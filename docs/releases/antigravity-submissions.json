@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "basis": "Candidate versions explicitly identified in the three recorded Google Antigravity Plugin Interest Form responses. Google confirmed each response was recorded. The form did not request ZIP uploads; no Marketplace approval or publication was recorded.",
+  "form_url": "https://forms.gle/2EX5RFYPoJe1UgxR9",
+  "submission_record": "antigravity-submissions/submitted/responses.json",
+  "plugins": {
+    "vera": {
+      "version": "0.1.334",
+      "submitted_at": "2026-10-02T21:02:39.416Z",
+      "submission_state": "response_recorded",
+      "marketplace_state": "awaiting_approval",
+      "zip_uploaded": false,
+      "candidate_package_sha256": "2c5570373c5ba7e695b14aef071bf95414be552b0e473f8eea49167bab47da2a",
+      "documentation_url": "https://mparanza.com/static/shared/vera/index.html?lang=it",
+      "confirmation_record": "antigravity-submissions/submitted/vera-confirmation.jpg"
+    },
+    "clara": {
+      "version": "0.1.240",
+      "submitted_at": "2026-10-02T21:04:13.557Z",
+      "submission_state": "response_recorded",
+      "marketplace_state": "awaiting_approval",
+      "zip_uploaded": false,
+      "candidate_package_sha256": "17e4c58da231286418efef478e3b0e6c8539de2169f62daaa3bc217d1c8a43eb",
+      "documentation_url": "https://mparanza.com/static/shared/clara/index.html?lang=en",
+      "confirmation_record": "antigravity-submissions/submitted/clara-confirmation.jpg"
+    },
+    "lucia": {
+      "version": "0.1.78",
+      "submitted_at": "2026-10-02T21:05:45.807Z",
+      "submission_state": "response_recorded",
+      "marketplace_state": "awaiting_approval",
+      "zip_uploaded": false,
+      "candidate_package_sha256": "35274a9c86ccc7ec2f53882a5fbe4fab07428d643730c3293f1c036fbe270135",
+      "documentation_url": "https://mparanza.com/static/shared/lucia/index.html",
+      "confirmation_record": "antigravity-submissions/submitted/lucia-confirmation.jpg"
+    }
+  }
+}

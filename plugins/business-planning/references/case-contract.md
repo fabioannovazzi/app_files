@@ -254,7 +254,7 @@ result must agree with financial revenue and EBITDA. Disagreement blocks readine
 
 ## Optional presentation
 
-`presentation` accepts `language` (`en` default, `it`), `tables`, `actions`, and
+`presentation` accepts `language` (`en` default, `it`, `fr`), `tables`, `actions`, and
 `source_notes`. Content selection and the recommendation remain model-authored.
 
 A table has unique `id`, `title`, an assessment `section`, `headers` (one to eight),

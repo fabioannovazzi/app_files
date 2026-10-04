@@ -579,6 +579,10 @@ def test_primary_semantic_report_contract_is_localized(
 ) -> None:
     core, semantic, input_dir, inspection = _inspection(tmp_path)
     model = _reviewed_case_model(semantic, inspection.inventory)
+    model["legal_framework"]["as_of_date"] = "2025-09-01"
+    model["legal_framework"][
+        "judgment_basis"
+    ] = "Historical text; current applicability remains unconfirmed."
     semantic_recipe = semantic.review_concordato_case_model(
         inspection.inventory,
         model,
@@ -614,6 +618,11 @@ def test_primary_semantic_report_contract_is_localized(
 
     assert markdown.startswith(f"# {title}\n")
     assert title in document_text
+    assert "2025-09-01" in markdown and "2025-09-01" in document_text
+    assert model["legal_framework"]["judgment_basis"] in markdown
+    assert model["legal_framework"]["judgment_basis"] in document_text
+    assert model["legal_framework"]["authority_refs"][0]["url"] in markdown
+    assert model["legal_framework"]["authority_refs"][0]["url"] in document_text
     assert summary_output["required_text"][0] == title
     # The full questions and follow-up remain readable paragraphs instead of
     # being squeezed into four or five narrow table columns.

@@ -1,5 +1,9 @@
 # Prepared teaching kits for Clara
 
+Before any course step, follow `file-access.md`: verify actual local writing,
+resolve missing permissions with the user and keep teaching paused until the
+retry succeeds. This also applies to resumed sessions and the working chat.
+
 ## Read the installed lesson format first
 
 This interim release combines new prepared teaching kits with retained published
@@ -142,6 +146,18 @@ prices or costs. Preserve the first report and compare what changed in the
 recommendation. The learner provides the evidence and question; Clara authors
 the technical case and handles its provenance.
 
+
+## Transcript imports
+
+The local `transcribe` lesson imports authored fictional text without recording
+or uploading audio. Present the readable reviewed note before raw import
+metadata. Put each speaker's turn in a separate Markdown paragraph so the
+rendered reader preserves the visible turn boundaries. Compare the words and
+speaker labels with the original; retain unknown names as unknown. Explain how
+the note links to its source in plain language, keeping long receipt identifiers
+and hashes in the native evidence records. Inspect the rendered note and guide
+before delivery, including paragraph breaks and any visible Markdown markers.
+Preserve earlier transcript versions and their receipts when revising a note.
 
 ## Browser preview
 

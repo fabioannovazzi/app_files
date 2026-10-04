@@ -42,6 +42,7 @@ TRANSITIVE_IMPLEMENTATION_ATTACKS = [
     ("plugin", ".codex-plugin/plugin.json"),
     ("assurance", "__init__.py"),
     ("assurance", "contracts.py"),
+    ("assurance", "jurisdiction.py"),
     ("assurance", "decisions.py"),
     ("assurance", "envelope.py"),
     ("assurance", "money.py"),
@@ -3655,9 +3656,7 @@ def test_journal_review_transaction_rejects_forged_save_response_contract(
     faulted = _journal_faulted_server(
         tmp_path,
         needle=needle,
-        replacement=(
-            needle
-            + """
+        replacement=(needle + """
       Object.assign(workingResult, {
         validation_type: "forged_save",
         run_id: "forged-run",
@@ -3667,8 +3666,7 @@ def test_journal_review_transaction_rejects_forged_save_response_contract(
         ui_decisions_path: "/private/client/forged-ui.json",
         message: "forged message",
       });
-"""
-        ),
+"""),
     )
 
     result = _journal_transaction_call(
@@ -3695,9 +3693,7 @@ def test_journal_review_transaction_rejects_forged_apply_response_contract(
     faulted = _journal_faulted_server(
         tmp_path,
         needle=needle,
-        replacement=(
-            needle
-            + """
+        replacement=(needle + """
       Object.assign(workingResult, {
         validation_type: "forged_apply",
         run_id: "forged-run",
@@ -3716,8 +3712,7 @@ def test_journal_review_transaction_rejects_forged_apply_response_contract(
         run_intake_path: "/private/client/forged-intake.json",
         message: "forged message",
       });
-"""
-        ),
+"""),
     )
 
     result = _journal_transaction_call(
@@ -4084,3 +4079,60 @@ def test_mus_repeated_threshold_hits_keep_unique_row_and_actual_count(
     assert result.audit["sample_size"] == 1
     assert result.audit["population_size_after_filters"] == 3
     assert result.audit["seed"] is None
+
+
+def test_archived_sample_reopens_but_review_writes_remain_blocked(tmp_path):
+    core = load_core()
+    output_dir, args = _real_journal_review_case(core, tmp_path)
+    context_path = _customer_context_path(output_dir)
+    context = core.load_client_engagement_context(context_path)
+    run_output = Path(context["output_dir"])
+    client_root = context_path.parents[5]
+    from tests.model_data_helpers import write_no_model_report
+
+    write_no_model_report(run_output, "journal-sampling", context["run_id"])
+    declarations = [
+        {
+            "artifact_id": f"artifact_{i}",
+            "path": p.relative_to(run_output).as_posix(),
+            "purpose": "QA retained output",
+            "audience": "review",
+            "media_type": "application/octet-stream",
+        }
+        for i, p in enumerate(sorted(run_output.rglob("*")))
+        if p.is_file()
+    ]
+    _load_customer_ledger().finalize_run(
+        client_root, context["engagement_id"], context["run_id"], declarations
+    )
+    before = {p: p.read_bytes() for p in run_output.rglob("*") if p.is_file()}
+    command = [
+        sys.executable,
+        "-I",
+        "-B",
+        str(ROOT / "plugins/journal-sampling/scripts/review_successor.py"),
+    ]
+    read = subprocess.run(
+        command
+        + ["validate", str(output_dir), "--client-engagement", str(context_path)],
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert read.returncode == 0, read.stderr
+    write = subprocess.run(
+        command
+        + [
+            "prepare",
+            str(output_dir),
+            "--kind",
+            "save",
+            "--client-engagement",
+            str(context_path),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert write.returncode != 0 and "running" in write.stderr
+    assert all(p.read_bytes() == data for p, data in before.items())

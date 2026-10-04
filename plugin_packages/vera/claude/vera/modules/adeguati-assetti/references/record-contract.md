@@ -14,10 +14,10 @@ The model authors JSON; the user does not fill technical fields. All narrative
 strings are in the user's language. The helper verifies references and integrity,
 not evidence meaning, professional judgment or completeness of the legal analysis.
 
-Set `language` to `it`, `en`, `fr`, `de` or `es` to match the narrative and memo headings. If omitted, the memo headings default to Italian. This selects presentation only; the jurisdiction remains Italian.
+Set `language` to `it`, `en`, `fr`, `de` or `es` to match the narrative and memo headings. If omitted, the memo headings default to Italian. This selects presentation only. Set jurisdiction independently to IT or CH-GE.
 
 Required top-level fields:
-- `schema_version`: 1; `jurisdiction`: "IT"; `as_of`: ISO date.
+- `schema_version`: 1; `jurisdiction`: "IT" or "CH-GE"; `as_of`: ISO date.
 - `scope`, `company_context`, `proportionality_basis`, `assessment`, `limitations`:
   nonempty narratives. Record excluded and unassessed areas in scope/limitations.
 - `sources`: nonempty array of `{id, path, title, sha256}`. Paths are relative to
@@ -52,6 +52,10 @@ Optional prior review:
   empty citation list when evidence is unavailable. Superseded requires nonempty
   current_action_ids identifying the replacement actions. Otherwise this list
   may be empty. A carried-forward action may keep its ID; explain any replacement.
+  Compare every material requirement of each prior action with current evidence,
+  including its completion evidence. Do not silently drop an unresolved requirement
+  when carrying the action forward or adding a new task; retain it explicitly or
+  explain a supported replacement in the disposition.
 
 Optional `professional_decision`: `{proposal_sha256, reviewer_ref, reviewed_at,
 conclusion, finding_dispositions, next_review_date, review_date_reason}`. The exact
@@ -98,3 +102,7 @@ row links to one or more observations. Empty arrays for these sections are allow
 when the case warrants it; explain the limitation or exclusion in coverage and
 the brief. Do not generate filler rows. The memo renders the complete extension,
 so the professional can read the reasoning without inspecting JSON.
+
+## Geneva adaptation
+
+For CH-GE, provide `jurisdiction_basis` explaining the entity, mandate, federal and cantonal scope. Populate `legal_basis` with current applicable Swiss sources and locators; Italian sources and French law are not defaults. Language is independent of jurisdiction. Prior reviews must have the same jurisdiction.

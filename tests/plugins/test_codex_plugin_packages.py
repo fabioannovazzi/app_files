@@ -16,6 +16,13 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 BUILD_SCRIPT = ROOT / "scripts" / "build_codex_plugin_zip.py"
 COMMERCIALISTA_MODULE_NAMES = {
+    "lipe",
+    "rating-legalita",
+    "scissione-guidata",
+    "patent-box-review",
+    "esg-reporting-assurance",
+    "trasformazione",
+    "fusione-guidata",
     "treasury-forecast",
     "aml-review",
     "adeguati-assetti",
@@ -25,8 +32,10 @@ COMMERCIALISTA_MODULE_NAMES = {
     "bilancio-xbrl-it",
     "browser-automation",
     "business-planning",
+    "business-valuation",
     "check-entries",
     "concordato-plan-review",
+    "composizione-negoziata",
     "comunicazione-professionale",
     "presenza-digitale-studio",
     "deep-research-validator",
@@ -53,7 +62,7 @@ UNIFIED_PLUGIN_NAMES = {"vera"}
 VERA_DISCOVERY_TERMS = (
     "commercialista",
     "studi professionali",
-    "contabilità",
+    "contabilita",  # Preserve the canonical keyword independently of prose.
     "controlli contabili",
     "scritture contabili",
     "riconciliazione bancaria",
@@ -75,10 +84,12 @@ VERA_DISCOVERY_TERMS = (
     "circolari clienti",
 )
 VERA_PUBLIC_PAGE_PATHS = (
+    Path("static/shared/scissione-guidata/index.html"),
     Path("static/shared/treasury-forecast/index.html"),
     Path("static/shared/archive-organization/index.html"),
     Path("static/shared/check-entries/index.html"),
     Path("static/shared/concordato-plan-review/index.html"),
+    Path("static/shared/composizione-negoziata/index.html"),
     Path("static/shared/deep-research-validator/index.html"),
     Path("static/shared/financial-analysis/index.html"),
     Path("static/shared/management-control-pack/index.html"),
@@ -599,18 +610,8 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert manifest["version"] == source_manifest["version"]
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
-    assert prompts[0] == (
-        "Trasforma questi export contabili in un pacchetto di controllo di gestione "
-        "con P&L, Budget, aging, cassa e concentrazione."
-    )
-    assert any(
-        "sito dello studio" in prompt and "preview responsive" in prompt
-        for prompt in prompts
-    )
-    assert prompts[2] == (
-        "Prepara un bilancio OIC intelligente anche da PDF: fammi rivedere "
-        "estrazione e celle incerte, poi genera l’XBRL finale."
-    )
+    # Packaging must preserve the source-owned prompts, not a frozen copy.
+    assert prompts == source_manifest["interface"]["defaultPrompt"]
     approved_description = (
         (ROOT / "docs" / "marketplace_copy" / "vera-long-description.txt")
         .read_text(encoding="utf-8")
@@ -621,7 +622,8 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert len(approved_description.split("\n\n")) == 3
     assert "bilancio civilistico OIC" in approved_description
     assert "concordato preventivo" in approved_description
-    assert "ricerche fiscali o normative" in approved_description
+    assert "quesiti fiscali e legali" in approved_description
+    assert "revisione contabile e le riconciliazioni" in approved_description
     assert "Cerca la corrispondenza del cliente." not in approved_description
     assert "giudizio professionale restano al commercialista." in approved_description
     assert "New Client" not in approved_description
@@ -937,6 +939,35 @@ def test_cross_surface_plugins_define_chatgpt_runtime_in_main_skill(
     content = skill_path.read_text(encoding="utf-8")
 
     assert builder.has_chatgpt_runtime_contract(content)
+
+
+@pytest.mark.parametrize("plugin_name", ["clara", "lucia", "vera"])
+def test_chatgpt_upload_omits_lifecycle_hooks_and_preserves_native_hooks(
+    plugin_name: str,
+) -> None:
+    builder = load_builder()
+    targets = {package.plugin: package for package in builder.load_packages()}
+    targets.update({bundle.name: bundle for bundle in builder.load_bundles()})
+    target = targets[plugin_name]
+    prefix = f"{target.package_root}/plugins/{plugin_name}/"
+    source_hooks = ROOT / "plugins" / plugin_name / "hooks" / "hooks.json"
+    native_entries = builder.expected_zip_entries(target)
+
+    entries = builder.chatgpt_upload_entries(target)
+
+    assert not any("hooks" in name.split("/")[:-1] for name in entries)
+    manifests = [
+        json.loads(content)
+        for name, content in entries.items()
+        if name.endswith(".codex-plugin/plugin.json")
+    ]
+    assert manifests
+    assert all("hooks" not in manifest for manifest in manifests)
+    assert native_entries[prefix + "hooks/hooks.json"] == source_hooks.read_bytes()
+    assert (
+        json.loads(native_entries[prefix + ".codex-plugin/plugin.json"])["hooks"]
+        == "./hooks/hooks.json"
+    )
 
 
 def test_chatgpt_card_projection_uses_approved_instructions() -> None:
@@ -1547,7 +1578,9 @@ def test_vera_routes_every_commercialista_module() -> None:
     )
     mcp_config = json.loads((plugin_root / ".mcp.json").read_text(encoding="utf-8"))
     routed_mcp_modules = {
-        server["args"][-1] for server in mcp_config["mcpServers"].values()
+        server["args"][-1]
+        for server in mcp_config["mcpServers"].values()
+        if server["args"][0] == "./scripts/run_component_mcp.cjs"
     }
     skill_names = {
         path.parent.name for path in (plugin_root / "skills").glob("*/SKILL.md")
@@ -1556,13 +1589,22 @@ def test_vera_routes_every_commercialista_module() -> None:
     assert components["schema_version"] == 1
     assert set(components["plugins"]) == COMMERCIALISTA_MODULE_NAMES
     assert routed_mcp_modules == COMMERCIALISTA_MODULE_NAMES - {
+        "lipe",
+        "scissione-guidata",
+        "patent-box-review",
+        "esg-reporting-assurance",
+        "composizione-negoziata",
+        "trasformazione",
+        "fusione-guidata",
         "invoice-xml",
         "treasury-forecast",
         "aml-review",
         "adeguati-assetti",
+        "rating-legalita",
         "bandi-agevolazioni",
         "browser-automation",
         "business-planning",
+        "business-valuation",
         "comunicazione-professionale",
         "management-control-pack",
         "centrale-rischi-review",
@@ -2248,6 +2290,22 @@ def test_all_dependency_checkers_accept_explicit_requirements_files(
             capture_output=True,
         )
 
+        if plugin_name == "fusione-guidata":
+            # This foundation declares no pip dependencies or alternate requirement set.
+            declared = (clean_plugin / "requirements.txt").read_text()
+            assert not any(
+                line.strip() and not line.lstrip().startswith("#")
+                for line in declared.splitlines()
+            )
+            runtime = subprocess.run(
+                [sys.executable, str(checker)],
+                check=False,
+                text=True,
+                capture_output=True,
+            )
+            assert runtime.returncode == 0, runtime.stderr
+            assert "Python and SQLite are available" in runtime.stderr
+            continue
         assert "--requirements" in result.stdout, plugin_name
 
 
@@ -2263,12 +2321,65 @@ def test_all_plugin_skills_define_material_choice_intake() -> None:
         )
         lowered_skill_text = combined_skill_text.lower()
 
+        if plugin_name == "business-valuation":
+            # The mandate workflow has its own concrete intake contract.
+            assert "resolve entity or branch" in lowered_skill_text
+            assert "ask only material missing choices" in lowered_skill_text
+            assert "from supplied evidence" in lowered_skill_text
+            assert "never ask the professional to write json" in lowered_skill_text
+            continue
+        if plugin_name == "composizione-negoziata":
+            # The compact specialist intake carries the same obligations without
+            # repeating the older generic intake boilerplate in every module.
+            assert "role, client/engagement, accessible documents" in lowered_skill_text
+            assert "read supplied evidence before asking for more" in lowered_skill_text
+            assert (
+                "current problem, observed evidence, contrary evidence and gaps"
+                in lowered_skill_text
+            )
+            continue
+
+        if plugin_name == "lipe":
+            normalized = " ".join(combined_skill_text.split())
+            assert "Inspect the supplied documents first" in normalized
+            assert "reuse confirmed answers" in normalized
+            assert "Use the current host model to propose" in normalized
+            assert "unresolved material choices" in normalized
+            continue
+        if plugin_name == "trasformazione":
+            assert (
+                "inspect provided synthetic inputs before asking" in lowered_skill_text
+            )
+            assert (
+                "missing fact that changes the next useful step" in lowered_skill_text
+            )
+            assert "do not route a real client mandate" in lowered_skill_text
+            continue
+        if plugin_name == "fusione-guidata":
+            # Check the P1 intake contract without requiring legacy template wording.
+            normalized = " ".join(combined_skill_text.split())
+            assert (
+                "Identify whom the professional assists, mandates/conflicts, the two companies"
+                in normalized
+            )
+            assert "Ask only questions that alter a material choice" in normalized
+            assert "A missing fact remains `unknown`" in normalized
+            assert "Independent work can continue" in normalized
+            continue
         assert (
             "material choices" in lowered_skill_text
             or "material research-angle" in lowered_skill_text
         ), plugin_name
-        assert "actual inputs" in lowered_skill_text, plugin_name
-        assert "unless the facts cue them" in lowered_skill_text, plugin_name
+        if plugin_name == "scissione-guidata":
+            assert "from the inspected evidence" in lowered_skill_text
+            assert (
+                "do not ask the professional to author configuration"
+                in lowered_skill_text
+            )
+            assert "not choices to propose separately" in lowered_skill_text
+        else:
+            assert "actual inputs" in lowered_skill_text, plugin_name
+            assert "unless the facts cue them" in lowered_skill_text, plugin_name
 
 
 def test_plugin_skills_do_not_require_continue_theater() -> None:
@@ -2748,6 +2859,49 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
         for skill_file in skill_files:
             skill_text = skill_file.read_text(encoding="utf-8")
             normalized_skill_text = " ".join(skill_text.split())
+            if plugin_root.name == "business-valuation":
+                # Test the actual fixed output contract rather than a legacy filename.
+                assert "## Calculation and review" in skill_text
+                assert "## Delivery and privacy" in skill_text
+                assert "Open `valuation_report.html`" in normalized_skill_text
+                assert (
+                    "HTML, DOCX/PDF, formula XLSX, JSON and calculation CSV"
+                    in normalized_skill_text
+                )
+                assert "same immutable revision" in normalized_skill_text
+                continue
+            if (
+                plugin_root.name == "vera"
+                and skill_file.parent.name == "business-valuation"
+            ):
+                assert "Read that module's" in normalized_skill_text
+                assert "follow it" in normalized_skill_text
+                assert "from that module root" in normalized_skill_text
+                continue
+            if plugin_root.name == "composizione-negoziata":
+                assert "Produce and persist useful work" in skill_text
+                assert "Declare every physical output" in normalized_skill_text
+                assert "actual model-data report" in normalized_skill_text
+                assert "read its skill and follow" in normalized_skill_text.lower()
+                assert "Never simulate saved history" in skill_text
+                continue
+            if skill_file.parent.name == "trasformazione":
+                if plugin_root.name == "vera":
+                    assert "../../modules/trasformazione" in normalized_skill_text
+                    assert "../../../trasformazione" in normalized_skill_text
+                    assert "Read the complete" in normalized_skill_text
+                    assert "working directory" in normalized_skill_text
+                else:
+                    assert (
+                        "version-bound Markdown memorandum and JSON dossier"
+                        in normalized_skill_text
+                    )
+                    assert (
+                        "Do not report a successful export as legal readiness"
+                        in normalized_skill_text
+                    )
+                    assert "Keep earlier exports" in normalized_skill_text
+                continue
             if (
                 plugin_root.name in {"vera", "clara", "lucia"}
                 and skill_file.parent.name == f"learn-with-{plugin_root.name}"
@@ -2822,11 +2976,25 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
             ):
                 assert lucia_native_references[skill_file.parent.name] in skill_text
                 continue
+            if (
+                plugin_root.name == "vera"
+                and skill_file.parent.name == "studio-document-format"
+            ):
+                assert "references/procedure.md" in skill_text
+                assert "scripts/studio_document_format.py" in skill_text
+                assert "references/written-course.md" in skill_text
+                assert "short and long" in normalized_skill_text
+                assert "user's explicit adoption" in normalized_skill_text
+                assert "financial report builder" in normalized_skill_text
+                continue
             if plugin_root.name in {"lucia", "vera"} and (
                 skill_file.parent.name != plugin_root.name
             ):
                 assert "Read that module's" in normalized_skill_text
-                assert "plugin working directory" in normalized_skill_text
+                if skill_file.parent.name == "composizione-negoziata":
+                    assert "Use the module root for commands" in normalized_skill_text
+                else:
+                    assert "plugin working directory" in normalized_skill_text
                 continue
             if (
                 plugin_root.name == "clara"
@@ -2841,6 +3009,38 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
             }:
                 assert "Read that component's" in normalized_skill_text
                 assert "working directory" in normalized_skill_text
+                continue
+            if plugin_root.name == "fusione-guidata":
+                # P1 exports case history and workpapers through its own review contract.
+                assert (
+                    "Never write run outputs inside this Git workspace or plugin source"
+                    in normalized_skill_text
+                )
+                assert "references/case-contract.md" in normalized_skill_text
+                assert (
+                    "selecting one kind at a time and its exact input references"
+                    in normalized_skill_text
+                )
+                assert "show the readable privacy report" in normalized_skill_text
+                assert (
+                    "actual professional confirmation still belongs to the named reviewer"
+                    in normalized_skill_text
+                )
+                continue
+            if plugin_root.name == "lipe":
+                assert (
+                    "VP table, findings and readable model-data report are normal outputs"
+                    in normalized_skill_text
+                )
+                assert "workpaper.xlsx" in normalized_skill_text
+                assert "codex_run_review.md" in normalized_skill_text
+                assert (
+                    "Never write run outputs inside this Git workspace"
+                    in normalized_skill_text
+                )
+                assert (
+                    "Do not close the managed run without them" in normalized_skill_text
+                )
                 continue
             for snippet in required_snippets:
                 if (
@@ -3188,12 +3388,15 @@ def test_static_plugin_pages_are_public_and_plugin_downloads_are_removed() -> No
         assert response.status_code == 404, path
 
 
-def test_manual_vera_download_is_removed() -> None:
+def test_manual_vera_download_is_removed(monkeypatch: pytest.MonkeyPatch) -> None:
     _restore_application_import_path()
 
     from fastapi.testclient import TestClient
 
+    from modules.hosted_services import api as pdp_api
     from src.fastapi_app_entry import app
+
+    monkeypatch.setattr(pdp_api, "start_voice_retention_cleanup", lambda: None)
 
     with TestClient(app) as client:
         response = client.get(
@@ -3219,6 +3422,7 @@ def test_clara_downloads_and_removed_explainers_return_404(
     from modules.hosted_services import api as pdp_api
     from src.fastapi_app_entry import app
 
+    monkeypatch.setattr(pdp_api, "start_voice_retention_cleanup", lambda: None)
     pro_email = "pro@example.com"
     free_email = "free@example.com"
     permissions_file = tmp_path / "site_page_permissions.json"
@@ -3842,8 +4046,13 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         "../fatture-xml-check/index.html",
         "../report-enti-locali/index.html",
         "../concordato-plan-review/index.html",
+        "../composizione-negoziata/index.html",
+        "../fusione-guidata/index.html",
+        "../scissione-guidata/index.html",
+        "../patent-box-review/index.html",
         "../previdenza-inps/index.html",
         "../registro-imprese-sari/index.html",
+        "../lipe/index.html",
     ):
         module = re.search(
             rf'<a class="module-row"[^>]+href="{re.escape(module_link)}"[^>]*>',
@@ -3851,9 +4060,9 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         )
         assert module is not None
         assert 'data-jurisdiction-item="it"' in module.group(0)
-    assert core.count(" data-module-link") == 35
-    assert core.count('class="module-row"') == 35
-    assert core.count('data-jurisdiction-item="it"') == 10
+    assert core.count(" data-module-link") == 44
+    assert core.count('class="module-row"') == 44
+    assert core.count('data-jurisdiction-item="it"') == 16
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
     for area_id in (
@@ -3880,8 +4089,8 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         in page
     )
     assert "data-vera-install-link" in page
-    assert 'href="downloads/vera-cowork-plugin.zip"' in page
-    assert "data-vera-cowork-download-link" in page
+    assert 'href="../cowork-downloads/index.html?lang=it"' in page
+    assert "data-cowork-guide-link" in page
     for localized_title in (
         "Installazione",
         "Installation",
@@ -3905,11 +4114,11 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
     ):
         assert localized_chatgpt_button in page
     for localized_cowork_button in (
-        "Scarica per Claude Cowork",
-        "Download for Claude Cowork",
-        "Télécharger pour Claude Cowork",
-        "Für Claude Cowork herunterladen",
-        "Descargar para Claude Cowork",
+        "Vai al marketplace Cowork",
+        "Go to Cowork marketplace",
+        "Aller au marketplace Cowork",
+        "Zum Cowork-Marketplace",
+        "Ir al marketplace de Cowork",
     ):
         assert localized_cowork_button in page
     for stale_snippet in (
@@ -5067,15 +5276,15 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         "Come usare Clara",
         "Installation",
         "Installazione",
-        "Install Clara for ChatGPT Work and Codex, or download the package for Claude Cowork.",
-        "Installa Clara per ChatGPT Work e Codex oppure scarica il pacchetto per Claude Cowork.",
+        "Install Clara in ChatGPT Work and Codex, Claude Cowork or Google Antigravity.",
+        "Installa Clara in ChatGPT Work e Codex, Claude Cowork o Google Antigravity.",
         "Install for ChatGPT Work and Codex",
         "Installa per ChatGPT Work e Codex",
-        "Download for Claude Cowork",
-        "Scarica per Claude Cowork",
+        "Go to Cowork marketplace",
+        "Vai al marketplace Cowork",
         "https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57b17fb5848191be710192d93fe03a",
         "data-clara-install-link",
-        "data-clara-cowork-download-link",
+        "data-cowork-guide-link",
         "data-function-link",
         "/?lang=${safeLang}",
     ):
@@ -5119,10 +5328,7 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         "data-pro-download-link",
         "data-clara-download-link",
         "/downloads/clara",
-        "Download ZIP",
         "Scarica lo ZIP",
-        "Télécharger le ZIP",
-        "ZIP herunterladen",
         "manual fallback",
         "alternativa manuale",
         "Pro Plugin Pack",
@@ -5154,9 +5360,10 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         'data-i18n="install.button">Install for ChatGPT Work and Codex</a>'
     ) in page
     assert (
-        '<a class="button" href="downloads/clara-cowork-plugin.zip" download '
-        'data-clara-cowork-download-link data-i18n="install.coworkButton">'
-        "Download for Claude Cowork</a>"
+        '<button class="button" type="button" disabled '
+        'aria-describedby="cowork-marketplace-status" '
+        'data-cowork-marketplace-pending data-i18n="install.coworkButton">'
+        "Go to Cowork marketplace</button>"
     ) in page
     assert page.count('"hero.title": "Clara"') == 5
     assert '<h1 data-i18n="hero.title">Clara</h1>' in page
@@ -5495,6 +5702,11 @@ def test_reporting_component_manifests_use_clara_homepage() -> None:
 
 def test_standard_family_plugin_manifests_use_family_homepages() -> None:
     expected_homepages = {
+        "lipe": "https://mparanza.com/static/shared/lipe/index.html",
+        "rating-legalita": "https://mparanza.com/static/shared/rating-legalita/index.html",
+        "scissione-guidata": "https://mparanza.com/static/shared/scissione-guidata/index.html",
+        "esg-reporting-assurance": "https://mparanza.com/static/shared/esg-reporting-assurance/index.html",
+        "trasformazione": "https://mparanza.com/static/shared/trasformazione/index.html",
         "invoice-xml": "https://mparanza.com/static/shared/invoice-xml/index.html",
         "aml-review": "https://mparanza.com/static/shared/aml-review/index.html",
         "adeguati-assetti": "https://mparanza.com/static/shared/adeguati-assetti/index.html",
@@ -5549,8 +5761,14 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
             "https://mparanza.com/static/shared/centrale-rischi-review/index.html?lang=it"
         ),
         "sales-plan": ("https://mparanza.com/static/shared/sales-plan/index.html"),
+        "patent-box-review": (
+            "https://mparanza.com/static/shared/patent-box-review/index.html?lang=it"
+        ),
         "business-planning": (
             "https://mparanza.com/static/shared/business-planning/index.html?lang=it"
+        ),
+        "business-valuation": (
+            "https://mparanza.com/static/shared/business-valuation/index.html"
         ),
         "prompt-optimizer": (
             "https://mparanza.com/static/shared/prompt-optimizer/index.html"
@@ -5567,6 +5785,8 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
         "browser-automation": (
             "https://mparanza.com/static/shared/browser-automation/index.html?lang=it"
         ),
+        "composizione-negoziata": "https://mparanza.com/static/shared/composizione-negoziata/index.html",
+        "fusione-guidata": "https://mparanza.com/static/shared/fusione-guidata/index.html?lang=it",
         "studio-archive": ("https://mparanza.com/static/shared/vera/index.html"),
         "vera": ("https://mparanza.com/static/shared/vera/index.html?lang=it"),
         "clara": ("https://mparanza.com/static/shared/clara/index.html?lang=en"),
@@ -6249,11 +6469,11 @@ def test_companion_install_flow_routes_login_to_same_listing(
 @pytest.mark.parametrize(
     "localized_guidance",
     (
-        "Install Clara for ChatGPT Work and Codex, or download the package for Claude Cowork.",
-        "Installa Clara per ChatGPT Work e Codex oppure scarica il pacchetto per Claude Cowork.",
-        "Installez Clara pour ChatGPT Work et Codex ou téléchargez le paquet pour Claude Cowork.",
-        "Installieren Sie Clara für ChatGPT Work und Codex oder laden Sie das Paket für Claude Cowork herunter.",
-        "Instala Clara para ChatGPT Work y Codex o descarga el paquete para Claude Cowork.",
+        "Install Clara in ChatGPT Work and Codex, Claude Cowork or Google Antigravity.",
+        "Installa Clara in ChatGPT Work e Codex, Claude Cowork o Google Antigravity.",
+        "Installez Clara dans ChatGPT Work et Codex, Claude Cowork ou Google Antigravity.",
+        "Installieren Sie Clara in ChatGPT Work und Codex, Claude Cowork oder Google Antigravity.",
+        "Instala Clara en ChatGPT Work y Codex, Claude Cowork o Google Antigravity.",
     ),
 )
 def test_clara_install_flow_localizes_platform_choices(

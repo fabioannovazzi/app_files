@@ -146,6 +146,19 @@ def _editorial_packet(
     validate_schema(contribution, "model_contribution.schema.json")
     assurance = load_json(claim_assurance_path)
     validate_schema(assurance, "claim_assurance.schema.json")
+    claim_packet = verify_model_phase_packet(root, "claim_assurance")
+    contract_row = next(
+        row
+        for row in claim_packet["allowed_inputs"]
+        if row["role"] == "answer_contract"
+    )
+    contract = load_json(Path(contract_row["path"]))
+    validate_claim_assurance(
+        assurance,
+        contribution=contribution,
+        answer_contract_digest=contract["contract_digest"],
+        source_register=load_json(root / "source_register.json"),
+    )
     packet = _base_packet(root, "editorial_assessment")
     packet["allowed_data_classes"] = [
         "proposed contribution",

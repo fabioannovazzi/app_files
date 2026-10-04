@@ -105,7 +105,7 @@
     },
     {
       "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/SKILL.md",
-      "sha256": "ebcac618e54662d0c68d516321fdc2a19bd4fbfb77130a54af3d161ec948018b"
+      "sha256": "7e8ba97ab0f1081da2ea203e192a4c5eb091200c74709ad31181127f34d5dc15"
     },
     {
       "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/agents/openai.yaml",
@@ -390,5 +390,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "2a54ae3608c5c8b1656360725c3b897817ce516221b98a1993b643a61422580a"
+  "canonical_course_sha256": "fa9123f4150d4ceb8a4ac2b805e3f70dc68c96bd3cf1c6231711a74ed42a4240"
 }

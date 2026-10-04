@@ -71,7 +71,19 @@ def test_purchase_kit_runs_reviewed_native_results_through_current_workflow(
             stable = dict(packet)
             stable.pop("invoice_id")
             stable.pop("source_reference")
-            assert stable == expected["packet"]
+            # The recorded XML review predates the shared provenance fields.
+            # Check their XML defaults while preserving every reviewed value.
+            expected_packet = {
+                **expected["packet"],
+                "source_format": "fatturapa_xml",
+                "source_locator": "",
+                "extraction_sha256": "",
+                "invoice_lines": [
+                    {**line, "locator": ""}
+                    for line in expected["packet"]["invoice_lines"]
+                ],
+            }
+            assert stable == expected_packet
             results.append({**expected["response"], "invoice_id": packet["invoice_id"]})
         calls.append(packet_sha)
         return {

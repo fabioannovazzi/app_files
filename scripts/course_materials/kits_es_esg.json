@@ -1,0 +1,27 @@
+{
+  "vera/esg-reporting-assurance": {
+    "title": "Seguir pruebas y decisiones de un expediente ESG",
+    "goal": "Relacionar un valor con su fuente, preparar un borrador parcial e identificar qué debe revisarse después de una actualización.",
+    "scenario": "Caso totalmente ficticio: Officina Selce, un centro y consumo eléctrico declarado de 2026. Primero 0 kWh; corrección 15 kWh. Ninguna medición certificada.",
+    "scope": "Base documental ESG en Codex desktop y Work local cuando sea compatible. En Cowork el curso utiliza una sola conversación escrita. Ningún informe ESG completo, cálculo VSME/ESRS o taxonomía, opinión de assurance, firma o envío.",
+    "inputs": "Lea brief-es.md y energy.csv. El primer valor es cero; la celda 2025 vacía significa no disponible. El centro excluido se declara no aplicable solo en este caso ficticio; el vacío no lo prueba. Reserve energy-update.csv para el siguiente paso.",
+    "request": "Vera, prepare el expediente ficticio Officina Selce 2026. Relacione valores con archivos, distinga cero, ausente y no aplicable, muestre una decisión para revisar y un borrador parcial. Importe después la corrección de 0 a 15 kWh y muestre qué queda obsoleto.",
+    "steps": [
+      "Prepare un cliente didáctico separado mediante Studio Archive, importe la nota y energy.csv e inicie la función actual. Acuerde período, servicio preparation y base unresolved sin elegir una norma automáticamente. Cree el caso synthetic y vincule filas 1, 2 y 3 de kwh.",
+      "Muestre original, localizador, interpretación y motivo. Antes de record_decision pida la decisión real del participante sobre estas versiones y dependencias. Sin respuesta, déjela abierta. Toda simulación debe etiquetarse y nunca atribuirse al participante. Prepare memo partial_draft con dependencias exactas sin afirmar conformidad.",
+      "Conserve el primer run. Importe energy-update.csv como nueva fuente inmutable e inicie otro run del mismo encargo con entradas antiguas y nuevas. start_case usa el primer previous_context; bind_evidence conserva ID energy y registra 15. En resume_case, energy v1 y decisión/borrador dependientes quedan obsoletos; energy v2 es actual. Ausente y no aplicable siguen separados."
+    ],
+    "deliverables": [
+      "esg_state.json con archivos, hashes, celdas, versiones, motivos, decisiones y dependencias; borradores parciales Markdown y JSON.",
+      "Ambos contextos Studio Archive, originales e historial, codex_run_review.md e informe legible de lecturas reales del modelo. Se ejecutan en esta sesión, no son resultados suministrados."
+    ],
+    "review": "Compruebe cliente, período, unidad, alcance y fuente. Cero declarado no prueba consumo realmente nulo. Ausente exige recopilación; no aplicable exige motivo. Revise interpretación y suficiencia. Una corrección invalida decisiones dependientes sin renovarlas. Un nombre declarado no es firma autenticada.",
+    "checkpoints": [
+      "Antes de decidir, encuentre las tres celdas y explique los distintos estados de los dos vacíos.",
+      "Tras corregir, muestre versión actual y decisión/borrador anteriores conservados; identifique qué revisar."
+    ],
+    "practice": "Con menos guía, use files/practice/ en otro cliente didáctico: Laboratorio Quarzo declara 8 y después 12 kWh. Pida el expediente, distinga vacíos, prepare primer borrador e importe corrección en el mismo encargo. Conserve demo. Exprese su decisión o déjela abierta.",
+    "success": "Encuentre 0 y luego 15 kWh en demo, 8 y luego 12 en práctica. Originales e historial siguen legibles; decisión/borrador dependientes necesitan revisión. Ambos null mantienen estados distintos; ningún informe completo u opinión está aprobado.",
+    "repeat": "Repita seleccionando cliente, encargo, período y CSV/textos pertinentes; formule petición y revise fuentes e interpretaciones. Cambios son entradas nuevas del mismo encargo. Guía breve de 5–8 minutos; procesamiento y práctica pueden prolongar. Archivos/progreso quedan locales; las lecturas del modelo entran en su contexto sin anonimización automática."
+  }
+}

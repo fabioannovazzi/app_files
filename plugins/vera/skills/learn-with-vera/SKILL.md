@@ -7,11 +7,24 @@ description: Teach only this installation's supported Vera workflows through a n
 
 Help the commercialista obtain and understand a useful result by describing their
 work naturally. Use native voice first, a teaching chat and a parallel working
-chat. Onboarding is optional: start the introduction with **3–4 distinct tailored
-workflows** only when the user chooses it. The user can pause or leave at any time
+chat. The short “Get started with Vera” introduction suggests **3–4 distinct
+tailored workflows** and tries one prepared task. The longer onboarding programme
+teaches all selected workflows only when the user chooses that programme.
+The user can pause or leave at any time
 and use ordinary workflows without finishing. After the introduction this skill
 can teach one workflow or a user-chosen sequence anytime.
 Do not require the user to know skill names or how to write technical prompts.
+
+## Required file access before any course step
+
+Before the interview, lesson explanation, window/voice setup or first exercise,
+read `references/file-access.md`, connect the shared course workspace and run
+its setup command to save and reload the actual profile. This applies
+to every course and language, first onboarding, repeated lessons and resumes.
+If access or saving fails, stop teaching and guide the user through the exact
+permission request and verified retry. Do not continue with prompt preparation,
+text-only practice or theory while files cannot be saved. Each working chat must
+verify its own access. A permission click is not a successful write test.
 
 ## Vera workflows only
 
@@ -38,21 +51,37 @@ actual input/output contract fits. Read that contract before making the choice.
 
 ## Start from the user's goal
 
+For “Get started with Vera”, “how does Vera work?” or the catalogue's introductory
+request, read `references/get-started.md` and follow its short, repeatable route:
+suggest 3–4 relevant courses, execute one prepared task and its small practice,
+then let the learner choose a next course. This route uses a single-course
+session, not the multi-course onboarding programme described below. It needs no
+new profile or mandatory interview. Follow an explicit request for ordinary work
+or a specific course directly.
+
 Read `../vera/references/local-onboarding.md` and use its installed-root discovery
-and shared OS-user profile. For this user-requested tutorial, if onboarding is
-unfinished, explain the optional introduction and follow its interview and 3–4
-lesson plan only if the user chooses it. If they decline or want ordinary work,
+and shared OS-user profile. Start a specifically requested course directly using
+the single-course route below. Use the short introduction above for an open
+introduction request. Explain the optional interview and 3–4 lesson programme
+only when the user wants that longer route, and follow it only if they choose it.
+If they decline or want ordinary work,
 route directly to the requested specialist. A tutorial setup or recovery error
 must never prevent that transition. Never reset a completed
 profile or use repeated teaching to manufacture onboarding completion.
 
-For a completed profile, read `references/local-sessions.md`, then run
+For a requested single course, including first use, read `references/local-sessions.md`, then run
 `local_teaching.py status`. Read the current profile explicitly in Codex and
 local ChatGPT Work on the same OS account. Use the user's current request over
 stored preferences. Verify actual local access; a cloud sandbox is not the
 user's computer. Start this two-thread voice journey in Codex desktop. Local
 Work may reuse its saved profile and sessions when the required native controls
 and local execution are actually available. Cowork receives no teaching skill.
+
+A single requested course does not require a completed introduction, a profile
+interview or a three-course plan. Start it with `local_teaching.py begin`, passing
+the verified native pair when none is saved. A missing profile stays unset; use
+the current request to choose the language and pace. Do not manufacture profile
+confirmation, onboarding completion or extra lessons to unlock this course.
 
 When the request is open, ask “Che cosa vorresti fare oggi?” If the user says
 “Non so cosa chiederti”, offer two or three concrete outcomes relevant to their
@@ -77,7 +106,9 @@ that use or answer the learner's question. Use the plain workflow title.
 Materialize its kit once below the active lesson's local files. Read `teacher.md`
 and, when supplied, `execution-request.json`. Open `course.html` as a rendered browser outline in the working
 window using the **Browser preview** procedure in `references/prepared-courses.md`
-(never `open_in_codex` with `type: "file"` for HTML), then inspect the supplied input files with the user. Import those exact
+(never `open_in_codex` with `type: "file"` for HTML), then inspect the supplied input files with the user. For `trasformazione`, follow its synthetic-folder exception in
+`references/prepared-courses.md`; do not use the Studio Archive adapter or offer
+a transition to real client files. For other workflows, import those exact
 source files through the real tutorial case adapter. Preserve the returned
 input bindings and output directory. Read the active worker contract before
 each bounded dispatch and execute the actual current pipeline in that worker.
@@ -87,7 +118,14 @@ quiz after the explanation. Never simulate the user's answers or participation.
 
 When the worker produces the normal deliverables, open those actual files in its
 window. Explain where to start, what the main sections mean, how a finding links
-to the inputs and what the user can do next. Rendering the outline produces no
+to the inputs and what the user can do next. Apply the existing model-data report
+contract to the actual reading and explanation of results as well as execution.
+Do not infer "no case data reached the model" merely because the parser ran
+locally: invoice fields or other results already read in chat are model context.
+This does not authorize any additional source access, copying or transmission.
+If a report predates later reads, state that limit; preserve a sealed run and
+record any correction locally outside it through the existing review procedure.
+Rendering the outline produces no
 execution evidence and completes no demo. A retained course may include an
 `example.html` specimen; explain that it is prepared material, not this session’s
 result. When no execution request is supplied, use its `teacher.md`, authored
@@ -122,6 +160,11 @@ silently send teaching data to hosted services to make a demonstration complete.
 
 ## Native voice and two parallel threads
 
+Use `references/chat-button.md` to present the native **Apri la chat di lavoro**
+or **Riprendi la chat di lavoro** control for every course. A working chat
+carrying a course invitation must claim it before executing any lesson.
+
+
 Keep one teaching chat and one working chat, reused across onboarding, later
 lessons and the transition to the user's files. Inspect the saved pair through
 native task read/status tools before creating anything. Resume it when available;
@@ -148,7 +191,9 @@ an available native operation. These setup actions need not be repeated while
 the same visible pair remains in use.
 
 Send the worker **one bounded step at a time**: exact session/lesson identity,
-workflow, teacher ID, current token, files and intended output. The worker reads
+workflow, teacher ID, current token, absolute `state_root`, files and intended
+output. Both chats use the verified course workspace; every helper command
+passes that same `--state-root`. The worker reads
 its actual native thread ID and validates `worker` before each new step. Keep
 the Vera-only scope in every handoff. Both chats must use the returned
 `workflow_contract.plugin_root` and `workflow_contract.skill_path`; the worker

@@ -30,7 +30,7 @@ Expliquez l’étape en cours et attendez son résultat réel.
 
 La conversation de travail prépare le dossier et montre documents reçus et questions proposées. La conversation vocale explique ce qui est disponible et les confirmations recherchées.
 
-Sur la page de revue, choisissez les demandes pertinentes et limitez les suggestions trop larges aux deux confirmations du cas. Vera enregistre et applique les décisions effectives avant de rédiger.
+Dans la revue, ouvrez « Demandes au client » et lisez le texte proposé. Choisissez l’action de demande de documents pour préciser la confirmation attendue dans le champ des documents demandés. Rejetez la question de classement interne, puis enregistrez et appliquez les décisions avant la rédaction.
 
 Vera rédige à partir des demandes revues. Ouvrez le brouillon et vérifiez objet, questions et ton ; tout remplacement est enregistré par la même revue, avec son lien aux décisions.
 

@@ -1,7 +1,18 @@
 ---
 name: financial-analysis
-description: Use when preparing controlled historical accounting analysis or fixed financial due-diligence calculations under Vera's accounting controls.
+description: Use to analyse historical accounting or compare bilanci through source-linked financial schedules, reconciliations, ratios and supported financial due-diligence calculations. For preparing the new bilancio civilistico OIC, nota integrativa or XBRL use bilancio-oic; for a forward-looking business plan use business-planning.
 ---
+
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+## Connected studio knowledge
+
+When the user or an adopted studio instruction requests relevant repository
+evidence, read `../vera/references/connected-studio-knowledge.md` before the
+dependent work, including direct specialist invocation. Use only callable host
+search/read tools; preserve citations and this workflow's qualification gates.
+Without a repository, continue ordinary work. Studio skills remain independently
+invoked by the user; Vera does not dispatch them.
+<!-- VERA_CONNECTED_KNOWLEDGE_END -->
 
 <!-- VERA_OPENAI_ONBOARDING_BEGIN -->
 Onboarding is optional. Continue ordinary professional work immediately,

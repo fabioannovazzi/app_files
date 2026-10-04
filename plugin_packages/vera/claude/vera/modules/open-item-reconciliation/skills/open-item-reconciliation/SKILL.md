@@ -11,6 +11,11 @@ choose a sibling output folder.
 
 # Open-item Reconciliation
 
+## Jurisdiction and Geneva
+
+For a CH-GE mandate, read `references/geneva.md` before the steps below. It specifies the Geneva input, source and output adaptations within this existing function. Choose governing jurisdiction independently of output language; the ordinary Italian path remains available for IT.
+
+
 Use this skill when the starting population is a list of items reported as open
 at a cut-off. Determine which items are closed, partly closed, or still open
 from the available accounting evidence, then document residuals, exceptions,
@@ -30,7 +35,7 @@ Before running helper scripts or write-heavy work, identify material choices tha
 
 Default output policy: produce the richest normal package for the workflow. DOCX/Word, Excel/CSV, JSON audit, diagnostics, charts, packaged reports, review notes, and Vera-written review files are not choices to propose when they are natural outputs of that plugin; generate them whenever dependencies and source data permit. Ask only when an output is technically impossible, unsafe, or the user explicitly requests a reduced/debug run.
 
-Default currency policy: use Euro (`EUR`) unless the user or source file explicitly states another currency. Do not ask for currency when it is otherwise unresolved; record `EUR` as the assumption.
+Currency: carry the currency evidenced by the source or confirmed for the engagement (including CHF). Never infer currency from output language or silently default to EUR. If unresolved, obtain the currency before computing or matching amounts. Keep different currencies separate; conversion requires an explicit reviewed rate, date and basis.
 
 Keep progress and handoff concise. Use a checklist, Run Intake table, Decision
 Table, or Artifact Card when it helps the user review complex work; their chat
@@ -167,6 +172,12 @@ or the contents of an accounting file.
    execution inputs as `Vera/engagements/<engagement-id>/runs/<run-id>/inputs`
    and the only permitted output path as the sibling `outputs` directory in
    the selected customer folder. Never substitute a freely chosen directory.
+   When the host also requires run-level disclosure artifacts, pass
+   `--output-subdirectory reconciliation` for a new run and every regeneration.
+   This uses only the fixed `outputs/reconciliation/` child for the exact native
+   assurance package; retain disclosures in the owning `outputs/` directory.
+   Open review and validate assurance against the returned native output path.
+   Declare every file in both locations when finalizing the owning archive run.
 4. Stop when the context, input receipt, execution copy, lifecycle, or customer
    manifest is stale or edited. Do not copy, merge, or relabel another
    customer's files to make validation pass.
@@ -327,9 +338,14 @@ Do not patch the downloadable ZIP manually.
 
 ## Cowork execution contract
 
+Public workflow names select skills; component IDs select module paths.
+`financial-report-builder` uses component `report-builder`, `vouching` (historically
+called Check Entries) uses `check-entries`, and `purchase-invoice-review` uses
+`passive-invoice-audit`. These component IDs are not additional workflows.
+
 For journal-sampling, open-item-reconciliation, journal-bank-reconciliation,
-concordato-plan-review, report-builder and check-entries only, optional cache
-cleanup is available from the installed Vera root:
+concordato-plan-review, financial-report-builder and vouching only, optional cache
+cleanup uses the corresponding component ID from the installed Vera root:
 
 ```bash
 python3 modules/<module>/scripts/implementation_bootstrap.py --repair
@@ -339,6 +355,13 @@ For a standalone module, use `python3 scripts/implementation_bootstrap.py --repa
 from its root. This validates the implementation first, then removes only regular,
 single-link `__pycache__/*.pyc` files under that module's own `vendor` tree. It
 leaves directories, other files, symlinks and shared vendor trees untouched.
+This supported maintenance command is the only cache-cleanup exception to the
+prohibition on editing the installed tree by hand. It is optional: ordinary
+validation and execution tolerate incidental bytecode without removing it.
+On a read-only installation, skip cleanup. If the command reports a permission
+error, retain that error and continue the ordinary validated workflow when its
+checks pass; do not chmod, delete files manually, copy or patch the installation,
+or bypass the host's permissions to make cleanup succeed.
 If `validate_implementation_tree` ever fails with a file/directory-contract
 mismatch, do not delete or modify files inside the installed plugin tree by hand
 and do not bypass a sandbox/permission rejection to do so. Stop and report the

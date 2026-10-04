@@ -596,8 +596,8 @@ def test_lucia_public_page_is_a_directory_of_separate_function_pages() -> None:
         'plugins_6a7aeb8b27dc8191aaef8e64146296ae?q=lucia"'
     ) in page
     assert "data-lucia-install-link" in page
-    assert 'href="downloads/lucia-cowork-plugin.zip"' in page
-    assert "data-lucia-cowork-download-link" in page
+    assert 'href="../cowork-downloads/index.html?lang=it"' in page
+    assert "data-cowork-guide-link" in page
     assert 'id="lucia-install-video-link"' in page
     assert 'data-i18n-aria-label="install.video.title"' in page
     assert 'id="lucia-install-video-thumbnail"' in page
@@ -619,11 +619,11 @@ def test_lucia_public_page_is_a_directory_of_separate_function_pages() -> None:
     ):
         assert localized_chatgpt_button in page
     for localized_cowork_button in (
-        "Scarica per Claude Cowork",
-        "Download for Claude Cowork",
-        "Télécharger pour Claude Cowork",
-        "Für Claude Cowork herunterladen",
-        "Descargar para Claude Cowork",
+        "Vai al marketplace Cowork",
+        "Go to Cowork marketplace",
+        "Aller au marketplace Cowork",
+        "Zum Cowork-Marketplace",
+        "Ir al marketplace de Cowork",
     ):
         assert localized_cowork_button in page
     assert 'href="lucia-page.css?v=' in page

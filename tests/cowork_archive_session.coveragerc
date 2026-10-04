@@ -1,0 +1,7 @@
+[run]
+include =
+    */plugins/vera/scripts/studio_archive_session.py
+
+[report]
+show_missing = True
+fail_under = 80

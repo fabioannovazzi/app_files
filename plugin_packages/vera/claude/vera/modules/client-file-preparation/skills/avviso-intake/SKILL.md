@@ -5,9 +5,14 @@ description: Use when creating a first intake memo for notices, agency communica
 
 ## Cowork execution contract
 
+Public workflow names select skills; component IDs select module paths.
+`financial-report-builder` uses component `report-builder`, `vouching` (historically
+called Check Entries) uses `check-entries`, and `purchase-invoice-review` uses
+`passive-invoice-audit`. These component IDs are not additional workflows.
+
 For journal-sampling, open-item-reconciliation, journal-bank-reconciliation,
-concordato-plan-review, report-builder and check-entries only, optional cache
-cleanup is available from the installed Vera root:
+concordato-plan-review, financial-report-builder and vouching only, optional cache
+cleanup uses the corresponding component ID from the installed Vera root:
 
 ```bash
 python3 modules/<module>/scripts/implementation_bootstrap.py --repair
@@ -17,6 +22,13 @@ For a standalone module, use `python3 scripts/implementation_bootstrap.py --repa
 from its root. This validates the implementation first, then removes only regular,
 single-link `__pycache__/*.pyc` files under that module's own `vendor` tree. It
 leaves directories, other files, symlinks and shared vendor trees untouched.
+This supported maintenance command is the only cache-cleanup exception to the
+prohibition on editing the installed tree by hand. It is optional: ordinary
+validation and execution tolerate incidental bytecode without removing it.
+On a read-only installation, skip cleanup. If the command reports a permission
+error, retain that error and continue the ordinary validated workflow when its
+checks pass; do not chmod, delete files manually, copy or patch the installation,
+or bypass the host's permissions to make cleanup succeed.
 If `validate_implementation_tree` ever fails with a file/directory-contract
 mismatch, do not delete or modify files inside the installed plugin tree by hand
 and do not bypass a sandbox/permission rejection to do so. Stop and report the
@@ -157,3 +169,33 @@ reference for render, save, and apply. Do not resend `review_payload.json`
 merely to carry state. Routine high-confidence inventory rows omit extracted
 text previews after deterministic mapping; exception rows retain a bounded
 preview, and every row keeps its exact local source reference.
+
+## Deliver the reviewed notice, not only the extraction list
+
+A mention of a tax form in a notice does not establish that the form was supplied.
+Read the notice and any client covering message before accepting document kinds.
+Use the existing text-hash-bound `--document-kind-decisions` contract when a
+lexical candidate is wrong. For a readable letter with no supported fiscal-form
+adapter, `kind: "unsupported"` means no fiscal-form fields are extracted; it does
+not mean that the letter is unreadable. Preserve the exact extracted-text hash
+and `basis: "model_review"`. Changed decisions require a new successor run.
+Keep generated decision JSON under that run's owning `outputs/` and use
+`--out <owning-outputs>/intake` for its fresh native output directory, so the
+configuration is outside the initially empty intake folder.
+
+The deterministic `avviso/avviso_intake_memo.md` and date/reference CSV are
+extraction aids. The main delivered note is the current source-backed synthesis
+in `07_scheda_per_studio.md`. Follow the full client-file-preparation skill's
+normal explicit review edit and Apply path to replace its initial template.
+Explain who wrote to whom, the stated request and period, protocol, dates with
+their source meaning, documents actually received, missing evidence and next
+checks. Distinguish a client statement from an acquired document or proof of
+receipt. Do not turn an extracted date into a verified legal deadline or infer
+a quantified debt from a document request.
+
+Review the missing-document candidates against this assignment. Remove unrelated
+general tax-intake questions; a notice does not by itself justify a CU request.
+Show the reviewed note first, then the extracted references. Keep all original
+sources and extraction records. Apply changes through the normal review contract,
+never by overwriting sealed outputs. Practice with new evidence uses a fresh run
+and retains the earlier notice assessment.

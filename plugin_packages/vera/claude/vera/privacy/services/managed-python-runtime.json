@@ -12,7 +12,9 @@
     "requirements-shared-core.txt",
     "requirements-shared-ocr.txt",
     "constraints-shared-macos-py312.txt",
-    "scripts/_python_bootstrap.py"
+    "scripts/_python_bootstrap.py",
+    "scripts/studio_archive_session.py",
+    "scripts/studio_archive_windows.ps1"
   ],
   "runtime_profiles": [
     "anthropic-cowork"
@@ -78,12 +80,21 @@
         "scripts/_shared_python_runtime.py"
       ],
       "on_violation": "A target creation or validation failure returns a bounded setup error and the requested helper is not run."
+    },
+    {
+      "id": "cowork-archive-session-bootstrap",
+      "control": "The Windows archive launcher probes a callable interpreter and package entrypoint without changing aliases, registry, execution policy or client folders. The archive helper checks package readability before setup and supplies an explicit task UUID to every managed archive command. Recovery requires reconnecting the selected existing archive root; tasks do not silently adopt each other's configuration. Diagnostics return bounded package/startup status rather than client documents.",
+      "implemented_by": [
+        "scripts/studio_archive_session.py",
+        "scripts/studio_archive_windows.ps1"
+      ],
+      "on_violation": "An unreadable package or invalid session stops before runtime setup and archive commands."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-15",
+    "reviewed_at": "2026-10-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "e7872db9e06f26b26c9cb8e9a24fb725847072f11a9a72702cf3f08122934291"
+    "source_fingerprint": "9d54991a53c2b113e714dcd807876919611ab34e8a4fb04d9e2914bba37fe3a2"
   }
 }

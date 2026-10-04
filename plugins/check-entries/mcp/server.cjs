@@ -31,6 +31,7 @@ const CHECK_ENTRIES_PLUGIN_IMPLEMENTATION_PATHS = [
 const CHECK_ENTRIES_SHARED_IMPLEMENTATION_PATHS = [
   "__init__.py",
   "contracts.py",
+  "jurisdiction.py",
   "decisions.py",
   "envelope.py",
   "money.py",
@@ -1775,7 +1776,7 @@ function readOnlyAssuredReviewArgs(inputArgs) {
     canonicalOutputDir: outputDir,
     failureMessage: CHECK_ENTRIES_AUTHORIZATION_FAILURE,
   });
-  const childPreflight = preflightWorkflowSpecificReviewApplication(outputDir);
+  const childPreflight = preflightWorkflowSpecificReviewApplication(outputDir, null, true);
   validatePreflightAcknowledgement(childPreflight, persistedAuthority);
   return authority.args;
 }
@@ -4605,10 +4606,12 @@ function preflightClientRun(outputDir, expectedRunId) {
 function preflightWorkflowSpecificReviewApplication(
   outputDir,
   canonicalOutputDir = null,
+  readOnly = false,
 ) {
   if (!outputDir) return { ok: true };
   const scriptPath = path.join(PLUGIN_ROOT, "scripts", "apply_review_edits.py");
   const args = [scriptPath, "--output-dir", outputDir, "--preflight-only"];
+  if (readOnly) args.push("--read-only");
   if (canonicalOutputDir) {
     args.push("--canonical-output-dir", canonicalOutputDir);
   }

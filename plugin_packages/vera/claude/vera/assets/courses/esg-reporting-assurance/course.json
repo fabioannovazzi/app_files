@@ -1,0 +1,390 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "esg-reporting-assurance",
+  "revision": "2026-10-01.1",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "esg_evidence_then_same_engagement_update"
+  },
+  "sources": [
+    {
+      "path": "modules/esg-reporting-assurance/assets/icon.svg",
+      "sha256": "e7b2c890fd0a8437ca10b98b72142282a5e878831799ab1245ba6e8b07dd1710"
+    },
+    {
+      "path": "modules/esg-reporting-assurance/requirements.txt",
+      "sha256": "117bb7857e2106917057761be56b51e26df4b9c0e3ebdbcf48a992e94534c6ac"
+    },
+    {
+      "path": "modules/esg-reporting-assurance/schemas/foundation.schema.json",
+      "sha256": "903dd3ebf227ca2b291d21c188517fb67367a0f28775f9df904811e5a4d834d4"
+    },
+    {
+      "path": "modules/esg-reporting-assurance/scripts/check_dependencies.py",
+      "sha256": "17de1d10843d23a6fc275755014b41c4e7734cb1f360aba6a131b4c1fdd3322a"
+    },
+    {
+      "path": "modules/esg-reporting-assurance/scripts/demo_esg.py",
+      "sha256": "5110dc79aee377d1d8e36759b644033b871509699ee93aecc7ed66ec9b889039"
+    },
+    {
+      "path": "modules/esg-reporting-assurance/scripts/esg_case.py",
+      "sha256": "9eb774ace8ea92e47f485094a34714e454ec6d4fe7d6f7f8bad8dba4d4b5120f"
+    },
+    {
+      "path": "modules/esg-reporting-assurance/skills/esg-reporting-assurance/SKILL.md",
+      "sha256": "825c1638c7c6b9fc2356f64c65fe52b8a0b4e83579e94f51c2800e37423bc769"
+    },
+    {
+      "path": "skills/esg-reporting-assurance/SKILL.md",
+      "sha256": "7283775f7503ead4581f4152bde53499b186386d306633f3991f2e0ab925d123"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/energy.csv",
+      "sha256": "d31e1687cd21d2753b47625bab1a9c218ecc689fa3610676dcc2852d87a08801",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/energy-update.csv",
+      "sha256": "dee2f73c6f041b1e12657ac5ed5af465bc1fc2ce76ef368cf62fa8c3ab64b415",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/brief-it.md",
+      "sha256": "31e6798a319a66cd9cca486fcf5f2013680cb22f9d3c2fa2f0c9ed35aa6dcb5d",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/brief-en.md",
+      "sha256": "e6ae9780275457616d867787a71fe5919942501628406d3626f2a0228e461bdb",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/brief-fr.md",
+      "sha256": "4a7cb2c87e49e28f0d7bde51b973d828a7952fec64fdf44cb7f2b3bb37c5026d",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/brief-de.md",
+      "sha256": "830ca9579d7878fa00588b387ae53d115adb9a356b4fa1c78ea7bb88c35a3041",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/brief-es.md",
+      "sha256": "e91a103c81489d36945160adfcb89c7bcf3023929c0b641f92ab10e15f7ed6c7",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/energy.csv",
+      "sha256": "b16ebb98d940b63902118aa938ad5880e2f9c70e6d02f8acb1b0316583439a70",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/energy-update.csv",
+      "sha256": "bb08862ed8fa1c0573f28f7ed9ad1366ea8b55c613c6814ab170e0dfd4af5297",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/brief-it.md",
+      "sha256": "7d75d602461b12c20e5a0b014304a0e13876062e2a574b6f0a5dee65c6b09f91",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/brief-en.md",
+      "sha256": "8b5ac9c00129b8e6426f82da554cfacd902974777233e77008b79069a08775f2",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/brief-fr.md",
+      "sha256": "61be23fe3ccd3d5adc9370a7cb1700346728c04383a72343934a6522be99910a",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/brief-de.md",
+      "sha256": "fdcfdb1c0cec0e4a15c8d5b1ebd483f7994bab5b5d4b45bb486af58ea5a91c9f",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/brief-es.md",
+      "sha256": "9513bfa0868dd56f3db95fd8a8244ba4114a35668bdfdbf721b374840c89702d",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Seguire evidenze e decisioni di un fascicolo ESG",
+      "goal": "Imparare a collegare un dato alla fonte, preparare una bozza parziale e riconoscere cosa richiede riesame dopo un aggiornamento.",
+      "scenario": "Caso interamente fittizio: Officina Selce, un solo sito e il consumo elettrico dichiarato per il 2026. Il dato iniziale è 0 kWh; una rettifica indica 15 kWh. Non è una misurazione certificata.",
+      "scope": "Fondazione documentale ESG in Cowork: una lezione scritta e interattiva in questa conversazione. Nessun report ESG completo, calcolo VSME/ESRS o tassonomia, conclusione di assurance, firma o invio.",
+      "inputs": "Leggi brief-it.md ed energy.csv. La prima cella numerica vale zero; la cella 2025 vuota significa dato non disponibile. Il sito escluso è dichiarato non applicabile solo in questo caso fittizio: il vuoto da solo non lo dimostra. Conserva energy-update.csv per il secondo passaggio.",
+      "request": "Vera, prepara il fascicolo fittizio di Officina Selce per il 2026. Collega i dati ai file, distingui zero, mancante e non applicabile, mostrami una decisione da rivedere e una bozza parziale. Poi acquisisci la rettifica da 0 a 15 kWh e mostrami cosa è diventato obsoleto.",
+      "steps": [
+        "Prepara un cliente didattico separato attraverso Studio Archive, importa brief ed energy.csv e avvia la funzione corrente. Concorda periodo, servizio preparation e base unresolved senza scegliere uno standard automaticamente. Crea il caso synthetic e collega le tre celle alle righe 1, 2 e 3 della colonna kwh.",
+        "Mostra originale, localizzatore, valore interpretato e motivazione. Prima di record_decision chiedi la decisione effettiva del partecipante su queste versioni e dipendenze. Se non la esprime, lasciala aperta. Una decisione simulata deve essere etichettata, mai attribuita al partecipante. Genera un memo partial_draft con dipendenze esatte, senza affermazioni di conformità.",
+        "Conserva il primo run. Importa energy-update.csv come nuova fonte immutabile e avvia un nuovo run nello stesso incarico, selezionando vecchi e nuovi input. start_case usa previous_context del primo run; bind_evidence mantiene lo stesso ID energy e registra 15. Apri resume_case: energy v1, decisione e bozza dipendenti sono obsolete, energy v2 è corrente; mancante e non applicabile restano distinti."
+      ],
+      "deliverables": [
+        "Stato esg_state.json con file, hash, celle, versioni, motivazioni, decisioni e dipendenze; bozze Markdown e JSON parziali.",
+        "Entrambi i contesti Studio Archive, fonti originali e storia, codex_run_review.md e rapporto leggibile sui dati letti dal modello. Sono risultati da eseguire nella sessione, non file già forniti."
+      ],
+      "review": "Controlla cliente, periodo, unità, perimetro e fonte. Zero è un valore dichiarato, non prova di consumo effettivamente nullo. Il mancante richiede raccolta; la non applicabilità richiede un motivo. Rivedi interpretazione e sufficienza; una rettifica rende obsolete le decisioni dipendenti, non le rinnova. Il nome dichiarato non è firma autenticata.",
+      "checkpoints": [
+        "Prima della decisione, ritrova le tre celle e spiega perché i due vuoti hanno stati diversi.",
+        "Dopo la rettifica, mostra la versione corrente e la vecchia decisione/bozza conservate; indica cosa va riesaminato."
+      ],
+      "practice": "Con meno guida, usa files/practice/ in un nuovo cliente didattico: Laboratorio Quarzo dichiara 8 kWh, poi 12. Chiedi il fascicolo, distingui i due vuoti, prepara la prima bozza e acquisisci la rettifica nello stesso incarico. Conserva il demo; esprimi tu la decisione o lasciala aperta.",
+      "success": "Nel demo ritrovi 0 e poi 15 kWh; nella pratica 8 e poi 12. I vecchi file e la storia restano leggibili, la decisione e la bozza dipendenti richiedono riesame. I due null mantengono stati diversi e nessun report completo o opinione è approvato.",
+      "repeat": "Per ripetere, seleziona cliente, incarico, periodo e soli CSV/testi pertinenti; fornisci una richiesta e rivedi fonti e interpretazioni. Gli aggiornamenti entrano come nuovi input nello stesso incarico. La guida breve mira a 5–8 minuti, elaborazione e pratica possono proseguire. File e progressi restano locali; ciò che il modello legge entra nel suo contesto, senza anonimizzazione automatica."
+    },
+    "en": {
+      "title": "Track evidence and decisions in an ESG case",
+      "goal": "Learn to trace a value to its source, prepare a partial draft and identify what needs review after an update.",
+      "scenario": "Entirely fictional: Officina Selce, one site and declared 2026 electricity use. The initial value is 0 kWh; a correction states 15 kWh. No certified measurement.",
+      "scope": "ESG evidence foundation in Cowork: an interactive written lesson in this conversation. No complete ESG report, VSME/ESRS or taxonomy calculation, assurance opinion, signing or sending.",
+      "inputs": "Read brief-en.md and energy.csv. The first numeric cell is zero; the blank 2025 cell is not available. The excluded site is declared not applicable for this fictional case only; a blank alone does not establish that. Keep energy-update.csv for the next step.",
+      "request": "Vera, prepare the fictional 2026 Officina Selce case. Bind values to files, distinguish zero, missing and not applicable, show a decision for review and a partial draft. Then import the correction from 0 to 15 kWh and show what became outdated.",
+      "steps": [
+        "Use Studio Archive to prepare a separate tutorial client, import the brief and energy.csv and start the current workflow. Agree period, service preparation and reporting basis unresolved without automatically selecting a standard. Start a synthetic case and bind rows 1, 2 and 3 of column kwh.",
+        "Show the original, locator, interpreted value and rationale. Before record_decision ask for the participant’s actual decision on these exact versions and dependencies. Leave it open if none is given. Label any simulation; never attribute it to the participant. Build a partial_draft memo with exact dependencies and no compliance claim.",
+        "Preserve the first run. Import energy-update.csv as a new immutable source and start a successor in the same engagement selecting old and new inputs. start_case uses the first previous_context; bind_evidence keeps logical ID energy and records 15. Open resume_case: energy v1 and dependent decision/draft are outdated, energy v2 is current; missing and not applicable remain distinct."
+      ],
+      "deliverables": [
+        "esg_state.json with files, hashes, cells, versions, rationales, decisions and dependencies; partial Markdown and JSON drafts.",
+        "Both Studio Archive contexts, originals and history, codex_run_review.md and the readable report of actual model reads. These are outputs to execute now, not supplied results."
+      ],
+      "review": "Check client, period, unit, scope and source. Declared zero does not prove actual zero consumption. Missing needs collection; not applicable needs a reason. Review interpretation and sufficiency. A correction invalidates dependent decisions without renewing them. A declared name is not an authenticated signature.",
+      "checkpoints": [
+        "Before deciding, locate all three cells and explain why the two blanks have different statuses.",
+        "After updating, show the current version and preserved old decision/draft; identify what needs review."
+      ],
+      "practice": "With less guidance, use files/practice/ in a fresh tutorial client: Laboratorio Quarzo declares 8 kWh, then 12. Request the case, distinguish both blanks, prepare the initial draft and import the correction in the same engagement. Preserve the demo. Give your own decision or leave it open.",
+      "success": "Find 0 then 15 kWh in the demo and 8 then 12 in practice. Original files and history remain readable; dependent decision/draft need review. The two null values retain distinct statuses and no complete report or opinion is approved.",
+      "repeat": "Repeat by selecting client, engagement, period and relevant CSV/text files; state the request and review sources and interpretations. Updates are new inputs in the same engagement. The short guide targets 5–8 minutes; processing and practice may extend it. Files and progress stay local; model reads enter its context without automatic anonymisation."
+    },
+    "fr": {
+      "title": "Suivre les preuves et décisions d’un dossier ESG",
+      "goal": "Relier une valeur à sa source, préparer un brouillon partiel et repérer les éléments à réexaminer après une mise à jour.",
+      "scenario": "Cas entièrement fictif : Officina Selce, un site et une consommation électrique déclarée pour 2026. Valeur initiale 0 kWh, correction 15 kWh. Aucune mesure certifiée.",
+      "scope": "Fondation documentaire ESG dans Cowork : une leçon écrite interactive dans cette conversation. Aucun rapport ESG complet, calcul VSME/ESRS ou taxonomie, avis d’assurance, signature ou envoi.",
+      "inputs": "Lisez brief-fr.md et energy.csv. La première valeur est zéro ; la cellule 2025 vide est indisponible. Le site exclu est déclaré non applicable dans ce seul cas fictif ; le vide ne le prouve pas. Gardez energy-update.csv pour la suite.",
+      "request": "Vera, préparez le dossier fictif Officina Selce pour 2026. Reliez les valeurs aux fichiers, distinguez zéro, manquant et non applicable, présentez une décision à examiner et un brouillon partiel. Importez ensuite la correction de 0 à 15 kWh et montrez ce qui devient obsolète.",
+      "steps": [
+        "Préparez un client pédagogique séparé avec Studio Archive, importez la note et energy.csv et démarrez la fonction courante. Convenez de la période, du service preparation et de la base unresolved sans choisir automatiquement une norme. Créez le cas synthetic et liez les lignes 1, 2 et 3 de la colonne kwh.",
+        "Montrez original, localisation, interprétation et motif. Avant record_decision, demandez la décision réelle du participant sur ces versions et dépendances. Sans réponse, laissez-la ouverte. Toute simulation doit être étiquetée et jamais attribuée au participant. Produisez un memo partial_draft avec dépendances exactes, sans conformité déclarée.",
+        "Conservez le premier run. Importez energy-update.csv comme nouvelle source immuable et démarrez un run suivant dans la même mission avec anciens et nouveaux fichiers. start_case utilise le previous_context initial ; bind_evidence garde l’ID energy et inscrit 15. Dans resume_case, energy v1 et décision/brouillon dépendants sont obsolètes ; energy v2 est courant. Manquant et non applicable restent distincts."
+      ],
+      "deliverables": [
+        "esg_state.json : fichiers, empreintes, cellules, versions, motifs, décisions et dépendances ; brouillons partiels Markdown et JSON.",
+        "Les deux contextes Studio Archive, originaux et historique, codex_run_review.md et rapport lisible des lectures réelles du modèle. À produire dans la session, pas des résultats fournis."
+      ],
+      "review": "Vérifiez client, période, unité, périmètre et source. Zéro déclaré ne prouve pas une consommation réellement nulle. Manquant nécessite collecte ; non applicable nécessite justification. Examinez interprétation et suffisance. Une correction invalide les décisions dépendantes sans les renouveler. Un nom déclaré n’est pas une signature authentifiée.",
+      "checkpoints": [
+        "Avant la décision, retrouvez les trois cellules et expliquez les deux statuts des valeurs vides.",
+        "Après correction, montrez version courante et ancienne décision/brouillon conservés ; indiquez quoi réexaminer."
+      ],
+      "practice": "Avec moins d’aide, utilisez files/practice/ dans un nouveau client pédagogique : Laboratorio Quarzo déclare 8 puis 12 kWh. Demandez le dossier, distinguez les vides, préparez le premier brouillon puis importez la correction dans la même mission. Conservez la démonstration. Exprimez votre décision ou laissez-la ouverte.",
+      "success": "Retrouvez 0 puis 15 kWh dans la démonstration, 8 puis 12 dans la pratique. Originaux et historique restent lisibles ; décision/brouillon dépendants demandent réexamen. Les deux null gardent des statuts distincts ; aucun rapport complet ou avis n’est approuvé.",
+      "repeat": "Pour répéter, choisissez client, mission, période et CSV/textes pertinents ; formulez la demande et examinez sources et interprétations. Les mises à jour sont de nouveaux fichiers de la même mission. Guide bref de 5–8 minutes, traitement et pratique peuvent prolonger. Fichiers et progression restent locaux ; les lectures du modèle entrent dans son contexte sans anonymisation automatique."
+    },
+    "de": {
+      "title": "Belege und Entscheidungen einer ESG-Akte verfolgen",
+      "goal": "Einen Wert zur Quelle zurückverfolgen, einen Teilentwurf erstellen und nach Änderungen den Prüfbedarf erkennen.",
+      "scenario": "Vollständig fiktiv: Officina Selce, ein Standort und erklärter Stromverbrauch 2026. Zuerst 0 kWh, Korrektur 15 kWh. Keine zertifizierte Messung.",
+      "scope": "ESG-Beleggrundlage in Cowork: eine interaktive schriftliche Lektion in diesem Gespräch. Kein vollständiger ESG-Bericht, VSME/ESRS- oder Taxonomieberechnung, Prüfungsurteil, Signieren oder Senden.",
+      "inputs": "Lesen Sie brief-de.md und energy.csv. Der erste Wert ist null; die leere Zelle 2025 bedeutet nicht verfügbar. Der ausgeschlossene Standort ist nur für diesen fiktiven Fall als nicht anwendbar erklärt; eine leere Zelle beweist das nicht. Halten Sie energy-update.csv zurück.",
+      "request": "Vera, bereiten Sie die fiktive ESG-Akte Officina Selce 2026 vor. Verknüpfen Sie Werte mit Dateien, unterscheiden Sie null, fehlend und nicht anwendbar und zeigen Sie eine Entscheidung zur Prüfung und einen Teilentwurf. Importieren Sie dann die Korrektur von 0 auf 15 kWh und zeigen Sie veraltete Arbeit.",
+      "steps": [
+        "Bereiten Sie mit Studio Archive einen getrennten Übungsmandanten vor, importieren Sie Hinweis und energy.csv und starten Sie die aktuelle Funktion. Vereinbaren Sie Zeitraum, Service preparation und Basis unresolved ohne automatische Normwahl. Starten Sie einen synthetic-Fall und binden Sie Zeilen 1, 2, 3 der Spalte kwh.",
+        "Zeigen Sie Original, Fundstelle, Auslegung und Grund. Vor record_decision fragen Sie nach der tatsächlichen Entscheidung des Teilnehmers zu diesen Versionen und Abhängigkeiten. Ohne Antwort bleibt sie offen. Simulationen kennzeichnen, niemals dem Teilnehmer zuschreiben. Erstellen Sie einen partial_draft-Memo mit exakten Abhängigkeiten ohne Konformitätsaussage.",
+        "Bewahren Sie den ersten Run. Importieren Sie energy-update.csv als neue unveränderliche Quelle und starten Sie einen Folge-Run im selben Auftrag mit alten und neuen Eingaben. start_case nutzt den ersten previous_context; bind_evidence behält ID energy und erfasst 15. In resume_case sind energy v1 und abhängige Entscheidung/Entwurf veraltet; energy v2 ist aktuell. Fehlend und nicht anwendbar bleiben getrennt."
+      ],
+      "deliverables": [
+        "esg_state.json mit Dateien, Hashes, Zellen, Versionen, Gründen, Entscheidungen und Abhängigkeiten; Markdown/JSON-Teilentwürfe.",
+        "Beide Studio-Archive-Kontexte, Originale und Verlauf, codex_run_review.md und lesbarer Bericht tatsächlicher Modellzugriffe. In dieser Sitzung erzeugen, keine mitgelieferten Ergebnisse."
+      ],
+      "review": "Prüfen Sie Mandant, Zeitraum, Einheit, Umfang und Quelle. Erklärte null beweist keinen tatsächlichen Nullverbrauch. Fehlend erfordert Beschaffung; nicht anwendbar eine Begründung. Auslegung und Angemessenheit prüfen. Eine Korrektur entwertet abhängige Entscheidungen, erneuert sie aber nicht. Ein erklärter Name ist keine authentifizierte Signatur.",
+      "checkpoints": [
+        "Vor der Entscheidung die drei Zellen finden und die verschiedenen Status der leeren Werte erklären.",
+        "Nach Änderung aktuelle Version und erhaltene alte Entscheidung/Entwurf zeigen; Prüfbedarf benennen."
+      ],
+      "practice": "Mit weniger Anleitung files/practice/ in einem neuen Übungsmandanten nutzen: Laboratorio Quarzo erklärt 8, dann 12 kWh. Akte anfordern, leere Werte unterscheiden, ersten Entwurf erstellen und Korrektur im selben Auftrag importieren. Demo bewahren. Eigene Entscheidung ausdrücken oder offenlassen.",
+      "success": "Im Demo 0 dann 15 kWh finden, in der Übung 8 dann 12. Originale und Verlauf bleiben lesbar; abhängige Entscheidung/Entwurf brauchen Prüfung. Beide null-Werte behalten unterschiedliche Status; kein vollständiger Bericht oder Urteil ist genehmigt.",
+      "repeat": "Wiederholen mit Mandant, Auftrag, Zeitraum und relevanten CSV/Textdateien; Auftrag formulieren und Quellen/Auslegung prüfen. Änderungen sind neue Eingaben desselben Auftrags. Kurze Anleitung 5–8 Minuten, Verarbeitung und Übung können länger dauern. Dateien/Fortschritt bleiben lokal; Modellzugriffe gelangen ohne automatische Anonymisierung in seinen Kontext."
+    },
+    "es": {
+      "title": "Seguir pruebas y decisiones de un expediente ESG",
+      "goal": "Relacionar un valor con su fuente, preparar un borrador parcial e identificar qué debe revisarse después de una actualización.",
+      "scenario": "Caso totalmente ficticio: Officina Selce, un centro y consumo eléctrico declarado de 2026. Primero 0 kWh; corrección 15 kWh. Ninguna medición certificada.",
+      "scope": "Base documental ESG en Cowork: lección escrita e interactiva en esta conversación. Ningún informe ESG completo, cálculo VSME/ESRS o taxonomía, opinión de assurance, firma o envío.",
+      "inputs": "Lea brief-es.md y energy.csv. El primer valor es cero; la celda 2025 vacía significa no disponible. El centro excluido se declara no aplicable solo en este caso ficticio; el vacío no lo prueba. Reserve energy-update.csv para el siguiente paso.",
+      "request": "Vera, prepare el expediente ficticio Officina Selce 2026. Relacione valores con archivos, distinga cero, ausente y no aplicable, muestre una decisión para revisar y un borrador parcial. Importe después la corrección de 0 a 15 kWh y muestre qué queda obsoleto.",
+      "steps": [
+        "Prepare un cliente didáctico separado mediante Studio Archive, importe la nota y energy.csv e inicie la función actual. Acuerde período, servicio preparation y base unresolved sin elegir una norma automáticamente. Cree el caso synthetic y vincule filas 1, 2 y 3 de kwh.",
+        "Muestre original, localizador, interpretación y motivo. Antes de record_decision pida la decisión real del participante sobre estas versiones y dependencias. Sin respuesta, déjela abierta. Toda simulación debe etiquetarse y nunca atribuirse al participante. Prepare memo partial_draft con dependencias exactas sin afirmar conformidad.",
+        "Conserve el primer run. Importe energy-update.csv como nueva fuente inmutable e inicie otro run del mismo encargo con entradas antiguas y nuevas. start_case usa el primer previous_context; bind_evidence conserva ID energy y registra 15. En resume_case, energy v1 y decisión/borrador dependientes quedan obsoletos; energy v2 es actual. Ausente y no aplicable siguen separados."
+      ],
+      "deliverables": [
+        "esg_state.json con archivos, hashes, celdas, versiones, motivos, decisiones y dependencias; borradores parciales Markdown y JSON.",
+        "Ambos contextos Studio Archive, originales e historial, codex_run_review.md e informe legible de lecturas reales del modelo. Se ejecutan en esta sesión, no son resultados suministrados."
+      ],
+      "review": "Compruebe cliente, período, unidad, alcance y fuente. Cero declarado no prueba consumo realmente nulo. Ausente exige recopilación; no aplicable exige motivo. Revise interpretación y suficiencia. Una corrección invalida decisiones dependientes sin renovarlas. Un nombre declarado no es firma autenticada.",
+      "checkpoints": [
+        "Antes de decidir, encuentre las tres celdas y explique los distintos estados de los dos vacíos.",
+        "Tras corregir, muestre versión actual y decisión/borrador anteriores conservados; identifique qué revisar."
+      ],
+      "practice": "Con menos guía, use files/practice/ en otro cliente didáctico: Laboratorio Quarzo declara 8 y después 12 kWh. Pida el expediente, distinga vacíos, prepare primer borrador e importe corrección en el mismo encargo. Conserve demo. Exprese su decisión o déjela abierta.",
+      "success": "Encuentre 0 y luego 15 kWh en demo, 8 y luego 12 en práctica. Originales e historial siguen legibles; decisión/borrador dependientes necesitan revisión. Ambos null mantienen estados distintos; ningún informe completo u opinión está aprobado.",
+      "repeat": "Repita seleccionando cliente, encargo, período y CSV/textos pertinentes; formule petición y revise fuentes e interpretaciones. Cambios son entradas nuevas del mismo encargo. Guía breve de 5–8 minutos; procesamiento y práctica pueden prolongar. Archivos/progreso quedan locales; las lecturas del modelo entran en su contexto sin anonimización automática."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "c14f8971ba21d79371418fa8dc8809e0d477a5d6564bf8ad6b48073aed71e10d"
+}

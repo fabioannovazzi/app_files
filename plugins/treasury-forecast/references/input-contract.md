@@ -1,7 +1,7 @@
 # Treasury input contract v1
 
 Provide six comma-delimited UTF-8 CSV files, or XLSX sheets with these exact
-headers and order. Dates are ISO YYYY-MM-DD or native Excel dates. Money is EUR
+headers and order. Dates are ISO YYYY-MM-DD or native Excel dates. Money uses one explicit reporting currency, EUR or CHF,
 decimal text with a point and at most two decimal places; native Excel numeric
 money is accepted when exactly representable at cent precision. IDs are text
 cells; formulas, ambiguous separators, duplicate keys and ragged rows are rejected.

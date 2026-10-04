@@ -3,146 +3,353 @@
     "archiveOrganizationWidgets": {
       "title": "Vera · Riordino archivio",
       "description": "Validate, render, save, and compile review decisions for a client-folder organization plan.",
-      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": [
+            "24x24"
+          ]
+        }
+      ],
       "cwd": ".",
       "command": "node",
-      "args": ["./scripts/run_component_mcp.cjs", "archive-organization"]
+      "args": [
+        "./scripts/run_component_mcp.cjs",
+        "archive-organization"
+      ]
     },
     "openItemReconciliationWidgets": {
       "title": "Riconciliazione partite aperte",
       "description": "Validate and render Open-item Reconciliation review-session payloads.",
-      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": [
+            "24x24"
+          ]
+        }
+      ],
       "cwd": ".",
       "command": "node",
-      "args": ["./scripts/run_component_mcp.cjs", "open-item-reconciliation"]
+      "args": [
+        "./scripts/run_component_mcp.cjs",
+        "open-item-reconciliation"
+      ]
     },
     "newClientFilePreparation": {
       "title": "New Client · File Preparation",
       "description": "Validate, render, save, and apply document-preparation decisions for the first phase of New Client.",
-      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": [
+            "24x24"
+          ]
+        }
+      ],
       "cwd": ".",
       "command": "node",
-      "args": ["./scripts/run_component_mcp.cjs", "client-file-preparation"]
+      "args": [
+        "./scripts/run_component_mcp.cjs",
+        "client-file-preparation"
+      ]
     },
     "newClientProfessionalSetup": {
       "title": "New Client · Professional Setup",
       "description": "Validate, render, save, and apply source-bound professional decisions for the later phases of New Client.",
-      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": [
+            "24x24"
+          ]
+        }
+      ],
       "cwd": ".",
       "command": "node",
-      "args": ["./scripts/run_component_mcp.cjs", "new-client"]
+      "args": [
+        "./scripts/run_component_mcp.cjs",
+        "new-client"
+      ]
     },
     "journalSamplingWidgets": {
       "title": "Journal Sampling",
-      "description": "Validate and render Journal Sampling review-session payloads.",
-      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "description": "Review an already prepared accounting journal sample (campione di scritture): validate its review payload, inspect diagnostics and persist reviewed decisions. Source qualification and sample extraction use the journal-sampling workflow.",
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": [
+            "24x24"
+          ]
+        }
+      ],
       "cwd": ".",
       "command": "node",
-      "args": ["./scripts/run_component_mcp.cjs", "journal-sampling"]
+      "args": [
+        "./scripts/run_component_mcp.cjs",
+        "journal-sampling"
+      ]
     },
     "checkEntriesWidgets": {
       "title": "Check Entries",
-      "description": "Validate and render Check Entries review-session payloads.",
-      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "description": "Review document checks for an already qualified journal sample against invoices and supporting PDFs (verifica documentale): inspect coverage, exceptions and missing evidence, then persist reviewed decisions. Not a whole-population invoice audit.",
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": [
+            "24x24"
+          ]
+        }
+      ],
       "cwd": ".",
       "command": "node",
-      "args": ["./scripts/run_component_mcp.cjs", "check-entries"]
+      "args": [
+        "./scripts/run_component_mcp.cjs",
+        "check-entries"
+      ]
     },
     "journalBankWidgets": {
       "title": "Journal-Bank Reconciliation",
-      "description": "Validate and render Journal-Bank Reconciliation review-session payloads.",
-      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "description": "Review an already prepared bank-to-journal reconciliation (estratti conto versus prima nota): inspect matched movements, unmatched rows and residuals, then persist decisions. Intake and matching use the journal-bank-reconciliation workflow.",
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": [
+            "24x24"
+          ]
+        }
+      ],
       "cwd": ".",
       "command": "node",
-      "args": ["./scripts/run_component_mcp.cjs", "journal-bank-reconciliation"]
+      "args": [
+        "./scripts/run_component_mcp.cjs",
+        "journal-bank-reconciliation"
+      ]
     },
     "varianceAnalysisWidgets": {
       "title": "Vera · Analisi degli scostamenti",
       "description": "Validate, render, save, and apply review decisions for accounting variance calculations and plots.",
-      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": [
+            "24x24"
+          ]
+        }
+      ],
       "cwd": ".",
       "command": "node",
-      "args": ["./scripts/run_component_mcp.cjs", "variance-analysis"]
+      "args": [
+        "./scripts/run_component_mcp.cjs",
+        "variance-analysis"
+      ]
     },
     "financialAnalysisContracts": {
       "title": "Vera Financial Analysis",
       "description": "Describe Vera's registered accounting-analysis and financial due-diligence packs, contracts, and reviewed registers.",
-      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": [
+            "24x24"
+          ]
+        }
+      ],
       "cwd": ".",
       "command": "node",
-      "args": ["./scripts/run_component_mcp.cjs", "financial-analysis"]
+      "args": [
+        "./scripts/run_component_mcp.cjs",
+        "financial-analysis"
+      ]
     },
     "veraSalesPlan": {
       "title": "Vera Plan",
       "description": "Describe the reviewed Actual-to-Plan workflow and its deterministic artifacts.",
-      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": [
+            "24x24"
+          ]
+        }
+      ],
       "cwd": ".",
       "command": "node",
-      "args": ["./scripts/run_component_mcp.cjs", "sales-plan"]
+      "args": [
+        "./scripts/run_component_mcp.cjs",
+        "sales-plan"
+      ]
     },
     "reportBuilderWidgets": {
       "title": "Build Report",
       "description": "Validate and render Build Report review-session payloads.",
-      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": [
+            "24x24"
+          ]
+        }
+      ],
       "cwd": ".",
       "command": "node",
-      "args": ["./scripts/run_component_mcp.cjs", "report-builder"]
+      "args": [
+        "./scripts/run_component_mcp.cjs",
+        "report-builder"
+      ]
     },
     "concordatoPlanReviewWidgets": {
       "title": "Revisione Piano Concordato",
       "description": "Validate and render Concordato Plan Review payloads.",
-      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": [
+            "24x24"
+          ]
+        }
+      ],
       "cwd": ".",
       "command": "node",
-      "args": ["./scripts/run_component_mcp.cjs", "concordato-plan-review"]
+      "args": [
+        "./scripts/run_component_mcp.cjs",
+        "concordato-plan-review"
+      ]
     },
     "promptOptimizerWidgets": {
       "title": "Plan Answer",
       "description": "Validate and render Legal/Tax Answer Planner review-session payloads.",
-      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": [
+            "24x24"
+          ]
+        }
+      ],
       "cwd": ".",
       "command": "node",
-      "args": ["./scripts/run_component_mcp.cjs", "prompt-optimizer"]
+      "args": [
+        "./scripts/run_component_mcp.cjs",
+        "prompt-optimizer"
+      ]
     },
     "deepResearchValidatorWidgets": {
       "title": "Validate Answer",
       "description": "Validate and render Deep Research review-session payloads.",
-      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": [
+            "24x24"
+          ]
+        }
+      ],
       "cwd": ".",
       "command": "node",
-      "args": ["./scripts/run_component_mcp.cjs", "deep-research-validator"]
+      "args": [
+        "./scripts/run_component_mcp.cjs",
+        "deep-research-validator"
+      ]
     },
     "previdenzaInpsReview": {
       "title": "Previdenza INPS Review",
       "description": "Validate, render, save, and apply Previdenza INPS review decisions.",
-      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": [
+            "24x24"
+          ]
+        }
+      ],
       "cwd": ".",
       "command": "node",
-      "args": ["./scripts/run_component_mcp.cjs", "previdenza-inps"]
+      "args": [
+        "./scripts/run_component_mcp.cjs",
+        "previdenza-inps"
+      ]
     },
     "registroImpreseSariReview": {
       "title": "Registro Imprese e SARI Review",
       "description": "Validate, render, save, and apply a source-backed Registro Imprese/DIRE practice review.",
-      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": [
+            "24x24"
+          ]
+        }
+      ],
       "cwd": ".",
       "command": "node",
-      "args": ["./scripts/run_component_mcp.cjs", "registro-imprese-sari"]
+      "args": [
+        "./scripts/run_component_mcp.cjs",
+        "registro-imprese-sari"
+      ]
     },
     "bilancioXbrlIt": {
       "title": "Bilancio intelligente",
       "description": "Prepare Italian OIC annual accounts intelligently; XBRL is the final deterministic export.",
-      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": [
+            "24x24"
+          ]
+        }
+      ],
       "cwd": ".",
       "command": "node",
-      "args": ["./scripts/run_component_mcp.cjs", "bilancio-xbrl-it"]
+      "args": [
+        "./scripts/run_component_mcp.cjs",
+        "bilancio-xbrl-it"
+      ]
     },
     "veraStudioArchive": {
       "title": "Vera · Archivio dello Studio",
       "description": "Configure, refresh, search, and verify a private local archive index, plus plan and validate client-scoped Gmail retrieval.",
-      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": [
+            "24x24"
+          ]
+        }
+      ],
       "cwd": ".",
       "command": "node",
-      "args": ["./scripts/run_component_mcp.cjs", "studio-archive"]
+      "args": [
+        "./scripts/run_component_mcp.cjs",
+        "studio-archive"
+      ]
+    },
+    "courseChats": {
+      "title": "Vera · Corsi",
+      "description": "Open or resume the paired working chat for local courses.",
+      "cwd": ".",
+      "command": "node",
+      "args": [
+        "./scripts/course_chat_mcp.cjs"
+      ]
     }
   }
 }

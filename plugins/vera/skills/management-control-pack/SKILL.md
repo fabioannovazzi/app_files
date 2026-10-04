@@ -1,7 +1,18 @@
 ---
 name: management-control-pack
-description: Use when Vera must prepare one connectorless management-control pack from reviewed accounting, Budget, remaining-month Forecast, open-item, bank, and sales exports.
+description: Prepara il controllo di gestione da export contabili oppure analizza costi e margini per commessa, prodotto o cliente, con Direct, Direct Evoluto, Full o ABC e scenari decisionali riveduti. Include P&L, budget/forecast, aging e cassa quando pertinenti. Per i soli scostamenti usa variance-analysis.
 ---
+
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+## Connected studio knowledge
+
+When the user or an adopted studio instruction requests relevant repository
+evidence, read `../vera/references/connected-studio-knowledge.md` before the
+dependent work, including direct specialist invocation. Use only callable host
+search/read tools; preserve citations and this workflow's qualification gates.
+Without a repository, continue ordinary work. Studio skills remain independently
+invoked by the user; Vera does not dispatch them.
+<!-- VERA_CONNECTED_KNOWLEDGE_END -->
 
 <!-- VERA_OPENAI_ONBOARDING_BEGIN -->
 Onboarding is optional. Continue ordinary professional work immediately,
@@ -28,3 +39,7 @@ completely and follow it. Treat the resolved module root as the plugin working
 directory for dependency checks and helper commands.
 
 For budget monitoring and a client report through Sites, use the resolved module's budget/forecast and Sites delivery instructions. This is distinct from preparing a business plan.
+
+For a focused costing question, follow that module's `references/costing.md`.
+Keep the same workflow identity and archive run, select only relevant methods,
+and preserve the normal calculation, commentary and disclosure receipts.

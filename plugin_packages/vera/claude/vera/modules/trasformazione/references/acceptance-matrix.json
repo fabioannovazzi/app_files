@@ -1,0 +1,422 @@
+{
+  "schema_version": 1,
+  "source_sha256": "70f1700fd3351d5c86d3b68a80db4a52e50fce8de6d16e5b5e1e3f7d8eb291dd",
+  "professional_validation": false,
+  "test_execution_evidence": "See task verification report; test references are not a pass claim.",
+  "cases": [
+    {
+      "id": "T01",
+      "scenario": "SNC in SRL",
+      "expected": "Attivare stima, quote, responsabilità e fiscalità",
+      "rule_id": "R02",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T02",
+      "scenario": "Voto utili diverso da capitale",
+      "expected": "Non copiare quota capitale nel quorum",
+      "rule_id": "R02",
+      "status": "implemented_mechanical_subset",
+      "implementation_test": "tests/plugins/test_trasformazione.py::test_capital_vote_and_profit_rights_remain_distinct",
+      "scope": "Separate rights stored; no legal quorum selected."
+    },
+    {
+      "id": "T03",
+      "scenario": "Contratto con clausola speciale",
+      "expected": "Leggere clausola prima del quorum ordinario",
+      "rule_id": "R02",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T04",
+      "scenario": "Socio dissenziente",
+      "expected": "Registrare recesso e conseguenze da risolvere",
+      "rule_id": "R02",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T05",
+      "scenario": "SPA e documentazione2343ter",
+      "expected": "Verificare ammissibilità alternativa alla perizia2343",
+      "rule_id": "R02",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T06",
+      "scenario": "Perizia mancante",
+      "expected": "Bloccare capitale; proseguire raccolta indipendente",
+      "rule_id": "R02",
+      "status": "implemented_mechanical_subset",
+      "implementation_test": "tests/plugins/test_trasformazione.py::test_missing_valuation_blocks_only_dependent_branch",
+      "scope": "Explicit dependencies isolate missing valuation."
+    },
+    {
+      "id": "T07",
+      "scenario": "Capitale superiore al netto stimato",
+      "expected": "Segnalare insufficienza",
+      "rule_id": "R11",
+      "status": "implemented_mechanical_subset",
+      "implementation_test": "tests/plugins/test_trasformazione.py::test_unqualified_or_unreconciled_calculations_are_rejected",
+      "scope": "Arithmetic coverage only, not legal capital adequacy."
+    },
+    {
+      "id": "T08",
+      "scenario": "Socio d'opera senza quota",
+      "expected": "Non assegnare zero; acquisire titolo accordo o giudice",
+      "rule_id": "R03",
+      "status": "implemented_mechanical_subset",
+      "implementation_test": "tests/plugins/test_trasformazione.py::test_unqualified_or_unreconciled_calculations_are_rejected",
+      "scope": "Unknown work share rejected as an arithmetic operand."
+    },
+    {
+      "id": "T09",
+      "scenario": "Quote sommano99%",
+      "expected": "Rifiutare quadratura",
+      "rule_id": "R03",
+      "status": "implemented_mechanical_subset",
+      "implementation_test": "tests/plugins/test_trasformazione.py::test_unqualified_or_unreconciled_calculations_are_rejected",
+      "scope": "Exact shares must sum to one."
+    },
+    {
+      "id": "T10",
+      "scenario": "Usufrutto o pegno",
+      "expected": "Distinguere titolo e diritti",
+      "rule_id": "R03",
+      "status": "implemented_mechanical_subset",
+      "implementation_test": "tests/plugins/test_trasformazione.py::test_capital_vote_and_profit_rights_remain_distinct",
+      "scope": "Title and separate rights preserved; no legal interpretation."
+    },
+    {
+      "id": "T11",
+      "scenario": "Creditore senza ricevuta",
+      "expected": "Non far partire termine quinquies",
+      "rule_id": "R04",
+      "status": "implemented_mechanical_subset",
+      "implementation_test": "tests/plugins/test_trasformazione.py::test_unknown_required_receipt_blocks_without_inferred_deadline",
+      "scope": "Missing explicitly required receipt blocks; no term engine."
+    },
+    {
+      "id": "T12",
+      "scenario": "Diniego creditore",
+      "expected": "Non liberare socio per solo decorso",
+      "rule_id": "R04",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T13",
+      "scenario": "Garanzia personale",
+      "expected": "Non cancellare automaticamente",
+      "rule_id": "R04",
+      "status": "implemented_mechanical_subset",
+      "implementation_test": "tests/plugins/test_trasformazione.py::test_unknown_required_receipt_blocks_without_inferred_deadline",
+      "scope": "Personal guarantee remains an independent field."
+    },
+    {
+      "id": "T14",
+      "scenario": "Regressiva senza consenso nuovo illimitato",
+      "expected": "Bloccare delibera proposta",
+      "rule_id": "R05",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T15",
+      "scenario": "SRL in SAS",
+      "expected": "Distinguere accomandatari e accomandanti",
+      "rule_id": "R05",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T16",
+      "scenario": "Relazione regressiva mancante",
+      "expected": "Segnalare adempimento e termine",
+      "rule_id": "R05",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T17",
+      "scenario": "SPA in SRL",
+      "expected": "Non importare automaticamente perizia2500ter e separazione fiscale",
+      "rule_id": "R01",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T18",
+      "scenario": "SNC in SAS",
+      "expected": "Verificare regole proprie e responsabilità",
+      "rule_id": "R01",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T19",
+      "scenario": "Eterogenea2/3 dei presenti",
+      "expected": "Verificare aventi diritto non solo presenti",
+      "rule_id": "R06",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T20",
+      "scenario": "Comunione senza unanimità",
+      "expected": "Bloccare schema ordinario",
+      "rule_id": "R06",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T21",
+      "scenario": "Associazione con contributi pubblici",
+      "expected": "Verificare limite2500octies e disciplina speciale",
+      "rule_id": "R06",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T22",
+      "scenario": "Fondazione verso capitali",
+      "expected": "Acquisire percorso autorità competente",
+      "rule_id": "R06",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T23",
+      "scenario": "Eterogenea iscritta ieri",
+      "expected": "Non dichiarare subito efficace senza eccezioni provate",
+      "rule_id": "R06",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T24",
+      "scenario": "Opposizione pendente",
+      "expected": "Richiedere esito e valutazione",
+      "rule_id": "R06",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T25",
+      "scenario": "Progressiva riserva già tassata",
+      "expected": "Verificare origine ed esposizione in bilancio",
+      "rule_id": "R07",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T26",
+      "scenario": "Regressiva origine riserva assente",
+      "expected": "Analizzare comma4b e5; non rinviare sempre a distribuzione",
+      "rule_id": "R07",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T27",
+      "scenario": "Riserva sospensione",
+      "expected": "Acquisire norma generatrice",
+      "rule_id": "R07",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T28",
+      "scenario": "Cambio IRES/nonIRES",
+      "expected": "Aprire analisi frazione e conto economico",
+      "rule_id": "R07",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T29",
+      "scenario": "Bene rimasto aziendale",
+      "expected": "Non applicare automaticamente realizzo",
+      "rule_id": "R08",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T30",
+      "scenario": "Bene uscito impresa",
+      "expected": "Qualificare presupposto e tributi separati",
+      "rule_id": "R08",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T31",
+      "scenario": "Ente non commerciale verso capitali",
+      "expected": "Distinguere azienda e beni extraziendali",
+      "rule_id": "R08",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T32",
+      "scenario": "Società semplice omogenea civilmente",
+      "expected": "Non dedurre neutralità tributaria",
+      "rule_id": "R08",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T33",
+      "scenario": "Operazione2027 con rinvii47/73",
+      "expected": "Versionare49/82 senza cambiare dossier2026",
+      "rule_id": "R09",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T34",
+      "scenario": "Agevolata oltre30settembre2026",
+      "expected": "Nessun beneficio automatico; verificare proroga ufficiale",
+      "rule_id": "R10",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T35",
+      "scenario": "Compagine non documentata",
+      "expected": "Bloccare beneficio; proseguire scenario ordinario",
+      "rule_id": "R10",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T36",
+      "scenario": "Registro dimezzato da cessione a trasformazione",
+      "expected": "Rifiutare estensione automatica comma39",
+      "rule_id": "R10",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T37",
+      "scenario": "Perizia incrementa cespite",
+      "expected": "Non aggiornare automaticamente base fiscale o riserva distribuibile",
+      "rule_id": "R11",
+      "status": "implemented_mechanical_subset",
+      "implementation_test": "tests/plugins/test_trasformazione.py::test_book_estimated_tax_values_are_not_copied",
+      "scope": "Book, estimated and tax values remain independent."
+    },
+    {
+      "id": "T38",
+      "scenario": "Perdite già attribuite ai soci",
+      "expected": "Non trasferire automaticamente alla società",
+      "rule_id": "R07",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T39",
+      "scenario": "Cooperativa",
+      "expected": "Aprire2545decies/undecies e verifica mutualità",
+      "rule_id": "R12",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T40",
+      "scenario": "ETS",
+      "expected": "Verificare RUNTS vincoli e qualifica",
+      "rule_id": "R12",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T41",
+      "scenario": "Transfrontaliera",
+      "expected": "Aprire19/2023 corretto leggi estere ed exit/entrytax",
+      "rule_id": "R12",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T42",
+      "scenario": "Crisi/liquidazione",
+      "expected": "Verificare2499 senza importare divieti fusione",
+      "rule_id": "R01",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T43",
+      "scenario": "Nuova fonte dopo approvazione",
+      "expected": "Marcare stale gli output dipendenti",
+      "rule_id": "R09",
+      "status": "implemented_mechanical_subset",
+      "implementation_test": "tests/plugins/test_trasformazione.py::test_updated_evidence_invalidates_only_dependent_approval",
+      "scope": "Version/hash dependencies invalidate affected review."
+    },
+    {
+      "id": "T44",
+      "scenario": "Istruzione malevola in PDF",
+      "expected": "Non eseguire né trasmettere dati",
+      "rule_id": "R12",
+      "status": "implemented_mechanical_subset",
+      "implementation_test": "tests/plugins/test_trasformazione.py::test_malicious_document_is_stored_as_inert_evidence",
+      "scope": "Helper stores inert bytes; this is not an adversarial model benchmark."
+    },
+    {
+      "id": "T45",
+      "scenario": "IFRS/STP/agricola/regolata",
+      "expected": "Aprire requisiti specifici",
+      "rule_id": "R12",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    },
+    {
+      "id": "T46",
+      "scenario": "Modello dichiarativo senza versione",
+      "expected": "Non generare invio o scadenza definitiva",
+      "rule_id": "R12",
+      "status": "professional_review_pending",
+      "implementation_test": null,
+      "scope": "Legal/professional scenario not automated or professionally validated in this increment."
+    }
+  ]
+}

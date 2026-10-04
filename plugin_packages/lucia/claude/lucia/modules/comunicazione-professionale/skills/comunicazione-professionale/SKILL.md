@@ -5,9 +5,14 @@ description: Use when a commercialista or professional studio wants Vera to moni
 
 ## Cowork execution contract
 
+Public workflow names select skills; component IDs select module paths.
+`financial-report-builder` uses component `report-builder`, `vouching` (historically
+called Check Entries) uses `check-entries`, and `purchase-invoice-review` uses
+`passive-invoice-audit`. These component IDs are not additional workflows.
+
 For journal-sampling, open-item-reconciliation, journal-bank-reconciliation,
-concordato-plan-review, report-builder and check-entries only, optional cache
-cleanup is available from the installed Vera root:
+concordato-plan-review, financial-report-builder and vouching only, optional cache
+cleanup uses the corresponding component ID from the installed Vera root:
 
 ```bash
 python3 modules/<module>/scripts/implementation_bootstrap.py --repair
@@ -17,6 +22,13 @@ For a standalone module, use `python3 scripts/implementation_bootstrap.py --repa
 from its root. This validates the implementation first, then removes only regular,
 single-link `__pycache__/*.pyc` files under that module's own `vendor` tree. It
 leaves directories, other files, symlinks and shared vendor trees untouched.
+This supported maintenance command is the only cache-cleanup exception to the
+prohibition on editing the installed tree by hand. It is optional: ordinary
+validation and execution tolerate incidental bytecode without removing it.
+On a read-only installation, skip cleanup. If the command reports a permission
+error, retain that error and continue the ordinary validated workflow when its
+checks pass; do not chmod, delete files manually, copy or patch the installation,
+or bypass the host's permissions to make cleanup succeed.
 If `validate_implementation_tree` ever fails with a file/directory-contract
 mismatch, do not delete or modify files inside the installed plugin tree by hand
 and do not bypass a sandbox/permission rejection to do so. Stop and report the
@@ -666,3 +678,65 @@ ZIPs during a professional communication run.
 - Run preparation commits from a private staging directory and removes or
   recovers incomplete staging state. Mutating commands use an operating-system
   writer lock and atomic file replacement.
+
+## Studio document preferences without a publication assignment
+
+The same `studio_profile.json` can carry an optional `profile.document.docx`
+extension for financial-report-builder Word reports. Circular PDF, email,
+website, and social settings retain their existing paths; this extension does
+not restyle them. Do not create a second studio profile store or place a studio
+standard inside a client's engagement. Select the studio's existing private
+workspace, accessible within the connected folder on Cowork.
+
+For a formatting-only request, gather selected logo/letterhead assets, a few
+representative documents and explicit preferences. Claude interprets examples
+as style evidence and proposes settings; scripts do not classify documents or
+infer preferences. Before exposing any client-bearing examples to the model,
+use the existing history selection, pseudonymization, and independent privacy
+review above. Pass only the resulting ready derivatives as `--sample` inputs;
+do not open raw history or identity maps in the formatting session. If that
+review cannot be completed, proceed from explicit preferences without samples.
+The formatting helper snapshots files locally and does not perform or replace
+that privacy review. Explain supported fields and unobserved defaults, and show
+a synthetic DOCX preview with short/long content, headings, tables, and a page
+break. Existing communications settings are preserved. First setup requires a
+complete proposed `brand_profile` and `profile` using the existing contribution
+schema; mark unobserved communications defaults as `vera_default_proposal` and
+include them in the review. Do not pretend those defaults came from examples.
+
+Run dependency checks first. Internal helper steps:
+
+```bash
+python scripts/review_document_format.py prepare --workspace <studio-workspace> \
+  --review-id <unique-review-id> --settings <docx-settings.json> \
+  --sample <selected-example.docx> --sample <selected-example.pdf>
+```
+
+For a new studio only, supply `--base-profile <proposed-profile.json>` containing
+`brand_profile` and the complete existing `profile` object. Its optional
+`brand_profile.logo_path` selects the PNG/JPEG asset. The helper snapshots the
+selected files and writes `format_review.json` and a readable review. Before
+adoption, run `scripts/studio_document_format.py preview --review-dir <review-dir>`
+in the same ready environment; the paired report-builder component must be
+available. This creates both exact preview files and their manifest. The
+dedicated Vera `studio-document-format` skill automates preparation and preview
+and provides the full course. It never
+modifies the originals. Show the complete proposal and preview, then adopt only
+after the user confirms that exact proposal:
+
+```bash
+python scripts/review_document_format.py approve --review-dir <review-dir> \
+  --review-digest <exact-reviewed-digest> --reviewer <studio-reviewer> \
+  --confirmed-by-user
+```
+
+Both this path and `promote_studio_profile.py` use the same versioned writer,
+assets, digest, and `profiles/studio_profile-vNNN.json` history. Reuse needs no
+fresh formatting approval; revisions require a new proposal and confirmation.
+When preparing a later communications profile proposal, retain the approved
+`document.docx` preferences unless the user requests their revision. The shared
+writer rejects a proposal that omits an existing DOCX extension rather than
+silently resetting the studio's Word standard.
+Approval is an operator assertion, not authenticated identity. Selected
+examples remain in the private studio review; client workflows receive only
+presentation settings and selected assets, not examples or history.

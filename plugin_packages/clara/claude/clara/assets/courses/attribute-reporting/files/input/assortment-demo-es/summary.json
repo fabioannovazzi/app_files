@@ -1,0 +1,21 @@
+{
+  "retailer": "fictional",
+  "retailer_label": "Minorista ficticio",
+  "category_key": "teaching-knitwear",
+  "category_label": "Prendas de punto",
+  "product_count": 20,
+  "recent_products": 4,
+  "top_seller_products": 4,
+  "recent_definition": "The new-arrivals cohort explicitly assigned in this fictional source matrix.",
+  "top_seller_definition": "The best-seller cohort explicitly assigned in this fictional source matrix; no sales quantities are supplied.",
+  "diagnostic_warnings": [
+    {
+      "code": "fictional_teaching_data",
+      "message": "Datos ficticios para la lección: no representan un minorista, observaciones del mercado, una captura web ni un recibo del servidor."
+    },
+    {
+      "code": "no_consumer_reviews",
+      "message": "El paquete no contiene opiniones de consumidores ni imágenes de productos."
+    }
+  ]
+}

@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import logging
 from pathlib import Path
+from typing import Any
 
 from workflow_core import (
     atomic_copy_file,
@@ -20,7 +21,7 @@ from workflow_core import (
     workflow_lock,
 )
 
-__all__ = ["promote_studio_profile", "main"]
+__all__ = ["promote_studio_profile", "persist_studio_profile", "main"]
 
 LOGGER = logging.getLogger(__name__)
 
@@ -70,6 +71,41 @@ def _promote_studio_profile_locked(root: Path) -> Path:
         == workbench["contribution_digest"]
     ):
         return profile_path
+    logo = load_json(root / "source_register.json").get("brand_logo")
+    return persist_studio_profile(
+        workspace,
+        profile=profile,
+        brand_profile=intake["brand_profile"],
+        workspace_id=intake["workspace_id"],
+        logo=Path(logo["snapshot_path"]) if isinstance(logo, dict) else None,
+        approved_from={
+            "run_id": intake["run_id"],
+            "contribution_digest": workbench["contribution_digest"],
+            "review_event": decisions["studio_profile"],
+        },
+    )
+
+
+def persist_studio_profile(
+    workspace: Path,
+    *,
+    profile: dict[str, Any],
+    brand_profile: dict[str, Any],
+    workspace_id: str,
+    logo: Path | None,
+    approved_from: dict[str, Any],
+) -> Path:
+    """Write the common versioned profile; caller must hold the workspace lock."""
+    profile_path = workspace / "studio_profile.json"
+    previous = load_json(profile_path) if profile_path.is_file() else None
+    if (
+        previous
+        and "docx" in previous["profile"]["document"]
+        and "docx" not in profile["document"]
+    ):
+        raise ValueError(
+            "The approved DOCX preferences are missing from this proposal; retain them or explicitly revise them before review"
+        )
     version = int(previous["version"]) + 1 if previous else 1
     if previous:
         archive_dir = workspace / "profiles"
@@ -77,11 +113,9 @@ def _promote_studio_profile_locked(root: Path) -> Path:
         archive_path = archive_dir / f"studio_profile-v{previous['version']:03d}.json"
         if not archive_path.exists():
             atomic_write_json(archive_path, previous)
-    source_register = load_json(root / "source_register.json")
-    logo = source_register.get("brand_logo")
     logo_record = None
-    if isinstance(logo, dict):
-        source_logo = Path(logo["snapshot_path"])
+    if logo is not None:
+        source_logo = Path(logo)
         suffix = source_logo.suffix.lower()
         asset_path = workspace / "studio_assets" / f"studio-logo-v{version:03d}{suffix}"
         atomic_copy_file(source_logo, asset_path)
@@ -105,8 +139,8 @@ def _promote_studio_profile_locked(root: Path) -> Path:
     }
     format_digest = canonical_digest(
         {
-            "studio_name": intake["brand_profile"]["studio_name"],
-            "brand_profile": intake["brand_profile"],
+            "studio_name": brand_profile["studio_name"],
+            "brand_profile": brand_profile,
             "brand_assets": brand_assets,
             "profile": profile,
         }
@@ -114,20 +148,16 @@ def _promote_studio_profile_locked(root: Path) -> Path:
     payload = {
         "schema_version": 1,
         "workflow": "comunicazione-professionale",
-        "workspace_id": intake["workspace_id"],
+        "workspace_id": workspace_id,
         "version": version,
-        "studio_name": intake["brand_profile"]["studio_name"],
-        "brand_profile": intake["brand_profile"],
+        "studio_name": brand_profile["studio_name"],
+        "brand_profile": brand_profile,
         "brand_assets": brand_assets,
         "profile": profile,
         "profile_provenance_summary": provenance_summary,
         "accepted_as_studio_standard": True,
         "format_digest": format_digest,
-        "approved_from": {
-            "run_id": intake["run_id"],
-            "contribution_digest": workbench["contribution_digest"],
-            "review_event": decisions["studio_profile"],
-        },
+        "approved_from": approved_from,
         "promoted_at": utc_now(),
     }
     atomic_write_json(profile_path, payload)

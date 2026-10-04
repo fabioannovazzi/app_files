@@ -261,6 +261,7 @@ def _managed_review_run(
     tmp_path: Path,
     *,
     content: str = CU_TEXT,
+    nested: bool = False,
 ) -> tuple[Any, Path]:
     ledger_path = (
         REPOSITORY_ROOT / "plugins" / "studio-archive" / "scripts" / "client_ledger.py"
@@ -312,7 +313,11 @@ def _managed_review_run(
     result = build_file_preparation_outputs(
         Path(context["input_dir"]),
         target_year=2025,
-        output_dir=Path(running["output_dir"]),
+        output_dir=(
+            Path(running["output_dir"]) / "intake"
+            if nested
+            else Path(running["output_dir"])
+        ),
         run_id=str(context["run_id"]),
         run_root=Path(context["run_root"]),
     )
@@ -569,7 +574,7 @@ def test_build_file_preparation_outputs_writes_expected_files(tmp_path: Path) ->
     assert "Oggetto: Documenti e chiarimenti per completare l'istruttoria" in email
     assert "certificazione degli interessi passivi del mutuo" in email
     assert "spese sanitarie inviate sono complete" in email
-    assert "F24 mancanti" in email
+    assert "modelli o quietanze F24 sono disponibili" in email
     assert "documenti non classificati" not in email
 
     run_intake = json.loads(
@@ -2674,8 +2679,18 @@ def test_client_file_preparation_mcp_apply_updates_draft_email_artifact(
     assert email_output["status"] == "updated_from_review"
 
 
-def test_client_file_preparation_mcp_accepts_exact_reviewed_email_replacement(
+@pytest.mark.parametrize(
+    "item_id,target",
+    [
+        ("draft-client-email", "04_bozza_email_cliente.md"),
+        ("draft-memo", "06_memo_istruttoria.md"),
+        ("draft-studio-brief", "07_scheda_codex_per_studio.md"),
+    ],
+)
+def test_client_file_preparation_mcp_accepts_exact_reviewed_draft_replacement(
     tmp_path: Path,
+    item_id: str,
+    target: str,
 ) -> None:
     result, client_engagement = _managed_review_run(tmp_path)
     run_intake, review_payload, final_artifacts = _load_review_run(result.output_dir)
@@ -2686,7 +2701,7 @@ def test_client_file_preparation_mcp_accepts_exact_reviewed_email_replacement(
                 "action": "edit",
                 "edit_value": "Oggetto: Documenti aggiornati\n\nGentile cliente, confermi i documenti ancora mancanti.",
             }
-            if item["id"] == "draft-client-email"
+            if item["id"] == item_id
             else {"item_id": item["id"], "action": "accept"}
         )
         for item in review_payload["items"]
@@ -2704,11 +2719,9 @@ def test_client_file_preparation_mcp_accepts_exact_reviewed_email_replacement(
 
     assert payload["ok"] is True
     edited = next(row["edit_value"] for row in decisions if row["action"] == "edit")
-    assert (result.output_dir / "04_bozza_email_cliente.md").read_text() == edited
+    assert (result.output_dir / target).read_text() == edited
     updated = json.loads((result.output_dir / "final_artifacts.json").read_text())
-    email = next(
-        row for row in updated["outputs"] if row["path"] == "04_bozza_email_cliente.md"
-    )
+    email = next(row for row in updated["outputs"] if row["path"] == target)
     assert email["required_text"] == [edited]
     assert email["qa_checks"] == ["nonempty_text", "required_text"]
 
@@ -2766,12 +2779,14 @@ def test_client_file_preparation_mcp_save_reseals_generated_package(
     )
 
 
+@pytest.mark.parametrize("nested", [False, True])
 def test_client_file_preparation_persistence_survives_customer_folder_rename_and_rejects_escape(
     tmp_path: Path,
+    nested: bool,
 ) -> None:
-    result, old_context_path = _managed_review_run(tmp_path)
+    result, old_context_path = _managed_review_run(tmp_path, nested=nested)
     old_output_dir = result.output_dir
-    old_client_root = old_output_dir.parents[5]
+    old_client_root = old_context_path.parents[5]
     relative_output = old_output_dir.relative_to(old_client_root)
     relative_context = old_context_path.relative_to(old_client_root)
     renamed_client_root = old_client_root.with_name("Renamed Managed Customer")
@@ -2780,7 +2795,7 @@ def test_client_file_preparation_persistence_survives_customer_folder_rename_and
     context_path = renamed_client_root / relative_context
     run_intake, review_payload, final_artifacts = _load_review_run(output_dir)
     assert run_intake["path_reference"] == "run_root_relative"
-    assert run_intake["output_dir"] == "outputs"
+    assert run_intake["output_dir"] == ("outputs/intake" if nested else "outputs")
     arguments = {
         "client_engagement": str(context_path),
         "run_intake": run_intake,

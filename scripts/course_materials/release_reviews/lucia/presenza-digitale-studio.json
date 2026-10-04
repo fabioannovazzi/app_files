@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "presenza-digitale-studio",
-  "course_sha256": "2a54ae3608c5c8b1656360725c3b897817ce516221b98a1993b643a61422580a",
+  "course_sha256": "fa9123f4150d4ceb8a4ac2b805e3f70dc68c96bd3cf1c6231711a74ed42a4240",
   "reviewer": "Codex: five-language first-use website material, native execution and rendered output review",
   "reviewed_at": "2026-09-15T01:19:06.371245+00:00",
-  "review_scope": "Read the complete five-language outlines, fictional studio profiles and hours updates. Reviewed all 20 exact demonstration/practice pages for Vera and Lucia through actual full-page desktop and phone browser captures, with observed navigation, widths and console state. The browser returned JPEG bytes: their original bytes were preserved and filenames corrected, and the current workflow now accepts PNG or JPEG evidence with matching headers, dimensions and hashes. Each reviewed run has a real recorded quality assessment and valid quality_ready state. Fresh native preparation/implementation/mechanical checks in website-teaching-release-04 reproduce every reviewed site digest after that repair. Those tests use explicitly authored fictional briefs and HTML, not simulated browser acceptance. This accepts prepared local teaching material; it does not attest a professional publication decision, human lesson timing/comprehension or live native voice and paired-window learner interaction.",
+  "review_scope": "Read the complete five-language outlines, fictional studio profiles and hours updates. Reviewed all 20 exact demonstration/practice pages for Vera and Lucia through actual full-page desktop and phone browser captures, with observed navigation, widths and console state. The browser returned JPEG bytes: their original bytes were preserved and filenames corrected, and the current workflow now accepts PNG or JPEG evidence with matching headers, dimensions and hashes. Each reviewed run has a real recorded quality assessment and valid quality_ready state. Fresh native preparation/implementation/mechanical checks in website-teaching-release-04 reproduce every reviewed site digest after that repair. Those tests use explicitly authored fictional briefs and HTML, not simulated browser acceptance. This accepts prepared local teaching material; it does not attest a professional publication decision, human lesson timing/comprehension or live native voice and paired-window learner interaction. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -539,5 +539,201 @@
     "native_evidence": "GitHub Actions run 35208501248, job 105160051302, commit 8a86a6fe: the native teaching phase passed 824 tests with 90 explicitly skipped cases and 89.96% courseware coverage. The later compiler/review phase rejected the stale editorial digest; the run is not represented as green. The next full CI run must independently validate every required demo/practice identity and current digest.",
     "render_evidence": "Italian Vera fatture-xml-check rendered through the new CLI and inspected in the Codex in-app browser. Original material and the port-8769 lesson server were untouched.",
     "limits": "Existing artifact hashes remain historical evidence. No new professional approval, live learner completion, installed-version acceptance or validation of every browser host is claimed."
-  }
+  },
+  "codex_course_qa_20260928": {
+    "status": "passed",
+    "course": 44,
+    "product": "lucia",
+    "workflow": "presenza-digitale-studio",
+    "scope": "Italian Codex simulated learner journey, real native demo and distinct site update practice, source drilldown and saved reopening",
+    "runs": {
+      "demo": {
+        "run": "/private/tmp/teaching-acceptance-20260926/codex/lucia-website/teaching/sessions/3faa17fba4bc54d8d46257d4f0c5d7c8/files/demo-73b0a00dd761153c/outputs/studio-arco-website/runs/20260928T012216Z-5d2e6f29ca",
+        "native": {
+          "schema_version": 1,
+          "run_id": "20260928T012216Z-5d2e6f29ca",
+          "status": "quality_ready",
+          "site_digest": "95706f604126d0155b6910b09094c5d643da05716b988dc53ed3f09ec74d93e8",
+          "issues": [],
+          "valid": true
+        },
+        "saved_reopening": {
+          "passed": true,
+          "url": "http://127.0.0.1:52678/course.html",
+          "observed": "Studio Arco, two legal services, Monday–Thursday 09:00–12:00, email and fixed heading; no Friday yet; corrected phone caption; native saved result opened in Codex",
+          "human_approval": false
+        },
+        "outputs": [
+          {
+            "path": "demo-73b0a00dd761153c/outputs/studio-arco-website/runs/20260928T012216Z-5d2e6f29ca/work/site/index.html",
+            "sha256": "9844efd06f1ab3012669e9faf4fc60628588a9ada69a8405ca00c7a1dfaad354"
+          },
+          {
+            "path": "demo-73b0a00dd761153c/outputs/studio-arco-website/runs/20260928T012216Z-5d2e6f29ca/work/site/styles.css",
+            "sha256": "ff6878640137bb4b829901b3e496609827f718c45c3e863c9278a4615bb93a62"
+          },
+          {
+            "path": "demo-73b0a00dd761153c/outputs/studio-arco-website/runs/20260928T012216Z-5d2e6f29ca/artifact_card.md",
+            "sha256": "d79da8dfb65cf3a893e6b4194fac0496c578e4d4f75b8488d44c86e1886d0f01"
+          },
+          {
+            "path": "demo-73b0a00dd761153c/outputs/studio-arco-website/runs/20260928T012216Z-5d2e6f29ca/reviews/browser/desktop.jpg",
+            "sha256": "c518de23e9a48a348256bf85b78fc9a8aa72326add426e66110e534dc2453fd9"
+          },
+          {
+            "path": "demo-73b0a00dd761153c/outputs/studio-arco-website/runs/20260928T012216Z-5d2e6f29ca/reviews/browser/phone.jpg",
+            "sha256": "a571f8e15eb96c0ff15a9550e93c5cb2881048b2193eef6492bcf3c5bd83a416"
+          }
+        ]
+      },
+      "practice": {
+        "run": "/private/tmp/teaching-acceptance-20260926/codex/lucia-website/teaching/sessions/3faa17fba4bc54d8d46257d4f0c5d7c8/files/demo-73b0a00dd761153c/outputs/studio-arco-website/runs/20260928T013351Z-a2111028d5",
+        "native": {
+          "schema_version": 1,
+          "run_id": "20260928T013351Z-a2111028d5",
+          "status": "quality_ready",
+          "site_digest": "2cf56577e48a98413a8dd67bfedf1d966857f1ce366924c6485fafabf3640635",
+          "issues": [],
+          "valid": true
+        },
+        "saved_reopening": {
+          "passed": true,
+          "url": "http://127.0.0.1:52856/course.html",
+          "observed": "Actual saved site opens in Codex. Friday 14:00–16:00 added; Monday–Thursday 09:00–12:00, both legal services, fictional email and corrected heading retained. Labeled screenshot previews and updated review readable.",
+          "human_approval": false
+        },
+        "outputs": [
+          {
+            "path": "demo-73b0a00dd761153c/outputs/studio-arco-website/runs/20260928T013351Z-a2111028d5/work/site/index.html",
+            "sha256": "5933fe4624f5b13c32b279f51e8bb94c7c575255b99098d3d6828c65c3354e99"
+          },
+          {
+            "path": "demo-73b0a00dd761153c/outputs/studio-arco-website/runs/20260928T013351Z-a2111028d5/artifact_card.md",
+            "sha256": "67de9435aae19d78ee88ee568bfc1e8bcf1d0a4ce4d73d7211cb4f03791fb757"
+          },
+          {
+            "path": "demo-73b0a00dd761153c/outputs/studio-arco-website/runs/20260928T013351Z-a2111028d5/reviews/browser/desktop.jpg",
+            "sha256": "02f82ba89ea17813cb45930ec26cbc419df70dc8e86f4bc35fd494914a5decd6"
+          },
+          {
+            "path": "demo-73b0a00dd761153c/outputs/studio-arco-website/runs/20260928T013351Z-a2111028d5/reviews/browser/phone.jpg",
+            "sha256": "80e5f7ccd34387b16d22eadda3c02a9d80ad2dd79158d4f192f9826f84da2529"
+          }
+        ]
+      }
+    },
+    "demo_files_preserved": 31,
+    "session_id": "3faa17fba4bc54d8d46257d4f0c5d7c8",
+    "session_phase": "paused",
+    "repairs": [
+      "Restored whitespace around a responsive heading line break in generated demo, then retested desktop and phone before acceptance",
+      "Localized phone.jpg screenshot caption in five supported languages"
+    ],
+    "checkpoint": {
+      "question": "Se vedo questa pagina, è già online? E posso aggiungere un indirizzo che manca nel file?",
+      "answer": "No: questa pagina è aperta in una prova locale sul computer e non è stata pubblicata online. Per pubblicarla servirebbero una destinazione scelta e le approvazioni sulla versione esatta. Un indirizzo che manca nel file va prima fornito e verificato per l’uso nel sito: non lo aggiungiamo per supposizione.",
+      "participant": "Codex simulated QA; not Fabio",
+      "actual_human_participation_claimed": false,
+      "source": "Explicit teacher simulated-test checkpoint",
+      "state_basis": {
+        "external_routes": "all unselected",
+        "packages_created": false,
+        "deliveries": [],
+        "source_has_address": false
+      }
+    },
+    "checks": [
+      "Actual Codex IAB1280x720 and390x844 full-page renders and contact navigation",
+      "Native workflow validation, exact screenshot hashes, independent source expectations",
+      "Five supported-language owning-kit checks",
+      "Previous demonstration byte preservation and separate saved-result reopening"
+    ],
+    "limitations": [
+      "Native microphone and voice untested",
+      "Physical two-window placement untested",
+      "Other-language interactive lessons untested",
+      "Current source checkout, no claim of installed-package equivalence"
+    ],
+    "human_understanding_confirmed": false,
+    "professional_approval": false,
+    "no_install_deploy_publish": true,
+    "verified_at": "2026-09-28T01:39:38.349882+00:00"
+  },
+  "release_freshness_20260928": {
+    "reviewer": "Codex /root - bounded release freshness review",
+    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
+    "previous_course_sha256": "2a54ae3608c5c8b1656360725c3b897817ce516221b98a1993b643a61422580a",
+    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
+    "changed_compiled_fields": [
+      "sources"
+    ],
+    "content_review": "Compared the complete compiled course against the release base: authored locales, fictional input definitions, checkpoints, practice and duration are unchanged. Only bindings to the repaired runtime sources differ.",
+    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced.",
+    "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-44.md",
+    "italian_course_qa_sha256": "3b847799f89bf2098cd6bab8e52d9d7f0ff41312f3416dcbbd99b6127df85828",
+    "native_execution_evidence": {
+      "commit": "2431fbd29",
+      "run": 36392851481,
+      "job": 108832365397,
+      "passed": 1152,
+      "skipped": 3,
+      "phase": "Verify teaching-kit languages, real executions and native packages",
+      "later_failure": "Editorial digest freshness; this run is not represented as fully green."
+    },
+    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
+  },
+  "esg_source_refresh_20260929": {
+    "reviewer": "Codex /root - bounded source review",
+    "reviewed_at": "2026-09-29T18:26:42.517707+00:00",
+    "baseline_commit": "6f26f0e8241a0fe3027c162e2c2cae4d97395465",
+    "previous_course_sha256": "bd7e0dddbe204c760eb182d3f9d95800aefb5aae18988b2385ae5a8d42aef5ff",
+    "current_course_sha256": "2f4c9dd12d05e00737f70534d0c5e223376dea34dfddee4fcd08d897f9162975",
+    "content_review": "Complete JSON equality except top-level source bindings. Existing inputs, requests, locale content, checkpoints, practice and timing remain unchanged.",
+    "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged.",
+    "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
+    "detail": "docs/releases/2026-09-29-vera-esg-course-source-review.json"
+  },
+  "esg_source_refresh_20260930": {
+    "reviewer": "Codex /root - bounded source review",
+    "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
+    "baseline_commit": "5f4c3324b9efe209e9e6f99a3a38d7ac002df81a",
+    "previous_course_sha256": "bd7e0dddbe204c760eb182d3f9d95800aefb5aae18988b2385ae5a8d42aef5ff",
+    "current_course_sha256": "2f4c9dd12d05e00737f70534d0c5e223376dea34dfddee4fcd08d897f9162975",
+    "content_review": "Complete JSON equality except top-level source bindings. Existing inputs, requests, locale content, checkpoints, practice and timing remain unchanged.",
+    "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged.",
+    "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
+    "detail": "docs/releases/2026-09-30-vera-esg-course-source-review.json"
+  },
+  "studio_format_source_binding_20261001": {
+    "reviewer": "Codex - bounded studio-format source compatibility review",
+    "reviewed_at": "2026-10-01T18:46:46.342128+00:00",
+    "baseline_commit": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
+    "previous_course_sha256": "2f4c9dd12d05e00737f70534d0c5e223376dea34dfddee4fcd08d897f9162975",
+    "current_course_sha256": "921e550c9f4a9e433c3a4757219644ff5cbc7df24fd1c6830de62a8d7a51e7fe",
+    "content_review": "Complete compiled JSON equality with current main except source bindings. All narratives, input files, checkpoints, practice and timing are unchanged.",
+    "changed_sources": [
+      "plugins/_shared/vendor/modules/desktop_teaching/cases.py"
+    ],
+    "source_review": "The shared teaching case conditional adds only studio-document-format to the pre-existing studio-workspace branch. All pre-existing workflow branches retain their behavior. Communication adds optional approved DOCX settings while retaining existing channel settings; report-builder adds explicit studio selection and frozen reviewed-format reuse. Actual new-format regression and ten course executions exercise these paths.",
+    "limits": "This source review preserves historical editorial and output-hash evidence; it claims no fresh visual review or learner acceptance for existing lessons. Release CI must run each existing demo/practice identity against the current course digest before merge."
+  },
+  "integration_refresh": {
+    "reviewer": "Codex /root",
+    "date": "2026-10-02",
+    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
+  },
+  "rating_legalita_source_binding_20261002": {
+    "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+    "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+    "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+    "previous_course_sha256": "6015b4a0677887932991f162547435c5f29fdb29b35d10c6281f95b14b13352d",
+    "current_course_sha256": "08bd243e04c1991190d5a7f003c9102fa2909c6c4be5a5ad17f7f6da07f9d34f",
+    "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+    "changed_sources": [
+      "vendor/modules/courseware/policy.py"
+    ],
+    "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+    "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+  },
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
 }

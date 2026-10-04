@@ -570,10 +570,12 @@ def main_row_from_detail(
                 else "SI - chiusura non dimostrata al cut-off"
             )
         )
+        difference_text = clean_text(best.get("differenza"))
+        difference = parse_decimal(difference_text)
         ambiguous = (
             confidence in {"Media", "Bassa", "Non trovato"}
             or len(details) > 1
-            or bool(clean_text(best.get("differenza")))
+            or bool(difference_text and difference != Decimal("0"))
         )
         non_capita = "SI" if ambiguous else "NO"
 

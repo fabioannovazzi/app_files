@@ -2323,8 +2323,26 @@ globalThis.__result = {
   storedReviewer: window.openai.lastState?.reviewer_alias || null,
   invalidAliasError,
   statusMessage: document.getElementById("save-status").textContent,
-};`).runInContext(context);
-process.stdout.write(JSON.stringify(context.__result));
+};
+globalThis.__saveTest = (async () => {
+  const item = itemById("party-1");
+  setDecisionField(item, "reviewer_note", "Saved private note");
+  window.openai.callTool = async () => ({ok: true, ui_decisions: {decisions: [{item_id: "party-1", action: "accept"}]}});
+  await saveCurrentDecisions();
+  __result.cleanAfterProjectedSave = decisionSignature(collectDecisionInputs()) === decisionSignature(savedDecisionInputs());
+  __result.noteRetainedLocally = state.decisions["party-1"].reviewer_note;
+  setDecisionField(item, "reviewer_note", "Second note");
+  window.openai.callTool = async () => {
+    setDecisionField(item, "reviewer_note", "Edited while saving");
+    return {ok: true, ui_decisions: {decisions: [{item_id: "party-1", action: "accept"}]}};
+  };
+  await saveCurrentDecisions();
+  __result.concurrentEditStillDirty = decisionSignature(collectDecisionInputs()) !== decisionSignature(savedDecisionInputs());
+  state.payload.ui_decisions.decisions[0].reviewer_note = "Saved browser note";
+  state.decisions["party-1"] = {item_id: "party-1", action: "accept", reviewer_note: "Saved browser note", reuse_saved_details: true};
+  __result.cleanAfterLocalReopen = decisionSignature(collectDecisionInputs()) === decisionSignature(savedDecisionInputs());
+})();`).runInContext(context);
+Promise.resolve(context.__saveTest).then(() => process.stdout.write(JSON.stringify(context.__result))).catch(error => { console.error(error); process.exitCode = 1; });
 """
 
     completed = subprocess.run(
@@ -2337,6 +2355,10 @@ process.stdout.write(JSON.stringify(context.__result));
     )
     result = json.loads(completed.stdout)
 
+    assert result["cleanAfterProjectedSave"] is True
+    assert result["noteRetainedLocally"] == "Saved private note"
+    assert result["concurrentEditStillDirty"] is True
+    assert result["cleanAfterLocalReopen"] is True
     assert result["decisionIds"] == ["party-1"]
     assert result["reviewer"] == "Fabio Annovazzi"
     assert result["fallbackReviewer"] == "Fabio Annovazzi"

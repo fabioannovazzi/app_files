@@ -86,7 +86,11 @@
     "newReviewNote": "New review note",
     "notPersisted": "Decisions exported, not saved to the run. Use the local server to persist them.",
     "open_supported": "Open with supporting evidence",
-    "out_of_scope": "Out of scope"
+    "out_of_scope": "Out of scope",
+    "reviewPendingTitle": "Item review still to complete",
+    "reviewPendingFinding": "{count} items do not yet have an applied review verified in regenerated documents.",
+    "reviewPendingEffect": "Examine the listed items, record reasoned decisions and regenerate the documents with fresh validation. Accepting this exception does not complete the item reviews.",
+    "readOnly": "Archived result is read only. Start a new run to change review decisions."
   },
   "it": {
     "purpose": "Confronta le partite segnalate come aperte con le evidenze disponibili. Verifica gli esiti e registra il supporto mancante.",
@@ -175,7 +179,11 @@
     "newReviewNote": "Nuova nota di revisione",
     "notPersisted": "Decisioni esportate, non salvate nel run. Usa il server locale per registrarle.",
     "open_supported": "Aperte con riscontro",
-    "out_of_scope": "Fuori perimetro"
+    "out_of_scope": "Fuori perimetro",
+    "reviewPendingTitle": "Revisione delle partite da completare",
+    "reviewPendingFinding": "{count} partite non hanno ancora una revisione applicata e verificata nei documenti rigenerati.",
+    "reviewPendingEffect": "Esamina le partite indicate, registra decisioni motivate e rigenera i documenti con una nuova verifica. Confermare questa eccezione non completa la revisione delle partite.",
+    "readOnly": "Risultato archiviato in sola lettura. Per modificare le decisioni avvia una nuova esecuzione."
   },
   "fr": {
     "purpose": "Comparez les postes déclarés ouverts aux justificatifs disponibles. Vérifiez les résultats et consignez les pièces manquantes.",
@@ -264,7 +272,11 @@
     "newReviewNote": "Nouvelle note de revue",
     "notPersisted": "Décisions exportées, non enregistrées dans l’exécution. Utilisez le serveur local pour les enregistrer.",
     "open_supported": "Ouverts avec justificatifs",
-    "out_of_scope": "Hors périmètre"
+    "out_of_scope": "Hors périmètre",
+    "reviewPendingTitle": "Revue des postes à terminer",
+    "reviewPendingFinding": "{count} postes ne disposent pas encore d’une revue appliquée et vérifiée dans les documents régénérés.",
+    "reviewPendingEffect": "Examinez les postes indiqués, consignez des décisions motivées et régénérez les documents avec une nouvelle validation. Accepter cette exception ne termine pas la revue des postes.",
+    "readOnly": "Résultat archivé en lecture seule. Lancez une nouvelle exécution pour modifier les décisions."
   },
   "de": {
     "purpose": "Gleichen Sie gemeldete offene Posten mit den verfügbaren Nachweisen ab. Prüfen Sie die Ergebnisse und erfassen Sie fehlende Belege.",
@@ -353,7 +365,11 @@
     "newReviewNote": "Neue Prüfnotiz",
     "notPersisted": "Entscheidungen exportiert, nicht im Lauf gespeichert. Verwenden Sie den lokalen Server zum Speichern.",
     "open_supported": "Mit Nachweisen offen",
-    "out_of_scope": "Außerhalb des Prüfungsumfangs"
+    "out_of_scope": "Außerhalb des Prüfungsumfangs",
+    "reviewPendingTitle": "Prüfung der Posten noch offen",
+    "reviewPendingFinding": "Für {count} Posten liegt noch keine angewendete und in neu erstellten Dokumenten validierte Prüfung vor.",
+    "reviewPendingEffect": "Prüfen Sie die aufgeführten Posten, erfassen Sie begründete Entscheidungen und erstellen Sie die Dokumente mit erneuter Validierung. Das Bestätigen dieser Ausnahme schließt die Prüfung der Posten nicht ab.",
+    "readOnly": "Archiviertes Ergebnis ist schreibgeschützt. Starten Sie einen neuen Lauf, um Prüfentscheidungen zu ändern."
   },
   "es": {
     "purpose": "Contraste las partidas declaradas abiertas con las evidencias disponibles. Revise los resultados y registre el soporte que falta.",
@@ -442,6 +458,10 @@
     "newReviewNote": "Nueva nota de revisión",
     "notPersisted": "Decisiones exportadas, no guardadas en la ejecución. Use el servidor local para registrarlas.",
     "open_supported": "Abiertas con soporte",
-    "out_of_scope": "Fuera del alcance"
+    "out_of_scope": "Fuera del alcance",
+    "reviewPendingTitle": "Revisión de partidas pendiente",
+    "reviewPendingFinding": "{count} partidas aún no tienen una revisión aplicada y verificada en los documentos regenerados.",
+    "reviewPendingEffect": "Examine las partidas indicadas, registre decisiones motivadas y regenere los documentos con una nueva validación. Aceptar esta excepción no completa la revisión de las partidas.",
+    "readOnly": "Resultado archivado de solo lectura. Inicie una nueva ejecución para cambiar las decisiones."
   }
 }

@@ -28,6 +28,11 @@ partial directory as a result.
 
 # Registro Imprese e SARI
 
+## Jurisdiction and Geneva
+
+For a CH-GE mandate, read `references/geneva.md` before the steps below. It specifies the Geneva input, source and output adaptations within this existing function. Choose governing jurisdiction independently of output language; the ordinary Italian path remains available for IT.
+
+
 Prepare a reviewable practice plan from explicit case facts and current official
 sources. Keep SARI guidance, DIRE compilation, Registro Imprese/REA effects, and
 other recipient positions separate. The output is a professional-review draft,
@@ -321,6 +326,22 @@ name the validate, render, save, and apply sequence and repeat that the handoff
 does not authorize a portal action.
 
 ## 7. Professional review
+
+If the host cannot expose the review MCP tools, open the same native review
+widget through the local browser transport instead:
+
+```bash
+node mcp/server.cjs --http --client-engagement <client_engagement_path>
+```
+
+Use the already available Node runtime and the managed Python interpreter
+(`VERA_CLIENT_WORKFLOW_PYTHON`), without installing dependencies. Open the
+returned loopback URL as a browser page in Codex, not as an HTML source file.
+This transport invokes the same validate, render, save and apply operations;
+it does not create a second review system. Save and Apply remain explicit
+reviewer actions. Reload to verify saved choices. Archived runs reopen for
+reading with persistence disabled; changes require a new run. No portal
+action is performed. Keep the server alive while the review is open.
 
 Call the MCP review tools in this order:
 

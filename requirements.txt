@@ -70,3 +70,4 @@ xlrd==2.0.1
 xlsxwriter==3.2.0
 playwright>=1.48.0
 reportlab>=4.2.0
+tzdata>=2024.1

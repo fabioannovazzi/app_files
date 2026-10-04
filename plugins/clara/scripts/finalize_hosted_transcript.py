@@ -43,7 +43,7 @@ from advisor_case_core import (
     register_material,
     validate_case_workspace,
 )
-from advisory_evidence_lineage import record_evidence
+from advisory_evidence_lineage import EVIDENCE_REGISTER_FILENAME, record_evidence
 from repair_audio_pointer_links import (
     is_repairable_audio_pointer_validation_error,
     repair_audio_pointer_links,
@@ -165,7 +165,7 @@ def _transcript_receipt(
     except ValueError:
         path_reference = "absolute"
         artifact_value = str(attributed_path.resolve())
-    return {
+    receipt = {
         "id": f"ev-transcript-{material_id}-{digest[:12]}",
         "evidence_type": "interview_transcript",
         "recorded_at": timestamp,
@@ -205,6 +205,20 @@ def _transcript_receipt(
         "rechecks_evidence_id": "",
         "supersedes_evidence_id": "",
     }
+    # Re-finalizing identical bytes reuses their original capture record. Only
+    # its timestamps may be reused: record_evidence still rejects any changed
+    # source path, binding, scope or other immutable receipt content.
+    register_path = case_dir / EVIDENCE_REGISTER_FILENAME
+    if register_path.is_file():
+        register = json.loads(register_path.read_text(encoding="utf-8"))
+        for existing in register.get("evidence", []):
+            if existing.get("id") == receipt["id"]:
+                receipt["recorded_at"] = existing["recorded_at"]
+                receipt["verification"]["checked_at"] = existing["verification"][
+                    "checked_at"
+                ]
+                break
+    return receipt
 
 
 def _default_raw_transcript_path(
@@ -470,6 +484,7 @@ def finalize_hosted_transcript(
         material["summary"] = summary
         material["updated_at"] = timestamp
         metadata = dict(material.get("source_metadata") or {})
+        metadata["attributed_transcript"] = _relative_path(case_dir, attributed_path)
         metadata["speaker_attribution"] = speaker_attribution_note
         metadata["unattributed_transcript_backup"] = _relative_path(
             case_dir, backup_path

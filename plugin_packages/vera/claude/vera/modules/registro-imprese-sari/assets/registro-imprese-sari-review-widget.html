@@ -812,8 +812,12 @@
           ${decision.action === "request_more_documents" ? `<div class="field"><label for="documents">${esc(copy().requestedDocuments)}</label><textarea id="documents">${esc((decision.requested_documents || []).join("\n"))}</textarea></div>` : ""}
           <p class="impact">${esc(copy().impact)}</p>
         </section>`;
+      if (state.payload?.local_read_only) {
+        document.getElementById("detail").querySelectorAll("button, textarea").forEach(control => { control.disabled = true; });
+      }
     }
     function updateDecision(itemId, changes) {
+      if (state.payload?.local_read_only) return;
       const current = state.decisions.get(itemId) || { item_id: itemId, action: "", reviewer_note: "", edit_value: "", requested_documents: [] };
       const next = { ...current, ...changes };
       if (!next.action) state.decisions.delete(itemId); else state.decisions.set(itemId, next);
@@ -844,7 +848,20 @@
     async function callReviewTool(toolName) {
       if (!toolName) throw new Error(copy().toolMissing);
       if (!window.openai?.callTool) throw new Error(copy().mcpUnavailable);
-      return window.openai.callTool(toolName, toolArguments());
+      const args = toolArguments();
+      const missingDocuments = args.decisions.some(d => d.action === "request_more_documents" && !d.requested_documents?.length);
+      const missingEdit = args.decisions.some(d => d.action === "edit" && !d.edit_value?.trim());
+      if (missingDocuments || missingEdit) {
+        const messages = {
+          it: ["Indica almeno un documento da richiedere prima di salvare.", "Scrivi la modifica richiesta prima di salvare."],
+          en: ["Enter at least one requested document before saving.", "Enter the requested change before saving."],
+          fr: ["Indiquez au moins un document à demander avant d’enregistrer.", "Indiquez la modification demandée avant d’enregistrer."],
+          de: ["Vor dem Speichern mindestens ein angefordertes Dokument angeben.", "Vor dem Speichern die gewünschte Änderung angeben."],
+          es: ["Indica al menos un documento que solicitar antes de guardar.", "Escribe el cambio solicitado antes de guardar."],
+        };
+        throw new Error((messages[review().language] || messages.en)[missingDocuments ? 0 : 1]);
+      }
+      return window.openai.callTool(toolName, args);
     }
     async function copyDecisions() {
       const text = JSON.stringify(toolArguments(), null, 2);
@@ -903,6 +920,18 @@
     const previous = state.payload?.ui_decisions?.decisions;
     if (Array.isArray(previous)) previous.forEach((decision) => state.decisions.set(decision.item_id, decision));
     render();
+    if (state.payload?.local_read_only) {
+      document.getElementById("save").disabled = true;
+      document.getElementById("apply").disabled = true;
+      const notices = {
+        it: "Esecuzione archiviata: puoi leggere le decisioni salvate. Per modificarle, avvia una nuova versione.",
+        en: "Archived run: saved decisions are read-only. Start a new version to make changes.",
+        fr: "Exécution archivée : les décisions enregistrées sont en lecture seule. Créez une nouvelle version pour les modifier.",
+        de: "Archivierter Lauf: Gespeicherte Entscheidungen sind schreibgeschützt. Für Änderungen eine neue Version starten.",
+        es: "Ejecución archivada: las decisiones guardadas son de solo lectura. Inicia una nueva versión para cambiarlas.",
+      };
+      setMessage(notices[review().language] || notices.en, "ok");
+    }
   </script>
 </body>
 </html>

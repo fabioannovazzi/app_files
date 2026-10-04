@@ -26,6 +26,10 @@
   <link rel="stylesheet" href="clara-page.css?v=2026072401">
   <link rel="stylesheet" href="../product-navigation.css?v=2026072301">
   <script defer src="../product-navigation.js?v=2026072301"></script>
+  <script defer src="../plugin-download-versions.js?v=2026100201"></script>
+  <link rel="stylesheet" href="../product-social.css?v=2026092601">
+  <link rel="stylesheet" href="../product-install.css?v=2026100302">
+  <script defer src="antigravity/version.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content" data-i18n="skip">Skip to content</a>
@@ -75,17 +79,33 @@
         <div class="hero-install" id="download">
           <div class="hero-install__copy">
             <h2 data-i18n="install.title">Installation</h2>
-            <p data-i18n="install.copy">Install Clara for ChatGPT Work and Codex, or download the package for Claude Cowork.</p>
+            <p data-i18n="install.copy">Install Clara in ChatGPT Work and Codex, Claude Cowork or Google Antigravity.</p>
           </div>
           <div class="hero-install__actions" role="group" aria-label="Clara installation options" data-i18n-aria-label="install.actions.label">
             <div class="install-option">
-              <a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57b17fb5848191be710192d93fe03a" target="_blank" rel="noopener noreferrer" data-clara-install-link data-i18n="install.button">Install for ChatGPT Work and Codex</a>
-              <p class="install-option__note" data-i18n="install.chatgptHelp">Opens Clara’s installation page for ChatGPT Work and Codex.</p>
+              <button class="button" type="button" disabled aria-describedby="cowork-marketplace-status" data-cowork-marketplace-pending data-i18n="install.coworkButton">Go to Cowork marketplace</button>
+              <p class="install-option__note" id="cowork-marketplace-status" data-i18n="install.coworkHelp">We have submitted the plugin to the Cowork marketplace. Awaiting approval.</p>
+              <a class="button install-option__download" href="../cowork-downloads/index.html?lang=en" data-cowork-guide-link data-i18n="install.coworkGuide">Download ZIP for Cowork</a>
+              <p class="install-option__note" data-i18n="install.coworkZipHelp">Cowork package and instructions to install or update.</p>
             </div>
             <div class="install-option">
-              <a class="button" href="downloads/clara-cowork-plugin.zip" download data-clara-cowork-download-link data-i18n="install.coworkButton">Download for Claude Cowork</a>
-              <p class="install-option__note" data-i18n="install.coworkHelp">Then upload the ZIP from Customize → Plugins in Claude Cowork.</p>
+              <a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57b17fb5848191be710192d93fe03a" target="_blank" rel="noopener noreferrer" data-clara-install-link data-i18n="install.button">Install for ChatGPT Work and Codex</a>
+              <!-- Version confirmed on the public Marketplace listing on 2026-10-02. -->
+              <p class="install-option__note">Marketplace · v0.1.232</p>
+              <a class="button install-option__download" href="../plugin-downloads/index.html?product=clara&amp;lang=en" data-codex-download-link data-i18n="install.zipButton">Download ZIP for ChatGPT Work and Codex</a>
+              <p class="install-option__note" data-plugin-zip-version="clara" hidden></p>
             </div>
+          </div>
+          <div class="hero-install__antigravity install-option" id="antigravity">
+            <button class="button" type="button" disabled aria-describedby="antigravity-marketplace-status" data-antigravity-marketplace-pending data-i18n="install.antigravity.marketplace">Go to Antigravity marketplace</button>
+            <p class="install-option__note" id="antigravity-marketplace-status">
+              <!-- Submitted candidate version; maintained separately from the downloadable ZIP. See docs/releases/antigravity-submissions.json. -->
+              <span data-antigravity-marketplace-version>Marketplace · v0.1.240</span><br>
+              <span data-i18n="install.antigravity.pending">Awaiting approval.</span>
+            </p>
+            <a class="button install-option__download" href="downloads/clara-antigravity-plugin.zip" download data-i18n="install.antigravity.download">Download ZIP for Google Antigravity</a>
+            <p class="install-option__note" data-antigravity-version hidden></p>
+            <a class="install-option__note" href="antigravity/index.html?lang=en" data-antigravity-guide-link data-i18n="install.antigravity.guide">How to install Clara in Antigravity →</a>
           </div>
           <a class="hero-install__video" id="clara-install-video-link" href="https://youtu.be/vU4eow_MMDA" target="_blank" rel="noopener noreferrer" aria-label="Connect ChatGPT to your computer with Codex" data-i18n-aria-label="install.video.title">
             <span class="video-story__thumb" aria-hidden="true">
@@ -164,11 +184,16 @@
 
   <footer>
     <a href="https://github.com/fabioannovazzi/app_files/tree/main/plugins/clara" target="_blank" rel="noopener noreferrer">GitHub</a>
+    <nav class="product-social" aria-label="Clara social profiles" data-i18n-aria-label="footer.socialLabel">
+      <a href="https://www.linkedin.com/company/clara-consultant/" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false" fill="currentColor"><path d="M20.45 2H3.55C2.69 2 2 2.68 2 3.52v16.96c0 .84.69 1.52 1.55 1.52h16.9c.86 0 1.55-.68 1.55-1.52V3.52c0-.84-.69-1.52-1.55-1.52ZM7.93 18.75H4.98V9.2h2.95v9.55ZM6.45 7.9a1.71 1.71 0 1 1 0-3.42 1.71 1.71 0 0 1 0 3.42Zm12.3 10.85H15.8v-4.64c0-1.11-.02-2.54-1.55-2.54-1.55 0-1.79 1.21-1.79 2.46v4.72H9.51V9.2h2.83v1.3h.04c.39-.74 1.36-1.52 2.79-1.52 2.99 0 3.54 1.97 3.54 4.53v5.24Z"/></svg><span>LinkedIn</span></a>
+      <a href="https://x.com/ClaraPlugin" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false" fill="currentColor"><path d="M18.9 2H22l-6.78 7.75L23.2 22h-6.25l-4.89-7.4L5.58 22H2.45l7.99-9.13L.8 2h6.41l4.42 6.74L18.9 2Zm-1.1 18h1.73L6.26 3.88H4.4L17.8 20Z"/></svg><span>X</span></a>
+    </nav>
   </footer>
 
   <script>
     const copy = {
       en: {
+        "footer.socialLabel": "Clara social profiles",
         title: "Clara",
         "meta.description": "Clara adds presentations, narrated research videos, interviews, transcription, documents, retail analysis, and data analysis to Codex.",
         "skip": "Skip to content",
@@ -295,7 +320,7 @@
         "capabilities.interview.prompt": "\"Prepare a 15-minute interview in Italian for this participant.\"",
         "capabilities.transcribe.kicker": "Transcription",
         "capabilities.transcribe.title": "Transcribe a meeting or recording",
-        "capabilities.transcribe.copy": "Record the conversation or upload an existing audio file through Mparanza-hosted Voice Capture. The audio reaches Mparanza and OpenAI for transcription. Hosted working files are deleted before the completed files are returned; Codex may then read the local transcript for speaker attribution and review.",
+        "capabilities.transcribe.copy": "Record the conversation or upload an existing audio file through Mparanza-hosted Voice Capture. Recording languages include Arabic, English, Italian, French, German, and Spanish. The audio reaches Mparanza and OpenAI for transcription. Hosted working files are deleted before the completed files are returned; Codex may then read the local transcript for speaker attribution and review.",
         "capabilities.transcribe.prompt": "\"Transcribe this recording and identify the speakers.\"",
         "capabilities.attributes.kicker": "Advisory work",
         "capabilities.attributes.title": "From sources to a document for review",
@@ -309,15 +334,22 @@
         "capabilities.charts.copy.after": ".",
         "capabilities.charts.prompt": "\"Analyze this spreadsheet, choose the most useful chart, and explain the result.\"",
         "install.title": "Installation",
-        "install.copy": "Install Clara for ChatGPT Work and Codex, or download the package for Claude Cowork.",
+        "install.copy": "Install Clara in ChatGPT Work and Codex, Claude Cowork or Google Antigravity.",
+        "install.antigravity.marketplace": "Go to Antigravity marketplace",
+        "install.antigravity.pending": "Awaiting approval.",
+        "install.antigravity.download": "Download ZIP for Google Antigravity",
+        "install.antigravity.guide": "How to install Clara in Antigravity →",
         "install.actions.label": "Clara installation options",
         "install.video.title": "Connect ChatGPT to your computer with Codex",
         "install.button": "Install for ChatGPT Work and Codex",
-        "install.chatgptHelp": "Opens Clara’s installation page for ChatGPT Work and Codex.",
-        "install.coworkButton": "Download for Claude Cowork",
-        "install.coworkHelp": "Then upload the ZIP from Customize → Plugins in Claude Cowork.",
+        "install.zipButton": "Download ZIP for ChatGPT Work and Codex",
+        "install.coworkButton": "Go to Cowork marketplace",
+        "install.coworkHelp": "We have submitted the plugin to the Cowork marketplace. Awaiting approval.",
+        "install.coworkGuide": "Download ZIP for Cowork",
+        "install.coworkZipHelp": "Cowork package and instructions to install or update.",
       },
       it: {
+        "footer.socialLabel": "Profili social di Clara",
         title: "Clara",
         "meta.description": "Clara aggiunge a Codex presentazioni, video di ricerca narrati, interviste, trascrizione, documenti, analisi retail e analisi dei dati.",
         "skip": "Vai al contenuto",
@@ -444,7 +476,7 @@
         "capabilities.interview.prompt": "\"Prepara un'intervista di 15 minuti in italiano per questa persona.\"",
         "capabilities.transcribe.kicker": "Trascrizione",
         "capabilities.transcribe.title": "Trascrivi una riunione o una registrazione",
-        "capabilities.transcribe.copy": "Registra la conversazione o carica un file audio con Voice Capture, ospitato da Mparanza. L'audio raggiunge Mparanza e OpenAI per la trascrizione. I file di lavoro ospitati vengono cancellati prima della restituzione dei file completati; Codex può poi leggere la trascrizione locale per attribuire i parlanti e rivederla.",
+        "capabilities.transcribe.copy": "Registra la conversazione o carica un file audio con Voice Capture, ospitato da Mparanza. Le lingue della registrazione includono arabo, inglese, italiano, francese, tedesco e spagnolo. L'audio raggiunge Mparanza e OpenAI per la trascrizione. I file di lavoro ospitati vengono cancellati prima della restituzione dei file completati; Codex può poi leggere la trascrizione locale per attribuire i parlanti e rivederla.",
         "capabilities.transcribe.prompt": "\"Trascrivi questa registrazione e identifica chi parla.\"",
         "capabilities.attributes.kicker": "Lavoro di consulenza",
         "capabilities.attributes.title": "Dalle fonti al documento da rivedere",
@@ -458,15 +490,22 @@
         "capabilities.charts.copy.after": ".",
         "capabilities.charts.prompt": "\"Analizza questo file, scegli il grafico più utile e spiegami il risultato.\"",
         "install.title": "Installazione",
-        "install.copy": "Installa Clara per ChatGPT Work e Codex oppure scarica il pacchetto per Claude Cowork.",
+        "install.copy": "Installa Clara in ChatGPT Work e Codex, Claude Cowork o Google Antigravity.",
+        "install.antigravity.marketplace": "Vai al marketplace Antigravity",
+        "install.antigravity.pending": "In attesa di approvazione.",
+        "install.antigravity.download": "Scarica ZIP per Google Antigravity",
+        "install.antigravity.guide": "Come installare Clara in Antigravity →",
         "install.actions.label": "Opzioni di installazione di Clara",
         "install.video.title": "Collega ChatGPT al computer con Codex",
         "install.button": "Installa per ChatGPT Work e Codex",
-        "install.chatgptHelp": "Apre la pagina di installazione di Clara per ChatGPT Work e Codex.",
-        "install.coworkButton": "Scarica per Claude Cowork",
-        "install.coworkHelp": "Poi carica il file ZIP da Personalizza → Plugin in Claude Cowork.",
+        "install.zipButton": "Scarica ZIP per ChatGPT Work e Codex",
+        "install.coworkButton": "Vai al marketplace Cowork",
+        "install.coworkHelp": "Abbiamo inviato il plugin al marketplace Cowork. In attesa di approvazione.",
+        "install.coworkGuide": "Scarica ZIP per Cowork",
+        "install.coworkZipHelp": "Pacchetto per Cowork e istruzioni per installare o aggiornare.",
       },
       fr: {
+        "footer.socialLabel": "Profils de Clara sur les réseaux sociaux",
         title: "Clara",
         "meta.description": "Clara ajoute à Codex les présentations, les vidéos de recherche narrées, les entretiens, la transcription, les documents, l'analyse retail et l'analyse de données.",
         "skip": "Aller au contenu",
@@ -593,7 +632,7 @@
         "capabilities.interview.prompt": "\"Prépare un entretien de 15 minutes en français pour cette personne.\"",
         "capabilities.transcribe.kicker": "Transcription",
         "capabilities.transcribe.title": "Transcrivez une réunion ou un enregistrement",
-        "capabilities.transcribe.copy": "Enregistrez la conversation ou chargez un fichier audio via Voice Capture, hébergé par Mparanza. L'audio atteint Mparanza et OpenAI pour la transcription. Les fichiers de travail hébergés sont supprimés avant le retour des fichiers terminés ; Codex peut ensuite lire la transcription locale pour attribuer les locuteurs et la relire.",
+        "capabilities.transcribe.copy": "Enregistrez la conversation ou chargez un fichier audio via Voice Capture, hébergé par Mparanza. Les langues d'enregistrement comprennent l'arabe, l'anglais, l'italien, le français, l'allemand et l'espagnol. L'audio atteint Mparanza et OpenAI pour la transcription. Les fichiers de travail hébergés sont supprimés avant le retour des fichiers terminés ; Codex peut ensuite lire la transcription locale pour attribuer les locuteurs et la relire.",
         "capabilities.transcribe.prompt": "\"Transcris cet enregistrement et identifie les personnes qui parlent.\"",
         "capabilities.attributes.kicker": "Travail de conseil",
         "capabilities.attributes.title": "Des sources au document à relire",
@@ -607,15 +646,22 @@
         "capabilities.charts.copy.after": ".",
         "capabilities.charts.prompt": "\"Analyse ce fichier, choisis le graphique le plus utile et explique le résultat.\"",
         "install.title": "Installation",
-        "install.copy": "Installez Clara pour ChatGPT Work et Codex ou téléchargez le paquet pour Claude Cowork.",
+        "install.copy": "Installez Clara dans ChatGPT Work et Codex, Claude Cowork ou Google Antigravity.",
+        "install.antigravity.marketplace": "Aller au marketplace Antigravity",
+        "install.antigravity.pending": "En attente d’approbation.",
+        "install.antigravity.download": "Télécharger le ZIP pour Google Antigravity",
+        "install.antigravity.guide": "Installer Clara dans Antigravity →",
         "install.actions.label": "Options d’installation de Clara",
         "install.video.title": "Connectez ChatGPT à votre ordinateur avec Codex",
         "install.button": "Installer pour ChatGPT Work et Codex",
-        "install.chatgptHelp": "Ouvre la page d’installation de Clara pour ChatGPT Work et Codex.",
-        "install.coworkButton": "Télécharger pour Claude Cowork",
-        "install.coworkHelp": "Importez ensuite le fichier ZIP depuis Personnaliser → Plugins dans Claude Cowork.",
+        "install.zipButton": "Télécharger le ZIP pour ChatGPT Work et Codex",
+        "install.coworkButton": "Aller au marketplace Cowork",
+        "install.coworkHelp": "Nous avons soumis le plugin au marketplace Cowork. En attente d’approbation.",
+        "install.coworkGuide": "Télécharger le ZIP pour Cowork",
+        "install.coworkZipHelp": "Paquet pour Cowork et instructions d’installation ou de mise à jour.",
       },
       de: {
+        "footer.socialLabel": "Clara in sozialen Netzwerken",
         title: "Clara",
         "meta.description": "Clara ergänzt Codex um Präsentationen, vertonte Forschungsvideos, Interviews, Transkription, Dokumente, Retail-Analysen und Datenanalysen.",
         "skip": "Zum Inhalt",
@@ -742,7 +788,7 @@
         "capabilities.interview.prompt": "\"Bereite für diese Person ein 15-minütiges Interview auf Deutsch vor.\"",
         "capabilities.transcribe.kicker": "Transkription",
         "capabilities.transcribe.title": "Transkribieren Sie eine Besprechung oder Aufnahme",
-        "capabilities.transcribe.copy": "Zeichnen Sie das Gespräch auf oder laden Sie über das von Mparanza gehostete Voice Capture eine Audiodatei hoch. Das Audio erreicht Mparanza und OpenAI zur Transkription. Gehostete Arbeitsdateien werden gelöscht, bevor das fertige Paket zurückgegeben wird; anschließend kann Codex das lokale Transkript zur Sprecherzuordnung und Prüfung lesen.",
+        "capabilities.transcribe.copy": "Zeichnen Sie das Gespräch auf oder laden Sie über das von Mparanza gehostete Voice Capture eine Audiodatei hoch. Zu den Aufnahmesprachen gehören Arabisch, Englisch, Italienisch, Französisch, Deutsch und Spanisch. Das Audio erreicht Mparanza und OpenAI zur Transkription. Gehostete Arbeitsdateien werden gelöscht, bevor das fertige Paket zurückgegeben wird; anschließend kann Codex das lokale Transkript zur Sprecherzuordnung und Prüfung lesen.",
         "capabilities.transcribe.prompt": "\"Transkribiere diese Aufnahme und ordne die Sprecher zu.\"",
         "capabilities.attributes.kicker": "Beratungsarbeit",
         "capabilities.attributes.title": "Von den Quellen zum Dokument zur Durchsicht",
@@ -756,15 +802,22 @@
         "capabilities.charts.copy.after": ".",
         "capabilities.charts.prompt": "\"Analysiere diese Datei, wähle den nützlichsten Chart und erkläre das Ergebnis.\"",
         "install.title": "Installation",
-        "install.copy": "Installieren Sie Clara für ChatGPT Work und Codex oder laden Sie das Paket für Claude Cowork herunter.",
+        "install.copy": "Installieren Sie Clara in ChatGPT Work und Codex, Claude Cowork oder Google Antigravity.",
+        "install.antigravity.marketplace": "Zum Antigravity-Marketplace",
+        "install.antigravity.pending": "Freigabe ausstehend.",
+        "install.antigravity.download": "ZIP für Google Antigravity herunterladen",
+        "install.antigravity.guide": "Clara in Antigravity installieren →",
         "install.actions.label": "Installationsoptionen für Clara",
         "install.video.title": "ChatGPT mit Codex mit Ihrem Computer verbinden",
         "install.button": "Für ChatGPT Work und Codex installieren",
-        "install.chatgptHelp": "Öffnet Claras Installationsseite für ChatGPT Work und Codex.",
-        "install.coworkButton": "Für Claude Cowork herunterladen",
-        "install.coworkHelp": "Laden Sie die ZIP-Datei anschließend in Claude Cowork unter Anpassen → Plugins hoch.",
+        "install.zipButton": "ZIP für ChatGPT Work und Codex herunterladen",
+        "install.coworkButton": "Zum Cowork-Marketplace",
+        "install.coworkHelp": "Wir haben das Plugin beim Cowork-Marketplace eingereicht. Die Freigabe steht aus.",
+        "install.coworkGuide": "ZIP für Cowork herunterladen",
+        "install.coworkZipHelp": "Cowork-Paket und Anleitung zum Installieren oder Aktualisieren.",
       },
       es: {
+        "footer.socialLabel": "Perfiles de Clara en redes sociales",
         title: "Clara",
         "meta.description": "Clara añade a Codex presentaciones, vídeos de investigación narrados, entrevistas, transcripción, documentos, análisis retail y análisis de datos.",
         "skip": "Ir al contenido",
@@ -891,7 +944,7 @@
         "capabilities.interview.prompt": "\"Prepara una entrevista de 15 minutos en español para esta persona.\"",
         "capabilities.transcribe.kicker": "Transcripción",
         "capabilities.transcribe.title": "Transcribe una reunión o una grabación",
-        "capabilities.transcribe.copy": "Graba la conversación o carga un archivo de audio existente mediante Voice Capture, alojado por Mparanza. El audio llega a Mparanza y OpenAI para su transcripción. Los archivos de trabajo alojados se eliminan antes de devolver los archivos completados; después, Codex puede leer la transcripción local para atribuir los hablantes y revisarla.",
+        "capabilities.transcribe.copy": "Graba la conversación o carga un archivo de audio existente mediante Voice Capture, alojado por Mparanza. Los idiomas de grabación incluyen árabe, inglés, italiano, francés, alemán y español. El audio llega a Mparanza y OpenAI para su transcripción. Los archivos de trabajo alojados se eliminan antes de devolver los archivos completados; después, Codex puede leer la transcripción local para atribuir los hablantes y revisarla.",
         "capabilities.transcribe.prompt": "\"Transcribe esta grabación e identifica a los hablantes.\"",
         "capabilities.attributes.kicker": "Trabajo de consultoría",
         "capabilities.attributes.title": "De las fuentes a un documento para revisar",
@@ -905,13 +958,19 @@
         "capabilities.charts.copy.after": ".",
         "capabilities.charts.prompt": "\"Analiza esta hoja de cálculo, elige el gráfico más útil y explica el resultado.\"",
         "install.title": "Instalación",
-        "install.copy": "Instala Clara para ChatGPT Work y Codex o descarga el paquete para Claude Cowork.",
+        "install.copy": "Instala Clara en ChatGPT Work y Codex, Claude Cowork o Google Antigravity.",
+        "install.antigravity.marketplace": "Ir al marketplace de Antigravity",
+        "install.antigravity.pending": "Pendiente de aprobación.",
+        "install.antigravity.download": "Descargar ZIP para Google Antigravity",
+        "install.antigravity.guide": "Cómo instalar Clara en Antigravity →",
         "install.actions.label": "Opciones de instalación de Clara",
         "install.video.title": "Conecta ChatGPT al ordenador con Codex",
         "install.button": "Instalar para ChatGPT Work y Codex",
-        "install.chatgptHelp": "Abre la página de instalación de Clara para ChatGPT Work y Codex.",
-        "install.coworkButton": "Descargar para Claude Cowork",
-        "install.coworkHelp": "Después, sube el archivo ZIP desde Personalizar → Plugins en Claude Cowork.",
+        "install.zipButton": "Descargar ZIP para ChatGPT Work y Codex",
+        "install.coworkButton": "Ir al marketplace de Cowork",
+        "install.coworkHelp": "Hemos enviado el plugin al marketplace de Cowork. Pendiente de aprobación.",
+        "install.coworkGuide": "Descargar ZIP para Cowork",
+        "install.coworkZipHelp": "Paquete para Cowork e instrucciones para instalar o actualizar.",
       },
     };
 
@@ -958,6 +1017,13 @@
       const value = activeCopy[node.dataset.i18nContent];
       if (typeof value === "string") node.setAttribute("content", value);
     });
+
+    document.querySelector("[data-codex-download-link]").href =
+      "../plugin-downloads/index.html?product=clara&lang=" + (safeLang === "it" ? "it" : "en");
+    document.querySelector("[data-antigravity-guide-link]").href =
+      "antigravity/index.html?lang=" + (safeLang === "it" ? "it" : "en");
+    document.querySelector("[data-cowork-guide-link]").href =
+      "../cowork-downloads/index.html?lang=" + (safeLang === "it" ? "it" : "en");
     document.querySelectorAll("[data-current-language]").forEach((node) => {
       node.textContent = safeLang.toUpperCase();
     });

@@ -485,7 +485,11 @@ def test_realtime_transcription_session_rejects_invalid_launch_token(
     assert "Invalid or expired Clara voice launch token" in str(error.value.detail)
 
 
-def test_create_audio_transcription_posts_small_audio_multipart(monkeypatch) -> None:
+@pytest.mark.parametrize("source_language", ["es", "ar"])
+def test_create_audio_transcription_posts_supported_language_hint(
+    monkeypatch,
+    source_language: str,
+) -> None:
     class FakeResponse:
         def __init__(self, payload: dict[str, object]) -> None:
             self.payload = payload
@@ -524,7 +528,7 @@ def test_create_audio_transcription_posts_small_audio_multipart(monkeypatch) -> 
         audio_bytes=b"fake-audio",
         filename="note.mp3",
         content_type="audio/mpeg",
-        language="es",
+        language=source_language,
         case_context="Cliente: ExampleCo",
     )
     upload_body = captured[0]["body"]
@@ -551,7 +555,7 @@ def test_create_audio_transcription_posts_small_audio_multipart(monkeypatch) -> 
     assert b'name="temperature"' in upload_body
     assert b"\r\n0\r\n" in upload_body
     assert b'name="languages[]"' in upload_body
-    assert b"\r\nes\r\n" in upload_body
+    assert f"\r\n{source_language}\r\n".encode() in upload_body
     assert b'name="prompt"' in upload_body
     assert b"Preferred spellings / case glossary" in upload_body
     assert b"- ExampleCo" in upload_body
@@ -1455,9 +1459,11 @@ def test_write_upload_file_to_path_rejects_oversized_stream(tmp_path: Path) -> N
     assert list(tmp_path.glob("*.uploading")) == []
 
 
-def test_upload_audio_route_accepts_spanish_source_language(
+@pytest.mark.parametrize("source_language", ["es", "ar"])
+def test_upload_audio_route_accepts_supported_source_language(
     tmp_path: Path,
     monkeypatch,
+    source_language: str,
 ) -> None:
     monkeypatch.setenv("CASE_NOTES_VOICE_TOKEN_ROOT", str(tmp_path))
     monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path))
@@ -1487,7 +1493,7 @@ def test_upload_audio_route_accepts_spanish_source_language(
         api.upload_audio(
             background_tasks=background_tasks,
             launch_token=token,
-            language="es",
+            language=source_language,
             case_context="Client: ExampleCo\nRisk: governance remains informal.",
             source_metadata_json=json.dumps(
                 {
@@ -1512,7 +1518,28 @@ def test_upload_audio_route_accepts_spanish_source_language(
     job_payload = api._read_upload_job(body["job_id"], user)
     assert job_payload["status"] == "queued"
     assert len(background_tasks.tasks) == 1
-    assert background_tasks.tasks[0].kwargs["language"] == "es"
+    assert background_tasks.tasks[0].kwargs["language"] == source_language
+
+
+def test_launch_token_preserves_arabic_source_language(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    monkeypatch.setenv("CASE_NOTES_VOICE_TOKEN_ROOT", str(tmp_path))
+    user = AuthenticatedUser(email="advisor@example.com")
+
+    token = api.issue_voice_launch_token(user=user, language="ar")
+    metadata = api.verify_voice_launch_token(token=token, user=user)
+
+    assert metadata["language"] == "ar"
+
+
+def test_voice_capture_page_supports_arabic_transcript_direction() -> None:
+    page = (ROOT / "templates" / "case_notes_voice.html").read_text(encoding="utf-8")
+
+    assert '<option value="ar"' in page
+    assert 'id="userTranscript" dir="auto"' in page
+    assert 'language == "ar"' in page
 
 
 def test_upload_audio_route_rejects_unsupported_source_language() -> None:

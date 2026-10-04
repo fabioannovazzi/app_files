@@ -35,7 +35,7 @@
     "no_assessment": "Valutazione non ancora registrata.",
     "source_details": "Dettagli della fonte",
     "technical": "Registri e dettagli di controllo",
-    "technical_note": "Apri questi file per esaminare i dati completi, le revisioni e i controlli. I nomi dei campi tecnici sono conservati.",
+    "technical_note": "Questi file sono conservati nella cartella del dossier e contengono dati completi, revisioni e controlli. I nomi dei campi tecnici sono conservati.",
     "workpaper": "Dossier di dettaglio",
     "facts": "Fatti registrati",
     "forms": "Campi per la domanda",
@@ -87,7 +87,9 @@
     "pass": "Controllo superato",
     "fail": "Controllo non superato",
     "returned": "Restituito per revisione",
-    "reviewed": "Revisionato"
+    "reviewed": "Revisionato",
+    "mechanical_validation_limit": "La validazione tecnica non conferma l’autorità delle fonti, l’interpretazione giuridica, l’ammissibilità del soggetto o delle spese, né la prontezza all’invio.",
+    "informational_notes": "Note sul dossier"
   },
   "en": {
     "title": "Grant-application dossier",
@@ -125,7 +127,7 @@
     "no_assessment": "No assessment recorded yet.",
     "source_details": "Source details",
     "technical": "Registers and control details",
-    "technical_note": "Open these files to inspect the full records, reviews and checks. Technical field names are preserved.",
+    "technical_note": "These files are retained in the dossier folder and contain the full records, reviews and checks. Technical field names are preserved.",
     "workpaper": "Detailed workpaper",
     "facts": "Recorded facts",
     "forms": "Application fields",
@@ -177,7 +179,9 @@
     "pass": "Check passed",
     "fail": "Check failed",
     "returned": "Returned for review",
-    "reviewed": "Reviewed"
+    "reviewed": "Reviewed",
+    "mechanical_validation_limit": "Mechanical validation does not establish source authority, legal interpretation, eligibility, cost admissibility, or filing readiness.",
+    "informational_notes": "Dossier notes"
   },
   "fr": {
     "title": "Dossier de demande d’aide",
@@ -215,7 +219,7 @@
     "no_assessment": "Aucune évaluation encore enregistrée.",
     "source_details": "Détails de la source",
     "technical": "Registres et détails de contrôle",
-    "technical_note": "Ouvrez ces fichiers pour examiner les données complètes, les révisions et les contrôles. Les noms des champs techniques sont conservés.",
+    "technical_note": "Ces fichiers sont conservés dans le dossier et contiennent les données complètes, les révisions et les contrôles. Les noms des champs techniques sont conservés.",
     "workpaper": "Dossier détaillé",
     "facts": "Faits enregistrés",
     "forms": "Champs de la demande",
@@ -267,7 +271,9 @@
     "pass": "Contrôle réussi",
     "fail": "Contrôle non réussi",
     "returned": "Retourné pour examen",
-    "reviewed": "Examiné"
+    "reviewed": "Examiné",
+    "mechanical_validation_limit": "La validation technique ne confirme ni l’autorité des sources, ni l’interprétation juridique, ni l’éligibilité du demandeur ou des dépenses, ni la préparation au dépôt.",
+    "informational_notes": "Notes sur le dossier"
   },
   "de": {
     "title": "Förderantragsdossier",
@@ -305,7 +311,7 @@
     "no_assessment": "Noch keine Bewertung erfasst.",
     "source_details": "Quelldetails",
     "technical": "Register und Kontrolldetails",
-    "technical_note": "Öffnen Sie diese Dateien, um sämtliche Daten, Prüfungen und Kontrollen einzusehen. Technische Feldnamen bleiben unverändert.",
+    "technical_note": "Diese Dateien werden im Dossierordner aufbewahrt und enthalten die vollständigen Daten, Prüfungen und Kontrollen. Technische Feldnamen bleiben erhalten.",
     "workpaper": "Detaillierte Arbeitsunterlage",
     "facts": "Erfasste Fakten",
     "forms": "Antragsfelder",
@@ -357,7 +363,9 @@
     "pass": "Prüfung bestanden",
     "fail": "Prüfung nicht bestanden",
     "returned": "Zur Prüfung zurückgegeben",
-    "reviewed": "Geprüft"
+    "reviewed": "Geprüft",
+    "mechanical_validation_limit": "Die technische Validierung bestätigt weder die Verbindlichkeit der Quellen noch die rechtliche Auslegung, die Förderfähigkeit des Antragstellers oder der Kosten oder die Einreichungsbereitschaft.",
+    "informational_notes": "Hinweise zum Dossier"
   },
   "es": {
     "title": "Expediente de solicitud de ayuda",
@@ -395,7 +403,7 @@
     "no_assessment": "Todavía no hay evaluación registrada.",
     "source_details": "Detalles de la fuente",
     "technical": "Registros y detalles de control",
-    "technical_note": "Abra estos archivos para examinar los datos completos, las revisiones y los controles. Se conservan los nombres de los campos técnicos.",
+    "technical_note": "Estos archivos se conservan en la carpeta del expediente y contienen los datos completos, las revisiones y los controles. Se mantienen los nombres de los campos técnicos.",
     "workpaper": "Documento de trabajo detallado",
     "facts": "Hechos registrados",
     "forms": "Campos de la solicitud",
@@ -447,6 +455,8 @@
     "pass": "Comprobación superada",
     "fail": "Comprobación no superada",
     "returned": "Devuelto para revisión",
-    "reviewed": "Revisado"
+    "reviewed": "Revisado",
+    "mechanical_validation_limit": "La validación técnica no confirma la autoridad de las fuentes, la interpretación jurídica, la elegibilidad del solicitante o de los gastos, ni que el expediente esté listo para presentarse.",
+    "informational_notes": "Notas del expediente"
   }
 }

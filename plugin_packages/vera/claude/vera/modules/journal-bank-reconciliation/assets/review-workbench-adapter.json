@@ -12,6 +12,9 @@
       "title": "Journal Entry",
       "variant": "ledger",
       "fields": [
+        "journal_date",
+        "journal_amount",
+        "journal_description",
         "entry",
         "entry_date",
         "account",
@@ -24,6 +27,9 @@
       "title": "Bank Statement",
       "variant": "ledger",
       "fields": [
+        "bank_date",
+        "bank_amount",
+        "bank_description",
         "bank_line",
         "statement_date",
         "counterparty",
@@ -37,6 +43,11 @@
       "variant": "finding",
       "fields": [
         "status",
+        "stage",
+        "shared_references",
+        "amount_delta",
+        "date_diff_days",
+        "review_note",
         "match_basis",
         "requested_document",
         "reason",

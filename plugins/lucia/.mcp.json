@@ -65,6 +65,15 @@
       "env": {
         "LUCIA_ASSURANCE_HOST": "1"
       }
+    },
+    "courseChats": {
+      "title": "Lucia · Corsi",
+      "description": "Open or resume the paired working chat for local courses.",
+      "cwd": ".",
+      "command": "node",
+      "args": [
+        "./scripts/course_chat_mcp.cjs"
+      ]
     }
   }
 }

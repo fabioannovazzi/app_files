@@ -148,3 +148,12 @@ Il modello ospite legge i documenti selezionati e produce il giudizio; il codice
 controlla soltanto file, copertura dichiarata, contesto e occorrenza delle citazioni.
 Lucia mantiene autonomamente l'adattamento italiano: può riprendere miglioramenti
 upstream dopo verifica, ma non promette compatibilità o aggiornamenti automatici.
+
+## Google Antigravity
+
+Build the Antigravity ZIP with `python scripts/build_antigravity_plugin.py lucia`.
+The projection includes the canonical skills, the Lucia agent, embedded
+modules, scripts and any configured MCP servers. Install the complete extracted
+`lucia` folder with `agy plugin install "/path/to/lucia"`; then use
+`agy --agent lucia`. For the desktop installation and host limitations, see
+[the installation guide](https://mparanza.com/static/shared/lucia/antigravity/index.html).

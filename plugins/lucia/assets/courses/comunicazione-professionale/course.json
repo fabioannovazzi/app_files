@@ -53,9 +53,39 @@
       "sha256": "9cad267791094a6a9b20ff3a4c7e44d730bc7e05de4d40e7865931392e7803b4"
     },
     {
+      "path": "modules/comunicazione-professionale/assets/package-labels.json",
+      "repository_path": "plugins/comunicazione-professionale/assets/package-labels.json",
+      "sha256": "20037aadccc71638347356ae903084da35c4a155438b1ad7808ed34cfe18d88d"
+    },
+    {
+      "path": "modules/comunicazione-professionale/assets/studio-document-format/baseline-profile-de.json",
+      "repository_path": "plugins/comunicazione-professionale/assets/studio-document-format/baseline-profile-de.json",
+      "sha256": "26a10c0e443a8a2f6c1abe9eef08155f3d364e3669fc01ef9195c4b40750ca18"
+    },
+    {
+      "path": "modules/comunicazione-professionale/assets/studio-document-format/baseline-profile-en.json",
+      "repository_path": "plugins/comunicazione-professionale/assets/studio-document-format/baseline-profile-en.json",
+      "sha256": "c1c2d3f4533c52681a5e29519cc260c722e96dfa224a9d299289bff7dc8e98a4"
+    },
+    {
+      "path": "modules/comunicazione-professionale/assets/studio-document-format/baseline-profile-es.json",
+      "repository_path": "plugins/comunicazione-professionale/assets/studio-document-format/baseline-profile-es.json",
+      "sha256": "a10f5d3e0ea01cd9e1578f173671e7f5608368b955238e6a23117b692393ce91"
+    },
+    {
+      "path": "modules/comunicazione-professionale/assets/studio-document-format/baseline-profile-fr.json",
+      "repository_path": "plugins/comunicazione-professionale/assets/studio-document-format/baseline-profile-fr.json",
+      "sha256": "76a92ea58a450a5fb5a1912db449eb6477a0115018d0e46db2ef722991d1ba50"
+    },
+    {
+      "path": "modules/comunicazione-professionale/assets/studio-document-format/baseline-profile-it.json",
+      "repository_path": "plugins/comunicazione-professionale/assets/studio-document-format/baseline-profile-it.json",
+      "sha256": "4b9f57be78573553a69a5f9343ed7a5eca21994f0911d85c9d595c87aea011e5"
+    },
+    {
       "path": "modules/comunicazione-professionale/requirements.txt",
       "repository_path": "plugins/comunicazione-professionale/requirements.txt",
-      "sha256": "4376e39d90f829be0b643d59c8df0c2ac265409071947ee64265207daae4c2e7"
+      "sha256": "21d6d3b5742482d9d57790df8cea6e1f00bff4742683b748916f5d1223b472f8"
     },
     {
       "path": "modules/comunicazione-professionale/schemas/answer_contract.schema.json",
@@ -110,7 +140,7 @@
     {
       "path": "modules/comunicazione-professionale/schemas/model_contribution.schema.json",
       "repository_path": "plugins/comunicazione-professionale/schemas/model_contribution.schema.json",
-      "sha256": "468d2884b8542964a1470b88a6b3dac1799e3a2cfc20b758085e43bdc329dd86"
+      "sha256": "95c52ca07693397b394abd7e44514f728df0f8956a23a53e7b1baba325d03b35"
     },
     {
       "path": "modules/comunicazione-professionale/schemas/review_bundle.schema.json",
@@ -145,7 +175,7 @@
     {
       "path": "modules/comunicazione-professionale/scripts/package_communications.py",
       "repository_path": "plugins/comunicazione-professionale/scripts/package_communications.py",
-      "sha256": "15f877e32d62c99849d798dab0602014953a434d15950b4621e24cada117994a"
+      "sha256": "b71677ef0500fca3770bb501d5e4f2ff68a5b1ae0077a8389d81c70eb705d60b"
     },
     {
       "path": "modules/comunicazione-professionale/scripts/prepare_creative_direction_handoff.py",
@@ -155,7 +185,7 @@
     {
       "path": "modules/comunicazione-professionale/scripts/prepare_model_phase.py",
       "repository_path": "plugins/comunicazione-professionale/scripts/prepare_model_phase.py",
-      "sha256": "72bbc6bd7349e51017a7c10b2bb234fda9307c29420313f96b638e86354d0043"
+      "sha256": "9514479d1043407f024af9e2333fbcc6a36f580d24ce7b6ee3ea0e44315e731d"
     },
     {
       "path": "modules/comunicazione-professionale/scripts/prepare_run.py",
@@ -165,7 +195,7 @@
     {
       "path": "modules/comunicazione-professionale/scripts/promote_studio_profile.py",
       "repository_path": "plugins/comunicazione-professionale/scripts/promote_studio_profile.py",
-      "sha256": "11443b542e3174ca1faf7ef293e675854a78322cf0b0c078c369250d524856cc"
+      "sha256": "9365c82638e49c99d658bd5b7dc0c13581be4ab73d9cb0a7ff6e1d32ebb9e0a3"
     },
     {
       "path": "modules/comunicazione-professionale/scripts/qualify_editorial_assessor.py",
@@ -213,6 +243,16 @@
       "sha256": "c07ac4376bd254bcbd249e9e3a8432e1948999cf1678c5dd5cd9233ac03a033c"
     },
     {
+      "path": "modules/comunicazione-professionale/scripts/review_document_format.py",
+      "repository_path": "plugins/comunicazione-professionale/scripts/review_document_format.py",
+      "sha256": "7b0a6aff7147e56cc79df968455fbedc6c10e39eef609bccd77494f6a7f4052f"
+    },
+    {
+      "path": "modules/comunicazione-professionale/scripts/studio_document_format.py",
+      "repository_path": "plugins/comunicazione-professionale/scripts/studio_document_format.py",
+      "sha256": "f95ed026ce9d288b6e1a6d1a16606288428f3b126a9dfe284dd1b746d2cca826"
+    },
+    {
       "path": "modules/comunicazione-professionale/scripts/validate_run.py",
       "repository_path": "plugins/comunicazione-professionale/scripts/validate_run.py",
       "sha256": "93410dfa2c1c87a8d950b5421bbb00960933341ae4fa8fb88e76ff75ff5004f5"
@@ -225,7 +265,7 @@
     {
       "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/SKILL.md",
       "repository_path": "plugins/comunicazione-professionale/skills/comunicazione-professionale/SKILL.md",
-      "sha256": "d2a78b6e80bc9d5882903a68b7bb551741476ca1d76288e72e032e1f7efab4ed"
+      "sha256": "e6da7288fd756d9d6ef29a8d3df8f99dd9bb2296f883fe0ac87b415cacca0b8b"
     },
     {
       "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/agents/openai.yaml",
@@ -278,6 +318,11 @@
       "sha256": "79c785f896af8b4cdcedf1210131c62b95fc2914dec135f6d3fe93d392648ec6"
     },
     {
+      "path": "vendor/modules/courseware/access.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+      "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+    },
+    {
       "path": "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
       "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
@@ -293,14 +338,24 @@
       "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
     },
     {
+      "path": "vendor/modules/courseware/assets/chat.html",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/chat.html",
+      "sha256": "9428f27dfc9cc761bf1b8dbb6c9e0f94c91b23d75682e58771f255963fccf961"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/chat.js",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/chat.js",
+      "sha256": "15d35c56bcb6bb1ae2ea3031e5703be6296a16dc7dce31b9800a838766a875b8"
+    },
+    {
       "path": "vendor/modules/courseware/assets/course.css",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
-      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+      "sha256": "5b28ac597f0a3deaf4cfc907b8a33bb40aae21719206ad0c976b605950f89dc7"
     },
     {
       "path": "vendor/modules/courseware/assets/languages.json",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
-      "sha256": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
+      "sha256": "507967ae7dcf07ae4e138fff4333adb5fd709484731dcef45d531152c54ede45"
     },
     {
       "path": "vendor/modules/courseware/assets/legacy-course.css",
@@ -313,29 +368,64 @@
       "sha256": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
     },
     {
+      "path": "vendor/modules/courseware/chat.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/chat.py",
+      "sha256": "d9c3f73fc3cd91b9eafc6a058e1a9f09388c166d9268a60082ec3201b4d94b2b"
+    },
+    {
+      "path": "vendor/modules/courseware/deck_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/deck_view.py",
+      "sha256": "96f75ea3078c9e0c6e509cdefb0beeb876677e2e7884777d213d9b03c6c27b80"
+    },
+    {
+      "path": "vendor/modules/courseware/document_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/document_view.py",
+      "sha256": "9982c9d6ce83e7feb26165308fa9a136a744891a7e623ce23ff9bb778e6b7403"
+    },
+    {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
       "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
     },
     {
+      "path": "vendor/modules/courseware/html_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/html_view.py",
+      "sha256": "57280e82460bd8c7982294c4be6e0cff7da969800d4282e6da15059571cce0b1"
+    },
+    {
       "path": "vendor/modules/courseware/legacy.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
-      "sha256": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+      "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
     },
     {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "22c5ea8d39a6ffa376c63f12bd31e3282b435a913e8027ee44c4261a5e704a74"
+      "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+    },
+    {
+      "path": "vendor/modules/courseware/native.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/native.cjs",
+      "sha256": "a34698a9c099bf81cf154ec1bafc3ab626860460f454a9f3400cf2d09ceae5b1"
     },
     {
       "path": "vendor/modules/courseware/policy.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
-      "sha256": "9587e770d7a64510899a361412e22353d1542dc876cbde5c74bf7bfbf7914d55"
+      "sha256": "f0c15e7bac029b913d2c80167e6d23591040bf03958923a1a4c68eb0ae8fd8e7"
     },
     {
       "path": "vendor/modules/courseware/preview.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/preview.py",
-      "sha256": "36ff10a3d93772a927765c395eb19c5073664c1447b0b267cf9bd9455c4ad6f3"
+      "sha256": "1a6e56141cdd554a6510100f47745f7b31472c9d22f45407f4f86ac7981aee10"
+    },
+    {
+      "path": "vendor/modules/courseware/sales_plan_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/sales_plan_view.py",
+      "sha256": "115977d03c034ed5f363d6fd5c8c82648ed1349067ac61e48d0701b10caa7e7b"
+    },
+    {
+      "path": "vendor/modules/courseware/website_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/website_view.py",
+      "sha256": "f230f86272201bae7bc34f1868d8cb6013b47ce9ccc8b876acdfb0bc257637d5"
     },
     {
       "path": "vendor/modules/desktop_teaching/__init__.py",
@@ -345,17 +435,17 @@
     {
       "path": "vendor/modules/desktop_teaching/cases.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/cases.py",
-      "sha256": "faf8ca6bbd59f16f679796a057b027b2efbcccfc4798dfc6c5e356d3239cb602"
+      "sha256": "17c5796df886818346bae0873da3dfd324c55a4e43d37ec5bb2457b9ef2fc2a2"
     },
     {
       "path": "vendor/modules/desktop_teaching/onboarding.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
-      "sha256": "c9c5ad72bee4ada303cbda72fe5ba81627f537e34418fc10d7ab8de5de04a71a"
+      "sha256": "a6e48f4aacaf83d5ad3d2db4e60ba696c9583c719dbf20270f62e21e8d186782"
     },
     {
       "path": "vendor/modules/desktop_teaching/teaching.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
-      "sha256": "9b967e0c028397d9645bf731024dfe07c990d3f377a6175a5486c0dc870e9ec1"
+      "sha256": "acd268d54bb7c034f06bd11cd15ccbd17d9a6bafd3e57a0d4897dc08ce06d8ab"
     }
   ],
   "files": [

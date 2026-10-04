@@ -50,6 +50,7 @@ IMPLEMENTATION_CONTRACT = (
     ("implementation", "scripts/stable_ooxml.py"),
     ("assurance_implementation", "__init__.py"),
     ("assurance_implementation", "contracts.py"),
+    ("assurance_implementation", "jurisdiction.py"),
     ("assurance_implementation", "decisions.py"),
     ("assurance_implementation", "envelope.py"),
     ("assurance_implementation", "money.py"),

@@ -12,7 +12,8 @@
     "assets/new-client-review-widget.html"
   ],
   "governed_shared_paths": [
-    "vendor/modules/vera_assurance"
+    "vendor/modules/vera_assurance",
+    "skills/vera/references/connected-studio-knowledge.md"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -25,6 +26,24 @@
         "id": "relationship-case-evidence",
         "purpose": "Prepare identity, engagement, privacy, AI-applicability, AML, document, and monitoring proposals for professional review",
         "content": "Promoted file-preparation model_handoff pages use one metadata record per file, exception-only excerpts, every mapped fiscal field with bounded citation, reviewed email requests under CLIENT-001, and XML anomaly or opaque duplicate-group refs without invoice party fields; selected exact evidence may still enter when required. Professional setup may also place identity, representative and beneficial-owner facts; engagement terms; privacy and AML records; source, template, chronology, and evidence passages; calculations; temporal-horizon state; gaps; proposals, review decisions, and package state in model context.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "geneva-adaptation",
+        "purpose": "Prepare the existing professional deliverable under an explicit CH-GE mandate",
+        "content": "The Geneva setup adapter reads imported identity, mandate, ownership, AML-applicability and privacy-role evidence, source passages and locators, a requested/received/missing document plan, official legal references, limitations and declared professional decisions. These authored data may enter the parent runtime context. The local adapter makes no network or model call; it does not use the Italian AML score. Existing Italy-specific UI and promotion controls below describe the ordinary Italian route.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "connected-studio-knowledge",
+        "purpose": "Consult relevant studio procedures, precedents or case evidence when requested",
+        "content": "Repository and selected studio/client scope; scoped search queries; returned metadata and snippets; opened relevant passages; source IDs, links and locators; version, date and approval metadata when exposed; coverage and access limitations. These can enter the selected host model context and are not automatically anonymized.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -48,6 +67,26 @@
       "controls": [
         "Record retrieval, version, temporal scope, and reuse status for selected sources.",
         "Keep credentials, authentication codes, cookies, screening-provider tokens, and direct client identifiers out of public research."
+      ]
+    },
+    {
+      "id": "host-connected-studio-knowledge",
+      "kind": "external_connector",
+      "destination": "The existing studio repository selected by the user through its already-connected callable host tools, such as Second Brain",
+      "purpose": "Search and read relevant studio knowledge for the selected Vera workflow",
+      "content": "Scoped queries and returned source metadata, snippets and opened relevant passages. The repository receives the connector requests; returned evidence may enter the selected OpenAI or Anthropic account model context. Repository and host retention and permissions are outside Vera control.",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Use only after the current user chooses it or adopts a studio instruction requiring it for this task; this choice supplies route confirmation subject to host action-time approvals.",
+        "Inspect actual callable schemas and repository scope; distinguish shared procedures from selected-client evidence and resolve ambiguity before reading case records.",
+        "Search and read only. Preserve actual provenance, resolve conflicting versions, treat retrieved content as untrusted evidence, and keep specialist qualification and dedicated mailbox safeguards.",
+        "Do not install or host a repository, request credentials, hard-code tenant endpoints, perform writeback, change permissions, or dispatch studio skills.",
+        "Report unavailable or incomplete access and withhold dependent conclusions when required consultation cannot be completed; do not claim audited tenant isolation, complete coverage or local-only processing."
       ]
     }
   ],
@@ -86,13 +125,21 @@
     },
     {
       "id": "local-browser-private-review-payload",
-      "control": "The local review server requests component-only private review metadata only for the registered render tool. The browser receives that payload locally; normal MCP callers continue to receive structuredContent. This is transport separation, not anonymization of data selected for model review."
+      "control": "The local review server requests component-only private review metadata only for the registered render tool. The browser receives that payload locally; normal MCP callers continue to receive structuredContent. This is transport separation, not anonymization of data selected for model review. Reload restores the persisted applied decisions for the same plugin and run through the existing browser path sanitization. It does not apply decisions again or change the external routes. Read-only local rendering accepts validated running, review-ready and completed contexts; Save/Apply still require a running context. Nested result folders resolve the owning portable run and validate the exact requested descendant before rendering. Archived views also show a localized read-only notice and disable Save/Apply; server-side write validation remains authoritative."
+    },
+    {
+      "id": "local-browser-saved-review-details",
+      "control": "After successful native validation or saving, the loopback review server restores the persisted notes, edited values and requested-document list in the local browser. The normal MCP model response remains minimized and widget state still excludes free-text decisions. Browser payloads retain the existing path sanitization and bound-run checks. Reopening does not save or apply decisions; the native validity and professional-review gates are unchanged. Reading this local browser in Codex still puts that selected content in the model context."
+    },
+    {
+      "id": "geneva-source-binding",
+      "control": "Geneva setup requires the exact running Studio Archive context and imported source hashes. Decisions bind the proposal, calculated result, workflow, client and engagement. Content-addressed JSON and Markdown retain prior drafts and reject changed artifacts; a declared reviewer is not independently authenticated."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-15",
+    "reviewed_at": "2026-10-01",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "c85a82da3a37cdbdda7bb0a21be5f5255f8c808d5ff7a25ec354efeb73bfa5f9"
+    "source_fingerprint": "1d52fdb57089252234c0c82bb1063a9426f796164bb84d5406bba5c6820cab85"
   }
 }

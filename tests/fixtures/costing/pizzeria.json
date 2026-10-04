@@ -1,0 +1,341 @@
+{
+  "case": {
+    "meta": {
+      "schemaVersion": "1.0.0",
+      "caseId": "PIZZERIA",
+      "clientId": "SYNTHETIC",
+      "engagementId": "DEMO-CONTROL",
+      "currency": "EUR",
+      "periodStart": "2026-09-01",
+      "periodEnd": "2026-09-30",
+      "basis": "accrual_consumed",
+      "demonstration": true,
+      "perimeter": "operating"
+    },
+    "evidence": [
+      {
+        "id": "SYN-01",
+        "kind": "synthetic",
+        "locator": "Dati inventati esclusivamente per test; non un cliente e non un benchmark.",
+        "status": "synthetic"
+      }
+    ],
+    "objects": [
+      {
+        "id": "A",
+        "label": "Sala e asporto diretto",
+        "dimension": "channel",
+        "units": "2000",
+        "unit": "pizze",
+        "revenueCents": 2200000,
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      },
+      {
+        "id": "B",
+        "label": "Delivery intermediato",
+        "dimension": "channel",
+        "units": "1000",
+        "unit": "pizze",
+        "revenueCents": 1400000,
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      }
+    ],
+    "costs": [
+      {
+        "id": "C001",
+        "label": "Ingredienti canale A",
+        "amountCents": 650000,
+        "behavior": "variable",
+        "traceability": "direct",
+        "objectId": "A",
+        "poolId": null,
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      },
+      {
+        "id": "C002",
+        "label": "Ingredienti canale B",
+        "amountCents": 420000,
+        "behavior": "variable",
+        "traceability": "direct",
+        "objectId": "B",
+        "poolId": null,
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      },
+      {
+        "id": "C003",
+        "label": "Packaging A",
+        "amountCents": 50000,
+        "behavior": "variable",
+        "traceability": "direct",
+        "objectId": "A",
+        "poolId": null,
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      },
+      {
+        "id": "C004",
+        "label": "Packaging B",
+        "amountCents": 60000,
+        "behavior": "variable",
+        "traceability": "direct",
+        "objectId": "B",
+        "poolId": null,
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      },
+      {
+        "id": "C005",
+        "label": "Commissioni delivery",
+        "amountCents": 200000,
+        "behavior": "variable",
+        "traceability": "direct",
+        "objectId": "B",
+        "poolId": null,
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      },
+      {
+        "id": "C006",
+        "label": "Energia variabile",
+        "amountCents": 60000,
+        "behavior": "variable",
+        "traceability": "indirect",
+        "objectId": null,
+        "poolId": "OVEN",
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      },
+      {
+        "id": "C007",
+        "label": "Fissi specifici A",
+        "amountCents": 150000,
+        "behavior": "fixed",
+        "traceability": "direct",
+        "objectId": "A",
+        "poolId": null,
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      },
+      {
+        "id": "C008",
+        "label": "Fissi specifici B",
+        "amountCents": 50000,
+        "behavior": "fixed",
+        "traceability": "direct",
+        "objectId": "B",
+        "poolId": null,
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      },
+      {
+        "id": "C009",
+        "label": "Cucina",
+        "amountCents": 700000,
+        "behavior": "fixed",
+        "traceability": "indirect",
+        "objectId": null,
+        "poolId": "KITCHEN",
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      },
+      {
+        "id": "C010",
+        "label": "Gestione ordini",
+        "amountCents": 150000,
+        "behavior": "fixed",
+        "traceability": "indirect",
+        "objectId": null,
+        "poolId": "ORDER",
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      },
+      {
+        "id": "C011",
+        "label": "Struttura",
+        "amountCents": 300000,
+        "behavior": "fixed",
+        "traceability": "entity",
+        "objectId": null,
+        "poolId": null,
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      }
+    ],
+    "pools": [
+      {
+        "id": "OVEN",
+        "label": "Forno variabile",
+        "driver": {
+          "name": "Tempi equivalenti forno",
+          "unit": "minuti",
+          "weights": {
+            "A": "2000",
+            "B": "1000"
+          },
+          "capacityPolicy": "actual",
+          "capacity": null,
+          "rationale": "Ipotesi dimostrativa esplicita; da sostituire e approvare sul caso reale."
+        }
+      },
+      {
+        "id": "KITCHEN",
+        "label": "Cucina",
+        "driver": {
+          "name": "Ore cucina",
+          "unit": "ore",
+          "weights": {
+            "A": "100",
+            "B": "70"
+          },
+          "capacityPolicy": "actual",
+          "capacity": null,
+          "rationale": "Ipotesi dimostrativa esplicita; da sostituire e approvare sul caso reale."
+        }
+      },
+      {
+        "id": "ORDER",
+        "label": "Gestione ordini",
+        "driver": {
+          "name": "Numero ordini",
+          "unit": "ordini",
+          "weights": {
+            "A": "2000",
+            "B": "1000"
+          },
+          "capacityPolicy": "actual",
+          "capacity": null,
+          "rationale": "Ipotesi dimostrativa esplicita; da sostituire e approvare sul caso reale."
+        }
+      }
+    ],
+    "traditionalDriver": {
+      "name": "Base tradizionale approvata",
+      "unit": "pizze",
+      "weights": {
+        "A": "2000",
+        "B": "1000"
+      },
+      "capacityPolicy": "actual",
+      "capacity": null,
+      "rationale": "Ipotesi dimostrativa esplicita; da sostituire e approvare sul caso reale."
+    },
+    "commonPolicy": "allocate",
+    "commonDriver": {
+      "name": "Ricavi operativi",
+      "unit": "EUR",
+      "weights": {
+        "A": "22000",
+        "B": "14000"
+      },
+      "capacityPolicy": "actual",
+      "capacity": null,
+      "rationale": "Ipotesi dimostrativa esplicita; da sostituire e approvare sul caso reale."
+    },
+    "sourceTotals": {
+      "revenueCents": 3600000,
+      "costsCents": 2790000,
+      "evidenceIds": [
+        "SYN-01"
+      ]
+    },
+    "review": {
+      "status": "synthetic",
+      "reviewer": null,
+      "mappingVersion": "demo-v1",
+      "note": "Classificazioni soltanto dimostrative. Non implicano costi evitabili."
+    }
+  },
+  "expected": {
+    "direct_costing": {
+      "entityProfitCents": 810000,
+      "objects": [
+        {
+          "id": "A",
+          "revenueCents": 2200000,
+          "variableCents": 740000,
+          "cm1Cents": 1460000
+        },
+        {
+          "id": "B",
+          "revenueCents": 1400000,
+          "variableCents": 700000,
+          "cm1Cents": 700000
+        }
+      ]
+    },
+    "direct_costing_evoluto": {
+      "entityProfitCents": 810000,
+      "objects": [
+        {
+          "id": "A",
+          "revenueCents": 2200000,
+          "variableCents": 740000,
+          "cm1Cents": 1460000,
+          "specificFixedCents": 150000,
+          "cm2Cents": 1310000
+        },
+        {
+          "id": "B",
+          "revenueCents": 1400000,
+          "variableCents": 700000,
+          "cm1Cents": 700000,
+          "specificFixedCents": 50000,
+          "cm2Cents": 650000
+        }
+      ]
+    },
+    "full_costing": {
+      "entityProfitCents": 810000,
+      "objects": [
+        {
+          "id": "A",
+          "fullCostCents": 1640000,
+          "allocatedFixedCents": 750000,
+          "marginCents": 560000
+        },
+        {
+          "id": "B",
+          "fullCostCents": 1150000,
+          "allocatedFixedCents": 400000,
+          "marginCents": 250000
+        }
+      ]
+    },
+    "abc": {
+      "entityProfitCents": 810000,
+      "objects": [
+        {
+          "id": "A",
+          "activityFixedCents": 511765,
+          "allocatedFixedCents": 695098,
+          "fullCostCents": 1585098,
+          "marginCents": 614902
+        },
+        {
+          "id": "B",
+          "activityFixedCents": 338235,
+          "allocatedFixedCents": 454902,
+          "fullCostCents": 1204902,
+          "marginCents": 195098
+        }
+      ]
+    }
+  }
+}

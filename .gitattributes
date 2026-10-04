@@ -28,6 +28,9 @@ scripts/course_materials/inputs/** -text whitespace=-blank-at-eol
 # Authoritative invoice schemas are pinned by their original byte digests.
 plugins/invoice-xml/references/xsd/*.xsd -text whitespace=-blank-at-eol,-space-before-tab
 plugin_packages/vera/claude/vera/modules/invoice-xml/references/xsd/*.xsd -text whitespace=-blank-at-eol,-space-before-tab
+# LIPE validates the original official schema bytes on every XML test export.
+plugins/lipe/references/xsd/**/*.xsd -text whitespace=-blank-at-eol,-space-before-tab
+plugin_packages/vera/claude/vera/modules/lipe/references/xsd/**/*.xsd -text whitespace=-blank-at-eol,-space-before-tab
 plugins/*/assets/*-review-widget.html -diff linguist-generated=true
 static/shared/????????????????????????????????????????????????????????????????/** -diff linguist-generated=true
 # Published lesson inputs and provenance preserve the rendered, hash-bound bytes.

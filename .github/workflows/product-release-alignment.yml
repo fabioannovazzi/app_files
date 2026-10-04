@@ -22,12 +22,22 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: python -m pip install pytest pytest-cov
+      - run: python -m pip install pytest pytest-cov beautifulsoup4
+      - name: Verify website ZIP version labels
+        run: node --test tests/test_plugin_download_versions.mjs
       - name: Verify stale-package rejection
         run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_product_release_alignment.py --cov --cov-config=tests/product_release.coveragerc
       - name: Verify stale and duplicate installed-plugin rejection
         run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_installed_product.py
+      - name: Verify Antigravity download integrity checks
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_antigravity_package.py
       - name: Verify all product packages against canonical source and version
         run: python scripts/build_product_release.py --check
+      - name: Verify the recorded Vera catalogue matches the release
+        run: python .agents/skills/localize-vera/scripts/catalogue.py check --root plugins/vera --inventory plugins/vera/skills/vera/references/localization/geneva/catalogue.json --assessment plugins/vera/skills/vera/references/localization/geneva/assessment.json
+      - name: Verify optional studio knowledge instruction packaging
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_vera_connected_knowledge.py
+      - name: Verify optional connector download and host setup guides
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_optional_connector_downloads.py
       - name: Verify renamed skill identities in every host package
         run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_skill_name_alignment.py

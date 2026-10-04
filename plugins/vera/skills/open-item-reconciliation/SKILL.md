@@ -1,7 +1,18 @@
 ---
 name: open-item-reconciliation
-description: Use when a reported open-item population must be tested at a cut-off against ledgers, statements, payments, factoring, advances, or compensation to determine which items are closed, partly closed, or still open. For direct bank-statement-to-journal matching, use journal-bank-reconciliation.
+description: Use to verify a supplied elenco partite aperte clienti o fornitori at a cut-off against mastrini, journal, bank statements, payments, factoring, advances or compensation. Produces closed, partly closed and still-open items, residuals and exceptions. For direct estratto conto versus prima nota matching use journal-bank-reconciliation.
 ---
+
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+## Connected studio knowledge
+
+When the user or an adopted studio instruction requests relevant repository
+evidence, read `../vera/references/connected-studio-knowledge.md` before the
+dependent work, including direct specialist invocation. Use only callable host
+search/read tools; preserve citations and this workflow's qualification gates.
+Without a repository, continue ordinary work. Studio skills remain independently
+invoked by the user; Vera does not dispatch them.
+<!-- VERA_CONNECTED_KNOWLEDGE_END -->
 
 <!-- VERA_OPENAI_ONBOARDING_BEGIN -->
 Onboarding is optional. Continue ordinary professional work immediately,
@@ -19,6 +30,9 @@ Current user requests take precedence over saved preferences.
 
 # Riconciliazione partite
 
+For a Geneva (CH-GE) mandate, read `../vera/references/localization/geneva.md` first and use this existing function’s Geneva adaptation in its resolved component skill. Language alone never selects jurisdiction.
+
+
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
 
 Resolve `../../modules/open-item-reconciliation` from this skill directory when it
@@ -26,3 +40,12 @@ exists; otherwise resolve `../../../open-item-reconciliation` in the repository.
 Read that module's `skills/open-item-reconciliation/SKILL.md` completely and follow
 it. Treat the resolved module root as the plugin working directory for scripts,
 requirements, assets, review servers, and outputs.
+
+For a new Vera run, pass `--output-subdirectory reconciliation` to the native
+`raw_input_runner.py` command. Keep that same option on regeneration. The native
+assured package is then in the bound run's `outputs/reconciliation/`; use that
+directory for its review server and assurance validation. Write the required
+local model-data disclosure in the owning `outputs/` directory, outside the
+exact native assurance boundary. Declare both the nested package and disclosure
+when finalizing the Studio Archive run. Never add the disclosure to an already
+sealed native assurance directory or alter its receipt to make extra files pass.

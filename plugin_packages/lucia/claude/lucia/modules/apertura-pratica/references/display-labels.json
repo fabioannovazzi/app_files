@@ -188,7 +188,9 @@
     "applied_decisions": "Applied decisions",
     "validation_report": "Validation result",
     "previous_memo": "Previous-version memo",
-    "run_directory": "Dossier folder"
+    "run_directory": "Dossier folder",
+    "restored": "Saved decisions restored. Review them before applying.",
+    "saved_unavailable": "Saved decisions cannot be restored for this version. Review the data before saving a new decision."
   },
   "it": {
     "page_title": "Preparare una pratica",
@@ -379,7 +381,9 @@
     "applied_decisions": "Decisioni applicate",
     "validation_report": "Esito dei controlli",
     "previous_memo": "Memo della versione precedente",
-    "run_directory": "Cartella del dossier"
+    "run_directory": "Cartella del dossier",
+    "restored": "Decisioni salvate ripristinate. Controllale prima di applicarle.",
+    "saved_unavailable": "Le decisioni salvate non possono essere ripristinate per questa versione. Rivedi i dati prima di salvare una nuova decisione."
   },
   "fr": {
     "page_title": "Préparer un dossier",
@@ -570,7 +574,9 @@
     "applied_decisions": "Décisions appliquées",
     "validation_report": "Résultat des contrôles",
     "previous_memo": "Note de la version précédente",
-    "run_directory": "Dossier de travail"
+    "run_directory": "Dossier de travail",
+    "restored": "Décisions enregistrées restaurées. Vérifiez-les avant de les appliquer.",
+    "saved_unavailable": "Les décisions enregistrées ne peuvent pas être restaurées pour cette version. Revoyez les données avant de sauvegarder une nouvelle décision."
   },
   "de": {
     "page_title": "Eine Angelegenheit vorbereiten",
@@ -761,7 +767,9 @@
     "applied_decisions": "Angewandte Entscheidungen",
     "validation_report": "Prüfergebnis",
     "previous_memo": "Vermerk der vorherigen Version",
-    "run_directory": "Aktenordner"
+    "run_directory": "Aktenordner",
+    "restored": "Gespeicherte Entscheidungen wiederhergestellt. Vor dem Anwenden prüfen.",
+    "saved_unavailable": "Die gespeicherten Entscheidungen können für diese Version nicht wiederhergestellt werden. Prüfen Sie die Daten vor dem Speichern einer neuen Entscheidung."
   },
   "es": {
     "page_title": "Preparar un expediente",
@@ -952,6 +960,8 @@
     "applied_decisions": "Decisiones aplicadas",
     "validation_report": "Resultado de los controles",
     "previous_memo": "Nota de la versión anterior",
-    "run_directory": "Carpeta del expediente"
+    "run_directory": "Carpeta del expediente",
+    "restored": "Decisiones guardadas recuperadas. Revísalas antes de aplicarlas.",
+    "saved_unavailable": "Las decisiones guardadas no pueden recuperarse para esta versión. Revisa los datos antes de guardar una nueva decisión."
   }
 }

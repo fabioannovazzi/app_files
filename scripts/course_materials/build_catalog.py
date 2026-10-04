@@ -43,6 +43,8 @@ LIMITED_LANGUAGES = {
     "vera/management-control-pack": ["it", "en"],
     "vera/centrale-rischi-review": ["it"],
     "vera/treasury-forecast": ["it"],
+    "vera/business-valuation": ["it"],
+    "vera/lipe": ["it"],
 }
 
 
@@ -117,6 +119,8 @@ def _source_records(product: str, workflow: str) -> list[dict[str, str]]:
     root = ROOT / "plugins" / product
     skill = root / "skills" / workflow / "SKILL.md"
     paths = {skill}
+    if product == "vera":
+        paths.add(root / "skills/vera/references/connected-studio-knowledge.md")
     paths.update(
         path for path in skill.parent.rglob("*.md") if path.name != "cowork-runtime.md"
     )
@@ -184,6 +188,12 @@ def _source_records(product: str, workflow: str) -> list[dict[str, str]]:
             module_root / name
             for name in ("rulepacks", "taxonomy", "templates", "assets")
         ]
+        if module == "patent-box-review":
+            # This component keeps its engine and synthetic rule contract outside
+            # scripts/vendor; both affect the prepared lesson's execution.
+            candidates += [
+                module_root / name for name in ("patent_box", "config", "examples")
+            ]
         requirements = module_root / "requirements.txt"
         if requirements.is_file():
             paths.add(requirements)
@@ -411,7 +421,7 @@ def build(*, require_complete: bool = True, check: bool = False) -> dict[str, An
                 "schema": "mparanza.teaching_kit.v2",
                 "product": product,
                 "workflow": workflow,
-                "revision": "2026-09-14.2",
+                "revision": definition.get("revision", "2026-09-14.2"),
                 "seconds": [45, 60, 105, 75, 45, 60],
                 "supported_languages": supported,
                 "language_basis": (

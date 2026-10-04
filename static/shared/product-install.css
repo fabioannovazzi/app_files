@@ -1,0 +1,56 @@
+/* Shared installation controls for Vera, Clara and Lucia. */
+.hero-install__actions {
+  row-gap: 8px;
+}
+
+.install-option {
+  grid-row: span 4;
+  grid-template-rows: subgrid;
+}
+
+.install-option .button:disabled,
+.install-option .button:disabled:hover {
+  color: #526375;
+  background: #f5f7fa;
+  border-color: #c5cfda;
+  cursor: not-allowed;
+  transform: none;
+  opacity: 1;
+}
+
+.install-option .button.install-option__download {
+  width: calc(100% - 32px);
+  max-width: 100%;
+  min-height: 36px;
+  justify-self: start;
+  padding: 6px 12px;
+  border-radius: 5px;
+  border-color: var(--blue);
+  background: var(--white);
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.install-option .button.install-option__download:hover {
+  background: #f1f6fb;
+  transform: none;
+}
+
+.hero-install {
+  grid-template-areas: "copy" "action" "antigravity" "video";
+}
+
+.hero-install__antigravity {
+  grid-area: antigravity;
+  grid-template-rows: none;
+  width: min(100%, 350px);
+  scroll-margin-top: 100px;
+  display: grid;
+  gap: 8px;
+}
+
+.hero-install__antigravity a:not(.button) {
+  text-underline-offset: 0.2em;
+}

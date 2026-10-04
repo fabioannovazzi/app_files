@@ -653,6 +653,10 @@ def test_local_review_workbench_routes_save_and_apply_to_plugin_mcp(
 
     assert ui_decisions["decision_source"] == "local_review_server"
     assert applied_decisions["decision_source"] == "local_review_server"
+    reloaded = server.build_session_payload(workbench)
+    assert reloaded["applied_decisions"]["decision_count"] == 1
+    assert reloaded["applied_decisions"]["decisions"][0]["item_id"] == "entry-1"
+    assert output_dir.as_posix() not in json.dumps(reloaded)
     assert final_artifacts["review_application"]["decision_count"] == 1
     assert "Reviewed from local browser" in check_results
     client_root = Path(client_context["context_path"]).parents[5]
@@ -663,18 +667,126 @@ def test_local_review_workbench_routes_save_and_apply_to_plugin_mcp(
     )
 
 
-def test_archive_local_render_keeps_reference_in_same_process(tmp_path: Path) -> None:
-    from scripts.audit_local_review_workbench_writeback import write_plugin_fixture
+@pytest.mark.parametrize("nested", [False, True])
+def test_finalized_review_can_reopen_but_cannot_save(
+    tmp_path: Path, monkeypatch, nested: bool
+) -> None:
+    server = load_server_module()
+    server._node_executable()
+    output_dir = _managed_fixture_output_dir(tmp_path)
+    ledger = _load_fixture_module(
+        "test_review_workbench_client_ledger", CLIENT_LEDGER_PATH
+    )
+    run_path = output_dir.parent / "run.json"
+    run = json.loads(run_path.read_text())
+    ledger._write_run_status_locked(
+        output_dir.parents[5], run["engagement_id"], run["run_id"], "ready_for_review"
+    )
+    if nested:
+        original_files = list(output_dir.iterdir())
+        nested_dir = output_dir / "reconciliation"
+        nested_dir.mkdir()
+        for path in original_files:
+            path.rename(nested_dir / path.name)
+        output_dir = nested_dir
+    workbench = server.LocalReviewWorkbench(
+        plugin_dir=ROOT / "plugins/check-entries", output_dir=output_dir
+    )
+    before = {
+        path: path.read_bytes() for path in output_dir.rglob("*") if path.is_file()
+    }
+    assert (
+        server.build_session_payload(workbench)["review_payload"]["run_id"]
+        == run["run_id"]
+    )
+    assert server.build_session_payload(workbench)["local_review_read_only"] is True
+    assert 'id = "local-read-only-notice"' in server.render_review_html(workbench)
+    opened = []
+    monkeypatch.setattr(
+        server, "serve_review", lambda workbench, **kwargs: opened.append(workbench)
+    )
+    assert (
+        server.main(
+            [str(output_dir), "--plugin-dir", str(workbench.plugin_dir), "--no-open"]
+        )
+        == 0
+    )
+    assert opened == [workbench]
+    with pytest.raises(ValueError, match="running state"):
+        server.call_review_tool(
+            workbench, "save_check_entries_decisions", {"decisions": []}
+        )
+    assert all(path.read_bytes() == data for path, data in before.items())
 
+
+def test_archive_local_render_keeps_reference_in_same_process(tmp_path: Path) -> None:
+    scenario = _load_fixture_module(
+        "archive_review_local_scenario",
+        ROOT / "plugins/archive-organization/tests/test_archive_organization.py",
+    )
+    context, snapshot, originals = scenario._prepared_run(tmp_path)
+    prepared = scenario.core.build_review_package(
+        context, scenario._proposals(tmp_path, snapshot), language="it"
+    )
     module = load_server_module()
-    output_dir = tmp_path / "archive-run"
-    write_plugin_fixture(ROOT, "archive-organization", output_dir)
+    output_dir = Path(prepared["output_dir"])
     workbench = module.LocalReviewWorkbench(
         ROOT / "plugins/archive-organization", output_dir
     )
     session = module.build_session_payload(workbench)
     assert session["review_payload"]["items"]
     assert session["review_payload"]["plugin"] == "archive-organization"
+    assert session["decision_policy"]["can_persist"] is True
+    assert session["final_artifacts"]["outputs"]
+    assert all(
+        (output_dir / item["path"]).is_file()
+        for item in session["final_artifacts"]["outputs"]
+    )
+    decisions = [
+        {"item_id": item["id"], "action": "accept"}
+        for item in session["review_payload"]["items"]
+    ]
+    saved = module.call_review_tool(
+        workbench,
+        "save_archive_organization_decisions",
+        {"decisions": decisions, "reviewer": "fictional-qa"},
+    )
+    assert saved["ok"] is True
+    assert len(saved["ui_decisions"]["decisions"]) == len(decisions)
+    applied = module.call_review_tool(
+        workbench,
+        "apply_archive_organization_decisions",
+        {"decisions": decisions, "reviewer": "fictional-qa"},
+    )
+    assert applied["ok"] is True
+    assert applied["execution_requires_separate_explicit_approval"] is True
+    assert len(applied["applied_decisions"]["decisions"]) == len(decisions)
+    reopened = module.build_session_payload(workbench)
+    assert reopened["ui_decisions"] == applied["ui_decisions"]
+    assert reopened["applied_decisions"] == applied["applied_decisions"]
+    assert all(
+        (tmp_path / "Example Client" / name).read_bytes() == content
+        for name, content in originals.items()
+    )
+    run = json.loads((output_dir.parent / "run.json").read_text())
+    scenario.ledger._write_run_status_locked(
+        tmp_path / "Example Client",
+        run["engagement_id"],
+        run["run_id"],
+        "ready_for_review",
+    )
+    before = {p: p.read_bytes() for p in output_dir.rglob("*") if p.is_file()}
+    readonly = module.build_session_payload(workbench)
+    assert readonly["local_review_read_only"] is True
+    assert readonly["decision_policy"]["can_persist"] is False
+    assert readonly["applied_decisions"] == applied["applied_decisions"]
+    with pytest.raises(ValueError, match="running state"):
+        module.call_review_tool(
+            workbench,
+            "save_archive_organization_decisions",
+            {"decisions": decisions, "reviewer": "fictional-qa"},
+        )
+    assert all(p.read_bytes() == data for p, data in before.items())
 
 
 def test_output_download_accepts_declared_file_and_rejects_escape(
@@ -718,19 +830,95 @@ def test_private_review_metadata_is_returned_only_to_browser_render(
             "_meta": {"private_review_payload": private},
         },
     }
+    calls = []
+
+    def run_child(*args, **kwargs):
+        calls.append(kwargs)
+        return SimpleNamespace(returncode=0, stdout=json.dumps(response), stderr="")
+
+    monkeypatch.delenv("PYTHON", raising=False)
     monkeypatch.setattr(
         module.subprocess,
         "run",
-        lambda *a, **k: SimpleNamespace(
-            returncode=0, stdout=json.dumps(response), stderr=""
-        ),
+        run_child,
     )
     assert module._mcp_tool_result(workbench, render_name, {}) == public
+    assert calls[-1]["env"]["PYTHON"] == module.sys.executable
+    monkeypatch.setenv("PYTHON", "/explicit/component/python")
     assert (
         module._mcp_tool_result(workbench, render_name, {}, browser_payload=True)
         == private
     )
+    assert calls[-1]["env"]["PYTHON"] == "/explicit/component/python"
     with pytest.raises(ValueError, match="only available to browser rendering"):
         module._mcp_tool_result(
             workbench, "save_check_entries_decisions", {}, browser_payload=True
         )
+
+
+def test_journal_local_handoff_uses_fresh_server_owned_context(tmp_path, monkeypatch):
+    server = load_server_module()
+    workbench = server.LocalReviewWorkbench(ROOT / "plugins/journal-sampling", tmp_path)
+    monkeypatch.setattr(
+        server,
+        "_raw_session_payload",
+        lambda _w: {
+            key: {}
+            for key in (
+                "run_intake",
+                "review_payload",
+                "ui_decisions",
+                "final_artifacts",
+            )
+        },
+    )
+    first = {"review_ref": "review-first", "content_sha256": "first"}
+    second = {"review_ref": "review-second", "content_sha256": "second"}
+    _write_json(tmp_path / "model_review_context.json", first)
+    posted = {
+        "model_review_context": {"review_ref": "forged"},
+        "decisions": [],
+        "reviewer": "QA",
+    }
+    args = server._server_tool_args(workbench, posted)
+    assert args["model_review_context"] == first
+    assert "review_payload" not in args and "run_intake" not in args
+    _write_json(tmp_path / "model_review_context.json", second)
+    assert server._server_tool_args(workbench, posted)["model_review_context"] == second
+
+
+def test_journal_browser_projection_waits_for_native_identity_validation(
+    tmp_path, monkeypatch
+):
+    server = load_server_module()
+    workbench = server.LocalReviewWorkbench(ROOT / "plugins/journal-sampling", tmp_path)
+    context = {"review_ref": "review-current"}
+    _write_json(tmp_path / "model_review_context.json", context)
+    raw = {
+        "run_intake": {},
+        "review_payload": {"plugin": "journal-sampling", "run_id": "native-run"},
+        "ui_decisions": {},
+        "applied_decisions": None,
+        "final_artifacts": {"outputs": [{"path": "journal_sample.xlsx"}]},
+    }
+    monkeypatch.setattr(server, "_raw_session_payload", lambda _w: raw)
+
+    def mismatch(_w, _name, args, **kwargs):
+        assert args == {"model_review_context": context}
+        return {
+            "review_payload": {"plugin": "journal-sampling", "run_id": "foreign-review"}
+        }
+
+    monkeypatch.setattr(server, "_mcp_tool_result", mismatch)
+    with pytest.raises(ValueError, match="mismatched review"):
+        server.build_session_payload(workbench)
+    monkeypatch.setattr(
+        server,
+        "_mcp_tool_result",
+        lambda *_a, **_kw: {
+            "review_payload": {"plugin": "journal-sampling", "run_id": "review-current"}
+        },
+    )
+    rendered = server.build_session_payload(workbench)
+    assert rendered["final_artifacts"]["outputs"][0]["path"] == "journal_sample.xlsx"
+    assert rendered["review_payload"]["run_id"] == "native-run"

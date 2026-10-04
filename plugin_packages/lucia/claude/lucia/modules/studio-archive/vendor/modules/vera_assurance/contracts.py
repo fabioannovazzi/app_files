@@ -123,6 +123,10 @@ _RUN_TRANSITIONS = {
 # engine at the product layer, but receives its own run folder because it emits
 # an independently reviewed package that New Client consumes.
 VERA_CLIENT_WORKFLOW_IDS = (
+    "lipe",
+    "rating-legalita",
+    "scissione-guidata",
+    "esg-reporting-assurance",
     "treasury-forecast",
     "aml-review",
     "adeguati-assetti",
@@ -137,17 +141,21 @@ VERA_CLIENT_WORKFLOW_IDS = (
     "invoice-xml",
     "sales-plan",
     "business-planning",
+    "business-valuation",
     "variance-analysis",
     "management-control-pack",
     "centrale-rischi-review",
     "financial-analysis",
     "report-builder",
     "concordato-plan-review",
+    "composizione-negoziata",
     "prompt-optimizer",
     "deep-research-validator",
     "previdenza-inps",
     "registro-imprese-sari",
     "bandi-agevolazioni",
+    "patent-box-review",
+    "bilancio-xbrl-it",
 )
 
 # This is an exact file-contract handoff, so fixed rules provide mechanically

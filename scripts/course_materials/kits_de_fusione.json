@@ -1,0 +1,31 @@
+{
+  "vera/fusione-guidata": {
+    "title": "Eine P1-Verschmelzung durch Aufnahme vorbereiten und prüfen",
+    "goal": "Zwei OIC-Gesellschaften von den Belegen bis zum Prüfungsdossier begleiten und abhängige Arbeiten nach einer Saldenänderung erneut prüfen.",
+    "scenario": "Vollständig fiktives Material. Demonstration: Alpha übernimmt die unabhängige Beta; vorgegebene Eigenkapitalwerte 600.000 und 400.000 EUR. Übung: Alpha übernimmt die unmittelbar zu 100 % gehaltene Beta; Beteiligungsbuchwert 480.000 EUR, Beta-Bucheigenkapital 300.000 EUR.",
+    "scope": "Zwei italienische OIC-Gesellschaften, gleichartige gewöhnliche Rechte, keine Barabfindung. Ausgeschlossen: 90 %, umgekehrte Verschmelzung, Schwestergesellschaften, MLBO, IFRS, grenzüberschreitende Fälle, Krise und Neugründung. Keine professionelle Validierung an einem echten Mandanten.",
+    "inputs": "dossier-de.md und ordinary.json für die Demonstration öffnen; wholly-owned.json für die Übung, update.json erst beim Änderungsschritt. JSON trennt Alpha/Beta-Fakten, Salden, Anteilseigner, Steuerwerte und Kalenderannahmen. Kein Ergebnis und keine Bestätigung ist vorab genehmigt.",
+    "request": "Vera, erstelle ein Prüfungsdossier für diese fiktive P1-Aufnahme. Wähle die Dokumente beider Gesellschaften über Studio Archive, begründe den Zweig und zeige Umtausch, Kontenabstimmung und Kalender. Frage nach notwendigen Entscheidungen, ohne Genehmigungen in meinem Namen zu erfassen.",
+    "steps": [
+      "Beide fiktiven Mandanten und Aufträge, autorisierte Dokumente und einen separaten Fallordner auswählen. Vera importiert die ausgewählten Belege über Studio Archive, prüft Importbelege und Bytes und zitiert Seite oder Feld. Eigentum, Rechte, Auftrag und P1-Annahmen prüfen; fehlende Tatsachen bleiben unbekannt.",
+      "Methode und gemeinsamen Stichtag der vorgegebenen Bewertungen besprechen: die Berechnung bewertet das Unternehmen nicht. BranchDecision und Valuation prüfen, danach ExchangeModel mit exaktem Verhältnis, neuen Aktien und Anteil jedes Eigentümers. Vorschlag, tatsächliche Entscheidung und synthetische Testbestätigung unterscheiden; keine verdeckte Rundung.",
+      "BookBridge prüfen: professionell abgeschlossene Salden am gleichen Stichtag, Zuordnungen, gegenseitige Salden und Differenzen. Bei 100 % die Beteiligungsausbuchung, im gewöhnlichen Fall die Kapitalerhöhung prüfen. Differenzzuordnung und Bilanzierungspolitik anhand von Belegen wählen, ohne automatischen Goodwill. Entwurf der Eröffnungsbuchung und separates Steuerregister öffnen.",
+      "Deadline mit Quellen/versionen und Daten beider Gesellschaften prüfen: Tage oder Kalendermonate, spätester relevanter Anker, Ausnahmen und nicht belegte Ereignisse. Dateikonventionen sind Übungsannahmen, kein geltendes Recht; reale Fälle benötigen aktuelle Primärquellen und Prüfung. Ein errechnetes Datum beweist keine Einreichung, Zustimmung oder Befreiung.",
+      "Vera verfasst beleggebundene Abschnitte zu Auftrag, Due Diligence, Projekt, Rechten, Daten, Steuern, Umstellung, Zuständigkeiten und Folgekontrollen; Lücken und ausstehende Prüfungen bleiben sichtbar. p1-workpapers.html, Fallhistorie und lesbaren Bericht über Modelldaten exportieren und öffnen. Keine Unterschrift oder Einreichung.",
+      "update.json in denselben Fall importieren. ChangeImpact und historische Bestätigungen lesen: abhängige Salden-, Überleitungs- und Dossierarbeiten erneut prüfen; unabhängiger Kalender bleibt erhalten. Abschluss und Zuordnung vor einem neuen Ergebnis klären; frühere Exporte bewahren."
+    ],
+    "deliverables": [
+      "Markdown/HTML-Dossier mit Zweig, Bewertungen, exakten Umtauschzuordnungen, Kontenabstimmung und Eröffnungsbuchungsentwurf, Kalender und offenen Fragen.",
+      "Versions- und Bestätigungshistorie, Importbelege beider Archive, separates Steuerregister und lesbarer Bericht über die Daten im Modell."
+    ],
+    "review": "Jeden Betrag zu Dokument und Entscheidung zurückverfolgen. Bewertung, Bilanzzuordnung, Eröffnungssaldo, getrennte Steuern, Quellenanwendbarkeit, fehlende Belege und Zuständigkeiten prüfen. Synthetische Tests validieren diese Entscheidungen nicht an einem realen Fall.",
+    "checkpoints": [
+      "Ein Alpha- und ein Beta-Dokument finden; Mandant, Auftrag, Importbeleg und zitiertes Feld prüfen.",
+      "Neue Aktien im unabhängigen Fall und keine neuen Aktien bei 100 % erklären; Differenz mit der vorgeschlagenen Politik verbinden.",
+      "Berechnetes Datum und Beleg unterscheiden; nach neuem Saldo wieder zu prüfende Arbeiten nennen."
+    ],
+    "practice": "Mit wholly-owned.json wiederholen: unmittelbaren Vollbesitz, null neue Aktien, unveränderte Alpha-Anteilseignerquoten, Ausbuchung und getrennte Steuerwerte prüfen. Danach update.json im selben Fall importieren und abhängige Arbeiten und Bestätigungen zur erneuten Prüfung erläutern. Keine ausgleichende Korrektur erfinden.",
+    "success": "Dokumente und Zweig auswählen, Werte und Politik diskutieren, Tabellen lesen, Quellen prüfen und geänderte Fälle mit getrennten Belegen und Entscheidungen fortsetzen können.",
+    "repeat": "Für reale Aufträge Mandat, beide Gesellschaften, Eigentum, Daten und autorisierte Dokumente angeben. Überschreitet der Fall P1, diesen Zweig anhalten und erforderliche Spezialarbeit anfordern. Nur tatsächliche professionelle Bestätigungen zur geprüften Version erfassen."
+  }
+}

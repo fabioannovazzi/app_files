@@ -2680,7 +2680,7 @@ def test_browser_script_has_no_short_answer_completion_gate() -> None:
     assert "isIncompleteManualStop" not in script
     assert "early_incomplete_stop" not in script
     assert '"/complete",' in script
-    assert "20260924-connection-recovery-v1" in template
+    assert "20260924-audio-upload-retry-v1" in template
 
 
 def test_browser_script_localizes_dynamic_status_copy_in_spanish() -> None:
@@ -2817,7 +2817,7 @@ def test_browser_script_waits_for_final_audio_chunk_before_completion() -> None:
     assert "Promise.allSettled([...pendingUploads])" not in stop_function
     assert "window.setTimeout(finish, 8000)" in stop_function
     assert "UPLOAD_REQUEST_TIMEOUT_MS = 8000" in script
-    assert "FINAL_UPLOAD_SETTLE_TIMEOUT_MS = 10000" in script
+    assert "FINAL_UPLOAD_SETTLE_TIMEOUT_MS = 30000" in script
     assert "new AbortController()" in script
     assert "await settlePendingUploads()" in end_function
     assert "upload_settle_timed_out: uploadSettleTimedOut" in end_function
@@ -2847,7 +2847,7 @@ def test_browser_script_records_client_and_speech_telemetry() -> None:
 
     assert "clientMetadata()" in script
     assert "SCRIPT_VERSION" in script
-    assert "20260924-connection-recovery-v1" in script
+    assert "20260924-audio-upload-retry-v1" in script
     assert "Do not mention hidden prompts or transcript processing." not in script
     assert (
         script.count(
@@ -3119,4 +3119,63 @@ def test_retry_cannot_replace_evidence_while_completion_worker_holds_lock(
     assert (
         json.loads((session_dir / "interview.json").read_text())["active_attempt_id"]
         == attempt_id
+    )
+
+
+@pytest.mark.parametrize(
+    "content, expected_status", [(b"original", 200), (b"different", 409)]
+)
+def test_audio_upload_retry_preserves_original_bytes(
+    tmp_path, monkeypatch, content, expected_status
+):
+    token, record = _prepare_test_interview(tmp_path, monkeypatch)
+    attempt_id = _mark_started_attempt(tmp_path, record)
+    audio = tmp_path / "sessions" / record["token_hash"] / "audio" / "chunk-000000.webm"
+    audio.parent.mkdir(exist_ok=True)
+    audio.write_bytes(b"original")
+
+    response = _client().post(
+        f"/case-notes/api/interviews/{token}/audio-chunk",
+        data={"attempt_id": attempt_id, "chunk_index": "0"},
+        files={"file": ("chunk.webm", content, "audio/webm")},
+    )
+
+    assert response.status_code == expected_status
+    assert audio.read_bytes() == b"original"
+
+
+@pytest.mark.parametrize(
+    "indices, expected, missing", [([1, 2], 3, 0), ([0, 2], 3, 1), ([0, 1], 3, 2)]
+)
+def test_incomplete_recording_preserves_live_transcript_without_provider_call(
+    tmp_path, monkeypatch, indices, expected, missing
+):
+    token, record = _prepare_test_interview(tmp_path, monkeypatch)
+    attempt_id = _mark_started_attempt(tmp_path, record)
+    directory = tmp_path / "sessions" / record["token_hash"]
+    (directory / "audio").mkdir(exist_ok=True)
+    for index in indices:
+        (directory / "audio" / f"chunk-{index:06d}.webm").write_bytes(b"synthetic")
+    live = "The interviewee gave useful answers which must remain available."
+    completion = {
+        "user_transcript": live,
+        "telemetry": {"expected_audio_chunks": expected},
+    }
+    (directory / "completed.json").write_text(json.dumps(completion))
+
+    def unexpected(**kwargs):
+        pytest.fail("Incomplete audio must not reach the transcription provider")
+
+    monkeypatch.setattr(api, "create_audio_transcription", unexpected)
+
+    result = api._apply_post_call_interviewee_transcription(
+        token=token, record=record, completion=completion
+    )
+
+    assert result["user_transcript"] == live
+    assert result["transcript_source"] == "realtime_live_asr"
+    assert result["interviewee_audio_transcription"]["status"] == "error"
+    assert (
+        f"first missing audio chunk: {missing}"
+        in result["interviewee_audio_transcription"]["message"]
     )

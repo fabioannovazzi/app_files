@@ -5,9 +5,14 @@ description: Review an Italian enterprise's organizational, administrative and a
 
 ## Cowork execution contract
 
+Public workflow names select skills; component IDs select module paths.
+`financial-report-builder` uses component `report-builder`, `vouching` (historically
+called Check Entries) uses `check-entries`, and `purchase-invoice-review` uses
+`passive-invoice-audit`. These component IDs are not additional workflows.
+
 For journal-sampling, open-item-reconciliation, journal-bank-reconciliation,
-concordato-plan-review, report-builder and check-entries only, optional cache
-cleanup is available from the installed Vera root:
+concordato-plan-review, financial-report-builder and vouching only, optional cache
+cleanup uses the corresponding component ID from the installed Vera root:
 
 ```bash
 python3 modules/<module>/scripts/implementation_bootstrap.py --repair
@@ -17,6 +22,13 @@ For a standalone module, use `python3 scripts/implementation_bootstrap.py --repa
 from its root. This validates the implementation first, then removes only regular,
 single-link `__pycache__/*.pyc` files under that module's own `vendor` tree. It
 leaves directories, other files, symlinks and shared vendor trees untouched.
+This supported maintenance command is the only cache-cleanup exception to the
+prohibition on editing the installed tree by hand. It is optional: ordinary
+validation and execution tolerate incidental bytecode without removing it.
+On a read-only installation, skip cleanup. If the command reports a permission
+error, retain that error and continue the ordinary validated workflow when its
+checks pass; do not chmod, delete files manually, copy or patch the installation,
+or bypass the host's permissions to make cleanup succeed.
 If `validate_implementation_tree` ever fails with a file/directory-contract
 mismatch, do not delete or modify files inside the installed plugin tree by hand
 and do not bypass a sandbox/permission rejection to do so. Stop and report the
@@ -92,7 +104,12 @@ Do not use WhatsApp, live INPS browser capture, hosted feedback or voice
 interviews, or custom update services. Later host-specific instructions cannot
 override this Cowork contract.
 
-# Valutazione degli assetti organizzativi, amministrativi e contabili
+# Valutazione e costruzione degli assetti organizzativi, amministrativi e contabili
+
+## Jurisdiction and Geneva
+
+For a CH-GE mandate, read `references/geneva.md` before the steps below. It specifies the Geneva input, source and output adaptations within this existing function. Choose governing jurisdiction independently of output language; the ordinary Italian path remains available for IT.
+
 
 Help the professional assess whether this enterprise's responsibilities, processes
 and information support its actual activities and timely decisions. Deliver a
@@ -101,6 +118,18 @@ of arrangements, not a compliance certificate, statutory audit, attestation or
 automatic crisis declaration. Directors retain their responsibilities; the
 commercialista reviews the proposed analysis. Neither a score nor a successful
 script establishes adequacy.
+
+## Construction requested by the professional
+
+When asked to build arrangements, carry the same engagement through discovery,
+evidence review, control design, manual/registers, distinct company adoption,
+operating evidence and subsequent review. Read `references/construction-workflow.md`
+and `references/construction-contract.md` completely. The existing assessment v1
+helper remains available; never reinterpret historical completion as adoption.
+Construction uses `scripts/assetti_construction.py` in the same archive workflow.
+It is an experimental studio method requiring company-specific professional
+review and a supervised operating pilot, not a turnkey or certified installation.
+The optional numerical view explains qualified evidence; it never decides adequacy.
 
 Read `references/intelligent-assessment.md`, `references/professional-method.md`
 and `references/record-contract.md`
@@ -204,7 +233,7 @@ review JSON in the output folder and run from the module root:
 python scripts/assetti_review.py --client-engagement <context-path> --review <run-output>/review_input.json
 ```
 
-For every new run, author the `intelligent_review` extension described in the
+For every new assessment-mode run, author the `intelligent_review` extension described in the
 record contract. Use its coverage, process evidence, targeted questions, chronology
 and decision brief to make the reasoning reviewable. Reassess hypotheses after
 answers; do not merely fill fields or run the helper and call that analysis.
@@ -231,8 +260,11 @@ company or employee identifiers. No external business-data connector is included
 
 ## Execution boundaries
 
-The local deterministic helpers use only the Python standard library declared in
-`requirements.txt`; they verify bindings and record integrity, not adequacy.
+Local deterministic scripts own exact arithmetic, file bindings, revisions and
+record integrity; the model and professional own semantic judgment. The domain
+helpers use the Python standard library; construction manual exports use
+python-docx and ReportLab declared in `requirements.txt` in the shared managed
+runtime. They never determine adequacy.
 Run `scripts/check_dependencies.py` before helper execution. Do not install
 undeclared dependencies. Explicit approval is reserved for external, destructive,
 approval-sensitive or materially unresolved steps. Ordinary authorized local

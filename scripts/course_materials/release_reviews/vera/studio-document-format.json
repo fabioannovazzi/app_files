@@ -1,0 +1,377 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "studio-document-format",
+  "course_sha256": "bd9253e1b9e4e03e19f946eee3fb6200ac9d831ad4920601b1fb03d41c1c5df1",
+  "reviewer": "Codex: authored five-language course and actual synthetic native output review",
+  "reviewed_at": "2026-10-01T18:41:07.117136+00:00",
+  "review_scope": "Reviewed all five complete authored narratives and the actual DOCX structure, profiles and financial analysis from ten independent native demo/practice regressions. Regression approvals are expressly simulated, never learner decisions. Structural artifact inspection does not establish visual pagination, font availability on a learner host, installed enabled-plugin execution, native voice, paired-window or learner acceptance. Tests run local component code without model or network calls. No jurisdiction qualification is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The first use turns explicitly selected fictional Word evidence into a reviewed private format, then reuses it in the current financial report builder. Scope explicitly excludes model training, exact template cloning and unsupported document generators.",
+        "inputs_and_request": "The language-specific raw JSON supplies a fictional Word example and independent accounting CSV generated locally. The natural request asks for observations, missing-setting proposals, two previews and adoption of the exact user-approved version; no client material is required.",
+        "execution_and_checkpoints": "The installed specialist owns the current workflow. Observations and proposals remain distinct. Both short and long previews must be opened and explicitly accepted before adoption. Tests independently choose complete fixture settings and simulate that decision; they do not attest learner review or model-led interpretation.",
+        "deliverable_and_next_action": "Formatting evidence, two real DOCX previews, private versioned profile and a ledger-backed financial report are inspectable outputs. The lesson requires all-page visual review and separate normal review of figures and conclusions. Actual synthetic report numeric analysis remains unchanged after formatting revision.",
+        "practice_and_repeat": "Fresh Studio Selva practice uses a separate workspace, Times New Roman and different source amounts. Revision creates profile version two and preserves version one and email settings. Repeat specifies the authorized private workspace and selected examples, then an explicitly selected supported financial report.",
+        "language_and_pacing": "The complete it narrative preserves the same checkpoints, privacy/configuration boundaries and independent practice. Generated headers and footers match that selected language. The nominal 390 seconds are instruction pacing; no measured learner duration or completed learner exercise is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_studio_document_format_execution::test_course_format_preview_adoption_report_and_revision[demo-14500-it]",
+        "result_review": "Inspected actual short/long DOCX structures and localized headers/footers for Studio Riva, using Arial. Approval without confirmation is rejected and creates no adopted profile. Explicitly simulated review creates version one; revision changes paragraph spacing to 12 points and archives the exact earlier profile while preserving email settings. The real ledger-backed report uses the selected studio identity and font. Its amount sum is 14500; complete report_analysis.json is identical before and after revision, and the earlier report retains its earlier format settings. These are component regression results, not learner or installed-host acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "preview-short.docx",
+            "sha256": "6e4dda86d6c862887535421f82a7f08c5ffb0c0c9da70030a26f17086ef3d09d"
+          },
+          {
+            "name": "preview-long.docx",
+            "sha256": "5fd5dbcb4ab76e8c87647698af661428d4b541d8fbb96a1b3e0b3877859f4571"
+          },
+          {
+            "name": "studio_profile.json",
+            "sha256": "0dad60aec0d138c43a0ff9ec3e7b895c1738f2171e47e6b05207680d3e62dc3c"
+          },
+          {
+            "name": "report.docx",
+            "sha256": "54d6781666c043c8b804e346b5af5fbd1822381160f787f7864e9ab8827abfc8"
+          },
+          {
+            "name": "report_analysis.json",
+            "sha256": "436ed20a8cfd5241950b1c2d43745faca267607a472a44b1cda51ddfa5153d44"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_studio_document_format_execution::test_course_format_preview_adoption_report_and_revision[practice-25100-it]",
+        "result_review": "Inspected actual short/long DOCX structures and localized headers/footers for Studio Selva, using Times New Roman. Approval without confirmation is rejected and creates no adopted profile. Explicitly simulated review creates version one; revision changes paragraph spacing to 12 points and archives the exact earlier profile while preserving email settings. The real ledger-backed report uses the selected studio identity and font. Its amount sum is 25100; complete report_analysis.json is identical before and after revision, and the earlier report retains its earlier format settings. These are component regression results, not learner or installed-host acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "preview-short.docx",
+            "sha256": "5e53a279f9e5ec43593ed32c8e8baaaa0d8589a79c078e63c0e6f64ff0f4dfa3"
+          },
+          {
+            "name": "preview-long.docx",
+            "sha256": "695dfe7538e2d4f67e6df29d757f683aaf55cbbf67c77a7345a9695967ccae1f"
+          },
+          {
+            "name": "studio_profile.json",
+            "sha256": "82c19b5c4a899a374cda9218e2258826afbf50a9dc1b19d8f57697614dd7ea95"
+          },
+          {
+            "name": "report.docx",
+            "sha256": "414709610a57a06bb92f832d4f781324c479c5245dd252b47fd2f8ac120d9771"
+          },
+          {
+            "name": "report_analysis.json",
+            "sha256": "f3753f7a9f4fb8566ccb402817b7c9c041d68c3caf10f36d96df8c9ffcde0105"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The first use turns explicitly selected fictional Word evidence into a reviewed private format, then reuses it in the current financial report builder. Scope explicitly excludes model training, exact template cloning and unsupported document generators.",
+        "inputs_and_request": "The language-specific raw JSON supplies a fictional Word example and independent accounting CSV generated locally. The natural request asks for observations, missing-setting proposals, two previews and adoption of the exact user-approved version; no client material is required.",
+        "execution_and_checkpoints": "The installed specialist owns the current workflow. Observations and proposals remain distinct. Both short and long previews must be opened and explicitly accepted before adoption. Tests independently choose complete fixture settings and simulate that decision; they do not attest learner review or model-led interpretation.",
+        "deliverable_and_next_action": "Formatting evidence, two real DOCX previews, private versioned profile and a ledger-backed financial report are inspectable outputs. The lesson requires all-page visual review and separate normal review of figures and conclusions. Actual synthetic report numeric analysis remains unchanged after formatting revision.",
+        "practice_and_repeat": "Fresh Studio Selva practice uses a separate workspace, Times New Roman and different source amounts. Revision creates profile version two and preserves version one and email settings. Repeat specifies the authorized private workspace and selected examples, then an explicitly selected supported financial report.",
+        "language_and_pacing": "The complete en narrative preserves the same checkpoints, privacy/configuration boundaries and independent practice. Generated headers and footers match that selected language. The nominal 390 seconds are instruction pacing; no measured learner duration or completed learner exercise is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_studio_document_format_execution::test_course_format_preview_adoption_report_and_revision[demo-14500-en]",
+        "result_review": "Inspected actual short/long DOCX structures and localized headers/footers for Studio Riva, using Arial. Approval without confirmation is rejected and creates no adopted profile. Explicitly simulated review creates version one; revision changes paragraph spacing to 12 points and archives the exact earlier profile while preserving email settings. The real ledger-backed report uses the selected studio identity and font. Its amount sum is 14500; complete report_analysis.json is identical before and after revision, and the earlier report retains its earlier format settings. These are component regression results, not learner or installed-host acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "preview-short.docx",
+            "sha256": "102ec858ddc54de8a89db4dfc2634e7cb20ab97a822b6c10ec0eda9fa987e4a2"
+          },
+          {
+            "name": "preview-long.docx",
+            "sha256": "029475ce060c278034c92d7cb146a7381d64029ba545629c8fe6bc7622929992"
+          },
+          {
+            "name": "studio_profile.json",
+            "sha256": "38456b978a7d532a35e197b20b2d6cacdb5b78d7a8daf9244cc7111a89abacee"
+          },
+          {
+            "name": "report.docx",
+            "sha256": "318c20c6a6687a299fcc9d0b35ebbb81f06ee9861cd3c32dd580b91014ac639f"
+          },
+          {
+            "name": "report_analysis.json",
+            "sha256": "680d5566535ea848c608fe411d83ae90ced95180674c899e4d5dfc1132215206"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_studio_document_format_execution::test_course_format_preview_adoption_report_and_revision[practice-25100-en]",
+        "result_review": "Inspected actual short/long DOCX structures and localized headers/footers for Studio Selva, using Times New Roman. Approval without confirmation is rejected and creates no adopted profile. Explicitly simulated review creates version one; revision changes paragraph spacing to 12 points and archives the exact earlier profile while preserving email settings. The real ledger-backed report uses the selected studio identity and font. Its amount sum is 25100; complete report_analysis.json is identical before and after revision, and the earlier report retains its earlier format settings. These are component regression results, not learner or installed-host acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "preview-short.docx",
+            "sha256": "a91ee33e78a4c730d00fb0e508b785b5609483f6a26f102379ed615683a1578f"
+          },
+          {
+            "name": "preview-long.docx",
+            "sha256": "ac7673c5ba2c42f2e9dce80977e6a2aa8f5024a456e64362ba1fd54931ba87e2"
+          },
+          {
+            "name": "studio_profile.json",
+            "sha256": "3fbb09e673c5300ad8a9f324e3c08ddb788f76aacdf6f8f2b921ebf2bd514926"
+          },
+          {
+            "name": "report.docx",
+            "sha256": "41aa028482111dcfd9168cdec44ade839fbf42d769f06aa0423ac53c4f2783a4"
+          },
+          {
+            "name": "report_analysis.json",
+            "sha256": "d03f40410bd585c0e92a01fa759b2009498383d0aa89c6edbf3906aed08fe73a"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The first use turns explicitly selected fictional Word evidence into a reviewed private format, then reuses it in the current financial report builder. Scope explicitly excludes model training, exact template cloning and unsupported document generators.",
+        "inputs_and_request": "The language-specific raw JSON supplies a fictional Word example and independent accounting CSV generated locally. The natural request asks for observations, missing-setting proposals, two previews and adoption of the exact user-approved version; no client material is required.",
+        "execution_and_checkpoints": "The installed specialist owns the current workflow. Observations and proposals remain distinct. Both short and long previews must be opened and explicitly accepted before adoption. Tests independently choose complete fixture settings and simulate that decision; they do not attest learner review or model-led interpretation.",
+        "deliverable_and_next_action": "Formatting evidence, two real DOCX previews, private versioned profile and a ledger-backed financial report are inspectable outputs. The lesson requires all-page visual review and separate normal review of figures and conclusions. Actual synthetic report numeric analysis remains unchanged after formatting revision.",
+        "practice_and_repeat": "Fresh Studio Selva practice uses a separate workspace, Times New Roman and different source amounts. Revision creates profile version two and preserves version one and email settings. Repeat specifies the authorized private workspace and selected examples, then an explicitly selected supported financial report.",
+        "language_and_pacing": "The complete fr narrative preserves the same checkpoints, privacy/configuration boundaries and independent practice. Generated headers and footers match that selected language. The nominal 390 seconds are instruction pacing; no measured learner duration or completed learner exercise is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_studio_document_format_execution::test_course_format_preview_adoption_report_and_revision[demo-14500-fr]",
+        "result_review": "Inspected actual short/long DOCX structures and localized headers/footers for Studio Riva, using Arial. Approval without confirmation is rejected and creates no adopted profile. Explicitly simulated review creates version one; revision changes paragraph spacing to 12 points and archives the exact earlier profile while preserving email settings. The real ledger-backed report uses the selected studio identity and font. Its amount sum is 14500; complete report_analysis.json is identical before and after revision, and the earlier report retains its earlier format settings. These are component regression results, not learner or installed-host acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "preview-short.docx",
+            "sha256": "a2c0ac54ab3df1d0ba4ffd43699bab3d2e26d5034148ecc1f6c4c8dac9082878"
+          },
+          {
+            "name": "preview-long.docx",
+            "sha256": "c929a4f6f7ebf3a570f74e6864b081a71fa2c5db2abb6731393073b3d980d3c8"
+          },
+          {
+            "name": "studio_profile.json",
+            "sha256": "b6909816332306d8fe4863ed7e5bc8219701d3c25469904a2995ee1f3cd1fa9e"
+          },
+          {
+            "name": "report.docx",
+            "sha256": "4ebcbcb8e16cc964d76989afa08c3b9a9d034f396794c68453ea6af9dbaf2fd4"
+          },
+          {
+            "name": "report_analysis.json",
+            "sha256": "900b04b5d2446a67afdb8c951e7523adc257634b5aee51ae839de5cc73bdb6d6"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_studio_document_format_execution::test_course_format_preview_adoption_report_and_revision[practice-25100-fr]",
+        "result_review": "Inspected actual short/long DOCX structures and localized headers/footers for Studio Selva, using Times New Roman. Approval without confirmation is rejected and creates no adopted profile. Explicitly simulated review creates version one; revision changes paragraph spacing to 12 points and archives the exact earlier profile while preserving email settings. The real ledger-backed report uses the selected studio identity and font. Its amount sum is 25100; complete report_analysis.json is identical before and after revision, and the earlier report retains its earlier format settings. These are component regression results, not learner or installed-host acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "preview-short.docx",
+            "sha256": "06bbae05a3f0dd3ded305d802e59ac1d1b850db76bf21067ffcadca7b871ba45"
+          },
+          {
+            "name": "preview-long.docx",
+            "sha256": "2a067e2d13ec401c13d268bc976f00ff604853cc92728301aba95be00b15d29a"
+          },
+          {
+            "name": "studio_profile.json",
+            "sha256": "6f85b2e4de00afdc153bbdb10d4b74c84d69788dcb53c404be11a2bb447c8ff1"
+          },
+          {
+            "name": "report.docx",
+            "sha256": "cfc00a455b493dff54acfcb9c350547f1821ae8542b969ffd9f856e6586a4e85"
+          },
+          {
+            "name": "report_analysis.json",
+            "sha256": "c04bf15d68658ee37a53e475d04ff9d387cf91b0cbc8f0904054901001eca783"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The first use turns explicitly selected fictional Word evidence into a reviewed private format, then reuses it in the current financial report builder. Scope explicitly excludes model training, exact template cloning and unsupported document generators.",
+        "inputs_and_request": "The language-specific raw JSON supplies a fictional Word example and independent accounting CSV generated locally. The natural request asks for observations, missing-setting proposals, two previews and adoption of the exact user-approved version; no client material is required.",
+        "execution_and_checkpoints": "The installed specialist owns the current workflow. Observations and proposals remain distinct. Both short and long previews must be opened and explicitly accepted before adoption. Tests independently choose complete fixture settings and simulate that decision; they do not attest learner review or model-led interpretation.",
+        "deliverable_and_next_action": "Formatting evidence, two real DOCX previews, private versioned profile and a ledger-backed financial report are inspectable outputs. The lesson requires all-page visual review and separate normal review of figures and conclusions. Actual synthetic report numeric analysis remains unchanged after formatting revision.",
+        "practice_and_repeat": "Fresh Studio Selva practice uses a separate workspace, Times New Roman and different source amounts. Revision creates profile version two and preserves version one and email settings. Repeat specifies the authorized private workspace and selected examples, then an explicitly selected supported financial report.",
+        "language_and_pacing": "The complete de narrative preserves the same checkpoints, privacy/configuration boundaries and independent practice. Generated headers and footers match that selected language. The nominal 390 seconds are instruction pacing; no measured learner duration or completed learner exercise is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_studio_document_format_execution::test_course_format_preview_adoption_report_and_revision[demo-14500-de]",
+        "result_review": "Inspected actual short/long DOCX structures and localized headers/footers for Studio Riva, using Arial. Approval without confirmation is rejected and creates no adopted profile. Explicitly simulated review creates version one; revision changes paragraph spacing to 12 points and archives the exact earlier profile while preserving email settings. The real ledger-backed report uses the selected studio identity and font. Its amount sum is 14500; complete report_analysis.json is identical before and after revision, and the earlier report retains its earlier format settings. These are component regression results, not learner or installed-host acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "preview-short.docx",
+            "sha256": "7909fce9eec08322e5b5c59b7172ed561851e305e3d26d677328d64f0dc09b02"
+          },
+          {
+            "name": "preview-long.docx",
+            "sha256": "766e07f75d6b341632075ac80dd7877f481330d29fafd6bda82ba6bae08916b8"
+          },
+          {
+            "name": "studio_profile.json",
+            "sha256": "6daa7cbb675867c734ce0fb00cded7cd96e0baee639203154fbdffc18d9239d1"
+          },
+          {
+            "name": "report.docx",
+            "sha256": "a7ddc93af384318974a1dde2c27058020fc2864b549e1b101f1e635f6aeae4ea"
+          },
+          {
+            "name": "report_analysis.json",
+            "sha256": "d2926be24b539f360363e9cf2538db2bda704bef71d1a7befb77c9b3f2b11870"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_studio_document_format_execution::test_course_format_preview_adoption_report_and_revision[practice-25100-de]",
+        "result_review": "Inspected actual short/long DOCX structures and localized headers/footers for Studio Selva, using Times New Roman. Approval without confirmation is rejected and creates no adopted profile. Explicitly simulated review creates version one; revision changes paragraph spacing to 12 points and archives the exact earlier profile while preserving email settings. The real ledger-backed report uses the selected studio identity and font. Its amount sum is 25100; complete report_analysis.json is identical before and after revision, and the earlier report retains its earlier format settings. These are component regression results, not learner or installed-host acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "preview-short.docx",
+            "sha256": "2837f0ee45bd60a59108d2ec8f5844e49c41b79b85881147f9bed784f6ce7f63"
+          },
+          {
+            "name": "preview-long.docx",
+            "sha256": "fb14ffa65ea5899384b715d96a92296b9819fe4737375fdc874bf46960e148b5"
+          },
+          {
+            "name": "studio_profile.json",
+            "sha256": "0ca2b46ddd24f5a462e582ccd1a85a3eab363b7986186384731f5f4b4ab5c64c"
+          },
+          {
+            "name": "report.docx",
+            "sha256": "b47458647340d5f3514223e7c27f084122a0aea4d93e25f90fc39ccb8569c686"
+          },
+          {
+            "name": "report_analysis.json",
+            "sha256": "009ea43cc2c9e67b6f5f85ef3ee19a07949e4ffca27ff2cce64ed7ad56ddcdd1"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The first use turns explicitly selected fictional Word evidence into a reviewed private format, then reuses it in the current financial report builder. Scope explicitly excludes model training, exact template cloning and unsupported document generators.",
+        "inputs_and_request": "The language-specific raw JSON supplies a fictional Word example and independent accounting CSV generated locally. The natural request asks for observations, missing-setting proposals, two previews and adoption of the exact user-approved version; no client material is required.",
+        "execution_and_checkpoints": "The installed specialist owns the current workflow. Observations and proposals remain distinct. Both short and long previews must be opened and explicitly accepted before adoption. Tests independently choose complete fixture settings and simulate that decision; they do not attest learner review or model-led interpretation.",
+        "deliverable_and_next_action": "Formatting evidence, two real DOCX previews, private versioned profile and a ledger-backed financial report are inspectable outputs. The lesson requires all-page visual review and separate normal review of figures and conclusions. Actual synthetic report numeric analysis remains unchanged after formatting revision.",
+        "practice_and_repeat": "Fresh Studio Selva practice uses a separate workspace, Times New Roman and different source amounts. Revision creates profile version two and preserves version one and email settings. Repeat specifies the authorized private workspace and selected examples, then an explicitly selected supported financial report.",
+        "language_and_pacing": "The complete es narrative preserves the same checkpoints, privacy/configuration boundaries and independent practice. Generated headers and footers match that selected language. The nominal 390 seconds are instruction pacing; no measured learner duration or completed learner exercise is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_studio_document_format_execution::test_course_format_preview_adoption_report_and_revision[demo-14500-es]",
+        "result_review": "Inspected actual short/long DOCX structures and localized headers/footers for Studio Riva, using Arial. Approval without confirmation is rejected and creates no adopted profile. Explicitly simulated review creates version one; revision changes paragraph spacing to 12 points and archives the exact earlier profile while preserving email settings. The real ledger-backed report uses the selected studio identity and font. Its amount sum is 14500; complete report_analysis.json is identical before and after revision, and the earlier report retains its earlier format settings. These are component regression results, not learner or installed-host acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "preview-short.docx",
+            "sha256": "d92b8e2432edb4ecb195f2d5b4b06f6abfb6842fd9f3c1e351d758c847f6b152"
+          },
+          {
+            "name": "preview-long.docx",
+            "sha256": "dd7e4c2b386de3f6ceb5de07171b77824bc58024f27c628e3af7863e212fb624"
+          },
+          {
+            "name": "studio_profile.json",
+            "sha256": "9d3c9f205b73a196a0c46375d45527d4e62c2a043ca5ef037552c01767577b42"
+          },
+          {
+            "name": "report.docx",
+            "sha256": "1cb2dfdd7cf1f0a871ee1be641db6394c40874d6a29b539b57ed428edb5c3267"
+          },
+          {
+            "name": "report_analysis.json",
+            "sha256": "977bb8ed1e1fd52a8d4425a07a624ad4da0a89f57aa9f49e09e0f7656e309ea5"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_studio_document_format_execution::test_course_format_preview_adoption_report_and_revision[practice-25100-es]",
+        "result_review": "Inspected actual short/long DOCX structures and localized headers/footers for Studio Selva, using Times New Roman. Approval without confirmation is rejected and creates no adopted profile. Explicitly simulated review creates version one; revision changes paragraph spacing to 12 points and archives the exact earlier profile while preserving email settings. The real ledger-backed report uses the selected studio identity and font. Its amount sum is 25100; complete report_analysis.json is identical before and after revision, and the earlier report retains its earlier format settings. These are component regression results, not learner or installed-host acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "preview-short.docx",
+            "sha256": "165e364bcc45803a4a42a33e1880d75a5b7e9a86d367994cba51a1ad078dc790"
+          },
+          {
+            "name": "preview-long.docx",
+            "sha256": "de79ae83c89b72c1da61301f92031418dddf9c5c638ee03a030ea3fbdd07c0e4"
+          },
+          {
+            "name": "studio_profile.json",
+            "sha256": "29f88220d7b5e75a74cd4da47ec0505c46bdde11462c9e8f08d9a72724572483"
+          },
+          {
+            "name": "report.docx",
+            "sha256": "a9691d3b0a4dca305051adf412eee1e5446f7fa42fb45db96be2450bc2935238"
+          },
+          {
+            "name": "report_analysis.json",
+            "sha256": "ecaef79c4c584728e9c645b89e1a35f9fb0e05824612c112c6f6dd5442fe2618"
+          }
+        ]
+      }
+    }
+  },
+  "connected_studio_knowledge_source_binding_20261002": {
+    "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+    "reviewed_at": "2026-10-01T22:12:56.036386+00:00",
+    "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+    "previous_course_sha256": "314b07c315e2ec80b4ec0b56fb02a5a588a985ac4f65b68fec7ce10ddfef1a35",
+    "current_course_sha256": "e945f61e0d67e1ab2211dde940d1e8943379656a1658300c66001d169d65cf5d",
+    "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+    "changed_sources": [
+      "skills/studio-document-format/SKILL.md",
+      "skills/vera/references/connected-studio-knowledge.md"
+    ],
+    "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+    "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+  },
+  "integration_refresh": {
+    "reviewer": "Codex /root",
+    "date": "2026-10-02",
+    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
+  },
+  "rating_legalita_source_binding_20261002": {
+    "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+    "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+    "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+    "previous_course_sha256": "d2b859ee050349ab5e2bf719d82ee5142ba4f3c8041eac6e3ecf354d39156005",
+    "current_course_sha256": "1d4e249980916069072e259eda72d24e1475313aa5aad53cbeee2eaef6a87f04",
+    "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+    "changed_sources": [
+      "modules/report-builder/vendor/modules/vera_assurance/contracts.py",
+      "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
+      "vendor/modules/courseware/policy.py",
+      "vendor/modules/vera_assurance/contracts.py"
+    ],
+    "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+    "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+  },
+  "lipe_source_binding_20261002": {
+    "reviewer": "Codex /root - bounded LIPE source compatibility review",
+    "reviewed_at": "2026-10-02T20:25:14.425278+00:00",
+    "baseline_commit": "bebefc9b5f187bbcc5619a1b603363581ec68158",
+    "previous_course_sha256": "1d4e249980916069072e259eda72d24e1475313aa5aad53cbeee2eaef6a87f04",
+    "current_course_sha256": "98da62f68279c4a433bd29ed6e3d78ffc35d6e185628f8e4438b45179013919a",
+    "content_review": "Compared the complete compiled course JSON against the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are retained. This is not a new editorial, visual, professional or learner acceptance review.",
+    "changed_sources": [
+      "modules/report-builder/vendor/modules/vera_assurance/contracts.py",
+      "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
+      "vendor/modules/vera_assurance/contracts.py"
+    ],
+    "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
+    "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
+  },
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
+}

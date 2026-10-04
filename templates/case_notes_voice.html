@@ -316,7 +316,7 @@
         </div>
       </header>
 
-      <p class="processing-notice" id="processingNotice">
+      <p class="processing-notice" id="processingNotice"{% if language == "ar" %} lang="ar" dir="rtl"{% endif %}>
         {% if language == "es" %}
           Clara Voice Capture es un servicio alojado por Mparanza. Mparanza y
           OpenAI procesan el audio y el contexto resumido del proyecto asociado a
@@ -326,6 +326,13 @@
           Después de la descarga, Codex puede leer la transcripción mediante el
           plan de ChatGPT existente y el entorno de trabajo Codex del despacho para
           atribuir a los hablantes y revisarla. <a href="/data-handling?lang=es" target="_blank" rel="noopener noreferrer">Consulta cómo se tratan los datos</a>.
+        {% elif language == "ar" %}
+          خدمة Clara Voice Capture مستضافة لدى Mparanza. تعالج Mparanza وOpenAI
+          الصوت والسياق الموجز للمشروع المرتبط بالجلسة لإنشاء النص. يبقى فيديو
+          الشاشة في المتصفح ولا يُرفع إلى Mparanza. تُحذف ملفات الصوت والعمل
+          المستضافة قبل إعادة الحزمة المكتملة. بعد التنزيل، يمكن لـCodex قراءة
+          النص ضمن خطة ChatGPT الحالية وبيئة عمل Codex لدى المكتب لإسناد
+          المتحدثين ومراجعته. <a href="/data-handling?lang=en" target="_blank" rel="noopener noreferrer">اقرأ كيفية معالجة البيانات باللغة الإنجليزية</a>.
         {% else %}
           Clara Voice Capture è un servizio hosted da Mparanza. Mparanza e OpenAI
           trattano l'audio e il contesto compatto del progetto collegato alla sessione
@@ -356,6 +363,7 @@
         <option value="fr"{% if language == "fr" %} selected{% endif %}>French</option>
         <option value="de"{% if language == "de" %} selected{% endif %}>German</option>
         <option value="es"{% if language == "es" %} selected{% endif %}>Spanish</option>
+        <option value="ar"{% if language == "ar" %} selected{% endif %}>Arabic</option>
       </select>
 
       <section class="capture-workspace" aria-label="Capture input">
@@ -397,17 +405,18 @@
       <section class="source-details" aria-label="Call metadata">
         <h2>Call metadata</h2>
         <label class="wide">Short title
-          <input id="sourceTitle" autocomplete="off" required />
+          <input id="sourceTitle" autocomplete="off" required dir="auto" />
         </label>
         <label class="wide">Speakers / participants
           <input
             id="sourceParticipants"
             autocomplete="off"
+            dir="auto"
             required
           />
         </label>
         <label class="full">Attribution notes
-          <textarea id="sourceNotes"></textarea>
+          <textarea id="sourceNotes" dir="auto"></textarea>
         </label>
       </section>
 
@@ -438,7 +447,7 @@
       <section class="panels is-hidden" id="transcriptPanels" aria-hidden="true">
         <div class="panel">
           <h2>Transcript</h2>
-          <textarea id="userTranscript" spellcheck="false"></textarea>
+          <textarea id="userTranscript" dir="auto" spellcheck="false"></textarea>
         </div>
       </section>
     </main>

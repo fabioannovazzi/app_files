@@ -1,0 +1,14 @@
+{
+  "plugin": "business-valuation",
+  "version": 1,
+  "should_trigger": [
+    {"id": "valuation-1", "prompt": "Prepara una valutazione d’impresa PMI dai bilanci e dal piano forniti.", "required_signals": ["valutazione"]},
+    {"id": "valuation-2", "prompt": "Rivedi il DCF FCFF e il raccordo dal valore operativo al capitale proprio.", "required_signals": ["DCF"]},
+    {"id": "valuation-3", "prompt": "Confronta una valutazione patrimoniale rettificata e una reddituale su queste fonti.", "required_signals": ["valutazione"]}
+  ],
+  "should_not_trigger": [
+    {"id": "valuation-4", "prompt": "Prepara un business plan per una nuova attività."},
+    {"id": "valuation-5", "prompt": "Riconcilia gli estratti conto con la prima nota."},
+    {"id": "valuation-6", "prompt": "Prepara il budget di tesoreria dei prossimi mesi."}
+  ]
+}

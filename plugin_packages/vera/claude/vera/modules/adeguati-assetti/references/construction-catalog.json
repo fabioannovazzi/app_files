@@ -1,0 +1,1378 @@
+{
+  "schema_version": "assetti.criteria.v0.1",
+  "methodology_version": "STUDIO-AA-0.1",
+  "status": "pilot_proposal",
+  "disclaimer": "Catalogo originale di studio. Ancoraggi e pesi non attribuiti a UNI. Nessun giudizio automatico di adeguatezza.",
+  "domains": [
+    {
+      "id": "governance",
+      "weight": 1,
+      "weight_origin": "studio_proposal"
+    },
+    {
+      "id": "processi",
+      "weight": 1,
+      "weight_origin": "studio_proposal"
+    },
+    {
+      "id": "contabilita",
+      "weight": 1,
+      "weight_origin": "studio_proposal"
+    },
+    {
+      "id": "pianificazione",
+      "weight": 1,
+      "weight_origin": "studio_proposal"
+    },
+    {
+      "id": "tesoreria",
+      "weight": 1,
+      "weight_origin": "studio_proposal"
+    },
+    {
+      "id": "informazioni",
+      "weight": 1,
+      "weight_origin": "studio_proposal"
+    }
+  ],
+  "criteria": [
+    {
+      "id": "C01",
+      "domain": "governance",
+      "title": "Obiettivi e decisioni",
+      "question": "Quale decisione recente mostra come gli obiettivi guidano le risorse?",
+      "interview_role": "Direzione",
+      "evidence_request": "Decisione datata e obiettivi del periodo",
+      "expected_outcome": "Obiettivi e decisioni con responsabilità, informazioni e risultati proporzionati all'impresa.",
+      "applicability": {
+        "default": "pending",
+        "decision": "Professional review of business context; N/A requires rationale and approval"
+      },
+      "source_mapping": [
+        {
+          "source_id": "STUDIO-AA-0.1",
+          "kind": "original_operational_proposal",
+          "locator": "C01",
+          "status": "proposed"
+        },
+        {
+          "source_id": "S01",
+          "kind": "technical_framework",
+          "locator": null,
+          "status": "pending_full_text"
+        }
+      ],
+      "contextual_method_reference": {
+        "source_id": "S03",
+        "locator": "pp. 4–5",
+        "scope": "personalizzazione e metodo; non origine del singolo quesito o dei voti"
+      },
+      "weight": 1,
+      "anchors": {
+        "0": "obiettivi non definiti nel perimetro accertato",
+        "1": "priorità variabili e non condivise",
+        "2": "obiettivi, decisori e riesame definiti",
+        "3": "decisioni osservate coerenti con gli obiettivi",
+        "4": "risultati riesaminati e obiettivi aggiornati"
+      },
+      "follow_up": "Mostrare un caso recente, il responsabile, il destinatario e l'esito; verificare il periodo se emergono contraddizioni.",
+      "action_template": {
+        "proposal": "Preparare un registro obiettivi, decisioni e riesami",
+        "template_id": "registro_obiettivi",
+        "owner": "da concordare",
+        "timing": "da concordare",
+        "completion_evidence": "Disegno pertinente, decisione aziendale e prova del ciclo richiesto dal controllo; limiti espliciti."
+      },
+      "target_score": null,
+      "criticality": "to_be_reasoned_for_case",
+      "additional_method_references": [
+        {
+          "source_id": "S08",
+          "locator": "§6.2.1; pp. 124–126",
+          "status": "thematic_passage_verified",
+          "scope": "Collegamento al cruscotto; ancoraggi numerici originali di studio"
+        },
+        {
+          "source_id": "S09",
+          "locator": "Parte sui servizi, §4, pp. 60–61",
+          "status": "thematic_passage_verified",
+          "scope": "Progettazione contestuale; non griglia di voti"
+        }
+      ]
+    },
+    {
+      "id": "C02",
+      "domain": "governance",
+      "title": "Responsabilità e sostituzioni",
+      "question": "Se domani manca la persona che svolge questa attività, chi interviene e con quali poteri?",
+      "interview_role": "Direzione e responsabile processo",
+      "evidence_request": "Mappa ruoli ed esempio di sostituzione",
+      "expected_outcome": "Responsabilità e sostituzioni con responsabilità, informazioni e risultati proporzionati all'impresa.",
+      "applicability": {
+        "default": "pending",
+        "decision": "Professional review of business context; N/A requires rationale and approval"
+      },
+      "source_mapping": [
+        {
+          "source_id": "STUDIO-AA-0.1",
+          "kind": "original_operational_proposal",
+          "locator": "C02",
+          "status": "proposed"
+        },
+        {
+          "source_id": "S01",
+          "kind": "technical_framework",
+          "locator": null,
+          "status": "pending_full_text"
+        }
+      ],
+      "contextual_method_reference": {
+        "source_id": "S03",
+        "locator": "pp. 4–5",
+        "scope": "personalizzazione e metodo; non origine del singolo quesito o dei voti"
+      },
+      "weight": 1,
+      "anchors": {
+        "0": "attività critica senza responsabile identificato",
+        "1": "responsabile noto ma sostituzione incerta",
+        "2": "compiti, poteri e sostituzioni definiti",
+        "3": "ruoli effettivamente esercitati nel campione",
+        "4": "assetto dei ruoli riesaminato dopo cambiamenti"
+      },
+      "follow_up": "Mostrare un caso recente, il responsabile, il destinatario e l'esito; verificare il periodo se emergono contraddizioni.",
+      "action_template": {
+        "proposal": "Concordare responsabilità, sostituti e limiti decisionali",
+        "template_id": "matrice_ruoli",
+        "owner": "da concordare",
+        "timing": "da concordare",
+        "completion_evidence": "Disegno pertinente, decisione aziendale e prova del ciclo richiesto dal controllo; limiti espliciti."
+      },
+      "target_score": null,
+      "criticality": "to_be_reasoned_for_case",
+      "additional_method_references": []
+    },
+    {
+      "id": "C03",
+      "domain": "governance",
+      "title": "Autorizzazioni e controlli compensativi",
+      "question": "Mostrate una spesa recente: chi l'ha proposta, autorizzata e verificata?",
+      "interview_role": "Direzione e amministrazione",
+      "evidence_request": "Proposta, autorizzazione ed esito",
+      "expected_outcome": "Autorizzazioni e controlli compensativi con responsabilità, informazioni e risultati proporzionati all'impresa.",
+      "applicability": {
+        "default": "pending",
+        "decision": "Professional review of business context; N/A requires rationale and approval"
+      },
+      "source_mapping": [
+        {
+          "source_id": "STUDIO-AA-0.1",
+          "kind": "original_operational_proposal",
+          "locator": "C03",
+          "status": "proposed"
+        },
+        {
+          "source_id": "S01",
+          "kind": "technical_framework",
+          "locator": null,
+          "status": "pending_full_text"
+        }
+      ],
+      "contextual_method_reference": {
+        "source_id": "S03",
+        "locator": "pp. 4–5",
+        "scope": "personalizzazione e metodo; non origine del singolo quesito o dei voti"
+      },
+      "weight": 1,
+      "anchors": {
+        "0": "assenza accertata di autorizzazione pertinente",
+        "1": "approvazioni occasionali non ricostruibili sempre",
+        "2": "regole e controlli compensativi definiti",
+        "3": "autorizzazioni e controlli osservati nel campione",
+        "4": "eccezioni analizzate e regole riesaminate"
+      },
+      "follow_up": "Mostrare un caso recente, il responsabile, il destinatario e l'esito; verificare il periodo se emergono contraddizioni.",
+      "action_template": {
+        "proposal": "Definire deleghe e traccia delle autorizzazioni proporzionate",
+        "template_id": "matrice_deleghe",
+        "owner": "da concordare",
+        "timing": "da concordare",
+        "completion_evidence": "Disegno pertinente, decisione aziendale e prova del ciclo richiesto dal controllo; limiti espliciti."
+      },
+      "target_score": null,
+      "criticality": "to_be_reasoned_for_case",
+      "additional_method_references": []
+    },
+    {
+      "id": "C04",
+      "domain": "governance",
+      "title": "Decisioni sulle anomalie",
+      "question": "Quale anomalia recente è arrivata alla direzione e che cosa è successo dopo?",
+      "interview_role": "Direzione",
+      "evidence_request": "Segnalazione, destinatario, decisione ed esito",
+      "expected_outcome": "Decisioni sulle anomalie con responsabilità, informazioni e risultati proporzionati all'impresa.",
+      "applicability": {
+        "default": "pending",
+        "decision": "Professional review of business context; N/A requires rationale and approval"
+      },
+      "source_mapping": [
+        {
+          "source_id": "STUDIO-AA-0.1",
+          "kind": "original_operational_proposal",
+          "locator": "C04",
+          "status": "proposed"
+        },
+        {
+          "source_id": "S01",
+          "kind": "technical_framework",
+          "locator": null,
+          "status": "pending_full_text"
+        }
+      ],
+      "contextual_method_reference": {
+        "source_id": "S03",
+        "locator": "pp. 4–5",
+        "scope": "personalizzazione e metodo; non origine del singolo quesito o dei voti"
+      },
+      "weight": 1,
+      "anchors": {
+        "0": "anomalia osservata senza destinatario o decisione",
+        "1": "presa in carico occasionale",
+        "2": "percorso di escalation e tempi definiti",
+        "3": "escalation e risposte osservate",
+        "4": "tempi ed esiti riesaminati con correzioni"
+      },
+      "follow_up": "Mostrare un caso recente, il responsabile, il destinatario e l'esito; verificare il periodo se emergono contraddizioni.",
+      "action_template": {
+        "proposal": "Istituire un registro anomalie e decisioni",
+        "template_id": "registro_anomalie",
+        "owner": "da concordare",
+        "timing": "da concordare",
+        "completion_evidence": "Disegno pertinente, decisione aziendale e prova del ciclo richiesto dal controllo; limiti espliciti."
+      },
+      "target_score": null,
+      "criticality": "to_be_reasoned_for_case",
+      "additional_method_references": []
+    },
+    {
+      "id": "C05",
+      "domain": "processi",
+      "title": "Ordine, prestazione e fatturazione",
+      "question": "Seguiamo un ordine fino alla fattura: dove controllate ciò che è stato consegnato?",
+      "interview_role": "Vendite e amministrazione",
+      "evidence_request": "Ordine, prova prestazione, fattura e controllo",
+      "expected_outcome": "Ordine, prestazione e fatturazione con responsabilità, informazioni e risultati proporzionati all'impresa.",
+      "applicability": {
+        "default": "pending",
+        "decision": "Professional review of business context; N/A requires rationale and approval"
+      },
+      "source_mapping": [
+        {
+          "source_id": "STUDIO-AA-0.1",
+          "kind": "original_operational_proposal",
+          "locator": "C05",
+          "status": "proposed"
+        },
+        {
+          "source_id": "S01",
+          "kind": "technical_framework",
+          "locator": null,
+          "status": "pending_full_text"
+        }
+      ],
+      "contextual_method_reference": {
+        "source_id": "S03",
+        "locator": "pp. 4–5",
+        "scope": "personalizzazione e metodo; non origine del singolo quesito o dei voti"
+      },
+      "weight": 1,
+      "anchors": {
+        "0": "mancato raccordo accertato tra prestazioni e fatture",
+        "1": "raccordo parziale o occasionale",
+        "2": "responsabilità e passaggi di raccordo definiti",
+        "3": "ciclo e anomalie verificati su casi scelti",
+        "4": "errori del ciclo analizzati e controlli migliorati"
+      },
+      "follow_up": "Mostrare un caso recente, il responsabile, il destinatario e l'esito; verificare il periodo se emergono contraddizioni.",
+      "action_template": {
+        "proposal": "Disegnare il controllo di completezza del ciclo attivo",
+        "template_id": "procedura_ciclo_attivo",
+        "owner": "da concordare",
+        "timing": "da concordare",
+        "completion_evidence": "Disegno pertinente, decisione aziendale e prova del ciclo richiesto dal controllo; limiti espliciti."
+      },
+      "target_score": null,
+      "criticality": "to_be_reasoned_for_case",
+      "additional_method_references": []
+    },
+    {
+      "id": "C06",
+      "domain": "processi",
+      "title": "Acquisto e debito da pagare",
+      "question": "Come accertate che una fattura corrisponde a un acquisto autorizzato e ricevuto?",
+      "interview_role": "Acquisti e amministrazione",
+      "evidence_request": "Richiesta, ricezione, fattura, contestazioni",
+      "expected_outcome": "Acquisto e debito da pagare con responsabilità, informazioni e risultati proporzionati all'impresa.",
+      "applicability": {
+        "default": "pending",
+        "decision": "Professional review of business context; N/A requires rationale and approval"
+      },
+      "source_mapping": [
+        {
+          "source_id": "STUDIO-AA-0.1",
+          "kind": "original_operational_proposal",
+          "locator": "C06",
+          "status": "proposed"
+        },
+        {
+          "source_id": "S01",
+          "kind": "technical_framework",
+          "locator": null,
+          "status": "pending_full_text"
+        }
+      ],
+      "contextual_method_reference": {
+        "source_id": "S03",
+        "locator": "pp. 4–5",
+        "scope": "personalizzazione e metodo; non origine del singolo quesito o dei voti"
+      },
+      "weight": 1,
+      "anchors": {
+        "0": "pagamenti osservati senza verifica pertinente",
+        "1": "controlli non sistematici",
+        "2": "verifiche, responsabilità e contestazioni definite",
+        "3": "controlli eseguiti e anomalie trattate nel campione",
+        "4": "anomalie ricorrenti riesaminate"
+      },
+      "follow_up": "Mostrare un caso recente, il responsabile, il destinatario e l'esito; verificare il periodo se emergono contraddizioni.",
+      "action_template": {
+        "proposal": "Definire verifiche prima della proposta di pagamento",
+        "template_id": "procedura_ciclo_passivo",
+        "owner": "da concordare",
+        "timing": "da concordare",
+        "completion_evidence": "Disegno pertinente, decisione aziendale e prova del ciclo richiesto dal controllo; limiti espliciti."
+      },
+      "target_score": null,
+      "criticality": "to_be_reasoned_for_case",
+      "additional_method_references": []
+    },
+    {
+      "id": "C07",
+      "domain": "processi",
+      "title": "Consegne tra azienda e studio",
+      "question": "Quali dati inviate allo studio, quando e come sapete se sono completi?",
+      "interview_role": "Amministrazione e studio esterno",
+      "evidence_request": "Calendario, invio, ricezione e richieste integrazione",
+      "expected_outcome": "Consegne tra azienda e studio con responsabilità, informazioni e risultati proporzionati all'impresa.",
+      "applicability": {
+        "default": "pending",
+        "decision": "Professional review of business context; N/A requires rationale and approval"
+      },
+      "source_mapping": [
+        {
+          "source_id": "STUDIO-AA-0.1",
+          "kind": "original_operational_proposal",
+          "locator": "C07",
+          "status": "proposed"
+        },
+        {
+          "source_id": "S01",
+          "kind": "technical_framework",
+          "locator": null,
+          "status": "pending_full_text"
+        }
+      ],
+      "contextual_method_reference": {
+        "source_id": "S03",
+        "locator": "pp. 4–5",
+        "scope": "personalizzazione e metodo; non origine del singolo quesito o dei voti"
+      },
+      "weight": 1,
+      "anchors": {
+        "0": "passaggi informativi essenziali assenti",
+        "1": "invii reattivi e incompleti",
+        "2": "calendario, responsabilità e controllo completezza definiti",
+        "3": "consegne e integrazioni gestite nel periodo",
+        "4": "ritardi e cause riesaminati con azienda e studio"
+      },
+      "follow_up": "Mostrare un caso recente, il responsabile, il destinatario e l'esito; verificare il periodo se emergono contraddizioni.",
+      "action_template": {
+        "proposal": "Concordare un protocollo di consegna e controllo dei dati",
+        "template_id": "calendario_consegne",
+        "owner": "da concordare",
+        "timing": "da concordare",
+        "completion_evidence": "Disegno pertinente, decisione aziendale e prova del ciclo richiesto dal controllo; limiti espliciti."
+      },
+      "target_score": null,
+      "criticality": "to_be_reasoned_for_case",
+      "additional_method_references": []
+    },
+    {
+      "id": "C08",
+      "domain": "processi",
+      "title": "Risorse operative e commesse",
+      "question": "Quali attività o risorse possono fermare una consegna e come ve ne accorgete?",
+      "interview_role": "Responsabile operativo",
+      "evidence_request": "Lista attività, avanzamento, eccezione gestita",
+      "expected_outcome": "Risorse operative e commesse con responsabilità, informazioni e risultati proporzionati all'impresa.",
+      "applicability": {
+        "default": "pending",
+        "decision": "Professional review of business context; N/A requires rationale and approval"
+      },
+      "source_mapping": [
+        {
+          "source_id": "STUDIO-AA-0.1",
+          "kind": "original_operational_proposal",
+          "locator": "C08",
+          "status": "proposed"
+        },
+        {
+          "source_id": "S01",
+          "kind": "technical_framework",
+          "locator": null,
+          "status": "pending_full_text"
+        }
+      ],
+      "contextual_method_reference": {
+        "source_id": "S03",
+        "locator": "pp. 4–5",
+        "scope": "personalizzazione e metodo; non origine del singolo quesito o dei voti"
+      },
+      "weight": 1,
+      "anchors": {
+        "0": "vincoli rilevanti non rilevati nel caso osservato",
+        "1": "monitoraggio occasionale",
+        "2": "controllo proporzionato di avanzamento e vincoli definito",
+        "3": "controllo usato su commesse o attività pertinenti",
+        "4": "scostamenti e colli di bottiglia riesaminati"
+      },
+      "follow_up": "Mostrare un caso recente, il responsabile, il destinatario e l'esito; verificare il periodo se emergono contraddizioni.",
+      "action_template": {
+        "proposal": "Progettare il controllo operativo pertinente al modello di attività",
+        "template_id": "registro_avanzamento",
+        "owner": "da concordare",
+        "timing": "da concordare",
+        "completion_evidence": "Disegno pertinente, decisione aziendale e prova del ciclo richiesto dal controllo; limiti espliciti."
+      },
+      "target_score": null,
+      "criticality": "to_be_reasoned_for_case",
+      "additional_method_references": [
+        {
+          "source_id": "S09",
+          "locator": "Parte sui servizi, §4, pp. 60–61",
+          "status": "thematic_passage_verified",
+          "scope": "Progettazione contestuale; non griglia di voti"
+        }
+      ]
+    },
+    {
+      "id": "C09",
+      "domain": "contabilita",
+      "title": "Calendario e completezza della chiusura",
+      "question": "Mostrate l'ultima chiusura e quali dati mancavano alla data prevista.",
+      "interview_role": "Amministrazione",
+      "evidence_request": "Lista chiusura, date e riconciliazioni",
+      "expected_outcome": "Calendario e completezza della chiusura con responsabilità, informazioni e risultati proporzionati all'impresa.",
+      "applicability": {
+        "default": "pending",
+        "decision": "Professional review of business context; N/A requires rationale and approval"
+      },
+      "source_mapping": [
+        {
+          "source_id": "STUDIO-AA-0.1",
+          "kind": "original_operational_proposal",
+          "locator": "C09",
+          "status": "proposed"
+        },
+        {
+          "source_id": "S01",
+          "kind": "technical_framework",
+          "locator": null,
+          "status": "pending_full_text"
+        }
+      ],
+      "contextual_method_reference": {
+        "source_id": "S03",
+        "locator": "pp. 4–5",
+        "scope": "personalizzazione e metodo; non origine del singolo quesito o dei voti"
+      },
+      "weight": 1,
+      "anchors": {
+        "0": "assenza accertata di una chiusura utile",
+        "1": "chiusura occasionale o incompleta",
+        "2": "calendario e controlli di completezza definiti",
+        "3": "chiusure utili eseguite nel periodo",
+        "4": "tempi ed errori di chiusura riesaminati"
+      },
+      "follow_up": "Mostrare un caso recente, il responsabile, il destinatario e l'esito; verificare il periodo se emergono contraddizioni.",
+      "action_template": {
+        "proposal": "Costruire calendario e checklist della chiusura",
+        "template_id": "checklist_chiusura",
+        "owner": "da concordare",
+        "timing": "da concordare",
+        "completion_evidence": "Disegno pertinente, decisione aziendale e prova del ciclo richiesto dal controllo; limiti espliciti."
+      },
+      "target_score": null,
+      "criticality": "to_be_reasoned_for_case",
+      "additional_method_references": []
+    },
+    {
+      "id": "C10",
+      "domain": "contabilita",
+      "title": "Raccordo banca e contabilità",
+      "question": "Come spiegate oggi le differenze tra banca e contabilità?",
+      "interview_role": "Amministrazione",
+      "evidence_request": "Saldi, movimenti, riconciliazione e differenze",
+      "expected_outcome": "Raccordo banca e contabilità con responsabilità, informazioni e risultati proporzionati all'impresa.",
+      "applicability": {
+        "default": "pending",
+        "decision": "Professional review of business context; N/A requires rationale and approval"
+      },
+      "source_mapping": [
+        {
+          "source_id": "STUDIO-AA-0.1",
+          "kind": "original_operational_proposal",
+          "locator": "C10",
+          "status": "proposed"
+        },
+        {
+          "source_id": "S01",
+          "kind": "technical_framework",
+          "locator": null,
+          "status": "pending_full_text"
+        }
+      ],
+      "contextual_method_reference": {
+        "source_id": "S03",
+        "locator": "pp. 4–5",
+        "scope": "personalizzazione e metodo; non origine del singolo quesito o dei voti"
+      },
+      "weight": 1,
+      "anchors": {
+        "0": "differenze pertinenti non controllate",
+        "1": "raccordi saltuari o differenze senza responsabile",
+        "2": "procedura di raccordo e trattamento differenze definita",
+        "3": "riconciliazioni eseguite e differenze gestite",
+        "4": "anzianità delle differenze e cause riesaminate"
+      },
+      "follow_up": "Mostrare un caso recente, il responsabile, il destinatario e l'esito; verificare il periodo se emergono contraddizioni.",
+      "action_template": {
+        "proposal": "Attivare una riconciliazione e un registro delle partite sospese",
+        "template_id": "registro_riconciliazioni",
+        "owner": "da concordare",
+        "timing": "da concordare",
+        "completion_evidence": "Disegno pertinente, decisione aziendale e prova del ciclo richiesto dal controllo; limiti espliciti."
+      },
+      "target_score": null,
+      "criticality": "to_be_reasoned_for_case",
+      "additional_method_references": []
+    },
+    {
+      "id": "C11",
+      "domain": "contabilita",
+      "title": "Attendibilità dei residui",
+      "question": "Quale prova usate per dire che questo credito o debito è ancora aperto?",
+      "interview_role": "Amministrazione",
+      "evidence_request": "Residui, incassi/pagamenti, note credito e contestazioni",
+      "expected_outcome": "Attendibilità dei residui con responsabilità, informazioni e risultati proporzionati all'impresa.",
+      "applicability": {
+        "default": "pending",
+        "decision": "Professional review of business context; N/A requires rationale and approval"
+      },
+      "source_mapping": [
+        {
+          "source_id": "STUDIO-AA-0.1",
+          "kind": "original_operational_proposal",
+          "locator": "C11",
+          "status": "proposed"
+        },
+        {
+          "source_id": "S01",
+          "kind": "technical_framework",
+          "locator": null,
+          "status": "pending_full_text"
+        }
+      ],
+      "contextual_method_reference": {
+        "source_id": "S03",
+        "locator": "pp. 4–5",
+        "scope": "personalizzazione e metodo; non origine del singolo quesito o dei voti"
+      },
+      "weight": 1,
+      "anchors": {
+        "0": "residui utilizzati senza verifiche accertate",
+        "1": "verifiche parziali",
+        "2": "regola di verifica residui e allocazioni definita",
+        "3": "residui verificati nel perimetro e data dichiarati",
+        "4": "differenze ricorrenti e copertura riesaminate"
+      },
+      "follow_up": "Mostrare un caso recente, il responsabile, il destinatario e l'esito; verificare il periodo se emergono contraddizioni.",
+      "action_template": {
+        "proposal": "Raccordare partite aperte e prove di estinzione",
+        "template_id": "registro_residui",
+        "owner": "da concordare",
+        "timing": "da concordare",
+        "completion_evidence": "Disegno pertinente, decisione aziendale e prova del ciclo richiesto dal controllo; limiti espliciti."
+      },
+      "target_score": null,
+      "criticality": "to_be_reasoned_for_case",
+      "additional_method_references": []
+    },
+    {
+      "id": "C12",
+      "domain": "contabilita",
+      "title": "Competenza e dati non ordinari",
+      "question": "Quali poste richiedono una valutazione a fine periodo e chi fornisce il dato?",
+      "interview_role": "Amministrazione e studio",
+      "evidence_request": "Lista poste pertinenti, basi e decisioni contabili",
+      "expected_outcome": "Competenza e dati non ordinari con responsabilità, informazioni e risultati proporzionati all'impresa.",
+      "applicability": {
+        "default": "pending",
+        "decision": "Professional review of business context; N/A requires rationale and approval"
+      },
+      "source_mapping": [
+        {
+          "source_id": "STUDIO-AA-0.1",
+          "kind": "original_operational_proposal",
+          "locator": "C12",
+          "status": "proposed"
+        },
+        {
+          "source_id": "S01",
+          "kind": "technical_framework",
+          "locator": null,
+          "status": "pending_full_text"
+        }
+      ],
+      "contextual_method_reference": {
+        "source_id": "S03",
+        "locator": "pp. 4–5",
+        "scope": "personalizzazione e metodo; non origine del singolo quesito o dei voti"
+      },
+      "weight": 1,
+      "anchors": {
+        "0": "poste rilevanti accertate non considerate",
+        "1": "valutazioni episodiche senza base completa",
+        "2": "processo di raccolta e revisione delle poste definito",
+        "3": "poste pertinenti revisionate nelle chiusure osservate",
+        "4": "stime e risultati successivi confrontati"
+      },
+      "follow_up": "Mostrare un caso recente, il responsabile, il destinatario e l'esito; verificare il periodo se emergono contraddizioni.",
+      "action_template": {
+        "proposal": "Definire fonti e revisione delle poste di chiusura pertinenti",
+        "template_id": "scheda_poste_chiusura",
+        "owner": "da concordare",
+        "timing": "da concordare",
+        "completion_evidence": "Disegno pertinente, decisione aziendale e prova del ciclo richiesto dal controllo; limiti espliciti."
+      },
+      "target_score": null,
+      "criticality": "to_be_reasoned_for_case",
+      "additional_method_references": []
+    },
+    {
+      "id": "C13",
+      "domain": "pianificazione",
+      "title": "Report utile alle decisioni",
+      "question": "Quale report era disponibile prima dell'ultima decisione gestionale?",
+      "interview_role": "Direzione e amministrazione",
+      "evidence_request": "Report, data disponibilità, destinatario e decisione",
+      "expected_outcome": "Report utile alle decisioni con responsabilità, informazioni e risultati proporzionati all'impresa.",
+      "applicability": {
+        "default": "pending",
+        "decision": "Professional review of business context; N/A requires rationale and approval"
+      },
+      "source_mapping": [
+        {
+          "source_id": "STUDIO-AA-0.1",
+          "kind": "original_operational_proposal",
+          "locator": "C13",
+          "status": "proposed"
+        },
+        {
+          "source_id": "S01",
+          "kind": "technical_framework",
+          "locator": null,
+          "status": "pending_full_text"
+        }
+      ],
+      "contextual_method_reference": {
+        "source_id": "S03",
+        "locator": "pp. 4–5",
+        "scope": "personalizzazione e metodo; non origine del singolo quesito o dei voti"
+      },
+      "weight": 1,
+      "anchors": {
+        "0": "informazioni necessarie non prodotte nel caso osservato",
+        "1": "report occasionali o tardivi",
+        "2": "contenuti, tempi e destinatari definiti",
+        "3": "report tempestivi effettivamente utilizzati",
+        "4": "utilità informativa e decisioni riesaminate"
+      },
+      "follow_up": "Mostrare un caso recente, il responsabile, il destinatario e l'esito; verificare il periodo se emergono contraddizioni.",
+      "action_template": {
+        "proposal": "Definire reporting e registro delle decisioni",
+        "template_id": "report_mensile",
+        "owner": "da concordare",
+        "timing": "da concordare",
+        "completion_evidence": "Disegno pertinente, decisione aziendale e prova del ciclo richiesto dal controllo; limiti espliciti."
+      },
+      "target_score": null,
+      "criticality": "to_be_reasoned_for_case",
+      "additional_method_references": [
+        {
+          "source_id": "S08",
+          "locator": "§6.2.1; pp. 124–126",
+          "status": "thematic_passage_verified",
+          "scope": "Collegamento al cruscotto; ancoraggi numerici originali di studio"
+        }
+      ]
+    },
+    {
+      "id": "C14",
+      "domain": "pianificazione",
+      "title": "Assunzioni del budget",
+      "question": "Quali ipotesi spiegano ricavi, costi e risorse del prossimo periodo?",
+      "interview_role": "Direzione e responsabili",
+      "evidence_request": "Assunzioni, fonti e accettazioni",
+      "expected_outcome": "Assunzioni del budget con responsabilità, informazioni e risultati proporzionati all'impresa.",
+      "applicability": {
+        "default": "pending",
+        "decision": "Professional review of business context; N/A requires rationale and approval"
+      },
+      "source_mapping": [
+        {
+          "source_id": "STUDIO-AA-0.1",
+          "kind": "original_operational_proposal",
+          "locator": "C14",
+          "status": "proposed"
+        },
+        {
+          "source_id": "S01",
+          "kind": "technical_framework",
+          "locator": null,
+          "status": "pending_full_text"
+        }
+      ],
+      "contextual_method_reference": {
+        "source_id": "S03",
+        "locator": "pp. 4–5",
+        "scope": "personalizzazione e metodo; non origine del singolo quesito o dei voti"
+      },
+      "weight": 1,
+      "anchors": {
+        "0": "assenza accertata di programmazione pertinente",
+        "1": "previsioni parziali non coordinate",
+        "2": "assunzioni e responsabilità del budget definite",
+        "3": "budget costruito da ipotesi revisionate e usato",
+        "4": "ipotesi confrontate con gli esiti e aggiornate"
+      },
+      "follow_up": "Mostrare un caso recente, il responsabile, il destinatario e l'esito; verificare il periodo se emergono contraddizioni.",
+      "action_template": {
+        "proposal": "Costruire il registro delle assunzioni e il budget proporzionato",
+        "template_id": "registro_assunzioni",
+        "owner": "da concordare",
+        "timing": "da concordare",
+        "completion_evidence": "Disegno pertinente, decisione aziendale e prova del ciclo richiesto dal controllo; limiti espliciti."
+      },
+      "target_score": null,
+      "criticality": "to_be_reasoned_for_case",
+      "additional_method_references": [
+        {
+          "source_id": "S08",
+          "locator": "§6.2.1; pp. 124–126",
+          "status": "thematic_passage_verified",
+          "scope": "Collegamento al cruscotto; ancoraggi numerici originali di studio"
+        },
+        {
+          "source_id": "S09",
+          "locator": "Parte sui servizi, §4, pp. 60–61",
+          "status": "thematic_passage_verified",
+          "scope": "Progettazione contestuale; non griglia di voti"
+        },
+        {
+          "source_id": "S10",
+          "locator": "Premessa pp. 5–6",
+          "status": "thematic_passage_verified",
+          "scope": "Piano e liquidità"
+        }
+      ]
+    },
+    {
+      "id": "C15",
+      "domain": "pianificazione",
+      "title": "Scostamenti e azioni",
+      "question": "Mostrate uno scostamento: quali cause sono provate e quale azione è stata decisa?",
+      "interview_role": "Direzione e amministrazione",
+      "evidence_request": "Confronto riconciliato, cause e decisione",
+      "expected_outcome": "Scostamenti e azioni con responsabilità, informazioni e risultati proporzionati all'impresa.",
+      "applicability": {
+        "default": "pending",
+        "decision": "Professional review of business context; N/A requires rationale and approval"
+      },
+      "source_mapping": [
+        {
+          "source_id": "STUDIO-AA-0.1",
+          "kind": "original_operational_proposal",
+          "locator": "C15",
+          "status": "proposed"
+        },
+        {
+          "source_id": "S01",
+          "kind": "technical_framework",
+          "locator": null,
+          "status": "pending_full_text"
+        }
+      ],
+      "contextual_method_reference": {
+        "source_id": "S03",
+        "locator": "pp. 4–5",
+        "scope": "personalizzazione e metodo; non origine del singolo quesito o dei voti"
+      },
+      "weight": 1,
+      "anchors": {
+        "0": "scostamenti pertinenti non esaminati",
+        "1": "confronti occasionali senza seguito",
+        "2": "regole di confronto e follow-up definite",
+        "3": "scostamenti esaminati e azioni prese in carico",
+        "4": "effetti delle azioni verificati al ciclo successivo"
+      },
+      "follow_up": "Mostrare un caso recente, il responsabile, il destinatario e l'esito; verificare il periodo se emergono contraddizioni.",
+      "action_template": {
+        "proposal": "Collegare scostamenti, spiegazioni e azioni",
+        "template_id": "registro_scostamenti",
+        "owner": "da concordare",
+        "timing": "da concordare",
+        "completion_evidence": "Disegno pertinente, decisione aziendale e prova del ciclo richiesto dal controllo; limiti espliciti."
+      },
+      "target_score": null,
+      "criticality": "to_be_reasoned_for_case",
+      "additional_method_references": [
+        {
+          "source_id": "S08",
+          "locator": "§6.2.1; pp. 124–126",
+          "status": "thematic_passage_verified",
+          "scope": "Collegamento al cruscotto; ancoraggi numerici originali di studio"
+        }
+      ]
+    },
+    {
+      "id": "C16",
+      "domain": "pianificazione",
+      "title": "Scenari e aggiornamento",
+      "question": "Se l'incasso principale slitta, quali decisioni cambiano e quale previsione aggiornate?",
+      "interview_role": "Direzione",
+      "evidence_request": "Assunzioni di scenario, effetti e decisioni",
+      "expected_outcome": "Scenari e aggiornamento con responsabilità, informazioni e risultati proporzionati all'impresa.",
+      "applicability": {
+        "default": "pending",
+        "decision": "Professional review of business context; N/A requires rationale and approval"
+      },
+      "source_mapping": [
+        {
+          "source_id": "STUDIO-AA-0.1",
+          "kind": "original_operational_proposal",
+          "locator": "C16",
+          "status": "proposed"
+        },
+        {
+          "source_id": "S01",
+          "kind": "technical_framework",
+          "locator": null,
+          "status": "pending_full_text"
+        }
+      ],
+      "contextual_method_reference": {
+        "source_id": "S03",
+        "locator": "pp. 4–5",
+        "scope": "personalizzazione e metodo; non origine del singolo quesito o dei voti"
+      },
+      "weight": 1,
+      "anchors": {
+        "0": "variazioni rilevanti ignorate nel caso osservato",
+        "1": "simulazioni isolate",
+        "2": "eventi di aggiornamento e responsabilità definiti",
+        "3": "previsioni aggiornate su cambiamenti osservati",
+        "4": "scenari ed errori previsivi riesaminati"
+      },
+      "follow_up": "Mostrare un caso recente, il responsabile, il destinatario e l'esito; verificare il periodo se emergono contraddizioni.",
+      "action_template": {
+        "proposal": "Definire revisione delle previsioni ed eventuali scenari",
+        "template_id": "registro_reforecast",
+        "owner": "da concordare",
+        "timing": "da concordare",
+        "completion_evidence": "Disegno pertinente, decisione aziendale e prova del ciclo richiesto dal controllo; limiti espliciti."
+      },
+      "target_score": null,
+      "criticality": "to_be_reasoned_for_case",
+      "additional_method_references": [
+        {
+          "source_id": "S08",
+          "locator": "§6.2.1; pp. 124–126",
+          "status": "thematic_passage_verified",
+          "scope": "Collegamento al cruscotto; ancoraggi numerici originali di studio"
+        },
+        {
+          "source_id": "S09",
+          "locator": "Parte sui servizi, §4, pp. 60–61",
+          "status": "thematic_passage_verified",
+          "scope": "Progettazione contestuale; non griglia di voti"
+        }
+      ]
+    },
+    {
+      "id": "C17",
+      "domain": "tesoreria",
+      "title": "Posizione di cassa disponibile",
+      "question": "Quali conti e fondi sono realmente utilizzabili alla data del prospetto?",
+      "interview_role": "Amministrazione",
+      "evidence_request": "Saldi e perimetro conti con vincoli",
+      "expected_outcome": "Posizione di cassa disponibile con responsabilità, informazioni e risultati proporzionati all'impresa.",
+      "applicability": {
+        "default": "pending",
+        "decision": "Professional review of business context; N/A requires rationale and approval"
+      },
+      "source_mapping": [
+        {
+          "source_id": "STUDIO-AA-0.1",
+          "kind": "original_operational_proposal",
+          "locator": "C17",
+          "status": "proposed"
+        },
+        {
+          "source_id": "S01",
+          "kind": "technical_framework",
+          "locator": null,
+          "status": "pending_full_text"
+        }
+      ],
+      "contextual_method_reference": {
+        "source_id": "S03",
+        "locator": "pp. 4–5",
+        "scope": "personalizzazione e metodo; non origine del singolo quesito o dei voti"
+      },
+      "weight": 1,
+      "anchors": {
+        "0": "posizione usata non ricostruibile nel caso accertato",
+        "1": "saldi parziali o non aggiornati",
+        "2": "perimetro e aggiornamento saldi definiti",
+        "3": "saldi raccordati e usati nel ciclo",
+        "4": "differenze e variazioni di disponibilità riesaminate"
+      },
+      "follow_up": "Mostrare un caso recente, il responsabile, il destinatario e l'esito; verificare il periodo se emergono contraddizioni.",
+      "action_template": {
+        "proposal": "Definire la posizione finanziaria utilizzabile e i suoi controlli",
+        "template_id": "prospetto_saldi",
+        "owner": "da concordare",
+        "timing": "da concordare",
+        "completion_evidence": "Disegno pertinente, decisione aziendale e prova del ciclo richiesto dal controllo; limiti espliciti."
+      },
+      "target_score": null,
+      "criticality": "to_be_reasoned_for_case",
+      "additional_method_references": [
+        {
+          "source_id": "S11",
+          "locator": "§4.2.3, p. 62",
+          "status": "thematic_passage_verified",
+          "scope": "Costruzione delle previsioni"
+        }
+      ]
+    },
+    {
+      "id": "C18",
+      "domain": "tesoreria",
+      "title": "Flussi prospettici e date",
+      "question": "Come includete incassi, pagamenti e impegni non ancora fatturati nella previsione?",
+      "interview_role": "Amministrazione e direzione",
+      "evidence_request": "Partite, flussi pianificati, date motivate e raccordi",
+      "expected_outcome": "Flussi prospettici e date con responsabilità, informazioni e risultati proporzionati all'impresa.",
+      "applicability": {
+        "default": "pending",
+        "decision": "Professional review of business context; N/A requires rationale and approval"
+      },
+      "source_mapping": [
+        {
+          "source_id": "STUDIO-AA-0.1",
+          "kind": "original_operational_proposal",
+          "locator": "C18",
+          "status": "proposed"
+        },
+        {
+          "source_id": "S01",
+          "kind": "technical_framework",
+          "locator": null,
+          "status": "pending_full_text"
+        }
+      ],
+      "contextual_method_reference": {
+        "source_id": "S03",
+        "locator": "pp. 4–5",
+        "scope": "personalizzazione e metodo; non origine del singolo quesito o dei voti"
+      },
+      "weight": 1,
+      "anchors": {
+        "0": "assenza accertata di previsione necessaria",
+        "1": "previsione parziale non raccordata",
+        "2": "fonti, orizzonte e revisione delle date definiti",
+        "3": "previsione completa nel perimetro e revisionata",
+        "4": "differenze fra previsto e accaduto spiegate"
+      },
+      "follow_up": "Mostrare un caso recente, il responsabile, il destinatario e l'esito; verificare il periodo se emergono contraddizioni.",
+      "action_template": {
+        "proposal": "Costruire previsione di cassa e revisione delle date",
+        "template_id": "forecast_tesoreria",
+        "owner": "da concordare",
+        "timing": "da concordare",
+        "completion_evidence": "Disegno pertinente, decisione aziendale e prova del ciclo richiesto dal controllo; limiti espliciti."
+      },
+      "target_score": null,
+      "criticality": "to_be_reasoned_for_case",
+      "additional_method_references": [
+        {
+          "source_id": "S10",
+          "locator": "Premessa pp. 5–6",
+          "status": "thematic_passage_verified",
+          "scope": "Piano e liquidità"
+        },
+        {
+          "source_id": "S11",
+          "locator": "§4.2.3, p. 62",
+          "status": "thematic_passage_verified",
+          "scope": "Costruzione delle previsioni"
+        }
+      ]
+    },
+    {
+      "id": "C19",
+      "domain": "tesoreria",
+      "title": "Prospettiva di sostenibilità",
+      "question": "Quali informazioni usate per discutere debiti e continuità nei dodici mesi successivi?",
+      "interview_role": "Direzione e commercialista",
+      "evidence_request": "Piano prospettico, debiti, assunzioni e limiti",
+      "expected_outcome": "Prospettiva di sostenibilità con responsabilità, informazioni e risultati proporzionati all'impresa.",
+      "applicability": {
+        "default": "pending",
+        "decision": "Professional review of business context; N/A requires rationale and approval"
+      },
+      "source_mapping": [
+        {
+          "source_id": "STUDIO-AA-0.1",
+          "kind": "original_operational_proposal",
+          "locator": "C19",
+          "status": "proposed"
+        },
+        {
+          "source_id": "S01",
+          "kind": "technical_framework",
+          "locator": null,
+          "status": "pending_full_text"
+        }
+      ],
+      "contextual_method_reference": {
+        "source_id": "S03",
+        "locator": "pp. 4–5",
+        "scope": "personalizzazione e metodo; non origine del singolo quesito o dei voti"
+      },
+      "weight": 1,
+      "anchors": {
+        "0": "informazioni prospettiche pertinenti assenti",
+        "1": "copertura parziale dell'orizzonte o dei debiti",
+        "2": "processo e fonti della prospettiva definiti",
+        "3": "prospettiva elaborata e discussa con limiti espliciti",
+        "4": "assunzioni e scostamenti prospettici riesaminati"
+      },
+      "follow_up": "Mostrare un caso recente, il responsabile, il destinatario e l'esito; verificare il periodo se emergono contraddizioni.",
+      "action_template": {
+        "proposal": "Integrare debiti, assunzioni e prospettiva temporale pertinente",
+        "template_id": "prospettiva_sostenibilita",
+        "owner": "da concordare",
+        "timing": "da concordare",
+        "completion_evidence": "Disegno pertinente, decisione aziendale e prova del ciclo richiesto dal controllo; limiti espliciti."
+      },
+      "target_score": null,
+      "criticality": "to_be_reasoned_for_case",
+      "additional_method_references": [
+        {
+          "source_id": "S10",
+          "locator": "Premessa pp. 5–6",
+          "status": "thematic_passage_verified",
+          "scope": "Piano e liquidità"
+        }
+      ]
+    },
+    {
+      "id": "C20",
+      "domain": "tesoreria",
+      "title": "Segnali e tempestività di intervento",
+      "question": "Chi rileva una tensione o un segnale pertinente e come arriva alla decisione?",
+      "interview_role": "Direzione e amministrazione",
+      "evidence_request": "Registro segnali, dati, comunicazioni e decisioni",
+      "expected_outcome": "Segnali e tempestività di intervento con responsabilità, informazioni e risultati proporzionati all'impresa.",
+      "applicability": {
+        "default": "pending",
+        "decision": "Professional review of business context; N/A requires rationale and approval"
+      },
+      "source_mapping": [
+        {
+          "source_id": "STUDIO-AA-0.1",
+          "kind": "original_operational_proposal",
+          "locator": "C20",
+          "status": "proposed"
+        },
+        {
+          "source_id": "S01",
+          "kind": "technical_framework",
+          "locator": null,
+          "status": "pending_full_text"
+        }
+      ],
+      "contextual_method_reference": {
+        "source_id": "S03",
+        "locator": "pp. 4–5",
+        "scope": "personalizzazione e metodo; non origine del singolo quesito o dei voti"
+      },
+      "weight": 1,
+      "anchors": {
+        "0": "segnale osservato senza presa in carico",
+        "1": "risposte episodiche",
+        "2": "fonti, destinatari e percorso di approfondimento definiti",
+        "3": "segnali pertinenti rilevati e discussi",
+        "4": "tempestività e seguito delle decisioni riesaminati"
+      },
+      "follow_up": "Mostrare un caso recente, il responsabile, il destinatario e l'esito; verificare il periodo se emergono contraddizioni.",
+      "action_template": {
+        "proposal": "Progettare registro segnali e percorso di decisione",
+        "template_id": "registro_segnali",
+        "owner": "da concordare",
+        "timing": "da concordare",
+        "completion_evidence": "Disegno pertinente, decisione aziendale e prova del ciclo richiesto dal controllo; limiti espliciti."
+      },
+      "target_score": null,
+      "criticality": "to_be_reasoned_for_case",
+      "additional_method_references": []
+    },
+    {
+      "id": "C21",
+      "domain": "informazioni",
+      "title": "Accessi e reperibilità",
+      "question": "Chi può modificare il dato utilizzato per decidere e come ricostruite la versione?",
+      "interview_role": "Responsabile sistemi o referente",
+      "evidence_request": "Accessi, versioni e prova di reperimento",
+      "expected_outcome": "Accessi e reperibilità con responsabilità, informazioni e risultati proporzionati all'impresa.",
+      "applicability": {
+        "default": "pending",
+        "decision": "Professional review of business context; N/A requires rationale and approval"
+      },
+      "source_mapping": [
+        {
+          "source_id": "STUDIO-AA-0.1",
+          "kind": "original_operational_proposal",
+          "locator": "C21",
+          "status": "proposed"
+        },
+        {
+          "source_id": "S01",
+          "kind": "technical_framework",
+          "locator": null,
+          "status": "pending_full_text"
+        }
+      ],
+      "contextual_method_reference": {
+        "source_id": "S03",
+        "locator": "pp. 4–5",
+        "scope": "personalizzazione e metodo; non origine del singolo quesito o dei voti"
+      },
+      "weight": 1,
+      "anchors": {
+        "0": "dati essenziali non reperibili o modifiche non controllate",
+        "1": "controlli parziali su accessi/versioni",
+        "2": "regole proporzionate di accesso e archiviazione definite",
+        "3": "regole applicate e reperimento verificato",
+        "4": "accessi e incidenti riesaminati"
+      },
+      "follow_up": "Mostrare un caso recente, il responsabile, il destinatario e l'esito; verificare il periodo se emergono contraddizioni.",
+      "action_template": {
+        "proposal": "Definire accessi e archivio delle versioni rilevanti",
+        "template_id": "registro_accessi",
+        "owner": "da concordare",
+        "timing": "da concordare",
+        "completion_evidence": "Disegno pertinente, decisione aziendale e prova del ciclo richiesto dal controllo; limiti espliciti."
+      },
+      "target_score": null,
+      "criticality": "to_be_reasoned_for_case",
+      "additional_method_references": []
+    },
+    {
+      "id": "C22",
+      "domain": "informazioni",
+      "title": "Ripristino delle informazioni",
+      "question": "Quando avete provato a recuperare un'informazione essenziale da un backup?",
+      "interview_role": "Referente sistemi e direzione",
+      "evidence_request": "Prova ripristino e responsabilità",
+      "expected_outcome": "Ripristino delle informazioni con responsabilità, informazioni e risultati proporzionati all'impresa.",
+      "applicability": {
+        "default": "pending",
+        "decision": "Professional review of business context; N/A requires rationale and approval"
+      },
+      "source_mapping": [
+        {
+          "source_id": "STUDIO-AA-0.1",
+          "kind": "original_operational_proposal",
+          "locator": "C22",
+          "status": "proposed"
+        },
+        {
+          "source_id": "S01",
+          "kind": "technical_framework",
+          "locator": null,
+          "status": "pending_full_text"
+        }
+      ],
+      "contextual_method_reference": {
+        "source_id": "S03",
+        "locator": "pp. 4–5",
+        "scope": "personalizzazione e metodo; non origine del singolo quesito o dei voti"
+      },
+      "weight": 1,
+      "anchors": {
+        "0": "assenza accertata di recuperabilità pertinente",
+        "1": "copie presenti ma processo incompleto",
+        "2": "regola di backup e test di ripristino definita",
+        "3": "ripristino provato nel perimetro concordato",
+        "4": "esiti dei test e tempi di recupero riesaminati"
+      },
+      "follow_up": "Mostrare un caso recente, il responsabile, il destinatario e l'esito; verificare il periodo se emergono contraddizioni.",
+      "action_template": {
+        "proposal": "Concordare backup, ripristino e prove proporzionate",
+        "template_id": "registro_ripristino",
+        "owner": "da concordare",
+        "timing": "da concordare",
+        "completion_evidence": "Disegno pertinente, decisione aziendale e prova del ciclo richiesto dal controllo; limiti espliciti."
+      },
+      "target_score": null,
+      "criticality": "to_be_reasoned_for_case",
+      "additional_method_references": []
+    },
+    {
+      "id": "C23",
+      "domain": "informazioni",
+      "title": "Competenze per eseguire i controlli",
+      "question": "La persona incaricata può mostrare come esegue il controllo e gestisce un errore?",
+      "interview_role": "Responsabili dei processi",
+      "evidence_request": "Dimostrazione, istruzioni e necessità formative",
+      "expected_outcome": "Competenze per eseguire i controlli con responsabilità, informazioni e risultati proporzionati all'impresa.",
+      "applicability": {
+        "default": "pending",
+        "decision": "Professional review of business context; N/A requires rationale and approval"
+      },
+      "source_mapping": [
+        {
+          "source_id": "STUDIO-AA-0.1",
+          "kind": "original_operational_proposal",
+          "locator": "C23",
+          "status": "proposed"
+        },
+        {
+          "source_id": "S01",
+          "kind": "technical_framework",
+          "locator": null,
+          "status": "pending_full_text"
+        }
+      ],
+      "contextual_method_reference": {
+        "source_id": "S03",
+        "locator": "pp. 4–5",
+        "scope": "personalizzazione e metodo; non origine del singolo quesito o dei voti"
+      },
+      "weight": 1,
+      "anchors": {
+        "0": "incarico essenziale non eseguibile nel caso accertato",
+        "1": "esecuzione dipendente da aiuto non stabilizzato",
+        "2": "istruzioni e formazione necessaria definite",
+        "3": "incaricati eseguono i controlli osservati",
+        "4": "difficoltà ed esigenze formative riesaminate"
+      },
+      "follow_up": "Mostrare un caso recente, il responsabile, il destinatario e l'esito; verificare il periodo se emergono contraddizioni.",
+      "action_template": {
+        "proposal": "Preparare istruzioni e affiancamento sul primo ciclo",
+        "template_id": "piano_affiancamento",
+        "owner": "da concordare",
+        "timing": "da concordare",
+        "completion_evidence": "Disegno pertinente, decisione aziendale e prova del ciclo richiesto dal controllo; limiti espliciti."
+      },
+      "target_score": null,
+      "criticality": "to_be_reasoned_for_case",
+      "additional_method_references": [
+        {
+          "source_id": "S08",
+          "locator": "§6.2.1; pp. 124–126",
+          "status": "thematic_passage_verified",
+          "scope": "Collegamento al cruscotto; ancoraggi numerici originali di studio"
+        }
+      ]
+    },
+    {
+      "id": "C24",
+      "domain": "informazioni",
+      "title": "Riesame del sistema e cambiamenti",
+      "question": "Quale cambiamento recente ha richiesto di aggiornare responsabilità o procedure?",
+      "interview_role": "Direzione e commercialista",
+      "evidence_request": "Riesame, decisioni e versioni",
+      "expected_outcome": "Riesame del sistema e cambiamenti con responsabilità, informazioni e risultati proporzionati all'impresa.",
+      "applicability": {
+        "default": "pending",
+        "decision": "Professional review of business context; N/A requires rationale and approval"
+      },
+      "source_mapping": [
+        {
+          "source_id": "STUDIO-AA-0.1",
+          "kind": "original_operational_proposal",
+          "locator": "C24",
+          "status": "proposed"
+        },
+        {
+          "source_id": "S01",
+          "kind": "technical_framework",
+          "locator": null,
+          "status": "pending_full_text"
+        }
+      ],
+      "contextual_method_reference": {
+        "source_id": "S03",
+        "locator": "pp. 4–5",
+        "scope": "personalizzazione e metodo; non origine del singolo quesito o dei voti"
+      },
+      "weight": 1,
+      "anchors": {
+        "0": "cambiamento rilevante accertato non considerato",
+        "1": "aggiornamenti occasionali",
+        "2": "eventi e responsabilità del riesame definiti",
+        "3": "riesame eseguito con disposizioni sulle azioni",
+        "4": "esiti del riesame verificati e metodo adattato"
+      },
+      "follow_up": "Mostrare un caso recente, il responsabile, il destinatario e l'esito; verificare il periodo se emergono contraddizioni.",
+      "action_template": {
+        "proposal": "Definire calendario ed eventi di riesame degli assetti",
+        "template_id": "registro_riesame",
+        "owner": "da concordare",
+        "timing": "da concordare",
+        "completion_evidence": "Disegno pertinente, decisione aziendale e prova del ciclo richiesto dal controllo; limiti espliciti."
+      },
+      "target_score": null,
+      "criticality": "to_be_reasoned_for_case",
+      "additional_method_references": [
+        {
+          "source_id": "S08",
+          "locator": "§6.2.1; pp. 124–126",
+          "status": "thematic_passage_verified",
+          "scope": "Collegamento al cruscotto; ancoraggi numerici originali di studio"
+        }
+      ]
+    }
+  ],
+  "provenance": {
+    "discord_message_id": "1554384736061886564",
+    "archive_sha256": "44021bbdbf7889c3e85ad89dc240958548f166bcb4bc6eb2a272888362673ee4",
+    "catalog_sha256": "2300a6b80d067753ce68dbbd41f7a4da82307ee0e38a919d827a7b44960271ae",
+    "source_mapping_status": "contributor_report_not_independently_verified",
+    "recovered_at": "2026-09-29"
+  }
+}

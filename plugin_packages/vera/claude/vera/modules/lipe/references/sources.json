@@ -1,0 +1,81 @@
+{
+  "sources": [
+    {
+      "id": "ae-istruzioni.pdf",
+      "official_url": "https://www.agenziaentrate.gov.it/portale/documents/20143/5986193/IVA+period_2024.pdf/04990f53-edc9-048a-c953-49592ebea05f",
+      "retrieved_on": "2026-10-02",
+      "sha256": "881ba066042942c651653ccb505381ddfa79bb109fb4735615a32b1dea455050",
+      "status": "RETRIEVED_AND_INSPECTED",
+      "professional_acceptance": "PENDING"
+    },
+    {
+      "id": "ae-specifiche.pdf",
+      "official_url": "https://www.agenziaentrate.gov.it/portale/documents/20143/5986193/SpecificheIVP18_2024.pdf/86501570-9d0c-9593-6e8c-1e538b720490",
+      "retrieved_on": "2026-10-02",
+      "sha256": "032b1e1bff0b9204e913fea6c7c7d4c613d9feb695a5aa2cfd4f7bb006f35dc8",
+      "status": "RETRIEVED_AND_INSPECTED",
+      "professional_acceptance": "PENDING"
+    },
+    {
+      "id": "ae-xsd.zip",
+      "official_url": "https://www.agenziaentrate.gov.it/portale/documents/20143/289347/Specifiche+IVP2018_SchemaIV18.zip/c650c70c-4318-b27a-2209-81d1a10d463d",
+      "retrieved_on": "2026-10-02",
+      "sha256": "ea4f9a6cf9d356c02c27852ecafaabdc2b89c0d53a7f50f13fd152ecc1f5dcdd",
+      "status": "RETRIEVED_AND_INSPECTED",
+      "professional_acceptance": "PENDING"
+    },
+    {
+      "id": "ae-trasmissione-2017.pdf",
+      "official_url": "https://def.finanze.it/DocTribFrontend/getContent.do?id=%7B3F69162E-B900-4A41-AB7A-8C24785B35B5%7D",
+      "retrieved_on": "2026-10-03",
+      "sha256": "8f13947daa32a7edfa0a36fccb4aa7d249aaaec7d61ff8fc00a1f86b934de423",
+      "status": "RETRIEVED_AND_INSPECTED",
+      "use": "Transmission annex sections 2.2 and 3.5: filename format, supplied receipt format and XAdES-BES requirement only. Not a source for current arithmetic or deadlines.",
+      "professional_acceptance": "PENDING"
+    },
+    {
+      "id": "DatiFatturaMessaggi_v2.0.xsd",
+      "official_url": "https://www.fatturapa.gov.it/export/documenti/ws/trasmissione/v2.0/DatiFatturaMessaggi_v2.0.xsd",
+      "retrieved_on": "2026-10-03",
+      "sha256": "8a78580152a16648e45ac649c7a9f1a1c97ec5b15ce138da73c5c1b1c4dc388d",
+      "status": "RETRIEVED_AND_INSPECTED",
+      "use": "Offline supplied-receipt structural validation and declared status. XSD validation does not authenticate an Agenzia Entrate signature.",
+      "professional_acceptance": "PENDING"
+    }
+  ],
+  "developer_pack": {
+    "channel_message": "https://discord.com/channels/1550191335917625474/1554906410947715243/1555530487215423568",
+    "sha256": "043d3128f927ed98b0c1215f84a57a6447ff9b67e43162dc088711facc5550eb",
+    "use": "Requirements and defect review only. Real aggregate example amounts are not shipped."
+  },
+  "supporting_web_sources": [
+    {
+      "id": "dm-1976-art7",
+      "official_url": "https://def.finanze.it/DocTribFrontend/executePrintArticolo.do?articolo=Articolo+7&codiceOrdinamento=200000700000000&id=%7B8D93A450-E5FE-47FC-A6F0-F938769051BF%7D",
+      "inspected_on": "2026-10-03",
+      "status": "WEB_TEXT_INSPECTED_NO_LOCAL_BYTE_HASH",
+      "use": "Alphabetic fiscal-code transcription checksum."
+    },
+    {
+      "id": "dm-1976-art9",
+      "official_url": "https://def.finanze.it/DocTribFrontend/executePrintArticolo.do?codiceOrdinamento=200000900000000&id=%7B9BCC7F03-1710-4C43-8F59-C157797D746E%7D&idAttoNormativo=%7B8D93A450-E5FE-47FC-A6F0-F938769051BF%7D",
+      "inspected_on": "2026-10-03",
+      "status": "WEB_TEXT_INSPECTED_NO_LOCAL_BYTE_HASH",
+      "use": "Numeric identifier transcription checksum."
+    },
+    {
+      "id": "ae-registry-cf",
+      "official_url": "https://telematici.agenziaentrate.gov.it/VerificaCF/Scegli.jsp",
+      "inspected_on": "2026-10-03",
+      "status": "WEB_TEXT_INSPECTED_NO_LOCAL_BYTE_HASH",
+      "use": "Registry existence/correspondence is distinct from a checksum and from VAT-number verification."
+    },
+    {
+      "id": "openssl-cms",
+      "official_url": "https://docs.openssl.org/3.0/man1/openssl-cms/",
+      "inspected_on": "2026-10-03",
+      "status": "WEB_TEXT_INSPECTED_NO_LOCAL_BYTE_HASH",
+      "use": "Exact binary CMS verification is distinct from chain, revocation, powers and qualified-signature status."
+    }
+  ]
+}

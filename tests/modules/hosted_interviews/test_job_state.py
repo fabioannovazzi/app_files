@@ -13,14 +13,15 @@ from modules.hosted_interviews import api, job_state
 def test_worker_death_cleans_assembled_audio_on_inspection_preserving_original(
     tmp_path: Path,
 ) -> None:
-    original = tmp_path / "original.webm"
+    original = tmp_path / "chunk-000000.webm"
     original.write_bytes(b"synthetic original audio")
     script = """
 import os, sys
 from pathlib import Path
 from modules.hosted_interviews import api, job_state
 directory = Path(sys.argv[1])
-api._audio_files_for_session = lambda _: [{'file_name':'original.webm', 'relative_path':'original.webm', 'content_type':'audio/webm'}]
+(directory / "completed.json").write_text("{}")
+api._audio_files_for_session = lambda _: [{'file_name':'chunk-000000.webm', 'relative_path':'chunk-000000.webm', 'content_type':'audio/webm'}]
 api._resolve_openai_api_key = lambda: 'synthetic-no-network'
 api._hosted_interview_transcription_context = lambda _: 'synthetic'
 def crash(**kwargs):

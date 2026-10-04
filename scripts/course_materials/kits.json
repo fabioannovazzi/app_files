@@ -4,7 +4,7 @@
     "execution": {
       "mode": "current_native_workflow",
       "local_tutorial": true,
-      "route": "assess_arrangements_then_review_new_evidence"
+      "route": "assess_then_construct_resume_and_review_operation"
     },
     "files": [
       {
@@ -286,8 +286,257 @@
         "languages": [
           "es"
         ]
+      },
+      {
+        "source": "assetti/construction-it.md",
+        "path": "files/input/construction-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "assetti/financial-lab-it.md",
+        "path": "files/input/financial-lab-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "assetti/construction-it.md",
+        "path": "files/practice/construction-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "assetti/financial-lab-it.md",
+        "path": "files/practice/financial-lab-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "assetti/construction-update-it.md",
+        "path": "files/practice/construction-update-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "assetti/construction-en.md",
+        "path": "files/input/construction-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "assetti/financial-lab-en.md",
+        "path": "files/input/financial-lab-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "assetti/construction-en.md",
+        "path": "files/practice/construction-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "assetti/financial-lab-en.md",
+        "path": "files/practice/financial-lab-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "assetti/construction-update-en.md",
+        "path": "files/practice/construction-update-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "assetti/construction-fr.md",
+        "path": "files/input/construction-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "assetti/financial-lab-fr.md",
+        "path": "files/input/financial-lab-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "assetti/construction-fr.md",
+        "path": "files/practice/construction-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "assetti/financial-lab-fr.md",
+        "path": "files/practice/financial-lab-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "assetti/construction-update-fr.md",
+        "path": "files/practice/construction-update-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "assetti/construction-de.md",
+        "path": "files/input/construction-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "assetti/financial-lab-de.md",
+        "path": "files/input/financial-lab-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "assetti/construction-de.md",
+        "path": "files/practice/construction-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "assetti/financial-lab-de.md",
+        "path": "files/practice/financial-lab-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "assetti/construction-update-de.md",
+        "path": "files/practice/construction-update-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "assetti/construction-es.md",
+        "path": "files/input/construction-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "assetti/financial-lab-es.md",
+        "path": "files/input/financial-lab-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "assetti/construction-es.md",
+        "path": "files/practice/construction-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "assetti/financial-lab-es.md",
+        "path": "files/practice/financial-lab-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "assetti/construction-update-es.md",
+        "path": "files/practice/construction-update-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "assetti/construction-facts.json",
+        "path": "files/input/construction-facts.json",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "assetti/construction-facts.json",
+        "path": "files/practice/construction-facts.json",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "assetti/financial-facts.json",
+        "path": "files/input/financial-facts.json",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "assetti/financial-facts.json",
+        "path": "files/practice/financial-facts.json",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
       }
-    ]
+    ],
+    "revision": "2026-10-01.1"
   },
   "vera/aml-review": {
     "group": "workflow",
@@ -8062,6 +8311,1251 @@
           "fr",
           "de",
           "es"
+        ]
+      }
+    ]
+  },
+  "vera/business-valuation": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true
+    },
+    "files": [
+      {
+        "source": "business-valuation/caso-it.md",
+        "path": "files/input/caso-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "business-valuation/caso-it.md",
+        "path": "files/practice/caso-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "business-valuation/pratica-it.md",
+        "path": "files/practice/pratica-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "business-valuation/evidenze-mancanti-it.md",
+        "path": "files/practice/evidenze-mancanti-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "business-valuation/integrazione-it.md",
+        "path": "files/practice/integrazione-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "business-valuation/riscontri-it.md",
+        "path": "files/practice/riscontri-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      }
+    ]
+  },
+  "vera/composizione-negoziata": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "local_role_specific_case_financial_treasury_research_revision_and_negative_handoff"
+    },
+    "files": [
+      {
+        "source": "composizione-negoziata/caso-it.md",
+        "path": "files/input/caso-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/aggiornamento-it.md",
+        "path": "files/practice/aggiornamento-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/esercizio-it.md",
+        "path": "files/independent/esercizio-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/research-it.md",
+        "path": "files/input/research-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/case-en.md",
+        "path": "files/input/case-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/update-en.md",
+        "path": "files/practice/update-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/exercise-en.md",
+        "path": "files/independent/exercise-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/research-en.md",
+        "path": "files/input/research-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/cas-fr.md",
+        "path": "files/input/cas-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/mise-a-jour-fr.md",
+        "path": "files/practice/mise-a-jour-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/exercice-fr.md",
+        "path": "files/independent/exercice-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/research-fr.md",
+        "path": "files/input/research-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/fall-de.md",
+        "path": "files/input/fall-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/aktualisierung-de.md",
+        "path": "files/practice/aktualisierung-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/uebung-de.md",
+        "path": "files/independent/uebung-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/research-de.md",
+        "path": "files/input/research-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/caso-es.md",
+        "path": "files/input/caso-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/actualizacion-es.md",
+        "path": "files/practice/actualizacion-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/ejercicio-es.md",
+        "path": "files/independent/ejercicio-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/research-es.md",
+        "path": "files/input/research-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/balances.csv",
+        "path": "files/balances.csv",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/treasury-demo/accounts.csv",
+        "path": "files/treasury-demo/demo-accounts.csv",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/treasury-demo/bank_movements.csv",
+        "path": "files/treasury-demo/demo-bank_movements.csv",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/treasury-demo/open_items.csv",
+        "path": "files/treasury-demo/demo-open_items.csv",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/treasury-demo/planned_flows.csv",
+        "path": "files/treasury-demo/demo-planned_flows.csv",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/treasury-demo/allocations.csv",
+        "path": "files/treasury-demo/demo-allocations.csv",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/treasury-demo/adjustments.csv",
+        "path": "files/treasury-demo/demo-adjustments.csv",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/treasury-practice/accounts.csv",
+        "path": "files/treasury-practice/guided-accounts.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/treasury-practice/bank_movements.csv",
+        "path": "files/treasury-practice/guided-bank_movements.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/treasury-practice/open_items.csv",
+        "path": "files/treasury-practice/guided-open_items.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/treasury-practice/planned_flows.csv",
+        "path": "files/treasury-practice/guided-planned_flows.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/treasury-practice/allocations.csv",
+        "path": "files/treasury-practice/guided-allocations.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/treasury-practice/adjustments.csv",
+        "path": "files/treasury-practice/guided-adjustments.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/treasury-independent/accounts.csv",
+        "path": "files/treasury-independent/expert-accounts.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/treasury-independent/bank_movements.csv",
+        "path": "files/treasury-independent/expert-bank_movements.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/treasury-independent/open_items.csv",
+        "path": "files/treasury-independent/expert-open_items.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/treasury-independent/planned_flows.csv",
+        "path": "files/treasury-independent/expert-planned_flows.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/treasury-independent/allocations.csv",
+        "path": "files/treasury-independent/expert-allocations.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "composizione-negoziata/treasury-independent/adjustments.csv",
+        "path": "files/treasury-independent/expert-adjustments.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/trasformazione": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "synthetic_evidence_review_stale_dossier"
+    },
+    "files": [
+      {
+        "source": "trasformazione/input/case.json",
+        "path": "files/input/case.json",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "trasformazione/input/participants.json",
+        "path": "files/input/participants.json",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "trasformazione/input/creditors.json",
+        "path": "files/input/creditors.json",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "trasformazione/input/valuation.json",
+        "path": "files/input/valuation.json",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "trasformazione/input/valuation-update.json",
+        "path": "files/input/valuation-update.json",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "trasformazione/practice/case.json",
+        "path": "files/practice/case.json",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "trasformazione/practice/participants.json",
+        "path": "files/practice/participants.json",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "trasformazione/practice/creditors.json",
+        "path": "files/practice/creditors.json",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "trasformazione/practice/valuation.json",
+        "path": "files/practice/valuation.json",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "trasformazione/practice/valuation-update.json",
+        "path": "files/practice/valuation-update.json",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/patent-box-review": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "inspect_normalize_review_then_synthetic_dossier"
+    },
+    "files": [
+      {
+        "source": "patent-box/evidence-it.md",
+        "path": "files/input/evidence-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "patent-box/evidence-practice-it.md",
+        "path": "files/practice/evidence-practice-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "patent-box/evidence-en.md",
+        "path": "files/input/evidence-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "patent-box/evidence-practice-en.md",
+        "path": "files/practice/evidence-practice-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "patent-box/evidence-fr.md",
+        "path": "files/input/evidence-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "patent-box/evidence-practice-fr.md",
+        "path": "files/practice/evidence-practice-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "patent-box/evidence-de.md",
+        "path": "files/input/evidence-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "patent-box/evidence-practice-de.md",
+        "path": "files/practice/evidence-practice-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "patent-box/evidence-es.md",
+        "path": "files/input/evidence-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "patent-box/evidence-practice-es.md",
+        "path": "files/practice/evidence-practice-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "patent-box/ledger-demo.csv",
+        "path": "files/input/ledger-demo.csv",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "patent-box/synthetic-rules.txt",
+        "path": "files/input/synthetic-rules.txt",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "patent-box/ledger-practice.csv",
+        "path": "files/practice/ledger-practice.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "patent-box/synthetic-rules.txt",
+        "path": "files/practice/synthetic-rules.txt",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/studio-document-format": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "inspect_examples_propose_preview_adopt_reuse"
+    },
+    "files": [
+      {
+        "source": "studio-document-format/demo-it.json",
+        "path": "files/input/demo-it.json",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "studio-document-format/demo-en.json",
+        "path": "files/input/demo-en.json",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "studio-document-format/demo-fr.json",
+        "path": "files/input/demo-fr.json",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "studio-document-format/demo-de.json",
+        "path": "files/input/demo-de.json",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "studio-document-format/demo-es.json",
+        "path": "files/input/demo-es.json",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "studio-document-format/practice-it.json",
+        "path": "files/practice/practice-it.json",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "studio-document-format/practice-en.json",
+        "path": "files/practice/practice-en.json",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "studio-document-format/practice-fr.json",
+        "path": "files/practice/practice-fr.json",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "studio-document-format/practice-de.json",
+        "path": "files/practice/practice-de.json",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "studio-document-format/practice-es.json",
+        "path": "files/practice/practice-es.json",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/scissione-guidata": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "versioned_partial_proportional_new_beneficiary"
+    },
+    "files": [
+      {
+        "source": "scissione/mandate-it.md",
+        "path": "files/input/mandate-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "scissione/mandate-update-it.md",
+        "path": "files/practice/mandate-update-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "scissione/mandate-it.md",
+        "path": "files/practice/mandate-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "scissione/mandate-en.md",
+        "path": "files/input/mandate-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "scissione/mandate-update-en.md",
+        "path": "files/practice/mandate-update-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "scissione/mandate-en.md",
+        "path": "files/practice/mandate-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "scissione/mandate-fr.md",
+        "path": "files/input/mandate-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "scissione/mandate-update-fr.md",
+        "path": "files/practice/mandate-update-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "scissione/mandate-fr.md",
+        "path": "files/practice/mandate-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "scissione/mandate-de.md",
+        "path": "files/input/mandate-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "scissione/mandate-update-de.md",
+        "path": "files/practice/mandate-update-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "scissione/mandate-de.md",
+        "path": "files/practice/mandate-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "scissione/mandate-es.md",
+        "path": "files/input/mandate-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "scissione/mandate-update-es.md",
+        "path": "files/practice/mandate-update-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "scissione/mandate-es.md",
+        "path": "files/practice/mandate-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "scissione/allocations.csv",
+        "path": "files/input/allocations.csv",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "scissione/allocations-update.csv",
+        "path": "files/practice/allocations-update.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/fusione-guidata": {
+    "group": "workflow",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "review_two_company_p1_workpapers_then_reopen_changed_inputs"
+    },
+    "files": [
+      {
+        "source": "fusione/ordinary.json",
+        "path": "files/input/ordinary.json",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "fusione/wholly-owned.json",
+        "path": "files/practice/wholly-owned.json",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "fusione/update.json",
+        "path": "files/practice/update.json",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "fusione/dossier-it.md",
+        "path": "files/input/dossier-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "fusione/dossier-en.md",
+        "path": "files/input/dossier-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "fusione/dossier-fr.md",
+        "path": "files/input/dossier-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "fusione/dossier-de.md",
+        "path": "files/input/dossier-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "fusione/dossier-es.md",
+        "path": "files/input/dossier-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      }
+    ],
+    "revision": "2026-10-01.1"
+  },
+  "vera/esg-reporting-assurance": {
+    "group": "workflow",
+    "parent_workflow": null,
+    "revision": "2026-10-01.1",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "esg_evidence_then_same_engagement_update"
+    },
+    "files": [
+      {
+        "source": "esg/demo/energy.csv",
+        "path": "files/input/energy.csv",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "esg/demo/energy-update.csv",
+        "path": "files/input/energy-update.csv",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "esg/demo/brief-it.md",
+        "path": "files/input/brief-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "esg/demo/brief-en.md",
+        "path": "files/input/brief-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "esg/demo/brief-fr.md",
+        "path": "files/input/brief-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "esg/demo/brief-de.md",
+        "path": "files/input/brief-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "esg/demo/brief-es.md",
+        "path": "files/input/brief-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "esg/practice/energy.csv",
+        "path": "files/practice/energy.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "esg/practice/energy-update.csv",
+        "path": "files/practice/energy-update.csv",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "esg/practice/brief-it.md",
+        "path": "files/practice/brief-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "esg/practice/brief-en.md",
+        "path": "files/practice/brief-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "esg/practice/brief-fr.md",
+        "path": "files/practice/brief-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "esg/practice/brief-de.md",
+        "path": "files/practice/brief-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "esg/practice/brief-es.md",
+        "path": "files/practice/brief-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/lipe": {
+    "group": "workflow",
+    "revision": "2026-10-03.1",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "review_synthetic_registers_then_revise_purchase"
+    },
+    "files": [
+      {
+        "source": "lipe/incarico.txt",
+        "path": "files/input/incarico.txt",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "lipe/registri.txt",
+        "path": "files/input/registri.txt",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "lipe/incarico.txt",
+        "path": "files/practice/incarico.txt",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "lipe/rettifica.txt",
+        "path": "files/practice/rettifica.txt",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "lipe/registri-rettificati.txt",
+        "path": "files/practice/registri-rettificati.txt",
+        "role": "practice",
+        "languages": [
+          "it"
         ]
       }
     ]

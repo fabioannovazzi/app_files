@@ -29,7 +29,7 @@
   "sources": [
     {
       "path": "modules/concordato-plan-review/assets/concordato-plan-review-widget.html",
-      "sha256": "2e7c3dbcc3c4b004226bd147057b023e92587860d4b09c4e9bf397bbb0b07fe9"
+      "sha256": "e9d11140c77aefa190a71f8d61caae2aba74d76319d53f6b167a44f69c1486a6"
     },
     {
       "path": "modules/concordato-plan-review/assets/icon.svg",
@@ -41,7 +41,7 @@
     },
     {
       "path": "modules/concordato-plan-review/references/review-methodology.md",
-      "sha256": "156c354369dd2ccc47832ad41eeabc1f9db464e8362355be2aa05b9495bd7e26"
+      "sha256": "1751b5fe95836eb12b2cc17b12f30856389916ffd19b3e587ae52b977b068c0e"
     },
     {
       "path": "modules/concordato-plan-review/references/workflow-reference.md",
@@ -61,7 +61,7 @@
     },
     {
       "path": "modules/concordato-plan-review/scripts/concordato_labels.py",
-      "sha256": "014b2f80b7393f2bff1e66ce42ca078aaf744a8a4e3ceda155f7c02c9aae44cd"
+      "sha256": "bd304e5a846949aa1e54b42a6dabf19a7a2725989a3158a772581d3dd58e3bd1"
     },
     {
       "path": "modules/concordato-plan-review/scripts/concordato_plan_core.py",
@@ -69,7 +69,7 @@
     },
     {
       "path": "modules/concordato-plan-review/scripts/concordato_semantic.py",
-      "sha256": "270c269c8af48bc663888741787163fb356304305c4524efbdd0535068ff7500"
+      "sha256": "70b74debdff6ba6d8a22af4327de4d17cd9c20313c1439b0d0efc3767b47fba7"
     },
     {
       "path": "modules/concordato-plan-review/scripts/finalize_output_closure.py",
@@ -77,7 +77,7 @@
     },
     {
       "path": "modules/concordato-plan-review/scripts/implementation_bootstrap.py",
-      "sha256": "af471aa7a524bd47c5c7a1ba3766bdcfbf98ea814a64df527d9b9ed9981f2fd7"
+      "sha256": "6d96e124c00a8466e5ee1a212ec1c57044fb54138742293362042139c7bf4b1b"
     },
     {
       "path": "modules/concordato-plan-review/scripts/output_closure.py",
@@ -105,7 +105,7 @@
     },
     {
       "path": "modules/concordato-plan-review/skills/concordato-plan-review/SKILL.md",
-      "sha256": "0d6d38e3e49f58dd71a2562fce31cdb46b34b35de075ba88b204310d54aa4332"
+      "sha256": "46c8a908037234ecaaa402c4244a3a509efed2c4558f35b11f5d8453347d6271"
     },
     {
       "path": "modules/concordato-plan-review/vendor/modules/__init__.py",
@@ -117,7 +117,7 @@
     },
     {
       "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
     },
     {
       "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/decisions.py",
@@ -126,6 +126,10 @@
     {
       "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/money.py",
@@ -145,7 +149,11 @@
     },
     {
       "path": "skills/concordato-plan-review/SKILL.md",
-      "sha256": "2f686784058bffd08e96a34ab6fd86e9452b5a013ec55e7ce2c05463089f28e6"
+      "sha256": "0a5321c08ba31d1789bb9d3464bde978052a9e7af6b897b9d2ef3bd11b984fde"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -161,7 +169,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -170,6 +178,10 @@
     {
       "path": "vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "vendor/modules/vera_assurance/money.py",
@@ -498,5 +510,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "5dfbf0965bbb5200a51727948f65a73b5bf45a8385fcdc0918e5628ec180ca4a"
+  "canonical_course_sha256": "56baf3d490938f0701c6429ac81dd3ab5121d4870597d98c47f876b2f0ae07ea"
 }

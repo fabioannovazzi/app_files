@@ -1,2 +1,4 @@
 # Synthetic retailer attribute labels, not credentials; exact historical finding only.
 bc746615bd5f8cdab212c8cc6a499c49321289a1:tests/scripts/test_build_retailer_category_evidence_pack.py:generic-api-key:2958
+# Public ECB 10-year yield-curve series identifier, not a credential; exact historical finding only.
+c8089dc7a5d8bff2272ed59092ce04298d78140a:plugins/business-valuation/references/benchmark-acquisition.md:generic-api-key:94

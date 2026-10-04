@@ -17,7 +17,11 @@
     "skills/vera/references/workflow-catalog.md",
     "marketplace_skill_instructions.json",
     "scripts/local_courses.py",
-    "assets/courses"
+    "assets/courses",
+    "scripts/course_chat_bridge.py",
+    "scripts/course_chat_mcp.cjs",
+    "scripts/_desktop_teaching.py",
+    "skills/learn-with-vera/references/chat-button.md"
   ],
   "runtime_profiles": [
     "openai-codex"
@@ -44,7 +48,7 @@
   "security_controls": [
     {
       "id": "local-state-only",
-      "control": "The stdlib helper retains a confirmed work/preferences summary, language, thread IDs, lesson evidence hashes and optional feedback only in the OS user local onboarding directory. It stores no audio and implements no network transport or hosted interview. The native OpenAI host sees the conversation and the local summaries/results it reads, under the ordinary OpenAI model-processing boundary. This also applies to local ChatGPT Work; the current register calls that OpenAI account boundary openai-codex, and does not certify cloud access to local files. Repeated teaching reads the same confirmed profile and saves each session separately, with a local example collection derived from those checkpoints. The profile is not copied into a hosted teaching service.",
+      "control": "The stdlib helper retains a confirmed work/preferences summary, language, thread IDs, lesson evidence hashes and optional feedback only in the OS user local onboarding directory. It stores no audio and implements no network transport or hosted interview. The native OpenAI host sees the conversation and the local summaries/results it reads, under the ordinary OpenAI model-processing boundary. This also applies to local ChatGPT Work; the current register calls that OpenAI account boundary openai-codex, and does not certify cloud access to local files. Repeated teaching reads the same confirmed profile and saves each session separately, with a local example collection derived from those checkpoints. The profile is not copied into a hosted teaching service. A specifically requested first course can create its local session and native chat pair without a profile interview; the profile remains unset, and no introduction or understanding is marked complete. Existing introduction records are preserved. The optional Get started with Vera introduction reuses a single supported course and its separate practice; a short resume note stays beside the lesson outputs. It does not reset or complete the separate multi-course programme or introduce a model API, hosted interview or feedback recipient. The Patent Box kit supplies fictional software evidence and separate demo/practice ledgers. Rendering writes no approval or calculated result; actual selected files run through the same tutorial ledger. Historical synthetic rules and synthetic review cannot authorize real-client calculations; learner participation and understanding remain unconfirmed by fixture runs.",
       "implemented_by": [
         "scripts/local_onboarding.py",
         "skills/vera/references/local-onboarding.md",
@@ -75,19 +79,60 @@
     },
     {
       "id": "prepared-course-integrity",
-      "control": "The local stdlib loader supports both new teaching kits and explicitly retained published lessons. It verifies own-product identity, authored language, current source fingerprints and attachment hashes, then renders escaped HTML in a fresh ordinary directory without network or model calls. Both formats enumerate prepared artifact hashes; local progress checks reject those bytes even when copied or renamed. The working host must attest actual input, native-run and output files in the paired lesson. Hash and thread checks do not authenticate a host or prove semantic quality. Rendering performs no profile, understanding or execution-completion write. The static public catalogue contains prepared fictional materials and relative-only provenance, with no local execution requests, profile or progress files. Native OpenAI conversation is ordinary model processing, not offline inference. Browser preview is a separate optional local server: it binds only 127.0.0.1 on a free port, serves the rendered kit and relative assets, rejects resolved paths outside the kit and directory listings, and runs only for the lesson preview. It does not upload files, save access logs, change profiles or record completion. Browser/model inspection remains ordinary native model processing; loopback serving is not authentication against other local processes.",
+      "control": "The local loader supports both new teaching kits and explicitly retained published lessons. It verifies own-product identity, authored language, current source fingerprints and attachment hashes, then renders escaped HTML in a fresh ordinary directory without network or model calls. Both formats enumerate prepared artifact hashes; local progress checks reject those bytes even when copied or renamed. The working host must attest actual input, native-run and output files in the paired lesson. Hash and thread checks do not authenticate a host or prove semantic quality. Rendering performs no profile, understanding or execution-completion write. The static public catalogue contains prepared fictional materials and relative-only provenance, with no local execution requests, profile or progress files. Native OpenAI conversation is ordinary model processing, not offline inference. Browser preview is a separate optional local server: it binds only 127.0.0.1 on a free port, serves the rendered kit and relative assets, rejects resolved paths outside the kit and directory listings, and runs only for the lesson preview. It does not upload files, save access logs, change profiles or record completion. Browser/model inspection remains ordinary native model processing; loopback serving is not authentication against other local processes. XML, Markdown and text inputs have escaped reading views while execution keeps the original bytes. The optional results view checks the live execution record and input/output hashes, then renders selected CSV/text outputs in a fresh directory outside the sealed run. It retains source identities, performs no workflow execution or completion write, and uses only the same loopback preview and native model boundaries. PDF reading views render original pages locally with the already declared PyMuPDF dependency. Page images and an original-file download remain inside the lesson; the original PDF bytes remain the execution inputs. Rendering adds no external route or model call.",
       "implemented_by": [
         "scripts/local_courses.py",
         "skills/learn-with-vera/references/prepared-courses.md"
       ],
       "on_violation": "Reject stale, foreign, altered or unavailable course material without fallback or lesson completion."
+    },
+    {
+      "id": "recorded-input-citation-reading",
+      "control": "Result Markdown links become local reading-page links only for exact absolute paths or exact output-relative paths of hash-verified Markdown, text, CSV or XML inputs recorded in that execution. Relative aliases are generated solely from that allow-list and the actual output directory; links do not discover or fetch files. Original input bytes are copied with a fresh hash check. Unrecorded paths, network URLs and active schemes remain inert text. Source reading pages escape file content and do not execute Markdown or HTML.",
+      "implemented_by": [
+        "scripts/local_courses.py",
+        "skills/learn-with-vera/references/prepared-courses.md"
+      ],
+      "on_violation": "Input hash or path mismatch rejects the result view; unrecorded citation targets remain inert text."
+    },
+    {
+      "id": "verified-result-reading",
+      "control": "Hash-verified Word and workbook files have escaped local text/table reading views; original downloads retain exact bytes. Workbook readers disclose unavailable formula values without calculating invented values. Validated website results retain only the native hash-bound inventory of local HTML, CSS, image and font files and are served under a passive CSP sandbox that blocks scripts, forms, popups and external loads. The teacher may read these selected views in the native model context; no new hosted recipient, model call or automatic approval is introduced. Trasformazione lessons use a private synthetic component folder, without Studio Archive preparation or a transition to real client files; token and source/output identity checks still apply.",
+      "implemented_by": [
+        "scripts/local_courses.py",
+        "skills/learn-with-vera/references/prepared-courses.md"
+      ],
+      "on_violation": "Reject changed or unrecorded files before serving the lesson result."
+    },
+    {
+      "id": "course-file-access",
+      "control": "Before teaching, instructions connect the existing shared course directory as the host workspace or request scoped host write access. The stdlib setup helper saves and reloads the real profile without advancing lessons or changing the saved revision. Temporary probes check create/read/write/update/replace/delete operations; state mutations and worker dispatch repeat checks for their actual directories. Diagnostics expose only the exact local paths, operation and native error to the selected host model. Grants are host-controlled; helpers neither change OS permissions nor infer successful access from an approval click. Existing profiles are not relocated or reset. No new network transport or external recipient is introduced.",
+      "implemented_by": [
+        "scripts/local_onboarding.py",
+        "scripts/local_teaching.py",
+        "skills/learn-with-vera/references/file-access.md",
+        "repository:plugins/_shared/vendor/modules/courseware/access.py"
+      ],
+      "on_violation": "Failed checks or saves pause course progression. The host obtains the exact folder access, retries with normal sandbox permissions and preserves existing progress. Ordinary professional work remains optional and available."
+    },
+    {
+      "id": "native-course-chat-invitation",
+      "control": "The MCP App shows a readable native chat request with product, workflow, absolute course folder, teacher/worker references and a short-lived opaque invitation. These references enter the selected OpenAI account conversation; the worker claim returns the saved profile, lesson, exact installed skill path and bounded assignment to that same model runtime. No course input or output file bytes are attached to the chat request. The local bridge has no network calls and no Mparanza recipient. Folder access, revision, first unfinished lesson, product membership, thread pairing and invitation reuse are checked before execution. Only the teacher records progress; the host controls message confirmation and filesystem grants. Resume requests target the teacher, which reopens the saved working chat with native host tools. The invitation is a local coordination token, not host authentication or permission to bypass approvals.",
+      "implemented_by": [
+        "scripts/course_chat_bridge.py",
+        "scripts/course_chat_mcp.cjs",
+        "skills/learn-with-vera/references/chat-button.md",
+        "repository:plugins/_shared/vendor/modules/courseware/chat.py",
+        "repository:plugins/_shared/vendor/modules/courseware/native.cjs"
+      ],
+      "on_violation": "Block stale, expired, replaced, duplicate or interrupted claims; return to the teacher and preserve course files and progress."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-15",
+    "reviewed_at": "2026-10-04",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "90f96d61bf1e361b02ff65441f4a3e600a1ec796bbb3b111db4839d2ede24a14"
+    "source_fingerprint": "98681142dccb204c2a3dc7123402206cd5c1b514ef1cc4952209bbf4a4e9940b"
   },
   "governed_repository_paths": [
     "static/shared/learn-with-vera/index.html",

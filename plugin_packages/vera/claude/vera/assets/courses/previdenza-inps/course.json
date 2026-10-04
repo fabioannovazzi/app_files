@@ -53,7 +53,7 @@
     },
     {
       "path": "modules/previdenza-inps/schemas/case_records.schema.json",
-      "sha256": "bcb172275b979e1450ab9678421b2dd59a61a531e97cd6f40ea881596d9a8d3a"
+      "sha256": "0c7550c48e3696292c1d43c489d874ee2872eb8f3cf8a5d355d6ec3dcac6cf61"
     },
     {
       "path": "modules/previdenza-inps/schemas/claims_review.schema.json",
@@ -77,11 +77,11 @@
     },
     {
       "path": "modules/previdenza-inps/scripts/memo_labels.py",
-      "sha256": "1076ac8ff3cce2fc15f8f04b1afc490939aa0f03c0cad0e91743432202bc288c"
+      "sha256": "be048e95d6957ca8e7cf4c344aae8e1418dd00b16f3cd2aec183ad92f5fcd595"
     },
     {
       "path": "modules/previdenza-inps/scripts/package_case.py",
-      "sha256": "587301ac36db1127246a418993c7856cd6c317af0d4009415e61042c1115d915"
+      "sha256": "6b36bda0a2cf423b5d65d3b3e4c0b1fa1b9652b16955eb5a6aafe57542776273"
     },
     {
       "path": "modules/previdenza-inps/scripts/privacy_guard.py",
@@ -97,15 +97,19 @@
     },
     {
       "path": "modules/previdenza-inps/scripts/validate_case_records.py",
-      "sha256": "556de80f2deac4cd14848052a201fa869de190d08ea2dc23ced5a2724920f6fa"
+      "sha256": "7c6fbade21bf4f80621c0e9c3fbf3eb1f0d53ad6100118a60d49f5028792f752"
     },
     {
       "path": "modules/previdenza-inps/skills/previdenza-inps/SKILL.md",
-      "sha256": "845e80a286030a588fb6a4ff9151f439d4fc9c80c5f551d095d5ae60abfdfcd8"
+      "sha256": "ce3c2e577456251e43eed614a21bfac9bdbff88378e42eab1690eb56b8b02d73"
     },
     {
       "path": "modules/previdenza-inps/skills/previdenza-inps/agents/openai.yaml",
       "sha256": "bbe8ab077fed5caf28db2ff4fb6e12c5ac6ff4c5cfe5fb4b7f5d2e3b817e891f"
+    },
+    {
+      "path": "modules/previdenza-inps/skills/previdenza-inps/references/geneva.md",
+      "sha256": "304b17162da3f8db6afc0cf2fb082a473bb6d8ef6a36efc98d57162d0634c2a3"
     },
     {
       "path": "modules/previdenza-inps/vendor/modules/__init__.py",
@@ -117,7 +121,7 @@
     },
     {
       "path": "modules/previdenza-inps/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
     },
     {
       "path": "modules/previdenza-inps/vendor/modules/vera_assurance/decisions.py",
@@ -126,6 +130,10 @@
     {
       "path": "modules/previdenza-inps/vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/previdenza-inps/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "modules/previdenza-inps/vendor/modules/vera_assurance/money.py",
@@ -145,7 +153,11 @@
     },
     {
       "path": "skills/previdenza-inps/SKILL.md",
-      "sha256": "a0176a62be990fc8d5f896399da0e0c8a16c48e1e7eb9a0f211e2f3d82588cfc"
+      "sha256": "32f4a27d098c13f54fbfd832d0bddb9562c4d674fc07cd28bb2df5f7abbad3f4"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -161,7 +173,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -170,6 +182,10 @@
     {
       "path": "vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "vendor/modules/vera_assurance/money.py",
@@ -658,5 +674,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "4e52cfa332932135305e8effd4a35ab15367ce3358df873291f26eefcc343e01"
+  "canonical_course_sha256": "969852f0b9936b89ce1801bc42c4cf279288c00676551df3e6bdcbd35a4aa9a1"
 }

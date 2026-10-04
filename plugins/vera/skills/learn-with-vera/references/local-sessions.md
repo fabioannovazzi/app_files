@@ -1,23 +1,35 @@
 # Local repeated-session contract
 
+Before any course step, follow `file-access.md`: verify actual local writing,
+resolve missing permissions with the user and keep teaching paused until the
+retry succeeds. This also applies to resumed sessions and the working chat.
+
 Resolve `<vera-root>` as the directory containing this skill's parent `skills`
 and the existing `scripts/local_onboarding.py`. Read the shared profile with that
-helper. Never create a separate profile for a task, project, version or host.
+helper. Pass the setup result's absolute `--state-root` to every teaching/case
+command and handoff, in the same verified course workspace. Never create a
+separate profile for a task, project, version or host.
 Normal repeated sessions use `scripts/local_teaching.py` in the same root.
 
 Use the absolute script path and ordinary local execution. Write spoken text as
 JSON with a file-writing tool; do not interpolate it into shell commands.
-`--state-root` exists only for an explicitly selected recovery or developer test
-root. Normal users omit it. `status` is read-only and returns the current profile,
+`--state-root` binds the already selected shared course folder; it is not a
+request to move files or reset progress. `status` is read-only and returns the current profile,
 chat pair and example summaries. Add `--session <id>` for one full checkpoint.
 
-`begin --input <json>` starts one session after the optional introduction is complete. Reuse or
+`begin --input <json>` starts one requested course, including before the optional introduction. Reuse or
 pause the current active session before starting another. Paused sessions remain
 in the library. Its input is:
 
 ```json
 {"workflow_id":"fatture-xml-check","title":"Controllo delle fatture XML","goal":"Capire quali dati e anomalie controllare","mode":"show"}
 ```
+
+On first use, include `pair` with the actual `teacher_thread_id` and
+`worker_thread_id`. The helper creates local storage and its local-only marker,
+without inventing a professional profile or marking the introduction complete.
+An existing unfinished introduction and its lessons remain unchanged. A worker
+may receive `profile: null`; explain using the current request in that case.
 
 Use `mode: together` for guided work. An optional `example_id` selects a completed
 session ID or `onboarding:<workflow-id>` as the intent for a fresh run. This copies
@@ -28,7 +40,7 @@ before dispatch; update with `pair` if needed.
 Every update uses the latest returned revision:
 
 ```text
-python3 <vera-root>/scripts/local_teaching.py <command> --session <id> --revision <revision> --input <local-json>
+python3 <vera-root>/scripts/local_teaching.py <command> --state-root "<state_root>" --session <id> --revision <revision> --input <local-json>
 ```
 
 | Command | Input |
@@ -46,7 +58,7 @@ python3 <vera-root>/scripts/local_teaching.py <command> --session <id> --revisio
 The native worker validates before every bounded step:
 
 ```text
-python3 <vera-root>/scripts/local_teaching.py worker --session <id> --thread-id <actual-native-id> --workflow <id> --token <current-token>
+python3 <vera-root>/scripts/local_teaching.py worker --state-root "<state_root>" --session <id> --thread-id <actual-native-id> --workflow <id> --token <current-token>
 ```
 
 Use the returned `lesson.directory`, latest shared profile and assignment scope.
@@ -62,7 +74,7 @@ Teacher/worker tokens coordinate local sessions; they are not host authenticatio
 or permission to ignore the specialist or host's approval requirements.
 
 ```text
-python3 <vera-root>/scripts/local_onboarding_case.py --session <id> --thread-id <actual-worker-id> --workflow <workflow> --token <token> --phase demo --source <selected-source>
+python3 <vera-root>/scripts/local_onboarding_case.py --state-root "<state_root>" --session <id> --thread-id <actual-worker-id> --workflow <workflow> --token <token> --phase demo --source <selected-source>
 ```
 
 Use `--phase practice` after recording the demo. The original onboarding adapter
@@ -72,6 +84,14 @@ omits `--session`. The same genuine managed-case setup and specialist commands i
 attempt; inspect `tutorial_case.json` and reuse an interrupted attempt first.
 
 Only the teacher records progress. The worker returns actual artifacts and state.
+A working chat becoming idle is not proof that its step ran. Check its returned
+file paths and native run state. If it only acknowledges the request or reports
+an unperformed prerequisite, give it the next concrete bounded step and inspect
+that result before continuing. Reuse the current case and run; do not repeat
+imports or create another attempt just because a reply omitted a field. A worker
+handoff must identify what actually ran, its current review state and the next
+required action. Do not ask the learner to diagnose these internal handoffs or
+count a promise to run as teaching evidence.
 Pausing, rebinding, resuming and entering real work revoke the previous token.
 They do not cancel an already running host task. A changed input, missing file,
 changed result, wrong workflow/worker, stale revision or corrupt local state

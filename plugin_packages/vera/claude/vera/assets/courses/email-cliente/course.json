@@ -29,7 +29,7 @@
   "sources": [
     {
       "path": "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
-      "sha256": "4b56449248b02f910f434804918f16c28713387b17432aea4993607a5275adf7"
+      "sha256": "b9bd5e14e415cec52e6a3bc1be5c5bb2bffa1e930d19e2a627a68bf4df08ff88"
     },
     {
       "path": "modules/client-file-preparation/assets/icon.svg",
@@ -37,7 +37,7 @@
     },
     {
       "path": "modules/client-file-preparation/assets/review-workbench-adapter.json",
-      "sha256": "42af84f012b36d6d34c2646a9277b1a9aaf9eb8c4bf9287038948a56d2d401d0"
+      "sha256": "932b3b69030360e3ba849d4c6c20dca6ec8c247a147e4a451725c517d1b57382"
     },
     {
       "path": "modules/client-file-preparation/references/workflow-reference.md",
@@ -53,7 +53,7 @@
     },
     {
       "path": "modules/client-file-preparation/scripts/build_file_preparation_outputs.py",
-      "sha256": "5d84eb4fba8b93ae03a50108925fcaef068ffaad0263ccd0fc1a93deb08659d1"
+      "sha256": "e081fb3f478db184476627dcb92f9c9e194daa6e2cd9b1b2ce8cd6b673dc2418"
     },
     {
       "path": "modules/client-file-preparation/scripts/check_dependencies.py",
@@ -97,7 +97,7 @@
     },
     {
       "path": "modules/client-file-preparation/skills/email-cliente/SKILL.md",
-      "sha256": "6f3aa94ca18ffb406515ec87aff28e608bb8022e71efcb808b922bf5bc469a90"
+      "sha256": "6105ac402dba44e387c5f7a28a4e93ae1a70792917b29e0f8562659887a75bee"
     },
     {
       "path": "modules/client-file-preparation/templates/email_documenti_mancanti.md",
@@ -117,7 +117,7 @@
     },
     {
       "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
     },
     {
       "path": "modules/client-file-preparation/vendor/modules/vera_assurance/decisions.py",
@@ -126,6 +126,10 @@
     {
       "path": "modules/client-file-preparation/vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/client-file-preparation/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "modules/client-file-preparation/vendor/modules/vera_assurance/money.py",
@@ -145,7 +149,11 @@
     },
     {
       "path": "skills/email-cliente/SKILL.md",
-      "sha256": "1f91c8bff55055a3096c648fede03212b8f3f1203e12fc6234784adff4c6cabe"
+      "sha256": "ae256950bd262f71a419dd8a9745e3535c35c9c1afddc2bf9543c3dfa1df5628"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -161,7 +169,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -170,6 +178,10 @@
     {
       "path": "vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "vendor/modules/vera_assurance/money.py",
@@ -388,7 +400,7 @@
       "request": "Vera, prepara una email per chiedere al cliente se ha altre CU e se ci ha consegnato tutti gli F24 della campagna. Fammi prima rivedere le richieste sulla base di questo fascicolo.",
       "steps": [
         "L’assistente esegue la preparazione del fascicolo e mostra documenti ricevuti e domande proposte. L’assistente spiega quali informazioni sono già disponibili e quali conferme si cercano.",
-        "Nella pagina di revisione scegli le richieste pertinenti e restringi quelle troppo generiche alle due conferme del caso. Vera salva e applica le decisioni effettive prima di usarle nella bozza.",
+        "Nella revisione apri «Richieste al cliente» e leggi il testo proposto. Per restringerlo, scegli «Richiedi documenti» e scrivi la conferma precisa nel campo «Documenti richiesti». Rifiuta la domanda sulla classificazione interna. Salva e applica le decisioni prima della bozza.",
         "Vera scrive la email dalle richieste riviste. Apri la bozza, controlla oggetto, domande e tono; un’eventuale modifica viene salvata attraverso la stessa revisione, conservando il collegamento alle decisioni."
       ],
       "deliverables": [
@@ -413,7 +425,7 @@
       "request": "Vera, prepare an email asking whether the client has other CUs and has supplied all F24s for the campaign. First let me review the requests against this file.",
       "steps": [
         "The assistant prepares the file and shows received documents and proposed questions. The assistant explains what is already available and which confirmations are needed.",
-        "On the review page, choose relevant requests and narrow broad suggestions to the two confirmations in the case. Vera saves and applies the actual decisions before using them for the draft.",
+        "In the review, open “Client requests” and read the proposed text. To narrow it, choose “Request documents” and enter the precise confirmation in “Requested documents”. Reject the internal classification question. Save and apply the decisions before drafting.",
         "Vera writes the email from reviewed requests. Open it and check subject, questions and tone; any replacement is saved through the same review process with its link to the decisions."
       ],
       "deliverables": [
@@ -438,7 +450,7 @@
       "request": "Vera, prépare un courriel demandant si le client possède d’autres CU et a transmis tous les F24 de la campagne. Fais-moi d’abord revoir les demandes à partir de ce dossier.",
       "steps": [
         "L’assistant prépare le dossier et montre documents reçus et questions proposées. L’assistant explique ce qui est disponible et les confirmations recherchées.",
-        "Sur la page de revue, choisissez les demandes pertinentes et limitez les suggestions trop larges aux deux confirmations du cas. Vera enregistre et applique les décisions effectives avant de rédiger.",
+        "Dans la revue, ouvrez « Demandes au client » et lisez le texte proposé. Choisissez l’action de demande de documents pour préciser la confirmation attendue dans le champ des documents demandés. Rejetez la question de classement interne, puis enregistrez et appliquez les décisions avant la rédaction.",
         "Vera rédige à partir des demandes revues. Ouvrez le brouillon et vérifiez objet, questions et ton ; tout remplacement est enregistré par la même revue, avec son lien aux décisions."
       ],
       "deliverables": [
@@ -463,7 +475,7 @@
       "request": "Vera, entwirf eine E-Mail mit der Frage, ob weitere CU existieren und alle F24 der Kampagne vorliegen. Lass mich die Anfragen zunächst anhand dieser Akte prüfen.",
       "steps": [
         "Der Assistent bereitet die Akte vor und zeigt erhaltene Dokumente und vorgeschlagene Fragen. Der Assistent erklärt, was vorliegt und welche Bestätigungen fehlen.",
-        "Wählen Sie auf der Prüfseite die passenden Anfragen und begrenzen Sie breite Vorschläge auf die beiden Bestätigungen des Falls. Vera speichert und übernimmt die tatsächlichen Entscheidungen vor dem Entwurf.",
+        "Öffnen Sie in der Prüfung „Mandantenanfragen“ und lesen Sie den vorgeschlagenen Text. Wählen Sie die Aktion zum Anfordern von Dokumenten und tragen Sie die genaue Bestätigung im Feld für angeforderte Dokumente ein. Lehnen Sie die interne Einordnungsfrage ab; speichern und übernehmen Sie die Entscheidungen vor dem Entwurf.",
         "Vera schreibt aus den geprüften Anfragen. Öffnen Sie den Entwurf und prüfen Sie Betreff, Fragen und Ton; ein Ersatztext wird über dieselbe Prüfung mit Bezug zu den Entscheidungen gespeichert."
       ],
       "deliverables": [
@@ -488,7 +500,7 @@
       "request": "Vera, prepara un correo para preguntar si el cliente tiene otras CU y ha entregado todos los F24 de la campaña. Primero déjame revisar las peticiones a partir de este expediente.",
       "steps": [
         "El asistente prepara el expediente y muestra documentos recibidos y preguntas propuestas. El asistente explica qué está disponible y qué confirmaciones se necesitan.",
-        "En la página de revisión, elige peticiones pertinentes y limita las sugerencias amplias a las dos confirmaciones del caso. Vera guarda y aplica las decisiones reales antes de redactar.",
+        "En la revisión, abre «Solicitudes al cliente» y lee el texto propuesto. Elige la acción para solicitar documentos y escribe la confirmación precisa en el campo de documentos solicitados. Rechaza la pregunta de clasificación interna; guarda y aplica las decisiones antes de redactar.",
         "Vera escribe desde las peticiones revisadas. Abre el borrador y comprueba asunto, preguntas y tono; cualquier sustitución se guarda mediante la misma revisión, vinculada a las decisiones."
       ],
       "deliverables": [
@@ -506,5 +518,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "81cb47277864d25d4b64a701104b672c69fb692e927f6b534ba30944e6164b8a"
+  "canonical_course_sha256": "fa3e791b0ea8dab846f27302a460c856b60721402b05bf4472c7c700295721b4"
 }

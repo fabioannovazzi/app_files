@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "deck-correction",
-  "course_sha256": "481a0fc978f4d32cb1f07b6faa54920e10a0efb15e1d473747f35b5223c9b3d9",
+  "course_sha256": "02bad7c19ab6451163caf5636a452f4df4ddb624ea3a4e8f0256d09097e99617",
   "reviewer": "Codex: first-use teaching-kit editorial review",
-  "reviewed_at": "2026-09-14T21:09:24.778028+00:00",
-  "review_scope": "Prepared lesson, fictional inputs and actual outputs from source-bound regression cases, including visual review. Fixed model contributions are test-only. This is not human learner acceptance, native voice/two-window acceptance, or professional approval. Source dependency refresh after the localized advisory evidence-map repair: 35 current presentation/transcript checks pass in clara-teaching-source-refresh-02. All 60 recorded primary/supporting artifacts across these three kits are byte-identical to the previously inspected versions; the parity manifest retains actual paths. Existing editorial and visual judgments are preserved for unchanged material. No new voice, learner or GUI acceptance is asserted.",
+  "reviewed_at": "2026-09-29T13:36:23+00:00",
+  "review_scope": "Prepared lesson, fictional inputs and actual outputs from source-bound regression cases, including visual review. Fixed model contributions are test-only. This is not human learner acceptance, native voice/two-window acceptance, or professional approval. Source dependency refresh after the localized advisory evidence-map repair: 35 current presentation/transcript checks pass in clara-teaching-source-refresh-02. All 60 recorded primary/supporting artifacts across these three kits are byte-identical to the previously inspected versions; the parity manifest retains actual paths. Existing editorial and visual judgments are preserved for unchanged material. No new voice, learner or GUI acceptance is asserted. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -525,5 +525,155 @@
     "native_evidence": "GitHub Actions run 35208501248, job 105160051302, commit 8a86a6fe: the native teaching phase passed 824 tests with 90 explicitly skipped cases and 89.96% courseware coverage. The later compiler/review phase rejected the stale editorial digest; the run is not represented as green. The next full CI run must independently validate every required demo/practice identity and current digest.",
     "render_evidence": "Italian Vera fatture-xml-check rendered through the new CLI and inspected in the Codex in-app browser. Original material and the port-8769 lesson server were untouched.",
     "limits": "Existing artifact hashes remain historical evidence. No new professional approval, live learner completion, installed-version acceptance or validation of every browser host is claimed."
-  }
+  },
+  "codex_course_qa_20260928": {
+    "status": "passed",
+    "course": 38,
+    "product": "clara",
+    "workflow": "deck-correction",
+    "scope": "Italian Codex simulated learner demonstration and independent practice; actual rendered native presentations, sources and saved reopening",
+    "human_understanding_confirmed": false,
+    "professional_approval": false,
+    "session_id": "1f871842f679a12d3fb0fab86eaed6fd",
+    "phase": "paused",
+    "revision": 4,
+    "profile": null,
+    "onboarding_phase": "interview",
+    "runs": {
+      "demo": {
+        "html": "/private/tmp/teaching-acceptance-20260926/codex/clara-correction-reporting/teaching/sessions/1f871842f679a12d3fb0fab86eaed6fd/files/demo-caba4dd9638fcb8f/revised-build/8a79130b5c915b6993f3d5e5acaae4c714408239e936d5d0968fb2793ed602d1/index.html",
+        "sha256": "8a79130b5c915b6993f3d5e5acaae4c714408239e936d5d0968fb2793ed602d1",
+        "execution_sha256": "de4eddf085c17d8501b853c1aad6b1f0afde2ada12a436c540d5e5d750a06834",
+        "target": "responsibilities",
+        "native_preservation": "passed",
+        "browser_review": "/private/tmp/teaching-acceptance-20260926/clara-correction-demo-browser-review.json"
+      },
+      "practice": {
+        "html": "/private/tmp/teaching-acceptance-20260926/codex/clara-correction-reporting/teaching/sessions/1f871842f679a12d3fb0fab86eaed6fd/files/practice-4819ab2583f444b1/revised-build/59d154fbbe747c49740e258b68c85055f03046733a60931509e0311d172d53c8/index.html",
+        "sha256": "59d154fbbe747c49740e258b68c85055f03046733a60931509e0311d172d53c8",
+        "execution_sha256": "4c21f56178a8c3a25fa19443c99fc3ef9159f3751419d0ce5d41246ab456e26c",
+        "target": "decision",
+        "native_preservation": "passed",
+        "browser_review": "/private/tmp/teaching-acceptance-20260926/clara-correction-practice-browser-review.json"
+      }
+    },
+    "demo_files_preserved": 38,
+    "repairs": [
+      "Clara native stage deck and ZIP result handling with exact script checks and sandboxed loopback view",
+      "Original presentation link and plain result title",
+      "Plain learner revision summary",
+      "Closing-action font scales with narrow stage; five-language fictional originals rebuilt through native pipeline"
+    ],
+    "limitations": [
+      "Native voice and physical two-window placement unverified",
+      "Other-language live journeys pending",
+      "Installed Clara unavailable; current local source tested",
+      "Native automated browser_qa script, print and reduced-motion setting not exercised; actual Codex UI observations retained instead"
+    ],
+    "no_install_deploy_publish": true,
+    "verified_at": "2026-09-27T22:28:21.991635+00:00"
+  },
+  "release_freshness_20260928": {
+    "reviewer": "Codex /root - bounded release freshness review",
+    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
+    "previous_course_sha256": "481a0fc978f4d32cb1f07b6faa54920e10a0efb15e1d473747f35b5223c9b3d9",
+    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
+    "changed_compiled_fields": [
+      "sources",
+      "files"
+    ],
+    "content_review": "Five original HTML decks differ only in two CSS rules: numbered process markers accommodate wider labels, and closing-action text scales to narrow stages. The five companion ZIPs differ only in custom.css. Narratives, figures and requested changes are unchanged.",
+    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced.",
+    "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-38.md",
+    "italian_course_qa_sha256": "a53030ac018dec31db273c534a00802ad98a7133d14ae6fd470735152201fc58",
+    "native_execution_evidence": {
+      "commit": "2431fbd29",
+      "run": 36392851481,
+      "job": 108832365397,
+      "passed": 1152,
+      "skipped": 3,
+      "phase": "Verify teaching-kit languages, real executions and native packages",
+      "later_failure": "Editorial digest freshness; this run is not represented as fully green."
+    },
+    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
+  },
+  "arabic_transcription_refresh_20260929": {
+    "reviewer": "Codex /root - bounded Arabic transcription dependency review authorized by Fabio",
+    "reviewed_at": "2026-09-29T13:36:23+00:00",
+    "previous_course_sha256": "8745f22a60caa781ffc37cc2d78f864459edbb18de8d29038123d34709000e06",
+    "changed_compiled_fields": [
+      "sources"
+    ],
+    "content_review": "Compared every compiled Italian, English, French, German and Spanish lesson field with the prior course. Presentation inputs, requested corrections, checkpoints, deliverables and practice are unchanged; only shared voice-source fingerprints changed.",
+    "source_review": "Reviewed the deck-correction voice dependency. An explicitly Arabic recording can now be transcribed without expanding Clara's case output languages or changing the approval, copy-preservation, render, semantic-review and final-output gates used by this lesson.",
+    "limits": "This refresh does not claim an Arabic teaching locale, a live Arabic deck-feedback session, native voice acceptance, learner understanding or professional approval. Existing reviewed deck artifacts remain historical evidence; fresh CI must bind the existing five-language demo and practice cases to the current course digest."
+  },
+  "esg_source_refresh_20260929": {
+    "reviewer": "Codex /root - bounded source review",
+    "reviewed_at": "2026-09-29T18:26:42.517707+00:00",
+    "baseline_commit": "6f26f0e8241a0fe3027c162e2c2cae4d97395465",
+    "previous_course_sha256": "58f64fb5a8c0aceaf1754fcbd45199b983eeebcad3ba3f193796cffc88a75dba",
+    "current_course_sha256": "0197a2691717d5e0c2b6692bcdf9d69dac05900d282ce33beaa2fa250d13850d",
+    "content_review": "Complete JSON equality except top-level source bindings. Existing inputs, requests, locale content, checkpoints, practice and timing remain unchanged.",
+    "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged.",
+    "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
+    "detail": "docs/releases/2026-09-29-vera-esg-course-source-review.json"
+  },
+  "esg_source_refresh_20260930": {
+    "reviewer": "Codex /root - bounded source review",
+    "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
+    "baseline_commit": "5f4c3324b9efe209e9e6f99a3a38d7ac002df81a",
+    "previous_course_sha256": "58f64fb5a8c0aceaf1754fcbd45199b983eeebcad3ba3f193796cffc88a75dba",
+    "current_course_sha256": "0197a2691717d5e0c2b6692bcdf9d69dac05900d282ce33beaa2fa250d13850d",
+    "content_review": "Complete JSON equality except top-level source bindings. Existing inputs, requests, locale content, checkpoints, practice and timing remain unchanged.",
+    "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged.",
+    "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
+    "detail": "docs/releases/2026-09-30-vera-esg-course-source-review.json"
+  },
+  "studio_format_source_binding_20261001": {
+    "reviewer": "Codex - bounded studio-format source compatibility review",
+    "reviewed_at": "2026-10-01T18:46:46.204713+00:00",
+    "baseline_commit": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
+    "previous_course_sha256": "0197a2691717d5e0c2b6692bcdf9d69dac05900d282ce33beaa2fa250d13850d",
+    "current_course_sha256": "cf0ce7b79b1254c967619439e79b6ac5dc0d88c90da07aee96d005ab1318a3e4",
+    "content_review": "Complete compiled JSON equality with current main except source bindings. All narratives, input files, checkpoints, practice and timing are unchanged.",
+    "changed_sources": [
+      "plugins/_shared/vendor/modules/desktop_teaching/cases.py"
+    ],
+    "source_review": "The shared teaching case conditional adds only studio-document-format to the pre-existing studio-workspace branch. All pre-existing workflow branches retain their behavior. Communication adds optional approved DOCX settings while retaining existing channel settings; report-builder adds explicit studio selection and frozen reviewed-format reuse. Actual new-format regression and ten course executions exercise these paths.",
+    "limits": "This source review preserves historical editorial and output-hash evidence; it claims no fresh visual review or learner acceptance for existing lessons. Release CI must run each existing demo/practice identity against the current course digest before merge."
+  },
+  "integration_refresh": {
+    "reviewer": "Codex /root",
+    "date": "2026-10-02",
+    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
+  },
+  "rating_legalita_source_binding_20261002": {
+    "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+    "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+    "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+    "previous_course_sha256": "c40e2a6bfadae86828fac587d4cfd7a5ebd79ef88788fe19de5d7c6de677ac3c",
+    "current_course_sha256": "03152e3fa9cd50e1d138e28d7ed97282ce18c2baac9fc46ad86174e757eef575",
+    "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+    "changed_sources": [
+      "vendor/modules/courseware/policy.py"
+    ],
+    "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+    "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+  },
+  "antigravity_source_binding_20261003": {
+    "reviewer": "Codex - bounded Antigravity package source compatibility review",
+    "reviewed_at": "2026-10-03T07:09:09.437560+00:00",
+    "baseline_commit": "bebefc9b5f187bbcc5619a1b603363581ec68158",
+    "previous_course_sha256": "03152e3fa9cd50e1d138e28d7ed97282ce18c2baac9fc46ad86174e757eef575",
+    "current_course_sha256": "2cc3af5d7947fb99b1e01cffdd13dce0aef369724964651fa034b6616d78c557",
+    "content_review": "Compared the complete compiled JSON against the reviewed main baseline. All localized lessons, fictional inputs, requests, checkpoints, exercises, deliverables and timing are unchanged. Only the prepare_voice_deck_revision.py source fingerprint differs. Existing editorial judgments and historical reviewed output hashes are preserved.",
+    "changed_sources": [
+      "scripts/prepare_voice_deck_revision.py"
+    ],
+    "source_review": "Inspected the helper diff and its support-file consumers. It recognizes the installed plugin root when bundled docs/specs/pptx_templates exists, so template lookup, repository-relative support lookup and advisory-output-shaper lookup can use the flat Antigravity package. The repository fallback, lesson content, processing, requested deck edits and approval gates remain unchanged. The Antigravity builder includes these same support files; focused installed-folder and deck-revision tests passed.",
+    "native_evidence": "GitHub Actions run 37103155786, job 111146493689, commit 6a996c4a49a448d714ea2654ba5ad84861563ad4 passed 1567 native teaching tests with 3 skips and 92% courseware coverage. The later release verifier rejected the stale editorial digest, so that job is not represented as green.",
+    "limits": "This is a source compatibility review, not a new independent editorial, visual, learner, live voice or professional acceptance review. Final CI must execute the existing localized demo and practice identities against these exact current course digests and pass verify_release.py before merge."
+  },
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
 }

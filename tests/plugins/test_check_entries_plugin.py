@@ -1527,6 +1527,56 @@ def _supported_assurance_run(
     )
 
 
+def test_archived_vouching_review_reopens_without_authorizing_writes(
+    monkeypatch, tmp_path
+):
+    _, output_dir, review_payload, run_intake = _supported_assurance_run(
+        monkeypatch, tmp_path
+    )
+    context_path = _managed_run_context_path(output_dir)
+    context = json.loads(context_path.read_text())
+    output_root = output_dir.parent
+    declarations = [
+        {
+            "artifact_id": f"qa.{i}",
+            "path": p.relative_to(output_root).as_posix(),
+            "purpose": "Archived review regression evidence",
+            "audience": "review",
+            "media_type": "application/octet-stream",
+        }
+        for i, p in enumerate(sorted(p for p in output_root.rglob("*") if p.is_file()))
+    ]
+    declarations.extend(
+        write_no_model_report(output_root, "check-entries", context["run_id"])
+    )
+    _load_client_ledger().finalize_run(
+        context_path.parents[5],
+        context["engagement_id"],
+        context["run_id"],
+        declarations,
+    )
+    before = _transaction_tree_state(output_root)
+    args = _managed_check_mcp_arguments(
+        output_dir,
+        {
+            "run_intake": run_intake,
+            "review_payload": review_payload,
+            "ui_decisions": json.loads((output_dir / "ui_decisions.json").read_text()),
+            "final_artifacts": json.loads(
+                (output_dir / "final_artifacts.json").read_text()
+            ),
+        },
+    )
+    read = _check_transaction_call("render_check_entries_review", args)
+    assert read.get("ok") is not False, read
+    item = review_payload["items"][0]
+    args["decisions"] = [{"item_id": item["id"], "action": item["allowed_actions"][0]}]
+    for tool in ["save_check_entries_decisions", "apply_check_entries_decisions"]:
+        result = _check_transaction_call(tool, args)
+        assert result.get("ok") is False, result
+    assert _transaction_tree_state(output_root) == before
+
+
 def test_managed_journal_to_check_review_survives_customer_folder_rename(
     monkeypatch: Any,
     tmp_path: Path,
@@ -9446,12 +9496,15 @@ def test_xml_supported_review_note_uses_working_language(
 
 
 @pytest.mark.parametrize(
-    ("language", "phrase"),
-    [("it", "Individuato"), ("fr", "FatturaPA"), ("de", "FatturaPA-XML")],
-)
-@pytest.mark.parametrize(
-    ("direction_reviewed", "amount", "status"),
-    [(False, "100", "manual_review"), (True, "90", "mismatch")],
+    ("language", "phrase", "direction_reviewed", "amount", "status"),
+    [
+        ("it", "Dare o in Avere", False, "100", "manual_review"),
+        ("fr", "débit ou un crédit", False, "100", "manual_review"),
+        ("de", "Soll- oder Habenbetrag", False, "100", "manual_review"),
+        ("it", "Individuato", True, "90", "mismatch"),
+        ("fr", "FatturaPA", True, "90", "mismatch"),
+        ("de", "FatturaPA-XML", True, "90", "mismatch"),
+    ],
 )
 def test_xml_unresolved_review_notes_use_working_language(
     tmp_path: Path,

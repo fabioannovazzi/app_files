@@ -1,0 +1,278 @@
+{
+  "case": {
+    "meta": {
+      "schemaVersion": "1.0.0",
+      "caseId": "SERVICES",
+      "clientId": "SYNTHETIC",
+      "engagementId": "DEMO-CONTROL",
+      "currency": "EUR",
+      "periodStart": "2026-09-01",
+      "periodEnd": "2026-09-30",
+      "basis": "accrual_consumed",
+      "demonstration": true,
+      "perimeter": "operating"
+    },
+    "evidence": [
+      {
+        "id": "SYN-01",
+        "kind": "synthetic",
+        "locator": "Dati inventati esclusivamente per test; non un cliente e non un benchmark.",
+        "status": "synthetic"
+      }
+    ],
+    "objects": [
+      {
+        "id": "A",
+        "label": "Servizi ricorrenti",
+        "dimension": "service",
+        "units": "300",
+        "unit": "ore erogate",
+        "revenueCents": 2100000,
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      },
+      {
+        "id": "B",
+        "label": "Progetto speciale",
+        "dimension": "service",
+        "units": "150",
+        "unit": "ore erogate",
+        "revenueCents": 1500000,
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      }
+    ],
+    "costs": [
+      {
+        "id": "C001",
+        "label": "Collaborazioni A",
+        "amountCents": 200000,
+        "behavior": "variable",
+        "traceability": "direct",
+        "objectId": "A",
+        "poolId": null,
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      },
+      {
+        "id": "C002",
+        "label": "Collaborazioni B",
+        "amountCents": 300000,
+        "behavior": "variable",
+        "traceability": "direct",
+        "objectId": "B",
+        "poolId": null,
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      },
+      {
+        "id": "C003",
+        "label": "Trasferte",
+        "amountCents": 60000,
+        "behavior": "variable",
+        "traceability": "indirect",
+        "objectId": null,
+        "poolId": "TRAVEL",
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      },
+      {
+        "id": "C004",
+        "label": "Personale dedicato A",
+        "amountCents": 700000,
+        "behavior": "fixed",
+        "traceability": "direct",
+        "objectId": "A",
+        "poolId": null,
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      },
+      {
+        "id": "C005",
+        "label": "Personale dedicato B",
+        "amountCents": 500000,
+        "behavior": "fixed",
+        "traceability": "direct",
+        "objectId": "B",
+        "poolId": null,
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      },
+      {
+        "id": "C006",
+        "label": "Coordinamento",
+        "amountCents": 300000,
+        "behavior": "fixed",
+        "traceability": "indirect",
+        "objectId": null,
+        "poolId": "COORD",
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      },
+      {
+        "id": "C007",
+        "label": "Struttura",
+        "amountCents": 200000,
+        "behavior": "fixed",
+        "traceability": "entity",
+        "objectId": null,
+        "poolId": null,
+        "evidenceIds": [
+          "SYN-01"
+        ]
+      }
+    ],
+    "pools": [
+      {
+        "id": "TRAVEL",
+        "label": "Trasferte",
+        "driver": {
+          "name": "Chilometri",
+          "unit": "km",
+          "weights": {
+            "A": "100",
+            "B": "200"
+          },
+          "capacityPolicy": "actual",
+          "capacity": null,
+          "rationale": "Ipotesi dimostrativa esplicita; da sostituire e approvare sul caso reale."
+        }
+      },
+      {
+        "id": "COORD",
+        "label": "Coordinamento",
+        "driver": {
+          "name": "Ore coordinamento",
+          "unit": "ore",
+          "weights": {
+            "A": "10",
+            "B": "30"
+          },
+          "capacityPolicy": "actual",
+          "capacity": null,
+          "rationale": "Ipotesi dimostrativa esplicita; da sostituire e approvare sul caso reale."
+        }
+      }
+    ],
+    "traditionalDriver": {
+      "name": "Base tradizionale approvata",
+      "unit": "ore erogate",
+      "weights": {
+        "A": "300",
+        "B": "150"
+      },
+      "capacityPolicy": "actual",
+      "capacity": null,
+      "rationale": "Ipotesi dimostrativa esplicita; da sostituire e approvare sul caso reale."
+    },
+    "commonPolicy": "allocate",
+    "commonDriver": {
+      "name": "Ricavi operativi",
+      "unit": "EUR",
+      "weights": {
+        "A": "21000",
+        "B": "15000"
+      },
+      "capacityPolicy": "actual",
+      "capacity": null,
+      "rationale": "Ipotesi dimostrativa esplicita; da sostituire e approvare sul caso reale."
+    },
+    "sourceTotals": {
+      "revenueCents": 3600000,
+      "costsCents": 2260000,
+      "evidenceIds": [
+        "SYN-01"
+      ]
+    },
+    "review": {
+      "status": "synthetic",
+      "reviewer": null,
+      "mappingVersion": "demo-v1",
+      "note": "Classificazioni soltanto dimostrative. Non implicano costi evitabili."
+    }
+  },
+  "expected": {
+    "direct_costing": {
+      "entityProfitCents": 1340000,
+      "objects": [
+        {
+          "id": "A",
+          "revenueCents": 2100000,
+          "variableCents": 220000,
+          "cm1Cents": 1880000
+        },
+        {
+          "id": "B",
+          "revenueCents": 1500000,
+          "variableCents": 340000,
+          "cm1Cents": 1160000
+        }
+      ]
+    },
+    "direct_costing_evoluto": {
+      "entityProfitCents": 1340000,
+      "objects": [
+        {
+          "id": "A",
+          "revenueCents": 2100000,
+          "variableCents": 220000,
+          "cm1Cents": 1880000,
+          "specificFixedCents": 700000,
+          "cm2Cents": 1180000
+        },
+        {
+          "id": "B",
+          "revenueCents": 1500000,
+          "variableCents": 340000,
+          "cm1Cents": 1160000,
+          "specificFixedCents": 500000,
+          "cm2Cents": 660000
+        }
+      ]
+    },
+    "full_costing": {
+      "entityProfitCents": 1340000,
+      "objects": [
+        {
+          "id": "A",
+          "fullCostCents": 1236667,
+          "allocatedFixedCents": 316667,
+          "marginCents": 863333
+        },
+        {
+          "id": "B",
+          "fullCostCents": 1023333,
+          "allocatedFixedCents": 183333,
+          "marginCents": 476667
+        }
+      ]
+    },
+    "abc": {
+      "entityProfitCents": 1340000,
+      "objects": [
+        {
+          "id": "A",
+          "activityFixedCents": 75000,
+          "allocatedFixedCents": 191667,
+          "fullCostCents": 1111667,
+          "marginCents": 988333
+        },
+        {
+          "id": "B",
+          "activityFixedCents": 225000,
+          "allocatedFixedCents": 308333,
+          "fullCostCents": 1148333,
+          "marginCents": 351667
+        }
+      ]
+    }
+  }
+}

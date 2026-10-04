@@ -1,7 +1,18 @@
 ---
 name: vouching
-description: Use when comparing qualified Journal Sampling entries with FatturaPA XML or supporting PDFs, running exact evidence checks, and producing lineage-bound review outputs.
+description: Use to check scritture campionate against fatture FatturaPA XML or supporting PDFs, using the qualified sample and lineage from Journal Sampling. Produces source-linked checks, exceptions and missing-document requests for those entries. To select the sample use journal-sampling; to review the whole passive-invoice population against booked entries use purchase-invoice-review.
 ---
+
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+## Connected studio knowledge
+
+When the user or an adopted studio instruction requests relevant repository
+evidence, read `../vera/references/connected-studio-knowledge.md` before the
+dependent work, including direct specialist invocation. Use only callable host
+search/read tools; preserve citations and this workflow's qualification gates.
+Without a repository, continue ordinary work. Studio skills remain independently
+invoked by the user; Vera does not dispatch them.
+<!-- VERA_CONNECTED_KNOWLEDGE_END -->
 
 <!-- VERA_OPENAI_ONBOARDING_BEGIN -->
 Onboarding is optional. Continue ordinary professional work immediately,
@@ -18,6 +29,9 @@ Current user requests take precedence over saved preferences.
 <!-- VERA_OPENAI_ONBOARDING_END -->
 
 # Vouching
+
+For a Geneva (CH-GE) mandate, read `../vera/references/localization/geneva.md` first and use this existing function’s Geneva adaptation in its resolved component skill. Language alone never selects jurisdiction.
+
 
 Use the localized public name: **Vouching** (en), **Verifica documentale** (it),
 **Contrôle sur pièces** (fr), **Belegprüfung** (de), and

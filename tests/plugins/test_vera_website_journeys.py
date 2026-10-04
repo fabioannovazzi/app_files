@@ -11,6 +11,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 import pytest
+from bs4 import BeautifulSoup
 from pypdf import PdfReader
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -304,6 +305,52 @@ def _js_named_object_literals(source: str) -> list[tuple[str, str]]:
     return literals
 
 
+def _js_initialized_locale_properties(
+    page: str, object_name: str, literal: str
+) -> dict[str, str]:
+    """Evaluate explicit locale assignments against the page's actual text nodes."""
+
+    assignments = re.findall(
+        rf"\b{re.escape(object_name)}\.[a-z]{{2}}\s*=\s*[^;]+;", page
+    )
+    if not assignments:
+        return _js_object_properties(literal)
+    node = shutil.which("node")
+    assert node is not None, "Node.js is required to verify initialized locale objects"
+    nodes = [
+        {"dataset": {"i18n": item["data-i18n"]}, "textContent": item.get_text()}
+        for item in BeautifulSoup(page, "html.parser").select("[data-i18n]")
+    ]
+    script = """
+const vm = require('node:vm');
+const input = JSON.parse(require('node:fs').readFileSync(0, 'utf8'));
+const document = { querySelectorAll(selector) {
+  if (selector !== '[data-i18n]') throw new Error('Unexpected locale selector');
+  return input.nodes;
+}};
+const source = `(() => { const ${input.name} = ${input.literal};
+  ${input.assignments.join('\\n')} return ${input.name}; })()`;
+const result = vm.runInNewContext(source, { document }, { timeout: 1000 });
+process.stdout.write(JSON.stringify(result));
+"""
+    result = subprocess.run(
+        [node, "-e", script],
+        input=json.dumps(
+            {
+                "name": object_name,
+                "literal": literal,
+                "assignments": assignments,
+                "nodes": nodes,
+            }
+        ),
+        text=True,
+        capture_output=True,
+        check=True,
+        timeout=5,
+    )
+    return {key: json.dumps(value) for key, value in json.loads(result.stdout).items()}
+
+
 def _vtt_seconds(timestamp: str) -> float:
     """Convert one WebVTT timestamp to seconds."""
 
@@ -431,6 +478,7 @@ def test_static_pages_with_spanish_selector_have_complete_locale_objects() -> No
             if len(present_languages) < 3:
                 continue
 
+            properties = _js_initialized_locale_properties(page, object_name, literal)
             locale_object_count += 1
             assert language_buttons <= properties.keys(), (
                 f"{page_label}: {object_name} is missing "
@@ -772,6 +820,12 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
         VERA_PLUGIN_ROOT / "skills" / "vera" / "references" / "workflow-catalog.md"
     ).read_text(encoding="utf-8")
     core = _section_markup(page, "core")
+    foundation = catalog.split("## Development preview", 1)[1].split(
+        "## Professional workflows", 1
+    )[0]
+    foundation_skills = set(
+        re.findall(r"^`([a-z0-9-]+)` prepares", foundation, re.MULTILINE)
+    )
     roles = json.loads((VERA_PLUGIN_ROOT / "components.json").read_text())[
         "workflow_roles"
     ]
@@ -779,23 +833,49 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
         roles.get(component, {}).get("skill", component)
         for component in re.findall(r'data-vera-workflow="([^"]+)"', core)
     }
+    initial_section = catalog.split("## Scissione: initial operational path", 1)[
+        1
+    ].split("## Professional workflows", 1)[0]
+    initial_skills = set(
+        re.findall(r"`\.\./\.\./([a-z0-9-]+)/SKILL\.md`", initial_section)
+    )
+    assert initial_skills == {"scissione-guidata"}
+    assert "prepared local lesson" in initial_section
 
     # Exact identity closure is mechanically verifiable and prevents public
     # inventory drift. Page component IDs resolve to the current skill names.
-    assert directory_skills == (
-        set(re.findall(r"^- `([^`]+)`:", catalog, re.MULTILINE))
-        - _catalog_workflow_names(
-            catalog, "Learning and discovery", "Professional workflows"
+    assert (
+        directory_skills
+        == (
+            set(
+                re.findall(
+                    r"^- `([^`]+)`(?: \(\*\*[^*]+\*\*\))?:", catalog, re.MULTILINE
+                )
+            )
+            - _catalog_workflow_names(
+                catalog, "Learning and discovery", "DATEV installation trial"
+            )
+            - _catalog_workflow_names(
+                catalog,
+                "Synthetic development prototypes",
+                "Subordinate intake workflows",
+            )
+            - _catalog_workflow_names(
+                catalog,
+                "Subordinate intake workflows",
+                "Cross-cutting answer assurance",
+            )
+            - _catalog_workflow_names(
+                catalog,
+                "Cross-cutting answer assurance",
+                "Run-wide model-data evidence",
+            )
+            - _catalog_workflow_names(
+                catalog, "Developer governance", "Public process explanations"
+            )
         )
-        - _catalog_workflow_names(
-            catalog, "Subordinate intake workflows", "Cross-cutting answer assurance"
-        )
-        - _catalog_workflow_names(
-            catalog, "Cross-cutting answer assurance", "Run-wide model-data evidence"
-        )
-        - _catalog_workflow_names(
-            catalog, "Developer governance", "Public process explanations"
-        )
+        | initial_skills
+        | foundation_skills
     )
     assert set(
         re.findall(r'data-vera-subordinate-workflow="([^"]+)"', core)
@@ -815,7 +895,7 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
 def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     core = _section_markup(page, "core")
-    expected_module_count = 35
+    expected_module_count = 44
     module_hrefs = re.findall(
         r'<a class="module-row"[^>]+href="([^"]+)"', core, flags=re.DOTALL
     )
@@ -824,7 +904,7 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     assert len(module_hrefs) == expected_module_count
     assert len(module_hrefs) == len(set(module_hrefs))
     assert core.count('data-primary-workflow-link="') == 2
-    assert core.count('data-jurisdiction-item="it"') == 10
+    assert core.count('data-jurisdiction-item="it"') == 16
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
     for expected_href in (
@@ -838,6 +918,8 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
         "../previdenza-inps/index.html",
         "../registro-imprese-sari/index.html",
         "../bilancio-xbrl-it/index.html",
+        "../composizione-negoziata/index.html",
+        "../fusione-guidata/index.html",
         "../concordato-plan-review/index.html",
         "../browser-automation/index.html",
         "../journal-sampling/index.html",
@@ -848,6 +930,7 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
         "../sales-plan/index.html",
         "../business-planning/index.html",
         "../variance-analysis/index.html",
+        "../scissione-guidata/index.html",
         "../treasury-forecast/index.html",
         "../management-control-pack/index.html",
         "../centrale-rischi-review/index.html",
@@ -894,6 +977,7 @@ def test_vera_hub_separates_research_from_studio_communication() -> None:
         "../adversarial-opinion/index.html",
     }
     assert set(re.findall(r'href="([^"]+)"', communication)) == {
+        "../studio-document-format/index.html",
         "../comunicazione-professionale/index.html",
         "../presenza-digitale-studio/index.html",
     }
@@ -931,18 +1015,26 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Revisione pratica INPS",
         "Pratiche Registro Imprese",
         "Bilancio OIC e XBRL",
+        "Composizione negoziata",
+        "Fusione per incorporazione",
+        "Patent Box · anteprima",
         "Revisione concordato preventivo",
         "Automazione web",
         "Campionamento scritture contabili",
         "Verifica documentale",
         "Preparazione fatture XML",
-        "Audit intelligente fatture passive",
+        "LIPE",
+        "Audit delle fatture passive",
         "Riconciliazione banca-contabilità",
         "Riconciliazione partite aperte",
         "Preparazione piano vendite",
+        "Valutazione d’impresa",
         "Preparare un business plan",
         "Analisi scostamenti",
+        "Rating di legalità",
         "Adeguati assetti",
+        "Scissione guidata",
+        "Fascicolo ESG · in sviluppo",
         "Budget di tesoreria",
         "Pacchetto controllo di gestione",
         "Analisi Centrale Rischi",
@@ -952,10 +1044,13 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Bandi e agevolazioni",
         "Risposta a quesiti legali e fiscali",
         "Parere contrapposto",
+        "Formato dei documenti dello studio",
         "Comunicazione professionale",
         "Sito dello studio",
     ]
     expected_runtime_labels = {
+        "module.lipe.title": "LIPE",
+        "module.esg.title": "Fascicolo ESG · in sviluppo",
         "module.invoiceXml.title": "Preparazione fatture XML",
         "module.learn.title": "Impara con Vera",
         "module.newClient.title": "Apertura del fascicolo cliente",
@@ -969,11 +1064,14 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "module.reconciliation.title": "Riconciliazione partite aperte",
         "module.plan.title": "Preparazione piano vendite",
         "module.businessPlanning.title": "Preparare un business plan",
+        "module.valuation.title": "Valutazione d’impresa",
         "module.variance.title": "Analisi scostamenti",
         "module.assetti.title": "Adeguati assetti",
+        "module.scissione.title": "Scissione guidata",
         "module.treasury.title": "Budget di tesoreria",
         "module.managementPack.title": "Pacchetto controllo di gestione",
         "module.centraleRischi.title": "Analisi Centrale Rischi",
+        "module.studio-format.title": "Formato dei documenti dello studio",
         "module.communication.title": "Comunicazione professionale",
         "module.website.title": "Sito dello studio",
         "module.report.title": "Preparazione report finanziario",
@@ -983,6 +1081,8 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
 
     # The public directory and marketplace use one canonical naming contract.
     canonical_skill_labels = {
+        "lipe": "LIPE",
+        "esg-reporting-assurance": "Fascicolo ESG",
         "invoice-xml": "Preparazione fatture XML",
         "learn-with-vera": "Impara con Vera",
         "adeguati-assetti": "Adeguati assetti",
@@ -992,7 +1092,10 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "avviso-intake": "Esame avvisi e cartelle",
         "bilancio-oic": "Bilancio OIC e XBRL",
         "vouching": "Verifica documentale",
+        "composizione-negoziata": "Composizione negoziata",
         "concordato-plan-review": "Revisione concordato preventivo",
+        "fusione-guidata": "Fusione per incorporazione",
+        "studio-document-format": "Formato dei documenti dello studio",
         "comunicazione-professionale": "Comunicazione professionale",
         "dati-fiscali-strutturati": "Estrazione dati fiscali",
         "legal-tax-answer-review": "Validazione ricerca",
@@ -1002,6 +1105,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "management-control-pack": "Pacchetto controllo di gestione",
         "centrale-rischi-review": "Analisi Centrale Rischi",
         "business-planning": "Prepare a business plan",
+        "business-valuation": "Valutazione d’impresa",
         "journal-bank-reconciliation": "Riconciliazione banca-contabilità",
         "journal-sampling": "Campionamento scritture contabili",
         "new-client": "Apertura del fascicolo cliente",
@@ -1016,6 +1120,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "variance-analysis": "Analisi scostamenti",
         "studio-archive": "Archiviazione e ricerca nel fascicolo cliente",
         "treasury-forecast": "Budget di tesoreria",
+        "scissione-guidata": "Scissione guidata",
     }
     marketplace_cards = json.loads(
         (VERA_PLUGIN_ROOT / "marketplace_skill_instructions.json").read_text(
@@ -1024,7 +1129,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
     )["skills"]
 
     assert labels == expected_labels
-    assert len(labels) == 35
+    assert len(labels) == 44
     assert {
         workflow: marketplace_cards[workflow]["display_name"]
         for workflow in canonical_skill_labels
@@ -1149,7 +1254,7 @@ def test_vera_hub_keeps_calls_to_action_in_the_installation_block() -> None:
     install_section = page[install_start:install_end]
 
     assert "data-vera-install-link" in install_section
-    assert "data-vera-cowork-download-link" in install_section
+    assert "data-cowork-guide-link" in install_section
     assert 'href="#installa"' not in page
     assert 'class="text-link' not in page
     assert "data-variance-report-link" not in page
@@ -1306,19 +1411,13 @@ def test_product_install_copy_explains_chatgpt_codex_and_cowork_options(
     product: str,
 ) -> None:
     page = page_path.read_text(encoding="utf-8")
-    for phrase in (
-        f"Install {product} for ChatGPT Work and Codex",
-        f"Installa {product} per ChatGPT Work e Codex",
-        f"Installez {product} pour ChatGPT Work et Codex",
-        f"Installieren Sie {product} für ChatGPT Work und Codex",
-        f"Instala {product} para ChatGPT Work y Codex",
-        "download the package for Claude Cowork",
-        "scarica il pacchetto per Claude Cowork",
-        "téléchargez le paquet pour Claude Cowork",
-        "laden Sie das Paket für Claude Cowork herunter",
-        "descarga el paquete para Claude Cowork",
-    ):
-        assert phrase in page
+    installation_copy = re.findall(r'"install.copy": "([^"]+)"', page)
+    assert len(installation_copy) == 5
+    for translation in installation_copy:
+        assert product in translation
+        assert "ChatGPT Work" in translation
+        assert "Codex" in translation
+        assert "Claude Cowork" in translation
 
 
 def _vera_data_boundary_section(page: str) -> str:
@@ -1338,41 +1437,42 @@ def test_vera_hub_data_boundary_is_compact_and_not_manifest_driven() -> None:
 
 def test_vera_hub_explains_the_automatic_run_level_model_data_report() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
+    comparison = (SHARED_ROOT / "vera-compliance" / "index.html").read_text(
+        encoding="utf-8"
+    )
 
     assert 'id="model-data-report"' in page
-    assert 'data-i18n="report.title"' in page
-    assert 'data-data-handling-anchor="#run-evidence"' in page
-    assert "https://mparanza.com/data-handling?lang=it#run-evidence" in page
-    assert "https://mparanza.com/data-handling?lang=${lang}" in page
-    assert 'data-i18n="report.stamp"' in page
-    assert "identificativo casuale, la versione e il digest del report locale" in page
-    assert "random identifier, the version, and the local report digest" in page
-    assert "salvare come PDF" in page
-    assert "Per ogni report durevole, Vera invia automaticamente" in page
-    assert "For every durable report, Vera automatically sends" in page
-    assert "il lavoro resta completato e la richiesta rimane in attesa" in page
-    assert "the work remains complete and the request stays pending" in page
-    assert 'href="examples/model-data-receipt.html"' not in page
-    assert 'data-i18n="report.exampleLink"' not in page
-    for phrase in (
-        "Vera mostra che cosa è arrivato al modello.",
-        "Vera shows what reached the model.",
-        "Vera montre ce qui est parvenu au modèle.",
-        "Vera zeigt, was das Modell erhalten hat.",
-        "Vera muestra qué llegó al modelo.",
-        '"report.sourceValue": "100"',
-        '"report.processedValue": "100"',
-        '"report.mappingRowsValue": "10"',
-        '"report.mappingColumnsValue": "4"',
-        '"report.resultRowsValue": "12"',
-        '"report.resultMetricsValue": "53"',
-        '"report.localValue": "90"',
-        '"report.identityColumnsValue": "2"',
-        "Righe mensili ricevute per il commento",
-        "Monthly rows received for commentary",
-        "complete document or population is the correct minimum",
-    ):
-        assert phrase in page
+    assert 'id="why-vera"' in page
+    assert 'data-i18n="compliance.title"' in page
+    assert 'href="../vera-compliance/index.html?lang=it"' in page
+    assert 'data-i18n="report.title"' not in page
+    assert page.count('"compliance.title":') == 5
+    assert 'id="g1-3"' in comparison
+    assert "Vera mostra che cosa è arrivato al modello." in comparison
+    assert "Esempio con dati sintetici" in comparison
+    assert "https://mparanza.com/data-handling?lang=it#run-evidence" in comparison
+    assert "il report e i dati del cliente restano nello spazio di lavoro" in comparison
+    assert "il lavoro resta completato e la richiesta rimane in attesa" in comparison
+    assert comparison.count('class="run-report__receipt-row"') == 8
+    assert 'href="examples/model-data-receipt.html"' not in comparison
+    identifiers = re.findall(r'data-item="([GDN]\d\.\d+)"', comparison)
+    assert len(identifiers) == len(set(identifiers)) == 30
+    assert 'href="../learn-with-vera/index.html?lang=it"' in comparison
+    assert "Parziale" not in comparison
+
+
+def test_vera_compliance_links_g1_3_to_the_expandable_model_data_report() -> None:
+    page = (SHARED_ROOT / "vera-compliance" / "index.html").read_text(encoding="utf-8")
+    requirement = page.split('id="g1-3"', 1)[1].split("</tr>", 1)[0]
+    example = page.split('id="report-esempio"', 1)[1].split("</details>", 1)[0]
+
+    assert 'href="#report-esempio"' in requirement
+    assert "data-handling?lang=it#run-evidence" in requirement
+    assert '<details class="report-disclosure">' in example
+    assert "Vera mostra che cosa è arrivato al modello." in example
+    assert "il report e i dati del cliente restano nello spazio di lavoro" in example
+    assert "salvare come PDF" in example
+    assert "il lavoro resta completato e la richiesta rimane in attesa" in example
 
 
 def test_public_page_does_not_publish_a_synthetic_server_receipt() -> None:
@@ -1557,14 +1657,13 @@ def test_vera_hub_explains_work_area_numbers_in_every_language(
 def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     hub_path = SHARED_ROOT / "vera" / "index.html"
     page = hub_path.read_text(encoding="utf-8")
-    expected_module_link_count = 35
     module_hrefs = re.findall(
         r'<a\b(?=[^>]*\bclass="module-row")(?=[^>]*\bdata-module-link)[^>]*'
         r'\bhref="([^"]+)"',
         page,
     )
 
-    assert len(module_hrefs) == expected_module_link_count
+    assert "../rating-legalita/index.html" in module_hrefs
     for href in module_hrefs:
         target = urlsplit(href)
         target_path = (

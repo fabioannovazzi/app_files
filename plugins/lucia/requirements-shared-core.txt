@@ -1,6 +1,7 @@
 # Shared Mparanza runtime: identical in Clara, Vera and Lucia.
 arelle-release==2.42.1
 beautifulsoup4>=4.12
+cryptography>=43.0.1
 datashader
 defusedxml
 defusedxml>=0.7,<1
@@ -66,3 +67,4 @@ xlsxwriter
 xlsxwriter>=3.2
 # Requests 2.32.3 runtime supports chardet below 6.
 chardet>=3,<6
+tzdata>=2024.1

@@ -1,7 +1,18 @@
 ---
 name: variance-analysis
-description: Use when Vera must compare Actual, Budget, Forecast, or prior-period accounting performance, calculate controlled value or price-volume-mix variances, and produce reviewable variance plots and workpapers.
+description: Use to explain scostamenti Actual versus Budget, Forecast or prior-period accounting results by account, cost centre or available dimensions. Produces reconciled value or supported price-volume-mix variances, charts and reviewable workpapers. For an integrated pack with aging, cash and customer margins use management-control-pack.
 ---
+
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+## Connected studio knowledge
+
+When the user or an adopted studio instruction requests relevant repository
+evidence, read `../vera/references/connected-studio-knowledge.md` before the
+dependent work, including direct specialist invocation. Use only callable host
+search/read tools; preserve citations and this workflow's qualification gates.
+Without a repository, continue ordinary work. Studio skills remain independently
+invoked by the user; Vera does not dispatch them.
+<!-- VERA_CONNECTED_KNOWLEDGE_END -->
 
 <!-- VERA_OPENAI_ONBOARDING_BEGIN -->
 Onboarding is optional. Continue ordinary professional work immediately,

@@ -3,6 +3,17 @@ name: studio-archive
 description: Use when Vera must create or resume a durable client engagement, import a source, journal, or support file, search one client's callable Gmail connector, inspect a capability-gated WhatsApp Desktop chat, or search connected studio documents without mixing clients.
 ---
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+## Connected studio knowledge
+
+When the user or an adopted studio instruction requests relevant repository
+evidence, read `../vera/references/connected-studio-knowledge.md` before the
+dependent work, including direct specialist invocation. Use only callable host
+search/read tools; preserve citations and this workflow's qualification gates.
+Without a repository, continue ordinary work. Studio skills remain independently
+invoked by the user; Vera does not dispatch them.
+<!-- VERA_CONNECTED_KNOWLEDGE_END -->
+
 <!-- VERA_OPENAI_ONBOARDING_BEGIN -->
 Onboarding is optional. Continue ordinary professional work immediately,
 including direct specialist invocation, without checking or completing a local
@@ -20,12 +31,17 @@ Current user requests take precedence over saved preferences.
 ## Surface routing
 
 In ChatGPT, continue with connected Gmail when its read tools are callable and
-with material supplied in the conversation. WhatsApp Desktop control and local
-archive indexing remain Codex Desktop capabilities. For those local routes,
+with material supplied in the conversation or an existing callable studio
+knowledge repository, following the shared connected-knowledge reference.
+WhatsApp Desktop control and local archive indexing remain Codex Desktop
+capabilities. For those local routes,
 complete any useful preparation or review available in chat, recommend Codex
 using the localized wording in `../vera/SKILL.md`, and continue in ChatGPT.
 
 # Archivio dello Studio
+
+For a Geneva (CH-GE) mandate, read `../vera/references/localization/geneva.md` first and use this existing function’s Geneva adaptation in its resolved component skill. Language alone never selects jurisdiction.
+
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
 
@@ -60,7 +76,12 @@ Choose the route before resolving any module:
      connector must be installed, enabled, and connected on the current
      surface. Do not use IMAP, browser scraping, or ask the user to save `.eml`
      files.
-3. When the user asks to identify or create a client workspace, import or
+3. When the user asks to search an existing connected studio knowledge
+   repository, follow `../vera/references/connected-studio-knowledge.md` using
+   its callable search/read tools. This route needs no local document module,
+   archive configuration or Microsoft 365 account. Keep Gmail and WhatsApp on
+   their dedicated routes above.
+4. When the user asks to identify or create a client workspace, import or
    resume a source, journal, or support engagement, or configure, refresh, or
    search local studio documents, resolve `../../modules/studio-archive` from
    this skill directory when it exists; otherwise resolve
@@ -75,8 +96,9 @@ Choose the route before resolving any module:
    `archive_folder_picker_unavailable`; cancellation means no configuration was
    written and should lead to an offer to reopen the chooser.
 
-The Gmail, WhatsApp Desktop, and local document routes are independent. Gmail
-uses OpenAI's separately connected connector in ChatGPT or Codex. WhatsApp is
+The Gmail, WhatsApp Desktop, connected knowledge, and local document routes
+are independent. Gmail uses OpenAI's separately connected connector in ChatGPT
+or Codex. WhatsApp is
 an on-demand view of the local application through Computer Use. There is no
 Vera or Mparanza WhatsApp webhook, background sync, hosted connector, message
 database, or retention period. WhatsApp content read for the task may still

@@ -1,7 +1,7 @@
 {
   "name": "vera",
   "displayName": "Vera",
-  "description": "Assistente AI per commercialisti e studi professionali. Organizza documenti, controlla dati e scritture, riconcilia movimenti e prepara analisi finanziarie, bilanci, report e carte di lavoro. Supporta ricerche fiscali e normative, pratiche e comunicazioni ai clienti. Espone fonti, ambiguità e informazioni mancanti. Il giudizio professionale, la firma e l’invio restano al commercialista.",
+  "description": "Assistente AI per commercialisti e studi professionali. Prepara risposte e report a quesiti fiscali e legali con verifica delle fonti e del ragionamento, bilanci OIC/XBRL e analisi finanziarie, riconciliazioni e controlli a supporto della revisione contabile. Conserva eccezioni e carte di lavoro; supporta anche pianificazione, pratiche e comunicazioni. Il giudizio professionale, la firma e l’invio restano al commercialista.",
   "author": {
     "name": "Mparanza",
     "email": "fabio@mparanza.com",
@@ -43,7 +43,22 @@
     "website-articles",
     "presenza-digitale-studio",
     "website-refresh",
-    "first-website"
+    "first-website",
+    "fiduciaire",
+    "fiduciaires",
+    "expert-comptable",
+    "experts-comptables",
+    "comptabilité",
+    "fiscalité",
+    "questions-fiscales",
+    "questions-juridiques",
+    "comptes-annuels",
+    "états-financiers",
+    "révision-comptable",
+    "rapprochement-bancaire",
+    "rapprochement-comptable",
+    "analyse-financière",
+    "genève"
   ],
   "skills": "./skills/",
   "agents": [

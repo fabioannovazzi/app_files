@@ -262,7 +262,7 @@
     },
     {
       "path": "files/practice/revised-assignment-it.md",
-      "sha256": "d67cc5308cbf09330b970be305653878652ecfa14b3b7226adf9cffe1edd8885",
+      "sha256": "8e7a3856fe78ecf3053b32ce1f899094425859921b78c986a68d00b3aa5d0316",
       "languages": [
         "it"
       ],
@@ -270,7 +270,7 @@
     },
     {
       "path": "files/practice/revised-assignment-en.md",
-      "sha256": "4701aa3e32d218c15728584b6215cd2c9dbfdbb94a7fbbb0b5c660e3bc101535",
+      "sha256": "f18d42dbd8062b2207cbf79e706a4d313ecdb2fb7e2dc5a780d26695f8cf94ef",
       "languages": [
         "en"
       ],
@@ -278,7 +278,7 @@
     },
     {
       "path": "files/practice/revised-assignment-fr.md",
-      "sha256": "7e831badde0463a66f00c3e89f5eb40b53f064597f9950e1c675d2b6527f694d",
+      "sha256": "fa5b8d3039be29d6f3929e81ca55f937c6cdc7921196f6a5cf0550623d059222",
       "languages": [
         "fr"
       ],
@@ -286,7 +286,7 @@
     },
     {
       "path": "files/practice/revised-assignment-de.md",
-      "sha256": "7abecdf27b3b3eff590de4b28be366409128de741890985f635a649ec8f1b4d8",
+      "sha256": "8093eb55f3a7d2b1f75ae457efcd0fd221798f498b28d1d265cde1786130c233",
       "languages": [
         "de"
       ],
@@ -294,7 +294,7 @@
     },
     {
       "path": "files/practice/revised-assignment-es.md",
-      "sha256": "4eb57eb5b41a29a13373ddbce3d5b7f127e43eec70098bacca00eb96b34522bb",
+      "sha256": "84e13545103283571571819b1d507889e0900d8e9dceff3fa35d773d38893799",
       "languages": [
         "es"
       ],
@@ -429,5 +429,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "35484690c3f74d102293b7cc315ca041f9b3010f239a7b1e0c1b98c67bd289d1"
+  "canonical_course_sha256": "0b02605674a23ec6f604c77f8c9ad5d52a8654eccbd4bb474b79513e0eba0163"
 }

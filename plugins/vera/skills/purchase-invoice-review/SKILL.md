@@ -1,7 +1,18 @@
 ---
 name: purchase-invoice-review
-description: Use when Vera must audit a population of passive FatturaPA invoices against actual booked accounting entries and surface only deterministic or native Codex semantic exceptions for professional review.
+description: Use to check a population of fatture passive FatturaPA XML against actual prima nota or booked ledger entries. Produces an exception workpaper for amounts, IVA, duplicates, reconciliation and reviewed account coherence. For only an already qualified journal sample use vouching; for XML validity without accounting entries use fatture-xml-check. Does not book invoices or write to the gestionale.
 ---
+
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+## Connected studio knowledge
+
+When the user or an adopted studio instruction requests relevant repository
+evidence, read `../vera/references/connected-studio-knowledge.md` before the
+dependent work, including direct specialist invocation. Use only callable host
+search/read tools; preserve citations and this workflow's qualification gates.
+Without a repository, continue ordinary work. Studio skills remain independently
+invoked by the user; Vera does not dispatch them.
+<!-- VERA_CONNECTED_KNOWLEDGE_END -->
 
 <!-- VERA_OPENAI_ONBOARDING_BEGIN -->
 Onboarding is optional. Continue ordinary professional work immediately,
@@ -18,6 +29,9 @@ Current user requests take precedence over saved preferences.
 <!-- VERA_OPENAI_ONBOARDING_END -->
 
 # Intelligent Passive-Invoice Audit
+
+For a Geneva (CH-GE) mandate, read `../vera/references/localization/geneva.md` first and use this existing function’s Geneva adaptation in its resolved component skill. Language alone never selects jurisdiction.
+
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
 

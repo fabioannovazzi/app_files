@@ -1,5 +1,9 @@
 # Prepared teaching kits for Vera
 
+Before any course step, follow `file-access.md`: verify actual local writing,
+resolve missing permissions with the user and keep teaching paused until the
+retry succeeds. This also applies to resumed sessions and the working chat.
+
 ## Read the installed lesson format first
 
 This interim release combines new prepared teaching kits with retained published
@@ -34,16 +38,64 @@ and review any change to the saved procedure rather than guessing it works.
 Do not transfer a developer pack or use a real portal from this local tutorial.
 Stop the fixture after the session unless a current browser handoff needs it.
 
+Check the actual browser REPL before declaring the persistent runtime missing.
+When the host supports module imports, load `scripts/process_runtime.mjs` in
+that same supported browser session and verify its `executeProcess` export;
+the absence of a separately named Node tool does not establish a blocker.
+Keep all browser interactions in the host's permitted controller. Importing
+the module proves availability only; replay still needs the actual connected
+tab and fresh machine-written execution records.
+
+Create the initial teaching checkpoint from the registered process descriptor:
+copy its exact objective, start state and end condition, and use the checkpoint
+schema's `resume_instruction` and empty `steps`. Do not paraphrase these bound
+fields or substitute an informal `boundaries`/`next_step` note. Preserve a
+rejected payload, correct it and retry the same still-empty attempt rather than
+creating a second process or asking the learner to repeat setup.
+
+Lead the result viewer with a short procedure in the lesson language: supplied
+inputs, observed steps, checked result, present review/replay status and the
+ordinary request for reuse. Explain the fixture's English labels there. Keep
+the native checkpoint report available afterwards for detail; its identifiers
+and hashes must not become the learner's main explanation. Derive this readable
+summary from the actual saved steps and receipts, preserving any missing checks.
+
 The `bilancio-oic` kit starts with a fictional first-year company and a small
 trial balance. Read the current `bilancio-xbrl-it` entry point, import and review
 the source, determine the applicable form, review proposed account mappings,
 and prepare statements with the current official taxonomy and disclosure pack.
-Open the actual HTML draft and its validation findings together. The source is
-not a completed year-end close: taxes and other missing disclosures remain
-questions for the professional. Never imply that a draft is approved or ready
+Open the actual HTML draft and its validation findings together. The supplied
+year-end declaration includes taxes from an external fictional workpaper and
+the supporting disclosures; review those exact inputs rather than treating them
+as missing or recalculating the tax. Any information actually absent remains a
+question for the professional. Never imply that a draft is approved or ready
 to file. Practice uses a revised trial balance in a new run and preserves the
 first result. No approved mappings, negative confirmations or output are shipped
 in the teaching kit.
+
+Prepare the managed Bilancio case once and retain its returned client,
+engagement, run and case locations. To resume, resolve that existing run; do
+not repeat the new-case adapter to recover a missing return value. Both the
+company Markdown and the year-end text are supported evidence attachments.
+Keep final drafts and check reports under that run's outputs directory.
+
+The year-end declaration states the completeness of the account population
+and gives explicit absence statements. Review each applicable category, then
+record the required per-concept presentation decisions with its specific
+source and reason. A missing balance alone is not evidence of zero. Complete
+the triggered supporting schedules, selected-form disclosures and local
+candidate check before presenting the final result. Do not turn technical
+payload entry into an extra learner exercise after the learner has reviewed
+the source-backed proposal. Rebuild the preview after changing the case, and
+show the current draft together with the actual check report; an earlier
+preview is not evidence of the revised result.
+
+For the update exercise, review fresh bounded packets from the replacement
+inputs. Check amounts in the explanation as well as the proposed account
+classifications: copying an earlier rationale can preserve an obsolete amount
+even when the classification still fits. Return such a proposal for correction
+before applying it. Retain the old version as history, and cite the replacement
+year-end declaration for the updated disclosures.
 
 The `registro-imprese-sari` kit prepares a fictional company PEC change through
 the current case inventory, official-source selection, plan and review package.
@@ -51,6 +103,13 @@ Use the public references as starting points, verify current guidance, and keep
 source applicability and missing activation evidence open. It contains no SARI
 card selection, approved filing route, credentials or prewritten practice plan.
 Practice changes the request; make a new run and preserve the original result.
+For this follow-up, import the practice files into the demonstration's existing
+client and engagement, then prepare a new native ledger run there. The isolated
+tutorial-case adapter creates a fresh client even when its phase is `practice`;
+do not use it as a resume operation for this changed request.
+If the host does not expose the review tools, use the workflow’s native local
+browser review transport. Open its loopback URL in Codex and exercise the actual
+Save/Apply controls; scripted test decisions are not browser acceptance.
 
 The `comunicazione-professionale` kit starts with a fictional studio brief and
 an attributed official source. Run the current communications workflow in its
@@ -67,6 +126,12 @@ are starting evidence; check their currency. Keep source language separate
 from answer language and jurisdiction. Practice changes the audience and
 question scope. Do not invent an opposing position for this informational
 request, a ready-made answer, or completed validation.
+The real archive journey starts with `prompt-optimizer`; its closed preparation
+artifacts feed a `deep-research-validator` run in the same engagement. The named
+question lesson is not a third ledger stage. Generate Word through the current
+packager and verify the requested length and source links; a hand-edited output
+does not establish that the workflow exports correctly. Keep the useful answer
+prominent and the complete verification record available for inspection.
 
 The native package contains one kit per supported teaching entry, with plain
 localized titles, a stated purpose, fictional input files, a lesson outline,
@@ -149,6 +214,19 @@ does not select external preview or final publication. Practice updates the loca
 site in a new run/version, preserving the demonstration and rechecking the new
 bytes. Never reuse approvals from the old site.
 
+Open website results through the normal `local_courses.py results` command,
+including `site_validation.json` among the native records and every authored
+HTML page among the outputs. The result view opens the exact validated site
+with its local asset paths intact; the passive report reader is not a website
+preview. Reused styles, fonts, images and licences remain hash-checked dependencies
+in the native site inventory, not proof that a new workflow ran. Keep the site
+on loopback, inspect its actual layout and use the input links to explain its
+sources. Save screenshots with the extension matching their actual image
+format, and verify the captured width before claiming a phone review. If a
+host's viewport control has no effect, report that limitation and use an
+available supported browser for responsive inspection without claiming the
+in-app resize worked.
+
 ## AML review and subsequent evidence
 
 The initial AML lesson starts a normal `aml-review` run with the fictional
@@ -169,24 +247,67 @@ call the new-attempt adapter to create a different client for this follow-up.
 Preserve the first memo and record byte for byte. Completion means delivery;
 the teacher records understanding only from the learner's actual response.
 
-## Company arrangements and follow-up
+## Company arrangements, construction and follow-up
 
-`adeguati-assetti` supplies company context, a monthly procedure and a dated
-operating example. Teach the whole assessment journey: agree scope, examine
-responsibilities and actual information use, discuss findings, review actions
-and understand the limits of the conclusion. The first successful cycle is
-evidence for that cycle only. Do not infer every weekly review or future cash
-sufficiency from it.
+`adeguati-assetti` retains the scoped assessment of fictional Officina Arco and
+adds five-language `construction-<language>.md` and `financial-lab-<language>.md`
+chapters. The 5–8 minute outline introduces ordinary first use; construction,
+operating review and the financial lab continue in further resumable sessions.
+Explain this before starting rather than promising the whole process in one
+short lesson. Read the current specialist construction workflow and contract.
 
-The April practice continues in the same client and engagement using the actual
-first record, as in the AML follow-up above. Import the new evidence and prior
-immutable record, start a new `adeguati-assetti` run and bind `previous`. Address
-every earlier action in `prior_action_review`. The update documents late dispatch
-and report delivery after an absence; it does not support marking the proposed
-substitution action complete. Include the current intelligent-assessment
-extension and perform the specialist's factual challenge before delivery.
-Explain proposed responsibilities and timing as proposals; never record an
-accepted commitment or professional approval on the learner's behalf.
+Run the assessment in the working chat and inspect its actual memo. Preserve
+that record in the same engagement; construction has a separate native schema.
+Do not turn a delivered assessment into adoption. Discovery asks one contextual
+question at a time, preserving attributed originals and a separate summary.
+Open the current contextual offline HTML form, export Markdown before closing,
+import its original bytes and resume the same practice with its snapshot and
+all receipted sources. Unknown answers, missing attachments and contradictions
+stay visible; unknown never becomes zero. There is no browser autosave, audio
+capture, hosted upload or automatic anonymization.
+
+Trace evidence, risk/finding, control and action. Compare qualified base, any
+reasoned professional override and target without a UNI score or adequacy
+verdict. Design one proportionate control, compile the real Word/PDF/Markdown
+manual and editable CSV register, then inspect their contents and rendered
+pages. Fixed construction export headings currently remain Italian. Explain
+them in the lesson language. The current PDF exporter can put the final version
+line on a separate page; inspect layout before any professional delivery.
+Manual generation never demonstrates adoption or operating effectiveness.
+Record professional review and exact company adoption only from the competent
+participant's explicit instruction and evidence. If unavailable, retain a draft
+and teach the missing step without inventing it. A recorded actor is attribution,
+not an authenticated signature. Tutorial cycles must be labelled simulation;
+they cannot support actual operation or complete an operating action.
+
+The distinct April practice imports the new evidence, original sources and prior
+snapshot into a new run of the same engagement. Assessment follow-up binds its
+unchanged prior record and addresses every action. Construction uses `resume`,
+shows stale qualifications/decisions after new evidence, and makes a changed
+control's old manual need review. Compile a new draft without copying review or
+adoption. Dispatch and report deadlines were missed; Elena's five-day review
+period from 28 April is still open at 30 April. Do not invent collection or
+Paolo's access. Preserve the earlier records and ask for the learner's actual
+practice request and response.
+
+The financial lab is a separate fictional entity, not Officina Arco's accounts.
+The existing Ciclo Arco Business Planning kit supports Italian/English only;
+explain its actual source language and do not relabel its partial plan as ready
+for the native adapter. The unapproved `financial-facts.json` supports a separate
+technical three-month EUR exercise. Execute and review Business Planning v3
+normally, import the exact output, review calculation-ID mappings and reconciled
+totals, freeze Budget and retain a later Forecast separately. Unreviewed/partial
+plans and unreconciled mappings must remain blocked. Other adapters require
+reviewed external artifacts with their scope and limitations. Version KPI
+formula/population before observations; missing input or a zero denominator
+produces no value. Keep hypotheses separate from proven explanations.
+
+Synthetic engineering tests manufacture separately receipted test-only decisions
+to exercise the state boundaries; none is shipped in the kit or authorizes a
+learner's approval. These tests establish neither native voice/window acceptance,
+learner understanding nor a real-company professional pilot. Keep lesson data,
+progress and feedback local. Returning sources to the selected native runtime
+brings them into model context under that account's processing terms.
 
 ## Concordato plan review
 
@@ -215,6 +336,12 @@ the actual Word memo, chronology and document requests. The table is a teaching
 input, never an official portal capture or evidence of non-payment. Read the
 current specialist and retain all real review requirements; no approvals,
 legal conclusion or arithmetic recipe is bundled in this kit.
+
+Read the answer and next document request before the detailed fact list. Include
+the employment and contribution-table period boundaries in the authored
+chronology, each anchored to its own source; document creation dates alone do
+not explain the period being reviewed. Trace one observation through the memo's
+fact and document locator to the evidence matrix and original lesson input.
 
 The practice starts a fresh review of the updated fictional table. Explain
 which document comparison changes and which questions still need evidence;
@@ -249,6 +376,12 @@ Import the new operating note and the actual first `business_plan.json` as the
 prior plan, start a fresh run, reconsider the recommendation and every carried
 conclusion, and produce a new linked cycle without overwriting the first one.
 The updated note supplies no new figures: do not invent new volumes or prices.
+Keep the supplied EUR currency and the original dated commercial assumptions
+available as an explicitly labelled previous hypothesis, with a source-bound
+table. They are not a forecast for Saturday. A changed operating constraint does
+not make the known source currency disappear; revise the recommendation and
+identify what must be tested before preparing updated figures. Preserve source
+versions for unchanged files and keep all professional reviews pending.
 Show both reports and explain what the evidence changed. The learner does not
 author technical case JSON, approval records or source hashes.
 
@@ -354,7 +487,88 @@ replace them with a prepared result or claim portal preparation, signing or
 submission during this local exercise.
 
 
+## Open-item reconciliation execution handoff
+
+Use the normal managed archive context and its linked input manifest. Build the
+execution settings from the reviewed lesson request and actual source mapping;
+do not reuse an enriched output record as an execution request. Store generated
+assumptions and review-row configuration under the owning run's `outputs/`,
+outside its strict `outputs/reconciliation/` package, and keep that same native
+subdirectory on regeneration. Preserve the demo while running the April update.
+
+## Management-control results
+
+The management-control dashboard has live month selectors. After native
+`finalize_pack.py`, use that module's `scripts/preview_report.py` with the exact
+client context and reviewed dashboard path. Open the printed HTTP URL in the
+working chat and verify the cumulative view and one month. Do not pass this
+interactive HTML to the passive course result reader, which deliberately rejects
+active documents. Use a document result view for the workbook and Markdown
+report and keep the dashboard in its native preview. Record all displayed files
+and retain the normal complete archive inventory. A completed run can be reopened
+read-only with the same native preview command.
+
+## Concordato revision practice
+
+The `concordato-plan-review` practice revises the same fictional case. After
+recording the demonstration, reuse its returned `client_root`, `client_id` and
+`engagement_id`. Do not call `local_onboarding_case.py --phase practice` for this
+update: that adapter creates an independent client and engagement.
+
+Use the ordinary portable `client_ledger` methods: `import_document` for each
+replacement practice source, `prepare_run` for `concordato-plan-review` with
+exactly those returned input IDs, then `start_run`. Save the full returned
+context and run paths before execution. Run a fresh inspection, author and
+review the revised case model, and execute the current pipeline in the new
+run. Preserve the demonstration's source snapshots and outputs. Changed
+amounts require fresh source references and updated explanations as well as
+recalculated schedules.
+
 ## Browser preview
+
+The kit's XML, Markdown and text links open escaped reading pages in the
+browser, with a return link to the relevant lesson step. PDF links show locally
+rendered page images and offer the original download, so an unavailable embedded
+PDF viewer does not leave the learner on a blank page. Run rendering with the
+ready managed Python, which includes the declared PyMuPDF dependency. The original files
+remain unchanged and are still the inputs in `execution-request.json`.
+
+For actual CSV, Markdown, text or document results, use the verified result view when the
+native file panel is unavailable, queued or hard to read:
+
+```text
+python scripts/local_courses.py results --workflow <exact-id> --language <language> --lesson-dir <lesson-files> --execution-record <demo-or-practice-execution.json> --output-dir <fresh-local-result-view>
+```
+
+This checks the actual execution record and source/output hashes before creating
+a reading view outside the sealed run. It does not run the workflow or record
+lesson completion. Serve that new directory with the `serve` command below and
+inspect the rendered result in Codex's browser. For invoice summaries, add
+`--columns invoice_number invoice_date total_amount currency anomalies file_name`
+to start with useful columns. The complete original CSV text remains accessible
+under each table. Explain the actual empty anomaly or duplicate files; do not
+infer that invoices are booked, paid or professionally approved.
+
+Keep the original output links in the working chat. The reading view is a
+presentation of those results, never a substitute execution artifact. Word and Excel results open a local reading view of the actual stored text,
+tables and visible sheets, with a return link and byte-verified original file.
+These views do not reproduce document layout or recalculate spreadsheet formulas.
+Open the relevant sheets and source references with the learner. PDF results
+provide byte-verified original downloads; this page does not
+pretend to render their contents. Show those documents in their native viewer
+and verify the download or opening before claiming that it succeeded. Use actual visible browser evidence
+before saying that the result is shown; do not stop at a queued panel request.
+
+For local archive search, retain the complete native search and source-open
+responses. The answer must address the requested facts, not just identify a
+document or supplier. Cite the opened source with its actual locator and an
+absolute Markdown file link (use angle brackets around paths with spaces).
+Include that source among the execution record's inputs. The result reader
+opens citations to recorded Markdown, text, CSV and XML inputs in local reading
+pages with the verified original bytes; unrecorded paths and network links
+remain plain text. Click the citation and inspect its content before recording
+the checkpoint. After the practice update, refresh the same index, open both
+the initial agreement and update, and preserve the demo answer.
 
 For `course.html` and a retained kit's `example.html`, serve the rendered kit
 with the installed product helper, using the same configured Python runtime:
@@ -389,3 +603,247 @@ Keep the preview process running while the learner needs its links. Stop only
 that process when the lesson is finished and no handoff needs the preview.
 The helper serves local files on loopback; it does not upload them or record
 lesson completion. Native model processing of content read in chat still applies.
+
+
+## Notice intake
+
+For `avviso-intake`, follow the delegated notice skill's source review and normal
+reviewed note delivery. A letter mentioning F24 is not an F24 form. Record a
+text-bound document-kind correction when needed; do not present candidate fiscal
+fields as verified data. Show the actually reviewed `07_scheda_codex_per_studio.md`
+as the operational note, with `avviso/avviso_intake_memo.md` and its CSV as the
+extraction references. The practice adds a client's statement; documents said
+to be recovered remain unreceived until their actual files are supplied. Keep
+the explanation about the request, dates, evidence and next action.
+
+## Scissione guidata
+
+The fictional Arco mandate and allocation CSV exercise the Italian OIC partial
+proportional route into a new beneficiary. Start without approvals. The missing
+lease, unexamined contingent liabilities and null shareholder tax costs remain
+visible; a calculation does not close those gaps. The teacher explains actual
+Italian dossier headings and stable machine fields in the learner's language.
+The learner reviews the displayed exact revision in ordinary professional terms;
+never copy the test-only reviewer or manufacture participation.
+
+Practice imports the updated mandate and CSV in a fresh run of the same tutorial
+engagement, with the exact finalized prior revision as an upstream artifact.
+Changed allocation evidence reopens its dependent reviews; unchanged route and
+ownership evidence can retain theirs. Preserve the demo outputs. Codex uses its
+teacher/worker pair; Cowork uses the packaged written single-conversation lesson.
+Both keep tutorial state local and require actual learner confirmation.
+
+
+## Trasformazione: synthetic preparation only
+
+Use the prepared `trasformazione` kit only after an explicit synthetic lesson
+request. This is preparation for a supervised pilot, never a real mandate.
+Read the installed Vera wrapper and complete module contract. The Italian
+source JSON and native dossier remain Italian in all five conversation locales.
+Explain their fields in the selected language; do not translate schema keys.
+
+After validating the paired worker token, use a fresh private lesson output
+folder for the component's `CaseStore` or CLI, not Studio Archive preparation.
+This workflow has no Studio Archive adapter. Preserve exact input bindings in
+the local execution record, and capture output paths/hashes through the existing
+course execution mechanism. Do not call a hosted adapter or stamping service.
+The generic local model-data report builder remains required; show its readable
+report with the actual phases and selected model-visible files.
+
+Import case, participants and creditors first. Keep valuation withheld until
+the first blocked-capital export. The worker model authors findings, calculations
+and explicit dependencies from these inputs, not from a preapproved recipe.
+Do not use `demo.py` to substitute its internally generated inputs for this kit.
+Capital/vote/profit rights and book/estimated/tax values remain distinct. Missing
+tax basis, sources, receipts and consents stay unknown. Review only the limited
+creditor collection branch; never infer release or opposition from collection.
+Show dossier, proposal digest and blockers before recording the learner's actual
+decision. Automated test reviewers are labelled simulations and never count as
+learner decisions, participation or understanding.
+
+Import valuation-update.json under the original valuation evidence ID. Inspect
+selective staleness before changing numeric inputs: historical arithmetic is not
+a recomputation from changed document text. Correct the calculations and findings,
+resubmit and seek a new decision. Keep all prior exports and chained history.
+Practice starts a separate case using files/practice; preserve the demonstration.
+The 46-scenario matrix is not professional acceptance: only 11 scenarios had
+mechanical subsets tested in the recovered increment; remaining professional
+coverage is pending. This lesson creates no authenticated review, legal/tax
+qualification, statutory filing, real-client acceptance or publication evidence.
+
+## Patent Box controlled preview
+
+`patent-box-review` supplies fictional ordinary software evidence, a ledger and
+an unchanged synthetic source. Use the normal tutorial adapter, exact selected
+receipts and current Patent Box module. Inspect the ledger, review its mapping
+and source total, normalize, then propose detailed controls and located A/B text.
+The ordinary maintenance row is distinct from development. Practice starts a
+fresh bound case with an additional personnel row whose project link is missing.
+Keep it suspended and request evidence; absence does not establish failure.
+Preserve demonstration bytes and obtain a new actual proposal confirmation.
+
+Only explicitly synthetic initialization (`--demo`) and the shipped demo rules
+at their historical test date 2026-09-23 are permitted in this exercise. Never
+refresh or promote them into real rules. Read the readable proposal before actual
+learner confirmation; `--synthetic` requires an explicitly synthetic reviewer
+and the actual confirmation reference. Automated fixtures use test identities
+only and do not attest learner participation. Without confirmation calculation
+stays pending. No tutorial exception configures a firm policy, signs a mandate,
+or authorizes real-client calculation.
+
+Open the actual summary, missing-document list, controls, reconciliation,
+workpaper, unsigned Word/PDF A/B dossier and model-data report. Explain the
+additional deduction versus a tax saving and the separate income/IRAP bases.
+Engine titles and fields remain Italian; conversation, outline and authored
+narrative follow the selected supported language. Patents, designs, premial
+events and signature/timestamp verification are separate fact-dependent paths,
+not demonstrated executions. The implementation remains a controlled preview:
+32 professional UAT scenarios are NOT_RUN and professional/installed-host
+acceptance is unverified. Synthetic success changes none of those boundaries.
+The lesson has no public research, schedule, notification, signing or filing.
+Fictional inputs, model proposals and results read by the native OpenAI host
+enter its account model context; local storage does not mean offline inference.
+Complete the normal report, declarations and local ledger finalization without
+telemetry or external feedback.
+
+## Fusione per incorporazione P1
+
+The `fusione-guidata` kit teaches two companies, not two branches of one client's
+ledger. Start the bound tutorial intake with the selected source files as usual;
+retain that outer tutorial run and its local-only marker. Under its private
+output directory, prepare separate synthetic Alpha and Beta client roots and
+engagements using the current Studio Archive ledger. Bind both exact archive
+identities to the P1 case and import only the selected company evidence. Keep
+selected pack bytes and field locators so model-extracted facts can be traced
+back to the actual course documents. Never configure the user's studio archive,
+scan other clients or write a combined dossier into either company's archive.
+
+Read `dossier-<language>.md` and `ordinary.json` for the demonstration. The
+native field names stay unchanged across languages. Read the current component
+P1 contract, prepare requests from those inputs and discuss the branch, supplied
+valuations, difference allocation and source applicability with the learner.
+`demo-p1` and `prepare_case` are developer fixtures with synthetic approvals;
+do not run them as a substitute for the learner's demonstration or record their
+fixture confirmations as the learner's professional decisions. A pending decision
+remains pending in the newly executed draft. Author the dossier's professional
+sections from the available evidence; the source note explicitly identifies gaps.
+
+Use the P1 case/report records as native execution evidence, then declare the
+actual reports in the outer tutorial run. Show the opening journal, separate tax
+register, readable workpapers and model-data report. Finalize the outer run only
+under its normal contract after its actual outputs and review state are recorded.
+No signatures, postings, filings or real-client validation are demonstrated.
+
+Practice starts a separate wholly owned synthetic P1 case under the same lesson,
+using `wholly-owned.json`. Preserve the independent-company demonstration.
+Once the learner has inspected the practice result, import `update.json` into
+Beta's archive and revise that case's exact liability Fact. Inspect ChangeImpact,
+retain historic confirmations and reopen the dependent bridge and dossier.
+Recompute only with current references: the updated inputs have no revised
+closing equity or difference allocation and therefore retain a EUR 100 imbalance.
+Do not invent an offset, renew an approval or count that blocked follow-up as a
+successful computation. The successful base practice and its blocked update are
+separate checkpoints. All exercise calendar conventions are fictional hypotheses;
+real-case sources and actual professional confirmation remain required.
+
+## Trasformazione: synthetic preparation only
+
+Use the prepared `trasformazione` kit only after an explicit synthetic lesson
+request. This is preparation for a supervised pilot, never a real mandate.
+Read the installed Vera wrapper and complete module contract. The Italian
+source JSON and native dossier remain Italian in all five conversation locales.
+Explain their fields in the selected language; do not translate schema keys.
+
+After validating the paired worker token, use a fresh private lesson output
+folder for the component's `CaseStore` or CLI, not Studio Archive preparation.
+This workflow has no Studio Archive adapter. Preserve exact input bindings in
+the local execution record, and capture output paths/hashes through the existing
+course execution mechanism. Do not call a hosted adapter or stamping service.
+The generic local model-data report builder remains required; show its readable
+report with the actual phases and selected model-visible files.
+
+Import case, participants and creditors first. Keep valuation withheld until
+the first blocked-capital export. The worker model authors findings, calculations
+and explicit dependencies from these inputs, not from a preapproved recipe.
+Do not use `demo.py` to substitute its internally generated inputs for this kit.
+Capital/vote/profit rights and book/estimated/tax values remain distinct. Missing
+tax basis, sources, receipts and consents stay unknown. Review only the limited
+creditor collection branch; never infer release or opposition from collection.
+Show dossier, proposal digest and blockers before recording the learner's actual
+decision. Automated test reviewers are labelled simulations and never count as
+learner decisions, participation or understanding.
+
+Import valuation-update.json under the original valuation evidence ID. Inspect
+selective staleness before changing numeric inputs: historical arithmetic is not
+a recomputation from changed document text. Correct the calculations and findings,
+resubmit and seek a new decision. Keep all prior exports and chained history.
+Practice starts a separate case using files/practice; preserve the demonstration.
+The 46-scenario matrix is not professional acceptance: only 11 scenarios had
+mechanical subsets tested in the recovered increment; remaining professional
+coverage is pending. This lesson creates no authenticated review, legal/tax
+qualification, statutory filing, real-client acceptance or publication evidence.
+
+## Patent Box controlled preview
+
+`patent-box-review` supplies fictional ordinary software evidence, a ledger and
+an unchanged synthetic source. Use the normal tutorial adapter, exact selected
+receipts and current Patent Box module. Inspect the ledger, review its mapping
+and source total, normalize, then propose detailed controls and located A/B text.
+The ordinary maintenance row is distinct from development. Practice starts a
+fresh bound case with an additional personnel row whose project link is missing.
+Keep it suspended and request evidence; absence does not establish failure.
+Preserve demonstration bytes and obtain a new actual proposal confirmation.
+
+Only explicitly synthetic initialization (`--demo`) and the shipped demo rules
+at their historical test date 2026-09-23 are permitted in this exercise. Never
+refresh or promote them into real rules. Read the readable proposal before actual
+learner confirmation; `--synthetic` requires an explicitly synthetic reviewer
+and the actual confirmation reference. Automated fixtures use test identities
+only and do not attest learner participation. Without confirmation calculation
+stays pending. No tutorial exception configures a firm policy, signs a mandate,
+or authorizes real-client calculation.
+
+Open the actual summary, missing-document list, controls, reconciliation,
+workpaper, unsigned Word/PDF A/B dossier and model-data report. Explain the
+additional deduction versus a tax saving and the separate income/IRAP bases.
+Engine titles and fields remain Italian; conversation, outline and authored
+narrative follow the selected supported language. Patents, designs, premial
+events and signature/timestamp verification are separate fact-dependent paths,
+not demonstrated executions. The implementation remains a controlled preview:
+32 professional UAT scenarios are NOT_RUN and professional/installed-host
+acceptance is unverified. Synthetic success changes none of those boundaries.
+The lesson has no public research, schedule, notification, signing or filing.
+Fictional inputs, model proposals and results read by the native OpenAI host
+enter its account model context; local storage does not mean offline inference.
+Complete the normal report, declarations and local ledger finalization without
+telemetry or external feedback.
+
+## ESG evidence and corrected observations
+
+Use the `esg_evidence_then_same_engagement_update` route and the current ESG
+specialist. Render the exact language kit. Initially select only brief-<lang>.md
+and energy.csv through the tutorial adapter; reserve energy-update.csv for the
+successor run. The rendered input list includes that future source for discovery,
+not permission to treat it as initial evidence. Use the original filenames in
+the returned bindings. Bind row 1 as observed, row 2 as not_available and row 3
+as not_applicable only after reading the declared fictional scope in the brief.
+Zero is not missing, and a blank does not establish non-applicability.
+
+Ask for the participant’s actual decision before record_decision. A refused or
+unexpressed decision stays open; do not manufacture an approved history to finish
+a lesson. Any illustrative operator decision must be expressly described as a
+simulation. Build only partial drafts with exact dependencies. Preserve the first
+run, import the update as a new Archive source and prepare/start a successor in
+the same engagement with historical and new inputs. start_case references the
+first context; rebinding logical ID energy creates its new version. Inspect the
+current resume_case output and show the old decision/draft as outdated. Do not
+renew approval or present an outdated memo as current. Missing and non-applicable
+observations remain null with distinct status and rationale.
+
+Practice starts a fresh tutorial client from files/practice/, then follows the
+same within-engagement update. Preserve both attempts. Write codex_run_review.md,
+show the actual model-data report and finalize the normal Archive artifact
+manifest only when the ordinary specialist requirements are met. Developer
+regression outputs are not learner decisions, participation or professional
+acceptance. Cowork reuses these fictional materials through its existing written
+single-conversation lesson; native voice and teacher/worker chats do not apply.

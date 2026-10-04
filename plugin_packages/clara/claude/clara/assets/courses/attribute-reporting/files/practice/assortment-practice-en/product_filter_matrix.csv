@@ -1,0 +1,21 @@
+listing_identity,parent_product_id,product_name,brand,color,garment type,listing_status,top_seller_status,sale_pressure_status,pdp_url
+fictional-01,fictional-01,Fictional garment 01,Riva,black,cardigan,rest,top_seller,other,https://example.invalid/products/fictional-01
+fictional-02,fictional-02,Fictional garment 02,Lago,black,cardigan,rest,top_seller,other,https://example.invalid/products/fictional-02
+fictional-03,fictional-03,Fictional garment 03,Riva,black,cardigan,rest,top_seller,other,https://example.invalid/products/fictional-03
+fictional-04,fictional-04,Fictional garment 04,Lago,black,cardigan,rest,other,other,https://example.invalid/products/fictional-04
+fictional-05,fictional-05,Fictional garment 05,Riva,blue,sweater,rest,top_seller,other,https://example.invalid/products/fictional-05
+fictional-06,fictional-06,Fictional garment 06,Lago,blue,sweater,rest,other,other,https://example.invalid/products/fictional-06
+fictional-07,fictional-07,Fictional garment 07,Riva,blue,sweater,recent,other,other,https://example.invalid/products/fictional-07
+fictional-08,fictional-08,Fictional garment 08,Lago,blue,sweater,recent,other,other,https://example.invalid/products/fictional-08
+fictional-09,fictional-09,Fictional garment 09,Riva,blue,sweater,recent,other,other,https://example.invalid/products/fictional-09
+fictional-10,fictional-10,Fictional garment 10,Lago,blue,sweater,recent,other,other,https://example.invalid/products/fictional-10
+fictional-11,fictional-11,Fictional garment 11,Riva,cream,sweater,rest,other,other,https://example.invalid/products/fictional-11
+fictional-12,fictional-12,Fictional garment 12,Lago,cream,sweater,rest,other,other,https://example.invalid/products/fictional-12
+fictional-13,fictional-13,Fictional garment 13,Riva,cream,sweater,rest,other,other,https://example.invalid/products/fictional-13
+fictional-14,fictional-14,Fictional garment 14,Lago,cream,sweater,rest,other,other,https://example.invalid/products/fictional-14
+fictional-15,fictional-15,Fictional garment 15,Riva,cream,sweater,rest,other,other,https://example.invalid/products/fictional-15
+fictional-16,fictional-16,Fictional garment 16,Lago,cream,sweater,rest,other,other,https://example.invalid/products/fictional-16
+fictional-17,fictional-17,Fictional garment 17,Riva,cream,sweater,rest,other,other,https://example.invalid/products/fictional-17
+fictional-18,fictional-18,Fictional garment 18,Lago,cream,sweater,rest,other,other,https://example.invalid/products/fictional-18
+fictional-19,fictional-19,Fictional garment 19,Riva,cream,sweater,rest,other,other,https://example.invalid/products/fictional-19
+fictional-20,fictional-20,Fictional garment 20,Lago,cream,sweater,rest,other,other,https://example.invalid/products/fictional-20

@@ -11,7 +11,9 @@ ZIPs are generated artifacts and must never be edited by hand.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib.util
+import io
 import json
 import logging
 import re
@@ -20,7 +22,7 @@ import stat
 import sys
 import tempfile
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 from types import ModuleType
 from zipfile import ZIP_DEFLATED, BadZipFile, ZipFile, ZipInfo
 
@@ -36,6 +38,7 @@ __all__ = [
     "project_claude_manifest",
     "project_claude_mcp",
     "project_cowork_skill",
+    "project_cowork_workflow_registry",
     "verify_catalog",
     "verify_directory",
     "verify_package",
@@ -59,6 +62,68 @@ FIXED_ZIP_DATE = (1980, 1, 1, 0, 0, 0)
 LOGGER = logging.getLogger(__name__)
 
 
+def _expand_cowork_course_archives(entries: dict[str, bytes]) -> None:
+    """Ship course ZIP inputs as directories accepted by the Cowork installer."""
+    index_path = "assets/courses/index.json"
+    index = json.loads(entries[index_path])
+    for original in index["courses"].values():
+        manifest = "assets/courses/" + original["path"]
+        course = json.loads(entries[manifest])
+        files = []
+        replacements = []
+        for item in course["files"]:
+            relative = PurePosixPath(item["path"])
+            if relative.suffix.lower() != ".zip":
+                files.append(item)
+                continue
+            path = (PurePosixPath(manifest).parent / relative).as_posix()
+            content = entries.pop(path)
+            if hashlib.sha256(content).hexdigest() != item["sha256"]:
+                raise ValueError(f"Unreviewed course attachment: {path}")
+            replacements.append((relative.name, relative.stem + "/"))
+            with ZipFile(io.BytesIO(content)) as archive:
+                for member in archive.infolist():
+                    name = PurePosixPath(member.filename)
+                    if (
+                        name.is_absolute()
+                        or ".." in name.parts
+                        or "\\" in member.filename
+                        or PureWindowsPath(member.filename).drive
+                        or name.suffix.lower() == ".zip"
+                        or stat.S_ISLNK(member.external_attr >> 16)
+                    ):
+                        raise ValueError(
+                            f"Invalid course archive member: {member.filename}"
+                        )
+                    if member.is_dir():
+                        continue
+                    target = relative.with_suffix("") / name
+                    packaged = (PurePosixPath(manifest).parent / target).as_posix()
+                    if packaged in entries:
+                        raise ValueError(f"Duplicate course archive member: {packaged}")
+                    data = archive.read(member)
+                    entries[packaged] = data
+                    files.append(
+                        {
+                            **item,
+                            "path": target.as_posix(),
+                            "sha256": hashlib.sha256(data).hexdigest(),
+                        }
+                    )
+        if replacements:
+            course["files"] = files
+            locales = json.dumps(course["locales"], ensure_ascii=False)
+            for old, new in replacements:
+                locales = locales.replace(old, new)
+            course["locales"] = json.loads(locales)
+            entries[manifest] = _json_bytes(course)
+            original["sha256"] = hashlib.sha256(entries[manifest]).hexdigest()
+    entries[index_path] = _json_bytes(index)
+    nested = [name for name in entries if name.lower().endswith(".zip")]
+    if nested:
+        raise ValueError(f"Cowork cannot contain nested ZIP files: {nested}")
+
+
 def _add_written_teaching(
     product: str, source: dict[str, bytes], entries: dict[str, bytes]
 ) -> None:
@@ -69,6 +134,7 @@ def _add_written_teaching(
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     module.add_written_teaching(ROOT, product, source, entries)
+    _expand_cowork_course_archives(entries)
     if product == "vera":
         path = "skills/learn-with-vera/SKILL.md"
         entries[path] = _inject_named_execution_contract(
@@ -87,6 +153,8 @@ ROOT_OMITTED_PATHS = frozenset(
         "scripts/datev_starter.py",
         "scripts/check_for_update.py",
         "scripts/_desktop_teaching.py",
+        "scripts/course_chat_bridge.py",
+        "scripts/course_chat_mcp.cjs",
         "scripts/local_courses.py",
         "skills/clara/references/local-onboarding.md",
         "skills/clara/references/tutorial-cases.md",
@@ -107,7 +175,11 @@ COWORK_OMITTED_PATHS = frozenset(
         "modules/studio-archive/scripts/whatsapp_desktop_guard.mjs",
     }
 )
-COWORK_SHARED_SERVICES = ("run-receipt-stamping", "managed-python-runtime")
+COWORK_SHARED_SERVICES = (
+    "run-receipt-stamping",
+    "managed-python-runtime",
+    "cnc-authenticated-review",
+)
 PROJECTION_ONLY_PATHS = frozenset(
     {
         "marketplace_skill_instructions.json",
@@ -230,9 +302,14 @@ COWORK_REVIEW_SECTIONS = {
 }
 COWORK_EXECUTION_CONTRACT = """## Cowork execution contract
 
+Public workflow names select skills; component IDs select module paths.
+`financial-report-builder` uses component `report-builder`, `vouching` (historically
+called Check Entries) uses `check-entries`, and `purchase-invoice-review` uses
+`passive-invoice-audit`. These component IDs are not additional workflows.
+
 For journal-sampling, open-item-reconciliation, journal-bank-reconciliation,
-concordato-plan-review, report-builder and check-entries only, optional cache
-cleanup is available from the installed Vera root:
+concordato-plan-review, financial-report-builder and vouching only, optional cache
+cleanup uses the corresponding component ID from the installed Vera root:
 
 ```bash
 python3 modules/<module>/scripts/implementation_bootstrap.py --repair
@@ -242,6 +319,13 @@ For a standalone module, use `python3 scripts/implementation_bootstrap.py --repa
 from its root. This validates the implementation first, then removes only regular,
 single-link `__pycache__/*.pyc` files under that module's own `vendor` tree. It
 leaves directories, other files, symlinks and shared vendor trees untouched.
+This supported maintenance command is the only cache-cleanup exception to the
+prohibition on editing the installed tree by hand. It is optional: ordinary
+validation and execution tolerate incidental bytecode without removing it.
+On a read-only installation, skip cleanup. If the command reports a permission
+error, retain that error and continue the ordinary validated workflow when its
+checks pass; do not chmod, delete files manually, copy or patch the installation,
+or bypass the host's permissions to make cleanup succeed.
 If `validate_implementation_tree` ever fails with a file/directory-contract
 mismatch, do not delete or modify files inside the installed plugin tree by hand
 and do not bypass a sandbox/permission rejection to do so. Stop and report the
@@ -327,6 +411,13 @@ For owner-only/private packages copied from scratch space, reapply and verify
 private delivery.
 Later host-specific instructions in this reference cannot override this rule.
 """
+COWORK_BROWSER_AUTOMATION_DESCRIPTION = (
+    "inspect, explain or edit a supplied sanitized developer pack or capability "
+    "JSON, and run packaged local evidence/capability pipelines through the "
+    "managed Python launcher. Live browser discovery, execution and replay "
+    "validation are unavailable in this package. Do not operate authenticated "
+    "websites or claim that local pipeline checks prove live validation."
+)
 RUNTIME_TEXT_SUFFIXES = frozenset(
     {
         ".cjs",
@@ -897,6 +988,10 @@ def project_claude_mcp(content: bytes) -> bytes:
         raise ValueError("Canonical .mcp.json requires an mcpServers object")
     projected_servers: dict[str, dict[str, object]] = {}
     for name in sorted(source["mcpServers"]):
+        if name == "courseChats":
+            # OpenAI native course chats require the desktop teaching runtime.
+            # Cowork keeps its existing written-course contract.
+            continue
         server = source["mcpServers"][name]
         if not isinstance(server, dict):
             raise ValueError(f"MCP server {name} must be a JSON object")
@@ -1049,15 +1144,21 @@ def _studio_archive_cowork_skill(source: str, reference: bytes) -> str:
 def _browser_automation_cowork_skill(source: str) -> str:
     """Project live Chrome work as unavailable while preserving artifact review."""
 
+    frontmatter = _sub_required(
+        _skill_frontmatter(source),
+        r"(?m)^description: .*$",
+        f"description: Use when a user wants Vera to {COWORK_BROWSER_AUTOMATION_DESCRIPTION}",
+        label="Cowork browser-automation description",
+    )
     return (
-        f"{_skill_frontmatter(source)}\n\n"
+        f"{frontmatter}\n\n"
         "# Automazione web\n\n"
         "Live process discovery, execution, and validation require Codex Desktop, "
         "the connected Chrome extension, and its Playwright browser runtime; "
         "those capabilities are unavailable in this Cowork package. Cowork may "
         "inspect, explain, or edit a supplied sanitized developer pack or "
         "capability JSON and may run the packaged deterministic evidence or "
-        "capability pipeline when local Python is already available, but it must "
+        "capability pipeline through Vera's managed Python launcher, but it must "
         "not claim live discovery or validation. Continue with useful process "
         "scoping, developer-pack review, or capability review. Do not request "
         "credentials, substitute a video or standalone browser, or operate an "
@@ -1066,6 +1167,12 @@ def _browser_automation_cowork_skill(source: str) -> str:
 
 
 def _project_main_cowork_scope(text: str) -> str:
+    text = _sub_required(
+        text,
+        r"(?ms)^- `browser-automation`:.*?(?=^- `)",
+        f"- `browser-automation`: {COWORK_BROWSER_AUTOMATION_DESCRIPTION}\n",
+        label="Vera Cowork browser-automation route",
+    )
     text = _replace_section(
         text,
         "## Client-first workflow in Codex",
@@ -1733,8 +1840,8 @@ def _without_openai_onboarding(content: bytes) -> bytes:
     """Keep the one-off OpenAI onboarding out of the unchanged Cowork runtime."""
     text = content.decode("utf-8")
     text = re.sub(
-        r"<!-- VERA_OPENAI_(?:ONBOARDING|DATEV|VERSION)_BEGIN -->\n.*?"
-        r"<!-- VERA_OPENAI_(?:ONBOARDING|DATEV|VERSION)_END -->\n\n",
+        r"<!-- (?P<block>VERA_OPENAI_(?:ONBOARDING|DATEV|VERSION))_BEGIN -->\r?\n.*?"
+        r"<!-- (?P=block)_END -->(?:\r?\n|$)(?:\r?\n)?",
         "",
         text,
         flags=re.DOTALL,
@@ -1852,6 +1959,20 @@ def project_cowork_skill(
     text = _remove_optional_section(text, "## Plugin Improvement Feedback")
     text = _inject_cowork_execution_contract(text)
     text = _project_natural_language_runtime(text)
+    # Some public wrappers are replaced by Cowork-specific bodies. Retain their
+    # optional knowledge contract without altering shared component skill bytes.
+    if relative_path.startswith("skills/"):
+        knowledge = re.search(
+            r"(?s)<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->.*?"
+            r"<!-- VERA_CONNECTED_KNOWLEDGE_END -->",
+            content.decode("utf-8"),
+        )
+        if knowledge is not None and knowledge.group() not in text:
+            text = _inject_named_execution_contract(
+                text,
+                heading="## Connected studio knowledge",
+                contract=knowledge.group(),
+            )
     for marker in (*PROMOTION_MARKERS, *CALL_HOME_MARKERS):
         if marker in text:
             raise ValueError(
@@ -1866,7 +1987,14 @@ def _project_cowork_reference(
     relative_path: str,
 ) -> bytes:
     text = content.decode("utf-8")
-    if relative_path == "modules/previdenza-inps/references/workflow-reference.md":
+    if relative_path == "skills/vera/references/workflow-catalog.md":
+        text = _sub_required(
+            text,
+            r"(?ms)^- `browser-automation`:.*?(?=^- `)",
+            f"- `browser-automation`: {COWORK_BROWSER_AUTOMATION_DESCRIPTION}\n",
+            label="Vera Cowork browser-automation catalogue",
+        )
+    elif relative_path == "modules/previdenza-inps/references/workflow-reference.md":
         text = _project_previdenza_workflow_reference(text)
     elif relative_path == "modules/previdenza-inps/references/inps-access-channels.md":
         text = _project_previdenza_access_reference(text)
@@ -1955,6 +2083,42 @@ when the professional explicitly selects that different route.
     return text.encode("utf-8")
 
 
+def project_cowork_workflow_registry(
+    content: bytes, *, entries: dict[str, bytes]
+) -> bytes:
+    """Keep explicit host exclusions; reject mechanically missing package paths."""
+    registry = json.loads(content)
+    registry["host_qualification"]["browser_automation"][
+        "requirement"
+    ] = COWORK_BROWSER_AUTOMATION_DESCRIPTION
+    omitted = (
+        ROOT_OMITTED_PATHS
+        | COWORK_OMITTED_PATHS
+        | {
+            "skills/datev-invoice-start/SKILL.md",
+            "skills/privacy-surface-review/SKILL.md",
+        }
+    )
+
+    def packaged_paths(paths: list[str]) -> list[str]:
+        retained = [path for path in paths if path not in omitted]
+        missing = [path for path in retained if path not in entries]
+        if missing:
+            raise ValueError(
+                "Cowork workflow registry references missing package files: "
+                + ", ".join(missing)
+            )
+        return retained
+
+    registry["vera_wrapper_skills"] = packaged_paths(registry["vera_wrapper_skills"])
+    for component in registry["components"]:
+        component["skills"] = packaged_paths(component["skills"])
+        component["python_entrypoints"] = packaged_paths(
+            component["python_entrypoints"]
+        )
+    return _json_bytes(registry)
+
+
 def _validate_cowork_instruction_entries(entries: dict[str, bytes]) -> None:
     for name, content in entries.items():
         is_instruction = (
@@ -1965,6 +2129,13 @@ def _validate_cowork_instruction_entries(entries: dict[str, bytes]) -> None:
         if not is_instruction:
             continue
         text = content.decode("utf-8")
+        # These markers explicitly delimit excluded host instructions, not prose.
+        if re.search(
+            r"<!-- (?:VERA|CLARA|LUCIA)_OPENAI_"
+            r"(?:ONBOARDING|DATEV|VERSION)_(?:BEGIN|END) -->",
+            text,
+        ):
+            raise ValueError(f"{name}: Cowork instruction retains an OpenAI-only block")
         for marker in COWORK_FORBIDDEN_INSTRUCTION_MARKERS:
             if marker in text:
                 raise ValueError(
@@ -2379,6 +2550,8 @@ def _clara_cowork_omits_path(relative_path: str) -> bool:
     parts = Path(relative_path).parts
     if relative_path in {
         "scripts/_desktop_teaching.py",
+        "scripts/course_chat_bridge.py",
+        "scripts/course_chat_mcp.cjs",
         "scripts/local_courses.py",
         "scripts/local_onboarding.py",
         "scripts/local_teaching.py",
@@ -2814,6 +2987,11 @@ def _lucia_package_entries(
             "constraints-shared-macos-py312.txt",
         }:
             entries[name] = content
+    # The shared archive skill calls these helpers; ship the same canonical
+    # bytes with the shared component instead of dangling Vera-only references.
+    for helper in ("studio_archive_session.py", "studio_archive_windows.ps1"):
+        name = f"scripts/{helper}"
+        entries[name] = vera_entries[name]
     entries["README.md"] = LUCIA_COWORK_README.encode("utf-8")
     if "assets/icon.svg" in source_entries:
         entries["assets/icon.svg"] = source_entries["assets/icon.svg"]
@@ -2968,6 +3146,10 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
             ).replace(b"    # VERA_OPENAI_ONBOARDING_END\n", b"")
         if relative == ".mcp.json":
             content = project_claude_mcp(content)
+        elif relative == "skills/vera/references/optional-integrations.md":
+            # This setup guide compares named hosts. Rebranding Codex as Claude
+            # would incorrectly tell Cowork users to install a TOML configuration.
+            pass
         elif relative.endswith("/SKILL.md"):
             content = project_cowork_skill(
                 content,
@@ -2989,17 +3171,6 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
             content = _json_bytes({"runtime": "cowork-haiku"})
         elif relative == "components.json":
             content = _project_vera_components(content)
-        elif relative == "skills/vera/references/workflow-registry.json":
-            registry = json.loads(content)
-            registry["vera_wrapper_skills"] = [
-                skill
-                for skill in registry["vera_wrapper_skills"]
-                if skill
-                not in {
-                    "skills/datev-invoice-start/SKILL.md",
-                }
-            ]
-            content = _json_bytes(registry)
         if (
             relative.startswith("modules/")
             and Path(relative).suffix.lower() in RUNTIME_TEXT_SUFFIXES
@@ -3027,6 +3198,10 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
             if name.startswith(prefix)
         },
         entries,
+    )
+    registry_path = "skills/vera/references/workflow-registry.json"
+    entries[registry_path] = project_cowork_workflow_registry(
+        entries[registry_path], entries=entries
     )
     _project_cowork_privacy_register(entries)
     _validate_cowork_instruction_entries(entries)

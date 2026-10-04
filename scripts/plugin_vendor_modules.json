@@ -13,6 +13,9 @@
     "variance"
   ],
   "plugins": {
+    "scissione-guidata": {
+      "module_roots": ["vera_assurance"]
+    },
     "distribution-analysis": {},
     "mix-contribution-analysis": {},
     "period-comparison": {
@@ -209,6 +212,41 @@
       ]
     },
     "invoice-xml": {
+      "module_roots": [
+        "vera_assurance"
+      ]
+    },
+    "business-valuation": {
+      "module_roots": [
+        "vera_assurance"
+      ],
+      "overlays": [
+        {
+          "source_root": "plugins/clara/scripts",
+          "module_roots": [
+            "public_http.py"
+          ]
+        }
+      ]
+    },
+    "fusione-guidata": {
+      "module_roots": [],
+      "overlays": [
+        {
+          "source_root": "plugins/vera/scripts",
+          "module_roots": [
+            "model_data_report.py"
+          ]
+        },
+        {
+          "source_root": "plugins/studio-archive/scripts",
+          "module_roots": [
+            "client_ledger.py"
+          ]
+        }
+      ]
+    },
+    "patent-box-review": {
       "module_roots": [
         "vera_assurance"
       ]

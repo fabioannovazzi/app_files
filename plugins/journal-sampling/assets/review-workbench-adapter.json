@@ -12,11 +12,14 @@
       "title": "Extracted Journal Row",
       "variant": "ledger",
       "fields": [
-        "entry",
+        "movement_number",
+        "line_number",
         "entry_date",
         "account",
-        "description",
-        "amount",
+        "line_desc",
+        "amount_signed",
+        "debit",
+        "credit",
         "status"
       ],
       "empty": "No journal row fields."
@@ -28,10 +31,10 @@
         "method",
         "reason",
         "sample_size",
-        "population_size",
+        "population_size_after_filters",
         "seed"
       ],
-      "empty": "No sampling basis."
+      "empty": "See the sampling control for method and population."
     },
     {
       "title": "Output Trace",

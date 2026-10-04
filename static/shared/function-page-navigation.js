@@ -2,7 +2,7 @@
   "use strict";
 
   const currentScript = document.currentScript;
-  const languages = new Set(["it", "en", "fr", "de", "es"]);
+  const languages = new Set(["it", "en", "fr", "de", "es", "ar"]);
   const assistantNames = { vera: "Vera", lucia: "Lucia", clara: "Clara" };
   const areaLabels = {
     vera: {
@@ -109,6 +109,7 @@
         fr: "Entretiens et enregistrements",
         de: "Interviews und Aufnahmen",
         es: "Entrevistas y grabaciones",
+        ar: "المقابلات والتسجيلات",
       },
       "area-retail": {
         it: "Analisi retail",
@@ -153,6 +154,8 @@
     "bandi-agevolazioni": [["vera", "area-research"]],
     "bilancio-xbrl-it": [["vera", "area-matters"]],
     "business-planning": [["vera", "area-analysis"]],
+    "business-valuation": [["vera", "area-analysis"]],
+    "fusione-guidata": [["vera", "area-matters"]],
     "browser-automation": [["vera", "area-matters"]],
     "centrale-rischi-review": [["vera", "area-analysis"]],
     "check-entries": [["vera", "area-accounting"]],
@@ -167,8 +170,11 @@
     "clara-research-video": [["clara", "area-deliverables"]],
     "clara-retailer-signals": [["clara", "area-retail"]],
     "clara-transcribe": [["clara", "area-recordings"]],
+    "studio-document-format": [["vera", "area-studio"]],
     "comunicazione-professionale": [["lucia", "area-studio"], ["vera", "area-studio"]],
     "concordato-plan-review": [["vera", "area-matters"]],
+    "patent-box-review": [["vera", "area-matters"]],
+    "composizione-negoziata": [["vera", "area-matters"]],
     "dati-fiscali-strutturati": [["vera", "area-clients"]],
     "deep-research-validator": [["lucia", "area-research"], ["vera", "area-research"]],
     "email-cliente": [["vera", "area-clients"]],
@@ -178,6 +184,7 @@
     "management-control-pack": [["vera", "area-analysis"]],
     "passive-invoice-audit": [["vera", "area-accounting"]],
     "invoice-xml": [["vera", "area-accounting"]],
+    "lipe": [["vera", "area-accounting"]],
     "journal-sampling": [["vera", "area-accounting"]],
     "new-client": [["vera", "area-clients"]],
     "new-client/geneva": [["vera", "area-clients"]],
@@ -352,6 +359,7 @@
     fr: "Parcours de la page",
     de: "Seitenpfad",
     es: "Ruta de la página",
+    ar: "مسار الصفحة",
   };
 
   const headingLabels = {
@@ -544,6 +552,7 @@
     if (/^@(Vera|Lucia|Clara)\b/.test(trimmed)) {
       return trimmed.replace(/^@(Vera|Lucia|Clara)\b/, `@${assistant}`);
     }
+    if (currentLanguage === "ar") return `@${assistant} ${trimmed}`;
 
     const financialAnalysisOpeners = {
       it: ["Usa Vera per preparare", "Prepara"],
@@ -737,7 +746,8 @@
     breadcrumb.setAttribute("aria-label", ariaLabels[currentLanguage]);
 
     const areaLink = document.createElement("a");
-    areaLink.href = `../${product}/index.html?lang=${currentLanguage}#${area}`;
+    const productLanguage = currentLanguage === "ar" ? "en" : currentLanguage;
+    areaLink.href = `../${product}/index.html?lang=${productLanguage}#${area}`;
     areaLink.textContent = areaLabels[product][area][currentLanguage];
 
     const separator = document.createElement("span");

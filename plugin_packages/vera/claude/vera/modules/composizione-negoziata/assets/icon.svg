@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Vera · Composizione negoziata" data-theme="mparanza-plugin-icon-v1">
+  <rect width="64" height="64" rx="14" fill="#171816"/>
+  <path d="M49 0h1l14 14v1H49z" fill="#00B0F0"/>
+  <circle cx="51" cy="50" r="7" fill="#00B0F0"/>
+  <circle cx="51" cy="50" r="3" fill="#171816"/>
+<path d="M12 17h18v16H18l-6 6zm22 8h18v22l-6-6H34z" fill="none" stroke="#F7F0DF" stroke-width="3" stroke-linejoin="round"/><path d="M23 47h8l7 7" fill="none" stroke="#00B0F0" stroke-width="3" stroke-linecap="round"/>
+</svg>

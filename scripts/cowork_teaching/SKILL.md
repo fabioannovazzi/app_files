@@ -12,6 +12,36 @@ chat, coordinate teacher/worker threads, or require onboarding. Ordinary work
 remains available immediately. Start only when the user asks to learn, see a
 demonstration or practise a supported function.
 
+## Required file access before teaching
+
+For every course and language, before explanations or exercises, ask the user to
+connect the intended lesson folder through Cowork's folder picker if it is not
+already connected. Explain that the course must save its inputs, progress and
+results there. Use the exact connected local path exposed by this session; do not
+assume it is the same as the path shown in the user's Windows Explorer.
+Run `python3 <plugin-root>/scripts/local_courses.py preflight --output-dir "<lesson-directory>"`.
+This needs only the standard library and tests creation, write, read-back, update,
+replacement and deletion. Require exit code 0 and `status: ready`; selecting a
+folder or saying “yes” does not prove write access. Preparation checks again.
+
+If blocked, stop all teaching. Show the exact directory and failed operation;
+issue the host's actual permission request for the required access and guide the
+user to approve that displayed request or grant write access to the connected
+folder. If organization settings prevent it, explain the actual notice and ask
+the administrator to grant that specific access. After approval rerun the check
+in this session. If it still fails, inspect the exact command/error and native
+code before assigning a Windows, filesystem or security-policy cause. Do not
+invent a menu or assume that a host approval changed Windows permissions.
+
+Do not continue with prompt preparation, the guide, theory or an unsaved exercise
+while writing is blocked. Do not move the course, reset progress, change security
+settings or request blanket full access to evade the failure. Keep existing data
+and the chosen directory. A later failed save stops new lesson steps immediately;
+say if even the pause checkpoint could not be saved. Repeat preflight before
+resuming and in any new session, including actual demo/practice output directories
+before use. Resume only after both the test and the necessary save succeed.
+The user may leave the course for ordinary work; that is not course progress.
+
 ## Choose and prepare
 
 Use the root of this installed plugin, derived from this skill's location.
@@ -54,8 +84,9 @@ outputs are labelled reference examples, never evidence of today's execution.
    steps. Aim for 5–8 minutes of explanation and a short exercise; processing and
    questions may add time. Stop or pause immediately when asked.
 
-If execution is unavailable, show the prepared guide with that limitation and
-leave the demonstration incomplete. Do not manufacture documents to simulate a
+If execution is unavailable, keep the lesson paused and resolve the prerequisite
+with the user before continuing. A file-access failure never permits teaching
+from the prepared guide while saving is blocked. Do not manufacture documents to simulate a
 successful pipeline. Custom examples can adapt the lesson after the prepared
 case, using the same supported workflow and checked inputs.
 

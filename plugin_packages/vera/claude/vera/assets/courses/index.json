@@ -4,7 +4,7 @@
   "courses": {
     "adeguati-assetti": {
       "path": "adeguati-assetti/course.json",
-      "sha256": "b62da9831c266360bd70bbddc95ab70d1ababb0b543bd108d56b926929b0de09",
+      "sha256": "884f84ec3e755820a4c6d38ee3ff09858dba1a2a1413c6d9a0d3e85ed017ea57",
       "languages": [
         "it",
         "en",
@@ -16,23 +16,23 @@
       "group": "workflow",
       "parent_workflow": null,
       "titles": {
-        "it": "Valutare gli assetti aziendali con Vera",
-        "en": "Assess company arrangements with Vera",
-        "fr": "Évaluer l’organisation de l’entreprise avec Vera",
-        "de": "Unternehmensorganisation mit Vera beurteilen",
-        "es": "Evaluar la organización de la empresa con Vera"
+        "it": "Valutare e costruire gli assetti con Vera",
+        "en": "Assess and construct company arrangements with Vera",
+        "fr": "Évaluer et construire les dispositifs de l’entreprise avec Vera",
+        "de": "Unternehmensstrukturen mit Vera beurteilen und aufbauen",
+        "es": "Evaluar y construir la organización empresarial con Vera"
       },
       "goals": {
-        "it": "Imparare a richiedere una valutazione degli assetti, fornire evidenze del loro funzionamento e utilizzare rilievi e azioni proposte.",
-        "en": "Learn to request an assessment of company arrangements, supply evidence of their operation and use findings and proposed actions.",
-        "fr": "Apprendre à demander une évaluation des dispositifs de l’entreprise, fournir des preuves de fonctionnement et utiliser constats et actions proposées.",
-        "de": "Lernen, eine Beurteilung betrieblicher Vorkehrungen anzufordern, Nachweise ihrer Anwendung zu liefern und Feststellungen sowie Maßnahmenvorschläge zu nutzen.",
-        "es": "Aprender a solicitar una evaluación de los mecanismos empresariales, aportar pruebas de funcionamiento y utilizar hallazgos y acciones propuestas."
+        "it": "Dalla valutazione alle procedure: raccogliere risposte, progettare un controllo proporzionato, rivedere il manuale e verificare separatamente adozione e funzionamento.",
+        "en": "Move from assessment to procedures: collect answers, design a proportionate control, review the manual and check adoption and operation separately.",
+        "fr": "Passer de l’évaluation aux procédures : recueillir les réponses, concevoir un contrôle proportionné, revoir le manuel et vérifier séparément adoption et fonctionnement.",
+        "de": "Von der Beurteilung zu Verfahren: Antworten erfassen, eine angemessene Kontrolle entwerfen, das Handbuch prüfen sowie Einführung und Betrieb getrennt bewerten.",
+        "es": "Pasar de evaluación a procedimientos: recoger respuestas, diseñar un control proporcionado, revisar el manual y comprobar adopción y funcionamiento por separado."
       }
     },
     "aml-review": {
       "path": "aml-review/course.json",
-      "sha256": "d5ab4179e2967b6493e682fb40f6f10523ef1b0ce9bfaa6fdcf864a0caa9ce15",
+      "sha256": "a75ed727dcccdcc49acff60d329fdda531be263074e4e9dbda9a234a9a76c26c",
       "languages": [
         "it",
         "en",
@@ -60,7 +60,7 @@
     },
     "archive-organization": {
       "path": "archive-organization/course.json",
-      "sha256": "e41a3dda00d0bc2681a556e3beddea724d5f9282bd8ebe5195f0e0bc5053e587",
+      "sha256": "544ca2fae13fb0cc0ea0b5c74cf89eb65fb8d83ede88d08743a9858b70d16201",
       "languages": [
         "it",
         "en",
@@ -88,7 +88,7 @@
     },
     "avviso-intake": {
       "path": "avviso-intake/course.json",
-      "sha256": "dec709beb0ce58c32e3ca4499bb92cf48157974eb6c74832569333e9e442dc92",
+      "sha256": "d9b7ba56e9597b681de80d3b2750536b0d1d4eff7fe6a43a819a98f65f0f1746",
       "languages": [
         "it",
         "en",
@@ -116,7 +116,7 @@
     },
     "bandi-agevolazioni": {
       "path": "bandi-agevolazioni/course.json",
-      "sha256": "5e22183bf4692c62de03229d1def07bd3a1ff75f58604fd4c8b92877fa55d761",
+      "sha256": "b80f0ea76e93e3dda710b72b94d81d26dd4bfc8dcb8321b7891104fcb78cac2a",
       "languages": [
         "it",
         "en",
@@ -144,7 +144,7 @@
     },
     "bilancio-oic": {
       "path": "bilancio-oic/course.json",
-      "sha256": "750edcdff749d95c61f778c826b196b36a4c474f9e81e7eb6d5fc51437c3313c",
+      "sha256": "c30084c62764fd97da401c5a2919c59a28931943850bafc4698f6e243da1d5d1",
       "languages": [
         "it",
         "en"
@@ -163,7 +163,7 @@
     },
     "browser-automation": {
       "path": "browser-automation/course.json",
-      "sha256": "9671f0d1cef059454a08090255966614c04e88b7f4522d16749cac87b40d9213",
+      "sha256": "82dff448ff50754dc3ff5ba1c0136c346e12bdb3784cdf7f1e0927df657d475a",
       "languages": [
         "it",
         "en",
@@ -191,7 +191,7 @@
     },
     "business-planning": {
       "path": "business-planning/course.json",
-      "sha256": "2bf2c877d3b28a67974941b499eb89a83af8190906cde8e182a4fc4b07174cf3",
+      "sha256": "f8fcffda31aae88159f7b951cb0c716ff744d8322a94aa90110ca427ab8d8f8b",
       "languages": [
         "it",
         "en"
@@ -208,9 +208,25 @@
         "en": "Learn to start from a proposal, supply available information and obtain a report that helps decide what to test, change or investigate."
       }
     },
+    "business-valuation": {
+      "path": "business-valuation/course.json",
+      "sha256": "4473e407617901379cc580a40eb99be17008779fb9b43b50631824c7996a4c13",
+      "languages": [
+        "it"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Valutazione PMI: dal fascicolo alle carte di lavoro DCF"
+      },
+      "goals": {
+        "it": "Aprire un incarico in Studio Archive, tracciare le fonti, riprodurre un DCF, rivedere Excel e report, cambiare il tasso e recuperare il lavoro salvato."
+      }
+    },
     "centrale-rischi-review": {
       "path": "centrale-rischi-review/course.json",
-      "sha256": "cc200762747cdda041cb13c4cc377d8fee716732ba665248e68143acfc25ea00",
+      "sha256": "dfb33544233af8f12619bbdf0b617560a77dfcc5c3c4da9d5eeeb73a22eb54f1",
       "languages": [
         "it"
       ],
@@ -224,9 +240,37 @@
         "it": "Impara a partire da una Centrale Rischi, ottenere un’analisi verificabile e usarla per preparare il confronto con il cliente."
       }
     },
+    "composizione-negoziata": {
+      "path": "composizione-negoziata/course.json",
+      "sha256": "cbfb4184eea50b6bd86adb5ff22d5d9024a0922c30d709eaf58a00abfd759557",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Composizione negoziata: dal fascicolo alla relazione finale",
+        "en": "Composizione negoziata: from evidence to the final report",
+        "fr": "Composizione negoziata : du dossier au rapport final",
+        "de": "Composizione negoziata: von den Belegen zum Abschlussbericht",
+        "es": "Composizione negoziata: del expediente al informe final"
+      },
+      "goals": {
+        "it": "Eseguire un caso fittizio completo, distinguendo advisor ed esperto, e consegnare una bozza con esito negativo e responsabilità residue.",
+        "en": "Execute one fictional case, separate company advisor and independent expert, and deliver a negative-outcome draft with residual responsibilities.",
+        "fr": "Exécuter un cas fictif, distinguer conseil de l’entreprise et expert indépendant, puis livrer un projet avec échec des négociations et responsabilités restantes.",
+        "de": "Einen fiktiven Fall ausführen, Unternehmensberater und unabhängigen Experten trennen und einen Entwurf bei gescheiterten Verhandlungen mit verbleibenden Aufgaben liefern.",
+        "es": "Ejecutar un caso ficticio, distinguir asesor de la empresa y experto independiente, y entregar un borrador con negociación fallida y responsabilidades pendientes."
+      }
+    },
     "comunicazione-professionale": {
       "path": "comunicazione-professionale/course.json",
-      "sha256": "d80993865e75c1d68fdd9380aa4ecb37f78fa43458d47ccaa944f669155d2273",
+      "sha256": "1eb7b87a36b3a2e025194924c8a43e8290de1d432c48b9e5c202454929be0212",
       "languages": [
         "it",
         "en",
@@ -254,7 +298,7 @@
     },
     "concordato-plan-review": {
       "path": "concordato-plan-review/course.json",
-      "sha256": "1c7152c9eb18a86f7ca976a3edfc89e17efa34ad248ee0ef6ea1009092e2b17c",
+      "sha256": "396d264a5f85c88c70fa876b6d2c9c2f8e3222102ff7506c6e881065e6bae374",
       "languages": [
         "it",
         "en",
@@ -282,7 +326,7 @@
     },
     "dati-fiscali-strutturati": {
       "path": "dati-fiscali-strutturati/course.json",
-      "sha256": "1dca9d64a6d23a375619a0fcd05c76afe3dce9a2ecc26c0f91adde26d992ae04",
+      "sha256": "6212d341df2f3b630f79b24e1f66306bbec880e84a73a84c45a112ceee586e7c",
       "languages": [
         "it",
         "en",
@@ -310,7 +354,7 @@
     },
     "email-cliente": {
       "path": "email-cliente/course.json",
-      "sha256": "ab80804254924733f90eef920e27bfe98a4d4c09bcb960e4a671b7b535659e59",
+      "sha256": "e1621f91a0394a162664cea92c96f8851405bf33613e24d2ce292472b7582a48",
       "languages": [
         "it",
         "en",
@@ -336,9 +380,37 @@
         "es": "Aprender a convertir las peticiones documentales del expediente en un correo breve y preciso para revisión del despacho."
       }
     },
+    "esg-reporting-assurance": {
+      "path": "esg-reporting-assurance/course.json",
+      "sha256": "b605bb0474ff9c1c7b94d0f27af3ffc71837edf39b1e077bd46bece4ad3d5943",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Seguire evidenze e decisioni di un fascicolo ESG",
+        "en": "Track evidence and decisions in an ESG case",
+        "fr": "Suivre les preuves et décisions d’un dossier ESG",
+        "de": "Belege und Entscheidungen einer ESG-Akte verfolgen",
+        "es": "Seguir pruebas y decisiones de un expediente ESG"
+      },
+      "goals": {
+        "it": "Imparare a collegare un dato alla fonte, preparare una bozza parziale e riconoscere cosa richiede riesame dopo un aggiornamento.",
+        "en": "Learn to trace a value to its source, prepare a partial draft and identify what needs review after an update.",
+        "fr": "Relier une valeur à sa source, préparer un brouillon partiel et repérer les éléments à réexaminer après une mise à jour.",
+        "de": "Einen Wert zur Quelle zurückverfolgen, einen Teilentwurf erstellen und nach Änderungen den Prüfbedarf erkennen.",
+        "es": "Relacionar un valor con su fuente, preparar un borrador parcial e identificar qué debe revisarse después de una actualización."
+      }
+    },
     "fatture-xml-check": {
       "path": "fatture-xml-check/course.json",
-      "sha256": "2d00cbca50dc1e836e1fd555806b95fe7ff32d61ba01ed3e96963941b617f8cc",
+      "sha256": "fb24175b12da02aa840c8b2effdff0f9cea6a6e0565f02b0003099b887388f43",
       "languages": [
         "it",
         "en",
@@ -366,7 +438,7 @@
     },
     "financial-analysis": {
       "path": "financial-analysis/course.json",
-      "sha256": "d68004446384b33415beed2cf023ef9fc5b2d9a13190c1cdfe2462d36841ea7e",
+      "sha256": "0fd57a8a556e2a686106f9758d2b7753936522306d4eeef1aa49db09a6e0183a",
       "languages": [
         "it",
         "en",
@@ -394,7 +466,7 @@
     },
     "financial-report-builder": {
       "path": "financial-report-builder/course.json",
-      "sha256": "e185aa78fb730cc9329b98bf29495a4b2a8da949abdf03ecbed466e3d806e154",
+      "sha256": "4af3ad4e3e5f7b28b6e80c1bb8cba933668ebc813c89f34a716b4480163d7ee8",
       "languages": [
         "it",
         "en",
@@ -420,9 +492,37 @@
         "es": "Aprender a convertir estados contables en un informe legible, con tablas, comentarios y referencias para comprobar cifras."
       }
     },
+    "fusione-guidata": {
+      "path": "fusione-guidata/course.json",
+      "sha256": "829927b31471b8c56231fa1a9deb9eeb11fa900e64767ed7604821e3811cd4ee",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Preparare e rivedere una fusione per incorporazione P1",
+        "en": "Prepare and review a P1 incorporation merger",
+        "fr": "Préparer et revoir une fusion par absorption P1",
+        "de": "Eine P1-Verschmelzung durch Aufnahme vorbereiten und prüfen",
+        "es": "Preparar y revisar una fusión por absorción P1"
+      },
+      "goals": {
+        "it": "Seguire due società OIC dalle evidenze al dossier di revisione e riaprire il lavoro quando cambia un saldo.",
+        "en": "Follow two OIC companies from evidence to a review dossier and reopen dependent work after a balance changes.",
+        "fr": "Suivre deux sociétés OIC des pièces au dossier de revue et rouvrir les travaux après un changement de solde.",
+        "de": "Zwei OIC-Gesellschaften von den Belegen bis zum Prüfungsdossier begleiten und abhängige Arbeiten nach einer Saldenänderung erneut prüfen.",
+        "es": "Seguir dos sociedades OIC desde los documentos hasta el expediente de revisión y reabrir trabajos dependientes al cambiar un saldo."
+      }
+    },
     "invoice-xml": {
       "path": "invoice-xml/course.json",
-      "sha256": "ab5e7d5831db13d8e926f0853b37202b08f341e2f588bca2bcce784a9b68a508",
+      "sha256": "004dcb941feff66b614b46ec98251ef6f0f03f3c6e173f78154b87159351466c",
       "languages": [
         "it",
         "en",
@@ -450,7 +550,7 @@
     },
     "journal-bank-reconciliation": {
       "path": "journal-bank-reconciliation/course.json",
-      "sha256": "c5e8c5c774622153d8eb22ec3341a069f0aa7f73f204e41e68156bd9d511d971",
+      "sha256": "85aa7f3e8d06b4d39aafa61fc325134efec9cd6922a850cfcbdfdf1962f78e3f",
       "languages": [
         "it",
         "en",
@@ -478,7 +578,7 @@
     },
     "journal-sampling": {
       "path": "journal-sampling/course.json",
-      "sha256": "74aa03e66d0070ba8bb567779e9a99a86ee1a1c65b3ae9a4fbc3af01cb88f1f8",
+      "sha256": "3abb893fa4d4ec0c6f6d4305a2b088eb18e7f6d93f16fbdb7ad422299e6cfade",
       "languages": [
         "it",
         "en",
@@ -504,9 +604,25 @@
         "es": "Aprender a aportar un diario, comprobar su lectura y obtener líneas seleccionadas para el control posterior."
       }
     },
+    "lipe": {
+      "path": "lipe/course.json",
+      "sha256": "a08d3df0200eb49db7205a205e76b02322d2e03e2694a2b2e54d1385f629bfaa",
+      "languages": [
+        "it"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "LIPE dai registri IVA alla bozza VP"
+      },
+      "goals": {
+        "it": "Controllare le fonti, leggere la carta di lavoro e aggiornare la bozza dopo una correzione, conservando la prima versione."
+      }
+    },
     "management-control-pack": {
       "path": "management-control-pack/course.json",
-      "sha256": "eba6e798f39f7e84fe5e9c757a5a81592574e62d4aa77df77a0ecef1c04debc3",
+      "sha256": "0bb9bcb96a7c4ce7e0e4bc0a153f4da4f446adb8189a70397889d3b8b99f5591",
       "languages": [
         "it",
         "en"
@@ -525,7 +641,7 @@
     },
     "new-client": {
       "path": "new-client/course.json",
-      "sha256": "82ea2cd12b3b9d5290fdbb20f69c1c597af91b9dc2058b1a597b72662b6d3f75",
+      "sha256": "2fe218cab0eeed996d8eed4871b2092c31963a6136d027f3c50e37434d37c582",
       "languages": [
         "it",
         "en",
@@ -553,7 +669,7 @@
     },
     "open-item-reconciliation": {
       "path": "open-item-reconciliation/course.json",
-      "sha256": "e4de10bc1ca8e00cd4e53b71154a7d948d5a93c439d7d802e046590d1fd09c46",
+      "sha256": "23ee0826581b7b7f9f9ebebae4ddb6972376fce1130bfb7c1d2493e6cbf78fdd",
       "languages": [
         "it",
         "en",
@@ -579,9 +695,37 @@
         "es": "Aprender a comprobar una lista de impagados y distinguir las facturas con prueba de pago de las que siguen pendientes de aclaración en una fecha concreta."
       }
     },
+    "patent-box-review": {
+      "path": "patent-box-review/course.json",
+      "sha256": "575ad9436a87f2679d094ac31e2c3a7bd2ea9bc4d2f74ec3f86244374744fcbb",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Preparare un dossier Patent Box da evidenze e costi",
+        "en": "Prepare a Patent Box dossier from evidence and costs",
+        "fr": "Préparer un dossier Patent Box à partir des preuves et des coûts",
+        "de": "Eine Patent-Box-Akte aus Belegen und Kosten vorbereiten",
+        "es": "Preparar un expediente Patent Box con evidencias y costes"
+      },
+      "goals": {
+        "it": "Imparare a fornire documenti sul software, riconciliare i costi, distinguere inclusioni, esclusioni e sospensioni e leggere un fascicolo A/B da rivedere.",
+        "en": "Learn to supply software evidence, reconcile costs, distinguish included, excluded and suspended components and read a draft A/B dossier.",
+        "fr": "Apprendre à fournir les pièces du logiciel, rapprocher les coûts, distinguer inclusion, exclusion et suspension et lire un dossier A/B à revoir.",
+        "de": "Softwarebelege bereitstellen, Kosten abstimmen, einbezogene, ausgeschlossene und ausgesetzte Teile unterscheiden und einen A/B-Entwurf lesen lernen.",
+        "es": "Aprender a aportar pruebas del software, conciliar costes, distinguir inclusión, exclusión y suspensión y leer un borrador A/B."
+      }
+    },
     "presenza-digitale-studio": {
       "path": "presenza-digitale-studio/course.json",
-      "sha256": "eba7f6d0132a472f2f2e22be1050714590d385732c508ba8247d4f070b0edfc1",
+      "sha256": "9c4095878a04b00248e26e2c9eba08437ba8aa177c10fa126399c21306858726",
       "languages": [
         "it",
         "en",
@@ -609,7 +753,7 @@
     },
     "previdenza-inps": {
       "path": "previdenza-inps/course.json",
-      "sha256": "76b1a2e3ca31ffe5dd43be37c97b7bb9ae3e727c83725d1146740881f6c1675d",
+      "sha256": "db3cc1037bc87dff55428d71e2bf8c7b23f506e1562816d41365cbfad9f02d20",
       "languages": [
         "it",
         "en",
@@ -637,7 +781,7 @@
     },
     "purchase-invoice-review": {
       "path": "purchase-invoice-review/course.json",
-      "sha256": "7aae8dfff959e2da62264e98e78d3bc081da09e2c7b03e154e389593a2c8aff3",
+      "sha256": "66b4b6765d09ea2aa89a8773e427622a2aa1bfc0de9d0190b4755db8d3646f6c",
       "languages": [
         "it",
         "en",
@@ -665,7 +809,7 @@
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
-      "sha256": "a688ec985c3a11c611b2bb6c66d6678aec3647e289e425f24c2aa36072e72b4e",
+      "sha256": "a152a14d3e832a4e9e459964342ff121b7c380f08bf9a94d26848408292b1160",
       "languages": [
         "it",
         "en",
@@ -693,7 +837,7 @@
     },
     "registro-imprese-sari": {
       "path": "registro-imprese-sari/course.json",
-      "sha256": "12928fe7e4df6589a1565c7ecb80c67776d4d1ff249a9fa2aa315cee01be29e3",
+      "sha256": "11bcaf0516fb31ad18ffd563f5103762a15895fe83f0564a61bc19591dcea02c",
       "languages": [
         "it",
         "en",
@@ -721,7 +865,7 @@
     },
     "sales-plan": {
       "path": "sales-plan/course.json",
-      "sha256": "5382d432b6cc37118efee4201f11c4c1621c9d70ed987b4ab5b989ff684ec1aa",
+      "sha256": "f5071a8629ef26789386d71c44dd6459ce103e01a6706effb86ad8c3c1f991a8",
       "languages": [
         "it",
         "en",
@@ -747,9 +891,37 @@
         "es": "Aprender a convertir ventas realizadas e hipótesis comerciales en un escenario futuro y comprobar qué cambia y por qué."
       }
     },
+    "scissione-guidata": {
+      "path": "scissione-guidata/course.json",
+      "sha256": "89d5df43a2ba2d74eb87b7cab5b989594f37eb08d0148b64f0c95d34e40e9dd1",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Scissione guidata con Vera",
+        "en": "Guided demerger with Vera",
+        "fr": "Scission guidée avec Vera",
+        "de": "Geführte Spaltung mit Vera",
+        "es": "Escisión guiada con Vera"
+      },
+      "goals": {
+        "it": "Preparare un fascicolo versionato, leggere i prospetti e rivedere le decisioni dopo un cambiamento.",
+        "en": "Prepare a versioned dossier, read its schedules and revisit decisions after a change.",
+        "fr": "Préparer un dossier versionné, lire les tableaux et réexaminer les décisions après un changement.",
+        "de": "Eine versionierte Akte vorbereiten, Aufstellungen lesen und Entscheidungen nach Änderungen erneut prüfen.",
+        "es": "Preparar un expediente versionado, leer cuadros y revisar decisiones tras un cambio."
+      }
+    },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "4f5f0b7d51f0edafe1d41629963a7700c3941ce9aff5939e7b0de7a5219be4a4",
+      "sha256": "1c43bcfd4c1e07260ec8f57cca0dc1e37e7bc44be91e9a2fd477d08bd1927068",
       "languages": [
         "it",
         "en",
@@ -775,9 +947,65 @@
         "es": "Aprender a conectar una carpeta del despacho, buscar en el cliente correcto y obtener una respuesta vinculada a sus documentos."
       }
     },
+    "studio-document-format": {
+      "path": "studio-document-format/course.json",
+      "sha256": "618243fad87a91b692b106d8ea7117e11d7aee5096cb110bcc39a08627efb634",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Insegna a Vera il formato dei documenti dello studio",
+        "en": "Teach Vera your studio’s document format",
+        "fr": "Enseigner à Vera le format des documents du cabinet",
+        "de": "Vera das Dokumentformat der Kanzlei beibringen",
+        "es": "Enseñar a Vera el formato de los documentos del despacho"
+      },
+      "goals": {
+        "it": "Impara a trasformare esempi selezionati in uno standard Word verificato e riutilizzabile.",
+        "en": "Learn to turn selected examples into a reviewed, reusable Word report standard.",
+        "fr": "Transformer des exemples choisis en un standard Word vérifié et réutilisable.",
+        "de": "Aus ausgewählten Beispielen einen geprüften, wiederverwendbaren Word-Standard erstellen.",
+        "es": "Convertir ejemplos seleccionados en un estándar Word revisado y reutilizable."
+      }
+    },
+    "trasformazione": {
+      "path": "trasformazione/course.json",
+      "sha256": "26d976b2b0eed8f3e44a2222ebcbe07c878330c3b90cb5f920cb078685c1b873",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Eseguire un caso sintetico di trasformazione societaria",
+        "en": "Run a synthetic company-transformation case",
+        "fr": "Exécuter un cas synthétique de transformation de société",
+        "de": "Einen synthetischen Umwandlungsfall bearbeiten",
+        "es": "Ejecutar un caso sintético de transformación societaria"
+      },
+      "goals": {
+        "it": "Preparare e rivedere un dossier sintetico, seguire le fonti e riaprire le decisioni quando cambia una passività.",
+        "en": "Prepare and review a synthetic dossier, trace its evidence and reopen decisions when a liability changes.",
+        "fr": "Préparer et revoir un dossier synthétique, suivre ses preuves et rouvrir les décisions après une modification du passif.",
+        "de": "Ein synthetisches Dossier erstellen und prüfen, Belege verfolgen und Entscheidungen nach geänderten Verbindlichkeiten neu prüfen.",
+        "es": "Preparar y revisar un expediente sintético, seguir sus evidencias y reabrir decisiones cuando cambia un pasivo."
+      }
+    },
     "treasury-forecast": {
       "path": "treasury-forecast/course.json",
-      "sha256": "2e95ad5a312834042ed183d1d020fbbe5059afcc60454b89c6eb5df3950daf0f",
+      "sha256": "1f050c05fff0650cea836db721b13cccab7014399f920815f9e7f5a911a49615",
       "languages": [
         "it"
       ],
@@ -793,7 +1021,7 @@
     },
     "variance-analysis": {
       "path": "variance-analysis/course.json",
-      "sha256": "c04be04e25b376f76263801f361f22b7ba9de0f105a30ce4daf5fbf89717dc1f",
+      "sha256": "83459a6dc35aff7caccb802ff0df320e5703285ef1900e7272abe39bc41cf74d",
       "languages": [
         "it",
         "en",
@@ -821,7 +1049,7 @@
     },
     "vouching": {
       "path": "vouching/course.json",
-      "sha256": "5f71ec177cba94e1fa8c461fab346691fd39e0efac2619b8e2db879145249336",
+      "sha256": "de8daf1a308c364c250a82a807a4310fe9e5b4435bc3226173d8df7f7e11b73d",
       "languages": [
         "it",
         "en",

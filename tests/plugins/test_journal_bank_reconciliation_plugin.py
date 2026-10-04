@@ -2110,9 +2110,7 @@ def test_tabular_v7_extension_contract_is_frozen_and_matches_production() -> Non
             "silent_upgrade_forbidden": True,
         },
     }
-    assert contract["localized_date_contract"]["date_locale_values"] == list(
-        core.DATE_LOCALES
-    )
+    assert contract["localized_date_contract"]["date_locale_values"] == ["it"]
     assert contract["localized_date_contract"]["month_vocabulary"] == (
         core.ITALIAN_MONTH_NUMBERS
     )
@@ -3672,6 +3670,129 @@ def test_reviewed_italian_locale_rejects_invalid_or_out_of_contract_dates(
     assert diagnostic["date_interpretation_evidence"]["status_counts"]["invalid"] == 1
 
 
+@pytest.mark.parametrize(
+    "source_date",
+    [
+        "5 août 2026",
+        "05 AOÛT 2026",
+        "05   août 2026",
+        "05\u00a0août\u00a02026",
+    ],
+)
+def test_reviewed_french_textual_month_dates_use_adapter_v8(
+    tmp_path: Path,
+    source_date: str,
+) -> None:
+    # Arrange
+    core = load_core()
+    bank_path = tmp_path / "bank.csv"
+    journal_path = tmp_path / "journal.csv"
+    output_dir = tmp_path / "out"
+    for source_path in (bank_path, journal_path):
+        _save_csv(
+            source_path,
+            [
+                ["Date", "Amount", "Reference"],
+                [source_date, "80.00", "TX100"],
+            ],
+        )
+    recipe_path = _prepare_reviewed_date_locale_recipe(
+        core,
+        bank_path,
+        journal_path,
+        tmp_path / "recipe",
+        date_locale="fr",
+    )
+
+    # Act
+    result = core.run_reconciliation(
+        bank_path,
+        journal_path,
+        output_dir,
+        recipe_path,
+        tolerance="0",
+        date_window_days=0,
+    )
+
+    # Assert
+    normalized_bank = _read_csv_dicts(output_dir / "normalized_bank.csv")
+    reviewed_decisions = json.loads(
+        (output_dir / "reviewed_decisions.json").read_text(encoding="utf-8")
+    )
+    source_qualifications = json.loads(
+        (output_dir / "source_qualifications.json").read_text(encoding="utf-8")
+    )
+    mapping_receipts = [
+        decision
+        for decision in reviewed_decisions["decisions"]
+        if decision["decision_type"] == "journal_bank_mapping"
+    ]
+    assert result.matches.height == 1
+    assert normalized_bank[0]["transaction_date"] == "2026-08-05"
+    assert {
+        (receipt["adapter_id"], receipt["adapter_version"])
+        for receipt in mapping_receipts
+    } == {("journal_bank.tabular.v8", "8")}
+    assert {receipt["content"]["date_locale"] for receipt in mapping_receipts} == {"fr"}
+    assert {
+        (qualification["adapter_id"], qualification["adapter_version"])
+        for qualification in source_qualifications["qualifications"]
+    } == {("journal_bank.tabular.v8", "8")}
+
+
+@pytest.mark.parametrize(
+    "source_date",
+    [
+        "31 avril 2026",
+        "05 august 2026",
+        "05 aou 2026",
+        "05 août 26",
+        "05 août 2026 posted",
+        "05\naoût\n2026",
+    ],
+)
+def test_reviewed_french_locale_rejects_invalid_or_out_of_contract_dates(
+    tmp_path: Path,
+    source_date: str,
+) -> None:
+    # Arrange
+    core = load_core()
+    bank_path = tmp_path / "bank.csv"
+    journal_path = tmp_path / "journal.csv"
+    for source_path in (bank_path, journal_path):
+        _save_csv(
+            source_path,
+            [
+                ["Date", "Amount", "Reference"],
+                [source_date, "80.00", "TX100"],
+            ],
+        )
+    recipe_path = _prepare_reviewed_date_locale_recipe(
+        core,
+        bank_path,
+        journal_path,
+        tmp_path / "recipe",
+        date_locale="fr",
+    )
+
+    # Act
+    inspection = core.inspect_inputs(
+        bank_path,
+        journal_path,
+        tmp_path / "reinspection",
+        recipe_path,
+    )
+
+    # Assert
+    diagnostic = inspection.bank["files"][0]
+    assert inspection.bank["row_count"] == 0
+    assert diagnostic["adapter_id"] == "journal_bank.tabular.v8"
+    assert diagnostic["qualification_status"] == "unsupported_source_layout"
+    assert diagnostic["failure_kind"] == "candidate_row_contract_failed"
+    assert diagnostic["row_disposition_counts"] == {"invalid_date_value": 1}
+    assert diagnostic["date_interpretation_evidence"]["status_counts"]["invalid"] == 1
+
+
 def test_unsupported_date_locale_is_review_required_and_emits_zero_rows(
     tmp_path: Path,
 ) -> None:
@@ -3714,7 +3835,9 @@ def test_unsupported_date_locale_is_review_required_and_emits_zero_rows(
     assert inspection.bank["row_count"] == 0
     assert diagnostic["qualification_status"] == "needs_review"
     assert diagnostic["failure_kind"] == "mapping_review_required"
-    assert "date_locale must be exactly it" in diagnostic["missing_required_mapping"]
+    assert (
+        "date_locale must be exactly it or fr" in diagnostic["missing_required_mapping"]
+    )
     assert diagnostic["mapping_decision"] is None
 
 
@@ -5653,7 +5776,7 @@ def test_canonical_snake_case_mapping_runs_amount_date_cascade_and_native_closur
                 if receipt["role"] == "implementation"
             ]
         )
-        == 24
+        == 25
     )
 
 
@@ -6917,7 +7040,7 @@ def test_initial_assurance_envelope_binds_exact_transitive_implementation_set(
         (root_id, relative_path)
         for _, root_id, relative_path in core.IMPLEMENTATION_ARTIFACT_SPECS
     ]
-    assert len(implementation_receipts) == 24
+    assert len(implementation_receipts) == 25
 
 
 @pytest.mark.parametrize(

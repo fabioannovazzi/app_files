@@ -1,0 +1,36 @@
+{
+  "plugin": "patent-box-review",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "ordinary-software-dossier",
+      "prompt": "Vera, prepara una pratica Patent Box per questo software e questi costi selezionati.",
+      "required_signals": [
+        "Patent Box",
+        "software",
+        "costi"
+      ]
+    },
+    {
+      "id": "synthetic-acceptance",
+      "prompt": "Proviamo la procedura Patent Box su una pratica sintetica con fascicolo A/B.",
+      "required_signals": [
+        "Patent Box",
+        "sintetica",
+        "fascicolo"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "general-tax-question",
+      "prompt": "Che cos’è il Patent Box?",
+      "reason": "General legal explanation belongs to quesito-legale-fiscale."
+    },
+    {
+      "id": "annual-tax-return",
+      "prompt": "Compila e invia la dichiarazione fiscale.",
+      "reason": "This workflow does not prepare or transmit annual tax returns."
+    }
+  ]
+}

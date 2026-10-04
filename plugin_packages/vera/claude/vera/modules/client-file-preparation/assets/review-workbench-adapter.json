@@ -24,8 +24,12 @@
       "title": "Required Evidence",
       "variant": "checklist",
       "fields": [
+        "request_text",
         "requested_document",
         "reason",
+        "reasons",
+        "label",
+        "value",
         "status",
         "confidence"
       ],
@@ -35,6 +39,7 @@
       "title": "Memo / Email Impact",
       "variant": "draft",
       "fields": [
+        "preview",
         "memo_section",
         "email_text",
         "review_notes",

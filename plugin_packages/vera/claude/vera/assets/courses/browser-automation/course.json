@@ -61,7 +61,7 @@
     },
     {
       "path": "modules/browser-automation/references/econs-review.md",
-      "sha256": "8c5b74d912bffa3b3877647705edad0b46f4d8be7055cade2bc030fbbf8a2855"
+      "sha256": "9557af440ba4597ac8756fbfe7522ed0cd7aac244f87489c2f5f6d8bcaaf51dc"
     },
     {
       "path": "modules/browser-automation/references/ordinary-use.md",
@@ -69,7 +69,7 @@
     },
     {
       "path": "modules/browser-automation/references/passive-invoice-procedure.md",
-      "sha256": "c508b155748e8ead93283ef698faaf891052950d0d199c669ffe1ab6150f4e6d"
+      "sha256": "e71fd7dbac1114790b92cbda60cea6e02189892399f75ba5209e978cc3dfb929"
     },
     {
       "path": "modules/browser-automation/references/process-lifecycle.md",
@@ -145,15 +145,15 @@
     },
     {
       "path": "modules/browser-automation/scripts/econs_processing.mjs",
-      "sha256": "9115b543d05a83757d6efb54eaecf6282774cefe678db7b48916e7b70875ccc5"
+      "sha256": "31be0484088ed09a706c7aa202cf3d32847fc2b750aaa91275ce9040fd2a66dc"
     },
     {
       "path": "modules/browser-automation/scripts/econs_review.mjs",
-      "sha256": "0e4e06e1966090ed7affa5613d33671870d1c6316d7c52a4ea548064fcf4d557"
+      "sha256": "e52f40404a353a9140b89d88bce0067cf0eb7a558e062e3ba7bfb52a234eb451"
     },
     {
       "path": "modules/browser-automation/scripts/econs_setup.mjs",
-      "sha256": "0a7362f8cc36fc2644ee86f4eb7717953d22022a52866daa7a1da37a6ead91df"
+      "sha256": "05b2aad66eecd71a620814bb907a5326fb068de014ef8acf6f53efca1179104a"
     },
     {
       "path": "modules/browser-automation/scripts/process_lifecycle.py",
@@ -173,11 +173,15 @@
     },
     {
       "path": "modules/browser-automation/skills/browser-automation/SKILL.md",
-      "sha256": "755001c4e67727767a8df08000a3bb8a02b3d093df4b8d6dde17e7e42d52417c"
+      "sha256": "451aed51a64052abc4fdf76a82b80f23c02bf5e63373806d1fdba7fe71885df4"
     },
     {
       "path": "skills/browser-automation/SKILL.md",
-      "sha256": "7a1a86b459d5f360774229270af502d946d34eeadcae05fa789c66745d3d85a3"
+      "sha256": "b3ec950707b0b2d63e476e5a33356a24f254aac9ff885ffb6f638b1e0dee87cf"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -193,7 +197,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -202,6 +206,10 @@
     {
       "path": "vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "vendor/modules/vera_assurance/money.py",
@@ -450,5 +458,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "a1a931b48d8e123cc46c0268280a1601770d6a561e6f9b2367bf3cc89fafbc02"
+  "canonical_course_sha256": "7aa817652d051480ab01daeef34f435e3798f36e1b84ea6862d34511fd1c490a"
 }

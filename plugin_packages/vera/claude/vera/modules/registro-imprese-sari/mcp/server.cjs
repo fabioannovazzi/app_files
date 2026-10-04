@@ -127,27 +127,35 @@ for candidate in candidates:
 else:
     raise RuntimeError("The required vera_assurance module is not available.")
 
-from vera_assurance import load_client_workflow_context_for_output
+from vera_assurance import load_client_workflow_context_for_output, load_client_engagement_context_file
 
-context = load_client_workflow_context_for_output(
-    output_dir,
-    expected_workflow_id=workflow_id,
-)
+if len(sys.argv) > 4 and sys.argv[4] == "read-only":
+    context = load_client_engagement_context_file(
+        Path(output_dir).parent / "context.json",
+        expected_workflow_id=workflow_id,
+        output_dir=output_dir,
+        allowed_statuses=("running", "ready_for_review", "completed"),
+    )
+else:
+    context = load_client_workflow_context_for_output(
+        output_dir, expected_workflow_id=workflow_id,
+    )
 print(json.dumps({
     "ok": True,
     "schema_version": context["schema_version"],
     "workflow_id": context["workflow_id"],
     "run_id": context["run_id"],
+    "run_status": json.loads(Path(context["run_manifest_path"]).read_text())["status"],
 }, separators=(",", ":")))
 `;
 
-function preflightClientWorkflowRun(outputDir, expectedRunId) {
+function preflightClientWorkflowRun(outputDir, expectedRunId, readOnly = false) {
   if (!outputDir) return null;
   // Run ownership and lifecycle state are exact audit properties, so every
   // persistence boundary reuses the shared v2 validator immediately before write.
   const completed = spawnSync(
     pythonExecutable(),
-    ["-I", "-B", "-c", CLIENT_WORKFLOW_PREFLIGHT, PLUGIN_ROOT, outputDir, PLUGIN_NAME],
+    ["-I", "-B", "-c", CLIENT_WORKFLOW_PREFLIGHT, PLUGIN_ROOT, outputDir, PLUGIN_NAME, readOnly ? "read-only" : "write"],
     { cwd: PLUGIN_ROOT, encoding: "utf8", maxBuffer: 64 * 1024 },
   );
   if (completed.error || completed.status !== 0) {
@@ -1118,4 +1126,14 @@ function main() {
   });
 }
 
-main();
+if (process.argv.includes("--http")) {
+  const index = process.argv.indexOf("--client-engagement");
+  if (index < 0 || !process.argv[index + 1]) throw new Error("--client-engagement is required");
+  require("./local-review.cjs").start({
+    contextPath: path.resolve(process.argv[index + 1]),
+    readJson, callTool, preflightClientWorkflowRun,
+    widget: resourceText(WIDGET_URI),
+  });
+} else {
+  main();
+}

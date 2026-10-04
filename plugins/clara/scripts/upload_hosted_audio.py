@@ -43,7 +43,6 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from advisor_case_core import (
-    SUPPORTED_LANGUAGES,
     CaseWorkspaceError,
     load_case_file,
     refresh_case_brief,
@@ -55,6 +54,7 @@ from import_hosted_voice_bundle import (
 )
 from launch_hosted_voice import (
     MAX_CASE_CONTEXT_CHARS,
+    SUPPORTED_TRANSCRIPTION_LANGUAGES,
     build_case_context,
     read_private_text_file,
     validate_hosted_url,
@@ -862,7 +862,7 @@ def upload_hosted_audio(
         .strip()
         .lower()
     )
-    if resolved_language not in SUPPORTED_LANGUAGES:
+    if resolved_language not in SUPPORTED_TRANSCRIPTION_LANGUAGES:
         raise CaseWorkspaceError(f"Unsupported voice language: {resolved_language}")
     source_path = audio_path.expanduser()
     if not source_path.is_file():
@@ -1011,7 +1011,7 @@ def main() -> int:
     parser.add_argument("--no-import", action="store_true")
     parser.add_argument(
         "--language",
-        choices=sorted(SUPPORTED_LANGUAGES),
+        choices=sorted(SUPPORTED_TRANSCRIPTION_LANGUAGES),
         help="Transcription language; defaults to the Clara case output language.",
     )
     parser.add_argument(

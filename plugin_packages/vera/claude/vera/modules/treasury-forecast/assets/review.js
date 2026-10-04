@@ -1,7 +1,7 @@
 'use strict';
 const token = new URLSearchParams(location.hash.slice(1)).get('token') || '';
 const $ = id => document.getElementById(id);
-const euro = value => new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR'}).format(Number(value));
+const euro = value => new Intl.NumberFormat('it-IT',{style:'currency',currency:state.currency}).format(Number(value));
 let state = null;
 let offset = 0;
 let dirty = false;
@@ -25,9 +25,24 @@ function chart(){
   for(const value of new Set([low,0,high])){add('line',{x1:105,x2:875,y1:y(value),y2:y(value),stroke:value===0?'#8296ad':'#dce4ed'});add('text',{x:95,y:y(value)+4,'text-anchor':'end','font-size':13,fill:'#42617d'},euro(value));}
   add('polyline',{points:values.map((value,i)=>x(i)+','+y(value)).join(' '),fill:'none',stroke:'#006fa9','stroke-width':3});
   add('text',{x:105,y:231,'font-size':13,fill:'#42617d'},state.daily[0].date);add('text',{x:875,y:231,'text-anchor':'end','font-size':13,fill:'#42617d'},state.daily.at(-1).date);
-  $('chart-caption').textContent='Chiusure giornaliere in EUR. I dettagli per giorno e settimana sono nel prospetto Excel.';
+  $('chart-caption').textContent='Chiusure giornaliere in '+state.currency+'. I dettagli per giorno e settimana sono nel prospetto Excel.';
+}
+function cashTable(container, rows, columns){
+  const table=document.createElement('table'),head=document.createElement('thead'),body=document.createElement('tbody'),titles=document.createElement('tr');
+  for(const [,label] of columns){const th=document.createElement('th');th.scope='col';th.textContent=label;titles.append(th);}
+  head.append(titles);table.append(head,body);
+  for(const item of rows){const row=document.createElement('tr');for(const [key,,money] of columns)textCell(row,money?euro(item[key]):item[key]);body.append(row);}
+  $(container).replaceChildren(table);
+}
+function statement(){
+  const labels={accepted:'Previsione accettata',draft_for_review:'Bozza da rivedere',needs_review:'Previsione incompleta: definire le date prima di utilizzare i saldi'};
+  $('statement-status').textContent=labels[state.status]+' · Situazione al '+state.as_of+' · Orizzonte al '+state.horizon_end;
+  $('statement-version').textContent='Versione salvata: '+state.record_sha256;
+  cashTable('weekly-statement',state.weekly,[['week_start','Settimana dal'],['net_cash','Flusso netto EUR',true],['closing_cash','Cassa finale EUR',true],['minimum_daily_cash','Minimo giornaliero EUR',true]]);
+  cashTable('daily-statement',state.daily,[['date','Data'],['net_cash','Flusso netto EUR',true],['closing_cash','Cassa finale EUR',true]]);
 }
 function render(){
+  $('cash-heading').textContent='Flusso '+state.currency;
   $('company').textContent=state.company_name;
   $('period').textContent='Situazione al '+state.as_of+' · Previsione fino al '+state.horizon_end;
   $('coverage').textContent=state.coverage;
@@ -43,6 +58,7 @@ function render(){
   if(state.events.some(event=>event.event_id===selected))$('scenario-id').value=selected;
   $('scenario').disabled=dirty||!state.calculation_complete||!state.total_events;
   chart();
+  statement();
   const query=$('search').value.toLowerCase();
   for(const event of state.events){
     if(!(event.event_id+' '+event.description).toLowerCase().includes(query))continue;
@@ -71,9 +87,9 @@ $('next').onclick=guard(async()=>{offset+=100;await load();});
 $('search').oninput=render;
 $('review-date').value=new Date().toISOString().slice(0,10);
 $('accept').onclick=guard(async()=>{await api('/api/review',{record_sha256:state.record_sha256,review:{proposal_sha256:state.proposal_sha256,reviewer_ref:$('reviewer').value,reviewed_at:$('review-date').value,conclusion:$('conclusion').value}});await load();});
-async function download(route,name,preview=false){const response=await fetch(route,{headers:{'X-Treasury-Token':token}});if(!response.ok)throw new Error((await response.json()).error);const url=URL.createObjectURL(await response.blob());if(preview)window.open(url,'_blank','noopener');else{const link=document.createElement('a');link.href=url;link.download=name;link.click();}setTimeout(()=>URL.revokeObjectURL(url),60000);}
+async function download(route,name){const response=await fetch(route,{headers:{'X-Treasury-Token':token}});if(!response.ok)throw new Error((await response.json()).error);const url=URL.createObjectURL(await response.blob());{const link=document.createElement('a');link.href=url;link.download=name;link.click();}setTimeout(()=>URL.revokeObjectURL(url),60000);}
 $('workbook').onclick=guard(()=>download('/api/workbook','tesoreria.xlsx'));
-$('report').onclick=guard(()=>download('/api/report','report.html',true));
+$('report').onclick=()=>{$('cash-statement').hidden=false;$('report').setAttribute('aria-expanded','true');$('statement-heading').focus();$('cash-statement').scrollIntoView({block:'start'});};
 $('scenario').onclick=guard(async()=>{const result=await api('/api/scenario',{record_sha256:state.record_sha256,dates:{[$('scenario-id').value]:$('scenario-date').value}});$('scenario-result').textContent='Alternativa: minimo giornaliero '+euro(result.minimum_daily_cash)+'. Previsione di base invariata.';});
 window.addEventListener('beforeunload',event=>{if(dirty){event.preventDefault();event.returnValue='';}});
 guard(load)();

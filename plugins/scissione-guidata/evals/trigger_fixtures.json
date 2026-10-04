@@ -1,0 +1,14 @@
+{
+  "plugin": "scissione-guidata",
+  "version": 1,
+  "should_trigger": [
+    {"id":"scissione-1", "prompt":"Prepara il fascicolo di una scissione parziale proporzionale verso nuova beneficiaria, con evidenze e decisioni da rivedere.", "required_signals":["scissione"]},
+    {"id":"scissione-2", "prompt":"Sono cambiate le valutazioni della scissione: quali prospetti e approvazioni devo riaprire?", "required_signals":["scissione"]},
+    {"id":"scissione-3", "prompt":"Ho solo il bilancio per questa scissione, identifica le evidenze mancanti.", "required_signals":["scissione"]}
+  ],
+  "should_not_trigger": [
+    {"id":"scissione-4", "prompt":"Spiegami la scissione dei pagamenti IVA."},
+    {"id":"scissione-5", "prompt":"Prepara un budget di tesoreria."},
+    {"id":"scissione-6", "prompt":"Riconcilia queste partite aperte."}
+  ]
+}

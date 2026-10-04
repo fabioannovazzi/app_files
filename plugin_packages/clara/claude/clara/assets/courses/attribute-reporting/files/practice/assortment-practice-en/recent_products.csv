@@ -1,0 +1,5 @@
+listing_identity,parent_product_id,product_name,brand,color,garment type,listing_status,top_seller_status,sale_pressure_status,pdp_url
+fictional-07,fictional-07,Fictional garment 07,Riva,blue,sweater,recent,other,other,https://example.invalid/products/fictional-07
+fictional-08,fictional-08,Fictional garment 08,Lago,blue,sweater,recent,other,other,https://example.invalid/products/fictional-08
+fictional-09,fictional-09,Fictional garment 09,Riva,blue,sweater,recent,other,other,https://example.invalid/products/fictional-09
+fictional-10,fictional-10,Fictional garment 10,Lago,blue,sweater,recent,other,other,https://example.invalid/products/fictional-10

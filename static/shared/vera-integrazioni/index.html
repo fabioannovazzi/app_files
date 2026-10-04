@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="it">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <meta content="#ffffff" name="theme-color"/>
+  <title>
+   Integrazioni di Vera · Vera
+  </title>
+  <meta content="Integrazioni di Vera: Second Brain e connettori opzionali di anonimizzazione per Codex, Cowork e Antigravity." name="description"/>
+  <link href="https://mparanza.com/static/shared/vera-integrazioni/index.html?lang=it" rel="canonical"/>
+  <link href="https://mparanza.com/static/shared/vera-integrazioni/index.html?lang=it" hreflang="it" rel="alternate"/>
+  <link href="https://mparanza.com/static/shared/vera-integrazioni/index.html?lang=en" hreflang="en" rel="alternate"/>
+  <link href="https://mparanza.com/static/shared/vera-integrazioni/index.html?lang=fr" hreflang="fr" rel="alternate"/>
+  <link href="https://mparanza.com/static/shared/vera-integrazioni/index.html?lang=de" hreflang="de" rel="alternate"/>
+  <link href="https://mparanza.com/static/shared/vera-integrazioni/index.html?lang=es" hreflang="es" rel="alternate"/>
+  <link href="https://mparanza.com/static/shared/vera-integrazioni/index.html?lang=it" hreflang="x-default" rel="alternate"/>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <style>
+   :root { color-scheme: light; --navy: #06245c; --blue: #006fc9; --cyan: #00a6d7; --line: #d8e4ef; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #fff; color: var(--navy); font: 17px/1.65 "Instrument Sans", sans-serif; }
+    a { color: var(--blue); text-underline-offset: .2em; }
+    a:hover { color: var(--navy); }
+    :focus-visible { outline: 3px solid var(--cyan); outline-offset: 4px; }
+    .shell { width: min(100% - 48px, 940px); margin-inline: auto; }
+    header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; padding-block: 26px; border-bottom: 1px solid var(--line); }
+    .brand { color: var(--navy); font-size: 22px; font-weight: 700; text-decoration: none; letter-spacing: -.04em; }
+    .languages { display: flex; gap: 18px; font-size: 14px; }
+    .languages a[aria-current="page"] { color: var(--navy); font-weight: 700; text-decoration: none; }
+    main { padding-block: 48px 64px; }
+    .back { display: inline-block; font-size: 15px; margin-bottom: 34px; }
+    h1 { font-size: clamp(36px, 6vw, 62px); font-weight: 600; letter-spacing: -.045em; line-height: 1.1; margin: 0 0 24px; max-width: 820px; }
+    .lead { font-size: 21px; line-height: 1.55; }
+    p { margin: 0 0 18px; max-width: 78ch; }
+    .jump-links { display: flex; flex-wrap: wrap; gap: 10px 26px; font-size: 15px; margin-block: 30px 44px; }
+    section { border-top: 1px solid var(--cyan); padding-top: 30px; margin-top: 42px; scroll-margin-top: 24px; }
+    h2 { font-size: clamp(26px, 4vw, 34px); line-height: 1.2; font-weight: 600; letter-spacing: -.025em; margin: 0 0 24px; }
+    h3 { font-size: 19px; font-weight: 600; line-height: 1.4; margin: 24px 0 8px; }
+    .steps { padding-left: 26px; max-width: 78ch; margin: 0 0 24px; }
+    .steps li { padding-left: 8px; margin-bottom: 20px; }
+    .steps li::marker { color: var(--blue); font-weight: 700; }
+    blockquote { margin: 20px 0 28px; padding: 20px 24px; border-left: 2px solid var(--cyan); background: #f5f9fd; max-width: 78ch; }
+    .note { font-size: 15px; }
+    footer { padding-block: 24px 40px; border-top: 1px solid var(--line); font-size: 14px; }
+    @media (max-width: 580px) { .shell { width: calc(100% - 36px); } main { padding-top: 32px; } .lead { font-size: 19px; } .steps { padding-left: 22px; } .steps li { padding-left: 4px; } blockquote { padding: 16px 18px; } }
+  </style>
+ </head>
+ <body>
+  <header class="shell">
+   <a class="brand" data-vera-link="" href="../vera/index.html?lang=it">
+    Vera
+   </a>
+   <nav aria-label="Lingua" class="languages">
+    <a aria-current="page" data-lang="it" href="?lang=it" lang="it">
+     IT
+    </a>
+    <a data-lang="en" href="?lang=en" lang="en">
+     EN
+    </a>
+    <a data-lang="fr" href="?lang=fr" lang="fr">
+     FR
+    </a>
+    <a data-lang="de" href="?lang=de" lang="de">
+     DE
+    </a>
+    <a data-lang="es" href="?lang=es" lang="es">
+     ES
+    </a>
+   </nav>
+  </header>
+  <main class="shell" id="main-content">
+   <a class="back" data-i18n="back" data-vera-link="" href="../vera/index.html?lang=it#connections">← Torna a Integrazioni</a>
+   <h1 data-i18n="title">Integrazioni di Vera</h1>
+   <p class="lead" data-i18n="lead">Collega Second Brain, usa le skill dello studio o scegli OpenAI Privacy Filter, GLiNER2-PII, Rizzo PII, Lethe o PII-Shield nelle app desktop Codex, Cowork e Antigravity.</p>
+   <p data-i18n="scope">Per seguire la guida Second Brain serve un Second Brain già esistente con un connettore MCP compatibile. Vera non fornisce questo servizio e non richiede Microsoft 365. Se non hai un archivio esterno, puoi usare Vera senza questa configurazione.</p>
+   <nav aria-label="Passaggi della guida" class="jump-links" data-nav="">
+    <a data-i18n="prepare" href="#prepare">Prima di iniziare</a>
+    <a data-i18n="claude" href="#claude">Claude e Cowork</a>
+    <a data-i18n="codex" href="#codex">Codex e app desktop ChatGPT</a>
+    <a data-i18n="antigravity" href="#antigravity">Google Antigravity</a>
+    <a data-i18n="verify" href="#verify">Verificare il collegamento</a>
+    <a data-i18n="skills" href="#skills">Le skill dello studio</a>
+    <a data-i18n="help" href="#help">Se il collegamento non funziona</a>
+    <a data-i18n="connector.title" href="#connector-download">Scarica i connettori di anonimizzazione</a>
+    <a data-i18n="privacy.title" href="#privacy-filter">OpenAI Privacy Filter</a>
+    <a data-i18n="gliner.title" href="#gliner2-pii">GLiNER2-PII</a>
+    <a data-i18n="rizzo.title" href="#rizzo-pii">Rizzo PII</a>
+    <a data-i18n="lethe.title" href="#lethe">Lethe</a>
+    <a data-i18n="shield.title" href="#pii-shield">PII-Shield</a>
+    <a data-i18n="sessions.title" href="#sessions">Sessioni e ripristino delle identità</a>
+
+   </nav>
+   <section aria-labelledby="prepare-title" id="prepare">
+    <h2 data-i18n="prepare" id="prepare-title">Prima di iniziare</h2>
+    <p data-i18n="mcpMeaning">Il connettore MCP è il collegamento che consente all’app di cercare e leggere i documenti del tuo Second Brain.</p>
+    <ol class="steps">
+     <li data-i18n="before1">Recupera l’URL del server MCP dalle istruzioni del tuo Second Brain o chiedilo a chi lo gestisce. È l’indirizzo del connettore, che può essere diverso dall’indirizzo del sito o della pagina di accesso. Non esiste un URL unico fornito da Vera.</li>
+     <li data-i18n="before2">Chiedi al gestore quale metodo di accesso usare e se il connettore funziona con la tua app. Per questi passaggi Codex richiede un server Streamable HTTP; un collegamento funzionante in Claude va verificato separatamente in Codex.</li>
+     <li data-i18n="before3">Usa il tuo account dello studio e individua l’archivio, la cartella o il ramo da consultare. Per la consultazione servono strumenti di ricerca e lettura; disabilita gli strumenti che scrivono o eliminano dati dove l’app lo consente.</li>
+     <li data-i18n="before4">Verifica che Vera sia installata e attiva nell’app scelta. L’installazione di Vera e il collegamento a Second Brain sono due operazioni distinte.</li>
+    </ol>
+    <p data-i18n="already">Second Brain è già collegato nella stessa app? Passa direttamente alla prova di lettura qui sotto.</p>
+   </section>
+   <section aria-labelledby="claude-title" id="claude">
+    <h2 data-i18n="claude" id="claude-title">Claude e Cowork</h2>
+    <ol class="steps">
+     <li data-i18n="claude1">Apri Personalizza (Customize) → Connettori (Connectors). Scegli + Aggiungi (Add) → Aggiungi connettore personalizzato (Add custom connector).</li>
+     <li data-i18n="claude2">Inserisci un nome, ad esempio Second Brain, e l’URL MCP ricevuto dal gestore. Premi Continua (Continue).</li>
+     <li data-i18n="claude3">Controlla il metodo di autenticazione rilevato e segui le istruzioni del gestore. Completa Aggiungi (Add) e Connetti (Connect) o Sign in now quando richiesto; accedi con il tuo account. Password e credenziali vanno nella schermata del servizio, non nella chat.</li>
+     <li data-i18n="claude4">Nella scheda del connettore controlla le autorizzazioni degli strumenti. Abilita ricerca e lettura, per esempio Search memory e Read memory se presenti. I nomi effettivi dipendono dal servizio.</li>
+     <li data-i18n="claude5">Apri un’attività Cowork con Vera attiva. Nel menu + della conversazione → Connettori, abilita Second Brain, poi esegui la prova di lettura.</li>
+    </ol>
+    <p class="note" data-i18n="team">Con Team o Enterprise, un proprietario o un ruolo autorizzato deve prima aggiungere il connettore in Organization settings → Connectors. Ogni utente completa poi il proprio collegamento. Se l’opzione manca, chiedi all’amministratore. I connettori remoti devono essere raggiungibili dall’infrastruttura Anthropic.</p>
+    <a data-i18n="claudeDocs" href="https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp" rel="noopener noreferrer" target="_blank">Istruzioni ufficiali Claude per i connettori personalizzati</a>
+   </section>
+   <section aria-labelledby="codex-title" id="codex">
+    <h2 data-i18n="codex" id="codex-title">Codex e app desktop ChatGPT</h2>
+    <ol class="steps">
+     <li data-i18n="codex1">Nell’app desktop apri Impostazioni (Settings) → Server MCP (MCP servers) → Aggiungi server (Add server).</li>
+     <li data-i18n="codex2">Assegna un nome, ad esempio Second Brain, scegli Streamable HTTP e inserisci l’URL MCP fornito dal gestore.</li>
+     <li data-i18n="codex3">Salva, seleziona Restart e, se compare, Authenticate per accedere al servizio. Usa il metodo previsto dal gestore. Se è richiesta una chiave o una configurazione diversa, fatti assistere dal gestore senza incollare credenziali nella chat.</li>
+     <li data-i18n="codex4">Apri una nuova attività con Vera. Scrivi /mcp nel campo del messaggio per vedere i server collegati; verifica Second Brain ed esegui la prova di lettura.</li>
+    </ol>
+    <p class="note" data-i18n="cloud">Questi passaggi riguardano la configurazione desktop. La disponibilità nella chat web o in Work Cloud va verificata nella sessione in cui lavori: collegare il servizio in un’app non garantisce l’accesso in un’altra.</p>
+    <a data-i18n="codexDocs" href="https://learn.chatgpt.com/docs/extend/mcp?surface=cli" rel="noopener noreferrer" target="_blank">Istruzioni ufficiali OpenAI per i server MCP</a>
+   </section>
+   <section aria-labelledby="antigravity-title" id="antigravity">
+    <h2 data-i18n="antigravity" id="antigravity-title">Google Antigravity</h2>
+    <ol class="steps"><li data-i18n="antigravity1">Per Second Brain, apri la configurazione MCP di Antigravity e aggiungi il server del gestore. Per un server remoto usa serverUrl nell’oggetto mcpServers; mantieni gli altri collegamenti.</li><li data-i18n="antigravity2">Ricarica i server, completa l’autenticazione prevista dal gestore e verifica ricerca e lettura nella sessione corrente. Non serve un installer Second Brain fornito da Vera. Compatibilità e autorizzazioni dipendono dal servizio scelto.</li></ol>
+    <a href="https://antigravity.google/docs/mcp" rel="noopener noreferrer" target="_blank">Google Antigravity · MCP ↗</a>
+   </section>
+   <section aria-labelledby="verify-title" id="verify">
+    <h2 data-i18n="verify" id="verify-title">Verificare il collegamento</h2>
+    <p data-i18n="test1">Nel tuo Second Brain crea manualmente un documento senza dati dei clienti, intitolato «Prova collegamento Vera». Scrivi una frase inventata che saprai riconoscere. Non includere quella frase nel messaggio inviato a Vera.</p>
+    <p data-i18n="test2">Nella nuova attività con Vera, invia questo messaggio:</p>
+    <blockquote data-i18n="prompt">
+     Cerca il documento «Prova collegamento Vera» nel mio Second Brain, aprilo e riportane il testo con titolo e identificativo o collegamento. Non creare o modificare nulla. Se non puoi accedere, dimmi quale passaggio manca.
+    </blockquote>
+    <p data-i18n="test3">Controlla che la conversazione mostri una ricerca e una lettura tramite il connettore. Confronta il testo restituito con la frase scritta nel documento e apri il riferimento, se disponibile. La sola risposta «sono collegato» non dimostra la lettura.</p>
+    <p data-i18n="test4">Dopo questa prova, indica a Vera il lavoro e il ramo o la cartella da consultare. Se la ricerca non riesce, risolvi l’accesso prima di richiedere conclusioni basate su quell’archivio.</p>
+    <h3 data-i18n="exampleTitle">
+     Esempio per un lavoro reale
+    </h3>
+    <blockquote data-i18n="example">
+     Usa Vera per esaminare questo avviso. Prima consulta la procedura approvata dello studio nel ramo «contenzioso» di Second Brain. Cita le fonti effettivamente aperte e segnala eventuali versioni in conflitto o informazioni mancanti.
+    </blockquote>
+   </section>
+   <section aria-labelledby="skills-title" id="skills">
+    <h2 data-i18n="skills" id="skills-title">Le skill dello studio</h2>
+    <p data-i18n="skillsCopy">Il connettore dà accesso ai documenti, non installa le skill dello studio. Se vuoi usare una tua skill, installala e richiamala direttamente nell’app che la supporta, con il nome o comando previsto da quell’app. Puoi usare la tua skill senza invocare Vera. Non occorre copiarla nel plugin Vera.</p>
+    <p><a data-skills-link href="../vera-skill-studio/index.html?lang=it" data-i18n="skillsGuide">Come installare e usare le skill dello studio →</a></p>
+   </section>
+   <section aria-labelledby="help-title" id="help">
+    <h2 data-i18n="help" id="help-title">Se il collegamento non funziona</h2>
+    <h3 data-i18n="missingTitle">
+     Non compare Aggiungi connettore / Aggiungi server
+    </h3>
+    <p data-i18n="missing">Verifica di essere nell’app e nell’account corretti. Chiedi all’amministratore se il tuo ruolo può aggiungere connessioni personalizzate.</p>
+    <h3 data-i18n="deniedTitle">
+     Accesso negato o richiesta di login
+    </h3>
+    <p data-i18n="denied">Riapri Connetti / Authenticate e controlla l’account. Il gestore deve verificare che tu abbia accesso all’archivio richiesto.</p>
+    <h3 data-i18n="emptyTitle">
+     La ricerca non trova il documento
+    </h3>
+    <p data-i18n="empty">Controlla il titolo, il ramo o la cartella e che il documento sia ricercabile in Second Brain. Non ampliare la ricerca ad altri clienti.</p>
+    <h3 data-i18n="readTitle">
+     Il server è elencato ma Vera non legge
+    </h3>
+    <p data-i18n="read">Abilita il connettore nella conversazione e gli strumenti di lettura, poi avvia una nuova attività. Verifica una chiamata reale: l’elenco dei server da solo non basta.</p>
+    <h3 data-i18n="authTitle">
+     URL non valido o errore di autenticazione
+    </h3>
+    <p data-i18n="auth">Chiedi al gestore di verificare URL MCP, compatibilità con l’app e autenticazione. Comunica app, sistema operativo e testo dell’errore, senza documenti, password o token.</p>
+    <p class="note" data-i18n="status">Questa guida descrive la configurazione; non attesta una prova di funzionamento con il tuo Second Brain. L’esito della prova di lettura va verificato nel tuo account.</p>
+    <h3 data-i18n="sources">
+     Documentazione dei fornitori
+    </h3>
+    <a data-i18n="claudeDocs" href="https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp" rel="noopener noreferrer" target="_blank">Istruzioni ufficiali Claude per i connettori personalizzati</a>
+    <br/>
+    <a data-i18n="codexDocs" href="https://learn.chatgpt.com/docs/extend/mcp?surface=cli" rel="noopener noreferrer" target="_blank">Istruzioni ufficiali OpenAI per i server MCP</a>
+    <p class="note" data-i18n="docsDate">Passaggi verificati sulla documentazione ufficiale il 2 ottobre 2026. I nomi dei comandi possono cambiare con lingua e versione dell’app.</p>
+   </section>
+   <section aria-labelledby="connector-download-title" id="connector-download">
+    <h2 data-i18n="connector.title" id="connector-download-title">Scarica i connettori di anonimizzazione</h2>
+    <p data-i18n="connector.copy">Un download separato da Vera. Durante la configurazione scegli il motore e le cartelle per originali e copie filtrate. Si installano solo le dipendenze del motore scelto; puoi aggiungerne un altro in seguito.</p>
+    <p><a href="downloads/anonymization-connectors.zip" download data-i18n="connector.button">Scarica ZIP dei connettori</a></p>
+    <p data-i18n="connector.requirements">Estrai lo ZIP e avvia install.py --setup con Python 3.12. Scegli tra OpenAI Privacy Filter, GLiNER2-PII, Rizzo PII, Lethe e PII-Shield. I modelli non sono nello ZIP. Rizzo richiede la sua app aperta; Lethe richiede la revisione locale; PII-Shield richiede Node.js 22+ e i percorsi --node e --npm (npm-cli.js).</p>
+    <ol class="steps"><li data-i18n="connector.codex">Codex: aggiungi la sezione di codex-mcp.toml alla configurazione e riavvia MCP.</li><li data-i18n="connector.cowork">Cowork: installa il file generato cowork-connector.zip in Personalizza → Plugin. Esegui l’installazione sul computer, non nella VM Linux di Cowork. Usa una nuova attività locale.</li><li data-i18n="connector.antigravity">Antigravity: aggiungi la voce di antigravity-mcp.json alla configurazione MCP dell’app e ricarica i server.</li></ol>
+    <p data-i18n="connector.verify">In ciascuna app verifica lo stato del motore e filtra un file sintetico indicando il nome relativo nella cartella Input. Controlla la copia salvata. Le impostazioni esistenti delle app non vengono sovrascritte. Questo percorso riguarda le sessioni desktop locali.</p>
+    <a href="https://github.com/fabioannovazzi/app_files/blob/main/connectors/privacy-filter/SETUP.md" data-i18n="connector.setup" rel="noopener noreferrer" target="_blank">Istruzioni di installazione per le tre app ↗</a>
+   </section>
+   <p class="note" data-i18n="gliner.choice">Scegli tu tra OpenAI Privacy Filter, GLiNER2-PII e Rizzo PII. Sono integrazioni opzionali, indipendenti da Vera; puoi installarne una o più. Questa pagina non indica quale scegliere.</p>
+   <section aria-labelledby="privacy-filter-title" id="privacy-filter">
+    <h2 data-i18n="privacy.title" id="privacy-filter-title">OpenAI Privacy Filter</h2>
+    <p data-i18n="privacy.status">Connettore locale opzionale per Codex, Cowork e Antigravity desktop, da installare separatamente.</p>
+    <p data-i18n="privacy.copy">Privacy Filter è un modello open source di OpenAI che individua nel testo dati personali, come nomi, indirizzi, email e numeri di telefono, e sostituisce quelli rilevati con segnaposto. L’elaborazione avviene sul computer su cui è installato.</p>
+    <p data-i18n="privacy.workflow">Il connettore si installa separatamente da Vera e si usa su richiesta. Legge file TXT, Markdown, DOCX e PDF con testo estraibile e salva copie di testo filtrate in formato .txt. Le scansioni richiedono prima l’OCR.</p>
+    <p><a data-i18n="privacy.setup" href="https://github.com/fabioannovazzi/app_files/tree/main/connectors/privacy-filter" rel="noopener noreferrer" target="_blank">Installare e usare il connettore Privacy Filter ↗</a></p>
+    <a data-i18n="privacy.source" href="https://github.com/openai/privacy-filter" rel="noopener noreferrer" target="_blank">Codice e documentazione di OpenAI Privacy Filter ↗</a>
+   </section>
+   <section aria-labelledby="gliner2-pii-title" id="gliner2-pii">
+    <h2 data-i18n="gliner.title" id="gliner2-pii-title">GLiNER2-PII</h2>
+    <p data-i18n="gliner.status">Connettore locale opzionale per Codex, Cowork e Antigravity desktop, da installare separatamente.</p>
+    <p data-i18n="gliner.copy">GLiNER2-PII è un modello open source di Fastino per individuare dati personali nel testo. Il connettore richiede le 42 categorie supportate dal modello, tra cui nomi, email, indirizzi, identificativi fiscali e IBAN, e sostituisce le rilevazioni con segnaposto. Il modello dichiara dati di addestramento in sette lingue, incluso l’italiano.</p>
+    <p data-i18n="gliner.workflow">Il connettore legge file TXT, Markdown, DOCX e PDF con testo estraibile dal percorso locale indicato e salva una copia .txt filtrata. Gli originali restano invariati. Le scansioni richiedono prima l’OCR. Installa Python 3.12 o successivo; il modello viene scaricato durante la configurazione.</p>
+    <p data-i18n="gliner.limit">Le rilevazioni possono omettere dati o rimuovere testo utile. Controlla la copia locale prima di usarla; non è garantita la rimozione di tutti gli identificativi personali o aziendali.</p>
+    <p><a data-i18n="gliner.setup" href="https://github.com/fabioannovazzi/app_files/blob/main/connectors/privacy-filter/GLINER2.md" rel="noopener noreferrer" target="_blank">Installare e usare il connettore GLiNER2-PII ↗</a></p>
+    <a data-i18n="gliner.source" href="https://huggingface.co/fastino/gliner2-privacy-filter-PII-multi" rel="noopener noreferrer" target="_blank">Modello e documentazione di GLiNER2-PII ↗</a>
+   </section>
+   <section aria-labelledby="rizzo-pii-title" id="rizzo-pii">
+    <h2 data-i18n="rizzo.title" id="rizzo-pii-title">Rizzo PII</h2>
+    <p data-i18n="rizzo.status">Connettore locale opzionale per Codex, Cowork e Antigravity desktop. Richiede l’app Rizzo PII aperta sullo stesso computer.</p>
+    <p data-i18n="rizzo.copy">Rizzo PII individua dati personali con un modello orientato ai testi italiani e rilevatori propri, anche per codice fiscale, partita IVA e dati catastali. Il connettore usa l’elaborazione dell’app Rizzo e salva una copia di testo con segnaposto.</p>
+    <p data-i18n="rizzo.workflow">Installa e avvia Rizzo PII, poi configura il connettore con Python 3.12 o successivo. Legge TXT, Markdown, DOCX e PDF con testo estraibile dal percorso locale indicato e salva una copia .txt. Gli originali restano invariati; le scansioni richiedono prima l’OCR. Rizzo deve restare aperto durante l’elaborazione.</p>
+    <p data-i18n="rizzo.limit">Il connettore richiede tutte le categorie e abilita il dizionario nativo di Rizzo per ogni documento, senza cambiare le preferenze dell’app. Conserva il dizionario localmente e restituisce un session_id per ripristinare quel documento. Le chiamate separate non condividono identità: ogni file ha la propria sessione.</p>
+    <p><a data-i18n="rizzo.setup" href="rizzo/index.html?lang=it" data-engine-link rel="noopener noreferrer" target="_blank">Installare e usare il connettore Rizzo PII ↗</a></p>
+    <p><a data-i18n="rizzo.source" href="https://github.com/Rizzo-AI-Academy/rizzo-pii" rel="noopener noreferrer" target="_blank">App e documentazione di Rizzo PII ↗</a></p>
+   </section>
+   <section id="lethe"><h2 data-i18n="lethe.title">Lethe</h2><p data-i18n="lethe.copy">Lethe assegna i segnaposto una sola volta a un insieme di elementi approvati localmente per tutto il lavoro. Il connettore riusa quella selezione nei documenti successivi; non aggiunge nuove identità. La revisione locale è necessaria prima di creare la sessione.</p><a data-engine-link href="lethe/index.html?lang=it" data-i18n="engine.details">Istruzioni, limiti e percorso dei dati</a></section>
+<section id="pii-shield"><h2 data-i18n="shield.title">PII-Shield</h2><p data-i18n="shield.copy">Il connettore usa PII-Shield di gregmos, CLI Node.js 2.2.0. Il primo documento crea la sessione del motore; i successivi la estendono con lo stesso dizionario. Il motore decide identità, alias e pseudonimi. Servono Node.js 22+ e la configurazione esplicita del modello. Nella prova su macOS arm64, il runtime ONNX del motore si interrompe alla chiusura: il connettore rifiuta l’esecuzione e non dichiara il modello pronto. L’accettazione su questo Mac non è verificata; la prova reale multi-documento viene eseguita separatamente su Linux.</p><a data-engine-link href="pii-shield/index.html?lang=it" data-i18n="engine.details">Istruzioni, limiti e percorso dei dati</a></section>
+<section id="sessions"><h2 data-i18n="sessions.title">Sessioni e ripristino delle identità</h2><p data-i18n="sessions.copy">Lethe e PII-Shield possono usare la stessa sessione per più documenti e ripristinare le identità nel risultato finale. Crea o riapri una sessione, usa il suo ID per ogni file e passa alla funzione di ripristino il percorso del risultato AI salvato localmente. Il ripristino restituisce solo il percorso del file, da aprire sul computer.</p><p data-i18n="sessions.boundary">Il dizionario del motore è autorevole: il connettore ne conserva lo stato senza inferire, unire o correggere identità. OpenAI Privacy Filter e GLiNER2 restano di sola redazione. Rizzo conserva e ripristina il dizionario nativo di ogni documento; non estende una sessione tra chiamate separate. Lethe e PII-Shield supportano il lavoro multi-documento.</p></section>
+<section aria-labelledby="model-data-title" id="model-data">
+    <h2 data-i18n="data" id="model-data-title">Quali dati arrivano al modello</h2>
+    <h3>Second Brain</h3>
+    <p data-i18n="dataCopy">Questa pagina non registra l’URL del tuo connettore, non avvia login e non legge Second Brain. Quando chiedi una consultazione a Vera, la query, i metadati e gli estratti restituiti dalla ricerca, e il testo delle fonti aperte possono entrare nel contesto del modello dell’app scelta. Per la prova usa un documento senza dati dei clienti. La consultazione non è solo locale: accesso, conservazione e trattamento dipendono dall’app e dal servizio Second Brain. Collegare l’archivio non invia automaticamente tutto il suo contenuto a Vera; i dati effettivamente consultati dipendono dagli strumenti e dalle richieste.</p>
+    <h3 data-i18n="privacy.title">OpenAI Privacy Filter</h3>
+    <p data-i18n="privacy.data">Il connettore elabora gli originali localmente. All’app scelta arrivano i percorsi indicati nella richiesta, il percorso della copia filtrata e un riepilogo con i conteggi. Il testo filtrato entra nella conversazione quando ne chiedi la lettura. L’installazione scarica il modello e il tokenizer; il filtraggio avviene in locale, senza chiamate API.</p>
+    <h3 data-i18n="gliner.title">GLiNER2-PII</h3>
+    <p data-i18n="gliner.data">Il testo estratto dal documento arriva al modello GLiNER2 sul tuo computer. Il processo locale applica i segnaposto senza restituire i valori rilevati. All’app scelta arrivano i percorsi della richiesta e del risultato, i conteggi e i metadati del modello; il testo filtrato entra nella conversazione quando ne chiedi la lettura. Modello e tokenizer vengono scaricati durante l’installazione. Il filtraggio usa i file locali e non chiama API.</p>
+    <h3 data-i18n="rizzo.title">Rizzo PII</h3>
+    <p data-i18n="rizzo.data">Il testo originale estratto arriva all’app Rizzo sullo stesso computer tramite HTTP locale. Il dizionario nativo viene salvato nella cartella privata model/sessions del connettore, senza cifratura; su POSIX i permessi sono 0700/0600, su Windows valgono le ACL della cartella utente. Dizionario, originali, anteprime e diagnostica non entrano nelle risposte MCP. Alla conversazione arrivano percorsi, ID, conteggi e testo filtrato richiesto. Il ripristino restituisce solo un percorso locale e funziona anche con Rizzo chiuso. La cartella resta fino alla rimozione da parte dell’utente.</p>
+<h3 data-i18n="lethe.title">Lethe</h3><p data-i18n="lethe.data">Il testo estratto viene elaborato da Lethe sul computer. Gli elementi approvati e il dizionario restano nella cartella privata della sessione, senza entrare nelle risposte MCP. Questo connettore non usa il vault cifrato dell’app Lethe. Al modello arrivano percorsi, ID, conteggi e il testo filtrato richiesto; il ripristino salva un file locale e restituisce solo il percorso.</p>
+<h3 data-i18n="shield.title">PII-Shield</h3><p data-i18n="shield.data">Gli originali estratti arrivano al processo PII-Shield e al suo modello GLiNER locali. Dizionari e record di revisione, che possono contenere dati originali, restano separati per sessione sul computer. Non sono cifrati dal connettore. Al modello della conversazione arrivano solo metadati e testo filtrato richiesto; il ripristino restituisce un percorso locale. La conservazione dipende anche dal TTL del motore.</p>
+    <a data-data-link="" data-i18n="dataPage" href="https://mparanza.com/data-handling?lang=it">Gestione dei dati Mparanza</a>
+   </section>
+  </main>
+  <footer class="shell">
+   <a data-i18n="back" data-vera-link="" href="../vera/index.html?lang=it#connections">← Torna a Integrazioni</a>
+  </footer>
+  <script>
+   const copy = {
+  "it": {
+    "title": "Integrazioni di Vera",
+    "lead": "Collega Second Brain, usa le skill dello studio o scegli OpenAI Privacy Filter, GLiNER2-PII, Rizzo PII, Lethe o PII-Shield nelle app desktop Codex, Cowork e Antigravity.",
+    "scope": "Per seguire la guida Second Brain serve un Second Brain già esistente con un connettore MCP compatibile. Vera non fornisce questo servizio e non richiede Microsoft 365. Se non hai un archivio esterno, puoi usare Vera senza questa configurazione.",
+    "back": "← Torna a Integrazioni",
+    "nav": "Passaggi della guida",
+    "prepare": "Prima di iniziare",
+    "claude": "Claude e Cowork",
+    "codex": "Codex e app desktop ChatGPT",
+    "verify": "Verificare il collegamento",
+    "skills": "Le skill dello studio",
+    "help": "Se il collegamento non funziona",
+    "data": "Quali dati arrivano al modello",
+    "before1": "Recupera l’URL del server MCP dalle istruzioni del tuo Second Brain o chiedilo a chi lo gestisce. È l’indirizzo del connettore, che può essere diverso dall’indirizzo del sito o della pagina di accesso. Non esiste un URL unico fornito da Vera.",
+    "before2": "Chiedi al gestore quale metodo di accesso usare e se il connettore funziona con la tua app. Per questi passaggi Codex richiede un server Streamable HTTP; un collegamento funzionante in Claude va verificato separatamente in Codex.",
+    "before3": "Usa il tuo account dello studio e individua l’archivio, la cartella o il ramo da consultare. Per la consultazione servono strumenti di ricerca e lettura; disabilita gli strumenti che scrivono o eliminano dati dove l’app lo consente.",
+    "before4": "Verifica che Vera sia installata e attiva nell’app scelta. L’installazione di Vera e il collegamento a Second Brain sono due operazioni distinte.",
+    "already": "Second Brain è già collegato nella stessa app? Passa direttamente alla prova di lettura qui sotto.",
+    "claude1": "Apri Personalizza (Customize) → Connettori (Connectors). Scegli + Aggiungi (Add) → Aggiungi connettore personalizzato (Add custom connector).",
+    "claude2": "Inserisci un nome, ad esempio Second Brain, e l’URL MCP ricevuto dal gestore. Premi Continua (Continue).",
+    "claude3": "Controlla il metodo di autenticazione rilevato e segui le istruzioni del gestore. Completa Aggiungi (Add) e Connetti (Connect) o Sign in now quando richiesto; accedi con il tuo account. Password e credenziali vanno nella schermata del servizio, non nella chat.",
+    "claude4": "Nella scheda del connettore controlla le autorizzazioni degli strumenti. Abilita ricerca e lettura, per esempio Search memory e Read memory se presenti. I nomi effettivi dipendono dal servizio.",
+    "claude5": "Apri un’attività Cowork con Vera attiva. Nel menu + della conversazione → Connettori, abilita Second Brain, poi esegui la prova di lettura.",
+    "team": "Con Team o Enterprise, un proprietario o un ruolo autorizzato deve prima aggiungere il connettore in Organization settings → Connectors. Ogni utente completa poi il proprio collegamento. Se l’opzione manca, chiedi all’amministratore. I connettori remoti devono essere raggiungibili dall’infrastruttura Anthropic.",
+    "claudeDocs": "Istruzioni ufficiali Claude per i connettori personalizzati",
+    "codex1": "Nell’app desktop apri Impostazioni (Settings) → Server MCP (MCP servers) → Aggiungi server (Add server).",
+    "codex2": "Assegna un nome, ad esempio Second Brain, scegli Streamable HTTP e inserisci l’URL MCP fornito dal gestore.",
+    "codex3": "Salva, seleziona Restart e, se compare, Authenticate per accedere al servizio. Usa il metodo previsto dal gestore. Se è richiesta una chiave o una configurazione diversa, fatti assistere dal gestore senza incollare credenziali nella chat.",
+    "codex4": "Apri una nuova attività con Vera. Scrivi /mcp nel campo del messaggio per vedere i server collegati; verifica Second Brain ed esegui la prova di lettura.",
+    "cloud": "Questi passaggi riguardano la configurazione desktop. La disponibilità nella chat web o in Work Cloud va verificata nella sessione in cui lavori: collegare il servizio in un’app non garantisce l’accesso in un’altra.",
+    "codexDocs": "Istruzioni ufficiali OpenAI per i server MCP",
+    "test1": "Nel tuo Second Brain crea manualmente un documento senza dati dei clienti, intitolato «Prova collegamento Vera». Scrivi una frase inventata che saprai riconoscere. Non includere quella frase nel messaggio inviato a Vera.",
+    "test2": "Nella nuova attività con Vera, invia questo messaggio:",
+    "prompt": "Cerca il documento «Prova collegamento Vera» nel mio Second Brain, aprilo e riportane il testo con titolo e identificativo o collegamento. Non creare o modificare nulla. Se non puoi accedere, dimmi quale passaggio manca.",
+    "test3": "Controlla che la conversazione mostri una ricerca e una lettura tramite il connettore. Confronta il testo restituito con la frase scritta nel documento e apri il riferimento, se disponibile. La sola risposta «sono collegato» non dimostra la lettura.",
+    "test4": "Dopo questa prova, indica a Vera il lavoro e il ramo o la cartella da consultare. Se la ricerca non riesce, risolvi l’accesso prima di richiedere conclusioni basate su quell’archivio.",
+    "exampleTitle": "Esempio per un lavoro reale",
+    "example": "Usa Vera per esaminare questo avviso. Prima consulta la procedura approvata dello studio nel ramo «contenzioso» di Second Brain. Cita le fonti effettivamente aperte e segnala eventuali versioni in conflitto o informazioni mancanti.",
+    "skillsCopy": "Il connettore dà accesso ai documenti, non installa le skill dello studio. Se vuoi usare una tua skill, installala e richiamala direttamente nell’app che la supporta, con il nome o comando previsto da quell’app. Puoi usare la tua skill senza invocare Vera. Non occorre copiarla nel plugin Vera.",
+    "skillsGuide": "Come installare e usare le skill dello studio →",
+    "missingTitle": "Non compare Aggiungi connettore / Aggiungi server",
+    "missing": "Verifica di essere nell’app e nell’account corretti. Chiedi all’amministratore se il tuo ruolo può aggiungere connessioni personalizzate.",
+    "deniedTitle": "Accesso negato o richiesta di login",
+    "denied": "Riapri Connetti / Authenticate e controlla l’account. Il gestore deve verificare che tu abbia accesso all’archivio richiesto.",
+    "emptyTitle": "La ricerca non trova il documento",
+    "empty": "Controlla il titolo, il ramo o la cartella e che il documento sia ricercabile in Second Brain. Non ampliare la ricerca ad altri clienti.",
+    "readTitle": "Il server è elencato ma Vera non legge",
+    "read": "Abilita il connettore nella conversazione e gli strumenti di lettura, poi avvia una nuova attività. Verifica una chiamata reale: l’elenco dei server da solo non basta.",
+    "authTitle": "URL non valido o errore di autenticazione",
+    "auth": "Chiedi al gestore di verificare URL MCP, compatibilità con l’app e autenticazione. Comunica app, sistema operativo e testo dell’errore, senza documenti, password o token.",
+    "status": "Questa guida descrive la configurazione; non attesta una prova di funzionamento con il tuo Second Brain. L’esito della prova di lettura va verificato nel tuo account.",
+    "sources": "Documentazione dei fornitori",
+    "docsDate": "Passaggi verificati sulla documentazione ufficiale il 2 ottobre 2026. I nomi dei comandi possono cambiare con lingua e versione dell’app.",
+    "dataCopy": "Questa pagina non registra l’URL del tuo connettore, non avvia login e non legge Second Brain. Quando chiedi una consultazione a Vera, la query, i metadati e gli estratti restituiti dalla ricerca, e il testo delle fonti aperte possono entrare nel contesto del modello dell’app scelta. Per la prova usa un documento senza dati dei clienti. La consultazione non è solo locale: accesso, conservazione e trattamento dipendono dall’app e dal servizio Second Brain. Collegare l’archivio non invia automaticamente tutto il suo contenuto a Vera; i dati effettivamente consultati dipendono dagli strumenti e dalle richieste.",
+    "dataPage": "Gestione dei dati Mparanza",
+    "mcpMeaning": "Il connettore MCP è il collegamento che consente all’app di cercare e leggere i documenti del tuo Second Brain.",
+    "privacy.title": "OpenAI Privacy Filter",
+    "privacy.status": "Connettore locale opzionale per Codex, Cowork e Antigravity desktop, da installare separatamente.",
+    "privacy.copy": "Privacy Filter è un modello open source di OpenAI che individua nel testo dati personali, come nomi, indirizzi, email e numeri di telefono, e sostituisce quelli rilevati con segnaposto. L’elaborazione avviene sul computer su cui è installato.",
+    "privacy.workflow": "Il connettore si installa separatamente da Vera e si usa su richiesta. Legge file TXT, Markdown, DOCX e PDF con testo estraibile e salva copie di testo filtrate in formato .txt. Le scansioni richiedono prima l’OCR.",
+    "privacy.data": "Il connettore elabora gli originali localmente. All’app scelta arrivano i percorsi indicati nella richiesta, il percorso della copia filtrata e un riepilogo con i conteggi. Il testo filtrato entra nella conversazione quando ne chiedi la lettura. L’installazione scarica il modello e il tokenizer; il filtraggio avviene in locale, senza chiamate API.",
+    "privacy.source": "Codice e documentazione di OpenAI Privacy Filter ↗",
+    "privacy.setup": "Installare e usare il connettore Privacy Filter ↗",
+    "gliner.title": "GLiNER2-PII",
+    "gliner.status": "Connettore locale opzionale per Codex, Cowork e Antigravity desktop, da installare separatamente.",
+    "gliner.copy": "GLiNER2-PII è un modello open source di Fastino per individuare dati personali nel testo. Il connettore richiede le 42 categorie supportate dal modello, tra cui nomi, email, indirizzi, identificativi fiscali e IBAN, e sostituisce le rilevazioni con segnaposto. Il modello dichiara dati di addestramento in sette lingue, incluso l’italiano.",
+    "gliner.choice": "Scegli tu tra OpenAI Privacy Filter, GLiNER2-PII e Rizzo PII. Sono integrazioni opzionali, indipendenti da Vera; puoi installarne una o più. Questa pagina non indica quale scegliere.",
+    "gliner.workflow": "Il connettore legge file TXT, Markdown, DOCX e PDF con testo estraibile dal percorso locale indicato e salva una copia .txt filtrata. Gli originali restano invariati. Le scansioni richiedono prima l’OCR. Installa Python 3.12 o successivo; il modello viene scaricato durante la configurazione.",
+    "gliner.limit": "Le rilevazioni possono omettere dati o rimuovere testo utile. Controlla la copia locale prima di usarla; non è garantita la rimozione di tutti gli identificativi personali o aziendali.",
+    "gliner.setup": "Installare e usare il connettore GLiNER2-PII ↗",
+    "gliner.source": "Modello e documentazione di GLiNER2-PII ↗",
+    "gliner.data": "Il testo estratto dal documento arriva al modello GLiNER2 sul tuo computer. Il processo locale applica i segnaposto senza restituire i valori rilevati. All’app scelta arrivano i percorsi della richiesta e del risultato, i conteggi e i metadati del modello; il testo filtrato entra nella conversazione quando ne chiedi la lettura. Modello e tokenizer vengono scaricati durante l’installazione. Il filtraggio usa i file locali e non chiama API.",
+    "rizzo.status": "Connettore locale opzionale per Codex, Cowork e Antigravity desktop. Richiede l’app Rizzo PII aperta sullo stesso computer.",
+    "rizzo.copy": "Rizzo PII individua dati personali con un modello orientato ai testi italiani e rilevatori propri, anche per codice fiscale, partita IVA e dati catastali. Il connettore usa l’elaborazione dell’app Rizzo e salva una copia di testo con segnaposto.",
+    "rizzo.workflow": "Installa e avvia Rizzo PII, poi configura il connettore con Python 3.12 o successivo. Legge TXT, Markdown, DOCX e PDF con testo estraibile dal percorso locale indicato e salva una copia .txt. Gli originali restano invariati; le scansioni richiedono prima l’OCR. Rizzo deve restare aperto durante l’elaborazione.",
+    "rizzo.limit": "Il connettore richiede tutte le categorie e abilita il dizionario nativo di Rizzo per ogni documento, senza cambiare le preferenze dell’app. Conserva il dizionario localmente e restituisce un session_id per ripristinare quel documento. Le chiamate separate non condividono identità: ogni file ha la propria sessione.",
+    "rizzo.setup": "Installare e usare il connettore Rizzo PII ↗",
+    "rizzo.source": "App e documentazione di Rizzo PII ↗",
+    "rizzo.data": "Il testo originale estratto arriva all’app Rizzo sullo stesso computer tramite HTTP locale. Il dizionario nativo viene salvato nella cartella privata model/sessions del connettore, senza cifratura; su POSIX i permessi sono 0700/0600, su Windows valgono le ACL della cartella utente. Dizionario, originali, anteprime e diagnostica non entrano nelle risposte MCP. Alla conversazione arrivano percorsi, ID, conteggi e testo filtrato richiesto. Il ripristino restituisce solo un percorso locale e funziona anche con Rizzo chiuso. La cartella resta fino alla rimozione da parte dell’utente.",
+    "rizzo.title": "Rizzo PII",
+    "connector.title": "Scarica i connettori di anonimizzazione",
+    "connector.copy": "Un download separato da Vera. Durante la configurazione scegli il motore e le cartelle per originali e copie filtrate. Si installano solo le dipendenze del motore scelto; puoi aggiungerne un altro in seguito.",
+    "connector.button": "Scarica ZIP dei connettori",
+    "connector.setup": "Istruzioni di installazione per le tre app ↗",
+    "connector.requirements": "Estrai lo ZIP e avvia install.py --setup con Python 3.12. Scegli tra OpenAI Privacy Filter, GLiNER2-PII, Rizzo PII, Lethe e PII-Shield. I modelli non sono nello ZIP. Rizzo richiede la sua app aperta; Lethe richiede la revisione locale; PII-Shield richiede Node.js 22+ e i percorsi --node e --npm (npm-cli.js).",
+    "connector.codex": "Codex: aggiungi la sezione di codex-mcp.toml alla configurazione e riavvia MCP.",
+    "connector.cowork": "Cowork: installa il file generato cowork-connector.zip in Personalizza → Plugin. Esegui l’installazione sul computer, non nella VM Linux di Cowork. Usa una nuova attività locale.",
+    "connector.antigravity": "Antigravity: aggiungi la voce di antigravity-mcp.json alla configurazione MCP dell’app e ricarica i server.",
+    "connector.verify": "In ciascuna app verifica lo stato del motore e filtra un file sintetico indicando il nome relativo nella cartella Input. Controlla la copia salvata. Le impostazioni esistenti delle app non vengono sovrascritte. Questo percorso riguarda le sessioni desktop locali.",
+    "antigravity": "Google Antigravity",
+    "antigravity1": "Per Second Brain, apri la configurazione MCP di Antigravity e aggiungi il server del gestore. Per un server remoto usa serverUrl nell’oggetto mcpServers; mantieni gli altri collegamenti.",
+    "antigravity2": "Ricarica i server, completa l’autenticazione prevista dal gestore e verifica ricerca e lettura nella sessione corrente. Non serve un installer Second Brain fornito da Vera. Compatibilità e autorizzazioni dipendono dal servizio scelto.",
+    "sessions.title": "Sessioni e ripristino delle identità",
+    "sessions.copy": "Lethe e PII-Shield possono usare la stessa sessione per più documenti e ripristinare le identità nel risultato finale. Crea o riapri una sessione, usa il suo ID per ogni file e passa alla funzione di ripristino il percorso del risultato AI salvato localmente. Il ripristino restituisce solo il percorso del file, da aprire sul computer.",
+    "sessions.boundary": "Il dizionario del motore è autorevole: il connettore ne conserva lo stato senza inferire, unire o correggere identità. OpenAI Privacy Filter e GLiNER2 restano di sola redazione. Rizzo conserva e ripristina il dizionario nativo di ogni documento; non estende una sessione tra chiamate separate. Lethe e PII-Shield supportano il lavoro multi-documento.",
+    "lethe.copy": "Lethe assegna i segnaposto una sola volta a un insieme di elementi approvati localmente per tutto il lavoro. Il connettore riusa quella selezione nei documenti successivi; non aggiunge nuove identità. La revisione locale è necessaria prima di creare la sessione.",
+    "lethe.data": "Il testo estratto viene elaborato da Lethe sul computer. Gli elementi approvati e il dizionario restano nella cartella privata della sessione, senza entrare nelle risposte MCP. Questo connettore non usa il vault cifrato dell’app Lethe. Al modello arrivano percorsi, ID, conteggi e il testo filtrato richiesto; il ripristino salva un file locale e restituisce solo il percorso.",
+    "shield.copy": "Il connettore usa PII-Shield di gregmos, CLI Node.js 2.2.0. Il primo documento crea la sessione del motore; i successivi la estendono con lo stesso dizionario. Il motore decide identità, alias e pseudonimi. Servono Node.js 22+ e la configurazione esplicita del modello. Nella prova su macOS arm64, il runtime ONNX del motore si interrompe alla chiusura: il connettore rifiuta l’esecuzione e non dichiara il modello pronto. L’accettazione su questo Mac non è verificata; la prova reale multi-documento viene eseguita separatamente su Linux.",
+    "shield.data": "Gli originali estratti arrivano al processo PII-Shield e al suo modello GLiNER locali. Dizionari e record di revisione, che possono contenere dati originali, restano separati per sessione sul computer. Non sono cifrati dal connettore. Al modello della conversazione arrivano solo metadati e testo filtrato richiesto; il ripristino restituisce un percorso locale. La conservazione dipende anche dal TTL del motore.",
+    "engine.details": "Istruzioni, limiti e percorso dei dati",
+    "lethe.title": "Lethe",
+    "shield.title": "PII-Shield"
+  },
+  "en": {
+    "title": "Vera integrations",
+    "lead": "Connect Second Brain, use studio skills, or choose OpenAI Privacy Filter, GLiNER2-PII or Rizzo PII, Lethe, PII-Shield in Codex, Cowork and Antigravity desktop apps.",
+    "scope": "For the Second Brain setup guide, you need an existing Second Brain with a compatible MCP connector. Vera does not supply this service or require Microsoft 365. You can use Vera without this setup if you have no external repository.",
+    "back": "← Back to Integrations",
+    "nav": "Guide steps",
+    "prepare": "Before you begin",
+    "claude": "Claude and Cowork",
+    "codex": "Codex and the ChatGPT desktop app",
+    "verify": "Verify the connection",
+    "skills": "Your firm’s skills",
+    "help": "If the connection fails",
+    "data": "What data reaches the model",
+    "before1": "Get the MCP server URL from your Second Brain instructions or its administrator. This connector address may differ from the website or sign-in address. Vera does not provide a universal URL.",
+    "before2": "Ask the administrator which sign-in method to use and whether the connector supports your app. These Codex steps require a Streamable HTTP server; a connection working in Claude must be verified separately in Codex.",
+    "before3": "Use your firm account and identify the repository, folder or branch to consult. Search and reading tools are needed; disable tools that write or delete data where the app allows it.",
+    "before4": "Check that Vera is installed and enabled in your chosen app. Installing Vera and connecting Second Brain are separate steps.",
+    "already": "Second Brain is already connected in the same app? Go straight to the reading test below.",
+    "claude1": "Open Customize → Connectors. Select + Add → Add custom connector.",
+    "claude2": "Enter a name such as Second Brain and the MCP URL supplied by the administrator. Select Continue.",
+    "claude3": "Review the detected authentication method and follow the administrator’s instructions. Complete Add and Connect or Sign in now when prompted, using your own account. Enter credentials on the service’s sign-in screen, not in chat.",
+    "claude4": "Check tool permissions in the connector details. Enable search and reading, such as Search memory and Read memory if present. Actual names depend on the service.",
+    "claude5": "Start a Cowork task with Vera enabled. In the conversation’s + menu → Connectors, enable Second Brain, then run the reading test.",
+    "team": "On Team or Enterprise, an owner or authorized role must first add the connector in Organization settings → Connectors. Each user then connects their own account. If the option is missing, ask your administrator. Remote connectors must be reachable from Anthropic’s infrastructure.",
+    "claudeDocs": "Official Claude custom connector instructions",
+    "codex1": "In the desktop app, open Settings → MCP servers → Add server.",
+    "codex2": "Name the server, for example Second Brain, select Streamable HTTP, and enter the MCP URL supplied by its administrator.",
+    "codex3": "Save, select Restart and, if shown, Authenticate to sign in. Use the method specified by the administrator. If a key or different configuration is required, ask the administrator for help without pasting credentials in chat.",
+    "codex4": "Start a new task with Vera. Type /mcp in the composer to see connected servers; check Second Brain and run the reading test.",
+    "cloud": "These steps configure the desktop app. Verify access separately in the web chat or Work Cloud session where you work: connecting a service in one app does not guarantee access in another.",
+    "codexDocs": "Official OpenAI MCP server instructions",
+    "test1": "Manually create a document in Second Brain with no client data, titled “Vera connection test”. Add an invented sentence you can recognize. Do not include that sentence in the message you send to Vera.",
+    "test2": "In the new task with Vera, send this message:",
+    "prompt": "Find the document “Vera connection test” in my Second Brain, open it and return its text with its title and identifier or link. Do not create or change anything. If access is unavailable, tell me which step is missing.",
+    "test3": "Check that the conversation shows a connector search and read. Compare the returned text with your sentence and open the source reference if available. A reply saying “I am connected” does not prove that the document was read.",
+    "test4": "After this test, tell Vera the task and the branch or folder to consult. If search fails, resolve access before requesting conclusions based on that repository.",
+    "exampleTitle": "Example for a real task",
+    "example": "Use Vera to examine this notice. First consult the firm’s approved procedure in the “litigation” branch of Second Brain. Cite the sources actually opened and flag conflicting versions or missing information.",
+    "skillsCopy": "The connector gives access to documents; it does not install the firm’s skills. To use your own skill, install and invoke it directly in the app that supports it, using that app’s name or command. You can use your skill without invoking Vera. You do not need to copy it into the Vera plugin.",
+    "skillsGuide": "How to install and use your firm’s skills →",
+    "missingTitle": "Add connector / Add server is missing",
+    "missing": "Check that you are in the right app and account. Ask the administrator whether your role may add custom connections.",
+    "deniedTitle": "Access denied or sign-in requested",
+    "denied": "Open Connect / Authenticate again and check the account. The administrator must confirm access to the intended repository.",
+    "emptyTitle": "Search does not find the document",
+    "empty": "Check the title, branch or folder and whether the document is searchable in Second Brain. Do not broaden the search to other clients.",
+    "readTitle": "The server is listed but Vera does not read",
+    "read": "Enable the connector in the conversation and its reading tools, then start a new task. Verify an actual tool call: the server list alone is insufficient.",
+    "authTitle": "Invalid URL or authentication error",
+    "auth": "Ask the administrator to check the MCP URL, app compatibility and authentication. Share the app, operating system and error text, without documents, passwords or tokens.",
+    "status": "This guide describes configuration; it does not certify a working connection to your Second Brain. Verify the reading test in your own account.",
+    "sources": "Provider documentation",
+    "docsDate": "Steps checked against official documentation on 2 October 2026. Control names may change with the app language and version.",
+    "dataCopy": "This page does not record your connector URL, start sign-in or read Second Brain. When you ask Vera to consult it, the query, source metadata and search excerpts, and the text of opened sources may enter your chosen app’s model context. Use a document without client data for the test. Consultation is not local-only: access, retention and processing depend on the app and Second Brain service. Connecting the repository does not automatically send all its contents to Vera; the material actually consulted depends on the tools and requests.",
+    "dataPage": "Mparanza data handling",
+    "mcpMeaning": "The MCP connector is the connection that lets your app search and read documents in your Second Brain.",
+    "privacy.title": "OpenAI Privacy Filter",
+    "privacy.status": "Optional local connector for Codex, Cowork and Antigravity desktop; installed separately.",
+    "privacy.copy": "Privacy Filter is an open-source OpenAI model that identifies personal information in text, such as names, addresses, emails and phone numbers, and replaces detected values with placeholders. Processing runs on the computer where it is installed.",
+    "privacy.workflow": "Install the connector separately from Vera and use it on request. It reads TXT, Markdown, DOCX and PDFs with extractable text and saves redacted text copies as .txt files. Scans need OCR first.",
+    "privacy.data": "The connector processes originals locally. The selected app receives the paths supplied in the request, the filtered copy’s path and a summary with counts. Filtered text enters the conversation when you ask to read it. Installation downloads the model and tokenizer; filtering runs locally without API calls.",
+    "privacy.source": "OpenAI Privacy Filter code and documentation ↗",
+    "privacy.setup": "Install and use the Privacy Filter connector ↗",
+    "gliner.title": "GLiNER2-PII",
+    "gliner.status": "Optional local connector for Codex, Cowork and Antigravity desktop; installed separately.",
+    "gliner.copy": "GLiNER2-PII is an open-source Fastino model for detecting personal information in text. The connector requests the model’s 42 supported categories, including names, emails, addresses, tax identifiers and IBANs, and replaces detections with placeholders. The model reports training data in seven languages, including Italian.",
+    "gliner.choice": "You choose OpenAI Privacy Filter, GLiNER2-PII or Rizzo PII. These optional integrations are independent of Vera; install one or more. This page does not recommend one over another.",
+    "gliner.workflow": "The connector reads TXT, Markdown, DOCX and PDFs with extractable text from the specified local path and saves a filtered .txt copy. Originals remain unchanged. Scans need OCR first. Install Python 3.12 or later; the model is downloaded during setup.",
+    "gliner.limit": "Detection can miss data or remove useful text. Review the local copy before using it; removal of every personal or company identifier is not guaranteed.",
+    "gliner.setup": "Install and use the GLiNER2-PII connector ↗",
+    "gliner.source": "GLiNER2-PII model and documentation ↗",
+    "gliner.data": "Extracted document text reaches the GLiNER2 model on your computer. The local process applies placeholders without returning detected values. The selected app receives request and result paths, counts and model metadata; filtered text enters the conversation when you ask to read it. The model and tokenizer are downloaded during installation. Filtering uses local files and makes no API calls.",
+    "rizzo.status": "Optional local connector for Codex, Cowork and Antigravity desktop. Requires the Rizzo PII app running on the same computer.",
+    "rizzo.copy": "Rizzo PII detects personal data using an Italian-focused model and its own detectors, including Italian tax codes, VAT numbers and cadastral references. The connector uses the Rizzo app’s processing and saves a text copy with placeholders.",
+    "rizzo.workflow": "Install and start Rizzo PII, then configure the connector with Python 3.12 or later. It reads TXT, Markdown, DOCX and PDFs with extractable text from the specified local path and saves a .txt copy. Originals remain unchanged; scans need OCR first. Keep Rizzo running during processing.",
+    "rizzo.limit": "The connector requests all categories and enables Rizzo’s native dictionary for each document without changing app preferences. It keeps the dictionary locally and returns a session_id for restoring that document. Separate calls do not share identities: every file has its own session.",
+    "rizzo.setup": "Install and use the Rizzo PII connector ↗",
+    "rizzo.source": "Rizzo PII app and documentation ↗",
+    "rizzo.data": "Extracted original text reaches the Rizzo app on the same computer over local HTTP. The native dictionary is saved privately under the connector’s model/sessions directory without encryption; POSIX permissions are 0700/0600 and Windows uses the user folder’s ACLs. Dictionaries, originals, previews and diagnostics never enter MCP responses. The conversation receives paths, IDs, counts and requested filtered text. Restoration returns only a local path and also works with Rizzo closed. State remains until the user removes it.",
+    "rizzo.title": "Rizzo PII",
+    "connector.title": "Download anonymization connectors",
+    "connector.copy": "A separate download from Vera. Choose the engine and folders for originals and filtered copies during setup. Only the selected engine’s dependencies are installed; you can add another later.",
+    "connector.button": "Download connectors ZIP",
+    "connector.setup": "Setup instructions for the three apps ↗",
+    "connector.requirements": "Extract the ZIP and run install.py --setup with Python 3.12. Choose OpenAI Privacy Filter, GLiNER2-PII, Rizzo PII, Lethe or PII-Shield. Models are not bundled. Rizzo needs its app running; Lethe needs local review; PII-Shield needs Node.js 22+ and --node and --npm (npm-cli.js) paths.",
+    "connector.codex": "Codex: add the codex-mcp.toml section to your configuration and restart MCP.",
+    "connector.cowork": "Cowork: install the generated cowork-connector.zip in Customize → Plugins. Run setup on the host computer, not inside Cowork’s Linux VM. Start a new local task.",
+    "connector.antigravity": "Antigravity: add the antigravity-mcp.json server entry to the app’s MCP configuration and reload servers.",
+    "connector.verify": "In each app, check engine status and filter a synthetic file using its relative name inside Input. Inspect the saved copy. Existing app settings are not overwritten. This setup targets local desktop sessions.",
+    "antigravity": "Google Antigravity",
+    "antigravity1": "For Second Brain, open Antigravity’s MCP configuration and add the provider’s server. For a remote server use serverUrl inside mcpServers; preserve existing connections.",
+    "antigravity2": "Reload servers, complete the provider’s authentication and verify search and read in the current session. Vera supplies no Second Brain installer. Compatibility and access depend on the chosen service.",
+    "sessions.title": "Sessions and identity restoration",
+    "sessions.copy": "Lethe and PII-Shield can reuse one session across documents and restore identities in the final output. Create or reopen a session, pass its ID to every file, then restore the locally saved AI output by its path. Restoration returns only a file path to open on your computer.",
+    "sessions.boundary": "The engine’s dictionary is authoritative: the connector preserves it without inferring, merging or repairing identities. OpenAI Privacy Filter and GLiNER2 remain redaction-only. Rizzo preserves and restores each document’s native dictionary; it does not extend sessions across separate calls. Lethe and PII-Shield support multi-document jobs.",
+    "lethe.copy": "Lethe allocates placeholders once for a locally approved set covering the whole job. The connector reuses that selection in later documents and does not add new identities. Local review is required before session creation.",
+    "lethe.data": "Extracted text is processed by Lethe on your computer. Approved items and mappings stay in the private session directory and never enter MCP responses. This adapter does not use Lethe’s encrypted desktop vault. The model receives paths, IDs, counts and requested filtered text; restoration writes a local file and returns its path only.",
+    "shield.copy": "This connector uses gregmos/PII-Shield Node.js CLI 2.2.0. The first document creates the native session; later documents extend its mapping pool. The engine decides identities, aliases and pseudonyms. Node.js 22+ and explicit model setup are required. On the tested macOS arm64 host, the engine’s ONNX runtime aborts at shutdown: the connector rejects the run and does not declare readiness. Acceptance on this Mac is not established; the real multi-document test runs separately on Linux.",
+    "shield.data": "Extracted originals reach the local PII-Shield process and GLiNER model. Mapping and review records can contain original data and remain isolated by session on your computer. The connector does not encrypt them. The conversational model receives metadata and requested filtered text; restoration returns a local path. Retention also depends on the engine’s TTL.",
+    "engine.details": "Instructions, limits and data path",
+    "lethe.title": "Lethe",
+    "shield.title": "PII-Shield"
+  },
+  "fr": {
+    "title": "Intégrations de Vera",
+    "lead": "Connectez Second Brain, utilisez les skills du cabinet ou choisissez OpenAI Privacy Filter, GLiNER2-PII ou Rizzo PII, Lethe, PII-Shield dans les applications de bureau Codex, Cowork et Antigravity.",
+    "scope": "Pour suivre le guide Second Brain, il faut un Second Brain existant avec un connecteur MCP compatible. Vera ne fournit pas ce service et ne nécessite pas Microsoft 365. Sans archive externe, vous pouvez utiliser Vera sans cette configuration.",
+    "back": "← Retour aux intégrations",
+    "nav": "Étapes du guide",
+    "prepare": "Avant de commencer",
+    "claude": "Claude et Cowork",
+    "codex": "Codex et l’application de bureau ChatGPT",
+    "verify": "Vérifier la connexion",
+    "skills": "Les skills du cabinet",
+    "help": "Si la connexion échoue",
+    "data": "Quelles données parviennent au modèle",
+    "before1": "Obtenez l’URL du serveur MCP dans les instructions de votre Second Brain ou auprès de son gestionnaire. Cette adresse peut différer de celle du site ou de la page de connexion. Vera ne fournit pas d’URL universelle.",
+    "before2": "Demandez au gestionnaire le mode de connexion et la compatibilité avec votre application. Ces étapes Codex nécessitent un serveur Streamable HTTP ; une connexion fonctionnelle dans Claude doit être vérifiée séparément dans Codex.",
+    "before3": "Utilisez votre compte du cabinet et identifiez l’archive, le dossier ou la branche à consulter. Il faut des outils de recherche et de lecture ; désactivez les outils d’écriture ou de suppression lorsque l’application le permet.",
+    "before4": "Vérifiez que Vera est installée et activée dans l’application choisie. Installer Vera et connecter Second Brain sont deux opérations distinctes.",
+    "already": "Second Brain est déjà connecté dans la même application ? Passez au test de lecture ci-dessous.",
+    "claude1": "Ouvrez Personnaliser (Customize) → Connecteurs (Connectors). Sélectionnez + Ajouter (Add) → Ajouter un connecteur personnalisé (Add custom connector).",
+    "claude2": "Saisissez un nom, par exemple Second Brain, et l’URL MCP fournie par le gestionnaire. Sélectionnez Continuer (Continue).",
+    "claude3": "Vérifiez le mode d’authentification détecté et suivez les instructions du gestionnaire. Terminez avec Add et Connect ou Sign in now lorsque demandé, avec votre compte. Saisissez les identifiants sur l’écran du service, pas dans la conversation.",
+    "claude4": "Vérifiez les autorisations dans la fiche du connecteur. Activez la recherche et la lecture, par exemple Search memory et Read memory si présents. Les noms dépendent du service.",
+    "claude5": "Démarrez une tâche Cowork avec Vera activée. Dans le menu + de la conversation → Connecteurs, activez Second Brain, puis effectuez le test de lecture.",
+    "team": "Sur Team ou Enterprise, un propriétaire ou un rôle autorisé doit d’abord ajouter le connecteur dans Organization settings → Connectors. Chaque utilisateur connecte ensuite son compte. Si l’option manque, demandez à l’administrateur. Les connecteurs distants doivent être accessibles depuis l’infrastructure Anthropic.",
+    "claudeDocs": "Instructions officielles Claude pour les connecteurs personnalisés",
+    "codex1": "Dans l’application de bureau, ouvrez Paramètres (Settings) → Serveurs MCP (MCP servers) → Ajouter un serveur (Add server).",
+    "codex2": "Nommez le serveur, par exemple Second Brain, choisissez Streamable HTTP et saisissez l’URL MCP du gestionnaire.",
+    "codex3": "Enregistrez, sélectionnez Restart puis Authenticate si proposé. Utilisez le mode indiqué par le gestionnaire. Si une clé ou une autre configuration est nécessaire, demandez son aide sans coller d’identifiants dans la conversation.",
+    "codex4": "Démarrez une nouvelle tâche avec Vera. Saisissez /mcp dans le champ du message pour voir les serveurs connectés ; vérifiez Second Brain et effectuez le test de lecture.",
+    "cloud": "Ces étapes configurent l’application de bureau. Vérifiez séparément l’accès dans votre session web ou Work Cloud : connecter un service dans une application ne garantit pas son accès dans une autre.",
+    "codexDocs": "Instructions officielles OpenAI pour les serveurs MCP",
+    "test1": "Créez manuellement dans Second Brain un document sans données clients, intitulé « Test de connexion Vera ». Ajoutez une phrase inventée que vous reconnaîtrez. Ne l’incluez pas dans le message envoyé à Vera.",
+    "test2": "Dans la nouvelle tâche avec Vera, envoyez ce message :",
+    "prompt": "Cherche le document « Test de connexion Vera » dans mon Second Brain, ouvre-le et restitue son texte avec son titre et son identifiant ou lien. Ne crée ni ne modifie rien. Si l’accès est indisponible, indique quelle étape manque.",
+    "test3": "Vérifiez que la conversation montre une recherche et une lecture via le connecteur. Comparez le texte à votre phrase et ouvrez la référence si disponible. Une réponse « je suis connecté » ne prouve pas la lecture.",
+    "test4": "Après ce test, précisez à Vera le travail et la branche ou le dossier à consulter. Si la recherche échoue, résolvez l’accès avant de demander des conclusions fondées sur cette archive.",
+    "exampleTitle": "Exemple pour un travail réel",
+    "example": "Utilise Vera pour examiner cet avis. Consulte d’abord la procédure approuvée du cabinet dans la branche « contentieux » de Second Brain. Cite les sources effectivement ouvertes et signale les versions contradictoires ou les informations manquantes.",
+    "skillsCopy": "Le connecteur donne accès aux documents ; il n’installe pas les skills du cabinet. Pour utiliser votre skill, installez-la et invoquez-la directement dans l’application compatible, avec le nom ou la commande prévu. Vous pouvez l’utiliser sans invoquer Vera et sans la copier dans le plugin Vera.",
+    "skillsGuide": "Installer et utiliser les skills du cabinet →",
+    "missingTitle": "Ajouter un connecteur / un serveur est absent",
+    "missing": "Vérifiez l’application et le compte. Demandez à l’administrateur si votre rôle peut ajouter des connexions personnalisées.",
+    "deniedTitle": "Accès refusé ou connexion demandée",
+    "denied": "Rouvrez Connect / Authenticate et vérifiez le compte. Le gestionnaire doit confirmer votre accès à l’archive visée.",
+    "emptyTitle": "La recherche ne trouve pas le document",
+    "empty": "Vérifiez le titre, la branche ou le dossier et la disponibilité du document dans la recherche Second Brain. N’étendez pas la recherche à d’autres clients.",
+    "readTitle": "Le serveur est listé mais Vera ne lit pas",
+    "read": "Activez le connecteur dans la conversation et ses outils de lecture, puis démarrez une nouvelle tâche. Vérifiez un appel réel : la liste des serveurs ne suffit pas.",
+    "authTitle": "URL incorrecte ou erreur d’authentification",
+    "auth": "Demandez au gestionnaire de vérifier l’URL MCP, la compatibilité et l’authentification. Communiquez l’application, le système et le texte de l’erreur, sans documents, mots de passe ni tokens.",
+    "status": "Ce guide décrit la configuration ; il n’atteste pas une connexion fonctionnelle à votre Second Brain. Vérifiez le test de lecture dans votre compte.",
+    "sources": "Documentation des fournisseurs",
+    "docsDate": "Étapes vérifiées dans la documentation officielle le 2 octobre 2026. Les noms peuvent changer selon la langue et la version.",
+    "dataCopy": "Cette page n’enregistre pas l’URL de votre connecteur, ne lance pas de connexion et ne lit pas Second Brain. Lors d’une consultation par Vera, la requête, les métadonnées et extraits de recherche, ainsi que le texte des sources ouvertes peuvent entrer dans le contexte du modèle de l’application choisie. Utilisez un document sans données clients pour le test. La consultation n’est pas uniquement locale : accès, conservation et traitement dépendent de l’application et du service Second Brain. Connecter l’archive n’envoie pas automatiquement tout son contenu à Vera ; les éléments consultés dépendent des outils et des demandes.",
+    "dataPage": "Traitement des données Mparanza",
+    "mcpMeaning": "Le connecteur MCP est la connexion qui permet à l’application de rechercher et de lire les documents de votre Second Brain.",
+    "privacy.title": "OpenAI Privacy Filter",
+    "privacy.status": "Connecteur local facultatif pour Codex, Cowork et Antigravity sur ordinateur, à installer séparément.",
+    "privacy.copy": "Privacy Filter est un modèle open source d’OpenAI qui repère dans le texte des données personnelles, comme les noms, adresses, emails et numéros de téléphone, et remplace les valeurs détectées par des libellés génériques. Le traitement s’exécute sur l’ordinateur où il est installé.",
+    "privacy.workflow": "Le connecteur s’installe séparément de Vera et s’utilise à la demande. Il lit les fichiers TXT, Markdown, DOCX et les PDF contenant du texte extractible et enregistre des copies de texte filtré au format .txt. Les documents numérisés nécessitent d’abord une reconnaissance optique de caractères (OCR).",
+    "privacy.data": "Le connecteur traite les originaux localement. L’application choisie reçoit les chemins indiqués dans la demande, le chemin de la copie filtrée et un résumé avec les décomptes. Le texte filtré entre dans la conversation lorsque vous demandez sa lecture. L’installation télécharge le modèle et le tokenizer ; le filtrage s’exécute en local, sans appels API.",
+    "privacy.source": "Code et documentation d’OpenAI Privacy Filter ↗",
+    "privacy.setup": "Installer et utiliser le connecteur Privacy Filter ↗",
+    "gliner.title": "GLiNER2-PII",
+    "gliner.status": "Connecteur local facultatif pour Codex, Cowork et Antigravity sur ordinateur, à installer séparément.",
+    "gliner.copy": "GLiNER2-PII est un modèle open source de Fastino qui repère des données personnelles dans le texte. Le connecteur recherche les 42 catégories prises en charge, dont les noms, emails, adresses, identifiants fiscaux et IBAN, puis remplace les éléments détectés par des libellés génériques. Le modèle déclare des données d’entraînement dans sept langues, dont l’italien.",
+    "gliner.choice": "Vous choisissez OpenAI Privacy Filter, GLiNER2-PII ou Rizzo PII. Ces intégrations sont facultatives et indépendantes de Vera ; vous pouvez en installer une ou plusieurs. Cette page ne recommande aucun choix.",
+    "gliner.workflow": "Le connecteur lit les fichiers TXT, Markdown, DOCX et PDF contenant du texte extractible au chemin local indiqué et enregistre une copie .txt filtrée. Les originaux restent inchangés. Les documents numérisés nécessitent d’abord un OCR. Installez Python 3.12 ou ultérieur ; le modèle est téléchargé lors de la configuration.",
+    "gliner.limit": "La détection peut omettre des données ou supprimer du texte utile. Vérifiez la copie locale avant utilisation ; la suppression de tous les identifiants personnels ou d’entreprise n’est pas garantie.",
+    "gliner.setup": "Installer et utiliser le connecteur GLiNER2-PII ↗",
+    "gliner.source": "Modèle et documentation GLiNER2-PII ↗",
+    "gliner.data": "Le texte extrait du document est transmis au modèle GLiNER2 sur votre ordinateur. Le processus local applique les libellés sans restituer les valeurs détectées. L’application choisie reçoit les chemins de la demande et du résultat, les décomptes et les métadonnées du modèle ; le texte filtré entre dans la conversation à votre demande. Le modèle et le tokenizer sont téléchargés à l’installation. Le filtrage utilise les fichiers locaux sans appel API.",
+    "rizzo.status": "Connecteur local facultatif pour Codex, Cowork et Antigravity sur ordinateur. L’application Rizzo PII doit être ouverte sur le même ordinateur.",
+    "rizzo.copy": "Rizzo PII repère les données personnelles avec un modèle orienté vers les textes italiens et ses propres détecteurs, notamment pour les codes fiscaux, numéros de TVA et références cadastrales italiens. Le connecteur utilise le traitement de Rizzo et enregistre une copie texte avec des libellés de remplacement.",
+    "rizzo.workflow": "Installez et ouvrez Rizzo PII, puis configurez le connecteur avec Python 3.12 ou ultérieur. Il lit TXT, Markdown, DOCX et les PDF contenant du texte extractible au chemin local indiqué, puis enregistre une copie .txt. Les originaux restent inchangés ; les documents numérisés nécessitent un OCR préalable. Gardez Rizzo ouvert pendant le traitement.",
+    "rizzo.limit": "Le connecteur demande toutes les catégories et active le dictionnaire natif de Rizzo pour chaque document sans modifier les préférences de l’application. Il conserve le dictionnaire localement et renvoie un session_id pour restaurer ce document. Les appels séparés ne partagent pas les identités : chaque fichier a sa session.",
+    "rizzo.setup": "Installer et utiliser le connecteur Rizzo PII ↗",
+    "rizzo.source": "Application et documentation Rizzo PII ↗",
+    "rizzo.data": "Le texte original extrait atteint l’application Rizzo sur le même ordinateur par HTTP local. Le dictionnaire natif est conservé dans le dossier privé model/sessions du connecteur, sans chiffrement ; les permissions POSIX sont 0700/0600 et Windows utilise les ACL du dossier utilisateur. Dictionnaires, originaux, aperçus et diagnostics restent hors des réponses MCP. La conversation reçoit chemins, ID, compteurs et texte filtré demandé. La restauration renvoie uniquement un chemin local et fonctionne aussi avec Rizzo fermé. Les données restent jusqu’à leur suppression par l’utilisateur.",
+    "rizzo.title": "Rizzo PII",
+    "connector.title": "Télécharger les connecteurs d’anonymisation",
+    "connector.copy": "Un téléchargement séparé de Vera. Choisissez le moteur et les dossiers des originaux et des copies filtrées. Seules les dépendances du moteur choisi sont installées ; vous pouvez en ajouter un autre ensuite.",
+    "connector.button": "Télécharger le ZIP des connecteurs",
+    "connector.setup": "Instructions d’installation pour les trois applications ↗",
+    "connector.requirements": "Extrayez le ZIP et lancez install.py --setup avec Python 3.12. Choisissez OpenAI Privacy Filter, GLiNER2-PII, Rizzo PII, Lethe ou PII-Shield. Les modèles ne sont pas inclus. Rizzo exige son application ouverte ; Lethe une révision locale ; PII-Shield Node.js 22+ et les chemins --node et --npm (npm-cli.js).",
+    "connector.codex": "Codex : ajoutez la section de codex-mcp.toml à votre configuration et redémarrez MCP.",
+    "connector.cowork": "Cowork : installez le fichier généré cowork-connector.zip dans Personnaliser → Plugins. Lancez l’installation sur l’ordinateur, pas dans la VM Linux de Cowork. Ouvrez une nouvelle tâche locale.",
+    "connector.antigravity": "Antigravity : ajoutez le serveur d’antigravity-mcp.json à la configuration MCP de l’application et rechargez les serveurs.",
+    "connector.verify": "Dans chaque application, vérifiez l’état du moteur et filtrez un fichier fictif en indiquant son nom relatif dans Input. Contrôlez la copie enregistrée. Les réglages existants sont conservés. Ce parcours concerne les sessions de bureau locales.",
+    "antigravity": "Google Antigravity",
+    "antigravity1": "Pour Second Brain, ouvrez la configuration MCP d’Antigravity et ajoutez le serveur du fournisseur. Pour un serveur distant, utilisez serverUrl dans mcpServers ; conservez les autres connexions.",
+    "antigravity2": "Rechargez les serveurs, effectuez l’authentification prévue et vérifiez la recherche et la lecture dans la session actuelle. Vera ne fournit pas d’installateur Second Brain. La compatibilité et les droits dépendent du service choisi.",
+    "sessions.title": "Sessions et restauration des identités",
+    "sessions.copy": "Lethe et PII-Shield réutilisent une session pour plusieurs documents et restaurent les identités dans le résultat final. Créez ou rouvrez une session, utilisez son ID pour chaque fichier puis indiquez le chemin du résultat IA enregistré localement. La restauration renvoie seulement le chemin du fichier à ouvrir sur votre ordinateur.",
+    "sessions.boundary": "Le dictionnaire du moteur fait autorité : le connecteur le conserve sans déduire, fusionner ni corriger les identités. OpenAI Privacy Filter et GLiNER2 restent limités à la suppression. Rizzo conserve et restaure le dictionnaire natif de chaque document, sans prolonger la session entre appels séparés. Lethe et PII-Shield prennent en charge les travaux multi-documents.",
+    "lethe.copy": "Lethe attribue une fois les marqueurs à un ensemble approuvé localement pour tout le travail. Le connecteur réutilise cette sélection sans ajouter de nouvelles identités. La révision locale est requise avant de créer la session.",
+    "lethe.data": "Lethe traite le texte extrait sur votre ordinateur. Les éléments approuvés et les correspondances restent dans le dossier privé de la session, hors des réponses MCP. Ce connecteur n’utilise pas le coffre chiffré de Lethe. Le modèle reçoit chemins, ID, compteurs et texte filtré demandé ; la restauration renvoie seulement le chemin d’un fichier local.",
+    "shield.copy": "Ce connecteur utilise gregmos/PII-Shield, CLI Node.js 2.2.0. Le premier document crée la session native ; les suivants étendent ses correspondances. Le moteur décide des identités, alias et pseudonymes. Node.js 22+ et la configuration explicite du modèle sont nécessaires. Sur le Mac arm64 testé, le runtime ONNX du moteur s’interrompt à la fermeture : le connecteur refuse l’exécution et ne déclare pas le modèle prêt. L’acceptation sur ce Mac n’est pas établie ; le test réel multi-document est exécuté séparément sous Linux.",
+    "shield.data": "Les originaux extraits arrivent au processus PII-Shield et au modèle GLiNER locaux. Les correspondances et révisions peuvent contenir des données originales et restent isolées par session sur l’ordinateur. Le connecteur ne les chiffre pas. Le modèle conversationnel reçoit les métadonnées et le texte filtré demandé ; la restauration renvoie un chemin local. La conservation dépend aussi du TTL du moteur.",
+    "engine.details": "Instructions, limites et parcours des données",
+    "lethe.title": "Lethe",
+    "shield.title": "PII-Shield"
+  },
+  "de": {
+    "title": "Vera-Integrationen",
+    "lead": "Verbinden Sie Second Brain, nutzen Sie Kanzlei-Skills oder wählen Sie OpenAI Privacy Filter, GLiNER2-PII oder Rizzo PII, Lethe, PII-Shield in den Desktop-Apps Codex, Cowork und Antigravity.",
+    "scope": "Für die Second-Brain-Anleitung benötigen Sie ein vorhandenes Second Brain mit kompatiblem MCP-Konnektor. Vera stellt diesen Dienst nicht bereit und benötigt kein Microsoft 365. Ohne externes Archiv können Sie Vera ohne diese Einrichtung nutzen.",
+    "back": "← Zurück zu Integrationen",
+    "nav": "Schritte der Anleitung",
+    "prepare": "Vorbereitung",
+    "claude": "Claude und Cowork",
+    "codex": "Codex und die ChatGPT-Desktop-App",
+    "verify": "Verbindung prüfen",
+    "skills": "Skills der Kanzlei",
+    "help": "Wenn die Verbindung nicht funktioniert",
+    "data": "Welche Daten das Modell erreichen",
+    "before1": "Besorgen Sie die MCP-Server-URL aus der Anleitung Ihres Second Brain oder von dessen Administrator. Diese Adresse kann von der Website oder Anmeldeseite abweichen. Vera stellt keine allgemeingültige URL bereit.",
+    "before2": "Fragen Sie den Administrator nach dem Anmeldeverfahren und der App-Kompatibilität. Diese Codex-Schritte benötigen einen Streamable-HTTP-Server. Eine in Claude funktionierende Verbindung muss in Codex separat geprüft werden.",
+    "before3": "Nutzen Sie Ihr Kanzleikonto und bestimmen Sie Archiv, Ordner oder Bereich für die Abfrage. Sie benötigen Such- und Lesewerkzeuge. Deaktivieren Sie Schreib- und Löschwerkzeuge, soweit die App dies erlaubt.",
+    "before4": "Prüfen Sie, dass Vera in der gewählten App installiert und aktiviert ist. Vera installieren und Second Brain verbinden sind getrennte Schritte.",
+    "already": "Second Brain ist bereits in derselben App verbunden? Gehen Sie direkt zum Lesetest weiter.",
+    "claude1": "Öffnen Sie Anpassen (Customize) → Konnektoren (Connectors). Wählen Sie + Hinzufügen (Add) → Benutzerdefinierten Konnektor hinzufügen (Add custom connector).",
+    "claude2": "Geben Sie einen Namen wie Second Brain und die MCP-URL des Administrators ein. Wählen Sie Weiter (Continue).",
+    "claude3": "Prüfen Sie das erkannte Anmeldeverfahren und folgen Sie der Anleitung des Administrators. Schließen Sie Add und Connect oder Sign in now ab und melden Sie sich mit Ihrem Konto an. Zugangsdaten gehören in die Anmeldemaske des Dienstes, nicht in den Chat.",
+    "claude4": "Prüfen Sie die Werkzeugberechtigungen des Konnektors. Aktivieren Sie Suche und Lesen, etwa Search memory und Read memory, falls vorhanden. Die Namen hängen vom Dienst ab.",
+    "claude5": "Starten Sie eine Cowork-Aufgabe mit aktiviertem Vera. Aktivieren Sie Second Brain im + Menü der Unterhaltung → Connectors. Führen Sie dann den Lesetest durch.",
+    "team": "Bei Team oder Enterprise muss ein Eigentümer oder eine berechtigte Rolle den Konnektor zuerst unter Organization settings → Connectors hinzufügen. Danach verbindet jeder Nutzer sein Konto. Fragen Sie bei fehlender Option den Administrator. Remote-Konnektoren müssen aus der Anthropic-Infrastruktur erreichbar sein.",
+    "claudeDocs": "Offizielle Claude-Anleitung für benutzerdefinierte Konnektoren",
+    "codex1": "Öffnen Sie in der Desktop-App Einstellungen (Settings) → MCP-Server (MCP servers) → Server hinzufügen (Add server).",
+    "codex2": "Vergeben Sie einen Namen wie Second Brain, wählen Sie Streamable HTTP und tragen Sie die MCP-URL des Administrators ein.",
+    "codex3": "Speichern Sie, wählen Sie Restart und gegebenenfalls Authenticate für die Anmeldung. Nutzen Sie das vorgegebene Verfahren. Bei erforderlichem Schlüssel oder anderer Konfiguration hilft der Administrator; fügen Sie keine Zugangsdaten in den Chat ein.",
+    "codex4": "Starten Sie eine neue Aufgabe mit Vera. Geben Sie /mcp im Nachrichtenfeld ein, um verbundene Server zu sehen. Prüfen Sie Second Brain und führen Sie den Lesetest durch.",
+    "cloud": "Diese Schritte richten die Desktop-App ein. Prüfen Sie den Zugriff in Web-Chat oder Work Cloud separat in der verwendeten Sitzung. Eine Verbindung in einer App garantiert keinen Zugriff in einer anderen.",
+    "codexDocs": "Offizielle OpenAI-Anleitung für MCP-Server",
+    "test1": "Erstellen Sie in Second Brain manuell ein Dokument ohne Mandantendaten mit dem Titel „Vera-Verbindungstest“. Schreiben Sie einen erfundenen Satz hinein, den Sie wiedererkennen. Nennen Sie diesen Satz nicht in Ihrer Nachricht an Vera.",
+    "test2": "Senden Sie in der neuen Aufgabe mit Vera diese Nachricht:",
+    "prompt": "Suche das Dokument „Vera-Verbindungstest“ in meinem Second Brain, öffne es und gib seinen Text mit Titel und Kennung oder Link zurück. Erstelle und ändere nichts. Wenn kein Zugriff möglich ist, nenne den fehlenden Schritt.",
+    "test3": "Prüfen Sie, dass die Unterhaltung eine Suche und einen Leseaufruf über den Konnektor zeigt. Vergleichen Sie den Text mit Ihrem Satz und öffnen Sie die Quellenreferenz, falls verfügbar. „Ich bin verbunden“ beweist keinen Lesezugriff.",
+    "test4": "Nennen Sie Vera nach dem Test die Aufgabe und den Bereich oder Ordner. Falls die Suche fehlschlägt, klären Sie den Zugriff vor Schlussfolgerungen auf Basis dieses Archivs.",
+    "exampleTitle": "Beispiel für eine echte Aufgabe",
+    "example": "Prüfe diesen Bescheid mit Vera. Lies zuerst das freigegebene Kanzleiverfahren im Bereich „Streitverfahren“ von Second Brain. Zitiere tatsächlich geöffnete Quellen und benenne widersprüchliche Versionen oder fehlende Informationen.",
+    "skillsCopy": "Der Konnektor erschließt Dokumente und installiert keine Kanzlei-Skills. Installieren und starten Sie Ihren eigenen Skill direkt in einer unterstützten App mit deren vorgesehenem Namen oder Befehl. Sie können ihn ohne Vera verwenden und müssen ihn nicht in das Vera-Plugin kopieren.",
+    "skillsGuide": "Skills der Kanzlei installieren und verwenden →",
+    "missingTitle": "Konnektor / Server hinzufügen fehlt",
+    "missing": "Prüfen Sie App und Konto. Fragen Sie den Administrator, ob Ihre Rolle eigene Verbindungen hinzufügen darf.",
+    "deniedTitle": "Zugriff verweigert oder Anmeldung verlangt",
+    "denied": "Öffnen Sie Connect / Authenticate erneut und prüfen Sie das Konto. Der Administrator muss Ihren Zugriff auf das gewünschte Archiv bestätigen.",
+    "emptyTitle": "Die Suche findet das Dokument nicht",
+    "empty": "Prüfen Sie Titel, Bereich oder Ordner sowie die Suchbarkeit in Second Brain. Erweitern Sie die Suche nicht auf andere Mandanten.",
+    "readTitle": "Der Server ist aufgeführt, aber Vera liest nicht",
+    "read": "Aktivieren Sie Konnektor und Lesewerkzeuge in der Unterhaltung und starten Sie eine neue Aufgabe. Prüfen Sie einen echten Werkzeugaufruf; die Serverliste reicht nicht.",
+    "authTitle": "Ungültige URL oder Anmeldefehler",
+    "auth": "Bitten Sie den Administrator, MCP-URL, App-Kompatibilität und Anmeldung zu prüfen. Teilen Sie App, Betriebssystem und Fehlertext mit, ohne Dokumente, Passwörter oder Tokens.",
+    "status": "Diese Anleitung beschreibt die Einrichtung und bestätigt keine funktionierende Verbindung zu Ihrem Second Brain. Prüfen Sie den Lesetest in Ihrem Konto.",
+    "sources": "Dokumentation der Anbieter",
+    "docsDate": "Schritte am 2. Oktober 2026 anhand offizieller Dokumentation geprüft. Bezeichnungen können je nach Sprache und App-Version abweichen.",
+    "dataCopy": "Diese Seite speichert Ihre Konnektor-URL nicht, startet keine Anmeldung und liest Second Brain nicht. Bei einer Abfrage durch Vera können Suchanfrage, Quellenmetadaten und Suchauszüge sowie der Text geöffneter Quellen in den Modellkontext der gewählten App gelangen. Nutzen Sie für den Test ein Dokument ohne Mandantendaten. Die Abfrage ist nicht ausschließlich lokal: Zugriff, Aufbewahrung und Verarbeitung hängen von App und Second-Brain-Dienst ab. Das Verbinden des Archivs übermittelt nicht automatisch dessen gesamten Inhalt an Vera; tatsächlich gelesene Inhalte hängen von Werkzeugen und Anfragen ab.",
+    "dataPage": "Datenverarbeitung bei Mparanza",
+    "mcpMeaning": "Der MCP-Konnektor ist die Verbindung, über die Ihre App Dokumente in Ihrem Second Brain suchen und lesen kann.",
+    "privacy.title": "OpenAI Privacy Filter",
+    "privacy.status": "Optionaler lokaler Konnektor für Codex, Cowork und Antigravity auf dem Desktop, separat zu installieren.",
+    "privacy.copy": "Privacy Filter ist ein Open-Source-Modell von OpenAI. Es erkennt personenbezogene Angaben im Text, etwa Namen, Adressen, E-Mail-Adressen und Telefonnummern, und ersetzt erkannte Werte durch Platzhalter. Die Verarbeitung erfolgt auf dem Computer, auf dem das Modell installiert ist.",
+    "privacy.workflow": "Der Konnektor wird unabhängig von Vera installiert und bei Bedarf verwendet. Er liest TXT-, Markdown- und DOCX-Dateien sowie PDFs mit extrahierbarem Text und speichert gefilterte Textkopien im Format .txt. Scans benötigen zuvor eine Texterkennung (OCR).",
+    "privacy.data": "Der Konnektor verarbeitet Originale lokal. Die gewählte App erhält die in der Anfrage angegebenen Pfade, den Pfad der gefilterten Kopie und eine Zusammenfassung mit Anzahlen. Gefilterter Text gelangt erst auf Ihre Leseanfrage in die Unterhaltung. Die Installation lädt Modell und Tokenizer herunter; die Filterung erfolgt lokal ohne API-Aufrufe.",
+    "privacy.source": "Code und Dokumentation von OpenAI Privacy Filter ↗",
+    "privacy.setup": "Privacy-Filter-Konnektor installieren und verwenden ↗",
+    "gliner.title": "GLiNER2-PII",
+    "gliner.status": "Optionaler lokaler Konnektor für Codex, Cowork und Antigravity auf dem Desktop, separat zu installieren.",
+    "gliner.copy": "GLiNER2-PII ist ein Open-Source-Modell von Fastino zur Erkennung personenbezogener Angaben im Text. Der Konnektor fragt alle 42 unterstützten Kategorien ab, darunter Namen, E-Mail-Adressen, Anschriften, Steuerkennungen und IBANs, und ersetzt erkannte Angaben durch Platzhalter. Laut Modellbeschreibung stammen die Trainingsdaten aus sieben Sprachen, einschließlich Italienisch.",
+    "gliner.choice": "Sie wählen OpenAI Privacy Filter, GLiNER2-PII oder Rizzo PII. Diese Integrationen sind optional und unabhängig von Vera; Sie können eine oder mehrere installieren. Diese Seite empfiehlt keine davon.",
+    "gliner.workflow": "Der Konnektor liest TXT-, Markdown- und DOCX-Dateien sowie PDFs mit extrahierbarem Text aus dem angegebenen lokalen Pfad und speichert eine gefilterte .txt-Kopie. Originale bleiben unverändert. Scans benötigen zuvor OCR. Installieren Sie Python 3.12 oder neuer; das Modell wird bei der Einrichtung heruntergeladen.",
+    "gliner.limit": "Die Erkennung kann Angaben übersehen oder nützlichen Text entfernen. Prüfen Sie die lokale Kopie vor der Verwendung; die Entfernung sämtlicher Personen- oder Unternehmenskennungen ist nicht garantiert.",
+    "gliner.setup": "GLiNER2-PII-Konnektor installieren und verwenden ↗",
+    "gliner.source": "GLiNER2-PII-Modell und Dokumentation ↗",
+    "gliner.data": "Der extrahierte Dokumenttext wird vom GLiNER2-Modell auf Ihrem Computer verarbeitet. Der lokale Prozess setzt Platzhalter ein, ohne erkannte Werte zurückzugeben. Die gewählte App erhält Anfrage- und Ergebnispfade, Anzahlen und Modellmetadaten; gefilterter Text gelangt erst auf Ihre Leseanfrage in das Gespräch. Modell und Tokenizer werden bei der Installation heruntergeladen. Die Filterung verwendet lokale Dateien ohne API-Aufrufe.",
+    "rizzo.status": "Optionaler lokaler Konnektor für Codex, Cowork und Antigravity auf dem Desktop. Die Rizzo-PII-App muss auf demselben Computer laufen.",
+    "rizzo.copy": "Rizzo PII erkennt personenbezogene Daten mit einem auf italienische Texte ausgerichteten Modell und eigenen Detektoren, auch für italienische Steuercodes, Umsatzsteuer-Identifikationsnummern und Katasterangaben. Der Konnektor verwendet die Verarbeitung der Rizzo-App und speichert eine Textkopie mit Platzhaltern.",
+    "rizzo.workflow": "Installieren und starten Sie Rizzo PII und richten Sie den Konnektor mit Python 3.12 oder neuer ein. Er liest TXT, Markdown, DOCX und PDFs mit extrahierbarem Text aus dem angegebenen lokalen Pfad und speichert eine .txt-Kopie. Originale bleiben unverändert; Scans benötigen zuvor OCR. Rizzo muss während der Verarbeitung laufen.",
+    "rizzo.limit": "Der Connector fordert alle Kategorien an und aktiviert Rizzos natives Wörterbuch für jedes Dokument, ohne App-Einstellungen zu ändern. Er speichert es lokal und liefert eine session_id zur Wiederherstellung dieses Dokuments. Separate Aufrufe teilen keine Identitäten: Jede Datei hat ihre eigene Sitzung.",
+    "rizzo.setup": "Rizzo-PII-Konnektor installieren und verwenden ↗",
+    "rizzo.source": "Rizzo-PII-App und Dokumentation ↗",
+    "rizzo.data": "Extrahierter Originaltext erreicht die Rizzo-App auf demselben Computer über lokales HTTP. Das native Wörterbuch liegt unverschlüsselt im privaten Connector-Ordner model/sessions; POSIX-Berechtigungen sind 0700/0600, Windows nutzt die ACLs des Benutzerordners. Wörterbücher, Originale, Vorschauen und Diagnosen erscheinen nicht in MCP-Antworten. Der Chat erhält Pfade, IDs, Zähler und angeforderten gefilterten Text. Die Wiederherstellung liefert nur einen lokalen Pfad und funktioniert auch bei geschlossener Rizzo-App. Daten bleiben bis zur Löschung durch den Benutzer.",
+    "rizzo.title": "Rizzo PII",
+    "connector.title": "Anonymisierungskonnektoren herunterladen",
+    "connector.copy": "Ein separater Download neben Vera. Wählen Sie bei der Einrichtung den Motor und die Ordner für Originale und gefilterte Kopien. Nur die Abhängigkeiten des gewählten Motors werden installiert; weitere können später hinzukommen.",
+    "connector.button": "Konnektoren als ZIP herunterladen",
+    "connector.setup": "Installationsanleitung für die drei Apps ↗",
+    "connector.requirements": "Entpacken Sie die ZIP und starten Sie install.py --setup mit Python 3.12. Wählen Sie OpenAI Privacy Filter, GLiNER2-PII, Rizzo PII, Lethe oder PII-Shield. Modelle sind nicht enthalten. Rizzo benötigt seine laufende App; Lethe eine lokale Prüfung; PII-Shield Node.js 22+ sowie --node und --npm (npm-cli.js).",
+    "connector.codex": "Codex: Ergänzen Sie Ihre Konfiguration um den Abschnitt aus codex-mcp.toml und starten Sie MCP neu.",
+    "connector.cowork": "Cowork: Installieren Sie die erzeugte cowork-connector.zip unter Anpassen → Plugins. Führen Sie die Einrichtung auf dem Computer aus, nicht in Coworks Linux-VM. Starten Sie eine neue lokale Aufgabe.",
+    "connector.antigravity": "Antigravity: Fügen Sie den Server aus antigravity-mcp.json zur MCP-Konfiguration der App hinzu und laden Sie die Server neu.",
+    "connector.verify": "Prüfen Sie in jeder App den Motorstatus und filtern Sie eine fiktive Testdatei über ihren relativen Namen in Input. Prüfen Sie die gespeicherte Kopie. Bestehende App-Einstellungen bleiben erhalten. Dieser Ablauf gilt für lokale Desktop-Sitzungen.",
+    "antigravity": "Google Antigravity",
+    "antigravity1": "Öffnen Sie für Second Brain die MCP-Konfiguration von Antigravity und ergänzen Sie den Server des Anbieters. Verwenden Sie für einen Remote-Server serverUrl in mcpServers; behalten Sie bestehende Verbindungen.",
+    "antigravity2": "Laden Sie die Server neu, melden Sie sich beim Anbieter an und prüfen Sie Suche und Lesen in der aktuellen Sitzung. Vera liefert kein Second-Brain-Installationsprogramm. Kompatibilität und Zugriff hängen vom gewählten Dienst ab.",
+    "sessions.title": "Sitzungen und Wiederherstellung der Identitäten",
+    "sessions.copy": "Lethe und PII-Shield verwenden eine Sitzung für mehrere Dokumente und stellen Identitäten im Endergebnis wieder her. Erstellen oder öffnen Sie eine Sitzung, übergeben Sie ihre ID für jede Datei und anschließend den Pfad der lokal gespeicherten KI-Ausgabe. Die Wiederherstellung liefert nur einen Dateipfad zum lokalen Öffnen.",
+    "sessions.boundary": "Das Wörterbuch der Engine ist maßgeblich. Der Connector bewahrt es, ohne Identitäten abzuleiten, zusammenzuführen oder zu korrigieren. OpenAI Privacy Filter und GLiNER2 bleiben auf Redaktion beschränkt. Rizzo bewahrt und restauriert das native Wörterbuch jedes Dokuments, ohne Sitzungen zwischen separaten Aufrufen zu erweitern. Lethe und PII-Shield unterstützen mehrere Dokumente pro Auftrag.",
+    "lethe.copy": "Lethe vergibt Platzhalter einmal für einen lokal freigegebenen Satz für den gesamten Auftrag. Der Connector verwendet diese Auswahl erneut und ergänzt keine Identitäten. Vor dem Erstellen der Sitzung ist eine lokale Prüfung erforderlich.",
+    "lethe.data": "Lethe verarbeitet den extrahierten Text auf Ihrem Computer. Freigegebene Elemente und Zuordnungen bleiben im privaten Sitzungsordner und außerhalb der MCP-Antworten. Dieser Connector verwendet nicht Lethes verschlüsselten Desktop-Tresor. Das Modell erhält Pfade, IDs, Zähler und angeforderten gefilterten Text; die Wiederherstellung liefert nur einen lokalen Dateipfad.",
+    "shield.copy": "Dieser Connector verwendet gregmos/PII-Shield, Node.js CLI 2.2.0. Das erste Dokument erstellt die native Sitzung; weitere erweitern deren Zuordnungen. Die Engine bestimmt Identitäten, Aliase und Pseudonyme. Node.js 22+ und eine ausdrückliche Modelleinrichtung sind erforderlich. Auf dem getesteten Mac mit arm64 bricht die ONNX-Laufzeit beim Beenden ab: Der Connector lehnt den Lauf ab und meldet keine Bereitschaft. Die Abnahme auf diesem Mac ist nicht belegt; der echte Mehrdokumententest läuft separat unter Linux.",
+    "shield.data": "Extrahierte Originale erreichen den lokalen PII-Shield-Prozess und das lokale GLiNER-Modell. Zuordnungen und Prüfdatensätze können Originaldaten enthalten und bleiben pro Sitzung auf dem Computer getrennt. Der Connector verschlüsselt sie nicht. Das Konversationsmodell erhält Metadaten und angeforderten gefilterten Text; die Wiederherstellung liefert einen lokalen Pfad. Die Aufbewahrung hängt auch vom TTL der Engine ab.",
+    "engine.details": "Anleitung, Grenzen und Datenweg",
+    "lethe.title": "Lethe",
+    "shield.title": "PII-Shield"
+  },
+  "es": {
+    "title": "Integraciones de Vera",
+    "lead": "Conecta Second Brain, usa las skills del despacho o elige OpenAI Privacy Filter, GLiNER2-PII o Rizzo PII, Lethe, PII-Shield en las aplicaciones de escritorio Codex, Cowork y Antigravity.",
+    "scope": "Para seguir la guía de Second Brain necesitas un Second Brain existente con un conector MCP compatible. Vera no proporciona este servicio ni requiere Microsoft 365. Sin archivo externo puedes usar Vera sin esta configuración.",
+    "back": "← Volver a Integraciones",
+    "nav": "Pasos de la guía",
+    "prepare": "Antes de empezar",
+    "claude": "Claude y Cowork",
+    "codex": "Codex y la aplicación de escritorio ChatGPT",
+    "verify": "Verificar la conexión",
+    "skills": "Las skills del despacho",
+    "help": "Si la conexión falla",
+    "data": "Qué datos llegan al modelo",
+    "before1": "Obtén la URL del servidor MCP de las instrucciones de tu Second Brain o de su administrador. Esta dirección puede ser distinta de la web o de la página de acceso. Vera no proporciona una URL universal.",
+    "before2": "Pregunta al administrador qué método de acceso usar y si el conector admite tu aplicación. Estos pasos de Codex requieren un servidor Streamable HTTP; una conexión que funciona en Claude debe verificarse por separado en Codex.",
+    "before3": "Usa tu cuenta del despacho e identifica el archivo, carpeta o rama que consultar. Necesitas herramientas de búsqueda y lectura; desactiva las de escritura o eliminación donde la aplicación lo permita.",
+    "before4": "Comprueba que Vera esté instalada y activa en la aplicación elegida. Instalar Vera y conectar Second Brain son operaciones distintas.",
+    "already": "¿Second Brain ya está conectado en la misma aplicación? Pasa directamente a la prueba de lectura.",
+    "claude1": "Abre Personalizar (Customize) → Conectores (Connectors). Elige + Añadir (Add) → Añadir conector personalizado (Add custom connector).",
+    "claude2": "Introduce un nombre, por ejemplo Second Brain, y la URL MCP del administrador. Pulsa Continuar (Continue).",
+    "claude3": "Revisa el método de autenticación detectado y sigue las instrucciones del administrador. Completa Add y Connect o Sign in now cuando se solicite, con tu cuenta. Introduce credenciales en la pantalla del servicio, no en el chat.",
+    "claude4": "Revisa los permisos de herramientas en la ficha del conector. Activa búsqueda y lectura, por ejemplo Search memory y Read memory si aparecen. Los nombres dependen del servicio.",
+    "claude5": "Inicia una tarea Cowork con Vera activa. En el menú + de la conversación → Connectors, activa Second Brain y ejecuta la prueba de lectura.",
+    "team": "En Team o Enterprise, un propietario o rol autorizado debe añadir primero el conector en Organization settings → Connectors. Cada usuario conecta después su cuenta. Si falta la opción, pregunta al administrador. Los conectores remotos deben ser accesibles desde la infraestructura de Anthropic.",
+    "claudeDocs": "Instrucciones oficiales de Claude para conectores personalizados",
+    "codex1": "En la aplicación de escritorio abre Ajustes (Settings) → Servidores MCP (MCP servers) → Añadir servidor (Add server).",
+    "codex2": "Asigna un nombre, por ejemplo Second Brain, elige Streamable HTTP e introduce la URL MCP del administrador.",
+    "codex3": "Guarda, selecciona Restart y Authenticate si aparece para acceder al servicio. Usa el método indicado por el administrador. Si se necesita una clave u otra configuración, pide su ayuda sin pegar credenciales en el chat.",
+    "codex4": "Inicia una nueva tarea con Vera. Escribe /mcp en el campo del mensaje para ver los servidores conectados, comprueba Second Brain y ejecuta la prueba de lectura.",
+    "cloud": "Estos pasos configuran la aplicación de escritorio. Verifica por separado el acceso en la sesión web o Work Cloud donde trabajas: conectar un servicio en una aplicación no garantiza el acceso en otra.",
+    "codexDocs": "Instrucciones oficiales de OpenAI para servidores MCP",
+    "test1": "Crea manualmente en Second Brain un documento sin datos de clientes titulado «Prueba de conexión Vera». Añade una frase inventada que puedas reconocer. No incluyas esa frase en el mensaje enviado a Vera.",
+    "test2": "En la nueva tarea con Vera, envía este mensaje:",
+    "prompt": "Busca el documento «Prueba de conexión Vera» en mi Second Brain, ábrelo y devuelve su texto con título e identificador o enlace. No crees ni modifiques nada. Si no puedes acceder, indica qué paso falta.",
+    "test3": "Comprueba que la conversación muestre una búsqueda y una lectura mediante el conector. Compara el texto con tu frase y abre la referencia si está disponible. Una respuesta «estoy conectado» no demuestra la lectura.",
+    "test4": "Después de la prueba, indica a Vera el trabajo y la rama o carpeta que consultar. Si la búsqueda falla, resuelve el acceso antes de pedir conclusiones basadas en ese archivo.",
+    "exampleTitle": "Ejemplo para un trabajo real",
+    "example": "Usa Vera para examinar esta notificación. Consulta primero el procedimiento aprobado del despacho en la rama «contencioso» de Second Brain. Cita las fuentes realmente abiertas y señala versiones contradictorias o información que falta.",
+    "skillsCopy": "El conector da acceso a documentos; no instala las skills del despacho. Para usar tu skill, instálala e invócala directamente en la aplicación compatible, con el nombre o comando previsto. Puedes usarla sin invocar Vera y sin copiarla al plugin Vera.",
+    "skillsGuide": "Instalar y usar las skills del despacho →",
+    "missingTitle": "No aparece Añadir conector / servidor",
+    "missing": "Comprueba la aplicación y la cuenta. Pregunta al administrador si tu rol puede añadir conexiones personalizadas.",
+    "deniedTitle": "Acceso denegado o solicitud de inicio de sesión",
+    "denied": "Abre Connect / Authenticate de nuevo y comprueba la cuenta. El administrador debe confirmar tu acceso al archivo previsto.",
+    "emptyTitle": "La búsqueda no encuentra el documento",
+    "empty": "Comprueba título, rama o carpeta y que el documento se pueda buscar en Second Brain. No amplíes la búsqueda a otros clientes.",
+    "readTitle": "El servidor aparece pero Vera no lee",
+    "read": "Activa el conector en la conversación y sus herramientas de lectura; inicia una nueva tarea. Verifica una llamada real: la lista de servidores no basta.",
+    "authTitle": "URL no válida o error de autenticación",
+    "auth": "Pide al administrador que revise URL MCP, compatibilidad y autenticación. Comparte aplicación, sistema operativo y texto del error, sin documentos, contraseñas ni tokens.",
+    "status": "Esta guía describe la configuración; no acredita una conexión funcional con tu Second Brain. Verifica la prueba de lectura en tu cuenta.",
+    "sources": "Documentación de los proveedores",
+    "docsDate": "Pasos revisados en la documentación oficial el 2 de octubre de 2026. Los nombres pueden cambiar según el idioma y la versión.",
+    "dataCopy": "Esta página no registra la URL del conector, no inicia sesión ni lee Second Brain. Cuando pides una consulta a Vera, la búsqueda, los metadatos y extractos devueltos, y el texto de las fuentes abiertas pueden entrar en el contexto del modelo de la aplicación elegida. Usa un documento sin datos de clientes para la prueba. La consulta no es solo local: acceso, conservación y tratamiento dependen de la aplicación y del servicio Second Brain. Conectar el archivo no envía automáticamente todo su contenido a Vera; el material consultado depende de las herramientas y las solicitudes.",
+    "dataPage": "Tratamiento de datos de Mparanza",
+    "mcpMeaning": "El conector MCP es la conexión que permite a la aplicación buscar y leer documentos de tu Second Brain.",
+    "privacy.title": "OpenAI Privacy Filter",
+    "privacy.status": "Conector local opcional para Codex, Cowork y Antigravity de escritorio, con instalación independiente.",
+    "privacy.copy": "Privacy Filter es un modelo de código abierto de OpenAI que identifica datos personales en el texto, como nombres, direcciones, correos electrónicos y números de teléfono, y sustituye los valores detectados por marcadores. El procesamiento se realiza en el ordenador donde está instalado.",
+    "privacy.workflow": "El conector se instala por separado de Vera y se utiliza cuando lo solicitas. Lee archivos TXT, Markdown, DOCX y PDF con texto extraíble y guarda copias de texto filtrado en formato .txt. Los documentos escaneados necesitan primero reconocimiento óptico de caracteres (OCR).",
+    "privacy.data": "El conector procesa los originales localmente. La aplicación elegida recibe las rutas indicadas en la solicitud, la ruta de la copia filtrada y un resumen con los recuentos. El texto filtrado entra en la conversación cuando pides leerlo. La instalación descarga el modelo y el tokenizer; el filtrado se realiza en local, sin llamadas API.",
+    "privacy.source": "Código y documentación de OpenAI Privacy Filter ↗",
+    "privacy.setup": "Instalar y utilizar el conector Privacy Filter ↗",
+    "gliner.title": "GLiNER2-PII",
+    "gliner.status": "Conector local opcional para Codex, Cowork y Antigravity de escritorio, con instalación independiente.",
+    "gliner.copy": "GLiNER2-PII es un modelo de código abierto de Fastino para detectar datos personales en texto. El conector solicita las 42 categorías admitidas, incluidos nombres, emails, direcciones, identificadores fiscales e IBAN, y sustituye las detecciones por marcadores. El modelo declara datos de entrenamiento en siete idiomas, incluido el italiano.",
+    "gliner.choice": "Tú eliges OpenAI Privacy Filter, GLiNER2-PII o Rizzo PII. Son integraciones opcionales e independientes de Vera; puedes instalar una o varias. Esta página no recomienda ninguna sobre las demás.",
+    "gliner.workflow": "El conector lee archivos TXT, Markdown, DOCX y PDF con texto extraíble desde la ruta local indicada y guarda una copia .txt filtrada. Los originales no se modifican. Los documentos escaneados necesitan OCR previo. Instala Python 3.12 o posterior; el modelo se descarga durante la configuración.",
+    "gliner.limit": "La detección puede omitir datos o eliminar texto útil. Revisa la copia local antes de usarla; no se garantiza la eliminación de todos los identificadores personales o empresariales.",
+    "gliner.setup": "Instalar y usar el conector GLiNER2-PII ↗",
+    "gliner.source": "Modelo y documentación de GLiNER2-PII ↗",
+    "gliner.data": "El texto extraído del documento llega al modelo GLiNER2 en tu ordenador. El proceso local aplica los marcadores sin devolver los valores detectados. La aplicación elegida recibe las rutas de la solicitud y del resultado, los recuentos y los metadatos del modelo; el texto filtrado entra en la conversación cuando solicitas leerlo. El modelo y el tokenizador se descargan durante la instalación. El filtrado utiliza archivos locales sin llamadas API.",
+    "rizzo.status": "Conector local opcional para Codex, Cowork y Antigravity de escritorio. Requiere la aplicación Rizzo PII abierta en el mismo ordenador.",
+    "rizzo.copy": "Rizzo PII detecta datos personales con un modelo orientado a textos italianos y sus propios detectores, incluidos códigos fiscales, números de IVA y referencias catastrales italianos. El conector utiliza el procesamiento de Rizzo y guarda una copia de texto con marcadores.",
+    "rizzo.workflow": "Instala y abre Rizzo PII, después configura el conector con Python 3.12 o posterior. Lee TXT, Markdown, DOCX y PDF con texto extraíble desde la ruta local indicada y guarda una copia .txt. Los originales no se modifican; los documentos escaneados necesitan OCR previo. Mantén Rizzo abierto durante el procesamiento.",
+    "rizzo.limit": "El conector solicita todas las categorías y activa el diccionario nativo de Rizzo para cada documento sin cambiar las preferencias de la aplicación. Lo guarda localmente y devuelve un session_id para restaurar ese documento. Las llamadas separadas no comparten identidades: cada archivo tiene su sesión.",
+    "rizzo.setup": "Instalar y usar el conector Rizzo PII ↗",
+    "rizzo.source": "Aplicación y documentación de Rizzo PII ↗",
+    "rizzo.data": "El texto original extraído llega a Rizzo en el mismo ordenador mediante HTTP local. El diccionario nativo se guarda sin cifrado en la carpeta privada model/sessions del conector; los permisos POSIX son 0700/0600 y Windows usa las ACL de la carpeta del usuario. Diccionarios, originales, vistas previas y diagnósticos no entran en las respuestas MCP. La conversación recibe rutas, ID, recuentos y texto filtrado solicitado. La restauración devuelve solo una ruta local y funciona también con Rizzo cerrado. Los datos permanecen hasta que el usuario los elimina.",
+    "rizzo.title": "Rizzo PII",
+    "connector.title": "Descargar conectores de anonimización",
+    "connector.copy": "Una descarga separada de Vera. Elige el motor y las carpetas para originales y copias filtradas durante la instalación. Solo se instalan las dependencias del motor elegido; puedes añadir otro después.",
+    "connector.button": "Descargar ZIP de conectores",
+    "connector.setup": "Instrucciones de instalación para las tres aplicaciones ↗",
+    "connector.requirements": "Extrae el ZIP y ejecuta install.py --setup con Python 3.12. Elige OpenAI Privacy Filter, GLiNER2-PII, Rizzo PII, Lethe o PII-Shield. Los modelos no están incluidos. Rizzo necesita su aplicación abierta; Lethe revisión local; PII-Shield Node.js 22+ y rutas --node y --npm (npm-cli.js).",
+    "connector.codex": "Codex: añade la sección de codex-mcp.toml a tu configuración y reinicia MCP.",
+    "connector.cowork": "Cowork: instala el archivo generado cowork-connector.zip en Personalizar → Plugins. Ejecuta la instalación en el ordenador, no en la VM Linux de Cowork. Abre una nueva tarea local.",
+    "connector.antigravity": "Antigravity: añade el servidor de antigravity-mcp.json a la configuración MCP de la aplicación y recarga los servidores.",
+    "connector.verify": "En cada aplicación, comprueba el estado del motor y filtra un archivo ficticio con su nombre relativo dentro de Input. Revisa la copia guardada. La configuración existente se conserva. Este proceso corresponde a sesiones locales de escritorio.",
+    "antigravity": "Google Antigravity",
+    "antigravity1": "Para Second Brain, abre la configuración MCP de Antigravity y añade el servidor del proveedor. Para un servidor remoto utiliza serverUrl dentro de mcpServers; conserva las conexiones existentes.",
+    "antigravity2": "Recarga los servidores, completa la autenticación y verifica búsqueda y lectura en la sesión actual. Vera no proporciona un instalador de Second Brain. La compatibilidad y el acceso dependen del servicio elegido.",
+    "sessions.title": "Sesiones y restauración de identidades",
+    "sessions.copy": "Lethe y PII-Shield reutilizan una sesión para varios documentos y restauran las identidades en el resultado final. Crea o reabre una sesión, pasa su ID a cada archivo y después la ruta del resultado de IA guardado localmente. La restauración devuelve solo la ruta de un archivo para abrir en tu ordenador.",
+    "sessions.boundary": "El diccionario del motor es la referencia. El conector lo conserva sin inferir, unir ni corregir identidades. OpenAI Privacy Filter y GLiNER2 siguen siendo de solo redacción. Rizzo conserva y restaura el diccionario nativo de cada documento sin ampliar sesiones entre llamadas separadas. Lethe y PII-Shield admiten trabajos con varios documentos.",
+    "lethe.copy": "Lethe asigna los marcadores una vez a un conjunto aprobado localmente para todo el trabajo. El conector reutiliza esa selección sin añadir identidades. La revisión local es necesaria antes de crear la sesión.",
+    "lethe.data": "Lethe procesa el texto extraído en tu ordenador. Los elementos aprobados y los mapas permanecen en la carpeta privada de la sesión, fuera de las respuestas MCP. Este conector no usa la bóveda cifrada de Lethe. El modelo recibe rutas, ID, recuentos y texto filtrado solicitado; la restauración devuelve solo la ruta de un archivo local.",
+    "shield.copy": "Este conector usa gregmos/PII-Shield, CLI Node.js 2.2.0. El primer documento crea la sesión nativa; los siguientes amplían su mapa. El motor decide identidades, alias y pseudónimos. Se necesitan Node.js 22+ y configuración explícita del modelo. En el Mac arm64 probado, el runtime ONNX se interrumpe al cerrar: el conector rechaza la ejecución y no declara el modelo listo. La aceptación en este Mac no está establecida; la prueba real de varios documentos se ejecuta por separado en Linux.",
+    "shield.data": "Los originales extraídos llegan al proceso PII-Shield y al modelo GLiNER locales. Los mapas y registros de revisión pueden contener datos originales y permanecen aislados por sesión en el ordenador. El conector no los cifra. El modelo conversacional recibe metadatos y texto filtrado solicitado; la restauración devuelve una ruta local. La conservación también depende del TTL del motor.",
+    "engine.details": "Instrucciones, límites y ruta de los datos",
+    "lethe.title": "Lethe",
+    "shield.title": "PII-Shield"
+  }
+};
+    const requested = new URLSearchParams(location.search).get('lang');
+    const lang = Object.hasOwn(copy, requested) ? requested : 'it';
+    const text = copy[lang];
+    document.documentElement.lang = lang;
+    document.title = text.title + ' · Vera';
+    document.querySelector('meta[name="description"]').content = text.lead;
+    document.querySelector('link[rel="canonical"]').href = "https://mparanza.com/static/shared/vera-integrazioni/index.html" + '?lang=' + lang;
+    document.querySelectorAll('[data-engine-link]').forEach(node => { const url = new URL(node.href); url.searchParams.set('lang', lang); node.href = url; });
+    document.querySelectorAll('[data-i18n]').forEach(node => { node.textContent = text[node.dataset.i18n]; });
+    const languageLabels = {it:'Lingua', en:'Language', fr:'Langue', de:'Sprache', es:'Idioma'};
+    document.querySelector('.languages').setAttribute('aria-label', languageLabels[lang]);
+    document.querySelector('[data-nav]').setAttribute('aria-label', text.nav);
+    document.querySelectorAll('[data-lang]').forEach(link => {
+      if (link.dataset.lang === lang) link.setAttribute('aria-current', 'page');
+      else link.removeAttribute('aria-current');
+    });
+    document.querySelectorAll('[data-vera-link], [data-skills-link]').forEach(link => {
+      const target = new URL(link.getAttribute('href'), location.href);
+      target.searchParams.set('lang', lang);
+      link.href = target.href;
+    });
+    document.querySelector('[data-data-link]').href = 'https://mparanza.com/data-handling?lang=' + lang;
+  </script>
+ </body>
+</html>

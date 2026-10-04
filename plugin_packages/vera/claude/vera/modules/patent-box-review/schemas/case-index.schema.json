@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:vera:patent-box:case-index",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "cases"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "case_id",
+          "regime",
+          "state",
+          "period_start",
+          "period_end",
+          "rule_ids",
+          "approved_hash"
+        ],
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+          },
+          "regime": {
+            "type": "string",
+            "enum": [
+              "NEW",
+              "OLD"
+            ]
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "OPEN",
+              "APPROVED"
+            ]
+          },
+          "period_start": {
+            "type": "string",
+            "format": "date"
+          },
+          "period_end": {
+            "type": "string",
+            "format": "date"
+          },
+          "rule_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}"
+            },
+            "minItems": 0,
+            "uniqueItems": true
+          },
+          "approved_hash": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "[a-f0-9]{64}"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "minItems": 0,
+      "uniqueItems": false
+    }
+  }
+}

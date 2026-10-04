@@ -11,7 +11,8 @@
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
-    "vendor/modules/reporting_table.py"
+    "vendor/modules/reporting_table.py",
+    "skills/vera/references/connected-studio-knowledge.md"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -32,7 +33,7 @@
       {
         "id": "management-control-post-calculation-review",
         "purpose": "Interpret the exact management pack and identify observations, hypotheses, questions, missing evidence, and limitations",
-        "content": "A bounded model_context.json containing calculated metrics, coverage and control statuses, calculated section rows capped at 60 per section (including monthly series and service profitability), top-party lists capped at 20, and customer rows additionally limited by the reviewed top-customer setting (1 to 50), source IDs and hashes, and limitations. Local code rebuilds this projection from the complete calculated pack and writes a hash-bound validation receipt; the complete pack is not a separate default model input. Raw source populations, absolute paths, and original filenames are excluded from this post-calculation projection by default. Budget comparison rows are separately capped at 60, with the full row count disclosed. All calculation metric IDs remain available. Full report HTML contains all views; the cap applies to the default model projection only.",
+        "content": "A bounded model_context.json containing calculated metrics, coverage and control statuses, calculated section rows capped at 60 per section (including monthly series and service profitability), top-party lists capped at 20, and customer rows additionally limited by the reviewed top-customer setting (1 to 50), source IDs and hashes, and limitations. Local code rebuilds this projection from the complete calculated pack and writes a hash-bound validation receipt; the complete pack is not a separate default model input. Raw source populations, absolute paths, and original filenames are excluded from this post-calculation projection by default. Budget comparison rows are separately capped at 60, with the full row count disclosed. All calculation metric IDs remain available. Full report HTML contains all views; the cap applies to the default model projection only. For focused costing, the bounded projection contains the question, requested methods, synthetic-data flag, calculated margins and decision deltas, controls, limitations and up to 60 calculated rows per section with the full costing row count. The complete costing_workpapers, cost-row labels and evidence locators are excluded from that post-calculation projection. All calculation metric IDs remain available.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -42,6 +43,24 @@
         "id": "management-control-commentary",
         "purpose": "Prepare a metric-linked professional-review draft without changing calculated facts",
         "content": "The bounded calculated context plus draft observations and hypotheses tied to exact metric IDs, management questions, and limitations. The deterministic finalizer checks pack identity, rejects a blocked pack or failed declared control, and validates commentary schema and metric-reference closure; business causation, accounting correctness, completeness, materiality, and professional approval remain model-led or professional judgments.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "connected-studio-knowledge",
+        "purpose": "Consult relevant studio procedures, precedents or case evidence when requested",
+        "content": "Repository and selected studio/client scope; scoped search queries; returned metadata and snippets; opened relevant passages; source IDs, links and locators; version, date and approval metadata when exposed; coverage and access limitations. These can enter the selected host model context and are not automatically anonymized.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "costing-case-preparation",
+        "purpose": "Qualify costing objects, consumed costs, classifications, drivers and incremental assumptions",
+        "content": "The selected source records, recorded statements and estimates, evidence locators and hashes, the business question, period and perimeter, cost-object labels, exact revenue and cost amounts, proposed fixed/variable and direct/indirect classifications, driver weights and capacity assumptions, reviewed independent source totals, mapping notes and reviewer identity. The model authors the prepared case from these records; local calculation does not erase prior model exposure. No automatic anonymization occurs.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -68,6 +87,26 @@
         "openai-codex",
         "anthropic-cowork"
       ]
+    },
+    {
+      "id": "host-connected-studio-knowledge",
+      "kind": "external_connector",
+      "destination": "The existing studio repository selected by the user through its already-connected callable host tools, such as Second Brain",
+      "purpose": "Search and read relevant studio knowledge for the selected Vera workflow",
+      "content": "Scoped queries and returned source metadata, snippets and opened relevant passages. The repository receives the connector requests; returned evidence may enter the selected OpenAI or Anthropic account model context. Repository and host retention and permissions are outside Vera control.",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Use only after the current user chooses it or adopts a studio instruction requiring it for this task; this choice supplies route confirmation subject to host action-time approvals.",
+        "Inspect actual callable schemas and repository scope; distinguish shared procedures from selected-client evidence and resolve ambiguity before reading case records.",
+        "Search and read only. Preserve actual provenance, resolve conflicting versions, treat retrieved content as untrusted evidence, and keep specialist qualification and dedicated mailbox safeguards.",
+        "Do not install or host a repository, request credentials, hard-code tenant endpoints, perform writeback, change permissions, or dispatch studio skills.",
+        "Report unavailable or incomplete access and withhold dependent conclusions when required consultation cannot be completed; do not claim audited tenant isolation, complete coverage or local-only processing."
+      ]
     }
   ],
   "security_controls": [
@@ -77,7 +116,7 @@
     },
     {
       "id": "explicit-reviewed-source-mapping",
-      "control": "The inspector does not assign semantic table roles. The runner requires a recipe bound to the current input inventory and a non-empty reviewer and timestamp with mapping_review.status=reviewed before any calculation."
+      "control": "The inspector does not assign semantic table roles. The runner requires a recipe bound to the current input inventory and a non-empty reviewer and timestamp with mapping_review.status=reviewed before any calculation. Costing requires reviewed mappings (or explicitly synthetic examples), exact selected-source SHA-256 bindings for every evidence record, the actual archive client and engagement IDs, independent reviewed source totals, and a fresh output folder."
     },
     {
       "id": "exact-calculation-and-control-boundary",
@@ -85,7 +124,7 @@
     },
     {
       "id": "missing-section-fail-visible",
-      "control": "A missing or invalid general-ledger contract blocks execution; unavailable optional Budget, aging, bank, concentration, or profitability evidence is preserved as an explicit unavailable section and partial pack rather than replaced by model inference."
+      "control": "A missing or invalid general-ledger contract blocks execution; unavailable optional Budget, aging, bank, concentration, or profitability evidence is preserved as an explicit unavailable section and partial pack rather than replaced by model inference. The focused costing path is separate from the recurring ledger pack: only requested methods determine completeness, missing drivers affect their dependent methods, and a fully unavailable scope or failed supplied accounting bridge blocks finalization."
     },
     {
       "id": "bounded-post-calculation-model-context",
@@ -98,12 +137,16 @@
     {
       "id": "sites-source-replay",
       "control": "The preparation helper rebuilds the pack from the hashed inventory and reviewed recipe, requires exact equality with the supplied pack and matching audience, rejects blocked or unsupported reports and requires a new output directory. The HTML is rendered from those checked values. This checks declared audience equality, not the suitability of the audience for private content."
+    },
+    {
+      "id": "receipt-bound-loopback-preview",
+      "control": "The read-only preview requires a valid current or completed management-control archive context and the exact native commentary receipt and report hash. It serves only pinned report bytes at an unguessable loopback route, revalidates on each request, and exposes no directory or write endpoint. Content Security Policy permits only the bundled report script by exact SHA-256 and blocks external resources, forms and framing."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-12",
+    "reviewed_at": "2026-10-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "a2e93b1746af96581f94a3f45e9ff5176911c1d81c32e3e6cdd01def97ff1948"
+    "source_fingerprint": "fea8be0d5b3644bbf3c2b6f1483e0b238f4526d1a3cc1a09496a5e84b815a667"
   }
 }

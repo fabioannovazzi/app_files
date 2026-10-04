@@ -228,7 +228,11 @@ def test_every_function_page_gets_one_clickable_work_area_breadcrumb() -> None:
 
     assert 'const areaLink = document.createElement("a");' in navigation
     assert (
-        "areaLink.href = `../${product}/index.html?lang=${currentLanguage}#${area}`;"
+        'const productLanguage = currentLanguage === "ar" ? "en" : currentLanguage;'
+        in navigation
+    )
+    assert (
+        "areaLink.href = `../${product}/index.html?lang=${productLanguage}#${area}`;"
         in navigation
     )
     assert "breadcrumb.append(areaLink, separator, current);" in navigation
@@ -255,7 +259,7 @@ def test_vera_keeps_market_specific_functions_inside_user_job_areas() -> None:
     assert 'href="#jurisdiction"' not in vera
     assert "data-jurisdiction-section" not in vera
     assert "data-jurisdiction-nav" not in vera
-    assert vera.count('data-jurisdiction-item="it"') == 10
+    assert vera.count('data-jurisdiction-item="it"') == 16
     assert 'id="area-matters"' in vera
     assert 'id="area-analysis"' in vera
     assert 'id="area-research"' in vera
@@ -572,7 +576,7 @@ def test_function_pages_use_specific_data_copy_and_keep_future_page_fallback() -
         reviewed_vera_lucia.count("modelDataConclusion:")
         == len(vera_lucia_workflows) * 5
     )
-    assert reviewed_clara.count("modelDataConclusion:") == len(clara_workflows) * 5
+    assert reviewed_clara.count("modelDataConclusion:") == len(clara_workflows) * 5 + 1
     assert (
         'modelDataStatus: "relevant"'
         in function_copy.split("Object.entries(reviewedFunctionModelData)", 1)[1]
@@ -588,9 +592,34 @@ def test_function_pages_use_specific_data_copy_and_keep_future_page_fallback() -
         "Les informations spécifiques à cette fonction sont en préparation.",
         "Funktionsspezifische Informationen werden derzeit vorbereitet.",
         "Se está preparando la información específica de esta función.",
+        "يجري إعداد المعلومات الخاصة بهذه الوظيفة.",
     ):
         assert placeholder in placeholder_script
         assert placeholder in function_copy
+
+
+def test_arabic_transcription_page_is_function_specific_and_rtl() -> None:
+    function_page = (SHARED / "clara-transcribe" / "index.html").read_text(
+        encoding="utf-8"
+    )
+    function_copy = (SHARED / "product-function-pages.js").read_text(encoding="utf-8")
+    renderer = (SHARED / "product-function-page.js").read_text(encoding="utf-8")
+    clara_page = (SHARED / "clara" / "index.html").read_text(encoding="utf-8")
+
+    transcribe_copy = function_copy.split('"clara-transcribe":', 1)[1].split(
+        '"clara-advisory-deliverable-validator":', 1
+    )[0]
+    assert 'hreflang="ar"' in function_page
+    assert 'ar: pending("ar"' in transcribe_copy
+    assert "لغة التسجيل: العربية" in transcribe_copy
+    assert "لغة الملاحظات والمخرجات: الإنجليزية" in transcribe_copy
+    assert "ما البيانات التي تصل إلى النموذج" in renderer
+    assert (
+        'document.documentElement.dir = language === "ar" ? "rtl" : "ltr";' in renderer
+    )
+    assert "availableLanguages" in renderer
+    assert "Recording languages include Arabic" in clara_page
+    assert 'data-lang="ar"' not in clara_page
 
 
 def test_professional_communication_page_explains_exact_phase_boundaries() -> None:
@@ -817,7 +846,7 @@ def test_every_function_page_uses_one_shared_model_data_component() -> None:
     assert "#run-evidence" in injector
     assert "#run-evidence" in renderer
     assert "https://mparanza.com/data-handling?lang=${language}" in injector
-    assert "https://mparanza.com/data-handling?lang=${language}" in renderer
+    assert "https://mparanza.com/data-handling?lang=${linkedSiteLanguage}" in renderer
     assert 'attributeFilter: ["lang"]' in injector
     assert "pf-model-data" not in renderer
     assert "pf-model-data" not in renderer_css
@@ -935,11 +964,7 @@ def test_all_function_page_systems_use_the_shared_quiet_typography_scale() -> No
         for href in _directory_links(page):
             destination = _resolved_page(page_path, href)
             explanation = destination.read_text(encoding="utf-8")
-            assert any(
-                stylesheet in explanation
-                for stylesheet in (
-                    "product-function-page.css?v=20260813-function-pages",
-                    "plugin-page-shell.css?v=20260813-function-pages",
-                    "function-page-scale.css?v=20260813-function-pages",
-                )
+            assert re.search(
+                r'href="\.\./(?:product-function-page|plugin-page-shell|function-page-scale)\.css(?:\?[^\"]*)?"',
+                explanation,
             ), f"{destination}: does not consume the shared function-page scale"

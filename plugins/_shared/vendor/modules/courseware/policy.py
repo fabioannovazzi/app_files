@@ -9,12 +9,20 @@ def unavailable_local_workflows(product: str) -> frozenset[str]:
     """Return explicit local teaching exclusions, not professional routing rules."""
     if product == "clara":
         return frozenset({"brand-fit", "hosted-interview", "research-video"})
+    if product == "vera":
+        return frozenset({"rating-legalita"})
     return frozenset()
 
 
 def local_unavailability(product: str, workflow: object) -> str | None:
     """Explain an unavailable lesson without claiming its workflow is absent."""
     if isinstance(workflow, str) and workflow in unavailable_local_workflows(product):
+        if product == "vera" and workflow == "rating-legalita":
+            return (
+                "The rating-legalita professional workflow is available, but its "
+                "teaching kit has not been authored and reviewed. Continue normal "
+                "professional work without starting a prepared lesson."
+            )
         return (
             "This Clara workflow requires hosted services and is unavailable in "
             "local lessons. Choose another local lesson; the normal professional "

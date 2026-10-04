@@ -1,0 +1,5 @@
+listing_identity,parent_product_id,product_name,brand,color,garment type,listing_status,top_seller_status,sale_pressure_status,pdp_url
+fictional-01,fictional-01,Fiktives Kleidungsstück 01,Riva,black,cardigan,recent,top_seller,other,https://example.invalid/products/fictional-01
+fictional-02,fictional-02,Fiktives Kleidungsstück 02,Lago,black,cardigan,recent,top_seller,other,https://example.invalid/products/fictional-02
+fictional-04,fictional-04,Fiktives Kleidungsstück 04,Lago,black,cardigan,recent,other,other,https://example.invalid/products/fictional-04
+fictional-06,fictional-06,Fiktives Kleidungsstück 06,Lago,blue,sweater,recent,other,other,https://example.invalid/products/fictional-06

@@ -1,0 +1,413 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "composizione-negoziata",
+  "course_sha256": "087ebcb3a8d6ffb4198c9e59f49282f474c59c9185062217e2166dd20e9c22d7",
+  "reviewer": "Codex /root - authored outline, real local execution and saved artifact review",
+  "reviewed_at": "2026-10-01T08:09:14.553451+00:00",
+  "review_scope": "Expanded the existing introductory entry without adding a duplicate workflow. Reviewed all five full outlines, case/update/research inputs and independent challenges. Executed ten fresh role-specific native journeys and inspected actual net-debt metrics, original/revised treasury outputs, final no-agreement reports, closure/residual records and model-data disclosures. Native calculations and persistence execute real code. Professional prose and financial interpretation in regression runs are explicitly synthetic test fixtures; no learner or real professional approval is claimed. Research intake and no-fetch source inspection ran; full current-law acquisition, answer generation and semantic validation remain unexecuted, visibly retained as law_gap. Canonical JSON/helper headings are not promised to be localized. Native voice, learner understanding, installed-host and professional acceptance remain separate. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Read the complete localized outline. One Italian fictional business connects advisor demonstration, guided changed receipt and independent expert exercise. Separate engagements and selected evidence are explicit; no eligibility certification or statutory test is invented.",
+        "inputs_and_request": "Read the localized case, changed facts, public research brief and independent challenge. CSVs preserve 120000 loan, 50000 available cash, 10000 restricted deposit, 80000 trade payables and 100000 assumed collection. November, January and beyond-horizon February dates belong to distinct visibly named table sets. Empty supplied tables are not declarations of completeness; no recipe or approved result is shipped.",
+        "execution_and_checkpoints": "Reviewed real financial net_debt execution and two treasury executions per role. Actual artifacts are sealed and bound to CNC successor runs. Changed collection invalidates forecast/proposal; wider semantic review remains necessary. Research question inspection and no-fetch availability inspection use existing modules and retain an explicit gap. Exact-version professional confirmation must come from the participant; the regression writes none.",
+        "deliverable_and_next_action": "Read final memo, forecast, financial result, source inventory, immutable snapshot and readable model-data report for both roles. Negative handoff contains current result bases, no fabricated receipts, named residual owners and unverified deadline bases. It stays draft_handoff; completed runs neither sign nor file nor close a legal procedure.",
+        "practice_and_repeat": "Advisor guided practice preserves baseline bytes and recomputes after January delay and refusal. Independent expert practice selects the separately authored challenge and February tables in a distinct engagement and produces neutral role-specific prose. Source links, restart/resume and open gaps are checked. No advisor private dossier is automatically transferred; no learner performance is asserted.",
+        "language_and_pacing": "Read all it lesson fields and its localized case/update/research/challenge inputs. The existing six 390-second teaching cues cover explanation; the scope explicitly makes this an extended multi-session course beyond that pacing. Italian jurisdiction, treasury native labels and canonical fields remain explicit. Model-data boundaries include imported facts, outputs, drafts and decisions, native model processing and exclusion of hosted review/feedback in tutorials. No translation at runtime or native voice acceptance is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_cnc_practical_execution::test_practical_cnc_kit_executes_role_specific_negative_handoff[demo-advisor-practice-it]",
+        "result_review": "Inspected the advisor actual EUR 70000 net-debt result, EUR 50000 baseline and EUR -30000 revised cash, source-bound versioned final memo and no_agreement residual handoff. Both treasury runs are preserved. January delay/refusal drives advisor practice; independent expert uses the separate February challenge beyond the horizon. Research law remains an explicit unverified gap, reviews remain empty, hosted/external actions are not authorized. Prose is test-authored, not native-model or professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "cnc-revision-000004.md",
+            "sha256": "0c47a6bb90d17f2902833e9cea37d7b7582df86b9966371f47f071bc97136f8c"
+          },
+          {
+            "name": "forecast.json",
+            "sha256": "49a935b1ef63f940a0b8bc07a95e5f3a433ffe9736b38b7eb10d031c49fd66b9"
+          },
+          {
+            "name": "fdd_result.json",
+            "sha256": "bf763860011da57353101367db7970a79c62f041d722ecc3219bb515579ce4ce"
+          },
+          {
+            "name": "source_inventory.json",
+            "sha256": "713375dda7d356af808ea4787168e2fbec87c7b18c3a11e2d150cc04a16a6139"
+          },
+          {
+            "name": "workflow-revision-000004.json",
+            "sha256": "a4f7482c559928894f96aefa1e4445789ad189fec09d6d1b4bfa4b5c84e952e8"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "88edd801576354340f2e13f804a9b7447fadb13acc8328b319fc961cff00e6e1"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_cnc_practical_execution::test_practical_cnc_kit_executes_role_specific_negative_handoff[practice-esperto-independent-it]",
+        "result_review": "Inspected the esperto actual EUR 70000 net-debt result, EUR 50000 baseline and EUR -30000 revised cash, source-bound versioned final memo and no_agreement residual handoff. Both treasury runs are preserved. January delay/refusal drives advisor practice; independent expert uses the separate February challenge beyond the horizon. Research law remains an explicit unverified gap, reviews remain empty, hosted/external actions are not authorized. Prose is test-authored, not native-model or professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "cnc-revision-000004.md",
+            "sha256": "923b87abe636d0c1565028da4b4fb52bb164fa39d76a75e77c81dce327d52083"
+          },
+          {
+            "name": "forecast.json",
+            "sha256": "cfefbb0742526356c7ef327fcebe4960bec6730b40162bda407b4e5c3c818366"
+          },
+          {
+            "name": "fdd_result.json",
+            "sha256": "bf763860011da57353101367db7970a79c62f041d722ecc3219bb515579ce4ce"
+          },
+          {
+            "name": "source_inventory.json",
+            "sha256": "713375dda7d356af808ea4787168e2fbec87c7b18c3a11e2d150cc04a16a6139"
+          },
+          {
+            "name": "workflow-revision-000004.json",
+            "sha256": "b81376a087b97073a11a2e2d11977f6d1e25bf40e6fd0cdd888dd436c24e2fa7"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "b18f302cd3ec676fa324a5bcac606a2e18ce7461c223a3a3232c32bc6ce0a308"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Read the complete localized outline. One Italian fictional business connects advisor demonstration, guided changed receipt and independent expert exercise. Separate engagements and selected evidence are explicit; no eligibility certification or statutory test is invented.",
+        "inputs_and_request": "Read the localized case, changed facts, public research brief and independent challenge. CSVs preserve 120000 loan, 50000 available cash, 10000 restricted deposit, 80000 trade payables and 100000 assumed collection. November, January and beyond-horizon February dates belong to distinct visibly named table sets. Empty supplied tables are not declarations of completeness; no recipe or approved result is shipped.",
+        "execution_and_checkpoints": "Reviewed real financial net_debt execution and two treasury executions per role. Actual artifacts are sealed and bound to CNC successor runs. Changed collection invalidates forecast/proposal; wider semantic review remains necessary. Research question inspection and no-fetch availability inspection use existing modules and retain an explicit gap. Exact-version professional confirmation must come from the participant; the regression writes none.",
+        "deliverable_and_next_action": "Read final memo, forecast, financial result, source inventory, immutable snapshot and readable model-data report for both roles. Negative handoff contains current result bases, no fabricated receipts, named residual owners and unverified deadline bases. It stays draft_handoff; completed runs neither sign nor file nor close a legal procedure.",
+        "practice_and_repeat": "Advisor guided practice preserves baseline bytes and recomputes after January delay and refusal. Independent expert practice selects the separately authored challenge and February tables in a distinct engagement and produces neutral role-specific prose. Source links, restart/resume and open gaps are checked. No advisor private dossier is automatically transferred; no learner performance is asserted.",
+        "language_and_pacing": "Read all en lesson fields and its localized case/update/research/challenge inputs. The existing six 390-second teaching cues cover explanation; the scope explicitly makes this an extended multi-session course beyond that pacing. Italian jurisdiction, treasury native labels and canonical fields remain explicit. Model-data boundaries include imported facts, outputs, drafts and decisions, native model processing and exclusion of hosted review/feedback in tutorials. No translation at runtime or native voice acceptance is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_cnc_practical_execution::test_practical_cnc_kit_executes_role_specific_negative_handoff[demo-advisor-practice-en]",
+        "result_review": "Inspected the advisor actual EUR 70000 net-debt result, EUR 50000 baseline and EUR -30000 revised cash, source-bound versioned final memo and no_agreement residual handoff. Both treasury runs are preserved. January delay/refusal drives advisor practice; independent expert uses the separate February challenge beyond the horizon. Research law remains an explicit unverified gap, reviews remain empty, hosted/external actions are not authorized. Prose is test-authored, not native-model or professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "cnc-revision-000004.md",
+            "sha256": "7df066f6a0a2ff2995cecc61a25470a6e116492c9e3547c1bbce1afae86eccb9"
+          },
+          {
+            "name": "forecast.json",
+            "sha256": "0d10761f21562bfec156da91822289522b950102e1e1ed9607d988d0611abf32"
+          },
+          {
+            "name": "fdd_result.json",
+            "sha256": "bf763860011da57353101367db7970a79c62f041d722ecc3219bb515579ce4ce"
+          },
+          {
+            "name": "source_inventory.json",
+            "sha256": "713375dda7d356af808ea4787168e2fbec87c7b18c3a11e2d150cc04a16a6139"
+          },
+          {
+            "name": "workflow-revision-000004.json",
+            "sha256": "b8ded9c3cb92eddb130d5eef17eec5e7db9a24618f5e5b485884cbb1dc6fbd2c"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "e82b271dcf61caca5cff47c11b1ba36d6ead0a22a65f3a4abbc14db17c69e456"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_cnc_practical_execution::test_practical_cnc_kit_executes_role_specific_negative_handoff[practice-esperto-independent-en]",
+        "result_review": "Inspected the esperto actual EUR 70000 net-debt result, EUR 50000 baseline and EUR -30000 revised cash, source-bound versioned final memo and no_agreement residual handoff. Both treasury runs are preserved. January delay/refusal drives advisor practice; independent expert uses the separate February challenge beyond the horizon. Research law remains an explicit unverified gap, reviews remain empty, hosted/external actions are not authorized. Prose is test-authored, not native-model or professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "cnc-revision-000004.md",
+            "sha256": "cb07519d90d55f3bd8332f2e1ba3e247f20774d7424129df7999e977047fe589"
+          },
+          {
+            "name": "forecast.json",
+            "sha256": "06d807fae1a7ff3e3905d931463ae8e569888d398e7c66c5aff3adceeec87529"
+          },
+          {
+            "name": "fdd_result.json",
+            "sha256": "bf763860011da57353101367db7970a79c62f041d722ecc3219bb515579ce4ce"
+          },
+          {
+            "name": "source_inventory.json",
+            "sha256": "713375dda7d356af808ea4787168e2fbec87c7b18c3a11e2d150cc04a16a6139"
+          },
+          {
+            "name": "workflow-revision-000004.json",
+            "sha256": "9eab24d11af329496ba51feef26efe8975e337da2794eb9e8ae55a61ea337bf8"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "53832b7706ac7a953942a7239bfd9363fce943fcfed4fcea2c969bb777947de5"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Read the complete localized outline. One Italian fictional business connects advisor demonstration, guided changed receipt and independent expert exercise. Separate engagements and selected evidence are explicit; no eligibility certification or statutory test is invented.",
+        "inputs_and_request": "Read the localized case, changed facts, public research brief and independent challenge. CSVs preserve 120000 loan, 50000 available cash, 10000 restricted deposit, 80000 trade payables and 100000 assumed collection. November, January and beyond-horizon February dates belong to distinct visibly named table sets. Empty supplied tables are not declarations of completeness; no recipe or approved result is shipped.",
+        "execution_and_checkpoints": "Reviewed real financial net_debt execution and two treasury executions per role. Actual artifacts are sealed and bound to CNC successor runs. Changed collection invalidates forecast/proposal; wider semantic review remains necessary. Research question inspection and no-fetch availability inspection use existing modules and retain an explicit gap. Exact-version professional confirmation must come from the participant; the regression writes none.",
+        "deliverable_and_next_action": "Read final memo, forecast, financial result, source inventory, immutable snapshot and readable model-data report for both roles. Negative handoff contains current result bases, no fabricated receipts, named residual owners and unverified deadline bases. It stays draft_handoff; completed runs neither sign nor file nor close a legal procedure.",
+        "practice_and_repeat": "Advisor guided practice preserves baseline bytes and recomputes after January delay and refusal. Independent expert practice selects the separately authored challenge and February tables in a distinct engagement and produces neutral role-specific prose. Source links, restart/resume and open gaps are checked. No advisor private dossier is automatically transferred; no learner performance is asserted.",
+        "language_and_pacing": "Read all fr lesson fields and its localized case/update/research/challenge inputs. The existing six 390-second teaching cues cover explanation; the scope explicitly makes this an extended multi-session course beyond that pacing. Italian jurisdiction, treasury native labels and canonical fields remain explicit. Model-data boundaries include imported facts, outputs, drafts and decisions, native model processing and exclusion of hosted review/feedback in tutorials. No translation at runtime or native voice acceptance is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_cnc_practical_execution::test_practical_cnc_kit_executes_role_specific_negative_handoff[demo-advisor-practice-fr]",
+        "result_review": "Inspected the advisor actual EUR 70000 net-debt result, EUR 50000 baseline and EUR -30000 revised cash, source-bound versioned final memo and no_agreement residual handoff. Both treasury runs are preserved. January delay/refusal drives advisor practice; independent expert uses the separate February challenge beyond the horizon. Research law remains an explicit unverified gap, reviews remain empty, hosted/external actions are not authorized. Prose is test-authored, not native-model or professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "cnc-revision-000004.md",
+            "sha256": "b1872f6577d85b7d3d6e6120bbdde03cb2762c2e031d60237f4805863ff4ac7a"
+          },
+          {
+            "name": "forecast.json",
+            "sha256": "f9f6579c8147263a8c1d76cc689f80fddae3de1d9c7f32e1fab3d86b7a275a05"
+          },
+          {
+            "name": "fdd_result.json",
+            "sha256": "bf763860011da57353101367db7970a79c62f041d722ecc3219bb515579ce4ce"
+          },
+          {
+            "name": "source_inventory.json",
+            "sha256": "713375dda7d356af808ea4787168e2fbec87c7b18c3a11e2d150cc04a16a6139"
+          },
+          {
+            "name": "workflow-revision-000004.json",
+            "sha256": "078465059c39567176b73b5370b7539a2b246b279e9deae87b480e62043161a9"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "6293a372c169cb1a2f3bf03792b23f52f536272091ef8e214cb00e11169242e2"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_cnc_practical_execution::test_practical_cnc_kit_executes_role_specific_negative_handoff[practice-esperto-independent-fr]",
+        "result_review": "Inspected the esperto actual EUR 70000 net-debt result, EUR 50000 baseline and EUR -30000 revised cash, source-bound versioned final memo and no_agreement residual handoff. Both treasury runs are preserved. January delay/refusal drives advisor practice; independent expert uses the separate February challenge beyond the horizon. Research law remains an explicit unverified gap, reviews remain empty, hosted/external actions are not authorized. Prose is test-authored, not native-model or professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "cnc-revision-000004.md",
+            "sha256": "9d759837f00749e8e9a889fa34f37d44cf5294b1f2f992c1b38ad989c6f8eee8"
+          },
+          {
+            "name": "forecast.json",
+            "sha256": "a6b4ecb3915b9ce3aeb615d985ef3039677224ddc57170e23aa52afe73d53b8b"
+          },
+          {
+            "name": "fdd_result.json",
+            "sha256": "bf763860011da57353101367db7970a79c62f041d722ecc3219bb515579ce4ce"
+          },
+          {
+            "name": "source_inventory.json",
+            "sha256": "713375dda7d356af808ea4787168e2fbec87c7b18c3a11e2d150cc04a16a6139"
+          },
+          {
+            "name": "workflow-revision-000004.json",
+            "sha256": "dd0db50f6273db491f874731b164e9b76ec02e6de3e77674e269d67ccb03e525"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "f9d8d8fddb200e355a959d86a589e535ebea4f6a5087753984f86811281e685d"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Read the complete localized outline. One Italian fictional business connects advisor demonstration, guided changed receipt and independent expert exercise. Separate engagements and selected evidence are explicit; no eligibility certification or statutory test is invented.",
+        "inputs_and_request": "Read the localized case, changed facts, public research brief and independent challenge. CSVs preserve 120000 loan, 50000 available cash, 10000 restricted deposit, 80000 trade payables and 100000 assumed collection. November, January and beyond-horizon February dates belong to distinct visibly named table sets. Empty supplied tables are not declarations of completeness; no recipe or approved result is shipped.",
+        "execution_and_checkpoints": "Reviewed real financial net_debt execution and two treasury executions per role. Actual artifacts are sealed and bound to CNC successor runs. Changed collection invalidates forecast/proposal; wider semantic review remains necessary. Research question inspection and no-fetch availability inspection use existing modules and retain an explicit gap. Exact-version professional confirmation must come from the participant; the regression writes none.",
+        "deliverable_and_next_action": "Read final memo, forecast, financial result, source inventory, immutable snapshot and readable model-data report for both roles. Negative handoff contains current result bases, no fabricated receipts, named residual owners and unverified deadline bases. It stays draft_handoff; completed runs neither sign nor file nor close a legal procedure.",
+        "practice_and_repeat": "Advisor guided practice preserves baseline bytes and recomputes after January delay and refusal. Independent expert practice selects the separately authored challenge and February tables in a distinct engagement and produces neutral role-specific prose. Source links, restart/resume and open gaps are checked. No advisor private dossier is automatically transferred; no learner performance is asserted.",
+        "language_and_pacing": "Read all de lesson fields and its localized case/update/research/challenge inputs. The existing six 390-second teaching cues cover explanation; the scope explicitly makes this an extended multi-session course beyond that pacing. Italian jurisdiction, treasury native labels and canonical fields remain explicit. Model-data boundaries include imported facts, outputs, drafts and decisions, native model processing and exclusion of hosted review/feedback in tutorials. No translation at runtime or native voice acceptance is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_cnc_practical_execution::test_practical_cnc_kit_executes_role_specific_negative_handoff[demo-advisor-practice-de]",
+        "result_review": "Inspected the advisor actual EUR 70000 net-debt result, EUR 50000 baseline and EUR -30000 revised cash, source-bound versioned final memo and no_agreement residual handoff. Both treasury runs are preserved. January delay/refusal drives advisor practice; independent expert uses the separate February challenge beyond the horizon. Research law remains an explicit unverified gap, reviews remain empty, hosted/external actions are not authorized. Prose is test-authored, not native-model or professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "cnc-revision-000004.md",
+            "sha256": "c464991cee2c6a41b9e7a5108f097839582ccf1adea569c0b2d930751b4243f8"
+          },
+          {
+            "name": "forecast.json",
+            "sha256": "f61bbe4ee113b0575fca0e1f3a5b422ec8de880ab4341be29d8d233c1f923193"
+          },
+          {
+            "name": "fdd_result.json",
+            "sha256": "bf763860011da57353101367db7970a79c62f041d722ecc3219bb515579ce4ce"
+          },
+          {
+            "name": "source_inventory.json",
+            "sha256": "713375dda7d356af808ea4787168e2fbec87c7b18c3a11e2d150cc04a16a6139"
+          },
+          {
+            "name": "workflow-revision-000004.json",
+            "sha256": "82db712ccec6bc4de23748d49394106f79d04d0b4ec3c0131a9a1e2c499bf328"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "a5ea0ec50046c74fe573f8cb8d124a7cdba63d8f01153a16c74066bed9f50447"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_cnc_practical_execution::test_practical_cnc_kit_executes_role_specific_negative_handoff[practice-esperto-independent-de]",
+        "result_review": "Inspected the esperto actual EUR 70000 net-debt result, EUR 50000 baseline and EUR -30000 revised cash, source-bound versioned final memo and no_agreement residual handoff. Both treasury runs are preserved. January delay/refusal drives advisor practice; independent expert uses the separate February challenge beyond the horizon. Research law remains an explicit unverified gap, reviews remain empty, hosted/external actions are not authorized. Prose is test-authored, not native-model or professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "cnc-revision-000004.md",
+            "sha256": "08cf3f183e0b9cb600b600d0c6d4a964c5cfe6d95e237faac61d9bb2f0b3c7d5"
+          },
+          {
+            "name": "forecast.json",
+            "sha256": "39384323ef934a34c9f5899681350bc839c74a36dc93742b1af8571f8450b2d7"
+          },
+          {
+            "name": "fdd_result.json",
+            "sha256": "bf763860011da57353101367db7970a79c62f041d722ecc3219bb515579ce4ce"
+          },
+          {
+            "name": "source_inventory.json",
+            "sha256": "713375dda7d356af808ea4787168e2fbec87c7b18c3a11e2d150cc04a16a6139"
+          },
+          {
+            "name": "workflow-revision-000004.json",
+            "sha256": "47f212199a2d912c7d9a8ac8a506478d6c78651133756b442a169834607ac3d2"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "6da519fef12b5ef11ea9c0f1514f72c3602ced8f8b5e09b5af028060c9c1214f"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Read the complete localized outline. One Italian fictional business connects advisor demonstration, guided changed receipt and independent expert exercise. Separate engagements and selected evidence are explicit; no eligibility certification or statutory test is invented.",
+        "inputs_and_request": "Read the localized case, changed facts, public research brief and independent challenge. CSVs preserve 120000 loan, 50000 available cash, 10000 restricted deposit, 80000 trade payables and 100000 assumed collection. November, January and beyond-horizon February dates belong to distinct visibly named table sets. Empty supplied tables are not declarations of completeness; no recipe or approved result is shipped.",
+        "execution_and_checkpoints": "Reviewed real financial net_debt execution and two treasury executions per role. Actual artifacts are sealed and bound to CNC successor runs. Changed collection invalidates forecast/proposal; wider semantic review remains necessary. Research question inspection and no-fetch availability inspection use existing modules and retain an explicit gap. Exact-version professional confirmation must come from the participant; the regression writes none.",
+        "deliverable_and_next_action": "Read final memo, forecast, financial result, source inventory, immutable snapshot and readable model-data report for both roles. Negative handoff contains current result bases, no fabricated receipts, named residual owners and unverified deadline bases. It stays draft_handoff; completed runs neither sign nor file nor close a legal procedure.",
+        "practice_and_repeat": "Advisor guided practice preserves baseline bytes and recomputes after January delay and refusal. Independent expert practice selects the separately authored challenge and February tables in a distinct engagement and produces neutral role-specific prose. Source links, restart/resume and open gaps are checked. No advisor private dossier is automatically transferred; no learner performance is asserted.",
+        "language_and_pacing": "Read all es lesson fields and its localized case/update/research/challenge inputs. The existing six 390-second teaching cues cover explanation; the scope explicitly makes this an extended multi-session course beyond that pacing. Italian jurisdiction, treasury native labels and canonical fields remain explicit. Model-data boundaries include imported facts, outputs, drafts and decisions, native model processing and exclusion of hosted review/feedback in tutorials. No translation at runtime or native voice acceptance is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_cnc_practical_execution::test_practical_cnc_kit_executes_role_specific_negative_handoff[demo-advisor-practice-es]",
+        "result_review": "Inspected the advisor actual EUR 70000 net-debt result, EUR 50000 baseline and EUR -30000 revised cash, source-bound versioned final memo and no_agreement residual handoff. Both treasury runs are preserved. January delay/refusal drives advisor practice; independent expert uses the separate February challenge beyond the horizon. Research law remains an explicit unverified gap, reviews remain empty, hosted/external actions are not authorized. Prose is test-authored, not native-model or professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "cnc-revision-000004.md",
+            "sha256": "9bbcfeaaa460be03afa0e93fc83b5c42594c3d1e3e77475aa7db21f02d97bca2"
+          },
+          {
+            "name": "forecast.json",
+            "sha256": "c51d96efb907a0b3bfede4c8f9452977406e0eeb1661318238a63cd75784c748"
+          },
+          {
+            "name": "fdd_result.json",
+            "sha256": "bf763860011da57353101367db7970a79c62f041d722ecc3219bb515579ce4ce"
+          },
+          {
+            "name": "source_inventory.json",
+            "sha256": "713375dda7d356af808ea4787168e2fbec87c7b18c3a11e2d150cc04a16a6139"
+          },
+          {
+            "name": "workflow-revision-000004.json",
+            "sha256": "5b32649c7f1ead9de575a2483526fe6584adf8464ae1967d3ec21b3e95899c1a"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "2074b4855b6e9e0c7360a8d22469992bcd378087e811e97641fd330bff5f7391"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_cnc_practical_execution::test_practical_cnc_kit_executes_role_specific_negative_handoff[practice-esperto-independent-es]",
+        "result_review": "Inspected the esperto actual EUR 70000 net-debt result, EUR 50000 baseline and EUR -30000 revised cash, source-bound versioned final memo and no_agreement residual handoff. Both treasury runs are preserved. January delay/refusal drives advisor practice; independent expert uses the separate February challenge beyond the horizon. Research law remains an explicit unverified gap, reviews remain empty, hosted/external actions are not authorized. Prose is test-authored, not native-model or professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "cnc-revision-000004.md",
+            "sha256": "533afa4c997104e77cef766d6e4f12c6a3c98693d86add1baf1f1cbb80e2c83d"
+          },
+          {
+            "name": "forecast.json",
+            "sha256": "c844ade32d75adb09692c8486554e69562ce00286a65b68bff549826ad4a5435"
+          },
+          {
+            "name": "fdd_result.json",
+            "sha256": "bf763860011da57353101367db7970a79c62f041d722ecc3219bb515579ce4ce"
+          },
+          {
+            "name": "source_inventory.json",
+            "sha256": "713375dda7d356af808ea4787168e2fbec87c7b18c3a11e2d150cc04a16a6139"
+          },
+          {
+            "name": "workflow-revision-000004.json",
+            "sha256": "7eb8067647a7cf77ef9edbd9f6d488006b636780adbfd55dd339665f09258e8c"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "cfe971fab7e8ede2ee3067bf9a78158abba968f51847ec6d95bb34fd6ad03231"
+          }
+        ]
+      }
+    }
+  },
+  "connected_studio_knowledge_source_binding_20261002": {
+    "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+    "reviewed_at": "2026-10-01T22:12:55.585083+00:00",
+    "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+    "previous_course_sha256": "0b70de16e78dc2cd444fee6ca6cfaf651488da66e3b1f5d489c049bc67e1316f",
+    "current_course_sha256": "e99f1a9943566eb44536177859745371dd8168257b952d52e7e0cca5935832c2",
+    "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+    "changed_sources": [
+      "skills/composizione-negoziata/SKILL.md",
+      "skills/vera/references/connected-studio-knowledge.md"
+    ],
+    "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+    "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+  },
+  "integration_refresh": {
+    "reviewer": "Codex /root",
+    "date": "2026-10-02",
+    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
+  },
+  "rating_legalita_source_binding_20261002": {
+    "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+    "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+    "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+    "previous_course_sha256": "bb97e5b42009e5d3877f79c33b9ceb637bb4494590a35bdf9a888cec21723263",
+    "current_course_sha256": "b089d170182d02317d686c0c4b6f5f0e5a9f6af515c16bf77cfe72885f886107",
+    "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+    "changed_sources": [
+      "vendor/modules/courseware/policy.py",
+      "vendor/modules/vera_assurance/contracts.py"
+    ],
+    "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+    "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+  },
+  "lipe_source_binding_20261002": {
+    "reviewer": "Codex /root - bounded LIPE source compatibility review",
+    "reviewed_at": "2026-10-02T20:25:14.425278+00:00",
+    "baseline_commit": "bebefc9b5f187bbcc5619a1b603363581ec68158",
+    "previous_course_sha256": "b089d170182d02317d686c0c4b6f5f0e5a9f6af515c16bf77cfe72885f886107",
+    "current_course_sha256": "c891bd9ef8b5d979d231ec15e5cbde6945a1caa3811e29c9b5afcc6df04cda70",
+    "content_review": "Compared the complete compiled course JSON against the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are retained. This is not a new editorial, visual, professional or learner acceptance review.",
+    "changed_sources": [
+      "vendor/modules/vera_assurance/contracts.py"
+    ],
+    "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
+    "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
+  },
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
+}

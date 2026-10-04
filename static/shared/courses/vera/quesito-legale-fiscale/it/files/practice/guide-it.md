@@ -9,265 +9,280 @@ Reuse: https://european-union.europa.eu/legal-notice_en
 ---
 
 Se la tua impresa ha fornito beni o servizi a un cliente (nel rispetto dei termini
-                     del contratto commerciale) e non hai ricevuto il relativo pagamento entro il termine
-                     stabilito hai diritto
+del contratto commerciale) e non hai ricevuto il relativo pagamento entro il termine
+stabilito hai diritto
 agli interessi e a un risarcimento
 per quanto ti è dovuto.
+
 Ciò
 vale per tutte le operazioni commerciali da te effettuate
 con altre imprese (incluse le ditte individuali, purché operino nell'ambito della
-                     loro attività economica o professionale indipendente) e con le amministrazioni pubbliche.
-Attenzione
+loro attività economica o professionale indipendente) e con le amministrazioni pubbliche.
+
+
+## Attenzione
+
 Queste norme e quelle delle fasi successive
 non si applicano
 :
 in caso di procedura di insolvenza (compresi i procedimenti finalizzati alla ristrutturazione
-                              del debito)
+del debito)
 ai pagamenti di risarcimento per danni (ad esempio da parte di compagnie di assicurazione).
+
 Vai direttamente alla
 calcolatrice degli interessi
 per vedere quanto ti devono o seleziona la situazione che ti riguarda dall'elenco
-                     qui sotto.
-Ho dei crediti nei confronti di
+qui sotto.
+
+
+## Ho dei crediti nei confronti di
+
 un'altra impresa
 un’autorità pubblica
 un consumatore
-Un’altra impresa mi deve del denaro
+
+## Un’altra impresa mi deve del denaro
+
 La mia impresa ha sede in un paese dell’UE e ho crediti nei confronti di un’impresa
-                        che
+che
 opera nel mio stesso paese
 La mia impresa ha sede in un paese dell’UE e ho crediti nei confronti di un’impresa
-                        che
+che
 opera in un paese dell’UE diverso dal mio
-Un’autorità pubblica mi deve del denaro
+
+## Un’autorità pubblica mi deve del denaro
+
 La mia impresa ha sede in un paese dell’UE e ho crediti nei confronti di un’autorità
-                        pubblica
+pubblica
 del mio stesso paese
 La mia impresa ha sede in un paese dell’UE e ho crediti nei confronti di un’autorità
-                        pubblica
+pubblica
 di un paese dell’UE diverso dal mio
-Un consumatore mi deve del denaro
+
+## Un consumatore mi deve del denaro
+
 Gli interessi di mora non sono dovuti per le transazioni con i consumatori. In caso
-                     di problemi con un consumatore, le norme precedenti non si applicano. Per maggiori
-                     informazioni sui problemi con i consumatori, vedi:
+di problemi con un consumatore, le norme precedenti non si applicano. Per maggiori
+informazioni sui problemi con i consumatori, vedi:
 Contratti con i consumatori
 Garanzie per il consumatore
-La mia impresa ha sede in un
-paese dell’UE
-e ho crediti nei confronti di un’impresa che opera
-nel mio stesso paese
-Calcolare gli interessi passivi
+
+
+## La mia impresa ha sede in un paese dell’UE e ho crediti nei confronti di un’impresa che opera nel mio stesso paese
+
+
+## Calcolare gli interessi passivi
+
 Se hai adempiuto agli obblighi contrattuali e di legge e il cliente è responsabile
-                     del ritardo (nel senso che questo non è dovuto a circostanze che sfuggono al suo controllo),
-                     hai diritto a richiedere gli interessi di mora e il risarcimento per i costi di recupero.
-Quando sono dovuti gli interessi?
+del ritardo (nel senso che questo non è dovuto a circostanze che sfuggono al suo controllo),
+hai diritto a richiedere gli interessi di mora e il risarcimento per i costi di recupero.
+
+
+## Quando sono dovuti gli interessi?
+
 Gli interessi sono dovuti a decorrere dal giorno successivo alla data di scadenza
-                     fissata nel contratto.
+fissata nel contratto.
+
 Se nel contratto
 non è indicata una data di pagamento
 , gli interessi diventano automaticamente esigibili 30 giorni dopo il ricevimento
-                     da parte del cliente della fattura o richiesta di pagamento.
+da parte del cliente della fattura o richiesta di pagamento.
+
 Se
 non conosce la data di ricevimento della fattura
 , il creditore può chiedere gli interessi di mora 30 giorni di calendario dopo la
-                     fornitura dei servizi o prodotti.
+fornitura dei servizi o prodotti.
+
 Se la fattura è stata inviata prima della fornitura dei servizi o prodotti, gli interessi
-                     scattano soltanto dopo la fornitura.
-Quale tasso d’interesse va applicato?
+scattano soltanto dopo la fornitura.
+
+
+## Quale tasso d’interesse va applicato?
+
 Si applica il tasso di interesse per i ritardi di pagamento come stabilito nel contratto.
-                     Se tale tasso non è stato concordato, si applica il tasso legale.
-Tassi di interesse legale per paese
+
+Se tale tasso non è stato concordato, si applica il tasso legale.
+
+
+## Tassi di interesse legale per paese
+
 Espandi
 Chiudi
-Paese dell’UE
-01/07/2026 – 31/12/2026
-Austria
-10,73
-Belgio
-10,50
-Bulgaria
-10,15
-Cechia
-11,75
-Cipro
-10,15
-Croazia
-10,15
-Danimarca
-10,00
-Estonia
-10,40
-Finlandia
-10,50
-Francia
-12,40
-Germania
-10,52
-Grecia
-10,15
-Irlanda
-10,40
-Italia
-10,15
-Lettonia
-10,40
-Lituania
-10,15
-Lussemburgo
-10,15
-Malta
-10,40
-Paesi Bassi
-10,15
-Polonia (settore sanitario)
-11,75
-Polonia (altri settori)
-13,75
-Portogallo
-10,15
-Romania
-14,50
-Slovacchia
-10,15
-Slovenia
-10,40
-Spagna
-10,40
-Svezia
-10,00
-Ungheria
-14,00
+
+| Paese dell’UE | 01/07/2026 – 31/12/2026 |
+| --- | --- |
+| Austria | 10,73 |
+| Belgio | 10,50 |
+| Bulgaria | 10,15 |
+| Cechia | 11,75 |
+| Cipro | 10,15 |
+| Croazia | 10,15 |
+| Danimarca | 10,00 |
+| Estonia | 10,40 |
+| Finlandia | 10,50 |
+| Francia | 12,40 |
+| Germania | 10,52 |
+| Grecia | 10,15 |
+| Irlanda | 10,40 |
+| Italia | 10,15 |
+| Lettonia | 10,40 |
+| Lituania | 10,15 |
+| Lussemburgo | 10,15 |
+| Malta | 10,40 |
+| Paesi Bassi | 10,15 |
+| Polonia (settore sanitario) | 11,75 |
+| Polonia (altri settori) | 13,75 |
+| Portogallo | 10,15 |
+| Romania | 14,50 |
+| Slovacchia | 10,15 |
+| Slovenia | 10,40 |
+| Spagna | 10,40 |
+| Svezia | 10,00 |
+| Ungheria | 14,00 |
+
 Utilizza la nostra calcolatrice per scoprire gli interessi che hai diritto di pretendere.
-Risarcimento delle spese di recupero
+
+
+## Risarcimento delle spese di recupero
+
 Oltre agli interessi dovuti
 si ha diritto a richiedere un risarcimento forfettario di 40 euro (o di importo equivalente)
-                     per ogni fattura pagata in ritardo (in alcuni paesi dell’UE l’importo può essere più
-                     elevato e calcolato in base a quello della fattura).
+per ogni fattura pagata in ritardo (in alcuni paesi dell’UE l’importo può essere più
+elevato e calcolato in base a quello della fattura).
+
 Se i costi sopportati per recuperare il debito sono superiori a tale valore
 è possibile richiedere un ragionevole risarcimento aggiuntivo
 (ad es. a causa di spese amministrative, oneri per il recupero dei crediti, o spese
-                     per l’ingaggio di un avvocato).
-IVA
+per l’ingaggio di un avvocato).
+
+
+## IVA
+
 Gli interessi si applicano sull’importo lordo del debito (compresa l’IVA), ma il creditore
-                     non paga l’IVA sugli interessi.
-Come recuperare il credito
+non paga l’IVA sugli interessi.
+
+
+## Come recuperare il credito
+
 Inviare al cliente una fattura comprensiva di interessi e risarcimento.
+
 Contattare un organismo nazionale in grado di agevolare il recupero del credito.
+
 Rivolgersi a un’agenzia di recupero crediti.
+
 Ottenere un titolo esecutivo da un
 tribunale nazionale
 .
-La mia impresa ha sede in un
-paese dell’UE
-e ho crediti nei confronti di un’impresa che opera in un
-paese dell’UE
-diverso
-dal mio
+
+
+## La mia impresa ha sede in un paese dell’UE e ho crediti nei confronti di un’impresa che opera in un paese dell’UE diverso dal mio
+
 I contratti sono disciplinati dalla legge scelta dalle parti interessate. Occorre
-                     pertanto
+pertanto
 verificare quale legge disciplina il contratto in questione
 .
 Se non è stata fatta una scelta esplicita al momento della sottoscrizione del contratto,
-                     i ritardi di pagamento sono disciplinati dalla legge del paese in cui il creditore
-                     ha la residenza abituale.
+i ritardi di pagamento sono disciplinati dalla legge del paese in cui il creditore
+ha la residenza abituale.
+
 Questa norma vale sia per la vendita di beni che la prestazione di servizi.
-Attenzione
+
+
+## Attenzione
+
 Se il contratto è disciplinato dalle leggi di paesi extra-UE, le seguenti norme
 potrebbero non applicarsi
 .
-Calcolare gli interessi passivi
+
+## Calcolare gli interessi passivi
+
 Se hai adempiuto agli obblighi contrattuali e di legge e il cliente è responsabile
-                     del ritardo (nel senso che questo non è dovuto a circostanze che sfuggono al suo controllo),
-                     hai diritto a richiedere gli interessi di mora e il risarcimento per i costi di recupero.
-Quando sono dovuti gli Interessi?
+del ritardo (nel senso che questo non è dovuto a circostanze che sfuggono al suo controllo),
+hai diritto a richiedere gli interessi di mora e il risarcimento per i costi di recupero.
+
+
+## Quando sono dovuti gli Interessi?
+
 Gli interessi sono dovuti a decorrere dal giorno successivo alla data di scadenza
-                     fissata nel contratto.
+fissata nel contratto.
+
 Se nel contratto
 non è indicata una data di pagamento
 , gli interessi diventano automaticamente esigibili 30 giorni dopo il ricevimento
-                     da parte del cliente della fattura o richiesta di pagamento.
+da parte del cliente della fattura o richiesta di pagamento.
+
 Se
 non conosce la data di ricevimento della fattura
 , il creditore può chiedere gli interessi di mora 30 giorni di calendario dopo la
-                     fornitura dei servizi o prodotti.
+fornitura dei servizi o prodotti.
+
 Se la fattura è stata inviata prima della fornitura dei servizi o prodotti, gli interessi
-                     scattano soltanto dopo la fornitura.
-Quale tasso d’interesse va applicato?
+scattano soltanto dopo la fornitura.
+
+
+## Quale tasso d’interesse va applicato?
+
 Si applica il tasso di interesse per i ritardi di pagamento come stabilito nel contratto.
-                     Se tale tasso non è stato concordato, si applica il tasso legale.
-Tassi di interesse legale per paese
+
+Se tale tasso non è stato concordato, si applica il tasso legale.
+
+
+## Tassi di interesse legale per paese
+
 Espandi
 Chiudi
-Paese dell’UE
-01/07/2026 – 31/12/2026
-Austria
-10,73
-Belgio
-10,50
-Bulgaria
-10,15
-Cechia
-11,75
-Cipro
-10,15
-Croazia
-10,15
-Danimarca
-10,00
-Estonia
-10,40
-Finlandia
-10,50
-Francia
-12,40
-Germania
-10,52
-Grecia
-10,15
-Irlanda
-10,40
-Italia
-10,15
-Lettonia
-10,40
-Lituania
-10,15
-Lussemburgo
-10,15
-Malta
-10,40
-Paesi Bassi
-10,15
-Polonia (settore sanitario)
-11,75
-Polonia (altri settori)
-13,75
-Portogallo
-10,15
-Romania
-14,50
-Slovacchia
-10,15
-Slovenia
-10,40
-Spagna
-10,40
-Svezia
-10,00
-Ungheria
-14,00
+
+| Paese dell’UE | 01/07/2026 – 31/12/2026 |
+| --- | --- |
+| Austria | 10,73 |
+| Belgio | 10,50 |
+| Bulgaria | 10,15 |
+| Cechia | 11,75 |
+| Cipro | 10,15 |
+| Croazia | 10,15 |
+| Danimarca | 10,00 |
+| Estonia | 10,40 |
+| Finlandia | 10,50 |
+| Francia | 12,40 |
+| Germania | 10,52 |
+| Grecia | 10,15 |
+| Irlanda | 10,40 |
+| Italia | 10,15 |
+| Lettonia | 10,40 |
+| Lituania | 10,15 |
+| Lussemburgo | 10,15 |
+| Malta | 10,40 |
+| Paesi Bassi | 10,15 |
+| Polonia (settore sanitario) | 11,75 |
+| Polonia (altri settori) | 13,75 |
+| Portogallo | 10,15 |
+| Romania | 14,50 |
+| Slovacchia | 10,15 |
+| Slovenia | 10,40 |
+| Spagna | 10,40 |
+| Svezia | 10,00 |
+| Ungheria | 14,00 |
+
 Utilizza la nostra calcolatrice per scoprire gli interessi che hai diritto di pretendere.
-Risarcimento delle spese di recupero
+
+
+## Risarcimento delle spese di recupero
+
 Oltre agli interessi dovuti
 si ha diritto a richiedere un risarcimento forfettario di 40 euro (o di importo equivalente)
-                     per ogni fattura pagata in ritardo (in alcuni paesi dell’UE l’importo può essere più
-                     elevato e calcolato in base a quello della fattura).
+per ogni fattura pagata in ritardo (in alcuni paesi dell’UE l’importo può essere più
+elevato e calcolato in base a quello della fattura).
+
 Se i costi sopportati per recuperare il debito sono superiori a tale valore
 è possibile richiedere un ragionevole risarcimento aggiuntivo
 (ad es. a causa di spese amministrative, oneri per il recupero dei crediti, o spese
-                     per l’ingaggio di un avvocato).
-Come recuperare il credito
+per l’ingaggio di un avvocato).
+
+
+## Come recuperare il credito
+
 Inviare al cliente una fattura comprensiva di interessi e risarcimento.
+
 Contattare un
 partner locale della rete Enterprise Europe
 en
@@ -278,224 +293,220 @@ manuale sulla gestione delle controversie e dei crediti transfrontalieri
 Verificare se uno dei
 regolamenti dell’UE sul recupero transfrontaliero dei crediti
 è applicabile al proprio caso.
+
 Rivolgersi a un’agenzia di recupero crediti.
-La mia impresa ha sede in un
-paese dell’UE
-e ho crediti nei confronti di un’autorità pubblica del mio
-stesso paese
-Calcolare gli interessi passivi
+
+
+
+## La mia impresa ha sede in un paese dell’UE e ho crediti nei confronti di un’autorità pubblica del mio stesso paese
+
+
+## Calcolare gli interessi passivi
+
 Se hai adempiuto agli obblighi contrattuali e di legge e il cliente è responsabile
-                     del ritardo (nel senso che questo non è dovuto a circostanze che sfuggono al suo controllo),
-                     hai diritto a richiedere gli interessi di mora e il risarcimento per i costi di recupero.
-Quando sono dovuti gli Interessi?
+del ritardo (nel senso che questo non è dovuto a circostanze che sfuggono al suo controllo),
+hai diritto a richiedere gli interessi di mora e il risarcimento per i costi di recupero.
+
+
+## Quando sono dovuti gli Interessi?
+
 Gli interessi sono dovuti a decorrere dal giorno successivo alla data di scadenza
-                     fissata nel contratto.
+fissata nel contratto.
+
 Se nel contratto
 non è indicata una data di pagamento
 , gli interessi diventano automaticamente esigibili 30 giorni dopo il ricevimento
-                     da parte del cliente della fattura o richiesta di pagamento.
+da parte del cliente della fattura o richiesta di pagamento.
+
 Se
 non conosce la data di ricevimento della fattura
 , il creditore può chiedere gli interessi di mora 30 giorni di calendario dopo la
-                     fornitura dei servizi o prodotti.
+fornitura dei servizi o prodotti.
+
 Se la fattura è stata inviata prima della fornitura dei servizi o prodotti, gli interessi
-                     scattano soltanto dopo la fornitura.
-Quale tasso d’interesse va applicato?
+scattano soltanto dopo la fornitura.
+
+
+## Quale tasso d’interesse va applicato?
+
 Si possono esigere gli interessi al tasso legale.
-Tassi di interesse legale per paese
+
+
+## Tassi di interesse legale per paese
+
 Espandi
 Chiudi
-Paese dell’UE
-01/07/2026 – 31/12/2026
-Austria
-10,73
-Belgio
-10,50
-Bulgaria
-10,15
-Cechia
-11,75
-Cipro
-10,15
-Croazia
-10,15
-Danimarca
-10,00
-Estonia
-10,40
-Finlandia
-10,50
-Francia
-12,40
-Germania
-10,52
-Grecia
-10,15
-Irlanda
-10,40
-Italia
-10,15
-Lettonia
-10,40
-Lituania
-10,15
-Lussemburgo
-10,15
-Malta
-10,40
-Paesi Bassi
-10,15
-Polonia (settore sanitario)
-11,75
-Polonia (altri settori)
-13,75
-Portogallo
-10,15
-Romania
-14,50
-Slovacchia
-10,15
-Slovenia
-10,40
-Spagna
-10,40
-Svezia
-10,00
-Ungheria
-14,00
+
+| Paese dell’UE | 01/07/2026 – 31/12/2026 |
+| --- | --- |
+| Austria | 10,73 |
+| Belgio | 10,50 |
+| Bulgaria | 10,15 |
+| Cechia | 11,75 |
+| Cipro | 10,15 |
+| Croazia | 10,15 |
+| Danimarca | 10,00 |
+| Estonia | 10,40 |
+| Finlandia | 10,50 |
+| Francia | 12,40 |
+| Germania | 10,52 |
+| Grecia | 10,15 |
+| Irlanda | 10,40 |
+| Italia | 10,15 |
+| Lettonia | 10,40 |
+| Lituania | 10,15 |
+| Lussemburgo | 10,15 |
+| Malta | 10,40 |
+| Paesi Bassi | 10,15 |
+| Polonia (settore sanitario) | 11,75 |
+| Polonia (altri settori) | 13,75 |
+| Portogallo | 10,15 |
+| Romania | 14,50 |
+| Slovacchia | 10,15 |
+| Slovenia | 10,40 |
+| Spagna | 10,40 |
+| Svezia | 10,00 |
+| Ungheria | 14,00 |
+
 Utilizza la nostra calcolatrice per scoprire gli interessi che hai diritto di pretendere.
-Risarcimento delle spese di recupero
+
+
+## Risarcimento delle spese di recupero
+
 Oltre agli interessi dovuti
 si ha diritto a richiedere un risarcimento forfettario di 40 euro (o di importo equivalente)
-                     per ogni fattura pagata in ritardo (in alcuni paesi dell’UE l’importo può essere più
-                     elevato e calcolato in base a quello della fattura).
+per ogni fattura pagata in ritardo (in alcuni paesi dell’UE l’importo può essere più
+elevato e calcolato in base a quello della fattura).
+
 Se i costi sopportati per recuperare il debito sono superiori a tale valore
 è possibile richiedere un ragionevole risarcimento aggiuntivo
 (ad es. a causa di spese amministrative, oneri per il recupero dei crediti, o spese
-                     per l’ingaggio di un avvocato).
-Come recuperare il credito
+per l’ingaggio di un avvocato).
+
+
+## Come recuperare il credito
+
 Inviare al cliente una fattura comprensiva di interessi e risarcimento.
+
 Rivolgersi a un
 difensore civico nazionale
 o a un
 giudice nazionale
 .
 N.B.
+
 Se i pagamenti di un’autorità pubblica sono sistematicamente in ritardo, è possibile
-                     anche
+anche
 presentare una denuncia
 alla Commissione europea.
-La mia impresa ha sede in un
-paese dell’UE
-e ho crediti nei confronti di un’autorità pubblica di un
-paese dell’UE
-diverso
-dal mio
+
+
+
+## La mia impresa ha sede in un paese dell’UE e ho crediti nei confronti di un’autorità pubblica di un paese dell’UE diverso dal mio
+
 I contratti sono disciplinati dalla legge scelta dalle parti interessate. Occorre
-                     pertanto
+pertanto
 verificare quale legge disciplina il contratto in questione
 .
-Calcolare gli interessi passivi
+
+## Calcolare gli interessi passivi
+
 Se hai adempiuto agli obblighi contrattuali e di legge e il cliente è responsabile
-                     del ritardo (nel senso che questo non è dovuto a circostanze che sfuggono al suo controllo),
-                     hai diritto a richiedere gli interessi di mora e il risarcimento per i costi di recupero.
-Quando sono dovuti gli Interessi?
+del ritardo (nel senso che questo non è dovuto a circostanze che sfuggono al suo controllo),
+hai diritto a richiedere gli interessi di mora e il risarcimento per i costi di recupero.
+
+
+## Quando sono dovuti gli Interessi?
+
 Gli interessi sono dovuti a decorrere dal giorno successivo alla data di scadenza
-                     fissata nel contratto.
+fissata nel contratto.
+
 Se nel contratto
 non è indicata una data di pagamento
 , gli interessi diventano automaticamente esigibili 30 giorni dopo il ricevimento
-                     da parte del cliente della fattura o richiesta di pagamento.
+da parte del cliente della fattura o richiesta di pagamento.
+
 Se
 non conosce la data di ricevimento della fattura
 , il creditore può chiedere gli interessi di mora 30 giorni di calendario dopo la
-                     fornitura dei servizi o prodotti.
+fornitura dei servizi o prodotti.
+
 Se la fattura è stata inviata prima della fornitura dei servizi o prodotti, gli interessi
-                     scattano soltanto dopo la fornitura.
-Quale tasso d’interesse va applicato?
+scattano soltanto dopo la fornitura.
+
+
+## Quale tasso d’interesse va applicato?
+
 Si possono esigere gli interessi al tasso legale.
-Tassi di interesse legale per paese
+
+
+## Tassi di interesse legale per paese
+
 Espandi
 Chiudi
-Paese dell'UE
-01/07/2026 – 31/12/2026
-Austria
-10,73
-Belgio
-10,50
-Bulgaria
-10,15
-Cechia
-11,75
-Cipro
-10,15
-Croazia
-10,15
-Danimarca
-10,00
-Estonia
-10,40
-Finlandia
-10,50
-Francia
-12,40
-Germania
-10,52
-Grecia
-10,15
-Irlanda
-10,40
-Italia
-10,15
-Lettonia
-10,40
-Lituania
-10,15
-Lussemburgo
-10,15
-Malta
-10,40
-Paesi Bassi
-10,15
-Polonia (settore sanitario)
-11,75
-Polonia (altri settori)
-13,75
-Portogallo
-10,15
-Romania
-14,50
-Slovacchia
-10,15
-Slovenia
-10,40
-Spagna
-10,40
-Svezia
-10,00
-Ungheria
-14,00
+
+| Paese dell'UE | 01/07/2026 – 31/12/2026 |
+| --- | --- |
+| Austria | 10,73 |
+| Belgio | 10,50 |
+| Bulgaria | 10,15 |
+| Cechia | 11,75 |
+| Cipro | 10,15 |
+| Croazia | 10,15 |
+| Danimarca | 10,00 |
+| Estonia | 10,40 |
+| Finlandia | 10,50 |
+| Francia | 12,40 |
+| Germania | 10,52 |
+| Grecia | 10,15 |
+| Irlanda | 10,40 |
+| Italia | 10,15 |
+| Lettonia | 10,40 |
+| Lituania | 10,15 |
+| Lussemburgo | 10,15 |
+| Malta | 10,40 |
+| Paesi Bassi | 10,15 |
+| Polonia (settore sanitario) | 11,75 |
+| Polonia (altri settori) | 13,75 |
+| Portogallo | 10,15 |
+| Romania | 14,50 |
+| Slovacchia | 10,15 |
+| Slovenia | 10,40 |
+| Spagna | 10,40 |
+| Svezia | 10,00 |
+| Ungheria | 14,00 |
+
 Utilizza la nostra calcolatrice per scoprire gli interessi che hai diritto di pretendere.
-Risarcimento delle spese di recupero
+
+
+## Risarcimento delle spese di recupero
+
 Oltre agli interessi dovuti
 si ha diritto a richiedere un risarcimento forfettario di 40 euro (o di importo equivalente)
-                     per ogni fattura pagata in ritardo (in alcuni paesi dell’UE l’importo può essere più
-                     elevato e calcolato in base a quello della fattura).
+per ogni fattura pagata in ritardo (in alcuni paesi dell’UE l’importo può essere più
+elevato e calcolato in base a quello della fattura).
+
 Se i costi sopportati per recuperare il debito sono superiori a tale valore
 è possibile richiedere un ragionevole risarcimento aggiuntivo
 (ad es. a causa di spese amministrative, oneri per il recupero dei crediti, o spese
-                     per l’ingaggio di un avvocato).
-Come recuperare il credito
+per l’ingaggio di un avvocato).
+
+
+## Come recuperare il credito
+
 Inviare al cliente una fattura comprensiva di interessi e risarcimento.
+
 Rivolgersi a
 Solvit
 Apre un link esterno
 .
 N.B.
+
 Se i pagamenti di un’autorità pubblica sono sistematicamente in ritardo, è possibile
-                     anche
+anche
 presentare una denuncia
 alla Commissione europea.
+
 Calcolatrice degli interessi
 Per saperne di più sui ritardi nei pagamenti nel tuo paese:
 Scegli un paese

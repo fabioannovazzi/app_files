@@ -380,6 +380,10 @@ def parse_invoice_population(source: Path, staging_dir: Path) -> list[dict[str, 
 
     started = time.perf_counter()
     source = source.expanduser().resolve()
+    if source.is_file() and source.suffix.lower() == ".json":
+        from reviewed_invoices import load_reviewed_invoices
+
+        return load_reviewed_invoices(source)
     if source.is_dir():
         paths = sorted(
             path for path in source.rglob("*") if path.suffix.lower() == ".xml"
@@ -400,7 +404,7 @@ def parse_invoice_population(source: Path, staging_dir: Path) -> list[dict[str, 
         source_names = {source: source.name}
     else:
         raise AuditError(
-            "Invoice source must be an XML file, directory, or ZIP archive"
+            "Invoice source must be XML, a directory, ZIP, or a reviewed invoice JSON population"
         )
     parser = _load_fatturapa_module()
     invoices: list[dict[str, Any]] = []
@@ -703,7 +707,7 @@ def _deterministic_findings(
     tolerance: Decimal,
 ) -> list[dict[str, Any]]:
     findings: list[dict[str, Any]] = []
-    if not invoice.get("xml_valid"):
+    if not invoice.get("input_valid", invoice.get("xml_valid")):
         findings.append(
             _finding("xml_invalid", "exception", _text(invoice.get("parse_error")), {})
         )
@@ -956,7 +960,7 @@ def match_population(
             _money(_decimal(invoice.get("gross_amount"))),
         )
         for invoice in invoices
-        if invoice.get("xml_valid")
+        if invoice.get("input_valid", invoice.get("xml_valid"))
     )
     invoice_number_index: dict[str, set[str]] = defaultdict(set)
     supplier_date_index: dict[tuple[str, str], set[str]] = defaultdict(set)
@@ -982,7 +986,7 @@ def match_population(
     candidate_comparisons = 0
     for invoice in invoices:
         candidates: list[dict[str, Any]] = []
-        if invoice.get("xml_valid"):
+        if invoice.get("input_valid", invoice.get("xml_valid")):
             invoice_number = _normalized_invoice_number(invoice.get("invoice_number"))
             supplier_id = _normalized_tax_identifier(invoice.get("supplier_vat"))
             invoice_date = _normalized_date(invoice.get("invoice_date"))
@@ -1015,7 +1019,11 @@ def match_population(
             _normalized_date(invoice.get("invoice_date")),
             _money(_decimal(invoice.get("gross_amount"))),
         )
-        duplicate = duplicate_counts[key] > 1 if invoice.get("xml_valid") else False
+        duplicate = (
+            duplicate_counts[key] > 1
+            if invoice.get("input_valid", invoice.get("xml_valid"))
+            else False
+        )
         uniquely_owned = (
             len(candidates) == 1
             and movement_candidate_counts[str(candidates[0]["movement"]["movement_id"])]
@@ -1149,6 +1157,7 @@ def build_packet(
         line_rows.append(
             {
                 "description": description,
+                "locator": _text(line.get("locator")),
                 "quantity": _text(line.get("quantity")),
                 "line_total": _text(line.get("line_total")),
                 "vat_rate": _text(line.get("vat_rate")),
@@ -1203,6 +1212,9 @@ def build_packet(
     return {
         "invoice_id": invoice["invoice_id"],
         "source_reference": invoice.get("source_identifier"),
+        "source_locator": invoice.get("source_locator", ""),
+        "source_format": invoice.get("source_format", "fatturapa_xml"),
+        "extraction_sha256": invoice.get("extraction_sha256", ""),
         "supplier": {
             "name": invoice.get("supplier_name", ""),
             "tax_id": invoice.get("supplier_vat", ""),
@@ -1488,6 +1500,11 @@ def _input_fingerprint(
     history: Sequence[Mapping[str, Any]],
     chart_of_accounts: Mapping[str, str] | None,
 ) -> str:
+    if invoice_source.is_file() and invoice_source.suffix.lower() == ".json":
+        from reviewed_invoices import load_reviewed_invoices
+
+        # Recheck source hashes on resume, before accepting a prior job fingerprint.
+        load_reviewed_invoices(invoice_source)
     if invoice_source.is_dir():
         invoice_manifest = [
             [
@@ -2072,7 +2089,7 @@ def run_audit(
     if not invoices:
         connection.close()
         raise AuditError(
-            "Invoice population is empty; provide at least one readable FatturaPA XML invoice"
+            "Invoice population is empty; provide FatturaPA XML or a reviewed invoice population"
         )
     ledger_rows = load_ledger(ledger_path, mapping_path, sheet=ledger_sheet)
     timing: dict[str, float] = {}

@@ -1,0 +1,83 @@
+name: LIPE
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lipe:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    env:
+      PYTHONUNBUFFERED: "1"
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit -r plugins/lipe/requirements.txt
+      - name: Select preinstalled OpenSSL 3 on Windows
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $lipeOpenSSL = 'C:\Program Files\Git\usr\bin'
+          if (-not (Test-Path "$lipeOpenSSL\openssl.exe")) { throw 'Preinstalled OpenSSL is missing' }
+          $lipeOpenSSL | Out-File -FilePath $env:GITHUB_PATH -Append
+      - run: openssl version
+      - name: Verify LIPE test collection
+        timeout-minutes: 2
+        run: python -m pytest --collect-only -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_lipe.py tests/plugins/test_lipe_catalog.py tests/plugins/test_lipe_metrics.py tests/plugins/test_lipe_approval.py tests/plugins/test_lipe_receipt.py tests/plugins/test_lipe_export.py tests/plugins/test_lipe_catalog_authorization.py
+      - name: Verify evidence, tax arithmetic and export boundaries
+        timeout-minutes: 5
+        shell: python {0}
+        run: |
+          import os
+          import subprocess
+          import sys
+          from pathlib import Path
+
+          # Bound collection as well as tests, and preserve diagnostics even if
+          # the runner cannot flush its live log before the job cancellation.
+          log_path = Path(os.environ["RUNNER_TEMP"]) / "lipe-pytest.log"
+          command = [
+              sys.executable, "-u", "-m", "pytest", "-v",
+              "-o", "addopts=", "-o", "faulthandler_timeout=60",
+              "-o", "faulthandler_exit_on_timeout=true", "--confcutdir=tests/plugins",
+              "tests/plugins/test_lipe.py", "tests/plugins/test_lipe_catalog.py",
+              "tests/plugins/test_lipe_metrics.py", "tests/plugins/test_lipe_approval.py",
+              "tests/plugins/test_lipe_receipt.py", "tests/plugins/test_lipe_export.py",
+              "tests/plugins/test_lipe_catalog_authorization.py",
+              "--cov=plugins/lipe/scripts", "--cov-report=term-missing", "--cov-fail-under=80",
+          ]
+          status = 1
+          with log_path.open("w", encoding="utf-8") as log:
+              try:
+                  status = subprocess.run(
+                      command, stdout=log, stderr=subprocess.STDOUT,
+                      timeout=240, check=False,
+                  ).returncode
+              except subprocess.TimeoutExpired:
+                  log.write("\nLIPE pytest process exceeded 240 seconds; terminated.\n")
+          print(log_path.read_text(encoding="utf-8", errors="replace"), flush=True)
+          sys.exit(status)
+      - name: Preserve LIPE test diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lipe-pytest-${{ matrix.os }}
+          path: ${{ runner.temp }}/lipe-pytest.log
+          if-no-files-found: warn
+          retention-days: 7
+      - run: python -m black --check plugins/lipe/scripts tests/plugins/test_lipe.py tests/plugins/test_lipe_catalog.py tests/plugins/test_lipe_metrics.py tests/plugins/test_lipe_approval.py tests/plugins/test_lipe_receipt.py tests/plugins/test_lipe_export.py tests/plugins/test_lipe_catalog_authorization.py
+      - run: python -m isort --check-only plugins/lipe/scripts tests/plugins/test_lipe.py tests/plugins/test_lipe_catalog.py tests/plugins/test_lipe_metrics.py tests/plugins/test_lipe_approval.py tests/plugins/test_lipe_receipt.py tests/plugins/test_lipe_export.py tests/plugins/test_lipe_catalog_authorization.py
+      - run: python -m mypy --follow-imports=skip --ignore-missing-imports plugins/lipe/scripts
+      - run: python -m bandit -q -ll -r plugins/lipe/scripts

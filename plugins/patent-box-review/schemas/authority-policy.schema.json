@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "authority-policy.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "policy_id",
+    "authority_name",
+    "demo",
+    "admin_certificate_sha256",
+    "revoked_certificate_sha256",
+    "revoked_mandate_ids"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "policy_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "pattern": ".*\\S.*"
+    },
+    "authority_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "pattern": ".*\\S.*"
+    },
+    "demo": {
+      "type": "boolean"
+    },
+    "admin_certificate_sha256": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "[0-9a-f]{64}"
+      },
+      "uniqueItems": true,
+      "maxItems": 1000
+    },
+    "revoked_certificate_sha256": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "[0-9a-f]{64}"
+      },
+      "uniqueItems": true,
+      "maxItems": 1000
+    },
+    "revoked_mandate_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 500,
+        "pattern": ".*\\S.*"
+      },
+      "uniqueItems": true,
+      "maxItems": 1000
+    }
+  }
+}

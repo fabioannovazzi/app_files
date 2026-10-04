@@ -2419,6 +2419,32 @@ def test_prior_xbrl_locale_formatted_monetary_value_cannot_reconcile(
     }
 
 
+def test_company_markdown_is_retained_as_untrusted_supporting_evidence(tmp_path):
+    _, case = _created_case(tmp_path)
+    source = tmp_path / "company.md"
+    original = "# Società fittizia\n\nPrimo esercizio. Nessuna approvazione.\n"
+    source.write_text(original, encoding="utf-8")
+    before = deepcopy(case["trial_balance"])
+
+    result = xbrl_case.attach_supporting_document(
+        case,
+        source,
+        "SUPPORTING_EVIDENCE",
+        "Dati societari da rivedere",
+        "codex-simulated-qa",
+        case["revision_id"],
+    )
+
+    document = result["source_documents"][-1]
+    assert document["media_type"] == "text/markdown"
+    assert document["sha256"] == hashlib.sha256(original.encode()).hexdigest()
+    assert document["content_treated_as_untrusted"] is True
+    assert document["source_refs"] == [document["document_id"]]
+    assert result["trial_balance"] == before
+    assert result["approval"] is None
+    assert source.read_text(encoding="utf-8") == original
+
+
 def test_validate_case_blocks_comparative_mismatch_with_attached_prior_xbrl(
     tmp_path: Path,
 ) -> None:

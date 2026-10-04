@@ -1,0 +1,11 @@
+Fictional comparable-company evidence for development only. No observed market prices.
+Valuation/information date: 2026-12-31. LTM period: 2025-10-01 to 2026-09-30.
+Evidence publication: 2026-11-30. Peer price date: 2026-12-30.
+Target reported EBITDA 90 EUR + signed lease adjustment 10 = comparable EBITDA 100 EUR.
+Alpha: reported operating value 700 EUR + lease liability adjustment 50 = comparable EV 750 EUR.
+Alpha reported EBITDA 80 EUR + lease adjustment 20 = comparable EBITDA 100 EUR; EV/EBITDA 7.5x.
+Beta: operating value 1200 EUR without adjustments and EBITDA 120 EUR without adjustments; 10x.
+Gamma: excluded; missing support for a positive sustainable metric and unsuitable operating perimeter.
+All are fictional full-company amounts in EUR. The adopted convention capitalizes leases.
+The independently selected multiple is 8x, a synthetic professional assumption, not the arithmetic mean or median (8.75x).
+The universe, sector, markets, growth, margins, size, risk and leverage explanations are hypothetical; matching labels and sums do not establish actual comparability or IFRS 16 correctness.

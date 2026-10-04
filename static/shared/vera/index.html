@@ -25,6 +25,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;650&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../product-navigation.css?v=2026072301">
   <script defer src="../product-navigation.js?v=2026072301"></script>
+  <script defer src="../plugin-download-versions.js?v=2026100201"></script>
   <style>
     :root {
       --navy: #002060;
@@ -122,6 +123,24 @@
 
     .vera-mark img { display: block; width: 100%; height: auto; }
 
+    .vera-advantages {
+      max-width: 720px;
+      margin-top: 32px;
+    }
+    .vera-advantages h2 {
+      margin-bottom: 16px;
+      font-size: clamp(1.35rem, 2.2vw, 1.8rem);
+      letter-spacing: -0.025em;
+    }
+    .vera-advantages ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 12px;
+    }
+    .vera-advantages strong { font-weight: 650; }
+
     .hero-install {
       margin-top: 34px;
       padding-top: clamp(24px, 3vw, 32px);
@@ -129,6 +148,7 @@
       grid-template-areas:
         "copy"
         "action"
+        "antigravity"
         "video";
       grid-template-columns: minmax(0, 1fr);
       gap: 20px;
@@ -162,6 +182,14 @@
       font-size: 0.82rem;
       line-height: 1.45;
     }
+    .hero-install__antigravity {
+      grid-area: antigravity;
+      width: min(100%, 350px);
+      scroll-margin-top: 100px;
+      display: grid;
+      gap: 8px;
+    }
+    .hero-install__antigravity a:not(.button) { text-underline-offset: 0.2em; }
     .hero-install__video {
       grid-area: video;
       width: min(100%, 520px);
@@ -190,6 +218,8 @@
 
     .section-head__title { display: grid; gap: 14px; }
     .section-head > p { max-width: 660px; color: var(--blue); font-size: 1.075rem; }
+
+    .legacy-report-anchor { position: absolute; scroll-margin-top: 88px; }
 
     .run-report {
       padding-block: var(--space-section);
@@ -345,6 +375,26 @@
       color: var(--cyan);
       font-weight: 700;
     }
+
+    .connections { scroll-margin-top: 88px; }
+    .connections__body {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(28px, 6vw, 72px);
+    }
+    .connections__body article { padding-top: 24px; border-top: 1px solid var(--cyan); }
+    .connections__body .module-row {
+      min-height: 0;
+      padding: 0;
+      grid-template-columns: minmax(0, 1fr) 32px;
+      gap: 18px;
+      margin-bottom: 18px;
+      border-bottom: 0;
+    }
+    .connections__body .module-row h3 { margin: 0; }
+    .connections__body .module-row__arrow { grid-column: 2; grid-row: 1; }
+    .connections__body p { max-width: 60ch; color: var(--blue); line-height: 1.6; }
+    .connections__body p + p { margin-top: 16px; }
 
     .contributors { scroll-margin-top: 88px; }
     .contributors .section-head { margin-bottom: clamp(38px, 6vw, 64px); }
@@ -1019,7 +1069,7 @@
     .footer-links a { min-height: 44px; display: inline-flex; align-items: center; color: var(--blue); text-decoration: none; }
     .footer-links a:hover { color: var(--navy); }
 
-    a:focus-visible, button:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+    a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
 
     @media (max-width: 900px) {
       main, .footer-shell { width: min(var(--content), calc(100% - 40px)); }
@@ -1028,6 +1078,7 @@
         grid-template-areas:
           "copy"
           "action"
+          "antigravity"
           "video";
         grid-template-columns: 1fr;
         align-items: start;
@@ -1086,6 +1137,7 @@
       .hero-install__actions { grid-template-columns: 1fr; }
       .vera-mark { width: 132px; grid-row: 1; padding: 0 0 28px; border-left: 0; border-bottom: 1px solid var(--cyan); }
       .section-head { grid-template-columns: 1fr; gap: 20px; }
+      .connections__body { grid-template-columns: 1fr; }
       .run-report { grid-template-columns: 1fr; gap: 40px; }
       .run-report__intro h2 { max-width: 14ch; }
       .workstream-head { grid-template-columns: 1fr; gap: 10px; }
@@ -1158,6 +1210,9 @@
       .overview-video:hover img { transform: none; }
     }
   </style>
+  <link rel="stylesheet" href="../product-social.css?v=2026092601">
+  <link rel="stylesheet" href="../product-install.css?v=2026100302">
+  <script defer src="antigravity/version.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content" data-i18n="skip">Vai al contenuto</a>
@@ -1207,20 +1262,44 @@
         <p class="eyebrow" data-i18n="hero.eyebrow">Assistente AI per commercialisti</p>
         <h1 data-i18n="hero.title">Vera</h1>
         <p class="lead" data-i18n="hero.lead">Vera aggiunge a Codex fascicoli cliente, controlli contabili, riconciliazioni, analisi, report, comunicazione e ricerca.</p>
+        <section class="vera-advantages" id="why-vera" aria-labelledby="vera-advantages-title">
+          <h2 id="vera-advantages-title" data-i18n="advantages.title">Perché Vera</h2>
+          <ul>
+            <li><strong data-i18n="advantages.free.label">Gratuita.</strong> <span data-i18n="advantages.free.copy">Nessun costo per il plugin.</span></li>
+            <li><strong data-i18n="advantages.open.label">Open source.</strong> <span data-i18n="advantages.open.copy">Il codice è pubblico, consultabile e adattabile.</span></li>
+            <li><strong data-i18n="advantages.professionals.label">Sviluppata con commercialisti.</strong> <span data-i18n="advantages.professionals.copy">I professionisti contribuiscono a definire le funzioni e a metterne alla prova i risultati.</span></li>
+          </ul>
+        </section>
         <div class="hero-install" id="installa">
           <div class="hero-install__copy">
             <h2 data-i18n="install.title">Installazione</h2>
-            <p data-i18n="install.copy">Installa Vera per ChatGPT Work e Codex oppure scarica il pacchetto per Claude Cowork.</p>
+            <p data-i18n="install.copy">Installa Vera in ChatGPT Work e Codex, Claude Cowork o Google Antigravity.</p>
           </div>
           <div class="hero-install__actions" role="group" aria-label="Opzioni di installazione di Vera" data-i18n-aria-label="install.actions.label">
             <div class="install-option">
-              <a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer" data-vera-install-link data-i18n="install.button">Installa per ChatGPT Work e Codex</a>
-              <p class="install-option__note" data-i18n="install.chatgptHelp">Apre la pagina di installazione di Vera per ChatGPT Work e Codex.</p>
+              <button class="button" type="button" disabled aria-describedby="cowork-marketplace-status" data-cowork-marketplace-pending data-i18n="install.coworkButton">Vai al marketplace Cowork</button>
+              <p class="install-option__note" id="cowork-marketplace-status" data-i18n="install.coworkHelp">Abbiamo inviato il plugin al marketplace Cowork. In attesa di approvazione.</p>
+              <a class="button install-option__download" href="../cowork-downloads/index.html?lang=it" data-cowork-guide-link data-i18n="install.coworkGuide">Scarica ZIP per Cowork</a>
+              <p class="install-option__note" data-i18n="install.coworkZipHelp">Pacchetto per Cowork e istruzioni per installare o aggiornare.</p>
             </div>
             <div class="install-option">
-              <a class="button" href="downloads/vera-cowork-plugin.zip" download data-vera-cowork-download-link data-i18n="install.coworkButton">Scarica per Claude Cowork</a>
-              <p class="install-option__note" data-i18n="install.coworkHelp">Poi carica il file ZIP da Personalizza → Plugin in Claude Cowork.</p>
+              <a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer" data-vera-install-link data-i18n="install.button">Installa per ChatGPT Work e Codex</a>
+              <!-- Version confirmed on the public Marketplace listing on 2026-10-02. -->
+              <p class="install-option__note">Marketplace · v0.1.295</p>
+              <a class="button install-option__download" href="../plugin-downloads/index.html?product=vera&amp;lang=it" data-codex-download-link data-i18n="install.zipButton">Scarica ZIP per ChatGPT Work e Codex</a>
+              <p class="install-option__note" data-plugin-zip-version="vera" hidden></p>
             </div>
+          </div>
+          <div class="hero-install__antigravity install-option" id="antigravity">
+            <button class="button" type="button" disabled aria-describedby="antigravity-marketplace-status" data-antigravity-marketplace-pending data-i18n="install.antigravity.marketplace">Vai al marketplace Antigravity</button>
+            <p class="install-option__note" id="antigravity-marketplace-status">
+              <!-- Submitted candidate version; maintained separately from the downloadable ZIP. See docs/releases/antigravity-submissions.json. -->
+              <span data-antigravity-marketplace-version>Marketplace · v0.1.334</span><br>
+              <span data-i18n="install.antigravity.pending">In attesa di approvazione.</span>
+            </p>
+            <a class="button install-option__download" href="downloads/vera-antigravity-plugin.zip" download data-i18n="install.antigravity.download">Scarica ZIP per Google Antigravity</a>
+            <p class="install-option__note" data-antigravity-version hidden></p>
+            <a class="install-option__note" href="antigravity/index.html?lang=it" data-antigravity-guide-link data-i18n="install.antigravity.guide">Come installare Vera in Antigravity →</a>
           </div>
           <a class="hero-install__video" id="vera-install-video-link" href="https://youtu.be/yAnkIabnQ1M" target="_blank" rel="noopener noreferrer" aria-label="Collega ChatGPT al computer con Codex" data-i18n-aria-label="install.video.title">
             <span class="overview-video__thumb" aria-hidden="true">
@@ -1339,6 +1418,17 @@
           </a>
         </li>
         <li>
+          <a class="contributor-row" href="https://www.linkedin.com/in/francesco-perini-33a5a520/" target="_blank" rel="noopener noreferrer">
+            <span class="contributor-mark"><img src="/static/shared/vera/images/contributors/francesco-perini.jpeg" alt="Foto di Francesco Perini"></span>
+            <span>
+              <span class="contributor-name">Francesco Perini</span>
+              <span class="contributor-profile">Dottore Commercialista e Revisore Legale · Verona</span>
+              <span class="contributor-role" data-i18n="contributors.periniRole">Porta in Vera l’esperienza maturata nell’affiancare le imprese nelle decisioni che riguardano attività e patrimonio.</span>
+            </span>
+            <span class="contributor-platform">LinkedIn ↗</span>
+          </a>
+        </li>
+        <li>
           <a class="contributor-row" href="https://www.linkedin.com/in/nicola-sciarra/" target="_blank" rel="noopener noreferrer">
             <span class="contributor-mark"><img src="https://studiosciarra.com/media/yootheme/cache/a7/home-nicola-a78b7f1a.jpg?hash=d36fdfb7&amp;src=images%2Fyootheme%2Fhome%2Fhome-nicola.jpg&amp;thumbnail=800%2C850%2C" alt="Foto di Nicola Sciarra"></span>
             <span>
@@ -1360,37 +1450,32 @@
             <span class="contributor-platform">LinkedIn ↗</span>
           </a>
         </li>
+        <li>
+          <a class="contributor-row" href="https://www.linkedin.com/in/anna-vivoli-333b84355/" target="_blank" rel="noopener noreferrer">
+            <span class="contributor-mark"><img src="/static/shared/vera/images/contributors/anna-vivoli.jpg" alt="Foto di Anna Vivoli"></span>
+            <span>
+              <span class="contributor-name">Anna Vivoli</span>
+              <span class="contributor-profile">Consulente in Business Continuity e analisi pre-crisi per PMI · Mestre, Veneto</span>
+              <span class="contributor-role" data-i18n="contributors.vivoliRole">Mette alla prova Vera su controlli contabili e riconciliazioni, partendo da casi concreti.</span>
+            </span>
+            <span class="contributor-platform">LinkedIn ↗</span>
+          </a>
+        </li>
       </ul>
-      <p class="contributors-note" data-i18n="contributors.note">I profili collegano alle informazioni pubbliche condivise da ciascun contributore. Le fotografie e le descrizioni professionali saranno aggiunte solo con materiali approvati.</p>
+      <p class="contributors-note" data-i18n="contributors.note">I profili rimandano alle informazioni pubbliche condivise da ciascun contributore. Per fotografie e descrizioni professionali utilizziamo solo materiali approvati.</p>
     </section>
 
-    <section class="run-report" id="model-data-report" aria-labelledby="model-data-report-title">
+    <section class="run-report" id="compliance" aria-labelledby="compliance-title">
+      <span id="model-data-report" class="legacy-report-anchor" aria-hidden="true"></span>
       <div class="run-report__intro">
-        <span class="section-index" data-i18n="report.index">Per ogni lavoro</span>
-        <h2 id="model-data-report-title" data-i18n="report.title">Vera mostra che cosa è arrivato al modello.</h2>
+        <span class="section-index" data-i18n="compliance.index">Dati e lavoro dello studio</span>
+        <h2 id="compliance-title" data-i18n="compliance.title">Vera facilita la compliance dello studio.</h2>
       </div>
       <div class="run-report__detail">
-        <p class="run-report__copy" data-i18n="report.copy">Dopo ogni esecuzione sostanziale, un breve report distingue la fonte disponibile, ciò che il codice ha elaborato localmente, ciò che è stato visibile al modello e ciò che non è mai stato visibile al modello. Se la lavorazione crea file, conserva anche una ricevuta JSON e una versione Markdown.</p>
-        <p class="run-report__copy" data-i18n="report.stamp">Per ogni report durevole, Vera invia automaticamente a Mparanza soltanto un identificativo casuale, la versione e il digest del report locale; il report e i dati del cliente restano nello spazio di lavoro. Il commercialista riceve un HTML verificabile da inviare al cliente o salvare come PDF. Se il servizio non è disponibile, il lavoro resta completato e la richiesta rimane in attesa per un nuovo tentativo.</p>
-        <div class="run-report__receipt" aria-label="Esempio con dati sintetici del flusso" data-i18n-aria-label="report.exampleAria">
-          <div class="run-report__receipt-head">
-            <span data-i18n="report.example">Esempio con dati sintetici</span>
-            <span data-i18n="report.unit">Controllo di gestione</span>
-          </div>
-          <dl>
-            <div class="run-report__receipt-row"><dt data-i18n="report.source">Transazioni nella fonte</dt><dd data-i18n="report.sourceValue">100</dd></div>
-            <div class="run-report__receipt-row"><dt data-i18n="report.processed">Transazioni elaborate dal codice</dt><dd data-i18n="report.processedValue">100</dd></div>
-            <div class="run-report__receipt-row"><dt data-i18n="report.mappingRows">Righe mostrate per la mappatura</dt><dd data-i18n="report.mappingRowsValue">10</dd></div>
-            <div class="run-report__receipt-row"><dt data-i18n="report.mappingColumns">Colonne mostrate per la mappatura</dt><dd data-i18n="report.mappingColumnsValue">4</dd></div>
-            <div class="run-report__receipt-row"><dt data-i18n="report.resultRows">Righe mensili ricevute per il commento</dt><dd data-i18n="report.resultRowsValue">12</dd></div>
-            <div class="run-report__receipt-row"><dt data-i18n="report.resultMetrics">Metriche ricevute per il commento</dt><dd data-i18n="report.resultMetricsValue">53</dd></div>
-            <div class="run-report__receipt-row"><dt data-i18n="report.local">Righe mai mostrate singolarmente</dt><dd data-i18n="report.localValue">90</dd></div>
-            <div class="run-report__receipt-row"><dt data-i18n="report.identityColumns">Colonne di identità escluse</dt><dd data-i18n="report.identityColumnsValue">2</dd></div>
-          </dl>
-          <p class="run-report__note" data-i18n="report.note">Il totale elaborato localmente e la parte mai visibile al modello si sovrappongono e non vanno sommati. Le quantità effettive dipendono dal processo e dalla finalità professionale; per alcuni lavori, il documento o la popolazione completa è il minimo corretto.</p>
-        </div>
+        <p class="run-report__copy" data-i18n="compliance.copy">Vera supporta la compliance dello studio con elaborazioni locali, minimizzazione dei dati, report e formazione. Il confronto in 30 punti distingue le funzioni disponibili dalle aggiunte proposte.</p>
         <div class="run-report__links">
-          <a class="run-report__link" href="https://mparanza.com/data-handling?lang=it#run-evidence" data-data-handling-link data-data-handling-anchor="#run-evidence" data-i18n="report.link">Come leggere il report e i suoi limiti →</a>
+        <a class="run-report__link" href="../vera-compliance/index.html?lang=it" data-i18n="compliance.link">Esamina il confronto, voce per voce →</a>
+        <a class="run-report__link" href="../vera-compliance/index.html?lang=it#condizioni-uso" data-i18n="compliance.conditions">Condizioni e limiti d’uso →</a>
         </div>
       </div>
     </section>
@@ -1465,6 +1550,12 @@
               <h4>Bilancio OIC e XBRL</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
+            <a class="module-row" href="../composizione-negoziata/index.html" data-module-link data-jurisdiction-item="it" data-vera-workflow="composizione-negoziata"><h4>Composizione negoziata</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" href="../fusione-guidata/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-workflow="fusione-guidata" hidden>
+              <h4>Fusione per incorporazione</h4>
+              <span class="module-row__arrow" aria-hidden="true">↗</span>
+            </a>
+            <a class="module-row" href="../patent-box-review/index.html" data-module-link data-jurisdiction-item="it" data-vera-workflow="patent-box-review" hidden><h4>Patent Box · anteprima</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" href="../concordato-plan-review/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-workflow="concordato-plan-review" hidden>
               <h4>Revisione concordato preventivo</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
@@ -1495,8 +1586,9 @@
               <h4 data-i18n="module.invoiceXml.title">Preparazione fatture XML</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
+            <a class="module-row" href="../lipe/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="lipe"><h4 data-i18n="module.lipe.title">LIPE</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" href="../passive-invoice-audit/index.html" data-module-link data-vera-workflow="passive-invoice-audit">
-              <h4 data-i18n="module.passiveAudit.title">Audit intelligente fatture passive</h4>
+              <h4 data-i18n="module.passiveAudit.title">Audit delle fatture passive</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../journal-bank-reconciliation/index.html" data-module-link data-vera-workflow="journal-bank-reconciliation">
@@ -1521,6 +1613,7 @@
               <h4 data-i18n="module.plan.title">Preparazione piano vendite</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
+            <a class="module-row" id="business-valuation" href="../business-valuation/index.html" data-module-link data-vera-workflow="business-valuation"><h4 data-i18n="module.valuation.title">Valutazione d’impresa</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" id="business-planning" href="../business-planning/index.html" data-module-link data-vera-workflow="business-planning">
               <h4 data-i18n="module.businessPlanning.title">Preparare un business plan</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
@@ -1529,7 +1622,10 @@
               <h4 data-i18n="module.variance.title">Analisi scostamenti</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
+            <a class="module-row" href="../rating-legalita/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="rating-legalita"><h4 data-i18n="module.ratingLegalita.title">Rating di legalità</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" href="../adeguati-assetti/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="adeguati-assetti"><h4 data-i18n="module.assetti.title">Adeguati assetti</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" id="scissione-guidata" href="../scissione-guidata/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="scissione-guidata"><h4 data-i18n="module.scissione.title">Scissione guidata</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" id="esg-reporting-assurance" href="../esg-reporting-assurance/index.html" data-module-link data-vera-workflow="esg-reporting-assurance"><h4 data-i18n="module.esg.title">Fascicolo ESG · in sviluppo</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" id="treasury-forecast" href="../treasury-forecast/index.html" data-module-link data-vera-workflow="treasury-forecast"><h4 data-i18n="module.treasury.title">Budget di tesoreria</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" id="management-control-pack" href="../management-control-pack/index.html" data-module-link data-vera-workflow="management-control-pack">
               <h4 data-i18n="module.managementPack.title">Pacchetto controllo di gestione</h4>
@@ -1583,6 +1679,10 @@
             <p data-i18n="stream.studio.copy">Prepara comunicazioni professionali e il sito dello studio a partire da materiali verificati.</p>
           </header>
           <div class="module-directory">
+            <a class="module-row" href="../studio-document-format/index.html" data-module-link data-vera-workflow="studio-document-format">
+              <h4 data-i18n="module.studio-format.title">Formato dei documenti dello studio</h4>
+              <span class="module-row__arrow" aria-hidden="true">↗</span>
+            </a>
             <a class="module-row" id="professional-communication" href="../comunicazione-professionale/index.html" data-module-link data-vera-workflow="comunicazione-professionale">
               <h4 data-i18n="module.communication.title">Comunicazione professionale</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
@@ -1596,6 +1696,67 @@
       </div>
     </section>
 
+    <section class="section-block connections" id="connections" aria-labelledby="connections-title">
+      <div class="section-head">
+        <div class="section-head__title">
+          <h2 id="connections-title" data-i18n="connections.title">Integrazioni</h2>
+        </div>
+        <p data-i18n="connections.intro">Le guide qui sotto spiegano come collegare Second Brain, installare le skill dello studio e configurare i connettori locali per anonimizzare i documenti. I connettori sono opzionali e si installano separatamente.</p>
+      </div>
+      <div class="connections__body">
+        <article aria-labelledby="connections-knowledge-title">
+          <a class="module-row" href="../vera-integrazioni/index.html?lang=it#prepare" data-module-link>
+            <h3 id="connections-knowledge-title" data-i18n="connections.knowledge.title">Usare Vera con Second Brain</h3>
+            <span class="module-row__arrow" aria-hidden="true">↗</span>
+          </a>
+          <p data-i18n="connections.knowledge.copy">Se hai già Second Brain, collegalo nell’app in cui usi Vera e autorizza gli strumenti di ricerca e lettura. Poi chiedi a Vera di consultare una procedura, un precedente o un modello dello studio per il lavoro che stai svolgendo.</p>
+          <p data-i18n="connections.knowledge.limits">Vera consulta le fonti disponibili senza modificarle. Non fornisce Second Brain e funziona anche senza un archivio collegato. La disponibilità della consultazione dipende dal connettore e dagli strumenti accessibili nella sessione.</p>
+        </article>
+        <article aria-labelledby="connections-skills-title">
+          <a class="module-row" href="../vera-skill-studio/index.html?lang=it" data-module-link>
+            <h3 id="connections-skills-title" data-i18n="connections.skills.title">Usare le proprie skill</h3>
+            <span class="module-row__arrow" aria-hidden="true">↗</span>
+          </a>
+          <p data-i18n="connections.skills.copy">Se vuoi svolgere un lavoro con una tua skill, richiamala direttamente nell’app in cui l’hai installata. Collegare Second Brain non importa, seleziona o esegue le skill dello studio in Vera.</p>
+        </article>
+        <article aria-labelledby="connections-privacy-title">
+          <a class="module-row" href="../vera-integrazioni/index.html?lang=it#privacy-filter" data-module-link>
+            <h3 id="connections-privacy-title" data-i18n="connections.privacy.title">OpenAI Privacy Filter</h3>
+            <span class="module-row__arrow" aria-hidden="true">↗</span>
+          </a>
+          <p data-i18n="connections.privacy.description">Maschera dati personali con un modello principalmente inglese. Può elaborare più file, ma non conserva identità distinte e coerenti tra documenti né una mappa per ripristinare gli originali. Per testi italiani la qualità va verificata.</p>
+        </article>
+        <article aria-labelledby="connections-gliner-title">
+          <a class="module-row" href="../vera-integrazioni/index.html?lang=it#gliner2-pii" data-module-link>
+            <h3 id="connections-gliner-title" data-i18n="connections.gliner.title">GLiNER2-PII</h3>
+            <span class="module-row__arrow" aria-hidden="true">↗</span>
+          </a>
+          <p data-i18n="connections.gliner.description">Rileva e maschera dati personali in italiano, inglese, francese, tedesco, spagnolo, portoghese e olandese. Può elaborare più file, senza pseudonimi condivisi tra documenti né ripristino degli originali. È un modello multilingue generale, non specializzato negli identificativi fiscali italiani.</p>
+        </article>
+        <article aria-labelledby="connections-rizzo-title">
+          <a class="module-row" href="../vera-integrazioni/rizzo/index.html?lang=it" data-module-link>
+            <h3 id="connections-rizzo-title" data-i18n="connections.rizzo.title">Rizzo PII</h3>
+            <span class="module-row__arrow" aria-hidden="true">↗</span>
+          </a>
+          <p data-i18n="connections.rizzo.description">Orientato ai testi italiani, con rilevatori per codice fiscale, partita IVA e catasto. Usa pseudonimi reversibili e una mappa per documento. Elabora più file separatamente: lo stesso nome non mantiene necessariamente lo stesso pseudonimo tra documenti. La valutazione pubblicata riguarda l’italiano.</p>
+        </article>
+        <article aria-labelledby="connections-lethe-title">
+          <a class="module-row" href="../vera-integrazioni/lethe/index.html?lang=it" data-module-link>
+            <h3 id="connections-lethe-title" data-i18n="connections.lethe.title">Lethe</h3>
+            <span class="module-row__arrow" aria-hidden="true">↗</span>
+          </a>
+          <p data-i18n="connections.lethe.description">Per mantenere le stesse identità in più documenti e ripristinarle nel risultato AI. Usa un dizionario di nomi e alias verificato prima del lavoro. Il dizionario funziona in ogni lingua; il riconoscimento automatico non è specializzato per l’Italia. I nomi devono essere inclusi nella revisione iniziale.</p>
+        </article>
+        <article aria-labelledby="connections-shield-title">
+          <a class="module-row" href="../vera-integrazioni/pii-shield/index.html?lang=it" data-module-link>
+            <h3 id="connections-shield-title" data-i18n="connections.shield.title">PII-Shield</h3>
+            <span class="module-row__arrow" aria-hidden="true">↗</span>
+          </a>
+          <p data-i18n="connections.shield.description">Per aggiungere documenti alla stessa sessione con pseudonimi condivisi e ripristinare i dati originali. Combina rilevazione multilingue e regole per identificativi di Italia, altri Paesi UE, Regno Unito e USA. Prova reale superata su Linux; sul Mac testato il motore si interrompe.</p>
+        </article>
+      </div>
+    </section>
+
   </main>
 
   <footer>
@@ -1605,6 +1766,10 @@
           <a href="https://github.com/fabioannovazzi/app_files/tree/main/plugins/vera" target="_blank" rel="noopener noreferrer" data-i18n="footer.source">Codice sorgente</a>
           <a href="https://mparanza.com/data-handling?lang=it" data-data-handling-link data-i18n="footer.data">Gestione dei dati</a>
         </nav>
+        <nav class="product-social" aria-label="Profili social di Vera" data-i18n-aria-label="footer.socialLabel">
+          <a href="https://www.linkedin.com/company/vera-commercialista/" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false" fill="currentColor"><path d="M20.45 2H3.55C2.69 2 2 2.68 2 3.52v16.96c0 .84.69 1.52 1.55 1.52h16.9c.86 0 1.55-.68 1.55-1.52V3.52c0-.84-.69-1.52-1.55-1.52ZM7.93 18.75H4.98V9.2h2.95v9.55ZM6.45 7.9a1.71 1.71 0 1 1 0-3.42 1.71 1.71 0 0 1 0 3.42Zm12.3 10.85H15.8v-4.64c0-1.11-.02-2.54-1.55-2.54-1.55 0-1.79 1.21-1.79 2.46v4.72H9.51V9.2h2.83v1.3h.04c.39-.74 1.36-1.52 2.79-1.52 2.99 0 3.54 1.97 3.54 4.53v5.24Z"/></svg><span>LinkedIn</span></a>
+          <a href="https://x.com/VeraPlugin" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false" fill="currentColor"><path d="M18.9 2H22l-6.78 7.75L23.2 22h-6.25l-4.89-7.4L5.58 22H2.45l7.99-9.13L.8 2h6.41l4.42 6.74L18.9 2Zm-1.1 18h1.73L6.26 3.88H4.4L17.8 20Z"/></svg><span>X</span></a>
+        </nav>
       </div>
     </div>
   </footer>
@@ -1612,6 +1777,7 @@
   <script>
     const copy = {
       it: {
+        "footer.socialLabel": "Profili social di Vera",
         "meta.title": "Vera · Codex per commercialisti",
         "meta.description": "Vera aggiunge a Codex fascicoli cliente, controlli contabili, riconciliazioni, analisi, report, comunicazione e ricerca.",
         "skip": "Vai al contenuto",
@@ -1633,31 +1799,18 @@
         "hero.eyebrow": "Assistente AI per commercialisti",
         "hero.title": "Vera",
         "hero.lead": "Vera aggiunge a Codex fascicoli cliente, controlli contabili, riconciliazioni, analisi, report, comunicazione e ricerca.",
-        "report.index": "Per ogni lavoro",
-        "report.title": "Vera mostra che cosa è arrivato al modello.",
-        "report.copy": "Dopo ogni esecuzione sostanziale, un breve report distingue la fonte disponibile, ciò che il codice ha elaborato localmente, ciò che è stato visibile al modello e ciò che non è mai stato visibile al modello. Se la lavorazione crea file, conserva anche una ricevuta JSON e una versione Markdown.",
-        "report.stamp": "Per ogni report durevole, Vera invia automaticamente a Mparanza soltanto un identificativo casuale, la versione e il digest del report locale; il report e i dati del cliente restano nello spazio di lavoro. Il commercialista riceve un HTML verificabile da inviare al cliente o salvare come PDF. Se il servizio non è disponibile, il lavoro resta completato e la richiesta rimane in attesa per un nuovo tentativo.",
-        "report.exampleAria": "Esempio con dati sintetici del flusso",
-        "report.example": "Esempio con dati sintetici",
-        "report.unit": "Controllo di gestione",
-        "report.source": "Transazioni nella fonte",
-        "report.sourceValue": "100",
-        "report.processed": "Transazioni elaborate dal codice",
-        "report.processedValue": "100",
-        "report.mappingRows": "Righe mostrate per la mappatura",
-        "report.mappingRowsValue": "10",
-        "report.mappingColumns": "Colonne mostrate per la mappatura",
-        "report.mappingColumnsValue": "4",
-        "report.resultRows": "Righe mensili ricevute per il commento",
-        "report.resultRowsValue": "12",
-        "report.resultMetrics": "Metriche ricevute per il commento",
-        "report.resultMetricsValue": "53",
-        "report.local": "Righe mai mostrate singolarmente",
-        "report.localValue": "90",
-        "report.identityColumns": "Colonne di identità escluse",
-        "report.identityColumnsValue": "2",
-        "report.note": "Il totale elaborato localmente e la parte mai visibile al modello si sovrappongono e non vanno sommati. Le quantità effettive dipendono dal processo e dalla finalità professionale; per alcuni lavori, il documento o la popolazione completa è il minimo corretto.",
-        "report.link": "Come leggere il report e i suoi limiti →",
+        "advantages.title": "Perché Vera",
+        "advantages.free.label": "Gratuita.",
+        "advantages.free.copy": "Nessun costo per il plugin.",
+        "advantages.open.label": "Open source.",
+        "advantages.open.copy": "Il codice è pubblico, consultabile e adattabile.",
+        "advantages.professionals.label": "Sviluppata con commercialisti.",
+        "advantages.professionals.copy": "I professionisti contribuiscono a definire le funzioni e a metterne alla prova i risultati.",
+        "compliance.index": "Dati e lavoro dello studio",
+        "compliance.title": "Vera facilita la compliance dello studio.",
+        "compliance.copy": "Vera supporta la compliance dello studio con elaborazioni locali, minimizzazione dei dati, report e formazione. Il confronto in 30 punti distingue le funzioni disponibili dalle aggiunte proposte.",
+        "compliance.link": "Esamina il confronto, voce per voce →",
+        "compliance.conditions": "Condizioni e limiti d’uso →",
         "core.index": "Cosa può fare Vera",
         "core.title": "Funzioni disponibili",
         "core.copy": "Seleziona una funzione per aprire la pagina con input, metodo, output, responsabilità e informazioni sui dati che arrivano al modello.",
@@ -1685,6 +1838,8 @@
         "module.learn.title": "Impara con Vera",
         "module.newClient.title": "Apertura del fascicolo cliente",
         "module.amlReview.title": "Verifica antiriciclaggio del cliente",
+        "module.lipe.title": "LIPE",
+        "module.ratingLegalita.title": "Rating di legalità",
         "module.assetti.title": "Adeguati assetti",
         "module.newClient": "Prepara il fascicolo di avvio dai documenti ricevuti: identità, incarico, privacy, antiriciclaggio, informazioni mancanti e monitoraggio. Il professionista rivede il dossier; Vera non firma o invia documenti e non attiva il rapporto.",
         "module.newClient.includesLabel": "Funzioni incluse",
@@ -1702,7 +1857,7 @@
         "module.sampling": "Qualifica il layout del giornale, poi normalizza la popolazione e costruisce un campione riproducibile. Se i campi non sono affidabili, si ferma.",
         "module.entries.title": "Verifica documentale",
         "module.invoiceXml.title": "Preparazione fatture XML",
-        "module.passiveAudit.title": "Audit intelligente fatture passive",
+        "module.passiveAudit.title": "Audit delle fatture passive",
         "module.entries": "Collega scritture e supporti solo quando la relazione è verificabile; i candidati deboli restano eccezioni.",
         "module.bank.title": "Riconciliazione banca-contabilità",
         "module.bank": "Confronta banca e contabilità dopo un mapping confermato e chiude soltanto relazioni che soddisfano il contratto di riconciliazione.",
@@ -1710,10 +1865,13 @@
         "module.reconciliation": "Verifica se le partite indicate come aperte lo sono ancora al cut-off e separa saldi supportati, possibili regolamenti non allocati, residui ed evidenze mancanti.",
         "module.plan.title": "Preparazione piano vendite",
         "module.plan": "Trasforma vendite Actual revisionate in un Plan applicando soltanto assunzioni commerciali e valutarie confermate, con scope, periodi, priorità e riconciliazione visibili.",
+        "module.valuation.title": "Valutazione d’impresa",
         "module.businessPlanning.title": "Preparare un business plan",
         "module.businessPlanning": "Preparare un business plan",
         "module.variance.title": "Analisi scostamenti",
         "module.variance": "Confronta consuntivo (Actual), Budget, Forecast o periodi precedenti; riconcilia i totali alle fonti, calcola gli scostamenti a valore e, con unità affidabili, per prezzo, volume e mix, poi prepara tabelle e grafici rivedibili.",
+        "module.scissione.title": "Scissione guidata",
+        "module.esg.title": "Fascicolo ESG · in sviluppo",
         "module.treasury.title": "Budget di tesoreria",
         "module.managementPack.title": "Pacchetto controllo di gestione",
         "module.centraleRischi.title": "Analisi Centrale Rischi",
@@ -1740,6 +1898,7 @@
         "module.research.title": "Validazione ricerca",
         "module.research": "Controlla le affermazioni rispetto alle fonti citate e prepara il materiale consolidato.",
         "module.communication.title": "Comunicazione professionale",
+        "module.studio-format.title": "Formato dei documenti dello studio",
         "module.communication": "Decide se una novità merita davvero di essere comunicata e prepara email, articoli, post e visuali nel formato approvato dello Studio.",
         "module.website.title": "Sito dello studio",
         "module.website": "Rinnova il sito esistente o ne prepara uno iniziale dai materiali verificati, con preview responsive e pubblicazione subordinata all’approvazione.",
@@ -1799,13 +1958,36 @@
         "videos.overview.title": "Dal lavoro dello studio a un risultato rivedibile",
         "videos.open": "Si apre su YouTube",
         "install.title": "Installazione",
-        "install.copy": "Installa Vera per ChatGPT Work e Codex oppure scarica il pacchetto per Claude Cowork.",
+        "install.copy": "Installa Vera in ChatGPT Work e Codex, Claude Cowork o Google Antigravity.",
         "install.actions.label": "Opzioni di installazione di Vera",
+        "install.antigravity.marketplace": "Vai al marketplace Antigravity",
+        "install.antigravity.pending": "In attesa di approvazione.",
+        "install.antigravity.download": "Scarica ZIP per Google Antigravity",
+        "install.antigravity.guide": "Come installare Vera in Antigravity →",
         "install.button": "Installa per ChatGPT Work e Codex",
-        "install.chatgptHelp": "Apre la pagina di installazione di Vera per ChatGPT Work e Codex.",
-        "install.coworkButton": "Scarica per Claude Cowork",
-        "install.coworkHelp": "Poi carica il file ZIP da Personalizza → Plugin in Claude Cowork.",
+        "install.zipButton": "Scarica ZIP per ChatGPT Work e Codex",
+        "install.coworkButton": "Vai al marketplace Cowork",
+        "install.coworkHelp": "Abbiamo inviato il plugin al marketplace Cowork. In attesa di approvazione.",
+        "install.coworkGuide": "Scarica ZIP per Cowork",
+        "install.coworkZipHelp": "Pacchetto per Cowork e istruzioni per installare o aggiornare.",
         "install.video.title": "Collega ChatGPT al computer con Codex",
+        "connections.title": "Integrazioni",
+        "connections.intro": "Le guide qui sotto spiegano come collegare Second Brain, installare le skill dello studio e configurare i connettori locali per anonimizzare i documenti. I connettori sono opzionali e si installano separatamente.",
+        "connections.knowledge.title": "Usare Vera con Second Brain",
+        "connections.knowledge.copy": "Se hai già Second Brain, collegalo nell’app in cui usi Vera e autorizza gli strumenti di ricerca e lettura. Poi chiedi a Vera di consultare una procedura, un precedente o un modello dello studio per il lavoro che stai svolgendo.",
+        "connections.knowledge.limits": "Vera consulta le fonti disponibili senza modificarle. Non fornisce Second Brain e funziona anche senza un archivio collegato. La disponibilità della consultazione dipende dal connettore e dagli strumenti accessibili nella sessione.",
+        "connections.skills.title": "Usare le proprie skill",
+        "connections.skills.copy": "Se vuoi svolgere un lavoro con una tua skill, richiamala direttamente nell’app in cui l’hai installata. Collegare Second Brain non importa, seleziona o esegue le skill dello studio in Vera.",
+        "connections.gliner.title": "GLiNER2-PII",
+        "connections.gliner.description": "Rileva e maschera dati personali in italiano, inglese, francese, tedesco, spagnolo, portoghese e olandese. Può elaborare più file, senza pseudonimi condivisi tra documenti né ripristino degli originali. È un modello multilingue generale, non specializzato negli identificativi fiscali italiani.",
+        "connections.rizzo.title": "Rizzo PII",
+        "connections.rizzo.description": "Orientato ai testi italiani, con rilevatori per codice fiscale, partita IVA e catasto. Usa pseudonimi reversibili e una mappa per documento. Elabora più file separatamente: lo stesso nome non mantiene necessariamente lo stesso pseudonimo tra documenti. La valutazione pubblicata riguarda l’italiano.",
+        "connections.privacy.title": "OpenAI Privacy Filter",
+        "connections.privacy.description": "Maschera dati personali con un modello principalmente inglese. Può elaborare più file, ma non conserva identità distinte e coerenti tra documenti né una mappa per ripristinare gli originali. Per testi italiani la qualità va verificata.",
+        "connections.lethe.title": "Lethe",
+        "connections.lethe.description": "Per mantenere le stesse identità in più documenti e ripristinarle nel risultato AI. Usa un dizionario di nomi e alias verificato prima del lavoro. Il dizionario funziona in ogni lingua; il riconoscimento automatico non è specializzato per l’Italia. I nomi devono essere inclusi nella revisione iniziale.",
+        "connections.shield.title": "PII-Shield",
+        "connections.shield.description": "Per aggiungere documenti alla stessa sessione con pseudonimi condivisi e ripristinare i dati originali. Combina rilevazione multilingue e regole per identificativi di Italia, altri Paesi UE, Regno Unito e USA. Prova reale superata su Linux; sul Mac testato il motore si interrompe.",
         "contributors.index": "Collaborazione",
         "contributors.title": "Contributors",
         "contributors.copy": "Vera cresce attraverso il confronto con professionisti che mettono alla prova metodi, limiti e risultati nel lavoro reale.",
@@ -1815,16 +1997,19 @@
         "contributors.loffredoRole": "Esplora con Vera l’incontro tra tecnologia e lavoro dello studio, dai dati al risultato utile.",
         "contributors.maruottiRole": "Contribuisce all’evoluzione di Vera per fascicoli, revisioni e decisioni che richiedono giudizio professionale.",
         "contributors.petrelliRole": "Mette a confronto Vera con le esigenze operative dello studio, dalla pratica al documento verificabile.",
+        "contributors.periniRole": "Porta in Vera l’esperienza maturata nell’affiancare le imprese nelle decisioni che riguardano attività e patrimonio.",
         "contributors.manfrediniRole": "Verifica Vera nell’area dei controlli contabili, con attenzione a documenti, eccezioni e responsabilità.",
         "contributors.mottolaRole": "Sperimenta Vera nell’area della contabilità quotidiana, portando casi concreti e passaggi ricorrenti.",
         "contributors.plataniaRole": "Sperimentazione e test di Vera sulle pratiche di Studio, esigenze operative e definizioni di workflow.",
         "contributors.sciarraRole": "Porta nell’area della revisione legale l’esperienza necessaria per rendere verificabili metodo, documenti e decisioni.",
-        "contributors.note": "I profili collegano alle informazioni pubbliche condivise da ciascun contributore. Le fotografie e le descrizioni professionali saranno aggiunte solo con materiali approvati.",
+        "contributors.note": "I profili rimandano alle informazioni pubbliche condivise da ciascun contributore. Per fotografie e descrizioni professionali utilizziamo solo materiali approvati.",
+        "contributors.vivoliRole": "Mette alla prova Vera su controlli contabili e riconciliazioni, partendo da casi concreti.",
         "footer.linksLabel": "Informazioni",
         "footer.source": "Codice sorgente",
         "footer.data": "Gestione dei dati"
       },
       en: {
+        "footer.socialLabel": "Vera social profiles",
         "meta.title": "Vera · Codex for accountants",
         "meta.description": "Vera adds client files, accounting checks, reconciliations, analysis, reporting, communication, and research to Codex.",
         "skip": "Skip to content",
@@ -1846,31 +2031,18 @@
         "hero.eyebrow": "AI companion for accountants",
         "hero.title": "Vera",
         "hero.lead": "Vera adds client files, accounting checks, reconciliations, analysis, reporting, communication, and research to Codex.",
-        "report.index": "For every piece of work",
-        "report.title": "Vera shows what reached the model.",
-        "report.copy": "After every substantive run, a short report distinguishes the available source, what code processed locally, what was visible to the model, and what was never visible to the model. When the work creates files, it also keeps a JSON receipt and a Markdown version.",
-        "report.stamp": "For every durable report, Vera automatically sends Mparanza only a random identifier, the version, and the local report digest; the report and client data stay in the workspace. The accountant receives a verifiable HTML receipt to send to the customer or save as PDF. If the service is unavailable, the work remains complete and the request stays pending for retry.",
-        "report.exampleAria": "Synthetic-data flow example",
-        "report.example": "Synthetic-data example",
-        "report.unit": "Management control",
-        "report.source": "Transactions in the source",
-        "report.sourceValue": "100",
-        "report.processed": "Transactions processed by code",
-        "report.processedValue": "100",
-        "report.mappingRows": "Rows shown for mapping",
-        "report.mappingRowsValue": "10",
-        "report.mappingColumns": "Columns shown for mapping",
-        "report.mappingColumnsValue": "4",
-        "report.resultRows": "Monthly rows received for commentary",
-        "report.resultRowsValue": "12",
-        "report.resultMetrics": "Metrics received for commentary",
-        "report.resultMetricsValue": "53",
-        "report.local": "Rows never shown individually",
-        "report.localValue": "90",
-        "report.identityColumns": "Identity columns excluded",
-        "report.identityColumnsValue": "2",
-        "report.note": "The locally processed total and the part never visible to the model overlap and must not be added together. Actual quantities depend on the workflow and professional purpose; for some work, the complete document or population is the correct minimum.",
-        "report.link": "How to read the report and its limits →",
+        "advantages.title": "Why Vera?",
+        "advantages.free.label": "Free.",
+        "advantages.free.copy": "No cost for the plugin.",
+        "advantages.open.label": "Open source.",
+        "advantages.open.copy": "The code is public and can be inspected and adapted.",
+        "advantages.professionals.label": "Developed with accountants.",
+        "advantages.professionals.copy": "Professionals help define the functions and test their results.",
+        "compliance.index": "Data and professional work",
+        "compliance.title": "Vera helps the firm meet its compliance obligations.",
+        "compliance.copy": "Vera supports the firm’s compliance work with local processing, data minimisation, reports and training. The 30-point assessment distinguishes available functions from proposed additions.",
+        "compliance.link": "Explore the discussion, item by item (in Italian) →",
+        "compliance.conditions": "Conditions and limits of use (in Italian) →",
         "core.index": "What Vera can do",
         "core.title": "Available functions",
         "core.copy": "Select a function to open its page with inputs, method, outputs, responsibilities, and model-data information.",
@@ -1898,6 +2070,8 @@
         "module.learn.title": "Learn with Vera",
         "module.newClient.title": "Open a new client file · United Kingdom",
         "module.amlReview.title": "AML review",
+        "module.lipe.title": "LIPE",
+        "module.ratingLegalita.title": "Italian legality rating",
         "module.assetti.title": "Assessment of company arrangements",
         "module.newClient": "Prepare the initial file from the documents received: identity, engagement, privacy, AML, missing evidence, and monitoring. The professional reviews the dossier; Vera does not sign or send documents and does not activate the relationship.",
         "module.newClient.includesLabel": "Included workflows",
@@ -1923,10 +2097,13 @@
         "module.reconciliation": "Checks whether items reported as open are still open at cut-off and separates supported balances, possible unallocated settlements, residuals and missing evidence.",
         "module.plan.title": "Prepare the sales plan",
         "module.plan": "Turns reviewed Actual sales into a Plan using only confirmed commercial and FX assumptions, with scopes, periods, priorities and reconciliation kept visible.",
+        "module.valuation.title": "Business valuation",
         "module.businessPlanning.title": "Prepare a business plan",
         "module.businessPlanning": "Prepare a business plan",
         "module.variance.title": "Variance analysis",
         "module.variance": "Compares Actual with Budget, Forecast or prior periods; ties totals to sources, calculates value variances and, with reliable units, price, volume and mix effects, then prepares reviewable tables and plots.",
+        "module.scissione.title": "Guided demerger",
+        "module.esg.title": "ESG case file · in development",
         "module.treasury.title": "Cash forecast",
         "module.managementPack.title": "Management control pack",
         "module.centraleRischi.title": "Centrale Rischi analysis",
@@ -1953,6 +2130,7 @@
         "module.research.title": "Verify research sources and conclusions",
         "module.research": "Checks claims against cited sources and prepares the consolidated material.",
         "module.communication.title": "Assess and prepare firm communications",
+        "module.studio-format.title": "Studio document format",
         "module.communication": "Decides whether a development is genuinely worth communicating and prepares emails, articles, posts and visuals in the firm’s approved format.",
         "module.website.title": "Create or update the firm website",
         "module.website": "Refreshes an existing site or creates a first one from verified material, with a responsive preview and approval-bound publication.",
@@ -2012,13 +2190,36 @@
         "videos.overview.title": "From the firm’s work to a reviewable result",
         "videos.open": "Opens on YouTube",
         "install.title": "Installation",
-        "install.copy": "Install Vera for ChatGPT Work and Codex, or download the package for Claude Cowork.",
+        "install.copy": "Install Vera in ChatGPT Work and Codex, Claude Cowork or Google Antigravity.",
         "install.actions.label": "Vera installation options",
+        "install.antigravity.marketplace": "Go to Antigravity marketplace",
+        "install.antigravity.pending": "Awaiting approval.",
+        "install.antigravity.download": "Download ZIP for Google Antigravity",
+        "install.antigravity.guide": "How to install Vera in Antigravity →",
         "install.button": "Install for ChatGPT Work and Codex",
-        "install.chatgptHelp": "Opens Vera’s installation page for ChatGPT Work and Codex.",
-        "install.coworkButton": "Download for Claude Cowork",
-        "install.coworkHelp": "Then upload the ZIP from Customize → Plugins in Claude Cowork.",
+        "install.zipButton": "Download ZIP for ChatGPT Work and Codex",
+        "install.coworkButton": "Go to Cowork marketplace",
+        "install.coworkHelp": "We have submitted the plugin to the Cowork marketplace. Awaiting approval.",
+        "install.coworkGuide": "Download ZIP for Cowork",
+        "install.coworkZipHelp": "Cowork package and instructions to install or update.",
         "install.video.title": "Connect ChatGPT to your computer with Codex",
+        "connections.title": "Integrations",
+        "connections.intro": "The guides below explain how to connect Second Brain, install your firm’s skills and configure local connectors for document anonymization. The connectors are optional and installed separately.",
+        "connections.knowledge.title": "Using Vera with Second Brain",
+        "connections.knowledge.copy": "If you already have Second Brain, connect it in the app where you use Vera and authorize its search and read tools. Then ask Vera to consult a firm procedure, precedent or template for the task you are working on.",
+        "connections.knowledge.limits": "Vera consults available sources without changing them. It does not supply Second Brain and works without a connected repository. Consultation depends on the connector and the tools accessible in the current session.",
+        "connections.skills.title": "Using your own skills",
+        "connections.skills.copy": "To carry out a task with your own skill, invoke it directly in the app where you installed it. Connecting Second Brain does not import, select or execute the firm’s skills inside Vera.",
+        "connections.gliner.title": "GLiNER2-PII",
+        "connections.gliner.description": "Detects and masks personal data in Italian, English, French, German, Spanish, Portuguese and Dutch. Processes multiple files without shared pseudonyms across documents or restoration of originals. A general multilingual model, without specialization in Italian tax identifiers.",
+        "connections.rizzo.title": "Rizzo PII",
+        "connections.rizzo.description": "Focused on Italian texts, with detectors for Italian tax codes, VAT numbers and cadastral references. Uses reversible pseudonyms and a mapping per document. Processes multiple files separately: the same name may receive different pseudonyms across documents. Published evaluation covers Italian.",
+        "connections.privacy.title": "OpenAI Privacy Filter",
+        "connections.privacy.description": "Masks personal data with a primarily English model. Processes multiple files, but keeps neither distinct, consistent identities across documents nor a mapping to restore originals. Quality on Italian texts needs checking.",
+        "connections.lethe.title": "Lethe",
+        "connections.lethe.description": "For keeping the same identities across documents and restoring them in AI output. Uses a dictionary of names and aliases reviewed before processing. The dictionary works in any language; automatic detection is not Italy-specific. Names must be included in the initial review.",
+        "connections.shield.title": "PII-Shield",
+        "connections.shield.description": "For adding documents to one session with shared pseudonyms and restoring original data. Combines multilingual detection with identifier rules for Italy, other EU countries, the UK and US. Passed real testing on Linux; the engine aborts on the tested Mac.",
         "contributors.index": "Collaboration",
         "contributors.title": "Contributors",
         "contributors.copy": "Vera grows through the exchange with professionals who test its methods, limits and results in real work.",
@@ -2028,16 +2229,19 @@
         "contributors.loffredoRole": "Explores with Vera the meeting point between technology and firm work, from data to useful outcomes.",
         "contributors.maruottiRole": "Contributes to Vera’s evolution for client files, reviews and decisions requiring professional judgement.",
         "contributors.petrelliRole": "Puts Vera against the firm’s operational needs, from the case to the verifiable document.",
+        "contributors.periniRole": "Brings to Vera his experience helping businesses make decisions about their operations and assets.",
         "contributors.manfrediniRole": "Checks Vera in accounting-control work, focusing on documents, exceptions and responsibilities.",
         "contributors.mottolaRole": "Experiments with Vera in day-to-day accounting, bringing concrete cases and recurring steps.",
         "contributors.plataniaRole": "Experimentation and testing of Vera on firm practices, operational needs and workflow definitions.",
         "contributors.sciarraRole": "Brings legal-audit experience to make methods, documents and decisions verifiable.",
-        "contributors.note": "Profiles link to the public information each contributor has shared. Photos and professional descriptions will be added only from approved material.",
+        "contributors.note": "Profiles link to the public information each contributor has shared. We use only approved material for photos and professional descriptions.",
+        "contributors.vivoliRole": "Tests Vera on accounting checks and reconciliations, using concrete cases.",
         "footer.linksLabel": "Information",
         "footer.source": "Source code",
         "footer.data": "Data handling"
       },
       fr: {
+        "footer.socialLabel": "Profils de Vera sur les réseaux sociaux",
         "meta.title": "Vera · Codex pour les experts-comptables",
         "meta.description": "Vera ajoute à Codex les dossiers clients, les contrôles comptables, les rapprochements, l'analyse, les rapports, la communication et la recherche.",
         "skip": "Aller au contenu",
@@ -2059,31 +2263,18 @@
         "hero.eyebrow": "AI companion pour les experts-comptables",
         "hero.title": "Vera",
         "hero.lead": "Vera ajoute à Codex les dossiers clients, les contrôles comptables, les rapprochements, l'analyse, les rapports, la communication et la recherche.",
-        "report.index": "Pour chaque travail",
-        "report.title": "Vera montre ce qui est parvenu au modèle.",
-        "report.copy": "Après chaque exécution substantielle, un bref rapport distingue la source disponible, ce que le code a traité localement, ce qui a été visible par le modèle et ce qui n'a jamais été visible par le modèle. Lorsque le travail crée des fichiers, il conserve aussi un reçu JSON et une version Markdown.",
-        "report.stamp": "Pour chaque rapport durable, Vera envoie automatiquement à Mparanza uniquement un identifiant aléatoire, la version et le hash du rapport local ; le rapport et les données client restent dans l'espace de travail. Le professionnel reçoit un HTML vérifiable à envoyer au client ou à enregistrer en PDF. Si le service est indisponible, le travail reste terminé et la demande demeure en attente d'une nouvelle tentative.",
-        "report.exampleAria": "Exemple de flux avec données synthétiques",
-        "report.example": "Exemple avec données synthétiques",
-        "report.unit": "Contrôle de gestion",
-        "report.source": "Transactions dans la source",
-        "report.sourceValue": "100",
-        "report.processed": "Transactions traitées par le code",
-        "report.processedValue": "100",
-        "report.mappingRows": "Lignes présentées pour le mapping",
-        "report.mappingRowsValue": "10",
-        "report.mappingColumns": "Colonnes présentées pour le mapping",
-        "report.mappingColumnsValue": "4",
-        "report.resultRows": "Lignes mensuelles reçues pour le commentaire",
-        "report.resultRowsValue": "12",
-        "report.resultMetrics": "Indicateurs reçus pour le commentaire",
-        "report.resultMetricsValue": "53",
-        "report.local": "Lignes jamais présentées individuellement",
-        "report.localValue": "90",
-        "report.identityColumns": "Colonnes d’identité exclues",
-        "report.identityColumnsValue": "2",
-        "report.note": "Le total traité localement et la partie jamais visible par le modèle se chevauchent et ne doivent pas être additionnés. Les quantités réelles dépendent du workflow et de la finalité professionnelle ; pour certains travaux, le document ou la population complète constitue le minimum approprié.",
-        "report.link": "Comprendre le rapport et ses limites →",
+        "advantages.title": "Pourquoi Vera ?",
+        "advantages.free.label": "Gratuite.",
+        "advantages.free.copy": "Aucun coût pour le plugin.",
+        "advantages.open.label": "Open source.",
+        "advantages.open.copy": "Le code est public, consultable et adaptable.",
+        "advantages.professionals.label": "Développée avec des professionnels de la comptabilité.",
+        "advantages.professionals.copy": "Les professionnels contribuent à définir les fonctions et à en tester les résultats.",
+        "compliance.index": "Données et travail du cabinet",
+        "compliance.title": "Vera facilite la conformité du cabinet.",
+        "compliance.copy": "Vera accompagne la conformité du cabinet avec des traitements locaux, la minimisation des données, des rapports et de la formation. Le bilan en 30 points distingue les fonctions disponibles des ajouts proposés.",
+        "compliance.link": "Examiner le dialogue, point par point (en italien) →",
+        "compliance.conditions": "Conditions et limites d’utilisation (en italien) →",
         "core.index": "Ce que Vera peut faire",
         "core.title": "Fonctions disponibles",
         "core.copy": "Sélectionnez une fonction pour ouvrir sa page avec les entrées, la méthode, les sorties, les responsabilités et les informations sur les données transmises au modèle.",
@@ -2111,6 +2302,8 @@
         "module.learn.title": "Apprendre avec Vera",
         "module.newClient.title": "Ouvrir le dossier d’un nouveau client · Genève",
         "module.amlReview.title": "Revue antiblanchiment",
+        "module.lipe.title": "LIPE",
+        "module.ratingLegalita.title": "Rating de légalité italien",
         "module.assetti.title": "Évaluation des dispositifs de l’entreprise",
         "module.newClient": "Prépare le dossier initial à partir des documents reçus : identité, mission, confidentialité, AML, pièces manquantes et suivi. Le professionnel revoit le dossier ; Vera ne signe ni n’envoie de documents et n’active pas la relation.",
         "module.newClient.includesLabel": "Fonctions incluses",
@@ -2136,10 +2329,13 @@
         "module.reconciliation": "Vérifie si les postes déclarés ouverts le sont encore au cut-off et sépare soldes étayés, règlements potentiellement non affectés, résiduels et preuves manquantes.",
         "module.plan.title": "Préparer le plan des ventes",
         "module.plan": "Transforme les ventes réelles révisées en Plan en appliquant uniquement des hypothèses commerciales et de change confirmées, avec périmètres, périodes, priorités et rapprochement visibles.",
+        "module.valuation.title": "Évaluation d’entreprise",
         "module.businessPlanning.title": "Préparer un business plan",
         "module.businessPlanning": "Préparer un business plan",
         "module.variance.title": "Analyse des écarts",
         "module.variance": "Compare le Réel au Budget, à la Prévision ou aux périodes antérieures ; rapproche les totaux des sources, calcule les écarts en valeur et, avec des unités fiables, les effets prix, volume et mix, puis prépare des tableaux et graphiques révisables.",
+        "module.scissione.title": "Scission guidée",
+        "module.esg.title": "Dossier ESG · en développement",
         "module.treasury.title": "Budget de trésorerie",
         "module.managementPack.title": "Dossier de contrôle de gestion",
         "module.centraleRischi.title": "Analyse Centrale Rischi",
@@ -2166,6 +2362,7 @@
         "module.research.title": "Vérifier les sources et les conclusions de la recherche",
         "module.research": "Contrôle les affirmations par rapport aux sources citées et prépare le matériel consolidé.",
         "module.communication.title": "Évaluer et préparer les communications du cabinet",
+        "module.studio-format.title": "Format des documents du cabinet",
         "module.communication": "Décide si une évolution mérite vraiment d’être communiquée et prépare e-mails, articles, publications et visuels dans le format approuvé du cabinet.",
         "module.website.title": "Créer ou mettre à jour le site du cabinet",
         "module.website": "Modernise un site existant ou en crée un premier à partir d’éléments vérifiés, avec aperçu responsive et publication soumise à validation.",
@@ -2225,13 +2422,36 @@
         "videos.overview.title": "Du travail du cabinet à un résultat révisable",
         "videos.open": "S’ouvre sur YouTube",
         "install.title": "Installation",
-        "install.copy": "Installez Vera pour ChatGPT Work et Codex ou téléchargez le paquet pour Claude Cowork.",
+        "install.copy": "Installez Vera dans ChatGPT Work et Codex, Claude Cowork ou Google Antigravity.",
         "install.actions.label": "Options d’installation de Vera",
+        "install.antigravity.marketplace": "Aller au marketplace Antigravity",
+        "install.antigravity.pending": "En attente d’approbation.",
+        "install.antigravity.download": "Télécharger le ZIP pour Google Antigravity",
+        "install.antigravity.guide": "Installer Vera dans Antigravity →",
         "install.button": "Installer pour ChatGPT Work et Codex",
-        "install.chatgptHelp": "Ouvre la page d’installation de Vera pour ChatGPT Work et Codex.",
-        "install.coworkButton": "Télécharger pour Claude Cowork",
-        "install.coworkHelp": "Importez ensuite le fichier ZIP depuis Personnaliser → Plugins dans Claude Cowork.",
+        "install.zipButton": "Télécharger le ZIP pour ChatGPT Work et Codex",
+        "install.coworkButton": "Aller au marketplace Cowork",
+        "install.coworkHelp": "Nous avons soumis le plugin au marketplace Cowork. En attente d’approbation.",
+        "install.coworkGuide": "Télécharger le ZIP pour Cowork",
+        "install.coworkZipHelp": "Paquet pour Cowork et instructions d’installation ou de mise à jour.",
         "install.video.title": "Connectez ChatGPT à votre ordinateur avec Codex",
+        "connections.title": "Intégrations",
+        "connections.intro": "Les guides ci-dessous expliquent comment connecter Second Brain, installer les skills du cabinet et configurer les connecteurs locaux pour anonymiser les documents. Les connecteurs sont facultatifs et s’installent séparément.",
+        "connections.knowledge.title": "Utiliser Vera avec Second Brain",
+        "connections.knowledge.copy": "Si vous avez déjà Second Brain, connectez-le dans l’application où vous utilisez Vera et autorisez ses outils de recherche et de lecture. Demandez ensuite à Vera de consulter une procédure, un précédent ou un modèle du cabinet pour le travail en cours.",
+        "connections.knowledge.limits": "Vera consulte les sources disponibles sans les modifier. Elle ne fournit pas Second Brain et fonctionne sans archive connectée. La consultation dépend du connecteur et des outils accessibles dans la session.",
+        "connections.skills.title": "Utiliser ses propres skills",
+        "connections.skills.copy": "Pour effectuer un travail avec votre propre skill, invoquez-la directement dans l’application où vous l’avez installée. Connecter Second Brain n’importe, ne sélectionne et n’exécute pas les skills du cabinet dans Vera.",
+        "connections.gliner.title": "GLiNER2-PII",
+        "connections.gliner.description": "Repère et masque les données personnelles dans italien, anglais, français, allemand, espagnol, portugais et néerlandais. Traite plusieurs fichiers sans pseudonymes partagés entre documents ni restauration des originaux. Modèle multilingue général, sans spécialisation dans les identifiants fiscaux italiens.",
+        "connections.rizzo.title": "Rizzo PII",
+        "connections.rizzo.description": "Orienté vers les textes italiens, avec des détecteurs pour codes fiscaux, numéros de TVA et références cadastrales italiens. Pseudonymes réversibles et correspondance par document. Traite plusieurs fichiers séparément : un même nom peut recevoir des pseudonymes différents entre documents. L’évaluation publiée porte sur l’italien.",
+        "connections.privacy.title": "OpenAI Privacy Filter",
+        "connections.privacy.description": "Masque les données personnelles avec un modèle principalement anglophone. Traite plusieurs fichiers, sans conserver des identités distinctes et cohérentes entre documents ni une correspondance pour restaurer les originaux. La qualité sur les textes italiens doit être vérifiée.",
+        "connections.lethe.title": "Lethe",
+        "connections.lethe.description": "Pour conserver les mêmes identités entre documents et les restaurer dans le résultat IA. Utilise un dictionnaire de noms et d’alias vérifié avant le travail. Le dictionnaire fonctionne dans toute langue ; la détection automatique n’est pas spécialisée pour l’Italie. Les noms doivent figurer dans la révision initiale.",
+        "connections.shield.title": "PII-Shield",
+        "connections.shield.description": "Pour ajouter des documents à une même session avec des pseudonymes partagés et restaurer les données originales. Combine détection multilingue et règles d’identifiants pour l’Italie, d’autres pays de l’UE, le Royaume-Uni et les États-Unis. Test réel réussi sous Linux ; le moteur s’interrompt sur le Mac testé.",
         "contributors.index": "Collaboration",
         "contributors.title": "Contributeurs",
         "contributors.copy": "Vera progresse grâce à l’échange avec des professionnels qui testent ses méthodes, ses limites et ses résultats dans le travail réel.",
@@ -2241,16 +2461,19 @@
         "contributors.loffredoRole": "Explore avec Vera le lien entre technologie et travail du cabinet, des données au résultat utile.",
         "contributors.maruottiRole": "Fait évoluer Vera pour les dossiers, les révisions et les décisions qui exigent un jugement professionnel.",
         "contributors.petrelliRole": "Confronte Vera aux besoins opérationnels du cabinet, de la pratique au document vérifiable.",
+        "contributors.periniRole": "Apporte à Vera son expérience de l’accompagnement des entreprises dans leurs décisions concernant leur activité et leur patrimoine.",
         "contributors.manfrediniRole": "Vérifie Vera dans le contrôle comptable, avec une attention aux documents, exceptions et responsabilités.",
         "contributors.mottolaRole": "Expérimente Vera dans la comptabilité quotidienne, à partir de cas concrets et de tâches récurrentes.",
         "contributors.plataniaRole": "Expérimentation et tests de Vera sur les pratiques du cabinet, ses besoins opérationnels et la définition des workflows.",
         "contributors.sciarraRole": "Apporte à l’audit légal l’expérience nécessaire pour rendre la méthode, les documents et les décisions vérifiables.",
-        "contributors.note": "Les profils renvoient vers les informations publiques partagées par chaque contributeur. Les photos et les descriptions professionnelles seront ajoutées uniquement à partir de contenus approuvés.",
+        "contributors.note": "Les profils renvoient vers les informations publiques partagées par chaque contributeur. Nous utilisons uniquement des contenus approuvés pour les photos et les descriptions professionnelles.",
+        "contributors.vivoliRole": "Met Vera à l’épreuve sur des contrôles comptables et des rapprochements, à partir de cas concrets.",
         "footer.linksLabel": "Informations",
         "footer.source": "Code source",
         "footer.data": "Gestion des données"
       },
       de: {
+        "footer.socialLabel": "Vera in sozialen Netzwerken",
         "meta.title": "Vera · Codex für Steuerberaterinnen und Steuerberater",
         "meta.description": "Vera ergänzt Codex um Mandantenakten, Buchungsprüfungen, Abstimmungen, Analysen, Berichte, Kommunikation und Recherche.",
         "skip": "Zum Inhalt",
@@ -2272,31 +2495,18 @@
         "hero.eyebrow": "AI companion für Steuerberaterinnen und Steuerberater",
         "hero.title": "Vera",
         "hero.lead": "Vera ergänzt Codex um Mandantenakten, Buchungsprüfungen, Abstimmungen, Analysen, Berichte, Kommunikation und Recherche.",
-        "report.index": "Für jede Arbeit",
-        "report.title": "Vera zeigt, was das Modell erhalten hat.",
-        "report.copy": "Nach jeder substanziellen Ausführung unterscheidet ein kurzer Bericht die verfügbare Quelle, was der Code lokal verarbeitet hat, was für das Modell sichtbar war und was für das Modell nie sichtbar war. Wenn die Arbeit Dateien erzeugt, werden außerdem ein JSON-Beleg und eine Markdown-Version gespeichert.",
-        "report.stamp": "Für jeden dauerhaften Bericht sendet Vera automatisch nur eine zufällige ID, die Version und den Hash des lokalen Berichts an Mparanza; Bericht und Mandantendaten bleiben im Arbeitsbereich. Die Kanzlei erhält einen prüfbaren HTML-Beleg zum Versand oder Speichern als PDF. Ist der Dienst nicht verfügbar, bleibt die Arbeit abgeschlossen und die Anfrage für einen erneuten Versuch ausstehend.",
-        "report.exampleAria": "Ablaufbeispiel mit synthetischen Daten",
-        "report.example": "Beispiel mit synthetischen Daten",
-        "report.unit": "Controlling",
-        "report.source": "Transaktionen in der Quelle",
-        "report.sourceValue": "100",
-        "report.processed": "Vom Code verarbeitete Transaktionen",
-        "report.processedValue": "100",
-        "report.mappingRows": "Für die Zuordnung gezeigte Zeilen",
-        "report.mappingRowsValue": "10",
-        "report.mappingColumns": "Für die Zuordnung gezeigte Spalten",
-        "report.mappingColumnsValue": "4",
-        "report.resultRows": "Für den Kommentar erhaltene Monatszeilen",
-        "report.resultRowsValue": "12",
-        "report.resultMetrics": "Für den Kommentar erhaltene Kennzahlen",
-        "report.resultMetricsValue": "53",
-        "report.local": "Nie einzeln gezeigte Zeilen",
-        "report.localValue": "90",
-        "report.identityColumns": "Ausgeschlossene Identitätsspalten",
-        "report.identityColumnsValue": "2",
-        "report.note": "Der lokal verarbeitete Gesamtumfang und der für das Modell nie sichtbare Teil überlappen und dürfen nicht addiert werden. Die tatsächlichen Mengen hängen vom Workflow und beruflichen Zweck ab; bei manchen Arbeiten ist das vollständige Dokument oder die vollständige Grundgesamtheit das richtige Minimum.",
-        "report.link": "Bericht und Grenzen verstehen →",
+        "advantages.title": "Warum Vera?",
+        "advantages.free.label": "Kostenlos.",
+        "advantages.free.copy": "Keine Kosten für das Plugin.",
+        "advantages.open.label": "Open Source.",
+        "advantages.open.copy": "Der Code ist öffentlich, einsehbar und anpassbar.",
+        "advantages.professionals.label": "Mit Fachleuten entwickelt.",
+        "advantages.professionals.copy": "Fachleute aus Steuerberatung und Rechnungswesen helfen, die Funktionen zu definieren und ihre Ergebnisse zu prüfen.",
+        "compliance.index": "Daten und Kanzleiarbeit",
+        "compliance.title": "Vera unterstützt die Compliance der Kanzlei.",
+        "compliance.copy": "Vera unterstützt die Compliance der Kanzlei mit lokaler Verarbeitung, Datenminimierung, Berichten und Schulungen. Die Übersicht mit 30 Punkten unterscheidet verfügbare Funktionen von vorgeschlagenen Ergänzungen.",
+        "compliance.link": "Die Diskussion Punkt für Punkt ansehen (auf Italienisch) →",
+        "compliance.conditions": "Nutzungsbedingungen und Grenzen (auf Italienisch) →",
         "core.index": "Was Vera kann",
         "core.title": "Verfügbare Funktionen",
         "core.copy": "Wählen Sie eine Funktion, um ihre Seite mit Eingaben, Methode, Ergebnissen, Verantwortlichkeiten und Informationen zu den Modelldaten zu öffnen.",
@@ -2324,6 +2534,8 @@
         "module.learn.title": "Mit Vera lernen",
         "module.newClient.title": "Neue Mandantenakte anlegen · Zürich",
         "module.amlReview.title": "Geldwäscheprüfung",
+        "module.lipe.title": "LIPE",
+        "module.ratingLegalita.title": "Italienisches Legalitätsrating",
         "module.assetti.title": "Bewertung der Unternehmensstrukturen",
         "module.newClient": "Bereitet aus den eingegangenen Unterlagen die Anfangsakte vor: Identität, Mandat, Datenschutz, AML, fehlende Nachweise und Überwachung. Der Berufsträger prüft das Dossier; Vera unterschreibt oder versendet keine Dokumente und aktiviert das Mandat nicht.",
         "module.newClient.includesLabel": "Enthaltene Workflows",
@@ -2349,10 +2561,13 @@
         "module.reconciliation": "Prüft, ob die als offen gemeldeten Posten zum Cut-off noch offen sind, und trennt belegte Salden, mögliche nicht zugeordnete Zahlungen, Restbeträge und fehlende Nachweise.",
         "module.plan.title": "Vertriebsplan erstellen",
         "module.plan": "Überführt geprüfte Ist-Umsätze in einen Plan und verwendet dabei nur bestätigte Vertriebs- und Währungsannahmen; Umfang, Zeiträume, Prioritäten und Abstimmung bleiben sichtbar.",
+        "module.valuation.title": "Unternehmensbewertung",
         "module.businessPlanning.title": "Businessplan erstellen",
         "module.businessPlanning": "Businessplan erstellen",
         "module.variance.title": "Abweichungsanalyse",
         "module.variance": "Vergleicht Ist mit Budget, Forecast oder Vorperioden; stimmt Summen mit Quellen ab, berechnet Wertabweichungen und bei verlässlichen Einheiten Preis-, Mengen- und Mixeffekte und erstellt prüfbare Tabellen und Grafiken.",
+        "module.scissione.title": "Begleitete Spaltung",
+        "module.esg.title": "ESG-Akte · in Entwicklung",
         "module.treasury.title": "Liquiditätsplanung",
         "module.managementPack.title": "Controlling-Paket",
         "module.centraleRischi.title": "Centrale-Rischi-Analyse",
@@ -2379,6 +2594,7 @@
         "module.research.title": "Quellen und Schlussfolgerungen der Recherche prüfen",
         "module.research": "Prüft Aussagen gegen zitierte Quellen und erstellt das konsolidierte Material.",
         "module.communication.title": "Kanzleimitteilungen bewerten und vorbereiten",
+        "module.studio-format.title": "Dokumentformat der Kanzlei",
         "module.communication": "Entscheidet, ob eine Entwicklung wirklich kommunikationswürdig ist, und erstellt E-Mails, Artikel, Beiträge und Visualisierungen im freigegebenen Kanzleiformat.",
         "module.website.title": "Kanzleiwebsite erstellen oder aktualisieren",
         "module.website": "Modernisiert eine bestehende Website oder erstellt eine erste aus geprüften Materialien, mit responsiver Vorschau und freigabegebundener Veröffentlichung.",
@@ -2438,13 +2654,36 @@
         "videos.overview.title": "Von der Kanzleiarbeit zu einem prüfbaren Ergebnis",
         "videos.open": "Öffnet YouTube",
         "install.title": "Installation",
-        "install.copy": "Installieren Sie Vera für ChatGPT Work und Codex oder laden Sie das Paket für Claude Cowork herunter.",
+        "install.copy": "Installieren Sie Vera in ChatGPT Work und Codex, Claude Cowork oder Google Antigravity.",
         "install.actions.label": "Installationsoptionen für Vera",
+        "install.antigravity.marketplace": "Zum Antigravity-Marketplace",
+        "install.antigravity.pending": "Freigabe ausstehend.",
+        "install.antigravity.download": "ZIP für Google Antigravity herunterladen",
+        "install.antigravity.guide": "Vera in Antigravity installieren →",
         "install.button": "Für ChatGPT Work und Codex installieren",
-        "install.chatgptHelp": "Öffnet Veras Installationsseite für ChatGPT Work und Codex.",
-        "install.coworkButton": "Für Claude Cowork herunterladen",
-        "install.coworkHelp": "Laden Sie die ZIP-Datei anschließend in Claude Cowork unter Anpassen → Plugins hoch.",
+        "install.zipButton": "ZIP für ChatGPT Work und Codex herunterladen",
+        "install.coworkButton": "Zum Cowork-Marketplace",
+        "install.coworkHelp": "Wir haben das Plugin beim Cowork-Marketplace eingereicht. Die Freigabe steht aus.",
+        "install.coworkGuide": "ZIP für Cowork herunterladen",
+        "install.coworkZipHelp": "Cowork-Paket und Anleitung zum Installieren oder Aktualisieren.",
         "install.video.title": "ChatGPT mit Codex mit Ihrem Computer verbinden",
+        "connections.title": "Integrationen",
+        "connections.intro": "Die folgenden Anleitungen erklären, wie Sie Second Brain verbinden, Kanzlei-Skills installieren und lokale Konnektoren zur Anonymisierung von Dokumenten einrichten. Die Konnektoren sind optional und werden separat installiert.",
+        "connections.knowledge.title": "Vera mit Second Brain verwenden",
+        "connections.knowledge.copy": "Wenn Sie Second Brain bereits nutzen, verbinden Sie es in der App, in der Sie Vera verwenden, und erlauben Sie die Such- und Lesewerkzeuge. Bitten Sie Vera anschließend, für Ihre aktuelle Aufgabe ein Verfahren, einen früheren Fall oder eine Vorlage der Kanzlei einzusehen.",
+        "connections.knowledge.limits": "Vera liest verfügbare Quellen, ohne sie zu ändern. Vera stellt Second Brain nicht bereit und funktioniert auch ohne verbundenes Archiv. Die Abfrage hängt vom Konnektor und den in der Sitzung verfügbaren Werkzeugen ab.",
+        "connections.skills.title": "Eigene Skills verwenden",
+        "connections.skills.copy": "Um eine Aufgabe mit einem eigenen Skill auszuführen, rufen Sie ihn direkt in der App auf, in der Sie ihn installiert haben. Die Verbindung mit Second Brain importiert, wählt oder startet die Skills der Kanzlei nicht innerhalb von Vera.",
+        "connections.gliner.title": "GLiNER2-PII",
+        "connections.gliner.description": "Erkennt und maskiert personenbezogene Daten in Italienisch, Englisch, Französisch, Deutsch, Spanisch, Portugiesisch und Niederländisch. Verarbeitet mehrere Dateien ohne gemeinsame Pseudonyme über Dokumente hinweg oder Wiederherstellung der Originaldaten. Allgemeines mehrsprachiges Modell ohne Spezialisierung auf italienische Steuerkennungen.",
+        "connections.rizzo.title": "Rizzo PII",
+        "connections.rizzo.description": "Auf italienische Texte ausgerichtet, mit Erkennung italienischer Steuercodes, Umsatzsteuer-Identifikationsnummern und Katasterangaben. Reversible Pseudonyme und eine Zuordnung je Dokument. Verarbeitet mehrere Dateien getrennt: Derselbe Name kann unterschiedliche Pseudonyme erhalten. Die veröffentlichte Bewertung betrifft Italienisch.",
+        "connections.privacy.title": "OpenAI Privacy Filter",
+        "connections.privacy.description": "Maskiert personenbezogene Daten mit einem hauptsächlich englischen Modell. Verarbeitet mehrere Dateien, bewahrt aber weder unterscheidbare, konsistente Identitäten über Dokumente hinweg noch eine Zuordnung zur Wiederherstellung. Die Qualität bei italienischen Texten muss geprüft werden.",
+        "connections.lethe.title": "Lethe",
+        "connections.lethe.description": "Für konsistente Identitäten über mehrere Dokumente und deren Wiederherstellung im KI-Ergebnis. Verwendet ein vorab geprüftes Wörterbuch mit Namen und Aliasen. Das Wörterbuch funktioniert sprachunabhängig; die automatische Erkennung ist nicht auf Italien spezialisiert. Namen müssen in der anfänglichen Prüfung enthalten sein.",
+        "connections.shield.title": "PII-Shield",
+        "connections.shield.description": "Für zusätzliche Dokumente in derselben Sitzung mit gemeinsamen Pseudonymen und Wiederherstellung der Originaldaten. Kombiniert mehrsprachige Erkennung mit Kennungsregeln für Italien, weitere EU-Länder, Großbritannien und die USA. Realtest unter Linux bestanden; auf dem getesteten Mac bricht die Engine ab.",
         "contributors.index": "Zusammenarbeit",
         "contributors.title": "Mitwirkende",
         "contributors.copy": "Vera wächst durch den Austausch mit Fachleuten, die ihre Methoden, Grenzen und Ergebnisse in der täglichen Arbeit prüfen.",
@@ -2454,16 +2693,19 @@
         "contributors.loffredoRole": "Erkundet mit Vera das Zusammenspiel von Technologie und Kanzleiarbeit, von Daten bis zum brauchbaren Ergebnis.",
         "contributors.maruottiRole": "Entwickelt Vera für Akten, Prüfungen und Entscheidungen weiter, die professionelles Urteil erfordern.",
         "contributors.petrelliRole": "Stellt Vera den operativen Anforderungen der Kanzlei gegenüber, vom Vorgang bis zum prüfbaren Dokument.",
+        "contributors.periniRole": "Bringt seine Erfahrung aus der Beratung von Unternehmen bei Entscheidungen zu Geschäftstätigkeit und Vermögen in Vera ein.",
         "contributors.manfrediniRole": "Prüft Vera im Bereich Buchungskontrolle und achtet auf Dokumente, Ausnahmen und Verantwortlichkeiten.",
         "contributors.mottolaRole": "Erprobt Vera in der täglichen Buchhaltung mit konkreten Fällen und wiederkehrenden Arbeitsschritten.",
         "contributors.plataniaRole": "Erprobung und Tests von Vera zu Kanzleipraxis, operativen Anforderungen und Workflow-Definitionen.",
         "contributors.sciarraRole": "Bringt Erfahrung aus der gesetzlichen Prüfung ein, damit Methode, Dokumente und Entscheidungen prüfbar werden.",
-        "contributors.note": "Die Profile verlinken auf die öffentlichen Informationen, die der jeweilige Mitwirkende geteilt hat. Fotos und berufliche Beschreibungen werden nur aus freigegebenem Material ergänzt.",
+        "contributors.note": "Die Profile verlinken auf die öffentlichen Informationen, die der jeweilige Mitwirkende geteilt hat. Für Fotos und berufliche Beschreibungen verwenden wir nur freigegebenes Material.",
+        "contributors.vivoliRole": "Prüft Vera anhand konkreter Fälle bei Buchhaltungskontrollen und Abstimmungen.",
         "footer.linksLabel": "Informationen",
         "footer.source": "Quellcode",
         "footer.data": "Datenverarbeitung"
       },
       es: {
+        "footer.socialLabel": "Perfiles de Vera en redes sociales",
         "meta.title": "Vera · Codex para asesores fiscales y contables",
         "meta.description": "Vera añade a Codex expedientes de clientes, controles contables, conciliaciones, análisis, informes, comunicación e investigación.",
         "skip": "Ir al contenido",
@@ -2485,31 +2727,18 @@
         "hero.eyebrow": "AI companion para asesores fiscales y contables",
         "hero.title": "Vera",
         "hero.lead": "Vera añade a Codex expedientes de clientes, controles contables, conciliaciones, análisis, informes, comunicación e investigación.",
-        "report.index": "Para cada trabajo",
-        "report.title": "Vera muestra qué llegó al modelo.",
-        "report.copy": "Después de cada ejecución sustancial, un breve informe distingue la fuente disponible, lo que el código procesó localmente, lo que fue visible para el modelo y lo que nunca fue visible para el modelo. Cuando el trabajo crea archivos, también conserva un recibo JSON y una versión Markdown.",
-        "report.stamp": "Para cada informe duradero, Vera envía automáticamente a Mparanza únicamente un identificador aleatorio, la versión y el hash del informe local; el informe y los datos del cliente permanecen en el espacio de trabajo. El asesor recibe un HTML verificable para enviarlo al cliente o guardarlo como PDF. Si el servicio no está disponible, el trabajo permanece completado y la solicitud queda pendiente para volver a intentarlo.",
-        "report.exampleAria": "Ejemplo de flujo con datos sintéticos",
-        "report.example": "Ejemplo con datos sintéticos",
-        "report.unit": "Control de gestión",
-        "report.source": "Transacciones en la fuente",
-        "report.sourceValue": "100",
-        "report.processed": "Transacciones procesadas por el código",
-        "report.processedValue": "100",
-        "report.mappingRows": "Filas mostradas para el mapeo",
-        "report.mappingRowsValue": "10",
-        "report.mappingColumns": "Columnas mostradas para el mapeo",
-        "report.mappingColumnsValue": "4",
-        "report.resultRows": "Filas mensuales recibidas para el comentario",
-        "report.resultRowsValue": "12",
-        "report.resultMetrics": "Métricas recibidas para el comentario",
-        "report.resultMetricsValue": "53",
-        "report.local": "Filas nunca mostradas individualmente",
-        "report.localValue": "90",
-        "report.identityColumns": "Columnas de identidad excluidas",
-        "report.identityColumnsValue": "2",
-        "report.note": "El total procesado localmente y la parte nunca visible para el modelo se solapan y no deben sumarse. Las cantidades reales dependen del flujo y de la finalidad profesional; para algunos trabajos, el documento o la población completa es el mínimo correcto.",
-        "report.link": "Cómo leer el informe y sus límites →",
+        "advantages.title": "¿Por qué Vera?",
+        "advantages.free.label": "Gratuita.",
+        "advantages.free.copy": "Sin coste por el plugin.",
+        "advantages.open.label": "Código abierto.",
+        "advantages.open.copy": "El código es público y se puede consultar y adaptar.",
+        "advantages.professionals.label": "Desarrollada con profesionales contables.",
+        "advantages.professionals.copy": "Los profesionales contribuyen a definir las funciones y a poner a prueba sus resultados.",
+        "compliance.index": "Datos y trabajo del despacho",
+        "compliance.title": "Vera facilita el cumplimiento del despacho.",
+        "compliance.copy": "Vera apoya la compliance del despacho con procesamiento local, minimización de datos, informes y formación. La evaluación de 30 puntos distingue las funciones disponibles de las incorporaciones propuestas.",
+        "compliance.link": "Examinar el análisis, punto por punto (en italiano) →",
+        "compliance.conditions": "Condiciones y límites de uso (en italiano) →",
         "core.index": "Qué puede hacer Vera",
         "core.title": "Funciones disponibles",
         "core.copy": "Selecciona una función para abrir su página con entradas, método, resultados, responsabilidades e información sobre los datos que llegan al modelo.",
@@ -2537,6 +2766,8 @@
         "module.learn.title": "Aprende con Vera",
         "module.newClient.title": "Abrir el expediente de un nuevo cliente",
         "module.amlReview.title": "Revisión antiblanqueo",
+        "module.lipe.title": "LIPE",
+        "module.ratingLegalita.title": "Rating de legalidad italiano",
         "module.assetti.title": "Evaluación de estructuras empresariales",
         "module.newClient": "Prepara el expediente inicial a partir de los documentos recibidos: identidad, encargo, privacidad, AML, evidencias que faltan y seguimiento. El profesional revisa el dossier; Vera no firma ni envía documentos y no activa la relación.",
         "module.newClient.includesLabel": "Flujos incluidos",
@@ -2562,10 +2793,13 @@
         "module.reconciliation": "Comprueba si las partidas declaradas abiertas siguen abiertas al corte y separa saldos respaldados, posibles liquidaciones no asignadas, residuos y evidencias pendientes.",
         "module.plan.title": "Preparar el plan de ventas",
         "module.plan": "Convierte ventas reales revisadas en un Plan aplicando únicamente supuestos comerciales y de cambio confirmados, con ámbitos, periodos, prioridades y conciliación visibles.",
+        "module.valuation.title": "Valoración de empresas",
         "module.businessPlanning.title": "Preparar un plan de negocio",
         "module.businessPlanning": "Preparar un plan de negocio",
         "module.variance.title": "Análisis de desviaciones",
         "module.variance": "Compara Real con Presupuesto, Previsión o periodos anteriores; concilia los totales con las fuentes, calcula desviaciones de valor y, con unidades fiables, efectos de precio, volumen y mix, y prepara tablas y gráficos revisables.",
+        "module.scissione.title": "Escisión guiada",
+        "module.esg.title": "Expediente ESG · en desarrollo",
         "module.treasury.title": "Presupuesto de tesorería",
         "module.managementPack.title": "Paquete de control de gestión",
         "module.centraleRischi.title": "Análisis Centrale Rischi",
@@ -2592,6 +2826,7 @@
         "module.research.title": "Verificar las fuentes y conclusiones de la investigación",
         "module.research": "Comprueba las afirmaciones frente a las fuentes citadas y prepara el material consolidado.",
         "module.communication.title": "Evaluar y preparar comunicaciones del despacho",
+        "module.studio-format.title": "Formato de los documentos del despacho",
         "module.communication": "Decide si una novedad merece realmente comunicarse y prepara correos, artículos, publicaciones y visuales en el formato aprobado del despacho.",
         "module.website.title": "Crear o actualizar el sitio web del despacho",
         "module.website": "Renueva un sitio existente o crea el primero a partir de materiales verificados, con vista previa responsive y publicación sujeta a aprobación.",
@@ -2651,13 +2886,36 @@
         "videos.overview.title": "Del trabajo del despacho a un resultado revisable",
         "videos.open": "Se abre en YouTube",
         "install.title": "Instalación",
-        "install.copy": "Instala Vera para ChatGPT Work y Codex o descarga el paquete para Claude Cowork.",
+        "install.copy": "Instala Vera en ChatGPT Work y Codex, Claude Cowork o Google Antigravity.",
         "install.actions.label": "Opciones de instalación de Vera",
+        "install.antigravity.marketplace": "Ir al marketplace de Antigravity",
+        "install.antigravity.pending": "Pendiente de aprobación.",
+        "install.antigravity.download": "Descargar ZIP para Google Antigravity",
+        "install.antigravity.guide": "Cómo instalar Vera en Antigravity →",
         "install.button": "Instalar para ChatGPT Work y Codex",
-        "install.chatgptHelp": "Abre la página de instalación de Vera para ChatGPT Work y Codex.",
-        "install.coworkButton": "Descargar para Claude Cowork",
-        "install.coworkHelp": "Después, sube el archivo ZIP desde Personalizar → Plugins en Claude Cowork.",
+        "install.zipButton": "Descargar ZIP para ChatGPT Work y Codex",
+        "install.coworkButton": "Ir al marketplace de Cowork",
+        "install.coworkHelp": "Hemos enviado el plugin al marketplace de Cowork. Pendiente de aprobación.",
+        "install.coworkGuide": "Descargar ZIP para Cowork",
+        "install.coworkZipHelp": "Paquete para Cowork e instrucciones para instalar o actualizar.",
         "install.video.title": "Conecta ChatGPT al ordenador con Codex",
+        "connections.title": "Integraciones",
+        "connections.intro": "Las guías siguientes explican cómo conectar Second Brain, instalar las skills del despacho y configurar los conectores locales para anonimizar documentos. Los conectores son opcionales y se instalan por separado.",
+        "connections.knowledge.title": "Usar Vera con Second Brain",
+        "connections.knowledge.copy": "Si ya tienes Second Brain, conéctalo en la aplicación donde usas Vera y autoriza sus herramientas de búsqueda y lectura. Después pide a Vera que consulte un procedimiento, un precedente o una plantilla del despacho para el trabajo en curso.",
+        "connections.knowledge.limits": "Vera consulta las fuentes disponibles sin modificarlas. No proporciona Second Brain y funciona sin un archivo conectado. La consulta depende del conector y de las herramientas accesibles en la sesión.",
+        "connections.skills.title": "Usar tus propias skills",
+        "connections.skills.copy": "Para realizar un trabajo con tu propia skill, invócala directamente en la aplicación donde la instalaste. Conectar Second Brain no importa, selecciona ni ejecuta las skills del despacho dentro de Vera.",
+        "connections.gliner.title": "GLiNER2-PII",
+        "connections.gliner.description": "Detecta y oculta datos personales en italiano, inglés, francés, alemán, español, portugués y neerlandés. Procesa varios archivos sin seudónimos compartidos entre documentos ni restauración de los originales. Modelo multilingüe general, sin especialización en identificadores fiscales italianos.",
+        "connections.rizzo.title": "Rizzo PII",
+        "connections.rizzo.description": "Orientado a textos italianos, con detectores de códigos fiscales, números de IVA y referencias catastrales italianos. Seudónimos reversibles y un mapa por documento. Procesa varios archivos por separado: un mismo nombre puede recibir distintos seudónimos entre documentos. La evaluación publicada cubre el italiano.",
+        "connections.privacy.title": "OpenAI Privacy Filter",
+        "connections.privacy.description": "Oculta datos personales con un modelo principalmente inglés. Procesa varios archivos, pero no conserva identidades distintas y coherentes entre documentos ni un mapa para restaurar los originales. Hay que comprobar la calidad en textos italianos.",
+        "connections.lethe.title": "Lethe",
+        "connections.lethe.description": "Para conservar las mismas identidades entre documentos y restaurarlas en el resultado de IA. Usa un diccionario de nombres y alias revisado antes del trabajo. El diccionario funciona en cualquier idioma; la detección automática no está especializada en Italia. Los nombres deben incluirse en la revisión inicial.",
+        "connections.shield.title": "PII-Shield",
+        "connections.shield.description": "Para añadir documentos a una misma sesión con seudónimos compartidos y restaurar los datos originales. Combina detección multilingüe y reglas de identificadores para Italia, otros países de la UE, Reino Unido y EE. UU. Prueba real superada en Linux; el motor se interrumpe en el Mac probado.",
         "contributors.index": "Colaboración",
         "contributors.title": "Colaboradores",
         "contributors.copy": "Vera crece a través del intercambio con profesionales que ponen a prueba sus métodos, límites y resultados en el trabajo real.",
@@ -2667,11 +2925,13 @@
         "contributors.loffredoRole": "Explora con Vera el encuentro entre tecnología y trabajo del despacho, de los datos al resultado útil.",
         "contributors.maruottiRole": "Contribuye a la evolución de Vera para expedientes, revisiones y decisiones que exigen criterio profesional.",
         "contributors.petrelliRole": "Contrasta Vera con las necesidades operativas del despacho, desde el trámite hasta el documento verificable.",
+        "contributors.periniRole": "Aporta a Vera su experiencia acompañando a empresas en decisiones sobre su actividad y patrimonio.",
         "contributors.manfrediniRole": "Verifica Vera en el área de controles contables, atendiendo a documentos, excepciones y responsabilidades.",
         "contributors.mottolaRole": "Experimenta Vera en la contabilidad diaria con casos concretos y pasos recurrentes.",
         "contributors.plataniaRole": "Experimentación y pruebas de Vera sobre las prácticas del despacho, sus necesidades operativas y la definición de flujos de trabajo.",
         "contributors.sciarraRole": "Aporta experiencia en auditoría legal para hacer verificables el método, los documentos y las decisiones.",
-        "contributors.note": "Los perfiles enlazan a la información pública que ha compartido cada colaborador. Las fotografías y descripciones profesionales se añadirán únicamente a partir de materiales aprobados.",
+        "contributors.note": "Los perfiles enlazan a la información pública que ha compartido cada colaborador. Para las fotografías y descripciones profesionales utilizamos solo materiales aprobados.",
+        "contributors.vivoliRole": "Pone a prueba Vera en controles contables y conciliaciones con casos concretos.",
         "footer.linksLabel": "Información",
         "footer.source": "Código fuente",
         "footer.data": "Tratamiento de datos"
@@ -2756,6 +3016,13 @@
         const key = node.dataset.i18nAriaLabel;
         if (Object.prototype.hasOwnProperty.call(strings, key)) node.setAttribute("aria-label", strings[key]);
       });
+
+      document.querySelector("[data-antigravity-guide-link]").href =
+        "antigravity/index.html?lang=" + (lang === "it" ? "it" : "en");
+      document.querySelector("[data-codex-download-link]").href =
+        "../plugin-downloads/index.html?product=vera&lang=" + (lang === "it" ? "it" : "en");
+      document.querySelector("[data-cowork-guide-link]").href =
+        "../cowork-downloads/index.html?lang=" + (lang === "it" ? "it" : "en");
       document.querySelectorAll("[data-current-language]").forEach((node) => {
         node.textContent = lang.toUpperCase();
       });

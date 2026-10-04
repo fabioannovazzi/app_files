@@ -96,6 +96,7 @@ def make_server(
                             "record_sha256",
                             "proposal_sha256",
                             "company_name",
+                            "currency",
                             "as_of",
                             "horizon_end",
                             "status",
@@ -121,6 +122,9 @@ def make_server(
                         changes=(record["comparison"] or {}).get("changes", [])[:100],
                         evidence_notes=record["evidence_notes"][:100],
                         daily=record["daily"] if record["calculation_complete"] else [],
+                        weekly=(
+                            record["weekly"] if record["calculation_complete"] else []
+                        ),
                     )
                     self.json(200, selected)
                 elif parsed.path in {"/api/workbook", "/api/report"}:

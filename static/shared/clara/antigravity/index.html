@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Scarica Clara e installala in Google Antigravity.">
+  <meta name="theme-color" content="#ffffff">
+  <title>Clara per Google Antigravity · Mparanza</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme: light; --navy: #002060; --blue: #215F9A; --cyan: #C1E5F5; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #fff; color: var(--navy); font: 17px/1.6 "Instrument Sans", sans-serif; }
+    a { color: var(--blue); text-underline-offset: .2em; }
+    button, textarea { font: inherit; }
+    :focus-visible { outline: 3px solid var(--blue); outline-offset: 4px; }
+    .shell { width: min(100% - 40px, 820px); margin-inline: auto; }
+    header { display: flex; justify-content: space-between; gap: 20px; padding-block: 26px; border-bottom: 1px solid var(--cyan); }
+    .brand { font-size: 22px; font-weight: 600; text-decoration: none; }
+    nav { display: flex; gap: 18px; font-size: 14px; align-items: center; }
+    nav [aria-current] { font-weight: 600; text-decoration: none; }
+    main { padding-block: 54px; }
+    h1 { font-size: clamp(34px, 6vw, 55px); font-weight: 500; letter-spacing: -.04em; line-height: 1.12; margin: 0 0 24px; max-width: 650px; }
+    h2 { font-size: 27px; font-weight: 500; letter-spacing: -.025em; margin: 0 0 18px; }
+    h3 { font-size: 19px; font-weight: 600; margin: 0 0 8px; }
+    p { margin: 0 0 14px; max-width: 70ch; }
+    .lead { font-size: 20px; }
+    .button { display: inline-block; padding: 12px 18px; border: 1px solid var(--blue); border-radius: 3px; font-weight: 600; color: var(--navy); background: #fff; text-decoration: none; cursor: pointer; text-align: center; }
+    .button:hover { background: #f5faff; }
+    .download { margin-block: 26px 36px; }
+    .note { font-size: 14px; color: var(--blue); margin-top: 8px; }
+    section { border-top: 1px solid var(--cyan); padding-top: 30px; margin-top: 32px; }
+    ol { padding-left: 24px; }
+    li { padding-left: 8px; margin-bottom: 26px; }
+    li::marker { color: var(--blue); font-weight: 600; }
+    label { display: block; font-size: 14px; margin-block: 16px 8px; }
+    textarea { width: 100%; min-height: 210px; padding: 14px; border: 1px solid var(--cyan); border-radius: 3px; color: var(--navy); background: #fff; resize: vertical; }
+    .copy-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 10px; }
+    code { font-size: .88em; overflow-wrap: anywhere; }
+    pre { white-space: pre-wrap; overflow-wrap: anywhere; border-left: 2px solid var(--cyan); padding: 12px 18px; }
+    details { margin-top: 22px; }
+    summary { cursor: pointer; font-weight: 600; color: var(--blue); margin-bottom: 18px; }
+    footer { padding-block: 24px 36px; border-top: 1px solid var(--cyan); font-size: 14px; }
+    @media (max-width: 580px) { main { padding-top: 36px; } textarea { min-height: 300px; } .lead { font-size: 18px; } }
+  </style>
+  <script defer src="version.js"></script>
+</head>
+<body>
+  <header class="shell">
+    <a class="brand" href="../index.html?lang=it" id="clara-link">Clara</a>
+    <nav aria-label="Language"><a href="?lang=it" lang="it" data-language="it" aria-current="page">Italiano</a><a href="?lang=en" lang="en" data-language="en">English</a></nav>
+  </header>
+  <main class="shell">
+    <h1 data-copy="title">Clara per Google Antigravity</h1>
+    <p class="lead" data-copy="lead">Scarica il pacchetto di Clara e installalo sul tuo computer in Google Antigravity.</p>
+    <div class="download">
+      <a class="button" href="../downloads/clara-antigravity-plugin.zip" download data-copy="download">Scarica Clara per Antigravity ↓</a>
+      <p class="note" data-antigravity-version hidden></p>
+    </div>
+    <section aria-labelledby="install-title">
+      <h2 id="install-title" data-copy="installTitle">Installazione nell’app Antigravity</h2>
+      <ol>
+        <li>
+          <h3 data-copy="appTitle">Installa Google Antigravity.</h3>
+          <p><a href="https://antigravity.google/download" target="_blank" rel="noopener noreferrer" data-copy="appLink">Scarica Antigravity dal sito Google</a>. <span data-copy="app">Apri l’app e accedi con il tuo account Google.</span></p>
+        </li>
+        <li>
+          <h3 data-copy="extractTitle">Estrai lo ZIP di Clara.</h3>
+          <p data-copy="extract">Su Mac, fai doppio clic sullo ZIP; su Windows, scegli “Estrai tutto”. Troverai una cartella clara con il file plugin.json. Conserva tutta la cartella, comprese le cartelle nascoste.</p>
+        </li>
+        <li>
+          <h3 data-copy="installStepTitle">Apri la cartella clara in Antigravity.</h3>
+          <p data-copy="installStep">Apri una chat in quella cartella, copia questa richiesta e lascia che Antigravity esegua l’installazione.</p>
+          <label for="install-prompt" data-copy="promptLabel">Richiesta da incollare nella chat di Antigravity</label>
+          <textarea id="install-prompt" readonly spellcheck="false">Installa Clara da questa cartella come plugin globale di Antigravity. Questa è la cartella che contiene plugin.json, skills, agents e mcp_config.json. Copia l’intera cartella in ~/.gemini/config/plugins/clara, come previsto dalla documentazione di Antigravity. Se esiste già una copia, controllala e chiedimi prima di sostituirla. Verifica che plugin.json e tutte le cartelle siano presenti nella destinazione e che i percorsi degli strumenti MCP si risolvano nella cartella installata. Controlla i requisiti con gli script inclusi e segnalami eventuali installazioni necessarie. Conserva i miei documenti. Dimmi quando riavviare Antigravity e come verificare che Clara sia disponibile in una nuova chat.</textarea>
+          <div class="copy-row"><button type="button" class="button" id="copy-prompt" data-copy="copy">Copia richiesta</button><span class="note" id="copy-status" role="status" aria-live="polite"></span></div>
+        </li>
+        <li>
+          <h3 data-copy="startTitle">Riavvia Antigravity e usa Clara.</h3>
+          <p data-copy="start">Apri la cartella dei documenti su cui vuoi lavorare e una nuova chat. In Customizations verifica che siano caricate le skill di Clara, poi scrivi “Usa Clara” e descrivi il lavoro. Se mancano dipendenze, chiedi ad Antigravity di eseguire il controllo incluso nel pacchetto prima di avviare il lavoro.</p>
+        </li>
+      </ol>
+    </section>
+    <section aria-labelledby="cli-title">
+      <h2 id="cli-title" data-copy="cliTitle">Installazione da terminale con Antigravity CLI</h2>
+      <p data-copy="cli">Se usi la CLI, dopo aver estratto lo ZIP esegui questi comandi. Sostituisci il percorso tra virgolette con il percorso completo della cartella clara che contiene plugin.json.</p>
+      <pre><code>agy plugin install "/percorso/alla/cartella/clara"
+agy plugin list
+agy agent</code></pre>
+      <p data-copy="cliStart">Clara deve comparire tra i plugin e gli agenti. Poi apri il terminale nella cartella dei tuoi documenti e avvia:</p>
+      <pre><code>agy --agent clara</code></pre>
+      <p data-copy="cliLogin">Al primo avvio, accedi con Google e descrivi il lavoro da svolgere.</p>
+      <p><a href="https://antigravity.google/docs/cli/install" target="_blank" rel="noopener noreferrer" id="cli-docs" data-copy="cliDocs">Installazione della CLI: istruzioni Google per il tuo sistema operativo →</a></p>
+    </section>
+    <section aria-labelledby="contents-title">
+      <h2 id="contents-title" data-copy="contentsTitle">Contenuto e aggiornamenti</h2>
+      <p data-copy="contents">Il pacchetto contiene le skill professionali, l’agente Clara, i moduli di lavoro e gli script locali. Le integrazioni specifiche di ChatGPT, Codex e Cowork dipendono dalle funzioni disponibili in Antigravity.</p>
+      <p data-copy="updates">Per aggiornare Clara, scarica di nuovo lo ZIP e ripeti l’installazione con la nuova cartella. Tieni i documenti di lavoro separati dalla cartella del plugin.</p>
+    </section>
+  </main>
+  <footer class="shell"><a href="https://antigravity.google/docs/plugins" target="_blank" rel="noopener noreferrer" data-copy="docs">Documentazione Google sui plugin Antigravity →</a></footer>
+  <script>
+    const language = new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'it';
+    const english = {
+      title: 'Clara for Google Antigravity', lead: 'Download Clara and install it in Google Antigravity on your computer.', download: 'Download Clara for Antigravity ↓',
+      installTitle: 'Install in the Antigravity app', appTitle: 'Install Google Antigravity.', appLink: 'Download Antigravity from Google', app: 'Open the app and sign in with your Google account.',
+      extractTitle: 'Extract the Clara ZIP.', extract: 'On Mac, double-click the ZIP; on Windows, choose “Extract All”. You will find a clara folder containing plugin.json. Keep the entire folder, including hidden folders.',
+      installStepTitle: 'Open the clara folder in Antigravity.', installStep: 'Start a chat in that folder, copy this request and let Antigravity install the plugin.', promptLabel: 'Request to paste into Antigravity chat', copy: 'Copy request',
+      startTitle: 'Restart Antigravity and use Clara.', start: 'Open the folder containing your working documents and start a new chat. In Customizations, check that Clara’s skills are loaded, then write “Use Clara” and describe the task. If dependencies are missing, ask Antigravity to run the included dependency check before starting work.',
+      cliTitle: 'Install from a terminal with Antigravity CLI', cli: 'If you use the CLI, run these commands after extracting the ZIP. Replace the quoted path with the full path of the clara folder containing plugin.json.', cliStart: 'Clara should appear among the plugins and agents. Then open a terminal in your document folder and start:', cliLogin: 'On first launch, sign in with Google and describe your task.', cliDocs: 'Install the CLI: Google instructions for your operating system →',
+      contentsTitle: 'Contents and updates', contents: 'The package includes professional skills, the Clara agent, workflow modules and local scripts. Integrations specific to ChatGPT, Codex and Cowork depend on the capabilities available in Antigravity.', updates: 'To update Clara, download the ZIP again and repeat installation using the new folder. Keep working documents separate from the plugin folder.', docs: 'Google documentation for Antigravity plugins →'
+    };
+    if (language === 'en') {
+      document.documentElement.lang = 'en'; document.title = 'Clara for Google Antigravity · Mparanza';
+      document.querySelector('meta[name="description"]').content = 'Download Clara and install it in Google Antigravity.';
+      document.querySelectorAll('[data-copy]').forEach(node => { node.textContent = english[node.dataset.copy]; });
+      document.getElementById('install-prompt').value = 'Install Clara from this folder as a global Antigravity plugin. This is the folder containing plugin.json, skills, agents and mcp_config.json. Copy the entire folder into ~/.gemini/config/plugins/clara as documented by Antigravity. If a copy already exists, inspect it and ask me before replacing it. Verify that plugin.json and every folder are present in the destination and that MCP tool paths resolve within the installed folder. Check prerequisites with the included scripts and tell me about any required installations. Preserve my documents. Tell me when to restart Antigravity and how to verify that Clara is available in a new chat.';
+      document.querySelector('pre code').textContent = 'agy plugin install "/path/to/the/clara/folder"\nagy plugin list\nagy agent';
+    }
+    document.getElementById('clara-link').href = '../index.html?lang=' + language;
+    document.querySelectorAll('[data-language]').forEach(link => {
+      if (link.dataset.language === language) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current');
+    });
+    document.getElementById('copy-prompt').addEventListener('click', async () => {
+      const prompt = document.getElementById('install-prompt');
+      const status = document.getElementById('copy-status');
+      try { await navigator.clipboard.writeText(prompt.value); status.textContent = language === 'en' ? 'Copied.' : 'Copiata.'; }
+      catch { prompt.focus(); prompt.select(); status.textContent = language === 'en' ? 'Text selected. Copy it manually.' : 'Testo selezionato. Copialo manualmente.'; }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "retailer": "fictional",
+  "retailer_label": "Distributeur fictif",
+  "category_key": "teaching-knitwear",
+  "category_label": "Maille",
+  "product_count": 20,
+  "recent_products": 4,
+  "top_seller_products": 4,
+  "recent_definition": "The new-arrivals cohort explicitly assigned in this fictional source matrix.",
+  "top_seller_definition": "The best-seller cohort explicitly assigned in this fictional source matrix; no sales quantities are supplied.",
+  "diagnostic_warnings": [
+    {
+      "code": "fictional_teaching_data",
+      "message": "Données fictives pour la leçon : elles ne représentent aucun distributeur, observation de marché, collecte web ou reçu du serveur."
+    },
+    {
+      "code": "no_consumer_reviews",
+      "message": "Le dossier ne contient ni avis de consommateurs ni images des produits."
+    }
+  ]
+}

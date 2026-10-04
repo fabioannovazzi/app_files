@@ -155,10 +155,274 @@ def configured():
     return builder, marketplace, vera_package
 
 
+@pytest.mark.parametrize(
+    ("section", "newline", "after"),
+    [
+        ("ONBOARDING", "\n", "\n# Continued work\n"),
+        ("ONBOARDING", "\n", "\n\n# Continued work\n"),
+        ("ONBOARDING", "\n", ""),
+        ("ONBOARDING", "\r\n", "\r\n# Continued work\r\n"),
+        ("DATEV", "\n", "\n# Continued work\n"),
+        ("VERSION", "\n", "\n# Continued work\n"),
+    ],
+)
+def test_cowork_skill_removes_openai_blocks_independent_of_spacing(
+    section: str, newline: str, after: str
+) -> None:
+    builder = load_builder()
+    content = (
+        "---\nname: fixture\ndescription: Fixture workflow\n---\n\n"
+        "Retained professional task.\n\n"
+        f"<!-- VERA_OPENAI_{section}_BEGIN -->{newline}"
+        f"Read `../vera/references/local-onboarding.md`.{newline}"
+        f"<!-- VERA_OPENAI_{section}_END -->{after}"
+    ).encode()
+
+    projected = builder.project_cowork_skill(
+        content,
+        relative_path="skills/fixture/SKILL.md",
+        cowork_runtime_reference=b"",
+        studio_archive_reference=b"",
+    )
+
+    assert b"local-onboarding.md" not in projected
+    assert b"VERA_OPENAI_" not in projected
+    assert b"Retained professional task." in projected
+    assert after.strip().encode() in projected
+
+
+def test_cowork_registry_removes_only_declared_host_exclusions() -> None:
+    builder = load_builder()
+    registry = {
+        "routing_policy": "Use professional judgment.",
+        "host_qualification": {"browser_automation": {"requirement": "Live Chrome"}},
+        "vera_wrapper_skills": [
+            "skills/active/SKILL.md",
+            "skills/datev-invoice-start/SKILL.md",
+            "skills/privacy-surface-review/SKILL.md",
+        ],
+        "components": [
+            {
+                "skills": ["modules/active/skills/active/SKILL.md"],
+                "python_entrypoints": [
+                    "modules/active/scripts/run.py",
+                    "modules/previdenza-inps/scripts/capture_portal_snapshot.py",
+                ],
+            }
+        ],
+    }
+    entries = {
+        "skills/active/SKILL.md": b"",
+        "modules/active/skills/active/SKILL.md": b"",
+        "modules/active/scripts/run.py": b"",
+    }
+
+    projected = builder.project_cowork_workflow_registry(
+        json.dumps(registry).encode(), entries=entries
+    )
+
+    assert json.loads(projected) == {
+        "routing_policy": "Use professional judgment.",
+        "host_qualification": {
+            "browser_automation": {
+                "requirement": builder.COWORK_BROWSER_AUTOMATION_DESCRIPTION
+            }
+        },
+        "vera_wrapper_skills": ["skills/active/SKILL.md"],
+        "components": [
+            {
+                "skills": ["modules/active/skills/active/SKILL.md"],
+                "python_entrypoints": ["modules/active/scripts/run.py"],
+            }
+        ],
+    }
+
+
+@pytest.mark.parametrize(
+    "field", ["vera_wrapper_skills", "skills", "python_entrypoints"]
+)
+def test_cowork_registry_rejects_unexpected_missing_files(field: str) -> None:
+    builder = load_builder()
+    registry = {
+        "host_qualification": {"browser_automation": {"requirement": "Live Chrome"}},
+        "vera_wrapper_skills": [],
+        "components": [{"skills": [], "python_entrypoints": []}],
+    }
+    fields = {
+        "vera_wrapper_skills": registry,
+        "skills": registry["components"][0],
+        "python_entrypoints": registry["components"][0],
+    }
+    fields[field][field] = ["modules/active/missing.md"]
+
+    with pytest.raises(ValueError, match="modules/active/missing.md"):
+        builder.project_cowork_workflow_registry(
+            json.dumps(registry).encode(), entries={}
+        )
+
+
 @pytest.fixture(scope="module")
 def vera_entries(configured):
     builder, _, package = configured
     return builder.claude_package_entries(package)
+
+
+def test_audit_instructions_grants_keep_exact_final_approval_boundary(vera_entries):
+    paths = (
+        "skills/vera/SKILL.md",
+        "skills/vera/references/workflow-catalog.md",
+    )
+    for path in paths:
+        source = (ROOT / "plugins/vera" / path).read_text()
+        projected = vera_entries[path].decode()
+        for text in (source, projected):
+            assert "exact final application" in " ".join(text.split())
+            assert (
+                "declarations, signatures and payment remain with the user"
+                in " ".join(text.split())
+            )
+            assert "file on a client's behalf" not in text
+            assert (
+                "selection, without contacting clients, authenticating, signing, or filing"
+                not in " ".join(text.split())
+            )
+    portal = vera_entries[
+        "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/portal-preparation.md"
+    ].decode()
+    assert (
+        "Project approval and approval to compile do not authorize submission" in portal
+    )
+    assert (
+        "that also accepts declarations, signs or pays must still be handled by the user"
+        in " ".join(portal.split())
+    )
+
+
+def test_audit_instructions_catalogue_delegates_model_selection_to_installed_skill(
+    vera_entries,
+):
+    path = "skills/vera/references/workflow-catalog.md"
+    for text in (
+        (ROOT / "plugins/vera" / path).read_text(),
+        vera_entries[path].decode(),
+    ):
+        assert "configured native semantic worker" in text
+        assert (
+            "screening result is not professional approval or an audit opinion" in text
+        )
+        assert "GPT-5.6 Luna" not in text
+    assert json.loads(
+        vera_entries["modules/passive-invoice-audit/scripts/worker_config.json"]
+    ) == {"runtime": "cowork-haiku"}
+    assert "model: haiku" in vera_entries["agents/passive-invoice-reviewer.md"].decode()
+    assert (
+        "Distinguish configured Haiku from observed identity"
+        in vera_entries["skills/purchase-invoice-review/SKILL.md"].decode()
+    )
+
+
+def test_audit_instructions_treasury_is_professional_workflow_with_real_entrypoints(
+    vera_entries,
+):
+    path = "skills/vera/references/workflow-catalog.md"
+    for text in (
+        (ROOT / "plugins/vera" / path).read_text(),
+        vera_entries[path].decode(),
+    ):
+        section = text.split("## Professional workflows\n", 1)[1].split("\n## ", 1)[0]
+        assert "- `treasury-forecast`:" in section
+        assert text.count("- `treasury-forecast`:") == 1
+        assert (
+            "treasury-forecast"
+            not in text.split("## Public process explanations", 1)[1]
+        )
+    registry = json.loads(vera_entries["skills/vera/references/workflow-registry.json"])
+    treasury = next(
+        item
+        for item in registry["components"]
+        if item["component_id"] == "treasury-forecast"
+    )
+    assert "skills/treasury-forecast/SKILL.md" in registry["vera_wrapper_skills"]
+    assert treasury["skills"]
+    assert treasury["python_entrypoints"]
+    assert all(
+        path in vera_entries
+        for path in treasury["skills"] + treasury["python_entrypoints"]
+    )
+
+
+@pytest.mark.parametrize(
+    "path",
+    (
+        "skills/vera/SKILL.md",
+        "skills/vera/references/workflow-catalog.md",
+        "skills/browser-automation/SKILL.md",
+        "modules/browser-automation/skills/browser-automation/SKILL.md",
+    ),
+)
+def test_audit_instructions_cowork_browser_scope_matches_callable_pipeline(
+    vera_entries, path: str
+):
+    text = vera_entries[path].decode()
+    assert load_builder().COWORK_BROWSER_AUTOMATION_DESCRIPTION in text
+    assert "a Claude Desktop capability factory" not in text
+    assert "managed Python launcher" in text
+    assert (
+        "Live browser discovery, execution and replay validation are unavailable"
+        in text
+    )
+    for entry in ("capability_pipeline.py", "discovery_pack.py"):
+        assert f"modules/browser-automation/scripts/{entry}" in vera_entries
+    registry = json.loads(vera_entries["skills/vera/references/workflow-registry.json"])
+    assert registry["host_qualification"]["browser_automation"]["requirement"] == (
+        load_builder().COWORK_BROWSER_AUTOMATION_DESCRIPTION
+    )
+
+
+def test_audit_instructions_direct_skills_share_current_contract_and_component_names(
+    vera_entries,
+):
+    builder = load_builder()
+    for path, content in vera_entries.items():
+        if path.endswith("/SKILL.md"):
+            text = content.decode()
+            assert text.count(builder.COWORK_EXECUTION_CONTRACT.strip()) == 1, path
+    for workflow, component in (
+        ("financial-report-builder", "report-builder"),
+        ("vouching", "check-entries"),
+        ("purchase-invoice-review", "passive-invoice-audit"),
+    ):
+        assert f"skills/{workflow}/SKILL.md" in vera_entries
+        assert f"modules/{component}/skills/{workflow}/SKILL.md" in vera_entries
+    assert (
+        "On a read-only installation, skip cleanup" in builder.COWORK_EXECUTION_CONTRACT
+    )
+
+
+def test_cowork_package_has_no_dangling_onboarding_or_registry_paths(
+    vera_entries,
+) -> None:
+    skill = vera_entries["skills/quesito-legale-fiscale/SKILL.md"]
+    registry = json.loads(vera_entries["skills/vera/references/workflow-registry.json"])
+    paths = registry["vera_wrapper_skills"] + [
+        path
+        for component in registry["components"]
+        for field in ("skills", "python_entrypoints")
+        for path in component[field]
+    ]
+
+    assert b"local-onboarding.md" not in skill
+    assert set(paths) <= vera_entries.keys()
+
+
+def test_cowork_build_rejects_unremoved_openai_instruction_blocks(
+    configured, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    builder, _, package = configured
+    monkeypatch.setattr(builder, "_without_openai_onboarding", lambda content: content)
+
+    with pytest.raises(ValueError, match="retains an OpenAI-only block"):
+        builder.claude_package_entries(package)
 
 
 @pytest.fixture(scope="module")
@@ -419,10 +683,12 @@ def test_cowork_privacy_register_keeps_supported_receipts_and_omits_openai_servi
     assert projected_components["shared_services"] == [
         "run-receipt-stamping",
         "managed-python-runtime",
+        "cnc-authenticated-review",
     ]
     assert {name for name in vera_entries if name.startswith("privacy/services/")} == {
         "privacy/services/run-receipt-stamping.json",
         "privacy/services/managed-python-runtime.json",
+        "privacy/services/cnc-authenticated-review.json",
     }
     assert "privacy/workstreams/studio-archive.json" in vera_entries
     runtime_service = json.loads(
@@ -507,7 +773,18 @@ def test_projected_cowork_skills_remove_promotion_feedback_and_codex_wording(
     for name, content in skills.items():
         assert "## Cowork execution contract" in content, name
         assert "connected folder and supplied files first" in content, name
-        assert "never install packages at runtime" not in content, name
+        if name == "modules/fusione-guidata/skills/fusione-guidata/SKILL.md":
+            # The P1 helper still has no installable dependencies; retain that contract.
+            assert "uses only the standard library" in " ".join(content.split())
+            requirements = vera_entries[
+                "modules/fusione-guidata/requirements.txt"
+            ].decode()
+            assert not any(
+                line.strip() and not line.lstrip().startswith("#")
+                for line in requirements.splitlines()
+            )
+        else:
+            assert "never install packages at runtime" not in content, name
         assert "scripts/check_dependencies.py --module <module>" in content, name
         assert (
             "scripts/managed_python_runtime.py --module <module> run" in content
@@ -588,7 +865,13 @@ def test_cowork_projects_user_facing_artifact_names_and_review_actor(
             ".yml",
         }
     }
-    combined = "\n".join(projected_text.values())
+    # Shared courseware retains cross-product filenames and translation keys;
+    # the separate emission regression below checks actual Cowork artifacts.
+    combined = "\n".join(
+        content
+        for name, content in projected_text.items()
+        if not name.startswith("vendor/modules/courseware/")
+    )
 
     assert "07_scheda_codex_per_studio.md" not in combined
     assert "codex_run_review.md" not in combined
@@ -803,9 +1086,43 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
         name: content
         for name, content in cowork_instruction_docs.items()
         if "/references/" in name
+        and not name.startswith("skills/learn-with-vera/references/")
     }
+    introduction = cowork_instruction_docs[
+        "skills/learn-with-vera/references/get-started.md"
+    ]
+    assert "In Cowork follow the written single-conversation contract" in introduction
+    assert "Never run desktop profile/session commands there" in introduction
     assert references
     for name, content in references.items():
+        if name == "skills/vera/references/optional-integrations.md":
+            # Setup for an explicitly selected external tool requires that tool;
+            # the general draft-delivery fallback is not a substitute for it.
+            assert "Ordinary Vera work requires none of them" in content
+            assert "Never substitute another engine or cloud processing" in content
+            assert "not inside Cowork's Linux VM" in content
+            continue
+        if name == "skills/learn-with-vera/references/get-started.md":
+            # The written-course projection installs this shared guide after
+            # ordinary reference projection; it delegates to its parent contract.
+            assert "Follow the parent teaching skill's host contract" in content
+            assert (
+                "Follow the parent skill and selected workflow's data contract"
+                in content
+            )
+            assert (
+                "## Cowork execution contract"
+                in cowork_instruction_docs["skills/learn-with-vera/SKILL.md"]
+            )
+            # This authored cross-host introduction carries its own Cowork boundary.
+            normalized = " ".join(content.split())
+            assert (
+                "In Cowork follow the written single-conversation contract"
+                in normalized
+            )
+            assert "Never run desktop profile/session commands there" in normalized
+            assert "uses only its connected lesson folder" in normalized
+            continue
         assert "Cowork execution note" in content, name
         assert "Their absence never" in content, name
         assert "blocks delivery" in content, name
@@ -1214,6 +1531,7 @@ def test_claude_build_is_deterministic_and_self_verifying(
         package,
         output_directory=tmp_path / "vera",
         output_zip=tmp_path / "vera-claude-plugin.zip",
+        public_zip=tmp_path / "public-vera-cowork-plugin.zip",
     )
 
     builder.build_package(isolated)
@@ -1236,6 +1554,7 @@ def test_claude_verifier_reports_directory_and_zip_drift(
         package,
         output_directory=tmp_path / "vera",
         output_zip=tmp_path / "vera-claude-plugin.zip",
+        public_zip=tmp_path / "public-vera-cowork-plugin.zip",
     )
     builder.build_package(isolated)
     skill_path = isolated.output_directory / "skills" / "vera" / "SKILL.md"

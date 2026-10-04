@@ -19,6 +19,7 @@ from typing import Any
 
 from local_onboarding import (
     MARKER,
+    CourseAccessError,
     OnboardingError,
     Store,
     _now,
@@ -166,25 +167,26 @@ class TeachingStore(Store):
         return self.sessions / _identifier(lesson["session_id"]) / "files"
 
     def begin(self, data: dict[str, Any] | None = None) -> dict[str, Any]:
-        """Start a fresh example after onboarding; repetition never reuses old results."""
+        """Start a requested course without requiring the optional introduction."""
         data = data or {}
-        if self._profile()["phase"] != "complete":
-            raise OnboardingError(
-                "Repeated tutorial sessions need the completed introduction; ordinary workflows remain available"
-            )
+        workflow = data.get("workflow_id")
+        if workflow not in eligible_workflows():
+            raise OnboardingError("Choose a supported operational workflow")
+        title = _text(data.get("title"), "title")
+        goal = _text(data.get("goal"), "goal")
+        mode = data.get("mode", "show")
+        if mode not in {"show", "together"}:
+            raise OnboardingError("Teaching mode is show or together")
+        # Validate the actual chat pair before creating first-use local state.
+        _pair(data.get("pair", self.status()["pair"]))
+        if self._profile()["phase"] == "required":
+            Store(self.root).begin()
         with self._lock():
             current = self.status()
-            if current["onboarding_phase"] != "complete":
-                raise OnboardingError(
-                    "Repeated tutorial sessions need the completed introduction; ordinary workflows remain available"
-                )
             if current["active_session"]:
                 raise OnboardingError(
                     "Resume or pause the active teaching session first"
                 )
-            workflow = data.get("workflow_id")
-            if workflow not in eligible_workflows():
-                raise OnboardingError("Choose a supported operational workflow")
             previous = data.get("example_id")
             if previous is not None and not any(
                 e["example_id"] == previous
@@ -193,9 +195,6 @@ class TeachingStore(Store):
                 for e in current["examples"]
             ):
                 raise OnboardingError("Choose a completed example of this workflow")
-            mode = data.get("mode", "show")
-            if mode not in {"show", "together"}:
-                raise OnboardingError("Teaching mode is show or together")
             profile = self._profile()
             session_id = secrets.token_hex(16)
             state = {
@@ -205,10 +204,10 @@ class TeachingStore(Store):
                 "revision": 1,
                 "phase": "active",
                 "workflow_id": workflow,
-                "title": _text(data.get("title"), "title"),
-                "goal": _text(data.get("goal"), "goal"),
+                "title": title,
+                "goal": goal,
                 "mode": mode,
-                "pair": _pair(current["pair"]),
+                "pair": _pair(data.get("pair", current["pair"])),
                 "worker_token": secrets.token_hex(24),
                 "directory": str(self.sessions / session_id / "files"),
                 "voice_preference": "native_voice",
@@ -218,7 +217,7 @@ class TeachingStore(Store):
             }
             path = self._session_path(session_id)
             path.parent.mkdir(parents=True, mode=0o700)
-            Path(state["directory"]).mkdir(mode=0o700)
+            self.preflight([path.parent, Path(state["directory"])])
             _write(path, state)
         self.session_id = session_id
         return self.status()
@@ -226,10 +225,6 @@ class TeachingStore(Store):
     def _state(self) -> dict[str, Any]:
         if not self.session_id:
             raise OnboardingError("Select --session from the local teaching library")
-        if self._profile()["phase"] != "complete":
-            raise OnboardingError(
-                "Resume the optional introduction for this tutorial; ordinary workflows remain available"
-            )
         return self._load(self.session_id, self._profile())
 
     def _verify_phase(self, state: dict[str, Any], phase: str) -> None:
@@ -258,6 +253,13 @@ class TeachingStore(Store):
             state = self._state()
             if state["revision"] != revision:
                 raise OnboardingError("Stale revision; reload before saving")
+            if action not in {"pause", "checkpoint"}:
+                self.preflight(
+                    [
+                        self._session_path(state["session_id"]).parent,
+                        Path(state["directory"]),
+                    ]
+                )
             if state["phase"] == "complete" and action not in {"focus", "feedback"}:
                 raise OnboardingError(
                     "Start a fresh session to repeat a completed example"
@@ -465,8 +467,16 @@ class TeachingStore(Store):
                     raise OnboardingError(
                         "Selected source changed; review the handoff before proceeding"
                     )
+        directories = [
+            self._session_path(state["session_id"]).parent,
+            Path(state["directory"]),
+        ]
+        if real:
+            directories.append(Path(real["destination"]))
+        self.preflight(directories)
         return {
             "session_id": state["session_id"],
+            "state_root": str(self.root),
             "workflow_contract": teaching_contract(workflow),
             "profile": self._profile()["profile"],
             "lesson": state,
@@ -505,6 +515,7 @@ def main(argv: list[str] | None = None) -> int:
         "command",
         choices=[
             "status",
+            "preflight",
             "begin",
             "pair",
             "pause",
@@ -522,6 +533,7 @@ def main(argv: list[str] | None = None) -> int:
         ],
     )
     parser.add_argument("--state-root", type=Path)
+    parser.add_argument("--directory", type=Path, action="append", default=[])
     parser.add_argument("--session")
     parser.add_argument("--revision", type=int)
     parser.add_argument("--input", type=Path)
@@ -533,6 +545,14 @@ def main(argv: list[str] | None = None) -> int:
         store = TeachingStore(args.state_root, args.session)
         if args.command == "status":
             result = store.status()
+        elif args.command == "preflight":
+            directories = list(args.directory)
+            if args.session:
+                state = store._state()
+                directories.extend(
+                    [store._session_path(args.session).parent, Path(state["directory"])]
+                )
+            result = store.preflight(directories)
         elif args.command == "worker":
             if not all((args.thread_id, args.workflow, args.token)):
                 raise OnboardingError(
@@ -553,6 +573,11 @@ def main(argv: list[str] | None = None) -> int:
             result = store.change(args.command, args.revision, _read(args.input))
         sys.stdout.write(json.dumps(result, indent=2) + "\n")
         return 0
+    except CourseAccessError as exc:
+        sys.stdout.write(
+            json.dumps({**exc.as_dict(), "workspace": store.workspace()}) + "\n"
+        )
+        return 2
     except (OnboardingError, OSError) as exc:
         sys.stdout.write(json.dumps({"status": "blocked", "error": str(exc)}) + "\n")
         return 2

@@ -30,6 +30,35 @@ def customize_review(html: str) -> str:
     )
     changes = [
         (
+            "      const draftCount = state.recovery?.draftDecisionCount || 0;",
+            "      const draftCount = hasUnsaved ? (state.recovery?.draftDecisionCount || 0) : 0;",
+            1,
+        ),
+        (
+            "      const fallbackActive = items().length > 0 && !canPersistThroughBridge();",
+            "      const fallbackActive = !state.payload.local_review_read_only && items().length > 0 && !canPersistThroughBridge();",
+            1,
+        ),
+        (
+            "      return normalizedDecisionList(state.payload.applied_decisions?.decisions);",
+            """      const decisions = state.payload.applied_decisions?.decisions || [];
+      return normalizedDecisionList(decisions.filter(d => itemById(d.item_id)?.allowed_actions?.includes(d.reviewer_action)).map(d => ({
+        item_id: d.item_id, action: d.reviewer_action, reviewer_note: d.reviewer_note,
+        edit_value: d.reviewer_action === "edit" ? d.approved_target_relative_path : "",
+      })));""",
+            1,
+        ),
+        (
+            "${outputLinkHtml(item.output_path)}",
+            "${outputLinkHtml(item.output_path, true)}",
+            1,
+        ),
+        (
+            '      return items().filter((item) => String(item.item_type || "").includes("artifact") || item.output_path).map((item) => ({ path: item.output_path || item.title, kind: String(item.output_path || "file").split(".").pop(), status: item.data?.exists === false ? "missing" : "written" })).slice(0, 8);',
+            "      return [];",
+            1,
+        ),
+        (
             "    function humanize(value) {",
             helpers + "    function humanize(value) {",
             1,
@@ -49,7 +78,11 @@ def customize_review(html: str) -> str:
             "return archiveLabels().groups[group.empty] || GROUP_TEXT[lang]?.[group.empty]",
             1,
         ),
-        ("${esc(formatValue(value))}", "${esc(archiveValue(value, key))}", 2),
+        (
+            "evidenceValueHtml(value)}</div>",
+            "evidenceValueHtml(archiveValue(value, key))}</div>",
+            2,
+        ),
         (
             'const label = activeLanguage() === "it" ? (downloadable ? "Scarica documento" : "Copia percorso") : (downloadable ? "Download file" : "Copy path");',
             'const label = archiveLabels().links[downloadable ? "download" : "copy"];',

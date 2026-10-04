@@ -31,10 +31,13 @@ def initialize_case(
     reference_date: str,
     client_reference: str,
     language: str = "it",
+    jurisdiction: str = "IT",
     client_engagement: Path | None = None,
 ) -> dict[str, Path]:
     """Create bounded empty drafts without choosing legal classifications."""
 
+    if jurisdiction not in {"IT", "CH-GE"}:
+        raise ValueError("Supported registry jurisdictions are IT and CH-GE")
     run_id = safe_identifier(run_id, field="run_id")
     client_reference = safe_identifier(client_reference, field="client_reference")
     reference_date = validate_iso_date(reference_date, field="reference_date")
@@ -69,6 +72,7 @@ def initialize_case(
         {
             "schema_version": "1.0",
             "plugin": PLUGIN_NAME,
+            "jurisdiction": jurisdiction,
             "run_id": run_id,
             "reference_date": reference_date,
             "client_reference": client_reference,
@@ -111,6 +115,7 @@ def initialize_case(
         {
             "schema_version": "1.0",
             "plugin": PLUGIN_NAME,
+            "jurisdiction": jurisdiction,
             "run_id": run_id,
             "case_summary": "",
             "review_context": {},
@@ -137,6 +142,7 @@ def initialize_case(
         {
             "schema_version": "1.0",
             "plugin": PLUGIN_NAME,
+            "jurisdiction": jurisdiction,
             "workflow": PLUGIN_NAME,
             "run_id": run_id,
             "reference_date": reference_date,
@@ -210,6 +216,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--reference-date", required=True)
     parser.add_argument("--client-reference", required=True)
     parser.add_argument("--language", default="it")
+    parser.add_argument("--jurisdiction", choices=("IT", "CH-GE"), default="IT")
     args = parser.parse_args(argv)
     try:
         context = load_running_case_context(
@@ -222,6 +229,7 @@ def main(argv: list[str] | None = None) -> int:
             reference_date=args.reference_date,
             client_reference=args.client_reference,
             language=args.language,
+            jurisdiction=args.jurisdiction,
             client_engagement=args.client_engagement,
         )
     except (AssuranceContractError, OSError, ValueError) as exc:

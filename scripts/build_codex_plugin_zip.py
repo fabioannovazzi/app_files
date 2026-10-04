@@ -131,7 +131,7 @@ SEVERE_CONTRACT_COVERAGE_AUDIT_SEVERITIES = {"blocker", "high", "medium"}
 CHATGPT_UPLOAD_MAX_DEFAULT_PROMPTS = 3
 CHATGPT_UPLOAD_MAX_DEFAULT_PROMPT_LENGTH = 128
 CHATGPT_UPLOAD_MAX_SUBTITLE_LENGTH = 30
-CHATGPT_UPLOAD_UNSUPPORTED_MANIFEST_FIELDS = {"apps", "mcpServers"}
+CHATGPT_UPLOAD_UNSUPPORTED_MANIFEST_FIELDS = {"apps", "mcpServers", "hooks"}
 CHATGPT_UPLOAD_UNSUPPORTED_INTERFACE_FIELDS = {"screenshots"}
 CHATGPT_UPLOAD_UNSUPPORTED_CONFIG_FILES = {".app.json", ".mcp.json"}
 CHATGPT_UPLOAD_REVIEW_MCP_SERVER = "scripts/review_mcp_server.cjs"
@@ -141,12 +141,20 @@ CHATGPT_HIDDEN_COMPONENTS: dict[str, frozenset[str]] = {}
 CHATGPT_SKILL_CARDS_FILE = "marketplace_skill_instructions.json"
 VERA_CHATGPT_DEVELOPER_SKILLS = frozenset({"privacy-surface-review"})
 VERA_CHATGPT_ROUTER_TARGETS = {
+    "studio-document-format": "skills/studio-document-format/SKILL.md",
+    "scissione-guidata": "modules/scissione-guidata/skills/scissione-guidata/SKILL.md",
+    "patent-box-review": "modules/patent-box-review/skills/patent-box-review/SKILL.md",
+    "esg-reporting-assurance": "modules/esg-reporting-assurance/skills/esg-reporting-assurance/SKILL.md",
+    "trasformazione": "modules/trasformazione/skills/trasformazione/SKILL.md",
+    "fusione-guidata": "modules/fusione-guidata/skills/fusione-guidata/SKILL.md",
     "datev-invoice-start": "skills/datev-invoice-start/SKILL.md",
     "learn-with-vera": "skills/learn-with-vera/SKILL.md",
     "adversarial-opinion": "skills/adversarial-opinion/SKILL.md",
     "treasury-forecast": "modules/treasury-forecast/skills/treasury-forecast/SKILL.md",
     "aml-review": "modules/aml-review/skills/aml-review/SKILL.md",
     "adeguati-assetti": "modules/adeguati-assetti/skills/adeguati-assetti/SKILL.md",
+    "lipe": "modules/lipe/skills/lipe/SKILL.md",
+    "rating-legalita": "modules/rating-legalita/skills/rating-legalita/SKILL.md",
     "archive-organization": "modules/archive-organization/skills/archive-organization/SKILL.md",
     "open-item-reconciliation": "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
     "bandi-agevolazioni": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/SKILL.md",
@@ -155,6 +163,7 @@ VERA_CHATGPT_ROUTER_TARGETS = {
     "browser-automation": "modules/browser-automation/skills/browser-automation/SKILL.md",
     "vouching": "modules/check-entries/skills/vouching/SKILL.md",
     "concordato-plan-review": "modules/concordato-plan-review/skills/concordato-plan-review/SKILL.md",
+    "composizione-negoziata": "modules/composizione-negoziata/skills/composizione-negoziata/SKILL.md",
     "comunicazione-professionale": "modules/comunicazione-professionale/skills/comunicazione-professionale/SKILL.md",
     "dati-fiscali-strutturati": "modules/client-file-preparation/skills/dati-fiscali-strutturati/SKILL.md",
     "legal-tax-answer-review": "modules/deep-research-validator/skills/legal-tax-answer-review/SKILL.md",
@@ -176,6 +185,7 @@ VERA_CHATGPT_ROUTER_TARGETS = {
     "financial-report-builder": "modules/report-builder/skills/financial-report-builder/SKILL.md",
     "sales-plan": "modules/sales-plan/skills/sales-plan/SKILL.md",
     "business-planning": "modules/business-planning/skills/business-planning/SKILL.md",
+    "business-valuation": "modules/business-valuation/skills/business-valuation/SKILL.md",
     "variance-analysis": "modules/variance-analysis/skills/variance-analysis/SKILL.md",
     "studio-archive": "modules/studio-archive/skills/studio-archive/SKILL.md",
 }
@@ -1573,6 +1583,10 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
             continue
         if name == CHATGPT_SKILL_CARDS_FILE:
             continue
+        # Lifecycle hooks are unsupported in Marketplace submissions. Keep
+        # them in native host packages, but omit root and component hooks here.
+        if "hooks" in path_parts[:-1]:
+            continue
         if path_parts[-1] in CHATGPT_UPLOAD_UNSUPPORTED_CONFIG_FILES:
             continue
         if (
@@ -1683,7 +1697,9 @@ def verify_zip_entries(zip_path: Path, entries: dict[str, bytes]) -> None:
                 raise ValueError(f"Temporary ZIP verification failed: {name}")
 
 
-def verify_packaged_mcp(zip_path: Path, plugin_roots: list[str]) -> list[str]:
+def verify_packaged_mcp(
+    zip_path: Path, plugin_roots: list[str], config_name: str = ".mcp.json"
+) -> list[str]:
     """Require real initialize/tools-list replies from each packaged launcher.
 
     This is a mechanical release gate, not a professional-workflow verdict.
@@ -1706,7 +1722,7 @@ def verify_packaged_mcp(zip_path: Path, plugin_roots: list[str]) -> list[str]:
             archive.extractall(staging)
         for relative_root in plugin_roots:
             root = staging / relative_root
-            config_path = root / ".mcp.json"
+            config_path = root / config_name
             if not config_path.is_file():
                 errors.append(f"{relative_root}: packaged MCP configuration is missing")
                 continue
@@ -1714,7 +1730,12 @@ def verify_packaged_mcp(zip_path: Path, plugin_roots: list[str]) -> list[str]:
             count = len(configuration["mcpServers"])
             try:
                 result = subprocess.run(
-                    [node, str(ROOT / "scripts" / "check_packaged_mcp.cjs"), str(root)],
+                    [
+                        node,
+                        str(ROOT / "scripts" / "check_packaged_mcp.cjs"),
+                        str(root),
+                        config_name,
+                    ],
                     cwd=staging,
                     capture_output=True,
                     text=True,

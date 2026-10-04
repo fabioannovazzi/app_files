@@ -32,11 +32,11 @@
     },
     {
       "path": "modules/journal-sampling/assets/journal-sampling-review-widget.html",
-      "sha256": "8e252809fd6e429ba4fd783bfa577e1e9632f3c1b962fb8aa931c72f0f637a48"
+      "sha256": "30398b103d0424b7ea3e4b86a8b246a7ae46762d4362bb72547e9749ce31486f"
     },
     {
       "path": "modules/journal-sampling/assets/review-workbench-adapter.json",
-      "sha256": "3c433e46a5cb624f3f5bf6e4871acd43a7b833b66802a4b7b22e5b0dcfaf1fb7"
+      "sha256": "21e8c9a626cbf2d7ad859951adb2a9f65cd3ca77528aeb6ed88f00fe043ad382"
     },
     {
       "path": "modules/journal-sampling/references/workflow-reference.md",
@@ -52,7 +52,7 @@
     },
     {
       "path": "modules/journal-sampling/scripts/implementation_bootstrap.py",
-      "sha256": "6d4c3337bedf0a352805622f8aebe562f6b39bde5c2e219b8ee0a5b432de81d6"
+      "sha256": "fc54756ac2acd0ab3e52fe61102bdff60fb3701ae50afc67a84008ac89188905"
     },
     {
       "path": "modules/journal-sampling/scripts/inspect_journal.py",
@@ -60,7 +60,7 @@
     },
     {
       "path": "modules/journal-sampling/scripts/journal_sampling_core.py",
-      "sha256": "b2a8ce641bdb5c231968afc522a2e1ea6af98a4e2f637da949014929992afaff"
+      "sha256": "8f049150741e4ab6ace790309a0e3b06450ff66e70dee01425b586f63190c4fc"
     },
     {
       "path": "modules/journal-sampling/scripts/normalize_journal.py",
@@ -76,7 +76,7 @@
     },
     {
       "path": "modules/journal-sampling/scripts/review_successor.py",
-      "sha256": "f753ddf73cd26639c593a01eed15e5d6188e1f492a05977fcedfd850710bc57a"
+      "sha256": "10e374946a9b0cbbf3378e65f58688326c44ba787ce3699e65fb89b278b2e7bd"
     },
     {
       "path": "modules/journal-sampling/scripts/run_sample.py",
@@ -84,7 +84,11 @@
     },
     {
       "path": "modules/journal-sampling/skills/journal-sampling/SKILL.md",
-      "sha256": "41bab2f43dbbe907baaf0e22c819db0712cafb31f079017d7f1cee9e8fb988a1"
+      "sha256": "740d024da66054a03622c2fc337ae5da0ae3740544a11069345817ad4fec45de"
+    },
+    {
+      "path": "modules/journal-sampling/skills/journal-sampling/references/geneva.md",
+      "sha256": "78a1b1575273d28559a0ae007d596a601715da810ac10d47cf52bb2dbdd82962"
     },
     {
       "path": "modules/journal-sampling/vendor/modules/__init__.py",
@@ -96,7 +100,7 @@
     },
     {
       "path": "modules/journal-sampling/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
     },
     {
       "path": "modules/journal-sampling/vendor/modules/vera_assurance/decisions.py",
@@ -105,6 +109,10 @@
     {
       "path": "modules/journal-sampling/vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/journal-sampling/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "modules/journal-sampling/vendor/modules/vera_assurance/money.py",
@@ -124,7 +132,11 @@
     },
     {
       "path": "skills/journal-sampling/SKILL.md",
-      "sha256": "9acc3071377f39ad291955c5d9bb7305e99280d652154a80f2b76ef3e57f2cfa"
+      "sha256": "f84692241596b638979cba5c2d46991698158236e9ab23de032f8adbf34487a7"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -140,7 +152,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -149,6 +161,10 @@
     {
       "path": "vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "vendor/modules/vera_assurance/money.py",
@@ -421,5 +437,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "994a01738537e8adc48bde798ac052161f256dd8ce43311173e241f3062eef53"
+  "canonical_course_sha256": "957000b5d12712ea9cbaced6dcd6f73ac34dfb1a6756bee44df2fd3f47bf348f"
 }

@@ -126,7 +126,7 @@ def test_spanish_docx_output_record_uses_spanish_required_text(
         "Secciones asignadas",
         "Ruta de entrada",
         "Tablas detectadas",
-        "Secciones pendientes",
+        "Secciones sin tabla fuente",
         "Resultados del periodo",
     ]
     assert draft["required_text"] == [
@@ -1122,7 +1122,7 @@ def test_review_integrity_receipts_exact_transitive_implementation_set(
 
     # Assert
     assert integrity["schema_version"] == "report_builder.review_integrity.v4"
-    assert len(references) == 32
+    assert len(references) == 35
     assert [receipt["artifact_id"] for receipt in receipts] == references
     assert {
         "implementation.report_builder.scripts.report_builder_core.py",
@@ -6221,3 +6221,35 @@ def test_csv_formula_like_headers_are_literal_strings_in_generated_xlsx(
     assert preview["A2"].value == "[numeric source value withheld]"
     assert preview["A2"].data_type == "s"
     assert not any(cell.data_type == "f" for row in preview.iter_rows() for cell in row)
+
+
+@pytest.mark.parametrize("language", ["en", "it", "fr", "de", "es"])
+def test_unreviewed_table_does_not_claim_a_reviewer_rejected_it(language: str) -> None:
+    load_core()
+    review_session = sys.modules["mparanza_report_builder_review_session"]
+    items = review_session._table_evidence_items(
+        {
+            "sections": [
+                {
+                    "section": "income_statement",
+                    "title": "Income",
+                    "status": "assigned",
+                    "assigned_table": "input.xlsx::Income",
+                    "sheet_name": "Income",
+                }
+            ]
+        },
+        language=language,
+    )
+    assert len(items) == 1
+    assert items[0]["recommended_action"] == "accept"
+    reason = items[0]["data"]["reason"]
+    assert "Reviewer marked" not in reason
+    assert "persona revisora marcó" not in reason
+    assert {
+        "en": "Check whether",
+        "it": "Verifica se",
+        "fr": "Vérifiez si",
+        "de": "Prüfen Sie",
+        "es": "Compruebe si",
+    }[language] in reason

@@ -28,13 +28,10 @@ def test_vera_router_frontmatter_triggers_for_explicit_invocation() -> None:
 
     frontmatter = router.split("---", maxsplit=2)[1]
 
-    assert "whenever Vera is explicitly invoked" in frontmatter
-    assert "including through @vera" in frontmatter
-    assert (
-        "stop without answering when no specialist workflow or saved-report request matches"
-        in frontmatter
-    )
-    assert "show or reopen the privacy report of a Vera run" in frontmatter
+    assert "whenever Vera or @vera is explicitly invoked" in frontmatter
+    assert "Select the narrowest supported specialist" in frontmatter
+    assert "Explicit invocation does not add unsupported services" in frontmatter
+    assert "reopen a Vera privacy report" in frontmatter
     assert "capability gap" not in frontmatter
     assert "out of scope" not in frontmatter
 
@@ -64,10 +61,20 @@ def test_vera_workflow_catalog_covers_every_specialist_skill() -> None:
     catalog = _read_text(CATALOG_PATH)
 
     catalogued_skills = set(
-        re.findall(r"^- `([a-z0-9-]+)`:", catalog, flags=re.MULTILINE)
+        re.findall(
+            r"^- `([a-z0-9-]+)`(?: \(\*\*[^*]+\*\*\))?:", catalog, flags=re.MULTILINE
+        )
     )
     # Installation adaptations have an explicit skill link outside the lesson list.
     catalogued_skills.update(re.findall(r"\.\./\.\./([a-z0-9-]+)/SKILL\.md", catalog))
+
+    # Merger workpapers are registered separately from prepared professional lessons.
+    foundation = catalog.split("## Merger workpapers", 1)[1].split(
+        "## Professional workflows", 1
+    )[0]
+    catalogued_skills.update(
+        re.findall(r"^`([a-z0-9-]+)` prepares", foundation, re.MULTILINE)
+    )
 
     assert catalogued_skills == expected_skills
 

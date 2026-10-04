@@ -1106,3 +1106,12 @@ The public plugin explainer is maintained at
 ## Python runtime
 
 Python workflows use **CPython 3.12 only**. The managed setup reuses Python 3.12, finds an installed 3.12 interpreter, or provisions it with an already installed `uv`. It never creates workflow environments with another Python minor version. If neither is available, setup gives an explicit installation instruction. Existing environments are preserved; separate component dependency environments remain necessary until their dependency sets are consolidated.
+
+## Google Antigravity
+
+Build the Antigravity ZIP with `python scripts/build_antigravity_plugin.py clara`.
+The projection includes the canonical skills, the Clara agent, embedded
+modules, scripts and any configured MCP servers. Install the complete extracted
+`clara` folder with `agy plugin install "/path/to/clara"`; then use
+`agy --agent clara`. For the desktop installation and host limitations, see
+[the installation guide](https://mparanza.com/static/shared/clara/antigravity/index.html).

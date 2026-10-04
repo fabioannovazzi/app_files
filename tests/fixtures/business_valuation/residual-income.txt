@@ -1,0 +1,12 @@
+FICTIONAL RESIDUAL-INCOME EXAMPLE. No real client or professional approval.
+Valuation date: 2024-12-31. Full-year period ends: 2025-12-31, 2026-12-31.
+Book equity: 1000 initially, 1120 after year one, 1230 after year two (EUR).
+Clean-surplus income: 150 and 180 EUR. Distributions: 50 and 70 EUR.
+Contributions at period end: 20 and 0 EUR. No other equity movements assumed.
+Every amount is explicitly supplied; closing balances are not balancing plugs.
+Terminal equity value: 1500 EUR, independently supplied synthetic hypothesis.
+Equity cost: 10% effective annual; alternate second rate: 20%.
+Accounting basis: consistent synthetic single-class total common equity.
+No OCI, foreign currency, capital adjustments or shareholder-right changes assumed.
+Income incorporates all non-owner changes in this fictional clean-surplus basis.
+No legal distributability or economic sustainability assessment is established.

@@ -1,0 +1,9 @@
+-r requirements.txt
+pytest>=8,<10
+pytest-cov>=6,<8
+black==25.1.0
+isort==6.0.1
+mypy>=1.15,<3
+bandit>=1.8,<2
+reportlab>=4,<6
+-r requirements-lethe.txt

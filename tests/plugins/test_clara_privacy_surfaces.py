@@ -158,7 +158,12 @@ def test_clara_register_does_not_relabel_workflow_hygiene_as_security() -> None:
     }
 
     assert manifests["claim-basis-map"]["security_controls"] == []
-    assert manifests["reporting-engine"]["security_controls"] == []
+    # The native budget preview now enforces receipt/script identity and an
+    # opaque-origin loopback sandbox; these are executable controls, not
+    # workflow hygiene. Their behavior is exercised in test_clara_budget_preview.
+    assert [
+        control["id"] for control in manifests["reporting-engine"]["security_controls"]
+    ] == ["local-budget-preview"]
     assert manifests["transcribe"]["security_controls"] == []
     assert all(
         control["id"] not in ceremonial_ids

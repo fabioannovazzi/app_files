@@ -1,0 +1,43 @@
+{
+  "name": "esg-reporting-assurance",
+  "version": "0.1.1",
+  "description": "Fascicolo ESG: evidenze, versioni e decisioni nel cliente e incarico selezionati.",
+  "author": {
+    "name": "Mparanza",
+    "email": "fabio@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/esg-reporting-assurance/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "vera",
+    "esg",
+    "evidenze",
+    "provenienza",
+    "decisioni"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Vera · Fascicolo ESG",
+    "shortDescription": "Collega evidenze ESG e decisioni alle versioni.",
+    "longDescription": "Prima tranche del workflow ESG: avvio e ripresa nel fascicolo Studio Archive, celle CSV e righe di testo con localizzatori, registro fonti non qualificato, decisioni versionate e bozze parziali. Non prepara ancora un report ESG completo, una dichiarazione di conformità o una relazione di assurance.",
+    "developerName": "Mparanza",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "defaultPrompt": [
+      "Organizza le evidenze e le decisioni di questa pratica ESG."
+    ],
+    "brandColor": "#002060",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg",
+    "screenshots": []
+  }
+}

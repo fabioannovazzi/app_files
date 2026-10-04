@@ -1397,11 +1397,10 @@ function validatePersistentState(inputArgs, reviewPayload) {
   const finalArtifacts = readRunJsonFile(finalArtifactsPath);
   const integrity = validateManifestIntegrity(outputDir, finalArtifacts);
   const runIntake = readRunJsonFile(path.join(outputDir, "run_intake.json"));
-  const storedOutputReference = shortString(runIntake.output_dir);
-  const storedOutputMatches = path.isAbsolute(storedOutputReference)
-    ? path.resolve(storedOutputReference) === outputDir
-    : runIntake.path_reference === "run_root_relative"
-      && storedOutputReference === path.basename(outputDir);
+  const storedOutputMatches = resolveRunOutputDir({
+    ...inputArgs,
+    run_intake: runIntake,
+  }) === outputDir;
   if (
     runIntake.plugin !== reviewPayload.plugin
     || runIntake.workflow !== reviewPayload.workflow
@@ -1922,8 +1921,10 @@ function writeDirectTextArtifactUpdates(outputDir, effects, currentFinalArtifact
       kind: path.extname(target.relativePath).replace(/^\./, "") || "txt",
       status: "updated_from_review",
       item_id: effect.item_id,
-      ...(target.relativePath === "04_bozza_email_cliente.md"
-        && effect.item_type === "draft_client_email"
+      ...((target.relativePath === "04_bozza_email_cliente.md"
+        && effect.item_type === "draft_client_email")
+        || (["06_memo_istruttoria.md", "07_scheda_codex_per_studio.md"].includes(target.relativePath)
+          && effect.item_type === "draft_memo_section")
         ? {
           // A complete reviewed replacement supersedes the starter draft's
           // literal wording. Keep exact reviewed-text and nonempty checks;

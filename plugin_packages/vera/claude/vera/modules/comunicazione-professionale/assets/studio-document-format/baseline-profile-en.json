@@ -1,0 +1,133 @@
+{
+  "derived_from_history_ids": [],
+  "voice": {
+    "audience_stance": "Clear professional language with short paragraphs.",
+    "rhythm": "Clear professional language with short paragraphs.",
+    "technical_density": "Clear professional language with short paragraphs.",
+    "formality": "Clear professional language with short paragraphs.",
+    "openings": "Clear professional language with short paragraphs.",
+    "closings": "Clear professional language with short paragraphs.",
+    "formatting": "Clear professional language with short paragraphs.",
+    "avoid": [
+      "Avoid unsupported claims and artificial urgency."
+    ]
+  },
+  "document": {
+    "page_size": "A4",
+    "font_family": "Instrument Sans",
+    "layout": {
+      "left_margin_mm": 20,
+      "right_margin_mm": 20,
+      "top_margin_mm": 34,
+      "bottom_margin_mm": 19,
+      "logo_width_mm": 45,
+      "logo_height_mm": 16,
+      "contact_rail_width_mm": 38,
+      "body_font_size_pt": 9.6,
+      "body_leading_pt": 13.4,
+      "subject_font_size_pt": 13,
+      "heading_font_size_pt": 10.2,
+      "rule_width_pt": 0.8
+    },
+    "recipient_pattern": "Dear client,",
+    "circular_label": "CIRCULAR",
+    "numbering_pattern": "{number}/{year}",
+    "date_pattern": "{date}",
+    "subject_prefix": "SUBJECT:",
+    "section_style": "numbered_uppercase",
+    "use_contact_rail": true,
+    "contact_rail_lines": [
+      "{studio}",
+      "{contact}"
+    ],
+    "footer_pattern": "{studio} · {page}",
+    "closing": "Contact the studio to discuss the specific case.",
+    "signature_lines": [
+      "{studio}"
+    ]
+  },
+  "email": {
+    "subject_pattern": "{studio} | {subject}",
+    "salutation": "Dear client,",
+    "closing": "Contact the studio to discuss the specific case.",
+    "signature_lines": [
+      "{studio}"
+    ],
+    "attachment_note": "Please find the accompanying circular attached."
+  },
+  "website": {
+    "byline_pattern": "{studio}",
+    "date_pattern": "{date}",
+    "heading_style": "editorial",
+    "source_heading": "Sources",
+    "cta": "Contact the studio to discuss the specific case.",
+    "show_update_date": true
+  },
+  "social": {
+    "preferred_format": "portrait_carousel",
+    "opening_style": "Clear professional language with short paragraphs.",
+    "closing_style": "Contact the studio to discuss the specific case.",
+    "hashtags": [],
+    "show_source_note": true,
+    "carousel_identity_placement": "close_only"
+  },
+  "field_provenance": [
+    {
+      "field_paths": [
+        "voice.audience_stance",
+        "voice.rhythm",
+        "voice.technical_density",
+        "voice.formality",
+        "voice.openings",
+        "voice.closings",
+        "voice.formatting",
+        "voice.avoid",
+        "document.page_size",
+        "document.font_family",
+        "document.layout.left_margin_mm",
+        "document.layout.right_margin_mm",
+        "document.layout.top_margin_mm",
+        "document.layout.bottom_margin_mm",
+        "document.layout.logo_width_mm",
+        "document.layout.logo_height_mm",
+        "document.layout.contact_rail_width_mm",
+        "document.layout.body_font_size_pt",
+        "document.layout.body_leading_pt",
+        "document.layout.subject_font_size_pt",
+        "document.layout.heading_font_size_pt",
+        "document.layout.rule_width_pt",
+        "document.recipient_pattern",
+        "document.circular_label",
+        "document.numbering_pattern",
+        "document.date_pattern",
+        "document.subject_prefix",
+        "document.section_style",
+        "document.use_contact_rail",
+        "document.contact_rail_lines",
+        "document.footer_pattern",
+        "document.closing",
+        "document.signature_lines",
+        "email.subject_pattern",
+        "email.salutation",
+        "email.closing",
+        "email.signature_lines",
+        "email.attachment_note",
+        "website.byline_pattern",
+        "website.date_pattern",
+        "website.heading_style",
+        "website.source_heading",
+        "website.cta",
+        "website.show_update_date",
+        "social.preferred_format",
+        "social.opening_style",
+        "social.closing_style",
+        "social.hashtags",
+        "social.show_source_note",
+        "social.carousel_identity_placement"
+      ],
+      "basis": "vera_default_proposal",
+      "history_ids": [],
+      "analysis": "Observed Word examples do not establish conventions for other channels; these are Vera proposals requiring explicit review."
+    }
+  ]
+}

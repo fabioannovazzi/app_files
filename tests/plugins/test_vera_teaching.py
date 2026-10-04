@@ -101,9 +101,7 @@ def test_repeated_examples_keep_completed_onboarding_and_reload_latest_profile(
     assert len(store.status()["examples"]) == 5
 
 
-def test_repeated_tutorial_requires_introduction_without_automatically_enrolling(
-    teaching, tmp_path
-):
+def test_first_course_requires_native_pair_before_creating_state(teaching, tmp_path):
     module, _, profile = teaching
     other = module.TeachingStore(tmp_path / "first-use")
     assert other.status()["onboarding_phase"] == "required"
@@ -111,6 +109,43 @@ def test_repeated_tutorial_requires_introduction_without_automatically_enrolling
         begin(other)
     assert not other.enrollment.exists()
     assert profile.status()["phase"] == "complete"
+
+
+def test_first_course_runs_without_profile_or_completed_introduction(
+    teaching, tmp_path
+):
+    module, _, _ = teaching
+    store = module.TeachingStore(tmp_path / "first-course")
+    state = begin(
+        store, pair={"teacher_thread_id": "teacher", "worker_thread_id": "worker"}
+    )
+    handoff = store.worker("worker", "fatture-xml-check", state["worker_token"])
+    assert handoff["profile"] is None
+    assert handoff["assignment"] == "tutorial"
+    assert handoff["local_only"] is True
+    assert store.status()["onboarding_phase"] == "interview"
+    assert store._profile()["lessons"] == []
+    output(store)
+    complete(store)
+    assert store.status()["session"]["phase"] == "complete"
+    assert store.status()["onboarding_phase"] == "interview"
+    assert store.status()["profile"] is None
+
+
+def test_single_course_preserves_unfinished_introduction(teaching, tmp_path):
+    module, _, _ = teaching
+    onboarding = sys.modules["local_onboarding"]
+    profile = onboarding.Store(tmp_path / "unfinished-introduction")
+    prepare(profile)
+    before = profile.path.read_bytes()
+    store = module.TeachingStore(profile.root)
+    state = begin(store)
+    assert store.worker("native-worker", "fatture-xml-check", state["worker_token"])[
+        "local_only"
+    ]
+    output(store)
+    complete(store)
+    assert profile.path.read_bytes() == before
 
 
 def test_pause_resume_pair_replacement_and_stale_writer_are_bounded(teaching):
@@ -519,6 +554,7 @@ def test_openai_packages_keep_paired_teaching_and_cowork_uses_written_lessons():
         assert not any("local_teaching" in name for name in archive.namelist())
         assert "scripts/local_courses.py" in archive.namelist()
         lesson = archive.read("skills/learn-with-vera/SKILL.md").decode("utf-8")
+        assert "Required file access before teaching" in lesson
         assert "Teach in writing in this conversation" in lesson
         assert "Do not request voice, create a second" in lesson
         router = archive.read("skills/vera/SKILL.md").decode()

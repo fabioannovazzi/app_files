@@ -5,7 +5,7 @@ import vm from 'node:vm';
 
 const script = readFileSync(new URL('../static/js/hosted-interview.js', import.meta.url), 'utf8');
 
-function browser({ storage = new Map(), status = 200, attempt = 'new-attempt', mode = 'research_interview', blockedAudio = false } = {}) {
+function browser({ storage = new Map(), status = 200, attempt = 'new-attempt', mode = 'research_interview', blockedAudio = false, uploadResults = null } = {}) {
   const elements = new Map();
   const requests = [];
   const sent = [];
@@ -16,6 +16,15 @@ function browser({ storage = new Map(), status = 200, attempt = 'new-attempt', m
   let now = Date.now();
   class Clock extends Date { static now() { return now; } }
   let peer;
+  let recorder;
+  class Recorder {
+    constructor() { recorder = this; }
+    mimeType = "audio/webm";
+    listeners = {};
+    addEventListener(type, fn) { this.listeners[type] = fn; }
+    start() {}
+    stop() { this.listeners.stop?.(); }
+  }
   const element = id => {
     if (!elements.has(id)) elements.set(id, {
       textContent: '', disabled: false, listeners: {},
@@ -45,6 +54,7 @@ function browser({ storage = new Map(), status = 200, attempt = 'new-attempt', m
     }
   }
   const window = {
+    MediaRecorder: uploadResults ? Recorder : undefined,
     isSecureContext: true,
     sessionStorage: {
       getItem: key => storage.get(key),
@@ -69,7 +79,14 @@ function browser({ storage = new Map(), status = 200, attempt = 'new-attempt', m
       getAudioTracks: () => [track], getTracks: () => [track],
     }) } },
     RTCPeerConnection: Peer, console, AbortController, Date: Clock,
+    MediaRecorder: Recorder, MediaStream: class {}, FormData,
     fetch: async (url, options) => {
+      if (url.endsWith('/audio-chunk')) {
+        requests.push({ url, payload: Object.fromEntries(options.body) });
+        const result = uploadResults.shift() ?? 200;
+        if (result instanceof Error) throw result;
+        return { ok: result === 200, status: result };
+      }
       requests.push({ url, payload: JSON.parse(options.body) });
       return { ok: status === 200, status, text: async () => status === 200 ? JSON.stringify({status:'incomplete'}) : 'active attempt',
         json: async () => ({ attempt_id: attempt, sdp: 'answer' }) };
@@ -77,6 +94,7 @@ function browser({ storage = new Map(), status = 200, attempt = 'new-attempt', m
   });
   return {
     requests, element, sent,
+    recordChunk() { recorder.listeners.dataavailable({data: new Blob(["synthetic audio"], {type:"audio/webm"})}); },
     peerState(state) { peer.connectionState = state; peer.listeners.connectionstatechange(); },
     audioTrack() { peer.ontrack({ streams: [{}] }); },
     allowAudio() { blockedAudio = false; },
@@ -275,7 +293,7 @@ test('departure sends the attempt identifier for server-side partial finalisatio
   await page.start(); page.open(); page.hide();
   const departure = page.requests.find(r => r.payload.event_type === 'pagehide');
   assert.equal(departure.payload.attempt_id, 'new-attempt');
-  assert.equal(departure.payload.payload.script_version, '20260924-connection-recovery-v1');
+  assert.equal(departure.payload.payload.script_version, '20260924-audio-upload-retry-v1');
 });
 
 
@@ -301,4 +319,38 @@ test('closing the page during manual saving still sends server recovery evidence
   await page.start(); page.open();
   page.element('endButton').listeners.click(); page.hide();
   assert.equal(page.requests.some(r => r.payload.event_type === 'pagehide'), true);
+});
+
+test('a timed-out microphone chunk is retried with identical index and bytes', async () => {
+  const page = browser({ uploadResults: [Object.assign(new Error('timeout'), {name:'AbortError'}), 200] });
+  await page.start();
+  page.recordChunk();
+  await drain();
+  page.settle();
+  await drain();
+  const uploads = page.requests.filter(r => r.url.endsWith('/audio-chunk'));
+  assert.equal(uploads.length, 2);
+  assert.equal(uploads[0].payload.chunk_index, '0');
+  assert.equal(uploads[1].payload.chunk_index, '0');
+  assert.equal(await uploads[0].payload.file.text(), await uploads[1].payload.file.text());
+  assert.equal(page.requests.some(r => r.payload.event_type === 'audio_chunk_upload_error'), false);
+});
+
+test('permanent audio rejection is recorded without retrying', async () => {
+  const page = browser({uploadResults:[409]});
+  await page.start();
+  page.recordChunk();
+  await drain();
+  assert.equal(page.requests.filter(r => r.url.endsWith('/audio-chunk')).length, 1);
+  const failure = page.requests.find(r => r.payload.event_type === 'audio_chunk_upload_error');
+  assert.equal(failure.payload.payload.chunk_index, 0);
+});
+
+test('repeated transient upload failure is bounded and recorded', async () => {
+  const page = browser({uploadResults:[503,503,503]});
+  await page.start();
+  page.recordChunk();
+  await drain(); page.settle(); await drain(); page.settle(); await drain();
+  assert.equal(page.requests.filter(r => r.url.endsWith('/audio-chunk')).length, 3);
+  assert.equal(page.requests.filter(r => r.payload.event_type === 'audio_chunk_upload_error').length, 1);
 });

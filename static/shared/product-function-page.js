@@ -114,15 +114,38 @@
       dataPolicy: "Tratamiento de datos",
       language: "Idioma",
     },
+    ar: {
+      skip: "انتقل إلى المحتوى",
+      function: "الوظيفة",
+      input: "قدّم",
+      work: "تنفّذ الوظيفة",
+      output: "تحصل على",
+      responsibilitiesLabel: "المسؤوليات",
+      responsibilitiesTitle: "من يفعل ماذا",
+      productRole: (product) => `تُعِدّ ${product}`,
+      sharedRole: "تُعِدّ الوظيفة",
+      professionalRole: "يقرر المستشار",
+      promptLabel: "للبدء",
+      promptTitle: "الطلب الأولي",
+      modelDataLabel: "معالجة البيانات",
+      modelDataTitle: "ما البيانات التي تصل إلى النموذج",
+      modelDataReport: "",
+      modelDataReportLink: "",
+      source: "الكود المصدري",
+      dataPolicy: "معالجة البيانات بالإنجليزية",
+      language: "اللغة",
+    },
   };
 
   const params = new URLSearchParams(window.location.search);
   const requestedLanguage = (params.get("lang") || page.defaultLanguage || "en").toLowerCase();
-  const language = Object.hasOwn(labels, requestedLanguage) ? requestedLanguage : page.defaultLanguage;
+  const availableLanguages = Object.keys(page.copy).filter((code) => Object.hasOwn(labels, code));
+  const language = availableLanguages.includes(requestedLanguage) ? requestedLanguage : page.defaultLanguage;
   const text = page.copy[language] || page.copy[page.defaultLanguage];
   const ui = labels[language];
   const isShared = page.shared === true;
-  const homeUrl = `/?lang=${language}`;
+  const linkedSiteLanguage = language === "ar" ? "en" : language;
+  const homeUrl = `/?lang=${linkedSiteLanguage}`;
 
   const modelDataParagraphs = (Array.isArray(text.modelData) ? text.modelData : [text.modelData])
     .flatMap((value) => String(value || "").split(/\n\s*\n/))
@@ -130,13 +153,14 @@
     .filter(Boolean);
 
   document.documentElement.lang = language;
+  document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
   document.title = `${text.name} | ${isShared ? "Mparanza" : page.product}`;
   const description = document.querySelector('meta[name="description"]');
   if (description) description.setAttribute("content", text.summary);
   const canonical = document.querySelector('link[rel="canonical"]');
   if (canonical) canonical.setAttribute("href", window.location.href.split("?")[0].split("#")[0]);
 
-  const languageButtons = Object.keys(labels)
+  const languageButtons = availableLanguages
     .map(
       (code) =>
         `<button type="button" data-language="${code}" aria-pressed="${code === language}">${code.toUpperCase()}</button>`,
@@ -228,7 +252,7 @@
           <div class="function-model-data__body function-model-data__paragraphs">
             ${text.modelDataConclusion ? `<h3 class="function-model-data__conclusion">${text.modelDataConclusion}</h3>` : ""}
             ${modelDataParagraphs.map((paragraph) => `<p class="function-model-data__copy">${paragraph}</p>`).join("")}
-            ${page.product === "Vera" && params.get("from") !== "lucia" ? `<p class="function-model-data__report-note" data-model-data-report-note>${ui.modelDataReport} <a href="https://mparanza.com/data-handling?lang=${language}#run-evidence">${ui.modelDataReportLink}</a></p>` : ""}
+            ${page.product === "Vera" && params.get("from") !== "lucia" ? `<p class="function-model-data__report-note" data-model-data-report-note>${ui.modelDataReport} <a href="https://mparanza.com/data-handling?lang=${linkedSiteLanguage}#run-evidence">${ui.modelDataReportLink}</a></p>` : ""}
           </div>
         </div>
       </section>
@@ -236,7 +260,7 @@
     <footer class="pf-footer">
       <div class="pf-footer__inner">
         <span>${isShared ? text.name : `${page.product} · ${text.name}`}</span>
-        <div><a href="https://github.com/fabioannovazzi/app_files">${ui.source}</a> · <a href="https://mparanza.com/data-handling?lang=${language}">${ui.dataPolicy}</a></div>
+        <div><a href="https://github.com/fabioannovazzi/app_files">${ui.source}</a> · <a href="https://mparanza.com/data-handling?lang=${linkedSiteLanguage}">${ui.dataPolicy}</a></div>
       </div>
     </footer>
   `;

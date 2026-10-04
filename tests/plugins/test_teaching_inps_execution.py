@@ -308,6 +308,12 @@ def test_inps_kit_runs_inventory_evidence_and_professional_draft(
     assert expected_heading in word_text
     memo = (output / "studio_memo.md").read_text(encoding="utf-8")
     assert w[7 if phase == "demo" else 8] in memo
+    # A learner can find the answer and next action before the detailed facts,
+    # and can trace those facts to the original document locator in both formats.
+    assert memo.index(w[7 if phase == "demo" else 8]) < memo.index(expected_heading)
+    assert memo.index(w[10 if phase == "demo" else 11]) < memo.index(expected_heading)
+    assert f"{employer}#document-1" in memo
+    assert f"{employer}#document-1" in word_text
     assert (
         w[10 if phase == "demo" else 11]
         in (output / "document_requests.md").read_text()

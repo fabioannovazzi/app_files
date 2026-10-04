@@ -92,6 +92,18 @@ def test_client_engagement_rejects_input_from_another_client(tmp_path: Path) -> 
         )
 
 
+@pytest.mark.parametrize("subdirectory", ["../outside", "other", "/tmp/outside"])
+def test_raw_run_rejects_uncontrolled_output_subdirectory(tmp_path, subdirectory):
+    runner = load_runner()
+    context, _ = running_audit_context(tmp_path)
+    with pytest.raises(ValueError, match="Output subdirectory must be reconciliation"):
+        runner.run_raw_input_reconciliation(
+            input_dir=context["input_dir"],
+            prepared_client_engagement=context,
+            output_subdirectory=subdirectory,
+        )
+
+
 def reviewed_source_input(
     *,
     role: str,
@@ -861,11 +873,19 @@ def test_extract_pdf_pages_emits_ocr_progress_events(tmp_path, monkeypatch):
     assert events[4]["ocr_page_count"] == 1
 
 
-def test_raw_run_writes_extracted_source_pages_to_output(tmp_path, monkeypatch):
+@pytest.mark.parametrize("output_subdirectory", [None, "reconciliation"])
+def test_raw_run_writes_extracted_source_pages_to_output(
+    tmp_path, monkeypatch, output_subdirectory
+):
     runner = load_runner()
     client_engagement, _ = running_audit_context(tmp_path)
     input_dir = Path(client_engagement["input_dir"])
     output_dir = Path(client_engagement["output_dir"])
+    if output_subdirectory:
+        output_dir /= output_subdirectory
+    output_prefix = output_dir.relative_to(
+        Path(client_engagement["run_root"])
+    ).as_posix()
 
     extracted_pages = [
         {
@@ -958,6 +978,7 @@ def test_raw_run_writes_extracted_source_pages_to_output(tmp_path, monkeypatch):
     result = runner.run_raw_input_reconciliation(
         input_dir=input_dir,
         prepared_client_engagement=client_engagement,
+        output_subdirectory=output_subdirectory,
         assumptions={
             "scope_year": "2023",
             "cutoff_date": "2023-12-31",
@@ -972,9 +993,11 @@ def test_raw_run_writes_extracted_source_pages_to_output(tmp_path, monkeypatch):
     source_pages = json.loads(source_pages_path.read_text(encoding="utf-8"))
 
     run_root = Path(client_engagement["run_root"])
-    assert result["manifest"]["source_pages_path"] == "outputs/source_pages.json"
+    assert (
+        result["manifest"]["source_pages_path"] == f"{output_prefix}/source_pages.json"
+    )
     assert (run_root / result["manifest"]["accountant_report_path"]).exists()
-    assert manifest["source_pages_path"] == "outputs/source_pages.json"
+    assert manifest["source_pages_path"] == f"{output_prefix}/source_pages.json"
     assert (run_root / manifest["accountant_report_path"]).exists()
     assert manifest["counts"]["source_pages"] == 1
     assert source_pages == extracted_pages
@@ -1002,7 +1025,7 @@ def test_raw_run_writes_extracted_source_pages_to_output(tmp_path, monkeypatch):
 
     assert (
         manifest["assurance"]["canonical_data_path"]
-        == "outputs/assurance_final_outputs/reconciliation_results.json"
+        == f"{output_prefix}/assurance_final_outputs/reconciliation_results.json"
     )
     canonical_path = (
         output_dir / "assurance_final_outputs" / "reconciliation_results.json"
@@ -1072,12 +1095,20 @@ def test_raw_run_writes_extracted_source_pages_to_output(tmp_path, monkeypatch):
     assert "Problemi elaborazione fonti" in workbook.sheetnames
     workbook.close()
 
+    if output_subdirectory:
+        # Archive disclosures belong to the owning run, outside the exact
+        # native assurance tree. They must not invalidate its replay.
+        (output_dir.parent / "model_data_report.md").write_text("Archive disclosure\n")
+        runner.validate_assurance_run(output_dir)
+
     old_client_root = Path(client_engagement["studio_client_folder"]["client_root"])
     renamed_client_root = old_client_root.with_name("Rossi Renamed")
     old_client_root.rename(renamed_client_root)
     renamed_output = (
         renamed_client_root / client_engagement["run_relative_path"] / "outputs"
     )
+    if output_subdirectory:
+        renamed_output /= output_subdirectory
 
     replayed = runner.validate_assurance_run(renamed_output)
 

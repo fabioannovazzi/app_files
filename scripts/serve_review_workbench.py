@@ -49,6 +49,7 @@ REVIEW_TOKEN_HEADER = "X-Mparanza-Review-Token"
 REQUIRE_VERA_CUSTOMER_RUN = True
 VERA_REVIEW_WORKFLOW_IDS = frozenset(
     {
+        "archive-organization",
         "open-item-reconciliation",
         "check-entries",
         "client-file-preparation",
@@ -167,8 +168,10 @@ def _output_dir(path: str | Path) -> Path:
 
 def _validate_vera_customer_run(
     workbench: LocalReviewWorkbench,
+    *,
+    read_only: bool = False,
 ) -> dict[str, Any] | None:
-    """Return the live portable Vera context required for review mutations."""
+    """Validate review ownership; only rendering may read a finalized run."""
 
     if not REQUIRE_VERA_CUSTOMER_RUN:
         return None
@@ -192,9 +195,30 @@ def _validate_vera_customer_run(
     if str(module_root) not in sys.path:
         sys.path.insert(0, str(module_root))
     from vera_assurance import (  # noqa: PLC0415
+        load_client_engagement_context_file,
         load_client_workflow_context_for_output,
     )
 
+    if read_only:
+        output_root = next(
+            (
+                ancestor
+                for ancestor in (workbench.output_dir, *workbench.output_dir.parents)
+                if ancestor.name == "outputs"
+                and (ancestor.parent / "context.json").is_file()
+            ),
+            None,
+        )
+        if output_root is None:
+            raise ValueError(
+                "workflow output is not inside a portable customer-folder run"
+            )
+        return load_client_engagement_context_file(
+            output_root.parent / "context.json",
+            expected_workflow_id=str(plugin),
+            output_dir=workbench.output_dir,
+            allowed_statuses=("running", "ready_for_review", "completed"),
+        )
     return load_client_workflow_context_for_output(
         workbench.output_dir,
         expected_workflow_id=str(plugin),
@@ -204,10 +228,12 @@ def _validate_vera_customer_run(
 def _with_vera_customer_context(
     workbench: LocalReviewWorkbench,
     args: dict[str, Any],
+    *,
+    read_only: bool = False,
 ) -> dict[str, Any]:
     """Add the live customer-run path to one server-owned MCP call."""
 
-    client_context = _validate_vera_customer_run(workbench)
+    client_context = _validate_vera_customer_run(workbench, read_only=read_only)
     if client_context is None:
         return args
     context_path = client_context.get("context_path")
@@ -359,14 +385,23 @@ def _raw_session_payload(workbench: LocalReviewWorkbench) -> dict[str, Any]:
         _read_json_object(workbench.output_dir / "review_payload.json", required=True),
     )
     ui_decisions = _read_json_object(workbench.output_dir / "ui_decisions.json")
+    applied_decisions = _read_json_object(
+        workbench.output_dir / "applied_decisions.json"
+    )
     final_artifacts = _read_json_object(workbench.output_dir / "final_artifacts.json")
     if run_intake.get("run_id") and run_intake["run_id"] != review_payload["run_id"]:
         raise ValueError("run_intake.run_id must match review_payload.run_id")
+    if applied_decisions and (
+        applied_decisions.get("run_id") != review_payload["run_id"]
+        or applied_decisions.get("plugin") != workbench.plugin
+    ):
+        raise ValueError("Applied decisions must belong to this review run")
     return {
         "widget_type": adapter.get("widgetType", f"{workbench.plugin}_review"),
         "run_intake": run_intake,
         "review_payload": review_payload,
         "ui_decisions": ui_decisions or _empty_ui_decisions(review_payload),
+        "applied_decisions": applied_decisions or None,
         "final_artifacts": final_artifacts or None,
         "decision_policy": {
             "save_tool": adapter["saveTool"],
@@ -459,14 +494,32 @@ def build_session_payload(workbench: LocalReviewWorkbench) -> dict[str, Any]:
     """Return the plugin-rendered, browser-safe local review session."""
 
     raw_session = _raw_session_payload(workbench)
+    read_only = False
     render_args = {
         "run_intake": raw_session["run_intake"],
         "review_payload": raw_session["review_payload"],
         "ui_decisions": raw_session["ui_decisions"],
         "final_artifacts": raw_session["final_artifacts"],
     }
-    if raw_session["run_intake"].get("path_reference") == "run_root_relative":
-        render_args = _with_vera_customer_context(workbench, render_args)
+    if workbench.plugin == "journal-sampling":
+        render_args = {
+            "model_review_context": _read_json_object(
+                workbench.output_dir / "model_review_context.json", required=True
+            )
+        }
+    if (
+        raw_session["run_intake"].get("path_reference") == "run_root_relative"
+        or workbench.plugin == "archive-organization"
+    ):
+        render_args = _with_vera_customer_context(
+            workbench, render_args, read_only=True
+        )
+        context_path = render_args.get("client_engagement")
+        if context_path:
+            run = _read_json_object(
+                Path(context_path).parent / "run.json", required=True
+            )
+            read_only = run.get("status") != "running"
     rendered = _mcp_tool_result(
         workbench,
         _render_tool_name(_adapter(workbench)),
@@ -478,11 +531,21 @@ def build_session_payload(workbench: LocalReviewWorkbench) -> dict[str, Any]:
     rendered_review = rendered.get("review_payload")
     if not isinstance(rendered_review, dict):
         raise ValueError("plugin render tool returned no review_payload")
+    expected_review_id = (
+        render_args["model_review_context"]["review_ref"]
+        if workbench.plugin == "journal-sampling"
+        else raw_session["review_payload"]["run_id"]
+    )
     if (
         rendered_review.get("plugin") != workbench.plugin
-        or rendered_review.get("run_id") != raw_session["review_payload"]["run_id"]
+        or rendered_review.get("run_id") != expected_review_id
     ):
         raise ValueError("plugin render tool returned a mismatched review session")
+    if workbench.plugin == "journal-sampling":
+        # The MCP call has replayed and bound the current persisted review.
+        # Opaque aliases belong to model context; the local human-facing widget
+        # needs the verified filenames for traceability and declared downloads.
+        rendered = {**rendered, **raw_session}
     redactions = _known_absolute_paths(
         {
             "session": raw_session,
@@ -490,6 +553,14 @@ def build_session_payload(workbench: LocalReviewWorkbench) -> dict[str, Any]:
             "workbench_output_dir": workbench.output_dir.resolve().as_posix(),
         }
     )
+    # Restore the persisted apply result through the same path redaction as the
+    # live tool response. A page reload must not reset its applied counter.
+    rendered["applied_decisions"] = raw_session["applied_decisions"]
+    if workbench.plugin == "new-client":
+        # The native model response omits free-text decisions. The validated
+        # local browser must still reopen the user's saved notes and requests.
+        rendered["ui_decisions"] = raw_session["ui_decisions"]
+    rendered["local_review_read_only"] = read_only
     sanitized = _sanitize_browser_payload(rendered, redactions=redactions)
     if not isinstance(sanitized, dict):
         raise ValueError("sanitized plugin render result must remain an object")
@@ -521,6 +592,32 @@ def _bridge_html(workbench: LocalReviewWorkbench, session_token: str) -> str:
       const pluginName = {plugin_json};
       const reviewToken = {token_json};
       const stateKey = `${{pluginName}}:${{serverPayload.review_payload?.run_id || "run"}}`;
+      if (serverPayload.local_review_read_only) {{
+        document.addEventListener("DOMContentLoaded", () => {{
+          const messages = {{
+            it: "Risultato archiviato: sola lettura. Le decisioni si salvano prima di finalizzare l’esecuzione. Per ulteriori modifiche avvia una nuova esecuzione.",
+            en: "Archived result: read only. Save review decisions before finalizing the run. Start a new run for further changes.",
+            fr: "Résultat archivé : lecture seule. Enregistrez les décisions avant de finaliser l’exécution. Lancez une nouvelle exécution pour toute modification.",
+            de: "Archiviertes Ergebnis: schreibgeschützt. Prüfentscheidungen vor Abschluss speichern. Für Änderungen einen neuen Lauf starten.",
+            es: "Resultado archivado: solo lectura. Guarde las decisiones antes de finalizar la ejecución. Inicie una nueva ejecución para realizar cambios."
+          }};
+          const language = String(serverPayload.run_intake?.language || serverPayload.review_payload?.language || "en").slice(0,2);
+          const notice = document.createElement("p");
+          notice.id = "local-read-only-notice";
+          notice.setAttribute("role", "status");
+          notice.style.cssText = "padding:16px 24px;margin:0;background:#fff4d6;color:#493900";
+          notice.textContent = messages[language] || messages.en;
+          document.body.prepend(notice);
+          const protect = () => {{
+            for (const id of ["save-decisions", "apply-decisions", "use-recommended"]) {{
+              const button = document.getElementById(id);
+              if (button && !button.disabled) button.disabled = true;
+            }}
+          }};
+          protect();
+          new MutationObserver(protect).observe(document.body, {{subtree:true, childList:true, attributes:true, attributeFilter:["disabled"]}});
+        }}, {{once:true}});
+      }}
       function readState() {{
         try {{ return JSON.parse(window.sessionStorage.getItem(stateKey) || "null"); }}
         catch {{ return null; }}
@@ -598,6 +695,13 @@ def _server_tool_args(
         "final_artifacts": session["final_artifacts"],
         "decision_source": "local_review_server",
     }
+    if workbench.plugin == "journal-sampling":
+        args = {
+            "model_review_context": _read_json_object(
+                workbench.output_dir / "model_review_context.json", required=True
+            ),
+            "decision_source": "local_review_server",
+        }
     if decisions is not None:
         args["decisions"] = decisions
     reviewer = posted_args.get("reviewer")
@@ -666,7 +770,7 @@ def _mcp_tool_result(
             "const validated = server.callTool(server.TOOL_NAMES.validateReview, args);"
             "const result = server.callTool(request.params.name, "
             "{...args, review_reference: validated.review_reference.reference});"
-            "process.stdout.write(JSON.stringify({id:request.id,result:{structuredContent:result}}));"
+            "process.stdout.write(JSON.stringify({id:request.id,result:{structuredContent:{ok:true,...result}}}));"
             "} catch(error) { process.stdout.write(JSON.stringify({id:request.id,"
             "error:{message:error.message}})); }",
             workbench.mcp_server_path.as_posix(),
@@ -678,6 +782,10 @@ def _mcp_tool_result(
         text=True,
         check=False,
         cwd=workbench.plugin_dir,
+        # The local server is already running in the selected environment.
+        # Its Node bridge defaults to that Python even when launched directly
+        # without shell activation. Preserve an explicit component override.
+        env={**os.environ, "PYTHON": os.environ.get("PYTHON") or sys.executable},
         timeout=30,
     )
     if completed.returncode != 0:
@@ -745,6 +853,20 @@ def call_review_tool(
     if name not in allowed_tools:
         raise ValueError(f"unsupported local review tool: {name}")
     result = _mcp_tool_result(workbench, name, args)
+    if (
+        workbench.plugin in {"journal-sampling", "archive-organization", "new-client"}
+        and result.get("ok") is True
+    ):
+        # A successful mutation returns a minimized model summary. Reload the
+        # actual persisted successor for browser counters and file downloads.
+        persisted = _raw_session_payload(workbench)
+        result = {
+            **result,
+            **{
+                key: persisted[key]
+                for key in ("ui_decisions", "applied_decisions", "final_artifacts")
+            },
+        }
     redactions = _known_absolute_paths(
         {
             "tool_args": args,
@@ -993,7 +1115,7 @@ def main(argv: list[str] | None = None) -> int:
             plugin_dir=_plugin_dir_from_args(args.plugin, args.plugin_dir),
             output_dir=_output_dir(args.output_dir),
         )
-        _validate_vera_customer_run(workbench)
+        _validate_vera_customer_run(workbench, read_only=True)
         serve_review(
             workbench,
             host=args.host,

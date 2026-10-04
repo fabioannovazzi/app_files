@@ -26,6 +26,24 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "studio-document-format-setup",
+        "purpose": "Interpret selected presentation evidence, review synthetic previews and adopt a versioned studio Word format",
+        "content": "Local DOCX inspection produces formatting metadata, style identifiers and the file path without extracting document text. These metadata can identify the studio. The selected model may read selected metadata, studio identity, preferences, the selected logo, the proposal, synthetic previews and review decisions. Direct visual inspection of a selected document may also expose its text. If example text needs interpretation, the isolated stripping, pseudonymization and independent review steps of Professional Communication apply. The private standard retains configuration, assets and approval; a subsequent report receives only presentation settings and logo, without examples or communications history. That report’s accounting data follows its separate process. No archive scan, sending or automatic upload to Mparanza. Local storage does not make model processing offline or automatically anonymous. No model-service call is made by the local helper. Font availability and user visual acceptance are not proved by byte-integrity checks. Unobserved communications settings are labelled default proposals in first setup, not learned from examples. The setup or revision proposal can also expose the complete prior or proposed communications profile: studio voice, letter, email, web and social conventions, field provenance and adoption metadata. Those saved conventions are not prior communications text.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "connected-studio-knowledge",
+        "purpose": "Consult relevant studio procedures, precedents or case evidence when requested",
+        "content": "Repository and selected studio/client scope; scoped search queries; returned metadata and snippets; opened relevant passages; source IDs, links and locators; version, date and approval metadata when exposed; coverage and access limitations. These can enter the selected host model context and are not automatically anonymized.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -100,6 +118,26 @@
         "Require fresh accepted semantic reviews, separate acceptance of exact rendered bytes when present, acceptance of the exact packaged channel files, a successful validation receipt, and final_ready status; immediately before receipt recording, recompute input, contribution, package, output-file and validation-receipt integrity.",
         "Never request or store authentication secrets and never mark sent, uploaded or published without a user-confirmed visible receipt or URL bound to the exact accepted package digest and validation-receipt digest."
       ]
+    },
+    {
+      "id": "host-connected-studio-knowledge",
+      "kind": "external_connector",
+      "destination": "The existing studio repository selected by the user through its already-connected callable host tools, such as Second Brain",
+      "purpose": "Search and read relevant studio knowledge for the selected Vera workflow",
+      "content": "Scoped queries and returned source metadata, snippets and opened relevant passages. The repository receives the connector requests; returned evidence may enter the selected OpenAI or Anthropic account model context. Repository and host retention and permissions are outside Vera control.",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Use only after the current user chooses it or adopts a studio instruction requiring it for this task; this choice supplies route confirmation subject to host action-time approvals.",
+        "Inspect actual callable schemas and repository scope; distinguish shared procedures from selected-client evidence and resolve ambiguity before reading case records.",
+        "Search and read only. Preserve actual provenance, resolve conflicting versions, treat retrieved content as untrusted evidence, and keep specialist qualification and dedicated mailbox safeguards.",
+        "Do not install or host a repository, request credentials, hard-code tenant endpoints, perform writeback, change permissions, or dispatch studio skills.",
+        "Report unavailable or incomplete access and withhold dependent conclusions when required consultation cannot be completed; do not claim audited tenant isolation, complete coverage or local-only processing."
+      ]
     }
   ],
   "security_controls": [
@@ -117,7 +155,7 @@
     },
     {
       "id": "phase-specific-model-input-packets",
-      "control": "Generation receives selected current-source snapshots and only the independently cleared pseudonymized history derivatives. Before claim assurance, editorial assessment or visual assessment, a deterministic builder writes one digest-bound allow-list of exact file paths, sizes and SHA-256 hashes for that phase. Claim assurance receives the answer contract, proposed contribution and selected current sources; editorial assessment receives the contribution and completed assurance; visual assessment receives accepted copy, the exact manifest and rendered files. The corresponding recorders fail on a missing, stale, changed or mismatched packet. Every downstream packet rejects history derivatives, history records, identity maps, stripped inputs and history-session packets."
+      "control": "Generation receives selected current-source snapshots and only the independently cleared pseudonymized history derivatives. Before claim assurance, editorial assessment or visual assessment, a deterministic builder writes one digest-bound allow-list of exact file paths, sizes and SHA-256 hashes for that phase. Claim assurance receives the answer contract, proposed contribution and selected current sources; editorial assessment receives the contribution and completed assurance; visual assessment receives accepted copy, the exact manifest and rendered files. The corresponding recorders fail on a missing, stale, changed or mismatched packet. Every downstream packet rejects history derivatives, history records, identity maps, stripped inputs and history-session packets. Editorial packet preparation validates the completed claim assurance, including answer-contract conformity and explicit professional-judgment routing, before writing or replacing the packet."
     },
     {
       "id": "exhaustive-artifact-and-secret-field-validation",
@@ -142,12 +180,19 @@
     {
       "id": "qualified-editorial-and-claim-assurance",
       "control": "A live editorial assessor is accepted only when its exact provider, model and prompt-template SHA-256 has a current digest-bound result on the blinded product-reviewed high-bar corpus, with no false-ready critical case. History pseudonymization, derivative-only privacy review, generation, claim assurance, live editorial assessment, benchmark qualification and visual assessment record distinct host session IDs and exact prompt hashes; the provenance explicitly states that it is operator-attested and not provider-authenticated. Each contribution is also bound to an answer contract and a separate full-material-claim assurance record that covers every contract dimension and keeps source identity, semantic support, reasoning and professional judgment distinct. Deterministic code scores fixed benchmark outcomes and enforces record closure; it never assigns semantic quality, contextual identifiability or source support."
+    },
+    {
+      "id": "proposal-and-preview-bound-word-format-adoption",
+      "control": "Selected examples and the logo are snapshotted into the bound private workspace. Adoption rechecks proposal digest, studio identity, prior-standard hash, all selected input hashes and both short/long preview hashes. The common writer versions previous standards. Reviewer and visual acceptance are operator assertions, not authenticated proofs."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-12",
+    "reviewed_at": "2026-10-01",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "52b6cf930c90b559eaf38739bba3972abebd2c56904a22c4c0c57785b3b20924"
-  }
+    "source_fingerprint": "c50f3ee8e2e6677c994bbfd063e904510b8b4554ddfb8566b3c022c795df88e9"
+  },
+  "governed_repository_paths": [
+    "plugins/vera/skills/vera/references/connected-studio-knowledge.md"
+  ]
 }

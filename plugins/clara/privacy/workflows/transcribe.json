@@ -30,7 +30,7 @@
       {
         "id": "recording-and-case-context",
         "purpose": "Transcribe an advisor debrief, meeting, call, or existing recording in the correct project context",
-        "content": "Audio or screen-recording content; compact case brief; client and project facts; recording title, date, participants, interviewer, notes, language, and source metadata"
+        "content": "Audio or screen-recording content; compact case brief; client and project facts; recording title, date, participants, interviewer, notes, source transcription language (including Arabic), separate supported case output language, and source metadata"
       },
       {
         "id": "transcript-and-review",
@@ -73,7 +73,7 @@
       "hosted_service_id": "hosted-voice",
       "destination": "Mparanza Hosted Voice and its configured realtime/transcription provider",
       "purpose": "Capture or upload a recording and return a transcript bundle",
-      "content": "Compact case context when enabled, microphone or uploaded audio, source metadata, and language reach Hosted Voice. Screen video, active-slide timeline, and visual capture metadata remain in the browser and local downloaded bundle; the service returns transcript and transcription metadata.",
+      "content": "Compact case context when enabled, microphone or uploaded audio, source metadata, and source transcription language reach Hosted Voice. Arabic source audio returns an Arabic transcript; the separate supported case output language controls later local notes, analysis, and deliverables. Screen video, active-slide timeline, and visual capture metadata remain in the browser and local downloaded bundle; the service returns transcript and transcription metadata.",
       "optional": true,
       "requires_confirmation": false,
       "controls": [
@@ -117,6 +117,6 @@
     "reviewed_at": "2026-09-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "5ed1ccfbc4087d1a274748b43b77c9fbfd1cffa93f3637a5d644a79962834147"
+    "source_fingerprint": "b9183ac479fb70918a3fa12b604d38cdf1df96f17f593031105d69ae2f99cb8f"
   }
 }

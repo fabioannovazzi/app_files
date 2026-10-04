@@ -5,6 +5,11 @@ description: Use when Vera must discover, monitor, match, prepare, or review Ita
 
 # Bandi e agevolazioni
 
+## Jurisdiction and Geneva
+
+For a CH-GE mandate, read `references/geneva.md` before the steps below. It specifies the Geneva input, source and output adaptations within this existing function. Choose governing jurisdiction independently of output language; the ordinary Italian path remains available for IT.
+
+
 Before any opportunity research, read `references/source-first-discovery.md`
 and `references/institutional-discovery.md` completely. This method applies in
 Codex and ChatGPT, including a public scan without a client portfolio. Follow
@@ -399,7 +404,10 @@ python scripts/intelligence_workflow.py \
 
    `rejected` and `returned` are also explicit terminal decisions. Accepted
    contributions enter `application_workbench.json` only as `proposed`; they
-   never overwrite confirmed or blocked work. Any change to intake, sources, or
+   never overwrite confirmed or blocked work. Proposed `ready` or
+   `not_applicable` readiness is normalized to `verify`: neither can certify
+   professional review, and the proposed outcome and rationale are preserved.
+   Any change to intake, sources, or
    workbench makes an undecided run stale. Deterministic scripts validate shape,
    identity, references, exact arithmetic, review hashes, status consistency,
    and prohibited portal controls; they do not interpret the call.

@@ -33,11 +33,19 @@
     },
     {
       "path": "modules/report-builder/assets/report-builder-review-widget.html",
-      "sha256": "b4a0a954bd18c77edaa24e8a567aa1494a6463fe325886433820413aa61819cd"
+      "sha256": "e7422f2a42d36e3e0d183b847664b2ba03405b01a882b6bef4539ec347fa0f97"
     },
     {
       "path": "modules/report-builder/assets/review-workbench-adapter.json",
-      "sha256": "7680804e4ae769a759a3f1d83bae58bad6f5fa90d7ece4f29da23e7432872f5c"
+      "sha256": "7cebe7dfc9e40b80a61c9291b324e42d35c72960a9ca23753ae397813eb3f70e"
+    },
+    {
+      "path": "modules/report-builder/assets/studio-docx-format.schema.json",
+      "sha256": "0f0c7c62dbe07fc65c0e2c9094ff5c71de9230b4ce457ef75b461279421c5f96"
+    },
+    {
+      "path": "modules/report-builder/references/studio-document-format.md",
+      "sha256": "b213cad8c1a7401fc7476bd23098a26cf5f0e3903f806cfcd0c2129ead4a11e9"
     },
     {
       "path": "modules/report-builder/references/workflow-reference.md",
@@ -45,7 +53,7 @@
     },
     {
       "path": "modules/report-builder/requirements.txt",
-      "sha256": "6735c9cbdb32c51d03324c6f2528b3f586b4545c54b022c1da0b0b5d44692b9a"
+      "sha256": "ee15516de98a1367562d8c098d149188c759330537462385aeafa86b5682ed45"
     },
     {
       "path": "modules/report-builder/scripts/apply_review_edits.py",
@@ -53,7 +61,7 @@
     },
     {
       "path": "modules/report-builder/scripts/build_report.py",
-      "sha256": "ec1458ec55c988fae0434d46abb5a9078d0ce8a217223b70df7b9decc093bb46"
+      "sha256": "c8051a0a61eb6b12d31e282e22e8d167d741f2f42a528ac597d01feb5e469437"
     },
     {
       "path": "modules/report-builder/scripts/check_dependencies.py",
@@ -65,11 +73,11 @@
     },
     {
       "path": "modules/report-builder/scripts/implementation_bootstrap.py",
-      "sha256": "656879eb05f496535cb23209391d74e0b286ceb15a09c28473451b7d43f88b5d"
+      "sha256": "c2775488e65a70846dbd995539615b4ad8ae38be26580932a67ff50e595ac6fc"
     },
     {
       "path": "modules/report-builder/scripts/implementation_contract.py",
-      "sha256": "1a95fad1881e8d3133e10292bbc80f67a39b6f77e298778f0f026226b7291a98"
+      "sha256": "d59c4651e56803b009d6556bc1ddad1a45565a9adcd557447610c73a83d901bc"
     },
     {
       "path": "modules/report-builder/scripts/inspect_inputs.py",
@@ -85,7 +93,7 @@
     },
     {
       "path": "modules/report-builder/scripts/report_builder_core.py",
-      "sha256": "32e6123a18fca2d9c8219e88406d6b986af8f1f5bb1c9dff84b85c709c292517"
+      "sha256": "6f286e8f9e1f25f9353cfe94e81e8c650b3314300e314a8584ebd5e1b5185efa"
     },
     {
       "path": "modules/report-builder/scripts/report_builder_integrity.py",
@@ -101,7 +109,7 @@
     },
     {
       "path": "modules/report-builder/scripts/review_session.py",
-      "sha256": "9ebf78e0c9c74db7136a455de61d993fd4092bee6ce61dfc74ade7dac635ae5b"
+      "sha256": "b6b8065c8fac0fd2208f68fb7cfdfb14a8d9ddda43b71d3dfc40bc3bcbb7b356"
     },
     {
       "path": "modules/report-builder/scripts/review_successor.py",
@@ -112,12 +120,16 @@
       "sha256": "1fc828a48a267ed81c940c6adc6dd86720b84fad06eddaf63dd39abfe70886ad"
     },
     {
+      "path": "modules/report-builder/scripts/studio_formatting.py",
+      "sha256": "fb239ee1c46f103146220accfaad40c1bc7190cb90a48b8a7d7574cae6f3ebb3"
+    },
+    {
       "path": "modules/report-builder/scripts/validate_review_integrity.py",
       "sha256": "c4632f361e2fda6be0e66e3242a8093a5e43696730a9cc51ea1c41d0eea60c39"
     },
     {
       "path": "modules/report-builder/skills/financial-report-builder/SKILL.md",
-      "sha256": "5200713f96bb19536a151aebf03f24eda553b52720ea9afb95e457b16ad46d53"
+      "sha256": "4b8c010199f7372db4a2e56f32e64c44fbfb8d99ea808e7b8af07da79c48210f"
     },
     {
       "path": "modules/report-builder/vendor/modules/__init__.py",
@@ -129,7 +141,7 @@
     },
     {
       "path": "modules/report-builder/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
     },
     {
       "path": "modules/report-builder/vendor/modules/vera_assurance/decisions.py",
@@ -138,6 +150,10 @@
     {
       "path": "modules/report-builder/vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/report-builder/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "modules/report-builder/vendor/modules/vera_assurance/money.py",
@@ -157,7 +173,11 @@
     },
     {
       "path": "skills/financial-report-builder/SKILL.md",
-      "sha256": "434569fd134b580c483a99ac95342869e6d00914b90ceac1c3655d68aec94a86"
+      "sha256": "bbf607fca0544bef26b282bf37140e89a53ff698669b6099c1573fd521250ec5"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -173,7 +193,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -182,6 +202,10 @@
     {
       "path": "vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "vendor/modules/vera_assurance/money.py",
@@ -454,5 +478,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "287a9913a58500cfa6750f6458e1a2992efbde97fafe3a3e8d56c0e588f26b56"
+  "canonical_course_sha256": "61d0d970ba3ffa890d7f7a37118b40a2bf42ccca3ab50995a126adc4a5b1e0bb"
 }

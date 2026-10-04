@@ -1,6 +1,7 @@
 {
   "schema_version": 1,
   "plugins": [
+    "scissione-guidata",
     "open-item-reconciliation",
     "archive-organization",
     "client-file-preparation",
@@ -14,6 +15,7 @@
     "invoice-xml",
     "sales-plan",
     "business-planning",
+    "business-valuation",
     "variance-analysis",
     "management-control-pack",
     "treasury-forecast",
@@ -21,6 +23,7 @@
     "financial-analysis",
     "report-builder",
     "concordato-plan-review",
+    "composizione-negoziata",
     "comunicazione-professionale",
     "presenza-digitale-studio",
     "prompt-optimizer",
@@ -30,11 +33,18 @@
     "bandi-agevolazioni",
     "bilancio-xbrl-it",
     "browser-automation",
-    "studio-archive"
+    "studio-archive",
+    "esg-reporting-assurance",
+    "trasformazione",
+    "fusione-guidata",
+    "patent-box-review",
+    "rating-legalita",
+    "lipe"
   ],
   "shared_services": [
     "run-receipt-stamping",
-    "managed-python-runtime"
+    "managed-python-runtime",
+    "cnc-authenticated-review"
   ],
   "workflow_roles": {
     "new-client": {

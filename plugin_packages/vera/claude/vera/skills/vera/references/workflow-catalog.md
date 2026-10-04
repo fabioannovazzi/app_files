@@ -15,7 +15,51 @@ task; Vera selects the workflow. Use semantic judgment, then read the selected
 skill completely. Do not select from keywords or use a cross-cutting assurance
 skill to imitate a missing operational workflow.
 
+## Development preview
+
+- `patent-box-review`: prepares selected evidence, reviewed ledger mappings and
+component controls for software, patents and designs, then exports draft A/B
+Word/PDF documents. Real calculation requires reviewed current sources and
+certificate-authenticated authorization under a firm-issued mandate. It verifies
+existing signatures and timestamps; it does not sign or file documents. All
+professional UAT and production acceptance boundaries remain explicit. Read
+`../../patent-box-review/SKILL.md`. Its prepared course uses fictional ordinary
+software evidence and a separate missing-link exercise. Synthetic execution does
+not establish professional acceptance.
+
+## Merger workpapers
+
+- `fusione-guidata`: prepares reviewed P1 domestic OIC incorporation workpapers for
+independent or directly wholly owned companies: verified Studio Archive imports,
+valuation bridges, exact shareholder allocations, accounting bridges, event
+calendars and versioned review dossiers. Its two complete synthetic cases are
+available through `demo-p1`. Its prepared course uses fictional independent and
+directly wholly owned cases, with professional review and changed-input practice. Later
+branches, signatures and filings remain unsupported. Use the specialist skill.
+
 ## Professional workflows
+
+- `lipe`: **LIPE** reconciles Italian VAT registers with source evidence and
+  prepares reviewed VP drafts. Preserve code confirmations, distinct VAT periods,
+  opening balances and payment differences. Pilot for ordinary 2024–2026 cases;
+  unsigned XML export requires fresh signed approval and mandate verification.
+  Signing, transmission and accounting-software acceptance remain external.
+  Use the LIPE specialist and state its unsupported-case boundaries.
+
+- `rating-legalita`: prepare an Italian AGCM initial-application dossier, even
+  from no documents; distinguish declarations, verified evidence, obstacles,
+  optional premiums and conditional improvements. Preserve T0, link every
+  conclusion to sources, and stop at professional review. Renewal, monitoring
+  and WebRating submission are outside this initial-application implementation.
+
+- `esg-reporting-assurance`: organize the first ESG evidence and decision
+  foundation inside an existing client engagement; bind CSV cells or text lines,
+  retain versions and decisions, flag stale dependencies and export partial drafts.
+  It does not yet produce complete ESG reports, ESRS/taxonomy assessments or
+  assurance opinions. Use the dedicated skill and state those limits. Its prepared
+  lesson uses fictional CSV evidence, a same-engagement update and a separate
+  practice case; prior decisions and drafts remain visible when outdated.
+
 
 - `invoice-xml`: prepare ordinary FPR12 invoice XML from supplied PDFs, photos
   or confirmed structured data; combine source views, retain field evidence,
@@ -26,7 +70,11 @@ skill to imitate a missing operational workflow.
 - `adeguati-assetti`: assess an Italian company's organizational, administrative
   and accounting arrangements using proportionate review of responsibilities,
   processes and actual reporting/operating evidence; prepare findings, improvement
-  actions and subsequent reviews. A management report alone is not an assetti
+  actions and subsequent reviews. When construction is requested, use the same
+  engagement for attributed interviews, qualified evidence, reasoned professional
+  overrides, control design, versioned manuals/registers, separate adoption and
+  sampled operating review. The numerical method is experimental; a manual does
+  not prove operation. A management report alone is not an assetti
   assessment; general legal questions remain in quesito-legale-fiscale.
 
 - `aml-review`: review Italian client AML evidence at onboarding or later review,
@@ -53,23 +101,33 @@ skill to imitate a missing operational workflow.
   selection for every territory and category, and explicit temporal scans of
   institutional sources before complementary semantic web search; match them to
   opaque client profiles and prepare a traceable application dossier after
-  selection, without contacting clients, authenticating, signing, or filing.
+  selection, without contacting clients, authenticating or signing. After project
+  approval and a request to compile, prepare the approved portal draft using
+  available host browser tools. Submit only after explicit approval of the exact
+  final application under the workflow's portal-preparation contract;
+  declarations, signatures and payment remain with the user.
 - `avviso-intake`: prepare first-intake analysis for Italian notices, avvisi,
   cartelle, HMRC letters, or Swiss cantonal tax letters.
 - `bilancio-oic`: understand accounting evidence and prepare, update,
   reconcile, review, validate, or export an individual Italian OIC civil-law
   annual financial statement; XBRL is an output, not the workflow identity.
-- `browser-automation`: teach, develop, test or repair an exact professional browser
-  process, keeping demonstrations, attempts and CRs linked across conversations.
-  Ordinary work uses a separately installed named operation skill, with its own
-  scope, inputs, result checks and adjacent process binding. Do not use the local
-  development catalog as the ordinary-use menu. No matching released skill means
-  the operation is unavailable; do not improvise a substitute.
+- `browser-automation`: inspect, explain or edit a supplied sanitized developer pack or capability JSON, and run packaged local evidence/capability pipelines through the managed Python launcher. Live browser discovery, execution and replay validation are unavailable in this package. Do not operate authenticated websites or claim that local pipeline checks prove live validation.
 - `vouching`: compare a qualified Journal Sampling population with
   FatturaPA XML or supporting PDFs using exact evidence bindings.
 - `concordato-plan-review`: review an Italian concordato preventivo across the
   procedure, proposal, plan, attestation, creditors, treatment, liquidity,
   evidence consistency, and open issues.
+- `composizione-negoziata`: guide an Italian CNC case as company advisor or
+  independent expert, with separate role guidance, evidence gaps, existing Vera
+  analyses, drafts, case revisions and dependency impact. Local review records
+  do not authenticate professional identity or authorize filing.
+- `studio-document-format`: teach a studio's reusable Word report format from
+  exact selected examples and preferences; inspect formatting, review generated
+  short/long previews, explicitly adopt a private versioned standard, and reuse
+  or revise it in supported financial reports. Includes a prepared course with
+  fictional inputs and distinct practice. Studio-wide setup shares the authorized
+  communications workspace; it is not a client run or model fine-tuning.
+
 - `comunicazione-professionale`: decide whether a current tax, legal,
   regulatory, accounting, or professional development is worth communicating;
   learn only from exact prior studio communications selected by the
@@ -93,6 +151,10 @@ skill to imitate a missing operational workflow.
   aging, cash, concentration, and profitability section plus a bounded
   model-led interpretation layer; missing optional data remains visible and
   the workflow does not require or simulate an ERP connector.
+  For a focused costing question, the same workflow supports reviewed Direct,
+  Direct Evoluto, Full and ABC methods by job, product or customer, plus
+  incremental-order, make-or-buy and discontinuation comparisons. This path
+  uses its own reviewed source totals and does not require the full ledger pack.
 - `centrale-rischi-review`: normalize an official native-text Italian Centrale
   Rischi PDF or analyse a reviewed CSV or Excel export; classify exposures
   through professional-confirmed maturity and risk-category mappings;
@@ -111,8 +173,10 @@ skill to imitate a missing operational workflow.
   being tested.
 - `purchase-invoice-review`: screen passive FatturaPA XML populations against
   actual booked ledger movements, apply deterministic arithmetic and matching
-  checks, then use native Claude GPT-5.6 Luna on compact matched-invoice packets
-  to produce an exception-focused professional workpaper.
+  checks, then use the workflow's configured native semantic worker on compact
+  matched-invoice packets to produce an exception-focused professional workpaper.
+  Read the selected skill for the host's worker and qualification requirements;
+  a screening result is not professional approval or an audit opinion.
 - `journal-sampling`: qualify and normalize journal entries and generate
   reproducible audit samples with diagnostics.
 - `new-client`: prepare a source-bound client setup covering files, identity,
@@ -138,6 +202,16 @@ skill to imitate a missing operational workflow.
   reviewable Markdown, DOCX, or JSON reports.
 - `sales-plan`: create a forward-looking sales Plan from reviewed Actuals and
   confirmed commercial or FX assumptions.
+- `treasury-forecast`: prepare and maintain a dated cash forecast from the documented
+  bank, outstanding-item, planned-flow, allocation and adjustment tables. Review
+  expected dates, preserve applicable decisions, compare successive accepted
+  forecasts and produce Excel/HTML workpapers. Required missing data stops this
+  workflow; optional supplied XML is invoice evidence, not payment proof. No
+  business-planning dependency or automatic Agenzia download.
+- `business-valuation`: prepare source-backed PMI valuation workpapers using selected
+  DCF, income, NAV, mixed, multiples and APV methods; reuse the same-engagement
+  business plan, retain calculations and review decisions, and export reports
+  and a formula workbook. Does not sign or certify PIV/legal-purpose conformity.
 - `business-planning`: prepare one business plan for a startup, new venture or
   established company. Assess customers, market, operations, economics, cash,
   options, recommendation and next actions using one case, financial model and
@@ -151,6 +225,16 @@ skill to imitate a missing operational workflow.
 - `studio-archive`: create or resume a durable client engagement; use its
   authorized local-document, Google Drive or Shared Drive, Gmail, or
   capability-gated WhatsApp evidence routes without mixing clients.
+
+## Synthetic development prototypes
+
+- `trasformazione`: prepare a synthetic Italian company-transformation case,
+  import evidence, propose findings, check exact arithmetic, record explicit
+  simulated/user review and export a versioned dossier. Changed evidence reopens
+  dependent approvals. This increment does not accept real client mandates,
+  qualify legal/tax effects, compute statutory deadlines or perform external
+  actions. It has no Studio Archive adapter. Select only for an explicitly
+  requested synthetic prototype or demonstration.
 
 ## Subordinate intake workflows
 
@@ -226,6 +310,9 @@ identity, allowed status, order and localization; it never chooses the status
 or validates the professional reason. Keep `/data-handling` global rather than
 recreating a central function register.
 
-- `treasury-forecast`: prepare and maintain a dated cash forecast from the documented bank, outstanding-item, planned-flow, allocation and adjustment tables. Review expected dates, preserve applicable decisions, compare successive accepted forecasts and produce Excel/HTML workpapers. Required missing data stops this workflow; optional supplied XML is invoice evidence, not payment proof. No business-planning dependency or automatic Agenzia download.
+## Scissione: initial operational path
+
+- `scissione-guidata`: prepare a versioned dossier and ownership/allocation schedules for an Italian OIC partial proportional scission into a new beneficiary. Require authorized entity evidence and exact-version professional decisions; preserve unknowns, separate book/tax/economic/shareholder tax values and reopen dependent approvals after changes. No automatic legal rules, accounting entries, statutory deadlines, signatures or filings. Other routes are explicitly unsupported.
+The prepared local lesson uses fictional inputs and an independent changed-evidence practice. Read `../../scissione-guidata/SKILL.md`; actual professional confirmations remain necessary.
 
 - `learn-with-vera`: learn an installed function in writing using prepared files, actual execution and practice in one conversation.

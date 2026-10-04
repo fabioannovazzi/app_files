@@ -14,6 +14,7 @@ const REPORT_BUILDER_PLUGIN_IMPLEMENTATION_PATHS = [
   ".app.json",
   ".mcp.json",
   "assets/icon.svg",
+  "assets/studio-docx-format.schema.json",
   "assets/report-builder-review-widget.html",
   "assets/review-workbench-adapter.json",
   "mcp/server.cjs",
@@ -27,6 +28,7 @@ const REPORT_BUILDER_PLUGIN_IMPLEMENTATION_PATHS = [
   "scripts/physical_output_set.py",
   "scripts/prepared_contract.py",
   "scripts/report_builder_core.py",
+  "scripts/studio_formatting.py",
   "scripts/report_builder_integrity.py",
   "scripts/report_gates.py",
   "scripts/review_successor.py",
@@ -38,6 +40,7 @@ const REPORT_BUILDER_PLUGIN_IMPLEMENTATION_PATHS = [
 const REPORT_BUILDER_SHARED_IMPLEMENTATION_PATHS = [
   "__init__.py",
   "contracts.py",
+  "jurisdiction.py",
   "decisions.py",
   "envelope.py",
   "money.py",

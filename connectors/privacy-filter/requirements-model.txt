@@ -1,0 +1,4 @@
+opf @ https://github.com/openai/privacy-filter/archive/f7f00ca7fb869683eb732c010299d901457f19c3.tar.gz
+torch==2.14.1
+tiktoken==0.14.0
+huggingface-hub>=1.0,<2

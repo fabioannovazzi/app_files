@@ -12,12 +12,11 @@
       "title": "Journal Entry",
       "variant": "ledger",
       "fields": [
-        "prepared_entry_id",
-        "source_qualification_id",
         "movement_number",
         "entry_date",
         "account",
         "beneficiary_expected",
+        "amount_signed",
         "amount_abs",
         "source_file",
         "source_sheet",
@@ -35,7 +34,6 @@
         "matched_pdf",
         "matched_support",
         "support_type",
-        "support_artifact_id",
         "support_match_status",
         "support_match_signals",
         "filename",
@@ -87,7 +85,7 @@
       "reviewTitle": "Verifica documentale",
       "queueTitle": "Scritture",
       "detailTitle": "Scrittura e supporto",
-      "detailHelp": "Confronta scrittura, PDF di supporto e rilievo prima della decisione.",
+      "detailHelp": "Confronta la registrazione con la fattura XML o il PDF collegato e rivedi i punti ancora da chiarire.",
       "search": "Cerca movimento, PDF, stato, anomalia, beneficiario"
     },
     "fr": {

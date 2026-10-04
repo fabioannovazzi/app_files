@@ -1,0 +1,1184 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Vera Rating di legalità — initial application case",
+  "description": "Validazione della forma; non verifica la verità dei fatti né la completezza giuridica. Non è un formato AGCM.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "case_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "synthetic": {
+      "type": "boolean"
+    },
+    "client": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "legal_name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "archive_client_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "engagement_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "legal_name",
+            "archive_client_id",
+            "engagement_id"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "mode": {
+      "enum": [
+        "guided",
+        "concise"
+      ]
+    },
+    "operation": {
+      "enum": [
+        "unknown",
+        "first_attribution"
+      ]
+    },
+    "status": {
+      "enum": [
+        "preintake",
+        "evidence_in_progress",
+        "not_eligible",
+        "ready_for_review"
+      ]
+    },
+    "as_of": {
+      "type": "string",
+      "format": "date"
+    },
+    "planned_submission": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "ruleset": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "const": "AGCM-31812-2026"
+        },
+        "checked_at": {
+          "type": "string",
+          "format": "date"
+        },
+        "catalog_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "id",
+        "checked_at",
+        "catalog_sha256"
+      ]
+    },
+    "subjects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "subject_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name_or_alias": {
+            "type": "string",
+            "minLength": 1
+          },
+          "role": {
+            "type": "string",
+            "minLength": 1
+          },
+          "start_date": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date"
+          },
+          "end_date": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date"
+          },
+          "inclusion": {
+            "enum": [
+              "included",
+              "excluded_reviewed",
+              "unknown"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "subject_id",
+          "name_or_alias",
+          "role",
+          "start_date",
+          "end_date",
+          "inclusion",
+          "reason"
+        ]
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "subject_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1
+          },
+          "occurred_on": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date"
+          },
+          "learned_on": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date"
+          }
+        },
+        "required": [
+          "event_id",
+          "subject_id",
+          "description",
+          "occurred_on",
+          "learned_on"
+        ]
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "evidence_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "enum": [
+              "document",
+              "declaration",
+              "public_register",
+              "synthetic_fact"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uri": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "as_of": {
+            "type": "string",
+            "format": "date"
+          },
+          "read_status": {
+            "enum": [
+              "read",
+              "unread",
+              "unreadable",
+              "synthetic_assumption"
+            ]
+          },
+          "limitations": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "evidence_id",
+          "kind",
+          "title",
+          "uri",
+          "sha256",
+          "as_of",
+          "read_status",
+          "limitations"
+        ]
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "perimeter_reviewed": {
+          "type": "boolean"
+        },
+        "required_instance_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "coverage_review": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/review"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_current": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "perimeter_reviewed",
+        "required_instance_ids",
+        "coverage_review",
+        "source_current"
+      ]
+    },
+    "snapshots": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/snapshot"
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/gap"
+      }
+    },
+    "official_rating": {
+      "type": "null"
+    },
+    "approvals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "actor": {
+            "type": "string",
+            "minLength": 1
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "scope": {
+            "type": "string",
+            "minLength": 1
+          },
+          "bundle_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "actor",
+          "date",
+          "scope",
+          "bundle_sha256",
+          "reason"
+        ]
+      }
+    },
+    "external_actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "action_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "type": "string",
+            "minLength": 1
+          },
+          "occurred_at": {
+            "type": "string",
+            "minLength": 1
+          },
+          "receipt_evidence_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "action_id",
+          "kind",
+          "occurred_at",
+          "receipt_evidence_id"
+        ]
+      },
+      "maxItems": 0
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "practice": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mandate": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "reviewer": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "reviewed_on": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "review_kind": {
+                  "enum": [
+                    "professional",
+                    "synthetic_assumption"
+                  ]
+                },
+                "evidence_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                },
+                "representative_declarations": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "studio_investigation": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "excluded_activities": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "event_reporting_owner": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "event_reporting_channel": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                }
+              },
+              "required": [
+                "reviewer",
+                "reviewed_on",
+                "review_kind",
+                "evidence_ids",
+                "representative_declarations",
+                "studio_investigation",
+                "excluded_activities",
+                "event_reporting_owner",
+                "event_reporting_channel"
+              ]
+            }
+          ]
+        },
+        "data_governance": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "reviewer": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "reviewed_on": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "review_kind": {
+                  "enum": [
+                    "professional",
+                    "synthetic_assumption"
+                  ]
+                },
+                "evidence_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                },
+                "notice_status_and_delivery": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "processing_legal_basis": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "judicial_data_authority": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "retention_rule": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "retention_owner": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "model_processing_review": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "next_review_on": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "access_roles": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "reviewer",
+                "reviewed_on",
+                "review_kind",
+                "evidence_ids",
+                "notice_status_and_delivery",
+                "processing_legal_basis",
+                "judicial_data_authority",
+                "retention_rule",
+                "retention_owner",
+                "model_processing_review",
+                "next_review_on",
+                "access_roles"
+              ]
+            }
+          ]
+        },
+        "event_reviews": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "reviewer": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "reviewed_on": {
+                "type": "string",
+                "format": "date"
+              },
+              "review_kind": {
+                "enum": [
+                  "professional",
+                  "synthetic_assumption"
+                ]
+              },
+              "evidence_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              },
+              "event_id": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "basis": {
+                "enum": [
+                  "art21_1_mandatory",
+                  "art21_4_premium",
+                  "not_reportable"
+                ]
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "owner": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "notice_sent_on": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "notice_receipt_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "reviewer",
+              "reviewed_on",
+              "review_kind",
+              "evidence_ids",
+              "event_id",
+              "basis",
+              "reason",
+              "owner",
+              "notice_sent_on",
+              "notice_receipt_id"
+            ]
+          }
+        },
+        "review_sessions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "session_id": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "reviewer": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "stage": {
+                "enum": [
+                  "intake",
+                  "subjects",
+                  "eligibility",
+                  "obstacles",
+                  "premiums",
+                  "event_review",
+                  "dossier",
+                  "rework"
+                ]
+              },
+              "started_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "ended_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "break_minutes": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "session_id",
+              "reviewer",
+              "stage",
+              "started_at",
+              "ended_at",
+              "break_minutes"
+            ]
+          }
+        }
+      },
+      "required": [
+        "mandate",
+        "data_governance",
+        "event_reviews",
+        "review_sessions"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "case_id",
+    "synthetic",
+    "client",
+    "mode",
+    "operation",
+    "status",
+    "as_of",
+    "planned_submission",
+    "ruleset",
+    "subjects",
+    "events",
+    "evidence",
+    "scope",
+    "snapshots",
+    "gaps",
+    "official_rating",
+    "approvals",
+    "external_actions",
+    "limitations",
+    "practice"
+  ],
+  "$defs": {
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "type": "string",
+          "minLength": 1
+        },
+        "date": {
+          "type": "string",
+          "format": "date"
+        },
+        "kind": {
+          "enum": [
+            "professional",
+            "synthetic_assumption"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "actor",
+        "date",
+        "kind",
+        "reason",
+        "source_ids"
+      ]
+    },
+    "instance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "instance_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rule_id": {
+          "enum": [
+            "A01",
+            "A02",
+            "A03",
+            "A04",
+            "A05",
+            "S01",
+            "S02",
+            "S03",
+            "S04",
+            "S05",
+            "B01",
+            "B02",
+            "B03",
+            "B04",
+            "B05",
+            "B06",
+            "B07",
+            "B08",
+            "B09",
+            "B10",
+            "B11",
+            "B12",
+            "B13",
+            "B14",
+            "B15",
+            "B16",
+            "B17",
+            "B18",
+            "C01",
+            "C02",
+            "C03",
+            "C04",
+            "C05",
+            "C06",
+            "C07",
+            "C08",
+            "C09",
+            "C10",
+            "C11",
+            "C12",
+            "P01",
+            "P02",
+            "P03",
+            "P04",
+            "P05",
+            "P06",
+            "P07",
+            "P08",
+            "P09",
+            "P10",
+            "D01",
+            "D02",
+            "D03",
+            "D04",
+            "M01",
+            "M02",
+            "M03",
+            "M04",
+            "M05",
+            "M06",
+            "M07",
+            "T01",
+            "T02",
+            "T03"
+          ]
+        },
+        "subject_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "event_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "enum": [
+            "unknown",
+            "claimed",
+            "evidence_pending",
+            "verified",
+            "failed",
+            "not_applicable_reviewed",
+            "disputed",
+            "stale"
+          ]
+        },
+        "fact": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_links": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "evidence_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "locator": {
+                "type": "string",
+                "minLength": 1
+              },
+              "excerpt": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "evidence_id",
+              "locator",
+              "excerpt"
+            ]
+          }
+        },
+        "decision": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/review"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "outcome": {
+          "enum": [
+            "unknown",
+            "satisfied",
+            "not_satisfied",
+            "not_applicable"
+          ]
+        }
+      },
+      "required": [
+        "instance_id",
+        "rule_id",
+        "subject_id",
+        "event_id",
+        "status",
+        "fact",
+        "evidence_links",
+        "decision",
+        "outcome"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "verified",
+                  "failed",
+                  "not_applicable_reviewed"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "decision": {
+                "$ref": "#/$defs/review"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "verified"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "outcome": {
+                "const": "satisfied"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "failed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "outcome": {
+                "const": "not_satisfied"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "not_applicable_reviewed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "outcome": {
+                "const": "not_applicable"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "snapshot_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "as_of": {
+          "type": "string",
+          "format": "date"
+        },
+        "kind": {
+          "enum": [
+            "observed",
+            "conditional_scenario"
+          ]
+        },
+        "instances": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/instance"
+          }
+        },
+        "base_status": {
+          "enum": [
+            "verified",
+            "obstructed",
+            "undetermined"
+          ]
+        },
+        "estimated_rating": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "snapshot_id",
+        "as_of",
+        "kind",
+        "instances",
+        "base_status",
+        "estimated_rating",
+        "conditions"
+      ]
+    },
+    "gap": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "gap_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instance_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "kind": {
+          "enum": [
+            "information",
+            "evidence",
+            "access",
+            "obstacle",
+            "premium",
+            "update",
+            "interpretation"
+          ]
+        },
+        "t0": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target": {
+          "type": "string",
+          "minLength": 1
+        },
+        "action": {
+          "type": "string",
+          "minLength": 1
+        },
+        "owner_role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewer_role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "due_date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "deadline_kind": {
+          "enum": [
+            "agreed",
+            "legal",
+            "to_agree"
+          ]
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "closure_evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "open",
+            "in_progress",
+            "ready_for_review",
+            "closed",
+            "not_feasible",
+            "deferred"
+          ]
+        }
+      },
+      "required": [
+        "gap_id",
+        "instance_ids",
+        "kind",
+        "t0",
+        "target",
+        "action",
+        "owner_role",
+        "reviewer_role",
+        "due_date",
+        "deadline_kind",
+        "dependencies",
+        "closure_evidence",
+        "status"
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "client": {
+            "type": "null"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "status": {
+            "const": "preintake"
+          },
+          "official_rating": {
+            "type": "null"
+          },
+          "external_actions": {
+            "maxItems": 0
+          }
+        }
+      }
+    }
+  ]
+}

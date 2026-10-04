@@ -51,6 +51,11 @@ artifacts.
 
 # Vera · Archivio dello Studio
 
+## Jurisdiction and Geneva
+
+For a CH-GE mandate, read `references/geneva.md` before the steps below. It specifies the Geneva input, source and output adaptations within this existing function. Choose governing jurisdiction independently of output language; the ordinary Italian path remains available for IT.
+
+
 For the optional local document route, use one shared or synced source folder
 whose immediate child directories are customer folders. Each customer folder
 contains its portable Vera ledger; each professional duplicates only the

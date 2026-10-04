@@ -1,0 +1,11 @@
+Prospetti interamente fittizi per verificare quadratura e continuità, in EUR.
+Perimetro stabile: società sintetica, bilancio individuale, dati riportati.
+2025: attivo 900, passività 250, patrimonio netto 650; sola quadratura.
+2026: attivo 1000, passività 300, patrimonio netto 700.
+Saldi di apertura 2026, dichiarati separatamente: 900, 250, 650.
+Movimenti 2026 con segno: attivo +100, passività +50, patrimonio netto +50.
+Questi totali non sono un bilancio reale né attestano classificazione o completezza.
+Il reddito ipotetico 100 del caso base è collegato al prospetto per verificare
+la dipendenza delle revisioni; non è ricavato automaticamente dai saldi.
+Variante di rettifica: attivo riportato 950 + rettifica con segno +50 = 1000;
+nessun effetto fiscale implicito, né validazione economica della rettifica.

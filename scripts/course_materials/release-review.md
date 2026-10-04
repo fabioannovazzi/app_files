@@ -1,5 +1,14 @@
 # Teaching-kit release review
 
+## ESG evidence course — 1 October 2026
+
+The complete fictional ESG kit, separate practice attempt and five localized
+guides are described in `docs/releases/2026-10-01-esg-course.md`. Source/output
+review is distinct from full release checks, professional review, live learner
+participation, installed runtime acceptance and publication. Existing authored
+lessons remain unchanged; their review records retain a bounded shared catalogue
+source refresh. The earlier dated entries below are historical.
+
 ## Final prepared-kit completion — 23 September 2026
 
 The last retained invoice-review lesson has been replaced with its prepared kit.
@@ -2789,3 +2798,16 @@ one has its current canonical course fingerprint. None has a stale case pin.
 The current inventory remains seven unfinished Vera kits, three Clara and one
 Lucia. All tool processes started in this continuation have completed; no
 background execution is being inferred from a status file.
+
+## Valutazione PMI course expansion — 1 October 2026
+
+Reviewed the full Italian lesson, all five fictional notes and original-download
+previews using the current course renderer. Added independent expected numbers,
+Studio Archive receipts and reopening guidance, and missing-terminal/recovery
+practice within the existing course. Five native regressions verify arithmetic,
+block/recovery and four immutable same-engagement runs. Reviewed 16 native PDF
+and 17 DOCX-rendered pages; independent LibreOffice recalculation matches all
+60 numeric calculation cells. No model call is performed by the native fixture;
+no learner comprehension, fresh installed-host or professional acceptance is
+claimed. Exact source and artifact fingerprints are in the business-valuation
+release review. No valuation-engine or shared course-framework behavior changed.

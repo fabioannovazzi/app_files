@@ -611,8 +611,8 @@ def _build_missing_items(
             r"\bf24\b|codice\s+tributo|sezione\s+erario",
         ):
             items.append(
-                "F24 presenti, ma non è possibile stabilire automaticamente se il set "
-                "sia completo o se servano ulteriori deleghe."
+                "Riferimenti a F24 rilevati. Verificare quali documenti siano "
+                "effettivamente presenti e quali occorrano per questa pratica."
             )
 
         if categories.get(CATEGORY_730) and not cu_found:
@@ -703,7 +703,7 @@ MISSING_ITEM_TRANSLATIONS = {
         "Presente documentazione mutuo": "Mortgage documents are present, but no separate mortgage-interest certificate was identified.",
         "Ricevute sanitarie presenti": "Medical receipts are present: verify the holder, payment traceability, and inclusion in the pre-filled return.",
         "Sono presenti riferimenti a spese sanitarie": "Readable documents refer to medical expenses. Check whether the receipts or supporting details are in the file.",
-        "F24 presenti": "F24 forms are present, but the automated checks cannot establish whether the set is complete or whether further forms are required.",
+        "Riferimenti a F24": "References to F24 forms were found. Check which documents are actually present and which are needed for this engagement.",
         "Presente documentazione 730/precompilata": "730/pre-filled-return documents are present without an identified CU; verify that the income documents are complete.",
         "Presente documentazione Redditi PF": "Redditi PF documents are present without an identified CU; verify the client's income perimeter.",
         "Il fascicolo è impostato su Italia": "The run is scoped to Italy, but no clearly readable Italian tax context was found. Review the document perimeter.",
@@ -720,7 +720,7 @@ MISSING_ITEM_TRANSLATIONS = {
         "Presente documentazione mutuo": "Des documents hypothécaires sont présents, mais aucune attestation séparée des intérêts n’a été identifiée.",
         "Ricevute sanitarie presenti": "Des reçus médicaux sont présents : vérifier le titulaire, la traçabilité du paiement et leur présence dans la déclaration préremplie.",
         "Sono presenti riferimenti a spese sanitarie": "Les documents lisibles mentionnent des frais médicaux. Vérifier que les reçus ou justificatifs figurent dans le dossier.",
-        "F24 presenti": "Des formulaires F24 sont présents, mais les contrôles automatiques ne permettent pas d’établir si l’ensemble est complet.",
+        "Riferimenti a F24": "Des références aux formulaires F24 ont été relevées. Vérifier quels documents sont effectivement présents et lesquels sont nécessaires pour cette mission.",
         "Presente documentazione 730/precompilata": "Des documents 730/préremplis sont présents sans CU identifiée ; vérifier l’exhaustivité des justificatifs de revenus.",
         "Presente documentazione Redditi PF": "Des documents Redditi PF sont présents sans CU identifiée ; vérifier le périmètre des revenus du client.",
         "Il fascicolo è impostato su Italia": "L’exécution est définie pour l’Italie, mais aucun contexte fiscal italien clairement lisible n’a été trouvé. Vérifier le périmètre documentaire.",
@@ -737,7 +737,7 @@ MISSING_ITEM_TRANSLATIONS = {
         "Presente documentazione mutuo": "Hypothekenunterlagen sind vorhanden, aber es wurde keine separate Zinsbescheinigung gefunden.",
         "Ricevute sanitarie presenti": "Gesundheitsbelege sind vorhanden: Inhaber, Nachvollziehbarkeit der Zahlung und Aufnahme in die vorausgefüllte Erklärung prüfen.",
         "Sono presenti riferimenti a spese sanitarie": "Lesbare Dokumente enthalten Hinweise auf Gesundheitsausgaben. Prüfen Sie, ob Belege oder Nachweise in der Akte vorhanden sind.",
-        "F24 presenti": "F24-Formulare sind vorhanden; die automatischen Prüfungen können jedoch nicht feststellen, ob der Satz vollständig ist.",
+        "Riferimenti a F24": "Hinweise auf F24-Formulare wurden gefunden. Prüfen, welche Unterlagen tatsächlich vorliegen und welche für dieses Mandat benötigt werden.",
         "Presente documentazione 730/precompilata": "Unterlagen zur Erklärung 730 sind ohne erkannte CU vorhanden; Vollständigkeit der Einkommensunterlagen prüfen.",
         "Presente documentazione Redditi PF": "Redditi-PF-Unterlagen sind ohne erkannte CU vorhanden; Einkommensumfang des Mandanten prüfen.",
         "Il fascicolo è impostato su Italia": "Der Lauf ist auf Italien ausgerichtet, aber es wurde kein klar lesbarer italienischer Steuerkontext gefunden. Dokumentumfang prüfen.",
@@ -754,7 +754,7 @@ MISSING_ITEM_TRANSLATIONS = {
         "Presente documentazione mutuo": "Hay documentación hipotecaria, pero no se identificó un certificado separado de intereses hipotecarios.",
         "Ricevute sanitarie presenti": "Hay justificantes médicos: verifique el titular, la trazabilidad del pago y su inclusión en la declaración precompletada.",
         "Sono presenti riferimenti a spese sanitarie": "Los documentos legibles mencionan gastos médicos. Compruebe si los justificantes o detalles de soporte figuran en el expediente.",
-        "F24 presenti": "Hay formularios F24, pero los controles automáticos no pueden determinar si el conjunto está completo.",
+        "Riferimenti a F24": "Se encontraron referencias a formularios F24. Comprobar qué documentos están realmente disponibles y cuáles se necesitan para este encargo.",
         "Presente documentazione 730/precompilata": "Hay documentación 730/precompletada sin una CU identificada; verifique que la documentación de ingresos esté completa.",
         "Presente documentazione Redditi PF": "Hay documentación Redditi PF sin una CU identificada; verifique el perímetro de rentas del cliente.",
         "Il fascicolo è impostato su Italia": "La ejecución se limita a Italia, pero no se encontró un contexto fiscal italiano claramente legible. Revise el perímetro documental.",
@@ -1232,7 +1232,7 @@ def _client_questions(
             "confirm_other_income": "confermare eventuali redditi esteri, locazioni, attività autonoma o partecipazioni non presenti nel fascicolo;",
             "send_mortgage_interest": "inviare la certificazione degli interessi passivi del mutuo;",
             "confirm_medical": "confermare se le spese sanitarie inviate sono complete;",
-            "confirm_f24": "inviare eventuali F24 mancanti o confermare che quelli inviati sono completi;",
+            "confirm_f24": "indicare quali modelli o quietanze F24 sono disponibili e fornire quelli necessari per questa pratica;",
             "confirm_other_years": "confermare se i file riferiti ad anni diversi sono pertinenti alla pratica in corso;",
             "clarify_unclassified": "chiarire la natura dei documenti non classificati indicati dallo studio;",
             "resend_xml": "reinviare eventuali fatture XML non leggibili o malformate;",
@@ -1244,7 +1244,7 @@ def _client_questions(
             "confirm_other_income": "confirm any foreign income, rental income, self-employment income, or participations not included in the file;",
             "send_mortgage_interest": "send the mortgage-interest certificate;",
             "confirm_medical": "confirm whether the medical-expense documents provided are complete;",
-            "confirm_f24": "send any missing F24 forms, or confirm that those already provided are complete;",
+            "confirm_f24": "identify the available F24 forms or payment receipts and provide those needed for this engagement;",
             "confirm_other_years": "confirm whether files relating to other years are relevant to the current engagement;",
             "clarify_unclassified": "clarify the nature of the unclassified documents identified by the firm;",
             "resend_xml": "resend any unreadable or malformed XML invoices;",
@@ -1256,7 +1256,7 @@ def _client_questions(
             "confirm_other_income": "confirmer les éventuels revenus étrangers, loyers, activités indépendantes ou participations absents du dossier ;",
             "send_mortgage_interest": "envoyer l’attestation des intérêts hypothécaires ;",
             "confirm_medical": "confirmer que les justificatifs de frais médicaux transmis sont complets ;",
-            "confirm_f24": "envoyer les éventuels formulaires F24 manquants ou confirmer que ceux transmis sont complets ;",
+            "confirm_f24": "indiquer les formulaires F24 ou justificatifs de paiement disponibles et fournir ceux nécessaires pour cette mission ;",
             "confirm_other_years": "confirmer si les fichiers d’autres années concernent la mission en cours ;",
             "clarify_unclassified": "préciser la nature des documents non classés signalés par le cabinet ;",
             "resend_xml": "renvoyer les factures XML illisibles ou mal formées ;",
@@ -1268,7 +1268,7 @@ def _client_questions(
             "confirm_other_income": "ausländische Einkünfte, Mieten, selbständige Tätigkeiten oder Beteiligungen bestätigen, die nicht in der Akte enthalten sind;",
             "send_mortgage_interest": "die Hypothekenzinsbescheinigung senden;",
             "confirm_medical": "bestätigen, ob die eingereichten Gesundheitsbelege vollständig sind;",
-            "confirm_f24": "fehlende F24-Formulare senden oder die Vollständigkeit der eingereichten Formulare bestätigen;",
+            "confirm_f24": "angeben, welche F24-Formulare oder Zahlungsbelege verfügbar sind, und die für dieses Mandat benötigten Unterlagen bereitstellen;",
             "confirm_other_years": "bestätigen, ob Dateien anderer Jahre für das aktuelle Mandat relevant sind;",
             "clarify_unclassified": "die Art der von der Kanzlei erkannten nicht klassifizierten Dokumente erläutern;",
             "resend_xml": "unlesbare oder fehlerhafte XML-Rechnungen erneut senden;",
@@ -1280,7 +1280,7 @@ def _client_questions(
             "confirm_other_income": "confirmar las rentas extranjeras, alquileres, actividades por cuenta propia o participaciones que no figuren en el expediente;",
             "send_mortgage_interest": "enviar el certificado de intereses hipotecarios;",
             "confirm_medical": "confirmar si la documentación de gastos médicos aportada está completa;",
-            "confirm_f24": "enviar los formularios F24 pendientes o confirmar que los aportados están completos;",
+            "confirm_f24": "indicar qué formularios F24 o justificantes de pago están disponibles y aportar los necesarios para este encargo;",
             "confirm_other_years": "confirmar si los archivos relativos a otros años son pertinentes para el encargo actual;",
             "clarify_unclassified": "aclarar la naturaleza de los documentos sin clasificar identificados por el despacho;",
             "resend_xml": "volver a enviar las facturas XML ilegibles o mal formadas;",

@@ -31,6 +31,11 @@ directory as a result.
 
 # Previdenza INPS
 
+## Jurisdiction and Geneva
+
+For a CH-GE mandate, read `references/geneva.md` before the steps below. It specifies the Geneva input, source and output adaptations within this existing function. Choose governing jurisdiction independently of output language; the ordinary Italian path remains available for IT.
+
+
 Prepare a source-traceable social-security case file for a commercialista. Inventory local evidence, preserve document locators, validate model-authored facts, research the confirmed framework, verify material claims, run only explicitly approved arithmetic, and package a draft for professional review.
 
 Do not claim autonomous INPS login or a general INPS API. The default bridge registers official exports. The conditional browser bridge is limited to a local read-only snapshot of one tab that the user has already authenticated and selected. The user remains responsible for having access authority and for using software-assisted capture only where permitted; Vera cannot prove that legal position and does not manufacture an approval record. Invoking the capture command with the exact INPS origin is the route choice. Do not submit, navigate the portal on the user's behalf, activate a delegation, inspect browser credentials/state, sign, or decide a legal or contribution classification. Do not infer the meaning of labels such as “3°/4° gruppo” from keywords. Read `../../references/workflow-reference.md` and `../../references/inps-access-channels.md` completely before an actual portal-assisted run. Here, the component root is the directory two levels above this skill file: `plugins/previdenza-inps`.

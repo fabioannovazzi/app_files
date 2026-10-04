@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "formalities-plan.schema.json",
+  "title": "Exact selected cryptographic evidence; no inferred trust or authority",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "format",
+    "document_evidence_id",
+    "signature_evidence_id"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "format": {
+      "enum": [
+        "CMS_DETACHED",
+        "CMS_ATTACHED",
+        "PDF",
+        "RFC3161_RESPONSE",
+        "RFC3161_TOKEN"
+      ]
+    },
+    "document_evidence_id": {
+      "type": "string",
+      "pattern": "E[0-9]{4}"
+    },
+    "signature_evidence_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "E[0-9]{4}"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  }
+}

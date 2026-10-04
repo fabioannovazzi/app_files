@@ -1,17 +1,23 @@
 # Local repeated-session contract
 
+Before any course step, follow `file-access.md`: verify actual local writing,
+resolve missing permissions with the user and keep teaching paused until the
+retry succeeds. This also applies to resumed sessions and the working chat.
+
 Resolve `<clara-root>` as the directory containing this skill's parent `skills`
 and the existing `scripts/local_onboarding.py`. Read the shared profile with that
-helper. Never create a separate profile for a task, project, version or host.
+helper. Pass the setup result's absolute `--state-root` to every teaching/case
+command and handoff, in the same verified course workspace. Never create a
+separate profile for a task, project, version or host.
 Normal repeated sessions use `scripts/local_teaching.py` in the same root.
 
 Use the absolute script path and ordinary local execution. Write spoken text as
 JSON with a file-writing tool; do not interpolate it into shell commands.
-`--state-root` exists only for an explicitly selected recovery or developer test
-root. Normal users omit it. `status` is read-only and returns the current profile,
+`--state-root` binds the already selected shared course folder; it is not a
+request to move files or reset progress. `status` is read-only and returns the current profile,
 chat pair and example summaries. Add `--session <id>` for one full checkpoint.
 
-`begin --input <json>` starts one session after the optional introduction is complete. Reuse or
+`begin --input <json>` starts a requested session without requiring the optional introduction. An unfinished introduction stays unfinished; no profile or understanding is invented. Reuse or
 pause the current active session before starting another. Paused sessions remain
 in the library. Its input is:
 
@@ -21,14 +27,15 @@ in the library. Its input is:
 
 Use `mode: together` for guided work. An optional `example_id` selects a completed
 session ID or `onboarding:<workflow-id>` as the intent for a fresh run. This copies
-no previous result or user approval. The session starts with native voice as the
-preference and the last saved pair. Verify that pair through native host tools
+no previous result or user approval. For first use without a saved pair, include `pair` with the actual distinct
+`teacher_thread_id` and `worker_thread_id` returned by native host tools. The
+session starts with native voice as the preference and that pair, or the last saved pair. Verify that pair through native host tools
 before dispatch; update with `pair` if needed.
 
 Every update uses the latest returned revision:
 
 ```text
-python3 <clara-root>/scripts/local_teaching.py <command> --session <id> --revision <revision> --input <local-json>
+python3 <clara-root>/scripts/local_teaching.py <command> --state-root "<state_root>" --session <id> --revision <revision> --input <local-json>
 ```
 
 | Command | Input |
@@ -46,7 +53,7 @@ python3 <clara-root>/scripts/local_teaching.py <command> --session <id> --revisi
 The native worker validates before every bounded step:
 
 ```text
-python3 <clara-root>/scripts/local_teaching.py worker --session <id> --thread-id <actual-native-id> --workflow <id> --token <current-token>
+python3 <clara-root>/scripts/local_teaching.py worker --state-root "<state_root>" --session <id> --thread-id <actual-native-id> --workflow <id> --token <current-token>
 ```
 
 Use the returned `lesson.directory`, latest shared profile and assignment scope.
@@ -62,7 +69,7 @@ Teacher/worker tokens coordinate local sessions; they are not host authenticatio
 or permission to ignore the specialist or host's approval requirements.
 
 ```text
-python3 <clara-root>/scripts/local_onboarding_case.py --session <id> --thread-id <actual-worker-id> --workflow <workflow> --token <token> --phase demo --source <selected-source>
+python3 <clara-root>/scripts/local_onboarding_case.py --state-root "<state_root>" --session <id> --thread-id <actual-worker-id> --workflow <workflow> --token <token> --phase demo --source <selected-source>
 ```
 
 Use `--phase practice` after recording the demo. The original onboarding adapter

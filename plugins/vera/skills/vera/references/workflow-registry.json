@@ -22,6 +22,16 @@
   },
   "components": [
     {
+      "component_id": "scissione-guidata",
+      "skills": [
+        "modules/scissione-guidata/skills/scissione-guidata/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/scissione-guidata/scripts/check_dependencies.py",
+        "modules/scissione-guidata/scripts/run_scissione.py"
+      ]
+    },
+    {
       "component_id": "open-item-reconciliation",
       "skills": [
         "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md"
@@ -74,6 +84,7 @@
         "modules/new-client/scripts/check_dependencies.py",
         "modules/new-client/scripts/delivery_manifest.py",
         "modules/new-client/scripts/initialize_case.py",
+        "modules/new-client/scripts/jurisdiction_setup.py",
         "modules/new-client/scripts/package_new_client.py",
         "modules/new-client/scripts/promote_client_file_preparation.py"
       ]
@@ -94,6 +105,7 @@
         "modules/adeguati-assetti/skills/adeguati-assetti/SKILL.md"
       ],
       "python_entrypoints": [
+        "modules/adeguati-assetti/scripts/assetti_construction.py",
         "modules/adeguati-assetti/scripts/assetti_review.py",
         "modules/adeguati-assetti/scripts/check_dependencies.py"
       ]
@@ -187,6 +199,17 @@
       ]
     },
     {
+      "component_id": "business-valuation",
+      "skills": [
+        "modules/business-valuation/skills/business-valuation/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/business-valuation/scripts/check_dependencies.py",
+        "modules/business-valuation/scripts/run_valuation.py",
+        "modules/business-valuation/scripts/valuation_benchmarks.py"
+      ]
+    },
+    {
       "component_id": "variance-analysis",
       "skills": [
         "modules/variance-analysis/skills/variance-analysis/SKILL.md"
@@ -210,6 +233,8 @@
         "modules/management-control-pack/scripts/finalize_pack.py",
         "modules/management-control-pack/scripts/inspect_inputs.py",
         "modules/management-control-pack/scripts/prepare_report_site.py",
+        "modules/management-control-pack/scripts/preview_report.py",
+        "modules/management-control-pack/scripts/run_costing.py",
         "modules/management-control-pack/scripts/run_pack.py"
       ]
     },
@@ -288,6 +313,16 @@
       ]
     },
     {
+      "component_id": "composizione-negoziata",
+      "skills": [
+        "modules/composizione-negoziata/skills/composizione-negoziata/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/composizione-negoziata/scripts/check_dependencies.py",
+        "modules/composizione-negoziata/scripts/cnc_case.py"
+      ]
+    },
+    {
       "component_id": "comunicazione-professionale",
       "skills": [
         "modules/comunicazione-professionale/skills/comunicazione-professionale/SKILL.md"
@@ -309,6 +344,8 @@
         "modules/comunicazione-professionale/scripts/record_review.py",
         "modules/comunicazione-professionale/scripts/record_visual_assessment.py",
         "modules/comunicazione-professionale/scripts/render_visuals.py",
+        "modules/comunicazione-professionale/scripts/review_document_format.py",
+        "modules/comunicazione-professionale/scripts/studio_document_format.py",
         "modules/comunicazione-professionale/scripts/validate_run.py"
       ]
     },
@@ -422,6 +459,7 @@
         "modules/bilancio-xbrl-it/scripts/check_dependencies.py",
         "modules/bilancio-xbrl-it/scripts/check_review_invariants.py",
         "modules/bilancio-xbrl-it/scripts/evaluate_intelligence_quality.py",
+        "modules/bilancio-xbrl-it/scripts/jurisdiction_accounts.py",
         "modules/bilancio-xbrl-it/scripts/managed_ocr_runtime.py",
         "modules/bilancio-xbrl-it/scripts/run_background_job.py",
         "modules/bilancio-xbrl-it/scripts/run_golden_cases.py",
@@ -459,6 +497,75 @@
         "modules/studio-archive/scripts/check_dependencies.py",
         "modules/studio-archive/scripts/studio_archive.py"
       ]
+    },
+    {
+      "component_id": "esg-reporting-assurance",
+      "skills": [
+        "modules/esg-reporting-assurance/skills/esg-reporting-assurance/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/esg-reporting-assurance/scripts/check_dependencies.py",
+        "modules/esg-reporting-assurance/scripts/demo_esg.py",
+        "modules/esg-reporting-assurance/scripts/esg_case.py"
+      ]
+    },
+    {
+      "component_id": "trasformazione",
+      "skills": [
+        "modules/trasformazione/skills/trasformazione/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/trasformazione/scripts/check_dependencies.py",
+        "modules/trasformazione/scripts/demo.py",
+        "modules/trasformazione/scripts/transform_case.py"
+      ]
+    },
+    {
+      "component_id": "fusione-guidata",
+      "skills": [
+        "modules/fusione-guidata/skills/fusione-guidata/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/fusione-guidata/scripts/check_dependencies.py",
+        "modules/fusione-guidata/scripts/run_fusione.py"
+      ]
+    },
+    {
+      "component_id": "patent-box-review",
+      "skills": [
+        "modules/patent-box-review/skills/patent-box-review/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/patent-box-review/scripts/check_dependencies.py",
+        "modules/patent-box-review/scripts/patent_box_sources.py",
+        "modules/patent-box-review/scripts/patent_box_workflow.py"
+      ]
+    },
+    {
+      "component_id": "rating-legalita",
+      "skills": [
+        "modules/rating-legalita/skills/rating-legalita/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/rating-legalita/scripts/check_dependencies.py",
+        "modules/rating-legalita/scripts/rating_case.py"
+      ]
+    },
+    {
+      "component_id": "lipe",
+      "skills": [
+        "modules/lipe/skills/lipe/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/lipe/scripts/check_dependencies.py",
+        "modules/lipe/scripts/lipe.py",
+        "modules/lipe/scripts/lipe_approval.py",
+        "modules/lipe/scripts/lipe_catalog.py",
+        "modules/lipe/scripts/lipe_catalog_authorization.py",
+        "modules/lipe/scripts/lipe_export.py",
+        "modules/lipe/scripts/lipe_metrics.py",
+        "modules/lipe/scripts/lipe_receipt.py"
+      ]
     }
   ],
   "vera_wrapper_skills": [
@@ -471,32 +578,42 @@
     "skills/bilancio-oic/SKILL.md",
     "skills/browser-automation/SKILL.md",
     "skills/business-planning/SKILL.md",
+    "skills/business-valuation/SKILL.md",
     "skills/centrale-rischi-review/SKILL.md",
+    "skills/composizione-negoziata/SKILL.md",
     "skills/comunicazione-professionale/SKILL.md",
     "skills/concordato-plan-review/SKILL.md",
     "skills/datev-invoice-start/SKILL.md",
     "skills/dati-fiscali-strutturati/SKILL.md",
     "skills/email-cliente/SKILL.md",
+    "skills/esg-reporting-assurance/SKILL.md",
     "skills/fatture-xml-check/SKILL.md",
     "skills/financial-analysis/SKILL.md",
     "skills/financial-report-builder/SKILL.md",
+    "skills/fusione-guidata/SKILL.md",
     "skills/invoice-xml/SKILL.md",
     "skills/journal-bank-reconciliation/SKILL.md",
     "skills/journal-sampling/SKILL.md",
     "skills/learn-with-vera/SKILL.md",
     "skills/legal-tax-answer-planner/SKILL.md",
     "skills/legal-tax-answer-review/SKILL.md",
+    "skills/lipe/SKILL.md",
     "skills/management-control-pack/SKILL.md",
     "skills/new-client/SKILL.md",
     "skills/open-item-reconciliation/SKILL.md",
+    "skills/patent-box-review/SKILL.md",
     "skills/presenza-digitale-studio/SKILL.md",
     "skills/previdenza-inps/SKILL.md",
     "skills/privacy-surface-review/SKILL.md",
     "skills/purchase-invoice-review/SKILL.md",
     "skills/quesito-legale-fiscale/SKILL.md",
+    "skills/rating-legalita/SKILL.md",
     "skills/registro-imprese-sari/SKILL.md",
     "skills/sales-plan/SKILL.md",
+    "skills/scissione-guidata/SKILL.md",
     "skills/studio-archive/SKILL.md",
+    "skills/studio-document-format/SKILL.md",
+    "skills/trasformazione/SKILL.md",
     "skills/treasury-forecast/SKILL.md",
     "skills/variance-analysis/SKILL.md",
     "skills/vera/SKILL.md",

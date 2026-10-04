@@ -32,6 +32,12 @@ _LABELS = {
         "Coverage has not yet been calculated. Review the statement presentation before completing the accounts.",
     ),
     "statements": ("Prospetti", "Statements"),
+    "totals": ("Il bilancio in sintesi", "Accounts at a glance"),
+    "verified_totals": (
+        "Totali dai prospetti riconciliati",
+        "Totals from reconciled statements",
+    ),
+    "classification": ("Classificazione registrata", "Recorded classification"),
     "first_year": ("Valori del primo esercizio", "First financial year values"),
     "comparatives": ("Valori correnti e comparativi", "Current and comparative values"),
     "section": ("Sezione", "Section"),
@@ -124,6 +130,18 @@ _LABELS = {
 }
 
 _TERMS = {
+    "itcc-ci:TotaleAttivo": ("Totale attivo", "Total assets"),
+    "itcc-ci:TotaleDebiti": ("Totale debiti", "Total debts"),
+    "itcc-ci:TotalePatrimonioNetto": ("Totale patrimonio netto", "Total equity"),
+    "itcc-ci:TotalePassivo": (
+        "Totale passivo e patrimonio netto",
+        "Total liabilities and equity",
+    ),
+    "itcc-ci:PatrimonioNettoCapitale": ("Capitale sociale", "Share capital"),
+    "itcc-ci:PatrimonioNettoUtilePerditaEsercizio": (
+        "Utile (perdita) dell’esercizio nel patrimonio netto",
+        "Profit (loss) for the year in equity",
+    ),
     "ASSETS": ("Attivo", "Assets"),
     "LIABILITIES_EQUITY": ("Passivo e patrimonio netto", "Liabilities and equity"),
     "INCOME_STATEMENT": ("Conto economico", "Income statement"),
@@ -279,7 +297,8 @@ def render_accounts_preview(case: Mapping[str, Any]) -> bytes:
         for reference in fact.get("source_refs", []):
             anchor = anchors.get(str(reference))
             if anchor is None:
-                references.append(_cell(reference))
+                document = documents.get(str(reference), {})
+                references.append(_cell(document.get("file_name") or reference))
                 continue
             document = documents.get(str(anchor.get("document_id")), {})
             location = f'{anchor.get("column", "")}{anchor.get("row", "")}'
@@ -304,9 +323,18 @@ def render_accounts_preview(case: Mapping[str, Any]) -> bytes:
     headers.append(label("currency"))
     rows = []
     for fact in statements.get("facts", []):
+        item = _cell(fact.get("key"))
+        if fact.get("xbrl_concept") in {
+            "itcc-ci:PatrimonioNettoCapitale",
+            "itcc-ci:PatrimonioNettoUtilePerditaEsercizio",
+        }:
+            item = (
+                term(fact["xbrl_concept"])
+                + f'<details><summary>{_cell(label("classification"))}</summary>{item}</details>'
+            )
         row = [
             term(fact.get("statement_section")),
-            _cell(fact.get("key")) + source_details(fact),
+            item + source_details(fact),
             _amount(_statement_value(fact, "current_value"), language),
         ]
         if not first_year:
@@ -340,6 +368,39 @@ def render_accounts_preview(case: Mapping[str, Any]) -> bytes:
             label("no_schedules"),
         ),
     ]
+    presentation = case.get("statutory_presentation") or {}
+    if presentation.get("status") == "COMPLETE":
+        totals = {
+            str(fact.get("xbrl_concept")): fact
+            for fact in presentation.get("output_facts", [])
+        }
+        total_rows = []
+        for concept in (
+            "itcc-ci:TotaleAttivo",
+            "itcc-ci:TotaleDebiti",
+            "itcc-ci:TotalePatrimonioNetto",
+            "itcc-ci:TotalePassivo",
+        ):
+            fact = totals.get(concept)
+            if fact is None:
+                continue
+            row = [term(concept), _amount(fact.get("current_value"), language)]
+            if not first_year:
+                row.append(_amount(fact.get("prior_value"), language))
+            row.append(_cell(case.get("currency")))
+            total_rows.append(row)
+        if total_rows:
+            sections.insert(
+                0,
+                table(
+                    "totals",
+                    label("totals"),
+                    label("verified_totals"),
+                    [label("item"), *headers[2:]],
+                    total_rows,
+                    "",
+                ),
+            )
     questions = [
         row
         for row in case.get("questionnaire", [])
@@ -390,7 +451,7 @@ def render_accounts_preview(case: Mapping[str, Any]) -> bytes:
                 [
                     term(row.get("key")),
                     term(row.get("status")),
-                    _cell(row.get("value")),
+                    _cell(row.get("value")) + source_details(row),
                     _cell(row.get("reason")),
                 ]
                 for row in (case.get("micro_reporting") or {}).get("footer_items", [])
@@ -477,6 +538,7 @@ article{{border-left:3px solid #5e7e9d;padding:.25rem 1rem;margin:1rem 0}}detail
 <main id="main-content" tabindex="-1" data-output-language="{language}"><header><p class="draft">{_cell(label("draft"))}</p><h1>{_cell(label("title"))}</h1>
 <p><strong>{_cell(entity.get("legal_name") or case.get("case_id"))}</strong></p><p>{_cell(label("period"))}: {_cell(period.get("start"))} – {_cell(period.get("end"))}</p>
 <p class="muted">{_cell(label("case"))} {_cell(case.get("case_id"))} · {_cell(label("revision"))} {_cell(case.get("revision_id"))} · {_cell(label("form"))}: {term(case.get("selected_form"))}</p></header>
-<section aria-labelledby="presentation-heading"><h2 id="presentation-heading">{_cell(label("presentation"))}</h2><p><strong>{term(presentation.get("status", "UNREVIEWED"))}</strong></p><p>{_cell(coverage)}</p></section>
-{"".join(sections)}<footer><p>{_cell(label("boundary"))}</p></footer></main></body></html>"""
+{"".join(sections)}
+<details><summary>{_cell(label("presentation"))}</summary><p><strong>{term(presentation.get("status", "UNREVIEWED"))}</strong></p><p>{_cell(coverage)}</p></details>
+<footer><p>{_cell(label("boundary"))}</p></footer></main></body></html>"""
     return document.encode("utf-8")

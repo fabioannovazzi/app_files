@@ -776,6 +776,50 @@ def test_connectorless_cli_runs_end_to_end_inside_studio_archive(
     ):
         assert heading in final_markdown
 
+    # The Codex preview exposes only this native report, preserving its bytes,
+    # with the bundled presentation script allowed and no external activity.
+    import http.client
+    import threading
+    from urllib.parse import urlsplit
+
+    from preview_report import make_server
+
+    report_path = final_dir / "management_control_dashboard_reviewed.html"
+    server, url = make_server(context_path, report_path)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    connection = http.client.HTTPConnection("127.0.0.1", server.server_port, timeout=5)
+    try:
+        route = urlsplit(url).path
+        connection.request("GET", route)
+        response = connection.getresponse()
+        assert response.status == 200
+        assert response.read() == report_path.read_bytes()
+        policy = response.getheader("Content-Security-Policy")
+        assert "default-src 'none'" in policy
+        assert "script-src 'sha256-" in policy
+        assert "'unsafe-eval'" not in policy
+        assert response.getheader("Referrer-Policy") == "no-referrer"
+        for unknown in ("/", "/commentary_receipt.json", route + "/../context.json"):
+            connection.request("GET", unknown)
+            response = connection.getresponse()
+            assert response.status == 404
+            response.read()
+        connection.request("POST", route, b"replace report")
+        response = connection.getresponse()
+        assert response.status == 501
+        response.read()
+        report_path.write_text(final_html + "changed", encoding="utf-8")
+        connection.request("GET", route)
+        response = connection.getresponse()
+        assert response.status == 409
+        response.read()
+    finally:
+        connection.close()
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=5)
+
 
 def test_public_page_states_connector_and_model_data_boundaries() -> None:
     page = (
@@ -786,7 +830,7 @@ def test_public_page_states_connector_and_model_data_boundaries() -> None:
     for snippet in (
         "Pacchetto controllo di gestione | Vera",
         "Management control pack | Vera",
-        "Prepare recurring management reports from accounting exports.",
+        "Prepare management reports and cost and margin analyses.",
         "Non serve un connettore al gestionale",
         "No accounting-system connector is required",
         "Quali dati arrivano al modello",

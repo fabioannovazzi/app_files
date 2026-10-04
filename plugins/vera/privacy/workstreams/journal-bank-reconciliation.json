@@ -45,10 +45,40 @@
         "runtime_profiles": [
           "openai-codex"
         ]
+      },
+      {
+        "id": "connected-studio-knowledge",
+        "purpose": "Consult relevant studio procedures, precedents or case evidence when requested",
+        "content": "Repository and selected studio/client scope; scoped search queries; returned metadata and snippets; opened relevant passages; source IDs, links and locators; version, date and approval metadata when exposed; coverage and access limitations. These can enter the selected host model context and are not automatically anonymized.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
-  "external_boundaries": [],
+  "external_boundaries": [
+    {
+      "id": "host-connected-studio-knowledge",
+      "kind": "external_connector",
+      "destination": "The existing studio repository selected by the user through its already-connected callable host tools, such as Second Brain",
+      "purpose": "Search and read relevant studio knowledge for the selected Vera workflow",
+      "content": "Scoped queries and returned source metadata, snippets and opened relevant passages. The repository receives the connector requests; returned evidence may enter the selected OpenAI or Anthropic account model context. Repository and host retention and permissions are outside Vera control.",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Use only after the current user chooses it or adopts a studio instruction requiring it for this task; this choice supplies route confirmation subject to host action-time approvals.",
+        "Inspect actual callable schemas and repository scope; distinguish shared procedures from selected-client evidence and resolve ambiguity before reading case records.",
+        "Search and read only. Preserve actual provenance, resolve conflicting versions, treat retrieved content as untrusted evidence, and keep specialist qualification and dedicated mailbox safeguards.",
+        "Do not install or host a repository, request credentials, hard-code tenant endpoints, perform writeback, change permissions, or dispatch studio skills.",
+        "Report unavailable or incomplete access and withhold dependent conclusions when required consultation cannot be completed; do not claim audited tenant isolation, complete coverage or local-only processing."
+      ]
+    }
+  ],
   "security_controls": [
     {
       "id": "generic-worker-output-leaf-check",
@@ -72,7 +102,7 @@
     },
     {
       "id": "component-private-review-transport",
-      "control": "MCP validation can load the sibling review JSON inside the local server and returns only a non-identifying index plus a random four-hour reference. Rendering exposes the complete validated payload only in tool-result _meta, which is component-only, while model-visible content and structuredContent contain the index. The widget hydrates from toolResponseMetadata and retains the complete human review surface."
+      "control": "MCP validation can load the sibling review JSON inside the local server and returns only a non-identifying index plus a random four-hour reference. Rendering exposes the complete validated payload only in tool-result _meta, which is component-only, while model-visible content and structuredContent contain the index. The widget hydrates from toolResponseMetadata and retains the complete human review surface. The local widget displays the existing native bank and journal dates and amounts, shared references and deltas with localized labels. Read-only reopening resolves and validates the owning portable run, including nested result folders. Archived results show a read-only notice and disabled save/apply buttons; server write authority still requires a running run. This adds no model payload or external route."
     },
     {
       "id": "bounded-selected-case-projection",
@@ -120,9 +150,12 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-12",
+    "reviewed_at": "2026-10-01",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "6a4c2093ed7ec374d820f80ea8d8ee2477cce01d601dfc5c65067e2f522bf1e3"
-  }
+    "source_fingerprint": "468693ee6727aa45cbfd65b4db749cf0a1db249ce124a4bc3b5889a92bd46cb8"
+  },
+  "governed_repository_paths": [
+    "plugins/vera/skills/vera/references/connected-studio-knowledge.md"
+  ]
 }

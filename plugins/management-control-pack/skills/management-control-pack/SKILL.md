@@ -1,6 +1,6 @@
 ---
 name: management-control-pack
-description: Use when Vera must turn reviewed accounting exports into one connectorless management-control pack covering the supported P&L, budget, working-capital, cash, concentration, and profitability sections.
+description: Use for a recurring management-control pack from reviewed exports, or focused costing and decision analysis by job, product or customer with reviewed cost classifications and allocation drivers.
 ---
 
 ## Output location
@@ -10,6 +10,21 @@ Codex, use only the exact Studio Archive run output for workflow ID
 `management-control-pack`.
 
 # Management Control Pack
+
+## Choose the path from the professional question
+
+For costs and margins by job, product, customer or another single reviewed
+dimension, read `../../references/costing.md` from this skill directory and use
+the focused `run_costing.py` path in the same `management-control-pack` run.
+It supports selected Direct, Direct Evoluto, Full and ABC methods and reviewed
+incremental-order, make-or-buy and discontinuation scenarios. It does not
+require a general ledger or unrelated budget, bank and aging exports. Establish
+the decision, data gaps, classifications and drivers with model-led reasoning
+and professional review; the code owns exact arithmetic and reconciliation.
+Do not route a costing-only request through the full-pack ledger requirement.
+
+The following instructions describe the recurring reporting-pack path. Its
+existing source requirements and calculations remain unchanged.
 
 Use this workflow when the requested outcome is one recurring management pack,
 not one isolated variance, reconciliation, due-diligence schedule, or generic
@@ -200,6 +215,20 @@ source completeness, business causation, or approval.
 - after interpretation, `management_control_report.md`,
   `management_control_dashboard_reviewed.html`, and
   `commentary_receipt.json`.
+
+Open the final interactive HTML in Codex through the bound local preview:
+
+```bash
+python scripts/preview_report.py --client-engagement <context.json> --report <run-output>/pack/final/management_control_dashboard_reviewed.html
+```
+
+Keep that process running and open its exact printed HTTP URL with a browser
+panel, not a file/source editor. The preview serves only the receipt-verified
+report on loopback, permits only the bundled month-switching script, and makes
+no external requests. It also reopens completed archive runs read-only. Verify
+the cumulative and monthly controls in the actual browser. Preserve the HTML
+and workbook links as downloadable artifacts; the passive teaching reader is
+useful for reading them but does not run interactive controls.
 
 Visually inspect the final HTML. Open the generated XLSX in Excel when the
 current runtime can operate it and check sheet names, number formats, frozen

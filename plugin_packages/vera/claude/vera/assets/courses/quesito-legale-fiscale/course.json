@@ -69,15 +69,15 @@
     },
     {
       "path": "modules/deep-research-validator/scripts/package_validation.py",
-      "sha256": "d305e856cc9bd889e5fee69726a4b08ff062a73b6f197c3525dfc12601bae575"
+      "sha256": "cf99f33ccf373a8d6816cb72304912bc1995f576e708155746e0c89649d58d37"
     },
     {
       "path": "modules/deep-research-validator/scripts/review_session.py",
-      "sha256": "beb7e88a185a41cd169742fadc5970db66468d787c464a3f0d809f4c8c676a0d"
+      "sha256": "d37dc93f9ca7d1ff2944835f3c76a1b8eded864b7206955b3f3b785210bbfa5c"
     },
     {
       "path": "modules/deep-research-validator/skills/legal-tax-answer-review/SKILL.md",
-      "sha256": "d7666205cc67deacd734baa1db45da896edf89c87525cdcfeeadd56a59d6c6ca"
+      "sha256": "d2144ced97a7a2838858c84e5feb8ed6a0a96712b8ea986c862f7dd49ae0a2fe"
     },
     {
       "path": "modules/deep-research-validator/skills/legal-tax-answer-review/references/adversarial-scope.md",
@@ -101,7 +101,7 @@
     },
     {
       "path": "modules/deep-research-validator/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
     },
     {
       "path": "modules/deep-research-validator/vendor/modules/vera_assurance/decisions.py",
@@ -110,6 +110,10 @@
     {
       "path": "modules/deep-research-validator/vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/deep-research-validator/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "modules/deep-research-validator/vendor/modules/vera_assurance/money.py",
@@ -129,7 +133,11 @@
     },
     {
       "path": "skills/quesito-legale-fiscale/SKILL.md",
-      "sha256": "d1612999e363b8392ad87179ad79b3ef47b70cb8c4a0fb9bce6cd90dc7f1ad54"
+      "sha256": "e824bbea84573f315c36bc07c47ad4774d8bdec5dc0f17a51ff09fb10db6103c"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -145,7 +153,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "be0c3e3b89666231e22b7e951930abbb594fdc28e15974acbee3a84f94f0d487"
+      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -154,6 +162,10 @@
     {
       "path": "vendor/modules/vera_assurance/envelope.py",
       "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
     },
     {
       "path": "vendor/modules/vera_assurance/money.py",
@@ -211,7 +223,7 @@
     },
     {
       "path": "files/input/guide-it.md",
-      "sha256": "a68c5a5b24e694d5546b58a493e521ed0957f92cc1a82f8507a62d0da3100a63",
+      "sha256": "4980f464edea93a96a8497206e614ac2d213cfebf2d9d7912a757511f976872c",
       "languages": [
         "it"
       ],
@@ -219,7 +231,7 @@
     },
     {
       "path": "files/input/source-provenance-it.json",
-      "sha256": "4991c54a144a4407a00665c5e8539980084ba2e8eac54b9a48c56b24fc930212",
+      "sha256": "eb85bc6b20216283d72eb52328bbcbc6fb67d7c1d80434eea3a1eff231d1a184",
       "languages": [
         "it"
       ],
@@ -243,7 +255,7 @@
     },
     {
       "path": "files/practice/guide-it.md",
-      "sha256": "a68c5a5b24e694d5546b58a493e521ed0957f92cc1a82f8507a62d0da3100a63",
+      "sha256": "4980f464edea93a96a8497206e614ac2d213cfebf2d9d7912a757511f976872c",
       "languages": [
         "it"
       ],
@@ -251,7 +263,7 @@
     },
     {
       "path": "files/practice/source-provenance-it.json",
-      "sha256": "4991c54a144a4407a00665c5e8539980084ba2e8eac54b9a48c56b24fc930212",
+      "sha256": "eb85bc6b20216283d72eb52328bbcbc6fb67d7c1d80434eea3a1eff231d1a184",
       "languages": [
         "it"
       ],
@@ -706,5 +718,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "64500bf6ecdd77a47c45d277d4fc0798473c4310af5de08d1089d439d1b417ce"
+  "canonical_course_sha256": "d264e7ae84b5e5b577cd646eb4fd4f5707ffcf9d7c02a6159dcbae0dd0f0f5f7"
 }

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Localize Vera"
+  short_description: "Adapt existing Vera functions to new jurisdictions"
+  default_prompt: "Use $localize-vera to assess and adapt the existing Vera functions for the Canton of Geneva, preserving a common core and excluding services Vera does not offer."

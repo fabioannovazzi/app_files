@@ -22,7 +22,10 @@
     "repository/plugins/_shared/vendor/modules/courseware",
     "repository/scripts/course_materials",
     "repository/static/shared/courses",
-    "repository/scripts/cowork_teaching"
+    "repository/scripts/cowork_teaching",
+    ".mcp.json",
+    "scripts/course_chat_bridge.py",
+    "scripts/course_chat_mcp.cjs"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -30,7 +33,7 @@
       {
         "id": "native-teaching-context",
         "purpose": "Understand professional interests and explain actual selected workflow results",
-        "content": "Native spoken or written conversation; explicitly loaded local professional profile and checkpoints; selected fictional or user-authorized inputs, current specialist instructions and verified results. No automatic anonymisation. The native OpenAI account processes this content; these helpers do not save audio or raw transcripts. The selected prepared synthetic course, worked specimen and attached starter output may also be read to support the lesson. New kits supply demonstration and practice inputs and a first-use outline; retained lessons keep their published specimens. Local host-attested execution records include input, run-record and output paths and hashes. Those records stay in the local lesson; the public catalogue contains only prepared fictional materials and relative provenance."
+        "content": "Native spoken or written conversation; explicitly loaded local professional profile and checkpoints; selected fictional or user-authorized inputs, current specialist instructions and verified results. No automatic anonymisation. The native OpenAI account processes this content; these helpers do not save audio or raw transcripts. The selected prepared synthetic course, worked specimen and attached starter output may also be read to support the lesson. New kits supply demonstration and practice inputs and a first-use outline; retained lessons keep their published specimens. Local host-attested execution records include input, run-record and output paths and hashes. Those records stay in the local lesson; the public catalogue contains only prepared fictional materials and relative provenance. Native chat invitations include the exact course directory, product, workflow and teacher chat identifiers plus an expiring opaque invitation token. The claimed worker receives the saved profile, lesson and bound specialist assignment through the same selected native model account. The button attaches no source files and adds no Mparanza recipient."
       }
     ]
   },
@@ -76,17 +79,37 @@
   "security_controls": [
     {
       "id": "local-teaching-state",
-      "control": "The stdlib helpers have no network client; profile, progress, examples and feedback remain local. Exact product identity prevents cross-product profile loading. Current request outranks stored preferences. Hosted interviews, Mparanza feedback and receipt stamping are excluded for tutorials; CR polling is suppressed while pending, inaccessible or active. The independent public-version GET sends only ordinary connection metadata, never tutorial/profile/lesson content, the installed version or local paths, and does not depend on onboarding completion. Lesson planning and dispatch require an own-catalog workflow and a skill inside the same installed Clara root; worker responses bind the product and exact skill path. The native teacher and worker follow only that product's lesson contract."
+      "control": "The stdlib helpers have no network client; profile, progress, examples and feedback remain local. Exact product identity prevents cross-product profile loading. Current request outranks stored preferences. Hosted interviews, Mparanza feedback and receipt stamping are excluded for tutorials; CR polling is suppressed while pending, inaccessible or active. The independent public-version GET sends only ordinary connection metadata, never tutorial/profile/lesson content, the installed version or local paths, and does not depend on onboarding completion. Lesson planning and dispatch require an own-catalog workflow and a skill inside the same installed Clara root; worker responses bind the product and exact skill path. The native teacher and worker follow only that product's lesson contract. A directly requested course can create local enrollment without completing the optional introduction. It validates the own-product workflow and distinct native chat pair first; the profile stays null unless confirmed, and existing interview and lesson records are preserved."
     },
     {
       "id": "prepared-course-integrity",
-      "control": "The local stdlib course loader checks own-product identity, authored language, current source fingerprints and attachment hashes before rendering escaped HTML in a fresh ordinary directory. New and retained lessons both enumerate prepared artifact hashes, so those files and renamed copies cannot serve as native execution outputs. Progress requires distinct input, run-record and output files bound to the selected workflow, phase and working-thread ID. These checks do not authenticate the host or judge understanding. The renderer has no network or model client and performs no profile or completion write. The public catalogue removes local execution requests and local-path provenance. Brand Fit, Hosted Interview and Research Video remain unavailable in local teaching. Browser preview is a separate optional local server: it binds only 127.0.0.1 on a free port, serves the rendered kit and relative assets, rejects resolved paths outside the kit and directory listings, and runs only for the lesson preview. It does not upload files, save access logs, change profiles or record completion. Browser/model inspection remains ordinary native model processing; loopback serving is not authentication against other local processes."
+      "control": "The local course loader checks own-product identity, authored language, current source fingerprints and attachment hashes before rendering escaped HTML in a fresh ordinary directory. New and retained lessons both enumerate prepared artifact hashes, so those files and renamed copies cannot serve as native execution outputs. Progress requires distinct input, run-record and output files bound to the selected workflow, phase and working-thread ID. These checks do not authenticate the host or judge understanding. The renderer has no network or model client and performs no profile or completion write. The public catalogue removes local execution requests and local-path provenance. Brand Fit, Hosted Interview and Research Video remain unavailable in local teaching. Browser preview is a separate optional local server: it binds only 127.0.0.1 on a free port, serves the rendered kit and relative assets, rejects resolved paths outside the kit and directory listings, and runs only for the lesson preview. It does not upload files, save access logs, change profiles or record completion. Browser/model inspection remains ordinary native model processing; loopback serving is not authentication against other local processes. XML, Markdown and text inputs have escaped reading views while execution keeps the original bytes. The optional results view checks the live execution record and input/output hashes, then renders selected CSV/text outputs in a fresh directory outside the sealed run. It retains source identities, performs no workflow execution or completion write, and uses only the same loopback preview and native model boundaries. PDF reading views render original pages locally with the already declared PyMuPDF dependency. Page images and an original-file download remain inside the lesson; the original PDF bytes remain the execution inputs. Rendering adds no external route or model call."
+    },
+    {
+      "id": "recorded-input-citation-reading",
+      "control": "Result Markdown citations become local reading-page links only for exact hash-verified inputs recorded in that execution, or section anchors for exact recorded outputs. Relative paths resolve against the actual output file. Original bytes are preserved and downloads are hash-checked. Unrecorded paths, network URLs and active schemes remain inert text. Reading pages escape file content; only the existing passive formatting and disclosure allow-list is rendered. No additional directory discovery, external service or model call is introduced. Case-director navigation lists only the already verified rendered outputs; previous-version labels are presentation text for native versioned workpaper filenames, not a semantic validity or approval claim."
+    },
+    {
+      "id": "verified-local-deck-preview",
+      "control": "For Clara deck-correction and html-deck lessons, the result reader requires a native successful stage validation bound to the exact output hash, and compares executable scripts to Clara’s current deck engine and fixed-format runtime. Additional scripts, event attributes, embedded frames, forms, remote resources and non-fragment links are rejected. Hash-verified original stage-deck inputs may be reopened with the same runtime checks. Loopback presentation copies retain exact bytes and run in an opaque-origin sandbox with only their exact script hashes permitted; default resource loading, forms, popups and same-origin privileges remain unavailable. Other HTML outputs retain the passive reader. ZIP packages are downloadable evidence only and are not executed or extracted by the results page. No additional recipient or network service is introduced."
+    },
+    {
+      "id": "verified-result-reading",
+      "control": "Hash-verified Word and workbook files have escaped local text/table reading views; original downloads retain exact bytes. Workbook readers disclose unavailable formula values without calculating invented values. Validated website results retain only the native hash-bound inventory of local HTML, CSS, image and font files and are served under a passive CSP sandbox that blocks scripts, forms, popups and external loads. The teacher may read these selected views in the native model context; no new hosted recipient, model call or automatic approval is introduced."
+    },
+    {
+      "id": "course-file-access",
+      "control": "The stdlib setup helper saves and reloads the actual profile without advancing a lesson or changing its revision. Filesystem probes test create, read, write, update, replacement and deletion in the exact shared course directory and planned output directories. Mutations and worker dispatch repeat applicable checks; failures retain the exact local path, operation and native error for the selected host model. Helpers do not grant host access, change OS permissions, relocate profiles or introduce network transport. Native instructions connect the same course workspace in each chat and stop teaching until normal sandbox writes succeed."
+    },
+    {
+      "id": "native-course-chat-invitation",
+      "control": "Preparation and claim repeat filesystem access checks and validate own-product workflow, current revision, exact teacher identity and a distinct worker. An expiring single-claim invitation binds the worker to the selected lesson or repeatable course without recording completion; duplicate claims from another chat and stale revisions are rejected. Existing workers are resumed through native host inspection instead of silently replaced. Invitation tokens coordinate local state and do not authenticate the host. The UI checks parent message source and advertised native capability and prevents repeated successful dispatch; helpers introduce no network transport."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-15",
+    "reviewed_at": "2026-10-04",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "29def25eebdab467bbabf49472251cf43c66db926adbf7bc035291649580226d"
+    "source_fingerprint": "bdab1d8b270b9b6151c37b562a30576cd834c904cf4ad9a2fdea9173a47a31d6"
   }
 }

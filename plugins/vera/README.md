@@ -1,5 +1,19 @@
 # Vera
 
+Optional anonymization connectors have a
+[separate download](https://mparanza.com/static/shared/vera-integrazioni/downloads/anonymization-connectors.zip)
+with setup for Codex, Claude Cowork and Google Antigravity desktop. See
+`skills/vera/references/optional-integrations.md`. Choose an engine during setup;
+installing Vera does not install a model or activate a connector. Second Brain
+uses its provider's existing connection and has no installer supplied by Vera.
+
+Vera can consult an existing studio knowledge repository, such as Second Brain,
+through search/read tools already connected in the user's host, when requested
+by the user or an adopted studio instruction. See
+`skills/vera/references/connected-studio-knowledge.md` for scope, source citation,
+access limitations and model-context boundaries. Vera does not supply or require
+a repository or Microsoft 365. Studio skills remain independently invoked.
+
 [Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/vera) · [GNU AGPLv3 License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
 Vera is a bounded AI colleague and reviewer for professional accounting
@@ -7,6 +21,20 @@ studios. She prepares, checks, and documents work while keeping evidence,
 limitations, and professional-review steps visible. Vera does not replace the
 commercialista: decisions, approval, and responsibility remain with the
 qualified professional.
+
+## LIPE
+
+`lipe` reconciles VAT-register evidence and produces VP review drafts. It is a
+2024–2026 ordinary-VAT pilot with explicit source, mapping and balance checks.
+Real XML export is blocked pending professional, authentication and importer
+acceptance. See `modules/lipe/skills/lipe/SKILL.md` in the installed package.
+
+## Business valuation
+
+`business-valuation` prepares client-bound PMI valuation workpapers with selected
+methods, traceable calculations, business-plan reuse, professional review and
+HTML, DOCX, PDF, XLSX, JSON and CSV outputs. It does not provide a signed opinion
+or certify PIV conformity. See the module skill for supported conventions.
 
 ## One source, two packages
 
@@ -98,6 +126,12 @@ explicit approval and is then retained in the same environment. This dependency
 environment does not isolate modules or client matters from one another.
 
 The shared specialist workflows cover:
+
+- ESG case evidence, version-specific decisions and partial Markdown/JSON drafts
+  through `esg-reporting-assurance`; complete reporting and assurance remain unimplemented;
+- `fusione-guidata` P0 merger case preparation with versioned evidence, explicit
+  facts, professional confirmation records and change impacts; legal branches and
+  merger calculations remain unsupported;
 
 - new-client file preparation, evidence gaps, identity, engagement, privacy,
   AML, document planning, and monitoring;
@@ -200,6 +234,11 @@ run it through the managed launcher to enforce this supported-runtime contract,
 including for the base portable ledger in Cowork.
 
 ## Adeguati assetti
+
+`vera:composizione-negoziata` guides an Italian CNC case with separate advisor
+and expert instructions, existing Vera analyses, evidence-linked drafts and
+case revisions. Changed dependencies trigger review; recorded confirmations
+are not authenticated signatures. No filing or automatic monitoring is included.
 
 `vera:adeguati-assetti` evaluates organizational, administrative and accounting
 arrangements from company evidence. It distinguishes documented procedures,

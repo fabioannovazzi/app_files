@@ -1,0 +1,4 @@
+interface:
+  display_name: "Fusione guidata · P1"
+  short_description: "Reviewed domestic OIC incorporation workpapers."
+  default_prompt: "Prepare reviewed OIC incorporation workpapers with verified evidence, exact allocations, accounting bridges and event calendars."

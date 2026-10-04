@@ -1,0 +1,157 @@
+{
+  "schema_version": 3,
+  "workstream": "patent-box-review",
+  "display_name": "Patent Box",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "patent_box",
+    "schemas",
+    "config"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "selected-patent-box-evidence",
+        "purpose": "Extract case facts and propose detailed controls and draft A/B text",
+        "content": "The host model may read the selected client identity and period; software, patent, design and rights evidence; technical descriptions, contracts and supplier chains; ledger cells and literal PDF page passages; personnel/payroll rows, activity and project allocations; reviewed exchange-rate evidence, credit notes, exclusions and suspected duplicates; prior options and incentives; public source text and proposed control rationales with citations. Relevant selected documents can be read in full. Local snapshots and CSV/XLSX/PDF parsing do not anonymize them or prevent host-model processing. Runtime profiles describe account boundaries; current development checks do not establish installed Codex or Cowork acceptance.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "proposal-review-and-draft-results",
+        "purpose": "Review exact proposals, identify missing documents and explain draft calculations",
+        "content": "Readable proposals and Word/PDF drafts expose normalized costs and original component rows, fiscal bases, mappings, rate provenance, control totals, duplicate decisions, located facts, rights/activity/supplier records, missing-document requests, source-specific incentive formulas, annual return mappings, adversarial questions, control statuses, evidence/source citations, rules and A/B narratives. Preparation may contain real case data. The selected host model may also inspect certificate subjects and issuers, professional names/references, firm mandates and powers-evidence references, signed review statements and cryptographic verification results. Local review is an assertion; the separate signed-review path verifies certificates and a firm-issued scope mandate. Real rules remain unapproved by default. Technical tests do not establish professional or installed-runtime acceptance. Reopening adds the stated reason, references and hashes of selected prior approvals; a successor run reads only explicitly selected archive upstream artifacts. A configured host monitor may read its owner, selected local paths, public plan, private opaque case index, prior approval hashes and local notice records. Its persistent native task prompt contains the chosen paths and public scope; current host/account storage and model-context boundaries apply.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "connected-studio-knowledge",
+        "purpose": "Consult relevant studio procedures, precedents or case evidence when requested",
+        "content": "Repository and selected studio/client scope; scoped search queries; returned metadata and snippets; opened relevant passages; source IDs, links and locators; version, date and approval metadata when exposed; coverage and access limitations. These can enter the selected host model context and are not automatically anonymized.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "official-source-research",
+      "kind": "public_research",
+      "destination": "Official tax and legal sources selected by the host model",
+      "purpose": "Acquire current and period-specific source material for professional review",
+      "content": "Generic act identifiers, Patent Box topics and period terms; the workflow instructs the host not to send client facts or identifiers in queries",
+      "optional": true,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Host public research uses generic legal terms and act identifiers without client facts. The source adapter makes read-only HTTPS requests only within the model-reviewed public plan and rechecks each redirect and DNS address; credentials, cookies and proxy settings are not sent. It retains original bytes and extracted-text hashes, records failed or partial coverage and leaves applicability for professional review. Signed reviews require a complete declared scan whose selected original bytes match the proposed rule sources and are at most 24 hours old. Private case indexes and impact queues remain local. No scheduler or external notification is enabled; bundled real rules remain DRAFT."
+      ]
+    },
+    {
+      "id": "professional-selected-signing-service",
+      "kind": "send_or_publish",
+      "destination": "A signing service selected and operated by the professional, only if they choose an external service",
+      "purpose": "Obtain an actual signature on the exact review request or firm mandate",
+      "content": "The exported review request contains opaque client, engagement and run IDs, fiscal period, review statement and hashes binding evidence, proposal, rules and outputs. A firm mandate contains the professional name/reference, certificate fingerprint, authority scope and powers-evidence references. No private signing key is read or requested by the workflow. A reopening request also includes its reason and hash references to the preserved prior version; the host must review that text before the professional chooses an external signing route.",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "The implemented adapter has no upload, signing or timestamp network action. The professional chooses and operates their signing route separately; ordinary preparation does not initiate it. Local verification imports only the selected returned signatures and mandate. The host must not sign for the professional or invent confirmation."
+      ]
+    },
+    {
+      "id": "host-connected-studio-knowledge",
+      "kind": "external_connector",
+      "destination": "The existing studio repository selected by the user through its already-connected callable host tools, such as Second Brain",
+      "purpose": "Search and read relevant studio knowledge for the selected Vera workflow",
+      "content": "Scoped queries and returned source metadata, snippets and opened relevant passages. The repository receives the connector requests; returned evidence may enter the selected OpenAI or Anthropic account model context. Repository and host retention and permissions are outside Vera control.",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Use only after the current user chooses it or adopts a studio instruction requiring it for this task; this choice supplies route confirmation subject to host action-time approvals.",
+        "Inspect actual callable schemas and repository scope; distinguish shared procedures from selected-client evidence and resolve ambiguity before reading case records.",
+        "Search and read only. Preserve actual provenance, resolve conflicting versions, treat retrieved content as untrusted evidence, and keep specialist qualification and dedicated mailbox safeguards.",
+        "Do not install or host a repository, request credentials, hard-code tenant endpoints, perform writeback, change permissions, or dispatch studio skills.",
+        "Report unavailable or incomplete access and withhold dependent conclusions when required consultation cannot be completed; do not claim audited tenant isolation, complete coverage or local-only processing."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "exact-running-context",
+      "control": "All workflow actions load the actual Studio Archive v2 context for patent-box-review, require a running run, constrain writes to its output directory and snapshot only its exact selected receipts."
+    },
+    {
+      "id": "evidence-and-review-freshness",
+      "control": "Selected source and snapshot hashes are rechecked before every action; proposals, explicit decisions and results are created exclusively at distinct digest-bound paths. Missing or stale decisions cannot calculate. Hashes do not authenticate a professional reviewer."
+    },
+    {
+      "id": "closed-controls-and-arithmetic",
+      "control": "Closed schemas, exact evidence/source references, detailed child-control aggregation, duplicate ledger-row detection, allocation limits and Decimal arithmetic reject malformed or unsupported data rather than inferring an outcome."
+    },
+    {
+      "id": "real-calculation-gate",
+      "control": "Real calculation requires a current dated archive run, reviewed rules, exact source/evidence bindings and a certificate-authenticated decision backed by a separately configured firm policy. The signed mandate must cover the exact client, engagement, fiscal period and control/rules review actions; current revocations, certificate chains, full-chain CRLs and modern message-digest policy are rechecked. Synthetic authorization cannot cover real cases. No real policy is bundled."
+    },
+    {
+      "id": "spreadsheet-cell-escaping",
+      "control": "Generated CSV cells that begin with spreadsheet formula prefixes are escaped before export."
+    },
+    {
+      "id": "replay-normalized-ledgers",
+      "control": "Selected CSV/XLSX/PDF table proposals are replayed from the bound original bytes; normalization checks closed row populations, reviewed source totals and Decimal calculations. Unresolved duplicate groups stay attached to affected costs and cannot receive a PASS cost control. Source meaning, fiscal eligibility and completeness of selected ranges require professional review."
+    },
+    {
+      "id": "local-cryptographic-verification",
+      "control": "The configured OpenSSL 3 executable receives fixed argument arrays without a shell, private temporary files and a restricted environment. Files and selected evidence are bounded; no certificate/CRL/OCSP/AIA network retrieval occurs. CMS content and PDF byte ranges are checked against exact bytes; an earlier PDF signature cannot establish acceptance of unsigned later content."
+    },
+    {
+      "id": "signed-version-preservation",
+      "control": "The request binds client, engagement, period, run, evidence, proposal, rules and source preflight. A separate final request also binds results, artifact hashes and the earlier authenticated review. Requests, external signature bytes, mandate proofs and receipts use exclusive creation. Changes to sources, output files, mandate or host authority configuration prevent reuse; qualified status and independent statutory retention are not inferred."
+    },
+    {
+      "id": "authenticated-reopening",
+      "control": "Changed approved work requires a fresh REOPEN_CASE signature and current scope mandate before a new control review. Closed-run handoffs use only selected, sealed Studio Archive upstream artifacts in the same engagement. Prior byte/signature integrity is checked without treating a local timestamp or old mandate as current authority. Earlier artifacts are preserved; historical trust and statutory retention remain NOT_TESTED."
+    },
+    {
+      "id": "default-off-monitor-service",
+      "control": "The local coordinator starts disabled. Native scheduling requires an explicit user request and the actual host tool receipt; the local reference is labelled as an operator attestation. Every scan outcome persists, including unchanged and failed work; partial scans cannot replace complete baselines. Private indexes and queues are rechecked outside public storage. Notices are local requests for host delivery, not proof of a delivered notification. No external message is sent by the adapter and no case or active rule is automatically changed."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-10-01",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "2d3c2421142192806c3d065ba76ed5f11afbe009832845e83730223408cbbc9f"
+  },
+  "governed_repository_paths": [
+    "plugins/vera/skills/vera/references/connected-studio-knowledge.md"
+  ]
+}

@@ -3424,6 +3424,39 @@ def test_hosted_voice_launcher_sends_context_by_authenticated_body(
     assert "ClientCo" not in launch_url
 
 
+def test_hosted_voice_launcher_keeps_arabic_source_separate_from_english_case(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    _, case_dir = init_case(tmp_path, output_language="en")
+    launcher = load_hosted_voice_launcher()
+    captured: dict[str, Any] = {}
+
+    fake_client = types.ModuleType("upload_hosted_audio")
+    fake_client._new_opener = lambda: object()
+    fake_client.authenticate_with_magic_link = lambda *_args, **_kwargs: ""
+    fake_client.bind_session_cookie = lambda *_args, **_kwargs: None
+
+    def fake_request_context_launch_token(_opener, **kwargs):
+        captured.update(kwargs)
+        return "opaque-token"
+
+    fake_client.request_context_launch_token = fake_request_context_launch_token
+    monkeypatch.setitem(sys.modules, "upload_hosted_audio", fake_client)
+
+    launch_url, context_attached = launcher.prepare_launch_url(
+        case_dir,
+        cookie_header="auth_session=test-cookie",
+        language="ar",
+    )
+
+    manifest = json.loads((case_dir / "case_manifest.json").read_text(encoding="utf-8"))
+    assert context_attached is True
+    assert launch_url.endswith("?session=opaque-token")
+    assert captured["language"] == "ar"
+    assert manifest["output_language"] == "en"
+
+
 def test_hosted_voice_launcher_builds_clean_chrome_args(tmp_path: Path) -> None:
     launcher = load_hosted_voice_launcher()
     profile_dir = tmp_path / "chrome-profile"
@@ -4008,6 +4041,46 @@ def test_spanish_hosted_voice_import_localizes_review_artifacts(
     assert "Speaker Attribution Task" not in attribution_task
 
 
+def test_arabic_hosted_voice_import_preserves_source_with_english_case_output(
+    tmp_path: Path,
+) -> None:
+    _, case_dir = init_case(tmp_path, output_language="en")
+    importer = load_hosted_voice_importer()
+    bundle_path = tmp_path / "case-notes-voice-ar.json"
+    arabic_transcript = "قال المستشار إن القرار يحتاج إلى دليل إضافي قبل اعتماده."
+    bundle_path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "source": "case_notes_hosted_voice",
+                "captured_at": "2026-09-29T10:30:00+00:00",
+                "language": "ar",
+                "model": "gpt-transcribe",
+                "user_transcript": arabic_transcript,
+                "assistant_transcript": "",
+                "extraction_json": {
+                    "cleaned_notes_markdown": "",
+                    "entries": [],
+                    "open_questions": [],
+                },
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    result = importer.import_hosted_voice_bundle(case_dir, bundle_path)
+    raw_transcript = result.raw_transcript_path.read_text(encoding="utf-8")
+    clara_review = result.clara_review_path.read_text(encoding="utf-8")
+    manifest = json.loads((case_dir / "case_manifest.json").read_text(encoding="utf-8"))
+
+    assert raw_transcript.startswith("# Hosted Voice Transcript")
+    assert arabic_transcript in raw_transcript
+    assert clara_review.startswith("# Clara Audio Review")
+    assert arabic_transcript in clara_review
+    assert manifest["output_language"] == "en"
+
+
 def test_find_latest_hosted_voice_bundle_skips_imported_and_invalid(
     tmp_path: Path,
 ) -> None:
@@ -4408,6 +4481,9 @@ def test_finalize_hosted_transcript_records_local_attribution_and_audio_pointer(
     assert backup_path.read_text(encoding="utf-8") == raw_text
     assert transcript["path"] == str(attributed_path.resolve())
     assert transcript["material_type"] == "transcript"
+    assert transcript["source_metadata"]["attributed_transcript"] == str(
+        attributed_path.relative_to(case_dir)
+    )
     assert (
         transcript["source_metadata"]["speaker_attribution"]
         == finalizer.DEFAULT_SPEAKER_ATTRIBUTION_NOTE
@@ -4444,17 +4520,21 @@ def test_finalize_hosted_transcript_records_local_attribution_and_audio_pointer(
     assert "Family interview [transcript, indexed]" in brief
     assert "Audio interview pointer [source, indexed]" in brief
 
+    evidence_path = case_dir / "advisory_evidence_register.json"
+    original_evidence = evidence_path.read_bytes()
     result_again = finalizer.finalize_hosted_transcript(
         case_dir,
         imported.material_id,
         attributed_path,
         audio_pointer_path=audio_pointer_path,
         audio_pointer_title="Audio interview pointer",
-        now=fixed_now(),
+        now=datetime(2026, 1, 3, 12, 0, tzinfo=timezone.utc),
     )
     registry_again = json.loads((case_dir / "material_registry.json").read_text())
 
     assert result_again.audio_pointer_material_id == pointer["id"]
+    assert result_again.evidence_receipt_id == result.evidence_receipt_id
+    assert evidence_path.read_bytes() == original_evidence
     assert [material["path"] for material in registry_again["materials"]].count(
         str(audio_pointer_path.resolve())
     ) == 1
@@ -4462,6 +4542,22 @@ def test_finalize_hosted_transcript_records_local_attribution_and_audio_pointer(
         audio_pointer_path.read_text(encoding="utf-8").count("## Trascrizione Clara")
         == 1
     )
+
+    # Reusing timestamps must not weaken the immutable source binding.
+    different_path = attributed_path.with_name("different-location.md")
+    different_path.write_bytes(attributed_path.read_bytes())
+    registry_before_conflict = (case_dir / "material_registry.json").read_bytes()
+    with pytest.raises(ValueError, match="already exists with different content"):
+        finalizer.finalize_hosted_transcript(
+            case_dir,
+            imported.material_id,
+            different_path,
+            now=datetime(2026, 1, 4, 12, 0, tzinfo=timezone.utc),
+        )
+    assert evidence_path.read_bytes() == original_evidence
+    assert (
+        case_dir / "material_registry.json"
+    ).read_bytes() == registry_before_conflict
 
 
 def test_finalize_hosted_transcript_rolls_back_when_receipt_commit_fails(
@@ -4774,12 +4870,13 @@ def test_upload_hosted_audio_accepts_ordinary_folder_without_case_features(
         cookie_header="auth_session=test-cookie",
         include_case_context=False,
         import_bundle=False,
+        language="ar",
     )
 
     assert result.run_dir.parent == target_folder / "hosted_voice_uploads"
     assert result.import_result is None
     assert captured["case_context"] == ""
-    assert captured["language"] == "it"
+    assert captured["language"] == "ar"
     assert not (target_folder / "case_manifest.json").exists()
 
 
@@ -5346,11 +5443,25 @@ def test_prepare_voice_deck_revision_intake_inherits_parent_company_style_profil
     assert "Apply the resolved deck style spec" in " ".join(intake["next_actions"])
 
 
+@pytest.mark.parametrize("flat_install", [False, True])
 def test_prepare_voice_deck_revision_intake_accepts_explicit_deck_style(
     tmp_path: Path,
+    monkeypatch,
+    flat_install: bool,
 ) -> None:
     _, case_dir = init_case(tmp_path)
     preparer = load_voice_deck_revision_preparer()
+    if flat_install:
+        installed_root = tmp_path / "installed-clara"
+        style_dir = installed_root / "docs/specs/pptx_templates"
+        style_dir.mkdir(parents=True)
+        source_style = ROOT / "docs/specs/pptx_templates/bain-style-spec.md"
+        (style_dir / "bain-style-spec.md").write_bytes(source_style.read_bytes())
+        monkeypatch.setattr(
+            preparer,
+            "__file__",
+            str(installed_root / "scripts/prepare_voice_deck_revision.py"),
+        )
     session_dir = case_dir / "voice_sessions" / "20260102103000Z"
     session_dir.mkdir(parents=True)
     (session_dir / "raw_transcript.md").write_text(

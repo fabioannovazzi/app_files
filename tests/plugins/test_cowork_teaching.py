@@ -39,8 +39,14 @@ def test_installed_cowork_prepares_every_supported_course_and_language(installed
     result = run(root, "list")
     assert result.returncode == 0, result.stderr
     catalog = json.loads(result.stdout)
-    assert len(catalog) == {"vera": 32, "clara": 7, "lucia": 4}[product]
-    for entry in catalog:
+    assert len(catalog) == {"vera": 41, "clara": 7, "lucia": 4}[product]
+    # Native-only outlines retain their platform limitation; checked separately.
+    written_courses = [
+        entry
+        for entry in catalog
+        if (product, entry["workflow"]) != ("vera", "trasformazione")
+    ]
+    for entry in written_courses:
         workflow = entry["workflow"]
         assert (root / f"skills/{workflow}/SKILL.md").is_file()
         for language in entry["languages"]:
@@ -78,6 +84,42 @@ def test_installed_cowork_prepares_every_supported_course_and_language(installed
             assert (
                 "execution-request.json" not in (destination / "teacher.md").read_text()
             )
+
+
+@pytest.mark.parametrize("installed", ["vera"], indirect=True)
+@pytest.mark.parametrize(
+    "language,unavailability",
+    [
+        ("it", "Cowork non offre questo corso"),
+        ("en", "Cowork has no teaching course"),
+        ("fr", "Cowork ne propose pas ce cours"),
+        ("de", "Cowork bietet diesen Kurs nicht"),
+        ("es", "Cowork no ofrece este curso"),
+    ],
+)
+def test_cowork_native_only_outline_preserves_limit_and_no_execution(
+    installed, language, unavailability
+):
+    """Reading prepared material does not make its native-only course available."""
+    _, root, output = installed
+    destination = output / "native-only" / language
+    result = run(
+        root,
+        "prepare",
+        "trasformazione",
+        "--language",
+        language,
+        "--output-dir",
+        destination,
+    )
+    assert result.returncode == 0, result.stderr
+    receipt = json.loads(result.stdout)
+    guide = (destination / "course.html").read_text()
+    assert unavailability in guide
+    assert "Codex" in guide
+    assert receipt["execution_receipt"] is False
+    assert receipt["understanding_confirmed"] is False
+    assert not (destination / "execution-request.json").exists()
 
 
 def test_cowork_rejects_foreign_missing_or_unsupported_lesson(installed):
@@ -137,6 +179,33 @@ def test_cowork_preserves_existing_lesson_on_resume(installed):
     progress.write_text("User paused after examining the input.\n")
     assert run(root, *args).returncode != 0
     assert progress.read_text() == "User paused after examining the input.\n"
+
+
+def test_cowork_preflight_checks_selected_folder_without_resetting_progress(installed):
+    _, root, output = installed
+    folder = output / "existing lesson"
+    folder.mkdir()
+    progress = folder / "lesson-progress.md"
+    progress.write_text("Paused at the first exercise.\n")
+
+    result = run(root, "preflight", "--output-dir", folder)
+
+    assert result.returncode == 0, result.stderr
+    assert json.loads(result.stdout)["status"] == "ready"
+    assert list(folder.iterdir()) == [progress]
+    assert progress.read_text() == "Paused at the first exercise.\n"
+
+
+def test_cowork_preflight_reports_invalid_destination_as_blocked(installed):
+    _, root, output = installed
+    folder = output / "not a directory"
+    folder.write_text("Existing file; preserve it.")
+
+    result = run(root, "preflight", "--output-dir", folder)
+
+    assert result.returncode == 2
+    assert json.loads(result.stdout)["status"] == "blocked"
+    assert folder.read_text() == "Existing file; preserve it."
 
 
 def test_cowork_tutorial_marker_suppresses_receipt_transport(installed, monkeypatch):
@@ -216,3 +285,57 @@ def test_course_attachment_archive_names_are_portable(monkeypatch, path_type):
     projection.add_written_teaching(ROOT, "clara", source, entries)
     assert entries[attachment] == content
     assert not any("\\" in name for name in entries)
+
+
+@pytest.mark.parametrize("product", ["clara", "vera", "lucia"])
+def test_cowork_install_archive_has_root_manifest_and_no_nested_zips(product):
+    with ZipFile(
+        ROOT / f"plugin_packages/{product}/{product}-claude-plugin.zip"
+    ) as archive:
+        names = archive.namelist()
+    assert ".claude-plugin/plugin.json" in names
+    assert not [name for name in names if name.lower().endswith(".zip")]
+
+
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+def test_clara_attribute_lesson_preserves_expanded_demo_and_practice(
+    tmp_path, language
+):
+    root = tmp_path / "installed"
+    with ZipFile(ROOT / "plugin_packages/clara/clara-claude-plugin.zip") as archive:
+        archive.extractall(root)
+    destination = tmp_path / "lesson"
+
+    result = run(
+        root,
+        "prepare",
+        "attribute-reporting",
+        "--language",
+        language,
+        "--output-dir",
+        destination,
+    )
+
+    assert result.returncode == 0, result.stderr
+    guide = (destination / "teacher.md").read_text()
+    for role, name in [("input", "demo"), ("practice", "practice")]:
+        stem = f"assortment-{name}-{language}"
+        original = (
+            ROOT
+            / f"plugins/clara/assets/courses/attribute-reporting/files/{role}/{stem}.zip"
+        )
+        expanded = destination / "files" / role / stem
+        with ZipFile(original) as source:
+            expected = {name: source.read(name) for name in source.namelist()}
+        actual = {
+            path.relative_to(expanded).as_posix(): path.read_bytes()
+            for path in expanded.rglob("*")
+            if path.is_file()
+        }
+        assert actual == expected
+        assert stem + "/" in guide
+        assert stem + ".zip" not in guide
+        assert (
+            json.loads((expanded / "package_integrity.json").read_text())["status"]
+            == "pass"
+        )

@@ -1,0 +1,333 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "trasformazione",
+  "course_sha256": "11c2c150c39adaa565adfab4450fd311f2a3ad806f5ec74b84249846bdea1b19",
+  "reviewer": "Codex: authored outline and actual synthetic native output review",
+  "reviewed_at": "2026-10-01T08:02:24.833788+00:00",
+  "review_scope": "Reviewed five authored narratives, factual inputs and ten native synthetic demo/practice regressions. Italian lesson top and practice sections inspected in the browser. Review records in the regression are simulated, not learner decisions. Direct component execution and rendering do not establish installed enabled-plugin, native voice, paired-window or learner acceptance. No professional, legal or tax qualification is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The complete first synthetic use proceeds from fictional mandate and documents to proposal, explicit review, changed evidence and dossier inspection; it prepares a future supervised pilot without authorizing a real mandate.",
+        "inputs_and_request": "Ten JSON source files supply two independent fictional cases and changed liabilities. They contain facts and explicit unknowns, no preapproved records, conclusions or exported dossier. The natural request states the synthetic scope and withholds valuation until the blocked-capital checkpoint.",
+        "execution_and_checkpoints": "The current installed specialist owns execution. The worker uses the documented private synthetic-folder exception, not Studio Archive. Checkpoints inspect branch blockers and capital/vote/profit rights before decisions and selective staleness after evidence replacement. A digest binds only an explicitly expressed decision.",
+        "deliverable_and_next_action": "Versioned Markdown/JSON dossier, manifest and history make evidence, exact amounts, independent rights, missing receipts/tax bases and earlier decisions inspectable. A local generic disclosure report is required. The lesson explains that arithmetic and exports do not approve an operation.",
+        "practice_and_repeat": "Practice uses separate fresh files with assets 640000 and liabilities 270000, then changes liabilities to 305000. It preserves the demonstration, corrects dependent arithmetic/findings and requests a new review while independent collection remains current. Repeat is synthetic-only.",
+        "language_and_pacing": "The complete it outline preserves the same case, numbers, rights and boundaries. Source fields and native dossier remain Italian, explained in the selected language. Five to eight minutes is only explanation and brief-attempt pacing; full review and practice can extend it, with no measured learner duration."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_trasformazione_execution::test_transformation_kit_native_dossier_and_selective_staleness[demo-450000-350000-390000-290000-it]",
+        "result_review": "Actual demo exports preserve initial missing-valuation blockers, current simulated capital/collection preparation decisions, stale capital after changed valuation, unchanged independent collection, and fresh capital decision after explicit numeric/finding correction. Obsolete approval digest is rejected. Capital split is 60000/40000; voting/profit rights remain distinct; release/opposition/tax stay blocked. History retains three simulated decisions and old exports. Local report states no model/network invocation by the regression and does not attest learner exposure. Exact values match the lesson review criteria.",
+        "reviewed_artifacts": [
+          {
+            "name": "dossier.md",
+            "sha256": "dce6ae0826d1066bbd67ce19d3266ff97b3dab2107af16d1ab1b127fd1ebd2c5"
+          },
+          {
+            "name": "case.json",
+            "sha256": "66d47a6b831de01e191077de695b6ba2961d108857ce8678b00cae179a2397a6"
+          },
+          {
+            "name": "manifest.json",
+            "sha256": "ffaf80923c56e1b871bb39e4857bf2e62cd04edaf393540fd5086d62d74430c5"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "31332b86bcd4311267aed89351ab8c675bffbe46ea5ddf00f58621f4500c897d"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_trasformazione_execution::test_transformation_kit_native_dossier_and_selective_staleness[practice-370000-270000-335000-235000-it]",
+        "result_review": "Actual practice exports preserve initial missing-valuation blockers, current simulated capital/collection preparation decisions, stale capital after changed valuation, unchanged independent collection, and fresh capital decision after explicit numeric/finding correction. Obsolete approval digest is rejected. Capital split is 60000/40000; voting/profit rights remain distinct; release/opposition/tax stay blocked. History retains three simulated decisions and old exports. Local report states no model/network invocation by the regression and does not attest learner exposure. Exact values match the lesson review criteria.",
+        "reviewed_artifacts": [
+          {
+            "name": "dossier.md",
+            "sha256": "5e9eeaf5c6c3486dd18ec946bc15241cec0873d3bb5b3bcc82e1302bf2362041"
+          },
+          {
+            "name": "case.json",
+            "sha256": "b9417e93a05d34cd2136b2b53d3d8f68bd1eddec8ee47d8a4b79596c271a372b"
+          },
+          {
+            "name": "manifest.json",
+            "sha256": "77b37e2ecfbf12405d59c9d8004a088e35950974c8d46047c23eeeace2885c95"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "d7dbf2121c59f7e3c0267052f6c95ed1891500dcd61101a85730b1b86a823d49"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The complete first synthetic use proceeds from fictional mandate and documents to proposal, explicit review, changed evidence and dossier inspection; it prepares a future supervised pilot without authorizing a real mandate.",
+        "inputs_and_request": "Ten JSON source files supply two independent fictional cases and changed liabilities. They contain facts and explicit unknowns, no preapproved records, conclusions or exported dossier. The natural request states the synthetic scope and withholds valuation until the blocked-capital checkpoint.",
+        "execution_and_checkpoints": "The current installed specialist owns execution. The worker uses the documented private synthetic-folder exception, not Studio Archive. Checkpoints inspect branch blockers and capital/vote/profit rights before decisions and selective staleness after evidence replacement. A digest binds only an explicitly expressed decision.",
+        "deliverable_and_next_action": "Versioned Markdown/JSON dossier, manifest and history make evidence, exact amounts, independent rights, missing receipts/tax bases and earlier decisions inspectable. A local generic disclosure report is required. The lesson explains that arithmetic and exports do not approve an operation.",
+        "practice_and_repeat": "Practice uses separate fresh files with assets 640000 and liabilities 270000, then changes liabilities to 305000. It preserves the demonstration, corrects dependent arithmetic/findings and requests a new review while independent collection remains current. Repeat is synthetic-only.",
+        "language_and_pacing": "The complete en outline preserves the same case, numbers, rights and boundaries. Source fields and native dossier remain Italian, explained in the selected language. Five to eight minutes is only explanation and brief-attempt pacing; full review and practice can extend it, with no measured learner duration."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_trasformazione_execution::test_transformation_kit_native_dossier_and_selective_staleness[demo-450000-350000-390000-290000-en]",
+        "result_review": "Actual demo exports preserve initial missing-valuation blockers, current simulated capital/collection preparation decisions, stale capital after changed valuation, unchanged independent collection, and fresh capital decision after explicit numeric/finding correction. Obsolete approval digest is rejected. Capital split is 60000/40000; voting/profit rights remain distinct; release/opposition/tax stay blocked. History retains three simulated decisions and old exports. Local report states no model/network invocation by the regression and does not attest learner exposure. Exact values match the lesson review criteria.",
+        "reviewed_artifacts": [
+          {
+            "name": "dossier.md",
+            "sha256": "dce6ae0826d1066bbd67ce19d3266ff97b3dab2107af16d1ab1b127fd1ebd2c5"
+          },
+          {
+            "name": "case.json",
+            "sha256": "a81a23d11da4f98a1c60f1105350bf6d33d34c2a7466eaeda27865a2cfb2db2b"
+          },
+          {
+            "name": "manifest.json",
+            "sha256": "1dff169962d626acd71987bc3920b54cd293a78a73dec6720b8ac266e26d6f09"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "7f1687f4db582842b0fb7f09cfd6459250616d39ad37c148877b7d6188148f43"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_trasformazione_execution::test_transformation_kit_native_dossier_and_selective_staleness[practice-370000-270000-335000-235000-en]",
+        "result_review": "Actual practice exports preserve initial missing-valuation blockers, current simulated capital/collection preparation decisions, stale capital after changed valuation, unchanged independent collection, and fresh capital decision after explicit numeric/finding correction. Obsolete approval digest is rejected. Capital split is 60000/40000; voting/profit rights remain distinct; release/opposition/tax stay blocked. History retains three simulated decisions and old exports. Local report states no model/network invocation by the regression and does not attest learner exposure. Exact values match the lesson review criteria.",
+        "reviewed_artifacts": [
+          {
+            "name": "dossier.md",
+            "sha256": "5e9eeaf5c6c3486dd18ec946bc15241cec0873d3bb5b3bcc82e1302bf2362041"
+          },
+          {
+            "name": "case.json",
+            "sha256": "70b96c3b1967bf495fef3cfd9c9a1b8240be37b2a4c6525e9b8026cc977e7324"
+          },
+          {
+            "name": "manifest.json",
+            "sha256": "0fcfdbde5fb97195941bb3ffac0e4ad3249c77f84e9a249effa3074b9b417be1"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "fe41b5b1ca7e0cf40bf0ac75ace816d56f47697ce3ba2b7a351982b93489db28"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The complete first synthetic use proceeds from fictional mandate and documents to proposal, explicit review, changed evidence and dossier inspection; it prepares a future supervised pilot without authorizing a real mandate.",
+        "inputs_and_request": "Ten JSON source files supply two independent fictional cases and changed liabilities. They contain facts and explicit unknowns, no preapproved records, conclusions or exported dossier. The natural request states the synthetic scope and withholds valuation until the blocked-capital checkpoint.",
+        "execution_and_checkpoints": "The current installed specialist owns execution. The worker uses the documented private synthetic-folder exception, not Studio Archive. Checkpoints inspect branch blockers and capital/vote/profit rights before decisions and selective staleness after evidence replacement. A digest binds only an explicitly expressed decision.",
+        "deliverable_and_next_action": "Versioned Markdown/JSON dossier, manifest and history make evidence, exact amounts, independent rights, missing receipts/tax bases and earlier decisions inspectable. A local generic disclosure report is required. The lesson explains that arithmetic and exports do not approve an operation.",
+        "practice_and_repeat": "Practice uses separate fresh files with assets 640000 and liabilities 270000, then changes liabilities to 305000. It preserves the demonstration, corrects dependent arithmetic/findings and requests a new review while independent collection remains current. Repeat is synthetic-only.",
+        "language_and_pacing": "The complete fr outline preserves the same case, numbers, rights and boundaries. Source fields and native dossier remain Italian, explained in the selected language. Five to eight minutes is only explanation and brief-attempt pacing; full review and practice can extend it, with no measured learner duration."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_trasformazione_execution::test_transformation_kit_native_dossier_and_selective_staleness[demo-450000-350000-390000-290000-fr]",
+        "result_review": "Actual demo exports preserve initial missing-valuation blockers, current simulated capital/collection preparation decisions, stale capital after changed valuation, unchanged independent collection, and fresh capital decision after explicit numeric/finding correction. Obsolete approval digest is rejected. Capital split is 60000/40000; voting/profit rights remain distinct; release/opposition/tax stay blocked. History retains three simulated decisions and old exports. Local report states no model/network invocation by the regression and does not attest learner exposure. Exact values match the lesson review criteria.",
+        "reviewed_artifacts": [
+          {
+            "name": "dossier.md",
+            "sha256": "dce6ae0826d1066bbd67ce19d3266ff97b3dab2107af16d1ab1b127fd1ebd2c5"
+          },
+          {
+            "name": "case.json",
+            "sha256": "22c4d20a358610e8f9f9f44dfe70ea812c3b18eb5641f67591b24a93e7fbe770"
+          },
+          {
+            "name": "manifest.json",
+            "sha256": "b56f80ec1c9c2f9925e35b28cdb88ac3caeecd291ce226f0ffad31cae8ea9192"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "84600dd6bbf6c22ac79a70ba9fd6efc5ce692b6d68dab355e2f81db99a0e5bc6"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_trasformazione_execution::test_transformation_kit_native_dossier_and_selective_staleness[practice-370000-270000-335000-235000-fr]",
+        "result_review": "Actual practice exports preserve initial missing-valuation blockers, current simulated capital/collection preparation decisions, stale capital after changed valuation, unchanged independent collection, and fresh capital decision after explicit numeric/finding correction. Obsolete approval digest is rejected. Capital split is 60000/40000; voting/profit rights remain distinct; release/opposition/tax stay blocked. History retains three simulated decisions and old exports. Local report states no model/network invocation by the regression and does not attest learner exposure. Exact values match the lesson review criteria.",
+        "reviewed_artifacts": [
+          {
+            "name": "dossier.md",
+            "sha256": "5e9eeaf5c6c3486dd18ec946bc15241cec0873d3bb5b3bcc82e1302bf2362041"
+          },
+          {
+            "name": "case.json",
+            "sha256": "e8ea9b4f229d3491faf8571bd47748f6a22aa5825600a4da1c9a670dcd15b7b0"
+          },
+          {
+            "name": "manifest.json",
+            "sha256": "9087f458149e65eb240a1b26876099bf14786bb0519418d22f7390238d321058"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "44271668f4cb345d504ecb085f80332ae49565c8bed831d735ac4b862a5dd717"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The complete first synthetic use proceeds from fictional mandate and documents to proposal, explicit review, changed evidence and dossier inspection; it prepares a future supervised pilot without authorizing a real mandate.",
+        "inputs_and_request": "Ten JSON source files supply two independent fictional cases and changed liabilities. They contain facts and explicit unknowns, no preapproved records, conclusions or exported dossier. The natural request states the synthetic scope and withholds valuation until the blocked-capital checkpoint.",
+        "execution_and_checkpoints": "The current installed specialist owns execution. The worker uses the documented private synthetic-folder exception, not Studio Archive. Checkpoints inspect branch blockers and capital/vote/profit rights before decisions and selective staleness after evidence replacement. A digest binds only an explicitly expressed decision.",
+        "deliverable_and_next_action": "Versioned Markdown/JSON dossier, manifest and history make evidence, exact amounts, independent rights, missing receipts/tax bases and earlier decisions inspectable. A local generic disclosure report is required. The lesson explains that arithmetic and exports do not approve an operation.",
+        "practice_and_repeat": "Practice uses separate fresh files with assets 640000 and liabilities 270000, then changes liabilities to 305000. It preserves the demonstration, corrects dependent arithmetic/findings and requests a new review while independent collection remains current. Repeat is synthetic-only.",
+        "language_and_pacing": "The complete de outline preserves the same case, numbers, rights and boundaries. Source fields and native dossier remain Italian, explained in the selected language. Five to eight minutes is only explanation and brief-attempt pacing; full review and practice can extend it, with no measured learner duration."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_trasformazione_execution::test_transformation_kit_native_dossier_and_selective_staleness[demo-450000-350000-390000-290000-de]",
+        "result_review": "Actual demo exports preserve initial missing-valuation blockers, current simulated capital/collection preparation decisions, stale capital after changed valuation, unchanged independent collection, and fresh capital decision after explicit numeric/finding correction. Obsolete approval digest is rejected. Capital split is 60000/40000; voting/profit rights remain distinct; release/opposition/tax stay blocked. History retains three simulated decisions and old exports. Local report states no model/network invocation by the regression and does not attest learner exposure. Exact values match the lesson review criteria.",
+        "reviewed_artifacts": [
+          {
+            "name": "dossier.md",
+            "sha256": "dce6ae0826d1066bbd67ce19d3266ff97b3dab2107af16d1ab1b127fd1ebd2c5"
+          },
+          {
+            "name": "case.json",
+            "sha256": "e5991b73e07ddd03e0f455e1255d0c34cb9df2d878d034fc335f5e5b1347ad71"
+          },
+          {
+            "name": "manifest.json",
+            "sha256": "3d88761bf9a601e5300caef1efc42e2f626511517041a2e7cc36ce4fdbd93b1c"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "aa6879e48415bb073be9b39ad69f106784a5163d37f444a0da1d230f27711c9b"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_trasformazione_execution::test_transformation_kit_native_dossier_and_selective_staleness[practice-370000-270000-335000-235000-de]",
+        "result_review": "Actual practice exports preserve initial missing-valuation blockers, current simulated capital/collection preparation decisions, stale capital after changed valuation, unchanged independent collection, and fresh capital decision after explicit numeric/finding correction. Obsolete approval digest is rejected. Capital split is 60000/40000; voting/profit rights remain distinct; release/opposition/tax stay blocked. History retains three simulated decisions and old exports. Local report states no model/network invocation by the regression and does not attest learner exposure. Exact values match the lesson review criteria.",
+        "reviewed_artifacts": [
+          {
+            "name": "dossier.md",
+            "sha256": "5e9eeaf5c6c3486dd18ec946bc15241cec0873d3bb5b3bcc82e1302bf2362041"
+          },
+          {
+            "name": "case.json",
+            "sha256": "e907865ce2ee851b706ceba521d75e72f9afb05d185b2f703835827e74c363ff"
+          },
+          {
+            "name": "manifest.json",
+            "sha256": "a7d27591c9198ad05044bc21a21995931b8c0aca5ea1f6d5a06eb13c69ec92ef"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "267974d5b6a807683344db67ef6e01cd6660a98a0268528c50500c2eaff5a016"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The complete first synthetic use proceeds from fictional mandate and documents to proposal, explicit review, changed evidence and dossier inspection; it prepares a future supervised pilot without authorizing a real mandate.",
+        "inputs_and_request": "Ten JSON source files supply two independent fictional cases and changed liabilities. They contain facts and explicit unknowns, no preapproved records, conclusions or exported dossier. The natural request states the synthetic scope and withholds valuation until the blocked-capital checkpoint.",
+        "execution_and_checkpoints": "The current installed specialist owns execution. The worker uses the documented private synthetic-folder exception, not Studio Archive. Checkpoints inspect branch blockers and capital/vote/profit rights before decisions and selective staleness after evidence replacement. A digest binds only an explicitly expressed decision.",
+        "deliverable_and_next_action": "Versioned Markdown/JSON dossier, manifest and history make evidence, exact amounts, independent rights, missing receipts/tax bases and earlier decisions inspectable. A local generic disclosure report is required. The lesson explains that arithmetic and exports do not approve an operation.",
+        "practice_and_repeat": "Practice uses separate fresh files with assets 640000 and liabilities 270000, then changes liabilities to 305000. It preserves the demonstration, corrects dependent arithmetic/findings and requests a new review while independent collection remains current. Repeat is synthetic-only.",
+        "language_and_pacing": "The complete es outline preserves the same case, numbers, rights and boundaries. Source fields and native dossier remain Italian, explained in the selected language. Five to eight minutes is only explanation and brief-attempt pacing; full review and practice can extend it, with no measured learner duration."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_trasformazione_execution::test_transformation_kit_native_dossier_and_selective_staleness[demo-450000-350000-390000-290000-es]",
+        "result_review": "Actual demo exports preserve initial missing-valuation blockers, current simulated capital/collection preparation decisions, stale capital after changed valuation, unchanged independent collection, and fresh capital decision after explicit numeric/finding correction. Obsolete approval digest is rejected. Capital split is 60000/40000; voting/profit rights remain distinct; release/opposition/tax stay blocked. History retains three simulated decisions and old exports. Local report states no model/network invocation by the regression and does not attest learner exposure. Exact values match the lesson review criteria.",
+        "reviewed_artifacts": [
+          {
+            "name": "dossier.md",
+            "sha256": "dce6ae0826d1066bbd67ce19d3266ff97b3dab2107af16d1ab1b127fd1ebd2c5"
+          },
+          {
+            "name": "case.json",
+            "sha256": "f50c517deacef58e5f079a91441aec592d3f9e65b064c31ebff2b03ecd2fd539"
+          },
+          {
+            "name": "manifest.json",
+            "sha256": "1e0f42fd2229c4eff79f05a78ce2e2da39aeff15daf38f2482096eab1b70e23f"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "29d1218bbcc6e91bf51ade373ee80547154ac686033134be9dc206b9767f835d"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_trasformazione_execution::test_transformation_kit_native_dossier_and_selective_staleness[practice-370000-270000-335000-235000-es]",
+        "result_review": "Actual practice exports preserve initial missing-valuation blockers, current simulated capital/collection preparation decisions, stale capital after changed valuation, unchanged independent collection, and fresh capital decision after explicit numeric/finding correction. Obsolete approval digest is rejected. Capital split is 60000/40000; voting/profit rights remain distinct; release/opposition/tax stay blocked. History retains three simulated decisions and old exports. Local report states no model/network invocation by the regression and does not attest learner exposure. Exact values match the lesson review criteria.",
+        "reviewed_artifacts": [
+          {
+            "name": "dossier.md",
+            "sha256": "5e9eeaf5c6c3486dd18ec946bc15241cec0873d3bb5b3bcc82e1302bf2362041"
+          },
+          {
+            "name": "case.json",
+            "sha256": "6059ae057feeac03c55c7685e4749ab5e6ffe51d585b054c2db68f905ab83941"
+          },
+          {
+            "name": "manifest.json",
+            "sha256": "724e41ce8bd1a806b543573f807ac3c5d66f863de509985b7d8928289690310d"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "3fc8183668684b4344a90f40f39bbbe8770f12cbc7b3a2f88e202a1eaf37ad44"
+          }
+        ]
+      }
+    }
+  },
+  "connected_studio_knowledge_source_binding_20261002": {
+    "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+    "reviewed_at": "2026-10-01T22:12:56.058298+00:00",
+    "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+    "previous_course_sha256": "6b0fb7b9c6248aef773c90fa01267424605212b204d03d7b377df3a90171eb89",
+    "current_course_sha256": "e9ce55a19e00969198cb614c8de3ea36e3851738295f788c9231e2ecdd58beeb",
+    "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+    "changed_sources": [
+      "skills/trasformazione/SKILL.md",
+      "skills/vera/references/connected-studio-knowledge.md"
+    ],
+    "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+    "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+  },
+  "integration_refresh": {
+    "reviewer": "Codex /root",
+    "date": "2026-10-02",
+    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
+  },
+  "rating_legalita_source_binding_20261002": {
+    "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+    "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+    "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+    "previous_course_sha256": "ba877b7b35492f7975f6783b2f621a376f7560e8327397a96b1ac5d78a9e1bce",
+    "current_course_sha256": "7b34e1cbe24025e7ce5c296bd970e5970a550772f47dcefdf942f8bf7ec24133",
+    "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+    "changed_sources": [
+      "vendor/modules/courseware/policy.py",
+      "vendor/modules/vera_assurance/contracts.py"
+    ],
+    "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+    "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+  },
+  "lipe_source_binding_20261002": {
+    "reviewer": "Codex /root - bounded LIPE source compatibility review",
+    "reviewed_at": "2026-10-02T20:25:14.425278+00:00",
+    "baseline_commit": "bebefc9b5f187bbcc5619a1b603363581ec68158",
+    "previous_course_sha256": "7b34e1cbe24025e7ce5c296bd970e5970a550772f47dcefdf942f8bf7ec24133",
+    "current_course_sha256": "5d1c2d91e55fc916df89192d2c059bc9d2be31825eeccea52abd3065e9261e15",
+    "content_review": "Compared the complete compiled course JSON against the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are retained. This is not a new editorial, visual, professional or learner acceptance review.",
+    "changed_sources": [
+      "vendor/modules/vera_assurance/contracts.py"
+    ],
+    "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
+    "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
+  },
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
+}

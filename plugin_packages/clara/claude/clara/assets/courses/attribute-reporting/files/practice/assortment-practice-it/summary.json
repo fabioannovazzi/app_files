@@ -1,0 +1,21 @@
+{
+  "retailer": "fictional",
+  "retailer_label": "Rivenditore fittizio",
+  "category_key": "teaching-knitwear",
+  "category_label": "Maglieria",
+  "product_count": 20,
+  "recent_products": 4,
+  "top_seller_products": 4,
+  "recent_definition": "The new-arrivals cohort explicitly assigned in this fictional source matrix.",
+  "top_seller_definition": "The best-seller cohort explicitly assigned in this fictional source matrix; no sales quantities are supplied.",
+  "diagnostic_warnings": [
+    {
+      "code": "fictional_teaching_data",
+      "message": "Dati fittizi per la lezione: non rappresentano un rivenditore, osservazioni di mercato, una raccolta web o una ricevuta del server."
+    },
+    {
+      "code": "no_consumer_reviews",
+      "message": "Il pacchetto non contiene recensioni dei consumatori né immagini dei prodotti."
+    }
+  ]
+}

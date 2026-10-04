@@ -103,6 +103,9 @@ def _normalise_language(value: Any) -> str:
         "deu": "de",
         "ger": "de",
         "german": "de",
+        "ara": "ar",
+        "arabic": "ar",
+        "العربية": "ar",
     }
     base = clean.split("-", 1)[0]
     return aliases.get(clean, aliases.get(base, base))
@@ -118,6 +121,15 @@ def _artifact_language(
         manifest.get("output_language"),
     )
     normalized = [_normalise_language(value) for value in candidates]
+    if normalized[0] == "ar":
+        return next(
+            (
+                value
+                for value in normalized[1:]
+                if value in {"it", "en", "fr", "de", "es"}
+            ),
+            "en",
+        )
     if "es" in normalized:
         return "es"
     return next((value for value in normalized if value), "en")

@@ -18,7 +18,7 @@ RECEIPT = ".mparanza-shared-ready.json"
 POLICY = ".mparanza-shared-features.json"
 INSTALLING = "MPARANZA_RUNTIME_INSTALLING"
 # Bump together across products whenever recipes, constraints or this backend change.
-POLICY_REVISION = 5
+POLICY_REVISION = 6
 # Every process in the managed interpreter holds a reader lease until exit.
 # The installer uses the same file exclusively. Never modify the interpreter
 # while readers are running. This is concurrency protection, not a sandbox.

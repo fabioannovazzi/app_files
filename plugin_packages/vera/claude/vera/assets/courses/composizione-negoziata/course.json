@@ -1,0 +1,717 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "composizione-negoziata",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "local_role_specific_case_financial_treasury_research_revision_and_negative_handoff"
+  },
+  "sources": [
+    {
+      "path": "modules/composizione-negoziata/assets/icon.svg",
+      "sha256": "57d5f2434dd064061c42c6a6b8fa009c4c53170ecbba191274f775bde83b32f5"
+    },
+    {
+      "path": "modules/composizione-negoziata/references/access-and-measures.md",
+      "sha256": "d73f6c8cb0a36081cc0a9a27ad807bb5128d741bdb200ed1a165427e8758b32b"
+    },
+    {
+      "path": "modules/composizione-negoziata/references/advisor.md",
+      "sha256": "4a3bd9870430510c6beb21ce2b0e5bd113a04bf3266b10f3c84e146606a917e2"
+    },
+    {
+      "path": "modules/composizione-negoziata/references/case-record.md",
+      "sha256": "8b612b146fe4448c83e84a9027a3773246966272c4f0b0fed0cd38eef28c8c67"
+    },
+    {
+      "path": "modules/composizione-negoziata/references/esperto.md",
+      "sha256": "a7946e589eadc7dc0b613abf9f1101217a253595de1b86bce290ec2c343cfce6"
+    },
+    {
+      "path": "modules/composizione-negoziata/references/events-and-closure.md",
+      "sha256": "8e493c00b69c983f5b8d8e3241c63029af722c48e8a39a9e040c4af793420e1b"
+    },
+    {
+      "path": "modules/composizione-negoziata/references/financial-and-research.md",
+      "sha256": "ad03fc2cc23a0077da53c7b387ca922d96cb327762a572de21f5a7b946b3a80c"
+    },
+    {
+      "path": "modules/composizione-negoziata/references/negotiations-and-special-events.md",
+      "sha256": "48ca3f780b917e824d3fb37213c2684084d009076e692f52416d199f7a4c7f95"
+    },
+    {
+      "path": "modules/composizione-negoziata/references/report-and-handoff.md",
+      "sha256": "4b93be792b16b76c42e10cdabf5a86c1e44cbf1f64d98351e778d9c2fcca96fc"
+    },
+    {
+      "path": "modules/composizione-negoziata/requirements.txt",
+      "sha256": "b11002e732f89a31a126e1c4387bb0d1e574a1cd12a72ff1109705c510b476be"
+    },
+    {
+      "path": "modules/composizione-negoziata/scripts/check_dependencies.py",
+      "sha256": "b6f39a186c1d0f18b8ee66914cc06996cc667a029c64e34d8536e5b6d611d1c3"
+    },
+    {
+      "path": "modules/composizione-negoziata/scripts/cnc_case.py",
+      "sha256": "973ca3e00a0827fb4ae3fef7a31aa79dc606184a40c60b0aa5b90a5946bcec07"
+    },
+    {
+      "path": "modules/composizione-negoziata/scripts/cnc_review_client.py",
+      "sha256": "6d84ccf1844b6fce6395655e04c9b3b70df67ebff6e253ad94f2e09d144e0581"
+    },
+    {
+      "path": "modules/composizione-negoziata/skills/composizione-negoziata/SKILL.md",
+      "sha256": "ec9b2bb739ccc4b76df536dc61f9ffd2365e47e22599962445266a16e34d2111"
+    },
+    {
+      "path": "modules/composizione-negoziata/skills/composizione-negoziata/agents/openai.yaml",
+      "sha256": "15a2bc5644f4dfe718150e02a0bfad2c5c9d3819211167bca097985f74c30834"
+    },
+    {
+      "path": "skills/composizione-negoziata/SKILL.md",
+      "sha256": "fb7582323d9b1831505eaae217dd66be38ec20b713cd3c05182b74dc958237cd"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/caso-it.md",
+      "sha256": "9e8b0284769a0adc701cfe1a66cf9777950c85e3aa5699e901595d83f7e8fb0a",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/aggiornamento-it.md",
+      "sha256": "b171e4594e457c49531316add4d75be4eb0ed70f5ef3d1e6775e27e6f8821e2a",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/independent/esercizio-it.md",
+      "sha256": "a0b824f047695e992dc4db895d7299e1198f9d721b06575d845cbfce44359766",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/research-it.md",
+      "sha256": "5847baca0322f516f99ca18b82a2447b2212ff3c38881914dbeccc42abad0235",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/case-en.md",
+      "sha256": "f0128d271d7718fd49170315ca5ea83b6fd01ee8c5d056fc51b85898829136e8",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/update-en.md",
+      "sha256": "ada1af8af9504700d5d5cd709524cd96bc38203142df485b5465c883e46a3d83",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/independent/exercise-en.md",
+      "sha256": "3ea0583f465fe7dc06e6e0e548aaeb1bb23dd6e40205a11995567d7ccaf0d3e3",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/research-en.md",
+      "sha256": "b1675d38db6898b461db9745ccb1f30024ea89b4c2806dc44a1dfb6f997354d6",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/cas-fr.md",
+      "sha256": "e86abb1ad4e5b769dc39037e7d2b5814f748c449cd0b917f390f8901a2ffdfd0",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/mise-a-jour-fr.md",
+      "sha256": "55bcb4b3699c66a59805ad83d49386844c15a050edf90d1374f1ccabd313ad80",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/independent/exercice-fr.md",
+      "sha256": "c248636b23e982ada15a7713d02f4fe28dc11a4733d540e2c001741ae26603ae",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/research-fr.md",
+      "sha256": "4370484a3b9ff54878ac1c33d832c4ecf9913ea7bd2ec9399da94f07285bedf6",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/fall-de.md",
+      "sha256": "66ae8c6ce6d82bfff0b128321f844b8db57e7fd4f527b94672c8c48b37877396",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/aktualisierung-de.md",
+      "sha256": "53c6be627ecc1905934335f851e8f525de077417632425d650875953d9e1caab",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/independent/uebung-de.md",
+      "sha256": "4f2365e39477f832972bcf55d80e72fa73ba325075e89665ae0c5d42f4bd8090",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/research-de.md",
+      "sha256": "6cc4de0568cd9a4a84014fedab6f3ea90ef8fcdf1527d104161d7061d65ee2e8",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/caso-es.md",
+      "sha256": "e130569cc8b4c74aafcc2cbc0f574ad2440a811a2fd2538b54dcfb3174619fe8",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/actualizacion-es.md",
+      "sha256": "b94a2778c39e36f7d0bae6ed4d86a8bcd9fcaabbee20baa67fab78f5d1ec3992",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/independent/ejercicio-es.md",
+      "sha256": "0a8edfed707038ebd1475ac34e908bb38f0200c021b6cbd11bcf78ee008e3b2e",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/research-es.md",
+      "sha256": "baf087250385ae73bbbcf02eb6500fe431784d4e7c93d41b402390023a6335f1",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/balances.csv",
+      "sha256": "757c6914baa0382dceeb80694fa3a02880c90bcd32f80e782cf9eb4459688de9",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/treasury-demo/demo-accounts.csv",
+      "sha256": "573461068cb5bebc8cc7264e63ea405295ad40d4fe760b83858fc74887b7a95d",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/treasury-demo/demo-bank_movements.csv",
+      "sha256": "e9ee44d7f8b0d0f464518ee956fb2b803f50983f98b3f44de6b40aecadce6ac6",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/treasury-demo/demo-open_items.csv",
+      "sha256": "44bfea86c14445ae421de6ba0459f117dd6ff139acb9a1c9a9e82e0c5ecabe0f",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/treasury-demo/demo-planned_flows.csv",
+      "sha256": "3c48db17647fd8ebca12b7a46fea95ec787ed9ac0c9c926df85f54f0cf812231",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/treasury-demo/demo-allocations.csv",
+      "sha256": "414b598218082cb79b69234c381146c7867a345de93b59f2d70f7681e7322968",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/treasury-demo/demo-adjustments.csv",
+      "sha256": "5a9a543f060efab502532273ecb32eab5e9dc7d94afe209f39b7ff1f978aa867",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/treasury-practice/guided-accounts.csv",
+      "sha256": "573461068cb5bebc8cc7264e63ea405295ad40d4fe760b83858fc74887b7a95d",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/treasury-practice/guided-bank_movements.csv",
+      "sha256": "e9ee44d7f8b0d0f464518ee956fb2b803f50983f98b3f44de6b40aecadce6ac6",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/treasury-practice/guided-open_items.csv",
+      "sha256": "44bfea86c14445ae421de6ba0459f117dd6ff139acb9a1c9a9e82e0c5ecabe0f",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/treasury-practice/guided-planned_flows.csv",
+      "sha256": "6ece55af124963c50b02962541142bb5e0046c870ecb101909872a5b69b32c33",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/treasury-practice/guided-allocations.csv",
+      "sha256": "414b598218082cb79b69234c381146c7867a345de93b59f2d70f7681e7322968",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/treasury-practice/guided-adjustments.csv",
+      "sha256": "5a9a543f060efab502532273ecb32eab5e9dc7d94afe209f39b7ff1f978aa867",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/treasury-independent/expert-accounts.csv",
+      "sha256": "573461068cb5bebc8cc7264e63ea405295ad40d4fe760b83858fc74887b7a95d",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/treasury-independent/expert-bank_movements.csv",
+      "sha256": "e9ee44d7f8b0d0f464518ee956fb2b803f50983f98b3f44de6b40aecadce6ac6",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/treasury-independent/expert-open_items.csv",
+      "sha256": "44bfea86c14445ae421de6ba0459f117dd6ff139acb9a1c9a9e82e0c5ecabe0f",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/treasury-independent/expert-planned_flows.csv",
+      "sha256": "d85406f3d34e5427d946f58a8be98c3e6d9cfb919bf99157023e7d5d0971c7a2",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/treasury-independent/expert-allocations.csv",
+      "sha256": "414b598218082cb79b69234c381146c7867a345de93b59f2d70f7681e7322968",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/treasury-independent/expert-adjustments.csv",
+      "sha256": "5a9a543f060efab502532273ecb32eab5e9dc7d94afe209f39b7ff1f978aa867",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Composizione negoziata: dal fascicolo alla relazione finale",
+      "goal": "Eseguire un caso fittizio completo, distinguendo advisor ed esperto, e consegnare una bozza con esito negativo e responsabilità residue.",
+      "scenario": "Officina Arco CNC è una società italiana interamente fittizia. Al 31 ottobre 2026: finanziamento EUR 120.000, cassa disponibile EUR 50.000, deposito vincolato EUR 10.000, debiti commerciali EUR 80.000. Incasso ipotizzato EUR 100.000 il 15 novembre; pagamento EUR 80.000 il 30 novembre. Mancano aging, conferma di recuperabilità, ordini, nomina e ricevute. Sono solo le posizioni fornite, non una situazione completa.",
+      "scope": "Percorso locale esteso in più sessioni: dimostrazione advisor, variazione guidata e prova autonoma come esperto in un incarico separato. I 5–8 minuti riguardano un singolo segmento spiegato; analisi, ricerca, revisione e pratica richiedono tempo aggiuntivo. Non è un corso abilitante né una verifica automatica di accesso alla procedura.",
+      "inputs": "Apri il caso e balances.csv, poi le tabelle treasury-demo. Le tabelle vuote indicano assenza di dati forniti, non assenza di movimenti reali. Le cartelle treasury-practice e treasury-independent accompagnano aggiornamento e prova autonoma. Il brief di ricerca contiene solo una domanda pubblica generica e URL da verificare; nessun testo giuridico vigente o risposta approvata è fornito.",
+      "request": "Vera, assisto Officina Arco CNC come advisor in questa esercitazione fittizia. Leggi il fascicolo, separa fatti, ipotesi e lacune; usa analisi finanziaria e tesoreria esistenti, prepara una bozza condizionata alle evidenze e guidami nella revisione. Mantieni tutto locale, senza invii né approvazioni professionali simulate.",
+      "steps": [
+        "Intake: crea il caso tutorial locale e l’incarico advisor, importa le fonti esatte e registra perimetro, data, valuta, urgenze e lacune. Chiedi solo ciò che cambia il lavoro. La mancanza di nomina non impedisce l’esercitazione; non affermare una nomina verificata. Apri la prima nota e assegna le richieste di documenti.",
+        "Analisi: leggi le skill finanziaria e tesoreria correnti. Rivedi la definizione esercitativa di debito netto: finanziamento meno cassa disponibile, deposito vincolato e debiti commerciali esclusi. Esegui il pack net_debt e il forecast dalle tabelle fornite; chiudi i loro run e collega gli elaborati dichiarati al successivo run CNC. Controlla cifra, fonte e copertura; un saldo non prova incassabilità e il forecast non è il test ministeriale.",
+        "Ricerca: usa quesito-legale-fiscale con il brief pubblico. Scegli esplicitamente la ricerca ordinaria o una modalità Deep Research disponibile secondo la skill; niente passaggio automatico a servizi ospitati. Segui planner e revisione, leggi fonti primarie applicabili, salva contratto, risposta, fonti e limiti e collega l’elaborato effettivo. URL, snippet o registro strutturalmente valido non provano vigenza o correttezza. Se l’accesso fallisce, conserva il quesito aperto. Non inserire dati tutorial nelle query.",
+        "Bozza e revisione: redigi cronologia, riscontri, ipotesi, analisi, proposta condizionata e domande. Apri la versione esatta e chiedi al partecipante cosa correggere. Registra solo una sua decisione effettiva: l’attribuzione locale non verifica identità e non approva un handoff. Non chiamare cnc-review né creare ricevute. Mostra anche il report effettivo dei dati usati dal modello.",
+        "Variazione guidata: importa aggiornamento e tabelle practice nello stesso incarico, mantieni gli ID stabili e le vecchie versioni. Controlla discendenti superati e impatto semantico ulteriore. Ricalcola la tesoreria, collega il nuovo risultato e riscrivi proposta e relazione: il debitore rinvia e il creditore rifiuta, nessun accordo documentato. La vecchia decisione non vale per questa bozza.",
+        "Consegna: apri la relazione all’impresa con esito no_agreement, basi, limiti, atti/ricevute mancanti, proprietari delle attività residue e termini da verificare. Mantieni draft_handoff; completare il run non firma, deposita o chiude la procedura. Poi svolgi la prova autonoma esperto nel suo incarico separato, con i soli documenti scelti: domande neutrali, indipendenza/nomina non verificate, propria relazione finale e responsabilità distinte."
+      ],
+      "deliverables": [
+        "Nota di intake e lista di lacune con fonti e responsabili.",
+        "Pack finanziario eseguito, forecast iniziale e ricalcolato, risposta di ricerca e sua revisione oppure gap esplicito.",
+        "Bozze e revisioni immutabili del caso, relazione finale per ruolo, handoff negativo e attività residue.",
+        "Report leggibile dei dati arrivati al modello, dichiarazione degli artefatti e storia riprendibile."
+      ],
+      "review": "Segui ogni cifra dal CSV al risultato e alla relazione. Separa debito netto, saldo bancario e minimo di cassa. Controlla la versione precisa, le basi, il ruolo e l’eventuale stale state prima di una decisione. I giudizi economici, l’indipendenza, il diritto applicabile, la firma e gli adempimenti restano al professionista; non inventare ricevute o esiti favorevoli.",
+      "checkpoints": [
+        "Quale dato manca e quale analisi può continuare? Il deposito vincolato è disponibile?",
+        "Quale risultato è stato realmente eseguito e quale attività è solo proposta?",
+        "Quali dipendenze e decisioni vanno riesaminate dopo il rinvio?",
+        "Quali sezioni cambiano tra advisor ed esperto e chi segue ciascuna attività residua?"
+      ],
+      "practice": "Prima, con guida, importa aggiornamento-it.md: incasso al 15 gennaio 2027 e rifiuto della proposta. Preserva il primo forecast e prepara la relazione negativa. Poi, senza istruzioni passo passo, apri esercizio-it.md e un incarico esperto separato: l’incasso è rinviato al 15 febbraio, oltre l’orizzonte, e non risultano accordi. Usa treasury-independent; consegna una propria bozza neutrale, dimostra le fonti e riprendi la storia in una nuova sessione. Non copiare automaticamente il fascicolo riservato dell’advisor.",
+      "success": "Sai ricostruire fonti e limiti dei risultati, dimostrare il ricalcolo e le revisioni, distinguere i due incarichi e spiegare un esito negativo con decisioni e compiti ancora aperti. La riuscita richiede una prova effettiva e la tua spiegazione; un test automatico non certifica apprendimento.",
+      "repeat": "Per un caso reale seleziona nuovi documenti e destinazione professionale, separati dal tutorial, conferma ruolo e mandato e segui il contratto corrente. Quali dati arrivano al modello: il runtime selezionato può leggere fonti importate, tabelle finanziarie, forecast, note, dipendenze, bozze, decisioni e fonti pubbliche discusse. I helper locali non inviano questi file a Mparanza; storage locale non significa inferenza offline o anonimizzazione. Il report registra l’uso effettivo, non ogni lettura del modello. La revisione ospitata opzionale invia identificatori opachi, digest, decisione, account e ora, ma è esclusa dal tutorial. Nessun invio di feedback, deposito o comunicazione alle parti."
+    },
+    "en": {
+      "title": "Composizione negoziata: from evidence to the final report",
+      "goal": "Execute one fictional case, separate company advisor and independent expert, and deliver a negative-outcome draft with residual responsibilities.",
+      "scenario": "Officina Arco CNC is entirely fictional and Italian. At 31 October 2026: loan EUR 120,000, available cash EUR 50,000, restricted deposit EUR 10,000, trade payables EUR 80,000. Assumed receipt EUR 100,000 on 15 November; payment EUR 80,000 on 30 November. Aging, collectability confirmation, orders, appointment and filing receipts are absent. These selected positions are incomplete.",
+      "scope": "An extended local course across several sessions: advisor demonstration, guided change and independent expert exercise in a separate engagement. Five to eight minutes applies to one explained segment; computation, research, review and practice take additional time. No qualification or automatic eligibility assessment.",
+      "inputs": "Read the case, balances.csv and treasury-demo tables. Empty tables mean no supplied evidence, not no real activity. treasury-practice and treasury-independent accompany the update and independent exercise. The research brief contains a generic public question and URLs to verify, not current law or an approved answer.",
+      "request": "Vera, I advise fictional Officina Arco CNC. Read the evidence, separate facts, assumptions and gaps, execute the existing financial and treasury workflows and draft an evidence-conditioned proposal. Guide my exact-version review. Keep the tutorial local without external sends or simulated professional acceptance.",
+      "steps": [
+        "Intake: create the local tutorial case and advisor engagement, import exact sources and record scope, date, currency, urgent events and gaps. Ask only questions that change the work. An absent appointment does not block training and must not be called verified. Open the first note and assign evidence requests.",
+        "Analysis: read the current financial and treasury skills. Review the exercise definition of net debt: loan less available cash, excluding restricted deposit and trade payables. Execute net_debt and the supplied treasury tables, complete those runs and bind declared results to a successor CNC run. Check values, evidence and coverage; balances do not prove collectability and the forecast is not the ministerial test.",
+        "Research: use quesito-legale-fiscale with the public brief. Explicitly choose ordinary research or an available Deep Research route under the skill, without an automatic hosted handoff. Follow planner and review; inspect applicable primary sources, save contract, answer, sources and limits, and bind the actual deliverable. URLs, snippets and structurally valid records do not prove legal currency or correctness. Failed access remains an open question. No tutorial facts in queries.",
+        "Draft and review: write chronology, evidence, assumptions, analysis, conditional proposal and questions. Open the exact draft and ask the learner what to correct. Record only their actual decision: local attribution does not verify identity or approve a handoff. Do not call cnc-review or manufacture receipts. Show the actual model-data report.",
+        "Guided change: import the update and practice tables in the same engagement, retain stable IDs and earlier versions. Check stale descendants and wider semantic impact. Recompute treasury, bind the new output and rewrite proposal and report: delayed receipt and creditor refusal, with no documented agreement. Earlier decisions do not apply to the new draft.",
+        "Handoff: open the advisor report with no_agreement, bases, limits, missing acts/receipts, residual task owners and dates to verify. Keep draft_handoff: completing a run neither signs, files nor closes the procedure. Next perform the independent expert exercise in a separate engagement using only selected documents: neutral questions, unverified independence/appointment, the expert’s own report and distinct responsibilities."
+      ],
+      "deliverables": [
+        "Intake note and evidence-gap requests with sources and owners.",
+        "Executed financial pack, initial and revised forecasts, research answer and review or explicit gap.",
+        "Immutable case revisions, role-specific final report, negative handoff and residual tasks.",
+        "Readable model-data report, artifact declaration and resumable history."
+      ],
+      "review": "Trace each figure from CSV to output to report. Separate net debt, bank balance and minimum cash. Check exact versions, bases, role and stale state before deciding. Economic judgment, independence, applicable law, signature and obligations remain professional responsibilities; do not invent receipts or a positive outcome.",
+      "checkpoints": [
+        "What is missing and what work can continue? Is restricted cash available?",
+        "Which result actually ran and which task is only proposed?",
+        "Which dependencies and decisions need review after the delay?",
+        "How do the two reports differ and who owns residual tasks?"
+      ],
+      "practice": "First, guided, import update-en.md: receipt moves to 15 January 2027 and the creditor refuses. Preserve the first forecast and draft the negative report. Then independently open exercise-en.md in a separate expert engagement: receipt moves to 15 February, beyond the horizon, with no agreement. Use treasury-independent, deliver a neutral draft, demonstrate source links and resume in a fresh session. Do not automatically copy the advisor’s private case.",
+      "success": "You can explain source coverage and limits, demonstrate recalculation and revisions, distinguish the engagements and explain a negative outcome with outstanding decisions and work. Actual practice and your explanation are required; automated tests do not certify learning.",
+      "repeat": "For real work select fresh documents and a professional destination separate from training, confirm role and mandate and follow the current contract. What data reaches the model: the selected runtime may read imported sources, financial tables, forecasts, notes, dependencies, drafts, decisions and discussed public sources. Local helpers do not send these files to Mparanza; local storage is not offline inference or anonymization. The report records actual use, not every model read. Optional hosted review sends opaque identifiers, digest, decision, account and time, and is excluded from this tutorial. No feedback sends, filing or communications to parties."
+    },
+    "fr": {
+      "title": "Composizione negoziata : du dossier au rapport final",
+      "goal": "Exécuter un cas fictif, distinguer conseil de l’entreprise et expert indépendant, puis livrer un projet avec échec des négociations et responsabilités restantes.",
+      "scenario": "Officina Arco CNC est une entreprise italienne entièrement fictive. Au 31 octobre 2026 : emprunt EUR 120 000, trésorerie disponible EUR 50 000, dépôt bloqué EUR 10 000, dettes fournisseurs EUR 80 000. Encaissement supposé EUR 100 000 le 15 novembre ; paiement EUR 80 000 le 30 novembre. Balance âgée, preuve de recouvrabilité, commandes, nomination et récépissés absents. Population fournie incomplète.",
+      "scope": "Parcours local étendu en plusieurs séances : démonstration conseil, changement guidé puis exercice autonome expert dans un mandat distinct. Les 5–8 minutes concernent un segment expliqué ; calculs, recherche, revue et pratique demandent davantage de temps. Aucune habilitation ni appréciation automatique de recevabilité.",
+      "inputs": "Lire le cas, balances.csv et treasury-demo. Les tables vides signifient données non fournies, pas absence d’activité réelle. treasury-practice et treasury-independent accompagnent la mise à jour et l’exercice autonome. Le brief de recherche contient une question publique générique et des URL à vérifier, pas une réponse approuvée ni un corpus à jour.",
+      "request": "Vera, je conseille Officina Arco CNC, entreprise fictive. Lis les pièces, sépare faits, hypothèses et lacunes ; exécute les analyses financière et de trésorerie existantes et prépare une proposition conditionnelle. Guide ma revue de la version exacte. Tout reste local, sans envoi ni acceptation professionnelle simulée.",
+      "steps": [
+        "Intake : créer le cas tutoriel local et le mandat conseil, importer les pièces exactes, préciser périmètre, date, devise, urgences et lacunes. Ne demander que ce qui change le travail. Une nomination absente n’empêche pas l’exercice et ne devient pas vérifiée. Ouvrir la première note et attribuer les demandes de pièces.",
+        "Analyse : lire les skills financière et trésorerie actuelles. Revoir la définition pédagogique de dette nette : emprunt moins trésorerie disponible, dépôt bloqué et fournisseurs exclus. Exécuter net_debt et le forecast des tables fournies ; terminer ces runs puis lier leurs résultats déclarés au run CNC suivant. Vérifier montants, sources et couverture : un solde ne prouve pas le recouvrement et le forecast n’est pas le test ministériel.",
+        "Recherche : utiliser quesito-legale-fiscale avec le brief public. Choisir explicitement recherche ordinaire ou route Deep Research disponible selon la skill, sans transfert hébergé automatique. Suivre planner et revue ; lire les sources primaires applicables, conserver contrat, réponse, sources et limites, puis lier le livrable réel. URL, extrait et registre valide ne prouvent ni actualité ni justesse. Un accès impossible reste une question ouverte. Aucun fait tutoriel dans les requêtes.",
+        "Projet et revue : écrire chronologie, preuves, hypothèses, analyse, proposition conditionnelle et questions. Ouvrir la version exacte, demander au participant ce qu’il corrigerait. Enregistrer seulement sa décision réelle : attribution locale sans identité vérifiée, aucune approbation du handoff. Ne pas appeler cnc-review ni fabriquer de récépissé. Montrer le rapport réel des données utilisées par le modèle.",
+        "Changement guidé : importer mise à jour et tables practice dans le même mandat, conserver identifiants stables et versions antérieures. Examiner descendants obsolètes et impact sémantique supplémentaire. Recalculer la trésorerie, lier le résultat puis réécrire proposition et rapport : encaissement différé, refus du créancier, aucun accord documenté. L’ancienne décision ne vaut pas pour ce projet.",
+        "Remise : ouvrir le rapport à l’entreprise avec no_agreement, bases, limites, actes/récépissés manquants, responsables des tâches et échéances à vérifier. Garder draft_handoff : terminer un run ne signe, ne dépose ni ne clôt la procédure. Réaliser ensuite l’exercice expert dans un mandat distinct avec les seules pièces choisies : questions neutres, indépendance/nomination non vérifiées, propre rapport final et responsabilités séparées."
+      ],
+      "deliverables": [
+        "Note initiale, lacunes et demandes avec sources et responsables.",
+        "Pack financier exécuté, forecasts initial et révisé, réponse de recherche revue ou lacune explicite.",
+        "Révisions immuables, rapport par rôle, remise négative et tâches restantes.",
+        "Rapport lisible des données modèle, déclaration des fichiers et historique reprenable."
+      ],
+      "review": "Suivre chaque chiffre du CSV au résultat puis au rapport. Distinguer dette nette, solde bancaire et trésorerie minimale. Vérifier version exacte, bases, rôle et obsolescence avant décision. Jugement économique, indépendance, droit applicable, signature et formalités restent professionnels ; ne pas inventer de récépissés ou d’issue positive.",
+      "checkpoints": [
+        "Que manque-t-il et quel travail peut continuer ? Le dépôt bloqué est-il disponible ?",
+        "Quel résultat a réellement été exécuté et quelle tâche reste proposée ?",
+        "Quelles dépendances et décisions faut-il revoir après le report ?",
+        "Quelles différences entre rapports et qui assume les tâches restantes ?"
+      ],
+      "practice": "D’abord, avec guide, importer mise-a-jour-fr.md : encaissement au 15 janvier 2027 et refus. Garder le premier forecast, préparer le rapport négatif. Ensuite ouvrir exercice-fr.md, sans étapes dictées, dans un mandat expert distinct : encaissement au 15 février au-delà de l’horizon, aucun accord. Utiliser treasury-independent, livrer un projet neutre, démontrer les sources et reprendre dans une nouvelle séance. Ne pas copier automatiquement le dossier privé du conseil.",
+      "success": "Vous expliquez couverture et limites, démontrez recalcul et révisions, distinguez mandats et expliquez une issue négative avec décisions et travaux ouverts. Pratique réelle et votre explication nécessaires ; les tests ne certifient pas l’apprentissage.",
+      "repeat": "En pratique réelle choisir nouvelles pièces et destination professionnelle distincte, confirmer rôle et mandat puis suivre le contrat courant. Quelles données parviennent au modèle : sources importées, tables financières, forecasts, notes, dépendances, projets, décisions et sources publiques discutées peuvent être lus par le runtime choisi. Les helpers locaux n’envoient pas ces fichiers à Mparanza ; stockage local ne signifie ni inférence hors ligne ni anonymisation. Le rapport décrit l’usage effectif, pas toute lecture modèle. La revue hébergée optionnelle transmet identifiants opaques, digest, décision, compte et heure ; elle est exclue du tutoriel. Aucun envoi de feedback, dépôt ou message aux parties."
+    },
+    "de": {
+      "title": "Composizione negoziata: von den Belegen zum Abschlussbericht",
+      "goal": "Einen fiktiven Fall ausführen, Unternehmensberater und unabhängigen Experten trennen und einen Entwurf bei gescheiterten Verhandlungen mit verbleibenden Aufgaben liefern.",
+      "scenario": "Officina Arco CNC ist ein vollständig fiktives italienisches Unternehmen. Zum 31. Oktober 2026: Darlehen EUR 120.000, verfügbare Bankmittel EUR 50.000, gesperrte Einlage EUR 10.000, Lieferverbindlichkeiten EUR 80.000. Angenommener Eingang EUR 100.000 am 15. November, Zahlung EUR 80.000 am 30. November. Altersstruktur, Einbringlichkeitsnachweis, Aufträge, Bestellung und Einreichungsbelege fehlen. Die gelieferten Positionen sind unvollständig.",
+      "scope": "Erweiterter lokaler Kurs in mehreren Sitzungen: Beraterdemonstration, geführte Änderung und selbständige Expertenübung in getrenntem Mandat. 5–8 Minuten gelten für einen erklärten Abschnitt; Berechnung, Recherche, Prüfung und Übung benötigen zusätzliche Zeit. Keine Qualifikation oder automatische Zugangsbewertung.",
+      "inputs": "Fall, balances.csv und treasury-demo lesen. Leere Tabellen bedeuten nicht gelieferte Daten, nicht fehlende reale Geschäftsvorfälle. treasury-practice und treasury-independent begleiten Änderung und selbständige Übung. Der Rechercheauftrag enthält eine allgemeine öffentliche Frage und zu prüfende URLs, kein aktuelles Rechtskorpus oder genehmigtes Ergebnis.",
+      "request": "Vera, ich berate die fiktive Officina Arco CNC. Lies Belege, trenne Fakten, Annahmen und Lücken, führe vorhandene Finanz- und Liquiditätsanalysen aus und entwerfe einen belegabhängigen Vorschlag. Begleite meine Prüfung der exakten Fassung. Alles bleibt lokal, ohne Versand oder simulierte fachliche Genehmigung.",
+      "steps": [
+        "Intake: lokalen Übungsfall und Beratermandat erstellen, genaue Quellen importieren, Umfang, Datum, Währung, dringende Ereignisse und Lücken festhalten. Nur arbeitsrelevante Fragen stellen. Fehlende Bestellung verhindert die Übung nicht und wird nicht als geprüft bezeichnet. Erste Notiz öffnen und Beleganforderungen zuordnen.",
+        "Analyse: aktuelle Finanz- und Treasury-Skills lesen. Übungsdefinition der Nettoverschuldung prüfen: Darlehen abzüglich verfügbarer Bankmittel, gesperrte Einlage und Lieferverbindlichkeiten ausgeschlossen. net_debt und Forecast mit gelieferten Tabellen ausführen, Runs abschließen und deklarierte Ergebnisse im Folge-CNC-Run binden. Werte, Quellen und Abdeckung prüfen: Saldo beweist keine Einbringlichkeit; Forecast ist kein ministerieller Test.",
+        "Recherche: quesito-legale-fiscale mit öffentlichem Auftrag nutzen. Gewöhnliche Recherche oder verfügbare Deep-Research-Route ausdrücklich nach Skill wählen, kein automatischer gehosteter Übergang. Planner und Review folgen, anwendbare Primärquellen lesen, Vertrag, Antwort, Quellen und Grenzen speichern und tatsächliches Ergebnis binden. URLs, Ausschnitte und gültige Register beweisen keine Aktualität oder Richtigkeit. Fehlender Zugriff bleibt offene Frage. Keine Übungsfakten in Suchanfragen.",
+        "Entwurf und Prüfung: Chronologie, Belege, Annahmen, Analysen, bedingten Vorschlag und Fragen verfassen. Exakte Fassung öffnen und Teilnehmer nach Korrekturen fragen. Nur tatsächliche Entscheidung speichern: lokale Zuordnung prüft keine Identität und genehmigt keinen Handoff. cnc-review nicht aufrufen, keine Quittungen erfinden. Tatsächlichen Bericht zur Modell-Datennutzung zeigen.",
+        "Geführte Änderung: Aktualisierung und practice-Tabellen im selben Mandat importieren; stabile IDs und alte Fassungen bewahren. Veraltete Nachfolger und weiteren semantischen Einfluss prüfen. Treasury neu rechnen, neues Ergebnis binden, Vorschlag und Bericht neu schreiben: verzögerter Eingang und Ablehnung, kein dokumentiertes Abkommen. Alte Entscheidung gilt nicht für neuen Entwurf.",
+        "Übergabe: Unternehmensbericht mit no_agreement, Grundlagen, Grenzen, fehlenden Handlungen/Belegen, Aufgabenverantwortlichen und zu prüfenden Fristen öffnen. draft_handoff bleibt: Run-Abschluss ist weder Unterschrift, Einreichung noch rechtlicher Abschluss. Danach Expertenübung in getrenntem Mandat mit ausgewählten Dokumenten: neutrale Fragen, ungeprüfte Unabhängigkeit/Bestellung, eigener Bericht und getrennte Verantwortung."
+      ],
+      "deliverables": [
+        "Intake-Notiz und Beleglücken mit Quellen und Verantwortlichen.",
+        "Ausgeführtes Finanzpaket, ursprünglicher und neuer Forecast, geprüfte Rechercheantwort oder offene Lücke.",
+        "Unveränderte historische Revisionen, rollenbezogener Abschlussbericht, negative Übergabe und Restaufgaben.",
+        "Lesbarer Modell-Datenbericht, Artefaktdeklaration und fortsetzbare Historie."
+      ],
+      "review": "Jede Zahl vom CSV über Ergebnis zum Bericht verfolgen. Nettoverschuldung, Banksaldo und minimale Liquidität trennen. Exakte Fassung, Grundlagen, Rolle und veralteten Zustand vor Entscheidung prüfen. Wirtschaftliches Urteil, Unabhängigkeit, Recht, Unterschrift und Pflichten verbleiben beim Fachmann; keine erfundenen Quittungen oder positiven Ergebnisse.",
+      "checkpoints": [
+        "Was fehlt und welche Arbeit kann weitergehen? Ist gesperrtes Geld verfügbar?",
+        "Welches Ergebnis wurde ausgeführt, welche Aufgabe nur vorgeschlagen?",
+        "Welche Abhängigkeiten und Entscheidungen nach Verzögerung neu prüfen?",
+        "Wie unterscheiden sich Berichte und wer trägt Restaufgaben?"
+      ],
+      "practice": "Zunächst geführt aktualisierung-de.md importieren: Eingang am 15. Januar 2027 und Ablehnung. Ersten Forecast bewahren und negativen Bericht verfassen. Dann selbständig uebung-de.md im getrennten Expertenmandat: Eingang am 15. Februar außerhalb des Horizonts, kein Abkommen. treasury-independent nutzen, neutralen Entwurf liefern, Quellen nachweisen und in neuer Sitzung fortsetzen. Beraterprivatakte nicht automatisch kopieren.",
+      "success": "Sie erklären Abdeckung und Grenzen, zeigen Neuberechnung und Revisionen, trennen Mandate und erläutern ein negatives Ergebnis mit offenen Entscheidungen und Aufgaben. Tatsächliche Übung und eigene Erklärung erforderlich; Tests bescheinigen kein Lernen.",
+      "repeat": "Für echte Arbeit neue Dokumente und professionelle Zielablage getrennt vom Tutorial auswählen, Rolle und Mandat bestätigen und aktuellen Vertrag befolgen. Welche Daten das Modell erreichen: importierte Quellen, Finanztabellen, Forecasts, Notizen, Abhängigkeiten, Entwürfe, Entscheidungen und besprochene öffentliche Quellen können vom gewählten Runtime gelesen werden. Lokale Helfer senden diese Dateien nicht an Mparanza; lokale Ablage bedeutet weder Offline-Inferenz noch Anonymisierung. Bericht beschreibt tatsächliche Nutzung, nicht jede Modelllektüre. Optionale gehostete Prüfung sendet opake IDs, Digest, Entscheidung, Konto und Zeit und ist im Tutorial ausgeschlossen. Kein Feedbackversand, keine Einreichung oder Parteienkommunikation."
+    },
+    "es": {
+      "title": "Composizione negoziata: del expediente al informe final",
+      "goal": "Ejecutar un caso ficticio, distinguir asesor de la empresa y experto independiente, y entregar un borrador con negociación fallida y responsabilidades pendientes.",
+      "scenario": "Officina Arco CNC es una sociedad italiana totalmente ficticia. Al 31 de octubre de 2026: préstamo EUR 120.000, caja disponible EUR 50.000, depósito restringido EUR 10.000, proveedores EUR 80.000. Cobro supuesto EUR 100.000 el 15 de noviembre; pago EUR 80.000 el 30 de noviembre. Faltan antigüedad de saldos, confirmación de recuperabilidad, pedidos, nombramiento y justificantes. Las posiciones aportadas son incompletas.",
+      "scope": "Curso local ampliado en varias sesiones: demostración asesor, cambio guiado y ejercicio autónomo experto en otro encargo. Los 5–8 minutos corresponden a un segmento explicado; cálculo, investigación, revisión y práctica necesitan más tiempo. Sin habilitación ni evaluación automática de acceso.",
+      "inputs": "Leer caso, balances.csv y treasury-demo. Tablas vacías significan datos no aportados, no ausencia de actividad real. treasury-practice y treasury-independent acompañan actualización y ejercicio autónomo. El brief de investigación incluye pregunta pública genérica y URL por verificar, no legislación actual ni respuesta aprobada.",
+      "request": "Vera, asesoro a la ficticia Officina Arco CNC. Lee pruebas, separa hechos, supuestos y carencias, ejecuta los flujos financieros y de tesorería existentes y prepara una propuesta condicionada. Guía mi revisión de la versión exacta. Todo local, sin envíos ni aceptación profesional simulada.",
+      "steps": [
+        "Intake: crear caso tutorial local y encargo asesor, importar fuentes exactas y registrar alcance, fecha, moneda, urgencias y carencias. Preguntar solo lo que cambie el trabajo. Nombramiento ausente no impide entrenar ni pasa a verificado. Abrir primera nota y asignar solicitudes de documentos.",
+        "Análisis: leer skills financieras y tesorería actuales. Revisar definición didáctica de deuda neta: préstamo menos caja disponible, excluyendo depósito restringido y proveedores. Ejecutar net_debt y forecast con tablas aportadas, completar sus runs y vincular resultados declarados al siguiente run CNC. Revisar cifras, pruebas y cobertura; un saldo no prueba recuperabilidad y el forecast no es el test ministerial.",
+        "Investigación: usar quesito-legale-fiscale con brief público. Elegir expresamente investigación ordinaria o ruta Deep Research disponible según skill, sin traspaso alojado automático. Seguir planner y revisión, leer fuentes primarias aplicables, guardar contrato, respuesta, fuentes y límites y vincular entregable real. URL, fragmentos y registros válidos no prueban vigencia ni corrección. Acceso fallido permanece cuestión abierta. Sin hechos tutorial en consultas.",
+        "Borrador y revisión: redactar cronología, pruebas, supuestos, análisis, propuesta condicional y preguntas. Abrir versión exacta y preguntar al participante qué corregir. Registrar solo decisión real: atribución local no verifica identidad ni aprueba handoff. No llamar cnc-review ni fabricar recibos. Mostrar informe real de datos usados por el modelo.",
+        "Cambio guiado: importar actualización y tablas practice en el mismo encargo, conservar IDs estables y versiones previas. Revisar descendientes obsoletos e impacto semántico adicional. Recalcular tesorería, vincular resultado y reescribir propuesta e informe: cobro aplazado y rechazo, sin acuerdo documentado. Decisión anterior no vale para nuevo borrador.",
+        "Entrega: abrir informe a empresa con no_agreement, bases, límites, actos/justificantes ausentes, responsables de tareas y plazos por verificar. Mantener draft_handoff: completar run no firma, presenta ni cierra procedimiento. Después ejercicio experto en encargo separado con documentos elegidos: preguntas neutrales, independencia/nombramiento no verificados, informe propio y responsabilidades distintas."
+      ],
+      "deliverables": [
+        "Nota inicial y solicitudes de pruebas con fuentes y responsables.",
+        "Pack financiero ejecutado, forecasts inicial y revisado, respuesta investigada y revisada o carencia explícita.",
+        "Revisiones históricas conservadas, informe por rol, entrega negativa y tareas pendientes.",
+        "Informe legible de datos modelo, declaración de artefactos e historia recuperable."
+      ],
+      "review": "Seguir cada cifra del CSV al resultado y al informe. Separar deuda neta, saldo bancario y caja mínima. Revisar versión exacta, bases, rol y estado obsoleto antes de decidir. Juicio económico, independencia, derecho aplicable, firma y obligaciones siguen siendo profesionales; no inventar justificantes ni resultado favorable.",
+      "checkpoints": [
+        "¿Qué falta y qué trabajo puede continuar? ¿Está disponible el depósito restringido?",
+        "¿Qué resultado se ejecutó y qué tarea solo se propuso?",
+        "¿Qué dependencias y decisiones revisar tras el aplazamiento?",
+        "¿Cómo difieren informes y quién asume tareas pendientes?"
+      ],
+      "practice": "Primero guiado importar actualizacion-es.md: cobro al 15 de enero de 2027 y rechazo. Preservar primer forecast, preparar informe negativo. Luego abrir ejercicio-es.md autónomamente en encargo experto separado: cobro el 15 de febrero fuera del horizonte, ningún acuerdo. Usar treasury-independent, entregar borrador neutral, demostrar fuentes y recuperar historia en nueva sesión. No copiar automáticamente expediente privado del asesor.",
+      "success": "Puedes explicar cobertura y límites, demostrar recálculo y revisiones, distinguir encargos y explicar resultado negativo con decisiones y tareas abiertas. Se requiere práctica real y tu explicación; tests no certifican aprendizaje.",
+      "repeat": "Para trabajo real elegir documentos nuevos y destino profesional separado, confirmar rol y mandato y seguir contrato actual. Qué datos llegan al modelo: el runtime elegido puede leer fuentes importadas, tablas financieras, forecasts, notas, dependencias, borradores, decisiones y fuentes públicas discutidas. Helpers locales no envían archivos a Mparanza; almacenamiento local no significa inferencia offline ni anonimización. Informe registra uso real, no cada lectura modelo. Revisión alojada opcional envía IDs opacos, digest, decisión, cuenta y hora y queda excluida del tutorial. Sin feedback enviado, presentación o comunicación a partes."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "087ebcb3a8d6ffb4198c9e59f49282f474c59c9185062217e2166dd20e9c22d7"
+}

@@ -743,6 +743,12 @@ def normalize_proposed_payload(
             check["review_status"] = "proposed"
         return normalized
     normalized["review_status"] = "proposed"
+    # These readiness states require a confirmed professional review. Keeping
+    # either beside forced `proposed` makes even a review-only dossier invalid.
+    # Preserve the model's substantive outcome and rationale, but leave the
+    # readiness decision for review, just like the other proposal controls.
+    if normalized.get("readiness") in ("ready", "not_applicable"):
+        normalized["readiness"] = "verify"
     if collection == "facts":
         normalized["kind"] = "model_inference"
     if collection == "assessments":

@@ -73,6 +73,21 @@ _ITALIAN = {
     "The debit/credit convention is not confirmed": "La convenzione Dare/Avere non è confermata",
     "Statements have not been computed": "I prospetti non sono stati calcolati",
     "A trial balance is required": "È necessaria una situazione contabile",
+    "Upload or enter source-backed schedule data": "Fornisci i dati del prospetto con i relativi riferimenti alle fonti",
+    "Accepted statement facts or the selected statutory form activate this supporting schedule.": "Le voci di bilancio riviste o la forma scelta richiedono questo prospetto di supporto.",
+}
+
+_SCHEDULES = {
+    "FIXED_ASSETS": "immobilizzazioni",
+    "INVENTORIES": "rimanenze",
+    "RECEIVABLES": "crediti",
+    "PAYABLES": "debiti",
+    "EQUITY": "patrimonio netto",
+    "PROVISIONS": "fondi",
+    "TFR": "trattamento di fine rapporto",
+    "TAXES": "imposte",
+    "GUARANTEES_COMMITMENTS": "garanzie e impegni",
+    "CASH_FLOW": "rendiconto finanziario",
 }
 
 _FLAGS = {
@@ -113,12 +128,18 @@ _SECTIONS = {
 def preview_text(value: Any, language: str) -> str:
     """Translate only an exact fixed string; retain unknown and authored text."""
     text = "—" if value is None else str(value)
+    if language == "it":
+        required = re.fullmatch(r"Provide the required (\w+) schedule", text)
+        if required and required[1].upper() in _SCHEDULES:
+            return "Fornisci il prospetto richiesto: " + _SCHEDULES[required[1].upper()]
     return _ITALIAN.get(text, text) if language == "it" else text
 
 
 def preview_reason(value: Any, language: str) -> str:
     """Localize the disclosure engine's exact reason formats, retaining prose."""
     reason = "—" if value is None else str(value)
+    if reason in _ITALIAN:
+        return preview_text(reason, language)
     locale = 0 if language == "it" else 1
     schedules = {
         "FIXED_ASSETS": ("immobilizzazioni", "fixed assets"),
@@ -186,6 +207,12 @@ def preview_check_message(
     """Display known native message formats with their exact declared subjects."""
     message = str(issue.get("message") or "")
     locale = 0 if language == "it" else 1
+    schedule_prefix = "Required schedules are missing: "
+    if language == "it" and message.startswith(schedule_prefix):
+        subjects = message[len(schedule_prefix) :].split(", ")
+        return "Mancano i prospetti richiesti: " + ", ".join(
+            _SCHEDULES.get(subject, subject) for subject in subjects
+        )
     count = re.fullmatch(r"(\d+) annual negative confirmations are missing", message)
     if count:
         return (

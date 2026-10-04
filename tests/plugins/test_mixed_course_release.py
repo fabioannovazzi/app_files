@@ -145,7 +145,17 @@ class Links(HTMLParser):
 
 def test_public_catalogue_links_every_language_and_contains_no_local_requests():
     directory = ROOT / "static/shared/courses"
-    assert len(list(directory.glob("*/*/*/course.html"))) == 205
+    guides = set(directory.glob("*/*/*/course.html"))
+    introductions = set(directory.glob("vera/get-started/*/course.html"))
+    expected_public_guides = 242  # Includes the Italian LIPE course.
+    assert len(guides - introductions) == expected_public_guides
+    assert {path.parent.name for path in introductions} == {
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es",
+    }
     assert not list(directory.rglob("execution-request.json"))
     documents = {}
     for path in directory.rglob("*.html"):

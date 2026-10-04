@@ -30,7 +30,7 @@ Explica el paso que se está ejecutando y espera su resultado real.
 
 La conversación de trabajo prepara el expediente y muestra documentos recibidos y preguntas propuestas. La conversación de voz explica qué está disponible y qué confirmaciones se necesitan.
 
-En la página de revisión, elige peticiones pertinentes y limita las sugerencias amplias a las dos confirmaciones del caso. Vera guarda y aplica las decisiones reales antes de redactar.
+En la revisión, abre «Solicitudes al cliente» y lee el texto propuesto. Elige la acción para solicitar documentos y escribe la confirmación precisa en el campo de documentos solicitados. Rechaza la pregunta de clasificación interna; guarda y aplica las decisiones antes de redactar.
 
 Vera escribe desde las peticiones revisadas. Abre el borrador y comprueba asunto, preguntas y tono; cualquier sustitución se guarda mediante la misma revisión, vinculada a las decisiones.
 

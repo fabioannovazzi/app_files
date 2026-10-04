@@ -344,6 +344,7 @@ function registerReviewReference(clientEngagement, suppliedReview) {
   const preflight = load_client_workflow_context_for_output(
     contextPath,
     suppliedReview.run_id,
+    true,
   );
   const outputDir = fs.realpathSync(requireString(preflight.output_dir, "output_dir"));
   const outputStat = fs.statSync(outputDir);
@@ -359,13 +360,14 @@ function registerReviewReference(clientEngagement, suppliedReview) {
   pruneReviewReferences();
   REVIEW_REFERENCES.set(reference, {
     clientEngagement: contextPath,
+    persistenceEnabled: preflight.write_enabled === true,
     outputDir,
     reviewPath,
     reviewSha256,
     runId: stored.payload.run_id,
     expiresAt: Date.now() + REVIEW_REFERENCE_TTL_MS,
   });
-  return { reference, reviewSha256, persistenceEnabled: true };
+  return { reference, reviewSha256, persistenceEnabled: preflight.write_enabled === true };
 }
 
 function resolveReviewReference(rawReference) {
@@ -472,11 +474,12 @@ function callCli(args) {
   return payload;
 }
 
-function load_client_workflow_context_for_output(clientEngagement, expectedRunId) {
+function load_client_workflow_context_for_output(clientEngagement, expectedRunId, readOnly = false) {
   const result = callCli([
     "preflight",
     "--client-engagement",
     clientEngagement,
+    ...(readOnly ? ["--read-only"] : []),
   ]);
   if (result.run_id !== expectedRunId) {
     throw new Error("client engagement run_id does not match review_payload.run_id");
@@ -486,7 +489,7 @@ function load_client_workflow_context_for_output(clientEngagement, expectedRunId
 
 function persistDecisions(inputArgs, compileApproval) {
   const resolved = resolveReviewReference(inputArgs.review_reference);
-  if (!resolved.context.clientEngagement) {
+  if (!resolved.context.clientEngagement || !resolved.context.persistenceEnabled) {
     throw new Error(
       "review_reference is review-only; local persistence requires a bound Studio Archive run",
     );
@@ -574,6 +577,10 @@ function callTool(name, inputArgs) {
   }
   if (name === TOOL_NAMES.renderReview) {
     const resolved = resolveReviewReference(args.review_reference);
+    const canPersist = Boolean(resolved.context.clientEngagement) &&
+      load_client_workflow_context_for_output(
+        resolved.context.clientEngagement, resolved.review.run_id, true,
+      ).write_enabled === true;
     return {
       plugin: "archive-organization",
       run_id: resolved.review.run_id,
@@ -585,7 +592,13 @@ function callTool(name, inputArgs) {
         ? readOptionalSidecar(resolved.context.outputDir, "final_artifacts.json")
         : null,
       review_reference: resolved.reference,
-      persistence_enabled: Boolean(resolved.context.clientEngagement),
+      persistence_enabled: canPersist,
+      decision_policy: {
+        save_tool: TOOL_NAMES.saveDecisions,
+        apply_tool: TOOL_NAMES.applyDecisions,
+        can_persist: canPersist,
+        fallback: "copy_json",
+      },
       execution_requires_separate_explicit_approval: true,
       source_archive_mutated: false,
     };

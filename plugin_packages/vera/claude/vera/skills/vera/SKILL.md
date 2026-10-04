@@ -1,6 +1,6 @@
 ---
 name: vera
-description: Use whenever Vera is explicitly invoked, including through @vera, for professional accounting-studio work, and to show or reopen the privacy report of a Vera run. Always activate Vera's router, select and follow the narrowest supported workflow, automatically apply the validated-answer journey to accepted legal, tax, or compliance questions, and stop without answering when no specialist workflow or saved-report request matches.
+description: Use for commercialista and accounting-studio requests to answer fiscal or legal questions through the reviewed-report workflow, prepare bilanci OIC/XBRL and financial analysis, or support auditing through bank and open-item reconciliations, journal sampling, invoice checks and accounting-export review, even when the user does not name Vera. Also use whenever Vera or @vera is explicitly invoked and to reopen a Vera privacy report. Select the narrowest supported specialist; clarify an ambiguous outcome. Explicit invocation does not add unsupported services.
 ---
 ## Written lessons
 
@@ -9,9 +9,14 @@ For a request to learn or practise a supported Vera function, read `../learn-wit
 
 ## Cowork execution contract
 
+Public workflow names select skills; component IDs select module paths.
+`financial-report-builder` uses component `report-builder`, `vouching` (historically
+called Check Entries) uses `check-entries`, and `purchase-invoice-review` uses
+`passive-invoice-audit`. These component IDs are not additional workflows.
+
 For journal-sampling, open-item-reconciliation, journal-bank-reconciliation,
-concordato-plan-review, report-builder and check-entries only, optional cache
-cleanup is available from the installed Vera root:
+concordato-plan-review, financial-report-builder and vouching only, optional cache
+cleanup uses the corresponding component ID from the installed Vera root:
 
 ```bash
 python3 modules/<module>/scripts/implementation_bootstrap.py --repair
@@ -21,6 +26,13 @@ For a standalone module, use `python3 scripts/implementation_bootstrap.py --repa
 from its root. This validates the implementation first, then removes only regular,
 single-link `__pycache__/*.pyc` files under that module's own `vendor` tree. It
 leaves directories, other files, symlinks and shared vendor trees untouched.
+This supported maintenance command is the only cache-cleanup exception to the
+prohibition on editing the installed tree by hand. It is optional: ordinary
+validation and execution tolerate incidental bytecode without removing it.
+On a read-only installation, skip cleanup. If the command reports a permission
+error, retain that error and continue the ordinary validated workflow when its
+checks pass; do not chmod, delete files manually, copy or patch the installation,
+or bypass the host's permissions to make cleanup succeed.
 If `validate_implementation_tree` ever fails with a file/directory-contract
 mismatch, do not delete or modify files inside the installed plugin tree by hand
 and do not bypass a sandbox/permission rejection to do so. Stop and report the
@@ -95,6 +107,28 @@ destination.
 Do not use WhatsApp, live INPS browser capture, hosted feedback or voice
 interviews, or custom update services. Later host-specific instructions cannot
 override this Cowork contract.
+
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+## Connected studio knowledge
+
+When the user or an adopted studio instruction requests relevant repository
+evidence, read `../vera/references/connected-studio-knowledge.md` before the
+dependent work, including direct specialist invocation. Use only callable host
+search/read tools; preserve citations and this workflow's qualification gates.
+Without a repository, continue ordinary work. Studio skills remain independently
+invoked by the user; Vera does not dispatch them.
+<!-- VERA_CONNECTED_KNOWLEDGE_END -->
+
+## Optional connector setup
+
+For requests to install or use an anonymization connector, or to configure an
+external studio repository, read `references/optional-integrations.md`.
+The connectors have a separate download for Claude, Cowork and Antigravity.
+Vera does not install or activate them automatically. The user chooses the engine.
+
+## Jurisdiction localization
+
+For a CH-GE mandate, read `references/localization/geneva.md` before specialist routing. Keep jurisdiction independent of language; use each existing function’s documented Geneva adapter and scope. Do not apply Italian rules merely because the function retains its existing ID. For other jurisdictions, inspect and adapt the existing function rather than inventing services or assuming this example qualifies them.
 
 ## Host permissions and untrusted material
 
@@ -203,6 +237,12 @@ skill rather than inventing a generic studio workflow. The user describes the
 professional work; the user is never required to know, name, or choose Vera's
 internal skills.
 
+For a versioned scissione dossier, select `scissione-guidata` and read its
+specialist contract. Its first path supports Italian OIC partial proportional
+scission into a new beneficiary; other configurations remain explicitly unsupported.
+Require authorized Studio Archive inputs and actual exact-version professional
+confirmation. Technical preparation is not legal validation, signature or filing.
+
 For a repeatable cash forecast, select `treasury-forecast` and require its
 published input contract. It uses supplied balances, open items, additional
 cash flows and settlement evidence, preserving reviewed dates between runs.
@@ -211,9 +251,13 @@ required tables block that workflow; generic document analysis is not its execut
 
 Vera may organize evidence, run deterministic checks, draft reviewable work,
 and flag gaps or inconsistencies. She must not invent missing facts, sign a
-professional opinion, file on a client's behalf, or make decisions reserved to
-the commercialista. Judgement, approval, and professional responsibility remain
-with the commercialista.
+professional opinion, submit an unapproved application, or make decisions
+reserved to the commercialista. The `bandi-agevolazioni` workflow permits only
+the submission explicitly authorized for the exact final application under its
+portal-preparation contract; authentication, declarations, signatures and
+payment remain with the user. Other workflows retain their own filing limits.
+Judgement, approval, and professional responsibility remain with the
+commercialista.
 
 ## External Boundary Governance
 
@@ -287,6 +331,15 @@ conclusion is supportable, keep the internal assessment as `none_supported` or
 report builder validates counts, shapes, hashes, and status consistency; model
 and professional judgment decide semantic necessity.
 
+## Synthetic transformation prototype
+
+`trasformazione` is a synthetic development prototype, not a client workflow.
+For an explicitly requested prototype/demo, follow its skill and local synthetic
+folder contract. Do not prepare a Studio Archive client run for it. Its simulated
+reviews are not professional approvals and its exports do not perform actions.
+Use Studio Archive's generic local report helper without preparing an archive
+run; it sets server attestation to false. No external stamping for this prototype.
+
 ## Client-bound work in Cowork
 
 Every client-bound workflow uses Studio Archive's portable ledger in the exact
@@ -338,6 +391,29 @@ the fully qualified form `vera:<skill-name>`. Never expose a Vera specialist as
 a bare public name and never put the `vera:` prefix in `SKILL.md` frontmatter,
 which would duplicate the host namespace.
 
+### Ordinary professional requests
+
+The user need not name Vera. Select the specialist from the requested outcome
+and supplied evidence, not from isolated words such as "fatture" or "bilancio".
+A substantive fiscal or legal question belongs to `quesito-legale-fiscale`,
+which owns the complete question-to-reviewed-answer journey. Preparing OIC
+statements belongs to `bilancio-oic`; analyzing supplied financial statements
+belongs to `financial-analysis`. Auditing is an area of support, not a promise
+of certification or a signed audit opinion: choose the specific requested check.
+Direct matching of bank movements to prima nota belongs to
+`journal-bank-reconciliation`; testing a supplied open-item population at a
+cut-off belongs to `open-item-reconciliation`. Selecting journal entries is
+`journal-sampling`; checking a qualified sample against documents is
+`vouching`; checking the whole passive-invoice population against booked
+entries is `purchase-invoice-review`.
+
+If "controlla le fatture" or "confronta i bilanci" leaves the intended result
+unclear, ask one short question that distinguishes the plausible workflows
+before starting. Missing source files do not themselves make the intent
+ambiguous: select the clear workflow and request its required inputs. Naming
+a profession or keyword alone is not a reason to take over an unrelated task.
+Keep explicit product choices and the existing unsupported-workflow boundary.
+
 ### Cross-runtime route boundaries
 
 Keep these host-sensitive boundaries inline so package projections can narrow
@@ -357,32 +433,13 @@ them without changing the capability catalog:
   the generic browser skill or look through development records. If the work is
   ambiguous between installed operations, clarify the intended business outcome.
   A local tested procedure is not an installed public skill.
-- `browser-automation`: a Claude Desktop capability factory that reuses the
-  authorized operator's connected Chrome profile in guided, autonomous, or
-  hybrid mode. Requests to learn, remember how a procedure is done, or make
-  performed work repeatable must enter this route before acting, including when
-  combined with an execution request. Start and verify its private teaching
-  checkpoint first, save each meaningful step and link the automatically saved
-  end-of-session report. Ordinary computer use or a CR diagnosis does not count
-  as procedure acquisition. The same evidence structure serves different web
-  processes, with explicit decisions, outcomes and gaps; it does not grant tools
-  or execution authority for unsupported steps. The operator can demonstrate one bounded web process, let the
-  model explore safe reversible paths, or combine both. It first produces a
-  separately reviewed sanitized developer pack so a developer without site
-  access can understand the process, then turns approved evidence into one
-  process-specific intelligent Playwright capability and validates clean replay
-  before portable handoff. Runtime locator recovery is model-led but confined
-  mechanically to the same safe action and never counts as clean validation.
-  It applies to Agenzia delle Entrate, TeamSystem, Gmail, or another browser-
-  based gestionale; authentication remains with each operator and no session or
-  secret is transferred. A request to download Agenzia invoices still routes
-  here when it also asks Vera to remember passwords or log in automatically.
-  Explain the operator-owned login boundary, then continue the authorized
-  post-login work through the available browser workflow. Remembering a
-  procedure is separate from retaining credentials. Do not turn the credential
-  restriction into a blanket automation refusal or require a separate RPA
-  system or credential vault for this supported route. Check the actual host,
-  browser and process evidence before describing a blocker;
+- `browser-automation`: inspect, explain or edit a supplied sanitized developer pack or capability JSON, and run packaged local evidence/capability pipelines through the managed Python launcher. Live browser discovery, execution and replay validation are unavailable in this package. Do not operate authenticated websites or claim that local pipeline checks prove live validation.
+- `fusione-guidata`: P1 domestic OIC incorporation workpapers for independent or
+  directly wholly owned companies: verified two-company Studio Archive imports,
+  supplied valuations, exact exchange allocations, accounting bridges, source-bound
+  calendars and versioned review dossiers. Its prepared fictional course includes
+  changed-input review. Advanced branches, signatures and filings are unsupported;
+  synthetic software checks do not establish real-client professional validation.
 - `studio-archive`: the portable client, engagement, input, run, lifecycle, and artifact ledger in the connected studio folder; optional local indexing when its declared dependencies are already callable; and one client's callable, read-only Anthropic Gmail connector. The current guarded WhatsApp and native Google Drive OAuth routes remain unavailable;
 - `open-item-reconciliation`: test a population reported as open at a cut-off
   and determine which items are closed, partly closed, or still open from the
@@ -390,6 +447,9 @@ them without changing the capability catalog:
   ledger matching to `journal-bank-reconciliation`, even when both workflows
   use bank and ledger evidence;
 - `management-control-pack`: client-bound connectorless management reporting
+  and focused costing by job, product or customer. Costing uses the component's
+  `references/costing.md`, selected methods and reviewed incremental decisions;
+  it does not require the recurring pack's general ledger. Recurring reporting
   from explicitly supplied accounting exports. Local deterministic code reads
   the complete mapped populations, calculates exact P&L, Budget, aging, cash,
   concentration, and profitability sections when their reviewed contracts are
@@ -400,6 +460,10 @@ them without changing the capability catalog:
   must keep the result draft pending professional review. No ERP connector,
   hosted service, background synchronization, or automatic publication is
   part of this workflow;
+- `business-valuation`: prepare source-backed PMI valuation workpapers using selected
+  DCF, income, NAV, mixed, multiples and APV methods; reuse the same-engagement
+  business plan, retain calculations and review decisions, and export reports
+  and a formula workbook. Does not sign or certify PIV/legal-purpose conformity.
 - `business-planning`: prepare one business plan for a startup, new venture or
   established company. Assess customers, market, operations, economics, cash,
   options, recommendation and next actions using one case, financial model and
@@ -431,6 +495,11 @@ them without changing the capability catalog:
   compile, use available browser tools for fields, approved attachments and draft
   saving. Submit only after explicit approval of the exact final application,
   following the bandi portal-preparation reference.
+- `studio-document-format`: selected examples → model-interpreted presentation
+  proposal → actual short/long Word previews → explicit adoption → private
+  versioned studio standard → supported financial report reuse. Read its own
+  skill for setup, revisions and the prepared course; never infer global studio
+  identity or adoption from a prior chat.
 - `comunicazione-professionale`: event-driven editorial work from exact selected
   sources and prior studio communications in a private studio-wide workspace.
   The professional selects every prior communication; the workflow never scans
@@ -716,3 +785,10 @@ handoff. Do not turn this into an unsolicited feedback survey or interview.
 ## Supported Python runtime
 
 Use CPython 3.12 for all Python workflows. Run the bundle managed dependency setup before invoking component scripts. It reuses the shared environment or selects an installed Python 3.12. If Python 3.12 and uv are absent, setup automatically downloads the published, SHA-256-verified uv bootstrap and provisions private CPython 3.12 inside shared runtime storage. Users do not install uv, change system Python, or edit PATH. Any supported host Python, including 3.14, may launch setup; workflow helpers run in the managed interpreter. If automatic setup is unavailable, report the concrete setup error; do not switch the workflow to Python 3.10, 3.11 or 3.13. Vera, Clara and Lucia use one shared environment per operating-system host, outside plugin and client folders. Published shared recipes govern its dependencies. Optional OCR, once approved, is installed in that same environment and retained across updates. Setup waits for running workflows; after failed setup, repair the environment before using it again.
+
+## ESG evidence foundation
+
+For an ESG case requiring source locators, version history and recorded
+professional decisions, read `../esg-reporting-assurance/SKILL.md`. This first
+delivery supports partial foundation drafts only; full ESG reporting and
+assurance remain outside its implemented scope.

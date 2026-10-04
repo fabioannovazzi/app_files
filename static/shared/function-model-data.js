@@ -40,6 +40,13 @@
       report: "Al final de cada ejecución sustancial, Vera muestra un breve informe que separa lo procesado localmente, lo visible para el modelo y lo que nunca fue visible para el modelo.",
       reportLink: "Cómo leer el informe →",
     },
+    ar: {
+      label: "معالجة البيانات",
+      title: "ما البيانات التي تصل إلى النموذج",
+      placeholder: "يجري إعداد المعلومات الخاصة بهذه الوظيفة.",
+      report: "",
+      reportLink: "",
+    },
   };
 
   const params = new URLSearchParams(window.location.search);

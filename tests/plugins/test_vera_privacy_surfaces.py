@@ -131,6 +131,7 @@ def test_vera_shared_services_separate_runtime_update_and_feedback() -> None:
     manifests = {manifest["service_id"]: manifest for manifest in _service_manifests()}
 
     assert set(manifests) == {
+        "cnc-authenticated-review",
         "datev-starter",
         "local-onboarding",
         "managed-python-runtime",
@@ -437,7 +438,17 @@ def test_shared_model_data_copy_names_the_model_not_the_runtime_pair() -> None:
     function_copy = (
         ROOT / "static" / "shared" / "product-function-pages.js"
     ).read_text(encoding="utf-8")
-    vera_function_copy = function_copy.split('"clara-advisory-planning":', 1)[0]
+    # These new pages explicitly document their inspected dual-host boundaries.
+    legacy_function_copy = function_copy
+    for workflow in ("rating-legalita", "lipe"):
+        entry_start = legacy_function_copy.index(f'"{workflow}":')
+        object_start = legacy_function_copy.index("{", entry_start)
+        _, length = json.JSONDecoder().raw_decode(legacy_function_copy[object_start:])
+        legacy_function_copy = (
+            legacy_function_copy[:entry_start]
+            + legacy_function_copy[object_start + length :]
+        )
+    vera_function_copy = legacy_function_copy.split('"clara-advisory-planning":', 1)[0]
     vera_function_copy += function_copy.split("const bilancioModelData =", 1)[1].split(
         "Object.entries(bilancioModelData)", 1
     )[0]

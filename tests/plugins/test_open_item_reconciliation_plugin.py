@@ -978,6 +978,23 @@ def test_review_server_applies_local_browser_decisions(tmp_path: Path) -> None:
     assert result["run_intake_path"] == (output_dir / "run_intake.json").as_posix()
     assert applied["decision_source"] == "local_review_server"
     assert applied["decision_count"] == 2
+    reopened = review_server.build_session_payload(output_dir)
+    assert reopened["applied_decisions"] == applied
+    assert '"applied_decisions": {' in review_server.render_review_html(output_dir)
+    original_saved = (output_dir / "ui_decisions.json").read_bytes()
+    regenerated_template = review_server._empty_ui_decisions(reopened["review_payload"])
+    (output_dir / "ui_decisions.json").write_text(json.dumps(regenerated_template))
+    before_reload = (output_dir / "ui_decisions.json").read_bytes()
+    restored = review_server.build_session_payload(output_dir)
+    assert restored["ui_decisions"]["decisions"] == applied["decisions"]
+    assert (output_dir / "ui_decisions.json").read_bytes() == before_reload
+    regenerated_template["decision_source"] = "local_review_server"
+    (output_dir / "ui_decisions.json").write_text(json.dumps(regenerated_template))
+    assert (
+        review_server.build_session_payload(output_dir)["ui_decisions"]["decisions"]
+        == []
+    )
+    (output_dir / "ui_decisions.json").write_bytes(original_saved)
     assert applied["blocker_count"] == 1
     assert applied["completion_blockers"][0]["kind"] == "assurance_replay_required"
     assert applied["structured_update_count"] == 1
@@ -1031,6 +1048,20 @@ def test_review_server_applies_local_browser_decisions(tmp_path: Path) -> None:
         strict_output_content=True,
     )
     assert contract_report.ok, contract_report.as_dict()
+
+
+def test_review_server_rejects_applied_decisions_from_another_run(
+    tmp_path: Path,
+) -> None:
+    review_server = load_review_server()
+    output_dir = tmp_path / "out"
+    _write_review_server_fixture(output_dir)
+    (output_dir / "applied_decisions.json").write_text(
+        json.dumps({"plugin": "open-item-reconciliation", "run_id": "other-run"}),
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="current review run"):
+        review_server.build_session_payload(output_dir)
 
 
 def test_review_server_failed_checks_block_final_ready(tmp_path: Path) -> None:
@@ -1316,7 +1347,7 @@ def test_audit_mcp_rejects_expanded_tree_before_every_public_surface(
         )
 
     assert raised.value.stdout == ""
-    assert "exact 25-file contract" in raised.value.stderr
+    assert "exact 26-file contract" in raised.value.stderr
 
 
 @pytest.mark.parametrize(
@@ -1380,7 +1411,7 @@ def test_audit_mcp_rejects_post_start_expansion_before_next_public_surface(
 
     assert returncode != 0
     assert remaining_stdout == ""
-    assert "exact 25-file contract" in stderr
+    assert "exact 26-file contract" in stderr
 
 
 def test_open_item_reconciliation_mcp_server_localizes_spanish_runtime_feedback(
@@ -2377,6 +2408,59 @@ def _portable_audit_transaction_case(
     )
     arguments["run_intake"] = run_intake
     return output_dir, arguments
+
+
+@pytest.mark.parametrize("nested", [False, True])
+def test_archived_native_review_reopens_without_enabling_writes(
+    tmp_path, monkeypatch, nested
+):
+    output_dir, _ = _portable_audit_transaction_case(tmp_path)
+    context_path = _customer_context_path(output_dir)
+    context = json.loads(context_path.read_text())
+    ledger = _load_customer_ledger()
+    ledger._write_run_status_locked(
+        context_path.parents[5],
+        context["engagement_id"],
+        context["run_id"],
+        "ready_for_review",
+    )
+    if nested:
+        originals = list(output_dir.iterdir())
+        nested_dir = output_dir / "reconciliation"
+        nested_dir.mkdir()
+        for path in originals:
+            path.rename(nested_dir / path.name)
+        output_dir = nested_dir
+    review_server = load_review_server()
+    before = _audit_tree_image(output_dir)
+    assert (
+        review_server.build_session_payload(output_dir, for_display=True)[
+            "local_review_read_only"
+        ]
+        is True
+    )
+    assert '"local_review_read_only": true' in review_server.render_review_html(
+        output_dir
+    )
+
+    class LocalServer:
+        server_address = ("127.0.0.1", 12345)
+
+        def serve_forever(self):
+            raise KeyboardInterrupt
+
+        def server_close(self):
+            pass
+
+    monkeypatch.setattr(
+        review_server, "ThreadingHTTPServer", lambda *args: LocalServer()
+    )
+    review_server.serve_review(output_dir, open_browser=False)
+    with pytest.raises(ValueError, match="running state"):
+        review_server.save_decisions(output_dir, {"decisions": []})
+    with pytest.raises(ValueError, match="running state"):
+        review_server.apply_decisions(output_dir, {"decisions": []})
+    assert _audit_tree_image(output_dir) == before
 
 
 def test_audit_review_save_and_apply_survive_customer_folder_rename(

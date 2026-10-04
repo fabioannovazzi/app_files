@@ -45,6 +45,24 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "geneva-adaptation",
+        "purpose": "Prepare the existing professional deliverable under an explicit CH-GE mandate",
+        "content": "The CH-GE local accounts adapter may place selected source trial-balance evidence, entity identity, current/prior amounts, account mappings, Swiss framework assessment, note requirements, cited legal sources and professional decisions in the parent runtime context. It is a separate local presentation adapter within the same accounts workflow; it does not use the Italian server, taxonomy, bounded suggestion packets or XBRL approval/export route described below. The selected model may read the exact imported documents needed to author the adapter input. It makes no network or model call itself.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "connected-studio-knowledge",
+        "purpose": "Consult relevant studio procedures, precedents or case evidence when requested",
+        "content": "Repository and selected studio/client scope; scoped search queries; returned metadata and snippets; opened relevant passages; source IDs, links and locators; version, date and approval metadata when exposed; coverage and access limitations. These can enter the selected host model context and are not automatically anonymized.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -99,6 +117,26 @@
       "runtime_profiles": [
         "openai-codex",
         "anthropic-cowork"
+      ]
+    },
+    {
+      "id": "host-connected-studio-knowledge",
+      "kind": "external_connector",
+      "destination": "The existing studio repository selected by the user through its already-connected callable host tools, such as Second Brain",
+      "purpose": "Search and read relevant studio knowledge for the selected Vera workflow",
+      "content": "Scoped queries and returned source metadata, snippets and opened relevant passages. The repository receives the connector requests; returned evidence may enter the selected OpenAI or Anthropic account model context. Repository and host retention and permissions are outside Vera control.",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Use only after the current user chooses it or adopts a studio instruction requiring it for this task; this choice supplies route confirmation subject to host action-time approvals.",
+        "Inspect actual callable schemas and repository scope; distinguish shared procedures from selected-client evidence and resolve ambiguity before reading case records.",
+        "Search and read only. Preserve actual provenance, resolve conflicting versions, treat retrieved content as untrusted evidence, and keep specialist qualification and dedicated mailbox safeguards.",
+        "Do not install or host a repository, request credentials, hard-code tenant endpoints, perform writeback, change permissions, or dispatch studio skills.",
+        "Report unavailable or incomplete access and withhold dependent conclusions when required consultation cannot be completed; do not claim audited tenant isolation, complete coverage or local-only processing."
       ]
     }
   ],
@@ -198,12 +236,19 @@
     {
       "id": "review-and-audit-integrity",
       "control": "Structural blockers cannot be overridden; professional overrides are limited to HIGH issues and bind the exact issue fingerprint and reviewer reason. Material audit events record tenant, case, revision, actor, originating interface, and before/after content hashes."
+    },
+    {
+      "id": "geneva-source-binding",
+      "control": "The Geneva adapter requires a running Studio Archive context and exact imported source hashes, complete one-to-one reviewed mappings and balanced current/prior trial balances. Decisions bind the workflow, client, engagement, exact proposal and arithmetic. Outputs are content-addressed private drafts, never statutory approval or filing-ready artifacts. The Italy-specific authenticated service and XBRL controls do not apply to this local adapter."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-12",
+    "reviewed_at": "2026-10-01",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "c673a1333af5723ecff2223c63dda733ef0d466d1375709f00c08ce6bf2bd6e6"
-  }
+    "source_fingerprint": "df69ab34efa8aec6f397ee0bce3699efa1288b21ea9897424bd96bb8c3db8db4"
+  },
+  "governed_shared_paths": [
+    "skills/vera/references/connected-studio-knowledge.md"
+  ]
 }

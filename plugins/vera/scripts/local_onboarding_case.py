@@ -161,8 +161,8 @@ def prepare_case(
             encoding="utf-8",
         )
         return result
-    if workflow == "presenza-digitale-studio":
-        # This specialist owns a website workspace, rather than a ledger run.
+    if workflow in {"presenza-digitale-studio", "studio-document-format"}:
+        # These specialists own studio workspaces, rather than client ledger runs.
         inputs = case / "inputs"
         outputs = case / "outputs"
         inputs.mkdir()
@@ -222,6 +222,10 @@ def prepare_case(
         if "skill" in metadata
     }
     ledger_workflow = skill_components.get(workflow, ledger_workflow)
+    if workflow == "quesito-legale-fiscale":
+        # The named answer journey starts with a real preparation run. Its
+        # closed artifacts feed answer review in the same engagement.
+        ledger_workflow = "prompt-optimizer"
     if workflow == "vouching":
         # Raw kit sources are not a prepared Vouching population. First run
         # actual Journal Sampling; its closed artifacts feed the later check.

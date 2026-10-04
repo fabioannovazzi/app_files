@@ -1,0 +1,91 @@
+{
+  "schema_version": 3,
+  "workstream": "trasformazione",
+  "display_name": "Synthetic company-transformation prototype",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "references"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "synthetic-transformation-case",
+        "purpose": "Propose and review synthetic transformation-case findings and inspect versioned dossiers",
+        "content": "Selected synthetic documents, case attributes, source snapshots, participant rights, creditors, reserve and asset values, proposed findings, decisions and dossiers may be read by the selected session model. Local code stores inert bytes, exact arithmetic and hashes. The synthetic-only declaration is not automatic anonymization or a personal-data detector; the helper does not measure provider context. No real-client mandate is supported in this increment.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "synthetic-teaching",
+        "purpose": "Explain the prepared synthetic case, inspect live demo/practice outputs and actual review choices",
+        "content": "The native OpenAI teaching session may read the selected fictional course inputs, proposed findings, versioned dossiers, actual review choices and lesson profile. Course rendering, case storage and progress are local and send no Mparanza telemetry; this does not make model inference local-only. Tutorial outputs and state are not public catalogue materials. Cowork has no native teaching skill. No Studio Archive preparation or server stamping is used for this course.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
+        "id": "connected-studio-knowledge",
+        "purpose": "Consult relevant studio procedures, precedents or case evidence when requested",
+        "content": "Repository and selected studio/client scope; scoped search queries; returned metadata and snippets; opened relevant passages; source IDs, links and locators; version, date and approval metadata when exposed; coverage and access limitations. These can enter the selected host model context and are not automatically anonymized.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "host-connected-studio-knowledge",
+      "kind": "external_connector",
+      "destination": "The existing studio repository selected by the user through its already-connected callable host tools, such as Second Brain",
+      "purpose": "Search and read relevant studio knowledge for the selected Vera workflow",
+      "content": "Scoped queries and returned source metadata, snippets and opened relevant passages. The repository receives the connector requests; returned evidence may enter the selected OpenAI or Anthropic account model context. Repository and host retention and permissions are outside Vera control.",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Use only after the current user chooses it or adopts a studio instruction requiring it for this task; this choice supplies route confirmation subject to host action-time approvals.",
+        "Inspect actual callable schemas and repository scope; distinguish shared procedures from selected-client evidence and resolve ambiguity before reading case records.",
+        "Search and read only. Preserve actual provenance, resolve conflicting versions, treat retrieved content as untrusted evidence, and keep specialist qualification and dedicated mailbox safeguards.",
+        "Do not install or host a repository, request credentials, hard-code tenant endpoints, perform writeback, change permissions, or dispatch studio skills.",
+        "Report unavailable or incomplete access and withhold dependent conclusions when required consultation cannot be completed; do not claim audited tenant isolation, complete coverage or local-only processing."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "inert-import",
+      "control": "Evidence import copies bytes without parsing or executing source contents; subsequent loads verify retained evidence hashes."
+    },
+    {
+      "id": "bound-review",
+      "control": "Review requires the exact current submitted proposal digest and rejects blank reviewer attribution; evidence changes invalidate dependent approvals. Reviewer names are not authenticated signatures."
+    },
+    {
+      "id": "history-integrity",
+      "control": "Append-only snapshot creation and chained digests detect edits and reject conflicting revision writes. Local owner can rewrite the store; this is not tamper-proof notarization."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-10-01",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "766fc32b9eefb461e8fdaf81e05d80d8b7d2216a546cf9744065f1cc6d93a11d"
+  },
+  "governed_shared_paths": [
+    "skills/vera/references/connected-studio-knowledge.md"
+  ]
+}

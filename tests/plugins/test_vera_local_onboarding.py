@@ -1328,12 +1328,15 @@ def test_organization_kit_keeps_result_and_runs_reviewed_practice_copy(
     )
 
 
-def test_website_teaching_prepares_private_project_for_current_specialist(
-    store, module, tmp_path
+@pytest.mark.parametrize(
+    "studio_workflow", ["presenza-digitale-studio", "studio-document-format"]
+)
+def test_studio_teaching_prepares_private_project_for_current_specialist(
+    store, module, tmp_path, studio_workflow
 ):
     store.begin()
     change(store, "profile", confirmed_by_user=True, profile=profile())
-    workflows = ("presenza-digitale-studio", "fatture-xml-check", "variance-analysis")
+    workflows = (studio_workflow, "fatture-xml-check", "variance-analysis")
     change(
         store,
         "plan",
@@ -1363,6 +1366,46 @@ def test_website_teaching_prepares_private_project_for_current_specialist(
     assert Path(result["inputs"][0]["path"]).read_bytes() == source.read_bytes()
     assert Path(result["output_dir"]).is_relative_to(store.root)
     assert not (Path(result["directory"]) / "Vera").exists()
+
+
+def test_question_teaching_starts_preparation_with_bound_original_inputs(
+    store, module, tmp_path
+):
+    store.begin()
+    change(store, "profile", confirmed_by_user=True, profile=profile())
+    change(
+        store,
+        "plan",
+        lessons=[
+            {"workflow_id": wf, "reason": "Fictional fixture", "goal": "Learn answers"}
+            for wf in (
+                "quesito-legale-fiscale",
+                "fatture-xml-check",
+                "variance-analysis",
+            )
+        ],
+    )
+    change(store, "pair", teacher_thread_id="teacher", worker_thread_id="worker")
+    started = change(store, "start", workflow_id="quesito-legale-fiscale")
+    question = tmp_path / "question.md"
+    question.write_text("Prepare a two-page informational briefing for businesses.")
+    source = tmp_path / "source.md"
+    source.write_text("Fictional source note; verify current official authority.")
+    result = load("local_onboarding_case").prepare_case(
+        store,
+        thread_id="worker",
+        workflow="quesito-legale-fiscale",
+        token=started["lessons"][0]["worker_token"],
+        sources=[question, source],
+        phase="demo",
+    )
+    assert result["workflow_id"] == "quesito-legale-fiscale"
+    assert result["run"]["workflow_id"] == "prompt-optimizer"
+    assert result["context"]["workflow_id"] == "prompt-optimizer"
+    bindings = result["context"]["input_bindings"]
+    assert len(bindings) == 2
+    assert Path(bindings[0]["path"]).read_bytes() == question.read_bytes()
+    assert Path(bindings[1]["path"]).read_bytes() == source.read_bytes()
 
 
 def test_sampling_teaching_binds_one_journal_and_separate_context_note(

@@ -76,7 +76,10 @@ def prepare_case(
         )
     case = root / f"{phase}-{secrets.token_hex(8)}"
     case.mkdir(mode=0o700)
-    if store.product == "clara" or workflow == "presenza-digitale-studio":
+    if store.product == "clara" or workflow in {
+        "presenza-digitale-studio",
+        "studio-document-format",
+    }:
         inputs = case / "inputs"
         outputs = case / "outputs"
         inputs.mkdir()
@@ -119,7 +122,11 @@ def prepare_case(
         ledger.import_document(case, client_id, engagement_id, source, "source")
         for source in source_paths
     ]
-    ledger_workflow = workflow
+    # The question journey starts in its actual planning component; it does
+    # not introduce a separate Studio Archive workstream for the wrapper.
+    ledger_workflow = (
+        "prompt-optimizer" if workflow == "quesito-legale-fiscale" else workflow
+    )
     manifest = json.loads(
         (store.plugin_root / ".codex-plugin/plugin.json").read_text(encoding="utf-8")
     )

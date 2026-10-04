@@ -11,6 +11,7 @@
     const deskTitle = (item) => {
       if (deskGroup(item) === "accounting") return [item.data?.document_no || item.data?.document_key || item.id, item.data?.counterparty].filter(Boolean).join(" · ");
       if (deskGroup(item) === "documents") return item.output_path || item.title;
+      if (item.item_type === "check_exception" && item.data?.check === "codex_review_completed") return deskText("reviewPendingTitle");
       return deskText(item.item_type) + (item.data?.source_file ? ` · ${item.data.source_file}` : "");
     };
     const deskPair = (label, value) => `<dt>${esc(deskText(label))}</dt><dd>${esc(value === undefined || value === null || value === "" ? deskText("unavailable") : formatValue(value))}</dd>`;
@@ -28,8 +29,8 @@
       document.getElementById("decision-progress-fill").style.width = `${total ? validDecisionCount()/total*100 : 0}%`;
       document.getElementById("decision-pill").textContent = "";
       document.getElementById("use-recommended").disabled = true;
-      document.getElementById("save-decisions").disabled = !validDecisionCount();
-      document.getElementById("apply-decisions").disabled = !validDecisionCount();
+      document.getElementById("save-decisions").disabled = state.payload.local_review_read_only || !validDecisionCount();
+      document.getElementById("apply-decisions").disabled = state.payload.local_review_read_only || !validDecisionCount();
       renderReviewStore();
       renderRecoveryPanel();
     }
@@ -76,7 +77,7 @@
     }
     function decisionImpactHtml(item, action) {
       const group = deskGroup(item);
-      const key = group === "accounting" ? (action || "choose") + "Effect" : group + "Effect";
+      const key = item.item_type === "check_exception" && item.data?.check === "codex_review_completed" ? "reviewPendingEffect" : group === "accounting" ? (action || "choose") + "Effect" : group + "Effect";
       return `<p class="decision-impact">${esc(deskText(key))}</p>`;
     }
     function decisionControlsHtml(item) {
@@ -103,7 +104,9 @@
       if (group === "accounting") {
         body += `<p>${esc(deskText(result))}</p><div class="desk-balance">${[["original",amount],["settlement",settled],["residual",residual]].map(([label,value]) => `<div><span>${esc(deskText(label))}</span><strong>${esc(deskMoney(value,data.currency))}</strong></div>`).join("")}</div><p class="desk-note">${esc(deskText(supported ? result === "closed" ? "closedNote" : "partialNote" : "unsupportedNote"))}</p><section class="desk-evidence"><h4>${esc(deskText("evidence"))}</h4><dl>${deskPair("source",source)}${deskPair("reference",reference)}${deskPair("paymentDate",data.supporting_bank_date)}${deskPair("documentDate",data.document_date)}${deskPair("account",data.account)}</dl><p>${esc(deskText(result === "closed" ? "verifyClosed" : result === "partially_paid" ? "verifyPartial" : "verifyOpen"))}</p></section>`;
       } else {
-        body += `<p>${esc(deskText(group + "Effect"))}</p><dl>${deskPair("source",source || item.output_path)}${deskPair("finding", data.reason || data.error || data.note)}</dl>`;
+        const pendingReview = item.item_type === "check_exception" && data.check === "codex_review_completed";
+        const finding = pendingReview ? deskText("reviewPendingFinding").replace("{count}", String(data.actual ?? deskText("unavailable"))) : data.reason || data.error || data.note;
+        body += `<p>${esc(deskText(pendingReview ? "reviewPendingEffect" : group + "Effect"))}</p><dl>${deskPair("source",source || item.output_path)}${deskPair("finding", finding)}</dl>`;
       }
       if (missing && result !== "closed") body += `<section class="desk-evidence"><h4>${esc(deskText("missingSupport"))}</h4><p>${esc(result === "partially_paid" ? deskText("partialNote") : missing)}</p></section>`;
       return body + decisionControlsHtml(item) + technical;
@@ -115,6 +118,7 @@
       document.getElementById("status-pill").textContent = "";
       document.getElementById("diagnostics-title").textContent = deskText("diagnostics");
       document.getElementById("desk-save-help").textContent = deskText("saveHelp");
+      document.getElementById("desk-read-only").textContent = state.payload.local_review_read_only ? deskText("readOnly") : "";
       document.getElementById("detail-title").textContent = deskText("detailTitle");
       setButtonText("save-decisions",deskText("save"));
       setButtonText("apply-decisions",deskText("apply"));

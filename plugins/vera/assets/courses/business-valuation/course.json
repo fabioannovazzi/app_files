@@ -1,0 +1,495 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "business-valuation",
+  "revision": "2026-09-14.2",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it"
+  ],
+  "language_basis": "workflow_output_contract",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true
+  },
+  "sources": [
+    {
+      "path": "modules/business-valuation/assets/icon.svg",
+      "repository_path": "plugins/business-valuation/assets/icon.svg",
+      "sha256": "18529aca60718f8522901906b39c749aed4f2334cf92237739f2ad5d949023d8"
+    },
+    {
+      "path": "modules/business-valuation/references/benchmark-acquisition.md",
+      "repository_path": "plugins/business-valuation/references/benchmark-acquisition.md",
+      "sha256": "98ed73e28be42aa6e2bcf7ea808903e4e6167066b4c1af1eaccf922090814abd"
+    },
+    {
+      "path": "modules/business-valuation/references/case-contract.md",
+      "repository_path": "plugins/business-valuation/references/case-contract.md",
+      "sha256": "a1679302ea245a6cbe8169f92dfa50859e485c35e9a4b4fe49800e6a8780dd80"
+    },
+    {
+      "path": "modules/business-valuation/references/purpose-profiles.json",
+      "repository_path": "plugins/business-valuation/references/purpose-profiles.json",
+      "sha256": "7d79805d998df0fc69540ccfaf58b4093d906aad0f8a38f2844689fd5a0e06cc"
+    },
+    {
+      "path": "modules/business-valuation/references/valuation-case.schema.json",
+      "repository_path": "plugins/business-valuation/references/valuation-case.schema.json",
+      "sha256": "a26aaf9c9e644d407595401eec6a064870858e251dfdb0b634763ebcdc0c0e5e"
+    },
+    {
+      "path": "modules/business-valuation/requirements.txt",
+      "repository_path": "plugins/business-valuation/requirements.txt",
+      "sha256": "e88c45de398486564629d288737f8b6735c055b1fd5bc8f88e581455033ebb4b"
+    },
+    {
+      "path": "modules/business-valuation/scripts/check_dependencies.py",
+      "repository_path": "plugins/business-valuation/scripts/check_dependencies.py",
+      "sha256": "46e32163cced87a53fc28b5fab5dc9c2b0cd5ba0b4bbe8a2f3870d1936b2f63c"
+    },
+    {
+      "path": "modules/business-valuation/scripts/run_valuation.py",
+      "repository_path": "plugins/business-valuation/scripts/run_valuation.py",
+      "sha256": "06b86561255566e61a5bdea5da38f165da9521557643c86644d6b7445a19b369"
+    },
+    {
+      "path": "modules/business-valuation/scripts/valuation_benchmarks.py",
+      "repository_path": "plugins/business-valuation/scripts/valuation_benchmarks.py",
+      "sha256": "63216710329e5246c7637ca54729c36d36b365d3ed83d81dfe6777cd7385bc8a"
+    },
+    {
+      "path": "modules/business-valuation/scripts/valuation_case.py",
+      "repository_path": "plugins/business-valuation/scripts/valuation_case.py",
+      "sha256": "275748032261e9fc9057d9e172fa472faa11d4f4cd4df6a05725968644d1f373"
+    },
+    {
+      "path": "modules/business-valuation/scripts/valuation_claims.py",
+      "repository_path": "plugins/business-valuation/scripts/valuation_claims.py",
+      "sha256": "81d95eefb26e1f25b643bfa54942010086866587d81d7c3e6d55bb2481a01894"
+    },
+    {
+      "path": "modules/business-valuation/scripts/valuation_comparables.py",
+      "repository_path": "plugins/business-valuation/scripts/valuation_comparables.py",
+      "sha256": "f18b66fb2d1b823399d40bed4e63e24f654cee4675d47abdb0f250bd1f703e8b"
+    },
+    {
+      "path": "modules/business-valuation/scripts/valuation_download.py",
+      "repository_path": "plugins/business-valuation/scripts/valuation_download.py",
+      "sha256": "1af2141a13ee29d51708265e0eea2d8b053a37a44d368757c85d7d2c7234ec86"
+    },
+    {
+      "path": "modules/business-valuation/scripts/valuation_ecb.py",
+      "repository_path": "plugins/business-valuation/scripts/valuation_ecb.py",
+      "sha256": "663d5c0d296e440ab36616cfb4a70cce4a183b8dafc8b00f087a64383667a7b5"
+    },
+    {
+      "path": "modules/business-valuation/scripts/valuation_economic.py",
+      "repository_path": "plugins/business-valuation/scripts/valuation_economic.py",
+      "sha256": "bd651cb1b6e0e07c22224884947e690b5e7e9a1b51f785898f377d4dd471b310"
+    },
+    {
+      "path": "modules/business-valuation/scripts/valuation_engine.py",
+      "repository_path": "plugins/business-valuation/scripts/valuation_engine.py",
+      "sha256": "afcec8ce563e01d83fcbd1a2911ddac61b1450b2393202d26af37a6c5e9e9854"
+    },
+    {
+      "path": "modules/business-valuation/scripts/valuation_holding.py",
+      "repository_path": "plugins/business-valuation/scripts/valuation_holding.py",
+      "sha256": "daf6bb086cf67b8c4fc3e47414591bd522b13593af0079b46c977c243d031353"
+    },
+    {
+      "path": "modules/business-valuation/scripts/valuation_mandate.py",
+      "repository_path": "plugins/business-valuation/scripts/valuation_mandate.py",
+      "sha256": "69bc18f555bbb77781fb1cddd073de4e48c398c7fc191e5ae90605e749adbee0"
+    },
+    {
+      "path": "modules/business-valuation/scripts/valuation_normalization.py",
+      "repository_path": "plugins/business-valuation/scripts/valuation_normalization.py",
+      "sha256": "4b5153fb2cf46920c1f0f1a749efe9c79a1c81072cf062fffac0ca3e012d424b"
+    },
+    {
+      "path": "modules/business-valuation/scripts/valuation_plan.py",
+      "repository_path": "plugins/business-valuation/scripts/valuation_plan.py",
+      "sha256": "afb23f84018f15fa16196ced2b8e39c1e2029d858493c0a167c10c434311760a"
+    },
+    {
+      "path": "modules/business-valuation/scripts/valuation_report.py",
+      "repository_path": "plugins/business-valuation/scripts/valuation_report.py",
+      "sha256": "e8b7d325672f36bc97e4c694ca8005189143f77cfe2361342ef8790ddcac89ed"
+    },
+    {
+      "path": "modules/business-valuation/scripts/valuation_residual.py",
+      "repository_path": "plugins/business-valuation/scripts/valuation_residual.py",
+      "sha256": "1c698efa4808edf38a954d6154e9efa38f6ff6926a56ecad0ea4b490e48e1a23"
+    },
+    {
+      "path": "modules/business-valuation/scripts/valuation_schema.py",
+      "repository_path": "plugins/business-valuation/scripts/valuation_schema.py",
+      "sha256": "11d08f73b221e35a44b22e65ea81b3f9f2144bf61892075d2466bee56c948b5c"
+    },
+    {
+      "path": "modules/business-valuation/scripts/valuation_statements.py",
+      "repository_path": "plugins/business-valuation/scripts/valuation_statements.py",
+      "sha256": "8d6826f9c8757308d9f6e530f75014cdae633c35626211a54590726bdf9e27db"
+    },
+    {
+      "path": "modules/business-valuation/skills/business-valuation/SKILL.md",
+      "repository_path": "plugins/business-valuation/skills/business-valuation/SKILL.md",
+      "sha256": "84fbb693d9d5917cca621718f122ac7192dd8192cba2868f78321c1a6f5a4b99"
+    },
+    {
+      "path": "modules/business-valuation/vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/business-valuation/vendor/modules/public_http.py",
+      "repository_path": "plugins/clara/scripts/public_http.py",
+      "sha256": "0320cf3b5407c0805c453f2f81918c29b1eb33c32d7384855d5b39d2ae09c073"
+    },
+    {
+      "path": "modules/business-valuation/vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/business-valuation/vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
+    },
+    {
+      "path": "modules/business-valuation/vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/business-valuation/vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/business-valuation/vendor/modules/vera_assurance/jurisdiction.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+    },
+    {
+      "path": "modules/business-valuation/vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/business-valuation/vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "modules/business-valuation/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "modules/business-valuation/vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "skills/business-valuation/SKILL.md",
+      "repository_path": "plugins/vera/skills/business-valuation/SKILL.md",
+      "sha256": "6fd68351fba4b23cc467e2d574ba19e1cbcda6acd2bea9fa38a1571e8be0fc82"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/courseware/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/__init__.py",
+      "sha256": "79c785f896af8b4cdcedf1210131c62b95fc2914dec135f6d3fe93d392648ec6"
+    },
+    {
+      "path": "vendor/modules/courseware/access.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/access.py",
+      "sha256": "bc9bdd5f713e5da54fa5cb803e88f1b481f16b6c945d9cc749d9227aa51e9ace"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
+      "sha256": "69fd3f7c467c70c1f73b232812407f688f3d87dd7a801ea7281aa97d29cf53d5"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-SemiBold.ttf",
+      "sha256": "7151cf505f897e17b4e9b956293b5a60046ec39da3923a8feba29ce86fd14e12"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/OFL.txt",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/OFL.txt",
+      "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/chat.html",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/chat.html",
+      "sha256": "9428f27dfc9cc761bf1b8dbb6c9e0f94c91b23d75682e58771f255963fccf961"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/chat.js",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/chat.js",
+      "sha256": "15d35c56bcb6bb1ae2ea3031e5703be6296a16dc7dce31b9800a838766a875b8"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
+      "sha256": "5b28ac597f0a3deaf4cfc907b8a33bb40aae21719206ad0c976b605950f89dc7"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
+      "sha256": "507967ae7dcf07ae4e138fff4333adb5fd709484731dcef45d531152c54ede45"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-course.css",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+      "sha256": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/legacy-languages.json",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+      "sha256": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+    },
+    {
+      "path": "vendor/modules/courseware/chat.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/chat.py",
+      "sha256": "d9c3f73fc3cd91b9eafc6a058e1a9f09388c166d9268a60082ec3201b4d94b2b"
+    },
+    {
+      "path": "vendor/modules/courseware/deck_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/deck_view.py",
+      "sha256": "96f75ea3078c9e0c6e509cdefb0beeb876677e2e7884777d213d9b03c6c27b80"
+    },
+    {
+      "path": "vendor/modules/courseware/document_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/document_view.py",
+      "sha256": "9982c9d6ce83e7feb26165308fa9a136a744891a7e623ce23ff9bb778e6b7403"
+    },
+    {
+      "path": "vendor/modules/courseware/execution.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
+      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+    },
+    {
+      "path": "vendor/modules/courseware/html_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/html_view.py",
+      "sha256": "57280e82460bd8c7982294c4be6e0cff7da969800d4282e6da15059571cce0b1"
+    },
+    {
+      "path": "vendor/modules/courseware/legacy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+      "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+    },
+    {
+      "path": "vendor/modules/courseware/library.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+      "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+    },
+    {
+      "path": "vendor/modules/courseware/native.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/native.cjs",
+      "sha256": "a34698a9c099bf81cf154ec1bafc3ab626860460f454a9f3400cf2d09ceae5b1"
+    },
+    {
+      "path": "vendor/modules/courseware/policy.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/policy.py",
+      "sha256": "f0c15e7bac029b913d2c80167e6d23591040bf03958923a1a4c68eb0ae8fd8e7"
+    },
+    {
+      "path": "vendor/modules/courseware/preview.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/preview.py",
+      "sha256": "1a6e56141cdd554a6510100f47745f7b31472c9d22f45407f4f86ac7981aee10"
+    },
+    {
+      "path": "vendor/modules/courseware/sales_plan_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/sales_plan_view.py",
+      "sha256": "115977d03c034ed5f363d6fd5c8c82648ed1349067ac61e48d0701b10caa7e7b"
+    },
+    {
+      "path": "vendor/modules/courseware/website_view.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/website_view.py",
+      "sha256": "f230f86272201bae7bc34f1868d8cb6013b47ce9ccc8b876acdfb0bc257637d5"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "repository_path": "plugins/_shared/vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/caso-it.md",
+      "sha256": "b5b40509d08e4671dcde1590b0f583605bba182530928ba8bd833a47c1aea17c",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/caso-it.md",
+      "sha256": "b5b40509d08e4671dcde1590b0f583605bba182530928ba8bd833a47c1aea17c",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/pratica-it.md",
+      "sha256": "084ee0891eb5b3c4cebd922a5aecbce9de1ebd0b9fbcbd14ccd929b181da125c",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/evidenze-mancanti-it.md",
+      "sha256": "4c04a993f5a9db8e902f065c51ee8b885e445e741269ae6aa8a1bacb0cf4fb36",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/integrazione-it.md",
+      "sha256": "a1974b4b49ad226d806ef4aa16d018c809098579828fb398a66424a4ebde6a28",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/riscontri-it.md",
+      "sha256": "c1643a4449610bf5deb0954fa447ed4e945d73a816112a5262e5f8c636612ef9",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Valutazione PMI: dal fascicolo alle carte di lavoro DCF",
+      "goal": "Aprire un incarico in Studio Archive, tracciare le fonti, riprodurre un DCF, rivedere Excel e report, cambiare il tasso e recuperare il lavoro salvato.",
+      "scenario": "Sei il commercialista di Officina Arco, società interamente fittizia. La direzione chiede un confronto interno sul valore al 31 dicembre 2026. La nota distingue FCFF prospettici, ipotesi didattiche e raccordo al capitale proprio: parti da questi documenti e conserva ogni esecuzione nel fascicolo tutorial.",
+      "scope": "Un DCF FCFF annuale sul 100% dell’attività e sul capitale proprio, in euro, senza sconti di quota. La spiegazione iniziale e il primo confronto sono brevi; per eseguire, controllare Excel, fare le due prove e riaprire il fascicolo prevedi 25–35 minuti più l’elaborazione. Il risultato è una bozza di carte di lavoro della beta: non costituisce accettazione professionale, certificazione PIV o perizia firmata. La sostenibilità dei flussi e la finalità legale non sono verificate.",
+      "inputs": "Scarica caso-it.md per la dimostrazione e pratica-it.md per il cambio di tasso. evidenze-mancanti-it.md è una prova autonoma: contiene gli stessi fatti di base ma non il flusso terminale; integrazione-it.md fornisce successivamente quell’ipotesi. riscontri-it.md contiene il calcolo manuale e la lista dei controlli: consultalo dopo il tuo calcolo, senza importarlo come prova economica o sostituirlo a un output. I documenti sono fittizi; non esiste un business plan finalizzato. Vera prepara il caso tecnico dai documenti, tu non devi scrivere JSON.",
+      "request": "Vera, guidami nel corso Valutazione PMI con questi file fittizi. Apri un incarico tutorial Valutazione PMI — Officina Arco in Studio Archive, importa solo caso-it.md come evidenza iniziale e mostrami la ricevuta. Proponi il metodo adatto, mostrami dati e ipotesi da confermare, poi genera il DCF FCFF e apri report ed Excel. Conserva i risultati per le prove e per riaprirli in una nuova chat.",
+      "steps": [
+        "Apri Studio Archive e identifica il cliente tutorial Officina Arco; conferma la cartella prima della copia. Crea o seleziona l’incarico Valutazione PMI — Officina Arco e annota client_id ed engagement_id. Importa caso-it.md: apri l’originale conservato e trova input_id, hash SHA-256 e data della ricevuta. Segui le istruzioni iniziali del tuo host per visualizzare i risultati.",
+        "Rivedi finalità interna, data e limite informativo 31/12/2026, euro, continuità ipotetica e 100% del capitale. Il DCF FCFF è proposto perché la nota dà flussi operativi dopo imposte, investimenti e circolante. Escludi motivatamente gli altri metodi: mancano redditi normalizzati, valori patrimoniali e comparabili. Per un caso reale valuta l’appropriatezza rispetto all’incarico; non scegliere un metodo solo perché il software lo esegue.",
+        "Conferma solo i dati che hai letto: FCFF 2027 e terminale annuo 2028 di €100.000, tasso di sconto e terminale 10%, crescita 0%, debito €300.000, cassa eccedente €50.000 e gli altri zeri espliciti. Vera collega ogni input alla sezione della nota e distingue fatti, ipotesi e conferme. Campi di incarico non forniti e standard non selezionati restano incompleti: nessuna firma o attestazione professionale è simulata.",
+        "Vera prepara business-valuation con gli input_id esatti, avvia il run e usa soltanto i file idratati da Studio Archive. Il helper calcola localmente, produce report e cartella Excel con formule, e conserva la revisione. Apri valuation_report.html, valuation_workbook.xlsx e valuation_report.docx/PDF: verifica risultato, fonti, limiti e sensibilità. Un’uscita del comando con stato partial può avere output utili: leggi lo stato, non rilanciare alla cieca.",
+        "Nell’Excel parti da Sintesi, poi segui una formula al registro dei calcoli e al relativo input: €100.000/(1+10%) per il primo flusso, €100.000/(10%−0%) per il terminale a fine 2027. Dal valore operativo sottrai solo debito e assimilati e aggiungi cassa eccedente e rettifiche dichiarate. Apri Incarico per vedere cosa manca. Il workbook è modificabile per verifiche: una modifica manuale non aggiorna JSON, report o revisione archiviata; chiedi a Vera una nuova esecuzione per aggiornare il fascicolo.",
+        "Prima di concludere, Vera prepara e mostra il report dei dati al modello, dichiara tutti gli artefatti e registra il run con lo stato effettivo. Conserva client_id, engagement_id, run_id e percorsi. In una nuova chat chiedi: «Riapri l’incarico Valutazione PMI — Officina Arco e mostrami report ed Excel del run iniziale senza ricalcolare». Seleziona lo stesso cliente e incarico dall’elenco: verifica run_id e hash del report, poi apri i file salvati."
+      ],
+      "deliverables": [
+        "Report HTML e Word modificabile, più PDF: mandato, risultati, assunzioni, metodi esclusi, fonti, limiti e sensibilità. Una bozza partial con risultato aritmetico non è una conclusione accettata.",
+        "Excel con formule e valori Decimal di controllo; registri JSON/CSV di input, calcoli e fonti. Confronta una formula ricalcolata da Excel con il valore conservato e il riscontro manuale. La cassa aggiunta è solo quella eccedente dichiarata, non una compensazione inventata.",
+        "Ricevute di importazione, manifest del run e report leggibile dei dati al modello: permettono di risalire dall’importo alla fonte e di recuperare la stessa revisione senza affidarsi alla memoria della chat."
+      ],
+      "review": "Il commercialista decide scopo, base di valore, continuità, adeguatezza del metodo, sostenibilità del terminale, costo del capitale, normalizzazioni, debiti assimilati e conclusione. Qui i tassi sono ipotesi didattiche, non benchmark verificati. Confermare un input non approva incarico o conclusione. La scheda Incarico resta partial per le informazioni non fornite; il metodo numerico resta da rivedere. Per uso reale servono incarico, competenze e conflitti, standard scelti e motivati, bilanci e basi delle ipotesi, oltre alle revisioni professionali previste. La beta non qualifica il profilo Strategia e governance per l’uso professionale e non autentica l’identità del firmatario.",
+      "checkpoints": [
+        "Archivio: mostra cliente, incarico, run_id e ricevuta di caso-it.md. Trova l’input del debito e la sua sezione nella nota: un valore senza fonte o conferma richiede revisione.",
+        "Caso iniziale: PV del primo FCFF €90.909,09; terminale non attualizzato €1.000.000; PV terminale €909.090,91; valore operativo €1.000.000; capitale proprio €750.000. Tolleranza €0,01 sui valori esposti. Il terminale pesa il 90,91% del valore operativo: indica perché la sua sostenibilità conta.",
+        "Con entrambi i tassi al 12%: PV primo FCFF €89.285,71; terminale €833.333,33; PV terminale €744.047,62; valore operativo €833.333,33; capitale proprio €583.333,33. Il capitale diminuisce di €166.666,67 (22,22%). Il run iniziale deve restare apribile e invariato.",
+        "Evidenza assente: DCF bloccato e nessun capitale proprio numerico del metodo; stato del caso partial o blocked secondo gli altri elementi disponibili, nessuna conclusione accettata. Il solo flusso 2027 non giustifica una perpetuità. Dopo integrazione e conferma deve tornare il riscontro iniziale, con nuova fonte e nuovo run.",
+        "Riapertura: stessa revisione e stessi hash di report ed Excel, nessun nuovo calcolo. Sai distinguere un output salvato, un input confermato e una conclusione approvata."
+      ],
+      "practice": "Prima prova: nello stesso incarico importa pratica-it.md, conferma entrambi i tassi al 12% e crea un run distinto mantenendo caso-it.md come fonte degli altri input. Confronta i riscontri e verifica che le revisioni dipendenti dal tasso vadano rifatte. Seconda prova: nello stesso fascicolo crea un run distinto usando soltanto evidenze-mancanti-it.md, senza ereditare la nota completa né il valore terminale precedente. Chiedi il DCF e apri il blocco: il professionista deve fornire un flusso terminale sostenibile con base, anno, unità e conferma, oppure scegliere un altro metodo supportato con proprie evidenze. Importa integrazione-it.md come nuova fonte, conferma l’ipotesi didattica e crea la revisione di recupero; conserva anche il tentativo incompleto. Poi riapri il run iniziale in una nuova chat.",
+      "success": "Hai quattro esecuzioni distinguibili: iniziale, tasso 12%, evidenza mancante e recupero. I valori iniziale, alternativo e recuperato coincidono con i riscontri entro €0,01; il tentativo incompleto non inventa il terminale. Puoi seguire debito e tasso alle fonti, trovare le informazioni di incarico mancanti e riaprire i risultati immutati. Questi controlli verificano il percorso tecnico; non provano comprensione o accettazione professionale.",
+      "repeat": "Per un cliente reale seleziona il suo fascicolo e incarico, fornisci bilanci, piano e fonti delle rettifiche, fissa finalità, data e destinatari e fai rivedere metodo e ipotesi. Un piano business-planning finalizzato può essere collegato solo come artefatto dello stesso incarico, con imposte e circolante documentati: la lezione non dimostra quel collegamento. Quali dati arrivano al modello: nella lettura e preparazione possono entrare testo delle note, identità del caso, importi, proiezioni, tassi, zeri, riferimenti e ricevute; nella revisione possono entrare tabelle, formule, risultati, limiti e decisioni del professionista. Il calcolo locale e il render non inviano il caso a servizi remoti e non rendono locale l’elaborazione del modello scelto nel tuo host. Questa lezione non usa acquisizione benchmark né richiede messaggi Discord o caricamento dei documenti su Mparanza. Il percorso tutorial locale dell’host con due conversazioni esclude il timbro server. Per i report durevoli costruiti dal builder Vera fuori da quel percorso è previsto il timbro automatico Mparanza: la richiesta contiene schema, UUID, versione e digest del report, più i normali metadati di connessione; non contiene il report, i documenti o i calcoli. In Cowork non assumere che il nome «tutorial» attivi l’esclusione documentata per l’altro host: leggi lo stato della ricevuta nel report salvato. Il report di run descrive le fasi osservate e i limiti di misurazione; non è una prova della consegna al provider né di anonimizzazione automatica."
+    }
+  }
+}

@@ -43,6 +43,8 @@ from modules.case_notes_voice.api import (
     stop_voice_retention_cleanup,
 )
 from modules.change_requests import router as change_requests_router
+from modules.cnc_review.api import api_router as cnc_review_api_router
+from modules.cnc_review.api import site_router as cnc_review_site_router
 from modules.hosted_interviews.api import admin_router as hosted_interviews_admin_router
 from modules.hosted_interviews.api import (
     public_router as hosted_interviews_public_router,
@@ -1607,6 +1609,8 @@ def create_app() -> FastAPI:
     app.include_router(change_requests_router)
     app.include_router(run_receipts_site_router)
     app.include_router(run_receipts_api_router)
+    app.include_router(cnc_review_api_router)
+    app.include_router(cnc_review_site_router)
     protected_site_routers = [
         (
             case_notes_voice_site_router,

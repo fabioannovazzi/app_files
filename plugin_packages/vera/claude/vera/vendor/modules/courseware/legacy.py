@@ -14,6 +14,8 @@ import shutil
 from pathlib import Path
 from typing import Any
 
+from .access import verify_course_access
+
 __all__ = ["CourseError", "CourseLibrary"]
 
 
@@ -157,9 +159,11 @@ class CourseLibrary:
         destination = destination.expanduser().absolute()
         if any(path.is_symlink() for path in (destination, *destination.parents)):
             raise CourseError("Use an ordinary local destination, not a symlink")
-        if destination.exists():
+        if destination.exists() and (
+            not destination.is_dir() or any(destination.iterdir())
+        ):
             raise CourseError("Use a fresh course directory; preserve existing work")
-        destination.mkdir(parents=True)
+        verify_course_access([destination])
         copy = course["locales"][language]
         shared_assets = Path(__file__).parent / "assets"
         ui = _read(shared_assets / "legacy-languages.json")[language]
