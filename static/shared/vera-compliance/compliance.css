@@ -203,6 +203,24 @@ footer > a { white-space: nowrap; }
   .report-example { padding: 20px 12px; }
   .report-example h3 { font-size: 23px; }
 }
+.conditions-link { display: inline-block; margin-top: 18px; font-size: 14px; }
+.use-conditions { margin-top: 48px; border-top: 2px solid var(--navy); padding-top: 30px; }
+.conditions-heading { margin-bottom: 32px; }
+.conditions-heading h2 { font-size: clamp(27px, 3vw, 38px); }
+.conditions-heading > p:last-child { color: var(--muted); margin-top: 12px; }
+.use-condition { display: grid; grid-template-columns: minmax(220px, 1fr) minmax(0, 2fr); gap: 36px; max-width: 1080px; padding: 26px 0; border-top: 1px solid var(--line); }
+.use-condition h3 { margin: 0; font-size: 19px; line-height: 1.35; font-weight: 500; color: var(--navy); letter-spacing: -.02em; }
+.use-condition > p { font-size: 16px; line-height: 1.7; }
+.use-condition:target { border-top-color: var(--blue); }
+.use-condition:target h3 { color: var(--blue); }
+.conditions-sources { border-top: 1px solid var(--line); max-width: 1080px; padding-top: 22px; margin-top: 10px; font-size: 12px; color: var(--muted); }
+.conditions-sources > p { font-weight: 600; }
+.conditions-sources ul { padding-left: 18px; margin: 10px 0 0; }
+.conditions-sources li { margin-bottom: 7px; }
+@media (max-width: 700px) {
+  .use-condition { grid-template-columns: 1fr; gap: 12px; padding: 22px 0; }
+  .use-condition > p { font-size: 15px; }
+}
 @media print {
   .toolbar, .site-header, .downloads, .skip-link { display: none !important; }
   .page-shell { width: 100%; }
