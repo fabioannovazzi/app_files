@@ -1724,35 +1724,35 @@
             <h3 id="connections-privacy-title" data-i18n="connections.privacy.title">OpenAI Privacy Filter</h3>
             <span class="module-row__arrow" aria-hidden="true">↗</span>
           </a>
-          <p data-i18n="connections.privacy.description">Individua e maschera nel testo nomi, recapiti, numeri di conto e altri dati personali con il modello di OpenAI.</p>
+          <p data-i18n="connections.privacy.description">Maschera dati personali con un modello principalmente inglese. Può elaborare più file, ma non conserva identità distinte e coerenti tra documenti né una mappa per ripristinare gli originali. Per testi italiani la qualità va verificata.</p>
         </article>
         <article aria-labelledby="connections-gliner-title">
           <a class="module-row" href="../vera-integrazioni/index.html?lang=it#gliner2-pii" data-module-link>
             <h3 id="connections-gliner-title" data-i18n="connections.gliner.title">GLiNER2-PII</h3>
             <span class="module-row__arrow" aria-hidden="true">↗</span>
           </a>
-          <p data-i18n="connections.gliner.description">Riconosce dati personali in più lingue con il modello GLiNER2 di Fastino e li sostituisce con segnaposto.</p>
+          <p data-i18n="connections.gliner.description">Rileva e maschera dati personali in italiano, inglese, francese, tedesco, spagnolo, portoghese e olandese. Può elaborare più file, senza pseudonimi condivisi tra documenti né ripristino degli originali. È un modello multilingue generale, non specializzato negli identificativi fiscali italiani.</p>
         </article>
         <article aria-labelledby="connections-rizzo-title">
           <a class="module-row" href="../vera-integrazioni/rizzo/index.html?lang=it" data-module-link>
             <h3 id="connections-rizzo-title" data-i18n="connections.rizzo.title">Rizzo PII</h3>
             <span class="module-row__arrow" aria-hidden="true">↗</span>
           </a>
-          <p data-i18n="connections.rizzo.description">Pensato per testi italiani, rileva anche codici fiscali, partite IVA e riferimenti catastali; conserva una mappa per ripristinare ogni documento.</p>
+          <p data-i18n="connections.rizzo.description">Orientato ai testi italiani, con rilevatori per codice fiscale, partita IVA e catasto. Usa pseudonimi reversibili e una mappa per documento. Elabora più file separatamente: lo stesso nome non mantiene necessariamente lo stesso pseudonimo tra documenti. La valutazione pubblicata riguarda l’italiano.</p>
         </article>
         <article aria-labelledby="connections-lethe-title">
           <a class="module-row" href="../vera-integrazioni/lethe/index.html?lang=it" data-module-link>
             <h3 id="connections-lethe-title" data-i18n="connections.lethe.title">Lethe</h3>
             <span class="module-row__arrow" aria-hidden="true">↗</span>
           </a>
-          <p data-i18n="connections.lethe.description">Usa un dizionario di nomi e alias verificato localmente per creare pseudonimi coerenti e ripristinare i nomi nel risultato AI.</p>
+          <p data-i18n="connections.lethe.description">Per mantenere le stesse identità in più documenti e ripristinarle nel risultato AI. Usa un dizionario di nomi e alias verificato prima del lavoro. Il dizionario funziona in ogni lingua; il riconoscimento automatico non è specializzato per l’Italia. I nomi devono essere inclusi nella revisione iniziale.</p>
         </article>
         <article aria-labelledby="connections-shield-title">
           <a class="module-row" href="../vera-integrazioni/pii-shield/index.html?lang=it" data-module-link>
             <h3 id="connections-shield-title" data-i18n="connections.shield.title">PII-Shield</h3>
             <span class="module-row__arrow" aria-hidden="true">↗</span>
           </a>
-          <p data-i18n="connections.shield.description">Anonimizza documenti collegati con pseudonimi condivisi nella stessa sessione e ripristina i dati originali nel risultato finale.</p>
+          <p data-i18n="connections.shield.description">Per aggiungere documenti alla stessa sessione con pseudonimi condivisi e ripristinare i dati originali. Combina rilevazione multilingue e regole per identificativi di Italia, altri Paesi UE, Regno Unito e USA. Prova reale superata su Linux; sul Mac testato il motore si interrompe.</p>
         </article>
       </div>
     </section>
@@ -1979,15 +1979,15 @@
         "connections.skills.title": "Usare le proprie skill",
         "connections.skills.copy": "Se vuoi svolgere un lavoro con una tua skill, richiamala direttamente nell’app in cui l’hai installata. Collegare Second Brain non importa, seleziona o esegue le skill dello studio in Vera.",
         "connections.gliner.title": "GLiNER2-PII",
-        "connections.gliner.description": "Riconosce dati personali in più lingue con il modello GLiNER2 di Fastino e li sostituisce con segnaposto.",
+        "connections.gliner.description": "Rileva e maschera dati personali in italiano, inglese, francese, tedesco, spagnolo, portoghese e olandese. Può elaborare più file, senza pseudonimi condivisi tra documenti né ripristino degli originali. È un modello multilingue generale, non specializzato negli identificativi fiscali italiani.",
         "connections.rizzo.title": "Rizzo PII",
-        "connections.rizzo.description": "Pensato per testi italiani, rileva anche codici fiscali, partite IVA e riferimenti catastali; conserva una mappa per ripristinare ogni documento.",
+        "connections.rizzo.description": "Orientato ai testi italiani, con rilevatori per codice fiscale, partita IVA e catasto. Usa pseudonimi reversibili e una mappa per documento. Elabora più file separatamente: lo stesso nome non mantiene necessariamente lo stesso pseudonimo tra documenti. La valutazione pubblicata riguarda l’italiano.",
         "connections.privacy.title": "OpenAI Privacy Filter",
-        "connections.privacy.description": "Individua e maschera nel testo nomi, recapiti, numeri di conto e altri dati personali con il modello di OpenAI.",
+        "connections.privacy.description": "Maschera dati personali con un modello principalmente inglese. Può elaborare più file, ma non conserva identità distinte e coerenti tra documenti né una mappa per ripristinare gli originali. Per testi italiani la qualità va verificata.",
         "connections.lethe.title": "Lethe",
-        "connections.lethe.description": "Usa un dizionario di nomi e alias verificato localmente per creare pseudonimi coerenti e ripristinare i nomi nel risultato AI.",
+        "connections.lethe.description": "Per mantenere le stesse identità in più documenti e ripristinarle nel risultato AI. Usa un dizionario di nomi e alias verificato prima del lavoro. Il dizionario funziona in ogni lingua; il riconoscimento automatico non è specializzato per l’Italia. I nomi devono essere inclusi nella revisione iniziale.",
         "connections.shield.title": "PII-Shield",
-        "connections.shield.description": "Anonimizza documenti collegati con pseudonimi condivisi nella stessa sessione e ripristina i dati originali nel risultato finale.",
+        "connections.shield.description": "Per aggiungere documenti alla stessa sessione con pseudonimi condivisi e ripristinare i dati originali. Combina rilevazione multilingue e regole per identificativi di Italia, altri Paesi UE, Regno Unito e USA. Prova reale superata su Linux; sul Mac testato il motore si interrompe.",
         "contributors.index": "Collaborazione",
         "contributors.title": "Contributors",
         "contributors.copy": "Vera cresce attraverso il confronto con professionisti che mettono alla prova metodi, limiti e risultati nel lavoro reale.",
@@ -2211,15 +2211,15 @@
         "connections.skills.title": "Using your own skills",
         "connections.skills.copy": "To carry out a task with your own skill, invoke it directly in the app where you installed it. Connecting Second Brain does not import, select or execute the firm’s skills inside Vera.",
         "connections.gliner.title": "GLiNER2-PII",
-        "connections.gliner.description": "Detects personal data across languages with Fastino’s GLiNER2 model and replaces it with placeholders.",
+        "connections.gliner.description": "Detects and masks personal data in Italian, English, French, German, Spanish, Portuguese and Dutch. Processes multiple files without shared pseudonyms across documents or restoration of originals. A general multilingual model, without specialization in Italian tax identifiers.",
         "connections.rizzo.title": "Rizzo PII",
-        "connections.rizzo.description": "Designed for Italian texts, including tax codes, VAT numbers and cadastral references; keeps a mapping to restore each document.",
+        "connections.rizzo.description": "Focused on Italian texts, with detectors for Italian tax codes, VAT numbers and cadastral references. Uses reversible pseudonyms and a mapping per document. Processes multiple files separately: the same name may receive different pseudonyms across documents. Published evaluation covers Italian.",
         "connections.privacy.title": "OpenAI Privacy Filter",
-        "connections.privacy.description": "Detects and masks names, contact details, account numbers and other personal data in text using OpenAI’s model.",
+        "connections.privacy.description": "Masks personal data with a primarily English model. Processes multiple files, but keeps neither distinct, consistent identities across documents nor a mapping to restore originals. Quality on Italian texts needs checking.",
         "connections.lethe.title": "Lethe",
-        "connections.lethe.description": "Uses a locally reviewed dictionary of names and aliases to create consistent pseudonyms and restore names in the AI output.",
+        "connections.lethe.description": "For keeping the same identities across documents and restoring them in AI output. Uses a dictionary of names and aliases reviewed before processing. The dictionary works in any language; automatic detection is not Italy-specific. Names must be included in the initial review.",
         "connections.shield.title": "PII-Shield",
-        "connections.shield.description": "Anonymizes related documents with shared pseudonyms in one session and restores the original data in the final output.",
+        "connections.shield.description": "For adding documents to one session with shared pseudonyms and restoring original data. Combines multilingual detection with identifier rules for Italy, other EU countries, the UK and US. Passed real testing on Linux; the engine aborts on the tested Mac.",
         "contributors.index": "Collaboration",
         "contributors.title": "Contributors",
         "contributors.copy": "Vera grows through the exchange with professionals who test its methods, limits and results in real work.",
@@ -2443,15 +2443,15 @@
         "connections.skills.title": "Utiliser ses propres skills",
         "connections.skills.copy": "Pour effectuer un travail avec votre propre skill, invoquez-la directement dans l’application où vous l’avez installée. Connecter Second Brain n’importe, ne sélectionne et n’exécute pas les skills du cabinet dans Vera.",
         "connections.gliner.title": "GLiNER2-PII",
-        "connections.gliner.description": "Reconnaît les données personnelles dans plusieurs langues avec le modèle GLiNER2 de Fastino et les remplace par des libellés.",
+        "connections.gliner.description": "Repère et masque les données personnelles dans italien, anglais, français, allemand, espagnol, portugais et néerlandais. Traite plusieurs fichiers sans pseudonymes partagés entre documents ni restauration des originaux. Modèle multilingue général, sans spécialisation dans les identifiants fiscaux italiens.",
         "connections.rizzo.title": "Rizzo PII",
-        "connections.rizzo.description": "Conçu pour les textes italiens, y compris les codes fiscaux, numéros de TVA et références cadastrales ; conserve une correspondance pour restaurer chaque document.",
+        "connections.rizzo.description": "Orienté vers les textes italiens, avec des détecteurs pour codes fiscaux, numéros de TVA et références cadastrales italiens. Pseudonymes réversibles et correspondance par document. Traite plusieurs fichiers séparément : un même nom peut recevoir des pseudonymes différents entre documents. L’évaluation publiée porte sur l’italien.",
         "connections.privacy.title": "OpenAI Privacy Filter",
-        "connections.privacy.description": "Repère et masque dans le texte les noms, coordonnées, numéros de compte et autres données personnelles avec le modèle d’OpenAI.",
+        "connections.privacy.description": "Masque les données personnelles avec un modèle principalement anglophone. Traite plusieurs fichiers, sans conserver des identités distinctes et cohérentes entre documents ni une correspondance pour restaurer les originaux. La qualité sur les textes italiens doit être vérifiée.",
         "connections.lethe.title": "Lethe",
-        "connections.lethe.description": "Utilise un dictionnaire de noms et d’alias vérifié localement pour créer des pseudonymes cohérents et restaurer les noms dans le résultat IA.",
+        "connections.lethe.description": "Pour conserver les mêmes identités entre documents et les restaurer dans le résultat IA. Utilise un dictionnaire de noms et d’alias vérifié avant le travail. Le dictionnaire fonctionne dans toute langue ; la détection automatique n’est pas spécialisée pour l’Italie. Les noms doivent figurer dans la révision initiale.",
         "connections.shield.title": "PII-Shield",
-        "connections.shield.description": "Anonymise les documents liés avec des pseudonymes partagés dans une même session et restaure les données originales dans le résultat final.",
+        "connections.shield.description": "Pour ajouter des documents à une même session avec des pseudonymes partagés et restaurer les données originales. Combine détection multilingue et règles d’identifiants pour l’Italie, d’autres pays de l’UE, le Royaume-Uni et les États-Unis. Test réel réussi sous Linux ; le moteur s’interrompt sur le Mac testé.",
         "contributors.index": "Collaboration",
         "contributors.title": "Contributeurs",
         "contributors.copy": "Vera progresse grâce à l’échange avec des professionnels qui testent ses méthodes, ses limites et ses résultats dans le travail réel.",
@@ -2675,15 +2675,15 @@
         "connections.skills.title": "Eigene Skills verwenden",
         "connections.skills.copy": "Um eine Aufgabe mit einem eigenen Skill auszuführen, rufen Sie ihn direkt in der App auf, in der Sie ihn installiert haben. Die Verbindung mit Second Brain importiert, wählt oder startet die Skills der Kanzlei nicht innerhalb von Vera.",
         "connections.gliner.title": "GLiNER2-PII",
-        "connections.gliner.description": "Erkennt personenbezogene Daten in mehreren Sprachen mit Fastinos GLiNER2-Modell und ersetzt sie durch Platzhalter.",
+        "connections.gliner.description": "Erkennt und maskiert personenbezogene Daten in Italienisch, Englisch, Französisch, Deutsch, Spanisch, Portugiesisch und Niederländisch. Verarbeitet mehrere Dateien ohne gemeinsame Pseudonyme über Dokumente hinweg oder Wiederherstellung der Originaldaten. Allgemeines mehrsprachiges Modell ohne Spezialisierung auf italienische Steuerkennungen.",
         "connections.rizzo.title": "Rizzo PII",
-        "connections.rizzo.description": "Auf italienische Texte ausgerichtet, einschließlich Steuercodes, Umsatzsteuer-Identifikationsnummern und Katasterangaben; bewahrt eine Zuordnung zur Wiederherstellung jedes Dokuments.",
+        "connections.rizzo.description": "Auf italienische Texte ausgerichtet, mit Erkennung italienischer Steuercodes, Umsatzsteuer-Identifikationsnummern und Katasterangaben. Reversible Pseudonyme und eine Zuordnung je Dokument. Verarbeitet mehrere Dateien getrennt: Derselbe Name kann unterschiedliche Pseudonyme erhalten. Die veröffentlichte Bewertung betrifft Italienisch.",
         "connections.privacy.title": "OpenAI Privacy Filter",
-        "connections.privacy.description": "Erkennt und maskiert Namen, Kontaktdaten, Kontonummern und weitere personenbezogene Angaben im Text mit dem Modell von OpenAI.",
+        "connections.privacy.description": "Maskiert personenbezogene Daten mit einem hauptsächlich englischen Modell. Verarbeitet mehrere Dateien, bewahrt aber weder unterscheidbare, konsistente Identitäten über Dokumente hinweg noch eine Zuordnung zur Wiederherstellung. Die Qualität bei italienischen Texten muss geprüft werden.",
         "connections.lethe.title": "Lethe",
-        "connections.lethe.description": "Verwendet ein lokal geprüftes Wörterbuch mit Namen und Aliasen für konsistente Pseudonyme und die Wiederherstellung der Namen im KI-Ergebnis.",
+        "connections.lethe.description": "Für konsistente Identitäten über mehrere Dokumente und deren Wiederherstellung im KI-Ergebnis. Verwendet ein vorab geprüftes Wörterbuch mit Namen und Aliasen. Das Wörterbuch funktioniert sprachunabhängig; die automatische Erkennung ist nicht auf Italien spezialisiert. Namen müssen in der anfänglichen Prüfung enthalten sein.",
         "connections.shield.title": "PII-Shield",
-        "connections.shield.description": "Anonymisiert zusammengehörige Dokumente mit gemeinsamen Pseudonymen in einer Sitzung und stellt die Originaldaten im Endergebnis wieder her.",
+        "connections.shield.description": "Für zusätzliche Dokumente in derselben Sitzung mit gemeinsamen Pseudonymen und Wiederherstellung der Originaldaten. Kombiniert mehrsprachige Erkennung mit Kennungsregeln für Italien, weitere EU-Länder, Großbritannien und die USA. Realtest unter Linux bestanden; auf dem getesteten Mac bricht die Engine ab.",
         "contributors.index": "Zusammenarbeit",
         "contributors.title": "Mitwirkende",
         "contributors.copy": "Vera wächst durch den Austausch mit Fachleuten, die ihre Methoden, Grenzen und Ergebnisse in der täglichen Arbeit prüfen.",
@@ -2907,15 +2907,15 @@
         "connections.skills.title": "Usar tus propias skills",
         "connections.skills.copy": "Para realizar un trabajo con tu propia skill, invócala directamente en la aplicación donde la instalaste. Conectar Second Brain no importa, selecciona ni ejecuta las skills del despacho dentro de Vera.",
         "connections.gliner.title": "GLiNER2-PII",
-        "connections.gliner.description": "Reconoce datos personales en varios idiomas con el modelo GLiNER2 de Fastino y los sustituye por marcadores.",
+        "connections.gliner.description": "Detecta y oculta datos personales en italiano, inglés, francés, alemán, español, portugués y neerlandés. Procesa varios archivos sin seudónimos compartidos entre documentos ni restauración de los originales. Modelo multilingüe general, sin especialización en identificadores fiscales italianos.",
         "connections.rizzo.title": "Rizzo PII",
-        "connections.rizzo.description": "Orientado a textos italianos, incluidos códigos fiscales, números de IVA y referencias catastrales; conserva un mapa para restaurar cada documento.",
+        "connections.rizzo.description": "Orientado a textos italianos, con detectores de códigos fiscales, números de IVA y referencias catastrales italianos. Seudónimos reversibles y un mapa por documento. Procesa varios archivos por separado: un mismo nombre puede recibir distintos seudónimos entre documentos. La evaluación publicada cubre el italiano.",
         "connections.privacy.title": "OpenAI Privacy Filter",
-        "connections.privacy.description": "Detecta y oculta nombres, datos de contacto, números de cuenta y otros datos personales en textos con el modelo de OpenAI.",
+        "connections.privacy.description": "Oculta datos personales con un modelo principalmente inglés. Procesa varios archivos, pero no conserva identidades distintas y coherentes entre documentos ni un mapa para restaurar los originales. Hay que comprobar la calidad en textos italianos.",
         "connections.lethe.title": "Lethe",
-        "connections.lethe.description": "Usa un diccionario de nombres y alias revisado localmente para crear seudónimos coherentes y restaurar los nombres en el resultado de IA.",
+        "connections.lethe.description": "Para conservar las mismas identidades entre documentos y restaurarlas en el resultado de IA. Usa un diccionario de nombres y alias revisado antes del trabajo. El diccionario funciona en cualquier idioma; la detección automática no está especializada en Italia. Los nombres deben incluirse en la revisión inicial.",
         "connections.shield.title": "PII-Shield",
-        "connections.shield.description": "Anonimiza documentos relacionados con seudónimos compartidos en una misma sesión y restaura los datos originales en el resultado final.",
+        "connections.shield.description": "Para añadir documentos a una misma sesión con seudónimos compartidos y restaurar los datos originales. Combina detección multilingüe y reglas de identificadores para Italia, otros países de la UE, Reino Unido y EE. UU. Prueba real superada en Linux; el motor se interrumpe en el Mac probado.",
         "contributors.index": "Colaboración",
         "contributors.title": "Colaboradores",
         "contributors.copy": "Vera crece a través del intercambio con profesionales que ponen a prueba sus métodos, límites y resultados en el trabajo real.",
