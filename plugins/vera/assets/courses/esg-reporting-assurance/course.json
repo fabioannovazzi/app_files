@@ -359,7 +359,7 @@
     },
     {
       "path": "files/practice/brief-it.md",
-      "sha256": "1d2f54b3dd5abf9aae6fa79ab987156b88c8104ba0045eba4a316f72252dcf6d",
+      "sha256": "7d75d602461b12c20e5a0b014304a0e13876062e2a574b6f0a5dee65c6b09f91",
       "languages": [
         "it"
       ],
@@ -367,7 +367,7 @@
     },
     {
       "path": "files/practice/brief-en.md",
-      "sha256": "3a0eeedadbabbac45f36f59dcf7ff1c2c5439f54264429e8f216b6905b1551d6",
+      "sha256": "8b5ac9c00129b8e6426f82da554cfacd902974777233e77008b79069a08775f2",
       "languages": [
         "en"
       ],
@@ -375,7 +375,7 @@
     },
     {
       "path": "files/practice/brief-fr.md",
-      "sha256": "2f1cc56ad57ebb0c32f91a282d7b0fe3061c779483e2ff0bdb6645fe1a82cbb6",
+      "sha256": "61be23fe3ccd3d5adc9370a7cb1700346728c04383a72343934a6522be99910a",
       "languages": [
         "fr"
       ],
@@ -383,7 +383,7 @@
     },
     {
       "path": "files/practice/brief-de.md",
-      "sha256": "3bbd0c0bf86e06b1329fc325996c84addbdee0c3f06e65c515a02a1f4762f471",
+      "sha256": "fdcfdb1c0cec0e4a15c8d5b1ebd483f7994bab5b5d4b45bb486af58ea5a91c9f",
       "languages": [
         "de"
       ],
@@ -391,7 +391,7 @@
     },
     {
       "path": "files/practice/brief-es.md",
-      "sha256": "aba97a0648799d49964ba3a5502b4c23f9025da314d335a16a03310bbaee5a2c",
+      "sha256": "9513bfa0868dd56f3db95fd8a8244ba4114a35668bdfdbf721b374840c89702d",
       "languages": [
         "es"
       ],

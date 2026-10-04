@@ -4,7 +4,7 @@ Caso totalmente ficticio: Laboratorio Quarzo, un centro y consumo eléctrico dec
 
 Solo pruebas y borradores parciales: ningún informe ESG completo, cálculo VSME/ESRS o taxonomía, opinión de assurance, firma o envío.
 
-Lea energy.csv. El primer valor es cero; la celda 2025 vacía significa no disponible. El centro excluido se declara no aplicable solo en este caso ficticio; el vacío no lo prueba. Reserve energy-update.csv para el siguiente paso.
+Lea energy.csv. El primer valor es 8 kWh; la celda 2025 vacía significa no disponible. El centro excluido se declara no aplicable solo en este caso ficticio; el vacío no lo prueba. Reserve energy-update.csv para el siguiente paso.
 
 Compruebe cliente, período, unidad, alcance y fuente. Cero declarado no prueba consumo realmente nulo. Ausente exige recopilación; no aplicable exige motivo. Revise interpretación y suficiencia. Una corrección invalida decisiones dependientes sin renovarlas. Un nombre declarado no es firma autenticada.
 

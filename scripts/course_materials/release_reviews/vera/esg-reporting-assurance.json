@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "esg-reporting-assurance",
-  "course_sha256": "0bad34d70e45fe8d588a9bb4d22996256b15b975945b1872fd16f1be4b6a4891",
+  "course_sha256": "c14f8971ba21d79371418fa8dc8809e0d477a5d6564bf8ad6b48073aed71e10d",
   "reviewer": "Codex /root",
   "reviewed_at": "2026-10-01T17:54:24.948053+00:00",
   "languages": {
@@ -397,5 +397,12 @@
     "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
   },
   "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
-  "review_scope": " Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate."
+  "review_scope": " Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+  "practice_value_correction_20261004": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-04T13:01:24.052767+00:00",
+    "previous_course_sha256": "0bad34d70e45fe8d588a9bb4d22996256b15b975945b1872fd16f1be4b6a4891",
+    "current_course_sha256": "c14f8971ba21d79371418fa8dc8809e0d477a5d6564bf8ad6b48073aed71e10d",
+    "scope": "Inspected all five localized practice briefs and energy.csv. Corrected only the first-cell instruction from zero to 8 kWh to match the supplied practice row. Demonstration remains 0 to 15; practice remains 8 to 12. Execution, scope and approvals are unchanged. Existing historical artifact reviews are preserved as historical evidence. Existing ESG execution and prepared-course tests passed after regeneration; actual learner execution remains blocked at host folder access."
+  }
 }
