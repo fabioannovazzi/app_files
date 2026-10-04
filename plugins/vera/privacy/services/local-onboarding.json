@@ -17,7 +17,11 @@
     "skills/vera/references/workflow-catalog.md",
     "marketplace_skill_instructions.json",
     "scripts/local_courses.py",
-    "assets/courses"
+    "assets/courses",
+    "scripts/course_chat_bridge.py",
+    "scripts/course_chat_mcp.cjs",
+    "scripts/_desktop_teaching.py",
+    "skills/learn-with-vera/references/chat-button.md"
   ],
   "runtime_profiles": [
     "openai-codex"
@@ -110,13 +114,25 @@
         "repository:plugins/_shared/vendor/modules/courseware/access.py"
       ],
       "on_violation": "Failed checks or saves pause course progression. The host obtains the exact folder access, retries with normal sandbox permissions and preserves existing progress. Ordinary professional work remains optional and available."
+    },
+    {
+      "id": "native-course-chat-invitation",
+      "control": "The MCP App shows a readable native chat request with product, workflow, absolute course folder, teacher/worker references and a short-lived opaque invitation. These references enter the selected OpenAI account conversation; the worker claim returns the saved profile, lesson, exact installed skill path and bounded assignment to that same model runtime. No course input or output file bytes are attached to the chat request. The local bridge has no network calls and no Mparanza recipient. Folder access, revision, first unfinished lesson, product membership, thread pairing and invitation reuse are checked before execution. Only the teacher records progress; the host controls message confirmation and filesystem grants. Resume requests target the teacher, which reopens the saved working chat with native host tools. The invitation is a local coordination token, not host authentication or permission to bypass approvals.",
+      "implemented_by": [
+        "scripts/course_chat_bridge.py",
+        "scripts/course_chat_mcp.cjs",
+        "skills/learn-with-vera/references/chat-button.md",
+        "repository:plugins/_shared/vendor/modules/courseware/chat.py",
+        "repository:plugins/_shared/vendor/modules/courseware/native.cjs"
+      ],
+      "on_violation": "Block stale, expired, replaced, duplicate or interrupted claims; return to the teacher and preserve course files and progress."
     }
   ],
   "review": {
     "reviewed_at": "2026-10-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "3f9c512f4fc677811d5c874eb4ecd1e29323ed400e8d4a184f366777496a6c09"
+    "source_fingerprint": "053b4d6a5d61e88f4695cc9c35ec3e8e8289a446b95abdbab91d3b8d553ae4d2"
   },
   "governed_repository_paths": [
     "static/shared/learn-with-vera/index.html",

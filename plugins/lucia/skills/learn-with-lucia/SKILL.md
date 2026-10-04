@@ -133,6 +133,11 @@ silently send teaching data to hosted services to make a demonstration complete.
 
 ## Native voice and two parallel threads
 
+Use `references/chat-button.md` to present the native **Apri la chat di lavoro**
+or **Riprendi la chat di lavoro** control for every course. A working chat
+carrying a course invitation must claim it before executing any lesson.
+
+
 Keep one teaching chat and one working chat, reused across onboarding, later
 lessons and the transition to the user's files. Inspect the saved pair through
 native task read/status tools before creating anything. Resume it when available;

@@ -1578,7 +1578,9 @@ def test_vera_routes_every_commercialista_module() -> None:
     )
     mcp_config = json.loads((plugin_root / ".mcp.json").read_text(encoding="utf-8"))
     routed_mcp_modules = {
-        server["args"][-1] for server in mcp_config["mcpServers"].values()
+        server["args"][-1]
+        for server in mcp_config["mcpServers"].values()
+        if server["args"][0] == "./scripts/run_component_mcp.cjs"
     }
     skill_names = {
         path.parent.name for path in (plugin_root / "skills").glob("*/SKILL.md")

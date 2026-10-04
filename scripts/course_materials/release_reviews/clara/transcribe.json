@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "transcribe",
-  "course_sha256": "e3a7a000045965edd35c4bf6179d90084cbab9102c8d8ef1dd4828e0885fe43e",
+  "course_sha256": "43c95c0287da7e66fecd8e5f542529cf35ac3a4bbb7e7d5ddb7ed1fe87e5fa7c",
   "reviewer": "Codex: first-use outline, source and native transcript-output review",
   "reviewed_at": "2026-09-29T13:36:23+00:00",
-  "review_scope": "Local bundle import, text-only speaker review, source preservation and case registration only. Fixed regression interpretation is not a learner action, live voice test, recorded audio or hosted transcription. No advisory claims or approvals are created. Source dependency refresh after the localized advisory evidence-map repair: 35 current presentation/transcript checks pass in clara-teaching-source-refresh-02. All 60 recorded primary/supporting artifacts across these three kits are byte-identical to the previously inspected versions; the parity manifest retains actual paths. Existing editorial and visual judgments are preserved for unchanged material. No new voice, learner or GUI acceptance is asserted.",
+  "review_scope": "Local bundle import, text-only speaker review, source preservation and case registration only. Fixed regression interpretation is not a learner action, live voice test, recorded audio or hosted transcription. No advisory claims or approvals are created. Source dependency refresh after the localized advisory evidence-map repair: 35 current presentation/transcript checks pass in clara-teaching-source-refresh-02. All 60 recorded primary/supporting artifacts across these three kits are byte-identical to the previously inspected versions; the parity manifest retains actual paths. Existing editorial and visual judgments are preserved for unchanged material. No new voice, learner or GUI acceptance is asserted. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
   "languages": {
     "it": {
       "verdict": "accepted",

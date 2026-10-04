@@ -234,6 +234,16 @@
       "sha256": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab"
     },
     {
+      "path": "vendor/modules/courseware/assets/chat.html",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/chat.html",
+      "sha256": "9428f27dfc9cc761bf1b8dbb6c9e0f94c91b23d75682e58771f255963fccf961"
+    },
+    {
+      "path": "vendor/modules/courseware/assets/chat.js",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/chat.js",
+      "sha256": "15d35c56bcb6bb1ae2ea3031e5703be6296a16dc7dce31b9800a838766a875b8"
+    },
+    {
       "path": "vendor/modules/courseware/assets/course.css",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/course.css",
       "sha256": "5b28ac597f0a3deaf4cfc907b8a33bb40aae21719206ad0c976b605950f89dc7"
@@ -252,6 +262,11 @@
       "path": "vendor/modules/courseware/assets/legacy-languages.json",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
       "sha256": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+    },
+    {
+      "path": "vendor/modules/courseware/chat.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/chat.py",
+      "sha256": "d9c3f73fc3cd91b9eafc6a058e1a9f09388c166d9268a60082ec3201b4d94b2b"
     },
     {
       "path": "vendor/modules/courseware/deck_view.py",
@@ -282,6 +297,11 @@
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
       "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+    },
+    {
+      "path": "vendor/modules/courseware/native.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/native.cjs",
+      "sha256": "a34698a9c099bf81cf154ec1bafc3ab626860460f454a9f3400cf2d09ceae5b1"
     },
     {
       "path": "vendor/modules/courseware/policy.py",
