@@ -618,6 +618,7 @@ def test_managed_run_prepares_and_exports_bound_invoice(
 ) -> None:
     import importlib.util
 
+    monkeypatch.syspath_prepend(str(SCRIPTS))
     import invoice_workflow
     import source_evidence
 
@@ -766,6 +767,7 @@ def test_line_discount_applies_before_quantity(tmp_path: Path) -> None:
 def test_dependency_preflight_reports_missing_xml_library(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    monkeypatch.syspath_prepend(str(SCRIPTS))
     import check_dependencies
 
     monkeypatch.setattr(
