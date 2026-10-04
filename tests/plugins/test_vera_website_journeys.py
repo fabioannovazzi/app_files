@@ -1435,49 +1435,30 @@ def test_vera_hub_data_boundary_is_compact_and_not_manifest_driven() -> None:
     assert 'data-i18n="privacy.routes.hosted.title"' not in page
 
 
-def test_vera_hub_explains_the_automatic_run_level_model_data_report() -> None:
+def test_vera_hub_links_to_compliance_instead_of_showing_the_detailed_report() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
 
-    assert 'id="model-data-report"' in page
-    assert 'data-i18n="report.title"' in page
-    assert 'data-data-handling-anchor="#run-evidence"' in page
-    assert "https://mparanza.com/data-handling?lang=it#run-evidence" in page
-    assert "https://mparanza.com/data-handling?lang=${lang}" in page
-    assert 'data-i18n="report.stamp"' in page
-    assert (
-        "identificativo casuale, la versione di Vera e un codice calcolato dal contenuto del report locale"
-        in page
+    assert 'id="model-data-report"' not in page
+    assert 'data-i18n="report.title"' not in page
+    assert 'href="../vera-compliance/index.html?lang=it"' in page
+    assert 'id="why-vera"' in page
+    assert 'id="compliance"' in page
+
+
+def test_vera_compliance_links_g1_3_to_the_expandable_model_data_report() -> None:
+    page = (SHARED_ROOT / "vera-compliance" / "index.html").read_text(
+        encoding="utf-8"
     )
-    assert (
-        "random identifier, the Vera version, and a code calculated from the local report's contents"
-        in page
-    )
-    assert "salvare come PDF" in page
-    assert "Per ogni report salvato come file, Vera invia automaticamente" in page
-    assert "For every report saved as a file, Vera automatically sends" in page
-    assert "il lavoro resta completato e la richiesta rimane in attesa" in page
-    assert "the work remains complete and the request stays pending" in page
-    assert 'href="examples/model-data-receipt.html"' not in page
-    assert 'data-i18n="report.exampleLink"' not in page
-    for phrase in (
-        "Vera mostra che cosa è arrivato al modello.",
-        "Vera shows what reached the model.",
-        "Vera montre ce qui est parvenu au modèle.",
-        "Vera zeigt, was das Modell erhalten hat.",
-        "Vera muestra qué llegó al modelo.",
-        '"report.sourceValue": "100"',
-        '"report.processedValue": "100"',
-        '"report.mappingRowsValue": "10"',
-        '"report.mappingColumnsValue": "4"',
-        '"report.resultRowsValue": "12"',
-        '"report.resultMetricsValue": "53"',
-        '"report.localValue": "90"',
-        '"report.identityColumnsValue": "2"',
-        "Righe mensili ricevute per il commento",
-        "Monthly rows received for commentary",
-        "complete document or population is the correct minimum",
-    ):
-        assert phrase in page
+    requirement = page.split('id="g1-3"', 1)[1].split("</tr>", 1)[0]
+    example = page.split('id="report-esempio"', 1)[1].split("</details>", 1)[0]
+
+    assert 'href="#report-esempio"' in requirement
+    assert 'data-handling?lang=it#run-evidence' in requirement
+    assert '<details class="report-disclosure">' in example
+    assert "Vera mostra che cosa è arrivato al modello." in example
+    assert "il report e i dati del cliente restano nello spazio di lavoro" in example
+    assert "salvare come PDF" in example
+    assert "il lavoro resta completato e la richiesta rimane in attesa" in example
 
 
 def test_public_page_does_not_publish_a_synthetic_server_receipt() -> None:
