@@ -373,6 +373,7 @@ def test_shield_explicit_setup_downloads_before_readiness_receipt(
 
     def setup(command, **kwargs):
         commands.append(command)
+        assert kwargs["env"]["ONNXRUNTIME_NODE_INSTALL"] == "skip"
         for name in (
             "cli/node_modules/pii-shield/dist/cli/bin.mjs",
             "upstream/models/model.onnx",

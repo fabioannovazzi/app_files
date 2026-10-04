@@ -42,6 +42,8 @@ def main() -> None:
     )
     env["PII_SHIELD_DATA_DIR"] = str(root / "upstream")
     env["PII_SHIELD_MODELS_DIR"] = str(root / "upstream/models")
+    # Native CPU binaries ship in npm; avoid optional CUDA downloads.
+    env["ONNXRUNTIME_NODE_INSTALL"] = "skip"
     subprocess.run(
         [
             str(node),
