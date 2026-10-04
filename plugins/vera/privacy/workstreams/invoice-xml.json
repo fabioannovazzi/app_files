@@ -30,7 +30,7 @@
       {
         "id": "draft-and-professional-review",
         "purpose": "Review extracted fields, fiscal proposals, missing facts, corrections and final export status",
-        "content": "Normalized invoice fields, per-field source references, uncertainties, professional decisions and user confirmations; domestic or foreign operation facts, VAT and date basis, original-invoice linkage, conversion evidence, schema and arithmetic errors, preview content and final export report. The same native model performs this work without a separate worker service.",
+        "content": "Normalized invoice fields, per-field source references, uncertainties, professional decisions and user confirmations; domestic or foreign operation facts, VAT and date basis, original-invoice linkage, conversion evidence, schema and arithmetic errors, preview content and final export report. The same native model performs this work without a separate worker service. Reviewed transmission mode, local fiscal-identifier validation errors, and the currently supplied gateway notification or screenshot may also enter context during rejection diagnosis. No identifier is sent to a registry by the local validator.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -104,10 +104,10 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-04",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "8c91ebfffb5f693ee095a541c83b7b27e245c5b1bff8797012b87f2fa472f57b"
+    "source_fingerprint": "f9c1e8aa4657df776728e6bf1456c06a89575e9dec1983eeb3dbea1801545022"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"

@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "invoice-xml",
-  "course_sha256": "4357cfe3fbedc6d76c46965446b630573a9fa6f27a785c153d0c8b41f4cffab9",
+  "course_sha256": "05b0573e8c7e64fb1364b18a5a7e675dc93498345d1aa34d1e3275a3364d5ede",
   "reviewer": "Codex: first-use kit, source and native invoice-output review",
-  "reviewed_at": "2026-09-14T16:28:02.594672+00:00",
-  "review_scope": "Prepared fictional lesson plus actual native preparation and export regression outputs. The test uses an explicitly synthetic approval event to exercise the exporter; it is not a professional or learner approval and is never included in the kit. This review does not establish a human voice/two-window session or tax correctness. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+  "reviewed_at": "2026-10-04T15:00:00+02:00",
+  "review_scope": "Prepared fictional lesson plus actual native preparation and export regression outputs. The test uses an explicitly synthetic approval event to exercise the exporter; it is not a professional or learner approval and is never included in the kit. This review does not establish a human voice/two-window session or tax correctness. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate. PR #685 refresh: authored lesson, fictional input bytes and output expectations are unchanged against current main; source inventory now binds proposal schema 2, reviewed transmitter choice and local fiscal-ID control-character checks. Ten fresh demo/practice execution regressions passed across five languages. Synthetic approval remains test-only; no SdI, professional or learner acceptance is claimed.",
   "languages": {
     "it": {
       "verdict": "accepted",

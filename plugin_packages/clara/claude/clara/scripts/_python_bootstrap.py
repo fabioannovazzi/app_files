@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import errno
 import hashlib
 import io
 import os
 import platform
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -44,6 +46,28 @@ ASSETS = {
     ),
 }
 MAX_DOWNLOAD = 64 * 1024 * 1024
+
+
+def _replace_download(temporary: Path, binary: Path) -> None:
+    """Keep atomic replacement; copy verified bytes only for cross-volume errors."""
+    try:
+        temporary.replace(binary)
+        return
+    except OSError as error:
+        if error.errno != errno.EXDEV and getattr(error, "winerror", None) != 17:
+            raise
+    # Exclusive creation prevents following symlinks or overwriting hardlinks.
+    # The shared installer lock excludes execution until this copy completes.
+    with binary.open("xb") as target:
+        try:
+            with temporary.open("rb") as source:
+                shutil.copyfileobj(source, target)
+            target.flush()
+            binary.chmod(0o700)
+        except OSError:
+            target.close()
+            binary.unlink(missing_ok=True)
+            raise
 
 
 def _uv(base: Path) -> Path:
@@ -88,7 +112,7 @@ def _uv(base: Path) -> Path:
         handle.write(data)
     try:
         temporary.chmod(0o700)
-        temporary.replace(binary)
+        _replace_download(temporary, binary)
     finally:
         temporary.unlink(missing_ok=True)
     return binary

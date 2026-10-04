@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import errno
 import hashlib
 import importlib.util
 import io
@@ -150,3 +151,93 @@ def test_bootstrap_rejects_linked_storage(tmp_path, directory):
     (tmp_path / directory).symlink_to(outside, target_is_directory=True)
     with pytest.raises(ValueError, match="symlink"):
         module.provision(tmp_path)
+
+
+def _provision_case(tmp_path, monkeypatch, error):
+    module = bootstrap()
+    payload = wheel()
+    mock_download(module, monkeypatch, payload, hashlib.sha256(payload).hexdigest())
+    interpreter = tmp_path / "python/bin/python3.12"
+    interpreter.parent.mkdir(parents=True)
+    interpreter.touch()
+
+    def fail_replace(*args, **kwargs):
+        raise error
+
+    monkeypatch.setattr(module.Path, "replace", fail_replace)
+
+    def runner(command, **kwargs):
+        return subprocess.CompletedProcess(command, 0, str(interpreter), "")
+
+    return module, runner, tmp_path / "bootstrap/uv"
+
+
+@pytest.mark.parametrize("windows_error", [False, True])
+def test_provision_installs_verified_executable_after_cross_volume_error(
+    tmp_path, monkeypatch, windows_error
+):
+    error = OSError(errno.EXDEV, "cross-volume")
+    if windows_error:
+        error = OSError("cross-volume")
+        error.winerror = 17
+    module, runner, binary = _provision_case(tmp_path, monkeypatch, error)
+
+    result = module.provision(tmp_path, runner)
+
+    assert result == str(tmp_path / "python/bin/python3.12")
+    assert binary.read_bytes() == b"official uv binary"
+    assert sorted(path.name for path in binary.parent.iterdir()) == ["uv"]
+
+
+def test_provision_does_not_copy_after_permission_failure(tmp_path, monkeypatch):
+    module, runner, binary = _provision_case(
+        tmp_path, monkeypatch, PermissionError(errno.EACCES, "denied")
+    )
+
+    with pytest.raises(PermissionError):
+        module.provision(tmp_path, runner)
+
+    assert not binary.exists()
+    assert list(binary.parent.iterdir()) == []
+
+
+@pytest.mark.parametrize("existing", ["file", "symlink", "hardlink"])
+def test_provision_cross_volume_fallback_preserves_existing_targets(
+    tmp_path, monkeypatch, existing
+):
+    module, runner, binary = _provision_case(
+        tmp_path, monkeypatch, OSError(errno.EXDEV, "cross-volume")
+    )
+    binary.parent.mkdir()
+    original = tmp_path / "original"
+    original.write_bytes(b"existing bytes")
+    if existing == "symlink":
+        binary.symlink_to(original)
+    elif existing == "hardlink":
+        binary.hardlink_to(original)
+    else:
+        binary.write_bytes(b"existing bytes")
+
+    with pytest.raises(FileExistsError):
+        module.provision(tmp_path, runner)
+
+    assert original.read_bytes() == b"existing bytes"
+    assert binary.read_bytes() == b"existing bytes"
+
+
+def test_provision_removes_partial_cross_volume_copy(tmp_path, monkeypatch):
+    module, runner, binary = _provision_case(
+        tmp_path, monkeypatch, OSError(errno.EXDEV, "cross-volume")
+    )
+
+    def fail_copy(source, target):
+        target.write(b"partial")
+        raise OSError(errno.ENOSPC, "disk full")
+
+    monkeypatch.setattr(module.shutil, "copyfileobj", fail_copy)
+
+    with pytest.raises(OSError, match="disk full"):
+        module.provision(tmp_path, runner)
+
+    assert not binary.exists()
+    assert list(binary.parent.iterdir()) == []
