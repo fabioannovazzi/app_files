@@ -1172,7 +1172,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "e703d67d57d108eb878b5f045d4a3718b711539f435bc1c4787652af1381920d",
+  "catalogue_fingerprint": "90d31123d4194a174ebb62ad8ad10a0f3b5e11be4f0f48368e199e9b00e08fd8",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1432,5 +1432,11 @@
     "version": "0.1.342",
     "previous_catalogue_fingerprint": "9818e8c63870d968d1b2eaee8f2203f1180b20cbfd09da1fa506027b0f69894e",
     "scope": "Manifest version refreshed; all recorded skill entrypoint IDs and hashes are unchanged. Italian invoice fiscal-ID and reviewed-transmitter checks plus shared Windows cross-volume bootstrap fix do not establish Geneva invoice support. Existing dispositions, professional findings and verification limits remain unchanged."
+  },
+  "website_download_release_refresh_20261004": {
+    "previous_version": "0.1.342",
+    "version": "0.1.343",
+    "previous_catalogue_fingerprint": "e703d67d57d108eb878b5f045d4a3718b711539f435bc1c4787652af1381920d",
+    "scope": "Canonical manifest version and listing category refreshed to 0.1.343 and Finance. All recorded skill entrypoint IDs and hashes are unchanged. Existing dispositions, professional findings and verification limits remain unchanged."
   }
 }
