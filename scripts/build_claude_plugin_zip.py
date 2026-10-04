@@ -153,6 +153,8 @@ ROOT_OMITTED_PATHS = frozenset(
         "scripts/datev_starter.py",
         "scripts/check_for_update.py",
         "scripts/_desktop_teaching.py",
+        "scripts/course_chat_bridge.py",
+        "scripts/course_chat_mcp.cjs",
         "scripts/local_courses.py",
         "skills/clara/references/local-onboarding.md",
         "skills/clara/references/tutorial-cases.md",
@@ -986,6 +988,10 @@ def project_claude_mcp(content: bytes) -> bytes:
         raise ValueError("Canonical .mcp.json requires an mcpServers object")
     projected_servers: dict[str, dict[str, object]] = {}
     for name in sorted(source["mcpServers"]):
+        if name == "courseChats":
+            # OpenAI native course chats require the desktop teaching runtime.
+            # Cowork keeps its existing written-course contract.
+            continue
         server = source["mcpServers"][name]
         if not isinstance(server, dict):
             raise ValueError(f"MCP server {name} must be a JSON object")
@@ -2544,6 +2550,8 @@ def _clara_cowork_omits_path(relative_path: str) -> bool:
     parts = Path(relative_path).parts
     if relative_path in {
         "scripts/_desktop_teaching.py",
+        "scripts/course_chat_bridge.py",
+        "scripts/course_chat_mcp.cjs",
         "scripts/local_courses.py",
         "scripts/local_onboarding.py",
         "scripts/local_teaching.py",

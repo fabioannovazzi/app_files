@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "esg-reporting-assurance",
-  "course_sha256": "7e94faad9807e67b5e0ffbef7a1d652bebc791efb99679e7504b4791fc533db2",
+  "course_sha256": "0bad34d70e45fe8d588a9bb4d22996256b15b975945b1872fd16f1be4b6a4891",
   "reviewer": "Codex /root",
   "reviewed_at": "2026-10-01T17:54:24.948053+00:00",
   "languages": {
@@ -396,5 +396,6 @@
     "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
     "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
   },
-  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
+  "review_scope": " Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate."
 }

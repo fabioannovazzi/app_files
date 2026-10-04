@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "lipe",
-  "course_sha256": "25e13bbc485de52223f72effe1d829260ce3d89d5da8fdc25d00c1004292fa66",
+  "course_sha256": "46e7f66b7d9050f2c0f63fd15f02a3cd3533eede51a3794231e039a73713c06c",
   "reviewer": "Codex - authored Italian lesson and actual synthetic output review",
   "reviewed_at": "2026-10-03T10:34:18.018139+00:00",
-  "review_scope": "Read the complete Italian lesson, fictional mandate, original registers and separate correction; executed the current LIPE CLI against exact rendered source bytes. Inspected actual VP results, PDF text and workbook structure. Test-only interpretations and confirmations are regression fixtures, never lesson inputs. No learner participation, live host/voice acceptance, professional approval, PDF extraction qualification, XML import or filing acceptance is claimed.",
+  "review_scope": "Read the complete Italian lesson, fictional mandate, original registers and separate correction; executed the current LIPE CLI against exact rendered source bytes. Inspected actual VP results, PDF text and workbook structure. Test-only interpretations and confirmations are regression fixtures, never lesson inputs. No learner participation, live host/voice acceptance, professional approval, PDF extraction qualification, XML import or filing acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
   "languages": {
     "it": {
       "verdict": "accepted",
