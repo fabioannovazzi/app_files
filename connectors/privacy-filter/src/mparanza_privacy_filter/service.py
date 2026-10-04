@@ -239,7 +239,10 @@ class FilterService:
             with self.lock:
                 if self.sessions is not None:
                     if session_id is None:
-                        raise FilterError("session_required")
+                        if self.settings.engine == "rizzo":
+                            session_id = self.sessions.create()["session_id"]
+                        else:
+                            raise FilterError("session_required")
                     document = self.sessions.process(session_id, candidate)
                 else:
                     if session_id is not None:
@@ -258,6 +261,12 @@ class FilterService:
         """Filter up to five explicit files, reporting failures by input index."""
         if not 1 <= len(paths) <= 5:
             raise FilterError("batch_requires_one_to_five_files")
+        if (
+            self.settings.engine == "rizzo"
+            and session_id is not None
+            and len(paths) > 1
+        ):
+            raise FilterError("rizzo_batch_requires_separate_sessions")
         results = []
         for index, path in enumerate(paths):
             try:

@@ -76,7 +76,7 @@ def test_real_lethe_three_documents_five_people_and_restore_after_restart(
         reloaded.read_result(Path(result["output_path"]).parent.name)
 
 
-@pytest.mark.parametrize("engine", ["openai", "gliner2", "rizzo"])
+@pytest.mark.parametrize("engine", ["openai", "gliner2"])
 def test_redaction_engines_do_not_advertise_session_tools(tmp_path, engine):
     service = FilterService(
         Settings(tmp_path, tmp_path / "out", tmp_path / "model", engine=engine)
@@ -169,6 +169,11 @@ def test_unapproved_lethe_review_and_missing_session_fail_closed(tmp_path, monke
     [
         {"error": "raw identities"},
         {"redacted_text": "safe"},
+        {
+            "redacted_text": "safe",
+            "detection_counts": {},
+            "source_characters": 3,
+        },
         {
             "redacted_text": "safe",
             "detection_counts": {"entities": -1},

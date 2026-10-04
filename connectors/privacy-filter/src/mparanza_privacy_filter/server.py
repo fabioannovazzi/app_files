@@ -26,7 +26,9 @@ def create_server(service: FilterService) -> FastMCP:
             "Pass paths to local files; do not read originals into chat first. "
             "filter_file and filter_batch save plain UTF-8 .txt artifacts. "
             "read_result reads only those filtered artifacts. No layout preservation. "
-            "For reversible engines create/open one session and pass its session_id to every file. "
+            "Check capabilities.cross_document before reusing a session across files. "
+            "Lethe and PII-Shield reuse one job session. Rizzo creates a separate session automatically "
+            "for every document; retain the returned session_id for restoration. "
             "Mappings remain local and authoritative to the anonymizer. Restore returns only a path; "
             "never open restored identities in model context. "
             "Detection can miss data; review the copy "
@@ -126,7 +128,7 @@ def main() -> None:
             Settings(
                 args.input_dir,
                 args.output_dir,
-                args.model_dir or Path.cwd(),
+                args.model_dir or args.output_dir / ".rizzo-state",
                 args.device,
                 args.engine,
                 args.rizzo_port,

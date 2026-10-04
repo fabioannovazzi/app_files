@@ -13,9 +13,59 @@ from zipfile import ZipFile
 import pytest
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
+from mparanza_privacy_filter.service import FilterService, Settings
 from reportlab.pdfgen.canvas import Canvas
 
 __all__: list[str] = []
+
+
+@pytest.mark.skipif(
+    not os.environ.get("RIZZO_TEST_PORT"),
+    reason="requires an explicitly started local Rizzo PII app",
+)
+def test_real_rizzo_native_dictionaries_restore_three_reordered_documents(
+    tmp_path: Path,
+) -> None:
+    people = (
+        "Mario Rossi",
+        "Maria Verdi",
+        "Anna Bianchi",
+        "Luca Neri",
+        "Giovanni Moretti",
+    )
+    source = tmp_path / "input"
+    source.mkdir()
+    originals = {}
+    for filename, order in (
+        ("A.txt", people),
+        ("B.txt", tuple(reversed(people))),
+        ("C.txt", people[2:] + people[:2]),
+    ):
+        originals[filename] = "\n".join(
+            f"Il cliente si chiama {person}." for person in order
+        )
+        (source / filename).write_text(originals[filename])
+    settings = Settings(
+        source,
+        tmp_path / "output",
+        tmp_path / "model",
+        engine="rizzo",
+        rizzo_port=int(os.environ["RIZZO_TEST_PORT"]),
+    )
+    service = FilterService(settings)
+    receipts = service.filter_batch(list(originals))["results"]
+    assert all(receipt["ok"] for receipt in receipts)
+    assert len({receipt["session_id"] for receipt in receipts}) == 3
+    reloaded = FilterService(settings)
+    for filename, receipt in zip(originals, receipts, strict=True):
+        filtered = reloaded.read_result(receipt["artifact_id"])["redacted_text"]
+        assert not any(person in filtered for person in people)
+        assert not any(person in json.dumps(receipt) for person in people)
+        answer = source / "answer.txt"
+        answer.write_text(filtered)
+        restored = reloaded.restore_file(receipt["session_id"], "answer.txt")
+        assert Path(restored["output_path"]).read_text() == originals[filename]
+        assert not any(person in json.dumps(restored) for person in people)
 
 
 @pytest.mark.skipif(
