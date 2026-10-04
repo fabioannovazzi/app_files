@@ -74,7 +74,7 @@
   <main class="shell" id="main-content">
    <a class="back" data-i18n="back" data-vera-link="" href="../vera/index.html?lang=it#connections">← Torna a Integrazioni</a>
    <h1 data-i18n="title">Integrazioni di Vera</h1>
-   <p class="lead" data-i18n="lead">Collega Second Brain, usa le skill dello studio o scegli OpenAI Privacy Filter, GLiNER2-PII o Rizzo PII nelle app desktop Codex, Cowork e Antigravity.</p>
+   <p class="lead" data-i18n="lead">Collega Second Brain, usa le skill dello studio o scegli OpenAI Privacy Filter, GLiNER2-PII, Rizzo PII, Lethe o PII-Shield nelle app desktop Codex, Cowork e Antigravity.</p>
    <p data-i18n="scope">Per seguire la guida Second Brain serve un Second Brain già esistente con un connettore MCP compatibile. Vera non fornisce questo servizio e non richiede Microsoft 365. Se non hai un archivio esterno, puoi usare Vera senza questa configurazione.</p>
    <nav aria-label="Passaggi della guida" class="jump-links" data-nav="">
     <a data-i18n="prepare" href="#prepare">Prima di iniziare</a>
@@ -88,6 +88,10 @@
     <a data-i18n="privacy.title" href="#privacy-filter">OpenAI Privacy Filter</a>
     <a data-i18n="gliner.title" href="#gliner2-pii">GLiNER2-PII</a>
     <a data-i18n="rizzo.title" href="#rizzo-pii">Rizzo PII</a>
+    <a data-i18n="lethe.title" href="#lethe">Lethe</a>
+    <a data-i18n="shield.title" href="#pii-shield">PII-Shield</a>
+    <a data-i18n="sessions.title" href="#sessions">Sessioni e ripristino delle identità</a>
+
    </nav>
    <section aria-labelledby="prepare-title" id="prepare">
     <h2 data-i18n="prepare" id="prepare-title">Prima di iniziare</h2>
@@ -184,7 +188,7 @@
     <h2 data-i18n="connector.title" id="connector-download-title">Scarica i connettori di anonimizzazione</h2>
     <p data-i18n="connector.copy">Un download separato da Vera. Durante la configurazione scegli il motore e le cartelle per originali e copie filtrate. Si installano solo le dipendenze del motore scelto; puoi aggiungerne un altro in seguito.</p>
     <p><a href="downloads/anonymization-connectors.zip" download data-i18n="connector.button">Scarica ZIP dei connettori</a></p>
-    <p data-i18n="connector.requirements">Estrai lo ZIP e avvia install.py --setup con Python 3.12 sul computer. Il pacchetto contiene codice e istruzioni, senza modelli. OpenAI e GLiNER2 scaricano modello e PyTorch durante l’installazione; Rizzo richiede la sua app già installata e aperta.</p>
+    <p data-i18n="connector.requirements">Estrai lo ZIP e avvia install.py --setup con Python 3.12. Scegli tra OpenAI Privacy Filter, GLiNER2-PII, Rizzo PII, Lethe e PII-Shield. I modelli non sono nello ZIP. Rizzo richiede la sua app aperta; Lethe richiede la revisione locale; PII-Shield richiede Node.js 22+ e i percorsi --node e --npm (npm-cli.js).</p>
     <ol class="steps"><li data-i18n="connector.codex">Codex: aggiungi la sezione di codex-mcp.toml alla configurazione e riavvia MCP.</li><li data-i18n="connector.cowork">Cowork: installa il file generato cowork-connector.zip in Personalizza → Plugin. Esegui l’installazione sul computer, non nella VM Linux di Cowork. Usa una nuova attività locale.</li><li data-i18n="connector.antigravity">Antigravity: aggiungi la voce di antigravity-mcp.json alla configurazione MCP dell’app e ricarica i server.</li></ol>
     <p data-i18n="connector.verify">In ciascuna app verifica lo stato del motore e filtra un file sintetico indicando il nome relativo nella cartella Input. Controlla la copia salvata. Le impostazioni esistenti delle app non vengono sovrascritte. Questo percorso riguarda le sessioni desktop locali.</p>
     <a href="https://github.com/fabioannovazzi/app_files/blob/main/connectors/privacy-filter/SETUP.md" data-i18n="connector.setup" rel="noopener noreferrer" target="_blank">Istruzioni di installazione per le tre app ↗</a>
@@ -216,7 +220,10 @@
     <p><a data-i18n="rizzo.setup" href="https://github.com/fabioannovazzi/app_files/blob/main/connectors/privacy-filter/RIZZO.md" rel="noopener noreferrer" target="_blank">Installare e usare il connettore Rizzo PII ↗</a></p>
     <p><a data-i18n="rizzo.source" href="https://github.com/Rizzo-AI-Academy/rizzo-pii" rel="noopener noreferrer" target="_blank">App e documentazione di Rizzo PII ↗</a></p>
    </section>
-   <section aria-labelledby="model-data-title" id="model-data">
+   <section id="lethe"><h2 data-i18n="lethe.title">Lethe</h2><p data-i18n="lethe.copy">Lethe assegna i segnaposto una sola volta a un insieme di elementi approvati localmente per tutto il lavoro. Il connettore riusa quella selezione nei documenti successivi; non aggiunge nuove identità. La revisione locale è necessaria prima di creare la sessione.</p><a data-engine-link href="lethe/index.html?lang=it" data-i18n="engine.details">Istruzioni, limiti e percorso dei dati</a></section>
+<section id="pii-shield"><h2 data-i18n="shield.title">PII-Shield</h2><p data-i18n="shield.copy">Il connettore usa PII-Shield di gregmos, CLI Node.js 2.2.0. Il primo documento crea la sessione del motore; i successivi la estendono con lo stesso dizionario. Il motore decide identità, alias e pseudonimi. Servono Node.js 22+ e la configurazione esplicita del modello. Nella prova su macOS arm64, il runtime ONNX del motore si interrompe alla chiusura: il connettore rifiuta l’esecuzione e non dichiara il modello pronto. L’accettazione su questo Mac non è verificata; la prova reale multi-documento viene eseguita separatamente su Linux.</p><a data-engine-link href="pii-shield/index.html?lang=it" data-i18n="engine.details">Istruzioni, limiti e percorso dei dati</a></section>
+<section id="sessions"><h2 data-i18n="sessions.title">Sessioni e ripristino delle identità</h2><p data-i18n="sessions.copy">Lethe e PII-Shield possono usare la stessa sessione per più documenti e ripristinare le identità nel risultato finale. Crea o riapri una sessione, usa il suo ID per ogni file e passa alla funzione di ripristino il percorso del risultato AI salvato localmente. Il ripristino restituisce solo il percorso del file, da aprire sul computer.</p><p data-i18n="sessions.boundary">Il dizionario del motore è autorevole: il connettore ne conserva lo stato e verifica integrità e isolamento, senza inferire, unire o correggere identità. OpenAI Privacy Filter e GLiNER2 restano di sola redazione. L’API locale Rizzo esaminata non offre estensione di sessione né ripristino, anche se la sua interfaccia desktop gestisce un dizionario per documento.</p></section>
+<section aria-labelledby="model-data-title" id="model-data">
     <h2 data-i18n="data" id="model-data-title">Quali dati arrivano al modello</h2>
     <h3>Second Brain</h3>
     <p data-i18n="dataCopy">Questa pagina non registra l’URL del tuo connettore, non avvia login e non legge Second Brain. Quando chiedi una consultazione a Vera, la query, i metadati e gli estratti restituiti dalla ricerca, e il testo delle fonti aperte possono entrare nel contesto del modello dell’app scelta. Per la prova usa un documento senza dati dei clienti. La consultazione non è solo locale: accesso, conservazione e trattamento dipendono dall’app e dal servizio Second Brain. Collegare l’archivio non invia automaticamente tutto il suo contenuto a Vera; i dati effettivamente consultati dipendono dagli strumenti e dalle richieste.</p>
@@ -226,6 +233,8 @@
     <p data-i18n="gliner.data">Il testo estratto dal documento arriva al modello GLiNER2 sul tuo computer. Il processo locale applica i segnaposto senza restituire i valori rilevati. All’app scelta arrivano i percorsi della richiesta e del risultato, i conteggi e i metadati del modello; il testo filtrato entra nella conversazione quando ne chiedi la lettura. Modello e tokenizer vengono scaricati durante l’installazione. Il filtraggio usa i file locali e non chiama API.</p>
     <h3 data-i18n="rizzo.title">Rizzo PII</h3>
     <p data-i18n="rizzo.data">Il testo originale estratto viene inviato all’app Rizzo sullo stesso computer tramite una connessione locale. Il connettore non accetta server remoti. Scarta testo originale, dizionario, anteprime e diagnostica dalla risposta di Rizzo. All’app scelta arrivano percorsi, conteggi e metadati; il testo filtrato entra nella conversazione quando ne chiedi la lettura. Installazione, modello e comportamento dell’app Rizzo sono gestiti separatamente dal connettore.</p>
+<h3 data-i18n="lethe.title">Lethe</h3><p data-i18n="lethe.data">Il testo estratto viene elaborato da Lethe sul computer. Gli elementi approvati e il dizionario restano nella cartella privata della sessione, senza entrare nelle risposte MCP. Questo connettore non usa il vault cifrato dell’app Lethe. Al modello arrivano percorsi, ID, conteggi e il testo filtrato richiesto; il ripristino salva un file locale e restituisce solo il percorso.</p>
+<h3 data-i18n="shield.title">PII-Shield</h3><p data-i18n="shield.data">Gli originali estratti arrivano al processo PII-Shield e al suo modello GLiNER locali. Dizionari e record di revisione, che possono contenere dati originali, restano separati per sessione sul computer. Non sono cifrati dal connettore. Al modello della conversazione arrivano solo metadati e testo filtrato richiesto; il ripristino restituisce un percorso locale. La conservazione dipende anche dal TTL del motore.</p>
     <a data-data-link="" data-i18n="dataPage" href="https://mparanza.com/data-handling?lang=it">Gestione dei dati Mparanza</a>
    </section>
   </main>
@@ -236,7 +245,7 @@
    const copy = {
   "it": {
     "title": "Integrazioni di Vera",
-    "lead": "Collega Second Brain, usa le skill dello studio o scegli OpenAI Privacy Filter, GLiNER2-PII o Rizzo PII nelle app desktop Codex, Cowork e Antigravity.",
+    "lead": "Collega Second Brain, usa le skill dello studio o scegli OpenAI Privacy Filter, GLiNER2-PII, Rizzo PII, Lethe o PII-Shield nelle app desktop Codex, Cowork e Antigravity.",
     "scope": "Per seguire la guida Second Brain serve un Second Brain già esistente con un connettore MCP compatibile. Vera non fornisce questo servizio e non richiede Microsoft 365. Se non hai un archivio esterno, puoi usare Vera senza questa configurazione.",
     "back": "← Torna a Integrazioni",
     "nav": "Passaggi della guida",
@@ -318,18 +327,28 @@
     "connector.copy": "Un download separato da Vera. Durante la configurazione scegli il motore e le cartelle per originali e copie filtrate. Si installano solo le dipendenze del motore scelto; puoi aggiungerne un altro in seguito.",
     "connector.button": "Scarica ZIP dei connettori",
     "connector.setup": "Istruzioni di installazione per le tre app ↗",
-    "connector.requirements": "Estrai lo ZIP e avvia install.py --setup con Python 3.12 sul computer. Il pacchetto contiene codice e istruzioni, senza modelli. OpenAI e GLiNER2 scaricano modello e PyTorch durante l’installazione; Rizzo richiede la sua app già installata e aperta.",
+    "connector.requirements": "Estrai lo ZIP e avvia install.py --setup con Python 3.12. Scegli tra OpenAI Privacy Filter, GLiNER2-PII, Rizzo PII, Lethe e PII-Shield. I modelli non sono nello ZIP. Rizzo richiede la sua app aperta; Lethe richiede la revisione locale; PII-Shield richiede Node.js 22+ e i percorsi --node e --npm (npm-cli.js).",
     "connector.codex": "Codex: aggiungi la sezione di codex-mcp.toml alla configurazione e riavvia MCP.",
     "connector.cowork": "Cowork: installa il file generato cowork-connector.zip in Personalizza → Plugin. Esegui l’installazione sul computer, non nella VM Linux di Cowork. Usa una nuova attività locale.",
     "connector.antigravity": "Antigravity: aggiungi la voce di antigravity-mcp.json alla configurazione MCP dell’app e ricarica i server.",
     "connector.verify": "In ciascuna app verifica lo stato del motore e filtra un file sintetico indicando il nome relativo nella cartella Input. Controlla la copia salvata. Le impostazioni esistenti delle app non vengono sovrascritte. Questo percorso riguarda le sessioni desktop locali.",
     "antigravity": "Google Antigravity",
     "antigravity1": "Per Second Brain, apri la configurazione MCP di Antigravity e aggiungi il server del gestore. Per un server remoto usa serverUrl nell’oggetto mcpServers; mantieni gli altri collegamenti.",
-    "antigravity2": "Ricarica i server, completa l’autenticazione prevista dal gestore e verifica ricerca e lettura nella sessione corrente. Non serve un installer Second Brain fornito da Vera. Compatibilità e autorizzazioni dipendono dal servizio scelto."
+    "antigravity2": "Ricarica i server, completa l’autenticazione prevista dal gestore e verifica ricerca e lettura nella sessione corrente. Non serve un installer Second Brain fornito da Vera. Compatibilità e autorizzazioni dipendono dal servizio scelto.",
+    "sessions.title": "Sessioni e ripristino delle identità",
+    "sessions.copy": "Lethe e PII-Shield possono usare la stessa sessione per più documenti e ripristinare le identità nel risultato finale. Crea o riapri una sessione, usa il suo ID per ogni file e passa alla funzione di ripristino il percorso del risultato AI salvato localmente. Il ripristino restituisce solo il percorso del file, da aprire sul computer.",
+    "sessions.boundary": "Il dizionario del motore è autorevole: il connettore ne conserva lo stato e verifica integrità e isolamento, senza inferire, unire o correggere identità. OpenAI Privacy Filter e GLiNER2 restano di sola redazione. L’API locale Rizzo esaminata non offre estensione di sessione né ripristino, anche se la sua interfaccia desktop gestisce un dizionario per documento.",
+    "lethe.copy": "Lethe assegna i segnaposto una sola volta a un insieme di elementi approvati localmente per tutto il lavoro. Il connettore riusa quella selezione nei documenti successivi; non aggiunge nuove identità. La revisione locale è necessaria prima di creare la sessione.",
+    "lethe.data": "Il testo estratto viene elaborato da Lethe sul computer. Gli elementi approvati e il dizionario restano nella cartella privata della sessione, senza entrare nelle risposte MCP. Questo connettore non usa il vault cifrato dell’app Lethe. Al modello arrivano percorsi, ID, conteggi e il testo filtrato richiesto; il ripristino salva un file locale e restituisce solo il percorso.",
+    "shield.copy": "Il connettore usa PII-Shield di gregmos, CLI Node.js 2.2.0. Il primo documento crea la sessione del motore; i successivi la estendono con lo stesso dizionario. Il motore decide identità, alias e pseudonimi. Servono Node.js 22+ e la configurazione esplicita del modello. Nella prova su macOS arm64, il runtime ONNX del motore si interrompe alla chiusura: il connettore rifiuta l’esecuzione e non dichiara il modello pronto. L’accettazione su questo Mac non è verificata; la prova reale multi-documento viene eseguita separatamente su Linux.",
+    "shield.data": "Gli originali estratti arrivano al processo PII-Shield e al suo modello GLiNER locali. Dizionari e record di revisione, che possono contenere dati originali, restano separati per sessione sul computer. Non sono cifrati dal connettore. Al modello della conversazione arrivano solo metadati e testo filtrato richiesto; il ripristino restituisce un percorso locale. La conservazione dipende anche dal TTL del motore.",
+    "engine.details": "Istruzioni, limiti e percorso dei dati",
+    "lethe.title": "Lethe",
+    "shield.title": "PII-Shield"
   },
   "en": {
     "title": "Vera integrations",
-    "lead": "Connect Second Brain, use studio skills, or choose OpenAI Privacy Filter, GLiNER2-PII or Rizzo PII in Codex, Cowork and Antigravity desktop apps.",
+    "lead": "Connect Second Brain, use studio skills, or choose OpenAI Privacy Filter, GLiNER2-PII or Rizzo PII, Lethe, PII-Shield in Codex, Cowork and Antigravity desktop apps.",
     "scope": "For the Second Brain setup guide, you need an existing Second Brain with a compatible MCP connector. Vera does not supply this service or require Microsoft 365. You can use Vera without this setup if you have no external repository.",
     "back": "← Back to Integrations",
     "nav": "Guide steps",
@@ -411,18 +430,28 @@
     "connector.copy": "A separate download from Vera. Choose the engine and folders for originals and filtered copies during setup. Only the selected engine’s dependencies are installed; you can add another later.",
     "connector.button": "Download connectors ZIP",
     "connector.setup": "Setup instructions for the three apps ↗",
-    "connector.requirements": "Extract the ZIP and run install.py --setup with Python 3.12 on your computer. The package contains code and instructions, without models. OpenAI and GLiNER2 download model weights and PyTorch during installation; Rizzo needs its own app installed and running.",
+    "connector.requirements": "Extract the ZIP and run install.py --setup with Python 3.12. Choose OpenAI Privacy Filter, GLiNER2-PII, Rizzo PII, Lethe or PII-Shield. Models are not bundled. Rizzo needs its app running; Lethe needs local review; PII-Shield needs Node.js 22+ and --node and --npm (npm-cli.js) paths.",
     "connector.codex": "Codex: add the codex-mcp.toml section to your configuration and restart MCP.",
     "connector.cowork": "Cowork: install the generated cowork-connector.zip in Customize → Plugins. Run setup on the host computer, not inside Cowork’s Linux VM. Start a new local task.",
     "connector.antigravity": "Antigravity: add the antigravity-mcp.json server entry to the app’s MCP configuration and reload servers.",
     "connector.verify": "In each app, check engine status and filter a synthetic file using its relative name inside Input. Inspect the saved copy. Existing app settings are not overwritten. This setup targets local desktop sessions.",
     "antigravity": "Google Antigravity",
     "antigravity1": "For Second Brain, open Antigravity’s MCP configuration and add the provider’s server. For a remote server use serverUrl inside mcpServers; preserve existing connections.",
-    "antigravity2": "Reload servers, complete the provider’s authentication and verify search and read in the current session. Vera supplies no Second Brain installer. Compatibility and access depend on the chosen service."
+    "antigravity2": "Reload servers, complete the provider’s authentication and verify search and read in the current session. Vera supplies no Second Brain installer. Compatibility and access depend on the chosen service.",
+    "sessions.title": "Sessions and identity restoration",
+    "sessions.copy": "Lethe and PII-Shield can reuse one session across documents and restore identities in the final output. Create or reopen a session, pass its ID to every file, then restore the locally saved AI output by its path. Restoration returns only a file path to open on your computer.",
+    "sessions.boundary": "The engine’s mapping is authoritative. The connector preserves state and checks integrity and isolation without inferring, merging or repairing identities. OpenAI Privacy Filter and GLiNER2 remain redaction-only. The inspected Rizzo HTTP API offers no session extension or restoration, although its desktop UI manages a per-document dictionary.",
+    "lethe.copy": "Lethe allocates placeholders once for a locally approved set covering the whole job. The connector reuses that selection in later documents and does not add new identities. Local review is required before session creation.",
+    "lethe.data": "Extracted text is processed by Lethe on your computer. Approved items and mappings stay in the private session directory and never enter MCP responses. This adapter does not use Lethe’s encrypted desktop vault. The model receives paths, IDs, counts and requested filtered text; restoration writes a local file and returns its path only.",
+    "shield.copy": "This connector uses gregmos/PII-Shield Node.js CLI 2.2.0. The first document creates the native session; later documents extend its mapping pool. The engine decides identities, aliases and pseudonyms. Node.js 22+ and explicit model setup are required. On the tested macOS arm64 host, the engine’s ONNX runtime aborts at shutdown: the connector rejects the run and does not declare readiness. Acceptance on this Mac is not established; the real multi-document test runs separately on Linux.",
+    "shield.data": "Extracted originals reach the local PII-Shield process and GLiNER model. Mapping and review records can contain original data and remain isolated by session on your computer. The connector does not encrypt them. The conversational model receives metadata and requested filtered text; restoration returns a local path. Retention also depends on the engine’s TTL.",
+    "engine.details": "Instructions, limits and data path",
+    "lethe.title": "Lethe",
+    "shield.title": "PII-Shield"
   },
   "fr": {
     "title": "Intégrations de Vera",
-    "lead": "Connectez Second Brain, utilisez les skills du cabinet ou choisissez OpenAI Privacy Filter, GLiNER2-PII ou Rizzo PII dans les applications de bureau Codex, Cowork et Antigravity.",
+    "lead": "Connectez Second Brain, utilisez les skills du cabinet ou choisissez OpenAI Privacy Filter, GLiNER2-PII ou Rizzo PII, Lethe, PII-Shield dans les applications de bureau Codex, Cowork et Antigravity.",
     "scope": "Pour suivre le guide Second Brain, il faut un Second Brain existant avec un connecteur MCP compatible. Vera ne fournit pas ce service et ne nécessite pas Microsoft 365. Sans archive externe, vous pouvez utiliser Vera sans cette configuration.",
     "back": "← Retour aux intégrations",
     "nav": "Étapes du guide",
@@ -504,18 +533,28 @@
     "connector.copy": "Un téléchargement séparé de Vera. Choisissez le moteur et les dossiers des originaux et des copies filtrées. Seules les dépendances du moteur choisi sont installées ; vous pouvez en ajouter un autre ensuite.",
     "connector.button": "Télécharger le ZIP des connecteurs",
     "connector.setup": "Instructions d’installation pour les trois applications ↗",
-    "connector.requirements": "Extrayez le ZIP et lancez install.py --setup avec Python 3.12 sur votre ordinateur. Le paquet contient le code et les instructions, sans modèles. OpenAI et GLiNER2 téléchargent le modèle et PyTorch pendant l’installation ; Rizzo nécessite sa propre application installée et ouverte.",
+    "connector.requirements": "Extrayez le ZIP et lancez install.py --setup avec Python 3.12. Choisissez OpenAI Privacy Filter, GLiNER2-PII, Rizzo PII, Lethe ou PII-Shield. Les modèles ne sont pas inclus. Rizzo exige son application ouverte ; Lethe une révision locale ; PII-Shield Node.js 22+ et les chemins --node et --npm (npm-cli.js).",
     "connector.codex": "Codex : ajoutez la section de codex-mcp.toml à votre configuration et redémarrez MCP.",
     "connector.cowork": "Cowork : installez le fichier généré cowork-connector.zip dans Personnaliser → Plugins. Lancez l’installation sur l’ordinateur, pas dans la VM Linux de Cowork. Ouvrez une nouvelle tâche locale.",
     "connector.antigravity": "Antigravity : ajoutez le serveur d’antigravity-mcp.json à la configuration MCP de l’application et rechargez les serveurs.",
     "connector.verify": "Dans chaque application, vérifiez l’état du moteur et filtrez un fichier fictif en indiquant son nom relatif dans Input. Contrôlez la copie enregistrée. Les réglages existants sont conservés. Ce parcours concerne les sessions de bureau locales.",
     "antigravity": "Google Antigravity",
     "antigravity1": "Pour Second Brain, ouvrez la configuration MCP d’Antigravity et ajoutez le serveur du fournisseur. Pour un serveur distant, utilisez serverUrl dans mcpServers ; conservez les autres connexions.",
-    "antigravity2": "Rechargez les serveurs, effectuez l’authentification prévue et vérifiez la recherche et la lecture dans la session actuelle. Vera ne fournit pas d’installateur Second Brain. La compatibilité et les droits dépendent du service choisi."
+    "antigravity2": "Rechargez les serveurs, effectuez l’authentification prévue et vérifiez la recherche et la lecture dans la session actuelle. Vera ne fournit pas d’installateur Second Brain. La compatibilité et les droits dépendent du service choisi.",
+    "sessions.title": "Sessions et restauration des identités",
+    "sessions.copy": "Lethe et PII-Shield réutilisent une session pour plusieurs documents et restaurent les identités dans le résultat final. Créez ou rouvrez une session, utilisez son ID pour chaque fichier puis indiquez le chemin du résultat IA enregistré localement. La restauration renvoie seulement le chemin du fichier à ouvrir sur votre ordinateur.",
+    "sessions.boundary": "La correspondance du moteur fait autorité. Le connecteur conserve l’état et vérifie intégrité et isolation, sans inférer, fusionner ni corriger les identités. OpenAI Privacy Filter et GLiNER2 restent limités à la suppression. L’API Rizzo examinée ne permet ni extension de session ni restauration, même si son interface desktop gère un dictionnaire par document.",
+    "lethe.copy": "Lethe attribue une fois les marqueurs à un ensemble approuvé localement pour tout le travail. Le connecteur réutilise cette sélection sans ajouter de nouvelles identités. La révision locale est requise avant de créer la session.",
+    "lethe.data": "Lethe traite le texte extrait sur votre ordinateur. Les éléments approuvés et les correspondances restent dans le dossier privé de la session, hors des réponses MCP. Ce connecteur n’utilise pas le coffre chiffré de Lethe. Le modèle reçoit chemins, ID, compteurs et texte filtré demandé ; la restauration renvoie seulement le chemin d’un fichier local.",
+    "shield.copy": "Ce connecteur utilise gregmos/PII-Shield, CLI Node.js 2.2.0. Le premier document crée la session native ; les suivants étendent ses correspondances. Le moteur décide des identités, alias et pseudonymes. Node.js 22+ et la configuration explicite du modèle sont nécessaires. Sur le Mac arm64 testé, le runtime ONNX du moteur s’interrompt à la fermeture : le connecteur refuse l’exécution et ne déclare pas le modèle prêt. L’acceptation sur ce Mac n’est pas établie ; le test réel multi-document est exécuté séparément sous Linux.",
+    "shield.data": "Les originaux extraits arrivent au processus PII-Shield et au modèle GLiNER locaux. Les correspondances et révisions peuvent contenir des données originales et restent isolées par session sur l’ordinateur. Le connecteur ne les chiffre pas. Le modèle conversationnel reçoit les métadonnées et le texte filtré demandé ; la restauration renvoie un chemin local. La conservation dépend aussi du TTL du moteur.",
+    "engine.details": "Instructions, limites et parcours des données",
+    "lethe.title": "Lethe",
+    "shield.title": "PII-Shield"
   },
   "de": {
     "title": "Vera-Integrationen",
-    "lead": "Verbinden Sie Second Brain, nutzen Sie Kanzlei-Skills oder wählen Sie OpenAI Privacy Filter, GLiNER2-PII oder Rizzo PII in den Desktop-Apps Codex, Cowork und Antigravity.",
+    "lead": "Verbinden Sie Second Brain, nutzen Sie Kanzlei-Skills oder wählen Sie OpenAI Privacy Filter, GLiNER2-PII oder Rizzo PII, Lethe, PII-Shield in den Desktop-Apps Codex, Cowork und Antigravity.",
     "scope": "Für die Second-Brain-Anleitung benötigen Sie ein vorhandenes Second Brain mit kompatiblem MCP-Konnektor. Vera stellt diesen Dienst nicht bereit und benötigt kein Microsoft 365. Ohne externes Archiv können Sie Vera ohne diese Einrichtung nutzen.",
     "back": "← Zurück zu Integrationen",
     "nav": "Schritte der Anleitung",
@@ -597,18 +636,28 @@
     "connector.copy": "Ein separater Download neben Vera. Wählen Sie bei der Einrichtung den Motor und die Ordner für Originale und gefilterte Kopien. Nur die Abhängigkeiten des gewählten Motors werden installiert; weitere können später hinzukommen.",
     "connector.button": "Konnektoren als ZIP herunterladen",
     "connector.setup": "Installationsanleitung für die drei Apps ↗",
-    "connector.requirements": "Entpacken Sie die ZIP-Datei und starten Sie install.py --setup mit Python 3.12 auf Ihrem Computer. Das Paket enthält Code und Anleitungen ohne Modelle. OpenAI und GLiNER2 laden Modell und PyTorch bei der Installation herunter; Rizzo benötigt seine separat installierte, geöffnete App.",
+    "connector.requirements": "Entpacken Sie die ZIP und starten Sie install.py --setup mit Python 3.12. Wählen Sie OpenAI Privacy Filter, GLiNER2-PII, Rizzo PII, Lethe oder PII-Shield. Modelle sind nicht enthalten. Rizzo benötigt seine laufende App; Lethe eine lokale Prüfung; PII-Shield Node.js 22+ sowie --node und --npm (npm-cli.js).",
     "connector.codex": "Codex: Ergänzen Sie Ihre Konfiguration um den Abschnitt aus codex-mcp.toml und starten Sie MCP neu.",
     "connector.cowork": "Cowork: Installieren Sie die erzeugte cowork-connector.zip unter Anpassen → Plugins. Führen Sie die Einrichtung auf dem Computer aus, nicht in Coworks Linux-VM. Starten Sie eine neue lokale Aufgabe.",
     "connector.antigravity": "Antigravity: Fügen Sie den Server aus antigravity-mcp.json zur MCP-Konfiguration der App hinzu und laden Sie die Server neu.",
     "connector.verify": "Prüfen Sie in jeder App den Motorstatus und filtern Sie eine fiktive Testdatei über ihren relativen Namen in Input. Prüfen Sie die gespeicherte Kopie. Bestehende App-Einstellungen bleiben erhalten. Dieser Ablauf gilt für lokale Desktop-Sitzungen.",
     "antigravity": "Google Antigravity",
     "antigravity1": "Öffnen Sie für Second Brain die MCP-Konfiguration von Antigravity und ergänzen Sie den Server des Anbieters. Verwenden Sie für einen Remote-Server serverUrl in mcpServers; behalten Sie bestehende Verbindungen.",
-    "antigravity2": "Laden Sie die Server neu, melden Sie sich beim Anbieter an und prüfen Sie Suche und Lesen in der aktuellen Sitzung. Vera liefert kein Second-Brain-Installationsprogramm. Kompatibilität und Zugriff hängen vom gewählten Dienst ab."
+    "antigravity2": "Laden Sie die Server neu, melden Sie sich beim Anbieter an und prüfen Sie Suche und Lesen in der aktuellen Sitzung. Vera liefert kein Second-Brain-Installationsprogramm. Kompatibilität und Zugriff hängen vom gewählten Dienst ab.",
+    "sessions.title": "Sitzungen und Wiederherstellung der Identitäten",
+    "sessions.copy": "Lethe und PII-Shield verwenden eine Sitzung für mehrere Dokumente und stellen Identitäten im Endergebnis wieder her. Erstellen oder öffnen Sie eine Sitzung, übergeben Sie ihre ID für jede Datei und anschließend den Pfad der lokal gespeicherten KI-Ausgabe. Die Wiederherstellung liefert nur einen Dateipfad zum lokalen Öffnen.",
+    "sessions.boundary": "Die Zuordnung der Engine ist maßgeblich. Der Connector bewahrt den Zustand und prüft Integrität und Isolation, ohne Identitäten abzuleiten, zusammenzuführen oder zu korrigieren. OpenAI Privacy Filter und GLiNER2 bleiben auf Redaktion beschränkt. Die geprüfte Rizzo-HTTP-API bietet keine Sitzungserweiterung oder Wiederherstellung; die Desktop-Oberfläche verwaltet ein Wörterbuch pro Dokument.",
+    "lethe.copy": "Lethe vergibt Platzhalter einmal für einen lokal freigegebenen Satz für den gesamten Auftrag. Der Connector verwendet diese Auswahl erneut und ergänzt keine Identitäten. Vor dem Erstellen der Sitzung ist eine lokale Prüfung erforderlich.",
+    "lethe.data": "Lethe verarbeitet den extrahierten Text auf Ihrem Computer. Freigegebene Elemente und Zuordnungen bleiben im privaten Sitzungsordner und außerhalb der MCP-Antworten. Dieser Connector verwendet nicht Lethes verschlüsselten Desktop-Tresor. Das Modell erhält Pfade, IDs, Zähler und angeforderten gefilterten Text; die Wiederherstellung liefert nur einen lokalen Dateipfad.",
+    "shield.copy": "Dieser Connector verwendet gregmos/PII-Shield, Node.js CLI 2.2.0. Das erste Dokument erstellt die native Sitzung; weitere erweitern deren Zuordnungen. Die Engine bestimmt Identitäten, Aliase und Pseudonyme. Node.js 22+ und eine ausdrückliche Modelleinrichtung sind erforderlich. Auf dem getesteten Mac mit arm64 bricht die ONNX-Laufzeit beim Beenden ab: Der Connector lehnt den Lauf ab und meldet keine Bereitschaft. Die Abnahme auf diesem Mac ist nicht belegt; der echte Mehrdokumententest läuft separat unter Linux.",
+    "shield.data": "Extrahierte Originale erreichen den lokalen PII-Shield-Prozess und das lokale GLiNER-Modell. Zuordnungen und Prüfdatensätze können Originaldaten enthalten und bleiben pro Sitzung auf dem Computer getrennt. Der Connector verschlüsselt sie nicht. Das Konversationsmodell erhält Metadaten und angeforderten gefilterten Text; die Wiederherstellung liefert einen lokalen Pfad. Die Aufbewahrung hängt auch vom TTL der Engine ab.",
+    "engine.details": "Anleitung, Grenzen und Datenweg",
+    "lethe.title": "Lethe",
+    "shield.title": "PII-Shield"
   },
   "es": {
     "title": "Integraciones de Vera",
-    "lead": "Conecta Second Brain, usa las skills del despacho o elige OpenAI Privacy Filter, GLiNER2-PII o Rizzo PII en las aplicaciones de escritorio Codex, Cowork y Antigravity.",
+    "lead": "Conecta Second Brain, usa las skills del despacho o elige OpenAI Privacy Filter, GLiNER2-PII o Rizzo PII, Lethe, PII-Shield en las aplicaciones de escritorio Codex, Cowork y Antigravity.",
     "scope": "Para seguir la guía de Second Brain necesitas un Second Brain existente con un conector MCP compatible. Vera no proporciona este servicio ni requiere Microsoft 365. Sin archivo externo puedes usar Vera sin esta configuración.",
     "back": "← Volver a Integraciones",
     "nav": "Pasos de la guía",
@@ -690,14 +739,24 @@
     "connector.copy": "Una descarga separada de Vera. Elige el motor y las carpetas para originales y copias filtradas durante la instalación. Solo se instalan las dependencias del motor elegido; puedes añadir otro después.",
     "connector.button": "Descargar ZIP de conectores",
     "connector.setup": "Instrucciones de instalación para las tres aplicaciones ↗",
-    "connector.requirements": "Extrae el ZIP y ejecuta install.py --setup con Python 3.12 en tu ordenador. El paquete contiene código e instrucciones, sin modelos. OpenAI y GLiNER2 descargan el modelo y PyTorch durante la instalación; Rizzo necesita su propia aplicación instalada y abierta.",
+    "connector.requirements": "Extrae el ZIP y ejecuta install.py --setup con Python 3.12. Elige OpenAI Privacy Filter, GLiNER2-PII, Rizzo PII, Lethe o PII-Shield. Los modelos no están incluidos. Rizzo necesita su aplicación abierta; Lethe revisión local; PII-Shield Node.js 22+ y rutas --node y --npm (npm-cli.js).",
     "connector.codex": "Codex: añade la sección de codex-mcp.toml a tu configuración y reinicia MCP.",
     "connector.cowork": "Cowork: instala el archivo generado cowork-connector.zip en Personalizar → Plugins. Ejecuta la instalación en el ordenador, no en la VM Linux de Cowork. Abre una nueva tarea local.",
     "connector.antigravity": "Antigravity: añade el servidor de antigravity-mcp.json a la configuración MCP de la aplicación y recarga los servidores.",
     "connector.verify": "En cada aplicación, comprueba el estado del motor y filtra un archivo ficticio con su nombre relativo dentro de Input. Revisa la copia guardada. La configuración existente se conserva. Este proceso corresponde a sesiones locales de escritorio.",
     "antigravity": "Google Antigravity",
     "antigravity1": "Para Second Brain, abre la configuración MCP de Antigravity y añade el servidor del proveedor. Para un servidor remoto utiliza serverUrl dentro de mcpServers; conserva las conexiones existentes.",
-    "antigravity2": "Recarga los servidores, completa la autenticación y verifica búsqueda y lectura en la sesión actual. Vera no proporciona un instalador de Second Brain. La compatibilidad y el acceso dependen del servicio elegido."
+    "antigravity2": "Recarga los servidores, completa la autenticación y verifica búsqueda y lectura en la sesión actual. Vera no proporciona un instalador de Second Brain. La compatibilidad y el acceso dependen del servicio elegido.",
+    "sessions.title": "Sesiones y restauración de identidades",
+    "sessions.copy": "Lethe y PII-Shield reutilizan una sesión para varios documentos y restauran las identidades en el resultado final. Crea o reabre una sesión, pasa su ID a cada archivo y después la ruta del resultado de IA guardado localmente. La restauración devuelve solo la ruta de un archivo para abrir en tu ordenador.",
+    "sessions.boundary": "El mapa del motor es la referencia. El conector conserva el estado y comprueba integridad y aislamiento sin inferir, unir ni corregir identidades. OpenAI Privacy Filter y GLiNER2 siguen siendo de solo redacción. La API Rizzo examinada no ofrece ampliación de sesiones ni restauración, aunque su interfaz de escritorio gestiona un diccionario por documento.",
+    "lethe.copy": "Lethe asigna los marcadores una vez a un conjunto aprobado localmente para todo el trabajo. El conector reutiliza esa selección sin añadir identidades. La revisión local es necesaria antes de crear la sesión.",
+    "lethe.data": "Lethe procesa el texto extraído en tu ordenador. Los elementos aprobados y los mapas permanecen en la carpeta privada de la sesión, fuera de las respuestas MCP. Este conector no usa la bóveda cifrada de Lethe. El modelo recibe rutas, ID, recuentos y texto filtrado solicitado; la restauración devuelve solo la ruta de un archivo local.",
+    "shield.copy": "Este conector usa gregmos/PII-Shield, CLI Node.js 2.2.0. El primer documento crea la sesión nativa; los siguientes amplían su mapa. El motor decide identidades, alias y pseudónimos. Se necesitan Node.js 22+ y configuración explícita del modelo. En el Mac arm64 probado, el runtime ONNX se interrumpe al cerrar: el conector rechaza la ejecución y no declara el modelo listo. La aceptación en este Mac no está establecida; la prueba real de varios documentos se ejecuta por separado en Linux.",
+    "shield.data": "Los originales extraídos llegan al proceso PII-Shield y al modelo GLiNER locales. Los mapas y registros de revisión pueden contener datos originales y permanecen aislados por sesión en el ordenador. El conector no los cifra. El modelo conversacional recibe metadatos y texto filtrado solicitado; la restauración devuelve una ruta local. La conservación también depende del TTL del motor.",
+    "engine.details": "Instrucciones, límites y ruta de los datos",
+    "lethe.title": "Lethe",
+    "shield.title": "PII-Shield"
   }
 };
     const requested = new URLSearchParams(location.search).get('lang');
@@ -707,6 +766,7 @@
     document.title = text.title + ' · Vera';
     document.querySelector('meta[name="description"]').content = text.lead;
     document.querySelector('link[rel="canonical"]').href = "https://mparanza.com/static/shared/vera-integrazioni/index.html" + '?lang=' + lang;
+    document.querySelectorAll('[data-engine-link]').forEach(node => { const url = new URL(node.href); url.searchParams.set('lang', lang); node.href = url; });
     document.querySelectorAll('[data-i18n]').forEach(node => { node.textContent = text[node.dataset.i18n]; });
     const languageLabels = {it:'Lingua', en:'Language', fr:'Langue', de:'Sprache', es:'Idioma'};
     document.querySelector('.languages').setAttribute('aria-label', languageLabels[lang]);

@@ -6,6 +6,7 @@ import argparse
 import json
 import logging
 import os
+import shutil
 import subprocess
 import sys
 import tomllib
@@ -20,6 +21,8 @@ ENGINES = {
     "openai": ("privacy_filter", "OpenAI Privacy Filter"),
     "gliner2": ("gliner2_pii", "GLiNER2-PII"),
     "rizzo": ("rizzo_pii", "Rizzo PII"),
+    "lethe": ("lethe", "Lethe"),
+    "pii-shield": ("pii_shield", "PII-Shield"),
 }
 
 
@@ -41,7 +44,7 @@ def server_entry(
         "--output-dir",
         str(output_dir),
     ]
-    if engine not in ("openai", "gliner2", "rizzo"):
+    if engine not in ENGINES:
         raise ValueError("unsupported_engine")
     if engine != "rizzo":
         args.extend(("--model-dir", str(model_dir)))
@@ -117,6 +120,8 @@ def write_host_files(
         "absolute path. Cowork VM /sessions paths are not host paths. Do not open or\n"
         "attach the original in chat. Use the connector's file or batch tools to save\n"
         "a filtered .txt copy. Only read the artifact when the user requests it.\n"
+        "For Lethe/PII-Shield create or reopen one session and reuse its ID for every file.\n"
+        "Restoration returns a local path; never read restored identities into chat.\n"
         "Do not silently fall back to another engine or cloud processing.\n"
         "A successful run does not guarantee that every sensitive value was detected.\n"
     )
@@ -135,11 +140,13 @@ def _interactive_setup(args: argparse.Namespace) -> None:
     """Collect explicit installation choices before downloading dependencies."""
     logging.info("Mparanza · Optional anonymization connectors")
     if args.engine is None:
-        logging.info("1. OpenAI Privacy Filter\n2. GLiNER2-PII\n3. Rizzo PII")
-        choice = input("Choose / Scegli (1, 2, 3): ").strip()
-        if choice not in ("1", "2", "3"):
-            raise ValueError("Choose 1, 2 or 3 and run setup again.")
-        args.engine = ("openai", "gliner2", "rizzo")[int(choice) - 1]
+        logging.info(
+            "1. OpenAI Privacy Filter\n2. GLiNER2-PII\n3. Rizzo PII\n4. Lethe\n5. PII-Shield"
+        )
+        choice = input("Choose / Scegli (1, 2, 3, 4, 5): ").strip()
+        if choice not in ("1", "2", "3", "4", "5"):
+            raise ValueError("Choose 1, 2, 3, 4 or 5 and run setup again.")
+        args.engine = tuple(ENGINES)[int(choice) - 1]
     default = Path.home() / "Documents" / "Mparanza" / ENGINES[args.engine][1]
     for field, label, folder in (
         ("input_dir", "Originals folder / Cartella originali", "Input"),
@@ -148,6 +155,25 @@ def _interactive_setup(args: argparse.Namespace) -> None:
         if getattr(args, field) is None:
             answer = input(f"{label} [{default / folder}]: ").strip()
             setattr(args, field, Path(answer) if answer else default / folder)
+    if args.engine == "pii-shield":
+        if args.node is None:
+            default_node = shutil.which("node") or ""
+            answer = input(
+                f"Node.js executable / Eseguibile [{default_node}]: "
+            ).strip()
+            args.node = Path(answer or default_node) if answer or default_node else None
+        if args.npm is None:
+            default_npm = ""
+            if args.node is not None:
+                for candidate in (
+                    args.node.parent / "node_modules/npm/bin/npm-cli.js",
+                    args.node.parent.parent / "lib/node_modules/npm/bin/npm-cli.js",
+                ):
+                    if candidate.is_file():
+                        default_npm = str(candidate.resolve())
+                        break
+            answer = input(f"npm-cli.js [{default_npm}]: ").strip()
+            args.npm = Path(answer or default_npm) if answer or default_npm else None
     logging.info("Engine / Motore: %s", ENGINES[args.engine][1])
     logging.info("Input: %s\nOutput: %s", args.input_dir, args.output_dir)
     logging.info("Setup downloads only the chosen engine's declared dependencies.")
@@ -173,7 +199,7 @@ def main() -> None:
     default_root = Path.home() / ".local" / "share" / "mparanza" / "privacy-filter"
     if sys.platform == "win32":
         default_root = Path(os.environ["LOCALAPPDATA"]) / "Mparanza" / "privacy-filter"
-    parser.add_argument("--engine", choices=("openai", "gliner2", "rizzo"))
+    parser.add_argument("--engine", choices=tuple(ENGINES))
     parser.add_argument(
         "--setup", action="store_true", help="Guided engine and folder selection"
     )
@@ -182,6 +208,8 @@ def main() -> None:
         action="store_true",
         help="Regenerate host files for an existing runtime without downloads",
     )
+    parser.add_argument("--node", type=Path, help="PII-Shield: Node.js 22+ executable")
+    parser.add_argument("--npm", type=Path, help="PII-Shield: npm-cli.js path")
     parser.add_argument("--rizzo-port", type=int, default=5005)
     parser.add_argument("--runtime-dir", type=Path)
     parser.add_argument("--input-dir", type=Path)
@@ -230,6 +258,10 @@ def main() -> None:
             runtime_dir, python, input_dir, output_dir, args.engine, args.rizzo_port
         )
         return
+    if args.engine == "pii-shield" and (args.node is None or args.npm is None):
+        parser.error(
+            "PII-Shield setup requires --node and --npm (npm-cli.js), see PII-SHIELD.md."
+        )
     venv.EnvBuilder(with_pip=True).create(environment)
     source = Path(__file__).resolve().parent
     logging.basicConfig(level=logging.INFO)
@@ -238,6 +270,8 @@ def main() -> None:
         "openai": "requirements-model.txt",
         "gliner2": "requirements-gliner2.txt",
         "rizzo": "requirements.txt",
+        "lethe": "requirements-lethe.txt",
+        "pii-shield": "requirements.txt",
     }
     subprocess.run(  # nosec B603
         [
@@ -251,7 +285,7 @@ def main() -> None:
         ],
         check=True,
     )
-    if args.engine != "rizzo":
+    if args.engine in ("openai", "gliner2"):
         subprocess.run(  # nosec B603
             [
                 str(python),
@@ -267,6 +301,22 @@ def main() -> None:
             ],
             check=True,
         )
+    if args.engine == "pii-shield":
+        subprocess.run(
+            [
+                str(python),
+                "-I",
+                "-m",
+                "mparanza_privacy_filter.shield_prepare",
+                "--model-dir",
+                str(runtime_dir / "model"),
+                "--node",
+                str(args.node),
+                "--npm",
+                str(args.npm),
+            ],
+            check=True,
+        )  # nosec B603
     write_host_files(
         runtime_dir, python, input_dir, output_dir, args.engine, args.rizzo_port
     )

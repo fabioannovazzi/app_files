@@ -26,6 +26,9 @@ def create_server(service: FilterService) -> FastMCP:
             "Pass paths to local files; do not read originals into chat first. "
             "filter_file and filter_batch save plain UTF-8 .txt artifacts. "
             "read_result reads only those filtered artifacts. No layout preservation. "
+            "For reversible engines create/open one session and pass its session_id to every file. "
+            "Mappings remain local and authoritative to the anonymizer. Restore returns only a path; "
+            "never open restored identities in model context. "
             "Detection can miss data; review the copy "
             "locally before sharing it. A completed run is not an anonymity guarantee."
         ),
@@ -43,17 +46,17 @@ def create_server(service: FilterService) -> FastMCP:
         """Check local model readiness and supported file formats; no download."""
         return service.status()
 
-    def filter_file(path: str) -> dict[str, Any]:
+    def filter_file(path: str, session_id: str | None = None) -> dict[str, Any]:
         """Filter one file in the configured input directory. Return its artifact ID."""
         try:
-            return service.filter_file(path)
+            return service.filter_file(path, session_id)
         except FilterError as exc:
             raise ToolError(str(exc)) from None
 
-    def filter_batch(paths: list[str]) -> dict[str, Any]:
+    def filter_batch(paths: list[str], session_id: str | None = None) -> dict[str, Any]:
         """Filter 1–5 explicit local paths; return each result by input index."""
         try:
-            return service.filter_batch(paths)
+            return service.filter_batch(paths, session_id)
         except FilterError as exc:
             raise ToolError(str(exc)) from None
 
@@ -66,6 +69,35 @@ def create_server(service: FilterService) -> FastMCP:
         except FilterError as exc:
             raise ToolError(str(exc)) from None
 
+    def create_session(state_path: str | None = None) -> dict[str, Any]:
+        """Create a local pseudonymization job. Lethe needs an approved review file path."""
+        try:
+            return service.create_session(state_path)
+        except (FilterError, OSError):
+            raise ToolError("session_creation_failed") from None
+
+    def open_session(session_id: str) -> dict[str, Any]:
+        """Reopen the exact session; return metadata only, never identity mappings."""
+        try:
+            return service.open_session(session_id)
+        except FilterError as exc:
+            raise ToolError(str(exc)) from None
+
+    def restore_file(session_id: str, path: str) -> dict[str, Any]:
+        """Restore a local AI-output file using this session; return path only. Do not read the restored file into chat."""
+        try:
+            return service.restore_file(session_id, path)
+        except (FilterError, OSError):
+            raise ToolError("restoration_failed") from None
+
+    if spec.reversible:
+        server.add_tool(
+            create_session, name=f"{spec.prefix}_session_create", annotations=writes
+        )
+        server.add_tool(
+            open_session, name=f"{spec.prefix}_session_open", annotations=read_only
+        )
+        server.add_tool(restore_file, name=f"{spec.prefix}_restore", annotations=writes)
     server.add_tool(status, name=f"{spec.prefix}_status", annotations=read_only)
     server.add_tool(filter_file, name=f"{spec.prefix}_file", annotations=writes)
     server.add_tool(filter_batch, name=f"{spec.prefix}_batch", annotations=writes)
@@ -81,7 +113,9 @@ def main() -> None:
     parser.add_argument("--model-dir", type=Path)
     parser.add_argument("--device", choices=("cpu", "cuda"), default="cpu")
     parser.add_argument(
-        "--engine", choices=("openai", "gliner2", "rizzo"), default="openai"
+        "--engine",
+        choices=("openai", "gliner2", "rizzo", "lethe", "pii-shield"),
+        default="openai",
     )
     parser.add_argument("--rizzo-port", type=int, default=5005)
     args = parser.parse_args()

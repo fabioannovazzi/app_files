@@ -28,6 +28,9 @@ FILES = (
     "README.md",
     "GLINER2.md",
     "RIZZO.md",
+    "LETHE.md",
+    "PII-SHIELD.md",
+    "requirements-lethe.txt",
 )
 
 
@@ -74,7 +77,7 @@ def main() -> None:
                 ]["version"],
                 "sha256": hashlib.sha256(data).hexdigest(),
                 "bytes": len(data),
-                "engines": ["openai", "gliner2", "rizzo"],
+                "engines": ["openai", "gliner2", "rizzo", "lethe", "pii-shield"],
                 "hosts": ["codex", "cowork", "antigravity"],
             },
             indent=2,

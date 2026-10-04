@@ -5,7 +5,7 @@ Download: https://mparanza.com/static/shared/vera-integrazioni/downloads/anonymi
 ## Italiano
 
 Questo download è separato da Vera. Scegli OpenAI Privacy Filter, GLiNER2-PII
-o Rizzo PII; puoi ripetere l'installazione per un altro motore. Non viene
+Rizzo PII, Lethe o PII-Shield; puoi ripetere l'installazione per un altro motore. Non viene
 consigliato un motore rispetto agli altri. Le tre app usano lo stesso connettore
 locale, con una configurazione specifica per ciascuna app.
 
@@ -64,7 +64,7 @@ connettore del gestore del tuo archivio e la
 ## English
 
 This download is separate from Vera. Choose OpenAI Privacy Filter, GLiNER2-PII
-or Rizzo PII; rerun setup to add another engine. No engine is ranked or selected
+Rizzo PII, Lethe or PII-Shield; rerun setup to add another engine. No engine is ranked or selected
 for you. Each engine has one runtime shared by the three desktop apps.
 
 1. Install Python 3.12 and extract the entire download.
@@ -138,3 +138,21 @@ and verify an actual search and read in each app/account.
 - [Cowork local plugin servers](https://support.claude.com/en/articles/13837440-use-plugins-in-claude)
 - [Cowork host and VM architecture](https://support.claude.com/en/articles/14479288-claude-cowork-architecture-overview)
 - [Antigravity MCP](https://antigravity.google/docs/mcp)
+
+## Sessioni reversibili / Reversible sessions (0.5.0)
+
+Sono disponibili anche **Lethe** (`--engine lethe`, [LETHE.md](LETHE.md)) e
+**PII-Shield** (`--engine pii-shield`, [PII-SHIELD.md](PII-SHIELD.md)).
+PII-Shield richiede Node.js 22+ e i percorsi `--node` e `--npm` (npm-cli.js).
+Lethe richiede una revisione locale dell'intero lavoro prima di creare la sessione.
+
+Per questi due motori crea/apri una sessione, riusa lo stesso `session_id` per
+ogni documento e ripristina il risultato con quella sessione. Dizionari e valori
+originali restano locali. Il ripristino restituisce solo il percorso del file.
+
+The two reversible engines expose session_create/session_open and restore.
+File/batch tools require the exact same session_id across the job. The existing
+OpenAI, GLiNER2 and Rizzo interfaces remain redaction-only: no session or restore
+tool is advertised. Rizzo's desktop UI supports a per-document dictionary, but
+its inspected HTTP API offers neither session extension nor a restoration
+endpoint. The connector does not manufacture a replacement mapping/restorer.

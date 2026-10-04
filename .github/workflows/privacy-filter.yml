@@ -43,3 +43,28 @@ jobs:
           python -m bandit -q -ll -r connectors/privacy-filter/src connectors/privacy-filter/install.py scripts/build_anonymization_connectors.py
       - name: Verify downloadable connector ZIP matches source
         run: python scripts/build_anonymization_connectors.py --check
+
+  shield-model-acceptance:
+    name: PII-Shield real multi-document session (Linux)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install declared connector test dependencies
+        run: python -m pip install -r connectors/privacy-filter/requirements-dev.txt -e connectors/privacy-filter
+      - name: Explicitly prepare the pinned local PII-Shield model and NER runtime
+        shell: bash
+        run: |
+          node_path="$(command -v node)"
+          npm_path="$(node -e 'const fs=require("fs"); console.log(fs.realpathSync(process.argv[1]));' "$(command -v npm)")"
+          python -m mparanza_privacy_filter.shield_prepare --model-dir "$RUNNER_TEMP/shield-model" --node "$node_path" --npm "$npm_path"
+      - name: Verify real five-person consistency, persisted session, privacy and restoration
+        env:
+          SHIELD_TEST_ROOT: '${{ runner.temp }}/shield-model'
+        run: python -m pytest -q connectors/privacy-filter/tests/test_shield_model_acceptance.py

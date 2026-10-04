@@ -1,11 +1,13 @@
 {
-  "version": "0.4.0",
-  "sha256": "5eda3cc6f13d1c1c1901a9d56eac2cd30b3e235e1def9f8dc7a6fdb789e88668",
-  "bytes": 48957,
+  "version": "0.5.0",
+  "sha256": "9645b2667c71360f3bc403bfb19b62e3324cb89151bdca0c305e05138505a0ae",
+  "bytes": 64101,
   "engines": [
     "openai",
     "gliner2",
-    "rizzo"
+    "rizzo",
+    "lethe",
+    "pii-shield"
   ],
   "hosts": [
     "codex",
