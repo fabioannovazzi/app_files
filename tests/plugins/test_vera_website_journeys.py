@@ -1446,14 +1446,12 @@ def test_vera_hub_links_to_compliance_instead_of_showing_the_detailed_report() -
 
 
 def test_vera_compliance_links_g1_3_to_the_expandable_model_data_report() -> None:
-    page = (SHARED_ROOT / "vera-compliance" / "index.html").read_text(
-        encoding="utf-8"
-    )
+    page = (SHARED_ROOT / "vera-compliance" / "index.html").read_text(encoding="utf-8")
     requirement = page.split('id="g1-3"', 1)[1].split("</tr>", 1)[0]
     example = page.split('id="report-esempio"', 1)[1].split("</details>", 1)[0]
 
     assert 'href="#report-esempio"' in requirement
-    assert 'data-handling?lang=it#run-evidence' in requirement
+    assert "data-handling?lang=it#run-evidence" in requirement
     assert '<details class="report-disclosure">' in example
     assert "Vera mostra che cosa è arrivato al modello." in example
     assert "il report e i dati del cliente restano nello spazio di lavoro" in example
