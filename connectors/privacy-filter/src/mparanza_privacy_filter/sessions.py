@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 from .contracts import FilteredDocument, FilterError
+from .engines import engine_for
 
 __all__ = ["SessionStore", "run_session_worker"]
 
@@ -101,6 +102,7 @@ class SessionStore:
             "engine": self.settings.engine,
             "folder": str(folder),
             "model_root": str(self.settings.model_root),
+            "rizzo_port": self.settings.rizzo_port,
             **extra,
         }
 
@@ -146,6 +148,12 @@ class SessionStore:
             raise FilterError("session_busy") from None
         try:
             receipt = self._load(folder)
+            # Rizzo resets its native token allocator on every /analyze call.
+            if (
+                not engine_for(self.settings.engine).cross_document
+                and receipt["documents"]
+            ):
+                raise FilterError("single_document_session")
             try:
                 body = self.backend(self._request("filter", folder, path=str(path)))
                 if set(body) != {
@@ -162,9 +170,10 @@ class SessionStore:
                 if (
                     not isinstance(text, str)
                     or not isinstance(counts, dict)
-                    or set(counts) != {"entities"}
-                    or type(counts["entities"]) is not int
-                    or counts["entities"] < 0
+                    or not set(counts).issubset(engine_for(self.settings.engine).labels)
+                    or any(
+                        type(value) is not int or value < 0 for value in counts.values()
+                    )
                     or type(chars) is not int
                     or chars < 0
                 ):

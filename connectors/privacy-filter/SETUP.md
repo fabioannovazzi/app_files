@@ -139,20 +139,25 @@ and verify an actual search and read in each app/account.
 - [Cowork host and VM architecture](https://support.claude.com/en/articles/14479288-claude-cowork-architecture-overview)
 - [Antigravity MCP](https://antigravity.google/docs/mcp)
 
-## Sessioni reversibili / Reversible sessions (0.5.0)
+## Sessioni reversibili / Reversible sessions (0.5.1)
 
-Sono disponibili anche **Lethe** (`--engine lethe`, [LETHE.md](LETHE.md)) e
-**PII-Shield** (`--engine pii-shield`, [PII-SHIELD.md](PII-SHIELD.md)).
-PII-Shield richiede Node.js 22+ e i percorsi `--node` e `--npm` (npm-cli.js).
-Lethe richiede una revisione locale dell'intero lavoro prima di creare la sessione.
+Lethe richiede una revisione locale dell’intero lavoro prima di creare la sessione.
+Lethe e PII-Shield riusano lo stesso `session_id` per tutti i documenti del lavoro
+ed espongono `session_create`, `session_open` e `restore`.
 
-Per questi due motori crea/apri una sessione, riusa lo stesso `session_id` per
-ogni documento e ripristina il risultato con quella sessione. Dizionari e valori
-originali restano locali. Il ripristino restituisce solo il percorso del file.
+Rizzo abilita il proprio dizionario nativo e crea automaticamente una sessione
+locale distinta per ogni file. Conserva il `session_id` restituito insieme alla
+copia filtrata e usalo con `rizzo_pii_restore` per il risultato AI di quel documento.
+Non riusare il dizionario per un altro documento e non unire risposte basate su
+sessioni Rizzo diverse: i segnaposto possono coincidere con identità differenti.
 
-The two reversible engines expose session_create/session_open and restore.
-File/batch tools require the exact same session_id across the job. The existing
-OpenAI, GLiNER2 and Rizzo interfaces remain redaction-only: no session or restore
-tool is advertised. Rizzo's desktop UI supports a per-document dictionary, but
-its inspected HTTP API offers neither session extension nor a restoration
-endpoint. The connector does not manufacture a replacement mapping/restorer.
+Lethe and PII-Shield use one job-wide session. Rizzo uses its native per-document
+dictionary, creates a document session automatically and exposes session/open
+and restore tools. Its inspected API resets token allocation on every analysis;
+it does not support session extension across calls. OpenAI and GLiNER2 remain
+redaction-only because these adapters do not have a native reversible dictionary.
+
+All dictionaries remain local and do not enter MCP responses. Restoration saves
+a local file and returns its path, never original identities in chat. See
+[Lethe](LETHE.md), [PII-Shield](PII-SHIELD.md) and [Rizzo](RIZZO.md) for precise
+review, storage, restoration and data-context boundaries.

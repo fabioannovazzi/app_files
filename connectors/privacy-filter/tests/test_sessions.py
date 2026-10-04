@@ -76,7 +76,7 @@ def test_real_lethe_three_documents_five_people_and_restore_after_restart(
         reloaded.read_result(Path(result["output_path"]).parent.name)
 
 
-@pytest.mark.parametrize("engine", ["openai", "gliner2", "rizzo"])
+@pytest.mark.parametrize("engine", ["openai", "gliner2"])
 def test_redaction_engines_do_not_advertise_session_tools(tmp_path, engine):
     service = FilterService(
         Settings(tmp_path, tmp_path / "out", tmp_path / "model", engine=engine)

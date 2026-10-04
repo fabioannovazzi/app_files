@@ -92,7 +92,7 @@ def test_download_guide_and_second_brain_hosts_are_localized_with_data_section_l
     assert soup.select("main > section")[-1].get("id") == "model-data"
 
 
-@pytest.mark.parametrize("engine", ["lethe", "pii-shield"])
+@pytest.mark.parametrize("engine", ["lethe", "pii-shield", "rizzo"])
 @pytest.mark.parametrize("lang", ["it", "en", "fr", "de", "es"])
 def test_reversible_engine_explanation_has_localized_actual_data_path_last(
     engine, lang

@@ -1,130 +1,102 @@
-# Rizzo PII connector for desktop apps
+# Rizzo PII: native per-document pseudonymization
 
-Use the [separate installer download](https://mparanza.com/static/shared/vera-integrazioni/downloads/anonymization-connectors.zip)
-and [SETUP.md](SETUP.md) for **Codex, Claude Cowork and Google Antigravity**.
-Guided setup: `python3.12 install.py --setup` (Windows: `py -3.12 install.py --setup`).
-The installer generates all three host formats; it does not edit host settings.
-The command-line examples below also remain available.
+[Download the separate connector ZIP](https://mparanza.com/static/shared/vera-integrazioni/downloads/anonymization-connectors.zip).
+[HTML explanation](https://mparanza.com/static/shared/vera-integrazioni/rizzo/index.html?lang=it).
+The separately installed [Rizzo PII app](https://github.com/Rizzo-AI-Academy/rizzo-pii)
+provides detection and its own numbered placeholder-to-original dictionary.
+The connector preserves that dictionary locally; it does not allocate, infer,
+merge or repair identities. It is optional and independent of Vera.
 
-An optional local MCP connector to the separately installed
-[Rizzo PII app](https://github.com/Rizzo-AI-Academy/rizzo-pii). Users choose
-[OpenAI Privacy Filter](README.md), [GLiNER2-PII](GLINER2.md), Rizzo PII, or more
-than one. None is part of Vera's runtime, and this integration does not rank them.
+## Setup
 
-## Install
-
-1. Install Rizzo PII from its [official releases](https://github.com/Rizzo-AI-Academy/rizzo-pii/releases)
-   or follow its source/Docker instructions. Start the app and wait for its model
-   to load. Keep it running on the same computer as Codex. Its default local
-   address is `http://127.0.0.1:5005`.
-2. Install Python 3.12 or later and create the input folder below.
-3. From this repository, install the connector:
+Start Rizzo on the same computer and wait for its model to load. Default port:
+5005. Configure the separate connector with Python 3.12:
 
 ```sh
-python3.12 connectors/privacy-filter/install.py --engine rizzo \
-  --input-dir "$HOME/Documents/Rizzo PII/Input" \
-  --output-dir "$HOME/Documents/Rizzo PII/Output"
+python install.py --engine rizzo --input-dir INPUT --output-dir OUTPUT
 ```
 
-On Windows use `py -3.12` and Windows directory paths. The connector runtime is
-`~/.local/share/mparanza/rizzo-pii` on macOS/Linux or
-`%LOCALAPPDATA%/Mparanza/rizzo-pii` on Windows. `--runtime-dir` overrides it.
-The installer creates only the lightweight connector environment. It does not
-install, start, modify or redistribute the Rizzo app, its model or PyMuPDF.
+Guided setup: `python install.py --setup`; on Windows use `py -3.12`.
+The installer generates Codex, Cowork and Antigravity configuration files without
+editing host settings. The runtime lives under `~/.local/share/mparanza/rizzo-pii`
+on macOS/Linux or `%LOCALAPPDATA%/Mparanza/rizzo-pii` on Windows. It installs no
+Rizzo app or model. Re-run setup when updating so the generated command includes
+`--model-dir`, which selects private session storage in the runtime.
+Existing manually configured commands without that option store state under
+`OUTPUT/.rizzo-state/sessions`, rather than in the current working directory.
 
-Add the `[mcp_servers.rizzo_pii]` entry from that runtime's `codex-mcp.toml` to
-your user `~/.codex/config.toml`, preserving existing entries. Restart the MCP
-connection and call `rizzo_pii_status`. The installer does not edit your Codex
-configuration. Status reports model readiness and the app/model versions
-reported by Rizzo; these are not independently verified model hashes.
+A different local app port can be selected with `--rizzo-port 5010`. The connector
+always uses `127.0.0.1`; remote/LAN services, proxies and redirects are unsupported.
+It requests `exclude_tags: []` and `include_mapping: true` per analysis without
+changing saved app preferences.
 
-If your Rizzo app uses another port, add `--rizzo-port 5010` to the installation
-command (substitute its actual port). The connector accepts only a port and
-always connects to `127.0.0.1`. Remote servers and office LAN addresses are not
-supported. With Docker, publish the port on `127.0.0.1` as shown upstream.
+## Filter and restore
 
-## Use
+1. Call `rizzo_pii_file(path="letter.docx")`. The response includes a filtered
+   `artifact_id`, its local path, and a **document `session_id`**.
+2. Read the filtered copy with `rizzo_pii_read(artifact_id=...)` when requested.
+   Review detections locally; successful processing does not establish complete
+   detection. Keep native placeholders such as `[FULLNAME_1]` unchanged.
+3. Save the AI response as a local file under INPUT. Call
+   `rizzo_pii_restore(session_id=..., path="answer.txt")` with that document's ID.
+4. Open the restored output locally. The tool returns only a path and checksum;
+   its restored file is not readable through `rizzo_pii_read`.
+5. After restart, `rizzo_pii_session_open` reopens that exact document's mapping.
+   Restoration also works with Rizzo closed because the native dictionary is local.
 
-Put a document in the configured input folder and ask:
+`rizzo_pii_batch` accepts 1–5 files and creates a **separate document session for
+ each file**. An explicit session can process only one document. A second analysis
+with the same ID is rejected without overwriting or invalidating the first mapping.
+`rizzo_pii_session_create` can pre-create an empty document session if needed.
 
-> Use Rizzo PII on `letter.docx` in its input folder and save the filtered copy.
+**Mapping is not cross-document identity consistency.** Rizzo's inspected
+`analyze()` resets `counters`, `seen` and `mapping` on each call. The same
+`[FULLNAME_1]` may therefore denote different people in separate files. Do not
+combine answers using those different dictionaries. The connector does not merge
+or renumber them. Lethe and PII-Shield provide separate multi-document workflows.
 
-| Tool | Input | Result |
-| --- | --- | --- |
-| `rizzo_pii_status` | None | Local app/model readiness, reported versions, formats and limits |
-| `rizzo_pii_file` | Path inside the configured input folder | Artifact ID, filtered file path, counts and checksum |
-| `rizzo_pii_batch` | One to five paths | Results or fixed errors in request order |
-| `rizzo_pii_read` | Artifact ID; optional offset and limit | Up to 16,000 characters of filtered text |
+Restoration performs one exact dictionary-lookup pass over canonical bracketed
+placeholders. It does not interpret changed, bare or guessed tokens. It cannot
+match `[FULLNAME_1]` inside `[FULLNAME_10]`, and inserted original values are not
+processed again. This uses the native dictionary and single-pass principle of
+Rizzo's desktop `reverse()`; unlike the desktop UI it requires unchanged tokens.
 
-The connector extracts UTF-8 TXT/Markdown, DOCX and PDFs with extractable text,
-then passes the text to Rizzo. It saves a UTF-8 `.txt` copy and leaves originals
-unchanged. It does not preserve layout, return PDFs or perform OCR. Encrypted
-PDFs and PDFs with any page lacking extractable text are rejected. Embedded
-files and text in images are not extracted. DOCX extraction includes body text,
-tables, headers, footers, notes, comments and tracked deleted text.
+## Formats, limits and verification
 
-Rizzo applies its own model and regex/checksum detectors. Each request specifies
-`exclude_tags: []` and `include_mapping: false`: all supported categories are
-requested, with the restoration dictionary disabled for that request. This does
-not change the app's saved settings. Numbered placeholders can still identify
-repeated values within a document; this connector does not restore original values.
-Rizzo trims leading/trailing whitespace when processing the extracted text.
+The connector extracts UTF-8 TXT/Markdown, DOCX and text-readable PDFs and saves
+UTF-8 `.txt` copies. Originals remain unchanged; layout, OCR, embedded files and
+text in images are outside this adapter. DOCX extraction covers body, tables,
+headers, footers, notes, comments and tracked deleted text. Limits are 25 MiB,
+500,000 extracted characters, 64 MiB expanded DOCX, five files per batch and ten
+minutes per file. Native responses are bounded to 16 MiB.
 
-Limits are 25 MiB and 500,000 extracted characters per file, 64 MiB expanded DOCX
-content, five files per batch and ten minutes per file. The connector bounds
-each upstream response to 16 MiB. An unavailable app, incompatible response or
-timeout produces a fixed error instead of returning raw diagnostic text.
-
-## What reaches Rizzo and Codex
-
-The extracted original text is sent over loopback HTTP to the Rizzo process on
-the same computer. The connector does not contact a cloud API, follow HTTP
-redirects or use environment-configured proxies. Rizzo's own installation,
-model downloads and network behavior remain under the separately installed
-app's control; the connector does not sandbox that process.
-
-Only the returned filtered text and validated category counts are accepted.
-Original-text fields, detected-value mappings, preview segments and upstream
-diagnostics are discarded. If the response says mapping is enabled, contains a
-nonempty mapping or excludes categories, processing fails without saving it.
-Artifacts contain `redacted.txt` and `receipt.json`, without a restoration
-dictionary. Receipts identify the engine and mark the model as managed by the
-local Rizzo app; the connector does not pin or download its model.
-
-Codex receives requested paths, artifact paths, counts, checksums and safe
-version metadata. Filtered text enters the conversation only when requested
-through `rizzo_pii_read`. Use neutral filenames and pass the local path rather
-than attaching the original. Review the filtered copy: successful processing
-does not prove that every sensitive value was detected.
-
-## Tested interface and removal
-
-The real-service acceptance test used app version `2.0.0`, model version `1.5.0`,
-source commit `30d6f9c675e245bc8494df959adaeaa9d8de35c7`. It uses `GET /health`
-and JSON `POST /analyze` with per-request mapping/tag overrides. Other versions
-need the same response contract. Rizzo app upgrades are managed separately.
-The test ran on macOS with CPU inference; Windows and CUDA were not tested.
-
-Rizzo's source and distributed app have their own
-[licensing terms](https://github.com/Rizzo-AI-Academy/rizzo-pii/blob/main/THIRD_PARTY_LICENSES.md).
-This connector communicates with the user's installation over its HTTP API.
-
-Disable or remove the `rizzo_pii` Codex entry to disconnect it. Removing the
-connector runtime does not uninstall Rizzo or delete the selected output folder.
-
-Developers can test a running local Rizzo app with synthetic documents:
+The inspected interface is `GET /health` and JSON `POST /analyze` from source
+`30d6f9c675e245bc8494df959adaeaa9d8de35c7`, app 2.0.0 and model 1.5.0. Rizzo's
+app/model upgrades and licensing remain managed by the separately installed app.
+Transport tests check dictionary privacy, persisted state, independent document
+sessions and exact restoration. The opt-in real model tests are run with:
 
 ```sh
-RIZZO_TEST_PORT=5005 python -m pytest \
-  connectors/privacy-filter/tests/test_rizzo_model_acceptance.py -v
+RIZZO_TEST_PORT=5005 python -m pytest connectors/privacy-filter/tests/test_rizzo_model_acceptance.py
 ```
 
-### Capability boundary (0.5.0)
+These tests cover three documents with five reordered people, independent native
+dictionaries, restart/restoration, four input formats and long text. Native
+Windows/CUDA and live desktop-host acceptance require their own session tests.
 
-The inspected Rizzo HTTP API can return a document's mapping, but has no
-session-extension or restoration endpoint. Its desktop UI restores values in
-JavaScript. The connector therefore reports `reversible: false` and
-`cross_document: false` for this interface; it keeps existing redaction behavior
-instead of allocating or merging a replacement identity pool. Choose Lethe or
-PII-Shield for the session workflow. This says nothing about Rizzo's detection
-quality or the desktop app's own reversible features.
+## What data reaches the model
+
+Extracted original text reaches the local Rizzo process and its model over
+loopback HTTP. The connector does not contact a cloud API or sandbox Rizzo's
+separately managed process. Rizzo returns its native dictionary to the isolated
+connector worker, which stores it under `model/sessions/<random-id>/rizzo.json`.
+That dictionary contains original identities. It is not encrypted; POSIX folders
+and files use 0700/0600 permissions, while Windows relies on user-directory ACLs.
+It remains until deliberately removed; Rizzo's web UI dictionary is separate.
+
+Original text, mapping values, previews and diagnostics are excluded from worker
+stdout, MCP responses and filtered artifacts. The host receives requested paths,
+random session/artifact IDs, category counts, checksums and validated version
+metadata. Requested filtered text enters the conversation through `rizzo_pii_read`.
+Restoration substitutes native tokens locally, saves a private file and returns
+its path and checksum without its text or a readable artifact ID.

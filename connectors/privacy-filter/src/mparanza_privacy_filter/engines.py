@@ -134,6 +134,8 @@ RIZZO = Engine(
     "mparanza_privacy_filter.rizzo_worker",
     (),
     (),
+    True,
+    False,
 )
 
 
