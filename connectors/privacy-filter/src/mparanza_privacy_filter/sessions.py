@@ -171,6 +171,7 @@ class SessionStore:
                     not isinstance(text, str)
                     or not isinstance(counts, dict)
                     or not set(counts).issubset(engine_for(self.settings.engine).labels)
+                    or (self.settings.engine != "rizzo" and set(counts) != {"entities"})
                     or any(
                         type(value) is not int or value < 0 for value in counts.values()
                     )

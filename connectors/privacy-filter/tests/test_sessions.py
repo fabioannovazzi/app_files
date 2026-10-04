@@ -171,6 +171,11 @@ def test_unapproved_lethe_review_and_missing_session_fail_closed(tmp_path, monke
         {"redacted_text": "safe"},
         {
             "redacted_text": "safe",
+            "detection_counts": {},
+            "source_characters": 3,
+        },
+        {
+            "redacted_text": "safe",
             "detection_counts": {"entities": -1},
             "source_characters": 3,
         },
