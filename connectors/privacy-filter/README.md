@@ -139,3 +139,13 @@ PRIVACY_FILTER_TEST_MODEL=PATH python -m pytest \
 To disable the connector, set `enabled = false` in its Codex server entry. To
 uninstall it, remove that entry and the dedicated runtime directory. Filtered
 outputs live in the user-selected output directory and can be retained separately.
+
+## Additional optional engines and capability-aware sessions
+
+Version 0.5.0 adds [Lethe](LETHE.md) and [PII-Shield](PII-SHIELD.md) without
+replacing OpenAI, GLiNER2 or Rizzo. Status reports redaction, reversible and
+cross-document capabilities. Reversible jobs persist authoritative engine state
+locally; the same session is reused for every document and final restoration.
+No identity mapping enters MCP responses or filtered artifacts. Restored output
+is a local file, never a readable filtered artifact. See the engine guides for
+setup, local review, retention and exact data paths.

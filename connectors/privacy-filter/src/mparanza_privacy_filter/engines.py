@@ -21,6 +21,8 @@ class Engine:
     worker: str
     checkpoint_parts: tuple[str, ...]
     required_files: tuple[str, ...]
+    reversible: bool = False
+    cross_document: bool = False
 
 
 OPENAI = Engine(
@@ -135,6 +137,32 @@ RIZZO = Engine(
 )
 
 
+LETHE = Engine(
+    "lethe",
+    "Lethe",
+    "lethe",
+    "736c3ea53f4f60aeb7024b6d4b8dae6f820e695b",
+    frozenset({"entities"}),
+    "mparanza_privacy_filter.session_worker",
+    (),
+    (),
+    True,
+    True,
+)
+SHIELD = Engine(
+    "pii-shield",
+    "PII-Shield",
+    "pii_shield",
+    "2.2.0",
+    frozenset({"entities"}),
+    "mparanza_privacy_filter.session_worker",
+    (),
+    (),
+    True,
+    True,
+)
+
+
 def engine_for(name: str) -> Engine:
     """Resolve only explicitly supported engines."""
     if name == "openai":
@@ -143,4 +171,8 @@ def engine_for(name: str) -> Engine:
         return GLINER2
     if name == "rizzo":
         return RIZZO
+    if name == "lethe":
+        return LETHE
+    if name == "pii-shield":
+        return SHIELD
     raise FilterError("unsupported_engine")

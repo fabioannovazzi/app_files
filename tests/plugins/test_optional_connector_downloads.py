@@ -90,3 +90,25 @@ def test_download_guide_and_second_brain_hosts_are_localized_with_data_section_l
     assert "Cowork" in copy[lang]["connector.cowork"]
     assert "Antigravity" in copy[lang]["connector.antigravity"]
     assert soup.select("main > section")[-1].get("id") == "model-data"
+
+
+@pytest.mark.parametrize("engine", ["lethe", "pii-shield"])
+@pytest.mark.parametrize("lang", ["it", "en", "fr", "de", "es"])
+def test_reversible_engine_explanation_has_localized_actual_data_path_last(
+    engine, lang
+):
+    page = (
+        ROOT / "static/shared/vera-integrazioni" / engine / "index.html"
+    ).read_text()
+    start = page.index("{", page.index("const copy ="))
+    copy, _ = json.JSONDecoder().raw_decode(page[start:])
+    soup = BeautifulSoup(page, "html.parser")
+    assert soup.select("main > section")[-1].get("id") == "model-data"
+    assert all(
+        element["data-i18n"] in copy[lang] for element in soup.select("[data-i18n]")
+    )
+    assert copy[lang]["dataCopy"] != copy[lang]["steps"]
+    assert soup.select_one(
+        'a[download][href="../downloads/anonymization-connectors.zip"]'
+    )
+    assert "session" in page

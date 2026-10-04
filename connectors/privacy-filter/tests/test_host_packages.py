@@ -44,7 +44,13 @@ def host_entry(runtime: Path, host: str, name: str) -> dict:
 
 @pytest.mark.parametrize(
     "engine,name",
-    [("openai", "privacy_filter"), ("gliner2", "gliner2_pii"), ("rizzo", "rizzo_pii")],
+    [
+        ("openai", "privacy_filter"),
+        ("gliner2", "gliner2_pii"),
+        ("rizzo", "rizzo_pii"),
+        ("lethe", "lethe"),
+        ("pii-shield", "pii_shield"),
+    ],
 )
 @pytest.mark.parametrize("host", ["codex", "cowork", "antigravity"])
 def test_native_host_configuration_preserves_paths_and_only_selected_engine(

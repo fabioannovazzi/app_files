@@ -17,6 +17,7 @@ from .contracts import FORMATS, LABELS, FilteredDocument, FilterError
 from .engines import Engine, engine_for
 from .rizzo_api import health as rizzo_health
 from .rizzo_api import validate_port
+from .sessions import SessionStore
 
 __all__ = ["Settings", "FilterService", "run_worker"]
 
@@ -66,6 +67,17 @@ class Settings:
 
     def ready(self) -> bool:
         """Require the explicit preparation receipt, weights and tokenizer cache."""
+        if self.engine == "lethe":
+            try:
+                from importlib.metadata import version
+
+                return version("lethe") == "1.3.1"
+            except ImportError:
+                return False
+        if self.engine == "pii-shield":
+            from .shield_ready import ready as shield_ready
+
+            return shield_ready(self.model_root)
         if self.engine == "rizzo":
             try:
                 return bool(rizzo_health(self.rizzo_port)["model_ready"])
@@ -172,6 +184,9 @@ class FilterService:
         self.settings.output_root.mkdir(mode=0o700, parents=True, exist_ok=True)
         self.backend = backend
         self.lock = threading.Lock()
+        self.sessions = (
+            SessionStore(self.settings) if self.settings.spec.reversible else None
+        )
 
     def status(self) -> dict[str, Any]:
         """Report readiness without scanning documents or downloading anything."""
@@ -181,6 +196,12 @@ class FilterService:
                 False if self.settings.engine == "rizzo" else self.settings.ready()
             ),
             "engine": self.settings.engine,
+            "capabilities": {
+                "redaction": True,
+                "reversible": self.settings.spec.reversible,
+                "cross_document": self.settings.spec.cross_document,
+                "mapping_authority": "anonymizer",
+            },
             "model_revision": self.settings.spec.revision,
             "device": self.settings.device,
             "formats": list(FORMATS),
@@ -196,7 +217,7 @@ class FilterService:
                 result.update(model_ready=False, error=str(exc))
         return result
 
-    def filter_file(self, path: str) -> dict[str, Any]:
+    def filter_file(self, path: str, session_id: str | None = None) -> dict[str, Any]:
         """Filter one explicit path inside the configured input directory."""
         if not self.settings.ready():
             raise FilterError(
@@ -216,27 +237,40 @@ class FilterService:
             if candidate.suffix.lower() not in FORMATS:
                 raise FilterError("unsupported_format")
             with self.lock:
-                document = _validated_document(
-                    asdict(self.backend(candidate, self.settings)),
-                    self.settings.spec.labels,
-                )
-            return self._save(document)
+                if self.sessions is not None:
+                    if session_id is None:
+                        raise FilterError("session_required")
+                    document = self.sessions.process(session_id, candidate)
+                else:
+                    if session_id is not None:
+                        raise FilterError("sessions_not_supported")
+                    document = _validated_document(
+                        asdict(self.backend(candidate, self.settings)),
+                        self.settings.spec.labels,
+                    )
+            return self._save(document, session_id)
         except OSError:
             raise FilterError("file_access_failed") from None
 
-    def filter_batch(self, paths: list[str]) -> dict[str, Any]:
+    def filter_batch(
+        self, paths: list[str], session_id: str | None = None
+    ) -> dict[str, Any]:
         """Filter up to five explicit files, reporting failures by input index."""
         if not 1 <= len(paths) <= 5:
             raise FilterError("batch_requires_one_to_five_files")
         results = []
         for index, path in enumerate(paths):
             try:
-                results.append({"index": index, "ok": True, **self.filter_file(path)})
+                results.append(
+                    {"index": index, "ok": True, **self.filter_file(path, session_id)}
+                )
             except FilterError as exc:
                 results.append({"index": index, "ok": False, "error": str(exc)})
         return {"results": results}
 
-    def _save(self, document: FilteredDocument) -> dict[str, Any]:
+    def _save(
+        self, document: FilteredDocument, session_id: str | None = None
+    ) -> dict[str, Any]:
         artifact_id = uuid.uuid4().hex
         folder = self.settings.output_root / artifact_id
         folder.mkdir(mode=0o700)
@@ -250,6 +284,8 @@ class FilterService:
             "engine": self.settings.engine,
             "model_revision": self.settings.spec.revision,
         }
+        if session_id is not None:
+            receipt["session_id"] = session_id
         for name, content in (
             ("redacted.txt", data),
             ("receipt.json", json.dumps(receipt, ensure_ascii=False).encode("utf-8")),
@@ -259,6 +295,46 @@ class FilterService:
                 target.chmod(0o600)
                 handle.write(content)
         return {**receipt, "output_path": str(folder / "redacted.txt")}
+
+    def create_session(self, state_path: str | None = None) -> dict[str, Any]:
+        """Create a private engine-owned job; Lethe requires a local approved review."""
+        if self.sessions is None:
+            raise FilterError("sessions_not_supported")
+        if not self.settings.ready():
+            raise FilterError("model_not_prepared")
+        source = None
+        if state_path is not None:
+            source = (self.settings.input_root / state_path).resolve(strict=True)
+            if (
+                not source.is_relative_to(self.settings.input_root)
+                or not source.is_file()
+            ):
+                raise FilterError("outside_input_directory")
+        return self.sessions.create(source)
+
+    def open_session(self, session_id: str) -> dict[str, Any]:
+        """Reopen the exact job after restart; no latest-job substitution."""
+        if self.sessions is None:
+            raise FilterError("sessions_not_supported")
+        return self.sessions.open(session_id)
+
+    def restore_file(self, session_id: str, path: str) -> dict[str, Any]:
+        """Save restored identities locally and return only a path and checksum."""
+        if self.sessions is None:
+            raise FilterError("sessions_not_supported")
+        source = (self.settings.input_root / path).resolve(strict=True)
+        if not source.is_relative_to(self.settings.input_root) or not source.is_file():
+            raise FilterError("outside_input_directory")
+        folder = self.settings.output_root / uuid.uuid4().hex
+        folder.mkdir(mode=0o700)
+        target = folder / "restored.txt"
+        self.sessions.restore(session_id, source, target)
+        # No artifact ID: read_result cannot read restored files into model context.
+        return {
+            "session_id": session_id,
+            "output_path": str(target),
+            "sha256": hashlib.sha256(target.read_bytes()).hexdigest(),
+        }
 
     def read_result(
         self, artifact_id: str, offset: int = 0, limit: int = 8000

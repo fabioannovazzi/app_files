@@ -118,3 +118,13 @@ Developers can test a running local Rizzo app with synthetic documents:
 RIZZO_TEST_PORT=5005 python -m pytest \
   connectors/privacy-filter/tests/test_rizzo_model_acceptance.py -v
 ```
+
+### Capability boundary (0.5.0)
+
+The inspected Rizzo HTTP API can return a document's mapping, but has no
+session-extension or restoration endpoint. Its desktop UI restores values in
+JavaScript. The connector therefore reports `reversible: false` and
+`cross_document: false` for this interface; it keeps existing redaction behavior
+instead of allocating or merging a replacement identity pool. Choose Lethe or
+PII-Shield for the session workflow. This says nothing about Rizzo's detection
+quality or the desktop app's own reversible features.

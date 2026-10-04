@@ -1,0 +1,2 @@
+-r requirements.txt
+lethe @ git+https://github.com/moonlight-lupin/lethe.git@736c3ea53f4f60aeb7024b6d4b8dae6f820e695b
