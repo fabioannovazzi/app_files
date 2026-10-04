@@ -38,6 +38,11 @@ neutral temporary TXT input. Layout and upstream DOCX editing tools are outside
 this adapter. It uses `--no-review`; review the filtered copy locally. Its output
 is bounded by the existing 25 MiB / 500,000-character extraction limits.
 
+In the real Linux test, five names on terse `Employee:` lines produced only
+three detected person tokens. The session acceptance fixture uses explicit
+`Full legal name:` fields to test mapping consistency separately from detection.
+This does not establish complete detection on arbitrary documents.
+
 ## What data reaches the model
 
 Extracted originals reach the local PII-Shield CLI and local GLiNER model.

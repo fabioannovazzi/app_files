@@ -1,7 +1,7 @@
 {
   "version": "0.5.0",
-  "sha256": "4f99ade4dafcac37d539544db196b2f8bf078af142407299049b3a3ca94a0b50",
-  "bytes": 63978,
+  "sha256": "9645b2667c71360f3bc403bfb19b62e3324cb89151bdca0c305e05138505a0ae",
+  "bytes": 64101,
   "engines": [
     "openai",
     "gliner2",

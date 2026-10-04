@@ -37,7 +37,7 @@ def test_real_shield_three_documents_five_people_consistent_and_restored(
         ("C.txt", people[2:] + people[:2]),
     ):
         (source / filename).write_text(
-            "\n".join(f"Employee: {person}." for person in ordered)
+            "\n".join(f"Full legal name: {person}." for person in ordered)
         )
     service = FilterService(
         Settings(source, tmp_path / "output", Path(MODEL_ROOT), engine="pii-shield")
@@ -54,7 +54,7 @@ def test_real_shield_three_documents_five_people_consistent_and_restored(
         for item in (first, second, third)
     ]
     tokens = re.findall(r"<PERSON_\d+[a-z]?>", filtered[0])
-    assert len(tokens) == len(set(tokens)) == 5
+    assert len(tokens) == len(set(tokens)) == 5, filtered
     assert re.findall(r"<PERSON_\d+[a-z]?>", filtered[1]) == list(reversed(tokens))
     assert re.findall(r"<PERSON_\d+[a-z]?>", filtered[2]) == tokens[2:] + tokens[:2]
     assert not any(
