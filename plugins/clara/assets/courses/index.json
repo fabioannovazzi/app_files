@@ -88,7 +88,7 @@
     },
     "attribute-reporting": {
       "path": "attribute-reporting/course.json",
-      "sha256": "4c3d8a4a42c49ffd91aad9268d0e3b8c7f39a94d622dbec3f979f7a61f3ecf0f",
+      "sha256": "f5ee481a0853bb72a9f9272d6d2cba2bae73075fe2ef937054ee332258148d7a",
       "languages": [
         "it",
         "en",
@@ -191,7 +191,7 @@
     },
     "reporting-engine": {
       "path": "reporting-engine/course.json",
-      "sha256": "25f8dc7fe2779dc5039cb5aea6d146607bca1731205dbeb5a0812626cf3d47bd",
+      "sha256": "55630418343a3c0a0e2254fdbba3d5e2a01d139b5feca423f88f1c5bb9319b5f",
       "languages": [
         "it",
         "en",

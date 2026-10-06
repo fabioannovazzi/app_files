@@ -44,7 +44,7 @@
     },
     {
       "path": "modules/journal-sampling/requirements.txt",
-      "sha256": "26c3b97af534359fdbe1849742fceec53b5328b7cb792f32e4bbc40fad17e9a4"
+      "sha256": "31f11a5d17f183e8178ca18dc4bcaf87de53e1d8adeb1f76c3e12c5745d6a7e4"
     },
     {
       "path": "modules/journal-sampling/scripts/check_dependencies.py",
@@ -60,7 +60,7 @@
     },
     {
       "path": "modules/journal-sampling/scripts/journal_sampling_core.py",
-      "sha256": "8f049150741e4ab6ace790309a0e3b06450ff66e70dee01425b586f63190c4fc"
+      "sha256": "14cea392772d2ff1336865b415c188ef871b5480217c8fdd30614c3bb51e0ed9"
     },
     {
       "path": "modules/journal-sampling/scripts/normalize_journal.py",
@@ -437,5 +437,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "845def48586cbe8bb0f4f97bbf44353e338f4a5607f0ce365fde5a2826025af1"
+  "canonical_course_sha256": "83aa2768e5ae701168a7e4328fb4973ca4d9355316d906c18e8167c2dac8c9e0"
 }

@@ -260,7 +260,7 @@ def legacy_date_period_context(
     names = imports["get_naming_params"]()
     date_name = names["dateName"]
     lazy_dates = (
-        df.select(pl.col(date_column).cast(pl.Date).alias(date_name))
+        df.select(pl.col(date_column).cast(pl.Utf8).str.to_date().alias(date_name))
         .drop_nulls(date_name)
         .lazy()
     )

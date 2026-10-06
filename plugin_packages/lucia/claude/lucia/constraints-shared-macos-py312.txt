@@ -98,8 +98,8 @@ pillow==11.1.0
 platformdirs==4.11.7
 playwright==1.62.0
 plotly==7.0.0
-polars-runtime-32==1.44.1
-polars==1.44.1
+polars-runtime-32==2.0.0
+polars==2.0.0
 premailer==3.10.0
 prettytable==3.18.0
 propcache==0.5.2

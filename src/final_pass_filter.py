@@ -360,7 +360,7 @@ def clean_bank_not_matched(
         df = df.with_columns([pl.lit(None, dtype=pl.Date).alias("__value_date")])
 
     # Row numbering for page-aware rules
-    df = df.with_row_count("__row_nr")
+    df = df.with_row_index("__row_nr")
 
     # Rule masks
     keep_masks: Dict[str, pl.Series] = {}

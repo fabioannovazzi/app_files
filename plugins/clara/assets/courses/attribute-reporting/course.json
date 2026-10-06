@@ -35,7 +35,7 @@
     {
       "path": "modules/attribute-reporting/requirements.txt",
       "repository_path": "plugins/attribute-reporting/requirements.txt",
-      "sha256": "99f5f904de80e30671839c0f00798ac5466872430e69c39e2b37446472b0eba4"
+      "sha256": "19f93c2e80b6e39003de1131a2fff49f70c5281c3badade0deb10a8fa61a5b9b"
     },
     {
       "path": "modules/attribute-reporting/scripts/apply_validated_mappings.py",

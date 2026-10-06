@@ -877,7 +877,7 @@ def _load_join_config() -> dict[str, JoinConfig]:
 
 
 def _row_id(df: pl.DataFrame, name: str) -> pl.DataFrame:
-    return df.with_row_count(name=name)
+    return df.with_row_index(name=name)
 
 
 def _log_join_fanout(retailer: str, stage: str, joined: pl.DataFrame) -> None:
