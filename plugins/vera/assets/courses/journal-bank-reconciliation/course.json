@@ -49,7 +49,7 @@
     {
       "path": "modules/journal-bank-reconciliation/requirements.txt",
       "repository_path": "plugins/journal-bank-reconciliation/requirements.txt",
-      "sha256": "25e8f14e4f988c97ac50ac90f5dbacfff665f81de45a56599eaa78997aec7e03"
+      "sha256": "2bc86985e40ea2e60003cb5519069709f6c6faa1fc37be2239189a8e3e3deae3"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/apply_review_edits.py",

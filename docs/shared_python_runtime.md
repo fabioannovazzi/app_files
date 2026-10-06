@@ -84,3 +84,5 @@ or the previous pushed commit. The package release builder also checks product
 parity. Cross-platform runtime tests cover upgrading an already installed
 revision-6 environment with and without OCR, retaining the interpreter and
 executing a workflow after the upgrade.
+
+Fresh installations keep Polars below major version 2 because reporting currently uses the supported 1.x date-conversion contract. Shared policy revision 8 advances the recipe monotonically; macOS retains its existing 1.44.1 constraint. Cross-platform fresh-package CI must render an actual chart before release.

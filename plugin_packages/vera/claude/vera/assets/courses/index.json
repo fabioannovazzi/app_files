@@ -550,7 +550,7 @@
     },
     "journal-bank-reconciliation": {
       "path": "journal-bank-reconciliation/course.json",
-      "sha256": "b8502e15d1cf38e325a6d789ff5644bc2310bb6aad6bf4fb522781b503863b71",
+      "sha256": "be4c0101481d133c3e48e0df3a0c9a4aee7a41daafb595c5701f7b3c2a285866",
       "languages": [
         "it",
         "en",
@@ -578,7 +578,7 @@
     },
     "journal-sampling": {
       "path": "journal-sampling/course.json",
-      "sha256": "3abb893fa4d4ec0c6f6d4305a2b088eb18e7f6d93f16fbdb7ad422299e6cfade",
+      "sha256": "b5811dc386b5346895d829349f674369177dfabf5e1e57188a71583b038754f7",
       "languages": [
         "it",
         "en",
@@ -1021,7 +1021,7 @@
     },
     "variance-analysis": {
       "path": "variance-analysis/course.json",
-      "sha256": "83459a6dc35aff7caccb802ff0df320e5703285ef1900e7272abe39bc41cf74d",
+      "sha256": "db734638ca60fd4a0056755c5d2b45992f06216de14e174a0761cf512a31490e",
       "languages": [
         "it",
         "en",
@@ -1049,7 +1049,7 @@
     },
     "vouching": {
       "path": "vouching/course.json",
-      "sha256": "de8daf1a308c364c250a82a807a4310fe9e5b4435bc3226173d8df7f7e11b73d",
+      "sha256": "28a47eeaee3c2df5855b7c193b078e5c8e157de4b6c81475966813f141d5e477",
       "languages": [
         "it",
         "en",

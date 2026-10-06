@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "journal-sampling",
-  "course_sha256": "957000b5d12712ea9cbaced6dcd6f73ac34dfb1a6756bee44df2fd3f47bf348f",
+  "course_sha256": "845def48586cbe8bb0f4f97bbf44353e338f4a5607f0ce365fde5a2826025af1",
   "reviewer": "Codex: first-use lesson, fictional inputs and current native sample review",
   "reviewed_at": "2026-09-14T18:13:05.890693+00:00",
   "review_scope": "Read all five localized outlines and context notes and both source journals. Current native inspection, normalization, random sampling and Studio Archive finalization pass in ten locale/phase checks within a 186-case regression. Visually inspected both complete unique sample worksheets in two horizontal views each; compared every cell value, type, style, column width, row height and freeze setting across the other eight locale workbooks. The worksheet name varies by locale; canonical column names intentionally remain English. No learner comprehension, voice, browser widget or two-window acceptance is claimed. Professional review decisions remain pending. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
@@ -574,5 +574,10 @@
     "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
     "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
   },
-  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
+  "runtime8_dependency_binding_20261006": {
+    "previous_course_sha256": "957000b5d12712ea9cbaced6dcd6f73ac34dfb1a6756bee44df2fd3f47bf348f",
+    "current_course_sha256": "845def48586cbe8bb0f4f97bbf44353e338f4a5607f0ce365fde5a2826025af1",
+    "scope": "Only source fingerprints changed. Authored content, fixtures, expectations and historical editorial/output reviews are unchanged. Declared Polars dependency excludes incompatible major version 2. Current executions remain a CI release gate; no new learner or visual acceptance is claimed."
+  }
 }
