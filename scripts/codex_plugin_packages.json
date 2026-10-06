@@ -21,7 +21,7 @@
       "marketplace_display": "MP Clara",
       "output_zip": "plugin_packages/clara/clara-plugin.zip",
       "install_readme": "static/shared/clara/LEGGIMI_INSTALLAZIONE.txt",
-      "category": "Business & Operations"
+      "category": "Productivity"
     },
     {
       "plugin": "lucia",
