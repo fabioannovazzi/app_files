@@ -98,9 +98,9 @@
   ],
   "security_controls": [],
   "review": {
-    "reviewed_at": "2026-09-15",
+    "reviewed_at": "2026-10-06",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "58b25937956a403499660cefed59c584a67c7fd04b9ba41b5bf6523656518a82"
+    "source_fingerprint": "b2d4c1f9cc08bfd34c4618bdc78817591f35735684a6891258a6864592863acd"
   }
 }

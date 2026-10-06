@@ -101,7 +101,11 @@ def test_default_command_checks_both_hosts_for_all_products(
 
     assert release.main(["--check"]) == 0
 
-    assert all("--check" in command for command in commands)
+    assert commands[0] == [
+        release.sys.executable,
+        "scripts/check_shared_runtime_revision.py",
+    ]
+    assert all("--check" in command for command in commands[1:])
     assert any(
         "scripts/build_claude_plugin_zip.py" in command
         and all(product in command for product in release.PRODUCTS)

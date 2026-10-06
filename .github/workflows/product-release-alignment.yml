@@ -16,6 +16,8 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -23,6 +25,17 @@ jobs:
         with:
           node-version: '22'
       - run: python -m pip install pytest pytest-cov beautifulsoup4
+      - name: Reject shared recipe changes without a policy revision upgrade
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [ -n "$BASE_REF" ] && [ "$BASE_REF" != "0000000000000000000000000000000000000000" ]; then
+            python scripts/check_shared_runtime_revision.py --base-ref "$BASE_REF"
+          else
+            python scripts/check_shared_runtime_revision.py
+          fi
+      - name: Test shared runtime release revision guard
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_shared_runtime_revision.py
       - name: Verify website ZIP version labels
         run: node --test tests/test_plugin_download_versions.mjs
       - name: Verify stale-package rejection

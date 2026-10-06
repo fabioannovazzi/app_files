@@ -82,6 +82,7 @@ def main(argv: list[str] | None = None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     suffix = ["--check"] if args.check else []
     commands = [
+        ["scripts/check_shared_runtime_revision.py"],
         ["scripts/course_materials/build_catalog.py", "--check"],
         ["scripts/build_codex_plugin_zip.py", *products, *suffix],
     ]

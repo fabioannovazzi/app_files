@@ -190,7 +190,8 @@ RESOLUTION_RANK = {level: rank for rank, level in enumerate(RESOLUTION_LEVELS)}
 DEFAULT_REQUIRED_RESOLUTION_LEVEL = "classified"
 
 LEGACY_WORKER_BOUNDARY_CONTRACT_ID = "journal_bank.luna_seatbelt_capsule.v1"
-WORKER_BOUNDARY_CONTRACT_ID = "journal_bank.luna_seatbelt_capsule.v2"
+PREVIOUS_WORKER_BOUNDARY_CONTRACT_ID = "journal_bank.luna_seatbelt_capsule.v2"
+WORKER_BOUNDARY_CONTRACT_ID = "journal_bank.luna_seatbelt_capsule.v3"
 SEATBELT_PROFILE = """(version 1)
 (deny default)
 (import "system.sb")
@@ -217,6 +218,7 @@ SEATBELT_PROFILE = """(version 1)
   (global-name "com.apple.SystemConfiguration.configd"))
 (allow network-outbound)
 """
+SEATBELT_PROFILE += '(allow file-read-metadata (path-ancestors (param "CODEX_BIN")))\n'
 MAX_COMPONENT_BANK_ROWS = 20
 MAX_COMPONENT_JOURNAL_ROWS = 40
 MAX_COMPONENT_EDGES = 100
@@ -312,8 +314,8 @@ _HOST_CAPABILITY_PROFILES: Mapping[str, _HostCapabilityProfile] = MappingProxyTy
             disabled_features=_LEGACY_DISABLED_WORKER_FEATURES,
             qualification_basis="pinned_hidden_view_image_outside_nonce_denied",
         ),
-        WORKER_BOUNDARY_CONTRACT_ID: _HostCapabilityProfile(
-            contract_id=WORKER_BOUNDARY_CONTRACT_ID,
+        PREVIOUS_WORKER_BOUNDARY_CONTRACT_ID: _HostCapabilityProfile(
+            contract_id=PREVIOUS_WORKER_BOUNDARY_CONTRACT_ID,
             provenance="native_qualified",
             platform="Darwin",
             darwin_build="26A428",
@@ -326,6 +328,21 @@ _HOST_CAPABILITY_PROFILES: Mapping[str, _HostCapabilityProfile] = MappingProxyTy
             seatbelt_sha256="c9fb7bbd473cf77e38e7ca041bb8b34b7c16178108f0a2660e6ba3131313d3be",
             disabled_features=_LEGACY_DISABLED_WORKER_FEATURES,
             qualification_basis="pinned_outer_boundary_image_controls_2026_09_23",
+        ),
+        WORKER_BOUNDARY_CONTRACT_ID: _HostCapabilityProfile(
+            contract_id=WORKER_BOUNDARY_CONTRACT_ID,
+            provenance="native_qualified",
+            platform="Darwin",
+            darwin_build="26A428",
+            codex_version="codex-cli 0.160.0",
+            codex_sha256="6b582e8813ce7e8ed4c52814ee5cf230dba647bf2292df747a4003f2657ef201",
+            sandbox_exec_path=Path("/usr/bin/sandbox-exec"),
+            sandbox_exec_sha256="58839ef01b4eef8aac0d2aa8f9d1c074ae45aafe3533965b030672450064acc8",
+            canary_path=Path("/bin/cat"),
+            canary_sha256="1e238665b377c3ef21734890c783aa828cf912d175b90998b88276cefad0b25a",
+            seatbelt_sha256="7da42098684e01822f6d82882b00805eb89c5da1d20054884eab348ae25394e1",
+            disabled_features=_LEGACY_DISABLED_WORKER_FEATURES,
+            qualification_basis="pinned_cli_ancestor_metadata_image_controls_2026_10_06",
         ),
     }
 )

@@ -1,4 +1,4 @@
-polars>=1.37.1
+polars>=1.37.1,<2
 fastexcel>=0.14
 openpyxl>=3.1
 xlsxwriter>=3.2

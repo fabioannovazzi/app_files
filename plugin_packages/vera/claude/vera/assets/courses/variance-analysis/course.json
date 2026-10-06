@@ -40,7 +40,7 @@
     },
     {
       "path": "modules/variance-analysis/requirements.txt",
-      "sha256": "7733ce9295f777cfdfa8de578dfee3c513c525012bbe38a2445a45dc0c58dde0"
+      "sha256": "1c6866926a5b5292d458da4c745d6f23682c17dbf54a1d524b19c126756971c2"
     },
     {
       "path": "modules/variance-analysis/scripts/accounting_controls.py",
@@ -729,5 +729,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "82af15e806e8d1178e5deff66f3f011a6b9aba2742521e2a0d96ca571a583940"
+  "canonical_course_sha256": "360a97a8266e107d18a719c95c3d7090978559fba4e8c828217b273d3daf5059"
 }

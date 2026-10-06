@@ -49,7 +49,7 @@
     {
       "path": "modules/journal-sampling/requirements.txt",
       "repository_path": "plugins/journal-sampling/requirements.txt",
-      "sha256": "884f4a5849cac35ee7ad5b35b4d130f029d038d9a458b410a580824ef8cebc7f"
+      "sha256": "26c3b97af534359fdbe1849742fceec53b5328b7cb792f32e4bbc40fad17e9a4"
     },
     {
       "path": "modules/journal-sampling/scripts/check_dependencies.py",
