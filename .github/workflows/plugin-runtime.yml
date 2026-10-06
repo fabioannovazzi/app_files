@@ -690,6 +690,37 @@ jobs:
           python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_managed_plugin_python_runtime.py -k "cowork_sync_generation or cowork_manifest_unsafe"
           python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_claude_plugin_packages.py -k "distribution_keeps_canonical or canonical_version_despite"
 
+  polars-compatibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        polars: ["1.44.1", "2.0.0"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install each supported Polars major with declared component dependencies
+        run: >-
+          python -m pip install pytest pytest-cov "polars==${{ matrix.polars }}"
+          -r plugins/variance-analysis/requirements.txt
+          -r plugins/scatter-bubble-analysis/requirements.txt
+          -r plugins/journal-sampling/requirements.txt
+      - name: Preserve date meaning, filter boundaries, rankings and weighted chart results
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_chart_date_parsing.py
+          tests/plugins/test_chart_harness.py
+          tests/plugins/test_variance_analysis_plugin.py::test_date_parser_retains_calendar_dates_on_supported_polars
+          tests/plugins/test_journal_sampling_plugin.py::test_date_filters_include_boundaries_and_exclude_outside_dates
+          tests/plugins/test_mix_contribution_plugin.py::test_legacy_show_only_largest_non_aggregated_keeps_top_n_items
+          tests/plugins/test_scatter_bubble_plugin.py::test_legacy_scatter_context_weights_grouped_price
+
   vera-cowork-python:
     runs-on: ubuntu-latest
     # Fresh managed environments and 24 install/render cases exceed 15 minutes.
@@ -708,7 +739,7 @@ jobs:
         run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_cowork_python_runtime.py
       - name: Check waterfall fallback with supporting marker traces
         run: |
-          python -m pip install plotly pillow "polars<2"
+          python -m pip install plotly pillow "polars>=2,<3"
           python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_waterfall_fallback.py tests/plugins/test_chart_date_parsing.py
       - name: Check waterfall ordering independently of contribution labels
         run: |

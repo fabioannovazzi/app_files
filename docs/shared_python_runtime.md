@@ -85,4 +85,4 @@ parity. Cross-platform runtime tests cover upgrading an already installed
 revision-6 environment with and without OCR, retaining the interpreter and
 executing a workflow after the upgrade.
 
-Fresh installations keep Polars below major version 2 because reporting currently uses the supported 1.x date-conversion contract. Shared policy revision 8 advances the recipe monotonically; macOS retains its existing 1.44.1 constraint. Cross-platform fresh-package CI must render an actual chart before release.
+Reporting parses string dates with the explicit Polars string API. Shared runtime recipes require Polars 2.x, excluding unqualified major version 3; component regressions also preserve the supported 1.x parsing behavior. Shared policy revision 10 advances the recipe monotonically and pins macOS to Polars 2.0.0. Cross-platform fresh-package CI must render an actual chart before release.

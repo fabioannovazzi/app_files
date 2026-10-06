@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "journal-bank-reconciliation",
-  "course_sha256": "7784f481d74b6ad8d7d8cf51afe7703030fa9b106bde4d40a7254964f8000c4f",
+  "course_sha256": "4515f09f5f1225436ea9cb8fb9b1d52b4db3889dccb3e4d1c2cd78e1a0e77c47",
   "reviewer": "Codex: source, first-use lesson, native workbook and localized review-note inspection",
   "reviewed_at": "2026-10-06T14:31:53.456758+00:00",
   "review_scope": "Prepared fictional month-end comparison only. Current CLI runs and source/value replay are verified. Worksheet headers and selected rows were visually inspected in all seven sheets of both unique workbooks; the five locale editions are byte-identical per phase. No learner, live voice, tax or professional approval is attested. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate. 2026-10-06: refreshed only source bindings after inspecting the v3 native-worker change. Course lesson text and prepared deterministic demo/practice are unchanged; this does not claim new voice or learner acceptance. Separate current-host synthetic semantic run completed with two validated beneficiary suggestions and production per-launch canaries.",
@@ -488,7 +488,11 @@
   "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
   "runtime8_dependency_binding_20261006": {
     "previous_course_sha256": "022a1fe85df270c2898fb30d28dbc7e74563d0523b67aa408137ca81e560157f",
-    "current_course_sha256": "7784f481d74b6ad8d7d8cf51afe7703030fa9b106bde4d40a7254964f8000c4f",
+    "current_course_sha256": "4515f09f5f1225436ea9cb8fb9b1d52b4db3889dccb3e4d1c2cd78e1a0e77c47",
     "scope": "Only source fingerprints changed. Authored content, fixtures, expectations and historical editorial/output reviews are unchanged. Declared Polars dependency excludes incompatible major version 2. Current executions remain a CI release gate; no new learner or visual acceptance is claimed."
+  },
+  "source_binding_update": {
+    "reviewed_at": "2026-10-06",
+    "scope": "Date parsing uses explicit string APIs and chart ordering is explicit for Polars 2.0. Authored lesson content and inputs are unchanged; current executions remain required CI evidence, with no new learner or visual acceptance claimed."
   }
 }

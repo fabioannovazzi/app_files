@@ -21,8 +21,13 @@ def parse_date_expression(column: str) -> pl.Expr:
         .then(text.str.replace_all("/", "-") + pl.lit("-01"))
         .otherwise(text)
     )
-    return expression.cast(pl.Date, strict=False).fill_null(
-        normalized.str.strptime(pl.Date, strict=False).fill_null(
-            normalized.str.strptime(pl.Datetime, strict=False).cast(pl.Date)
-        )
+    return pl.coalesce(
+        *(
+            normalized.str.to_date(format, strict=False)
+            for format in ("%Y-%m-%d", "%Y/%m/%d", "%d/%m/%Y", "%d-%m-%Y")
+        ),
+        *(
+            normalized.str.to_datetime(format, strict=False).dt.date()
+            for format in ("%Y-%m-%dT%H:%M:%S%.f", "%Y-%m-%d %H:%M:%S%.f")
+        ),
     )

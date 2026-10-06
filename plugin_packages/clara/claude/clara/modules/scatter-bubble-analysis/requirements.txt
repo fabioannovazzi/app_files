@@ -1,4 +1,4 @@
-polars<2
+polars<3
 plotly
 kaleido
 pillow

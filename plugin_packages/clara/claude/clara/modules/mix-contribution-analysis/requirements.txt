@@ -1,4 +1,4 @@
-polars>=1.0,<2
+polars>=1.0,<3
 plotly
 kaleido
 Pillow

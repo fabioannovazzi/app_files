@@ -2293,7 +2293,7 @@ def left_join_on_column(
     """
     Left-joins two Polars LazyFrames on `on`.
     """
-    return lazy_left.join(lazy_right, on=on, how="left")
+    return lazy_left.join(lazy_right, on=on, how="left", maintain_order="left")
 
 
 def sort_and_left_join(
@@ -2555,7 +2555,7 @@ def show_only_largest(
             )
         else:
             df = df.filter(pl.col(rankBoolean) == metConditionValue)
-            df = drop_columns(df, [rank, rankBoolean])
+            df = drop_columns(df.sort(rank, maintain_order=True), [rank, rankBoolean])
     else:
         df, group_byCols, valueCols, uniqueItems = (
             process_dataframe_based_on_chart_less_unique_dimensions(

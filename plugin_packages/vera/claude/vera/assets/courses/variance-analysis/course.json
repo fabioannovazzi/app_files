@@ -40,7 +40,7 @@
     },
     {
       "path": "modules/variance-analysis/requirements.txt",
-      "sha256": "1c6866926a5b5292d458da4c745d6f23682c17dbf54a1d524b19c126756971c2"
+      "sha256": "618fe34637ae3b61e4c951ced96c40c294bfcd1ba2f4872b26f82b9fd6fa498f"
     },
     {
       "path": "modules/variance-analysis/scripts/accounting_controls.py",
@@ -68,7 +68,7 @@
     },
     {
       "path": "modules/variance-analysis/scripts/legacy_adapter.py",
-      "sha256": "d12efcce5b761365324103f2e076fac0cccb8d33d39a17b09efeb6a97d1b6aee"
+      "sha256": "2a78bbf9e98ee3649e8e2979a248ca58dc993282433b92376a3bc13789d6a1e3"
     },
     {
       "path": "modules/variance-analysis/scripts/legacy_plotting.py",
@@ -108,7 +108,7 @@
     },
     {
       "path": "modules/variance-analysis/scripts/variance_core.py",
-      "sha256": "60b1368589432bef8d333c18a066f289e0f768eaefcee0f82f6d9ca887e70631"
+      "sha256": "606aac286e71ef9eb713a71b4a3db19f49a84780a5d3f3e184fe9c8677656db4"
     },
     {
       "path": "modules/variance-analysis/skills/variance-analysis/SKILL.md",
@@ -148,7 +148,7 @@
     },
     {
       "path": "modules/variance-analysis/vendor/modules/chart_harness/date_parsing.py",
-      "sha256": "05b91fe963ee974d6fea7d2bcb806effa0524d9fa353f8910643379a50c2a2ac"
+      "sha256": "175f17c295b0029db1bb895876aaa4f66d9a3e19b924cfffbbf22af42879a087"
     },
     {
       "path": "modules/variance-analysis/vendor/modules/chart_harness/metric_semantics.py",
@@ -240,7 +240,7 @@
     },
     {
       "path": "modules/variance-analysis/vendor/modules/data/common_data_utils.py",
-      "sha256": "3381fcbd8f2dfb14462605fec885fba4885d9ebcf456e8722df99af21ee4d96d"
+      "sha256": "da96c6e826750bc3515d8582a64bb5690f6603725dc5b1f579e5a939c8ad85fc"
     },
     {
       "path": "modules/variance-analysis/vendor/modules/data/misc_charts_data_prep.py",
@@ -729,5 +729,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "360a97a8266e107d18a719c95c3d7090978559fba4e8c828217b273d3daf5059"
+  "canonical_course_sha256": "4d67e5eb292877e707c8bf58203c83b7f07cd1a70b4b4c580cc98937bc09d747"
 }

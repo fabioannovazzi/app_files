@@ -3719,13 +3719,13 @@ def _apply_filters(
         )
     if date_start:
         result = result.filter(
-            pl.col("entry_date").cast(pl.Date, strict=False)
-            >= pl.lit(date_start).cast(pl.Date)
+            pl.col("entry_date").cast(pl.Utf8).str.to_date("%Y-%m-%d", strict=False)
+            >= pl.lit(date_start).str.to_date("%Y-%m-%d")
         )
     if date_end:
         result = result.filter(
-            pl.col("entry_date").cast(pl.Date, strict=False)
-            <= pl.lit(date_end).cast(pl.Date)
+            pl.col("entry_date").cast(pl.Utf8).str.to_date("%Y-%m-%d", strict=False)
+            <= pl.lit(date_end).str.to_date("%Y-%m-%d")
         )
     if min_abs is not None:
         threshold = (

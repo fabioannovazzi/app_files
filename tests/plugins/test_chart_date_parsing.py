@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import importlib.util
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 
 import polars as pl
@@ -14,6 +14,10 @@ from polars.testing import assert_frame_equal
 @pytest.mark.parametrize(
     "values,expected",
     [
+        (["not a date", None], [None, None]),
+        (["2026-01-31", None], [date(2026, 1, 31), None]),
+        (["2026-01-31T12:34:56", None], [date(2026, 1, 31), None]),
+        ([datetime(2026, 1, 31, 12, 34, 56)], [date(2026, 1, 31)]),
         (["2026-01", "2026-02"], [date(2026, 1, 1), date(2026, 2, 1)]),
         (["2026/01", "2026/02"], [date(2026, 1, 1), date(2026, 2, 1)]),
         (["2026-01", "2026-02-17"], [date(2026, 1, 1), date(2026, 2, 17)]),
@@ -34,4 +38,6 @@ def test_month_and_day_grains_keep_their_calendar_meaning(values, expected):
 
     result = pl.DataFrame({"date": values}).select(parser.parse_date_expression("date"))
 
-    assert_frame_equal(result, pl.DataFrame({"date": expected}))
+    assert_frame_equal(
+        result, pl.DataFrame({"date": expected}, schema={"date": pl.Date})
+    )
