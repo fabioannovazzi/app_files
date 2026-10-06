@@ -268,30 +268,19 @@ def _amount_expr(col: str) -> pl.Expr:
 
 def _parse_dates_expr(col: str) -> pl.Expr:
     """Vectorised date parsing expression used when ingesting spreadsheets."""
+    text = (
+        pl.col(col)
+        .cast(pl.Utf8, strict=False)
+        .str.replace_all(
+            r"[T ]\d{1,2}:\d{2}(:\d{2})?(\.\d+)?(Z|[+\-]\d{2}:\d{2})?$", ""
+        )
+    )
     return pl.coalesce(
         [
-            pl.col(col).cast(pl.Date, strict=False),
-            pl.col(col)
-            .cast(pl.Utf8, strict=False)
-            .str.replace_all(
-                r"[T ]\d{1,2}:\d{2}(:\d{2})?(\.\d+)?(Z|[+\-]\d{2}:\d{2})?$",
-                "",
-            )
-            .str.strptime(pl.Date, "%Y-%m-%d", strict=False),
-            pl.col(col)
-            .cast(pl.Utf8, strict=False)
-            .str.strptime(pl.Date, "%d/%m/%Y", strict=False),
-            pl.col(col)
-            .cast(pl.Utf8, strict=False)
-            .str.strptime(pl.Date, "%d-%m-%Y", strict=False),
-            pl.col(col)
-            .cast(pl.Utf8, strict=False)
-            .str.strptime(pl.Date, "%m/%d/%Y", strict=False),
-            pl.col(col)
-            .cast(pl.Utf8, strict=False)
-            .str.strptime(pl.Date, "%d.%m.%Y", strict=False),
-            pl.col(col).cast(pl.Utf8, strict=False).str.to_date(strict=False),
+            text.str.strptime(pl.Date, format, strict=False)
+            for format in ("%Y-%m-%d", "%d/%m/%Y", "%d-%m-%Y", "%m/%d/%Y", "%d.%m.%Y")
         ]
+        + [text.str.to_date(strict=False)]
     )
 
 

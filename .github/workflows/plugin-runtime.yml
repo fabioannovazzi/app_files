@@ -711,6 +711,7 @@ jobs:
           -r plugins/variance-analysis/requirements.txt
           -r plugins/scatter-bubble-analysis/requirements.txt
           -r plugins/journal-sampling/requirements.txt
+          -r plugins/journal-bank-reconciliation/requirements.txt
       - name: Preserve date meaning, filter boundaries, rankings and weighted chart results
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
@@ -720,6 +721,16 @@ jobs:
           tests/plugins/test_journal_sampling_plugin.py::test_date_filters_include_boundaries_and_exclude_outside_dates
           tests/plugins/test_mix_contribution_plugin.py::test_legacy_show_only_largest_non_aggregated_keeps_top_n_items
           tests/plugins/test_scatter_bubble_plugin.py::test_legacy_scatter_context_weights_grouped_price
+      - name: Preserve statement dates and transaction filtering on each Polars major
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/check_statements
+          tests/check_statements/test_polars_date_parsing.py
+          tests/test_final_pass_filter.py
+          tests/test_final_pass_filter_utils.py
+          tests/test_final_pass_filter_numeric.py
+          tests/test_final_pass_filter_return_dropped.py
+          tests/test_final_pass_filter_extrafido.py
+          tests/test_final_pass_filter_samples.py
 
   vera-cowork-python:
     runs-on: ubuntu-latest
