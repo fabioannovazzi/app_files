@@ -52,6 +52,13 @@ recovery, rename handling, and retention must remain separate explicit steps.
 The machine-local index and configuration are rebuildable aids, not the run
 ledger.
 
+For local archive delivery, show the generated `readable_archive.index_path`
+(`Vera/APRI ARCHIVIO.html`) and the dated, named folders under `Vera/Pratiche/`.
+These are portable, rebuildable navigation pages, not a replacement for the
+exact `engagements/` ledger. A completed execution does not imply professional
+approval. Check the returned readable-view status before claiming navigation
+is available.
+
 Choose the route before resolving any module:
 
 1. When the user asks to inspect WhatsApp messages, confirm that Computer Use

@@ -99,6 +99,15 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "studio-archive-readable-navigation",
+        "purpose": "Return the local readable archive navigation after explicit ledger mutations",
+        "content": "Readable-view availability, generated local index path, engagement and execution counts or a bounded view-generation error. Local HTML pages use only existing ledger client labels, dates, lifecycle states, exact input links and artifact purposes; they do not copy underlying documents, make external requests or certify professional approval. Pages and named navigation folders remain rebuildable under Vera and are excluded from document search.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -296,6 +305,6 @@
     "reviewed_at": "2026-10-01",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "0f2400ac4375d6c6dca7d344fd614b5c5d16924fed024d6bcb7867fa1bda1970"
+    "source_fingerprint": "4a52ff49a56e1d24acc3942c572d57e75d9ab2ab8c33e5b11b92b996593a230f"
   }
 }

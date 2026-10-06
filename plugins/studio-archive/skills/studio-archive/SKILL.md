@@ -78,6 +78,23 @@ renames, deletes, or overwrites an existing file. Refresh detects top-level
 scope-folder changes and reads the stable identity from `Vera/client.json`.
 The index never follows symbolic links.
 
+### Consultare cartelle e risultati
+
+Ogni modifica esplicita al ledger aggiorna una vista leggibile locale:
+`Vera/APRI ARCHIVIO.html` e `Vera/Pratiche/`. Le cartelle delle pratiche
+mostrano data, etichetta e ID completo; le cartelle delle attività mostrano
+nome del workflow e ID completo. I link relativi portano alle copie esatte
+dei documenti e a tutti gli output e versioni dichiarati. Non creano nuove
+copie, collegamenti simbolici o un secondo archivio autorevole.
+
+Alla consegna, mostra il percorso restituito in `readable_archive.index_path`
+e la cartella della pratica, oltre ai risultati. Spiega separatamente lo stato
+dell'esecuzione e l'eventuale approvazione professionale. `completed` non
+certifica l'approvazione del professionista. Una vista non disponibile viene
+segnalata in `readable_archive`; non dichiarare completata la navigazione in
+quel caso. `recover-ledger` ricostruisce questa vista anche per incarichi
+precedenti, senza modificare input, output o manifesti sigillati.
+
 ### Archive-root access preflight
 
 When the archive is not configured, offer the local guided setup first. Tell

@@ -1856,6 +1856,39 @@ def _safe_client_directory_name(legal_name: str) -> str:
     return name
 
 
+def _readable_after_write(
+    function: Callable[..., dict[str, Any]],
+) -> Callable[..., dict[str, Any]]:
+    """Refresh derived navigation after a successful explicit archive mutation."""
+
+    @wraps(function)
+    def wrapped(*args: Any, **kwargs: Any) -> dict[str, Any]:
+        result = function(*args, **kwargs)
+        client_id = result.get("client_id") or result.get("run", {}).get("client_id")
+        if client_id is None:
+            client_id = result.get("client", {}).get("client_id")
+        if client_id is not None:
+            try:
+                folder = get_studio_client_folder(
+                    client_id, state_dir=kwargs.get("state_dir")
+                )["client_folder"]
+                from readable_archive import refresh_readable_archive
+
+                result["readable_archive"] = refresh_readable_archive(
+                    Path(folder["client_root"]), ledger
+                )
+            except (ledger.LedgerError, OSError, UnicodeError) as exc:
+                # Ledger mutation remains committed; expose the separate view failure.
+                result["readable_archive"] = {
+                    "status": "unavailable",
+                    "error": str(exc),
+                }
+        return result
+
+    return wrapped
+
+
+@_readable_after_write
 def create_studio_client(
     legal_name: str,
     *,
@@ -1936,6 +1969,7 @@ def create_studio_client(
     }
 
 
+@_readable_after_write
 def create_studio_client_engagement(
     client_id: str,
     engagement_label: str,
@@ -2908,6 +2942,7 @@ def _workflow_version(workflow_id: str) -> str:
     return version.strip()
 
 
+@_readable_after_write
 def prepare_studio_client_workflow(
     engagement_id: str,
     workflow_id: str,
@@ -3037,6 +3072,7 @@ def _journal_sampling_handoff_references(
     return references
 
 
+@_readable_after_write
 def start_check_entries_from_sample(
     client_id: str,
     engagement_id: str,
@@ -3120,6 +3156,7 @@ def start_check_entries_from_sample(
     }
 
 
+@_readable_after_write
 def import_studio_client_document(
     client_id: str,
     source_path: Path,
@@ -3326,6 +3363,7 @@ def _selected_ledger_root(
     return client_root
 
 
+@_readable_after_write
 def start_studio_client_workflow(
     client_id: str,
     engagement_id: str,
@@ -3344,6 +3382,7 @@ def start_studio_client_workflow(
     return {"status": loaded["run"]["status"], "run": loaded["run"]}
 
 
+@_readable_after_write
 def fail_studio_client_workflow(
     client_id: str,
     engagement_id: str,
@@ -3363,6 +3402,7 @@ def fail_studio_client_workflow(
     return {"status": loaded["run"]["status"], "run": loaded["run"]}
 
 
+@_readable_after_write
 def cancel_studio_client_workflow(
     client_id: str,
     engagement_id: str,
@@ -3381,6 +3421,7 @@ def cancel_studio_client_workflow(
     return {"status": loaded["run"]["status"], "run": loaded["run"]}
 
 
+@_readable_after_write
 def finalize_studio_client_workflow(
     client_id: str,
     engagement_id: str,
@@ -3404,6 +3445,7 @@ def finalize_studio_client_workflow(
     }
 
 
+@_readable_after_write
 def complete_studio_client_workflow(
     client_id: str,
     engagement_id: str,
@@ -3422,6 +3464,7 @@ def complete_studio_client_workflow(
     return {"status": loaded["run"]["status"], "run": loaded["run"]}
 
 
+@_readable_after_write
 def close_studio_client_engagement(
     client_id: str,
     engagement_id: str,
@@ -3506,6 +3549,9 @@ def recover_studio_client_ledger(
                 run_count += len(runs)
         except ledger.LedgerError as exc:
             raise ArchiveError(f"Customer-folder recovery failed: {exc}") from exc
+        from readable_archive import refresh_readable_archive
+
+        refresh_readable_archive(root, ledger)
     return {
         "status": "recovered",
         "client_count": len(_discover_ledger_clients(current)),
@@ -3821,7 +3867,8 @@ def _connect(
         return connection
     connection.execute("PRAGMA secure_delete = ON")
     connection.execute("PRAGMA journal_mode = DELETE")
-    connection.executescript("""
+    connection.executescript(
+        """
         CREATE TABLE IF NOT EXISTS metadata (
             key TEXT PRIMARY KEY,
             value TEXT NOT NULL
@@ -3867,7 +3914,8 @@ def _connect(
             ON documents(scope_id, relative_path);
         CREATE INDEX IF NOT EXISTS chunks_document_idx
             ON chunks(document_id, ordinal);
-        """)
+        """
+    )
     try:
         connection.execute(
             "INSERT INTO chunk_fts(chunk_fts, rank) VALUES('secure-delete', 1)"
