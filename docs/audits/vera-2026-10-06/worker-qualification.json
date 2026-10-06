@@ -1,0 +1,164 @@
+{
+  "schema": "vera.native_worker_host_qualification.v1",
+  "reviewed_at": "2026-10-06T14:36:43.119442+00:00",
+  "reviewer": "Codex engineering native synthetic acceptance",
+  "contract_id": "journal_bank.luna_seatbelt_capsule.v3",
+  "scope": "Exact macOS 26A428 and codex-cli 0.160.0 executable; no other host qualification",
+  "production_profile_sha256": "7da42098684e01822f6d82882b00805eb89c5da1d20054884eab348ae25394e1",
+  "codex_sha256": "6b582e8813ce7e8ed4c52814ee5cf230dba647bf2292df747a4003f2657ef201",
+  "production_change": "Only metadata read of exact CLI executable ancestor directories. File-content scope, disabled features, inner read-only sandbox and per-launch canaries retained. Prior v1/v2 records unchanged.",
+  "normal_bank": {
+    "boundary_canaries": {
+      "exact_schema_read_succeeded": true,
+      "outside_capsule_read_denied": true,
+      "codex_version_inside_boundary": "codex-cli 0.160.0"
+    },
+    "validated_decisions": 2,
+    "artifacts": {
+      "cumulative_resolution_state.json": "af747acf55b8402a3e5e92742662ffe56fdd09d8b98f8ac7617991a151d7d323",
+      "human_review_queue.json": "dbb36d7e16376c99ceea571c5814a188f768cf19cc0be99b10b72ff9a161368c",
+      "luna_events.jsonl": "4fec021f4def38add75bbde2dc7346bf12009556133e2f13614c51892439a3e5",
+      "luna_launch_receipt.json": "453200b4e1fa1219d3326ef41845a823d9272db89d2d9282d1fd201ffa2c73fa",
+      "luna_output_schema.json": "1857c6ab5fb78807a4510e052b0a3352bf3be239e4452b70049766cc9404694c",
+      "luna_prompt.md": "c37b2a709ab63c21935990391dfdccbeb48c8a6cbaaa0f116c978ecb878109d0",
+      "luna_response.json": "92c28a51c9403164582b9255a19370cd9b0ae6131e5bff4f1e9a00d67f10abf8",
+      "luna_stderr.log": "404408fba8635c9554952e790526f5f1e6cd10c51a9fcde2328555000a07c07a",
+      "operational_review_payload.json": "be18f246648373ac63938229e50cdd54333e8354cda3f5588ec890d39bdef4de",
+      "prior_resolution_state.json": "374591f4e5c2999e9cab7f5b83fe716ac1f25fc00ee2620c35fcbd85b963e0c3",
+      "residual_candidate_graph.json": "8e16e9badff8c82ae3c330e210710235cd48e1008cee73a243808c56588a603b",
+      "resolution_funnel.json": "544c8fa144891f739972a5dd7de249411e469f17f6e8d97aa4987f36365e1eb1",
+      "semantic_resolution_application.json": "433cd439505aa99257eab9afb24d883b5fb3164640b8c8a8a630f207fd2b5d30",
+      "semantic_review_status.json": "fc62c1cf2f9b265c01a3a6bc69177453beca079cbe79a67f71891e3023fc8f28",
+      "semantic_suggestions_validated.json": "8d3ce0feb9696a07a78a262b914b5f687f191a2a487f35bcdc0954e81c2984d0",
+      "semantic_worker_run.json": "413895dbd81ca158bf58c1bfbb56661ced499a14e0b973e711ca9d55e390b0c9"
+    }
+  },
+  "invoice": {
+    "boundary_canaries": {
+      "exact_schema_read_succeeded": true,
+      "outside_capsule_read_denied": true,
+      "codex_version_inside_boundary": "codex-cli 0.160.0"
+    },
+    "synthetic_packets": 4,
+    "prompt_injection_case_passed": true,
+    "artifacts": {
+      "luna_events.jsonl": "5b973510966376ac32fe3a94efab3a4b2fb224b349832830faee13501bc6495d",
+      "luna_launch_receipt.json": "22028bbc15273834e81c40990a19783989adb356986b3055d302e54ed401f0bf",
+      "luna_response.json": "d74d096efc2783b7985e12d1bba899dc3bf0141f8819c69781bf38445a5aff03",
+      "luna_stderr.log": "9ac2399f3c1361b8d6079a8d9dd9fed416680d2f656d81536013695868b770ce"
+    }
+  },
+  "image_controls": {
+    "positive": {
+      "passed": true,
+      "nonce_exact_match": true,
+      "native_router_denial": false,
+      "inner_sandbox": "read-only",
+      "artifacts": {
+        "control.json": "14c3594c3649c5f769f550fefd68a1db20ff93d7c8bfeef43efe200bb63eed67",
+        "events.jsonl": "bc26d63a4e5b558324171bc35653388303755790b73e773dad8869bd282807cb",
+        "permitted.png": "2a623b4cd670623cb11883cb19e90b693e280d968b3b8495d0ceb7995e0df4ab",
+        "prompt.stdin": "8153512425d7bb2fc1156802cea96e80d7dc79884fa12a6cc9608068ae071934",
+        "schema.json": "8c9ddf0a946d3fbc84ebe1a323821bb885bd187bfdd993610e6fa59d55fc658f",
+        "seatbelt.sb": "7f9b12292bdb0eeda2e5ea5589f825c59a00b1ea2ef89704a888f8253ae5f1e2",
+        "state/goals_1.sqlite": "0b0721b76d7384964cf5b416cc9a45159bb9be087d2c653b19457f635e852da2",
+        "state/logs_2.sqlite": "6ff335d21b84865b6cf8f42235b04e644b9c865368b0005b1e2c796faabc7540",
+        "state/memories_1.sqlite": "9f1e98c5c4b1e86be45db52f16f41234ccba5bc71d047c2f4fff2a815bda30ce",
+        "state/queue_1.sqlite": "47c3247729acc505a87c1111635deab4d204402fbcd10437316912ecdcc1861f",
+        "state/state_5.sqlite": "4eeb710c739848e62f0d53d04057e17375b4af741c9b441f2a546f6ed860c79f",
+        "state/state_5.sqlite-shm": "1181b11fe5a525f0d2abd4a623a299c8e2d12329ef7bfb47645b6ec1a4f04332",
+        "state/state_5.sqlite-wal": "88a3037cfda07e50fa6864e66feb88c9c670c7fbfe6cbc2b646c66f38ad30dd7",
+        "stderr.txt": "164b1dd4111bfd650160e95ad1564e731e78fce7cde7e7838e978b327531a36d"
+      }
+    },
+    "outside": {
+      "passed": true,
+      "nonce_exact_match": false,
+      "native_router_denial": true,
+      "inner_sandbox": "read-only",
+      "artifacts": {
+        "control.json": "c49ffcddfc3e9dc48209c7874a62fa12d484bb38538a8cc2ec4fcdd307876927",
+        "events.jsonl": "950b44b55bfe082e22c957ab58535d83d1d30bff66f915081c6278d90e697354",
+        "prompt.stdin": "a5ee5baaa8adb37124b5eeb04a37db983712a156a14cb867bd20c6932857b677",
+        "schema.json": "8c9ddf0a946d3fbc84ebe1a323821bb885bd187bfdd993610e6fa59d55fc658f",
+        "seatbelt.sb": "86c13956f007a50c5ad49a9243c007aa87145262bd1613afabd6b823a007fcf7",
+        "state/goals_1.sqlite": "a6db602d791b29752f55f28540cfc63da859a5c21f9a89911f20943d131a8ecf",
+        "state/logs_2.sqlite": "f03cf12b18c5c12680b2ad5b877760cb7a6c502fe5a28e514f6e782dee1088c7",
+        "state/memories_1.sqlite": "5d8c67f265d7f9efb8f7a7250850b5e560f31c333a4d05819aaa5c1cf1bfedae",
+        "state/queue_1.sqlite": "f71a2937a00b8216e0895bc656589792e42fdc9a16c104bedaf326748055dc1c",
+        "state/state_5.sqlite": "4eeb710c739848e62f0d53d04057e17375b4af741c9b441f2a546f6ed860c79f",
+        "state/state_5.sqlite-shm": "22e8f3c268e8f1c00b709dd3268e86387b323998dfa9e72068ecc40ad7fc5374",
+        "state/state_5.sqlite-wal": "27b8a01e59ce57e7a6200ea5a956fe6bdbd302b5f85df6d745f5f3b4f3576bc0",
+        "stderr.txt": "68eeb82e9eef2799fdb05d5a29dc67488816adae5dc057987a6933c3d7edfbb6"
+      }
+    },
+    "symlink": {
+      "passed": true,
+      "nonce_exact_match": false,
+      "native_router_denial": true,
+      "inner_sandbox": "read-only",
+      "artifacts": {
+        "control.json": "ce50cd3a40284ff3ed067b2e57dfc15ae6bf250b33929663d4e1582607e03c3a",
+        "events.jsonl": "76b3bca1e561e90c10e8e1f24832e7c9b9f9ed53615bf13b220f6ba76b24ca8e",
+        "prompt.stdin": "1117161c3065eb7b2edd5dceac2aa5599b57eed2beafeda27309fdb6edab42fd",
+        "schema.json": "8c9ddf0a946d3fbc84ebe1a323821bb885bd187bfdd993610e6fa59d55fc658f",
+        "seatbelt.sb": "f237e34e9255352b6a6cce1c05c274fe5d06119a2236f8180fa81969a7465cbb",
+        "state/goals_1.sqlite": "3f81b7b682dd11524718a8ec4032b7f618aedd03de63295561f3d869df2e0d8a",
+        "state/logs_2.sqlite": "fe147991f6bb3b57934d83ae5d83221dcb6f88730b49d194ba5464a3d955bb43",
+        "state/memories_1.sqlite": "b36f6cf1d210cae5503dc38a7341c0c4a76f7944791089dd3dc0cbe51e6b6a64",
+        "state/queue_1.sqlite": "2a992a6546e5b1a00451288b72609e94e0c16315776f69825c8e7fbe22960e8b",
+        "state/state_5.sqlite": "e3447e0df38e9794697046c74cc61142d36f60eaeb1b7093b522127f30edcad1",
+        "stderr.txt": "bac8e897af0df8a4cfc46cffd268cadc314fe4bdde2cf80b1b5d950f1d461923"
+      }
+    }
+  },
+  "diagnostic_only_difference": "Exact code-mode helper and its public package manifest readable; exact helper execution and process fork permitted; exact positive image readable. Inner read-only sandbox remains active. Those permissions are absent from production. No danger-full-access mode was used in accepted evidence.",
+  "evidence_limits": [
+    "Image tool operations are not exposed in JSONL; negative outcomes independently recorded by native tool-router stderr.",
+    "No kernel-log confirmation obtained or claimed.",
+    "No real client files, professional approvals, Windows or Cowork acceptance involved.",
+    "Changed future CLI/OS executables still fail closed and require fresh qualification."
+  ],
+  "artifact_directory": "/Users/fabio/Documents/vera-codex-plugin/runtime-fix-20261006/worker-qualification",
+  "local_release": "0.1.345",
+  "bank_module_version": "0.1.55",
+  "installed_module_prerequisites": {
+    "passed": 39,
+    "total": 39,
+    "artifact": "module-checks.json"
+  },
+  "installed_native": {
+    "passed": true,
+    "answer": 42,
+    "artifacts": {
+      "luna_events.jsonl": "c8a01b4336b7a318e0a040b7f50decd9a1a53e9d9987c655a92f9a7551f04dae",
+      "luna_launch_receipt.json": "8f34c48f12c3ba38e757b5d357fb83c5d7c05a28d20bbff6ea15f65ded97d790",
+      "luna_response.json": "5823dd82885cb7115a6dc367851a93a23b86d80d7154cc5bd4e8e9aafee07ecd",
+      "luna_stderr.log": "35b3bac00217fddc8e08c6ecbc21d8bea3be77dc3c177445552e7bb43ae3a939"
+    }
+  },
+  "regressions": {
+    "primary_run": {
+      "passed": 554,
+      "failed": 1,
+      "skipped": 1
+    },
+    "failed_case_stable_rerun": "passed; included in 408-pass package/harness suite",
+    "native_invoice_opt_in": "1 passed",
+    "initial_35_worker_contract_tests": "35 passed",
+    "package_codex_alignment_assurance_fixture_suite": "408 passed",
+    "cowork_existing_failures": 3,
+    "cowork_baseline_artifact": "cowork-baseline.json"
+  },
+  "image_files": {
+    "symlink-outside.png": "0450fce004405d261a2c9b5f850a1f09d76c6900034db4f46fa8ae17afbbbf9c",
+    "outside-outside.png": "7da02c01f2b56a520c42d3ac6f33057737334e39efbbc4d386569e429ea3bc1b"
+  },
+  "final_package_sha256": "4726f0589add240acd794a64a82f072438884e21e5c96557deb3951988a54453",
+  "installed_source_matches": {
+    "modules/journal-bank-reconciliation/scripts/semantic_review.py": true,
+    "modules/journal-bank-reconciliation/.codex-plugin/plugin.json": true,
+    "privacy/services/local-onboarding.json": true
+  },
+  "privacy_validation_scope": "Complete register passes in the repository. Running the developer fingerprint validator inside the installed package cannot resolve repository-only governed paths and is not an installed-host acceptance check."
+}

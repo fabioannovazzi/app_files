@@ -147,13 +147,13 @@
     },
     {
       "id": "current-host-profile-qualification",
-      "control": "The fixed source registry includes the reviewed macOS 26A428 / Codex CLI 0.155.0-alpha.16 profile. Production OS sandbox text, disabled tools, read-only CLI arguments and allowed data paths are unchanged. Qualification retains an actual normal launch and positive/negative image controls under a separately documented diagnostic envelope; those diagnostic helper/process permissions are not deployed. Dependency inspection reads this same registry and is not itself launch qualification. Unknown or changed hosts fail closed. No model payload or external destination is added."
+      "control": "The fixed source registry includes the qualified macOS 26A428 / Codex CLI 0.160.0 v3 profile; v1 and v2 records remain unchanged. The only new OS permission is metadata-only access to ancestor directories of the exact CLI executable, required by the current transport. No file-content read scope, model packet or external destination is added. Disabled tool features, read-only inner sandbox and per-launch canaries remain active. Qualification retains a normal structured launch, an exact permitted-image nonce and native router denials for outside-image and symlink controls. Those image diagnostics also retained the inner read-only sandbox; their exact helper/process permissions are not production permissions. Unknown or changed hosts fail closed; dependency inspection alone is not launch qualification."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-06",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "eaf55ac4a8b5c66e994525df2c818b3580c1921404e9e54052ed94f82aa82434"
+    "source_fingerprint": "19cbd41af23c9692d9a6fa6605bfa7da27c87ef3991e3a323e7e1a87acc1d845"
   }
 }
