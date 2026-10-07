@@ -1,8 +1,8 @@
 {
   "schema": "mparanza.course_source_review.v1",
   "reviewer": "Codex /root",
-  "reviewed_at": "2026-10-07T06:13:09.681333+00:00",
-  "baseline_commit": "0bb6a89737f2aa7bdf191d18fa0964fccf9540f8",
+  "reviewed_at": "2026-10-07T07:29:44.367758+00:00",
+  "baseline_commit": "b716e60ad40908f86e5f83b70fc4a956e36e20a3",
   "scope": "Automatic verified hardlink execution preparation. Complete authored course content is unchanged; only source bindings differ. Previous editorial and output evidence remains historical; fresh CI executions are required. No affected-user or Cowork acceptance is claimed.",
   "kits": [
     {

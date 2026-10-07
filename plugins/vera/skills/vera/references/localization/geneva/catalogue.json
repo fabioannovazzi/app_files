@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "plugins/vera",
-  "version": "0.1.346",
-  "captured_at": "2026-10-06T15:06:52.461501+00:00",
-  "catalogue_fingerprint": "492c8ef6fc7bc0bb7561f9b3a5c0f3986510c4b7b34db11da1bb46469ce83d96",
-  "manifest_sha256": "edbf5284b20d9ac6580c5a6f488df80035fd5ba8ac8727e9b87065b5d207c19c",
+  "version": "0.1.347",
+  "captured_at": "2026-10-06T21:32:54.422401+00:00",
+  "catalogue_fingerprint": "f06b6752dfac9f4c82cfa09cb7045d9abab10ed697807d6a632cab4f5fbdda8d",
+  "manifest_sha256": "7d1a2c7b20e44a200528d05f62a4da26f23e9ee69842cff70c7658f8bd7b9dbf",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -219,7 +219,7 @@
     {
       "function_id": "studio-archive",
       "skill_path": "skills/studio-archive/SKILL.md",
-      "sha256": "a3c6abfa0110af81f88421044857369b5d6e7bc575320407d21fcbe876057d12"
+      "sha256": "05ba128166b61624d40376b9450a3fb3868ee5d25750abf98f3f9a244aa20b03"
     },
     {
       "function_id": "studio-document-format",
