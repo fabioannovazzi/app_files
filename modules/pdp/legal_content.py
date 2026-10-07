@@ -90,39 +90,52 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "title": "Ordinary Plugin Functions",
                 "paragraphs": [
                     (
-                        "Ordinary plugin functions run in your selected OpenAI Codex "
-                        "or Anthropic Cowork account and workspace. Files, scripts, "
-                        "and outputs may stay on your computer, while content the "
-                        "selected host reads can enter its model context under that "
-                        "account. Mparanza LLC does not "
-                        "receive, access, or retain that Customer Content merely "
-                        "because you use the plugin, and the plugin does not "
-                        "automatically anonymize it."
+                        "Ordinary plugin functions run in your "
+                        "selected OpenAI Codex or Anthropic Cowork "
+                        "account and workspace. Files, scripts, and "
+                        "outputs may stay on your computer, while "
+                        "content the selected host reads can enter "
+                        "its model context under that account. "
+                        "Mparanza LLC does not receive, access, or "
+                        "retain that Customer Content merely "
+                        "because you use the plugin, and the plugin "
+                        "does not automatically anonymize it."
                     ),
                     (
-                        "Your selected Codex or Cowork account, workspace settings, "
-                        "connectors, and "
-                        "other services process information under their own "
-                        "arrangements. If a plugin clearly invokes a Mparanza LLC-hosted "
-                        "service, that category is covered by the next section."
+                        "Your selected Codex or Cowork account, "
+                        "workspace settings, connectors, and other "
+                        "services process information under their "
+                        "own arrangements. If a plugin clearly "
+                        "invokes a Mparanza LLC-hosted service, "
+                        "that category is covered by the next "
+                        "section."
                     ),
                     (
-                        "Vera and Clara are available as plugins for Codex and Cowork. "
-                        "They work with material supplied in the session and with "
-                        "callable connected apps. Direct folder access, persistent "
-                        "project files, local tools, and durable deliverables depend "
-                        "on the selected host and its capabilities."
+                        "Vera and Clara are available as plugins "
+                        "for Codex and Cowork. They work with "
+                        "material supplied in the session and with "
+                        "callable connected apps. Direct folder "
+                        "access, persistent project files, local "
+                        "tools, and durable deliverables depend on "
+                        "the selected host and its capabilities. "
+                        "Vera also works with Google Antigravity "
+                        "and, subject to available tools and model "
+                        "capabilities, local-model environments."
                     ),
                     (
-                        "Vera's Studio Archive uses two non-hosted message routes. "
-                        "Gmail is searched through a separately connected Gmail "
-                        "connector in ChatGPT, Codex, or Cowork. WhatsApp is inspected "
-                        "only from Codex Desktop with Computer Use in the WhatsApp "
-                        "Desktop app already opened and authenticated by the "
-                        "professional. Neither route creates a Gmail or WhatsApp "
-                        "message store on Mparanza LLC-controlled systems. Content read by "
-                        "the selected host may still enter the model context under the "
-                        "user's OpenAI or Anthropic account."
+                        "Vera's Studio Archive uses two non-hosted "
+                        "message routes. Gmail is searched through "
+                        "a separately connected Gmail connector in "
+                        "ChatGPT, Codex, or Cowork. WhatsApp is "
+                        "inspected only from Codex Desktop with "
+                        "Computer Use in the WhatsApp Desktop app "
+                        "already opened and authenticated by the "
+                        "professional. Neither route creates a "
+                        "Gmail or WhatsApp message store on "
+                        "Mparanza LLC-controlled systems. Content "
+                        "read by the selected host may still enter "
+                        "the model context under the user's OpenAI "
+                        "or Anthropic account."
                     ),
                 ],
             },
@@ -151,6 +164,79 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "the underlying hosted data. Mparanza LLC's product development "
                         "is focused on ordinary plugin functions and reducing these "
                         "hosted retention exceptions."
+                    ),
+                ],
+            },
+            {
+                "id": "run-receipts",
+                "title": "Vera Technical Receipts",
+                "paragraphs": [
+                    (
+                        "Vera’s receipt-enabled report command automatically sends four "
+                        "fields to Mparanza LLC: schema version, random receipt ID, Vera "
+                        "version and the SHA-256 digest of the local report. It does not "
+                        "send the report, client documents, filenames, prompts or model "
+                        "outputs. Reading a report, the generic local Studio Archive "
+                        "report helper and the explicitly local onboarding path do not "
+                        "request server stamping."
+                    ),
+                    (
+                        "The service operates on servers in Finland, in the European "
+                        "Union. It adds a server timestamp and signature and retains the "
+                        "signed proof without automatic expiry or deletion. The receipt "
+                        "establishes existence, server time and integrity of the matching"
+                        " report; it does not certify GDPR compliance, provider delivery "
+                        "or the identity of the person who submitted the digest."
+                    ),
+                    (
+                        "Mparanza LLC has no names, client identifiers or correspondence "
+                        "between those hashes and the people described in the local "
+                        "reports. On these premises, we consider the stored hashes "
+                        "anonymous in relation to the people in those reports. Connection"
+                        " logs are separate from this proof."
+                    ),
+                    (
+                        "An IP address is not needed to create or verify a receipt and is"
+                        " not stored in the receipt database. The endpoint uses it to "
+                        "limit excessive requests; access logs also record it. Nginx "
+                        "retains 14 daily archives plus the current file. No fixed "
+                        "maximum retention has been identified for the Uvicorn "
+                        "application log; the operational script overwrites it on "
+                        "application restart. These log rules do not set an expiry for "
+                        "receipts. The technical check on 7 October 2026 observed the "
+                        "IP address, requested URL and HTTP status in the application "
+                        "log. A verification URL may include the receipt ID and the "
+                        "hash submitted for comparison; it contains neither the report "
+                        "nor the client’s documents."
+                    ),
+                    (
+                        "The SHA-256 hash is a 64-character fingerprint calculated on the"
+                        " user’s computer from the local report. It is not an encrypted "
+                        "copy: there is no decryption operation that returns the report’s"
+                        " contents. For example, the studio keeps its report and Mparanza"
+                        " keeps the signed proof of its fingerprint. To check the "
+                        "correspondence later, the studio recalculates the hash locally "
+                        "and compares it with the signed proof. The report need not be "
+                        "sent to Mparanza for this comparison. The random ID identifies "
+                        "the receipt, not a client. Document confidentiality is protected"
+                        " by excluding the contents from the request; automatic "
+                        "submission creates the technical proof. We do not provide a "
+                        "switch to disable receipt submission: it would add no protection "
+                        "for the report’s contents, which are not transmitted."
+                    ),
+                    (
+                        "Mparanza LLC acts as an independent controller for its own "
+                        "service’s technical logs, for security and abuse prevention. "
+                        "The identified legal basis is legitimate interests under "
+                        "Article 6(1)(f) GDPR, subject to necessity and proportionality. "
+                        "Mparanza LLC contact and company representative: Fabio "
+                        "Annovazzi, Anières, Switzerland."
+                    ),
+                    (
+                        "To be implemented: a 14-day retention limit with automatic "
+                        "deletion of technical logs. The current configuration described "
+                        "above has not yet been changed. Signed receipts are excluded "
+                        "from this deletion."
                     ),
                 ],
             },
@@ -402,7 +488,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
             },
             {
                 "id": "security-and-transfers",
-                "title": "Security and International Processing",
+                "title": "Security and Processing Location",
                 "paragraphs": [
                     (
                         "We use administrative, technical, and organizational "
@@ -413,10 +499,14 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "account and devices."
                     ),
                     (
-                        "Mparanza LLC is based in the United States. Hosted and "
-                        "external-service processing may occur in the United States "
-                        "and other countries whose data-protection laws differ from "
-                        "those where you live."
+                        "Mparanza LLC is incorporated in Delaware. Its hosted servers "
+                        "are located in Finland, in the European Union, where data "
+                        "is processed and stored."
+                    ),
+                    (
+                        "External AI platforms and other connected services have "
+                        "their own processing locations, terms, and data controls, "
+                        "separate from Mparanza LLC's hosting in Finland."
                     ),
                 ],
             },
@@ -610,6 +700,62 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "applicable deletion event. Mparanza LLC does not guarantee that "
                         "deleted content can be recovered."
                     ),
+                ],
+            },
+            {
+                "id": "vera-functions-and-limits",
+                "title": "Vera Functions and Limits of Use",
+                "paragraphs": [
+                    (
+                        "Vera supplies local scripts and workflow instructions for "
+                        "professional work. The workflow catalog and individual function "
+                        "pages describe intended tasks, inputs, outputs and limits. Each "
+                        "function page states what reaches the model, or explicitly "
+                        "labels that description as being prepared. Local processing and "
+                        "reduced model input are defined per process; local execution "
+                        "does not mean that the model receives no data."
+                    ),
+                    (
+                        "Vera works with Codex, Claude Cowork and Google Antigravity. Its "
+                        "open-source instructions and scripts can also be used with "
+                        "local-model environments, subject to the tools and model "
+                        "capabilities available there. Account plans, platform contracts "
+                        "and platform data controls are outside the plugin’s checks."
+                    ),
+                    (
+                        "Outputs are working materials for professional review and "
+                        "approval, not automatically validated professional opinions or "
+                        "certification of the studio’s compliance. Optional anonymization "
+                        "is chosen by the user. Mparanza LLC currently recommends none of "
+                        "the five listed engines and has not validated their authors’ "
+                        "effectiveness claims for professional use."
+                    ),
+                    (
+                        "The public comparison separates implemented functions, planned "
+                        "work and external conditions. The function-by-function AI Act "
+                        "analysis under G1.12 remains pending; this description does not "
+                        "establish approval for a high-risk use. Vera is free software "
+                        "under AGPL-3.0-only. Use of the software carries no support or "
+                        "service-level commitment unless separately agreed in writing."
+                    ),
+                ],
+                "links": [
+                    {
+                        "label": "Vera functions",
+                        "href": "/static/shared/vera/index.html?lang=it",
+                    },
+                    {
+                        "label": "Conditions and comparison",
+                        "href": "/static/shared/vera-compliance/index.html#condizioni-uso",
+                    },
+                    {
+                        "label": "Optional integrations",
+                        "href": "/static/shared/vera-integrazioni/index.html",
+                    },
+                    {
+                        "label": "Data handling",
+                        "href": "/data-handling?lang=it#run-evidence",
+                    },
                 ],
             },
             {
@@ -955,11 +1101,12 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "title": "Ordinary Functions Support Boundary",
                 "paragraphs": [
                     (
-                        "Ordinary plugin functions use your existing ChatGPT plan "
-                        "and Codex workspace. Mparanza has no automatic access to "
-                        "your files, plugin runs, or outputs and cannot inspect them "
-                        "unless you choose to share details or invoke a "
-                        "Mparanza-hosted service."
+                        "Ordinary plugin functions run in your "
+                        "selected AI host and workspace. Mparanza "
+                        "has no automatic access to your files, "
+                        "plugin runs, or outputs and cannot inspect "
+                        "them unless you choose to share details or "
+                        "invoke a Mparanza-hosted service."
                     ),
                 ],
             },
