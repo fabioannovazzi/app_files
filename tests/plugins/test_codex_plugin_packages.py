@@ -2859,6 +2859,16 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
         for skill_file in skill_files:
             skill_text = skill_file.read_text(encoding="utf-8")
             normalized_skill_text = " ".join(skill_text.split())
+            if (
+                plugin_root.name == "vera"
+                and skill_file.parent.name == "organizzazione-lavoro"
+            ):
+                # This is a source-owned service, not a sibling module wrapper.
+                assert "vera_studio_work_*" in skill_text
+                assert "Never manufacture evidence" in normalized_skill_text
+                assert "host-transcribed voice" in normalized_skill_text
+                assert "model_data_report.py" in skill_text
+                continue
             if plugin_root.name == "business-valuation":
                 # Test the actual fixed output contract rather than a legacy filename.
                 assert "## Calculation and review" in skill_text
@@ -4037,6 +4047,7 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         "../report-builder/index.html",
         "../quesito-legale-fiscale/index.html",
         "../studio-archive/index.html",
+        "../organizzazione-lavoro/index.html",
         "../browser-automation/index.html",
     ):
         assert f'href="{module_link}"' in core
@@ -4060,8 +4071,8 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         )
         assert module is not None
         assert 'data-jurisdiction-item="it"' in module.group(0)
-    assert core.count(" data-module-link") == 44
-    assert core.count('class="module-row"') == 44
+    assert core.count(" data-module-link") == 45
+    assert core.count('class="module-row"') == 45
     assert core.count('data-jurisdiction-item="it"') == 16
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
