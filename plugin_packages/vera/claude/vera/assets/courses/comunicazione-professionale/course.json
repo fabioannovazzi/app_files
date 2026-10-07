@@ -217,7 +217,7 @@
     },
     {
       "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/SKILL.md",
-      "sha256": "f2524eacffb13e61f40f77f5d41232d37e804cd1cc941381320c7c9a3d8ba073"
+      "sha256": "4131312fd1992510b22ffd394bdf90952295f433952f43e53ab9a53f83f3406f"
     },
     {
       "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/agents/openai.yaml",
@@ -245,7 +245,7 @@
     },
     {
       "path": "skills/comunicazione-professionale/SKILL.md",
-      "sha256": "4ac308b38e206eaf77dfec510e142b4a5d0f6d817a01cddf5fd0e07c91041b14"
+      "sha256": "3b63e74b9d4a798fd0ed1e3e528029f212c946ba98b016548f8d00c3b903d244"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

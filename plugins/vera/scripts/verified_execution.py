@@ -41,7 +41,13 @@ def _identity(info: os.stat_result) -> tuple[int, ...]:
         info.st_mode,
         info.st_size,
         info.st_mtime_ns,
-        info.st_ctime_ns,
+        # CPython 3.12 Windows lstat uses creation time for ctime, while
+        # fstat uses change time. Birthtime is comparable across both APIs.
+        (
+            getattr(info, "st_birthtime_ns", info.st_ctime_ns)
+            if os.name == "nt"
+            else info.st_ctime_ns
+        ),
         info.st_nlink,
     )
 
@@ -59,12 +65,16 @@ def _read_regular(path: Path) -> tuple[bytes, int]:
         raise ValueError(f"Non-regular installation file: {path}")
     descriptor = os.open(path, os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0))
     with os.fdopen(descriptor, "rb") as handle:
-        if _identity(before) != _identity(os.fstat(handle.fileno())):
+        opened = os.fstat(handle.fileno())
+        if _identity(before) != _identity(opened):
             raise ValueError(f"Installation file changed before read: {path}")
         data = handle.read()
-        if _identity(before) != _identity(os.fstat(handle.fileno())) or _identity(
-            before
-        ) != _identity(path.lstat()):
+        after = os.fstat(handle.fileno())
+        if (
+            _identity(before) != _identity(after)
+            or opened.st_ctime_ns != after.st_ctime_ns
+            or _identity(before) != _identity(path.lstat())
+        ):
             raise ValueError(f"Installation file changed during read: {path}")
     _real_ancestors(path.parent)
     return data, before.st_nlink

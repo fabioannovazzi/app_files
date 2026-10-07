@@ -3,12 +3,7 @@ name: open-item-reconciliation
 description: Use to verify a supplied elenco partite aperte clienti o fornitori at a cut-off against mastrini, journal, bank statements, payments, factoring, advances or compensation. Produces closed, partly closed and still-open items, residuals and exceptions. For direct estratto conto versus prima nota matching use journal-bank-reconciliation.
 ---
 
-## Cowork execution contract
-
-Public workflow names select skills; component IDs select module paths.
-`financial-report-builder` uses component `report-builder`, `vouching` (historically
-called Check Entries) uses `check-entries`, and `purchase-invoice-review` uses
-`passive-invoice-audit`. These component IDs are not additional workflows.
+## Verified execution preparation
 
 Before an assured installed-module handoff, follow Vera's
 `skills/vera/references/execution-recovery.md`: run the supported
@@ -17,6 +12,13 @@ returned execution root for the module skill, commands, assets and review server
 Do not ask the professional to use Terminal. This helper may create a private
 verified code copy outside the host installation; it never edits that installation
 and is not permission to manually copy it or bypass a denied operation.
+
+## Cowork execution contract
+
+Public workflow names select skills; component IDs select module paths.
+`financial-report-builder` uses component `report-builder`, `vouching` (historically
+called Check Entries) uses `check-entries`, and `purchase-invoice-review` uses
+`passive-invoice-audit`. These component IDs are not additional workflows.
 
 For journal-sampling, open-item-reconciliation, journal-bank-reconciliation,
 concordato-plan-review, financial-report-builder and vouching only, optional cache

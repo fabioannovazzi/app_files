@@ -97,7 +97,7 @@
     },
     {
       "path": "modules/registro-imprese-sari/skills/registro-imprese-sari/SKILL.md",
-      "sha256": "4906556c8ab693c7c55122c8362b3cb22c3fe1329b0a66ba49690d7fcb25bd13"
+      "sha256": "2f890f95d8828f9119ba14482b5416024fbbee6d985ec049a4d5be21a28f18ed"
     },
     {
       "path": "modules/registro-imprese-sari/skills/registro-imprese-sari/agents/openai.yaml",
@@ -149,7 +149,7 @@
     },
     {
       "path": "skills/registro-imprese-sari/SKILL.md",
-      "sha256": "8d902155ee417c0189854265aea2d75d3e39e14aa9a05f3f8afda46badf7a5ae"
+      "sha256": "daa69bc30a6452ee4a319560e342e752b307eaf9d71b441327ca147efdaac63c"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

@@ -6,12 +6,15 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import logging
+import runpy
 import sys
 from pathlib import Path
 
-from verified_execution import prepare_execution_root
-
 __all__ = ["main"]
+
+prepare_execution_root = runpy.run_path(
+    str(Path(__file__).with_name("verified_execution.py"))
+)["prepare_execution_root"]
 
 
 def _implementation_path() -> Path:

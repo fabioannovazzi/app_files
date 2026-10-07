@@ -307,14 +307,6 @@ Public workflow names select skills; component IDs select module paths.
 called Check Entries) uses `check-entries`, and `purchase-invoice-review` uses
 `passive-invoice-audit`. These component IDs are not additional workflows.
 
-Before an assured installed-module handoff, follow Vera's
-`skills/vera/references/execution-recovery.md`: run the supported
-`scripts/verified_execution.py --module <component-id>` internally and use the
-returned execution root for the module skill, commands, assets and review server.
-Do not ask the professional to use Terminal. This helper may create a private
-verified code copy outside the host installation; it never edits that installation
-and is not permission to manually copy it or bypass a denied operation.
-
 For journal-sampling, open-item-reconciliation, journal-bank-reconciliation,
 concordato-plan-review, financial-report-builder and vouching only, optional cache
 cleanup uses the corresponding component ID from the installed Vera root:
@@ -1966,6 +1958,29 @@ def project_cowork_skill(
     text = text.replace(LOCAL_FEEDBACK_HANDOFF, "")
     text = _remove_optional_section(text, "## Plugin Improvement Feedback")
     text = _inject_cowork_execution_contract(text)
+    if relative_path in {
+        "skills/vera/SKILL.md",
+        "skills/journal-bank-reconciliation/SKILL.md",
+        "skills/open-item-reconciliation/SKILL.md",
+        "skills/journal-sampling/SKILL.md",
+        "skills/financial-report-builder/SKILL.md",
+        "skills/vouching/SKILL.md",
+        "skills/concordato-plan-review/SKILL.md",
+    }:
+        text = _inject_named_execution_contract(
+            text,
+            heading="## Verified execution preparation",
+            contract="""## Verified execution preparation
+
+Before an assured installed-module handoff, follow Vera's
+`skills/vera/references/execution-recovery.md`: run the supported
+`scripts/verified_execution.py --module <component-id>` internally and use the
+returned execution root for the module skill, commands, assets and review server.
+Do not ask the professional to use Terminal. This helper may create a private
+verified code copy outside the host installation; it never edits that installation
+and is not permission to manually copy it or bypass a denied operation.
+""",
+        )
     text = _project_natural_language_runtime(text)
     # Some public wrappers are replaced by Cowork-specific bodies. Retain their
     # optional knowledge contract without altering shared component skill bytes.

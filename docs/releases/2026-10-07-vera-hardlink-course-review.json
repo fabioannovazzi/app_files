@@ -1,14 +1,14 @@
 {
   "schema": "mparanza.course_source_review.v1",
   "reviewer": "Codex /root",
-  "reviewed_at": "2026-10-07T07:29:44.367758+00:00",
+  "reviewed_at": "2026-10-07T07:41:27.494356+00:00",
   "baseline_commit": "b716e60ad40908f86e5f83b70fc4a956e36e20a3",
   "scope": "Automatic verified hardlink execution preparation. Complete authored course content is unchanged; only source bindings differ. Previous editorial and output evidence remains historical; fresh CI executions are required. No affected-user or Cowork acceptance is claimed.",
   "kits": [
     {
       "kit": "vera/bilancio-oic",
       "previous_course_sha256": "9e653ae15e3f18efc3d3e08593cf24b3b8ee6d535550548d720ba066b7856bfe",
-      "current_course_sha256": "5b6d672c1e32cec9f1a41f085a24fa6f6f971326d9bb364fef2dc8c911246bc9",
+      "current_course_sha256": "357134b2af073b3ff24d2f25d344db554dd6b1096493ea01b1834b932aa545fc",
       "authored_content_unchanged": true,
       "source_changes": [
         {
@@ -34,7 +34,7 @@
           "after": {
             "path": "scripts/managed_python_runtime.py",
             "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
-            "sha256": "7b18aa326d185fd1b74eedbf5d10627dae3c11722a8a3d036dc505aedece79c0"
+            "sha256": "d3d1fa4ed89deeb7934933abc38ebded8b464e8950b94f71aa3bc23547305e1d"
           }
         },
         {
@@ -43,7 +43,7 @@
           "after": {
             "path": "scripts/verified_execution.py",
             "repository_path": "plugins/vera/scripts/verified_execution.py",
-            "sha256": "09b9be2ae4f1913db7e074ee85b81087a353d50f9d421593677a1510a379c963"
+            "sha256": "48855c1adb73e2e0c7b7136ac9fc3d6b7ca65a09e0cc3cd5792307bfed9ba0b0"
           }
         }
       ]
@@ -156,7 +156,7 @@
     {
       "kit": "vera/trasformazione",
       "previous_course_sha256": "11c2c150c39adaa565adfab4450fd311f2a3ad806f5ec74b84249846bdea1b19",
-      "current_course_sha256": "85ca6964c6c53a9593fe5b8bb52f16cf3da9bdde9904a4f741da6b9760e6d595",
+      "current_course_sha256": "88c6764b4e342debe06c71fec9a98d3952fb222cbf6ee077a40ef149fefd7726",
       "authored_content_unchanged": true,
       "source_changes": [
         {
@@ -182,7 +182,7 @@
           "after": {
             "path": "scripts/managed_python_runtime.py",
             "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
-            "sha256": "7b18aa326d185fd1b74eedbf5d10627dae3c11722a8a3d036dc505aedece79c0"
+            "sha256": "d3d1fa4ed89deeb7934933abc38ebded8b464e8950b94f71aa3bc23547305e1d"
           }
         },
         {
@@ -191,7 +191,7 @@
           "after": {
             "path": "scripts/verified_execution.py",
             "repository_path": "plugins/vera/scripts/verified_execution.py",
-            "sha256": "09b9be2ae4f1913db7e074ee85b81087a353d50f9d421593677a1510a379c963"
+            "sha256": "48855c1adb73e2e0c7b7136ac9fc3d6b7ca65a09e0cc3cd5792307bfed9ba0b0"
           }
         }
       ]
@@ -199,7 +199,7 @@
     {
       "kit": "vera/variance-analysis",
       "previous_course_sha256": "4d67e5eb292877e707c8bf58203c83b7f07cd1a70b4b4c580cc98937bc09d747",
-      "current_course_sha256": "fa8417bd00ff95f38cee3d483c68db8f888d68cb4a18369cb95559cbef174529",
+      "current_course_sha256": "b31c98511b3286fee8a33a6e823ee3812bf299a6bfc8ae3450533ef2faea1a40",
       "authored_content_unchanged": true,
       "source_changes": [
         {
@@ -225,7 +225,7 @@
           "after": {
             "path": "scripts/managed_python_runtime.py",
             "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
-            "sha256": "7b18aa326d185fd1b74eedbf5d10627dae3c11722a8a3d036dc505aedece79c0"
+            "sha256": "d3d1fa4ed89deeb7934933abc38ebded8b464e8950b94f71aa3bc23547305e1d"
           }
         },
         {
@@ -234,7 +234,7 @@
           "after": {
             "path": "scripts/verified_execution.py",
             "repository_path": "plugins/vera/scripts/verified_execution.py",
-            "sha256": "09b9be2ae4f1913db7e074ee85b81087a353d50f9d421593677a1510a379c963"
+            "sha256": "48855c1adb73e2e0c7b7136ac9fc3d6b7ca65a09e0cc3cd5792307bfed9ba0b0"
           }
         }
       ]

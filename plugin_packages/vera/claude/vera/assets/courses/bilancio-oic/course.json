@@ -206,7 +206,7 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/SKILL.md",
-      "sha256": "9d03b99c69bf66d032b45e153d7f02070307f3fe589639c758346ebd316575c5"
+      "sha256": "c7bc8703a96df6ea0e319b7303aea529045092df2e0cea5e4bedb3a8eca11fd3"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/agents/openai.yaml",
@@ -254,15 +254,15 @@
     },
     {
       "path": "scripts/managed_python_runtime.py",
-      "sha256": "7b18aa326d185fd1b74eedbf5d10627dae3c11722a8a3d036dc505aedece79c0"
+      "sha256": "d3d1fa4ed89deeb7934933abc38ebded8b464e8950b94f71aa3bc23547305e1d"
     },
     {
       "path": "scripts/verified_execution.py",
-      "sha256": "09b9be2ae4f1913db7e074ee85b81087a353d50f9d421593677a1510a379c963"
+      "sha256": "48855c1adb73e2e0c7b7136ac9fc3d6b7ca65a09e0cc3cd5792307bfed9ba0b0"
     },
     {
       "path": "skills/bilancio-oic/SKILL.md",
-      "sha256": "69226e2e6f80ac37790387c42356325e8a1e5fc7887f99414372f16203258e4e"
+      "sha256": "0b3fd153d308fe4155364ee493279e29af777e7f4872b0c6b900b0b97a16f8d2"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -500,5 +500,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "5b6d672c1e32cec9f1a41f085a24fa6f6f971326d9bb364fef2dc8c911246bc9"
+  "canonical_course_sha256": "357134b2af073b3ff24d2f25d344db554dd6b1096493ea01b1834b932aa545fc"
 }

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "bilancio-oic",
-  "course_sha256": "5b6d672c1e32cec9f1a41f085a24fa6f6f971326d9bb364fef2dc8c911246bc9",
+  "course_sha256": "357134b2af073b3ff24d2f25d344db554dd6b1096493ea01b1834b932aa545fc",
   "reviewer": "Codex lesson, generated accounts and integration evidence review",
   "reviewed_at": "2026-09-23T11:54:05.184666+00:00",
   "review_scope": "Reviewed both localized lessons and four actual generated draft accounts. Native execution uses the checksum-verified official PCI taxonomy and Arelle. Parser, mapping and disclosure decisions in automated checks are explicitly synthetic fixtures supported by the fictional declaration, not learner or professional approvals. No filing, signature, human timing or live voice is claimed. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",

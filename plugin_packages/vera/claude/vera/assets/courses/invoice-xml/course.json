@@ -77,7 +77,7 @@
     },
     {
       "path": "modules/invoice-xml/skills/invoice-xml/SKILL.md",
-      "sha256": "f3dab5582330d8ee3b6824d6fbee029162d2eb27ee5440bff01e751d54371bce"
+      "sha256": "edbb81ae257a96d2b78e18cff86514ba64e70f39986210d13ff096beb5dfb1c2"
     },
     {
       "path": "modules/invoice-xml/vendor/modules/__init__.py",
@@ -121,7 +121,7 @@
     },
     {
       "path": "skills/invoice-xml/SKILL.md",
-      "sha256": "783b38d97c61890999f5432568fbf97b23699755e5c7edfce224cb968a6a8c36"
+      "sha256": "58bcf374cf2b0ff6af18ad1c8d2bca3f36645c453261ba16fc4706171207a1ff"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

@@ -58,6 +58,36 @@ def test_clean_installation_keeps_original_root(tmp_path):
     assert prepared == root
 
 
+def test_managed_launcher_loads_by_path_outside_its_script_directory(tmp_path):
+    scripts = tmp_path / "installed-vera" / "scripts"
+    scripts.mkdir(parents=True)
+    for name in (
+        "managed_python_runtime.py",
+        "_managed_python_runtime.py",
+        "verified_execution.py",
+    ):
+        shutil.copyfile(ROOT / "plugins/vera/scripts" / name, scripts / name)
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-I",
+            "-B",
+            "-c",
+            "import runpy, sys; runtime=runpy.run_path(sys.argv[1]); "
+            "runtime['main'](['--help'])",
+            str(scripts / "managed_python_runtime.py"),
+        ],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert "usage:" in result.stdout
+
+
 @pytest.mark.parametrize("component", sorted(load_recovery().ASSURED_MODULES))
 def test_hardlink_recovery_passes_unchanged_real_module_validator(tmp_path, component):
     recovery = load_recovery()

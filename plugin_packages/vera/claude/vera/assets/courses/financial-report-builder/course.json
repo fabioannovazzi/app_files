@@ -129,7 +129,7 @@
     },
     {
       "path": "modules/report-builder/skills/financial-report-builder/SKILL.md",
-      "sha256": "e77cff9da314df2723ed1fe0159777d55237c7daa18ce44bbf2d1eb5e6b70421"
+      "sha256": "4b8c010199f7372db4a2e56f32e64c44fbfb8d99ea808e7b8af07da79c48210f"
     },
     {
       "path": "modules/report-builder/vendor/modules/__init__.py",
@@ -173,7 +173,7 @@
     },
     {
       "path": "skills/financial-report-builder/SKILL.md",
-      "sha256": "df6c9d9609715d0a3af15b3f6d9d01b90bc65472de4a298ff382cb10f528e1d3"
+      "sha256": "501fbe1a4788330f5b551dae20a9f66b56d70fe0e6143007c296e9a6f076ae0e"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

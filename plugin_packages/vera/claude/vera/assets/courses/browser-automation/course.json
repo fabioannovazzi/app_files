@@ -173,11 +173,11 @@
     },
     {
       "path": "modules/browser-automation/skills/browser-automation/SKILL.md",
-      "sha256": "0d4c8dd4e56a8769243c2f9bc6d0075429909a732c511d91efeaf39aa29a0299"
+      "sha256": "451aed51a64052abc4fdf76a82b80f23c02bf5e63373806d1fdba7fe71885df4"
     },
     {
       "path": "skills/browser-automation/SKILL.md",
-      "sha256": "30b61973dbb8c08b8f4313349fa55aaab91b538b3a601c1ddf19db91c3bae5e9"
+      "sha256": "b3ec950707b0b2d63e476e5a33356a24f254aac9ff885ffb6f638b1e0dee87cf"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

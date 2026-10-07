@@ -144,7 +144,7 @@
     },
     "bilancio-oic": {
       "path": "bilancio-oic/course.json",
-      "sha256": "5b6d672c1e32cec9f1a41f085a24fa6f6f971326d9bb364fef2dc8c911246bc9",
+      "sha256": "357134b2af073b3ff24d2f25d344db554dd6b1096493ea01b1834b932aa545fc",
       "languages": [
         "it",
         "en"
@@ -977,7 +977,7 @@
     },
     "trasformazione": {
       "path": "trasformazione/course.json",
-      "sha256": "85ca6964c6c53a9593fe5b8bb52f16cf3da9bdde9904a4f741da6b9760e6d595",
+      "sha256": "88c6764b4e342debe06c71fec9a98d3952fb222cbf6ee077a40ef149fefd7726",
       "languages": [
         "it",
         "en",
@@ -1021,7 +1021,7 @@
     },
     "variance-analysis": {
       "path": "variance-analysis/course.json",
-      "sha256": "fa8417bd00ff95f38cee3d483c68db8f888d68cb4a18369cb95559cbef174529",
+      "sha256": "b31c98511b3286fee8a33a6e823ee3812bf299a6bfc8ae3450533ef2faea1a40",
       "languages": [
         "it",
         "en",

@@ -57,7 +57,7 @@
     },
     {
       "path": "modules/scissione-guidata/skills/scissione-guidata/SKILL.md",
-      "sha256": "98477a38e7134521c341290a7d6e145be90b338ce4ac409eddd30db12cafb439"
+      "sha256": "42c8b99a3ee64787a93f6b39cf3b442b40f876f013aa06159ae2decd88249fab"
     },
     {
       "path": "modules/scissione-guidata/vendor/modules/__init__.py",
@@ -101,7 +101,7 @@
     },
     {
       "path": "skills/scissione-guidata/SKILL.md",
-      "sha256": "56d7c583b12027598032458bc283fcdd75839dc679f5fe38075910b0c6abee2a"
+      "sha256": "47344a2d031bc9fb9c4c1a679a3e434b693fbfc69a42f15c931589c005953bfd"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

@@ -96,7 +96,7 @@
     },
     {
       "path": "modules/client-file-preparation/skills/fatture-xml-check/SKILL.md",
-      "sha256": "5aed3ef4fd650bbac07c0f9e1782a83150e803ef16fb4e5b1543e9175e3800cc"
+      "sha256": "99e614b287d703ac1c7afd83c4982381115c2edd52a3de05b315d26088f04b9e"
     },
     {
       "path": "modules/client-file-preparation/templates/email_documenti_mancanti.md",
@@ -148,7 +148,7 @@
     },
     {
       "path": "skills/fatture-xml-check/SKILL.md",
-      "sha256": "21b726042c59f1481a9690fa23f3fb221d9548cd2e3abf0bf199828fa46e06b3"
+      "sha256": "8c4654c717fce7a24089cd2d13066cd0f932ae6734be9254c9d3580fbf4f0ab9"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

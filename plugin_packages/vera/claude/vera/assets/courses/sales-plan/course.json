@@ -57,7 +57,7 @@
     },
     {
       "path": "modules/sales-plan/skills/sales-plan/SKILL.md",
-      "sha256": "24f83a2360554045a915d11af3715f6d6777b784f321aad866f47f55ac78e143"
+      "sha256": "9b33e97145ad0359ef13d9294dd9c8e10ec6c8051c9af7e7bf1d736e72f1add6"
     },
     {
       "path": "modules/sales-plan/vendor/modules/__init__.py",
@@ -101,7 +101,7 @@
     },
     {
       "path": "skills/sales-plan/SKILL.md",
-      "sha256": "3c31158539cd69e8569d47fef5f5fe4e94e12cd5273230f12b1f9c82ea0714d6"
+      "sha256": "5cd4d1dfdce986fc1a157508e403103bae68e5abb843e0eb356b60b21325c244"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

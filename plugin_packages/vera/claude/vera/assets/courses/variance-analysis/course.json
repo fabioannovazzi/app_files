@@ -112,7 +112,7 @@
     },
     {
       "path": "modules/variance-analysis/skills/variance-analysis/SKILL.md",
-      "sha256": "6b91d52de6c7211726c6b37f5a54d23e007698cc0c288b0df6ffeefeb34dbfb2"
+      "sha256": "07bce650765f60352b49a1ae7d5c4e231899017e870cd5ea16ea9195c33ec12c"
     },
     {
       "path": "modules/variance-analysis/vendor/modules/__init__.py",
@@ -420,15 +420,15 @@
     },
     {
       "path": "scripts/managed_python_runtime.py",
-      "sha256": "7b18aa326d185fd1b74eedbf5d10627dae3c11722a8a3d036dc505aedece79c0"
+      "sha256": "d3d1fa4ed89deeb7934933abc38ebded8b464e8950b94f71aa3bc23547305e1d"
     },
     {
       "path": "scripts/verified_execution.py",
-      "sha256": "09b9be2ae4f1913db7e074ee85b81087a353d50f9d421593677a1510a379c963"
+      "sha256": "48855c1adb73e2e0c7b7136ac9fc3d6b7ca65a09e0cc3cd5792307bfed9ba0b0"
     },
     {
       "path": "skills/variance-analysis/SKILL.md",
-      "sha256": "b2550e245edfa50c7e7ace372667e372580cbf4c2c587987b4b363cd1f53ad0e"
+      "sha256": "9418e80a6cbfc61227e57fda587c9332e407d1b25ad82cad53fa3aa8877d1bc2"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -733,5 +733,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "fa8417bd00ff95f38cee3d483c68db8f888d68cb4a18369cb95559cbef174529"
+  "canonical_course_sha256": "b31c98511b3286fee8a33a6e823ee3812bf299a6bfc8ae3450533ef2faea1a40"
 }
