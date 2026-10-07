@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "service_id": "studio-work",
+  "display_name": "Organizzazione del lavoro di studio",
+  "governed_paths": [
+    "scripts/studio_work.py",
+    "mcp/studio-work.cjs",
+    "skills/organizzazione-lavoro/SKILL.md",
+    "scripts/studio_work_runtime.py"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "external_boundaries": [
+    {
+      "id": "connected-calendar",
+      "kind": "send_or_publish",
+      "destination": "The selected connected calendar account through callable host plugins",
+      "purpose": "Read actual commitments and availability; execute user-authorized ordinary event creation, changes and deletion",
+      "content": "Selected calendar identifiers, event title, times, category color, reminders, description and recovery marker; responses and local commitments/preferences/meeting summaries may enter host model context with real client and personal details, without anonymization. No raw voice audio is stored by this service.",
+      "retention": "Local SQLite records, meeting summaries and audit/operation receipts persist in the owner data directory until removed by the owner. Connected services and the selected model account apply their own retention; Vera does not enforce it.",
+      "activation": "explicit_user_choice",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Host permissions and user-selected scope remain authoritative; preparation and local receipts do not execute a connector.",
+        "External dispatch is separate from local storage; use actual connector read-back evidence, not manufactured results. Invitations, recurring series and email sends are outside this ordinary event executor.",
+        "Scheduled briefing requires separately configured host automation and verified execution; no background listener or credentials are provided by this service."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "revision-and-retry",
+      "control": "SQLite immediate transactions serialize local mutations; exact request payloads reject changed retries. One unresolved operation per item and one-shot claim prevent blind redispatch. Connector evidence is supplied by the host, not independently authenticated by this service.",
+      "implemented_by": [
+        "scripts/studio_work.py"
+      ],
+      "on_violation": "Reject stale/changed writes; preserve uncertain operations for read-back recovery."
+    },
+    {
+      "id": "storage-scope",
+      "control": "No model-supplied storage path. Backend uses permanent owner-local storage by default or an explicit trusted host data location; it never silently falls back to the temporary managed runtime. It rejects symlink storage and applies private POSIX database permissions. Windows access relies on owner-profile ACLs.",
+      "implemented_by": [
+        "scripts/studio_work.py"
+      ],
+      "on_violation": "Reject symlink storage and fail writes when local permissions refuse access."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-10-07",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_shared_service_source",
+    "source_fingerprint": "bf46dafa7039db578056bacdb5b2a3997103337095a334feb40a8a0892ac6a66"
+  }
+}

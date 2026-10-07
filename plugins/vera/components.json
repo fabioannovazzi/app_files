@@ -48,7 +48,8 @@
     "run-receipt-stamping",
     "local-onboarding",
     "datev-starter",
-    "cnc-authenticated-review"
+    "cnc-authenticated-review",
+    "studio-work"
   ],
   "workflow_roles": {
     "new-client": {

@@ -17,7 +17,7 @@ REFERENCE = "skills/vera/references/connected-studio-knowledge.md"
 MARKER = "<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->"
 PROFESSIONAL_SKILLS = {
     path.parent.name for path in (VERA / "skills").glob("*/SKILL.md")
-} - {"learn-with-vera", "privacy-surface-review"}
+} - {"learn-with-vera", "privacy-surface-review", "organizzazione-lavoro"}
 
 
 def _package_entries(filename: str) -> dict[str, bytes]:
@@ -107,3 +107,20 @@ def test_repository_boundary_is_registered_for_each_professional_workstream() ->
         assert boundaries[0]["optional"] is True
         assert boundaries[0]["requires_confirmation"] is True
         assert f"plugins/vera/{REFERENCE}" in manifest["governed_repository_paths"]
+
+
+@pytest.mark.parametrize(
+    "filename",
+    ["vera-plugin.zip", "vera-chatgpt-upload.zip", "vera-claude-plugin.zip"],
+)
+def test_studio_work_service_uses_register_and_host_calendar_contract(
+    filename: str,
+) -> None:
+    """The operational service does not acquire a workpaper repository contract."""
+    entries = _package_entries(filename)
+    text = entries["skills/organizzazione-lavoro/SKILL.md"].decode()
+    assert "vera_studio_work_*" in text
+    assert "connected calendar plugin" in text
+    assert MARKER not in text
+    assert "Never manufacture evidence" in text
+    assert "scripts/studio_work.py" in entries

@@ -849,7 +849,7 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
         == (
             set(
                 re.findall(
-                    r"^- `([^`]+)`(?: \(\*\*[^*]+\*\*\))?:", catalog, re.MULTILINE
+                    r"^(?:- )?`([^`]+)`(?: \(\*\*[^*]+\*\*\))?:", catalog, re.MULTILINE
                 )
             )
             - _catalog_workflow_names(
@@ -895,7 +895,7 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
 def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     core = _section_markup(page, "core")
-    expected_module_count = 44
+    expected_module_count = 45
     module_hrefs = re.findall(
         r'<a class="module-row"[^>]+href="([^"]+)"', core, flags=re.DOTALL
     )
@@ -1006,6 +1006,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Impara con Vera",
         "Apertura del fascicolo cliente",
         "Verifica antiriciclaggio del cliente",
+        "Organizzazione del lavoro di studio",
         "Archiviazione e ricerca nel fascicolo cliente",
         "Riordino della cartella cliente",
         "Estrazione dati fiscali",
@@ -1049,6 +1050,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Sito dello studio",
     ]
     expected_runtime_labels = {
+        "module.workOrganization.title": "Organizzazione del lavoro di studio",
         "module.lipe.title": "LIPE",
         "module.esg.title": "Fascicolo ESG · in sviluppo",
         "module.invoiceXml.title": "Preparazione fatture XML",
@@ -1081,6 +1083,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
 
     # The public directory and marketplace use one canonical naming contract.
     canonical_skill_labels = {
+        "organizzazione-lavoro": "Organizzazione del lavoro",
         "lipe": "LIPE",
         "esg-reporting-assurance": "Fascicolo ESG",
         "invoice-xml": "Preparazione fatture XML",
@@ -1129,7 +1132,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
     )["skills"]
 
     assert labels == expected_labels
-    assert len(labels) == 44
+    assert len(labels) == 45
     assert {
         workflow: marketplace_cards[workflow]["display_name"]
         for workflow in canonical_skill_labels

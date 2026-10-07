@@ -877,3 +877,25 @@ jobs:
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_studio_archive_readable.py
           --cov=readable_archive --cov-report=term-missing --cov-fail-under=80
+
+  studio-work:
+    name: Studio work register and calendar receipts
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: python -m pip install pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit
+      - name: Verify persistence, revisions, receipts and retry recovery
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_vera_studio_work.py --cov --cov-config=tests/vera_studio_work.coveragerc --cov-report=term-missing
+      - name: Check studio work code quality
+        run: |
+          python -m black --check plugins/vera/scripts/studio_work.py plugins/vera/scripts/studio_work_runtime.py tests/plugins/test_vera_studio_work.py
+          python -m isort --check-only plugins/vera/scripts/studio_work.py plugins/vera/scripts/studio_work_runtime.py tests/plugins/test_vera_studio_work.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/vera/scripts/studio_work.py plugins/vera/scripts/studio_work_runtime.py
+          python -m bandit -q -ll plugins/vera/scripts/studio_work.py plugins/vera/scripts/studio_work_runtime.py

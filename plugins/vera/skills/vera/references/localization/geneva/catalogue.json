@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "plugins/vera",
-  "version": "0.1.348",
-  "captured_at": "2026-10-07T07:48:12.271816+00:00",
-  "catalogue_fingerprint": "131cafc560d6d45efd470d198f209ade2109a8d44927b0edad009232512c8755",
-  "manifest_sha256": "d5704cd9775f26d439be9fd1fcd069ab6f2631b61ba392115e6d7099f342f420",
+  "root": "/private/tmp/vera-organizzazione-release/plugins/vera",
+  "version": "0.1.349",
+  "captured_at": "2026-10-07T11:47:55.836062+00:00",
+  "catalogue_fingerprint": "d3048b2b5bdeff86aeb605fdf21e22d0a556b94eafa30172b77dea5ada0df0b3",
+  "manifest_sha256": "5b2ae27c1ef3dd11185f052a3abe8b09766e866e57ed4531cdf1b8c20d82586c",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -167,6 +167,11 @@
       "sha256": "23a8ff44580add47a6655a9045d393801e73d84cbce4e0db97aa7122d0797a5b"
     },
     {
+      "function_id": "organizzazione-lavoro",
+      "skill_path": "skills/organizzazione-lavoro/SKILL.md",
+      "sha256": "97a8a529449a2488bd4c7bf29ab097e00968a93347a31371461aff06911a6114"
+    },
+    {
       "function_id": "patent-box-review",
       "skill_path": "skills/patent-box-review/SKILL.md",
       "sha256": "7b2cfcee6b296e0f7f2a84c137809c114f67b36ca1bf6bd8ea7869025a7a5147"
@@ -244,7 +249,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "ab5a08505999a1b9fc46996d36936c4ddb8f360ba087181f2790ba531b602434"
+      "sha256": "6633c2f94dadbbf002c91571c9b96a16207ebe108e23a5d5af825da039b70f3a"
     },
     {
       "function_id": "vouching",

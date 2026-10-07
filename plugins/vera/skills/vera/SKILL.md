@@ -371,6 +371,13 @@ for each intentionally distinct run.
 
 ## Workflow routing
 
+For studio appointments, tasks, deadlines, delegations, waiting items, meeting
+follow-ups and daily planning, select `organizzazione-lavoro` and read
+`../organizzazione-lavoro/SKILL.md`. It combines model-led interpretation with a
+durable local register and the host's connected calendar plugins. Typed and
+host-transcribed voice requests use the same process. Verify actual tools,
+persistence and external outcomes; a briefing request does not install a scheduler.
+
 For every professional request, read
 `references/workflow-catalog.md` completely before deciding whether Vera has a
 matching capability. Treat that catalog and the available specialist-skill

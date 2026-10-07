@@ -37,6 +37,16 @@ available through `demo-p1`. Its prepared course uses fictional independent and
 directly wholly owned cases, with professional review and changed-input practice. Later
 branches, signatures and filings remain unsupported. Use the specialist skill.
 
+## Studio organisation
+
+`organizzazione-lavoro`: studio appointments, activities, deadlines, waiting
+  items, delegations, source-based meeting actions and daily planning. Persistent
+  local register in Claude/Cowork, with actual host calendar connections and
+  read-back verification. Accepts typed or host-transcribed voice instructions.
+  No unattended inbox listener; recurring briefings require separately configured
+  host automation. Without local tools, only bounded preparation is supported.
+  Read `../../organizzazione-lavoro/SKILL.md`.
+
 ## Professional workflows
 
 - `lipe`: **LIPE** reconciles Italian VAT registers with source evidence and

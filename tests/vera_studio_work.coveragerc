@@ -1,0 +1,5 @@
+[run]
+include = */studio_work.py
+
+[report]
+fail_under = 80

@@ -105,6 +105,12 @@
         "report-builder"
       ]
     },
+    "studioWork": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/mcp/studio-work.cjs"
+      ]
+    },
     "varianceAnalysisWidgets": {
       "command": "node",
       "args": [
