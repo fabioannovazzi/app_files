@@ -178,7 +178,7 @@ def test_italian_data_handling_copy_states_the_shared_boundaries_directly() -> N
     assert sections["run-evidence"]["title"] == (
         "Vera registra il confine dei dati di ogni esecuzione sostanziale."
     )
-    assert "ricevuta JSON e una versione Markdown" in (
+    assert "report JSON e una versione Markdown" in (
         sections["run-evidence"]["paragraphs"][0]
     )
     assert "non prova la consegna lato provider" in (
@@ -490,7 +490,7 @@ def test_data_handling_localizes_vera_run_evidence(
     run_evidence = sections["run-evidence"]
 
     assert "Vera" in run_evidence["title"]
-    assert len(run_evidence["paragraphs"]) == 3
+    assert len(run_evidence["paragraphs"]) == 5
     assert "JSON" in run_evidence["paragraphs"][0]
     assert "Markdown" in run_evidence["paragraphs"][0]
     assert automatic_word in run_evidence["paragraphs"][2].casefold()

@@ -1459,7 +1459,7 @@ def test_vera_hub_explains_the_automatic_run_level_model_data_report() -> None:
     assert comparison.count('class="run-report__receipt-row"') == 8
     assert 'href="examples/model-data-receipt.html"' not in comparison
     identifiers = re.findall(r'data-item="([GDN]\d\.\d+)"', comparison)
-    assert len(identifiers) == len(set(identifiers)) == 32
+    assert len(identifiers) == len(set(identifiers)) == 34
     assert 'href="../learn-with-vera/index.html?lang=it"' in comparison
     assert "Parziale" not in comparison
 

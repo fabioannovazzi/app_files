@@ -60,6 +60,13 @@
               {% endfor %}
             </ul>
           {% endif %}
+          {% if section.links %}
+            <ul>
+              {% for link in section.links %}
+                <li><a href="{{ link.href }}">{{ link.label }}</a></li>
+              {% endfor %}
+            </ul>
+          {% endif %}
         </section>
       {% endfor %}
     </article>
