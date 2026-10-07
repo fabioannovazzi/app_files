@@ -17,7 +17,8 @@ chat memory for the register, or manual copying for an available connector.
 
 When the user asks to learn or try this workflow, use `learn-with-vera` and the
 prepared `organizzazione-lavoro` kit. Native voice teaching uses Codex's paired
-teaching and working chats; Cowork retains ordinary work but excludes this course.
+teaching and working chats. Cowork can prepare the written, single-conversation
+lesson; it does not offer native paired voice teaching.
 The six-stage outline is 390 seconds of planned explanation; allow additional
 execution, questions and independent practice without claiming measured timing.
 

@@ -2,9 +2,9 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "organizzazione-lavoro",
-  "course_sha256": "a3df769b512ec18d55b3d7608e52e6a1d3ead3a8bfe3caa622f5e1170f613afa",
+  "course_sha256": "b33cd060f2c7d9554c17a36eee51f18024d3bb61c9a246014c228e7811c60cd7",
   "reviewer": "Codex: authored five-language material and actual isolated CLI output review",
-  "reviewed_at": "2026-10-07T13:03:02.108668+00:00",
+  "reviewed_at": "2026-10-07T13:37:03.746635+00:00",
   "review_scope": "Read the complete five-language lesson and distinct fictional demonstration/practice inputs. Inspected actual saved-register outputs from ten subprocess CLI exercises: capture, rescheduling, fresh-process reads, saved meeting summaries/actions and completion. Tests preserve the ordinary and demonstration registers. Busy periods and the tutorial-local-only calendar ID are explicitly fictional; no connector receipt, live calendar write, model interpretation, native voice session, paired-chat learner participation or measured comprehension/timing is attested. Native paired teaching uses the existing Codex course runtime; the ordinary organizer retains its Cowork path. Six stages total 390 seconds of planned explanation, with execution and questions additional.",
   "languages": {
     "it": {
@@ -23,7 +23,7 @@
         "reviewed_artifacts": [
           {
             "name": "saved-register.json",
-            "sha256": "8a038f23203f23489f5ff79350cd91c38a5819d307abd0085355f6201fba33bb"
+            "sha256": "8bb6f71784b6620a88a4b9dd8be61f149b464b360d07cf0622abb25d227990be"
           }
         ]
       },
@@ -33,7 +33,7 @@
         "reviewed_artifacts": [
           {
             "name": "saved-register.json",
-            "sha256": "27092fff546d46692639dc51e312e6473a7dc28f05400efaa635ee6865bc21a0"
+            "sha256": "f49338a0fda36368ec5b418380811bc281127132fc3dc810f3e1a340df7c786b"
           }
         ]
       }
@@ -54,7 +54,7 @@
         "reviewed_artifacts": [
           {
             "name": "saved-register.json",
-            "sha256": "6408b693839e3dca7c406ab677c95ee93f8de7925ecb8cdb1bdcb88faa51f589"
+            "sha256": "1d0d12800cf7d0a37dc58ef5b72983486e2949e2beb0a249a4e65476845d30b1"
           }
         ]
       },
@@ -64,7 +64,7 @@
         "reviewed_artifacts": [
           {
             "name": "saved-register.json",
-            "sha256": "4a65fc175b3f1a7e57b4925f7bd0962a0144f2bbed9d2fc395d46cdc7b1dd7d6"
+            "sha256": "9380f1b83f95f5ee74153eb9dc6397a88bace8ab0a8e970a1db288ea88af137a"
           }
         ]
       }
@@ -85,7 +85,7 @@
         "reviewed_artifacts": [
           {
             "name": "saved-register.json",
-            "sha256": "e8af971ad71d0a5844d232651c93ba4bc0fe84eca0649cc6967b6fe5c5945584"
+            "sha256": "ec4f4cc7b64f04f8f07427e8fbaea1b1d4a55f5466a4778aa9db4d66fc711d2f"
           }
         ]
       },
@@ -95,7 +95,7 @@
         "reviewed_artifacts": [
           {
             "name": "saved-register.json",
-            "sha256": "ae127884290c43acf04d88e6c66d3e9acbb237595a5bb3c4377dbbb35c56ad3d"
+            "sha256": "253735145772206456fdf856570d00daaf2113da1c2e896621665d8c4b53eee6"
           }
         ]
       }
@@ -116,7 +116,7 @@
         "reviewed_artifacts": [
           {
             "name": "saved-register.json",
-            "sha256": "e17e43a0418862058d63ed67461cc443a283ee7493e3ce5f201a76f84dc0638c"
+            "sha256": "02ab58991196bbc32bc04927698a690f51cc22994fe78e371975b01e4b2c8684"
           }
         ]
       },
@@ -126,7 +126,7 @@
         "reviewed_artifacts": [
           {
             "name": "saved-register.json",
-            "sha256": "705e859782ca259dd99a3e10f8f1f9ee2631c02262a7415c2ba0e92a3513d963"
+            "sha256": "ca2b92d27f17e11131c347690be3e003bc5329ec46457a5de25ba72127a68ad2"
           }
         ]
       }
@@ -147,7 +147,7 @@
         "reviewed_artifacts": [
           {
             "name": "saved-register.json",
-            "sha256": "74e4d094ec74747786495197f800c61be576d95af99ce1c5e33bf7863bbeb731"
+            "sha256": "79a521e562cd963c91d05deb6ff30ecc87dd4c6691e38efa29751506077d5332"
           }
         ]
       },
@@ -157,7 +157,7 @@
         "reviewed_artifacts": [
           {
             "name": "saved-register.json",
-            "sha256": "2d601190e8b625f7cbae8927f799e2da86ef47bd42b915530f76d2f4f7627455"
+            "sha256": "6865cda923b530a7c9c0969090c6420bbbe3b3fee705efe915634bee62042c6e"
           }
         ]
       }

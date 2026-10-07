@@ -53,7 +53,7 @@
     },
     {
       "path": "skills/organizzazione-lavoro/SKILL.md",
-      "sha256": "d33fbd38979f4339bc90bf3eb52b292c21a5b17b4762825eaa36ed18a0b61c35"
+      "sha256": "2362a9d6c853e7ebf91eb90e6cce4651db49244e12d2c5088e0f9f806087a4b5"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -344,5 +344,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "a3df769b512ec18d55b3d7608e52e6a1d3ead3a8bfe3caa622f5e1170f613afa"
+  "canonical_course_sha256": "b33cd060f2c7d9554c17a36eee51f18024d3bb61c9a246014c228e7811c60cd7"
 }

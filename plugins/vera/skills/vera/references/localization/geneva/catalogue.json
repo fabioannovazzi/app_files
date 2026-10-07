@@ -2,8 +2,8 @@
   "schema": "vera.localization.catalogue.v1",
   "root": "/private/tmp/vera-organizzazione-course/plugins/vera",
   "version": "0.1.350",
-  "captured_at": "2026-10-07T13:03:02.127633+00:00",
-  "catalogue_fingerprint": "d7630254b8fb6648782492583ccb7641a9bfea170777d92b9c07d9c2f7d48f2e",
+  "captured_at": "2026-10-07T13:37:03.758074+00:00",
+  "catalogue_fingerprint": "d00b7771ff319be692dff994999e9d5a3b0a3e7bf38eed3cb5ac4c36d87b0610",
   "manifest_sha256": "1b7ac6658d7ff5e6385845a1c6267483765bdedf550f8078f460a5b7ea6ba9e6",
   "entries": [
     {
@@ -169,7 +169,7 @@
     {
       "function_id": "organizzazione-lavoro",
       "skill_path": "skills/organizzazione-lavoro/SKILL.md",
-      "sha256": "832967512b521e6ef6c6a9920eab707442ca5281303f6348785aea9eddc6c6be"
+      "sha256": "d856381d02f70a8ecc804aede79c2fcb1d12ca1e3c6b480a4b9e59f5e29acafb"
     },
     {
       "function_id": "patent-box-review",
