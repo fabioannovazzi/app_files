@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "financial-report-builder",
-  "course_sha256": "a8784fd0128f0de4b5a16d6d8e2ebd00b16531e6374f85d594c0fdd505f7319c",
+  "course_sha256": "1e656dd238cd02609c95e1f8cacf5c53f9d6301425498d1437f8556f1e13e3d2",
   "reviewer": "Codex: five first-use guides, source context and all thirty rendered native report pages",
   "reviewed_at": "2026-09-14T16:03:20.707382+00:00",
   "review_scope": "Bounded management report from three fictional statements. Actual native Word reports in five languages and both phases were rendered and all thirty pages inspected. Fixed model-authored test commentary and synthetic mapping reviews are not packaged teaching results, professional approvals or learner actions. Live voice and beginner understanding remain unverified. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",

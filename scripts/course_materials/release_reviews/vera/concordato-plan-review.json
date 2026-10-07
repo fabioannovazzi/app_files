@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "concordato-plan-review",
-  "course_sha256": "7982b120e6a6b689e7fc4f9884a5be0406b86496b438323eab0bfd73cf8bae87",
+  "course_sha256": "9383a668c85af9fddf256a352627a0d91fae569b1db07f55275ba283735861f5",
   "reviewer": "Codex: direct lesson, source, native output and rendered artifact review",
   "reviewed_at": "2026-09-15T03:02:32.471301+00:00",
   "languages": {

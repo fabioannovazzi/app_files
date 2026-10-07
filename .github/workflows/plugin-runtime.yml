@@ -675,7 +675,7 @@ jobs:
         # These stdlib/Node checks do not need the application-wide fixtures.
         run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_packaged_mcp_startup.py
       - name: Verify cache tolerance without weakening source or link checks
-        run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_vera_implementation_bytecode.py -k "mcp or read_only or packaged_repair"
+        run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_vera_implementation_bytecode.py -k "mcp or read_only or packaged_repair or actual_link_count"
       - name: Enforce Cowork manifest description limits
         run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_claude_plugin_packages.py -k "description or projected_cowork_skills_remove"
       - name: Reject dangling Cowork workflow references

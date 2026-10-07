@@ -1,7 +1,7 @@
 {
   "schema": "mparanza.course_source_review.v1",
   "reviewer": "Codex /root",
-  "reviewed_at": "2026-10-07T07:41:27.494356+00:00",
+  "reviewed_at": "2026-10-07T07:52:13.144463+00:00",
   "baseline_commit": "b716e60ad40908f86e5f83b70fc4a956e36e20a3",
   "scope": "Automatic verified hardlink execution preparation. Complete authored course content is unchanged; only source bindings differ. Previous editorial and output evidence remains historical; fresh CI executions are required. No affected-user or Cowork acceptance is claimed.",
   "kits": [
@@ -51,9 +51,22 @@
     {
       "kit": "vera/concordato-plan-review",
       "previous_course_sha256": "56baf3d490938f0701c6429ac81dd3ab5121d4870597d98c47f876b2f0ae07ea",
-      "current_course_sha256": "7982b120e6a6b689e7fc4f9884a5be0406b86496b438323eab0bfd73cf8bae87",
+      "current_course_sha256": "9383a668c85af9fddf256a352627a0d91fae569b1db07f55275ba283735861f5",
       "authored_content_unchanged": true,
       "source_changes": [
+        {
+          "path": "modules/concordato-plan-review/scripts/implementation_bootstrap.py",
+          "before": {
+            "path": "modules/concordato-plan-review/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/concordato-plan-review/scripts/implementation_bootstrap.py",
+            "sha256": "6d96e124c00a8466e5ee1a212ec1c57044fb54138742293362042139c7bf4b1b"
+          },
+          "after": {
+            "path": "modules/concordato-plan-review/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/concordato-plan-review/scripts/implementation_bootstrap.py",
+            "sha256": "b0409060ec3b9f7cc65a9088fcd46ebd1d028c8c97bbaa2ec0ab5152e6cd8e38"
+          }
+        },
         {
           "path": "skills/concordato-plan-review/SKILL.md",
           "before": {
@@ -72,9 +85,22 @@
     {
       "kit": "vera/financial-report-builder",
       "previous_course_sha256": "61d0d970ba3ffa890d7f7a37118b40a2bf42ccca3ab50995a126adc4a5b1e0bb",
-      "current_course_sha256": "a8784fd0128f0de4b5a16d6d8e2ebd00b16531e6374f85d594c0fdd505f7319c",
+      "current_course_sha256": "1e656dd238cd02609c95e1f8cacf5c53f9d6301425498d1437f8556f1e13e3d2",
       "authored_content_unchanged": true,
       "source_changes": [
+        {
+          "path": "modules/report-builder/scripts/implementation_bootstrap.py",
+          "before": {
+            "path": "modules/report-builder/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/report-builder/scripts/implementation_bootstrap.py",
+            "sha256": "c2775488e65a70846dbd995539615b4ad8ae38be26580932a67ff50e595ac6fc"
+          },
+          "after": {
+            "path": "modules/report-builder/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/report-builder/scripts/implementation_bootstrap.py",
+            "sha256": "769cf9a7e32b0bdef0451d9f4219716af6943546f31a8c1afd2f2739433c3103"
+          }
+        },
         {
           "path": "skills/financial-report-builder/SKILL.md",
           "before": {
@@ -93,9 +119,22 @@
     {
       "kit": "vera/journal-bank-reconciliation",
       "previous_course_sha256": "4515f09f5f1225436ea9cb8fb9b1d52b4db3889dccb3e4d1c2cd78e1a0e77c47",
-      "current_course_sha256": "90cbd44d516b51eccafbf1ae15fe3eaf51ac3108aa0f7cfba17f4e97897f0b97",
+      "current_course_sha256": "1a1579b3a2da0432dc9a94d1d4b0f918a5d7d2a55d6f5562e8a3091a73710772",
       "authored_content_unchanged": true,
       "source_changes": [
+        {
+          "path": "modules/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
+          "before": {
+            "path": "modules/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
+            "sha256": "dc232232896529e1d0cac2d2e8991ada216389c701b80519fe11fbe7961ebdd4"
+          },
+          "after": {
+            "path": "modules/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
+            "sha256": "2dbc002a806a80feb0e9e8f67be9701ad4d7616e5426db234cbe6f30951c2564"
+          }
+        },
         {
           "path": "skills/journal-bank-reconciliation/SKILL.md",
           "before": {
@@ -135,9 +174,22 @@
     {
       "kit": "vera/open-item-reconciliation",
       "previous_course_sha256": "960914275adaa1c87e3134509ace996c71a23123b5d6fb276f87d457375d4b9d",
-      "current_course_sha256": "5f124a4eb70527434b4d01c3b01cb128d7c76b236c4b085f3a4500ae37302bca",
+      "current_course_sha256": "9e2a848e11ed9eb3ca4fcb0ef378263e235aa81e1f11aa4df98a00288e48978b",
       "authored_content_unchanged": true,
       "source_changes": [
+        {
+          "path": "modules/open-item-reconciliation/scripts/implementation_bootstrap.py",
+          "before": {
+            "path": "modules/open-item-reconciliation/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/open-item-reconciliation/scripts/implementation_bootstrap.py",
+            "sha256": "38860335562bd5c8272da0a34f27b50ebfecbe9782499305a8785c2cf80f53f1"
+          },
+          "after": {
+            "path": "modules/open-item-reconciliation/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/open-item-reconciliation/scripts/implementation_bootstrap.py",
+            "sha256": "eb6ee0a5aae1b75068cf738bc6d2797c2c32979418a623b8a07e877ef1ad3770"
+          }
+        },
         {
           "path": "skills/open-item-reconciliation/SKILL.md",
           "before": {
@@ -256,6 +308,27 @@
             "path": "skills/vouching/SKILL.md",
             "repository_path": "plugins/vera/skills/vouching/SKILL.md",
             "sha256": "3b11ba20430b428324f01e2b423d965b9a56decae481bedd2ae6b26f18d1af95"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/studio-document-format",
+      "authored_content_unchanged": true,
+      "previous_course_sha256": "3d505d0ec19180bd3ddf8f5f990e256090fbe6827e61308f682f148c9fadc2d8",
+      "current_course_sha256": "11c40647438a1b01c081488295cc501032bf420b8de8d9a302268ca67aa2d19c",
+      "source_changes": [
+        {
+          "path": "modules/report-builder/scripts/implementation_bootstrap.py",
+          "before": {
+            "path": "modules/report-builder/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/report-builder/scripts/implementation_bootstrap.py",
+            "sha256": "c2775488e65a70846dbd995539615b4ad8ae38be26580932a67ff50e595ac6fc"
+          },
+          "after": {
+            "path": "modules/report-builder/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/report-builder/scripts/implementation_bootstrap.py",
+            "sha256": "769cf9a7e32b0bdef0451d9f4219716af6943546f31a8c1afd2f2739433c3103"
           }
         }
       ]

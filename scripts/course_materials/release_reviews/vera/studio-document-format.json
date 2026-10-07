@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "studio-document-format",
-  "course_sha256": "3d505d0ec19180bd3ddf8f5f990e256090fbe6827e61308f682f148c9fadc2d8",
+  "course_sha256": "11c40647438a1b01c081488295cc501032bf420b8de8d9a302268ca67aa2d19c",
   "reviewer": "Codex: authored five-language course and actual synthetic native output review",
   "reviewed_at": "2026-10-01T18:41:07.117136+00:00",
   "review_scope": "Reviewed all five complete authored narratives and the actual DOCX structure, profiles and financial analysis from ten independent native demo/practice regressions. Regression approvals are expressly simulated, never learner decisions. Structural artifact inspection does not establish visual pagination, font availability on a learner host, installed enabled-plugin execution, native voice, paired-window or learner acceptance. Tests run local component code without model or network calls. No jurisdiction qualification is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate. Vera 0.1.347 bounded source-inventory refresh: the only changed course field is sources; all authored content, inputs, expectations and locale reviews match the reviewed main baseline. The Archive change adds derived navigation after engagement writes and recovery; local-search and document-format lesson behavior is unchanged. Their current native exercises passed in CI on commit 16671ffb0. This records source-currentness review, not new visual, learner or professional acceptance.",
@@ -373,5 +373,5 @@
     "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
     "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
   },
-  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
+  "source_update_review": "docs/releases/2026-10-07-vera-hardlink-course-review.json"
 }

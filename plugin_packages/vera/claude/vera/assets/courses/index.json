@@ -298,7 +298,7 @@
     },
     "concordato-plan-review": {
       "path": "concordato-plan-review/course.json",
-      "sha256": "471051d4f27c05325abff11d1bc0ea9cf6718aedb222310cc4c5aea6072e979d",
+      "sha256": "4e960c42465760c6319a18a13b5d7c1152e352ee8b0a6798c78693b4d8147e5e",
       "languages": [
         "it",
         "en",
@@ -466,7 +466,7 @@
     },
     "financial-report-builder": {
       "path": "financial-report-builder/course.json",
-      "sha256": "d400ca2917997789066998829b16dc00cc1237d5a62977d06967e0ddb8c72cd2",
+      "sha256": "ee5870560992fcb7a9265de9bfc413a6208b780ae031c7cff87188d1e6bc8605",
       "languages": [
         "it",
         "en",
@@ -550,7 +550,7 @@
     },
     "journal-bank-reconciliation": {
       "path": "journal-bank-reconciliation/course.json",
-      "sha256": "0ef595221c9c014ce12501e9f5ee2d526971449592d552ace2cd853b5ad839be",
+      "sha256": "6981e0f949759f0938bcf1d0e064365b0bccd6478eb6f1584b153ce1c322fc53",
       "languages": [
         "it",
         "en",
@@ -669,7 +669,7 @@
     },
     "open-item-reconciliation": {
       "path": "open-item-reconciliation/course.json",
-      "sha256": "10bba60513dcc4e2cb1888460302c85c6bd701c91843409583ca715fa68a74ab",
+      "sha256": "192bc81f1f12a63506018ea398d926a4b137a36ba12c4a48e1c037e495715ccb",
       "languages": [
         "it",
         "en",
@@ -949,7 +949,7 @@
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "b367abf17179e5e7a1f82dd747ebebc9fae351fac0af36531fffc06c184d9871",
+      "sha256": "ff535b23e04ae0fb2c3e9b2766c8c702d158cab04e194dcaeae197beeda52306",
       "languages": [
         "it",
         "en",

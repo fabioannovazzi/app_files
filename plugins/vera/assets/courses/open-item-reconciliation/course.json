@@ -94,7 +94,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/implementation_bootstrap.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/implementation_bootstrap.py",
-      "sha256": "38860335562bd5c8272da0a34f27b50ebfecbe9782499305a8785c2cf80f53f1"
+      "sha256": "eb6ee0a5aae1b75068cf738bc6d2797c2c32979418a623b8a07e877ef1ad3770"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/raw_input_runner.py",

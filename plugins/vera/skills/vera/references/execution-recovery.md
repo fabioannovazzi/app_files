@@ -16,7 +16,7 @@ handoff below it. Repository development uses existing sibling module roots.
 
 The helper checks a build-generated SHA-256 index. For unchanged regular files
 with multiple physical links, it creates independent files in a fresh private
-OS temporary directory, verifies copied bytes and runs the unchanged module
+OS temporary directory, verifies copied bytes and runs the module's single-link
 integrity validator. It never edits the host-managed installation or its aliases.
 The index checks package consistency; it is not a publisher signature. No
 network is used and no client documents, credentials or reports are copied.

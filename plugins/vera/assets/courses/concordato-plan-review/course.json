@@ -90,7 +90,7 @@
     {
       "path": "modules/concordato-plan-review/scripts/implementation_bootstrap.py",
       "repository_path": "plugins/concordato-plan-review/scripts/implementation_bootstrap.py",
-      "sha256": "6d96e124c00a8466e5ee1a212ec1c57044fb54138742293362042139c7bf4b1b"
+      "sha256": "b0409060ec3b9f7cc65a9088fcd46ebd1d028c8c97bbaa2ec0ab5152e6cd8e38"
     },
     {
       "path": "modules/concordato-plan-review/scripts/output_closure.py",
