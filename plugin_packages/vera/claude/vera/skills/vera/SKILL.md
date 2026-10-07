@@ -14,6 +14,14 @@ Public workflow names select skills; component IDs select module paths.
 called Check Entries) uses `check-entries`, and `purchase-invoice-review` uses
 `passive-invoice-audit`. These component IDs are not additional workflows.
 
+Before an assured installed-module handoff, follow Vera's
+`skills/vera/references/execution-recovery.md`: run the supported
+`scripts/verified_execution.py --module <component-id>` internally and use the
+returned execution root for the module skill, commands, assets and review server.
+Do not ask the professional to use Terminal. This helper may create a private
+verified code copy outside the host installation; it never edits that installation
+and is not permission to manually copy it or bypass a denied operation.
+
 For journal-sampling, open-item-reconciliation, journal-bank-reconciliation,
 concordato-plan-review, financial-report-builder and vouching only, optional cache
 cleanup uses the corresponding component ID from the installed Vera root:
@@ -171,6 +179,11 @@ For Cowork v1:
 Do not redirect the user to another product or an ordinary chat surface.
 
 # Vera
+
+For journal-bank-reconciliation, open-item-reconciliation, journal-sampling,
+financial-report-builder, vouching and concordato-plan-review, follow
+`references/execution-recovery.md` before the installed module handoff. Perform
+the preparation internally; do not ask the professional to use Terminal.
 
 
 ## Show the privacy report

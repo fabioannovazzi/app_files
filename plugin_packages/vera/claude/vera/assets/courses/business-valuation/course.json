@@ -120,7 +120,7 @@
     },
     {
       "path": "modules/business-valuation/skills/business-valuation/SKILL.md",
-      "sha256": "eedd16748e495fe5f83fd4bf082d82a29ffabd2c2005b151e14e1f16292730c4"
+      "sha256": "a519c8b5e8e8d71460a90d412721ab32258231ca995b5ff7be84204ccb282d17"
     },
     {
       "path": "modules/business-valuation/vendor/modules/__init__.py",
@@ -168,7 +168,7 @@
     },
     {
       "path": "skills/business-valuation/SKILL.md",
-      "sha256": "3dfdd0a05122300e7ea67a3b94f1297be0fe3fe2f976e3db7e462eb790ddf5c0"
+      "sha256": "a624ff15bf4208ae2d149e5e2c8f964b7c05e23d76ba96e250ba7201de61b5c7"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

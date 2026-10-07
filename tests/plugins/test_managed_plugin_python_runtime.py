@@ -110,6 +110,9 @@ def make_packaged_component(root: Path) -> Path:
         encoding="utf-8",
     )
     (scripts / "managed_python_runtime.py").write_bytes(VERA_MANAGER.read_bytes())
+    (scripts / "verified_execution.py").write_bytes(
+        (VERA_MANAGER.parent / "verified_execution.py").read_bytes()
+    )
     (scripts / "_managed_python_runtime.py").write_bytes(RUNTIME_SOURCE.read_bytes())
     (scripts / "_shared_python_runtime.py").write_bytes(
         RUNTIME_SOURCE.with_name("_shared_python_runtime.py").read_bytes()

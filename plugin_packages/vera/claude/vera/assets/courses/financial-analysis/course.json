@@ -77,7 +77,7 @@
     },
     {
       "path": "modules/financial-analysis/skills/financial-analysis/SKILL.md",
-      "sha256": "c18d4b48c87dbf05fadf73b3d395b01438ffad7cd880dc1a9477d52ed208943a"
+      "sha256": "8ca37c5a7df39abed376af2dbc2d2ef7371b78fb8cf71acdd7ae570d547601eb"
     },
     {
       "path": "modules/financial-analysis/vendor/modules/__init__.py",
@@ -137,7 +137,7 @@
     },
     {
       "path": "skills/financial-analysis/SKILL.md",
-      "sha256": "5f26196e4f62a24040d22298a3482618229df1a1bb4d75c38711e4f773374142"
+      "sha256": "073fc58c6b55af42a06e46cc8e419638271a0ff32caacc8a75a36418a7a5e904"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

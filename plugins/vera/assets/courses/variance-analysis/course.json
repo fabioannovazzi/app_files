@@ -514,12 +514,17 @@
     {
       "path": "scripts/check_dependencies.py",
       "repository_path": "plugins/vera/scripts/check_dependencies.py",
-      "sha256": "d8fe58ac68e4cb0e05783256d829fbffc2a29c802c83902ee3102ff432764b69"
+      "sha256": "046a6e74b09e07d49c34a51f2b7762fcd084d33725e6cca39810ded2ae0ac8a7"
     },
     {
       "path": "scripts/managed_python_runtime.py",
       "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
-      "sha256": "ccc8f805bc8807b1c16a2a92dc43533571cb341bc20a68d850d25af04c879e69"
+      "sha256": "7b18aa326d185fd1b74eedbf5d10627dae3c11722a8a3d036dc505aedece79c0"
+    },
+    {
+      "path": "scripts/verified_execution.py",
+      "repository_path": "plugins/vera/scripts/verified_execution.py",
+      "sha256": "09b9be2ae4f1913db7e074ee85b81087a353d50f9d421593677a1510a379c963"
     },
     {
       "path": "skills/variance-analysis/SKILL.md",

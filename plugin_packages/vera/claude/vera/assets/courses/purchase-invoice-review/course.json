@@ -73,7 +73,7 @@
     },
     {
       "path": "modules/passive-invoice-audit/skills/purchase-invoice-review/SKILL.md",
-      "sha256": "76692162ec6dc07fb140f088f94d908c61bdd792df5d42700c9095361db5dfeb"
+      "sha256": "fa365c2c5583ff92ae40d0a3a696ef6047c4f7ec880abb0f07bfecd05849db1d"
     },
     {
       "path": "modules/passive-invoice-audit/skills/purchase-invoice-review/references/geneva.md",
@@ -121,7 +121,7 @@
     },
     {
       "path": "skills/purchase-invoice-review/SKILL.md",
-      "sha256": "a6893e686c1f815f604e7669c868d5030d8467ce1517d70f1d6da68d8d0bf908"
+      "sha256": "61f5cdde617eef498c740c10dd509ec361240ad4c244ecd61eb1763b9818e4e1"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

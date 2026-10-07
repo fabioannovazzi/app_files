@@ -490,7 +490,10 @@ def test_root_anthropic_manifest_and_local_mcp_are_discoverable(
     assert ".mcp.json" in vera_entries
     cowork_mcp = json.loads(vera_entries[".mcp.json"])
     canonical_mcp = json.loads((ROOT / "plugins" / "vera" / ".mcp.json").read_text())
-    assert set(cowork_mcp["mcpServers"]) == set(canonical_mcp["mcpServers"])
+    # Native OpenAI course chats are deliberately absent from Cowork.
+    assert set(cowork_mcp["mcpServers"]) == set(canonical_mcp["mcpServers"]) - {
+        "courseChats"
+    }
     assert all(
         server["args"][0] == "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
         for server in cowork_mcp["mcpServers"].values()
@@ -582,7 +585,7 @@ def test_optional_claude_mcp_projection_uses_only_installation_safe_paths() -> N
     servers = payload["mcpServers"]
 
     canonical_mcp = json.loads((ROOT / "plugins" / "vera" / ".mcp.json").read_text())
-    assert set(servers) == set(canonical_mcp["mcpServers"])
+    assert set(servers) == set(canonical_mcp["mcpServers"]) - {"courseChats"}
     for server in servers.values():
         assert set(server) <= {"command", "args", "env"}
         assert server["command"] == "node"
@@ -865,12 +868,14 @@ def test_cowork_projects_user_facing_artifact_names_and_review_actor(
             ".yml",
         }
     }
-    # Shared courseware retains cross-product filenames and translation keys;
-    # the separate emission regression below checks actual Cowork artifacts.
+    # Shared courseware and reviewed source-course metadata retain cross-host
+    # authored filenames. Verify emitted Cowork instructions and artifacts;
+    # the package-index test separately covers those metadata bytes.
     combined = "\n".join(
         content
         for name, content in projected_text.items()
         if not name.startswith("vendor/modules/courseware/")
+        and not (name.startswith("assets/courses/") and name.endswith("/course.json"))
     )
 
     assert "07_scheda_codex_per_studio.md" not in combined

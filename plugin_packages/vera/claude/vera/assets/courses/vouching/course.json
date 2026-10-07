@@ -93,7 +93,7 @@
     },
     {
       "path": "modules/check-entries/skills/vouching/SKILL.md",
-      "sha256": "bcb210a49411e7efb83e3a8025f8d16899c915def5d967d9c51b7acd76ff8565"
+      "sha256": "68a6915a0dd0e98175d8a21c6ef4a866e32ff9c3c938a59dd9e40eabda50eb74"
     },
     {
       "path": "modules/check-entries/skills/vouching/references/geneva.md",
@@ -145,7 +145,7 @@
     },
     {
       "path": "skills/vouching/SKILL.md",
-      "sha256": "ba7740e858f30e032a04fe1e98944aa125eccf616fe9f602bc78bfe82fde3759"
+      "sha256": "350b9d3c4f5be74ec93528d7a52ab9985914a99769abaabaa0bb31253cea1c90"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -518,5 +518,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "0634006ceb6f17763b9c50fa2739602d13c040782a4989465dcfe68727107ac4"
+  "canonical_course_sha256": "ccf80530ee9b816577bc400d18fe787a579b5f0e7afc0fd349c042717f4e1827"
 }

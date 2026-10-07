@@ -10,6 +10,14 @@ Public workflow names select skills; component IDs select module paths.
 called Check Entries) uses `check-entries`, and `purchase-invoice-review` uses
 `passive-invoice-audit`. These component IDs are not additional workflows.
 
+Before an assured installed-module handoff, follow Vera's
+`skills/vera/references/execution-recovery.md`: run the supported
+`scripts/verified_execution.py --module <component-id>` internally and use the
+returned execution root for the module skill, commands, assets and review server.
+Do not ask the professional to use Terminal. This helper may create a private
+verified code copy outside the host installation; it never edits that installation
+and is not permission to manually copy it or bypass a denied operation.
+
 For journal-sampling, open-item-reconciliation, journal-bank-reconciliation,
 concordato-plan-review, financial-report-builder and vouching only, optional cache
 cleanup uses the corresponding component ID from the installed Vera root:
@@ -128,6 +136,10 @@ audience. The normalized population, diagnostics, and exact sample are separate
 upstream artifacts. Start Vouching through
 `start_check_entries_from_sample`; Studio Archive resolves those internal
 artifacts and Vouching checks only the sample rows.
+
+First follow `../vera/references/execution-recovery.md` for component
+`journal-sampling`. Use its verified execution root for the handoff below;
+never ask the professional to run a terminal command.
 
 Resolve `../../modules/journal-sampling` from this skill directory when it
 exists; otherwise resolve `../../../journal-sampling` in the repository. Read
