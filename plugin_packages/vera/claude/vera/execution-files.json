@@ -1411,7 +1411,7 @@
     "modules/fusione-guidata/skills/fusione-guidata/references/p1-source-review.md": "741f633d69e4f1f9031a2023f95b44b969562db8aee99e52200f0bcd9f6c0aeb",
     "modules/fusione-guidata/vendor/modules/client_ledger.py": "cebe03cf64d188cbab8be95ce083227663cfc3b6f41a802fa7f88c63f449bf9e",
     "modules/fusione-guidata/vendor/modules/model_data_report.py": "54fcde02508b195250c5a4c58758e10f796a63a32448115de64fccbce8b4022c",
-    "modules/invoice-xml/.codex-plugin/plugin.json": "346db9913309537a499e0087946a63c1bb33cd0ac43a411eb9431591fd93d801",
+    "modules/invoice-xml/.codex-plugin/plugin.json": "436727f530ce12f2531351621130358f9779d70e98e4e5072ce9a613d808d86e",
     "modules/invoice-xml/assets/icon.svg": "fcfd81e72c5e5d958e4273f58139b85798b1f2beba20785efb1edc0aaa3eb87c",
     "modules/invoice-xml/mypy.ini": "2cdf09d0a538dcb6ba4754b05be6cc48384535f38f4a37067bcec1d766f12c5f",
     "modules/invoice-xml/references/foreign-invoices.md": "8f0d7650633831ecd51245d712cee65e202800d35c2938757db5c886b9362368",
