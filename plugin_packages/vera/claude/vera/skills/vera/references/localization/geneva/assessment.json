@@ -1185,7 +1185,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "d3048b2b5bdeff86aeb605fdf21e22d0a556b94eafa30172b77dea5ada0df0b3",
+  "catalogue_fingerprint": "d00b7771ff319be692dff994999e9d5a3b0a3e7bf38eed3cb5ac4c36d87b0610",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1466,5 +1466,10 @@
       "vouching"
     ],
     "scope": "Internal verified private code preparation for hardlinked installed modules. Existing function IDs, jurisdiction dispositions, professional findings and acceptance limitations are unchanged. No Geneva or affected-user host acceptance is claimed."
+  },
+  "studio_work_course_source_refresh": {
+    "version": "0.1.350",
+    "previous_catalogue_fingerprint": "d7630254b8fb6648782492583ccb7641a9bfea170777d92b9c07d9c2f7d48f2e",
+    "scope": "Prepared five-language local organizer course; unchanged function coverage and Geneva disposition. No new learner, native voice or live-calendar acceptance."
   }
 }

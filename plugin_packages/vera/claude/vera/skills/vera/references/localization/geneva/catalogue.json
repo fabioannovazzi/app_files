@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/vera-organizzazione-release/plugins/vera",
-  "version": "0.1.349",
-  "captured_at": "2026-10-07T11:47:55.836062+00:00",
-  "catalogue_fingerprint": "d3048b2b5bdeff86aeb605fdf21e22d0a556b94eafa30172b77dea5ada0df0b3",
-  "manifest_sha256": "5b2ae27c1ef3dd11185f052a3abe8b09766e866e57ed4531cdf1b8c20d82586c",
+  "root": "/private/tmp/vera-organizzazione-course/plugins/vera",
+  "version": "0.1.350",
+  "captured_at": "2026-10-07T13:37:03.758074+00:00",
+  "catalogue_fingerprint": "d00b7771ff319be692dff994999e9d5a3b0a3e7bf38eed3cb5ac4c36d87b0610",
+  "manifest_sha256": "1b7ac6658d7ff5e6385845a1c6267483765bdedf550f8078f460a5b7ea6ba9e6",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -169,7 +169,7 @@
     {
       "function_id": "organizzazione-lavoro",
       "skill_path": "skills/organizzazione-lavoro/SKILL.md",
-      "sha256": "97a8a529449a2488bd4c7bf29ab097e00968a93347a31371461aff06911a6114"
+      "sha256": "d856381d02f70a8ecc804aede79c2fcb1d12ca1e3c6b480a4b9e59f5e29acafb"
     },
     {
       "function_id": "patent-box-review",

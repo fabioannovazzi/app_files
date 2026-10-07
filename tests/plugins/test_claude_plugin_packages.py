@@ -495,8 +495,13 @@ def test_root_anthropic_manifest_and_local_mcp_are_discoverable(
         "courseChats"
     }
     assert all(
-        server["args"][0] == "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
-        for server in cowork_mcp["mcpServers"].values()
+        server["args"][0]
+        == (
+            "${CLAUDE_PLUGIN_ROOT}/mcp/studio-work.cjs"
+            if name == "studioWork"
+            else "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
+        )
+        for name, server in cowork_mcp["mcpServers"].items()
     )
     assert '"archive-organization"' in vera_entries[
         "scripts/run_component_mcp.cjs"
@@ -586,13 +591,15 @@ def test_optional_claude_mcp_projection_uses_only_installation_safe_paths() -> N
 
     canonical_mcp = json.loads((ROOT / "plugins" / "vera" / ".mcp.json").read_text())
     assert set(servers) == set(canonical_mcp["mcpServers"]) - {"courseChats"}
-    for server in servers.values():
+    for name, server in servers.items():
         assert set(server) <= {"command", "args", "env"}
         assert server["command"] == "node"
         assert server["args"][0] == (
-            "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
+            "${CLAUDE_PLUGIN_ROOT}/mcp/studio-work.cjs"
+            if name == "studioWork"
+            else "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
         )
-        assert len(server["args"]) == 2
+        assert len(server["args"]) == (1 if name == "studioWork" else 2)
         assert "cwd" not in server
         assert "icons" not in server
         assert "title" not in server

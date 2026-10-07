@@ -15,7 +15,11 @@ window.MPARANZA_FUNCTION_PAGES = {
         "professionalRole": "Sceglie calendario e preferenze, chiarisce impegni ambigui e comunica completamenti e variazioni. Scadenze legali, rassegna professionale, insoluti e tesoreria seguono i rispettivi workflow specialistici.",
         "prompt": "Organizzami la giornata: leggi il calendario e gli impegni aperti, proponi le priorità e segnala le informazioni mancanti.",
         "modelData": "Il modello riceve richieste scritte o trascritte dalla voce, preferenze, impegni selezionati, riepiloghi recenti delle riunioni e risposte dei connettori: possono includere nomi, clienti, incarichi, note e date. Non vengono anonimizzati automaticamente. Il servizio locale conserva registro, cronologia e ricevute in SQLite, fuori dalle versioni del plugin; non conserva audio grezzo e non effettua chiamate di rete. Il connettore invia i campi degli eventi al calendario scelto quando viene eseguita una operazione autorizzata. Registrazione e trascrizione vocale appartengono al sistema ospite. Il trattamento del modello segue l’account del provider scelto e non è soltanto locale.",
-        "modelDataStatus": "relevant"
+        "modelDataStatus": "relevant",
+        "publicExampleLabel": "Corso guidato",
+        "publicExampleTitle": "Organizzare la giornata con Vera",
+        "publicExampleSummary": "Dimostrazione e pratica autonoma con dati fittizi in un registro separato: salvare, spostare e ritrovare un impegno, conservare le azioni di una riunione. L’esercizio sul calendario reale richiede una scelta successiva e una autorizzazione precisa.",
+        "publicExampleLinkLabel": "Apri il catalogo e scegli la lingua →"
       },
       "en": {
         "name": "Studio work organisation",
@@ -29,7 +33,11 @@ window.MPARANZA_FUNCTION_PAGES = {
         "professionalRole": "Selects the calendar and preferences, clarifies ambiguous commitments and reports completion and changes. Legal deadlines, professional news, open items and treasury follow their specialist workflows.",
         "prompt": "Plan my day: read the calendar and open commitments, propose priorities and identify missing information.",
         "modelData": "The model receives typed or transcribed requests, preferences, selected commitments, recent meeting summaries and connector responses, potentially including names, clients, engagements, notes and dates. These are not automatically anonymised. The local service retains the register, history and receipts in SQLite outside plugin versions; it stores no raw audio and makes no network calls. The connector sends event fields to the selected calendar when an authorised operation runs. Voice recording and transcription belong to the host. Model processing follows the selected provider account and is not local only.",
-        "modelDataStatus": "relevant"
+        "modelDataStatus": "relevant",
+        "publicExampleLabel": "Guided course",
+        "publicExampleTitle": "Organise your day with Vera",
+        "publicExampleSummary": "Demonstration and independent practice with fictional data in a separate register: save, move and retrieve a commitment and retain meeting actions. A live-calendar exercise requires a separate choice and specific authorization.",
+        "publicExampleLinkLabel": "Open the catalogue and choose a language →"
       },
       "fr": {
         "name": "Organisation du travail du cabinet",
@@ -43,7 +51,11 @@ window.MPARANZA_FUNCTION_PAGES = {
         "professionalRole": "Choisit calendrier et préférences, précise les engagements ambigus et signale les réalisations et changements. Échéances légales, actualités professionnelles, impayés et trésorerie suivent leurs workflows spécialisés.",
         "prompt": "Organise ma journée : consulte le calendrier et les engagements ouverts, propose les priorités et signale les informations manquantes.",
         "modelData": "Le modèle reçoit demandes écrites ou transcrites, préférences, engagements sélectionnés, comptes rendus récents et réponses des connecteurs, pouvant inclure noms, clients, missions, notes et dates. Il n’y a pas d’anonymisation automatique. Le service local conserve registre, historique et reçus dans SQLite, indépendamment des versions du plugin ; il ne stocke aucun audio brut et ne fait aucun appel réseau. Le connecteur envoie les champs des événements au calendrier choisi lors d’une opération autorisée. Enregistrement et transcription vocale relèvent du système hôte. Le traitement du modèle suit le compte du fournisseur choisi et n’est pas uniquement local.",
-        "modelDataStatus": "relevant"
+        "modelDataStatus": "relevant",
+        "publicExampleLabel": "Cours guidé",
+        "publicExampleTitle": "Organiser sa journée avec Vera",
+        "publicExampleSummary": "Démonstration et pratique autonome avec données fictives dans un registre séparé : enregistrer, déplacer et retrouver un engagement et conserver les actions de réunion. Un essai sur un calendrier réel exige un choix distinct et une autorisation précise.",
+        "publicExampleLinkLabel": "Ouvrir le catalogue et choisir une langue →"
       },
       "de": {
         "name": "Organisation der Kanzleiarbeit",
@@ -57,7 +69,11 @@ window.MPARANZA_FUNCTION_PAGES = {
         "professionalRole": "Wählt Kalender und Präferenzen, klärt mehrdeutige Verpflichtungen und meldet Erledigungen und Änderungen. Rechtliche Fristen, Fachnachrichten, offene Posten und Liquidität folgen eigenen Fachworkflows.",
         "prompt": "Plane meinen Tag: prüfe Kalender und offene Verpflichtungen, schlage Prioritäten vor und benenne fehlende Informationen.",
         "modelData": "Das Modell erhält geschriebene oder transkribierte Anfragen, Präferenzen, ausgewählte Verpflichtungen, aktuelle Besprechungszusammenfassungen und Connector-Antworten. Darin können Namen, Mandanten, Mandate, Notizen und Daten enthalten sein; sie werden nicht automatisch anonymisiert. Der lokale Dienst speichert Register, Verlauf und Belege in SQLite außerhalb der Plugin-Versionen; er speichert kein Rohaudio und sendet keine Netzwerkanfragen. Der Connector übermittelt Ereignisfelder bei autorisierten Vorgängen an den gewählten Kalender. Sprachaufnahme und Transkription gehören zum Hostsystem. Die Modellverarbeitung folgt dem ausgewählten Anbieterkonto und erfolgt nicht ausschließlich lokal.",
-        "modelDataStatus": "relevant"
+        "modelDataStatus": "relevant",
+        "publicExampleLabel": "Geführter Kurs",
+        "publicExampleTitle": "Den Arbeitstag mit Vera organisieren",
+        "publicExampleSummary": "Demonstration und eigenständige Übung mit fiktiven Daten in einem getrennten Register: Verpflichtung speichern, verschieben, wiederfinden und Besprechungsaufgaben behalten. Ein echter Kalendertest benötigt eine gesonderte Entscheidung und genaue Freigabe.",
+        "publicExampleLinkLabel": "Katalog öffnen und Sprache wählen →"
       },
       "es": {
         "name": "Organización del trabajo del despacho",
@@ -71,8 +87,13 @@ window.MPARANZA_FUNCTION_PAGES = {
         "professionalRole": "Elige calendario y preferencias, aclara compromisos ambiguos y comunica finalizaciones y cambios. Plazos legales, novedades profesionales, partidas abiertas y tesorería siguen sus workflows especializados.",
         "prompt": "Organiza mi día: consulta el calendario y los compromisos abiertos, propone prioridades e indica la información que falta.",
         "modelData": "El modelo recibe solicitudes escritas o transcritas, preferencias, compromisos seleccionados, resúmenes recientes y respuestas de conectores, que pueden incluir nombres, clientes, encargos, notas y fechas. No se anonimizan automáticamente. El servicio local conserva registro, historial y recibos en SQLite fuera de las versiones del plugin; no guarda audio bruto ni realiza llamadas de red. El conector envía los campos de eventos al calendario elegido cuando ejecuta una operación autorizada. Grabación y transcripción de voz pertenecen al sistema anfitrión. El tratamiento del modelo sigue la cuenta del proveedor elegido y no es únicamente local.",
-        "modelDataStatus": "relevant"
+        "modelDataStatus": "relevant",
+        "publicExampleLabel": "Curso guiado",
+        "publicExampleTitle": "Organizar la jornada con Vera",
+        "publicExampleSummary": "Demostración y práctica independiente con datos ficticios en un registro separado: guardar, cambiar y recuperar un compromiso y conservar tareas de reunión. Una prueba en el calendario real requiere otra elección y autorización concreta.",
+        "publicExampleLinkLabel": "Abrir el catálogo y elegir idioma →"
       }
-    }
+    },
+    "publicExampleHref": "../courses/index.html#vera"
   }
 };

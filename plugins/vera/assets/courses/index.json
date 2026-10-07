@@ -695,6 +695,34 @@
         "es": "Aprender a comprobar una lista de impagados y distinguir las facturas con prueba de pago de las que siguen pendientes de aclaración en una fecha concreta."
       }
     },
+    "organizzazione-lavoro": {
+      "path": "organizzazione-lavoro/course.json",
+      "sha256": "b33cd060f2c7d9554c17a36eee51f18024d3bb61c9a246014c228e7811c60cd7",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Organizzare la giornata con Vera",
+        "en": "Organise your day with Vera",
+        "fr": "Organiser sa journée avec Vera",
+        "de": "Den Arbeitstag mit Vera organisieren",
+        "es": "Organizar la jornada con Vera"
+      },
+      "goals": {
+        "it": "Imparare a registrare un impegno, modificarlo, ritrovarlo in una nuova chat e collegare una riunione alle attività successive.",
+        "en": "Learn to save a commitment, change it, recover it in a new chat and turn meeting notes into follow-up work.",
+        "fr": "Apprendre à enregistrer un engagement, le modifier, le retrouver dans une nouvelle discussion et transformer les notes de réunion en actions.",
+        "de": "Eine Verpflichtung speichern, ändern, in einem neuen Chat wiederfinden und Besprechungsnotizen in Folgeaufgaben überführen.",
+        "es": "Aprender a guardar un compromiso, modificarlo, recuperarlo en otra conversación y convertir notas de reunión en tareas posteriores."
+      }
+    },
     "patent-box-review": {
       "path": "patent-box-review/course.json",
       "sha256": "51a7c3589a8643bc5209e2df8f515cfb5c5811895d024ab22e30684e9df2c29b",

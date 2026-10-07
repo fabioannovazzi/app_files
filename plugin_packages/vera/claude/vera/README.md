@@ -245,3 +245,16 @@ arrangements from company evidence. It distinguishes documented procedures,
 reported practices, operating evidence and unknowns; delivers a memo, findings,
 proportionate action plan and version record; and revisits prior actions.
 Professional decisions remain explicit and no adequacy certification is issued.
+
+## Studio work course
+
+`organizzazione-lavoro` has a prepared five-language course in Impara con Vera.
+The paired teaching and working chats demonstrate capture, rescheduling, durable
+retrieval and meeting follow-ups, then use a different independent practice case.
+Fictional data stays in a separately bound local tutorial register; no live
+calendar is connected or changed by the prepared exercise. A later real-calendar
+exercise requires the user's selected account, specific authorization and actual
+connector read-back. Voice uses the host's available transcription. Native
+paired teaching is a Codex workflow; the ordinary file-based organizer remains
+available in Cowork. Course preparation and regression tests do not attest
+learner comprehension, measured timing or installed-host voice acceptance.

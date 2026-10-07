@@ -1,0 +1,29 @@
+{
+  "vera/organizzazione-lavoro": {
+    "title": "Organizzare la giornata con Vera",
+    "goal": "Imparare a registrare un impegno, modificarlo, ritrovarlo in una nuova chat e collegare una riunione alle attività successive.",
+    "scenario": "Studio Riva deve incontrare Paola e recuperare un documento. Nella prova autonoma Studio Selva incontra Luca: cambiano giorno, orario e responsabile. Tutti i dati sono fittizi.",
+    "scope": "Il registro didattico è separato da quello dello studio. Le fasce occupate nel file sono un esempio da leggere, non il calendario Google aggiornato. Il corso locale non crea eventi esterni. Dopo la pratica puoi scegliere un esercizio reale: collega il calendario, autorizza un evento di prova preciso e verifica il risultato con il connettore. Senza accesso o conferma, resta una proposta. La voce usa la trascrizione del sistema ospite; nessun ascolto continuo viene attivato.",
+    "inputs": "Apri case-it.json nella cartella della dimostrazione. Contiene preferenze, richiesta, un impegno da spostare, fasce occupate e appunti della riunione. I dati dichiarano il caso; non sono risultati già prodotti. La chat di lavoro prepara un registro didattico nuovo senza cambiare impostazioni o impegni reali.",
+    "request": "Vera, organizza gli impegni dello studio fittizio dal file: registra l’incontro, spostalo come richiesto, conserva le azioni della riunione e mostrami la giornata. Dimmi cosa è salvato localmente e cosa non è stato scritto nel calendario.",
+    "steps": [
+      "Nella chat di lavoro apri i dati fittizi e prepara il registro separato. La voce spiega calendario, orari e durata; chiedi il dettaglio mancante invece di inventarlo. Le preferenze didattiche non collegano un account reale.",
+      "Registra l’incontro e confronta orario e durata con le fasce di esempio. Leggi il risultato salvato. Sposta l’incontro con la nuova richiesta e controlla la revisione; non chiamarlo evento inserito in Google Calendar.",
+      "Apri il registro con una nuova esecuzione o chat. Verifica identità, fonte e nuovo orario. Dai soli appunti della riunione ricava sintesi, decisioni e azioni con responsabile e data; segnala ciò che manca. Mostra impegni aperti e piano proposto, distinguendo le preferenze dalle priorità ragionate."
+    ],
+    "deliverables": [
+      "Registro didattico riapribile con incontro aggiornato, fonte e cronologia.",
+      "Riunione conservata con attività successive e responsabili; riepilogo degli impegni aperti.",
+      "Spiegazione di ciò che è realmente salvato e di ciò che richiede ancora un calendario collegato o una automazione."
+    ],
+    "review": "Apri i risultati effettivi: confronta nome, data, durata, responsabile e fonte con il file. La nuova lettura deve ritrovare lo stesso incontro modificato. Un record locale non prova che il calendario sia stato aggiornato. Le scadenze legali vanno verificate nel workflow specialistico.",
+    "checkpoints": [
+      "Prima di scrivere, indica dove resteranno i dati della lezione.",
+      "Dopo lo spostamento, ritrova lo stesso incontro nella nuova lettura.",
+      "Prima di un eventuale evento reale, scegli account e calendario e autorizza l’operazione precisa."
+    ],
+    "practice": "Apri il diverso case-it.json della cartella practice. Senza ripetere i valori della dimostrazione, formula la richiesta per Studio Selva, controlla le fasce, sposta Luca e registra le azioni. Poi segna l’attività conclusa e verifica che esca dagli impegni aperti ma resti nella cronologia.",
+    "success": "La prova conserva i propri dati e il nuovo orario anche dopo riapertura; l’attività conclusa resta recuperabile e la dimostrazione è intatta. Spiega la differenza tra registro, calendario aggiornato e briefing automatico. Un esercizio preparato non equivale alla tua partecipazione.",
+    "repeat": "Chiedi «organizzami la giornata» o descrivi l’impegno con parole tue. Per il lavoro reale usa il registro ordinario e leggi il calendario aggiornato. Un riepilogo a un’ora fissa richiede una automazione separata, configurata e verificata."
+  }
+}
