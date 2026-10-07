@@ -145,7 +145,7 @@
     },
     {
       "path": "skills/vouching/SKILL.md",
-      "sha256": "ba7740e858f30e032a04fe1e98944aa125eccf616fe9f602bc78bfe82fde3759"
+      "sha256": "c70c4dcaa33b23b15ec8ec1207ac36cb51600a8cfc877b5c231a1c0f41db838f"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -518,5 +518,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "0634006ceb6f17763b9c50fa2739602d13c040782a4989465dcfe68727107ac4"
+  "canonical_course_sha256": "ccf80530ee9b816577bc400d18fe787a579b5f0e7afc0fd349c042717f4e1827"
 }

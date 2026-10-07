@@ -49,6 +49,10 @@ output with purpose and audience before review/completion. Use the explicit
 new-run option for an intentionally separate batch whose exact input selection
 matches an earlier run.
 
+First follow `../vera/references/execution-recovery.md` for component
+`check-entries`. Use its verified execution root for the handoff below;
+never ask the professional to run a terminal command.
+
 Resolve `../../modules/check-entries` from this skill directory when it exists;
 otherwise resolve `../../../check-entries` in the repository. Read that
 module's `skills/vouching/SKILL.md` completely and follow it. Treat the

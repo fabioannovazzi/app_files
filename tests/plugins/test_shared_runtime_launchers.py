@@ -43,6 +43,11 @@ def installed_fixture(tmp_path, product, monkeypatch):
             ROOT / "plugins/clara/scripts/managed_ocr_runtime.py",
             scripts / "managed_ocr_runtime.py",
         )
+    if product == "vera":
+        shutil.copyfile(
+            ROOT / "plugins/vera/scripts/verified_execution.py",
+            scripts / "verified_execution.py",
+        )
     component = "reporting-engine" if product == "clara" else "studio-archive"
     (root / "components.json").write_text(json.dumps({"plugins": [component]}))
     for name in (

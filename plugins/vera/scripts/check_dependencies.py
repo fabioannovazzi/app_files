@@ -11,6 +11,7 @@ import sys
 from pathlib import Path
 
 from managed_python_runtime import ensure_runtime, runtime_environment, runtime_python
+from verified_execution import prepare_execution_root
 
 __all__ = ["main"]
 
@@ -60,7 +61,16 @@ def main(argv: list[str] | None = None) -> int:
         LOGGER.info("All %s Vera modules are available.", len(COMPONENTS))
         return 0
 
-    component_root = _component_root(args.module)
+    try:
+        execution_root = prepare_execution_root(PLUGIN_ROOT, args.module)
+    except (OSError, ValueError) as error:
+        LOGGER.error("Vera installation verification failed: %s", error)
+        return 1
+    component_root = (
+        execution_root / "modules" / args.module
+        if execution_root != PLUGIN_ROOT
+        else _component_root(args.module)
+    )
     checker = component_root / "scripts" / "check_dependencies.py"
     if not checker.exists():
         LOGGER.error("Dependency checker not found for %s: %s", args.module, checker)
@@ -69,7 +79,7 @@ def main(argv: list[str] | None = None) -> int:
     for requirement in args.requirements or []:
         delegated_args = ["--requirements", requirement, *delegated_args]
     ready, target, detail = ensure_runtime(
-        PLUGIN_ROOT,
+        execution_root,
         args.module,
         requirements=args.requirements,
     )

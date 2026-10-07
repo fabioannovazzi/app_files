@@ -73,7 +73,7 @@
     },
     {
       "path": "modules/report-builder/scripts/implementation_bootstrap.py",
-      "sha256": "c2775488e65a70846dbd995539615b4ad8ae38be26580932a67ff50e595ac6fc"
+      "sha256": "769cf9a7e32b0bdef0451d9f4219716af6943546f31a8c1afd2f2739433c3103"
     },
     {
       "path": "modules/report-builder/scripts/implementation_contract.py",
@@ -173,7 +173,7 @@
     },
     {
       "path": "skills/financial-report-builder/SKILL.md",
-      "sha256": "bbf607fca0544bef26b282bf37140e89a53ff698669b6099c1573fd521250ec5"
+      "sha256": "501fbe1a4788330f5b551dae20a9f66b56d70fe0e6143007c296e9a6f076ae0e"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -478,5 +478,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "61d0d970ba3ffa890d7f7a37118b40a2bf42ccca3ab50995a126adc4a5b1e0bb"
+  "canonical_course_sha256": "1e656dd238cd02609c95e1f8cacf5c53f9d6301425498d1437f8556f1e13e3d2"
 }

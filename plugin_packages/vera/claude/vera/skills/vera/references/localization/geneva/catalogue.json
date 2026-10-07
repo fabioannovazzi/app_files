@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "plugins/vera",
-  "version": "0.1.347",
-  "captured_at": "2026-10-06T21:32:54.422401+00:00",
-  "catalogue_fingerprint": "f06b6752dfac9f4c82cfa09cb7045d9abab10ed697807d6a632cab4f5fbdda8d",
-  "manifest_sha256": "7d1a2c7b20e44a200528d05f62a4da26f23e9ee69842cff70c7658f8bd7b9dbf",
+  "version": "0.1.348",
+  "captured_at": "2026-10-07T07:48:12.271816+00:00",
+  "catalogue_fingerprint": "131cafc560d6d45efd470d198f209ade2109a8d44927b0edad009232512c8755",
+  "manifest_sha256": "d5704cd9775f26d439be9fd1fcd069ab6f2631b61ba392115e6d7099f342f420",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -74,7 +74,7 @@
     {
       "function_id": "concordato-plan-review",
       "skill_path": "skills/concordato-plan-review/SKILL.md",
-      "sha256": "b3be9b204b0255df1e1b072b2f1a3a4953cfd4ab52dc21e47f2acbd17784f9e3"
+      "sha256": "5dcb0967cdded11c160a618b1e4974aecba364c5aadaa7d6092a8685e54e1bc5"
     },
     {
       "function_id": "datev-invoice-start",
@@ -109,7 +109,7 @@
     {
       "function_id": "financial-report-builder",
       "skill_path": "skills/financial-report-builder/SKILL.md",
-      "sha256": "9564207bb5058957476686a2dbda8cf47f0f5cf381c11aaab6f16d309cefedbc"
+      "sha256": "1a6babdea8afc5d1d3dee0d8b2223749d64e59b9025484f2ea71e795bca77c9c"
     },
     {
       "function_id": "fusione-guidata",
@@ -124,12 +124,12 @@
     {
       "function_id": "journal-bank-reconciliation",
       "skill_path": "skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "5ac9421e513bb6be6232d93b1968d10fbd2c8d22c0e94a2bd2a1aacefe146459"
+      "sha256": "c412e0be44d248a38066a840987991b0a7cc20d327a5bffd9df0440913030e80"
     },
     {
       "function_id": "journal-sampling",
       "skill_path": "skills/journal-sampling/SKILL.md",
-      "sha256": "27e59641a06440aae0014bbfda8fdae48c28dde126843d94dbd625c46eca629c"
+      "sha256": "980f5d08620e332e91c0b353d431dc0f0e3490f639b4532fa153d9c92719226f"
     },
     {
       "function_id": "learn-with-vera",
@@ -164,7 +164,7 @@
     {
       "function_id": "open-item-reconciliation",
       "skill_path": "skills/open-item-reconciliation/SKILL.md",
-      "sha256": "cb7ba9a1460f9d0abd141a45ba19571a49072f427759a09b4675fc601c34a818"
+      "sha256": "23a8ff44580add47a6655a9045d393801e73d84cbce4e0db97aa7122d0797a5b"
     },
     {
       "function_id": "patent-box-review",
@@ -244,12 +244,12 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "da508821c1adb83bf5286c65c763346b6384dbf560c05ff05d45ffdcb067a06d"
+      "sha256": "ab5a08505999a1b9fc46996d36936c4ddb8f360ba087181f2790ba531b602434"
     },
     {
       "function_id": "vouching",
       "skill_path": "skills/vouching/SKILL.md",
-      "sha256": "f2b624e23345c051fa2bd30c9de0c08b614bfb6ed1b88dc3fd1ca1486fb48843"
+      "sha256": "3b11ba20430b428324f01e2b423d965b9a56decae481bedd2ae6b26f18d1af95"
     }
   ]
 }

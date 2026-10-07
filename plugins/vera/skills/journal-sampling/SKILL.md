@@ -42,6 +42,10 @@ upstream artifacts. Start Vouching through
 `start_check_entries_from_sample`; Studio Archive resolves those internal
 artifacts and Vouching checks only the sample rows.
 
+First follow `../vera/references/execution-recovery.md` for component
+`journal-sampling`. Use its verified execution root for the handoff below;
+never ask the professional to run a terminal command.
+
 Resolve `../../modules/journal-sampling` from this skill directory when it
 exists; otherwise resolve `../../../journal-sampling` in the repository. Read
 that module's `skills/journal-sampling/SKILL.md` completely and follow it. Treat

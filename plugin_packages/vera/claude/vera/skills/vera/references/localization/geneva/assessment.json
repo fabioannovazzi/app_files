@@ -1172,7 +1172,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "f06b6752dfac9f4c82cfa09cb7045d9abab10ed697807d6a632cab4f5fbdda8d",
+  "catalogue_fingerprint": "131cafc560d6d45efd470d198f209ade2109a8d44927b0edad009232512c8755",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1438,5 +1438,20 @@
     "version": "0.1.343",
     "previous_catalogue_fingerprint": "e703d67d57d108eb878b5f045d4a3718b711539f435bc1c4787652af1381920d",
     "scope": "Canonical manifest version and listing category refreshed to 0.1.343 and Finance. All recorded skill entrypoint IDs and hashes are unchanged. Existing dispositions, professional findings and verification limits remain unchanged."
+  },
+  "hardlink_execution_release_binding_20261007": {
+    "date": "2026-10-07",
+    "version": "0.1.348",
+    "previous_catalogue_fingerprint": "f06b6752dfac9f4c82cfa09cb7045d9abab10ed697807d6a632cab4f5fbdda8d",
+    "changed_entrypoints": [
+      "concordato-plan-review",
+      "financial-report-builder",
+      "journal-bank-reconciliation",
+      "journal-sampling",
+      "open-item-reconciliation",
+      "vera",
+      "vouching"
+    ],
+    "scope": "Internal verified private code preparation for hardlinked installed modules. Existing function IDs, jurisdiction dispositions, professional findings and acceptance limitations are unchanged. No Geneva or affected-user host acceptance is claimed."
   }
 }

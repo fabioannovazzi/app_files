@@ -90,7 +90,7 @@
     {
       "path": "modules/concordato-plan-review/scripts/implementation_bootstrap.py",
       "repository_path": "plugins/concordato-plan-review/scripts/implementation_bootstrap.py",
-      "sha256": "6d96e124c00a8466e5ee1a212ec1c57044fb54138742293362042139c7bf4b1b"
+      "sha256": "b0409060ec3b9f7cc65a9088fcd46ebd1d028c8c97bbaa2ec0ab5152e6cd8e38"
     },
     {
       "path": "modules/concordato-plan-review/scripts/output_closure.py",
@@ -180,7 +180,7 @@
     {
       "path": "skills/concordato-plan-review/SKILL.md",
       "repository_path": "plugins/vera/skills/concordato-plan-review/SKILL.md",
-      "sha256": "b3be9b204b0255df1e1b072b2f1a3a4953cfd4ab52dc21e47f2acbd17784f9e3"
+      "sha256": "5dcb0967cdded11c160a618b1e4974aecba364c5aadaa7d6092a8685e54e1bc5"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

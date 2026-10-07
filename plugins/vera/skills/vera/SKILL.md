@@ -71,6 +71,11 @@ continuing the useful in-chat work.
 
 # Vera
 
+For journal-bank-reconciliation, open-item-reconciliation, journal-sampling,
+financial-report-builder, vouching and concordato-plan-review, follow
+`references/execution-recovery.md` before the installed module handoff. Perform
+the preparation internally; do not ask the professional to use Terminal.
+
 <!-- VERA_OPENAI_VERSION_BEGIN -->
 ## Installed version check
 
