@@ -243,18 +243,21 @@ This executes the full quality gate:
 
 ### Marketplace version publication
 
-- Fabio gives standing authorization to publish new plugin versions to their
-  existing OpenAI Marketplace listings as part of the release procedure. Once
-  the required release checks pass, upload, submit, and publish the version
-  without asking for another user confirmation or stopping at "ready to publish."
-- This authorization covers Marketplace version publication only. Permissions
-  for merging, server deployment, cleanup, new listings, and public identity
-  changes remain unchanged. Honor explicit verification-only, draft-only, or
-  narrower requests.
-- This rule supersedes separate-confirmation requirements for Marketplace
-  version publication in release skills and memory, including
-  `app-files-release-verification`. Preserve tool and platform permission
-  enforcement; report an actual denial without bypassing it.
+- Do not publish to the OpenAI Marketplace as part of routine changes, fixes,
+  package builds, releases, PR merges, or server deployments. There is no
+  standing authorization for Marketplace publication. "Deploy" does not mean
+  "publish to the Marketplace."
+- Marketplace publication happens occasionally, when Fabio explicitly requests
+  that specific publication. Batch changes between those publication requests
+  rather than uploading or submitting every change and congesting OpenAI's
+  review system.
+- Without that specific request, do not upload packages, create Marketplace
+  drafts, submit versions for review, publish versions, cancel existing reviews,
+  or prompt Fabio to publish after each change. Leave the Marketplace alone.
+- This rule supersedes any automatic or standing publication authorization in
+  release skills, memory, or earlier instructions. Permissions for code changes,
+  merging, server deployment, cleanup, and public identity changes remain
+  separate and unchanged.
 - Verify the exact version's `Published` status in the authoritative Marketplace
   version list before reporting publication complete. Upload, submission, and
   Draft status are not publication evidence.
