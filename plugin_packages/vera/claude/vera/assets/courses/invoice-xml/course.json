@@ -36,6 +36,10 @@
       "sha256": "8f0d7650633831ecd51245d712cee65e202800d35c2938757db5c886b9362368"
     },
     {
+      "path": "modules/invoice-xml/references/model-data-report-example.json",
+      "sha256": "d9f5dcc822171dadeac71313f29807dc5b111155ef2ec7457be3fef8cedbb4a7"
+    },
+    {
       "path": "modules/invoice-xml/references/proposal-contract.md",
       "sha256": "733c871045946505eba97da2bfec106b690b5286abe0fa877253826dbadd8eb4"
     },
@@ -77,7 +81,7 @@
     },
     {
       "path": "modules/invoice-xml/skills/invoice-xml/SKILL.md",
-      "sha256": "edbb81ae257a96d2b78e18cff86514ba64e70f39986210d13ff096beb5dfb1c2"
+      "sha256": "875fb726fa063c5f42b3553d42a9dfbcc15e073ae9351c1846cbc419d2676c0e"
     },
     {
       "path": "modules/invoice-xml/vendor/modules/__init__.py",
@@ -121,7 +125,7 @@
     },
     {
       "path": "skills/invoice-xml/SKILL.md",
-      "sha256": "58bcf374cf2b0ff6af18ad1c8d2bca3f36645c453261ba16fc4706171207a1ff"
+      "sha256": "d2360468490735e12b2bdbf46343e0a13f41d77f58b072af225d0c73b8237756"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -346,5 +350,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "05b0573e8c7e64fb1364b18a5a7e675dc93498345d1aa34d1e3275a3364d5ede"
+  "canonical_course_sha256": "fb0134a3b851a4b511cb31b5581aaaf9d8c35b8a58c2ec6b4f286847f66f05e2"
 }

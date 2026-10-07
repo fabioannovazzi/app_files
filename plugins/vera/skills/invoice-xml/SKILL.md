@@ -38,3 +38,8 @@ Resolve `../../modules/invoice-xml` in the installed package or
 as the plugin working directory for helpers. Existing XML inspection remains
 `vera:fatture-xml-check`; invoice issuance and SdI transmission are outside
 this workflow.
+
+Reuse the complete router, specialist skill and required references already
+read in this conversation for the same installed version. Read missing material
+with enough output capacity, or contiguous sections, to avoid truncation. Re-read
+when the package changes or relevant instructions are missing from context.
