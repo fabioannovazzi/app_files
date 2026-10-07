@@ -1,0 +1,348 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "organizzazione-lavoro",
+  "revision": "2026-10-07.1",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "isolated_local_commitment_register_then_optional_authorized_calendar"
+  },
+  "sources": [
+    {
+      "path": "scripts/check_dependencies.py",
+      "sha256": "046a6e74b09e07d49c34a51f2b7762fcd084d33725e6cca39810ded2ae0ac8a7"
+    },
+    {
+      "path": "scripts/managed_python_runtime.py",
+      "sha256": "d3d1fa4ed89deeb7934933abc38ebded8b464e8950b94f71aa3bc23547305e1d"
+    },
+    {
+      "path": "scripts/model_data_report.py",
+      "sha256": "54fcde02508b195250c5a4c58758e10f796a63a32448115de64fccbce8b4022c"
+    },
+    {
+      "path": "scripts/notarized_run_receipt.py",
+      "sha256": "ecdad6c6aa491ab9fbcff84d85090b0568874305ad61a96af8120a47802bd165"
+    },
+    {
+      "path": "scripts/studio_work.py",
+      "sha256": "56b2c67f66819a3449af8fa63c200fb7eef24fa27e39f2d94550963c8eba772d"
+    },
+    {
+      "path": "scripts/verified_execution.py",
+      "sha256": "48855c1adb73e2e0c7b7136ac9fc3d6b7ca65a09e0cc3cd5792307bfed9ba0b0"
+    },
+    {
+      "path": "skills/organizzazione-lavoro/SKILL.md",
+      "sha256": "d33fbd38979f4339bc90bf3eb52b292c21a5b17b4762825eaa36ed18a0b61c35"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/case-it.json",
+      "sha256": "c9734312ed13d4424b40b69386066043677527c9b015a295ec9fcfb7c5183d1a",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/case-it.json",
+      "sha256": "4e87fe4c63ff73b7a53e8caa14ea3776f5939225a7c4f2e8bf1406b69dc52224",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/case-en.json",
+      "sha256": "55fbcc846d58881822f8c0ccb9713edfc84d63a63f07fe9d50b199216c3c1553",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/case-en.json",
+      "sha256": "7b349d859f0527df24777139a9783d89cd1049cf86311c3d5dacefb1694f408a",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/case-fr.json",
+      "sha256": "746d2702697d0f94ab335db78b3104ca1494312b572f9bf57f3c78db1dd128e5",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/case-fr.json",
+      "sha256": "4a3db7b72813bcee9971fbadaa1c388ff2e57dcff13e127f8f5cf5add3bd2a4a",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/case-de.json",
+      "sha256": "038bea836a39f5b7d1b4684764ca88fee158be186657cc9018834386278afcdd",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/case-de.json",
+      "sha256": "ed8340dda79dfa81d9376cfec5f5710bc4803fd0f763535c4cdaac2c6d663aff",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/case-es.json",
+      "sha256": "54c2a2049c5794c7e91a074cceabcd29bc41455c4cb8c4cac06d2dfb6925bb9b",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/case-es.json",
+      "sha256": "634fd01587c33e10d12f02a4aeaf4e001cbd32439ef4e6a56e2332c46571037d",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Organizzare la giornata con Vera",
+      "goal": "Imparare a registrare un impegno, modificarlo, ritrovarlo in una nuova chat e collegare una riunione alle attività successive.",
+      "scenario": "Studio Riva deve incontrare Paola e recuperare un documento. Nella prova autonoma Studio Selva incontra Luca: cambiano giorno, orario e responsabile. Tutti i dati sono fittizi.",
+      "scope": "Il registro didattico è separato da quello dello studio. Le fasce occupate nel file sono un esempio da leggere, non il calendario Google aggiornato. Il corso locale non crea eventi esterni. Dopo la pratica puoi scegliere un esercizio reale: collega il calendario, autorizza un evento di prova preciso e verifica il risultato con il connettore. Senza accesso o conferma, resta una proposta. La voce usa la trascrizione del sistema ospite; nessun ascolto continuo viene attivato.",
+      "inputs": "Apri case-it.json nella cartella della dimostrazione. Contiene preferenze, richiesta, un impegno da spostare, fasce occupate e appunti della riunione. I dati dichiarano il caso; non sono risultati già prodotti. L’assistente prepara un registro didattico nuovo senza cambiare impostazioni o impegni reali.",
+      "request": "Vera, organizza gli impegni dello studio fittizio dal file: registra l’incontro, spostalo come richiesto, conserva le azioni della riunione e mostrami la giornata. Dimmi cosa è salvato localmente e cosa non è stato scritto nel calendario.",
+      "steps": [
+        "In questa conversazione apri i dati fittizi e prepara il registro separato. L’assistente spiega per iscritto calendario, orari e durata; chiedi il dettaglio mancante invece di inventarlo. Le preferenze didattiche non collegano un account reale.",
+        "Registra l’incontro e confronta orario e durata con le fasce di esempio. Leggi il risultato salvato. Sposta l’incontro con la nuova richiesta e controlla la revisione; non chiamarlo evento inserito in Google Calendar.",
+        "Apri il registro con una nuova esecuzione o chat. Verifica identità, fonte e nuovo orario. Dai soli appunti della riunione ricava sintesi, decisioni e azioni con responsabile e data; segnala ciò che manca. Mostra impegni aperti e piano proposto, distinguendo le preferenze dalle priorità ragionate."
+      ],
+      "deliverables": [
+        "Registro didattico riapribile con incontro aggiornato, fonte e cronologia.",
+        "Riunione conservata con attività successive e responsabili; riepilogo degli impegni aperti.",
+        "Spiegazione di ciò che è realmente salvato e di ciò che richiede ancora un calendario collegato o una automazione."
+      ],
+      "review": "Apri i risultati effettivi: confronta nome, data, durata, responsabile e fonte con il file. La nuova lettura deve ritrovare lo stesso incontro modificato. Un record locale non prova che il calendario sia stato aggiornato. Le scadenze legali vanno verificate nel workflow specialistico.",
+      "checkpoints": [
+        "Prima di scrivere, indica dove resteranno i dati della lezione.",
+        "Dopo lo spostamento, ritrova lo stesso incontro nella nuova lettura.",
+        "Prima di un eventuale evento reale, scegli account e calendario e autorizza l’operazione precisa."
+      ],
+      "practice": "Apri il diverso case-it.json della cartella practice. Senza ripetere i valori della dimostrazione, formula la richiesta per Studio Selva, controlla le fasce, sposta Luca e registra le azioni. Poi segna l’attività conclusa e verifica che esca dagli impegni aperti ma resti nella cronologia.",
+      "success": "La prova conserva i propri dati e il nuovo orario anche dopo riapertura; l’attività conclusa resta recuperabile e la dimostrazione è intatta. Spiega la differenza tra registro, calendario aggiornato e briefing automatico. Un esercizio preparato non equivale alla tua partecipazione.",
+      "repeat": "Chiedi «organizzami la giornata» o descrivi l’impegno con parole tue. Per il lavoro reale usa il registro ordinario e leggi il calendario aggiornato. Un riepilogo a un’ora fissa richiede una automazione separata, configurata e verificata."
+    },
+    "en": {
+      "title": "Organise your day with Vera",
+      "goal": "Learn to save a commitment, change it, recover it in a new chat and turn meeting notes into follow-up work.",
+      "scenario": "Studio Riva needs to meet Paola and obtain a document. Independent practice uses Studio Selva and Luca, with a different day, time and owner. All data is fictional.",
+      "scope": "The teaching register is separate from the studio register. Busy periods in the file are reading examples, not a current Google calendar. The local course creates no external events. After practice you may choose a live extension: connect the calendar, authorise one specific test event and read it back through the connector. Without access or approval it remains a proposal. Voice uses host transcription; no continuous listener is enabled.",
+      "inputs": "Open case-en.json in the demonstration folder. It supplies preferences, a request, an appointment to reschedule, busy periods and meeting notes. These are case facts, not completed outputs. The assistant creates a fresh teaching register without changing real settings or commitments.",
+      "request": "Vera, organise the fictional studio commitments from this file: save the appointment, move it as requested, retain meeting actions and show the day. Tell me what was saved locally and what was not written to the calendar.",
+      "steps": [
+        "In this conversation read the fictional facts and prepare the separate register. The voice teacher explains calendar, hours and duration; ask for missing details instead of inventing them. Teaching preferences do not connect a real account.",
+        "Save the appointment and compare time and duration with the example busy periods. Read the saved result. Reschedule it from the changed request and check the revision; do not describe it as an event created in Google Calendar.",
+        "Open the register in a new process or chat. Check identity, source and new time. Derive summary, decisions and actions from the meeting notes, retaining owner and date where supplied and flagging gaps. Show open commitments and a proposed day, separating saved preferences from reasoned priorities."
+      ],
+      "deliverables": [
+        "A recoverable teaching register with the revised appointment, source and history.",
+        "A saved meeting with follow-up tasks and owners, plus a view of open commitments.",
+        "An explanation of actual saved results and what still needs a connected calendar or automation."
+      ],
+      "review": "Open actual outputs and compare name, date, duration, owner and source with the input. A new read must recover the same revised appointment. A local record does not prove calendar updating. Legal deadlines require the specialist workflow.",
+      "checkpoints": [
+        "Before writing, identify where lesson data will remain.",
+        "After rescheduling, recover the same appointment in a new read.",
+        "Before any live test event, select the account/calendar and authorise the exact operation."
+      ],
+      "practice": "Open the different case-en.json in practice. Ask for Studio Selva work in your own words rather than copying demonstration values. Check busy periods, move Luca and save meeting actions. Mark the task done; verify it leaves the open list and remains in history.",
+      "success": "Practice retains its own facts and revised time after reopening; completed work remains recoverable and the demonstration is unchanged. Explain register, current calendar and automatic briefing. Prepared material does not establish learner participation.",
+      "repeat": "Ask to organise your day or describe a commitment naturally. For real work use the normal register and freshly read calendar. A briefing at a fixed time needs separate configured and verified host automation."
+    },
+    "fr": {
+      "title": "Organiser sa journée avec Vera",
+      "goal": "Apprendre à enregistrer un engagement, le modifier, le retrouver dans une nouvelle discussion et transformer les notes de réunion en actions.",
+      "scenario": "Le cabinet Riva doit rencontrer Paola et obtenir un document. La pratique autonome utilise le cabinet Selva et Luca avec un autre jour, horaire et responsable. Toutes les données sont fictives.",
+      "scope": "Le registre pédagogique est séparé du registre du cabinet. Les périodes occupées du fichier sont des exemples, pas un agenda Google actualisé. Le cours local ne crée aucun événement externe. Après la pratique, vous pouvez choisir un essai réel : connecter le calendrier, autoriser un événement précis puis le relire avec le connecteur. Sans accès ou autorisation, cela reste une proposition. La voix utilise la transcription du système hôte ; aucune surveillance continue n’est activée.",
+      "inputs": "Ouvrez case-fr.json dans le dossier de démonstration : préférences, demande, rendez-vous à déplacer, périodes occupées et notes de réunion. Ce sont les faits du cas, pas des résultats déjà produits. La discussion de travail crée un registre pédagogique neuf sans modifier les paramètres ou engagements réels.",
+      "request": "Vera, organise les engagements du cabinet fictif à partir du fichier : enregistre le rendez-vous, déplace-le comme demandé, conserve les actions de réunion et montre la journée. Précise ce qui est enregistré localement et ce qui n’est pas écrit dans le calendrier.",
+      "steps": [
+        "Dans la discussion de travail, lisez les faits fictifs et préparez le registre séparé. L’enseignant vocal explique calendrier, horaires et durée ; demandez les précisions manquantes. Les préférences pédagogiques ne connectent aucun compte réel.",
+        "Enregistrez le rendez-vous et comparez horaire et durée aux périodes occupées de l’exemple. Lisez le résultat sauvegardé. Déplacez le rendez-vous selon la nouvelle demande et vérifiez la révision ; ne le présentez pas comme un événement créé dans Google Calendar.",
+        "Rouvrez le registre dans un nouveau processus ou une nouvelle discussion. Vérifiez identité, source et nouvel horaire. À partir des notes, dégagez synthèse, décisions et actions avec responsable et date lorsqu’ils sont indiqués ; signalez les lacunes. Montrez les engagements ouverts et un plan proposé en distinguant préférences et priorités raisonnées."
+      ],
+      "deliverables": [
+        "Registre pédagogique réouvrable avec rendez-vous modifié, source et historique.",
+        "Réunion conservée avec actions et responsables, et liste des engagements ouverts.",
+        "Explication des résultats réellement enregistrés et de ce qui nécessite encore un calendrier connecté ou une automatisation."
+      ],
+      "review": "Ouvrez les résultats réels et comparez nom, date, durée, responsable et source au fichier. Une nouvelle lecture doit retrouver le même rendez-vous modifié. Un enregistrement local ne prouve pas une mise à jour du calendrier. Les échéances légales nécessitent le workflow spécialisé.",
+      "checkpoints": [
+        "Avant d’écrire, indiquez où resteront les données pédagogiques.",
+        "Après le déplacement, retrouvez le même rendez-vous dans une nouvelle lecture.",
+        "Avant un essai réel, choisissez compte et calendrier et autorisez l’opération précise."
+      ],
+      "practice": "Ouvrez le différent case-fr.json du dossier practice. Formulez votre demande pour Selva sans recopier les valeurs de la démonstration. Vérifiez les périodes, déplacez Luca et enregistrez les actions. Marquez la tâche terminée ; vérifiez qu’elle quitte les tâches ouvertes mais reste dans l’historique.",
+      "success": "La pratique conserve ses propres faits et le nouvel horaire après réouverture ; la tâche terminée reste consultable et la démonstration reste intacte. Expliquez registre, calendrier actualisé et briefing automatique. Des fichiers préparés ne prouvent pas votre participation.",
+      "repeat": "Demandez d’organiser votre journée ou décrivez un engagement naturellement. Pour le travail réel, utilisez le registre habituel et relisez le calendrier actualisé. Un briefing à heure fixe nécessite une automatisation hôte distincte, configurée et vérifiée."
+    },
+    "de": {
+      "title": "Den Arbeitstag mit Vera organisieren",
+      "goal": "Eine Verpflichtung speichern, ändern, in einem neuen Chat wiederfinden und Besprechungsnotizen in Folgeaufgaben überführen.",
+      "scenario": "Kanzlei Riva muss Paola treffen und ein Dokument erhalten. Die eigenständige Übung nutzt Kanzlei Selva und Luca mit anderem Tag, Termin und Verantwortlichen. Alle Angaben sind fiktiv.",
+      "scope": "Das Übungsregister ist vom Kanzleiregister getrennt. Belegte Zeiten in der Datei sind Lesebeispiele, kein aktueller Google-Kalender. Der lokale Kurs erstellt keine externen Termine. Nach der Übung können Sie einen echten Test wählen: Kalender verbinden, einen bestimmten Testtermin genehmigen und über den Connector erneut lesen. Ohne Zugriff oder Freigabe bleibt es ein Vorschlag. Sprache nutzt die Transkription des Hostsystems; keine dauerhafte Überwachung wird aktiviert.",
+      "inputs": "Öffnen Sie case-de.json im Demonstrationsordner. Die Datei enthält Einstellungen, Anfrage, zu verschiebenden Termin, belegte Zeiten und Besprechungsnotizen. Das sind Fallangaben, keine fertigen Ergebnisse. Der Assistent erstellt ein neues Übungsregister, ohne echte Einstellungen oder Verpflichtungen zu ändern.",
+      "request": "Vera, organisiere die Verpflichtungen der fiktiven Kanzlei aus dieser Datei: speichere den Termin, verschiebe ihn wie angefragt, bewahre die Besprechungsaufgaben auf und zeige den Tag. Sage, was lokal gespeichert und was nicht in den Kalender geschrieben wurde.",
+      "steps": [
+        "Lesen Sie in diesem Chat die fiktiven Angaben und erstellen Sie das getrennte Register. Die Sprachbegleitung erklärt Kalender, Arbeitszeiten und Dauer; fragen Sie nach fehlenden Angaben. Übungseinstellungen verbinden kein echtes Konto.",
+        "Speichern Sie den Termin und vergleichen Sie Zeit und Dauer mit den beispielhaften belegten Zeiten. Lesen Sie das gespeicherte Ergebnis. Verschieben Sie den Termin anhand der neuen Anfrage und prüfen Sie die Revision; bezeichnen Sie ihn nicht als erstellten Google-Calendar-Termin.",
+        "Öffnen Sie das Register in einem neuen Prozess oder Chat. Prüfen Sie Identität, Quelle und neue Zeit. Leiten Sie Zusammenfassung, Entscheidungen und Aufgaben aus den Notizen ab, mit Verantwortlichem und Datum, soweit angegeben; benennen Sie Lücken. Zeigen Sie offene Verpflichtungen und einen Tagesvorschlag, wobei Einstellungen und begründete Prioritäten getrennt bleiben."
+      ],
+      "deliverables": [
+        "Ein erneut lesbares Übungsregister mit geändertem Termin, Quelle und Historie.",
+        "Eine gespeicherte Besprechung mit Folgeaufgaben und Verantwortlichen sowie offene Verpflichtungen.",
+        "Eine Erklärung der tatsächlich gespeicherten Ergebnisse und noch nötiger Kalenderverbindungen oder Automatisierungen."
+      ],
+      "review": "Öffnen Sie die echten Ergebnisse und vergleichen Sie Name, Datum, Dauer, Verantwortlichen und Quelle mit der Datei. Erneutes Lesen muss denselben geänderten Termin zeigen. Ein lokaler Datensatz beweist keine Kalenderänderung. Gesetzliche Fristen benötigen den spezialisierten Workflow.",
+      "checkpoints": [
+        "Benennen Sie vor dem Schreiben den Speicherort der Übungsdaten.",
+        "Finden Sie nach dem Verschieben denselben Termin durch erneutes Lesen.",
+        "Wählen Sie vor einem echten Test Konto und Kalender und genehmigen Sie die genaue Aktion."
+      ],
+      "practice": "Öffnen Sie die andere case-de.json im Ordner practice. Formulieren Sie die Anfrage für Selva ohne Demonstrationswerte zu kopieren. Prüfen Sie belegte Zeiten, verschieben Sie Luca und speichern Sie die Aufgaben. Markieren Sie die Aufgabe erledigt; sie muss aus der offenen Liste verschwinden und in der Historie bleiben.",
+      "success": "Die Übung behält ihre eigenen Angaben und neue Zeit nach erneutem Öffnen; erledigte Arbeit bleibt auffindbar und die Demonstration unverändert. Erklären Sie Register, aktuellen Kalender und automatisches Briefing. Vorbereitete Dateien beweisen keine Teilnahme.",
+      "repeat": "Bitten Sie um Tagesplanung oder beschreiben Sie eine Verpflichtung natürlich. Nutzen Sie bei echter Arbeit das normale Register und lesen Sie den aktuellen Kalender. Ein zeitgesteuertes Briefing braucht eine gesonderte, konfigurierte und überprüfte Hostautomatisierung."
+    },
+    "es": {
+      "title": "Organizar la jornada con Vera",
+      "goal": "Aprender a guardar un compromiso, modificarlo, recuperarlo en otra conversación y convertir notas de reunión en tareas posteriores.",
+      "scenario": "El despacho Riva debe reunirse con Paola y obtener un documento. La práctica independiente usa el despacho Selva y Luca, con otro día, horario y responsable. Todos los datos son ficticios.",
+      "scope": "El registro didáctico está separado del registro del despacho. Los períodos ocupados del archivo son ejemplos, no un calendario Google actualizado. El curso local no crea eventos externos. Después de practicar puede elegir una prueba real: conectar el calendario, autorizar un evento concreto y volver a leerlo con el conector. Sin acceso o autorización sigue siendo una propuesta. La voz usa la transcripción del sistema anfitrión; no se activa vigilancia continua.",
+      "inputs": "Abra case-es.json en la carpeta de demostración. Contiene preferencias, solicitud, cita que debe cambiarse, períodos ocupados y notas de reunión. Son hechos del caso, no resultados ya producidos. El asistente crea un registro didáctico nuevo sin cambiar ajustes o compromisos reales.",
+      "request": "Vera, organiza los compromisos del despacho ficticio del archivo: guarda la cita, cámbiala como se solicita, conserva las tareas de reunión y muestra la jornada. Indica qué se guardó localmente y qué no se escribió en el calendario.",
+      "steps": [
+        "En esta conversación lea los hechos ficticios y prepare el registro separado. La guía de voz explica calendario, horarios y duración; pida los datos que faltan. Las preferencias didácticas no conectan ninguna cuenta real.",
+        "Guarde la cita y compare horario y duración con los períodos ocupados del ejemplo. Lea el resultado guardado. Cambie la cita según la nueva solicitud y compruebe la revisión; no la describa como un evento creado en Google Calendar.",
+        "Abra el registro en otro proceso o conversación. Compruebe identidad, fuente y nueva hora. A partir de las notas derive resumen, decisiones y tareas con responsable y fecha cuando consten; señale las lagunas. Muestre compromisos abiertos y una propuesta de jornada, distinguiendo preferencias guardadas de prioridades razonadas."
+      ],
+      "deliverables": [
+        "Registro didáctico recuperable con cita modificada, fuente e historial.",
+        "Reunión guardada con tareas posteriores y responsables, más lista de compromisos abiertos.",
+        "Explicación de los resultados realmente guardados y de lo que aún necesita calendario conectado o automatización."
+      ],
+      "review": "Abra los resultados reales y compare nombre, fecha, duración, responsable y fuente con el archivo. Una nueva lectura debe recuperar la misma cita modificada. Un registro local no demuestra una actualización del calendario. Los plazos legales requieren el flujo especializado.",
+      "checkpoints": [
+        "Antes de escribir, indique dónde quedarán los datos de la lección.",
+        "Después del cambio, recupere la misma cita en una nueva lectura.",
+        "Antes de una prueba real, elija cuenta y calendario y autorice la operación exacta."
+      ],
+      "practice": "Abra el distinto case-es.json de practice. Formule la solicitud para Selva sin copiar los valores de la demostración. Compruebe períodos, cambie la cita de Luca y guarde las tareas. Marque la tarea completada; compruebe que salga de la lista abierta y siga en el historial.",
+      "success": "La práctica conserva sus propios datos y nueva hora tras reabrirse; la tarea completada sigue disponible y la demostración queda intacta. Explique registro, calendario actualizado y resumen automático. Los materiales preparados no prueban participación.",
+      "repeat": "Pida organizar la jornada o describa el compromiso con sus palabras. Para trabajo real use el registro normal y lea el calendario actualizado. Un resumen a hora fija necesita una automatización anfitriona separada, configurada y verificada."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "a3df769b512ec18d55b3d7608e52e6a1d3ead3a8bfe3caa622f5e1170f613afa"
+}

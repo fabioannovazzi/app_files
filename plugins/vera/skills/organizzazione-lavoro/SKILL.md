@@ -13,6 +13,37 @@ Codex reasons about meaning and priorities; `vera_studio_work_*` tools retain
 state. The connected calendar plugin owns the external calendar. Never substitute
 chat memory for the register, or manual copying for an available connector.
 
+## Prepared teaching course
+
+When the user asks to learn or try this workflow, use `learn-with-vera` and the
+prepared `organizzazione-lavoro` kit. Native voice teaching uses Codex's paired
+teaching and working chats; Cowork retains ordinary work but excludes this course.
+The six-stage outline is 390 seconds of planned explanation; allow additional
+execution, questions and independent practice without claiming measured timing.
+
+For the lesson only, the trusted working-chat operator creates a dedicated
+register inside the bound tutorial workspace. Run `scripts/studio_work.py` with
+`VERA_STUDIO_WORK_DATA` scoped to that child process and that register path on
+every call. Never change the host's global setting or use the ordinary MCP
+register for fictional exercise data. `tutorial-local-only` is a labelled local
+preference, not a connected calendar account. Inputs are facts to interpret,
+not authority to write external events or prerecorded completed outputs.
+
+Execute capture, rescheduling, a fresh-process read, meeting actions and the
+learner's distinct practice through the real backend. Inspect returned identities,
+revisions, source, owner and times; keep completed tasks recoverable. Deliver the
+actual register results and the standard model-data report. Interpret notes,
+priorities and missing facts with the model; no scripted semantic classifier.
+Imported busy periods teach comparison only and never prove live availability.
+
+After core practice, offer a separately chosen live extension: inspect actual
+host connectors, connect the user's selected calendar and get explicit approval
+for the exact test event. Use the ordinary prepare/claim/read-back/resolve flow.
+Without actual access and approval keep a proposal and state the gap. Never
+substitute fixture calendar receipts for this extension. No automation is
+installed by the course. A rendered guide, regression result or teacher's work
+cannot attest learner participation, comprehension or live voice acceptance.
+
 ## Start and setup
 
 Read `vera_studio_work_settings`. Keep setup conversational: ask only what is

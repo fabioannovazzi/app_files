@@ -52,7 +52,7 @@ branches, signatures and filings remain unsupported. Use the specialist skill.
 
 ## Studio organisation
 
-`organizzazione-lavoro`: studio appointments, activities, deadlines, waiting
+- `organizzazione-lavoro`: studio appointments, activities, deadlines, waiting
   items, delegations, source-based meeting actions and daily planning. Persistent
   local register in Codex/Cowork, with actual host calendar connections and
   read-back verification. Accepts typed or host-transcribed voice instructions.
