@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "workflow_id": "invoice-xml",
+  "run_id": "run_synthetic_example",
+  "runtime_profile": "openai-codex",
+  "language": "it",
+  "created_at": "2026-10-07T12:00:00+02:00",
+  "professional_purpose": "Preparare una bozza XML da una fonte sintetica leggibile.",
+  "phases": [
+    {
+      "phase_id": "source-interpretation",
+      "purpose": "Interpretare la fonte sintetica completa.",
+      "outcome": "full_context_required",
+      "evidence_basis": "host_attested",
+      "source_extent": [
+        {"unit": "images", "quantity": 1, "label": "immagini sintetiche disponibili", "basis": "attested"}
+      ],
+      "locally_processed": [],
+      "model_visible": [
+        {"unit": "images", "quantity": 1, "label": "immagini sintetiche viste", "basis": "attested"}
+      ],
+      "remained_local": [],
+      "reason": "La lettura dell'intera fonte sintetica era necessaria per interpretarne i campi.",
+      "evidence_files": []
+    }
+  ],
+  "improvement_assessment": {
+    "status": "not_assessed",
+    "candidates": []
+  }
+}

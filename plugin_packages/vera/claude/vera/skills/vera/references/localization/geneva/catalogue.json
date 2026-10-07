@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/vera-organizzazione-course/plugins/vera",
-  "version": "0.1.350",
-  "captured_at": "2026-10-07T13:37:03.758074+00:00",
-  "catalogue_fingerprint": "d00b7771ff319be692dff994999e9d5a3b0a3e7bf38eed3cb5ac4c36d87b0610",
-  "manifest_sha256": "1b7ac6658d7ff5e6385845a1c6267483765bdedf550f8078f460a5b7ea6ba9e6",
+  "root": "/private/tmp/vera-invoice-intake-deploy/plugins/vera",
+  "version": "0.1.351",
+  "captured_at": "2026-10-07T15:57:29.590256+00:00",
+  "catalogue_fingerprint": "56568435133705961b89c97b4e7a5f0cf97a1f50e20d19b62cbe14cd98968acf",
+  "manifest_sha256": "9b22e6890863e3ef32966eb892b1ad7489c6bae116cba8e3cc1ea181b982e715",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -119,7 +119,7 @@
     {
       "function_id": "invoice-xml",
       "skill_path": "skills/invoice-xml/SKILL.md",
-      "sha256": "f02a0ccf108eea2cd18415334d10aacc26f84cd9af11d543581c6aecb186ac81"
+      "sha256": "56655b50bdf3ec9035ef969195dfe2e64446ddbf583ae12a0dd455319c075cb9"
     },
     {
       "function_id": "journal-bank-reconciliation",

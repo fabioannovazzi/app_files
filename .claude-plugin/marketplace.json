@@ -12,7 +12,7 @@
       "displayName": "Vera",
       "source": "./plugin_packages/vera/claude/vera",
       "description": "Assistente AI per commercialisti e studi professionali. Prepara risposte e report a quesiti fiscali e legali con verifica delle fonti e del ragionamento, bilanci OIC/XBRL e analisi finanziarie, riconciliazioni e controlli a supporto della revisione contabile. Conserva eccezioni e carte di lavoro; supporta anche pianificazione, pratiche e comunicazioni. Il giudizio professionale, la firma e l’invio restano al commercialista.",
-      "version": "0.1.350",
+      "version": "0.1.351",
       "author": {
         "name": "Mparanza",
         "email": "fabio@mparanza.com",
