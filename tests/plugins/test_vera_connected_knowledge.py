@@ -123,4 +123,4 @@ def test_studio_work_service_uses_register_and_host_calendar_contract(
     assert "connected calendar plugin" in text
     assert MARKER not in text
     assert "Never manufacture evidence" in text
-    assert "privacy/services/studio-work.json" in entries
+    assert "scripts/studio_work.py" in entries
