@@ -6,6 +6,7 @@ const path = require("node:path");
 const { spawn } = require("node:child_process");
 
 const COMPONENTS = new Set([
+  "browser-automation",
   "archive-organization",
   "open-item-reconciliation",
   "client-file-preparation",

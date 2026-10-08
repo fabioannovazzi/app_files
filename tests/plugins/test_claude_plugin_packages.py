@@ -533,9 +533,18 @@ def test_root_anthropic_manifest_and_local_mcp_are_discoverable(
     assert (
         "modules/browser-automation/scripts/capability_contract.py" not in vera_entries
     )
+    for retired in (
+        "scripts/agenzia_download.mjs",
+        "scripts/agenzia_acquisition.mjs",
+        "scripts/agenzia_artifacts.mjs",
+        "capabilities/agenzia-invoice-zip/capability.json",
+    ):
+        assert f"modules/browser-automation/{retired}" not in vera_entries
+    assert "modules/browser-automation/scripts/agenzia_acquire.py" in vera_entries
+    assert "modules/browser-automation/mcp/server.cjs" in vera_entries
+    assert "skills/agenzia-acquisition/SKILL.md" in vera_entries
     for capability_id in (
         "gmail-search-export",
-        "agenzia-invoice-zip",
         "teamsystem-process",
     ):
         relative_path = f"capabilities/{capability_id}/capability.json"

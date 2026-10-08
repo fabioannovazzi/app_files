@@ -1,5 +1,7 @@
 # Automazione web
 
+Per fatture, corrispettivi e bolli dell’Agenzia usa la [funzione di acquisizione](skills/agenzia-acquisition/SKILL.md): un solo worker locale, adattato dalla procedura fornita da Francesco Platania, con pannello nativo facoltativo, ripresa verificata e file di risultato. L’operatore completa personalmente l’accesso nel Chrome locale.
+
 Sviluppo e uso ordinario conservano la stessa identità di processo anche in una
 nuova conversazione. Il [ciclo di sviluppo](references/process-lifecycle.md)
 collega insegnamento, tentativi, prove revisionate, CR effettivamente ricevuti,

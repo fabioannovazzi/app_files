@@ -9650,5 +9650,48 @@
         ]
       }
     ]
+  },
+  "vera/agenzia-acquisition": {
+    "group": "workflow",
+    "revision": "2026-10-08.1",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "run_agenzia_synthetic_fixture_then_review_and_resume"
+    },
+    "files": [
+      {
+        "source": "agenzia/task-it.md",
+        "path": "files/input/task-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "agenzia/demo.json",
+        "path": "files/input/demo.json",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "agenzia/practice-it.md",
+        "path": "files/practice/practice-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "agenzia/practice.json",
+        "path": "files/practice/practice.json",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      }
+    ]
   }
 }

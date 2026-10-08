@@ -30,6 +30,22 @@
         "es": "Pasar de evaluación a procedimientos: recoger respuestas, diseñar un control proporcionado, revisar el manual y comprobar adopción y funcionamiento por separado."
       }
     },
+    "agenzia-acquisition": {
+      "path": "agenzia-acquisition/course.json",
+      "sha256": "5d64ebfc1a15e1b0b186b799f85f16a7c144c8e250a7e4e15651504f1bd69d68",
+      "languages": [
+        "it"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Acquisire fatture, corrispettivi e bolli con Vera"
+      },
+      "goals": {
+        "it": "Preparare un’acquisizione per clienti e periodo, leggere originali ed eccezioni, riprendere un lavoro e distinguere i bolli rilevati dai residui da versare."
+      }
+    },
     "aml-review": {
       "path": "aml-review/course.json",
       "sha256": "a75ed727dcccdcc49acff60d329fdda531be263074e4e9dbda9a234a9a76c26c",
@@ -163,7 +179,7 @@
     },
     "browser-automation": {
       "path": "browser-automation/course.json",
-      "sha256": "82dff448ff50754dc3ff5ba1c0136c346e12bdb3784cdf7f1e0927df657d475a",
+      "sha256": "be94d4e036ee44df1b1591433146aa46b76a2ef0eaf6b75f7f8cd8ebd68ce101",
       "languages": [
         "it",
         "en",

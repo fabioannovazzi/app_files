@@ -106,11 +106,10 @@ def _set_nested(
         target[final] = value
 
 
-def test_three_process_capabilities_have_honest_contract_states() -> None:
+def test_process_capabilities_have_honest_contract_states() -> None:
     contract = _load_contract()
     expected_status = {
         "gmail-search-export": "draft",
-        "agenzia-invoice-zip": "scaffold",
         "teamsystem-process": "scaffold",
     }
 
@@ -162,7 +161,7 @@ def test_gmail_export_draft_retains_process_but_requires_new_replays() -> None:
 
 
 def test_agenzia_and_teamsystem_do_not_claim_unobserved_execution() -> None:
-    for capability_id in ("agenzia-invoice-zip", "teamsystem-process"):
+    for capability_id in ("teamsystem-process",):
         payload = _capability(capability_id)
 
         assert payload["status"] == "scaffold"

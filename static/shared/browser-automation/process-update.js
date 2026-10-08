@@ -21,33 +21,10 @@
       "El modelo lee la descripción y los límites del proceso, parámetros aportados, resúmenes del aprendizaje, resultados, recuentos, hashes y referencias a informes locales. Duración, modelo y tokens reflejan solo las medidas disponibles; la información que falta tiene un motivo explícito. El registro local vincula procesos, intentos, versiones y CR. El envío autorizado a Mparanza contiene el texto técnico revisado y las pruebas seleccionadas, no el ZIP, documentos fiscales, valores de salida, identificadores del cliente ni credenciales. La cualificación exige dos ejecuciones limpias en el mismo entorno, resultados comprobados y tiempos aceptados; una versión publicada no prueba el funcionamiento en el sitio."
     ]
   };
-  const browserSessionCopy = {
-    it: [
-      "Prima di una pausa per accesso o altro intervento dell'operatore, Vera conserva la scheda del processo per il turno successivo. Distingue scheda persa, elenco vuoto e browser non disponibile. Nell'acquisizione Agenzia archivia per anno e categoria, riconcilia pagine e totale osservato, conserva gli originali XML o P7M ed estrae dall'eventuale P7M l'XML collegandolo con hash. La stampa in PDF resta un passaggio dell'operatore e il risultato viene verificato dai byte salvati.",
-      "La diagnosi restituisce categorie, conteggi, esiti della conservazione della scheda e hash degli errori. Solo gli identificativi temporanei delle schede sulle origini autorizzate possono essere usati per la ripresa; URL completi e titoli non entrano nel report. Per Agenzia il modello usa periodo, nome accessibile della categoria, disponibilità dei formati e conteggi osservati; riceve solo aggregati, stato del prototipo e gap nativi. Percorsi, hash, identità delle pagine di dettaglio e collegamenti P7M–XML restano nei report locali; i contenuti delle fatture non vengono restituiti. L'estrazione P7M non verifica la firma digitale. Le prove simulate non valgono come validazione sul sito reale."
-    ],
-    en: [
-      "Before pausing for login or another operator step, Vera preserves the process tab for the next turn. It distinguishes a missing tab, an empty list and an unavailable browser. Agenzia acquisition archives by year and category, reconciles pages and the observed total, preserves XML or P7M originals, and extracts the XML from P7M with a hash binding. Printing to PDF remains an operator step and the saved bytes are verified.",
-      "Diagnosis returns categories, counts, tab-retention outcomes and error hashes. Only temporary tab identifiers on authorized origins may be used to resume; full URLs and titles are excluded from the report. For Agenzia the model uses the period, accessible category name, format availability and observed counts; it receives only aggregates, prototype status and native gaps. Paths, hashes, detail-page identities and P7M-to-XML bindings remain in local reports; invoice contents are not returned. P7M extraction does not validate the digital signature. Simulated tests cannot count as real-site validation."
-    ],
-    fr: [
-      "Avant une pause pour connexion ou intervention de l'opérateur, Vera conserve l'onglet du processus pour le tour suivant. Elle distingue onglet absent, liste vide et navigateur indisponible. L'acquisition Agenzia archive par année et catégorie, rapproche les pages et le total observé, conserve les originaux XML ou P7M et extrait le XML du P7M en le reliant par empreinte. L'impression en PDF reste une étape de l'opérateur et les octets enregistrés sont vérifiés.",
-      "Le diagnostic renvoie catégories, nombres, résultat de conservation de l'onglet et empreintes des erreurs. Seuls les identifiants temporaires d'onglets sur les origines autorisées peuvent servir à reprendre ; URL complètes et titres sont exclus du rapport. Pour Agenzia, le modèle utilise période, nom accessible de la catégorie, disponibilité des formats et nombres observés ; il ne reçoit que les agrégats, l'état du prototype et les étapes natives. Chemins, empreintes, identités des pages de détail et liens P7M–XML restent dans les rapports locaux ; le contenu des factures n'est pas renvoyé. L'extraction P7M ne valide pas la signature numérique. Les tests simulés ne constituent pas une validation sur le site réel."
-    ],
-    de: [
-      "Vor einer Pause für Anmeldung oder einen Bedienerschritt bewahrt Vera den Prozess-Tab für den nächsten Gesprächsschritt auf. Sie unterscheidet fehlenden Tab, leere Liste und nicht verfügbaren Browser. Die Agenzia-Erfassung archiviert nach Jahr und Kategorie, gleicht Seiten und beobachtete Gesamtzahl ab, bewahrt XML- oder P7M-Originale auf und extrahiert die XML aus P7M mit Hash-Verknüpfung. Der PDF-Druck bleibt ein Bedienerschritt; die gespeicherten Bytes werden geprüft.",
-      "Die Diagnose liefert Kategorien, Anzahlen, Ergebnisse der Tab-Aufbewahrung und Fehler-Hashes. Nur temporäre Tab-Kennungen zugelassener Ursprünge dürfen zur Fortsetzung dienen; vollständige URLs und Titel fehlen im Bericht. Für Agenzia verwendet das Modell Zeitraum, zugänglichen Kategorienamen, Formatverfügbarkeit und beobachtete Anzahlen; es erhält nur Aggregate, Prototypstatus und native Lücken. Pfade, Hashes, Detailseiten-Identitäten und P7M–XML-Verknüpfungen bleiben in lokalen Berichten; Rechnungsinhalte werden nicht zurückgegeben. Die P7M-Extraktion validiert die digitale Signatur nicht. Simulierte Tests gelten nicht als Validierung auf der echten Website."
-    ],
-    es: [
-      "Antes de pausar para iniciar sesión u otro paso del operador, Vera conserva la pestaña del proceso para el siguiente turno. Distingue pestaña ausente, lista vacía y navegador no disponible. La adquisición de Agenzia archiva por año y categoría, concilia páginas y total observado, conserva originales XML o P7M y extrae del P7M el XML vinculado mediante hash. La impresión en PDF sigue siendo un paso del operador y se verifican los bytes guardados.",
-      "El diagnóstico devuelve categorías, recuentos, resultado de conservación de la pestaña y hashes de errores. Solo pueden usarse identificadores temporales de pestañas en orígenes autorizados para retomar; URL completas y títulos quedan fuera del informe. Para Agenzia el modelo usa periodo, nombre accesible de la categoría, disponibilidad de formatos y recuentos observados; solo recibe agregados, estado de prototipo y brechas nativas. Rutas, hashes, identidades de páginas de detalle y vínculos P7M–XML permanecen en informes locales; no se devuelve el contenido de las facturas. La extracción P7M no valida la firma digital. Las pruebas simuladas no cuentan como validación en el sitio real."
-    ]
-  };
-  Object.entries(browserSessionCopy).forEach(([language, text]) => {
+
+  Object.entries(lifecycleCopy).forEach(([language, text]) => {
     const page = window.MPARANZA_FUNCTION_PAGES["browser-automation"].copy[language];
     page.work += " " + text[0];
     page.modelData += "\n\n" + text[1];
-    page.work += " " + lifecycleCopy[language][0];
-    page.modelData += "\n\n" + lifecycleCopy[language][1];
   });
 })();

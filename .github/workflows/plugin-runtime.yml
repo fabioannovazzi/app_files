@@ -252,6 +252,7 @@ jobs:
           -r plugins/attribute-reporting/requirements.txt
           -r plugins/bandi-agevolazioni/requirements.txt
           -r plugins/bilancio-xbrl-it/requirements.txt
+          -r plugins/browser-automation/requirements-agenzia.txt
           -r plugins/business-planning/requirements.txt
           -r plugins/business-valuation/requirements.txt
           -r plugins/centrale-rischi-review/requirements.txt
@@ -307,6 +308,7 @@ jobs:
           tests/plugins/test_teaching_release_review.py tests/plugins/test_teaching_execution_evidence.py tests/plugins/test_prepared_courses.py tests/plugins/test_course_chat_buttons.py tests/plugins/test_course_preview.py tests/plugins/test_mixed_course_release.py tests/plugins/test_prepared_course_packages.py tests/plugins/test_teaching_package_projection.py tests/plugins/test_teaching_kit_execution.py tests/plugins/test_teaching_kit_advisory_execution.py tests/plugins/test_teaching_kit_transcript_execution.py tests/plugins/test_teaching_kit_website_execution.py tests/plugins/test_teaching_presentation_execution.py tests/plugins/test_teaching_inps_execution.py
           tests/plugins/test_teaching_workbook_dimensions.py tests/plugins/test_teaching_concordato_execution.py tests/plugins/test_teaching_question_execution.py tests/plugins/test_teaching_registro_execution.py tests/plugins/test_teaching_bilancio_execution.py
           tests/plugins/test_teaching_attribute_execution.py
+          tests/plugins/test_teaching_agenzia_execution.py
           tests/plugins/test_teaching_studio_work_execution.py
           tests/plugins/test_teaching_bandi_execution.py
           tests/plugins/test_teaching_invoice_xml_execution.py

@@ -157,6 +157,7 @@
     "business-valuation": [["vera", "area-analysis"]],
     "fusione-guidata": [["vera", "area-matters"]],
     "browser-automation": [["vera", "area-matters"]],
+    "agenzia-acquisition": [["vera", "area-matters"]],
     "centrale-rischi-review": [["vera", "area-analysis"]],
     "check-entries": [["vera", "area-accounting"]],
     "clara-brand-fit": [["clara", "area-retail"]],
