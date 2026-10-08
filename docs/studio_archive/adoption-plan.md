@@ -55,3 +55,7 @@ installed Windows version or the model's actual conversational routing there, an
 there is no measured adoption uplift. His acceptance case remains: review an existing
 client contract in a new chat without archive setup or duplicate registration, then
 create one standalone invoice without archive setup while retaining export approval.
+
+## Existing-session upgrade correction
+
+The coordinated 0.1.354 candidate contains the adoption implementation. A further real upgrade probe found that enabling the durable profile for an already-approved legacy session could create its parent with mode 0755 before identity migration. The follow-up release (Vera 0.1.355, Clara 0.1.258, Lucia 0.1.90) persists the existing approved scope through the secure profile helper before the identity lock creates subdirectories. It rejects a profile inside the source archive before writing. Two subprocess regressions cover legacy alias recovery and source-root refusal; fresh-session, concurrency and standalone boundaries remain covered. Native Windows and Francesco conversation acceptance remain unverified.

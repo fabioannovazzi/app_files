@@ -577,6 +577,17 @@ def _identity_transaction(function: Callable[..., Any]) -> Callable[..., Any]:
             else None
         )
         try:
+            if profile is not None and config is not None:
+                if _path_is_within(profile, config.archive_root) or _path_is_within(
+                    config.archive_root, profile
+                ):
+                    raise ArchiveError(
+                        "Private archive profile must be outside the source archive."
+                    )
+                approved = profile / "approved-archive.json"
+                if not approved.exists() and not approved.is_symlink():
+                    # This session's validated configuration already carries approval.
+                    _remember_approved_root(state, config.archive_root)
             guard = (
                 preferences.registry_lock(profile, config.archive_root)
                 if profile is not None and config is not None
