@@ -84,3 +84,11 @@ dell'operatore. Il percorso a file rimane disponibile quando il pannello manca.
 CI, merge, deploy, integrità del download pubblico e messaggio Discord sono
 verificati separatamente nel PR e nel resoconto finale, non attestati da questo
 file. Nessuna pubblicazione Marketplace è inclusa.
+
+## Allineamento dei registri condivisi
+
+Il catalogo della localizzazione registra la nuova funzione come non qualificata
+per CH-GE, preservando i giudizi precedenti. Le impronte Clara relative a lezioni
+e voce includono i file pubblici condivisi modificati da questa release: sono
+state riesaminate senza modificare i percorsi dei dati. Clara 0.1.254 distribuisce
+questo aggiornamento dei soli metadati; non cambia funzioni o istruzioni.

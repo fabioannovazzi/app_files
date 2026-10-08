@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/vera-invoice-intake-deploy/plugins/vera",
-  "version": "0.1.351",
-  "captured_at": "2026-10-07T15:57:29.590256+00:00",
-  "catalogue_fingerprint": "56568435133705961b89c97b4e7a5f0cf97a1f50e20d19b62cbe14cd98968acf",
-  "manifest_sha256": "9b22e6890863e3ef32966eb892b1ad7489c6bae116cba8e3cc1ea181b982e715",
+  "root": "plugins/vera",
+  "version": "0.1.352",
+  "captured_at": "2026-10-08T08:22:17.049070+00:00",
+  "catalogue_fingerprint": "51ea7eed30a279c376c4b7df64016371b46ba2994f8b1444dac28277a03b5261",
+  "manifest_sha256": "875d07e2697de87e0d6a39f97a1510d7507f99e46d34f5bece458914afdb4860",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -15,6 +15,11 @@
       "function_id": "adversarial-opinion",
       "skill_path": "skills/adversarial-opinion/SKILL.md",
       "sha256": "e0a6d6119986763c0015dcb62d2bae3e980dbbfbe59d57d59ca6df3f740f8fab"
+    },
+    {
+      "function_id": "agenzia-acquisition",
+      "skill_path": "skills/agenzia-acquisition/SKILL.md",
+      "sha256": "e08a2df39ed37c76e62b3fdeb95110ff70e14c57c3198d1e01b08d39bcd103d1"
     },
     {
       "function_id": "aml-review",
@@ -44,7 +49,7 @@
     {
       "function_id": "browser-automation",
       "skill_path": "skills/browser-automation/SKILL.md",
-      "sha256": "0f0de0d1fe6ae670e244bb50f637d05155ea3f5955e81e1274fcf48df4d0cecc"
+      "sha256": "324bd3c99a9aa6ebe376c291c760b398f7c4de6b545bdbf03f29adf5c4f27216"
     },
     {
       "function_id": "business-planning",

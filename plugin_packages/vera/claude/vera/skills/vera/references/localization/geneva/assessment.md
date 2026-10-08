@@ -12,7 +12,7 @@ Later host-specific instructions in this reference cannot override this rule.
 
 Updated 2026-10-02 (catalogue integration only; prior professional assessment retained). Target: CH-GE; example user: a generalist fiduciary serving SMEs. French output and CHF are explicit case settings, not selectors of governing law.
 
-The current inventory covers all 48 skill entrypoints, including internal helpers and development prototypes. All prior professional judgments are retained; catalogue coverage does not establish target-country acceptance.
+The current inventory covers all 51 skill entrypoints, including internal helpers and development prototypes. All prior professional judgments are retained; catalogue coverage does not establish target-country acceptance.
 
 The release adds bounded adapters and instructions, not a blanket claim that every fiduciary mandate is supported. Original evidence and professional decisions remain necessary. No real Geneva client workflow has been accepted.
 
@@ -129,3 +129,11 @@ Vera 0.1.324 adds the studio Word-format pipeline and its course. The 47-entry s
 ## Rating di legalità catalogue integration — 2 October 2026
 
 Vera 0.1.334 adds the Italian first-attribution workflow, preserving the intervening French discovery keywords and Antigravity documentation. The 48-entry catalogue retains all 47 prior target rows and records this new function as Unresolved for CH-GE. The evidence dossier, event dates and pilot safeguards implement the Italian scope only. No equivalent Geneva procedure or professional acceptance is claimed.
+
+## Agenzia acquisition catalogue integration — 8 October 2026
+
+Vera 0.1.352 adds `agenzia-acquisition` and distinguishes it from generic browser
+teaching. Its worker targets the Italian AdE portal. Its Geneva disposition is
+Unresolved: no Swiss source adapter or domestic-case acceptance has been assessed.
+All prior jurisdiction judgments remain unchanged. The 51-entry snapshot is
+catalogue coverage, not a new professional qualification.

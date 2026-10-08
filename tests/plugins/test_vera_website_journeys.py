@@ -895,7 +895,7 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
 def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     core = _section_markup(page, "core")
-    expected_module_count = 45
+    expected_module_count = 46
     module_hrefs = re.findall(
         r'<a class="module-row"[^>]+href="([^"]+)"', core, flags=re.DOTALL
     )
@@ -904,7 +904,7 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     assert len(module_hrefs) == expected_module_count
     assert len(module_hrefs) == len(set(module_hrefs))
     assert core.count('data-primary-workflow-link="') == 2
-    assert core.count('data-jurisdiction-item="it"') == 16
+    assert core.count('data-jurisdiction-item="it"') == 17
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
     for expected_href in (
@@ -1020,6 +1020,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Fusione per incorporazione",
         "Patent Box · anteprima",
         "Revisione concordato preventivo",
+        "Acquisizione Agenzia delle Entrate",
         "Automazione web",
         "Campionamento scritture contabili",
         "Verifica documentale",
@@ -1083,6 +1084,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
 
     # The public directory and marketplace use one canonical naming contract.
     canonical_skill_labels = {
+        "agenzia-acquisition": "Acquisizione Agenzia delle Entrate",
         "organizzazione-lavoro": "Organizzazione del lavoro",
         "lipe": "LIPE",
         "esg-reporting-assurance": "Fascicolo ESG",
@@ -1132,7 +1134,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
     )["skills"]
 
     assert labels == expected_labels
-    assert len(labels) == 45
+    assert len(labels) == 46
     assert {
         workflow: marketplace_cards[workflow]["display_name"]
         for workflow in canonical_skill_labels

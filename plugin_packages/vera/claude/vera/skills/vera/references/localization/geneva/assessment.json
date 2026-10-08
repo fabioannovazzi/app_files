@@ -1000,6 +1000,27 @@
         "studio configuration"
       ],
       "limitations": "No unattended inbox listener or automatic legal deadline determination; live host and calendar acceptance remains outstanding."
+    },
+    {
+      "function_id": "agenzia-acquisition",
+      "name": "Agenzia delle Entrate acquisition",
+      "role": "function",
+      "disposition": "Unresolved",
+      "common_work": "Retrieve original invoices and portal summaries for review and later accounting import.",
+      "geneva_application": "No domestic Swiss source is implemented by this AdE-specific operation; cross-border use requires an evidenced Italian mandate.",
+      "required_change": "Assess an applicable Swiss source before proposing any adapter. The current worker uses fixed Italian Agenzia endpoints, Italian CF/P.IVA and bolli evidence.",
+      "adaptation_layers": [
+        "source system",
+        "tax identifiers",
+        "quarterly stamp-duty evidence"
+      ],
+      "acceptance_example": "A Geneva domestic request is not routed into Italian AdE merely because the explanation is in French.",
+      "sources": [
+        "plugins/browser-automation/scripts/ade_acquisition/portal.py",
+        "plugins/browser-automation/skills/agenzia-acquisition/SKILL.md"
+      ],
+      "verification": "Italian acquisition source and synthetic tests inspected. No Swiss source, real Geneva case or live AdE acceptance established.",
+      "implementation_status": "italian_source_only"
     }
   ],
   "sources": {
@@ -1185,7 +1206,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "56568435133705961b89c97b4e7a5f0cf97a1f50e20d19b62cbe14cd98968acf",
+  "catalogue_fingerprint": "51ea7eed30a279c376c4b7df64016371b46ba2994f8b1444dac28277a03b5261",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1471,5 +1492,17 @@
     "version": "0.1.350",
     "previous_catalogue_fingerprint": "d7630254b8fb6648782492583ccb7641a9bfea170777d92b9c07d9c2f7d48f2e",
     "scope": "Prepared five-language local organizer course; unchanged function coverage and Geneva disposition. No new learner, native voice or live-calendar acceptance."
+  },
+  "agenzia_acquisition_release_binding": {
+    "date": "2026-10-08",
+    "version": "0.1.352",
+    "previous_catalogue_fingerprint": "56568435133705961b89c97b4e7a5f0cf97a1f50e20d19b62cbe14cd98968acf",
+    "added_skills": [
+      "agenzia-acquisition"
+    ],
+    "changed_existing_entrypoints": [
+      "browser-automation"
+    ],
+    "scope": "Register the new AdE acquisition separately from generic browser teaching; preserve existing jurisdiction judgments. Optional native UI and translated pages do not qualify Swiss portal support."
   }
 }
