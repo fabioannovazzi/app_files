@@ -10,6 +10,10 @@ only the Studio Archive run path described below.
 
 ## Client engagement gate
 
+For annual OIC comparisons, first read `references/annual-statements.md` and use
+its source-cell case and managed runner. It shares this Archive lifecycle but
+does not require the unrelated accounting/FDD contract stack below.
+
 Select one Studio Archive client and engagement, import the reviewed datasets
 and case contract, then call `prepare_studio_client_workflow` with workflow ID
 `financial-analysis`. Pass the returned `client_engagement_path` as
@@ -25,6 +29,20 @@ the closed declaration, then call `complete_studio_client_workflow`; record
 directory as a result.
 
 # Vera Financial Analysis
+
+## Annual statements route
+
+For a historical diagnosis of annual filed accounts (including several years
+and combined balance-sheet/income-statement sheets), follow
+`references/annual-statements.md`. The maintained `annual_oic_source_cells.v1`
+recipe produces Word, editable Excel, Markdown and source-linked checks from
+explicit mappings, with model-written interpretation and note coverage. It
+preserves inconsistent source totals and missing values. Do not stop because the
+eight accounting/FDD packs below do not match this annual task, or substitute
+Report Builder's initial whole-sheet assignment for financial analysis.
+
+The eight-pack instructions below apply to their named accounting/FDD jobs.
+The separate annual route has its own case, receipt and dependency check.
 
 Use this workflow for financial-analysis preparation owned by Vera:
 
@@ -52,7 +70,7 @@ Clara may later consume reviewed customer-concentration evidence for commercial
 analysis, but Vera owns its accounting source, identity, currency, period,
 reconciliation, and preparation controls.
 
-This is one financial-analysis workflow, not an orchestrator. Do not generate
+For these eight accounting/FDD jobs, do not generate
 calculation code. Select one named and versioned deterministic recipe with
 explicit parameters. The component includes eight registered engines. They are
 deliberately narrow: input files must satisfy the exact reviewed case contract,
@@ -130,7 +148,8 @@ them. Natural outputs are not choices to propose.
 python scripts/check_dependencies.py
 ```
 
-The workflow has no third-party requirements. If dependency validation fails,
+The eight accounting/FDD packs have no third-party requirements. The annual route
+uses declared openpyxl and python-docx dependencies. If dependency validation fails,
 do not install undeclared packages; report the missing vendored assurance
 module.
 3. Run exactly one registered pack:

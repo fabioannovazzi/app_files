@@ -1,6 +1,14 @@
 # Vera Financial Analysis
 
-This Vera workflow establishes the case-level control layer for eight runnable
+Historical annual OIC statements have a separate source-cell recipe documented
+in `references/annual-statements.md`. It supports two to ten years in XLSX,
+explicit SP/CE cell mappings, source-versus-rebuilt reconciliation, both EBITDA
+definitions, missing-value propagation and model-authored source-linked notes.
+`scripts/run_annual_statements.py` produces Word, editable Excel, Markdown and
+JSON in a managed financial-analysis run. Exceptions remain qualified drafts;
+the recipe does not approve filings, audit note coverage or certify conclusions.
+
+The accounting/FDD route establishes the case-level control layer for eight runnable
 financial-analysis packs.
 
 Accounting preparation:

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import logging
 import sys
 from pathlib import Path
@@ -37,6 +38,7 @@ def main(argv: list[str] | None = None) -> int:
         type=Path,
         default=PLUGIN_ROOT / "requirements.txt",
     )
+    parser.add_argument("--annual-statements", action="store_true")
     args = parser.parse_args(argv)
     if not args.requirements.is_file():
         LOGGER.error("Requirements file not found: %s", args.requirements)
@@ -44,6 +46,11 @@ def main(argv: list[str] | None = None) -> int:
     try:
         _activate_assurance()
         import vera_financial_analysis  # noqa: F401
+
+        if args.annual_statements:
+            for module in ("openpyxl", "docx"):
+                if importlib.util.find_spec(module) is None:
+                    raise ImportError(f"Annual statements dependency missing: {module}")
     except (ImportError, RuntimeError) as exc:
         LOGGER.error("Missing dependency: %s", exc)
         return 1
