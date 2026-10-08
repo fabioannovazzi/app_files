@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "studio-archive",
-  "course_sha256": "b0c27bf939ff3375ff1457c2c920af929c541bc7afb95851d44ef8de92f722d9",
+  "course_sha256": "08111df731ef54aff9619cab5d4368e42d991289fdb8ad7971e5c61cfe82ce95",
   "reviewer": "Codex: five-language local archive lesson and delivered answer review",
   "reviewed_at": "2026-09-14T21:43:59.684693+00:00",
   "review_scope": "Prepared material and native local document-search review. Read all five complete outlines, all fifteen fictional input documents and all ten final answer captures. Nineteen checks pass, including ten distinct phase/language exercises through the real staging, archive configuration, refresh, exact-scope search and source opening functions. Semantic answers are authored regression fixtures outside the shipped kits and do not replace live host reasoning. Native voice, GUI presentation, actual elapsed lesson time and learner comprehension remain unverified. Gmail, WhatsApp, Drive and the separate engagement lifecycle are not exercised by this local-search lesson. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate. Vera 0.1.347 bounded source-inventory refresh: the only changed course field is sources; all authored content, inputs, expectations and locale reviews match the reviewed main baseline. The Archive change adds derived navigation after engagement writes and recovery; local-search and document-format lesson behavior is unchanged. Their current native exercises passed in CI on commit 16671ffb0. This records source-currentness review, not new visual, learner or professional acceptance.",
@@ -518,5 +518,10 @@
     "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
     "source_review": "docs/studio_archive/course-source-compatibility-review.json",
     "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  },
+  "archive_profile_bootstrap_source_review": {
+    "reviewed_at": "2026-10-08T13:18:37.418383+00:00",
+    "baseline_commit": "1964929f790964c4bc9796c2cae2851e1f0a646d",
+    "scope": "Compared complete compiled course: all fields except source inventory are identical. Archive bootstrap now securely persists approval already present in existing session config before private identity migration. Explicit lesson state remains isolated without a selected profile; source archives and ledger formats are unchanged. Preserved prior editorial and artifact reviews; fresh native CI required. No new installed-host or learner acceptance claimed."
   }
 }
