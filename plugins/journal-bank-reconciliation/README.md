@@ -95,7 +95,7 @@ timestamps and ZIP ordering so identical inputs produce byte-identical XLSX
 receipts; duplicate package member names are rejected.
 
 Before importing local workflow code, every public Python command validates an
-exact 24-file implementation/configuration/UI/shared-assurance tree and
+exact 26-file implementation/configuration/UI/shared-assurance tree and
 disables local bytecode. The MCP server closes the same physical tree before
 reading the manifest and launches Python with isolated imports and bytecode
 disabled. Unowned files, directories, caches, links, or special files block

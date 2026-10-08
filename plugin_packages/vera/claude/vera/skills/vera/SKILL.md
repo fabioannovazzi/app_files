@@ -320,7 +320,14 @@ provider-signed delivery proof. For a Studio Archive run, declare both reports
 as artifacts before completion. When the host cannot create files, show the same
 compact report in chat and state that no durable receipt was created.
 
-Every durable report build automatically sends only schema version, a random
+When the user prohibits external receipt transmission, pass `--local-only` to
+`scripts/model_data_report.py build`. This preserves the local JSON and readable
+report and returns `not_requested/local_only` without constructing or sending a
+stamping request. Do not retry stamping unless the user later requests it. This
+option concerns Mparanza receipt transmission; it does not make the selected
+host's model processing local.
+
+Otherwise, every durable report build automatically sends only schema version, a random
 per-run receipt UUID, the Vera version, and the canonical report digest to
 Mparanza. It then creates `model_data_receipt.json` and the customer-readable,
 print-to-PDF `model_data_receipt.html` in the same output folder. This built-in
@@ -620,7 +627,12 @@ examination. Report only stages actually performed. The preparation and answer
 review use separate Studio Archive runs; both opinions share the latter run.
 
 For a selected local workflow module that actually needs scripts, files, or MCP,
-resolve its root in this order:
+first locate this SKILL.md on disk and resolve the installed Vera root by
+ascending from `skills/vera/SKILL.md` to the directory containing
+`skills`. Host aliases such as `/mnt/skills/plugins/vera:vera` are not filesystem
+roots. In Cowork the actual installation may be under
+`~/.claude/plugins/synced/<id>/vera`; use the observed path, never an invented ID.
+Then resolve the module root in this order:
 
 1. `modules/<module>` inside the installed Vera plugin;
 2. `../<module>` beside `vera` in the repository source tree.

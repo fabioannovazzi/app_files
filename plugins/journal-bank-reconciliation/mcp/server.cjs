@@ -93,6 +93,11 @@ const IMPLEMENTATION_ARTIFACT_SPECS = [
     "scripts/run_reconciliation.py",
   ],
   [
+    "implementation.plugin.scripts.seal_review_receipts_py",
+    "implementation",
+    "scripts/seal_review_receipts.py",
+  ],
+  [
     "implementation.plugin.scripts.semantic_review_py",
     "implementation",
     "scripts/semantic_review.py",

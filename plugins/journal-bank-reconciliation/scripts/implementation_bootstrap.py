@@ -44,6 +44,7 @@ IMPLEMENTATION_CONTRACT = (
     ("plugin", "scripts/journal_bank_core.py"),
     ("plugin", "scripts/review_session.py"),
     ("plugin", "scripts/run_reconciliation.py"),
+    ("plugin", "scripts/seal_review_receipts.py"),
     ("plugin", "scripts/semantic_review.py"),
     ("shared_assurance", "__init__.py"),
     ("shared_assurance", "contracts.py"),

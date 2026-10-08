@@ -34,6 +34,9 @@ def installation(tmp_path: Path, component: str = "journal-bank-reconciliation")
         root / "vendor/modules/vera_assurance",
         ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "*.pyo"),
     )
+    (root / "components.json").write_text(
+        json.dumps({"plugins": [component]}), encoding="utf-8"
+    )
     write_index(root)
     return root
 

@@ -103,7 +103,7 @@
     "reviewed_at": "2026-10-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "2aef668ba60596afc4a4366e440a94aa67b1ada1d19360a8534c0e1f74c101da"
+    "source_fingerprint": "d064238d733343938dfe5cd19d318c214339780a42181acbd834d02ace559784"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/lipe/SKILL.md",

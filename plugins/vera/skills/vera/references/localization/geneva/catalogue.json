@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "plugins/vera",
-  "version": "0.1.352",
-  "captured_at": "2026-10-08T08:22:17.049070+00:00",
-  "catalogue_fingerprint": "51ea7eed30a279c376c4b7df64016371b46ba2994f8b1444dac28277a03b5261",
-  "manifest_sha256": "875d07e2697de87e0d6a39f97a1510d7507f99e46d34f5bece458914afdb4860",
+  "root": "/Users/fabio/.codex/worktrees/bank-review-receipts/app_files/plugins/vera",
+  "version": "0.1.353",
+  "captured_at": "2026-10-08T10:46:03.701201+00:00",
+  "catalogue_fingerprint": "a53cc4e5079cfa7190960effec424d1f6ffb3afba0c55742ac8337ed9de32b77",
+  "manifest_sha256": "983c9a5b139e4b06ffe44c063bab624a23c534592ba1da8b738d3089d605a7c6",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -254,7 +254,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "6633c2f94dadbbf002c91571c9b96a16207ebe108e23a5d5af825da039b70f3a"
+      "sha256": "71def58debad1bd8a166963971b9e7fb8f71a37aec60290b19dcfa8289e7460c"
     },
     {
       "function_id": "vouching",

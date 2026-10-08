@@ -60,6 +60,23 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--requirements", action="append")
     selection, _ = parser.parse_known_args(prefix)
     root = Path(__file__).absolute().parents[1]
+    # Reject an invalid entrypoint before provisioning, with an exact boundary
+    # diagnostic rather than conflating an outside script with a missing file.
+    if "run" in arguments:
+        run_index = arguments.index("run")
+        if run_index + 1 < len(arguments):
+            runtime_selection = _IMPLEMENTATION.select_runtime(
+                root, selection.module, selection.requirements
+            )
+            script = (
+                runtime_selection.requirement_root / arguments[run_index + 1]
+            ).resolve()
+            if not script.is_relative_to(runtime_selection.requirement_root):
+                logging.error("Managed runtime script outside module root: %s", script)
+                return 2
+            if not script.is_file():
+                logging.error("Managed runtime script not found: %s", script)
+                return 2
     try:
         root = prepare_execution_root(root, selection.module)
     except (OSError, ValueError) as error:
