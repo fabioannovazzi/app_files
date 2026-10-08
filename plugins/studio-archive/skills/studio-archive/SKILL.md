@@ -188,8 +188,11 @@ Use this exact chat workflow whenever a professional starts client work:
    decide from filename similarity.
 2. Ask whether the work is for an existing or new client only when the user's
    wording and the listed records do not already establish that choice.
-   Before the first file copy, show the selected client and obtain the user's
-   confirmation.
+   Before the first file copy, show the selected client. Reuse the user's
+   existing explicit selection and authorization for the same client and files;
+   do not ask them to confirm it again. Ask once when the association or authority
+   is genuinely unresolved. A filename, inferred company name or model assertion
+   is not a user selection. Host-required action-time approvals still apply.
 3. For an existing registered client, retain the `client_id` recovered from its
    customer-folder manifest. For an existing but unregistered scope, call
    `configure_studio_archive_client` with the confirmed scope and at least one
