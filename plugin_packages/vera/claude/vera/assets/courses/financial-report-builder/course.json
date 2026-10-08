@@ -129,7 +129,7 @@
     },
     {
       "path": "modules/report-builder/skills/financial-report-builder/SKILL.md",
-      "sha256": "4b8c010199f7372db4a2e56f32e64c44fbfb8d99ea808e7b8af07da79c48210f"
+      "sha256": "e77d145280cc22454788407ad95c05dae4ffc167731749ad4a23ca8b7c36d667"
     },
     {
       "path": "modules/report-builder/vendor/modules/__init__.py",
@@ -478,5 +478,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "511907cf410aab8ec3a3b78e707b80df66debeecc48c1ab78e925702eb6f9b2c"
+  "canonical_course_sha256": "1a23294b02ef3bf675356126503ff59a636c83d26e5f470896d0ea7f3ba06aed"
 }

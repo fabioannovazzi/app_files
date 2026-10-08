@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/.codex/worktrees/bank-review-receipts/app_files/plugins/vera",
-  "version": "0.1.353",
-  "captured_at": "2026-10-08T10:46:03.701201+00:00",
-  "catalogue_fingerprint": "a53cc4e5079cfa7190960effec424d1f6ffb3afba0c55742ac8337ed9de32b77",
-  "manifest_sha256": "983c9a5b139e4b06ffe44c063bab624a23c534592ba1da8b738d3089d605a7c6",
+  "root": "/Users/fabio/.codex/worktrees/deploy-committed-annual-statements/app_files/plugins/vera",
+  "version": "0.1.354",
+  "captured_at": "2026-10-08T12:34:35.538575+00:00",
+  "catalogue_fingerprint": "844ffd1b373f20f546137f3ca37c67ac5fef80d8dff7cf957813ec69dba20cf8",
+  "manifest_sha256": "b2ff47738fd7253bbd03b3845557c4d9bcc929e056143c256e8e502e6d65c060",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -109,7 +109,7 @@
     {
       "function_id": "financial-analysis",
       "skill_path": "skills/financial-analysis/SKILL.md",
-      "sha256": "c1ac248077d9a4d396dae8fe374d6831fe507816e2afe889de42968f465084ef"
+      "sha256": "e44c5396082694cb213ad979a877b09c340174dd3fc61030457bfe21d79b6d6e"
     },
     {
       "function_id": "financial-report-builder",
@@ -229,7 +229,7 @@
     {
       "function_id": "studio-archive",
       "skill_path": "skills/studio-archive/SKILL.md",
-      "sha256": "05ba128166b61624d40376b9450a3fb3868ee5d25750abf98f3f9a244aa20b03"
+      "sha256": "2afccf3add09d9b1e5fa43ee6af279eb3b2b7f456519fd750aa0c8dfad7ec08a"
     },
     {
       "function_id": "studio-document-format",
@@ -254,7 +254,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "71def58debad1bd8a166963971b9e7fb8f71a37aec60290b19dcfa8289e7460c"
+      "sha256": "4ed9d48dedb88434ff606606de39d95bd8b85c2e3495e6d7d1876389dafed6ea"
     },
     {
       "function_id": "vouching",

@@ -85,6 +85,13 @@ function handle(message) {
     const payload = {
       workflow: "vera.financial_analysis",
       registered_packs: PACKS,
+      annual_statements: {
+        recipe_id: "annual_oic_source_cells.v1",
+        entrypoint: "scripts/run_annual_statements.py",
+        reference: "references/annual-statements.md",
+        outputs: ["Word", "editable Excel", "Markdown", "JSON reconciliation"],
+        native_fdd_interface: false,
+      },
       contract_types: CONTRACTS,
       report_ready: false,
       boundary:

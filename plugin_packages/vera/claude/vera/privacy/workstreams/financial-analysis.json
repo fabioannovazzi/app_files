@@ -6,7 +6,8 @@
   "governed_paths": [
     "skills",
     "scripts",
-    "mcp"
+    "mcp",
+    "references"
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
@@ -42,6 +43,15 @@
         "id": "connected-studio-knowledge",
         "purpose": "Consult relevant studio procedures, precedents or case evidence when requested",
         "content": "Repository and selected studio/client scope; scoped search queries; returned metadata and snippets; opened relevant passages; source IDs, links and locators; version, date and approval metadata when exposed; coverage and access limitations. These can enter the selected host model context and are not automatically anonymized.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "annual-statements-source-cells-and-notes",
+        "purpose": "Map and interpret annual OIC statements and supporting disclosures, then review calculated comparisons",
+        "content": "Explicitly selected XLSX source cells, original labels and units, entity, years, source IDs, source-cell mappings, source hashes, recorded document/page coverage, selected PDF/XBRL note excerpts, model-authored observed/inferred/question commentary, calculated metrics, both EBITDA definitions, missing values, source subtotal exceptions and draft reports may enter the selected model runtime. The annual helper reads mapped XLSX values and hashes every declared original locally; hashing does not establish model reading or note accuracy. This separate file route does not use the eight-pack model_use manifest. No automatic anonymization or provider call occurs in the helper. The actual run data report records source reading and prepared-result phases.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -111,12 +121,16 @@
     {
       "id": "sealed-post-mapping-model-use",
       "control": "Every pack writes a hash-bound model_use_manifest.json. It identifies sealed sources by stable artifact ID and hash without repeating original filenames. Prepared outputs are the default post-mapping model context; reopening source evidence requires one named artifact, a specific reason and an idempotent request receipt, and the current bytes must still match the sealed source hash. This is a workflow phase boundary and does not claim operating-system denial of an otherwise authorized file."
+    },
+    {
+      "id": "annual-statements-import-binding",
+      "control": "run_annual_statements.py requires a running financial-analysis Archive context and an exact input_binding_id and matching SHA256 for every original. Source-cell parsing rejects formulas, error cells, duplicate mappings and changed source bytes; output must be a new directory beneath the managed run. The receipt binds case, implementation and delivered output bytes. Missing cells propagate as unavailable and source exceptions remain explicit. Commentary reference closure does not verify its meaning or source-page coverage."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-08",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "a5e853229b05d5f4e80d645c97699c300226eaf09af6251893368ff7b3e6e0ba"
+    "source_fingerprint": "deb829ed51effcf6c0f43e2d203caa8be7499cba2faeaa100a8cf936df35e276"
   }
 }

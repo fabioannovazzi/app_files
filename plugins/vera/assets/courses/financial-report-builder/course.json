@@ -155,7 +155,7 @@
     {
       "path": "modules/report-builder/skills/financial-report-builder/SKILL.md",
       "repository_path": "plugins/report-builder/skills/financial-report-builder/SKILL.md",
-      "sha256": "3b74151cb454476aa3f93d94a40e272406128b953a746931e4d97f0b3a9669b8"
+      "sha256": "d4d95bc079316c15730e694a61708339d851e4aa89af2ddba4b441e25d826d59"
     },
     {
       "path": "modules/report-builder/vendor/modules/__init__.py",
