@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "concordato-plan-review",
-  "course_sha256": "9383a668c85af9fddf256a352627a0d91fae569b1db07f55275ba283735861f5",
+  "course_sha256": "6d068686e38cc373aecc93ca0376d2e2ca46465bdf99ed82ec3741748a40ce2d",
   "reviewer": "Codex: direct lesson, source, native output and rendered artifact review",
   "reviewed_at": "2026-09-15T03:02:32.471301+00:00",
   "languages": {
@@ -585,5 +585,29 @@
     "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
     "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
   },
-  "source_update_review": "docs/releases/2026-10-07-vera-hardlink-course-review.json"
+  "source_update_review": "docs/releases/2026-10-07-vera-hardlink-course-review.json",
+  "committed_shared_contract_integration_20261008": {
+    "product": "vera",
+    "workflow": "concordato-plan-review",
+    "reviewer": "Codex /root - bounded shared-contract integration review",
+    "reviewed_at": "2026-10-08T12:40:14.001435+00:00",
+    "source_change": "Shared assurance contracts add a separately allowlisted standalone task context; ordinary registered client contexts and this lesson content remain unchanged. Other source changes were reviewed in the included bank and Archive commits.",
+    "comparison": "Complete course payload excluding source inventory is identical to all three inspected committed parents, including every localized lesson, input, checkpoint and expectation.",
+    "limits": "Preserves prior named editorial and artifact judgments; does not attest new learner participation, professional acceptance or installed native host behavior. Current CI must execute exact demo/practice identities against current course bytes.",
+    "parents": [
+      {
+        "commit": "c324cb0",
+        "course_sha256": "9383a668c85af9fddf256a352627a0d91fae569b1db07f55275ba283735861f5"
+      },
+      {
+        "commit": "f70d90d",
+        "course_sha256": "9383a668c85af9fddf256a352627a0d91fae569b1db07f55275ba283735861f5"
+      },
+      {
+        "commit": "0bb963db",
+        "course_sha256": "6d068686e38cc373aecc93ca0376d2e2ca46465bdf99ed82ec3741748a40ce2d"
+      }
+    ],
+    "course_sha256": "6d068686e38cc373aecc93ca0376d2e2ca46465bdf99ed82ec3741748a40ce2d"
+  }
 }

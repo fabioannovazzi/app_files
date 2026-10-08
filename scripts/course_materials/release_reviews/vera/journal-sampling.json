@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "journal-sampling",
-  "course_sha256": "c1bc6be3bf2663e0a09ea350382ca17a34337adbe3b431181f25668c39a4d22b",
+  "course_sha256": "5d06e850384094b37adfad9a02393feb1cae06de7f3e50aa61f9e2018e1386ec",
   "reviewer": "Codex: first-use lesson, fictional inputs and current native sample review",
   "reviewed_at": "2026-09-14T18:13:05.890693+00:00",
   "review_scope": "Read all five localized outlines and context notes and both source journals. Current native inspection, normalization, random sampling and Studio Archive finalization pass in ten locale/phase checks within a 186-case regression. Visually inspected both complete unique sample worksheets in two horizontal views each; compared every cell value, type, style, column width, row height and freeze setting across the other eight locale workbooks. The worksheet name varies by locale; canonical column names intentionally remain English. No learner comprehension, voice, browser widget or two-window acceptance is claimed. Professional review decisions remain pending. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
@@ -583,5 +583,29 @@
   "source_binding_update": {
     "reviewed_at": "2026-10-06",
     "scope": "Date parsing uses explicit string APIs and chart ordering is explicit for Polars 2.0. Authored lesson content and inputs are unchanged; current executions remain required CI evidence, with no new learner or visual acceptance claimed."
+  },
+  "committed_shared_contract_integration_20261008": {
+    "product": "vera",
+    "workflow": "journal-sampling",
+    "reviewer": "Codex /root - bounded shared-contract integration review",
+    "reviewed_at": "2026-10-08T12:40:14.242641+00:00",
+    "source_change": "Shared assurance contracts add a separately allowlisted standalone task context; ordinary registered client contexts and this lesson content remain unchanged. Other source changes were reviewed in the included bank and Archive commits.",
+    "comparison": "Complete course payload excluding source inventory is identical to all three inspected committed parents, including every localized lesson, input, checkpoint and expectation.",
+    "limits": "Preserves prior named editorial and artifact judgments; does not attest new learner participation, professional acceptance or installed native host behavior. Current CI must execute exact demo/practice identities against current course bytes.",
+    "parents": [
+      {
+        "commit": "c324cb0",
+        "course_sha256": "c1bc6be3bf2663e0a09ea350382ca17a34337adbe3b431181f25668c39a4d22b"
+      },
+      {
+        "commit": "f70d90d",
+        "course_sha256": "c1bc6be3bf2663e0a09ea350382ca17a34337adbe3b431181f25668c39a4d22b"
+      },
+      {
+        "commit": "0bb963db",
+        "course_sha256": "5d06e850384094b37adfad9a02393feb1cae06de7f3e50aa61f9e2018e1386ec"
+      }
+    ],
+    "course_sha256": "5d06e850384094b37adfad9a02393feb1cae06de7f3e50aa61f9e2018e1386ec"
   }
 }

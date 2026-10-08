@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "fatture-xml-check",
-  "course_sha256": "3e80f8293acf317e4ff379c979bf55e4425234951f4f2e86c91c5888f46bcb94",
+  "course_sha256": "c3eb92863a7f581fb4b0c0ca8b945d98bcf08440afe43289132e5d0882432b84",
   "reviewer": "Codex: first-use teaching-kit editorial and native-output review",
   "reviewed_at": "2026-09-14T16:28:02.622399+00:00",
   "review_scope": "Prepared lesson, fictional sources, actual native extraction outputs and closed local execution records. This does not approve a professional case or establish human learner, native voice or two-window acceptance. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
@@ -501,5 +501,29 @@
     "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
     "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
   },
-  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
+  "committed_shared_contract_integration_20261008": {
+    "product": "vera",
+    "workflow": "fatture-xml-check",
+    "reviewer": "Codex /root - bounded shared-contract integration review",
+    "reviewed_at": "2026-10-08T12:40:14.120440+00:00",
+    "source_change": "Shared assurance contracts add a separately allowlisted standalone task context; ordinary registered client contexts and this lesson content remain unchanged. Other source changes were reviewed in the included bank and Archive commits.",
+    "comparison": "Complete course payload excluding source inventory is identical to all three inspected committed parents, including every localized lesson, input, checkpoint and expectation.",
+    "limits": "Preserves prior named editorial and artifact judgments; does not attest new learner participation, professional acceptance or installed native host behavior. Current CI must execute exact demo/practice identities against current course bytes.",
+    "parents": [
+      {
+        "commit": "c324cb0",
+        "course_sha256": "3e80f8293acf317e4ff379c979bf55e4425234951f4f2e86c91c5888f46bcb94"
+      },
+      {
+        "commit": "f70d90d",
+        "course_sha256": "3e80f8293acf317e4ff379c979bf55e4425234951f4f2e86c91c5888f46bcb94"
+      },
+      {
+        "commit": "0bb963db",
+        "course_sha256": "c3eb92863a7f581fb4b0c0ca8b945d98bcf08440afe43289132e5d0882432b84"
+      }
+    ],
+    "course_sha256": "c3eb92863a7f581fb4b0c0ca8b945d98bcf08440afe43289132e5d0882432b84"
+  }
 }

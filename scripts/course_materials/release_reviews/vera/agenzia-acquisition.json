@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "agenzia-acquisition",
-  "course_sha256": "0e92511c6f119e7d8934fbf63ff5d7e0b2593c0036e8c0c2b2f52bbd5169ee55",
+  "course_sha256": "0ccb644d2664fd721a71860df0baa31c535caaf401686fa0b1e03c7aece2c86a",
   "reviewer": "Codex source, actual local output and lesson review",
   "reviewed_at": "2026-10-08T08:15:00+00:00",
   "review_scope": "Read the Italian authored lesson and fictional inputs. Executed the shipped CourseLibrary and acquisition engine twice for demo/practice using the explicitly synthetic source. Inspected actual CSV, JSON, model-data report and workbook sheets. Offline browser and MCP App harness tests are separate evidence; no live AdE account, native host session, learner participation or professional acceptance is claimed. Final wording review keeps internal commands in the specialist skill and describes learner actions in the public lesson. The acquisition lesson was executed again after this source change.",
@@ -70,5 +70,29 @@
         ]
       }
     }
+  },
+  "committed_shared_contract_integration_20261008": {
+    "product": "vera",
+    "workflow": "agenzia-acquisition",
+    "reviewer": "Codex /root - bounded shared-contract integration review",
+    "reviewed_at": "2026-10-08T12:40:13.623028+00:00",
+    "source_change": "Shared assurance contracts add a separately allowlisted standalone task context; ordinary registered client contexts and this lesson content remain unchanged. Other source changes were reviewed in the included bank and Archive commits.",
+    "comparison": "Complete course payload excluding source inventory is identical to all three inspected committed parents, including every localized lesson, input, checkpoint and expectation.",
+    "limits": "Preserves prior named editorial and artifact judgments; does not attest new learner participation, professional acceptance or installed native host behavior. Current CI must execute exact demo/practice identities against current course bytes.",
+    "parents": [
+      {
+        "commit": "c324cb0",
+        "course_sha256": "0e92511c6f119e7d8934fbf63ff5d7e0b2593c0036e8c0c2b2f52bbd5169ee55"
+      },
+      {
+        "commit": "f70d90d",
+        "course_sha256": "0e92511c6f119e7d8934fbf63ff5d7e0b2593c0036e8c0c2b2f52bbd5169ee55"
+      },
+      {
+        "commit": "0bb963db",
+        "course_sha256": "0ccb644d2664fd721a71860df0baa31c535caaf401686fa0b1e03c7aece2c86a"
+      }
+    ],
+    "course_sha256": "0ccb644d2664fd721a71860df0baa31c535caaf401686fa0b1e03c7aece2c86a"
   }
 }

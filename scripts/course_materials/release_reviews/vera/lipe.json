@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "lipe",
-  "course_sha256": "46e7f66b7d9050f2c0f63fd15f02a3cd3533eede51a3794231e039a73713c06c",
+  "course_sha256": "e3995fb7117f3e08f80870d588b719f476d69366f0d614bb8c3d73de97ce1242",
   "reviewer": "Codex - authored Italian lesson and actual synthetic output review",
   "reviewed_at": "2026-10-03T10:34:18.018139+00:00",
   "review_scope": "Read the complete Italian lesson, fictional mandate, original registers and separate correction; executed the current LIPE CLI against exact rendered source bytes. Inspected actual VP results, PDF text and workbook structure. Test-only interpretations and confirmations are regression fixtures, never lesson inputs. No learner participation, live host/voice acceptance, professional approval, PDF extraction qualification, XML import or filing acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
@@ -71,5 +71,29 @@
       }
     }
   },
-  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
+  "committed_shared_contract_integration_20261008": {
+    "product": "vera",
+    "workflow": "lipe",
+    "reviewer": "Codex /root - bounded shared-contract integration review",
+    "reviewed_at": "2026-10-08T12:40:14.273063+00:00",
+    "source_change": "Shared assurance contracts add a separately allowlisted standalone task context; ordinary registered client contexts and this lesson content remain unchanged. Other source changes were reviewed in the included bank and Archive commits.",
+    "comparison": "Complete course payload excluding source inventory is identical to all three inspected committed parents, including every localized lesson, input, checkpoint and expectation.",
+    "limits": "Preserves prior named editorial and artifact judgments; does not attest new learner participation, professional acceptance or installed native host behavior. Current CI must execute exact demo/practice identities against current course bytes.",
+    "parents": [
+      {
+        "commit": "c324cb0",
+        "course_sha256": "46e7f66b7d9050f2c0f63fd15f02a3cd3533eede51a3794231e039a73713c06c"
+      },
+      {
+        "commit": "f70d90d",
+        "course_sha256": "46e7f66b7d9050f2c0f63fd15f02a3cd3533eede51a3794231e039a73713c06c"
+      },
+      {
+        "commit": "0bb963db",
+        "course_sha256": "e3995fb7117f3e08f80870d588b719f476d69366f0d614bb8c3d73de97ce1242"
+      }
+    ],
+    "course_sha256": "e3995fb7117f3e08f80870d588b719f476d69366f0d614bb8c3d73de97ce1242"
+  }
 }

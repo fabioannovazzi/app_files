@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "organizzazione-lavoro",
-  "course_sha256": "123062ffa4cff82651231b62c16e949e6ee4bf570cd0e6efee7f902342ac98c4",
+  "course_sha256": "0e740c47f86034c69a3ca838844ead9c2a2c6b60593c09fbbbce1c40b0b17c77",
   "reviewer": "Codex: authored five-language material and actual isolated CLI output review",
   "reviewed_at": "2026-10-07T13:37:03.746635+00:00",
   "review_scope": "Read the complete five-language lesson and distinct fictional demonstration/practice inputs. Inspected actual saved-register outputs from ten subprocess CLI exercises: capture, rescheduling, fresh-process reads, saved meeting summaries/actions and completion. Tests preserve the ordinary and demonstration registers. Busy periods and the tutorial-local-only calendar ID are explicitly fictional; no connector receipt, live calendar write, model interpretation, native voice session, paired-chat learner participation or measured comprehension/timing is attested. Native paired teaching uses the existing Codex course runtime; the ordinary organizer retains its Cowork path. Six stages total 390 seconds of planned explanation, with execution and questions additional.",
@@ -163,5 +163,29 @@
       }
     }
   },
-  "journal_bank_receipts_source_update_review": "docs/releases/2026-10-08-journal-bank-receipts-course-review.json"
+  "journal_bank_receipts_source_update_review": "docs/releases/2026-10-08-journal-bank-receipts-course-review.json",
+  "committed_shared_contract_integration_20261008": {
+    "product": "vera",
+    "workflow": "organizzazione-lavoro",
+    "reviewer": "Codex /root - bounded shared-contract integration review",
+    "reviewed_at": "2026-10-08T12:40:14.398970+00:00",
+    "source_change": "Shared assurance contracts add a separately allowlisted standalone task context; ordinary registered client contexts and this lesson content remain unchanged. Other source changes were reviewed in the included bank and Archive commits.",
+    "comparison": "Complete course payload excluding source inventory is identical to all three inspected committed parents, including every localized lesson, input, checkpoint and expectation.",
+    "limits": "Preserves prior named editorial and artifact judgments; does not attest new learner participation, professional acceptance or installed native host behavior. Current CI must execute exact demo/practice identities against current course bytes.",
+    "parents": [
+      {
+        "commit": "c324cb0",
+        "course_sha256": "b33cd060f2c7d9554c17a36eee51f18024d3bb61c9a246014c228e7811c60cd7"
+      },
+      {
+        "commit": "f70d90d",
+        "course_sha256": "123062ffa4cff82651231b62c16e949e6ee4bf570cd0e6efee7f902342ac98c4"
+      },
+      {
+        "commit": "0bb963db",
+        "course_sha256": "4b15cb483b14e6e60dd29e9f40186a0f8ce14627d2b6aa67f778eac147c0f36c"
+      }
+    ],
+    "course_sha256": "0e740c47f86034c69a3ca838844ead9c2a2c6b60593c09fbbbce1c40b0b17c77"
+  }
 }

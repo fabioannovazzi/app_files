@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "new-client",
-  "course_sha256": "dedbf8843d862e2f874b99f737768d20852e04976272df5edc86e9a8343551e6",
+  "course_sha256": "cde9103e91523a616dbcb6f01413136d11c7a0cd5bb667b9f933974a6bd9c14c",
   "reviewer": "Codex: five-language first-use material and actual New Client draft-dossier review",
   "reviewed_at": "2026-09-15T00:09:04.432157+00:00",
   "review_scope": "Reviewed all five lesson outlines, fictional profile/contact sources, actual localized document requests, final cards, studio notes and memo facts/services. Inspected the current review widget in five loopback browser views, including the client facts and English engagement details. This accepts the prepared first use: produce and inspect an internal draft dossier, save a proposed request and revise from new contact evidence. It does not attest completed professional review, client acceptance, signing or sending. Native MCP validate/render/save, mandatory model-data disclosure, sealed delivery and Studio Archive completion are exercised. Apply is not part of the completed lesson evidence: the registry review date has expired, and a real attempted Apply correctly stopped. Source refresh is still required before decisions can be applied. Native voice, actual paired-window learner interaction and human timing/comprehension remain unverified. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
@@ -552,5 +552,29 @@
     "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
     "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
   },
-  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
+  "committed_shared_contract_integration_20261008": {
+    "product": "vera",
+    "workflow": "new-client",
+    "reviewer": "Codex /root - bounded shared-contract integration review",
+    "reviewed_at": "2026-10-08T12:40:14.336526+00:00",
+    "source_change": "Shared assurance contracts add a separately allowlisted standalone task context; ordinary registered client contexts and this lesson content remain unchanged. Other source changes were reviewed in the included bank and Archive commits.",
+    "comparison": "Complete course payload excluding source inventory is identical to all three inspected committed parents, including every localized lesson, input, checkpoint and expectation.",
+    "limits": "Preserves prior named editorial and artifact judgments; does not attest new learner participation, professional acceptance or installed native host behavior. Current CI must execute exact demo/practice identities against current course bytes.",
+    "parents": [
+      {
+        "commit": "c324cb0",
+        "course_sha256": "dedbf8843d862e2f874b99f737768d20852e04976272df5edc86e9a8343551e6"
+      },
+      {
+        "commit": "f70d90d",
+        "course_sha256": "dedbf8843d862e2f874b99f737768d20852e04976272df5edc86e9a8343551e6"
+      },
+      {
+        "commit": "0bb963db",
+        "course_sha256": "cde9103e91523a616dbcb6f01413136d11c7a0cd5bb667b9f933974a6bd9c14c"
+      }
+    ],
+    "course_sha256": "cde9103e91523a616dbcb6f01413136d11c7a0cd5bb667b9f933974a6bd9c14c"
+  }
 }

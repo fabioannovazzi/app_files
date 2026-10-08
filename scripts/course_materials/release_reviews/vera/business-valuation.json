@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "business-valuation",
-  "course_sha256": "2871cf86d3cfc2f2e336791b387800f8b44bff20bf5313b9fafcf13eb2a9315f",
+  "course_sha256": "245b4a757f6713e143abf4993e36d3dacd29a45df35ec9d5791eeac95646738c",
   "reviewer": "Codex /root: course, receipt-bound lifecycle, arithmetic and artifact review",
   "reviewed_at": "2026-10-01T07:53:39.156413+00:00",
   "review_scope": "Expanded the existing Italian DCF course rather than creating a duplicate framework. Read all five fictional notes and the complete rendered lesson; checked source-preview/download links visually in Chrome. Native test executions cover demo/practice, missing terminal and recovery. A four-run same-engagement regression imports exact receipts, prepares and starts the real workflow, generates honest no-model disclosures for its code-only fixtures, seals every output, then lists and reopens the first run without recalculation and verifies unchanged artifact hashes. Independently checked textbook arithmetic and LibreOffice recalculation of all 60 calculation cells across complete cases; missing case has no numeric method output. Inspected all 16 native PDF pages and 17 DOCX-rendered pages. Reports remain partial or blocked with no accepted conclusion. Human comprehension, paired voice, fresh enabled installation and professional/PIV acceptance are unverified. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
@@ -1025,5 +1025,29 @@
     "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
     "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
   },
-  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
+  "committed_shared_contract_integration_20261008": {
+    "product": "vera",
+    "workflow": "business-valuation",
+    "reviewer": "Codex /root - bounded shared-contract integration review",
+    "reviewed_at": "2026-10-08T12:40:13.875499+00:00",
+    "source_change": "Shared assurance contracts add a separately allowlisted standalone task context; ordinary registered client contexts and this lesson content remain unchanged. Other source changes were reviewed in the included bank and Archive commits.",
+    "comparison": "Complete course payload excluding source inventory is identical to all three inspected committed parents, including every localized lesson, input, checkpoint and expectation.",
+    "limits": "Preserves prior named editorial and artifact judgments; does not attest new learner participation, professional acceptance or installed native host behavior. Current CI must execute exact demo/practice identities against current course bytes.",
+    "parents": [
+      {
+        "commit": "c324cb0",
+        "course_sha256": "2871cf86d3cfc2f2e336791b387800f8b44bff20bf5313b9fafcf13eb2a9315f"
+      },
+      {
+        "commit": "f70d90d",
+        "course_sha256": "2871cf86d3cfc2f2e336791b387800f8b44bff20bf5313b9fafcf13eb2a9315f"
+      },
+      {
+        "commit": "0bb963db",
+        "course_sha256": "245b4a757f6713e143abf4993e36d3dacd29a45df35ec9d5791eeac95646738c"
+      }
+    ],
+    "course_sha256": "245b4a757f6713e143abf4993e36d3dacd29a45df35ec9d5791eeac95646738c"
+  }
 }
