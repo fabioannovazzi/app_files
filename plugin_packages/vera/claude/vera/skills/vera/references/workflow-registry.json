@@ -279,6 +279,7 @@
         "modules/financial-analysis/scripts/prepare_fdd_case.py",
         "modules/financial-analysis/scripts/prepare_monthly_pnl_case.py",
         "modules/financial-analysis/scripts/prepare_working_capital_case.py",
+        "modules/financial-analysis/scripts/run_annual_statements.py",
         "modules/financial-analysis/scripts/run_pack.py",
         "modules/financial-analysis/scripts/validate_case_contracts.py"
       ]

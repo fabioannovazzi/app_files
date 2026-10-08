@@ -1,0 +1,10 @@
+[run]
+source = plugins/financial-analysis/scripts
+patch = subprocess
+[report]
+include =
+    */annual_statements.py
+    */annual_statements_render.py
+    */run_annual_statements.py
+show_missing = True
+fail_under = 80

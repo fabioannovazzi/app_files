@@ -103,6 +103,15 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "approved-archive-profile",
+        "purpose": "Reconnect an approved archive and recover confirmed aliases across isolated sessions",
+        "content": "The approved archive absolute root and root-specific confirmed emails, legal-name aliases and tax identifiers remain in an owner-private profile on the current host. A fresh session revalidates that root and returns only the existing safe directory labels, IDs, counts and path-safe access status. Root changes do not change an active session. Profile persistence depends on the host retaining the owner storage; it is not a claim of persistence across ephemeral Cowork homes. No profile contents, indexes, OAuth tokens or client documents are transmitted by this helper. Task-selected file reads retain their existing selected model-runtime boundary.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -294,13 +303,17 @@
     {
       "id": "session-owned-archive-configuration",
       "control": "Default private state is isolated by a hash of the host-supplied session identity, with a process-specific identity when the host supplies none. The MCP server passes one stable session identity to its helper commands. Configuration persists its session owner; an OS lock covers each process lifetime after configuration access, other session owners are rejected, and public operations verify that the pinned configuration bytes did not change before returning. An explicit state directory remains subject to these ownership and locking checks. This is local session isolation, not authentication between users or encryption of the derived index."
+    },
+    {
+      "id": "approved-root-and-private-identity-continuity",
+      "control": "Only explicit configuration records an approved root. Fresh default sessions revalidate it into independent session-owned configuration; explicit state directories remain isolated unless an explicit private profile is supplied. Root-specific identity read/modify/write is serialized with short OS locks and private regular-file records; private aliases are not returned in safe directory rows. Current-session aliases migrate only after validation. Shared profile state stays outside source archives and contains no active run selection or credentials."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-08",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "81b56c12dfc55c79546ab56b200c5f729ca448836c6cf575cb35b812eeaedf9d"
+    "source_fingerprint": "fdc2da40ecf7cfc2d317f9fbbbe5f41e2fb1598ba0b1e158a1777ce06e6f2336"
   },
   "governed_repository_paths": [
     "plugins/vera/scripts/model_data_report.py",

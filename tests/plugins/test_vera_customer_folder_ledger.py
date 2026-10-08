@@ -75,6 +75,12 @@ class _FakeGoogleDriveGateway:
         raise AssertionError(f"Unexpected binary download for {file_id}")
 
 
+@pytest.fixture(autouse=True)
+def archive_script_imports(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Retain sibling imports independently of other tests' sys.path changes."""
+    monkeypatch.syspath_prepend(str(ARCHIVE_CORE_PATH.parent))
+
+
 @pytest.fixture(scope="module")
 def archive_core() -> ModuleType:
     """Load Studio Archive without changing its production import boundary."""

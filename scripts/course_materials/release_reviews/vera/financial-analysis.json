@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "financial-analysis",
-  "course_sha256": "b6b036fa2a9ffb888f2110f62a20a3063fc4dffbde6b48ea78f09131901fd330",
+  "course_sha256": "ca963325d952e7d189bc54c93728af1e3a6a8ad6d57955136df71f3ce403083e",
   "reviewer": "Codex: first-use material, native financial result and localized delivery-note review",
   "reviewed_at": "2026-09-14T18:31:25.025430+00:00",
   "review_scope": "Read both fictional four-balance statements and all five localized contexts and lesson outlines. Ten current registered net-debt executions pass and finalize their source-bound runs. Reviewed the actual prepared result, metrics and line items; those native files are byte-identical across languages within each phase. Read all five February delivery notes and verified that every March note differs only in the actual date, loan, cash, excluded payable and result values. The notes exercise the skill's ordinary Codex delivery stage through a test-only authored interpretation; they are not shipped answers or a deterministic engine report. No browser presentation, learner understanding, voice or two-window acceptance is claimed. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
@@ -543,5 +543,82 @@
     "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
     "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
   },
-  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
+  "committed_source_integration_20261008": {
+    "reviewer": "Codex /root - bounded committed-source integration review",
+    "reviewed_at": "2026-10-08T12:29:00.036504+00:00",
+    "source_review": "Annual OIC comparison is an additive explicit-cell file route; the existing net-debt exercise and ordinary FDD engine contract are unchanged. The maintained source selector adds declared requirements and wrapper references. Studio Archive now restores approved roots in a new isolated session and offers a separate selected-source standalone context for specifically supported one-off workflows; the course still uses explicit synthetic client preparation and actual Archive receipts. Bank receipt sealing and optional local-only data reports preserve their committed controls. Compare complete authored course/fixture/locale/timing objects against all three committed parents, preserving prior editorial judgments and historical artifact reviews. Fresh CI must verify current native demo/practice identities and digests. No new learner, visual, professional or installed-host acceptance is claimed.",
+    "parents": [
+      {
+        "label": "main",
+        "commit": "c324cb0cbc1d1965676c53e0c2c6dd11905a5393",
+        "course_sha256": "b6b036fa2a9ffb888f2110f62a20a3063fc4dffbde6b48ea78f09131901fd330",
+        "authored_content_identical": true
+      },
+      {
+        "label": "bank",
+        "commit": "f70d90d90abb9e87bf58fd2d8895d6dce05a51b2",
+        "course_sha256": "b6b036fa2a9ffb888f2110f62a20a3063fc4dffbde6b48ea78f09131901fd330",
+        "authored_content_identical": true
+      },
+      {
+        "label": "archive",
+        "commit": "0bb963db370b3b73093e807c836cb1b15d7d8deb",
+        "course_sha256": "55715fee2bf9f982cd2eb736f309ca54d0a10785cd153f0da85a77e745d80416",
+        "authored_content_identical": true
+      }
+    ],
+    "source_changes": [
+      {
+        "path": "modules/financial-analysis/references/annual-statements.md",
+        "repository_path": "plugins/financial-analysis/references/annual-statements.md",
+        "sha256": "a90b2cac67887aea774db58b408b6bb09d6d29b32cb60d5a3e504ac13f358992"
+      },
+      {
+        "path": "modules/financial-analysis/requirements.txt",
+        "repository_path": "plugins/financial-analysis/requirements.txt",
+        "sha256": "c5126d73be720f56df4d3b9b7a797ef9d7474187da879de488886db5d97b6f2f"
+      },
+      {
+        "path": "modules/financial-analysis/scripts/annual_statements.py",
+        "repository_path": "plugins/financial-analysis/scripts/annual_statements.py",
+        "sha256": "5c2cc2f66df91f697c6169342861aaf111b2926591f63a2b74a8ebf0eb79d469"
+      },
+      {
+        "path": "modules/financial-analysis/scripts/annual_statements_render.py",
+        "repository_path": "plugins/financial-analysis/scripts/annual_statements_render.py",
+        "sha256": "396671a74b8923716196af3bbc9885d4947d003d80707548467511007d8ef1f4"
+      },
+      {
+        "path": "modules/financial-analysis/scripts/check_dependencies.py",
+        "repository_path": "plugins/financial-analysis/scripts/check_dependencies.py",
+        "sha256": "4b582fe17e503168361d6c1070e178fc588e4ae92b87c1d207ad4eaeeacc13de"
+      },
+      {
+        "path": "modules/financial-analysis/scripts/run_annual_statements.py",
+        "repository_path": "plugins/financial-analysis/scripts/run_annual_statements.py",
+        "sha256": "95ae9def4eb352077ea6c22e0ccc2fc36365b72d267c92043ca5e08c246b94da"
+      },
+      {
+        "path": "modules/financial-analysis/skills/financial-analysis/SKILL.md",
+        "repository_path": "plugins/financial-analysis/skills/financial-analysis/SKILL.md",
+        "sha256": "71543f1cb2bbb2df096e6df80b98808ec49ca55788947cacebd3df759544bb86"
+      },
+      {
+        "path": "skills/financial-analysis/SKILL.md",
+        "repository_path": "plugins/vera/skills/financial-analysis/SKILL.md",
+        "sha256": "e44c5396082694cb213ad979a877b09c340174dd3fc61030457bfe21d79b6d6e"
+      }
+    ]
+  },
+  "studio_archive_adoption_source_binding_20261008": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "reviewed_at": "2026-10-08T12:39:27.596925+00:00",
+    "baseline_commit": "c324cb0cbc1d1965676c53e0c2c6dd11905a5393",
+    "previous_course_sha256": "b6b036fa2a9ffb888f2110f62a20a3063fc4dffbde6b48ea78f09131901fd330",
+    "current_course_sha256": "55715fee2bf9f982cd2eb736f309ca54d0a10785cd153f0da85a77e745d80416",
+    "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
+    "source_review": "docs/studio_archive/course-source-compatibility-review.json",
+    "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  }
 }

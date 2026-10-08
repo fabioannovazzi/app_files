@@ -12,8 +12,10 @@ import hashlib
 import json
 import os
 import re
+import secrets
 import stat
 from collections.abc import Mapping, Sequence
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -21,6 +23,9 @@ from .money import MoneyValidationError, parse_canonical_decimal
 from .serialization import canonical_json_sha256
 
 __all__ = [
+    "create_standalone_task",
+    "load_standalone_context",
+    "validate_standalone_context",
     "AssuranceContractError",
     "JOURNAL_SAMPLING_CHECK_ENTRIES_HANDOFF",
     "VERA_CLIENT_WORKFLOW_IDS",
@@ -783,6 +788,8 @@ def validate_client_engagement_context(value: object) -> dict[str, Any]:
     """Validate either a legacy context or the portable customer-folder context."""
 
     payload = _mapping(value, label="client engagement context")
+    if payload.get("schema_version") == "vera.standalone_workflow_context.v1":
+        return validate_standalone_context(payload)
     if payload.get("schema_version") == "vera.client_workflow_context.v2":
         return _validate_v2_client_engagement_context(payload)
     return _validate_v1_client_engagement_context(payload)
@@ -863,7 +870,10 @@ def validate_client_workflow_run(
             raise AssuranceContractError(
                 "output_dir is outside the client engagement run"
             )
-    if context["schema_version"] == "vera.client_workflow_context.v2":
+    if context["schema_version"] in {
+        "vera.client_workflow_context.v2",
+        "vera.standalone_workflow_context.v1",
+    }:
         selected = {Path(item["path"]) for item in context["input_bindings"]}
         for raw_path in input_paths:
             try:
@@ -1512,6 +1522,16 @@ def load_client_engagement_context_file(
         if descriptor >= 0:
             os.close(descriptor)
     if (
+        isinstance(payload, Mapping)
+        and payload.get("schema_version") == "vera.standalone_workflow_context.v1"
+    ):
+        return load_standalone_context(
+            context_path,
+            expected_workflow_id=expected_workflow_id,
+            output_dir=output_dir,
+            input_paths=input_paths,
+        )
+    if (
         not isinstance(payload, Mapping)
         or payload.get("schema_version") != "vera.client_workflow_context.v2"
     ):
@@ -2083,4 +2103,270 @@ def build_numeric_evidence_ledger(
     }
     return validate_numeric_evidence_ledger(
         {**content, "content_sha256": canonical_json_sha256(content)}
+    )
+
+
+# Standalone tasks share the exact-byte assurance contract without client identity.
+STANDALONE_WORKFLOWS = frozenset(
+    {"invoice-xml", "prompt-optimizer", "deep-research-validator"}
+)
+_STANDALONE_SCHEMA = "vera.standalone_workflow_context.v1"
+_STANDALONE_FIELDS = {
+    "schema_version",
+    "workflow_id",
+    "run_id",
+    "label",
+    "purpose",
+    "created_at",
+    "retention",
+    "inputs",
+    "content_sha256",
+}
+_STANDALONE_RUNTIME = {
+    "run_root",
+    "input_dir",
+    "output_dir",
+    "context_path",
+    "input_bindings",
+}
+
+
+def _standalone_directory(path: Path) -> Path:
+    if not path.is_absolute() or any(part in {".", ".."} for part in path.parts):
+        raise ValueError("Standalone paths must be normalized absolute paths")
+    for parent in (path, *path.parents):
+        if parent.is_symlink() or (parent.exists() and not parent.is_dir()):
+            raise ValueError("Standalone directories cannot contain aliases or files")
+    return path
+
+
+def _standalone_bytes(path: Path, maximum: int = 64 * 1024 * 1024) -> bytes:
+    """Enforce exact byte identity; semantics remain with the model/professional."""
+    before = path.lstat()
+    if (
+        not stat.S_ISREG(before.st_mode)
+        or before.st_nlink != 1
+        or before.st_size > maximum
+    ):
+        raise ValueError("Standalone input must be a bounded single-link regular file")
+    _standalone_directory(path.parent)
+    descriptor = os.open(path, os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0))
+    with os.fdopen(descriptor, "rb") as handle:
+        opened = os.fstat(handle.fileno())
+        content = handle.read(maximum + 1)
+        after = os.fstat(handle.fileno())
+
+    def identity(value: os.stat_result) -> tuple[int, ...]:
+        return (
+            value.st_dev,
+            value.st_ino,
+            value.st_size,
+            value.st_mtime_ns,
+            value.st_nlink,
+        )
+
+    if (
+        identity(before) != identity(opened)
+        or identity(before) != identity(after)
+        or identity(before) != identity(path.lstat())
+        or len(content) != before.st_size
+    ):
+        raise ValueError("Standalone input changed while being read")
+    return content
+
+
+def _standalone_write_new(path: Path, content: bytes) -> None:
+    descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(descriptor, "wb") as handle:
+        handle.write(content)
+        handle.flush()
+        os.fsync(handle.fileno())
+
+
+def validate_standalone_context(
+    value: Mapping[str, Any], *, run_root: Path | None = None
+) -> dict[str, Any]:
+    """Recheck selected source receipts and output ancestry on every engine call."""
+
+    try:
+        if (
+            not _STANDALONE_FIELDS.issubset(value)
+            or set(value) - _STANDALONE_FIELDS - _STANDALONE_RUNTIME
+        ):
+            raise ValueError("Standalone context fields are invalid")
+        content = {key: value[key] for key in _STANDALONE_FIELDS - {"content_sha256"}}
+        if (
+            value["schema_version"] != _STANDALONE_SCHEMA
+            or value["workflow_id"] not in STANDALONE_WORKFLOWS
+        ):
+            raise ValueError("Workflow does not support standalone tasks")
+        if not re.fullmatch(r"task_[0-9a-f]{24}", str(value["run_id"])):
+            raise ValueError("Standalone task identity is invalid")
+        if value["retention"] != "user_managed_no_archive_registration":
+            raise ValueError("Standalone retention declaration is invalid")
+        for key in ("label", "purpose", "created_at"):
+            if (
+                not isinstance(value[key], str)
+                or not value[key].strip()
+                or len(value[key]) > 500
+            ):
+                raise ValueError("Standalone task description is invalid")
+        datetime.fromisoformat(value["created_at"])
+        if canonical_json_sha256(content) != value["content_sha256"]:
+            raise ValueError("Standalone context digest is stale")
+        root = _standalone_directory(run_root or Path(value["run_root"]))
+        if not root.is_dir():
+            raise ValueError("Standalone task directory is unavailable")
+        for path in (root / "inputs", root / "outputs"):
+            _standalone_directory(path)
+            if not path.is_dir():
+                raise ValueError("Standalone task inputs/outputs are unavailable")
+        sources = value["inputs"]
+        if not isinstance(sources, list) or not 1 <= len(sources) <= 32:
+            raise ValueError("Standalone task requires 1 to 32 selected files")
+        selected = set()
+        bindings = []
+        for source in sources:
+            if not isinstance(source, dict) or set(source) != {
+                "path",
+                "byte_count",
+                "sha256",
+            }:
+                raise ValueError("Standalone source receipt is invalid")
+            relative = Path(source["path"])
+            if (
+                relative.is_absolute()
+                or relative.as_posix() != source["path"]
+                or len(relative.parts) != 3
+                or relative.parts[0] != "inputs"
+                or any(part in {".", ".."} for part in relative.parts)
+            ):
+                raise ValueError("Standalone source path is invalid")
+            path = root / relative
+            payload = _standalone_bytes(path)
+            if (
+                len(payload) != source["byte_count"]
+                or hashlib.sha256(payload).hexdigest() != source["sha256"]
+            ):
+                raise ValueError("Standalone source changed after capture")
+            if path in selected:
+                raise ValueError("Standalone sources contain duplicates")
+            selected.add(path)
+            bindings.append({"path": str(path), "sha256": source["sha256"]})
+        observed = set()
+        for path in (root / "inputs").rglob("*"):
+            if path.is_symlink():
+                raise ValueError("Standalone inputs contain a symbolic link")
+            if path.is_dir():
+                continue
+            _standalone_bytes(path)
+            observed.add(path)
+        if observed != selected:
+            raise ValueError("Standalone inputs are not closed to selected receipts")
+        return {
+            **value,
+            "run_root": str(root),
+            "input_dir": str(root / "inputs"),
+            "output_dir": str(root / "outputs"),
+            "context_path": str(root / "context.json"),
+            "input_bindings": bindings,
+        }
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        raise AssuranceContractError(f"Invalid standalone task: {exc}") from exc
+
+
+def load_standalone_context(
+    path: Path,
+    *,
+    expected_workflow_id: str,
+    output_dir: str | Path | None = None,
+    input_paths: Sequence[str | Path] = (),
+) -> dict[str, Any]:
+    """Load one task; never establish a customer identity or archive run status."""
+
+    try:
+        if path.name != "context.json":
+            raise ValueError("Standalone context must be the task's context.json")
+        payload = json.loads(_standalone_bytes(path, 256 * 1024))
+        context = validate_standalone_context(payload, run_root=path.parent)
+    except (OSError, ValueError, TypeError) as exc:
+        raise AssuranceContractError(f"Standalone context unavailable: {exc}") from exc
+    if output_dir is not None:
+        _standalone_directory(Path(output_dir))
+    for source in input_paths:
+        selected = Path(source)
+        _standalone_directory(selected.parent)
+        if selected.is_symlink():
+            raise AssuranceContractError("Standalone input cannot be a symbolic link")
+    return validate_client_workflow_run(
+        context,
+        expected_workflow_id=expected_workflow_id,
+        output_dir=output_dir,
+        input_paths=input_paths,
+    )
+
+
+def create_standalone_task(
+    destination: Path,
+    *,
+    workflow_id: str,
+    sources: Sequence[Path],
+    label: str,
+    purpose: str,
+) -> dict[str, Any]:
+    """Capture explicitly selected files in an authorized new task directory."""
+
+    root = _standalone_directory(destination)
+    if workflow_id not in STANDALONE_WORKFLOWS:
+        raise AssuranceContractError("Workflow does not support standalone tasks")
+    if root.exists() or any(
+        (parent / ".git").exists() for parent in (root, *root.parents)
+    ):
+        raise AssuranceContractError(
+            "Select a new standalone directory outside a Git workspace"
+        )
+    if (
+        not 1 <= len(sources) <= 32
+        or not label.strip()
+        or not purpose.strip()
+        or len(label) > 500
+        or len(purpose) > 500
+    ):
+        raise AssuranceContractError("Select files and describe this standalone task")
+    captured = [(source, _standalone_bytes(source)) for source in sources]
+    if sum(len(payload) for _, payload in captured) > 256 * 1024 * 1024:
+        raise AssuranceContractError("Standalone source selection exceeds 256 MiB")
+    root.mkdir(parents=True, mode=0o700)
+    (root / "inputs").mkdir(mode=0o700)
+    (root / "outputs").mkdir(mode=0o700)
+    receipts = []
+    for index, (source, payload) in enumerate(captured, 1):
+        folder = root / "inputs" / f"source-{index:02d}"
+        folder.mkdir(mode=0o700)
+        target = folder / source.name
+        _standalone_write_new(target, payload)
+        receipts.append(
+            {
+                "path": target.relative_to(root).as_posix(),
+                "byte_count": len(payload),
+                "sha256": hashlib.sha256(payload).hexdigest(),
+            }
+        )
+    content = {
+        "schema_version": _STANDALONE_SCHEMA,
+        "workflow_id": workflow_id,
+        "run_id": "task_" + secrets.token_hex(12),
+        "label": label,
+        "purpose": purpose,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "retention": "user_managed_no_archive_registration",
+        "inputs": receipts,
+    }
+    payload = {**content, "content_sha256": canonical_json_sha256(content)}
+    _standalone_write_new(
+        root / "context.json",
+        (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode(),
+    )
+    return load_standalone_context(
+        root / "context.json", expected_workflow_id=workflow_id
     )

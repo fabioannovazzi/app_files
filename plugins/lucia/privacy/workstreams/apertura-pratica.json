@@ -19,7 +19,8 @@
     "plugins/vera/scripts/model_data_report.py",
     "plugins/vera/skills/vera/references/model-data-report-contract.md",
     "plugins/studio-archive/scripts/build_model_data_report.py",
-    "plugins/studio-archive/scripts/readable_archive.py"
+    "plugins/studio-archive/scripts/readable_archive.py",
+    "plugins/studio-archive/scripts/archive_preferences.py"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -41,6 +42,15 @@
         "id": "readable-archive-navigation",
         "purpose": "Reopen locally retained client matter inputs and finalized artifacts",
         "content": "Returned local index path, counts and navigation status or error. Generated local HTML contains existing matter labels, dates, statuses and relative links to exact ledger files; it creates no document copies and makes no external requests.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "approved-archive-profile",
+        "purpose": "Reconnect an explicitly approved client archive in fresh sessions",
+        "content": "The last approved local archive root and root-specific confirmed identity aliases remain in an owner-private local profile, separately from session-owned configuration and active run selection. These profile files are not automatically sent to the model or copied into the archive. Returned archive locations, matching client IDs and safe directory labels can enter the invoking model context. Continuity requires the host to retain the local profile; temporary hosts provide no persistence guarantee.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -96,12 +106,16 @@
     {
       "id": "session-bound-archive-configuration",
       "control": "Studio Archive separates default configuration by host session identity, holds a process lock on configured state and rejects configuration changes during an operation. These controls do not anonymize case data or prove provider transmission."
+    },
+    {
+      "id": "private-root-specific-identity-continuity",
+      "control": "Approved archive discovery is revalidated before a fresh isolated session adopts it; existing sessions stay pinned. Private identity aliases are root-specific and short cross-process transactions prevent lost updates. Unavailable or malformed profile state fails closed, and private profile storage must remain outside source archives."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-06",
+    "reviewed_at": "2026-10-08",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "ed7c862b89604b9085bfc7716f3dbe9f6306e400b96ec5a17a385776bd91fb0b"
+    "source_fingerprint": "2600f7908ab3e529e6ad27283bb97b78227b981053297dd494c2437114b8da9c"
   }
 }

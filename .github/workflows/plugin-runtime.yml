@@ -10,6 +10,31 @@ permissions:
   contents: read
 
 jobs:
+  annual-statements:
+    name: Annual statement analysis and editable exports
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install declared annual statement dependencies and verification tools
+        run: >-
+          python -m pip install pytest pytest-cov 'coverage>=7.10' black==25.1.0 isort==6.0.1 mypy bandit
+          -r plugins/financial-analysis/requirements.txt
+      - name: Verify source cells, reconciliation, managed execution and Office outputs
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_annual_statements.py tests/plugins/test_vera_financial_analysis.py
+          --cov --cov-config=tests/annual_statements.coveragerc --cov-report=term-missing --cov-fail-under=80
+      - name: Check annual statement code quality
+        run: |
+          python -m black --check plugins/financial-analysis/scripts/annual_statements.py plugins/financial-analysis/scripts/annual_statements_render.py plugins/financial-analysis/scripts/run_annual_statements.py tests/plugins/test_annual_statements.py
+          python -m isort --check-only plugins/financial-analysis/scripts/annual_statements.py plugins/financial-analysis/scripts/annual_statements_render.py plugins/financial-analysis/scripts/run_annual_statements.py tests/plugins/test_annual_statements.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/financial-analysis/scripts/annual_statements.py plugins/financial-analysis/scripts/annual_statements_render.py plugins/financial-analysis/scripts/run_annual_statements.py
+          python -m bandit -q -ll plugins/financial-analysis/scripts/annual_statements.py plugins/financial-analysis/scripts/annual_statements_render.py plugins/financial-analysis/scripts/run_annual_statements.py
+
   rating-legalita:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -902,3 +927,30 @@ jobs:
           python -m isort --check-only plugins/vera/scripts/studio_work.py plugins/vera/scripts/studio_work_runtime.py tests/plugins/test_vera_studio_work.py tests/plugins/test_teaching_studio_work_execution.py
           python -m mypy --follow-imports=skip --ignore-missing-imports plugins/vera/scripts/studio_work.py plugins/vera/scripts/studio_work_runtime.py
           python -m bandit -q -ll plugins/vera/scripts/studio_work.py plugins/vera/scripts/studio_work_runtime.py
+
+  studio-archive-adoption:
+    name: Archive session recovery and standalone work
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit -r plugins/studio-archive/requirements.txt -r plugins/invoice-xml/requirements.txt -r plugins/prompt-optimizer/requirements.txt -r plugins/deep-research-validator/requirements.txt
+      - name: Verify fresh sessions, alias isolation, concurrency and task receipts
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_studio_archive_adoption.py
+          tests/plugins/test_vera_standalone_work.py
+          tests/plugins/test_cowork_archive_session.py
+      - name: Check added helper quality
+        run: |
+          python -m black --check plugins/studio-archive/scripts/archive_preferences.py plugins/_shared/vendor/modules/vera_assurance/contracts.py plugins/vera/scripts/standalone_work.py tests/plugins/test_studio_archive_adoption.py tests/plugins/test_vera_standalone_work.py
+          python -m isort --check-only plugins/studio-archive/scripts/archive_preferences.py plugins/_shared/vendor/modules/vera_assurance/contracts.py plugins/vera/scripts/standalone_work.py tests/plugins/test_studio_archive_adoption.py tests/plugins/test_vera_standalone_work.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/studio-archive/scripts/archive_preferences.py plugins/_shared/vendor/modules/vera_assurance/contracts.py plugins/vera/scripts/standalone_work.py
+          python -m bandit -q -ll plugins/studio-archive/scripts/archive_preferences.py plugins/_shared/vendor/modules/vera_assurance/contracts.py plugins/vera/scripts/standalone_work.py

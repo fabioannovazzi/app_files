@@ -81,6 +81,7 @@ CLIENT_WORKFLOW_ENTRYPOINTS = (
     ("centrale-rischi-review", "inspect_inputs.py"),
     ("centrale-rischi-review", "run_analysis.py"),
     ("centrale-rischi-review", "finalize_analysis.py"),
+    ("financial-analysis", "run_annual_statements.py"),
     ("financial-analysis", "run_pack.py"),
     ("financial-analysis", "validate_case_contracts.py"),
     ("financial-analysis", "prepare_customer_concentration_case.py"),

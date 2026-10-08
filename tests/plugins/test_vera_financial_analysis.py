@@ -109,7 +109,19 @@ def test_financial_analysis_mcp_describes_all_registered_packs() -> None:
     )
 
     responses = [json.loads(line) for line in result.stdout.splitlines()]
-    assert responses[0]["result"]["serverInfo"]["version"] == "0.2.7"
+    manifest = json.loads(
+        (MCP_SCRIPT.parent.parent / ".codex-plugin" / "plugin.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert responses[0]["result"]["serverInfo"]["version"] == manifest["version"]
+    assert responses[1]["result"]["structuredContent"]["annual_statements"] == {
+        "recipe_id": "annual_oic_source_cells.v1",
+        "entrypoint": "scripts/run_annual_statements.py",
+        "reference": "references/annual-statements.md",
+        "outputs": ["Word", "editable Excel", "Markdown", "JSON reconciliation"],
+        "native_fdd_interface": False,
+    }
     assert responses[1]["result"]["structuredContent"]["registered_packs"] == [
         "monthly_pnl",
         "working_capital",
@@ -791,8 +803,7 @@ def test_financial_model_use_authorizes_only_one_hash_bound_source(
 ) -> None:
     module = _load_pack_module()
     case_path = _vera_case(
-        ROOT
-        / "plugins/clara/evals/preparation/wd40_fy2025/case.json",
+        ROOT / "plugins/clara/evals/preparation/wd40_fy2025/case.json",
         tmp_path / "case",
         pack_id="monthly_pnl",
     )

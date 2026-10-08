@@ -81,7 +81,7 @@
     },
     {
       "path": "modules/invoice-xml/skills/invoice-xml/SKILL.md",
-      "sha256": "875fb726fa063c5f42b3553d42a9dfbcc15e073ae9351c1846cbc419d2676c0e"
+      "sha256": "c1f347039b59b308e4c8139bf5786c04f843f024b2fedd1f3e3c3fa209cc91ff"
     },
     {
       "path": "modules/invoice-xml/vendor/modules/__init__.py",
@@ -93,7 +93,7 @@
     },
     {
       "path": "modules/invoice-xml/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
+      "sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112"
     },
     {
       "path": "modules/invoice-xml/vendor/modules/vera_assurance/decisions.py",
@@ -145,7 +145,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
+      "sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -350,5 +350,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "fb0134a3b851a4b511cb31b5581aaaf9d8c35b8a58c2ec6b4f286847f66f05e2"
+  "canonical_course_sha256": "bf69a8e4c2d68ae16cec0e159dfa3ac6da6d9ac5a5a6b517943a252bc6dbebe8"
 }

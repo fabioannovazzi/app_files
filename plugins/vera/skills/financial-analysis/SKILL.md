@@ -37,3 +37,9 @@ exists; otherwise resolve `../../../financial-analysis` in the repository.
 Read that module's `skills/financial-analysis/SKILL.md` completely and follow
 it. Treat the resolved module root as the plugin working directory for all
 commands.
+
+For annual historical OIC statements, follow that module's
+`references/annual-statements.md` and `run_annual_statements.py` file route.
+It produces Word and editable Excel from explicit cell mappings and preserves
+source discrepancies. The eight-pack accounting/FDD route does not implement
+this annual recipe and must not intercept or block it.

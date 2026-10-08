@@ -61,6 +61,17 @@ is available.
 
 Choose the route before resolving any module:
 
+A fresh session reuses the last explicitly approved root from the owner-private
+profile after access revalidation. Existing sessions keep their own pinned root,
+run selection and index. Confirmed aliases persist privately per archive root;
+raw aliases are not returned in the safe client directory. If no approved root is
+available, say “the archive location is not connected”; do not say the client is
+unregistered or propose New client until the archive has been listed. Reuse an
+existing client/engagement and the user's established choices. Before the first
+copy, consolidate the selected client, engagement, sources and write permission
+into one concise confirmation; internal ledger steps remain separate.
+
+
 1. When the user asks to inspect WhatsApp messages, confirm that Computer Use
    can control the local WhatsApp Desktop application on the same computer.
    - If it is available, read `references/whatsapp-desktop.md` completely and

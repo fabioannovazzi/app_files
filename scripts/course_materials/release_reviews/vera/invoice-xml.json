@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "invoice-xml",
-  "course_sha256": "fb0134a3b851a4b511cb31b5581aaaf9d8c35b8a58c2ec6b4f286847f66f05e2",
+  "course_sha256": "bf69a8e4c2d68ae16cec0e159dfa3ac6da6d9ac5a5a6b517943a252bc6dbebe8",
   "reviewer": "Codex: invoice intake instruction and unchanged teaching-output review",
   "reviewed_at": "2026-10-07T17:57:01+02:00",
   "review_scope": "Prepared fictional lesson plus actual native preparation and export regression outputs. The test uses an explicitly synthetic approval event to exercise the exporter; it is not a professional or learner approval and is never included in the kit. This review does not establish a human voice/two-window session or tax correctness. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate. PR #685 refresh: authored lesson, fictional input bytes and output expectations are unchanged against current main; source inventory now binds proposal schema 2, reviewed transmitter choice and local fiscal-ID control-character checks. Ten fresh demo/practice execution regressions passed across five languages. Synthetic approval remains test-only; no SdI, professional or learner acceptance is claimed. Vera 0.1.351: reviewed instruction reuse, consolidated source-led intake, archive selector sequencing, pinned XSD paths and the validated model-data report example. Authored lesson content, inputs and expectations are unchanged; only source inventory changed. Ten fresh localized demo/practice runs passed and their previews and XML were inspected for expected invoice references. No timing, user-host, learner, professional or SdI acceptance is claimed.",
@@ -600,5 +600,39 @@
     "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
     "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
   },
-  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
+  "committed_shared_contract_integration_20261008": {
+    "product": "vera",
+    "workflow": "invoice-xml",
+    "reviewer": "Codex /root - bounded shared-contract integration review",
+    "reviewed_at": "2026-10-08T12:40:14.182064+00:00",
+    "source_change": "Shared assurance contracts add a separately allowlisted standalone task context; ordinary registered client contexts and this lesson content remain unchanged. Other source changes were reviewed in the included bank and Archive commits.",
+    "comparison": "Complete course payload excluding source inventory is identical to all three inspected committed parents, including every localized lesson, input, checkpoint and expectation.",
+    "limits": "Preserves prior named editorial and artifact judgments; does not attest new learner participation, professional acceptance or installed native host behavior. Current CI must execute exact demo/practice identities against current course bytes.",
+    "parents": [
+      {
+        "commit": "c324cb0",
+        "course_sha256": "fb0134a3b851a4b511cb31b5581aaaf9d8c35b8a58c2ec6b4f286847f66f05e2"
+      },
+      {
+        "commit": "f70d90d",
+        "course_sha256": "fb0134a3b851a4b511cb31b5581aaaf9d8c35b8a58c2ec6b4f286847f66f05e2"
+      },
+      {
+        "commit": "0bb963db",
+        "course_sha256": "bf69a8e4c2d68ae16cec0e159dfa3ac6da6d9ac5a5a6b517943a252bc6dbebe8"
+      }
+    ],
+    "course_sha256": "bf69a8e4c2d68ae16cec0e159dfa3ac6da6d9ac5a5a6b517943a252bc6dbebe8"
+  },
+  "studio_archive_adoption_source_binding_20261008": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "reviewed_at": "2026-10-08T12:39:27.596925+00:00",
+    "baseline_commit": "c324cb0cbc1d1965676c53e0c2c6dd11905a5393",
+    "previous_course_sha256": "fb0134a3b851a4b511cb31b5581aaaf9d8c35b8a58c2ec6b4f286847f66f05e2",
+    "current_course_sha256": "bf69a8e4c2d68ae16cec0e159dfa3ac6da6d9ac5a5a6b517943a252bc6dbebe8",
+    "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
+    "source_review": "docs/studio_archive/course-source-compatibility-review.json",
+    "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  }
 }

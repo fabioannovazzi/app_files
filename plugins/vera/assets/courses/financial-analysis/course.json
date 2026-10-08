@@ -33,14 +33,29 @@
       "sha256": "39d15fb5dfe55dc7237a606f9cffd495093288f926f326074b0161f447efb4c9"
     },
     {
+      "path": "modules/financial-analysis/references/annual-statements.md",
+      "repository_path": "plugins/financial-analysis/references/annual-statements.md",
+      "sha256": "a90b2cac67887aea774db58b408b6bb09d6d29b32cb60d5a3e504ac13f358992"
+    },
+    {
       "path": "modules/financial-analysis/requirements.txt",
       "repository_path": "plugins/financial-analysis/requirements.txt",
-      "sha256": "229e735e279e36bed2d189bc11684a11343e7b16671306c5784987419e20639e"
+      "sha256": "c5126d73be720f56df4d3b9b7a797ef9d7474187da879de488886db5d97b6f2f"
+    },
+    {
+      "path": "modules/financial-analysis/scripts/annual_statements.py",
+      "repository_path": "plugins/financial-analysis/scripts/annual_statements.py",
+      "sha256": "5c2cc2f66df91f697c6169342861aaf111b2926591f63a2b74a8ebf0eb79d469"
+    },
+    {
+      "path": "modules/financial-analysis/scripts/annual_statements_render.py",
+      "repository_path": "plugins/financial-analysis/scripts/annual_statements_render.py",
+      "sha256": "396671a74b8923716196af3bbc9885d4947d003d80707548467511007d8ef1f4"
     },
     {
       "path": "modules/financial-analysis/scripts/check_dependencies.py",
       "repository_path": "plugins/financial-analysis/scripts/check_dependencies.py",
-      "sha256": "249a5ae4cd2f1df11779655795fdf11a66e843f6addbd78b4ced78d293c0f3e3"
+      "sha256": "4b582fe17e503168361d6c1070e178fc588e4ae92b87c1d207ad4eaeeacc13de"
     },
     {
       "path": "modules/financial-analysis/scripts/managed_case_inputs.py",
@@ -78,6 +93,11 @@
       "sha256": "938fce98d40f0b797a305802af422c5f3980fe53254d3f87bef787bb94f29c43"
     },
     {
+      "path": "modules/financial-analysis/scripts/run_annual_statements.py",
+      "repository_path": "plugins/financial-analysis/scripts/run_annual_statements.py",
+      "sha256": "95ae9def4eb352077ea6c22e0ccc2fc36365b72d267c92043ca5e08c246b94da"
+    },
+    {
       "path": "modules/financial-analysis/scripts/run_pack.py",
       "repository_path": "plugins/financial-analysis/scripts/run_pack.py",
       "sha256": "9e328729f528e0ef8af93cc27d1234c24eef0c7abc5e754d63ee780903e57612"
@@ -90,7 +110,7 @@
     {
       "path": "modules/financial-analysis/skills/financial-analysis/SKILL.md",
       "repository_path": "plugins/financial-analysis/skills/financial-analysis/SKILL.md",
-      "sha256": "0c66329f22f90b04c01e1ca57428a598a4085fa8770102716feae2128eb3045e"
+      "sha256": "71543f1cb2bbb2df096e6df80b98808ec49ca55788947cacebd3df759544bb86"
     },
     {
       "path": "modules/financial-analysis/vendor/modules/__init__.py",
@@ -105,7 +125,7 @@
     {
       "path": "modules/financial-analysis/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
+      "sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112"
     },
     {
       "path": "modules/financial-analysis/vendor/modules/vera_assurance/decisions.py",
@@ -165,7 +185,7 @@
     {
       "path": "skills/financial-analysis/SKILL.md",
       "repository_path": "plugins/vera/skills/financial-analysis/SKILL.md",
-      "sha256": "c1ac248077d9a4d396dae8fe374d6831fe507816e2afe889de42968f465084ef"
+      "sha256": "e44c5396082694cb213ad979a877b09c340174dd3fc61030457bfe21d79b6d6e"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -305,7 +325,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
+      "sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
