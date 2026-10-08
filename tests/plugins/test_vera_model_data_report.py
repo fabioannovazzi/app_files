@@ -235,6 +235,47 @@ def test_candidate_without_run_evidence_is_rejected(tmp_path: Path) -> None:
         module.build_model_data_report(request, evidence_root=tmp_path)
 
 
+def test_local_only_build_never_invokes_stamping(
+    tmp_path: Path, monkeypatch, capsys
+) -> None:
+    module = _load_module()
+    (tmp_path / "mapping_payload.json").write_text("{}\n")
+    request = tmp_path / "request.json"
+    request.write_text(json.dumps(_reduced_request()))
+
+    def forbidden_stamp(*args, **kwargs):
+        raise AssertionError("local-only report attempted an external stamp")
+
+    monkeypatch.setitem(
+        sys.modules,
+        "notarized_run_receipt",
+        types.SimpleNamespace(
+            stamp_model_data_report=forbidden_stamp,
+            NotarizedRunReceiptError=ValueError,
+        ),
+    )
+
+    result = module.main(
+        [
+            "build",
+            "--input",
+            str(request),
+            "--output-dir",
+            str(tmp_path),
+            "--local-only",
+        ]
+    )
+
+    assert result == 0
+    assert json.loads(capsys.readouterr().out)["server_receipt"] == {
+        "status": "not_requested",
+        "reason": "local_only",
+    }
+    assert (tmp_path / "model_data_report.json").is_file()
+    assert (tmp_path / "model_data_report.md").is_file()
+    assert not (tmp_path / "model_data_receipt_request.json").exists()
+
+
 def test_exact_payload_basis_requires_existing_regular_file(tmp_path: Path) -> None:
     module = _load_module()
 

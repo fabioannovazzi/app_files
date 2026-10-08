@@ -87,7 +87,7 @@
     },
     {
       "id": "client-engagement-path-isolation",
-      "control": "Inspection and reconciliation require a digest-valid Studio Archive journal-bank-reconciliation context, accept bank, journal, sample, and recipe inputs only from that engagement, and write only to the context's run output root or a descendant."
+      "control": "Inspection, receipt sealing, and reconciliation require a digest-valid running Studio Archive context. Sealing resolves source receipts only to exact bound inputs, verifies current bytes, requires explicit reviewer identity/date and complete decisions, and replays source qualification before replacing the run-local recipe. No external script or MCP registration is needed."
     },
     {
       "id": "qualified-source-and-reviewed-policy-binding",
@@ -154,6 +154,6 @@
     "reviewed_at": "2026-10-06",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "b43ea0e1b1d0424922d3cb85485ff8f91f7e93b7ff902ba6a588d72e98b3aa37"
+    "source_fingerprint": "5771af076753b45fea1666e49c23fa1547db5808507d36b6eaf4188dee796834"
   }
 }

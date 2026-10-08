@@ -40,7 +40,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/references/workflow-reference.md",
-      "sha256": "ddcfeb906c16c85b85cb21c7da840046c4ae43ad3edc74edecdce47b6143e7d8"
+      "sha256": "f344e59e264229687d5a38dffcc8efc824bc7b7253ed197a16b38e05f67cb933"
     },
     {
       "path": "modules/journal-bank-reconciliation/requirements.txt",
@@ -60,7 +60,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
-      "sha256": "2dbc002a806a80feb0e9e8f67be9701ad4d7616e5426db234cbe6f30951c2564"
+      "sha256": "393b7e5d73d0aec4a8d9b5a4e65b113b0e85219f868f8b890cd4b67637c4897a"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/inspect_inputs.py",
@@ -68,7 +68,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/journal_bank_core.py",
-      "sha256": "363f569a3c27cf2b7bc01cf7d7b9a2cfac8c0b4d852dad48e9577c5852ad09b2"
+      "sha256": "d8ca211e4c698f01b602a6f429129445b7553568a7987a2fbf5c9a934d5302db"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/review_session.py",
@@ -79,12 +79,16 @@
       "sha256": "c4f7482818dcab5ceb328749b5456b8d397ae9281cb48820977066fcc4304961"
     },
     {
+      "path": "modules/journal-bank-reconciliation/scripts/seal_review_receipts.py",
+      "sha256": "62633479f20a2b1da1cb20697c576f059588cad8d4dfb3668cd1e760b731a22b"
+    },
+    {
       "path": "modules/journal-bank-reconciliation/scripts/semantic_review.py",
       "sha256": "2a6408f7fb20bf06612534d8a7b23807675ef9e2fca724f9b0aa935f4629b45b"
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "11dc73670ea89a996a9623edd7773fa295f655a8bff06b6f40c04a21fb22a3c5"
+      "sha256": "7175c98e473b330afa76c89220b894b6f1b9525f151e311e3173ef7ff7305279"
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/references/geneva.md",
@@ -461,5 +465,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "1a1579b3a2da0432dc9a94d1d4b0f918a5d7d2a55d6f5562e8a3091a73710772"
+  "canonical_course_sha256": "eec8b150d8c180b96a6db6ef72e74662014c9e2246e24c5cac6a92f422fdb7ab"
 }

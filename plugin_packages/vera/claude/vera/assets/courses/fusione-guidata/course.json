@@ -101,7 +101,7 @@
     },
     {
       "path": "modules/fusione-guidata/vendor/modules/model_data_report.py",
-      "sha256": "54fcde02508b195250c5a4c58758e10f796a63a32448115de64fccbce8b4022c"
+      "sha256": "0e7a99ef631ed67a1aa25eb10ce7ed158625f6c0c09dcf8546eeb132a238262d"
     },
     {
       "path": "skills/fusione-guidata/SKILL.md",
@@ -402,5 +402,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "86621eeb4f9b55450d22892726e19512695c947297afb26fb10871994a4dcde0"
+  "canonical_course_sha256": "d7b942d2675c4ec84e10a27f1b38a84ee66d50d33e88466f1ac713b1e6c77243"
 }

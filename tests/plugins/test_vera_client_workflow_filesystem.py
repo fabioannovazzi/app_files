@@ -63,6 +63,7 @@ CLIENT_WORKFLOW_ENTRYPOINTS = (
     ("check-entries", "inspect_entries.py"),
     ("check-entries", "run_checks.py"),
     ("journal-bank-reconciliation", "inspect_inputs.py"),
+    ("journal-bank-reconciliation", "seal_review_receipts.py"),
     ("journal-bank-reconciliation", "run_reconciliation.py"),
     ("journal-bank-reconciliation", "semantic_review.py"),
     ("passive-invoice-audit", "run_audit.py"),

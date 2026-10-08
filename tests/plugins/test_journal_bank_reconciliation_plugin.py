@@ -5776,7 +5776,7 @@ def test_canonical_snake_case_mapping_runs_amount_date_cascade_and_native_closur
                 if receipt["role"] == "implementation"
             ]
         )
-        == 25
+        == 26
     )
 
 
@@ -7040,7 +7040,7 @@ def test_initial_assurance_envelope_binds_exact_transitive_implementation_set(
         (root_id, relative_path)
         for _, root_id, relative_path in core.IMPLEMENTATION_ARTIFACT_SPECS
     ]
-    assert len(implementation_receipts) == 25
+    assert len(implementation_receipts) == 26
 
 
 @pytest.mark.parametrize(

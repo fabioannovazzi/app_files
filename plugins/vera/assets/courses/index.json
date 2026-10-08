@@ -160,7 +160,7 @@
     },
     "bilancio-oic": {
       "path": "bilancio-oic/course.json",
-      "sha256": "357134b2af073b3ff24d2f25d344db554dd6b1096493ea01b1834b932aa545fc",
+      "sha256": "767afc30b756edb498de9fe9a2c363f2b7e66a0ae8664d199363e3f6bfe6e5f2",
       "languages": [
         "it",
         "en"
@@ -510,7 +510,7 @@
     },
     "fusione-guidata": {
       "path": "fusione-guidata/course.json",
-      "sha256": "86621eeb4f9b55450d22892726e19512695c947297afb26fb10871994a4dcde0",
+      "sha256": "d7b942d2675c4ec84e10a27f1b38a84ee66d50d33e88466f1ac713b1e6c77243",
       "languages": [
         "it",
         "en",
@@ -566,7 +566,7 @@
     },
     "journal-bank-reconciliation": {
       "path": "journal-bank-reconciliation/course.json",
-      "sha256": "1a1579b3a2da0432dc9a94d1d4b0f918a5d7d2a55d6f5562e8a3091a73710772",
+      "sha256": "eec8b150d8c180b96a6db6ef72e74662014c9e2246e24c5cac6a92f422fdb7ab",
       "languages": [
         "it",
         "en",
@@ -713,7 +713,7 @@
     },
     "organizzazione-lavoro": {
       "path": "organizzazione-lavoro/course.json",
-      "sha256": "b33cd060f2c7d9554c17a36eee51f18024d3bb61c9a246014c228e7811c60cd7",
+      "sha256": "123062ffa4cff82651231b62c16e949e6ee4bf570cd0e6efee7f902342ac98c4",
       "languages": [
         "it",
         "en",
@@ -965,7 +965,7 @@
     },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "72be0d6f37056e1959a663eac75c85ef6cb051c972d16e386a8da4ff8c468416",
+      "sha256": "f8ab30988eacfe23e71d01f1cdc0a4f2c03fef698c1bbc4b9ba0b1e00c9895cb",
       "languages": [
         "it",
         "en",
@@ -993,7 +993,7 @@
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "11c40647438a1b01c081488295cc501032bf420b8de8d9a302268ca67aa2d19c",
+      "sha256": "2875bc88c582a5b442813910619d28c6f62191d316557535382a391144eff180",
       "languages": [
         "it",
         "en",
@@ -1021,7 +1021,7 @@
     },
     "trasformazione": {
       "path": "trasformazione/course.json",
-      "sha256": "88c6764b4e342debe06c71fec9a98d3952fb222cbf6ee077a40ef149fefd7726",
+      "sha256": "faca0259c621c0b24f2119640257916fd2cc859edeec5cc53578830ec248cad0",
       "languages": [
         "it",
         "en",
@@ -1065,7 +1065,7 @@
     },
     "variance-analysis": {
       "path": "variance-analysis/course.json",
-      "sha256": "b31c98511b3286fee8a33a6e823ee3812bf299a6bfc8ae3450533ef2faea1a40",
+      "sha256": "7584e1158a161fba28909206495ecb8d62d41271cdfa9769a3058161f39f8d69",
       "languages": [
         "it",
         "en",
