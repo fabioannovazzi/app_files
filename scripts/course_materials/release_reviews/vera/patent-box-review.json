@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "patent-box-review",
-  "course_sha256": "51a7c3589a8643bc5209e2df8f515cfb5c5811895d024ab22e30684e9df2c29b",
+  "course_sha256": "9a663104c6c0a1d50d5703d29795fd06d4d7b45f0babaec56a4dc50e9eea7d18",
   "reviewer": "Codex /root: source, teaching and document engineering review",
   "reviewed_at": "2026-10-01T08:06:30.198517+00:00",
   "review_scope": "Read all five complete localized outlines and demo/practice source notes. Executed ten separate native Studio Archive to normalized ledger to proposal to synthetic decision to actual Word/PDF dossier and local finalization runs. Read summaries, missing-document lists, control matrices, reconciliations and calculated records; extracted both document formats. Visually inspected all fifty native PDF pages and fifty-five LibreOffice Word-rendered pages, plus browser-rendered lesson titles in every locale and Italian execution/results sections. No clipping or overlap observed; practice Word exports place the closing disclaimer on a separate final page, retained as an engine layout limitation. All generated A/B paragraphs remain explicitly open because no professional template/casebook approval is supplied. Automated semantic interpretations and confirmations are synthetic fixtures outside the shipped course, not live model execution or learner/professional approval. Test no-model reports describe those automated runs only; live teaching must report actual native model reading. Native voice, user participation, learner understanding, two visible windows, installation acceptance and professional UAT remain unverified. The compiler source-binding correction pins the actual patent_box engine, config and examples directories. Their execution bytes and the lesson text are unchanged; the final thirteen-case regression reran against this corrected course inventory. Reviewed artifact hashes retain the inspected authoring runs rather than claiming new visual review of later duplicate runs. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
@@ -491,5 +491,15 @@
     "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
     "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
   },
-  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
+  "studio_archive_adoption_source_binding_20261008": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "reviewed_at": "2026-10-08T12:39:27.596925+00:00",
+    "baseline_commit": "c324cb0cbc1d1965676c53e0c2c6dd11905a5393",
+    "previous_course_sha256": "51a7c3589a8643bc5209e2df8f515cfb5c5811895d024ab22e30684e9df2c29b",
+    "current_course_sha256": "9a663104c6c0a1d50d5703d29795fd06d4d7b45f0babaec56a4dc50e9eea7d18",
+    "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
+    "source_review": "docs/studio_archive/course-source-compatibility-review.json",
+    "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  }
 }
