@@ -1,0 +1,74 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "agenzia-acquisition",
+  "course_sha256": "0e92511c6f119e7d8934fbf63ff5d7e0b2593c0036e8c0c2b2f52bbd5169ee55",
+  "reviewer": "Codex source, actual local output and lesson review",
+  "reviewed_at": "2026-10-08T08:15:00+00:00",
+  "review_scope": "Read the Italian authored lesson and fictional inputs. Executed the shipped CourseLibrary and acquisition engine twice for demo/practice using the explicitly synthetic source. Inspected actual CSV, JSON, model-data report and workbook sheets. Offline browser and MCP App harness tests are separate evidence; no live AdE account, native host session, learner participation or professional acceptance is claimed. Final wording review keeps internal commands in the specialist skill and describes learner actions in the public lesson. The acquisition lesson was executed again after this source change.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "The opening states a concrete client/period acquisition task and the missing-original scenario. It identifies the source as fictional before execution and distinguishes the real manual Chrome login.",
+        "inputs_and_request": "The supplied task, demo and practice files contain a single fictional client. The request is usable without terminal knowledge: Vera runs the packaged script in the lesson directory with the shared runtime.",
+        "execution_and_checkpoints": "The lesson executes the production engine with a synthetic source and asks the learner to find the missing document, actual original and missing cash amount. It never turns a missing value into zero or treats the partial first run as complete.",
+        "deliverable_and_next_action": "The named Excel, CSV, XML, HTML and model-data report exist. Workbook inspection confirms the first monthly cash total is withheld, while the later completed total is 150 EUR. Stamp duty evidence and payment status remain distinct; an F24 requires reviewed residual and due date.",
+        "practice_and_repeat": "Practice runs in the same acquisition folder, preserves the initial partial run, verifies the original bytes already present and acquires the second XML. Repeat instructions name clients, dates, operations, delegation and destination, with the native panel optional.",
+        "language_and_pacing": "All Italian lesson text and source notes were read. Six compiled steps total approximately 390 seconds of explanation; actual execution and discussion can extend that time. No timed learner session is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_agenzia_execution::test_agenzia_course_acquires_and_resumes_actual_outputs[demo]",
+        "result_review": "One XML acquired, second unavailable; partial first run preserved. Missing cash amount and monthly total remain blank with explicit issues. Stamp duty 24 EUR and a separate 12 EUR partial-payment note are visible; no payment PDF is generated.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.html",
+            "sha256": "e467f079a2b4d1aa3d580f89a416f3bd46662fe37bf5fe0a4e3f927e9343558f"
+          },
+          {
+            "name": "report.json",
+            "sha256": "83714b0223b72bc5dde7077b4e9a5acb4f66551d26cbf74a6f4a0101c95a7ad9"
+          },
+          {
+            "name": "riepilogo.xlsx",
+            "sha256": "d642f3b0c1822f878bfd0bc41bfb95710d2c3384a56efa5041938a4638b0f87c"
+          },
+          {
+            "name": "fatture.csv",
+            "sha256": "6c0574bf2883c0281f49bf8c6f0d9feaf264b17e27e4407c2c317995e0f1d485"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "6817838a7c9bd8c52c4b3355d23a3fd3a265b5baa35f535f81b47c39aff5b8f9"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_agenzia_execution::test_agenzia_course_acquires_and_resumes_actual_outputs[practice]",
+        "result_review": "A new run acquires the second XML and verifies the unchanged first XML. Both cash rows now have amounts, totaling 150 EUR for the month. The earlier partial run remains intact. The model-data report records local execution and leaves surrounding chat reads unmeasured.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.html",
+            "sha256": "c0a493b4ba94b1065b05a861278886f1ceb6e4c0f992ae871155f6af4bda8db9"
+          },
+          {
+            "name": "report.json",
+            "sha256": "931d13230ec7a3b01f193cd09ed8e96ef7ddf7bc842cfe5033b97b3fb50f6c08"
+          },
+          {
+            "name": "riepilogo.xlsx",
+            "sha256": "8050e002a63ce897f863ed5b7f020f2bd3565d0a93b7c2e655207fc5ba7274b0"
+          },
+          {
+            "name": "fatture.csv",
+            "sha256": "0cd76ad1ba57e029deb20f3e42752851c59ca983edbbfde78f13df11fee93365"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "831680d32f9bb281b27a3499d6bb8159ca5ff2bbf38d1977d8d46d4d80fe3207"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+[run]
+concurrency = thread, greenlet
+source = plugins/browser-automation/scripts
+
+[report]
+include =
+    */ade_acquisition/*
+    */agenzia_acquire.py
+    */agenzia_ui.py
+    */agenzia_demo.py
+    */agenzia_runtime.py
+fail_under = 80
+show_missing = True

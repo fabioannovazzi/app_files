@@ -5,6 +5,12 @@ description: "Use when an authorized operator or developer wants Vera to learn, 
 
 # Automazione web
 
+## Route ordinary Agenzia work first
+
+For downloading Agenzia invoices, corrispettivi or bolli, read
+`../agenzia-acquisition/SKILL.md` and stop following this generic teaching route.
+That named operation has its own local browser worker and optional native panel.
+
 Develop, test and repair an exact professional browser process. Read
 `references/process-lifecycle.md` before selecting the development process. On every new
 conversation, recover the scoped local process catalog and shipped bindings;
@@ -214,28 +220,15 @@ authorization.
 
 ## Choose the operation
 
-### Acquire and archive Agenzia invoices by category and year
+### Acquire Agenzia invoices, cash receipts and stamp-duty evidence
 
-For the CR-49 acquisition process, read
-`references/agenzia-acquisition.md` and use `scripts/agenzia_acquisition.mjs`.
-Build the category plan from currently observed authorized portal evidence;
-never infer a category or format from code. The runner reconciles independent
-counts and pages, preserves XML/P7M originals, extracts and hash-links the
-encapsulated FatturaPA XML, records unavailable formats, and resumes from a
-verified append-only state without overwriting earlier artifacts. P7M extraction
-does not validate the signature. Print to PDF remains an operator-owned
-`native_gap`, so a run using it cannot count as clean browser validation. Every
-result remains a prototype until the released version has the two required
-target-environment repetitions.
-
-### Download individual Agenzia invoices from supplied teaching
-
-For the individual-invoice process supplied with CR-43, read
-`references/agenzia-download.md` and use `scripts/agenzia_download.mjs`.
-It retains partial downloads and failures, verifies independent population
-counts and explicitly remains a prototype. Reuse the supplied work and current
-authorized Chrome session; do not create a second bespoke downloader in chat.
-This route is distinct from the batch ZIP request scaffold below.
+For ordinary Agenzia acquisition, route directly to `../agenzia-acquisition/SKILL.md`.
+It is the sole acquisition implementation: Francesco Platania's supplied procedure
+adapted into Vera's durable local Python worker. Do not reconstruct a downloader
+from teaching capabilities or use the retired ZIP scaffold. Its optional native
+panel and ordinary commands operate on the same saved plan, worker and files.
+The browser connection rules below apply to generic teaching and development;
+the named acquisition skill owns its visible local Chrome session and manual login.
 
 ### Prepare an ECONS invoice review automatically
 
@@ -508,9 +501,6 @@ frameworks, browser launchers, or capture formats unless the facts cue them.
   bounded transient retry. Earlier receipts do not validate this version. Renew
   exact authoring review, promote it, and complete two clean replays before
   treating it as a handoff.
-- `agenzia-invoice-zip`: a process-specific Agenzia invoice request and ZIP
-  retrieval scaffold. It must remain `scaffold` until an authorized live
-  discovery supplies real controls and clean replay evidence.
 - `teamsystem-process`: a TeamSystem process scaffold. The operator must first
   name the TeamSystem product, tenant origin, and exact process; do not treat
   the TeamSystem brand as one stable UI.

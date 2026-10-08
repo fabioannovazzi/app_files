@@ -1516,7 +1516,11 @@ def test_vera_bundle_contains_browser_discovery_capabilities() -> None:
         "references/process-lifecycle.md",
         "references/ordinary-use.md",
         "capabilities/gmail-search-export/capability.json",
-        "capabilities/agenzia-invoice-zip/capability.json",
+        "scripts/agenzia_acquire.py",
+        "scripts/ade_acquisition/engine.py",
+        "mcp/server.cjs",
+        "ui/agenzia.html",
+        "skills/agenzia-acquisition/SKILL.md",
         "capabilities/teamsystem-process/capability.json",
     ):
         assert f"{prefix}{relative_path}" in entries
@@ -1526,6 +1530,10 @@ def test_vera_bundle_contains_browser_discovery_capabilities() -> None:
         )
     assert f"{prefix}scripts/capability_contract.py" not in entries
     for retired_path in (
+        "scripts/agenzia_download.mjs",
+        "scripts/agenzia_acquisition.mjs",
+        "scripts/agenzia_artifacts.mjs",
+        "capabilities/agenzia-invoice-zip/capability.json",
         "scripts/record_agenzia_invoice_flow.py",
         "references/agenzia_invoice_flow_recording.md",
         "requirements-portal-recorder.txt",
@@ -1602,7 +1610,6 @@ def test_vera_routes_every_commercialista_module() -> None:
         "adeguati-assetti",
         "rating-legalita",
         "bandi-agevolazioni",
-        "browser-automation",
         "business-planning",
         "business-valuation",
         "comunicazione-professionale",
@@ -3001,7 +3008,9 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 skill_file.parent.name != plugin_root.name
             ):
                 assert "Read that module's" in normalized_skill_text
-                if skill_file.parent.name == "composizione-negoziata":
+                if skill_file.parent.name == "agenzia-acquisition":
+                    assert "root as the working directory" in normalized_skill_text
+                elif skill_file.parent.name == "composizione-negoziata":
                     assert "Use the module root for commands" in normalized_skill_text
                 else:
                     assert "plugin working directory" in normalized_skill_text
@@ -3019,6 +3028,18 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
             }:
                 assert "Read that component's" in normalized_skill_text
                 assert "working directory" in normalized_skill_text
+                continue
+            if (
+                plugin_root.name == "browser-automation"
+                and skill_file.parent.name == "agenzia-acquisition"
+            ):
+                # Dedicated acquisition uses its worker and report contract;
+                # it does not author or qualify a generic browser capability.
+                assert "agenzia_acquire.py" in normalized_skill_text
+                assert "outside source repositories" in normalized_skill_text
+                assert "model-data-report-contract.md" in normalized_skill_text
+                assert "riepilogo.xlsx" in normalized_skill_text
+                assert "ordinary report files remain available" in normalized_skill_text
                 continue
             if plugin_root.name == "fusione-guidata":
                 # P1 exports case history and workpapers through its own review contract.
@@ -4064,6 +4085,7 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         "../previdenza-inps/index.html",
         "../registro-imprese-sari/index.html",
         "../lipe/index.html",
+        "../agenzia-acquisition/index.html",
     ):
         module = re.search(
             rf'<a class="module-row"[^>]+href="{re.escape(module_link)}"[^>]*>',
@@ -4071,9 +4093,9 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         )
         assert module is not None
         assert 'data-jurisdiction-item="it"' in module.group(0)
-    assert core.count(" data-module-link") == 45
-    assert core.count('class="module-row"') == 45
-    assert core.count('data-jurisdiction-item="it"') == 16
+    assert core.count(" data-module-link") == 46
+    assert core.count('class="module-row"') == 46
+    assert core.count('data-jurisdiction-item="it"') == 17
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
     for area_id in (

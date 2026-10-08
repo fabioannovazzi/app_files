@@ -70,6 +70,10 @@ def build_registry(root: Path) -> dict[str, Any]:
                 "diagnostic": "modules/journal-bank-reconciliation/scripts/semantic_review.py host-status",
                 "requirement": "Exact qualified native capsule and launch-time canaries; inspect current host before promising execution.",
             },
+            "agenzia_acquisition": {
+                "component": "browser-automation",
+                "requirement": "Installed Chrome on the operator local graphical desktop and shared Python 3.12 with declared acquisition dependencies. Manual authentication. Optional MCP Apps panel and ordinary commands share one worker.",
+            },
             "browser_automation": {
                 "component": "browser-automation",
                 "requirement": "Connected Chrome with the documented Playwright tab API; native steps and unobservable downloads remain explicit gaps.",

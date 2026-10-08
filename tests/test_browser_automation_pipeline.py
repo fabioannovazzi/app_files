@@ -540,7 +540,6 @@ def _recovery_proposals(capability: dict[str, object]) -> dict[str, object]:
 def test_checked_in_capabilities_are_v2_and_honest() -> None:
     pipeline = _pipeline()
     expected = {
-        "agenzia-invoice-zip": "scaffold",
         "gmail-search-export": "draft",
         "teamsystem-process": "scaffold",
     }
@@ -586,7 +585,7 @@ def test_synthetic_fixture_discovery_reproduces_discovered_capability(
 
 
 def test_scaffolds_do_not_claim_unobserved_execution() -> None:
-    for capability_id in ("agenzia-invoice-zip", "teamsystem-process"):
+    for capability_id in ("teamsystem-process",):
         payload = _capability(capability_id)
         assert payload["validation"]["receipts"] == []
         assert payload["provenance"]["discovery_record_sha256"] is None
@@ -761,7 +760,17 @@ def test_validator_limits_model_summary_delivery_to_summary_outputs() -> None:
 
 def test_validator_keeps_download_paths_out_of_model_delivery() -> None:
     pipeline = _pipeline()
-    capability = _capability("agenzia-invoice-zip")
+    capability = _capability("gmail-search-export")
+    capability["outputs"] = [
+        {
+            "name": "download",
+            "type": "download_set",
+            "sensitivity": "private",
+            "delivery": "model_and_artifact",
+            "description": "Synthetic downloaded file fixture.",
+            "fields": [],
+        }
+    ]
     capability["outputs"][0]["delivery"] = "model_and_artifact"
 
     errors = pipeline.validate_capability(capability)

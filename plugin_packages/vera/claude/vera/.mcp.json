@@ -1,5 +1,12 @@
 {
   "mcpServers": {
+    "agenziaAcquisition": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
+        "browser-automation"
+      ]
+    },
     "archiveOrganizationWidgets": {
       "command": "node",
       "args": [

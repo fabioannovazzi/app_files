@@ -2954,3 +2954,102 @@
     }
   }
 })();
+
+window.MPARANZA_FUNCTION_PAGES["agenzia-acquisition"] = {
+  "product": "Vera",
+  "defaultLanguage": "it",
+  "component": "browser-automation",
+  "publicExampleHref": "../courses/vera/agenzia-acquisition/it/course.html",
+  "copy": {
+    "it": {
+      "name": "Acquisizione Agenzia delle Entrate",
+      "summary": "Acquisisce fatture, corrispettivi e dati trimestrali dei bolli per i clienti delegati selezionati. Conserva originali e riepiloghi locali, segnala le parti incomplete e riprende verificando i file già acquisiti.",
+      "useWhen": "Per recuperare documenti da Fatture e Corrispettivi per uno o più clienti e prepararli al controllo o all’importazione nel gestionale.",
+      "input": "Elenco clienti Excel o CSV con codice fiscale e partita IVA, intervallo di date, operazioni richieste e cartella di destinazione. Serve Google Chrome installato sul computer dell’operatore e accessibile a Vera. L’operatore completa personalmente l’accesso e il secondo fattore.",
+      "work": "Vera applica la procedura fornita da Francesco Platania, adattata in un unico worker locale: seleziona il cliente esatto, ricerca le categorie richieste, suddivide gli intervalli numerosi e controlla pagine e conteggi. Conserva XML e P7M originali; estrae dal P7M una copia XML collegata tramite hash. Raccoglie tutti i tipi di dispositivo dei corrispettivi e i bolli dei trimestri interessati. Il pannello nativo consente selezione, avanzamento e riesame; gli stessi comandi e file sono utilizzabili senza pannello.",
+      "output": "Originali organizzati per cliente, anno, categoria e trimestre; Excel con fatture, invii, totali giornalieri e mensili, bolli ed eccezioni; registro CSV, report HTML e dati JSON. Le riprese rileggono il periodo richiesto e riutilizzano soltanto originali verificati. Il prospetto F24 PDF usa importi residui, scadenze e motivi espressamente riesaminati dal professionista.",
+      "responsibilityIntro": "Versione per prove operative: i test sintetici verificano il software e la navigazione su pagine locali, non l’accesso a ogni utenza AdE. Un ambiente remoto senza desktop locale non può aprire il Chrome dell’operatore. La firma P7M non viene validata. I bolli riguardano il trimestre intero, anche quando il periodo selezionato è più breve.",
+      "productRole": "Acquisisce, conserva e verifica i file; distingue errori, dati non disponibili e ambiti non completati. Non trasmette dichiarazioni, non invia F24 e non dispone pagamenti. L’importazione in Studio Archive usa solo collegamenti espliciti al cliente e all’incarico esistenti.",
+      "professionalRole": "Verifica deleghe, clienti, periodo, completezza e anomalie. Controlla date e importi dei corrispettivi prima della riconciliazione contabile. Per il prospetto F24 decide il residuo effettivo, la scadenza e i trimestri da includere: l’importo del portale non è automaticamente un debito ancora da pagare.",
+      "prompt": "Vera, acquisisci le fatture ricevute e i corrispettivi dei clienti in questo elenco per il periodo indicato. Conserva gli originali nella cartella scelta e mostrami il riepilogo con i documenti da recuperare.",
+      "modelData": "Il worker Python/Playwright invia richieste autenticate all’Agenzia e salva localmente identità, documenti e righe del portale; non chiama un modello. Password, PIN e secondo fattore vengono inseriti nel Chrome dell’operatore e non sono registrati da Vera. Nel pannello, dettagli dei clienti e valori finanziari passano nei metadati riservati all’app; il testo degli strumenti restituisce stato e conteggi. La richiesta in chat, percorsi e riepiloghi selezionati e i contenuti che Vera legge esplicitamente possono arrivare al modello dell’host. I file non vengono allegati automaticamente. Il rapporto dati distingue la fase locale dalle effettive letture in chat; non dichiara assenza di dati al modello per l’intera conversazione.",
+      "publicExampleLabel": "Corso",
+      "publicExampleTitle": "Acquisire e controllare i risultati",
+      "publicExampleSummary": "Esempio locale fittizio: originali, errori, ripresa e riesame dei bolli. Nessun accesso al portale durante la lezione. Corso in italiano.",
+      "publicExampleLinkLabel": "Apri il corso →",
+      "modelDataStatus": "relevant"
+    },
+    "en": {
+      "name": "Agenzia delle Entrate acquisition",
+      "summary": "Acquires invoices, cash-receipt submissions and quarterly stamp-duty evidence for selected delegated clients. Keeps originals and summaries locally, identifies incomplete work and verifies retained files before resuming.",
+      "useWhen": "To retrieve documents from Italy’s Fatture e Corrispettivi portal for one or more clients before review or import into accounting software.",
+      "input": "An Excel or CSV client list with tax identifiers and VAT numbers, dates, requested operations and an output folder. Vera needs access to installed Chrome on the operator’s graphical desktop. The operator completes login and any second factor personally.",
+      "work": "Vera adapts Francesco Platania’s supplied procedure into one local worker. It selects the exact client, queries the requested categories, splits large date ranges and checks pages and counts. It retains XML/P7M originals and a hash-linked XML extraction from P7M, gathers all discovered receipt-device types and quarterly stamp-duty data. The optional native panel provides selection, progress and review; ordinary commands use the same worker and files.",
+      "output": "Originals by client, year, category and quarter; Excel for invoices, submissions, daily/monthly totals, stamp duty and exceptions; CSV, HTML and JSON evidence. Resuming rechecks the requested period and reuses verified originals. An F24 PDF working paper uses residual amounts, due dates and reasons explicitly reviewed by the professional.",
+      "responsibilityIntro": "Available for operational testing. Synthetic tests cover software and local browser fixtures, not every AdE account. A remote environment without access to the local desktop cannot launch the operator’s Chrome. P7M signatures are not validated. Stamp-duty results cover the full quarter even for shorter date selections.",
+      "productRole": "Acquires, preserves and checks files; distinguishes errors, unavailable data and incomplete scopes. It does not file tax returns, submit F24 or make payments. Studio Archive imports require explicit existing client and engagement bindings.",
+      "professionalRole": "Checks authority, client identity, dates, completeness and exceptions. Reviews receipt dates and amounts before accounting reconciliation. Chooses actual residual stamp duty, due dates and included quarters: a portal amount is not automatically unpaid debt.",
+      "prompt": "Vera, acquire received invoices and cash-receipt submissions for the clients in this list and the specified period. Preserve originals in the selected folder and show the summary and documents still missing.",
+      "modelData": "The local Python/Playwright worker sends authenticated requests to Agenzia and saves identities, documents and portal rows locally; it does not call a model. Login secrets are entered in the operator’s Chrome and are not recorded by Vera. Native-panel client and financial details are carried in app-only metadata; tool text returns status and counts. Chat requests, selected paths and summaries, and content Vera explicitly reads may reach the host model. Files are not attached automatically. The data report distinguishes the local phase from actual chat reads and does not claim that the whole conversation exposes no client data.",
+      "publicExampleLabel": "Course",
+      "publicExampleTitle": "Acquire and review the results",
+      "publicExampleSummary": "A fictional local exercise on originals, exceptions, resume and stamp-duty review. No portal login during the lesson. Course in Italian.",
+      "publicExampleLinkLabel": "Open the course →",
+      "modelDataStatus": "relevant"
+    },
+    "fr": {
+      "name": "Acquisition Agenzia delle Entrate",
+      "summary": "Récupère les factures, les transmissions de recettes et les données trimestrielles du droit de timbre des clients mandatés sélectionnés. Conserve les originaux localement, signale les travaux incomplets et vérifie les fichiers avant une reprise.",
+      "useWhen": "Pour récupérer des documents du portail italien Fatture e Corrispettivi avant leur contrôle ou leur importation dans le logiciel comptable.",
+      "input": "Liste clients Excel ou CSV avec identifiants fiscaux et numéros de TVA, dates, opérations et dossier de destination. Chrome doit être installé et accessible sur le bureau local de l’opérateur. Celui-ci effectue personnellement la connexion et le second facteur.",
+      "work": "Vera adapte la procédure fournie par Francesco Platania dans un seul programme local. Elle sélectionne le client exact, recherche les catégories demandées, découpe les périodes volumineuses et contrôle pages et nombres. Elle conserve les originaux XML/P7M et une extraction XML liée par empreinte, recueille tous les types d’appareils de recettes découverts et les données trimestrielles des bolli. Le panneau natif facultatif et les commandes ordinaires utilisent le même programme et les mêmes fichiers.",
+      "output": "Originaux par client, année, catégorie et trimestre ; Excel des factures, transmissions, totaux journaliers et mensuels, bolli et anomalies ; CSV, HTML et JSON. La reprise relit la période et réutilise uniquement les originaux vérifiés. Un document de travail F24 en PDF reprend les soldes, échéances et motifs expressément revus par le professionnel.",
+      "responsibilityIntro": "Version destinée aux essais opérationnels. Les tests synthétiques ne prouvent pas l’accès à chaque compte AdE. Un environnement distant sans bureau local ne peut ouvrir Chrome chez l’opérateur. Les signatures P7M ne sont pas validées. Les bolli couvrent le trimestre entier, même pour une période plus courte.",
+      "productRole": "Récupère, conserve et contrôle les fichiers ; distingue erreurs, données indisponibles et périmètres incomplets. Ne transmet ni déclaration ni F24 et n’effectue aucun paiement. L’importation dans Studio Archive exige des liens explicites vers le client et la mission existants.",
+      "professionalRole": "Vérifie les mandats, identités, périodes, exhaustivité et anomalies. Contrôle les dates et montants des recettes avant rapprochement. Décide du solde réel, de l’échéance et des trimestres du F24 : un montant affiché n’est pas automatiquement une dette impayée.",
+      "prompt": "Vera, récupère les factures reçues et les transmissions de recettes des clients de cette liste pour la période indiquée. Conserve les originaux et montre la synthèse et les documents manquants.",
+      "modelData": "Le programme Python/Playwright local envoie des requêtes authentifiées à Agenzia et conserve localement identités, documents et lignes du portail, sans appel au modèle. Les secrets de connexion sont saisis dans Chrome et ne sont pas enregistrés par Vera. Les détails du panneau passent dans les métadonnées réservées à l’application ; le texte des outils contient états et nombres. La demande en conversation, les chemins et synthèses sélectionnés et les contenus explicitement lus par Vera peuvent parvenir au modèle de l’hôte. Les fichiers ne sont pas joints automatiquement. Le rapport distingue cette phase locale des lectures réelles de la conversation.",
+      "publicExampleLabel": "Cours",
+      "publicExampleTitle": "Acquérir et contrôler les résultats",
+      "publicExampleSummary": "Exercice local fictif : originaux, anomalies, reprise et revue des bolli. Sans connexion au portail. Cours en italien.",
+      "publicExampleLinkLabel": "Ouvrir le cours →",
+      "modelDataStatus": "relevant"
+    },
+    "de": {
+      "name": "Agenzia delle Entrate: Daten abrufen",
+      "summary": "Ruft Rechnungen, Kassenmeldungen und vierteljährliche Stempelsteuerdaten ausgewählter bevollmächtigter Mandanten ab. Bewahrt Originale lokal auf, kennzeichnet unvollständige Arbeit und prüft vorhandene Dateien vor der Wiederaufnahme.",
+      "useWhen": "Um Dokumente aus dem italienischen Portal Fatture e Corrispettivi für Prüfung oder Import in die Buchhaltung abzurufen.",
+      "input": "Excel- oder CSV-Mandantenliste mit Steuerkennung und Umsatzsteuernummer, Zeitraum, Vorgängen und Zielordner. Vera benötigt installiertes Chrome auf dem lokalen grafischen Desktop. Der Bediener meldet sich persönlich an und bestätigt den zweiten Faktor.",
+      "work": "Vera übernimmt Francesco Platanias bereitgestelltes Verfahren in einen einzigen lokalen Prozess. Sie wählt den genauen Mandanten, durchsucht die gewünschten Kategorien, teilt umfangreiche Zeiträume auf und prüft Seiten und Anzahlen. XML/P7M-Originale und eine über Hash verknüpfte XML-Extraktion bleiben erhalten. Alle gefundenen Kassengerätetypen und vierteljährlichen Bolli-Daten werden erfasst. Optionales natives Panel und normale Befehle verwenden denselben Prozess und dieselben Dateien.",
+      "output": "Originale nach Mandant, Jahr, Kategorie und Quartal; Excel mit Rechnungen, Meldungen, Tages-/Monatssummen, Bolli und Ausnahmen; CSV, HTML und JSON. Die Wiederaufnahme prüft den angeforderten Zeitraum und verwendet nur geprüfte Originale erneut. Ein F24-Arbeitspapier als PDF enthält ausdrücklich geprüfte Restbeträge, Fälligkeiten und Begründungen.",
+      "responsibilityIntro": "Version für operative Tests. Synthetische Tests belegen keinen Zugang zu jedem AdE-Konto. Eine entfernte Umgebung ohne lokalen Desktop kann Chrome des Bedieners nicht öffnen. P7M-Signaturen werden nicht validiert. Bolli beziehen sich auch bei kürzerer Auswahl auf das ganze Quartal.",
+      "productRole": "Ruft Dateien ab, bewahrt sie auf und prüft sie; unterscheidet Fehler, fehlende Daten und unvollständige Bereiche. Übermittelt weder Steuererklärungen noch F24 und löst keine Zahlung aus. Studio Archive benötigt ausdrückliche Zuordnungen zu bestehenden Mandanten und Aufträgen.",
+      "professionalRole": "Prüft Vollmacht, Identität, Zeitraum, Vollständigkeit und Ausnahmen sowie Kassendaten vor dem Buchhaltungsabgleich. Bestimmt Restbetrag, Fälligkeit und F24-Quartale: ein Portalbetrag ist nicht automatisch eine offene Schuld.",
+      "prompt": "Vera, rufe Eingangsrechnungen und Kassenmeldungen für die Mandanten dieser Liste und den angegebenen Zeitraum ab. Bewahre die Originale im Zielordner auf und zeige die Übersicht mit fehlenden Dokumenten.",
+      "modelData": "Der lokale Python/Playwright-Prozess sendet authentifizierte Anfragen an Agenzia und speichert Identitäten, Dokumente und Portalzeilen lokal; er ruft kein Modell auf. Anmeldedaten werden in Chrome eingegeben und von Vera nicht gespeichert. Mandanten- und Finanzdetails des Panels liegen in App-Metadaten; Werkzeugtexte liefern Status und Anzahlen. Gesprächsanfragen, ausgewählte Pfade und Zusammenfassungen sowie ausdrücklich gelesene Inhalte können das Modell des Hosts erreichen. Dateien werden nicht automatisch angehängt. Der Datenbericht trennt den lokalen Prozess von tatsächlichen Lesevorgängen im Gespräch.",
+      "publicExampleLabel": "Kurs",
+      "publicExampleTitle": "Abruf und Ergebnisse prüfen",
+      "publicExampleSummary": "Fiktive lokale Übung zu Originalen, Ausnahmen, Wiederaufnahme und Bolli-Prüfung. Kein Portalzugang. Kurs auf Italienisch.",
+      "publicExampleLinkLabel": "Kurs öffnen →",
+      "modelDataStatus": "relevant"
+    },
+    "es": {
+      "name": "Adquisición Agenzia delle Entrate",
+      "summary": "Obtiene facturas, envíos de cobros y datos trimestrales del impuesto de timbre para los clientes autorizados seleccionados. Conserva originales localmente, señala trabajo incompleto y verifica archivos antes de reanudar.",
+      "useWhen": "Para recuperar documentos del portal italiano Fatture e Corrispettivi antes de revisarlos o importarlos al programa contable.",
+      "input": "Lista Excel o CSV con identificadores fiscales y números de IVA, fechas, operaciones y carpeta de destino. Vera necesita Chrome instalado y accesible en el escritorio local del operador. El operador completa personalmente el acceso y el segundo factor.",
+      "work": "Vera adapta el procedimiento aportado por Francesco Platania a un único proceso local. Selecciona al cliente exacto, busca las categorías, divide intervalos grandes y comprueba páginas y recuentos. Conserva originales XML/P7M y una extracción XML vinculada mediante hash. Recoge todos los tipos de dispositivo de cobros encontrados y los bolli trimestrales. El panel nativo opcional y los comandos ordinarios usan el mismo proceso y los mismos archivos.",
+      "output": "Originales por cliente, año, categoría y trimestre; Excel de facturas, envíos, totales diarios y mensuales, bolli y excepciones; CSV, HTML y JSON. La reanudación vuelve a consultar el periodo y reutiliza solo originales verificados. Un documento de trabajo F24 en PDF utiliza saldos, vencimientos y motivos revisados expresamente por el profesional.",
+      "responsibilityIntro": "Versión para pruebas operativas. Las pruebas sintéticas no acreditan acceso a todas las cuentas AdE. Un entorno remoto sin escritorio local no puede abrir Chrome del operador. No se validan firmas P7M. Los bolli cubren el trimestre completo aunque la selección sea más corta.",
+      "productRole": "Obtiene, conserva y verifica archivos; distingue errores, datos no disponibles y ámbitos incompletos. No presenta declaraciones ni F24 y no ordena pagos. Studio Archive requiere vínculos explícitos con el cliente y encargo existentes.",
+      "professionalRole": "Comprueba autorizaciones, identidad, periodo, integridad y excepciones. Revisa fechas e importes de cobros antes de conciliarlos. Decide el saldo real, vencimiento y trimestres del F24: el importe del portal no es automáticamente una deuda pendiente.",
+      "prompt": "Vera, obtén las facturas recibidas y los envíos de cobros de los clientes de esta lista para el periodo indicado. Conserva los originales y muestra el resumen y los documentos pendientes.",
+      "modelData": "El proceso local Python/Playwright envía solicitudes autenticadas a Agenzia y guarda identidades, documentos y filas del portal localmente; no llama a un modelo. Los secretos se introducen en Chrome y Vera no los registra. Los detalles del panel viajan en metadatos exclusivos de la aplicación; el texto de las herramientas devuelve estado y recuentos. La solicitud en el chat, rutas y resúmenes seleccionados y contenidos que Vera lee expresamente pueden llegar al modelo del host. Los archivos no se adjuntan automáticamente. El informe distingue la fase local de las lecturas reales del chat.",
+      "publicExampleLabel": "Curso",
+      "publicExampleTitle": "Obtener y revisar los resultados",
+      "publicExampleSummary": "Ejercicio local ficticio sobre originales, errores, reanudación y bolli. Sin acceso al portal. Curso en italiano.",
+      "publicExampleLinkLabel": "Abrir el curso →",
+      "modelDataStatus": "relevant"
+    }
+  }
+};

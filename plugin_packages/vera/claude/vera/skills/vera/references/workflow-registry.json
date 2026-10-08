@@ -15,6 +15,10 @@
       "diagnostic": "modules/journal-bank-reconciliation/scripts/semantic_review.py host-status",
       "requirement": "Exact qualified native capsule and launch-time canaries; inspect current host before promising execution."
     },
+    "agenzia_acquisition": {
+      "component": "browser-automation",
+      "requirement": "Installed Chrome on the operator local graphical desktop and shared Python 3.12 with declared acquisition dependencies. Manual authentication. Optional MCP Apps panel and ordinary commands share one worker."
+    },
     "browser_automation": {
       "component": "browser-automation",
       "requirement": "inspect, explain or edit a supplied sanitized developer pack or capability JSON, and run packaged local evidence/capability pipelines through the managed Python launcher. Live browser discovery, execution and replay validation are unavailable in this package. Do not operate authenticated websites or claim that local pipeline checks prove live validation."
@@ -471,10 +475,15 @@
     {
       "component_id": "browser-automation",
       "skills": [
+        "modules/browser-automation/skills/agenzia-acquisition/SKILL.md",
         "modules/browser-automation/skills/browser-automation/SKILL.md"
       ],
       "python_entrypoints": [
         "modules/browser-automation/scripts/acceptance_fixture.py",
+        "modules/browser-automation/scripts/agenzia_acquire.py",
+        "modules/browser-automation/scripts/agenzia_demo.py",
+        "modules/browser-automation/scripts/agenzia_runtime.py",
+        "modules/browser-automation/scripts/agenzia_ui.py",
         "modules/browser-automation/scripts/batch_review.py",
         "modules/browser-automation/scripts/capability_pipeline.py",
         "modules/browser-automation/scripts/check_dependencies.py",
@@ -570,6 +579,7 @@
   "vera_wrapper_skills": [
     "skills/adeguati-assetti/SKILL.md",
     "skills/adversarial-opinion/SKILL.md",
+    "skills/agenzia-acquisition/SKILL.md",
     "skills/aml-review/SKILL.md",
     "skills/archive-organization/SKILL.md",
     "skills/avviso-intake/SKILL.md",
