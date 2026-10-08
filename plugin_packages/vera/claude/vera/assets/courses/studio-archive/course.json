@@ -37,7 +37,11 @@
     },
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
-      "sha256": "01b0048ffc2bc6970691a8b6168407b480b16a9e7097821f9853a6ca858c0e27"
+      "sha256": "20e76d60ffcdbe95962c6df32bf46f86f5d1b095f5edcaa72d1a01b256dec374"
+    },
+    {
+      "path": "modules/studio-archive/scripts/archive_preferences.py",
+      "sha256": "a3bba1a9dd32607c26afdb7fd02fac8fb6f8094524bb3d4d60f15d8958008b28"
     },
     {
       "path": "modules/studio-archive/scripts/build_model_data_report.py",
@@ -65,7 +69,7 @@
     },
     {
       "path": "modules/studio-archive/skills/studio-archive/SKILL.md",
-      "sha256": "8883f723b22f0828c843bb54fe0c626330db50610f77eefb444215204908c0ee"
+      "sha256": "05780d273d426311c9348eed9949ff3f4962472999a5dc3b1edb0490776e1ab4"
     },
     {
       "path": "modules/studio-archive/skills/studio-archive/agents/openai.yaml",
@@ -93,7 +97,7 @@
     },
     {
       "path": "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
+      "sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112"
     },
     {
       "path": "modules/studio-archive/vendor/modules/vera_assurance/decisions.py",
@@ -129,7 +133,7 @@
     },
     {
       "path": "skills/studio-archive/SKILL.md",
-      "sha256": "a61be55109a9269ffc640ed39ac3d2ec0454f506572c1c36ef00982796d9ab74"
+      "sha256": "3b9467b1c45b88d57ebb6e493b7b5fb00d9991910636a8b9ea6a0963eef39850"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -149,7 +153,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
+      "sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -530,5 +534,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "72be0d6f37056e1959a663eac75c85ef6cb051c972d16e386a8da4ff8c468416"
+  "canonical_course_sha256": "75b25a0f2f81661f0ba51b5d05b45422b905364f284a24f34dc33ba623e6f632"
 }

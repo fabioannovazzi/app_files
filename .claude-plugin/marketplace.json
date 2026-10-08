@@ -12,7 +12,7 @@
       "displayName": "Vera",
       "source": "./plugin_packages/vera/claude/vera",
       "description": "Assistente AI per commercialisti e studi professionali. Prepara risposte e report a quesiti fiscali e legali con verifica delle fonti e del ragionamento, bilanci OIC/XBRL e analisi finanziarie, riconciliazioni e controlli a supporto della revisione contabile. Conserva eccezioni e carte di lavoro; supporta anche pianificazione, pratiche e comunicazioni. Il giudizio professionale, la firma e l’invio restano al commercialista.",
-      "version": "0.1.352",
+      "version": "0.1.353",
       "author": {
         "name": "Mparanza",
         "email": "fabio@mparanza.com",
@@ -85,7 +85,7 @@
       "displayName": "Clara",
       "source": "./plugin_packages/clara/claude/clara",
       "description": "AI companion for consultants. Clara plans and directs advisory cases, validates completed deliverables, organizes evidence, analyzes business data, and prepares reviewable work, reports, presentations, and narrated research videos.",
-      "version": "0.1.254",
+      "version": "0.1.255",
       "author": {
         "name": "Mparanza",
         "email": "fabio@mparanza.com",
@@ -127,7 +127,7 @@
       "displayName": "Lucia",
       "source": "./plugin_packages/lucia/claude/lucia",
       "description": "Assistente AI per avvocati e studi legali italiani. Rivede contratti, confronta documenti, prepara tabelle con citazioni e modifica copie di modelli forniti. Include ricerca, verifica delle fonti, apertura pratica, comunicazione professionale e sito dello studio. Gli helper documentali sono locali; il modello ospite interpreta i testi. Firma, approvazione, deposito, invio, pubblicazione e giudizio professionale restano all’avvocato.",
-      "version": "0.1.87",
+      "version": "0.1.88",
       "author": {
         "name": "Mparanza",
         "email": "fabio@mparanza.com",

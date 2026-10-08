@@ -65,6 +65,12 @@ EXPECTED_CLIENT_WORKFLOW_IDS = (
 )
 
 
+@pytest.fixture(autouse=True)
+def archive_script_imports(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Keep component sibling imports available across monkeypatched tests."""
+    monkeypatch.syspath_prepend(str(COMPONENT_ROOT / "scripts"))
+
+
 @pytest.fixture(scope="module")
 def archive_core() -> ModuleType:
     """Load the component core without changing production import paths."""

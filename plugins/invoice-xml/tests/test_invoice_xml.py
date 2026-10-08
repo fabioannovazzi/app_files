@@ -883,3 +883,48 @@ def test_git_preserves_original_pinned_schema_bytes(schema_root: str) -> None:
     )
 
     assert stored == original
+
+
+def test_standalone_task_prepares_and_exports_bound_invoice_without_client(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import invoice_workflow
+    import source_evidence
+
+    repository = Path(__file__).resolve().parents[3]
+    monkeypatch.syspath_prepend(str(repository / "plugins/_shared/vendor/modules"))
+    from vera_assurance.contracts import create_standalone_task
+
+    proposal, original_inputs = _proposal(tmp_path)
+    context = create_standalone_task(
+        tmp_path / "standalone-invoice",
+        workflow_id="invoice-xml",
+        sources=[original_inputs / "synthetic-invoice.txt"],
+        label="One invoice",
+        purpose="Synthetic reviewed single invoice export",
+    )
+    output = Path(context["output_dir"])
+    inputs = Path(context["input_dir"])
+    source = Path(context["input_bindings"][0]["path"])
+    proposal["sources"][0]["path"] = source.relative_to(inputs).as_posix()
+    proposal_path = output / "proposal.json"
+    proposal_path.write_text(json.dumps(proposal))
+    selection = output / "source_selection.json"
+    selection.write_text(json.dumps(proposal["sources"]))
+    common = ["--client-engagement", context["context_path"], "--output", str(output)]
+    source_evidence.main(["--selection", str(selection), *common])
+    invoice_workflow.main(["prepare", "--proposal", str(proposal_path), *common])
+    revision = output / f"draft-{digest(proposal)}"
+    review = output / "review.json"
+    review.write_text(json.dumps(_review(proposal)))
+
+    result = invoice_workflow.main(
+        ["export", "--revision", str(revision), "--review", str(review), *common]
+    )
+
+    assert result == 0
+    assert list((revision / "export").glob("*.xml"))
+    report = json.loads((revision / "export" / "export_report.json").read_text())
+    assert report["schema_valid"] is True
+    assert not list(tmp_path.rglob("client.json"))
+    assert context["run_id"].startswith("task_")

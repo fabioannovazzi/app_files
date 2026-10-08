@@ -316,8 +316,26 @@ run; it sets server attestation to false. No external stamping for this prototyp
 
 ## Client-first workflow in Codex
 
-Every local client-bound Vera workflow run begins in Studio Archive, and the selected
-customer folder is its durable source of truth. Four studio-wide workflows are
+For repeated client work, use Studio Archive by default and reuse its approved
+root, registered client and engagement. Do not require the user to choose Archive
+again in each chat. First list the clients: the local helper reconnects a fresh
+session to the approved root after access validation. An unconfigured archive
+means its location is not connected, not that the client is new or unregistered.
+Resolve that condition before offering registration. Do not infer client identity
+from a contract filename, and do not ask again for a choice already established.
+
+For a clear request for one analysis, contract review or invoice, with no ongoing
+client practice or archive-continuity requirement, default to the supported
+standalone route in `references/standalone-work.md`. State its retention briefly
+and proceed; the user need not name an internal route. This supported route avoids archive setup and
+client registration while retaining source and output checks and professional
+review. Choose it from the actual requested scope, not filename or keyword rules.
+Reuse an explicit choice; when retention materially changes the job and intent is
+unclear, ask once whether to retain the work in the client archive or deliver it as
+a standalone task. Never block an authorized standalone task on Archive setup.
+
+Every archived local client-bound Vera workflow run begins in Studio Archive,
+and the selected customer folder is its durable source of truth. Four studio-wide workflows are
 explicit exceptions. The pre-client `bandi-agevolazioni` opportunity radar
 cannot belong to one customer folder. `comunicazione-professionale` learns the
 studio's approved editorial voice and output formats across communications,
@@ -332,8 +350,9 @@ begins. Do not infer the client from a
 filename or assume that a similarly named folder is registered. Follow this
 explicit sequence:
 
-1. Identify an existing customer folder by its `Vera/client.json` identity, or
-   create a new folder only after the user chooses New client.
+1. List/reconnect the approved archive and identify an existing customer folder
+   by its `Vera/client.json` identity. Resolve available confirmed aliases before
+   registration; create a new folder only after the user chooses New client.
 2. Create or select one explicit engagement.
 3. After authorization, import each selected file as an immutable, receipted
    input. Use role `source` generally, `journal` for Journal Sampling, and
@@ -348,6 +367,11 @@ explicit sequence:
    relative path, concrete purpose, audience, and media type. Review those
    artifacts, then complete the run. Record failure or cancellation instead of
    treating a partial directory as a result.
+
+Keep these engine steps separate in the ledger, but do not make each an extra
+user decision. Reuse established scope and show one concise confirmation of the
+selected client, engagement, sources and authorized copy before the first write.
+Ask only about unresolved scope; exact export approval remains separate.
 
 The mechanical gate rejects another workflow, cross-client or cross-engagement
 inputs, edited or stale receipts, inputs added after preparation, and output
@@ -838,7 +862,9 @@ validated on the basis of structural inspection alone.
   authorization only where those requirements permit it, within its exact scope.
 - Treat missing required evidence as `partial` or `blocked`; do not replace it
   with model inference.
-- Never write run outputs inside this Git workspace. For client-bound Codex
+- Never write run outputs inside this Git workspace. Standalone tasks use only
+   their selected task output directory under `references/standalone-work.md`.
+   For archived client-bound Codex
   work, use only the prepared customer-folder run's exact `output_dir`; do not
   invent a parallel output folder.
 - Install core packages only through Vera's managed dependency check, which is

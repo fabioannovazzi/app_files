@@ -791,7 +791,9 @@ validated on the basis of structural inspection alone.
   authorization only where those requirements permit it, within its exact scope.
 - Treat missing required evidence as `partial` or `blocked`; do not replace it
   with model inference.
-- Never write run outputs inside this Git workspace. For client-bound Claude
+- Never write run outputs inside this Git workspace. Standalone tasks use only
+   their selected task output directory under `references/standalone-work.md`.
+   For archived client-bound Claude
   work, use only the prepared customer-folder run's exact `output_dir`; do not
   invent a parallel output folder.
 - Install core packages only through Vera's managed dependency check, which is
