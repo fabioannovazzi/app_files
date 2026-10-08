@@ -1,0 +1,40 @@
+name: Journal-bank packaged review receipts
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  review-receipts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: python -m pip install pytest pytest-cov reportlab black==25.1.0 isort==6.0.1 mypy bandit -r plugins/journal-bank-reconciliation/requirements.txt
+      - name: Verify source and packaged Codex and Cowork launcher paths without MCP
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_journal_bank_review_receipts.py
+          tests/plugins/test_journal_bank_reconciliation_plugin.py::test_reviewed_pdf_table_adapter_reconciles_amount_not_trailing_balance
+          tests/plugins/test_journal_bank_reconciliation_plugin.py::test_canonical_snake_case_mapping_runs_amount_date_cascade_and_native_closure
+          tests/plugins/test_journal_bank_reconciliation_plugin.py::test_initial_assurance_envelope_binds_exact_transitive_implementation_set
+          tests/plugins/test_vera_model_data_report.py::test_local_only_build_never_invokes_stamping
+          --cov=seal_review_receipts --cov-report=term-missing --cov-fail-under=80
+      - name: Check review entrypoint quality
+        run: |
+          python -m black --check plugins/journal-bank-reconciliation/scripts/seal_review_receipts.py tests/plugins/test_journal_bank_review_receipts.py
+          python -m isort --check-only plugins/journal-bank-reconciliation/scripts/seal_review_receipts.py tests/plugins/test_journal_bank_review_receipts.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/journal-bank-reconciliation/scripts/seal_review_receipts.py
+          python -m bandit -q plugins/journal-bank-reconciliation/scripts/seal_review_receipts.py

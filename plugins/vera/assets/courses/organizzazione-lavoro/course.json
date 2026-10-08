@@ -35,12 +35,12 @@
     {
       "path": "scripts/managed_python_runtime.py",
       "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
-      "sha256": "d3d1fa4ed89deeb7934933abc38ebded8b464e8950b94f71aa3bc23547305e1d"
+      "sha256": "ff9210c214c7f278b7b5216e041cd9642656a963f24fc3a065312b7981c56a64"
     },
     {
       "path": "scripts/model_data_report.py",
       "repository_path": "plugins/vera/scripts/model_data_report.py",
-      "sha256": "54fcde02508b195250c5a4c58758e10f796a63a32448115de64fccbce8b4022c"
+      "sha256": "0e7a99ef631ed67a1aa25eb10ce7ed158625f6c0c09dcf8546eeb132a238262d"
     },
     {
       "path": "scripts/notarized_run_receipt.py",
