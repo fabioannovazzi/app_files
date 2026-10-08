@@ -212,3 +212,57 @@ def test_concurrent_sessions_retain_both_confirmed_identity_profiles(
     assert directory["candidate_only_profile_count"] == 2
     assert "Private Alpha Alias" not in json.dumps(directory)
     assert "Private Beta Alias" not in json.dumps(directory)
+
+
+def test_existing_approved_session_bootstraps_private_profile_and_legacy_aliases(
+    tmp_path: Path,
+) -> None:
+    root = tmp_path / "Studio"
+    root.mkdir()
+    _run(tmp_path, "old", "configure", root, profile=False)
+    created = _run(tmp_path, "old", "create", root, profile=False)
+
+    current = _run(tmp_path, "old", "clients", root)
+    fresh = _run(tmp_path, "fresh", "resolve", root)
+
+    assert current["registered_client_count"] == 1
+    assert fresh["resolution_status"] == "exact_match"
+    assert fresh["matches"][0]["client_id"] == created["client_id"]
+    assert json.loads((tmp_path / "profile/approved-archive.json").read_text())[
+        "archive_root"
+    ] == str(root)
+    if os.name == "posix":
+        assert (tmp_path / "profile").stat().st_mode & 0o777 == 0o700
+
+
+def test_legacy_session_refuses_profile_inside_sources_before_creating_it(
+    tmp_path: Path,
+) -> None:
+    root = tmp_path / "Studio"
+    root.mkdir()
+    _run(tmp_path, "old", "configure", root, profile=False)
+    profile = root / "private-profile"
+    environment = {
+        **os.environ,
+        "VERA_STUDIO_ARCHIVE_PROFILE_DIR": str(profile),
+        "VERA_STUDIO_ARCHIVE_SESSION_ID": "old",
+    }
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            WORKER,
+            str(SCRIPTS),
+            str(tmp_path / "old"),
+            str(root),
+            "clients",
+        ],
+        env=environment,
+        capture_output=True,
+        text=True,
+    )
+
+    assert result.returncode != 0
+    assert "outside the source archive" in result.stderr
+    assert not profile.exists()
