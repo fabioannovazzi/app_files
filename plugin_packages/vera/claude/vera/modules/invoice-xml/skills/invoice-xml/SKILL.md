@@ -113,14 +113,15 @@ booked purchase-invoice auditing remains `vera:purchase-invoice-review`.
 ## Scope and decisions
 
 Inspect the supplied evidence and current conversation before collecting intake
-decisions. Reuse an already confirmed archive/client/engagement context. If that
-context is missing, explain the required archive binding and resolve the user's
-choice before opening a folder selector. Open a selector only when a folder
-selection is needed and the user has agreed to it; do not start it speculatively
-while asking unrelated invoice questions. If the user declines archive binding,
-explain the current workflow limitation and pause the managed run rather than
-opening or repeatedly polling the selector. This does not introduce an
-archive-free export route.
+decisions. Reuse an already confirmed archive/client/engagement context. For an
+explicitly selected single-file delivery without archive registration, follow
+Vera's `skills/vera/references/standalone-work.md` and pass that invoice task's
+`context_path` to the existing `--client-engagement` argument. Keep all source,
+proposal, professional-approval and export checks. Do not open an archive chooser
+or ask for client registration on this route. If retention is unresolved, ask once
+whether the user wants archived client work or a standalone deliverable; reuse the
+answer. For archived work, list/reconnect the approved root first and resolve
+existing identities before offering New client. Never open a chooser speculatively.
 
 Resolve one Studio Archive client and engagement. Import the selected sources,
 prepare/start an `invoice-xml` run, and use its exact `client_engagement_path`,
@@ -256,8 +257,9 @@ construct its hashes or defer the required report until after run completion.
 
 Create `model_data_report.json` and `model_data_report.md` in the exact run
 output using Vera's shared builder; its minimal server receipt is a shared Vera
-service, not an invoice upload. Declare all final artifacts in Studio Archive,
-review and complete the run only after the report contract is satisfied. Link
+service, not an invoice upload. For archived work, declare all final artifacts in Studio Archive, review and
+complete the run only after the report contract is satisfied. For standalone work,
+retain the report and artifacts in the task output; do not call Archive completion. Link
 the XML, preview and export report, distinguishing schema validation, local
 checks, professional review and untested SdI acceptance.
 

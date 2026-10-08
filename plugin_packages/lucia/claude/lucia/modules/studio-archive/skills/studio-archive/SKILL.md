@@ -202,10 +202,14 @@ folders. Never infer the archive root or a client from a filename.
    Do not create a replacement, move folders, or scan unrelated directories.
    Run `configure --archive-root <exact-connected-root>`, then `recover-ledger`
    and `clients`, all through the same session helper.
-3. At the start of a later task, if session-local configuration is absent,
-   configure the same exact connected root again and run `recover-ledger`.
-   Recovery reads stable identities from `Vera/client.json`; it does not invent
-   them from folder labels.
+3. At the start of a later task, run `clients` first. With the same retained
+   owner-private profile, the helper revalidates the approved connected root,
+   creates fresh session configuration and recovers confirmed aliases and stable
+   client IDs without another folder selection. Existing sessions remain pinned.
+   If the host provides a new/ephemeral home or the selected folder is no longer
+   accessible, reconnect the exact original folder; do not claim host persistence
+   that was not observed. Run `recover-ledger` when ledger verification is needed.
+   Recovery reads stable identities from `Vera/client.json`, not folder labels.
 4. If the connected root is unavailable or read-only, stop before client,
    engagement, import, or lifecycle writes. Report the permission limitation.
 
@@ -215,7 +219,9 @@ are rebuildable aids, not engagement evidence.
 
 ## Client and engagement workflow
 
-Use this sequence for every client-bound Vera workflow:
+Use this sequence for archived client work. Explicit standalone invoice/answer
+work follows Vera's `references/standalone-work.md` and retains task artifacts
+without this archive configuration or client-registration gate.
 
 1. Run `clients`. Select one returned stable client semantically from the
    user's instruction. If ambiguous, ask; never choose by recency or filename.

@@ -130,9 +130,9 @@ function toolDefinitions() {
       name: TOOL_NAMES.status,
       title: "Check Vera Studio Archive status",
       description:
-        "Read the local Studio Archive configuration, exact available scopes, refresh state, index counts, and named evidence gaps. Call this before searching.",
+        "Read the local Studio Archive configuration, exact available scopes, refresh state, index counts, and named evidence gaps. Call this before searching. A fresh session can revalidate the approved private-profile root and save isolated session configuration; no client is created.",
       inputSchema: objectSchema({}),
-      annotations: annotations(true),
+      annotations: annotations(false),
     },
     {
       name: TOOL_NAMES.clients,
@@ -140,7 +140,7 @@ function toolDefinitions() {
       description:
         "List registered client and orphaned-profile records using stable IDs, display labels, status, and private-identity counts. Stored email addresses, legal names, and tax identifiers remain local.",
       inputSchema: objectSchema({}),
-      annotations: annotations(true),
+      annotations: annotations(false),
     },
     {
       name: TOOL_NAMES.resolveClient,
@@ -1616,7 +1616,7 @@ function handleRpc(message) {
       serverInfo: { name: SERVER_NAME, version: SERVER_VERSION },
       capabilities: { tools: {} },
       instructions:
-        "For client work, list the safe registered-client directory first. If it returns configured=false and setup_required=true, tell the user that the native folder chooser will open and call setup_studio_archive before requesting an absolute path manually. Use the manual diagnose/configure fallback only when the guided tool reports archive_folder_picker_unavailable. Ask the user to choose Existing or New when no exact client is established. Resolve a user-supplied identity through the exact local resolver; never infer identity from a filename. Register a confirmed existing scope or create a new client, obtain its stable client ID, and import files only after the user authorizes the copy. Archive Organization uses the complete projected inventory and opaque item references; raw hashes, storage IDs, capabilities, and absolute paths remain local. Search one exact archive scope and open every file result used as evidence. For Gmail, use the connected Gmail read tools and fail closed on ambiguous routing.",
+        "For archived client work, list the safe registered-client directory first. Fresh default sessions reconnect the approved root and retain private aliases; configured=false means location not connected, not an unregistered client. Reuse established choices and confirm unresolved client/source/copy scope together. If it returns configured=false and setup_required=true, tell the user that the native folder chooser will open and call setup_studio_archive before requesting an absolute path manually. Use the manual diagnose/configure fallback only when the guided tool reports archive_folder_picker_unavailable. Ask the user to choose Existing or New when no exact client is established. Resolve a user-supplied identity through the exact local resolver; never infer identity from a filename. Register a confirmed existing scope or create a new client, obtain its stable client ID, and import files only after the user authorizes the copy. Archive Organization uses the complete projected inventory and opaque item references; raw hashes, storage IDs, capabilities, and absolute paths remain local. Search one exact archive scope and open every file result used as evidence. For Gmail, use the connected Gmail read tools and fail closed on ambiguous routing.",
     });
   }
   if (message.method === "notifications/initialized") return null;

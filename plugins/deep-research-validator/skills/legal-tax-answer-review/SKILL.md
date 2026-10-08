@@ -6,9 +6,18 @@ description: Use when Vera or Codex must validate a generated or supplied legal,
 ## Output Location Rule
 
 Never write run outputs inside this Git workspace or a published folder. Use
-only the Studio Archive run path described below.
+only the Studio Archive run path or the supported standalone task path below.
 
 ## Client engagement gate
+
+For an explicitly selected standalone question or answer review, follow the
+invoking Vera product's `skills/vera/references/standalone-work.md`. Prepare a
+`deep-research-validator` task from the explicitly selected source files, then pass its
+`context_path` as `--client-engagement` to these unchanged entrypoints. Keep the
+answer contract, source and semantic reviews, and opposing examination when
+required. Do not register a client or call Archive finalize/complete on this route.
+The three-engine allowlist is mechanically enforced; do not bypass other workflows'
+client-ledger requirements. For archived work, continue the gate below.
 
 Select one Studio Archive client and engagement, import the answer and supplied
 sources or use artifacts from the same engagement, then call

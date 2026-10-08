@@ -97,6 +97,16 @@ precedenti, senza modificare input, output o manifesti sigillati.
 
 ### Archive-root access preflight
 
+A fresh session reuses the last explicitly approved root from the owner-private
+profile after access revalidation. Existing sessions keep their own pinned root,
+run selection and index. Confirmed aliases persist privately per archive root;
+raw aliases are not returned in the safe client directory. If no approved root is
+available, say “the archive location is not connected”; do not say the client is
+unregistered or propose New client until the archive has been listed. Reuse an
+existing client/engagement and the user's established choices. Before the first
+copy, consolidate the selected client, engagement, sources and write permission
+into one concise confirmation; internal ledger steps remain separate.
+
 When the archive is not configured, offer the local guided setup first. Tell
 the user that Vera will open the operating system's folder chooser, then call
 `setup_studio_archive`. That action accepts no path argument: the chooser
@@ -793,7 +803,15 @@ whole run. Use a different ID for each concurrent workflow.
 An OS lock covers the full process lifetime after first configuration access;
 competing processes fail clearly. Persisted session ownership also prevents
 another session from adopting or overwriting that directory between commands.
-Reuse a session ID only to resume that same session. To start a new session,
-use fresh state, configure the approved root and run `recover-ledger`.
+Reuse a session ID only to resume that same session. A fresh default session
+revalidates the owner-private profile's approved root and creates its own config;
+run `recover-ledger` when ledger verification is needed. Explicit state directories
+stay isolated unless `VERA_STUDIO_ARCHIVE_PROFILE_DIR` explicitly selects a private
+profile. The default profile is `~/.mparanza/vera-studio-archive/profile`, outside
+sources. It stores the approved root and root-specific private identity aliases,
+not shared indexes, active run selection, OAuth tokens or session configuration.
+Registry updates use short root-specific locks. A changed/unavailable root requires
+normal access recovery; never silently pick a different folder. No old-session
+scan or config copying is performed.
 Never copy the old config into a new session or work around a configuration
 change error by repeatedly reconfiguring the contested state.

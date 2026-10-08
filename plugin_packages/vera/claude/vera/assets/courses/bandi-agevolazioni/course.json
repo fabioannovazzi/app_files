@@ -185,7 +185,7 @@
     },
     {
       "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
+      "sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112"
     },
     {
       "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/decisions.py",
@@ -237,7 +237,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
+      "sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -658,5 +658,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "0e868b12f2c15d861ab09de92b197b5974387074ca35a7c9f5baff8919cf98d2"
+  "canonical_course_sha256": "ee1e2d69526c3839160ff54d1d71e652cedb22cc608535092c248077518ea35d"
 }
