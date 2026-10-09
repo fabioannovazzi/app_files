@@ -459,7 +459,13 @@ def build_sales_calendar_and_join(
     if joined.is_empty() or "month" not in joined.columns:
         return empty_result
 
-    joined = joined.with_columns(pl.col("month").cast(pl.Date).alias("month"))
+    month = pl.col("month")
+    month = (
+        month.str.to_date()
+        if joined.schema["month"] == pl.String
+        else month.cast(pl.Date)
+    )
+    joined = joined.with_columns(month.alias("month"))
     min_month = joined.select(pl.col("month").min()).item()
     max_month = joined.select(pl.col("month").max()).item()
     if min_month is None or max_month is None:

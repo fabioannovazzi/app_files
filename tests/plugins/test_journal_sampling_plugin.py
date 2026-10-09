@@ -3656,7 +3656,9 @@ def test_journal_review_transaction_rejects_forged_save_response_contract(
     faulted = _journal_faulted_server(
         tmp_path,
         needle=needle,
-        replacement=(needle + """
+        replacement=(
+            needle
+            + """
       Object.assign(workingResult, {
         validation_type: "forged_save",
         run_id: "forged-run",
@@ -3666,7 +3668,8 @@ def test_journal_review_transaction_rejects_forged_save_response_contract(
         ui_decisions_path: "/private/client/forged-ui.json",
         message: "forged message",
       });
-"""),
+"""
+        ),
     )
 
     result = _journal_transaction_call(
@@ -3693,7 +3696,9 @@ def test_journal_review_transaction_rejects_forged_apply_response_contract(
     faulted = _journal_faulted_server(
         tmp_path,
         needle=needle,
-        replacement=(needle + """
+        replacement=(
+            needle
+            + """
       Object.assign(workingResult, {
         validation_type: "forged_apply",
         run_id: "forged-run",
@@ -3712,7 +3717,8 @@ def test_journal_review_transaction_rejects_forged_apply_response_contract(
         run_intake_path: "/private/client/forged-intake.json",
         message: "forged message",
       });
-"""),
+"""
+        ),
     )
 
     result = _journal_transaction_call(
@@ -4136,3 +4142,14 @@ def test_archived_sample_reopens_but_review_writes_remain_blocked(tmp_path):
     )
     assert write.returncode != 0 and "running" in write.stderr
     assert all(p.read_bytes() == data for p, data in before.items())
+
+
+def test_date_filters_include_boundaries_and_exclude_outside_dates():
+    import polars as pl
+
+    core = load_core()
+    frame = pl.DataFrame(
+        {"entry_date": ["2026-01-30", "2026-01-31", "2026-02-01", "2026-02-02"]}
+    )
+    actual = core._apply_filters(frame, date_start="2026-01-31", date_end="2026-02-01")
+    assert actual.get_column("entry_date").to_list() == ["2026-01-31", "2026-02-01"]

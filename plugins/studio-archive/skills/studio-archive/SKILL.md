@@ -78,7 +78,34 @@ renames, deletes, or overwrites an existing file. Refresh detects top-level
 scope-folder changes and reads the stable identity from `Vera/client.json`.
 The index never follows symbolic links.
 
+### Consultare cartelle e risultati
+
+Ogni modifica esplicita al ledger aggiorna una vista leggibile locale:
+`Vera/APRI ARCHIVIO.html` e `Vera/Pratiche/`. Le cartelle delle pratiche
+mostrano data, etichetta e ID completo; le cartelle delle attività mostrano
+nome del workflow e ID completo. I link relativi portano alle copie esatte
+dei documenti e a tutti gli output e versioni dichiarati. Non creano nuove
+copie, collegamenti simbolici o un secondo archivio autorevole.
+
+Alla consegna, mostra il percorso restituito in `readable_archive.index_path`
+e la cartella della pratica, oltre ai risultati. Spiega separatamente lo stato
+dell'esecuzione e l'eventuale approvazione professionale. `completed` non
+certifica l'approvazione del professionista. Una vista non disponibile viene
+segnalata in `readable_archive`; non dichiarare completata la navigazione in
+quel caso. `recover-ledger` ricostruisce questa vista anche per incarichi
+precedenti, senza modificare input, output o manifesti sigillati.
+
 ### Archive-root access preflight
+
+A fresh session reuses the last explicitly approved root from the owner-private
+profile after access revalidation. Existing sessions keep their own pinned root,
+run selection and index. Confirmed aliases persist privately per archive root;
+raw aliases are not returned in the safe client directory. If no approved root is
+available, say “the archive location is not connected”; do not say the client is
+unregistered or propose New client until the archive has been listed. Reuse an
+existing client/engagement and the user's established choices. Before the first
+copy, consolidate the selected client, engagement, sources and write permission
+into one concise confirmation; internal ledger steps remain separate.
 
 When the archive is not configured, offer the local guided setup first. Tell
 the user that Vera will open the operating system's folder chooser, then call
@@ -188,8 +215,11 @@ Use this exact chat workflow whenever a professional starts client work:
    decide from filename similarity.
 2. Ask whether the work is for an existing or new client only when the user's
    wording and the listed records do not already establish that choice.
-   Before the first file copy, show the selected client and obtain the user's
-   confirmation.
+   Before the first file copy, show the selected client. Reuse the user's
+   existing explicit selection and authorization for the same client and files;
+   do not ask them to confirm it again. Ask once when the association or authority
+   is genuinely unresolved. A filename, inferred company name or model assertion
+   is not a user selection. Host-required action-time approvals still apply.
 3. For an existing registered client, retain the `client_id` recovered from its
    customer-folder manifest. For an existing but unregistered scope, call
    `configure_studio_archive_client` with the confirmed scope and at least one
@@ -773,7 +803,15 @@ whole run. Use a different ID for each concurrent workflow.
 An OS lock covers the full process lifetime after first configuration access;
 competing processes fail clearly. Persisted session ownership also prevents
 another session from adopting or overwriting that directory between commands.
-Reuse a session ID only to resume that same session. To start a new session,
-use fresh state, configure the approved root and run `recover-ledger`.
+Reuse a session ID only to resume that same session. A fresh default session
+revalidates the owner-private profile's approved root and creates its own config;
+run `recover-ledger` when ledger verification is needed. Explicit state directories
+stay isolated unless `VERA_STUDIO_ARCHIVE_PROFILE_DIR` explicitly selects a private
+profile. The default profile is `~/.mparanza/vera-studio-archive/profile`, outside
+sources. It stores the approved root and root-specific private identity aliases,
+not shared indexes, active run selection, OAuth tokens or session configuration.
+Registry updates use short root-specific locks. A changed/unavailable root requires
+normal access recovery; never silently pick a different folder. No old-session
+scan or config copying is performed.
 Never copy the old config into a new session or work around a configuration
 change error by repeatedly reconfiguring the contested state.

@@ -132,6 +132,8 @@
       font-size: clamp(1.35rem, 2.2vw, 1.8rem);
       letter-spacing: -0.025em;
     }
+    .vera-advantages__link { display: flex; align-items: center; justify-content: space-between; gap: 16px; color: inherit; text-decoration: none; }
+    .vera-advantages__link:hover .module-row__arrow { transform: translate(2px, -2px); }
     .vera-advantages ul {
       margin: 0;
       padding: 0;
@@ -395,13 +397,6 @@
     .connections__body .module-row__arrow { grid-column: 2; grid-row: 1; }
     .connections__body p { max-width: 60ch; color: var(--blue); line-height: 1.6; }
     .connections__body p + p { margin-top: 16px; }
-    .connections__data {
-      max-width: 85ch;
-      margin-top: 36px;
-      color: var(--blue);
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
 
     .contributors { scroll-margin-top: 88px; }
     .contributors .section-head { margin-bottom: clamp(38px, 6vw, 64px); }
@@ -1270,11 +1265,11 @@
         <h1 data-i18n="hero.title">Vera</h1>
         <p class="lead" data-i18n="hero.lead">Vera aggiunge a Codex fascicoli cliente, controlli contabili, riconciliazioni, analisi, report, comunicazione e ricerca.</p>
         <section class="vera-advantages" id="why-vera" aria-labelledby="vera-advantages-title">
-          <h2 id="vera-advantages-title" data-i18n="advantages.title">Perché Vera</h2>
+          <h2 id="vera-advantages-title"><a class="vera-advantages__link" href="perche/index.html?lang=it" aria-label="Perché Vera" data-i18n-aria-label="advantages.linkLabel"><span data-i18n="advantages.title">Perché Vera</span><span class="module-row__arrow" aria-hidden="true">↗</span></a></h2>
           <ul>
-            <li><strong data-i18n="advantages.free.label">Gratuita.</strong> <span data-i18n="advantages.free.copy">Nessun costo per il plugin.</span></li>
-            <li><strong data-i18n="advantages.open.label">Open source.</strong> <span data-i18n="advantages.open.copy">Il codice è pubblico, consultabile e adattabile.</span></li>
-            <li><strong data-i18n="advantages.professionals.label">Sviluppata con commercialisti.</strong> <span data-i18n="advantages.professionals.copy">I professionisti contribuiscono a definire le funzioni e a metterne alla prova i risultati.</span></li>
+            <li><strong data-i18n="advantages.free.label">Plugin gratuito.</strong> <span data-i18n="advantages.free.copy">Usi i token del tuo abbonamento per applicare più intelligenza al problema.</span></li>
+            <li><strong data-i18n="advantages.open.label">Open source.</strong> <span data-i18n="advantages.open.copy">Il codice è pubblico e liberamente consultabile.</span></li>
+            <li><strong data-i18n="advantages.professionals.label">Sviluppata con voi.</strong> <span data-i18n="advantages.professionals.copy">Un gruppo di commercialisti definisce le funzioni e testa i risultati.</span></li>
           </ul>
         </section>
         <div class="hero-install" id="installa">
@@ -1479,7 +1474,7 @@
         <h2 id="compliance-title" data-i18n="compliance.title">Vera facilita la compliance dello studio.</h2>
       </div>
       <div class="run-report__detail">
-        <p class="run-report__copy" data-i18n="compliance.copy">Vera esegue calcoli locali, riduce i dati inviati al modello per processo, documenta le elaborazioni e offre corsi guidati. Il riscontro funzionale collega ogni voce alla sua finalità, ai riferimenti normativi e alle evidenze, distinguendo le funzioni presenti dalle aggiunte proposte.</p>
+        <p class="run-report__copy" data-i18n="compliance.copy">Vera supporta la compliance dello studio con elaborazioni locali, minimizzazione dei dati, report e formazione. Il confronto in 30 punti distingue le funzioni disponibili dalle aggiunte proposte.</p>
         <div class="run-report__links">
         <a class="run-report__link" href="../vera-compliance/index.html?lang=it" data-i18n="compliance.link">Esamina il confronto, voce per voce →</a>
         <a class="run-report__link" href="../vera-compliance/index.html?lang=it#condizioni-uso" data-i18n="compliance.conditions">Condizioni e limiti d’uso →</a>
@@ -1511,6 +1506,7 @@
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../aml-review/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="aml-review"><h4 data-i18n="module.amlReview.title">Verifica antiriciclaggio del cliente</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" href="../organizzazione-lavoro/index.html" data-module-link data-vera-workflow="organizzazione-lavoro"><h4 data-i18n="module.workOrganization.title">Organizzazione del lavoro di studio</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" id="studio-archive" href="../studio-archive/index.html" data-module-link data-vera-workflow="studio-archive">
               <h4 data-i18n="module.archive.title">Archiviazione e ricerca nel fascicolo cliente</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
@@ -1567,6 +1563,7 @@
               <h4>Revisione concordato preventivo</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
+            <a class="module-row" href="../agenzia-acquisition/index.html" data-module-link data-jurisdiction-item="it" data-vera-workflow="agenzia-acquisition"><h4 data-i18n="module.agenziaAcquisition.title">Acquisizione Agenzia delle Entrate</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" id="browser-automation" href="../browser-automation/index.html" data-module-link data-vera-workflow="browser-automation">
               <h4 data-i18n="module.browserAutomation.title">Automazione web</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
@@ -1708,7 +1705,7 @@
         <div class="section-head__title">
           <h2 id="connections-title" data-i18n="connections.title">Integrazioni</h2>
         </div>
-        <p data-i18n="connections.intro">Le guide qui sotto spiegano come collegare Second Brain, installare le skill dello studio e configurare i connettori locali opzionali per anonimizzare i documenti.</p>
+        <p data-i18n="connections.intro">Le guide qui sotto spiegano come collegare Second Brain, installare le skill dello studio e configurare i connettori locali per anonimizzare i documenti. I connettori sono opzionali e si installano separatamente.</p>
       </div>
       <div class="connections__body">
         <article aria-labelledby="connections-knowledge-title">
@@ -1717,7 +1714,7 @@
             <span class="module-row__arrow" aria-hidden="true">↗</span>
           </a>
           <p data-i18n="connections.knowledge.copy">Se hai già Second Brain, collegalo nell’app in cui usi Vera e autorizza gli strumenti di ricerca e lettura. Poi chiedi a Vera di consultare una procedura, un precedente o un modello dello studio per il lavoro che stai svolgendo.</p>
-          <p data-i18n="connections.knowledge.limits">Vera consulta le fonti disponibili senza modificarle. Non fornisce Second Brain, non richiede Microsoft 365 e funziona anche senza un archivio collegato. La disponibilità della consultazione dipende dal connettore e dagli strumenti accessibili nella sessione.</p>
+          <p data-i18n="connections.knowledge.limits">Vera consulta le fonti disponibili senza modificarle. Non fornisce Second Brain e funziona anche senza un archivio collegato. La disponibilità della consultazione dipende dal connettore e dagli strumenti accessibili nella sessione.</p>
         </article>
         <article aria-labelledby="connections-skills-title">
           <a class="module-row" href="../vera-skill-studio/index.html?lang=it" data-module-link>
@@ -1731,38 +1728,37 @@
             <h3 id="connections-privacy-title" data-i18n="connections.privacy.title">OpenAI Privacy Filter</h3>
             <span class="module-row__arrow" aria-hidden="true">↗</span>
           </a>
-          <p data-i18n="connections.privacy.status">Connettore locale opzionale per Codex, Cowork e Antigravity desktop, da installare separatamente.</p>
+          <p data-i18n="connections.privacy.description">Maschera dati personali con un modello principalmente inglese. Può elaborare più file, ma non conserva identità distinte e coerenti tra documenti né una mappa per ripristinare gli originali. Per testi italiani la qualità va verificata.</p>
         </article>
         <article aria-labelledby="connections-gliner-title">
           <a class="module-row" href="../vera-integrazioni/index.html?lang=it#gliner2-pii" data-module-link>
             <h3 id="connections-gliner-title" data-i18n="connections.gliner.title">GLiNER2-PII</h3>
             <span class="module-row__arrow" aria-hidden="true">↗</span>
           </a>
-          <p data-i18n="connections.gliner.status">Connettore locale opzionale per Codex, Cowork e Antigravity desktop, da installare separatamente.</p>
+          <p data-i18n="connections.gliner.description">Rileva e maschera dati personali in italiano, inglese, francese, tedesco, spagnolo, portoghese e olandese. Può elaborare più file, senza pseudonimi condivisi tra documenti né ripristino degli originali. È un modello multilingue generale, non specializzato negli identificativi fiscali italiani.</p>
         </article>
         <article aria-labelledby="connections-rizzo-title">
           <a class="module-row" href="../vera-integrazioni/rizzo/index.html?lang=it" data-module-link>
             <h3 id="connections-rizzo-title" data-i18n="connections.rizzo.title">Rizzo PII</h3>
             <span class="module-row__arrow" aria-hidden="true">↗</span>
           </a>
-          <p data-i18n="connections.rizzo.status">Connettore locale opzionale per Codex, Cowork e Antigravity desktop. Richiede l’app Rizzo PII sullo stesso computer.</p>
+          <p data-i18n="connections.rizzo.description">Orientato ai testi italiani, con rilevatori per codice fiscale, partita IVA e catasto. Usa pseudonimi reversibili e una mappa per documento. Elabora più file separatamente: lo stesso nome non mantiene necessariamente lo stesso pseudonimo tra documenti. La valutazione pubblicata riguarda l’italiano.</p>
         </article>
         <article aria-labelledby="connections-lethe-title">
           <a class="module-row" href="../vera-integrazioni/lethe/index.html?lang=it" data-module-link>
             <h3 id="connections-lethe-title" data-i18n="connections.lethe.title">Lethe</h3>
             <span class="module-row__arrow" aria-hidden="true">↗</span>
           </a>
-          <p data-i18n="connections.lethe.status">Connettore locale opzionale per Codex, Cowork e Antigravity desktop, da installare separatamente.</p>
+          <p data-i18n="connections.lethe.description">Per mantenere le stesse identità in più documenti e ripristinarle nel risultato AI. Usa un dizionario di nomi e alias verificato prima del lavoro. Il dizionario funziona in ogni lingua; il riconoscimento automatico non è specializzato per l’Italia. I nomi devono essere inclusi nella revisione iniziale.</p>
         </article>
         <article aria-labelledby="connections-shield-title">
           <a class="module-row" href="../vera-integrazioni/pii-shield/index.html?lang=it" data-module-link>
             <h3 id="connections-shield-title" data-i18n="connections.shield.title">PII-Shield</h3>
             <span class="module-row__arrow" aria-hidden="true">↗</span>
           </a>
-          <p data-i18n="connections.shield.status">Connettore locale opzionale per Codex, Cowork e Antigravity desktop, da installare separatamente.</p>
+          <p data-i18n="connections.shield.description">Per aggiungere documenti alla stessa sessione con pseudonimi condivisi e ripristinare i dati originali. Combina rilevazione multilingue e regole per identificativi di Italia, altri Paesi UE, Regno Unito e USA. Prova reale superata su Linux; sul Mac testato il motore si interrompe.</p>
         </article>
       </div>
-      <p class="connections__data" data-i18n="connections.data">Query, risultati di ricerca e testi consultati possono entrare nel contesto del modello dell’app scelta. Login, permessi e conservazione dipendono dall’app e dal servizio collegato.</p>
     </section>
 
   </main>
@@ -1808,15 +1804,16 @@
         "hero.title": "Vera",
         "hero.lead": "Vera aggiunge a Codex fascicoli cliente, controlli contabili, riconciliazioni, analisi, report, comunicazione e ricerca.",
         "advantages.title": "Perché Vera",
-        "advantages.free.label": "Gratuita.",
-        "advantages.free.copy": "Nessun costo per il plugin.",
+        "advantages.linkLabel": "Perché Vera",
+        "advantages.free.label": "Plugin gratuito.",
+        "advantages.free.copy": "Usi i token del tuo abbonamento per applicare più intelligenza al problema.",
         "advantages.open.label": "Open source.",
-        "advantages.open.copy": "Il codice è pubblico, consultabile e adattabile.",
-        "advantages.professionals.label": "Sviluppata con commercialisti.",
-        "advantages.professionals.copy": "I professionisti contribuiscono a definire le funzioni e a metterne alla prova i risultati.",
+        "advantages.open.copy": "Il codice è pubblico e liberamente consultabile.",
+        "advantages.professionals.label": "Sviluppata con voi.",
+        "advantages.professionals.copy": "Un gruppo di commercialisti definisce le funzioni e testa i risultati.",
         "compliance.index": "Dati e lavoro dello studio",
         "compliance.title": "Vera facilita la compliance dello studio.",
-        "compliance.copy": "Vera esegue calcoli locali, riduce i dati inviati al modello per processo, documenta le elaborazioni e offre corsi guidati. Il riscontro funzionale collega ogni voce alla sua finalità, ai riferimenti normativi e alle evidenze, distinguendo le funzioni presenti dalle aggiunte proposte.",
+        "compliance.copy": "Vera supporta la compliance dello studio con elaborazioni locali, minimizzazione dei dati, report e formazione. Il confronto in 30 punti distingue le funzioni disponibili dalle aggiunte proposte.",
         "compliance.link": "Esamina il confronto, voce per voce →",
         "compliance.conditions": "Condizioni e limiti d’uso →",
         "core.index": "Cosa può fare Vera",
@@ -1858,7 +1855,9 @@
         "module.notice": "Organizza avvisi, cartelle e comunicazioni fiscali in un primo fascicolo con fonti, scadenze, importi e punti da chiarire.",
         "module.archiveOrganization.title": "Riordino della cartella cliente",
         "module.archiveOrganization": "Parte da uno snapshot del fascicolo e propone categorie, nomi, spostamenti, duplicati e anomalie. Modifica i file soltanto dopo revisione e approvazione separata; registra ogni operazione e può ripristinarla.",
+        "module.agenziaAcquisition.title": "Acquisizione Agenzia delle Entrate",
         "module.browserAutomation.title": "Automazione web",
+        "module.workOrganization.title": "Organizzazione del lavoro di studio",
         "module.archive.title": "Archiviazione e ricerca nel fascicolo cliente",
         "module.archive": "Registra cliente, incarico, fonti importate, lavorazioni, decisioni e output verificati in un fascicolo che può essere ripreso. Cerca anche nei file locali o Google Drive, in Gmail e in una chat WhatsApp verificata; le fonti consultate non vengono copiate o modificate.",
         "module.sampling.title": "Campionamento scritture contabili",
@@ -1980,23 +1979,22 @@
         "install.coworkZipHelp": "Pacchetto per Cowork e istruzioni per installare o aggiornare.",
         "install.video.title": "Collega ChatGPT al computer con Codex",
         "connections.title": "Integrazioni",
-        "connections.intro": "Le guide qui sotto spiegano come collegare Second Brain, installare le skill dello studio e configurare i connettori locali opzionali per anonimizzare i documenti.",
+        "connections.intro": "Le guide qui sotto spiegano come collegare Second Brain, installare le skill dello studio e configurare i connettori locali per anonimizzare i documenti. I connettori sono opzionali e si installano separatamente.",
         "connections.knowledge.title": "Usare Vera con Second Brain",
         "connections.knowledge.copy": "Se hai già Second Brain, collegalo nell’app in cui usi Vera e autorizza gli strumenti di ricerca e lettura. Poi chiedi a Vera di consultare una procedura, un precedente o un modello dello studio per il lavoro che stai svolgendo.",
-        "connections.knowledge.limits": "Vera consulta le fonti disponibili senza modificarle. Non fornisce Second Brain, non richiede Microsoft 365 e funziona anche senza un archivio collegato. La disponibilità della consultazione dipende dal connettore e dagli strumenti accessibili nella sessione.",
+        "connections.knowledge.limits": "Vera consulta le fonti disponibili senza modificarle. Non fornisce Second Brain e funziona anche senza un archivio collegato. La disponibilità della consultazione dipende dal connettore e dagli strumenti accessibili nella sessione.",
         "connections.skills.title": "Usare le proprie skill",
         "connections.skills.copy": "Se vuoi svolgere un lavoro con una tua skill, richiamala direttamente nell’app in cui l’hai installata. Collegare Second Brain non importa, seleziona o esegue le skill dello studio in Vera.",
         "connections.gliner.title": "GLiNER2-PII",
-        "connections.gliner.status": "Connettore locale opzionale per Codex, Cowork e Antigravity desktop, da installare separatamente.",
+        "connections.gliner.description": "Rileva e maschera dati personali in italiano, inglese, francese, tedesco, spagnolo, portoghese e olandese. Può elaborare più file, senza pseudonimi condivisi tra documenti né ripristino degli originali. È un modello multilingue generale, non specializzato negli identificativi fiscali italiani.",
         "connections.rizzo.title": "Rizzo PII",
-        "connections.rizzo.status": "Connettore locale opzionale per Codex, Cowork e Antigravity desktop. Richiede l’app Rizzo PII sullo stesso computer.",
+        "connections.rizzo.description": "Orientato ai testi italiani, con rilevatori per codice fiscale, partita IVA e catasto. Usa pseudonimi reversibili e una mappa per documento. Elabora più file separatamente: lo stesso nome non mantiene necessariamente lo stesso pseudonimo tra documenti. La valutazione pubblicata riguarda l’italiano.",
         "connections.privacy.title": "OpenAI Privacy Filter",
-        "connections.privacy.status": "Connettore locale opzionale per Codex, Cowork e Antigravity desktop, da installare separatamente.",
+        "connections.privacy.description": "Maschera dati personali con un modello principalmente inglese. Può elaborare più file, ma non conserva identità distinte e coerenti tra documenti né una mappa per ripristinare gli originali. Per testi italiani la qualità va verificata.",
         "connections.lethe.title": "Lethe",
-        "connections.lethe.status": "Connettore locale opzionale per Codex, Cowork e Antigravity desktop, da installare separatamente.",
+        "connections.lethe.description": "Per mantenere le stesse identità in più documenti e ripristinarle nel risultato AI. Usa un dizionario di nomi e alias verificato prima del lavoro. Il dizionario funziona in ogni lingua; il riconoscimento automatico non è specializzato per l’Italia. I nomi devono essere inclusi nella revisione iniziale.",
         "connections.shield.title": "PII-Shield",
-        "connections.shield.status": "Connettore locale opzionale per Codex, Cowork e Antigravity desktop, da installare separatamente.",
-        "connections.data": "Query, risultati di ricerca e testi consultati possono entrare nel contesto del modello dell’app scelta. Login, permessi e conservazione dipendono dall’app e dal servizio collegato.",
+        "connections.shield.description": "Per aggiungere documenti alla stessa sessione con pseudonimi condivisi e ripristinare i dati originali. Combina rilevazione multilingue e regole per identificativi di Italia, altri Paesi UE, Regno Unito e USA. Prova reale superata su Linux; sul Mac testato il motore si interrompe.",
         "contributors.index": "Collaborazione",
         "contributors.title": "Contributors",
         "contributors.copy": "Vera cresce attraverso il confronto con professionisti che mettono alla prova metodi, limiti e risultati nel lavoro reale.",
@@ -2041,15 +2039,16 @@
         "hero.title": "Vera",
         "hero.lead": "Vera adds client files, accounting checks, reconciliations, analysis, reporting, communication, and research to Codex.",
         "advantages.title": "Why Vera?",
-        "advantages.free.label": "Free.",
-        "advantages.free.copy": "No cost for the plugin.",
+        "advantages.linkLabel": "Why Vera (in Italian)",
+        "advantages.free.label": "Free plugin.",
+        "advantages.free.copy": "You use the tokens in your subscription to apply more intelligence to the problem.",
         "advantages.open.label": "Open source.",
-        "advantages.open.copy": "The code is public and can be inspected and adapted.",
-        "advantages.professionals.label": "Developed with accountants.",
-        "advantages.professionals.copy": "Professionals help define the functions and test their results.",
+        "advantages.open.copy": "The code is public and freely available to inspect.",
+        "advantages.professionals.label": "Developed with you.",
+        "advantages.professionals.copy": "A group of accountants defines the functions and tests the results.",
         "compliance.index": "Data and professional work",
         "compliance.title": "Vera helps the firm meet its compliance obligations.",
-        "compliance.copy": "Vera runs local calculations, reduces model inputs for each process, documents processing and offers guided courses. The functional assessment connects each item to its purpose, legal references and evidence, distinguishing existing functions from proposed additions.",
+        "compliance.copy": "Vera supports the firm’s compliance work with local processing, data minimisation, reports and training. The 30-point assessment distinguishes available functions from proposed additions.",
         "compliance.link": "Explore the discussion, item by item (in Italian) →",
         "compliance.conditions": "Conditions and limits of use (in Italian) →",
         "core.index": "What Vera can do",
@@ -2091,7 +2090,9 @@
         "module.notice": "Organizes tax notices, collection notices, HMRC letters or cantonal tax letters into a first file with sources, deadlines, amounts and open questions.",
         "module.archiveOrganization.title": "Reorganize the client folder",
         "module.archiveOrganization": "Start from a snapshot of the file and propose categories, names, moves, duplicates, and anomalies. Documents change only after review and a separate approval; Vera records every operation and can undo it safely.",
+        "module.agenziaAcquisition.title": "Agenzia delle Entrate acquisition",
         "module.browserAutomation.title": "Web automation",
+        "module.workOrganization.title": "Studio work organisation",
         "module.archive.title": "Archive and search the client file",
         "module.archive": "Record the client, engagement, imported sources, runs, decisions, and verified outputs in a file that can be resumed. Also search local or Google Drive files, Gmail, and one verified WhatsApp chat; consulted sources are not copied or changed.",
         "module.sampling.title": "Sample the accounting journal",
@@ -2213,23 +2214,22 @@
         "install.coworkZipHelp": "Cowork package and instructions to install or update.",
         "install.video.title": "Connect ChatGPT to your computer with Codex",
         "connections.title": "Integrations",
-        "connections.intro": "The guides below explain how to connect Second Brain, install your firm’s skills and configure optional local connectors for document anonymization.",
+        "connections.intro": "The guides below explain how to connect Second Brain, install your firm’s skills and configure local connectors for document anonymization. The connectors are optional and installed separately.",
         "connections.knowledge.title": "Using Vera with Second Brain",
         "connections.knowledge.copy": "If you already have Second Brain, connect it in the app where you use Vera and authorize its search and read tools. Then ask Vera to consult a firm procedure, precedent or template for the task you are working on.",
-        "connections.knowledge.limits": "Vera consults available sources without changing them. It does not supply Second Brain or require Microsoft 365, and works without a connected repository. Consultation depends on the connector and the tools accessible in the current session.",
+        "connections.knowledge.limits": "Vera consults available sources without changing them. It does not supply Second Brain and works without a connected repository. Consultation depends on the connector and the tools accessible in the current session.",
         "connections.skills.title": "Using your own skills",
         "connections.skills.copy": "To carry out a task with your own skill, invoke it directly in the app where you installed it. Connecting Second Brain does not import, select or execute the firm’s skills inside Vera.",
         "connections.gliner.title": "GLiNER2-PII",
-        "connections.gliner.status": "Optional local connector for Codex, Cowork and Antigravity desktop, installed separately.",
+        "connections.gliner.description": "Detects and masks personal data in Italian, English, French, German, Spanish, Portuguese and Dutch. Processes multiple files without shared pseudonyms across documents or restoration of originals. A general multilingual model, without specialization in Italian tax identifiers.",
         "connections.rizzo.title": "Rizzo PII",
-        "connections.rizzo.status": "Optional local connector for Codex, Cowork and Antigravity desktop. Requires the Rizzo PII app on the same computer.",
+        "connections.rizzo.description": "Focused on Italian texts, with detectors for Italian tax codes, VAT numbers and cadastral references. Uses reversible pseudonyms and a mapping per document. Processes multiple files separately: the same name may receive different pseudonyms across documents. Published evaluation covers Italian.",
         "connections.privacy.title": "OpenAI Privacy Filter",
-        "connections.privacy.status": "Optional local connector for Codex, Cowork and Antigravity desktop, installed separately.",
+        "connections.privacy.description": "Masks personal data with a primarily English model. Processes multiple files, but keeps neither distinct, consistent identities across documents nor a mapping to restore originals. Quality on Italian texts needs checking.",
         "connections.lethe.title": "Lethe",
-        "connections.lethe.status": "Optional local connector for Codex, Cowork and Antigravity desktop, installed separately.",
+        "connections.lethe.description": "For keeping the same identities across documents and restoring them in AI output. Uses a dictionary of names and aliases reviewed before processing. The dictionary works in any language; automatic detection is not Italy-specific. Names must be included in the initial review.",
         "connections.shield.title": "PII-Shield",
-        "connections.shield.status": "Optional local connector for Codex, Cowork and Antigravity desktop, installed separately.",
-        "connections.data": "Queries, search results and consulted texts can enter the model context of your chosen app. Login, permissions and retention depend on the app and the connected service.",
+        "connections.shield.description": "For adding documents to one session with shared pseudonyms and restoring original data. Combines multilingual detection with identifier rules for Italy, other EU countries, the UK and US. Passed real testing on Linux; the engine aborts on the tested Mac.",
         "contributors.index": "Collaboration",
         "contributors.title": "Contributors",
         "contributors.copy": "Vera grows through the exchange with professionals who test its methods, limits and results in real work.",
@@ -2274,15 +2274,16 @@
         "hero.title": "Vera",
         "hero.lead": "Vera ajoute à Codex les dossiers clients, les contrôles comptables, les rapprochements, l'analyse, les rapports, la communication et la recherche.",
         "advantages.title": "Pourquoi Vera ?",
-        "advantages.free.label": "Gratuite.",
-        "advantages.free.copy": "Aucun coût pour le plugin.",
+        "advantages.linkLabel": "Pourquoi Vera (en italien)",
+        "advantages.free.label": "Plugin gratuit.",
+        "advantages.free.copy": "Vous utilisez les tokens de votre abonnement pour appliquer davantage d’intelligence au problème.",
         "advantages.open.label": "Open source.",
-        "advantages.open.copy": "Le code est public, consultable et adaptable.",
-        "advantages.professionals.label": "Développée avec des professionnels de la comptabilité.",
-        "advantages.professionals.copy": "Les professionnels contribuent à définir les fonctions et à en tester les résultats.",
+        "advantages.open.copy": "Le code est public et librement consultable.",
+        "advantages.professionals.label": "Développée avec vous.",
+        "advantages.professionals.copy": "Un groupe d’experts-comptables définit les fonctions et teste les résultats.",
         "compliance.index": "Données et travail du cabinet",
         "compliance.title": "Vera facilite la conformité du cabinet.",
-        "compliance.copy": "Vera effectue des calculs locaux, réduit les données transmises au modèle pour chaque processus, documente les traitements et propose des cours guidés. Le bilan fonctionnel relie chaque point à sa finalité, aux références réglementaires et aux éléments de preuve, en distinguant les fonctions présentes des ajouts proposés.",
+        "compliance.copy": "Vera accompagne la conformité du cabinet avec des traitements locaux, la minimisation des données, des rapports et de la formation. Le bilan en 30 points distingue les fonctions disponibles des ajouts proposés.",
         "compliance.link": "Examiner le dialogue, point par point (en italien) →",
         "compliance.conditions": "Conditions et limites d’utilisation (en italien) →",
         "core.index": "Ce que Vera peut faire",
@@ -2324,7 +2325,9 @@
         "module.notice": "Organise les avis fiscaux, lettres de recouvrement ou courriers fiscaux cantonaux dans un premier dossier avec sources, échéances, montants et questions ouvertes.",
         "module.archiveOrganization.title": "Réorganiser le dossier client",
         "module.archiveOrganization": "Part d’un instantané du dossier et propose catégories, noms, déplacements, doublons et anomalies. Les documents ne changent qu’après revue et approbation séparée ; Vera consigne chaque opération et peut l’annuler de manière contrôlée.",
+        "module.agenziaAcquisition.title": "Acquisition Agenzia delle Entrate",
         "module.browserAutomation.title": "Automatisation web",
+        "module.workOrganization.title": "Organisation du travail du cabinet",
         "module.archive.title": "Archiver et rechercher dans le dossier client",
         "module.archive": "Consigne le client, la mission, les sources importées, les traitements, les décisions et les livrables vérifiés dans un dossier qui peut être repris. Recherche aussi dans les fichiers locaux ou Google Drive, Gmail et une conversation WhatsApp vérifiée ; les sources consultées ne sont ni copiées ni modifiées.",
         "module.sampling.title": "Échantillonner le journal comptable",
@@ -2446,23 +2449,22 @@
         "install.coworkZipHelp": "Paquet pour Cowork et instructions d’installation ou de mise à jour.",
         "install.video.title": "Connectez ChatGPT à votre ordinateur avec Codex",
         "connections.title": "Intégrations",
-        "connections.intro": "Les guides ci-dessous expliquent comment connecter Second Brain, installer les skills du cabinet et configurer les connecteurs locaux facultatifs pour anonymiser les documents.",
+        "connections.intro": "Les guides ci-dessous expliquent comment connecter Second Brain, installer les skills du cabinet et configurer les connecteurs locaux pour anonymiser les documents. Les connecteurs sont facultatifs et s’installent séparément.",
         "connections.knowledge.title": "Utiliser Vera avec Second Brain",
         "connections.knowledge.copy": "Si vous avez déjà Second Brain, connectez-le dans l’application où vous utilisez Vera et autorisez ses outils de recherche et de lecture. Demandez ensuite à Vera de consulter une procédure, un précédent ou un modèle du cabinet pour le travail en cours.",
-        "connections.knowledge.limits": "Vera consulte les sources disponibles sans les modifier. Elle ne fournit pas Second Brain, ne nécessite pas Microsoft 365 et fonctionne sans archive connectée. La consultation dépend du connecteur et des outils accessibles dans la session.",
+        "connections.knowledge.limits": "Vera consulte les sources disponibles sans les modifier. Elle ne fournit pas Second Brain et fonctionne sans archive connectée. La consultation dépend du connecteur et des outils accessibles dans la session.",
         "connections.skills.title": "Utiliser ses propres skills",
         "connections.skills.copy": "Pour effectuer un travail avec votre propre skill, invoquez-la directement dans l’application où vous l’avez installée. Connecter Second Brain n’importe, ne sélectionne et n’exécute pas les skills du cabinet dans Vera.",
         "connections.gliner.title": "GLiNER2-PII",
-        "connections.gliner.status": "Connecteur local facultatif pour Codex, Cowork et Antigravity sur ordinateur, à installer séparément.",
+        "connections.gliner.description": "Repère et masque les données personnelles dans italien, anglais, français, allemand, espagnol, portugais et néerlandais. Traite plusieurs fichiers sans pseudonymes partagés entre documents ni restauration des originaux. Modèle multilingue général, sans spécialisation dans les identifiants fiscaux italiens.",
         "connections.rizzo.title": "Rizzo PII",
-        "connections.rizzo.status": "Connecteur local facultatif pour Codex, Cowork et Antigravity sur ordinateur. Nécessite Rizzo PII sur le même ordinateur.",
+        "connections.rizzo.description": "Orienté vers les textes italiens, avec des détecteurs pour codes fiscaux, numéros de TVA et références cadastrales italiens. Pseudonymes réversibles et correspondance par document. Traite plusieurs fichiers séparément : un même nom peut recevoir des pseudonymes différents entre documents. L’évaluation publiée porte sur l’italien.",
         "connections.privacy.title": "OpenAI Privacy Filter",
-        "connections.privacy.status": "Connecteur local facultatif pour Codex, Cowork et Antigravity sur ordinateur, à installer séparément.",
+        "connections.privacy.description": "Masque les données personnelles avec un modèle principalement anglophone. Traite plusieurs fichiers, sans conserver des identités distinctes et cohérentes entre documents ni une correspondance pour restaurer les originaux. La qualité sur les textes italiens doit être vérifiée.",
         "connections.lethe.title": "Lethe",
-        "connections.lethe.status": "Connecteur local facultatif pour Codex, Cowork et Antigravity sur ordinateur, à installer séparément.",
+        "connections.lethe.description": "Pour conserver les mêmes identités entre documents et les restaurer dans le résultat IA. Utilise un dictionnaire de noms et d’alias vérifié avant le travail. Le dictionnaire fonctionne dans toute langue ; la détection automatique n’est pas spécialisée pour l’Italie. Les noms doivent figurer dans la révision initiale.",
         "connections.shield.title": "PII-Shield",
-        "connections.shield.status": "Connecteur local facultatif pour Codex, Cowork et Antigravity sur ordinateur, à installer séparément.",
-        "connections.data": "Les requêtes, les résultats de recherche et les textes consultés peuvent entrer dans le contexte du modèle de l’application choisie. La connexion, les autorisations et la conservation dépendent de l’application et du service connecté.",
+        "connections.shield.description": "Pour ajouter des documents à une même session avec des pseudonymes partagés et restaurer les données originales. Combine détection multilingue et règles d’identifiants pour l’Italie, d’autres pays de l’UE, le Royaume-Uni et les États-Unis. Test réel réussi sous Linux ; le moteur s’interrompt sur le Mac testé.",
         "contributors.index": "Collaboration",
         "contributors.title": "Contributeurs",
         "contributors.copy": "Vera progresse grâce à l’échange avec des professionnels qui testent ses méthodes, ses limites et ses résultats dans le travail réel.",
@@ -2507,15 +2509,16 @@
         "hero.title": "Vera",
         "hero.lead": "Vera ergänzt Codex um Mandantenakten, Buchungsprüfungen, Abstimmungen, Analysen, Berichte, Kommunikation und Recherche.",
         "advantages.title": "Warum Vera?",
-        "advantages.free.label": "Kostenlos.",
-        "advantages.free.copy": "Keine Kosten für das Plugin.",
+        "advantages.linkLabel": "Warum Vera (auf Italienisch)",
+        "advantages.free.label": "Kostenloses Plugin.",
+        "advantages.free.copy": "Du nutzt die Tokens deines Abonnements, um mehr Intelligenz auf das Problem anzuwenden.",
         "advantages.open.label": "Open Source.",
-        "advantages.open.copy": "Der Code ist öffentlich, einsehbar und anpassbar.",
-        "advantages.professionals.label": "Mit Fachleuten entwickelt.",
-        "advantages.professionals.copy": "Fachleute aus Steuerberatung und Rechnungswesen helfen, die Funktionen zu definieren und ihre Ergebnisse zu prüfen.",
+        "advantages.open.copy": "Der Code ist öffentlich und frei einsehbar.",
+        "advantages.professionals.label": "Mit euch entwickelt.",
+        "advantages.professionals.copy": "Eine Gruppe von Steuerberatern definiert die Funktionen und testet die Ergebnisse.",
         "compliance.index": "Daten und Kanzleiarbeit",
         "compliance.title": "Vera unterstützt die Compliance der Kanzlei.",
-        "compliance.copy": "Vera führt Berechnungen lokal aus, reduziert die Modelldaten je Prozess, dokumentiert die Verarbeitung und bietet geführte Kurse. Die Funktionsübersicht verbindet jeden Punkt mit seinem Zweck, den Rechtsverweisen und den Nachweisen und unterscheidet bestehende Funktionen von vorgeschlagenen Ergänzungen.",
+        "compliance.copy": "Vera unterstützt die Compliance der Kanzlei mit lokaler Verarbeitung, Datenminimierung, Berichten und Schulungen. Die Übersicht mit 30 Punkten unterscheidet verfügbare Funktionen von vorgeschlagenen Ergänzungen.",
         "compliance.link": "Die Diskussion Punkt für Punkt ansehen (auf Italienisch) →",
         "compliance.conditions": "Nutzungsbedingungen und Grenzen (auf Italienisch) →",
         "core.index": "Was Vera kann",
@@ -2557,7 +2560,9 @@
         "module.notice": "Ordnet Steuerbescheide, Inkassomitteilungen oder kantonale Steuerschreiben in einer ersten Akte mit Quellen, Fristen, Beträgen und offenen Fragen.",
         "module.archiveOrganization.title": "Mandantenordner neu ordnen",
         "module.archiveOrganization": "Beginnt mit einer Momentaufnahme der Akte und schlägt Kategorien, Namen, Verschiebungen, Duplikate und Auffälligkeiten vor. Dokumente ändern sich erst nach Prüfung und gesonderter Genehmigung; Vera protokolliert jeden Vorgang und kann ihn kontrolliert rückgängig machen.",
+        "module.agenziaAcquisition.title": "Agenzia delle Entrate: Daten abrufen",
         "module.browserAutomation.title": "Web-Automatisierung",
+        "module.workOrganization.title": "Organisation der Kanzleiarbeit",
         "module.archive.title": "Mandantenakte archivieren und durchsuchen",
         "module.archive": "Speichert Mandant, Mandat, importierte Quellen, Läufe, Entscheidungen und geprüfte Ergebnisse in einer fortsetzbaren Akte. Durchsucht auch lokale oder Google-Drive-Dateien, Gmail und einen verifizierten WhatsApp-Chat; eingesehene Quellen werden weder kopiert noch verändert.",
         "module.sampling.title": "Buchungsjournal stichprobenartig prüfen",
@@ -2679,23 +2684,22 @@
         "install.coworkZipHelp": "Cowork-Paket und Anleitung zum Installieren oder Aktualisieren.",
         "install.video.title": "ChatGPT mit Codex mit Ihrem Computer verbinden",
         "connections.title": "Integrationen",
-        "connections.intro": "Die folgenden Anleitungen erklären, wie Sie Second Brain verbinden, Kanzlei-Skills installieren und optionale lokale Konnektoren zur Anonymisierung von Dokumenten einrichten.",
+        "connections.intro": "Die folgenden Anleitungen erklären, wie Sie Second Brain verbinden, Kanzlei-Skills installieren und lokale Konnektoren zur Anonymisierung von Dokumenten einrichten. Die Konnektoren sind optional und werden separat installiert.",
         "connections.knowledge.title": "Vera mit Second Brain verwenden",
         "connections.knowledge.copy": "Wenn Sie Second Brain bereits nutzen, verbinden Sie es in der App, in der Sie Vera verwenden, und erlauben Sie die Such- und Lesewerkzeuge. Bitten Sie Vera anschließend, für Ihre aktuelle Aufgabe ein Verfahren, einen früheren Fall oder eine Vorlage der Kanzlei einzusehen.",
-        "connections.knowledge.limits": "Vera liest verfügbare Quellen, ohne sie zu ändern. Vera stellt Second Brain nicht bereit, benötigt kein Microsoft 365 und funktioniert auch ohne verbundenes Archiv. Die Abfrage hängt vom Konnektor und den in der Sitzung verfügbaren Werkzeugen ab.",
+        "connections.knowledge.limits": "Vera liest verfügbare Quellen, ohne sie zu ändern. Vera stellt Second Brain nicht bereit und funktioniert auch ohne verbundenes Archiv. Die Abfrage hängt vom Konnektor und den in der Sitzung verfügbaren Werkzeugen ab.",
         "connections.skills.title": "Eigene Skills verwenden",
         "connections.skills.copy": "Um eine Aufgabe mit einem eigenen Skill auszuführen, rufen Sie ihn direkt in der App auf, in der Sie ihn installiert haben. Die Verbindung mit Second Brain importiert, wählt oder startet die Skills der Kanzlei nicht innerhalb von Vera.",
         "connections.gliner.title": "GLiNER2-PII",
-        "connections.gliner.status": "Optionaler lokaler Konnektor für Codex, Cowork und Antigravity auf dem Desktop zur separaten Installation.",
+        "connections.gliner.description": "Erkennt und maskiert personenbezogene Daten in Italienisch, Englisch, Französisch, Deutsch, Spanisch, Portugiesisch und Niederländisch. Verarbeitet mehrere Dateien ohne gemeinsame Pseudonyme über Dokumente hinweg oder Wiederherstellung der Originaldaten. Allgemeines mehrsprachiges Modell ohne Spezialisierung auf italienische Steuerkennungen.",
         "connections.rizzo.title": "Rizzo PII",
-        "connections.rizzo.status": "Optionaler lokaler Konnektor für Codex, Cowork und Antigravity auf dem Desktop. Benötigt die Rizzo-PII-App auf demselben Computer.",
+        "connections.rizzo.description": "Auf italienische Texte ausgerichtet, mit Erkennung italienischer Steuercodes, Umsatzsteuer-Identifikationsnummern und Katasterangaben. Reversible Pseudonyme und eine Zuordnung je Dokument. Verarbeitet mehrere Dateien getrennt: Derselbe Name kann unterschiedliche Pseudonyme erhalten. Die veröffentlichte Bewertung betrifft Italienisch.",
         "connections.privacy.title": "OpenAI Privacy Filter",
-        "connections.privacy.status": "Optionaler lokaler Konnektor für Codex, Cowork und Antigravity auf dem Desktop zur separaten Installation.",
+        "connections.privacy.description": "Maskiert personenbezogene Daten mit einem hauptsächlich englischen Modell. Verarbeitet mehrere Dateien, bewahrt aber weder unterscheidbare, konsistente Identitäten über Dokumente hinweg noch eine Zuordnung zur Wiederherstellung. Die Qualität bei italienischen Texten muss geprüft werden.",
         "connections.lethe.title": "Lethe",
-        "connections.lethe.status": "Optionaler lokaler Konnektor für Codex, Cowork und Antigravity auf dem Desktop zur separaten Installation.",
+        "connections.lethe.description": "Für konsistente Identitäten über mehrere Dokumente und deren Wiederherstellung im KI-Ergebnis. Verwendet ein vorab geprüftes Wörterbuch mit Namen und Aliasen. Das Wörterbuch funktioniert sprachunabhängig; die automatische Erkennung ist nicht auf Italien spezialisiert. Namen müssen in der anfänglichen Prüfung enthalten sein.",
         "connections.shield.title": "PII-Shield",
-        "connections.shield.status": "Optionaler lokaler Konnektor für Codex, Cowork und Antigravity auf dem Desktop zur separaten Installation.",
-        "connections.data": "Abfragen, Suchergebnisse und eingesehene Texte können in den Modellkontext der gewählten App gelangen. Anmeldung, Berechtigungen und Aufbewahrung hängen von der App und dem verbundenen Dienst ab.",
+        "connections.shield.description": "Für zusätzliche Dokumente in derselben Sitzung mit gemeinsamen Pseudonymen und Wiederherstellung der Originaldaten. Kombiniert mehrsprachige Erkennung mit Kennungsregeln für Italien, weitere EU-Länder, Großbritannien und die USA. Realtest unter Linux bestanden; auf dem getesteten Mac bricht die Engine ab.",
         "contributors.index": "Zusammenarbeit",
         "contributors.title": "Mitwirkende",
         "contributors.copy": "Vera wächst durch den Austausch mit Fachleuten, die ihre Methoden, Grenzen und Ergebnisse in der täglichen Arbeit prüfen.",
@@ -2740,15 +2744,16 @@
         "hero.title": "Vera",
         "hero.lead": "Vera añade a Codex expedientes de clientes, controles contables, conciliaciones, análisis, informes, comunicación e investigación.",
         "advantages.title": "¿Por qué Vera?",
-        "advantages.free.label": "Gratuita.",
-        "advantages.free.copy": "Sin coste por el plugin.",
+        "advantages.linkLabel": "Por qué Vera (en italiano)",
+        "advantages.free.label": "Plugin gratuito.",
+        "advantages.free.copy": "Usas los tokens de tu suscripción para aplicar más inteligencia al problema.",
         "advantages.open.label": "Código abierto.",
-        "advantages.open.copy": "El código es público y se puede consultar y adaptar.",
-        "advantages.professionals.label": "Desarrollada con profesionales contables.",
-        "advantages.professionals.copy": "Los profesionales contribuyen a definir las funciones y a poner a prueba sus resultados.",
+        "advantages.open.copy": "El código es público y se puede consultar libremente.",
+        "advantages.professionals.label": "Desarrollada con vosotros.",
+        "advantages.professionals.copy": "Un grupo de asesores fiscales y contables define las funciones y prueba los resultados.",
         "compliance.index": "Datos y trabajo del despacho",
         "compliance.title": "Vera facilita el cumplimiento del despacho.",
-        "compliance.copy": "Vera realiza cálculos locales, reduce los datos enviados al modelo por proceso, documenta el tratamiento y ofrece cursos guiados. El análisis funcional vincula cada punto con su finalidad, las referencias normativas y las evidencias, distinguiendo las funciones existentes de las incorporaciones propuestas.",
+        "compliance.copy": "Vera apoya la compliance del despacho con procesamiento local, minimización de datos, informes y formación. La evaluación de 30 puntos distingue las funciones disponibles de las incorporaciones propuestas.",
         "compliance.link": "Examinar el análisis, punto por punto (en italiano) →",
         "compliance.conditions": "Condiciones y límites de uso (en italiano) →",
         "core.index": "Qué puede hacer Vera",
@@ -2790,7 +2795,9 @@
         "module.notice": "Organiza avisos fiscales, requerimientos de cobro o cartas tributarias cantonales en un primer expediente con fuentes, plazos, importes y preguntas abiertas.",
         "module.archiveOrganization.title": "Reorganizar la carpeta del cliente",
         "module.archiveOrganization": "Parte de una instantánea del expediente y propone categorías, nombres, traslados, duplicados y anomalías. Los documentos solo cambian después de la revisión y una aprobación separada; Vera registra cada operación y puede deshacerla de forma controlada.",
+        "module.agenziaAcquisition.title": "Adquisición Agenzia delle Entrate",
         "module.browserAutomation.title": "Automatización web",
+        "module.workOrganization.title": "Organización del trabajo del despacho",
         "module.archive.title": "Archivar y buscar en el expediente del cliente",
         "module.archive": "Registra el cliente, el encargo, las fuentes importadas, las ejecuciones, las decisiones y los resultados verificados en un expediente que puede retomarse. También busca en archivos locales o de Google Drive, Gmail y un chat de WhatsApp verificado; las fuentes consultadas no se copian ni se modifican.",
         "module.sampling.title": "Muestrear el diario contable",
@@ -2912,23 +2919,22 @@
         "install.coworkZipHelp": "Paquete para Cowork e instrucciones para instalar o actualizar.",
         "install.video.title": "Conecta ChatGPT al ordenador con Codex",
         "connections.title": "Integraciones",
-        "connections.intro": "Las guías siguientes explican cómo conectar Second Brain, instalar las skills del despacho y configurar los conectores locales opcionales para anonimizar documentos.",
+        "connections.intro": "Las guías siguientes explican cómo conectar Second Brain, instalar las skills del despacho y configurar los conectores locales para anonimizar documentos. Los conectores son opcionales y se instalan por separado.",
         "connections.knowledge.title": "Usar Vera con Second Brain",
         "connections.knowledge.copy": "Si ya tienes Second Brain, conéctalo en la aplicación donde usas Vera y autoriza sus herramientas de búsqueda y lectura. Después pide a Vera que consulte un procedimiento, un precedente o una plantilla del despacho para el trabajo en curso.",
-        "connections.knowledge.limits": "Vera consulta las fuentes disponibles sin modificarlas. No proporciona Second Brain, no requiere Microsoft 365 y funciona sin un archivo conectado. La consulta depende del conector y de las herramientas accesibles en la sesión.",
+        "connections.knowledge.limits": "Vera consulta las fuentes disponibles sin modificarlas. No proporciona Second Brain y funciona sin un archivo conectado. La consulta depende del conector y de las herramientas accesibles en la sesión.",
         "connections.skills.title": "Usar tus propias skills",
         "connections.skills.copy": "Para realizar un trabajo con tu propia skill, invócala directamente en la aplicación donde la instalaste. Conectar Second Brain no importa, selecciona ni ejecuta las skills del despacho dentro de Vera.",
         "connections.gliner.title": "GLiNER2-PII",
-        "connections.gliner.status": "Conector local opcional para Codex, Cowork y Antigravity de escritorio, de instalación independiente.",
+        "connections.gliner.description": "Detecta y oculta datos personales en italiano, inglés, francés, alemán, español, portugués y neerlandés. Procesa varios archivos sin seudónimos compartidos entre documentos ni restauración de los originales. Modelo multilingüe general, sin especialización en identificadores fiscales italianos.",
         "connections.rizzo.title": "Rizzo PII",
-        "connections.rizzo.status": "Conector local opcional para Codex, Cowork y Antigravity de escritorio. Requiere Rizzo PII en el mismo ordenador.",
+        "connections.rizzo.description": "Orientado a textos italianos, con detectores de códigos fiscales, números de IVA y referencias catastrales italianos. Seudónimos reversibles y un mapa por documento. Procesa varios archivos por separado: un mismo nombre puede recibir distintos seudónimos entre documentos. La evaluación publicada cubre el italiano.",
         "connections.privacy.title": "OpenAI Privacy Filter",
-        "connections.privacy.status": "Conector local opcional para Codex, Cowork y Antigravity de escritorio, de instalación independiente.",
+        "connections.privacy.description": "Oculta datos personales con un modelo principalmente inglés. Procesa varios archivos, pero no conserva identidades distintas y coherentes entre documentos ni un mapa para restaurar los originales. Hay que comprobar la calidad en textos italianos.",
         "connections.lethe.title": "Lethe",
-        "connections.lethe.status": "Conector local opcional para Codex, Cowork y Antigravity de escritorio, de instalación independiente.",
+        "connections.lethe.description": "Para conservar las mismas identidades entre documentos y restaurarlas en el resultado de IA. Usa un diccionario de nombres y alias revisado antes del trabajo. El diccionario funciona en cualquier idioma; la detección automática no está especializada en Italia. Los nombres deben incluirse en la revisión inicial.",
         "connections.shield.title": "PII-Shield",
-        "connections.shield.status": "Conector local opcional para Codex, Cowork y Antigravity de escritorio, de instalación independiente.",
-        "connections.data": "Las consultas, los resultados de búsqueda y los textos consultados pueden entrar en el contexto del modelo de la aplicación elegida. El acceso, los permisos y la conservación dependen de la aplicación y del servicio conectado.",
+        "connections.shield.description": "Para añadir documentos a una misma sesión con seudónimos compartidos y restaurar los datos originales. Combina detección multilingüe y reglas de identificadores para Italia, otros países de la UE, Reino Unido y EE. UU. Prueba real superada en Linux; el motor se interrumpe en el Mac probado.",
         "contributors.index": "Colaboración",
         "contributors.title": "Colaboradores",
         "contributors.copy": "Vera crece a través del intercambio con profesionales que ponen a prueba sus métodos, límites y resultados en el trabajo real.",

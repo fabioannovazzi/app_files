@@ -132,8 +132,8 @@ def _references(value: Any, sources: dict[str, Any]) -> None:
 def _assess(
     proposal: dict[str, Any], input_root: Path, schema: InvoiceSchema
 ) -> tuple[dict[str, Any], bytes | None]:
-    if proposal["schema_version"] != 1:
-        raise ValueError("Expected invoice proposal schema version 1")
+    if proposal["schema_version"] != 2:
+        raise ValueError("Expected invoice proposal schema version 2")
     if not re.fullmatch(r"[a-zA-Z0-9][a-zA-Z0-9_-]{0,59}", proposal["draft_id"]):
         raise ValueError("Invalid draft ID")
     sources = _sources(proposal, input_root)
@@ -189,7 +189,9 @@ def _assess(
     except ValueError as exc:
         schema_errors = [str(exc)]
     if not schema_errors:
-        mechanical_errors = check_invoice(proposal["invoice"], proposal["route"])
+        mechanical_errors = check_invoice(
+            proposal["invoice"], proposal["route"], proposal["transmission_mode"]
+        )
     issues += schema_errors + mechanical_errors
     report = {
         "schema_version": 1,
@@ -206,7 +208,7 @@ def _assess(
         "sdi_acceptance": "not_tested",
         "limitations": [
             "Local review declarations do not authenticate the reviewer.",
-            "XSD and bounded arithmetic checks do not establish tax correctness, registry existence or SdI acceptance.",
+            "XSD, fixed fiscal-ID checks and bounded arithmetic do not establish tax correctness, registry existence, registry-level identity coherence or SdI acceptance.",
             "Prior issuance or export outside the reviewed evidence set cannot be checked automatically.",
         ],
     }

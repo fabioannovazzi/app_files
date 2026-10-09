@@ -30,6 +30,11 @@ Current user requests take precedence over saved preferences.
 
 # Automazione web
 
+For ordinary Agenzia invoice, corrispettivi or stamp-duty acquisition, use
+`../agenzia-acquisition/SKILL.md` immediately. That is the single installed
+acquisition route, with its own local Chrome worker and optional native panel.
+The rest of this skill covers generic teaching, development and other processes.
+
 <!-- VERA_OPENAI_DATEV_BEGIN -->
 For DATEV installed as a native Windows application, route instead to
 `../datev-invoice-start/SKILL.md` before any browser setup. That explicit native
@@ -111,24 +116,6 @@ A missing tab or empty inventory does not establish an extension disconnection;
 do not repeatedly send the operator to Settings without diagnostic evidence.
 Continue useful checkpoint review and partial development exports while the
 browser is unavailable. Never claim execution or validation without evidence.
-
-For the individual Agenzia invoice downloader supplied with CR-43, follow the
-module's `references/agenzia-download.md` and use `scripts/agenzia_download.mjs`.
-Vera reads the authorized filters and expected population counts and reconciles
-the saved files. Preserve partial results on interruption. Every result remains
-a prototype until target-site validation. Simulated tests and earlier manual
-downloads do not validate this module; declare the actual execution mode.
-
-For CR-49 category/year acquisition, follow the module's
-`references/agenzia-acquisition.md` and use `scripts/agenzia_acquisition.mjs`.
-Vera reviews the explicit category plan against current authorized portal
-evidence, preserves XML/P7M originals, extracts and hash-links encapsulated
-FatturaPA XML without claiming signature validation, records unavailable formats,
-and resumes only after verifying retained state and artifact hashes. Print to
-PDF is an operator-owned `native_gap`; it is verified from the saved bytes but
-does not count as a clean browser replay. Do not close CR-49 from simulated runs
-or publication alone; the exact released version still needs two clean target
-repetitions meeting the request's count, page, category, and resume criteria.
 
 Local filesystem verification of browser downloads in the normal Downloads
 folder is part of the runtime, like writing receipts; it is not desktop control.

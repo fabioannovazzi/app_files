@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "email-cliente",
-  "course_sha256": "fa3e791b0ea8dab846f27302a460c856b60721402b05bf4472c7c700295721b4",
+  "course_sha256": "e17ad93efde7d12f515e75cb154da8bc19bcc6e5a5b53641e0f299cb9e8a4bfb",
   "reviewer": "Codex: five lesson outlines, fictional source documents, reviewed request records and ten actual native drafts",
   "reviewed_at": "2026-09-14T16:37:52.454006+00:00",
   "review_scope": "Prepared local draft lesson only. Every generated Markdown draft was read in full. The normal source-file package remains blocked by unresolved evidence and rejected out-of-scope requests; its generated client email is explicitly a draft. Native review and replacement calls and output hashes are verified. Fixed test decisions do not attest a real professional approval, learner action, sending, voice or two-window acceptance. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
@@ -455,5 +455,39 @@
     "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
     "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
   },
-  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
+  "committed_shared_contract_integration_20261008": {
+    "product": "vera",
+    "workflow": "email-cliente",
+    "reviewer": "Codex /root - bounded shared-contract integration review",
+    "reviewed_at": "2026-10-08T12:40:14.061129+00:00",
+    "source_change": "Shared assurance contracts add a separately allowlisted standalone task context; ordinary registered client contexts and this lesson content remain unchanged. Other source changes were reviewed in the included bank and Archive commits.",
+    "comparison": "Complete course payload excluding source inventory is identical to all three inspected committed parents, including every localized lesson, input, checkpoint and expectation.",
+    "limits": "Preserves prior named editorial and artifact judgments; does not attest new learner participation, professional acceptance or installed native host behavior. Current CI must execute exact demo/practice identities against current course bytes.",
+    "parents": [
+      {
+        "commit": "c324cb0",
+        "course_sha256": "fa3e791b0ea8dab846f27302a460c856b60721402b05bf4472c7c700295721b4"
+      },
+      {
+        "commit": "f70d90d",
+        "course_sha256": "fa3e791b0ea8dab846f27302a460c856b60721402b05bf4472c7c700295721b4"
+      },
+      {
+        "commit": "0bb963db",
+        "course_sha256": "e17ad93efde7d12f515e75cb154da8bc19bcc6e5a5b53641e0f299cb9e8a4bfb"
+      }
+    ],
+    "course_sha256": "e17ad93efde7d12f515e75cb154da8bc19bcc6e5a5b53641e0f299cb9e8a4bfb"
+  },
+  "studio_archive_adoption_source_binding_20261008": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "reviewed_at": "2026-10-08T12:39:27.596925+00:00",
+    "baseline_commit": "c324cb0cbc1d1965676c53e0c2c6dd11905a5393",
+    "previous_course_sha256": "fa3e791b0ea8dab846f27302a460c856b60721402b05bf4472c7c700295721b4",
+    "current_course_sha256": "e17ad93efde7d12f515e75cb154da8bc19bcc6e5a5b53641e0f299cb9e8a4bfb",
+    "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
+    "source_review": "docs/studio_archive/course-source-compatibility-review.json",
+    "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  }
 }

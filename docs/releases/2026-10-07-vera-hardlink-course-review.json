@@ -1,0 +1,337 @@
+{
+  "schema": "mparanza.course_source_review.v1",
+  "reviewer": "Codex /root",
+  "reviewed_at": "2026-10-07T07:52:13.144463+00:00",
+  "baseline_commit": "b716e60ad40908f86e5f83b70fc4a956e36e20a3",
+  "scope": "Automatic verified hardlink execution preparation. Complete authored course content is unchanged; only source bindings differ. Previous editorial and output evidence remains historical; fresh CI executions are required. No affected-user or Cowork acceptance is claimed.",
+  "kits": [
+    {
+      "kit": "vera/bilancio-oic",
+      "previous_course_sha256": "9e653ae15e3f18efc3d3e08593cf24b3b8ee6d535550548d720ba066b7856bfe",
+      "current_course_sha256": "357134b2af073b3ff24d2f25d344db554dd6b1096493ea01b1834b932aa545fc",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "scripts/check_dependencies.py",
+          "before": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/vera/scripts/check_dependencies.py",
+            "sha256": "d8fe58ac68e4cb0e05783256d829fbffc2a29c802c83902ee3102ff432764b69"
+          },
+          "after": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/vera/scripts/check_dependencies.py",
+            "sha256": "046a6e74b09e07d49c34a51f2b7762fcd084d33725e6cca39810ded2ae0ac8a7"
+          }
+        },
+        {
+          "path": "scripts/managed_python_runtime.py",
+          "before": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+            "sha256": "ccc8f805bc8807b1c16a2a92dc43533571cb341bc20a68d850d25af04c879e69"
+          },
+          "after": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+            "sha256": "d3d1fa4ed89deeb7934933abc38ebded8b464e8950b94f71aa3bc23547305e1d"
+          }
+        },
+        {
+          "path": "scripts/verified_execution.py",
+          "before": null,
+          "after": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "48855c1adb73e2e0c7b7136ac9fc3d6b7ca65a09e0cc3cd5792307bfed9ba0b0"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/concordato-plan-review",
+      "previous_course_sha256": "56baf3d490938f0701c6429ac81dd3ab5121d4870597d98c47f876b2f0ae07ea",
+      "current_course_sha256": "9383a668c85af9fddf256a352627a0d91fae569b1db07f55275ba283735861f5",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/concordato-plan-review/scripts/implementation_bootstrap.py",
+          "before": {
+            "path": "modules/concordato-plan-review/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/concordato-plan-review/scripts/implementation_bootstrap.py",
+            "sha256": "6d96e124c00a8466e5ee1a212ec1c57044fb54138742293362042139c7bf4b1b"
+          },
+          "after": {
+            "path": "modules/concordato-plan-review/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/concordato-plan-review/scripts/implementation_bootstrap.py",
+            "sha256": "b0409060ec3b9f7cc65a9088fcd46ebd1d028c8c97bbaa2ec0ab5152e6cd8e38"
+          }
+        },
+        {
+          "path": "skills/concordato-plan-review/SKILL.md",
+          "before": {
+            "path": "skills/concordato-plan-review/SKILL.md",
+            "repository_path": "plugins/vera/skills/concordato-plan-review/SKILL.md",
+            "sha256": "b3be9b204b0255df1e1b072b2f1a3a4953cfd4ab52dc21e47f2acbd17784f9e3"
+          },
+          "after": {
+            "path": "skills/concordato-plan-review/SKILL.md",
+            "repository_path": "plugins/vera/skills/concordato-plan-review/SKILL.md",
+            "sha256": "5dcb0967cdded11c160a618b1e4974aecba364c5aadaa7d6092a8685e54e1bc5"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/financial-report-builder",
+      "previous_course_sha256": "61d0d970ba3ffa890d7f7a37118b40a2bf42ccca3ab50995a126adc4a5b1e0bb",
+      "current_course_sha256": "1e656dd238cd02609c95e1f8cacf5c53f9d6301425498d1437f8556f1e13e3d2",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/report-builder/scripts/implementation_bootstrap.py",
+          "before": {
+            "path": "modules/report-builder/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/report-builder/scripts/implementation_bootstrap.py",
+            "sha256": "c2775488e65a70846dbd995539615b4ad8ae38be26580932a67ff50e595ac6fc"
+          },
+          "after": {
+            "path": "modules/report-builder/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/report-builder/scripts/implementation_bootstrap.py",
+            "sha256": "769cf9a7e32b0bdef0451d9f4219716af6943546f31a8c1afd2f2739433c3103"
+          }
+        },
+        {
+          "path": "skills/financial-report-builder/SKILL.md",
+          "before": {
+            "path": "skills/financial-report-builder/SKILL.md",
+            "repository_path": "plugins/vera/skills/financial-report-builder/SKILL.md",
+            "sha256": "9564207bb5058957476686a2dbda8cf47f0f5cf381c11aaab6f16d309cefedbc"
+          },
+          "after": {
+            "path": "skills/financial-report-builder/SKILL.md",
+            "repository_path": "plugins/vera/skills/financial-report-builder/SKILL.md",
+            "sha256": "1a6babdea8afc5d1d3dee0d8b2223749d64e59b9025484f2ea71e795bca77c9c"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/journal-bank-reconciliation",
+      "previous_course_sha256": "4515f09f5f1225436ea9cb8fb9b1d52b4db3889dccb3e4d1c2cd78e1a0e77c47",
+      "current_course_sha256": "1a1579b3a2da0432dc9a94d1d4b0f918a5d7d2a55d6f5562e8a3091a73710772",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
+          "before": {
+            "path": "modules/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
+            "sha256": "dc232232896529e1d0cac2d2e8991ada216389c701b80519fe11fbe7961ebdd4"
+          },
+          "after": {
+            "path": "modules/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
+            "sha256": "2dbc002a806a80feb0e9e8f67be9701ad4d7616e5426db234cbe6f30951c2564"
+          }
+        },
+        {
+          "path": "skills/journal-bank-reconciliation/SKILL.md",
+          "before": {
+            "path": "skills/journal-bank-reconciliation/SKILL.md",
+            "repository_path": "plugins/vera/skills/journal-bank-reconciliation/SKILL.md",
+            "sha256": "5ac9421e513bb6be6232d93b1968d10fbd2c8d22c0e94a2bd2a1aacefe146459"
+          },
+          "after": {
+            "path": "skills/journal-bank-reconciliation/SKILL.md",
+            "repository_path": "plugins/vera/skills/journal-bank-reconciliation/SKILL.md",
+            "sha256": "c412e0be44d248a38066a840987991b0a7cc20d327a5bffd9df0440913030e80"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/journal-sampling",
+      "previous_course_sha256": "83aa2768e5ae701168a7e4328fb4973ca4d9355316d906c18e8167c2dac8c9e0",
+      "current_course_sha256": "c1bc6be3bf2663e0a09ea350382ca17a34337adbe3b431181f25668c39a4d22b",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "skills/journal-sampling/SKILL.md",
+          "before": {
+            "path": "skills/journal-sampling/SKILL.md",
+            "repository_path": "plugins/vera/skills/journal-sampling/SKILL.md",
+            "sha256": "27e59641a06440aae0014bbfda8fdae48c28dde126843d94dbd625c46eca629c"
+          },
+          "after": {
+            "path": "skills/journal-sampling/SKILL.md",
+            "repository_path": "plugins/vera/skills/journal-sampling/SKILL.md",
+            "sha256": "980f5d08620e332e91c0b353d431dc0f0e3490f639b4532fa153d9c92719226f"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/open-item-reconciliation",
+      "previous_course_sha256": "960914275adaa1c87e3134509ace996c71a23123b5d6fb276f87d457375d4b9d",
+      "current_course_sha256": "9e2a848e11ed9eb3ca4fcb0ef378263e235aa81e1f11aa4df98a00288e48978b",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "modules/open-item-reconciliation/scripts/implementation_bootstrap.py",
+          "before": {
+            "path": "modules/open-item-reconciliation/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/open-item-reconciliation/scripts/implementation_bootstrap.py",
+            "sha256": "38860335562bd5c8272da0a34f27b50ebfecbe9782499305a8785c2cf80f53f1"
+          },
+          "after": {
+            "path": "modules/open-item-reconciliation/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/open-item-reconciliation/scripts/implementation_bootstrap.py",
+            "sha256": "eb6ee0a5aae1b75068cf738bc6d2797c2c32979418a623b8a07e877ef1ad3770"
+          }
+        },
+        {
+          "path": "skills/open-item-reconciliation/SKILL.md",
+          "before": {
+            "path": "skills/open-item-reconciliation/SKILL.md",
+            "repository_path": "plugins/vera/skills/open-item-reconciliation/SKILL.md",
+            "sha256": "cb7ba9a1460f9d0abd141a45ba19571a49072f427759a09b4675fc601c34a818"
+          },
+          "after": {
+            "path": "skills/open-item-reconciliation/SKILL.md",
+            "repository_path": "plugins/vera/skills/open-item-reconciliation/SKILL.md",
+            "sha256": "23a8ff44580add47a6655a9045d393801e73d84cbce4e0db97aa7122d0797a5b"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/trasformazione",
+      "previous_course_sha256": "11c2c150c39adaa565adfab4450fd311f2a3ad806f5ec74b84249846bdea1b19",
+      "current_course_sha256": "88c6764b4e342debe06c71fec9a98d3952fb222cbf6ee077a40ef149fefd7726",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "scripts/check_dependencies.py",
+          "before": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/vera/scripts/check_dependencies.py",
+            "sha256": "d8fe58ac68e4cb0e05783256d829fbffc2a29c802c83902ee3102ff432764b69"
+          },
+          "after": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/vera/scripts/check_dependencies.py",
+            "sha256": "046a6e74b09e07d49c34a51f2b7762fcd084d33725e6cca39810ded2ae0ac8a7"
+          }
+        },
+        {
+          "path": "scripts/managed_python_runtime.py",
+          "before": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+            "sha256": "ccc8f805bc8807b1c16a2a92dc43533571cb341bc20a68d850d25af04c879e69"
+          },
+          "after": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+            "sha256": "d3d1fa4ed89deeb7934933abc38ebded8b464e8950b94f71aa3bc23547305e1d"
+          }
+        },
+        {
+          "path": "scripts/verified_execution.py",
+          "before": null,
+          "after": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "48855c1adb73e2e0c7b7136ac9fc3d6b7ca65a09e0cc3cd5792307bfed9ba0b0"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/variance-analysis",
+      "previous_course_sha256": "4d67e5eb292877e707c8bf58203c83b7f07cd1a70b4b4c580cc98937bc09d747",
+      "current_course_sha256": "b31c98511b3286fee8a33a6e823ee3812bf299a6bfc8ae3450533ef2faea1a40",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "scripts/check_dependencies.py",
+          "before": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/vera/scripts/check_dependencies.py",
+            "sha256": "d8fe58ac68e4cb0e05783256d829fbffc2a29c802c83902ee3102ff432764b69"
+          },
+          "after": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/vera/scripts/check_dependencies.py",
+            "sha256": "046a6e74b09e07d49c34a51f2b7762fcd084d33725e6cca39810ded2ae0ac8a7"
+          }
+        },
+        {
+          "path": "scripts/managed_python_runtime.py",
+          "before": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+            "sha256": "ccc8f805bc8807b1c16a2a92dc43533571cb341bc20a68d850d25af04c879e69"
+          },
+          "after": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+            "sha256": "d3d1fa4ed89deeb7934933abc38ebded8b464e8950b94f71aa3bc23547305e1d"
+          }
+        },
+        {
+          "path": "scripts/verified_execution.py",
+          "before": null,
+          "after": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "48855c1adb73e2e0c7b7136ac9fc3d6b7ca65a09e0cc3cd5792307bfed9ba0b0"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/vouching",
+      "previous_course_sha256": "0634006ceb6f17763b9c50fa2739602d13c040782a4989465dcfe68727107ac4",
+      "current_course_sha256": "ccf80530ee9b816577bc400d18fe787a579b5f0e7afc0fd349c042717f4e1827",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "path": "skills/vouching/SKILL.md",
+          "before": {
+            "path": "skills/vouching/SKILL.md",
+            "repository_path": "plugins/vera/skills/vouching/SKILL.md",
+            "sha256": "f2b624e23345c051fa2bd30c9de0c08b614bfb6ed1b88dc3fd1ca1486fb48843"
+          },
+          "after": {
+            "path": "skills/vouching/SKILL.md",
+            "repository_path": "plugins/vera/skills/vouching/SKILL.md",
+            "sha256": "3b11ba20430b428324f01e2b423d965b9a56decae481bedd2ae6b26f18d1af95"
+          }
+        }
+      ]
+    },
+    {
+      "kit": "vera/studio-document-format",
+      "authored_content_unchanged": true,
+      "previous_course_sha256": "3d505d0ec19180bd3ddf8f5f990e256090fbe6827e61308f682f148c9fadc2d8",
+      "current_course_sha256": "11c40647438a1b01c081488295cc501032bf420b8de8d9a302268ca67aa2d19c",
+      "source_changes": [
+        {
+          "path": "modules/report-builder/scripts/implementation_bootstrap.py",
+          "before": {
+            "path": "modules/report-builder/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/report-builder/scripts/implementation_bootstrap.py",
+            "sha256": "c2775488e65a70846dbd995539615b4ad8ae38be26580932a67ff50e595ac6fc"
+          },
+          "after": {
+            "path": "modules/report-builder/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/report-builder/scripts/implementation_bootstrap.py",
+            "sha256": "769cf9a7e32b0bdef0451d9f4219716af6943546f31a8c1afd2f2739433c3103"
+          }
+        }
+      ]
+    }
+  ]
+}

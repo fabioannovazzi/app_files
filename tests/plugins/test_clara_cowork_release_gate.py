@@ -527,3 +527,4 @@ def test_direct_cli_uses_empty_bootstrap_interpreter(monkeypatch, tmp_path):
         expected_error="missing required role bindings",
     )
     assert "CLAUDE_ENV_FILE" not in run.env
+    assert run.env["MPARANZA_RUNTIME_ROOT"] == str(run.output / "shared-runtime")

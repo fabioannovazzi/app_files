@@ -73,7 +73,7 @@
     },
     {
       "path": "modules/report-builder/scripts/implementation_bootstrap.py",
-      "sha256": "c2775488e65a70846dbd995539615b4ad8ae38be26580932a67ff50e595ac6fc"
+      "sha256": "769cf9a7e32b0bdef0451d9f4219716af6943546f31a8c1afd2f2739433c3103"
     },
     {
       "path": "modules/report-builder/scripts/implementation_contract.py",
@@ -129,7 +129,7 @@
     },
     {
       "path": "modules/report-builder/skills/financial-report-builder/SKILL.md",
-      "sha256": "4b8c010199f7372db4a2e56f32e64c44fbfb8d99ea808e7b8af07da79c48210f"
+      "sha256": "e77d145280cc22454788407ad95c05dae4ffc167731749ad4a23ca8b7c36d667"
     },
     {
       "path": "modules/report-builder/vendor/modules/__init__.py",
@@ -141,7 +141,7 @@
     },
     {
       "path": "modules/report-builder/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
+      "sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112"
     },
     {
       "path": "modules/report-builder/vendor/modules/vera_assurance/decisions.py",
@@ -173,7 +173,7 @@
     },
     {
       "path": "skills/financial-report-builder/SKILL.md",
-      "sha256": "bbf607fca0544bef26b282bf37140e89a53ff698669b6099c1573fd521250ec5"
+      "sha256": "501fbe1a4788330f5b551dae20a9f66b56d70fe0e6143007c296e9a6f076ae0e"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -193,7 +193,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
+      "sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -478,5 +478,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "61d0d970ba3ffa890d7f7a37118b40a2bf42ccca3ab50995a126adc4a5b1e0bb"
+  "canonical_course_sha256": "1a23294b02ef3bf675356126503ff59a636c83d26e5f470896d0ea7f3ba06aed"
 }

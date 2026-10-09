@@ -268,7 +268,7 @@ def draw_small_multiples_scatter_colored(fig,df,chartDict,paramDict,name,showLeg
 
     color_lookup = (
         lf.select(pl.col(colorDimension).unique(maintain_order=True))
-        .with_row_count("row_nr")
+        .with_row_index("row_nr")
         .join(
             pl.DataFrame({"row_nr": list(range(len(colorArray))), colorName: colorArray}).lazy(),
             on="row_nr",
@@ -1078,7 +1078,7 @@ def draw_total_scatter_colored(
 
     color_lookup = (
         lf.select(pl.col(colorDimension).unique(maintain_order=True))
-        .with_row_count("row_nr")
+        .with_row_index("row_nr")
         .join(
             pl.DataFrame({"row_nr": list(range(len(colorArray))), colorName: colorArray}).lazy(),
             on="row_nr",

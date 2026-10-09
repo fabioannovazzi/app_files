@@ -3338,3 +3338,12 @@ def test_standard_variance_export_has_readable_canvas_and_consistent_text(
     assert {
         trace.textfont.size for trace in figure.data if trace.type == "waterfall"
     } == {14}
+
+
+@pytest.mark.parametrize(
+    "values", [["2026-01-31", "2026-02-28"], [date(2026, 1, 31), date(2026, 2, 28)]]
+)
+def test_date_parser_retains_calendar_dates_on_supported_polars(values):
+    core = load_core()
+    actual = pl.DataFrame({"date": values}).select(core.parsed_date_expression("date"))
+    assert actual.get_column("date").to_list() == [date(2026, 1, 31), date(2026, 2, 28)]

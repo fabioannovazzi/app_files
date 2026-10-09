@@ -247,6 +247,7 @@ class CheckRun:
             PYTHONNOUSERSITE="1",
             PYTHONDONTWRITEBYTECODE="1",
             CLAUDE_PLUGIN_DATA=str(output / "managed"),
+            MPARANZA_RUNTIME_ROOT=str(output / "shared-runtime"),
             MPLCONFIGDIR=str(output / "matplotlib"),
             XDG_CACHE_HOME=str(output / "cache"),
             PIP_DISABLE_PIP_VERSION_CHECK="1",

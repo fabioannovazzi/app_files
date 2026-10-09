@@ -1,0 +1,29 @@
+{
+  "vera/organizzazione-lavoro": {
+    "title": "Organise your day with Vera",
+    "goal": "Learn to save a commitment, change it, recover it in a new chat and turn meeting notes into follow-up work.",
+    "scenario": "Studio Riva needs to meet Paola and obtain a document. Independent practice uses Studio Selva and Luca, with a different day, time and owner. All data is fictional.",
+    "scope": "The teaching register is separate from the studio register. Busy periods in the file are reading examples, not a current Google calendar. The local course creates no external events. After practice you may choose a live extension: connect the calendar, authorise one specific test event and read it back through the connector. Without access or approval it remains a proposal. Voice uses host transcription; no continuous listener is enabled.",
+    "inputs": "Open case-en.json in the demonstration folder. It supplies preferences, a request, an appointment to reschedule, busy periods and meeting notes. These are case facts, not completed outputs. The working chat creates a fresh teaching register without changing real settings or commitments.",
+    "request": "Vera, organise the fictional studio commitments from this file: save the appointment, move it as requested, retain meeting actions and show the day. Tell me what was saved locally and what was not written to the calendar.",
+    "steps": [
+      "In the working chat read the fictional facts and prepare the separate register. The voice teacher explains calendar, hours and duration; ask for missing details instead of inventing them. Teaching preferences do not connect a real account.",
+      "Save the appointment and compare time and duration with the example busy periods. Read the saved result. Reschedule it from the changed request and check the revision; do not describe it as an event created in Google Calendar.",
+      "Open the register in a new process or chat. Check identity, source and new time. Derive summary, decisions and actions from the meeting notes, retaining owner and date where supplied and flagging gaps. Show open commitments and a proposed day, separating saved preferences from reasoned priorities."
+    ],
+    "deliverables": [
+      "A recoverable teaching register with the revised appointment, source and history.",
+      "A saved meeting with follow-up tasks and owners, plus a view of open commitments.",
+      "An explanation of actual saved results and what still needs a connected calendar or automation."
+    ],
+    "review": "Open actual outputs and compare name, date, duration, owner and source with the input. A new read must recover the same revised appointment. A local record does not prove calendar updating. Legal deadlines require the specialist workflow.",
+    "checkpoints": [
+      "Before writing, identify where lesson data will remain.",
+      "After rescheduling, recover the same appointment in a new read.",
+      "Before any live test event, select the account/calendar and authorise the exact operation."
+    ],
+    "practice": "Open the different case-en.json in practice. Ask for Studio Selva work in your own words rather than copying demonstration values. Check busy periods, move Luca and save meeting actions. Mark the task done; verify it leaves the open list and remains in history.",
+    "success": "Practice retains its own facts and revised time after reopening; completed work remains recoverable and the demonstration is unchanged. Explain register, current calendar and automatic briefing. Prepared material does not establish learner participation.",
+    "repeat": "Ask to organise your day or describe a commitment naturally. For real work use the normal register and freshly read calendar. A briefing at a fixed time needs separate configured and verified host automation."
+  }
+}

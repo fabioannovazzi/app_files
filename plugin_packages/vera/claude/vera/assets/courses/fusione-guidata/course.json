@@ -101,7 +101,7 @@
     },
     {
       "path": "modules/fusione-guidata/vendor/modules/model_data_report.py",
-      "sha256": "54fcde02508b195250c5a4c58758e10f796a63a32448115de64fccbce8b4022c"
+      "sha256": "0e7a99ef631ed67a1aa25eb10ce7ed158625f6c0c09dcf8546eeb132a238262d"
     },
     {
       "path": "skills/fusione-guidata/SKILL.md",
@@ -125,7 +125,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
+      "sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -402,5 +402,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "86621eeb4f9b55450d22892726e19512695c947297afb26fb10871994a4dcde0"
+  "canonical_course_sha256": "d83272d90274f9a1c103281fb6bfcd72dfc54e60f27230d3c230dac7b6dceba7"
 }

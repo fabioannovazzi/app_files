@@ -44,7 +44,7 @@
     },
     {
       "path": "modules/journal-sampling/requirements.txt",
-      "sha256": "884f4a5849cac35ee7ad5b35b4d130f029d038d9a458b410a580824ef8cebc7f"
+      "sha256": "31f11a5d17f183e8178ca18dc4bcaf87de53e1d8adeb1f76c3e12c5745d6a7e4"
     },
     {
       "path": "modules/journal-sampling/scripts/check_dependencies.py",
@@ -60,7 +60,7 @@
     },
     {
       "path": "modules/journal-sampling/scripts/journal_sampling_core.py",
-      "sha256": "8f049150741e4ab6ace790309a0e3b06450ff66e70dee01425b586f63190c4fc"
+      "sha256": "14cea392772d2ff1336865b415c188ef871b5480217c8fdd30614c3bb51e0ed9"
     },
     {
       "path": "modules/journal-sampling/scripts/normalize_journal.py",
@@ -100,7 +100,7 @@
     },
     {
       "path": "modules/journal-sampling/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
+      "sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112"
     },
     {
       "path": "modules/journal-sampling/vendor/modules/vera_assurance/decisions.py",
@@ -132,7 +132,7 @@
     },
     {
       "path": "skills/journal-sampling/SKILL.md",
-      "sha256": "f84692241596b638979cba5c2d46991698158236e9ab23de032f8adbf34487a7"
+      "sha256": "896cd5b879f501e7c249e91be05ea528bb6cd537b79429794253549f414bf20e"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -152,7 +152,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
+      "sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -437,5 +437,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "957000b5d12712ea9cbaced6dcd6f73ac34dfb1a6756bee44df2fd3f47bf348f"
+  "canonical_course_sha256": "5d06e850384094b37adfad9a02393feb1cae06de7f3e50aa61f9e2018e1386ec"
 }

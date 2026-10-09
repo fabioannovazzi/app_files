@@ -5776,7 +5776,7 @@ def test_canonical_snake_case_mapping_runs_amount_date_cascade_and_native_closur
                 if receipt["role"] == "implementation"
             ]
         )
-        == 25
+        == 26
     )
 
 
@@ -7040,7 +7040,7 @@ def test_initial_assurance_envelope_binds_exact_transitive_implementation_set(
         (root_id, relative_path)
         for _, root_id, relative_path in core.IMPLEMENTATION_ARTIFACT_SPECS
     ]
-    assert len(implementation_receipts) == 25
+    assert len(implementation_receipts) == 26
 
 
 @pytest.mark.parametrize(
@@ -10375,7 +10375,9 @@ def test_skill_and_scripts_keep_codex_as_the_review_layer() -> None:
     assert "render_journal_bank_review" in skill_text
     assert "Codex-Only Luna Max Residual Resolution Funnel" in skill_text
     assert "semantic_review.py run-worker" in skill_text
-    assert "journal_bank.luna_seatbelt_capsule.v1" in skill_text
+    assert "journal_bank.luna_seatbelt_capsule.v3" in skill_text
+    assert "The v1 and v2" in skill_text
+    assert "registry records remain retained unchanged" in skill_text
     assert "current chat unchanged" in skill_text
     assert "Codex JSONL visibility is incomplete" in skill_text
     assert "luna_launch_receipt.json" in skill_text
@@ -13152,6 +13154,7 @@ def test_host_profile_registry_retains_immutable_legacy_envelope() -> None:
     assert tuple(profiles) == (
         "journal_bank.luna_seatbelt_capsule.v1",
         "journal_bank.luna_seatbelt_capsule.v2",
+        "journal_bank.luna_seatbelt_capsule.v3",
     )
     assert profile.provenance == "retained_legacy"
     assert profile.darwin_build == "25F84"
@@ -13240,11 +13243,24 @@ def test_current_host_profile_preserves_the_production_security_envelope() -> No
     semantic = load_semantic_review()
     current = semantic._resolve_host_profile()
     legacy = semantic._resolve_host_profile("journal_bank.luna_seatbelt_capsule.v1")
-    assert current.contract_id == "journal_bank.luna_seatbelt_capsule.v2"
+    assert current.contract_id == "journal_bank.luna_seatbelt_capsule.v3"
     assert current.provenance == "native_qualified"
     assert current.darwin_build == "26A428"
-    assert current.codex_version == "codex-cli 0.155.0-alpha.16"
-    assert current.seatbelt_sha256 == legacy.seatbelt_sha256
+    assert current.codex_version == "codex-cli 0.160.0"
+    previous = semantic._resolve_host_profile("journal_bank.luna_seatbelt_capsule.v2")
+    assert previous.codex_version == "codex-cli 0.155.0-alpha.16"
+    assert previous.codex_sha256 == (
+        "2f76d9cb0acab786dbb1cbf1020e8001d0e6d4de7b3c87a5d5769a4d03480f13"
+    )
+    assert previous.seatbelt_sha256 == legacy.seatbelt_sha256
+    assert (
+        current.seatbelt_sha256
+        == hashlib.sha256(semantic.SEATBELT_PROFILE.encode("utf-8")).hexdigest()
+    )
+    assert current.seatbelt_sha256 != previous.seatbelt_sha256
+    assert '(allow file-read-metadata (path-ancestors (param "CODEX_BIN")))' in (
+        semantic.SEATBELT_PROFILE
+    )
     assert current.disabled_features == legacy.disabled_features
     assert semantic._redacted_worker_argv(
         host_profile=current

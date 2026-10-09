@@ -15,6 +15,10 @@
       "diagnostic": "modules/journal-bank-reconciliation/scripts/semantic_review.py host-status",
       "requirement": "Exact qualified native capsule and launch-time canaries; inspect current host before promising execution."
     },
+    "agenzia_acquisition": {
+      "component": "browser-automation",
+      "requirement": "Installed Chrome on the operator local graphical desktop and shared Python 3.12 with declared acquisition dependencies. Manual authentication. Optional MCP Apps panel and ordinary commands share one worker."
+    },
     "browser_automation": {
       "component": "browser-automation",
       "requirement": "Connected Chrome with the documented Playwright tab API; native steps and unobservable downloads remain explicit gaps."
@@ -149,6 +153,7 @@
         "modules/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
         "modules/journal-bank-reconciliation/scripts/inspect_inputs.py",
         "modules/journal-bank-reconciliation/scripts/run_reconciliation.py",
+        "modules/journal-bank-reconciliation/scripts/seal_review_receipts.py",
         "modules/journal-bank-reconciliation/scripts/semantic_review.py"
       ]
     },
@@ -274,6 +279,7 @@
         "modules/financial-analysis/scripts/prepare_fdd_case.py",
         "modules/financial-analysis/scripts/prepare_monthly_pnl_case.py",
         "modules/financial-analysis/scripts/prepare_working_capital_case.py",
+        "modules/financial-analysis/scripts/run_annual_statements.py",
         "modules/financial-analysis/scripts/run_pack.py",
         "modules/financial-analysis/scripts/validate_case_contracts.py"
       ]
@@ -472,10 +478,15 @@
     {
       "component_id": "browser-automation",
       "skills": [
+        "modules/browser-automation/skills/agenzia-acquisition/SKILL.md",
         "modules/browser-automation/skills/browser-automation/SKILL.md"
       ],
       "python_entrypoints": [
         "modules/browser-automation/scripts/acceptance_fixture.py",
+        "modules/browser-automation/scripts/agenzia_acquire.py",
+        "modules/browser-automation/scripts/agenzia_demo.py",
+        "modules/browser-automation/scripts/agenzia_runtime.py",
+        "modules/browser-automation/scripts/agenzia_ui.py",
         "modules/browser-automation/scripts/batch_review.py",
         "modules/browser-automation/scripts/capability_pipeline.py",
         "modules/browser-automation/scripts/check_dependencies.py",
@@ -571,6 +582,7 @@
   "vera_wrapper_skills": [
     "skills/adeguati-assetti/SKILL.md",
     "skills/adversarial-opinion/SKILL.md",
+    "skills/agenzia-acquisition/SKILL.md",
     "skills/aml-review/SKILL.md",
     "skills/archive-organization/SKILL.md",
     "skills/avviso-intake/SKILL.md",
@@ -601,6 +613,7 @@
     "skills/management-control-pack/SKILL.md",
     "skills/new-client/SKILL.md",
     "skills/open-item-reconciliation/SKILL.md",
+    "skills/organizzazione-lavoro/SKILL.md",
     "skills/patent-box-review/SKILL.md",
     "skills/presenza-digitale-studio/SKILL.md",
     "skills/previdenza-inps/SKILL.md",

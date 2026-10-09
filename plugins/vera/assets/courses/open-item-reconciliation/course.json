@@ -94,7 +94,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/implementation_bootstrap.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/implementation_bootstrap.py",
-      "sha256": "38860335562bd5c8272da0a34f27b50ebfecbe9782499305a8785c2cf80f53f1"
+      "sha256": "eb6ee0a5aae1b75068cf738bc6d2797c2c32979418a623b8a07e877ef1ad3770"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/raw_input_runner.py",
@@ -159,7 +159,7 @@
     {
       "path": "modules/open-item-reconciliation/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
+      "sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112"
     },
     {
       "path": "modules/open-item-reconciliation/vendor/modules/vera_assurance/decisions.py",
@@ -199,7 +199,7 @@
     {
       "path": "skills/open-item-reconciliation/SKILL.md",
       "repository_path": "plugins/vera/skills/open-item-reconciliation/SKILL.md",
-      "sha256": "cb7ba9a1460f9d0abd141a45ba19571a49072f427759a09b4675fc601c34a818"
+      "sha256": "23a8ff44580add47a6655a9045d393801e73d84cbce4e0db97aa7122d0797a5b"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -339,7 +339,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
+      "sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",

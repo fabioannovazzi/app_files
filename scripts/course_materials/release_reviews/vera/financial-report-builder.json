@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "financial-report-builder",
-  "course_sha256": "61d0d970ba3ffa890d7f7a37118b40a2bf42ccca3ab50995a126adc4a5b1e0bb",
+  "course_sha256": "1a23294b02ef3bf675356126503ff59a636c83d26e5f470896d0ea7f3ba06aed",
   "reviewer": "Codex: five first-use guides, source context and all thirty rendered native report pages",
   "reviewed_at": "2026-09-14T16:03:20.707382+00:00",
   "review_scope": "Bounded management report from three fictional statements. Actual native Word reports in five languages and both phases were rendered and all thirty pages inspected. Fixed model-authored test commentary and synthetic mapping reviews are not packaged teaching results, professional approvals or learner actions. Live voice and beginner understanding remain unverified. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
@@ -435,5 +435,47 @@
     "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
     "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
   },
-  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
+  "source_update_review": "docs/releases/2026-10-07-vera-hardlink-course-review.json",
+  "committed_source_integration_20261008": {
+    "reviewer": "Codex /root - bounded committed-source integration review",
+    "reviewed_at": "2026-10-08T12:29:00.080052+00:00",
+    "source_review": "Annual OIC comparison is an additive explicit-cell file route; the existing net-debt exercise and ordinary FDD engine contract are unchanged. The maintained source selector adds declared requirements and wrapper references. Studio Archive now restores approved roots in a new isolated session and offers a separate selected-source standalone context for specifically supported one-off workflows; the course still uses explicit synthetic client preparation and actual Archive receipts. Bank receipt sealing and optional local-only data reports preserve their committed controls. Compare complete authored course/fixture/locale/timing objects against all three committed parents, preserving prior editorial judgments and historical artifact reviews. Fresh CI must verify current native demo/practice identities and digests. No new learner, visual, professional or installed-host acceptance is claimed.",
+    "parents": [
+      {
+        "label": "main",
+        "commit": "c324cb0cbc1d1965676c53e0c2c6dd11905a5393",
+        "course_sha256": "1e656dd238cd02609c95e1f8cacf5c53f9d6301425498d1437f8556f1e13e3d2",
+        "authored_content_identical": true
+      },
+      {
+        "label": "bank",
+        "commit": "f70d90d90abb9e87bf58fd2d8895d6dce05a51b2",
+        "course_sha256": "1e656dd238cd02609c95e1f8cacf5c53f9d6301425498d1437f8556f1e13e3d2",
+        "authored_content_identical": true
+      },
+      {
+        "label": "archive",
+        "commit": "0bb963db370b3b73093e807c836cb1b15d7d8deb",
+        "course_sha256": "511907cf410aab8ec3a3b78e707b80df66debeecc48c1ab78e925702eb6f9b2c",
+        "authored_content_identical": true
+      }
+    ],
+    "source_changes": [
+      {
+        "path": "modules/report-builder/skills/financial-report-builder/SKILL.md",
+        "repository_path": "plugins/report-builder/skills/financial-report-builder/SKILL.md",
+        "sha256": "d4d95bc079316c15730e694a61708339d851e4aa89af2ddba4b441e25d826d59"
+      }
+    ]
+  },
+  "studio_archive_adoption_source_binding_20261008": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "reviewed_at": "2026-10-08T12:39:27.596925+00:00",
+    "baseline_commit": "c324cb0cbc1d1965676c53e0c2c6dd11905a5393",
+    "previous_course_sha256": "1e656dd238cd02609c95e1f8cacf5c53f9d6301425498d1437f8556f1e13e3d2",
+    "current_course_sha256": "511907cf410aab8ec3a3b78e707b80df66debeecc48c1ab78e925702eb6f9b2c",
+    "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
+    "source_review": "docs/studio_archive/course-source-compatibility-review.json",
+    "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  }
 }

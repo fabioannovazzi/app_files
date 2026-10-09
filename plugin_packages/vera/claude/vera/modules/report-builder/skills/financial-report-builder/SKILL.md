@@ -27,6 +27,17 @@ directory as a result.
 
 # Build Report
 
+When the requested result is a historical financial diagnosis of annual OIC
+accounts, use Financial Analysis's maintained annual statements route rather
+than treating this renderer's initial section suggestions as an analytical
+method. Read `../financial-analysis/references/annual-statements.md` relative to
+this module's root (the sibling module in both installed and source layouts).
+It handles combined SP/CE sheets through explicit cell mappings and produces
+the annual Word/Excel package in a financial-analysis run. This report-builder
+workflow remains appropriate for generic report assembly and its existing
+numeric-review contract. Do not sum every year column of a hierarchical balance
+sheet: details and subtotals would be counted together.
+
 Use this skill when a finance or audit report must be assembled from variable workbooks, CSV exports, readable PDFs, or ZIP folders. The plugin is a guided Claude workflow: Claude inspects the files, proposes table-to-section mapping, asks only for unresolved business choices, writes or refines narrative comments in an editable recipe, runs deterministic helper scripts, reviews diagnostics, and delivers outputs.
 
 The workflow is not Italian-only. Support the same five working locales used by the other accounting plugins: `it`, `en`, `fr`, `de`, and `es`. Keep canonical output file names and JSON keys in English for stability, but speak to the user and write summaries in the chosen working language.

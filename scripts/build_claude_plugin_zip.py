@@ -1958,6 +1958,29 @@ def project_cowork_skill(
     text = text.replace(LOCAL_FEEDBACK_HANDOFF, "")
     text = _remove_optional_section(text, "## Plugin Improvement Feedback")
     text = _inject_cowork_execution_contract(text)
+    if relative_path in {
+        "skills/vera/SKILL.md",
+        "skills/journal-bank-reconciliation/SKILL.md",
+        "skills/open-item-reconciliation/SKILL.md",
+        "skills/journal-sampling/SKILL.md",
+        "skills/financial-report-builder/SKILL.md",
+        "skills/vouching/SKILL.md",
+        "skills/concordato-plan-review/SKILL.md",
+    }:
+        text = _inject_named_execution_contract(
+            text,
+            heading="## Verified execution preparation",
+            contract="""## Verified execution preparation
+
+Before an assured installed-module handoff, follow Vera's
+`skills/vera/references/execution-recovery.md`: run the supported
+`scripts/verified_execution.py --module <component-id>` internally and use the
+returned execution root for the module skill, commands, assets and review server.
+Do not ask the professional to use Terminal. This helper may create a private
+verified code copy outside the host installation; it never edits that installation
+and is not permission to manually copy it or bypass a denied operation.
+""",
+        )
     text = _project_natural_language_runtime(text)
     # Some public wrappers are replaced by Cowork-specific bodies. Retain their
     # optional knowledge contract without altering shared component skill bytes.
@@ -3205,6 +3228,7 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
     )
     _project_cowork_privacy_register(entries)
     _validate_cowork_instruction_entries(entries)
+    builder.add_vera_execution_manifest(entries)
 
     components = builder.embedded_plugin_names(ROOT / "plugins" / package.plugin)
     for component in components:

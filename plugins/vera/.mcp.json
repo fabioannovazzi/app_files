@@ -350,6 +350,43 @@
       "args": [
         "./scripts/course_chat_mcp.cjs"
       ]
+    },
+    "studioWork": {
+      "title": "Vera · Organizzazione lavoro",
+      "description": "Persistent commitments, meeting actions and verified calendar-operation receipts.",
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": [
+            "24x24"
+          ]
+        }
+      ],
+      "cwd": ".",
+      "command": "node",
+      "args": [
+        "./mcp/studio-work.cjs"
+      ]
+    },
+    "agenziaAcquisition": {
+      "title": "Vera · Acquisizione Agenzia",
+      "description": "Acquisizione locale di fatture, corrispettivi e bolli con avanzamento, anomalie e prospetto F24 riesaminato.",
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": [
+            "24x24"
+          ]
+        }
+      ],
+      "cwd": ".",
+      "command": "node",
+      "args": [
+        "./scripts/run_component_mcp.cjs",
+        "browser-automation"
+      ]
     }
   }
 }

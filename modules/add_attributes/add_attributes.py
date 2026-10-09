@@ -1242,9 +1242,12 @@ def _find_recent_launch_products(
     if group_col and groups:
         base = base.filter(pl.col(group_col).is_in(groups))
 
-    base = base.with_columns(
-        pl.col(date_col).cast(pl.Date, strict=False).alias("_launch_date")
-    )
+    date_expression = pl.col(date_col)
+    if base.collect_schema()[date_col] == pl.String:
+        date_expression = date_expression.str.to_date("%Y-%m-%d", strict=False)
+    else:
+        date_expression = date_expression.cast(pl.Date, strict=False)
+    base = base.with_columns(date_expression.alias("_launch_date"))
     current = base
     if period_col and periods:
         current = current.filter(pl.col(period_col).is_in(periods))

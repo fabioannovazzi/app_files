@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "reporting-engine",
-  "course_sha256": "e1fe7feda7459346e1ac7cf4c190944b2210cc64eaabcf0f8fbe7181ded4aa0c",
+  "course_sha256": "55630418343a3c0a0e2254fdbba3d5e2a01d139b5feca423f88f1c5bb9319b5f",
   "reviewer": "Codex lesson and actual generated report review",
   "reviewed_at": "2026-09-23T11:51:00.788201+00:00",
   "review_scope": "Reviewed localized lessons, prepared workbook meanings and generated demo/practice narratives and tables. Current native execution checks recalculate the workbook and retain the previous report. Authored commentary is replayed as a fixture, not represented as fresh model inference. The shared Italian dashboard was also inspected in Chrome and its February selector verified. No learner participation, professional approval, live voice or all-locale visual inspection is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
@@ -284,5 +284,14 @@
     "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
     "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
   },
-  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
+  "runtime8_dependency_binding_20261006": {
+    "previous_course_sha256": "e1fe7feda7459346e1ac7cf4c190944b2210cc64eaabcf0f8fbe7181ded4aa0c",
+    "current_course_sha256": "55630418343a3c0a0e2254fdbba3d5e2a01d139b5feca423f88f1c5bb9319b5f",
+    "scope": "Only source fingerprints changed. Authored content, fixtures, expectations and historical editorial/output reviews are unchanged. Declared Polars dependency excludes incompatible major version 2. Current executions remain a CI release gate; no new learner or visual acceptance is claimed."
+  },
+  "source_binding_update": {
+    "reviewed_at": "2026-10-06",
+    "scope": "Date parsing uses explicit string APIs and chart ordering is explicit for Polars 2.0. Authored lesson content and inputs are unchanged; current executions remain required CI evidence, with no new learner or visual acceptance claimed."
+  }
 }

@@ -32,7 +32,7 @@
     },
     {
       "path": "modules/reporting-engine/requirements.txt",
-      "sha256": "3776169cd87a66c32e068c01302ea1c3a1e2226cd21eb517c17095857db036c6"
+      "sha256": "aed9fc3e2dacf46152efcf4ec678bfae9701d7bc7702123717b6b34a7fd12ccf"
     },
     {
       "path": "modules/reporting-engine/scripts/budget_report.py",
@@ -393,5 +393,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "e1fe7feda7459346e1ac7cf4c190944b2210cc64eaabcf0f8fbe7181ded4aa0c"
+  "canonical_course_sha256": "55630418343a3c0a0e2254fdbba3d5e2a01d139b5feca423f88f1c5bb9319b5f"
 }

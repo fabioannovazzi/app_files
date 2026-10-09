@@ -490,10 +490,18 @@ def test_root_anthropic_manifest_and_local_mcp_are_discoverable(
     assert ".mcp.json" in vera_entries
     cowork_mcp = json.loads(vera_entries[".mcp.json"])
     canonical_mcp = json.loads((ROOT / "plugins" / "vera" / ".mcp.json").read_text())
-    assert set(cowork_mcp["mcpServers"]) == set(canonical_mcp["mcpServers"])
+    # Native OpenAI course chats are deliberately absent from Cowork.
+    assert set(cowork_mcp["mcpServers"]) == set(canonical_mcp["mcpServers"]) - {
+        "courseChats"
+    }
     assert all(
-        server["args"][0] == "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
-        for server in cowork_mcp["mcpServers"].values()
+        server["args"][0]
+        == (
+            "${CLAUDE_PLUGIN_ROOT}/mcp/studio-work.cjs"
+            if name == "studioWork"
+            else "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
+        )
+        for name, server in cowork_mcp["mcpServers"].items()
     )
     assert '"archive-organization"' in vera_entries[
         "scripts/run_component_mcp.cjs"
@@ -525,9 +533,18 @@ def test_root_anthropic_manifest_and_local_mcp_are_discoverable(
     assert (
         "modules/browser-automation/scripts/capability_contract.py" not in vera_entries
     )
+    for retired in (
+        "scripts/agenzia_download.mjs",
+        "scripts/agenzia_acquisition.mjs",
+        "scripts/agenzia_artifacts.mjs",
+        "capabilities/agenzia-invoice-zip/capability.json",
+    ):
+        assert f"modules/browser-automation/{retired}" not in vera_entries
+    assert "modules/browser-automation/scripts/agenzia_acquire.py" in vera_entries
+    assert "modules/browser-automation/mcp/server.cjs" in vera_entries
+    assert "skills/agenzia-acquisition/SKILL.md" in vera_entries
     for capability_id in (
         "gmail-search-export",
-        "agenzia-invoice-zip",
         "teamsystem-process",
     ):
         relative_path = f"capabilities/{capability_id}/capability.json"
@@ -582,14 +599,16 @@ def test_optional_claude_mcp_projection_uses_only_installation_safe_paths() -> N
     servers = payload["mcpServers"]
 
     canonical_mcp = json.loads((ROOT / "plugins" / "vera" / ".mcp.json").read_text())
-    assert set(servers) == set(canonical_mcp["mcpServers"])
-    for server in servers.values():
+    assert set(servers) == set(canonical_mcp["mcpServers"]) - {"courseChats"}
+    for name, server in servers.items():
         assert set(server) <= {"command", "args", "env"}
         assert server["command"] == "node"
         assert server["args"][0] == (
-            "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
+            "${CLAUDE_PLUGIN_ROOT}/mcp/studio-work.cjs"
+            if name == "studioWork"
+            else "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
         )
-        assert len(server["args"]) == 2
+        assert len(server["args"]) == (1 if name == "studioWork" else 2)
         assert "cwd" not in server
         assert "icons" not in server
         assert "title" not in server
@@ -865,12 +884,14 @@ def test_cowork_projects_user_facing_artifact_names_and_review_actor(
             ".yml",
         }
     }
-    # Shared courseware retains cross-product filenames and translation keys;
-    # the separate emission regression below checks actual Cowork artifacts.
+    # Shared courseware and reviewed source-course metadata retain cross-host
+    # authored filenames. Verify emitted Cowork instructions and artifacts;
+    # the package-index test separately covers those metadata bytes.
     combined = "\n".join(
         content
         for name, content in projected_text.items()
         if not name.startswith("vendor/modules/courseware/")
+        and not (name.startswith("assets/courses/") and name.endswith("/course.json"))
     )
 
     assert "07_scheda_codex_per_studio.md" not in combined

@@ -141,6 +141,8 @@ CHATGPT_HIDDEN_COMPONENTS: dict[str, frozenset[str]] = {}
 CHATGPT_SKILL_CARDS_FILE = "marketplace_skill_instructions.json"
 VERA_CHATGPT_DEVELOPER_SKILLS = frozenset({"privacy-surface-review"})
 VERA_CHATGPT_ROUTER_TARGETS = {
+    "agenzia-acquisition": "modules/browser-automation/skills/agenzia-acquisition/SKILL.md",
+    "organizzazione-lavoro": "skills/organizzazione-lavoro/SKILL.md",
     "studio-document-format": "skills/studio-document-format/SKILL.md",
     "scissione-guidata": "modules/scissione-guidata/skills/scissione-guidata/SKILL.md",
     "patent-box-review": "modules/patent-box-review/skills/patent-box-review/SKILL.md",
@@ -925,6 +927,24 @@ def marketplace_payload(package: BuildTarget) -> bytes:
     return (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
 
 
+def add_vera_execution_manifest(entries: dict[str, bytes], prefix: str = "") -> None:
+    """Bind recovery to exact final host bytes, never to client documents.
+
+    Digest matching is a mechanical drift check; host installation remains the
+    trust anchor. The index is not a publisher signature.
+    """
+
+    name = f"{prefix}execution-files.json"
+    files = {
+        path.removeprefix(prefix): hashlib.sha256(content).hexdigest()
+        for path, content in sorted(entries.items())
+        if path.startswith(prefix) and path != name
+    }
+    entries[name] = (
+        json.dumps({"schema_version": 1, "files": files}, indent=2) + "\n"
+    ).encode("utf-8")
+
+
 def expected_zip_entries(package: BuildTarget) -> dict[str, bytes]:
     plugin_dirs = [ROOT / "plugins" / plugin for plugin in package.plugin_names]
     vendor_module_config = load_vendor_module_config()
@@ -1009,6 +1029,7 @@ def expected_zip_entries(package: BuildTarget) -> dict[str, bytes]:
     for plugin_dir in plugin_dirs:
         if plugin_dir.name == "vera":
             named_browser_skill_cards(entries, f"{root}/plugins/vera/")
+            add_vera_execution_manifest(entries, f"{root}/plugins/vera/")
     return dict(sorted(entries.items()))
 
 
@@ -1661,6 +1682,8 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
     if ".codex-plugin/plugin.json" not in entries:
         raise ValueError("ChatGPT upload ZIP is missing .codex-plugin/plugin.json")
     project_chatgpt_course_sources(entries, packaged_entries, prefix)
+    if plugin_name == "vera":
+        add_vera_execution_manifest(entries)
     return dict(sorted(entries.items()))
 
 

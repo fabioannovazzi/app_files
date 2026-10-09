@@ -93,7 +93,7 @@ def test_zero_retention_page_is_public_when_auth_enabled(
     assert "Neither route creates a Gmail or WhatsApp message store" in str(page)
     assert "user's OpenAI or Anthropic account" in str(page)
     assert "Gmail, WhatsApp, OpenAI, and Anthropic are external systems" in str(page)
-    assert re.search(r"\bMparanza\b(?! LLC)", str(page)) is None
+    assert page["eyebrow"] == "Mparanza LLC · Privacy notice"
     assert context["active_legal_page"] == "zero-retention"
 
 
@@ -178,7 +178,7 @@ def test_support_page_is_public_when_auth_enabled(
     assert "Vera and Clara support professional work" in str(page)
     assert "Vera and other Mparanza plugins" not in str(page)
     assert "no automatic access" in str(page)
-    assert "existing ChatGPT plan and Codex workspace" in str(page)
+    assert "selected AI host and workspace" in str(page)
     assert "Mparanza-hosted service" in str(page)
     support_sections = page["sections"]
     assert isinstance(support_sections, list)

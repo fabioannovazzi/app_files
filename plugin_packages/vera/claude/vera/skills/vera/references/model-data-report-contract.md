@@ -31,14 +31,20 @@ exact output folder:
 - `model_data_report.md`: the small localized report shown in the final
   Artifact Card.
 
-The same build command automatically creates for every durable report:
+If the user prohibits external receipt transmission, add `--local-only` to the
+build command. It creates the local reports and returns
+`server_receipt={"status":"not_requested","reason":"local_only"}` without a
+request file or network call. Do not retry stamping without a later explicit
+request. This option does not change the selected host's model processing.
+
+Otherwise the same build command automatically creates for every durable report:
 
 - `model_data_receipt_request.json`: the retry-stable four-field request;
 - `model_data_receipt.json`: the returned server timestamp and Ed25519 proof;
 - `model_data_receipt.html`: a customer-readable receipt that can be printed or
   saved as PDF and links to public verification.
 
-There is no activation setting or per-run confirmation. If stamping fails,
+The default requires no per-run confirmation. If stamping fails,
 retain the completed work, local report, and retry-stable request; return the
 run successfully with `server_receipt.status` set to `pending`; and state that
 no server-stamped receipt was created. Never discard, roll back, or mark the

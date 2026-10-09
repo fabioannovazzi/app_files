@@ -1,5 +1,74 @@
 # Journal-Bank Reconciliation Reference
 
+## Packaged review-receipt command
+
+From the installed Vera root:
+
+```sh
+python3 scripts/managed_python_runtime.py --module journal-bank-reconciliation run scripts/seal_review_receipts.py --client-engagement <context.json> --output-dir <run>/outputs --recipe <run>/outputs/suggested_recipe.json --decisions <run>/outputs/review_decisions.json
+```
+
+The decisions file contains exactly `reviewer_ref`, `reviewed_on`, `bank`,
+`journal`, and `relationship`. Obtain the reviewer and date from the actual
+review: an identifier matching `^[A-Za-z0-9][A-Za-z0-9._-]*$` and a real
+`YYYY-MM-DD` date. Never invent them.
+
+Each side has `files`, keyed by every exact source-relative filename from
+inspection. Each file requires `header_rows` (one-based), `mapping`,
+`excluded_monetary_columns` (even if empty), and `date_convention` (null for
+ISO/unambiguous dates, otherwise `day_first` or `month_first`). Optional
+reviewed fields are `date_locale`, `non_movement_summary_labels`,
+`csv_field_delimiter`, `decimal_separator`, `thousands_separator`, and
+`direction_value_mapping`. Include applicable explicit separator/sign choices;
+omitted fields do not inherit proposed authority.
+
+For the synthetic PDF case, use this file decision under each actual filename:
+
+```json
+{
+  "header_rows": [1],
+  "mapping": {"date": "Date", "description": "Description", "reference": "Reference", "amount": "Amount", "currency": "Currency"},
+  "excluded_monetary_columns": ["Balance"],
+  "date_convention": null,
+  "decimal_separator": ".",
+  "thousands_separator": null,
+  "direction_value_mapping": {}
+}
+```
+
+`relationship` is the complete reviewed policy, not a receipt. For that
+synthetic case:
+
+```json
+{
+  "relationship_shape": "one_to_one",
+  "allow_evidence_reuse": false,
+  "require_same_currency": true,
+  "require_same_unit": true,
+  "require_same_entity": true,
+  "require_same_party": false,
+  "direction_policy": "same_sign",
+  "default_currency": "EUR",
+  "default_unit": "currency",
+  "default_entity_ref": "entity.case",
+  "default_party_ref": null,
+  "amount_tolerance": "0",
+  "date_window_days": 0
+}
+```
+
+The command validates the running Studio Archive context and current bytes from
+`input_receipts.json`, re-inspects selected mappings locally, derives potential
+monetary columns from the actual source, invokes both core receipt builders,
+and replaces the recipe only after qualification replays successfully. It
+aligns `matching.amount_tolerance` and `matching.date_window_days`.
+Incomplete decisions exit 2 with `REVIEW_RECEIPTS_BLOCKED:` and a concrete
+reason, leaving the recipe unchanged. Undisposed monetary columns report exactly
+`potential monetary columns require a complete mapped-or-excluded disposition`.
+The same packaged command works without MCP on Codex and Cowork.
+Reinspection preserves sealed relationship authority without making stale
+receipts valid.
+
 This reference documents the deterministic boundary for the plugin. Codex reads it only when a run needs more detail than the main skill.
 
 ## Stable Columns
@@ -340,7 +409,8 @@ complete reviewable native package, including an empty
 Only `material_value_ledger.json` is absent when source qualification or
 relationship authority blocks, because material reconciliation never ran.
 
-The execution boundary closes an exact 24-file contract covering launcher
+The execution boundary closes an exact 26-file contract (25 in the ChatGPT
+projection) covering launcher
 configuration, UI assets, Python/Node code, and the shared assurance kernel.
 Supported Python entries validate the physical tree before local imports; MCP
 does so before manifest parsing and invokes Python with `-I -B`. Unowned

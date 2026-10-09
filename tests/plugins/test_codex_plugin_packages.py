@@ -1516,7 +1516,11 @@ def test_vera_bundle_contains_browser_discovery_capabilities() -> None:
         "references/process-lifecycle.md",
         "references/ordinary-use.md",
         "capabilities/gmail-search-export/capability.json",
-        "capabilities/agenzia-invoice-zip/capability.json",
+        "scripts/agenzia_acquire.py",
+        "scripts/ade_acquisition/engine.py",
+        "mcp/server.cjs",
+        "ui/agenzia.html",
+        "skills/agenzia-acquisition/SKILL.md",
         "capabilities/teamsystem-process/capability.json",
     ):
         assert f"{prefix}{relative_path}" in entries
@@ -1526,6 +1530,10 @@ def test_vera_bundle_contains_browser_discovery_capabilities() -> None:
         )
     assert f"{prefix}scripts/capability_contract.py" not in entries
     for retired_path in (
+        "scripts/agenzia_download.mjs",
+        "scripts/agenzia_acquisition.mjs",
+        "scripts/agenzia_artifacts.mjs",
+        "capabilities/agenzia-invoice-zip/capability.json",
         "scripts/record_agenzia_invoice_flow.py",
         "references/agenzia_invoice_flow_recording.md",
         "requirements-portal-recorder.txt",
@@ -1602,7 +1610,6 @@ def test_vera_routes_every_commercialista_module() -> None:
         "adeguati-assetti",
         "rating-legalita",
         "bandi-agevolazioni",
-        "browser-automation",
         "business-planning",
         "business-valuation",
         "comunicazione-professionale",
@@ -2859,6 +2866,16 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
         for skill_file in skill_files:
             skill_text = skill_file.read_text(encoding="utf-8")
             normalized_skill_text = " ".join(skill_text.split())
+            if (
+                plugin_root.name == "vera"
+                and skill_file.parent.name == "organizzazione-lavoro"
+            ):
+                # This is a source-owned service, not a sibling module wrapper.
+                assert "vera_studio_work_*" in skill_text
+                assert "Never manufacture evidence" in normalized_skill_text
+                assert "host-transcribed voice" in normalized_skill_text
+                assert "model_data_report.py" in skill_text
+                continue
             if plugin_root.name == "business-valuation":
                 # Test the actual fixed output contract rather than a legacy filename.
                 assert "## Calculation and review" in skill_text
@@ -2991,7 +3008,9 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 skill_file.parent.name != plugin_root.name
             ):
                 assert "Read that module's" in normalized_skill_text
-                if skill_file.parent.name == "composizione-negoziata":
+                if skill_file.parent.name == "agenzia-acquisition":
+                    assert "root as the working directory" in normalized_skill_text
+                elif skill_file.parent.name == "composizione-negoziata":
                     assert "Use the module root for commands" in normalized_skill_text
                 else:
                     assert "plugin working directory" in normalized_skill_text
@@ -3009,6 +3028,18 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
             }:
                 assert "Read that component's" in normalized_skill_text
                 assert "working directory" in normalized_skill_text
+                continue
+            if (
+                plugin_root.name == "browser-automation"
+                and skill_file.parent.name == "agenzia-acquisition"
+            ):
+                # Dedicated acquisition uses its worker and report contract;
+                # it does not author or qualify a generic browser capability.
+                assert "agenzia_acquire.py" in normalized_skill_text
+                assert "outside source repositories" in normalized_skill_text
+                assert "model-data-report-contract.md" in normalized_skill_text
+                assert "riepilogo.xlsx" in normalized_skill_text
+                assert "ordinary report files remain available" in normalized_skill_text
                 continue
             if plugin_root.name == "fusione-guidata":
                 # P1 exports case history and workpapers through its own review contract.
@@ -4037,6 +4068,7 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         "../report-builder/index.html",
         "../quesito-legale-fiscale/index.html",
         "../studio-archive/index.html",
+        "../organizzazione-lavoro/index.html",
         "../browser-automation/index.html",
     ):
         assert f'href="{module_link}"' in core
@@ -4053,6 +4085,7 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         "../previdenza-inps/index.html",
         "../registro-imprese-sari/index.html",
         "../lipe/index.html",
+        "../agenzia-acquisition/index.html",
     ):
         module = re.search(
             rf'<a class="module-row"[^>]+href="{re.escape(module_link)}"[^>]*>',
@@ -4060,9 +4093,9 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         )
         assert module is not None
         assert 'data-jurisdiction-item="it"' in module.group(0)
-    assert core.count(" data-module-link") == 44
-    assert core.count('class="module-row"') == 44
-    assert core.count('data-jurisdiction-item="it"') == 16
+    assert core.count(" data-module-link") == 46
+    assert core.count('class="module-row"') == 46
+    assert core.count('data-jurisdiction-item="it"') == 17
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
     for area_id in (
@@ -4564,10 +4597,10 @@ def test_financial_analysis_page_explains_accounting_fdd_and_review_boundary() -
         'data-model-data-status="relevant"',
         "Quali dati arrivano al modello",
         "What data reaches the model",
-        "I calcoli non sono eseguiti dal modello",
-        "applica regole deterministiche a tutti i dati approvati e inclusi nell’analisi",
-        "il modello usa le tabelle e i risultati aggregati",
-        "Una fonte originale viene riaperta solo per chiarire una questione specifica",
+        "legge le celle Excel mappate esplicitamente",
+        "totali dichiarati, totali ricostruiti, valori mancanti e differenze",
+        "Il modello sceglie e interpreta le fonti pertinenti, comprese le note",
+        "Un hash non dimostra che tutte le pagine siano state lette",
         "Vera non anonimizza né pseudonimizza i dati",
         'id="prompt-example"',
         'href="../vera/index.html?lang=it"',
@@ -4590,7 +4623,6 @@ def test_financial_analysis_page_explains_accounting_fdd_and_review_boundary() -
         "Il codice applica regole definite",
         "non a un campione",
         "il modello usa normalmente le tabelle",
-        "i risultati preparati",
         "Le fonti selezionate vengono importate in una run Studio Archive",
         "L’account del modello è scelto",
         "il processo non ha altre destinazioni esterne",

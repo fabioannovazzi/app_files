@@ -168,9 +168,10 @@ def proposal(source: dict[str, str], phase: str, language: str) -> dict[str, Any
     if language != "en":
         decisions = dict(zip(decisions, translated_decisions[language], strict=True))
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "draft_id": f"teaching-{phase}",
         "route": "domestic",
+        "transmission_mode": "supplier_direct",
         "invoice": invoice,
         "sources": [source],
         "field_evidence": evidence,

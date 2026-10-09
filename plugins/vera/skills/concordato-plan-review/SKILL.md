@@ -32,6 +32,10 @@ Current user requests take precedence over saved preferences.
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
 
+First follow `../vera/references/execution-recovery.md` for component
+`concordato-plan-review`. Use its verified execution root for the handoff below;
+never ask the professional to run a terminal command.
+
 Resolve `../../modules/concordato-plan-review` from this skill directory when
 it exists; otherwise resolve `../../../concordato-plan-review` in the
 repository. Read that module's `skills/concordato-plan-review/SKILL.md`

@@ -35,6 +35,10 @@ For a Geneva (CH-GE) mandate, read `../vera/references/localization/geneva.md` f
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
 
+First follow `../vera/references/execution-recovery.md` for component
+`open-item-reconciliation`. Use its verified execution root for the handoff below;
+never ask the professional to run a terminal command.
+
 Resolve `../../modules/open-item-reconciliation` from this skill directory when it
 exists; otherwise resolve `../../../open-item-reconciliation` in the repository.
 Read that module's `skills/open-item-reconciliation/SKILL.md` completely and follow

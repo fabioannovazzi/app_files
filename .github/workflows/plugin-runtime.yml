@@ -10,6 +10,31 @@ permissions:
   contents: read
 
 jobs:
+  annual-statements:
+    name: Annual statement analysis and editable exports
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install declared annual statement dependencies and verification tools
+        run: >-
+          python -m pip install pytest pytest-cov 'coverage>=7.10' black==25.1.0 isort==6.0.1 mypy bandit
+          -r plugins/financial-analysis/requirements.txt
+      - name: Verify source cells, reconciliation, managed execution and Office outputs
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_annual_statements.py tests/plugins/test_vera_financial_analysis.py
+          --cov --cov-config=tests/annual_statements.coveragerc --cov-report=term-missing --cov-fail-under=80
+      - name: Check annual statement code quality
+        run: |
+          python -m black --check plugins/financial-analysis/scripts/annual_statements.py plugins/financial-analysis/scripts/annual_statements_render.py plugins/financial-analysis/scripts/run_annual_statements.py tests/plugins/test_annual_statements.py
+          python -m isort --check-only plugins/financial-analysis/scripts/annual_statements.py plugins/financial-analysis/scripts/annual_statements_render.py plugins/financial-analysis/scripts/run_annual_statements.py tests/plugins/test_annual_statements.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/financial-analysis/scripts/annual_statements.py plugins/financial-analysis/scripts/annual_statements_render.py plugins/financial-analysis/scripts/run_annual_statements.py
+          python -m bandit -q -ll plugins/financial-analysis/scripts/annual_statements.py plugins/financial-analysis/scripts/annual_statements_render.py plugins/financial-analysis/scripts/run_annual_statements.py
+
   rating-legalita:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -252,6 +277,7 @@ jobs:
           -r plugins/attribute-reporting/requirements.txt
           -r plugins/bandi-agevolazioni/requirements.txt
           -r plugins/bilancio-xbrl-it/requirements.txt
+          -r plugins/browser-automation/requirements-agenzia.txt
           -r plugins/business-planning/requirements.txt
           -r plugins/business-valuation/requirements.txt
           -r plugins/centrale-rischi-review/requirements.txt
@@ -307,6 +333,8 @@ jobs:
           tests/plugins/test_teaching_release_review.py tests/plugins/test_teaching_execution_evidence.py tests/plugins/test_prepared_courses.py tests/plugins/test_course_chat_buttons.py tests/plugins/test_course_preview.py tests/plugins/test_mixed_course_release.py tests/plugins/test_prepared_course_packages.py tests/plugins/test_teaching_package_projection.py tests/plugins/test_teaching_kit_execution.py tests/plugins/test_teaching_kit_advisory_execution.py tests/plugins/test_teaching_kit_transcript_execution.py tests/plugins/test_teaching_kit_website_execution.py tests/plugins/test_teaching_presentation_execution.py tests/plugins/test_teaching_inps_execution.py
           tests/plugins/test_teaching_workbook_dimensions.py tests/plugins/test_teaching_concordato_execution.py tests/plugins/test_teaching_question_execution.py tests/plugins/test_teaching_registro_execution.py tests/plugins/test_teaching_bilancio_execution.py
           tests/plugins/test_teaching_attribute_execution.py
+          tests/plugins/test_teaching_agenzia_execution.py
+          tests/plugins/test_teaching_studio_work_execution.py
           tests/plugins/test_teaching_bandi_execution.py
           tests/plugins/test_teaching_invoice_xml_execution.py
           tests/plugins/test_teaching_communication_execution.py
@@ -628,6 +656,7 @@ jobs:
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_single_shared_runtime.py
           tests/plugins/test_shared_runtime_launchers.py
+          tests/plugins/test_vera_verified_execution.py
           tests/plugins/test_python_bootstrap.py
           tests/plugins/test_cowork_archive_session.py
 
@@ -645,7 +674,7 @@ jobs:
       - name: Verify generated Vera workflow metadata
         run: python scripts/build_vera_workflow_registry.py --check
       - name: Exercise installation, concurrency and failure recovery
-        run: python -m pytest --confcutdir=tests/plugins tests/plugins/test_managed_plugin_python_runtime.py tests/plugins/test_single_shared_runtime.py tests/plugins/test_shared_runtime_launchers.py tests/plugins/test_python_bootstrap.py --cov --cov-config=tests/plugin_runtime.coveragerc --cov-report=term-missing
+        run: python -m pytest --confcutdir=tests/plugins tests/plugins/test_managed_plugin_python_runtime.py tests/plugins/test_single_shared_runtime.py tests/plugins/test_shared_runtime_launchers.py tests/plugins/test_python_bootstrap.py tests/plugins/test_vera_verified_execution.py tests/plugins/test_vera_execution_package_index.py --cov --cov-config=tests/plugin_runtime.coveragerc --cov-report=term-missing
       - name: Check Cowork archive session coverage
         run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_cowork_archive_session.py --cov --cov-config=tests/cowork_archive_session.coveragerc --cov-report=term-missing
       - name: Check changed plugin kernels without the application's error suppression
@@ -680,7 +709,7 @@ jobs:
         # These stdlib/Node checks do not need the application-wide fixtures.
         run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_packaged_mcp_startup.py
       - name: Verify cache tolerance without weakening source or link checks
-        run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_vera_implementation_bytecode.py -k "mcp or read_only or packaged_repair"
+        run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_vera_implementation_bytecode.py -k "mcp or read_only or packaged_repair or actual_link_count"
       - name: Enforce Cowork manifest description limits
         run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_claude_plugin_packages.py -k "description or projected_cowork_skills_remove"
       - name: Reject dangling Cowork workflow references
@@ -695,6 +724,48 @@ jobs:
         run: |
           python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_managed_plugin_python_runtime.py -k "cowork_sync_generation or cowork_manifest_unsafe"
           python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_claude_plugin_packages.py -k "distribution_keeps_canonical or canonical_version_despite"
+
+  polars-compatibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        polars: ["1.44.1", "2.0.0"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install each supported Polars major with declared component dependencies
+        run: >-
+          python -m pip install pytest pytest-cov "polars==${{ matrix.polars }}"
+          -r plugins/variance-analysis/requirements.txt
+          -r plugins/scatter-bubble-analysis/requirements.txt
+          -r plugins/journal-sampling/requirements.txt
+          -r plugins/journal-bank-reconciliation/requirements.txt
+      - name: Preserve date meaning, filter boundaries, rankings and weighted chart results
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_chart_date_parsing.py
+          tests/plugins/test_chart_harness.py
+          tests/plugins/test_variance_analysis_plugin.py::test_date_parser_retains_calendar_dates_on_supported_polars
+          tests/plugins/test_journal_sampling_plugin.py::test_date_filters_include_boundaries_and_exclude_outside_dates
+          tests/plugins/test_mix_contribution_plugin.py::test_legacy_show_only_largest_non_aggregated_keeps_top_n_items
+          tests/plugins/test_scatter_bubble_plugin.py::test_legacy_scatter_context_weights_grouped_price
+      - name: Preserve statement dates and transaction filtering on each Polars major
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/check_statements
+          tests/check_statements/test_polars_date_parsing.py
+          tests/test_final_pass_filter.py
+          tests/test_final_pass_filter_utils.py
+          tests/test_final_pass_filter_numeric.py
+          tests/test_final_pass_filter_return_dropped.py
+          tests/test_final_pass_filter_extrafido.py
+          tests/test_final_pass_filter_samples.py
 
   vera-cowork-python:
     runs-on: ubuntu-latest
@@ -714,7 +785,7 @@ jobs:
         run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_cowork_python_runtime.py
       - name: Check waterfall fallback with supporting marker traces
         run: |
-          python -m pip install plotly pillow polars
+          python -m pip install plotly pillow "polars>=2,<3"
           python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_waterfall_fallback.py tests/plugins/test_chart_date_parsing.py
       - name: Check waterfall ordering independently of contribution labels
         run: |
@@ -751,7 +822,11 @@ jobs:
           python -m bandit -q plugins/bandi-agevolazioni/scripts/opportunity_radar.py
 
   treasury-forecast:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
@@ -817,3 +892,71 @@ jobs:
           python -m isort --check-only plugins/scissione-guidata/scripts tests/plugins/test_scissione_guidata.py tests/plugins/test_scissione_archive.py
           python -m mypy --follow-imports=skip --ignore-missing-imports plugins/scissione-guidata/scripts
           python -m bandit -q -r plugins/scissione-guidata/scripts
+
+  studio-archive-readable:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install pytest pytest-cov
+      - name: Verify portable readable folders, integrity and recovery
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_studio_archive_readable.py
+          --cov=readable_archive --cov-report=term-missing --cov-fail-under=80
+
+  studio-work:
+    name: Studio work register and calendar receipts
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: python -m pip install pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit
+      - name: Verify persistence, revisions, receipts and retry recovery
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_vera_studio_work.py tests/plugins/test_teaching_studio_work_execution.py --cov --cov-config=tests/vera_studio_work.coveragerc --cov-report=term-missing
+      - name: Check studio work code quality
+        run: |
+          python -m black --check plugins/vera/scripts/studio_work.py plugins/vera/scripts/studio_work_runtime.py tests/plugins/test_vera_studio_work.py tests/plugins/test_teaching_studio_work_execution.py
+          python -m isort --check-only plugins/vera/scripts/studio_work.py plugins/vera/scripts/studio_work_runtime.py tests/plugins/test_vera_studio_work.py tests/plugins/test_teaching_studio_work_execution.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/vera/scripts/studio_work.py plugins/vera/scripts/studio_work_runtime.py
+          python -m bandit -q -ll plugins/vera/scripts/studio_work.py plugins/vera/scripts/studio_work_runtime.py
+
+  studio-archive-adoption:
+    name: Archive session recovery and standalone work
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit -r plugins/studio-archive/requirements.txt -r plugins/invoice-xml/requirements.txt -r plugins/prompt-optimizer/requirements.txt -r plugins/deep-research-validator/requirements.txt
+      - name: Verify fresh sessions, alias isolation, concurrency and task receipts
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_studio_archive_adoption.py
+          tests/plugins/test_vera_standalone_work.py
+          tests/plugins/test_cowork_archive_session.py
+      - name: Check added helper quality
+        run: |
+          python -m black --check plugins/studio-archive/scripts/archive_preferences.py plugins/_shared/vendor/modules/vera_assurance/contracts.py plugins/vera/scripts/standalone_work.py tests/plugins/test_studio_archive_adoption.py tests/plugins/test_vera_standalone_work.py
+          python -m isort --check-only plugins/studio-archive/scripts/archive_preferences.py plugins/_shared/vendor/modules/vera_assurance/contracts.py plugins/vera/scripts/standalone_work.py tests/plugins/test_studio_archive_adoption.py tests/plugins/test_vera_standalone_work.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/studio-archive/scripts/archive_preferences.py plugins/_shared/vendor/modules/vera_assurance/contracts.py plugins/vera/scripts/standalone_work.py
+          python -m bandit -q -ll plugins/studio-archive/scripts/archive_preferences.py plugins/_shared/vendor/modules/vera_assurance/contracts.py plugins/vera/scripts/standalone_work.py

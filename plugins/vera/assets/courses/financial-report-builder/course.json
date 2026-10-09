@@ -85,7 +85,7 @@
     {
       "path": "modules/report-builder/scripts/implementation_bootstrap.py",
       "repository_path": "plugins/report-builder/scripts/implementation_bootstrap.py",
-      "sha256": "c2775488e65a70846dbd995539615b4ad8ae38be26580932a67ff50e595ac6fc"
+      "sha256": "769cf9a7e32b0bdef0451d9f4219716af6943546f31a8c1afd2f2739433c3103"
     },
     {
       "path": "modules/report-builder/scripts/implementation_contract.py",
@@ -155,7 +155,7 @@
     {
       "path": "modules/report-builder/skills/financial-report-builder/SKILL.md",
       "repository_path": "plugins/report-builder/skills/financial-report-builder/SKILL.md",
-      "sha256": "3b74151cb454476aa3f93d94a40e272406128b953a746931e4d97f0b3a9669b8"
+      "sha256": "d4d95bc079316c15730e694a61708339d851e4aa89af2ddba4b441e25d826d59"
     },
     {
       "path": "modules/report-builder/vendor/modules/__init__.py",
@@ -170,7 +170,7 @@
     {
       "path": "modules/report-builder/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
+      "sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112"
     },
     {
       "path": "modules/report-builder/vendor/modules/vera_assurance/decisions.py",
@@ -210,7 +210,7 @@
     {
       "path": "skills/financial-report-builder/SKILL.md",
       "repository_path": "plugins/vera/skills/financial-report-builder/SKILL.md",
-      "sha256": "9564207bb5058957476686a2dbda8cf47f0f5cf381c11aaab6f16d309cefedbc"
+      "sha256": "1a6babdea8afc5d1d3dee0d8b2223749d64e59b9025484f2ea71e795bca77c9c"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -350,7 +350,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
+      "sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",

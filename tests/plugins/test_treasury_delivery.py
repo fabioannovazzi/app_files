@@ -69,7 +69,7 @@ def intake(tmp_path: Path) -> tuple[dict, Path]:
     root = tmp_path / "sources"
     root.mkdir()
     for name, content in csv_sources(first()).items():
-        (root / name).write_text(content)
+        (root / name).write_text(content, encoding="utf-8", newline="")
     return manifest(first()), root
 
 
@@ -190,7 +190,9 @@ def test_templates_do_not_overwrite_existing_sources(tmp_path):
     write_templates(tmp_path)
     with pytest.raises(TreasuryError, match="no overwrite"):
         write_templates(tmp_path)
-    assert (tmp_path / "accounts.csv").read_text().strip() == "account_id,balance"
+    assert (tmp_path / "accounts.csv").read_text(
+        encoding="utf-8"
+    ).strip() == "account_id,balance"
 
 
 def test_saved_review_changes_forecast_and_survives_reopen(tmp_path):
@@ -313,7 +315,9 @@ def test_report_escapes_supplied_markup_and_excel_formula_text(tmp_path):
     record = accept(data)
     write_artifacts(tmp_path / "version", record)
     workbook = load_workbook(tmp_path / "version/tesoreria.xlsx", data_only=False)
-    assert "<script>" not in (tmp_path / "version/report.html").read_text()
+    assert "<script>" not in (tmp_path / "version/report.html").read_text(
+        encoding="utf-8"
+    )
     assert workbook["Flussi"]["B5"].data_type == "s"
     assert workbook["Flussi"]["B5"].value.startswith("=HYPERLINK")
     workbook.close()
@@ -330,7 +334,7 @@ def test_delivery_exposes_weekly_cash_and_readable_date_assumptions(tmp_path):
 
     write_artifacts(tmp_path / "version", record)
 
-    html = (tmp_path / "version/report.html").read_text()
+    html = (tmp_path / "version/report.html").read_text(encoding="utf-8")
     assert "Bozza da rivedere" in html
     assert "<h2>Saldi settimanali</h2>" in html
     assert "<td>2026-09-28</td>" in html
@@ -349,7 +353,7 @@ def test_delivery_exposes_weekly_cash_and_readable_date_assumptions(tmp_path):
     assert flows.freeze_panes == "B2"
     assert (
         (tmp_path / "version/flussi.csv")
-        .read_text()
+        .read_text(encoding="utf-8")
         .splitlines()[0]
         .endswith(",basis,decision_origin")
     )
@@ -415,7 +419,7 @@ def archived_case(tmp_path: Path) -> dict:
     staging.mkdir()
     for name, content in csv_sources(first()).items():
         path = staging / name
-        path.write_text(content)
+        path.write_text(content, encoding="utf-8", newline="")
         receipt = ledger.import_document(
             client, client_id, engagement_id, path, "source"
         )["receipt"]
@@ -577,7 +581,9 @@ def test_report_writes_explained_update_and_incomplete_status(tmp_path):
         },
     )
     write_artifacts(tmp_path / "updated", updated)
-    assert "Variazioni rispetto" in (tmp_path / "updated/report.md").read_text()
+    assert "Variazioni rispetto" in (tmp_path / "updated/report.md").read_text(
+        encoding="utf-8"
+    )
     workbook = load_workbook(tmp_path / "updated/tesoreria.xlsx", data_only=True)
     assert workbook["Sintesi"]["B6"].value == -16000
     workbook.close()
@@ -586,7 +592,9 @@ def test_report_writes_explained_update_and_incomplete_status(tmp_path):
     write_artifacts(tmp_path / "missing", build_forecast(missing))
     workbook = load_workbook(tmp_path / "missing/tesoreria.xlsx", data_only=True)
     assert workbook["Sintesi"]["B7"].value == "Previsione incompleta"
-    assert "Previsione incompleta" in (tmp_path / "missing/report.html").read_text()
+    assert "Previsione incompleta" in (tmp_path / "missing/report.html").read_text(
+        encoding="utf-8"
+    )
     workbook.close()
 
 

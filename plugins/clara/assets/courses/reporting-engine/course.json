@@ -34,7 +34,7 @@
     {
       "path": "modules/reporting-engine/requirements.txt",
       "repository_path": "plugins/clara/modules/reporting-engine/requirements.txt",
-      "sha256": "3776169cd87a66c32e068c01302ea1c3a1e2226cd21eb517c17095857db036c6"
+      "sha256": "aed9fc3e2dacf46152efcf4ec678bfae9701d7bc7702123717b6b34a7fd12ccf"
     },
     {
       "path": "modules/reporting-engine/scripts/budget_report.py",

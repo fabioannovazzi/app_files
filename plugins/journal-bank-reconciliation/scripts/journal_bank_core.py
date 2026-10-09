@@ -264,6 +264,11 @@ IMPLEMENTATION_ARTIFACT_SPECS = (
         "scripts/run_reconciliation.py",
     ),
     (
+        "implementation.plugin.scripts.seal_review_receipts_py",
+        "implementation",
+        "scripts/seal_review_receipts.py",
+    ),
+    (
         "implementation.plugin.scripts.semantic_review_py",
         "implementation",
         "scripts/semantic_review.py",
@@ -835,6 +840,7 @@ __all__ = [
     "WORKBOOK_SHEET_ORDER",
     "add_common_args",
     "build_mapping_review_receipt",
+    "inspect_mapping_review_source",
     "build_implementation_artifact_receipts",
     "build_relationship_review_receipt",
     "configure_logging",
@@ -3895,6 +3901,25 @@ def _parser_failure_diagnostic(
     }
 
 
+def inspect_mapping_review_source(
+    path: Path,
+    *,
+    side: str,
+    source_file: str,
+    recipe: dict[str, Any],
+    source_artifact_ref: str,
+) -> dict[str, Any]:
+    """Replay source qualification for sealing without exposing complete rows."""
+    _, diagnostic = _normalize_table(
+        path,
+        side,
+        recipe,
+        source_identity=source_file,
+        source_artifact_ref=source_artifact_ref,
+    )
+    return diagnostic
+
+
 def _normalize_files(
     input_path: Path,
     side: str,
@@ -4376,6 +4401,8 @@ def _recipe_side(diagnostics: list[dict[str, Any]]) -> dict[str, Any]:
             entry["non_movement_summary_labels"] = diag["non_movement_summary_labels"]
         entry["mapping_origin"] = diag.get("mapping_origin")
         entry["mapping_review_content"] = diag.get("mapping_review_content")
+        for separator in ("decimal_separator", "thousands_separator"):
+            entry[separator] = (diag.get("mapping_review_content") or {}).get(separator)
         entry["mapping_review_content_sha256"] = diag.get(
             "mapping_review_content_sha256"
         )
@@ -4661,6 +4688,11 @@ def inspect_inputs(
             "decision": None,
         },
     }
+    # Preserve explicit authority during reinspection. Reconciliation still
+    # validates its source references and rejects stale or incompatible receipts.
+    if recipe.get("relationship", {}).get("decision") is not None:
+        suggested_recipe["relationship"] = recipe["relationship"]
+        suggested_recipe["matching"] = recipe["matching"]
     output_dir.mkdir(parents=True, exist_ok=True)
     write_assurance_json(
         output_dir / "input_receipts.json",

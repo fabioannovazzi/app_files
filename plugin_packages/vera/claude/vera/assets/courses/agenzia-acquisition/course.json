@@ -1,0 +1,338 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "vera",
+  "workflow": "agenzia-acquisition",
+  "revision": "2026-10-08.1",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it"
+  ],
+  "language_basis": "workflow_output_contract",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "run_agenzia_synthetic_fixture_then_review_and_resume"
+  },
+  "sources": [
+    {
+      "path": "modules/browser-automation/assets/icon.svg",
+      "sha256": "de9b1ea1fb9dbd8e6dbaf4137c90cfe2299c6a4f8c7be4c6104d38a2573cc722"
+    },
+    {
+      "path": "modules/browser-automation/references/batch-review.md",
+      "sha256": "f4eea599d4535c24b3d029cf0c49e5e8726f3d2ae5f9b9fb76ea1f1f5a9b60b5"
+    },
+    {
+      "path": "modules/browser-automation/references/browser-session.md",
+      "sha256": "4eab21285e97a02bbec52ec09743fb1a34fe7df3abb1a773cb3eadcccd03a7f4"
+    },
+    {
+      "path": "modules/browser-automation/references/capability-contract.md",
+      "sha256": "e154f07e345161c3b633fb3a2602b09a6176448788c2b6c8805b469ac76873a4"
+    },
+    {
+      "path": "modules/browser-automation/references/development-request.md",
+      "sha256": "f706ff4543f8422f2a7ffce036d90cf4f08e4d0f65397e464149a6ef20cfbd1c"
+    },
+    {
+      "path": "modules/browser-automation/references/discovery-playbook.md",
+      "sha256": "55669e6494580890b652302914db9feb183afe37500e213ac78a289ff47e7abc"
+    },
+    {
+      "path": "modules/browser-automation/references/econs-review.md",
+      "sha256": "9557af440ba4597ac8756fbfe7522ed0cd7aac244f87489c2f5f6d8bcaaf51dc"
+    },
+    {
+      "path": "modules/browser-automation/references/ordinary-use.md",
+      "sha256": "aafc8899c8ddd0473a0b053c763c0520e3dd4298ed010b3cd0cd5e082a084244"
+    },
+    {
+      "path": "modules/browser-automation/references/passive-invoice-procedure.md",
+      "sha256": "e71fd7dbac1114790b92cbda60cea6e02189892399f75ba5209e978cc3dfb929"
+    },
+    {
+      "path": "modules/browser-automation/references/process-lifecycle.md",
+      "sha256": "09fbf8ae7c7c924f4b0af0586e240f805bde1b863ab130da880dbca319f5b5be"
+    },
+    {
+      "path": "modules/browser-automation/references/production-skills.md",
+      "sha256": "6b723c2fae1e36cc9f1bcd6671537b2ac1c3a4264f32accd865b4078cf1f8e60"
+    },
+    {
+      "path": "modules/browser-automation/references/teaching-checkpoint.md",
+      "sha256": "d8227739dcd5dce2fa1b074c3bf2f8cd0f06ef3593b94f140477ea3e73f10612"
+    },
+    {
+      "path": "modules/browser-automation/requirements.txt",
+      "sha256": "d36b6c93da07433088beef4ef02f6d34dc9eba2ee88baa91f88720f1ccaf9366"
+    },
+    {
+      "path": "modules/browser-automation/scripts/acceptance_fixture.py",
+      "sha256": "e24928b0a984ed45fc3acb08439d7a4451bfc8d57be043efb601215f9481d13a"
+    },
+    {
+      "path": "modules/browser-automation/scripts/ade_acquisition/__init__.py",
+      "sha256": "2f088d3f895341b4046bc36a2d00d40de67a048a437c64b499e0d0fecd0bd175"
+    },
+    {
+      "path": "modules/browser-automation/scripts/ade_acquisition/artifacts.py",
+      "sha256": "f9f08166ee525811e599d92b8e4d24a1d9b8d4eb1975e451f94c8d621a457948"
+    },
+    {
+      "path": "modules/browser-automation/scripts/ade_acquisition/contracts.py",
+      "sha256": "3090bd59d7caec492c004b27a26303507c6802fd6bd6fb9e974c263f0d7fb9c3"
+    },
+    {
+      "path": "modules/browser-automation/scripts/ade_acquisition/disclosure.py",
+      "sha256": "ea6d22482f9d3bee87745fdda4b60f3dcdfba26799e3cd23a88bca2e52f84416"
+    },
+    {
+      "path": "modules/browser-automation/scripts/ade_acquisition/engine.py",
+      "sha256": "3345dc5bda643d2d1d6ab843214bb1ee9041fc8783475bfd030fde88a5d2eded"
+    },
+    {
+      "path": "modules/browser-automation/scripts/ade_acquisition/portal.py",
+      "sha256": "4412a39406d8317a44b738d870f66ffa3c9b7df26ab951ff344191e0b381b234"
+    },
+    {
+      "path": "modules/browser-automation/scripts/ade_acquisition/reports.py",
+      "sha256": "944cf5023eb1a27f5ba0628a94c6f6e82e08719580c9be773e6d549bef3c5559"
+    },
+    {
+      "path": "modules/browser-automation/scripts/ade_acquisition/storage.py",
+      "sha256": "19eb39ea6ee354b9bb71088fd7cff014d87c1e829399654e15de9d5292bbf662"
+    },
+    {
+      "path": "modules/browser-automation/scripts/agenzia_acquire.py",
+      "sha256": "699fc6eea78c83d8afcf5c49af1222f392f5130ff58f099b9ddd426037bb7e56"
+    },
+    {
+      "path": "modules/browser-automation/scripts/agenzia_demo.py",
+      "sha256": "954a7032c1fd272c45cc9bf620ab2db25050e5adaa3cb034089b94ddc03d4e6c"
+    },
+    {
+      "path": "modules/browser-automation/scripts/agenzia_runtime.py",
+      "sha256": "a7fe4232516a21f988030f89311464876d7b30081f3eaa65c3c6119c917060cb"
+    },
+    {
+      "path": "modules/browser-automation/scripts/agenzia_ui.py",
+      "sha256": "6bac91c556d0c4b65f49a411d42043ece3bce5497a6f9385ddb595931f3ee16e"
+    },
+    {
+      "path": "modules/browser-automation/scripts/batch_review.py",
+      "sha256": "1f1e348b1cdcbd2c0a56f67d74e27c527ada36c0b053f09c0c04fe9e42feb56e"
+    },
+    {
+      "path": "modules/browser-automation/scripts/browser_session.mjs",
+      "sha256": "a919c4b3dc43236352fb4dc0783eba39ea26f6f877828acf3ca8130994fdc5fd"
+    },
+    {
+      "path": "modules/browser-automation/scripts/capability_pipeline.py",
+      "sha256": "13906be8a42923dacb0e501434bc86e0d9fe81a902fb0b2c974fe110656f855a"
+    },
+    {
+      "path": "modules/browser-automation/scripts/capability_runtime.mjs",
+      "sha256": "fe3052420fd1795f6f834a0928f7c7c6bf51478fb87acbe5896b4ecf67314a11"
+    },
+    {
+      "path": "modules/browser-automation/scripts/check_dependencies.py",
+      "sha256": "6d61daf36ee61458017a312ce5748a9a22f9f3ff2fcc6569873eddc457523e6e"
+    },
+    {
+      "path": "modules/browser-automation/scripts/check_installation.py",
+      "sha256": "450f70ae92956302113c7b0bd29e448c50a2dced649ac464ecd2bdfc0bc744a9"
+    },
+    {
+      "path": "modules/browser-automation/scripts/development_request.py",
+      "sha256": "c7dbbe2e707b9b0892e3ad6fcb2c514461c296776268e79e83d5095b1f6dc418"
+    },
+    {
+      "path": "modules/browser-automation/scripts/discovery_pack.py",
+      "sha256": "14060a623ec3b8a211379747d397084fb6a7fe938c9b40a30469f78acadc3544"
+    },
+    {
+      "path": "modules/browser-automation/scripts/discovery_runtime.mjs",
+      "sha256": "d0b57d2c373943f583e8e2c18ed3b77e8a9c784b3831efa3aca73e26c7c40c09"
+    },
+    {
+      "path": "modules/browser-automation/scripts/download_directory.mjs",
+      "sha256": "e515c5c8985f861ed063c14de40aa8868cb0c1e6073338415ec16b305cd37f47"
+    },
+    {
+      "path": "modules/browser-automation/scripts/econs_processing.mjs",
+      "sha256": "31be0484088ed09a706c7aa202cf3d32847fc2b750aaa91275ce9040fd2a66dc"
+    },
+    {
+      "path": "modules/browser-automation/scripts/econs_review.mjs",
+      "sha256": "e52f40404a353a9140b89d88bce0067cf0eb7a558e062e3ba7bfb52a234eb451"
+    },
+    {
+      "path": "modules/browser-automation/scripts/econs_setup.mjs",
+      "sha256": "05b2aad66eecd71a620814bb907a5326fb068de014ef8acf6f53efca1179104a"
+    },
+    {
+      "path": "modules/browser-automation/scripts/process_lifecycle.py",
+      "sha256": "49483cbeaf4a00bf78c132e3de2131e7be82fd208f870240bbf421dc833e08c3"
+    },
+    {
+      "path": "modules/browser-automation/scripts/process_runtime.mjs",
+      "sha256": "eb3185effa0f068676f2c15bf13cd86a9ec18192dbebe6c88724c70258b57553"
+    },
+    {
+      "path": "modules/browser-automation/scripts/process_skills.py",
+      "sha256": "b7465fd97cef25824b186e16a4930c1da3feb919739a1c405be7ce34bfa604cd"
+    },
+    {
+      "path": "modules/browser-automation/scripts/teaching_checkpoint.py",
+      "sha256": "25d266b4e1162b6df2e0e9e0e6f91fe63355d5f205d872f7002b018246ecf0da"
+    },
+    {
+      "path": "modules/browser-automation/skills/agenzia-acquisition/SKILL.md",
+      "sha256": "62fa6b68a420a2b5dea2f43d2bc37eb1d5f056fe938ccbac65c0152ab8626fb9"
+    },
+    {
+      "path": "skills/agenzia-acquisition/SKILL.md",
+      "sha256": "1f380926e711169f2fbf27624e878b97844ec61d4a6e1b5cf9888c271cc725d6"
+    },
+    {
+      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
+    },
+    {
+      "path": "vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "vendor/modules/reporting_table.py",
+      "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/contracts.py",
+      "sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/relationships.py",
+      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/__init__.py",
+      "sha256": "930c35bf9761173daabfd1c7ac4ae1eec45f396017afc4b9a4be69fc846453db"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/contracts.py",
+      "sha256": "b65320b6021f2a5a3412123d8cd30d6d6665b4faf83bcf65f80b9e75d6e2e727"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/fdd.py",
+      "sha256": "897b9c0753b5dad27ef8f1585045ce9d80de8789d48dcd2b82e62dfda5cd41c9"
+    },
+    {
+      "path": "vendor/modules/vera_financial_analysis/registry.py",
+      "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/task-it.md",
+      "sha256": "01447abed7a0d844f6b7fd904296d49e2949741b5a93ec60887e2984c7caa042",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/input/demo.json",
+      "sha256": "388ae72d5e96a8f24b962b42760241d7d9d448c516c69c095ca92c402ecbc2a8",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/practice-it.md",
+      "sha256": "cd6aa433cea3964a3f6bf5f54c6f5c743bafaa0b361a4b8c53674167c67bdcf0",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/practice.json",
+      "sha256": "09e5a0ddaf2e2cd0723c32214bb3b01b3cb44bc798ddb63eb9117f262c970351",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Acquisire fatture, corrispettivi e bolli con Vera",
+      "goal": "Preparare un’acquisizione per clienti e periodo, leggere originali ed eccezioni, riprendere un lavoro e distinguere i bolli rilevati dai residui da versare.",
+      "scenario": "Per il cliente fittizio Ditta Esempio devi raccogliere due fatture ricevute, gli invii dei corrispettivi e i bolli del primo trimestre. Nella prima prova un originale non è disponibile. Nella seconda lo recuperi e riconosci i file già verificati.",
+      "scope": "Il corso esegue il vero motore locale con una sorgente didattica dichiarata, senza collegarsi all’Agenzia, aprire un conto o usare credenziali. Non dimostra il funzionamento su un’utenza AdE reale. Il pannello nativo del lavoro reale è facoltativo; la lezione usa i medesimi file di risultato.",
+      "inputs": "Apri task-it.md e demo.json. Contengono soltanto un cliente e dati fittizi. Vera esegue la dimostrazione nella cartella locale della lezione. Per l’esercizio successivo sono forniti practice-it.md e practice.json.",
+      "request": "Vera, insegnami ad acquisire le fatture, i corrispettivi e i bolli con questo esempio locale. Mostrami gli originali, le parti incomplete e come riprendere senza duplicare i file già verificati.",
+      "steps": [
+        "Leggi insieme a Vera cliente, periodo e operazioni di demo.json. Chiedile di eseguire la dimostrazione fornita nella cartella della lezione. Nel lavoro reale completi personalmente l’accesso in Chrome; questa prova non effettua alcun accesso al portale.",
+        "Apri il riepilogo Excel e il report HTML prodotti. Il risultato è parziale: una fattura è stata acquisita e una non è disponibile. Controlla il registro CSV e l’originale XML. Nei corrispettivi trova la riga priva di importo: resta segnalata e non viene sostituita con zero.",
+        "Leggi il foglio dei bolli: 24 euro è l’importo del portale fittizio e 12 euro sono già stati versati nello scenario. Non accettare 24 euro come residuo. Per un prospetto F24 occorre la tua revisione esplicita di residuo e scadenza; il corso non dispone pagamenti. Leggi il rapporto sui dati al modello e distingui elaborazione locale e letture effettive in chat."
+      ],
+      "deliverables": [
+        "Originale XML, registro fatture CSV e report HTML effettivamente generati dal motore.",
+        "Excel con ambiti, fatture, invii, totali e bolli; segnalazioni e rapporto dati, senza pagamenti o invii."
+      ],
+      "review": "Il primo risultato deve restare parziale: un download fallito non è un originale. Nei corrispettivi un importo assente non vale zero. Il totale dei bolli non stabilisce il debito residuo. Chiedi a Vera di indicare esattamente i file che ha letto nel corso.",
+      "checkpoints": [
+        "Indica il documento mancante e mostra il file originale effettivamente presente.",
+        "Spiega perché il bollo di 24 euro non autorizza un F24 da 24 euro e quali valori devi riesaminare."
+      ],
+      "practice": "Leggi practice-it.md. Esegui prima demo.json e poi practice.json nella stessa cartella acquisizione, conservando la prima esecuzione. Nella pratica la seconda fattura diventa disponibile e il corrispettivo viene completato. Apri i nuovi risultati: devono mostrare un originale nuovo e uno già presente e verificato, con due esecuzioni distinte.",
+      "success": "Sai leggere una parte incompleta senza dichiararla conclusa, riprendere il periodo con verifica dei file e riconoscere i dati che richiedono riesame professionale.",
+      "repeat": "Per il lavoro reale indica a Vera elenco clienti, periodo, operazioni, modalità di delega e destinazione. Completa l’accesso nel Chrome locale quando richiesto. Nel pannello nativo, se disponibile, controlla piano, avanzamento, eccezioni e file; altrimenti chiedi gli stessi risultati in chat. Dopo un’interruzione chiedi la ripresa dello stesso periodo."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "0ccb644d2664fd721a71860df0baa31c535caaf401686fa0b1e03c7aece2c86a"
+}

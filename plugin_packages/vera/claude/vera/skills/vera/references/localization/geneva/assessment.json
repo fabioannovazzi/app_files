@@ -987,6 +987,40 @@
       "verification": "Current implementation and official Italian source register inspected. Synthetic tests do not establish real professional or importer acceptance.",
       "implementation": "Italian review pilot with real filing export blocked; no Swiss adapter.",
       "implementation_status": "unresolved_not_qualified_for_target"
+    },
+    {
+      "function_id": "organizzazione-lavoro",
+      "name": "Organisation du travail",
+      "role": "function",
+      "disposition": "Reuse",
+      "common_work": "Maintain appointments, tasks, meeting actions and daily plans.",
+      "geneva_application": "Use the same operational register and connected calendars in a Geneva fiduciary practice.",
+      "required_change": "Configure the actual account, timezone, working hours and categories. Route legal or tax deadline judgments to locally reviewed specialist workflows.",
+      "adaptation_layers": [
+        "studio configuration"
+      ],
+      "limitations": "No unattended inbox listener or automatic legal deadline determination; live host and calendar acceptance remains outstanding."
+    },
+    {
+      "function_id": "agenzia-acquisition",
+      "name": "Agenzia delle Entrate acquisition",
+      "role": "function",
+      "disposition": "Unresolved",
+      "common_work": "Retrieve original invoices and portal summaries for review and later accounting import.",
+      "geneva_application": "No domestic Swiss source is implemented by this AdE-specific operation; cross-border use requires an evidenced Italian mandate.",
+      "required_change": "Assess an applicable Swiss source before proposing any adapter. The current worker uses fixed Italian Agenzia endpoints, Italian CF/P.IVA and bolli evidence.",
+      "adaptation_layers": [
+        "source system",
+        "tax identifiers",
+        "quarterly stamp-duty evidence"
+      ],
+      "acceptance_example": "A Geneva domestic request is not routed into Italian AdE merely because the explanation is in French.",
+      "sources": [
+        "plugins/browser-automation/scripts/ade_acquisition/portal.py",
+        "plugins/browser-automation/skills/agenzia-acquisition/SKILL.md"
+      ],
+      "verification": "Italian acquisition source and synthetic tests inspected. No Swiss source, real Geneva case or live AdE acceptance established.",
+      "implementation_status": "italian_source_only"
     }
   ],
   "sources": {
@@ -1172,7 +1206,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "301d7801c3857f65ad91f414a9f30c17842432edb1cb3350d0b6c6051abd4bc9",
+  "catalogue_fingerprint": "139fab3e72da3830ac158f17254e298c0c0f13f149b0d6edda890e1b7bc4b93d",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1419,5 +1453,60 @@
       "learn-with-vera"
     ],
     "review": "Only course workspace setup and filesystem readiness changed. Existing country applicability decisions and limitations are unchanged; no new jurisdiction or live-host acceptance is claimed."
+  },
+  "esg_wording_release_binding": {
+    "date": "2026-10-04",
+    "version": "0.1.341",
+    "previous_catalogue_fingerprint": "301d7801c3857f65ad91f414a9f30c17842432edb1cb3350d0b6c6051abd4bc9",
+    "changed_entrypoints": [],
+    "review": "Only the canonical version and fictional ESG practice wording changed. All skill entrypoint hashes and existing jurisdiction judgments are preserved. No new professional or native-host acceptance is claimed."
+  },
+  "invoice_windows_release_refresh_20261004": {
+    "previous_version": "0.1.341",
+    "version": "0.1.342",
+    "previous_catalogue_fingerprint": "9818e8c63870d968d1b2eaee8f2203f1180b20cbfd09da1fa506027b0f69894e",
+    "scope": "Manifest version refreshed; all recorded skill entrypoint IDs and hashes are unchanged. Italian invoice fiscal-ID and reviewed-transmitter checks plus shared Windows cross-volume bootstrap fix do not establish Geneva invoice support. Existing dispositions, professional findings and verification limits remain unchanged."
+  },
+  "website_download_release_refresh_20261004": {
+    "previous_version": "0.1.342",
+    "version": "0.1.343",
+    "previous_catalogue_fingerprint": "e703d67d57d108eb878b5f045d4a3718b711539f435bc1c4787652af1381920d",
+    "scope": "Canonical manifest version and listing category refreshed to 0.1.343 and Finance. All recorded skill entrypoint IDs and hashes are unchanged. Existing dispositions, professional findings and verification limits remain unchanged."
+  },
+  "hardlink_execution_release_binding_20261007": {
+    "date": "2026-10-07",
+    "version": "0.1.348",
+    "previous_catalogue_fingerprint": "f06b6752dfac9f4c82cfa09cb7045d9abab10ed697807d6a632cab4f5fbdda8d",
+    "changed_entrypoints": [
+      "concordato-plan-review",
+      "financial-report-builder",
+      "journal-bank-reconciliation",
+      "journal-sampling",
+      "open-item-reconciliation",
+      "vera",
+      "vouching"
+    ],
+    "scope": "Internal verified private code preparation for hardlinked installed modules. Existing function IDs, jurisdiction dispositions, professional findings and acceptance limitations are unchanged. No Geneva or affected-user host acceptance is claimed."
+  },
+  "studio_work_course_source_refresh": {
+    "version": "0.1.350",
+    "previous_catalogue_fingerprint": "d7630254b8fb6648782492583ccb7641a9bfea170777d92b9c07d9c2f7d48f2e",
+    "scope": "Prepared five-language local organizer course; unchanged function coverage and Geneva disposition. No new learner, native voice or live-calendar acceptance."
+  },
+  "agenzia_acquisition_release_binding": {
+    "date": "2026-10-08",
+    "version": "0.1.352",
+    "previous_catalogue_fingerprint": "56568435133705961b89c97b4e7a5f0cf97a1f50e20d19b62cbe14cd98968acf",
+    "added_skills": [
+      "agenzia-acquisition"
+    ],
+    "changed_existing_entrypoints": [
+      "browser-automation"
+    ],
+    "scope": "Register the new AdE acquisition separately from generic browser teaching; preserve existing jurisdiction judgments. Optional native UI and translated pages do not qualify Swiss portal support."
+  },
+  "archive_profile_bootstrap_source_refresh": {
+    "version": "0.1.355",
+    "scope": "Only canonical product version changed in the captured catalogue; function IDs and all skill bytes match the 0.1.354 snapshot. Existing Geneva dispositions remain unchanged. Secure legacy profile bootstrap preserves existing approval and source isolation; no additional legal adaptation or Geneva acceptance claimed."
   }
 }

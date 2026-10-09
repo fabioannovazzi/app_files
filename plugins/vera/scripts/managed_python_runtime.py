@@ -3,11 +3,18 @@
 
 from __future__ import annotations
 
+import argparse
 import importlib.util
+import logging
+import runpy
 import sys
 from pathlib import Path
 
 __all__ = ["main"]
+
+prepare_execution_root = runpy.run_path(
+    str(Path(__file__).with_name("verified_execution.py"))
+)["prepare_execution_root"]
 
 
 def _implementation_path() -> Path:
@@ -40,7 +47,42 @@ select_runtime = _IMPLEMENTATION.select_runtime
 def main(argv: list[str] | None = None) -> int:
     """Run Vera's managed runtime CLI."""
 
-    return _IMPLEMENTATION.main(Path(__file__).resolve().parents[1], argv)
+    arguments = list(sys.argv[1:] if argv is None else argv)
+    # Only runtime options before its subcommand select the component. A helper
+    # may itself have an unrelated --module option in its remaining arguments.
+    prefix = arguments
+    for index, argument in enumerate(arguments):
+        if argument in {"run", "install", "status"}:
+            prefix = arguments[:index]
+            break
+    parser = argparse.ArgumentParser(add_help=False, allow_abbrev=False)
+    parser.add_argument("--module")
+    parser.add_argument("--requirements", action="append")
+    selection, _ = parser.parse_known_args(prefix)
+    root = Path(__file__).absolute().parents[1]
+    # Reject an invalid entrypoint before provisioning, with an exact boundary
+    # diagnostic rather than conflating an outside script with a missing file.
+    if "run" in arguments:
+        run_index = arguments.index("run")
+        if run_index + 1 < len(arguments):
+            runtime_selection = _IMPLEMENTATION.select_runtime(
+                root, selection.module, selection.requirements
+            )
+            script = (
+                runtime_selection.requirement_root / arguments[run_index + 1]
+            ).resolve()
+            if not script.is_relative_to(runtime_selection.requirement_root):
+                logging.error("Managed runtime script outside module root: %s", script)
+                return 2
+            if not script.is_file():
+                logging.error("Managed runtime script not found: %s", script)
+                return 2
+    try:
+        root = prepare_execution_root(root, selection.module)
+    except (OSError, ValueError) as error:
+        logging.error("Vera installation verification failed: %s", error)
+        return 1
+    return _IMPLEMENTATION.main(root, arguments)
 
 
 if __name__ == "__main__":

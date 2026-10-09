@@ -153,8 +153,11 @@ Add `--sample <sample-file>` when a sample movement list is provided.
    explicitly review the recovered physical header, incoming/outgoing sign
    roles, and all running-balance or total columns. A PDF with no qualified
    physical column grid cannot be approved merely by changing a mapping.
-5. If a mapping decision is needed, edit `suggested_recipe.json` in the work
-   folder, then use `journal_bank_core.build_mapping_review_receipt` to seal the
+5. Record explicit decisions for every bank and journal file in
+   `review_decisions.json` inside the run output directory, following the JSON
+   contract in `../../references/workflow-reference.md`. Use the packaged
+   `scripts/seal_review_receipts.py` entrypoint, which calls
+   `journal_bank_core.build_mapping_review_receipt` to seal the
    reviewed header rows, mapping, CSV field delimiter, numeric separators,
    `date_convention`, `date_locale` when Italian textual-month dates are
    present, exact `non_movement_summary_labels` when a reviewed tabular total
@@ -176,11 +179,21 @@ Add `--sample <sample-file>` when a sample movement list is provided.
    required relationship shape (`one_to_one`, `one_to_many`, `many_to_one`, or
    `many_to_many`), no evidence reuse, currency/unit/entity/party perimeter,
    direction treatment, defaults, amount tolerance, and date window. Use
-   `journal_bank_core.build_relationship_review_receipt` to seal the reviewed
+   the same packaged command (which calls
+   `journal_bank_core.build_relationship_review_receipt`) to seal the reviewed
    policy against the current bank and journal source references. Every run
    requires the current `journal_bank.relationship.v3` relationship receipt;
    older receipts predate grouped reference allocation and are stale. Do not treat the
-   generated proposal as reviewed.
+   generated proposal as reviewed. Supply the actual `reviewer_ref` and
+   `reviewed_on` explicitly; never invent them. From the installed Vera root:
+
+```bash
+python3 scripts/managed_python_runtime.py --module journal-bank-reconciliation run scripts/seal_review_receipts.py --client-engagement <client_engagement_path> --output-dir <client-run-output> --recipe <client-run-output>/suggested_recipe.json --decisions <client-run-output>/review_decisions.json
+```
+
+   This path works without MCP on Codex and Cowork. Re-run inspection with the
+   sealed recipe before reconciliation. Changed sources require a fresh review;
+   never copy or hand-author receipts or run an external helper script.
 7. Run deterministic reconciliation:
 
 ```bash
@@ -284,7 +297,7 @@ python scripts/semantic_review.py run-worker <output-dir>/reconciliation \
   --client-engagement <client_engagement_path>
 ```
 
-The current `journal_bank.luna_seatbelt_capsule.v2` launcher is qualified only for its
+The current `journal_bank.luna_seatbelt_capsule.v3` launcher is qualified only for its
 pinned macOS build, Codex CLI version and executable hash, Seatbelt executable
 hash, canary executable hash, and deny-default profile hash. It fails closed on
 another platform or when any pin changes. It creates a mode-`0700` ephemeral
@@ -296,8 +309,11 @@ directory is not; the qualified boundary also denied Codex's hidden
 `view_image` path access to an outside nonce image. Current-host qualification
 used a working permitted-image control and denied outside-image and symlink
 controls under the outer sandbox; diagnostic helper permissions are never
-production permissions. The `journal_bank.luna_seatbelt_capsule.v1` registry
-record remains retained unchanged; it does not qualify newer hosts.
+production permissions. The current CLI also needs metadata-only access to
+the ancestor directories of its exact executable; this permission grants no
+file-content reads. Its permitted-image and outside/symlink controls ran with
+both the outer OS boundary and inner read-only sandbox active. The v1 and v2
+registry records remain retained unchanged; they do not qualify newer hosts.
 
 The outer boundary permits the child to read only the capsule and exact Codex
 runtime files. Codex authentication is readable and outbound network access is

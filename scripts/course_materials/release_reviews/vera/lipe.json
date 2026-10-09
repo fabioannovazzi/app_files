@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "lipe",
-  "course_sha256": "46e7f66b7d9050f2c0f63fd15f02a3cd3533eede51a3794231e039a73713c06c",
+  "course_sha256": "e3995fb7117f3e08f80870d588b719f476d69366f0d614bb8c3d73de97ce1242",
   "reviewer": "Codex - authored Italian lesson and actual synthetic output review",
   "reviewed_at": "2026-10-03T10:34:18.018139+00:00",
   "review_scope": "Read the complete Italian lesson, fictional mandate, original registers and separate correction; executed the current LIPE CLI against exact rendered source bytes. Inspected actual VP results, PDF text and workbook structure. Test-only interpretations and confirmations are regression fixtures, never lesson inputs. No learner participation, live host/voice acceptance, professional approval, PDF extraction qualification, XML import or filing acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
@@ -71,5 +71,39 @@
       }
     }
   },
-  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
+  "committed_shared_contract_integration_20261008": {
+    "product": "vera",
+    "workflow": "lipe",
+    "reviewer": "Codex /root - bounded shared-contract integration review",
+    "reviewed_at": "2026-10-08T12:40:14.273063+00:00",
+    "source_change": "Shared assurance contracts add a separately allowlisted standalone task context; ordinary registered client contexts and this lesson content remain unchanged. Other source changes were reviewed in the included bank and Archive commits.",
+    "comparison": "Complete course payload excluding source inventory is identical to all three inspected committed parents, including every localized lesson, input, checkpoint and expectation.",
+    "limits": "Preserves prior named editorial and artifact judgments; does not attest new learner participation, professional acceptance or installed native host behavior. Current CI must execute exact demo/practice identities against current course bytes.",
+    "parents": [
+      {
+        "commit": "c324cb0",
+        "course_sha256": "46e7f66b7d9050f2c0f63fd15f02a3cd3533eede51a3794231e039a73713c06c"
+      },
+      {
+        "commit": "f70d90d",
+        "course_sha256": "46e7f66b7d9050f2c0f63fd15f02a3cd3533eede51a3794231e039a73713c06c"
+      },
+      {
+        "commit": "0bb963db",
+        "course_sha256": "e3995fb7117f3e08f80870d588b719f476d69366f0d614bb8c3d73de97ce1242"
+      }
+    ],
+    "course_sha256": "e3995fb7117f3e08f80870d588b719f476d69366f0d614bb8c3d73de97ce1242"
+  },
+  "studio_archive_adoption_source_binding_20261008": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "reviewed_at": "2026-10-08T12:39:27.596925+00:00",
+    "baseline_commit": "c324cb0cbc1d1965676c53e0c2c6dd11905a5393",
+    "previous_course_sha256": "46e7f66b7d9050f2c0f63fd15f02a3cd3533eede51a3794231e039a73713c06c",
+    "current_course_sha256": "e3995fb7117f3e08f80870d588b719f476d69366f0d614bb8c3d73de97ce1242",
+    "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
+    "source_review": "docs/studio_archive/course-source-compatibility-review.json",
+    "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  }
 }

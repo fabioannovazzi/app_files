@@ -913,6 +913,11 @@ def _parser() -> argparse.ArgumentParser:
     build.add_argument("--input", type=Path, required=True)
     build.add_argument("--evidence-root", type=Path)
     build.add_argument("--output-dir", type=Path, required=True)
+    build.add_argument(
+        "--local-only",
+        action="store_true",
+        help="Build the local report without sending its digest for server stamping.",
+    )
     validate = subparsers.add_parser("validate")
     validate.add_argument("--report", type=Path, required=True)
     show = subparsers.add_parser(
@@ -977,7 +982,7 @@ def main(argv: list[str] | None = None, *, server_attestation: bool = True) -> i
         markdown_path = output_dir / "model_data_report.md"
         _write_once_or_identical(json_path, _canonical_bytes(report))
         _write_once_or_identical(markdown_path, markdown.encode("utf-8"))
-        if not server_attestation:
+        if not server_attestation or args.local_only:
             server_receipt = {"status": "not_requested", "reason": "local_only"}
         else:
             from notarized_run_receipt import (

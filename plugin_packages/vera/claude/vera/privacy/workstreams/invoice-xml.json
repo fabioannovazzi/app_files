@@ -10,7 +10,9 @@
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
-    "skills/vera/references/connected-studio-knowledge.md"
+    "skills/vera/references/connected-studio-knowledge.md",
+    "scripts/standalone_work.py",
+    "skills/vera/references/standalone-work.md"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -31,7 +33,7 @@
       {
         "id": "draft-and-professional-review",
         "purpose": "Review extracted fields, fiscal proposals, missing facts, corrections and final export status",
-        "content": "Normalized invoice fields, per-field source references, uncertainties, professional decisions and user confirmations; domestic or foreign operation facts, VAT and date basis, original-invoice linkage, conversion evidence, schema and arithmetic errors, preview content and final export report. The same native model performs this work without a separate worker service.",
+        "content": "Normalized invoice fields, per-field source references, uncertainties, professional decisions and user confirmations; domestic or foreign operation facts, VAT and date basis, original-invoice linkage, conversion evidence, schema and arithmetic errors, preview content and final export report. The same native model performs this work without a separate worker service. Reviewed transmission mode, local fiscal-identifier validation errors, and the currently supplied gateway notification or screenshot may also enter context during rejection diagnosis. No identifier is sent to a registry by the local validator.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -41,6 +43,15 @@
         "id": "connected-studio-knowledge",
         "purpose": "Consult relevant studio procedures, precedents or case evidence when requested",
         "content": "Repository and selected studio/client scope; scoped search queries; returned metadata and snippets; opened relevant passages; source IDs, links and locators; version, date and approval metadata when exposed; coverage and access limitations. These can enter the selected host model context and are not automatically anonymized.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "standalone-task-evidence",
+        "purpose": "Retain one explicitly selected standalone deliverable without registering a client",
+        "content": "Selected full source files and their locally prepared views may enter the native model context under this workflow's existing interpretation/review phases. The task has a distinct task ID, source filenames, exact-byte receipts, purpose, and output paths without an archive/client identity. The local capture helper makes no model or external-service call. Sources and outputs remain in the selected task folder until the user removes them; provider/host retention is separate. No automatic anonymization is performed. The existing Vera model-data report and minimal server-stamping service still apply when those commands are used.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -89,7 +100,7 @@
   "security_controls": [
     {
       "id": "managed-input-output-boundary",
-      "control": "CLI commands require a running Studio Archive invoice-xml context; source references stay below the bound input directory and outputs below the selected run. Symlink sources and source paths containing traversal are rejected."
+      "control": "CLI commands require either a running Studio Archive invoice-xml context or the distinct supported standalone invoice task context. Source references stay below the bound receipted input directory and outputs below its exact output root; source mutations, unselected inputs, symlinks and traversal are rejected."
     },
     {
       "id": "source-and-review-binding",
@@ -102,12 +113,16 @@
     {
       "id": "preview-content-escaping",
       "control": "The static local preview escapes source values and declares a no-network/no-script/no-form content security policy. It has no send, signing, submission or accounting-posting control."
+    },
+    {
+      "id": "standalone-exact-source-boundary",
+      "control": "Only invoice-xml, prompt-optimizer and deep-research-validator accept the distinct standalone context. The loader rechecks its digest, selected byte receipts and closed input set and rejects foreign workflows, aliases, source changes and output escape. Invoice professional export approval, schema/arithmetic checks and legal semantic review are retained. The task is not an Archive run or registered client."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-08",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "5bef58992f349167078e176b2e92e707654eff46bb1d1f2d774e1ecba55d1e77"
+    "source_fingerprint": "bbcb56cff8b0fa62c7ac4cb8a1fa83393fc36d9797964d52a09765853344dc00"
   }
 }

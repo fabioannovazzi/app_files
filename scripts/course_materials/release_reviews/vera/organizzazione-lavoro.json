@@ -1,0 +1,201 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "vera",
+  "workflow": "organizzazione-lavoro",
+  "course_sha256": "0e740c47f86034c69a3ca838844ead9c2a2c6b60593c09fbbbce1c40b0b17c77",
+  "reviewer": "Codex: authored five-language material and actual isolated CLI output review",
+  "reviewed_at": "2026-10-07T13:37:03.746635+00:00",
+  "review_scope": "Read the complete five-language lesson and distinct fictional demonstration/practice inputs. Inspected actual saved-register outputs from ten subprocess CLI exercises: capture, rescheduling, fresh-process reads, saved meeting summaries/actions and completion. Tests preserve the ordinary and demonstration registers. Busy periods and the tutorial-local-only calendar ID are explicitly fictional; no connector receipt, live calendar write, model interpretation, native voice session, paired-chat learner participation or measured comprehension/timing is attested. Native paired teaching uses the existing Codex course runtime; the ordinary organizer retains its Cowork path. Six stages total 390 seconds of planned explanation, with execution and questions additional.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Read the complete it outline: saving a commitment, changing its time, retrieving it and retaining meeting actions. The scope begins with the separate local register and makes the optional live-calendar extension conditional on account selection, authorization and actual read-back.",
+        "inputs_and_request": "Read both case-it.json inputs. Studio Riva/Paola/Sara on 10 November is distinct from Studio Selva/Luca/Elena on 12 November. The requests and meeting facts are localized, explicitly fictional and contain no precomputed identifiers or successful connector receipts. The busy-period label is localized and identifies an example, not live availability.",
+        "execution_and_checkpoints": "The actual demo output reopens Incontro con Paola at 2026-11-10T14:00:00+01:00 with revision 2. Saved meeting summary retains the input notes and its follow-up task has the supplied owner, date and source. Separate subprocess reads verify persistence, and local storage never becomes a claimed Google Calendar write. Model reasoning about priorities and meeting semantics remains for the actual working chat, not the regression adapter.",
+        "deliverable_and_next_action": "Inspected the actual saved-register JSON for both phases: revised appointment, persisted meeting/actions, current context and explicit calendar_refresh_required/scheduler_installed flags. These are actual local service outputs. The teacher must open/explain real outputs and produce the ordinary model-data report through the workflow; this regression does not attest such a host delivery. A real calendar extension requires a selected account and specific event authorization.",
+        "practice_and_repeat": "The independent actual practice saves Incontro con Luca at 2026-11-12T15:00:00+01:00 for Elena. Its follow-up is done and recoverable. Tests re-read unchanged demo and ordinary registers. The learner must formulate the request and explain register versus current calendar versus scheduled briefing; the materials and synthetic test do not manufacture learner responses.",
+        "language_and_pacing": "Read all it text and both localized input titles, requests, busy-period label and meeting notes. Six planned stages total 390 seconds; execution and questions add time. Dates include an explicit timezone offset. No human timing, comprehension or installed-host voice acceptance has been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_studio_work_execution::test_course_saves_reopens_moves_and_keeps_isolated_practice[it-demo]",
+        "result_review": "Actual isolated register records survive fresh child-process reads, retain the revised appointment and supplied meeting/action facts. No external operation is prepared or dispatched. Practice additionally completes the follow-up without touching demo or ordinary data.",
+        "reviewed_artifacts": [
+          {
+            "name": "saved-register.json",
+            "sha256": "8bb6f71784b6620a88a4b9dd8be61f149b464b360d07cf0622abb25d227990be"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_studio_work_execution::test_course_saves_reopens_moves_and_keeps_isolated_practice[it-practice]",
+        "result_review": "Actual isolated register records survive fresh child-process reads, retain the revised appointment and supplied meeting/action facts. No external operation is prepared or dispatched. Practice additionally completes the follow-up without touching demo or ordinary data.",
+        "reviewed_artifacts": [
+          {
+            "name": "saved-register.json",
+            "sha256": "f49338a0fda36368ec5b418380811bc281127132fc3dc810f3e1a340df7c786b"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Read the complete en outline: saving a commitment, changing its time, retrieving it and retaining meeting actions. The scope begins with the separate local register and makes the optional live-calendar extension conditional on account selection, authorization and actual read-back.",
+        "inputs_and_request": "Read both case-en.json inputs. Studio Riva/Paola/Sara on 10 November is distinct from Studio Selva/Luca/Elena on 12 November. The requests and meeting facts are localized, explicitly fictional and contain no precomputed identifiers or successful connector receipts. The busy-period label is localized and identifies an example, not live availability.",
+        "execution_and_checkpoints": "The actual demo output reopens Meeting with Paola at 2026-11-10T14:00:00+01:00 with revision 2. Saved meeting summary retains the input notes and its follow-up task has the supplied owner, date and source. Separate subprocess reads verify persistence, and local storage never becomes a claimed Google Calendar write. Model reasoning about priorities and meeting semantics remains for the actual working chat, not the regression adapter.",
+        "deliverable_and_next_action": "Inspected the actual saved-register JSON for both phases: revised appointment, persisted meeting/actions, current context and explicit calendar_refresh_required/scheduler_installed flags. These are actual local service outputs. The teacher must open/explain real outputs and produce the ordinary model-data report through the workflow; this regression does not attest such a host delivery. A real calendar extension requires a selected account and specific event authorization.",
+        "practice_and_repeat": "The independent actual practice saves Meeting with Luca at 2026-11-12T15:00:00+01:00 for Elena. Its follow-up is done and recoverable. Tests re-read unchanged demo and ordinary registers. The learner must formulate the request and explain register versus current calendar versus scheduled briefing; the materials and synthetic test do not manufacture learner responses.",
+        "language_and_pacing": "Read all en text and both localized input titles, requests, busy-period label and meeting notes. Six planned stages total 390 seconds; execution and questions add time. Dates include an explicit timezone offset. No human timing, comprehension or installed-host voice acceptance has been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_studio_work_execution::test_course_saves_reopens_moves_and_keeps_isolated_practice[en-demo]",
+        "result_review": "Actual isolated register records survive fresh child-process reads, retain the revised appointment and supplied meeting/action facts. No external operation is prepared or dispatched. Practice additionally completes the follow-up without touching demo or ordinary data.",
+        "reviewed_artifacts": [
+          {
+            "name": "saved-register.json",
+            "sha256": "1d0d12800cf7d0a37dc58ef5b72983486e2949e2beb0a249a4e65476845d30b1"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_studio_work_execution::test_course_saves_reopens_moves_and_keeps_isolated_practice[en-practice]",
+        "result_review": "Actual isolated register records survive fresh child-process reads, retain the revised appointment and supplied meeting/action facts. No external operation is prepared or dispatched. Practice additionally completes the follow-up without touching demo or ordinary data.",
+        "reviewed_artifacts": [
+          {
+            "name": "saved-register.json",
+            "sha256": "9380f1b83f95f5ee74153eb9dc6397a88bace8ab0a8e970a1db288ea88af137a"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Read the complete fr outline: saving a commitment, changing its time, retrieving it and retaining meeting actions. The scope begins with the separate local register and makes the optional live-calendar extension conditional on account selection, authorization and actual read-back.",
+        "inputs_and_request": "Read both case-fr.json inputs. Studio Riva/Paola/Sara on 10 November is distinct from Studio Selva/Luca/Elena on 12 November. The requests and meeting facts are localized, explicitly fictional and contain no precomputed identifiers or successful connector receipts. The busy-period label is localized and identifies an example, not live availability.",
+        "execution_and_checkpoints": "The actual demo output reopens Rendez-vous avec Paola at 2026-11-10T14:00:00+01:00 with revision 2. Saved meeting summary retains the input notes and its follow-up task has the supplied owner, date and source. Separate subprocess reads verify persistence, and local storage never becomes a claimed Google Calendar write. Model reasoning about priorities and meeting semantics remains for the actual working chat, not the regression adapter.",
+        "deliverable_and_next_action": "Inspected the actual saved-register JSON for both phases: revised appointment, persisted meeting/actions, current context and explicit calendar_refresh_required/scheduler_installed flags. These are actual local service outputs. The teacher must open/explain real outputs and produce the ordinary model-data report through the workflow; this regression does not attest such a host delivery. A real calendar extension requires a selected account and specific event authorization.",
+        "practice_and_repeat": "The independent actual practice saves Rendez-vous avec Luca at 2026-11-12T15:00:00+01:00 for Elena. Its follow-up is done and recoverable. Tests re-read unchanged demo and ordinary registers. The learner must formulate the request and explain register versus current calendar versus scheduled briefing; the materials and synthetic test do not manufacture learner responses.",
+        "language_and_pacing": "Read all fr text and both localized input titles, requests, busy-period label and meeting notes. Six planned stages total 390 seconds; execution and questions add time. Dates include an explicit timezone offset. No human timing, comprehension or installed-host voice acceptance has been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_studio_work_execution::test_course_saves_reopens_moves_and_keeps_isolated_practice[fr-demo]",
+        "result_review": "Actual isolated register records survive fresh child-process reads, retain the revised appointment and supplied meeting/action facts. No external operation is prepared or dispatched. Practice additionally completes the follow-up without touching demo or ordinary data.",
+        "reviewed_artifacts": [
+          {
+            "name": "saved-register.json",
+            "sha256": "ec4f4cc7b64f04f8f07427e8fbaea1b1d4a55f5466a4778aa9db4d66fc711d2f"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_studio_work_execution::test_course_saves_reopens_moves_and_keeps_isolated_practice[fr-practice]",
+        "result_review": "Actual isolated register records survive fresh child-process reads, retain the revised appointment and supplied meeting/action facts. No external operation is prepared or dispatched. Practice additionally completes the follow-up without touching demo or ordinary data.",
+        "reviewed_artifacts": [
+          {
+            "name": "saved-register.json",
+            "sha256": "253735145772206456fdf856570d00daaf2113da1c2e896621665d8c4b53eee6"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Read the complete de outline: saving a commitment, changing its time, retrieving it and retaining meeting actions. The scope begins with the separate local register and makes the optional live-calendar extension conditional on account selection, authorization and actual read-back.",
+        "inputs_and_request": "Read both case-de.json inputs. Studio Riva/Paola/Sara on 10 November is distinct from Studio Selva/Luca/Elena on 12 November. The requests and meeting facts are localized, explicitly fictional and contain no precomputed identifiers or successful connector receipts. The busy-period label is localized and identifies an example, not live availability.",
+        "execution_and_checkpoints": "The actual demo output reopens Termin mit Paola at 2026-11-10T14:00:00+01:00 with revision 2. Saved meeting summary retains the input notes and its follow-up task has the supplied owner, date and source. Separate subprocess reads verify persistence, and local storage never becomes a claimed Google Calendar write. Model reasoning about priorities and meeting semantics remains for the actual working chat, not the regression adapter.",
+        "deliverable_and_next_action": "Inspected the actual saved-register JSON for both phases: revised appointment, persisted meeting/actions, current context and explicit calendar_refresh_required/scheduler_installed flags. These are actual local service outputs. The teacher must open/explain real outputs and produce the ordinary model-data report through the workflow; this regression does not attest such a host delivery. A real calendar extension requires a selected account and specific event authorization.",
+        "practice_and_repeat": "The independent actual practice saves Termin mit Luca at 2026-11-12T15:00:00+01:00 for Elena. Its follow-up is done and recoverable. Tests re-read unchanged demo and ordinary registers. The learner must formulate the request and explain register versus current calendar versus scheduled briefing; the materials and synthetic test do not manufacture learner responses.",
+        "language_and_pacing": "Read all de text and both localized input titles, requests, busy-period label and meeting notes. Six planned stages total 390 seconds; execution and questions add time. Dates include an explicit timezone offset. No human timing, comprehension or installed-host voice acceptance has been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_studio_work_execution::test_course_saves_reopens_moves_and_keeps_isolated_practice[de-demo]",
+        "result_review": "Actual isolated register records survive fresh child-process reads, retain the revised appointment and supplied meeting/action facts. No external operation is prepared or dispatched. Practice additionally completes the follow-up without touching demo or ordinary data.",
+        "reviewed_artifacts": [
+          {
+            "name": "saved-register.json",
+            "sha256": "02ab58991196bbc32bc04927698a690f51cc22994fe78e371975b01e4b2c8684"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_studio_work_execution::test_course_saves_reopens_moves_and_keeps_isolated_practice[de-practice]",
+        "result_review": "Actual isolated register records survive fresh child-process reads, retain the revised appointment and supplied meeting/action facts. No external operation is prepared or dispatched. Practice additionally completes the follow-up without touching demo or ordinary data.",
+        "reviewed_artifacts": [
+          {
+            "name": "saved-register.json",
+            "sha256": "ca2b92d27f17e11131c347690be3e003bc5329ec46457a5de25ba72127a68ad2"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Read the complete es outline: saving a commitment, changing its time, retrieving it and retaining meeting actions. The scope begins with the separate local register and makes the optional live-calendar extension conditional on account selection, authorization and actual read-back.",
+        "inputs_and_request": "Read both case-es.json inputs. Studio Riva/Paola/Sara on 10 November is distinct from Studio Selva/Luca/Elena on 12 November. The requests and meeting facts are localized, explicitly fictional and contain no precomputed identifiers or successful connector receipts. The busy-period label is localized and identifies an example, not live availability.",
+        "execution_and_checkpoints": "The actual demo output reopens Reunión con Paola at 2026-11-10T14:00:00+01:00 with revision 2. Saved meeting summary retains the input notes and its follow-up task has the supplied owner, date and source. Separate subprocess reads verify persistence, and local storage never becomes a claimed Google Calendar write. Model reasoning about priorities and meeting semantics remains for the actual working chat, not the regression adapter.",
+        "deliverable_and_next_action": "Inspected the actual saved-register JSON for both phases: revised appointment, persisted meeting/actions, current context and explicit calendar_refresh_required/scheduler_installed flags. These are actual local service outputs. The teacher must open/explain real outputs and produce the ordinary model-data report through the workflow; this regression does not attest such a host delivery. A real calendar extension requires a selected account and specific event authorization.",
+        "practice_and_repeat": "The independent actual practice saves Reunión con Luca at 2026-11-12T15:00:00+01:00 for Elena. Its follow-up is done and recoverable. Tests re-read unchanged demo and ordinary registers. The learner must formulate the request and explain register versus current calendar versus scheduled briefing; the materials and synthetic test do not manufacture learner responses.",
+        "language_and_pacing": "Read all es text and both localized input titles, requests, busy-period label and meeting notes. Six planned stages total 390 seconds; execution and questions add time. Dates include an explicit timezone offset. No human timing, comprehension or installed-host voice acceptance has been measured."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_studio_work_execution::test_course_saves_reopens_moves_and_keeps_isolated_practice[es-demo]",
+        "result_review": "Actual isolated register records survive fresh child-process reads, retain the revised appointment and supplied meeting/action facts. No external operation is prepared or dispatched. Practice additionally completes the follow-up without touching demo or ordinary data.",
+        "reviewed_artifacts": [
+          {
+            "name": "saved-register.json",
+            "sha256": "79a521e562cd963c91d05deb6ff30ecc87dd4c6691e38efa29751506077d5332"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_studio_work_execution::test_course_saves_reopens_moves_and_keeps_isolated_practice[es-practice]",
+        "result_review": "Actual isolated register records survive fresh child-process reads, retain the revised appointment and supplied meeting/action facts. No external operation is prepared or dispatched. Practice additionally completes the follow-up without touching demo or ordinary data.",
+        "reviewed_artifacts": [
+          {
+            "name": "saved-register.json",
+            "sha256": "6865cda923b530a7c9c0969090c6420bbbe3b3fee705efe915634bee62042c6e"
+          }
+        ]
+      }
+    }
+  },
+  "journal_bank_receipts_source_update_review": "docs/releases/2026-10-08-journal-bank-receipts-course-review.json",
+  "committed_shared_contract_integration_20261008": {
+    "product": "vera",
+    "workflow": "organizzazione-lavoro",
+    "reviewer": "Codex /root - bounded shared-contract integration review",
+    "reviewed_at": "2026-10-08T12:40:14.398970+00:00",
+    "source_change": "Shared assurance contracts add a separately allowlisted standalone task context; ordinary registered client contexts and this lesson content remain unchanged. Other source changes were reviewed in the included bank and Archive commits.",
+    "comparison": "Complete course payload excluding source inventory is identical to all three inspected committed parents, including every localized lesson, input, checkpoint and expectation.",
+    "limits": "Preserves prior named editorial and artifact judgments; does not attest new learner participation, professional acceptance or installed native host behavior. Current CI must execute exact demo/practice identities against current course bytes.",
+    "parents": [
+      {
+        "commit": "c324cb0",
+        "course_sha256": "b33cd060f2c7d9554c17a36eee51f18024d3bb61c9a246014c228e7811c60cd7"
+      },
+      {
+        "commit": "f70d90d",
+        "course_sha256": "123062ffa4cff82651231b62c16e949e6ee4bf570cd0e6efee7f902342ac98c4"
+      },
+      {
+        "commit": "0bb963db",
+        "course_sha256": "4b15cb483b14e6e60dd29e9f40186a0f8ce14627d2b6aa67f778eac147c0f36c"
+      }
+    ],
+    "course_sha256": "0e740c47f86034c69a3ca838844ead9c2a2c6b60593c09fbbbce1c40b0b17c77"
+  },
+  "studio_archive_adoption_source_binding_20261008": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "reviewed_at": "2026-10-08T12:39:27.596925+00:00",
+    "baseline_commit": "c324cb0cbc1d1965676c53e0c2c6dd11905a5393",
+    "previous_course_sha256": "b33cd060f2c7d9554c17a36eee51f18024d3bb61c9a246014c228e7811c60cd7",
+    "current_course_sha256": "4b15cb483b14e6e60dd29e9f40186a0f8ce14627d2b6aa67f778eac147c0f36c",
+    "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
+    "source_review": "docs/studio_archive/course-source-compatibility-review.json",
+    "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  }
+}

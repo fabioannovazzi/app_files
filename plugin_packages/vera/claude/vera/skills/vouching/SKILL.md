@@ -3,6 +3,16 @@ name: vouching
 description: Use to check scritture campionate against fatture FatturaPA XML or supporting PDFs, using the qualified sample and lineage from Journal Sampling. Produces source-linked checks, exceptions and missing-document requests for those entries. To select the sample use journal-sampling; to review the whole passive-invoice population against booked entries use purchase-invoice-review.
 ---
 
+## Verified execution preparation
+
+Before an assured installed-module handoff, follow Vera's
+`skills/vera/references/execution-recovery.md`: run the supported
+`scripts/verified_execution.py --module <component-id>` internally and use the
+returned execution root for the module skill, commands, assets and review server.
+Do not ask the professional to use Terminal. This helper may create a private
+verified code copy outside the host installation; it never edits that installation
+and is not permission to manually copy it or bypass a denied operation.
+
 ## Cowork execution contract
 
 Public workflow names select skills; component IDs select module paths.
@@ -135,6 +145,10 @@ the returned run-local bindings, check only sampled rows, and finalize every
 output with purpose and audience before review/completion. Use the explicit
 new-run option for an intentionally separate batch whose exact input selection
 matches an earlier run.
+
+First follow `../vera/references/execution-recovery.md` for component
+`check-entries`. Use its verified execution root for the handoff below;
+never ask the professional to run a terminal command.
 
 Resolve `../../modules/check-entries` from this skill directory when it exists;
 otherwise resolve `../../../check-entries` in the repository. Read that

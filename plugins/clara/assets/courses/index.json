@@ -88,7 +88,7 @@
     },
     "attribute-reporting": {
       "path": "attribute-reporting/course.json",
-      "sha256": "f9e9a06b038f3dd0559eccd07a48e56226f5427e50e704056cee3b5d24cd341a",
+      "sha256": "f5ee481a0853bb72a9f9272d6d2cba2bae73075fe2ef937054ee332258148d7a",
       "languages": [
         "it",
         "en",
@@ -116,7 +116,7 @@
     },
     "business-planning": {
       "path": "business-planning/course.json",
-      "sha256": "8de7e8771d060dbecbd7c32b7a2d23a068a99f9778ed42c3a2efb03611bd6a2e",
+      "sha256": "4692b262afb45447a7e8f7a92bf49f38f05771f5b46877251dadfbb0498f493e",
       "languages": [
         "it",
         "en"
@@ -191,7 +191,7 @@
     },
     "reporting-engine": {
       "path": "reporting-engine/course.json",
-      "sha256": "e1fe7feda7459346e1ac7cf4c190944b2210cc64eaabcf0f8fbe7181ded4aa0c",
+      "sha256": "55630418343a3c0a0e2254fdbba3d5e2a01d139b5feca423f88f1c5bb9319b5f",
       "languages": [
         "it",
         "en",

@@ -1,0 +1,5 @@
+# Named Agenzia acquisition worker; supplied by the shared managed Python 3.12 runtime.
+playwright>=1.50,<2
+openpyxl>=3.1,<4
+reportlab>=4.0,<5
+defusedxml>=0.7,<1

@@ -67,3 +67,22 @@ the existing serialized recipe-update path after active workflows finish, keeps
 the same interpreter and enabled OCR, and validates before restoring readiness.
 Deploy the three product packages together; older policies cannot downgrade it.
 No shared runtime is rebuilt merely because the launcher's platform differs.
+
+
+## Revision 7: repair the LIPE recipe upgrade
+
+The LIPE release added `tzdata>=2024.1` while keeping revision 6. Machines
+already using the preceding revision-6 recipe correctly rejected this conflict.
+Revision 7 lets the managed installer upgrade that existing environment under
+its writer lock, retain enabled OCR and validate dependencies before restoring
+readiness. Do not remove metadata or create a separate environment to bypass it.
+
+`scripts/check_shared_runtime_revision.py --base-ref <previous-commit>` rejects
+changed shared recipes, macOS constraints or backend code without a strictly
+higher coordinated revision. Product release CI compares against the PR base
+or the previous pushed commit. The package release builder also checks product
+parity. Cross-platform runtime tests cover upgrading an already installed
+revision-6 environment with and without OCR, retaining the interpreter and
+executing a workflow after the upgrade.
+
+Reporting parses string dates with the explicit Polars string API. Shared runtime recipes require Polars 2.x, excluding unqualified major version 3; component regressions also preserve the supported 1.x parsing behavior. Shared policy revision 10 advances the recipe monotonically and pins macOS to Polars 2.0.0. Cross-platform fresh-package CI must render an actual chart before release.

@@ -44,12 +44,12 @@
     {
       "path": "modules/journal-bank-reconciliation/references/workflow-reference.md",
       "repository_path": "plugins/journal-bank-reconciliation/references/workflow-reference.md",
-      "sha256": "2b11e97bcecb31f82d2d6ba974a67f0d9a0a5f36f763a832910dfffc2db5b937"
+      "sha256": "dad7ec3c74fd97ebfc30c14a3ef61e2de009a606bf5119498948cb645ed59e7c"
     },
     {
       "path": "modules/journal-bank-reconciliation/requirements.txt",
       "repository_path": "plugins/journal-bank-reconciliation/requirements.txt",
-      "sha256": "25e8f14e4f988c97ac50ac90f5dbacfff665f81de45a56599eaa78997aec7e03"
+      "sha256": "c4ffd646182867d07e7b0da00bfcd6f9a0e9d9c5c66662dc67da505740f4b1ca"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/apply_review_edits.py",
@@ -69,7 +69,7 @@
     {
       "path": "modules/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
       "repository_path": "plugins/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
-      "sha256": "dc232232896529e1d0cac2d2e8991ada216389c701b80519fe11fbe7961ebdd4"
+      "sha256": "393b7e5d73d0aec4a8d9b5a4e65b113b0e85219f868f8b890cd4b67637c4897a"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/inspect_inputs.py",
@@ -79,7 +79,7 @@
     {
       "path": "modules/journal-bank-reconciliation/scripts/journal_bank_core.py",
       "repository_path": "plugins/journal-bank-reconciliation/scripts/journal_bank_core.py",
-      "sha256": "363f569a3c27cf2b7bc01cf7d7b9a2cfac8c0b4d852dad48e9577c5852ad09b2"
+      "sha256": "d8ca211e4c698f01b602a6f429129445b7553568a7987a2fbf5c9a934d5302db"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/review_session.py",
@@ -92,14 +92,19 @@
       "sha256": "0c39c79d94241bcb0abc6dc9094080f957b0a5b701251a0f793eb17a83923355"
     },
     {
+      "path": "modules/journal-bank-reconciliation/scripts/seal_review_receipts.py",
+      "repository_path": "plugins/journal-bank-reconciliation/scripts/seal_review_receipts.py",
+      "sha256": "62633479f20a2b1da1cb20697c576f059588cad8d4dfb3668cd1e760b731a22b"
+    },
+    {
       "path": "modules/journal-bank-reconciliation/scripts/semantic_review.py",
       "repository_path": "plugins/journal-bank-reconciliation/scripts/semantic_review.py",
-      "sha256": "1062f41d9dad9c2cb3e36bcd9f5e9f620ac88cfcd20ee8473eaa7ab12d2ece9e"
+      "sha256": "d21bad8cd8449506a80c0a2cb0d3284f0a7ec5df6c7a06f438a0d87167df7728"
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
       "repository_path": "plugins/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "bdf9c5652dd6e2edad0f75d8a6a95cf6da53ded9ace131f33beb01bad1391826"
+      "sha256": "eaed416edb901d12c5f2483fb0c3f9f06a0095985b9adc600b0861e93772c5bd"
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/references/geneva.md",
@@ -119,7 +124,7 @@
     {
       "path": "modules/journal-bank-reconciliation/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
+      "sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112"
     },
     {
       "path": "modules/journal-bank-reconciliation/vendor/modules/vera_assurance/decisions.py",
@@ -159,7 +164,7 @@
     {
       "path": "skills/journal-bank-reconciliation/SKILL.md",
       "repository_path": "plugins/vera/skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "5ac9421e513bb6be6232d93b1968d10fbd2c8d22c0e94a2bd2a1aacefe146459"
+      "sha256": "c412e0be44d248a38066a840987991b0a7cc20d327a5bffd9df0440913030e80"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -299,7 +304,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
+      "sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",

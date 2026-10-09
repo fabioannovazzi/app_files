@@ -21,11 +21,6 @@
   "language_basis": "product_conversation_language_and_workflow_narrative",
   "sources": [
     {
-      "path": "modules/browser-automation/references/agenzia-download.md",
-      "repository_path": "plugins/browser-automation/references/agenzia-download.md",
-      "sha256": "affd27e1967ce61ae2bc173eeeddae09706465137fb855a7bdc17fde0549854a"
-    },
-    {
       "path": "modules/browser-automation/references/batch-review.md",
       "repository_path": "plugins/browser-automation/references/batch-review.md",
       "sha256": "4d378633081517528e60e7065b0d5e3850dc52128648d4a4edf67104177ac526"

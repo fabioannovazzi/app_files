@@ -46,6 +46,15 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "standalone-task-evidence",
+        "purpose": "Retain one explicitly selected standalone deliverable without registering a client",
+        "content": "Selected full source files and their locally prepared views may enter the native model context under this workflow's existing interpretation/review phases. The task has a distinct task ID, source filenames, exact-byte receipts, purpose, and output paths without an archive/client identity. The local capture helper makes no model or external-service call. Sources and outputs remain in the selected task folder until the user removes them; provider/host retention is separate. No automatic anonymization is performed. The existing Vera model-data report and minimal server-stamping service still apply when those commands are used.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -135,17 +144,23 @@
     {
       "id": "local-browser-private-review-payload",
       "control": "The local review server requests component-only private review metadata only for the registered render tool. The browser receives that payload locally; normal MCP callers continue to receive structuredContent. This is transport separation, not anonymization of data selected for model review. Reload restores the persisted applied decisions for the same plugin and run through the existing browser path sanitization. It does not apply decisions again or change the external routes. Read-only local rendering accepts validated running, review-ready and completed contexts; Save/Apply still require a running context. Nested result folders resolve the owning portable run and validate the exact requested descendant before rendering. Archived views also show a localized read-only notice and disable Save/Apply; server-side write validation remains authoritative."
+    },
+    {
+      "id": "standalone-exact-source-boundary",
+      "control": "Only invoice-xml, prompt-optimizer and deep-research-validator accept the distinct standalone context. The loader rechecks its digest, selected byte receipts and closed input set and rejects foreign workflows, aliases, source changes and output escape. Invoice professional export approval, schema/arithmetic checks and legal semantic review are retained. The task is not an Archive run or registered client."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-08",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "a9e508ca9b72075cd2abcba97590d7db14a921aab39e1972b46eb8c5771c041c"
+    "source_fingerprint": "dc14532b35bf8ff92d4720dd97185b0433846192283940bcc4beb6cafb8f8f64"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/quesito-legale-fiscale/SKILL.md",
     "plugins/vera/skills/adversarial-opinion/SKILL.md",
-    "plugins/vera/skills/vera/references/connected-studio-knowledge.md"
+    "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+    "plugins/vera/scripts/standalone_work.py",
+    "plugins/vera/skills/vera/references/standalone-work.md"
   ]
 }

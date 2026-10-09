@@ -68,6 +68,45 @@ def validate(root: Path) -> subprocess.CompletedProcess[str]:
     )
 
 
+def test_validation_uses_actual_link_count_when_directory_cache_reports_zero(
+    module_copy: Path,
+) -> None:
+    code = """
+import os
+from types import SimpleNamespace
+import implementation_bootstrap as boundary
+real_scandir = os.scandir
+class Entry:
+    def __init__(self, original):
+        self.original = original
+    def __getattr__(self, name):
+        return getattr(self.original, name)
+    def stat(self, **kwargs):
+        actual = self.original.stat(**kwargs)
+        return SimpleNamespace(st_mode=actual.st_mode, st_nlink=0)
+class Scan:
+    def __init__(self, directory):
+        self.iterator = real_scandir(directory)
+    def __enter__(self):
+        self.iterator.__enter__()
+        return (Entry(entry) for entry in self.iterator)
+    def __exit__(self, *args):
+        return self.iterator.__exit__(*args)
+os.scandir = Scan
+boundary.activate_implementation_boundary()
+"""
+
+    result = subprocess.run(
+        [sys.executable, "-B", "-c", code],
+        cwd=module_copy / "scripts",
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+
+
 @pytest.mark.parametrize(
     "artifact", ["__pycache__/foo.cpython-3x.pyc", "foo.pyc", "foo.pyo"]
 )

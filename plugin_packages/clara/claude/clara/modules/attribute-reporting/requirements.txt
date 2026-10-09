@@ -1,2 +1,2 @@
-polars>=1.0
+polars>=1.0,<3
 playwright>=1.48.0

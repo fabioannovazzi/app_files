@@ -460,3 +460,50 @@ def test_wrong_cold_start_interpreter_does_not_create_environment_or_policy(tmp_
     assert not path.exists()
     assert not (path.parent / module.POLICY).exists()
     assert calls == []
+
+
+@pytest.mark.parametrize("features", [("core",), ("core", "ocr")])
+def test_upgrade_repairs_pre_lipe_revision6_without_recreating_runtime(
+    tmp_path, features
+):
+    module, selection, api, runner, calls = fixture_runtime(tmp_path)
+    current_revision = module.POLICY_REVISION
+    module.POLICY_REVISION = 6
+    if "ocr" in features:
+        selection.requirements_files = [selection.plugin_root / "requirements-ocr.txt"]
+    path = module.target(selection.plugin_root, tmp_path / "shared")
+    assert module.ensure(selection, path, api, runner)[0]
+    interpreter = api.runtime_python(path)
+    identity = interpreter.stat().st_ino
+    (selection.plugin_root / "requirements-shared-core.txt").write_text(
+        "# LIPE release added tzdata\n"
+    )
+    module.POLICY_REVISION = current_revision
+    selection.requirements_files = [selection.plugin_root / "requirements.txt"]
+    calls.clear()
+
+    ready, upgraded, detail = module.ensure(selection, path, api, runner)
+
+    assert ready, detail
+    assert upgraded == path
+    assert interpreter.stat().st_ino == identity
+    assert not any("venv" in call for call in calls)
+    assert current_revision > 6
+    assert (
+        json.loads((path.parent / module.POLICY).read_text())["revision"]
+        == current_revision
+    )
+    assert json.loads((path / module.RECEIPT).read_text())["features"] == list(features)
+    assert module.ready(selection, path, api)
+    env = dict(os.environ)
+    env.pop(module.INSTALLING, None)
+    result = subprocess.run(
+        [str(interpreter), "-c", "print('upgraded workflow ready')"],
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=15,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == "upgraded workflow ready"

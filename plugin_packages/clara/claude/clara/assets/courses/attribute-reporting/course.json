@@ -33,7 +33,7 @@
     },
     {
       "path": "modules/attribute-reporting/requirements.txt",
-      "sha256": "9139674d628b35fd9a4705a55a6e6ad79f0908f7d3a64cb9868b7d16d6d1890e"
+      "sha256": "19f93c2e80b6e39003de1131a2fff49f70c5281c3badade0deb10a8fa61a5b9b"
     },
     {
       "path": "modules/attribute-reporting/scripts/apply_validated_mappings.py",
@@ -1506,5 +1506,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "f9e9a06b038f3dd0559eccd07a48e56226f5427e50e704056cee3b5d24cd341a"
+  "canonical_course_sha256": "f5ee481a0853bb72a9f9272d6d2cba2bae73075fe2ef937054ee332258148d7a"
 }

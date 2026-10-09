@@ -20,6 +20,7 @@ import sys
 import tempfile
 import warnings
 import zipfile
+from contextlib import nullcontext
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from email import policy
@@ -52,6 +53,7 @@ _SCRIPT_DIRECTORY = Path(__file__).resolve().parent
 if str(_SCRIPT_DIRECTORY) not in sys.path:
     sys.path.insert(0, str(_SCRIPT_DIRECTORY))
 
+import archive_preferences as preferences  # noqa: E402
 import client_ledger as ledger  # noqa: E402
 import google_drive as drive  # noqa: E402
 from vera_assurance import (  # noqa: E402
@@ -536,8 +538,123 @@ def _config_path(state_dir: Path) -> Path:
     return state_dir / CONFIG_FILENAME
 
 
+def _archive_profile(state_dir: Path) -> Path | None:
+    """Keep approved root discovery private and independent of session leases."""
+    try:
+        return preferences.profile_directory(state_dir)
+    except (OSError, ValueError) as exc:
+        raise ArchiveError(f"Archive profile unavailable: {exc}") from exc
+
+
+def _profile_registry_directory(state_dir: Path) -> Path | None:
+    profile = _archive_profile(state_dir)
+    if profile is None:
+        return None
+    config = _load_config(state_dir, validate_scope_roots=False)
+    key = hashlib.sha256(str(config.archive_root).encode()).hexdigest()
+    return profile / "archives" / key
+
+
 def _client_identities_path(state_dir: Path) -> Path:
-    return state_dir / CLIENT_IDENTITIES_FILENAME
+    directory = _profile_registry_directory(state_dir)
+    return (directory or state_dir) / CLIENT_IDENTITIES_FILENAME
+
+
+def _identity_transaction(function: Callable[..., Any]) -> Callable[..., Any]:
+    """Lock the exact root's shared aliases across the whole identity transaction."""
+
+    @wraps(function)
+    def wrapped(*args: Any, **kwargs: Any) -> Any:
+        state = _state_dir(
+            kwargs.get(
+                "state_dir", args[0] if args and isinstance(args[0], Path) else None
+            )
+        )
+        profile = _archive_profile(state)
+        config = (
+            _load_config(state, validate_scope_roots=False)
+            if profile is not None
+            else None
+        )
+        try:
+            if profile is not None and config is not None:
+                if _path_is_within(profile, config.archive_root) or _path_is_within(
+                    config.archive_root, profile
+                ):
+                    raise ArchiveError(
+                        "Private archive profile must be outside the source archive."
+                    )
+                approved = profile / "approved-archive.json"
+                if not approved.exists() and not approved.is_symlink():
+                    # This session's validated configuration already carries approval.
+                    _remember_approved_root(state, config.archive_root)
+            guard = (
+                preferences.registry_lock(profile, config.archive_root)
+                if profile is not None and config is not None
+                else nullcontext()
+            )
+            with guard:
+                shared = _client_identities_path(state)
+                legacy = state / CLIENT_IDENTITIES_FILENAME
+                if shared != legacy and not shared.exists() and legacy.is_file():
+                    # Migrate only this approved session, never scan another session.
+                    _assert_private_file(legacy, "client identity registry")
+                    records = _load_client_identity_file(legacy)
+                    _write_private_json(
+                        shared,
+                        {
+                            "schema_version": CLIENT_IDENTITIES_SCHEMA_VERSION,
+                            "clients": [record.as_json() for record in records],
+                        },
+                    )
+                return function(*args, **kwargs)
+        except (OSError, ValueError) as exc:
+            raise ArchiveError(
+                f"Archive identity transaction unavailable: {exc}"
+            ) from exc
+
+    return wrapped
+
+
+def _remember_approved_root(state: Path, root: Path) -> None:
+    profile = _archive_profile(state)
+    if profile is None:
+        return
+    if _path_is_within(profile, root) or _path_is_within(root, profile):
+        raise ArchiveError(
+            "Private archive profile must be outside the source archive."
+        )
+    profile.mkdir(parents=True, exist_ok=True, mode=0o700)
+    profile.chmod(0o700)
+    _write_private_json(
+        profile / "approved-archive.json",
+        {
+            "schema_version": 1,
+            "archive_root": str(root),
+        },
+    )
+
+
+def _restore_approved_root(state: Path) -> None:
+    if _config_path(state).exists():
+        return
+    profile = _archive_profile(state)
+    if profile is None:
+        return
+    try:
+        saved = preferences.read_json(profile / "approved-archive.json")
+    except (OSError, ValueError) as exc:
+        raise ArchiveError(f"Approved archive preference is unreadable: {exc}") from exc
+    if saved is None:
+        return
+    if (
+        set(saved) != {"schema_version", "archive_root"}
+        or saved["schema_version"] != 1
+        or not isinstance(saved["archive_root"], str)
+    ):
+        raise ArchiveError("Approved archive preference is malformed.")
+    # Revalidate access and derive fresh scopes; never copy an old session config.
+    configure_archive(Path(saved["archive_root"]), state_dir=state)
 
 
 def _google_drive_bindings_path(state_dir: Path) -> Path:
@@ -852,6 +969,13 @@ def configure_archive(
         planned_state,
         host_access_approved=host_access_approved,
     )
+    profile = _archive_profile(planned_state)
+    if profile is not None and (
+        _path_is_within(profile, root) or _path_is_within(root, profile)
+    ):
+        raise ArchiveError(
+            "Private archive profile must be outside the source archive."
+        )
     private_state = _state_dir(state_dir, create=True)
     scopes = _discover_top_level_scopes(
         root,
@@ -866,6 +990,7 @@ def configure_archive(
     ):
         if os.name == "posix":
             config_path.chmod(0o600)
+        _remember_approved_root(private_state, root)
         return studio_archive_status(state_dir=private_state)
     config = ArchiveConfig(
         archive_root=root,
@@ -873,6 +998,7 @@ def configure_archive(
         configured_at=_now_iso(),
     )
     _write_private_json(config_path, config.as_json())
+    _remember_approved_root(private_state, root)
     status = studio_archive_status(state_dir=private_state)
     status["index_requires_refresh"] = True
     return status
@@ -1042,6 +1168,7 @@ def _load_config(
     *,
     validate_scope_roots: bool = True,
 ) -> ArchiveConfig:
+    _restore_approved_root(state_dir)
     _claim_state(state_dir)
     path = _config_path(state_dir)
     if not path.is_file():
@@ -1213,13 +1340,16 @@ def _validate_identity_uniqueness(records: Sequence[ClientIdentity]) -> None:
 
 
 def _load_client_identities(state_dir: Path) -> tuple[ClientIdentity, ...]:
-    path = _client_identities_path(state_dir)
+    return _load_client_identity_file(_client_identities_path(state_dir))
+
+
+def _load_client_identity_file(path: Path) -> tuple[ClientIdentity, ...]:
     if not path.is_file():
         return ()
     _assert_private_file(path, "client identity registry")
     try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
+        payload = preferences.read_json(path)
+    except (OSError, ValueError) as exc:
         raise ArchiveError(
             f"Studio Archive client identity registry is unreadable: {exc}"
         ) from exc
@@ -1323,6 +1453,7 @@ def _discover_ledger_clients(config: ArchiveConfig) -> tuple[dict[str, Any], ...
         raise ArchiveError(f"Customer-folder ledger is invalid: {exc}") from exc
 
 
+@_identity_transaction
 def _synchronize_client_identities(
     state_dir: Path,
     config: ArchiveConfig,
@@ -1524,6 +1655,7 @@ def list_studio_clients(
     """List client scopes without exposing the private identity registry."""
 
     private_state = _state_dir(state_dir)
+    _restore_approved_root(private_state)
     if not _config_path(private_state).is_file():
         return {
             "configured": False,
@@ -1699,6 +1831,7 @@ def get_studio_client_folder(
     }
 
 
+@_identity_transaction
 def set_studio_client_identity(
     scope_id: str,
     *,
@@ -1856,6 +1989,40 @@ def _safe_client_directory_name(legal_name: str) -> str:
     return name
 
 
+def _readable_after_write(
+    function: Callable[..., dict[str, Any]],
+) -> Callable[..., dict[str, Any]]:
+    """Refresh derived navigation after a successful explicit archive mutation."""
+
+    @wraps(function)
+    def wrapped(*args: Any, **kwargs: Any) -> dict[str, Any]:
+        result = function(*args, **kwargs)
+        client_id = result.get("client_id") or result.get("run", {}).get("client_id")
+        if client_id is None:
+            client_id = result.get("client", {}).get("client_id")
+        if client_id is not None:
+            try:
+                folder = get_studio_client_folder(
+                    client_id, state_dir=kwargs.get("state_dir")
+                )["client_folder"]
+                from readable_archive import refresh_readable_archive
+
+                result["readable_archive"] = refresh_readable_archive(
+                    Path(folder["client_root"]), ledger
+                )
+            except (ledger.LedgerError, OSError, UnicodeError) as exc:
+                # Ledger mutation remains committed; expose the separate view failure.
+                result["readable_archive"] = {
+                    "status": "unavailable",
+                    "error": str(exc),
+                }
+        return result
+
+    return wrapped
+
+
+@_readable_after_write
+@_identity_transaction
 def create_studio_client(
     legal_name: str,
     *,
@@ -1936,6 +2103,7 @@ def create_studio_client(
     }
 
 
+@_readable_after_write
 def create_studio_client_engagement(
     client_id: str,
     engagement_label: str,
@@ -2908,6 +3076,7 @@ def _workflow_version(workflow_id: str) -> str:
     return version.strip()
 
 
+@_readable_after_write
 def prepare_studio_client_workflow(
     engagement_id: str,
     workflow_id: str,
@@ -3037,6 +3206,7 @@ def _journal_sampling_handoff_references(
     return references
 
 
+@_readable_after_write
 def start_check_entries_from_sample(
     client_id: str,
     engagement_id: str,
@@ -3120,6 +3290,7 @@ def start_check_entries_from_sample(
     }
 
 
+@_readable_after_write
 def import_studio_client_document(
     client_id: str,
     source_path: Path,
@@ -3326,6 +3497,7 @@ def _selected_ledger_root(
     return client_root
 
 
+@_readable_after_write
 def start_studio_client_workflow(
     client_id: str,
     engagement_id: str,
@@ -3344,6 +3516,7 @@ def start_studio_client_workflow(
     return {"status": loaded["run"]["status"], "run": loaded["run"]}
 
 
+@_readable_after_write
 def fail_studio_client_workflow(
     client_id: str,
     engagement_id: str,
@@ -3363,6 +3536,7 @@ def fail_studio_client_workflow(
     return {"status": loaded["run"]["status"], "run": loaded["run"]}
 
 
+@_readable_after_write
 def cancel_studio_client_workflow(
     client_id: str,
     engagement_id: str,
@@ -3381,6 +3555,7 @@ def cancel_studio_client_workflow(
     return {"status": loaded["run"]["status"], "run": loaded["run"]}
 
 
+@_readable_after_write
 def finalize_studio_client_workflow(
     client_id: str,
     engagement_id: str,
@@ -3404,6 +3579,7 @@ def finalize_studio_client_workflow(
     }
 
 
+@_readable_after_write
 def complete_studio_client_workflow(
     client_id: str,
     engagement_id: str,
@@ -3422,6 +3598,7 @@ def complete_studio_client_workflow(
     return {"status": loaded["run"]["status"], "run": loaded["run"]}
 
 
+@_readable_after_write
 def close_studio_client_engagement(
     client_id: str,
     engagement_id: str,
@@ -3506,6 +3683,9 @@ def recover_studio_client_ledger(
                 run_count += len(runs)
         except ledger.LedgerError as exc:
             raise ArchiveError(f"Customer-folder recovery failed: {exc}") from exc
+        from readable_archive import refresh_readable_archive
+
+        refresh_readable_archive(root, ledger)
     return {
         "status": "recovered",
         "client_count": len(_discover_ledger_clients(current)),
@@ -3821,7 +4001,8 @@ def _connect(
         return connection
     connection.execute("PRAGMA secure_delete = ON")
     connection.execute("PRAGMA journal_mode = DELETE")
-    connection.executescript("""
+    connection.executescript(
+        """
         CREATE TABLE IF NOT EXISTS metadata (
             key TEXT PRIMARY KEY,
             value TEXT NOT NULL
@@ -3867,7 +4048,8 @@ def _connect(
             ON documents(scope_id, relative_path);
         CREATE INDEX IF NOT EXISTS chunks_document_idx
             ON chunks(document_id, ordinal);
-        """)
+        """
+    )
     try:
         connection.execute(
             "INSERT INTO chunk_fts(chunk_fts, rank) VALUES('secure-delete', 1)"
@@ -5204,6 +5386,7 @@ def studio_archive_status(*, state_dir: Path | None = None) -> dict[str, Any]:
     """Return configuration and derived-index status without changing state."""
 
     private_state = _state_dir(state_dir)
+    _restore_approved_root(private_state)
     config_path = _config_path(private_state)
     if not config_path.is_file():
         return {

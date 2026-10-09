@@ -9559,5 +9559,139 @@
         ]
       }
     ]
+  },
+  "vera/organizzazione-lavoro": {
+    "group": "workflow",
+    "revision": "2026-10-07.1",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "isolated_local_commitment_register_then_optional_authorized_calendar"
+    },
+    "files": [
+      {
+        "source": "studio-work/demo-it.json",
+        "path": "files/input/case-it.json",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "studio-work/practice-it.json",
+        "path": "files/practice/case-it.json",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "studio-work/demo-en.json",
+        "path": "files/input/case-en.json",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "studio-work/practice-en.json",
+        "path": "files/practice/case-en.json",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "studio-work/demo-fr.json",
+        "path": "files/input/case-fr.json",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "studio-work/practice-fr.json",
+        "path": "files/practice/case-fr.json",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "studio-work/demo-de.json",
+        "path": "files/input/case-de.json",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "studio-work/practice-de.json",
+        "path": "files/practice/case-de.json",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "studio-work/demo-es.json",
+        "path": "files/input/case-es.json",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "studio-work/practice-es.json",
+        "path": "files/practice/case-es.json",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "vera/agenzia-acquisition": {
+    "group": "workflow",
+    "revision": "2026-10-08.1",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "run_agenzia_synthetic_fixture_then_review_and_resume"
+    },
+    "files": [
+      {
+        "source": "agenzia/task-it.md",
+        "path": "files/input/task-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "agenzia/demo.json",
+        "path": "files/input/demo.json",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "agenzia/practice-it.md",
+        "path": "files/practice/practice-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "agenzia/practice.json",
+        "path": "files/practice/practice.json",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      }
+    ]
   }
 }

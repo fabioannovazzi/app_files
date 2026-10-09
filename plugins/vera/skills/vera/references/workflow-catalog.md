@@ -50,6 +50,16 @@ available through `demo-p1`. Its prepared course uses fictional independent and
 directly wholly owned cases, with professional review and changed-input practice. Later
 branches, signatures and filings remain unsupported. Use the specialist skill.
 
+## Studio organisation
+
+- `organizzazione-lavoro`: studio appointments, activities, deadlines, waiting
+  items, delegations, source-based meeting actions and daily planning. Persistent
+  local register in Codex/Cowork, with actual host calendar connections and
+  read-back verification. Accepts typed or host-transcribed voice instructions.
+  No unattended inbox listener; recurring briefings require separately configured
+  host automation. Without local tools, only bounded preparation is supported.
+  Read `../../organizzazione-lavoro/SKILL.md`.
+
 ## Professional workflows
 
 - `lipe`: **LIPE** reconciles Italian VAT registers with source evidence and
@@ -124,6 +134,7 @@ branches, signatures and filings remain unsupported. Use the specialist skill.
 - `bilancio-oic`: understand accounting evidence and prepare, update,
   reconcile, review, validate, or export an individual Italian OIC civil-law
   annual financial statement; XBRL is an output, not the workflow identity.
+- `agenzia-acquisition`: acquire Agenzia invoices, corrispettivi and quarterly stamp-duty evidence for selected delegated clients; review exceptions, resume verified originals and prepare an explicitly reviewed F24 working paper. Uses one local visible-Chrome worker with optional native panel; no payment or fiscal submission.
 - `browser-automation`: teach, develop, test or repair an exact professional browser
   process, keeping demonstrations, attempts and CRs linked across conversations.
   Ordinary work uses a separately installed named operation skill, with its own

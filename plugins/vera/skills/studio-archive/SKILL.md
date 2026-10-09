@@ -52,7 +52,25 @@ recovery, rename handling, and retention must remain separate explicit steps.
 The machine-local index and configuration are rebuildable aids, not the run
 ledger.
 
+For local archive delivery, show the generated `readable_archive.index_path`
+(`Vera/APRI ARCHIVIO.html`) and the dated, named folders under `Vera/Pratiche/`.
+These are portable, rebuildable navigation pages, not a replacement for the
+exact `engagements/` ledger. A completed execution does not imply professional
+approval. Check the returned readable-view status before claiming navigation
+is available.
+
 Choose the route before resolving any module:
+
+A fresh session reuses the last explicitly approved root from the owner-private
+profile after access revalidation. Existing sessions keep their own pinned root,
+run selection and index. Confirmed aliases persist privately per archive root;
+raw aliases are not returned in the safe client directory. If no approved root is
+available, say “the archive location is not connected”; do not say the client is
+unregistered or propose New client until the archive has been listed. Reuse an
+existing client/engagement and the user's established choices. Before the first
+copy, consolidate the selected client, engagement, sources and write permission
+into one concise confirmation; internal ledger steps remain separate.
+
 
 1. When the user asks to inspect WhatsApp messages, confirm that Computer Use
    can control the local WhatsApp Desktop application on the same computer.

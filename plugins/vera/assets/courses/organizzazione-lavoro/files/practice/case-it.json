@@ -1,0 +1,60 @@
+{
+  "fictional": true,
+  "phase": "practice",
+  "language": "it",
+  "studio": "Studio Selva",
+  "day": "2026-11-12",
+  "request": "Vera, organizza gli impegni dello studio fittizio dal file: registra l’incontro, spostalo come richiesto, conserva le azioni della riunione e mostrami la giornata. Dimmi cosa è salvato localmente e cosa non è stato scritto nel calendario.",
+  "preferences": {
+    "timezone": "Europe/Rome",
+    "calendar_id": "tutorial-local-only",
+    "working_hours": {
+      "start": "09:00",
+      "end": "18:00"
+    },
+    "durations": {
+      "appointment": 60
+    }
+  },
+  "busy_periods": [
+    {
+      "start": "2026-11-12T09:00:00+01:00",
+      "end": "2026-11-12T10:00:00+01:00",
+      "label": "Fascia fittizia di esempio; nessuna verifica del connettore"
+    }
+  ],
+  "appointment": {
+    "title": "Incontro con Luca",
+    "kind": "appointment",
+    "client": "Studio Selva",
+    "owner": "Elena",
+    "start_time": "2026-11-12T10:00:00+01:00",
+    "end_time": "2026-11-12T11:00:00+01:00",
+    "duration_minutes": 60,
+    "source": "case-it.json"
+  },
+  "reschedule_request": {
+    "start_time": "2026-11-12T15:00:00+01:00",
+    "end_time": "2026-11-12T16:00:00+01:00"
+  },
+  "meeting_notes": {
+    "title": "Riunione cliente",
+    "date": "2026-11-12",
+    "client": "Studio Selva",
+    "participants": [
+      "Luca",
+      "Elena"
+    ],
+    "source": "case-it.json",
+    "notes": "Concordato il recupero degli estratti conto mancanti. Elena: Inviare la richiesta documenti entro la data indicata. 2026-11-16."
+  },
+  "task_request": {
+    "title": "Richiedere estratti conto",
+    "kind": "follow_up",
+    "owner": "Elena",
+    "client": "Studio Selva",
+    "due_date": "2026-11-16",
+    "source": "case-it.json"
+  },
+  "live_calendar_authorized": false
+}

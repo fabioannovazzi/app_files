@@ -1,6 +1,6 @@
 {
   "name": "vera",
-  "version": "0.1.342",
+  "version": "0.1.355",
   "description": "Vera affianca commercialisti e studi professionali nei quesiti fiscali e legali, nel bilancio OIC/XBRL e nella revisione contabile e riconciliazione: risposte con fonti, analisi, controlli e carte di lavoro da rivedere.",
   "author": {
     "name": "Fabio Annovazzi · Mparanza",
@@ -110,7 +110,7 @@
     "shortDescription": "Assistente AI x commercialisti",
     "longDescription": "Vera affianca commercialisti e studi professionali nei quesiti fiscali e legali, nel bilancio e nella revisione contabile. Prepara risposte e report con verifica delle fonti e del ragionamento. Da CSV, Excel o PDF supportati prepara il bilancio civilistico OIC/XBRL e analisi finanziarie.\n\nPer la revisione contabile e le riconciliazioni prepara abbinamenti bancari, verifiche delle partite aperte, campioni, controlli documentali ed eccezioni. Supporta anche controllo di gestione, piani economico-finanziari, bandi, avvisi e cartelle, INPS, Registro Imprese e DIRE, concordato preventivo e comunicazioni.\n\nVera mostra fonti, passaggi, ambiguità e informazioni mancanti. Firma, approvazione, deposito, invio, pubblicazione e giudizio professionale restano al commercialista.",
     "developerName": "Fabio Annovazzi · Mparanza",
-    "category": "Productivity",
+    "category": "Finance",
     "capabilities": [
       "Interactive",
       "Read",

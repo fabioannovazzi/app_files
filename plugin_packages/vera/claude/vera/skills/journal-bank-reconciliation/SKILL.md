@@ -3,6 +3,16 @@ name: journal-bank-reconciliation
 description: Use to reconcile estratti conto bancari with prima nota, giornale contabile or mastrini from reviewed CSV/XLSX or consistently labelled text-PDF tables. Produces matched movements, unmatched rows, residuals and reviewable workpapers. For checking a supplied elenco partite aperte at a cut-off use open-item-reconciliation. OCR-only bank statements are unsupported.
 ---
 
+## Verified execution preparation
+
+Before an assured installed-module handoff, follow Vera's
+`skills/vera/references/execution-recovery.md`: run the supported
+`scripts/verified_execution.py --module <component-id>` internally and use the
+returned execution root for the module skill, commands, assets and review server.
+Do not ask the professional to use Terminal. This helper may create a private
+verified code copy outside the host installation; it never edits that installation
+and is not permission to manually copy it or bypass a denied operation.
+
 ## Cowork execution contract
 
 Public workflow names select skills; component IDs select module paths.
@@ -121,6 +131,10 @@ For a Geneva (CH-GE) mandate, read `../vera/references/localization/geneva.md` f
 
 
 
+
+First follow `../vera/references/execution-recovery.md` for component
+`journal-bank-reconciliation`. Use its verified execution root for the handoff
+below; never ask the professional to run a terminal command.
 
 Resolve `../../modules/journal-bank-reconciliation` from this skill directory
 when it exists; otherwise resolve `../../../journal-bank-reconciliation` in the

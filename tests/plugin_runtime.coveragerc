@@ -2,6 +2,7 @@
 include =
     */plugins/vera/scripts/_managed_python_runtime.py
     */plugins/vera/scripts/_shared_python_runtime.py
+    */plugins/vera/scripts/verified_execution.py
 
 [report]
 show_missing = True

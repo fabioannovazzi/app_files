@@ -36,8 +36,12 @@
       "sha256": "8f0d7650633831ecd51245d712cee65e202800d35c2938757db5c886b9362368"
     },
     {
+      "path": "modules/invoice-xml/references/model-data-report-example.json",
+      "sha256": "d9f5dcc822171dadeac71313f29807dc5b111155ef2ec7457be3fef8cedbb4a7"
+    },
+    {
       "path": "modules/invoice-xml/references/proposal-contract.md",
-      "sha256": "0ca151f9927e677e41a4a2a92bd7b04e3607bd97f1a32cc603983622ee479160"
+      "sha256": "733c871045946505eba97da2bfec106b690b5286abe0fa877253826dbadd8eb4"
     },
     {
       "path": "modules/invoice-xml/references/xsd/Schema_VFPR12_v1.2.3.xsd",
@@ -61,7 +65,7 @@
     },
     {
       "path": "modules/invoice-xml/scripts/invoice_checks.py",
-      "sha256": "d36b1e851a8791762762ccf7d6d38494093b91947dad2577aab2016b9a73e3eb"
+      "sha256": "3f7d16ce9845b5d8c604af825d626bda551218b0a26907fbe7aff3e101dda057"
     },
     {
       "path": "modules/invoice-xml/scripts/invoice_schema.py",
@@ -69,7 +73,7 @@
     },
     {
       "path": "modules/invoice-xml/scripts/invoice_workflow.py",
-      "sha256": "684323802f9b668eda34fc36ec8821e81076dc5bd90fc82c2c9de3c158f1993d"
+      "sha256": "e1704bdb61d0fa50bffa7af9a2f10a8cbb388957039f14b761ce1c2ecf0ecb25"
     },
     {
       "path": "modules/invoice-xml/scripts/source_evidence.py",
@@ -77,7 +81,7 @@
     },
     {
       "path": "modules/invoice-xml/skills/invoice-xml/SKILL.md",
-      "sha256": "036fd2a1aa69ceb611daf83d6cf4758ec973fa3bfdf2f0def061f3fea3dadefa"
+      "sha256": "c1f347039b59b308e4c8139bf5786c04f843f024b2fedd1f3e3c3fa209cc91ff"
     },
     {
       "path": "modules/invoice-xml/vendor/modules/__init__.py",
@@ -89,7 +93,7 @@
     },
     {
       "path": "modules/invoice-xml/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
+      "sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112"
     },
     {
       "path": "modules/invoice-xml/vendor/modules/vera_assurance/decisions.py",
@@ -121,7 +125,7 @@
     },
     {
       "path": "skills/invoice-xml/SKILL.md",
-      "sha256": "58bcf374cf2b0ff6af18ad1c8d2bca3f36645c453261ba16fc4706171207a1ff"
+      "sha256": "d2360468490735e12b2bdbf46343e0a13f41d77f58b072af225d0c73b8237756"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -141,7 +145,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "f03e4f52b6cf09ab1a83f778c0544fb59b4b5bf5728ed8cdab5ea81b4175f649"
+      "sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -346,5 +350,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "4357cfe3fbedc6d76c46965446b630573a9fa6f27a785c153d0c8b41f4cffab9"
+  "canonical_course_sha256": "bf69a8e4c2d68ae16cec0e159dfa3ac6da6d9ac5a5a6b517943a252bc6dbebe8"
 }

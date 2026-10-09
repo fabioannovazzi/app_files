@@ -2250,7 +2250,7 @@ def left_join_on_column(
     """
     Left-joins two Polars LazyFrames on `on`.
     """
-    return lazy_left.join(lazy_right, on=on, how="left")
+    return lazy_left.join(lazy_right, on=on, how="left", maintain_order="left")
 
 
 def sort_and_left_join(

@@ -112,6 +112,17 @@ booked purchase-invoice auditing remains `vera:purchase-invoice-review`.
 
 ## Scope and decisions
 
+Inspect the supplied evidence and current conversation before collecting intake
+decisions. Reuse an already confirmed archive/client/engagement context. For an
+explicitly selected single-file delivery without archive registration, follow
+Vera's `skills/vera/references/standalone-work.md` and pass that invoice task's
+`context_path` to the existing `--client-engagement` argument. Keep all source,
+proposal, professional-approval and export checks. Do not open an archive chooser
+or ask for client registration on this route. If retention is unresolved, ask once
+whether the user wants archived client work or a standalone deliverable; reuse the
+answer. For archived work, list/reconnect the approved root first and resolve
+existing identities before offering New client. Never open a chooser speculatively.
+
 Resolve one Studio Archive client and engagement. Import the selected sources,
 prepare/start an `invoice-xml` run, and use its exact `client_engagement_path`,
 `input_dir` and `output_dir`. Use Vera's managed dependency check for
@@ -130,6 +141,24 @@ Resolve material choices about the preparation purpose, source grouping and tax
 treatment from the current request and evidence before asking targeted questions.
 Inspect the actual inputs first. Do not introduce hypothetical tax branches or
 optional services unless the facts cue them.
+
+Collect the unresolved intake facts in one concise request after inspecting the
+source: preparation purpose and prior issuance, fiscal regime, number/date and
+amount confirmations, and any source-cued withholding or other tax decisions.
+Include archive context only if unresolved. Reuse answers already given; ask a
+follow-up only when new evidence or an incomplete answer requires it. Exact
+professional approval of the prepared revision remains a later export gate.
+
+Reuse the complete instructions and references already read for this installed
+version. Size reads to retain the full required text; read missing contiguous
+sections if output was truncated. Consult specific references for unresolved
+fields instead of repeatedly reading the router or serializer implementation.
+
+The bundled schema is `references/xsd/Schema_VFPR12_v1.2.3.xsd` relative to the
+module root, with `references/xsd/xmldsig-core-schema.xsd` and `sources.json`
+alongside it. `scripts/invoice_workflow.py` uses `InvoiceSchema` to resolve and
+verify this bundle automatically. Use the prepare/export entrypoints below;
+do not search for a schema path or build a separate serializer for a normal run.
 
 For foreign invoices, read `../../references/foreign-invoices.md`. Explain and
 review the operation facts, TD17/18/19 choice, parties, Italian VAT treatment,
@@ -169,6 +198,14 @@ delete information, change the tax treatment or split a source to bypass it.
    missing facts needed to progress. Do not infer tax IDs, regime, routing code,
    numbering, dates, quantity or unit price from a plausible default.
 
+For any SdI or gateway rejection follow-up, inspect the newest supplied
+notification or screenshot before answering. Record every currently visible
+error code and message, compare the exact referenced XML fields with the current
+artifact, and retain an unresolved-discrepancy checklist across successive
+rejections. Do not carry forward an earlier diagnosis as the current one and do
+not describe a correction as resolved until the exact latest control passes
+against the corrected artifact.
+
 ## Review and export
 
 Run `scripts/invoice_workflow.py prepare --proposal <output>/proposal.json
@@ -206,10 +243,23 @@ visible during review, and errors/results visible after local validation.
 prepared page reached the model. Record actual native-vision exposure honestly.
 Use `full_context_required` when the entire relevant invoice was needed.
 
+Read Vera's report contract once and use
+`../../references/model-data-report-example.json` (relative to this skill) as a
+schema-valid synthetic example. Replace its run metadata and measurements with
+actual evidence, and record every model-visible phase, including review and
+checks when applicable. The example is not a receipt for the current run.
+Use supported units such as `files`, `pages`, `images`, `items` or
+`evidence_excerpts`; invoice fields can be counted as `items` with a descriptive
+label, not a new `fields` unit. Unknown quantities must not be guessed or entered
+as zero. Consult `scripts/model_data_report.py` in the Vera root for other units.
+Build the report through the shared builder after the final checks; do not hand
+construct its hashes or defer the required report until after run completion.
+
 Create `model_data_report.json` and `model_data_report.md` in the exact run
 output using Vera's shared builder; its minimal server receipt is a shared Vera
-service, not an invoice upload. Declare all final artifacts in Studio Archive,
-review and complete the run only after the report contract is satisfied. Link
+service, not an invoice upload. For archived work, declare all final artifacts in Studio Archive, review and
+complete the run only after the report contract is satisfied. For standalone work,
+retain the report and artifacts in the task output; do not call Archive completion. Link
 the XML, preview and export report, distinguishing schema validation, local
 checks, professional review and untested SdI acceptance.
 

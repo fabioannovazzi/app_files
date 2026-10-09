@@ -90,13 +90,21 @@ def test_separate_commands_reuse_config_and_new_session_recovers_same_client(
     assert initial.returncode == 0, initial.stdout + initial.stderr
     first_clients = json.loads(initial.stdout)["clients"]
     assert len(first_clients) == 1
-    # A new task must select the root, not silently adopt another task's pointer.
+    # A fresh task revalidates the approved profile into independent config.
     fresh = invoke(root, second, "clients")
-    assert '"configured": false' in fresh.stdout
-    assert (
-        invoke(root, second, "configure", "--archive-root", str(archive)).returncode
-        == 0
+    assert fresh.returncode == 0, fresh.stderr
+    assert json.loads(fresh.stdout)["configured"] is True
+    resolved = invoke(
+        root,
+        second,
+        "resolve-client",
+        "--identity-kind",
+        "legal_name",
+        "--identity-value",
+        "Synthetic Client",
     )
+    assert resolved.returncode == 0, resolved.stderr
+    assert json.loads(resolved.stdout)["resolution_status"] == "exact_match"
     recovery = invoke(root, second, "recover-ledger")
     assert recovery.returncode == 0, recovery.stdout + recovery.stderr
     recovered = invoke(root, second, "clients")

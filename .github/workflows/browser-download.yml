@@ -9,7 +9,11 @@ on:
       - 'tests/plugins/test_vera_datev_starter.py'
       - 'tests/datev_starter.coveragerc'
       - 'tests/test_browser*.mjs'
-      - 'tests/fixtures/browser_agenzia_tab.mjs'
+      - 'tests/test_agenzia*.py'
+      - 'tests/test_agenzia*.mjs'
+      - 'tests/agenzia_acquisition.coveragerc'
+      - 'tests/plugins/test_teaching_agenzia_execution.py'
+      - 'plugins/vera/skills/agenzia-acquisition/**'
       - 'tests/test_browser_automation*.py'
       - 'tests/test_browser_batch_review.py'
       - 'tests/test_browser_development_request.py'
@@ -38,7 +42,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node --test tests/test_browser_download_directory.mjs tests/test_browser_automation_runtime.mjs tests/test_browser_automation_discovery_runtime.mjs tests/test_browser_session.mjs tests/test_browser_agenzia_download.mjs tests/test_browser_agenzia_acquisition.mjs tests/test_browser_agenzia_artifacts.mjs
+      - run: node --test tests/test_browser_download_directory.mjs tests/test_browser_automation_runtime.mjs tests/test_browser_automation_discovery_runtime.mjs tests/test_browser_session.mjs
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -93,3 +97,32 @@ jobs:
       - run: python -m isort --check-only plugins/vera/scripts/datev_starter.py tests/plugins/test_vera_datev_starter.py
       - run: python -m mypy --follow-imports=skip plugins/vera/scripts/datev_starter.py
       - run: python -m bandit -q plugins/vera/scripts/datev_starter.py
+
+  agenzia-acquisition:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    env:
+      VERA_ADE_BROWSER_TEST: '1'
+      VERA_ADE_TEST_CHANNEL: chromium
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python -m pip install pytest pytest-cov pypdf black==25.1.0 isort==6.0.1 mypy bandit -r plugins/browser-automation/requirements-agenzia.txt
+      - run: python -m playwright install --with-deps chromium
+      - name: Verify single worker, real offline DOM, optional UI and course execution
+        run: python -m pytest --noconftest -q -o addopts='' --tb=short tests/test_agenzia_acquisition.py tests/test_agenzia_ui.py tests/test_agenzia_portal.py tests/test_agenzia_panel.py tests/plugins/test_teaching_agenzia_execution.py --cov --cov-config=tests/agenzia_acquisition.coveragerc
+      - name: Verify native metadata and Python projection
+        shell: bash
+        run: VERA_AGENZIA_PYTHON="$(python -c 'import sys; print(sys.executable)')" node --test tests/test_agenzia_mcp.mjs
+      - run: python -m black --check plugins/browser-automation/scripts/ade_acquisition plugins/browser-automation/scripts/agenzia_acquire.py plugins/browser-automation/scripts/agenzia_ui.py plugins/browser-automation/scripts/agenzia_runtime.py plugins/browser-automation/scripts/agenzia_demo.py tests/test_agenzia_acquisition.py tests/test_agenzia_ui.py tests/test_agenzia_portal.py tests/test_agenzia_panel.py tests/plugins/test_teaching_agenzia_execution.py
+      - run: python -m isort --check-only plugins/browser-automation/scripts/ade_acquisition plugins/browser-automation/scripts/agenzia_acquire.py plugins/browser-automation/scripts/agenzia_ui.py plugins/browser-automation/scripts/agenzia_runtime.py plugins/browser-automation/scripts/agenzia_demo.py tests/test_agenzia_acquisition.py tests/test_agenzia_ui.py tests/test_agenzia_portal.py tests/test_agenzia_panel.py tests/plugins/test_teaching_agenzia_execution.py
+      - run: python -m mypy --config-file=tests/plugin_runtime.mypy.ini plugins/browser-automation/scripts/ade_acquisition plugins/browser-automation/scripts/agenzia_acquire.py plugins/browser-automation/scripts/agenzia_ui.py plugins/browser-automation/scripts/agenzia_runtime.py plugins/browser-automation/scripts/agenzia_demo.py
+      - run: python -m bandit -q -r plugins/browser-automation/scripts/ade_acquisition plugins/browser-automation/scripts/agenzia_acquire.py plugins/browser-automation/scripts/agenzia_ui.py plugins/browser-automation/scripts/agenzia_runtime.py plugins/browser-automation/scripts/agenzia_demo.py -ll

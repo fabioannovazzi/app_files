@@ -1,0 +1,29 @@
+{
+  "vera/organizzazione-lavoro": {
+    "title": "Den Arbeitstag mit Vera organisieren",
+    "goal": "Eine Verpflichtung speichern, ändern, in einem neuen Chat wiederfinden und Besprechungsnotizen in Folgeaufgaben überführen.",
+    "scenario": "Kanzlei Riva muss Paola treffen und ein Dokument erhalten. Die eigenständige Übung nutzt Kanzlei Selva und Luca mit anderem Tag, Termin und Verantwortlichen. Alle Angaben sind fiktiv.",
+    "scope": "Das Übungsregister ist vom Kanzleiregister getrennt. Belegte Zeiten in der Datei sind Lesebeispiele, kein aktueller Google-Kalender. Der lokale Kurs erstellt keine externen Termine. Nach der Übung können Sie einen echten Test wählen: Kalender verbinden, einen bestimmten Testtermin genehmigen und über den Connector erneut lesen. Ohne Zugriff oder Freigabe bleibt es ein Vorschlag. Sprache nutzt die Transkription des Hostsystems; keine dauerhafte Überwachung wird aktiviert.",
+    "inputs": "Öffnen Sie case-de.json im Demonstrationsordner. Die Datei enthält Einstellungen, Anfrage, zu verschiebenden Termin, belegte Zeiten und Besprechungsnotizen. Das sind Fallangaben, keine fertigen Ergebnisse. Der Arbeitschat erstellt ein neues Übungsregister, ohne echte Einstellungen oder Verpflichtungen zu ändern.",
+    "request": "Vera, organisiere die Verpflichtungen der fiktiven Kanzlei aus dieser Datei: speichere den Termin, verschiebe ihn wie angefragt, bewahre die Besprechungsaufgaben auf und zeige den Tag. Sage, was lokal gespeichert und was nicht in den Kalender geschrieben wurde.",
+    "steps": [
+      "Lesen Sie im Arbeitschat die fiktiven Angaben und erstellen Sie das getrennte Register. Die Sprachbegleitung erklärt Kalender, Arbeitszeiten und Dauer; fragen Sie nach fehlenden Angaben. Übungseinstellungen verbinden kein echtes Konto.",
+      "Speichern Sie den Termin und vergleichen Sie Zeit und Dauer mit den beispielhaften belegten Zeiten. Lesen Sie das gespeicherte Ergebnis. Verschieben Sie den Termin anhand der neuen Anfrage und prüfen Sie die Revision; bezeichnen Sie ihn nicht als erstellten Google-Calendar-Termin.",
+      "Öffnen Sie das Register in einem neuen Prozess oder Chat. Prüfen Sie Identität, Quelle und neue Zeit. Leiten Sie Zusammenfassung, Entscheidungen und Aufgaben aus den Notizen ab, mit Verantwortlichem und Datum, soweit angegeben; benennen Sie Lücken. Zeigen Sie offene Verpflichtungen und einen Tagesvorschlag, wobei Einstellungen und begründete Prioritäten getrennt bleiben."
+    ],
+    "deliverables": [
+      "Ein erneut lesbares Übungsregister mit geändertem Termin, Quelle und Historie.",
+      "Eine gespeicherte Besprechung mit Folgeaufgaben und Verantwortlichen sowie offene Verpflichtungen.",
+      "Eine Erklärung der tatsächlich gespeicherten Ergebnisse und noch nötiger Kalenderverbindungen oder Automatisierungen."
+    ],
+    "review": "Öffnen Sie die echten Ergebnisse und vergleichen Sie Name, Datum, Dauer, Verantwortlichen und Quelle mit der Datei. Erneutes Lesen muss denselben geänderten Termin zeigen. Ein lokaler Datensatz beweist keine Kalenderänderung. Gesetzliche Fristen benötigen den spezialisierten Workflow.",
+    "checkpoints": [
+      "Benennen Sie vor dem Schreiben den Speicherort der Übungsdaten.",
+      "Finden Sie nach dem Verschieben denselben Termin durch erneutes Lesen.",
+      "Wählen Sie vor einem echten Test Konto und Kalender und genehmigen Sie die genaue Aktion."
+    ],
+    "practice": "Öffnen Sie die andere case-de.json im Ordner practice. Formulieren Sie die Anfrage für Selva ohne Demonstrationswerte zu kopieren. Prüfen Sie belegte Zeiten, verschieben Sie Luca und speichern Sie die Aufgaben. Markieren Sie die Aufgabe erledigt; sie muss aus der offenen Liste verschwinden und in der Historie bleiben.",
+    "success": "Die Übung behält ihre eigenen Angaben und neue Zeit nach erneutem Öffnen; erledigte Arbeit bleibt auffindbar und die Demonstration unverändert. Erklären Sie Register, aktuellen Kalender und automatisches Briefing. Vorbereitete Dateien beweisen keine Teilnahme.",
+    "repeat": "Bitten Sie um Tagesplanung oder beschreiben Sie eine Verpflichtung natürlich. Nutzen Sie bei echter Arbeit das normale Register und lesen Sie den aktuellen Kalender. Ein zeitgesteuertes Briefing braucht eine gesonderte, konfigurierte und überprüfte Hostautomatisierung."
+  }
+}

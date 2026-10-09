@@ -18,7 +18,9 @@
     "plugins/studio-archive/mcp/server.cjs",
     "plugins/vera/scripts/model_data_report.py",
     "plugins/vera/skills/vera/references/model-data-report-contract.md",
-    "plugins/studio-archive/scripts/build_model_data_report.py"
+    "plugins/studio-archive/scripts/build_model_data_report.py",
+    "plugins/studio-archive/scripts/readable_archive.py",
+    "plugins/studio-archive/scripts/archive_preferences.py"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -31,6 +33,24 @@
         "id": "legal-matter-opening-material",
         "purpose": "Prepare a new client matter or a new matter for an existing client for lawyer review",
         "content": "Selected identity and contact material; client, assisted-party, counterparty and other relevant party names, aliases and identifiers; requested work, facts, jurisdiction and procedural posture; engagement scope, exclusions, authority and fee status; conflict-register search references and candidate matches; possible deadline triggers and source references; confidentiality restrictions; conditional AML applicability material; privacy and retention posture; missing items; original imported filenames (including aliases for identical bytes), evidence names, bytes and SHA-256 receipts; model provenance; proposed folder plan; lawyer review decisions and final package status. The workflow does not promise automatic anonymization, automatic conflict clearance, binding deadline calculation, engagement acceptance or local-only model processing.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "readable-archive-navigation",
+        "purpose": "Reopen locally retained client matter inputs and finalized artifacts",
+        "content": "Returned local index path, counts and navigation status or error. Generated local HTML contains existing matter labels, dates, statuses and relative links to exact ledger files; it creates no document copies and makes no external requests.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "approved-archive-profile",
+        "purpose": "Reconnect an explicitly approved client archive in fresh sessions",
+        "content": "The last approved local archive root and root-specific confirmed identity aliases remain in an owner-private local profile, separately from session-owned configuration and active run selection. These profile files are not automatically sent to the model or copied into the archive. Returned archive locations, matching client IDs and safe directory labels can enter the invoking model context. Continuity requires the host to retain the local profile; temporary hosts provide no persistence guarantee.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -86,12 +106,16 @@
     {
       "id": "session-bound-archive-configuration",
       "control": "Studio Archive separates default configuration by host session identity, holds a process lock on configured state and rejects configuration changes during an operation. These controls do not anonymize case data or prove provider transmission."
+    },
+    {
+      "id": "private-root-specific-identity-continuity",
+      "control": "Approved archive discovery is revalidated before a fresh isolated session adopts it; existing sessions stay pinned. Private identity aliases are root-specific and short cross-process transactions prevent lost updates. Unavailable or malformed profile state fails closed, and private profile storage must remain outside source archives."
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-30",
+    "reviewed_at": "2026-10-08",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "3aea7a16d8c3b88e498b1aaac7ae5275fdac617291bd97e37b08edd40a0d712f"
+    "source_fingerprint": "9f65d206509603e1c9568dc4d20b7e81180ecd9c210d4821ac5311ed252fb6fe"
   }
 }

@@ -1697,7 +1697,8 @@ def parsed_date_expression(column: str) -> pl.Expr:
     text = pl.col(column).cast(pl.Utf8)
     return pl.coalesce(
         [
-            pl.col(column).cast(pl.Date, strict=False),
+            text.str.to_datetime("%Y-%m-%d %H:%M:%S%.f", strict=False).dt.date(),
+            text.str.to_datetime("%Y-%m-%dT%H:%M:%S%.f", strict=False).dt.date(),
             text.str.strptime(pl.Date, "%Y-%m-%d", strict=False),
             text.str.strptime(pl.Date, "%Y/%m/%d", strict=False),
             text.str.strptime(pl.Date, "%d/%m/%Y", strict=False),

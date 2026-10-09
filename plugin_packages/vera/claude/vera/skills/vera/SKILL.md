@@ -7,6 +7,16 @@ description: Use for commercialista and accounting-studio requests to answer fis
 For a request to learn or practise a supported Vera function, read `../learn-with-vera/SKILL.md`. Teach in writing in this conversation using the prepared kit and actual workflow results. Start only when requested.
 
 
+## Verified execution preparation
+
+Before an assured installed-module handoff, follow Vera's
+`skills/vera/references/execution-recovery.md`: run the supported
+`scripts/verified_execution.py --module <component-id>` internally and use the
+returned execution root for the module skill, commands, assets and review server.
+Do not ask the professional to use Terminal. This helper may create a private
+verified code copy outside the host installation; it never edits that installation
+and is not permission to manually copy it or bypass a denied operation.
+
 ## Cowork execution contract
 
 Public workflow names select skills; component IDs select module paths.
@@ -172,6 +182,11 @@ Do not redirect the user to another product or an ordinary chat surface.
 
 # Vera
 
+For journal-bank-reconciliation, open-item-reconciliation, journal-sampling,
+financial-report-builder, vouching and concordato-plan-review, follow
+`references/execution-recovery.md` before the installed module handoff. Perform
+the preparation internally; do not ask the professional to use Terminal.
+
 
 ## Show the privacy report
 
@@ -305,7 +320,14 @@ provider-signed delivery proof. For a Studio Archive run, declare both reports
 as artifacts before completion. When the host cannot create files, show the same
 compact report in chat and state that no durable receipt was created.
 
-Every durable report build automatically sends only schema version, a random
+When the user prohibits external receipt transmission, pass `--local-only` to
+`scripts/model_data_report.py build`. This preserves the local JSON and readable
+report and returns `not_requested/local_only` without constructing or sending a
+stamping request. Do not retry stamping unless the user later requests it. This
+option concerns Mparanza receipt transmission; it does not make the selected
+host's model processing local.
+
+Otherwise, every durable report build automatically sends only schema version, a random
 per-run receipt UUID, the Vera version, and the canonical report digest to
 Mparanza. It then creates `model_data_receipt.json` and the customer-readable,
 print-to-PDF `model_data_receipt.html` in the same output folder. This built-in
@@ -356,6 +378,13 @@ client, scope, engagement, workflow, run, receipt, or lifecycle state from a
 name, filename, folder, or document content.
 
 ## Workflow routing
+
+For studio appointments, tasks, deadlines, delegations, waiting items, meeting
+follow-ups and daily planning, select `organizzazione-lavoro` and read
+`../organizzazione-lavoro/SKILL.md`. It combines model-led interpretation with a
+durable local register and the host's connected calendar plugins. Typed and
+host-transcribed voice requests use the same process. Verify actual tools,
+persistence and external outcomes; a briefing request does not install a scheduler.
 
 For every professional request, read
 `references/workflow-catalog.md` completely before deciding whether Vera has a
@@ -598,7 +627,12 @@ examination. Report only stages actually performed. The preparation and answer
 review use separate Studio Archive runs; both opinions share the latter run.
 
 For a selected local workflow module that actually needs scripts, files, or MCP,
-resolve its root in this order:
+first locate this SKILL.md on disk and resolve the installed Vera root by
+ascending from `skills/vera/SKILL.md` to the directory containing
+`skills`. Host aliases such as `/mnt/skills/plugins/vera:vera` are not filesystem
+roots. In Cowork the actual installation may be under
+`~/.claude/plugins/synced/<id>/vera`; use the observed path, never an invented ID.
+Then resolve the module root in this order:
 
 1. `modules/<module>` inside the installed Vera plugin;
 2. `../<module>` beside `vera` in the repository source tree.
@@ -769,7 +803,9 @@ validated on the basis of structural inspection alone.
   authorization only where those requirements permit it, within its exact scope.
 - Treat missing required evidence as `partial` or `blocked`; do not replace it
   with model inference.
-- Never write run outputs inside this Git workspace. For client-bound Claude
+- Never write run outputs inside this Git workspace. Standalone tasks use only
+   their selected task output directory under `references/standalone-work.md`.
+   For archived client-bound Claude
   work, use only the prepared customer-folder run's exact `output_dir`; do not
   invent a parallel output folder.
 - Install core packages only through Vera's managed dependency check, which is

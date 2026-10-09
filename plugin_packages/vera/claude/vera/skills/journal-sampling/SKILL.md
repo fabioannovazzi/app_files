@@ -3,6 +3,16 @@ name: journal-sampling
 description: Use to extract a reproducible campione di scritture from a giornale contabile in reviewed CSV/XLSX, including supported print layouts. Qualifies the population, normalizes monetary rows and returns the sample, diagnostics and selection trail. For checking an already qualified sample against fatture XML/PDF use vouching; this step does not verify supporting documents.
 ---
 
+## Verified execution preparation
+
+Before an assured installed-module handoff, follow Vera's
+`skills/vera/references/execution-recovery.md`: run the supported
+`scripts/verified_execution.py --module <component-id>` internally and use the
+returned execution root for the module skill, commands, assets and review server.
+Do not ask the professional to use Terminal. This helper may create a private
+verified code copy outside the host installation; it never edits that installation
+and is not permission to manually copy it or bypass a denied operation.
+
 ## Cowork execution contract
 
 Public workflow names select skills; component IDs select module paths.
@@ -128,6 +138,10 @@ audience. The normalized population, diagnostics, and exact sample are separate
 upstream artifacts. Start Vouching through
 `start_check_entries_from_sample`; Studio Archive resolves those internal
 artifacts and Vouching checks only the sample rows.
+
+First follow `../vera/references/execution-recovery.md` for component
+`journal-sampling`. Use its verified execution root for the handoff below;
+never ask the professional to run a terminal command.
 
 Resolve `../../modules/journal-sampling` from this skill directory when it
 exists; otherwise resolve `../../../journal-sampling` in the repository. Read

@@ -37,6 +37,7 @@ EXCLUDED = {
     "claim-basis-map",
 }
 LIMITED_LANGUAGES = {
+    "vera/agenzia-acquisition": ["it"],
     "vera/bilancio-oic": ["it", "en"],
     "vera/business-planning": ["it", "en"],
     "clara/business-planning": ["it", "en"],
