@@ -460,12 +460,23 @@ def test_lucia_marketplace_cards_use_vera_canonical_assurance_copy() -> None:
         ROOT / "plugins" / "vera" / "marketplace_skill_instructions.json"
     )["skills"]
 
+    vera_optional_knowledge_suffix = (
+        " Se l’utente o una procedura di studio adottata richiede conoscenze dal "
+        "repository già collegato, leggi `../vera/references/connected-studio-knowledge.md`, "
+        "cerca e leggi le fonti pertinenti con gli strumenti disponibili e citale. "
+        "Il repository è facoltativo; le skill dello studio si richiamano separatamente "
+        "e Vera non le instrada. Restano validi i requisiti del workflow specialistico."
+    )
     for workflow in ASSURANCE_SKILLS.values():
         for field in ("display_name", "short_description", "default_prompt"):
             assert lucia_cards[workflow][field] == vera_cards[workflow][field]
-        assert lucia_cards[workflow]["instructions"] == vera_cards[workflow][
-            "instructions"
-        ].replace("Vera", "Lucia")
+        instructions = vera_cards[workflow]["instructions"]
+        assert instructions.endswith(vera_optional_knowledge_suffix)
+        assert instructions.count(vera_optional_knowledge_suffix) == 1
+        shared_instructions = instructions.removesuffix(vera_optional_knowledge_suffix)
+        assert lucia_cards[workflow]["instructions"] == shared_instructions.replace(
+            "Vera", "Lucia"
+        )
 
     for field in ("display_name", "short_description", "default_prompt"):
         assert (

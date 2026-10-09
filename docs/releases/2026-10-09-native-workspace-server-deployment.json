@@ -36,13 +36,13 @@
     },
     {
       "path": "plugin_packages/lucia/lucia-plugin.zip",
-      "sha256": "1a53d3dfe4714ba9b1261b25d1d35a8ed3f6f0fd6723bea2985719fde7f44320",
-      "bytes": 3448836
+      "sha256": "f1dc44d5881a0e86cacc01f7e5aabbde0b738b2b71a420b58e6a3eba0532dbb9",
+      "bytes": 3448837
     },
     {
       "path": "plugin_packages/lucia/lucia-chatgpt-upload.zip",
-      "sha256": "5df947d068e9fa390f36f634436c93dc70b4bd1b27ba98415823ab4332a8f677",
-      "bytes": 3364767
+      "sha256": "9afbfd9f9bf6259a11e5e58eb8d847f9bb701d14ca20cdb5df9d8ad8775466a6",
+      "bytes": 3364768
     },
     {
       "path": "static/shared/lucia/downloads/lucia-cowork-plugin.zip",
@@ -51,8 +51,8 @@
     },
     {
       "path": "static/shared/lucia/downloads/lucia-antigravity-plugin.zip",
-      "sha256": "99ae4ef1ce01f1d01f2357d5afa41648c07a899f5206ccbedc25a80a36957c81",
-      "bytes": 3375919
+      "sha256": "f6b5a0447ad57a60a22de3b03739c48ff0cb96cae643184954c7e5ea0eec1753",
+      "bytes": 3375920
     },
     {
       "path": "plugin_packages/clara/clara-plugin.zip",
@@ -107,5 +107,13 @@
     "passed": 15,
     "junit": "/private/tmp/native-deploy-ci-corrections-final-20261009.xml",
     "production_packagers_or_analysis_engines_changed": false
+  },
+  "lucia_source_regressions": {
+    "passed": 26,
+    "junit": "/private/tmp/native-deploy-lucia-source-regressions-final-20261009.xml"
+  },
+  "normal_variance_rechecks": {
+    "passed": 9,
+    "junit": "/private/tmp/native-deploy-variance-normal-rechecks-20261009.xml"
   }
 }

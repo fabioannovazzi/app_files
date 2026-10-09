@@ -16,5 +16,12 @@
     "transcribe"
   ],
   "diagnostics": [],
-  "test_only_fix": "The lifecycle packaging mock now accepts the exact optional project_vera_privacy keyword; production packagers are unchanged."
+  "test_only_fix": "The lifecycle packaging mock now accepts the exact optional project_vera_privacy keyword; production packagers are unchanged.",
+  "lucia_matter_opening_review": {
+    "changed_source": "plugins/vera/skills/vera/references/model-data-report-contract.md",
+    "delta": "Clarify that generic Archive reports, local onboarding and saved-report reopening do not imply Vera server receipt stamping. No Lucia engine, recipient, payload, activation, consent or retention change.",
+    "previous_fingerprint": "9f65d206509603e1c9568dc4d20b7e81180ecd9c210d4821ac5311ed252fb6fe",
+    "current_fingerprint": "a9498e73e5f1de86ca06d814d48d50edaa27f90f62281e929e9cd38545089633",
+    "only_fingerprint_changed": true
+  }
 }
