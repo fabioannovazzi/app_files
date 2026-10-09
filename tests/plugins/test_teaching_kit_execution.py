@@ -2497,6 +2497,9 @@ def test_bank_reconciliation_kit_runs_current_comparison(
         language,
     )
     monkeypatch.syspath_prepend(str(ROOT / scripts))
+    # Component launchers have separate processes; emulate that isolation when
+    # this test imports the core after another component's bootstrap.
+    monkeypatch.delitem(sys.modules, "implementation_bootstrap", raising=False)
     spec = importlib.util.spec_from_file_location(
         "journal_bank_core", ROOT / scripts / "journal_bank_core.py"
     )
