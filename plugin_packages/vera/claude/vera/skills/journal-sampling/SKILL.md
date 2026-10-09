@@ -1,6 +1,6 @@
 ---
 name: journal-sampling
-description: Use to extract a reproducible campione di scritture from a giornale contabile in reviewed CSV/XLSX, including supported print layouts. Qualifies the population, normalizes monetary rows and returns the sample, diagnostics and selection trail. For checking an already qualified sample against fatture XML/PDF use vouching; this step does not verify supporting documents.
+description: Use to extract a reproducible campione di scritture from a giornale contabile in reviewed CSV/XLSX, including supported print layouts and reviewed registration-style text PDFs. Qualifies the population, normalizes monetary rows and returns the sample, diagnostics and selection trail. For checking an already qualified sample against fatture XML/PDF use vouching; this step does not verify supporting documents.
 ---
 
 ## Verified execution preparation
@@ -157,3 +157,12 @@ Resolve `../../modules/journal-sampling` from this skill directory when it
 exists; otherwise resolve `../../../journal-sampling` in the repository. Read
 that module's `skills/journal-sampling/SKILL.md` completely and follow it. Treat
 the resolved module root as the plugin working directory for all commands.
+
+
+For a text-PDF journal, follow the module's `registration_pdf` intake: inspect
+bounded coordinate evidence, review the source-bound physical layout, qualify
+every completed registration, then normalize and sample. Dates in registration
+headers and postings continued across pages are supported by that adapter.
+Readable text alone does not qualify amounts or posting boundaries. Retain
+incomplete-population diagnostics; never replace this route with an ad hoc
+parser or claim success from text extraction alone.

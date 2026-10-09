@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "agenzia-acquisition",
-  "course_sha256": "0ccb644d2664fd721a71860df0baa31c535caaf401686fa0b1e03c7aece2c86a",
+  "course_sha256": "759de67bcd0b65c7e23fdc7e8c9418afa7b4c7ebc0dadee00586cef3ab46f574",
   "reviewer": "Codex source, actual local output and lesson review",
   "reviewed_at": "2026-10-08T08:15:00+00:00",
   "review_scope": "Read the Italian authored lesson and fictional inputs. Executed the shipped CourseLibrary and acquisition engine twice for demo/practice using the explicitly synthetic source. Inspected actual CSV, JSON, model-data report and workbook sheets. Offline browser and MCP App harness tests are separate evidence; no live AdE account, native host session, learner participation or professional acceptance is claimed. Final wording review keeps internal commands in the specialist skill and describes learner actions in the public lesson. The acquisition lesson was executed again after this source change.",
@@ -104,5 +104,21 @@
     "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
     "source_review": "docs/studio_archive/course-source-compatibility-review.json",
     "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  },
+  "journal_pdf_source_binding_review_20261009": {
+    "reviewed_at": "2026-10-09T17:33:15.861554+00:00",
+    "reviewer": "Codex source-bound PDF workflow review",
+    "previous_course_sha256": "0ccb644d2664fd721a71860df0baa31c535caaf401686fa0b1e03c7aece2c86a",
+    "current_course_sha256": "759de67bcd0b65c7e23fdc7e8c9418afa7b4c7ebc0dadee00586cef3ab46f574",
+    "changed_fields": [
+      "revision",
+      "sources"
+    ],
+    "unchanged_materials": [
+      "All localized lesson text",
+      "Input bytes and execution contracts",
+      "Editorial and artifact review history"
+    ],
+    "scope": "Source inventory only: reviewed registration PDF adapter, page-cache release and worker diagnostics. Complete authored lesson content is identical to the prior main baseline. Prior output and editorial judgments remain historical; no renewed visual, installed-host, learner or Nicola-file acceptance is claimed. Fresh source-bound execution is required by CI teaching release verification."
   }
 }

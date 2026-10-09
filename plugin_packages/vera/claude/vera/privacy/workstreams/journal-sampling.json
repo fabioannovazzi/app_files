@@ -12,6 +12,7 @@
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
+    "vendor/modules/vera_journal_pdf",
     "skills/vera/references/connected-studio-knowledge.md"
   ],
   "runtime_profiles": [
@@ -43,6 +44,15 @@
         "id": "connected-studio-knowledge",
         "purpose": "Consult relevant studio procedures, precedents or case evidence when requested",
         "content": "Repository and selected studio/client scope; scoped search queries; returned metadata and snippets; opened relevant passages; source IDs, links and locators; version, date and approval metadata when exposed; coverage and access limitations. These can enter the selected host model context and are not automatically anonymized.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "registration-pdf-layout-review",
+        "purpose": "Review the physical layout of a text-PDF accounting journal before local reconstruction",
+        "content": "Bounded PDF layout evidence: at most 300 words from each of the first two and final pages, capped at 100 characters per word, their x/top coordinates, page dimensions, source SHA-256, page count and truncation status. Layout coordinates and printed header/footer labels are reviewed by the host model; no column semantics are inferred from number clusters. A dry-run preview contains at most ten reconstructed postings for sampling. Entire registration reconstruction and exact debit/credit closure run locally, preserving source page/row lineage. Case names and accounting text in the sampled words are not anonymized. The helper makes no direct model API calls or new external-service requests.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -108,12 +118,16 @@
     {
       "id": "local-review-output-download",
       "control": "The local review server requires the session token for output downloads. It accepts only files declared by the local run, within its output directory, rejects symlinks and traversal, and limits downloads to 50 MB. Files are downloaded as opaque bytes; HTML is not executed in the review origin. This does not claim atomic protection from concurrent filesystem changes. The browser may retain a user-requested downloaded copy; this route does not send document content to the model or an external service."
+    },
+    {
+      "id": "source-bound-registration-pdf-layout",
+      "control": "The mapping receipt binds reviewed physical bands and header/footer exclusions to the source digest. Overlapping bands, unmapped money, missing-text body pages, incomplete registrations or unequal registration debit/credit totals withhold the complete source. Page caches are released after each page. No PDF posting is qualified by text readability alone."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "4c0cac19273462cf847c6ac82b209b31af09cfd2039eea1e7b360704312c427d"
+    "source_fingerprint": "b171fd2d7e0d4a002d39ae28af36764100feeb5660738e7201a3c67b8d6bc3fa"
   }
 }

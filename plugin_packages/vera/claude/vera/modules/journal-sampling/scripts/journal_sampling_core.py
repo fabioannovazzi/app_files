@@ -12,7 +12,7 @@ import stat
 import sys
 import tempfile
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date, datetime, timedelta
 from decimal import Decimal, InvalidOperation
 from io import BytesIO
@@ -353,6 +353,8 @@ def configure_logging(verbose: bool = False) -> None:
 
     level = logging.DEBUG if verbose else logging.INFO
     logging.basicConfig(level=level, format="%(levelname)s: %(message)s")
+    for name in ("pdfminer", "pdfplumber"):
+        logging.getLogger(name).setLevel(logging.WARNING)
 
 
 def write_json(path: Path, payload: Any) -> None:
@@ -693,6 +695,7 @@ def _implementation_artifact_roots() -> dict[str, Path]:
     return {
         "implementation": _COMPONENT_ROOT,
         "assurance_implementation": _assurance_package_root(),
+        "pdf_implementation": _assurance_package_root().parent / "vera_journal_pdf",
     }
 
 
@@ -789,6 +792,7 @@ def _implementation_receipts() -> list[dict[str, Any]]:
             for relative_path, _ in ASSURANCE_IMPLEMENTATION_FILES
         ),
     )
+    declared_contract += (("shared_pdf", "__init__.py"),)
     if declared_contract != IMPLEMENTATION_CONTRACT:
         raise ValueError(
             "Journal Sampling receipt and execution-boundary contracts diverged."
@@ -828,6 +832,17 @@ def _implementation_receipts() -> list[dict[str, Any]]:
                 media_type=_implementation_media_type(path),
             )
         )
+    pdf_root = assurance_root.parent / "vera_journal_pdf"
+    receipts.append(
+        artifact_receipt(
+            pdf_root,
+            pdf_root / "__init__.py",
+            artifact_id="implementation.vera_journal_pdf",
+            root_id="pdf_implementation",
+            role="implementation",
+            media_type="text/x-python",
+        )
+    )
     _validate_implementation_configuration()
     return receipts
 
@@ -2729,24 +2744,159 @@ def _parse_print_friendly_excel(
     return frame, diagnostics
 
 
-def _parse_text_pdf(_path: Path) -> tuple[pl.DataFrame, dict[str, Any]]:
-    """Abstain from generic PDF side reconstruction.
+def _parse_text_pdf(
+    path: Path,
+    layout: dict[str, Any] | None = None,
+) -> tuple[pl.DataFrame, dict[str, Any]]:
+    """Normalize physical PDF postings through the shared reviewed reader."""
+    from vera_journal_pdf import read_registration_pdf
 
-    Text position alone cannot mechanically establish whether the last amount
-    is debit, credit, balance, or a line total. A source-family-specific adapter
-    must be implemented and tested before PDF rows may enter the population.
-    """
+    postings, diagnostics = read_registration_pdf(path, layout)
+    records = [
+        _normalize_record(
+            posting,
+            source_file=path.name,
+            source_sheet="PDF",
+            source_page=posting["source_page"],
+            source_row=posting["source_row"],
+        )
+        for posting in postings
+    ]
+    return (
+        pl.DataFrame(records, schema=CANONICAL_SCHEMA, strict=False)
+        if records
+        else pl.DataFrame(schema=CANONICAL_SCHEMA)
+    ), diagnostics
 
-    return pl.DataFrame(schema=CANONICAL_SCHEMA), {
-        "parser": "text_pdf",
-        "accepted": False,
-        "candidate_row_count": 0,
-        "emitted_row_count": 0,
-        "rejected_row_count": 0,
-        "rejected_rows": [],
-        "status": "unsupported_source_layout",
-        "reason": "generic_text_pdf_amount_side_reconstruction_disabled",
-    }
+
+def _registration_pdf_result(
+    path: Path, file_recipe: dict[str, Any]
+) -> NormalizationResult:
+    """Qualify reconstructed postings only against the exact source/layout receipt."""
+    layout = file_recipe.get("layout")
+    if not isinstance(layout, dict) or "columns" not in layout:
+        from vera_journal_pdf import inspect_registration_pdf
+
+        evidence = inspect_registration_pdf(path)
+        plan = replace(
+            _pdf_plan(),
+            parser="registration_pdf",
+            adapter_id="journal.registration_pdf.v1",
+            source_family="journal.registration_pdf.v1",
+            status="needs_review",
+            layout={"source_sha256": evidence["source_sha256"]},
+            controls=[
+                _control(
+                    "reviewed_layout",
+                    "not_assessed",
+                    "Physical column semantics require review before extraction.",
+                )
+            ],
+            limitations=[
+                "Review the physical PDF layout before reconstructing postings."
+            ],
+        )
+        frame = pl.DataFrame(schema=CANONICAL_SCHEMA)
+        qualification = _qualification_payload(path, plan, emitted_row_count=0)
+        return NormalizationResult(
+            frame=frame,
+            diagnostics={
+                "source_file": path.name,
+                "parser": "registration_pdf",
+                "accepted": False,
+                "qualification": qualification,
+                "qualification_status": "needs_review",
+                "review_required": True,
+                "pdf_layout_evidence": evidence,
+                "suggested_recipe": _recorded_recipe_from_plan(plan, "needs_review"),
+                "candidate_row_count": 0,
+                "emitted_row_count": 0,
+                "row_count": 0,
+                "rejected_rows": [],
+                "rejected_row_count": 0,
+                "missing_fields": _missing_fields(frame),
+            },
+        )
+    layout = dict(layout)
+    with path.open("rb") as source:
+        source_sha256 = hashlib.file_digest(source, "sha256").hexdigest()
+    if layout.get("source_sha256") not in (None, source_sha256):
+        raise ValueError("PDF layout review is stale: source bytes changed")
+    layout["source_sha256"] = source_sha256
+    contract = _mapping_contract(
+        parser="registration_pdf",
+        source_family="journal.registration_pdf.v1",
+        layout=layout,
+        posting_identity="movement_number_and_source_row",
+        currency="EUR",
+        unit="currency",
+        decimal_separator=",",
+        thousands_separator=".",
+    )
+    reviewed, decision_ref, receipt = _reviewed_mapping(
+        file_recipe,
+        contract,
+        path=path,
+        adapter_id="journal.registration_pdf.v1",
+    )
+    frame, parser_diag = _parse_text_pdf(path, layout)
+    complete = parser_diag["accepted"]
+    status = (
+        "qualified"
+        if reviewed and complete
+        else "needs_review" if complete else "unsupported_source_layout"
+    )
+    plan = replace(
+        _pdf_plan(),
+        parser="registration_pdf",
+        adapter_id="journal.registration_pdf.v1",
+        source_family="journal.registration_pdf.v1",
+        status=status,
+        candidate_row_count=parser_diag["candidate_row_count"],
+        reviewed_mapping_ref=decision_ref,
+        reviewed_decision=receipt,
+        layout=layout,
+        posting_identity="movement_number_and_source_row",
+        decimal_separator=",",
+        thousands_separator=".",
+        limitations=[] if complete else [str(parser_diag["reason"])],
+        controls=[
+            _control(
+                "registration_closure",
+                "passed" if complete else "failed",
+                "Every registration must have postings, complete physical lineage and equal debit/credit totals.",
+            ),
+            _control(
+                "reviewed_layout",
+                "passed" if reviewed else "not_assessed",
+                "Exact source bytes and PDF coordinate semantics require a reviewed mapping receipt.",
+            ),
+        ],
+    )
+    qualified_frame = (
+        frame if status == "qualified" else pl.DataFrame(schema=CANONICAL_SCHEMA)
+    )
+    qualification = _qualification_payload(
+        path, plan, emitted_row_count=qualified_frame.height
+    )
+    return NormalizationResult(
+        frame=qualified_frame,
+        diagnostics={
+            **parser_diag,
+            "source_file": path.name,
+            "accepted": status == "qualified",
+            "qualification": qualification,
+            "qualification_status": status,
+            "review_required": status == "needs_review",
+            "suggested_recipe": _recorded_recipe_from_plan(plan, status),
+            "reviewed_decision": receipt,
+            "proposed_emitted_row_count": frame.height,
+            "emitted_row_count": qualified_frame.height,
+            "row_count": qualified_frame.height,
+            "preview": frame.head(10).to_dicts() if status == "needs_review" else [],
+            "missing_fields": _missing_fields(qualified_frame),
+        },
+    )
 
 
 def _execute_plan(
@@ -2857,7 +3007,11 @@ def _unreadable_source_result(path: Path, error: BaseException) -> Normalization
             "rejected_row_count": 0,
             "rejected_rows": [],
             "row_count": 0,
-            "failure_class": "parser_failure",
+            "failure_class": (
+                "memory_exhausted"
+                if isinstance(error, MemoryError)
+                else "parser_failure"
+            ),
             "missing_fields": _missing_fields(frame),
             "parser_error": {
                 "type": type(error).__name__,
@@ -2958,6 +3112,11 @@ def normalize_file(
     suffix = path.suffix.lower()
     diagnostics: dict[str, Any] = {"source_file": path.name}
     if suffix == ".pdf":
+        if file_recipe.get("parser") in (None, "registration_pdf"):
+            try:
+                return _registration_pdf_result(path, file_recipe)
+            except (MemoryError, OSError, ValueError, RuntimeError) as exc:
+                return _unreadable_source_result(path, exc)
         plan = _pdf_plan()
         frame, parser_diag = _parse_text_pdf(path)
         qualification = _qualification_payload(path, plan, emitted_row_count=0)
@@ -3300,7 +3459,11 @@ def inspect_path(
     total_rows = 0
     for file_path in files:
         result = normalize_file(file_path, recipe)
-        preview = result.frame.head(20).to_dicts()
+        preview = (
+            result.diagnostics.get("preview", [])
+            if result.frame.is_empty()
+            else result.frame.head(20).to_dicts()
+        )
         diag = dict(result.diagnostics)
         diag.update(languages)
         diag["confidence"] = _confidence(diag)
@@ -3402,7 +3565,11 @@ def normalize_path(
                 if snapshot_receipt_before != source_receipt_before:
                     result = _source_changed_result(file_path)
                 else:
-                    captured_source_bytes = snapshot_path.read_bytes()
+                    captured_source_bytes = (
+                        None
+                        if snapshot_path.suffix.lower() == ".pdf"
+                        else snapshot_path.read_bytes()
+                    )
                     result = normalize_file(
                         snapshot_path,
                         recipe,

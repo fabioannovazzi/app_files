@@ -1348,3 +1348,107 @@ def test_selected_interpreter_identity_ignores_launcher_and_python_environment(
     actual = runtime.runtime_key(sys.executable)
 
     assert actual == expected
+
+
+def _load_vera_manager() -> Any:
+    spec = importlib.util.spec_from_file_location(
+        "vera_manager_forced_exit_test", VERA_MANAGER
+    )
+    assert spec and spec.loader
+    manager = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(manager)
+    return manager
+
+
+@pytest.mark.parametrize("returncode", [-9, 137, 247])
+def test_vera_manager_records_forcibly_terminated_worker_in_client_output(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    returncode: int,
+) -> None:
+    from types import SimpleNamespace
+
+    manager = _load_vera_manager()
+    output = tmp_path / "outputs"
+    context = tmp_path / "context.json"
+    context.write_text(
+        json.dumps(
+            {
+                "workflow_id": "journal-bank-reconciliation",
+                "run_id": "run_test",
+                "output_dir": str(output),
+            }
+        )
+    )
+    script = tmp_path / "worker.py"
+    script.write_text("pass")
+    monkeypatch.setattr(
+        manager._IMPLEMENTATION,
+        "select_runtime",
+        lambda *args: SimpleNamespace(requirement_root=tmp_path),
+    )
+    monkeypatch.setattr(manager._IMPLEMENTATION, "main", lambda *args: returncode)
+    monkeypatch.setattr(manager, "prepare_execution_root", lambda *args: tmp_path)
+
+    result = manager.main(
+        [
+            "--module",
+            "journal-bank-reconciliation",
+            "run",
+            "worker.py",
+            "--client-engagement",
+            str(context),
+            "--output-dir",
+            str(output),
+        ]
+    )
+
+    assert result == returncode
+    diagnostic = json.loads((output / "execution_failure.json").read_text())
+    assert diagnostic["failure_kind"] == "forced_termination"
+    assert diagnostic["memory_exhaustion_confirmed"] is False
+    assert diagnostic["exit_code"] == returncode
+
+
+def test_vera_manager_does_not_write_forced_exit_diagnostic_outside_client_output(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from types import SimpleNamespace
+
+    manager = _load_vera_manager()
+    output = tmp_path / "outside"
+    context = tmp_path / "context.json"
+    context.write_text(
+        json.dumps(
+            {
+                "workflow_id": "journal-bank-reconciliation",
+                "run_id": "run_test",
+                "output_dir": str(tmp_path / "outputs"),
+            }
+        )
+    )
+    (tmp_path / "worker.py").write_text("pass")
+    monkeypatch.setattr(
+        manager._IMPLEMENTATION,
+        "select_runtime",
+        lambda *args: SimpleNamespace(requirement_root=tmp_path),
+    )
+    monkeypatch.setattr(manager._IMPLEMENTATION, "main", lambda *args: -9)
+    monkeypatch.setattr(manager, "prepare_execution_root", lambda *args: tmp_path)
+
+    result = manager.main(
+        [
+            "--module",
+            "journal-bank-reconciliation",
+            "run",
+            "worker.py",
+            "--client-engagement",
+            str(context),
+            "--output-dir",
+            str(output),
+        ]
+    )
+
+    assert result == -9
+    assert not output.exists()

@@ -533,6 +533,7 @@ def _qualified_journal(
     normalization_name: str = "journal_normalization",
     client_engagement: dict[str, Any] | None = None,
     write_source: bool = True,
+    pdf_layout: dict[str, Any] | None = None,
 ) -> Path:
     root.mkdir(parents=True, exist_ok=True)
     managed_fixture: tuple[Any, Path, str, str] | None = None
@@ -612,9 +613,25 @@ def _qualified_journal(
             prepared["run"]["run_id"],
         )
     sampling_core = _load_journal_sampling_core()
+    requested_recipe = None
+    if pdf_layout is not None:
+        requested_recipe = normalization_dir.parent / "pdf-layout.json"
+        requested_recipe.write_text(
+            json.dumps(
+                {
+                    "files": {
+                        source_path.name: {
+                            "parser": "registration_pdf",
+                            "layout": pdf_layout,
+                        }
+                    }
+                }
+            )
+        )
     sampling_core.inspect_path(
         source_path,
         normalization_dir,
+        requested_recipe,
         client_engagement=client_engagement,
     )
     recipe_path = normalization_dir / "suggested_recipe.json"
@@ -650,9 +667,13 @@ def _qualified_journal(
             amount_sign_convention=entry.get("amount_sign_convention"),
         )
         adapter_id = (
-            sampling_core.PRINT_ADAPTER_ID
-            if entry["parser"] == "print_friendly_excel"
-            else sampling_core.TABULAR_ADAPTER_ID
+            "journal.registration_pdf.v1"
+            if entry["parser"] == "registration_pdf"
+            else (
+                sampling_core.PRINT_ADAPTER_ID
+                if entry["parser"] == "print_friendly_excel"
+                else sampling_core.TABULAR_ADAPTER_ID
+            )
         )
         decision_id = f"decision.journal_mapping.{index}"
         qualification["status"] = "reviewed"
@@ -2004,6 +2025,10 @@ def _copy_check_entries_runtime(root: Path) -> tuple[Path, Path]:
         ROOT / "plugins" / "_shared" / "vendor" / "modules" / "vera_assurance",
         shared,
     )
+    shutil.copytree(
+        ROOT / "plugins/_shared/vendor/modules/vera_journal_pdf",
+        shared.parent / "vera_journal_pdf",
+    )
     for cache in sorted(root.rglob("__pycache__"), reverse=True):
         shutil.rmtree(cache)
     return plugin, shared
@@ -2361,6 +2386,10 @@ def test_check_entries_rejects_unsafe_upstream_implementation_physical_tree(
     shutil.copytree(
         ROOT / "plugins" / "_shared" / "vendor" / "modules" / "vera_assurance",
         copied_shared,
+    )
+    shutil.copytree(
+        ROOT / "plugins/_shared/vendor/modules/vera_journal_pdf",
+        copied_shared.parent / "vera_journal_pdf",
     )
     for cache in sorted((tmp_path / "runtime").rglob("__pycache__"), reverse=True):
         shutil.rmtree(cache)
@@ -3197,6 +3226,10 @@ def test_mcp_replay_rejects_changed_transitive_implementation(
     shutil.copytree(
         ROOT / "plugins" / "_shared" / "vendor" / "modules" / "vera_assurance",
         copied_shared,
+    )
+    shutil.copytree(
+        ROOT / "plugins/_shared/vendor/modules/vera_journal_pdf",
+        copied_shared.parent / "vera_journal_pdf",
     )
     target = copied_plugin / relative_path
     target.write_bytes(target.read_bytes() + b"\n/* changed contributor */\n")
@@ -9316,6 +9349,11 @@ def test_check_entries_accepts_upstream_incidental_bytecode(
     shutil.copytree(
         ROOT / "plugins/_shared/vendor/modules/vera_assurance", shared, ignore=ignore
     )
+    shutil.copytree(
+        ROOT / "plugins/_shared/vendor/modules/vera_journal_pdf",
+        shared.parent / "vera_journal_pdf",
+        ignore=ignore,
+    )
     cache = plugin / "scripts" / artifact
     cache.parent.mkdir(parents=True, exist_ok=True)
     cache.write_bytes(b"inert generated cache")
@@ -9546,3 +9584,28 @@ def test_xml_unresolved_review_notes_use_working_language(
     assert row["status"] == status
     assert phrase in row["review_notes"]
     assert not row["review_notes"].startswith("Matched")
+
+
+def test_vouching_accepts_complete_reviewed_cross_page_pdf_journal(
+    tmp_path: Path,
+) -> None:
+    from tests.plugins.test_journal_sampling_plugin import (
+        _write_registration_journal_pdf,
+    )
+
+    source = tmp_path / "journal.pdf"
+    layout = _write_registration_journal_pdf(source)
+    normalized = _qualified_journal(
+        tmp_path / "upstream",
+        [],
+        source_path=source,
+        write_source=False,
+        pdf_layout=layout,
+    )
+    support = tmp_path / "support"
+    support.mkdir()
+    output = tmp_path / "vouching"
+    result = load_core().run_entry_checks(normalized, support, output)
+    assert result.audit["journal_row_count"] == 2
+    assert (output / "check_audit.json").is_file()
+    assert "PDF" in (output / "normalized_entries.csv").read_text()

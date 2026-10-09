@@ -14,7 +14,9 @@
   ],
   "plugins": {
     "scissione-guidata": {
-      "module_roots": ["vera_assurance"]
+      "module_roots": [
+        "vera_assurance"
+      ]
     },
     "distribution-analysis": {},
     "mix-contribution-analysis": {},
@@ -58,7 +60,8 @@
         "vera_financial_analysis",
         "vera_ocr",
         "reporting_table.py",
-        "courseware"
+        "courseware",
+        "vera_journal_pdf"
       ]
     },
     "open-item-reconciliation": {
@@ -83,7 +86,8 @@
     },
     "check-entries": {
       "module_roots": [
-        "vera_assurance"
+        "vera_assurance",
+        "vera_journal_pdf"
       ]
     },
     "concordato-plan-review": {
@@ -93,12 +97,14 @@
     },
     "journal-sampling": {
       "module_roots": [
-        "vera_assurance"
+        "vera_assurance",
+        "vera_journal_pdf"
       ]
     },
     "journal-bank-reconciliation": {
       "module_roots": [
-        "vera_assurance"
+        "vera_assurance",
+        "vera_journal_pdf"
       ]
     },
     "passive-invoice-audit": {

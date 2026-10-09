@@ -55,7 +55,7 @@ def _runtime_environment(root: Path, tmp_path: Path) -> dict[str, str]:
     }
 
 
-def _case(tmp_path: Path) -> dict:
+def _case(tmp_path: Path, *, registration_pdf: bool = False) -> dict:
     ledger = _load_customer_ledger()
     client = tmp_path / "client"
     client.mkdir()
@@ -98,6 +98,37 @@ def _case(tmp_path: Path) -> dict:
                 ]
             ],
         )
+        if registration_pdf:
+            if side == "journal":
+                from tests.plugins.test_journal_sampling_plugin import (
+                    _write_registration_journal_pdf,
+                )
+
+                _write_registration_journal_pdf(source)
+            else:
+                _write_pdf_table(
+                    source,
+                    [
+                        [
+                            [
+                                "Date",
+                                "Description",
+                                "Reference",
+                                "Amount",
+                                "Balance",
+                                "Currency",
+                            ],
+                            [
+                                "2024-01-01",
+                                "Pagamento INV100",
+                                "INV100",
+                                "100.00",
+                                "1100.00",
+                                "EUR",
+                            ],
+                        ]
+                    ],
+                )
         imported = ledger.import_document(
             client,
             client_id,
@@ -391,3 +422,131 @@ def test_sealing_cli_publishes_only_complete_recipe(
     assert bool(json.loads(recipe.read_text())["relationship"]["decision"]) is complete
     assert (recipe.read_bytes() != original) is complete
     assert list(output.glob(".review-receipts-*.tmp")) == []
+
+
+@pytest.mark.parametrize("host", ["source", "codex", "cowork"])
+def test_managed_registration_pdf_layout_sealing_and_reconciliation(
+    tmp_path: Path,
+    host: str,
+) -> None:
+    root = ROOT / "plugins/vera"
+    if host != "source":
+        archive = (
+            ROOT
+            / "plugin_packages/vera"
+            / ("vera-plugin.zip" if host == "codex" else "vera-claude-plugin.zip")
+        )
+        extracted = tmp_path / "package"
+        with ZipFile(archive) as bundle:
+            bundle.extractall(extracted)
+        root = next(extracted.rglob("scripts/managed_python_runtime.py")).parents[1]
+    environment = _runtime_environment(root, tmp_path)
+    case = _case(tmp_path, registration_pdf=True)
+    output = Path(case["output_dir"])
+    context = Path(case["context_path"])
+    sources = {
+        "bank" if item["role"] == "source" else item["role"]: Path(item["path"])
+        for item in case["context"]["input_bindings"]
+    }
+    layout = {
+        "body": [20, 770],
+        "columns": {
+            "account_debit": [20, 110],
+            "account_credit": [110, 195],
+            "description": [195, 400],
+            "debit": [400, 490],
+            "credit": [490, 590],
+        },
+        "ignored_line_prefixes": [],
+    }
+    recipe = output / "input_recipe.json"
+    recipe.write_text(
+        json.dumps(
+            {
+                "journal": {
+                    "files": {
+                        sources["journal"].name: {"pdf_registration_layout": layout}
+                    }
+                }
+            }
+        )
+    )
+
+    def run(script: str, *arguments: object) -> subprocess.CompletedProcess:
+        return subprocess.run(
+            [
+                sys.executable,
+                str(root / "scripts/managed_python_runtime.py"),
+                "--module",
+                "journal-bank-reconciliation",
+                "run",
+                f"scripts/{script}",
+                "--client-engagement",
+                str(context),
+                *map(str, arguments),
+            ],
+            capture_output=True,
+            text=True,
+            env=environment,
+            cwd=root,
+            timeout=90,
+            check=False,
+        )
+
+    inspected = run(
+        "inspect_inputs.py",
+        sources["bank"],
+        sources["journal"],
+        "--output-dir",
+        output,
+        "--recipe",
+        recipe,
+    )
+    assert inspected.returncode == 0, inspected.stderr
+    suggested = output / "suggested_recipe.json"
+    decisions = _decisions(json.loads(suggested.read_text()))
+    journal = next(iter(decisions["journal"]["files"].values()))
+    journal.update(
+        {
+            "mapping": {
+                "date": "Data",
+                "account": "Conto",
+                "description": "Descrizione",
+                "debit": "Dare",
+                "credit": "Avere",
+                "reference": "Numero registrazione",
+            },
+            "excluded_monetary_columns": [],
+            "pdf_registration_layout": layout,
+        }
+    )
+    decision_path = output / "review_decisions.json"
+    decision_path.write_text(json.dumps(decisions))
+    sealed = run(
+        "seal_review_receipts.py",
+        "--output-dir",
+        output,
+        "--recipe",
+        suggested,
+        "--decisions",
+        decision_path,
+    )
+    assert sealed.returncode == 0, sealed.stderr
+    reconciled = run(
+        "run_reconciliation.py",
+        sources["bank"],
+        sources["journal"],
+        "--output-dir",
+        output / "reconciliation",
+        "--recipe",
+        suggested,
+        "--tolerance",
+        "0",
+        "--date-window-days",
+        "0",
+    )
+    assert reconciled.returncode == 0, reconciled.stderr
+    assert "matched=1" in reconciled.stderr
+    normalized = (output / "reconciliation/normalized_journal.csv").read_text()
+    assert "PDF page 1" in normalized and "PDF page 2" in normalized
+    assert (output / "reconciliation/journal_bank_reconciliation.xlsx").is_file()

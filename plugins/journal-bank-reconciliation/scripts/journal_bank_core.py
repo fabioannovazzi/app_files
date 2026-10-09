@@ -114,6 +114,8 @@ FRENCH_TABULAR_ADAPTER_ID = "journal_bank.tabular.v8"
 FRENCH_TABULAR_ADAPTER_VERSION = "8"
 TEXT_PDF_ADAPTER_VERSION = "2"
 TEXT_PDF_ADAPTER_ID = "journal_bank.text_pdf.disabled.v2"
+PDF_REGISTRATION_ADAPTER_ID = "journal_bank.registration_pdf.v1"
+PDF_REGISTRATION_ADAPTER_VERSION = "1"
 PDF_TABLE_ADAPTER_VERSION = "1"
 PDF_TABLE_ADAPTER_ID = "journal_bank.pdf_table.v1"
 RELATIONSHIP_ADAPTER_ID = "journal_bank.relationship.v3"
@@ -319,6 +321,10 @@ IMPLEMENTATION_ARTIFACT_SPECS = (
         "serialization.py",
     ),
 )
+IMPLEMENTATION_ARTIFACT_SPECS += (
+    ("implementation.vera_journal_pdf", "pdf_implementation", "__init__.py"),
+)
+
 CHATGPT_IMPLEMENTATION_ARTIFACT_SPECS = tuple(
     spec
     for spec in IMPLEMENTATION_ARTIFACT_SPECS
@@ -922,6 +928,9 @@ def configure_logging(verbose: bool = False) -> None:
 
     level = logging.DEBUG if verbose else logging.INFO
     logging.basicConfig(level=level, format="%(levelname)s: %(message)s")
+    # Library object dumps obscure page progress and can create huge logs.
+    for name in ("pdfminer", "pdfplumber"):
+        logging.getLogger(name).setLevel(logging.WARNING)
 
 
 def normalize_language(
@@ -1483,73 +1492,85 @@ def _read_pdf_table_raw_unchecked(
     table_count = 0
     candidate_pages_without_tables: list[int] = []
     inconsistent_tables: list[str] = []
+    unqualified_text_preview = ""
     with pdfplumber.open(path) as document:
         for page_number, page in enumerate(document.pages, start=1):
-            page_count = page_number
-            page_tables = page.extract_tables() or []
-            if not any(
-                table
-                and len(table) >= 2
-                and _pdf_header_has_required_roles(
-                    [_pdf_cell_text(cell) for cell in table[0]]
-                )
-                for table in page_tables
-            ):
-                positioned_table = _extract_pdf_positioned_table(page)
-                page_tables = [positioned_table] if positioned_table is not None else []
-            if not page_tables:
-                page_tables = (
-                    page.extract_tables(
-                        table_settings={
-                            "vertical_strategy": "text",
-                            "horizontal_strategy": "text",
-                            "min_words_vertical": 2,
-                            "min_words_horizontal": 1,
-                            "intersection_tolerance": 5,
-                            "text_tolerance": 3,
-                        }
+            LOGGER.info("PDF_TABLE_PAGE source=%s page=%s", path.name, page_number)
+            try:
+                page_count = page_number
+                page_tables = page.extract_tables() or []
+                if not any(
+                    table
+                    and len(table) >= 2
+                    and _pdf_header_has_required_roles(
+                        [_pdf_cell_text(cell) for cell in table[0]]
                     )
-                    or []
-                )
-            usable_tables = []
-            for table_number, raw_table in enumerate(page_tables, start=1):
-                table_rows = [
-                    [_pdf_cell_text(cell) for cell in row]
-                    for row in (raw_table or [])
-                    if row and any(_pdf_cell_text(cell) for cell in row)
-                ]
-                if (
-                    len(table_rows) >= 2
-                    and len(table_rows[0]) >= 2
-                    and _pdf_header_has_required_roles(table_rows[0])
+                    for table in page_tables
                 ):
-                    usable_tables.append((table_number, table_rows))
-            if not usable_tables:
-                page_text = page.extract_text() or ""
-                if _pdf_page_has_unmapped_candidates(page_text):
-                    candidate_pages_without_tables.append(page_number)
-                continue
-            for table_number, table_rows in usable_tables:
-                table_count += 1
-                header = table_rows[0]
-                if canonical_header is None:
-                    canonical_header = header
-                if header != canonical_header:
-                    inconsistent_tables.append(
-                        f"page {page_number} table {table_number}"
+                    positioned_table = _extract_pdf_positioned_table(page)
+                    page_tables = (
+                        [positioned_table] if positioned_table is not None else []
                     )
+                if not page_tables:
+                    page_tables = (
+                        page.extract_tables(
+                            table_settings={
+                                "vertical_strategy": "text",
+                                "horizontal_strategy": "text",
+                                "min_words_vertical": 2,
+                                "min_words_horizontal": 1,
+                                "intersection_tolerance": 5,
+                                "text_tolerance": 3,
+                            }
+                        )
+                        or []
+                    )
+                usable_tables = []
+                for table_number, raw_table in enumerate(page_tables, start=1):
+                    table_rows = [
+                        [_pdf_cell_text(cell) for cell in row]
+                        for row in (raw_table or [])
+                        if row and any(_pdf_cell_text(cell) for cell in row)
+                    ]
+                    if (
+                        len(table_rows) >= 2
+                        and len(table_rows[0]) >= 2
+                        and _pdf_header_has_required_roles(table_rows[0])
+                    ):
+                        usable_tables.append((table_number, table_rows))
+                if not usable_tables:
+                    page_text = page.extract_text() or ""
+                    if _pdf_page_has_unmapped_candidates(page_text):
+                        unqualified_text_preview = page_text[:16384]
+                        candidate_pages_without_tables.append(page_number)
+                        # Unmapped monetary rows invalidate the source immediately.
+                        break
                     continue
-                locator_sheet = f"PDF page {page_number} table {table_number}"
-                for row_number, row in enumerate(table_rows[1:], start=2):
-                    if len(row) != len(canonical_header):
+                for table_number, table_rows in usable_tables:
+                    table_count += 1
+                    header = table_rows[0]
+                    if canonical_header is None:
+                        canonical_header = header
+                    if header != canonical_header:
                         inconsistent_tables.append(
-                            f"page {page_number} table {table_number} row {row_number}"
+                            f"page {page_number} table {table_number}"
                         )
                         continue
-                    rows.append(row)
-                    locators.append((locator_sheet, row_number))
-                    page_key = str(page_number)
-                    page_row_counts[page_key] = page_row_counts.get(page_key, 0) + 1
+                    locator_sheet = f"PDF page {page_number} table {table_number}"
+                    for row_number, row in enumerate(table_rows[1:], start=2):
+                        if len(row) != len(canonical_header):
+                            inconsistent_tables.append(
+                                f"page {page_number} table {table_number} row {row_number}"
+                            )
+                            continue
+                        rows.append(row)
+                        locators.append((locator_sheet, row_number))
+                        page_key = str(page_number)
+                        page_row_counts[page_key] = page_row_counts.get(page_key, 0) + 1
+            finally:
+                page.close()
+            if inconsistent_tables:
+                break
 
     failure_kind: str | None = None
     limitations: list[str] = []
@@ -1574,11 +1595,15 @@ def _read_pdf_table_raw_unchecked(
 
     metadata = {
         "page_count": page_count,
+        "inspection_stopped_early": bool(
+            candidate_pages_without_tables or inconsistent_tables
+        ),
         "table_count": table_count,
         "page_row_counts": page_row_counts,
         "candidate_pages_without_tables": candidate_pages_without_tables,
         "inconsistent_tables": inconsistent_tables,
         "failure_kind": failure_kind,
+        "unqualified_text_preview": unqualified_text_preview,
         "limitations": limitations,
     }
     if failure_kind is not None or canonical_header is None:
@@ -2266,9 +2291,12 @@ def _tabular_adapter_binding(
     non_movement_summary_labels: Sequence[str] = (),
     *,
     source_file: str | None = None,
+    pdf_registration_layout: dict[str, Any] | None = None,
 ) -> tuple[str, str]:
     """Select the source adapter bound by the reviewed mapping receipt."""
 
+    if pdf_registration_layout is not None:
+        return PDF_REGISTRATION_ADAPTER_ID, PDF_REGISTRATION_ADAPTER_VERSION
     if source_file and Path(source_file).suffix.lower() == ".pdf":
         return PDF_TABLE_ADAPTER_ID, PDF_TABLE_ADAPTER_VERSION
 
@@ -2294,6 +2322,7 @@ def _mapping_review_content(
     csv_field_delimiter: object | None,
     decimal_separator: object | None,
     thousands_separator: object | None,
+    pdf_registration_layout: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     normalized_direction_values, direction_errors = _normalized_direction_value_mapping(
         direction_value_mapping
@@ -2341,6 +2370,10 @@ def _mapping_review_content(
         content["date_locale"] = normalized_date_locale
     if normalized_summary_labels:
         content["non_movement_summary_labels"] = normalized_summary_labels
+    if pdf_registration_layout is not None:
+        if side != "journal" or not isinstance(pdf_registration_layout, dict):
+            raise ValueError("Registration PDF layout belongs to the journal side")
+        content["pdf_registration_layout"] = pdf_registration_layout
     return content
 
 
@@ -2363,6 +2396,7 @@ def build_mapping_review_receipt(
     csv_field_delimiter: object | None = None,
     decimal_separator: object | None = None,
     thousands_separator: object | None = None,
+    pdf_registration_layout: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Seal a professional mapping decision against source bytes and adapter."""
 
@@ -2414,6 +2448,7 @@ def build_mapping_review_receipt(
         normalized_date_locale,
         normalized_summary_labels,
         source_file=source_file,
+        pdf_registration_layout=pdf_registration_layout,
     )
     return build_reviewed_decision_receipt(
         decision_id=decision_id,
@@ -2438,6 +2473,7 @@ def build_mapping_review_receipt(
             csv_field_delimiter=csv_field_delimiter,
             decimal_separator=decimal_separator,
             thousands_separator=thousands_separator,
+            pdf_registration_layout=pdf_registration_layout,
         ),
     )
 
@@ -2978,6 +3014,51 @@ def _validated_mapping_decision(
     return receipt, None
 
 
+def _read_pdf_registration_raw(
+    path: Path,
+    layout: dict[str, Any],
+) -> tuple[pl.DataFrame, list[tuple[str, int]], dict[str, Any]]:
+    """Reuse the registration reader without guessing account or amount roles."""
+    from vera_journal_pdf import read_registration_pdf
+
+    postings, diagnostics = read_registration_pdf(path, layout)
+    metadata = {
+        "page_count": diagnostics.get("page_count", 0),
+        "failure_kind": None if diagnostics["accepted"] else diagnostics["reason"],
+        "limitations": [] if diagnostics["accepted"] else [diagnostics["reason"]],
+        "registration_diagnostics": diagnostics,
+    }
+    if not diagnostics["accepted"]:
+        return pl.DataFrame(), [], metadata
+    headers = ["Data", "Conto", "Descrizione", "Dare", "Avere", "Numero registrazione"]
+    rows = [
+        headers,
+        *[
+            [
+                p["entry_date"],
+                p["account"],
+                p["line_desc"],
+                p["debit"],
+                p["credit"],
+                p["movement_number"],
+            ]
+            for p in postings
+        ],
+    ]
+    raw = pl.DataFrame(
+        {
+            f"column_{index}": [row[index] for row in rows]
+            for index in range(len(headers))
+        },
+        strict=False,
+    )
+    locators = [
+        ("PDF header", 1),
+        *[(f"PDF page {p['source_page']}", p["source_row"]) for p in postings],
+    ]
+    return raw, locators, metadata
+
+
 def _normalize_table(
     path: Path,
     side: str,
@@ -3060,13 +3141,29 @@ def _normalize_table(
     pdf_metadata: dict[str, Any] = {}
     source_locators: list[tuple[str, int]] | None = None
     if path.suffix.lower() == ".pdf":
-        raw, source_locators, pdf_metadata = _read_pdf_table_raw(path)
+        registration_layout = file_recipe.get("pdf_registration_layout")
+        if registration_layout is not None:
+            if side != "journal" or not isinstance(registration_layout, dict):
+                raise ValueError(
+                    "Registration PDF layout requires journal-side physical coordinates"
+                )
+            raw, source_locators, pdf_metadata = _read_pdf_registration_raw(
+                path, registration_layout
+            )
+        else:
+            raw, source_locators, pdf_metadata = _read_pdf_table_raw(path)
         if pdf_metadata["failure_kind"] is not None:
+            if side == "journal" and registration_layout is None:
+                from vera_journal_pdf import inspect_registration_pdf
+
+                pdf_metadata["pdf_layout_evidence"] = inspect_registration_pdf(path)
+            # Rereading an already unsupported source cannot qualify it.
             frame, text_diagnostic = _normalize_text_pdf(
                 path,
                 side,
                 recipe,
                 source_identity=source_identity,
+                inspection_text=pdf_metadata.pop("unqualified_text_preview", ""),
             )
             return frame, {
                 **text_diagnostic,
@@ -3085,7 +3182,7 @@ def _normalize_table(
         pdf_metadata = {
             key: value
             for key, value in pdf_metadata.items()
-            if key not in {"failure_kind", "limitations"}
+            if key not in {"failure_kind", "limitations", "unqualified_text_preview"}
         }
     else:
         raw = _read_table_raw(
@@ -3168,6 +3265,7 @@ def _normalize_table(
         date_locale,
         non_movement_summary_labels,
         source_file=source_identity,
+        pdf_registration_layout=file_recipe.get("pdf_registration_layout"),
     )
     observed_direction_values = sorted(
         {
@@ -3273,6 +3371,7 @@ def _normalize_table(
         csv_field_delimiter=csv_field_delimiter,
         decimal_separator=decimal_separator,
         thousands_separator=thousands_separator,
+        pdf_registration_layout=file_recipe.get("pdf_registration_layout"),
     )
     mapping_receipt: dict[str, Any] | None = None
     mapping_review_error: str | None = None
@@ -3758,8 +3857,11 @@ def _extract_pdf_text(path: Path) -> str:
     lines: list[str] = []
     with pdfplumber.open(path) as pdf:
         for page in pdf.pages:
-            text = page.extract_text() or ""
-            lines.extend(line.strip() for line in text.splitlines() if line.strip())
+            try:
+                text = page.extract_text() or ""
+                lines.extend(line.strip() for line in text.splitlines() if line.strip())
+            finally:
+                page.close()
     return "\n".join(lines)
 
 
@@ -3793,6 +3895,7 @@ def _normalize_text_pdf(
     recipe: dict[str, Any],
     *,
     source_identity: str,
+    inspection_text: str | None = None,
 ) -> tuple[pl.DataFrame, dict[str, Any]]:
     """Inspect PDF text without emitting movements from an unbounded layout.
 
@@ -3802,7 +3905,7 @@ def _normalize_text_pdf(
     The narrow non-movement classifications remain useful review evidence.
     """
 
-    text = _extract_pdf_text(path)
+    text = _extract_pdf_text(path) if inspection_text is None else inspection_text
     non_movement_rows: list[dict[str, Any]] = []
     candidate_movement_rows = 0
     for line_idx, line in enumerate(text.splitlines(), start=1):
@@ -3884,7 +3987,9 @@ def _parser_failure_diagnostic(
         "adapter_id": TABULAR_ADAPTER_ID,
         "source_family": "parser_failure.v1",
         "qualification_status": "unsupported_source_layout",
-        "failure_kind": "parser_failure",
+        "failure_kind": (
+            "memory_exhausted" if isinstance(error, MemoryError) else "parser_failure"
+        ),
         "candidate_row_count": 0,
         "row_count": 0,
         "preview": [],
@@ -3940,6 +4045,7 @@ def _normalize_files(
                 source_artifact_ref=source_refs[(side, source_identity)],
             )
         except (
+            MemoryError,
             fastexcel.CalamineError,
             BadZipFile,
             InvalidFileException,
@@ -4118,6 +4224,8 @@ def _source_qualifications(
             adapter_version = TEXT_PDF_ADAPTER_VERSION
         elif adapter_id == PDF_TABLE_ADAPTER_ID:
             adapter_version = PDF_TABLE_ADAPTER_VERSION
+        elif adapter_id == PDF_REGISTRATION_ADAPTER_ID:
+            adapter_version = PDF_REGISTRATION_ADAPTER_VERSION
         else:
             raise ValueError(f"Unsupported Journal-Bank adapter: {adapter_id}")
         supported = status == "qualified"
@@ -4401,6 +4509,11 @@ def _recipe_side(diagnostics: list[dict[str, Any]]) -> dict[str, Any]:
             entry["non_movement_summary_labels"] = diag["non_movement_summary_labels"]
         entry["mapping_origin"] = diag.get("mapping_origin")
         entry["mapping_review_content"] = diag.get("mapping_review_content")
+        registration_layout = (diag.get("mapping_review_content") or {}).get(
+            "pdf_registration_layout"
+        )
+        if registration_layout is not None:
+            entry["pdf_registration_layout"] = registration_layout
         for separator in ("decimal_separator", "thousands_separator"):
             entry[separator] = (diag.get("mapping_review_content") or {}).get(separator)
         entry["mapping_review_content_sha256"] = diag.get(
@@ -4550,6 +4663,7 @@ def _read_sample_movements(
                 }
             )
         except (
+            MemoryError,
             fastexcel.CalamineError,
             BadZipFile,
             InvalidFileException,
@@ -6243,13 +6357,14 @@ def _artifact_roots(
 
 
 def implementation_artifact_roots() -> dict[str, Path]:
-    """Return the two immutable code roots bound into every assurance envelope."""
+    """Return the three immutable code roots bound into every assurance envelope."""
 
     if _VERA_ASSURANCE_ROOT is None:  # pragma: no cover - import gate above
         raise RuntimeError("Vendored vera_assurance implementation is unavailable.")
     return {
         "implementation": _COMPONENT_ROOT,
         "shared_implementation": _VERA_ASSURANCE_ROOT,
+        "pdf_implementation": _VERA_ASSURANCE_ROOT.parent / "vera_journal_pdf",
     }
 
 
@@ -6294,7 +6409,15 @@ def _validate_implementation_spec_coverage(roots: dict[str, Path]) -> None:
     )
     declared_contract = tuple(
         (
-            "plugin" if root_id == "implementation" else "shared_assurance",
+            (
+                "plugin"
+                if root_id == "implementation"
+                else (
+                    "shared_pdf"
+                    if root_id == "pdf_implementation"
+                    else "shared_assurance"
+                )
+            ),
             relative_path,
         )
         for _, root_id, relative_path in specs

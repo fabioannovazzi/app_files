@@ -85,7 +85,8 @@ Required:
   amount/debit/credit roles, sign convention, and every excluded monetary
   column such as a running balance;
 - a journal or ledger file or folder in `.xlsx`, `.xls`, `.csv`, or text `.pdf`
-  format, subject to the same reviewed PDF-table contract.
+  format, subject to the reviewed PDF-table contract or the registration-PDF
+  adapter described below.
 
 Optional:
 
@@ -98,11 +99,47 @@ Optional:
 - date window in days;
 - working language and source-document language.
 
-PDF text without a labelled physical column grid, inconsistent page tables,
+PDF text without a labelled physical column grid or a reviewed registration
+layout, inconsistent page tables,
 and OCR-only PDFs are not movement sources. Inspection must expose
 `unsupported_source_layout`, emit zero movements, and retain only the narrow
 bank non-movement classifications supported by the script. The presence of a
 date and one or more amounts on a line is never enough to infer a movement.
+
+### Registration-style journal PDF
+
+A text journal with `N ---- dd/mm/yyyy ----` registration headers and
+`seguito registrazione del dd/mm/yyyy` continuations can use the shared
+registration reader. When ordinary table inspection cannot qualify a journal,
+read its bounded `pdf_layout_evidence` with the host model. Review the physical
+column semantics and prepare `journal.files[filename].pdf_registration_layout`
+with `body: [top, bottom]`, five non-overlapping `[left, right]` bands under
+`columns` (`account_debit`, `account_credit`, `description`, `debit`, `credit`),
+and explicit `ignored_line_prefixes` limited to printed headers/footers.
+Reinspect using this recipe. Review the resulting ordinary column mapping and
+relationship perimeter, and include `pdf_registration_layout` in that file's
+decision passed to `seal_review_receipts.py`. The mapping receipt binds the
+layout, source digest and `journal_bank.registration_pdf.v1` adapter version
+`1`; changing coordinates or source bytes invalidates it. This is a maintained
+Vera adapter, not an ad hoc extraction alternative.
+
+The reader carries date/registration state across pages, retains multiline
+descriptions and page/row locators, and verifies each completed registration's
+debit/credit totals. Printed page totals can differ during a continued
+registration. Missing postings, empty-text pages, unassigned money, overlapping
+bands and incomplete/unbalanced registrations withhold the source. Review the
+bank-account scope and sign convention before matching a complete journal;
+counterpart postings must not be mistaken for bank-account movements. The bank
+PDF still requires its own labelled table mapping. An unsupported layout
+cannot be promoted merely because its text is readable.
+
+Each page cache is released after extraction; progress names the current page.
+Unsupported table extraction stops early and does not reread the whole PDF.
+A catchable `MemoryError` produces `memory_exhausted` parser diagnostics. If
+an OS kills the worker, Vera's parent runtime reports forced termination and
+writes `execution_failure.json` inside the declared client-run output. The exit
+code alone does not prove memory exhaustion. Retain this file, mark the run
+failed and do not report a completed reconciliation.
 
 ### Unsupported PDF hard stop
 
@@ -114,7 +151,7 @@ blocked result before ending the run:
 - `source_qualification`: `unsupported_source_layout`;
 - `emitted_movements`: `0`;
 - `reconciliation_deliverable`: `not_created`;
-- `next_supported_input`: a labelled text-PDF table or a reviewed CSV/XLSX
+- `next_supported_input`: a reviewed registration journal PDF, a labelled text-PDF table or a reviewed CSV/XLSX
   export from the source system.
 
 A user's instruction to proceed anyway does not authorize a fallback. Do not
@@ -122,7 +159,7 @@ invoke `run_reconciliation.py`, generic PDF/OCR tools, `pdfplumber` through an
 ad hoc script, or any undeclared extraction path; do not manually reconstruct
 movements; and do not create or relabel a generic comparison as a Vera result.
 Do not offer or start a non-Vera alternative in the same run. Keep the Vera run
-blocked until supported inputs or a reviewed PDF-table mapping are available.
+blocked until supported inputs or a reviewed PDF-table or registration-layout mapping are available.
 
 ## First Run Workflow
 
@@ -152,7 +189,7 @@ Add `--sample <sample-file>` when a sample movement list is provided.
    perimeter field. Treat the three separators as separate inputs. For a PDF,
    explicitly review the recovered physical header, incoming/outgoing sign
    roles, and all running-balance or total columns. A PDF with no qualified
-   physical column grid cannot be approved merely by changing a mapping.
+   physical column grid must use the dedicated reviewed registration adapter, if its supported structure is present; it cannot be approved merely by changing a table mapping.
 5. Record explicit decisions for every bank and journal file in
    `review_decisions.json` inside the run output directory, following the JSON
    contract in `../../references/workflow-reference.md`. Use the packaged
@@ -584,7 +621,8 @@ DE: Verwende Journal-Bank Reconciliation für Kontoauszüge in /pfad/bank und Jo
 
 ## Failure Modes
 
-- For every PDF without a consistent labelled physical table, and every
+- For every PDF without a consistent labelled physical table or a reviewed
+  supported registration layout, and every
   scanned/OCR-only PDF, report `unsupported_source_layout`; do not emit
   movements or complete reconciliation. User insistence never authorizes
   generic extraction, an ad hoc PDF script, or a non-Vera fallback in the same

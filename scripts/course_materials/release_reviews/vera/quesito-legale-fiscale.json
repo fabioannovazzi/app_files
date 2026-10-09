@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "quesito-legale-fiscale",
-  "course_sha256": "c58792a0f75b7953b37239876c22a31ca5a3726f897209893de778df88845fe1",
+  "course_sha256": "504ffb2a017ca29d3a8e6792634e2aef3db20397a7d99ac2962bdb0e53c02009",
   "reviewer": "Codex: authored lesson, official-source and rendered native-output review",
   "reviewed_at": "2026-09-23T11:43:24.017289+00:00",
   "review_scope": "First-use kit, fictional request, native planning, actual authored multilingual answer, source inspection, claim review, Word packaging and preserved practice revision. Rendered all ten distinct answer texts; both products produce the same reviewed document bodies. Regression fixtures replay dated official-source evidence and model-authored judgments; they do not attest fresh model inference, learner participation, professional approval or live voice. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
@@ -527,5 +527,21 @@
     "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
     "source_review": "docs/studio_archive/course-source-compatibility-review.json",
     "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  },
+  "journal_pdf_source_binding_review_20261009": {
+    "reviewed_at": "2026-10-09T17:33:15.614795+00:00",
+    "reviewer": "Codex source-bound PDF workflow review",
+    "previous_course_sha256": "c58792a0f75b7953b37239876c22a31ca5a3726f897209893de778df88845fe1",
+    "current_course_sha256": "504ffb2a017ca29d3a8e6792634e2aef3db20397a7d99ac2962bdb0e53c02009",
+    "changed_fields": [
+      "revision",
+      "sources"
+    ],
+    "unchanged_materials": [
+      "All localized lesson text",
+      "Input bytes and execution contracts",
+      "Editorial and artifact review history"
+    ],
+    "scope": "Source inventory only: reviewed registration PDF adapter, page-cache release and worker diagnostics. Complete authored lesson content is identical to the prior main baseline. Prior output and editorial judgments remain historical; no renewed visual, installed-host, learner or Nicola-file acceptance is claimed. Fresh source-bound execution is required by CI teaching release verification."
   }
 }

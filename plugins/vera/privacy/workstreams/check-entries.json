@@ -11,7 +11,8 @@
     "assets/check-entries-review-widget.html"
   ],
   "governed_shared_paths": [
-    "vendor/modules/vera_assurance"
+    "vendor/modules/vera_assurance",
+    "vendor/modules/vera_journal_pdf"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -153,10 +154,10 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "7d1a0e7048617d722de610be85af9c0fbca8088ac66b9abf4106e6e920cb2346"
+    "source_fingerprint": "36510a27b00cefe18b561a7cba937959398a80a2b17544589a7069564f752216"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"

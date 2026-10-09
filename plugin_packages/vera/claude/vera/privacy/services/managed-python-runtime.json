@@ -101,12 +101,20 @@
         "scripts/managed_python_runtime.py"
       ],
       "on_violation": "Preparation failures and host permission denials stop execution. A failed private copy is removed; no installation chmod/unlink/manual repair, alternate sandbox or relaxed component validation is permitted."
+    },
+    {
+      "id": "worker-forced-termination-diagnostic",
+      "control": "The parent Vera launcher reports a negative exit code or 137/247 as forced termination. It writes execution_failure.json only inside the selected workflow context output directory or its normalization/sample subdirectories; without that matching context it logs only. The diagnostic stores workflow/run identifiers, exit status and an explicit statement that memory exhaustion is not established by the exit code. It makes no model calls or network requests.",
+      "implemented_by": [
+        "scripts/managed_python_runtime.py"
+      ],
+      "on_violation": "A worker failure remains failure; diagnostic persistence errors are logged rather than converted into a success."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-06",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "f9d05aabd1c5912f9adffbc4294b65cfe1686c2bf24b6c6ad463c61efb2f0168"
+    "source_fingerprint": "8d3f70567d841f59ca8734a4e9378dc061ff76be46b76793bbd970eb9217cff3"
   }
 }

@@ -271,6 +271,101 @@ def test_pdf_candidate_text_outside_a_table_stays_blocked(tmp_path: Path) -> Non
     assert diagnostic["candidate_pages_without_tables"] == [1]
 
 
+def test_pdf_inspection_releases_pages_and_stops_before_unsupported_tail(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import pdfplumber
+
+    core = load_core()
+    closed: list[int] = []
+
+    class CandidatePage:
+        def extract_tables(self, **kwargs: Any) -> list[Any]:
+            return []
+
+        def extract_words(self, **kwargs: Any) -> list[Any]:
+            return []
+
+        def extract_text(self) -> str:
+            return "31/03/2025 BONIFICO 100,00"
+
+        def close(self) -> None:
+            closed.append(1)
+
+    class UnreadTail:
+        def extract_tables(self, **kwargs: Any) -> list[Any]:
+            pytest.fail("Unsupported source tail must not be read")
+
+    class Document:
+        pages = [CandidatePage(), UnreadTail()]
+
+        def __enter__(self) -> Document:
+            return self
+
+        def __exit__(self, *args: Any) -> None:
+            pass
+
+    monkeypatch.setattr(pdfplumber, "open", lambda path: Document())
+
+    frame, locators, metadata = core._read_pdf_table_raw(tmp_path / "journal.pdf")
+
+    assert frame.is_empty()
+    assert locators == []
+    assert metadata["inspection_stopped_early"] is True
+    assert metadata["candidate_pages_without_tables"] == [1]
+    assert closed == [1]
+
+
+def test_pdf_table_failure_does_not_reread_complete_text(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    core = load_core()
+    pdf = tmp_path / "bank.pdf"
+    _write_unruled_pdf_line(pdf, "31/03/2025 BONIFICO CLIENTE 100,00 1.500,00")
+
+    def forbidden_reread(path: Path) -> str:
+        pytest.fail("Already unsupported PDF must not be read twice")
+
+    monkeypatch.setattr(core, "_extract_pdf_text", forbidden_reread)
+
+    frame, diagnostic = core._normalize_table(
+        pdf,
+        "bank",
+        {},
+        source_identity=pdf.name,
+        source_artifact_ref="source.bank",
+    )
+
+    assert frame.is_empty()
+    assert diagnostic["failure_kind"] == "unmapped_pdf_candidate_page"
+    assert diagnostic["candidate_row_count"] == 1
+
+
+def test_pdf_memory_error_is_saved_as_explicit_inspection_diagnostic(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    core = load_core()
+    pdf = tmp_path / "bank.pdf"
+    pdf.write_bytes(b"%PDF test source")
+    journal = tmp_path / "journal.csv"
+    _save_csv(journal, [["Date", "Amount"], ["2025-03-31", "100.00"]])
+
+    def exhausted(path: Path) -> Any:
+        raise MemoryError("PDF page allocation exhausted")
+
+    monkeypatch.setattr(core, "_read_pdf_table_raw", exhausted)
+
+    result = core.inspect_inputs(pdf, journal, tmp_path / "inspection")
+
+    assert result.bank["files"][0]["failure_kind"] == "memory_exhausted"
+    assert "MemoryError" in result.bank["files"][0]["parser_error"]
+    saved = json.loads((tmp_path / "inspection" / "inspection.json").read_text())
+    assert saved["bank"]["files"][0]["failure_kind"] == "memory_exhausted"
+
+
 def _load_customer_ledger() -> Any:
     ledger_path = ROOT / "plugins" / "studio-archive" / "scripts" / "client_ledger.py"
     module_name = "test_journal_bank_customer_ledger"
@@ -343,6 +438,11 @@ def _rename_customer_output(output_dir: Path) -> tuple[Path, Path, Path]:
 def load_core() -> Any:
     if str(SCRIPT_DIR) not in sys.path:
         sys.path.insert(0, str(SCRIPT_DIR))
+    # These standalone components use the same bootstrap import name.
+    # Bind each test load to its own source instead of reusing another component.
+    sys.path.remove(str(SCRIPT_DIR))
+    sys.path.insert(0, str(SCRIPT_DIR))
+    sys.modules.pop("implementation_bootstrap", None)
     spec = importlib.util.spec_from_file_location("journal_bank_core", CORE_PATH)
     assert spec and spec.loader
     module = importlib.util.module_from_spec(spec)
@@ -603,6 +703,7 @@ def _attach_current_mapping_receipt(
         csv_field_delimiter=file_recipe["csv_field_delimiter"],
         decimal_separator=file_recipe.get("decimal_separator"),
         thousands_separator=file_recipe.get("thousands_separator"),
+        pdf_registration_layout=file_recipe.get("pdf_registration_layout"),
     )
     file_recipe["mapping_decision"] = receipt
     return receipt
@@ -1502,6 +1603,11 @@ def _copy_journal_bank_implementation(tmp_path: Path) -> tuple[Path, Path]:
     shutil.copytree(
         ROOT / "plugins" / "_shared" / "vendor" / "modules" / "vera_assurance",
         copied_shared,
+        ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "*.pyo"),
+    )
+    shutil.copytree(
+        ROOT / "plugins" / "_shared" / "vendor" / "modules" / "vera_journal_pdf",
+        copied_shared.parent / "vera_journal_pdf",
         ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "*.pyo"),
     )
     return copied_plugin, copied_shared
@@ -5768,16 +5874,13 @@ def test_canonical_snake_case_mapping_runs_amount_date_cascade_and_native_closur
     envelope = json.loads(
         (output_dir / "assurance_envelope.json").read_text(encoding="utf-8")
     )
-    assert (
-        len(
-            [
-                receipt
-                for receipt in envelope["artifact_receipts"]
-                if receipt["role"] == "implementation"
-            ]
-        )
-        == 26
-    )
+    assert len(
+        [
+            receipt
+            for receipt in envelope["artifact_receipts"]
+            if receipt["role"] == "implementation"
+        ]
+    ) == len(core.IMPLEMENTATION_ARTIFACT_SPECS)
 
 
 @pytest.mark.parametrize(
@@ -7009,6 +7112,9 @@ def test_invalid_utf8_csv_blocks_with_replayable_parser_failure_artifacts(
             "shared_implementation": (
                 ROOT / "plugins" / "_shared" / "vendor" / "modules" / "vera_assurance"
             ),
+            "pdf_implementation": (
+                ROOT / "plugins" / "_shared" / "vendor" / "modules" / "vera_journal_pdf"
+            ),
         },
     )
 
@@ -7040,7 +7146,7 @@ def test_initial_assurance_envelope_binds_exact_transitive_implementation_set(
         (root_id, relative_path)
         for _, root_id, relative_path in core.IMPLEMENTATION_ARTIFACT_SPECS
     ]
-    assert len(implementation_receipts) == 26
+    assert len(implementation_receipts) == len(core.IMPLEMENTATION_ARTIFACT_SPECS)
 
 
 @pytest.mark.parametrize(
@@ -7224,6 +7330,7 @@ def test_mcp_rejects_unowned_implementation_path_before_stdio(
         ("shared", "serialization.py"),
         ("shared", "money.py"),
         ("shared", "review_output_transaction.cjs"),
+        ("shared_pdf", "__init__.py"),
     ],
 )
 def test_python_preflight_rejects_copied_implementation_byte_mutation(
@@ -7235,7 +7342,11 @@ def test_python_preflight_rejects_copied_implementation_byte_mutation(
     output_dir, *_ = _prepare_closed_mcp_review_run(output_dir)
     before = _tree_snapshot(output_dir)
     copied_plugin, copied_shared = _copy_journal_bank_implementation(tmp_path)
-    root = copied_plugin if implementation_root == "plugin" else copied_shared
+    root = {
+        "plugin": copied_plugin,
+        "shared": copied_shared,
+        "shared_pdf": copied_shared.parent / "vera_journal_pdf",
+    }[implementation_root]
     target = root / relative_path
     target.write_bytes(target.read_bytes() + b"\n")
 
@@ -7268,6 +7379,7 @@ def test_python_preflight_rejects_copied_implementation_byte_mutation(
         ("shared", "serialization.py"),
         ("shared", "money.py"),
         ("shared", "review_output_transaction.cjs"),
+        ("shared_pdf", "__init__.py"),
     ],
 )
 def test_mcp_replay_rejects_copied_implementation_byte_mutation(
@@ -7281,7 +7393,11 @@ def test_mcp_replay_rejects_copied_implementation_byte_mutation(
     )
     before = _tree_snapshot(output_dir)
     copied_plugin, copied_shared = _copy_journal_bank_implementation(tmp_path)
-    root = copied_plugin if implementation_root == "plugin" else copied_shared
+    root = {
+        "plugin": copied_plugin,
+        "shared": copied_shared,
+        "shared_pdf": copied_shared.parent / "vera_journal_pdf",
+    }[implementation_root]
     target = root / relative_path
     target.write_bytes(target.read_bytes() + b"\n")
     env = {**os.environ, "PYTHON": sys.executable}
@@ -13308,3 +13424,90 @@ def test_current_host_profile_preserves_the_production_security_envelope() -> No
     assert "process-fork" not in semantic.SEATBELT_PROFILE
     assert "codex-code-mode-host" not in semantic.SEATBELT_PROFILE
     assert "danger-full-access" not in semantic._redacted_worker_argv()
+
+
+@pytest.mark.parametrize("mutate_layout", [False, True])
+def test_registration_pdf_journal_reconciliation_closes_or_blocks_stale_layout(
+    tmp_path: Path,
+    mutate_layout: bool,
+) -> None:
+    from tests.plugins.test_journal_sampling_plugin import (
+        _write_registration_journal_pdf,
+    )
+
+    core = load_core()
+    journal = tmp_path / "journal.pdf"
+    layout = _write_registration_journal_pdf(journal)
+    bank = tmp_path / "bank.csv"
+    _save_csv(
+        bank,
+        [
+            ["Date", "Amount", "Description", "Reference"],
+            ["2024-01-01", "100.00", "Pagamento INV100", "INV100"],
+        ],
+    )
+    initial = tmp_path / "initial.json"
+    initial.write_text(
+        json.dumps(
+            {
+                "journal": {
+                    "files": {
+                        journal.name: {
+                            "pdf_registration_layout": layout,
+                        }
+                    }
+                }
+            }
+        )
+    )
+    inspection_dir = tmp_path / "inspection"
+    core.inspect_inputs(bank, journal, inspection_dir, initial)
+    recipe_path = inspection_dir / "suggested_recipe.json"
+    recipe = json.loads(recipe_path.read_text())
+    receipts = json.loads((inspection_dir / "input_receipts.json").read_text())[
+        "receipts"
+    ]
+    _attach_current_mapping_receipt(
+        core,
+        recipe,
+        receipts,
+        side="journal",
+        source_path=journal,
+        decision_id="decision.mapping.registration_pdf",
+    )
+    recipe_path.write_text(json.dumps(recipe))
+    sealed = _seal_relationship_recipe(
+        core,
+        recipe_path,
+        inspection_dir / "input_receipts.json",
+        tolerance="0",
+        date_window_days=0,
+        policy_updates={"direction_policy": "same_sign"},
+    )
+    if mutate_layout:
+        changed = json.loads(sealed.read_text())
+        changed["journal"]["files"][journal.name]["pdf_registration_layout"]["body"][
+            0
+        ] = 21
+        sealed.write_text(json.dumps(changed))
+        with pytest.raises(ValueError):
+            core.run_reconciliation(
+                bank,
+                journal,
+                tmp_path / "results",
+                sealed,
+                tolerance="0",
+                date_window_days=0,
+            )
+        return
+
+    result = core.run_reconciliation(
+        bank, journal, tmp_path / "results", sealed, tolerance="0", date_window_days=0
+    )
+
+    assert result.matches.height == 1
+    assert result.unmatched_journal.height == 1
+    rows = _read_csv_dicts(tmp_path / "results" / "normalized_journal.csv")
+    assert [row["source_sheet"] for row in rows] == ["PDF page 1", "PDF page 2"]
+    assert [row["amount_signed"] for row in rows] == ["100", "-100"]
+    assert (tmp_path / "results" / "journal_bank_reconciliation.xlsx").is_file()

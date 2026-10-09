@@ -12,6 +12,7 @@
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
+    "vendor/modules/vera_journal_pdf",
     "skills/vera/references/connected-studio-knowledge.md"
   ],
   "runtime_profiles": [
@@ -154,9 +155,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "294a851390173680fb52f1a39492e0fbb7d1d1c075b775ac1c13e4a7e0ad20c8"
+    "source_fingerprint": "da705c68a116a29589e9bf258db118e60f3636a6aa9b0c6257c8be9275c261bb"
   }
 }
