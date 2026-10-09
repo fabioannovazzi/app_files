@@ -131,6 +131,17 @@ def _dispatch(
     statutory_rule_packs: Sequence[Mapping[str, Any]],
     disclosure_rule_pack: Mapping[str, Any],
 ) -> Any:
+    if tool.startswith("xbrl_workspace_"):
+        from dataclasses import replace
+
+        from workspace_bridge import dispatch_workspace
+
+        return dispatch_workspace(
+            service,
+            replace(context, originating_interface="mcp-app-workspace"),
+            tool,
+            arguments,
+        )
     if tool == "xbrl_case_create":
         statutory_rule_pack = _effective_statutory_rule_pack(
             statutory_rule_packs,

@@ -7,6 +7,7 @@
     "skills",
     "scripts",
     "mcp",
+    "ui",
     "rulepacks",
     "taxonomy",
     "requirements.txt",
@@ -62,6 +63,14 @@
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "native-workspace-selected-finding",
+        "purpose": "Discuss one explicitly selected finding and source cell from the private native workspace pilot",
+        "content": "The MCP Apps pilot keeps the authorized client and engagement catalogue and bounded review-page data in result _meta for UI display. Model-visible entrypoint results contain only counts or case/revision status. Clicking the explanation action checks the current selection, then sends a readable request containing the finding title, period end and exact case, finding, revision and optional selected-source references through ui/message to a new OpenAI host conversation. No evidence JSON, raw source values or context hash is attached to that message. The receiving model must call xbrl_workspace_explain with those exact references before answering. That authorized read rejects a changed revision and returns the existing ISSUE_EXPLANATION packet for one finding, plus up to twenty recorded linked source anchors/documents and optionally one explicitly user-selected trial-balance source reference, all inside a 256,000-byte UI snapshot limit. The returned envelope records a SHA-256 digest, exact case and revision identifiers, raw selected cell values, coordinates, source filename and source checksum when present. Source material is marked untrusted; no whole archive, whole case or grid is automatically attached. No raw-case fallback is permitted if the bounded read is unavailable. The action is blocked if the host does not advertise new-conversation support. The UI does not invoke a separate model API. Native-host new-chat separation and the model's exact selection read still require acceptance testing; no Cowork support is established. UI-only metadata is not an authorization boundary.",
+        "runtime_profiles": [
+          "openai-codex"
         ]
       }
     ]
@@ -240,13 +249,17 @@
     {
       "id": "geneva-source-binding",
       "control": "The Geneva adapter requires a running Studio Archive context and exact imported source hashes, complete one-to-one reviewed mappings and balanced current/prior trial balances. Decisions bind the workflow, client, engagement, exact proposal and arithmetic. Outputs are content-addressed private drafts, never statutory approval or filing-ready artifacts. The Italy-specific authenticated service and XBRL controls do not apply to this local adapter."
+    },
+    {
+      "id": "native-workspace-case-and-human-review-boundary",
+      "control": "The private local pilot requires a bounded host-supplied allowlist bound to the authenticated actor and tenant, verifies each referenced Studio Archive client/engagement/run manifest, and reuses CaseService authorization, checksum-verified case loading, revision checks, locked writes and persistent idempotency. The browser cannot supply a tenant, actor, role, client path or storage path. App-only review tools require a process-signed, expiring case/revision/finding ticket, an explicit review confirmation and the REVIEWER capability; a non-running Archive run rejects writes. These controls depend on the host enforcing app-only tool visibility and on trusted local identity configuration; they are not an independent remote human-identity attestation. Blockers remain non-overridable. UI rendering uses text nodes, bundles its font and assets, and requires no direct browser-to-localhost or external network requests. The separate development test host accepts only generated fictional data. Public MCP hosting and listing migration remain unsupported by this pilot."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-04",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "a041d86bba2ba2f513b4609a01504e7a505e23b05d06464e667214206fabfb0b"
+    "source_fingerprint": "b062b8c932a83bb0aac673e7d3fbd270dcb9e95babaa6c7dbacf79601d9dec63"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"

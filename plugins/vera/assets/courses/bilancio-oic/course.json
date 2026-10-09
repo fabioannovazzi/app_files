@@ -122,7 +122,7 @@
     {
       "path": "modules/bilancio-xbrl-it/scripts/case_service.py",
       "repository_path": "plugins/bilancio-xbrl-it/scripts/case_service.py",
-      "sha256": "684119a771b286afd447a7c6c19ea8b4d6774231baa9fdbdcb2a13126fef0603"
+      "sha256": "5e98b4be38206d559e2f8a7613355ff332fca201385073a562b3a51caffc360d"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/check_dependencies.py",
@@ -232,7 +232,7 @@
     {
       "path": "modules/bilancio-xbrl-it/scripts/service_bridge.py",
       "repository_path": "plugins/bilancio-xbrl-it/scripts/service_bridge.py",
-      "sha256": "895e8e35d212617f7c0bf1b47c4db2bceeeea38e25869b178687ed9960430d30"
+      "sha256": "5096fa3eb029c9741959368c55080851423467bbad6c034079df7f6ca1925a87"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/statutory_presentation.py",
@@ -243,6 +243,16 @@
       "path": "modules/bilancio-xbrl-it/scripts/validate_xbrl.py",
       "repository_path": "plugins/bilancio-xbrl-it/scripts/validate_xbrl.py",
       "sha256": "63ca86dd240de7d99a3026596564fb9b68a8aff380b8f53498c907b276d07b83"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/workspace_bridge.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/workspace_bridge.py",
+      "sha256": "feff5346d4bb359e68ea8c77dd6a4a0800be00b982c0148df16444b41c1dbbc9"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/workspace_contract.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/workspace_contract.py",
+      "sha256": "eadef6e7f231ec611d86edc1ec41a88a6408bed5e8d1cb98d88d8fdc6075d293"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/xbrl_case.py",
