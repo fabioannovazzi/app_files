@@ -23,5 +23,14 @@
     "previous_fingerprint": "9f65d206509603e1c9568dc4d20b7e81180ecd9c210d4821ac5311ed252fb6fe",
     "current_fingerprint": "a9498e73e5f1de86ca06d814d48d50edaa27f90f62281e929e9cd38545089633",
     "only_fingerprint_changed": true
+  },
+  "public_course_revision_review": {
+    "records": [
+      "plugins/vera/privacy/services/local-onboarding.json",
+      "plugins/clara/privacy/workflows/learn-with-clara.json"
+    ],
+    "review": "All 85 generated HTML changes were compared to b398cfb: only final course revision labels changed. Recipients, model-context payloads, activation, retention, consent, and security controls are unchanged. Only review fingerprints changed in the boundary records.",
+    "all_source_registers_current": true,
+    "normal_product_builder_check": "passed"
   }
 }

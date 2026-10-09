@@ -16,13 +16,13 @@
   "artifacts": [
     {
       "path": "plugin_packages/vera/vera-plugin.zip",
-      "sha256": "17159e2acdb36f2ff4b882143c55e6efa7aa5135c2ce4ec07b1f0d5fb5b294fb",
-      "bytes": 12569797
+      "sha256": "5cce773cc94a46b1af7e8b6596cf4a7f1b46c6eceeaadeaf222503bf1d8957df",
+      "bytes": 12569792
     },
     {
       "path": "plugin_packages/vera/vera-chatgpt-upload.zip",
-      "sha256": "c6489cc83792337a3e96d631b33d46f923f9f1aa8d1809904867e94eb9579600",
-      "bytes": 11940654
+      "sha256": "d1591a71c1c3029571fb7788be8d981d3f1dc3edb36ad00189057aff8f435e3d",
+      "bytes": 11940650
     },
     {
       "path": "static/shared/vera/downloads/vera-cowork-plugin.zip",
@@ -31,12 +31,12 @@
     },
     {
       "path": "static/shared/vera/downloads/vera-antigravity-plugin.zip",
-      "sha256": "f71411616a122546a33d6d4f8e5c9721aef632865c77b65406aa66573a89073f",
+      "sha256": "955dc44451349a0736598c533cf49b8abe4c19118c51397062106bf557f1602a",
       "bytes": 12258243
     },
     {
       "path": "plugin_packages/lucia/lucia-plugin.zip",
-      "sha256": "f1dc44d5881a0e86cacc01f7e5aabbde0b738b2b71a420b58e6a3eba0532dbb9",
+      "sha256": "1d792c6abfbd088a0802f81436da94418f4f30b8a9a73c296a228e06b789abc9",
       "bytes": 3448837
     },
     {
@@ -56,13 +56,13 @@
     },
     {
       "path": "plugin_packages/clara/clara-plugin.zip",
-      "sha256": "857d24c9af608452ff1adf48b41dc9dee33e52867be0ed1056e4454c6075f025",
-      "bytes": 6338342
+      "sha256": "064d61dfff3b8b1b88f497aad753674de1e372393dc949ce3110aefc23b46e08",
+      "bytes": 6338345
     },
     {
       "path": "plugin_packages/clara/clara-chatgpt-upload.zip",
-      "sha256": "0f28e72f781e9cbc70c03aa4eb2809700d66d776191f303487f2787548aa3ea3",
-      "bytes": 6054586
+      "sha256": "ae2cd03a88234e7d7b1ef6d4f33eac72985f6c28a4cf2a0cda4cdef1940f6574",
+      "bytes": 6054589
     },
     {
       "path": "static/shared/clara/downloads/clara-cowork-plugin.zip",
@@ -71,8 +71,8 @@
     },
     {
       "path": "static/shared/clara/downloads/clara-antigravity-plugin.zip",
-      "sha256": "2fd1190da8fa58ef2b724aedaccff897bdd3f5a62a57267fd1a1b91aba30d8b0",
-      "bytes": 6167212
+      "sha256": "91765e4c3c5cd7b70303cef5cbbce6a74ef7a4e4d43fa8066ff234689ca1d1a7",
+      "bytes": 6167215
     }
   ],
   "source_tests_previously_qualified": 2084,
@@ -94,7 +94,7 @@
     "skipped": 2,
     "junit": "/private/tmp/native-deploy-package-integrity-20261009.xml"
   },
-  "all_product_source_and_version_checks": "passed",
+  "all_product_source_and_version_checks": "passed after reviewed public catalogue boundary refresh",
   "download_version_label_tests": "passed",
   "instrumented_rpc_test_deadline": {
     "ordinary_seconds": 90,
@@ -130,5 +130,22 @@
     "matter_review_assets": "passed",
     "concordato_source_pdfs": "passed",
     "presentation_baselines_all_five_languages": "passed"
+  },
+  "course_boundary_regressions": {
+    "passed": 51,
+    "tests": [
+      "test_antigravity_package.py",
+      "test_clara_privacy_surfaces.py",
+      "test_vera_privacy_surfaces.py"
+    ]
+  },
+  "public_course_privacy_refresh": {
+    "records": [
+      "plugins/vera/privacy/services/local-onboarding.json",
+      "plugins/clara/privacy/workflows/learn-with-clara.json"
+    ],
+    "review": "All 85 generated HTML changes were compared to b398cfb: only final course revision labels changed. Recipients, model-context payloads, activation, retention, consent, and security controls are unchanged. Only review fingerprints changed in the boundary records.",
+    "all_source_registers_current": true,
+    "normal_product_builder_check": "passed"
   }
 }
