@@ -1,0 +1,153 @@
+{
+  "upstream_before": "4fad2c02dd811602f851aa54ad7d3012720bd088",
+  "upstream_after": "8df0157d52b1e322f9f85fdb77376b39e17db446",
+  "integration_commit": "28c1d22c50e51239a0501f91d95f93abd08862ff",
+  "services": [
+    {
+      "id": "managed-python-runtime",
+      "reviewed_upstream_diff": "diff --git a/plugins/vera/constraints-shared-macos-py312.txt b/plugins/vera/constraints-shared-macos-py312.txt\nindex 2c5b70ee5..2149b8f20 100644\n--- a/plugins/vera/constraints-shared-macos-py312.txt\n+++ b/plugins/vera/constraints-shared-macos-py312.txt\n@@ -1,4 +1,4 @@\n-# Resolved on macOS arm64 / CPython 3.12; includes optional OCR constraints.\n+# Resolved on macOS / CPython 3.12; includes optional OCR constraints.\n Jinja2==3.1.6\n MarkupSafe==3.0.3\n PyYAML==6.0.2\n@@ -67,7 +67,8 @@ jsonschema==4.26.0\n kaleido==1.3.0\n kiwisolver==1.5.1\n latex2mathml==3.81.0\n-llvmlite==0.49.0\n+llvmlite==0.45.1 ; platform_machine == \"x86_64\"\n+llvmlite==0.49.0 ; platform_machine != \"x86_64\"\n logistro==2.0.1\n lxml==6.1.3\n matplotlib-venn==1.1.2\n@@ -79,7 +80,8 @@ multidict==6.7.1\n multipledispatch==1.0.0\n narwhals==2.25.0\n networkx==3.6.1\n-numba==0.67.0\n+numba==0.62.1 ; platform_machine == \"x86_64\"\n+numba==0.67.0 ; platform_machine != \"x86_64\"\n numpy==2.2.6\n oauthlib==3.3.1\n opencv-contrib-python==4.10.0.84\ndiff --git a/plugins/vera/scripts/_shared_python_runtime.py b/plugins/vera/scripts/_shared_python_runtime.py\nindex 40ec12d73..3a6a1c535 100644\n--- a/plugins/vera/scripts/_shared_python_runtime.py\n+++ b/plugins/vera/scripts/_shared_python_runtime.py\n@@ -18,7 +18,7 @@ RECEIPT = \".mparanza-shared-ready.json\"\n POLICY = \".mparanza-shared-features.json\"\n INSTALLING = \"MPARANZA_RUNTIME_INSTALLING\"\n # Bump together across products whenever recipes, constraints or this backend change.\n-POLICY_REVISION = 10\n+POLICY_REVISION = 11\n # Every process in the managed interpreter holds a reader lease until exit.\n # The installer uses the same file exclusively. Never modify the interpreter\n # while readers are running. This is concurrency protection, not a sandbox.\n",
+      "before": "529905f12be626993366042bcf85f047449cd5e35f62d542896595384e891029",
+      "after": "55e2b42afdc61d7e984ff14d442b4944262d84c5bbb67c3b888ac4b7e2171cfd",
+      "only_fingerprint_changed": true
+    },
+    {
+      "id": "plugin-update-check",
+      "reviewed_upstream_diff": "diff --git a/plugins/vera/.codex-plugin/plugin.json b/plugins/vera/.codex-plugin/plugin.json\nindex a853e5985..7e9578e76 100644\n--- a/plugins/vera/.codex-plugin/plugin.json\n+++ b/plugins/vera/.codex-plugin/plugin.json\n@@ -1,6 +1,6 @@\n {\n   \"name\": \"vera\",\n-  \"version\": \"0.1.355\",\n+  \"version\": \"0.1.356\",\n   \"description\": \"Vera affianca commercialisti e studi professionali nei quesiti fiscali e legali, nel bilancio OIC/XBRL e nella revisione contabile e riconciliazione: risposte con fonti, analisi, controlli e carte di lavoro da rivedere.\",\n   \"author\": {\n     \"name\": \"Fabio Annovazzi \u00b7 Mparanza\",\n",
+      "before": "bae74dea5c4f3b8854706d0c86ad0a435b16ff1b2411754140305dc4c29c421a",
+      "after": "eecc5643cb7300e6b5f5400de27816d23ef35926f57ef42c2ca2c8c6187b3254",
+      "only_fingerprint_changed": true
+    },
+    {
+      "id": "run-receipt-stamping",
+      "reviewed_upstream_diff": "diff --git a/plugins/vera/.codex-plugin/plugin.json b/plugins/vera/.codex-plugin/plugin.json\nindex a853e5985..7e9578e76 100644\n--- a/plugins/vera/.codex-plugin/plugin.json\n+++ b/plugins/vera/.codex-plugin/plugin.json\n@@ -1,6 +1,6 @@\n {\n   \"name\": \"vera\",\n-  \"version\": \"0.1.355\",\n+  \"version\": \"0.1.356\",\n   \"description\": \"Vera affianca commercialisti e studi professionali nei quesiti fiscali e legali, nel bilancio OIC/XBRL e nella revisione contabile e riconciliazione: risposte con fonti, analisi, controlli e carte di lavoro da rivedere.\",\n   \"author\": {\n     \"name\": \"Fabio Annovazzi \u00b7 Mparanza\",\n",
+      "before": "ff280ea904f70bab70b160a31186613179f5f88f0a2707c9c476aa4cfcf5a006",
+      "after": "eedc43c47efdd02e334b57c022968d861cf6367bcc2cca5af6b528a0fe1ccdd9",
+      "only_fingerprint_changed": true
+    }
+  ],
+  "boundary_conclusion": "The governed source changes are the canonical version 355 to 356, Intel macOS dependency constraints, and shared policy revision 10 to 11. Existing destinations, request contents, activation, retention, and security controls remain accurate.",
+  "diagnostics": [],
+  "pilot17_native_ui_current_source_identity": {
+    "files": 136,
+    "mismatches": [],
+    "fresh_host_acceptance": false
+  },
+  "reviewed_native_source_identity_changes": [
+    {
+      "path": "plugins/vera/privacy/services/run-receipt-stamping.json",
+      "tested_snapshot_sha256": "20e59160d86fb20d852bf7e4e7d2441f066427445d50f6e8bbf9cd71affb172d",
+      "current_sha256": "fe4a68a4cf34b19fa099d7ffc941535fa87f7f6778398ef708d3a4a25e4d0319"
+    },
+    {
+      "path": "plugins/vera/privacy/services/managed-python-runtime.json",
+      "tested_snapshot_sha256": "37961799c14ef20d7bcd1c379dbbe7cceea2c6fe1e9cf910f38ab083995691a5",
+      "current_sha256": "bdc297479a2434dae914de0f4f5d9edb6c0548e6f5b45166d11cca7776b33489"
+    },
+    {
+      "path": "plugins/vera/privacy/services/plugin-update-check.json",
+      "tested_snapshot_sha256": "fab40dd74c9c15f9ae89b033752f06c23625e88e56dbb5c8861707e23e6a81c1",
+      "current_sha256": "229f3da277bae4330b5315c867bf77aabeb141bfb1392467d3cd0fb9c8d7642f"
+    },
+    {
+      "path": "tests/plugins/test_vera_native_workspace.py",
+      "tested_snapshot_sha256": "f3528d45bb9d0c23a2dc8d65f8340b99ed92faeee49b115974dc26f189e6ea8d",
+      "current_sha256": "62b8cdec3d90f94223ea4eefd1d564249b835fa650860c8cf69784e10b5e929b"
+    }
+  ],
+  "reviewed_source_files": 443,
+  "focused_shared_runtime_tests": {
+    "passed": 47,
+    "junit": "/private/tmp/native-upstream-runtime-merge-recheck-20261009.xml"
+  },
+  "package_tests": {
+    "tests": 443,
+    "passed": 441,
+    "failed": 0,
+    "skipped": 2,
+    "evidence": [
+      "/private/tmp/native-upstream-runtime-merge-package-integrity-20261009.xml",
+      "/private/tmp/native-upstream-runtime-merge-cowork-privacy-20261009.xml"
+    ],
+    "skip_reason": "Two official Marketplace installation checks require unavailable local curated installations."
+  },
+  "extracted_host_privacy": [
+    {
+      "host": "codex",
+      "sha256": "3e2193e8d0ea7da3810012c5988aff1dc5dcca3e39edc4891bdf342204780ba9",
+      "versions": [
+        "0.1.356"
+      ],
+      "validator": "actual package",
+      "diagnostic_count": 0
+    },
+    {
+      "host": "work",
+      "sha256": "92abf8c17a78f82fa3cf0f317b17cc9abe502ca9dc5a71edac1d6f2ad0034840",
+      "versions": [
+        "0.1.356"
+      ],
+      "validator": "actual package",
+      "diagnostic_count": 48
+    },
+    {
+      "host": "cowork",
+      "sha256": "d77d6dbe07803b14ac9ef94d564ae2af063fd499eed3bd787123faae8ddb3fd8",
+      "versions": [
+        "0.1.356"
+      ],
+      "validator": "source validator; developer validator intentionally absent",
+      "diagnostic_count": 0
+    },
+    {
+      "host": "antigravity",
+      "sha256": "9d36e07600592d262a9cf327083712a4494b15e16e4eb5e8155c7d0e1024a1ed",
+      "versions": [
+        "0.1.356"
+      ],
+      "validator": "actual package",
+      "diagnostic_count": 5
+    }
+  ],
+  "test_only_coverage_correction": {
+    "file": "tests/plugins/test_vera_native_workspace.py",
+    "change": "Preserve only COVERAGE_ environment variables in the restricted native test environment so Node-launched Python processes remain instrumented. Production files, isolation, guards and timeouts are unchanged.",
+    "probe_passed": 1,
+    "probe_junit": "/private/tmp/native-coverage-node-environment-probe-20261009.xml",
+    "native_business_planning_probe_coverage_percent": 63.21070234113712,
+    "previous_native_business_planning_recorded_coverage_percent": 0.0,
+    "full_native_coverage_rerun_pending": true,
+    "last_full_native_coverage_percent": 53.76950920484179,
+    "coverage_threshold_percent": 80,
+    "coverage_gate_passed": false
+  },
+  "verification_only_build": {
+    "products": {
+      "vera": "0.1.356",
+      "lucia": "0.1.91"
+    },
+    "build_passed": true,
+    "source_drift_check_passed": true,
+    "logs": [
+      "/private/tmp/native-upstream-runtime-merge-product-build-20261009.log",
+      "/private/tmp/native-upstream-runtime-merge-product-check-20261009.log"
+    ],
+    "new_release_version_reserved": false,
+    "published_or_deployed": false
+  },
+  "production_observed": {
+    "head": "8df0157d52b1e322f9f85fdb77376b39e17db446",
+    "worktree_clean": true,
+    "api_pid": 3017101,
+    "api_started_server_time": "Fri Oct 9 09:09:43 2026",
+    "homepage_http_status": 200,
+    "native_candidate_deployed": false
+  },
+  "repository_counts": {
+    "local_branches": 2,
+    "remote_heads": 1,
+    "registered_worktrees": 2,
+    "stashes": 0,
+    "temporary_branch_active": true
+  },
+  "release_qualified": false
+}

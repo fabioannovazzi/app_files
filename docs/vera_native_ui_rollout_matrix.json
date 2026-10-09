@@ -4531,7 +4531,7 @@
   "current_main_branch_integration": {
     "branch": "codex/bilancio-ui-integration",
     "worktree": "/Users/fabio/.codex/worktrees/bilancio-ui-integration/app_files",
-    "upstream": "4fad2c02dd811602f851aa54ad7d3012720bd088",
+    "upstream": "8df0157d52b1e322f9f85fdb77376b39e17db446",
     "bilancio_merge_commit": "b688a4597",
     "bilancio_passed": 24,
     "reviewed_native_source_files": 443,
@@ -4542,13 +4542,11 @@
     "native_regression_status": "2084 unique source cases pass after exact test-only and normal-runtime rechecks; nine raw instrumented failures remain recorded separately.",
     "package_integrity": {
       "tests": 443,
-      "passed": 439,
-      "failed": 2,
+      "passed": 441,
+      "failed": 0,
       "skipped": 2,
-      "pending": [
-        "Lucia vendored shared contract archive drift",
-        "Candidate release version preparation"
-      ]
+      "evidence": "docs/releases/2026-10-09-native-workspace-upstream-runtime-review.json",
+      "fresh_candidate_version_preparation_pending": true
     },
     "private_pilot": {
       "version": "0.0.17",
@@ -4560,6 +4558,13 @@
     "native_branch_coverage_percent": 53.76950920484179,
     "native_branch_coverage_gate_passed": false,
     "release_qualified": false,
-    "evidence": "docs/releases/2026-10-09-native-workspace-current-main-branch-integration.json"
+    "evidence": "docs/releases/2026-10-09-native-workspace-current-main-branch-integration.json",
+    "native_tested_baseline_upstream": "4fad2c02dd811602f851aa54ad7d3012720bd088",
+    "upstream_runtime_merge_commit": "28c1d22c50e51239a0501f91d95f93abd08862ff",
+    "shared_runtime_rechecks_passed": 47,
+    "privacy_diagnostics": 0,
+    "native_coverage_instrumentation_corrected": true,
+    "native_full_coverage_rerun_pending": true,
+    "latest_upstream_evidence": "docs/releases/2026-10-09-native-workspace-upstream-runtime-review.json"
   }
 }

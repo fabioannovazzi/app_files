@@ -57,6 +57,12 @@ def configure(monkeypatch, base: Path, bindings: list[dict]) -> dict[str, str]:
         )
     )
     env = {
+        # Keep coverage instrumentation across the test-only Node/Python bridge.
+        **{
+            key: value
+            for key, value in os.environ.items()
+            if key.startswith("COVERAGE_")
+        },
         "VERA_WORKSPACE_BINDINGS": str(path),
         "VERA_WORKSPACE_TENANT_ID": "fictional-studio",
         "VERA_WORKSPACE_ACTOR_ID": "fictional-reviewer",
