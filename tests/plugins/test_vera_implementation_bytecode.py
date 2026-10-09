@@ -35,6 +35,11 @@ def module_copy(request: pytest.FixtureRequest, tmp_path: Path) -> Path:
         root / "vendor/modules/vera_assurance",
         ignore=ignore,
     )
+    shutil.copytree(
+        ROOT / "plugins/_shared/vendor/modules/vera_journal_pdf",
+        root / "vendor/modules/vera_journal_pdf",
+        ignore=ignore,
+    )
     return root
 
 

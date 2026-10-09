@@ -65,7 +65,7 @@
     {
       "path": "modules/check-entries/scripts/check_entries_core.py",
       "repository_path": "plugins/check-entries/scripts/check_entries_core.py",
-      "sha256": "87dd56765642c6f1e8e9dd32e957bbc0ab155e22cbbbe7c8218ed2596f364c08"
+      "sha256": "bd10e2831c274cea590ed860c5da8b5349ac7e3c9c29c83397cdf701b1bf6d44"
     },
     {
       "path": "modules/check-entries/scripts/implementation_bootstrap.py",
@@ -166,6 +166,11 @@
       "path": "modules/check-entries/vendor/modules/vera_assurance/serialization.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
       "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "modules/check-entries/vendor/modules/vera_journal_pdf/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/__init__.py",
+      "sha256": "83c9569b49dde2f724f9b8eec2f7f45c50ae6eaf8f03baf6423a0c4df5e11d44"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

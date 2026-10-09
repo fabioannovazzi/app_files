@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "vouching",
-  "course_sha256": "d5ffa7d3e0b5a7a3e8d4f55a62d68597d5eef859357b7b07b7edd687970853f6",
+  "course_sha256": "20ea8294a17a29d0ceb1a930a1b24b4618978b238d4783a1e64ccf7b519067ea",
   "reviewer": "Codex bounded teaching-material and source integration review",
   "reviewed_at": "2026-10-09T13:18:34.216591+00:00",
   "review_scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
@@ -699,7 +699,7 @@
     "reviewed_at": "2026-10-09T17:33:15.788150+00:00",
     "reviewer": "Codex source-bound PDF workflow review",
     "previous_course_sha256": "d4ea680ab0d3e65bf283462bae3454ddb37f48c58d99284499395b493d8e6912",
-    "current_course_sha256": "d5ffa7d3e0b5a7a3e8d4f55a62d68597d5eef859357b7b07b7edd687970853f6",
+    "current_course_sha256": "20ea8294a17a29d0ceb1a930a1b24b4618978b238d4783a1e64ccf7b519067ea",
     "changed_fields": [
       "revision",
       "sources"

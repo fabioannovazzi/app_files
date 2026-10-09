@@ -250,6 +250,9 @@ JOURNAL_SAMPLING_IMPLEMENTATION_SPECS = (
         "implementation.vera_assurance_serialization",
     ),
 )
+JOURNAL_SAMPLING_IMPLEMENTATION_SPECS += (
+    ("pdf_implementation", "__init__.py", "implementation.vera_journal_pdf"),
+)
 JOURNAL_SAMPLING_COLUMNS = [
     "entry_date",
     "movement_number",
@@ -1218,6 +1221,7 @@ def _validate_journal_sampling_implementation_tree(
     roots = {
         "implementation": implementation_root,
         "assurance_implementation": assurance_root,
+        "pdf_implementation": assurance_root.parent / "vera_journal_pdf",
     }
     expected_files = {
         (root_id, relative_path)
@@ -1275,6 +1279,7 @@ def _validate_journal_sampling_implementation_tree(
         ("implementation", implementation_root / "scripts"),
         ("implementation", implementation_root / ".codex-plugin"),
         ("assurance_implementation", assurance_root),
+        ("pdf_implementation", roots["pdf_implementation"]),
     ):
         scan(root_id, scan_root)
     for relative_path in (".app.json", ".mcp.json"):
@@ -1735,6 +1740,9 @@ def _validate_upstream_assurance(
             "assurance_implementation"
         ],
     }
+    upstream_roots["pdf_implementation"] = (
+        upstream_roots["assurance_implementation"].parent / "vera_journal_pdf"
+    )
     _validate_journal_sampling_implementation_tree(
         upstream_roots["implementation"],
         upstream_roots["assurance_implementation"],
