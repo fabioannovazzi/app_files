@@ -1206,7 +1206,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "139fab3e72da3830ac158f17254e298c0c0f13f149b0d6edda890e1b7bc4b93d",
+  "catalogue_fingerprint": "d492591384e5eaa7374fe7e95c6f764225715be81688cc0335d746349849d3df",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1508,5 +1508,12 @@
   "archive_profile_bootstrap_source_refresh": {
     "version": "0.1.355",
     "scope": "Only canonical product version changed in the captured catalogue; function IDs and all skill bytes match the 0.1.354 snapshot. Existing Geneva dispositions remain unchanged. Secure legacy profile bootstrap preserves existing approval and source isolation; no additional legal adaptation or Geneva acceptance claimed."
+  },
+  "intel_macos_shared_runtime_release_binding": {
+    "date": "2026-10-09",
+    "version": "0.1.356",
+    "previous_catalogue_fingerprint": "139fab3e72da3830ac158f17254e298c0c0f13f149b0d6edda890e1b7bc4b93d",
+    "changed_entrypoints": [],
+    "scope": "Only the canonical product version changed in the captured catalogue; function IDs and all skill entrypoint bytes are unchanged. Intel macOS shared-runtime dependency selection adds no jurisdiction adaptation, professional capability, or Geneva acceptance claim. Existing Geneva dispositions and verification limits remain unchanged."
   }
 }
