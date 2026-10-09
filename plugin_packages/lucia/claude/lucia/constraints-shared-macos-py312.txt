@@ -1,4 +1,4 @@
-# Resolved on macOS arm64 / CPython 3.12; includes optional OCR constraints.
+# Resolved on macOS / CPython 3.12; includes optional OCR constraints.
 Jinja2==3.1.6
 MarkupSafe==3.0.3
 PyYAML==6.0.2
@@ -67,7 +67,8 @@ jsonschema==4.26.0
 kaleido==1.3.0
 kiwisolver==1.5.1
 latex2mathml==3.81.0
-llvmlite==0.49.0
+llvmlite==0.45.1 ; platform_machine == "x86_64"
+llvmlite==0.49.0 ; platform_machine != "x86_64"
 logistro==2.0.1
 lxml==6.1.3
 matplotlib-venn==1.1.2
@@ -79,7 +80,8 @@ multidict==6.7.1
 multipledispatch==1.0.0
 narwhals==2.25.0
 networkx==3.6.1
-numba==0.67.0
+numba==0.62.1 ; platform_machine == "x86_64"
+numba==0.67.0 ; platform_machine != "x86_64"
 numpy==2.2.6
 oauthlib==3.3.1
 opencv-contrib-python==4.10.0.84
