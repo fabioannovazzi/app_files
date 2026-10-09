@@ -21,7 +21,9 @@
     "scripts/course_chat_bridge.py",
     "scripts/course_chat_mcp.cjs",
     "scripts/_desktop_teaching.py",
-    "skills/learn-with-vera/references/chat-button.md"
+    "skills/learn-with-vera/references/chat-button.md",
+    "scripts/check_for_update.py",
+    "scripts/change_requests.py"
   ],
   "runtime_profiles": [
     "openai-codex"
@@ -41,7 +43,24 @@
         "openai-codex"
       ],
       "controls": [
-        "Profile, lesson and feedback fields are never arguments to the version checker. CR polling and tutorial receipt stamping remain suppressed."
+        "Profile, lesson and feedback fields are never arguments to the version checker. Change-request status polling is suppressed while onboarding is unfinished/recovering or a teaching session is active/inaccessible; tutorial receipt stamping remains suppressed. A completed introduction with no active teaching session permits the ordinary prior-submission status route described separately below."
+      ]
+    },
+    {
+      "id": "ordinary-prior-feedback-status-after-tutorial",
+      "kind": "hosted_service",
+      "destination": "Mparanza HTTPS /api/change-requests/status through the existing plugin-feedback service",
+      "purpose": "Restore ordinary status notices for previously user-approved feedback when the introduction is complete and no teaching session is active.",
+      "content": "Only previously retained change-request IDs and their bearer status tokens, bounded to 100 per batch, plus ordinary connection metadata. No interview, profile, lesson, personal teaching feedback, tutorial files or submitted feedback text is sent by this status lookup.",
+      "retention": "Existing local plugin-feedback receipt state and Mparanza service retention apply. The onboarding helper does not set a new deletion policy.",
+      "activation": "automatic_after_prior_submission",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex"
+      ],
+      "controls": [
+        "No local prior-submission receipts means no request. Unfinished or inaccessible onboarding and active or inaccessible teaching suppress this route. Polling does not create feedback or mark a lesson complete; the plugin-feedback register governs the bounded transport and response."
       ]
     }
   ],
@@ -59,11 +78,13 @@
     },
     {
       "id": "onboarding-transmission-suppression",
-      "control": "Tutorial profiles, lesson artifacts and feedback remain local. Incomplete, inaccessible or active tutorials suppress CR polling; their receipts suppress stamping, including direct retries. Independently, startup may GET the fixed public version manifest with ordinary connection metadata and no tutorial content, installed version or local path, as recorded under plugin-update-check. It does not require a completed profile. Pause/rebind/resume revoke worker tokens for future bounded steps without claiming to cancel a running host command.",
+      "control": "Tutorial profiles, lesson artifacts and feedback remain local. Incomplete, inaccessible or active tutorials suppress CR polling; their receipts suppress stamping, including direct retries. Independently, startup may GET the fixed public version manifest with ordinary connection metadata and no tutorial content, installed version or local path, as recorded under plugin-update-check. It does not require a completed profile. Pause/rebind/resume revoke worker tokens for future bounded steps without claiming to cancel a running host command. Startup delegates only the fixed public version GET during unfinished/recovering onboarding or active/inaccessible teaching. After introduction completion with no active lesson, the ordinary previously receipted feedback status lookup may resume; no teaching material is submitted.",
       "implemented_by": [
         "scripts/onboarding_session_start.py",
         "scripts/notarized_run_receipt.py",
-        "skills/vera/references/local-onboarding.md"
+        "skills/vera/references/local-onboarding.md",
+        "scripts/check_for_update.py",
+        "scripts/change_requests.py"
       ],
       "on_violation": "A tutorial receipt returns not_requested/local_onboarding before request construction; missing state leaves onboarding pending."
     },
@@ -129,10 +150,10 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-06",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "2a0df248ce11c1dd40ba89006aee76f95f628d71171c1e759d4bc45605025c32"
+    "source_fingerprint": "4f5c864a7f2a0b93a5f35e4d03600a26d44d9d1e662e48d41a28691af0558505"
   },
   "governed_repository_paths": [
     "static/shared/learn-with-vera/index.html",

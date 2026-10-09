@@ -23,6 +23,8 @@ import valuation_case
 import valuation_download as download
 from valuation_engine import ValuationError
 
+public_http = sys.modules[download.open_public_url.__module__]
+
 LANDING = "https://pages.stern.nyu.edu/index.html"
 DATASET = "https://pages.stern.nyu.edu/country.html"
 TERMS = "https://pages.stern.nyu.edu/terms.html"
@@ -33,7 +35,7 @@ FIXTURE = ROOT / "tests/fixtures/business_valuation"
 @pytest.fixture(autouse=True)
 def preserve_imports(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.syspath_prepend(str(SCRIPTS))
-    for module in (benchmarks, valuation_case, download):
+    for module in (benchmarks, valuation_case, download, public_http):
         monkeypatch.setitem(sys.modules, module.__name__, module)
 
 

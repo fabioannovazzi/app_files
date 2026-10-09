@@ -507,5 +507,31 @@
     "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
     "source_review": "docs/studio_archive/course-source-compatibility-review.json",
     "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  },
+  "native_workspace_source_binding_20261006": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-06T19:02:22.398282+00:00",
+    "source_review": "Read the complete component skill and maintained domain gates. The wrapper adds optional exact prepared-run native navigation and retains the persistent specialist route when tools or binding are absent, including Cowork. New Client keeps time validity and no-activation behavior; Archive review compiles only a plan, requiring distinct execution approval. Existing authored lesson locales, inputs, pacing and expected outputs are unchanged outside source inventory.",
+    "evidence": "docs/releases/2026-10-06-native-workspace-course-source-review.json",
+    "execution_requirement": "Fresh exact-digest teaching execution remains mandatory before release. Historical lesson and artifact reviews do not attest new native-host, learner or professional acceptance."
+  },
+  "native_main_integration_observation_20261009": {
+    "recorded_at": "2026-10-09T05:12:43.590508+00:00",
+    "status": "historical_review_union_current_release_unqualified",
+    "current_course_sha256": "a9aa1bcdbb5d0687432a7e1ce9f9e1a0ba4be4ea9d3b36eb71c63ec3784b425f",
+    "retained_current_main_review_record_sha256": "720eb00ab97f28f36aa61252ba3ebae4ef9737a02e15ea6eb0b6985d631c19e5",
+    "retained_candidate_review_record_sha256": "3bee4c1fddd135bf498a712bf688dfdd4cb98ef7335f99537ae841b22d336cde",
+    "retained_candidate_only_fields": [
+      "native_workspace_source_binding_20261006"
+    ],
+    "different_historical_fields": {
+      "course_sha256": {
+        "candidate_value": "2634900a6bd4fd1411ec728cc1ed58dbb3868ed9c8006185fbffd365ccb07333",
+        "current_main_value": "a046b353dd0682ab0b8206c6bdf85050d4bfb31905c29d6a10b9a7599c5fbd3c"
+      }
+    },
+    "localized_editorial_and_artifact_reviews_unchanged": true,
+    "current_release_acceptance_renewed": false,
+    "review_scope": "Preserve both source-review histories and their actual original course pins. Current lesson content matches the candidate reviewed baseline and the two histories have identical locale reviews. Compiler, source hashes and render success do not renew editorial/native output acceptance. Existing current-main reviewer/date/scope/language/artifact fields remain unchanged. The retained course_sha256 is not rewritten to claim current-candidate acceptance."
   }
 }

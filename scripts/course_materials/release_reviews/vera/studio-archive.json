@@ -523,5 +523,68 @@
     "reviewed_at": "2026-10-08T13:18:37.418383+00:00",
     "baseline_commit": "1964929f790964c4bc9796c2cae2851e1f0a646d",
     "scope": "Compared complete compiled course: all fields except source inventory are identical. Archive bootstrap now securely persists approval already present in existing session config before private identity migration. Explicit lesson state remains isolated without a selected profile; source archives and ledger formats are unchanged. Preserved prior editorial and artifact reviews; fresh native CI required. No new installed-host or learner acceptance claimed."
+  },
+  "native_workspace_source_binding_20261006": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-06T20:22:34.949108+00:00",
+    "previous_course_sha256": "4cc94fb383d4891d29de543e43ad35685024b55f4dbac2000893ef53ae47c99a",
+    "current_course_sha256": "8aa648220200598fbda734195dc8bf878a8b1d1e8e9316382f0ea075f2c2c918",
+    "authored_content_unchanged": true,
+    "changed_sources": [
+      "skills/studio-archive/SKILL.md"
+    ],
+    "scope": "Canonical current Bilancio workflow identity and optional owned Studio Archive native directory/setup/refresh. Engines, source qualification and authored teaching text are unchanged. Native intake/case connection, Treasury rename recovery, exact-digest teaching execution and installed native/Cowork acceptance remain pending.",
+    "previous_binding_review": {
+      "reviewer": "Codex /root",
+      "reviewed_at": "2026-10-06T18:17:44.961639+00:00",
+      "source_review": "The inspected Bilancio service additions provide authorised bounded read projections and explicit existing-service review writes; existing lesson engine commands and calculations are unchanged. Studio Archive adds optional native saved-run routing with an explicit fallback to its existing file-based route. Authored locales, supplied inputs, pacing and expected outputs are byte-equivalent outside source inventory.",
+      "evidence": "docs/releases/2026-10-06-native-workspace-course-source-review.json",
+      "execution_requirement": "Fresh execution against this exact course digest remains mandatory before release; historical editorial and artifact reviews are retained without claiming new learner or installed-host acceptance."
+    }
+  },
+  "native_archive_lifecycle_source_review_20261006": {
+    "reviewer": "Codex /root",
+    "scope": "Only the optional native wrapper source binding changes. Every authored course field, localized narrative, input and expected output is byte-equivalent in compiled JSON fields. Existing editorial judgments and historical acceptance remain unchanged.",
+    "previous_course_sha256": "8aa648220200598fbda734195dc8bf878a8b1d1e8e9316382f0ea075f2c2c918",
+    "current_course_sha256": "674deef5d93f4bbb0d4970fb3e49949d7bdd0b17fe4c4186cbdaf70cd237fc49",
+    "source_review": "The app-only native panel now creates a durable engagement, selects exact imported receipts, prepares an idempotent run and separately starts its lifecycle through unchanged Studio Archive APIs. No specialist engine execution, source qualification, professional approval, artifact finalization, customer/learner or installed-host acceptance is inferred. Imports, upstream artifact handoffs and later lifecycle remain specialist-led. Cowork retains maintained persistent engine/file routes.",
+    "fresh_exact_digest_teaching": "pending"
+  },
+  "native_output_closure_source_review_20261007": {
+    "reviewed_at": "2026-10-07",
+    "reviewer": "Codex /root - source compatibility review",
+    "previous_course_sha256": "674deef5d93f4bbb0d4970fb3e49949d7bdd0b17fe4c4186cbdaf70cd237fc49",
+    "current_course_sha256": "e9185975cfb299853494961e5adc845df17266dc2d8ef3833e866d676334e271",
+    "changed_sources": [
+      "skills/studio-archive/SKILL.md"
+    ],
+    "authored_content": "Multilingual lessons, examples, requests, expected outputs and timing are unchanged JSON values. The optional native closure addition does not change local search/intake teaching.",
+    "source_review": "Inspected complete maintained Archive finalization/completion and model-data report contracts. Native explicit purposes/audiences/types declare every physical output; report validation is local and never invents absence of model use. Run sealing/completion are separate from professional case decisions, filing and delivery. Private drafts/intents, CAS and concurrent producer limits preserve authoritative outputs. Cowork specialist persistent CLI remains available without native tools. No engine or teaching content is changed.",
+    "execution_requirement": "Re-run current localized Archive search/refresh cases, course/catalog validation and fresh host package/privacy checks. Source/headless and extracted packages do not establish installed-host, learner, professional or customer acceptance."
+  },
+  "native_main_integration_observation_20261009": {
+    "recorded_at": "2026-10-09T05:12:43.751634+00:00",
+    "status": "historical_review_union_current_release_unqualified",
+    "current_course_sha256": "48f52ed759b0ec739b856e2d4a71e5c7ded3425f59714f65c36265f147cee642",
+    "retained_current_main_review_record_sha256": "3094525df119500b9f0f7afcdf0d83fb3108048631728bd7c8da34858f5078e4",
+    "retained_candidate_review_record_sha256": "a77fd17341c689cb1c9e7a96d520127f90a7b428e7609c2a0860b6bfee1f1202",
+    "retained_candidate_only_fields": [
+      "native_archive_lifecycle_source_review_20261006",
+      "native_output_closure_source_review_20261007",
+      "native_workspace_source_binding_20261006"
+    ],
+    "different_historical_fields": {
+      "review_scope": {
+        "candidate_value": "Prepared material and native local document-search review. Read all five complete outlines, all fifteen fictional input documents and all ten final answer captures. Nineteen checks pass, including ten distinct phase/language exercises through the real staging, archive configuration, refresh, exact-scope search and source opening functions. Semantic answers are authored regression fixtures outside the shipped kits and do not replace live host reasoning. Native voice, GUI presentation, actual elapsed lesson time and learner comprehension remain unverified. Gmail, WhatsApp, Drive and the separate engagement lifecycle are not exercised by this local-search lesson. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+        "current_main_value": "Prepared material and native local document-search review. Read all five complete outlines, all fifteen fictional input documents and all ten final answer captures. Nineteen checks pass, including ten distinct phase/language exercises through the real staging, archive configuration, refresh, exact-scope search and source opening functions. Semantic answers are authored regression fixtures outside the shipped kits and do not replace live host reasoning. Native voice, GUI presentation, actual elapsed lesson time and learner comprehension remain unverified. Gmail, WhatsApp, Drive and the separate engagement lifecycle are not exercised by this local-search lesson. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate. Vera 0.1.347 bounded source-inventory refresh: the only changed course field is sources; all authored content, inputs, expectations and locale reviews match the reviewed main baseline. The Archive change adds derived navigation after engagement writes and recovery; local-search and document-format lesson behavior is unchanged. Their current native exercises passed in CI on commit 16671ffb0. This records source-currentness review, not new visual, learner or professional acceptance."
+      },
+      "course_sha256": {
+        "candidate_value": "e9185975cfb299853494961e5adc845df17266dc2d8ef3833e866d676334e271",
+        "current_main_value": "08111df731ef54aff9619cab5d4368e42d991289fdb8ad7971e5c61cfe82ce95"
+      }
+    },
+    "localized_editorial_and_artifact_reviews_unchanged": true,
+    "current_release_acceptance_renewed": false,
+    "review_scope": "Preserve both source-review histories and their actual original course pins. Current lesson content matches the candidate reviewed baseline and the two histories have identical locale reviews. Compiler, source hashes and render success do not renew editorial/native output acceptance. Existing current-main reviewer/date/scope/language/artifact fields remain unchanged. The retained course_sha256 is not rewritten to claim current-candidate acceptance."
   }
 }

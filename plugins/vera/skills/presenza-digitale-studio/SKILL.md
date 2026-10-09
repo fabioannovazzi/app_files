@@ -38,3 +38,23 @@ repository. Read that module's
 `skills/presenza-digitale-studio/SKILL.md` completely and follow it. Treat the
 resolved module root as the plugin working directory for all commands,
 requirements, scripts, schemas, references and visual assets.
+
+
+<!-- VERA_OPENAI_NATIVE_WORKSPACE_BEGIN -->
+For review of an already prepared studio website, read
+`../vera/references/native-workspace.md`. When the maintained Codex workspace
+is qualified and available, its “Sito dello studio” panel can retain incomplete
+literal fields, reopen the complete brief and source-use plan, inspect exact
+responsive screenshots, and separately record the professional review scopes
+through this module's existing producer. Studio websites remain in their exact
+private studio workspace, outside client engagements. Packages and Sites
+bindings do not authorize publication or constitute delivery evidence.
+
+The current source checkpoint is partial: component source/UI-event and local
+browser mechanisms are verified, but the complete shared renderer and installed
+native host are not qualified. Continue the ordinary file-based specialist
+workflow when the panel is unavailable or unqualified. Preserve the complete
+source-purpose, design, browser-evidence, professional-review and selected-route
+contracts above; the panel does not replace initial preparation, actual model
+contributions, site browser QA, external deployment or exact delivery receipts.
+<!-- VERA_OPENAI_NATIVE_WORKSPACE_END -->

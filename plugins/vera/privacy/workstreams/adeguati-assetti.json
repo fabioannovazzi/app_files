@@ -37,6 +37,22 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "native-selected-assessment-section",
+        "purpose": "Discuss one explicitly selected prepared assessment section without substituting a complete client folder",
+        "content": "One exact current producer assessment, observation, finding, proposed action, prior-action review, coverage, process, question, chronology, decision brief, next-review or recorded decision section. Explicit authored ID links may include related observations, findings, actions and cited source metadata. Professional company descriptions, assessments, attributed roles, dates, uncertainties and citations can enter the selected runtime model context. The complete selected explanation is limited to 64000 serialized bytes without truncation, and stale revisions are refused; full files and complete record are not substituted. Native private decision drafts, confirmation and panel history stay app-private and are not explanation context. This is not anonymization or verification of source truth, actual operating effectiveness, identity or adequacy. Other ordinary specialist routes may still read relevant complete files.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
+        "id": "native-explicit-initial-assessment-mandate",
+        "purpose": "Author a new complete assessment from the exact user-chosen running Archive inputs",
+        "content": "The literal professional question and all explicitly selected original paths, complete byte hashes and import/upstream receipts can enter the current Codex chat through an opaque actor/tenant/client/engagement/run-bound grant. Metadata above 100 KB is refused without sampling. The model may read the selected original files completely, together with company facts, staff roles, interviews, policies, operating examples, conflicting accounts, prior sealed assessments, every prior action, targeted questions and answers. There is no file-content excerpt cap, anonymization or local-only promise. The same-chat handoff or its copyable fallback supplies exact mandate references. Complete model-authored review, intelligent_review, record and memo are privately staged for explicit user conservation. Draft question/source fields and private panel confirmations do not confer model access before the mandate. Semantic scope, proportionality, source qualification and interpretation remain model-led; conservation does not establish adequacy, adoption, effectiveness or professional approval. The selected account arrangement applies; Vera is not a separate recipient. A selected original vera.user_statement.v1 interview source can include complete literal notes, optional unverified speaker, configured actor/tenant/client/engagement references and actual collection time. Collection time is not historical fact or information availability; reported practice and missing independent operating evidence remain separately qualified.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
       }
     ]
   },
@@ -91,15 +107,32 @@
     {
       "id": "construction-revisions",
       "control": "The construction CLI validates exact archive receipts and source bytes, rejects cross-client snapshots, uses transactional compare-and-append revisions and idempotency keys, validates intake identity/version, and binds decisions and manual versions to exact dependencies. Offline HTML escapes case data, uses a no-network CSP and has no automatic upload or microphone access."
+    },
+    {
+      "id": "native-explicit-assessment-grant",
+      "control": "Only the fixed assetti producer and same running reviewer-owned registered run are accepted. Signed source scopes, exact byte receipts and actor/tenant/client/engagement/run/implementation-bound grants refuse foreign or changed inputs. Private CAS stages require the current intelligent_review extension and reject model professional_decision. A predecessor must be the exact sealed same-engagement assetti artifact in a fresh run. Signed explicit selected conservation uses the unchanged immutable public producer; completed request receipts replay exact retries and pending/orphaned/changed/unreceipted work blocks further authoring, professional decisions and all-output closure until recovery."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "79cf20888f250593e0767390383a1ee65da8ed2c6f6db4e43fbab2dae30ff027"
+    "source_fingerprint": "8ec952a6f8b0aeed2a52a7404cc20cad21bcc96bf409611bb889ca3c866bb9a3"
   },
   "governed_repository_paths": [
-    "plugins/vera/skills/vera/references/connected-studio-knowledge.md"
+    "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+    "plugins/vera/skills/adeguati-assetti/SKILL.md",
+    "plugins/vera/skills/vera/references/native-workspace.md",
+    "plugins/vera/scripts/native_assetti.py",
+    "plugins/vera/scripts/native_aml.py",
+    "plugins/vera/scripts/native_aml_bridge.py",
+    "plugins/vera/scripts/native_workspace.py",
+    "plugins/vera/mcp/workspace.cjs",
+    "plugins/vera/ui/workspace.html",
+    "plugins/vera/ui/workspace.js",
+    "plugins/vera/ui/workspace.css",
+    "plugins/vera/ui/InstrumentSans-Regular.ttf",
+    "plugins/vera/scripts/native_aml_authoring.py",
+    "plugins/vera/scripts/native_archive_closure.py"
   ]
 }

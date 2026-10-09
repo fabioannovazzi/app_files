@@ -191,7 +191,8 @@ DEFAULT_REQUIRED_RESOLUTION_LEVEL = "classified"
 
 LEGACY_WORKER_BOUNDARY_CONTRACT_ID = "journal_bank.luna_seatbelt_capsule.v1"
 PREVIOUS_WORKER_BOUNDARY_CONTRACT_ID = "journal_bank.luna_seatbelt_capsule.v2"
-WORKER_BOUNDARY_CONTRACT_ID = "journal_bank.luna_seatbelt_capsule.v3"
+RETAINED_WORKER_BOUNDARY_CONTRACT_ID = "journal_bank.luna_seatbelt_capsule.v3"
+WORKER_BOUNDARY_CONTRACT_ID = "journal_bank.luna_seatbelt_capsule.v4"
 SEATBELT_PROFILE = """(version 1)
 (deny default)
 (import "system.sb")
@@ -329,8 +330,8 @@ _HOST_CAPABILITY_PROFILES: Mapping[str, _HostCapabilityProfile] = MappingProxyTy
             disabled_features=_LEGACY_DISABLED_WORKER_FEATURES,
             qualification_basis="pinned_outer_boundary_image_controls_2026_09_23",
         ),
-        WORKER_BOUNDARY_CONTRACT_ID: _HostCapabilityProfile(
-            contract_id=WORKER_BOUNDARY_CONTRACT_ID,
+        RETAINED_WORKER_BOUNDARY_CONTRACT_ID: _HostCapabilityProfile(
+            contract_id=RETAINED_WORKER_BOUNDARY_CONTRACT_ID,
             provenance="native_qualified",
             platform="Darwin",
             darwin_build="26A428",
@@ -343,6 +344,23 @@ _HOST_CAPABILITY_PROFILES: Mapping[str, _HostCapabilityProfile] = MappingProxyTy
             seatbelt_sha256="7da42098684e01822f6d82882b00805eb89c5da1d20054884eab348ae25394e1",
             disabled_features=_LEGACY_DISABLED_WORKER_FEATURES,
             qualification_basis="pinned_cli_ancestor_metadata_image_controls_2026_10_06",
+        ),
+        # Exact pins make the independently exercised OS boundary auditable;
+        # diagnostic image-helper permissions never enter this production profile.
+        WORKER_BOUNDARY_CONTRACT_ID: _HostCapabilityProfile(
+            contract_id=WORKER_BOUNDARY_CONTRACT_ID,
+            provenance="native_qualified",
+            platform="Darwin",
+            darwin_build="26A428",
+            codex_version="codex-cli 0.160.1",
+            codex_sha256="cc0a05e34876414280a79726153d0fe8d55c93f704ef6c292ec409bfe36d5b06",
+            sandbox_exec_path=Path("/usr/bin/sandbox-exec"),
+            sandbox_exec_sha256="58839ef01b4eef8aac0d2aa8f9d1c074ae45aafe3533965b030672450064acc8",
+            canary_path=Path("/bin/cat"),
+            canary_sha256="1e238665b377c3ef21734890c783aa828cf912d175b90998b88276cefad0b25a",
+            seatbelt_sha256="7da42098684e01822f6d82882b00805eb89c5da1d20054884eab348ae25394e1",
+            disabled_features=_LEGACY_DISABLED_WORKER_FEATURES,
+            qualification_basis="pinned_cli01601_boundary_image_controls_2026_10_07",
         ),
     }
 )

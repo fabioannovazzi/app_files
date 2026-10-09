@@ -49,6 +49,7 @@
     "local-onboarding",
     "datev-starter",
     "cnc-authenticated-review",
+    "native-workspace",
     "studio-work"
   ],
   "workflow_roles": {

@@ -39,6 +39,12 @@ from management_control_core import (  # noqa: E402
 from run_costing import main as costing_main  # noqa: E402
 
 
+@pytest.fixture(autouse=True)
+def restore_costing_import_paths(monkeypatch):
+    """Restore lazy costing imports after other CLI tests isolate sys.path."""
+    monkeypatch.syspath_prepend(str(SCRIPTS))
+
+
 def reference(name="jobs"):
     return json.loads((FIXTURES / f"{name}.json").read_text())
 

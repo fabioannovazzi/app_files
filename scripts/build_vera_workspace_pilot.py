@@ -55,7 +55,7 @@ def seed_demo(
         client,
         client_id,
         engagement["engagement_id"],
-        "bilancio-oic",
+        "bilancio-xbrl-it",
         "ui-pilot",
         input_ids=[receipt["receipt"]["input_id"]],
         label="Bilancio 2025 · prova UI",

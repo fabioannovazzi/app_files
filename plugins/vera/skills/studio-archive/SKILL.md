@@ -59,6 +59,86 @@ exact `engagements/` ledger. A completed execution does not imply professional
 approval. Check the returned readable-view status before claiming navigation
 is available.
 
+When the Codex native workspace is callable, read
+`../vera/references/native-workspace.md` and open “Lavori dello studio”. Its
+ordinary directory uses this workflow's owned local archive session and portable
+client ledger. If setup is required, the panel offers the maintained operating
+system folder chooser, accepting no path from browser/model content. Cancellation
+does not save configuration. Navigate client, engagement and exact run explicitly;
+refresh/recovery uses the unchanged archive service. Private contacts remain in
+the existing registry. Unregistered folders require confirmed client registration
+through the specialist route; the panel does not register them automatically.
+The panel can create an explicitly labelled engagement for a registered client,
+import explicitly selected file bytes, list verified imported receipts, prepare an idempotent run with an explicit
+workflow/input/label/purpose choice, and move one prepared or failed run to running.
+These app-only actions require the exact displayed signed scope, current receipts
+and reviewer authority, and use this workflow's maintained APIs. Creation retains
+a separate native request receipt: identical retries reuse the engagement, while
+an interrupted uncertain outcome requires archive verification before another
+request. Preparation and start do not execute a specialist engine, qualify
+sources, approve a result or complete a run. Workflow choices come from the
+maintained Vera engagement gate; excluded prototypes remain excluded.
+“Importa documenti” requires a file selection and an explicit journal, source or
+support role for each file, then confirmation of the displayed engagement.
+It transfers at most 64 MiB per file in 64 KiB chunks, verifies the complete
+selected-file digest, and calls the unchanged public importer. The browser
+does not supply the original OS path; transport receipts say so. Original files
+remain unchanged. Reopening shows retained bytes and roles without restoring
+confirmation. Resume only the same selected bytes; explicitly complete a known
+interrupted import intent through the same public deduplication gate. Changed,
+unreceipted or foreign state requires specialist verification. A pending write
+blocks new imports and new run preparation until resolved. Importing does not
+classify or inspect the document, select it for a run, or start a workflow.
+Larger files use the maintained specialist import. File bytes pass through the
+selected host's app/tool channel; this route makes no separate model call or
+external connector request. Later workflow reads have their own data path.
+“Appunti del colloquio” retains the user's complete literal text, optional declared
+speaker and chosen JSON basename in a private recoverable draft. No questionnaire
+answers, speaker identity or company evidence are inferred. Explicit conservation
+captures one immutable `vera.user_statement.v1` original with the actual capture
+time, configured actor/tenant/client/engagement references and unverified
+attribution, then uses the same complete-byte public import. Capture time is not
+the date when a fact happened or became known; a statement is not independent
+evidence of truth, adoption or operation. Recovery reopens that exact original
+without restoring confirmation or generating a new timestamp. Clearing the draft
+keeps captured originals and imported receipts. Text above 256 KiB uses original
+file import without excerpts. Choose the source and workflow separately to prepare
+and start a run. Notes and metadata pass through the selected host; later selected
+workflow reads may place them in model context without automatic anonymization.
+For a running maintained run, “Output e chiusura del run” lists every physical
+output in pages, including working requests, versions and the actual run-bound
+model-data JSON/Markdown report. Declare each file's reuse reference, purpose,
+audience and media type explicitly; no filename-based classification or default
+deliverability is inferred. Unfinished declarations remain private local drafts
+outside official outputs, with owner/run/output and concurrent-draft checkpoints.
+Recovery is explicit and never restores confirmation; changed outputs require
+explicit discard or specialist recovery. The panel validates the existing
+report's schema, evidence, run identity and exact rendered Markdown. It never
+creates a no-model report from missing telemetry. Prepare actual phase evidence
+in the specialist route first.
+Finalization requires all files and a separate confirmation and calls the
+unchanged Archive finalizer to produce ready-for-review status. Completion is
+another explicit action over revalidated sealed outputs; it does not attest
+professional approval, valid accounting/legal conclusions, signature, filing or
+delivery. Each request has a durable private intent/outcome. Successful exact
+retries revalidate the manifest; interrupted or changed outcomes require
+specialist verification without replay or automatic adoption. Concurrent
+specialist writes can leave a sealed result requiring that verification; the
+native panel does not roll back the authoritative ledger.
+The native preparation page also lists verified sealed artifacts from ready or
+completed runs in this same engagement. Explicitly select each artifact and
+author its role in the new run. The maintained preparer verifies its receipt and
+bytes again and preserves directory structure, including reviewed invoice source
+groups. Invalid upstream runs remain unavailable rather than becoming sources.
+Specialist source qualification, bound execution,
+engagement closure, cancellation/failure and recovery remain on existing
+specialist routes. Missing native tools never
+block those persistent routes, including in Cowork. Operator-bound development
+pilots retain their explicit allowlist and do not adopt another archive session.
+Some prepared runs still require specialist recovery: a renamed treasury folder
+can leave its existing session's absolute source references unavailable. Native
+navigation retains the portable run identity and refuses to rewrite those receipts.
+
 Choose the route before resolving any module:
 
 A fresh session reuses the last explicitly approved root from the owner-private

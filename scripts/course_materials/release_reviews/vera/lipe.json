@@ -105,5 +105,28 @@
     "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
     "source_review": "docs/studio_archive/course-source-compatibility-review.json",
     "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  },
+  "native_lipe_source_review_20261007": {
+    "scope": "Only the optional native wrapper source binding changed. Authored lesson text, input assets, semantic review, expectations, pacing and previous editorial/artifact judgments are unchanged. Initial immutable calculation/selected-result adapter is source-qualified; native teaching and host acceptance remain pending.",
+    "native_lesson_acceptance": "pending"
+  },
+  "native_main_integration_observation_20261009": {
+    "recorded_at": "2026-10-09T05:12:43.687974+00:00",
+    "status": "historical_review_union_current_release_unqualified",
+    "current_course_sha256": "0c73da69ae21fb984e197788fc61cddd6e1efcf19e8551183e954adb85ab2527",
+    "retained_current_main_review_record_sha256": "94a329d8fe33187541447c496019b67aa194def92c82bda991ddf7af47859de9",
+    "retained_candidate_review_record_sha256": "7b8e245a5c0520045d0cbac778db7904ada1a504910031222d50f866fb995bac",
+    "retained_candidate_only_fields": [
+      "native_lipe_source_review_20261007"
+    ],
+    "different_historical_fields": {
+      "course_sha256": {
+        "candidate_value": "7d3bdb63e19670bdb2907b551fb6f74745dbeaec517bcba33044fa5c27abe946",
+        "current_main_value": "e3995fb7117f3e08f80870d588b719f476d69366f0d614bb8c3d73de97ce1242"
+      }
+    },
+    "localized_editorial_and_artifact_reviews_unchanged": true,
+    "current_release_acceptance_renewed": false,
+    "review_scope": "Preserve both source-review histories and their actual original course pins. Current lesson content matches the candidate reviewed baseline and the two histories have identical locale reviews. Compiler, source hashes and render success do not renew editorial/native output acceptance. Existing current-main reviewer/date/scope/language/artifact fields remain unchanged. The retained course_sha256 is not rewritten to claim current-candidate acceptance."
   }
 }

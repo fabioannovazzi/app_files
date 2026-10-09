@@ -30,6 +30,16 @@ Current user requests take precedence over saved preferences.
 
 # Vouching
 
+For an already prepared checks run, use `vera_workspace_open` when callable and
+the exact Studio Archive run has a trusted operator binding. Read
+`../vera/references/native-workspace.md` before the handoff. The panel uses the
+existing checks review service; discussion retrieves only the selected semantic
+case with exact identifiers omitted by default. Preserve the qualified sample
+boundary, support lineage, missing-document findings and professional decisions.
+Preparation and new support batches remain in the specialist/Studio Archive
+route below. Without native tools or a trusted binding, continue persistent
+specialist work, including in Cowork; do not expand the sample population.
+
 For a Geneva (CH-GE) mandate, read `../vera/references/localization/geneva.md` first and use this existing function’s Geneva adaptation in its resolved component skill. Language alone never selects jurisdiction.
 
 

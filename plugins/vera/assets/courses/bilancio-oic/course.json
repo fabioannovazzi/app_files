@@ -247,7 +247,7 @@
     {
       "path": "modules/bilancio-xbrl-it/scripts/workspace_bridge.py",
       "repository_path": "plugins/bilancio-xbrl-it/scripts/workspace_bridge.py",
-      "sha256": "feff5346d4bb359e68ea8c77dd6a4a0800be00b982c0148df16444b41c1dbbc9"
+      "sha256": "7c01b6989899f7a7c11d7b02304668789ded69a4e10426abdbd073ad83156b0c"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/workspace_contract.py",
@@ -332,7 +332,7 @@
     {
       "path": "skills/bilancio-oic/SKILL.md",
       "repository_path": "plugins/vera/skills/bilancio-oic/SKILL.md",
-      "sha256": "4eaf50e376856a3215343fc19f46296aa8318916da0a19af9edaa220a74b76f4"
+      "sha256": "2c3d7b2d9549414a4ac7d1f3f9792926c9816c99585718f0792e00c89f350f44"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

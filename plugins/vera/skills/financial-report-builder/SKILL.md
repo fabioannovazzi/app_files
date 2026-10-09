@@ -30,6 +30,20 @@ Current user requests take precedence over saved preferences.
 
 # Build Report
 
+For an already prepared report run, use `vera_workspace_open` when it is callable
+and the exact Studio Archive run is bound by the trusted operator configuration.
+Read `../vera/references/native-workspace.md` before the native handoff. The panel
+reviews exact sections, displays the engine-validated current narrative, and
+applies reviewed replacements through the existing report transaction. It retains
+only returned integrity checkpoints outside the official output tree; missing or
+changed authority stops successor application. After an applied report, preserve
+later proposals as native drafts and apply the reviewed successor directly.
+Pending numeric-measure qualification remains pending. Inspection, mapping,
+numeric-measure review and bounded source expansion remain in the specialist
+workflow. If native tools or a trusted binding are absent, continue the existing
+persistent specialist route, including in Cowork. Native availability never
+authorizes external delivery or substitutes for professional review.
+
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
 
 First follow `../vera/references/execution-recovery.md` for component

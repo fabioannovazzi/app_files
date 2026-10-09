@@ -620,5 +620,44 @@
     "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
     "source_review": "docs/studio_archive/course-source-compatibility-review.json",
     "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  },
+  "native_prepared_inspection_source_review": {
+    "date": "2026-10-06",
+    "authored_content_unchanged": true,
+    "source_changes": [
+      {
+        "path": "skills/financial-analysis/SKILL.md",
+        "before": {
+          "path": "skills/financial-analysis/SKILL.md",
+          "repository_path": "plugins/vera/skills/financial-analysis/SKILL.md",
+          "sha256": "c1ac248077d9a4d396dae8fe374d6831fe507816e2afe889de42968f465084ef"
+        },
+        "after": {
+          "path": "skills/financial-analysis/SKILL.md",
+          "repository_path": "plugins/vera/skills/financial-analysis/SKILL.md",
+          "sha256": "dca0a4f222417b52be1150e4fd2a96c839109be06a3942c8762d314e0f336b66"
+        }
+      }
+    ],
+    "scope": "Optional prepared native inspection and maintained specialist/Cowork fallback. All eight real registered recipe fixtures inspected. No new native/learner/professional acceptance; exact-digest lesson execution remains pending."
+  },
+  "native_main_integration_observation_20261009": {
+    "recorded_at": "2026-10-09T05:12:43.633994+00:00",
+    "status": "historical_review_union_current_release_unqualified",
+    "current_course_sha256": "37d005384e8cc9995a45cb3c31f36bb03bf093f5096841807a9e988e4bfd1ce3",
+    "retained_current_main_review_record_sha256": "b36f6df330e2c2d65211b168ea9c5b48d478c965b38f0a04ac33861ef39b9b4a",
+    "retained_candidate_review_record_sha256": "42f9dfb7f8d9514dbe6e89310da09d87beb64ee8e5670eb27c4b55114f3270fd",
+    "retained_candidate_only_fields": [
+      "native_prepared_inspection_source_review"
+    ],
+    "different_historical_fields": {
+      "course_sha256": {
+        "candidate_value": "812b18e8db71348c723b9923a70435ed3b017e2f73d56f9ab29d50fe1f5bf00d",
+        "current_main_value": "ca963325d952e7d189bc54c93728af1e3a6a8ad6d57955136df71f3ce403083e"
+      }
+    },
+    "localized_editorial_and_artifact_reviews_unchanged": true,
+    "current_release_acceptance_renewed": false,
+    "review_scope": "Preserve both source-review histories and their actual original course pins. Current lesson content matches the candidate reviewed baseline and the two histories have identical locale reviews. Compiler, source hashes and render success do not renew editorial/native output acceptance. Existing current-main reviewer/date/scope/language/artifact fields remain unchanged. The retained course_sha256 is not rewritten to claim current-candidate acceptance."
   }
 }

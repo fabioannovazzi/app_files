@@ -6,7 +6,15 @@
     "scripts/studio_work.py",
     "mcp/studio-work.cjs",
     "skills/organizzazione-lavoro/SKILL.md",
-    "scripts/studio_work_runtime.py"
+    "scripts/studio_work_runtime.py",
+    "scripts/native_studio_work.py",
+    "mcp/studio-work-panel.cjs",
+    "ui/studio-work.html",
+    "ui/studio-work.js",
+    "ui/studio-work.css",
+    "ui/workspace.css",
+    "ui/custom_select.js",
+    "ui/InstrumentSans-Regular.ttf"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -18,7 +26,7 @@
       "kind": "send_or_publish",
       "destination": "The selected connected calendar account through callable host plugins",
       "purpose": "Read actual commitments and availability; execute user-authorized ordinary event creation, changes and deletion",
-      "content": "Selected calendar identifiers, event title, times, category color, reminders, description and recovery marker; responses and local commitments/preferences/meeting summaries may enter host model context with real client and personal details, without anonymization. No raw voice audio is stored by this service.",
+      "content": "Selected calendar identifiers, event title, times, category color, reminders, description and recovery marker; responses and local commitments/preferences/meeting summaries may enter host model context with real client and personal details, without anonymization. No raw voice audio is stored by this service. Native panel pages and incomplete fields are returned in app metadata, with only status/counts in model-visible text. Selected-record discussion sends an exact reference/revision; its context tool returns the whole selected commitment, meeting or operation, including source, names and notes, only while the register revision matches. Ordinary studio-work tools retain their existing broader model-context responses.",
       "retention": "Local SQLite records, meeting summaries and audit/operation receipts persist in the owner data directory until removed by the owner. Connected services and the selected model account apply their own retention; Vera does not enforce it.",
       "activation": "explicit_user_choice",
       "optional": true,
@@ -50,12 +58,22 @@
         "scripts/studio_work.py"
       ],
       "on_violation": "Reject symlink storage and fail writes when local permissions refuse access."
+    },
+    {
+      "id": "native-panel-revisions-and-private-response",
+      "control": "App-only mutation tools require canonical signed process-local tickets binding the exact form and current register revision. Owner path, executed source/resource bytes and current business state form the revision. Private draft compare-and-swap rejects concurrent or stale changes; retained local intents replay only capture/change/meeting through the public backend. The native adapter exposes no calendar prepare/claim/resolve/dispatch action. Panel records/drafts stay in response metadata; explicit selected context is returned to the host model.",
+      "implemented_by": [
+        "scripts/native_studio_work.py",
+        "mcp/studio-work-panel.cjs",
+        "ui/studio-work.js"
+      ],
+      "on_violation": "Reject expired/mismatched tickets, changed owner/source/state and stale draft writes; retain interrupted local save for receipt recovery. Public engine calendar-linked edit and atomic meeting restrictions remain authoritative."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-07",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "8caa3cda0e40e8e480f835aa20dea2a098ca0690da7ef8243c4eac339583a0fa"
+    "source_fingerprint": "0401916c0ca6c71884511ca930a9805f684830084e803f803e1f1f176343f095"
   }
 }

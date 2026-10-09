@@ -105,9 +105,9 @@ implementazione, record preparati e output. Gli importi sono gestiti con
 dell'incremento centesimale supportato vengono esclusi prima della
 preparazione. Le allocazioni conservano importi,
 identita, valuta, unita, entita/controparte e residui esatti.
-L'implementazione e un contratto ordinato fisso di 25 file (3 asset, 1 server
+L'implementazione e un contratto ordinato fisso di 26 file (3 asset, 1 server
 MCP, 8 script eseguibili incluso il bootstrap pre-import, 5 unita sorgente
-interne conservate e 8 moduli assurance condivisi), non un elenco estendibile
+interne conservate e 9 moduli assurance condivisi (incluso jurisdiction.py)), non un elenco estendibile
 dal contenuto della cartella o dalla ricevuta del run. Ogni entrypoint Python
 pubblico esegue il bootstrap sorgente prima di qualsiasi import locale,
 disabilita il bytecode locale e valida l'albero esatto. Le cinque unita interne
@@ -193,7 +193,7 @@ applicano comunque il bootstrap anche se queste opzioni vengono omesse.
 Il passaggio di handoff primario è il browser locale: dopo ogni run normale Codex deve indicare `artifact_card.md`, avviare `python -I -B scripts/review_server.py <cartella-output>`, comunicare esplicitamente l'URL `localhost` aperto e spiegare che i pulsanti della pagina scrivono i JSON nella cartella output. Questo passaggio va eseguito prima della risposta finale; non è sufficiente lasciare un file o un widget nascosto.
 
 I descrittori di avvio `.codex-plugin/plugin.json`, `.mcp.json` e `.app.json`
-restano fuori dal contratto assurance in-process dei 25 file: sono letti e
+restano fuori dal contratto assurance in-process dei 26 file: sono letti e
 governati dall'host Codex prima che il processo validato inizi. Il controllo
 del plugin non puo quindi attestare la scelta iniziale dell'eseguibile fatta
 dall'host, ne codice arbitrario gia in esecuzione con lo stesso utente del

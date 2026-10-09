@@ -41,6 +41,12 @@ materials say to do so. Use only the user's authorized scope and destination.
 
 ## ChatGPT and Codex Runtime
 
+For a request to open a saved native workspace or discuss its exact selection,
+read `references/native-workspace.md`. Use its callable tools only for their
+supported existing runs; retain the selected specialist's preparation and
+professional gates. The rollout's installed native acceptance remains separate
+from a successful tool call or package build.
+
 Do not stop merely because the current surface is ChatGPT. Use material supplied
 in the conversation and any callable connected-app tools to complete a useful
 lightweight version of the workflow. Analyze evidence, ask focused questions,

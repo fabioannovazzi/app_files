@@ -30,6 +30,21 @@ Current user requests take precedence over saved preferences.
 
 # Revisione del Concordato Preventivo
 
+For an already prepared, source-bound review, use `vera_workspace_open` when it
+is callable and the exact Studio Archive run has a trusted operator binding.
+Read `../vera/references/native-workspace.md` before the handoff. The panel uses
+the maintained persisted review reference and public engine tools; discussion
+retrieves only the exact selected item through the existing model projection.
+Save retains the proposal. Apply does not change confirmed case facts or close
+missing-evidence issues; edits of assurance-bound reports remain separate
+revision artifacts. Native memo application is suspended because the regenerated
+semantic Word summary failed independent engine replay in source qualification.
+Keep such proposals saved and do not claim regeneration or a completed review.
+Source intake, semantic qualification, updated case-model decisions and numerical
+appendix preparation remain in the specialist workflow. If native tools or a
+trusted binding are absent, continue the persistent specialist route, including
+in Cowork; native availability is optional and never authorizes delivery.
+
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
 
 First follow `../vera/references/execution-recovery.md` for component

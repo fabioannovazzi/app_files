@@ -365,5 +365,36 @@
     "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
     "source_review": "docs/studio_archive/course-source-compatibility-review.json",
     "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  },
+  "native_record_source_binding_20261007": {
+    "reviewed_at": "2026-10-07",
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "previous_course_sha256": "375bc991552e399111e9fb810bc78fc4fd434d8bdc8a1d7dcf9a0a05c64d1be4",
+    "current_course_sha256": "75b3ee7feba961b2007601b06f0e0948c7dbe51b153c53bc85aa8e1707752f26",
+    "changed_sources": [
+      "skills/scissione-guidata/SKILL.md"
+    ],
+    "content_review": "All authored localized lessons, inputs, expected outputs and timing remain identical as JSON values; only the current wrapper skill SHA changes. Retain original editorial and historical artifact reviews without claiming new learner or professional acceptance.",
+    "source_review": "Inspected maintained Scissione producer and contract. Optional native exact-version record review preserves case and uses unchanged professional gates, dependencies, approvals, unknown values and immutable artifacts. Initial authoring, source qualification, unsupported routes, signing/filing and model-data/finalization remain specialist-led. Cowork keeps maintained managed-runtime CLI and persistent folder; no native requirement.",
+    "execution_requirement": "Validate current Scissione examples/producer gates and fresh package/privacy source bindings. Source/headless/extracted checks do not establish installed or professional acceptance."
+  },
+  "native_main_integration_observation_20261009": {
+    "recorded_at": "2026-10-09T05:12:43.741443+00:00",
+    "status": "historical_review_union_current_release_unqualified",
+    "current_course_sha256": "5001dcf54030e04da4bf2cd1a098adad58daf68895982dcb8080029f3b221c4f",
+    "retained_current_main_review_record_sha256": "b80a08814cd8ef080008bbedc8539e3b7dc6c3c22bc0b06b126776cf866a65b7",
+    "retained_candidate_review_record_sha256": "02959417b1d6e4827f80f6ff39fa59b8ba8bd59be5ae0e59bd7094c589529a40",
+    "retained_candidate_only_fields": [
+      "native_record_source_binding_20261007"
+    ],
+    "different_historical_fields": {
+      "course_sha256": {
+        "candidate_value": "75b3ee7feba961b2007601b06f0e0948c7dbe51b153c53bc85aa8e1707752f26",
+        "current_main_value": "25f71c1027d5e0d0cae7c738d681673389d39f8139e3ad31dea69324366ed820"
+      }
+    },
+    "localized_editorial_and_artifact_reviews_unchanged": true,
+    "current_release_acceptance_renewed": false,
+    "review_scope": "Preserve both source-review histories and their actual original course pins. Current lesson content matches the candidate reviewed baseline and the two histories have identical locale reviews. Compiler, source hashes and render success do not renew editorial/native output acceptance. Existing current-main reviewer/date/scope/language/artifact fields remain unchanged. The retained course_sha256 is not rewritten to claim current-candidate acceptance."
   }
 }

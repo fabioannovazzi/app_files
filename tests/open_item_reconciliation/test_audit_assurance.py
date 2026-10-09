@@ -720,19 +720,20 @@ def fully_resealed_contradictory_predecessor(
     return assurance, output_dir, old_digest
 
 
-def test_implementation_receipts_match_exact_ordered_25_file_contract() -> None:
+def test_implementation_receipts_match_exact_ordered_26_file_contract() -> None:
     assurance = load_assurance()
 
     receipts = assurance.build_implementation_receipts()
 
     contract = [(item["root_id"], item["path"]) for item in receipts]
     assert contract == list(assurance.IMPLEMENTATION_CONTRACT)
-    assert len(contract) == 25
+    assert len(contract) == 26
+    assert ("shared_assurance", "jurisdiction.py") in contract
     assert (
         hashlib.sha256(
             "\n".join(f"{root_id}:{path}" for root_id, path in contract).encode()
         ).hexdigest()
-        == "73a6994244a211683d94d7f4f1873e74dfb6c0bda9ce2f0c4c25b6fff0d738cf"
+        == "bddbbe15817416bf35bf41066898b1519812b2fe7fb425d8fdb2a354e37a249b"
     )
 
 
@@ -2073,8 +2074,8 @@ def test_assurance_contract_is_documented_in_skill_and_workflow_reference() -> N
     assert "professional" in workflow.lower()
     assert "unsigned, unauthenticated, untrusted label" in workflow
     assert "unsigned, unauthenticated, untrusted label" in skill
-    assert "ordered 25-file implementation contract" in skill
-    assert "ordered 25-file contract" in workflow
+    assert "ordered 26-file implementation contract" in skill
+    assert "ordered 26-file contract" in workflow
     assert "pre-import" in workflow
     assert "bootstrap" in workflow
     assert "`__pycache__`" in workflow
@@ -2083,7 +2084,7 @@ def test_assurance_contract_is_documented_in_skill_and_workflow_reference() -> N
     assert "predecessor_run/" in skill
     assert "predecessor_run/" in workflow
     assert "complete physical snapshot" in workflow
-    assert "outside this in-process 25-file boundary" in workflow
+    assert "outside this in-process 26-file boundary" in workflow
     assert "`expected_predecessor_checkpoint`" in skill
     assert "`expected_predecessor_checkpoint`" in workflow
     assert "separate review channel" in skill

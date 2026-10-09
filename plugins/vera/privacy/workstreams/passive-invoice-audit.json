@@ -16,7 +16,18 @@
     "plugins/journal-bank-reconciliation/scripts/semantic_review.py",
     "plugins/vera/agents/passive-invoice-reviewer.md",
     "plugins/vera/references/passive-invoice-cowork.md",
-    "plugins/vera/skills/vera/references/connected-studio-knowledge.md"
+    "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+    "plugins/vera/scripts/native_passive_audit.py",
+    "plugins/vera/scripts/native_passive_audit_bridge.py",
+    "plugins/vera/scripts/native_passive_service.py",
+    "plugins/vera/scripts/native_passive_supervisor.py",
+    "plugins/vera/scripts/native_workspace.py",
+    "plugins/vera/mcp/workspace.cjs",
+    "plugins/vera/ui/workspace.js",
+    "plugins/vera/scripts/native_passive_review.py",
+    "plugins/vera/scripts/native_passive_review_bridge.py",
+    "plugins/vera/scripts/native_passive_sources.py",
+    "plugins/vera/scripts/native_passive_sources_bridge.py"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -37,7 +48,7 @@
       {
         "id": "compact-luna-invoice-review-packets",
         "purpose": "Determine whether each matched invoice has a concrete material reason for professional review",
-        "content": "Batched but independently judged compact records for matched invoices: opaque invoice ID and source reference, supplier name and tax identifier, date, number, document type, currency, invoice-line descriptions and values, VAT summaries and structured flags, bounded causale and related-document references, withholding and stamp summaries, actual booked account codes, descriptions, line descriptions and amounts, ledger reference, deterministic findings, and at most five professional-linked reviewed historical treatments. Raw XML, payment instructions and IBAN, the complete ledger population, unmapped ledger columns, credentials and unrelated client files are omitted from the worker prompt. Codex sends the packet through its native capsule. Cowork writes the same bounded packet and schema to cowork_request.json for the packaged Haiku subagent; the parent retains the returned JSON and actual host invocation record. The host record binds content and requested configuration but does not independently authenticate the model identity.",
+        "content": "Batched but independently judged compact records for matched invoices: opaque invoice ID and source reference, supplier name and tax identifier, date, number, document type, currency, invoice-line descriptions and values, VAT summaries and structured flags, bounded causale and related-document references, withholding and stamp summaries, actual booked account codes, descriptions, line descriptions and amounts, ledger reference, deterministic findings, and at most five professional-linked reviewed historical treatments. Raw XML, dedicated payment-instruction and IBAN fields, the complete ledger population, unmapped ledger columns, credentials and unrelated client files are omitted from the worker packet. Selected descriptions, causali and document-reference text are preserved within the declared bounds and may themselves contain names, identifiers or bank details; no automatic anonymization or semantic removal of those details is performed. Codex sends the packet through its native capsule. Cowork writes the same bounded packet and schema to cowork_request.json for the packaged Haiku subagent; the parent retains the returned JSON and actual host invocation record. The host record binds content and requested configuration but does not independently authenticate the model identity.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -59,6 +70,22 @@
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "native-explicit-source-or-evidence-page",
+        "purpose": "Discuss one user-selected current source excerpt or audit evidence member page",
+        "content": "Intake roles, full recipe, operator attribution, private drafts, operation receipts, full population, summaries and paths remain private app metadata; ordinary results contain status only. Explicit explanation returns one registered source text excerpt (at most 20000 bytes) or one exact JSON member page (at most 64000 serialized bytes). Binary sources return filename/hash/size metadata only. Chat handoffs contain exact scope/selection references, not the whole population. The worker receives the maintained compact packet through the separately governed Codex/Cowork boundary. Discussion does not create a worker, professional label or accounting approval.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
+        "id": "native-selected-human-label-or-missed-issue",
+        "purpose": "Discuss one explicitly selected professional label or missed material issue",
+        "content": "The native panel keeps full screening populations, human-label drafts, attribution, aggregate evaluation and four local output paths in private app metadata. Only an explicit discussion request exposes the exact selected label or missed issue, its invoice ID, authored label/known issue or observed semantic state, immutable review reference and current-population flag through vera_workspace_passive_review_explain. Authored known issues are bounded to 2000 characters. It does not return the full population, all labels, the complete missed-issue list or operator attribution. These selected actual case data may enter the parent Codex model context without automatic anonymization. The local public evaluator invokes no model and does not change subordinate worker packets. The maintained specialist route may read the human-label/evaluation files when explicitly required.",
+        "runtime_profiles": [
+          "openai-codex"
         ]
       }
     ]
@@ -128,17 +155,25 @@
     },
     {
       "id": "current-host-profile-qualification",
-      "control": "The fixed source registry includes the qualified macOS 26A428 / Codex CLI 0.160.0 v3 profile; v1 and v2 records remain unchanged. The only new OS permission is metadata-only access to ancestor directories of the exact CLI executable, required by the current transport. No file-content read scope, model packet or external destination is added. Disabled tool features, read-only inner sandbox and per-launch canaries remain active. Qualification retains a normal structured launch, an exact permitted-image nonce and native router denials for outside-image and symlink controls. Those image diagnostics also retained the inner read-only sandbox; their exact helper/process permissions are not production permissions. Unknown or changed hosts fail closed; dependency inspection alone is not launch qualification."
+      "control": "The fixed source registry includes qualified macOS 26A428 / exact Codex CLI 0.160.1 v4 after fresh structured arithmetic, two bank decisions, four invoice packets including prompt injection, and permitted/outside/symlink image controls. The complete v1, v2 and v3 records remain unchanged. The v4 production Seatbelt text, file-content scope, disabled tool features, read-only inner sandbox and every-launch canaries are identical to v3. No model packet or external destination is added. Diagnostic image controls enable only their exact code-mode helper with its public manifest and process creation, and permit only the exact positive image; those capabilities are absent from production. Both sandboxes remain active. Native router logs independently show denial of each exact outside/symlink target; JSONL is not complete tool visibility and no kernel-log or provider attestation is claimed. Unknown or changed hosts still fail closed; dependency inspection alone is not qualification."
     },
     {
       "id": "geneva-source-binding",
       "control": "Reviewed invoice inputs require a content-bound review declaration and exact original-file hashes within the population directory. Source or extraction changes reject reuse. The existing matching, arithmetic, currency checks, job binding and native worker boundary remain active."
+    },
+    {
+      "id": "native-scoped-supervised-intake",
+      "control": "Explicit Archive binding IDs and user/model-led source roles; public parser/mapping/matching qualification is immutable and content bound. Actor/tenant private draft CAS excludes confirmation. Reviewer-only signed scope and same-key durable intent precede the unchanged producer. Actual OS lease and owned global native write guard distinguish live ownership from stale markers; status does not inspect live worker capsules. Hard kill, missing ownership, guard cleanup failure or unreplayable job remains uncertain and preserves artifacts; no automatic restart. Prepared views replay sources, SQLite, JSONL, packets, checkpoints, summary and workbook. Only standard public output paths are offered, in private app metadata; capsule credentials, logs and SQLite sidecars are excluded. Binary previews contain metadata only. Reviewed CH-GE source-group preparation remains a specialist operation. No direct API, model substitution, ledger posting, signature, professional approval or Archive completion."
+    },
+    {
+      "id": "native-separate-human-label-evaluation",
+      "control": "Reviewer-only signed current job/revision authority and private actor/tenant/run draft CAS govern exact invoice IDs and explicit human label choices. Draft recovery never restores confirmation or infers attribution. Registration retains the exact screening JSONL and immutable separate labels, review attribution and public evaluate_results output; previous versions remain sealed by four artifact hashes and readonly. Corrections preserve other pages and do not rewrite worker screening. Same-key durable intent precedes writes; foreign output changes, implementation changes or guard cleanup faults preserve actual files and an uncertain receipt, with no automatic retry. No real ledger posting, professional approval or Archive completion is implied."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-06",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "a198c9ac62488b80e3a1610f4ae90ea8903e4e89f225385cf90ee84b5b8bed78"
+    "source_fingerprint": "346a4eb8620d54b72360607e55d1e5037b07b6a05215c50fa2fcf195b807c80a"
   }
 }

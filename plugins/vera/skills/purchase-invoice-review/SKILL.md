@@ -40,3 +40,32 @@ exists; otherwise resolve `../../../passive-invoice-audit` in the repository.
 Read that module's `skills/purchase-invoice-review/SKILL.md` completely and follow
 it. Treat the resolved module root as the plugin working directory for all
 commands.
+
+When the installed host exposes `vera_workspace_open`, an already registered
+Archive run can optionally use its native passive-invoice panel. Start the owned
+run through Archive first. Select source roles explicitly, review the actual
+ledger mapping, numeric convention, scope and worker controls, and supply the
+operator reference and decision basis. Private drafts preserve unfinished
+choices; recovery never restores confirmation. The supervised launch retains
+the public SQLite job and completed chunks. Poll the same operation; missing
+ownership or an uncertain receipt requires specialist process/output inspection,
+never automatic relaunch. Native reads expose bounded exact evidence and the
+existing public output files. Its optional human-review panel retains explicit
+professional labels across pages, private unfinished drafts and separately
+attributed immutable evaluations through the unchanged public evaluator.
+Recovery requires a new confirmation. Corrections retain earlier versions and
+the exact screening population; they never approve or rewrite worker states or
+ledger treatments. An uncertain evaluation preserves the actual files and
+requires specialist inspection before another registration. Only an explicitly
+selected label or missed issue is returned to the model for discussion; full
+labels, metrics, attribution and output paths remain in app metadata. Reviewed
+An already professionally reviewed CH-GE JSON and separately registered originals
+can first be grouped in an owned `client-file-preparation` run through the native
+source-group panel. Choose every original explicitly; the group preserves exact
+JSON, extraction review and document bytes. Native Archive closure can declare
+and seal each file, then its preparation page can explicitly select the canonical
+JSON, every original and the ledger/map for the audit, preserving relative paths.
+Extraction authoring and actual professional review remain in the specialist
+route; grouping does not manufacture either. Uncertain grouping retains intent
+and files without automatic retry. Screening is not approval of booked treatments. Cowork
+continues its maintained host handoff without requiring these Codex tools.

@@ -322,5 +322,45 @@
     "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
     "source_review": "docs/studio_archive/course-source-compatibility-review.json",
     "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  },
+  "native_cycle_source_binding_review_20261007": {
+    "reviewer": "Codex /root",
+    "previous_course_sha256": "135e8b4c17534e721128fa528db8a41412b831f817bf61d6524f79f08d57341e",
+    "current_course_sha256": "ffba0704dae1b5f43b414f778b603aaf06276ffa0d800ea346653c1b3cd8460c",
+    "changed_sources": [
+      "plugins/vera/skills/business-planning/SKILL.md"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Inspected exact registered-cycle native preparation and immutable full report/canonical record projections over the unchanged public compiler. No new authoring, review, financial/financing judgment, successor import/run automation or installed-host acceptance is claimed. Existing lesson text, input materials, practice, pacing and historical editorial/output reviews remain unchanged. Fresh exact-digest demo/practice still required."
+  },
+  "native_record_review_source_binding_20261007": {
+    "reviewer": "Codex /root",
+    "previous_course_sha256": "ffba0704dae1b5f43b414f778b603aaf06276ffa0d800ea346653c1b3cd8460c",
+    "current_course_sha256": "0d184777418275df47812a7b2ddeb40862438eddb062ab53022c7811e80997ad",
+    "changed_sources": [
+      "plugins/vera/skills/business-planning/SKILL.md"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Inspected additive exact canonical record review: private draft CAS, explicit real declared attribution, immutable chain, selected explanation and unchanged public plan. Overall approval and new-case/new-run iteration remain pending. No lesson text, inputs, practice or historical editorial/output judgments changed. Fresh exact-digest demo/practice executions required."
+  },
+  "native_main_integration_observation_20261009": {
+    "recorded_at": "2026-10-09T05:12:43.611516+00:00",
+    "status": "historical_review_union_current_release_unqualified",
+    "current_course_sha256": "44a04b74daa906bc79c3d05b120061f9dd7913d55c89d646e03ce2f46923c0d8",
+    "retained_current_main_review_record_sha256": "f5b0b5558b101358f1e12f191bc0c67e2b03939609fdd144eeafc99ebc326eb8",
+    "retained_candidate_review_record_sha256": "2477a9f8316bdbc5afd5acf1265ab1da3750edc542d9a12a021246f2bd9f0abf",
+    "retained_candidate_only_fields": [
+      "native_cycle_source_binding_review_20261007",
+      "native_record_review_source_binding_20261007"
+    ],
+    "different_historical_fields": {
+      "course_sha256": {
+        "candidate_value": "0d184777418275df47812a7b2ddeb40862438eddb062ab53022c7811e80997ad",
+        "current_main_value": "6e815fef2b7f6a8bb2e7f0115473a9bc5e6143a306efa1f57795981038eef0b9"
+      }
+    },
+    "localized_editorial_and_artifact_reviews_unchanged": true,
+    "current_release_acceptance_renewed": false,
+    "review_scope": "Preserve both source-review histories and their actual original course pins. Current lesson content matches the candidate reviewed baseline and the two histories have identical locale reviews. Compiler, source hashes and render success do not renew editorial/native output acceptance. Existing current-main reviewer/date/scope/language/artifact fields remain unchanged. The retained course_sha256 is not rewritten to claim current-candidate acceptance."
   }
 }

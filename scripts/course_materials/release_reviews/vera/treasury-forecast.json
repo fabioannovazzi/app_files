@@ -374,5 +374,47 @@
     "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
     "source_review": "docs/studio_archive/course-source-compatibility-review.json",
     "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  },
+  "native_workspace_source_binding_20261006": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-06T20:02:49.186431+00:00",
+    "previous_course_sha256": "c3d18a9d0b45b76d120728cd5278a24f99e56bf740dec327b951780c4618204e",
+    "current_course_sha256": "7322db9a83f6dbeea28abe46cca2c46f751ed18ab7ad1b2a00979ff463cf9c77",
+    "authored_content_unchanged": true,
+    "changed_sources": [
+      "skills/treasury-forecast/SKILL.md"
+    ],
+    "scope": "Optional native navigation for exact prepared, operator-bound runs. Existing engine, source qualification, immutable inputs/history and professional gates preserved. Specialist/Cowork route retained when native tools or binding are absent. Fresh exact-digest lesson and installed-host acceptance remain pending."
+  },
+  "native_intake_source_binding_review_20261007": {
+    "reviewer": "Codex /root",
+    "previous_course_sha256": "7322db9a83f6dbeea28abe46cca2c46f751ed18ab7ad1b2a00979ff463cf9c77",
+    "current_course_sha256": "027c4d5db7aa179832b1d55df2fe72e24e352ffc1f6345719d2c9a231e6dc7a1",
+    "changed_sources": [
+      "plugins/treasury-forecast/skills/treasury-forecast/SKILL.md",
+      "plugins/vera/skills/treasury-forecast/SKILL.md"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Inspected public six-table parsing, forecast/session service and native receipt-bound intake. Optional native authoring preserves public sources, persisted output history, explicit confirmation and separate professional acceptance; missing/renamed session recovery is still pending. Only source bindings changed; lesson text, fictional inputs, practice, output expectations and pacing remain unchanged. Historical editorial/output reviews retained. Fresh exact-digest demo/practice required; no new installed-host, learner or professional acceptance."
+  },
+  "native_main_integration_observation_20261009": {
+    "recorded_at": "2026-10-09T05:12:43.761872+00:00",
+    "status": "historical_review_union_current_release_unqualified",
+    "current_course_sha256": "0c89642b6354e22c87a05adcfc99b670ef83bd17a7ff0f1c9548d39302e620ce",
+    "retained_current_main_review_record_sha256": "d52004098f4d0c1ebd69b9d068cb53ba5a26000ac1bef288b4029e5d402e4e69",
+    "retained_candidate_review_record_sha256": "79893ee101f96fecfdffc2046745b319a22224b2a8e8d68fd5928ae9b18b9e15",
+    "retained_candidate_only_fields": [
+      "native_intake_source_binding_review_20261007",
+      "native_workspace_source_binding_20261006"
+    ],
+    "different_historical_fields": {
+      "course_sha256": {
+        "candidate_value": "027c4d5db7aa179832b1d55df2fe72e24e352ffc1f6345719d2c9a231e6dc7a1",
+        "current_main_value": "5d22295eb47bcf7b24d004cf5beb529d6a48518a04c10275f491187324d23c78"
+      }
+    },
+    "localized_editorial_and_artifact_reviews_unchanged": true,
+    "current_release_acceptance_renewed": false,
+    "review_scope": "Preserve both source-review histories and their actual original course pins. Current lesson content matches the candidate reviewed baseline and the two histories have identical locale reviews. Compiler, source hashes and render success do not renew editorial/native output acceptance. Existing current-main reviewer/date/scope/language/artifact fields remain unchanged. The retained course_sha256 is not rewritten to claim current-candidate acceptance."
   }
 }

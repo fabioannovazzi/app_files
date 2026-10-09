@@ -1,0 +1,166 @@
+{
+  "date": "2026-10-09",
+  "upstream": "4fad2c02dd811602f851aa54ad7d3012720bd088",
+  "integration_branch": "codex/bilancio-ui-integration",
+  "source_files_reviewed": 443,
+  "source_identity": "/private/tmp/vera-native-latest-main-integration-20261009/final-native-branch-source-identity.json",
+  "approved_repair": {
+    "files": 38,
+    "canonical_passed": 473,
+    "evidence": "docs/releases/2026-10-09-native-workspace-approved-canonical-repair-application.json"
+  },
+  "bilancio_current_main_merge": {
+    "commit": "b688a4597",
+    "tests_passed": 24
+  },
+  "local_quality": {
+    "black": {
+      "exit_code": 0,
+      "log": "/private/tmp/native-current-main-branch-final-black-20261009.log"
+    },
+    "isort": {
+      "exit_code": 0,
+      "log": "/private/tmp/native-current-main-branch-final-isort-20261009.log"
+    },
+    "bandit": {
+      "exit_code": 0,
+      "log": "/private/tmp/native-current-main-branch-final-bandit-20261009.log"
+    },
+    "mypy": {
+      "exit_code": 0,
+      "log": "/private/tmp/native-current-main-branch-final-mypy-20261009.log"
+    }
+  },
+  "javascript_syntax_files_passed": 32,
+  "privacy_register": {
+    "workstreams": 39,
+    "services": 9,
+    "diagnostics": 0
+  },
+  "product_build_and_check": {
+    "passed": true,
+    "version": "0.1.355",
+    "release_candidate_version_not_reserved": true,
+    "logs": [
+      "/private/tmp/native-current-main-branch-final-product-build-20261009.log",
+      "/private/tmp/native-current-main-branch-final-product-check-20261009.log"
+    ]
+  },
+  "extracted_host_privacy": [
+    {
+      "host": "codex",
+      "sha256": "af7736115262b25f4519ca9c0bad7a2fe4b9f4fc764094eedce55038243bd714",
+      "entries": 3445,
+      "version": "0.1.355",
+      "validator": "actual package",
+      "diagnostic_count": 0
+    },
+    {
+      "host": "work",
+      "sha256": "f66647d71d7b3380da2805eac5689d5ad46918d10fe2277fcc74bca60f43996c",
+      "entries": 2655,
+      "version": "0.1.355",
+      "validator": "actual package",
+      "diagnostic_count": 48
+    },
+    {
+      "host": "cowork",
+      "sha256": "c6cf1030a7e7d76c9bc0512dbbaafcefbca64975572df33b5e6389e181516dbd",
+      "entries": 2484,
+      "version": "0.1.355",
+      "validator": "current source; developer validator intentionally absent",
+      "diagnostic_count": 0
+    },
+    {
+      "host": "antigravity",
+      "sha256": "664a249c73cc6850a319c28fd1e84bca9a0287a9c736ba93b26aaee680475579",
+      "entries": 2658,
+      "version": "0.1.355",
+      "validator": "actual package",
+      "diagnostic_count": 5
+    }
+  ],
+  "native_regressions": {
+    "collected": 2084,
+    "batch_status": "all four terminal",
+    "inps_normal_runtime_passed": 19,
+    "sari_authoring_normal_runtime_passed": 16,
+    "production_timeouts_or_guards_changed": false,
+    "test_only_accessibility_contract_recheck_passed": 1,
+    "terminal_batches": [
+      {
+        "batch": 1,
+        "name": "pytest",
+        "errors": "0",
+        "failures": "1",
+        "skipped": "0",
+        "tests": "523",
+        "time": "2423.916",
+        "timestamp": "2026-10-09T10:09:20.748746+02:00",
+        "hostname": "fabios-Mac-mini",
+        "failed_cases": [
+          "tests.plugins.test_vera_native_sales_plan_authoring::test_native_authoring_shared_select_source_is_bundled_unchanged"
+        ]
+      },
+      {
+        "batch": 2,
+        "name": "pytest",
+        "errors": "0",
+        "failures": "6",
+        "skipped": "0",
+        "tests": "521",
+        "time": "3586.648",
+        "timestamp": "2026-10-09T10:09:20.748707+02:00",
+        "hostname": "fabios-Mac-mini",
+        "failed_cases": [
+          "tests.plugins.test_vera_native_inps::test_inps_actual_named_public_application_preserves_memo_and_review_ceiling[accept]",
+          "tests.plugins.test_vera_native_inps::test_inps_actual_named_public_application_preserves_memo_and_review_ceiling[reject]",
+          "tests.plugins.test_vera_native_inps::test_inps_actual_named_public_application_preserves_memo_and_review_ceiling[edit]",
+          "tests.plugins.test_vera_native_inps::test_inps_actual_named_public_application_preserves_memo_and_review_ceiling[mark_unclear]",
+          "tests.plugins.test_vera_native_inps::test_inps_actual_named_public_application_preserves_memo_and_review_ceiling[request_more_documents]",
+          "tests.plugins.test_vera_native_inps::test_inps_actual_named_public_application_preserves_memo_and_review_ceiling[skip]"
+        ]
+      },
+      {
+        "batch": 3,
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "520",
+        "time": "2074.586",
+        "timestamp": "2026-10-09T10:09:20.748703+02:00",
+        "hostname": "fabios-Mac-mini",
+        "failed_cases": []
+      }
+    ],
+    "completed_broad_cases": 1564,
+    "test_only_and_normal_runtime_evidence": "/private/tmp/vera-native-latest-main-integration-20261009/branch-source-test-only-corrections-20261009.json",
+    "broad_raw_failures": 9,
+    "latest_qualified_unique_passes": 2084,
+    "unresolved_source_case_failures": 0,
+    "qualified_union": "/private/tmp/native-current-main-branch-qualified-regression-union-20261009.json",
+    "instrumented_branch_coverage_percent": 53.76950920484179,
+    "coverage_threshold_percent": 80,
+    "coverage_gate_passed": false,
+    "coverage_report": "/private/tmp/native-current-main-branch-combined-coverage-20261009.json",
+    "normal_runtime_rechecks_do_not_prove_instrumented_coverage": true
+  },
+  "release_pending": [
+    "Native instrumented branch coverage is53.76950920484179 percent, below the required80 percent; qualify remaining meaningful coverage without weakening production safeguards.",
+    "Prepare candidate versions after source and host qualification; PR797 reserves Vera356, Clara259, Lucia91.",
+    "Resolve one shared contract file vendored into Lucia and rebuild affected release artifacts.",
+    "Resolve/qualify Work and Antigravity source-review projections.",
+    "Complete native implementation/acceptance gaps recorded in the rollout matrix; do not infer completion from code inventory.",
+    "Fresh installed Codex acceptance across the actual native workflows; current private pilot is17, public Vera installation is347."
+  ],
+  "private_pilot": {
+    "version": "0.0.17",
+    "enabled": true,
+    "native_ui_file_identities_verified": 136,
+    "identity": "/private/tmp/native-current-main-private-pilot-identity-20261009.json",
+    "fresh_session_accepted": false
+  },
+  "candidate_published_or_deployed": false,
+  "release_qualified": false
+}

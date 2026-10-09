@@ -685,5 +685,36 @@
     "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
     "source_review": "docs/studio_archive/course-source-compatibility-review.json",
     "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  },
+  "native_assessment_source_binding_20261007": {
+    "reviewed_at": "2026-10-07",
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "previous_course_sha256": "81ac814a4a0f13b8321535e841a1179b134fb50b347d2d17fa9555d661fe1a6b",
+    "current_course_sha256": "51adcab9251d812b9130534dd0a6c5c9e41593344da52249939b2be8aeef576e",
+    "changed_sources": [
+      "skills/adeguati-assetti/SKILL.md"
+    ],
+    "content_review": "All authored multilingual lessons, construction/practice/financial-lab inputs, expected outputs and timing are byte-equivalent as JSON values; only the current wrapper skill SHA binding changes. Retain original multilingual editorial and historical artifact review without claiming new learner or professional acceptance.",
+    "source_review": "Inspected the wrapper addition and maintained assetti review contract. Native assessment is optional over exact immutable records; complete attributed decisions preserve observations, proposed action states and unknown operation. Historical extended-analysis limits and CH-GE jurisdiction are explicit. Supervised construction, adoption, operating review, financial lab, model-data reports and Archive finalization remain in the unchanged specialist route. Cowork continues maintained persistent CLI without requiring native tools. No assessment/construction engine, teaching text or input is changed.",
+    "execution_requirement": "Run current localized assessment follow-up and construction teaching cases with the new digest and fresh package/privacy checks. Headless source checks and extracted packages do not establish installed native, real-company or learner acceptance."
+  },
+  "native_main_integration_observation_20261009": {
+    "recorded_at": "2026-10-09T05:12:43.568319+00:00",
+    "status": "historical_review_union_current_release_unqualified",
+    "current_course_sha256": "85d3dfb87b8eecf22594a6505cad5fdc5a7883165e054620b4c28450f1b91481",
+    "retained_current_main_review_record_sha256": "f418f491c1c3dec4d9a423f2d4b755e9c5d0c074cac61dceed693662809855d6",
+    "retained_candidate_review_record_sha256": "6df4dd782f2ec1e1c3bdc06811b2c32d469b55696d6652228958bf61b15e8c6d",
+    "retained_candidate_only_fields": [
+      "native_assessment_source_binding_20261007"
+    ],
+    "different_historical_fields": {
+      "course_sha256": {
+        "candidate_value": "51adcab9251d812b9130534dd0a6c5c9e41593344da52249939b2be8aeef576e",
+        "current_main_value": "75802fa802d048f825f1db5853cad04a4705062a5cf598d36cacb54bc7cc7837"
+      }
+    },
+    "localized_editorial_and_artifact_reviews_unchanged": true,
+    "current_release_acceptance_renewed": false,
+    "review_scope": "Preserve both source-review histories and their actual original course pins. Current lesson content matches the candidate reviewed baseline and the two histories have identical locale reviews. Compiler, source hashes and render success do not renew editorial/native output acceptance. Existing current-main reviewer/date/scope/language/artifact fields remain unchanged. The retained course_sha256 is not rewritten to claim current-candidate acceptance."
   }
 }

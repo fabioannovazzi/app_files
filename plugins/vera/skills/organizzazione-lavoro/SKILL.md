@@ -13,6 +13,21 @@ Codex reasons about meaning and priorities; `vera_studio_work_*` tools retain
 state. The connected calendar plugin owns the external calendar. Never substitute
 chat memory for the register, or manual copying for an available connector.
 
+When the host supplies `vera_studio_work_panel_open` and renders its MCP app,
+offer the optional native register for paged commitments, meetings, calendar
+receipts and history. It uses the same owner-local SQLite register, not a client
+Archive or a second ledger. Incomplete literal fields persist separately from
+commitments; reopening never restores confirmation. Local capture, exact-revision
+changes and meeting follow-ups use the public backend with retained retry receipts.
+Recover an interrupted local save from its exact receipt before creating another.
+Calendar-linked changes remain subject to the existing backend restriction.
+The panel cannot prepare, claim, resolve or dispatch calendar operations. Its
+discussion action shares the selected record reference/version with chat;
+`vera_studio_work_panel_context` returns that whole selected record to the model
+only if the register revision still matches. This is not authorization for an
+external write. Continue the calendar cycle below with actual connector reads
+and the current user's authorization. If the panel is unavailable, retain the
+ordinary tools and managed-Python/Cowork route described below
 ## Prepared teaching course
 
 When the user asks to learn or try this workflow, use `learn-with-vera` and the

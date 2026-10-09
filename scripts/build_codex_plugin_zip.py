@@ -21,6 +21,8 @@ import sys
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
+from types import ModuleType
+from typing import Any
 from zipfile import ZIP_DEFLATED, BadZipFile, ZipFile, ZipInfo
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -927,6 +929,341 @@ def marketplace_payload(package: BuildTarget) -> bytes:
     return (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
 
 
+def _vera_privacy_validator() -> ModuleType:
+    """Load the validator from the editable source used for this projection."""
+    path = (
+        ROOT
+        / "plugins/vera/skills/privacy-surface-review/scripts/validate_privacy_surfaces.py"
+    )
+    spec = importlib.util.spec_from_file_location(
+        "_codex_vera_privacy_projection", path
+    )
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"Cannot load Vera privacy validator: {path}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def _vera_repository_projections(
+    repository_path: str,
+    entries: dict[str, bytes],
+    prefix: str,
+    workstreams: list[str],
+    source_root: Path,
+    vendor_sources: dict[str, list[str]],
+) -> list[str]:
+    """Locate every installed copy and require its exact reviewed source bytes."""
+    relative = Path(repository_path)
+    if (
+        relative.is_absolute()
+        or ".." in relative.parts
+        or len(relative.parts) < 3
+        or relative.parts[0] != "plugins"
+    ):
+        raise ValueError(
+            f"Unsupported package-local repository path: {repository_path}"
+        )
+    source = source_root / relative
+    if source.is_symlink() or not source.is_file():
+        raise ValueError(
+            f"Governed package-local source is not a regular file: {repository_path}"
+        )
+    source.resolve(strict=True).relative_to(source_root.resolve())
+    parts = relative.parts
+    direct = (
+        Path(*parts[2:]) if parts[1] == "vera" else Path("modules", *parts[1:])
+    ).as_posix()
+    matches = {direct} if prefix + direct in entries else set()
+    matches.update(
+        destination
+        for destination in vendor_sources.get(repository_path, [])
+        if prefix + destination in entries
+    )
+    if not matches:
+        raise ValueError(f"Governed source has no installed copy: {repository_path}")
+    source_bytes = source.read_bytes()
+    for destination in sorted(matches):
+        if entries[prefix + destination] != source_bytes:
+            raise ValueError(
+                f"Installed governed copy differs from reviewed source: {destination}"
+            )
+    return sorted(matches)
+
+
+def _project_vera_repository_reviews(
+    entries: dict[str, bytes],
+    prefix: str,
+    source_root: Path,
+    validator: ModuleType,
+    vendor_sources: dict[str, list[str]],
+) -> dict[str, dict[str, Any]]:
+    """Retain complete source provenance while checking actual installed copies."""
+    projected: dict[str, dict[str, Any]] = {}
+    vera = source_root / "plugins/vera"
+    for service_id in (
+        "cnc-authenticated-review",
+        "local-onboarding",
+        "plugin-feedback",
+        "run-receipt-stamping",
+    ):
+        name = f"privacy/services/{service_id}.json"
+        original_bytes = (vera / name).read_bytes()
+        if entries[prefix + name] != original_bytes:
+            raise ValueError(f"Unreviewed shared-service bytes: {service_id}")
+        source_manifest = json.loads(original_bytes)
+        repository_paths = source_manifest["governed_repository_paths"]
+        source_files = validator._repository_governed_files(vera, repository_paths)
+        file_records: list[dict[str, Any]] = []
+        installed_paths: set[str] = set()
+        for logical_path, source in sorted(source_files.items()):
+            path = logical_path.removeprefix("repository:")
+            relative = Path(path)
+            matches = set(vendor_sources.get(path, []))
+            parts = relative.parts
+            if len(parts) >= 3 and parts[0] == "plugins":
+                direct = (
+                    Path(*parts[2:])
+                    if parts[1] == "vera"
+                    else Path("modules", *parts[1:])
+                ).as_posix()
+                if prefix + direct in entries:
+                    matches.add(direct)
+            installed = sorted(
+                destination
+                for destination in matches
+                if prefix + destination in entries
+            )
+            content = source.read_bytes()
+            for destination in installed:
+                if entries[prefix + destination] != content:
+                    raise ValueError(
+                        f"Installed repository copy differs from reviewed source: {destination}"
+                    )
+            installed_paths.update(installed)
+            file_records.append(
+                {
+                    "path": path,
+                    "bytes": len(content),
+                    "sha256": hashlib.sha256(content).hexdigest(),
+                    "installed_paths": installed,
+                }
+            )
+        # Freshness is checked against actual repository bytes again after
+        # enumeration; it is never established from the retained declaration.
+        current = validator._fingerprint(
+            vera,
+            source_manifest["governed_paths"],
+            vera_root=vera,
+            repository_paths=repository_paths,
+        )
+        if current != source_manifest["review"]["source_fingerprint"]:
+            raise ValueError(
+                f"Source changed during repository review projection: {service_id}"
+            )
+        review_path = f"privacy/repository-source-reviews/{service_id}.json"
+        document = {
+            "schema_version": 1,
+            "service_id": service_id,
+            "scope": validator.REPOSITORY_REVIEW_SCOPE,
+            "hosted_runtime_verified": False,
+            "limitations": [
+                "Hashes record repository bytes inspected during packaging; hosted code is not included or executed.",
+                "Installed validation checks local client bytes and this retained review declaration.",
+                "Hosted deployment, live controls and model delivery require separate acceptance evidence.",
+            ],
+            "source_manifest": source_manifest,
+            "files": file_records,
+        }
+        raw = (json.dumps(document, ensure_ascii=False, indent=2) + "\n").encode()
+        if len(raw) > validator.MAX_REPOSITORY_REVIEW_BYTES:
+            raise ValueError(
+                f"Repository source declaration exceeds its bound: {service_id}"
+            )
+        entries[prefix + review_path] = raw
+        # Keep repository governance and every original control unchanged.
+        # The additional paths bind code copies actually installed in this ZIP.
+        payload = json.loads(original_bytes)
+        payload["governed_paths"] = sorted(
+            set(payload["governed_paths"]) | installed_paths
+        )
+        payload["repository_source_review"] = {
+            "path": review_path,
+            "service_id": service_id,
+            "scope": validator.REPOSITORY_REVIEW_SCOPE,
+        }
+        payload["review"][
+            "fingerprint_scope"
+        ] = "installed_client_and_repository_review_declaration"
+        projected[name] = payload
+    return projected
+
+
+def _project_vera_codex_privacy(
+    entries: dict[str, bytes], prefix: str, source_root: Path
+) -> dict[str, object]:
+    """Rebase package-local governance without discarding hosted review sources."""
+    validator = _vera_privacy_validator()
+    source_vera = source_root / "plugins/vera"
+    source_errors = validator.validate_privacy_surfaces(source_vera)
+    if source_errors:
+        raise ValueError(
+            "Cannot project an unreviewed Vera source register: "
+            + "; ".join(source_errors)
+        )
+    components = json.loads(entries[prefix + "components.json"])
+    workstreams = components["plugins"]
+    roles = components["workflow_roles"]
+    vendor_sources: dict[str, list[str]] = {}
+    configs = load_vendor_module_config()
+    for component in ["vera", *workstreams]:
+        for name, candidate in shared_vendor_module_entries(
+            configs.get(component)
+        ).items():
+            try:
+                relative = (
+                    candidate.resolve(strict=True)
+                    .relative_to(ROOT.resolve())
+                    .as_posix()
+                )
+            except ValueError:
+                continue
+            destination = (
+                "" if component == "vera" else f"modules/{component}/"
+            ) + f"vendor/modules/{name}"
+            vendor_sources.setdefault(relative, []).append(destination)
+    projected: dict[str, dict[str, Any]] = {}
+    omitted_sources: dict[str, str] = {}
+    for workstream in workstreams:
+        name = f"privacy/workstreams/{workstream}.json"
+        payload = json.loads(entries[prefix + name])
+        source_manifest = source_vera / name
+        if entries[prefix + name] != source_manifest.read_bytes():
+            raise ValueError(f"Unreviewed workstream manifest bytes: {workstream}")
+        repository_paths = payload.get("governed_repository_paths", [])
+        if not repository_paths:
+            continue
+        paths = list(payload.get("governed_shared_paths", []))
+        for path in repository_paths:
+            if path == "plugins/vera/agents/passive-invoice-reviewer.md":
+                if not should_skip_codex_source(
+                    Path("agents/passive-invoice-reviewer.md")
+                ):
+                    raise ValueError("Cowork-only agent exclusion changed")
+                omitted_sources[path] = hashlib.sha256(
+                    (source_root / path).read_bytes()
+                ).hexdigest()
+                continue
+            paths.extend(
+                _vera_repository_projections(
+                    path, entries, prefix, workstreams, source_root, vendor_sources
+                )
+            )
+        payload["governed_shared_paths"] = sorted(set(paths))
+        payload.pop("governed_repository_paths")
+        projected[name] = payload
+    for service_id in ("datev-starter", "native-workspace", "managed-python-runtime"):
+        name = f"privacy/services/{service_id}.json"
+        payload = json.loads(entries[prefix + name])
+        if entries[prefix + name] != (source_vera / name).read_bytes():
+            raise ValueError(f"Unreviewed service manifest bytes: {service_id}")
+        mapping: dict[str, list[str]] = {}
+        if service_id != "native-workspace":
+            for path in payload.get("governed_repository_paths", []):
+                mapping[path] = _vera_repository_projections(
+                    path, entries, prefix, workstreams, source_root, vendor_sources
+                )
+        # This shared review server is injected byte-for-byte by expected_zip_entries.
+        if service_id == "native-workspace":
+            original = "scripts/serve_review_workbench.py"
+            installed = "scripts/serve_review_workbench.py"
+            if payload.get("governed_repository_paths") != [original]:
+                raise ValueError("Native hosted/local server governance changed")
+            if entries[prefix + installed] != (source_root / original).read_bytes():
+                raise ValueError("Injected review server differs from reviewed source")
+            mapping = {original: [installed]}
+        paths = list(payload["governed_paths"])
+        for values in mapping.values():
+            paths.extend(values)
+        omitted = "skills/studio-archive/references/cowork-runtime.md"
+        if service_id == "managed-python-runtime":
+            if (
+                tuple(Path(omitted).parts) not in CODEX_PACKAGE_EXCLUDED_PATHS
+                or prefix + omitted in entries
+            ):
+                raise ValueError("Cowork-only document exclusion changed")
+            paths.remove(omitted)
+            omitted_sources["plugins/vera/" + omitted] = hashlib.sha256(
+                (source_vera / omitted).read_bytes()
+            ).hexdigest()
+        payload["governed_paths"] = sorted(set(paths))
+        payload.pop("governed_repository_paths", None)
+        for control in payload["security_controls"]:
+            implementations: list[str] = []
+            for path in control["implemented_by"]:
+                if path.startswith("repository:"):
+                    implementations.extend(mapping[path.removeprefix("repository:")])
+                else:
+                    implementations.append(path)
+            control["implemented_by"] = sorted(set(implementations))
+        projected[name] = payload
+    projected.update(
+        _project_vera_repository_reviews(
+            entries, prefix, source_root, validator, vendor_sources
+        )
+    )
+    with tempfile.TemporaryDirectory(prefix="vera-codex-local-privacy-") as folder:
+        package = Path(folder) / "plugins/vera"
+        for name, content in entries.items():
+            if not name.startswith(prefix):
+                continue
+            target = package / name.removeprefix(prefix)
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(content)
+        for name, payload in projected.items():
+            if name.startswith("privacy/workstreams/"):
+                workstream = payload["workstream"]
+                role = roles.get(workstream, {}).get("kind", "workflow")
+                wrapper = (
+                    package
+                    / "skills"
+                    / roles.get(workstream, {}).get("skill", workstream)
+                    / "SKILL.md"
+                    if role != "internal_engine"
+                    else None
+                )
+                fingerprint = validator._fingerprint(
+                    validator._component_root(package, workstream),
+                    payload["governed_paths"],
+                    wrapper=wrapper,
+                    vera_root=package,
+                    shared_paths=payload.get("governed_shared_paths", []),
+                )
+            else:
+                fingerprint = validator._fingerprint(
+                    package,
+                    payload["governed_paths"],
+                    vera_root=package,
+                    repository_paths=payload.get("governed_repository_paths", []),
+                    repository_review=payload.get("repository_source_review"),
+                )
+            payload["review"]["source_fingerprint"] = fingerprint
+            content = (
+                json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
+            ).encode()
+            entries[prefix + name] = content
+            (package / name).write_bytes(content)
+        errors = validator.validate_privacy_surfaces(package)
+    return {
+        "projected_manifests": sorted(projected),
+        "intentional_other_host_document_exclusions": omitted_sources,
+        "remaining_diagnostics": errors,
+        "hosted_repository_governance_retained": True,
+        "repository_reviews_are_declarations_not_hosted_runtime_verification": True,
+        "source_register_verified_before_projection": True,
+    }
+
+
 def add_vera_execution_manifest(entries: dict[str, bytes], prefix: str = "") -> None:
     """Bind recovery to exact final host bytes, never to client documents.
 
@@ -945,7 +1282,9 @@ def add_vera_execution_manifest(entries: dict[str, bytes], prefix: str = "") -> 
     ).encode("utf-8")
 
 
-def expected_zip_entries(package: BuildTarget) -> dict[str, bytes]:
+def expected_zip_entries(
+    package: BuildTarget, *, project_vera_privacy: bool = True
+) -> dict[str, bytes]:
     plugin_dirs = [ROOT / "plugins" / plugin for plugin in package.plugin_names]
     vendor_module_config = load_vendor_module_config()
     hidden_missing = sorted(
@@ -989,6 +1328,9 @@ def expected_zip_entries(package: BuildTarget) -> dict[str, bytes]:
             entries[f"{plugin_root}/scripts/self_relaunch.py"] = (
                 ROOT / "plugins/clara/scripts/self_relaunch.py"
             ).read_bytes()
+            entries[f"{plugin_root}/scripts/serve_review_workbench.py"] = (
+                SHARED_REVIEW_WORKBENCH_SERVER.read_bytes()
+            )
         vendor_config = vendor_module_config.get(plugin_dir.name)
         for path in source_files(
             plugin_dir,
@@ -1029,6 +1371,23 @@ def expected_zip_entries(package: BuildTarget) -> dict[str, bytes]:
     for plugin_dir in plugin_dirs:
         if plugin_dir.name == "vera":
             named_browser_skill_cards(entries, f"{root}/plugins/vera/")
+            if project_vera_privacy:
+                projection = _project_vera_codex_privacy(
+                    entries, f"{root}/plugins/vera/", ROOT
+                )
+                if projection["remaining_diagnostics"]:
+                    raise ValueError(
+                        "Projected Codex privacy register remains invalid: "
+                        + "; ".join(projection["remaining_diagnostics"])
+                    )
+            else:
+                errors = _vera_privacy_validator().validate_privacy_surfaces(
+                    ROOT / "plugins/vera"
+                )
+                if errors:
+                    raise ValueError(
+                        "Unreviewed Vera source register: " + "; ".join(errors)
+                    )
             add_vera_execution_manifest(entries, f"{root}/plugins/vera/")
     return dict(sorted(entries.items()))
 
@@ -1531,7 +1890,7 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
         raise ValueError("ChatGPT upload ZIPs must contain exactly one root plugin")
     plugin_name = package.plugin_names[0]
     prefix = f"{package.package_root}/plugins/{plugin_name}/"
-    packaged_entries = expected_zip_entries(package)
+    packaged_entries = expected_zip_entries(package, project_vera_privacy=False)
     browser_cards = (
         named_browser_skill_cards(packaged_entries, prefix)
         if plugin_name == "vera"

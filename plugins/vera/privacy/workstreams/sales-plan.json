@@ -44,6 +44,22 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "native-selected-plan-record",
+        "purpose": "Discuss one explicitly selected immutable prepared Sales Plan record",
+        "content": "Only explicit current generation/item discussion returns one complete summary or applied-assumption ledger row, reconciliation, prepared-evidence lineage or producer contract refusal, with calculation status and professional boundary. Values, member labels, source references and attributed assumptions may be present. The selected serialized model envelope is limited to 64000 bytes and refuses oversize/stale records without sampling. Full Actual and prepared scenario tables are excluded from this route. Private source inspection scans the complete registered CSV and returns 20-row pages or 30 exact-member pages within 100000 serialized bytes; recoverable mapping/period/assumption/reviewer drafts are limited to 96000 serialized bytes. Those app payloads do not automatically enter the model result envelope when the host honors app-only visibility. No anonymization or local-only account-processing guarantee is supplied; ordinary specialist analysis may separately read actual evidence.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
+        "id": "native-retained-scenario-query",
+        "purpose": "Answer an explicitly recorded professional question using all exact selected scenario matches",
+        "content": "A signed owner/run/current-generation human request retains its literal reason, exact source-row IDs and/or column=value filters, and requested output columns. The unchanged model-use helper scans the complete sealed scenario on byte-identical local copies and conserves all exact matches outside the immutable Plan generation. Private 20-row app pages are not the whole population. Only explicit query_explain exposes the reason, selectors, columns, complete retained evidence/lineage and ALL matching rows to the selected model; customer or product labels, currencies, commercial assumptions and amounts may be included. Complete model results above 65536 UTF-8 serialized bytes refuse without truncation; a narrower new query is required. The helper does not reopen raw Actuals. Private app pages above 100000 UTF-8 serialized bytes refuse while preserving complete local matches. No automatic anonymization, result approval, semantic mapping inference, worker/provider call or Archive completion occurs.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
       }
     ]
   },
@@ -89,15 +105,34 @@
     {
       "id": "sealed-post-assumption-model-use",
       "control": "Every Plan run writes a hash-bound model_use_manifest.json without repeating the original Actual filename. The ledger, summary, reconciliation and lineage are the default model context; the full prepared scenario is excluded by default and can be queried only through exact row IDs or filters and explicit columns. The helper scans every sealed scenario row and returns all exact matches without sampling."
+    },
+    {
+      "id": "native-confirmed-case-plan",
+      "control": "The Codex adapter accepts exact registered Actual CSV receipts in the same running run, with optional explicitly inspected case seeding. Literal source pages and complete-source distinct-member searches stay private in app metadata. Explicit partial mappings, periods, assumptions and attribution persist in actor/tenant/run drafts outside outputs under signed current scope and exact draft CAS; stale rebase clears review attribution and confirmation is never stored. After renewed human review of the exact saved draft, encode the maintained v2 contract and call the unchanged complete runner. Retain source bytes, compiled case, full review choices and optional original seed case. Seal every generation file, preserve failed output and truthful producer contract refusals without a fake execution receipt, and block uncertain repeated execution. Prepared selected model reads exclude full Actual/scenario data. No semantic mapping inference, professional result approval or run completion is created."
+    },
+    {
+      "id": "native-purpose-bound-scenario-query",
+      "control": "In Codex, a signed exact-generation reviewer request with explicit purpose, row IDs or exact filters, columns and confirmation invokes unchanged public model_use on byte-identical manifest/scenario copies in a separate owner-scoped run-output query tree. Every match is retained without sampling; intent, exact idempotency replay and whole-tree seals preserve the Plan generation and stop uncertain retries. App pages are private and bounded; explicit query discussion returns the complete selected query as untrusted model evidence only if it fits 64 KiB, otherwise refuses without a sample and requires a narrower new query. Source consultation is available to Viewer without editing an authoring draft. No anonymization, professional approval or run completion is added."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "322e46fa18c5ac0e826848ef8391497b187bc69f318d0cd28f142dcbdc982013"
+    "source_fingerprint": "ed8350ed29ed959db36231ce6ad9cb0bcf4b606ba8eb84702d8e9c4ae45db03c"
   },
   "governed_repository_paths": [
-    "plugins/vera/skills/vera/references/connected-studio-knowledge.md"
+    "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+    "plugins/vera/scripts/native_sales_plan.py",
+    "plugins/vera/scripts/native_sales_plan_bridge.py",
+    "plugins/vera/scripts/native_workspace.py",
+    "plugins/vera/mcp/workspace.cjs",
+    "plugins/vera/ui/workspace.js",
+    "plugins/vera/skills/vera/references/native-workspace.md",
+    "plugins/vera/scripts/native_sales_plan_authoring.py",
+    "plugins/vera/ui/custom_select.js",
+    "plugins/vera/ui/workspace.html",
+    "plugins/vera/ui/workspace.css",
+    "plugins/vera/scripts/native_sales_plan_queries.py"
   ]
 }

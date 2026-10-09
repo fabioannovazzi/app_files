@@ -634,5 +634,48 @@
     "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
     "source_review": "docs/studio_archive/course-source-compatibility-review.json",
     "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  },
+  "native_exact_invoice_source_review_20261007": {
+    "reviewed_at": "2026-10-07",
+    "reviewer": "Codex /root - source compatibility review",
+    "previous_course_sha256": "05b0573e8c7e64fb1364b18a5a7e675dc93498345d1aa34d1e3275a3364d5ede",
+    "current_course_sha256": "d583bb8b4d2f3633a39b62c95d025e695e7fdecaeb586cf2a00346a4bbed920a",
+    "changed_sources": [
+      "skills/invoice-xml/SKILL.md"
+    ],
+    "authored_content": "All localized authored lessons, demo/practice source material, expectations and pacing are unchanged JSON values. The wrapper adds an optional native exact-proposal review/export route; the specialist CLI remains available.",
+    "source_review": "Inspected producer proposal/source contracts, public prepare/export and offline schema. New native controls retain authored tax decisions, blocked/partial cases, actual explicit review, exact immutable exports and separate Archive closure. Selected-model retrieval is scoped and no semantic classifier or automatic confirmation is introduced. No source producer or authored teaching content changed.",
+    "execution_requirement": "Current localized invoice demo/practice, course/catalog, privacy, producer and fresh extracted host tests must pass. Source/iframe/extracted services do not establish real installed-host, learner, professional or SdI acceptance."
+  },
+  "native_main_integration_observation_20261009": {
+    "recorded_at": "2026-10-09T05:12:43.655580+00:00",
+    "status": "historical_review_union_current_release_unqualified",
+    "current_course_sha256": "33d7a53ee38bd523393c9f7a29fdc3150646e4821eb6b9b5ca92b8fdccb053ef",
+    "retained_current_main_review_record_sha256": "099c561d57d61716c3a85c1bc475bd1f2c6e9ec401bdd2da320a035a60a27dda",
+    "retained_candidate_review_record_sha256": "97b2cf6a62e556970f3375aad297e8318a2b9b1e3fdf5097c3d2abc7e354b3e6",
+    "retained_candidate_only_fields": [
+      "native_exact_invoice_source_review_20261007"
+    ],
+    "different_historical_fields": {
+      "review_scope": {
+        "candidate_value": "Prepared fictional lesson plus actual native preparation and export regression outputs. The test uses an explicitly synthetic approval event to exercise the exporter; it is not a professional or learner approval and is never included in the kit. This review does not establish a human voice/two-window session or tax correctness. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate. PR #685 refresh: authored lesson, fictional input bytes and output expectations are unchanged against current main; source inventory now binds proposal schema 2, reviewed transmitter choice and local fiscal-ID control-character checks. Ten fresh demo/practice execution regressions passed across five languages. Synthetic approval remains test-only; no SdI, professional or learner acceptance is claimed.",
+        "current_main_value": "Prepared fictional lesson plus actual native preparation and export regression outputs. The test uses an explicitly synthetic approval event to exercise the exporter; it is not a professional or learner approval and is never included in the kit. This review does not establish a human voice/two-window session or tax correctness. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate. PR #685 refresh: authored lesson, fictional input bytes and output expectations are unchanged against current main; source inventory now binds proposal schema 2, reviewed transmitter choice and local fiscal-ID control-character checks. Ten fresh demo/practice execution regressions passed across five languages. Synthetic approval remains test-only; no SdI, professional or learner acceptance is claimed. Vera 0.1.351: reviewed instruction reuse, consolidated source-led intake, archive selector sequencing, pinned XSD paths and the validated model-data report example. Authored lesson content, inputs and expectations are unchanged; only source inventory changed. Ten fresh localized demo/practice runs passed and their previews and XML were inspected for expected invoice references. No timing, user-host, learner, professional or SdI acceptance is claimed."
+      },
+      "reviewed_at": {
+        "candidate_value": "2026-10-04T15:00:00+02:00",
+        "current_main_value": "2026-10-07T17:57:01+02:00"
+      },
+      "course_sha256": {
+        "candidate_value": "d583bb8b4d2f3633a39b62c95d025e695e7fdecaeb586cf2a00346a4bbed920a",
+        "current_main_value": "bf69a8e4c2d68ae16cec0e159dfa3ac6da6d9ac5a5a6b517943a252bc6dbebe8"
+      },
+      "reviewer": {
+        "candidate_value": "Codex: first-use kit, source and native invoice-output review",
+        "current_main_value": "Codex: invoice intake instruction and unchanged teaching-output review"
+      }
+    },
+    "localized_editorial_and_artifact_reviews_unchanged": true,
+    "current_release_acceptance_renewed": false,
+    "review_scope": "Preserve both source-review histories and their actual original course pins. Current lesson content matches the candidate reviewed baseline and the two histories have identical locale reviews. Compiler, source hashes and render success do not renew editorial/native output acceptance. Existing current-main reviewer/date/scope/language/artifact fields remain unchanged. The retained course_sha256 is not rewritten to claim current-candidate acceptance."
   }
 }

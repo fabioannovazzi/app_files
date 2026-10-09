@@ -55,6 +55,38 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "native-selected-variance-evidence-page",
+        "purpose": "Discuss one explicit exact prepared result or context page while retaining the complete public outputs",
+        "content": "Normal shared-panel calls carry only status/opaque references to the model; complete source/recipe identities, unsent literal setup drafts, chart PNG bytes and file paths stay in private app metadata. An explicit discussion through vera_workspace_variance_explain exposes only the selected verified CSV/JSON/Markdown member page (twenty rows, maximum 64 KiB). It may include generated numbers, reviewed recipe/control fields, chart/context metadata, limitations or an explicit candidate-column inspection preview if selected. It never automatically opens the original source table, chooses alternatives, authors interpretation or records professional approval. Oversized complete pages are refused and retained files remain available; no automatic anonymization occurs.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
+        "id": "native-authorized-variance-preparation",
+        "purpose": "Prepare or correct the complete comparison under an explicit selected-source mandate before separate conservation and calculation",
+        "content": "Ordinary app calls retain literal drafts, complete source identities and unsent named readback in private app metadata. Explicit vera_workspace_variance_author_context exposes the confirmed literal question, selected receipt paths/hashes and choices, inspection/suggested-recipe/public-skill references and an explicitly chosen whole proposal, including selected prior raw recipe/reviews. The inspector's referenced preview is at most ten candidate-column rows; complete authorized originals enter the host model context only when actually read through maintained readers. Model staging receives the complete authored public recipe and note and returns prospective schema validation without calculation, professional approval or a claim of actual model reading. No automatic anonymization or pseudonymization occurs; names, figures, provenance and sensitive financial information can enter the chosen host model context. Private unsent named readback is omitted.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
+        "id": "native-explicit-professional-variance-record",
+        "purpose": "Discuss exact public controls or one explicitly chosen complete residual sequence without exposing unsent reviewer drafts",
+        "content": "Ordinary app calls keep incomplete literal decision, declared name, timezone-aware review time and basis in private app metadata. Only explicit vera_workspace_variance_review_explain exposes the selected complete public accounting readiness and declared controls, plus exact comparison/totals for accounting review or the single actual retained residual sequence with its selected rows, chart/table paths, child artifact metadata and interpretation boundary. Existing declared reviews and financial figures in those records may enter the selected host model context. The original table and private unsent reviewer fields are omitted. Complete records exceeding 64 KiB are refused rather than truncated. This is untrusted evidence, not authenticated identity, professional acceptance, actual model reading, cause attribution, signature, delivery or completed run. No automatic anonymization or pseudonymization occurs.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
+        "id": "native-whole-variance-narrative",
+        "purpose": "Author and discuss the three complete ordinary notes from the exact sealed calculation, then retain separate private named readback",
+        "content": "Explicit narrative context provides all verified normal model-use numerical artifact references and generated chart references in pages of thirty; complete contents enter the selected host model only when actually read with maintained readers. Optional exact chosen proposal exposes all three literal ordinary Markdown notes. Stage receives the model-authored complete texts, within a 96,000-byte serialized payload bound without truncation. Private app read/setup/save/commit retain unsent decision/name/time/basis, full note texts, paths and conservation receipt in app metadata; they are not automatically sent to the model. Model authors interpretation; the professional judges it. Actual reads must be recorded in the normal run-level model-data report and are never inferred from references, navigation or stage/commit. No automatic anonymization, provider worker, signature, send or publication is introduced. Real calculated case amounts, dimensions, prior declared reviews, linked artifacts and hypotheses may enter the selected OpenAI Codex account context.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
       }
     ]
   },
@@ -122,7 +154,7 @@
     "reviewed_at": "2026-10-01",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "3c3a122e1ff4c20f9d0f40bada511772e7f1b44256cf68ab79e27e01b9f48131"
+    "source_fingerprint": "95cf7173d9fca6119ef361a8d229a6c8301736a31ea8863b6fdc05373e3a4648"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"

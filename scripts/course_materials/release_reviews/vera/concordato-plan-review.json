@@ -619,5 +619,52 @@
     "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
     "source_review": "docs/studio_archive/course-source-compatibility-review.json",
     "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  },
+  "native_workspace_source_binding_20261006": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-06T19:57:59.350555+00:00",
+    "previous_course_sha256": "56baf3d490938f0701c6429ac81dd3ab5121d4870597d98c47f876b2f0ae07ea",
+    "current_course_sha256": "18804a8cd13a82393ee163933c40bcdc1dda018f96d093d7193d71346e718f70",
+    "authored_content_unchanged": true,
+    "scope": "Optional prepared Concordato native navigation; maintained public reference and selected-item projection, unchanged engine and professional gates. Memo Apply refused before writes after independent replay failed. Fresh exact-digest teaching execution and installed native/Cowork acceptance remain pending.",
+    "changed_sources": [
+      "skills/concordato-plan-review/SKILL.md"
+    ]
+  },
+  "concordato_review_history_source_binding_20261009": {
+    "reviewed_at": "2026-10-09T00:44:15.690710+00:00",
+    "reviewer": "Codex /root",
+    "scope": "Five complete authored language outlines inspected against unchanged semantic/numeric engines and current public review workflow. Memo history changes presentation/replay and local receipts; input lesson files, scenarios, deliverables, practice finance change and professional decision gates remain unchanged. Package candidate only; actual teaching rerun, model, learner and installed-host acceptance remain pending.",
+    "authored_content_unchanged": true,
+    "changed_sources": [
+      "plugins/concordato-plan-review/scripts/apply_review_edits.py",
+      "plugins/concordato-plan-review/scripts/output_closure.py",
+      "plugins/concordato-plan-review/scripts/replay_assurance.py"
+    ],
+    "current_course_sha256": "c156c3ccdae151485ce1520af3d55d6aaa8c9318a3a10bdf194052e0877a34a0"
+  },
+  "native_main_integration_observation_20261009": {
+    "recorded_at": "2026-10-09T05:12:43.622427+00:00",
+    "status": "historical_review_union_current_release_unqualified",
+    "current_course_sha256": "0b6a30bd27adb088ee019586bbefd78596bd0cbc0ba5dc60b5747f2456ffb5ab",
+    "retained_current_main_review_record_sha256": "19546ab9890c012f0364b7cce36fa32e72b796435d1047efa6bd866cc48315a8",
+    "retained_candidate_review_record_sha256": "10e23ed8230e05a4df098f97dee4a99cd33f9f53e4267a73a7fb10e9bd6fda05",
+    "retained_candidate_only_fields": [
+      "concordato_review_history_source_binding_20261009",
+      "native_workspace_source_binding_20261006"
+    ],
+    "different_historical_fields": {
+      "course_sha256": {
+        "candidate_value": "c156c3ccdae151485ce1520af3d55d6aaa8c9318a3a10bdf194052e0877a34a0",
+        "current_main_value": "6d068686e38cc373aecc93ca0376d2e2ca46465bdf99ed82ec3741748a40ce2d"
+      },
+      "source_update_review": {
+        "candidate_value": "docs/releases/2026-10-03-course-file-access-review.json",
+        "current_main_value": "docs/releases/2026-10-07-vera-hardlink-course-review.json"
+      }
+    },
+    "localized_editorial_and_artifact_reviews_unchanged": true,
+    "current_release_acceptance_renewed": false,
+    "review_scope": "Preserve both source-review histories and their actual original course pins. Current lesson content matches the candidate reviewed baseline and the two histories have identical locale reviews. Compiler, source hashes and render success do not renew editorial/native output acceptance. Existing current-main reviewer/date/scope/language/artifact fields remain unchanged. The retained course_sha256 is not rewritten to claim current-candidate acceptance."
   }
 }

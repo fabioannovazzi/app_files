@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "journal-sampling",
-  "revision": "2026-09-14.2",
+  "revision": "2026-10-09.native-main-integration.review-proposal",
   "seconds": [
     45,
     60,
@@ -159,7 +159,7 @@
     {
       "path": "skills/journal-sampling/SKILL.md",
       "repository_path": "plugins/vera/skills/journal-sampling/SKILL.md",
-      "sha256": "980f5d08620e332e91c0b353d431dc0f0e3490f639b4532fa153d9c92719226f"
+      "sha256": "4d9e54b429f0c77cadc062d3181097b138b066e1ca2df3cd8d01b12fe7d02d28"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

@@ -1,0 +1,1040 @@
+{
+  "schema_version": 2,
+  "service_id": "native-workspace",
+  "display_name": "Vera native workspace",
+  "governed_paths": [
+    ".mcp.json",
+    "components.json",
+    "mcp/workspace.cjs",
+    "mcp/selected-context.cjs",
+    "scripts/native_workspace.py",
+    "scripts/native_workspace_runtime.py",
+    "scripts/native_open_item_bridge.py",
+    "ui",
+    "skills/vera/references/native-workspace.md",
+    "skills/archive-organization/SKILL.md",
+    "skills/new-client/SKILL.md",
+    "skills/financial-report-builder/SKILL.md",
+    "skills/concordato-plan-review/SKILL.md",
+    "skills/journal-bank-reconciliation/SKILL.md",
+    "skills/journal-sampling/SKILL.md",
+    "skills/vouching/SKILL.md",
+    "skills/treasury-forecast/SKILL.md",
+    "skills/bilancio-oic/SKILL.md",
+    "skills/open-item-reconciliation/SKILL.md",
+    "scripts/native_archive_navigation.py",
+    "skills/studio-archive/SKILL.md",
+    "scripts/native_financial_analysis.py",
+    "skills/financial-analysis/SKILL.md",
+    "scripts/native_bank_preparation.py",
+    "scripts/native_bank_preparation_bridge.py",
+    "scripts/native_lipe.py",
+    "scripts/native_lipe_bridge.py",
+    "skills/lipe/SKILL.md",
+    "scripts/native_aml.py",
+    "scripts/native_aml_bridge.py",
+    "skills/aml-review/SKILL.md",
+    "scripts/native_assetti.py",
+    "skills/adeguati-assetti/SKILL.md",
+    "scripts/native_scissione.py",
+    "scripts/native_scissione_bridge.py",
+    "skills/scissione-guidata/SKILL.md",
+    "scripts/native_archive_closure.py",
+    "scripts/native_archive_closure_bridge.py",
+    "scripts/native_invoice.py",
+    "scripts/native_invoice_bridge.py",
+    "skills/invoice-xml/SKILL.md",
+    "scripts/native_passive_audit.py",
+    "scripts/native_passive_audit_bridge.py",
+    "scripts/native_passive_service.py",
+    "scripts/native_passive_supervisor.py",
+    "skills/purchase-invoice-review/SKILL.md",
+    "scripts/native_passive_review.py",
+    "scripts/native_passive_review_bridge.py",
+    "scripts/native_passive_sources.py",
+    "scripts/native_passive_sources_bridge.py",
+    "scripts/native_sales_plan.py",
+    "scripts/native_sales_plan_bridge.py",
+    "skills/sales-plan/SKILL.md",
+    "scripts/native_sales_plan_authoring.py",
+    "scripts/native_sales_plan_queries.py",
+    "scripts/native_treasury_preparation.py",
+    "scripts/native_treasury_bridge.py",
+    "scripts/native_business_planning.py",
+    "scripts/native_business_planning_bridge.py",
+    "skills/business-planning/SKILL.md",
+    "scripts/native_business_planning_review.py",
+    "scripts/native_business_planning_authoring.py",
+    "scripts/native_business_planning_case_review.py",
+    "scripts/native_aml_authoring.py",
+    "scripts/native_archive_imports.py",
+    "scripts/native_scissione_authoring.py",
+    "scripts/native_invoice_authoring.py",
+    "scripts/native_centrale_rischi.py",
+    "scripts/native_centrale_rischi_bridge.py",
+    "skills/centrale-rischi-review/SKILL.md",
+    "scripts/native_centrale_rischi_editor.py",
+    "scripts/native_centrale_rischi_drafts.py",
+    "scripts/native_financial_execution.py",
+    "scripts/native_financial_execution_bridge.py",
+    "scripts/native_financial_sources.py",
+    "scripts/native_financial_sources_bridge.py",
+    "scripts/native_financial_authoring.py",
+    "scripts/native_financial_author_bridge.py",
+    "scripts/native_valuation.py",
+    "scripts/native_valuation_bridge.py",
+    "scripts/native_valuation_review.py",
+    "skills/business-valuation/SKILL.md",
+    "scripts/native_valuation_authoring.py",
+    "scripts/native_valuation_author_bridge.py",
+    "scripts/native_variance.py",
+    "scripts/native_variance_bridge.py",
+    "skills/variance-analysis/SKILL.md",
+    "scripts/native_variance_authoring.py",
+    "scripts/native_variance_author_bridge.py",
+    "scripts/native_variance_review.py",
+    "scripts/native_variance_review_bridge.py",
+    "scripts/native_variance_narrative.py",
+    "scripts/native_management_execution.py",
+    "scripts/native_management_bridge.py",
+    "scripts/native_management_commentary.py",
+    "scripts/native_management_commentary_bridge.py",
+    "skills/management-control-pack/SKILL.md",
+    "scripts/native_management_authoring.py",
+    "scripts/native_management_author_bridge.py",
+    "scripts/native_cnc.py",
+    "scripts/native_cnc_bridge.py",
+    "skills/composizione-negoziata/SKILL.md",
+    "scripts/native_cnc_history.py",
+    "scripts/native_cnc_authenticated.py",
+    "scripts/native_cnc_authenticated_bridge.py",
+    "scripts/native_esg.py",
+    "scripts/native_esg_bridge.py",
+    "skills/esg-reporting-assurance/SKILL.md",
+    "scripts/native_esg_authoring.py",
+    "scripts/native_esg_author_bridge.py",
+    "scripts/native_inps.py",
+    "scripts/native_inps_bridge.py",
+    "scripts/native_inps_rpc.cjs",
+    "skills/previdenza-inps/SKILL.md",
+    "scripts/native_sari_intake.py",
+    "scripts/native_sari_intake_bridge.py",
+    "skills/registro-imprese-sari/SKILL.md",
+    "scripts/native_sari_authoring.py",
+    "scripts/native_sari_author_bridge.py",
+    "scripts/native_sari_review.py",
+    "scripts/native_sari_review_bridge.py",
+    "scripts/native_sari_review_rpc.cjs",
+    "scripts/native_sari_followup.py",
+    "scripts/native_bandi.py",
+    "scripts/native_bandi_bridge.py",
+    "scripts/native_bandi_authoring.py",
+    "scripts/native_bandi_intelligence_bridge.py",
+    "scripts/native_bandi_decision_drafts.py",
+    "skills/bandi-agevolazioni/SKILL.md",
+    "scripts/native_patent_box.py",
+    "scripts/native_patent_box_bridge.py",
+    "scripts/native_patent_box_authoring.py",
+    "scripts/native_patent_box_author_bridge.py",
+    "skills/patent-box-review/SKILL.md",
+    "scripts/native_communication.py",
+    "scripts/native_communication_bridge.py",
+    "skills/comunicazione-professionale/SKILL.md",
+    "scripts/native_website.py",
+    "scripts/native_website_bridge.py",
+    "skills/presenza-digitale-studio/SKILL.md",
+    "scripts/native_transformation.py",
+    "scripts/native_transformation_bridge.py",
+    "skills/trasformazione/SKILL.md",
+    "scripts/native_rating.py",
+    "scripts/native_rating_bridge.py",
+    "skills/rating-legalita/SKILL.md",
+    "scripts/native_fusion.py",
+    "scripts/native_fusion_bridge.py",
+    "skills/fusione-guidata/SKILL.md",
+    "scripts/native_browser.py",
+    "scripts/native_browser_bridge.py",
+    "skills/browser-automation/SKILL.md",
+    "scripts/native_transformation_initial.py",
+    "scripts/native_transformation_initial_bridge.py",
+    "scripts/native_transformation_author.py",
+    "scripts/native_open_items_intake.py",
+    "scripts/native_open_items_intake_bridge.py"
+  ],
+  "governed_repository_paths": [
+    "scripts/serve_review_workbench.py"
+  ],
+  "runtime_profiles": [
+    "openai-codex"
+  ],
+  "external_boundaries": [
+    {
+      "id": "approved-drive-archive-metadata-write",
+      "kind": "send_or_publish",
+      "destination": "The user's already authorized Google Workspace account through the existing Archive Organization Google Drive API v3 adapter, confined to the exact bound client folder",
+      "purpose": "Execute the separately approved client archive plan, or restore unchanged moved files from its existing journal, by updating the same Drive files' parent and name",
+      "content": "Existing owner-private OAuth authorization, exact bound folder and file IDs, parent IDs, proposed names and paths, metadata revalidation requests, file versions and capabilities, available checksums, created folder names, move responses and rollback outcomes. No document upload, Mparanza transmission or new authorization is performed by this panel.",
+      "retention": "The existing component retains its owner-private authorization state and run plan/journal until the operator removes them. Drive retains the files and updated metadata under the user's account arrangement; Vera does not enforce a Google-side deletion period. Raw execution identities and credentials remain outside the model-facing plan projection.",
+      "activation": "explicit_user_choice",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex"
+      ],
+      "controls": [
+        "Use only a registered archive-organization run whose existing immutable snapshot and client/engagement identity replay successfully. Drive authorization and exact folder binding remain owned and verified by the existing component.",
+        "Persist professional review and compile approved_plan.json first. A separate application-only signed tool requires explicit approval of the complete operation, configured reviewer authority, a running run and the unchanged plan/journal revision.",
+        "The unchanged component revalidates file ID, parent, name, version, MIME type, Shared Drive, capabilities and available checksums, rejects occupied targets and preserves the same file identity. It records moves and verifies unchanged destinations before rollback.",
+        "The panel exposes only the existing projected client-relative paths, operation counts and journal status. Raw Drive IDs, hashes, credentials and executable journal rows are not sent as explanation context. Local-folder execution uses the component's separate filesystem checks and has no Drive transmission."
+      ]
+    },
+    {
+      "id": "chosen-cnc-receipt-verification",
+      "kind": "hosted_service",
+      "destination": "https://mparanza.com/api/vera/cnc-reviews/verify",
+      "purpose": "Verify an explicitly selected personally confirmed professional receipt before ordinary CNC import",
+      "content": "Only opaque receipt UUID and canonical whole-receipt SHA digest. Full prepared review JSON and chosen receipt/reason remain local/private until ordinary conservation; no case text, document, reason or credential is transmitted by this tool. The professional separately uses the already registered hosted browser review service personally.",
+      "retention": "Mparanza retains prior human-recorded review metadata/account ownership until administrative deletion; deletion or a superseding exact-version decision prevents verification. Local target/draft/receipt/request/snapshot/memo follow studio archive retention.",
+      "activation": "explicit_user_choice",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex"
+      ],
+      "controls": [
+        "Local public review-file preparation and private receipt/reason saving do not contact the service. Only separately renewed exact saved receipt confirmation chooses verification.",
+        "Fixed unchanged public HTTPS verifier rejects redirects and confirms exact retained receipt and local case/role/node/version. The first refusal/unavailability leaves attribution pending without public output writes. Later uncertain public writes preserve evidence and block repeat/closure.",
+        "Assistant never signs in, uploads the review file or confirms as the reviewer. Account identity is not a professional signature, qualification, independence or filing authority. The reviewed candidate uses the actual bound output write lock and complete binding object when reloading current authority. This repair adds no verifier payload fields or new destination; candidate tests are not installed-host acceptance."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "trusted-scope",
+      "control": "Use exact operator allowlist bindings, or resolve stable client/engagement/run IDs through the maintained owner-private Studio Archive session and configured local root. Revalidate folder membership, portable identities and immutable source receipts before reads/writes and specialist chat handoff. Preserve session ownership; never accept browser/model filesystem paths or adopt another session. Ordinary local actor/tenant namespaces derive from OS-user home and archive session; local reviewer authority remains the operating computer user, with explicit viewer/empty-role overrides honored. This does not authenticate an OpenAI or studio account.",
+      "implemented_by": [
+        "scripts/native_workspace.py"
+      ],
+      "on_violation": "Reject unknown, substituted or invalid run bindings."
+    },
+    {
+      "id": "signed-selection",
+      "control": "Application writes require a server-signed, expiring token tied to configured actor/tenant, exact work, revision, selected item and selected source. The domain adapter rejects stale state and decisions for another item. The candidate rejects noncanonical ticket body/signature syntax, trailing segments, wrong signature length, expiry and mismatched actor/tenant/work/revision/item/source/checkpoint before dispatch. This local capability is not authentication of the host account or a professional signature.",
+      "implemented_by": [
+        "mcp/workspace.cjs",
+        "scripts/native_workspace.py"
+      ],
+      "on_violation": "Reject forged, expired, mismatched or stale submissions before domain mutation."
+    },
+    {
+      "id": "human-domain-write",
+      "control": "Professional domain decisions require configured reviewer role, a running archive run, explicit human review and unchanged domain validation. Idempotency receipts replay identical successful submissions. Drafts remain outside official output artifacts.",
+      "implemented_by": [
+        "scripts/native_workspace.py"
+      ],
+      "on_violation": "Reject viewer or finalized-run writes, non-reviewed submissions, changed duplicate requests and domain validation failures."
+    },
+    {
+      "id": "specialist-model-projection",
+      "control": "For Journal Sampling read only the exact item in the replay-verified persisted model context. For Open-item Reconciliation, Journal-Bank Reconciliation and Vouching obtain the exact selected case through their existing public model-context tools in one server process, with exact identifiers omitted by default. For New Client file preparation verify every persisted model-handoff page's hash, size, run, page identity and complete population, map only exact identities through the maintained producer, and return only selected file-preparation records. An explicitly selected complete memo/email draft uses the component's professional-selection exception and is labelled as such; it is not default synthesis context. Fixed workflow review subdirectories are server-owned and ambiguous locations are refused. For Concordato use only its exact persisted reference and existing public read-items projection for one selected item, retaining substantive facts while its producer omits technical identities, hashes and paths.",
+      "implemented_by": [
+        "scripts/native_workspace.py",
+        "mcp/selected-context.cjs"
+      ],
+      "on_violation": "Reject missing selected model items, changed or incomplete handoff pages, unknown or expired opaque case handles, engine replay failures and ambiguous review locations."
+    },
+    {
+      "id": "archive-separate-execution",
+      "control": "Archive review apply only compiles the existing approved plan. A distinct application-only whole-operation confirmation calls the maintained apply or rollback CLI; the exact plan and journal are included in stale-state checks. Raw Drive identities and hashes remain in the existing local executable records while paths use the component's maintained Drive projection.",
+      "implemented_by": [
+        "scripts/native_workspace.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Reject absent separate approval, an item-scoped operation, missing compiled plan, forged or stale ticket, non-reviewer or finalized-run writes, and any existing engine execution or rollback failure."
+    },
+    {
+      "id": "artifact-paths",
+      "control": "Only declared regular artifact paths inside the authorized output tree can be exposed; linked or escaping paths are rejected.",
+      "implemented_by": [
+        "scripts/native_workspace.py"
+      ],
+      "on_violation": "Reject paths outside the run or through symbolic links."
+    },
+    {
+      "id": "report-retained-review-authority",
+      "control": "Resolve only the run's root or report child and call the existing report service to replay its source/review/output contracts. Retain only that service's returned current and predecessor integrity checkpoints outside the official output tree, then forward the exact required checkpoint for subsequent operations. Never derive retained authority from a locally resealed report. The displayed current narrative is selected by exact section identity from replay-validated report analysis; original review evidence remains intact. After an applied report, retain later proposals as native drafts and apply a reviewed successor directly; do not issue a separate domain Save that the existing service refuses.",
+      "implemented_by": [
+        "scripts/native_workspace.py",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Reject unknown or ambiguous sections, invalid or missing retained authority, substituted checkpoints, stale source/output receipts and separate Save after application. Preserve the existing report transaction and pending numeric-measure gates."
+    },
+    {
+      "id": "concordato-persisted-review-and-memo-guard",
+      "control": "Resolve only the bound run root or reviewed-output child. Validate and hydrate the exact client-engagement/review-reference pair through maintained public tools. Save retains proposals. Apply preserves confirmed semantic facts and missing-evidence gates; assurance-bound report edits remain separate revision artifacts. Refuse every merged Apply containing a memo edit before any official output write while the native memo integration remains unqualified. A separately tested public producer candidate retains content-addressed current/prior UI and applied-decision receipts plus literal memo history, and rejects linked receipt parents before reads; this does not remove the native guard or establish installed-host acceptance.",
+      "implemented_by": [
+        "scripts/native_workspace.py",
+        "mcp/selected-context.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Reject changed sources, wrong run references, failed engine replay and direct or previously saved memo edits in Apply. Do not weaken or change the existing engine."
+    },
+    {
+      "id": "owned-archive-directory-and-setup",
+      "control": "Project paginated directory labels/lifecycle only, without private contact values, input manifests or raw absolute roots. Setup requires an explicit app choice and calls the maintained OS chooser/access diagnostic, accepting no path argument; cancellation does not save configuration. Explicit refresh invokes the existing index/recovery services without changing customer sources/ledger. Unregistered folders, imports, upstream-artifact handoffs, source qualification, specialist execution, later lifecycle/finalization and missing Bilancio case binding remain specialist-led. Native engagement creation, exact imported-input run preparation and lifecycle start use separately signed app scopes and maintained APIs as described below. For unavailable Treasury session source paths, retain portable run identity but mark specialist recovery required; never rewrite receipts or session bytes. Reuse an existing canonical Bilancio case connection only when exact client folder/client/engagement/run and native/canonical actor/tenant coincide and the maintained case service separately authorizes the case. Refuse absent, ambiguous or unavailable connections; archive membership alone never authorizes a case. Every read/write repeats connection validation; canonical reviewer and approval gates remain independent.",
+      "implemented_by": [
+        "scripts/native_archive_navigation.py",
+        "scripts/native_workspace.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Reject changed sources, cross-client/engagement identities, foreign session state, extra path arguments, absent confirmation and non-reviewer configuration/writes. Keep incomplete component/host acceptance explicit."
+    },
+    {
+      "id": "financial-prepared-artifact-inspection",
+      "control": "Resolve one maintained pack at run root or prepared child and one exact current case at fixed case locations or receipted inputs. Validate the existing model-use manifest, execution receipt, source population and all prepared output bytes; match the registered recipe implementation. Inspect only exact producer-declared prepared artifacts, with bounded CSV and JSON-member pages. Large JSON children require explicit selection; page boundaries remain labelled. Raw source requests and changed professional contracts remain in the maintained specialist route. No mutable financial review service, professional approval, source tie-out or independent recomputation is inferred. Existing engines and their report_ready/source_tie_out boundaries are unchanged.",
+      "implemented_by": [
+        "scripts/native_financial_analysis.py",
+        "scripts/native_workspace.py",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Reject wrong/ambiguous case/pack/artifacts, changed byte receipts or recipe, unknown JSON members, extra selector fields, filesystem paths supplied as selectors, oversized pages and mutable review operations."
+    },
+    {
+      "id": "owned-archive-signed-lifecycle",
+      "control": "App-only engagement creation, run preparation and lifecycle start require explicit action, configured reviewer authority and an expiring server-signed exact client/engagement/run scope tied to actor/tenant. Revalidate owned folder membership and current engagement/input/run state before writes. Input pages expose only verified imported names, roles, sizes and receipt IDs in private app metadata; the model receives a status summary. Maintained Vera workflow choices are read from the existing engagement gate, preserving prototype exclusions. Preparation forwards explicit input IDs, label, purpose and idempotency key to the unchanged ledger, which validates exact bytes and component version; start changes lifecycle only. Neither executes a specialist engine, qualifies evidence, approves a result or finalizes outputs. Engagement creation stores a 0600 request intent/outcome outside the domain ledger; identical retries revalidate and reuse one result, changed requests are refused and an interrupted uncertain outcome refuses duplicate creation. This native receipt is not the domain source of truth and has no automatic crash-outcome adoption or cleanup.",
+      "implemented_by": [
+        "scripts/native_archive_navigation.py",
+        "scripts/native_workspace.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Reject stale or forged scope, changed sources, cross-client/engagement/run requests, explicit viewer/empty roles, undeclared fields, excluded workflow choices, duplicate or unknown inputs and uncertain creation outcomes before additional domain writes."
+    },
+    {
+      "id": "owned-bank-initial-preparation",
+      "control": "Application-only inspection uses exact explicitly selected disjoint run input identities, working/source languages, signed current run/revision and reviewer authority. It retains 0600 exact-byte selected source copies inside the existing run, closes source populations and inspection generations, hashes the complete maintained implementation and revalidates sources under the write lock and after execution. Mapping and relationship decisions use the unchanged public builders; currency and entity are explicit source-based choices. Reinspection gates reconciliation. Its fixed child output opens the maintained review service without residual worker dispatch, finalization or professional approval. Intent and outcomes remain outside official outputs; uncertain interruptions retain files and refuse automatic replay, while a known pre-write review refusal permits correction under a new key. Synchronous execution remains limited to 90 seconds; asynchronous jobs and native host acceptance are pending.",
+      "implemented_by": [
+        "scripts/native_bank_preparation.py",
+        "scripts/native_bank_preparation_bridge.py",
+        "scripts/native_workspace.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Reject wrong, duplicate or substituted inputs; foreign/stale/forged authority; changed source, population or implementation; invalid professional contracts; unsupported layouts and uncertain repeated execution."
+    },
+    {
+      "id": "bank-inspection-selected-model-context",
+      "control": "Initial inspection metadata, file roles, proposed mapping/policy and producer previews stay app-private. The separate model-readable inspection tool requires one exact selected source and revision. It returns the producer metadata/raw column names and at most 20 canonical preview rows, with technical IDs, physical row/sheet locators, redundant absolute amount and exact reference/movement/account identifiers omitted. Complete normalized tables and row dispositions remain local. The selected source may still contain real descriptions, names, amounts and other professional facts; this is not anonymization. No automatic model worker or external transmission is introduced.",
+      "implemented_by": [
+        "scripts/native_bank_preparation.py",
+        "scripts/native_bank_preparation_bridge.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse stale/unknown selections, oversized panel/context projections and invalid source generation; never substitute full raw tables."
+    },
+    {
+      "id": "bank-unfinished-private-drafts",
+      "control": "App-only source-role/language and raw mapping/policy drafts remain in 0600 atomic files outside official outputs, tied to exact actor/tenant/client/engagement/run/preparation revision. Revalidate owned sources and inspection generation; require current signed app ticket and reviewer authority for save/clear. A separate compare-and-set draft checkpoint rejects concurrent overwrite or discard. Bound fields to exact producer identities and editable keys and reject linked or altered draft files. Draft read returns only app-private metadata; no draft fields enter selected-model explanation context. Explicit recovery refuses stale preparation revisions and never restores professional confirmation or source qualification. The panel flushes before teardown acknowledgement, retains invalid raw input for correction and reports denied persistence. Successful submission clears only its exact consumed draft. No provider/network path is added.",
+      "implemented_by": [
+        "scripts/native_bank_preparation.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse unauthorized/stale/linked/tampered/out-of-scope or concurrent draft writes. Retain official sources and outputs; no silent adoption, domain approval or execution from a recovered draft."
+    },
+    {
+      "id": "lipe-immutable-calculation",
+      "control": "App-only calculation requires exact signed actor/tenant/run/revision scope, reviewer authority, a running run and explicit selection of one registered reviewed case JSON. Synthetic and real-origin cases retain their declared origin and exact archive identity; all declared sources must be registered unchanged run inputs. The unchanged LIPE CLI persists exclusive workpapers including blocked results. Local private receipts bind the engine/rules, selected input and full artifact population; selected reads expose at most 30 queue labels and one exact producer record with pilot/export limits. Newer generations never replace a requested version. Unknown existing outputs and uncertain interrupted requests require specialist recovery without auto-adoption or replay. No case editing, semantic classification, catalog fallback, professional signature, XML export, model worker, network call or finalization is introduced. The adapter has a 90-second synchronous bound; catalog connection, async recovery and native host acceptance remain pending. Local filesystem administration remains the trust boundary.",
+      "implemented_by": [
+        "scripts/native_lipe.py",
+        "scripts/native_lipe_bridge.py",
+        "scripts/native_workspace.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Reject forged/stale/foreign scope, input/case/source substitution, changed implementation or artifact population, generic Save/Apply/draft mutation, ambiguous revision and uncertain repeated execution."
+    },
+    {
+      "id": "aml-immutable-proposal-and-complete-decision",
+      "control": "Replay exact immutable AML JSON/memo, registered source receipts, client/engagement identity and maintained implementation. Keep bounded labels and one selected producer section private until explicitly explained; refuse stale selections and oversized projections. Require exact signed actor/tenant/run/proposal/population scope, running run and reviewer role for atomic private draft patches; merge at most 30 exact finding dispositions per page without replacing other pages and reject concurrent/tampered drafts. Explicit recovery and teardown persistence never restore confirmation. Validate all professional fields and every finding before durable append intent, then use unchanged public AML build/save APIs and replay the complete saved record/memo; preserve prior proposals, findings and unresolved questions. Successful exact retries revalidate the saved outcome; uncertain interruption requires specialist recovery. Reviewer attribution is not authenticated signature. No source qualification, suspicion classifier, clearance, screening, disclosure, SOS filing, worker, external transmission or finalization is introduced. Initial semantic analysis, source/new-evidence work, model-data reporting and output finalization remain specialist-led.",
+      "implemented_by": [
+        "scripts/native_aml.py",
+        "scripts/native_aml_bridge.py",
+        "scripts/native_workspace.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse altered/foreign/unreplayable source/record/memo, ambiguous versions, linked files, stale/forged authority, concurrent or incomplete draft, changed population/implementation, non-reviewer/finalized-run writes and uncertain repeated append."
+    },
+    {
+      "id": "assetti-immutable-assessment-and-complete-decision",
+      "control": "Use an explicit allowlisted Adeguati assetti producer route over immutable JSON/memo pairs. Replay exact client/engagement identities, registered source receipts and unchanged public build/render/save APIs. Paginate authored observations, actions, prior-action follow-up and extended coverage/process/question/chronology; follow only explicit IDs and cited source metadata for a selected-model explanation. No semantic classifier or operating-evidence inference is added. Keep actor/tenant/run/exact-proposal drafts private and atomic, with signed population/revision and compare-and-set checkpoints; explicit recovery never restores confirmation. Require every finding outcome and a complete professional decision; unchanged producer date/proposal gates apply before append intent. Preserve original proposal, action owner/timing/status, unknowns and prior records; uncertain interruption refuses repeated append. Historical v1 records lacking extended analysis remain labelled. CH-GE uses jurisdiction basis, not AML mandate fields. No company adoption, operating effectiveness, adequacy certification, authenticated signature, experimental-construction dispatch, model worker, external transmission or finalization is introduced. Initial semantic assessment, new evidence, model-data reports, full specialist construction and archive completion remain specialist-led.",
+      "implemented_by": [
+        "scripts/native_assetti.py",
+        "scripts/native_aml.py",
+        "scripts/native_aml_bridge.py",
+        "scripts/native_workspace.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Reject foreign workflow/client/engagement, unregistered or altered sources, unreplayable or linked record/memo, stale/forged scope, non-reviewer/finalized run, concurrent/incomplete draft, changed population/implementation and uncertain repeated append."
+    },
+    {
+      "id": "scissione-immutable-record-review",
+      "control": "Allowlist the Scissione producer and exact Archive workflow. Replay local canonical revisions/approvals/calculations with maintained build logic and re-render both reports, validating source receipts and immutable artifact inventories. Finalized upstream revisions rely on exact same-engagement Archive provenance, not reconstructed historical sources. Paginate labels and lazily render selected records/dependencies/cited evidence; unknown values are unavailable, never zero. Reviewer-only running/current exact-record writes require actor/tenant bound signed source/population authority and private-draft CAS. Complete attribution and explicit confirmation use public producer review; unchanged known-state, timezone, dependency and document/calculation gates precede durable intent. Preserve all versions; exact retries replay outcomes and interrupted uncertain intent refuses duplication. Private recovery never restores confirmation. No case authoring, semantic rules, source qualification, authenticated signature, filing, network/provider path or Archive completion is introduced.",
+      "implemented_by": [
+        "scripts/native_scissione.py",
+        "scripts/native_scissione_bridge.py",
+        "scripts/native_workspace.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Reject ambiguous/foreign/linked/tampered sources or versions, altered reports/derived artifacts, stale/forged population authority, incomplete attribution, historical/finalized-run writes, concurrent draft replacement and uncertain repeated review."
+    },
+    {
+      "id": "owned-archive-exact-output-closure",
+      "control": "Application-only closure enumerates every physical output of one maintained owned run with canonical byte identities; no filename classifier selects purposes, audiences, reuse IDs or deliverability. Reviewer-only explicit declarations merge at most 30 exact files per page into 0600 atomic actor/tenant/client/engagement/run private drafts outside outputs, with signed scope and draft compare-and-set. Explicit recovery never restores confirmation; stale output drafts require explicit discard or specialist recovery. Teardown acknowledges only after persistence. Validate the actual run-bound model-data report through maintained public schema/evidence/build/render APIs, comparing full JSON and exact Markdown without writing a report, inferring absent transmission, contacting a provider or stamping a server receipt. Report text and file paths remain app-private metadata; lifecycle text is the model-facing summary. Explicit full-population finalization and a separate sealed-output completion invoke unchanged public Archive APIs and do not approve a specialist case, authenticate attribution, certify conclusions, sign, file, deliver or publish. Durable private intents retain uncertain outcomes; exact successful retries revalidate manifests. Sources, implementation and full reviewed artifact bytes are revalidated before and after the maintained public write. Specialist producers do not share the native lock; a concurrent change can leave a sealed or completed ledger state requiring specialist verification. Refuse native repetition or completion, retain drafts/files/ledger and never automatically adopt or roll back such an outcome. Local filesystem administration remains the trust boundary.",
+      "implemented_by": [
+        "scripts/native_archive_closure.py",
+        "scripts/native_archive_closure_bridge.py",
+        "scripts/native_archive_navigation.py",
+        "scripts/native_workspace.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Reject cross-owner/client/engagement/run, excluded prototype, linked/tampered/oversized records, stale/forged authority, changed source/implementation/output population, concurrent drafts, incomplete declarations, invalid actual disclosure and uncertain repeated closure before further native writes."
+    },
+    {
+      "id": "invoice-exact-proposal-and-local-export",
+      "control": "Use the fixed Invoice XML producer and exact owned registered-source bindings. Prepare the existing model-authored candidate through unchanged public prepare_draft, retaining immutable partial/blocked proposals. Explicitly select each proposal; paginate exact fields, authored fiscal decisions and cited source metadata. Selected-model explanations are bounded to one selection and never approve or edit it. Re-run public preparation and export in temporary verification directories; compare all proposal/validation/review-request bytes and actual XML/review/report. Preview comparison normalizes only the two escaped field-row and decision-pair orders that sorted JSON persistence loses; every row and all other HTML bytes must match. The full actual artifact population remains bound by exact hashes. Whole-version signed actor/tenant scope, reviewer authority, running run, complete actual attribution, timezone-aware approval date and explicit fresh confirmation precede local export. All source/implementation/output bytes are rechecked before/after writes. Private atomic actor/run/version unfinished drafts use CAS outside outputs, with explicit recovery and no persisted confirmation. Durable uncertain intents prevent repeated writes; concurrent producer changes can retain actual artifacts requiring specialist verification, never automatic adoption or rollback. No invoice extraction, semantic tax/duplicate classifier, worker/provider/registry call, signing, issuance, booking, SdI transmission, authenticated identity or run completion is added. Initial semantic drafting and same-original corrections may use the explicit source-mandate route; new evidence requires a fresh run and actual model-data disclosure remains necessary; shared Archive closure remains a separate action.",
+      "implemented_by": [
+        "scripts/native_invoice.py",
+        "scripts/native_invoice_bridge.py",
+        "scripts/native_workspace.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse changed/foreign/unregistered/linked input, altered proposal/preview/review/validation/XML/report, stale/forged whole-version authority, non-reviewer/finalized run, missing confirmation, incomplete attribution, native draft races and uncertain repeated writes. Preserve official artifacts and prior versions."
+    },
+    {
+      "id": "passive-invoice-owned-supervisor",
+      "control": "Explicit Archive binding IDs and user/model-led source roles; public parser/mapping/matching qualification is immutable and content bound. Actor/tenant private draft CAS excludes confirmation. Reviewer-only signed scope and same-key durable intent precede the unchanged producer. Actual OS lease and owned global native write guard distinguish live ownership from stale markers; status does not inspect live worker capsules. Hard kill, missing ownership, guard cleanup failure or unreplayable job remains uncertain and preserves artifacts; no automatic restart. Prepared views replay sources, SQLite, JSONL, packets, checkpoints, summary and workbook. Only standard public output paths are offered, in private app metadata; capsule credentials, logs and SQLite sidecars are excluded. Binary previews contain metadata only. Reviewed CH-GE source-group preparation remains a specialist operation. No direct API, model substitution, ledger posting, signature, professional approval or Archive completion.",
+      "implemented_by": [
+        "scripts/native_passive_audit.py",
+        "scripts/native_passive_audit_bridge.py",
+        "scripts/native_passive_service.py",
+        "scripts/native_passive_supervisor.py",
+        "scripts/native_workspace.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Reject foreign/stale/forged scope, incomplete or changed qualification, draft CAS race, non-reviewer/finalized run, live or uncertain operation, changed source/output/implementation or unreplayable worker evidence; preserve source receipts and actual producer output."
+    },
+    {
+      "id": "native-passive-human-labels-and-evaluation",
+      "control": "Keep full human labels, private drafts, authored attribution, aggregate metrics and actual four-file paths in app metadata. Only explicit selected-label/missed-issue explanation enters model context. Exact signed actor/tenant/run/job/revision authority, draft CAS, explicit confirmation and attribution precede a durable local intent. Content-addressed shards retain all edited pages. The unchanged public evaluator compares separate authored labels with a retained exact screening snapshot; it invokes no model, infers no labels and does not alter ledger or worker states. Immutable completed receipts seal all four artifacts, including evaluation time; historical records stay readonly and labels never transfer automatically to a changed population. Same-key retries return the actual receipt; source/output/implementation/guard faults remain uncertain and preserve files. No authenticated signature, accounting approval, external publication or Archive completion is added.",
+      "implemented_by": [
+        "scripts/native_passive_review.py",
+        "scripts/native_passive_review_bridge.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse stale/forged/foreign job authority, non-reviewer/finalized writes, wrong invoice IDs, draft CAS races, missing confirmation/attribution, altered immutable artifacts, changed implementation and uncertain repeated writes. Retain real screening, professional review files and private intent."
+    },
+    {
+      "id": "native-reviewed-invoice-source-groups",
+      "control": "An owned running client-file-preparation run groups an explicitly selected already reviewed CH-GE JSON and explicit original receipt IDs. Portable path/alias checks and exact source digests prevent rewriting locators, replacing extraction review or selecting unregistered originals. The unchanged public reviewed-invoice reader runs against transient owner-private preflight copies; invalid review never becomes an official output. Signed actor/tenant/run/selection authority and draft CAS preserve unfinished mappings without confirmation. Durable intent precedes atomic complete-directory commit; clean guard release, source/output rechecks and three-or-more exact output hashes close the receipt. Completed retries replay exact files; faults retain intent and files without automatic repeat. Grouping never creates professional extraction review, ledger approval or Archive completion. Full mappings, extraction, originals, attribution and file paths remain app-private; only an explicitly selected at-most-20000-byte UTF-8 excerpt or binary identity can enter model context. Normal native Archive declaration/finalization seals each file; explicitly authored roles and exact upstream IDs reuse only public byte-validated ready/completed artifacts from the same engagement, preserving directory structure. Invalid upstream runs stay visibly unavailable.",
+      "implemented_by": [
+        "scripts/native_passive_sources.py",
+        "scripts/native_passive_sources_bridge.py",
+        "scripts/native_archive_navigation.py",
+        "scripts/native_workspace.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Reject foreign, changed, incomplete, unreviewed or conflicting evidence. Preserve uncertain committed groups for specialist inspection; never re-create review attribution or repeat an uncertain write."
+    },
+    {
+      "id": "open-item-complete-raw-regeneration",
+      "control": "Open-item regeneration verifies the same signed actor/run/revision authority as review writes and an explicit human confirmation. Only retained settings and the exact applied professional review reach the existing raw producer. Its separately anchored predecessor, existing COW transaction and mandatory successor replay preserve prior outputs on rejection. The full package remains application-only metadata; the selected-case model projection and identifier defaults are unchanged. No new external recipient, automatic disclosure send or professional approval is introduced.",
+      "implemented_by": [
+        "mcp/workspace.cjs",
+        "scripts/native_workspace.py",
+        "scripts/native_open_item_bridge.py"
+      ],
+      "on_violation": "Reject stale or unreviewed submissions before mutation; reject invalid predecessor, settings, sources or replay without promoting candidate outputs."
+    },
+    {
+      "id": "immutable-sales-plan-generation",
+      "control": "App-only execution accepts an exact registered reviewed case/Actual pair or a human-confirmed exact saved native draft over a registered strict CSV. Require signed current actor/tenant/revision reviewer authority, a running run and exact draft CAS. Literal source preview and complete-source member lookup stay app-private. Partial fields persist outside outputs; stale draft reuse is explicit and clears attribution; confirmation is never retained. Native draft encoding uses the maintained engine contract and calls the unchanged complete runner. Retain original Actual bytes, compiled case, full attributed choices and optional original seed case. Intent and exact retries protect immutable generations. Normal pass/fail receipts remain producer-owned; contract validation refusals retain a correctable invalid-case generation without a fabricated execution receipt. Reopen verifies every physical generation file and exact registered receipts. Orphans and uncertain requests require specialist recovery. Neither calculation nor draft review approves a Plan or completes a run. Default selected model reads remain prepared summary/ledger/reconciliation/lineage only; an explicit signed reviewer query reuses public model_use on exact manifest/scenario copies in a new owner-scoped query tree without altering the Plan seal. Persist all exact matches, intent and complete query artifact hashes; exact retries replay, uncertain queries require recovery. App query pages stay private. Explicit selected model discussion returns the question, filters, columns and all matches as untrusted evidence, or refuses an oversized complete result without sampling. Viewer source consultation never edits a Plan draft.",
+      "implemented_by": [
+        "scripts/native_sales_plan.py",
+        "scripts/native_sales_plan_bridge.py",
+        "mcp/workspace.cjs",
+        "scripts/native_sales_plan_authoring.py",
+        "ui/workspace.js",
+        "scripts/native_sales_plan_queries.py"
+      ],
+      "on_violation": "Reject stale or substituted scope and inputs before execution; preserve uncertain artifacts for specialist recovery; reject altered generation populations."
+    },
+    {
+      "id": "treasury-explicit-six-table-preparation",
+      "control": "App-only preparation keeps literal company/currency/cutoff/horizon/coverage, six exact registered CSV/XLSX receipt choices and sheet names, optional extracted XML and an accepted predecessor in atomic actor/tenant/client/engagement/run private drafts with CAS; confirmation is never persisted. Complete source validation and cent-exact arithmetic use unchanged public load_inputs/build_forecast, not inferred source roles. Private pages count every row and display 20 complete parsed rows; oversized pages are refused without sampling. Exact current signed reviewer scope and running run, public preflight and explicit confirmation precede durable intent and public prepare. Retain compiled native manifest and intake, seal every physical file of the immutable first public version, and allow subsequent public date review/acceptance versions only while that initial version and source evidence replay. Identical completed requests replay receipts; uncertain preparation blocks even ordinary view/review. No automatic source-pointer recovery, source rewriting, semantic mapping, anonymization, model/provider/network call, authenticated signature, professional acceptance or Archive completion occurs. Choices, counts and preview cells remain app-private metadata; existing explicit selected-event explanation is the model-context boundary. Host/account processing can still expose locally selected sources when requested.",
+      "implemented_by": [
+        "scripts/native_treasury_preparation.py",
+        "scripts/native_treasury_bridge.py",
+        "scripts/native_workspace.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse foreign/changed receipt, unsupported public table or prior record, stale/forged scope, missing confirmation, non-reviewer/finalized writes, concurrent draft replacement, uncertain intent or altered first-version/intake evidence; retain artifacts and route to specialist recovery."
+    },
+    {
+      "id": "registered-business-planning-cycle",
+      "control": "App-only ordinary calculation uses one explicit registered shared v3 case, every exact same-run source locator/hash and unchanged public dependency checker, runner, Decimal engine and compiler. No semantic classification, guessed roles, generated review stamps or mandatory approval checkbox. Signed current reviewer scope and a running run precede durable intent; one cycle per run, source/implementation rechecks, complete artifact-tree hashes and canonical public replay protect immutable HTML/JSON/CSV including legitimate partial/blocked results. Unknown, altered, orphaned or interrupted outputs require specialist recovery, never adoption or automatic retry. Complete compiled HTML stays app-private in a script-disabled sandbox; all comparison views remain in its unchanged bytes. Every canonical record is privately paged without sampling nested records; oversized complete pages/reports refuse and retain specialist files. Only explicit exact generation/collection/index explanation sends the selected record and authored cycle context to the account model, labelled untrusted and without automatic anonymization. Narrative explanation preserves canonical acceptance/withholding. Exact record review and user-mandated model staging/fresh-run execution are qualified separately; whole-plan human decisions use an exact artifact-bound immutable sidecar and remain distinct from public readiness and installed-host acceptance. Preserve the immediate predecessor and every prior report. No research, network worker, provider request, publication, inferred professional acceptance or Archive closure is added.",
+      "implemented_by": [
+        "scripts/native_business_planning.py",
+        "scripts/native_business_planning_bridge.py",
+        "scripts/native_workspace.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Reject unregistered/foreign/changed source, restricted audience, forged/stale scope, viewer/finalized writes, changed artifacts/implementation, uncertain intent or attempts to overwrite a prior cycle; retain actual evidence."
+    },
+    {
+      "id": "user-mandated-business-case-authoring",
+      "control": "Signed app request and reviewer-owned open engagement issue a cryptographically random 256-bit actor/tenant/engagement grant. Literal partial intake uses private atomic draft CAS; stale reuse is refused and explicit discard never deletes a mandate or intent. Retained mandate hash is bound to its original completed request; source ledger bindings, complete cached input tree and public/native/Archive implementation hashes revalidate every context/stage/launch. Complete selected source closure and public replay precede immutable staging. New case reviewer/time are empty; fresh record/source attestations reject, while exact unchanged prior records may retain their attribution without approving the new case. Stage CAS and app-signed explicit proposal launch protect independent new runs; all upstream files pass normal ready/completed all-output seals. Durable intent precedes all official source/run writes. Unknown/altered/orphaned/pending requests block distinct-key repetition rather than adopting or duplicating outputs. Exact completed retries verify immutable generation bytes; later legitimate review sidecars do not invalidate the original generation. Only the explicit user-requested author_context exposes full chosen source identities/local paths and literal question to the host model as untrusted evidence. Files themselves can contain complete client data. Standard same-chat ui/message is capability-detected; no new-chat extension is required. No automatic anonymization/local-only promise or automatic model call. Private complete staged reports use the unchanged script-disabled sandbox.",
+      "implemented_by": [
+        "scripts/native_business_planning_authoring.py",
+        "scripts/native_workspace.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Reject altered/foreign/unsigned/stale scope, changed draft, changed selected bytes or implementation, missing complete source closure, model-invented fresh attestations, restricted audiences, missing predecessor seal and pending/orphaned/changed writes. Preserve original reports and uncertain evidence for recovery."
+    },
+    {
+      "id": "business-planning-whole-plan-human-decision",
+      "control": "Private full public HTML and canonical plan readback uses a 2 MB complete-payload cap. Signed current exact whole_plan:0 actor/tenant/run scope and draft CAS, a running reviewer-owned run, nonblank literal action/reason/reviewer/time and fresh confirmation precede a durable immutable decision. Whole-plan target binds public case/plan hashes and every original generation artifact hash. Acceptance requires the unchanged public readiness contract; partial/blocked plans permit rejection or requests for changes. Latest exact whole-plan action in verified chain order determines current acceptance; uncertain review writes withhold it. Individual record acceptance never approves the plan. No report rewrite, fabricated review metadata, signature, transmission, publication or Archive completion. Only explicit selected explanation exposes the full decision as untrusted model context, with a 64 KiB refusal cap and no sampling or automatic anonymization.",
+      "implemented_by": [
+        "scripts/native_business_planning_review.py",
+        "scripts/native_business_planning.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Reject stale/foreign/forged selection, changed generation bytes, incomplete attribution, unready acceptance or uncertain writes; retain original reports and review history for specialist recovery."
+    },
+    {
+      "id": "exact-human-case-review-copy",
+      "control": "Running reviewer-owned configured Archive and signed case_review:0 scope precede explicit copy retention and separate fresh-run execution. Complete case/report readback supplies only top-level case attestation; exact individual source/evidence/assumption/decision/narrative reviews remain separate. Only latest verified chain actions for exact unchanged records and source-generation artifact hashes copy literal reviewer/time into public review fields; negative actions withdraw only the selected attestation. This fixed JSON-field transformation is mechanically verifiable, not a business judgment. Undecided records, business inputs and source identity/role/audience remain unchanged; public readiness, conflict, missing-evidence and audience gates persist. Locked durable requests, source/run/implementation rechecks, full immutable case/plan/report/lineage hashes and retained launch receipts reject stale/foreign/changed/orphaned/pending writes. Missing completed launch receipts require recovery; no distinct-key adoption/restart. Original reports remain readable while uncertainty blocks new decisions and all-output closure. The new owned run receives original imports/upstream seals plus the exact reviewed case and its review_lineage control receipt. All four original-run copy files require explicit all-output declarations. No fabricated human metadata, automatic overall acceptance, semantic case editing, model/provider worker, publication, signature, transmission or Archive completion.",
+      "implemented_by": [
+        "scripts/native_business_planning_case_review.py",
+        "scripts/native_business_planning_review.py",
+        "scripts/native_business_planning.py",
+        "scripts/native_workspace.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse guessed or cross-scope review, changed inputs/decisions/implementation, operator-only execution bindings and uncertain writes; preserve original reports and attributable workpapers for recovery."
+    },
+    {
+      "id": "explicit-aml-source-mandate-and-proposal",
+      "control": "Literal unfinished question/source drafts stay app-private and confer no model grant. Signed explicit run source choice retains an owner/tenant/client/engagement/run-bound opaque mandate; only that grant lets the current chat receive the complete question and all selected original local paths/hash/import or upstream receipts up to 100 KB, refusing oversize without sampling. Selected originals may enter model context in full; no anonymization or file-content excerpt cap is provided by this handoff. Semantic AML interpretation, jurisdiction, relevance and current primary/professional source verification remain model-led. Capability-detected same-chat ui/message handoff contains exact mandate references/instructions, with a copyable fallback; provider processing still applies to private app metadata. Public proposal build/render/save rejects model professional_decision, requires selected byte closure and same-engagement sealed AML predecessor through a fresh run, and preserves complete review/memo up to 2 MB private preview. Explicit signed selected conservation preserves earlier records; draft_for_review requires a separate attributed human decision. Exact retries and pending/orphaned/altered/missing completed receipt guards protect further authoring, professional decisions and all-output Archive closure. No clearance, screening, calendar, client communication/SOS, model worker or completion occurs.",
+      "implemented_by": [
+        "scripts/native_aml_authoring.py",
+        "scripts/native_aml.py",
+        "scripts/native_aml_bridge.py",
+        "scripts/native_archive_closure.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse stale or foreign authorization, altered sources/contracts and uncertain writes; retain original records and staged work for review/recovery."
+    },
+    {
+      "id": "owned-native-file-transport",
+      "control": "App-only selected File bytes require explicit roles and confirmation, configured reviewer authority, signed current owned engagement scope and serialized native writes. Receive at most 64 MiB per file in 64 KiB chunks with exact offsets, durable private intents and complete SHA-256 validation. Do not accept an original OS path, classify document content, create a run or call a model/provider. Use the unchanged public importer and its byte/role deduplication for conservation and explicit recovery of a known interrupted intent. Refuse changed, missing, linked or foreign receipts; pending uncertain writes block new imports and run preparation. Reopening retains progress and roles but never confirmation. Local filesystem administration and ordinary selected host/account processing remain trust boundaries.",
+      "implemented_by": [
+        "scripts/native_archive_imports.py",
+        "scripts/native_archive_navigation.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse the write, preserve retained bytes and receipts, and require explicit same-byte recovery or specialist verification."
+    },
+    {
+      "id": "explicit-assetti-source-mandate-and-proposal",
+      "control": "The fixed Adeguati assetti producer uses its distinct signed app tools and private actor/tenant/client/engagement/run namespace. Literal question/source drafts grant no model access. Explicit signed source selection binds complete original byte receipts and implementation; only the opaque mandate exposes the complete question and selected paths/hashes/receipts to the current chat, refusing metadata above 100 KB without sampling. Complete selected originals may enter model context without an excerpt limit, anonymization or local-only guarantee. Scope, proportionality, evidence qualification, hypotheses, targeted questions, chronology, interpretation and current-source research remain model-led. New proposals require complete intelligent_review and reject model professional_decision; predecessors must be exact same-engagement sealed assetti artifacts from a fresh run. Full record/memo private preview precedes a separate signed user conservation into immutable draft_for_review, then a distinct complete human decision. Exact retries and pending/orphaned/changed/missing completed receipts guard further authoring, decisions and Archive closure. This does not dispatch the experimental construction contract, infer company adoption/control effectiveness/adequacy, contact people, launch a model worker or complete the run.",
+      "implemented_by": [
+        "scripts/native_assetti.py",
+        "scripts/native_aml_authoring.py",
+        "scripts/native_aml.py",
+        "scripts/native_aml_bridge.py",
+        "scripts/native_archive_closure.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse stale, foreign or changed authority/bytes and uncertain writes; preserve unchanged records and staged work for explicit recovery."
+    },
+    {
+      "id": "literal-user-statement-capture",
+      "control": "Reviewer-only signed current owned engagement and CAS draft revisions preserve full literal UTF-8 text up to 256 KiB, chosen safe JSON basename and optional unverified speaker attribution. Private drafts are recoverable without confirmation. Explicit capture writes an immutable user_statement original with actual UTC capture time and configured actor/tenant/client/engagement references, then uses unchanged complete-byte public import. These labels are not authenticated identity; capture time is not prior fact or information availability and statements do not establish truth, adoption or operation. Reopen exact byte-bound retained originals without replacement timestamp or OS-file selection. Clearing private fields preserves captured originals and public receipts. Reject stale/foreign/linked/changed/missing or uncertain original states; pending import blocks new preparation. Longer notes require original file import, without truncation. No audio capture, semantic classification, run creation, separate model/provider call or external connector request.",
+      "implemented_by": [
+        "scripts/native_archive_imports.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse the request and retain original sources and uncertain intents for explicit recovery."
+    },
+    {
+      "id": "explicit-scissione-source-mandate-and-case",
+      "control": "Use the fixed Scissione producer contract in the shared private literal-question/source-selection service. Signed owner/run source authorization binds complete bytes, implementation and actual current case pointer/version/path/hash. Only the exact mandate exposes the question, full selected receipt metadata and current case locator to the current chat; complete originals and case may then enter the selected OpenAI model context without anonymization or a local-only promise. Source qualification, semantic case authoring and current legal research remain model/professional work. A proposal contains a complete case plus its exact current revision for correction, or a chosen sealed same-engagement predecessor in a fresh run, and no new approval metadata. Every selected ordinary source remains exact evidence. Full private record/memo replay precedes separate signed conservation through the unchanged public producer; verify resulting pointer and all immutable artifacts plus retained execution request. Preserve older versions and only actual producer-carried approvals. Exact completed retries revalidate their own outcome; foreign successors, pending/orphaned/altered/missing receipts refuse new writes, record review and Archive closure. No semantic classifier, fabricated authority, legal certification, model worker, signature, filing or run completion.",
+      "implemented_by": [
+        "scripts/native_scissione_authoring.py",
+        "scripts/native_scissione.py",
+        "scripts/native_scissione_bridge.py",
+        "scripts/native_aml_authoring.py",
+        "scripts/native_assetti.py",
+        "scripts/native_archive_closure.py",
+        "scripts/native_workspace.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse stale/foreign/changed scope, byte membership, case lineage, invented approval or uncertain writes; retain original versions and staged evidence for explicit recovery."
+    },
+    {
+      "id": "explicit-invoice-source-mandate-and-proposal",
+      "control": "Signed owner/run source authorization retains the literal question, exact chosen originals and implementation. Only its exact model-visible mandate exposes complete receipt metadata and private prepared material paths. The unchanged public source_evidence helper retains complete text and every PDF page/image without model extraction, OCR or provider calls. Local material inventory never establishes model exposure; actual text/vision reading through the host can send chosen original content to the selected model account, without automatic anonymization or a local-only guarantee. Source roles/grouping, field interpretation, tax decisions and current primary-source research remain model/professional judgments. The model stages the complete v2 proposal with exact evidence_ref and source metadata, unknowns/questions and no approval fields. Complete script-disabled public preview and record precede separate signed conservation through unchanged prepare_draft. Recheck exact private/public artifact populations, original bytes, implementation and public replay; retain every source view, request and immutable draft. Same-byte corrections preserve older proposals/exports and reuse only identical public source views. Fresh context CAS is required after source preparation. Missing/altered/orphaned/pending receipts block new authoring, local export and Archive closure; uncertain outcomes cannot repeat or be adopted. Completed exact retries return only the retained receipt. Complete metadata above 100000 bytes, submissions above 128000 bytes and private reads above 2000000 bytes are refused without sampling; public source preparation retains its 50 MiB/file, 100-page and page-size limits. Source preparation/conservation provides no professional approval, signing, issuance, booking, SdI transmission, worker call, authenticated identity or completion. Actual version-bound professional export remains a separate action.",
+      "implemented_by": [
+        "scripts/native_invoice_authoring.py",
+        "scripts/native_invoice.py",
+        "scripts/native_invoice_bridge.py",
+        "scripts/native_aml_authoring.py",
+        "scripts/native_assetti.py",
+        "scripts/native_archive_closure.py",
+        "scripts/native_workspace.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse changed/foreign source scope, absent or altered complete material, invented authority and stale CAS; retain originals and uncertain receipts for explicit recovery without adoption."
+    },
+    {
+      "id": "centrale-rischi-exact-phases",
+      "control": "Only exact registered digital PDF/tabular receipts enter the unchanged inspector. Owner/run/input/implementation and complete immutable artifact populations bind every retained phase. Signed exact source selection issues a literal question and bounded public inspection/model_context grant, without exposing raw paths/full populations or claiming actual model reading. Model proposals retain pending mapping_review and exact provenance; CAS preserves prior private proposals. Public calculation requires separate signed full-proposal SHA, named timestamped mapping review and unchanged public validation; reconciled mode stays unsupported. Blocked calculations retain every normal output. Finalizer verifies exact analysis SHA and evidence-reference closure, preserving draft_pending_professional_review. Durable intents precede writes; pending/orphaned/changed public outputs refuse new execution and Archive closure. No OCR, semantic classifier, provider call, professional report approval, rating, transmission or completion. Complete hash-bound producer HTML/Markdown previews stay app-private. The HTML iframe disables scripts and external resources; neither readback nor pagination issues a new model grant or professional approval. Source navigation uses the unchanged public loader and calculator mapping-key normalizer; exact inventory, originals and PDF-normalization hashes are rechecked. Tables, complete rows, full cells and all distinct values are paginated without meaning/class inference. Only signed exact page SHA/item identity plus literal question can add that row/value page to the model mandate; changed selectors or foreign pages refuse. Other complete pages remain private. Retained questions reopen their exact page; normalization is not original PDF visual acceptance. App-only full pending recipe drafts bind the exact inspection grant, fixed provenance and current draft/proposal CAS. Incomplete choices, manually selected public classes and declared controls are recoverable locally; no model transfer or approval is issued. Changed proposals preserve stale drafts for explicit discard, with generation tombstones preventing lost updates. Signed explicit draft conservation retains pending proposal history under an intent; interruptions block writes and closure. Named review and calculation confirmation are separate and never restored. App-only grant-local history paginates and reopens exact full proposal hashes without inferred creation dates. Full hash and pending provenance or exact analysis SHA are revalidated; historical selected tickets cannot calculate/finalize. Explicit historical recipe recovery creates a new pending draft under the displayed draft/proposal CAS, refusing concurrent changes and preserving an existing draft/current pointer. The draft stores the exact observed-value field/offset; its source column, inspection inventory, originals and normalization are reverified without model exposure or review restoration. App-only local drafts recover registered input choices across pages, exact inspection navigation, and verbatim unsent questions per exact revision or nonempty source page. Full owner/input/implementation/page scope and signed draft-generation CAS refuse foreign and concurrent writes. Draft tickets cannot authorize public inspection; saving/reopening does not issue a model grant, restore confirmation or expose unsent questions to model_context. Explicitly clearing fields advances generation; stale edits may be discarded from the browser and authoritative saved bytes reread.",
+      "implemented_by": [
+        "scripts/native_centrale_rischi.py",
+        "scripts/native_centrale_rischi_bridge.py",
+        "scripts/native_centrale_rischi_editor.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js",
+        "scripts/native_archive_closure.py",
+        "scripts/native_centrale_rischi_drafts.py"
+      ],
+      "on_violation": "Refuse stale, changed or foreign scope, manufactured review, unsupported mode and uncertain outputs; retain phases for explicit recovery."
+    },
+    {
+      "id": "financial-reviewed-case-execution",
+      "control": "A configured reviewer chooses a registered running Financial Analysis run, one public recipe, the exact imported reviewed JSON case and every case-declared source ID binding. Selection never infers accounting meaning or edits the case. Owner/input/implementation-bound incomplete choices persist privately with generation CAS; replay after clearing and concurrent overwrites are refused. Renewed signed confirmation copies exact registered case/source bytes to a fresh retained version and invokes the unchanged public dispatcher, preserving all normal outputs and receipts. Whole-version hashes, exact source references and current public/native implementation checks prevent latest-version substitution and changed artifacts. Recorded intents precede execution; interrupted or unrecorded outputs require recovery and block further execution and shared Archive closure. Normal qualification/failure receipts remain unapproved. App-only case/input metadata is not automatically model context. The dedicated model-visible explanation returns only the selected prepared artifact member/page and exact version/revision, excluding the raw source population. Named source requests and complete case proposals use their dedicated optional phases with the same maintained public specialist route. No automatic anonymization, source tie-out, completeness, professional approval, run completion or installed-host acceptance is claimed.",
+      "implemented_by": [
+        "scripts/native_financial_execution.py",
+        "scripts/native_financial_execution_bridge.py",
+        "scripts/native_financial_analysis.py",
+        "scripts/native_workspace.py",
+        "scripts/native_archive_closure.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse foreign, stale, incomplete or mismatched case/source selections, non-reviewer writes, missing renewed confirmation, stale draft generation, different retries, changed retained bytes/implementation and uncertain execution. Retain uncertain outputs without adopting success or automatically retrying."
+    },
+    {
+      "id": "financial-named-source-requests",
+      "control": "After exact prepared-result review, a reviewer explicitly chooses one retained calculation and one manifest-sealed source ID. Owner/input/public-and-native implementation scope and source SHA are revalidated. Literal unsent questions and reference annotations persist privately with generation CAS; clearing advances generation and concurrent overwrites are refused. Saving/reopening drafts grants no source authority, restores no confirmation and sends no model context. A separately signed confirmed request with a specific question copies and verifies the complete immutable calculation tree, then invokes unchanged public model_use.authorize_evidence and retains its real request receipt. The parent calculation is never edited or resealed. Every copied file and receipt is hash-bound; intents precede writes and uncertain/orphaned requests block new execution and shared Archive closure. The app-only reader returns exact question, receipt and paginated UTF-8 source text; pages can divide records. Binary sources have an explicit unsupported-text limitation, without conversion or OCR. An explicit model-visible source_context call returns only that one named source question, selected text page and authorized copied-file path for the maintained selected-runtime file reader. Public authority covers the complete named source; selectors are purpose annotations and do not filter its bytes. This is a workflow phase boundary, not OS denial. Real source identifiers/content may reach the selected runtime model; nothing is automatically anonymized and actual model reading, source tie-out, completeness, professional approval and run completion are not inferred.",
+      "implemented_by": [
+        "scripts/native_financial_sources.py",
+        "scripts/native_financial_sources_bridge.py",
+        "scripts/native_financial_execution.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js",
+        "scripts/native_archive_closure.py"
+      ],
+      "on_violation": "Refuse foreign or stale calculation/source/question scope, invalid page offsets, changed parent/copy/input/implementation, unconfirmed or empty source purpose, non-reviewer writes, stale question draft generations, altered retries and uncertain authorizations. Preserve retained artifacts rather than adopting success or automatically retrying."
+    },
+    {
+      "id": "financial-complete-case-authoring",
+      "control": "An explicit signed mandate binds one fixed recipe, literal question, selected original input IDs and bytes, and optional exact retained predecessor to the owned running reviewer context and current input/public/native implementation scope. Private intake and named-review drafts use generation CAS, survive clearing, restore no confirmation and are excluded from model context. Explicit author_context exposes only that mandate, chosen original identities/hash/size/authorized paths, public method path and any explicitly selected complete proposal or predecessor. Model author_stage retains complete immutable proposals, exact source copies and fixed public checks without provider calls, arithmetic execution or professional authority. FDD pending constructors carry only decision_ref and basis; they are not reviewed public cases. A separate signed named reviewer/date/basis gate invokes unchanged build_fdd_case with the actual recorded native actor reference and review date, validates the resulting public bundle and retains a separate immutable reviewed case plus a cross-linked hash-bound review receipt. Original proposals remain unchanged and ineligible. Normal calculation needs separate confirmation and exact reviewed source bindings. Cancellation retains evidence and refuses further mandate context/model writes; open mandates and interrupted/orphaned writes block shared Archive closure. No semantic mapping inference, fictional review metadata, automatic source reading, source tie-out, financial-conclusion approval, report readiness, provider acceptance or run completion is inferred.",
+      "implemented_by": [
+        "scripts/native_financial_authoring.py",
+        "scripts/native_financial_author_bridge.py",
+        "scripts/native_financial_execution.py",
+        "scripts/native_archive_closure.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse stale or foreign scope, unselected sources, incomplete bindings, lost draft updates, altered retained bytes, manufactured authority, incorrect review selection and uncertain conservation. Preserve proposals and refuse automatic adoption or retry."
+    },
+    {
+      "id": "valuation-public-case-execution",
+      "control": "Select only an exact registered portable-v2 Business Valuation case with actual source receipts and SHA checks; linked Business Plans require a finalized same-engagement upstream artifact. Application-only calculation requires configured reviewer authority, running run, signed exact case/revision and renewed confirmation. Call unchanged public run_case, conserve its full nineteen-file population and original partial/blocked/attestation state, and revalidate public replay plus whole-tree hashes. One case per run; private generation CAS retains incomplete choices without confirmation. Durable owner-scoped intent admits identical completed retry only; incomplete or unrecorded exports block consultation and Archive closure. Initial case authoring and economic judgments remain specialist work. Attributed individual review uses the distinct successor-case control below.",
+      "implemented_by": [
+        "scripts/native_valuation.py",
+        "scripts/native_valuation_bridge.py",
+        "scripts/native_archive_closure.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Reject substituted, foreign, stale, altered or uncertain inputs/outputs; require specialist recovery without automatic adoption or repeat."
+    },
+    {
+      "id": "valuation-attributed-successor-review",
+      "control": "Exact current retained public record selection, configured reviewer authority, owned running run, signed source/item/revision and draft generation CAS bind the literal decision, declared reviewer, actual timezone-aware review time and basis. A separate renewed confirmation changes only the public review fields using its actual dependency digest. The unchanged public producer must accept dependencies before accepted_workpaper can be retained. Rejected and changes_requested decisions never manufacture acceptance; blocked records without hashes cannot be accepted. Normalization adjustments are separately identified by exact group/adjustment identities. Durable private intent precedes immutable case conservation and maintained Studio Archive import/prepare/start of a fresh same-engagement run with original input receipts/upstream references. Calculation is separate. Exact completed retry verifies the successor and replays its receipt; incomplete or orphaned review case/intent, changed private retained bytes or uncertain conservation refuse consultation, writes and Archive closure. Predecessor case and nineteen-file report remain byte-identical. These controls do not authenticate named people, certify PIV, sign/deliver or complete the run.",
+      "implemented_by": [
+        "scripts/native_valuation_review.py",
+        "scripts/native_valuation.py",
+        "scripts/native_valuation_bridge.py",
+        "scripts/native_archive_closure.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse missing attribution, timezone, invalid or stale selection/generation, altered retry, foreign scope, dependency-ineligible acceptance and uncertain conservation; require specialist recovery without automatic adoption or repeat."
+    },
+    {
+      "id": "valuation-model-led-whole-case-authoring",
+      "control": "A signed user-confirmed mandate binds explicit registered originals, literal question, optional exact predecessor and owner/input/implementation scope. The host model reads only authorized complete originals and authors the complete public case. Model context includes authorized receipt identities/hashes/paths and selected whole predecessor/proposal, potentially real amounts, mandate, forecasts and actual prior human reviews. Private unfinished named readback attribution is excluded. Model staging mechanically replaces source paths/hashes with actual selected receipts, preserves exact original review-bearing records and raw reviews and refuses fabricated or altered human attestations. The unchanged public producer checks the whole case prospectively; no economic classification, provider worker or report export is added. Separate signed full-case readback, saved literal actual name/time/basis, generation CAS and renewed confirmation conserve immutable case and named receipt and prepare/start a fresh same-engagement run through maintained Archive. This does not accept methods/conclusions, authenticate names or establish PIV; public dependency digests govern stale reviews. Exact completed retries revalidate retained case/readback and registered successor. Open mandates block closure until conserved or explicitly cancelled; incomplete/orphaned/tampered intent, candidate or receipt requires recovery without automatic adoption. Complete bounded selections are refused rather than sampled. Calculation, individual professional decisions and Archive completion remain separate.",
+      "implemented_by": [
+        "scripts/native_valuation_authoring.py",
+        "scripts/native_valuation_author_bridge.py",
+        "scripts/native_valuation.py",
+        "scripts/native_archive_closure.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse foreign or stale scope, unselected receipt bindings, manufactured/lost attestation provenance, draft races, incomplete attribution/confirmation, closed model grants and uncertain or altered conservation. Preserve retained originals and proposals."
+    },
+    {
+      "id": "variance-exact-rich-execution-and-private-page-boundary",
+      "control": "Registered same-run source and prepared recipe IDs, explicit currency and language, owned running reviewer, signed renewed confirmation and literal private draft CAS drive the unchanged rich public runner. Completed exact retries replay retained results; complete output-tree hashes, public/native implementation fingerprints and original receipt SHA protect reopening. Incomplete intent or orphaned output blocks writes and Archive closure. Native page inspection does not select semantic causes/alternatives, approve reports or complete the run; generic Save/Apply cannot mutate these immutable calculations.",
+      "implemented_by": [
+        "scripts/native_variance.py",
+        "scripts/native_variance_bridge.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js",
+        "scripts/native_archive_closure.py"
+      ],
+      "on_violation": "Refuse unregistered paths, changed source/implementation/output bytes, stale or unsigned preparation, concurrent draft changes, wrong workflow or viewer writes. Preserve uncertain results for specialist recovery."
+    },
+    {
+      "id": "variance-explicit-authoring-and-separate-readback",
+      "control": "Private owner/run/input/implementation-bound literal question and receipt-choice drafts use generation CAS without restoring confirmation. Renewed signed user confirmation conserves an exact selected-source mandate and calls the unchanged public inspector. Model context exposes only this mandate's authorized receipt paths/hashes, inspection and skill references and explicitly selected complete proposal, never private unsent named readback. Staging checks actual columns and the public recipe schema without calculation/export; both professional and root-cause attestation slots must remain pending without human attribution or approved-alternative selection. A selected prior recipe and raw reviews are retained separately. Positive literal whole-proposal readback with declared reviewer, actual timezone-aware time and basis plus renewed signed confirmation imports immutable recipe/readback and selected receipts into a fresh same-engagement authoritative Archive run. Calculation is separately confirmed there. Open mandates require conservation or explicit cancellation before closure. Actual model reads, professional approval and installed-host acceptance are never inferred from UI calls.",
+      "implemented_by": [
+        "scripts/native_variance_authoring.py",
+        "scripts/native_variance_author_bridge.py",
+        "scripts/native_variance_bridge.py",
+        "scripts/native_variance.py",
+        "scripts/native_workspace.py",
+        "scripts/native_archive_closure.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse stale, foreign, unsigned, unselected or concurrent writes, changed originals/proposals/implementation, inherited or fabricated approval, missing readback/confirmation and closed model grants. Preserve incomplete intent and orphaned inspection/proposal/readback for specialist recovery; do not silently adopt or repeat."
+    },
+    {
+      "id": "variance-attributed-exact-control-and-sequence-review",
+      "control": "Only the owned running reviewer can save literal private decision/name/time/basis under exact output generation, owner, implementation and input hashes with draft CAS. The signed source/item binding and renewed confirmation conserve immutable comparison and decision receipts in a fresh same-engagement Archive run while retaining predecessor inputs and output. Positive decisions replay unchanged public readiness and require its accounting controls to pass; root selection must be an actual retained alternative. An empty successor calculation draft preselects the newly registered comparison without restoring confirmation. Final report status comes from a separately confirmed ordinary public calculation, not this decision adapter. Declared reviewer identity is not authenticated. No semantic cause, signature, delivery or completed run is inferred. Exact model discussion omits private unsent decisions and the original table.",
+      "implemented_by": [
+        "scripts/native_variance_review.py",
+        "scripts/native_variance_review_bridge.py",
+        "scripts/native_variance.py",
+        "scripts/native_workspace.py",
+        "scripts/native_archive_closure.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse wrong or changed signed identity, stale generation, draft race, ineligible positive acceptance, absent alternative, incomplete attribution/confirmation, viewer writes and changed conserved artifacts. Actual post-Archive process interruption retains incomplete intent and successor, requiring recovery before retry or closure."
+    },
+    {
+      "id": "variance-complete-note-conservation-and-readback",
+      "control": "Mechanical exact owner/run/input/calculation/implementation hashes and complete three-filename shape bind literal host-authored proposals. Private readback uses signed source/item binding, generation CAS, actual timezone-aware declared name/time/basis and renewed confirmation. Same-run immutable versioned conservation retains all three notes and receipt for accepted, rejected and changes_requested outcomes without changing public accounting readiness or sealed calculation files. Pending proposals block closure; incomplete intent or orphaned/tampered candidate/conservation requires recovery without automatic adoption. Writes to completed runs are prohibited, but completed-run reopening is currently unqualified because the preceding calculation draft still refers to the running state. Interpretation quality and economic causes remain model/professional judgments; actual model reads remain the separately maintained run-report contract.",
+      "implemented_by": [
+        "scripts/native_variance_narrative.py",
+        "scripts/native_variance.py",
+        "scripts/native_workspace.py",
+        "scripts/native_archive_closure.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse stale/foreign/tampered identities, unsigned/concurrent/incomplete/unconfirmed writes, wrong roles and closed-run writes. Preserve incomplete intent and all exact candidate/conserved evidence for specialist recovery; no semantic scoring, silent adoption, overwrite or note truncation."
+    },
+    {
+      "id": "management-exact-calculation-and-whole-commentary",
+      "control": "Exact owned registered source/recipe IDs and literal reporting/costing mode remain in private generation-CAS drafts without retained confirmation. Signed running-reviewer confirmation invokes unchanged public producers, retains all eight normal output files and public partial/blocked status, and verifies complete tree, source bytes and public/native implementation identities. Explicit model context returns the whole ordinary bounded calculated projection and verified execution/context receipts plus normal commentary template; original populations, the full pack and unsent drafts stay outside this default projection. Complete literal metric-linked commentary is validated by the unchanged public finalizer contract and retained as an explicit immutable candidate. Separate signed selected-case CAS and renewed named timezone-aware readback conserve the literal comment and attributed decision in the same run. Acceptance invokes unchanged finalize_pack.py and retains all three normal draft outputs plus original commentary and native readback; negative decisions retain commentary/readback without report finalization. Initial eight files stay immutable. Stable owner/source/implementation/calculation identity permits terminal readonly consultation; writes still require the current running lifecycle. Pending proposals and uncertain/orphaned/tampered files prevent closure without automatic adoption. No semantic scoring, source/cost-method classifier, cause assignment, model worker, authenticated professional identity, signing, delivery, publication or completion is added. Native source/case authoring and interactive report opening remain pending. App-only metadata does not promise local-only provider processing.",
+      "implemented_by": [
+        "scripts/native_management_execution.py",
+        "scripts/native_management_bridge.py",
+        "scripts/native_management_commentary.py",
+        "scripts/native_management_commentary_bridge.py",
+        "scripts/native_workspace.py",
+        "scripts/native_archive_closure.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Reject foreign/stale scope, forged signature, concurrent/incomplete/unconfirmed drafts, wrong roles or lifecycle, changed source/output/implementation, unknown metric, blocked finalization and changed idempotent retry. Retain uncertain intent and complete evidence for specialist recovery; do not overwrite or truncate."
+    },
+    {
+      "id": "management-explicit-original-mandate-and-complete-case",
+      "control": "Signed renewed confirmation retains literal question, reporting/costing path, selected original receipt IDs and optional prior complete case. Reporting preserves ordinary public inspection/skeleton files without semantic role adoption; costing records exact sources without a ledger requirement or invented extraction. Model context names only expressly granted original/prior-case paths and hashes, methods/intake references and optional explicitly selected complete proposal path; private unsent named readback stays excluded. Whole reporting proposals retain empty pending mapping review; costing uses existing mechanical case/source/client/engagement contracts without calculation. Named draft CAS and separate renewed saved acceptance precede immutable case/readback import in a fresh same-engagement run. Reporting attribution uses exactly the declared readback; costing payload stays literal. Intent/tree/scope checks retain uncertain evidence. Current source registration and closure audit have missing archive_root/digest/load_binding capability wiring defects; the verified three-line correction remains an unapplied review proposal. No semantic scoring, model worker, authenticated identity, report approval, signing, delivery or completion is added.",
+      "implemented_by": [
+        "scripts/native_management_authoring.py",
+        "scripts/native_management_author_bridge.py",
+        "scripts/native_workspace.py",
+        "scripts/native_archive_closure.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse foreign scope/receipts, stale signed generation, fabricated reporting attribution, viewer writes, cancelled mandates, altered bytes, oversized whole work and uncertain retries; preserve full evidence without automatic adoption or truncation."
+    },
+    {
+      "id": "cnc-explicit-role-source-mandate-and-complete-revisions",
+      "control": "Owned portable CNC runs retain literal incomplete question/role/source drafts privately under generation CAS without renewed confirmation. Signed source mandates bind exact granted original receipts and the exact prior case. Explicit model context returns only their paths/hashes and an explicitly selected whole proposal path; unsent named review drafts remain excluded. Whole proposals have empty model reviews, granted citations and unchanged public validation. Renewed signed proposal confirmation appends the ordinary full request, snapshot and memo plus native receipt without approval/completion. Current nodes expose public dependency staleness and retained version-bound reviews; separately saved/reconfirmed local decisions retain literal declared fields with record_only_identity_not_verified authority. No hosted review transmission/import, professional authentication, semantic classifier, worker, signature, filing or delivery is added. Durable intents and exact trees/output hashes preserve interrupted writes and block retry/closure. History navigation, changed-case mandate reconciliation and recovery remain on the ordinary specialist route. App-private metadata is not a promise of local-only model/provider processing. Current source cannot consult/cancel an older open mandate after a newer case revision and can therefore block closure; the cancellation-only correction is verified in a separate candidate and remains unapplied.",
+      "implemented_by": [
+        "scripts/native_cnc.py",
+        "scripts/native_cnc_bridge.py",
+        "scripts/native_workspace.py",
+        "scripts/native_archive_closure.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse foreign/stale scope, changed sources/proposals/output bytes, cross-role writes, fabricated model review attribution, unsigned/concurrent/unconfirmed writes, stale nodes, closed-run writes and uncertain retries. Preserve complete evidence; do not truncate, overwrite, silently reconcile or adopt professional decisions."
+    },
+    {
+      "id": "cnc-readonly-whole-history-and-ordinary-output-view",
+      "control": "Exact maintained engagement history is paged thirty versions newest first across its managed runs. Explicit selected whole cases are readonly even when latest; no history ticket can substitute for a current node review. The private output reader returns actual complete ordinary snapshot/memo bytes and hashes, reporting missing memo without regeneration. Foreign/changed versions or a stale view revision are refused. An explicit model-context tool returns the whole selected historical case within 64 KiB without truncation, including conserved names/reasons/reviews when present; private unsent drafts and absolute original-file/output paths are excluded. Original files need a separate mandate. Private full views are bounded to 2 MB. Public role/lineage/source/dependency validation is unchanged. Stored authenticated reviews are not independently reverified by this reader. No writes, hosted receipt import, model worker, professional authentication, approval, signature, delivery, publication or completion is added.",
+      "implemented_by": [
+        "scripts/native_cnc_history.py",
+        "scripts/native_cnc.py",
+        "scripts/native_cnc_bridge.py",
+        "scripts/native_workspace.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse unknown or foreign version, changed public snapshot/memo/source/history, stale selected-view revision and oversized whole response without truncation. Preserve complete files and unsent drafts; missing memo stays explicit for ordinary specialist recovery."
+    },
+    {
+      "id": "cnc-chosen-authenticated-review-receipt-import",
+      "control": "The optional app prepares the unchanged ordinary local review-node file without network; receipt/reason drafts remain private and generation-bound. A separately renewed exact saved-receipt choice contacts only the fixed HTTPS verification endpoint with opaque UUID/hash. Local exact case/role/node/version/request conflicts refuse transmission; actual server retention and the unchanged public writer independently verify account/decision. Complete ordinary request/receipt/snapshot/memo bytes are preserved. First service refusal/unavailability remains pending without public writes; uncertain later writes block retry/closure. Source currently has two incorrect API arguments; the corrected route is separately candidate-qualified only, not production/native acceptance.",
+      "implemented_by": [
+        "scripts/native_cnc_authenticated.py",
+        "scripts/native_cnc_authenticated_bridge.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse foreign prepared target, wrong case/role/node/version/request, unsaved receipt/reason, old generation, unconfirmed or Viewer/closed/stale writes. Fixed server refusal stays pending without authenticated attribution. Preserve uncertain public side effects and block repeat/closure."
+    },
+    {
+      "id": "esg-exact-readonly-version-dependency-closure",
+      "control": "Owned Archive run/input bytes and maintained public ESG resume validate exact immutable state/draft hashes and all dependency references. Native thirty-version pages retain current and stale versions. Explicit selected-model context binds current actor/tenant/run/input/implementation revision and complete recursive exact dependencies, refusing over 64 KiB without truncation. Private ordinary draft opening revalidates the public immutable files and unchanged state. No original input automatically enters model context, no named reviewer authentication or mutation is added.",
+      "implemented_by": [
+        "scripts/native_esg.py",
+        "scripts/native_esg_bridge.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse unknown/foreign versions, altered state/drafts, linked state, stale model/output selection and oversized whole context. Remain readonly including completed runs; no full ESG/assurance or actual model read claim."
+    },
+    {
+      "id": "native-esg-explicit-authoring-and-human-decisions",
+      "control": "Source authoring checks exact owner/run/input/implementation scope, current public state, signed human selection, literal draft-generation CAS, separately renewed confirmation and whole proposal hashes. Public operation and original IDs are fixed by the mandate; model professional decisions and server-owned request fields are refused. Isolated public-execute previews retain complete private proposal bodies. Conservation uses durable intents, ordinary full requests, unchanged public execution and native receipts; unfinished intents, altered artifacts and open mandates block Archive closure. Obsolete mandates remain privately readable/cancellable but cannot obtain new context, stage or publish. Human decision fields are app-only and current-dependency-bound. The source preview bridge currently fails on unresolved macOS temporary paths; its corrective one-line candidate is separate, unapproved and not applied. Declared reviewer identity is not authenticated; no assurance, external send or run completion is inferred.",
+      "implemented_by": [
+        "scripts/native_esg_authoring.py",
+        "scripts/native_esg_author_bridge.py",
+        "scripts/native_archive_closure.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse stale/foreign/forged selections, ungranted original IDs, replaced whole proposals or uncertain public writes; preserve state, artifacts and mandates for explicit recovery. Native macOS preview-path repair and actual installed/model acceptance remain pending."
+    },
+    {
+      "id": "native-inps-prepared-evidence-review",
+      "control": "Optional prepared-case integration binds owner, run, closed input manifest, implementation, acquisition posture and complete output hashes. Literal reviewer/item action/reason/edit/document-request drafts are app-only, generation-bound and never inherit confirmation. Explicit selected-item context returns the whole current public evidence record within 64 KiB or refuses, without original paths or unsent private fields. Signed named confirmation invokes unchanged public INPS Apply; requested edits are not applied to the memo and professional-review ceilings remain. Durable uncertain intents block further native writes and shared native Archive closure. Closed sealed runs consult the public shape validator without acquiring persistence authority. The reviewed candidate carries the exact client_engagement context alongside persistence_token for public Render/Apply. This mechanical authority binding does not widen source access or turn a proposed edit into a professional decision. Initial preparation, actual model reads, installed-host and professional acceptance remain unverified.",
+      "implemented_by": [
+        "scripts/native_inps.py",
+        "scripts/native_inps_bridge.py",
+        "scripts/native_inps_rpc.cjs",
+        "scripts/native_workspace.py",
+        "scripts/native_archive_closure.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse stale or forged authority, changed bound acquisition, unsaved or unconfirmed named decisions, foreign items and pending uncertain writes; preserve private choices and ordinary output bytes for explicit recovery. Source context forwarding, initial authoring and actual installed/model acceptance remain pending."
+    },
+    {
+      "id": "native-sari-owned-initial-intake",
+      "control": "Optional exact owned initial intake retains literal date/reference/language/jurisdiction privately with generation CAS and never restores confirmation. Renewed signed reviewer confirmation invokes unchanged public empty-draft initialization and inventory only on an empty running run. Registered originals are revalidated; language never selects jurisdiction. No OCR, download, network, legal source selection, classification or professional decision occurs. Explicit complete selected-extraction context binds exact whole output/input/implementation scope and hash, excludes unsent initial fields and absolute original paths, and refuses over 64 KiB without truncation. Actual model reads remain unverified. Durable uncertain intents refuse duplicate native initialization. Source qualification is withheld: the new UI fails syntax and the shared Archive closure caller omits the digest capability needed by the new uncertainty guard. Isolated corrections are unapproved and unapplied. Ordinary semantic preparation, public review, installed host and professional acceptance remain pending.",
+      "implemented_by": [
+        "scripts/native_sari_intake.py",
+        "scripts/native_sari_intake_bridge.py",
+        "scripts/native_workspace.py",
+        "scripts/native_archive_closure.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse stale scope or private generation, forged authority, changed originals/extractions, foreign or oversized selections, incomplete or unsaved confirmed parameters, existing outputs and uncertain repeats; preserve outputs and receipts for ordinary recovery. Shared closure guard and UI correction remain pending."
+    },
+    {
+      "id": "registro-imprese-sari-prepared-review",
+      "control": "Exact prepared-case/source bindings and preserved ordinary validate/render/save/apply producers. Private literal incomplete decisions, actor draft CAS, complete selected-item model boundary and whole private workpapers. Separate explicit Save/Apply review confirmations and actual declared reviewer, exact saved-choice hash, retained prior mutable records and durable intent/receipt guard. Current source ticket verifier still accepts an unchanged signature with an appended dangling hex nibble; stricter canonical-signature proposal is isolated, unapproved and unapplied. Shared UI syntax/closure corrections and installed acceptance remain pending; no filing authority.",
+      "implemented_by": [
+        "scripts/native_sari_review.py",
+        "scripts/native_sari_review_bridge.py",
+        "scripts/native_sari_review_rpc.cjs",
+        "scripts/native_workspace.py",
+        "scripts/native_archive_closure.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse changed bindings, forged authority, private CAS mismatch, incomplete edit/document choice, wrong saved hash/reviewer, silent removal of saved items, altered snapshots and uncertain repeated writes. Preserve ordinary records and retained versions for recovery; noncanonical signature and source UI/closure corrections remain pending."
+    },
+    {
+      "id": "registry-followup-separate-run",
+      "control": "Only an actual owned open Studio Archive engagement and a historical applied review can authorize a distinct follow-up. Explicitly saved literal question, whole predecessor selection and selected engagement receipts are generation-bound and separately confirmed. Immutable predecessor copies, lineage mapping and exact successor input receipts are retained; pending creation and orphan copies block ordinary use and output closure. Public initializer, existing model mandate and unchanged proposal producers remain authoritative. Prior confirmations remain historical and no model reads or filing are attested. The reviewed candidate materializes the unchanged public input iterator as a list before joining predecessor receipts; this preserves every receipt and changes no source selection or professional scope. Native installed-host acceptance remains pending.",
+      "implemented_by": [
+        "scripts/native_sari_followup.py",
+        "scripts/native_workspace.py",
+        "scripts/native_archive_closure.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse changed or uncertain scope without adopting an unreceipted successor; require ordinary recovery."
+    },
+    {
+      "id": "bandi-offline-dossier-review",
+      "control": "App-only complete public dossier files and whole-scope hash inspection; exact actor/run/source scope and private incomplete draft CAS without restoring confirmation. Separate explicit initialization or accepted/returned scope review records the declared reviewer ID/role through unchanged public producers. Scope review never confirms individual rows. Current passing audit is required for the public HTML/Markdown package; failed audits persist. Prior complete bytes are retained outside outputs with durable pending intent and exact retry. Uncertain/orphaned operations or altered retained bytes block writes and Archive closure. The separate contribution service authorizes one exact public task packet with literal subject and explicitly selected original-source IDs after renewed request and separate-session attestations. Model-facing reads return that complete packet and only registered unchanged originals permitted by the public task boundary; evidence is untrusted. Complete model proposal and exact declared provider/model/template remain private until separate signed registration as MODEL_SUGGESTED. A further explicit professional decision uses the unchanged public producer; accepted rows remain proposed and confirmed or blocked rows cannot be overwritten. Explicit cancellation/stale marking preserve evidence. All actors' unfinished mandates and uncertain public writes block closure. No provider execution, authenticated separate-session guarantee, current-chat handoff, radar storage, portal, signature or filing action is enabled. Actual model reads and installed-host acceptance remain unverified. Shared UI syntax and noncanonical signature defects remain pending their separately proposed repairs.",
+      "implemented_by": [
+        "scripts/native_bandi.py",
+        "scripts/native_bandi_bridge.py",
+        "scripts/native_bandi_authoring.py",
+        "scripts/native_bandi_intelligence_bridge.py",
+        "scripts/native_bandi_decision_drafts.py",
+        "scripts/native_workspace.py",
+        "scripts/native_archive_closure.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Refuse stale or unsupported scopes and uncertain writes; ordinary recovery is required."
+    },
+    {
+      "id": "patent-box-native-producer-adapter",
+      "control": "Six app-only Patent Box routes retain complete literal incomplete operation drafts outside output artifacts under tenant/actor/run/operation CAS without stored confirmation. Signed current running reviewer scopes and renewed exact action confirmation precede retained complete prior bytes and durable producer intents. Fixed isolated calls use unchanged public initialization, selected ledger import/inspection/normalization, full proposal, local review, calculation, professional request/acceptance and formalities. Exact unchanged refusals are retained separately from partial-write uncertainty; every historical receipt and prior file is rechecked before later operations. Source/signature/mandate references are existing owned-run artifacts; trust policy, roots, CRLs and executable remain existing firm-admin configuration outside the case. Local review cannot authorize real calculation. No firm policy, keys, signature, semantic classifier, public research, monitor, provider client, notification or professional acceptance is created. Typed controls expose ten producer operations, clear confirmation after changes, require a complete selected case preview for review/calculation, and restore incomplete fields without consent. Read-only PDF/Word delivery checks full bounded bytes against SHA-256 and byte count before a Blob link; browser download completion remains unverified. Fresh native model authoring, signed-artifact import and signed-review positive acceptance remain pending. Shared workspace JavaScript retains its existing syntax fault; the standalone component probe is not installed-host acceptance. Closure requires the same pending-intent audit but the current shared MCP closure API lacks digest; its correction remains unapplied. App metadata is not a promise that host/provider processing is local-only.",
+      "implemented_by": [
+        "mcp/workspace.cjs",
+        "scripts/native_workspace.py",
+        "scripts/native_patent_box.py",
+        "scripts/native_patent_box_bridge.py",
+        "scripts/native_archive_closure.py",
+        "ui/patent-box.js"
+      ],
+      "on_violation": "Reject stale/cross-owner/cross-run/oversized fields, path escapes, altered retained bytes and conflicting retries; preserve pending writes for ordinary recovery and do not repeat or complete Archive."
+    },
+    {
+      "id": "patent-box-owned-specialist-authoring",
+      "control": "Seven app-only and three model-visible authoring routes retain literal question/task and explicitly selected original/record IDs under current actor/tenant/run/source/code scope and private draft CAS. Signed renewed authorization freezes exact prior public bytes. Model context/source responses are retained as immutable service read receipts, with whole selected records/text, full schemas/method/control catalogue and DRAFT real rules. Binary identity/path does not prove host reading, no automatic anonymization or local-only provider guarantee, and provider telemetry remains not_measurable. Complete bounded staging records caller-declared runtime/provider/model/template/session provenance; no model identity authentication or client/session is created. Read-only preflight reuses unchanged producer helpers without context substitutions, semantic classification or public writes. App-only adoption compares complete staged version and current typed fields, requires exact private CAS and explicit replacement consent, restores no confirmation and writes no public output. A later independent renewed producer action is required. All owners historical hashes, orphaned/pending intents and mandate dispositions are audited; open mandates block producer execution and Archive closure. Closed or stale mandates cannot supply fresh model context. Real professional signed authorization, final dossier approval, formalities and Archive completion remain separate. Current source/shared UI faults, installed-host acceptance and independent Cowork gates remain unresolved.",
+      "implemented_by": [
+        "scripts/native_patent_box_authoring.py",
+        "scripts/native_patent_box_author_bridge.py",
+        "mcp/workspace.cjs",
+        "scripts/native_workspace.py",
+        "scripts/native_archive_closure.py",
+        "ui/patent-box-authoring.js",
+        "ui/patent-box.js"
+      ],
+      "on_violation": "Refuse changed owner/run/whole records/code, stale or closed context, unselected originals, altered private evidence and conflicting retries; retain uncertain intents and require ordinary recovery without repeating or completing Archive."
+    },
+    {
+      "id": "studio-wide-communication-native-review",
+      "implemented_by": [
+        "scripts/native_communication.py",
+        "scripts/native_communication_bridge.py",
+        "mcp/workspace.cjs",
+        "ui/communication.js"
+      ],
+      "control": "Six app-only review routes use exact host tenant/actor-bound studio-wide workspace/run references outside Git and client engagements, regular single-link paths, whole-file revisions, signed current app scope, literal private draft CAS and renewed human confirmation. No model route, direct history/identity-map read, arbitrary artifact path, sender or publisher is added. Public communication helpers remain authoritative for semantic matrices, exact render/package review, no_publish internal validation and profile promotion; provider provenance remains operator-attested. Interrupted writes retain private intents and refuse automatic replay. Runtime qualification is pending: source 1/13 passes because mutable public writer lock metadata currently invalidates connected reads; UI events 5/5 on explicitly fictional transport do not establish native-host acceptance.",
+      "on_violation": "Refuse unknown or changed owner/workspace/run/source/code, linked paths, incomplete semantic matrices, missing renewed confirmation and changed retries. Retain uncertain intents for specialist recovery; no automatic replay, model dispatch, send or publish."
+    },
+    {
+      "id": "studio-wide-website-native-review",
+      "implemented_by": [
+        "scripts/native_website.py",
+        "scripts/native_website_bridge.py",
+        "mcp/workspace.cjs",
+        "ui/website.js"
+      ],
+      "control": "Six app-only routes use exact trusted host tenant/actor/workspace/run bindings for the existing private studio-wide website store outside Git and client engagements. Whole public workspace and implementation revisions, single-link regular paths, signed scope, private draft CAS, explicit current confirmation and durable pending/completed intent receipts bind literal decisions. Fixed producer calls retain complete intake and source-use-plan records, three independently recorded professional review scopes, exact responsive screenshot and validation gates, preview/release packages and selected Sites binding preparation. Only verified declared site/package/screenshot files can be downloaded; originals are not returned. No model source route, semantic classifier, automatic publication, external delivery receipt recorder or client Archive completion is added. A private note remains native interaction state, never falsely attributed to the public professional record. Source/UI tests and local browser mechanisms cannot certify installed native-host acceptance or actual model/professional execution.",
+      "on_violation": "Refuse unknown or changed actor/workspace/run/source/code, links, stale signed scope or private draft CAS, missing explicit reviewer/decision/confirmation, altered declarations and conflicting retries. Display actual public issues for incomplete or stale work. Retain uncertain intents and require specialist recovery without repeating a producer write or publishing."
+    },
+    {
+      "id": "restricted-synthetic-transformation-native-store",
+      "implemented_by": [
+        "scripts/native_transformation.py",
+        "scripts/native_transformation_bridge.py",
+        "mcp/workspace.cjs",
+        "ui/transformation.js",
+        "scripts/native_transformation_initial.py",
+        "scripts/native_transformation_initial_bridge.py",
+        "scripts/native_transformation_author.py"
+      ],
+      "control": "Exact trusted tenant/actor binding and stable case identity require a declared synthetic-only CaseStore outside Git, published directories and client engagements. No real mandates or Archive adapter. Fixed unchanged public calls only; selected inert imports require exact host-bound files in synthetic-inputs. All source files and ancestors are checked for symlinks and hardlinks. Complete store/implementation identity and signed current app scope bind writes; private draft CAS and no restored confirmation; durable uncertain intent refuses automatic repeat; exact receipts detect changed retry/results. Every historical export is replayed with the unchanged formatter and compared byte for byte before app reads/downloads. No legal classification, professional source validation, deadline/filing/sending or stamping is added by the adapter. Declared operator attribution is not an authenticated signature; whole native-host acceptance remains pending. Four additional app-only initialization routes use an explicit host initialize=true synthetic binding, a new/empty target separate from existing private controls, literal owner/purpose CAS and separate synthetic-only confirmation. The unchanged public CaseStore initializes unknown forms, tax regimes, commerciality and dates as null. Durable intent precedes creation; transport uncertainty before or after public conservation blocks ordinary case work and repetition. Initial revisions hash their adapters and UI. Ordinary case revision coverage of the new initialization adapters remains a prepared unapplied repair; no whole security or installed-host qualification is claimed. Keep the exact initial host binding unchanged until its completion receipt or specialist recovery; adding source bindings is a separate host step after conserved creation. The native source chooser lists only exact host-bound file references and complete names/hashes; it never chooses by semantic relevance. Literal id, source_ref, origin and locator edit the same incomplete record_json draft, preserve unknown references and unparseable/extra-field proposals, and withdraw confirmation. A separate explicit confirmed public import owns the inert-byte copy and domain validation. Complete definition lists and ordered arrays preserve all record values, unknowns and empty collections. Desktop nested-grid readability requires a prepared unapplied scoped CSS repair; source tests and responsive width checks are not whole usability acceptance. Eight further app-only routes retain literal synthetic question/operation/selected-source intake, request, readback, adoption, withdrawal and durable chat-request preparation. Only author_context and author_stage are model-visible. A separately confirmed reviewer mandate binds the owner, whole current public case/code revision, explicit permitted preparation operation and only selected original references; an opaque random grant expires after one hour. Context returns the whole current synthetic state and public contract, specialist skill path, and selected original paths/hashes; the session model reads those originals separately. Nothing is automatically anonymized, and the selected OpenAI account model-processing boundary applies; local helpers call no provider service. Private staging intends an unchanged public replay on an isolated complete copy; separate human adoption can copy only into empty canonical fields, with actor/decision/consent empty. Canonical Mac staging currently fails on the helper-created temporary-directory alias, and the prepared correction remains unapplied; staging/adoption are not qualified. Durable request preparation precedes optional ui/message or a copyable fallback and is not evidence of dispatch, model receipt or actual provider exposure. Withdrawal preserves requests/proposals while blocking model access; public/code changes, expiry and unresolved intents refuse dependent operations. Private limits refuse oversized complete ledgers rather than sample. No semantic source selector or professional approval is inferred.",
+      "on_violation": "Refuse unknown/non-synthetic/cross-owner cases, changed implementation or public history, linked/oversized files, stale scope or private draft CAS, absent confirmation, incomplete attribution and altered dossier/retry receipts. Keep uncertain public-write intents for specialist recovery; do not repeat writes, grant real-mandate readiness or create Archive runs. Refuse stale/expired/withdrawn model mandates, nonselected originals, forbidden review/submit/export proposals and overwriting incomplete canonical fields; do not repeat uncertain private requests or infer provider-context receipt."
+    },
+    {
+      "id": "rating-native-exact-prepared-readback",
+      "implemented_by": [
+        "scripts/native_rating.py",
+        "scripts/native_rating_bridge.py",
+        "mcp/workspace.cjs",
+        "ui/rating.js"
+      ],
+      "control": "App-only whole prepared-dossier views require exact owner/run binding, portable Rating Archive v2 authority, client/engagement equality, exact evidence receipts, unchanged bytes and explicitly selected sealed same-workflow predecessor. The unchanged engine checks real practice prerequisites and immutable history before projecting case records. No semantic qualification or professional decision is added. The reviewed candidate supports first-save with the actual empty predecessor digest and retains strict signed scope. Exact version, explicit human confirmation and public readiness gates still apply; read or synthetic write acceptance does not establish installed-host acceptance.",
+      "on_violation": "Refuse foreign or changed inputs, noncanonical locators, unregistered predecessor, changed quotations, missing real prerequisites, rewritten snapshots and oversized complete views. Keep outputs and public histories intact. Do not bypass failed native write schema/signature gates or repeat uncertain writes."
+    },
+    {
+      "id": "multi-company-fusion-native-public-store",
+      "implemented_by": [
+        "scripts/native_fusion.py",
+        "scripts/native_fusion_bridge.py",
+        "mcp/workspace.cjs",
+        "ui/fusion.js"
+      ],
+      "control": "Seven app-only routes use exact trusted host tenant/operator/case/operation bindings and an existing logical CaseStore actor. The unchanged public store enforces each current company grant and every inherited scope. Complete accessible records and history are retained; prepared put/workpaper/bind_archive/import_archive requests cannot embed grants or approvals. Exact host authorization is required for new Archive identities or company source roots. Public proposals are previewed on an isolated SQLite copy; live writes require literal-field CAS, complete current preview, renewed confirmation and retained intent. Separate exact-version professional assertions require the actual reviewer grant, stated role, defined scope and expressed confirmation; names are not authenticated signatures. Combined exports remain in the merger case, include the unchanged canonical model-data report and are independently regenerated byte for byte from a retained private baseline. Live permissions and every exported history record are rechecked, so a baseline cannot restore revoked company access. Only declared export artifacts or exact preserved documents can be downloaded. No model tool, arbitrary folder discovery, grant editor, individual Archive output copy, signing, filing or engagement closure is added. Initial native intake/model authoring, shared renderer/ticket repairs, full package checks and installed-host acceptance remain pending. The app readback includes the exact saved canonical Markdown only after independent export byte verification. A shared text-only renderer displays all retained headings, phases, measurements and limitations without HTML execution, link navigation, automatic translation, sampling or arithmetic across unlike units. Full JSON evidence remains available separately. Reopening does not write a report, add exposure phases or request provider/server receipts. Long identifier wrapping and actual installed-host report delivery remain unqualified.",
+      "on_violation": "Refuse changed owner/case/operation/implementation/source, linked paths, incomplete or foreign references, changed draft CAS/preview/confirmation, absent actual case permissions, altered export or baseline bytes, stale completed retries and uncertain writes. Preserve case history and both company Archives; require specialist recovery without repeating a producer write."
+    },
+    {
+      "id": "browser-native-selective-process-and-batch-review",
+      "implemented_by": [
+        "scripts/native_browser.py",
+        "scripts/native_browser_bridge.py",
+        "mcp/workspace.cjs",
+        "ui/browser.js"
+      ],
+      "control": "Seven app-only routes use exact trusted tenant/operator bindings to existing selected development processes or batch directories outside Git and public folders. Business batches require a verified real client manifest and exact engagement. The unchanged process lifecycle exposes declared boundaries, implementation/qualification, attempt evidence and technical output metadata, excluding raw submission/status records and artifact-only output values. No ordinary-use procedure selection, Chrome connection, page capture, model handoff, credential handling, posting, qualification or developer submission is added. The unchanged batch helper verifies every JSON revision and current HTML is independently regenerated offline and compared byte for byte without repairing live files. Complete current entries and prior reviews remain separate from processing outcomes. Signed current entry/owner scope, private generation CAS, literal unsent decision/note, renewed explicit confirmation and durable intents bind only the actual operator assertion. Public record_review appends checked/correction_requested without changing completed entries, executing a correction or closing Archive. Exact completed retries verify the current successor; interrupted writes before or after public conservation require recovery. Native-host and target-site acceptance, shared renderer/ticket repairs and full independent package gates remain unqualified.",
+      "on_violation": "Refuse unknown/foreign owner, client, engagement, process or batch; linked/oversized paths; changed public JSON/HTML/code; stale entry scope/private CAS; missing actual decision/note/confirmation and conflicting or uncertain retries. Retain public history and source Archives unchanged; do not repeat a possible write, repair report files during reads, disclose raw business execution outputs or infer browser qualification."
+    },
+    {
+      "id": "open-items-initial-source-intake",
+      "control": "Five app-only routes retain exact registered original identities, actor-private unfinished scope and per-source decision fields without stored confirmation, and signed current source/draft CAS. Original consultation replays immutable source receipts and bounds full verified bytes to 4 MiB inside the existing bridge envelope; base64, file name, size and hash remain in app metadata. No source role or perimeter is inferred from a filename and no provider client or model-facing source route is added. Renewed explicit review invokes only the unchanged strict public raw producer and full assurance replay at the fixed reconciliation child. The normal package, cache, original report options, failed gates and uncertain durable intent are retained. Stale/foreign/viewer/incomplete/changed-source requests are refused. Report readiness remains distinct from semantic review, professional approval, actual run disclosure, finalization and Archive completion. The ordinary packaged Cowork/file route remains independent. Scope-qualified source tests and an isolated browser with separately unapplied shared repairs do not establish installed-host or professional acceptance. App metadata and a local process do not guarantee local-only host/account processing. This shared-service review covers the native source envelope, authority and account boundary; the separately governed workstream owns substantive reconciliation source review.",
+      "implemented_by": [
+        "scripts/native_open_items_intake.py",
+        "scripts/native_open_items_intake_bridge.py",
+        "scripts/native_workspace.py",
+        "mcp/workspace.cjs",
+        "ui/open-items-intake.js"
+      ],
+      "on_violation": "Refuse the request before producer execution or require specialist recovery for an unresolved intent; preserve prior outputs and drafts."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-10-09",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_shared_service_source",
+    "source_fingerprint": "ccbb4f4c1f369e03709929cdf2b11924f2a021e7934635a2c6af4a30d592798d"
+  }
+}

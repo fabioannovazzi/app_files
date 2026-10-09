@@ -1760,7 +1760,7 @@ function concordatoPathIsInside(root, candidate) {
   );
 }
 
-function concordatoReadRegularFileSnapshot(filePath) {
+function concordatoReadRegularFileSnapshot(filePath, includePayload = false) {
   const noFollow = fs.constants.O_NOFOLLOW || 0;
   let descriptor;
   try {
@@ -1789,6 +1789,7 @@ function concordatoReadRegularFileSnapshot(filePath) {
     return {
       byteCount: payload.length,
       sha256: crypto.createHash("sha256").update(payload).digest("hex"),
+      ...(includePayload ? { payload } : {}),
     };
   } finally {
     if (descriptor !== undefined) fs.closeSync(descriptor);
@@ -2329,7 +2330,7 @@ const CONCORDATO_INITIAL_OUTPUT_PATHS = new Set([
   "ui_decisions.json",
   "workbook_sheets.json",
 ]);
-const CONCORDATO_REVIEW_OUTPUT_PATH_FIELDS = [
+const CONCORDATO_REVIEW_OUTPUT_PATH_FIELDS = ["review_authority_paths",
   "revision_paths",
   "target_update_paths",
   "structured_update_paths",
@@ -2821,6 +2822,12 @@ function validateConcordatoParentTransactionState(
   ) {
     throw new Error("Concordato UI receipt did not close.");
   }
+  if (kind === "save" && state.expectedFinalArtifacts != null) {
+    const persistedFinal = readJsonFileIfPresent(path.join(workingOutputDir, "final_artifacts.json"));
+    if (stableJson(persistedFinal) !== stableJson(state.expectedFinalArtifacts)) {
+      throw new Error("Concordato saved draft artifact receipt did not close.");
+    }
+  }
   if (kind === "apply") {
     const expectedFinalArtifacts =
       concordatoFinalArtifactsWithCurrentReceipts(
@@ -3158,6 +3165,14 @@ function saveDecisionPayloadWrites(inputArgs) {
     parentState.expectedUiDecisions =
       cloneConcordatoReviewTransactionValue(uiDecisions);
     parentState.authorizedWritePaths = ["ui_decisions.json"];
+    const finalPath = resolveFinalArtifactsOutputPath(inputArgs);
+    const currentFinal = readJsonFileIfPresent(finalPath);
+    if (currentFinal?.outputs?.some((entry) => entry.path === "ui_decisions.json")) {
+      const expected = concordatoFinalArtifactsWithCurrentReceipts(currentFinal, resolveRunOutputDir(inputArgs));
+      generatedReviewAtomicWriteFileSync(finalPath, `${JSON.stringify(expected, null, 2)}\n`, "utf8");
+      parentState.expectedFinalArtifacts = cloneConcordatoReviewTransactionValue(expected);
+      parentState.authorizedWritePaths.push("final_artifacts.json");
+    }
     parentState.complete = true;
   }
   return result;
@@ -3562,6 +3577,7 @@ function collectReviewApplicationPaths(appliedDecisions, finalArtifacts) {
     ? finalArtifacts.review_application
     : {};
   for (const fieldName of [
+    "review_authority_paths",
     "applied_decisions_path",
     "revision_paths",
     "target_update_paths",
@@ -3960,7 +3976,7 @@ function markDerivedNativeRegenerationPending(outputDir, effects, currentFinalAr
   const nativeOutputs = [];
   for (const effect of effects) {
     if (effect.action !== "edit" || !effect.edit_value) continue;
-    if (!["revision_artifact_written", "structured_artifact_updated"].includes(effect.artifact_update)) continue;
+    if (!["revision_artifact_written", "structured_artifact_updated", "target_artifact_updated"].includes(effect.artifact_update)) continue;
     const derivedTargets = existingDerivedNativeTargets(
       outputDir,
       currentFinalArtifacts,
@@ -4173,6 +4189,7 @@ function finalArtifactsWithApplication(
       native_regeneration_count: appliedDecisions.native_regeneration_count || 0,
       native_regeneration_paths: appliedDecisions.native_regeneration_paths || [],
       original_backup_paths: backupOutputs.map((output) => output.path),
+      review_authority_paths: appliedDecisions.review_authority_paths || [],
       applied_decisions_path: "applied_decisions.json",
     },
   };
@@ -4201,7 +4218,22 @@ function effectsToBlockers(effects) {
 }
 
 function nextActionsWithReviewApplication(currentNextActions, appliedDecisions, blockers, language = "en") {
-  const nextActions = Array.isArray(currentNextActions) ? [...currentNextActions] : [];
+  // Replace exact workflow-status instructions when the application changes;
+  // source-generated substantive next actions remain unchanged.
+  const applicationActions = new Set([
+    "Resolve blocked review decisions before treating final artifacts as ready.",
+    "Regenerate native DOCX/XLSX/PDF outputs before final handoff.",
+    "Review was recorded, but professional conclusion and publication remain withheld.",
+    "Review is recorded; professional conclusion and publication remain withheld.",
+    "Complete remaining review decisions before final handoff.",
+    "Resuelva las decisiones de revisión bloqueadas antes de considerar listos los artefactos finales.",
+    "Vuelva a generar las salidas nativas DOCX, XLSX o PDF antes de la entrega final.",
+    "La revisión se registró, pero la conclusión profesional y la publicación siguen retenidas.",
+    "Complete las decisiones de revisión restantes antes de la entrega final.",
+  ]);
+  const nextActions = (Array.isArray(currentNextActions) ? currentNextActions : []).filter(
+    (action) => !applicationActions.has(action),
+  );
   if (blockers.length) {
     nextActions.push(isSpanish(language) ? "Resuelva las decisiones de revisión bloqueadas antes de considerar listos los artefactos finales." : "Resolve blocked review decisions before treating final artifacts as ready.");
   } else if (appliedDecisions.native_regeneration_count) {
@@ -4273,6 +4305,52 @@ function applyDecisionPayload(inputArgs) {
   );
 }
 
+// Exact immutable review receipts preserve applied authority while drafts
+// change. This is a byte/decision contract, not reviewer authentication.
+function writeConcordatoReviewAuthority(outputDir, uiDecisions) {
+  if (!outputDir) return { outputs: [], history: [], uiReceipt: null };
+  const previous = readJsonFileIfPresent(path.join(outputDir, "applied_decisions.json"));
+  const outputs = [];
+  function preserve(payload, kind) {
+    const digest = crypto.createHash("sha256").update(payload).digest("hex");
+    const relativePath = `revisions/authority/${kind}-${digest}.json`;
+    const absolutePath = path.join(outputDir, relativePath);
+    const existing = generatedReviewPathEntryStat(absolutePath);
+    if (existing) {
+      if (!concordatoReadRegularFileSnapshot(absolutePath, true).payload.equals(payload)) {
+        throw new Error("Concordato review authority receipt changed.");
+      }
+    } else {
+      fs.mkdirSync(path.dirname(absolutePath), { recursive: true });
+      generatedReviewAtomicWriteFileSync(absolutePath, payload);
+    }
+    outputs.push({ path: relativePath, kind: "json", status: "written_review_authority" });
+    return { path: relativePath, sha256: digest };
+  }
+  const history = Array.isArray(previous?.review_history)
+    ? cloneConcordatoReviewTransactionValue(previous.review_history)
+    : [];
+  if (previous) {
+    const previousUiPath = previous.ui_decisions_receipt?.path || "ui_decisions.json";
+    const previousUi = concordatoReadRegularFileSnapshot(path.join(outputDir, previousUiPath), true);
+    const uiReceipt = preserve(previousUi.payload, "ui");
+    const previousApplied = concordatoReadRegularFileSnapshot(path.join(outputDir, "applied_decisions.json"), true);
+    history.push({ applied_decisions: preserve(previousApplied.payload, "applied"), ui_decisions: uiReceipt });
+  }
+  const uiReceipt = preserve(Buffer.from(`${JSON.stringify(uiDecisions, null, 2)}\n`, "utf8"), "ui");
+  const retained = new Set([uiReceipt.path]);
+  for (const reference of history) {
+    retained.add(reference.applied_decisions.path);
+    retained.add(reference.ui_decisions.path);
+  }
+  if (previous) {
+    for (const field of [...CONCORDATO_REVIEW_OUTPUT_PATH_FIELDS, "review_authority_paths"]) {
+      for (const relative of previous[field] || []) retained.add(relative);
+    }
+  }
+  return { outputs, history, uiReceipt, paths: Array.from(retained).sort() };
+}
+
 function applyDecisionPayloadWrites(inputArgs) {
   const parentState = inputArgs[CONCORDATO_REVIEW_TRANSACTION_STATE] || null;
   const { uiDecisions, decisionOutputPath } = buildUiDecisions(inputArgs);
@@ -4285,6 +4363,7 @@ function applyDecisionPayloadWrites(inputArgs) {
     buildApplicationEffect(decision, itemById.get(decision.item_id), appliedAt),
   );
   const outputDir = resolveRunOutputDir(inputArgs);
+  const authority = writeConcordatoReviewAuthority(outputDir, uiDecisions);
   const revisionOutputs = writeRevisionArtifacts(outputDir, effects);
   const textUpdates = writeDirectTextArtifactUpdates(outputDir, effects);
   const structuredUpdates = writeStructuredArtifactUpdates(outputDir, effects);
@@ -4334,6 +4413,11 @@ function applyDecisionPayloadWrites(inputArgs) {
     original_backup_paths: backupOutputs.map((output) => output.path),
     application_status: applicationStatus,
   };
+  if (authority.uiReceipt) {
+    appliedDecisions.ui_decisions_receipt = authority.uiReceipt;
+    appliedDecisions.review_history = authority.history;
+    appliedDecisions.review_authority_paths = authority.paths;
+  }
   if (uiDecisions.reviewer) appliedDecisions.reviewer = uiDecisions.reviewer;
 
   const finalArtifacts = finalArtifactsWithApplication(
@@ -4345,6 +4429,7 @@ function applyDecisionPayloadWrites(inputArgs) {
     backupOutputs,
     nativeRegenerationOutputs,
   );
+  for (const output of authority.outputs) concordatoChildUpsertOutput(finalArtifacts.outputs, output);
   let persisted = false;
   if (decisionOutputPath) {
     fs.mkdirSync(path.dirname(decisionOutputPath), { recursive: true });
@@ -4450,7 +4535,7 @@ function applyDecisionPayloadWrites(inputArgs) {
       cloneConcordatoReviewTransactionValue(responseFinalArtifacts);
     parentState.authorizedWritePaths = concordatoReviewParentWritePaths(
       parentState,
-      revisionOutputs,
+      [...revisionOutputs, ...authority.outputs],
       targetOutputs,
       backupOutputs,
       runIntakePath,
@@ -5141,7 +5226,9 @@ function validateConcordatoChildFiles(contract, afterChildImage) {
     if (
       !backupAfter ||
       backupAfter.mode !== sourceEntry.mode ||
-      !backupAfter.payload.equals(sourceEntry.payload)
+      !backupAfter.payload.equals(
+        (concordatoChildImageFile(contract.beforeChildImage, record.path) || sourceEntry).payload,
+      )
     ) {
       throw new Error(
         "Concordato review application returned an invalid result.",

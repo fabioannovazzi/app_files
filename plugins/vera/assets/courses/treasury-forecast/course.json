@@ -105,7 +105,7 @@
     {
       "path": "modules/treasury-forecast/skills/treasury-forecast/SKILL.md",
       "repository_path": "plugins/treasury-forecast/skills/treasury-forecast/SKILL.md",
-      "sha256": "c6e31c262da16ec98c588296fdf3ac90c4e189abc74eeea6c87dc90cd952765b"
+      "sha256": "eddec788fcba5575a03b17489bf820ef5a0df46fa27045ee030f242f3ff8473b"
     },
     {
       "path": "modules/treasury-forecast/skills/treasury-forecast/references/geneva.md",
@@ -165,7 +165,7 @@
     {
       "path": "skills/treasury-forecast/SKILL.md",
       "repository_path": "plugins/vera/skills/treasury-forecast/SKILL.md",
-      "sha256": "b482dbab37cd9160e523c5b761088db7fcfb95ea6d4586da1987051dae53e454"
+      "sha256": "4b4a8085d61d3f59f9bb03886bb2ca9fa394f8d983bb3ab7334d28a4b245934e"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

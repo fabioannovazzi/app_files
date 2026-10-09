@@ -54,6 +54,14 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "native-centrale-rischi-literal-question",
+        "purpose": "Prepare a complete pending recipe or evidence-linked commentary using the current chat model under the exact selected version grant",
+        "content": "The literal user question, owner-bound grant reference, complete public bounded inspection or prepared model_context and its proposal template; recipe inventory/source hashes may appear as already present in the public inspection. No raw original paths or full populations are sent by these tools. App-only full JSON member pages, complete checksum-bound producer HTML/Markdown previews and full proposed recipes/commentary do not automatically enter model context. The grant establishes authorization, not actual model exposure or human mapping approval. Retained private model proposals preserve unknowns and pending review; named timestamped mapping review and draft report conservation are separate signed UI actions. Ordinary OpenAI processing is not anonymized or local-only. Cowork retains its original explicitly connected-file route independently. When the user explicitly selects a parsed-source page, its exact inventory-bound selector and complete up-to-30 parsed rows (all displayed columns or the chosen column) or observed mapping-key entries with occurrence counts and first public row numbers also enter context. Values and cell strings are not truncated. CSV/Excel cells and PDF-normalized provenance, amounts, counterparties and personal details may appear. The public bounded inspection remains included; other complete source pages are not automatically exposed. Full private table/value pagination itself issues no model grant. PDF normalized rows do not establish visual review of the original PDF. The complete native model result, including its bounded public inspection or calculated context, template, literal question and optional exact selected parsed-source page, refuses UTF-8 serialized envelopes over 100000 bytes without sampling. Model-visible staging returns only saved/pending-review status and exact proposal digest and no-approval status; complete retained recipes/commentary and unsent question/source/navigation drafts are app-only routes when the host honors metadata visibility. That host behavior and actual complete original/visual PDF reading remain unverified.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
       }
     ]
   },
@@ -111,15 +119,27 @@
     {
       "id": "pdf-layout-provenance",
       "control": "A PDF-derived normalization retains the source document hash, page, table region, row locator, current-versus-previous record status and available validity dates. The supported input is the official digital Centrale Rischi report; an image-only copy is rejected with a request for that original digital report. When calculation receives the original PDF again, it verifies the source hash, the run-local normalization receipt and the exact normalized-workbook hash before applying the reviewed recipe; missing, changed or substituted artifacts fail closed."
+    },
+    {
+      "id": "native-recipe-draft-cas",
+      "control": " App-only full pending recipe drafts bind the exact inspection grant, fixed provenance and current draft/proposal CAS. Incomplete choices, manually selected public classes and declared controls are recoverable locally; no model transfer or approval is issued. Changed proposals preserve stale drafts for explicit discard, with generation tombstones preventing lost updates. Signed explicit draft conservation retains pending proposal history under an intent; interruptions block writes and closure. Named review and calculation confirmation are separate and never restored. App-only grant-local history paginates and reopens exact full proposal hashes without inferred creation dates. Full hash and pending provenance or exact analysis SHA are revalidated; historical selected tickets cannot calculate/finalize. Explicit historical recipe recovery creates a new pending draft under the displayed draft/proposal CAS, refusing concurrent changes and preserving an existing draft/current pointer. The draft stores the exact observed-value field/offset; its source column, inspection inventory, originals and normalization are reverified without model exposure or review restoration. Source choices, exact inspection navigation and literal unsent question drafts are app-only and generation-CAS-bound to owner/run/inputs/implementation and exact revision/page; they grant no model context and restore no confirmation."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "b3cd2c5e7056d934002588e4aead59d0e5172b935790512ec5930f7a11f3d7cf"
+    "source_fingerprint": "57ab9ae53782e2bcb3c2134d7b8612ff6c2868ff96a1262ef561a4b2cc6049f4"
   },
   "governed_repository_paths": [
-    "plugins/vera/skills/vera/references/connected-studio-knowledge.md"
+    "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+    "plugins/vera/scripts/native_centrale_rischi.py",
+    "plugins/vera/scripts/native_centrale_rischi_bridge.py",
+    "plugins/vera/skills/centrale-rischi-review/SKILL.md",
+    "plugins/vera/mcp/workspace.cjs",
+    "plugins/vera/ui/workspace.js",
+    "plugins/vera/scripts/native_archive_closure.py",
+    "plugins/vera/scripts/native_centrale_rischi_editor.py",
+    "plugins/vera/scripts/native_centrale_rischi_drafts.py"
   ]
 }

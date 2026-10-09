@@ -63,6 +63,7 @@ if _SCRIPTS_DIR not in _bootstrap_sys.path:
 
 import argparse
 import copy
+import hashlib
 import json
 import re
 import shutil
@@ -394,39 +395,122 @@ def _docx_image(path: Path) -> dict[str, Any]:
     }
 
 
-def _memo_text_from_applied_state(
-    output_dir: Path,
-    *,
-    require_target: bool,
-) -> str | None:
+def _review_authority_receipt(
+    output_dir: Path, reference: object, kind: str
+) -> tuple[dict[str, Any], str]:
+    """Verify exact immutable receipt bytes and their content-addressed path."""
+
+    if not isinstance(reference, Mapping) or set(reference) != {"path", "sha256"}:
+        raise ValueError("Concordato review authority reference is invalid")
+    digest = reference["sha256"]
+    if not isinstance(digest, str) or re.fullmatch(r"[a-f0-9]{64}", digest) is None:
+        raise ValueError("Concordato review authority digest is invalid")
+    relative = f"revisions/authority/{kind}-{digest}.json"
+    if reference["path"] != relative:
+        raise ValueError("Concordato review authority path is invalid")
+    for parent in (output_dir / "revisions", output_dir / "revisions/authority"):
+        if parent.is_symlink() or not parent.is_dir():
+            raise ValueError(
+                "Concordato review authority directories must be real directories"
+            )
+    raw = _read_regular_bytes(output_dir / relative)
+    if hashlib.sha256(raw).hexdigest() != digest:
+        raise ValueError("Concordato review authority receipt changed")
+    payload = json.loads(raw)
+    if not isinstance(payload, dict):
+        raise ValueError("Concordato review authority receipt is not an object")
+    return payload, relative
+
+
+def _review_application_authorities(
+    output_dir: Path, applied: dict[str, Any], current_ui: dict[str, Any]
+) -> tuple[list[tuple[dict[str, Any], dict[str, Any]]], list[str]]:
+    """Resolve the complete ordered applied history, independently of drafts."""
+
+    if "ui_decisions_receipt" not in applied and "review_history" not in applied:
+        return [(applied, current_ui)], []
+    history = applied.get("review_history")
+    if not isinstance(history, list):
+        raise ValueError("Concordato review history is invalid")
+    records = []
+    paths: list[str] = []
+    seen: set[str] = set()
+    for index, reference in enumerate(history):
+        if not isinstance(reference, Mapping) or set(reference) != {
+            "applied_decisions",
+            "ui_decisions",
+        }:
+            raise ValueError("Concordato predecessor review reference is invalid")
+        previous, previous_path = _review_authority_receipt(
+            output_dir, reference["applied_decisions"], "applied"
+        )
+        previous_ui, ui_path = _review_authority_receipt(
+            output_dir, reference["ui_decisions"], "ui"
+        )
+        if (
+            previous_path in seen
+            or previous.get("review_history", []) != history[:index]
+        ):
+            raise ValueError("Concordato review history is not an ordered chain")
+        if (
+            "ui_decisions_receipt" in previous
+            and previous["ui_decisions_receipt"] != reference["ui_decisions"]
+        ):
+            raise ValueError("Concordato predecessor UI receipt is stale")
+        seen.add(previous_path)
+        records.append((previous, previous_ui))
+        paths.extend([previous_path, ui_path])
+    applied_ui, ui_path = _review_authority_receipt(
+        output_dir, applied.get("ui_decisions_receipt"), "ui"
+    )
+    records.append((applied, applied_ui))
+    paths.append(ui_path)
+    return records, sorted(set(paths))
+
+
+def memo_application_texts(
+    output_dir: Path, *, require_target: bool, include_current: bool = True
+) -> list[str]:
+    """Replay each exact applied memo, preserving history and literal retries."""
+
     applied_path = output_dir / "applied_decisions.json"
     if not applied_path.exists():
-        return None
+        return []
     applied = _read_object(applied_path)
-    effects = applied.get("effects")
-    if not isinstance(effects, list):
-        raise ValueError("applied_decisions.effects must be a list")
-    memo_effects = [
-        effect
-        for effect in effects
-        if isinstance(effect, Mapping)
-        and effect.get("item_id") == "codex-review-memo"
-        and effect.get("action") == "edit"
-        and isinstance(effect.get("edit_value"), str)
-        and str(effect["edit_value"]).strip()
-    ]
-    if not memo_effects:
-        return None
-    memo_text = str(memo_effects[-1]["edit_value"]).strip()
-    target = str(memo_effects[-1].get("target_artifact") or "codex_run_review.md")
-    if target != "codex_run_review.md":
-        raise ValueError("Concordato review memo target is unsupported")
-    target_path = output_dir / target
-    if not target_path.exists() and not require_target:
-        return memo_text
-    if _read_regular_bytes(target_path) != memo_text.encode("utf-8"):
-        raise ValueError("Concordato review memo is not derived from applied state")
-    return memo_text
+    records, _ = _review_application_authorities(
+        output_dir, applied, _read_object(output_dir / "ui_decisions.json")
+    )
+    memos: list[str] = []
+    for record, _ in records if include_current else records[:-1]:
+        effects = record.get("effects")
+        if not isinstance(effects, list):
+            raise ValueError("applied_decisions.effects must be a list")
+        matching = [
+            effect
+            for effect in effects
+            if isinstance(effect, Mapping)
+            and effect.get("item_id") == "codex-review-memo"
+            and effect.get("action") == "edit"
+            and isinstance(effect.get("edit_value"), str)
+            and effect["edit_value"].strip()
+        ]
+        if len(matching) > 1:
+            raise ValueError("Concordato applied memo is not unique")
+        if matching:
+            if (
+                str(matching[0].get("target_artifact") or "codex_run_review.md")
+                != "codex_run_review.md"
+            ):
+                raise ValueError("Concordato review memo target is unsupported")
+            memo = str(matching[0]["edit_value"]).strip()
+            if not memos or memos[-1] != memo:
+                memos.append(memo)
+    if memos and require_target:
+        if _read_regular_bytes(output_dir / "codex_run_review.md") != memos[-1].encode(
+            "utf-8"
+        ):
+            raise ValueError("Concordato review memo is not derived from applied state")
+    return memos
 
 
 def _append_expected_memo(path: Path, memo_text: str) -> None:
@@ -960,7 +1044,11 @@ def _validate_applied_final_artifacts(
             raise ValueError(f"final_artifacts.review_application.{field} is stale")
     if application.get("applied_decisions_path") != "applied_decisions.json":
         raise ValueError("final_artifacts applied decision path is stale")
-    for field in ("native_regenerated_count", "native_regenerated_paths"):
+    for field in (
+        "native_regenerated_count",
+        "native_regenerated_paths",
+        "review_authority_paths",
+    ):
         if field in applied or field in application:
             if application.get(field) != applied.get(field):
                 raise ValueError(f"final_artifacts.review_application.{field} is stale")
@@ -1077,30 +1165,38 @@ def _validate_independent_outputs(
             raise ValueError(
                 "Concordato semantic workpaper is not independently reproducible"
             )
-        if _docx_image(
-            output_dir / "concordato_preventivo_review_summary.docx"
-        ) != _docx_image(baseline / "concordato_preventivo_review_summary.docx"):
-            raise ValueError(
-                "Concordato semantic summary is not independently reproducible"
-            )
-
-        baseline_docx = baseline / "concordato_review_summary.docx"
-        expected_docx = Path(temporary) / "expected-summary.docx"
-        shutil.copy2(baseline_docx, expected_docx)
-        memo_text = _memo_text_from_applied_state(
-            output_dir,
-            require_target=require_final_state,
+        # The producer regenerates only the semantic summary. Reproduce its
+        # exact memo transformation; keep the numeric appendix unchanged.
+        memo_texts = memo_application_texts(
+            output_dir, require_target=require_final_state
         )
-        if memo_text is not None:
+        baseline_docx = baseline / "concordato_preventivo_review_summary.docx"
+        expected_docx = Path(temporary) / "expected-semantic-summary.docx"
+        shutil.copy2(baseline_docx, expected_docx)
+        for memo_text in memo_texts:
             _append_expected_memo(expected_docx, memo_text)
-        actual_docx_image = _docx_image(output_dir / "concordato_review_summary.docx")
+        actual_docx_image = _docx_image(
+            output_dir / "concordato_preventivo_review_summary.docx"
+        )
         allowed_docx_images = [_docx_image(expected_docx)]
-        if not require_final_state and memo_text is not None:
-            allowed_docx_images.append(_docx_image(baseline_docx))
+        if not require_final_state:
+            predecessor_docx = Path(temporary) / "expected-predecessor-summary.docx"
+            shutil.copy2(baseline_docx, predecessor_docx)
+            for memo_text in memo_application_texts(
+                output_dir, require_target=False, include_current=False
+            ):
+                _append_expected_memo(predecessor_docx, memo_text)
+            allowed_docx_images.append(_docx_image(predecessor_docx))
         if actual_docx_image not in allowed_docx_images:
             raise ValueError(
-                "Concordato summary is not independently reproducible from "
-                "deterministic facts and applied review state"
+                "Concordato semantic summary is not independently reproducible "
+                "from source authority and applied review state"
+            )
+        if _docx_image(output_dir / "concordato_review_summary.docx") != _docx_image(
+            baseline / "concordato_review_summary.docx"
+        ):
+            raise ValueError(
+                "Concordato numeric summary is not independently reproducible"
             )
 
         actual_audit = _read_object(output_dir / "run_audit.json")
@@ -1180,13 +1276,39 @@ def _validate_independent_outputs(
                 )
         else:
             applied = _read_object(applied_path)
-            effects, review_paths = _validate_applied_decisions(
-                applied,
-                actual_ui,
-                actual_review,
-                decisions,
-                items,
+            authorities, authority_paths = _review_application_authorities(
+                output_dir, applied, actual_ui
             )
+            historical_paths: set[str] = set(authority_paths)
+            prior_owned_paths: set[str] = set()
+            history = applied.get("review_history", [])
+            for index, (authority, authority_ui) in enumerate(authorities):
+                authority_decisions, authority_items = _validate_ui_decisions(
+                    authority_ui, actual_review
+                )
+                effects, review_paths = _validate_applied_decisions(
+                    authority,
+                    authority_ui,
+                    actual_review,
+                    authority_decisions,
+                    authority_items,
+                )
+                if "ui_decisions_receipt" in authority:
+                    retained = {authority["ui_decisions_receipt"]["path"]}
+                    retained.update(prior_owned_paths)
+                    for reference in history[:index]:
+                        retained.add(reference["applied_decisions"]["path"])
+                        retained.add(reference["ui_decisions"]["path"])
+                    if authority.get("review_authority_paths") != sorted(retained):
+                        raise ValueError(
+                            "Concordato retained review output authority is stale"
+                        )
+                owned_paths = {
+                    relative for paths in review_paths.values() for relative in paths
+                }
+                historical_paths.update(owned_paths)
+                prior_owned_paths.update(owned_paths)
+            review_paths["review_authority_paths"] = sorted(historical_paths)
             _validate_applied_final_artifacts(
                 actual_final,
                 expected_final,

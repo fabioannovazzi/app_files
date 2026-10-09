@@ -15,7 +15,12 @@ from openpyxl import load_workbook
 from pypdf import PdfReader
 
 from tests.plugins._teaching_release import record_native_check
-from tests.plugins.test_lipe import case_data, main, read_json
+from tests.plugins.test_lipe import (  # noqa: F401
+    case_data,
+    lipe_script_imports,
+    main,
+    read_json,
+)
 
 __all__: list[str] = []
 ROOT = Path(__file__).resolve().parents[2]

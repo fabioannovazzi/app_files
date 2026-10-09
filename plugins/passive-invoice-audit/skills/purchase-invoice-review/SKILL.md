@@ -207,3 +207,9 @@ sono inclusi nel prompt. I file sorgente e gli output restano locali, salvo il
 contenuto necessario elaborato dal modello nel normale confine Codex. Non viene
 usata una API separata, non viene richiesto `OPENAI_API_KEY` e non vengono
 scritti dati nel gestionale.
+
+La selezione del pacchetto esclude i campi dedicati alle istruzioni di
+pagamento e all’IBAN. Non cancella informazioni presenti nelle descrizioni,
+nelle causali o nei riferimenti documentali selezionati: se quei testi
+contengono nomi, identificativi o coordinate bancarie, possono arrivare al
+modello. Non viene applicata un’anonimizzazione automatica.

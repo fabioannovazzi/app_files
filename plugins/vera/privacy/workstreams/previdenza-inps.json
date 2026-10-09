@@ -47,6 +47,14 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "native-explicit-inps-review-item",
+        "purpose": "Discuss only the whole prepared public evidence item explicitly selected by the user.",
+        "content": "In optional Codex native review, an exact owner/run/revision/source/item selection returns that whole public review record, including its data, quotes, locators, uncertainty, public source references and allowed actions, within 64000 UTF-8 serialized bytes or refuses. Public acquisition metadata is not an instruction. Unsent reviewer name, chosen action, reason, edit and document-request fields, original document paths and authentication material are not included in this tool response. Ordinary specialist phases can separately read selected real case originals under the existing workflow; there is no anonymization, local-only model-processing guarantee or attestation of actual reads. The candidate forwards exact running client-engagement context to token-based Render/Apply; the production correction remains separately proposed, unapplied and unreleased. Complete app readback is bounded to 2000000 UTF-8 serialized bytes without sampling; private metadata handling depends on installed-host behavior and does not attest original/model reading.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
       }
     ]
   },
@@ -140,15 +148,27 @@
     {
       "id": "review-reference-lifecycle",
       "control": "Persisted Validate, Render, Save, and Apply calls reuse an opaque, four-hour, server-held reference bound to the exact run and stored review hash; at most 128 live references are retained and private review rows are not echoed in validation results or text fallbacks."
+    },
+    {
+      "id": "native-inps-prepared-evidence-review",
+      "control": "Optional prepared-case integration binds owner, run, closed input manifest, implementation, acquisition posture and complete output hashes. Literal reviewer/item action/reason/edit/document-request drafts are app-only, generation-bound and never inherit confirmation. Explicit selected-item context returns the whole current public evidence record within 64000 UTF-8 serialized bytes or refuses, without original paths or unsent private fields. Signed named confirmation invokes unchanged public INPS Apply; requested edits are not applied to the memo and professional-review ceilings remain. Durable uncertain intents block further native writes and shared native Archive closure. Closed sealed runs consult the public shape validator without acquiring persistence authority. Canonical running source reads/applications lose client_engagement context in token-based Render/Apply. The candidate passes that exact context through both unchanged public calls; this separately qualified correction remains unapproved, unapplied and unreleased. Initial preparation, actual model reads, installed-host and professional acceptance remain unverified."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "51cae1adfba750bb9dcb984409ac71096d5a8f0e2ede4ffcd8a020747167ab95"
+    "source_fingerprint": "0ebe82e5ab797813616553ed690ab202041c7030291d5318a739a14fee0298ca"
   },
   "governed_repository_paths": [
-    "plugins/vera/skills/vera/references/connected-studio-knowledge.md"
+    "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+    "plugins/vera/scripts/native_inps.py",
+    "plugins/vera/scripts/native_inps_bridge.py",
+    "plugins/vera/scripts/native_inps_rpc.cjs",
+    "plugins/vera/scripts/native_archive_closure.py",
+    "plugins/vera/skills/previdenza-inps/SKILL.md",
+    "plugins/vera/mcp/workspace.cjs",
+    "plugins/vera/ui/workspace.js",
+    "plugins/vera/scripts/native_workspace.py"
   ]
 }

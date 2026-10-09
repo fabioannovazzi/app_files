@@ -297,7 +297,7 @@ python scripts/semantic_review.py run-worker <output-dir>/reconciliation \
   --client-engagement <client_engagement_path>
 ```
 
-The current `journal_bank.luna_seatbelt_capsule.v3` launcher is qualified only for its
+The current `journal_bank.luna_seatbelt_capsule.v4` launcher is qualified only for its
 pinned macOS build, Codex CLI version and executable hash, Seatbelt executable
 hash, canary executable hash, and deny-default profile hash. It fails closed on
 another platform or when any pin changes. It creates a mode-`0700` ephemeral
@@ -312,8 +312,11 @@ controls under the outer sandbox; diagnostic helper permissions are never
 production permissions. The current CLI also needs metadata-only access to
 the ancestor directories of its exact executable; this permission grants no
 file-content reads. Its permitted-image and outside/symlink controls ran with
-both the outer OS boundary and inner read-only sandbox active. The v1 and v2
+both the outer OS boundary and inner read-only sandbox active. The v1, v2 and v3
 registry records remain retained unchanged; they do not qualify newer hosts.
+The current v4 qualification pins CLI 0.160.1 on macOS 26A428 after fresh
+structured and domain worker checks and positive/outside/symlink image controls.
+It retains the exact v3 production profile, features and read-only arguments.
 
 The outer boundary permits the child to read only the capsule and exact Codex
 runtime files. Codex authentication is readable and outbound network access is

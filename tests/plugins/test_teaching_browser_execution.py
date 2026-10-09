@@ -16,6 +16,7 @@ from tests.plugins.test_teaching_kit_execution import ROOT
 
 __all__: list[str] = []
 FIXTURE = ROOT / "tests/fixtures/teaching_browser"
+PLUGIN = ROOT / "plugins/vera"
 
 
 @prepared_kit("vera/browser-automation")
@@ -28,7 +29,7 @@ def test_browser_kit_replays_actual_local_page(
     monkeypatch.syspath_prepend(str(ROOT / "plugins/_shared/vendor/modules"))
     from courseware.library import CourseLibrary
 
-    kit = CourseLibrary(ROOT / "plugins/vera", {"browser-automation"}).render(
+    kit = CourseLibrary(PLUGIN, {"browser-automation"}).render(
         "browser-automation", language, tmp_path / "kit"
     )
     source_note = Path(kit["source_files"][0]).read_text()

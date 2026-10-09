@@ -477,5 +477,35 @@
     "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
     "source_review": "docs/studio_archive/course-source-compatibility-review.json",
     "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  },
+  "native_workspace_source_binding_20261006": {
+    "previous_course_sha256": "61d0d970ba3ffa890d7f7a37118b40a2bf42ccca3ab50995a126adc4a5b1e0bb",
+    "current_course_sha256": "ddf37f5926a1ffb8dbc23ed2b6afcd305f8673d80dee0392a807e2aa89918871",
+    "authored_content_unchanged": true,
+    "evidence": "docs/releases/2026-10-06-native-workspace-course-source-review.json",
+    "scope": "Prepared report native review routing only. Source mechanism qualification remains separate from exact-digest lesson execution, native learner acceptance and installed Cowork operation."
+  },
+  "native_main_integration_observation_20261009": {
+    "recorded_at": "2026-10-09T05:12:43.644813+00:00",
+    "status": "historical_review_union_current_release_unqualified",
+    "current_course_sha256": "09e76ebcd84e533ed168bf1dade51fb07d7fb3b26c8f6b33a55f4ce6bdf8bf50",
+    "retained_current_main_review_record_sha256": "086a1824323b5231b46b4e621f864a34afd654b70be33c40976e5fa06493da35",
+    "retained_candidate_review_record_sha256": "1c580cdab26c47b4cc8feedf4b899813c8ab4c02e23dbc0610b773b0d4ab9df8",
+    "retained_candidate_only_fields": [
+      "native_workspace_source_binding_20261006"
+    ],
+    "different_historical_fields": {
+      "course_sha256": {
+        "candidate_value": "ddf37f5926a1ffb8dbc23ed2b6afcd305f8673d80dee0392a807e2aa89918871",
+        "current_main_value": "1a23294b02ef3bf675356126503ff59a636c83d26e5f470896d0ea7f3ba06aed"
+      },
+      "source_update_review": {
+        "candidate_value": "docs/releases/2026-10-03-course-file-access-review.json",
+        "current_main_value": "docs/releases/2026-10-07-vera-hardlink-course-review.json"
+      }
+    },
+    "localized_editorial_and_artifact_reviews_unchanged": true,
+    "current_release_acceptance_renewed": false,
+    "review_scope": "Preserve both source-review histories and their actual original course pins. Current lesson content matches the candidate reviewed baseline and the two histories have identical locale reviews. Compiler, source hashes and render success do not renew editorial/native output acceptance. Existing current-main reviewer/date/scope/language/artifact fields remain unchanged. The retained course_sha256 is not rewritten to claim current-candidate acceptance."
   }
 }

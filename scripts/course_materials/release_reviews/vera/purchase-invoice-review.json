@@ -493,5 +493,46 @@
     "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
     "source_review": "docs/studio_archive/course-source-compatibility-review.json",
     "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  },
+  "native_supervised_intake_source_binding_20261007": {
+    "reviewed_at": "2026-10-07",
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "previous_course_sha256": "1ef59d5d1c979973c4e0cc014709a589b28cacda0f162c783243f68e13731a05",
+    "current_course_sha256": "3ea36df4193a6d63f2352e31f32850cc42dfe9f2053d3fd3ac2799f8563de0cd",
+    "changed_sources": [
+      "skills/purchase-invoice-review/SKILL.md"
+    ],
+    "content_review": "All authored multilingual lessons, examples, timing, teaching inputs and expected outputs are unchanged as JSON values. Only wrapper source SHA changes; historical editorial review is retained without claiming new native learner acceptance.",
+    "source_review": "Optional registered native intake requires explicit roles, public mapping/numeric convention, actual operator/basis and confirmation. Draft recovery does not restore confirmation. Long execution uses durable intent plus process lease and unchanged worker; uncertain job requires specialist inspection. Native file/evidence reads do not approve ledger entries. Professional labels/evaluation, CH-GE grouping and Archive closure remain the maintained component workflow; Cowork does not require native tools.",
+    "execution_requirement": "Run localized teaching/source/package checks with current digest; actual installed native host and representative professional acceptance remain pending."
+  },
+  "source_inventory_compatibility_reviews": [
+    {
+      "reviewed_at": "2026-10-07",
+      "previous_course_sha256": "3ea36df4193a6d63f2352e31f32850cc42dfe9f2053d3fd3ac2799f8563de0cd",
+      "course_sha256": "e02173d7c4c5018cd214b89a964d3a158a0ad245ec998ec25b924c3634119dea",
+      "changed_source": "skills/purchase-invoice-review/SKILL.md",
+      "scope": "Optional source native human-label/evaluation route. Only wrapper source binding changes; all authored localized lessons, exercises, duration budgets and historical worker evidence remain unchanged. New local evaluator/package/browser qualification is separate and does not claim fresh provider or installed-host acceptance."
+    }
+  ],
+  "native_main_integration_observation_20261009": {
+    "recorded_at": "2026-10-09T05:12:43.719741+00:00",
+    "status": "historical_review_union_current_release_unqualified",
+    "current_course_sha256": "7b87feb6c89287ecd9805ed91c5b555f1b9b430057e7a53236907ce0293f215c",
+    "retained_current_main_review_record_sha256": "3afa54e8d959ab9ecec00ceaf01781a7e63cf5d6d60899d34f585dd6800482c0",
+    "retained_candidate_review_record_sha256": "c7f06b5a638d8544282bb841bddf40e81b981f9b827f8b9205a02a2286d49805",
+    "retained_candidate_only_fields": [
+      "native_supervised_intake_source_binding_20261007",
+      "source_inventory_compatibility_reviews"
+    ],
+    "different_historical_fields": {
+      "course_sha256": {
+        "candidate_value": "e02173d7c4c5018cd214b89a964d3a158a0ad245ec998ec25b924c3634119dea",
+        "current_main_value": "45df4d7b23460b8ab9f78fa951cedd47056da73e4ad6e6434f3fcfb289e90bbb"
+      }
+    },
+    "localized_editorial_and_artifact_reviews_unchanged": true,
+    "current_release_acceptance_renewed": false,
+    "review_scope": "Preserve both source-review histories and their actual original course pins. Current lesson content matches the candidate reviewed baseline and the two histories have identical locale reviews. Compiler, source hashes and render success do not renew editorial/native output acceptance. Existing current-main reviewer/date/scope/language/artifact fields remain unchanged. The retained course_sha256 is not rewritten to claim current-candidate acceptance."
   }
 }

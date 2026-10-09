@@ -23,6 +23,8 @@ from tests.plugins.test_teaching_kit_execution import (
     _write,
 )
 
+COURSE_PLUGIN_ROOT = ROOT / "plugins/vera"
+
 WORDS = {
     "it": [
         "Interpretazione della bozza fornita, soggetta a verifica professionale.",
@@ -363,7 +365,7 @@ def test_concordato_kit_builds_current_review_from_fictional_plan(
             if path.is_file()
         }
         context = run["context"]
-        kit = CourseLibrary(ROOT / "plugins/vera", {"concordato-plan-review"}).render(
+        kit = CourseLibrary(COURSE_PLUGIN_ROOT, {"concordato-plan-review"}).render(
             "concordato-plan-review", language, tmp_path / "practice-kit"
         )
         imports = [

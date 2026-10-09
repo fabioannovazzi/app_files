@@ -291,6 +291,58 @@
     "source_review": "docs/studio_archive/course-source-compatibility-review.json",
     "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
   },
+  "native_workspace_source_binding_20261006": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-06T20:22:34.949108+00:00",
+    "previous_course_sha256": "65bc984c4ff756f2ae19ba1ec39335f545da45e91d8c9d9dd37f35162f361b34",
+    "current_course_sha256": "1783b355e955d030c88141c94d41b3b9e5e9a8abf13de4bdca3b376fa1a8a981",
+    "authored_content_unchanged": true,
+    "changed_sources": [
+      "modules/bilancio-xbrl-it/scripts/workspace_bridge.py"
+    ],
+    "scope": "Canonical current Bilancio workflow identity and optional owned Studio Archive native directory/setup/refresh. Engines, source qualification and authored teaching text are unchanged. Native intake/case connection, Treasury rename recovery, exact-digest teaching execution and installed native/Cowork acceptance remain pending.",
+    "previous_binding_review": {
+      "reviewer": "Codex /root",
+      "reviewed_at": "2026-10-06T20:04:26.134896+00:00",
+      "previous_course_sha256": "66a3cd284ec9228a6269323dc29c8f96d8d5ebb73fd93759a26d9d9426fbc175",
+      "current_course_sha256": "65bc984c4ff756f2ae19ba1ec39335f545da45e91d8c9d9dd37f35162f361b34",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        "skills/bilancio-oic/SKILL.md"
+      ],
+      "scope": "Prepared-run optional native handoff; exact canonical case/service and retained authority, professional gates unchanged. No native/Cowork host acceptance; Open-item full regeneration remains specialist-led. Fresh exact-digest teaching execution remains required.",
+      "previous_binding_review": {
+        "reviewer": "Codex /root",
+        "reviewed_at": "2026-10-06T18:17:44.961639+00:00",
+        "source_review": "The inspected Bilancio service additions provide authorised bounded read projections and explicit existing-service review writes; existing lesson engine commands and calculations are unchanged. Studio Archive adds optional native saved-run routing with an explicit fallback to its existing file-based route. Authored locales, supplied inputs, pacing and expected outputs are byte-equivalent outside source inventory.",
+        "evidence": "docs/releases/2026-10-06-native-workspace-course-source-review.json",
+        "execution_requirement": "Fresh execution against this exact course digest remains mandatory before release; historical editorial and artifact reviews are retained without claiming new learner or installed-host acceptance."
+      }
+    }
+  },
+  "native_main_integration_observation_20261009": {
+    "recorded_at": "2026-10-09T05:12:43.601200+00:00",
+    "status": "historical_review_union_current_release_unqualified",
+    "current_course_sha256": "ba8696a645dc8efb922f928e4a72b92d2876841638a603c0cc1813b9d815b6e3",
+    "retained_current_main_review_record_sha256": "359991407a699cd5163e936ce45c950aaa981f6b339f76bd32ea2357e9f81a1d",
+    "retained_candidate_review_record_sha256": "b21d8d985aa29073c56956eb8c52bf8a463513feeb58f2455bb50d91fe9b798f",
+    "retained_candidate_only_fields": [
+      "native_workspace_source_binding_20261006"
+    ],
+    "different_historical_fields": {
+      "course_sha256": {
+        "candidate_value": "1783b355e955d030c88141c94d41b3b9e5e9a8abf13de4bdca3b376fa1a8a981",
+        "current_main_value": "e90d80a038ac8ecec8eb66bee0235c6589418417fb72383fcfc66fca4e6c3762"
+      },
+      "source_update_review": {
+        "candidate_value": "docs/releases/2026-10-03-course-file-access-review.json",
+        "current_main_value": "docs/releases/2026-10-07-vera-hardlink-course-review.json"
+      }
+    },
+    "localized_editorial_and_artifact_reviews_unchanged": true,
+    "current_release_acceptance_renewed": false,
+    "review_scope": "Preserve both source-review histories and their actual original course pins. Current lesson content matches the candidate reviewed baseline and the two histories have identical locale reviews. Compiler, source hashes and render success do not renew editorial/native output acceptance. Existing current-main reviewer/date/scope/language/artifact fields remain unchanged. The retained course_sha256 is not rewritten to claim current-candidate acceptance."
+  },
   "native_bilancio_branch_history_20261009": {
     "scope": "historical_branch_review_not_new_release_acceptance",
     "course_sha256": "66a3cd284ec9228a6269323dc29c8f96d8d5ebb73fd93759a26d9d9426fbc175",

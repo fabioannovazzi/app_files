@@ -1681,8 +1681,15 @@ def test_public_page_and_privacy_surface_are_registered() -> None:
     assert 'href="https://centrale-rischi-synthetic.fabio3143.chatgpt.site/"' in page
     assert 'id="example"' in page
     assert manifest["workstream"] == "centrale-rischi-review"
-    assert manifest["external_boundaries"] == []
-    mapping_class, review_class, commentary_class = manifest["model_context"]["classes"]
+    assert [row["id"] for row in manifest["external_boundaries"]] == [
+        "host-connected-studio-knowledge"
+    ]
+    assert manifest["external_boundaries"][0]["optional"] is True
+    assert manifest["external_boundaries"][0]["requires_confirmation"] is True
+    classes = {row["id"]: row for row in manifest["model_context"]["classes"]}
+    mapping_class = classes["centrale-rischi-mapping-inspection"]
+    review_class = classes["centrale-rischi-post-calculation-review"]
+    commentary_class = classes["centrale-rischi-commentary"]
     assert "stable table IDs" in mapping_class["content"]
     assert "each table's source SHA-256 hash" in mapping_class["content"]
     assert "inventory SHA-256 hash" in mapping_class["content"]

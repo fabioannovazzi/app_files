@@ -398,6 +398,15 @@ def pytest_runtest_teardown(item: object) -> None:
     for name, module in list(sys.modules.items()):
         if name in prior_modules:
             continue
+        if (
+            name == "swig_runtime_data4"
+            and type(getattr(module, "type_pointer_capsule", None)).__name__
+            == "PyCapsule"
+        ):
+            # PyMuPDF's compiled extensions share this process-owned type table.
+            # It has no import spec but is not a test stub: removing it creates
+            # incompatible SwigPyObject identities on the next PDF operation.
+            continue
         if getattr(module, "__spec__", None) is None or _is_plugin_local_module(
             module, plugins_root=plugins_root
         ):

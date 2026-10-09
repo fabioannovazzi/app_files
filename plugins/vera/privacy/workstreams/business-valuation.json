@@ -47,6 +47,22 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "optional-native-selected-workpaper",
+        "purpose": "Discuss the exact user-selected current retained public valuation workpaper.",
+        "content": "The optional Codex panel receives the complete registered case, full retained HTML, complete paginated public collections and exact output paths as application-only payloads. These app reads do not themselves send case contents to the model. An explicit vera_workspace_valuation_explain call returns one exact current selected record, its declared entity, public status and unassessed PIV conformity. The record may include real amounts, assumptions, mandate, source references, named reviewers and review times without anonymization. It neither opens original sources automatically nor approves the case. Separately chosen original files and the unchanged specialist file workflow may still be read by the selected model under the existing account boundary. The adapter invokes no provider, public-research or send/publish route. Local arithmetic does not establish local-only model processing. The complete selected record may also include a successor-case decision and its actual declared reviewer, timezone-aware time, basis and dependency digest. Incomplete native review drafts remain private app state and are not automatically sent to the model. Explicit professional review creates an immutable registered successor case and fresh run locally; calculation remains separate, names are not authenticated identity and predecessor outputs are preserved. No model or external send is invoked by draft storage or decision conservation.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
+        "id": "optional-native-whole-case-authoring",
+        "purpose": "Prepare or correct a whole public valuation case under an explicit selected-source model mandate.",
+        "content": "An explicit author-context tool may supply the literal question, selected original receipt IDs/hashes/authorized paths, complete explicitly chosen predecessor or proposal and public method/contract/schema paths to the selected Codex model. This may include real mandate and entity details, private forecasts, economic assumptions, personal information, source references and actual prior reviewer names/times/bases without anonymization. The model separately reads only the authorized originals with maintained runtime readers; a grant, inventory or copied chat request is not evidence of reading. App-only source-choice/question drafts and unfinished named full-case readback attribution are not automatically model context. Staging preserves whole proposed cases and prospective local producer validation privately, refusing fabricated or changed human reviews while retaining prior raw reviews; public dependency hashes determine efficacy. A separately confirmed actual named full-case readback conserves the immutable case and receipt in a fresh same-engagement run locally. The adapter invokes no provider worker, public research, publication or send route. Calculation and individual method/conclusion acceptance are separate; names are not authenticated identity and PIV remains unassessed. Explicitly selected registered successor cases may later expose their actual prior attestation facts under the same whole-case authorization. Complete oversized context is refused, never sampled.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
       }
     ]
   },
@@ -117,7 +133,7 @@
     "reviewed_at": "2026-10-01",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "7e5547e4445003312d79a351a73281d30a352adf7011f23ca7b9aeaae31e41da"
+    "source_fingerprint": "44ea1712614ae7a5068c8e093e96f6b82d6782f87bc4b5f7c9fac4c356de58f3"
   },
   "governed_repository_paths": [
     "plugins/clara/scripts/public_http.py",

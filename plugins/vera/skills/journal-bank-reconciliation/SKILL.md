@@ -30,6 +30,33 @@ Current user requests take precedence over saved preferences.
 
 # Journal-Bank Reconciliation
 
+Use `vera_workspace_open` when callable and the exact Studio Archive run is
+authorised through the owned archive or a trusted operator binding.
+Read `../vera/references/native-workspace.md` before the handoff. The panel opens
+the maintained review service; explanations use only its selected-case projection
+with exact identifiers omitted by default. Retain the source-bound mapping,
+material-value replay, residual review and unsupported-PDF gates below. A running
+run without outputs also offers native initial inspection: the user explicitly
+assigns the exact imported bank/journal inputs and optional single sample, reviews
+every proposed file mapping and the documented currency/entity and relationship
+policy, then executes the maintained reconciliation after source qualification.
+Only explicit selected-source discussion sends a bounded producer preview of at
+most 20 rows to the model. Exact source copies and each inspection/review remain
+inside this run; decisions use the maintained public receipt builders. Results
+open in the existing review adapter and do not complete or approve the run.
+Unsupported layouts remain blocked. Interrupted uncertain execution preserves
+artifacts and requires specialist recovery; the panel never silently reruns it.
+Unsent source roles/languages and raw mapping/policy fields can be retained in a
+local actor/tenant/run draft outside official outputs. Recovery is explicit and
+requires the unchanged preparation revision; stale drafts cannot be applied to
+new sources. A draft is neither a reviewed receipt nor authorization to execute.
+The professional confirmation is never recovered. Exact draft checkpoints reject
+concurrent replacement; a denied save or teardown must not claim persistence.
+Initial imports, artifact handoffs, the separate residual worker, finalization
+and recovery remain specialist-led. Without native tools
+or a trusted binding, continue the existing persistent specialist route, including
+in Cowork; native availability never substitutes for professional review.
+
 For a Geneva (CH-GE) mandate, read `../vera/references/localization/geneva.md` first and use this existing function’s Geneva adaptation in its resolved component skill. Language alone never selects jurisdiction.
 
 

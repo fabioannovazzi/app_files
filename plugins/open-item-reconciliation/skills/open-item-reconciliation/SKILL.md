@@ -246,6 +246,19 @@ prepared assumptions and receipts, material values, gates, final inventory,
 and exact run tree must all revalidate. A successor is invalid if that
 content-addressed history is missing, changed, expanded, reordered,
 contradictory, or path-forged.
+The raw runner retains the original report title, narrative and requested language
+in `run_manifest.json.report_options`. Its public
+`regenerate_raw_input_reconciliation` entrypoint rebuilds the same registered raw
+sources with those exact settings and the current applied review. It checks the
+settings against the retained predecessor, requires the separately retained
+checkpoint and uses the existing detached review transaction. The candidate must
+freshly replay before promotion; failed production leaves the prior package
+unchanged. No row-level matching or professional judgment is replaced. The
+native Vera panel exposes this as a separate, explicitly confirmed regeneration
+after Apply. A package without retained settings, normalized-only preparation or
+an explicit cache override stays in the specialist route; do not manufacture
+settings, move its cache or treat a stale receipt as the successor seal.
+
 Before that first apply, retain the predecessor seal's 64-hex
 `content_sha256` through a separate review channel. Supply it explicitly as
 `expected_predecessor_checkpoint` on browser/MCP apply, on the successor
@@ -253,7 +266,7 @@ workflow rebuild, and on successor validation. Never infer or copy this value
 from the candidate successor tree. Missing or unequal checkpoints fail without
 changing the output tree. Checkpoint provenance remains the responsibility of
 the separate channel; digest equality does not authenticate a reviewer.
-That replay also enforces the fixed ordered 25-file implementation contract,
+That replay also enforces the fixed ordered 26-file implementation contract,
 including its pre-import bootstrap and every cache entry, plus the exact
 physical file-and-directory closure at the run and final-output boundaries.
 MCP terminal readiness must use the same complete replay and invokes Python

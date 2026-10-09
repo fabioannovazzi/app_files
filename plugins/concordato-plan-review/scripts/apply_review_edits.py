@@ -68,7 +68,7 @@ from pathlib import Path
 from typing import Any
 
 from docx import Document
-from replay_assurance import replay_assurance
+from replay_assurance import memo_application_texts, replay_assurance
 from vera_assurance import (  # noqa: E402
     AssuranceContractError,
     load_client_engagement_context_file,
@@ -398,7 +398,11 @@ def apply_review_edits(
         clean_text(candidate_effects[-1].get("item_id")),
         SUMMARY_DOCX,
     )
-    _append_memo_to_summary_docx(docx_path, memo_text)
+    preceding_memos = memo_application_texts(
+        output_dir, require_target=False, include_current=False
+    )
+    if not preceding_memos or preceding_memos[-1] != memo_text:
+        _append_memo_to_summary_docx(docx_path, memo_text)
 
     native_regenerated_paths = [SUMMARY_DOCX]
     native_pending = [

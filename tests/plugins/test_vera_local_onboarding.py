@@ -17,6 +17,7 @@ from tests.plugins._teaching_release import record_native_check
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS = ROOT / "plugins/vera/scripts"
+COURSE_PLUGIN_ROOT = ROOT / "plugins/vera"
 
 
 def load(name: str):
@@ -815,7 +816,7 @@ def test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy(
     started = change(store, "start", workflow_id="studio-archive")
     token = started["lessons"][0]["worker_token"]
     kit_root = tmp_path / "kit"
-    kit = CourseLibrary(ROOT / "plugins/vera", {"studio-archive"}).render(
+    kit = CourseLibrary(COURSE_PLUGIN_ROOT, {"studio-archive"}).render(
         "studio-archive", language, kit_root
     )
     sources = [Path(path) for path in kit["source_files"]]
@@ -1292,7 +1293,7 @@ def test_organization_kit_keeps_result_and_runs_reviewed_practice_copy(
     )
     started = change(store, "start", workflow_id="archive-organization")
     kit_root = tmp_path / "kit"
-    kit = CourseLibrary(ROOT / "plugins/vera", {"archive-organization"}).render(
+    kit = CourseLibrary(COURSE_PLUGIN_ROOT, {"archive-organization"}).render(
         "archive-organization", language, kit_root
     )
     demo = _run_organization_teaching_case(
@@ -1455,7 +1456,7 @@ def test_vouching_kit_runs_live_sample_handoff_and_current_checks(
     monkeypatch.syspath_prepend(str(ROOT / "plugins/_shared/vendor/modules"))
     from courseware.library import CourseLibrary
 
-    kit = CourseLibrary(ROOT / "plugins/vera", {"vouching"}).render(
+    kit = CourseLibrary(COURSE_PLUGIN_ROOT, {"vouching"}).render(
         "vouching", language, tmp_path / "kit"
     )
     store.begin()

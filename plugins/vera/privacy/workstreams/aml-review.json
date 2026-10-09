@@ -35,6 +35,22 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "native-selected-aml-record",
+        "purpose": "Explain one explicitly selected immutable producer section",
+        "content": "Exact selected assessment/finding/reference/mandate/previous-review change/calculation/attributed decision or one disposition, with cited source metadata when applicable, jurisdiction, date and producer assurance limits. Real professional facts, personal data and source references may be included; the tool refuses stale/foreign records and limits model payloads to 64 KB. No automatic complete proposal, raw evidence, unfinished draft or model worker is dispatched. Private UI metadata is ordinary host/provider processing and is not an anonymization or local-only boundary. Specialist analysis may separately read complete selected evidence as described above.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
+        "id": "native-explicit-aml-authoring",
+        "purpose": "Prepare a model-authored review from an explicit actual question and chosen registered sources",
+        "content": "Unfinished question/source-selection drafts stay app-private and confer no model grant. After an explicit app request, the owner/tenant/client/engagement/run-bound opaque mandate allows the current chat to read the literal question and COMPLETE chosen local paths, SHA-256, relative paths and import/upstream receipt metadata, up to 100 KB without sampling. Selected originals may enter model context in full when the chat reads them; no automatic anonymization or excerpt cap applies to those file reads. The explicit ui/message handoff contains only the exact mandate references and workflow instructions; unsupported hosts display the request for copying. Model-authored review JSON goes to the local staging tool; complete public record and memo stay app-private, up to 2 MB. The model cannot submit a professional_decision. No research query with client identifiers, screening provider, calendar, client/SOS message or new model worker is dispatched. Private app metadata remains host/provider processing, not a local-only boundary.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
       }
     ]
   },
@@ -85,15 +101,35 @@
     {
       "id": "record-integrity",
       "control": "Records bind source hashes, prior client and engagement identity, and exact proposal digests for decisions; content-addressed output never overwrites an earlier record."
+    },
+    {
+      "id": "native-immutable-review",
+      "control": "The optional native route replays exact registered evidence and immutable producer JSON/memo pairs. Version choice is explicit; no latest decision, source truth or suspicion is inferred. App-only paginated drafts merge exact finding dispositions outside official outputs in actor/tenant/run/record scope with atomic permissions, integrity checks and signed compare-and-set checkpoints. Explicit whole-proposal confirmation appends a complete attributed human decision through the unchanged public build/save service, retaining prior records, findings and unresolved questions. Validate before durable intent; uncertain interrupted append refuses automatic repetition and successful retries replay the saved record. Reviewer attribution is not authenticated signature, AML clearance, client disclosure, SOS filing or run completion. Initial analysis, source qualification, new evidence, model-data reporting and finalization remain specialist-led."
+    },
+    {
+      "id": "explicit-native-model-proposal",
+      "control": "Signed app-only source mandate and literal intake CAS bind current exact run and actor/tenant. Stable opaque grant enables only selected actual evidence, complete source closure and model staging CAS; fixed checks establish identity and integrity rather than legal relevance or truth. The unchanged public AML build/render/save service validates source hashes and same-engagement sealed AML predecessor from a fresh run, retains full proposed findings and memo, and rejects model-authored professional decisions. Explicit signed selection conserves the exact staged draft_for_review record, with full preview replay and exact retries, without overwriting old records. Pending, orphaned, altered or missing completed staging/conservation receipts block additional authoring, professional decisions and Archive closure. Final human decision, run-level model-data report and explicit all-output declaration/finalization stay separate."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "8e769d713b15c19742dd19fcaf9ac22594da92b50db6368df48c62671ff787d7"
+    "source_fingerprint": "af6eca7b3227eb537b4cb0e639b28c01d8e9ed8db31f11226ea91ddf93c3a57f"
   },
   "governed_repository_paths": [
-    "plugins/vera/skills/vera/references/connected-studio-knowledge.md"
+    "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+    "plugins/vera/scripts/native_workspace.py",
+    "plugins/vera/scripts/native_aml.py",
+    "plugins/vera/scripts/native_aml_bridge.py",
+    "plugins/vera/mcp/workspace.cjs",
+    "plugins/vera/ui/workspace.html",
+    "plugins/vera/ui/workspace.js",
+    "plugins/vera/ui/workspace.css",
+    "plugins/vera/skills/aml-review/SKILL.md",
+    "plugins/vera/skills/vera/references/native-workspace.md",
+    "plugins/vera/scripts/native_assetti.py",
+    "plugins/vera/scripts/native_aml_authoring.py",
+    "plugins/vera/scripts/native_archive_closure.py"
   ]
 }

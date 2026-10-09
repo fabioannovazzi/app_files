@@ -495,6 +495,7 @@ def test_local_protocol_host_serves_current_ui_resource(tmp_path):
     )
     try:
         url = process.stdout.readline().strip()
+        assert url.startswith("http://127.0.0.1:"), process.communicate(timeout=10)[1]
         with urlopen(url + "/ui", timeout=10) as response:
             html = response.read().decode("utf-8")
         assert "Fascicoli di bilancio" in html

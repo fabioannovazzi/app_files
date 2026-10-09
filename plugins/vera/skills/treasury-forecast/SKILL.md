@@ -30,6 +30,31 @@ Current user requests take precedence over saved preferences.
 
 # Budget di tesoreria
 
+<!-- VERA_OPENAI_NATIVE_WORKSPACE_BEGIN -->
+When the native tools are callable and this exact Studio Archive run is bound,
+read `../vera/references/native-workspace.md` and open `vera_workspace_open`.
+The preparation panel keeps an actor-private partial draft of explicit company,
+EUR/CHF currency, cutoff, horizon, coverage and the six registered table choices.
+For XLSX declare the exact sheet name; optional extracted FatturaPA XML and an
+accepted predecessor must be exact registered receipts. Never infer table roles
+from names or invent a predecessor digest. The panel reads every source row
+through the maintained public parser and calculator before confirmed preparation.
+Source or field changes invalidate the visible verification and confirmation;
+reopening a draft never recovers confirmation. Do not ask the professional to
+edit JSON. Unsupported exports still require the specialist preparation route.
+
+Explicit confirmation authorizes the first proposal, not professional acceptance
+or Archive completion. Native preparation retains its exact intake and immutable
+first version; identical retries replay the receipt and interrupted writes require
+specialist recovery. Review event dates and their bases through the existing
+session service, then accept only the exact displayed proposal after separate
+explicit professional review. Accepted history remains immutable. Later source
+updates and missing/renamed source-session references require the specialist route;
+never rewrite source pointers to make a broken session appear recovered.
+Without native tools or a trusted binding, continue persistent specialist work,
+including Cowork. Missing inputs and incomplete coverage remain visible.
+<!-- VERA_OPENAI_NATIVE_WORKSPACE_END -->
+
 For a Geneva (CH-GE) mandate, read `../vera/references/localization/geneva.md` first and use this existing function’s Geneva adaptation in its resolved component skill. Language alone never selects jurisdiction.
 
 

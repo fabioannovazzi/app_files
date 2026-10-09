@@ -33,6 +33,14 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "native-prepared-studio-website-app-readback",
+        "purpose": "Inspect exact already prepared private studio website evidence, browser artifacts and approval-bound local packages",
+        "content": "Optional OpenAI native app-only tools reopen the complete intake, studio owner, source register, brief/source-use plan, validation, quality/screenshots and review events, exact site/package/Sites-binding metadata and literal unfinished reviewer fields. Complete private payloads refuse over 2000000 UTF-8 serialized bytes without sampling; declared screenshot/site/package artifact downloads refuse files over 1000000 source bytes and return byte-verified base64 privately. Original source contents are not returned by this panel. Model content/structuredContent carry status/count/work-reference summaries rather than full app records when the host honors app-only/_meta visibility. No native website model-context or initial/model authoring route is supplied; ordinary specialist stages can separately read approved website material under their purpose-bound source-use plan. The workspace remains studio-owned outside client engagements. Actual host privacy/rendering is unverified; local review/package/binding is not external publication or delivery evidence. No automatic anonymization or local-only model processing guarantee.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
       }
     ]
   },
@@ -193,15 +201,26 @@
     {
       "id": "exact-package-and-visible-delivery-binding",
       "control": "Preview and release packages reject every symlink and non-regular file, copy exact site bytes atomically, record and rehash every packaged file, and bind intake, brief, validation, quality-assessment and current review digests. Preview packaging additionally requires an explicitly selected route and noindex, nofollow and noarchive on every HTML page; release packaging rejects every preview robots directive and requires all current professional review scopes. Delivery recording revalidates the complete package, exact selected destination, non-empty user confirmation and visible URL or provider receipt. Sites deliveries additionally bind the exact website payload to the current Vera package, source commit, deployment archive, project metadata, server bundle, saved version, succeeded deployment and deployed browser evidence."
+    },
+    {
+      "id": "native-owned-prepared-website",
+      "control": "Explicit host tenant/operator/workspace/run bindings, verified source/quality/whole-workspace bytes, exact current scope and private draft CAS govern native review. Writes require reviewer role, exact saved literal fields, renewed confirmation and durable idempotent intents. Complete current reviews, screenshot hashes and selected external-route posture remain public-producer prerequisites. Changed or uncertain outcomes refuse automatic replay; exact retained receipts are revalidated. Native helpers invoke only maintained local validation/review/package/Sites-binding producers, never deploy, upload or record fabricated delivery. Only exact declared current artifacts are downloadable; original sources and arbitrary paths are excluded. Separate actual site browser QA and installed host acceptance remain unverified."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "6255b23056ea9b8188d478c7ba8260ddcbf826a56c82b6e0d82454a88b77e52c"
+    "source_fingerprint": "c0628896c0804b9b0f03b9590f02c1f8fefb9927f06caf8e56f619474a28030f"
   },
   "governed_repository_paths": [
-    "plugins/vera/skills/vera/references/connected-studio-knowledge.md"
+    "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+    "plugins/vera/scripts/native_website.py",
+    "plugins/vera/scripts/native_website_bridge.py",
+    "plugins/vera/ui/website.js",
+    "plugins/vera/skills/presenza-digitale-studio/SKILL.md",
+    "plugins/vera/mcp/workspace.cjs",
+    "plugins/vera/ui/workspace.js",
+    "plugins/vera/scripts/native_workspace.py"
   ]
 }

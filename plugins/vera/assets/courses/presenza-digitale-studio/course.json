@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "presenza-digitale-studio",
-  "revision": "2026-09-14.2",
+  "revision": "2026-10-08.1",
   "seconds": [
     45,
     60,
@@ -160,7 +160,7 @@
     {
       "path": "skills/presenza-digitale-studio/SKILL.md",
       "repository_path": "plugins/vera/skills/presenza-digitale-studio/SKILL.md",
-      "sha256": "2a4c3fc9a527c9cb3d46720480d9673ee8f586cef0d2859e55e4043f25af1f84"
+      "sha256": "e7f17236ce72cf42a560e47d2430fc5d9acc04e4f2ad6c0ceb4a94fd3ba7d849"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

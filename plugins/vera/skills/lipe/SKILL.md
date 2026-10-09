@@ -30,6 +30,30 @@ Current user requests take precedence over saved preferences.
 
 # LIPE
 
+## Optional native calculation panel
+
+When this host exposes `vera_workspace_open`, the user may choose a registered
+LIPE run and open **Calcoli LIPE**. The panel lists exact imported JSON identities;
+file extension does not establish that a document is a valid or reviewed case.
+The user explicitly selects the already reviewed case and confirms calculation.
+The unchanged LIPE CLI persists immutable workpapers, including blocked results.
+The panel reads only native-receipted revisions, with bounded producer records;
+discussion retrieves one exact selected record and its pilot/export limits.
+It never substitutes a newer revision for a requested one.
+
+This initial adapter does not edit cases or create tax confirmations. Keep source
+interpretation, case corrections, catalog configuration, external signed approval,
+model-data session reporting, XML export and run finalization in the maintained
+workflow below. Catalog-bound cases retain `CATALOG_NOT_AVAILABLE` when the panel
+has no catalog connection; never remove the binding to bypass that gate. Existing
+unreceipted workpapers or interrupted execution require specialist recovery; the
+panel does not silently adopt or rerun them. Calculations remain synchronous with
+a 90-second bound. Full native-host and professional acceptance are pending.
+
+If native UI or local MCP is unavailable, including Cowork, continue through the
+same component skill, managed Python and persistent customer-folder inputs and
+outputs. Do not replace this fallback with a native-only route.
+
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
 
 Resolve `../../modules/lipe` from this skill directory when it

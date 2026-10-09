@@ -30,6 +30,40 @@ Current user requests take precedence over saved preferences.
 
 # Riconciliazione partite
 
+For a prepared and started run with exact registered source receipts, the
+optional native workspace also offers initial preparation. It preserves private
+unfinished scope and per-source choices without restoring confirmation. The
+reviewer declares every source's role, maintained adapter, perimeter, money and
+date conventions and the evidence policies; filenames do not authorize those
+choices. Originals up to 4 MiB can be consulted privately in the panel; larger
+documents remain in the registered Archive folder. After renewed explicit
+review, the panel calls the unchanged raw producer in `outputs/reconciliation/`
+and replays assurance, retaining its complete outputs and failed gates. It then
+hands back to the existing review. No source qualification, professional
+approval or Archive completion is inferred from a draft or successful call.
+Interrupted intents or existing partial outputs require specialist recovery
+without automatic repetition. Read `../vera/references/native-workspace.md`
+before this handoff. These source-qualified controls still require installed
+native-host and representative professional acceptance; use the ordinary
+persistent specialist route when the panel is unavailable, including in Cowork.
+
+For an already prepared review, use `vera_workspace_open` when callable and the
+exact Studio Archive run has a trusted operator binding. Read
+`../vera/references/native-workspace.md` before the handoff. The panel uses the
+maintained Python review service; discussion retrieves only the selected case
+through the existing public model projection. Assured Apply requires the exact
+predecessor checkpoint retained independently of mutable run outputs. After Apply, `vera_workspace_open_items_regenerate` can rebuild a raw-input
+package that retains its original report settings and uses its package-owned
+default cache. It re-extracts the same registered sources, uses only the applied
+professional review and performs fresh successor assurance replay inside the
+maintained whole-tree transaction. Title and narrative are preserved. Missing
+settings, normalized-only packages or custom cache locations keep the specialist
+route; never infer settings or read a checkpoint from the candidate tree.
+Regeneration does not complete the Archive run or waive remaining checks. Initial
+intake, mapping and source qualification retain their existing gates. Without
+native tools or a trusted binding, continue persistent specialist work, including
+in Cowork. Keep the output/disclosure boundary below unchanged.
+
 For a Geneva (CH-GE) mandate, read `../vera/references/localization/geneva.md` first and use this existing function’s Geneva adaptation in its resolved component skill. Language alone never selects jurisdiction.
 
 

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "fusione-guidata",
-  "revision": "2026-10-01.1",
+  "revision": "2026-10-08.1",
   "seconds": [
     45,
     60,
@@ -125,7 +125,7 @@
     {
       "path": "skills/fusione-guidata/SKILL.md",
       "repository_path": "plugins/vera/skills/fusione-guidata/SKILL.md",
-      "sha256": "9a39ed663d732bcc80e41823e31a97a20857934ac50c87d8004ff80c9adf6e7f"
+      "sha256": "b391bfba87e29638b803dadef78cb5ee1c409b941c7b4bca6aaea8d3e0637753"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

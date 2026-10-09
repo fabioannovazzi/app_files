@@ -60,7 +60,10 @@ def _archive_binding(binding: Mapping[str, Any]) -> dict[str, Any]:
             "Studio Archive binding could not be verified; check the configured run"
         ) from exc
     run = loaded["run"]
-    if run["client_id"] != binding["client_id"] or run["workflow_id"] != "bilancio-oic":
+    if (
+        run["client_id"] != binding["client_id"]
+        or run["workflow_id"] != "bilancio-xbrl-it"
+    ):
         raise PermissionError(
             "Workspace case is bound to a different client or workflow"
         )
