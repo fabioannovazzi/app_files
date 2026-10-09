@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-09",
+  "clara_version": "0.1.260",
+  "changed_implementation": false,
+  "reviewed_source_delta": "Only Vera entries/release-review records in the shared course catalogue and Clara canonical version metadata changed. Clara course execution, source selection, local/host boundaries, destinations, payloads, consent and security controls are unchanged.",
+  "refreshed_identifiers": [
+    "learn-with-clara",
+    "plugin-update-check",
+    "advisory-brief-planner",
+    "advisory-case-director",
+    "advisory-deliverable-validator",
+    "clara",
+    "deck-correction",
+    "reporting-engine",
+    "research-video",
+    "transcribe"
+  ],
+  "diagnostics": [],
+  "test_only_fix": "The lifecycle packaging mock now accepts the exact optional project_vera_privacy keyword; production packagers are unchanged."
+}
