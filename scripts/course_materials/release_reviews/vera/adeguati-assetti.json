@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "adeguati-assetti",
-  "course_sha256": "75802fa802d048f825f1db5853cad04a4705062a5cf598d36cacb54bc7cc7837",
-  "reviewer": "Codex /root: source, multilingual editorial and synthetic artifact review",
-  "reviewed_at": "2026-10-01T08:03:58.950451+00:00",
-  "review_scope": "Replaces the assessment-only outline with five localized resumable construction chapters and a separate financial lab. Read current specialist skill, native contract, intake, exports and adapters. Inspected original fictional inputs, localized Word/PDF/Markdown content, registers, snapshots, financial rows and KPI history. Rendered Italian course and chapter and English course in the Codex browser; visually inspected all pages of a generated manual. The PDF exporter may orphan its final version line on a second page; this remains a disclosed pre-existing export limitation, not a claim of client-ready layout. Fixed export headings are Italian and some test attribution/engineering labels are English. Native voice, window arrangement, learner participation/understanding, authenticated professional approval and real-company operating effectiveness are not established. Technical tests manufacture separately receipted synthetic decisions only at execution time; no approved case, approval or result is shipped as a teaching input. The 390-second metadata describes the introductory lesson; extended construction and financial labs require further resumable sessions. Deployment review: inspected the five localized data-context statements after replacing the ambiguous OpenAI/Cowork account name with the selected host or service account. The existing host-specific footer identifies OpenAI for Codex and Anthropic for Cowork. Inputs, execution code, reviewed output artifacts and processing boundaries are unchanged. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+  "course_sha256": "85d3dfb87b8eecf22594a6505cad5fdc5a7883165e054620b4c28450f1b91481",
+  "reviewer": "Codex bounded teaching-material and source integration review",
+  "reviewed_at": "2026-10-09T13:18:33.832104+00:00",
+  "review_scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -685,5 +685,72 @@
     "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
     "source_review": "docs/studio_archive/course-source-compatibility-review.json",
     "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  },
+  "native_assessment_source_binding_20261007": {
+    "reviewed_at": "2026-10-07",
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "previous_course_sha256": "81ac814a4a0f13b8321535e841a1179b134fb50b347d2d17fa9555d661fe1a6b",
+    "current_course_sha256": "51adcab9251d812b9130534dd0a6c5c9e41593344da52249939b2be8aeef576e",
+    "changed_sources": [
+      "skills/adeguati-assetti/SKILL.md"
+    ],
+    "content_review": "All authored multilingual lessons, construction/practice/financial-lab inputs, expected outputs and timing are byte-equivalent as JSON values; only the current wrapper skill SHA binding changes. Retain original multilingual editorial and historical artifact review without claiming new learner or professional acceptance.",
+    "source_review": "Inspected the wrapper addition and maintained assetti review contract. Native assessment is optional over exact immutable records; complete attributed decisions preserve observations, proposed action states and unknown operation. Historical extended-analysis limits and CH-GE jurisdiction are explicit. Supervised construction, adoption, operating review, financial lab, model-data reports and Archive finalization remain in the unchanged specialist route. Cowork continues maintained persistent CLI without requiring native tools. No assessment/construction engine, teaching text or input is changed.",
+    "execution_requirement": "Run current localized assessment follow-up and construction teaching cases with the new digest and fresh package/privacy checks. Headless source checks and extracted packages do not establish installed native, real-company or learner acceptance."
+  },
+  "native_main_integration_observation_20261009": {
+    "recorded_at": "2026-10-09T05:12:43.568319+00:00",
+    "status": "historical_review_union_current_release_unqualified",
+    "current_course_sha256": "85d3dfb87b8eecf22594a6505cad5fdc5a7883165e054620b4c28450f1b91481",
+    "retained_current_main_review_record_sha256": "f418f491c1c3dec4d9a423f2d4b755e9c5d0c074cac61dceed693662809855d6",
+    "retained_candidate_review_record_sha256": "6df4dd782f2ec1e1c3bdc06811b2c32d469b55696d6652228958bf61b15e8c6d",
+    "retained_candidate_only_fields": [
+      "native_assessment_source_binding_20261007"
+    ],
+    "different_historical_fields": {
+      "course_sha256": {
+        "candidate_value": "51adcab9251d812b9130534dd0a6c5c9e41593344da52249939b2be8aeef576e",
+        "current_main_value": "75802fa802d048f825f1db5853cad04a4705062a5cf598d36cacb54bc7cc7837"
+      }
+    },
+    "localized_editorial_and_artifact_reviews_unchanged": true,
+    "current_release_acceptance_renewed": false,
+    "review_scope": "Preserve both source-review histories and their actual original course pins. Current lesson content matches the candidate reviewed baseline and the two histories have identical locale reviews. Compiler, source hashes and render success do not renew editorial/native output acceptance. Existing current-main reviewer/date/scope/language/artifact fields remain unchanged. The retained course_sha256 is not rewritten to claim current-candidate acceptance."
+  },
+  "source_binding_review_20261009": {
+    "reviewer": "Codex bounded teaching-material and source integration review",
+    "reviewed_at": "2026-10-09T13:18:33.832104+00:00",
+    "previous_review_identity": {
+      "reviewer": "Codex /root: source, multilingual editorial and synthetic artifact review",
+      "reviewed_at": "2026-10-01T08:03:58.950451+00:00",
+      "review_scope": "Replaces the assessment-only outline with five localized resumable construction chapters and a separate financial lab. Read current specialist skill, native contract, intake, exports and adapters. Inspected original fictional inputs, localized Word/PDF/Markdown content, registers, snapshots, financial rows and KPI history. Rendered Italian course and chapter and English course in the Codex browser; visually inspected all pages of a generated manual. The PDF exporter may orphan its final version line on a second page; this remains a disclosed pre-existing export limitation, not a claim of client-ready layout. Fixed export headings are Italian and some test attribution/engineering labels are English. Native voice, window arrangement, learner participation/understanding, authenticated professional approval and real-company operating effectiveness are not established. Technical tests manufacture separately receipted synthetic decisions only at execution time; no approved case, approval or result is shipped as a teaching input. The 390-second metadata describes the introductory lesson; extended construction and financial labs require further resumable sessions. Deployment review: inspected the five localized data-context statements after replacing the ambiguous OpenAI/Cowork account name with the selected host or service account. The existing host-specific footer identifies OpenAI for Codex and Anthropic for Cowork. Inputs, execution code, reviewed output artifacts and processing boundaries are unchanged. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+      "course_sha256": "75802fa802d048f825f1db5853cad04a4705062a5cf598d36cacb54bc7cc7837"
+    },
+    "accepted_material_baseline": "8df0157d52b1e322f9f85fdb77376b39e17db446",
+    "current_course_sha256": "85d3dfb87b8eecf22594a6505cad5fdc5a7883165e054620b4c28450f1b91481",
+    "unchanged_materials": [
+      "all lesson locales and editorial text",
+      "input specifications and hashes",
+      "demo and practice execution contracts",
+      "language and grouping contracts"
+    ],
+    "changed_fields": [
+      "sources"
+    ],
+    "source_review_basis": "Native source integration and the owner-approved canonical repair were reviewed separately. Current real workflow regression assertions ran before their recorded native checks. Lesson content is byte-equivalent at the JSON-field level to the accepted main baseline; reviewed input bindings and output contracts are unchanged. Existing per-locale output artifacts and editorial history are retained, with no new visual or host acceptance claim.",
+    "current_execution_evidence": {
+      "run": 37930167083,
+      "job": 113818653311,
+      "head": "89004da63fc3d6d6a5feffde2484143c203634a1",
+      "native_teaching_suite_passed": 1642,
+      "skipped": 3,
+      "log": "/private/tmp/native-deploy-final-teaching-failure-20261009.log",
+      "whole_job_outcome": "failed at stale editorial course pin after execution suite passed",
+      "final_gate_requires_fresh_matching_junit": true
+    },
+    "new_native_output_visual_review": false,
+    "installed_host_acceptance": false,
+    "learner_or_professional_acceptance": false,
+    "scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance."
   }
 }

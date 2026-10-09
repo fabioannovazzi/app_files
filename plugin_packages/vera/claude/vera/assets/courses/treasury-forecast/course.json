@@ -88,7 +88,7 @@
     },
     {
       "path": "modules/treasury-forecast/skills/treasury-forecast/SKILL.md",
-      "sha256": "531404f0176ec9da15c71842d0a651a112277b4a15e13bb59dd0f95d0d60fd61"
+      "sha256": "324aacec46cbdda6f969f867ed2203812d9dcf454b75aca27117a2cbacb5bfe9"
     },
     {
       "path": "modules/treasury-forecast/skills/treasury-forecast/references/geneva.md",
@@ -350,5 +350,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "5d22295eb47bcf7b24d004cf5beb529d6a48518a04c10275f491187324d23c78"
+  "canonical_course_sha256": "0c89642b6354e22c87a05adcfc99b670ef83bd17a7ff0f1c9548d39302e620ce"
 }

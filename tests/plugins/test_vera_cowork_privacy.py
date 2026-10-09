@@ -138,6 +138,7 @@ def test_vera_cowork_services_include_shared_runtime_and_run_receipts() -> None:
         "datev-starter": ["openai-codex"],
         "local-onboarding": ["openai-codex"],
         "managed-python-runtime": RUNTIME_PROFILE_IDS,
+        "native-workspace": ["openai-codex"],
         "plugin-feedback": ["openai-codex"],
         "plugin-update-check": ["openai-codex"],
         "run-receipt-stamping": RUNTIME_PROFILE_IDS,

@@ -20,7 +20,18 @@
     "modules/studio-archive/vendor/modules/model-data-report-contract.md",
     "skills/vera/references/model-data-report-contract.md",
     "modules/studio-archive/scripts/build_model_data_report.py",
-    "skills/vera/references/connected-studio-knowledge.md"
+    "skills/vera/references/connected-studio-knowledge.md",
+    "scripts/native_archive_closure.py",
+    "scripts/native_archive_closure_bridge.py",
+    "scripts/native_archive_navigation.py",
+    "scripts/native_workspace.py",
+    "mcp/workspace.cjs",
+    "ui/workspace.js",
+    "ui/workspace.html",
+    "ui/workspace.css",
+    "skills/studio-archive/SKILL.md",
+    "skills/vera/references/native-workspace.md",
+    "scripts/native_archive_imports.py"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -98,6 +109,22 @@
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "native-selected-file-transport",
+        "purpose": "Conserve explicitly selected file bytes and declared roles in one owned engagement through the maintained public importer",
+        "content": "The optional native app receives each explicitly selected complete file, up to 64 MiB, through the selected host app/tool channel in 64 KiB chunks. File.name, size, SHA-256, explicit journal/source/support role, portable client/engagement IDs and signed transport authority accompany the requests. The original absolute OS path is unavailable; receipts label that limitation. Chunk bytes and private import progress are not dispatched as a model explanation or separate model call by this transport. Ordinary selected host/account processing applies; this does not establish local-only processing or anonymization. The unchanged importer conserves exact verified bytes and receipts locally in the engagement without starting a run. Later explicitly chosen workflow reads can expose selected source content under their own model-context contract. No new external connector, provider request or Mparanza upload is performed.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
+        "id": "native-literal-user-statement",
+        "purpose": "Preserve original interview notes before explicitly selecting them for a specialist workflow",
+        "content": "Complete literal user text, chosen JSON filename, optional declared speaker and original capture provenance (configured actor, tenant, client and engagement references, actual UTC capture time and identity_authenticated=false) pass through the host app/tool channel. Private draft fields and original source text are app-private metadata, not automatic explanation context or a model-access grant. The imported source and provenance may later enter the selected workflow model context completely when explicitly selected. This transport makes no separate provider call, records no audio, authenticates no speaker and performs no automatic anonymization. Ordinary selected account/host processing applies; Vera is not a separate recipient. Capture time does not establish historical availability and the statement is not independent operating evidence.",
+        "runtime_profiles": [
+          "openai-codex"
         ]
       },
       {
@@ -310,14 +337,26 @@
       "control": "Default private state is isolated by a hash of the host-supplied session identity, with a process-specific identity when the host supplies none. The MCP server passes one stable session identity to its helper commands. Configuration persists its session owner; an OS lock covers each process lifetime after configuration access, other session owners are rejected, and public operations verify that the pinned configuration bytes did not change before returning. An explicit state directory remains subject to these ownership and locking checks. This is local session isolation, not authentication between users or encryption of the derived index."
     },
     {
+      "id": "owned-archive-exact-output-closure",
+      "control": "Application-only closure enumerates every physical output of one maintained owned run with canonical byte identities; no filename classifier selects purposes, audiences, reuse IDs or deliverability. Reviewer-only explicit declarations merge at most 30 exact files per page into 0600 atomic actor/tenant/client/engagement/run private drafts outside outputs, with signed scope and draft compare-and-set. Explicit recovery never restores confirmation; stale output drafts require explicit discard or specialist recovery. Teardown acknowledges only after persistence. Validate the actual run-bound model-data report through maintained public schema/evidence/build/render APIs, comparing full JSON and exact Markdown without writing a report, inferring absent transmission, contacting a provider or stamping a server receipt. Report text and file paths remain app-private metadata; lifecycle text is the model-facing summary. Explicit full-population finalization and a separate sealed-output completion invoke unchanged public Archive APIs and do not approve a specialist case, authenticate attribution, certify conclusions, sign, file, deliver or publish. Durable private intents retain uncertain outcomes; exact successful retries revalidate manifests. Sources, implementation and full reviewed artifact bytes are revalidated before and after the maintained public write. Specialist producers do not share the native lock; a concurrent change can leave a sealed or completed ledger state requiring specialist verification. Refuse native repetition or completion, retain drafts/files/ledger and never automatically adopt or roll back such an outcome. Local filesystem administration remains the trust boundary."
+    },
+    {
+      "id": "explicit-native-file-import",
+      "control": "Require reviewer authority, an open owned engagement, signed current input scope, explicitly chosen file role and separate user confirmation. Never accept an original browser/model filesystem path or classify document meaning. Actor/tenant/client/engagement-bound private intents retain bounded chunk offsets and SHA-256; verify complete selected-file bytes before calling the unchanged public importer. Exact receipt/byte/role deduplication preserves public import aliases and prevents duplicates during explicit recovery of the same known interrupted intent. Refuse missing, changed, linked, unreceipted or foreign state. Other pending writes block new imports and run preparation until resolved. Reopening does not restore confirmation, select run sources or start a workflow. Ordinary host processing remains separate from this local transport integrity gate."
+    },
+    {
+      "id": "literal-user-statement-capture",
+      "control": "Reviewer-only signed current owned engagement and CAS draft revisions preserve full literal UTF-8 text up to 256 KiB, chosen safe JSON basename and optional unverified speaker attribution. Private drafts are recoverable without confirmation. Explicit capture writes an immutable user_statement original with actual UTC capture time and configured actor/tenant/client/engagement references, then uses unchanged complete-byte public import. These labels are not authenticated identity; capture time is not prior fact or information availability and statements do not establish truth, adoption or operation. Reopen exact byte-bound retained originals without replacement timestamp or OS-file selection. Clearing private fields preserves captured originals and public receipts. Reject stale/foreign/linked/changed/missing or uncertain original states; pending import blocks new preparation. Longer notes require original file import, without truncation. No audio capture, semantic classification, run creation, separate model/provider call or external connector request."
+    },
+    {
       "id": "approved-root-and-private-identity-continuity",
       "control": "Only explicit configuration records an approved root. Fresh default sessions revalidate it into independent session-owned configuration; explicit state directories remain isolated unless an explicit private profile is supplied. Root-specific identity read/modify/write is serialized with short OS locks and private regular-file records; private aliases are not returned in safe directory rows. Current-session aliases migrate only after validation. Shared profile state stays outside source archives and contains no active run selection or credentials."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-08",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "189811e2ea519acc0d6ca748c4541b523703590ac40dd07953c81024858f524a"
+    "source_fingerprint": "72077e28c0c202131519da12d1b96f055e7ec36574c97fa2e989fcd7127e0275"
   }
 }

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "open-item-reconciliation",
-  "revision": "2026-09-14.2",
+  "revision": "2026-10-09.native-main-integration.review-proposal",
   "seconds": [
     45,
     60,
@@ -56,7 +56,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/references/workflow-reference.md",
-      "sha256": "0f72e0a5abeb60224622931a0fd807e145dd84c0bc7695f5ed03f5b8e2dabcc3"
+      "sha256": "b6e3f2823268d8070cfba7462fbfbd6bd0131b3ff69e66ab5a22fffda9b7b681"
     },
     {
       "path": "modules/open-item-reconciliation/requirements.txt",
@@ -64,7 +64,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/audit_assurance.py",
-      "sha256": "725c3e849156088e71217dc1604441faa0a2bb47569b847f432997c52819bf1b"
+      "sha256": "28db9d3ba74b5313cd73dd3e15f3d943f7ced80f5d42544ae4291da322eb3c61"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
@@ -84,7 +84,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/raw_input_runner.py",
-      "sha256": "98cae1b52a8bd17eb477f3343d0a71d6e1026a298e3893dc15ae6e53ff80e096"
+      "sha256": "901a038c0ea4cd25a3aa84a2906969d228f212a35089ca50bb3aefa5ac51447b"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/reconciliation_workflow.py",
@@ -104,7 +104,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/review_session.source",
-      "sha256": "ac9b4a2c1f6bdaed1462c34be3cecb82f176758614ff9752e42621c500b5c3c9"
+      "sha256": "a61eb1a2630fdea23e95ce2c3db3fc79e5e38595df301112b6aff4e206c2bb09"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/workpaper_outputs.source",
@@ -164,7 +164,7 @@
     },
     {
       "path": "skills/open-item-reconciliation/SKILL.md",
-      "sha256": "0b1797500c188813319c475f8bcb2085290f13399564effb630504962abb88a3"
+      "sha256": "0ff46b42ec634bbfc21453ec724127c7e257e2e280fc3c5f224ba7902c335a4e"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -525,5 +525,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "60d54091c890ae914179ba1187043680e0e37b835590f5154a939303362d3a7e"
+  "canonical_course_sha256": "0b63f6eb03e2795b2a87bbcc6a8ce043fd78ffe9a5ee863511da803dc7bc8a44"
 }

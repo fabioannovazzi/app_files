@@ -117,6 +117,16 @@ invoked by the user; Vera does not dispatch them.
 
 # Bilancio intelligente
 
+For an existing Bilancio case, use `vera_workspace_open` when callable and the
+exact case and Studio Archive run have trusted operator bindings. Read
+`../vera/references/native-workspace.md` before the handoff. The panel inspects
+issues and their sources through the canonical case service, and records an
+explicit human issue decision against the exact revision. A decision invalidates
+the current validation; it does not approve the accounts or authorize export,
+signing or filing. Intake, mappings, source qualification, validation and final
+handoff retain the specialist's existing gates. Without native tools or exact
+bindings, continue persistent specialist work, including in Cowork.
+
 For a Geneva (CH-GE) mandate, read `../vera/references/localization/geneva.md` first and use this existing function’s Geneva adaptation in its resolved component skill. Language alone never selects jurisdiction.
 
 

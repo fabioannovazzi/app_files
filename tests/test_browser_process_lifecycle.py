@@ -1017,7 +1017,7 @@ def test_named_skill_is_discoverable_and_bound_in_package(
     monkeypatch.syspath_prepend(str(ROOT / "scripts"))
     builder = importlib.import_module("build_codex_plugin_zip")
     target = next(bundle for bundle in builder.load_bundles() if bundle.name == "vera")
-    entries = builder.expected_zip_entries(target)
+    entries = builder.expected_zip_entries(target, project_vera_privacy=False)
     prefix = f"{target.package_root}/plugins/vera/"
     for path in skill.rglob("*"):
         if path.is_file():
@@ -1028,7 +1028,11 @@ def test_named_skill_is_discoverable_and_bound_in_package(
                 + "/"
                 + path.relative_to(skill).as_posix()
             ] = path.read_bytes()
-    monkeypatch.setattr(builder, "expected_zip_entries", lambda _target: entries)
+    monkeypatch.setattr(
+        builder,
+        "expected_zip_entries",
+        lambda _target, *, project_vera_privacy=True: entries,
+    )
 
     if package_format == "chatgpt":
         package_builder = lambda: builder.chatgpt_upload_entries(target)

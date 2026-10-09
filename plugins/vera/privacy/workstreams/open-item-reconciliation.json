@@ -30,6 +30,15 @@
         ]
       },
       {
+        "id": "native-initial-intake-and-private-originals",
+        "purpose": "Distinguish the optional native preparation and original-document view from substantive model source review.",
+        "content": "The native panel preserves explicit scope, reviewer attribution, evidence policies, literal keywords, title/narrative and per-source role, adapter, perimeter, money and date conventions in actor/tenant/client/engagement/run private drafts. Setup returns receipt-bound source titles and current choices in app metadata. A signed exact source request reads at most one registered original up to 4 MiB, verifies its bytes and returns base64 content only in app metadata for opening/download; larger sources remain in Studio Archive. Setup, original opening, draft writes and confirmed raw preparation have no model/provider/network call. Their model-facing tool result carries only status and a work reference. This is not a local-only guarantee for the professional task: the selected Codex or Cowork model may read the exact necessary source through the ordinary source-analysis path, without automatic anonymization. The optional Codex native panel is independent from the retained Cowork file-based route.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
         "id": "non-identifying-review-index",
         "purpose": "Let the model select review cases without receiving the complete review payload",
         "content": "One model-visible index containing aggregate item-type counts and, for each model-relevant review item, an opaque per-run case handle, item type, normalized categorical review status, recommended action and the names of present mechanical signal classes. It excludes signal values, item titles, names, descriptions, dates, amounts, source references and identifiers, source paths, workflow record IDs, review write targets and complete row objects. Non-interpretive artifact items accepted by the deterministic workflow remain available to the human widget but are omitted from the index.",
@@ -128,15 +137,35 @@
     {
       "id": "native-package-and-local-handoff",
       "control": "Vera uses the fixed reconciliation child below the bound Studio Archive outputs root for the exact native assurance tree. Required local model-data disclosures stay at the owning outputs root; archive declarations cover both. No native receipt is rewritten to admit disclosures. The native review page restores same-run applied decisions on reload. Validated archived runs open read-only and native Save/Apply require the running lifecycle before a transaction. These changes add no hosted service or external data route."
+    },
+    {
+      "id": "native-raw-successor-regeneration",
+      "control": "Native regeneration is a separate application-only signed reviewed action. It requires a running exact bound run, the externally retained predecessor checkpoint and applied review, compares original title/narrative/language and assumptions with the replayed predecessor, rejects newer unapplied decisions and custom cache locations, re-extracts the same registered sources in the existing detached whole-tree transaction and freshly replays successor assurance before promotion. Original report options are retained locally in the run manifest, without an added model-context or hosted route. Missing settings and normalized-only packages keep the specialist route; no Archive completion, publication or waived source/value/review gate follows from regeneration."
+    },
+    {
+      "id": "explicit-registered-native-initial-intake",
+      "control": "Signed current work/revision and receipt identities bind native source opening; stale, foreign, changed or oversized sources are refused. All source roles and conventions must be explicitly complete before the unchanged raw producer runs in the bound outputs/reconciliation directory. Private drafts use owner-bound compare-and-set and never restore confirmation. A durable unresolved intent requires recovery; identical completed requests replay their retained result. The public assurance validator checks the complete output and preserves failed gates. Declared reviewer labels are not authenticated identities; preparation does not approve the reconciliation or complete Archive."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "68245f93afd9782f24a730c810cd3ab9f1c08d243cb7107de389ca73d1480b24"
+    "source_fingerprint": "2037cfa41eb2750222adeac6cc7cc97686183754cf00316904eb285ee4129d42"
   },
   "governed_repository_paths": [
-    "plugins/vera/skills/vera/references/connected-studio-knowledge.md"
+    "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+    "plugins/vera/scripts/native_open_items_intake.py",
+    "plugins/vera/scripts/native_open_items_intake_bridge.py",
+    "plugins/vera/scripts/native_workspace.py",
+    "plugins/vera/scripts/native_workspace_runtime.py",
+    "plugins/vera/scripts/native_bank_preparation.py",
+    "plugins/vera/mcp/workspace.cjs",
+    "plugins/vera/mcp/selected-context.cjs",
+    "plugins/vera/ui/open-items-intake.js",
+    "plugins/vera/ui/workspace.js",
+    "plugins/vera/ui/workspace.html",
+    "plugins/vera/ui/workspace.css",
+    "plugins/vera/ui/custom_select.js"
   ]
 }

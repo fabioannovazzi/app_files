@@ -130,6 +130,14 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "browser-session-handoff-status",
+        "purpose": "Resume the same authorized task after an operator login or user-input handoff without selecting another account",
+        "content": "The model receives the current-turn handoff-mark result, sanitized session categories, counts, error hashes and owner-only report paths. Session inspection reads tab URLs and inventory metadata locally; only candidate IDs matching the authorized origins are returned as ephemeral task handles, without raw URLs or titles. These handles do not establish the fiscal account. The helper reacquires only the same task tab once and does not authenticate, read business documents or execute the retired Agenzia prototype runners.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
       }
     ]
   },
@@ -243,7 +251,7 @@
     },
     {
       "id": "scaffolds-do-not-claim-live-support",
-      "control": "The Agenzia and TeamSystem source packages remain scaffold until authorized live discovery supplies actual controls, branches, postconditions and clean replay evidence. Brand or process names alone cannot be described as executable support."
+      "control": "The TeamSystem scaffold and generic browser drafts do not establish executable support from brand or process names. Authorized discovery, exact reviewed controls and clean replay evidence remain required for generic capabilities. Ordinary Agenzia acquisition uses its separate named local worker; its source/synthetic checks do not establish live portal, Windows, Cowork or installed native-host acceptance."
     },
     {
       "id": "selected-frame-origin-boundary",
@@ -288,18 +296,28 @@
     {
       "id": "single-durable-agenzia-worker",
       "control": "One worker implementation serves the named operation, ordinary CLI and native panel. OS locks prevent concurrent destination writers; a durable launch reservation precedes process start and makes native retries idempotent. Plans and source-client identity are revalidated per panel call, drafts use revision checks, and app actions use opaque server-bound source/output references. Every successful original has XML identity validation, byte length and hash evidence. P7M extraction is not signature validation. Resuming re-enumerates the requested period and reuses only verified files; unknown counts, repeated pages, unavailable originals and missing cash values remain incomplete or review issues. Private atomic state and per-record events survive interruption; native downloads have an explicit allow-list and size bound. Source files, private configs and real client data are excluded from package and tutorial fixtures."
+    },
+    {
+      "id": "optional-native-process-and-batch-review",
+      "control": "Seven app-only routes use exact trusted tenant/operator bindings to existing selected development processes or batch directories outside Git and public folders. Business batches require a verified real client manifest and exact engagement. The unchanged process lifecycle exposes declared boundaries, implementation/qualification, attempt evidence and technical output metadata, excluding raw submission/status records and artifact-only output values. No ordinary-use procedure selection, Chrome connection, page capture, model handoff, credential handling, posting, qualification or developer submission is added. The unchanged batch helper verifies every JSON revision and current HTML is independently regenerated offline and compared byte for byte without repairing live files. Complete current entries and prior reviews remain separate from processing outcomes. Signed current entry/owner scope, private generation CAS, literal unsent decision/note, renewed explicit confirmation and durable intents bind only the actual operator assertion. Public record_review appends checked/correction_requested without changing completed entries, executing a correction or closing Archive. Exact completed retries verify the current successor; interrupted writes before or after public conservation require recovery. Native-host and target-site acceptance, shared renderer/ticket repairs and full independent package gates remain unqualified."
     }
   ],
   "review": {
     "reviewed_at": "2026-10-08",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "f336605260d94ae63b81bbec435cdbd168015718741234dadeda46c8976657c8"
+    "source_fingerprint": "1f09d93f2c0f7b166a5429cffed1f9e1009807cf263b9a19ef1d9b3a558d3547"
   },
   "governed_shared_paths": [
     "skills/vera/references/connected-studio-knowledge.md",
     "skills/agenzia-acquisition/SKILL.md",
     ".mcp.json",
-    "scripts/run_component_mcp.cjs"
+    "scripts/run_component_mcp.cjs",
+    "scripts/native_browser.py",
+    "scripts/native_browser_bridge.py",
+    "ui/browser.js",
+    "skills/browser-automation/SKILL.md",
+    "modules/fusione-guidata/vendor/modules/client_ledger.py",
+    "modules/studio-archive/scripts/client_ledger.py"
   ]
 }

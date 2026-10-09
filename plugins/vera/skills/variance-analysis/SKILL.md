@@ -57,6 +57,67 @@ Cowork result is a Studio Archive run.
 
 ## Accounting intake and review gates
 
+When the optional shared native workspace exposes
+`vera_workspace_variance_setup`, open the exact running Archive work there.
+Select the registered original and the already prepared comparison recipe,
+review currency and output language, inspect the complete declared comparison
+and controls, then separately confirm calculation. The panel conserves
+incomplete and empty choices without restoring confirmation. It calls the
+ordinary rich public runner and preserves its complete output population,
+accounting readiness and draft-report status. Read result tables and structured
+contexts before chart previews; `vera_workspace_variance_explain` exposes only
+the explicitly selected exact CSV/JSON/Markdown page, never the original table
+by default. The public widget's fifty-driver preview is not the full result.
+
+When `vera_workspace_variance_author_setup` is available, initial preparation
+and comparison correction can start from a private literal question, explicitly
+selected original and supporting receipts, optional registered prior recipe,
+currency and language. Renewed confirmation conserves the mandate and calls
+the public inspector; its suggested mappings are candidates, not semantic
+decisions. `vera_workspace_variance_author_context` exposes only this mandate's
+authorized source paths/hashes, inspection/skill references and explicitly
+selected complete proposal. Read the authorized originals through maintained
+readers and report what was actually read. Do not infer a model read from a
+copied chat request or panel call.
+
+The host model prepares the complete public recipe and limitations with the
+professional. `vera_workspace_variance_author_stage` checks the actual source
+columns and public recipe shape without calculation or export. Preserve a
+selected prior recipe and its raw reviews; both new professional-review and
+root-cause-review slots must remain pending without invented attribution or an
+approved alternative. A separate private full-proposal readback records the
+literal decision, declared name, actual timezone-aware time and basis. Renewed
+signed confirmation imports the comparison and readback into a fresh
+same-engagement Archive run with the selected sources. Calculation requires
+its own choices and confirmation in that successor. Unsent readback drafts
+remain private. Open mandates require conservation or explicit cancellation
+before closure; interrupted or altered preparation requires recovery.
+
+When `vera_workspace_variance_review_setup` is available, the panel can record
+literal accounting-control decisions and decisions over one explicitly chosen
+retained alternative. Read the complete public controls and chosen residual
+sequence before deciding. The private draft preserves incomplete decision,
+declared reviewer, actual timezone-aware review time and basis without renewing
+confirmation. An accepted decision requires the unchanged public accounting
+controls to pass; blocked or partial controls cannot be overridden. Signed
+renewed confirmation imports immutable comparison and decision receipts into a
+fresh same-engagement run, retaining predecessor inputs and outputs. The panel
+preselects the exact newly registered comparison only in an empty successor
+draft; calculation still requires a separate confirmation. The public runner
+alone determines the regenerated report's status. The declared name is not
+authenticated, and the panel does not author final interpretation, sign,
+deliver or complete the run. Interrupted conservation requires recovery and
+blocks repeats and closure. Explicit `vera_workspace_variance_review_explain`
+exposes only the selected complete public controls/alternative as untrusted
+evidence, omitting private unsent decision fields and the original table.
+
+Model-written final interpretation uses the complete maintained workflow below.
+Do not ask the professional to edit JSON. If tools are absent or a complete page exceeds the view limit,
+continue with the maintained files and chat. An uncertain or altered native
+generation requires specialist recovery before repetition or Archive closure;
+do not adopt or overwrite it. Native calculation and reading alone do not
+approve a report, complete a run, or prove an installed-host acceptance.
+
 Before calculation, establish from the sources or ask only for unresolved
 material choices:
 
@@ -135,6 +196,44 @@ calculated drivers, reviewed favorable/adverse convention, unresolved data or
 judgment items, and links to the tables and variance plots. Narrative causes
 must be attributed to supplied evidence or clearly labeled as hypotheses
 requiring professional confirmation.
+
+When `vera_workspace_variance_narrative_setup` is available, the optional
+panel can retain the three ordinary complete Markdown notes beside the sealed
+calculation in the same authoritative run. Explicit
+`vera_workspace_variance_narrative_context` returns the verified normal
+model-use file references and generated chart references in pages of thirty.
+Read the complete manifest and numerical artifacts before chart pixels through
+the maintained readers, and record only actual model reads in the normal run
+model-data report. References, panel navigation and copied chat requests do not
+prove reads. An explicitly selected whole note proposal can be discussed;
+private unfinished named readback fields remain omitted.
+
+The host model authors `codex_business_analysis.md`,
+`codex_root_cause_sweep_analysis.md` and `codex_run_review.md` in full. Stage all
+three literal texts together with `vera_workspace_variance_narrative_stage`.
+Interpretation, alternative comparison, residual explanations, evidence-linked
+causes or labelled hypotheses, limitations and final-note suitability remain
+model/professional judgments. The service checks only shape, exact identities,
+file hashes, concurrency and conservation. Complete notes exceeding the stated
+96,000-byte serialized payload bound require the maintained file/chat route;
+never truncate them to fit the panel.
+
+Select one complete proposal explicitly in the panel, save a literal named
+readback with actual timezone-aware time and basis, then renew confirmation.
+`vera_workspace_variance_narrative_commit` conserves all three unchanged notes
+and `narrative_receipt.json` in a separate versioned folder of the same run.
+Rejected notes and requests for correction preserve the complete texts too.
+This does not change the accounting report gate, recalculate, authenticate a
+reviewer, establish actual model reads, sign, deliver or complete the run.
+Draft/blocked comparisons may have diagnostic notes; their accounting status
+stays unchanged. A final accountant-facing note requires the public accounting
+and root-cause review gates described below. Pending proposals block Archive
+closure until an explicit named readback; interrupted conservation requires
+specialist recovery. The current source refuses note reopening after Archive completion because
+the preceding calculation draft is still bound to the earlier running status.
+Completed-run consultation is unqualified and requires a production fix; do
+not claim complete native acceptance. The
+ordinary independent Cowork file route and its normal outputs remain available.
 
 ## Financial report presentation
 

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "browser-automation",
-  "revision": "2026-09-14.2",
+  "revision": "2026-10-09.native-main-integration.review-proposal",
   "seconds": [
     45,
     60,
@@ -250,7 +250,7 @@
     {
       "path": "skills/browser-automation/SKILL.md",
       "repository_path": "plugins/vera/skills/browser-automation/SKILL.md",
-      "sha256": "324bd3c99a9aa6ebe376c291c760b398f7c4de6b545bdbf03f29adf5c4f27216"
+      "sha256": "a11694b449b876d40db423149cf2a9404d42e48a20788e4dc793fdf161e41158"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

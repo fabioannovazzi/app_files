@@ -14,7 +14,13 @@
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
-    "skills/vera/references/connected-studio-knowledge.md"
+    "skills/vera/references/connected-studio-knowledge.md",
+    "scripts/native_esg.py",
+    "scripts/native_esg_bridge.py",
+    "skills/esg-reporting-assurance/SKILL.md",
+    "scripts/native_esg_authoring.py",
+    "scripts/native_esg_author_bridge.py",
+    "scripts/native_archive_closure.py"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -35,7 +41,7 @@
       {
         "id": "esg-decisions",
         "purpose": "Explain changes and prepare partial drafts for professional review.",
-        "content": "Source titles, URLs, versions and unapproved catalogue status; declared reviewer names, dates, decisions and rationales; exact references, full retained history, stale status and draft text. The script does not call a model. Actual host reads must be recorded by Vera separately; the helper cannot attest to them.",
+        "content": "Source titles, URLs, versions and unapproved catalogue status; declared reviewer names, dates, decisions and rationales; exact references, full retained history, stale status and draft text. The script does not call a model. Actual host reads must be recorded by Vera separately; the helper cannot attest to them. Optional native selected-version discussion returns the complete selected object and recursive exact dependency records, including stale history and declared reviewer identity, only on explicit current revision, within 64000 UTF-8 serialized bytes without truncation. Private complete record/output reads are limited to 2000000 bytes and stay outside the model result envelope when the host honors app-only visibility. Original input files are not automatically read; private page/output views stay app metadata. No automatic anonymization or actual-read attestation is added.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -45,6 +51,15 @@
         "id": "connected-studio-knowledge",
         "purpose": "Consult relevant studio procedures, precedents or case evidence when requested",
         "content": "Repository and selected studio/client scope; scoped search queries; returned metadata and snippets; opened relevant passages; source IDs, links and locators; version, date and approval metadata when exposed; coverage and access limitations. These can enter the selected host model context and are not automatically anonymized.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "native-explicit-esg-source-mandate",
+        "purpose": "Prepare the explicitly requested partial ESG operation from selected originals.",
+        "content": "Only after an explicit signed human source mandate: literal question and chosen operation; selected registered original IDs, full paths and hashes; current case state path/hash; optional explicitly selected same-engagement predecessor state path/hash or whole staged proposal path/hash; full specialist skill/schema paths. The host may read those originals and whole retained state, including actual prior decisions and source metadata. No automatic original read, anonymization or actual-model-read attestation. Unsent professional identity/date/outcome/reason/dependency drafts remain private app metadata. The complete context is limited to 64000 UTF-8 serialized bytes without truncation; it supplies authorized paths, not an automatic file-content upload. The model can stage only the granted partial operation with an authored body limited to 96000 UTF-8 serialized bytes. Identity, date, outcome, reason and exact dependencies of professional decisions use a distinct app-only human route; no model-authored record_decision is accepted. Public preview/execution uses the maintained ESG producer. Source/package checks do not establish installed-host or professional acceptance.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -86,12 +101,20 @@
     {
       "id": "closed-output-paths",
       "control": "Outputs use fixed state filenames and hash-derived draft filenames in the verified run output directory. Traversal and symlinks are rejected and draft bytes are verified before reuse."
+    },
+    {
+      "id": "native-exact-readonly-version",
+      "control": "Owned Archive run/input bytes and maintained public ESG resume validate exact immutable state/draft hashes and all dependency references. Native thirty-version pages retain current and stale versions. Explicit selected-model context binds current actor/tenant/run/input/implementation revision and complete recursive exact dependencies, refusing over 64 KiB without truncation. Private ordinary draft opening revalidates the public immutable files and unchanged state. No original input automatically enters model context, no named reviewer authentication or mutation is added."
+    },
+    {
+      "id": "native-esg-explicit-authoring-and-human-decisions",
+      "control": "Source authoring checks exact owner/run/input/implementation scope, current public state, signed human selection, literal draft-generation CAS, separately renewed confirmation and whole proposal hashes. Public operation and original IDs are fixed by the mandate; model professional decisions and server-owned request fields are refused. Isolated public-execute previews retain complete private proposal bodies. Conservation uses durable intents, ordinary full requests, unchanged public execution and native receipts; unfinished intents, altered artifacts and open mandates block Archive closure. Obsolete mandates remain privately readable/cancellable but cannot obtain new context, stage or publish. Human decision fields are app-only and current-dependency-bound. The source preview bridge currently fails on unresolved macOS temporary paths; its corrective one-line candidate is separate, unapproved and not applied. Declared reviewer identity is not authenticated; no assurance, external send or run completion is inferred."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "a91767e210dd88a39bd37ec09b587cad5e040e8863cc63dc38a5edfbd8d1433c"
+    "source_fingerprint": "57e1fda83c068a15108ed87bebfa97acc1c86f05fc67dc901b2603c29f03e0b1"
   }
 }

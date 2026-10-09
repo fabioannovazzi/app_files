@@ -18,7 +18,7 @@
       {
         "id": "synthetic-transformation-case",
         "purpose": "Propose and review synthetic transformation-case findings and inspect versioned dossiers",
-        "content": "Selected synthetic documents, case attributes, source snapshots, participant rights, creditors, reserve and asset values, proposed findings, decisions and dossiers may be read by the selected session model. Local code stores inert bytes, exact arithmetic and hashes. The synthetic-only declaration is not automatic anonymization or a personal-data detector; the helper does not measure provider context. No real-client mandate is supported in this increment.",
+        "content": "Selected synthetic documents, case attributes, source snapshots, participant rights, creditors, reserve and asset values, proposed findings, decisions and dossiers may be read by the selected session model. Local code stores inert bytes, exact arithmetic and hashes. The synthetic-only declaration is not automatic anonymization or a personal-data detector; the helper does not measure provider context. No real-client mandate is supported in this increment. The optional native OpenAI source increment uses a separately confirmed one-hour owner-bound synthetic preparation mandate. Its model-visible context returns the complete current synthetic case and public contract, exact specialist skill path, and only explicitly selected original paths/hashes; the model reads originals separately. Question/draft persistence and app-private inspection do not automatically dispatch them. A durable prepared ui/message request or copyable fallback is not a model receipt. Private proposal replay/adoption are separate from public writes and review; the candidate resolves the disposable-directory path before public replay, but that runtime repair remains unapplied and unreleased. Context and stage are explicit model-visible tool results: the stage acknowledgement contains retained stage identity/revision/status and separate-public-write/approval limitations rather than the complete private proposal. Complete synthetic model context and app readback refuse UTF-8 serialized envelopes over 2000000 bytes without sampling. Withdrawal, expiry, source/code changes and unresolved intents block further model access. Actual installed-host/model exposure and whole readable model-data reporting remain unverified.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -77,15 +77,25 @@
     {
       "id": "history-integrity",
       "control": "Append-only snapshot creation and chained digests detect edits and reject conflicting revision writes. Local owner can rewrite the store; this is not tamper-proof notarization."
+    },
+    {
+      "id": "native-owned-synthetic-mandate",
+      "control": "Exact explicitly configured synthetic-only tenant/operator/case binding, reviewer role, independently confirmed literal question/operation and selected originals govern a one-hour retained mandate. Withdrawal, expiry, changed source or implementation scope, unfinished public operations and uncertain private intents block model access. Staging permits preparation operations only and invokes the unchanged public producer on an isolated exact copy; adoption into empty edit fields, public execution and actual submitted-digest review remain separate human actions. No real mandate, Studio Archive adapter, automatic synthetic substitution, authenticated signature, legal qualification, filing or external transmission is introduced."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "766fc32b9eefb461e8fdaf81e05d80d8b7d2216a546cf9744065f1cc6d93a11d"
+    "source_fingerprint": "4bbd1ea8c1a2a465566e0bd8b20d84d3d4c0532f858605e4f71cae433975f8f3"
   },
   "governed_shared_paths": [
-    "skills/vera/references/connected-studio-knowledge.md"
+    "skills/vera/references/connected-studio-knowledge.md",
+    "scripts/native_transformation.py",
+    "scripts/native_transformation_bridge.py",
+    "scripts/native_transformation_initial.py",
+    "scripts/native_transformation_initial_bridge.py",
+    "ui/transformation.js",
+    "scripts/native_transformation_author.py"
   ]
 }

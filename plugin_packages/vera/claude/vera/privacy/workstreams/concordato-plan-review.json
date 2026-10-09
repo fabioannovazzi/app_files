@@ -51,7 +51,7 @@
       {
         "id": "professional-review-decisions-codex",
         "purpose": "Record review questions, issues, evidence requests, reviewer decisions, and professional handoff material in Codex or ChatGPT",
-        "content": "During substantive analysis: semantic case-model decisions, judgment bases, open and resolved issues, severity and ownership, requested documents, reviewer notes and actions, generated workpapers, summaries, and review memos. After semantic confirmation, reference-bound validate and render expose only run status, total and per-type counts, a small persisted review reference, and the bounded on-demand tool contract to the model; complete review rows, run intake, current decisions, final-artifact state, technical paths, source filenames, sizes, hashes, and artifact references are hydrated locally for the component. A purpose-selected on-demand call may expose at most 25 requested review items with substantive procedure, creditor, treatment, amount, issue, evidence-locator, and reviewer context preserved, while technical metadata is removed and source filenames are replaced with stable aliases. The exact source file remains available when a specific evidence question requires it; the workflow does not reopen the whole case by default.",
+        "content": "During substantive analysis: semantic case-model decisions, judgment bases, open and resolved issues, severity and ownership, requested documents, reviewer notes and actions, generated workpapers, summaries, and review memos. After semantic confirmation, reference-bound validate and render expose only run status, total and per-type counts, a small persisted review reference, and the bounded on-demand tool contract to the model; complete review rows, run intake, current decisions, final-artifact state, technical paths, source filenames, sizes, hashes, and artifact references are hydrated locally for the component. A purpose-selected on-demand call may expose at most 25 requested review items with substantive procedure, creditor, treatment, amount, issue, evidence-locator, and reviewer context preserved, while technical metadata is removed and source filenames are replaced with stable aliases. The exact source file remains available when a specific evidence question requires it; the workflow does not reopen the whole case by default. Successful memo applications additionally retain local content-addressed snapshots of current and earlier UI/applied decisions, including literal memo text and reviewer attribution. Apply keeps the complete history in component-only metadata; its model summary contains status and counts. These snapshots add no automatic model call or external destination.",
         "runtime_profiles": [
           "openai-codex"
         ]
@@ -59,7 +59,7 @@
       {
         "id": "professional-review-decisions-cowork",
         "purpose": "Record review questions, issues, evidence requests, reviewer decisions, and professional handoff material in Cowork",
-        "content": "During substantive analysis, Cowork may read the same semantic case-model decisions, judgment bases, issues, requested documents, reviewer notes, generated workpapers, summaries, and review memos needed for the professional task. Studio Archive supplies the same portable customer-run context as in Codex. When the packaged MCP interface is callable and used, the same reference-bound component-only result and at-most-25-item on-demand projection apply. If MCP is unavailable in either runtime, the same file-based handoff begins with the delivered semantic review and may open only the exact review or source files needed for an unresolved professional question; the 25-item MCP limit does not apply to that symmetric fallback.",
+        "content": "During substantive analysis, Cowork may read the same semantic case-model decisions, judgment bases, issues, requested documents, reviewer notes, generated workpapers, summaries, and review memos needed for the professional task. Studio Archive supplies the same portable customer-run context as in Codex. When the packaged MCP interface is callable and used, the same reference-bound component-only result and at-most-25-item on-demand projection apply. If MCP is unavailable in either runtime, the same file-based handoff begins with the delivered semantic review and may open only the exact review or source files needed for an unresolved professional question; the 25-item MCP limit does not apply to that symmetric fallback. Successful memo applications retain the same local exact decision-history snapshots. The MCP Apply summary excludes that history; component metadata retains it. Under the file-based fallback, an explicitly needed history file may be read by the selected runtime and its literal notes and attribution may enter model context.",
         "runtime_profiles": [
           "anthropic-cowork"
         ]
@@ -141,12 +141,16 @@
     {
       "id": "local-review-output-download",
       "control": "The local review server requires the session token for output downloads. It accepts only files declared by the local run, within its output directory, rejects symlinks and traversal, and limits downloads to 50 MB. Files are downloaded as opaque bytes; HTML is not executed in the review origin. This does not claim atomic protection from concurrent filesystem changes. The browser may retain a user-requested downloaded copy; this route does not send document content to the model or an external service."
+    },
+    {
+      "id": "content-addressed-professional-review-history",
+      "control": "Current UI and every prior applied/UI decision pair are stored as content-addressed local receipts, validated by exact bytes and the ordinary decision schema, and declared in the execution trace and whole-output closure. Standalone replay refuses linked revisions/authority parent directories before receipt reads. This does not claim atomic protection from concurrent filesystem changes."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "9dd0a3b098dd88c43d78b6717ca2b27c1b29b32375c76b916f25f84c289c7073"
+    "source_fingerprint": "0e768b89b9491bf4bef9a652a455d44bcabf8f37a5b17ea1b799d98fe92aaec1"
   }
 }

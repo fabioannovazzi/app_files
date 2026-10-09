@@ -72,6 +72,7 @@ INITIAL_OUTPUT_PATHS = {
     "workbook_sheets.json",
 }
 REVIEW_PATH_FIELDS = {
+    "review_authority_paths",
     "revision_paths",
     "target_update_paths",
     "structured_update_paths",

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "concordato-plan-review",
-  "revision": "2026-09-14.2",
+  "revision": "2026-10-09.native-main-integration.review-proposal",
   "seconds": [
     45,
     60,
@@ -60,7 +60,7 @@
     {
       "path": "modules/concordato-plan-review/scripts/apply_review_edits.py",
       "repository_path": "plugins/concordato-plan-review/scripts/apply_review_edits.py",
-      "sha256": "27cca0773f5685d664ce7a8a29f54b5e2a1a2450e7b812415c395b95e3264475"
+      "sha256": "7cd690eb62960c3fd44bc77a29c3b4661b9035667b7c5ceddd12eb961b442b55"
     },
     {
       "path": "modules/concordato-plan-review/scripts/check_dependencies.py",
@@ -95,12 +95,12 @@
     {
       "path": "modules/concordato-plan-review/scripts/output_closure.py",
       "repository_path": "plugins/concordato-plan-review/scripts/output_closure.py",
-      "sha256": "25857c7c622e3c6b766dc22344fd2f6b5c77d97263e7068636240b183b04d92a"
+      "sha256": "2bd827e57ab68f6d16aceb7a6dc41f6dca839048511fb7b1e889740135cb95d1"
     },
     {
       "path": "modules/concordato-plan-review/scripts/replay_assurance.py",
       "repository_path": "plugins/concordato-plan-review/scripts/replay_assurance.py",
-      "sha256": "9fa65b180fd467ab7453adb2cbf94581bcdda04a7dee6d775dda05d9aa9d7e64"
+      "sha256": "6de6c44af01dd7361cebb07b3cb35663ccb9c248d70234e2faddb4c7d33fa27b"
     },
     {
       "path": "modules/concordato-plan-review/scripts/review_case_model.py",
@@ -180,7 +180,7 @@
     {
       "path": "skills/concordato-plan-review/SKILL.md",
       "repository_path": "plugins/vera/skills/concordato-plan-review/SKILL.md",
-      "sha256": "5dcb0967cdded11c160a618b1e4974aecba364c5aadaa7d6092a8685e54e1bc5"
+      "sha256": "fbfadb5cb9c39414684a0d33e689bd0f69d97fe1a1b50c0a6cec81d5819132fd"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

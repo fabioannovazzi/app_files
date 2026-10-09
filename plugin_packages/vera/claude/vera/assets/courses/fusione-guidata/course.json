@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "fusione-guidata",
-  "revision": "2026-10-01.1",
+  "revision": "2026-10-08.1",
   "seconds": [
     45,
     60,
@@ -105,7 +105,7 @@
     },
     {
       "path": "skills/fusione-guidata/SKILL.md",
-      "sha256": "326d6ecbea557e9916d0a41445feb8e5cc1fffc65c9996abe0fb2e0785c6277f"
+      "sha256": "3a74669f30045bb1b39f1fa0b1b9822fb6218dcd207da0781e9434eac8ab85f0"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -402,5 +402,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "d83272d90274f9a1c103281fb6bfcd72dfc54e60f27230d3c230dac7b6dceba7"
+  "canonical_course_sha256": "75314299b333bdcc38ccbbc7f5ba9c9c9cb092c1d60436e88928593da51ccec0"
 }

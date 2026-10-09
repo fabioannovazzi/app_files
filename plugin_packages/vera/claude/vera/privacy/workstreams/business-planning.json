@@ -13,7 +13,18 @@
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
     "vendor/modules/reporting_table.py",
-    "skills/vera/references/connected-studio-knowledge.md"
+    "skills/vera/references/connected-studio-knowledge.md",
+    "scripts/native_business_planning.py",
+    "scripts/native_business_planning_bridge.py",
+    "scripts/native_workspace.py",
+    "mcp/workspace.cjs",
+    "ui/workspace.js",
+    "ui/workspace.html",
+    "ui/workspace.css",
+    "ui/custom_select.js",
+    "scripts/native_business_planning_review.py",
+    "scripts/native_business_planning_authoring.py",
+    "scripts/native_business_planning_case_review.py"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -56,6 +67,38 @@
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "native-cycle-selected-record",
+        "purpose": "Discuss one explicitly selected immutable planning record",
+        "content": "In OpenAI native workspace, complete report HTML, cycle choices and all paginated canonical workpapers stay in private app metadata. An explicit generation/collection/index explanation returns one complete selected record plus its authored planning-cycle context and canonical narrative acceptance/withholding as untrusted evidence. That record can contain client names, financial values, assumptions, narrative, source locators and professional attribution. Maximum 64 KiB; oversized complete records are refused rather than sampled. No automatic anonymization, no local-only model-processing guarantee, and the selected OpenAI account arrangement applies. This adapter makes no model/network/research/publication call itself. Initial case authoring, professional review and revised-case/new-run iteration remain specialist/model-led workflows.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
+        "id": "native-professional-record-review",
+        "purpose": "Discuss one explicitly selected retained human decision on an exact canonical record or complete planning generation",
+        "content": "Private app metadata carries exact canonical records, prior decisions, notes, actual declared reviewer and timezone-aware review time. Actor/tenant/client/engagement/run drafts store unfinished text without confirmation. Review commits call no model. Only an explicit exact generation/collection/index/review_ref explanation returns the complete retained record, literal note, action, declared attribution and ownership as untrusted evidence, capped at 64 KiB without truncation. It can contain client facts and personal information. No automatic anonymization or local-only processing guarantee; the selected OpenAI account arrangement applies. Whole-plan private readback includes the complete canonical plan and public HTML, capped together at 2 MB without sampling. Only explicitly confirmed whole-plan acceptance on a public ready-for-professional-review generation records professional plan approval, bound to every original artifact hash; single-record decisions cannot approve a plan. Latest verified whole-plan action determines current acceptance, while uncertain review writes withhold it. Decisions do not rewrite the report, resolve its issues, generate case/source/record review metadata, sign or transmit it, or complete the run. Whole-plan acceptance cannot approve a successor case; new semantic cases and runs use the separately authorized model-led authoring workflow.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
+        "id": "native-user-mandated-case-authoring",
+        "purpose": "Prepare a new planning case from the user's explicit question and complete chosen evidence",
+        "content": "OpenAI-only private intake stores unfinished literal question, run label/purpose and explicit imported/upstream choices without model access. An explicit app request registers the actual literal question and retains complete user-selected source bytes in actor/tenant/client/engagement mandate state. The user may then request preparation in the SAME chat through standard MCP Apps ui/message, or copy the request when messaging is unavailable. The message contains exact mandate references; author_context exposes the actual question and every chosen source identity, role, SHA-256 and local path. The host model may read all those complete files, including real client/personal/financial facts, sealed predecessor plans and professional decisions, as untrusted evidence. Context identity payloads exceeding 100000 serialized bytes refuse without sampling; this is not a cap on the contents of the chosen files the model reads. No automatic anonymization or local-only processing guarantee. The selected OpenAI account arrangement applies. The model authors semantic qualification, business reasoning, cycle and financing; native staging invokes only unchanged local public calculation/report engines. New case review and new record/source attestations cannot be fabricated by staging. Full staged HTML/plan stays app-private until explicit selected use. Explicit app launch creates a separate real run; it does not approve or complete it. Earlier reports and all normal actual-model-data/output-closure requirements remain. No model/provider worker, research, outreach, publication or signature is added.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
+        "id": "native-human-case-review-copy",
+        "purpose": "Apply the user-declared reviews to the same exact planning case and execute its separately selected copy",
+        "content": "Complete public report, canonical case, exact latest human decisions and draft/current copy previews stay in OpenAI app-private metadata, capped at 2 MB without sampling. Native source review privately renders complete registered UTF-8 TXT/MD/CSV/JSON/XML files up to 64 KiB after matching their exact SHA-256; larger/binary files use the original file path and the user must read their complete contents in the appropriate program. Source names, paths, client facts and personal information can be present. No automatic model transfer or model call. Metadata-only case copying preserves original business inputs and source roles/paths/hash/audience restrictions, and invokes unchanged local public rules. A selected fresh run imports its complete human-decision lineage as an audit control receipt; that JSON includes literal notes, actions, actual declared reviewer/time, source-generation file hashes and exact actor/tenant/client/run scope. This is not additional model-authored business evidence or a source-qualification classifier. All previous reports and the separate final whole-plan decision remain. Only later explicit selected explanation or a user-selected authoring mandate can put original decision/source files into host model context under their established caps/paths; no automatic anonymization or local-only model-processing guarantee.",
+        "runtime_profiles": [
+          "openai-codex"
         ]
       }
     ]
@@ -135,12 +178,28 @@
     {
       "id": "authoritative-narrative-figures",
       "control": "Calculated financial claims require canonical calculation IDs and exact values. External numerical facts can bind to source-backed evidence IDs with exact values and units. Disagreement blocks readiness, clears accepted narrative in the compiled plan and withholds the assessment in HTML while preserving the submitted case and calculation/source/issue evidence; missing inputs or material reviews/conflicts withhold capital recommendations. Ordinary provisional interpretation remains visible. Numeric literals in narrative are rejected. Semantic classification and conclusions remain model-led and subject to professional review."
+    },
+    {
+      "id": "registered-business-planning-cycle",
+      "control": "App-only ordinary calculation uses one explicit registered shared v3 case, every exact same-run source locator/hash and unchanged public dependency checker, runner, Decimal engine and compiler. No semantic classification, guessed roles, generated review stamps or mandatory approval checkbox. Signed current reviewer scope and a running run precede durable intent; one cycle per run, source/implementation rechecks, complete artifact-tree hashes and canonical public replay protect immutable HTML/JSON/CSV including legitimate partial/blocked results. Unknown, altered, orphaned or interrupted outputs require specialist recovery, never adoption or automatic retry. Complete compiled HTML stays app-private in a script-disabled sandbox; all comparison views remain in its unchanged bytes. Every canonical record is privately paged without sampling nested records; oversized complete pages/reports refuse and retain specialist files. Only explicit exact generation/collection/index explanation sends the selected record and authored cycle context to the account model, labelled untrusted and without automatic anonymization. Narrative explanation preserves canonical acceptance/withholding. Explicit user mandates now support model-authored staging and separately authorized fresh-run execution as described in native-user-mandated-case-authoring; overall plan approval remains professional. Preserve the immediate predecessor and every prior report. No research, network worker, provider request, publication, professional acceptance or Archive closure is added. Selected-record and selected retained-review model contexts refuse complete results over 65536 UTF-8 serialized bytes. Full private whole-plan/case readback is limited to 2000000 serialized bytes; complete small source text is available only up to 65536 source bytes."
+    },
+    {
+      "id": "exact-attributed-record-review",
+      "control": "Signed current actor/tenant/record scope, running-run reviewer role and private draft CAS precede professional review writes. Commit requires fresh explicit confirmation, a nonblank literal action/note/reviewer/time and timezone-aware timestamp; no attribution is generated. Every immutable decision retains the complete exact record, case and plan hashes, its predecessor reference and complete file hashes. Durable exact request receipts, locked writes, source/implementation rechecks and chain replay reject changed, orphaned or interrupted records; uncertain review writes block new decisions and complete output closure. Original sealed report replay remains available during pending review recovery. Whole-plan decisions additionally bind the full canonical plan and every original generation artifact hash. Explicit human acceptance requires the unchanged public readiness status; partial/blocked reports allow rejection and requests for changes. The latest exact whole-plan action in receipt-chain order determines acceptance; uncertainty withholds current approval. No inferred acceptance, report rewriting, generated case/source/record review metadata, new-run creation, signature, publishing or automatic model transfer occurs."
+    },
+    {
+      "id": "user-mandate-source-and-staging-authority",
+      "control": "Signed app request and reviewer-owned open engagement issue a cryptographically random 256-bit actor/tenant/engagement grant. Literal partial intake uses private atomic draft CAS; stale reuse is refused and explicit discard never deletes a mandate or intent. Retained mandate hash is bound to its original completed request; source ledger bindings, complete cached input tree and public/native/Archive implementation hashes revalidate every context/stage/launch. Complete selected source closure and public replay precede immutable staging. New case reviewer/time are empty; fresh record/source attestations reject, while exact unchanged prior records may retain their attribution without approving the new case. Stage CAS and app-signed explicit proposal launch protect independent new runs; all upstream files pass normal ready/completed all-output seals. Durable intent precedes all official source/run writes. Unknown/altered/orphaned/pending requests block distinct-key repetition rather than adopting or duplicating outputs. Exact completed retries verify immutable generation bytes; later legitimate review sidecars do not invalidate the original generation."
+    },
+    {
+      "id": "exact-human-case-review-copy",
+      "control": "Running reviewer-owned configured Archive and signed case_review:0 scope precede explicit copy retention and separate fresh-run execution. Complete case/report readback supplies only top-level case attestation; exact individual source/evidence/assumption/decision/narrative reviews remain separate. Only latest verified chain actions for exact unchanged records and source-generation artifact hashes copy literal reviewer/time into public review fields; negative actions withdraw only the selected attestation. This fixed JSON-field transformation is mechanically verifiable, not a business judgment. Undecided records, business inputs and source identity/role/audience remain unchanged; public readiness, conflict, missing-evidence and audience gates persist. Locked durable requests, source/run/implementation rechecks, full immutable case/plan/report/lineage hashes and retained launch receipts reject stale/foreign/changed/orphaned/pending writes. Missing completed launch receipts require recovery; no distinct-key adoption/restart. Original reports remain readable while uncertainty blocks new decisions and all-output closure. The new owned run receives original imports/upstream seals plus the exact reviewed case and its review_lineage control receipt. All four original-run copy files require explicit all-output declarations. No fabricated human metadata, automatic overall acceptance, semantic case editing, model/provider worker, publication, signature, transmission or Archive completion."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "e60af8e8a93ca82c3fe7efa497fb16b99d3b4712e2e5d631c1a5a89b1be8b192"
+    "source_fingerprint": "205fdd5579163a0ddc8b47b87102abf9401bc724fd453bab8224cdfd049bcebe"
   }
 }

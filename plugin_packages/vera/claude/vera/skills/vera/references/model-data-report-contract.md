@@ -21,13 +21,16 @@ Studio Archive also reuses this input schema and local report validation in
 Markdown only and returns `server_receipt.status=not_requested`. The automatic
 server-attestation behavior described below belongs to Vera's own
 `scripts/model_data_report.py` command; it is not implied by the generic helper.
+The explicitly local onboarding path does not request stamping. Reading an
+existing report does not request stamping either. See
+[Functions and limits of use](functions-and-limits.md) for the shared boundaries.
 
 ## Required outputs
 
 When the runtime can write durable artifacts, create both files in the run's
 exact output folder:
 
-- `model_data_report.json`: the machine-readable, hash-bound receipt;
+- `model_data_report.json`: the machine-readable local processing report;
 - `model_data_report.md`: the small localized report shown in the final
   Artifact Card.
 
@@ -37,7 +40,7 @@ build command. It creates the local reports and returns
 request file or network call. Do not retry stamping without a later explicit
 request. This option does not change the selected host's model processing.
 
-Otherwise the same build command automatically creates for every durable report:
+Otherwise the receipt-enabled Vera build command automatically creates:
 
 - `model_data_receipt_request.json`: the retry-stable four-field request;
 - `model_data_receipt.json`: the returned server timestamp and Ed25519 proof;

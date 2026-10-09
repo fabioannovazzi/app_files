@@ -1,0 +1,179 @@
+{
+  "date": "2026-10-09",
+  "requested_action": "Deploy please",
+  "branch": "codex/bilancio-ui-integration",
+  "versions": {
+    "vera": "0.1.357",
+    "lucia": "0.1.92",
+    "bilancio-xbrl-it": "0.1.19",
+    "concordato-plan-review": "0.1.42",
+    "journal-bank-reconciliation": "0.1.58",
+    "open-item-reconciliation": "0.1.58",
+    "sales-plan": "0.1.9",
+    "treasury-forecast": "0.1.3",
+    "clara": "0.1.260"
+  },
+  "artifacts": [
+    {
+      "path": "plugin_packages/vera/vera-plugin.zip",
+      "sha256": "0c556dba91aab77a904feb81e77ee1933684d029abd82b6d99c926097f5bedfa",
+      "bytes": 12569772
+    },
+    {
+      "path": "plugin_packages/vera/vera-chatgpt-upload.zip",
+      "sha256": "717134bde8240cbde4e666269aee1b112dad350285f63ebf845aca1e5c6d394b",
+      "bytes": 11940655
+    },
+    {
+      "path": "static/shared/vera/downloads/vera-cowork-plugin.zip",
+      "sha256": "1fb2824e17ade04a4a9657a2e890409b56e62e93b42cb17cd2fdf645c517e885",
+      "bytes": 11653868
+    },
+    {
+      "path": "static/shared/vera/downloads/vera-antigravity-plugin.zip",
+      "sha256": "1ffb995550dfe4699e51c6691d4e741e6820c840055b792d1ad1b1ef5d610b58",
+      "bytes": 12258217
+    },
+    {
+      "path": "plugin_packages/lucia/lucia-plugin.zip",
+      "sha256": "ed966a394bdcf37da381fff443439f2a9330d6d01340d6376332ab2cb2b4decf",
+      "bytes": 3448837
+    },
+    {
+      "path": "plugin_packages/lucia/lucia-chatgpt-upload.zip",
+      "sha256": "9afbfd9f9bf6259a11e5e58eb8d847f9bb701d14ca20cdb5df9d8ad8775466a6",
+      "bytes": 3364768
+    },
+    {
+      "path": "static/shared/lucia/downloads/lucia-cowork-plugin.zip",
+      "sha256": "8072b306ebb478d2eb16501e9391a61c0dfa2b3e05bb9c9b0331700bee80bd8e",
+      "bytes": 3269495
+    },
+    {
+      "path": "static/shared/lucia/downloads/lucia-antigravity-plugin.zip",
+      "sha256": "f6b5a0447ad57a60a22de3b03739c48ff0cb96cae643184954c7e5ea0eec1753",
+      "bytes": 3375920
+    },
+    {
+      "path": "plugin_packages/clara/clara-plugin.zip",
+      "sha256": "7d7189a393fb4c0f4704329f9a57a641c6b8cbb7a39716a751dd7b0f502ce44f",
+      "bytes": 6338342
+    },
+    {
+      "path": "plugin_packages/clara/clara-chatgpt-upload.zip",
+      "sha256": "7da1e93ad2a2d0f220d297553862e76fbc12e689d1c05633f02b8837d63a2845",
+      "bytes": 6054586
+    },
+    {
+      "path": "static/shared/clara/downloads/clara-cowork-plugin.zip",
+      "sha256": "67a80719cf9cc9b5bfa52ddd698c56eb539aa77a041d0516a8a9da2c6e63b69d",
+      "bytes": 5315327
+    },
+    {
+      "path": "static/shared/clara/downloads/clara-antigravity-plugin.zip",
+      "sha256": "3c4ccebf45072760355c362e0962279243fb7cb8b36cd0a2cc647797398af5ff",
+      "bytes": 6167212
+    }
+  ],
+  "source_tests_previously_qualified": 2084,
+  "full_native_instrumented_rerun": "interrupted after repeated instrumentation runtime timeouts; not qualification",
+  "previous_native_coverage_percent": 53.76950920484179,
+  "coverage_instrumentation_corrected": true,
+  "server_deployment_status": "pending green checks and merge",
+  "installed_native_acceptance": "pending; deployment will not imply native-host acceptance",
+  "all_native_rollout_components_complete": false,
+  "work_and_antigravity_privacy_projection_diagnostics": {
+    "work": 48,
+    "antigravity": 5
+  },
+  "public_published_version_manifest_changed": false,
+  "CI_status": "fresh final run required after bounded course source reviews and package regeneration",
+  "final_package_checks": {
+    "tests": 443,
+    "passed": 441,
+    "skipped": 2,
+    "junit": "/private/tmp/native-deploy-package-integrity-20261009.xml"
+  },
+  "all_product_source_and_version_checks": "passed after reviewed public catalogue boundary refresh",
+  "download_version_label_tests": "passed",
+  "instrumented_rpc_test_deadline": {
+    "ordinary_seconds": 90,
+    "coverage_seconds": 300,
+    "production_deadlines_changed": false,
+    "normal_variance_case_passed": true
+  },
+  "shared_teaching_review": "docs/releases/2026-10-09-native-workspace-shared-teaching-release-review.json",
+  "focused_CI_corrections": {
+    "passed": 15,
+    "junit": "/private/tmp/native-deploy-ci-corrections-final-20261009.xml",
+    "production_packagers_or_analysis_engines_changed": false
+  },
+  "lucia_source_regressions": {
+    "passed": 26,
+    "junit": "/private/tmp/native-deploy-lucia-source-regressions-final-20261009.xml"
+  },
+  "normal_variance_rechecks": {
+    "passed": 9,
+    "junit": "/private/tmp/native-deploy-variance-normal-rechecks-20261009.xml"
+  },
+  "full_native_instrumented_rerun_receipt": "/private/tmp/native-deploy-coverage-interrupted-20261009.json",
+  "public_course_catalogue": {
+    "builder": "scripts/course_materials/build_public_catalog.py",
+    "files_verified": 3852,
+    "generated_course_html_refreshed": 85,
+    "reason": "Propagate reviewed source course revision into public pages",
+    "check": "passed"
+  },
+  "course_generated_checks": {
+    "source_catalogue": "passed",
+    "public_catalogue": "passed",
+    "matter_review_assets": "passed",
+    "concordato_source_pdfs": "passed",
+    "presentation_baselines_all_five_languages": "passed"
+  },
+  "course_boundary_regressions": {
+    "passed": 51,
+    "tests": [
+      "test_antigravity_package.py",
+      "test_clara_privacy_surfaces.py",
+      "test_vera_privacy_surfaces.py"
+    ]
+  },
+  "public_course_privacy_refresh": {
+    "records": [
+      "plugins/vera/privacy/services/local-onboarding.json",
+      "plugins/clara/privacy/workflows/learn-with-clara.json"
+    ],
+    "review": "All 85 generated HTML changes were compared to b398cfb: only final course revision labels changed. Recipients, model-context payloads, activation, retention, consent, and security controls are unchanged. Only review fingerprints changed in the boundary records.",
+    "all_source_registers_current": true,
+    "normal_product_builder_check": "passed"
+  },
+  "teaching_editorial_source_binding_review": {
+    "record": "docs/releases/2026-10-09-native-workspace-course-source-binding-review.json",
+    "courses_reviewed": 35,
+    "all_course_pins_current": 56,
+    "unchanged_lesson_materials": true,
+    "native_execution_suite_passed": 1642,
+    "native_execution_suite_skipped": 3,
+    "review_validator_tests_passed": 36,
+    "new_visual_or_host_acceptance": false
+  },
+  "remaining_teaching_job_gates_checked_locally": {
+    "concordato": {
+      "passed": 136,
+      "coverage_percent": 89.75
+    },
+    "registro": {
+      "passed": 61,
+      "coverage_percent": 85.82
+    },
+    "website": {
+      "passed": 71,
+      "coverage_percent": 80.65
+    },
+    "matter_opening_complete_CI_scope": {
+      "passed": 13,
+      "coverage_percent": 83.63
+    }
+  }
+}

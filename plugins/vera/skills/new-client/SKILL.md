@@ -63,6 +63,18 @@ one. Both MCP toolsets belong to this workflow:
 Treat the relevant resolved module root as the plugin working directory for each
 command. Present every phase and artifact to the user under **New Client**.
 
+For either prepared phase-one or professional-setup run in Codex, when native workspace tools
+and its exact trusted run binding are available, read
+`../vera/references/native-workspace.md` and open “Lavori dello studio”. Applying
+review preserves all dossier gates and never activates the relationship;
+material fact edits or an expired package require specialist regeneration.
+For phase one, the panel's ordinary explanations read the exact selected evidence
+from the hash-verified model handoff; complete memo/email drafts enter discussion
+only when explicitly selected. Apply uses the existing transactional regeneration
+and sealing route. Neither phase has installed native-host acceptance merely
+because its source regression passes. Without native tools or a trusted binding,
+including Cowork, retain the persistent component route.
+
 Phase one accepts `italy`, `geneva`, `zurich`, `uk`, or `mixed`; its review,
 memo, client request, inventory, extraction report, and fiscal summary follow
 `it`, `en`, `fr`, `de`, or `es`. Low-level machine records retain stable field and
@@ -85,6 +97,20 @@ contract; do not use its broader draft previews as ordinary synthesis context.
 Exact local identifiers remain available in professional artifacts and may be
 loaded when the work requires them. The generic `CLIENT-001` reference applies
 only to phase-one email drafting; it is not blanket anonymization.
+
+For an explicit CH-GE mandate, an owned running `client-file-preparation` run
+can also prepare an already reviewed invoice source group in the native panel.
+Select its registered canonical JSON and map every declared original explicitly
+to a registered document. Preserve the JSON, extraction review and original
+bytes. Recoverable mapping drafts never restore confirmation; supply actual
+grouping attribution and confirm the complete mapping. The public reader rejects
+invalid extraction review before official output writes. Completed retries replay
+the exact group; uncertain intent and retained files require specialist inspection.
+This action groups existing reviewed evidence; it does not perform extraction,
+manufacture professional review or activate the client relationship. Declare and
+seal each group file through the separate Archive closure before explicitly
+selecting its canonical JSON and originals as upstream audit inputs. Only an
+explicit selected-source discussion returns a bounded excerpt to the model.
 
 When host MCP tools are unavailable, use each resolved module's persistent
 loopback workbench instead of treating chat text as saved decisions. From an

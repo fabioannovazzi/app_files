@@ -9,7 +9,8 @@ from decimal import Decimal
 from pathlib import Path
 
 import pytest
-from test_business_valuation import (
+
+from tests.plugins.test_business_valuation import (
     FIXTURE,
     ValuationError,
     build_valuation,

@@ -57,7 +57,7 @@
     },
     {
       "path": "modules/sales-plan/skills/sales-plan/SKILL.md",
-      "sha256": "9b33e97145ad0359ef13d9294dd9c8e10ec6c8051c9af7e7bf1d736e72f1add6"
+      "sha256": "4997bbfac75e8f24324fba666ba45f9b0f0465fdae62fb99ac01c5ce56e5440d"
     },
     {
       "path": "modules/sales-plan/vendor/modules/__init__.py",
@@ -406,5 +406,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "ad46221dda07219cb929c29825d7c7e85211fdb64a6cb2f33b75f10cae1ee918"
+  "canonical_course_sha256": "ec36832eb273850ba7d763ce9d29a51ceaaa3d6fced67a60d24ccd7bc1b4cb60"
 }

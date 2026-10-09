@@ -10,7 +10,6 @@ from typing import Any
 
 import pytest
 from patent_box import source_acquisition as acquisition
-from patent_box.contracts import ContractError
 from patent_box.source_transport import PublicResponse
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -181,7 +180,9 @@ def test_impact_cli_rejects_private_case_index_inside_public_scan(
     before = document_scan(tmp_path, b"<p>Before</p>")
     after = document_scan(tmp_path, b"<p>After</p>")
 
-    with pytest.raises(ContractError, match="outside public"):
+    # The repository import-isolation fixture can reload the package between tests.
+    # Bind the expected exception to the actual CLI instance under test.
+    with pytest.raises(command.ContractError, match="outside public"):
         command.main(
             [
                 "impact",
@@ -200,9 +201,10 @@ def test_impact_cli_rejects_private_case_index_inside_public_scan(
 @pytest.mark.parametrize("value", [[], None, "not an object"])
 def test_open_cli_rejects_non_object_plan(tmp_path: Path, value: Any) -> None:
     path = save(tmp_path / "invalid.json", value)
+    command = cli()
 
-    with pytest.raises(ContractError, match="Expected an object"):
-        cli().main(["open", "--plan", str(path), "--output-root", str(tmp_path)])
+    with pytest.raises(command.ContractError, match="Expected an object"):
+        command.main(["open", "--plan", str(path), "--output-root", str(tmp_path)])
 
 
 def test_monitor_cli_retains_default_off_state_and_failed_host_attempt(

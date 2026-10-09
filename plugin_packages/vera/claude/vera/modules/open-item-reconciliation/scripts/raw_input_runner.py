@@ -3077,6 +3077,8 @@ def run_raw_input_reconciliation(
     language: str = "it",
     expected_predecessor_checkpoint: str | None = None,
     output_subdirectory: str | None = None,
+    regeneration_output_dir: Path | None = None,
+    applied_review_rows: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     try:
         client_engagement = validate_client_engagement_context(
@@ -3117,7 +3119,25 @@ def run_raw_input_reconciliation(
     )
     if output_subdirectory:
         out_dir = out_dir / output_subdirectory
+    canonical_out_dir = out_dir
+    if regeneration_output_dir is not None:
+        # Only the existing detached review transaction is an admissible alternate
+        # target. Its context validation rejects arbitrary sibling/client paths.
+        from audit_assurance import _validated_client_engagement
+
+        _validated_client_engagement(
+            client_engagement,
+            output_dir=regeneration_output_dir,
+            source_root=Path(input_dir),
+        )
+        out_dir = regeneration_output_dir
     out_dir.mkdir(parents=True, exist_ok=True)
+
+    def managed_reference(value: str | Path) -> str:
+        path = Path(value)
+        if regeneration_output_dir is not None and path.is_relative_to(out_dir):
+            path = canonical_out_dir / path.relative_to(out_dir)
+        return _managed_run_reference(path, client_engagement)
 
     extracted = extract_normalized_records(input_dir, active, output_dir=out_dir)
     bindings_by_path = {
@@ -3129,9 +3149,9 @@ def run_raw_input_reconciliation(
         imported_names = binding.get("imported_names", [])
         if len(imported_names) > 1:
             source["byte_identical_import_names"] = "; ".join(imported_names)
-    review_rows = None
+    review_rows = applied_review_rows
     review_rows_path = active.get("review_rows_path")
-    if review_rows_path:
+    if review_rows_path and review_rows is None:
         review_rows = json.loads(Path(review_rows_path).read_text(encoding="utf-8"))
 
     result = build_reconciliation_artifacts(
@@ -3201,14 +3221,17 @@ def run_raw_input_reconciliation(
 
     source_pages_path = out_dir / "source_pages.json"
     manifest = {
+        "report_options": {
+            "title": title,
+            "narrative": narrative,
+            "language": language,
+        },
         "client_engagement": _portable_client_engagement_context(client_engagement),
         "path_reference": "run_root_relative",
-        "input_dir": _managed_run_reference(input_dir, client_engagement),
-        "output_dir": _managed_run_reference(out_dir, client_engagement),
-        "cache_dir": _managed_run_reference(extracted["cache_dir"], client_engagement),
-        "source_pages_path": _managed_run_reference(
-            source_pages_path, client_engagement
-        ),
+        "input_dir": managed_reference(input_dir),
+        "output_dir": managed_reference(out_dir),
+        "cache_dir": managed_reference(extracted["cache_dir"]),
+        "source_pages_path": managed_reference(source_pages_path),
         "assumptions": active,
         "counts": {
             "source_files": len(extracted["source_inventory"]),
@@ -3257,13 +3280,11 @@ def run_raw_input_reconciliation(
         },
         "checks": result["checks"],
         "checks_pass": result["checks_pass"],
-        "excel_path": _managed_run_reference(result["excel_path"], client_engagement),
-        "accountant_report_path": _managed_run_reference(
-            result["accountant_report_path"], client_engagement
-        ),
-        "word_path": _managed_run_reference(result["word_path"], client_engagement),
-        "missing_evidence_requests_path": _managed_run_reference(
-            missing_evidence_requests_path, client_engagement
+        "excel_path": managed_reference(result["excel_path"]),
+        "accountant_report_path": managed_reference(result["accountant_report_path"]),
+        "word_path": managed_reference(result["word_path"]),
+        "missing_evidence_requests_path": managed_reference(
+            missing_evidence_requests_path
         ),
     }
     write_json(out_dir / "run_manifest.json", manifest)
@@ -3291,39 +3312,22 @@ def run_raw_input_reconciliation(
     )
     manifest["review_session"] = {
         "run_id": review_session.run_id,
-        "run_intake_path": _managed_run_reference(
-            review_session.run_intake_path, client_engagement
-        ),
-        "review_payload_path": _managed_run_reference(
-            review_session.review_payload_path, client_engagement
-        ),
-        "ui_decisions_path": _managed_run_reference(
-            review_session.ui_decisions_path, client_engagement
-        ),
-        "review_html_path": _managed_run_reference(
-            review_session.review_html_path, client_engagement
-        ),
-        "final_artifacts_path": _managed_run_reference(
-            review_session.final_artifacts_path, client_engagement
-        ),
+        "run_intake_path": managed_reference(review_session.run_intake_path),
+        "review_payload_path": managed_reference(review_session.review_payload_path),
+        "ui_decisions_path": managed_reference(review_session.ui_decisions_path),
+        "review_html_path": managed_reference(review_session.review_html_path),
+        "final_artifacts_path": managed_reference(review_session.final_artifacts_path),
         "review_item_count": review_session.review_item_count,
     }
     manifest["assurance"] = {
-        "receipts_path": _managed_run_reference(
-            out_dir / "assurance_receipts.json", client_engagement
+        "receipts_path": managed_reference(out_dir / "assurance_receipts.json"),
+        "gates_path": managed_reference(out_dir / "assurance_gates.json"),
+        "final_output_inventory_path": managed_reference(
+            out_dir / "final_output_inventory.json"
         ),
-        "gates_path": _managed_run_reference(
-            out_dir / "assurance_gates.json", client_engagement
-        ),
-        "final_output_inventory_path": _managed_run_reference(
-            out_dir / "final_output_inventory.json", client_engagement
-        ),
-        "final_output_boundary": _managed_run_reference(
-            out_dir / "assurance_final_outputs", client_engagement
-        ),
-        "canonical_data_path": _managed_run_reference(
-            out_dir / "assurance_final_outputs" / "reconciliation_results.json",
-            client_engagement,
+        "final_output_boundary": managed_reference(out_dir / "assurance_final_outputs"),
+        "canonical_data_path": managed_reference(
+            out_dir / "assurance_final_outputs" / "reconciliation_results.json"
         ),
     }
     write_json(out_dir / "run_manifest.json", manifest)
@@ -3354,6 +3358,105 @@ def run_raw_input_reconciliation(
         "missing_evidence_requests_path": str(missing_evidence_requests_path),
         "missing_evidence_request_pack": missing_evidence_pack,
     }
+
+
+def regenerate_raw_input_reconciliation(
+    output_dir: Path,
+    prepared_client_engagement: Mapping[str, Any],
+    *,
+    expected_predecessor_checkpoint: str,
+) -> dict[str, Any]:
+    """Rebuild the complete raw package from retained settings and applied review.
+
+    Re-extraction, workpapers, targeted requests, seal and replay all happen in
+    the maintained copy-on-write review transaction. No approval is fabricated.
+    """
+    from audit_assurance import (
+        run_review_output_transaction,
+        validate_review_transition_history,
+    )
+
+    validate_review_transition_history(
+        output_dir, expected_predecessor_checkpoint=expected_predecessor_checkpoint
+    )
+    manifest = json.loads((output_dir / "run_manifest.json").read_bytes())
+    options = manifest.get("report_options")
+    if not isinstance(options, dict) or set(options) != {
+        "title",
+        "narrative",
+        "language",
+    }:
+        raise ValueError("Regeneration requires retained original report settings")
+    if (
+        options["title"] is not None
+        and not isinstance(options["title"], str)
+        or not isinstance(options["narrative"], str)
+        or not isinstance(options["language"], str)
+    ):
+        raise ValueError("Invalid retained report settings")
+    if any(manifest["assumptions"].get(key) for key in ("cache_dir", "ocr_cache_dir")):
+        raise ValueError("Native regeneration requires the package-owned default cache")
+    context = validate_client_engagement_context(prepared_client_engagement)
+    canonical = Path(context["output_dir"])
+    if output_dir.resolve() not in {canonical, canonical / "reconciliation"}:
+        raise ValueError("Regeneration belongs to a different client output")
+    applied = json.loads((output_dir / "applied_decisions.json").read_bytes())
+    authority = json.loads((output_dir / "professional_review.json").read_bytes())
+    if (
+        authority["origin"] != "applied_decisions"
+        or applied["run_id"] != context["run_id"]
+    ):
+        raise ValueError("Apply the current professional review before regeneration")
+    predecessor = (
+        output_dir
+        / "assurance_transition_history"
+        / authority["predecessor_assurance_sha256"]
+        / "predecessor_run"
+    )
+    retained_manifest = json.loads((predecessor / "run_manifest.json").read_bytes())
+    if any(
+        manifest[key] != retained_manifest[key]
+        for key in ("report_options", "assumptions")
+    ):
+        # Report text, source decisions and accounting assumptions must be the
+        # exact retained original, not values replaced in the pending candidate.
+        raise ValueError("Original regeneration settings changed after review")
+    decisions = json.loads((output_dir / "ui_decisions.json").read_bytes())
+    if (
+        decisions.get("decision_source") != "not_collected"
+        and decisions["decisions"] != applied["decisions"]
+    ):
+        raise ValueError("Saved decisions differ from the applied review")
+
+    def rebuild(working: Path) -> dict[str, Any]:
+        result = run_raw_input_reconciliation(
+            input_dir=context["input_dir"],
+            prepared_client_engagement=context,
+            assumptions=manifest["assumptions"],
+            **options,
+            output_subdirectory=(
+                "reconciliation" if output_dir.name == "reconciliation" else None
+            ),
+            expected_predecessor_checkpoint=expected_predecessor_checkpoint,
+            regeneration_output_dir=working,
+            applied_review_rows=authority["records"],
+        )
+        replay = validate_assurance_run(
+            working, expected_predecessor_checkpoint=expected_predecessor_checkpoint
+        )
+        return {
+            "regenerated": True,
+            "assurance_sha256": replay["content_sha256"],
+            "report_ready": replay["gate_register"]["report_ready"],
+            "checks_pass": result["checks_pass"],
+        }
+
+    return run_review_output_transaction(
+        output_dir,
+        rebuild,
+        expected_predecessor_checkpoint=expected_predecessor_checkpoint,
+        regenerate_successor=True,
+    )
 
 
 def _cli_parser() -> Any:

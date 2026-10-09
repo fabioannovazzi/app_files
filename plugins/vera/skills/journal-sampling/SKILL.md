@@ -30,6 +30,16 @@ Current user requests take precedence over saved preferences.
 
 # Journal Sampling
 
+For an already prepared sample, use `vera_workspace_open` when callable and the
+exact Studio Archive run has a trusted operator binding. Read
+`../vera/references/native-workspace.md` before the handoff. The panel reviews the
+maintained sample and decisions; discussion retrieves only the exact selected item
+from its replay-verified model context. It preserves population qualification,
+normalization, selection lineage and unresolved professional gates. Initial
+population review and sample preparation remain in the specialist workflow.
+Without native tools or a trusted binding, continue the persistent specialist
+route, including in Cowork. Reviewing a sample does not verify its documents.
+
 For a Geneva (CH-GE) mandate, read `../vera/references/localization/geneva.md` first and use this existing function’s Geneva adaptation in its resolved component skill. Language alone never selects jurisdiction.
 
 

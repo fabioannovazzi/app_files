@@ -13,7 +13,15 @@
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
     "vendor/modules/vera_ocr",
-    "skills/vera/references/connected-studio-knowledge.md"
+    "skills/vera/references/connected-studio-knowledge.md",
+    "scripts/native_inps.py",
+    "scripts/native_inps_bridge.py",
+    "scripts/native_inps_rpc.cjs",
+    "scripts/native_archive_closure.py",
+    "skills/previdenza-inps/SKILL.md",
+    "mcp/workspace.cjs",
+    "ui/workspace.js",
+    "scripts/native_workspace.py"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -47,6 +55,14 @@
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "native-explicit-inps-review-item",
+        "purpose": "Discuss only the whole prepared public evidence item explicitly selected by the user.",
+        "content": "In optional Codex native review, an exact owner/run/revision/source/item selection returns that whole public review record, including its data, quotes, locators, uncertainty, public source references and allowed actions, within 64000 UTF-8 serialized bytes or refuses. Public acquisition metadata is not an instruction. Unsent reviewer name, chosen action, reason, edit and document-request fields, original document paths and authentication material are not included in this tool response. Ordinary specialist phases can separately read selected real case originals under the existing workflow; there is no anonymization, local-only model-processing guarantee or attestation of actual reads. The candidate forwards exact running client-engagement context to token-based Render/Apply; the production correction remains separately proposed, unapplied and unreleased. Complete app readback is bounded to 2000000 UTF-8 serialized bytes without sampling; private metadata handling depends on installed-host behavior and does not attest original/model reading.",
+        "runtime_profiles": [
+          "openai-codex"
         ]
       }
     ]
@@ -141,12 +157,16 @@
     {
       "id": "review-reference-lifecycle",
       "control": "Persisted Validate, Render, Save, and Apply calls reuse an opaque, four-hour, server-held reference bound to the exact run and stored review hash; at most 128 live references are retained and private review rows are not echoed in validation results or text fallbacks."
+    },
+    {
+      "id": "native-inps-prepared-evidence-review",
+      "control": "Optional prepared-case integration binds owner, run, closed input manifest, implementation, acquisition posture and complete output hashes. Literal reviewer/item action/reason/edit/document-request drafts are app-only, generation-bound and never inherit confirmation. Explicit selected-item context returns the whole current public evidence record within 64000 UTF-8 serialized bytes or refuses, without original paths or unsent private fields. Signed named confirmation invokes unchanged public INPS Apply; requested edits are not applied to the memo and professional-review ceilings remain. Durable uncertain intents block further native writes and shared native Archive closure. Closed sealed runs consult the public shape validator without acquiring persistence authority. Canonical running source reads/applications lose client_engagement context in token-based Render/Apply. The candidate passes that exact context through both unchanged public calls; this separately qualified correction remains unapproved, unapplied and unreleased. Initial preparation, actual model reads, installed-host and professional acceptance remain unverified."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "0fd815b9770832007501ccf7c9180f0b6325256d73ecaacc0082298b6d6c9466"
+    "source_fingerprint": "199fa33d50556687ceccd533a24ae1bd4ba953104863e5e1075075a185f7b959"
   }
 }

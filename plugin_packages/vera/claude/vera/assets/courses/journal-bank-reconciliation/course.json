@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "journal-bank-reconciliation",
-  "revision": "2026-09-14.2",
+  "revision": "2026-10-09.native-main-integration.review-proposal",
   "seconds": [
     45,
     60,
@@ -84,7 +84,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/semantic_review.py",
-      "sha256": "2a6408f7fb20bf06612534d8a7b23807675ef9e2fca724f9b0aa935f4629b45b"
+      "sha256": "9e6c1f12de9f3723d310022f59f7a29b40620b1b1cd940b5f24d0049ba66247b"
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
@@ -136,7 +136,7 @@
     },
     {
       "path": "skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "24297e5777869022816acc002416b60efb378d9e2fa5af56f9c292652a85fb4a"
+      "sha256": "774199515ecd4af9e0165a2dbb5e5923ba347d2454bc70586a577acabde7a66e"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -465,5 +465,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "230fe84ee677cd3736742c8339c729f10211a21850d4f0b5654722d48c8ac234"
+  "canonical_course_sha256": "907941939d94d94ad21c8eea6dbf1304b44bbaf65c4204f1160eb2a27fa8ae2a"
 }

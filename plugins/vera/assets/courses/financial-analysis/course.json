@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "financial-analysis",
-  "revision": "2026-09-14.2",
+  "revision": "2026-10-09.native-main-integration.review-proposal",
   "seconds": [
     45,
     60,
@@ -185,7 +185,7 @@
     {
       "path": "skills/financial-analysis/SKILL.md",
       "repository_path": "plugins/vera/skills/financial-analysis/SKILL.md",
-      "sha256": "e44c5396082694cb213ad979a877b09c340174dd3fc61030457bfe21d79b6d6e"
+      "sha256": "45e1c2c0cc92fee8959114772992285abf53ff0a1aa4ad8cf7463990137036b7"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

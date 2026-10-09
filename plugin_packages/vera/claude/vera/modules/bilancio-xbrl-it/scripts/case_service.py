@@ -1334,6 +1334,28 @@ class CaseService:
         authorize(context, "READ", case)
         return build_review_view(case, view, offset=offset, limit=limit)
 
+    def workspace_snapshot(
+        self,
+        context: RequestContext,
+        case_id: str,
+        view: str,
+        *,
+        expected_revision: str | None = None,
+        issue_id: str | None = None,
+        source_ref: str | None = None,
+        offset: int = 0,
+        limit: int = 30,
+    ) -> dict[str, Any]:
+        """Read a coherent UI snapshot and optional exact finding from one revision."""
+
+        from workspace_contract import build_workspace_snapshot
+
+        case = load_case(self._case_dir(context.tenant_id, case_id))
+        authorize(context, "READ", case)
+        if expected_revision and case["revision_id"] != expected_revision:
+            raise ValueError("Stale revision: reload the case before continuing")
+        return build_workspace_snapshot(case, view, issue_id, offset, limit, source_ref)
+
     def _dispatch(
         self,
         case_dir: Path,

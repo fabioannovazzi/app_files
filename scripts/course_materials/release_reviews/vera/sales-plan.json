@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "sales-plan",
-  "course_sha256": "ad46221dda07219cb929c29825d7c7e85211fdb64a6cb2f33b75f10cae1ee918",
-  "reviewer": "Codex: five-language sales-plan lesson and actual scenario delivery review",
-  "reviewed_at": "2026-09-14T21:58:58.519111+00:00",
-  "review_scope": "Prepared material and native local workflow review. Read all five complete outlines, all ten assumption source notes, the four-row Actual CSV, all ten delivered cards, assumption read-backs and run-review notes. The final Italian/English cards match the reviewed text outside their separately read final trace tables. All thirty native scenario/summary/ledger CSV files match the inspected phase-specific values across languages. Thirty-nine relevant native checks pass, including ten phase/language lesson identities, exact-row retrieval, same-engagement alternative runs and first-output preservation. Host-authored regression interpretations and delivery formatting live outside the shipped kits. Native voice, window rendering, elapsed lesson time, learner comprehension, learner confirmation and professional approval remain separate unverified steps. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+  "course_sha256": "ec36832eb273850ba7d763ce9d29a51ceaaa3d6fced67a60d24ccd7bc1b4cb60",
+  "reviewer": "Codex bounded teaching-material and source integration review",
+  "reviewed_at": "2026-10-09T13:18:34.137635+00:00",
+  "review_scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -808,5 +808,92 @@
     "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
     "source_review": "docs/studio_archive/course-source-compatibility-review.json",
     "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  },
+  "native_source_binding_review_20261007": {
+    "basis": "Only the Vera wrapper source receipt changed for the native registered-case route; lesson instructions, supported languages, fictional inputs, checkpoints and expected results remain unchanged. Initial native case authoring and installed UI acceptance are still pending.",
+    "current_course_sha256": "792b3b8ff07de5d1a86077ec638e2d6f72f7caa974054fe3c9fe3a8104708775"
+  },
+  "native_authoring_source_binding_review_20261007": {
+    "previous_course_sha256": "792b3b8ff07de5d1a86077ec638e2d6f72f7caa974054fe3c9fe3a8104708775",
+    "current_course_sha256": "3656f9e4d6a89d86ddf00df69487e7a6698fc3ecbc9fa3b7d5d8f9f893bdcd7b",
+    "changed_sources": [
+      "plugins/sales-plan/skills/sales-plan/SKILL.md",
+      "plugins/vera/skills/sales-plan/SKILL.md"
+    ],
+    "basis": "Inspected Vera wrapper and module skill update: native strict registered-CSV authoring, recoverable drafts and explicit review route preserve the unchanged public engine, lesson content, inputs, languages, timing, checkpoints and expected results. Every course field other than source hashes remains equal to the prior reviewed course. Fresh localized execution tests are required; no installed-host, learner or professional acceptance is claimed.",
+    "host_projection": "Explicit native-workspace instruction markers preserve this Codex-only route. The maintained Cowork builder removes those exact blocks; specialist case preparation, the public runner and model-use helper remain available. Authored lesson content is unchanged."
+  },
+  "native_query_source_binding_review_20261007": {
+    "source_changes": [
+      {
+        "path": "plugins/sales-plan/skills/sales-plan/SKILL.md",
+        "before": "e1a3c8dea219ffc61dfde912378680c93c39fa78602b9e82330ec998c282a697",
+        "after": "7a5e417d66c2e93ebf2627c3b2fd3ed422e56dca24a0cb73bad6d04966ea0be9"
+      },
+      {
+        "path": "plugins/vera/skills/sales-plan/SKILL.md",
+        "before": "4a46d52fa744ff3a2821f5625046e6abbdba85f711ae6801ca7aadfef38e3b55",
+        "after": "e6cd4f53bc5d1b9535fad7a33055ad3cff0ca352bb41b2ad402afe2684dfd296"
+      }
+    ],
+    "basis": "Reviewed OpenAI-only native scenario query instructions and unchanged public runner. No lesson narrative, input, output or timing changes. Cowork strips the exact native block.",
+    "engine_changed": false
+  },
+  "native_main_integration_observation_20261009": {
+    "recorded_at": "2026-10-09T05:12:43.730740+00:00",
+    "status": "historical_review_union_current_release_unqualified",
+    "current_course_sha256": "ec36832eb273850ba7d763ce9d29a51ceaaa3d6fced67a60d24ccd7bc1b4cb60",
+    "retained_current_main_review_record_sha256": "0122e06e3988d559e540fa205abcb9fea6c128f8320326350497b064c9608d1c",
+    "retained_candidate_review_record_sha256": "18d45f3e866df5c4ac93636aa3b9497557890646c75a32cc25329040e57beb43",
+    "retained_candidate_only_fields": [
+      "native_authoring_source_binding_review_20261007",
+      "native_query_source_binding_review_20261007",
+      "native_source_binding_review_20261007"
+    ],
+    "different_historical_fields": {
+      "course_sha256": {
+        "candidate_value": "2e09998bf19ceb10d83c6ab000dcb3f77502dd454d7fce26b5a6d3e12fcbffef",
+        "current_main_value": "ad46221dda07219cb929c29825d7c7e85211fdb64a6cb2f33b75f10cae1ee918"
+      }
+    },
+    "localized_editorial_and_artifact_reviews_unchanged": true,
+    "current_release_acceptance_renewed": false,
+    "review_scope": "Preserve both source-review histories and their actual original course pins. Current lesson content matches the candidate reviewed baseline and the two histories have identical locale reviews. Compiler, source hashes and render success do not renew editorial/native output acceptance. Existing current-main reviewer/date/scope/language/artifact fields remain unchanged. The retained course_sha256 is not rewritten to claim current-candidate acceptance."
+  },
+  "source_binding_review_20261009": {
+    "reviewer": "Codex bounded teaching-material and source integration review",
+    "reviewed_at": "2026-10-09T13:18:34.137635+00:00",
+    "previous_review_identity": {
+      "reviewer": "Codex: five-language sales-plan lesson and actual scenario delivery review",
+      "reviewed_at": "2026-09-14T21:58:58.519111+00:00",
+      "review_scope": "Prepared material and native local workflow review. Read all five complete outlines, all ten assumption source notes, the four-row Actual CSV, all ten delivered cards, assumption read-backs and run-review notes. The final Italian/English cards match the reviewed text outside their separately read final trace tables. All thirty native scenario/summary/ledger CSV files match the inspected phase-specific values across languages. Thirty-nine relevant native checks pass, including ten phase/language lesson identities, exact-row retrieval, same-engagement alternative runs and first-output preservation. Host-authored regression interpretations and delivery formatting live outside the shipped kits. Native voice, window rendering, elapsed lesson time, learner comprehension, learner confirmation and professional approval remain separate unverified steps. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+      "course_sha256": "ad46221dda07219cb929c29825d7c7e85211fdb64a6cb2f33b75f10cae1ee918"
+    },
+    "accepted_material_baseline": "8df0157d52b1e322f9f85fdb77376b39e17db446",
+    "current_course_sha256": "ec36832eb273850ba7d763ce9d29a51ceaaa3d6fced67a60d24ccd7bc1b4cb60",
+    "unchanged_materials": [
+      "all lesson locales and editorial text",
+      "input specifications and hashes",
+      "demo and practice execution contracts",
+      "language and grouping contracts"
+    ],
+    "changed_fields": [
+      "sources"
+    ],
+    "source_review_basis": "Native source integration and the owner-approved canonical repair were reviewed separately. Current real workflow regression assertions ran before their recorded native checks. Lesson content is byte-equivalent at the JSON-field level to the accepted main baseline; reviewed input bindings and output contracts are unchanged. Existing per-locale output artifacts and editorial history are retained, with no new visual or host acceptance claim.",
+    "current_execution_evidence": {
+      "run": 37930167083,
+      "job": 113818653311,
+      "head": "89004da63fc3d6d6a5feffde2484143c203634a1",
+      "native_teaching_suite_passed": 1642,
+      "skipped": 3,
+      "log": "/private/tmp/native-deploy-final-teaching-failure-20261009.log",
+      "whole_job_outcome": "failed at stale editorial course pin after execution suite passed",
+      "final_gate_requires_fresh_matching_junit": true
+    },
+    "new_native_output_visual_review": false,
+    "installed_host_acceptance": false,
+    "learner_or_professional_acceptance": false,
+    "scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance."
   }
 }

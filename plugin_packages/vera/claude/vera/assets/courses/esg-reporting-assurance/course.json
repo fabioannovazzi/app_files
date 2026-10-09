@@ -57,7 +57,7 @@
     },
     {
       "path": "skills/esg-reporting-assurance/SKILL.md",
-      "sha256": "7283775f7503ead4581f4152bde53499b186386d306633f3991f2e0ab925d123"
+      "sha256": "02808de5b0f72f361ee25148652fe05ef4c0930b590d7a8c464c47770eeedb7e"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -386,5 +386,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "fc8414b712e60749d3ed7a205de67fb505ecedcbd25313f6b2823384b0a528e6"
+  "canonical_course_sha256": "4caeee38298dc977707112aa02c018d4aafec9262683a8787bd194bafd70150d"
 }

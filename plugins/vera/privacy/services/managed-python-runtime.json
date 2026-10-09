@@ -5,14 +5,6 @@
   "governed_paths": [
     "components.json",
     "scripts/check_dependencies.py",
-    "scripts/verified_execution.py",
-    "skills/vera/references/execution-recovery.md",
-    "skills/journal-bank-reconciliation/SKILL.md",
-    "skills/open-item-reconciliation/SKILL.md",
-    "skills/journal-sampling/SKILL.md",
-    "skills/financial-report-builder/SKILL.md",
-    "skills/vouching/SKILL.md",
-    "skills/concordato-plan-review/SKILL.md",
     "scripts/_managed_python_runtime.py",
     "scripts/managed_python_runtime.py",
     "skills/vera/SKILL.md",
@@ -23,11 +15,9 @@
     "scripts/_python_bootstrap.py",
     "scripts/studio_archive_session.py",
     "scripts/studio_archive_windows.ps1",
-    "skills/studio-archive/references/cowork-runtime.md"
-  ],
-  "governed_repository_paths": [
-    "scripts/build_codex_plugin_zip.py",
-    "scripts/build_claude_plugin_zip.py"
+    "skills/studio-archive/references/cowork-runtime.md",
+    "scripts/verified_execution.py",
+    "skills/vera/references/execution-recovery.md"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -78,18 +68,6 @@
   ],
   "security_controls": [
     {
-      "id": "verified-hardlink-execution-copy",
-      "control": "Before six assured Python module workflows, preparation checks exact installed package inventory and stable regular-file bytes against a build-generated SHA-256 index for that host projection. Unchanged hardlinked files are copied into a fresh private OS temporary directory, each copied file is checked as independent and byte-identical, and the unchanged module integrity validator runs before execution. Host-managed files and aliases are never edited. Copies contain package code and bundled assets only, remain in OS temporary storage for normal OS cleanup, and do not contain client documents or outputs. The host installation is the trust anchor; the embedded index is a consistency check, not publisher authentication. This adds no network boundary and no model-context case content. Direct host MCP startup is outside these Python launchers.",
-      "implemented_by": [
-        "scripts/verified_execution.py",
-        "scripts/check_dependencies.py",
-        "scripts/managed_python_runtime.py",
-        "repository:scripts/build_codex_plugin_zip.py",
-        "repository:scripts/build_claude_plugin_zip.py"
-      ],
-      "on_violation": "Missing digest index requires a supported update. Missing, altered or extra files, symlinks, special files, changing reads, original-validator failures and host storage denials stop the workflow. They are never automatically repaired or bypassed."
-    },
-    {
       "id": "published-requirements-only",
       "control": "Setup validates package-relative selections and installs the published shared recipe. No package names or dependency instructions are accepted from client documents.",
       "implemented_by": [
@@ -117,12 +95,22 @@
         "scripts/studio_archive_windows.ps1"
       ],
       "on_violation": "An unreadable package or invalid session stops before runtime setup and archive commands."
+    },
+    {
+      "id": "verified-code-copy-before-assured-execution",
+      "control": "For the six explicitly supported assured modules, the launchers verify the complete package inventory and stable regular-file bytes against the embedded build-generated SHA-256 index. Symlinks, reparse entries, special files, extra directories/files, missing or changed code and unstable reads stop preparation. Unchanged hardlinked package code is materialized into a fresh private OS temporary directory; each copied file is re-read and must have one physical link, then the unchanged component integrity validator must pass. The managed installation and aliases are not modified. The copy contains indexed product code/assets, not client documents, credentials, workflow reports or dependency environments. This local index detects package drift; it is not a publisher signature, a signed origin attestation or proof of installed-host acceptance. Successful code copies remain in OS temporary storage for normal OS cleanup.",
+      "implemented_by": [
+        "scripts/verified_execution.py",
+        "scripts/check_dependencies.py",
+        "scripts/managed_python_runtime.py"
+      ],
+      "on_violation": "Preparation failures and host permission denials stop execution. A failed private copy is removed; no installation chmod/unlink/manual repair, alternate sandbox or relaxed component validation is permitted."
     }
   ],
   "review": {
     "reviewed_at": "2026-10-06",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "3d93080e2003eb7239150379e6326f7da25e3b6b63587f12fa49e5bacdfb244f"
+    "source_fingerprint": "55e2b42afdc61d7e984ff14d442b4944262d84c5bbb67c3b888ac4b7e2171cfd"
   }
 }

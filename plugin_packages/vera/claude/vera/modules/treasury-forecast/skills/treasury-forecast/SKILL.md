@@ -147,6 +147,7 @@ declared horizon. Keep the scope and omitted populations explicit.
 
 ## Cowork-native Run UX
 
+
 Resolve material choices from actual inputs before asking the professional:
 company, account population, cutoff, horizon, coverage and unsupported date
 assumptions. Do not propose extra scenarios or output variants unless the facts cue them.

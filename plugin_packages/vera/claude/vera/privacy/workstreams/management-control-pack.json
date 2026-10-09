@@ -65,6 +65,22 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "native-explicit-calculation-and-commentary",
+        "purpose": "Interpret one exact sealed normal calculation and an explicitly selected complete commentary proposal when the optional maintained panel is available",
+        "content": "Explicit current source MCP context returns the whole existing bounded model_context.json, actual execution/context receipts, normal commentary template and public specialist method reference. Commentary context optionally includes the expressly chosen complete literal normal commentary. It excludes raw source populations, the complete pack and private unsent intake/named readback by default; prior source/case-preparation model exposure remains unchanged. App metadata holds exact input choices, complete registered recipe/case, output paths, full commentary and declared name/time/basis. Model staging receives the complete authored commentary; public validation checks schema, exact pack and metric references, not prose quality or causation. No automatic model worker is invoked and actual reads must be recorded separately in the ordinary run-level report. Shared native integration remains incomplete for initial source/case preparation and interactive HTML opening; these use the complete ordinary specialist path. Real installed-host handoff has not yet been qualified.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
+        "id": "native-explicit-original-source-preparation",
+        "purpose": "Prepare a whole reporting recipe or costing case under a distinct explicit source mandate",
+        "content": "After renewed explicit saved source/question confirmation, author context contains literal question and reporting/costing path, receipt IDs, exact SHA hashes and authorized absolute original-file paths, therefore original/client-folder names where present. An optional explicitly selected prior complete-case path can expose its data and declared reviews if actually read. Authorized originals may contain full transactions, parties, costs and evidence; their mandate is not proof of model reads. Public reporting inspection is a bounded sample, not the population; focused costing has no ledger requirement. The explicitly selected whole proposal is a bound file path plus open-items note, and model staging receives the whole ordinary payload. Private unsent decision/name/time/basis stays excluded from author context; app metadata can show whole proposed/prior cases and named drafts. No provider worker starts; actual model exposure needs the ordinary run-level report. Source registration/closure currently have missing capability wiring defects; the verified correction is unapplied. Installed host/model acceptance and native report opening remain pending.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
       }
     ]
   },
@@ -144,9 +160,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-03",
+    "reviewed_at": "2026-10-08",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "cdd3c1b31949b47613692b9c83c4be8f1da1cdfce24acde190db4a6d01dee3c6"
+    "source_fingerprint": "02516635e37986ecb45ecfd89a307340d08f95ce98358360fae114bd31926fb0"
   }
 }

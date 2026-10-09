@@ -37,3 +37,24 @@ exists; otherwise resolve `../../../rating-legalita` in the repository. Read
 that module's `skills/rating-legalita/SKILL.md` completely and follow it. Treat
 the resolved module root as the plugin working directory for all commands,
 scripts, requirement files, references, schemas, and local review server.
+
+<!-- VERA_OPENAI_NATIVE_WORKSPACE_BEGIN -->
+## Optional native dossier workspace
+
+Read `../vera/references/native-workspace.md` before using an available,
+host-qualified OpenAI panel. The current source checkpoint reads a complete
+prepared case from exact registered Rating run inputs and an explicitly chosen,
+sealed same-engagement Rating predecessor. It verifies the public engine's
+prerequisites, evidence links, quotations, immutable observations and status
+before projecting the dossier privately to the app. No legal judgment, source
+qualification or professional decision is added by opening the panel.
+
+Initial preparation, model-led case authoring, professional decisions and the
+readable model-data report continue in the unchanged specialist workflow. A
+native saved selection is not a review, an AGCM award or permission to submit.
+First-save and signed-scope write qualification are pending in current source;
+do not claim native render is accepted or bypass those checks. Use the public
+CLI/file workflow for authorized work while they remain unresolved. The
+independent Codex/Cowork workflow remains supported; installed native-host and
+fresh package acceptance must be verified separately.
+<!-- VERA_OPENAI_NATIVE_WORKSPACE_END -->

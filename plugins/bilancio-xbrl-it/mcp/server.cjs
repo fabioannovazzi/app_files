@@ -5,6 +5,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const readline = require("node:readline");
 const { spawnSync } = require("node:child_process");
+const workspace = require("./native-workspace.cjs");
 
 const PLUGIN_ROOT = path.resolve(__dirname, "..");
 const MANIFEST = JSON.parse(
@@ -327,6 +328,11 @@ function response(id, result) {
   return { jsonrpc: "2.0", id, result };
 }
 
+const workspaceEnabled = process.env.VERA_XBRL_UI_ONLY === "1"
+  || process.env.VERA_XBRL_NATIVE_UI === "1";
+const exposedTools = process.env.VERA_XBRL_UI_ONLY === "1"
+  ? workspace.TOOLS : [...TOOLS, ...(workspaceEnabled ? workspace.TOOLS : [])];
+
 function errorResponse(id, code, message) {
   return { jsonrpc: "2.0", id, error: { code, message } };
 }
@@ -339,6 +345,7 @@ function callBridge(tool, args) {
     input: JSON.stringify({ tool, arguments: args }),
     encoding: "utf8",
     maxBuffer: 8 * 1024 * 1024,
+    timeout: 120000,
   });
   if (result.error) throw result.error;
   if (result.status !== 0) {
@@ -352,15 +359,25 @@ function handle(message) {
   if (message.method === "initialize") {
     return response(message.id, {
       protocolVersion: "2025-03-26",
-      capabilities: { tools: {} },
+      capabilities: { tools: {}, ...(workspaceEnabled ? { resources: {} } : {}) },
       serverInfo: { name: "vera-bilancio-xbrl-it", version: MANIFEST.version },
     });
   }
-  if (message.method === "tools/list") return response(message.id, { tools: TOOLS });
+  if (message.method === "tools/list") return response(message.id, { tools: exposedTools });
+  if (message.method === "resources/list") return response(message.id, {
+    resources: workspaceEnabled ? [{ uri: workspace.URI, name: "Fascicoli Vera", mimeType: workspace.MIME }] : [],
+  });
+  if (message.method === "resources/read") {
+    if (!workspaceEnabled || message.params?.uri !== workspace.URI) return errorResponse(message.id, -32602, "Unknown resource");
+    return response(message.id, workspace.readResource());
+  }
   if (message.method === "tools/call") {
-    const tool = TOOLS.find((item) => item.name === message.params?.name);
+    const tool = exposedTools.find((item) => item.name === message.params?.name);
     if (!tool) return errorResponse(message.id, -32601, "Unknown tool");
     try {
+      if (tool.name.startsWith("xbrl_workspace_")) {
+        return response(message.id, workspace.call(tool, message.params?.arguments || {}, callBridge));
+      }
       const payload = callBridge(tool.name, message.params?.arguments || {});
       return response(message.id, {
         content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],
@@ -368,6 +385,13 @@ function handle(message) {
         isError: false,
       });
     } catch (error) {
+      if (tool.name.startsWith("xbrl_workspace_")) {
+        return response(message.id, {
+          isError: true,
+          content: [{ type: "text", text: String(error.message || error) }],
+          _meta: { workspace: { error: String(error.message || error) } },
+        });
+      }
       return errorResponse(message.id, -32000, String(error.message || error));
     }
   }

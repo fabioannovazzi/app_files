@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "vouching",
-  "revision": "2026-09-14.2",
+  "revision": "2026-10-09.native-main-integration.review-proposal",
   "seconds": [
     45,
     60,
@@ -145,7 +145,7 @@
     },
     {
       "path": "skills/vouching/SKILL.md",
-      "sha256": "c70c4dcaa33b23b15ec8ec1207ac36cb51600a8cfc877b5c231a1c0f41db838f"
+      "sha256": "7d01b5891a598b31ce26ec1b6f420bb4cdf2d98c4953d512a9b5f869398465c5"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -518,5 +518,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "256763d1072e30abf644d30809793a9548f8997aaa6c1e078e177bbe98c39611"
+  "canonical_course_sha256": "d4ea680ab0d3e65bf283462bae3454ddb37f48c58d99284499395b493d8e6912"
 }

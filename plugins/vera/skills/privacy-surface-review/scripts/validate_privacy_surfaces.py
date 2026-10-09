@@ -258,6 +258,203 @@ def _repository_governed_files(
     return logical_files
 
 
+REPOSITORY_REVIEW_SCOPE = "reviewed_repository_declaration_not_hosted_runtime"
+MAX_REPOSITORY_REVIEW_BYTES = 8_000_000
+
+
+def _review_relative_path(value: Any) -> bool:
+    """Require portable contained paths for mechanically checked provenance."""
+    return (
+        isinstance(value, str)
+        and bool(value)
+        and value != "."
+        and ":" not in value
+        and "\\" not in value
+        and not Path(value).is_absolute()
+        and ".." not in Path(value).parts
+        and Path(value).as_posix() == value
+    )
+
+
+def _review_digest(value: Any) -> bool:
+    """Check a SHA-256 representation without claiming authenticated provenance."""
+    return (
+        isinstance(value, str)
+        and len(value) == 64
+        and all(character in "0123456789abcdef" for character in value)
+    )
+
+
+def _repository_review_binding_errors(
+    payload: dict[str, Any], service_id: str
+) -> list[str]:
+    binding = payload.get("repository_source_review")
+    if binding is None:
+        return []
+    if not isinstance(binding, dict) or set(binding) != {"path", "service_id", "scope"}:
+        return [f"{service_id}: invalid repository-source review binding"]
+    expected = f"privacy/repository-source-reviews/{service_id}.json"
+    if (
+        binding["service_id"] != service_id
+        or binding["scope"] != REPOSITORY_REVIEW_SCOPE
+        or binding["path"] != expected
+    ):
+        return [
+            f"{service_id}: repository-source review must bind its exact service and declaration scope"
+        ]
+    if not payload.get("governed_repository_paths"):
+        return [
+            f"{service_id}: repository-source review requires retained repository governance"
+        ]
+    review = payload.get("review")
+    if (
+        not isinstance(review, dict)
+        or review.get("fingerprint_scope")
+        != "installed_client_and_repository_review_declaration"
+    ):
+        return [
+            f"{service_id}: repository-source review requires explicit fingerprint scope"
+        ]
+    return []
+
+
+def _repository_review_file(
+    vera_root: Path, binding: dict[str, Any], repository_paths: Iterable[str]
+) -> tuple[str, Path]:
+    """Validate retained declarations; never substitute them for hosted runtime proof."""
+    # Source freshness must still inspect actual repository bytes. Only an
+    # explicitly bound installed package may retain a declaration instead.
+    if (
+        (vera_root / "modules").is_symlink()
+        or not (vera_root / "modules").is_dir()
+        or not (vera_root / ".codex-plugin/plugin.json").is_file()
+    ):
+        raise ValueError(
+            "repository-source declarations are allowed only in installed Codex packages"
+        )
+    relative = binding["path"]
+    if not _review_relative_path(relative):
+        raise ValueError("invalid repository-source review path")
+    target = vera_root / relative
+    if any(
+        (vera_root / Path(*Path(relative).parts[:count])).is_symlink()
+        for count in range(1, len(Path(relative).parts) + 1)
+    ):
+        raise ValueError("repository-source review must not be a symlink")
+    target.resolve(strict=True).relative_to(vera_root.resolve())
+    if not target.is_file() or target.stat().st_size > MAX_REPOSITORY_REVIEW_BYTES:
+        raise ValueError("repository-source review is unavailable or oversized")
+    raw = target.read_bytes()
+    if len(raw) > MAX_REPOSITORY_REVIEW_BYTES:
+        raise ValueError("repository-source review is oversized")
+    document = json.loads(raw)
+    expected_fields = {
+        "schema_version",
+        "service_id",
+        "scope",
+        "hosted_runtime_verified",
+        "limitations",
+        "source_manifest",
+        "files",
+    }
+    if not isinstance(document, dict) or set(document) != expected_fields:
+        raise ValueError("invalid repository-source review document fields")
+    if (
+        type(document["schema_version"]) is not int
+        or document["schema_version"] != 1
+        or document["service_id"] != binding["service_id"]
+        or document["scope"] != REPOSITORY_REVIEW_SCOPE
+        or document["hosted_runtime_verified"] is not False
+    ):
+        raise ValueError(
+            "repository-source review cannot claim hosted runtime verification"
+        )
+    if document["limitations"] != [
+        "Hashes record repository bytes inspected during packaging; hosted code is not included or executed.",
+        "Installed validation checks local client bytes and this retained review declaration.",
+        "Hosted deployment, live controls and model delivery require separate acceptance evidence.",
+    ]:
+        raise ValueError("repository-source review limitations must remain explicit")
+    source = document["source_manifest"]
+    if (
+        not isinstance(source, dict)
+        or source.get("service_id") != binding["service_id"]
+    ):
+        raise ValueError("repository-source review has a foreign source manifest")
+    if _service_manifest_errors(source, service_id=binding["service_id"]):
+        raise ValueError("repository-source review has an invalid source manifest")
+    if "repository_source_review" in source or not _review_digest(
+        source["review"]["source_fingerprint"]
+    ):
+        raise ValueError(
+            "repository-source review must retain the original source review"
+        )
+    roots = list(repository_paths)
+    if source.get("governed_repository_paths") != roots or not all(
+        _review_relative_path(path) for path in roots
+    ):
+        raise ValueError("repository-source review changed declared source scope")
+    files = document["files"]
+    if not isinstance(files, list) or not files or len(files) > 10_000:
+        raise ValueError(
+            "repository-source review must contain bounded source-file identities"
+        )
+    seen: set[str] = set()
+    covered: set[str] = set()
+    for item in files:
+        if not isinstance(item, dict) or set(item) != {
+            "path",
+            "bytes",
+            "sha256",
+            "installed_paths",
+        }:
+            raise ValueError("invalid reviewed repository-file fields")
+        path = item["path"]
+        if (
+            not _review_relative_path(path)
+            or path in seen
+            or not _review_digest(item["sha256"])
+            or type(item["bytes"]) is not int
+            or item["bytes"] < 0
+        ):
+            raise ValueError("invalid or duplicate reviewed repository-file identity")
+        parents = {
+            root for root in roots if path == root or path.startswith(root + "/")
+        }
+        if not parents:
+            raise ValueError(
+                "reviewed repository file is outside the declared source scope"
+            )
+        installed = item["installed_paths"]
+        if (
+            not isinstance(installed, list)
+            or not all(_review_relative_path(value) for value in installed)
+            or len(installed) != len(set(installed))
+        ):
+            raise ValueError("invalid reviewed repository-file installation paths")
+        for value in installed:
+            selected = vera_root / value
+            if any(
+                (vera_root / Path(*Path(value).parts[:count])).is_symlink()
+                for count in range(1, len(Path(value).parts) + 1)
+            ):
+                raise ValueError("reviewed installed copy must not be a symlink")
+            selected.resolve(strict=True).relative_to(vera_root.resolve())
+            content = selected.read_bytes()
+            if (
+                len(content) != item["bytes"]
+                or hashlib.sha256(content).hexdigest() != item["sha256"]
+            ):
+                raise ValueError(
+                    "installed copy differs from reviewed repository-source identity"
+                )
+        seen.add(path)
+        covered.update(parents)
+    if covered != set(roots):
+        raise ValueError("repository-source review omits a declared source root")
+    return f"repository-source-review:{binding['service_id']}", target
+
+
 def _fingerprint(
     component_root: Path,
     paths: Iterable[str],
@@ -266,6 +463,7 @@ def _fingerprint(
     vera_root: Path | None = None,
     shared_paths: Iterable[str] = (),
     repository_paths: Iterable[str] = (),
+    repository_review: dict[str, Any] | None = None,
 ) -> str:
     governed_paths = tuple(paths)
     logical_files = {
@@ -288,9 +486,15 @@ def _fingerprint(
     if repository_governed_paths:
         if vera_root is None:
             raise ValueError("vera_root is required for governed repository paths")
-        logical_files.update(
-            _repository_governed_files(vera_root, repository_governed_paths)
-        )
+        if repository_review is None:
+            logical_files.update(
+                _repository_governed_files(vera_root, repository_governed_paths)
+            )
+        else:
+            logical_path, review_file = _repository_review_file(
+                vera_root, repository_review, repository_governed_paths
+            )
+            logical_files[logical_path] = review_file
     projected_review_server = "scripts/review_server.py"
     adapter = component_root / "assets" / "review-workbench-adapter.json"
     source_review_server = component_root / projected_review_server
@@ -731,6 +935,7 @@ def _service_manifest_errors(payload: dict[str, Any], *, service_id: str) -> lis
         fingerprint = review.get("source_fingerprint")
         if not isinstance(fingerprint, str) or len(fingerprint) != 64:
             errors.append(f"{service_id}: invalid source fingerprint")
+    errors.extend(_repository_review_binding_errors(payload, service_id))
     return errors
 
 
@@ -812,6 +1017,7 @@ def validate_privacy_surfaces(vera_root: Path | None = None) -> list[str]:
                 payload["governed_paths"],
                 vera_root=root,
                 repository_paths=payload.get("governed_repository_paths", []),
+                repository_review=payload.get("repository_source_review"),
             )
         except (OSError, ValueError) as exc:
             errors.append(
@@ -869,6 +1075,7 @@ def _refresh_service(service_id: str, vera_root: Path) -> None:
             payload["governed_paths"],
             vera_root=vera_root,
             repository_paths=payload.get("governed_repository_paths", []),
+            repository_review=payload.get("repository_source_review"),
         )
         manifest_path.write_text(
             json.dumps(payload, ensure_ascii=False, indent=2) + "\n",

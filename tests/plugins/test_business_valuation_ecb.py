@@ -214,7 +214,7 @@ def test_http_timestamp_never_becomes_publication_or_vintage(tmp_path):
 
 
 def test_incomplete_ecb_acquisition_cannot_bind_a_case_input(tmp_path):
-    from test_business_valuation_benchmarks import bound_case
+    from tests.plugins.test_business_valuation_benchmarks import bound_case
 
     result = benchmarks.acquire_benchmark(
         request(), tmp_path, fetch=fixture_fetch(), now=CLOCK
@@ -226,7 +226,7 @@ def test_incomplete_ecb_acquisition_cannot_bind_a_case_input(tmp_path):
 
 
 def test_relabelled_acquisition_with_invented_publication_fails_source_replay(tmp_path):
-    from test_business_valuation_benchmarks import bound_case
+    from tests.plugins.test_business_valuation_benchmarks import bound_case
 
     result = benchmarks.acquire_benchmark(
         request(), tmp_path, fetch=fixture_fetch(), now=CLOCK
@@ -337,7 +337,7 @@ def test_csv_download_revalidates_redirect_host(monkeypatch):
     ],
 )
 def test_csv_download_rejects_error_html_and_disguised_binary(body, mime, monkeypatch):
-    from test_business_valuation_benchmarks import Response
+    from tests.plugins.test_business_valuation_benchmarks import Response
 
     monkeypatch.setattr(download, "open_public_url", lambda *args: Response(body, mime))
     with pytest.raises(ValuationError):
@@ -345,7 +345,7 @@ def test_csv_download_rejects_error_html_and_disguised_binary(body, mime, monkey
 
 
 def test_csv_download_retains_original_bytes_without_formula_execution(monkeypatch):
-    from test_business_valuation_benchmarks import Response
+    from tests.plugins.test_business_valuation_benchmarks import Response
 
     body = csv_bytes(row(TITLE='=HYPERLINK("https://example.invalid")'))
     monkeypatch.setattr(

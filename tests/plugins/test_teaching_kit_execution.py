@@ -21,6 +21,7 @@ import pytest
 from tests.plugins._teaching_release import prepared_kit, record_native_check
 
 ROOT = Path(__file__).resolve().parents[2]
+TEACHING_PLUGIN_ROOT = ROOT / "plugins"
 
 
 def _read(path):
@@ -55,7 +56,7 @@ def _bound_case(
     monkeypatch.syspath_prepend(str(ROOT / "plugins/_shared/vendor/modules"))
     from courseware.library import CourseLibrary
 
-    kit = CourseLibrary(ROOT / "plugins" / product, {workflow}).render(
+    kit = CourseLibrary(TEACHING_PLUGIN_ROOT / product, {workflow}).render(
         workflow, language, tmp_path / "kit"
     )
     sources = kit["source_files" if phase == "demo" else "practice_files"]

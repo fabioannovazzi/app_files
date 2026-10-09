@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "trasformazione",
-  "revision": "2026-09-14.2",
+  "revision": "2026-10-08.1",
   "seconds": [
     45,
     60,
@@ -402,5 +402,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "aed65566005cbb2399511c919a0d7dd3b0107d7c2e7852d7de53de6b329bf582"
+  "canonical_course_sha256": "05af2449c3b0ec14c4fe64d4679ea22bddaaeb56e1ca30aa86a01b302a738c76"
 }

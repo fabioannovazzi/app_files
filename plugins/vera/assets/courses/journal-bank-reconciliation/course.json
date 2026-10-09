@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "journal-bank-reconciliation",
-  "revision": "2026-09-14.2",
+  "revision": "2026-10-09.native-main-integration.review-proposal",
   "seconds": [
     45,
     60,
@@ -99,12 +99,12 @@
     {
       "path": "modules/journal-bank-reconciliation/scripts/semantic_review.py",
       "repository_path": "plugins/journal-bank-reconciliation/scripts/semantic_review.py",
-      "sha256": "d21bad8cd8449506a80c0a2cb0d3284f0a7ec5df6c7a06f438a0d87167df7728"
+      "sha256": "fd59023e8428e4fbf178361397657b14301cd5bfa2a75c15547754d9078a82c1"
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
       "repository_path": "plugins/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "eaed416edb901d12c5f2483fb0c3f9f06a0095985b9adc600b0861e93772c5bd"
+      "sha256": "1da4ecb7206c52573eb890e89f315460de8140e18a72155b886890e79f1727d5"
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/references/geneva.md",
@@ -164,7 +164,7 @@
     {
       "path": "skills/journal-bank-reconciliation/SKILL.md",
       "repository_path": "plugins/vera/skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "c412e0be44d248a38066a840987991b0a7cc20d327a5bffd9df0440913030e80"
+      "sha256": "42c86653569573a783d558054580364225e397bc78a73cf725be7f3a8e964926"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

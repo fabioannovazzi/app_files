@@ -164,6 +164,8 @@ def configured():
         ("ONBOARDING", "\r\n", "\r\n# Continued work\r\n"),
         ("DATEV", "\n", "\n# Continued work\n"),
         ("VERSION", "\n", "\n# Continued work\n"),
+        ("NATIVE_WORKSPACE", "\n", "\n# Continued work\n"),
+        ("NATIVE_WORKSPACE", "\r\n", "\r\n# Continued work\r\n"),
     ],
 )
 def test_cowork_skill_removes_openai_blocks_independent_of_spacing(
@@ -497,9 +499,13 @@ def test_root_anthropic_manifest_and_local_mcp_are_discoverable(
     assert all(
         server["args"][0]
         == (
-            "${CLAUDE_PLUGIN_ROOT}/mcp/studio-work.cjs"
-            if name == "studioWork"
-            else "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
+            "${CLAUDE_PLUGIN_ROOT}/mcp/workspace.cjs"
+            if name == "veraNativeWorkspace"
+            else (
+                "${CLAUDE_PLUGIN_ROOT}/mcp/studio-work.cjs"
+                if name == "studioWork"
+                else "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
+            )
         )
         for name, server in cowork_mcp["mcpServers"].items()
     )
@@ -604,11 +610,17 @@ def test_optional_claude_mcp_projection_uses_only_installation_safe_paths() -> N
         assert set(server) <= {"command", "args", "env"}
         assert server["command"] == "node"
         assert server["args"][0] == (
-            "${CLAUDE_PLUGIN_ROOT}/mcp/studio-work.cjs"
-            if name == "studioWork"
-            else "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
+            "${CLAUDE_PLUGIN_ROOT}/mcp/workspace.cjs"
+            if name == "veraNativeWorkspace"
+            else (
+                "${CLAUDE_PLUGIN_ROOT}/mcp/studio-work.cjs"
+                if name == "studioWork"
+                else "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
+            )
         )
-        assert len(server["args"]) == (1 if name == "studioWork" else 2)
+        assert len(server["args"]) == (
+            1 if name in {"veraNativeWorkspace", "studioWork"} else 2
+        )
         assert "cwd" not in server
         assert "icons" not in server
         assert "title" not in server
@@ -703,11 +715,13 @@ def test_cowork_privacy_register_keeps_supported_receipts_and_omits_openai_servi
         "run-receipt-stamping",
         "managed-python-runtime",
         "cnc-authenticated-review",
+        "studio-work",
     ]
     assert {name for name in vera_entries if name.startswith("privacy/services/")} == {
         "privacy/services/run-receipt-stamping.json",
         "privacy/services/managed-python-runtime.json",
         "privacy/services/cnc-authenticated-review.json",
+        "privacy/services/studio-work.json",
     }
     assert "privacy/workstreams/studio-archive.json" in vera_entries
     runtime_service = json.loads(
@@ -732,6 +746,55 @@ def test_cowork_privacy_register_keeps_supported_receipts_and_omits_openai_servi
         for control in receipt_service["security_controls"]
         for implementation in control["implemented_by"]
     )
+
+
+def test_cowork_studio_work_privacy_governs_the_packaged_local_register(
+    vera_entries,
+) -> None:
+    """Retain the actual local scheduling route and its account boundaries."""
+    service = json.loads(vera_entries["privacy/services/studio-work.json"])
+
+    assert service["runtime_profiles"] == ["anthropic-cowork"]
+    assert "scripts/studio_work.py" in service["governed_paths"]
+    assert "scripts/native_studio_work.py" in service["governed_paths"]
+    assert "skills/organizzazione-lavoro/SKILL.md" in service["governed_paths"]
+    assert "mcp/studio-work-panel.cjs" in service["governed_paths"]
+    assert "ui/studio-work.js" in service["governed_paths"]
+    assert all(path in vera_entries for path in service["governed_paths"])
+    assert {boundary["id"] for boundary in service["external_boundaries"]} == {
+        "connected-calendar"
+    }
+    assert service["external_boundaries"][0]["runtime_profiles"] == ["anthropic-cowork"]
+    assert service["external_boundaries"][0]["requires_confirmation"] is True
+    assert {control["id"] for control in service["security_controls"]} == {
+        "revision-and-retry",
+        "storage-scope",
+        "native-panel-revisions-and-private-response",
+    }
+
+
+def test_cowork_build_rejects_studio_work_missing_from_source_registration(
+    configured,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Do not manufacture a declared service when its source registry is absent."""
+    builder, _, package = configured
+    codex_builder = builder._load_codex_builder()
+    original_entries = codex_builder.expected_zip_entries
+
+    def missing_registration(target):
+        entries = original_entries(target)
+        key = f"{target.package_root}/plugins/vera/components.json"
+        components = json.loads(entries[key])
+        components["shared_services"].remove("studio-work")
+        entries[key] = json.dumps(components).encode()
+        return entries
+
+    monkeypatch.setattr(codex_builder, "expected_zip_entries", missing_registration)
+    monkeypatch.setattr(builder, "_load_codex_builder", lambda: codex_builder)
+
+    with pytest.raises(ValueError, match="missing Cowork shared services.*studio-work"):
+        builder.claude_package_entries(package)
 
 
 def test_cowork_privacy_register_validates_projected_bytes(
@@ -1707,3 +1770,16 @@ def test_cowork_passive_invoice_worker_uses_haiku_and_pending_handoff(vera_entri
     assert "cowork_host_reported" in skill
     assert "Never invent an" in skill
     assert "unavailable in Cowork" not in skill
+
+
+def test_cowork_sales_plan_keeps_public_runner_without_codex_native_authoring(
+    vera_entries,
+):
+    wrapper = vera_entries["skills/sales-plan/SKILL.md"].decode()
+    module = vera_entries["modules/sales-plan/skills/sales-plan/SKILL.md"].decode()
+    assert "native-workspace.md" not in wrapper
+    assert "operator/tenant/run-scoped draft" not in wrapper
+    assert "skills/sales-plan/SKILL.md" in wrapper
+    assert "paged authoring from a registered strict CSV" not in module
+    assert "run_plan.py" in module
+    assert "model_use.py" in module

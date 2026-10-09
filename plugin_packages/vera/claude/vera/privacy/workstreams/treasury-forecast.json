@@ -13,7 +13,15 @@
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
-    "skills/vera/references/connected-studio-knowledge.md"
+    "skills/vera/references/connected-studio-knowledge.md",
+    "scripts/native_treasury_preparation.py",
+    "scripts/native_treasury_bridge.py",
+    "scripts/native_workspace.py",
+    "mcp/workspace.cjs",
+    "ui/workspace.js",
+    "ui/workspace.html",
+    "ui/workspace.css",
+    "ui/custom_select.js"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -25,7 +33,7 @@
       {
         "id": "treasury-intake",
         "purpose": "Confirm eligibility, supplied scope and fixed table roles.",
-        "content": "Company identity, account balances, bank movements, customer and supplier identities, outstanding obligations, payroll/tax/debt and other supplied planned cash flows, settlement allocations and non-cash adjustment evidence. Optional supplied FatturaPA XML is parsed by the bundled client-file-preparation parser. Codex or Cowork may read the complete selected sources when needed; there is no automatic anonymization.",
+        "content": "Company identity, account balances, bank movements, customer and supplier identities, outstanding obligations, payroll/tax/debt and other supplied planned cash flows, settlement allocations and non-cash adjustment evidence. Optional supplied FatturaPA XML is parsed by the bundled client-file-preparation parser. Codex or Cowork may read the complete selected sources when needed; there is no automatic anonymization. The native OpenAI panel stores exact source choices and partial drafts privately and validates all registered source rows locally through the unchanged public parser/calculator. Source pages and choices are returned in app metadata, not automatically in model-facing content. Confirmation authorizes a first proposal only; later explicit selected-event discussion uses the maintained bounded native projection. Neither preparation nor reopening invokes a model or network.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -89,12 +97,16 @@
     {
       "id": "untrusted-rendering",
       "control": "Supplied strings are escaped in HTML and assigned with textContent in the review page. Excel text cells are forced to strings and CSV formula prefixes in text columns are escaped."
+    },
+    {
+      "id": "treasury-explicit-six-table-preparation",
+      "control": "App-only preparation keeps literal company/currency/cutoff/horizon/coverage, six exact registered CSV/XLSX receipt choices and sheet names, optional extracted XML and an accepted predecessor in atomic actor/tenant/client/engagement/run private drafts with CAS; confirmation is never persisted. Complete source validation and cent-exact arithmetic use unchanged public load_inputs/build_forecast, not inferred source roles. Private pages count every row and display 20 complete parsed rows; oversized pages are refused without sampling. Exact current signed reviewer scope and running run, public preflight and explicit confirmation precede durable intent and public prepare. Retain compiled native manifest and intake, seal every physical file of the immutable first public version, and allow subsequent public date review/acceptance versions only while that initial version and source evidence replay. Identical completed requests replay receipts; uncertain preparation blocks even ordinary view/review. No automatic source-pointer recovery, source rewriting, semantic mapping, anonymization, model/provider/network call, authenticated signature, professional acceptance or Archive completion occurs. Choices, counts and preview cells remain app-private metadata; existing explicit selected-event explanation is the model-context boundary. Host/account processing can still expose locally selected sources when requested."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "94aab4638a9e013f8ae399f285f9a5c51286b6439ac53e8e0efeebb93785ecd9"
+    "source_fingerprint": "f0f1d786b03428e191622d1e87a9de80583ba03d2228b3ed34283746a3ea52ca"
   }
 }

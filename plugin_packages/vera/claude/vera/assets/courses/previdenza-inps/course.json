@@ -153,7 +153,7 @@
     },
     {
       "path": "skills/previdenza-inps/SKILL.md",
-      "sha256": "32f4a27d098c13f54fbfd832d0bddb9562c4d674fc07cd28bb2df5f7abbad3f4"
+      "sha256": "bea3563685e17e5481ef93aa04b65b5d046f0b39290178c54dc4767592eb617a"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -674,5 +674,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "8180561a99243bb1a650d0c3a72fb1a758de916331bc4481b9fc7ff3917b646c"
+  "canonical_course_sha256": "408f831e469095f4b37cf55dde94ef837c33ab2de626781686a1fc97789d0265"
 }

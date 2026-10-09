@@ -95,3 +95,35 @@ Codex or Cowork has no routine privacy notice or consent step.
 GDPR data minimisation remains applicable as a purpose-based professional and
 legal judgment. The manifest and validator neither decide that judgment nor
 certify GDPR compliance.
+
+## Installed Codex repository-source declarations
+
+A Codex package may retain a shared service's complete repository review without
+shipping the hosted application or the entire published course library. Source
+validation must still inspect actual repository bytes before packaging and
+reject a stale review; it must never use the declaration as a source fallback.
+
+The installed service keeps `governed_repository_paths`, every original
+security control and external boundary. An explicit `repository_source_review`
+binds the exact service, `privacy/repository-source-reviews/<service>.json`, and
+the scope `reviewed_repository_declaration_not_hosted_runtime`. Its review uses
+`fingerprint_scope: installed_client_and_repository_review_declaration`.
+
+The retained JSON has schema version 1, service identity and scope,
+`hosted_runtime_verified: false`, the unchanged original source manifest and
+review fingerprint, and complete file identities for every declared repository
+root: repository-relative path, byte count, SHA-256 and every matching installed
+copy. It includes three mandatory limitations: these hashes record inspected
+repository bytes; installed validation checks local clients and the retained
+declaration; hosted deployment, live controls and model delivery require
+separate acceptance evidence. No hosted source code is executed from this
+record, and the record contains no client-case material.
+
+The installed fingerprint binds this exact declaration and the actual local
+client implementations. Installed copies also match their retained source
+size and SHA-256. The validator rejects foreign services, escaped or symlink
+paths, missing source roots, duplicate or malformed identities, oversized
+records, changed local copies, stale fingerprints, and any declaration claiming
+hosted verification. It does not independently reconstruct absent source bytes
+from hashes or authenticate the unsigned review record. A package-local pass
+is not hosted acceptance or proof that a provider received model context.

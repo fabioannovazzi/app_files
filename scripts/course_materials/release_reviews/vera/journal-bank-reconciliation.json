@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "journal-bank-reconciliation",
-  "course_sha256": "230fe84ee677cd3736742c8339c729f10211a21850d4f0b5654722d48c8ac234",
-  "reviewer": "Codex: source, first-use lesson, native workbook and localized review-note inspection",
-  "reviewed_at": "2026-10-06T14:31:53.456758+00:00",
-  "review_scope": "Prepared fictional month-end comparison only. Current CLI runs and source/value replay are verified. Worksheet headers and selected rows were visually inspected in all seven sheets of both unique workbooks; the five locale editions are byte-identical per phase. No learner, live voice, tax or professional approval is attested. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate. 2026-10-06: refreshed only source bindings after inspecting the v3 native-worker change. Course lesson text and prepared deterministic demo/practice are unchanged; this does not claim new voice or learner acceptance. Separate current-host synthetic semantic run completed with two validated beneficiary suggestions and production per-launch canaries.",
+  "course_sha256": "907941939d94d94ad21c8eea6dbf1304b44bbaf65c4204f1160eb2a27fa8ae2a",
+  "reviewer": "Codex bounded teaching-material and source integration review",
+  "reviewed_at": "2026-10-09T13:18:34.002154+00:00",
+  "review_scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -529,5 +529,101 @@
     "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
     "source_review": "docs/studio_archive/course-source-compatibility-review.json",
     "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  },
+  "native_workspace_source_binding_20261006": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-06T20:02:49.186431+00:00",
+    "previous_course_sha256": "4515f09f5f1225436ea9cb8fb9b1d52b4db3889dccb3e4d1c2cd78e1a0e77c47",
+    "current_course_sha256": "c050126f3f2af23e8770ea2d83674ee0e53ce174be4b58902bf4250ac3bf7951",
+    "authored_content_unchanged": true,
+    "changed_sources": [
+      "skills/journal-bank-reconciliation/SKILL.md"
+    ],
+    "scope": "Optional native navigation for exact prepared, operator-bound runs. Existing engine, source qualification, immutable inputs/history and professional gates preserved. Specialist/Cowork route retained when native tools or binding are absent. Fresh exact-digest lesson and installed-host acceptance remain pending."
+  },
+  "native_bank_preparation_source_review_20261006": {
+    "reviewer": "Codex /root",
+    "previous_course_sha256": "c050126f3f2af23e8770ea2d83674ee0e53ce174be4b58902bf4250ac3bf7951",
+    "current_course_sha256": "0082c32368f4a196c9439215b97d62dc0d7ddb486ed8e91cfdf8277ae1ba8783",
+    "scope": "Only the optional native wrapper source binding changes. All authored course fields, locales, input assets, requests, checkpoints, output expectations and pacing are unchanged; previous editorial and artifact judgments remain historical.",
+    "source_review": "New app-only initial inspection uses explicit exact bank/journal/sample selections and retained source copies inside the owned run. Existing public mapping and relationship receipt builders seal human decisions, existing inspection repeats qualification, and existing reconciliation opens its normal review adapter. Engines, residual worker gates, authored lesson execution and Cowork persistent fallback are unchanged. Unsupported sources and uncertain operations remain blocked; native/representative acceptance is pending.",
+    "fresh_exact_digest_teaching": "pending"
+  },
+  "native_bank_draft_source_review_20261007": {
+    "reviewer": "Codex /root",
+    "previous_course_sha256": "0082c32368f4a196c9439215b97d62dc0d7ddb486ed8e91cfdf8277ae1ba8783",
+    "current_course_sha256": "24176148516d61eb9c7626a6c2d88c1d158bd5e7d50556a06770c46fee274d8b",
+    "authored_content_unchanged": true,
+    "changed_sources": [
+      "skills/journal-bank-reconciliation/SKILL.md"
+    ],
+    "scope": "Only optional native wrapper source digest changes. All authored requests, expected outputs, input assets, locales, checkpoints and pacing remain unchanged. Actor/tenant/run-scoped unfinished drafts preserve raw fields; no professional confirmation, source qualification or execution is restored. Existing source and specialist/Cowork persistence gates remain.",
+    "fresh_exact_digest_teaching": "pending"
+  },
+  "native_main_integration_observation_20261009": {
+    "recorded_at": "2026-10-09T05:12:43.666230+00:00",
+    "status": "historical_review_union_current_release_unqualified",
+    "current_course_sha256": "907941939d94d94ad21c8eea6dbf1304b44bbaf65c4204f1160eb2a27fa8ae2a",
+    "retained_current_main_review_record_sha256": "0ad830a891be15d8e9b685313adb699bc37d3b3780467fd15ebe138202d946eb",
+    "retained_candidate_review_record_sha256": "0efda7cedb0c9dac1c3861edff14a02eb5118238995682be8b5edbefc67aa03d",
+    "retained_candidate_only_fields": [
+      "native_bank_draft_source_review_20261007",
+      "native_bank_preparation_source_review_20261006",
+      "native_workspace_source_binding_20261006"
+    ],
+    "different_historical_fields": {
+      "review_scope": {
+        "candidate_value": "Prepared fictional month-end comparison only. Current CLI runs and source/value replay are verified. Worksheet headers and selected rows were visually inspected in all seven sheets of both unique workbooks; the five locale editions are byte-identical per phase. No learner, live voice, tax or professional approval is attested. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate. 2026-10-06: refreshed only source bindings after inspecting the v3 native-worker change. Course lesson text and prepared deterministic demo/practice are unchanged; this does not claim new voice or learner acceptance. Separate current-host synthetic semantic run completed with two validated beneficiary suggestions and production per-launch canaries. 2026-10-07: refreshed only the two source bindings after exact CLI 0.160.1 v4 boundary qualification. All authored lesson fields, five languages, prepared inputs, outputs and editorial judgments remain unchanged. Fresh synthetic native bank/invoice workers and image boundary controls qualify the host, not a learner, voice, professional approval or Cowork acceptance.",
+        "current_main_value": "Prepared fictional month-end comparison only. Current CLI runs and source/value replay are verified. Worksheet headers and selected rows were visually inspected in all seven sheets of both unique workbooks; the five locale editions are byte-identical per phase. No learner, live voice, tax or professional approval is attested. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate. 2026-10-06: refreshed only source bindings after inspecting the v3 native-worker change. Course lesson text and prepared deterministic demo/practice are unchanged; this does not claim new voice or learner acceptance. Separate current-host synthetic semantic run completed with two validated beneficiary suggestions and production per-launch canaries."
+      },
+      "course_sha256": {
+        "candidate_value": "b0acafa94b81d42e96c3bded2913365c3f284eeaf15b9eec5781594f3c98563c",
+        "current_main_value": "230fe84ee677cd3736742c8339c729f10211a21850d4f0b5654722d48c8ac234"
+      },
+      "source_update_review": {
+        "candidate_value": "docs/releases/2026-10-03-course-file-access-review.json",
+        "current_main_value": "docs/releases/2026-10-07-vera-hardlink-course-review.json"
+      }
+    },
+    "localized_editorial_and_artifact_reviews_unchanged": true,
+    "current_release_acceptance_renewed": false,
+    "review_scope": "Preserve both source-review histories and their actual original course pins. Current lesson content matches the candidate reviewed baseline and the two histories have identical locale reviews. Compiler, source hashes and render success do not renew editorial/native output acceptance. Existing current-main reviewer/date/scope/language/artifact fields remain unchanged. The retained course_sha256 is not rewritten to claim current-candidate acceptance."
+  },
+  "source_binding_review_20261009": {
+    "reviewer": "Codex bounded teaching-material and source integration review",
+    "reviewed_at": "2026-10-09T13:18:34.002154+00:00",
+    "previous_review_identity": {
+      "reviewer": "Codex: source, first-use lesson, native workbook and localized review-note inspection",
+      "reviewed_at": "2026-10-06T14:31:53.456758+00:00",
+      "review_scope": "Prepared fictional month-end comparison only. Current CLI runs and source/value replay are verified. Worksheet headers and selected rows were visually inspected in all seven sheets of both unique workbooks; the five locale editions are byte-identical per phase. No learner, live voice, tax or professional approval is attested. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate. 2026-10-06: refreshed only source bindings after inspecting the v3 native-worker change. Course lesson text and prepared deterministic demo/practice are unchanged; this does not claim new voice or learner acceptance. Separate current-host synthetic semantic run completed with two validated beneficiary suggestions and production per-launch canaries.",
+      "course_sha256": "230fe84ee677cd3736742c8339c729f10211a21850d4f0b5654722d48c8ac234"
+    },
+    "accepted_material_baseline": "8df0157d52b1e322f9f85fdb77376b39e17db446",
+    "current_course_sha256": "907941939d94d94ad21c8eea6dbf1304b44bbaf65c4204f1160eb2a27fa8ae2a",
+    "unchanged_materials": [
+      "all lesson locales and editorial text",
+      "input specifications and hashes",
+      "demo and practice execution contracts",
+      "language and grouping contracts"
+    ],
+    "changed_fields": [
+      "revision",
+      "sources"
+    ],
+    "source_review_basis": "Native source integration and the owner-approved canonical repair were reviewed separately. Current real workflow regression assertions ran before their recorded native checks. Lesson content is byte-equivalent at the JSON-field level to the accepted main baseline; reviewed input bindings and output contracts are unchanged. Existing per-locale output artifacts and editorial history are retained, with no new visual or host acceptance claim.",
+    "current_execution_evidence": {
+      "run": 37930167083,
+      "job": 113818653311,
+      "head": "89004da63fc3d6d6a5feffde2484143c203634a1",
+      "native_teaching_suite_passed": 1642,
+      "skipped": 3,
+      "log": "/private/tmp/native-deploy-final-teaching-failure-20261009.log",
+      "whole_job_outcome": "failed at stale editorial course pin after execution suite passed",
+      "final_gate_requires_fresh_matching_junit": true
+    },
+    "new_native_output_visual_review": false,
+    "installed_host_acceptance": false,
+    "learner_or_professional_acceptance": false,
+    "scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance."
   }
 }

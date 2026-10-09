@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "composizione-negoziata",
-  "revision": "2026-09-14.2",
+  "revision": "2026-10-08.1",
   "seconds": [
     45,
     60,
@@ -103,9 +103,39 @@
       "sha256": "15a2bc5644f4dfe718150e02a0bfad2c5c9d3819211167bca097985f74c30834"
     },
     {
+      "path": "scripts/native_bank_preparation.py",
+      "repository_path": "plugins/vera/scripts/native_bank_preparation.py",
+      "sha256": "ce181f4622e0561f29ec8e745678bbc39cbb43af62bde9094111c43b213ca3b8"
+    },
+    {
+      "path": "scripts/native_cnc.py",
+      "repository_path": "plugins/vera/scripts/native_cnc.py",
+      "sha256": "ade9ea24db353e255ff4ea96205906ef4f4819e3e664bbaa7d3428f5ce847dca"
+    },
+    {
+      "path": "scripts/native_cnc_authenticated.py",
+      "repository_path": "plugins/vera/scripts/native_cnc_authenticated.py",
+      "sha256": "00835dc3eec4913b4c41518e0509a9e83646ec30ddb640b905dcbe22a74709b9"
+    },
+    {
+      "path": "scripts/native_cnc_authenticated_bridge.py",
+      "repository_path": "plugins/vera/scripts/native_cnc_authenticated_bridge.py",
+      "sha256": "1e6762bf9d934a0ec4540b30bc9dcededcbc867e393f55e4b82c594e4d7015a2"
+    },
+    {
+      "path": "scripts/native_cnc_bridge.py",
+      "repository_path": "plugins/vera/scripts/native_cnc_bridge.py",
+      "sha256": "da4796b1e484886b55771875af46fc81c936bdf91e46df08f82963de88a981a1"
+    },
+    {
+      "path": "scripts/native_cnc_history.py",
+      "repository_path": "plugins/vera/scripts/native_cnc_history.py",
+      "sha256": "1d9e454021ee54853f12ddc51fbc7c75f2661556e4c325ccb12b760c1920ad31"
+    },
+    {
       "path": "skills/composizione-negoziata/SKILL.md",
       "repository_path": "plugins/vera/skills/composizione-negoziata/SKILL.md",
-      "sha256": "a0bb63bc0cef7d5c905bce40dbdf93f0e327b856ef4f57a01b7f143cc1e78393"
+      "sha256": "b83cd7bb7e095decb5ecacd1027991ca8d7cbf2862f59a188a3a67523cafe40a"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

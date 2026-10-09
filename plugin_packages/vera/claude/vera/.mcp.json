@@ -125,6 +125,12 @@
         "variance-analysis"
       ]
     },
+    "veraNativeWorkspace": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/mcp/workspace.cjs"
+      ]
+    },
     "veraSalesPlan": {
       "command": "node",
       "args": [

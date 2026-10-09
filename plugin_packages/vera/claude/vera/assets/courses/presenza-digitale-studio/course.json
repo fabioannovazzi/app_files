@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "presenza-digitale-studio",
-  "revision": "2026-09-14.2",
+  "revision": "2026-10-08.1",
   "seconds": [
     45,
     60,
@@ -454,5 +454,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "11c641176c952eb7986bd594ed4c47d8c8c83e904205ad68101981526f319c52"
+  "canonical_course_sha256": "d076b7f70a55077bad972d90692b6a5e3becf2583b6f9ffb5606a64adcd7d332"
 }

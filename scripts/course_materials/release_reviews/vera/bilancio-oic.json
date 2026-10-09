@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "bilancio-oic",
-  "course_sha256": "e90d80a038ac8ecec8eb66bee0235c6589418417fb72383fcfc66fca4e6c3762",
-  "reviewer": "Codex lesson, generated accounts and integration evidence review",
-  "reviewed_at": "2026-09-23T11:54:05.184666+00:00",
-  "review_scope": "Reviewed both localized lessons and four actual generated draft accounts. Native execution uses the checksum-verified official PCI taxonomy and Arelle. Parser, mapping and disclosure decisions in automated checks are explicitly synthetic fixtures supported by the fictional declaration, not learner or professional approvals. No filing, signature, human timing or live voice is claimed. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+  "course_sha256": "ba8696a645dc8efb922f928e4a72b92d2876841638a603c0cc1813b9d815b6e3",
+  "reviewer": "Codex bounded teaching-material and source integration review",
+  "reviewed_at": "2026-10-09T13:18:33.867033+00:00",
+  "review_scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -290,5 +290,99 @@
     "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
     "source_review": "docs/studio_archive/course-source-compatibility-review.json",
     "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  },
+  "native_workspace_source_binding_20261006": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-06T20:22:34.949108+00:00",
+    "previous_course_sha256": "65bc984c4ff756f2ae19ba1ec39335f545da45e91d8c9d9dd37f35162f361b34",
+    "current_course_sha256": "1783b355e955d030c88141c94d41b3b9e5e9a8abf13de4bdca3b376fa1a8a981",
+    "authored_content_unchanged": true,
+    "changed_sources": [
+      "modules/bilancio-xbrl-it/scripts/workspace_bridge.py"
+    ],
+    "scope": "Canonical current Bilancio workflow identity and optional owned Studio Archive native directory/setup/refresh. Engines, source qualification and authored teaching text are unchanged. Native intake/case connection, Treasury rename recovery, exact-digest teaching execution and installed native/Cowork acceptance remain pending.",
+    "previous_binding_review": {
+      "reviewer": "Codex /root",
+      "reviewed_at": "2026-10-06T20:04:26.134896+00:00",
+      "previous_course_sha256": "66a3cd284ec9228a6269323dc29c8f96d8d5ebb73fd93759a26d9d9426fbc175",
+      "current_course_sha256": "65bc984c4ff756f2ae19ba1ec39335f545da45e91d8c9d9dd37f35162f361b34",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        "skills/bilancio-oic/SKILL.md"
+      ],
+      "scope": "Prepared-run optional native handoff; exact canonical case/service and retained authority, professional gates unchanged. No native/Cowork host acceptance; Open-item full regeneration remains specialist-led. Fresh exact-digest teaching execution remains required.",
+      "previous_binding_review": {
+        "reviewer": "Codex /root",
+        "reviewed_at": "2026-10-06T18:17:44.961639+00:00",
+        "source_review": "The inspected Bilancio service additions provide authorised bounded read projections and explicit existing-service review writes; existing lesson engine commands and calculations are unchanged. Studio Archive adds optional native saved-run routing with an explicit fallback to its existing file-based route. Authored locales, supplied inputs, pacing and expected outputs are byte-equivalent outside source inventory.",
+        "evidence": "docs/releases/2026-10-06-native-workspace-course-source-review.json",
+        "execution_requirement": "Fresh execution against this exact course digest remains mandatory before release; historical editorial and artifact reviews are retained without claiming new learner or installed-host acceptance."
+      }
+    }
+  },
+  "native_main_integration_observation_20261009": {
+    "recorded_at": "2026-10-09T05:12:43.601200+00:00",
+    "status": "historical_review_union_current_release_unqualified",
+    "current_course_sha256": "ba8696a645dc8efb922f928e4a72b92d2876841638a603c0cc1813b9d815b6e3",
+    "retained_current_main_review_record_sha256": "359991407a699cd5163e936ce45c950aaa981f6b339f76bd32ea2357e9f81a1d",
+    "retained_candidate_review_record_sha256": "b21d8d985aa29073c56956eb8c52bf8a463513feeb58f2455bb50d91fe9b798f",
+    "retained_candidate_only_fields": [
+      "native_workspace_source_binding_20261006"
+    ],
+    "different_historical_fields": {
+      "course_sha256": {
+        "candidate_value": "1783b355e955d030c88141c94d41b3b9e5e9a8abf13de4bdca3b376fa1a8a981",
+        "current_main_value": "e90d80a038ac8ecec8eb66bee0235c6589418417fb72383fcfc66fca4e6c3762"
+      },
+      "source_update_review": {
+        "candidate_value": "docs/releases/2026-10-03-course-file-access-review.json",
+        "current_main_value": "docs/releases/2026-10-07-vera-hardlink-course-review.json"
+      }
+    },
+    "localized_editorial_and_artifact_reviews_unchanged": true,
+    "current_release_acceptance_renewed": false,
+    "review_scope": "Preserve both source-review histories and their actual original course pins. Current lesson content matches the candidate reviewed baseline and the two histories have identical locale reviews. Compiler, source hashes and render success do not renew editorial/native output acceptance. Existing current-main reviewer/date/scope/language/artifact fields remain unchanged. The retained course_sha256 is not rewritten to claim current-candidate acceptance."
+  },
+  "native_bilancio_branch_history_20261009": {
+    "scope": "historical_branch_review_not_new_release_acceptance",
+    "course_sha256": "66a3cd284ec9228a6269323dc29c8f96d8d5ebb73fd93759a26d9d9426fbc175",
+    "review_scope": "Reviewed both localized lessons and four actual generated draft accounts. Native execution uses the checksum-verified official PCI taxonomy and Arelle. Parser, mapping and disclosure decisions in automated checks are explicitly synthetic fixtures supported by the fictional declaration, not learner or professional approvals. No filing, signature, human timing or live voice is claimed. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate. Bilancio workspace integration: inspected the source-only inventory change; authored lessons, inputs, practice and expected outputs are unchanged. Native finding review is private and disabled by default; browser save/reload and protocol tests do not prove native chat acceptance.",
+    "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
+  },
+  "source_binding_review_20261009": {
+    "reviewer": "Codex bounded teaching-material and source integration review",
+    "reviewed_at": "2026-10-09T13:18:33.867033+00:00",
+    "previous_review_identity": {
+      "reviewer": "Codex lesson, generated accounts and integration evidence review",
+      "reviewed_at": "2026-09-23T11:54:05.184666+00:00",
+      "review_scope": "Reviewed both localized lessons and four actual generated draft accounts. Native execution uses the checksum-verified official PCI taxonomy and Arelle. Parser, mapping and disclosure decisions in automated checks are explicitly synthetic fixtures supported by the fictional declaration, not learner or professional approvals. No filing, signature, human timing or live voice is claimed. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+      "course_sha256": "e90d80a038ac8ecec8eb66bee0235c6589418417fb72383fcfc66fca4e6c3762"
+    },
+    "accepted_material_baseline": "8df0157d52b1e322f9f85fdb77376b39e17db446",
+    "current_course_sha256": "ba8696a645dc8efb922f928e4a72b92d2876841638a603c0cc1813b9d815b6e3",
+    "unchanged_materials": [
+      "all lesson locales and editorial text",
+      "input specifications and hashes",
+      "demo and practice execution contracts",
+      "language and grouping contracts"
+    ],
+    "changed_fields": [
+      "sources"
+    ],
+    "source_review_basis": "Native source integration and the owner-approved canonical repair were reviewed separately. Current real workflow regression assertions ran before their recorded native checks. Lesson content is byte-equivalent at the JSON-field level to the accepted main baseline; reviewed input bindings and output contracts are unchanged. Existing per-locale output artifacts and editorial history are retained, with no new visual or host acceptance claim.",
+    "current_execution_evidence": {
+      "run": 37930167083,
+      "job": 113818653311,
+      "head": "89004da63fc3d6d6a5feffde2484143c203634a1",
+      "native_teaching_suite_passed": 1642,
+      "skipped": 3,
+      "log": "/private/tmp/native-deploy-final-teaching-failure-20261009.log",
+      "whole_job_outcome": "failed at stale editorial course pin after execution suite passed",
+      "final_gate_requires_fresh_matching_junit": true
+    },
+    "new_native_output_visual_review": false,
+    "installed_host_acceptance": false,
+    "learner_or_professional_acceptance": false,
+    "scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance."
   }
 }

@@ -1623,7 +1623,8 @@
           "es"
         ]
       }
-    ]
+    ],
+    "revision": "2026-10-09.native-main-integration.review-proposal"
   },
   "vera/business-planning": {
     "group": "workflow",
@@ -2264,7 +2265,8 @@
           "es"
         ]
       }
-    ]
+    ],
+    "revision": "2026-10-09.native-main-integration.review-proposal"
   },
   "vera/dati-fiscali-strutturati": {
     "group": "supporting_task",
@@ -2761,7 +2763,8 @@
           "es"
         ]
       }
-    ]
+    ],
+    "revision": "2026-10-09.native-main-integration.review-proposal"
   },
   "vera/financial-report-builder": {
     "group": "workflow",
@@ -2875,7 +2878,8 @@
           "es"
         ]
       }
-    ]
+    ],
+    "revision": "2026-10-09.native-main-integration.review-proposal"
   },
   "vera/journal-bank-reconciliation": {
     "group": "workflow",
@@ -3012,7 +3016,8 @@
           "es"
         ]
       }
-    ]
+    ],
+    "revision": "2026-10-09.native-main-integration.review-proposal"
   },
   "vera/journal-sampling": {
     "group": "workflow",
@@ -3125,7 +3130,8 @@
           "es"
         ]
       }
-    ]
+    ],
+    "revision": "2026-10-09.native-main-integration.review-proposal"
   },
   "vera/management-control-pack": {
     "group": "workflow",
@@ -3482,7 +3488,8 @@
           "es"
         ]
       }
-    ]
+    ],
+    "revision": "2026-10-09.native-main-integration.review-proposal"
   },
   "vera/presenza-digitale-studio": {
     "group": "workflow",
@@ -3612,7 +3619,8 @@
           "es"
         ]
       }
-    ]
+    ],
+    "revision": "2026-10-08.1"
   },
   "vera/previdenza-inps": {
     "group": "workflow",
@@ -5092,7 +5100,8 @@
           "es"
         ]
       }
-    ]
+    ],
+    "revision": "2026-10-09.native-main-integration.review-proposal"
   },
   "vera/treasury-forecast": {
     "group": "workflow",
@@ -5512,7 +5521,8 @@
           "es"
         ]
       }
-    ]
+    ],
+    "revision": "2026-10-09.native-main-integration.review-proposal"
   },
   "clara/attribute-reporting": {
     "group": "workflow",
@@ -8313,7 +8323,8 @@
           "es"
         ]
       }
-    ]
+    ],
+    "revision": "2026-10-09.native-main-integration.review-proposal"
   },
   "vera/business-valuation": {
     "group": "workflow",
@@ -8768,7 +8779,8 @@
           "es"
         ]
       }
-    ]
+    ],
+    "revision": "2026-10-08.1"
   },
   "vera/trasformazione": {
     "group": "workflow",
@@ -8898,7 +8910,8 @@
           "es"
         ]
       }
-    ]
+    ],
+    "revision": "2026-10-08.1"
   },
   "vera/patent-box-review": {
     "group": "workflow",
@@ -9036,7 +9049,8 @@
           "es"
         ]
       }
-    ]
+    ],
+    "revision": "2026-10-08.1"
   },
   "vera/studio-document-format": {
     "group": "workflow",
@@ -9126,7 +9140,8 @@
           "es"
         ]
       }
-    ]
+    ],
+    "revision": "2026-10-09.native-main-integration.review-proposal"
   },
   "vera/scissione-guidata": {
     "group": "workflow",
@@ -9367,7 +9382,7 @@
         ]
       }
     ],
-    "revision": "2026-10-01.1"
+    "revision": "2026-10-08.1"
   },
   "vera/esg-reporting-assurance": {
     "group": "workflow",
@@ -9562,7 +9577,7 @@
   },
   "vera/organizzazione-lavoro": {
     "group": "workflow",
-    "revision": "2026-10-07.1",
+    "revision": "2026-10-09.native-main-integration.review-proposal",
     "execution": {
       "mode": "current_native_workflow",
       "local_tutorial": true,

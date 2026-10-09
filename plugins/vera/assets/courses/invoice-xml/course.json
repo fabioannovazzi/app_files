@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "invoice-xml",
-  "revision": "2026-09-14.2",
+  "revision": "2026-10-09.native-main-integration.review-proposal",
   "seconds": [
     45,
     60,
@@ -150,7 +150,7 @@
     {
       "path": "skills/invoice-xml/SKILL.md",
       "repository_path": "plugins/vera/skills/invoice-xml/SKILL.md",
-      "sha256": "56655b50bdf3ec9035ef969195dfe2e64446ddbf583ae12a0dd455319c075cb9"
+      "sha256": "a0aeacad7df9227e3035b585858ad113084f619f3578c165fb5c2d2f211371d0"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

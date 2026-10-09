@@ -49,6 +49,24 @@
         ]
       },
       {
+        "id": "financial-analysis-native-named-source-request",
+        "purpose": "Resolve one recorded professional question about one exact manifest-sealed original source after reviewing prepared results",
+        "content": "The exact literal professional question, optional purpose-reference annotations, public model-use receipt and source identity/hash/size, a selected complete UTF-8 text page and the authorized copied-file path for the selected runtime file reader. The public request authorizes the complete named source only; annotations do not filter content. The relevant source may be read in full when needed; text pages may split records and unreadable binary evidence requires its maintained file reader. Other original sources are not authorized by this request. Unsent private drafts and app-only readback are not automatically model context. No anonymization or pseudonymization is performed. Request recording does not prove model reading or professional approval.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "financial-analysis-native-complete-case-authoring",
+        "purpose": "Prepare or correct the complete selected financial case from an explicit original-source mandate before separate named professional review",
+        "content": "The literal authorized question, selected original identities and authorized paths with exact hash/size, complete selected proposal or predecessor case, explicit source bindings, proposal note, fixed validation results and public method/pending-constructor shape. Original contents enter the selected runtime model when its maintained readers actually read those chosen paths. Unsent private intake and named-review drafts are excluded. The reviewed case can contain the actual actor reference, review date and basis recorded by the separate named human action. Nothing is automatically anonymized. Source inventories do not prove model reading; a proposal or review receipt does not approve financial conclusions.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
         "id": "annual-statements-source-cells-and-notes",
         "purpose": "Map and interpret annual OIC statements and supporting disclosures, then review calculated comparisons",
         "content": "Explicitly selected XLSX source cells, original labels and units, entity, years, source IDs, source-cell mappings, source hashes, recorded document/page coverage, selected PDF/XBRL note excerpts, model-authored observed/inferred/question commentary, calculated metrics, both EBITDA definitions, missing values, source subtotal exceptions and draft reports may enter the selected model runtime. The annual helper reads mapped XLSX values and hashes every declared original locally; hashing does not establish model reading or note accuracy. This separate file route does not use the eight-pack model_use manifest. No automatic anonymization or provider call occurs in the helper. The actual run data report records source reading and prepared-result phases.",
@@ -123,6 +141,18 @@
       "control": "Every pack writes a hash-bound model_use_manifest.json. It identifies sealed sources by stable artifact ID and hash without repeating original filenames. Prepared outputs are the default post-mapping model context; reopening source evidence requires one named artifact, a specific reason and an idempotent request receipt, and the current bytes must still match the sealed source hash. This is a workflow phase boundary and does not claim operating-system denial of an otherwise authorized file."
     },
     {
+      "id": "optional-native-reviewed-case-execution",
+      "control": "When dedicated native tools are available, an explicitly selected registered reviewed case and complete source bindings can execute the unchanged public pack in a fresh immutable version. Private intake drafts do not approve contracts or restore execution confirmation. The model-visible explanation reads only the explicitly selected prepared artifact/member/page and exact retained version/revision; app-private case/input metadata is not automatically transferred. Whole-version integrity and uncertain intents guard reads, repeated writes and shared Archive closure. Case construction/changes and named source requests use dedicated optional phases and the maintained public professional workflow. Execution remains report_ready=false and does not establish source tie-out, completeness, approval, installed-host acceptance or run completion."
+    },
+    {
+      "id": "optional-native-named-source-request",
+      "control": "A signed confirmed exact calculation/source and specific professional question invokes the unchanged public model-use authorizer on a verified immutable copy, preserving the original calculation. The real public receipt, complete copied tree, owner/input/implementation and exact selection remain bound; interrupted/orphaned writes block further execution and shared Archive closure. Private question drafts use generation CAS and restore no confirmation. Explicit source_context transfers only the selected named-source question, text page and authorized file path, with full-file public authority and selector annotations explicitly distinguished from filtering. Binary sources are not converted or OCRed by the panel. No source tie-out, completeness, actual model reading, professional approval or completion is inferred."
+    },
+    {
+      "id": "optional-native-complete-case-authoring",
+      "control": "An explicit signed mandate binds one fixed recipe, literal question, selected original input IDs and bytes, and optional exact retained predecessor to the owned running reviewer context and current input/public/native implementation scope. Private intake and named-review drafts use generation CAS, survive clearing, restore no confirmation and are excluded from model context. Explicit author_context exposes only that mandate, chosen original identities/hash/size/authorized paths, public method path and any explicitly selected complete proposal or predecessor. Model author_stage retains complete immutable proposals, exact source copies and fixed public checks without provider calls, arithmetic execution or professional authority. FDD pending constructors carry only decision_ref and basis; they are not reviewed public cases. A separate signed named reviewer/date/basis gate invokes unchanged build_fdd_case with the actual recorded native actor reference and review date, validates the resulting public bundle and retains a separate immutable reviewed case plus a cross-linked hash-bound review receipt. Original proposals remain unchanged and ineligible. Normal calculation needs separate confirmation and exact reviewed source bindings. Cancellation retains evidence and refuses further mandate context/model writes; open mandates and interrupted/orphaned writes block shared Archive closure. No semantic mapping inference, fictional review metadata, automatic source reading, source tie-out, financial-conclusion approval, report readiness, provider acceptance or run completion is inferred."
+    },
+    {
       "id": "annual-statements-import-binding",
       "control": "run_annual_statements.py requires a running financial-analysis Archive context and an exact input_binding_id and matching SHA256 for every original. Source-cell parsing rejects formulas, error cells, duplicate mappings and changed source bytes; output must be a new directory beneath the managed run. The receipt binds case, implementation and delivered output bytes. Missing cells propagate as unavailable and source exceptions remain explicit. Commentary reference closure does not verify its meaning or source-page coverage."
     }
@@ -131,6 +161,6 @@
     "reviewed_at": "2026-10-08",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "deb829ed51effcf6c0f43e2d203caa8be7499cba2faeaa100a8cf936df35e276"
+    "source_fingerprint": "7689c023e8b2a26e9d720ca33ce025583c4fa6ec291861ae93957be106fb84d0"
   }
 }

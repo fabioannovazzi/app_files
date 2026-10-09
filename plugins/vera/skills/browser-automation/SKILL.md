@@ -35,6 +35,36 @@ For ordinary Agenzia invoice, corrispettivi or stamp-duty acquisition, use
 acquisition route, with its own local Chrome worker and optional native panel.
 The rest of this skill covers generic teaching, development and other processes.
 
+## Optional native progress and batch-review panel
+
+When the installed host exposes `vera_workspace_browser_catalogue`, the shared
+workspace can show explicitly linked existing development processes and saved
+batch reviews. Routine execution still starts through its installed named
+operation skill; the panel does not select or execute a procedure, start Chrome,
+authenticate, capture a page or authorize posting. This app panel is not a native
+desktop-control fallback.
+
+Business batches require an exact client and engagement Archive binding. Read
+the complete selected entry, its proposed and actual treatment, evidence and
+previous checks. Preserve literal unfinished decision/note fields privately;
+confirmation is never restored. Only an actual explicit operator check or
+correction request may be conserved through the unchanged batch-review helper.
+Posted entries stay unchanged. A requested correction is not an executed
+rectification. Interrupted conservation requires specialist recovery before
+repeating that entry's write. The verified offline report remains available.
+
+The panel offers Italian, English, French, German and Spanish interface copy,
+including its own final model-data explanation. Changing the panel language
+saves unfinished fields and reopens the same selected record without restoring
+confirmation. Source values, document titles, saved notes and public decision
+identifiers are not translated. Unrecognized process fields retain their source
+keys; the panel does not infer missing metadata or a professional conclusion.
+
+Source panel checks do not establish installed-host acceptance, a clean portal
+replay or ordinary-use qualification. Shared renderer/signature repairs and
+full release-package qualification remain pending. Keep the independent
+file-based batch/teaching workflow available when native routes are absent.
+
 <!-- VERA_OPENAI_DATEV_BEGIN -->
 For DATEV installed as a native Windows application, route instead to
 `../datev-invoice-start/SKILL.md` before any browser setup. That explicit native

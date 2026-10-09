@@ -402,6 +402,12 @@ jobs:
           python -m isort --check-only plugins/bilancio-xbrl-it/scripts/accounts_preview.py plugins/bilancio-xbrl-it/scripts/accounts_preview_text.py plugins/bilancio-xbrl-it/scripts/xbrl_case.py tests/plugins/test_bilancio_preview_presentation.py tests/plugins/test_bilancio_xbrl_it_plugin.py
           python -m mypy --follow-imports=skip plugins/bilancio-xbrl-it/scripts/accounts_preview.py plugins/bilancio-xbrl-it/scripts/accounts_preview_text.py plugins/bilancio-xbrl-it/scripts/xbrl_case.py
           python -m bandit -q plugins/bilancio-xbrl-it/scripts/accounts_preview.py plugins/bilancio-xbrl-it/scripts/accounts_preview_text.py plugins/bilancio-xbrl-it/scripts/xbrl_case.py
+      - name: Check private Bilancio workspace integration
+        run: |
+          python -m black --check plugins/bilancio-xbrl-it/scripts/workspace_bridge.py plugins/bilancio-xbrl-it/scripts/workspace_contract.py scripts/build_vera_workspace_pilot.py tests/plugins/test_bilancio_native_workspace.py
+          python -m isort --check-only plugins/bilancio-xbrl-it/scripts/workspace_bridge.py plugins/bilancio-xbrl-it/scripts/workspace_contract.py scripts/build_vera_workspace_pilot.py tests/plugins/test_bilancio_native_workspace.py
+          python -m mypy --follow-imports=skip plugins/bilancio-xbrl-it/scripts/workspace_bridge.py plugins/bilancio-xbrl-it/scripts/workspace_contract.py scripts/build_vera_workspace_pilot.py
+          python -m bandit -ll plugins/bilancio-xbrl-it/scripts/workspace_bridge.py plugins/bilancio-xbrl-it/scripts/workspace_contract.py scripts/build_vera_workspace_pilot.py
       - name: Check course runtime and compiler
         run: |
           python -m black --check tests/plugins/test_teaching_patent_box_execution.py

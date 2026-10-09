@@ -10375,8 +10375,8 @@ def test_skill_and_scripts_keep_codex_as_the_review_layer() -> None:
     assert "render_journal_bank_review" in skill_text
     assert "Codex-Only Luna Max Residual Resolution Funnel" in skill_text
     assert "semantic_review.py run-worker" in skill_text
-    assert "journal_bank.luna_seatbelt_capsule.v3" in skill_text
-    assert "The v1 and v2" in skill_text
+    assert "journal_bank.luna_seatbelt_capsule.v4" in skill_text
+    assert "The v1, v2 and v3" in skill_text
     assert "registry records remain retained unchanged" in skill_text
     assert "current chat unchanged" in skill_text
     assert "Codex JSONL visibility is incomplete" in skill_text
@@ -13155,6 +13155,7 @@ def test_host_profile_registry_retains_immutable_legacy_envelope() -> None:
         "journal_bank.luna_seatbelt_capsule.v1",
         "journal_bank.luna_seatbelt_capsule.v2",
         "journal_bank.luna_seatbelt_capsule.v3",
+        "journal_bank.luna_seatbelt_capsule.v4",
     )
     assert profile.provenance == "retained_legacy"
     assert profile.darwin_build == "25F84"
@@ -13238,15 +13239,54 @@ def test_semantic_validate_rejects_rehashed_profile_capability_argv_tamper(
         )
 
 
+@pytest.mark.parametrize(
+    ("profile_id", "expected_digest"),
+    [
+        (
+            "journal_bank.luna_seatbelt_capsule.v1",
+            "aa967cb2819796a8c1d1438691c6e10510679c1d69a71c35cb6cd9038460680c",
+        ),
+        (
+            "journal_bank.luna_seatbelt_capsule.v2",
+            "c1bac74d49d415c43c259533960b045b5383024174bcc2bdd0a24e8235d27cce",
+        ),
+        (
+            "journal_bank.luna_seatbelt_capsule.v3",
+            "708239ebfbc6569d161b7fc7db7c1ffa1a0611080039a15f80e545b87bfdb1df",
+        ),
+    ],
+)
+def test_cli_01601_upgrade_preserves_each_complete_prior_qualification_record(
+    profile_id: str, expected_digest: str
+) -> None:
+    """Freeze authority inspected before the upgrade, including every old pin."""
+    from dataclasses import asdict
+
+    semantic = load_semantic_review()
+    profile = semantic._resolve_host_profile(profile_id)
+    serialized = json.dumps(
+        asdict(profile), default=str, sort_keys=True, separators=(",", ":")
+    ).encode()
+
+    assert hashlib.sha256(serialized).hexdigest() == expected_digest
+
+
 def test_current_host_profile_preserves_the_production_security_envelope() -> None:
     """Diagnostic helper permissions never enter the normal worker boundary."""
     semantic = load_semantic_review()
     current = semantic._resolve_host_profile()
     legacy = semantic._resolve_host_profile("journal_bank.luna_seatbelt_capsule.v1")
-    assert current.contract_id == "journal_bank.luna_seatbelt_capsule.v3"
+    assert current.contract_id == "journal_bank.luna_seatbelt_capsule.v4"
     assert current.provenance == "native_qualified"
     assert current.darwin_build == "26A428"
-    assert current.codex_version == "codex-cli 0.160.0"
+    assert current.codex_version == "codex-cli 0.160.1"
+    assert current.codex_sha256 == (
+        "cc0a05e34876414280a79726153d0fe8d55c93f704ef6c292ec409bfe36d5b06"
+    )
+    retained = semantic._resolve_host_profile("journal_bank.luna_seatbelt_capsule.v3")
+    assert retained.codex_version == "codex-cli 0.160.0"
+    assert current.seatbelt_sha256 == retained.seatbelt_sha256
+    assert current.disabled_features == retained.disabled_features
     previous = semantic._resolve_host_profile("journal_bank.luna_seatbelt_capsule.v2")
     assert previous.codex_version == "codex-cli 0.155.0-alpha.16"
     assert previous.codex_sha256 == (

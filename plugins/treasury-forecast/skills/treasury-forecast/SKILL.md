@@ -46,6 +46,23 @@ declared horizon. Keep the scope and omitted populations explicit.
 
 ## Codex-Native Run UX
 
+<!-- VERA_OPENAI_NATIVE_WORKSPACE_BEGIN -->
+For an exact bound running Studio Archive run with callable Vera workspace tools,
+use the native preparation panel for explicit registered six-table CSV/XLSX
+choices, exact XLSX sheets, company/currency/cutoff/horizon/coverage and optional
+registered extracted XML or an accepted predecessor. The panel stores partial
+choices privately and compiles this module's maintained manifest only after
+all-source public parsing/calculation and explicit human confirmation. It does
+not infer source roles, approve a forecast, or complete Archive. The first version
+is retained, exact retries replay its receipt and uncertain writes require recovery.
+Reopening or editing never retains confirmation. Existing event date review and
+professional acceptance still use this module's public session service. New source
+updates, unsupported exports and broken/renamed source references remain specialist
+work; never adopt a found session or edit pointers to bypass source replay.
+Without native tools, continue the persistent public commands described below.
+<!-- VERA_OPENAI_NATIVE_WORKSPACE_END -->
+
+
 Resolve material choices from actual inputs before asking the professional:
 company, account population, cutoff, horizon, coverage and unsupported date
 assumptions. Do not propose extra scenarios or output variants unless the facts cue them.

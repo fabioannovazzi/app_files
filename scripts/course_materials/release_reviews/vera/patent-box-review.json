@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "patent-box-review",
-  "course_sha256": "9a663104c6c0a1d50d5703d29795fd06d4d7b45f0babaec56a4dc50e9eea7d18",
-  "reviewer": "Codex /root: source, teaching and document engineering review",
-  "reviewed_at": "2026-10-01T08:06:30.198517+00:00",
-  "review_scope": "Read all five complete localized outlines and demo/practice source notes. Executed ten separate native Studio Archive to normalized ledger to proposal to synthetic decision to actual Word/PDF dossier and local finalization runs. Read summaries, missing-document lists, control matrices, reconciliations and calculated records; extracted both document formats. Visually inspected all fifty native PDF pages and fifty-five LibreOffice Word-rendered pages, plus browser-rendered lesson titles in every locale and Italian execution/results sections. No clipping or overlap observed; practice Word exports place the closing disclaimer on a separate final page, retained as an engine layout limitation. All generated A/B paragraphs remain explicitly open because no professional template/casebook approval is supplied. Automated semantic interpretations and confirmations are synthetic fixtures outside the shipped course, not live model execution or learner/professional approval. Test no-model reports describe those automated runs only; live teaching must report actual native model reading. Native voice, user participation, learner understanding, two visible windows, installation acceptance and professional UAT remain unverified. The compiler source-binding correction pins the actual patent_box engine, config and examples directories. Their execution bytes and the lesson text are unchanged; the final thirteen-case regression reran against this corrected course inventory. Reviewed artifact hashes retain the inspected authoring runs rather than claiming new visual review of later duplicate runs. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+  "course_sha256": "d3e5ce331d136c670ea9671e12dc6736127e446a7e5ac531683e9ce622fe7431",
+  "reviewer": "Codex bounded teaching-material and source integration review",
+  "reviewed_at": "2026-10-09T13:18:34.080392+00:00",
+  "review_scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -525,5 +525,42 @@
     "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
     "source_review": "docs/studio_archive/course-source-compatibility-review.json",
     "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  },
+  "source_binding_review_20261009": {
+    "reviewer": "Codex bounded teaching-material and source integration review",
+    "reviewed_at": "2026-10-09T13:18:34.080392+00:00",
+    "previous_review_identity": {
+      "reviewer": "Codex /root: source, teaching and document engineering review",
+      "reviewed_at": "2026-10-01T08:06:30.198517+00:00",
+      "review_scope": "Read all five complete localized outlines and demo/practice source notes. Executed ten separate native Studio Archive to normalized ledger to proposal to synthetic decision to actual Word/PDF dossier and local finalization runs. Read summaries, missing-document lists, control matrices, reconciliations and calculated records; extracted both document formats. Visually inspected all fifty native PDF pages and fifty-five LibreOffice Word-rendered pages, plus browser-rendered lesson titles in every locale and Italian execution/results sections. No clipping or overlap observed; practice Word exports place the closing disclaimer on a separate final page, retained as an engine layout limitation. All generated A/B paragraphs remain explicitly open because no professional template/casebook approval is supplied. Automated semantic interpretations and confirmations are synthetic fixtures outside the shipped course, not live model execution or learner/professional approval. Test no-model reports describe those automated runs only; live teaching must report actual native model reading. Native voice, user participation, learner understanding, two visible windows, installation acceptance and professional UAT remain unverified. The compiler source-binding correction pins the actual patent_box engine, config and examples directories. Their execution bytes and the lesson text are unchanged; the final thirteen-case regression reran against this corrected course inventory. Reviewed artifact hashes retain the inspected authoring runs rather than claiming new visual review of later duplicate runs. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+      "course_sha256": "9a663104c6c0a1d50d5703d29795fd06d4d7b45f0babaec56a4dc50e9eea7d18"
+    },
+    "accepted_material_baseline": "8df0157d52b1e322f9f85fdb77376b39e17db446",
+    "current_course_sha256": "d3e5ce331d136c670ea9671e12dc6736127e446a7e5ac531683e9ce622fe7431",
+    "unchanged_materials": [
+      "all lesson locales and editorial text",
+      "input specifications and hashes",
+      "demo and practice execution contracts",
+      "language and grouping contracts"
+    ],
+    "changed_fields": [
+      "revision",
+      "sources"
+    ],
+    "source_review_basis": "Native source integration and the owner-approved canonical repair were reviewed separately. Current real workflow regression assertions ran before their recorded native checks. Lesson content is byte-equivalent at the JSON-field level to the accepted main baseline; reviewed input bindings and output contracts are unchanged. Existing per-locale output artifacts and editorial history are retained, with no new visual or host acceptance claim.",
+    "current_execution_evidence": {
+      "run": 37930167083,
+      "job": 113818653311,
+      "head": "89004da63fc3d6d6a5feffde2484143c203634a1",
+      "native_teaching_suite_passed": 1642,
+      "skipped": 3,
+      "log": "/private/tmp/native-deploy-final-teaching-failure-20261009.log",
+      "whole_job_outcome": "failed at stale editorial course pin after execution suite passed",
+      "final_gate_requires_fresh_matching_junit": true
+    },
+    "new_native_output_visual_review": false,
+    "installed_host_acceptance": false,
+    "learner_or_professional_acceptance": false,
+    "scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance."
   }
 }

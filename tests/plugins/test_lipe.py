@@ -25,6 +25,17 @@ from lipe_review import review_bindings
 from lipe_xml import build_test_xml
 
 XLSX_NS = {"s": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
+LIPE_MODULES = {
+    name: sys.modules[name] for name in ("lipe", "lipe_core", "lipe_review", "lipe_xml")
+}
+
+
+@pytest.fixture(autouse=True)
+def lipe_script_imports(monkeypatch):
+    """Restore lazy component imports after the repository's per-test isolation."""
+    monkeypatch.syspath_prepend(str(PLUGIN / "scripts"))
+    for name, module in LIPE_MODULES.items():
+        monkeypatch.setitem(sys.modules, name, module)
 
 
 def case_data() -> dict:

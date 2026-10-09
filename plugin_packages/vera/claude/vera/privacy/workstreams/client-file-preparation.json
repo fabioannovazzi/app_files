@@ -12,7 +12,14 @@
     "assets/client-file-preparation-review-widget.html"
   ],
   "governed_shared_paths": [
-    "vendor/modules/vera_assurance"
+    "vendor/modules/vera_assurance",
+    "scripts/native_passive_sources.py",
+    "scripts/native_passive_sources_bridge.py",
+    "scripts/native_workspace.py",
+    "scripts/native_archive_navigation.py",
+    "mcp/workspace.cjs",
+    "ui/workspace.js",
+    "ui/workspace.css"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -28,6 +35,14 @@
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "native-selected-reviewed-group-source",
+        "purpose": "Discuss one explicitly selected registered source of an already reviewed CH-GE invoice group",
+        "content": "Native group setup, full canonical extraction, existing extraction review, originals, mapping drafts, grouping attribution, complete file paths and sealed output catalogue stay in private app metadata. Setup returns only status and work reference to the model. An explicit source_group_explain selection returns the selected source identity, filename, SHA and size and at most the first 20000 UTF-8 bytes; binary sources have identity only. A specialist chat handoff carries exact work/revision/canonical/source IDs and asks for a fresh selected read. The local grouping action copies exact bytes, validates with the existing reviewed-invoices reader in transient owner-private preflight, retains intent before committing a complete output group and does not call a model or manufacture extraction review. Existing broader client-file evidence processing remains a separate supported model path.",
+        "runtime_profiles": [
+          "openai-codex"
         ]
       }
     ]
@@ -87,9 +102,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-09-26",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "5e742245459b7f7f4b52fea363a4713e908ff4cf0b97557a792cacdb609615f0"
+    "source_fingerprint": "8b10a78a39338c83d53157711392841382baaf099b25321ba7df4bfdeca18711"
   }
 }

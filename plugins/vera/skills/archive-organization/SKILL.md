@@ -48,3 +48,10 @@ or Google Drive folder-snapshot receipt, workflow preparation, lifecycle, and ar
 closure. The shared archive's search and source-opening operations remain
 read-only; only the separately reviewed and explicitly approved Riordino
 archivio execution may change client-file paths.
+
+In Codex, when native workspace tools and this exact prepared run's trusted
+binding are available, read `../vera/references/native-workspace.md` and open
+the run in “Lavori dello studio”. Review Apply compiles the plan only; execute
+or roll back from the separately confirmed “Esecuzione del piano” view.
+Discussion never authorizes moves. Without native tools or a trusted binding,
+including Cowork, continue the resolved component's existing persistent route.

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "trasformazione",
-  "revision": "2026-09-14.2",
+  "revision": "2026-10-08.1",
   "seconds": [
     45,
     60,
@@ -95,7 +95,7 @@
     {
       "path": "skills/trasformazione/SKILL.md",
       "repository_path": "plugins/vera/skills/trasformazione/SKILL.md",
-      "sha256": "6b07de01234575894ac6369036991a70a4ebd0e151878f83a4150af0406a0ec4"
+      "sha256": "c1ff755ed7c41192f4275ccd6012d58cfc90b9a433b782789844344454d11091"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "composizione-negoziata",
-  "revision": "2026-09-14.2",
+  "revision": "2026-10-08.1",
   "seconds": [
     45,
     60,
@@ -88,8 +88,32 @@
       "sha256": "15a2bc5644f4dfe718150e02a0bfad2c5c9d3819211167bca097985f74c30834"
     },
     {
+      "path": "scripts/native_bank_preparation.py",
+      "sha256": "ce181f4622e0561f29ec8e745678bbc39cbb43af62bde9094111c43b213ca3b8"
+    },
+    {
+      "path": "scripts/native_cnc.py",
+      "sha256": "ade9ea24db353e255ff4ea96205906ef4f4819e3e664bbaa7d3428f5ce847dca"
+    },
+    {
+      "path": "scripts/native_cnc_authenticated.py",
+      "sha256": "00835dc3eec4913b4c41518e0509a9e83646ec30ddb640b905dcbe22a74709b9"
+    },
+    {
+      "path": "scripts/native_cnc_authenticated_bridge.py",
+      "sha256": "1e6762bf9d934a0ec4540b30bc9dcededcbc867e393f55e4b82c594e4d7015a2"
+    },
+    {
+      "path": "scripts/native_cnc_bridge.py",
+      "sha256": "da4796b1e484886b55771875af46fc81c936bdf91e46df08f82963de88a981a1"
+    },
+    {
+      "path": "scripts/native_cnc_history.py",
+      "sha256": "1d9e454021ee54853f12ddc51fbc7c75f2661556e4c325ccb12b760c1920ad31"
+    },
+    {
       "path": "skills/composizione-negoziata/SKILL.md",
-      "sha256": "fb7582323d9b1831505eaae217dd66be38ec20b713cd3c05182b74dc958237cd"
+      "sha256": "55e92936455f4395eea6886c1fbbbb75b260156e2799692fdef89e9e4979a119"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -713,5 +737,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "ec19923dab8169c97ed09f55dfc6b48ae9b6ef611f74f5ecf0f732c542cdd20a"
+  "canonical_course_sha256": "40586b719bc79f2e3f1c9b146d6ede9dc01af9d6ab550a1ece85b0f104c86d95"
 }

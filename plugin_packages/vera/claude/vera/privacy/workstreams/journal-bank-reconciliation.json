@@ -147,13 +147,13 @@
     },
     {
       "id": "current-host-profile-qualification",
-      "control": "The fixed source registry includes the qualified macOS 26A428 / Codex CLI 0.160.0 v3 profile; v1 and v2 records remain unchanged. The only new OS permission is metadata-only access to ancestor directories of the exact CLI executable, required by the current transport. No file-content read scope, model packet or external destination is added. Disabled tool features, read-only inner sandbox and per-launch canaries remain active. Qualification retains a normal structured launch, an exact permitted-image nonce and native router denials for outside-image and symlink controls. Those image diagnostics also retained the inner read-only sandbox; their exact helper/process permissions are not production permissions. Unknown or changed hosts fail closed; dependency inspection alone is not launch qualification."
+      "control": "The fixed source registry includes qualified macOS 26A428 / exact Codex CLI 0.160.1 v4 after fresh structured arithmetic, two bank decisions, four invoice packets including prompt injection, and permitted/outside/symlink image controls. The complete v1, v2 and v3 records remain unchanged. The v4 production Seatbelt text, file-content scope, disabled tool features, read-only inner sandbox and every-launch canaries are identical to v3. No model packet or external destination is added. Diagnostic image controls enable only their exact code-mode helper with its public manifest and process creation, and permit only the exact positive image; those capabilities are absent from production. Both sandboxes remain active. Native router logs independently show denial of each exact outside/symlink target; JSONL is not complete tool visibility and no kernel-log or provider attestation is claimed. Unknown or changed hosts still fail closed; dependency inspection alone is not qualification."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-06",
+    "reviewed_at": "2026-10-07",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "8e1258c42abad925da691777a1b1b7e3d0d8425ac690dc85eda2e607b41c65c8"
+    "source_fingerprint": "9f346a5754b38f88707b614c1731f455eac4bb842b1f4e8caf1e7f1faf791dfe"
   }
 }

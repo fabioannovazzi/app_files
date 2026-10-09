@@ -179,6 +179,7 @@ COWORK_SHARED_SERVICES = (
     "run-receipt-stamping",
     "managed-python-runtime",
     "cnc-authenticated-review",
+    "studio-work",
 )
 PROJECTION_ONLY_PATHS = frozenset(
     {
@@ -1840,7 +1841,7 @@ def _without_openai_onboarding(content: bytes) -> bytes:
     """Keep the one-off OpenAI onboarding out of the unchanged Cowork runtime."""
     text = content.decode("utf-8")
     text = re.sub(
-        r"<!-- (?P<block>VERA_OPENAI_(?:ONBOARDING|DATEV|VERSION))_BEGIN -->\r?\n.*?"
+        r"<!-- (?P<block>VERA_OPENAI_(?:ONBOARDING|DATEV|VERSION|NATIVE_WORKSPACE))_BEGIN -->\r?\n.*?"
         r"<!-- (?P=block)_END -->(?:\r?\n|$)(?:\r?\n)?",
         "",
         text,
@@ -2155,7 +2156,7 @@ def _validate_cowork_instruction_entries(entries: dict[str, bytes]) -> None:
         # These markers explicitly delimit excluded host instructions, not prose.
         if re.search(
             r"<!-- (?:VERA|CLARA|LUCIA)_OPENAI_"
-            r"(?:ONBOARDING|DATEV|VERSION)_(?:BEGIN|END) -->",
+            r"(?:ONBOARDING|DATEV|VERSION|NATIVE_WORKSPACE)_(?:BEGIN|END) -->",
             text,
         ):
             raise ValueError(f"{name}: Cowork instruction retains an OpenAI-only block")
@@ -2761,7 +2762,9 @@ def _full_codex_plugin_entries(
         raise ValueError(f"{plugin_name}: expected one matching source plugin")
     package_root = getattr(source_target, "package_root")
     prefix = f"{package_root}/plugins/{plugin_name}/"
-    packaged_entries = builder.expected_zip_entries(source_target)
+    packaged_entries = builder.expected_zip_entries(
+        source_target, project_vera_privacy=False
+    )
     entries = {
         name.removeprefix(prefix): content
         for name, content in packaged_entries.items()
@@ -3071,7 +3074,7 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
         )
     if package.plugin != "vera":
         raise ValueError(f"Unsupported Claude package plugin: {package.plugin}")
-    packaged = builder.expected_zip_entries(source_target)
+    packaged = builder.expected_zip_entries(source_target, project_vera_privacy=False)
     prefix = f"{source_target.package_root}/plugins/{package.plugin}/"
     source_manifest_name = f"{prefix}.codex-plugin/plugin.json"
     if source_manifest_name not in packaged:

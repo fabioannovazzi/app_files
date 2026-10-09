@@ -10,7 +10,8 @@
     "rulepacks",
     "taxonomy",
     "requirements.txt",
-    "requirements-ocr.txt"
+    "requirements-ocr.txt",
+    "ui"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -62,6 +63,14 @@
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "native-selected-finding",
+        "purpose": "Explain a user-selected finding and explicitly chosen source cell in the native workspace",
+        "content": "The native view retains the existing intelligence packet and its context receipt, with an envelope for up to twenty recorded or explicitly selected source anchors and their document metadata. The chosen source must belong to the same authorized case; choosing it is not an inferred association with the finding. The envelope records the exact case revision and its own content hash. Source text is untrusted data. This read cannot save a decision or approve accounts.",
+        "runtime_profiles": [
+          "openai-codex"
         ]
       }
     ]
@@ -240,13 +249,17 @@
     {
       "id": "geneva-source-binding",
       "control": "The Geneva adapter requires a running Studio Archive context and exact imported source hashes, complete one-to-one reviewed mappings and balanced current/prior trial balances. Decisions bind the workflow, client, engagement, exact proposal and arithmetic. Outputs are content-addressed private drafts, never statutory approval or filing-ready artifacts. The Italy-specific authenticated service and XBRL controls do not apply to this local adapter."
+    },
+    {
+      "id": "native-view-scope",
+      "control": "The bridge authorizes case reads through the existing service context, requires the exact current revision when supplied, bounds views and context payloads, rejects unknown case source references and requires signed expiring UI tickets for issue review. The existing reviewer-role, case/run binding and idempotency checks remain authoritative."
     }
   ],
   "review": {
     "reviewed_at": "2026-10-01",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "a041d86bba2ba2f513b4609a01504e7a505e23b05d06464e667214206fabfb0b"
+    "source_fingerprint": "05d5da25fb47188739670821e0162b12894a17cb7464187fc15c8ab9f99a2569"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"

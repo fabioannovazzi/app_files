@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "patent-box-review",
-  "revision": "2026-09-14.2",
+  "revision": "2026-10-08.1",
   "seconds": [
     45,
     60,
@@ -415,7 +415,7 @@
     {
       "path": "skills/patent-box-review/SKILL.md",
       "repository_path": "plugins/vera/skills/patent-box-review/SKILL.md",
-      "sha256": "7b2cfcee6b296e0f7f2a84c137809c114f67b36ca1bf6bd8ea7869025a7a5147"
+      "sha256": "38ccb5ec008de71368ceda02b28fdd48261d313b2ef51ea0db5abb786a6ab1d6"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

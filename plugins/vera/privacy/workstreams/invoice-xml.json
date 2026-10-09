@@ -46,9 +46,26 @@
         ]
       },
       {
+        "id": "native-exact-field-or-decision",
+        "purpose": "Discuss one explicitly selected prepared field, authored decision or blocker after exact source/version retrieval",
+        "content": "The private native catalogue, full proposals, full review attribution and paths remain app metadata. The ordinary model-facing tool result is a status summary. On explicit selection retrieval, the exact field value and its authored basis/kind/uncertainty/calculated operand pointers, or one authored decision/validation issue, and its registered cited source IDs, titles, relative paths, evidence groups and locators may enter the selected host model context. Bounded selected retrieval does not read source document content, infer fiscal approval or create a separate worker/provider call. Initial full invoice reading and professional reasoning continue through the existing specialist flow and selected provider account without automatic anonymization.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "native-explicit-original-source-authoring",
+        "purpose": "Prepare a complete invoice proposal only for an explicitly chosen source mandate in the current chat",
+        "content": "Literal invoice question; all chosen registered original-source receipts, identifiers, local paths and byte digests; full local prepared-material inventory with exact text/page/image paths. Subsequent actual host text/vision reads can include complete selected invoices/photos/PDF pages, tax identifiers, names, amounts and supporting profiles, without anonymization. The adapter records model_exposure_verified=false and cannot establish what pages reached the model; declare only actual reads in the run-level model-data report. A full version-2 source-linked model proposal may enter context during staging. Complete private catalogue/HTML inspection stays app metadata; explicit author context and evidence preparation are separate model-visible routes. There is no separate worker call or local-only promise.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
         "id": "standalone-task-evidence",
         "purpose": "Retain one explicitly selected standalone deliverable without registering a client",
-        "content": "Selected full source files and their locally prepared views may enter the native model context under this workflow's existing interpretation/review phases. The task has a distinct task ID, source filenames, exact-byte receipts, purpose, and output paths without an archive/client identity. The local capture helper makes no model or external-service call. Sources and outputs remain in the selected task folder until the user removes them; provider/host retention is separate. No automatic anonymization is performed. The existing Vera model-data report and minimal server-stamping service still apply when those commands are used.",
+        "content": "Selected full source files and their locally prepared views may enter the selected host model context under this workflow's existing interpretation/review phases. The task has a distinct task ID, source filenames, exact-byte receipts, purpose, and output paths without an archive/client identity. The local capture helper makes no model or external-service call. Sources and outputs remain in the selected task folder until the user removes them; provider/host retention is separate. No automatic anonymization is performed. The existing Vera model-data report and minimal server-stamping service still apply when those commands are used. This describes the ordinary file-based specialist route; clientless task support in the optional native app panel is not established by this review.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -112,18 +129,40 @@
       "control": "The static local preview escapes source values and declares a no-network/no-script/no-form content security policy. It has no send, signing, submission or accounting-posting control."
     },
     {
+      "id": "invoice-exact-proposal-and-local-export",
+      "control": "Use the fixed Invoice XML producer and exact owned registered-source bindings. Prepare the existing model-authored candidate through unchanged public prepare_draft, retaining immutable partial/blocked proposals. Explicitly select each proposal; paginate exact fields, authored fiscal decisions and cited source metadata. Selected-model explanations are bounded to one selection and never approve or edit it. Re-run public preparation and export in temporary verification directories; compare all proposal/validation/review-request bytes and actual XML/review/report. Preview comparison normalizes only the two escaped field-row and decision-pair orders that sorted JSON persistence loses; every row and all other HTML bytes must match. The full actual artifact population remains bound by exact hashes. Whole-version signed actor/tenant scope, reviewer authority, running run, complete actual attribution, timezone-aware approval date and explicit fresh confirmation precede local export. All source/implementation/output bytes are rechecked before/after writes. Private atomic actor/run/version unfinished drafts use CAS outside outputs, with explicit recovery and no persisted confirmation. Durable uncertain intents prevent repeated writes; concurrent producer changes can retain actual artifacts requiring specialist verification, never automatic adoption or rollback. No invoice extraction, semantic tax/duplicate classifier, worker/provider/registry call, signing, issuance, booking, SdI transmission, authenticated identity or run completion is added. Initial semantic drafting and same-original corrections may use the explicit source-mandate route; new evidence requires a fresh run and actual model-data disclosure remains necessary; shared Archive closure remains a separate action."
+    },
+    {
+      "id": "explicit-invoice-source-mandate-and-proposal",
+      "control": "Signed owner/run source authorization retains the literal question, exact chosen originals and implementation. Only its exact model-visible mandate exposes complete receipt metadata and private prepared material paths. The unchanged public source_evidence helper retains complete text and every PDF page/image without model extraction, OCR or provider calls. Local material inventory never establishes model exposure; actual text/vision reading through the host can send chosen original content to the selected model account, without automatic anonymization or a local-only guarantee. Source roles/grouping, field interpretation, tax decisions and current primary-source research remain model/professional judgments. The model stages the complete v2 proposal with exact evidence_ref and source metadata, unknowns/questions and no approval fields. Complete script-disabled public preview and record precede separate signed conservation through unchanged prepare_draft. Recheck exact private/public artifact populations, original bytes, implementation and public replay; retain every source view, request and immutable draft. Same-byte corrections preserve older proposals/exports and reuse only identical public source views. Fresh context CAS is required after source preparation. Missing/altered/orphaned/pending receipts block new authoring, local export and Archive closure; uncertain outcomes cannot repeat or be adopted. Completed exact retries return only the retained receipt. Complete metadata above 100000 bytes, submissions above 128000 bytes and private reads above 2000000 bytes are refused without sampling; public source preparation retains its 50 MiB/file, 100-page and page-size limits. Source preparation/conservation provides no professional approval, signing, issuance, booking, SdI transmission, worker call, authenticated identity or completion. Actual version-bound professional export remains a separate action."
+    },
+    {
       "id": "standalone-exact-source-boundary",
       "control": "Only invoice-xml, prompt-optimizer and deep-research-validator accept the distinct standalone context. The loader rechecks its digest, selected byte receipts and closed input set and rejects foreign workflows, aliases, source changes and output escape. Invoice professional export approval, schema/arithmetic checks and legal semantic review are retained. The task is not an Archive run or registered client."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-08",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "06d8c295f897427087b5961ef509f30fec2e9dd73873fc054feb72b5cad4e2f9"
+    "source_fingerprint": "bbf7ba26f6af63e279a717917dba473750835f1976371088b03dee40bb96c7f4"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+    "plugins/vera/scripts/native_invoice.py",
+    "plugins/vera/scripts/native_invoice_bridge.py",
+    "plugins/vera/scripts/native_workspace.py",
+    "plugins/vera/mcp/workspace.cjs",
+    "plugins/vera/ui/workspace.html",
+    "plugins/vera/ui/workspace.js",
+    "plugins/vera/ui/workspace.css",
+    "plugins/vera/ui/InstrumentSans-Regular.ttf",
+    "plugins/vera/skills/invoice-xml/SKILL.md",
+    "plugins/vera/skills/vera/references/native-workspace.md",
+    "plugins/vera/scripts/native_invoice_authoring.py",
+    "plugins/vera/scripts/native_aml_authoring.py",
+    "plugins/vera/scripts/native_assetti.py",
+    "plugins/vera/scripts/native_archive_closure.py",
     "plugins/vera/scripts/standalone_work.py",
     "plugins/vera/skills/vera/references/standalone-work.md"
   ]

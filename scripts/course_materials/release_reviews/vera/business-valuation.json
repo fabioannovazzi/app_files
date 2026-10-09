@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "business-valuation",
-  "course_sha256": "245b4a757f6713e143abf4993e36d3dacd29a45df35ec9d5791eeac95646738c",
-  "reviewer": "Codex /root: course, receipt-bound lifecycle, arithmetic and artifact review",
-  "reviewed_at": "2026-10-01T07:53:39.156413+00:00",
-  "review_scope": "Expanded the existing Italian DCF course rather than creating a duplicate framework. Read all five fictional notes and the complete rendered lesson; checked source-preview/download links visually in Chrome. Native test executions cover demo/practice, missing terminal and recovery. A four-run same-engagement regression imports exact receipts, prepares and starts the real workflow, generates honest no-model disclosures for its code-only fixtures, seals every output, then lists and reopens the first run without recalculation and verifies unchanged artifact hashes. Independently checked textbook arithmetic and LibreOffice recalculation of all 60 calculation cells across complete cases; missing case has no numeric method output. Inspected all 16 native PDF pages and 17 DOCX-rendered pages. Reports remain partial or blocked with no accepted conclusion. Human comprehension, paired voice, fresh enabled installation and professional/PIV acceptance are unverified. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+  "course_sha256": "9f9281bfe92d34aeaaa27e0f93694784e90001a9dccdc22ff9126ce81052d988",
+  "reviewer": "Codex bounded teaching-material and source integration review",
+  "reviewed_at": "2026-10-09T13:18:33.902030+00:00",
+  "review_scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -1059,5 +1059,41 @@
     "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
     "source_review": "docs/studio_archive/course-source-compatibility-review.json",
     "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  },
+  "source_binding_review_20261009": {
+    "reviewer": "Codex bounded teaching-material and source integration review",
+    "reviewed_at": "2026-10-09T13:18:33.902030+00:00",
+    "previous_review_identity": {
+      "reviewer": "Codex /root: course, receipt-bound lifecycle, arithmetic and artifact review",
+      "reviewed_at": "2026-10-01T07:53:39.156413+00:00",
+      "review_scope": "Expanded the existing Italian DCF course rather than creating a duplicate framework. Read all five fictional notes and the complete rendered lesson; checked source-preview/download links visually in Chrome. Native test executions cover demo/practice, missing terminal and recovery. A four-run same-engagement regression imports exact receipts, prepares and starts the real workflow, generates honest no-model disclosures for its code-only fixtures, seals every output, then lists and reopens the first run without recalculation and verifies unchanged artifact hashes. Independently checked textbook arithmetic and LibreOffice recalculation of all 60 calculation cells across complete cases; missing case has no numeric method output. Inspected all 16 native PDF pages and 17 DOCX-rendered pages. Reports remain partial or blocked with no accepted conclusion. Human comprehension, paired voice, fresh enabled installation and professional/PIV acceptance are unverified. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+      "course_sha256": "245b4a757f6713e143abf4993e36d3dacd29a45df35ec9d5791eeac95646738c"
+    },
+    "accepted_material_baseline": "8df0157d52b1e322f9f85fdb77376b39e17db446",
+    "current_course_sha256": "9f9281bfe92d34aeaaa27e0f93694784e90001a9dccdc22ff9126ce81052d988",
+    "unchanged_materials": [
+      "all lesson locales and editorial text",
+      "input specifications and hashes",
+      "demo and practice execution contracts",
+      "language and grouping contracts"
+    ],
+    "changed_fields": [
+      "sources"
+    ],
+    "source_review_basis": "Native source integration and the owner-approved canonical repair were reviewed separately. Current real workflow regression assertions ran before their recorded native checks. Lesson content is byte-equivalent at the JSON-field level to the accepted main baseline; reviewed input bindings and output contracts are unchanged. Existing per-locale output artifacts and editorial history are retained, with no new visual or host acceptance claim.",
+    "current_execution_evidence": {
+      "run": 37930167083,
+      "job": 113818653311,
+      "head": "89004da63fc3d6d6a5feffde2484143c203634a1",
+      "native_teaching_suite_passed": 1642,
+      "skipped": 3,
+      "log": "/private/tmp/native-deploy-final-teaching-failure-20261009.log",
+      "whole_job_outcome": "failed at stale editorial course pin after execution suite passed",
+      "final_gate_requires_fresh_matching_junit": true
+    },
+    "new_native_output_visual_review": false,
+    "installed_host_acceptance": false,
+    "learner_or_professional_acceptance": false,
+    "scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance."
   }
 }

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "studio-document-format",
-  "revision": "2026-09-14.2",
+  "revision": "2026-10-09.native-main-integration.review-proposal",
   "seconds": [
     45,
     60,
@@ -540,7 +540,7 @@
     {
       "path": "modules/studio-archive/vendor/modules/model-data-report-contract.md",
       "repository_path": "plugins/vera/skills/vera/references/model-data-report-contract.md",
-      "sha256": "a153b9b79890713729ae9478a980840e79dfced17ec20c647db39e8d985e9958"
+      "sha256": "d15de66e8cacde6586955265f51121ec9f59a0a7d6e2e3edc1c5784efdb994cb"
     },
     {
       "path": "modules/studio-archive/vendor/modules/model_data_report.py",

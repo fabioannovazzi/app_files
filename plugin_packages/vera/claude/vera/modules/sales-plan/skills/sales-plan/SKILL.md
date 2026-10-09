@@ -192,7 +192,7 @@ Resolve only ambiguities that change the result:
   usable; a recorded zero is a known value.
 
 For a large assumption set, prepare the same review table in Markdown or case
-JSON and review it in batches. A separate HTML workbench is not part of v2.
+JSON and review it in batches.
 
 ## Cowork-native Run UX
 

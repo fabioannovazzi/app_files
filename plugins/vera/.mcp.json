@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "archiveOrganizationWidgets": {
-      "title": "Vera · Riordino archivio",
+      "title": "Vera \u00b7 Riordino archivio",
       "description": "Validate, render, save, and compile review decisions for a client-folder organization plan.",
       "icons": [
         {
@@ -39,7 +39,7 @@
       ]
     },
     "newClientFilePreparation": {
-      "title": "New Client · File Preparation",
+      "title": "New Client \u00b7 File Preparation",
       "description": "Validate, render, save, and apply document-preparation decisions for the first phase of New Client.",
       "icons": [
         {
@@ -58,7 +58,7 @@
       ]
     },
     "newClientProfessionalSetup": {
-      "title": "New Client · Professional Setup",
+      "title": "New Client \u00b7 Professional Setup",
       "description": "Validate, render, save, and apply source-bound professional decisions for the later phases of New Client.",
       "icons": [
         {
@@ -134,7 +134,7 @@
       ]
     },
     "varianceAnalysisWidgets": {
-      "title": "Vera · Analisi degli scostamenti",
+      "title": "Vera \u00b7 Analisi degli scostamenti",
       "description": "Validate, render, save, and apply review decisions for accounting variance calculations and plots.",
       "icons": [
         {
@@ -324,7 +324,7 @@
       ]
     },
     "veraStudioArchive": {
-      "title": "Vera · Archivio dello Studio",
+      "title": "Vera \u00b7 Archivio dello Studio",
       "description": "Configure, refresh, search, and verify a private local archive index, plus plan and validate client-scoped Gmail retrieval.",
       "icons": [
         {
@@ -343,7 +343,7 @@
       ]
     },
     "courseChats": {
-      "title": "Vera · Corsi",
+      "title": "Vera \u00b7 Corsi",
       "description": "Open or resume the paired working chat for local courses.",
       "cwd": ".",
       "command": "node",
@@ -351,8 +351,26 @@
         "./scripts/course_chat_mcp.cjs"
       ]
     },
+    "veraNativeWorkspace": {
+      "title": "Lavori dello studio",
+      "description": "Open authorised Studio Archive runs, inspect exact source-bound selections, recover unapplied drafts and save supported human-reviewed decisions through existing workflow services.",
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": [
+            "24x24"
+          ]
+        }
+      ],
+      "cwd": ".",
+      "command": "node",
+      "args": [
+        "./mcp/workspace.cjs"
+      ]
+    },
     "studioWork": {
-      "title": "Vera · Organizzazione lavoro",
+      "title": "Vera \u00b7 Organizzazione lavoro",
       "description": "Persistent commitments, meeting actions and verified calendar-operation receipts.",
       "icons": [
         {
@@ -370,7 +388,7 @@
       ]
     },
     "agenziaAcquisition": {
-      "title": "Vera · Acquisizione Agenzia",
+      "title": "Vera \u00b7 Acquisizione Agenzia",
       "description": "Acquisizione locale di fatture, corrispettivi e bolli con avanzamento, anomalie e prospetto F24 riesaminato.",
       "icons": [
         {

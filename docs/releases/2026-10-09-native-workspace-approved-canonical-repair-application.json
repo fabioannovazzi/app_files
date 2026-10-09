@@ -1,0 +1,224 @@
+{
+  "applied_at": "2026-10-09T07:33:33.056696+00:00",
+  "authorization": "Direct human reply: I approve, following the explicit 38-file canonical repair approval requirement.",
+  "proposal": "/private/tmp/concordato-review-history-packages-20261009/complete-proposal.patch",
+  "proposal_sha256": "a9b8838d691fdb8cfd0ae20ef70fa482c69eb9ea9e9a8e9902568518b9752b6c",
+  "source_identity": "/private/tmp/concordato-review-history-packages-20261009/proposal-identity.json",
+  "files_applied": 38,
+  "all_before_and_after_identities_verified": true,
+  "paths": [
+    {
+      "path": "plugins/concordato-plan-review/mcp/server.cjs",
+      "before_sha256": "4d2b311dc8e4c71f9ad8e0128717810d6b24c6cb86bf5083ad061f56a4df04e2",
+      "after_sha256": "f8938687312d753a4f5200679bd7a178a8562e2c215b58d91e2934295cdc99df"
+    },
+    {
+      "path": "plugins/concordato-plan-review/scripts/apply_review_edits.py",
+      "before_sha256": "27cca0773f5685d664ce7a8a29f54b5e2a1a2450e7b812415c395b95e3264475",
+      "after_sha256": "7cd690eb62960c3fd44bc77a29c3b4661b9035667b7c5ceddd12eb961b442b55"
+    },
+    {
+      "path": "plugins/concordato-plan-review/scripts/output_closure.py",
+      "before_sha256": "25857c7c622e3c6b766dc22344fd2f6b5c77d97263e7068636240b183b04d92a",
+      "after_sha256": "2bd827e57ab68f6d16aceb7a6dc41f6dca839048511fb7b1e889740135cb95d1"
+    },
+    {
+      "path": "plugins/concordato-plan-review/scripts/replay_assurance.py",
+      "before_sha256": "9fa65b180fd467ab7453adb2cbf94581bcdda04a7dee6d775dda05d9aa9d7e64",
+      "after_sha256": "6de6c44af01dd7361cebb07b3cb35663ccb9c248d70234e2faddb4c7d33fa27b"
+    },
+    {
+      "path": "plugins/vera/assets/courses/browser-automation/course.json",
+      "before_sha256": "7aa817652d051480ab01daeef34f435e3798f36e1b84ea6862d34511fd1c490a",
+      "after_sha256": "fc704328ef245db8774bf65e4e076682ff328da42af73ddc28c0b890b65da52e"
+    },
+    {
+      "path": "plugins/vera/assets/courses/composizione-negoziata/course.json",
+      "before_sha256": "aa34b5f68077e0288ab7171bb113020d2c2e46e85a780010f677bc8689fe111c",
+      "after_sha256": "b1a85506a67e73726427f81e078a9ed8f59e13166f46f35a0cef3908a5af918d"
+    },
+    {
+      "path": "plugins/vera/assets/courses/concordato-plan-review/course.json",
+      "before_sha256": "18804a8cd13a82393ee163933c40bcdc1dda018f96d093d7193d71346e718f70",
+      "after_sha256": "c156c3ccdae151485ce1520af3d55d6aaa8c9318a3a10bdf194052e0877a34a0"
+    },
+    {
+      "path": "plugins/vera/assets/courses/financial-analysis/course.json",
+      "before_sha256": "50a4f1a5f08b1049326797609dba223a00908924e388295580942b37ef6e1086",
+      "after_sha256": "e1fd8e353bd370f38ad86108154229c4e5189b1cc1976153e8de2a6143cd687d"
+    },
+    {
+      "path": "plugins/vera/assets/courses/financial-report-builder/course.json",
+      "before_sha256": "ddf37f5926a1ffb8dbc23ed2b6afcd305f8673d80dee0392a807e2aa89918871",
+      "after_sha256": "99cbad095b681572c2ec81a4a5c6332d5527c3e4ee8e9d98196fab1ed83f2b7d"
+    },
+    {
+      "path": "plugins/vera/assets/courses/fusione-guidata/course.json",
+      "before_sha256": "86621eeb4f9b55450d22892726e19512695c947297afb26fb10871994a4dcde0",
+      "after_sha256": "154fcc3dc5d7c7e3abae329d768399748e7249fd896d9822f64dc802772948ee"
+    },
+    {
+      "path": "plugins/vera/assets/courses/index.json",
+      "before_sha256": "a1698343a5808df3ba107b0437695a39362a285020b6248e9da05c618054cfb2",
+      "after_sha256": "45b9776edaf9788694f0f851529c4770cbea12cc6194b62fd699c326360828e0"
+    },
+    {
+      "path": "plugins/vera/assets/courses/open-item-reconciliation/course.json",
+      "before_sha256": "242609f79569ac4c89afa65f022b9a94b77696376d88e249fb955d5788cc3e97",
+      "after_sha256": "fabf954089a4a3757f154b923a2d25c204ba927f093c4c0516984dfda2514609"
+    },
+    {
+      "path": "plugins/vera/assets/courses/patent-box-review/course.json",
+      "before_sha256": "51a7c3589a8643bc5209e2df8f515cfb5c5811895d024ab22e30684e9df2c29b",
+      "after_sha256": "4979c57b749d6b7ba6ad1820565372087bf8ee66bcbf4efb30441c3685acc636"
+    },
+    {
+      "path": "plugins/vera/assets/courses/presenza-digitale-studio/course.json",
+      "before_sha256": "b46c350d017b25a0c1954e15e8233433c458835f37ffd7fa5c02e450674000dc",
+      "after_sha256": "b0fd2e5f889709641a720bc8656c2f34369221253b4e50900dbd6b8e1b7f8f53"
+    },
+    {
+      "path": "plugins/vera/assets/courses/studio-archive/course.json",
+      "before_sha256": "f6c38761bea7d15bd888e84a3c2d23f1afe8627ea2c9ae0648e089315179cccd",
+      "after_sha256": "9419fbe7b1c0107616ff12fce3c5d46d7784b1496f5eb16175f085f099c24a2b"
+    },
+    {
+      "path": "plugins/vera/assets/courses/studio-document-format/course.json",
+      "before_sha256": "4510aeba0821695ffaaaf2d86a2eaa2150cec21bef707c3ffcd5de0e77c4b782",
+      "after_sha256": "ce9abbf597175ef7e5ca3ef9e608f82d379756ff8ccf6790c7cc26ed2f3788ad"
+    },
+    {
+      "path": "plugins/vera/assets/courses/trasformazione/course.json",
+      "before_sha256": "11c2c150c39adaa565adfab4450fd311f2a3ad806f5ec74b84249846bdea1b19",
+      "after_sha256": "6847cc74aaa7f5fa2d6d7ae446e22c960174a926605d06e578197f4e7849813e"
+    },
+    {
+      "path": "plugins/vera/mcp/workspace.cjs",
+      "before_sha256": "6fc4ffe0a561a17da4f620196b4e7c5eea1ccf0f7087d63070a08f5cd826949c",
+      "after_sha256": "c1e8c8857a7e49ae97509bbc9e636d8a54e78989062955e12875af01b7185a29"
+    },
+    {
+      "path": "plugins/vera/privacy/services/studio-work.json",
+      "before_sha256": "74b5920f391f0e5dcaddb38f13fa41314e70759bcd9d5db0a892699c4bdf5da1",
+      "after_sha256": "3a8ab35fa070442f4db2c4603b698b6b6558ce7f9de5f4108e7ef81a01048ad3"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/concordato-plan-review.json",
+      "before_sha256": "52c43908c83d6ca652f870a536923d45e89d7990ed40720089588df03023231d",
+      "after_sha256": "078b367b8d1a4cb8dad5cc93a50cdc8f417b150ec796a1d360a77d292ee5394a"
+    },
+    {
+      "path": "plugins/vera/scripts/native_bandi_intelligence_bridge.py",
+      "before_sha256": "80364a25e167c7953b5f6407f6afcc6ad5de5f54683c9dde795dda5524345e2b",
+      "after_sha256": "ccbb94fcb1ef7f948fca3e56d2182106b77f1e29c05850f7618a7eb4b65720a7"
+    },
+    {
+      "path": "plugins/vera/scripts/native_cnc.py",
+      "before_sha256": "97a59c800ac46a7658558cb0b669687c21d7b80377c97582c0498276acd9fae9",
+      "after_sha256": "ade9ea24db353e255ff4ea96205906ef4f4819e3e664bbaa7d3428f5ce847dca"
+    },
+    {
+      "path": "plugins/vera/scripts/native_cnc_authenticated.py",
+      "before_sha256": "2a876b0832ba9ee1993cf18a3caa0aa60be15dba2df5fbd3d07f1e494ffbecd4",
+      "after_sha256": "00835dc3eec4913b4c41518e0509a9e83646ec30ddb640b905dcbe22a74709b9"
+    },
+    {
+      "path": "plugins/vera/scripts/native_communication.py",
+      "before_sha256": "d25230004857fccc4f56fb62e30000f50bf3f601f8e5c18f2781e88e42023b7b",
+      "after_sha256": "1aacc157f8ab136b7b1c8f029926d6f1847940ead9109247d19e21416a920979"
+    },
+    {
+      "path": "plugins/vera/scripts/native_esg_author_bridge.py",
+      "before_sha256": "ab72ec6c932f594348788d236a6f48cc4f70d6d3456ea04460313b7c2dd635bf",
+      "after_sha256": "b9be5ab3654ecb65f8ed4b1a08d98f1eb173854bd611c3edb1b7dd5b58424d22"
+    },
+    {
+      "path": "plugins/vera/scripts/native_inps_rpc.cjs",
+      "before_sha256": "da0d6946b57079f4c0324af799053db19e80ad9eddd7ff877b32930bc66fd2a4",
+      "after_sha256": "19fe5c49c6d35093cc96be05490acf23fac1ee0084a2b38ff6324a25d8f9df61"
+    },
+    {
+      "path": "plugins/vera/scripts/native_rating.py",
+      "before_sha256": "f7b3fc68c27b7279c39202bfe1a5d3105d7f8c3d87542648b1368dd0a5c0fbf7",
+      "after_sha256": "46a7009dc6616daada63c2fd8334f8e824227ec0a4604642a1e794d5b7bf6460"
+    },
+    {
+      "path": "plugins/vera/scripts/native_sari_followup.py",
+      "before_sha256": "913cbd5f2e8a6e53489c33d75d28bb5b34edc2a65f49aeead96e78405ab67f9e",
+      "after_sha256": "bd15ee51a98b8ef51a0f8143b2c299aa542c72fd2ea64a21338fc4572b192db8"
+    },
+    {
+      "path": "plugins/vera/scripts/native_transformation.py",
+      "before_sha256": "4e585b9ec1a9d6b574a4182f72a1e8c34ba5d98e8e5ed3c55ce0ccaa49575357",
+      "after_sha256": "3c04e0de78d1a2bb0da85896f4c451a3680f57360aed4bd0a195344f1d8a627c"
+    },
+    {
+      "path": "plugins/vera/scripts/native_transformation_author.py",
+      "before_sha256": "45c39996ff212ace74261913bd47f2a8b68f0d5709d5ca42f8433f426b6afd15",
+      "after_sha256": "fd3eeddb9213dee000ab2cc76ac80d396d4aabed768d9e479c653e5b17b19d64"
+    },
+    {
+      "path": "plugins/vera/scripts/native_variance.py",
+      "before_sha256": "5ed42642eb8cb0a78c111f61a7f70d753b03c4cfc78e271e9cba828c1b623b4a",
+      "after_sha256": "3a9781faa117f6e138552894ec7bbd34252bc64536c1df65887f5e569abd2e7d"
+    },
+    {
+      "path": "plugins/vera/scripts/native_workspace.py",
+      "before_sha256": "6e4905f87241d738821dca45bd137ba5cc18086afc15ab3f7954c790061e3107",
+      "after_sha256": "29644e19c5e2909eca275ac938e6d83cbe139eb6b929aac310c2d0addb9fdcc5"
+    },
+    {
+      "path": "plugins/vera/ui/fusion.js",
+      "before_sha256": "aa4c9a52f31528991cea266f8f4bcbd5c9dd274d6e441fa82acab34827f146ef",
+      "after_sha256": "7c91f0323dcb77e8787cdb1a1de86b23d9fc57d90d9ff68887d6c93973757811"
+    },
+    {
+      "path": "plugins/vera/ui/studio-work.js",
+      "before_sha256": "f20b4d14d650a0779b16f40ef6acf91d30737f0d85e8b88cb76e1fbd960e08d0",
+      "after_sha256": "2ac4093133f16221ca9149d7237ca41148c97e318b56e3fcd9ea8fd6e66d8ec8"
+    },
+    {
+      "path": "plugins/vera/ui/workspace.css",
+      "before_sha256": "9560f76a8cd759ea43b6ad1225991f812b317df16dbbff33f19da9c17e7c5382",
+      "after_sha256": "e80549e9a1622024dd88b7d37ff5035b2c8ca40817db97b8cd93cd7c40961dee"
+    },
+    {
+      "path": "plugins/vera/ui/workspace.js",
+      "before_sha256": "848e739dae5fa740840e9616cb3d0e1520a795bc86ef92b70b0ff8f26429ce5b",
+      "after_sha256": "7fbb6ce54096cf3e18e343db61ca57a431b3b8a44a69d89503dc9e52f8e1ef95"
+    },
+    {
+      "path": "scripts/build_claude_plugin_zip.py",
+      "before_sha256": "8c59c9e1131a6f92dbe5c103ed7c78ae2c5e4e4f99509664543094c8fd595c4b",
+      "after_sha256": "d7a6d44f30755d3aed2539c13d69bbb6d62a3540d8fb69b6b95e2f241afd4215"
+    },
+    {
+      "path": "scripts/course_materials/release_reviews/vera/concordato-plan-review.json",
+      "before_sha256": "a7a2d7d8dbf93d69b3e191223fdc249fa536a57000e93e6cd37abc56fcd46ac4",
+      "after_sha256": "10e23ed8230e05a4df098f97dee4a99cd33f9f53e4267a73a7fb10e9bd6fda05"
+    }
+  ],
+  "other_temporary_proposals_applied": false,
+  "candidate_deployed_or_published": false,
+  "installed_native_host_acceptance": false,
+  "rollout_complete": false,
+  "related_bilancio_worktree_regressions": {
+    "unique_passed": 24,
+    "first_run_passed": 23,
+    "first_run_failed": 1,
+    "qualified_localhost_recheck_passed": 1,
+    "first_junit": "/private/tmp/native-existing-bilancio-worktree-recheck-20261009.xml",
+    "recheck_junit": "/private/tmp/native-existing-bilancio-local-http-qualified-recheck-20261009.xml",
+    "production_changed_for_failure": false
+  },
+  "verification": {
+    "source_tests": 473,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "junit": "/private/tmp/native-approved-canonical-repair-regressions-20261009.xml",
+    "log": "/private/tmp/native-approved-canonical-repair-regressions-20261009.log",
+    "native_host_acceptance": false,
+    "release_or_deployment": false
+  }
+}

@@ -12,7 +12,17 @@
     "vendor/modules/vera_assurance",
     "modules/fusione-guidata/vendor/modules/client_ledger.py",
     "modules/studio-archive/scripts/client_ledger.py",
-    "skills/vera/references/connected-studio-knowledge.md"
+    "skills/vera/references/connected-studio-knowledge.md",
+    "scripts/native_cnc.py",
+    "scripts/native_cnc_bridge.py",
+    "skills/vera/references/native-workspace.md",
+    "scripts/native_cnc_history.py",
+    "scripts/native_cnc_authenticated.py",
+    "scripts/native_cnc_authenticated_bridge.py",
+    "mcp/workspace.cjs",
+    "ui/workspace.js",
+    "scripts/native_workspace.py",
+    "skills/composizione-negoziata/SKILL.md"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -46,6 +56,22 @@
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "optional-native-granted-case-context",
+        "purpose": "Prepare complete model-authored proposals from the explicitly selected original evidence and exact prior case",
+        "content": "After renewed native source confirmation, an explicit author-context tool names selected original paths/hashes, the exact prior complete snapshot and an optional specifically selected whole proposal path. These files may include complete financial, creditor and confidential client evidence. Exact node context returns complete selected node content, citations, dependencies and retained historical reviews within a bounded response; oversized content is refused rather than truncated. Private unsent local reviewer names, reasons, confirmation references and declared times are excluded from these native contexts. Actual file reads must be recorded in the normal run-level report; neither mandate nor context call alone proves a read. Native metadata/panels are not a local-only provider-processing promise. Complete exact-node model contexts refuse envelopes above 24000 UTF-8 serialized bytes; source-mandate identity/path context refuses above 64000 bytes. Original and prior-case/proposal files may then be read in full through the selected host. Whole model stage submissions are limited to 96000 serialized bytes and produce an explicitly model-visible saved case-reference and no-approval acknowledgement; complete proposed update/preview and unsent attributed decisions remain private app payloads, bounded to 2000000 bytes. App-private metadata depends on actual installed-host handling, not a local-only account promise.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
+        "id": "explicit-native-historical-case",
+        "purpose": "Discuss a specifically selected complete old case without authorizing original-file reads or new decisions",
+        "content": "An explicit historical-context call returns the entire selected case, including old nodes, source references, dependency versions/staleness and already conserved reviewer identities, reasons and confirmation references. Complete cases above 64000 UTF-8 serialized bytes are refused rather than truncated. Unsent private local drafts and absolute original-file/output paths stay excluded. Ordinary memo/snapshot bytes and paths are available in a separate app-private output view, within a 2000000 UTF-8 serialized-byte complete-response limit; native metadata does not promise local-only provider processing. Original files require a separate explicit source mandate. The reader shows retained authenticated decisions as stored without independently verifying their server receipts again. Actual historical-case reads must be recorded in the ordinary run-level report.",
+        "runtime_profiles": [
+          "openai-codex"
         ]
       }
     ]
@@ -84,7 +110,8 @@
         "The user must choose this hosted route before transmission. The professional personally signs in and confirms; the assistant prepares but never approves.",
         "Server session authentication fails closed when disabled; same-origin requests, fixed metadata schema, payload-size and rate limits are enforced. The first authenticated reviewer owns the review scope; other accounts and role changes are rejected.",
         "The client uses a fixed HTTPS verification endpoint, rejects redirects, bounds responses and compares the entire retained record and exact local scope/version before authenticating a decision.",
-        "The local filesystem remains the document-access boundary. Account authentication is not proof of qualification, professional independence, a signature or authority to file."
+        "The local filesystem remains the document-access boundary. Account authentication is not proof of qualification, professional independence, a signature or authority to file.",
+        "Optional native preparation and private receipt draft saving do not transmit. Renewed exact saved-receipt confirmation separately chooses verification, and sends only opaque receipt UUID/hash. The assistant does not sign in or decide as the reviewer. Current lock/binding defects leave this new source route unqualified; separate candidate proof is not hosted/native professional acceptance."
       ]
     },
     {
@@ -120,12 +147,24 @@
     {
       "id": "role-and-review-version-binding",
       "control": "Role changes and stale/wrong-version reviews are rejected. Attribution-only JSON never approves a handoff. Optional Mparanza receipts are independently verified and bound to the authenticated account and exact case, role, node and version; later authenticated rejection supersedes acceptance. Local document access remains governed by host permissions."
+    },
+    {
+      "id": "native-local-confirmation-boundary",
+      "control": "Whole model proposals retain empty review attribution. Renewed exact proposal confirmation conserves ordinary draft revisions without professional approval. Separately saved/reconfirmed version-specific local decisions preserve declared fields with record_only_identity_not_verified authority. Native tools do not transmit to the optional hosted review service or import authenticated receipts; human-selected specialist instructions remain authoritative. Pending/uncertain/tampered native evidence blocks closure; changed-case mandate reconciliation uses the ordinary file route. Canonical source blocks cancellation of an older open mandate after a new case revision. The candidate permits only private read/disposition of stale grants; stale original context/staging/publication remain refused. The production correction is separately qualified and remains unapplied pending the repository exception."
+    },
+    {
+      "id": "native-readonly-history-source-binding",
+      "control": "The reader verifies the existing public history/role/lineage and original source receipts; exact owned historical case selection is readonly across managed runs of the same engagement, including completed runs. Complete ordinary snapshot/memo byte checks and current view revision prevent altered/stale reads. Missing memo is reported without regeneration. This reader has no writer, hosted receipt import or new professional authentication."
+    },
+    {
+      "id": "native-chosen-authenticated-review",
+      "control": "The optional app prepares the unchanged ordinary local review-node file without network; receipt/reason drafts remain private and generation-bound. A separately renewed exact saved-receipt choice contacts only the fixed HTTPS verification endpoint with opaque UUID/hash. Local exact case/role/node/version/request conflicts refuse transmission; actual server retention and the unchanged public writer independently verify account/decision. Complete ordinary request/receipt/snapshot/memo bytes are preserved. First service refusal/unavailability remains pending without public writes; uncertain later writes block retry/closure. Canonical source has two incorrect API arguments. The candidate uses the declared output-path lock and direct-binding reload; its separately qualified correction remains unapplied and does not establish production or installed-host acceptance."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "a0a72673f98322f2649810d96f3d18e1573df0001f27e8f5c7960fd56e0ca383"
+    "source_fingerprint": "f80765cf8ada1d7506dc94751ba68bda5356d01dc38d9221bca0fc415b2b136a"
   }
 }

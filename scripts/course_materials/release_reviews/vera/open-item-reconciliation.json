@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "open-item-reconciliation",
-  "course_sha256": "60d54091c890ae914179ba1187043680e0e37b835590f5154a939303362d3a7e",
-  "reviewer": "Codex: source, first-use outline and actual native document/workbook review",
-  "reviewed_at": "2026-09-14T17:59:18.652300+00:00",
-  "review_scope": "Prepared full-payment matching example and cumulative April practice. All 51 Word pages from native run 07 and 34 summary/request worksheet views were visually inspected. All three operational sheets were also checked through a native LibreOffice conversion, which disproved the excessive row heights in the secondary preview renderer. Run 08 re-executes the final corrected outlines with unchanged inputs and production method: full Word body XML and both operational/request workbook cell values and styles match run 07 after exact managed-source and run-metadata substitutions. The local HTML review page could not be opened because of browser URL security policy; visual browser interaction, learner understanding, native voice and two-window behavior are not attested. Row review remains pending; this is not professional case approval. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+  "course_sha256": "0b63f6eb03e2795b2a87bbcc6a8ce043fd78ffe9a5ee863511da803dc7bc8a44",
+  "reviewer": "Codex bounded teaching-material and source integration review",
+  "reviewed_at": "2026-10-09T13:18:34.057561+00:00",
+  "review_scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -537,5 +537,125 @@
     "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
     "source_review": "docs/studio_archive/course-source-compatibility-review.json",
     "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  },
+  "native_workspace_source_binding_20261006": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-06T20:04:26.134896+00:00",
+    "previous_course_sha256": "960914275adaa1c87e3134509ace996c71a23123b5d6fb276f87d457375d4b9d",
+    "current_course_sha256": "d04b477afb7bab0f690d27ea9253c0b45d9feb43d89b3962af5945f67d975ac4",
+    "authored_content_unchanged": true,
+    "changed_sources": [
+      "skills/open-item-reconciliation/SKILL.md"
+    ],
+    "scope": "Prepared-run optional native handoff; exact canonical case/service and retained authority, professional gates unchanged. No native/Cowork host acceptance; Open-item full regeneration remains specialist-led. Fresh exact-digest teaching execution remains required."
+  },
+  "native_regeneration_source_binding_20261007": {
+    "previous_course_sha256": "d04b477afb7bab0f690d27ea9253c0b45d9feb43d89b3962af5945f67d975ac4",
+    "current_course_sha256": "242609f79569ac4c89afa65f022b9a94b77696376d88e249fb955d5788cc3e97",
+    "changed_sources": [
+      {
+        "path": "plugins/open-item-reconciliation/scripts/audit_assurance.py",
+        "old": "725c3e849156088e71217dc1604441faa0a2bb47569b847f432997c52819bf1b",
+        "new": "28db9d3ba74b5313cd73dd3e15f3d943f7ced80f5d42544ae4291da322eb3c61"
+      },
+      {
+        "path": "plugins/open-item-reconciliation/scripts/raw_input_runner.py",
+        "old": "98cae1b52a8bd17eb477f3343d0a71d6e1026a298e3893dc15ae6e53ff80e096",
+        "new": "901a038c0ea4cd25a3aa84a2906969d228f212a35089ca50bb3aefa5ac51447b"
+      },
+      {
+        "path": "plugins/open-item-reconciliation/scripts/retained_sources/review_session.source",
+        "old": "ac9b4a2c1f6bdaed1462c34be3cecb82f176758614ff9752e42621c500b5c3c9",
+        "new": "a61eb1a2630fdea23e95ce2c3db3fc79e5e38595df301112b6aff4e206c2bb09"
+      },
+      {
+        "path": "plugins/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
+        "old": "12703a5d8f38b40ba4d530ebd4a530fc4a4cb7fe30902ffa20e81b9e16e62c78",
+        "new": "1c323cb707784f565da84a589dfbd99eea77e658c6e54bee74efc814536baaf0"
+      },
+      {
+        "path": "plugins/vera/skills/open-item-reconciliation/SKILL.md",
+        "old": "1881e9f0be3a1df9038a4e62e1912531c0a8117df631d87963d906862369827c",
+        "new": "67e7bbfbacd6fc7d363e54b9b18c7dfa1b254ca8fc127ff678d392550f1c8cc9"
+      }
+    ],
+    "scope": "Raw pipeline retains original report options; separately anchored applied-review regeneration uses existing COW transaction and fresh successor replay. Accounting classification unchanged; authored lessons unchanged. Existing editorial judgments remain historical; new source regressions and current five-language execution recorded separately.",
+    "final_contract_documentation_binding": {
+      "previous_course_sha256": "819bdfd4238e143c449c6f73d364702ae325df830c90508c26910606d04e41b9",
+      "changed_sources": [
+        {
+          "path": "plugins/open-item-reconciliation/references/workflow-reference.md",
+          "old": "7307ea131612bf3d4afbf308640f9488418e6b624cc71a6897240c7d94b269f5",
+          "new": "e2192a7b55196de1b096540f183f739572c5bb8c70a13db08e02a40d429cbd37"
+        },
+        {
+          "path": "plugins/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
+          "old": "1c323cb707784f565da84a589dfbd99eea77e658c6e54bee74efc814536baaf0",
+          "new": "190893aa01e12503f29c413048a7a2f58b86ffa507064ffd89ae760ff8ce94dd"
+        }
+      ],
+      "reason": "The existing jurisdiction.py addition makes the exact ordered implementation boundary 26 files. Old 25-file digest is reproduced exactly by omitting only that file; tests and documentation now describe the inspected 26-file contract. No producer logic changed for this stale assertion."
+    }
+  },
+  "native_main_integration_observation_20261009": {
+    "recorded_at": "2026-10-09T05:12:43.709322+00:00",
+    "status": "historical_review_union_current_release_unqualified",
+    "current_course_sha256": "0b63f6eb03e2795b2a87bbcc6a8ce043fd78ffe9a5ee863511da803dc7bc8a44",
+    "retained_current_main_review_record_sha256": "da151a1edb07692825dc79a5bc3a6dba5ff3db82bf3819f1719f619655fca3f5",
+    "retained_candidate_review_record_sha256": "69f4bef26c78d6cc2d834ecf97fbf6df91adc14d201544f6cc7f1daf5c690735",
+    "retained_candidate_only_fields": [
+      "native_regeneration_source_binding_20261007",
+      "native_workspace_source_binding_20261006"
+    ],
+    "different_historical_fields": {
+      "course_sha256": {
+        "candidate_value": "242609f79569ac4c89afa65f022b9a94b77696376d88e249fb955d5788cc3e97",
+        "current_main_value": "60d54091c890ae914179ba1187043680e0e37b835590f5154a939303362d3a7e"
+      },
+      "source_update_review": {
+        "candidate_value": "docs/releases/2026-10-03-course-file-access-review.json",
+        "current_main_value": "docs/releases/2026-10-07-vera-hardlink-course-review.json"
+      }
+    },
+    "localized_editorial_and_artifact_reviews_unchanged": true,
+    "current_release_acceptance_renewed": false,
+    "review_scope": "Preserve both source-review histories and their actual original course pins. Current lesson content matches the candidate reviewed baseline and the two histories have identical locale reviews. Compiler, source hashes and render success do not renew editorial/native output acceptance. Existing current-main reviewer/date/scope/language/artifact fields remain unchanged. The retained course_sha256 is not rewritten to claim current-candidate acceptance."
+  },
+  "source_binding_review_20261009": {
+    "reviewer": "Codex bounded teaching-material and source integration review",
+    "reviewed_at": "2026-10-09T13:18:34.057561+00:00",
+    "previous_review_identity": {
+      "reviewer": "Codex: source, first-use outline and actual native document/workbook review",
+      "reviewed_at": "2026-09-14T17:59:18.652300+00:00",
+      "review_scope": "Prepared full-payment matching example and cumulative April practice. All 51 Word pages from native run 07 and 34 summary/request worksheet views were visually inspected. All three operational sheets were also checked through a native LibreOffice conversion, which disproved the excessive row heights in the secondary preview renderer. Run 08 re-executes the final corrected outlines with unchanged inputs and production method: full Word body XML and both operational/request workbook cell values and styles match run 07 after exact managed-source and run-metadata substitutions. The local HTML review page could not be opened because of browser URL security policy; visual browser interaction, learner understanding, native voice and two-window behavior are not attested. Row review remains pending; this is not professional case approval. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+      "course_sha256": "60d54091c890ae914179ba1187043680e0e37b835590f5154a939303362d3a7e"
+    },
+    "accepted_material_baseline": "8df0157d52b1e322f9f85fdb77376b39e17db446",
+    "current_course_sha256": "0b63f6eb03e2795b2a87bbcc6a8ce043fd78ffe9a5ee863511da803dc7bc8a44",
+    "unchanged_materials": [
+      "all lesson locales and editorial text",
+      "input specifications and hashes",
+      "demo and practice execution contracts",
+      "language and grouping contracts"
+    ],
+    "changed_fields": [
+      "revision",
+      "sources"
+    ],
+    "source_review_basis": "Native source integration and the owner-approved canonical repair were reviewed separately. Current real workflow regression assertions ran before their recorded native checks. Lesson content is byte-equivalent at the JSON-field level to the accepted main baseline; reviewed input bindings and output contracts are unchanged. Existing per-locale output artifacts and editorial history are retained, with no new visual or host acceptance claim.",
+    "current_execution_evidence": {
+      "run": 37930167083,
+      "job": 113818653311,
+      "head": "89004da63fc3d6d6a5feffde2484143c203634a1",
+      "native_teaching_suite_passed": 1642,
+      "skipped": 3,
+      "log": "/private/tmp/native-deploy-final-teaching-failure-20261009.log",
+      "whole_job_outcome": "failed at stale editorial course pin after execution suite passed",
+      "final_gate_requires_fresh_matching_junit": true
+    },
+    "new_native_output_visual_review": false,
+    "installed_host_acceptance": false,
+    "learner_or_professional_acceptance": false,
+    "scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance."
   }
 }

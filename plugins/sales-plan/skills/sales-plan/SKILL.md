@@ -91,7 +91,20 @@ Resolve only ambiguities that change the result:
   usable; a recorded zero is a known value.
 
 For a large assumption set, prepare the same review table in Markdown or case
-JSON and review it in batches. A separate HTML workbench is not part of v2.
+JSON and review it in batches.
+
+<!-- VERA_OPENAI_NATIVE_WORKSPACE_BEGIN -->
+Vera's maintained Codex workspace also supports
+paged authoring from a registered strict CSV and explicit reuse of an inspected
+case. That adapter encodes this same v2 contract after renewed human review;
+it does not replace the public runner or infer commercial assumptions. For an
+immutable native generation, use the panel's question-bound scenario consultation:
+it calls the unchanged model-use helper on separate byte-identical copies, retains
+all exact matches and exposes them to the model only on explicit discussion.
+Never invoke a writing drilldown inside the sealed native generation. Oversized
+complete model reads are refused without sampling; refine the query. Cowork
+and specialist chat retain the same case preparation and review workflow.
+<!-- VERA_OPENAI_NATIVE_WORKSPACE_END -->
 
 ## Codex-Native Run UX
 

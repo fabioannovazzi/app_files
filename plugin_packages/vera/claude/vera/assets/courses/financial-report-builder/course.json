@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "financial-report-builder",
-  "revision": "2026-09-14.2",
+  "revision": "2026-10-09.native-main-integration.review-proposal",
   "seconds": [
     45,
     60,
@@ -173,7 +173,7 @@
     },
     {
       "path": "skills/financial-report-builder/SKILL.md",
-      "sha256": "501fbe1a4788330f5b551dae20a9f66b56d70fe0e6143007c296e9a6f076ae0e"
+      "sha256": "bfaccca8d893a615efe5c3a00e5da768dfbcd1add12130cd09bdfde88c55acd2"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -478,5 +478,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "1a23294b02ef3bf675356126503ff59a636c83d26e5f470896d0ea7f3ba06aed"
+  "canonical_course_sha256": "09e76ebcd84e533ed168bf1dade51fb07d7fb3b26c8f6b33a55f4ce6bdf8bf50"
 }
