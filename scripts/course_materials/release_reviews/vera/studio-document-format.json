@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "studio-document-format",
-  "course_sha256": "38c16a4ffb252eafe0787ccd314728e2f869df3be10cb8d489a9328b5b652065",
-  "reviewer": "Codex: authored five-language course and actual synthetic native output review",
-  "reviewed_at": "2026-10-01T18:41:07.117136+00:00",
-  "review_scope": "Reviewed all five complete authored narratives and the actual DOCX structure, profiles and financial analysis from ten independent native demo/practice regressions. Regression approvals are expressly simulated, never learner decisions. Structural artifact inspection does not establish visual pagination, font availability on a learner host, installed enabled-plugin execution, native voice, paired-window or learner acceptance. Tests run local component code without model or network calls. No jurisdiction qualification is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate. Vera 0.1.347 bounded source-inventory refresh: the only changed course field is sources; all authored content, inputs, expectations and locale reviews match the reviewed main baseline. The Archive change adds derived navigation after engagement writes and recovery; local-search and document-format lesson behavior is unchanged. Their current native exercises passed in CI on commit 16671ffb0. This records source-currentness review, not new visual, learner or professional acceptance.",
+  "course_sha256": "ff12e46b64b39ed7dbb4b41816c568188594ba3b75be96fe0b73654a92d19d9d",
+  "reviewer": "Codex bounded teaching-material and source integration review",
+  "reviewed_at": "2026-10-09T13:18:34.172019+00:00",
+  "review_scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -421,5 +421,42 @@
     "reviewed_at": "2026-10-08T13:18:37.609333+00:00",
     "baseline_commit": "1964929f790964c4bc9796c2cae2851e1f0a646d",
     "scope": "Compared complete compiled course: all fields except source inventory are identical. Archive bootstrap now securely persists approval already present in existing session config before private identity migration. Explicit lesson state remains isolated without a selected profile; source archives and ledger formats are unchanged. Preserved prior editorial and artifact reviews; fresh native CI required. No new installed-host or learner acceptance claimed."
+  },
+  "source_binding_review_20261009": {
+    "reviewer": "Codex bounded teaching-material and source integration review",
+    "reviewed_at": "2026-10-09T13:18:34.172019+00:00",
+    "previous_review_identity": {
+      "reviewer": "Codex: authored five-language course and actual synthetic native output review",
+      "reviewed_at": "2026-10-01T18:41:07.117136+00:00",
+      "review_scope": "Reviewed all five complete authored narratives and the actual DOCX structure, profiles and financial analysis from ten independent native demo/practice regressions. Regression approvals are expressly simulated, never learner decisions. Structural artifact inspection does not establish visual pagination, font availability on a learner host, installed enabled-plugin execution, native voice, paired-window or learner acceptance. Tests run local component code without model or network calls. No jurisdiction qualification is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate. Vera 0.1.347 bounded source-inventory refresh: the only changed course field is sources; all authored content, inputs, expectations and locale reviews match the reviewed main baseline. The Archive change adds derived navigation after engagement writes and recovery; local-search and document-format lesson behavior is unchanged. Their current native exercises passed in CI on commit 16671ffb0. This records source-currentness review, not new visual, learner or professional acceptance.",
+      "course_sha256": "38c16a4ffb252eafe0787ccd314728e2f869df3be10cb8d489a9328b5b652065"
+    },
+    "accepted_material_baseline": "8df0157d52b1e322f9f85fdb77376b39e17db446",
+    "current_course_sha256": "ff12e46b64b39ed7dbb4b41816c568188594ba3b75be96fe0b73654a92d19d9d",
+    "unchanged_materials": [
+      "all lesson locales and editorial text",
+      "input specifications and hashes",
+      "demo and practice execution contracts",
+      "language and grouping contracts"
+    ],
+    "changed_fields": [
+      "revision",
+      "sources"
+    ],
+    "source_review_basis": "Native source integration and the owner-approved canonical repair were reviewed separately. Current real workflow regression assertions ran before their recorded native checks. Lesson content is byte-equivalent at the JSON-field level to the accepted main baseline; reviewed input bindings and output contracts are unchanged. Existing per-locale output artifacts and editorial history are retained, with no new visual or host acceptance claim.",
+    "current_execution_evidence": {
+      "run": 37930167083,
+      "job": 113818653311,
+      "head": "89004da63fc3d6d6a5feffde2484143c203634a1",
+      "native_teaching_suite_passed": 1642,
+      "skipped": 3,
+      "log": "/private/tmp/native-deploy-final-teaching-failure-20261009.log",
+      "whole_job_outcome": "failed at stale editorial course pin after execution suite passed",
+      "final_gate_requires_fresh_matching_junit": true
+    },
+    "new_native_output_visual_review": false,
+    "installed_host_acceptance": false,
+    "learner_or_professional_acceptance": false,
+    "scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance."
   }
 }

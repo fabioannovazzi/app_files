@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "fusione-guidata",
-  "course_sha256": "d83272d90274f9a1c103281fb6bfcd72dfc54e60f27230d3c230dac7b6dceba7",
-  "reviewer": "Codex /root - source, native execution and artifact review",
-  "reviewed_at": "2026-10-01T08:04:10.681899+00:00",
-  "review_scope": "Read the five complete outlines and source notes, both fictional data packs and changed balance. Executed and inspected ten native source-tree cases driven by the shipped facts and calendar conventions. Alpha/Beta receipts, exact allocations, draft journals, separate fiscal values, source-bound calendars, pending event receipts and immutable histories were inspected. Test narrative and reviewer confirmations are explicitly synthetic fixtures; no live voice, learner comprehension, installed-host acceptance or professional validation on a real client is claimed. Native workpaper headings and structural fields retain the P1 language contract; localized lesson guidance does not promise a fully localized helper report. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+  "course_sha256": "75314299b333bdcc38ccbbc7f5ba9c9c9cb092c1d60436e88928593da51ccec0",
+  "reviewer": "Codex bounded teaching-material and source integration review",
+  "reviewed_at": "2026-10-09T13:18:33.980041+00:00",
+  "review_scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -364,5 +364,42 @@
     "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
     "source_review": "docs/studio_archive/course-source-compatibility-review.json",
     "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  },
+  "source_binding_review_20261009": {
+    "reviewer": "Codex bounded teaching-material and source integration review",
+    "reviewed_at": "2026-10-09T13:18:33.980041+00:00",
+    "previous_review_identity": {
+      "reviewer": "Codex /root - source, native execution and artifact review",
+      "reviewed_at": "2026-10-01T08:04:10.681899+00:00",
+      "review_scope": "Read the five complete outlines and source notes, both fictional data packs and changed balance. Executed and inspected ten native source-tree cases driven by the shipped facts and calendar conventions. Alpha/Beta receipts, exact allocations, draft journals, separate fiscal values, source-bound calendars, pending event receipts and immutable histories were inspected. Test narrative and reviewer confirmations are explicitly synthetic fixtures; no live voice, learner comprehension, installed-host acceptance or professional validation on a real client is claimed. Native workpaper headings and structural fields retain the P1 language contract; localized lesson guidance does not promise a fully localized helper report. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+      "course_sha256": "d83272d90274f9a1c103281fb6bfcd72dfc54e60f27230d3c230dac7b6dceba7"
+    },
+    "accepted_material_baseline": "8df0157d52b1e322f9f85fdb77376b39e17db446",
+    "current_course_sha256": "75314299b333bdcc38ccbbc7f5ba9c9c9cb092c1d60436e88928593da51ccec0",
+    "unchanged_materials": [
+      "all lesson locales and editorial text",
+      "input specifications and hashes",
+      "demo and practice execution contracts",
+      "language and grouping contracts"
+    ],
+    "changed_fields": [
+      "revision",
+      "sources"
+    ],
+    "source_review_basis": "Native source integration and the owner-approved canonical repair were reviewed separately. Current real workflow regression assertions ran before their recorded native checks. Lesson content is byte-equivalent at the JSON-field level to the accepted main baseline; reviewed input bindings and output contracts are unchanged. Existing per-locale output artifacts and editorial history are retained, with no new visual or host acceptance claim.",
+    "current_execution_evidence": {
+      "run": 37930167083,
+      "job": 113818653311,
+      "head": "89004da63fc3d6d6a5feffde2484143c203634a1",
+      "native_teaching_suite_passed": 1642,
+      "skipped": 3,
+      "log": "/private/tmp/native-deploy-final-teaching-failure-20261009.log",
+      "whole_job_outcome": "failed at stale editorial course pin after execution suite passed",
+      "final_gate_requires_fresh_matching_junit": true
+    },
+    "new_native_output_visual_review": false,
+    "installed_host_acceptance": false,
+    "learner_or_professional_acceptance": false,
+    "scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance."
   }
 }

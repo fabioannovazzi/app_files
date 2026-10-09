@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "studio-archive",
-  "course_sha256": "08111df731ef54aff9619cab5d4368e42d991289fdb8ad7971e5c61cfe82ce95",
-  "reviewer": "Codex: five-language local archive lesson and delivered answer review",
-  "reviewed_at": "2026-09-14T21:43:59.684693+00:00",
-  "review_scope": "Prepared material and native local document-search review. Read all five complete outlines, all fifteen fictional input documents and all ten final answer captures. Nineteen checks pass, including ten distinct phase/language exercises through the real staging, archive configuration, refresh, exact-scope search and source opening functions. Semantic answers are authored regression fixtures outside the shipped kits and do not replace live host reasoning. Native voice, GUI presentation, actual elapsed lesson time and learner comprehension remain unverified. Gmail, WhatsApp, Drive and the separate engagement lifecycle are not exercised by this local-search lesson. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate. Vera 0.1.347 bounded source-inventory refresh: the only changed course field is sources; all authored content, inputs, expectations and locale reviews match the reviewed main baseline. The Archive change adds derived navigation after engagement writes and recovery; local-search and document-format lesson behavior is unchanged. Their current native exercises passed in CI on commit 16671ffb0. This records source-currentness review, not new visual, learner or professional acceptance.",
+  "course_sha256": "48f52ed759b0ec739b856e2d4a71e5c7ded3425f59714f65c36265f147cee642",
+  "reviewer": "Codex bounded teaching-material and source integration review",
+  "reviewed_at": "2026-10-09T13:18:34.159838+00:00",
+  "review_scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -586,5 +586,42 @@
     "localized_editorial_and_artifact_reviews_unchanged": true,
     "current_release_acceptance_renewed": false,
     "review_scope": "Preserve both source-review histories and their actual original course pins. Current lesson content matches the candidate reviewed baseline and the two histories have identical locale reviews. Compiler, source hashes and render success do not renew editorial/native output acceptance. Existing current-main reviewer/date/scope/language/artifact fields remain unchanged. The retained course_sha256 is not rewritten to claim current-candidate acceptance."
+  },
+  "source_binding_review_20261009": {
+    "reviewer": "Codex bounded teaching-material and source integration review",
+    "reviewed_at": "2026-10-09T13:18:34.159838+00:00",
+    "previous_review_identity": {
+      "reviewer": "Codex: five-language local archive lesson and delivered answer review",
+      "reviewed_at": "2026-09-14T21:43:59.684693+00:00",
+      "review_scope": "Prepared material and native local document-search review. Read all five complete outlines, all fifteen fictional input documents and all ten final answer captures. Nineteen checks pass, including ten distinct phase/language exercises through the real staging, archive configuration, refresh, exact-scope search and source opening functions. Semantic answers are authored regression fixtures outside the shipped kits and do not replace live host reasoning. Native voice, GUI presentation, actual elapsed lesson time and learner comprehension remain unverified. Gmail, WhatsApp, Drive and the separate engagement lifecycle are not exercised by this local-search lesson. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate. Vera 0.1.347 bounded source-inventory refresh: the only changed course field is sources; all authored content, inputs, expectations and locale reviews match the reviewed main baseline. The Archive change adds derived navigation after engagement writes and recovery; local-search and document-format lesson behavior is unchanged. Their current native exercises passed in CI on commit 16671ffb0. This records source-currentness review, not new visual, learner or professional acceptance.",
+      "course_sha256": "08111df731ef54aff9619cab5d4368e42d991289fdb8ad7971e5c61cfe82ce95"
+    },
+    "accepted_material_baseline": "8df0157d52b1e322f9f85fdb77376b39e17db446",
+    "current_course_sha256": "48f52ed759b0ec739b856e2d4a71e5c7ded3425f59714f65c36265f147cee642",
+    "unchanged_materials": [
+      "all lesson locales and editorial text",
+      "input specifications and hashes",
+      "demo and practice execution contracts",
+      "language and grouping contracts"
+    ],
+    "changed_fields": [
+      "revision",
+      "sources"
+    ],
+    "source_review_basis": "Native source integration and the owner-approved canonical repair were reviewed separately. Current real workflow regression assertions ran before their recorded native checks. Lesson content is byte-equivalent at the JSON-field level to the accepted main baseline; reviewed input bindings and output contracts are unchanged. Existing per-locale output artifacts and editorial history are retained, with no new visual or host acceptance claim.",
+    "current_execution_evidence": {
+      "run": 37930167083,
+      "job": 113818653311,
+      "head": "89004da63fc3d6d6a5feffde2484143c203634a1",
+      "native_teaching_suite_passed": 1642,
+      "skipped": 3,
+      "log": "/private/tmp/native-deploy-final-teaching-failure-20261009.log",
+      "whole_job_outcome": "failed at stale editorial course pin after execution suite passed",
+      "final_gate_requires_fresh_matching_junit": true
+    },
+    "new_native_output_visual_review": false,
+    "installed_host_acceptance": false,
+    "learner_or_professional_acceptance": false,
+    "scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance."
   }
 }

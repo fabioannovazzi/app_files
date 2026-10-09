@@ -1,0 +1,345 @@
+{
+  "baseline": "8df0157d52b1e322f9f85fdb77376b39e17db446",
+  "reviewed_courses": 35,
+  "records": [
+    {
+      "workflow": "vera/adeguati-assetti",
+      "course_sha256": "85d3dfb87b8eecf22594a6505cad5fdc5a7883165e054620b4c28450f1b91481",
+      "changed_fields": [
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/aml-review",
+      "course_sha256": "46d6fe932d64381eb3dcef12a29b0caac36f9ef474319a0747e039cbb703f931",
+      "changed_fields": [
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/archive-organization",
+      "course_sha256": "a9aa1bcdbb5d0687432a7e1ce9f9e1a0ba4be4ea9d3b36eb71c63ec3784b425f",
+      "changed_fields": [
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/bilancio-oic",
+      "course_sha256": "ba8696a645dc8efb922f928e4a72b92d2876841638a603c0cc1813b9d815b6e3",
+      "changed_fields": [
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/browser-automation",
+      "course_sha256": "9a0d01a4da8cabdac4c161b7254d80765abb8a72c246b567a0ee21abd48b65ff",
+      "changed_fields": [
+        "revision",
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/business-planning",
+      "course_sha256": "44a04b74daa906bc79c3d05b120061f9dd7913d55c89d646e03ce2f46923c0d8",
+      "changed_fields": [
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/business-valuation",
+      "course_sha256": "9f9281bfe92d34aeaaa27e0f93694784e90001a9dccdc22ff9126ce81052d988",
+      "changed_fields": [
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/centrale-rischi-review",
+      "course_sha256": "8385061a7b4909d75c2c7402a28b63b6147c9daea4be04e2e22795bce0d320b4",
+      "changed_fields": [
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/composizione-negoziata",
+      "course_sha256": "40586b719bc79f2e3f1c9b146d6ede9dc01af9d6ab550a1ece85b0f104c86d95",
+      "changed_fields": [
+        "revision",
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/concordato-plan-review",
+      "course_sha256": "0b6a30bd27adb088ee019586bbefd78596bd0cbc0ba5dc60b5747f2456ffb5ab",
+      "changed_fields": [
+        "revision",
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/esg-reporting-assurance",
+      "course_sha256": "4caeee38298dc977707112aa02c018d4aafec9262683a8787bd194bafd70150d",
+      "changed_fields": [
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/financial-analysis",
+      "course_sha256": "37d005384e8cc9995a45cb3c31f36bb03bf093f5096841807a9e988e4bfd1ce3",
+      "changed_fields": [
+        "revision",
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/financial-report-builder",
+      "course_sha256": "09e76ebcd84e533ed168bf1dade51fb07d7fb3b26c8f6b33a55f4ce6bdf8bf50",
+      "changed_fields": [
+        "revision",
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/fusione-guidata",
+      "course_sha256": "75314299b333bdcc38ccbbc7f5ba9c9c9cb092c1d60436e88928593da51ccec0",
+      "changed_fields": [
+        "revision",
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/invoice-xml",
+      "course_sha256": "33d7a53ee38bd523393c9f7a29fdc3150646e4821eb6b9b5ca92b8fdccb053ef",
+      "changed_fields": [
+        "revision",
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/journal-bank-reconciliation",
+      "course_sha256": "907941939d94d94ad21c8eea6dbf1304b44bbaf65c4204f1160eb2a27fa8ae2a",
+      "changed_fields": [
+        "revision",
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/journal-sampling",
+      "course_sha256": "05e062cb046a67d572e9419d181a57d1431433706cb1b108185e7e69363533db",
+      "changed_fields": [
+        "revision",
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/lipe",
+      "course_sha256": "0c73da69ae21fb984e197788fc61cddd6e1efcf19e8551183e954adb85ab2527",
+      "changed_fields": [
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/management-control-pack",
+      "course_sha256": "df718f9e72e47f1393dd93097d973acaa330fd57023d3ae6bb418745f168cafe",
+      "changed_fields": [
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/new-client",
+      "course_sha256": "d31408993e314c699334d61bb994cee86316554452b768cf394a74a2122d78c9",
+      "changed_fields": [
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/open-item-reconciliation",
+      "course_sha256": "0b63f6eb03e2795b2a87bbcc6a8ce043fd78ffe9a5ee863511da803dc7bc8a44",
+      "changed_fields": [
+        "revision",
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/organizzazione-lavoro",
+      "course_sha256": "5b3e5bd149f8b33caf39d0301ecd29c8d17bbdbef2b526919662b4fbf07f8d0c",
+      "changed_fields": [
+        "revision",
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/patent-box-review",
+      "course_sha256": "d3e5ce331d136c670ea9671e12dc6736127e446a7e5ac531683e9ce622fe7431",
+      "changed_fields": [
+        "revision",
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/presenza-digitale-studio",
+      "course_sha256": "d076b7f70a55077bad972d90692b6a5e3becf2583b6f9ffb5606a64adcd7d332",
+      "changed_fields": [
+        "revision",
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/previdenza-inps",
+      "course_sha256": "408f831e469095f4b37cf55dde94ef837c33ab2de626781686a1fc97789d0265",
+      "changed_fields": [
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/purchase-invoice-review",
+      "course_sha256": "7b87feb6c89287ecd9805ed91c5b555f1b9b430057e7a53236907ce0293f215c",
+      "changed_fields": [
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/registro-imprese-sari",
+      "course_sha256": "d926925cbd170580c6a4735b7a84fe98271b53bacb32ee380a1e01f66ff8c335",
+      "changed_fields": [
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/sales-plan",
+      "course_sha256": "ec36832eb273850ba7d763ce9d29a51ceaaa3d6fced67a60d24ccd7bc1b4cb60",
+      "changed_fields": [
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/scissione-guidata",
+      "course_sha256": "5001dcf54030e04da4bf2cd1a098adad58daf68895982dcb8080029f3b221c4f",
+      "changed_fields": [
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/studio-archive",
+      "course_sha256": "48f52ed759b0ec739b856e2d4a71e5c7ded3425f59714f65c36265f147cee642",
+      "changed_fields": [
+        "revision",
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/studio-document-format",
+      "course_sha256": "ff12e46b64b39ed7dbb4b41816c568188594ba3b75be96fe0b73654a92d19d9d",
+      "changed_fields": [
+        "revision",
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/trasformazione",
+      "course_sha256": "05af2449c3b0ec14c4fe64d4679ea22bddaaeb56e1ca30aa86a01b302a738c76",
+      "changed_fields": [
+        "revision",
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/treasury-forecast",
+      "course_sha256": "0c89642b6354e22c87a05adcfc99b670ef83bd17a7ff0f1c9548d39302e620ce",
+      "changed_fields": [
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/variance-analysis",
+      "course_sha256": "a4798bb124c8d1f5083ccd380db7a4e94424c0ae54a16dd2674feb5b4a61d3a8",
+      "changed_fields": [
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    },
+    {
+      "workflow": "vera/vouching",
+      "course_sha256": "d4ea680ab0d3e65bf283462bae3454ddb37f48c58d99284499395b493d8e6912",
+      "changed_fields": [
+        "revision",
+        "sources"
+      ],
+      "accepted_materials_unchanged": true,
+      "historical_editorial_and_artifact_records_retained": true
+    }
+  ],
+  "execution_evidence": {
+    "run": 37930167083,
+    "job": 113818653311,
+    "passed": 1642,
+    "skipped": 3
+  },
+  "new_visual_or_host_acceptance": false
+}

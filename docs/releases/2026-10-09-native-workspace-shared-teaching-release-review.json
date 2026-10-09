@@ -32,5 +32,15 @@
     "review": "All 85 generated HTML changes were compared to b398cfb: only final course revision labels changed. Recipients, model-context payloads, activation, retention, consent, and security controls are unchanged. Only review fingerprints changed in the boundary records.",
     "all_source_registers_current": true,
     "normal_product_builder_check": "passed"
+  },
+  "course_binding_record": {
+    "record": "docs/releases/2026-10-09-native-workspace-course-source-binding-review.json",
+    "courses_reviewed": 35,
+    "all_course_pins_current": 56,
+    "unchanged_lesson_materials": true,
+    "native_execution_suite_passed": 1642,
+    "native_execution_suite_skipped": 3,
+    "review_validator_tests_passed": 36,
+    "new_visual_or_host_acceptance": false
   }
 }
