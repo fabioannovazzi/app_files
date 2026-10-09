@@ -102,7 +102,7 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/case_service.py",
-      "sha256": "684119a771b286afd447a7c6c19ea8b4d6774231baa9fdbdcb2a13126fef0603"
+      "sha256": "5e98b4be38206d559e2f8a7613355ff332fca201385073a562b3a51caffc360d"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/check_dependencies.py",
@@ -190,7 +190,7 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/service_bridge.py",
-      "sha256": "895e8e35d212617f7c0bf1b47c4db2bceeeea38e25869b178687ed9960430d30"
+      "sha256": "5096fa3eb029c9741959368c55080851423467bbad6c034079df7f6ca1925a87"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/statutory_presentation.py",
@@ -199,6 +199,14 @@
     {
       "path": "modules/bilancio-xbrl-it/scripts/validate_xbrl.py",
       "sha256": "63ca86dd240de7d99a3026596564fb9b68a8aff380b8f53498c907b276d07b83"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/workspace_bridge.py",
+      "sha256": "7c01b6989899f7a7c11d7b02304668789ded69a4e10426abdbd073ad83156b0c"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/workspace_contract.py",
+      "sha256": "eadef6e7f231ec611d86edc1ec41a88a6408bed5e8d1cb98d88d8fdc6075d293"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/xbrl_case.py",
@@ -262,7 +270,7 @@
     },
     {
       "path": "skills/bilancio-oic/SKILL.md",
-      "sha256": "0b3fd153d308fe4155364ee493279e29af777e7f4872b0c6b900b0b97a16f8d2"
+      "sha256": "60b9e9a95fb2b279bbbd78c5ddefc706611d00c79d013cc05e76d51acbf033a7"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -500,5 +508,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "e90d80a038ac8ecec8eb66bee0235c6589418417fb72383fcfc66fca4e6c3762"
+  "canonical_course_sha256": "ba8696a645dc8efb922f928e4a72b92d2876841638a603c0cc1813b9d815b6e3"
 }

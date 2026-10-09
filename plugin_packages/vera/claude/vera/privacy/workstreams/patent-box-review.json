@@ -12,7 +12,17 @@
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
-    "skills/vera/references/connected-studio-knowledge.md"
+    "skills/vera/references/connected-studio-knowledge.md",
+    "scripts/native_patent_box.py",
+    "scripts/native_patent_box_bridge.py",
+    "scripts/native_patent_box_authoring.py",
+    "scripts/native_patent_box_author_bridge.py",
+    "mcp/workspace.cjs",
+    "ui/patent-box.js",
+    "ui/patent-box-authoring.js",
+    "ui/workspace.js",
+    "scripts/native_archive_closure.py",
+    "skills/patent-box-review/SKILL.md"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -46,6 +56,14 @@
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "native-explicit-whole-proposal-and-selected-originals",
+        "purpose": "Prepare a complete Patent Box proposal or normalization plan from explicitly granted registered evidence using the current host model",
+        "content": "An exactly confirmed owner/tenant/client/engagement/run/public-output mandate retains the literal question, propose/normalize_ledger task, original IDs and chosen complete output-record names. The explicit context returns the complete session input/evidence register except selected_path, selected original names/hashes/byte counts, every chosen complete JSON record, all public schemas, control catalogue, full specialist skill and proposed real DRAFT rules. The separate explicit original-source tool returns only selected IDs: complete UTF-8 text for txt/csv/md/json/xml up to 1000000 source bytes, or exact path/hash/byte count and a binary-reader instruction without binary content. Larger text requires ordinary whole-file specialist reading; no truncated text substitutes. Complete context/source results and private complete proposal/readback/preflight envelopes refuse over 2000000 UTF-8 serialized bytes without sampling. Actual host binary/original reading, semantic extraction and provider telemetry remain unverified; a durable service read packet is not proof all originals were read. The model stages one entire proposal/normalization plan with actual declared runtime/provider/model/template/session provenance and receives only a stage-reference acknowledgement. Whole private body/preview, literal unsent questions, typed producer fields and review/signature choices stay app-only when the installed host honors visibility. Adoption, renewed public execution, local assertion, real certificate/firm-mandate review, final signed approval, formalities and Archive completion remain separate. No automatic anonymization, local-only guarantee, model API client, automatic real-rule approval, signer impersonation or client-folder discovery is supplied.",
+        "runtime_profiles": [
+          "openai-codex"
         ]
       }
     ]
@@ -144,12 +162,16 @@
     {
       "id": "default-off-monitor-service",
       "control": "The local coordinator starts disabled. Native scheduling requires an explicit user request and the actual host tool receipt; the local reference is labelled as an operator attestation. Every scan outcome persists, including unchanged and failed work; partial scans cannot replace complete baselines. Private indexes and queues are rechecked outside public storage. Notices are local requests for host delivery, not proof of a delivered notification. No external message is sent by the adapter and no case or active rule is automatically changed."
+    },
+    {
+      "id": "native-whole-mandate-and-separate-producer",
+      "control": "Exact selected receipts, actor/tenant/run/public source and implementation hashes, signed current mutation tickets, private draft CAS, explicit same-question/source choice and durable intent/idempotency receipts govern authoring. Context/source reads require a current open mandate; stale, foreign or cancelled requests fail. Stage requires a prior complete method-context read and actual declared model provenance; unchanged public preflight checks exact whole schema/reference/cost population on a readonly producer route. Private adoption compares the entire selected stage and current typed fields, requiring renewed replacement consent when fields exist. Public execution is a separate exact confirmed operation; real calculation keeps the unchanged current-source/rules/certificate/scope-mandate gates. Open/uncertain mandates and incomplete intents block public operations or Archive closure as implemented. Read receipts retain exact returned bytes without claiming provider telemetry or host binary reading."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "b3ac94436ea6ed271639abf9e977b415f05b01ff9de836c9a7e808f75e2d569e"
+    "source_fingerprint": "73e48c040bbed5efe8d6dde36e241e0e45c5b1cb4fcfc940e57b016077ac5056"
   }
 }

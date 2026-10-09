@@ -264,7 +264,7 @@
     },
     {
       "path": "skills/new-client/SKILL.md",
-      "sha256": "4338b02f353b066adb612da035bd3d16e181affb6588697958f293db06be525b"
+      "sha256": "f22f7ed5d84f631815a32eb203946c364d09e3545b10d6113848fc4a129e229b"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -585,5 +585,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "cde9103e91523a616dbcb6f01413136d11c7a0cd5bb667b9f933974a6bd9c14c"
+  "canonical_course_sha256": "d31408993e314c699334d61bb994cee86316554452b768cf394a74a2122d78c9"
 }

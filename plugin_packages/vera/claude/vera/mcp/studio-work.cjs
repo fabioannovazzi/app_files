@@ -6,6 +6,7 @@ const path = require("node:path");
 const readline = require("node:readline");
 const { spawnSync } = require("node:child_process");
 const ROOT = path.resolve(__dirname, "..");
+const panel = require("./studio-work-panel.cjs");
 const string = { type: "string", minLength: 1, maxLength: 20000 };
 const object = { type: "object" };
 const revision = { type: "integer", minimum: 0 };
@@ -29,6 +30,7 @@ const TOOLS = [
   definition("operation", "Read a persisted external intent/outcome for recovery; this never authorizes redispatch.", { operation_id: string }, ["operation_id"]),
   definition("resolve", "Record real connector read-back evidence, definitive no-write failure or uncertainty. Verification checks exact event fields and identity. This is not independent Google verification: supply actual tool evidence, never fabricate it.", { ...key, operation_id: string, outcome: { enum: ["verified", "failed", "uncertain"] }, evidence: object }, ["request_key", "operation_id", "outcome", "evidence"]),
   definition("abandon", "Cancel an undispatched prepared operation at the user's instruction. Dispatched/uncertain operations require connector recovery.", { ...key, operation_id: string, authorization: string }, ["request_key", "operation_id", "authorization"]),
+  ...panel.TOOLS,
 ];
 
 function bridge(action, args) {
@@ -51,6 +53,7 @@ function bridge(action, args) {
 }
 
 function call(name, args) {
+  if (name.startsWith(panel.PREFIX)) return panel.call(name, args);
   const tool = TOOLS.find(candidate => candidate.name === name);
   if (!tool) throw new Error("Unknown studio work tool");
   if (!args || typeof args !== "object" || Array.isArray(args)) throw new Error("Arguments must be an object");
@@ -71,12 +74,15 @@ function call(name, args) {
 
 function handle(request) {
   if (request.method === "notifications/initialized") return null;
-  if (request.method === "initialize") return { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "vera-studio-work", version: "1.0.0" } };
+  if (request.method === "initialize") return { protocolVersion: "2024-11-05", capabilities: { tools: {}, resources: {} }, serverInfo: { name: "vera-studio-work", version: "1.0.0" } };
   if (request.method === "ping") return {};
   if (request.method === "tools/list") return { tools: TOOLS };
+  if (request.method === "resources/list") return { resources: [{ uri: panel.URI, name: "Organizzazione del lavoro", mimeType: panel.MIME }] };
+  if (request.method === "resources/read" && request.params?.uri === panel.URI) return panel.resource();
   if (request.method === "tools/call") {
     try {
       const value = call(request.params.name, request.params.arguments || {});
+      if (request.params.name.startsWith(panel.PREFIX)) return value;
       return { content: [{ type: "text", text: JSON.stringify(value) }], structuredContent: value };
     } catch (error) {
       return { isError: true, content: [{ type: "text", text: error.message }] };

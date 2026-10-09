@@ -1,0 +1,84 @@
+{
+  "date": "2026-10-09",
+  "requested_action": "Deploy please",
+  "branch": "codex/bilancio-ui-integration",
+  "versions": {
+    "vera": "0.1.357",
+    "lucia": "0.1.92",
+    "bilancio-xbrl-it": "0.1.19",
+    "concordato-plan-review": "0.1.42",
+    "journal-bank-reconciliation": "0.1.58",
+    "open-item-reconciliation": "0.1.58",
+    "sales-plan": "0.1.9",
+    "treasury-forecast": "0.1.3"
+  },
+  "artifacts": [
+    {
+      "path": "plugin_packages/vera/vera-plugin.zip",
+      "sha256": "17159e2acdb36f2ff4b882143c55e6efa7aa5135c2ce4ec07b1f0d5fb5b294fb",
+      "bytes": 12569797
+    },
+    {
+      "path": "plugin_packages/vera/vera-chatgpt-upload.zip",
+      "sha256": "c6489cc83792337a3e96d631b33d46f923f9f1aa8d1809904867e94eb9579600",
+      "bytes": 11940654
+    },
+    {
+      "path": "static/shared/vera/downloads/vera-cowork-plugin.zip",
+      "sha256": "1fb2824e17ade04a4a9657a2e890409b56e62e93b42cb17cd2fdf645c517e885",
+      "bytes": 11653868
+    },
+    {
+      "path": "static/shared/vera/downloads/vera-antigravity-plugin.zip",
+      "sha256": "f71411616a122546a33d6d4f8e5c9721aef632865c77b65406aa66573a89073f",
+      "bytes": 12258243
+    },
+    {
+      "path": "plugin_packages/lucia/lucia-plugin.zip",
+      "sha256": "1a53d3dfe4714ba9b1261b25d1d35a8ed3f6f0fd6723bea2985719fde7f44320",
+      "bytes": 3448836
+    },
+    {
+      "path": "plugin_packages/lucia/lucia-chatgpt-upload.zip",
+      "sha256": "5df947d068e9fa390f36f634436c93dc70b4bd1b27ba98415823ab4332a8f677",
+      "bytes": 3364767
+    },
+    {
+      "path": "static/shared/lucia/downloads/lucia-cowork-plugin.zip",
+      "sha256": "8072b306ebb478d2eb16501e9391a61c0dfa2b3e05bb9c9b0331700bee80bd8e",
+      "bytes": 3269495
+    },
+    {
+      "path": "static/shared/lucia/downloads/lucia-antigravity-plugin.zip",
+      "sha256": "99ae4ef1ce01f1d01f2357d5afa41648c07a899f5206ccbedc25a80a36957c81",
+      "bytes": 3375919
+    }
+  ],
+  "source_tests_previously_qualified": 2084,
+  "full_native_instrumented_rerun": "running",
+  "previous_native_coverage_percent": 53.76950920484179,
+  "coverage_instrumentation_corrected": true,
+  "server_deployment_status": "pending green checks and merge",
+  "installed_native_acceptance": "pending; deployment will not imply native-host acceptance",
+  "all_native_rollout_components_complete": false,
+  "work_and_antigravity_privacy_projection_diagnostics": {
+    "work": 48,
+    "antigravity": 5
+  },
+  "public_published_version_manifest_changed": false,
+  "CI_status": "not yet dispatched",
+  "final_package_checks": {
+    "tests": 443,
+    "passed": 441,
+    "skipped": 2,
+    "junit": "/private/tmp/native-deploy-package-integrity-20261009.xml"
+  },
+  "all_product_source_and_version_checks": "passed",
+  "download_version_label_tests": "passed",
+  "instrumented_rpc_test_deadline": {
+    "ordinary_seconds": 90,
+    "coverage_seconds": 300,
+    "production_deadlines_changed": false,
+    "normal_variance_case_passed": true
+  }
+}

@@ -13,7 +13,20 @@
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
     "vendor/modules/vera_ocr",
-    "skills/vera/references/connected-studio-knowledge.md"
+    "skills/vera/references/connected-studio-knowledge.md",
+    "scripts/native_sari_intake.py",
+    "scripts/native_sari_intake_bridge.py",
+    "skills/registro-imprese-sari/SKILL.md",
+    "scripts/native_sari_authoring.py",
+    "scripts/native_sari_author_bridge.py",
+    "scripts/native_sari_review.py",
+    "scripts/native_sari_review_bridge.py",
+    "scripts/native_sari_review_rpc.cjs",
+    "scripts/native_sari_followup.py",
+    "scripts/native_archive_closure.py",
+    "mcp/workspace.cjs",
+    "ui/workspace.js",
+    "scripts/native_workspace.py"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -38,6 +51,38 @@
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "optional-native-authoring-mandate",
+        "purpose": "Prepare the exact explicitly authorized registry question, source proposals and whole draft for separately confirmed human conservation",
+        "content": "Confirmed saved question, complete initial intake and plan, public schema and skill locations, and paths and hashes of only explicitly selected registered originals. Actual reads can place real case data and official-source evidence in the selected runtime model context. The complete case/plan/source proposal and stage receipt are model-visible; private unsent fields, whole previews and human source-selector choices remain app-private. Context is whole within 64000 UTF-8 serialized bytes or refused, without truncation. Permission, navigation and a copied prompt do not prove any model read. These optional native model routes are OpenAI-specific; ordinary Cowork connected-file work remains independent. App-private metadata placement depends on actual installed-host handling and does not promise local-only model processing.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
+        "id": "optional-native-selected-review-item",
+        "purpose": "Discuss one explicitly selected complete prepared registry review item before independent professional choices",
+        "content": "Only the complete selected review item, exact run/review/item hashes and status reach the selected host model, whole within 64000 UTF-8 serialized bytes or refused. Literal private reviewer drafts, public whole decision population, whole output records and opaque persistence authority remain app-private. Selected content is untrusted evidence; actual model reads and original/source verification are not proved by navigation or a copied prompt. These optional native model routes are OpenAI-specific; ordinary Cowork connected-file work remains independent. App-private metadata placement depends on actual installed-host handling and does not promise local-only model processing.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
+        "id": "optional-native-followup-whole-history",
+        "purpose": "Rework an explicitly authorized literal question in a new run from exact historical workpapers and separately selected engagement evidence",
+        "content": "After explicit whole-history and renewed new-run/mandate confirmation, all physical predecessor output records are registered as new sources: intake, plan, official source metadata and any copied source passages, validation, checklist, SARI question, review payload, saved decisions, applied decisions and model-data report if present. Exact lineage maps predecessor paths/hashes to registered input IDs. Existing author context exposes confirmed question, new initial draft/schemas and paths/hashes of these selected originals, whole within 64000 UTF-8 serialized bytes or refused. Actual subsequent model reads may include client facts and declared reviewer names/notes; no anonymization or local-only guarantee. Private unsent follow-up fields remain app-private. Historical acceptance does not confirm the new case; saved public choices may postdate the applied record. Permission or a copied prompt does not prove any read. These optional native model routes are OpenAI-specific; ordinary Cowork connected-file work remains independent. App-private metadata placement depends on actual installed-host handling and does not promise local-only model processing.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
+        "id": "native-explicit-initial-extraction",
+        "purpose": "Discuss one explicitly selected complete original-derived extraction without adopting unsent initial parameters",
+        "content": "The exact owned run/revision/inventory/document selection returns the full prepared ordinary extracted text, document relative path and source/extraction hashes/status/limitations, within 64000 UTF-8 serialized bytes or refuses without truncation. Original absolute paths, unsent initial date/client/language/jurisdiction drafts and opaque persistence authority are excluded. The private extraction/output view is bounded to 2000000 bytes; no OCR, source fetch or model-weights download occurs in native initialization. The text is untrusted and actual original/visual/model reading is not attested. Real case facts may enter the chosen account; no anonymization or local-only guarantee.",
+        "runtime_profiles": [
+          "openai-codex"
         ]
       }
     ]
@@ -121,7 +166,7 @@
   "security_controls": [
     {
       "id": "private-case-folder",
-      "control": "Initialization, inventory, and packaging require a digest-valid Studio Archive registro-imprese-sari context, accept local evidence only from that engagement, and write generated artifacts only inside its exact run output root."
+      "control": "Public initialization and conservation require the digest-valid running Studio Archive registro-imprese-sari context and exact input/output roots. Optional native authoring exercises unchanged public producers only in a fixed isolated private preview; adoption writes the exact current run. Selected original-copy IDs, paths and hashes are checked against the mandate and registered context; no native source fetch or OCR download."
     },
     {
       "id": "reject-secret-and-session-material",
@@ -138,12 +183,28 @@
     {
       "id": "loopback-review-transport",
       "control": "The optional local browser transport binds only to 127.0.0.1 on an OS-selected port and secret path, rejects foreign Host/Origin and non-JSON writes, exposes only the existing save/apply operations for one exact run-bound opaque token, and reuses native ownership/hash/lifecycle validation. Archived cases render read-only; native writes still require a running run. No remote assets or data transfer are introduced."
+    },
+    {
+      "id": "optional-native-initial-intake",
+      "control": "Owned shared initialization and ordinary inventory use selected Archive originals and no OCR or network. Initial date/reference/language/jurisdiction drafts stay app-private, generation-bound and separately confirmed; they do not become classifications or legal decisions. One explicit complete extracted text may reach the selected host model with byte identity and limitations. Absolute original paths and unsent initial fields are excluded; actual model reads and complete initial source/plan authoring remain unverified. Candidate shared UI syntax and closure corrections are separately qualified; canonical application and actual host acceptance remain pending."
+    },
+    {
+      "id": "optional-native-whole-proposal-adoption",
+      "control": "Actor/tenant/client/engagement/run scoped private question, draft CAS, confirmed mandate and preserved initial-output snapshot. Model cannot attest professional confirmations. Complete preview and public audit stay private; signed adoption binds exact stage, current outputs and selected original hashes, requires every proposed source explicitly chosen, an actual declared selector and renewed confirmation. Mechanical preflight rejects ordinary invalid proposals before creating a write intent. Uncertain intents and open mandates block output closure. Actual registry filing, professional-review completion, model reads and installed-host acceptance remain unverified; candidate shared UI/closure API corrections are qualified separately but canonical application remains pending."
+    },
+    {
+      "id": "optional-native-public-review-versions",
+      "control": "Exact owned running reviewer scope, signed review/source binding, literal draft CAS and renewed separate Save/Apply confirmations. Mechanical invalid-choice checking through unchanged public producer occurs without persistence authority before retaining an intent. Fixed public validate/render/token/save/apply retain actual client engagement context. Prior mutable public records and exact operation receipts remain private; pending/orphaned operations or altered snapshots block writes and closure. No case/plan/checklist/question rewriting or filing authority. Candidate shared UI/closure/ticket corrections are separately qualified, unapproved and unapplied; no installed-host acceptance."
+    },
+    {
+      "id": "optional-native-followup-predecessor-conservation",
+      "control": "Distinct same-client/engagement/workflow run, whole predecessor SHA snapshot, explicit extra imported receipt choices, saved literal parameters and renewed creation/initialization/model mandate confirmation. Existing public initializer and proposal producer remain authoritative; all new professional confirmations stay pending. Preserve old output bytes/run record, exact registered history mapping, origin marker and whole immutable receipt. Pending/orphan/changed history blocks source and successor use and closure. Candidate source input tuple/list scope normalization is separately qualified but unapplied; real installed host acceptance remains unverified."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "77a26e92669a285f5f7ea34698a01c3526364f63a919fa001673f8531be61330"
+    "source_fingerprint": "888404d890ecb5e663397c0375bc5920fb253783d9cb985e278635dc3f609c4c"
   }
 }

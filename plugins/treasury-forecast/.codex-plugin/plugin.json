@@ -1,6 +1,6 @@
 {
   "name": "treasury-forecast",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Prepara e aggiorna il budget di tesoreria da dati strutturati, con ipotesi e revisioni conservate.",
   "author": {
     "name": "Mparanza",

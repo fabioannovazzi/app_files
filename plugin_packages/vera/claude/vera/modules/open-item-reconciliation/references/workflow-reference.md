@@ -57,10 +57,10 @@ value to one current source locator. Write `prepared_records.json` atomically,
 receipt it, and replay the complete set. A stale or unaddressable source stops
 before reconciliation or final promotion.
 
-The implementation boundary is one code-owned, ordered 25-file contract:
+The implementation boundary is one code-owned, ordered 26-file contract:
 3 assets, 1 MCP server, 8 executable workflow scripts (including the
-pre-import bootstrap), 5 retained internal source units, and 8 shared assurance
-files. Every public Python entrypoint first executes that bootstrap source,
+pre-import bootstrap), 5 retained internal source units, and 9 shared assurance
+files (including jurisdiction.py). Every public Python entrypoint first executes that bootstrap source,
 disables local bytecode, and validates the exact implementation tree before
 importing plugin or shared modules. The five internal units are deliberately
 stored under `scripts/retained_sources/` with a non-`.py` suffix. Ordinary
@@ -74,7 +74,7 @@ the same tree check before reading its manifest and again before every public
 RPC surface.
 
 The launcher descriptors `.codex-plugin/plugin.json`, `.mcp.json`, and
-`.app.json` are outside this in-process 25-file boundary. The Claude host reads
+`.app.json` are outside this in-process 26-file boundary. The Claude host reads
 them before the validated process starts, so this replay does not attest the
 host's initial executable selection. Arbitrary code already executing as the
 same operating-system user is likewise outside this in-process boundary.

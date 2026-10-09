@@ -32,7 +32,9 @@ process.stdout.write(JSON.stringify(result));
         capture_output=True,
         text=True,
         check=False,
-        timeout=90,
+        # Instrumentation measures many fresh Python children in one RPC case.
+        # Keep the ordinary test deadline and all production deadlines unchanged.
+        timeout=300 if "COVERAGE_PROCESS_CONFIG" in env else 90,
     )
     assert completed.returncode == 0, completed.stderr
     return json.loads(completed.stdout)

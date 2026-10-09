@@ -49,6 +49,14 @@ branches, signatures and filings remain unsupported. Use the specialist skill.
 
 ## Professional workflows
 
+- `organizzazione-lavoro`: studio appointments, activities, deadlines, waiting
+  items, delegations, source-based meeting actions and daily planning. Persistent
+  local register in Claude/Cowork, with actual host calendar connections and
+  read-back verification. Accepts typed or host-transcribed voice instructions.
+  No unattended inbox listener; recurring briefings require separately configured
+  host automation. Without local tools, only bounded preparation is supported.
+  Read `../../organizzazione-lavoro/SKILL.md`.
+
 - `lipe`: **LIPE** reconciles Italian VAT registers with source evidence and
   prepares reviewed VP drafts. Preserve code confirmations, distinct VAT periods,
   opening balances and payment differences. Pilot for ordinary 2024–2026 cases;

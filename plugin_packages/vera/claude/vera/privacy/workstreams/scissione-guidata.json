@@ -13,7 +13,21 @@
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
-    "skills/vera/references/connected-studio-knowledge.md"
+    "skills/vera/references/connected-studio-knowledge.md",
+    "skills/scissione-guidata/SKILL.md",
+    "skills/vera/references/native-workspace.md",
+    "scripts/native_scissione.py",
+    "scripts/native_scissione_bridge.py",
+    "scripts/native_workspace.py",
+    "mcp/workspace.cjs",
+    "ui/workspace.html",
+    "ui/workspace.js",
+    "ui/workspace.css",
+    "ui/InstrumentSans-Regular.ttf",
+    "scripts/native_scissione_authoring.py",
+    "scripts/native_aml_authoring.py",
+    "scripts/native_assetti.py",
+    "scripts/native_archive_closure.py"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -47,6 +61,22 @@
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "native-selected-record",
+        "purpose": "Explain one explicitly selected exact-version record and its authored dependencies.",
+        "content": "The selected record data, its existing attributed approval, explicit transitive dependency records and cited evidence metadata, exact version/date and assurance limits may enter the Codex model context. Private unfinished review fields remain application metadata until explicitly registered; full queue/case is not automatically passed by the selected explanation tool. Case values, reviewer references and citations can contain personal data; this is not anonymization. Other specialist reads still follow their actual per-run model-data reports. The complete selected model explanation refuses serialized envelopes over 64000 bytes without sampling. Private case/record/version pages refuse envelopes over 2000000 bytes; source catalogues offer 30 exact receipts per page. App-private placement depends on actual host visibility/metadata handling and is not a local-only guarantee.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
+        "id": "native-source-mandate-case-authoring",
+        "purpose": "Prepare a complete initial case or an exact-current same-evidence correction after explicit source authorization.",
+        "content": "Literal user question; all explicitly chosen registered original paths, byte hashes and complete import/upstream receipts; actual current case version, absolute path and byte hash when present. Subsequent authorized reads can expose complete original documents, current case facts, authorities, personal data, values, rules and professional history to the selected OpenAI account. The full model-authored case and public producer memo are retained privately for explicit app conservation. Application metadata still follows ordinary host/account processing; no automatic anonymization, local-only guarantee or separate provider worker. Exact artifact membership and producer replay do not establish source truth or professional applicability. The complete mandate identity/context result refuses serialized envelopes over 100000 bytes without sampling; original file and current case reads are separate and may be complete. The stage result is also explicitly model-visible and contains saved status, retained stage reference/revision and professional-approval limitation; the full authored case and readable memo are returned by the separate private stage read route.",
+        "runtime_profiles": [
+          "openai-codex"
         ]
       }
     ]
@@ -103,12 +133,20 @@
     {
       "id": "escaped-report",
       "control": "All case text is HTML-escaped before report rendering. The report has no remote scripts or network calls."
+    },
+    {
+      "id": "native-exact-version-record-review",
+      "control": "Optional app-only reads validate registered sources, exact pointer/version/artifact population and maintained engine lineage, JSON and both reports. One selected record follows authored dependencies/cited metadata only. Actor/tenant/run/version/record drafts stay private outside outputs with atomic compare-and-set; recovery never restores confirmation. Explicit complete attributed review calls the unchanged producer for exactly one record under signed current source/population authority, preserving historical versions and unknown values. Document-before-calculation and aware review date gates apply before intent. Exact retries replay their saved outcome; uncertain interruptions require specialist recovery. Upstream finalized receipts do not imply historical source/implementation replay. No semantic rule selection, signature, filing, model worker, external transmission or finalization is added."
+    },
+    {
+      "id": "native-source-mandate-complete-case",
+      "control": "Signed actor/tenant/client/engagement/running-run source authorization and recoverable private literal-question CAS bind all selected bytes, native/public implementation and exact current case scope. Model proposals must preserve every chosen ordinary source in case evidence and may use only a selected sealed same-engagement Scissione predecessor in a fresh run. Initial preparation and correction replay the unchanged public producer without new approval fields. Complete private case and memo precede explicit signed conservation; retain original execution request and every immutable public artifact, check the resulting current pointer and preserve prior versions. Existing approvals survive or invalidate solely through the producer. Exact successful retries reopen only their own outcome; later case changes require a fresh mandate. Pending, orphaned, altered or unreceipted intents block authoring, record review and all-output closure. Current legal applicability/source qualification remain model/professional work; no signature, filing, source classifier, worker or Archive completion."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "c7fae5de72aef76be75fe517654a08b911261c652e7d81e60cc0ca21476b7600"
+    "source_fingerprint": "1bc571a446cf2482f1b981c8dc176d4c823fadbb28e3970fb2d18a007f073cd5"
   }
 }

@@ -101,7 +101,7 @@
     },
     {
       "path": "skills/scissione-guidata/SKILL.md",
-      "sha256": "47344a2d031bc9fb9c4c1a679a3e434b693fbfc69a42f15c931589c005953bfd"
+      "sha256": "918fbd511554c7e7c640ae77a9a60c1bd627232a0fda014bc8ec994af537b286"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -446,5 +446,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "25f71c1027d5e0d0cae7c738d681673389d39f8139e3ad31dea69324366ed820"
+  "canonical_course_sha256": "5001dcf54030e04da4bf2cd1a098adad58daf68895982dcb8080029f3b221c4f"
 }

@@ -149,7 +149,7 @@
     },
     {
       "path": "skills/adeguati-assetti/SKILL.md",
-      "sha256": "983166c48c63de22da5d7365bf0795f51546a7db7a12927c82e01efaf9f028b8"
+      "sha256": "b0ffb89ecb8055ae3f9f7ffc284cf1889c1bd64b1d271b7c1a3b35e4c4dbd002"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -883,5 +883,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "75802fa802d048f825f1db5853cad04a4705062a5cf598d36cacb54bc7cc7837"
+  "canonical_course_sha256": "85d3dfb87b8eecf22594a6505cad5fdc5a7883165e054620b4c28450f1b91481"
 }

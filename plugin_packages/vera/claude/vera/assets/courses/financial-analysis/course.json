@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "financial-analysis",
-  "revision": "2026-09-14.2",
+  "revision": "2026-10-09.native-main-integration.review-proposal",
   "seconds": [
     45,
     60,
@@ -153,7 +153,7 @@
     },
     {
       "path": "skills/financial-analysis/SKILL.md",
-      "sha256": "3b0fab8411716bca8d4ba9dc3061b63ff3eb0d0758122fb40485cd247b915d54"
+      "sha256": "5b741662a3832646214550db1a514f2bdda858f2aa4aedb7c40edca31e56c6af"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -458,5 +458,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "ca963325d952e7d189bc54c93728af1e3a6a8ad6d57955136df71f3ce403083e"
+  "canonical_course_sha256": "37d005384e8cc9995a45cb3c31f36bb03bf093f5096841807a9e988e4bfd1ce3"
 }

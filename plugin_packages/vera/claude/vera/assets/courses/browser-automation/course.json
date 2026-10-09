@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "browser-automation",
-  "revision": "2026-09-14.2",
+  "revision": "2026-10-09.native-main-integration.review-proposal",
   "seconds": [
     45,
     60,
@@ -486,5 +486,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "b65c78f85d414ee3cc2967a25bd06cd119337cf4ca6b034fa7f9ea517b02ffcb"
+  "canonical_course_sha256": "9a0d01a4da8cabdac4c161b7254d80765abb8a72c246b567a0ee21abd48b65ff"
 }

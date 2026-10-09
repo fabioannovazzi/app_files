@@ -130,3 +130,60 @@ For budget monitoring and a client report through Sites, use the resolved module
 For a focused costing question, follow that module's `references/costing.md`.
 Keep the same workflow identity and archive run, select only relevant methods,
 and preserve the normal calculation, commentary and disclosure receipts.
+
+## Optional native workspace
+
+When the current host exposes the maintained workspace tools and the user
+chooses the panel, follow `../vera/references/native-workspace.md`. The panel
+can select exact registered sources and a complete already reviewed recipe or
+costing case, retain incomplete choices privately and calculate through the
+unchanged producers after a separate confirmation. Reporting and costing remain
+distinct; focused costing does not require a general ledger.
+
+For interpretation, explicitly read `vera_workspace_management_commentary_context`
+for the exact calculation. It returns the ordinary bounded calculated context,
+verified receipts, template and optional expressly selected whole commentary.
+It excludes raw originals, the full pack and unsent named readback by default.
+Use the actual metric identifiers in the returned records; the reporting and
+costing producers retain their existing record shapes. Prepare the complete
+normal commentary, distinguishing observations, hypotheses, questions and limits.
+Do not infer causation or professional approval. Stage it through
+`vera_workspace_management_commentary_stage` only when the current public
+calculation permits finalization. Larger complete commentary stays on the
+maintained file path; do not truncate it to fit the panel.
+
+The panel separately captures the professional's complete declared decision,
+name, actual timezone-aware time and basis. Signed confirmation conserves the
+literal comment and readback in the same run. Acceptance uses unchanged
+`finalize_pack.py` for all three normal draft report outputs. Rejection or a
+request for changes retains the comment and decision without finalizing a report.
+Calculation files remain immutable. Record only actual model reads in the normal
+run report; app reads and chat-request text do not prove model exposure.
+
+The optional source-preparation prototype retains a literal question,
+reporting/costing path, selected original receipt IDs and optional prior case.
+A renewed source mandate permits `vera_workspace_management_author_context`
+to name only expressly granted original/prior-case paths and hashes, public
+method/intake references and an optional explicitly chosen complete proposal
+path. Read authorized originals with maintained readers; inspection samples
+are not the population. Record actual model exposure separately.
+
+Stage `proposal={case:whole_ordinary_payload,note:open_items}` through
+`vera_workspace_management_author_stage`. New reporting mapping_review must
+remain exactly `{status:"not_reviewed",reviewer:"",reviewed_at:""}`; never
+manufacture human attribution. Preserve prior case/reviews separately. Costing
+keeps the whole ordinary payload, exact client/engagement and selected-source
+evidence hashes, without a ledger requirement or mechanically chosen semantic
+roles, classifications or methods. Larger whole work stays on the file path.
+
+Named complete-case readback, new-run registration, calculation and commentary
+review are separate. Current source registration and closure audit have missing
+archive_root/digest/load_binding capability wiring. The verified three-line review proposal
+remains unapplied pending the repository operating-rule exception; do not claim
+this native lifecycle qualified until the repair is applied and retested.
+Preserve the complete specialist file path while integration remains incomplete.
+
+Open the normal HTML through `preview_report.py` as described by the component;
+interactive panel opening is pending. Preserve earlier versions, full workbook,
+HTML and receipts. Signing, delivery and Archive completion remain separate.
+Missing native tools do not block file work.

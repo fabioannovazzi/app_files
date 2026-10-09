@@ -1126,6 +1126,7 @@ def run_review_output_transaction(
     operation: Callable[[Path], dict[str, Any]],
     *,
     expected_predecessor_checkpoint: str | None = None,
+    regenerate_successor: bool = False,
 ) -> dict[str, Any]:
     """Run one browser write on a copy and atomically promote it after checks."""
 
@@ -1134,14 +1135,53 @@ def run_review_output_transaction(
     out_dir = requested_dir.resolve()
     _physical_tree_entries(out_dir)
     assurance_path = out_dir / "assurance_receipts.json"
-    assurance = (
-        validate_assurance_run(
+    if regenerate_successor:
+        # Apply intentionally replaces review authority before a new seal exists.
+        # Validate its separately anchored complete predecessor and exact retained
+        # transition, rather than accepting the now-stale predecessor receipt as
+        # a seal of the candidate. A fresh successor replay is mandatory below.
+        authority = validate_professional_review_authority(
+            _read_json_mapping(out_dir / "professional_review.json")
+        )
+        if authority["origin"] != "applied_decisions":
+            raise AssuranceRunError("successor regeneration requires applied review")
+        validate_review_transition_history(
             out_dir,
+            current_professional_review=authority,
             expected_predecessor_checkpoint=expected_predecessor_checkpoint,
         )
-        if assurance_path.exists() or assurance_path.is_symlink()
-        else None
-    )
+        assurance = _validated_assurance_envelope(_read_json_mapping(assurance_path))
+        retained = (
+            out_dir
+            / REVIEW_TRANSITION_HISTORY_DIRECTORY
+            / authority["predecessor_assurance_sha256"]
+        )
+        if assurance["content_sha256"] != authority["predecessor_assurance_sha256"]:
+            assurance = validate_assurance_run(
+                out_dir,
+                expected_predecessor_checkpoint=expected_predecessor_checkpoint,
+            )
+        elif assurance != _read_json_mapping(
+            retained / "predecessor_assurance_receipts.json"
+        ):
+            raise AssuranceRunError(
+                "pending successor seal differs from retained predecessor"
+            )
+        _validate_run_tree_allowlist(
+            output_dir=out_dir,
+            entries=_physical_tree_entries(out_dir),
+            output_contract=assurance["workflow_output_contract"],
+            expected_predecessor_checkpoint=expected_predecessor_checkpoint,
+        )
+    else:
+        assurance = (
+            validate_assurance_run(
+                out_dir,
+                expected_predecessor_checkpoint=expected_predecessor_checkpoint,
+            )
+            if assurance_path.exists() or assurance_path.is_symlink()
+            else None
+        )
     trusted_fingerprint = _tree_fingerprint(out_dir)
     transaction_root = Path(
         tempfile.mkdtemp(prefix=".audit-review-transaction-", dir=out_dir.parent)
@@ -1151,6 +1191,11 @@ def run_review_output_transaction(
     shutil.copytree(out_dir, working_dir)
     try:
         result = operation(working_dir)
+        if regenerate_successor:
+            validate_assurance_run(
+                working_dir,
+                expected_predecessor_checkpoint=expected_predecessor_checkpoint,
+            )
         entries = _physical_tree_entries(working_dir)
         if assurance is not None:
             output_contract = _validate_workflow_output_contract(

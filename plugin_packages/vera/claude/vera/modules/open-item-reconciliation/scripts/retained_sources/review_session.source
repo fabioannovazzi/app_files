@@ -325,8 +325,22 @@ def _run_root_relative_reference(
             raise ValueError("Managed workflow path reference leaves the run root.")
         return candidate.as_posix()
     run_root = Path(run_root_value).expanduser().resolve()
+    resolved = candidate.resolve()
+    for ancestor in (resolved, *resolved.parents):
+        if (
+            ancestor.name == "working"
+            and ancestor.parent.name.startswith(".audit-review-transaction-")
+            and ancestor.parent.parent in {run_root, run_root / "outputs"}
+        ):
+            # The engine's fixed detached transaction is promoted to this exact
+            # destination. Never persist its temporary execution path as a link.
+            canonical = run_root / "outputs"
+            if ancestor.parent.parent == canonical:
+                canonical /= "reconciliation"
+            resolved = canonical / resolved.relative_to(ancestor)
+            break
     try:
-        relative = candidate.resolve().relative_to(run_root)
+        relative = resolved.relative_to(run_root)
     except ValueError as exc:
         raise ValueError("Managed workflow path is outside the run root.") from exc
     if not relative.parts:

@@ -44,7 +44,8 @@
   "shared_services": [
     "run-receipt-stamping",
     "managed-python-runtime",
-    "cnc-authenticated-review"
+    "cnc-authenticated-review",
+    "studio-work"
   ],
   "workflow_roles": {
     "new-client": {

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_kit.v2",
   "product": "vera",
   "workflow": "organizzazione-lavoro",
-  "revision": "2026-10-07.1",
+  "revision": "2026-10-09.native-main-integration.review-proposal",
   "seconds": [
     45,
     60,
@@ -53,7 +53,7 @@
     },
     {
       "path": "skills/organizzazione-lavoro/SKILL.md",
-      "sha256": "2362a9d6c853e7ebf91eb90e6cce4651db49244e12d2c5088e0f9f806087a4b5"
+      "sha256": "436e81a126d720562f027237f4eb2b89e99d5ed320c93f7789c26f0ed87683ff"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -344,5 +344,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "0e740c47f86034c69a3ca838844ead9c2a2c6b60593c09fbbbce1c40b0b17c77"
+  "canonical_course_sha256": "5b3e5bd149f8b33caf39d0301ecd29c8d17bbdbef2b526919662b4fbf07f8d0c"
 }
