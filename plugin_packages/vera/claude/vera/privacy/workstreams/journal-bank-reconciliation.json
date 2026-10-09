@@ -12,6 +12,7 @@
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
+    "vendor/modules/vera_journal_pdf",
     "skills/vera/references/connected-studio-knowledge.md"
   ],
   "runtime_profiles": [
@@ -51,6 +52,15 @@
         "id": "connected-studio-knowledge",
         "purpose": "Consult relevant studio procedures, precedents or case evidence when requested",
         "content": "Repository and selected studio/client scope; scoped search queries; returned metadata and snippets; opened relevant passages; source IDs, links and locators; version, date and approval metadata when exposed; coverage and access limitations. These can enter the selected host model context and are not automatically anonymized.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "registration-pdf-layout-review",
+        "purpose": "Review the physical layout of a text-PDF accounting journal before local reconstruction",
+        "content": "Bounded PDF layout evidence: at most 300 words from each of the first two and final pages, capped at 100 characters per word, their x/top coordinates, page dimensions, source SHA-256, page count and truncation status. Layout coordinates and printed header/footer labels are reviewed by the host model; no column semantics are inferred from number clusters. A dry-run preview contains at most twenty reconstructed postings per source for reconciliation. Entire registration reconstruction and exact debit/credit closure run locally, preserving source page/row lineage. Case names and accounting text in the sampled words are not anonymized. The helper makes no direct model API calls or new external-service requests.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -148,12 +158,16 @@
     {
       "id": "current-host-profile-qualification",
       "control": "The fixed source registry includes qualified macOS 26A428 / exact Codex CLI 0.160.1 v4 after fresh structured arithmetic, two bank decisions, four invoice packets including prompt injection, and permitted/outside/symlink image controls. The complete v1, v2 and v3 records remain unchanged. The v4 production Seatbelt text, file-content scope, disabled tool features, read-only inner sandbox and every-launch canaries are identical to v3. No model packet or external destination is added. Diagnostic image controls enable only their exact code-mode helper with its public manifest and process creation, and permit only the exact positive image; those capabilities are absent from production. Both sandboxes remain active. Native router logs independently show denial of each exact outside/symlink target; JSONL is not complete tool visibility and no kernel-log or provider attestation is claimed. Unknown or changed hosts still fail closed; dependency inspection alone is not qualification."
+    },
+    {
+      "id": "source-bound-registration-pdf-layout",
+      "control": "The mapping receipt binds reviewed physical bands and header/footer exclusions to the source digest. Overlapping bands, unmapped money, missing-text body pages, incomplete registrations or unequal registration debit/credit totals withhold the complete source. Page caches are released after each page. No PDF posting is qualified by text readability alone."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-07",
+    "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "9f346a5754b38f88707b614c1731f455eac4bb842b1f4e8caf1e7f1faf791dfe"
+    "source_fingerprint": "03145c182760976f78f7295b5b2f29a0d9f88f53cd409d8fdc7061cd6c101109"
   }
 }

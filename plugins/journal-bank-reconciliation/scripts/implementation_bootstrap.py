@@ -55,6 +55,7 @@ IMPLEMENTATION_CONTRACT = (
     ("shared_assurance", "relationships.py"),
     ("shared_assurance", "review_output_transaction.cjs"),
     ("shared_assurance", "serialization.py"),
+    ("shared_pdf", "__init__.py"),
 )
 CHATGPT_IMPLEMENTATION_CONTRACT = tuple(
     entry
@@ -214,7 +215,8 @@ def validate_implementation_tree(
         if shared_assurance_root is not None
         else _shared_assurance_root(root)
     )
-    roots = {"plugin": root, "shared_assurance": shared_root}
+    pdf_root = _os.path.join(_os.path.dirname(shared_root), "vera_journal_pdf")
+    roots = {"plugin": root, "shared_assurance": shared_root, "shared_pdf": pdf_root}
     contract = implementation_contract(root)
     observed_files: set[tuple[str, str]] = set()
     observed_directories: set[tuple[str, str]] = set()
@@ -232,6 +234,7 @@ def validate_implementation_tree(
         ("plugin", _os.path.join(root, "assets")),
         ("plugin", _os.path.join(root, "scripts")),
         ("shared_assurance", shared_root),
+        ("shared_pdf", pdf_root),
     ]
     if contract == IMPLEMENTATION_CONTRACT:
         scan_roots.insert(2, ("plugin", _os.path.join(root, "mcp")))

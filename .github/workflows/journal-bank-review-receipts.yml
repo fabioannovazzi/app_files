@@ -32,6 +32,26 @@ jobs:
           tests/plugins/test_journal_bank_reconciliation_plugin.py::test_initial_assurance_envelope_binds_exact_transitive_implementation_set
           tests/plugins/test_vera_model_data_report.py::test_local_only_build_never_invokes_stamping
           --cov=seal_review_receipts --cov-report=term-missing --cov-fail-under=80
+      - name: Verify reviewed registration PDFs, continued entries and complete populations
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_journal_sampling_plugin.py
+          tests/plugins/test_journal_bank_reconciliation_plugin.py
+          -k registration_pdf
+          --cov=vera_journal_pdf --cov-report=term-missing --cov-fail-under=80
+      - name: Verify shared PDF receipt integrity and worker termination diagnostics
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_journal_sampling_plugin.py
+          tests/plugins/test_journal_bank_reconciliation_plugin.py
+          tests/plugins/test_managed_plugin_python_runtime.py
+          -k 'shared_pdf or forcibly_terminated or forced_exit or pdf_memory_error or pdf_table_failure or pdf_inspection_releases'
+      - name: Check shared PDF reader quality
+        run: |
+          python -m black --check plugins/_shared/vendor/modules/vera_journal_pdf/__init__.py plugins/vera/scripts/managed_python_runtime.py
+          python -m isort --check-only plugins/_shared/vendor/modules/vera_journal_pdf/__init__.py plugins/vera/scripts/managed_python_runtime.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/_shared/vendor/modules/vera_journal_pdf/__init__.py plugins/vera/scripts/managed_python_runtime.py
+          python -m bandit -q plugins/_shared/vendor/modules/vera_journal_pdf/__init__.py plugins/vera/scripts/managed_python_runtime.py
       - name: Check review entrypoint quality
         run: |
           python -m black --check plugins/journal-bank-reconciliation/scripts/seal_review_receipts.py tests/plugins/test_journal_bank_review_receipts.py

@@ -1206,7 +1206,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "f7aaac4208ac52b3ab5efff001a5372f35cb66b29df4f02c77fd5934c9806396",
+  "catalogue_fingerprint": "6095d1ba78f32558a97251062e72aab277edcac9c0544b9ffc48fb5532406c70",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1560,5 +1560,16 @@
     "basis": "Reviewed native workspace source, retained producer methods, explicit jurisdiction and professional-review boundaries, privacy register and synthetic source regressions. Existing Geneva dispositions and qualification limits are retained; no additional Geneva client or installed native-host acceptance is claimed.",
     "native_host_acceptance": false,
     "evidence": "docs/releases/2026-10-09-native-workspace-current-main-branch-integration.json"
+  },
+  "journal_pdf_source_snapshot_review_20261009": {
+    "prior_catalogue_fingerprint": "f7aaac4208ac52b3ab5efff001a5372f35cb66b29df4f02c77fd5934c9806396",
+    "current_catalogue_fingerprint": "6095d1ba78f32558a97251062e72aab277edcac9c0544b9ffc48fb5532406c70",
+    "version": "0.1.358",
+    "changed_entrypoints": [
+      "journal-bank-reconciliation",
+      "journal-sampling"
+    ],
+    "scope": "Reviewed registration-style PDF intake and existing professional/source qualification boundaries. Existing Geneva relevance dispositions remain unchanged. The adapter still needs reviewed coordinates and full registration closure; no legal adaptation, actual Geneva-client or installed-host acceptance is claimed.",
+    "evidence": "docs/releases/2026-10-09-vera-registration-pdf.md"
   }
 }

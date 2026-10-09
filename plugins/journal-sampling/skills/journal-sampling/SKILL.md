@@ -198,6 +198,7 @@ earlier Check Entries input manifest or cause it to scan the engagement folder.
 ## Supported V2 Inputs
 
 - reviewed native Excel/CSV journals with explicit mappings;
+- reviewed registration-style text-PDF journals with cross-page registration closure;
 - reviewed print-friendly Excel exports using the bounded
   `print_friendly.debit_credit_columns.v1` layout adapter.
 
@@ -208,10 +209,31 @@ before such a workbook can qualify.
 Unreadable containers emit no rows and record `failure_class=parser_failure`,
 separately from readable sources whose structure is unsupported.
 
-Generic text PDFs and OCR-only scanned PDFs are not qualified inputs. Text
-position does not establish whether a trailing number is debit, credit, balance,
-or a line total. Inspection returns `unsupported_source_layout` and emits no
-rows unless a source-family-specific PDF adapter is implemented and tested.
+Text journals with registration headers (`N ---- dd/mm/yyyy ----`) and
+`seguito registrazione del dd/mm/yyyy` continuation headers can use the
+`registration_pdf` adapter. Initial PDF inspection returns bounded
+`pdf_layout_evidence` from the first two and final pages, with word coordinates
+and the source SHA-256. Read this evidence with the host model; do not infer
+column meanings from numeric clusters. Supply a file recipe with
+`parser: registration_pdf` and `layout` containing `body: [top, bottom]`,
+non-overlapping `columns` bands `[left, right]` for `account_debit`,
+`account_credit`, `description`, `debit`, and `credit`, plus explicit
+`ignored_line_prefixes` for printed headers/footers only. Reinspect to obtain
+the exact proposed mapping contract and seal its source-mapping receipt with
+adapter `journal.registration_pdf.v1`, version `2`. The layout digest includes
+the PDF SHA-256; changing the source or coordinates invalidates review.
+
+The reader carries registration dates and numbers across pages, preserves
+multiline descriptions and posting page/row lineage, and checks equal debit
+and credit totals only when each registration closes. Page totals are not
+registration totals. It releases each page cache and reports progress. An
+unbalanced/incomplete registration, empty-text body page, unmapped monetary
+value, overlapping bands, or two posting sides on one physical row withholds
+the complete population and reports `unsupported_source_layout`. Do not hide postings through footer labels or crop
+bounds. Unsupported families and scanned/OCR-only pages remain unqualified;
+retain diagnostics and request the missing layout evidence or a supported
+export. Once normalization qualifies, use the ordinary sample and Vouching
+handoff; do not stop at text extraction.
 
 ## Language Policy
 

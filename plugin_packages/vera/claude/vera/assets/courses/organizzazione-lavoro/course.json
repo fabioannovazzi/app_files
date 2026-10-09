@@ -33,7 +33,7 @@
     },
     {
       "path": "scripts/managed_python_runtime.py",
-      "sha256": "ff9210c214c7f278b7b5216e041cd9642656a963f24fc3a065312b7981c56a64"
+      "sha256": "f6f07f568e8caee8a2461f3428528829f6beb30945e81272e05bdfcdfc200028"
     },
     {
       "path": "scripts/model_data_report.py",
@@ -118,6 +118,10 @@
     {
       "path": "vendor/modules/vera_financial_analysis/registry.py",
       "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
+    },
+    {
+      "path": "vendor/modules/vera_journal_pdf/__init__.py",
+      "sha256": "83c9569b49dde2f724f9b8eec2f7f45c50ae6eaf8f03baf6423a0c4df5e11d44"
     },
     {
       "path": "vendor/modules/vera_ocr/__init__.py",
@@ -344,5 +348,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "5b3e5bd149f8b33caf39d0301ecd29c8d17bbdbef2b526919662b4fbf07f8d0c"
+  "canonical_course_sha256": "c8787aa02e4e38d7b209da29ae1d8725bf86a83fe0ee06cbe80cb6669350ae74"
 }

@@ -587,7 +587,7 @@
           <p class="eyebrow" data-i18n="inputs.eyebrow">Inputs</p>
           <h2 data-i18n="inputs.title">What it reads</h2>
         </div>
-        <p data-i18n="inputs.copy">Works with files already available in the firm's Codex workspace. Text and scanned PDFs cannot supply sampling rows: provide an Excel or CSV export with reviewed mappings.</p>
+        <p data-i18n="inputs.copy">Works with files already available in the firm's Codex workspace. Text-PDF registration journals require reviewed columns, headers and cross-page continuations, and each registration must balance before sampling. Scans and unsupported layouts remain excluded.</p>
       </div>
       <div class="grid four" id="input-cards"></div>
     </section>
@@ -698,11 +698,11 @@
         inputs: {
           eyebrow: "File letti",
           title: "Che cosa legge",
-          copy: "Lavora sui file già disponibili nel workspace Codex dello studio. I PDF testuali e scansionati non possono alimentare il campione: occorre un export Excel o CSV con mappatura verificata.",
+          copy: "Lavora sui file già disponibili nel workspace Codex dello studio: Excel, CSV e giornali PDF testuali con registrazioni riconoscibili. Per i PDF occorre verificare colonne, intestazioni e prosecuzioni tra pagine; ogni registrazione deve quadrare prima del campionamento. Le scansioni e i formati non supportati restano esclusi.",
           cards: [
             ["Excel e CSV", "Giornali esportati con intestazioni leggibili e righe contabili."],
             ["Excel da stampa PDF", "Fogli con intestazioni ripetute, colonne larghe e righe di dettaglio."],
-            ["PDF testuali", "Non supportati per normalizzazione e campionamento, anche quando il testo è estraibile."],
+            ["PDF testuali", "Giornali con intestazioni di registrazione e colonne dare/avere verificate; le continuazioni possono attraversare più pagine."],
             ["Parametri del campione", "Metodo, seed, filtri e dimensione del campione da conservare nella traccia di revisione."]
           ]
         },
@@ -778,11 +778,11 @@
         inputs: {
           eyebrow: "Inputs",
           title: "What it reads",
-          copy: "Works with files already available in the firm's Codex workspace. Text and scanned PDFs cannot supply sampling rows: provide an Excel or CSV export with reviewed mappings.",
+          copy: "Works with files already available in the firm’s Codex workspace: Excel, CSV and text-PDF journals with recognizable registrations. PDF columns, headers and cross-page continuations require review; every registration must balance before sampling. Scans and unsupported layouts remain excluded.",
           cards: [
             ["Excel and CSV", "Exported journals with readable headers and accounting rows."],
             ["Print-style Excel", "Sheets with repeated headers, wide columns and detail rows."],
-            ["Text PDFs", "Unsupported for normalization and sampling, even when text is extractable."],
+            ["Text PDFs", "Journals with registration headers and reviewed debit/credit columns; registrations may continue across pages."],
             ["Sample parameters", "Method, seed, filters and sample size documented in the review trail."]
           ]
         },
@@ -858,11 +858,11 @@
         inputs: {
           eyebrow: "Entrées",
           title: "Ce qu'il lit",
-          copy: "Le contrôle travaille sur les fichiers déjà disponibles dans l'espace de travail Codex du cabinet. Les PDF textuels et numérisés ne peuvent pas alimenter l’échantillon : fournissez un export Excel ou CSV avec une correspondance des champs vérifiée.",
+          copy: "Travaille sur les fichiers disponibles dans l’espace Codex du cabinet : Excel, CSV et journaux PDF textuels avec écritures identifiables. Les colonnes, en-têtes et suites entre pages doivent être vérifiés ; chaque écriture doit être équilibrée avant l’échantillonnage. Les scans et formats non pris en charge restent exclus.",
           cards: [
             ["Excel et CSV", "Journaux exportés avec en-têtes lisibles et lignes comptables."],
             ["Excel type impression", "Feuilles avec en-têtes répétés, colonnes larges et lignes de détail."],
-            ["PDF textuels", "Non pris en charge pour la normalisation et l’échantillonnage, même si le texte est extractible."],
+            ["PDF textuels", "Journaux avec en-têtes d’écriture et colonnes débit/crédit vérifiées ; les écritures peuvent continuer sur plusieurs pages."],
             ["Paramètres d'échantillon", "Méthode, seed, filtres et taille d'échantillon documentés dans la trace de revue."]
           ]
         },
@@ -938,11 +938,11 @@
         inputs: {
           eyebrow: "Entradas",
           title: "Qué lee",
-          copy: "Trabaja con archivos ya disponibles en el espacio de trabajo Codex del despacho. Los PDF con texto y escaneados no pueden aportar filas a la muestra: proporcione una exportación Excel o CSV con un mapeo revisado.",
+          copy: "Trabaja con archivos disponibles en el espacio Codex del despacho: Excel, CSV y diarios PDF con texto y asientos identificables. Deben revisarse columnas, encabezados y continuaciones entre páginas; cada asiento debe cuadrar antes del muestreo. Las imágenes escaneadas y diseños no compatibles quedan excluidos.",
           cards: [
             ["Excel y CSV", "Diarios exportados con encabezados legibles y líneas contables."],
             ["Excel con formato de impresión", "Hojas con encabezados repetidos, columnas anchas y líneas de detalle."],
-            ["PDF con texto", "No compatibles con la normalización ni el muestreo, aunque pueda extraerse el texto."],
+            ["PDF con texto", "Diarios con encabezados de asiento y columnas debe/haber revisadas; los asientos pueden continuar en otras páginas."],
             ["Parámetros de la muestra", "Método, semilla, filtros y tamaño de la muestra documentados en la trazabilidad de revisión."]
           ]
         },
@@ -1018,11 +1018,11 @@
         inputs: {
           eyebrow: "Eingaben",
           title: "Was es liest",
-          copy: "Arbeitet mit Dateien, die bereits im Codex-Workspace der Kanzlei verfügbar sind. Text- und Scan-PDFs können keine Stichprobenzeilen liefern: Erforderlich ist ein Excel- oder CSV-Export mit geprüfter Feldzuordnung.",
+          copy: "Arbeitet mit Dateien im Codex-Workspace der Kanzlei: Excel, CSV und Text-PDF-Journale mit erkennbaren Buchungssätzen. Spalten, Kopfzeilen und Fortsetzungen über Seiten erfordern eine Prüfung; jeder Buchungssatz muss vor der Stichprobe ausgeglichen sein. Scans und nicht unterstützte Layouts bleiben ausgeschlossen.",
           cards: [
             ["Excel und CSV", "Exportierte Journale mit lesbaren Kopfzeilen und Buchungszeilen."],
             ["Druck-Excel", "Blätter mit wiederholten Kopfzeilen, breiten Spalten und Detailzeilen."],
-            ["Text-PDFs", "Für Normalisierung und Stichproben nicht unterstützt, auch bei extrahierbarem Text."],
+            ["Text-PDFs", "Journale mit Buchungskopfzeilen und geprüften Soll-/Habenspalten; Buchungssätze können sich über mehrere Seiten erstrecken."],
             ["Stichprobenparameter", "Methode, Seed, Filter und Stichprobengröße in den Prüfdateien dokumentiert."]
           ]
         },
@@ -1311,7 +1311,7 @@
         "model.source.title": "Nella mappatura il modello può leggere dati reali del giornale",
         "model.source.copy": "Il modello riceve le istruzioni e può vedere lo stesso contesto Studio Archive di cliente, incarico e run, la ricevuta e il percorso del file selezionato. Intestazioni, contenuto fornito o righe normalizzate possono essere aperti quando servono a risolvere una specifica ambiguità di mappatura.",
         "model.preview.title": "L'ispezione mostra un estratto preciso",
-        "model.preview.copy": "Per ogni file l'ispezione prepara al massimo le prime 20 righe canoniche: data, numeri di movimento e riga, conto e descrizioni, dare, avere, importi, valuta, unità e posizione nel file.",
+        "model.preview.copy": "Per ogni file l'ispezione prepara al massimo le prime 20 righe canoniche: data, numeri di movimento e riga, conto e descrizioni, dare, avere, importi, valuta, unità e posizione nel file. Per la revisione del layout PDF, il modello può ricevere fino a 300 parole per ciascuna delle prime due pagine e dell’ultima, con coordinate, dimensioni delle pagine e impronta del file; ogni parola è limitata a 100 caratteri. Le parole possono contenere dati reali dello studio. La ricostruzione completa e il controllo dei totali delle registrazioni avvengono localmente.",
         "model.local.title": "Il codice controlla tutto il giornale; il modello riceve il campione e un riepilogo",
         "model.local.copy": "Dopo aver confermato la corrispondenza delle colonne, il codice controlla e campiona l'intero giornale. Il modello riceve come è stato scelto il campione, i conteggi principali, lo stato dei controlli e della revisione e fino a 750 righe selezionate, con tutti i 17 campi contabili e di origine. Non riceve il registro del cliente e dell'incarico, i file interni usati per gestire la revisione, i percorsi sul computer o gli orari di elaborazione. I riferimenti ai file sono sostituiti da codici neutri.",
         "model.runtime.title": "Lo stesso campione ridotto in ogni modalità",
@@ -1323,7 +1323,7 @@
         "model.source.title": "The model can read real journal data during mapping",
         "model.source.copy": "The model receives the instructions and may see the same Studio Archive client, engagement, and run context plus the selected file receipt and path. Headers, supplied content, or normalized rows may be opened when needed to resolve a specific mapping ambiguity.",
         "model.preview.title": "Inspection shows a precise extract",
-        "model.preview.copy": "For each file, inspection prepares at most the first 20 canonical rows: date, movement and line numbers, account and descriptions, debit, credit, amounts, currency, unit, and source location.",
+        "model.preview.copy": "For each file, inspection prepares at most the first 20 canonical rows: date, movement and line numbers, account and descriptions, debit, credit, amounts, currency, unit, and source location. For PDF layout review, the model may receive up to 300 words from each of the first two and final pages, with coordinates, page dimensions and the file fingerprint; each word is limited to 100 characters. Those words can contain real case data. Complete reconstruction and registration-total checks run locally.",
         "model.local.title": "Code checks the entire journal; the model receives the sample and a summary",
         "model.local.copy": "Once the column mapping is confirmed, code checks and samples the entire journal. The model receives how the sample was chosen, the main counts, the status of the checks and review, and up to 750 selected rows with all 17 accounting and source fields. It does not receive the client and engagement record, internal files used to manage the review, computer file paths, or processing times. File references are replaced with neutral codes.",
         "model.runtime.title": "The same reduced sample in every mode",
@@ -1335,7 +1335,7 @@
         "model.source.title": "Le modèle peut lire des données réelles du journal pendant le mapping",
         "model.source.copy": "Le modèle reçoit les instructions et peut voir le même contexte Studio Archive du client, de la mission et de l’exécution ainsi que le reçu et le chemin du fichier sélectionné. Les en-têtes, le contenu fourni ou des lignes normalisées peuvent être ouverts pour résoudre une ambiguïté précise de mapping.",
         "model.preview.title": "L'inspection montre un extrait précis",
-        "model.preview.copy": "Pour chaque fichier, l'inspection prépare au maximum les 20 premières lignes canoniques : date, numéros de mouvement et de ligne, compte et libellés, débit, crédit, montants, devise, unité et emplacement dans la source.",
+        "model.preview.copy": "Pour chaque fichier, l'inspection prépare au maximum les 20 premières lignes canoniques : date, numéros de mouvement et de ligne, compte et libellés, débit, crédit, montants, devise, unité et emplacement dans la source. Pour examiner la mise en page PDF, le modèle peut recevoir jusqu’à 300 mots de chacune des deux premières pages et de la dernière, avec leurs coordonnées, les dimensions des pages et l’empreinte du fichier ; chaque mot est limité à 100 caractères. Ces mots peuvent contenir des données réelles du dossier. La reconstruction complète et le contrôle des totaux des écritures sont exécutés localement.",
         "model.local.title": "Le code contrôle tout le journal ; le modèle reçoit l’échantillon et un résumé",
         "model.local.copy": "Une fois la correspondance des colonnes confirmée, le code contrôle et échantillonne tout le journal. Le modèle reçoit la manière dont l’échantillon a été choisi, les principaux décomptes, l’état des contrôles et de la revue, et jusqu’à 750 lignes sélectionnées avec les 17 champs comptables et de provenance. Il ne reçoit pas le registre du client et de la mission, les fichiers internes utilisés pour gérer la revue, les chemins sur l’ordinateur ni les heures de traitement. Les références aux fichiers sont remplacées par des codes neutres.",
         "model.runtime.title": "Le même échantillon réduit dans chaque mode",
@@ -1347,7 +1347,7 @@
         "model.source.title": "Das Modell kann bei der Zuordnung echte Journaldaten lesen",
         "model.source.copy": "Das Modell erhält die Anweisungen und kann denselben Studio-Archive-Kontext für Mandant, Auftrag und Lauf sowie Beleg und Pfad der ausgewählten Datei sehen. Überschriften, bereitgestellte Inhalte oder normalisierte Zeilen können geöffnet werden, um eine konkrete Zuordnungsunklarheit zu lösen.",
         "model.preview.title": "Die Prüfung zeigt einen genau begrenzten Auszug",
-        "model.preview.copy": "Für jede Datei bereitet die Prüfung höchstens die ersten 20 kanonischen Zeilen auf: Datum, Bewegungs- und Zeilennummern, Konto und Beschreibungen, Soll, Haben, Beträge, Währung, Einheit und Quellposition.",
+        "model.preview.copy": "Für jede Datei bereitet die Prüfung höchstens die ersten 20 kanonischen Zeilen auf: Datum, Bewegungs- und Zeilennummern, Konto und Beschreibungen, Soll, Haben, Beträge, Währung, Einheit und Quellposition. Für die Prüfung des PDF-Layouts kann das Modell bis zu 300 Wörter aus jeder der ersten beiden Seiten und der letzten Seite erhalten, mit Koordinaten, Seitengrößen und Dateiprüfsumme; jedes Wort ist auf 100 Zeichen begrenzt. Diese Wörter können echte Falldaten enthalten. Die vollständige Rekonstruktion und die Kontrolle der Buchungssummen erfolgen lokal.",
         "model.local.title": "Der Code prüft das gesamte Journal; das Modell erhält die Stichprobe und eine Zusammenfassung",
         "model.local.copy": "Nach Bestätigung der Spaltenzuordnung prüft und beprobt der Code das gesamte Journal. Das Modell erhält Angaben dazu, wie die Stichprobe ausgewählt wurde, die wichtigsten Zählwerte, den Stand der Kontrollen und Prüfung sowie bis zu 750 ausgewählte Zeilen mit allen 17 Buchungs- und Herkunftsfeldern. Es erhält weder den Mandanten- und Auftragsdatensatz noch interne Dateien zur Steuerung der Prüfung, Computerpfade oder Verarbeitungszeiten. Dateiverweise werden durch neutrale Codes ersetzt.",
         "model.runtime.title": "Dieselbe reduzierte Stichprobe in jeder Variante",
@@ -1359,7 +1359,7 @@
         "model.source.title": "El modelo puede leer datos reales del diario durante la asignación",
         "model.source.copy": "El modelo recibe las instrucciones y puede ver el mismo contexto Studio Archive del cliente, del encargo y de la ejecución, además del recibo y la ruta del archivo seleccionado. Los encabezados, el contenido aportado o las filas normalizadas pueden abrirse para resolver una ambigüedad concreta de asignación.",
         "model.preview.title": "La inspección muestra un extracto preciso",
-        "model.preview.copy": "Para cada archivo, la inspección prepara como máximo las primeras 20 filas canónicas: fecha, números de movimiento y línea, cuenta y descripciones, debe, haber, importes, moneda, unidad y ubicación en la fuente.",
+        "model.preview.copy": "Para cada archivo, la inspección prepara como máximo las primeras 20 filas canónicas: fecha, números de movimiento y línea, cuenta y descripciones, debe, haber, importes, moneda, unidad y ubicación en la fuente. Para revisar el diseño del PDF, el modelo puede recibir hasta 300 palabras de cada una de las dos primeras páginas y de la última, con coordenadas, dimensiones de página y huella del archivo; cada palabra se limita a 100 caracteres. Pueden contener datos reales del expediente. La reconstrucción completa y la comprobación de los totales de los asientos se ejecutan localmente.",
         "model.local.title": "El código revisa todo el diario; el modelo recibe la muestra y un resumen",
         "model.local.copy": "Una vez confirmada la correspondencia de las columnas, el código revisa y muestrea todo el diario. El modelo recibe cómo se eligió la muestra, los recuentos principales, el estado de los controles y de la revisión, y hasta 750 filas seleccionadas con los 17 campos contables y de origen. No recibe el registro del cliente y del encargo, los archivos internos usados para gestionar la revisión, las rutas del ordenador ni los horarios de procesamiento. Las referencias a archivos se sustituyen por códigos neutros.",
         "model.runtime.title": "La misma muestra reducida en cada modalidad",

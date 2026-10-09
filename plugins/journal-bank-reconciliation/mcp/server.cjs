@@ -16,6 +16,7 @@ const SHARED_ASSURANCE_ROOT = (() => {
     ? vendored
     : path.resolve(PLUGIN_ROOT, "..", "_shared", "vendor", "modules", "vera_assurance");
 })();
+const SHARED_PDF_ROOT = path.join(path.dirname(SHARED_ASSURANCE_ROOT), "vera_journal_pdf");
 const IMPLEMENTATION_ARTIFACT_SPECS = [
   [
     "implementation.plugin.codex_plugin.plugin_json",
@@ -147,6 +148,7 @@ const IMPLEMENTATION_ARTIFACT_SPECS = [
     "shared_implementation",
     "serialization.py",
   ],
+  ["implementation.vera_journal_pdf", "pdf_implementation", "__init__.py"],
 ];
 validateImplementationPhysicalTree();
 const PLUGIN_MANIFEST = JSON.parse(
@@ -3057,6 +3059,7 @@ function implementationArtifactRoots() {
   return {
     implementation: PLUGIN_ROOT,
     shared_implementation: SHARED_ASSURANCE_ROOT,
+    pdf_implementation: SHARED_PDF_ROOT,
   };
 }
 
@@ -3142,6 +3145,10 @@ function validateImplementationPhysicalTree() {
     ["."],
     [],
   );
+  const pdfTree = scanImplementationRoot(SHARED_PDF_ROOT, ["."], []);
+  const pdfPaths = IMPLEMENTATION_ARTIFACT_SPECS
+    .filter(([, rootId]) => rootId === "pdf_implementation")
+    .map(([, , relativePath]) => relativePath);
   const expectedPluginDirectories =
     implementationExpectedDirectories(pluginPaths);
   if (
@@ -3151,7 +3158,9 @@ function validateImplementationPhysicalTree() {
       JSON.stringify([...expectedPluginDirectories].sort()) ||
     JSON.stringify([...sharedTree.files].sort()) !==
       JSON.stringify([...sharedPaths].sort()) ||
-    sharedTree.directories.size !== 0
+    sharedTree.directories.size !== 0 ||
+    JSON.stringify([...pdfTree.files].sort()) !== JSON.stringify([...pdfPaths].sort()) ||
+    pdfTree.directories.size !== 0
   ) {
     throw new Error("implementation physical tree is not exact");
   }
@@ -3160,7 +3169,8 @@ function validateImplementationPhysicalTree() {
 function validateImplementationSpecCoverage(roots) {
   if (
     path.resolve(roots.implementation) !== PLUGIN_ROOT ||
-    path.resolve(roots.shared_implementation) !== SHARED_ASSURANCE_ROOT
+    path.resolve(roots.shared_implementation) !== SHARED_ASSURANCE_ROOT ||
+    path.resolve(roots.pdf_implementation) !== SHARED_PDF_ROOT
   ) {
     throw new Error("implementation receipt roots are invalid");
   }
@@ -3314,6 +3324,7 @@ function sourceRootsForOutput(outputDir) {
     run: outputDir,
     implementation: PLUGIN_ROOT,
     shared_implementation: SHARED_ASSURANCE_ROOT,
+    pdf_implementation: SHARED_PDF_ROOT,
   };
   let runRoot = null;
   let candidate = path.resolve(outputDir);

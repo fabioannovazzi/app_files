@@ -49,6 +49,7 @@ TRANSITIVE_IMPLEMENTATION_ATTACKS = [
     ("assurance", "relationships.py"),
     ("assurance", "review_output_transaction.cjs"),
     ("assurance", "serialization.py"),
+    ("shared_pdf", "__init__.py"),
 ]
 
 
@@ -135,6 +136,11 @@ def _customer_run_id(output_dir: Path) -> str:
 def load_core() -> Any:
     if str(SCRIPT_DIR) not in sys.path:
         sys.path.insert(0, str(SCRIPT_DIR))
+    # These standalone components use the same bootstrap import name.
+    # Bind each test load to its own source instead of reusing another component.
+    sys.path.remove(str(SCRIPT_DIR))
+    sys.path.insert(0, str(SCRIPT_DIR))
+    sys.modules.pop("implementation_bootstrap", None)
     spec = importlib.util.spec_from_file_location("journal_sampling_core", CORE_PATH)
     assert spec and spec.loader
     module = importlib.util.module_from_spec(spec)
@@ -185,9 +191,13 @@ def _approve_suggested_recipe(path: Path) -> None:
             amount_sign_convention=entry.get("amount_sign_convention"),
         )
         adapter_id = (
-            core.PRINT_ADAPTER_ID
-            if entry["parser"] == "print_friendly_excel"
-            else core.TABULAR_ADAPTER_ID
+            "journal.registration_pdf.v1"
+            if entry["parser"] == "registration_pdf"
+            else (
+                core.PRINT_ADAPTER_ID
+                if entry["parser"] == "print_friendly_excel"
+                else core.TABULAR_ADAPTER_ID
+            )
         )
         decision_id = f"decision.journal_mapping.{index}"
         qualification["status"] = "reviewed"
@@ -567,6 +577,7 @@ def test_sample_stage_closes_all_values_receipts_gates_and_physical_outputs(
     assert envelope["implementation_artifact_refs"] == [
         *(artifact_id for _, artifact_id in core.IMPLEMENTATION_PLUGIN_FILES),
         *(artifact_id for _, artifact_id in core.ASSURANCE_IMPLEMENTATION_FILES),
+        "implementation.vera_journal_pdf",
     ]
     receipt_roles = {
         receipt["artifact_id"]: receipt["role"]
@@ -2036,7 +2047,10 @@ def test_journal_sampling_vendors_shared_assurance_module() -> None:
         (ROOT / "scripts" / "plugin_vendor_modules.json").read_text(encoding="utf-8")
     )
 
-    assert payload["plugins"]["journal-sampling"]["module_roots"] == ["vera_assurance"]
+    assert payload["plugins"]["journal-sampling"]["module_roots"] == [
+        "vera_assurance",
+        "vera_journal_pdf",
+    ]
 
 
 def test_skill_tells_codex_user_does_not_run_cli_directly() -> None:
@@ -2747,6 +2761,11 @@ def _copy_journal_implementation_tree(
         copied_assurance,
         ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "*.pyo"),
     )
+    shutil.copytree(
+        ROOT / "plugins" / "_shared" / "vendor" / "modules" / "vera_journal_pdf",
+        copied_assurance.parent / "vera_journal_pdf",
+        ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "*.pyo"),
+    )
     return copied_plugin, copied_assurance
 
 
@@ -2790,6 +2809,7 @@ def test_transitive_implementation_attack_matrix_is_exact() -> None:
     assert TRANSITIVE_IMPLEMENTATION_ATTACKS == [
         *(("plugin", path) for path, _ in core.IMPLEMENTATION_PLUGIN_FILES),
         *(("assurance", path) for path, _ in core.ASSURANCE_IMPLEMENTATION_FILES),
+        ("shared_pdf", "__init__.py"),
     ]
 
 
@@ -3014,7 +3034,11 @@ def test_python_replay_rejects_each_transitive_implementation_mutation(
     relative_path: str,
 ) -> None:
     copied_plugin, copied_assurance = _copy_journal_implementation_tree(tmp_path)
-    root = copied_plugin if implementation_root == "plugin" else copied_assurance
+    root = {
+        "plugin": copied_plugin,
+        "assurance": copied_assurance,
+        "shared_pdf": copied_assurance.parent / "vera_journal_pdf",
+    }[implementation_root]
     _mutate_implementation_bytes(root / relative_path)
 
     completed = subprocess.run(
@@ -3048,7 +3072,11 @@ def test_mcp_replay_rejects_each_transitive_implementation_mutation(
     relative_path: str,
 ) -> None:
     copied_plugin, copied_assurance = _copy_journal_implementation_tree(tmp_path)
-    root = copied_plugin if implementation_root == "plugin" else copied_assurance
+    root = {
+        "plugin": copied_plugin,
+        "assurance": copied_assurance,
+        "shared_pdf": copied_assurance.parent / "vera_journal_pdf",
+    }[implementation_root]
     _mutate_implementation_bytes(root / relative_path)
 
     result = _journal_transaction_call(
@@ -4153,3 +4181,156 @@ def test_date_filters_include_boundaries_and_exclude_outside_dates():
     )
     actual = core._apply_filters(frame, date_start="2026-01-31", date_end="2026-02-01")
     assert actual.get_column("entry_date").to_list() == ["2026-01-31", "2026-02-01"]
+
+
+def _write_registration_journal_pdf(
+    path: Path,
+    *,
+    credit: str = "100,00",
+    continuation_date: str = "01/01/2024",
+    credit_x: int = 500,
+) -> dict[str, Any]:
+    from reportlab.pdfgen import canvas
+
+    pdf = canvas.Canvas(str(path), pagesize=(600, 800))
+    pdf.setFont("Helvetica", 10)
+    pdf.drawString(30, 750, "1 ---- 01/01/2024 ---- Fattura INV100")
+    pdf.drawString(30, 710, "6.30.055")
+    pdf.drawString(200, 710, "Pagamento")
+    pdf.drawString(410, 710, "100,00")
+    pdf.drawString(200, 690, "descrizione su due righe")
+    pdf.showPage()
+    pdf.setFont("Helvetica", 10)
+    pdf.drawString(30, 750, f"seguito registrazione del {continuation_date}")
+    pdf.drawString(120, 710, "7.10.001")
+    pdf.drawString(200, 710, "Contropartita")
+    pdf.drawString(credit_x, 710, credit)
+    pdf.save()
+    return {
+        "body": [20, 770],
+        "columns": {
+            "account_debit": [20, 110],
+            "account_credit": [110, 195],
+            "description": [195, 400],
+            "debit": [400, 490],
+            "credit": [490, 590],
+        },
+        "ignored_line_prefixes": [],
+    }
+
+
+def test_reviewed_registration_pdf_normalizes_cross_page_entry_and_samples(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    pdf = tmp_path / "journal.pdf"
+    layout = _write_registration_journal_pdf(pdf)
+    recipe = tmp_path / "input_recipe.json"
+    recipe.write_text(
+        json.dumps(
+            {
+                "files": {
+                    pdf.name: {
+                        "parser": "registration_pdf",
+                        "layout": layout,
+                    }
+                }
+            }
+        )
+    )
+    output = tmp_path / "normalization"
+
+    inspection = core.inspect_path(pdf, output, recipe)
+    _approve_suggested_recipe(output / "suggested_recipe.json")
+    normalized = core.normalize_path(pdf, output, output / "suggested_recipe.json")
+    sample = core.run_sample(
+        output / "normalized_journal.csv", tmp_path / "sample", method="random", size=1
+    )
+
+    assert inspection.files[0]["qualification_status"] == "needs_review"
+    assert len(inspection.files[0]["preview"]) == 2
+    assert normalized.frame.height == 2
+    assert normalized.diagnostics["population_status"] == "complete"
+    assert normalized.frame.get_column("source_page").to_list() == [1, 2]
+    assert normalized.frame.get_column("entry_date").to_list() == [
+        "2024-01-01",
+        "2024-01-01",
+    ]
+    assert normalized.frame.get_column("amount_signed").to_list() == ["100", "-100"]
+    assert "descrizione su due righe" in normalized.frame.get_column("line_desc")[0]
+    assert sample.frame.height == 1
+    assert (tmp_path / "sample" / "journal_sample.xlsx").is_file()
+
+
+def test_registration_pdf_unbalanced_entry_withholds_complete_population(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    pdf = tmp_path / "journal.pdf"
+    layout = _write_registration_journal_pdf(pdf, credit="99,00")
+
+    result = core.normalize_file(
+        pdf, {"files": {pdf.name: {"parser": "registration_pdf", "layout": layout}}}
+    )
+
+    assert result.frame.is_empty()
+    assert result.diagnostics["qualification_status"] == "unsupported_source_layout"
+    assert (
+        result.diagnostics["rejected_rows"][0]["reason"]
+        == "registration_debit_credit_do_not_balance"
+    )
+
+
+@pytest.mark.parametrize(
+    ("options", "reason"),
+    [
+        (
+            {"continuation_date": "02/01/2024"},
+            "continuation_without_matching_registration",
+        ),
+        ({"credit_x": 590}, "monetary_value_outside_reviewed_bands"),
+    ],
+)
+def test_registration_pdf_ambiguous_lineage_or_amount_blocks_all_rows(
+    tmp_path: Path,
+    options: dict[str, Any],
+    reason: str,
+) -> None:
+    core = load_core()
+    pdf = tmp_path / "journal.pdf"
+    layout = _write_registration_journal_pdf(pdf, **options)
+    result = core.normalize_file(
+        pdf, {"files": {pdf.name: {"parser": "registration_pdf", "layout": layout}}}
+    )
+    assert result.frame.is_empty()
+    assert reason in [row["reason"] for row in result.diagnostics["rejected_rows"]]
+
+
+def test_registration_pdf_intake_exposes_bounded_layout_evidence_without_postings(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    pdf = tmp_path / "journal.pdf"
+    _write_registration_journal_pdf(pdf)
+    result = core.normalize_file(pdf)
+    evidence = result.diagnostics["pdf_layout_evidence"]
+    assert result.frame.is_empty()
+    assert result.diagnostics["qualification_status"] == "needs_review"
+    assert len(evidence["source_sha256"]) == 64
+    assert [page["page"] for page in evidence["sampled_pages"]] == [1, 2]
+    assert all(len(page["words"]) <= 300 for page in evidence["sampled_pages"])
+
+
+def test_registration_pdf_review_cannot_be_reused_for_changed_source(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    pdf = tmp_path / "journal.pdf"
+    layout = _write_registration_journal_pdf(pdf)
+    recipe = {"files": {pdf.name: {"parser": "registration_pdf", "layout": layout}}}
+    inspected = core.normalize_file(pdf, recipe)
+    reviewed = {"files": {pdf.name: inspected.diagnostics["suggested_recipe"]}}
+    _write_registration_journal_pdf(pdf, credit="99,00")
+    result = core.normalize_file(pdf, reviewed)
+    assert result.frame.is_empty()
+    assert "changed" in result.diagnostics["parser_error"]["message"].lower()

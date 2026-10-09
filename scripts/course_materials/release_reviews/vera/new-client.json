@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "new-client",
-  "course_sha256": "d31408993e314c699334d61bb994cee86316554452b768cf394a74a2122d78c9",
+  "course_sha256": "6b7417f47f8c25be3460318e99522bd8319858da884da8c2e401043c0a5de3be",
   "reviewer": "Codex bounded teaching-material and source integration review",
   "reviewed_at": "2026-10-09T13:18:34.046693+00:00",
   "review_scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
@@ -648,5 +648,21 @@
     "installed_host_acceptance": false,
     "learner_or_professional_acceptance": false,
     "scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance."
+  },
+  "journal_pdf_source_binding_review_20261009": {
+    "reviewed_at": "2026-10-09T17:33:15.527804+00:00",
+    "reviewer": "Codex source-bound PDF workflow review",
+    "previous_course_sha256": "d31408993e314c699334d61bb994cee86316554452b768cf394a74a2122d78c9",
+    "current_course_sha256": "6b7417f47f8c25be3460318e99522bd8319858da884da8c2e401043c0a5de3be",
+    "changed_fields": [
+      "revision",
+      "sources"
+    ],
+    "unchanged_materials": [
+      "All localized lesson text",
+      "Input bytes and execution contracts",
+      "Editorial and artifact review history"
+    ],
+    "scope": "Source inventory only: reviewed registration PDF adapter, page-cache release and worker diagnostics. Complete authored lesson content is identical to the prior main baseline. Prior output and editorial judgments remain historical; no renewed visual, installed-host, learner or Nicola-file acceptance is claimed. Fresh source-bound execution is required by CI teaching release verification."
   }
 }

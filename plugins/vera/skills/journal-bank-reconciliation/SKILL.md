@@ -81,7 +81,13 @@ Before reporting native values, require the module's fresh
 `material_value_ledger.json` replay and review the unclassified exact
 `relationship_residuals.csv`; do not infer a residual disposition.
 
-The module may admit a text PDF only when inspection recovers a consistent,
+The module may admit a journal text PDF through its reviewed registration
+adapter, including dates in registration headers and cross-page postings.
+Read the module’s Registration-style journal PDF instructions and use its
+bounded coordinate evidence, layout/mapping receipts and closure checks.
+Bank PDFs still require their own table mapping.
+
+The module may otherwise admit a text PDF only when inspection recovers a consistent,
 labelled physical table and the professional approves a source-bound mapping
 of date, incoming/outgoing or signed amount, sign convention, and every
 excluded monetary column such as running balance. If either source is generic,
