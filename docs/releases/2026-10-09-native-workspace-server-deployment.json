@@ -76,7 +76,7 @@
     }
   ],
   "source_tests_previously_qualified": 2084,
-  "full_native_instrumented_rerun": "running",
+  "full_native_instrumented_rerun": "interrupted after repeated instrumentation runtime timeouts; not qualification",
   "previous_native_coverage_percent": 53.76950920484179,
   "coverage_instrumentation_corrected": true,
   "server_deployment_status": "pending green checks and merge",
@@ -87,7 +87,7 @@
     "antigravity": 5
   },
   "public_published_version_manifest_changed": false,
-  "CI_status": "not yet dispatched",
+  "CI_status": "new run required after public catalogue regeneration",
   "final_package_checks": {
     "tests": 443,
     "passed": 441,
@@ -115,5 +115,20 @@
   "normal_variance_rechecks": {
     "passed": 9,
     "junit": "/private/tmp/native-deploy-variance-normal-rechecks-20261009.xml"
+  },
+  "full_native_instrumented_rerun_receipt": "/private/tmp/native-deploy-coverage-interrupted-20261009.json",
+  "public_course_catalogue": {
+    "builder": "scripts/course_materials/build_public_catalog.py",
+    "files_verified": 3852,
+    "generated_course_html_refreshed": 85,
+    "reason": "Propagate reviewed source course revision into public pages",
+    "check": "passed"
+  },
+  "course_generated_checks": {
+    "source_catalogue": "passed",
+    "public_catalogue": "passed",
+    "matter_review_assets": "passed",
+    "concordato_source_pdfs": "passed",
+    "presentation_baselines_all_five_languages": "passed"
   }
 }
