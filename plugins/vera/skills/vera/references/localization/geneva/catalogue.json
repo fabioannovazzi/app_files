@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/.codex/worktrees/journal-pdf-end-to-end/app_files/plugins/vera",
-  "version": "0.1.358",
-  "captured_at": "2026-10-09T17:42:20.718337+00:00",
-  "catalogue_fingerprint": "6095d1ba78f32558a97251062e72aab277edcac9c0544b9ffc48fb5532406c70",
-  "manifest_sha256": "5037cc3bf4fbd426f8330edfec71b5aa7b71d11cfbf7ef1ad7eb475feedc2343",
+  "root": "/Users/fabio/.codex/worktrees/vera-host-use-marker/app_files/plugins/vera",
+  "version": "0.1.359",
+  "captured_at": "2026-10-10T18:28:56.717717+00:00",
+  "catalogue_fingerprint": "2966e4569ad3a8f6914b5bcd1db45d5e8fb110fa434bc3aa1f493c2f0491ac59",
+  "manifest_sha256": "d06ddb222ee7ba83d1910bc4e0de381cb08703d910140c50e210b31470ec6a00",
   "entries": [
     {
       "function_id": "adeguati-assetti",

@@ -266,7 +266,7 @@
     },
     {
       "path": "scripts/verified_execution.py",
-      "sha256": "48855c1adb73e2e0c7b7136ac9fc3d6b7ca65a09e0cc3cd5792307bfed9ba0b0"
+      "sha256": "6c41ba4583fd91a9cfaa78d3ccfc07eadda49e8efef7e4a58b01f0560b5ad6c0"
     },
     {
       "path": "skills/bilancio-oic/SKILL.md",
@@ -512,5 +512,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "49008e137eddc1ed2f2b9d8686e4c205b0c3b40090804ba4efdc381deffb50bf"
+  "canonical_course_sha256": "d2edf85d6cb852aab1d0df3e7477603a32f9bb04c48238d5b3c34c93273c6570"
 }

@@ -77,7 +77,7 @@
     },
     {
       "path": "scripts/verified_execution.py",
-      "sha256": "48855c1adb73e2e0c7b7136ac9fc3d6b7ca65a09e0cc3cd5792307bfed9ba0b0"
+      "sha256": "6c41ba4583fd91a9cfaa78d3ccfc07eadda49e8efef7e4a58b01f0560b5ad6c0"
     },
     {
       "path": "skills/trasformazione/SKILL.md",
@@ -406,5 +406,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "64bc06545792bcb1f92f254b78725da6bb0e05a19f2c503ea22ca2826c67a78f"
+  "canonical_course_sha256": "b37f5d86d6167ecccdbe4365e05b43b7bd6fcc7b414a3b954b0bcdde08d2438e"
 }

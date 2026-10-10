@@ -94,6 +94,25 @@ def _real_ancestors(root: Path) -> None:
             raise ValueError(f"Installation ancestor must be a real directory: {path}")
 
 
+def _validate_host_use_markers(directory: Path) -> None:
+    """Accept only numeric regular host leases; none become executable inputs.
+
+    Exact filesystem rules distinguish the reported host bookkeeping from code
+    without allowing an arbitrary ignored subtree in the integrity boundary.
+    """
+
+    for marker in directory.iterdir():
+        info = marker.lstat()
+        if (
+            not marker.name.isascii()
+            or not marker.name.isdecimal()
+            or not stat.S_ISREG(info.st_mode)
+            or _reparse_point(info)
+            or info.st_nlink != 1
+        ):
+            raise ValueError(f"Invalid host use marker: {marker}")
+
+
 def _inventory(root: Path) -> tuple[dict[str, Path], set[str]]:
     """Reject unexpected filesystem types before reading any installed code."""
 
@@ -108,6 +127,9 @@ def _inventory(root: Path) -> tuple[dict[str, Path], set[str]]:
             if _reparse_point(info):
                 raise ValueError(f"Reparse installation entry: {path}")
             if stat.S_ISDIR(info.st_mode):
+                if relative == ".in_use":
+                    _validate_host_use_markers(path)
+                    continue
                 if path.name != "__pycache__":
                     directories.add(relative)
                     pending.append(path)

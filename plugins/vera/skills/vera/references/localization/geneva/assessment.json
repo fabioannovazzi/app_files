@@ -1206,7 +1206,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "6095d1ba78f32558a97251062e72aab277edcac9c0544b9ffc48fb5532406c70",
+  "catalogue_fingerprint": "2966e4569ad3a8f6914b5bcd1db45d5e8fb110fa434bc3aa1f493c2f0491ac59",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1571,5 +1571,12 @@
     ],
     "scope": "Reviewed registration-style PDF intake and existing professional/source qualification boundaries. Existing Geneva relevance dispositions remain unchanged. The adapter still needs reviewed coordinates and full registration closure; no legal adaptation, actual Geneva-client or installed-host acceptance is claimed.",
     "evidence": "docs/releases/2026-10-09-vera-registration-pdf.md"
+  },
+  "host_marker_version_binding_20261010": {
+    "prior_catalogue_fingerprint": "6095d1ba78f32558a97251062e72aab277edcac9c0544b9ffc48fb5532406c70",
+    "current_catalogue_fingerprint": "2966e4569ad3a8f6914b5bcd1db45d5e8fb110fa434bc3aa1f493c2f0491ac59",
+    "version": "0.1.359",
+    "changed_entrypoints": [],
+    "scope": "Canonical release metadata only; all skill hashes, jurisdiction judgments and acceptance limits are unchanged."
   }
 }

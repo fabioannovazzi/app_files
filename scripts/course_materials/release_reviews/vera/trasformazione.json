@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "trasformazione",
-  "course_sha256": "64bc06545792bcb1f92f254b78725da6bb0e05a19f2c503ea22ca2826c67a78f",
+  "course_sha256": "b37f5d86d6167ecccdbe4365e05b43b7bd6fcc7b414a3b954b0bcdde08d2438e",
   "reviewer": "Codex bounded teaching-material and source integration review",
   "reviewed_at": "2026-10-09T13:18:34.182538+00:00",
   "review_scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
@@ -417,5 +417,11 @@
       "Editorial and artifact review history"
     ],
     "scope": "Source inventory only: reviewed registration PDF adapter, page-cache release and worker diagnostics. Complete authored lesson content is identical to the prior main baseline. Prior output and editorial judgments remain historical; no renewed visual, installed-host, learner or Nicola-file acceptance is claimed. Fresh source-bound execution is required by CI teaching release verification."
+  },
+  "host_marker_source_binding_review_20261010": {
+    "prior_course_sha256": "64bc06545792bcb1f92f254b78725da6bb0e05a19f2c503ea22ca2826c67a78f",
+    "current_course_sha256": "b37f5d86d6167ecccdbe4365e05b43b7bd6fcc7b414a3b954b0bcdde08d2438e",
+    "scope": "Only the reviewed integrity preflight source binding changed. Teaching text, inputs, execution contracts and historical editorial/output judgments remain unchanged; no fresh learner or installed-host acceptance is claimed.",
+    "evidence": "docs/releases/2026-10-10-vera-host-use-marker.md"
   }
 }
