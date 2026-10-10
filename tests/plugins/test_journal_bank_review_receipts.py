@@ -440,6 +440,10 @@ def test_managed_registration_pdf_layout_sealing_and_reconciliation(
         with ZipFile(archive) as bundle:
             bundle.extractall(extracted)
         root = next(extracted.rglob("scripts/managed_python_runtime.py")).parents[1]
+    if host != "source":
+        markers = root / ".in_use"
+        markers.mkdir()
+        (markers / "71").write_text("")
     environment = _runtime_environment(root, tmp_path)
     case = _case(tmp_path, registration_pdf=True)
     output = Path(case["output_dir"])

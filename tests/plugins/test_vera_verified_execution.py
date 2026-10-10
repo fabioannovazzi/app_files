@@ -363,3 +363,97 @@ def test_preflight_cli_reports_corrupt_index_without_execution(
 
     assert result == 1
     assert "Invalid execution digest index" in caplog.text
+
+
+@pytest.mark.parametrize("component", sorted(load_recovery().ASSURED_MODULES))
+def test_numeric_host_use_markers_preserve_real_component_validation(
+    tmp_path, component
+):
+    recovery = load_recovery()
+    root = installation(tmp_path, component)
+    markers = root / ".in_use"
+    markers.mkdir()
+    (markers / "71").write_text("host bookkeeping")
+    (markers / "123").write_text("")
+
+    prepared = recovery.prepare_execution_root(root, component)
+
+    assert prepared == root
+    assert (markers / "71").read_text() == "host bookkeeping"
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "code",
+        "unicode",
+        "nested",
+        "symlink",
+        "hardlink",
+        "directory_symlink",
+        "nested_marker",
+        "altered_code",
+    ],
+)
+def test_host_marker_exception_does_not_hide_unsafe_installation(
+    tmp_path, monkeypatch, mutation
+):
+    recovery = load_recovery()
+    root = installation(tmp_path)
+    markers = root / ".in_use"
+    markers.mkdir()
+    marker = markers / "71"
+    marker.write_text("")
+    if mutation == "code":
+        (markers / "unexpected.py").write_text("# must not execute")
+    elif mutation == "unicode":
+        (markers / "７１").write_text("")
+    elif mutation == "nested":
+        (markers / "72").mkdir()
+    elif mutation == "symlink":
+        marker.unlink()
+        marker.symlink_to(root / "components.json")
+    elif mutation == "hardlink":
+        (tmp_path / "marker-alias").hardlink_to(marker)
+    elif mutation == "directory_symlink":
+        marker.unlink()
+        markers.rmdir()
+        markers.symlink_to(root / "modules", target_is_directory=True)
+    elif mutation == "nested_marker":
+        nested = root / "modules/journal-bank-reconciliation/.in_use"
+        nested.mkdir()
+        (nested / "71").write_text("")
+    else:
+        (
+            root / "modules/journal-bank-reconciliation/scripts/inspect_inputs.py"
+        ).write_text("# altered")
+    executed = []
+    monkeypatch.setattr(
+        recovery, "_validate_module", lambda *args: executed.append(args)
+    )
+
+    with pytest.raises(ValueError):
+        recovery.prepare_execution_root(root, "journal-bank-reconciliation")
+
+    assert executed == []
+
+
+def test_host_markers_are_excluded_from_hardlink_recovery_copy(tmp_path):
+    recovery = load_recovery()
+    root = installation(tmp_path)
+    markers = root / ".in_use"
+    markers.mkdir()
+    (markers / "71").write_text("lease")
+    source = (
+        root / "modules/journal-bank-reconciliation/scripts/implementation_bootstrap.py"
+    )
+    (tmp_path / "host-alias").hardlink_to(source)
+
+    prepared = recovery.prepare_execution_root(root, "journal-bank-reconciliation")
+
+    try:
+        assert prepared != root
+        assert not (prepared / ".in_use").exists()
+        assert (markers / "71").read_text() == "lease"
+    finally:
+        shutil.rmtree(prepared)

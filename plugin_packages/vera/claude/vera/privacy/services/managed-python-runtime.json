@@ -94,7 +94,7 @@
     },
     {
       "id": "verified-code-copy-before-assured-execution",
-      "control": "For the six explicitly supported assured modules, the launchers verify the complete package inventory and stable regular-file bytes against the embedded build-generated SHA-256 index. Symlinks, reparse entries, special files, extra directories/files, missing or changed code and unstable reads stop preparation. Unchanged hardlinked package code is materialized into a fresh private OS temporary directory; each copied file is re-read and must have one physical link, then the unchanged component integrity validator must pass. The managed installation and aliases are not modified. The copy contains indexed product code/assets, not client documents, credentials, workflow reports or dependency environments. This local index detects package drift; it is not a publisher signature, a signed origin attestation or proof of installed-host acceptance. Successful code copies remain in OS temporary storage for normal OS cleanup.",
+      "control": "For the six explicitly supported assured modules, the launchers verify the complete package inventory and stable regular-file bytes against the embedded build-generated SHA-256 index. Symlinks, reparse entries, special files, extra directories/files, missing or changed code and unstable reads stop preparation. Unchanged hardlinked package code is materialized into a fresh private OS temporary directory; each copied file is re-read and must have one physical link, then the unchanged component integrity validator must pass. The managed installation and aliases are not modified. The copy contains indexed product code/assets, not client documents, credentials, workflow reports or dependency environments. This local index detects package drift; it is not a publisher signature, a signed origin attestation or proof of installed-host acceptance. Successful code copies remain in OS temporary storage for normal OS cleanup. The root-level host .in_use directory is non-executable bookkeeping: only ASCII numeric, ordinary single-link regular marker files are excluded from the product inventory. Nested directories, links, reparse points and non-numeric names there are rejected. Marker contents are not read, executed, transmitted or included in a recovery copy; host markers and installed product files are not modified.",
       "implemented_by": [
         "scripts/verified_execution.py",
         "scripts/check_dependencies.py",
@@ -112,9 +112,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-09",
+    "reviewed_at": "2026-10-10",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "8d3f70567d841f59ca8734a4e9378dc061ff76be46b76793bbd970eb9217cff3"
+    "source_fingerprint": "e5cf4269990fbfcb912fc495eb1c0f4608c37d58f2a46ade3062683e534aaac2"
   }
 }
