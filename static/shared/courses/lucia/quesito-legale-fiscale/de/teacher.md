@@ -30,7 +30,7 @@ Erklären Sie den laufenden Schritt und warten Sie auf sein tatsächliches Ergeb
 
 Im Arbeitsthread liest Lucia die Frage und bereitet Ziel, Quellenplan, Sprache und Rechtsrahmen vor. Der Sprachchat erklärt den vorgesehenen Inhalt. Korrigiere Missverständnisse und beantworte nur Fragen, die die Arbeit beeinflussen.
 
-Wähle gewöhnliche Recherche oder Deep Research, falls verfügbar; eine bereits für diese Frage getroffene Wahl bleibt erhalten. Im Arbeitsthread entstehen Recherche und Antwort. Die Spracherklärung folgt dem tatsächlichen Fortschritt und nimmt deine Fragen auf.
+Der Workflow nutzt eine Recherchemethode in der Sitzung: Quellen untersuchen, Belege und Begründung sofort prüfen, Gegenbelege suchen und offene Fragen vertiefen. Zyklen und Maßnahmen bleiben dokumentiert; Feststellungen der Abschlussprüfung öffnen die Recherche erneut. Die Stimme folgt dem tatsächlichen Fortschritt.
 
 Lucia prüft die Antwort anhand von Frage, Quellen und Begründung und korrigiert nötigenfalls. Öffne die Word-Notiz, sieh dir die Schlussfolgerungen an und verfolge eine Quelle. Prüfe Grenzen und offene Punkte vor der Verwendung.
 
@@ -62,7 +62,7 @@ Lassen Sie den Nutzer die Anfrage formulieren und begleiten Sie seinen Versuch.
 
 Lies practice-de.md und fordere eine neue Fassung für die Einführung mit Lieferanten öffentlicher Stellen an. Bewahre die erste Version, verfolge neue Recherche und Prüfung und erläutere die Verwendung des Vergleichs.
 
-Du kannst eine vollständige Frage formulieren, den Rechercheweg wählen, Antwort und Prüfungen einordnen und die Arbeit bei einer geänderten Anfrage aktualisieren.
+Du kannst eine vollständige Frage formulieren, Recherche und offene Fragen verfolgen, Antwort und Prüfungen einordnen und die Arbeit bei einer geänderten Anfrage aktualisieren.
 
 Nenne Lucia Frage, verfügbare Fakten, Land oder Rechtsrahmen, Zielgruppe und gewünschtes Ergebnis. Prüfe Umfang, Quellen, Schlussfolgerungen und offene Punkte im erstellten Dokument.
 

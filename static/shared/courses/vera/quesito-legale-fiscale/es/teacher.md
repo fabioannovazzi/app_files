@@ -30,7 +30,7 @@ Explica el paso que se está ejecutando y espera su resultado real.
 
 En el hilo de trabajo, Vera lee la pregunta y prepara objetivo, fuentes, idioma y marco jurídico. La voz explica qué abarcará la respuesta. Corrige malentendidos y responde solo a las preguntas que cambian el trabajo.
 
-Elige investigación ordinaria o Deep Research si está disponible; el workflow conserva una elección ya hecha para esta pregunta. El hilo de trabajo investiga y redacta. La voz sigue el progreso real y responde a tus preguntas.
+El workflow usa una sola investigación en la sesión: examinar fuentes, verificar inmediatamente soporte y razonamiento, buscar pruebas contrarias y profundizar cuestiones abiertas. Conserva ciclos y tratamientos; los hallazgos de la revisión final reabren la investigación. La voz sigue el progreso real.
 
 Vera verifica la respuesta frente al encargo, las fuentes y el razonamiento y corrige lo necesario. Abre la nota Word, observa las conclusiones y localiza una fuente. Revisa límites y puntos abiertos antes de usarla.
 
@@ -62,7 +62,7 @@ Deja que el usuario formule la petición y acompaña su intento.
 
 Lee practice-es.md y pide una nueva versión para la reunión que incluye proveedores de administraciones públicas. Conserva la primera versión, sigue la nueva investigación y verificación y explica cómo usar la comparación producida.
 
-Sabes plantear una pregunta completa, elegir la investigación, orientarte en la respuesta y sus comprobaciones y actualizar el trabajo cuando cambia el encargo.
+Sabes plantear una pregunta completa, seguir la investigación y las cuestiones abiertas, orientarte en la respuesta y sus comprobaciones y actualizar el trabajo cuando cambia el encargo.
 
 Proporciona a Vera pregunta, hechos disponibles, país o marco jurídico, destinatario y resultado esperado. Revisa alcance, fuentes, conclusiones y puntos abiertos en el documento generado.
 
