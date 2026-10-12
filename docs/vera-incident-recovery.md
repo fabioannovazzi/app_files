@@ -4,7 +4,7 @@ Release candidate: the saved anonymous OAuth correction is approved and
 implemented. Security and incident regression tests pass. Deployment and native
 cross-task acceptance remain pending; see [the connection design](vera-incident-connection-design.md).
 
-Vera 0.1.367 adds a technical incident service, separate from optional feature
+Vera 0.1.368 adds a technical incident service, separate from optional feature
 suggestions. Failures are reported automatically; no support questionnaire or
 extra confirmation is required. Professional outputs and client files are not
 incident inputs. Complete relevant technical chains are retained; mechanically

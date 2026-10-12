@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "files": {
-    ".claude-plugin/plugin.json": "4ebff9b9ff90ae39f99ceb4948b4fb64f54ebc66a39246655a9ce2b438b26ff3",
+    ".claude-plugin/plugin.json": "6b407a29e4404e62c288b22aff8f898f1ed50198eba3eefe36028d30cdc95cbe",
     ".mcp.json": "1f3d9b3541e0ce6be9674fa7278599b83be73356f426aa05e1a064230170ee53",
     "LICENSE": "0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0",
     "README.md": "ef91bc57270cc4b1e2d1bd1ff5f9e999f515d4c54eb4579d98d6b018029ac07f",
@@ -2425,9 +2425,9 @@
     "skills/vera/references/functions-and-limits.md": "e3794600e8eb4f4e9b93d18a78c697933e9116f3b8106edb16659de138c7ac69",
     "skills/vera/references/incident-recovery.md": "5f8663ce58229ed1d1c95c61e0753650fcb63fa62422c28032496e84915ab426",
     "skills/vera/references/localization/geneva.md": "86c083237f5d428b8bdb1347403b8ac36eff2040686e7230c208475c6709267e",
-    "skills/vera/references/localization/geneva/assessment.json": "258df9c9f4bdb97e58963cfc8c6f0c40c73ab530953cb774194574fb94e8b796",
+    "skills/vera/references/localization/geneva/assessment.json": "f51fd7c3302178f96cb9015a3e7f6e956382eaac0a3c7b34e0d2f840a55570ae",
     "skills/vera/references/localization/geneva/assessment.md": "f4f9d21e58d0d3c1695588229b2dd43168339c4bb9a2a564e24ecf21f8a283ee",
-    "skills/vera/references/localization/geneva/catalogue.json": "d676956cb8c5b45999ada33e7eedd42b750808198419af5511f99714ac00cf3a",
+    "skills/vera/references/localization/geneva/catalogue.json": "ddcc6da04005db1d58aead4e27f4a6852f5e2b1e791915b57e900d811e636dfc",
     "skills/vera/references/model-data-report-contract.md": "4665bce3922819792632d2fbb43913a930b2f30deda1ebfb14f3b5c085cc87c8",
     "skills/vera/references/native-workspace.md": "23a3db89d8cdb4a19fc2afa721fd0472145d898b2b464ccd4d38974137db72d3",
     "skills/vera/references/optional-integrations.md": "c04150ba15e78b96881f40a71dd58968590a93aaec3d3fad639a870f72b98600",

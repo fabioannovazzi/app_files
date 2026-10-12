@@ -113,7 +113,7 @@ def rpc(client, token, name, arguments=None):
 def technical_report():
     return {
         "report_id": str(uuid4()),
-        "product_version": "0.1.367",
+        "product_version": "0.1.368",
         "host": "cowork",
         "platform": "linux",
         "workflow": "journal-sampling",
