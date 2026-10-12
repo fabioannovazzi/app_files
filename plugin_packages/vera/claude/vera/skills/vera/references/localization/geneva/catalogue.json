@@ -2,8 +2,8 @@
   "schema": "vera.localization.catalogue.v1",
   "root": "/private/tmp/app-files-shared-legal-tax-research/plugins/vera",
   "version": "0.1.363",
-  "captured_at": "2026-10-12T16:56:36.452521+00:00",
-  "catalogue_fingerprint": "8a980e333a3a951e888749f19210287c0b3cb9df9c9658f6c2c606871a15030f",
+  "captured_at": "2026-10-12T17:11:49.208841+00:00",
+  "catalogue_fingerprint": "60f78bb3e3d6c9fafbe4e32dcdcd31ba193eed2eee37f9d379cfe92ee4c496ee",
   "manifest_sha256": "8c7f6d7696b0e47b55eb0ca195047e429fa5eb124ea8f90dcccee1e4bd8b8a96",
   "entries": [
     {
@@ -94,7 +94,7 @@
     {
       "function_id": "deep-research",
       "skill_path": "skills/deep-research/SKILL.md",
-      "sha256": "b017d3bc0681d3a0d72d501d5855c72c680b2864ce6989fc712bbcd97cd0177f"
+      "sha256": "068a5578e0e752e8d9f7e6b7d0d7b5bb6fb717303fb7bee2cfd0da92e0113974"
     },
     {
       "function_id": "email-cliente",
