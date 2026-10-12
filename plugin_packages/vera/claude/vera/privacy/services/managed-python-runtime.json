@@ -16,7 +16,8 @@
     "scripts/studio_archive_session.py",
     "scripts/studio_archive_windows.ps1",
     "scripts/verified_execution.py",
-    "skills/vera/references/execution-recovery.md"
+    "skills/vera/references/execution-recovery.md",
+    "scripts/operational_incidents.py"
   ],
   "runtime_profiles": [
     "anthropic-cowork"
@@ -59,6 +60,27 @@
         "Use an installed CPython 3.12 when available; otherwise use uv or automatically download the published uv 0.12.10 wheel, verify its pinned SHA-256, and provision private CPython 3.12 without changing system Python or shell profiles.",
         "Probe the selected interpreter before creating the dependency environment; never fall back to executing workflows with another Python minor version.",
         "A failed download or interpreter probe stops setup; existing environments and client files remain intact."
+      ]
+    },
+    {
+      "id": "runtime-failure-incident-delivery",
+      "kind": "hosted_service",
+      "destination": "Mparanza HTTPS operational-incident API and Streamable HTTP MCP endpoint",
+      "purpose": "Diagnose observed execution/setup failures, return installation-specific remedies and receive actual recovery outcomes",
+      "content": "Random installation UUID and opaque capability, Vera/host/runtime versions, platform and workflow technical IDs, failed stage, complete available technical diagnostic chains and measurements, explicit missing-measurement reasons, retry IDs and actual recovery outcomes. No professional helper stdout, client documents, case text, user prompts or arbitrary task logs. Known path, email and credential patterns are removed from technical messages; this mechanical filter does not establish semantic privacy. The host agent must select technical evidence without unrelated personal/client material. The remote channel does not read local files.",
+      "retention": "Local capability, pending reports and receipts persist outside client folders. The service retains incident, report, remedy and outcome records; no automatic deletion period is enforced. Status access is scoped by the opaque capability.",
+      "activation": "automatic_on_first_use",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Only closed technical transport schemas are accepted; unknown fields and arbitrary recovery commands are rejected.",
+        "The fixed HTTPS transport refuses redirects. Reporting failures retain the outbox and do not discard professional outputs.",
+        "The remote connector is independent of local command-process startup. If the host cannot expose/connect it, no successful report is claimed.",
+        "Only two built-in setup/preparation retries may execute automatically, once per remedy revision. Client documents, ACLs and security settings are not changed.",
+        "A published update is not recovery. The failed operation must actually execute successfully before that installation delivery closes."
       ]
     }
   ],
@@ -115,6 +137,6 @@
     "reviewed_at": "2026-10-10",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "b0f5a6345d69d3f3620790fd0ecb426fac6f45c1fe0c9cbf357aab8fc0db3d93"
+    "source_fingerprint": "e72fe20a83b08845f88e1f19794d640f353d69d80a0f996c9a71698b1e13cc71"
   }
 }

@@ -1,0 +1,9 @@
+[run]
+source =
+    modules/operational_incidents
+    plugins/vera/scripts
+
+[report]
+include =
+    modules/operational_incidents/*
+    plugins/vera/scripts/operational_incidents.py

@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "archiveOrganizationWidgets": {
-      "title": "Vera \u00b7 Riordino archivio",
+      "title": "Vera · Riordino archivio",
       "description": "Validate, render, save, and compile review decisions for a client-folder organization plan.",
       "icons": [
         {
@@ -39,7 +39,7 @@
       ]
     },
     "newClientFilePreparation": {
-      "title": "New Client \u00b7 File Preparation",
+      "title": "New Client · File Preparation",
       "description": "Validate, render, save, and apply document-preparation decisions for the first phase of New Client.",
       "icons": [
         {
@@ -58,7 +58,7 @@
       ]
     },
     "newClientProfessionalSetup": {
-      "title": "New Client \u00b7 Professional Setup",
+      "title": "New Client · Professional Setup",
       "description": "Validate, render, save, and apply source-bound professional decisions for the later phases of New Client.",
       "icons": [
         {
@@ -134,7 +134,7 @@
       ]
     },
     "varianceAnalysisWidgets": {
-      "title": "Vera \u00b7 Analisi degli scostamenti",
+      "title": "Vera · Analisi degli scostamenti",
       "description": "Validate, render, save, and apply review decisions for accounting variance calculations and plots.",
       "icons": [
         {
@@ -324,7 +324,7 @@
       ]
     },
     "veraStudioArchive": {
-      "title": "Vera \u00b7 Archivio dello Studio",
+      "title": "Vera · Archivio dello Studio",
       "description": "Configure, refresh, search, and verify a private local archive index, plus plan and validate client-scoped Gmail retrieval.",
       "icons": [
         {
@@ -343,7 +343,7 @@
       ]
     },
     "courseChats": {
-      "title": "Vera \u00b7 Corsi",
+      "title": "Vera · Corsi",
       "description": "Open or resume the paired working chat for local courses.",
       "cwd": ".",
       "command": "node",
@@ -370,7 +370,7 @@
       ]
     },
     "studioWork": {
-      "title": "Vera \u00b7 Organizzazione lavoro",
+      "title": "Vera · Organizzazione lavoro",
       "description": "Persistent commitments, meeting actions and verified calendar-operation receipts.",
       "icons": [
         {
@@ -388,7 +388,7 @@
       ]
     },
     "agenziaAcquisition": {
-      "title": "Vera \u00b7 Acquisizione Agenzia",
+      "title": "Vera · Acquisizione Agenzia",
       "description": "Acquisizione locale di fatture, corrispettivi e bolli con avanzamento, anomalie e prospetto F24 riesaminato.",
       "icons": [
         {
@@ -405,6 +405,12 @@
         "./scripts/run_component_mcp.cjs",
         "browser-automation"
       ]
+    },
+    "veraIncidents": {
+      "type": "http",
+      "url": "https://mparanza.com/mcp/vera-incidents",
+      "title": "Vera · Ripristino operativo",
+      "description": "Automatic technical incident reporting, incident-specific remedies and recovery outcomes. Independent of local command execution."
     }
   }
 }

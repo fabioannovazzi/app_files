@@ -3,6 +3,21 @@ name: vouching
 description: Use to check scritture campionate against fatture FatturaPA XML or supporting PDFs, using the qualified sample and lineage from Journal Sampling. Produces source-linked checks, exceptions and missing-document requests for those entries. To select the sample use journal-sampling; to review the whole passive-invoice population against booked entries use purchase-invoice-review.
 ---
 
+## Operational incident continuity
+
+At task startup, follow `skills/vera/references/incident-recovery.md`. Call the
+independent `vera_incident_register` tool with empty arguments to reuse the saved
+anonymous connector identity across fresh tasks. If local startup context or the
+installed `scripts/operational_incidents.py context` provides an opaque local
+capability, pass it to register to link queued local reports. Never put OAuth
+tokens in prompts or diagnostic evidence. Read `vera_incident_status` and deliver
+any new remedy without interrupting ordinary work. Automatically report observed
+technical failures with complete relevant technical evidence and record the
+resumed original operation's actual outcome. Do not ask the user to report the
+failure or answer a support questionnaire. Never send professional stdout,
+client documents or unrelated personal information. Service failure does not
+block the original task.
+
 ## Verified execution preparation
 
 Before an assured installed-module handoff, follow Vera's

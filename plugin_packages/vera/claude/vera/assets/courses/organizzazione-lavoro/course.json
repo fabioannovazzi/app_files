@@ -29,11 +29,11 @@
   "sources": [
     {
       "path": "scripts/check_dependencies.py",
-      "sha256": "e06cef69215fd34ebe9d572136bbb27c34201a34d22f071fa3ce5b2a55da94a4"
+      "sha256": "f49a0a461a7dfedb9b0193e2be830b41b1963aa7843cb58917b2b7e86e6ce99f"
     },
     {
       "path": "scripts/managed_python_runtime.py",
-      "sha256": "f6f07f568e8caee8a2461f3428528829f6beb30945e81272e05bdfcdfc200028"
+      "sha256": "6236baca52e8bf6272198ae312010e65223c6cd3c39920ab07473f839f30c011"
     },
     {
       "path": "scripts/model_data_report.py",
@@ -42,6 +42,10 @@
     {
       "path": "scripts/notarized_run_receipt.py",
       "sha256": "ecdad6c6aa491ab9fbcff84d85090b0568874305ad61a96af8120a47802bd165"
+    },
+    {
+      "path": "scripts/operational_incidents.py",
+      "sha256": "1cdced83f83ee089e7cbcbe9d8d7d272dd290805ffc050c370db80597f404aed"
     },
     {
       "path": "scripts/studio_work.py",
@@ -53,7 +57,7 @@
     },
     {
       "path": "skills/organizzazione-lavoro/SKILL.md",
-      "sha256": "436e81a126d720562f027237f4eb2b89e99d5ed320c93f7789c26f0ed87683ff"
+      "sha256": "e5b0a09f6ea5682f33e2a9f19216038c8d50d6b0fe3b8a5cb481a9bf1b58fb9a"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -348,5 +352,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "722b52c7e1ad33b9fe91c21b398a7d6911a8555e71132983b26ead8b1ce56069"
+  "canonical_course_sha256": "d0f03c72aba1ac733a5644326786665db56d72ac10702cf5f09af45a1aee72aa"
 }

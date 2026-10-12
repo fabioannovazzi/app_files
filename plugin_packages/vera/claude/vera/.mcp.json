@@ -125,6 +125,10 @@
         "variance-analysis"
       ]
     },
+    "veraIncidents": {
+      "type": "http",
+      "url": "https://mparanza.com/mcp/vera-incidents"
+    },
     "veraNativeWorkspace": {
       "command": "node",
       "args": [

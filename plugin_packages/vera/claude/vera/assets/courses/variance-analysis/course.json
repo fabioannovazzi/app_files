@@ -416,11 +416,15 @@
     },
     {
       "path": "scripts/check_dependencies.py",
-      "sha256": "e06cef69215fd34ebe9d572136bbb27c34201a34d22f071fa3ce5b2a55da94a4"
+      "sha256": "f49a0a461a7dfedb9b0193e2be830b41b1963aa7843cb58917b2b7e86e6ce99f"
     },
     {
       "path": "scripts/managed_python_runtime.py",
-      "sha256": "f6f07f568e8caee8a2461f3428528829f6beb30945e81272e05bdfcdfc200028"
+      "sha256": "6236baca52e8bf6272198ae312010e65223c6cd3c39920ab07473f839f30c011"
+    },
+    {
+      "path": "scripts/operational_incidents.py",
+      "sha256": "1cdced83f83ee089e7cbcbe9d8d7d272dd290805ffc050c370db80597f404aed"
     },
     {
       "path": "scripts/verified_execution.py",
@@ -428,7 +432,7 @@
     },
     {
       "path": "skills/variance-analysis/SKILL.md",
-      "sha256": "02bef900000037240fd5567c657117af53742a0b5783b8254e8d28ff8b5df339"
+      "sha256": "1c2bcffa590a30b06222b031a76c05afbab39e77442a4e0c91ee6a01abba8e37"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -737,5 +741,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "76e558058b56f0ed85ebacce07cd316919d272754eae2159b22a4c0194773713"
+  "canonical_course_sha256": "83476355df8a3139c1bca6ee6b757eafc20a891543c12d1a663874977e71c0f7"
 }

@@ -713,6 +713,10 @@ def test_managed_launcher_imports_ready_component_target(
     )
     environment = dict(os.environ)
     environment["PLUGIN_DATA"] = str(data_dir)
+    environment["MPARANZA_INCIDENT_STATE_DIR"] = str(tmp_path / "incidents")
+    (plugin_root / "scripts/operational_incidents.py").write_bytes(
+        (ROOT / "plugins/vera/scripts/operational_incidents.py").read_bytes()
+    )
 
     completed = subprocess.run(
         [
@@ -1350,7 +1354,17 @@ def test_selected_interpreter_identity_ignores_launcher_and_python_environment(
     assert actual == expected
 
 
-def _load_vera_manager() -> Any:
+def _load_vera_manager(monkeypatch: pytest.MonkeyPatch) -> Any:
+    from types import SimpleNamespace
+
+    monkeypatch.setitem(
+        sys.modules,
+        "operational_incidents",
+        SimpleNamespace(
+            report_failure=lambda *args, **kwargs: {"reporting": "test-isolated"},
+            record_success=lambda *args, **kwargs: None,
+        ),
+    )
     spec = importlib.util.spec_from_file_location(
         "vera_manager_forced_exit_test", VERA_MANAGER
     )
@@ -1368,7 +1382,7 @@ def test_vera_manager_records_forcibly_terminated_worker_in_client_output(
 ) -> None:
     from types import SimpleNamespace
 
-    manager = _load_vera_manager()
+    manager = _load_vera_manager(monkeypatch)
     output = tmp_path / "outputs"
     context = tmp_path / "context.json"
     context.write_text(
@@ -1416,7 +1430,7 @@ def test_vera_manager_does_not_write_forced_exit_diagnostic_outside_client_outpu
 ) -> None:
     from types import SimpleNamespace
 
-    manager = _load_vera_manager()
+    manager = _load_vera_manager(monkeypatch)
     output = tmp_path / "outside"
     context = tmp_path / "context.json"
     context.write_text(

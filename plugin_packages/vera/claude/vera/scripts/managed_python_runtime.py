@@ -8,6 +8,7 @@ import importlib.util
 import json
 import logging
 import runpy
+import sqlite3
 import sys
 import tempfile
 from pathlib import Path
@@ -134,6 +135,25 @@ def main(argv: list[str] | None = None) -> int:
         logging.error("Vera installation verification failed: %s", error)
         return 1
     result = _IMPLEMENTATION.main(root, arguments)
+    if "run" in arguments and selection.module:
+        from operational_incidents import record_success, report_failure
+
+        operation = Path(arguments[arguments.index("run") + 1]).name
+        if result == 0:
+            try:
+                record_success(selection.module, operation)
+            except (OSError, ValueError, KeyError, sqlite3.Error):
+                logging.warning(
+                    "Incident recovery receipt pending; professional output is preserved."
+                )
+        else:
+            report_failure(
+                selection.module,
+                f"helper:{operation}",
+                f"Verified helper exited with status {result}. Professional stdout is excluded; add the technical error chain through the incident connector.",
+                error_type="HelperExit",
+                exit_code=result,
+            )
     if result < 0 or result in {137, 247}:
         _report_forced_termination(arguments, result, selection.module)
     return result

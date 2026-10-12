@@ -367,6 +367,11 @@ def test_pending_hook_checks_public_version_without_feedback_or_private_summary(
         "check_for_update",
         types.SimpleNamespace(session_start_output=version_only),
     )
+    monkeypatch.setitem(
+        sys.modules,
+        "operational_incidents",
+        types.SimpleNamespace(startup_context=lambda: "Incident transport context."),
+    )
     hook = load("onboarding_session_start")
     assert hook.main() == 0
     output = capsys.readouterr().out
@@ -633,6 +638,11 @@ def test_hook_checks_version_during_recovery_but_only_polls_crs_after_completion
         sys.modules,
         "check_for_update",
         types.SimpleNamespace(session_start_output=check),
+    )
+    monkeypatch.setitem(
+        sys.modules,
+        "operational_incidents",
+        types.SimpleNamespace(startup_context=lambda: "Incident transport context."),
     )
     hook = load("onboarding_session_start")
     before = store.path.read_bytes()

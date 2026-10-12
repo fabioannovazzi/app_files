@@ -51,6 +51,7 @@ from modules.hosted_interviews.api import (
 )
 from modules.hosted_interviews.api import site_router as hosted_interviews_site_router
 from modules.notifications.notifier import process_pending_notifications
+from modules.operational_incidents.api import router as operational_incidents_router
 from modules.pdp.attribute_reporting_api import router as attribute_reporting_router
 from modules.pdp.data_handling_content import get_data_handling_content
 from modules.pdp.language import (
@@ -1607,6 +1608,7 @@ def create_app() -> FastAPI:
     app.include_router(hosted_interviews_site_router)
     app.include_router(hosted_interviews_public_router)
     app.include_router(change_requests_router)
+    app.include_router(operational_incidents_router)
     app.include_router(run_receipts_site_router)
     app.include_router(run_receipts_api_router)
     app.include_router(cnc_review_api_router)

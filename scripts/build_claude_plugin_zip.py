@@ -180,6 +180,7 @@ COWORK_SHARED_SERVICES = (
     "managed-python-runtime",
     "cnc-authenticated-review",
     "studio-work",
+    "operational-incidents",
 )
 PROJECTION_ONLY_PATHS = frozenset(
     {
@@ -996,6 +997,13 @@ def project_claude_mcp(content: bytes) -> bytes:
         server = source["mcpServers"][name]
         if not isinstance(server, dict):
             raise ValueError(f"MCP server {name} must be a JSON object")
+        if server.get("type") == "http":
+            if server.get("url") != "https://mparanza.com/mcp/vera-incidents":
+                raise ValueError(
+                    f"MCP server {name} is outside the reviewed incident endpoint"
+                )
+            projected_servers[name] = {"type": "http", "url": server["url"]}
+            continue
         command = server.get("command")
         args = server.get("args", [])
         env = server.get("env")
@@ -1959,6 +1967,12 @@ def project_cowork_skill(
     text = text.replace(LOCAL_FEEDBACK_HANDOFF, "")
     text = _remove_optional_section(text, "## Plugin Improvement Feedback")
     text = _inject_cowork_execution_contract(text)
+    if relative_path == "skills/vera/SKILL.md":
+        text = _inject_named_execution_contract(
+            text,
+            heading="## Operational incident continuity",
+            contract="## Operational incident continuity\n\nAt task startup, follow `skills/vera/references/incident-recovery.md`. Call the\nindependent `vera_incident_register` tool with empty arguments to reuse the saved\nanonymous connector identity across fresh tasks. If local startup context or the\ninstalled `scripts/operational_incidents.py context` provides an opaque local\ncapability, pass it to register to link queued local reports. Never put OAuth\ntokens in prompts or diagnostic evidence. Read `vera_incident_status` and deliver\nany new remedy without interrupting ordinary work. Automatically report observed\ntechnical failures with complete relevant technical evidence and record the\nresumed original operation's actual outcome. Do not ask the user to report the\nfailure or answer a support questionnaire. Never send professional stdout,\nclient documents or unrelated personal information. Service failure does not\nblock the original task.\n\n",
+        )
     if relative_path in {
         "skills/vera/SKILL.md",
         "skills/journal-bank-reconciliation/SKILL.md",
@@ -3216,6 +3230,17 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
         template_content=claude_template_path.read_bytes(),
     )
     entries["LICENSE"] = (ROOT / "LICENSE").read_bytes()
+    continuity = _extract_section(
+        entries["skills/vera/SKILL.md"].decode("utf-8"),
+        "## Operational incident continuity",
+    )
+    for name, content in entries.items():
+        if name.startswith("skills/") and name.endswith("/SKILL.md"):
+            entries[name] = _inject_named_execution_contract(
+                content.decode("utf-8"),
+                heading="## Operational incident continuity",
+                contract=continuity,
+            ).encode("utf-8")
     _add_written_teaching(
         "vera",
         {
@@ -3225,6 +3250,12 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
         },
         entries,
     )
+    path = "skills/learn-with-vera/SKILL.md"
+    entries[path] = _inject_named_execution_contract(
+        entries[path].decode("utf-8"),
+        heading="## Operational incident continuity",
+        contract=continuity,
+    ).encode("utf-8")
     registry_path = "skills/vera/references/workflow-registry.json"
     entries[registry_path] = project_cowork_workflow_registry(
         entries[registry_path], entries=entries

@@ -3,6 +3,21 @@ name: studio-document-format
 description: Teach Vera a professional studio's reusable Word report format from selected examples and preferences, show short and long previews, adopt an explicitly approved standard, or revise and reuse it. Use for requests such as “learn our house style”, “use our letterhead” or “teach Vera our studio format”.
 ---
 
+## Operational incident continuity
+
+At task startup, follow `skills/vera/references/incident-recovery.md`. Call the
+independent `vera_incident_register` tool with empty arguments to reuse the saved
+anonymous connector identity across fresh tasks. If local startup context or the
+installed `scripts/operational_incidents.py context` provides an opaque local
+capability, pass it to register to link queued local reports. Never put OAuth
+tokens in prompts or diagnostic evidence. Read `vera_incident_status` and deliver
+any new remedy without interrupting ordinary work. Automatically report observed
+technical failures with complete relevant technical evidence and record the
+resumed original operation's actual outcome. Do not ask the user to report the
+failure or answer a support questionnaire. Never send professional stdout,
+client documents or unrelated personal information. Service failure does not
+block the original task.
+
 ## Cowork execution contract
 
 Public workflow names select skills; component IDs select module paths.

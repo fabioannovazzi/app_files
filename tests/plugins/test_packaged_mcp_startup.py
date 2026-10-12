@@ -42,7 +42,7 @@ def write_zip(path: Path, entries: dict[str, bytes]) -> None:
 
 @pytest.mark.parametrize("surface", ["cowork", "codex"])
 @pytest.mark.parametrize("with_caches", [False, True])
-def test_vera_zip_all_registered_servers_initialize_and_list_tools(
+def test_vera_zip_local_servers_initialize_and_remote_contracts_validate(
     surface: str, with_caches: bool, cowork_entries: dict[str, bytes], tmp_path: Path
 ) -> None:
     builder = load_builder("build_codex_plugin_zip")

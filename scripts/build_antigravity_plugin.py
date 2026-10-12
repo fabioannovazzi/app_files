@@ -105,7 +105,13 @@ def package_entries(product: str = "vera") -> dict[str, bytes]:
     entries[f"{product}/mcp_config.json"] = _json_bytes(
         {
             "mcpServers": {
-                name: {key: value for key, value in config.items() if key in MCP_FIELDS}
+                name: (
+                    {"serverUrl": config["url"]}
+                    if config.get("type") == "http"
+                    else {
+                        key: value for key, value in config.items() if key in MCP_FIELDS
+                    }
+                )
                 for name, config in servers.items()
             }
         }
