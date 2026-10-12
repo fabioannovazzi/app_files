@@ -175,21 +175,8 @@ def _approve_suggested_recipe(path: Path) -> None:
         qualification = entry["qualification"]
         if qualification["status"] == "unsupported_source_layout":
             continue
-        contract = core._mapping_contract(
-            parser=entry["parser"],
-            source_family=entry["source_family"],
-            header_rows=entry.get("header_rows", []),
-            mapping=entry.get("mapping", {}),
-            layout=entry.get("layout", {}),
-            excluded_monetary_columns=entry.get("excluded_monetary_columns", []),
-            posting_identity=entry.get("posting_identity", "source_row"),
-            carry_forward_fields=entry.get("carry_forward_fields", []),
-            currency=entry.get("currency", "EUR"),
-            unit=entry.get("unit", "currency"),
-            decimal_separator=entry.get("decimal_separator"),
-            thousands_separator=entry.get("thousands_separator"),
-            amount_sign_convention=entry.get("amount_sign_convention"),
-        )
+        contract = qualification["mapping_contract"]
+        assert core.canonical_json_sha256(contract) == qualification["mapping_sha256"]
         adapter_id = (
             "journal.registration_pdf.v1"
             if entry["parser"] == "registration_pdf"
@@ -4334,3 +4321,124 @@ def test_registration_pdf_review_cannot_be_reused_for_changed_source(
     result = core.normalize_file(pdf, reviewed)
     assert result.frame.is_empty()
     assert "changed" in result.diagnostics["parser_error"]["message"].lower()
+
+
+@pytest.mark.parametrize("currency", ["EUR", "CHF"])
+def test_fresh_registration_pdf_inspection_writes_review_contract_then_managed_sample(
+    tmp_path: Path,
+    currency: str,
+) -> None:
+    core = load_core()
+    pdf = tmp_path / "journal.pdf"
+    layout = _write_registration_journal_pdf(pdf)
+    context_path, outputs = _running_customer_output(tmp_path, source_path=pdf)
+    context = core.load_client_engagement_context(context_path)
+    bound = Path(context["input_bindings"][0]["path"])
+    normalization = outputs / "normalization"
+
+    first = core.inspect_path(bound, normalization, client_engagement=context)
+
+    saved = json.loads((normalization / "inspection.json").read_text(encoding="utf-8"))
+    evidence = saved["files"][0]["pdf_layout_evidence"]
+    assert first.total_rows == 0
+    assert isinstance(evidence["sampled_pages"][0]["width"], str)
+    assert isinstance(evidence["sampled_pages"][0]["words"][0]["x0"], str)
+    recipe = outputs / "reviewed_layout.json"
+    layout["body"] = [str(value) for value in layout["body"]]
+    layout["columns"] = {
+        key: [str(value) for value in band] for key, band in layout["columns"].items()
+    }
+    recipe.write_text(
+        json.dumps(
+            {
+                "files": {
+                    bound.name: {
+                        "parser": "registration_pdf",
+                        "layout": layout,
+                        "currency": currency,
+                    }
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    core.inspect_path(bound, normalization, recipe, client_engagement=context)
+    reviewed = normalization / "suggested_recipe.json"
+    _approve_suggested_recipe(reviewed)
+    normalized = core.normalize_path(
+        bound, normalization, reviewed, client_engagement=context
+    )
+    sampled = core.run_sample(
+        normalization / "normalized_journal.csv",
+        outputs / "sample",
+        method="random",
+        size=1,
+        client_engagement=context,
+    )
+    assert normalized.frame.get_column("currency").to_list() == [currency, currency]
+    assert normalized.frame.get_column("amount_signed").to_list() == ["100", "-100"]
+    assert sampled.frame.height == 1
+    assert (outputs / "sample/journal_sample.xlsx").is_file()
+    assert (
+        json.loads(
+            (outputs / "sample/sample_assurance_gates.json").read_text(encoding="utf-8")
+        )["gates"]["preparation"]["status"]
+        == "passed"
+    )
+    from tests.model_data_helpers import write_no_model_report
+
+    write_no_model_report(outputs, "journal-sampling", context["run_id"])
+    required_ids = {
+        "normalization/normalized_journal.csv": "prepared.normalized_journal",
+        "normalization/normalization_diagnostics.json": "internal.normalization_diagnostics",
+        "sample/journal_sample.csv": "prepared.journal_sample_csv",
+    }
+    declarations = [
+        {
+            "artifact_id": required_ids.get(
+                path.relative_to(outputs).as_posix(), f"test.output.{index}"
+            ),
+            "path": path.relative_to(outputs).as_posix(),
+            "purpose": "Synthetic PDF lifecycle regression",
+            "audience": "internal",
+            "media_type": "application/octet-stream",
+        }
+        for index, path in enumerate(sorted(outputs.rglob("*")))
+        if path.is_file()
+    ]
+    ledger = _load_customer_ledger()
+    client_root = context_path.parents[5]
+    ledger.finalize_run(
+        client_root, context["engagement_id"], context["run_id"], declarations
+    )
+    completed = ledger.complete_run(
+        client_root, context["engagement_id"], context["run_id"]
+    )
+    assert completed["run"]["status"] == "completed"
+
+
+def test_managed_registration_pdf_rejects_external_recipe_before_output_writes(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    pdf = tmp_path / "journal.pdf"
+    layout = _write_registration_journal_pdf(pdf)
+    context_path, outputs = _running_customer_output(tmp_path, source_path=pdf)
+    context = core.load_client_engagement_context(context_path)
+    bound = Path(context["input_bindings"][0]["path"])
+    recipe = tmp_path / "outside_recipe.json"
+    recipe.write_text(
+        json.dumps(
+            {"files": {bound.name: {"parser": "registration_pdf", "layout": layout}}}
+        ),
+        encoding="utf-8",
+    )
+    normalization = outputs / "normalization"
+    core.inspect_path(bound, normalization, recipe, client_engagement=context)
+    before = _journal_tree_image(outputs)
+
+    with pytest.raises(ValueError, match="outside the run root"):
+        core.normalize_path(bound, normalization, recipe, client_engagement=context)
+
+    assert _journal_tree_image(outputs) == before
+    assert not (normalization / "normalized_journal.csv").exists()

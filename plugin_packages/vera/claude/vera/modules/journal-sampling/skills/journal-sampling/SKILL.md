@@ -74,7 +74,17 @@ The user should not interact directly with CLI scripts. Treat scripts as interna
    richness. If the audit plan does not specify sample size or method, default
    to the deterministic script baseline: `random`, size `25`, seed `42`, and
    record those assumptions in the audit trail.
-4. Run dependency checks from the plugin directory:
+4. In a combined Vera package, first run `python3 scripts/check_dependencies.py
+   --module journal-sampling` from the product root. Then execute component
+   helpers through `python3 scripts/managed_python_runtime.py --module
+   journal-sampling run scripts/<helper>.py <arguments>` from that same root.
+   The commands below show the standalone component equivalents. Do not install
+   packages in a client folder or use an unrelated interpreter.
+   Prefer Studio Archive MCP tools. If the host requires multi-command CLI
+   fallback, set one unique `VERA_STUDIO_ARCHIVE_SESSION_ID` before configuring
+   and preserve it across all archive commands in this activity; never generate
+   a different ID for each command or reuse another activity's state.
+   Run standalone dependency checks from the component directory:
 
 ```bash
 python scripts/check_dependencies.py
@@ -90,10 +100,17 @@ python scripts/inspect_journal.py <bound-journal-path> --output-dir <client-run-
 ```
 
 6. Read the inspection artifacts. Inspection never promotes a suggested mapping
-   into the population. Review each source-family adapter, header/layout mapping,
+   into the population. `qualification.mapping_contract` contains the complete
+   proposed contract; use it directly as receipt content and check its
+   `mapping_sha256`. Do not reconstruct it from private helper internals.
+   PDF dimensions and word coordinates are decimal text in PDF points; use
+   integer or decimal-text coordinates in the reviewed layout, never JSON floats.
+   Review each source-family adapter, header/layout mapping,
    debit/credit or signed-amount convention, and localized number separators.
    Ask the user only for the smallest unresolved semantic decision.
-7. Record the reviewed recipe in the work folder, not plugin source. The
+7. Record the reviewed recipe inside this run, for example
+   `<client-run-output>/vera-review/reviewed_recipe.json`, not plugin source or
+   a sibling scratch folder. An outside-run recipe is rejected before writes. The
    reviewed contract must explicitly bind the source artifact, adapter and
    version, field mapping, posting identity, carry-forward policy, currency,
    unit, and the disposition of every additional monetary-labelled or numeric
@@ -106,7 +123,7 @@ python scripts/inspect_journal.py <bound-journal-path> --output-dir <client-run-
 8. Normalize rows:
 
 ```bash
-python scripts/normalize_journal.py <bound-journal-path> --output-dir <client-run-output>/normalization --recipe <client-run-output>/normalization/suggested_recipe.json --client-engagement <client-engagement.json> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
+python scripts/normalize_journal.py <bound-journal-path> --output-dir <client-run-output>/normalization --recipe <client-run-output>/vera-review/reviewed_recipe.json --client-engagement <client-engagement.json> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
 ```
 
 Require the complete normalization to retain the exact reviewed bytes as
@@ -165,9 +182,16 @@ python -I -B scripts/review_successor.py context <client-run-output> \
   --client-engagement <customer-run>/context.json
 ```
 
-11. After the last output write, call `finalize_studio_client_workflow` and
+11. Before finalization, generate the required run-bound `model_data_report.json`
+   and `.md` with the product's `build_model_data_report.py` helper. Describe the
+   actual model-context data path, including local/no-model or unknown cases;
+   do not invent transmission facts. Use `--local-only` for an isolated synthetic
+   test. Read the model-data report contract for the exact CLI arguments.
+   After the last output write, call `finalize_studio_client_workflow` and
    declare every physical output with a unique artifact ID, relative path,
-   concrete purpose, audience, and media type. The downstream handoff must
+   concrete purpose, audience, and media type. Declaration keys are exactly
+   `artifact_id`, `path`, `purpose`, `audience`, `media_type`; do not supply
+   computed hashes or byte counts (the ledger computes those). The downstream handoff must
    include `prepared.normalized_journal`,
    `internal.normalization_diagnostics`, and
    `prepared.journal_sample_csv`. Finalization moves the run to

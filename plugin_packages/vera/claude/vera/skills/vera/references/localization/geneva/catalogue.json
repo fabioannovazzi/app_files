@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/.codex/worktrees/vera-cowork-yaml-integrity/app_files/plugins/vera",
-  "version": "0.1.360",
-  "captured_at": "2026-10-12T05:35:15.558241+00:00",
-  "catalogue_fingerprint": "85ec9acac73797a84cb23dc374ab8a6699121d6fc2a6b189358f248cb59f5920",
-  "manifest_sha256": "63db605472d438e19add1c1c3212a6b9078d3e68dc0364ae7c8ed35df70eb311",
+  "root": "/Users/fabio/.codex/worktrees/vera-pdf-first-run/app_files/plugins/vera",
+  "version": "0.1.361",
+  "captured_at": "2026-10-12T08:14:40.553002+00:00",
+  "catalogue_fingerprint": "bf22ce9cd7ab289f6fca9e242a73efa291ca20b75a5aba7f5fa7c06267e2691c",
+  "manifest_sha256": "ad04dc36d4f4cdd6b564632e8cfd3deb0e4cc636dc3e7a7e4efc8275eeaca0c8",
   "entries": [
     {
       "function_id": "adeguati-assetti",

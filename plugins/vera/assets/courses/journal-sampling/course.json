@@ -69,7 +69,7 @@
     {
       "path": "modules/journal-sampling/scripts/journal_sampling_core.py",
       "repository_path": "plugins/journal-sampling/scripts/journal_sampling_core.py",
-      "sha256": "6ef55f2e6432f1071ee4b773fe5766802a71d7fa67f34035ef2c5b928fc9e505"
+      "sha256": "e154e0171cb4db00cb3b0c1ebe2dd82648f232f924f9b3b469b80b8ced0408db"
     },
     {
       "path": "modules/journal-sampling/scripts/normalize_journal.py",
@@ -99,7 +99,7 @@
     {
       "path": "modules/journal-sampling/skills/journal-sampling/SKILL.md",
       "repository_path": "plugins/journal-sampling/skills/journal-sampling/SKILL.md",
-      "sha256": "f5c37e8131c27b928ef276074bb07d55793f3ccf2d8d50a5c7f74031c3e2197d"
+      "sha256": "e93a2e565c8adbedaeb3c5f77a0c560f2c0ccaec1bad88a7172156e3bf066d99"
     },
     {
       "path": "modules/journal-sampling/skills/journal-sampling/references/geneva.md",
@@ -159,7 +159,7 @@
     {
       "path": "modules/journal-sampling/vendor/modules/vera_journal_pdf/__init__.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/__init__.py",
-      "sha256": "83c9569b49dde2f724f9b8eec2f7f45c50ae6eaf8f03baf6423a0c4df5e11d44"
+      "sha256": "dd88f8273d2eab075178de060385d12014e12b213b1a1e6733568688fdc6cb21"
     },
     {
       "path": "skills/journal-sampling/SKILL.md",
@@ -364,7 +364,7 @@
     {
       "path": "vendor/modules/vera_journal_pdf/__init__.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/__init__.py",
-      "sha256": "83c9569b49dde2f724f9b8eec2f7f45c50ae6eaf8f03baf6423a0c4df5e11d44"
+      "sha256": "dd88f8273d2eab075178de060385d12014e12b213b1a1e6733568688fdc6cb21"
     },
     {
       "path": "vendor/modules/vera_ocr/__init__.py",
