@@ -1845,3 +1845,23 @@ def test_every_vera_cowork_entry_preserves_automatic_incident_continuity(
         assert "complete relevant technical evidence" in skill, name
         assert "Do not ask the user to report the failure" in skill, name
         assert "Never send professional stdout, client documents" in skill, name
+
+
+def test_finished_vera_cowork_courses_bind_to_final_skill_bytes(configured) -> None:
+    """Operational contracts must be added before teaching source hashes are sealed."""
+    import hashlib
+
+    builder, _, package = configured
+    entries = builder.claude_package_entries(package)
+    courses = [
+        json.loads(content)
+        for name, content in entries.items()
+        if name.startswith("assets/courses/") and name.endswith("/course.json")
+    ]
+
+    assert courses
+    for course in courses:
+        for source in course["sources"]:
+            assert (
+                hashlib.sha256(entries[source["path"]]).hexdigest() == source["sha256"]
+            ), source["path"]

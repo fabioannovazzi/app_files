@@ -1,6 +1,11 @@
 # Vera operational incident recovery
 
-Vera 0.1.365 adds a technical incident service, separate from optional feature
+Release candidate: native Cowork testing found task-local identity loss. The
+saved-connection correction is awaiting the specific security approval recorded
+in [the connection design](vera-incident-connection-design.md). This candidate
+has not been merged or deployed, and cross-task native recovery is unproven.
+
+Vera 0.1.366 adds a technical incident service, separate from optional feature
 suggestions. Failures are reported automatically; no support questionnaire or
 extra confirmation is required. Professional outputs and client files are not
 incident inputs. Complete relevant technical chains are retained; mechanically

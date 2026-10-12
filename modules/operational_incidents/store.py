@@ -9,10 +9,11 @@ import sqlite3
 import threading
 from collections.abc import Iterator
 from contextlib import contextmanager
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 import psycopg
 
@@ -24,7 +25,15 @@ from modules.pdp.postgres_compat import (
 )
 from modules.utilities.cache import get_cache_dir
 
-__all__ = ["IncidentStore", "IncidentConflict", "IncidentNotFound"]
+__all__ = ["IncidentStore", "IncidentConflict", "IncidentNotFound", "ConnectionActor"]
+
+
+@dataclass(frozen=True)
+class ConnectionActor:
+    """Server-created identity proven by the saved connector's OAuth token."""
+
+    installation_id: UUID
+    connection_id: UUID
 
 
 class IncidentConflict(ValueError):
@@ -36,6 +45,7 @@ class IncidentNotFound(ValueError):
 
 
 _SCHEMA = (
+    "CREATE TABLE IF NOT EXISTS operational_connection_links (connection_id TEXT NOT NULL, installation_id TEXT NOT NULL, PRIMARY KEY (connection_id, installation_id))",
     "CREATE TABLE IF NOT EXISTS operational_installations (installation_id TEXT PRIMARY KEY, key_hash TEXT NOT NULL, created_at TEXT NOT NULL)",
     "CREATE TABLE IF NOT EXISTS operational_incidents (incident_id TEXT PRIMARY KEY, signal_hash TEXT UNIQUE NOT NULL, status TEXT NOT NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL, revision INTEGER NOT NULL, remedy_json TEXT NOT NULL)",
     "CREATE TABLE IF NOT EXISTS operational_reports (report_id TEXT PRIMARY KEY, installation_id TEXT NOT NULL, incident_id TEXT NOT NULL, payload_hash TEXT NOT NULL, payload_json TEXT NOT NULL, created_at TEXT NOT NULL)",
@@ -85,6 +95,9 @@ class IncidentStore:
                     with connection:
                         connection.execute("BEGIN IMMEDIATE")
                         yield connection
+                except (ValueError, OSError, sqlite3.Error):
+                    self._ready = False
+                    raise
                 finally:
                     connection.close()
 
@@ -97,13 +110,29 @@ class IncidentStore:
                 connection.execute(statement)
             self._ready = True
 
-    def _authorize(self, connection: Any, credentials: Credentials) -> None:
+    def _authorize(
+        self, connection: Any, credentials: Credentials | ConnectionActor
+    ) -> None:
         row = connection.execute(
             self._sql(
                 "SELECT key_hash FROM operational_installations WHERE installation_id=?"
             ),
             (str(credentials.installation_id),),
         ).fetchone()
+        if isinstance(credentials, ConnectionActor):
+            linked = (
+                credentials.installation_id == credentials.connection_id
+                or connection.execute(
+                    self._sql(
+                        "SELECT 1 FROM operational_connection_links WHERE connection_id=? AND installation_id=?"
+                    ),
+                    (str(credentials.connection_id), str(credentials.installation_id)),
+                ).fetchone()
+                is not None
+            )
+            if row is None or not linked:
+                raise IncidentNotFound("Installation is outside the connector scope")
+            return
         actual = hashlib.sha256(credentials.installation_key.encode()).hexdigest()
         if row is None or not hmac.compare_digest(row["key_hash"], actual):
             raise IncidentNotFound("Installation capability is unavailable")
@@ -125,7 +154,73 @@ class IncidentStore:
             self._authorize(connection, credentials)
         return {"installation_id": str(credentials.installation_id), "registered": True}
 
-    def report(self, credentials: Credentials, report: Report) -> dict[str, Any]:
+    def link_connection(self, actor: ConnectionActor, credentials: Credentials) -> None:
+        """Link local state only with proof of both the connection and local capability."""
+        self.register(credentials)
+        with self._connection() as connection:
+            self._schema(connection)
+            self._authorize(connection, actor)
+            self._authorize(connection, credentials)
+            connection.execute(
+                self._sql(
+                    "INSERT INTO operational_connection_links VALUES (?,?) ON CONFLICT (connection_id,installation_id) DO NOTHING"
+                ),
+                (str(actor.connection_id), str(credentials.installation_id)),
+            )
+
+    def connection_members(self, actor: ConnectionActor) -> list[str]:
+        """Return only installation IDs cryptographically linked to this connection."""
+        with self._connection() as connection:
+            self._schema(connection)
+            self._authorize(connection, actor)
+            rows = connection.execute(
+                self._sql(
+                    "SELECT installation_id FROM operational_connection_links WHERE connection_id=?"
+                ),
+                (str(actor.connection_id),),
+            ).fetchall()
+        return sorted(
+            {str(actor.connection_id), *(row["installation_id"] for row in rows)}
+        )
+
+    def connection_status(self, actor: ConnectionActor) -> dict[str, Any]:
+        """Read remedies across saved local identities, including expired task containers."""
+        incidents = []
+        for identifier in self.connection_members(actor):
+            member = ConnectionActor(UUID(identifier), actor.connection_id)
+            incidents.extend(
+                {**row, "installation_id": identifier}
+                for row in self.status(member)["incidents"]
+            )
+        return {
+            "installation_id": str(actor.connection_id),
+            "binding": "saved-connector",
+            "incidents": incidents,
+        }
+
+    def connection_outcome(
+        self, actor: ConnectionActor, outcome: Outcome
+    ) -> dict[str, Any]:
+        """Bind the resumed operation to its actual report's linked installation."""
+        identifier = str(actor.connection_id)
+        if outcome.report_id is not None:
+            with self._connection() as connection:
+                self._schema(connection)
+                row = connection.execute(
+                    self._sql(
+                        "SELECT installation_id FROM operational_reports WHERE report_id=?"
+                    ),
+                    (str(outcome.report_id),),
+                ).fetchone()
+            if row is None:
+                raise IncidentNotFound("Original report is unavailable")
+            identifier = row["installation_id"]
+        member = ConnectionActor(UUID(identifier), actor.connection_id)
+        return self.outcome(member, outcome)
+
+    def report(
+        self, credentials: Credentials | ConnectionActor, report: Report
+    ) -> dict[str, Any]:
         """Group exact technical signals for investigation, not assumed root causes."""
         payload = report.model_dump(mode="json")
         encoded = _json(payload)
@@ -214,7 +309,7 @@ class IncidentStore:
             "deduplicated": False,
         }
 
-    def status(self, credentials: Credentials) -> dict[str, Any]:
+    def status(self, credentials: Credentials | ConnectionActor) -> dict[str, Any]:
         """Return only this installation's incidents and structured remedies."""
         with self._connection() as connection:
             self._schema(connection)
@@ -277,7 +372,9 @@ class IncidentStore:
             "status": "awaiting-recovery",
         }
 
-    def outcome(self, credentials: Credentials, outcome: Outcome) -> dict[str, Any]:
+    def outcome(
+        self, credentials: Credentials | ConnectionActor, outcome: Outcome
+    ) -> dict[str, Any]:
         """Close this delivery only after an actual successful execution receipt."""
         if outcome.status == "recovered" and not outcome.execution_succeeded:
             raise IncidentConflict("Recovery requires successful execution evidence")

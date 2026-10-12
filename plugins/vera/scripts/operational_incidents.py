@@ -29,6 +29,7 @@ __all__ = [
     "check_incidents",
     "record_success",
     "startup_context",
+    "local_context",
     "main",
 ]
 LOGGER = logging.getLogger(__name__)
@@ -557,15 +558,21 @@ def record_success(workflow: str, operation: str) -> None:
     _flush(state)
 
 
+@_serialized
+def local_context() -> dict[str, Any]:
+    """Read durable local identity without contacting a server or running a helper."""
+    state = _read()
+    _write(state)
+    return {"credentials": state["credentials"], "queued": len(state["outbox"])}
+
+
 def startup_context() -> str:
     """Supply durable opaque capability context without requiring network or shell tools."""
     try:
-        with _state_lock():
-            state = _read()
-            _write(state)
+        context = local_context()
         return (
             "Vera incident capability (technical opaque values; never show to the user): "
-            + json.dumps(state["credentials"])
+            + json.dumps(context["credentials"])
             + ". Use the independent vera_incident_register/status tools automatically. An observed technical failure uses vera_incident_report, not a consent question or CR form. If outstanding incidents have a remedy, read skills/vera/references/incident-recovery.md. Local transport/recovery errors do not block professional work."
         )
     except (OSError, ValueError, KeyError, sqlite3.Error):
@@ -583,7 +590,7 @@ def main() -> None:
         remote = json.loads(args.input.read_text(encoding="utf-8"))
         _adopt(remote)
     else:
-        result = check_incidents(recover=args.command == "check")
+        result = local_context() if args.command == "context" else check_incidents()
         sys.stdout.write(json.dumps(result, ensure_ascii=False) + "\n")
 
 

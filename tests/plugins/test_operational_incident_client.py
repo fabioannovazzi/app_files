@@ -447,3 +447,23 @@ def test_delayed_success_records_evidence_without_closing_newer_remote_failure(
     assert saved["status"] == "open"
     assert saved["outcomes"][-1]["execution_succeeded"] is True
     assert saved["outcomes"][-1]["status"] == "action-required"
+
+
+def test_cli_context_returns_saved_identity_when_network_is_blocked(
+    tmp_path, monkeypatch, capsys
+):
+    module, _, _ = client(tmp_path, monkeypatch)
+    module.startup_context()
+    expected = module._read()["credentials"]
+    monkeypatch.setattr(
+        module,
+        "_post",
+        lambda *_args: pytest.fail("Local context must not contact the service"),
+    )
+    monkeypatch.setattr(module.sys, "argv", ["operational_incidents.py", "context"])
+
+    module.main()
+
+    result = json.loads(capsys.readouterr().out)
+    assert result["credentials"] == expected
+    assert result["queued"] == 0

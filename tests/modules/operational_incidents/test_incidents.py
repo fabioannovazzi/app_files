@@ -435,3 +435,102 @@ def test_old_failed_recovery_keeps_evidence_without_reopening_newer_success(tmp_
     assert recorded["delivery_updated"] is False
     assert store.queue() == []
     assert len(store.show(old["incident_id"])["outcomes"]) == 2
+
+
+def test_unknown_capability_first_does_not_break_later_registration(tmp_path):
+    store = IncidentStore(tmp_path / "new.sqlite3")
+    first = credentials()
+    with pytest.raises(IncidentNotFound):
+        store.status(first)
+
+    result = store.register(first)
+
+    assert result["registered"] is True
+    assert store.status(first)["incidents"] == []
+
+
+def test_saved_connection_reads_reports_after_task_local_identity_changes(tmp_path):
+    from modules.operational_incidents.store import ConnectionActor
+
+    store, parent = registered(tmp_path)
+    actor = ConnectionActor(parent.installation_id, parent.installation_id)
+    task_a = credentials()
+    task_b = credentials()
+    store.link_connection(actor, task_a)
+    receipt = store.report(task_a, report())
+    store.link_connection(actor, task_b)
+
+    status = store.connection_status(actor)
+
+    assert status["installation_id"] == str(parent.installation_id)
+    assert status["incidents"][0]["latest_report_id"] == receipt["report_id"]
+    assert status["incidents"][0]["installation_id"] == str(task_a.installation_id)
+
+
+def test_saved_connection_rejects_an_unproved_foreign_installation(tmp_path):
+    from modules.operational_incidents.store import ConnectionActor
+
+    store, parent = registered(tmp_path)
+    actor = ConnectionActor(parent.installation_id, parent.installation_id)
+    foreign = credentials()
+    store.register(foreign)
+    forged = foreign.model_copy(update={"installation_key": "x" * 32})
+
+    with pytest.raises(IncidentNotFound):
+        store.link_connection(actor, forged)
+
+    assert store.connection_members(actor) == [str(parent.installation_id)]
+
+
+def test_saved_connection_recovery_closes_only_the_original_linked_report(tmp_path):
+    from modules.operational_incidents.store import ConnectionActor
+
+    store, parent = registered(tmp_path)
+    actor = ConnectionActor(parent.installation_id, parent.installation_id)
+    task_a = credentials()
+    task_b = credentials()
+    store.link_connection(actor, task_a)
+    store.link_connection(actor, task_b)
+    receipt_a = store.report(task_a, report())
+    receipt_b = store.report(task_b, report())
+    recovery = Outcome(
+        outcome_id=uuid4(),
+        incident_id=receipt_a["incident_id"],
+        report_id=receipt_a["report_id"],
+        remedy_revision=1,
+        status="recovered",
+        execution_succeeded=True,
+    )
+
+    result = store.connection_outcome(actor, recovery)
+
+    assert result["status"] == "recovered"
+    assert store.status(task_a)["incidents"][0]["status"] == "recovered"
+    assert (
+        store.status(task_b)["incidents"][0]["latest_report_id"]
+        == receipt_b["report_id"]
+    )
+    assert store.status(task_b)["incidents"][0]["status"] == "open"
+
+
+def test_saved_connection_cannot_close_an_unlinked_foreign_report(tmp_path):
+    from modules.operational_incidents.store import ConnectionActor
+
+    store, parent = registered(tmp_path)
+    actor = ConnectionActor(parent.installation_id, parent.installation_id)
+    foreign = credentials()
+    store.register(foreign)
+    receipt = store.report(foreign, report())
+    recovery = Outcome(
+        outcome_id=uuid4(),
+        incident_id=receipt["incident_id"],
+        report_id=receipt["report_id"],
+        remedy_revision=1,
+        status="recovered",
+        execution_succeeded=True,
+    )
+
+    with pytest.raises(IncidentNotFound):
+        store.connection_outcome(actor, recovery)
+
+    assert store.status(foreign)["incidents"][0]["status"] == "open"

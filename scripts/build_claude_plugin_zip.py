@@ -3230,15 +3230,6 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
         template_content=claude_template_path.read_bytes(),
     )
     entries["LICENSE"] = (ROOT / "LICENSE").read_bytes()
-    _add_written_teaching(
-        "vera",
-        {
-            name.removeprefix(prefix): content
-            for name, content in packaged.items()
-            if name.startswith(prefix)
-        },
-        entries,
-    )
     continuity = _extract_section(
         entries["skills/vera/SKILL.md"].decode("utf-8"),
         "## Operational incident continuity",
@@ -3250,6 +3241,21 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
                 heading="## Operational incident continuity",
                 contract=continuity,
             ).encode("utf-8")
+    _add_written_teaching(
+        "vera",
+        {
+            name.removeprefix(prefix): content
+            for name, content in packaged.items()
+            if name.startswith(prefix)
+        },
+        entries,
+    )
+    path = "skills/learn-with-vera/SKILL.md"
+    entries[path] = _inject_named_execution_contract(
+        entries[path].decode("utf-8"),
+        heading="## Operational incident continuity",
+        contract=continuity,
+    ).encode("utf-8")
     registry_path = "skills/vera/references/workflow-registry.json"
     entries[registry_path] = project_cowork_workflow_registry(
         entries[registry_path], entries=entries

@@ -45,7 +45,7 @@
     },
     {
       "path": "scripts/operational_incidents.py",
-      "sha256": "e2e142ea4174b8ec1dc739e60ed0bea5264c02111060b93ba8a3a10626347785"
+      "sha256": "1cdced83f83ee089e7cbcbe9d8d7d272dd290805ffc050c370db80597f404aed"
     },
     {
       "path": "scripts/studio_work.py",
@@ -57,7 +57,7 @@
     },
     {
       "path": "skills/organizzazione-lavoro/SKILL.md",
-      "sha256": "436e81a126d720562f027237f4eb2b89e99d5ed320c93f7789c26f0ed87683ff"
+      "sha256": "b5cf27e23687db9caeb2946e75f9ae3e387ae34b9afc42ca3cc439fdf6dcf629"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -352,5 +352,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "5a89f31affd0bec3c3f88b1e32dc85e96457b4e1cd5427f807e65622ab0ec21b"
+  "canonical_course_sha256": "d0f03c72aba1ac733a5644326786665db56d72ac10702cf5f09af45a1aee72aa"
 }
