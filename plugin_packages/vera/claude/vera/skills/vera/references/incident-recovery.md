@@ -25,6 +25,12 @@ report its own integrity failure. Missing local MCP tools are not required for
 this remote route. If the host cannot reach/register the remote connector,
 state that precise unavailable channel; do not claim delivery.
 
+Claude initially lists the remote connector as `Not added`. Connect
+`veraIncidents` once from Vera's Connectors panel after installation. Use
+permitted computer controls to do it internally; otherwise give only that
+necessary click. Preserve the host's mandatory connection/security controls.
+This one-time host setup is not a repeated failure-report question.
+
 At startup, retain the random installation UUID and opaque capability from the
 hook's technical context. Never show or send that capability in diagnostics.
 Use `vera_incident_register` with those credentials, then
@@ -91,8 +97,11 @@ ask only for that missing access; do not create a duplicate practice.
 
 ## Outcome and continuity
 
-Successful verified helper execution automatically reports recovery for a
-matching failed operation. Otherwise use `vera_incident_outcome` with a new stable
+Successful verified helper execution automatically reports recovery only for
+matching setup/startup incidents. A helper exit incident requires verification
+of the actual original task, inputs and retained run: another successful call to
+the same helper is insufficient. After that verification, automatically use
+`vera_incident_outcome` with a new stable
 outcome UUID, current remedy revision, actual execution result and the complete
 technical failure chain if it still fails. `recovered` requires actual successful
 execution. A failed attempt keeps the incident open; a newer remedy requires a

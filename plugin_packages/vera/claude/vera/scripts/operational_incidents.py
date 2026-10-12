@@ -444,12 +444,14 @@ def check_incidents(*, recover: bool = True) -> dict[str, Any]:
 
 @_serialized
 def record_success(workflow: str, operation: str) -> None:
-    """Report actual successful helper execution for matching pending incidents."""
+    """Report successful execution against matching setup/startup incidents."""
     state = _read()
     if not state["receipts"] and not state["outbox"]:
         return
     _flush(state)
     status = _post("status", {"credentials": state["credentials"]})
+    # A helper name does not identify the original client case or input. The
+    # host agent verifies that case and reports its outcome through remote MCP.
     for incident in status["incidents"]:
         if incident["status"] == "recovered" or not any(
             row["incident_id"] == incident["incident_id"]
@@ -460,7 +462,6 @@ def record_success(workflow: str, operation: str) -> None:
                 "dependency-setup",
                 "execution-startup",
                 "installation-preparation",
-                f"helper:{operation}",
             }
             for row in state["receipts"]
         ):

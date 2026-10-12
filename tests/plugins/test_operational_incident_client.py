@@ -124,10 +124,10 @@ def test_unavailable_local_state_routes_to_independent_connector(tmp_path, monke
     assert "vera_incident_register" in module.startup_context()
 
 
-def test_actual_matching_helper_success_closes_incident(tmp_path, monkeypatch):
+def test_actual_matching_setup_execution_closes_incident(tmp_path, monkeypatch):
     module, store, _ = client(tmp_path, monkeypatch)
     module.report_failure(
-        "journal-sampling", "helper:run_sample.py", "helper exit", exit_code=1
+        "journal-sampling", "dependency-setup", "helper exit", exit_code=1
     )
     module.record_success("journal-sampling", "run_sample.py")
     assert store.queue() == []
@@ -358,3 +358,17 @@ def test_obsolete_outcome_is_retained_without_blocking_later_reports(
     assert saved["outbox"] == []
     assert len(saved["rejected_outcomes"]) == 1
     assert len(store.queue()) == 2
+
+
+def test_same_helper_success_does_not_prove_recovery_of_original_case(
+    tmp_path, monkeypatch
+):
+    module, store, _ = client(tmp_path, monkeypatch)
+    module.report_failure(
+        "journal-sampling",
+        "helper:run_sample.py",
+        "Original task helper failed",
+        exit_code=1,
+    )
+    module.record_success("journal-sampling", "run_sample.py")
+    assert store.queue()[0]["status"] == "open"

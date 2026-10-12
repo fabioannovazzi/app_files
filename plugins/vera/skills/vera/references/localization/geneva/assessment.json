@@ -1206,7 +1206,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "5c1860a9fdc12855d09f33227f80512b03d4d41ef8dec62b13f9e31ff0f83dba",
+  "catalogue_fingerprint": "be3916777dbe11d95f333db4b2c4a9e8f723f491bcc29fe6d46c69bd38ad39e6",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1591,7 +1591,7 @@
   },
   "source_binding_update": {
     "date": "2026-10-12",
-    "version": "0.1.362",
+    "version": "0.1.364",
     "reason": "Router gains automatic technical incident continuity; jurisdiction scope and the 51 assessed professional functions are unchanged.",
     "fresh_geneva_acceptance": false
   }

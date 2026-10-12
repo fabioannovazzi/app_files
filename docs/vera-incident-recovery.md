@@ -1,6 +1,6 @@
 # Vera operational incident recovery
 
-Vera 0.1.362 adds a technical incident service, separate from optional feature
+Vera 0.1.364 adds a technical incident service, separate from optional feature
 suggestions. Failures are reported automatically; no support questionnaire or
 extra confirmation is required. Professional outputs and client files are not
 incident inputs. Complete relevant technical chains are retained; mechanically
@@ -19,7 +19,9 @@ startup fails, provided the host exposes and connects that remote tool. When no
 local capability is available, remote registration creates one and a report ID;
 retain it in the current task and adopt after local recovery. Adoption refuses
 to replace existing incident history. A fresh task without the capability cannot
-recover it. Older packages need one update to join this loop.
+recover it. Older packages need one update to join this loop. In Claude, connect
+`veraIncidents` once from Vera's Connectors panel after installation; this is the
+host's one-time connector setup, not a repeated failure-report question.
 
 ## Operator workflow
 
@@ -48,8 +50,10 @@ Host/security changes remain under their ordinary authority.
 Each connected task reads status. The fixed built-in actions run once per remedy
 revision and accept no downloaded code or shell text. Setup success means ready
 to resume. It does not close the incident. Resume the original task and preserve
-its archive and practice. Actual matching helper success reports recovery;
-another failure stays open. Obsolete outcome revisions cannot close newer work
+its archive and practice. Actual helper execution can close matching setup/startup incidents. For a helper
+exit incident, the host AI verifies the original task and inputs, then reports its
+actual outcome; a successful invocation for another client case is insufficient.
+Another failure stays open. Obsolete outcome revisions cannot close newer work
 and are retained locally rather than blocking newer reports. One installation's
 success does not close another installation's delivery.
 
