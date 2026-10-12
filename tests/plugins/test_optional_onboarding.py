@@ -60,6 +60,11 @@ def test_startup_allows_normal_work_for_every_onboarding_state(
             }
         ),
     )
+    monkeypatch.setitem(
+        sys.modules,
+        "operational_incidents",
+        types.SimpleNamespace(startup_context=lambda: "Incident transport context."),
+    )
     spec = importlib.util.spec_from_file_location(
         f"{product}_optional_startup",
         ROOT / f"plugins/{product}/scripts/onboarding_session_start.py",

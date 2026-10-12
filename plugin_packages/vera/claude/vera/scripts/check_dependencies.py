@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -102,6 +103,10 @@ def main(argv: list[str] | None = None) -> int:
             )
             return completed.returncode
     if not ready:
+        from operational_incidents import report_failure
+
+        if not os.environ.get("MPARANZA_INCIDENT_RECOVERY_ACTIVE"):
+            report_failure(args.module, "dependency-setup", detail)
         LOGGER.error("Vera managed Python runtime setup failed: %s", detail)
         return 1
     completed = subprocess.run(

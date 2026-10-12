@@ -497,7 +497,7 @@ def test_root_anthropic_manifest_and_local_mcp_are_discoverable(
         "courseChats"
     }
     assert all(
-        server["args"][0]
+        server.get("args", [None])[0]
         == (
             "${CLAUDE_PLUGIN_ROOT}/mcp/workspace.cjs"
             if name == "veraNativeWorkspace"
@@ -508,6 +508,7 @@ def test_root_anthropic_manifest_and_local_mcp_are_discoverable(
             )
         )
         for name, server in cowork_mcp["mcpServers"].items()
+        if server.get("type") != "http"
     )
     assert '"archive-organization"' in vera_entries[
         "scripts/run_component_mcp.cjs"
@@ -607,6 +608,12 @@ def test_optional_claude_mcp_projection_uses_only_installation_safe_paths() -> N
     canonical_mcp = json.loads((ROOT / "plugins" / "vera" / ".mcp.json").read_text())
     assert set(servers) == set(canonical_mcp["mcpServers"]) - {"courseChats"}
     for name, server in servers.items():
+        if name == "veraIncidents":
+            assert server == {
+                "type": "http",
+                "url": "https://mparanza.com/mcp/vera-incidents",
+            }
+            continue
         assert set(server) <= {"command", "args", "env"}
         assert server["command"] == "node"
         assert server["args"][0] == (
@@ -716,12 +723,14 @@ def test_cowork_privacy_register_keeps_supported_receipts_and_omits_openai_servi
         "managed-python-runtime",
         "cnc-authenticated-review",
         "studio-work",
+        "operational-incidents",
     ]
     assert {name for name in vera_entries if name.startswith("privacy/services/")} == {
         "privacy/services/run-receipt-stamping.json",
         "privacy/services/managed-python-runtime.json",
         "privacy/services/cnc-authenticated-review.json",
         "privacy/services/studio-work.json",
+        "privacy/services/operational-incidents.json",
     }
     assert "privacy/workstreams/studio-archive.json" in vera_entries
     runtime_service = json.loads(
@@ -731,6 +740,7 @@ def test_cowork_privacy_register_keeps_supported_receipts_and_omits_openai_servi
     assert {boundary["id"] for boundary in runtime_service["external_boundaries"]} == {
         "declared-core-dependency-retrieval",
         "declared-python312-retrieval",
+        "runtime-failure-incident-delivery",
     }
     assert all(
         boundary["runtime_profiles"] == ["anthropic-cowork"]

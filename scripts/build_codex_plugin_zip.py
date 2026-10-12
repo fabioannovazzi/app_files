@@ -87,6 +87,19 @@ RUNTIME_SUPPORT_FILES = {
 REQUIRED_FEEDBACK_HEADING = "## Plugin Improvement Feedback"
 LOCAL_FEEDBACK_SNIPPET = "Keep the improvement note local to chat or run artifacts."
 TRANSMITTED_FEEDBACK_PLUGINS = frozenset({"clara", "vera"})
+AUTOMATIC_INCIDENT_SNIPPETS = (
+    "references/incident-recovery.md",
+    "relevant technical diagnostics without a separate consent question",
+    "keeps the affected installation linked until actual",
+    "material, professional stdout, credentials, usernames or local paths",
+    "technical failure reporting does not send it.",
+    "consent to transmit that suggestion",
+    "scripts/change_requests.py submit-suggestion",
+    "scripts/change_requests.py reserve-suggestion-prompt",
+    "scripts/change_requests.py start-interview",
+    "Always use the generic client-free string below",
+    "at most one minute",
+)
 TRANSMITTED_FEEDBACK_SNIPPETS = (
     "Should I transmit this technical problem to the developer so we can fix it?",
     "Do not continue with a chat interview, offer a fallback, or ask any",
@@ -683,7 +696,11 @@ def validate_plugin_source(plugin_dir: Path) -> list[str]:
         feedback_snippets = (
             (
                 REQUIRED_FEEDBACK_HEADING,
-                *TRANSMITTED_FEEDBACK_SNIPPETS,
+                *(
+                    AUTOMATIC_INCIDENT_SNIPPETS
+                    if plugin_name == "vera"
+                    else TRANSMITTED_FEEDBACK_SNIPPETS
+                ),
                 GENERIC_VOICE_OPPORTUNITY_TEMPLATE.format(
                     display_name=plugin_name.title()
                 ),
@@ -1006,6 +1023,7 @@ def _project_vera_repository_reviews(
         "local-onboarding",
         "plugin-feedback",
         "run-receipt-stamping",
+        "operational-incidents",
     ):
         name = f"privacy/services/{service_id}.json"
         original_bytes = (vera / name).read_bytes()
@@ -2147,7 +2165,7 @@ def verify_packaged_mcp(
                 )
             else:
                 logging.getLogger(__name__).info(
-                    "[MCP OK] %s: %s servers initialized and listed tools",
+                    "[MCP OK] %s: %s server entries passed local startup or remote contract checks",
                     relative_root,
                     count,
                 )

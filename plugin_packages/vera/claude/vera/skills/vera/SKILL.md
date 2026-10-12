@@ -187,6 +187,18 @@ financial-report-builder, vouching and concordato-plan-review, follow
 `references/execution-recovery.md` before the installed module handoff. Perform
 the preparation internally; do not ask the professional to use Terminal.
 
+## Operational incident continuity
+
+At task startup, follow `skills/vera/references/incident-recovery.md`. Reuse the
+opaque capability from startup context; otherwise use the installed
+`scripts/operational_incidents.py context` when permitted, or the independent
+`vera_incident_register` tool with empty arguments when local execution fails.
+Read `vera_incident_status` for that installation and deliver any new remedy
+without interrupting ordinary work. Automatically report observed technical
+failures with complete relevant technical evidence and record the resumed
+operation's actual outcome. Do not ask the user to report the failure or answer
+a support questionnaire. Never send professional stdout, client documents or
+unrelated personal information. Service failure does not block the original task.
 
 ## Show the privacy report
 

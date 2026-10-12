@@ -50,7 +50,8 @@
     "datev-starter",
     "cnc-authenticated-review",
     "native-workspace",
-    "studio-work"
+    "studio-work",
+    "operational-incidents"
   ],
   "workflow_roles": {
     "new-client": {

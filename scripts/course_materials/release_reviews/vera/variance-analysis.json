@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "variance-analysis",
-  "course_sha256": "76e558058b56f0ed85ebacce07cd316919d272754eae2159b22a4c0194773713",
+  "course_sha256": "0515d15028b40271becae3098f6ac266dd0eeedf58d71bd559562bca10e9fabd",
   "reviewer": "Codex bounded teaching-material and source integration review",
   "reviewed_at": "2026-10-09T13:18:34.205104+00:00",
   "review_scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
@@ -710,8 +710,9 @@
     "scope": "Only source fingerprints changed. Authored content, fixtures, expectations and historical editorial/output reviews are unchanged. Declared Polars dependency excludes incompatible major version 2. Current executions remain a CI release gate; no new learner or visual acceptance is claimed."
   },
   "source_binding_update": {
-    "reviewed_at": "2026-10-06",
-    "scope": "Date parsing uses explicit string APIs, row indices use the supported API, and chart ordering is explicit for Polars 2.0. Authored lesson content and inputs are unchanged; current executions remain required CI evidence, with no new learner or visual acceptance claimed."
+    "reason": "Automatic technical incident recovery routing; teaching content, files and earlier execution artifacts unchanged.",
+    "date": "2026-10-12",
+    "fresh_learner_acceptance": false
   },
   "journal_bank_receipts_source_update_review": "docs/releases/2026-10-08-journal-bank-receipts-course-review.json",
   "committed_shared_contract_integration_20261008": {
@@ -809,7 +810,7 @@
   "pdf_first_run_source_binding_20261012": {
     "reviewed_at": "2026-10-12T09:07:16.006899+00:00",
     "previous_course_sha256": "001448fa4fadcd367e3b9671497ed445d61870cf4aa62e962ef2a064241c70ec",
-    "current_course_sha256": "76e558058b56f0ed85ebacce07cd316919d272754eae2159b22a4c0194773713",
+    "current_course_sha256": "0515d15028b40271becae3098f6ac266dd0eeedf58d71bd559562bca10e9fabd",
     "scope": "Bounded source integration review: authored lesson content, localized prompts, fixtures, acceptance judgments and historical output artifact receipts are unchanged; only sources bindings changed.",
     "source_changes": "Vera dependency checker re-enters the base interpreter when required; PDF geometry is persisted as decimal text; reviewed mapping contracts are exposed; run recipe containment is checked before output writes; reviewed currency reaches PDF postings; first-run instructions specify runtime, session identity, in-run recipe and finalization disclosure.",
     "evidence": "Final repair commit native teaching execution step passed before the editorial binding check; local packaged PDF pipeline and source regressions passed. Fresh CI must verify execution against these exact current course hashes.",

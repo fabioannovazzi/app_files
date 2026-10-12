@@ -6,7 +6,38 @@ const path = require("node:path");
 const { spawn, spawnSync } = require("node:child_process");
 const readline = require("node:readline");
 
+async function checkRemoteServer(name, config) {
+  let url;
+  try { url = new URL(config.url); } catch { return {name, error: "Invalid remote MCP URL"}; }
+  if (url.protocol !== "https:" || url.username || url.password || url.search || url.hash ||
+      url.origin !== "https://mparanza.com" || url.pathname !== "/mcp/vera-incidents") {
+    return {name, error: "Remote MCP endpoint is outside the reviewed incident contract"};
+  }
+  if (process.env.MPARANZA_VERIFY_REMOTE_MCP !== "1") {
+    return {name, transport: "http", contractValid: true, remoteRuntimeChecked: false};
+  }
+  try {
+    const rpc = async (id, method, params) => {
+      const response = await fetch(url, {method: "POST", redirect: "error",
+        headers: {"Content-Type": "application/json", "Accept": "application/json, text/event-stream"},
+        body: JSON.stringify({jsonrpc: "2.0", id, method, params}), signal: AbortSignal.timeout(10000)});
+      if (!response.ok) throw new Error(`Remote MCP HTTP ${response.status}`);
+      const text = await response.text();
+      if (text.length > 1000000) throw new Error("Remote MCP response exceeds handshake limit");
+      const result = JSON.parse(text);
+      if (result.error) throw new Error("Remote MCP protocol error");
+      return result.result;
+    };
+    const initialized = await rpc(1, "initialize", {protocolVersion: "2025-03-26", capabilities: {}, clientInfo: {name: "package-release-verifier", version: "1"}});
+    if (!initialized.serverInfo?.name || !initialized.capabilities?.tools) throw new Error("Invalid remote initialize response");
+    const listed = await rpc(2, "tools/list", {});
+    if (!Array.isArray(listed.tools) || listed.tools.length !== 4) throw new Error("Invalid remote incident tools/list");
+    return {name, transport: "http", tools: listed.tools.length, remoteRuntimeChecked: true};
+  } catch (error) { return {name, error: error.message}; }
+}
+
 function checkServer(root, name, config) {
+  if (config.type === "http" || config.serverUrl) return checkRemoteServer(name, {...config, url: config.url || config.serverUrl});
   return new Promise((resolve) => {
     if (config.command !== "node" || !Array.isArray(config.args)) {
       resolve({

@@ -180,6 +180,7 @@ COWORK_SHARED_SERVICES = (
     "managed-python-runtime",
     "cnc-authenticated-review",
     "studio-work",
+    "operational-incidents",
 )
 PROJECTION_ONLY_PATHS = frozenset(
     {
@@ -996,6 +997,13 @@ def project_claude_mcp(content: bytes) -> bytes:
         server = source["mcpServers"][name]
         if not isinstance(server, dict):
             raise ValueError(f"MCP server {name} must be a JSON object")
+        if server.get("type") == "http":
+            if server.get("url") != "https://mparanza.com/mcp/vera-incidents":
+                raise ValueError(
+                    f"MCP server {name} is outside the reviewed incident endpoint"
+                )
+            projected_servers[name] = {"type": "http", "url": server["url"]}
+            continue
         command = server.get("command")
         args = server.get("args", [])
         env = server.get("env")
@@ -1959,6 +1967,12 @@ def project_cowork_skill(
     text = text.replace(LOCAL_FEEDBACK_HANDOFF, "")
     text = _remove_optional_section(text, "## Plugin Improvement Feedback")
     text = _inject_cowork_execution_contract(text)
+    if relative_path == "skills/vera/SKILL.md":
+        text = _inject_named_execution_contract(
+            text,
+            heading="## Operational incident continuity",
+            contract="## Operational incident continuity\n\nAt task startup, follow `skills/vera/references/incident-recovery.md`. Reuse the\nopaque capability from startup context; otherwise use the installed\n`scripts/operational_incidents.py context` when permitted, or the independent\n`vera_incident_register` tool with empty arguments when local execution fails.\nRead `vera_incident_status` for that installation and deliver any new remedy\nwithout interrupting ordinary work. Automatically report observed technical\nfailures with complete relevant technical evidence and record the resumed\noperation's actual outcome. Do not ask the user to report the failure or answer\na support questionnaire. Never send professional stdout, client documents or\nunrelated personal information. Service failure does not block the original task.\n\n",
+        )
     if relative_path in {
         "skills/vera/SKILL.md",
         "skills/journal-bank-reconciliation/SKILL.md",

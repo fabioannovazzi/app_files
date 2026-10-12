@@ -111,7 +111,13 @@ def test_projection_keeps_canonical_skills_agent_and_host_configuration(
     )
     packaged_servers = json.loads(entries[f"{product}/mcp_config.json"])["mcpServers"]
     assert packaged_servers == {
-        name: {key: value for key, value in config.items() if key in builder.MCP_FIELDS}
+        name: (
+            {"serverUrl": config["url"]}
+            if config.get("type") == "http"
+            else {
+                key: value for key, value in config.items() if key in builder.MCP_FIELDS
+            }
+        )
         for name, config in expected_servers.items()
     }
 

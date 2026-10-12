@@ -44,6 +44,13 @@ def installed_fixture(tmp_path, product, monkeypatch):
             scripts / "managed_ocr_runtime.py",
         )
     if product == "vera":
+        monkeypatch.setenv(
+            "MPARANZA_INCIDENT_STATE_DIR", str(tmp_path / "incident-state")
+        )
+        shutil.copyfile(
+            ROOT / "plugins/vera/scripts/operational_incidents.py",
+            scripts / "operational_incidents.py",
+        )
         shutil.copyfile(
             ROOT / "plugins/vera/scripts/verified_execution.py",
             scripts / "verified_execution.py",

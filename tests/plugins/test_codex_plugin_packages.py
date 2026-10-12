@@ -1588,7 +1588,7 @@ def test_vera_routes_every_commercialista_module() -> None:
     routed_mcp_modules = {
         server["args"][-1]
         for server in mcp_config["mcpServers"].values()
-        if server["args"][0] == "./scripts/run_component_mcp.cjs"
+        if server.get("args", [None])[0] == "./scripts/run_component_mcp.cjs"
     }
     skill_names = {
         path.parent.name for path in (plugin_root / "skills").glob("*/SKILL.md")
@@ -2565,11 +2565,11 @@ def test_builder_rejects_transmitted_feedback_policy_missing_safeguard(
     tmp_path: Path, required_snippet: str
 ) -> None:
     builder = load_builder()
-    plugin_root = tmp_path / "vera"
-    skill_path = plugin_root / "skills" / "vera" / "SKILL.md"
+    plugin_root = tmp_path / "clara"
+    skill_path = plugin_root / "skills" / "clara" / "SKILL.md"
     skill_path.parent.mkdir(parents=True)
     source_skill = (
-        ROOT / "plugins" / "vera" / "skills" / "vera" / "SKILL.md"
+        ROOT / "plugins" / "clara" / "skills" / "clara" / "SKILL.md"
     ).read_text(encoding="utf-8")
     assert required_snippet in source_skill
     skill_path.write_text(
@@ -2580,7 +2580,7 @@ def test_builder_rejects_transmitted_feedback_policy_missing_safeguard(
     errors = builder.validate_plugin_source(plugin_root)
 
     assert (
-        "vera: skill instructions must include plugin improvement feedback policy"
+        "clara: skill instructions must include plugin improvement feedback policy"
         in errors
     )
 
@@ -2771,7 +2771,11 @@ def test_all_repo_plugins_include_end_of_run_feedback_policy() -> None:
         normalized_skill_text = " ".join(combined_skill_text.split())
 
         assert "## Plugin Improvement Feedback" in combined_skill_text, plugin_name
-        if plugin_name in {"clara", "vera"}:
+        if plugin_name == "vera":
+            for snippet in builder.AUTOMATIC_INCIDENT_SNIPPETS:
+                assert snippet in combined_skill_text
+            assert "Should I transmit this technical problem" not in combined_skill_text
+        elif plugin_name == "clara":
             assert (
                 "Localize the consent question to the conversation language."
                 in combined_skill_text

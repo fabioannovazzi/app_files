@@ -45,7 +45,8 @@
     "run-receipt-stamping",
     "managed-python-runtime",
     "cnc-authenticated-review",
-    "studio-work"
+    "studio-work",
+    "operational-incidents"
   ],
   "workflow_roles": {
     "new-client": {
