@@ -70,6 +70,7 @@ def test_full_incident_remedy_delivery_and_actual_recovery(tmp_path):
         Outcome(
             outcome_id=uuid4(),
             incident_id=receipt["incident_id"],
+            report_id=receipt["report_id"],
             remedy_revision=delivery["revision"],
             status="recovered",
             execution_succeeded=True,
@@ -94,6 +95,7 @@ def test_identical_signals_share_investigation_without_closing_other_users(tmp_p
         Outcome(
             outcome_id=uuid4(),
             incident_id=one["incident_id"],
+            report_id=one["report_id"],
             remedy_revision=1,
             status="recovered",
             execution_succeeded=True,
@@ -154,6 +156,7 @@ def test_update_available_is_not_recovered_and_stale_outcome_is_rejected(tmp_pat
             Outcome(
                 outcome_id=uuid4(),
                 incident_id=receipt["incident_id"],
+                report_id=receipt["report_id"],
                 remedy_revision=1,
                 status="recovered",
                 execution_succeeded=True,
@@ -170,6 +173,7 @@ def test_false_recovery_receipt_is_rejected(tmp_path):
             Outcome(
                 outcome_id=uuid4(),
                 incident_id=receipt["incident_id"],
+                report_id=receipt["report_id"],
                 remedy_revision=1,
                 status="recovered",
             ),
@@ -186,6 +190,7 @@ def test_failed_recovery_keeps_all_new_diagnostics(tmp_path):
         Outcome(
             outcome_id=uuid4(),
             incident_id=receipt["incident_id"],
+            report_id=receipt["report_id"],
             remedy_revision=1,
             status="failed",
             diagnostics=evidence.diagnostics,
@@ -206,6 +211,7 @@ def test_recurrence_reopens_a_recovered_delivery(tmp_path):
         Outcome(
             outcome_id=uuid4(),
             incident_id=receipt["incident_id"],
+            report_id=receipt["report_id"],
             remedy_revision=1,
             status="recovered",
             execution_succeeded=True,
@@ -336,6 +342,7 @@ def test_retry_of_old_outcome_cannot_close_a_new_failure(tmp_path):
     recovered = Outcome(
         outcome_id=uuid4(),
         incident_id=receipt["incident_id"],
+        report_id=receipt["report_id"],
         remedy_revision=1,
         status="recovered",
         execution_succeeded=True,
@@ -361,3 +368,70 @@ def test_public_transport_rate_bound_expires(monkeypatch):
     assert caught.value.status_code == 429
     monkeypatch.setattr(api.time, "monotonic", lambda: 161.0)
     api._admit("technical-source")
+
+
+def test_delayed_success_cannot_close_a_newer_reported_episode(tmp_path):
+    store, first = registered(tmp_path)
+    receipt = store.report(first, report())
+    store.report(first, report())
+    with pytest.raises(IncidentConflict, match="newer failure"):
+        store.outcome(
+            first,
+            Outcome(
+                outcome_id=uuid4(),
+                incident_id=receipt["incident_id"],
+                report_id=receipt["report_id"],
+                remedy_revision=1,
+                status="recovered",
+                execution_succeeded=True,
+            ),
+        )
+    assert store.queue()[0]["status"] == "open"
+
+
+def test_recovery_without_report_identity_cannot_close_an_episode(tmp_path):
+    store, first = registered(tmp_path)
+    receipt = store.report(first, report())
+    with pytest.raises(IncidentConflict, match="reported episode"):
+        store.outcome(
+            first,
+            Outcome(
+                outcome_id=uuid4(),
+                incident_id=receipt["incident_id"],
+                remedy_revision=1,
+                status="recovered",
+                execution_succeeded=True,
+            ),
+        )
+    assert store.queue()[0]["status"] == "open"
+
+
+def test_old_failed_recovery_keeps_evidence_without_reopening_newer_success(tmp_path):
+    store, first = registered(tmp_path)
+    old = store.report(first, report())
+    latest = store.report(first, report())
+    store.outcome(
+        first,
+        Outcome(
+            outcome_id=uuid4(),
+            incident_id=latest["incident_id"],
+            report_id=latest["report_id"],
+            remedy_revision=1,
+            status="recovered",
+            execution_succeeded=True,
+        ),
+    )
+    recorded = store.outcome(
+        first,
+        Outcome(
+            outcome_id=uuid4(),
+            incident_id=old["incident_id"],
+            report_id=old["report_id"],
+            remedy_revision=1,
+            status="failed",
+        ),
+    )
+    assert recorded["recorded"] is True
+    assert recorded["delivery_updated"] is False
+    assert store.queue() == []
+    assert len(store.show(old["incident_id"])["outcomes"]) == 2

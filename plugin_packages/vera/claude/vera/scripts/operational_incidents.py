@@ -161,6 +161,62 @@ def _post(operation: str, payload: dict[str, Any]) -> dict[str, Any]:
     return value
 
 
+def _expand_success(state: dict[str, Any], item: dict[str, Any]) -> None:
+    """Bind saved execution evidence to its reported episodes before delivery."""
+    targets = set(item["payload"]["report_ids"])
+    receipts = [row for row in state["receipts"] if row["report_id"] in targets]
+    status = _post("status", {"credentials": state["credentials"]})
+    outcomes = []
+    for incident in status["incidents"]:
+        matching = [
+            row for row in receipts if row["incident_id"] == incident["incident_id"]
+        ]
+        if not matching or incident["status"] == "recovered":
+            continue
+        report_id = matching[-1]["report_id"]
+        same_episode = incident["latest_report_id"] in targets
+        if same_episode:
+            report_id = incident["latest_report_id"]
+        outcomes.append(
+            {
+                "operation": "outcome",
+                "payload": {
+                    "outcome": {
+                        "outcome_id": str(uuid4()),
+                        "incident_id": incident["incident_id"],
+                        "report_id": report_id,
+                        "remedy_revision": incident["revision"],
+                        "status": "recovered" if same_episode else "action-required",
+                        "execution_succeeded": True,
+                        "diagnostics": [
+                            {
+                                "component": "vera-runtime",
+                                "error_type": "ObservedExecutionSuccess",
+                                "stage": "execution-receipt",
+                                "exit_code": 0,
+                                "evidence_source": "observed-tool-result",
+                                "message": (
+                                    "Verified helper execution succeeded: "
+                                    + item["payload"]["operation"]
+                                    + "; Vera "
+                                    + item["payload"]["product_version"]
+                                    + ". "
+                                    + (
+                                        "Matching reported episode."
+                                        if same_episode
+                                        else "A later failure exists; this earlier success does not close it."
+                                    )
+                                ),
+                            }
+                        ],
+                    }
+                },
+            }
+        )
+    state["outbox"][:1] = outcomes
+    _write(state)
+
+
 def _flush(state: dict[str, Any]) -> None:
     if not state["registered"]:
         _post("register", {"credentials": state["credentials"]})
@@ -170,6 +226,9 @@ def _flush(state: dict[str, Any]) -> None:
     delivered = 0
     while state["outbox"] and delivered < 3 and time.monotonic() < deadline:
         item = state["outbox"][0]
+        if item["operation"] == "observed-success":
+            _expand_success(state, item)
+            continue
         try:
             reply = _post(
                 item["operation"],
@@ -280,7 +339,19 @@ def _report_failure(
                 sort_keys=True,
             ).encode()
         ).hexdigest()
-        if not any(item.get("fingerprint") == fingerprint for item in state["outbox"]):
+        boundary = max(
+            (
+                index
+                for index, item in enumerate(state["outbox"])
+                if item["operation"] == "observed-success"
+                and item["payload"]["workflow"] == workflow
+            ),
+            default=-1,
+        )
+        if not any(
+            item.get("fingerprint") == fingerprint
+            for item in state["outbox"][boundary + 1 :]
+        ):
             state["outbox"].extend(
                 {
                     "operation": "report",
@@ -413,6 +484,7 @@ def check_incidents(*, recover: bool = True) -> dict[str, Any]:
                     "outcome": {
                         "outcome_id": str(uuid4()),
                         "incident_id": incident["incident_id"],
+                        "report_id": incident["latest_report_id"],
                         "remedy_revision": incident["revision"],
                         "status": (
                             "action-required" if completed.returncode == 0 else "failed"
@@ -436,6 +508,7 @@ def check_incidents(*, recover: bool = True) -> dict[str, Any]:
     return {
         "notifications": messages,
         "credentials": state["credentials"],
+        "retained_outcomes": state.get("rejected_outcomes", []),
         "pending": [
             item for item in result["incidents"] if item["status"] != "recovered"
         ],
@@ -448,40 +521,39 @@ def record_success(workflow: str, operation: str) -> None:
     state = _read()
     if not state["receipts"] and not state["outbox"]:
         return
-    _flush(state)
-    status = _post("status", {"credentials": state["credentials"]})
-    # A helper name does not identify the original client case or input. The
-    # host agent verifies that case and reports its outcome through remote MCP.
-    for incident in status["incidents"]:
-        if incident["status"] == "recovered" or not any(
-            row["incident_id"] == incident["incident_id"]
-            and row["workflow"] == workflow
-            and row.get("host") == _host()
-            and row["stage"]
-            in {
-                "dependency-setup",
-                "execution-startup",
-                "installation-preparation",
-            }
-            for row in state["receipts"]
-        ):
-            continue
-        state["outbox"].append(
-            {
-                "operation": "outcome",
-                "payload": {
-                    "outcome": {
-                        "outcome_id": str(uuid4()),
-                        "incident_id": incident["incident_id"],
-                        "remedy_revision": incident["revision"],
-                        "status": "recovered",
-                        "execution_succeeded": True,
-                        "diagnostics": [],
-                    }
-                },
-            }
-        )
+    # A helper name cannot identify a client case; only setup/startup is closed
+    # by this callback. The host agent verifies original helper-exit cases.
+    stages = {"dependency-setup", "execution-startup", "installation-preparation"}
+    report_ids = [
+        row["report_id"]
+        for row in state["receipts"]
+        if row["workflow"] == workflow
+        and row.get("host") == _host()
+        and row["stage"] in stages
+    ]
+    report_ids.extend(
+        row["payload"]["report"]["report_id"]
+        for row in state["outbox"]
+        if row["operation"] == "report"
+        and row["payload"]["report"]["workflow"] == workflow
+        and row["payload"]["report"]["host"] == _host()
+        and row["payload"]["report"]["stage"] in stages
+    )
+    if not report_ids:
+        return
+    state["outbox"].append(
+        {
+            "operation": "observed-success",
+            "payload": {
+                "report_ids": report_ids,
+                "workflow": workflow,
+                "operation": operation,
+                "product_version": _identity()["product_version"],
+            },
+        }
+    )
     _write(state)
+    # Save the observed result before any network access so outages cannot lose it.
     _flush(state)
 
 

@@ -168,7 +168,7 @@ TOOLS = [
     ),
     _tool(
         "vera_incident_outcome",
-        "Record the actual result of recovery or a resumed operation against the current remedy revision. Only execution success closes that installation's delivery.",
+        "Record the actual result of recovery or a resumed operation against the current remedy revision. Only actual execution success matching the original report_id and current remedy revision closes that installation's delivery.",
         "outcome",
     ),
 ]

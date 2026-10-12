@@ -221,7 +221,7 @@ class IncidentStore:
             self._authorize(connection, credentials)
             rows = connection.execute(
                 self._sql(
-                    "SELECT i.incident_id,i.revision,i.remedy_json,d.status FROM operational_incidents i JOIN operational_deliveries d ON i.incident_id=d.incident_id WHERE d.installation_id=? ORDER BY i.updated_at"
+                    "SELECT i.incident_id,i.revision,i.remedy_json,d.status,(SELECT r.report_id FROM operational_reports r WHERE r.incident_id=i.incident_id AND r.installation_id=d.installation_id ORDER BY r.created_at DESC LIMIT 1) AS latest_report_id FROM operational_incidents i JOIN operational_deliveries d ON i.incident_id=d.incident_id WHERE d.installation_id=? ORDER BY i.updated_at"
                 ),
                 (str(credentials.installation_id),),
             ).fetchall()
@@ -230,6 +230,7 @@ class IncidentStore:
                 {
                     "incident_id": row["incident_id"],
                     "revision": row["revision"],
+                    "latest_report_id": row["latest_report_id"],
                     "status": row["status"],
                     "remedy": json.loads(row["remedy_json"]),
                     "download_urls": (
@@ -315,6 +316,20 @@ class IncidentStore:
                     "status": outcome.status,
                     "recorded": True,
                 }
+            latest = connection.execute(
+                self._sql(
+                    "SELECT report_id FROM operational_reports WHERE incident_id=? AND installation_id=? ORDER BY created_at DESC LIMIT 1"
+                ),
+                (str(outcome.incident_id), str(credentials.installation_id)),
+            ).fetchone()
+            same_episode = (
+                outcome.report_id is not None
+                and str(outcome.report_id) == latest["report_id"]
+            )
+            if outcome.status == "recovered" and not same_episode:
+                raise IncidentConflict(
+                    "A newer failure exists; recovery must match the reported episode"
+                )
             connection.execute(
                 self._sql(
                     "INSERT INTO operational_outcomes VALUES (?,?,?,?,?) ON CONFLICT (outcome_id) DO NOTHING"
@@ -327,6 +342,13 @@ class IncidentStore:
                     _now(),
                 ),
             )
+            if not same_episode:
+                return {
+                    "incident_id": str(outcome.incident_id),
+                    "status": outcome.status,
+                    "recorded": True,
+                    "delivery_updated": False,
+                }
             connection.execute(
                 self._sql(
                     "UPDATE operational_deliveries SET status=?,updated_at=? WHERE installation_id=? AND incident_id=?"

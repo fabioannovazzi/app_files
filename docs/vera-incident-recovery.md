@@ -10,7 +10,10 @@ privacy classifier or a legal compliance certification.
 
 The client queues deliveries outside client folders, with a separate opaque
 identity for Codex and Cowork. Atomic writes and a SQLite transaction lock
-serialize simultaneous sessions. Retries preserve report IDs. Status and outcome
+serialize simultaneous sessions. Retries preserve report IDs. Successful execution
+evidence is saved before contacting the service, so a network outage cannot lose
+it. Recovery carries the original report ID; delayed results cannot close a newer
+failure or reopen a subsequently recovered delivery. Status and outcome
 access require the matching capability. The server stores only key hashes.
 
 The `veraIncidents` HTTP MCP endpoint at `/mcp/vera-incidents` does not run a local

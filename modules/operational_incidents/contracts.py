@@ -111,6 +111,7 @@ class Remedy(StrictModel):
 
 
 class Outcome(StrictModel):
+    report_id: UUID | None = None
     outcome_id: UUID
     incident_id: UUID
     remedy_revision: int = Field(ge=1)

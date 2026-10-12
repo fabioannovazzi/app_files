@@ -92,9 +92,14 @@ matching setup/startup incidents. A helper exit incident requires verification
 of the actual original task, inputs and retained run: another successful call to
 the same helper is insufficient. After that verification, automatically use
 `vera_incident_outcome` with a new stable
-outcome UUID, current remedy revision, actual execution result and the complete
+outcome UUID, the original receipt's `report_id`, current remedy revision, actual execution result and the complete
 technical failure chain if it still fails. `recovered` requires actual successful
-execution. A failed attempt keeps the incident open; a newer remedy requires a
+execution. A recovery must match the installation's latest reported episode; an older
+result cannot close a newer failure. Successful setup execution is saved locally
+before network access and delivered when the service returns. Review any
+`retained_outcomes` returned by the client and automatically report their evidence
+against current status without pretending an obsolete result proves recovery.
+A failed attempt keeps the incident open; a newer remedy requires a
 fresh status read. Never close an incident merely because a code change was
 merged, deployed or downloaded.
 

@@ -372,3 +372,78 @@ def test_same_helper_success_does_not_prove_recovery_of_original_case(
     )
     module.record_success("journal-sampling", "run_sample.py")
     assert store.queue()[0]["status"] == "open"
+
+
+def test_success_during_service_outage_is_durable_and_delivered_on_return(
+    tmp_path, monkeypatch
+):
+    module, store, post = client(tmp_path, monkeypatch)
+    module.report_failure(
+        "journal-sampling", "dependency-setup", "Synthetic setup failure"
+    )
+    monkeypatch.setattr(
+        module,
+        "_post",
+        lambda *_args: (_ for _ in ()).throw(urllib.error.URLError("offline")),
+    )
+    with pytest.raises(urllib.error.URLError):
+        module.record_success("journal-sampling", "run_sample.py")
+    assert module._read()["outbox"][0]["operation"] == "observed-success"
+    monkeypatch.setattr(module, "_post", post)
+    module.check_incidents(recover=False)
+    assert store.queue() == []
+    assert module._read()["outbox"] == []
+
+
+def test_offline_failure_success_same_failure_sequence_remains_unresolved(
+    tmp_path, monkeypatch
+):
+    module, store, post = client(tmp_path, monkeypatch)
+    monkeypatch.setattr(
+        module,
+        "_post",
+        lambda *_args: (_ for _ in ()).throw(urllib.error.URLError("offline")),
+    )
+    module.report_failure(
+        "journal-sampling", "dependency-setup", "same synthetic error"
+    )
+    with pytest.raises(urllib.error.URLError):
+        module.record_success("journal-sampling", "run_sample.py")
+    module.report_failure(
+        "journal-sampling", "dependency-setup", "same synthetic error"
+    )
+    assert [item["operation"] for item in module._read()["outbox"]] == [
+        "report",
+        "observed-success",
+        "report",
+    ]
+    monkeypatch.setattr(module, "_post", post)
+    module.check_incidents(recover=False)
+    row = store.queue()[0]
+    assert row["status"] == "open"
+    assert len(row["reports"]) == 2
+
+
+def test_delayed_success_records_evidence_without_closing_newer_remote_failure(
+    tmp_path, monkeypatch
+):
+    module, store, post = client(tmp_path, monkeypatch)
+    module.report_failure(
+        "journal-sampling", "dependency-setup", "Synthetic setup failure"
+    )
+    monkeypatch.setattr(
+        module,
+        "_post",
+        lambda *_args: (_ for _ in ()).throw(urllib.error.URLError("offline")),
+    )
+    with pytest.raises(urllib.error.URLError):
+        module.record_success("journal-sampling", "run_sample.py")
+    row = store.queue()[0]["reports"][0]
+    credentials = Credentials.model_validate(module._read()["credentials"])
+    store.report(credentials, Report.model_validate({**row, "report_id": str(uuid4())}))
+    monkeypatch.setattr(module, "_post", post)
+    module.check_incidents(recover=False)
+    saved = store.queue()[0]
+    assert saved["status"] == "open"
+    assert saved["outcomes"][-1]["execution_succeeded"] is True
+    assert saved["outcomes"][-1]["status"] == "action-required"
