@@ -18,7 +18,8 @@ other-language sources whenever the legal framework requires them.
 For the complete `quesito-legale-fiscale` journey, resolve the shared validator
 module at `../../modules/deep-research-validator` from this skill directory, or
 `../../../deep-research-validator` in repository source. Read its
-`skills/legal-tax-answer-review/references/research-choice.md` and follow it
-after preparing the question and before finalizing the generation route and
-semantic review. Reuse a choice already made for this answer. This does not
-turn a preparation-only request into a full research assignment.
+`skills/legal-tax-answer-review/references/research-choice.md` before finalizing
+the contract. New research always uses `generation_route: codex_direct` and
+`../deep-research/SKILL.md`, which resolves the one method shared by both
+products. Do not offer a normal/deep choice or an external research-plugin route.
+Preparation-only and supplied-answer review requests retain their scope.

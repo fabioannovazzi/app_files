@@ -742,8 +742,6 @@ def _package_markdown(
     answer_contract = audit.get("answer_contract") or {}
     contract_review = audit.get("prompt_contract_review") or {}
     contract_review_audit = audit.get("prompt_contract_review_audit") or {}
-    deep_research = answer_contract.get("generation_route") == "chatgpt_deep_research"
-    research_plugin = answer_contract.get("generation_route") == "deep_research_plugin"
     contract_labels = (
         (
             "Dominio de la pregunta",
@@ -795,17 +793,11 @@ def _package_markdown(
         for label, value in zip(contract_labels, contract_values, strict=True)
     ]
     if spanish:
-        use_lines = (
-            [
-                "- Pegue `optimized_prompt.md` en Deep Research.",
-                "- Pegue `source_domains_comma.txt` en el campo de sitios web de Deep Research.",
-            ]
-            if deep_research
-            else [
-                "- Use `optimized_prompt.md` como instrucciones para generar la respuesta.",
-                "- Conserve `source_domains.txt` como lista de fuentes para la generación.",
-            ]
-        )
+        use_lines = [
+            "- Use `optimized_prompt.md` como instrucciones para generar la respuesta.",
+            "- Conserve `source_domains.txt` como lista de fuentes para la generación.",
+            "- Siga la skill deep-research del producto: investigar, validar y cuestionar en ciclos.",
+        ]
         use_lines.extend(
             [
                 "- Conserve `answer_contract.json` con la respuesta generada.",
@@ -814,30 +806,17 @@ def _package_markdown(
             ]
         )
     else:
-        use_lines = (
-            [
-                "- Paste `optimized_prompt.md` into Deep Research.",
-                "- Paste `source_domains_comma.txt` into the Deep Research websites field.",
-            ]
-            if deep_research
-            else [
-                "- Use `optimized_prompt.md` as the answer-generation instructions.",
-                "- Keep `source_domains.txt` as the source list for generation.",
-            ]
-        )
+        use_lines = [
+            "- Use `optimized_prompt.md` as the answer-generation instructions.",
+            "- Keep `source_domains.txt` as the source list for generation.",
+            "- Follow the product's deep-research skill: investigate, validate and challenge in cycles.",
+        ]
         use_lines.extend(
             [
                 "- Keep `answer_contract.json` with the generated answer.",
                 "- Keep `prompt_contract_review.json` as the semantic prompt review.",
                 "- Treat `prompt_audit.json` as machine-readable validation metadata.",
             ]
-        )
-    if research_plugin:
-        # Render the explicitly selected route; code does not choose the research method.
-        use_lines[0] = (
-            "- Use la skill Deep Research de OpenAI instalada con `optimized_prompt.md`."
-            if spanish
-            else "- Use the installed OpenAI Deep Research skill with `optimized_prompt.md`."
         )
     source_domain_text = (
         "\n".join(f"- {domain}" for domain in source_domains)
@@ -846,13 +825,12 @@ def _package_markdown(
             (
                 "No se proporcionó ni extrajo una lista explícita de sitios web. "
                 "Añada un archivo auxiliar de dominios y vuelva a ejecutar la "
-                "validación si Deep Research necesita el campo de sitios web."
+                "validación cuando se necesite una lista de fuentes."
             )
             if spanish
             else (
                 "No explicit website list was provided or extracted. Add a sidecar "
-                "source-domain file and rerun validation if Deep Research needs "
-                "a websites field."
+                "source-domain file and rerun validation when a source list is needed."
             )
         )
     )
@@ -1092,85 +1070,28 @@ def write_validation(
 
 
 def _readme_markdown(audit: dict[str, Any]) -> str:
-    """Return a short human usage guide for the generated files."""
-
-    source_domains = audit.get("source_domains") or []
-    answer_contract = audit.get("answer_contract") or {}
-    deep_research = answer_contract.get("generation_route") == "chatgpt_deep_research"
-    research_plugin = answer_contract.get("generation_route") == "deep_research_plugin"
+    """Describe the shared current-host method, retaining imported route provenance."""
     if _package_language(audit) == "es":
-        if deep_research:
-            website_instruction = (
-                "2. Pegue `source_domains_comma.txt` en el campo de sitios web de Deep Research."
-                if source_domains
-                else (
-                    "2. `source_domains_comma.txt` está vacío porque no se proporcionó "
-                    "ni extrajo ninguna lista de sitios web."
-                )
-            )
-        else:
-            website_instruction = (
-                "2. Use `source_domains.txt` como lista de fuentes para la generación."
-            )
-        first_instruction = (
-            "1. Pegue `optimized_prompt.md` en Deep Research."
-            if deep_research
-            else "1. Use `optimized_prompt.md` como instrucciones para generar la respuesta."
-        )
-        if research_plugin:
-            first_instruction = "1. Use la skill Deep Research de OpenAI instalada con `optimized_prompt.md`."
-        return "\n".join(
-            [
-                "# Cómo utilizar estos archivos",
-                "",
-                first_instruction,
-                website_instruction,
-                "3. Verifique que `prompt_contract_review.json` tenga estado `conforms` y acción `accept`.",
-                "4. Conserve `answer_contract.json` con la respuesta para la validación.",
-                "5. Use `source_domains.txt` para consultar la lista con un sitio web por línea.",
-                (
-                    "6. Consulte `prompt_audit.json` solo para depurar la validación; "
-                    "registra qué controles del plugin se superaron."
-                ),
-                "",
-            ]
-        )
-    if deep_research:
-        website_instruction = (
-            "2. Paste `source_domains_comma.txt` into the Deep Research websites field."
-            if source_domains
-            else (
-                "2. `source_domains_comma.txt` is empty because no website list was "
-                "provided or extracted."
-            )
-        )
+        lines = [
+            "# Cómo utilizar estos archivos",
+            "1. Use `optimized_prompt.md` como instrucciones para generar la respuesta.",
+            "2. Use `source_domains.txt` como lista de fuentes para la generación.",
+            "3. Verifique que `prompt_contract_review.json` tenga estado `conforms` y acción `accept`.",
+            "4. Conserve `answer_contract.json` con la respuesta para la validación.",
+            "5. Siga la skill deep-research del producto: investigar, validar y cuestionar en ciclos; completar las revisiones finales.",
+            "6. Consulte `prompt_audit.json` para los controles mecánicos; no certifica la corrección jurídica.",
+        ]
     else:
-        website_instruction = (
-            "2. Use `source_domains.txt` as the source list for generation."
-        )
-    first_instruction = (
-        "1. Paste `optimized_prompt.md` into Deep Research."
-        if deep_research
-        else "1. Use `optimized_prompt.md` as the instructions for generating the answer."
-    )
-    if research_plugin:
-        first_instruction = "1. Use the installed OpenAI Deep Research skill with `optimized_prompt.md`."
-    return "\n".join(
-        [
+        lines = [
             "# How to use these files",
-            "",
-            first_instruction,
-            website_instruction,
+            "1. Use `optimized_prompt.md` as the instructions for generating the answer.",
+            "2. Use `source_domains.txt` as the source list for generation.",
             "3. Verify that `prompt_contract_review.json` records `conforms` and `accept`.",
             "4. Keep `answer_contract.json` with the answer for validation.",
-            "5. Use `source_domains.txt` for the readable one-website-per-line list.",
-            (
-                "6. Ignore `prompt_audit.json` unless you are debugging validation; "
-                "it only records which plugin checks passed."
-            ),
-            "",
+            "5. Follow the product's deep-research skill: investigate, validate and challenge in cycles; complete the final reviews.",
+            "6. Consult `prompt_audit.json` for mechanical checks; it does not certify legal correctness.",
         ]
-    )
+    return "\n\n".join(lines) + "\n"
 
 
 def _read_text(path: Path) -> str:

@@ -1,6 +1,6 @@
 ---
 name: legal-tax-answer-planner
-description: Use internally when Vera or Codex receives a legal, tax, or compliance question and must define the answer contract, choose a model-led generation route, and prepare source-backed generation instructions. The user does not need to ask for prompt optimization. Do not use for unrelated copywriting or ordinary prompt polishing.
+description: Use internally when Vera or Codex receives a legal, tax, or compliance question and must define the answer contract, prepare the shared agentic research assignment, and prepare source-backed generation instructions. The user does not need to ask for prompt optimization. Do not use for unrelated copywriting or ordinary prompt polishing.
 ---
 
 ## Output Location Rule
@@ -36,8 +36,7 @@ directory as a result.
 
 Use this skill as the internal planning stage of Vera's question-to-validated-
 answer journey. Codex inspects the question, confirms only essential
-assumptions, writes `answer_contract.json`, chooses the generation route with
-model-led judgment, prepares the generation instructions, runs deterministic
+assumptions, writes `answer_contract.json`, records the current-host generation route, prepares the generation instructions, runs deterministic
 shape validation, and delivers a reviewable handoff package.
 
 Do not ask the user whether to optimize a prompt. The user supplies the
@@ -89,7 +88,7 @@ uncertain/practice-dependent.
 Always include a hard authority-safety rule in broad legal prompts: do not
 invent cases, court decisions, tax circulars, treaty provisions, administrative
 practice, or professional commentary. If authority cannot be verified from
-official or reliable sources, the Deep Research answer must say verification
+official or reliable sources, the researched answer must say verification
 was not possible.
 
 ## Codex-Native Run UX
@@ -230,7 +229,7 @@ actual issue. Do not copy domains from `prompt_recipe.json["source_domains"]`;
 that field is intentionally empty for legal prompts.
 
 Validation writes `source_domains.txt` next to the optimized prompt for
-backward-compatible packaging and `source_domains_comma.txt` for Deep Research
+packaging and `source_domains_comma.txt` as the same source list in comma-separated
 website fields that require comma-separated URLs. Deterministic validation must
 not choose legal source domains; Codex must curate the list and pass it as a
 sidecar file. Treat any domains extracted from the optimized prompt as
@@ -302,8 +301,8 @@ python scripts/inspect_question.py <managed-question-file> --client-engagement <
 9. Write `draft_answer_contract.json` in Codex. It must contain:
    - `schema_version`: `1.0`;
    - `question_domain`: `legal`, `tax`, `compliance`, or `mixed`;
-   - `generation_route`: `codex_direct`, `deep_research_plugin`,
-     `chatgpt_deep_research`, or `external_document`;
+   - `generation_route`: `codex_direct` for new research or `external_document`
+     for supplied-answer review; other accepted labels describe imported provenance;
    - free-text `document_type`, `purpose`, `audience`, `output_language`, and
      `jurisdiction`;
    - `jurisdiction_status`: `confirmed`, `assumed`, `unresolved`, or
@@ -353,19 +352,23 @@ python scripts/validate_prompt.py <managed-question-file> <client-run-output>/dr
 16. Deliver `answer_contract.json`, `optimized_prompt.md`,
    `prompt_contract_review.json`,
    `source_domains_comma.txt`, `source_domains.txt`, `prompt_package.md`,
-   `README_HUMAN.md`, and `prompt_audit.json`. For
-   `deep_research_plugin`, read and follow the installed OpenAI `deep-research`
-   skill with the prepared brief, source list and contracted output, then
-   continue to answer validation. This route must reflect the user's explicit
-   choice and an available skill. Reuse confirmed intake and preserve the
-   contracted scope, format and length over the research skill's defaults.
-   For `chatgpt_deep_research`, provide the separately chosen ChatGPT-window
-   handoff. For `codex_direct`, use the instructions to generate the answer in
-   Codex and continue directly to answer validation.
+   `README_HUMAN.md`, and `prompt_audit.json`. For new research, continue with
+   the invoking product's bundled `deep-research` skill in the current host.
+   Its shared method investigates, validates and challenges provisional
+   conclusions, then completes distinct final reviews. No normal/deep choice,
+   external research plugin or separate model API is required. A supplied
+   document goes to answer review without being regenerated.
 
 ## Prompt Requirements
 
 The optimized prompt must require:
+
+- repeated source investigation, immediate validation and adversarial challenge
+  of decisive provisional conclusions, and a persistent issue/cycle record;
+- targeted follow-up and actual correction for material findings, including
+  feedback from final validation, opposing review and comparison;
+- substantive coverage and stopping reasoning without token-saving shortcuts,
+  arbitrary search/source counts or report-length requirements;
 
 - a professional role aligned with the question;
 - a user-facing jurisdiction assumption notice that distinguishes output language from legal jurisdiction;

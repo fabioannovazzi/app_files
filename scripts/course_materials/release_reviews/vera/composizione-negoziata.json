@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "composizione-negoziata",
-  "course_sha256": "221428b5c1f30cd504506c4858b5e1ea49caa046339413d22deed6fb59450e5e",
+  "course_sha256": "f47d04e06fc35b4156ff238bac60a9f7d5c805589f1a860507e86d99552deba6",
   "reviewer": "Codex bounded teaching-material and source integration review",
-  "reviewed_at": "2026-10-09T13:18:33.924283+00:00",
-  "review_scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
+  "reviewed_at": "2026-10-12T16:30:00+00:00",
+  "review_scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance. Shared research instructional update: all five locales use the current-host investigation, validation and challenge loop rather than an external-plugin choice. The source inventory includes the shared method and record helper. Prior authored documents and professional-acceptance limits remain; regression replays do not attest live model research quality.",
   "languages": {
     "it": {
       "verdict": "accepted",

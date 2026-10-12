@@ -1021,6 +1021,26 @@
       ],
       "verification": "Italian acquisition source and synthetic tests inspected. No Swiss source, real Geneva case or live AdE acceptance established.",
       "implementation_status": "italian_source_only"
+    },
+    {
+      "function_id": "deep-research",
+      "name": "Shared legal and tax research method",
+      "role": "shared_helper",
+      "disposition": "Use",
+      "common_work": "Investigate the accepted question with source inspection, continuous validation and challenge, persistent issues and distinct final reviews.",
+      "geneva_application": "Internal research stage of quesito-legale-fiscale; retains its confirmed jurisdiction and source posture.",
+      "required_change": "No separate jurisdiction engine is introduced. Select applicable sources under the original answer contract; material source or framing gaps return to the same shared loop.",
+      "adaptation_layers": [
+        "case-specific source selection"
+      ],
+      "acceptance_example": "A supplied French-language question retains its confirmed governing framework, including during opposing investigation and final-review feedback.",
+      "sources": [
+        "plugins/deep-research-validator/skills/deep-research/SKILL.md",
+        "plugins/deep-research-validator/skills/legal-tax-answer-review/references/answer-journey.md"
+      ],
+      "verification": "Source and synthetic record-integrity checks; no current Swiss-law investigation, real Geneva case or professional acceptance is attested.",
+      "implementation": "The product adapter resolves the same method as Lucia; helpers bind declared research and exact artifacts without deciding legal correctness.",
+      "implementation_status": "shared_method_source_verified"
     }
   ],
   "sources": {
@@ -1206,7 +1226,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "be3916777dbe11d95f333db4b2c4a9e8f723f491bcc29fe6d46c69bd38ad39e6",
+  "catalogue_fingerprint": "60f78bb3e3d6c9fafbe4e32dcdcd31ba193eed2eee37f9d379cfe92ee4c496ee",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1589,10 +1609,16 @@
     ],
     "scope": "Quote the existing colon-bearing description as valid YAML; parsed wording and all function IDs, jurisdiction dispositions and acceptance limits are unchanged."
   },
+  "shared_research_release_binding": {
+    "reviewed_at": "2026-10-12",
+    "version": "0.1.363",
+    "previous_catalogue_fingerprint": "bf22ce9cd7ab289f6fca9e242a73efa291ca20b75a5aba7f5fa7c06267e2691c",
+    "review": "Adds one internal research stage beneath the existing legal/tax question function. Retains previous target dispositions and professional-acceptance limits. Language never selects jurisdiction. New continuous reviews and final feedback preserve the accepted contract and sources; source/package checks do not establish Geneva legal correctness."
+  },
   "source_binding_update": {
     "date": "2026-10-12",
-    "version": "0.1.364",
-    "reason": "Router gains automatic technical incident continuity; jurisdiction scope and the 51 assessed professional functions are unchanged.",
+    "version": "0.1.365",
+    "reason": "Automatic technical incident continuity in direct Cowork entrypoints; retains the merged research stage and every existing jurisdiction assessment.",
     "fresh_geneva_acceptance": false
   }
 }

@@ -156,6 +156,7 @@ CHATGPT_HIDDEN_COMPONENTS: dict[str, frozenset[str]] = {}
 CHATGPT_SKILL_CARDS_FILE = "marketplace_skill_instructions.json"
 VERA_CHATGPT_DEVELOPER_SKILLS = frozenset({"privacy-surface-review"})
 VERA_CHATGPT_ROUTER_TARGETS = {
+    "deep-research": "skills/deep-research/SKILL.md",
     "agenzia-acquisition": "modules/browser-automation/skills/agenzia-acquisition/SKILL.md",
     "organizzazione-lavoro": "skills/organizzazione-lavoro/SKILL.md",
     "studio-document-format": "skills/studio-document-format/SKILL.md",
@@ -207,6 +208,7 @@ VERA_CHATGPT_ROUTER_TARGETS = {
     "studio-archive": "modules/studio-archive/skills/studio-archive/SKILL.md",
 }
 LUCIA_CHATGPT_ROUTER_TARGETS = {
+    "deep-research": "skills/deep-research/SKILL.md",
     "estrazione-clausole": "skills/estrazione-clausole/SKILL.md",
     "contenzioso-civile": "skills/contenzioso-civile/SKILL.md",
     "operazioni-ma": "skills/operazioni-ma/SKILL.md",

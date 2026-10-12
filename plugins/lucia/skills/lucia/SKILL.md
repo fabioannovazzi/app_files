@@ -127,8 +127,10 @@ Lucia.
 `quesito-legale-fiscale` orchestra quelle due fasi e la generazione della
 risposta come un solo percorso per l'utente, leggendo il metodo canonico
 `answer-journey.md` nel modulo condiviso Legal/Tax Answer Review. Dopo la
-preparazione propone il plugin Deep Research disponibile oppure la ricerca
-ordinaria. La ricerca informativa termina dopo la validazione. Un parere su
+preparazione usa `../deep-research/SKILL.md`: la stessa ricerca condivisa con
+Vera, con indagine ripetuta, validazione continua, ricerca delle prove contrarie
+e registro persistente delle questioni. Non propone modalità ordinaria o plugin
+esterno. I rilievi delle revisioni finali riaprono la ricerca mirata. La ricerca informativa termina dopo la validazione. Un parere su
 una posizione concreta o una richiesta esplicita include il contrapposto, salvo
 esclusione dell'utente. `adversarial-opinion` legge lo stesso metodo e usa lo
 stesso helper di Vera nel modulo condiviso: nessun fork del codice o del metodo.

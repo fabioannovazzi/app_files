@@ -64,8 +64,8 @@ or compliance question; do not ask whether they want a prompt optimized.
 Codex must write `answer_contract.json` before generation. Keep these decisions
 separate:
 
-- generation route: `codex_direct`, `deep_research_plugin`,
-  `chatgpt_deep_research`, or `external_document`;
+- generation route: `codex_direct` for new research, `external_document` for
+  supplied-answer review; older labels remain imported provenance only;
 - document type: the requested artifact, such as a research report, legal memo,
   one-page letter, response letter, checklist, or counsel brief.
 - validation scope: all material claims by default, selected material claims
@@ -79,12 +79,12 @@ Choose both with model-led judgment or user confirmation. Deterministic scripts
 only validate that the explicit contract has the required fields and allowed
 codes. They must not infer the route or document type from keywords.
 
-`deep_research_plugin` uses the installed OpenAI `deep-research` skill in the
-current host after the user selects it. Carry the prepared brief, source list,
-confirmed intake and requested artifact into that skill, then resume answer
-validation. `chatgpt_deep_research` is the separate ChatGPT-window handoff.
-Direct drafting and the installed-plugin route both skip that manual handoff
-while preserving the answer contract and source record for the validator.
+New research uses the invoking product's bundled `deep-research` wrapper,
+which resolves the same agentic method for Vera and Lucia in the current host.
+There is no ordinary/deep selector or external-plugin dependency. Prepare a
+research assignment requiring investigation, continuous validation and
+challenge, issue-driven follow-up and distinct final reviews. Supplied-answer
+review retains the original document and investigates only as needed for review.
 
 ## Output Language And Jurisdiction Scope
 
@@ -137,7 +137,7 @@ the remaining phases, instead of compressing doctrine or inventing authority.
 
 ## Source Strategy
 
-The final prompt should ask Deep Research to prefer stable, official sources:
+The research assignment should prioritize stable, official sources:
 
 - legislation and official consolidated law portals;
 - official gazettes;
@@ -158,10 +158,10 @@ file to validation. Keep the source hierarchy and domain list separate:
 - the hierarchy explains which source classes are preferred;
 - `source_domains.txt` gives the user concrete websites/domains one per line;
 - `source_domains_comma.txt` gives the same websites as comma-separated URLs to
-  paste into Deep Research source controls;
+  retain alongside the line-separated source list;
 - the list is model-curated and must be reviewed for relevance before delivery.
 
-Ask Deep Research to flag unavailable or broken URLs and avoid making unsupported claims.
+Require the research method to flag unavailable or broken URLs and avoid unsupported claims.
 
 ## Prompt Structure
 

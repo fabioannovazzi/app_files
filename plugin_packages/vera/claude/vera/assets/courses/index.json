@@ -258,7 +258,7 @@
     },
     "composizione-negoziata": {
       "path": "composizione-negoziata/course.json",
-      "sha256": "5c9369c3b8082ca68e9cd7dac19dfd44becefeb44e2acfc3fee9c49b20220374",
+      "sha256": "8b46360fc266f0b346626af93c6138bbfb164661f80ab06781915fdb987f5e6d",
       "languages": [
         "it",
         "en",
@@ -853,7 +853,7 @@
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
-      "sha256": "438e9c768c9f74010d6cf364fd1bb1ee548fc0a91ca4f786801886fcc4e4a6de",
+      "sha256": "0835e5b4da17a5a328877711927acdbee624911f22e8e38852f4fe6d15d5b88d",
       "languages": [
         "it",
         "en",

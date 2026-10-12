@@ -838,6 +838,7 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
             "skills/lucia/SKILL.md",
             "skills/learn-with-lucia/SKILL.md",
             "skills/quesito-legale-fiscale/SKILL.md",
+            "skills/deep-research/SKILL.md",
             "skills/legal-tax-answer-planner/SKILL.md",
             "skills/legal-tax-answer-review/SKILL.md",
             "skills/comunicazione-professionale/SKILL.md",
@@ -2869,6 +2870,23 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
 
         for skill_file in skill_files:
             skill_text = skill_file.read_text(encoding="utf-8")
+            if skill_file.parent.name == "deep-research" and plugin_root.name in {
+                "vera",
+                "lucia",
+                "deep-research-validator",
+            }:
+                # The research method reads the canonical answer-review policy;
+                # product adapters resolve that method rather than copying UX rules.
+                policy = (
+                    ROOT
+                    / "plugins/deep-research-validator/skills/legal-tax-answer-review/SKILL.md"
+                ).read_text(encoding="utf-8")
+                if plugin_root.name == "deep-research-validator":
+                    assert "legal-tax-answer-review/SKILL.md" in skill_text
+                else:
+                    assert "skills/deep-research/SKILL.md" in skill_text
+                    assert "../../../deep-research-validator" in skill_text
+                skill_text += "\n" + policy
             normalized_skill_text = " ".join(skill_text.split())
             if (
                 plugin_root.name == "vera"
@@ -3011,6 +3029,14 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
             if plugin_root.name in {"lucia", "vera"} and (
                 skill_file.parent.name != plugin_root.name
             ):
+                if skill_file.parent.name == "deep-research":
+                    # Both product adapters delegate to one method and retain
+                    # the existing question and final-review entry points.
+                    skills = skill_file.parent.parent
+                    assert (skills / "quesito-legale-fiscale" / "SKILL.md").is_file()
+                    assert (skills / "legal-tax-answer-review" / "SKILL.md").is_file()
+                    assert "skills/deep-research/SKILL.md" in skill_text
+                    continue
                 assert "Read that module's" in normalized_skill_text
                 if skill_file.parent.name == "agenzia-acquisition":
                     assert "root as the working directory" in normalized_skill_text
