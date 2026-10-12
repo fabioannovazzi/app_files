@@ -16,6 +16,21 @@ LOGGER = logging.getLogger(__name__)
 ZERO = Decimal("0")
 
 
+def _coordinate(value: Any) -> float:
+    """Validate a finite PDF coordinate; persisted decimals use canonical text."""
+    if isinstance(value, bool) or not isinstance(value, (str, int, float)):
+        raise ValueError("PDF coordinates must be finite decimal text or numbers")
+    try:
+        result = float(value)
+    except ValueError as exc:
+        raise ValueError(
+            "PDF coordinates must be finite decimal text or numbers"
+        ) from exc
+    if not math.isfinite(result):
+        raise ValueError("PDF coordinates must be finite decimal text or numbers")
+    return result
+
+
 def inspect_registration_pdf(path: Path) -> dict[str, Any]:
     """Return bounded physical evidence; the host model selects column semantics."""
     import pdfplumber
@@ -34,16 +49,16 @@ def inspect_registration_pdf(path: Path) -> dict[str, Any]:
                     samples.append(
                         {
                             "page": index + 1,
-                            "width": page.width,
-                            "height": page.height,
+                            "width": str(page.width),
+                            "height": str(page.height),
                             "word_count": len(words),
                             "truncated": len(words) > 300,
                             "words": [
                                 {
                                     "text": str(w["text"])[:100],
-                                    "x0": w["x0"],
-                                    "x1": w["x1"],
-                                    "top": w["top"],
+                                    "x0": str(w["x0"]),
+                                    "x1": str(w["x1"]),
+                                    "top": str(w["top"]),
                                 }
                                 for w in words[:300]
                             ],
@@ -57,6 +72,7 @@ def inspect_registration_pdf(path: Path) -> dict[str, Any]:
         "source_sha256": digest,
         "page_count": count,
         "sampled_pages": samples,
+        "coordinate_unit": "PDF points; canonical decimal text",
         "purpose": "Physical layout evidence for model-led review; no postings extracted",
     }
 
@@ -64,6 +80,8 @@ def inspect_registration_pdf(path: Path) -> dict[str, Any]:
 def _read_registration_pdf(
     path: Path,
     layout: dict[str, Any] | None = None,
+    *,
+    currency: str = "EUR",
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     """Read a reviewed registration layout, keeping physical posting lineage.
 
@@ -92,34 +110,20 @@ def _read_registration_pdf(
         )
     bands: dict[str, tuple[float, float]] = {}
     for field, bounds in columns.items():
-        if (
-            not isinstance(bounds, list)
-            or len(bounds) != 2
-            or any(
-                isinstance(v, bool)
-                or not isinstance(v, (int, float))
-                or not math.isfinite(v)
-                for v in bounds
-            )
-            or not 0 <= bounds[0] < bounds[1]
-        ):
+        if not isinstance(bounds, list) or len(bounds) != 2:
             raise ValueError(f"Invalid PDF coordinate band: {field}")
-        bands[field] = (float(bounds[0]), float(bounds[1]))
+        low, high = (_coordinate(value) for value in bounds)
+        if not 0 <= low < high:
+            raise ValueError(f"Invalid PDF coordinate band: {field}")
+        bands[field] = (low, high)
     ordered = sorted(bands.values())
     if any(left[1] > right[0] for left, right in zip(ordered, ordered[1:])):
         raise ValueError("PDF coordinate bands must not overlap")
-    body = layout.get("body")
-    if (
-        not isinstance(body, list)
-        or len(body) != 2
-        or any(
-            isinstance(v, bool)
-            or not isinstance(v, (int, float))
-            or not math.isfinite(v)
-            for v in body
-        )
-        or not 0 <= body[0] < body[1]
-    ):
+    body_value = layout.get("body")
+    if not isinstance(body_value, list) or len(body_value) != 2:
+        raise ValueError("PDF layout needs a finite top/bottom body range")
+    body = tuple(_coordinate(value) for value in body_value)
+    if not 0 <= body[0] < body[1]:
         raise ValueError("PDF layout needs a finite top/bottom body range")
     ignored = layout.get("ignored_line_prefixes", [])
     if not isinstance(ignored, list) or any(
@@ -304,7 +308,7 @@ def _read_registration_pdf(
                             ),
                             "debit": str(amount) if side == "debit" else "0",
                             "credit": str(amount) if side == "credit" else "0",
-                            "currency": "EUR",
+                            "currency": currency,
                             "unit": "currency",
                             "reported_increment": "0.01",
                             "source_file": path.name,
@@ -347,11 +351,13 @@ def _read_registration_pdf(
 def read_registration_pdf(
     path: Path,
     layout: dict[str, Any] | None = None,
+    *,
+    currency: str = "EUR",
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     """Reconstruct the complete source, converting PDF decoder failures to diagnostics."""
     from pdfplumber.utils.exceptions import PdfminerException
 
     try:
-        return _read_registration_pdf(path, layout)
+        return _read_registration_pdf(path, layout, currency=currency)
     except PdfminerException as exc:
         raise ValueError("PDF source could not be reconstructed") from exc

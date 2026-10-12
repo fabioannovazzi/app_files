@@ -2348,6 +2348,7 @@ def _suggested_recipe_from_plan(plan: QualificationPlan) -> dict[str, Any]:
             ),
             "decision_ref": None,
             "mapping_sha256": canonical_json_sha256(contract),
+            "mapping_contract": contract,
         },
     }
     if plan.header_rows:
@@ -2747,11 +2748,13 @@ def _parse_print_friendly_excel(
 def _parse_text_pdf(
     path: Path,
     layout: dict[str, Any] | None = None,
+    *,
+    currency: str = "EUR",
 ) -> tuple[pl.DataFrame, dict[str, Any]]:
     """Normalize physical PDF postings through the shared reviewed reader."""
     from vera_journal_pdf import read_registration_pdf
 
-    postings, diagnostics = read_registration_pdf(path, layout)
+    postings, diagnostics = read_registration_pdf(path, layout, currency=currency)
     records = [
         _normalize_record(
             posting,
@@ -2823,12 +2826,17 @@ def _registration_pdf_result(
     if layout.get("source_sha256") not in (None, source_sha256):
         raise ValueError("PDF layout review is stale: source bytes changed")
     layout["source_sha256"] = source_sha256
+    currency = str(file_recipe.get("currency", "EUR"))
+    if not re.fullmatch(r"[A-Z]{3}", currency):
+        raise ValueError(
+            "PDF currency must be an explicitly reviewed three-letter code"
+        )
     contract = _mapping_contract(
         parser="registration_pdf",
         source_family="journal.registration_pdf.v1",
         layout=layout,
         posting_identity="movement_number_and_source_row",
-        currency="EUR",
+        currency=currency,
         unit="currency",
         decimal_separator=",",
         thousands_separator=".",
@@ -2839,7 +2847,7 @@ def _registration_pdf_result(
         path=path,
         adapter_id="journal.registration_pdf.v1",
     )
-    frame, parser_diag = _parse_text_pdf(path, layout)
+    frame, parser_diag = _parse_text_pdf(path, layout, currency=currency)
     complete = parser_diag["accepted"]
     status = (
         "qualified"
@@ -2856,6 +2864,7 @@ def _registration_pdf_result(
         reviewed_mapping_ref=decision_ref,
         reviewed_decision=receipt,
         layout=layout,
+        currency=currency,
         posting_identity="movement_number_and_source_row",
         decimal_separator=",",
         thousands_separator=".",
@@ -3531,6 +3540,11 @@ def normalize_path(
         recipe_source_receipt,
         recipe_source_bytes,
     ) = _read_recipe_with_receipt(recipe_path)
+    # Validate every persisted run reference before any output mutation.
+    # Run containment is mechanically verifiable, independent of mapping review.
+    _managed_run_reference(resolved_input, normalized_client_engagement)
+    if recipe_source_path is not None:
+        _managed_run_reference(recipe_source_path, normalized_client_engagement)
     languages = language_assumptions(
         recipe, language=language, document_language=document_language
     )

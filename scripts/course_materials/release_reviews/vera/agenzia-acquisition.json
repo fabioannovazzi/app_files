@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "agenzia-acquisition",
-  "course_sha256": "759de67bcd0b65c7e23fdc7e8c9418afa7b4c7ebc0dadee00586cef3ab46f574",
+  "course_sha256": "ab4e03293125cc34a6e974d44b39b8eee5f7b551caecc2487ed1076cfdeb8f18",
   "reviewer": "Codex source, actual local output and lesson review",
   "reviewed_at": "2026-10-08T08:15:00+00:00",
   "review_scope": "Read the Italian authored lesson and fictional inputs. Executed the shipped CourseLibrary and acquisition engine twice for demo/practice using the explicitly synthetic source. Inspected actual CSV, JSON, model-data report and workbook sheets. Offline browser and MCP App harness tests are separate evidence; no live AdE account, native host session, learner participation or professional acceptance is claimed. Final wording review keeps internal commands in the specialist skill and describes learner actions in the public lesson. The acquisition lesson was executed again after this source change.",
@@ -120,5 +120,14 @@
       "Editorial and artifact review history"
     ],
     "scope": "Source inventory only: reviewed registration PDF adapter, page-cache release and worker diagnostics. Complete authored lesson content is identical to the prior main baseline. Prior output and editorial judgments remain historical; no renewed visual, installed-host, learner or Nicola-file acceptance is claimed. Fresh source-bound execution is required by CI teaching release verification."
+  },
+  "pdf_first_run_source_binding_20261012": {
+    "reviewed_at": "2026-10-12T09:07:16.006899+00:00",
+    "previous_course_sha256": "759de67bcd0b65c7e23fdc7e8c9418afa7b4c7ebc0dadee00586cef3ab46f574",
+    "current_course_sha256": "ab4e03293125cc34a6e974d44b39b8eee5f7b551caecc2487ed1076cfdeb8f18",
+    "scope": "Bounded source integration review: authored lesson content, localized prompts, fixtures, acceptance judgments and historical output artifact receipts are unchanged; only sources bindings changed.",
+    "source_changes": "Vera dependency checker re-enters the base interpreter when required; PDF geometry is persisted as decimal text; reviewed mapping contracts are exposed; run recipe containment is checked before output writes; reviewed currency reaches PDF postings; first-run instructions specify runtime, session identity, in-run recipe and finalization disclosure.",
+    "evidence": "Final repair commit native teaching execution step passed before the editorial binding check; local packaged PDF pipeline and source regressions passed. Fresh CI must verify execution against these exact current course hashes.",
+    "limits": "This source-only binding review does not claim new visual, learner, installed-host or professional acceptance. Existing review descriptions and output receipts retain their historical scope."
   }
 }

@@ -83,6 +83,24 @@ def main(argv: list[str] | None = None) -> int:
         args.module,
         requirements=args.requirements,
     )
+    if not ready and detail.startswith(
+        "Shared runtime update requires the base Python interpreter"
+    ):
+        # An activated host hook may put the managed venv first on PATH.
+        # Re-enter this same verified checker under its recorded base interpreter;
+        # keep the shared runtime's prohibition on self-updating intact.
+        base = Path(getattr(sys, "_base_executable", sys.executable))
+        if base.is_file() and base.absolute() != Path(sys.executable).absolute():
+            completed = subprocess.run(
+                [
+                    str(base),
+                    str(execution_root / "scripts/check_dependencies.py"),
+                    *(sys.argv[1:] if argv is None else argv),
+                ],
+                cwd=execution_root,
+                check=False,
+            )
+            return completed.returncode
     if not ready:
         LOGGER.error("Vera managed Python runtime setup failed: %s", detail)
         return 1

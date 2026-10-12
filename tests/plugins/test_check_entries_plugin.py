@@ -297,8 +297,13 @@ def _seal_review_payload(payload: dict[str, Any]) -> dict[str, Any]:
 
 
 def load_core() -> Any:
-    if str(SCRIPT_DIR) not in sys.path:
-        sys.path.insert(0, str(SCRIPT_DIR))
+    # Standalone components use identical import names; bind this fixture to
+    # Check Entries even when Sampling ran earlier in the same pytest process.
+    if str(SCRIPT_DIR) in sys.path:
+        sys.path.remove(str(SCRIPT_DIR))
+    sys.path.insert(0, str(SCRIPT_DIR))
+    sys.modules.pop("implementation_bootstrap", None)
+    sys.modules.pop("implementation_contract", None)
     spec = importlib.util.spec_from_file_location("check_entries_core", CORE_PATH)
     assert spec and spec.loader
     module = importlib.util.module_from_spec(spec)
