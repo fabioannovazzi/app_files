@@ -25,7 +25,11 @@ def _load_builder():
 def test_vera_declares_registro_imprese_sari_component_skill_and_mcp_route() -> None:
     components = json.loads((VERA_ROOT / "components.json").read_text(encoding="utf-8"))
     mcp = json.loads((VERA_ROOT / ".mcp.json").read_text(encoding="utf-8"))
-    routed_modules = {server["args"][-1] for server in mcp["mcpServers"].values()}
+    routed_modules = {
+        server["args"][-1]
+        for server in mcp["mcpServers"].values()
+        if server.get("command")
+    }
 
     assert "registro-imprese-sari" in components["plugins"]
     assert "registro-imprese-sari" in routed_modules
