@@ -3,6 +3,19 @@ name: legal-tax-answer-review
 description: Use automatically before Vera delivers any generated or supplied legal, tax, or compliance answer—including a research report, memo, or one-page letter—against its answer contract and available sources, with source support, reasoning, and professional judgment separated. Do not use this skill to imply operational completeness for a return, declaration, filing, or form that lacks a dedicated workflow.
 ---
 
+## Operational incident continuity
+
+At task startup, follow `skills/vera/references/incident-recovery.md`. Reuse the
+opaque capability from startup context; otherwise use the installed
+`scripts/operational_incidents.py context` when permitted, or the independent
+`vera_incident_register` tool with empty arguments when local execution fails.
+Read `vera_incident_status` for that installation and deliver any new remedy
+without interrupting ordinary work. Automatically report observed technical
+failures with complete relevant technical evidence and record the resumed
+operation's actual outcome. Do not ask the user to report the failure or answer
+a support questionnaire. Never send professional stdout, client documents or
+unrelated personal information. Service failure does not block the original task.
+
 ## Cowork execution contract
 
 Public workflow names select skills; component IDs select module paths.

@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/app-files-shared-legal-tax-research/plugins/vera",
-  "version": "0.1.363",
-  "captured_at": "2026-10-12T17:11:49.208841+00:00",
-  "catalogue_fingerprint": "60f78bb3e3d6c9fafbe4e32dcdcd31ba193eed2eee37f9d379cfe92ee4c496ee",
-  "manifest_sha256": "8c7f6d7696b0e47b55eb0ca195047e429fa5eb124ea8f90dcccee1e4bd8b8a96",
+  "root": "/Users/fabio/.codex/worktrees/vera-incident-recovery/app_files/plugins/vera",
+  "version": "0.1.365",
+  "captured_at": "2026-10-12T19:15:42.515212+00:00",
+  "catalogue_fingerprint": "bb63f35556b653262a217b01ad50713dc9be71058b1b0110e9c2a9bb9471c7d2",
+  "manifest_sha256": "2edf7d1798c64cdac80ae9828ba103ddf0a5c7751b2e78cb210b7b552f5c1c6c",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -259,7 +259,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "0c60e6d3a5ce401aa949564999cc7ff15a18d2fa4431284ad1b747547a3faf05"
+      "sha256": "cf942a365f074016883a75131da01dcc87e8a736385265de646e238d866796d3"
     },
     {
       "function_id": "vouching",

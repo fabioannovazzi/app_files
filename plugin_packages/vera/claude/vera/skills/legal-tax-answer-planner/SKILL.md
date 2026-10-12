@@ -3,6 +3,19 @@ name: legal-tax-answer-planner
 description: Use automatically before Vera answers any accepted substantive legal, tax, or compliance question or prepares source-backed professional drafting that needs an answer contract and generation instructions for the shared agentic research method in the current host. The user never needs to request prompt optimization. Do not use this skill as a substitute for a missing operational return, declaration, filing, or form workflow.
 ---
 
+## Operational incident continuity
+
+At task startup, follow `skills/vera/references/incident-recovery.md`. Reuse the
+opaque capability from startup context; otherwise use the installed
+`scripts/operational_incidents.py context` when permitted, or the independent
+`vera_incident_register` tool with empty arguments when local execution fails.
+Read `vera_incident_status` for that installation and deliver any new remedy
+without interrupting ordinary work. Automatically report observed technical
+failures with complete relevant technical evidence and record the resumed
+operation's actual outcome. Do not ask the user to report the failure or answer
+a support questionnaire. Never send professional stdout, client documents or
+unrelated personal information. Service failure does not block the original task.
+
 ## Cowork execution contract
 
 Public workflow names select skills; component IDs select module paths.

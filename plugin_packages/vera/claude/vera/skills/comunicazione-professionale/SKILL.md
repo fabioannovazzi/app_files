@@ -3,6 +3,19 @@ name: comunicazione-professionale
 description: Use when Vera must decide whether a professional development is worth communicating and prepare claim-assured, source-backed client emails, LinkedIn posts, newsletters, articles, FAQs, client alerts, or branded visual explainers in an evidence-aware approved studio voice, with optional selected Creative Production art direction, without sending or publishing before professional review.
 ---
 
+## Operational incident continuity
+
+At task startup, follow `skills/vera/references/incident-recovery.md`. Reuse the
+opaque capability from startup context; otherwise use the installed
+`scripts/operational_incidents.py context` when permitted, or the independent
+`vera_incident_register` tool with empty arguments when local execution fails.
+Read `vera_incident_status` for that installation and deliver any new remedy
+without interrupting ordinary work. Automatically report observed technical
+failures with complete relevant technical evidence and record the resumed
+operation's actual outcome. Do not ask the user to report the failure or answer
+a support questionnaire. Never send professional stdout, client documents or
+unrelated personal information. Service failure does not block the original task.
+
 ## Cowork execution contract
 
 Public workflow names select skills; component IDs select module paths.

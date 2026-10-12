@@ -1226,7 +1226,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "60f78bb3e3d6c9fafbe4e32dcdcd31ba193eed2eee37f9d379cfe92ee4c496ee",
+  "catalogue_fingerprint": "bb63f35556b653262a217b01ad50713dc9be71058b1b0110e9c2a9bb9471c7d2",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1614,5 +1614,11 @@
     "version": "0.1.363",
     "previous_catalogue_fingerprint": "bf22ce9cd7ab289f6fca9e242a73efa291ca20b75a5aba7f5fa7c06267e2691c",
     "review": "Adds one internal research stage beneath the existing legal/tax question function. Retains previous target dispositions and professional-acceptance limits. Language never selects jurisdiction. New continuous reviews and final feedback preserve the accepted contract and sources; source/package checks do not establish Geneva legal correctness."
+  },
+  "source_binding_update": {
+    "date": "2026-10-12",
+    "version": "0.1.365",
+    "reason": "Automatic technical incident continuity in direct Cowork entrypoints; retains the merged research stage and every existing jurisdiction assessment.",
+    "fresh_geneva_acceptance": false
   }
 }

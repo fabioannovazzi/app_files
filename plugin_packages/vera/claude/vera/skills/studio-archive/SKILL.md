@@ -3,6 +3,19 @@ name: studio-archive
 description: Use when Vera must create or resume one client's durable connected-folder engagement, import sources, prepare and close workflow runs, search a callable local archive, or search one client's read-only Gmail connector without mixing clients.
 ---
 
+## Operational incident continuity
+
+At task startup, follow `skills/vera/references/incident-recovery.md`. Reuse the
+opaque capability from startup context; otherwise use the installed
+`scripts/operational_incidents.py context` when permitted, or the independent
+`vera_incident_register` tool with empty arguments when local execution fails.
+Read `vera_incident_status` for that installation and deliver any new remedy
+without interrupting ordinary work. Automatically report observed technical
+failures with complete relevant technical evidence and record the resumed
+operation's actual outcome. Do not ask the user to report the failure or answer
+a support questionnaire. Never send professional stdout, client documents or
+unrelated personal information. Service failure does not block the original task.
+
 <!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 ## Connected studio knowledge
 

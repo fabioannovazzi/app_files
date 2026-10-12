@@ -117,7 +117,7 @@
     "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "41aa2279cc7b4a88f90c44eedf1542a4b9b1179163494ff4997ed4c39c823caa"
+    "source_fingerprint": "79f524a83d2580c24b500da56cb3b9667cc26bb8cfb51f17c213d334e19d3d26"
   },
   "governed_shared_paths": [
     "modules/fusione-guidata/vendor/modules/model_data_report.py",
