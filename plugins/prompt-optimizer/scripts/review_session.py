@@ -66,17 +66,9 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
             "## Prompt-Contract Semantic Review",
             "## What to Use",
         ],
-        "readme_required_deep_research": [
-            "# How to use these files",
-            "Paste `optimized_prompt.md` into Deep Research.",
-        ],
         "readme_required_direct": [
             "# How to use these files",
             "Use `optimized_prompt.md` as the instructions for generating the answer.",
-        ],
-        "readme_required_research_plugin": [
-            "# How to use these files",
-            "Use the installed OpenAI Deep Research skill with `optimized_prompt.md`.",
         ],
         "dependency_note": "Codex should run scripts/check_dependencies.py before helper scripts.",
         "data_notes": [
@@ -141,17 +133,9 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
             "## Revisión semántica del contrato del prompt",
             "## Cómo utilizar los archivos",
         ],
-        "readme_required_deep_research": [
-            "# Cómo utilizar estos archivos",
-            "Pegue `optimized_prompt.md` en Deep Research.",
-        ],
         "readme_required_direct": [
             "# Cómo utilizar estos archivos",
             "Use `optimized_prompt.md` como instrucciones para generar la respuesta.",
-        ],
-        "readme_required_research_plugin": [
-            "# Cómo utilizar estos archivos",
-            "Use la skill Deep Research de OpenAI instalada con `optimized_prompt.md`.",
         ],
         "dependency_note": "Codex debe ejecutar scripts/check_dependencies.py antes de los scripts auxiliares.",
         "data_notes": [
@@ -547,22 +531,9 @@ def _output_records(
         "draft_source_domains.txt",
     }
     copy = _copy(language, audit)
-    answer_contract = audit.get("answer_contract")
-    deep_research = (
-        isinstance(answer_contract, dict)
-        and answer_contract.get("generation_route") == "chatgpt_deep_research"
-    )
-    readme_required_key = (
-        "readme_required_deep_research" if deep_research else "readme_required_direct"
-    )
-    if (
-        isinstance(answer_contract, dict)
-        and answer_contract.get("generation_route") == "deep_research_plugin"
-    ):
-        readme_required_key = "readme_required_research_plugin"
     required_text_by_path = {
         "prompt_package.md": copy["package_required"],
-        "README_HUMAN.md": copy[readme_required_key],
+        "README_HUMAN.md": copy["readme_required_direct"],
     }
     outputs: list[dict[str, Any]] = []
     for path in sorted(output_dir.rglob("*")):

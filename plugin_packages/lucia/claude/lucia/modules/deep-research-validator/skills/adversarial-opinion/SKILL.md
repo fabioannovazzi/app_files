@@ -122,6 +122,11 @@ instruction to omit the stage; do not change `not_required` merely because
 research has produced conclusions. Do not apply this stage to other
 product workflows merely because their output mentions law or tax.
 
+Early challenges within `../deep-research/SKILL.md` guide research but never
+complete this final assignment. Re-read the reviewed original and sources under
+an opposing assignment rather than endorsing the research narrative. Keep
+adverse evidence and alternative interpretations visible.
+
 ## Develop the opposing case
 
 1. Read the complete reviewed position, original facts and question, answer
@@ -173,7 +178,12 @@ to the reviewed documents; research and validate any new material claim.
 The original may remain unchanged despite a credible opposing case. If the
 exercise exposes a defect requiring correction, identify it explicitly,
 correct and revalidate the original when supported, then refresh the opposing
-exercise against that exact version. Do not silently merge the opinions or
+exercise against that exact version. Reopen the shared research issue register
+and targeted investigation for any material defect or new evidence exposed by
+the opposing review or comparison. Record the treatment and changed/dependent
+claims, then refresh the final reviews and research bindings. A credible
+alternative interpretation alone does not establish a defect in the original.
+Do not silently merge the opinions or
 present a preferred legal strategy as an established fact. If missing evidence
 or professional judgment prevents closure, preserve the partial package and
 state what remains rather than looping or manufacturing a resolution.

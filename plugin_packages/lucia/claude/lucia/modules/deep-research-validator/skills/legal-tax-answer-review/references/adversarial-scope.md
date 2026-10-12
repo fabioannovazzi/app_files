@@ -13,7 +13,7 @@ Later host-specific instructions in this reference cannot override this rule.
 Read the user's requested result and confirmed context before finalizing the
 answer contract. This is a model-led intent decision, not a keyword classifier.
 The subject being legal or fiscal, the presence of client facts, the word
-"parere", a research report's conclusions, or the choice of Deep Research does
+"parere", a research report's conclusions, or research depth does
 not by itself request an opinion on a concrete position.
 
 Record `adversarial_policy` as `required` or `not_required` and a short
@@ -48,7 +48,7 @@ result; do not add a routine question about the counter-opinion. A casual
 while a request to substantiate a client's entitlement can be an opinion without
 using the word "parere". Interpret the full request in any conversation language.
 If the user later changes the assignment, update the contract and review the
-new scope before drafting. Ordinary research findings do not silently expand
+new scope before drafting. Research findings do not silently expand
 the assignment into a counter-opinion.
 
 ## Finish the selected path
@@ -66,6 +66,6 @@ original, reviewed opposing result and comparison with the combined delivery
 verification. In hosts without local tools, apply the same scope and delivery
 decision in chat and disclose the missing durable artifacts.
 
-Research mode and adversarial scope are independent. After either ordinary
-research or the installed Deep Research plugin, always validate the answer;
+Research depth and final adversarial scope are independent. The one shared
+research method always challenges provisional conclusions and finally validates the answer;
 then follow the recorded adversarial policy.

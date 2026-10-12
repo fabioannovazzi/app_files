@@ -9,19 +9,23 @@ and `skills/legal-tax-answer-planner/SKILL.md`; they add no helper implementatio
 external transfer. They retain the lawyer's governing-law, source and final
 professional decisions and the existing Lucia runtime boundary.
 
-The optional installed Deep Research route receives the prepared brief,
-contract, selected case material and source list in the current host context.
-Its availability and selection are checked before use. The separate manual
-ChatGPT handoff remains an expressly chosen destination. Informational research
-ends after ordinary validation. For an opposing examination, the selected
-model may read the complete reviewed original, material case facts, source
-captures, complete opposing result and comparison. Public source queries can
-contain case facts needed for research. There is no automatic anonymization
-or claim that model-read material remains local-only.
+Both products resolve the same bundled research method in the current host.
+The model may read the accepted brief, selected case material, source captures,
+provisional conclusions, validation findings, challenges, issue/cycle records and
+stopping assessment. There is no ordinary/deep selector, external research-plugin
+dependency, additional model API or automatic transfer to another account.
+Final validation and the reviewed opposing examination can reopen targeted
+research. Informational research has continuous challenges and final validation;
+it does not manufacture a separate opposing opinion. For a required opposing
+examination, the same selected model may also read the complete reviewed
+original, complete opposing result, their reviews and the comparison. Public
+source queries can contain case facts necessary and authorized for research.
+There is no automatic anonymization or claim of local-only model processing.
 
 Both opinions use the same existing Studio Archive validation run, with
 preparation in its separate run. The shared helper enforces exact phase paths,
-file hashes and declared review states; legal support and opposing-case judgment
+file hashes and declared review states; the research helper also binds the
+issue/cycle record, answer, contract, review, research log and source captures; legal support and opposing-case judgment
 remain model-led and subject to the lawyer's review. Without local tools Lucia
 continues in chat and states the missing durable artifacts. The shared public
 question, planner and opposing-opinion pages describe these same paths.

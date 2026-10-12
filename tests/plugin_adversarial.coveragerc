@@ -1,5 +1,7 @@
 [run]
-include = plugins/deep-research-validator/scripts/adversarial_opinion.py
+include =
+    plugins/deep-research-validator/scripts/adversarial_opinion.py
+    plugins/deep-research-validator/scripts/research_record.py
 relative_files = True
 
 [report]

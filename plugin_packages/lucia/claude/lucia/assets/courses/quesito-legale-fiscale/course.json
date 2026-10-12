@@ -72,24 +72,40 @@
       "sha256": "cf99f33ccf373a8d6816cb72304912bc1995f576e708155746e0c89649d58d37"
     },
     {
+      "path": "modules/deep-research-validator/scripts/research_record.py",
+      "sha256": "43b22498a68c530a66eef6214f958c43ddf464eda9e31c825b24e9f3139236be"
+    },
+    {
       "path": "modules/deep-research-validator/scripts/review_session.py",
       "sha256": "d37dc93f9ca7d1ff2944835f3c76a1b8eded864b7206955b3f3b785210bbfa5c"
     },
     {
+      "path": "modules/deep-research-validator/skills/deep-research/SKILL.md",
+      "sha256": "751387d630383a9862df80c16d2ac302d6547bfa0fdc6f67cf391734e20a87ea"
+    },
+    {
+      "path": "modules/deep-research-validator/skills/deep-research/references/evaluation.md",
+      "sha256": "2e81c2bd62094b071e88a621e4cac8232d6286b8b3bdf65e6691b94982f98358"
+    },
+    {
+      "path": "modules/deep-research-validator/skills/deep-research/references/research-loop.md",
+      "sha256": "b8d4d299f3c8f8f025c2eb24334332e777142df29a9776f546e8dd2769c8f361"
+    },
+    {
       "path": "modules/deep-research-validator/skills/legal-tax-answer-review/SKILL.md",
-      "sha256": "d6dac0511eeda1901cb8f6fa706cb23f8f865b2d7022b040436bcfea62959b8b"
+      "sha256": "a5df4eabb9aba621ee22e7667e577998e16dbe9890220f8c843123428283c769"
     },
     {
       "path": "modules/deep-research-validator/skills/legal-tax-answer-review/references/adversarial-scope.md",
-      "sha256": "34e033fe2eb3ff0455731e378ddf19347bd68fa5c7075d7a34df802f5ebab80d"
+      "sha256": "7e7c399e9dd80f01a0ef0c8243a563ba6c07a585e2d45d5e0e7fa4399c405db5"
     },
     {
       "path": "modules/deep-research-validator/skills/legal-tax-answer-review/references/answer-journey.md",
-      "sha256": "33fca75a6ab0b1ff43d8ecf6ea28280a36747721df913d83219f9161111b21f4"
+      "sha256": "51159dda3eee30d77e7e6bd33c0995d2ac80b4ee67ce76c341dd56a93572c0bc"
     },
     {
       "path": "modules/deep-research-validator/skills/legal-tax-answer-review/references/research-choice.md",
-      "sha256": "91b1a3e336af61d91cc4645ba54d34d2a36be949c4dadbff9f6fa9af2a1f23a3"
+      "sha256": "7728a9d20f07fe942117704d2dff12834abc355ad24746f6e4a0874e8289ca59"
     },
     {
       "path": "modules/deep-research-validator/vendor/modules/__init__.py",
@@ -133,7 +149,7 @@
     },
     {
       "path": "skills/quesito-legale-fiscale/SKILL.md",
-      "sha256": "b7d3b1017b3331ee45e8f517e6e866413d98eac2bbc76ddb521d55ba8100a6c2"
+      "sha256": "4c652ce4f9ce52e552d515a925e020c08cac8daa9c9c8c88923f269332bc39d6"
     }
   ],
   "files": [
@@ -532,7 +548,7 @@
       "request": "Lucia, rispondi al quesito di Imprese Arco in questo file. Prepara la breve nota richiesta, verifica le fonti e la risposta e mostrami il documento e le questioni da rivedere.",
       "steps": [
         "In questa conversazione Lucia legge il quesito e prepara obiettivo, fonti, lingua e quadro giuridico. L’assistente spiega per iscritto che cosa verrà risposto. Correggi eventuali incomprensioni e rispondi solo alle domande che cambiano il lavoro.",
-        "Scegli la ricerca ordinaria o Deep Research se disponibile; il workflow conserva una scelta già fatta per questo quesito. L’assistente ricerca e redige la risposta. L’assistente spiega per iscritto il progresso effettivo e risponde alle tue domande.",
+        "Il workflow usa una sola ricerca nella sessione: indaga le fonti, verifica subito supporto e ragionamento, cerca prove contrarie e approfondisce le questioni aperte. Conserva cicli e interventi nel registro; i rilievi della revisione finale riaprono la ricerca. L’assistente segue il progresso effettivo.",
         "Lucia verifica la risposta rispetto al quesito, alle fonti e al ragionamento, correggendo quanto necessario. Apri la nota Word, osserva come sono esposte le conclusioni e rintraccia una fonte. Rivedi limiti e questioni aperte prima di utilizzarla."
       ],
       "deliverables": [
@@ -545,7 +561,7 @@
         "Trova una conclusione, la sua fonte e un limite o una verifica ancora necessaria."
       ],
       "practice": "Leggi practice-it.md e chiedi una nuova versione della nota per l’incontro che comprende anche fornitori della pubblica amministrazione. Conserva la prima versione, segui la nuova ricerca e verifica e spiega come usare il confronto prodotto.",
-      "success": "Sai porre un quesito completo, scegliere il percorso di ricerca, orientarti nella risposta e nelle verifiche e aggiornare il lavoro quando cambia la richiesta.",
+      "success": "Sai porre un quesito completo, seguire la ricerca e le questioni aperte, orientarti nella risposta e nelle verifiche e aggiornare il lavoro quando cambia la richiesta.",
       "repeat": "Fornisci a Lucia la domanda, i fatti disponibili, il paese o quadro giuridico, il destinatario e il risultato che ti serve. Rivedi perimetro, fonti, conclusioni e questioni aperte nel documento prodotto."
     },
     "en": {
@@ -557,7 +573,7 @@
       "request": "Lucia, answer Imprese Arco’s question in this file. Prepare the requested short briefing, check the sources and answer, and show me the document and matters requiring review.",
       "steps": [
         "In this conversation, Lucia reads the question and prepares its objective, source plan, language and legal framework. The assistant explains what the answer will cover. Correct misunderstandings and answer only questions that affect the work.",
-        "Choose ordinary research or Deep Research when available; the workflow preserves a choice already made for this question. The assistant researches and drafts the answer. The written explanation follows real progress and takes your questions.",
+        "The workflow uses one research method in the session: investigate sources, check support and reasoning immediately, seek opposing evidence and follow unresolved issues. Preserve cycles and treatments in the record; final-review findings reopen research. The assistant follows actual progress.",
         "Lucia checks the answer against the question, sources and reasoning, making necessary corrections. Open the Word briefing, see how conclusions are presented and trace one source. Review limitations and unresolved points before use."
       ],
       "deliverables": [
@@ -570,7 +586,7 @@
         "Find a conclusion, its source and a limitation or remaining check."
       ],
       "practice": "Read practice-en.md and request a new version for the meeting that now includes suppliers to public authorities. Preserve the first version, follow the new research and checks, and explain how to use the resulting comparison.",
-      "success": "You can frame a complete question, choose the research route, navigate the answer and its checks, and update the work when the request changes.",
+      "success": "You can frame a complete question, follow the research and unresolved issues, navigate the answer and its checks, and update the work when the request changes.",
       "repeat": "Give Lucia the question, available facts, country or legal framework, intended reader and required result. Review scope, sources, conclusions and unresolved points in the resulting document."
     },
     "fr": {
@@ -582,7 +598,7 @@
       "request": "Lucia, réponds à la question d’Imprese Arco dans ce fichier. Prépare la courte note demandée, vérifie sources et réponse, puis montre-moi le document et les points à revoir.",
       "steps": [
         "Dans cette conversation, Lucia lit la question et prépare objectif, sources, langue et cadre juridique. L’assistant explique le contenu visé. Corrige les incompréhensions et réponds seulement aux questions qui influent sur le travail.",
-        "Choisis la recherche ordinaire ou Deep Research si disponible ; le workflow conserve un choix déjà fait pour cette question. L’assistant recherche et rédige la réponse. L’assistant suit le progrès réel et répond à tes questions.",
+        "Le workflow utilise une seule méthode de recherche dans la session : examiner les sources, vérifier immédiatement le support et le raisonnement, chercher les éléments contraires et approfondir les questions ouvertes. Conserver cycles et traitements ; les constats de la revue finale relancent la recherche. L’assistant suit le progrès réel.",
         "Lucia vérifie la réponse par rapport à la demande, aux sources et au raisonnement et apporte les corrections nécessaires. Ouvre la note Word, repère les conclusions et retrouve une source. Revois limites et points ouverts avant utilisation."
       ],
       "deliverables": [
@@ -595,7 +611,7 @@
         "Retrouve une conclusion, sa source et une limite ou vérification encore nécessaire."
       ],
       "practice": "Lis practice-fr.md et demande une nouvelle version pour la réunion accueillant aussi des fournisseurs du secteur public. Conserve la première version, suis la nouvelle recherche et sa vérification, puis explique l’usage du comparatif produit.",
-      "success": "Tu sais formuler une question complète, choisir la recherche, lire la réponse et ses vérifications et actualiser le travail si la demande change.",
+      "success": "Tu sais formuler une question complète, suivre la recherche et les questions ouvertes, lire la réponse et ses vérifications et actualiser le travail si la demande change.",
       "repeat": "Donne à Lucia la question, les faits disponibles, le pays ou cadre juridique, le destinataire et le résultat attendu. Revois périmètre, sources, conclusions et points ouverts dans le document produit."
     },
     "de": {
@@ -607,7 +623,7 @@
       "request": "Lucia, beantworte die Frage von Imprese Arco in dieser Datei. Erstelle die gewünschte kurze Notiz, prüfe Quellen und Antwort und zeige mir das Dokument und die noch zu prüfenden Punkte.",
       "steps": [
         "In diesem Chat liest Lucia die Frage und bereitet Ziel, Quellenplan, Sprache und Rechtsrahmen vor. Der Assistent erklärt den vorgesehenen Inhalt. Korrigiere Missverständnisse und beantworte nur Fragen, die die Arbeit beeinflussen.",
-        "Wähle gewöhnliche Recherche oder Deep Research, falls verfügbar; eine bereits für diese Frage getroffene Wahl bleibt erhalten. In diesem Chat entstehen Recherche und Antwort. Die schriftliche Erklärung folgt dem tatsächlichen Fortschritt und nimmt deine Fragen auf.",
+        "Der Workflow nutzt eine Recherchemethode in der Sitzung: Quellen untersuchen, Belege und Begründung sofort prüfen, Gegenbelege suchen und offene Fragen vertiefen. Zyklen und Maßnahmen bleiben dokumentiert; Feststellungen der Abschlussprüfung öffnen die Recherche erneut. Der Assistent folgt dem tatsächlichen Fortschritt.",
         "Lucia prüft die Antwort anhand von Frage, Quellen und Begründung und korrigiert nötigenfalls. Öffne die Word-Notiz, sieh dir die Schlussfolgerungen an und verfolge eine Quelle. Prüfe Grenzen und offene Punkte vor der Verwendung."
       ],
       "deliverables": [
@@ -620,7 +636,7 @@
         "Finde eine Schlussfolgerung, ihre Quelle und eine Grenze oder ausstehende Prüfung."
       ],
       "practice": "Lies practice-de.md und fordere eine neue Fassung für die Einführung mit Lieferanten öffentlicher Stellen an. Bewahre die erste Version, verfolge neue Recherche und Prüfung und erläutere die Verwendung des Vergleichs.",
-      "success": "Du kannst eine vollständige Frage formulieren, den Rechercheweg wählen, Antwort und Prüfungen einordnen und die Arbeit bei einer geänderten Anfrage aktualisieren.",
+      "success": "Du kannst eine vollständige Frage formulieren, Recherche und offene Fragen verfolgen, Antwort und Prüfungen einordnen und die Arbeit bei einer geänderten Anfrage aktualisieren.",
       "repeat": "Nenne Lucia Frage, verfügbare Fakten, Land oder Rechtsrahmen, Zielgruppe und gewünschtes Ergebnis. Prüfe Umfang, Quellen, Schlussfolgerungen und offene Punkte im erstellten Dokument."
     },
     "es": {
@@ -632,7 +648,7 @@
       "request": "Lucia, responde a la cuestión de Imprese Arco en este archivo. Prepara la nota breve solicitada, verifica fuentes y respuesta y muéstrame el documento y los puntos que requieren revisión.",
       "steps": [
         "En esta conversación, Lucia lee la pregunta y prepara objetivo, fuentes, idioma y marco jurídico. El asistente explica por escrito qué abarcará la respuesta. Corrige malentendidos y responde solo a las preguntas que cambian el trabajo.",
-        "Elige investigación ordinaria o Deep Research si está disponible; el workflow conserva una elección ya hecha para esta pregunta. El asistente investiga y redacta. El asistente sigue el progreso real y responde a tus preguntas.",
+        "El workflow usa una sola investigación en la sesión: examinar fuentes, verificar inmediatamente soporte y razonamiento, buscar pruebas contrarias y profundizar cuestiones abiertas. Conserva ciclos y tratamientos; los hallazgos de la revisión final reabren la investigación. El asistente sigue el progreso real.",
         "Lucia verifica la respuesta frente al encargo, las fuentes y el razonamiento y corrige lo necesario. Abre la nota Word, observa las conclusiones y localiza una fuente. Revisa límites y puntos abiertos antes de usarla."
       ],
       "deliverables": [
@@ -645,10 +661,10 @@
         "Encuentra una conclusión, su fuente y un límite o comprobación pendiente."
       ],
       "practice": "Lee practice-es.md y pide una nueva versión para la reunión que incluye proveedores de administraciones públicas. Conserva la primera versión, sigue la nueva investigación y verificación y explica cómo usar la comparación producida.",
-      "success": "Sabes plantear una pregunta completa, elegir la investigación, orientarte en la respuesta y sus comprobaciones y actualizar el trabajo cuando cambia el encargo.",
+      "success": "Sabes plantear una pregunta completa, seguir la investigación y las cuestiones abiertas, orientarte en la respuesta y sus comprobaciones y actualizar el trabajo cuando cambia el encargo.",
       "repeat": "Proporciona a Lucia pregunta, hechos disponibles, país o marco jurídico, destinatario y resultado esperado. Revisa alcance, fuentes, conclusiones y puntos abiertos en el documento generado."
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "2b423601f2d584d07b6843b5e7ffd11b111d38b6bcb4e063390e1dbb5a473950"
+  "canonical_course_sha256": "8fa155d6c1077b43109f3be36e76d8c930d63e79f282266f178e7e0b25141759"
 }

@@ -54,7 +54,7 @@ PUBLIC_SKILLS = (
     | set(ASSURANCE_SKILLS.values())
     | ORCHESTRATION_WORKFLOWS
     | DOCUMENT_WORKFLOWS
-    | {"learn-with-lucia"}
+    | {"learn-with-lucia", "deep-research"}
 )
 WEBSITE_SKILLS = (
     PUBLIC_WORKFLOWS

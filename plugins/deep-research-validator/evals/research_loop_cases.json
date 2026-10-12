@@ -1,0 +1,113 @@
+{
+  "schema_version": "1.0",
+  "purpose": "Model/professional evaluation of the complete shared research loop using fictional authorities. Expectations are reviewer material, never a deterministic legal classifier or input to the research assignment.",
+  "cases": [
+    {
+      "id": "lost-condition-before-drafting",
+      "assignment": "Prepare a short client letter assessing exemption eligibility. The client's independent activity has not been established.",
+      "materials": [
+        {"id": "A", "text": "An exemption is available only when the independent-activity test is met."}
+      ],
+      "provisional_position": "The client qualifies for the exemption.",
+      "reviewer_expectations": [
+        "Detect the omitted factual predicate during research, record it and seek the missing evidence.",
+        "Correct the actual conclusion or state its conditional status before drafting dependent advice.",
+        "Keep a short deliverable despite detailed research; final validation and opposing review remain distinct."
+      ]
+    },
+    {
+      "id": "wrong-rule-version",
+      "assignment": "Assess the filing deadline for an event on 15 December 2024.",
+      "materials": [
+        {"id": "A", "text": "From 1 January 2025, the filing period is 60 days. Earlier events remain governed by the previous 30-day period."},
+        {"id": "B", "text": "The rule applicable in December 2024 requires filing within 30 days."}
+      ],
+      "provisional_position": "The client has 60 days.",
+      "reviewer_expectations": [
+        "Detect the temporal defect, investigate the transition and bind the conclusion to the event date.",
+        "Revisit dependent deadline and strategy statements and preserve the original finding."
+      ]
+    },
+    {
+      "id": "framing-return-to-planner",
+      "assignment": "An English-language request concerns a transaction expressly governed by State B law. The prepared brief incorrectly assumes State A law.",
+      "materials": [
+        {"id": "contract", "text": "This transaction is governed by State B law. The competent forum is in State B."}
+      ],
+      "provisional_position": "Apply State A law because the request is in English.",
+      "reviewer_expectations": [
+        "Return the consequential framing error to preparation and preserve an accepted revision.",
+        "Keep language, governing law and forum separate; do not silently mutate the accepted contract."
+      ]
+    },
+    {
+      "id": "credible-counterposition-without-original-defect",
+      "assignment": "Give a reasoned opinion on whether this client's remote assistance constitutes presence in the jurisdiction.",
+      "materials": [
+        {"id": "A", "text": "Physical access is ordinarily required; contractual language may extend the concept of presence to continuous remote assistance."},
+        {"id": "contract", "text": "The provider maintains continuous remote assistance; this agreement does not define presence."}
+      ],
+      "provisional_position": "The ordinary physical-access interpretation favors the client.",
+      "reviewer_expectations": [
+        "Investigate the contractual exception early and retain both plausible interpretations.",
+        "Develop and validate a coherent contrary opinion in the final assignment even if the original remains sound.",
+        "Do not mark the original defective solely because a credible alternative exists or force a single winner."
+      ]
+    },
+    {
+      "id": "no-manufactured-counterposition",
+      "assignment": "Explain the current filing fee, with no request for a case-specific opinion.",
+      "materials": [
+        {"id": "A", "text": "For the requested filing type, the fee is EUR 25. There are no exceptions in this provision."}
+      ],
+      "provisional_position": "The filing fee is EUR 25.",
+      "reviewer_expectations": [
+        "Check scope and plausible exceptions with the available materials without inventing authorities or opposition.",
+        "Complete final answer validation without manufacturing a separate opposing opinion.",
+        "Explain the bounded coverage of the investigation rather than asserting no contrary case can exist."
+      ]
+    },
+    {
+      "id": "gated-historical-authority",
+      "assignment": "Assess whether a historical decision supports the client's interpretation.",
+      "materials": [
+        {"id": "portal", "text": "This public portal covers decisions from 2020 onward. The requested 2014 decision returned no result."},
+        {"id": "reproduction", "text": "A non-institutional reproduction identifies the 2014 decision and states the relevant holding. Separate bibliographic records corroborate its identifier. The official full text remains gated."}
+      ],
+      "provisional_position": "The decision does not exist because it is absent from the public portal.",
+      "reviewer_expectations": [
+        "Distinguish existence, official access, provenance, text fidelity and semantic support.",
+        "Correct the nonexistence inference and preserve the unverified fidelity and decisive access limits.",
+        "Do not declare complete research when decisive unavailable evidence leaves the issue evidence-limited."
+      ]
+    },
+    {
+      "id": "final-review-reopens-research",
+      "assignment": "Produce a memo on eligibility and the amount recoverable.",
+      "materials": [
+        {"id": "A", "text": "Eligible expenditures are recoverable at 20 percent. Related-party expenditures are excluded."},
+        {"id": "case", "text": "Expenditures total EUR 100,000. EUR 40,000 was paid to a related party."}
+      ],
+      "provisional_position": "All EUR 100,000 qualifies; EUR 20,000 is recoverable.",
+      "injected_final_review_finding": "The draft omitted the related-party exclusion.",
+      "reviewer_expectations": [
+        "Reopen the saved issue register and investigate the material exclusion instead of editing the review status alone.",
+        "Correct eligibility and dependent arithmetic in the actual memo, revalidate and refresh the opposing comparison against the exact revision.",
+        "Preserve earlier cycles and bind the new answer and reviews only after substantive re-examination."
+      ]
+    },
+    {
+      "id": "interruption-is-not-closure",
+      "assignment": "Assess eligibility where the decisive implementing measure cannot be retrieved before a host interruption.",
+      "materials": [
+        {"id": "A", "text": "Eligibility depends on criteria in an implementing measure. Its contents are not available in the supplied material."}
+      ],
+      "provisional_position": "Eligibility is established.",
+      "reviewer_expectations": [
+        "Preserve the unfinished record and distinguish interruption from substantive evidence-limited delivery.",
+        "Do not invent the implementing measure, infer eligibility from silence or mark an actionable open issue complete.",
+        "Resume from the same issue history with a useful next source/evidence request."
+      ]
+    }
+  ]
+}

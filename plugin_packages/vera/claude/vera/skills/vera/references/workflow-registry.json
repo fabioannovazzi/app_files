@@ -393,6 +393,7 @@
       "component_id": "deep-research-validator",
       "skills": [
         "modules/deep-research-validator/skills/adversarial-opinion/SKILL.md",
+        "modules/deep-research-validator/skills/deep-research/SKILL.md",
         "modules/deep-research-validator/skills/legal-tax-answer-review/SKILL.md"
       ],
       "python_entrypoints": [
@@ -401,7 +402,8 @@
         "modules/deep-research-validator/scripts/check_dependencies.py",
         "modules/deep-research-validator/scripts/inspect_document.py",
         "modules/deep-research-validator/scripts/inspect_sources.py",
-        "modules/deep-research-validator/scripts/package_validation.py"
+        "modules/deep-research-validator/scripts/package_validation.py",
+        "modules/deep-research-validator/scripts/research_record.py"
       ]
     },
     {
@@ -595,6 +597,7 @@
     "skills/comunicazione-professionale/SKILL.md",
     "skills/concordato-plan-review/SKILL.md",
     "skills/dati-fiscali-strutturati/SKILL.md",
+    "skills/deep-research/SKILL.md",
     "skills/email-cliente/SKILL.md",
     "skills/esg-reporting-assurance/SKILL.md",
     "skills/fatture-xml-check/SKILL.md",

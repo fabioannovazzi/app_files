@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/.codex/worktrees/vera-pdf-first-run/app_files/plugins/vera",
-  "version": "0.1.361",
-  "captured_at": "2026-10-12T08:14:40.553002+00:00",
-  "catalogue_fingerprint": "bf22ce9cd7ab289f6fca9e242a73efa291ca20b75a5aba7f5fa7c06267e2691c",
-  "manifest_sha256": "ad04dc36d4f4cdd6b564632e8cfd3deb0e4cc636dc3e7a7e4efc8275eeaca0c8",
+  "root": "/private/tmp/app-files-shared-legal-tax-research/plugins/vera",
+  "version": "0.1.363",
+  "captured_at": "2026-10-12T16:56:36.452521+00:00",
+  "catalogue_fingerprint": "8a980e333a3a951e888749f19210287c0b3cb9df9c9658f6c2c606871a15030f",
+  "manifest_sha256": "8c7f6d7696b0e47b55eb0ca195047e429fa5eb124ea8f90dcccee1e4bd8b8a96",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -92,6 +92,11 @@
       "sha256": "55d9bb3e4447e4898b0e4bbd8b6ac6744fccf3c65860d1453d5856761e790c5b"
     },
     {
+      "function_id": "deep-research",
+      "skill_path": "skills/deep-research/SKILL.md",
+      "sha256": "b017d3bc0681d3a0d72d501d5855c72c680b2864ce6989fc712bbcd97cd0177f"
+    },
+    {
       "function_id": "email-cliente",
       "skill_path": "skills/email-cliente/SKILL.md",
       "sha256": "9f6cc0eef1bcf2804eb4fdd66428e62db522226063595e7293e983f7e4e7e79a"
@@ -144,7 +149,7 @@
     {
       "function_id": "legal-tax-answer-planner",
       "skill_path": "skills/legal-tax-answer-planner/SKILL.md",
-      "sha256": "f113f8f93209821904a4cede8161bff675eb6f38599b19e4188ca680b2adef32"
+      "sha256": "30f23171058090e81d3bcabaa4cd0ac62de6e22890f18d48a50f3a419075fa75"
     },
     {
       "function_id": "legal-tax-answer-review",
@@ -204,7 +209,7 @@
     {
       "function_id": "quesito-legale-fiscale",
       "skill_path": "skills/quesito-legale-fiscale/SKILL.md",
-      "sha256": "d95a7b5f242d71ae53c1b4f92d819bee39586255c05d69628f8eea4eac6f9155"
+      "sha256": "3943d6da4003fa2a41c22fe1ce5b804d6187b24f0139fa4c146f16efeb16dbf7"
     },
     {
       "function_id": "rating-legalita",
