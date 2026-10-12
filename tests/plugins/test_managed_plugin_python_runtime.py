@@ -713,6 +713,10 @@ def test_managed_launcher_imports_ready_component_target(
     )
     environment = dict(os.environ)
     environment["PLUGIN_DATA"] = str(data_dir)
+    environment["MPARANZA_INCIDENT_STATE_DIR"] = str(tmp_path / "incidents")
+    (plugin_root / "scripts/operational_incidents.py").write_bytes(
+        (ROOT / "plugins/vera/scripts/operational_incidents.py").read_bytes()
+    )
 
     completed = subprocess.run(
         [
