@@ -3239,6 +3239,17 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
         },
         entries,
     )
+    continuity = _extract_section(
+        entries["skills/vera/SKILL.md"].decode("utf-8"),
+        "## Operational incident continuity",
+    )
+    for name, content in entries.items():
+        if name.startswith("skills/") and name.endswith("/SKILL.md"):
+            entries[name] = _inject_named_execution_contract(
+                content.decode("utf-8"),
+                heading="## Operational incident continuity",
+                contract=continuity,
+            ).encode("utf-8")
     registry_path = "skills/vera/references/workflow-registry.json"
     entries[registry_path] = project_cowork_workflow_registry(
         entries[registry_path], entries=entries

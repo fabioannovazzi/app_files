@@ -1823,3 +1823,25 @@ def test_business_planning_description_is_a_quoted_yaml_scalar(product):
     parsed = json.loads(description)
 
     assert "company: assess customers" in parsed
+
+
+def test_every_vera_cowork_entry_preserves_automatic_incident_continuity(
+    configured,
+) -> None:
+    """Direct specialist invocation must retain the independent recovery route."""
+    builder, _, package = configured
+    entries = builder.claude_package_entries(package)
+    public_skills = {
+        name: content.decode("utf-8")
+        for name, content in entries.items()
+        if name.startswith("skills/") and name.endswith("/SKILL.md")
+    }
+
+    assert len(public_skills) > 1
+    for name, skill in public_skills.items():
+        assert "## Operational incident continuity" in skill, name
+        assert "vera_incident_status" in skill, name
+        assert "vera_incident_register" in skill, name
+        assert "complete relevant technical evidence" in skill, name
+        assert "Do not ask the user to report the failure" in skill, name
+        assert "Never send professional stdout, client documents" in skill, name

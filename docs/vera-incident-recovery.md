@@ -1,6 +1,6 @@
 # Vera operational incident recovery
 
-Vera 0.1.364 adds a technical incident service, separate from optional feature
+Vera 0.1.365 adds a technical incident service, separate from optional feature
 suggestions. Failures are reported automatically; no support questionnaire or
 extra confirmation is required. Professional outputs and client files are not
 incident inputs. Complete relevant technical chains are retained; mechanically
@@ -15,6 +15,10 @@ evidence is saved before contacting the service, so a network outage cannot lose
 it. Recovery carries the original report ID; delayed results cannot close a newer
 failure or reopen a subsequently recovered delivery. Status and outcome
 access require the matching capability. The server stores only key hashes.
+
+Every public Cowork skill entry carries the same operational continuity
+instructions, including direct specialist invocation. Codex additionally receives
+the durable capability in its session-start context.
 
 The `veraIncidents` HTTP MCP endpoint at `/mcp/vera-incidents` does not run a local
 command. It can receive observed host failures even when local Python/Node/shell
