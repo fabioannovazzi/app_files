@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/.codex/worktrees/vera-host-use-marker/app_files/plugins/vera",
-  "version": "0.1.359",
-  "captured_at": "2026-10-10T18:28:56.717717+00:00",
-  "catalogue_fingerprint": "2966e4569ad3a8f6914b5bcd1db45d5e8fb110fa434bc3aa1f493c2f0491ac59",
-  "manifest_sha256": "d06ddb222ee7ba83d1910bc4e0de381cb08703d910140c50e210b31470ec6a00",
+  "root": "/Users/fabio/.codex/worktrees/vera-cowork-yaml-integrity/app_files/plugins/vera",
+  "version": "0.1.360",
+  "captured_at": "2026-10-12T05:35:15.558241+00:00",
+  "catalogue_fingerprint": "85ec9acac73797a84cb23dc374ab8a6699121d6fc2a6b189358f248cb59f5920",
+  "manifest_sha256": "63db605472d438e19add1c1c3212a6b9078d3e68dc0364ae7c8ed35df70eb311",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -54,7 +54,7 @@
     {
       "function_id": "business-planning",
       "skill_path": "skills/business-planning/SKILL.md",
-      "sha256": "986a4937e9875c342acffad0c1e9c261ad1667418ab9f1a03b0b77d83be2cf34"
+      "sha256": "c568fbe41791a991520b8198aad0c8f36ec1eb892d8ae17ef03d8273adf88a71"
     },
     {
       "function_id": "business-valuation",

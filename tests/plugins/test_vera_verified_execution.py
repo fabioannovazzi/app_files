@@ -467,7 +467,7 @@ def test_host_description_quoting_preserves_verified_execution(tmp_path):
     skill.parent.mkdir(parents=True)
     shutil.copyfile(ROOT / "plugins/vera/skills/business-planning/SKILL.md", skill)
     write_index(root)
-    text = skill.read_text()
+    text = skill.read_text(encoding="utf-8")
     description_line = next(
         line for line in text.splitlines() if line.startswith("description: ")
     )
@@ -476,7 +476,8 @@ def test_host_description_quoting_preserves_verified_execution(tmp_path):
     # scalar. A valid source scalar must remain unchanged by that host repair.
     if not description.startswith('"'):
         skill.write_text(
-            text.replace(description_line, "description: " + json.dumps(description))
+            text.replace(description_line, "description: " + json.dumps(description)),
+            encoding="utf-8",
         )
 
     prepared = recovery.prepare_execution_root(root, "journal-bank-reconciliation")
