@@ -457,3 +457,29 @@ def test_host_markers_are_excluded_from_hardlink_recovery_copy(tmp_path):
         assert (markers / "71").read_text() == "lease"
     finally:
         shutil.rmtree(prepared)
+
+
+def test_host_description_quoting_preserves_verified_execution(tmp_path):
+    """Reproduce Cowork's observed YAML repair before running real integrity checks."""
+    recovery = load_recovery()
+    root = installation(tmp_path)
+    skill = root / "skills/business-planning/SKILL.md"
+    skill.parent.mkdir(parents=True)
+    shutil.copyfile(ROOT / "plugins/vera/skills/business-planning/SKILL.md", skill)
+    write_index(root)
+    text = skill.read_text()
+    description_line = next(
+        line for line in text.splitlines() if line.startswith("description: ")
+    )
+    description = description_line.removeprefix("description: ")
+    # The installed 0.1.359 file differs only by quotes around this colon-bearing
+    # scalar. A valid source scalar must remain unchanged by that host repair.
+    if not description.startswith('"'):
+        skill.write_text(
+            text.replace(description_line, "description: " + json.dumps(description))
+        )
+
+    prepared = recovery.prepare_execution_root(root, "journal-bank-reconciliation")
+
+    assert prepared == root
+    assert json.loads(description).startswith("Prepare one business plan")

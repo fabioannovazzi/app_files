@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "business-planning",
-  "course_sha256": "4692b262afb45447a7e8f7a92bf49f38f05771f5b46877251dadfbb0498f493e",
+  "course_sha256": "18934a360441902b797e01958213c387604ff72b70049b881bb76da0fe337b81",
   "reviewer": "Codex first-use lesson and native business-plan output review",
   "reviewed_at": "2026-09-23T11:52:59.406972+00:00",
   "review_scope": "Reviewed both localized lessons and generated native demo/practice plans. Tests replay model-authored interpretation through the current workflow, with distinct owning-product case handling and preserved preceding plan. Chrome DOM review additionally inspected the English practice reader view. No fresh model inference, market research, learner participation, professional approval or complete financing model is claimed. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
@@ -314,5 +314,14 @@
     "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
     "source_review": "docs/studio_archive/course-source-compatibility-review.json",
     "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  },
+  "cowork_yaml_source_binding_review_20261012": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "reviewed_at": "2026-10-12T05:15:38.228950+00:00",
+    "previous_course_sha256": "4692b262afb45447a7e8f7a92bf49f38f05771f5b46877251dadfbb0498f493e",
+    "current_course_sha256": "18934a360441902b797e01958213c387604ff72b70049b881bb76da0fe337b81",
+    "content_review": "Complete course JSON equality except source bindings. All authored content, inputs, checkpoints and execution contracts are unchanged. Prior editorial and artifact judgments are retained.",
+    "source_review": "Quote the existing colon-bearing business-planning description as valid YAML. The parsed description is unchanged; no workflow, model context, data boundary or integrity rule changes.",
+    "limits": "Source-binding refresh only; fresh CI must execute the existing demo/practice identities. No new learner or professional acceptance is claimed."
   }
 }

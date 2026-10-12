@@ -1783,3 +1783,25 @@ def test_cowork_sales_plan_keeps_public_runner_without_codex_native_authoring(
     assert "paged authoring from a registered strict CSV" not in module
     assert "run_plan.py" in module
     assert "model_use.py" in module
+
+
+@pytest.mark.parametrize("product", ["vera", "clara"])
+def test_business_planning_description_is_a_quoted_yaml_scalar(product):
+    """Prevent the observed installer repair of a colon-bearing description."""
+    source = ROOT / "plugins" / product / "skills/business-planning/SKILL.md"
+    builder = load_builder()
+    projected = builder.project_cowork_skill(
+        source.read_bytes(),
+        relative_path="skills/business-planning/SKILL.md",
+        cowork_runtime_reference=b"",
+        studio_archive_reference=b"",
+    ).decode()
+    description = next(
+        line.removeprefix("description: ")
+        for line in projected.splitlines()
+        if line.startswith("description: ")
+    )
+
+    parsed = json.loads(description)
+
+    assert "company: assess customers" in parsed
