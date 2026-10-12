@@ -211,10 +211,18 @@ branches, signatures and filings remain unsupported. Use the specialist skill.
 - `quesito-legale-fiscale`: answer a substantive legal, tax, or compliance
   question, or prepare source-backed professional drafting, through one
   question-to-reviewed-answer journey. It orchestrates prompt preparation,
-  a choice of available Deep Research plugin or ordinary research, and answer
-  validation, followed by a routine adversarial opinion and comparison,
+  Vera's bundled `skills/deep-research/SKILL.md` using the current session
+  model and research tools, continuous validation and adversarial challenge,
+  persistent issues and targeted follow-up, then distinct final answer review.
+  Both products resolve the same method without a normal/deep selector.
+  Final findings reopen the research loop. Concrete opinions include the
+  separately required adversarial opinion and comparison,
   without asking the user to select those internal stages. It does
   not substitute for an operational return, declaration, filing, or form.
+  Its internal research stage is registered at `../../deep-research/SKILL.md`;
+  it uses the same accepted question and final-review journey, not a separate
+  professional assignment.
+
 - `registro-imprese-sari`: prepare Registro Imprese, REA, Comunicazione Unica,
   or DIRE work from official guidance without filing or signing.
 - `financial-report-builder`: map financial Excel, CSV, or text-PDF evidence into

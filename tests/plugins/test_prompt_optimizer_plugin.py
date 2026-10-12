@@ -513,7 +513,8 @@ Flag residual uncertainty.
     )
     package_text = paths["prompt_package"].read_text(encoding="utf-8")
     assert "Prompt Optimizer Package" in package_text
-    assert "Paste `source_domains_comma.txt`" in package_text
+    assert "Follow the product's deep-research skill" in package_text
+    assert "Paste `source_domains_comma.txt`" not in package_text
     assert "## Optimized Prompt\nYou are a tax lawyer." not in package_text
     assert audit["review_session"]["run_id"] == run_intake["run_id"]
     assert review_payload["plugin"] == "prompt-optimizer"
@@ -580,7 +581,7 @@ Flag residual uncertainty.
     )
     assert readme_output["required_text"] == [
         "# How to use these files",
-        "Paste `optimized_prompt.md` into Deep Research.",
+        "Use `optimized_prompt.md` as the instructions for generating the answer.",
     ]
     assert paths["review_payload"] == tmp_path / "review_payload.json"
     contract_report = validate_contract(
@@ -888,11 +889,11 @@ Flag residual uncertainty.
         ("codex_direct", "Use `optimized_prompt.md` as the instructions"),
         (
             "deep_research_plugin",
-            "Use the installed OpenAI Deep Research skill with `optimized_prompt.md`.",
+            "Use `optimized_prompt.md` as the instructions",
         ),
     ],
 )
-def test_validate_prompt_preserves_current_host_route_and_letter_contract(
+def test_validate_prompt_preserves_provenance_without_requiring_external_research(
     tmp_path: Path,
     generation_route: str,
     instruction: str,

@@ -44,47 +44,37 @@ jurisdiction from the language of the conversation.
    `not_required`) with `adversarial_rationale` in the original contract.
    Respect explicit user instructions. Do not infer this policy from tax/legal
    keywords, document labels, the research mode or the validation outcome.
-   Keep generation route separate from document type:
-   - `generation_route` is `codex_direct`, `deep_research_plugin`,
-     `chatgpt_deep_research`, or `external_document`;
-   - `document_type` is the requested answer artifact, such as a research
-     report, legal memo, one-page letter, response letter, checklist, or
-     counsel brief.
-   Infer the document type from the request. For `quesito-legale-fiscale`,
-   follow `research-choice.md`: after preparing
-   the question, offer the available OpenAI Deep Research plugin or ordinary
-   research before finalizing the route. Reuse an explicit choice for
-   this answer; otherwise wait for it before generation.
-3. Use `deep_research_plugin` when the user selects the installed OpenAI
-   `deep-research` skill. Read and follow that skill in the current host with
-   the prepared brief, answer contract and selected sources, then resume
-   validation. Use `codex_direct` for the ordinary route. Both routes retain
-   the generated answer, source record and the same answer contract.
-4. Use `chatgpt_deep_research` for a separately chosen native ChatGPT Deep
-   Research handoff. This is distinct from the installed plugin route.
-   Present one concise handoff containing:
-   - the complete text of `optimized_prompt.md`, or a direct local link;
-   - the complete contents of `source_domains_comma.txt`;
-   - the `answer_contract.json` document type and output requirements;
-   - a model-led recommendation to restrict research to the listed sites or
-     prioritize them while allowing broader web research.
-5. Choose the site policy from the confirmed framework, objective, source
-   posture, and issue—not from keywords or a deterministic classifier. Ask the
-   user only when competing policies would materially change the professional
-   result and the confirmed posture does not resolve the choice.
-6. Keep the separate ChatGPT handoff explicit. The assistant cannot claim to start,
-   monitor, interrupt, or retrieve a native run unless a callable host tool
-   expressly provides that capability. End with one instruction to return the
-   completed answer in the same conversation as Markdown, text, HTML, readable
-   PDF, or DOCX. Do not ask the user to restate confirmed context.
-7. When a generated or external answer is available, route it through
-   `deep-research-validator` with the same `answer_contract.json`. The validator
+   Keep generation route separate from document type. New research uses
+   `generation_route: codex_direct`; supplied-answer review uses
+   `external_document`. Older imported route labels remain provenance only.
+   Infer the document type from the request, including short letters and memos.
+   Follow `research-choice.md`: both products use one bundled research method,
+   without a normal/deep selector or external research-plugin dependency.
+3. For new research, read and execute `<product-root>/skills/deep-research/SKILL.md` using the
+   accepted optimizer package. It resolves the canonical shared research
+   method and opens the existing validation run early. Investigate material
+   issues, validate provisional source support and reasoning, seek opposing
+   evidence, track findings and respond with targeted research or corrections.
+   Persist the issue register and research cycles. Use substantive stopping
+   criteria; counts, token savings and repeated model agreement are insufficient.
+   For a supplied answer, review it first; use the same research loop for
+   material evidence gaps without regenerating the supplied position merely
+   to run research. Retain its external-document provenance.
+4. Continuous checking never replaces final examination of the complete draft.
+   Final validation, the opposing examination and comparison can reopen the
+   same research loop. Correct the actual answer, revalidate changed and
+   dependent claims, and refresh final reviews against its exact revision.
+5. When a generated or external answer is available, route it through
+   `deep-research-validator` with the same `answer_contract.json`. Reuse the
+   running validation context if the product-owned research stage already
+   prepared it; do not create a second validation run. The validator
    applies to short letters and other professional documents as well as
    research reports. Only when `adversarial_policy` is `required`, package the
    original in `position/` beneath the validation run and keep that run open for
-   the adversarial stage. Otherwise use the ordinary validator packaging and
-   finish the reviewed-answer journey without an adversarial package.
-8. Keep the validation dimensions explicit and separate:
+   the adversarial stage. Otherwise use the ordinary validator packaging
+   without an adversarial package. Keep the run open for research-record
+   verification and the invoking journey's remaining writes.
+6. Keep the validation dimensions explicit and separate:
    - mechanical observations: document/source access, exact identifier
      resolution, exact passage presence in the specifically cited source
      snapshot, and record shape;
@@ -97,11 +87,11 @@ jurisdiction from the language of the conversation.
      interpretations, strategy, and uncertain outcomes.
    Mechanical observations must never decide semantic support. A structurally
    passing audit does not certify legal correctness.
-9. Review answer-contract conformance and whether all material claims were
+7. Review answer-contract conformance and whether all material claims were
    selected, independently from the individual claim assessments. Treat source,
    support, qualification, time/modality, reasoning, and judgment issues with
    their issue-specific actions rather than a single pass/fail label.
-10. Correct support or reasoning defects when the evidence permits. Mark
+8. Correct support or reasoning defects when the evidence permits. Mark
    judgment-dependent conclusions for professional review rather than
    presenting them as validated facts. Preserve the corrected document,
    validation record and unresolved issues for the next stage. Recording a proposed fix is not correction: regenerate the
@@ -111,7 +101,7 @@ jurisdiction from the language of the conversation.
    claim marked ready, or a completed correction paired with a no-defect
    outcome—but it must never assign the semantic support or reasoning status.
 
-11. For `quesito-legale-fiscale` with `adversarial_policy: required`, read and
+9. For `quesito-legale-fiscale` with `adversarial_policy: required`, read and
    follow `<product-root>/skills/adversarial-opinion/SKILL.md`
    before delivery, independently of the original validation outcome. Use the
    current model; model diversity is not required. Develop and review a
@@ -121,14 +111,20 @@ jurisdiction from the language of the conversation.
    with the documented helper before delivering the original, opposing result,
    comparison and separate reviews. When local tooling is unavailable, perform
    the substantive exercise in chat and state the missing durable evidence.
-   With `not_required`, deliver the reviewed answer, sources and limits and
-   complete the ordinary validation run; do not invoke the adversarial helper
+   With `not_required`, prepare the reviewed answer, sources and limits;
+   do not invoke the adversarial helper
    or require `opinion_delivery.json`. Report only the stages actually run.
 
-If a selected Deep Research route is unavailable or fails, state the actual
-limitation and obtain the user's alternative route choice. Do not silently
-substitute ordinary research or move case material to another account. Follow
-the availability handling in `research-choice.md`.
+10. For research performed here, bind and verify `research_review.json` using
+    the shared research skill's `research_record.py` instructions after the
+    final substantive reviews. Do not finalize an actionable open issue or
+    substitute an interrupted run for a completed investigation. The helper
+    enforces artifact hashes and declared record consistency, never legal
+    correctness. Preserve evidence limits and professional-review items.
+    Only after these checks and all contracted final reviews, declare the
+    artifacts and complete the same validation run under its review rules,
+    then deliver the reviewed package. Supplied-answer review without research
+    does not require a fabricated research record.
 
 `quesito-legale-fiscale` does not create a third Studio Archive workstream or a
 new external data route. The preparation stage remains governed by the
@@ -138,7 +134,9 @@ adversarial research, opposing review and final comparison.
 
 At delivery, show only the stages actually performed, using the invoking
 product's namespace: `quesito-legale-fiscale -> prompt-optimizer ->
-deep-research-validator`, appending `adversarial-opinion` only when it ran.
+deep-research-validator`. Insert `deep-research` between preparation and
+validation only when the product-owned research skill ran, and append
+`adversarial-opinion` only when it ran.
 Keep the product's reporting and feedback rules. With no local tools, follow
 its chat fallback, retain both opinions when required, and disclose which
 research or durable records could not be produced.

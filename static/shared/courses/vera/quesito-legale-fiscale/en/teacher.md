@@ -30,7 +30,7 @@ Explain the step happening now and wait for its actual result.
 
 In the working thread, Vera reads the question and prepares its objective, source plan, language and legal framework. The voice chat explains what the answer will cover. Correct misunderstandings and answer only questions that affect the work.
 
-Choose ordinary research or Deep Research when available; the workflow preserves a choice already made for this question. The working thread researches and drafts the answer. The voice explanation follows real progress and takes your questions.
+The workflow uses one research method in the session: investigate sources, check support and reasoning immediately, seek opposing evidence and follow unresolved issues. Preserve cycles and treatments in the record; final-review findings reopen research. Voice follows actual progress.
 
 Vera checks the answer against the question, sources and reasoning, making necessary corrections. Open the Word briefing, see how conclusions are presented and trace one source. Review limitations and unresolved points before use.
 
@@ -62,7 +62,7 @@ Let the user formulate the request and guide their attempt.
 
 Read practice-en.md and request a new version for the meeting that now includes suppliers to public authorities. Preserve the first version, follow the new research and checks, and explain how to use the resulting comparison.
 
-You can frame a complete question, choose the research route, navigate the answer and its checks, and update the work when the request changes.
+You can frame a complete question, follow the research and unresolved issues, navigate the answer and its checks, and update the work when the request changes.
 
 Give Vera the question, available facts, country or legal framework, intended reader and required result. Review scope, sources, conclusions and unresolved points in the resulting document.
 

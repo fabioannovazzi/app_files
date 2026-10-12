@@ -8,7 +8,7 @@
     "request": "Vera, réponds à la question d’Imprese Arco dans ce fichier. Prépare la courte note demandée, vérifie sources et réponse, puis montre-moi le document et les points à revoir.",
     "steps": [
       "Dans le fil de travail, Vera lit la question et prépare objectif, sources, langue et cadre juridique. La conversation vocale explique le contenu visé. Corrige les incompréhensions et réponds seulement aux questions qui influent sur le travail.",
-      "Choisis la recherche ordinaire ou Deep Research si disponible ; le workflow conserve un choix déjà fait pour cette question. Le fil de travail recherche et rédige la réponse. La voix suit le progrès réel et répond à tes questions.",
+      "Le workflow utilise une seule méthode de recherche dans la session : examiner les sources, vérifier immédiatement le support et le raisonnement, chercher les éléments contraires et approfondir les questions ouvertes. Conserver cycles et traitements ; les constats de la revue finale relancent la recherche. La voix suit le progrès réel.",
       "Vera vérifie la réponse par rapport à la demande, aux sources et au raisonnement et apporte les corrections nécessaires. Ouvre la note Word, repère les conclusions et retrouve une source. Revois limites et points ouverts avant utilisation."
     ],
     "deliverables": [
@@ -21,7 +21,7 @@
       "Retrouve une conclusion, sa source et une limite ou vérification encore nécessaire."
     ],
     "practice": "Lis practice-fr.md et demande une nouvelle version pour la réunion accueillant aussi des fournisseurs du secteur public. Conserve la première version, suis la nouvelle recherche et sa vérification, puis explique l’usage du comparatif produit.",
-    "success": "Tu sais formuler une question complète, choisir la recherche, lire la réponse et ses vérifications et actualiser le travail si la demande change.",
+    "success": "Tu sais formuler une question complète, suivre la recherche et les questions ouvertes, lire la réponse et ses vérifications et actualiser le travail si la demande change.",
     "repeat": "Donne à Vera la question, les faits disponibles, le pays ou cadre juridique, le destinataire et le résultat attendu. Revois périmètre, sources, conclusions et points ouverts dans le document produit."
   },
   "lucia/quesito-legale-fiscale": {
@@ -33,7 +33,7 @@
     "request": "Lucia, réponds à la question d’Imprese Arco dans ce fichier. Prépare la courte note demandée, vérifie sources et réponse, puis montre-moi le document et les points à revoir.",
     "steps": [
       "Dans le fil de travail, Lucia lit la question et prépare objectif, sources, langue et cadre juridique. La conversation vocale explique le contenu visé. Corrige les incompréhensions et réponds seulement aux questions qui influent sur le travail.",
-      "Choisis la recherche ordinaire ou Deep Research si disponible ; le workflow conserve un choix déjà fait pour cette question. Le fil de travail recherche et rédige la réponse. La voix suit le progrès réel et répond à tes questions.",
+      "Le workflow utilise une seule méthode de recherche dans la session : examiner les sources, vérifier immédiatement le support et le raisonnement, chercher les éléments contraires et approfondir les questions ouvertes. Conserver cycles et traitements ; les constats de la revue finale relancent la recherche. La voix suit le progrès réel.",
       "Lucia vérifie la réponse par rapport à la demande, aux sources et au raisonnement et apporte les corrections nécessaires. Ouvre la note Word, repère les conclusions et retrouve une source. Revois limites et points ouverts avant utilisation."
     ],
     "deliverables": [
@@ -46,7 +46,7 @@
       "Retrouve une conclusion, sa source et une limite ou vérification encore nécessaire."
     ],
     "practice": "Lis practice-fr.md et demande une nouvelle version pour la réunion accueillant aussi des fournisseurs du secteur public. Conserve la première version, suis la nouvelle recherche et sa vérification, puis explique l’usage du comparatif produit.",
-    "success": "Tu sais formuler une question complète, choisir la recherche, lire la réponse et ses vérifications et actualiser le travail si la demande change.",
+    "success": "Tu sais formuler une question complète, suivre la recherche et les questions ouvertes, lire la réponse et ses vérifications et actualiser le travail si la demande change.",
     "repeat": "Donne à Lucia la question, les faits disponibles, le pays ou cadre juridique, le destinataire et le résultat attendu. Revois périmètre, sources, conclusions et points ouverts dans le document produit."
   }
 }

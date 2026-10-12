@@ -26,7 +26,15 @@ sources or use artifacts from the same engagement, then call
 `--client-engagement` to document inspection, source inspection, and packaging.
 Cross-engagement inputs and arbitrary outputs are rejected.
 
-Start the prepared run before inspection. After the last output write, call
+The product-owned research stage may prepare this same run early using the
+accepted planner artifacts from the engagement, then write its answer and
+source captures under the returned output root. Reuse that running context
+for inspection and review; do not prepare a duplicate run.
+
+Start the prepared run before inspection. In the complete question journey,
+keep it running through research-record verification and any contracted
+opposing examination; original-answer packaging alone does not close it.
+After the last output write in the invoking journey, call
 `finalize_studio_client_workflow` and declare every physical file with a stable
 artifact ID, relative path, concrete purpose, audience, and media type. Review
 the closed declaration, then call `complete_studio_client_workflow`; record
@@ -67,6 +75,23 @@ when not already given, and preserve workflow-specific approval gates.
 At delivery, link outputs and state their purpose, review status, unresolved
 items, and next action. Create `codex_run_review.md` when a durable review index
 is useful; never edit plugin source or generated ZIPs during a user-data run.
+
+## Continuous review and final examination
+
+The shared `../deep-research/SKILL.md` method applies these same semantic
+review dimensions to provisional conclusions during research. Record material
+findings immediately in its persistent issue register and investigate or correct
+them before relying on affected conclusions. Do not generate full final review
+packages for every provisional paragraph.
+
+This skill still performs a distinct final review of the entire generated or
+supplied answer. Check coverage and contract conformance as well as individual
+claims. Any material source, applicability, reasoning or coverage finding
+reopens targeted research in the same running context. Preserve the finding,
+actual treatment, answer revision and renewed review. A proposed fix or an
+updated artifact hash alone is not a corrected, revalidated answer. Final
+opposing review and comparison use this same feedback path without recursively
+requesting further opposing opinions.
 
 ## Core Principle
 

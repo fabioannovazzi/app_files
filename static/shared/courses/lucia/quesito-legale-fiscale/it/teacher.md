@@ -30,7 +30,7 @@ Spiega il passaggio che sta avvenendo e attendi il suo risultato effettivo.
 
 Nel thread di lavoro Lucia legge il quesito e prepara obiettivo, fonti, lingua e quadro giuridico. La voce spiega che cosa verrà risposto. Correggi eventuali incomprensioni e rispondi solo alle domande che cambiano il lavoro.
 
-Scegli la ricerca ordinaria o Deep Research se disponibile; il workflow conserva una scelta già fatta per questo quesito. Il thread di lavoro ricerca e redige la risposta. La voce spiega il progresso effettivo e risponde alle tue domande.
+Il workflow usa una sola ricerca nella sessione: indaga le fonti, verifica subito supporto e ragionamento, cerca prove contrarie e approfondisce le questioni aperte. Conserva cicli e interventi nel registro; i rilievi della revisione finale riaprono la ricerca. La voce segue il progresso effettivo.
 
 Lucia verifica la risposta rispetto al quesito, alle fonti e al ragionamento, correggendo quanto necessario. Apri la nota Word, osserva come sono esposte le conclusioni e rintraccia una fonte. Rivedi limiti e questioni aperte prima di utilizzarla.
 
@@ -62,7 +62,7 @@ Lascia formulare la richiesta all’utente e accompagna la sua prova.
 
 Leggi practice-it.md e chiedi una nuova versione della nota per l’incontro che comprende anche fornitori della pubblica amministrazione. Conserva la prima versione, segui la nuova ricerca e verifica e spiega come usare il confronto prodotto.
 
-Sai porre un quesito completo, scegliere il percorso di ricerca, orientarti nella risposta e nelle verifiche e aggiornare il lavoro quando cambia la richiesta.
+Sai porre un quesito completo, seguire la ricerca e le questioni aperte, orientarti nella risposta e nelle verifiche e aggiornare il lavoro quando cambia la richiesta.
 
 Fornisci a Lucia la domanda, i fatti disponibili, il paese o quadro giuridico, il destinatario e il risultato che ti serve. Rivedi perimetro, fonti, conclusioni e questioni aperte nel documento prodotto.
 
