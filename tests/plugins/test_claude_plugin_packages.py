@@ -782,8 +782,8 @@ def test_cowork_build_rejects_studio_work_missing_from_source_registration(
     codex_builder = builder._load_codex_builder()
     original_entries = codex_builder.expected_zip_entries
 
-    def missing_registration(target):
-        entries = original_entries(target)
+    def missing_registration(target, **options):
+        entries = original_entries(target, **options)
         key = f"{target.package_root}/plugins/vera/components.json"
         components = json.loads(entries[key])
         components["shared_services"].remove("studio-work")
@@ -949,12 +949,20 @@ def test_cowork_projects_user_facing_artifact_names_and_review_actor(
     }
     # Shared courseware and reviewed source-course metadata retain cross-host
     # authored filenames. Verify emitted Cowork instructions and artifacts;
-    # the package-index test separately covers those metadata bytes.
+    # the package-index test separately covers those metadata bytes. Native
+    # OpenAI adapters retain canonical artifact identities across host packages;
+    # they are not projected Cowork instruction/output producers.
+    native_identity_paths = {
+        "mcp/workspace.cjs",
+        "scripts/native_variance_narrative.py",
+        "ui/workspace.js",
+    }
     combined = "\n".join(
         content
         for name, content in projected_text.items()
         if not name.startswith("vendor/modules/courseware/")
         and not (name.startswith("assets/courses/") and name.endswith("/course.json"))
+        and name not in native_identity_paths
     )
 
     assert "07_scheda_codex_per_studio.md" not in combined
