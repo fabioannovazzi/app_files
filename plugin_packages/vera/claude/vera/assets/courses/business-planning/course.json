@@ -182,7 +182,7 @@
     },
     {
       "path": "skills/business-planning/SKILL.md",
-      "sha256": "3cb771ec90e9a334aef66c80dac7f43c4cb87bf940b38bba50b11db023836c0f"
+      "sha256": "07ac30730790fec230e74f0fc9a24541abf87b83e2bab2777d168e0cfe0f1295"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -442,5 +442,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "f1a414803bdac3494477deacadadae00dba5c187fdaf9b25b8e8d86462588a44"
+  "canonical_course_sha256": "154cae3a777d073b07aad5ef091a4af5c0379cf96605100e8187a0235e0b4200"
 }

@@ -1,6 +1,6 @@
 ---
 name: business-planning
-description: Prepare one business plan for a startup, new venture or established company: assess customers, market, operations, economics, cash needs, options and next actions. Vera and Clara use the same workflow and report.
+description: "Prepare one business plan for a startup, new venture or established company: assess customers, market, operations, economics, cash needs, options and next actions. Vera and Clara use the same workflow and report."
 ---
 
 ## Cowork execution contract
