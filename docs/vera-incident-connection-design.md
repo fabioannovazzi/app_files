@@ -1,6 +1,6 @@
 # Vera: persistent anonymous incident connection — approval review
 
-Status: proposed security boundary; OAuth source and endpoints have not been created or deployed.
+Status: explicitly approved by Fabio; OAuth source and endpoints implemented and security regressions passed. Deployment and native host acceptance pending.
 
 ## Observed
 
@@ -14,7 +14,7 @@ Keep the existing HTTPS MCP endpoint and four incident tools. Add standard OAuth
 
 Authorization creates a new anonymous technical namespace. It does not log into a personal account. Its sole scope is Vera incident registration, technical reporting, remedy status and actual recovery outcomes. It grants no access to client documents, user profile, email, professional outputs, host files, administrative actions or arbitrary commands. Existing report capability checks, original-report outcome guards and operator-only remedy publication remain required.
 
-Store only token/code hashes and technical client callback metadata. Bind grants to the fixed incident resource, exact registered callback and PKCE verifier. Permit the verified Claude callback and exactly registered loopback callbacks. Published client metadata may be fetched only from the fixed verified Claude metadata URL; caller-supplied URLs cannot trigger network fetches.
+Store only token/code hashes and technical client callback metadata. Bind grants to the fixed incident resource, exact registered callback and PKCE verifier. Permit the verified Claude callback and exactly registered loopback callbacks. The verified Claude client metadata is pinned to its exact published client ID and callback. No caller-supplied URL is fetched; dynamic public-client registration permits only that callback and exact native loopback callbacks.
 
 Link a task-local installation to the saved connection only after proving possession of both the connection credential and that local installation capability. Future tasks can receive remedies for those linked reports after the task filesystem disappears. Keep report IDs, evidence and per-installation recovery outcomes intact. One linked installation's success must not close another report.
 
@@ -32,7 +32,7 @@ The host's one-time Connect/authentication setup remains under its normal contro
 
 ## Boundaries still unverified
 
-The native saved-connection flow has not yet been implemented or exercised. No customer recovery, continuous server-side AI availability or Marketplace publication is claimed. The existing 15-minute Codex incident monitor remains paused until the live recovery cycle is verified.
+The native saved-connection flow is implemented and verified through public route tests; actual saved host connection and cross-task acceptance remain pending. No customer recovery, continuous server-side AI availability or Marketplace publication is claimed. The existing 15-minute Codex incident monitor remains paused until the live recovery cycle is verified.
 
 ## Sources
 

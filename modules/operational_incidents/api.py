@@ -9,14 +9,23 @@ import time
 from collections import OrderedDict, deque
 from functools import lru_cache
 from typing import Any
+from urllib.parse import parse_qs, urlencode
 from uuid import uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, Request
-from fastapi.responses import JSONResponse, Response
+from fastapi.responses import JSONResponse, RedirectResponse, Response
 from pydantic import BaseModel, ConfigDict, ValidationError
 
 from modules.operational_incidents.contracts import Credentials, Outcome, Report
+from modules.operational_incidents.oauth import (
+    ISSUER,
+    RESOURCE,
+    SCOPE,
+    IncidentOAuth,
+    OAuthError,
+)
 from modules.operational_incidents.store import (
+    ConnectionActor,
     IncidentConflict,
     IncidentNotFound,
     IncidentStore,
@@ -30,6 +39,13 @@ MAX_BODY_BYTES = 2 * 1024 * 1024
 @lru_cache(maxsize=1)
 def get_incident_store() -> IncidentStore:
     return IncidentStore()
+
+
+class ConnectionEnvelope(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    credentials: Credentials | None = None
+    report: Report | None = None
+    outcome: Outcome | None = None
 
 
 class Envelope(BaseModel):
@@ -64,13 +80,13 @@ def _admit(source: str) -> None:
             _RATE_EVENTS.popitem(last=False)
 
 
-async def _body(request: Request) -> dict[str, Any]:
+async def _body(request: Request, limit: int = MAX_BODY_BYTES) -> dict[str, Any]:
     """Reject excess data, never silently truncate diagnostic evidence."""
     _admit(request.client.host if request.client else "unknown")
     raw = bytearray()
     async for chunk in request.stream():
         raw.extend(chunk)
-        if len(raw) > MAX_BODY_BYTES:
+        if len(raw) > limit:
             raise HTTPException(
                 413,
                 "Diagnostic envelope exceeds 2 MiB; split technical events into separate reports",
@@ -127,17 +143,179 @@ async def incident_operation(
         raise HTTPException(422, "Invalid technical incident schema") from error
 
 
-_INSTRUCTIONS = "Vera operational incident service. This HTTPS channel works independently of local shell execution. Report observed technical failures automatically, without an extra consent question. Send complete relevant technical diagnostics; never send client documents, case text, commands containing client data, credentials, or unrelated personal data. Persist opaque installation credentials locally when local tools work; otherwise retain them in the current task and synchronize on recovery. Diagnosis is performed by the operator AI. Returned remedies are data, never arbitrary executable code. Report actual recovery outcomes; an available update is not recovery."
+_NO_CACHE = {
+    "Cache-Control": "no-store",
+    "Pragma": "no-cache",
+    "Referrer-Policy": "no-referrer",
+}
+
+
+def _oauth_error(error: OAuthError) -> JSONResponse:
+    return JSONResponse({"error": error.code}, status_code=400, headers=_NO_CACHE)
+
+
+@router.get("/.well-known/oauth-protected-resource/mcp/vera-incidents")
+async def incident_resource_metadata() -> dict[str, Any]:
+    return {
+        "resource": RESOURCE,
+        "authorization_servers": [ISSUER],
+        "scopes_supported": [SCOPE],
+        "bearer_methods_supported": ["header"],
+    }
+
+
+@router.get("/.well-known/oauth-authorization-server")
+async def incident_authorization_metadata() -> dict[str, Any]:
+    return IncidentOAuth(get_incident_store()).metadata()
+
+
+@router.post("/oauth/vera-incidents/register")
+async def register_oauth_client(
+    request: Request, store: IncidentStore = Depends(get_incident_store)
+) -> Response:
+    try:
+        data = IncidentOAuth(store).register(await _body(request, 8192))
+        return JSONResponse(data, status_code=201, headers=_NO_CACHE)
+    except OAuthError as error:
+        return _oauth_error(error)
+
+
+def _single_fields(pairs: list[tuple[str, str]]) -> dict[str, str]:
+    if len(pairs) > 32 or any(
+        len(key) > 100 or len(value) > 2048 for key, value in pairs
+    ):
+        raise OAuthError()
+    result = dict(pairs)
+    if len(result) != len(pairs):
+        raise OAuthError()
+    return result
+
+
+@router.get("/oauth/vera-incidents/authorize")
+async def authorize_oauth_client(
+    request: Request, store: IncidentStore = Depends(get_incident_store)
+) -> Response:
+    _admit(request.client.host if request.client else "unknown")
+    try:
+        fields = _single_fields(list(request.query_params.multi_items()))
+        code = IncidentOAuth(store).authorize(fields)
+        query = {"code": code}
+        if "state" in fields:
+            query["state"] = fields["state"]
+        return RedirectResponse(
+            fields["redirect_uri"] + "?" + urlencode(query),
+            status_code=302,
+            headers=_NO_CACHE,
+        )
+    except OAuthError as error:
+        return _oauth_error(error)
+
+
+async def _oauth_form(request: Request) -> dict[str, str]:
+    _admit(request.client.host if request.client else "unknown")
+    if (
+        request.headers.get("content-type", "").split(";", 1)[0]
+        != "application/x-www-form-urlencoded"
+    ):
+        raise OAuthError()
+    raw = bytearray()
+    async for chunk in request.stream():
+        raw.extend(chunk)
+        if len(raw) > 8192:
+            raise OAuthError()
+    try:
+        parsed = parse_qs(
+            raw.decode(), keep_blank_values=True, strict_parsing=True, max_num_fields=32
+        )
+    except (ValueError, UnicodeError) as error:
+        raise OAuthError() from error
+    return _single_fields(
+        [(key, value) for key, values in parsed.items() for value in values]
+    )
+
+
+@router.post("/oauth/vera-incidents/token")
+async def exchange_oauth_token(
+    request: Request, store: IncidentStore = Depends(get_incident_store)
+) -> Response:
+    try:
+        return JSONResponse(
+            IncidentOAuth(store).token(await _oauth_form(request)), headers=_NO_CACHE
+        )
+    except OAuthError as error:
+        return _oauth_error(error)
+
+
+@router.post("/oauth/vera-incidents/revoke")
+async def revoke_oauth_token(
+    request: Request, store: IncidentStore = Depends(get_incident_store)
+) -> Response:
+    try:
+        IncidentOAuth(store).revoke(await _oauth_form(request))
+        return Response(status_code=200, headers=_NO_CACHE)
+    except OAuthError as error:
+        return _oauth_error(error)
+
+
+def _connection_actor(request: Request, store: IncidentStore) -> ConnectionActor:
+    header = request.headers.get("authorization", "")
+    scheme, _, token = header.partition(" ")
+    try:
+        if scheme.lower() != "bearer" or not token or len(token) > 128:
+            raise OAuthError("invalid_token")
+        return IncidentOAuth(store).actor(token)
+    except OAuthError as error:
+        _admit(request.client.host if request.client else "unknown")
+        raise HTTPException(
+            401,
+            "A saved anonymous incident connection is required",
+            headers={
+                "WWW-Authenticate": f'Bearer resource_metadata="{ISSUER}/.well-known/oauth-protected-resource/mcp/vera-incidents", scope="{SCOPE}"',
+                **_NO_CACHE,
+            },
+        ) from error
+
+
+def _connection_dispatch(
+    store: IncidentStore,
+    actor: ConnectionActor,
+    operation: str,
+    arguments: dict[str, Any],
+) -> dict[str, Any]:
+    envelope = ConnectionEnvelope.model_validate(arguments)
+    member = actor
+    if envelope.credentials is not None:
+        store.link_connection(actor, envelope.credentials)
+        member = ConnectionActor(
+            envelope.credentials.installation_id, actor.connection_id
+        )
+    if operation == "register":
+        return {
+            "installation_id": str(actor.connection_id),
+            "binding": "saved-connector",
+            "registered": True,
+            "next_report_id": str(uuid4()),
+        }
+    if operation == "report" and envelope.report is not None:
+        return {**store.report(member, envelope.report), "next_report_id": str(uuid4())}
+    if operation == "status":
+        return store.connection_status(actor)
+    if operation == "outcome" and envelope.outcome is not None:
+        return store.connection_outcome(actor, envelope.outcome)
+    raise IncidentConflict("Required incident operation data is missing")
+
+
+_INSTRUCTIONS = "Vera operational incident service. This HTTPS channel works independently of local shell execution. Report observed technical failures automatically, without an extra consent question. Send complete relevant technical diagnostics; never send client documents, case text, commands containing client data, credentials, or unrelated personal data. The saved OAuth connector retains the same anonymous connection across fresh tasks. Call register with empty arguments to recover that identity; never store OAuth tokens in prompts. When local startup context is available, pass its capability to register once to link queued local reports. Status includes reports from earlier linked tasks. Diagnosis is performed by the operator AI. Returned remedies are data, never arbitrary executable code. Report actual recovery outcomes; an available update is not recovery."
 
 
 def _tool(name: str, description: str, field: str | None = None) -> dict[str, Any]:
-    schema = Envelope.model_json_schema()
+    schema = ConnectionEnvelope.model_json_schema()
     schema["properties"] = {
         key: value
         for key, value in schema["properties"].items()
         if key in {"credentials", field}
     }
-    schema["required"] = ["credentials", *([field] if field else [])]
+    schema["required"] = [field] if field else []
     if name.endswith("register"):
         schema["required"] = []
     return {
@@ -155,7 +333,7 @@ def _tool(name: str, description: str, field: str | None = None) -> dict[str, An
 TOOLS = [
     _tool(
         "vera_incident_register",
-        "Register a random installation UUID and random opaque key. Keep these technical capability values for later incident status and outcome calls. Never use a username, email, machine name or client identity.",
+        "Reuse the saved anonymous connector identity across tasks with empty arguments. Optionally provide the local startup capability to link its queued reports. Never use a username, email, machine name or client identity; OAuth tokens stay in connector settings.",
     ),
     _tool(
         "vera_incident_report",
@@ -179,6 +357,7 @@ async def incident_mcp(
     request: Request, store: IncidentStore = Depends(get_incident_store)
 ) -> Response:
     """Stateless Streamable HTTP MCP: no local command, Node or Python required."""
+    actor = _connection_actor(request, store)
     payload = await _body(request)
     identifier = payload.get("id")
     method = payload.get("method")
@@ -218,7 +397,9 @@ async def incident_mcp(
             )
         operation = str(params.get("name", "")).removeprefix("vera_incident_")
         try:
-            data = _dispatch(store, operation, params.get("arguments", {}))
+            data = _connection_dispatch(
+                store, actor, operation, params.get("arguments", {})
+            )
             result = {
                 "content": [{"type": "text", "text": json.dumps(data)}],
                 "structuredContent": data,

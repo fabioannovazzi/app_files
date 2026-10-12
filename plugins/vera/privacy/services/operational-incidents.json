@@ -26,8 +26,8 @@
       "kind": "hosted_service",
       "destination": "Mparanza HTTPS operational-incident API and Streamable HTTP MCP endpoint",
       "purpose": "Diagnose observed execution/setup failures, return installation-specific remedies and receive actual recovery outcomes",
-      "content": "Random installation UUID and opaque capability, Vera/host/runtime versions, platform and workflow technical IDs, failed stage, complete available technical diagnostic chains and measurements, explicit missing-measurement reasons, retry IDs and actual recovery outcomes. No professional helper stdout, client documents, case text, user prompts or arbitrary task logs. Known path, email and credential patterns are removed from technical messages; this mechanical filter does not establish semantic privacy. The host agent must select technical evidence without unrelated personal/client material. The remote channel does not read local files.",
-      "retention": "Local capability, pending reports and receipts persist outside client folders. The service retains incident, report, remedy and outcome records; no automatic deletion period is enforced. Status access is scoped by the opaque capability.",
+      "content": "Random installation UUID and opaque capability, Vera/host/runtime versions, platform and workflow technical IDs, failed stage, complete available technical diagnostic chains and measurements, explicit missing-measurement reasons, retry IDs and actual recovery outcomes. No professional helper stdout, client documents, case text, user prompts or arbitrary task logs. Known path, email and credential patterns are removed from technical messages; this mechanical filter does not establish semantic privacy. The host agent must select technical evidence without unrelated personal/client material. The remote channel does not read local files. Saved anonymous connector authorization exchanges a random code with a PKCE verifier, client ID and fixed incident resource; the host saves access/refresh tokens. The server stores token/code hashes, technical callback metadata and a random connection UUID. No personal account signup, user profile, email or client-file permission is involved.",
+      "retention": "Local capabilities, pending reports and receipts persist outside client folders. In tested Cowork task containers this filesystem is task-local; the saved host connection retains its separate random UUID and credentials. Access tokens last one hour; rotating refresh grants expire after 90 idle days and can be revoked. Token/code hashes and incident records have no automatic deletion period. Access requires the local capability or the saved connector token, with explicit capability proof before linking local reports.",
       "activation": "automatic_session_start",
       "optional": false,
       "requires_confirmation": false,
@@ -40,7 +40,8 @@
         "The fixed HTTPS transport refuses redirects. Reporting failures retain the outbox and do not discard professional outputs.",
         "The remote connector is independent of local command-process startup. If the host cannot expose/connect it, no successful report is claimed.",
         "Only two built-in setup/preparation retries may execute automatically, once per remedy revision. Client documents, ACLs and security settings are not changed.",
-        "A published update is not recovery. The failed operation must actually execute successfully before that installation delivery closes."
+        "A published update is not recovery. The failed operation must actually execute successfully before that installation delivery closes.",
+        "The remote MCP requires OAuth access tokens for the fixed incident resource. Authorization uses S256 PKCE, exact registered callbacks and a single-use five-minute code. Refresh tokens rotate and a replay revokes the grant; raw OAuth credentials are never placed in model prompts or stored server records."
       ]
     }
   ],
@@ -62,12 +63,22 @@
         "repository:modules/operational_incidents/contracts.py"
       ],
       "on_violation": "Reject unsupported actions and keep the incident open."
+    },
+    {
+      "id": "saved-anonymous-connector",
+      "control": "OAuth discovery has fixed server URLs, public clients use mandatory S256 PKCE and exact registered callbacks, and every grant is bound to the incident resource and sole incident scope. Token/code hashes are stored, access expires in one hour, refresh rotates, reuse commits grant revocation, and foreign report outcomes require a proven local link. Caller-supplied metadata URLs are never fetched.",
+      "implemented_by": [
+        "repository:modules/operational_incidents/oauth.py",
+        "repository:modules/operational_incidents/api.py",
+        "repository:modules/operational_incidents/store.py"
+      ],
+      "on_violation": "Reject invalid authorization, token or resource proof without returning caller inputs or another connection record."
     }
   ],
   "review": {
     "reviewed_at": "2026-10-12",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "bb5b35122a69212c92711eaf89fbc6e915d4a82ce1426327768a2fa4f7f7d267"
+    "source_fingerprint": "4b43d464b5df8a005bdc842196669d3055bf5c207d3d127b8085eccfc482fa0d"
   }
 }

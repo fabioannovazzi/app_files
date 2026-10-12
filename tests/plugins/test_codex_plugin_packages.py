@@ -3997,22 +3997,51 @@ def test_prompt_optimizer_workflow_hides_internal_file_handoff_in_every_locale()
 
 
 @pytest.mark.parametrize(
-    ("language", "information_work", "information_stage", "position"),
+    ("language", "question_work", "information_stage", "position", "opinion_work"),
     [
-        ("it", "per informarsi", "ricerca informativa", "posizione concreta"),
-        ("en", "informational research", "informational research", "concrete position"),
-        ("fr", "recherche informative", "recherche informative", "position concrète"),
-        ("de", "informationsrecherche", "informationsrecherche", "konkreten position"),
+        (
+            "it",
+            "quesito accettato",
+            "ricerca informativa",
+            "posizione concreta",
+            "posizione concreta",
+        ),
+        (
+            "en",
+            "accepted question",
+            "informational research",
+            "concrete position",
+            "concrete professional opinion",
+        ),
+        (
+            "fr",
+            "question acceptée",
+            "recherche informative",
+            "position concrète",
+            "position concrète",
+        ),
+        (
+            "de",
+            "akzeptierte frage",
+            "informationsrecherche",
+            "konkreten position",
+            "konkreten position",
+        ),
         (
             "es",
+            "consulta aceptada",
             "investigación informativa",
-            "investigación informativa",
+            "posición concreta",
             "posición concreta",
         ),
     ],
 )
-def test_legal_research_pages_distinguish_information_from_opinions(
-    language: str, information_work: str, information_stage: str, position: str
+def test_legal_research_pages_define_question_method_and_distinguish_opinion_scope(
+    language: str,
+    question_work: str,
+    information_stage: str,
+    position: str,
+    opinion_work: str,
 ) -> None:
     source = (ROOT / "static/shared/product-function-pages.js").read_text()
     planner = (ROOT / "static/shared/prompt-optimizer/index.html").read_text()
@@ -4038,8 +4067,8 @@ def test_legal_research_pages_distinguish_information_from_opinions(
         re.search(r'"workflow.item4.copy": (".*"),', planner_locale).group(1)
     ).casefold()
 
-    assert information_work in work
-    assert position in work
+    assert question_work in work
+    assert opinion_work in work
     assert information_stage in activation
     assert position in activation
     assert information_stage in research_choice

@@ -18,6 +18,7 @@ from modules.operational_incidents.store import (
     IncidentNotFound,
     IncidentStore,
 )
+from tests.modules.operational_incidents.test_oauth import connection_headers
 
 
 def credentials() -> Credentials:
@@ -272,6 +273,7 @@ def test_remote_mcp_report_works_without_starting_a_local_process(
     client = TestClient(app)
     response = client.post(
         "/mcp/vera-incidents",
+        headers=connection_headers(store),
         json={
             "jsonrpc": "2.0",
             "id": 1,
@@ -289,27 +291,32 @@ def test_remote_mcp_report_works_without_starting_a_local_process(
     assert len(store.queue()) == 1
 
 
-def test_remote_registration_needs_no_local_uuid_generator(tmp_path):
+def test_remote_registration_reuses_saved_identity_without_local_uuid_generator(
+    tmp_path,
+):
+    store = IncidentStore(tmp_path / "store.sqlite3")
     app = FastAPI()
     app.include_router(router)
-    app.dependency_overrides[get_incident_store] = lambda: IncidentStore(
-        tmp_path / "store.sqlite3"
-    )
+    app.dependency_overrides[get_incident_store] = lambda: store
     client = TestClient(app)
-    reply = client.post(
-        "/mcp/vera-incidents",
-        json={
-            "jsonrpc": "2.0",
-            "id": 1,
-            "method": "tools/call",
-            "params": {"name": "vera_incident_register", "arguments": {}},
-        },
-    ).json()["result"]["structuredContent"]
-    assert Credentials.model_validate(reply["credentials"])
-    status = client.post(
-        "/api/operational-incidents/status", json={"credentials": reply["credentials"]}
-    )
-    assert status.json() == {"incidents": []}
+    headers = connection_headers(store)
+    payload = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "tools/call",
+        "params": {"name": "vera_incident_register", "arguments": {}},
+    }
+
+    reply = client.post("/mcp/vera-incidents", headers=headers, json=payload).json()[
+        "result"
+    ]["structuredContent"]
+    repeated = client.post("/mcp/vera-incidents", headers=headers, json=payload).json()[
+        "result"
+    ]["structuredContent"]
+
+    assert reply["installation_id"] == repeated["installation_id"]
+    assert reply["binding"] == "saved-connector"
+    assert "credentials" not in reply
 
 
 def test_mcp_schemas_have_resolvable_references():

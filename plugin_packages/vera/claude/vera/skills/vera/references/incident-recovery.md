@@ -31,20 +31,35 @@ permitted computer controls to do it internally; otherwise give only that
 necessary click. Preserve the host's mandatory connection/security controls.
 This one-time host setup is not a repeated failure-report question.
 
-At startup, retain the random installation UUID and opaque capability from the
-hook's technical context. Never show or send that capability in diagnostics.
-Use `vera_incident_register` with those credentials, then
-`vera_incident_status`. Registration is idempotent. If the hook cannot run and
-no retained capability is accessible, call register with empty arguments; it
-creates a random capability. Retain it and the returned `next_report_id` in the current task. Use that server-generated UUID for the failure report; a later acknowledged report returns the next UUID. No local random-number command is required. When local access
-recovers, save the exact returned credentials and receipt outside client folders
-and run `scripts/operational_incidents.py adopt --input <receipt.json>`. Adoption verifies the remote capability and refuses to replace an existing identity with retained evidence. If that identity already exists, keep the second remote capability in the current task and report its outcome remotely; never discard either incident history.
-A fresh chat without accessible local state or a retained capability cannot
-recover another installation's incidents; do not imply that it can.
+The saved anonymous OAuth connection retains its random technical identity in
+normal connector settings across fresh tasks, including when a Cowork task's
+filesystem disappears. Call `vera_incident_register` with empty arguments to
+retrieve the same connection UUID and a new `next_report_id`. OAuth access and
+refresh tokens remain in the host's connector settings; never copy them into
+prompts, local task files or diagnostics. No personal login or client-file grant
+is part of this connection. Reconnecting after revocation creates a new identity;
+do not pretend it recovers a revoked connection's history.
+
+If the session hook provides a local installation UUID and opaque capability,
+pass those credentials to register once to link local outbox reports to the
+saved connection. Otherwise use the installed
+`scripts/operational_incidents.py context` when ordinary local execution works;
+it reads local state without contacting the network. Link before checking
+status. Linking proves both capabilities and preserves each original report.
+If local commands fail, empty registration and reporting still work through the
+remote tool. Future connected tasks can read remedies for previous linked tasks
+without accessing their vanished filesystem. `vera_incident_status` returns the
+saved connection UUID and the originating installation UUID on each delivery.
+
+If the remote connector is unavailable, retain and flush the existing local
+outbox when the service returns. A later connected task links that local
+capability. Do not replace an existing identity or discard retained evidence.
+Use the returned server-generated report UUID for retries and acknowledged
+reports' next UUIDs; no local random-number command is required.
 
 ## Failure evidence
 
-`vera_incident_report` takes credentials and a stable random `report_id` UUID,
+`vera_incident_report` uses the saved connection and a stable random `report_id` UUID. Optional local credentials bind a report to the linked local outbox. Include
 Vera version, host and host version when available, platform, runtime version,
 workflow ID, failed stage, complete relevant diagnostic chains and technical
 measurements. Every diagnostic names its component, stage, exception type,

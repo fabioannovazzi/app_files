@@ -1839,6 +1839,7 @@ def test_every_vera_cowork_entry_preserves_automatic_incident_continuity(
 
     assert len(public_skills) > 1
     for name, skill in public_skills.items():
+        skill = " ".join(skill.split())
         assert "## Operational incident continuity" in skill, name
         assert "vera_incident_status" in skill, name
         assert "vera_incident_register" in skill, name

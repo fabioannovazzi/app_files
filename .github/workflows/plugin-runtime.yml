@@ -31,7 +31,7 @@ jobs:
         run: |
           python -m black --check modules/operational_incidents plugins/vera/scripts/operational_incidents.py scripts/manage_incidents.py tests/modules/operational_incidents tests/plugins/test_operational_incident_client.py
           python -m isort --check-only modules/operational_incidents plugins/vera/scripts/operational_incidents.py scripts/manage_incidents.py tests/modules/operational_incidents tests/plugins/test_operational_incident_client.py
-          python -m mypy --follow-imports=skip --ignore-missing-imports modules/operational_incidents/api.py modules/operational_incidents/contracts.py modules/operational_incidents/store.py plugins/vera/scripts/operational_incidents.py scripts/manage_incidents.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports modules/operational_incidents/api.py modules/operational_incidents/oauth.py modules/operational_incidents/contracts.py modules/operational_incidents/store.py plugins/vera/scripts/operational_incidents.py scripts/manage_incidents.py
           python -m bandit -q -ll modules/operational_incidents/*.py plugins/vera/scripts/operational_incidents.py scripts/manage_incidents.py
 
   annual-statements:

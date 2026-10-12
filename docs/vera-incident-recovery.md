@@ -1,11 +1,10 @@
 # Vera operational incident recovery
 
-Release candidate: native Cowork testing found task-local identity loss. The
-saved-connection correction is awaiting the specific security approval recorded
-in [the connection design](vera-incident-connection-design.md). This candidate
-has not been merged or deployed, and cross-task native recovery is unproven.
+Release candidate: the saved anonymous OAuth correction is approved and
+implemented. Security and incident regression tests pass. Deployment and native
+cross-task acceptance remain pending; see [the connection design](vera-incident-connection-design.md).
 
-Vera 0.1.366 adds a technical incident service, separate from optional feature
+Vera 0.1.367 adds a technical incident service, separate from optional feature
 suggestions. Failures are reported automatically; no support questionnaire or
 extra confirmation is required. Professional outputs and client files are not
 incident inputs. Complete relevant technical chains are retained; mechanically
@@ -28,12 +27,13 @@ the durable capability in its session-start context.
 The `veraIncidents` HTTP MCP endpoint at `/mcp/vera-incidents` does not run a local
 command. It can receive observed host failures even when local Python/Node/shell
 startup fails, provided the host exposes and connects that remote tool. When no
-local capability is available, remote registration creates one and a report ID;
-retain it in the current task and adopt after local recovery. Adoption refuses
-to replace existing incident history. A fresh task without the capability cannot
-recover it. Older packages need one update to join this loop. In Claude, connect
-`veraIncidents` once from Vera's Connectors panel after installation; this is the
-host's one-time connector setup, not a repeated failure-report question.
+local capability is available, remote registration reuses the saved OAuth
+connection UUID and supplies a report ID. Link a local outbox by proving its
+capability through register; status then includes earlier linked task reports.
+The host retains OAuth tokens outside task prompts/files. No personal account or
+client-file access is granted. Older packages need one update to join this loop.
+In Claude, connect `veraIncidents` once from Vera's Connectors panel after
+installation; this is the host's normal connector setup.
 
 ## Operator workflow
 
