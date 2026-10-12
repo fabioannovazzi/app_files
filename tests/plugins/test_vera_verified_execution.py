@@ -7,6 +7,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -299,6 +300,20 @@ def test_managed_cli_delegates_to_private_root_and_keeps_helper_arguments(
         root / "modules/journal-bank-reconciliation/scripts/implementation_bootstrap.py"
     )
     monkeypatch.syspath_prepend(str(SCRIPT.parent))
+    reports = []
+
+    def record_failure(workflow, stage, message, **details):
+        reports.append((workflow, stage, details))
+        return {"reporting": "test-isolated"}
+
+    # This deliberately failed helper must never send fixture data to production.
+    monkeypatch.setitem(
+        sys.modules,
+        "operational_incidents",
+        SimpleNamespace(
+            report_failure=record_failure, record_success=lambda *args: None
+        ),
+    )
     spec = importlib.util.spec_from_file_location(
         "vera_managed_recovery_test", SCRIPT.parent / "managed_python_runtime.py"
     )
@@ -327,6 +342,13 @@ def test_managed_cli_delegates_to_private_root_and_keeps_helper_arguments(
     result = launcher.main(arguments)
 
     try:
+        assert reports == [
+            (
+                "journal-bank-reconciliation",
+                "helper:inspect_inputs.py",
+                {"error_type": "HelperExit", "exit_code": 17},
+            )
+        ]
         assert result == 17
         assert len(delegated) == 1
         assert delegated[0][0] != root
