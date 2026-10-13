@@ -22,6 +22,7 @@ LOGGER = logging.getLogger(__name__)
 KINDS = (
     "documenti",
     "contenzioso-civile",
+    "contenzioso-tributario",
     "operazioni-ma",
     "lavoro",
     "recupero-crediti",

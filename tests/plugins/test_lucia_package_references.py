@@ -22,6 +22,7 @@ DOCUMENT_SKILLS = {
     "metodo-studio",
     "verifica-citazioni",
     "contenzioso-civile",
+    "contenzioso-tributario",
     "operazioni-ma",
     "lavoro",
     "recupero-crediti",

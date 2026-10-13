@@ -12,6 +12,7 @@
       "enum": [
         "documenti",
         "contenzioso-civile",
+        "contenzioso-tributario",
         "operazioni-ma",
         "lavoro",
         "recupero-crediti",
