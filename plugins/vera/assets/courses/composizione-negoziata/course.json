@@ -265,7 +265,7 @@
     {
       "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
       "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
-      "sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5"
+      "sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
     },
     {
       "path": "vendor/modules/italian_tax_litigation/references/fonti.md",
@@ -280,7 +280,7 @@
     {
       "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
       "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
-      "sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f"
+      "sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
     },
     {
       "path": "vendor/modules/italian_tax_litigation/workflow.md",
@@ -295,12 +295,12 @@
     {
       "path": "vendor/modules/scripts/legal_documents.py",
       "repository_path": "plugins/lucia/scripts/legal_documents.py",
-      "sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26"
+      "sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
     },
     {
       "path": "vendor/modules/scripts/legal_documents_labels.json",
       "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
-      "sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d"
+      "sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
     },
     {
       "path": "vendor/modules/scripts/legal_documents_review.schema.json",
@@ -315,7 +315,7 @@
     {
       "path": "vendor/modules/scripts/legal_matter.py",
       "repository_path": "plugins/lucia/scripts/legal_matter.py",
-      "sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0"
+      "sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
     },
     {
       "path": "vendor/modules/scripts/legal_matter.schema.json",
@@ -335,7 +335,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112"
+      "sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",

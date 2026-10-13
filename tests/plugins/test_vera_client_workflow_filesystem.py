@@ -28,6 +28,13 @@ from vera_assurance import (  # noqa: E402
     load_client_workflow_context_for_output,
 )
 
+# Direct skills use the public Archive lifecycle and generic packaged helpers;
+# their execution is covered by the tax lifecycle and packaged-helper regressions.
+DIRECT_CLIENT_SKILLS = {
+    "contenzioso-tributario": ROOT
+    / "plugins/vera/skills/contenzioso-tributario/SKILL.md",
+}
+
 CLIENT_WORKFLOW_ENTRYPOINTS = (
     ("lipe", "lipe.py"),
     ("rating-legalita", "rating_case.py"),
@@ -436,10 +443,13 @@ def _call_review_tool(
     return responses[-1]["result"]["structuredContent"]
 
 
-def test_client_workflow_entrypoints_cover_registered_vera_workflows() -> None:
+def test_client_workflow_entrypoints_and_direct_skills_cover_registry() -> None:
     observed_workflows = {workflow_id for workflow_id, _ in CLIENT_WORKFLOW_ENTRYPOINTS}
 
-    assert observed_workflows == set(VERA_CLIENT_WORKFLOW_IDS)
+    assert observed_workflows | set(DIRECT_CLIENT_SKILLS) == set(
+        VERA_CLIENT_WORKFLOW_IDS
+    )
+    assert all(path.is_file() for path in DIRECT_CLIENT_SKILLS.values())
 
 
 def test_client_workflow_registry_covers_every_vera_component() -> None:
@@ -447,7 +457,9 @@ def test_client_workflow_registry_covers_every_vera_component() -> None:
         (ROOT / "plugins" / "vera" / "components.json").read_text(encoding="utf-8")
     )
 
-    assert set(VERA_CLIENT_WORKFLOW_IDS) == set(components["plugins"]) - {
+    assert set(VERA_CLIENT_WORKFLOW_IDS) - set(DIRECT_CLIENT_SKILLS) == set(
+        components["plugins"]
+    ) - {
         # The merger foundation explicitly has no live multi-company Archive adapter.
         "fusione-guidata",
         # The transformation route is synthetic-only and has no Archive adapter.

@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/.codex/worktrees/vera-tax-litigation/app_files/plugins/vera",
-  "version": "0.1.372",
-  "captured_at": "2026-10-13T19:20:16.505320+00:00",
-  "catalogue_fingerprint": "10c0391237aba07f656360ef7ad216edd4f41cf900bba233a91c7c4bb2e9cbed",
-  "manifest_sha256": "2893abcc0b447b53e88788901d11ecfa63775dea13a000fa4d5d20c50fd1a0a6",
+  "root": "/Users/fabio/.codex/worktrees/tax-litigation-fixes/app_files/plugins/vera",
+  "version": "0.1.374",
+  "captured_at": "2026-10-13T21:59:46.931978+00:00",
+  "catalogue_fingerprint": "971aa9f9e06ece11afb6d1d7d00ea5ec2b3b0ee6372031ba52428730a904fb38",
+  "manifest_sha256": "d076570c31658ecba98e9d0fe356f560811ca46897d89799e8e0546cf392164f",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -84,7 +84,7 @@
     {
       "function_id": "contenzioso-tributario",
       "skill_path": "skills/contenzioso-tributario/SKILL.md",
-      "sha256": "4d436f7e7e94ac14e361062f37a5c70a57e1c684cff3f371905818965efeb449"
+      "sha256": "a6cd9df635b1d77f972ab90afb851e6fd7395961493c4b076ea4ac220cd01878"
     },
     {
       "function_id": "datev-invoice-start",

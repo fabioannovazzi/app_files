@@ -121,7 +121,7 @@
     },
     {
       "path": "modules/deep-research-validator/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112"
+      "sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
     },
     {
       "path": "modules/deep-research-validator/vendor/modules/vera_assurance/decisions.py",
@@ -157,7 +157,7 @@
     },
     {
       "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
-      "sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5"
+      "sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
     },
     {
       "path": "vendor/modules/italian_tax_litigation/references/fonti.md",
@@ -169,7 +169,7 @@
     },
     {
       "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
-      "sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f"
+      "sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
     },
     {
       "path": "vendor/modules/italian_tax_litigation/workflow.md",
@@ -690,5 +690,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "37471eccaf061f3857352f7e07288a2e51d34a97cd23b030f39cc4c9da9e69c2"
+  "canonical_course_sha256": "80dbd37dee64448207047ce4c767da7e70f57bef0e588e384bf449a490ec63d0"
 }

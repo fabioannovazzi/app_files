@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "business-planning",
-  "course_sha256": "18934a360441902b797e01958213c387604ff72b70049b881bb76da0fe337b81",
-  "reviewer": "Codex first-use lesson and native business-plan output review",
-  "reviewed_at": "2026-09-23T11:52:59.406972+00:00",
-  "review_scope": "Reviewed both localized lessons and generated native demo/practice plans. Tests replay model-authored interpretation through the current workflow, with distinct owning-product case handling and preserved preceding plan. Chrome DOM review additionally inspected the English practice reader view. No fresh model inference, market research, learner participation, professional approval or complete financing model is claimed. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+  "course_sha256": "4ef1feeac3eaed1188b098a1828967620d7316730b0e8d2e319b5847bc267f1e",
+  "reviewer": "Codex /root - tax-litigation fix source compatibility review",
+  "reviewed_at": "2026-10-13T21:38:57.946661+00:00",
+  "review_scope": "Source compatibility review of unchanged authored lessons; fresh execution against each exact course digest remains required. Historical locale/editorial/artifact judgments retain their scope. No new learner, visual, installed-host or professional acceptance is claimed.",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -323,5 +323,23 @@
     "content_review": "Complete course JSON equality except source bindings. All authored content, inputs, checkpoints and execution contracts are unchanged. Prior editorial and artifact judgments are retained.",
     "source_review": "Quote the existing colon-bearing business-planning description as valid YAML. The parsed description is unchanged; no workflow, model context, data boundary or integrity rule changes.",
     "limits": "Source-binding refresh only; fresh CI must execute the existing demo/practice identities. No new learner or professional acceptance is claimed."
+  },
+  "tax_litigation_fixes_source_review_20261013": {
+    "baseline_commit": "3fbd29e58ad50c7e6db571ba45c6e604fea7eed2",
+    "reviewed_at": "2026-10-13T21:38:57.946661+00:00",
+    "previous_review_identity": {
+      "reviewer": "Codex first-use lesson and native business-plan output review",
+      "reviewed_at": "2026-09-23T11:52:59.406972+00:00",
+      "review_scope": "Reviewed both localized lessons and generated native demo/practice plans. Tests replay model-authored interpretation through the current workflow, with distinct owning-product case handling and preserved preceding plan. Chrome DOM review additionally inspected the English practice reader view. No fresh model inference, market research, learner participation, professional approval or complete financing model is claimed. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+      "course_sha256": "18934a360441902b797e01958213c387604ff72b70049b881bb76da0fe337b81"
+    },
+    "previous_course_sha256": "18934a360441902b797e01958213c387604ff72b70049b881bb76da0fe337b81",
+    "current_course_sha256": "4ef1feeac3eaed1188b098a1828967620d7316730b0e8d2e319b5847bc267f1e",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "source_review": "docs/releases/2026-10-13-tax-litigation-fixes-source-review.json",
+    "fresh_matching_junit_required": true
   }
 }

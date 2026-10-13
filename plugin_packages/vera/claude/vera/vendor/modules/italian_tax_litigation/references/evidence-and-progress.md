@@ -12,7 +12,11 @@ Later host-specific instructions in this reference cannot override this rule.
 
 L'adattatore del prodotto stabilisce il suo root, l'ambiente condiviso, il
 percorso assoluto `<helper-dir>` e la cartella di lavoro autorizzata. Esegui
-prima il controllo delle dipendenze dichiarate. Se non disponibili, continua
+prima il controllo delle dipendenze dichiarate. `prepare` richiede una directory
+nuova: se il contenitore autorizzato esiste, scegli una sottocartella nuova
+per `<run>`. Non passare un output Archive già creato e non reinizializzare
+una run esistente. Riprendi la stessa directory per stato e report.
+Se le dipendenze non sono disponibili, continua
 con i materiali leggibili in chat e indica quali helper non sono stati eseguiti.
 Non installare un ambiente nuovo nella pratica né aggirare limiti di rete.
 

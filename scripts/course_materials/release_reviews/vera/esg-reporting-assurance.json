@@ -2,9 +2,9 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "esg-reporting-assurance",
-  "course_sha256": "5c8d03d5664ee6d510dc01c1773f97cceb535d39c0da6136ac691ba305928642",
-  "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
-  "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
+  "course_sha256": "25016a450b872c55553e2ee2e05edf79339b5a19b75cf168e97a13f73ecf29e1",
+  "reviewer": "Codex /root - tax-litigation fix source compatibility review",
+  "reviewed_at": "2026-10-13T21:38:57.946661+00:00",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -397,7 +397,7 @@
     "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
   },
   "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
-  "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
+  "review_scope": "Source compatibility review of unchanged authored lessons; fresh execution against each exact course digest remains required. Historical locale/editorial/artifact judgments retain their scope. No new learner, visual, installed-host or professional acceptance is claimed.",
   "practice_value_correction_20261004": {
     "reviewer": "Codex /root",
     "reviewed_at": "2026-10-04T13:01:24.052767+00:00",
@@ -522,5 +522,23 @@
     "new_native_output_visual_review": false,
     "learner_or_professional_acceptance": false,
     "installed_host_acceptance": false
+  },
+  "tax_litigation_fixes_source_review_20261013": {
+    "baseline_commit": "3fbd29e58ad50c7e6db571ba45c6e604fea7eed2",
+    "reviewed_at": "2026-10-13T21:38:57.946661+00:00",
+    "previous_review_identity": {
+      "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
+      "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
+      "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
+      "course_sha256": "5c8d03d5664ee6d510dc01c1773f97cceb535d39c0da6136ac691ba305928642"
+    },
+    "previous_course_sha256": "5c8d03d5664ee6d510dc01c1773f97cceb535d39c0da6136ac691ba305928642",
+    "current_course_sha256": "25016a450b872c55553e2ee2e05edf79339b5a19b75cf168e97a13f73ecf29e1",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "source_review": "docs/releases/2026-10-13-tax-litigation-fixes-source-review.json",
+    "fresh_matching_junit_required": true
   }
 }

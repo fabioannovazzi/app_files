@@ -23,9 +23,21 @@ Later host-specific instructions in this reference cannot override this rule.
 """
 
 
+def _archive_path(product: str, suffix: str) -> Path:
+    if suffix == "antigravity":
+        return (
+            ROOT
+            / "static/shared"
+            / product
+            / "downloads"
+            / f"{product}-antigravity-plugin.zip"
+        )
+    return ROOT / "plugin_packages" / product / f"{product}-{suffix}"
+
+
 @pytest.mark.parametrize("product", ["vera", "lucia"])
 @pytest.mark.parametrize(
-    "suffix", ["plugin.zip", "chatgpt-upload.zip", "claude-plugin.zip"]
+    "suffix", ["plugin.zip", "chatgpt-upload.zip", "claude-plugin.zip", "antigravity"]
 )
 @pytest.mark.parametrize(
     "relative",
@@ -41,7 +53,7 @@ def test_each_host_contains_the_canonical_procedural_guide(
     product: str, suffix: str, relative: str
 ) -> None:
     """A release cannot ship an independently drifting procedural copy."""
-    filename = ROOT / "plugin_packages" / product / f"{product}-{suffix}"
+    filename = _archive_path(product, suffix)
     target = f"vendor/modules/italian_tax_litigation/{relative}"
     with ZipFile(filename) as archive:
         name = next(name for name in archive.namelist() if name.endswith(target))
@@ -55,10 +67,13 @@ def _command(
     root: Path, name: str, *arguments: str
 ) -> subprocess.CompletedProcess[str]:
     """Execute a real packaged helper using the existing test environment."""
+    helper_dir = root / "vendor/modules/scripts"
+    if not helper_dir.is_dir():
+        helper_dir = root / "scripts"
     result = subprocess.run(
         [
             sys.executable,
-            str(root / "vendor/modules/scripts" / name),
+            str(helper_dir / name),
             *arguments,
         ],
         cwd=root,
@@ -72,24 +87,27 @@ def _command(
 
 
 @pytest.mark.parametrize(
-    "suffix", ["plugin.zip", "chatgpt-upload.zip", "claude-plugin.zip"]
+    "suffix", ["plugin.zip", "chatgpt-upload.zip", "claude-plugin.zip", "antigravity"]
 )
-def test_packaged_vera_prepares_and_resumes_without_claiming_filing(
-    tmp_path: Path, suffix: str
+@pytest.mark.parametrize("product_name", ["vera", "lucia"])
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+def test_packaged_product_prepares_and_resumes_without_claiming_filing(
+    tmp_path: Path, suffix: str, product_name: str, language: str
 ) -> None:
     """Exercise the shipped dependencies, Vera report and unresolved external act."""
-    filename = ROOT / "plugin_packages/vera" / f"vera-{suffix}"
+    filename = _archive_path(product_name, suffix)
+    helper_subdir = "vendor/modules/scripts" if product_name == "vera" else "scripts"
     with ZipFile(filename) as archive:
         helper = next(
             name
             for name in archive.namelist()
-            if name.endswith("vendor/modules/scripts/legal_matter.py")
+            if name.endswith(helper_subdir + "/legal_matter.py")
         )
-        prefix = helper.removesuffix("vendor/modules/scripts/legal_matter.py")
+        prefix = helper.removesuffix(helper_subdir + "/legal_matter.py")
         names = [
             name
             for name in archive.namelist()
-            if name.startswith(prefix + "vendor/modules/scripts/legal_")
+            if name.startswith(prefix + helper_subdir + "/legal_")
         ]
         for name in names:
             target = tmp_path / "package" / name
@@ -124,7 +142,7 @@ def test_packaged_vera_prepares_and_resumes_without_claiming_filing(
         legal_basis="Nessuna conclusione giuridica; sola prova tecnica",
         firm_instructions="Nessun modello",
         instructions="Verificare il pacchetto locale",
-        language="it",
+        language=language,
     )
     review["coverage"]["D001"]["reviewed_anchors"] = ["line:1"]
     review["items"][0].update(
@@ -144,7 +162,7 @@ def test_packaged_vera_prepares_and_resumes_without_claiming_filing(
         "--review",
         str(review_path),
         "--product",
-        "Vera",
+        product_name.title(),
     )
     _command(
         product,
@@ -158,6 +176,7 @@ def test_packaged_vera_prepares_and_resumes_without_claiming_filing(
         "Preparare la pratica fittizia",
     )
     state = json.loads((run / "matter.json").read_text(encoding="utf-8"))
+    state["language"] = language
     state["stages"] = [
         {
             "id": "preparazione",
@@ -201,7 +220,19 @@ def test_packaged_vera_prepares_and_resumes_without_claiming_filing(
     result = _command(product, "legal_matter.py", "status", "--run-dir", str(run))
     _command(product, "legal_matter.py", "render", "--run-dir", str(run))
 
-    assert "<h1>Vera · " in (run / "review.html").read_text(encoding="utf-8")
+    html = (run / "review.html").read_text(encoding="utf-8")
+    labels = json.loads(
+        (product / helper_subdir / "legal_documents_labels.json").read_text(
+            encoding="utf-8"
+        )
+    )[language]
+    reviewer_prefix = "professional_" if product_name == "vera" else ""
+    assert "<h1>" + product_name.title() + " · " in html
+    assert labels[reviewer_prefix + "complete"] in html
+    assert labels[reviewer_prefix + "quote_meaning"] in html
+    if product_name == "vera":
+        assert labels["complete"] not in html
+        assert labels["quote_meaning"] not in html
     assert json.loads(result.stderr)["blocked_stages"] == {"deposito": ["Q1"]}
     assert (
         json.loads((run / "matter.json").read_text(encoding="utf-8"))["revision"] == 1
@@ -216,3 +247,10 @@ def test_vera_help_links_the_shared_function_and_keeps_explanation_on_its_page()
     assert 'data-vera-workflow="contenzioso-tributario"' in page
     assert "../contenzioso-tributario/index.html?from=vera" in page
     assert "La guida è una base editoriale" not in page
+
+
+def test_shared_progress_reference_resolves_without_a_product_specific_skill() -> None:
+    text = (GUIDE / "references/termini-e-ripresa.md").read_text(encoding="utf-8")
+    assert "`evidence-and-progress.md`" in text
+    assert (GUIDE / "references/evidence-and-progress.md").is_file()
+    assert "../../revisione-contratti/" not in text

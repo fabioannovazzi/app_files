@@ -98,7 +98,7 @@
     "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "6aaa7964ec87cd15e1c563df8cebdc3983d942b50c63859ab0def6a07b393e51"
+    "source_fingerprint": "23a65cf213ea822aca628b9117b02869ea452f4951575bf1647f4ce2c3e026f2"
   },
   "governed_repository_paths": [
     "plugins/vera/scripts/native_passive_sources.py",
