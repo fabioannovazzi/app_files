@@ -61,7 +61,22 @@
         "vera_ocr",
         "reporting_table.py",
         "courseware",
-        "vera_journal_pdf"
+        "vera_journal_pdf",
+        "italian_tax_litigation"
+      ],
+      "overlays": [
+        {
+          "source_root": "plugins/lucia",
+          "module_roots": [
+            "scripts/legal_documents.py",
+            "scripts/legal_docx.py",
+            "scripts/legal_documents_review.schema.json",
+            "scripts/legal_documents_labels.json",
+            "scripts/legal_matter.py",
+            "scripts/legal_matter.schema.json",
+            "scripts/legal_matter_labels.json"
+          ]
+        }
       ]
     },
     "open-item-reconciliation": {
@@ -214,7 +229,8 @@
     "lucia": {
       "module_roots": [
         "desktop_teaching",
-        "courseware"
+        "courseware",
+        "italian_tax_litigation"
       ]
     },
     "invoice-xml": {

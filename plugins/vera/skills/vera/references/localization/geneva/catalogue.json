@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/.codex/worktrees/vera-incident-diagnostics/app_files/plugins/vera",
-  "version": "0.1.370",
-  "captured_at": "2026-10-13T08:13:25.680651+00:00",
-  "catalogue_fingerprint": "d923ad3980000dedbcde2a1c7b18497a5fc552998e18985d4b328a75f3b36599",
-  "manifest_sha256": "5a1c37d9c36dedd4a35de21c2cb44e88adf7f3dcc3aa6778550866eba14701ed",
+  "root": "/Users/fabio/.codex/worktrees/vera-tax-litigation/app_files/plugins/vera",
+  "version": "0.1.371",
+  "captured_at": "2026-10-13T11:06:40.806458+00:00",
+  "catalogue_fingerprint": "872c4dec91e7f380d2674b18b86f4f6c88222c334f5f846011b14c8eafc7ae2e",
+  "manifest_sha256": "4ffb9a0ce23c9ea55b568fbae14a6d041abb53ccfe55e0d1062bd0998ebe5719",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -80,6 +80,11 @@
       "function_id": "concordato-plan-review",
       "skill_path": "skills/concordato-plan-review/SKILL.md",
       "sha256": "fbfadb5cb9c39414684a0d33e689bd0f69d97fe1a1b50c0a6cec81d5819132fd"
+    },
+    {
+      "function_id": "contenzioso-tributario",
+      "skill_path": "skills/contenzioso-tributario/SKILL.md",
+      "sha256": "4d436f7e7e94ac14e361062f37a5c70a57e1c684cff3f371905818965efeb449"
     },
     {
       "function_id": "datev-invoice-start",
@@ -259,7 +264,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "de17779c444863d6aba2e6ef6ebf213ab4109882a64d7b62f2c356909103de99"
+      "sha256": "0b8b9a2084852d5ce64b0e55e6914784c235dd5ebf55ab49b01ad3ec5ca9256c"
     },
     {
       "function_id": "vouching",

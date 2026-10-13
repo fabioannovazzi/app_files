@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "bandi-agevolazioni",
-  "course_sha256": "b8506b59ed3b98a757b55de7c8cf0bd19ce314dc717d31bd7c73a199d768ac8f",
-  "reviewer": "Codex localized lesson and native dossier review",
-  "reviewed_at": "2026-09-23T11:55:24.295421+00:00",
-  "review_scope": "Reviewed five localized first-use kits and ten generated reader-facing HTML dossiers. Native integration tests replay explicitly synthetic source/intelligence acceptance fixtures and authored assessments, not professional approval or learner participation. The selected fictional call avoids hosted discovery and real applications. HTML reader labels are localized; the technical Markdown register retains Italian labels. No signature, submission, external contact or funding eligibility decision is claimed. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+  "course_sha256": "05d0bceb2db691a83b38686497163ca97bf8071b968b367b9ef0386fd91f7947",
+  "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
+  "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
+  "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -394,5 +394,28 @@
     "source_changes": "Vera dependency checker re-enters the base interpreter when required; PDF geometry is persisted as decimal text; reviewed mapping contracts are exposed; run recipe containment is checked before output writes; reviewed currency reaches PDF postings; first-run instructions specify runtime, session identity, in-run recipe and finalization disclosure.",
     "evidence": "Final repair commit native teaching execution step passed before the editorial binding check; local packaged PDF pipeline and source regressions passed. Fresh CI must verify execution against these exact current course hashes.",
     "limits": "This source-only binding review does not claim new visual, learner, installed-host or professional acceptance. Existing review descriptions and output receipts retain their historical scope."
+  },
+  "tax_litigation_source_binding_review_20261013": {
+    "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
+    "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
+    "previous_review_identity": {
+      "reviewer": "Codex localized lesson and native dossier review",
+      "reviewed_at": "2026-09-23T11:55:24.295421+00:00",
+      "review_scope": "Reviewed five localized first-use kits and ten generated reader-facing HTML dossiers. Native integration tests replay explicitly synthetic source/intelligence acceptance fixtures and authored assessments, not professional approval or learner participation. The selected fictional call avoids hosted discovery and real applications. HTML reader labels are localized; the technical Markdown register retains Italian labels. No signature, submission, external contact or funding eligibility decision is claimed. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+      "course_sha256": "b8506b59ed3b98a757b55de7c8cf0bd19ce314dc717d31bd7c73a199d768ac8f"
+    },
+    "baseline_commit": "589aad7a9d400aaef2498a1a0c772af3cb4637a9",
+    "reviewed_source_commit": "ff753a8583961a88c3071b4f9d72223687e221e4",
+    "previous_course_sha256": "b8506b59ed3b98a757b55de7c8cf0bd19ce314dc717d31bd7c73a199d768ac8f",
+    "current_course_sha256": "05d0bceb2db691a83b38686497163ca97bf8071b968b367b9ef0386fd91f7947",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "source_review": "docs/releases/2026-10-13-tax-litigation-course-source-review.json",
+    "fresh_matching_junit_required": true,
+    "new_native_output_visual_review": false,
+    "learner_or_professional_acceptance": false,
+    "installed_host_acceptance": false
   }
 }

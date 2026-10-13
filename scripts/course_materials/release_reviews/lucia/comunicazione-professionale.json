@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "comunicazione-professionale",
-  "course_sha256": "2fa39635f48e3b31bcf8c3da419d0e6ef840833dcfa361f3062900781d9ef72a",
-  "reviewer": "Codex: first-use/source/output inspection; independent claim session 01a0a0b8-d623-7cd0-870c-ec3921855b09 and independent editorial session /root/communication_editorial_isolated_07",
-  "reviewed_at": "2026-09-14T17:03:02.450310+00:00",
-  "review_scope": "Actual current local native packaging with explicitly synthetic professional-review transitions. Exact revised contributions and all 220 claims across both products were independently assessed, followed by a fresh editorial session separate from generation, source assurance and benchmark qualification. The final FAQs preserve the exact reviewed bodies once; root inspected the native packaging and all ten practice emails. Host identities are operator attestations, not API receipts. The outputs are Markdown FAQs and text emails; no HTML, rendered palette, professional approval, sending, real learner, or voice/two-window acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+  "course_sha256": "b0b434535a8bfebeb8f7a451124c699ceef27677ae57061748e8c80f4e4ce990",
+  "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
+  "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
+  "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -493,5 +493,28 @@
     "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
     "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
   },
-  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json"
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
+  "tax_litigation_source_binding_review_20261013": {
+    "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
+    "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
+    "previous_review_identity": {
+      "reviewer": "Codex: first-use/source/output inspection; independent claim session 01a0a0b8-d623-7cd0-870c-ec3921855b09 and independent editorial session /root/communication_editorial_isolated_07",
+      "reviewed_at": "2026-09-14T17:03:02.450310+00:00",
+      "review_scope": "Actual current local native packaging with explicitly synthetic professional-review transitions. Exact revised contributions and all 220 claims across both products were independently assessed, followed by a fresh editorial session separate from generation, source assurance and benchmark qualification. The final FAQs preserve the exact reviewed bodies once; root inspected the native packaging and all ten practice emails. Host identities are operator attestations, not API receipts. The outputs are Markdown FAQs and text emails; no HTML, rendered palette, professional approval, sending, real learner, or voice/two-window acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+      "course_sha256": "2fa39635f48e3b31bcf8c3da419d0e6ef840833dcfa361f3062900781d9ef72a"
+    },
+    "baseline_commit": "589aad7a9d400aaef2498a1a0c772af3cb4637a9",
+    "reviewed_source_commit": "ff753a8583961a88c3071b4f9d72223687e221e4",
+    "previous_course_sha256": "2fa39635f48e3b31bcf8c3da419d0e6ef840833dcfa361f3062900781d9ef72a",
+    "current_course_sha256": "b0b434535a8bfebeb8f7a451124c699ceef27677ae57061748e8c80f4e4ce990",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "source_review": "docs/releases/2026-10-13-tax-litigation-course-source-review.json",
+    "fresh_matching_junit_required": true,
+    "new_native_output_visual_review": false,
+    "learner_or_professional_acceptance": false,
+    "installed_host_acceptance": false
+  }
 }

@@ -38,6 +38,7 @@ jobs:
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_lucia_package_references.py
+          tests/plugins/test_shared_tax_litigation.py
       - name: Check document helper quality
         run: |
           python -m black --check plugins/lucia/scripts/legal_documents.py tests/plugins/test_lucia_legal_documents.py

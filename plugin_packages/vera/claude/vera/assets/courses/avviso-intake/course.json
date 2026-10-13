@@ -159,8 +159,56 @@
       "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
     },
     {
+      "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+      "sha256": "75466084306f68e98e7497de5bcd3f05076b64ca51067b1f859f21b1efe52091"
+    },
+    {
+      "path": "vendor/modules/italian_tax_litigation/references/fonti.md",
+      "sha256": "cbcef6ab5d3ef0d2e17d07268328b34aad8e7dd23c79ca5d5b0bb94ebb3777b2"
+    },
+    {
+      "path": "vendor/modules/italian_tax_litigation/references/procedura-italiana.md",
+      "sha256": "8942876ee32bce255abde67f69ae554dfc0f87150144455b186269d88097a9b3"
+    },
+    {
+      "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+      "sha256": "f915638613441268ff16acc3e7ebff4a86d2e75bfdd3328078afd8ea38e6c811"
+    },
+    {
+      "path": "vendor/modules/italian_tax_litigation/workflow.md",
+      "sha256": "9e32947e8840f2186e2011b4aae957e0eeb13b81a42004f279b16ccd6b4e3de1"
+    },
+    {
       "path": "vendor/modules/reporting_table.py",
       "sha256": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
+    },
+    {
+      "path": "vendor/modules/scripts/legal_documents.py",
+      "sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26"
+    },
+    {
+      "path": "vendor/modules/scripts/legal_documents_labels.json",
+      "sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d"
+    },
+    {
+      "path": "vendor/modules/scripts/legal_documents_review.schema.json",
+      "sha256": "4dca15c02f9ca12d010e4ddbc0bfc9b7e786ddee51987b86a39f9b1bb635e268"
+    },
+    {
+      "path": "vendor/modules/scripts/legal_docx.py",
+      "sha256": "f64755119c0d07e1630dc7718f179b6e0bb78aaa4155c1f18752bd6692f50fbf"
+    },
+    {
+      "path": "vendor/modules/scripts/legal_matter.py",
+      "sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0"
+    },
+    {
+      "path": "vendor/modules/scripts/legal_matter.schema.json",
+      "sha256": "b1fb25dd09d300a79cb7cd68eec45cec7c82afa18d1ba08d05a34d1447971586"
+    },
+    {
+      "path": "vendor/modules/scripts/legal_matter_labels.json",
+      "sha256": "c03f840e81b1f3185cb4be0fedb955adf22845aafd13fc3e78b090c8185129ef"
     },
     {
       "path": "vendor/modules/vera_assurance/__init__.py",
@@ -389,5 +437,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "c4ef5daf9a09411d0d2cbd922b790e3bf2889ef7b3aca32a2f4a048c31729d9f"
+  "canonical_course_sha256": "4c1a1dd014f6984d33ffb8f07d461b9df32ec61d06148f5b8c15e6c58f68c6b8"
 }

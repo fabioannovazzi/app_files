@@ -3021,7 +3021,9 @@ def _lucia_package_entries(
     for name, content in source_entries.items():
         if name in ROOT_OMITTED_PATHS:
             continue
-        if name.startswith("scripts/") or name in {
+        if name.startswith(
+            ("scripts/", "vendor/modules/italian_tax_litigation/")
+        ) or name in {
             "requirements.txt",
             "requirements-shared-core.txt",
             "requirements-shared-ocr.txt",
