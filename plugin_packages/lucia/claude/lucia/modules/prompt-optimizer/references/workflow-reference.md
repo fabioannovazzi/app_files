@@ -34,10 +34,10 @@ use the generated `lawyer_intake` recipe as a boundary: it intentionally does
 not supply semantic questions or choices. Claude should:
 
 - select or assume the research lens semantically and state it when useful;
-- in Default mode, state proposed defaults and unresolved assumptions before
-  asking the user to confirm or switch to Plan mode for native choices;
-- in Plan mode, use `request_user_input` when it is available for unresolved
-  discrete choices, with the recipe's preferred option as the default;
+- use an available, permitted native question tool for unresolved material
+  choices, with focused case-specific options and a free-text path;
+- otherwise ask in chat; follow the host tool's limits for required versus
+  optional questions and never require a conversation-mode switch;
 - disregard the inspection layer as a confirmation decision maker; its
   `required: false` values mean only that confirmation is model-led;
 - ask only material missing facts, normally no more than 3 questions;
@@ -53,11 +53,11 @@ not supply semantic questions or choices. Claude should:
 First check whether the run has a material research-angle decision. This is the
 controlling research angle: problem framing, decision lens, risk appetite, scope
 boundaries, audience, output artifact, and source posture. If that choice exists
-and materially changes the run, Default mode should state the inferred default
-and pause for chat confirmation or invite Plan mode for native choices before
-legal-framework details or drafting. In Plan mode, use the native choice widget
-when the host exposes it. Mode transitions are host/user controlled; Claude can
-request Plan mode, but must not claim that it can switch modes itself.
+and materially changes the run, state the inferred default and ask using an
+available, permitted native question tool or chat. Wait for necessary answers;
+continue independent work while an asynchronous question is pending. For
+nonessential choices, record explicit assumptions and proceed. Do not ask the
+user to change modes or configuration to answer an intake question.
 
 After required choices are fixed, produce a concise execution plan that names
 the confirmed angle, framework, output language, remaining caveats, scripts to

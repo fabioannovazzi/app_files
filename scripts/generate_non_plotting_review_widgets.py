@@ -5877,6 +5877,85 @@ def render_target(target: dict[str, Any]) -> str:
             from new_client_review_widget import customize_review
 
         return customize_review(html)
+    if target["plugin"] in {"prompt-optimizer", "deep-research-validator"}:
+        bridge = (ROOT / "scripts/review_mcp_apps_bridge.js").read_text(
+            encoding="utf-8"
+        )
+        html = (
+            html.replace(
+                'typeof window.openai?.callTool === "function"',
+                "window.mparanzaReviewHost.canCallTools()",
+            )
+            .replace(
+                'typeof window.openai?.callTool !== "function"',
+                "!window.mparanzaReviewHost.canCallTools()",
+            )
+            .replace("window.openai.callTool(", "window.mparanzaReviewHost.callTool(")
+        )
+        html = html.replace(
+            'window.addEventListener("message", (event) => {\n'
+            '      if (event?.data?.method !== "ui/notifications/tool-result") return;\n'
+            "      const nextPayload = pickPayload(event.data.params);",
+            "window.mparanzaReviewHost.onToolResult((result) => {\n"
+            "      const nextPayload = pickPayload(result);",
+        )
+        html = html.replace(
+            "    state.payload = toolOutput();",
+            '    window.addEventListener("mparanza:review-host-ready", render);\n'
+            "    state.payload = toolOutput();",
+        )
+        html = html.replace(
+            "return GROUP_TEXT[lang]?.[group.title] ||",
+            "return group.localized_titles?.[lang] || GROUP_TEXT[lang]?.[group.title] ||",
+        )
+        if target["plugin"] == "deep-research-validator":
+            html = html.replace(
+                "const groups = Array.isArray(CONFIG.detailGroups)",
+                "let groups = Array.isArray(CONFIG.detailGroups)",
+            ).replace(
+                '      return `<div class="workflow-detail workflow-detail--',
+                '      if (["research_issue", "research_cycle", "research_completion", "opinion_review", "source_capture"].includes(item.item_type) || item.data?.text != null) groups = groups.filter(group => group.title === "Research record");\n'
+                '      return `<div class="workflow-detail workflow-detail--',
+            )
+            html = (
+                html.replace(
+                    "for (const item of filteredItems()) ensureDecision",
+                    'for (const item of filteredItems()) if (reviewPayload().review_type !== "legal_tax_pipeline_review" || item.recommended_action) ensureDecision',
+                )
+                .replace(
+                    "      renderChrome();",
+                    "      renderChrome();\n"
+                    '      document.getElementById("use-recommended").disabled = reviewPayload().review_type === "legal_tax_pipeline_review" && !items().some(item => item.recommended_action);',
+                )
+                .replace(
+                    "function statusLabel(status) { return",
+                    'function statusLabel(status) { if (status === "research_review_applied") return uiText("decisionsApplied", "Decisions applied."); return',
+                )
+            )
+        html = html.replace(
+            'result.message || uiText("decisionsSaved", "Decisions saved.")',
+            'uiText("decisionsSaved", "Decisions saved.")',
+        ).replace(
+            'result.message || uiText("decisionsApplied", "Decisions applied.")',
+            'uiText("decisionsApplied", "Decisions applied.")',
+        )
+        html = html.replace(
+            "widgetState?.run_id === reviewPayload().run_id &&",
+            "widgetState?.run_id === reviewPayload().run_id && "
+            "widgetState.review_payload_sha256 === "
+            "(state.payload.review_reference?.review_payload_sha256 || "
+            "state.payload.ui_decisions?.review_payload_sha256) &&",
+        ).replace(
+            "run_id: reviewPayload().run_id || null, decisions: state.decisions",
+            "run_id: reviewPayload().run_id || null, "
+            "review_payload_sha256: state.payload.review_reference?.review_payload_sha256 || "
+            "state.payload.ui_decisions?.review_payload_sha256, decisions: state.decisions",
+        )
+        html = html.replace(
+            "state.payload = nextPayload;",
+            "state.payload = { ...state.payload, ...nextPayload };",
+        )
+        html = html.replace("<script>", f"<script>\n{bridge}\n", 1)
     return html
 
 
@@ -5930,6 +6009,67 @@ def adapter_config(target: dict[str, Any]) -> dict[str, Any]:
         config["widgetType"] = "report_builder_review"
     if target["plugin"] == "prompt-optimizer":
         config["widgetType"] = "prompt_optimizer_review"
+    if target["plugin"] == "deep-research-validator":
+        config["detailGroups"] = [
+            *config["detailGroups"],
+            {
+                "title": "Research record",
+                "localized_titles": {
+                    "it": "Registro di ricerca",
+                    "en": "Research record",
+                    "fr": "Dossier de recherche",
+                    "de": "Rechercheprotokoll",
+                    "es": "Registro de investigación",
+                },
+                "variant": "prose",
+                "fields": [
+                    "preview_notice",
+                    "character_count",
+                    "question",
+                    "purpose",
+                    "findings",
+                    "validation",
+                    "challenge",
+                    "treatment",
+                    "evidence",
+                    "limits",
+                    "cycle_ids",
+                    "coverage_review",
+                    "stopping_rationale",
+                    "status",
+                    "outcome",
+                    "rationale",
+                    "comparison",
+                    "comparison_review",
+                    "search_record",
+                    "text",
+                    "preview",
+                ],
+                "empty": "No research record fields.",
+            },
+        ]
+        config["localized"] = {
+            code: {**copy, "title": title, "reviewTitle": title}
+            for code, copy, title in (
+                ("it", config["localized"]["it"], "Revisione ricerca legale e fiscale"),
+                ("en", {}, "Legal and tax research review"),
+                (
+                    "fr",
+                    config["localized"]["fr"],
+                    "Revue de recherche juridique et fiscale",
+                ),
+                (
+                    "de",
+                    config["localized"]["de"],
+                    "Prüfung der Rechts- und Steuerrecherche",
+                ),
+                (
+                    "es",
+                    config["localized"]["es"],
+                    "Revisión de investigación jurídica y fiscal",
+                ),
+            )
+        }
     return config
 
 

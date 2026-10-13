@@ -221,8 +221,8 @@ Run UX:
 
 1. First check semantically whether there is a material research-angle decision: the
    controlling frame, decision lens, risk appetite, scope boundaries, audience,
-   or source posture. Ask the choice in chat when a material research-angle
-   decision is still unresolved.
+   or source posture. Ask only if unresolved, using an available, permitted
+   native question tool or chat.
 2. Treat `angle_confirmation.required` and
    `jurisdiction_confirmation.required` as non-decisions from the inspection
    layer. Their normal value is `false` with decision owner `codex_or_user`.
@@ -237,9 +237,9 @@ Run UX:
    numbered questions with a short "why this matters" phrase for each, unless
    a native widget is available for the same decision.
 6. Do not ask whether to optimize, package, validate, or write source-domain
-   sidecars. Preserve an explicit route choice and follow the entry product's
-   research-choice handoff before inferring a route. Infer `document_type` from the question
-   when they are clear. Ask only when the choice materially changes the answer
+   sidecars. New research uses the current-host shared research method. Preserve
+   supplied-document review scope. Infer `document_type` from the question
+   when it is clear. Ask only when the choice materially changes the answer
    and cannot be inferred.
 7. After required choices are fixed, state a concise execution plan naming
    confirmed assumptions, remaining caveats, scripts to run, and deliverables,
@@ -272,8 +272,9 @@ supply a missing custom value.
 The inspection artifact does not decide that angle or jurisdiction
 confirmation is required and does not provide generic preferred options. Claude
 must make that semantic determination from the actual matter. When confirmation
-is materially required, generate fact-specific options, use native Plan-mode
-choices when available, or ask in chat and wait.
+is materially required, generate fact-specific options and use an available,
+permitted native question tool or chat. Wait for a necessary answer; respect
+the current tool's restrictions and continue independent work meanwhile.
 
 For repository-wide Claude UX compatibility, map the standard artifacts to this
 conversational flow: a checklist can be a short progress note; a Run Intake table
@@ -321,8 +322,8 @@ The user should not interact directly with CLI scripts. Treat scripts as interna
 
 ## Qualified Source Domains
 
-The old web workflow produced a copyable list of reliable websites for Deep
-Research. Preserve that behavior in the plugin.
+Provide the model-curated, copyable source list as an ordinary research
+artifact. It does not select a separate research mode.
 
 Do not use deterministic source-domain selection. Claude must curate any
 "Qualified source domains" list from the confirmed legal framework and the

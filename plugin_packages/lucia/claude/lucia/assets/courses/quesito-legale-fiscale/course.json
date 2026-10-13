@@ -29,7 +29,7 @@
   "sources": [
     {
       "path": "modules/deep-research-validator/assets/deep-research-review-widget.html",
-      "sha256": "88a55257c6e258006ff86fb375e37553956312f509b0017048dce7cc02b3151f"
+      "sha256": "223a1a187be3ad229592c49ac359fe97ad147a7e88da38d364e17b383f54fa07"
     },
     {
       "path": "modules/deep-research-validator/assets/icon.svg",
@@ -37,7 +37,7 @@
     },
     {
       "path": "modules/deep-research-validator/assets/review-workbench-adapter.json",
-      "sha256": "5f295f506e378fee83909433dff20fe940ed9b5b0688fb7018d26fbff16535f8"
+      "sha256": "f74ce8ffe2133dd3b8677df4cd2103581c6a81c5806bb912ea5c09bfd11a4e17"
     },
     {
       "path": "modules/deep-research-validator/references/workflow-reference.md",
@@ -72,8 +72,12 @@
       "sha256": "cf99f33ccf373a8d6816cb72304912bc1995f576e708155746e0c89649d58d37"
     },
     {
+      "path": "modules/deep-research-validator/scripts/pipeline_review.py",
+      "sha256": "3c9967dd329f9b20f294105eb92b20c5af540587f9544e62818ad59aae8d2882"
+    },
+    {
       "path": "modules/deep-research-validator/scripts/research_record.py",
-      "sha256": "43b22498a68c530a66eef6214f958c43ddf464eda9e31c825b24e9f3139236be"
+      "sha256": "2a0c8e3a694c74f757970511dd7699b19a4a8f125be56519a3aff024b13a9c3b"
     },
     {
       "path": "modules/deep-research-validator/scripts/review_session.py",
@@ -81,7 +85,7 @@
     },
     {
       "path": "modules/deep-research-validator/skills/deep-research/SKILL.md",
-      "sha256": "751387d630383a9862df80c16d2ac302d6547bfa0fdc6f67cf391734e20a87ea"
+      "sha256": "b8075da9b1858dcba2836d745a77fb8e47eab179356e4bc763a5564b2ef63d3a"
     },
     {
       "path": "modules/deep-research-validator/skills/deep-research/references/evaluation.md",
@@ -666,5 +670,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "8fa155d6c1077b43109f3be36e76d8c930d63e79f282266f178e7e0b25141759"
+  "canonical_course_sha256": "bc0f174587ebcce24ba888a9d7f9f1f57896ac0721ac6aa666992855cf789e2c"
 }
