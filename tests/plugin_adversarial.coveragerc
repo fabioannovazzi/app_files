@@ -3,6 +3,9 @@ include =
     plugins/deep-research-validator/scripts/adversarial_opinion.py
     plugins/deep-research-validator/scripts/research_record.py
     plugins/deep-research-validator/scripts/pipeline_review.py
+    plugins/deep-research-validator/scripts/evidence_refs.py
+    plugins/deep-research-validator/scripts/source_captures.py
+    plugins/deep-research-validator/scripts/research_evaluation.py
 relative_files = True
 
 [report]

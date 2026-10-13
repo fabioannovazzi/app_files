@@ -544,6 +544,8 @@ jobs:
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_vera_adversarial_opinion.py
           tests/plugins/test_legal_tax_research_record.py
+          tests/plugins/test_legal_tax_evidence_integrity.py
+          tests/plugins/test_legal_tax_evaluation.py
           tests/plugins/test_legal_tax_native_ui.py
           tests/plugins/test_vera_validated_answer_pipeline.py
           tests/plugins/test_prompt_optimizer_plugin.py
@@ -552,10 +554,10 @@ jobs:
           --cov --cov-config=tests/plugin_adversarial.coveragerc
       - name: Check formatting, typing and security
         run: |
-          python -m black --check plugins/deep-research-validator/scripts/adversarial_opinion.py tests/plugins/test_vera_adversarial_opinion.py plugins/deep-research-validator/scripts/research_record.py tests/plugins/test_legal_tax_research_record.py plugins/deep-research-validator/scripts/pipeline_review.py tests/plugins/test_legal_tax_native_ui.py
-          python -m isort --check-only plugins/deep-research-validator/scripts/adversarial_opinion.py tests/plugins/test_vera_adversarial_opinion.py plugins/deep-research-validator/scripts/research_record.py tests/plugins/test_legal_tax_research_record.py plugins/deep-research-validator/scripts/pipeline_review.py tests/plugins/test_legal_tax_native_ui.py
-          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/deep-research-validator/scripts/adversarial_opinion.py plugins/deep-research-validator/scripts/research_record.py plugins/deep-research-validator/scripts/pipeline_review.py
-          python -m bandit -q plugins/deep-research-validator/scripts/adversarial_opinion.py plugins/deep-research-validator/scripts/research_record.py plugins/deep-research-validator/scripts/pipeline_review.py
+          python -m black --check plugins/deep-research-validator/scripts/adversarial_opinion.py tests/plugins/test_vera_adversarial_opinion.py plugins/deep-research-validator/scripts/research_record.py tests/plugins/test_legal_tax_research_record.py plugins/deep-research-validator/scripts/pipeline_review.py tests/plugins/test_legal_tax_native_ui.py plugins/deep-research-validator/scripts/evidence_refs.py plugins/deep-research-validator/scripts/source_captures.py plugins/deep-research-validator/scripts/research_evaluation.py tests/plugins/test_legal_tax_evidence_integrity.py tests/plugins/test_legal_tax_evaluation.py
+          python -m isort --check-only plugins/deep-research-validator/scripts/adversarial_opinion.py tests/plugins/test_vera_adversarial_opinion.py plugins/deep-research-validator/scripts/research_record.py tests/plugins/test_legal_tax_research_record.py plugins/deep-research-validator/scripts/pipeline_review.py tests/plugins/test_legal_tax_native_ui.py plugins/deep-research-validator/scripts/evidence_refs.py plugins/deep-research-validator/scripts/source_captures.py plugins/deep-research-validator/scripts/research_evaluation.py tests/plugins/test_legal_tax_evidence_integrity.py tests/plugins/test_legal_tax_evaluation.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/deep-research-validator/scripts/adversarial_opinion.py plugins/deep-research-validator/scripts/research_record.py plugins/deep-research-validator/scripts/pipeline_review.py plugins/deep-research-validator/scripts/evidence_refs.py plugins/deep-research-validator/scripts/source_captures.py plugins/deep-research-validator/scripts/research_evaluation.py
+          python -m bandit -q plugins/deep-research-validator/scripts/adversarial_opinion.py plugins/deep-research-validator/scripts/research_record.py plugins/deep-research-validator/scripts/pipeline_review.py plugins/deep-research-validator/scripts/evidence_refs.py plugins/deep-research-validator/scripts/source_captures.py plugins/deep-research-validator/scripts/research_evaluation.py
           node --check static/shared/product-function-pages.js
 
   business-planning-decisions:

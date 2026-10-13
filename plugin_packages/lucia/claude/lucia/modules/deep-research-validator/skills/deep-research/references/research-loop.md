@@ -28,8 +28,9 @@ The following is an illustrative record shape, not findings to copy:
 
 ```json
 {
-  "schema_version": "1.0",
+  "schema_version": "2.0",
   "method": "shared_agentic_legal_tax_research",
+  "answer_revision_sha256": "SHA256 of the actual delivered answer bytes",
   "cycles": [
     {
       "id": "cycle-1",
@@ -47,7 +48,11 @@ The following is an illustrative record shape, not findings to copy:
       "status": "resolved",
       "cycle_ids": ["cycle-1"],
       "treatment": "Actual follow-up, changed conclusion and affected claims.",
-      "evidence": ["Source locator and passage actually examined"],
+      "treatment_type": "source_assessment",
+      "evidence": [{"kind": "source_capture", "artifact": "research/sources/text-<actual-sha>.txt", "sha256": "actual text SHA256", "inventory": "research/source_inventory-<actual-sha>.json", "inventory_sha256": "actual inventory SHA256", "source_id": "source-001", "capture_id": "actual examined capture ID", "start_char": 0, "end_char": 42}],
+      "effects": [{"kind": "claim", "artifact": "claims_review.json", "sha256": "actual final review SHA256", "claim_index": 1}],
+      "dependencies": [],
+      "dependency_review": "Actual assessment of effects on dependent issues and claims",
       "limits": []
     }
   ],
@@ -102,3 +107,35 @@ A changed artifact requires renewed substantive review before rebinding.
 Never refresh hashes alone to make a stale review pass. Without local tooling,
 keep the issue/cycle history and reviews in chat and disclose missing durable
 records and hash verification; do not report that a helper ran.
+
+Schema 2.0 requires nonempty structured evidence and effects for every treated
+issue. References pin an existing file revision and an actual JSON pointer,
+claim index or character span. Treatment types are model-declared work:
+`source_assessment`, `fact_confirmation`, `scope_revision`, `calculation`,
+`claim_removal`, `qualification` or `professional_judgment`. Use source/access
+records for a source assessment, facts for fact confirmation, scope/contract
+for scope revision, calculations for arithmetic and claim/note references for
+professional judgment. A qualification can reference claims, sources or facts.
+A removed claim remains in the final review with its removal disposition.
+Effects reference the current reviewed claim, answer, contract or scope.
+Dependencies are actual other issue IDs; assess changed dependent conclusions
+before closure. Empty evidence, free-form invented locators and mere proposals
+cannot close an issue. No reference schema determines whether an action is
+substantively adequate.
+
+To pin hashes without guessing them, save a model-selected reference object
+without its hash fields and run:
+
+```bash
+python scripts/evidence_refs.py --output-dir <client-run-output> --selection <selected-reference.json>
+```
+
+This read-only helper emits a fully resolved reference. It does not select
+sources, infer support, or repair a mismatched retained capture. Keep the actual
+answer revision SHA256 in the record; changing the answer requires reassessment.
+Binding automatically includes referenced files and the final review inventories,
+reruns the final review integrity checks, rejects untreated review defects, and
+requires evidence limits or professional judgment to remain visible in closure.
+Preserve `source_capture_manifest.json`, immutable inventory snapshots and all
+original/text captures when registering the complete run in Studio Archive.
+The newest `source_inventory.json` is a pointer, not a substitute for history.

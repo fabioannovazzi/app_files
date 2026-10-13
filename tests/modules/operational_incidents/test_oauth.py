@@ -145,6 +145,7 @@ def test_saved_connection_refresh_keeps_identity_and_previous_task_remedy(host):
         receipt["incident_id"],
         Remedy(
             kind="user-action",
+            target_report_id=receipt["report_id"],
             summary="Resume the retained synthetic task",
             evidence="Synthetic startup failure",
             instructions="Resume the original task",

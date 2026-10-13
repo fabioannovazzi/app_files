@@ -66,6 +66,15 @@ __all__ = [
     "write_validation_package",
 ]
 
+import importlib.util  # noqa: E402
+
+_evidence_spec = importlib.util.spec_from_file_location(
+    "legal_tax_package_evidence", Path(__file__).with_name("evidence_refs.py")
+)
+assert _evidence_spec and _evidence_spec.loader
+_evidence = importlib.util.module_from_spec(_evidence_spec)
+_evidence_spec.loader.exec_module(_evidence)
+
 ANSWER_CONTRACT_REQUIRED_FIELDS = (
     "schema_version",
     "question_domain",
@@ -112,7 +121,7 @@ ANSWER_CONTRACT_ENUMS = {
     "correction_policy": {"correct_when_supported", "review_only"},
     "judgment_policy": {"flag_for_professional_review"},
 }
-REVIEW_SCHEMA_VERSION = "2.1"
+REVIEW_SCHEMA_VERSION = "2.2"
 ALLOWED_SUPPORT_STATUSES = {
     "supported",
     "partially_supported",
@@ -376,7 +385,7 @@ def _resolve_source(
 def _captured_source_text(
     source: dict[str, Any],
     source_base_dir: Path | None,
-) -> tuple[str, str]:
+) -> tuple[str, str, str]:
     """Read a bounded captured source snapshot or fall back to its excerpt.
 
     Relative capture paths are accepted only inside the source-inventory
@@ -384,15 +393,7 @@ def _captured_source_text(
     does not assess source meaning or authority.
     """
 
-    relative = _clean_text(source.get("captured_text_path"))
-    if relative and source_base_dir is not None:
-        candidate = (source_base_dir / relative).resolve()
-        base = source_base_dir.resolve()
-        if candidate.is_relative_to(base) and candidate.is_file():
-            return candidate.read_text(encoding="utf-8", errors="ignore"), _clean_text(
-                source.get("capture_scope") or "captured_text"
-            )
-    return str(source.get("excerpt") or ""), "inventory_excerpt"
+    return _evidence.read_capture(source, source_base_dir)
 
 
 def _exact_passage_observation(
@@ -402,7 +403,11 @@ def _exact_passage_observation(
 ) -> dict[str, Any]:
     source_ref = _clean_text(source_check.get("source_ref"))
     resolution, source = _resolve_source(source_ref, sources)
-    passage = _clean_text(source_check.get("cited_passage"))
+    passage = _clean_text(
+        source_check.get("original_passage")
+        if source_check.get("passage_kind") == "translation"
+        else source_check.get("cited_passage")
+    )
     observation: dict[str, Any] = {
         "source_ref": source_ref,
         "resolution_status": resolution,
@@ -410,23 +415,120 @@ def _exact_passage_observation(
         "access_status": source.get("status") if source else "not_observed",
         "exact_passage_presence": "not_tested",
         "observation_scope": "none",
+        "capture_id": None,
+        "capture_integrity": "not_tested",
         "meaning": (
             "Exact presence is a mechanical observation only and does not decide "
             "semantic support."
         ),
     }
-    if source is None or not passage:
+    if source is None:
         return observation
-    source_text, scope = _captured_source_text(source, source_base_dir)
+    if (
+        source.get("capture_id")
+        or source.get("capture_history")
+        or source_check.get("capture_id")
+    ):
+        requested = source_check.get("capture_id")
+        if not requested:
+            observation["capture_integrity"] = "capture_reference_missing"
+            return observation
+        if requested != source.get("capture_id"):
+            matches = [
+                item
+                for item in source.get("capture_history", [])
+                if item.get("capture_id") == requested
+            ]
+            if len(matches) != 1:
+                observation["capture_integrity"] = "capture_reference_mismatch"
+                return observation
+            source = matches[0]
+        observation["capture_id"] = requested
+        observation["access_status"] = source.get("status")
+    observation["source_bytes_sha256"] = source.get("source_bytes_sha256")
+    observation["captured_original_path"] = source.get("captured_original_path")
+    source_text, scope, integrity = _captured_source_text(source, source_base_dir)
     observation["observation_scope"] = scope
-    if not source_text.strip():
+    observation["capture_integrity"] = integrity
+    if (
+        integrity not in {"verified", "excerpt_only"}
+        or not passage
+        or not source_text.strip()
+    ):
         return observation
-    target = _clean_text(passage).casefold()
-    haystack = _clean_text(source_text).casefold()
+    target = _clean_text(passage)
+    haystack = _clean_text(source_text)
+    if source_check.get("passage_kind") not in {"verbatim", "translation"}:
+        target, haystack = target.casefold(), haystack.casefold()
     observation["exact_passage_presence"] = (
         "present" if target in haystack else "absent"
     )
     return observation
+
+
+def _passage_disposition_errors(
+    check: dict[str, Any], observation: dict[str, Any], base: Path | None
+) -> tuple[list[str], bool]:
+    """A literal anomaly needs treatment; matching never establishes support."""
+    kind = check.get("passage_kind")
+    if not isinstance(kind, str) or kind not in {
+        "none",
+        "verbatim",
+        "paraphrase",
+        "translation",
+    }:
+        return ["passage_kind_required"], False
+    if kind == "none" and _clean_text(check.get("cited_passage")):
+        return ["passage_kind_conflicts_with_text"], False
+    if kind == "translation" and not _clean_text(check.get("original_passage")):
+        return ["translation_requires_original_passage"], False
+    if kind == "verbatim" and not _clean_text(check.get("cited_passage")):
+        return ["verbatim_requires_passage"], False
+    if (
+        kind not in {"verbatim", "translation"}
+        or observation["exact_passage_presence"] == "present"
+    ):
+        return [], False
+    disposition = check.get("passage_disposition")
+    if not isinstance(disposition, dict) or not _clean_text(
+        disposition.get("analysis")
+    ):
+        return ["verbatim_discrepancy_requires_disposition"], False
+    if disposition.get("capture_id") != observation.get("capture_id"):
+        return ["passage_disposition_capture_mismatch"], False
+    if disposition.get("status") == "evidence_limit":
+        return (
+            ([], True)
+            if check.get("limitations")
+            else (["passage_limit_requires_disclosure"], False)
+        )
+    if (
+        disposition.get("status") != "verified_in_original"
+        or base is None
+        or not observation.get("captured_original_path")
+    ):
+        return ["passage_disposition_requires_original_inspection"], False
+    reference = disposition.get("reference")
+    if not isinstance(reference, dict) or reference.get("kind") != "inspection_note":
+        return ["passage_disposition_requires_inspection_reference"], False
+    try:
+        note = _evidence.reference_value(base, reference)
+    except (ValueError, OSError):
+        return ["passage_inspection_reference_invalid"], False
+    original = (
+        check.get("original_passage")
+        if kind == "translation"
+        else check.get("cited_passage")
+    )
+    if (
+        not isinstance(note, dict)
+        or note.get("capture_id") != observation.get("capture_id")
+        or note.get("source_bytes_sha256") != observation.get("source_bytes_sha256")
+        or note.get("quoted_passage") != original
+        or not _clean_text(note.get("original_locator"))
+    ):
+        return ["passage_inspection_note_does_not_match_capture"], False
+    return [], False
 
 
 def validate_answer_contract(answer_contract: dict[str, Any]) -> dict[str, Any]:
@@ -860,6 +962,36 @@ def build_audit(
                     source_base_dir,
                 )
                 source_observations.append(observation)
+                if observation["capture_integrity"] not in {
+                    "verified",
+                    "verified_metadata_only",
+                    "excerpt_only",
+                    "not_tested",
+                }:
+                    consistency_errors.append(
+                        {
+                            "scope": "source_check",
+                            "claim_index": claim_index,
+                            "source_ref": source_check["source_ref"],
+                            "error": "retained_capture_integrity_"
+                            + observation["capture_integrity"],
+                        }
+                    )
+                passage_errors, passage_limit = _passage_disposition_errors(
+                    source_check, observation, source_base_dir
+                )
+                for error in passage_errors:
+                    consistency_errors.append(
+                        {
+                            "scope": "source_check",
+                            "claim_index": claim_index,
+                            "source_ref": source_check["source_ref"],
+                            "error": error,
+                        }
+                    )
+                if passage_limit:
+                    evidence_limited_claims.append(claim_index)
+                    source_fidelity_limited_claims.append(claim_index)
                 if observation["access_status"] not in {"available", "not_observed"}:
                     evidence_limited_claims.append(claim_index)
                 if observation["resolution_status"] != "resolved":
@@ -1614,11 +1746,20 @@ def write_validation_package(
     client_engagement: dict[str, Any] | None = None,
     client_run_id: str | None = None,
 ) -> dict[str, Path]:
-    output_dir.mkdir(parents=True, exist_ok=True)
     document_inventory = _read_json(document_inventory_path)
     source_inventory = _read_json(source_inventory_path)
     claims_review = _read_json(claims_review_path)
     answer_contract = _read_json(answer_contract_path)
+    validated_document = str(claims_review.get("validated_document", "") or "")
+    if validated_document_path is not None:
+        supplied_document = validated_document_path.read_text(encoding="utf-8")
+        # Exact answer identity is mechanical; replacing reviewed text is not review.
+        if supplied_document.strip() != validated_document.strip():
+            raise ValueError(
+                "The supplied document differs from the reviewed answer; "
+                "perform a renewed substantive review before packaging."
+            )
+    output_dir.mkdir(parents=True, exist_ok=True)
     run_intake = write_run_intake(
         output_dir,
         document_inventory_path=document_inventory_path,
@@ -1632,18 +1773,6 @@ def write_validation_package(
         client_engagement=client_engagement,
         client_run_id=client_run_id,
     )
-    validated_document = (
-        validated_document_path.read_text(encoding="utf-8")
-        if validated_document_path and validated_document_path.exists()
-        else str(claims_review.get("validated_document", "") or "")
-    )
-    if (
-        validated_document.strip()
-        and not str(claims_review.get("validated_document") or "").strip()
-    ):
-        claims_review = dict(claims_review)
-        claims_review["validated_document"] = validated_document.strip()
-
     audit = build_audit(
         document_inventory,
         source_inventory,

@@ -29,7 +29,7 @@
       {
         "id": "report-and-source-review",
         "purpose": "Assess answer-contract conformance, claim coverage, source identity, semantic support, reasoning quality, professional-judgment boundaries, and proposed corrections",
-        "content": "Generated or supplied answer, including a Deep Research report, memo, or one-page letter; answer contract; claims and surrounding text; citations; normalized captured text from fetched public pages or local source files, including extracted PDF page text and page-coverage status, and HTML text parsed without tag attributes, comments, scripts or styles; source-identity, semantic-support, reasoning, issue-treatment, disposition, and professional-judgment assessments; diagnostics; proposed corrections and review decisions. The canonical review record keeps each claim or scope assessment once and uses local references for mechanical observations and the complete audit rather than duplicating those records in each review item.",
+        "content": "Generated or supplied answer, including a Deep Research report, memo, or one-page letter; answer contract; claims and surrounding text; citations; normalized captured text from fetched public pages or local source files, including extracted PDF page text and page-coverage status, and HTML text parsed without tag attributes, comments, scripts or styles; source-identity, semantic-support, reasoning, issue-treatment, disposition, and professional-judgment assessments; diagnostics; proposed corrections and review decisions. The canonical review record keeps each claim or scope assessment once and uses local references for mechanical observations and the complete audit rather than duplicating those records in each review item. Stable source resource IDs, selected capture IDs, immutable original bytes and extracted text, exact inventory revisions, passage types and actual original-inspection notes, pinned treatment evidence/effects and issue dependencies may be selected for the same host-model review. Developer evaluation records can retain the actual question, materials, research history, delivered answer, host/model/tool observations, package identity and assessor judgment locally; no evaluation helper calls a model or sends evidence externally.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -192,12 +192,20 @@
     {
       "id": "faithful-source-encoding-preview",
       "control": "Source review previews decode UTF-8 without modifying original captures. Unsupported source encodings remain explicit metadata limits; full original-byte hashes still bind review decisions. Required control records remain strict UTF-8."
+    },
+    {
+      "id": "immutable-capture-and-reviewed-answer-identity",
+      "control": "Capture storage appends exact original and extracted bytes with persistent resource IDs under an OS lock, retains inventory revisions and verifies hashes before consuming evidence. Packaging rejects a different delivered answer before writing. Issue closure resolves pinned evidence/effects, reruns final review integrity and binds consumed artifacts; these mechanical checks do not establish legal correctness or substantive adequacy."
+    },
+    {
+      "id": "actual-evaluation-retention",
+      "control": "Evaluation tooling copies selected existing artifacts locally, pins the actual product ZIP version and hash, records host/model/tool observation limits and binds any actual assessment to exact final-answer bytes. Comparison withholds workflow labels in a separate assessor directory while preserving content; file integrity cannot certify execution authenticity or professional quality."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-13",
+    "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "df0f1c1c3aab9fbabb0f799376e354aec8fdaf2a9df1f534aee52cca32ef434b"
+    "source_fingerprint": "7d3aed9d1fac75dfcf3e59ef4c0f17ea68012bc258b1291b4d69ae60f88dafd9"
   }
 }

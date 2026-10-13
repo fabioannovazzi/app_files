@@ -68,7 +68,7 @@
       "destination": "Mparanza HTTPS operational-incident API and Streamable HTTP MCP endpoint",
       "purpose": "Diagnose observed execution/setup failures, return installation-specific remedies and receive actual recovery outcomes",
       "content": "Random installation UUID and opaque capability, Vera/host/runtime versions, platform and workflow technical IDs, failed stage, complete available technical diagnostic chains and measurements, explicit missing-measurement reasons, retry IDs and actual recovery outcomes. No professional helper stdout, client documents, case text, user prompts or arbitrary task logs. Known path, email and credential patterns are removed from technical messages; this mechanical filter does not establish semantic privacy. The host agent must select technical evidence without unrelated personal/client material. The remote channel does not read local files. Failed helpers retain complete stderr privately on disk; stderr may include unrelated private/client text and is read by the selected host model for semantic review under its existing account. Raw stderr is not forwarded to Mparanza. Only reviewed relevant technical diagnostics, linked by the original report UUID, are submitted as supplemental evidence. Professional stdout is not captured.",
-      "retention": "Local capability, pending reports and receipts persist outside client folders. The service retains incident, report, remedy and outcome records; no automatic deletion period is enforced. Status access is scoped by the opaque capability. Pending diagnostic pointers and raw stderr persist in the private incident directory until a matching actual recorded supplementation receipt is acknowledged; unsuccessful review or delivery retains them. Supplementation never replaces the original recovery episode or reopens recovered records.",
+      "retention": "Local capability, pending reports and receipts persist outside client folders. The service retains incident, report, remedy and outcome records; no automatic deletion period is enforced. Status access is scoped by the opaque capability. Pending diagnostic pointers and raw stderr persist in the private incident directory until a matching actual recorded supplementation receipt is acknowledged; unsuccessful review or delivery retains them. Supplementation never replaces the original recovery episode or reopens recovered records. Recorded original/outcome receipts can acknowledge only their exact local queued UUID without replacing the local capability or saved connector identity. Remedy revisions are retained from the surviving migration revision onward; overwritten legacy revisions are not reconstructed.",
       "activation": "automatic_on_first_use",
       "optional": false,
       "requires_confirmation": false,
@@ -81,7 +81,11 @@
         "The remote connector is independent of local command-process startup. If the host cannot expose/connect it, no successful report is claimed.",
         "Only two built-in setup/preparation retries may execute automatically, once per remedy revision. Client documents, ACLs and security settings are not changed.",
         "A published update is not recovery. The failed operation must actually execute successfully before that installation delivery closes.",
-        "Supplemental diagnostics require ownership of the original report and matching execution metadata; they are stored separately and cannot change the original report UUID, delivery status or remedy revision. Raw local diagnostic files can only be removed by acknowledging a matching recorded supplement."
+        "Supplemental diagnostics require ownership of the original report and matching execution metadata; they are stored separately and cannot change the original report UUID, delivery status or remedy revision. Raw local diagnostic files can only be removed by acknowledging a matching recorded supplement.",
+        "Actionable remedies target an explicit original report. Each delivery uses its own applicable revision; a different report with the same generic signal does not inherit that remedy.",
+        "A cached actual connector status permits only the two fixed retries for an existing matching local receipt and latest report. It performs no direct HTTP polling or identity adoption. Missing local receipts cannot be fabricated to authorise a retry.",
+        "A helper success records readiness. Host AI verification of the original task and inputs is required for all recovered outcomes, including setup/startup. Delayed failures cannot reopen an already recovered episode.",
+        "Failed fixed retries retain complete stderr privately for semantic review. Raw recovery stderr is not automatically transmitted."
       ]
     }
   ],
@@ -138,6 +142,6 @@
     "reviewed_at": "2026-10-13",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "ee9bf6531b418df17339b054bfa511d76d5c1f6312beb49e9bd19ab8ba149178"
+    "source_fingerprint": "e3534cbe71208d289179354f51fe3498d4fa55fc54a1325c58f395b61a70d8f6"
   }
 }

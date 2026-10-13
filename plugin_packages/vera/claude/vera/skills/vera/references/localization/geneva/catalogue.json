@@ -1,8 +1,8 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/app-files-research-review-encoding/plugins/vera",
+  "root": "/Users/fabio/Documents/GitHub/app_files/plugins/vera",
   "version": "0.1.373",
-  "captured_at": "2026-10-13T19:37:17.141587+00:00",
+  "captured_at": "2026-10-13T22:34:08.455550+00:00",
   "catalogue_fingerprint": "955e7093fec0e1ced0f5ac741918cbdbf084e33357db31b94aeeed1e235da917",
   "manifest_sha256": "28649617949b6988859aff4c25865c09f243a772c2af57e0e1dfa8d805430dd3",
   "entries": [

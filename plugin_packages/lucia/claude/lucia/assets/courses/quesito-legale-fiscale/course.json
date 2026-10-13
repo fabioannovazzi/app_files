@@ -41,7 +41,7 @@
     },
     {
       "path": "modules/deep-research-validator/references/workflow-reference.md",
-      "sha256": "b191b355896206ac3a2dc82bc9c9a7636e224270dab0bd38173d3467b31ee039"
+      "sha256": "928ed2c8c8f26b559987cc72321aa784296b0f97f9b536d492fbdb4984c02a3e"
     },
     {
       "path": "modules/deep-research-validator/requirements.txt",
@@ -60,28 +60,40 @@
       "sha256": "3bff292963b959762c57785c9b7f9a796a0454eb7438880ef672bed13c1ae5d5"
     },
     {
+      "path": "modules/deep-research-validator/scripts/evidence_refs.py",
+      "sha256": "b47cbe13777a3cf96398ca39312ccc234557ad7a62ab654c9cccae2b498fd878"
+    },
+    {
       "path": "modules/deep-research-validator/scripts/inspect_document.py",
       "sha256": "f76c0db4dc72942ecf90195c035177d263cb122e90b49cdb8a6550c66fbfbb8d"
     },
     {
       "path": "modules/deep-research-validator/scripts/inspect_sources.py",
-      "sha256": "e257e2ce924c6b9b74d724bcb1b584301d6ab02f98a2a6c1986135a3c8f1ba7f"
+      "sha256": "6f244ed1133a1910e10ba72e7dfbd919b14f85fb3258f803c2fb9d2e7953c454"
     },
     {
       "path": "modules/deep-research-validator/scripts/package_validation.py",
-      "sha256": "cf99f33ccf373a8d6816cb72304912bc1995f576e708155746e0c89649d58d37"
+      "sha256": "8ae8c808d51af8c0ccfee0ebaf09a2ef7955aba4745efdd431a56a6f3ab00412"
     },
     {
       "path": "modules/deep-research-validator/scripts/pipeline_review.py",
       "sha256": "29fe95c4c3ce7cee87efc310d90d1da504039875fb263a843968421a0e617f79"
     },
     {
+      "path": "modules/deep-research-validator/scripts/research_evaluation.py",
+      "sha256": "51a74c3dbdbcb1bbbb61bdff3efe1ed36214589842b3135263b42d43939964ba"
+    },
+    {
       "path": "modules/deep-research-validator/scripts/research_record.py",
-      "sha256": "2a0c8e3a694c74f757970511dd7699b19a4a8f125be56519a3aff024b13a9c3b"
+      "sha256": "b55877176b07eabb789fe5294eed6a8b61cdda13f1a152128d17f271b07acc98"
     },
     {
       "path": "modules/deep-research-validator/scripts/review_session.py",
       "sha256": "d37dc93f9ca7d1ff2944835f3c76a1b8eded864b7206955b3f3b785210bbfa5c"
+    },
+    {
+      "path": "modules/deep-research-validator/scripts/source_captures.py",
+      "sha256": "aad36bafbcafe2e1bfe49ed17618a6d78849ade0a1a40edd09475892fb8eb78a"
     },
     {
       "path": "modules/deep-research-validator/skills/deep-research/SKILL.md",
@@ -89,15 +101,15 @@
     },
     {
       "path": "modules/deep-research-validator/skills/deep-research/references/evaluation.md",
-      "sha256": "2e81c2bd62094b071e88a621e4cac8232d6286b8b3bdf65e6691b94982f98358"
+      "sha256": "9a19cd336b8567e3ecc66d21e0fe519d2c0691fc6a02d53d0cd9d4d8393af6e7"
     },
     {
       "path": "modules/deep-research-validator/skills/deep-research/references/research-loop.md",
-      "sha256": "b8d4d299f3c8f8f025c2eb24334332e777142df29a9776f546e8dd2769c8f361"
+      "sha256": "d2ea840a053771a338e0b6adc5d771f3672114e3d459aadb60222ef1d56b8135"
     },
     {
       "path": "modules/deep-research-validator/skills/legal-tax-answer-review/SKILL.md",
-      "sha256": "a5df4eabb9aba621ee22e7667e577998e16dbe9890220f8c843123428283c769"
+      "sha256": "263906f6e7db04ddfcdc15072dd489591c3112747aa69f374f3776566cbd7c5a"
     },
     {
       "path": "modules/deep-research-validator/skills/legal-tax-answer-review/references/adversarial-scope.md",
@@ -690,5 +702,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "eec872354aece96aaf92706d3237ea5a9d428bbf02a8fc9e4afa741d5307db86"
+  "canonical_course_sha256": "72d21aea1e66882e847268ba2195c3872f14484782b2171f0ebfbfb7a27dc866"
 }

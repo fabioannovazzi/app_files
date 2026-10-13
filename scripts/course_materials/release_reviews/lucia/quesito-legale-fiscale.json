@@ -2,9 +2,9 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "quesito-legale-fiscale",
-  "course_sha256": "eec872354aece96aaf92706d3237ea5a9d428bbf02a8fc9e4afa741d5307db86",
+  "course_sha256": "72d21aea1e66882e847268ba2195c3872f14484782b2171f0ebfbfb7a27dc866",
   "reviewer": "Codex /root - source-preview encoding and unchanged teaching-material review",
-  "reviewed_at": "2026-10-13T19:28:41.735928+00:00",
+  "reviewed_at": "2026-10-13T22:34:08.410930+00:00",
   "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
   "languages": {
     "it": {
@@ -541,5 +541,11 @@
   "encoding_preview_source_binding_review_20261013": {
     "reviewed_at": "2026-10-13T19:28:41.735928+00:00",
     "scope": "Reviewed the shared UI projection fix against unsupported-encoding, UTF-8 BOM and malformed-control regressions. Native source inventory changes only; authored lessons, multilingual inputs, deliverables and all prior professional-acceptance limits are preserved. Unsupported raw captures retain their bytes and hashes and display an explicit encoding limit. No new research method, law judgment, recipient or model API is introduced."
+  },
+  "research_integrity_source_binding_review_20261014": {
+    "reviewed_at": "2026-10-13T22:34:08.410930+00:00",
+    "previous_course_sha256": "eec872354aece96aaf92706d3237ea5a9d428bbf02a8fc9e4afa741d5307db86",
+    "authored_content_unchanged": true,
+    "scope": "Reviewed answer identity, immutable original/text captures, typed issue evidence/effects, quotation anomaly treatment and retention of executed evaluations. No source selection or legal support classifier added. Fresh course execution and CI remain required; no professional, learner or installed-host acceptance is inferred."
   }
 }

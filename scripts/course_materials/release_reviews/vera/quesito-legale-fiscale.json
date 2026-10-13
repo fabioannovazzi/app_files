@@ -2,9 +2,9 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "quesito-legale-fiscale",
-  "course_sha256": "0a5ec2bbade778c58b2d4fd43c5b707fc21e0fb05dc864f15de13adcd6d196ad",
+  "course_sha256": "cc79c873227f753a05010dd59e3156da79a1fe378a0cd8ba4511c1c9eabfc66f",
   "reviewer": "Codex /root - source-preview encoding and unchanged teaching-material review",
-  "reviewed_at": "2026-10-13T19:28:41.735928+00:00",
+  "reviewed_at": "2026-10-13T22:34:08.410930+00:00",
   "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
   "languages": {
     "it": {
@@ -579,5 +579,11 @@
   "encoding_preview_source_binding_review_20261013": {
     "reviewed_at": "2026-10-13T19:28:41.735928+00:00",
     "scope": "Reviewed the shared UI projection fix against unsupported-encoding, UTF-8 BOM and malformed-control regressions. Native source inventory changes only; authored lessons, multilingual inputs, deliverables and all prior professional-acceptance limits are preserved. Unsupported raw captures retain their bytes and hashes and display an explicit encoding limit. No new research method, law judgment, recipient or model API is introduced."
+  },
+  "research_integrity_source_binding_review_20261014": {
+    "reviewed_at": "2026-10-13T22:34:08.410930+00:00",
+    "previous_course_sha256": "0a5ec2bbade778c58b2d4fd43c5b707fc21e0fb05dc864f15de13adcd6d196ad",
+    "authored_content_unchanged": true,
+    "scope": "Reviewed answer identity, immutable original/text captures, typed issue evidence/effects, quotation anomaly treatment and retention of executed evaluations. No source selection or legal support classifier added. Fresh course execution and CI remain required; no professional, learner or installed-host acceptance is inferred."
   }
 }

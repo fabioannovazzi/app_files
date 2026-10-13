@@ -1633,9 +1633,15 @@
     "review": "Adds one internal research stage beneath the existing legal/tax question function. Retains previous target dispositions and professional-acceptance limits. Language never selects jurisdiction. New continuous reviews and final feedback preserve the accepted contract and sources; source/package checks do not establish Geneva legal correctness."
   },
   "source_binding_update": {
-    "date": "2026-10-13",
+    "date": "2026-10-14",
     "version": "0.1.373",
-    "reason": "Release identity for the shared source-preview encoding fix. Function IDs, jurisdiction dispositions and professional acceptance limits are preserved. This metadata binding is not fresh Geneva legal or installed-host acceptance.",
+    "reason": "Refresh current product identity after legal/tax evidence-integrity changes; preserve all Geneva dispositions and acceptance limits. No fresh Geneva qualification inferred.",
+    "fresh_geneva_acceptance": false
+  },
+  "incident_pipeline_release_binding": {
+    "date": "2026-10-13",
+    "version": "0.1.372",
+    "reason": "Version-only catalogue refresh after the incident pipeline correction. Skill entrypoints, jurisdiction dispositions and professional acceptance limits remain unchanged.",
     "fresh_geneva_acceptance": false
   }
 }
