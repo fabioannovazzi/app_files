@@ -224,6 +224,11 @@ CLIENT_WORKFLOW_CLI_ALLOWLIST = (
     ("prompt-optimizer", "run_fiscalprompt_benchmark.py"),
     ("prompt-optimizer", "summarize_fiscalprompt_benchmark.py"),
     ("deep-research-validator", "check_dependencies.py"),
+    # Read-only reference pinning selects an existing run artifact; it writes no case.
+    ("deep-research-validator", "evidence_refs.py"),
+    # Developer evaluation retention copies explicitly selected executed evidence;
+    # it does not start or mutate a professional client workflow.
+    ("deep-research-validator", "research_evaluation.py"),
     ("previdenza-inps", "check_dependencies.py"),
     ("registro-imprese-sari", "check_dependencies.py"),
     ("bandi-agevolazioni", "check_dependencies.py"),
