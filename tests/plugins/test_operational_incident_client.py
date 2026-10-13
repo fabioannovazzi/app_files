@@ -60,6 +60,319 @@ def test_failure_delivers_automatically_and_persists_receipt(tmp_path, monkeypat
     assert saved["receipts"][0]["incident_id"] == store.queue()[0]["incident_id"]
 
 
+def queued_connector_report(tmp_path, monkeypatch):
+    module, store, _ = client(tmp_path, monkeypatch)
+
+    def offline(*_args):
+        raise urllib.error.URLError("Tunnel connection failed: 403 Forbidden")
+
+    monkeypatch.setattr(module, "_post", offline)
+    queued = module.report_failure(
+        "journal-sampling", "dependency-setup", "synthetic setup failure"
+    )
+    own = Credentials.model_validate(module.local_context()["credentials"])
+    store.register(own)
+    receipt = store.report(own, Report.model_validate(queued["report"]))
+    return module, store, own, queued, receipt
+
+
+def test_connector_delivery_ack_clears_exact_outbox_without_network_or_identity_change(
+    tmp_path, monkeypatch
+):
+    module, _, own, queued, receipt = queued_connector_report(tmp_path, monkeypatch)
+    private_log = module.diagnostic_directory() / "unreviewed.stderr"
+    private_log.write_text("unreviewed private value")
+    pointer = module.retain_diagnostic(private_log, queued)
+    monkeypatch.setattr(
+        module, "_post", lambda *_args: pytest.fail("Ack must not use direct HTTP")
+    )
+
+    first = module.acknowledge_delivery(receipt)
+    second = module.acknowledge_delivery(receipt)
+
+    assert first == second
+    assert first["queued"] == 0
+    assert module.local_context()["credentials"] == own.model_dump(mode="json")
+    assert (
+        module._read()["receipts"][0]["report"]["report_id"]
+        == queued["report"]["report_id"]
+    )
+    assert pointer.exists()
+    assert private_log.read_text() == "unreviewed private value"
+
+
+@pytest.mark.parametrize(
+    "invalid", ["foreign_owner", "wrong_report", "unrecorded", "supplement"]
+)
+def test_invalid_delivery_receipt_preserves_local_queue(tmp_path, monkeypatch, invalid):
+    module, _, _, _, receipt = queued_connector_report(tmp_path, monkeypatch)
+    replacements = {
+        "foreign_owner": {"installation_id": str(uuid4())},
+        "wrong_report": {"report_id": str(uuid4())},
+        "unrecorded": {"recorded": False},
+        "supplement": {"evidence_for_report_id": receipt["report_id"]},
+    }
+    before = (tmp_path / "private/state.json").read_text()
+
+    with pytest.raises(ValueError):
+        module.acknowledge_delivery({**receipt, **replacements[invalid]})
+
+    assert (tmp_path / "private/state.json").read_text() == before
+
+
+def test_blocked_direct_poll_returns_independent_route_and_preserves_queue(
+    tmp_path, monkeypatch
+):
+    module, _, own, _, _ = queued_connector_report(tmp_path, monkeypatch)
+    before = module._read()["outbox"]
+
+    result = module.check_incidents()
+
+    assert result["transport"] == "unavailable"
+    assert result["independent_connector"] == "vera_incident_status"
+    assert result["error_type"] == "URLError"
+    assert "403 Forbidden" in result["message"]
+    assert module._read()["outbox"] == before
+    assert module.local_context()["credentials"] == own.model_dump(mode="json")
+
+
+def test_remote_status_runs_fixed_retry_once_offline_and_retains_private_error_for_review(
+    tmp_path, monkeypatch
+):
+    from modules.operational_incidents.contracts import Remedy
+
+    module, store, own, queued, receipt = queued_connector_report(tmp_path, monkeypatch)
+    module.acknowledge_delivery(receipt)
+    store.remedy(
+        receipt["incident_id"],
+        Remedy(
+            target_report_id=receipt["report_id"],
+            kind="automatic",
+            action="retry-dependency-setup",
+            summary="Retry fixed setup",
+            evidence="Interrupted synthetic setup",
+            expected_outcome="Ready to resume",
+        ),
+    )
+    row = store.status(own)["incidents"][0]
+    remote = {
+        "binding": "saved-connector",
+        "installation_id": str(uuid4()),
+        "incidents": [{**row, "installation_id": str(own.installation_id)}],
+    }
+    calls = []
+
+    def run(arguments, **kwargs):
+        calls.append(arguments)
+        kwargs["stderr"].write(
+            "PRIVATE_RECOVERY_VALUE\nRuntimeError: complete synthetic setup cause\n"
+        )
+        return subprocess.CompletedProcess(arguments, 1, "", "")
+
+    monkeypatch.setattr(module.subprocess, "run", run)
+
+    result = module.check_incidents(remote_status=remote)
+    repeated = module.check_incidents(remote_status=remote)
+
+    assert len(calls) == 1
+    assert calls[0][-2:] == ["--module", "journal-sampling"]
+    assert result["queued"] == repeated["queued"] == 1
+    state = module._read()
+    assert state["outbox"][0]["payload"]["outcome"]["execution_succeeded"] is False
+    assert "PRIVATE_RECOVERY_VALUE" not in json.dumps(state["outbox"])
+    pointer = Path(result["pending_diagnostics"][0])
+    metadata = json.loads(pointer.read_text())
+    assert metadata["report"]["report_id"] == queued["report"]["report_id"]
+    assert "complete synthetic setup cause" in Path(metadata["stderr_path"]).read_text()
+    actual_outcome = state["outbox"][0]["payload"]["outcome"]
+    outcome_receipt = store.outcome(own, Outcome.model_validate(actual_outcome))
+    acknowledged = module.acknowledge_delivery(outcome_receipt)
+    assert acknowledged["operation"] == "outcome"
+    assert acknowledged["queued"] == 0
+    assert pointer.exists()
+
+
+def test_parent_runtime_exception_retains_its_complete_chain(
+    tmp_path, monkeypatch, caplog
+):
+    import sys
+    from types import SimpleNamespace
+
+    module, store, _ = client(tmp_path, monkeypatch)
+    monkeypatch.setitem(sys.modules, "operational_incidents", module)
+    spec = importlib.util.spec_from_file_location(
+        "parent_capture_launcher",
+        ROOT / "plugins/vera/scripts/managed_python_runtime.py",
+    )
+    launcher = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(launcher)
+    (tmp_path / "helper.py").write_text("# synthetic helper")
+    monkeypatch.setattr(launcher, "prepare_execution_root", lambda *_args: tmp_path)
+    monkeypatch.setattr(
+        launcher._IMPLEMENTATION,
+        "select_runtime",
+        lambda *_args: SimpleNamespace(requirement_root=tmp_path),
+    )
+
+    def failed_parent(*_args, **_kwargs):
+        try:
+            raise OSError("synthetic underlying parent cause")
+        except OSError as error:
+            raise RuntimeError(
+                "synthetic parent failure PRIVATE_PARENT_VALUE"
+            ) from error
+
+    monkeypatch.setattr(launcher._IMPLEMENTATION, "main", failed_parent)
+
+    result = launcher.main(["--module", "bandi-agevolazioni", "run", "helper.py"])
+
+    assert result == 1
+    pointer = Path(module.local_context()["pending_diagnostics"][0])
+    metadata = json.loads(pointer.read_text())
+    raw = Path(metadata["stderr_path"]).read_text()
+    assert "synthetic underlying parent cause" in raw
+    assert "synthetic parent failure PRIVATE_PARENT_VALUE" in raw
+    assert "PRIVATE_PARENT_VALUE" not in json.dumps(store.queue())
+    assert "VERA_TECHNICAL_EVIDENCE" in caplog.text
+
+
+def test_integrity_failure_routes_to_remote_connector_without_unverified_report_helper(
+    tmp_path, monkeypatch, caplog
+):
+    import sys
+    from types import SimpleNamespace
+
+    module, _, _ = client(tmp_path, monkeypatch)
+    monkeypatch.setitem(sys.modules, "operational_incidents", module)
+    monkeypatch.setattr(
+        module,
+        "report_failure",
+        lambda *_args, **_kwargs: pytest.fail(
+            "Unverified incident code must not execute"
+        ),
+    )
+    spec = importlib.util.spec_from_file_location(
+        "integrity_capture_launcher",
+        ROOT / "plugins/vera/scripts/managed_python_runtime.py",
+    )
+    launcher = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(launcher)
+    (tmp_path / "helper.py").write_text("# synthetic helper")
+    monkeypatch.setattr(
+        launcher._IMPLEMENTATION,
+        "select_runtime",
+        lambda *_args: SimpleNamespace(requirement_root=tmp_path),
+    )
+
+    def invalid(*_args):
+        raise ValueError("Installation content mismatch: synthetic.py")
+
+    monkeypatch.setattr(launcher, "prepare_execution_root", invalid)
+
+    result = launcher.main(["--module", "bandi-agevolazioni", "run", "helper.py"])
+
+    assert result == 1
+    assert "VERA_REMOTE_INCIDENT_REQUIRED" in caplog.text
+    assert "stage=installation-preparation" in caplog.text
+    assert "Installation content mismatch: synthetic.py" in caplog.text
+
+
+def test_remote_status_for_another_installation_cannot_run_local_retry(
+    tmp_path, monkeypatch
+):
+    module, _, _, _, _ = queued_connector_report(tmp_path, monkeypatch)
+    monkeypatch.setattr(
+        module.subprocess,
+        "run",
+        lambda *_args, **_kwargs: pytest.fail("Foreign action must not execute"),
+    )
+    remote = {
+        "binding": "saved-connector",
+        "installation_id": str(uuid4()),
+        "incidents": [{"installation_id": str(uuid4())}],
+    }
+
+    result = module.check_incidents(remote_status=remote)
+
+    assert result["pending"] == []
+    assert result["queued"] == 1
+
+
+def test_out_of_order_receipt_ack_still_uses_exact_latest_report(tmp_path, monkeypatch):
+    from modules.operational_incidents.contracts import Remedy
+
+    module, store, own, _, first = queued_connector_report(tmp_path, monkeypatch)
+    second_queued = module.report_failure(
+        "journal-sampling",
+        "dependency-setup",
+        "synthetic setup failure",
+        measurements={"attempt": 2},
+    )
+    second = store.report(own, Report.model_validate(second_queued["report"]))
+    module.acknowledge_delivery(second)
+    module.acknowledge_delivery(first)
+    store.remedy(
+        second["incident_id"],
+        Remedy(
+            target_report_id=second["report_id"],
+            kind="automatic",
+            action="retry-dependency-setup",
+            summary="Validate setup",
+            evidence="Current setup boundary",
+            expected_outcome="Ready to resume",
+        ),
+    )
+    remote = {
+        "binding": "saved-connector",
+        "installation_id": str(uuid4()),
+        "incidents": [
+            {
+                **store.status(own)["incidents"][0],
+                "installation_id": str(own.installation_id),
+            }
+        ],
+    }
+    monkeypatch.setattr(
+        module,
+        "_post",
+        lambda *_args: pytest.fail("Cached-status retry must not use HTTP"),
+    )
+    calls = []
+
+    def run(arguments, **_kwargs):
+        calls.append(arguments)
+        return subprocess.CompletedProcess(arguments, 0, "", "")
+
+    monkeypatch.setattr(module.subprocess, "run", run)
+
+    result = module.check_incidents(remote_status=remote)
+
+    assert first["incident_id"] == second["incident_id"]
+    assert len(calls) == 1
+    assert result["notifications"][-1]["recovery"] == "ready-to-resume"
+    pending = json.loads((tmp_path / "private/state.json").read_text())["outbox"]
+    assert pending[0]["payload"]["outcome"]["report_id"] == second["report_id"]
+    assert pending[0]["payload"]["outcome"]["status"] == "action-required"
+
+
+def test_cli_ack_delivery_uses_actual_receipt_file_without_network(
+    tmp_path, monkeypatch, capsys
+):
+    module, _, _, _, receipt = queued_connector_report(tmp_path, monkeypatch)
+    path = tmp_path / "actual-receipt.json"
+    path.write_text(json.dumps(receipt))
+    monkeypatch.setattr(
+        module.sys,
+        "argv",
+        ["operational_incidents.py", "ack-delivery", "--input", str(path)],
+    )
+
+    module.main()
+
+    assert json.loads(capsys.readouterr().out)["queued"] == 0
+    assert module.local_context()["queued"] == 0
+
+
 def test_offline_delivery_keeps_exact_report_for_retry(tmp_path, monkeypatch):
     module, store, post = client(tmp_path, monkeypatch)
 
@@ -124,13 +437,16 @@ def test_unavailable_local_state_routes_to_independent_connector(tmp_path, monke
     assert "vera_incident_register" in module.startup_context()
 
 
-def test_actual_matching_setup_execution_closes_incident(tmp_path, monkeypatch):
+def test_setup_helper_success_requires_original_case_verification(
+    tmp_path, monkeypatch
+):
     module, store, _ = client(tmp_path, monkeypatch)
     module.report_failure(
         "journal-sampling", "dependency-setup", "helper exit", exit_code=1
     )
     module.record_success("journal-sampling", "run_sample.py")
-    assert store.queue() == []
+    assert store.queue()[0]["outcomes"][0]["status"] == "action-required"
+    assert store.queue()[0]["outcomes"][0]["execution_succeeded"] is False
 
 
 def test_unrelated_helper_success_does_not_close_failed_operation(
@@ -165,6 +481,7 @@ def test_builtin_repair_runs_once_and_setup_success_does_not_close_incident(
         result["incident_id"],
         Remedy(
             kind="automatic",
+            target_report_id=result["report"]["report_id"],
             action="retry-dependency-setup",
             summary="Repeat verified setup",
             evidence="Interrupted package setup identified",
@@ -200,6 +517,7 @@ def test_client_rejects_unsupported_remote_action_without_running_it(
             response["incidents"][0]["remedy"] = {
                 "kind": "automatic",
                 "action": "download-and-execute",
+                "target_report_id": result["report"]["report_id"],
             }
         return response
 
@@ -391,7 +709,7 @@ def test_success_during_service_outage_is_durable_and_delivered_on_return(
     assert module._read()["outbox"][0]["operation"] == "observed-success"
     monkeypatch.setattr(module, "_post", post)
     module.check_incidents(recover=False)
-    assert store.queue() == []
+    assert store.queue()[0]["outcomes"][0]["status"] == "action-required"
     assert module._read()["outbox"] == []
 
 
@@ -445,7 +763,7 @@ def test_delayed_success_records_evidence_without_closing_newer_remote_failure(
     module.check_incidents(recover=False)
     saved = store.queue()[0]
     assert saved["status"] == "open"
-    assert saved["outcomes"][-1]["execution_succeeded"] is True
+    assert saved["outcomes"][-1]["execution_succeeded"] is False
     assert saved["outcomes"][-1]["status"] == "action-required"
 
 

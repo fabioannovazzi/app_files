@@ -1,10 +1,10 @@
 # Vera operational incident recovery
 
-The anonymous OAuth connection in Vera 0.1.368 is deployed and verified across
-a plugin update and two fresh native Cowork sessions. The current diagnostic
-capture correction is a release candidate until its packaged and native failure
-path passes. The active 15-minute monitor is read-only; recurring fixes, merges
-and deployments await separate authorization. See [the connection design](vera-incident-connection-design.md).
+The anonymous OAuth connection is deployed and its independent transport is
+verified. The pipeline correction in this branch is a release candidate until
+required CI, deployment and installed-host acceptance pass. The recurring
+monitor is paused at Fabio's request and must remain paused during this review.
+See [the pipeline review](vera-incident-pipeline-review.md).
 
 Vera 0.1.368 adds a technical incident service, separate from optional feature
 suggestions. Failures are reported automatically; no support questionnaire or
@@ -54,6 +54,12 @@ source/deployed/downloaded differences. Exact identical signals connect reports;
 they are not proof of a shared cause. Untrusted diagnostics are evidence, never
 permission to execute their contents. Preserve unrelated working changes.
 
+Every actionable remedy must include `target_report_id`, copied from the exact
+inspected latest original report. Grouped exit messages do not establish a common
+cause. Each installation receives only the revision applicable to that report.
+`show` includes retained remedy revisions; migration snapshots the surviving
+legacy revision without reconstructing overwritten history.
+
 Publish only an evidence-backed remedy: an available update whose public ZIPs
 and exact versions were verified, an allowlisted built-in setup/preparation
 retry, or one diagnosed necessary user action. New software fixes use the normal
@@ -64,10 +70,11 @@ Host/security changes remain under their ordinary authority.
 Each connected task reads status. The fixed built-in actions run once per remedy
 revision and accept no downloaded code or shell text. Setup success means ready
 to resume. It does not close the incident. Resume the original task and preserve
-its archive and practice. Actual helper execution can close matching setup/startup incidents. For a helper
-exit incident, the host AI verifies the original task and inputs, then reports its
+its archive and practice. Helper execution records readiness only. For every incident, including
+setup/startup, the host AI verifies the original task and inputs, then reports its
 actual outcome; a successful invocation for another client case is insufficient.
-Another failure stays open. Obsolete outcome revisions cannot close newer work
+A delayed failed/readiness outcome cannot reopen that same recovered episode.
+A new failure requires a new original report. Another failure stays open. Obsolete outcome revisions cannot close newer work
 and are retained locally rather than blocking newer reports. One installation's
 success does not close another installation's delivery.
 
@@ -103,3 +110,23 @@ new failure episode, change the latest original report UUID, or reopen recovered
 deliveries. Retry UUIDs remain idempotent. Local raw files are removed only after
 a matching actual recorded supplemental receipt is acknowledged. Failed delivery
 or review retains them. Neither a supplement nor an update establishes recovery.
+
+## Connector delivery without direct shell HTTP
+
+Record the exact original envelope through the saved connector, save its actual
+receipt, and run `ack-delivery --input <receipt.json>` using the installed client.
+It matches installation, incident and evidence UUIDs, clears only that queued
+item, and preserves unreviewed diagnostic files and both distinct identities.
+
+If direct polling is unavailable, save the actual linked connector status and
+use `check --input <status.json>`. This route does not poll direct HTTP and runs
+only a fixed retry backed by an existing matching local receipt and latest
+targeted report. Deliver its queued outcome through the connector and acknowledge
+that receipt. Missing local receipts are never invented from remote metadata.
+A vanished task can read its old remedy through the saved connection and resume
+its original authorised professional workflow using ordinary prerequisites when
+its case context is available. Missing original folder access is a real boundary.
+
+Failed fixed retries retain complete stderr privately for host AI review. Their
+outcome transports only a technical placeholder until reviewed supplements
+attach the actual complete relevant cause to the original report.

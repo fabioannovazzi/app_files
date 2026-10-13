@@ -53,10 +53,211 @@ def registered(tmp_path):
     return store, first
 
 
+def test_scoped_remedy_does_not_reach_another_installation_with_same_signal(tmp_path):
+    store, first = registered(tmp_path)
+    second = credentials()
+    store.register(second)
+    one = store.report(first, report())
+    two = store.report(second, report())
+
+    store.remedy(
+        one["incident_id"],
+        Remedy(
+            target_report_id=one["report_id"],
+            kind="user-action",
+            summary="First case action",
+            evidence="Only the first cause was established",
+            instructions="Resume the first original command",
+            expected_outcome="First case succeeds",
+        ),
+    )
+
+    assert one["incident_id"] == two["incident_id"]
+    assert (
+        store.status(first)["incidents"][0]["remedy"]["target_report_id"]
+        == one["report_id"]
+    )
+    assert store.status(second)["incidents"][0]["remedy"]["kind"] == "investigating"
+
+
+def test_other_target_remedy_preserves_first_applicable_revision_and_recovery(tmp_path):
+    store, first = registered(tmp_path)
+    second = credentials()
+    store.register(second)
+    one = store.report(first, report())
+    two = store.report(second, report())
+    store.remedy(
+        one["incident_id"],
+        Remedy(
+            target_report_id=one["report_id"],
+            kind="user-action",
+            summary="First",
+            evidence="First diagnosed cause",
+            instructions="First action",
+            expected_outcome="First succeeds",
+        ),
+    )
+    store.remedy(
+        two["incident_id"],
+        Remedy(
+            target_report_id=two["report_id"],
+            kind="user-action",
+            summary="Second",
+            evidence="Second diagnosed cause",
+            instructions="Second action",
+            expected_outcome="Second succeeds",
+        ),
+    )
+    original_revision = store.status(first)["incidents"][0]["revision"]
+
+    recovered = store.outcome(
+        first,
+        Outcome(
+            outcome_id=uuid4(),
+            incident_id=one["incident_id"],
+            report_id=one["report_id"],
+            remedy_revision=original_revision,
+            status="recovered",
+            execution_succeeded=True,
+        ),
+    )
+
+    assert original_revision == 2
+    assert store.status(second)["incidents"][0]["revision"] == 3
+    assert recovered["status"] == "recovered"
+    assert store.status(second)["incidents"][0]["status"] == "open"
+    assert [
+        r["revision"] for r in store.show(one["incident_id"])["remedy_revisions"]
+    ] == [1, 2, 3]
+
+
+def test_new_failure_does_not_inherit_a_remedy_for_an_older_report(tmp_path):
+    store, first = registered(tmp_path)
+    one = store.report(first, report())
+    store.remedy(
+        one["incident_id"],
+        Remedy(
+            target_report_id=one["report_id"],
+            kind="user-action",
+            summary="Old case",
+            evidence="Old cause",
+            instructions="Old action",
+            expected_outcome="Old succeeds",
+        ),
+    )
+    latest = store.report(first, report())
+
+    state = store.status(first)["incidents"][0]
+
+    assert state["latest_report_id"] == latest["report_id"]
+    assert state["remedy"]["kind"] == "investigating"
+
+
+def test_legacy_migration_keeps_surviving_revision_without_inventing_history(tmp_path):
+    import sqlite3
+
+    store, first = registered(tmp_path)
+    one = store.report(first, report())
+    store.remedy(
+        one["incident_id"],
+        Remedy(
+            target_report_id=one["report_id"],
+            kind="user-action",
+            summary="Known current action",
+            evidence="Current evidence",
+            instructions="Current action",
+            expected_outcome="Success",
+        ),
+    )
+    with sqlite3.connect(tmp_path / "incidents.sqlite3") as connection:
+        connection.execute("DROP TABLE operational_remedy_revisions")
+    migrated = IncidentStore(tmp_path / "incidents.sqlite3")
+
+    detail = migrated.show(one["incident_id"])
+
+    assert len(detail["remedy_revisions"]) == 1
+    assert detail["remedy_revisions"][0]["revision"] == 2
+    assert (
+        migrated.status(first)["incidents"][0]["remedy"]["instructions"]
+        == "Current action"
+    )
+
+
+def test_obsolete_report_cannot_receive_a_new_remedy(tmp_path):
+    store, first = registered(tmp_path)
+    old = store.report(first, report())
+    store.report(first, report())
+    proposed = Remedy(
+        target_report_id=old["report_id"],
+        kind="user-action",
+        summary="Old",
+        evidence="Old cause",
+        instructions="Old action",
+        expected_outcome="Success",
+    )
+
+    with pytest.raises(IncidentConflict, match="obsolete"):
+        store.remedy(old["incident_id"], proposed)
+
+    assert store.show(old["incident_id"])["revision"] == 1
+
+
+def test_delayed_failure_for_recovered_episode_is_recorded_without_reopening(tmp_path):
+    store, first = registered(tmp_path)
+    original = store.report(first, report())
+    store.outcome(
+        first,
+        Outcome(
+            outcome_id=uuid4(),
+            incident_id=original["incident_id"],
+            report_id=original["report_id"],
+            remedy_revision=1,
+            status="recovered",
+            execution_succeeded=True,
+        ),
+    )
+
+    delayed = store.outcome(
+        first,
+        Outcome(
+            outcome_id=uuid4(),
+            incident_id=original["incident_id"],
+            report_id=original["report_id"],
+            remedy_revision=1,
+            status="failed",
+        ),
+    )
+
+    assert delayed["recorded"] is True
+    assert delayed["delivery_updated"] is False
+    assert store.status(first)["incidents"][0]["status"] == "recovered"
+    assert len(store.show(original["incident_id"])["outcomes"]) == 2
+
+
+@pytest.mark.parametrize("target", [None, "foreign"])
+def test_remedy_rejects_missing_or_foreign_original_target(tmp_path, target):
+    store, first = registered(tmp_path)
+    one = store.report(first, report())
+    value = Remedy(
+        target_report_id=uuid4() if target else None,
+        kind="user-action",
+        summary="Action",
+        evidence="Cause",
+        instructions="Action",
+        expected_outcome="Success",
+    )
+
+    with pytest.raises((IncidentConflict, IncidentNotFound)):
+        store.remedy(one["incident_id"], value)
+
+    assert store.show(one["incident_id"])["revision"] == 1
+
+
 def test_full_incident_remedy_delivery_and_actual_recovery(tmp_path):
     store, first = registered(tmp_path)
     receipt = store.report(first, report())
     remedy = Remedy(
+        target_report_id=receipt["report_id"],
         kind="user-action",
         summary="Complete the pending host update",
         evidence="Host status is restart_required",
@@ -144,6 +345,7 @@ def test_update_available_is_not_recovered_and_stale_outcome_is_rejected(tmp_pat
         receipt["incident_id"],
         Remedy(
             kind="update",
+            target_report_id=receipt["report_id"],
             summary="Install corrected Vera",
             evidence="Verified published ZIP",
             required_version="0.1.362",

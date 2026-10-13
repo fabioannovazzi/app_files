@@ -100,6 +100,7 @@ class Report(StrictModel):
 
 
 class Remedy(StrictModel):
+    target_report_id: UUID | None = None
     kind: Literal["investigating", "update", "automatic", "user-action"]
     summary: str = Field(min_length=1, max_length=4000)
     evidence: str = Field(min_length=1, max_length=16000)

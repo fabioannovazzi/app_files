@@ -45,6 +45,7 @@ class IncidentNotFound(ValueError):
 
 
 _SCHEMA = (
+    "CREATE TABLE IF NOT EXISTS operational_remedy_revisions (incident_id TEXT NOT NULL, revision INTEGER NOT NULL, remedy_json TEXT NOT NULL, recorded_at TEXT NOT NULL, PRIMARY KEY (incident_id,revision))",
     "CREATE TABLE IF NOT EXISTS operational_report_evidence (report_id TEXT PRIMARY KEY, original_report_id TEXT NOT NULL, installation_id TEXT NOT NULL, incident_id TEXT NOT NULL, payload_hash TEXT NOT NULL, payload_json TEXT NOT NULL, created_at TEXT NOT NULL)",
     "CREATE TABLE IF NOT EXISTS operational_connection_links (connection_id TEXT NOT NULL, installation_id TEXT NOT NULL, PRIMARY KEY (connection_id, installation_id))",
     "CREATE TABLE IF NOT EXISTS operational_installations (installation_id TEXT PRIMARY KEY, key_hash TEXT NOT NULL, created_at TEXT NOT NULL)",
@@ -109,7 +110,46 @@ class IncidentStore:
         if not self._ready:
             for statement in _SCHEMA:
                 connection.execute(statement)
+            # Snapshot only the surviving legacy revision; lost history is unknown.
+            connection.execute(
+                self._sql(
+                    "INSERT INTO operational_remedy_revisions SELECT incident_id,revision,remedy_json,? FROM operational_incidents WHERE 1=1 ON CONFLICT (incident_id,revision) DO NOTHING"
+                ),
+                (_now(),),
+            )
             self._ready = True
+
+    def _save_remedy_revision(self, connection: Any, incident_id: str) -> None:
+        connection.execute(
+            self._sql(
+                "INSERT INTO operational_remedy_revisions SELECT incident_id,revision,remedy_json,? FROM operational_incidents WHERE incident_id=? ON CONFLICT (incident_id,revision) DO NOTHING"
+            ),
+            (_now(), incident_id),
+        )
+
+    def _applicable_remedy(
+        self, connection: Any, incident_id: str, report_id: str, fallback_revision: int
+    ) -> tuple[int, dict[str, Any]]:
+        """Match explicit report identity; grouping is not proof of a common cause."""
+        rows = connection.execute(
+            self._sql(
+                "SELECT revision,remedy_json FROM operational_remedy_revisions WHERE incident_id=? ORDER BY revision DESC"
+            ),
+            (incident_id,),
+        ).fetchall()
+        for row in rows:
+            remedy = json.loads(row["remedy_json"])
+            if remedy.get("target_report_id") == report_id or (
+                remedy["kind"] == "investigating"
+                and remedy.get("target_report_id") is None
+            ):
+                return row["revision"], remedy
+        return fallback_revision, Remedy(
+            kind="investigating",
+            summary="Il problema è in diagnosi; nessun rimedio è assegnato a questa segnalazione.",
+            evidence="No scoped remedy is available for this original report. Earlier overwritten revisions cannot be reconstructed.",
+            expected_outcome="Successful execution of the original operation",
+        ).model_dump(mode="json")
 
     def _authorize(
         self, connection: Any, credentials: Credentials | ConnectionActor
@@ -308,6 +348,7 @@ class IncidentStore:
                 )
         return {
             "incident_id": original["incident_id"],
+            "installation_id": str(credentials.installation_id),
             "report_id": str(report.report_id),
             "evidence_for_report_id": str(report.evidence_for_report_id),
             "recorded": True,
@@ -355,6 +396,7 @@ class IncidentStore:
                     )
                 return {
                     "incident_id": old["incident_id"],
+                    "installation_id": str(credentials.installation_id),
                     "report_id": str(report.report_id),
                     "recorded": True,
                     "deduplicated": True,
@@ -391,6 +433,7 @@ class IncidentStore:
                 (fingerprint,),
             ).fetchone()
             incident_id = incident["incident_id"]
+            self._save_remedy_revision(connection, incident_id)
             connection.execute(
                 self._sql("INSERT INTO operational_reports VALUES (?,?,?,?,?,?)"),
                 (
@@ -416,6 +459,7 @@ class IncidentStore:
             )
         return {
             "incident_id": incident_id,
+            "installation_id": str(credentials.installation_id),
             "report_id": str(report.report_id),
             "recorded": True,
             "deduplicated": False,
@@ -432,29 +476,49 @@ class IncidentStore:
                 ),
                 (str(credentials.installation_id),),
             ).fetchall()
-        return {
-            "incidents": [
-                {
-                    "incident_id": row["incident_id"],
-                    "revision": row["revision"],
-                    "latest_report_id": row["latest_report_id"],
-                    "status": row["status"],
-                    "remedy": json.loads(row["remedy_json"]),
-                    "download_urls": (
-                        {
-                            "codex": "https://mparanza.com/static/shared/plugin-downloads/index.html?product=vera&lang=it",
-                            "cowork": "https://mparanza.com/static/shared/vera/downloads/vera-cowork-plugin.zip",
-                        }
-                        if json.loads(row["remedy_json"])["kind"] == "update"
-                        else {}
-                    ),
-                }
-                for row in rows
-            ]
-        }
+            incidents = []
+            for row in rows:
+                revision, remedy = self._applicable_remedy(
+                    connection,
+                    row["incident_id"],
+                    row["latest_report_id"],
+                    row["revision"],
+                )
+                incidents.append(
+                    {
+                        "incident_id": row["incident_id"],
+                        "revision": revision,
+                        "latest_report_id": row["latest_report_id"],
+                        "status": row["status"],
+                        "remedy": remedy,
+                        "report_metadata": {
+                            key: value
+                            for key, value in json.loads(
+                                connection.execute(
+                                    self._sql(
+                                        "SELECT payload_json FROM operational_reports WHERE report_id=?"
+                                    ),
+                                    (row["latest_report_id"],),
+                                ).fetchone()["payload_json"]
+                            ).items()
+                            if key not in {"diagnostics", "measurements", "unavailable"}
+                        },
+                        "download_urls": (
+                            {
+                                "codex": "https://mparanza.com/static/shared/plugin-downloads/index.html?product=vera&lang=it",
+                                "cowork": "https://mparanza.com/static/shared/vera/downloads/vera-cowork-plugin.zip",
+                            }
+                            if remedy["kind"] == "update"
+                            else {}
+                        ),
+                    }
+                )
+        return {"incidents": incidents}
 
     def remedy(self, incident_id: str, remedy: Remedy) -> dict[str, Any]:
         """Operator-only publication; clients cannot deliver executable commands."""
+        if remedy.kind != "investigating" and remedy.target_report_id is None:
+            raise IncidentConflict("A remedy must target its diagnosed original report")
         if remedy.kind == "update" and not remedy.required_version:
             raise IncidentConflict("An update remedy requires a deployed version")
         if remedy.kind == "automatic" and remedy.action is None:
@@ -471,6 +535,34 @@ class IncidentStore:
             ).fetchone()
             if row is None:
                 raise IncidentNotFound("Incident is unavailable")
+            if remedy.target_report_id is not None:
+                original = connection.execute(
+                    self._sql(
+                        "SELECT installation_id FROM operational_reports WHERE incident_id=? AND report_id=?"
+                    ),
+                    (incident_id, str(remedy.target_report_id)),
+                ).fetchone()
+                if original is None:
+                    raise IncidentNotFound("Remedy target is outside this incident")
+                delivery = connection.execute(
+                    self._sql(
+                        "SELECT status,(SELECT report_id FROM operational_reports WHERE incident_id=? AND installation_id=? ORDER BY created_at DESC LIMIT 1) AS latest_report_id FROM operational_deliveries WHERE incident_id=? AND installation_id=?"
+                    ),
+                    (
+                        incident_id,
+                        original["installation_id"],
+                        incident_id,
+                        original["installation_id"],
+                    ),
+                ).fetchone()
+                if (
+                    delivery["latest_report_id"] != str(remedy.target_report_id)
+                    or delivery["status"] == "recovered"
+                ):
+                    raise IncidentConflict(
+                        "Remedy target is obsolete or already recovered"
+                    )
+            self._save_remedy_revision(connection, incident_id)
             revision = row["revision"] + 1
             connection.execute(
                 self._sql(
@@ -478,6 +570,7 @@ class IncidentStore:
                 ),
                 (revision, _json(remedy.model_dump(mode="json")), _now(), incident_id),
             )
+            self._save_remedy_revision(connection, incident_id)
         return {
             "incident_id": incident_id,
             "revision": revision,
@@ -496,13 +589,25 @@ class IncidentStore:
             self._authorize(connection, credentials)
             row = connection.execute(
                 self._sql(
-                    "SELECT i.revision FROM operational_incidents i JOIN operational_deliveries d ON i.incident_id=d.incident_id WHERE i.incident_id=? AND d.installation_id=?"
+                    "SELECT i.revision,d.status AS delivery_status FROM operational_incidents i JOIN operational_deliveries d ON i.incident_id=d.incident_id WHERE i.incident_id=? AND d.installation_id=?"
                 ),
                 (str(outcome.incident_id), str(credentials.installation_id)),
             ).fetchone()
             if row is None:
                 raise IncidentNotFound("Incident is unavailable")
-            if row["revision"] != outcome.remedy_revision:
+            latest = connection.execute(
+                self._sql(
+                    "SELECT report_id FROM operational_reports WHERE incident_id=? AND installation_id=? ORDER BY created_at DESC LIMIT 1"
+                ),
+                (str(outcome.incident_id), str(credentials.installation_id)),
+            ).fetchone()
+            revision, _ = self._applicable_remedy(
+                connection,
+                str(outcome.incident_id),
+                latest["report_id"],
+                row["revision"],
+            )
+            if revision != outcome.remedy_revision:
                 raise IncidentConflict(
                     "Remedy changed; read current status before reporting recovery"
                 )
@@ -522,15 +627,13 @@ class IncidentStore:
             if previous:
                 return {
                     "incident_id": str(outcome.incident_id),
+                    "installation_id": str(credentials.installation_id),
+                    "outcome_id": str(outcome.outcome_id),
+                    "report_id": str(outcome.report_id) if outcome.report_id else None,
+                    "remedy_revision": outcome.remedy_revision,
                     "status": outcome.status,
                     "recorded": True,
                 }
-            latest = connection.execute(
-                self._sql(
-                    "SELECT report_id FROM operational_reports WHERE incident_id=? AND installation_id=? ORDER BY created_at DESC LIMIT 1"
-                ),
-                (str(outcome.incident_id), str(credentials.installation_id)),
-            ).fetchone()
             same_episode = (
                 outcome.report_id is not None
                 and str(outcome.report_id) == latest["report_id"]
@@ -551,9 +654,15 @@ class IncidentStore:
                     _now(),
                 ),
             )
-            if not same_episode:
+            if not same_episode or (
+                row["delivery_status"] == "recovered" and outcome.status != "recovered"
+            ):
                 return {
                     "incident_id": str(outcome.incident_id),
+                    "installation_id": str(credentials.installation_id),
+                    "outcome_id": str(outcome.outcome_id),
+                    "report_id": str(outcome.report_id) if outcome.report_id else None,
+                    "remedy_revision": outcome.remedy_revision,
                     "status": outcome.status,
                     "recorded": True,
                     "delivery_updated": False,
@@ -587,6 +696,10 @@ class IncidentStore:
             )
         return {
             "incident_id": str(outcome.incident_id),
+            "installation_id": str(credentials.installation_id),
+            "outcome_id": str(outcome.outcome_id),
+            "report_id": str(outcome.report_id) if outcome.report_id else None,
+            "remedy_revision": outcome.remedy_revision,
             "status": outcome.status,
             "recorded": True,
         }
@@ -616,6 +729,19 @@ class IncidentStore:
 
     def _details(self, connection: Any, incident: dict[str, Any]) -> dict[str, Any]:
         incident["remedy"] = json.loads(incident.pop("remedy_json"))
+        incident["remedy_revisions"] = [
+            {
+                "revision": row["revision"],
+                "remedy": json.loads(row["remedy_json"]),
+                "recorded_at": row["recorded_at"],
+            }
+            for row in connection.execute(
+                self._sql(
+                    "SELECT revision,remedy_json,recorded_at FROM operational_remedy_revisions WHERE incident_id=? ORDER BY revision"
+                ),
+                (incident["incident_id"],),
+            ).fetchall()
+        ]
         incident["reports"] = [
             json.loads(row["payload_json"])
             for row in connection.execute(

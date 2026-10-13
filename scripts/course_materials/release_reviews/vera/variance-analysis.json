@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "variance-analysis",
-  "course_sha256": "a277cf1c6ec8cc3cd8150ea8e81c5fdcdf8dca1032f3478ac761b48188a642a9",
+  "course_sha256": "2c793978f40c2129a9544ca9594403fe73a4b95fd12eb78fd59e33756d3ec198",
   "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
   "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
   "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
@@ -838,5 +838,12 @@
     "new_native_output_visual_review": false,
     "learner_or_professional_acceptance": false,
     "installed_host_acceptance": false
+  },
+  "incident_pipeline_source_binding_20261013": {
+    "scope": "Source binding only after inspected launcher and incident-client correction. Course narrative, inputs, editorial judgments and prior artifact reviews are unchanged. Existing review dates are preserved. Fresh execution remains required by CI.",
+    "changed_sources": [
+      "scripts/managed_python_runtime.py",
+      "scripts/operational_incidents.py"
+    ]
   }
 }
