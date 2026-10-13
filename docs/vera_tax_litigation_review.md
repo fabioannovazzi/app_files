@@ -42,6 +42,14 @@ report identity, schema/quote/file checks and declared question dependencies.
 Law, relevance, applicability, professional authority and workflow completeness
 remain model-led and professionally reviewed.
 
+Clara's lesson audit also governs the shared course compiler. The compiler now
+excludes this new professional workflow from prepared teaching kits. This does
+not change Clara's lesson inventory, runtime or data boundaries. The inspected
+Clara lesson record was refreshed; Clara 0.1.270 requires matching metadata-only
+reviews for its main workflow and public update-check service. Their recorded
+account, recipient, access and retention boundaries remain unchanged. All Clara
+host packages are rebuilt to avoid changing public bytes under version 0.1.269.
+
 ## Verification boundaries
 
 Package regressions exercise the shipped Vera helpers: fictional evidence,
