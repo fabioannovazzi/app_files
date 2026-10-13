@@ -93,6 +93,7 @@ funzione Lucia:
 | Istruzioni riutilizzabili dello studio da creare, modificare, duplicare o applicare | Leggi integralmente `../metodo-studio/SKILL.md` e seguilo. |
 | Citazioni di norme o decisioni e proposizioni giuridiche in un documento da verificare | Leggi integralmente `../verifica-citazioni/SKILL.md` e seguilo. |
 | Cronologia, matrice delle prove, date processuali o bozza per un contenzioso civile | Leggi integralmente `../contenzioso-civile/SKILL.md` e seguilo. |
+| Atti fiscali, ricorso, appello o memorie in un contenzioso tributario italiano, con passaggi successivi e termini da verificare | Leggi integralmente `../contenzioso-tributario/SKILL.md` e seguilo. La guida procedurale e la ricerca delle regole fanno parte di questo percorso. |
 | NDA, due diligence, questioni SPA o riscontro disclosure in un'operazione M&A | Leggi integralmente `../operazioni-ma/SKILL.md` e seguilo. |
 | Contratti di lavoro, fascicolo di licenziamento, dati retributivi o calcolo specifico documentato | Leggi integralmente `../lavoro/SKILL.md` e seguilo. |
 | Prove, capitale/pagamenti, interessi o bozza della fase richiesta per recuperare un credito | Leggi integralmente `../recupero-crediti/SKILL.md` e seguilo. |

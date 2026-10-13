@@ -74,6 +74,54 @@ def test_unanswered_question_only_blocks_its_dependent_stage(tmp_path):
     assert result["work_products_recorded"] is False
 
 
+def test_tax_matter_reopens_without_completing_an_unproven_filing(tmp_path):
+    """Saved preparation does not resolve the separately declared filing question."""
+    source = tmp_path / "ricevuta.txt"
+    source.write_text("Ricorso notificato il 5 ottobre 2026.\n", encoding="utf-8")
+    run = tmp_path / "contenzioso"
+    prepare(run, [source], "revisione-documentale", ["Proposizione"])
+    initialize(run, "contenzioso-tributario", "Preparare la costituzione in giudizio")
+    state = json.loads((run / "matter.json").read_text(encoding="utf-8"))
+    (run / "pacchetto.md").write_text(
+        "Elenco degli atti preparato; deposito da provare."
+    )
+    state["stages"] = [
+        {
+            "id": "preparazione",
+            "label": "Preparare il pacchetto",
+            "status": "done",
+            "note": "Elenco locale prodotto",
+            "outputs": ["pacchetto.md"],
+        },
+        {
+            "id": "deposito",
+            "label": "Acquisire prova del deposito",
+            "status": "pending",
+            "note": "",
+            "outputs": [],
+        },
+    ]
+    state["questions"] = [
+        {
+            "id": "ricevuta-deposito",
+            "question": "È disponibile la ricevuta del deposito effettuato?",
+            "reason": "La preparazione non prova l'attività esterna.",
+            "blocks": ["deposito"],
+            "status": "open",
+            "answer": "",
+            "citations": [],
+        }
+    ]
+
+    save(run, proposal(run, state), 0)
+
+    reopened = status(run)
+    assert reopened["revision"] == 1
+    assert reopened["blocked_stages"] == {"deposito": ["ricevuta-deposito"]}
+    assert reopened["changed_outputs"] == []
+    assert reopened["work_products_recorded"] is False
+
+
 def test_answered_question_resumes_saved_work_and_retains_history(tmp_path):
     run, state = matter(tmp_path)
     save(run, proposal(run, state), 0)
