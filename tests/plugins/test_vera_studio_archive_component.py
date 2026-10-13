@@ -29,6 +29,7 @@ ARCHIVE_CORE_PATH = COMPONENT_ROOT / "scripts" / "archive_core.py"
 CHECK_DEPENDENCIES_PATH = COMPONENT_ROOT / "scripts" / "check_dependencies.py"
 MCP_SERVER_PATH = COMPONENT_ROOT / "mcp" / "server.cjs"
 EXPECTED_CLIENT_WORKFLOW_IDS = (
+    "contenzioso-tributario",
     "lipe",
     "rating-legalita",
     "scissione-guidata",
@@ -2041,7 +2042,9 @@ def test_mcp_configure_refresh_search_and_open(tmp_path: Path) -> None:
     assert result["structuredContent"]["citation"] == "Rossi/memo.txt, lines 1"
 
 
-@pytest.mark.parametrize("workflow_id", ["financial-analysis", "lipe"])
+@pytest.mark.parametrize(
+    "workflow_id", ["financial-analysis", "lipe", "contenzioso-tributario"]
+)
 def test_mcp_executes_the_customer_folder_lifecycle_end_to_end(
     tmp_path: Path, workflow_id: str
 ) -> None:
@@ -2626,3 +2629,350 @@ def test_configuration_change_during_operation_fails_at_return(
         archive_core.ArchiveError, match="configuration changed during this run"
     ):
         archive_core.studio_archive_status(state_dir=indexed_archive.state)
+
+
+def test_tax_litigation_reuses_sealed_intake_in_a_distinct_resumable_archive_run(
+    indexed_archive: SimpleNamespace, archive_core: ModuleType
+) -> None:
+    """Exercise Archive, real evidence helpers, open filing proof and finalization."""
+    registered = archive_core.set_studio_client_identity(
+        indexed_archive.scopes["Rossi"],
+        legal_names=["Rossi SRL"],
+        state_dir=indexed_archive.state,
+    )
+    client_id = registered["client"]["client_id"]
+    engagement = archive_core.create_studio_client_engagement(
+        client_id,
+        "Synthetic tax review",
+        state_dir=indexed_archive.state,
+    )["engagement"]
+    engagement_id = engagement["engagement_id"]
+    imported = archive_core.import_studio_client_document(
+        client_id,
+        indexed_archive.source,
+        "source",
+        engagement_id=engagement_id,
+        state_dir=indexed_archive.state,
+    )
+    intake = archive_core.prepare_studio_client_workflow(
+        engagement_id,
+        "client-file-preparation",
+        input_ids=[imported["input_id"]],
+        state_dir=indexed_archive.state,
+    )
+    intake_id = intake["run"]["run_id"]
+    archive_core.start_studio_client_workflow(
+        client_id,
+        engagement_id,
+        intake_id,
+        state_dir=indexed_archive.state,
+    )
+    intake_output = Path(intake["client_engagement"]["output_dir"])
+    (intake_output / "intake.md").write_text(
+        "Fictional intake; no verified deadline.\n", encoding="utf-8"
+    )
+    archive_core.finalize_studio_client_workflow(
+        client_id,
+        engagement_id,
+        intake_id,
+        [
+            *write_no_model_report(intake_output, "client-file-preparation", intake_id),
+            {
+                "artifact_id": "intake.memo",
+                "path": "intake.md",
+                "purpose": "Retain reviewed fictional intake.",
+                "audience": "review",
+                "media_type": "text/markdown",
+            },
+        ],
+        state_dir=indexed_archive.state,
+    )
+    archive_core.complete_studio_client_workflow(
+        client_id,
+        engagement_id,
+        intake_id,
+        state_dir=indexed_archive.state,
+    )
+    sealed_before = {
+        p.relative_to(intake_output).as_posix(): p.read_bytes()
+        for p in intake_output.rglob("*")
+        if p.is_file()
+    }
+
+    tax = archive_core.prepare_studio_client_workflow(
+        engagement_id,
+        "contenzioso-tributario",
+        input_ids=[imported["input_id"]],
+        upstream_artifacts=[
+            {
+                "role": "intake",
+                "run_id": intake_id,
+                "artifact_id": "intake.memo",
+            }
+        ],
+        state_dir=indexed_archive.state,
+    )
+    run_id = tax["run"]["run_id"]
+    archive_core.start_studio_client_workflow(
+        client_id,
+        engagement_id,
+        run_id,
+        state_dir=indexed_archive.state,
+    )
+    output = Path(tax["client_engagement"]["output_dir"])
+    run = output / "evidence-review"
+    helper = ROOT / "plugins/lucia/scripts"
+
+    def command(name: str, *args: str) -> subprocess.CompletedProcess[str]:
+        result = subprocess.run(
+            [sys.executable, str(helper / name), *args],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+        assert result.returncode == 0, result.stderr
+        return result
+
+    source = next(
+        binding
+        for binding in tax["client_engagement"]["input_bindings"]
+        if binding["kind"] == "import"
+    )
+    command(
+        "legal_documents.py",
+        "prepare",
+        "--run-dir",
+        str(run),
+        "--workflow",
+        "revisione-documentale",
+        "--file",
+        source["path"],
+        "--topic",
+        "Synthetic selected evidence",
+    )
+    command(
+        "legal_matter.py",
+        "init",
+        "--run-dir",
+        str(run),
+        "--kind",
+        "contenzioso-tributario",
+        "--purpose",
+        "Prepare; do not file",
+    )
+    (run / "plan.md").write_text(
+        "Preparation only; filing receipt missing.\n", encoding="utf-8"
+    )
+    state = json.loads((run / "matter.json").read_text(encoding="utf-8"))
+    state["stages"] = [
+        {
+            "id": "prepare",
+            "label": "Preparation",
+            "status": "done",
+            "note": "Local plan exists",
+            "outputs": ["plan.md"],
+        },
+        {
+            "id": "filing-proof",
+            "label": "Filing proof",
+            "status": "pending",
+            "note": "No actual filing performed",
+            "outputs": [],
+        },
+    ]
+    state["questions"] = [
+        {
+            "id": "receipt",
+            "question": "Is filing proof available?",
+            "reason": "Preparation does not prove filing",
+            "blocks": ["filing-proof"],
+            "status": "open",
+            "answer": "",
+            "citations": [],
+        }
+    ]
+    proposal = run / "proposal.json"
+    proposal.write_text(json.dumps(state), encoding="utf-8")
+    command(
+        "legal_matter.py",
+        "save",
+        "--run-dir",
+        str(run),
+        "--state",
+        str(proposal),
+        "--expected-revision",
+        "0",
+    )
+    command("legal_matter.py", "render", "--run-dir", str(run))
+    reopened = json.loads(
+        command("legal_matter.py", "status", "--run-dir", str(run)).stderr
+    )
+    disclosures = write_no_model_report(output, "contenzioso-tributario", run_id)
+    products = [
+        {
+            "artifact_id": f"tax.evidence-{i}",
+            "path": p.relative_to(output).as_posix(),
+            "purpose": "Preserve fictional evidence and resumable preparation.",
+            "audience": "internal",
+            "media_type": "application/octet-stream",
+        }
+        for i, p in enumerate(sorted(run.rglob("*")))
+        if p.is_file()
+    ]
+    finalized = archive_core.finalize_studio_client_workflow(
+        client_id,
+        engagement_id,
+        run_id,
+        [*disclosures, *products],
+        state_dir=indexed_archive.state,
+    )
+    completed = archive_core.complete_studio_client_workflow(
+        client_id,
+        engagement_id,
+        run_id,
+        state_dir=indexed_archive.state,
+    )
+
+    assert run_id != intake_id
+    assert (
+        tax["run"]["workflow_version"]
+        == json.loads(
+            (ROOT / "plugins/vera/.codex-plugin/plugin.json").read_text(
+                encoding="utf-8"
+            )
+        )["version"]
+    )
+    assert reopened["blocked_stages"] == {"filing-proof": ["receipt"]}
+    assert reopened["work_products_recorded"] is False
+    assert finalized["status"] == "ready_for_review"
+    assert completed["status"] == "completed"
+    assert (run / "matter.html").is_file()
+    assert sealed_before == {
+        p.relative_to(intake_output).as_posix(): p.read_bytes()
+        for p in intake_output.rglob("*")
+        if p.is_file()
+    }
+
+    # A late answer/proof belongs to a new run; completed output remains sealed.
+    sealed_tax = {
+        p.relative_to(output).as_posix(): p.read_bytes()
+        for p in output.rglob("*")
+        if p.is_file()
+    }
+    late_source = indexed_archive.root.parent / "fictional-late-receipt.txt"
+    late_quote = "Fictional receipt supplied for technical progress testing."
+    late_source.write_text(late_quote + "\n", encoding="utf-8")
+    late_import = archive_core.import_studio_client_document(
+        client_id,
+        late_source,
+        "source",
+        engagement_id=engagement_id,
+        state_dir=indexed_archive.state,
+    )
+    state_artifact = next(
+        item for item in products if item["path"] == "evidence-review/matter.json"
+    )
+    successor = archive_core.prepare_studio_client_workflow(
+        engagement_id,
+        "contenzioso-tributario",
+        input_ids=[imported["input_id"], late_import["input_id"]],
+        upstream_artifacts=[
+            {
+                "run_id": run_id,
+                "artifact_id": state_artifact["artifact_id"],
+                "role": "prior-progress",
+            }
+        ],
+        purpose="Review late evidence and resume selected prior progress",
+        state_dir=indexed_archive.state,
+    )
+    successor_id = successor["run"]["run_id"]
+    started_successor = archive_core.start_studio_client_workflow(
+        client_id,
+        engagement_id,
+        successor_id,
+        state_dir=indexed_archive.state,
+    )
+    bindings = successor["client_engagement"]["input_bindings"]
+    selected_original = next(
+        b for b in bindings if b["binding_id"] == imported["input_id"]
+    )
+    selected_late = next(
+        b for b in bindings if b["binding_id"] == late_import["input_id"]
+    )
+    prior_progress = next(b for b in bindings if b["role"] == "prior-progress")
+    previous_state = json.loads(
+        Path(prior_progress["path"]).read_text(encoding="utf-8")
+    )
+    resumed = Path(successor["client_engagement"]["output_dir"]) / "evidence-review"
+    command(
+        "legal_documents.py",
+        "prepare",
+        "--run-dir",
+        str(resumed),
+        "--workflow",
+        "revisione-documentale",
+        "--file",
+        selected_original["path"],
+        "--file",
+        selected_late["path"],
+        "--topic",
+        "Review new fictional proof",
+    )
+    command(
+        "legal_matter.py",
+        "init",
+        "--run-dir",
+        str(resumed),
+        "--kind",
+        "contenzioso-tributario",
+        "--purpose",
+        "Review late proof",
+    )
+    resumed_state = json.loads((resumed / "matter.json").read_text(encoding="utf-8"))
+    resumed_state["stages"] = [
+        {
+            **stage,
+            "status": "pending",
+            "outputs": [],
+            "note": "Recheck in successor run",
+        }
+        for stage in previous_state["stages"]
+    ]
+    resumed_state["questions"] = previous_state["questions"]
+    resumed_state["questions"][0].update(
+        status="answered",
+        answer="Fictional document acquired; legal adequacy unexamined",
+        citations=[{"source_id": "D002", "anchor": "line:1", "quote": late_quote}],
+    )
+    resumed_state["notes"] = [
+        f"Prior selected progress: {run_id}; earlier run remains sealed."
+    ]
+    resumed_proposal = resumed / "proposal.json"
+    resumed_proposal.write_text(json.dumps(resumed_state), encoding="utf-8")
+    command(
+        "legal_matter.py",
+        "save",
+        "--run-dir",
+        str(resumed),
+        "--state",
+        str(resumed_proposal),
+        "--expected-revision",
+        "0",
+    )
+    command("legal_matter.py", "render", "--run-dir", str(resumed))
+    late_status = json.loads(
+        command("legal_matter.py", "status", "--run-dir", str(resumed)).stderr
+    )
+
+    assert successor_id != run_id
+    assert started_successor["status"] == "running"
+    assert late_status["open_questions"] == []
+    assert late_status["ready_stages"] == ["prepare", "filing-proof"]
+    assert late_status["work_products_recorded"] is False
+    assert sealed_tax == {
+        p.relative_to(output).as_posix(): p.read_bytes()
+        for p in output.rglob("*")
+        if p.is_file()
+    }

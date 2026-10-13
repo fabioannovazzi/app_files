@@ -4,7 +4,7 @@
   "courses": {
     "apertura-pratica": {
       "path": "apertura-pratica/course.json",
-      "sha256": "31bb17916a49fb1af2fc8db80770984ce8229cafd0aba6a6a26c5a743ff98dcb",
+      "sha256": "3070f5a9da502db645e69fcdd86200f9da59babefbd49ba70e3d23226d0a73ff",
       "languages": [
         "it",
         "en",
@@ -32,7 +32,7 @@
     },
     "comunicazione-professionale": {
       "path": "comunicazione-professionale/course.json",
-      "sha256": "67a107a5b0657b30d2bb5bf992bb1b59c773e856f434c748349954ed08b6c1ac",
+      "sha256": "06ceca6878879f58c22bbe96e0968ea5e365330cebb0df21d2c019661c996bca",
       "languages": [
         "it",
         "en",
@@ -60,7 +60,7 @@
     },
     "presenza-digitale-studio": {
       "path": "presenza-digitale-studio/course.json",
-      "sha256": "5cf50db9a4ad3682a6b9f8fcae909713aa822c3b3cce12dc445e412cbd46c6d7",
+      "sha256": "286326fc87ca60665d1a391d7a6b546771856837017db7fa3ce509b427001923",
       "languages": [
         "it",
         "en",
@@ -88,7 +88,7 @@
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
-      "sha256": "cc36c1575fb63b99f2156e7cea6d2d154309917c9c043e7534982ad8b0a62ce3",
+      "sha256": "0170789b9303e3aa6009f45fba5359a5596a203e89f0d88c5f8848173f5059ae",
       "languages": [
         "it",
         "en",

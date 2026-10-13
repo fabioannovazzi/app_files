@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "quesito-legale-fiscale",
-  "course_sha256": "72d21aea1e66882e847268ba2195c3872f14484782b2171f0ebfbfb7a27dc866",
-  "reviewer": "Codex /root - source-preview encoding and unchanged teaching-material review",
-  "reviewed_at": "2026-10-13T22:34:08.410930+00:00",
-  "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
+  "course_sha256": "faa76fd941389cdeb8be025af028cd2ab2352a7473fe2579203bb1614679b8b8",
+  "reviewer": "Codex /root - tax-litigation fix source compatibility review",
+  "reviewed_at": "2026-10-13T22:58:23.914955+00:00",
+  "review_scope": "Source compatibility review of unchanged authored lessons; fresh execution against each exact course digest remains required. Historical locale/editorial/artifact judgments retain their scope. No new learner, visual, installed-host or professional acceptance is claimed.",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -538,6 +538,24 @@
     "learner_or_professional_acceptance": false,
     "installed_host_acceptance": false
   },
+  "tax_litigation_fixes_source_review_20261013": {
+    "baseline_commit": "3fbd29e58ad50c7e6db571ba45c6e604fea7eed2",
+    "reviewed_at": "2026-10-13T21:38:57.946661+00:00",
+    "previous_review_identity": {
+      "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
+      "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
+      "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
+      "course_sha256": "37471eccaf061f3857352f7e07288a2e51d34a97cd23b030f39cc4c9da9e69c2"
+    },
+    "previous_course_sha256": "37471eccaf061f3857352f7e07288a2e51d34a97cd23b030f39cc4c9da9e69c2",
+    "current_course_sha256": "80dbd37dee64448207047ce4c767da7e70f57bef0e588e384bf449a490ec63d0",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "source_review": "docs/releases/2026-10-13-tax-litigation-fixes-source-review.json",
+    "fresh_matching_junit_required": true
+  },
   "encoding_preview_source_binding_review_20261013": {
     "reviewed_at": "2026-10-13T19:28:41.735928+00:00",
     "scope": "Reviewed the shared UI projection fix against unsupported-encoding, UTF-8 BOM and malformed-control regressions. Native source inventory changes only; authored lessons, multilingual inputs, deliverables and all prior professional-acceptance limits are preserved. Unsupported raw captures retain their bytes and hashes and display an explicit encoding limit. No new research method, law judgment, recipient or model API is introduced."
@@ -547,5 +565,12 @@
     "previous_course_sha256": "eec872354aece96aaf92706d3237ea5a9d428bbf02a8fc9e4afa741d5307db86",
     "authored_content_unchanged": true,
     "scope": "Reviewed answer identity, immutable original/text captures, typed issue evidence/effects, quotation anomaly treatment and retention of executed evaluations. No source selection or legal support classifier added. Fresh course execution and CI remain required; no professional, learner or installed-host acceptance is inferred."
+  },
+  "research_integrity_integration_review_20261014": {
+    "reviewed_at": "2026-10-13T22:58:23.914955+00:00",
+    "previous_course_sha256": "80dbd37dee64448207047ce4c767da7e70f57bef0e588e384bf449a490ec63d0",
+    "current_course_sha256": "faa76fd941389cdeb8be025af028cd2ab2352a7473fe2579203bb1614679b8b8",
+    "authored_content_unchanged": true,
+    "scope": "Carry source bindings forward after integrating the independently released shared tax-litigation Archive fixes with legal/tax evidence-integrity changes. Authored multilingual lessons, materials and deliverables remain unchanged. Fresh exact-digest CI is required; no professional or installed-host acceptance inferred."
   }
 }

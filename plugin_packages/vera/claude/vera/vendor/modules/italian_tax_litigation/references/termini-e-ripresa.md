@@ -47,7 +47,7 @@ pertinente, fonte/regime, prove richieste, dipendenze, responsabile, elaborato,
 termine o ragione della sua assenza e stato. Distinguere necessario, facoltativo
 e condizionale; non convertire l'intera guida in una lista sempre obbligatoria.
 Il registro `matter.json` conserva gli stadi scelti, domande e risultati secondo
-`../../revisione-contratti/references/matter-progress.md`.
+`evidence-and-progress.md`, nella stessa directory di questo riferimento.
 
 Esempio di struttura, non calcolo legale: prova della proposizione del ricorso →
 verifica del termine di costituzione → preparazione del pacchetto → acquisizione

@@ -1243,7 +1243,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "955e7093fec0e1ced0f5ac741918cbdbf084e33357db31b94aeeed1e235da917",
+  "catalogue_fingerprint": "a278aa2a3a3796ec249cd961fef8db27ad8d4d2d5a29445488453eeec1770d37",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1634,14 +1634,25 @@
   },
   "source_binding_update": {
     "date": "2026-10-14",
-    "version": "0.1.373",
-    "reason": "Refresh current product identity after legal/tax evidence-integrity changes; preserve all Geneva dispositions and acceptance limits. No fresh Geneva qualification inferred.",
+    "version": "0.1.375",
+    "reason": "Current product identity after integrating the released tax-litigation Archive handoffs and research evidence-integrity fixes. Preserve existing Geneva dispositions and acceptance limits. No new qualification inferred.",
     "fresh_geneva_acceptance": false
   },
   "incident_pipeline_release_binding": {
     "date": "2026-10-13",
     "version": "0.1.372",
     "reason": "Version-only catalogue refresh after the incident pipeline correction. Skill entrypoints, jurisdiction dispositions and professional acceptance limits remain unchanged.",
+    "fresh_geneva_acceptance": false
+  },
+  "tax_litigation_fix_release_binding_20261013": {
+    "date": "2026-10-13",
+    "version": "0.1.374",
+    "prior_catalogue_fingerprint": "10c0391237aba07f656360ef7ad216edd4f41cf900bba233a91c7c4bb2e9cbed",
+    "current_catalogue_fingerprint": "971aa9f9e06ece11afb6d1d7d00ea5ec2b3b0ee6372031ba52428730a904fb38",
+    "changed_entrypoints": [
+      "contenzioso-tributario"
+    ],
+    "reason": "Refresh the release baseline for the Archive registration, evidence subdirectory and sealed-run resume guidance. Existing jurisdiction dispositions, Italy-only litigation scope and professional acceptance limits are unchanged.",
     "fresh_geneva_acceptance": false
   }
 }

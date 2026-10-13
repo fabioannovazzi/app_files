@@ -239,7 +239,7 @@ def status(run_dir: Path) -> dict[str, Any]:
             if s["status"] == "pending" and not blockers[s["id"]]
         ],
         "changed_outputs": drift,
-        "meaning": "Recorded workflow state and file integrity only; the lawyer retains professional approval.",
+        "meaning": "Recorded workflow state and file integrity only; approval remains with the responsible professional.",
     }
 
 

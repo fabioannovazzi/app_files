@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "previdenza-inps",
-  "course_sha256": "b9a051f50a2002220998f98256c97b908969cea34418cf61d59690471d474b6f",
-  "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
-  "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
-  "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
+  "course_sha256": "ed2d509f148cb8649e5682ff38137ce482dd1fb2fb8409ff7d02cae844f23e10",
+  "reviewer": "Codex /root - tax-litigation fix source compatibility review",
+  "reviewed_at": "2026-10-13T21:38:57.946661+00:00",
+  "review_scope": "Source compatibility review of unchanged authored lessons; fresh execution against each exact course digest remains required. Historical locale/editorial/artifact judgments retain their scope. No new learner, visual, installed-host or professional acceptance is claimed.",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -613,5 +613,23 @@
     "new_native_output_visual_review": false,
     "learner_or_professional_acceptance": false,
     "installed_host_acceptance": false
+  },
+  "tax_litigation_fixes_source_review_20261013": {
+    "baseline_commit": "3fbd29e58ad50c7e6db571ba45c6e604fea7eed2",
+    "reviewed_at": "2026-10-13T21:38:57.946661+00:00",
+    "previous_review_identity": {
+      "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
+      "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
+      "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
+      "course_sha256": "b9a051f50a2002220998f98256c97b908969cea34418cf61d59690471d474b6f"
+    },
+    "previous_course_sha256": "b9a051f50a2002220998f98256c97b908969cea34418cf61d59690471d474b6f",
+    "current_course_sha256": "ed2d509f148cb8649e5682ff38137ce482dd1fb2fb8409ff7d02cae844f23e10",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "source_review": "docs/releases/2026-10-13-tax-litigation-fixes-source-review.json",
+    "fresh_matching_junit_required": true
   }
 }

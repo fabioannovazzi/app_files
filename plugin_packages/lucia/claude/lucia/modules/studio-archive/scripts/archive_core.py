@@ -3060,9 +3060,15 @@ def open_studio_google_drive_source(
 
 
 def _workflow_version(workflow_id: str) -> str:
-    """Read the selected component version without inventing one in a run."""
+    """Read the owning product/component version for the exact run identity."""
 
-    component_root = Path(__file__).resolve().parents[2] / workflow_id
+    components = Path(__file__).resolve().parents[2]
+    component_root = components / workflow_id
+    if workflow_id == "contenzioso-tributario":
+        # This direct skill is released with Vera, not as a standalone component.
+        component_root = (
+            components.parent if components.name == "modules" else components / "vera"
+        )
     manifest_path = component_root / ".codex-plugin" / "plugin.json"
     if not manifest_path.is_file():
         return "unversioned"
