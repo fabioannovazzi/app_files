@@ -113,12 +113,16 @@
     {
       "id": "standalone-exact-source-boundary",
       "control": "Only invoice-xml, prompt-optimizer and deep-research-validator accept the distinct standalone context. The loader rechecks its digest, selected byte receipts and closed input set and rejects foreign workflows, aliases, source changes and output escape. Invoice professional export approval, schema/arithmetic checks and legal semantic review are retained. The task is not an Archive run or registered client."
+    },
+    {
+      "id": "portable-native-intake-and-review",
+      "control": "Necessary intake choices use an available permitted host question tool or chat without requiring a conversation-mode change. Prompt review uses the standard MCP Apps tools/call bridge with parent/origin checks; feature-detected window.openai remains a compatibility fallback. Native save/apply tools retain the existing hash-bound local review and decision persistence. No new external recipient, model API, source selection or automatic anonymization is introduced."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-12",
+    "reviewed_at": "2026-10-13",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "89fff09b7f605881e55f8e651d1b2ceab814922ce367be7742e7788738b93f48"
+    "source_fingerprint": "ec9b916d7f801dc60041735641181033c0653c448925e4cc4fcc37605e10554b"
   }
 }

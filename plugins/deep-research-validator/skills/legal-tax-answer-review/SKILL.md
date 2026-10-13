@@ -361,8 +361,9 @@ If MCP rendering is unavailable, fall back to a markdown review summary from
 repair `claims_review_draft.json` and rerun packaging rather than ignoring the
 failed checks. Keep review decisions pending unless they are recorded in
 `ui_decisions.json` and consumed into `applied_decisions.json`. Small setup
-choices should stay in chat or, when this conversation is in Plan mode and the
-tool is available, native Plan-mode choices.
+choices use an available, permitted native question tool or chat without a
+mode switch. Standard MCP Apps hosts save/apply through the tools/call bridge;
+window.openai is only a feature-detected compatibility fallback.
 
 ## Language Policy
 

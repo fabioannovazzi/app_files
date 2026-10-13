@@ -247,9 +247,50 @@ positions; do not silently blend them or recurse into counter-counter-opinions.
 Refresh artifact bindings after actual review; never rebind stale review text
 merely to clear a failed hash check.
 
+## Native research review
+
+Use the current host's available question tool for material missing facts and
+professional choices; respect that tool's permissions and fall back to chat.
+Do not require Plan mode, ask the user to choose a research mode, or pause for
+routine internal validation/challenge cycles.
+
+After a reviewable checkpoint or when the user asks to inspect the work, run:
+
+```bash
+python scripts/research_record.py review-ui --output-dir <client-run-output> --client-engagement <client_engagement_path>
+```
+
+This projects the saved issues, cycles, faithful source captures, available
+reviewed original and opposing opinions, assessment and comparison into the
+same native answer-review widget. It displays the model's declared status;
+it does not certify closure or legal quality. Validate the hash-bound local
+review reference, then call `render_deep_research_review` as documented in
+`../legal-tax-answer-review/SKILL.md`. Pass the returned token to save/apply.
+Use the MCP Apps bridge on compatible hosts; retain the local/chat fallback
+when rendering is unavailable. Simple questions do not need this workbench.
+UI excerpts are labelled and bounded for display; read the original artifacts
+for substantive review. Display limits never limit research or prove coverage.
+For a completed run, use its stored bound review read-only; do not rewrite the
+completed run just to prepare a screen. Use read-only files/chat when no
+compatible saved UI snapshot exists.
+
+Read `applied_decisions.json` after any reviewer action. Consume rejected,
+unclear and document-requested items into the same issue register and targeted
+research loop. Reviewer acceptance is a review decision, not source support or
+permission to close unfinished research. Refresh substantive reviews and the
+UI snapshot after actual corrections; prior decisions remain in review history.
+An evidence-revision mismatch requires a new snapshot and review, never a token
+refresh to approve an old screen. Show this review after the final opposing
+stage too, so both positions and the comparison are available together.
+
 Before delivery, bind and verify `research_review.json` with the documented
 `research_record.py` helper. When required, also verify `opinion_delivery.json`
-with the existing adversarial helper. Then declare all physical artifacts,
+with the existing adversarial helper. After these bindings are verified,
+refresh the final native review snapshot from that exact revision. Save/apply
+any collected professional decisions and consume consequential findings before
+closure; after a correction, substantively review, rebind and refresh the
+snapshot again. Do not require ceremonial clicks or treat an unanswered UI
+queue as source support. Verify the substantive bindings again, then declare all physical artifacts,
 including research records and source captures, and complete the same Archive
 run under its existing professional-review rules. Report only work actually
 performed, remaining limits and professional decisions.

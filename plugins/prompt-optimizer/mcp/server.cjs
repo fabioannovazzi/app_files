@@ -73,7 +73,7 @@ const RUNTIME_COPY = {
     ready: "Use final_artifacts.json as the reviewed artifact gallery for handoff.",
     partial: "Complete remaining review decisions before final handoff.",
     instructions:
-      "Use validate_prompt_optimizer_review with the hash-bound local review reference before render_prompt_optimizer_review, then reuse the returned short-lived token. Prefer the MCP widget for final Prompt Optimizer package review; use save_prompt_optimizer_decisions to persist review actions and apply_prompt_optimizer_decisions to write applied_decisions.json plus final_artifacts.json status; use native Plan-mode choices or chat for simple pre-draft intake decisions.",
+      "Use validate_prompt_optimizer_review with the hash-bound local review reference before render_prompt_optimizer_review, then reuse the returned short-lived token. Prefer the MCP widget for final Prompt Optimizer package review; use save_prompt_optimizer_decisions to persist review actions and apply_prompt_optimizer_decisions to write applied_decisions.json plus final_artifacts.json status; use available, permitted native question controls or chat for simple pre-draft intake decisions.",
   },
   es: {
     handoffTitle: "Entrega para revisión",
@@ -98,7 +98,7 @@ const RUNTIME_COPY = {
     ready: "Utilice final_artifacts.json como galería revisada de artefactos para la entrega.",
     partial: "Complete las decisiones de revisión pendientes antes de la entrega final.",
     instructions:
-      "Ejecute validate_prompt_optimizer_review con la referencia local vinculada por hash antes de render_prompt_optimizer_review y reutilice después el token temporal devuelto. Utilice preferentemente el widget MCP para la revisión final del paquete; guarde las decisiones con save_prompt_optimizer_decisions y aplíquelas con apply_prompt_optimizer_decisions para generar applied_decisions.json y actualizar el estado de final_artifacts.json. Para decisiones sencillas previas al borrador, utilice las opciones nativas del modo Plan o el chat.",
+      "Ejecute validate_prompt_optimizer_review con la referencia local vinculada por hash antes de render_prompt_optimizer_review y reutilice después el token temporal devuelto. Utilice preferentemente el widget MCP para la revisión final del paquete; guarde las decisiones con save_prompt_optimizer_decisions y aplíquelas con apply_prompt_optimizer_decisions para generar applied_decisions.json y actualizar el estado de final_artifacts.json. Para decisiones sencillas previas al borrador, utilice las preguntas nativas disponibles y permitidas o el chat.",
   },
 };
 
@@ -302,6 +302,7 @@ function toolDefinitions() {
     },
     {
       name: TOOL_NAMES.saveDecisions,
+      _meta: { ui: { visibility: ["model", "app"] } },
       title: "Save Prompt Optimizer review decisions",
       description:
         "Validate Prompt Optimizer review decisions and persist them to ui_decisions.json when run_intake.output_dir is available.",
@@ -315,6 +316,7 @@ function toolDefinitions() {
     },
     {
       name: TOOL_NAMES.applyDecisions,
+      _meta: { ui: { visibility: ["model", "app"] } },
       title: "Apply Prompt Optimizer review decisions",
       description:
         "Validate Prompt Optimizer review decisions, write applied_decisions.json, and update final_artifacts.json status when run_intake.output_dir is available.",

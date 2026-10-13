@@ -231,9 +231,9 @@ def verify_research_record(root: Path) -> dict[str, Any]:
 
 
 def main() -> int:
-    """Use the existing managed review run; only binding writes artifacts."""
+    """Use the existing managed review run for binding and native UI projection."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", choices=("bind", "verify"))
+    parser.add_argument("action", choices=("bind", "verify", "review-ui"))
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--client-engagement", type=Path, required=True)
     parser.add_argument("--answer")
@@ -245,7 +245,7 @@ def main() -> int:
     try:
         root = args.output_dir.expanduser().absolute()
         record_path = _file(root, RECORD)
-        load_client_engagement_context_file(
+        context = load_client_engagement_context_file(
             args.client_engagement,
             expected_workflow_id="deep-research-validator",
             input_paths=[record_path],
@@ -269,6 +269,10 @@ def main() -> int:
                 research_log=args.research_log,
                 sources=args.source_file,
             )
+        elif args.action == "review-ui":
+            from pipeline_review import write_pipeline_review
+
+            result = write_pipeline_review(root, context)
         else:
             result = verify_research_record(root)
     except (OSError, ValueError, AssuranceContractError) as exc:
