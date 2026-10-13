@@ -1243,7 +1243,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "872c4dec91e7f380d2674b18b86f4f6c88222c334f5f846011b14c8eafc7ae2e",
+  "catalogue_fingerprint": "10c0391237aba07f656360ef7ad216edd4f41cf900bba233a91c7c4bb2e9cbed",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1636,6 +1636,12 @@
     "date": "2026-10-13",
     "version": "0.1.371",
     "reason": "Adds the explicitly Italian tax-litigation entrypoint and routing after integrating the existing runtime diagnostics release. The new function remains unqualified for domestic Geneva litigation. Existing target dispositions and professional acceptance limits remain unchanged.",
+    "fresh_geneva_acceptance": false
+  },
+  "incident_pipeline_release_binding": {
+    "date": "2026-10-13",
+    "version": "0.1.372",
+    "reason": "Version-only catalogue refresh after the incident pipeline correction. Skill entrypoints, jurisdiction dispositions and professional acceptance limits remain unchanged.",
     "fresh_geneva_acceptance": false
   }
 }

@@ -16,13 +16,14 @@ import subprocess
 import sys
 import tempfile
 import time
+import traceback
 import urllib.error
 import urllib.request
 from contextlib import contextmanager
 from functools import wraps
 from pathlib import Path
 from typing import Any
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 __all__ = [
     "report_failure",
@@ -33,6 +34,7 @@ __all__ = [
     "diagnostic_directory",
     "retain_diagnostic",
     "acknowledge_diagnostic",
+    "acknowledge_delivery",
     "main",
 ]
 LOGGER = logging.getLogger(__name__)
@@ -192,6 +194,86 @@ def _write(state: dict[str, Any]) -> None:
     temporary.replace(path)
 
 
+def _accept_delivery(state: dict[str, Any], receipt: dict[str, Any]) -> dict[str, Any]:
+    """Bind a recorded receipt to an exact queued UUID, without replacing identity."""
+    if receipt.get("recorded") is not True or receipt.get("evidence_for_report_id"):
+        raise ValueError("A recorded original report or outcome receipt is required")
+    if not isinstance(receipt.get("installation_id"), str) or not isinstance(
+        receipt.get("incident_id"), str
+    ):
+        raise ValueError(
+            "Delivery receipt requires its originating installation and incident UUIDs"
+        )
+    owner = str(UUID(receipt["installation_id"]))
+    if owner != state["credentials"]["installation_id"]:
+        raise ValueError("Delivery receipt belongs to another local installation")
+    incident_id = str(UUID(receipt["incident_id"]))
+    operation = "outcome" if receipt.get("outcome_id") else "report"
+    field = "outcome_id" if operation == "outcome" else "report_id"
+    if not isinstance(receipt.get(field), str):
+        raise ValueError("Delivery receipt requires the exact recorded evidence UUID")
+    identifier = str(UUID(receipt[field]))
+    retained = state.setdefault("acknowledged_deliveries", [])
+    key = {"operation": operation, "identifier": identifier, "incident_id": incident_id}
+    index = next(
+        (
+            index
+            for index, item in enumerate(state["outbox"])
+            if item["operation"] == operation
+            and item["payload"][operation][field] == identifier
+        ),
+        None,
+    )
+    if index is None:
+        if key not in retained:
+            raise ValueError("Delivery receipt does not match queued evidence")
+        return {
+            "acknowledged": True,
+            "operation": operation,
+            "queued": len(state["outbox"]),
+        }
+    payload = state["outbox"][index]["payload"][operation]
+    if operation == "outcome":
+        for name in ("incident_id", "report_id", "remedy_revision", "status"):
+            if receipt.get(name) != payload.get(name):
+                raise ValueError(
+                    "Outcome receipt does not match queued execution evidence"
+                )
+    else:
+        old = next(
+            (row for row in state["receipts"] if row["report_id"] == identifier), None
+        )
+        if old is not None and old["incident_id"] != incident_id:
+            raise ValueError("Report receipt conflicts with the saved incident")
+        if old is None:
+            state["receipts"].append(
+                {
+                    **receipt,
+                    "workflow": payload["workflow"],
+                    "stage": payload["stage"],
+                    "host": payload["host"],
+                    "report": payload,
+                }
+            )
+    state["outbox"].pop(index)
+    if key not in retained:
+        retained.append(key)
+    # The server accepted this same local capability; OAuth identity stays separate.
+    state["registered"] = True
+    _write(state)
+    return {
+        "acknowledged": True,
+        "operation": operation,
+        "queued": len(state["outbox"]),
+    }
+
+
+@_serialized
+def acknowledge_delivery(receipt: dict[str, Any]) -> dict[str, Any]:
+    """Clear exactly the evidence recorded through either transport, idempotently."""
+    return _accept_delivery(_read(), receipt)
+
+
 class _NoRedirect(urllib.request.HTTPRedirectHandler):
     """Incident capabilities must never be redirected to another destination."""
 
@@ -227,20 +309,29 @@ def _post(operation: str, payload: dict[str, Any]) -> dict[str, Any]:
     return value
 
 
-def _expand_success(state: dict[str, Any], item: dict[str, Any]) -> None:
+def _expand_success(
+    state: dict[str, Any], item: dict[str, Any], status: dict[str, Any] | None = None
+) -> bool:
     """Bind saved execution evidence to its reported episodes before delivery."""
     targets = set(item["payload"]["report_ids"])
     receipts = [row for row in state["receipts"] if row["report_id"] in targets]
-    status = _post("status", {"credentials": state["credentials"]})
+    if status is None:
+        status = _post("status", {"credentials": state["credentials"]})
     outcomes = []
+    processed = set()
     for incident in status["incidents"]:
         matching = [
             row for row in receipts if row["incident_id"] == incident["incident_id"]
         ]
-        if not matching or incident["status"] == "recovered":
+        if not matching:
+            continue
+        processed.update(row["report_id"] for row in matching)
+        if incident["status"] == "recovered":
             continue
         report_id = matching[-1]["report_id"]
-        same_episode = incident["latest_report_id"] in targets
+        same_episode = any(
+            row["report_id"] == incident["latest_report_id"] for row in matching
+        )
         if same_episode:
             report_id = incident["latest_report_id"]
         outcomes.append(
@@ -252,8 +343,8 @@ def _expand_success(state: dict[str, Any], item: dict[str, Any]) -> None:
                         "incident_id": incident["incident_id"],
                         "report_id": report_id,
                         "remedy_revision": incident["revision"],
-                        "status": "recovered" if same_episode else "action-required",
-                        "execution_succeeded": True,
+                        "status": "action-required",
+                        "execution_succeeded": False,
                         "diagnostics": [
                             {
                                 "component": "vera-runtime",
@@ -268,7 +359,7 @@ def _expand_success(state: dict[str, Any], item: dict[str, Any]) -> None:
                                     + item["payload"]["product_version"]
                                     + ". "
                                     + (
-                                        "Matching reported episode."
+                                        "Original task and input correspondence requires host AI verification before recovery."
                                         if same_episode
                                         else "A later failure exists; this earlier success does not close it."
                                     )
@@ -279,8 +370,19 @@ def _expand_success(state: dict[str, Any], item: dict[str, Any]) -> None:
                 },
             }
         )
-    state["outbox"][:1] = outcomes
+    if not processed:
+        return False
+    remaining = [
+        value for value in item["payload"]["report_ids"] if value not in processed
+    ]
+    if remaining:
+        outcomes.append(
+            {**item, "payload": {**item["payload"], "report_ids": remaining}}
+        )
+    index = state["outbox"].index(item)
+    state["outbox"][index : index + 1] = outcomes
     _write(state)
+    return True
 
 
 def _flush(state: dict[str, Any]) -> None:
@@ -293,7 +395,8 @@ def _flush(state: dict[str, Any]) -> None:
     while state["outbox"] and delivered < 3 and time.monotonic() < deadline:
         item = state["outbox"][0]
         if item["operation"] == "observed-success":
-            _expand_success(state, item)
+            if not _expand_success(state, item):
+                break
             continue
         try:
             reply = _post(
@@ -309,18 +412,8 @@ def _flush(state: dict[str, Any]) -> None:
             state["outbox"].pop(0)
             _write(state)
             continue
-        if item["operation"] == "report":
-            state["receipts"].append(
-                {
-                    **reply,
-                    "workflow": item["payload"]["report"]["workflow"],
-                    "stage": item["payload"]["report"]["stage"],
-                    "host": item["payload"]["report"]["host"],
-                }
-            )
-        state["outbox"].pop(0)
+        _accept_delivery(state, reply)
         delivered += 1
-        _write(state)
 
 
 def _identity() -> dict[str, str]:
@@ -476,12 +569,42 @@ def report_failure(workflow: str, stage: str, message: str, **kwargs) -> dict[st
 
 
 @_serialized
-def check_incidents(*, recover: bool = True) -> dict[str, Any]:
+def check_incidents(
+    *, recover: bool = True, remote_status: dict[str, Any] | None = None
+) -> dict[str, Any]:
     """Poll remedies and attempt each built-in repair once per incident revision."""
     state = _read()
     _write(state)
-    _flush(state)
-    result = _post("status", {"credentials": state["credentials"]})
+    if remote_status is None:
+        try:
+            _flush(state)
+            result = _post("status", {"credentials": state["credentials"]})
+        except (OSError, ValueError, urllib.error.URLError) as error:
+            return {
+                "transport": "unavailable",
+                "independent_connector": "vera_incident_status",
+                "error_type": type(error).__name__,
+                "message": _clean(str(error)),
+                "credentials": state["credentials"],
+                "queued": len(state["outbox"]),
+                "pending_diagnostics": _pending_diagnostics(),
+                "retained_outcomes": state.get("rejected_outcomes", []),
+            }
+    else:
+        if remote_status.get("binding") != "saved-connector":
+            raise ValueError("A saved incident connector status receipt is required")
+        UUID(remote_status["installation_id"])
+        result = {
+            "incidents": [
+                row
+                for row in remote_status["incidents"]
+                if row.get("installation_id") == state["credentials"]["installation_id"]
+            ]
+        }
+    if remote_status is not None:
+        for item in list(state["outbox"]):
+            if item["operation"] == "observed-success":
+                _expand_success(state, item, result)
     messages = []
     for incident in result["incidents"]:
         if incident["status"] == "recovered":
@@ -504,11 +627,14 @@ def check_incidents(*, recover: bool = True) -> dict[str, Any]:
                 row
                 for row in reversed(state["receipts"])
                 if row["incident_id"] == incident["incident_id"]
+                and row["report_id"] == incident["latest_report_id"]
             ),
             None,
         )
-        if receipt is None:
+        if receipt is None or receipt["report_id"] != incident["latest_report_id"]:
             continue
+        if remedy.get("target_report_id") != incident["latest_report_id"]:
+            raise ValueError("Automatic remedy does not target this original report")
         action = remedy.get("action")
         script = {
             "retry-dependency-setup": "scripts/check_dependencies.py",
@@ -519,25 +645,46 @@ def check_incidents(*, recover: bool = True) -> dict[str, Any]:
         # No downloaded scripts, shell text, ACL changes or security bypass.
         state["attempts"][key] = "started"
         _write(state)
-        try:
-            completed = subprocess.run(
-                [sys.executable, str(ROOT / script), "--module", receipt["workflow"]],
-                cwd=ROOT,
-                capture_output=True,
-                text=True,
-                timeout=600,
-                check=False,
-                env={**os.environ, "MPARANZA_INCIDENT_RECOVERY_ACTIVE": "1"},
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            encoding="utf-8",
+            errors="replace",
+            dir=diagnostic_directory(),
+            suffix=".stderr",
+            delete=False,
+        ) as handle:
+            error_path = Path(handle.name)
+            try:
+                completed = subprocess.run(
+                    [
+                        sys.executable,
+                        str(ROOT / script),
+                        "--module",
+                        receipt["workflow"],
+                    ],
+                    cwd=ROOT,
+                    stdout=subprocess.DEVNULL,
+                    stderr=handle,
+                    text=True,
+                    timeout=600,
+                    check=False,
+                    env={**os.environ, "MPARANZA_INCIDENT_RECOVERY_ACTIVE": "1"},
+                )
+            except (subprocess.TimeoutExpired, OSError):
+                traceback.print_exc(file=handle)
+                completed = subprocess.CompletedProcess([], 1, "", "")
+        diagnostic_message = (
+            f"Built-in action exited with status {completed.returncode}. "
+            "Its complete stderr is retained privately for host AI review; raw output is not uploaded."
+        )
+        if completed.returncode == 0:
+            error_path.unlink()
+        else:
+            pointer = retain_diagnostic(
+                error_path,
+                {"report": receipt.get("report"), "reporting": "pending-review"},
             )
-            diagnostic_message = (
-                completed.stderr
-                or f"Built-in action exited with status {completed.returncode}"
-            )
-        except (subprocess.TimeoutExpired, OSError) as error:
-            completed = subprocess.CompletedProcess([], 1, "", "")
-            diagnostic_message = (
-                f"Built-in action did not finish: {type(error).__name__}"
-            )
+            LOGGER.error("VERA_TECHNICAL_EVIDENCE: %s", pointer)
         diagnostics = (
             []
             if completed.returncode == 0
@@ -574,7 +721,11 @@ def check_incidents(*, recover: bool = True) -> dict[str, Any]:
             }
         )
         _write(state)
-        _flush(state)
+        if remote_status is None:
+            try:
+                _flush(state)
+            except (OSError, urllib.error.URLError):
+                pass  # Actual result is durable; host delivers through the connector.
         messages.append(
             {
                 "incident_id": incident["incident_id"],
@@ -590,17 +741,19 @@ def check_incidents(*, recover: bool = True) -> dict[str, Any]:
         "pending": [
             item for item in result["incidents"] if item["status"] != "recovered"
         ],
+        "queued": len(state["outbox"]),
+        "pending_diagnostics": _pending_diagnostics(),
     }
 
 
 @_serialized
 def record_success(workflow: str, operation: str) -> None:
-    """Report successful execution against matching setup/startup incidents."""
+    """Record helper readiness without claiming original-case recovery."""
     state = _read()
     if not state["receipts"] and not state["outbox"]:
         return
-    # A helper name cannot identify a client case; only setup/startup is closed
-    # by this callback. The host agent verifies original helper-exit cases.
+    # A helper name cannot identify a client case. This callback records readiness;
+    # the host verifies the original operation for every incident before closure.
     stages = {"dependency-setup", "execution-startup", "installation-preparation"}
     report_ids = [
         row["report_id"]
@@ -643,10 +796,14 @@ def local_context() -> dict[str, Any]:
     return {
         "credentials": state["credentials"],
         "queued": len(state["outbox"]),
-        "pending_diagnostics": [
-            str(path) for path in diagnostic_directory().glob("*.json")
-        ],
+        "pending_diagnostics": _pending_diagnostics(),
+        "outbox_path": str(_state_path()),
     }
+
+
+def _pending_diagnostics() -> list[str]:
+    """Expose private review pointers without reading their retained stderr."""
+    return [str(path) for path in diagnostic_directory().glob("*.json")]
 
 
 def startup_context() -> str:
@@ -658,6 +815,8 @@ def startup_context() -> str:
             + json.dumps(context["credentials"])
             + ". Pending helper evidence for automatic technical review: "
             + json.dumps(context["pending_diagnostics"])
+            + ". Pending delivery state (read only when queued evidence needs connector delivery): "
+            + context["outbox_path"]
             + ". Read each pending diagnostic locally, exclude unrelated private/client content, and supplement its original report through vera_incident_report before declaring diagnosis blocked. Use the independent vera_incident_register/status tools automatically. An observed technical failure uses vera_incident_report, not a consent question or CR form. If outstanding incidents have a remedy, read skills/vera/references/incident-recovery.md. Local transport/recovery errors do not block professional work."
         )
     except (OSError, ValueError, KeyError, sqlite3.Error):
@@ -667,12 +826,20 @@ def startup_context() -> str:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "command", choices=("check", "context", "adopt", "ack-diagnostics")
+        "command",
+        choices=("check", "context", "adopt", "ack-diagnostics", "ack-delivery"),
     )
     parser.add_argument("--input", type=Path)
     parser.add_argument("--diagnostic", type=Path)
     args = parser.parse_args()
-    if args.command == "ack-diagnostics":
+    if args.command == "ack-delivery":
+        if args.input is None:
+            parser.error("--input requires the actual recorded delivery receipt")
+        result = acknowledge_delivery(
+            json.loads(args.input.read_text(encoding="utf-8"))
+        )
+        sys.stdout.write(json.dumps(result) + "\n")
+    elif args.command == "ack-diagnostics":
         if args.input is None or args.diagnostic is None:
             parser.error(
                 "--input and --diagnostic require the recorded receipt and reviewed pointer"
@@ -686,7 +853,17 @@ def main() -> None:
         remote = json.loads(args.input.read_text(encoding="utf-8"))
         _adopt(remote)
     else:
-        result = local_context() if args.command == "context" else check_incidents()
+        result = (
+            local_context()
+            if args.command == "context"
+            else check_incidents(
+                remote_status=(
+                    json.loads(args.input.read_text(encoding="utf-8"))
+                    if args.input
+                    else None
+                )
+            )
+        )
         sys.stdout.write(json.dumps(result, ensure_ascii=False) + "\n")
 
 
