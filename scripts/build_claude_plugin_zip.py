@@ -669,6 +669,7 @@ LUCIA_DOCUMENT_COWORK_SKILLS = frozenset(
         "metodo-studio",
         "verifica-citazioni",
         "contenzioso-civile",
+        "contenzioso-tributario",
         "operazioni-ma",
         "lavoro",
         "recupero-crediti",

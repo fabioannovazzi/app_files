@@ -78,6 +78,32 @@ execution, not plugin dependencies or public customer examples.
 
 ## Runtime and data paths
 
+### Italian tax-litigation procedure
+
+`contenzioso-tributario` adds Lucia-authored Italian procedural guidance, rather
+than asking the lawyer to supply the sequence. Its three references cover the
+first-instance appeal, filing after service, hearing submissions, interim-order
+challenges, appeal and conditional later remedies. Every selected action and
+deadline requires its applicable authority, triggering event and evidence.
+The 13 October 2026 editorial source review includes the 2027 commencement of
+the tax code, the current summer suspension and the constitutional update to
+new evidence in appeal. The same sources must be checked for the actual matter.
+
+The host's canonical legal/tax research journey establishes applicability and
+contrary evidence; `legal_matter.py` accepts `contenzioso-tributario` and retains
+the model-authored stages, questions and output integrity. It does not contain
+a legal deadline classifier or an Italian procedural calculator. New evidence
+and hearing dates require a review of affected actions and deadlines; unchanged
+file hashes do not establish unchanged law. Draft preparation and evidence of
+actual lawyer-performed service/filing are separate stages. There is no new
+backend, legal database or autonomous reminder service.
+
+The dedicated five-language explanation is
+`static/shared/contenzioso-tributario/index.html`; its final model-data section
+describes tax acts, identifiers, amounts, receipts, research queries and local
+artifacts. The source guidance is in
+`plugins/lucia/skills/contenzioso-tributario/`.
+
 `legal_documents.py` snapshots originals, extracts complete selected sources,
 maintains evidence hashes, compares literal text and exports reports.
 `legal_docx.py` inspects paragraphs, tables, stories, links, fields, revisions,

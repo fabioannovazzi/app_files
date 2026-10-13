@@ -19,6 +19,7 @@ They are available for ordinary work, outside the prepared-course inventory belo
 | `metodo-studio` | Edit, duplicate, export and apply reusable firm instructions through a local file, preserving the selected version in each run. |
 | `verifica-citazioni` | Check document claims against acquired legal authorities, separating identity, temporal version, semantic support and unavailable text. |
 | `contenzioso-civile` | Prepare a civil chronology, evidence matrix, verified procedural-date inputs and a reviewable pleading draft. |
+| `contenzioso-tributario` | Prepare or resume an Italian tax dispute with an authored procedural guide, source-verified next steps and deadlines, grounds, precedents and reviewable pleadings. |
 | `operazioni-ma` | Prepare NDA reviews, due-diligence matrices, SPA issues and disclosure cross-checks for the selected side of an operation. |
 | `lavoro` | Review employment terms, organize dismissal evidence, extract pay records and prepare explicitly scoped calculations. |
 | `recupero-crediti` | Reconcile debt evidence and payments, prepare source-backed interest calculations and draft the requested recovery-stage document. |

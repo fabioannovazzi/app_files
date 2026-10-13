@@ -211,6 +211,7 @@ LUCIA_CHATGPT_ROUTER_TARGETS = {
     "deep-research": "skills/deep-research/SKILL.md",
     "estrazione-clausole": "skills/estrazione-clausole/SKILL.md",
     "contenzioso-civile": "skills/contenzioso-civile/SKILL.md",
+    "contenzioso-tributario": "skills/contenzioso-tributario/SKILL.md",
     "operazioni-ma": "skills/operazioni-ma/SKILL.md",
     "lavoro": "skills/lavoro/SKILL.md",
     "recupero-crediti": "skills/recupero-crediti/SKILL.md",
