@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "organizzazione-lavoro",
-  "course_sha256": "2ff21363e2dcf7a0f421db11622368844ed2f335dcfd1579c3bd58830c71b188",
-  "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
-  "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
-  "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
+  "course_sha256": "58b2de51e1802ccc81277e2eb3022f45456c507f7ea550677cd384855343f0ae",
+  "reviewer": "Codex /root - tax-litigation fix source compatibility review",
+  "reviewed_at": "2026-10-13T21:38:57.946661+00:00",
+  "review_scope": "Source compatibility review of unchanged authored lessons; fresh execution against each exact course digest remains required. Historical locale/editorial/artifact judgments retain their scope. No new learner, visual, installed-host or professional acceptance is claimed.",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -301,5 +301,23 @@
       "scripts/operational_incidents.py"
     ]
   },
-  "cached_readiness_source_binding_20261013": "Source-only binding after cached readiness reconciliation. Existing course content, dates, editorial judgments and artifact reviews are preserved. Fresh execution remains required by CI."
+  "cached_readiness_source_binding_20261013": "Source-only binding after cached readiness reconciliation. Existing course content, dates, editorial judgments and artifact reviews are preserved. Fresh execution remains required by CI.",
+  "tax_litigation_fixes_source_review_20261013": {
+    "baseline_commit": "3fbd29e58ad50c7e6db571ba45c6e604fea7eed2",
+    "reviewed_at": "2026-10-13T21:38:57.946661+00:00",
+    "previous_review_identity": {
+      "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
+      "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
+      "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
+      "course_sha256": "2ff21363e2dcf7a0f421db11622368844ed2f335dcfd1579c3bd58830c71b188"
+    },
+    "previous_course_sha256": "2ff21363e2dcf7a0f421db11622368844ed2f335dcfd1579c3bd58830c71b188",
+    "current_course_sha256": "58b2de51e1802ccc81277e2eb3022f45456c507f7ea550677cd384855343f0ae",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "source_review": "docs/releases/2026-10-13-tax-litigation-fixes-source-review.json",
+    "fresh_matching_junit_required": true
+  }
 }

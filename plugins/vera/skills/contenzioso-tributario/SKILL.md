@@ -64,7 +64,15 @@ cliente, incarico, percorso o stato di un intake. Se l'atto deve ancora essere
 preparato, leggi `../avviso-intake/SKILL.md` e segui il suo contratto una volta.
 Riusa l'intake già esaminato e gli originali pertinenti. Per un incarico
 gestito in Studio Archive avvia una run distinta di contenzioso nel medesimo
-incarico e usa il suo output autorizzato; non scrivere in un intake completato
+incarico e usa il suo output autorizzato. Per `legal_documents.py prepare`,
+`<run>` è una nuova sottocartella di quell’`output_dir`, non l’`output_dir`
+già creato da Archive. Riprendi la stessa sottocartella e il suo `matter.json`
+finché la run Archive è aperta e non sigillata. Se è sigillata o completata,
+per gli aggiornamenti richiesti prepara una run successiva del medesimo incarico
+con originali e nuove prove selezionati e con lo stato/elaborati precedenti come
+upstream. Prepara un nuovo evidence pack e riporta soltanto risposte e fasi
+ancora sostenute, con provenienza e citazioni verificate sul nuovo pack; non
+mutare gli snapshot o il `matter.json` della run precedente. Non scrivere in un intake completato
 o sigillato. Registra gli elaborati e i report della nuova run prima di
 completarla. Preserva risultati, ricevute e prove delle run anteriori.
 

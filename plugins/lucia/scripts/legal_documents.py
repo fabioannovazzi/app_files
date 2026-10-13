@@ -552,12 +552,15 @@ def render(run_dir: Path, review_path: Path, product: str = "Lucia") -> Path:
             ]
             for source in pack["sources"]
         ]
+    reviewer_prefix = "professional_" if product == "Vera" else ""
     overall_status = (
-        labels["complete"] if validation["coverage_complete"] else labels["partial"]
+        labels[reviewer_prefix + "complete"]
+        if validation["coverage_complete"]
+        else labels["partial"]
     )
     context_rows = [
         [labels["status"], overall_status],
-        [labels["caveat"], labels["quote_meaning"]],
+        [labels["caveat"], labels[reviewer_prefix + "quote_meaning"]],
     ]
     for key, label in labels["context_labels"].items():
         value = review["context"][key]

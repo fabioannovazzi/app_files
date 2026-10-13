@@ -253,7 +253,7 @@
     },
     {
       "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
-      "sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5"
+      "sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
     },
     {
       "path": "vendor/modules/italian_tax_litigation/references/fonti.md",
@@ -265,7 +265,7 @@
     },
     {
       "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
-      "sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f"
+      "sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
     },
     {
       "path": "vendor/modules/italian_tax_litigation/workflow.md",
@@ -682,5 +682,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "b0b434535a8bfebeb8f7a451124c699ceef27677ae57061748e8c80f4e4ce990"
+  "canonical_course_sha256": "6f86a574ac74d65093db49cd3860ae86077c981dfff5a0d8b4c809a50b6222f5"
 }

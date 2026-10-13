@@ -1,0 +1,2217 @@
+{
+  "schema": "mparanza.course_source_review.v1",
+  "baseline_commit": "3fbd29e58ad50c7e6db571ba45c6e604fea7eed2",
+  "reviewed_at": "2026-10-13T21:38:57.946661+00:00",
+  "source_compatibility_judgment": "The shared run contract only adds the exact tax-litigation workflow identifier; all existing IDs, transitions, input/receipt/ownership checks and completion semantics remain unchanged. The Archive version resolver binds this direct skill to Vera in source and installed layouts; other component resolution is unchanged. The two guide edits repair a relative reference and clarify a fresh evidence subdirectory below the existing Archive output. The document renderer chooses professional wording for explicit Vera output in all five languages while retaining exact Lucia default wording; document extraction, schema/quote checks, formats, local processing and data boundaries are unchanged. The progress JSON caveat is role-neutral without changing statuses or integrity checks. Existing courses retain their complete authored locales, inputs, requests, checkpoints, deliverables, practice and pacing; only source hashes change. The new litigation workflow remains excluded from prepared lessons.",
+  "native_execution_evidence": "Fresh exact-digest execution required by unchanged verify_release.py and CI; no fresh acceptance is inferred from source compatibility.",
+  "kits": [
+    {
+      "kit": "clara/business-planning",
+      "previous_course_sha256": "18934a360441902b797e01958213c387604ff72b70049b881bb76da0fe337b81",
+      "current_course_sha256": "4ef1feeac3eaed1188b098a1828967620d7316730b0e8d2e319b5847bc267f1e",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/business-planning/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "lucia/apertura-pratica",
+      "previous_course_sha256": "53a0f9ed740ae7bd0405556d7c69ce4cd3eca903219f0caf5800bbe0517498af",
+      "current_course_sha256": "5127c097e99a37155dff69df11c7d77c82b7f52f67ef3a57c3d6cae944f9644a",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        }
+      ]
+    },
+    {
+      "kit": "lucia/comunicazione-professionale",
+      "previous_course_sha256": "b0b434535a8bfebeb8f7a451124c699ceef27677ae57061748e8c80f4e4ce990",
+      "current_course_sha256": "6f86a574ac74d65093db49cd3860ae86077c981dfff5a0d8b4c809a50b6222f5",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        }
+      ]
+    },
+    {
+      "kit": "lucia/presenza-digitale-studio",
+      "previous_course_sha256": "c76b10baf010b34dd298e7cf1fca52e33a0139de319ab18efb70567dcee16759",
+      "current_course_sha256": "76e0f7d9c58671691c6a82a3a25d2981b729cccf2ff36f98d2b540d13068cdf6",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        }
+      ]
+    },
+    {
+      "kit": "lucia/quesito-legale-fiscale",
+      "previous_course_sha256": "37471eccaf061f3857352f7e07288a2e51d34a97cd23b030f39cc4c9da9e69c2",
+      "current_course_sha256": "80dbd37dee64448207047ce4c767da7e70f57bef0e588e384bf449a490ec63d0",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/deep-research-validator/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        }
+      ]
+    },
+    {
+      "kit": "vera/adeguati-assetti",
+      "previous_course_sha256": "fdbbb5d7b94aed19d8960faf82c8972e8b10a5e09e8636c4b63a2632cb443115",
+      "current_course_sha256": "55be61656122b5ed7e6c425aaa07534d1cb6e7dcb828c744cb57ac19701f7f94",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/agenzia-acquisition",
+      "previous_course_sha256": "f23413a691733bb0d771d6288688b74de446d6dfbeec050676a23081878c1bb2",
+      "current_course_sha256": "90d366b2130a2a9504609db371e2e242e5d50980ba2abe6be753d82883bef519",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/aml-review",
+      "previous_course_sha256": "14dfc3a80e696bb6b772db0fc68264cb423fc4994ff13c62dce4d1624c4010d1",
+      "current_course_sha256": "1a31a623bba1701baede9923100c9eb095ee23dfc7119ad57ff8a4a9ae1f11dc",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/aml-review/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/archive-organization",
+      "previous_course_sha256": "1afecedc6ffb81aff2a986ccb90bd031727be0d4499a10ad2aea139e9b772a56",
+      "current_course_sha256": "03b731c871d87d64d254eba5a33818ff847aa21de3a156a575b18964797d1ae7",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/archive-organization/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/avviso-intake",
+      "previous_course_sha256": "4c1a1dd014f6984d33ffb8f07d461b9df32ec61d06148f5b8c15e6c58f68c6b8",
+      "current_course_sha256": "37d0f81bae733083b29e03554a5575c0d5860c0ad47b46ee5c2b2a293fcbb2c0",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/bandi-agevolazioni",
+      "previous_course_sha256": "05d0bceb2db691a83b38686497163ca97bf8071b968b367b9ef0386fd91f7947",
+      "current_course_sha256": "04e6aa615aa10883170e77df37e3cf1274dd7db9c27d9d5076365ab603ef4bd7",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/bilancio-oic",
+      "previous_course_sha256": "6063e73b8ca090839d4911293c22dc257ad9bb5848c784d90eb587c146a0238a",
+      "current_course_sha256": "72a2c33edddc13ac5c5d88dea03da17382801b71250fc1f9c7ba0783588ef402",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/browser-automation",
+      "previous_course_sha256": "72b43e2acf0886e50e2fb416ac9d4a96460378a6512869fe2b06b8cbb7ad3d88",
+      "current_course_sha256": "d0cd22cae070901689e485da9ec854d73feddf3aa3fe60f7c8f8de27454ae98e",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/business-planning",
+      "previous_course_sha256": "eca2f34ae291c47e3f4ae9c7d2eb47c686a40076ae75b350415591af82eea04f",
+      "current_course_sha256": "6b21e74252160b2fe86fd50919b209b2ce2b251ab55c38febb95cdb416b98f4a",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/business-planning/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/business-valuation",
+      "previous_course_sha256": "b247f243eedd2d181071ee3248ae9bafe3a8790132e0719ad8bf2e1cd9935b58",
+      "current_course_sha256": "1c6f5c6fc78e4f929649ca3824b9bb4b83610412c24208c8252af82b0c0975e7",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/business-valuation/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/centrale-rischi-review",
+      "previous_course_sha256": "7b28209805c7faa76127cf0cb461defd4f73f2b28408fc178bb2e4628401aeca",
+      "current_course_sha256": "79f6c8295cc5125e1d5dc3b32f9efe51ad834ebab65828b37f5cb0b6843869dd",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/centrale-rischi-review/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/composizione-negoziata",
+      "previous_course_sha256": "0f48482c77bb6ea14e0013f51910ed9ad4ed0a167fe0474d760dbb7c82925386",
+      "current_course_sha256": "db4bc13354bb58b73d63d167827d96b9ed14fb7d18c90f99dc81a1185ece100a",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/comunicazione-professionale",
+      "previous_course_sha256": "5a46589d8d06d4e91830c1e1ec74533b90bbd5c35f8cfbee90f5fee5eec7a9a9",
+      "current_course_sha256": "1bb6148ee9db9722dd990087a97bf1457a52ca913934f060a59ff9869fe15dc1",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/concordato-plan-review",
+      "previous_course_sha256": "65062dc03beb053db797a9e4b5d86593a342746f7975d887316226f6c8872b28",
+      "current_course_sha256": "c1b7bd1dac1d939ecfcfee33efacbc8b0cceba962ec7ac5dba9eeedfb510aa10",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/dati-fiscali-strutturati",
+      "previous_course_sha256": "35b70605379b5ca18c6ad630ef0c89e5f66918af3670a37bf9d8bb2acc8d51d9",
+      "current_course_sha256": "82bec7599f28427d82d609ea15d10be1c0379f6fa42ee6cc49e1798560a58608",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/email-cliente",
+      "previous_course_sha256": "bae7be013c3c2c2320f222838cb76052ac9481beeee70abdec45b8e2e0aa8052",
+      "current_course_sha256": "bad8916574d849c7dc7419a4056971fd26bd6fe578d2178245bd1163ce44a9b2",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/esg-reporting-assurance",
+      "previous_course_sha256": "5c8d03d5664ee6d510dc01c1773f97cceb535d39c0da6136ac691ba305928642",
+      "current_course_sha256": "25016a450b872c55553e2ee2e05edf79339b5a19b75cf168e97a13f73ecf29e1",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/fatture-xml-check",
+      "previous_course_sha256": "dec00463cedf9eebac08b4f58ec5c745de186e9ab9316c83fcb8d9b2abdd6842",
+      "current_course_sha256": "2f6b29dca7e54d0e8ea8ec649a6350c1ab1dc4a2f7777a572a25e4be3e549bec",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/financial-analysis",
+      "previous_course_sha256": "948bb77e5745bc0421bbc5c741e8f521ea2b8c7e9555e9fbb7cc006569cd2f44",
+      "current_course_sha256": "d319e10d993f015963c7707635d3f53822fa9ebc3bf851cefb5648329e0172b7",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/financial-analysis/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/financial-report-builder",
+      "previous_course_sha256": "dc9d743bdca86b201df48a2e773e6ded1a73c26d6c2f87fbeee9913bee916eab",
+      "current_course_sha256": "3b88d3c75511e02fc5b1f9f712c06ff80ec8373d1d2114f8fe264d66fdfe1396",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/report-builder/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/fusione-guidata",
+      "previous_course_sha256": "0cf847a3ccf1a8287d8da1253f281d094413b1963810cc5c449dfa8410c2b1c7",
+      "current_course_sha256": "a472dd7bdaa0f1e54185d492c2da2dec84b09f151ce813561f791a19c775f40b",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/invoice-xml",
+      "previous_course_sha256": "ee0134fb0bba582ac2f1cd8db782353c5c9ac2837f82e9bb94e5c48903ad2c74",
+      "current_course_sha256": "e052ef662becb59374c75c2ba342b916ec453db71214bef1bb5d5dea92eedf32",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/invoice-xml/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/journal-bank-reconciliation",
+      "previous_course_sha256": "8f2423c8846992b5edecef64fdf144f59b919301ede75056e712e3f95422a27b",
+      "current_course_sha256": "30a363be039b4f0c0959a912aa3803a5f99e38be3bc640d7d07e804a7b453554",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/journal-bank-reconciliation/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/journal-sampling",
+      "previous_course_sha256": "35573f421e90be2d1f1d52428402369f79ba84b830efccdbadda779cef37499a",
+      "current_course_sha256": "cbddfc9998f8eadaa4c597e15ea8c9446524f053fe124d543189c7ec1d44c699",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/journal-sampling/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/lipe",
+      "previous_course_sha256": "dea17e17eb053bf5c4ab3dbe279a2e76de65213b3b0b89675eb6af6de7a88ea6",
+      "current_course_sha256": "2dec01948820cf783cfbfdcb811e2d6810c10acbd3d5117417ba39760a05b848",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/management-control-pack",
+      "previous_course_sha256": "8e6c3470cbbbd6e38656a1c4fdf46a12238054cf5bc67a4d88b3b8e7986da479",
+      "current_course_sha256": "b5b0f5325ea81c5d362276f045c144380a16321c46f321b0842f40b360a38d7e",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/management-control-pack/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/new-client",
+      "previous_course_sha256": "48550ec8d86f508ce8f736e44cee5df1318305252d06bfa5ed9611de3eff1c1a",
+      "current_course_sha256": "cc90a1ce5b20a7d71c5c87e42f9f7649ae2c33730ad69aa39ea8c4720ad34dc8",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "modules/new-client/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/open-item-reconciliation",
+      "previous_course_sha256": "7e29783599c905b541f15d68cc75668b78ff7475f501d5c82952bbc723327829",
+      "current_course_sha256": "d4cf2ad1faf7943d9e613e923cff951d1a6361004d271df007d1fd6e475afc27",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/open-item-reconciliation/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/organizzazione-lavoro",
+      "previous_course_sha256": "2ff21363e2dcf7a0f421db11622368844ed2f335dcfd1579c3bd58830c71b188",
+      "current_course_sha256": "58b2de51e1802ccc81277e2eb3022f45456c507f7ea550677cd384855343f0ae",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/patent-box-review",
+      "previous_course_sha256": "1239ad80cd17c8f46c95418a1ae14ba623f98513fc78ef0f831417f863b32d05",
+      "current_course_sha256": "7f571c802644668ec6dd8f945dabad4b80851d90caecb64ae3a51f5ebcce34a1",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/patent-box-review/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/presenza-digitale-studio",
+      "previous_course_sha256": "9beb7fb94251e6c92386c5e8919257f9912a2df668998990c64ca84a38be95db",
+      "current_course_sha256": "1dfc6a4b7ed6bdb310392903de0743f6d188d7b4de5af4db565dc81fc3618f7e",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/previdenza-inps",
+      "previous_course_sha256": "b9a051f50a2002220998f98256c97b908969cea34418cf61d59690471d474b6f",
+      "current_course_sha256": "ed2d509f148cb8649e5682ff38137ce482dd1fb2fb8409ff7d02cae844f23e10",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/previdenza-inps/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/purchase-invoice-review",
+      "previous_course_sha256": "4e88600335d654b0b3c559d6ba40b5576ca0d86ede6288ff776652e323525d11",
+      "current_course_sha256": "e808d615cba347fcab110f9aaeae1784354dfc977f31f9123bd5782c909e3b21",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/passive-invoice-audit/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/quesito-legale-fiscale",
+      "previous_course_sha256": "92b15075429514bb2e83d18fd6aff0b2d3e6f5565714f462380949db9cdcf640",
+      "current_course_sha256": "973eac2bc51c9b8e90593a311a3a2eb89f444eea71e14fefa01746aed3261b64",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/deep-research-validator/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/registro-imprese-sari",
+      "previous_course_sha256": "125add7e5fb6d1780a74404655d7f31d70c7af4018d07d7c15e2e856ee2521c9",
+      "current_course_sha256": "fbf6acfebc72795f71aedb6a0f9f0ff3259380b5202a085eb6fdbe8163768aa5",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/registro-imprese-sari/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/sales-plan",
+      "previous_course_sha256": "b76dc727e51f9b19d76dfe271ea66da164cf39b87b90d56bd1d9253ca40df47b",
+      "current_course_sha256": "e2d4f284fdd8e9874814fe1ca31545fe791f5c6bb5635ab7da4ceabff76623e8",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/sales-plan/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/scissione-guidata",
+      "previous_course_sha256": "dfb86601a84d3bd8d65aacd9121a4af4979cc2d6443ee43339e92fa3dcb22e2f",
+      "current_course_sha256": "2d9ae6595c0d1f52e0c7e31402a4713133143e486d71a518e284cbca31f7fd6d",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/scissione-guidata/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/studio-archive",
+      "previous_course_sha256": "6139351bf464f1a7d7c6e061bb3d67d5f7781ab65b0ae0fca9af24bbc777e788",
+      "current_course_sha256": "3e1b24adb4e5cf56be5485dd1fa7771e6750dc348f859267ce0f21f8abc24fdf",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/studio-archive/scripts/archive_core.py",
+          "repository_path": "plugins/studio-archive/scripts/archive_core.py",
+          "previous_sha256": "3db37940191d233722617a462ea14d7505db39a3df682ce6aece4f16ada905cd",
+          "current_sha256": "9b3ebd275b69b19f59a54e6dc19dfab80034bb7b5758ad133df97996c55f345e"
+        },
+        {
+          "path": "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/studio-document-format",
+      "previous_course_sha256": "9f0098bda6412b779817d4b024a0010d5728ede0e1c96e95546a1d6b7098ff53",
+      "current_course_sha256": "300a024f1d12fd7e31ad5cb535f0f7aeb103b2ffa0fd9f605111e6d60da21b3c",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/report-builder/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "modules/studio-archive/scripts/archive_core.py",
+          "repository_path": "plugins/studio-archive/scripts/archive_core.py",
+          "previous_sha256": "3db37940191d233722617a462ea14d7505db39a3df682ce6aece4f16ada905cd",
+          "current_sha256": "9b3ebd275b69b19f59a54e6dc19dfab80034bb7b5758ad133df97996c55f345e"
+        },
+        {
+          "path": "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/trasformazione",
+      "previous_course_sha256": "0ba5b5694d8691ce70b86141cabda9cb55d90a850f568a9ffbd1c76568dceef7",
+      "current_course_sha256": "6121632431b095d2117f34053d3210bc38873a3916286e62e5074221f9973244",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/treasury-forecast",
+      "previous_course_sha256": "0adee7b8d29c03c66c82fe211b6772c2b65236a883919dd79b6e531f4098833f",
+      "current_course_sha256": "b87bc5883a8259a6f816a10bc335b8a3c63cbe8c4e5dae9abc9122c63ee57f9a",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/treasury-forecast/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/variance-analysis",
+      "previous_course_sha256": "d8e5e727a378ee9ba7c6012e798902ac156605259535ced96080407409baef61",
+      "current_course_sha256": "62a7e7157b80142318b53c21f204b201cc9d890251421c7f5d9471e6c3eb5e85",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/variance-analysis/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    },
+    {
+      "kit": "vera/vouching",
+      "previous_course_sha256": "3ef762921b56b8b63e8cb45bf7ffec86fdb9b1749de46f8abcd803e13ec317b5",
+      "current_course_sha256": "b2510f29dc887b023318e19faa672b68ccaa1152cf4ce69b4192cf941e032e50",
+      "authored_content_unchanged": true,
+      "changed_sources": [
+        {
+          "path": "modules/check-entries/vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+          "previous_sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5",
+          "current_sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+        },
+        {
+          "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+          "previous_sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f",
+          "current_sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents.py",
+          "repository_path": "plugins/lucia/scripts/legal_documents.py",
+          "previous_sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26",
+          "current_sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_documents_labels.json",
+          "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+          "previous_sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d",
+          "current_sha256": "29c9732318b0c8de6b6bce48c644b260b920fdbfd2cfaf33f4272a39508c363e"
+        },
+        {
+          "path": "vendor/modules/scripts/legal_matter.py",
+          "repository_path": "plugins/lucia/scripts/legal_matter.py",
+          "previous_sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0",
+          "current_sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+        },
+        {
+          "path": "vendor/modules/vera_assurance/contracts.py",
+          "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+          "previous_sha256": "2329e34e99c678f69cdd3e77b337ae844c78085bae058f4168e1ae1a99ba2112",
+          "current_sha256": "bfec08068636730405446cab9f5edd8dac01db1e0ed6a21022abcede3ad1faa8"
+        }
+      ]
+    }
+  ]
+}
