@@ -938,3 +938,94 @@ def test_acknowledging_one_capture_preserves_other_logs_for_the_same_report(
     assert not first.exists()
     assert second.read_text() == "another pending error"
     assert second_pointer.exists()
+
+
+def cached_connector_status(store, own):
+    return {
+        "binding": "saved-connector",
+        "installation_id": str(uuid4()),
+        "incidents": [
+            {**row, "installation_id": str(own.installation_id)}
+            for row in store.status(own)["incidents"]
+        ],
+    }
+
+
+def test_cached_status_converts_saved_readiness_without_direct_http(
+    tmp_path, monkeypatch
+):
+    module, store, own, queued, receipt = queued_connector_report(tmp_path, monkeypatch)
+    module.acknowledge_delivery(receipt)
+    with pytest.raises(urllib.error.URLError):
+        module.record_success("journal-sampling", "run_sample.py")
+    remote = cached_connector_status(store, own)
+
+    result = module.check_incidents(remote_status=remote, recover=False)
+
+    assert result["queued"] == 1
+    pending = module._read()["outbox"][0]
+    assert pending["operation"] == "outcome"
+    assert pending["payload"]["outcome"]["report_id"] == queued["report"]["report_id"]
+    assert pending["payload"]["outcome"]["status"] == "action-required"
+    assert pending["payload"]["outcome"]["execution_succeeded"] is False
+
+
+def test_cached_recorded_recovery_clears_only_matching_readiness_hint(
+    tmp_path, monkeypatch
+):
+    module, store, own, queued, receipt = queued_connector_report(tmp_path, monkeypatch)
+    module.acknowledge_delivery(receipt)
+    with pytest.raises(urllib.error.URLError):
+        module.record_success("journal-sampling", "run_sample.py")
+    store.outcome(
+        own,
+        Outcome(
+            outcome_id=uuid4(),
+            incident_id=receipt["incident_id"],
+            report_id=queued["report"]["report_id"],
+            remedy_revision=1,
+            status="recovered",
+            execution_succeeded=True,
+        ),
+    )
+    remote = cached_connector_status(store, own)
+
+    result = module.check_incidents(remote_status=remote, recover=False)
+
+    assert result["queued"] == 0
+    assert module.local_context()["queued"] == 0
+
+
+@pytest.mark.parametrize("foreign", [False, True])
+def test_unlinked_cached_status_preserves_readiness_hint(
+    tmp_path, monkeypatch, foreign
+):
+    module, store, own, _, receipt = queued_connector_report(tmp_path, monkeypatch)
+    module.acknowledge_delivery(receipt)
+    with pytest.raises(urllib.error.URLError):
+        module.record_success("journal-sampling", "run_sample.py")
+    remote = cached_connector_status(store, own)
+    if foreign:
+        remote["incidents"][0]["installation_id"] = str(uuid4())
+    else:
+        remote["incidents"] = []
+
+    result = module.check_incidents(remote_status=remote, recover=False)
+
+    assert result["queued"] == 1
+    assert module._read()["outbox"][0]["operation"] == "observed-success"
+
+
+def test_cached_readiness_requires_existing_local_report_receipt(tmp_path, monkeypatch):
+    module, store, own, _, _ = queued_connector_report(tmp_path, monkeypatch)
+    with pytest.raises(urllib.error.URLError):
+        module.record_success("journal-sampling", "run_sample.py")
+    remote = cached_connector_status(store, own)
+
+    result = module.check_incidents(remote_status=remote, recover=False)
+
+    assert result["queued"] == 2
+    assert [row["operation"] for row in module._read()["outbox"]] == [
+        "report",
+        "observed-success",
+    ]

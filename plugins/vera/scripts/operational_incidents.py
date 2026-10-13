@@ -309,20 +309,29 @@ def _post(operation: str, payload: dict[str, Any]) -> dict[str, Any]:
     return value
 
 
-def _expand_success(state: dict[str, Any], item: dict[str, Any]) -> None:
+def _expand_success(
+    state: dict[str, Any], item: dict[str, Any], status: dict[str, Any] | None = None
+) -> bool:
     """Bind saved execution evidence to its reported episodes before delivery."""
     targets = set(item["payload"]["report_ids"])
     receipts = [row for row in state["receipts"] if row["report_id"] in targets]
-    status = _post("status", {"credentials": state["credentials"]})
+    if status is None:
+        status = _post("status", {"credentials": state["credentials"]})
     outcomes = []
+    processed = set()
     for incident in status["incidents"]:
         matching = [
             row for row in receipts if row["incident_id"] == incident["incident_id"]
         ]
-        if not matching or incident["status"] == "recovered":
+        if not matching:
+            continue
+        processed.update(row["report_id"] for row in matching)
+        if incident["status"] == "recovered":
             continue
         report_id = matching[-1]["report_id"]
-        same_episode = incident["latest_report_id"] in targets
+        same_episode = any(
+            row["report_id"] == incident["latest_report_id"] for row in matching
+        )
         if same_episode:
             report_id = incident["latest_report_id"]
         outcomes.append(
@@ -361,8 +370,19 @@ def _expand_success(state: dict[str, Any], item: dict[str, Any]) -> None:
                 },
             }
         )
-    state["outbox"][:1] = outcomes
+    if not processed:
+        return False
+    remaining = [
+        value for value in item["payload"]["report_ids"] if value not in processed
+    ]
+    if remaining:
+        outcomes.append(
+            {**item, "payload": {**item["payload"], "report_ids": remaining}}
+        )
+    index = state["outbox"].index(item)
+    state["outbox"][index : index + 1] = outcomes
     _write(state)
+    return True
 
 
 def _flush(state: dict[str, Any]) -> None:
@@ -375,7 +395,8 @@ def _flush(state: dict[str, Any]) -> None:
     while state["outbox"] and delivered < 3 and time.monotonic() < deadline:
         item = state["outbox"][0]
         if item["operation"] == "observed-success":
-            _expand_success(state, item)
+            if not _expand_success(state, item):
+                break
             continue
         try:
             reply = _post(
@@ -580,6 +601,10 @@ def check_incidents(
                 if row.get("installation_id") == state["credentials"]["installation_id"]
             ]
         }
+    if remote_status is not None:
+        for item in list(state["outbox"]):
+            if item["operation"] == "observed-success":
+                _expand_success(state, item, result)
     messages = []
     for incident in result["incidents"]:
         if incident["status"] == "recovered":

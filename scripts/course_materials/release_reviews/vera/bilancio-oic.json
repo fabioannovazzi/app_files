@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "bilancio-oic",
-  "course_sha256": "c64693fbe030e78b03c7d2eae53d1129887f92ba0401711a0c54589584472f73",
+  "course_sha256": "6063e73b8ca090839d4911293c22dc257ad9bb5848c784d90eb587c146a0238a",
   "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
   "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
   "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
@@ -450,5 +450,6 @@
       "scripts/managed_python_runtime.py",
       "scripts/operational_incidents.py"
     ]
-  }
+  },
+  "cached_readiness_source_binding_20261013": "Source-only binding after cached readiness reconciliation. Existing course content, dates, editorial judgments and artifact reviews are preserved. Fresh execution remains required by CI."
 }

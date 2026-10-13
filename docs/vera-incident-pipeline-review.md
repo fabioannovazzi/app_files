@@ -14,6 +14,7 @@ acceptance claim. The earlier 0.1.370 capture correction is already deployed.
 | Closure | A helper name/workflow match automatically closed setup incidents without proving the original case. | Helper success is readiness. Host AI must verify original task and inputs before recovered status for every incident type. |
 | Delayed outcomes | A new delayed failed outcome for the same already recovered report could reopen its delivery. | Retain the outcome as history without reopening that episode. New failure episodes require a new original report. |
 | Parent/early failure | Parent RuntimeError was not retained; missing entrypoint/integrity errors returned before helper reporting. | Retain complete known parent exception chains. Early guards explicitly route observed evidence through the independent connector without running unverified reporting helpers. |
+| Cached readiness | A recovered service record still left an offline observed-success hint locally. | Reconcile actual cached status with existing local receipts. Queue readiness as action-required or clear only matching recovered hints; retain unlinked hints. |
 | Recovery diagnostics | Fixed-action stderr was mechanically scrubbed and immediately uploaded. | Retain complete raw stderr privately for model review; transport no raw recovery output. |
 
 The baseline 99 tests passed despite these gaps. New regressions cover scoped
@@ -56,3 +57,7 @@ a binding-only companion package; Vera remains 0.1.372. ChatGPT upload archives
 are regenerated as downloads, without Marketplace submission. The expanded local
 package suite passes 641 tests with two environment-dependent skips; all 84
 Clara release/privacy checks pass.
+
+The additional cached-readiness reproduction is corrected. The final local
+incident suite passes 124 tests with 89.87% coverage, including preservation
+of unlinked and unacknowledged readiness hints.

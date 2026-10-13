@@ -162,8 +162,11 @@ connector. Link the existing local capability, save the actual
 `vera_incident_status` result privately, then invoke `check --input <status.json>`.
 This route performs no direct HTTP polling. Only a matching existing local
 delivery receipt and the same latest targeted report permit a fixed retry.
-Deliver its exact queued outcome through the connector and acknowledge the
-recorded receipt with `ack-delivery`. Do not invent or adopt a local receipt for
+Cached status also converts retained setup-readiness hints into durable
+action-required outcomes using existing matching local receipts. It clears
+only matching readiness hints when actual status confirms recovery; unlinked
+hints remain local. Deliver its exact queued outcome through the connector and
+acknowledge the recorded receipt with `ack-delivery`. Do not invent or adopt a local receipt for
 an older task whose local state disappeared. That task can still read its remedy
 through the saved connection. Resume its original authorized professional
 workflow using ordinary prerequisite checks when its case context is available;

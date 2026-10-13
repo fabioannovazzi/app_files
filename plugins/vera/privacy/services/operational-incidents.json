@@ -47,7 +47,8 @@
         "Actionable remedies target an explicit original report. Each delivery uses its own applicable revision; a different report with the same generic signal does not inherit that remedy.",
         "A cached actual connector status permits only the two fixed retries for an existing matching local receipt and latest report. It performs no direct HTTP polling or identity adoption. Missing local receipts cannot be fabricated to authorise a retry.",
         "A helper success records readiness. Host AI verification of the original task and inputs is required for all recovered outcomes, including setup/startup. Delayed failures cannot reopen an already recovered episode.",
-        "Failed fixed retries retain complete stderr privately for semantic review. Raw recovery stderr is not automatically transmitted."
+        "Failed fixed retries retain complete stderr privately for semantic review. Raw recovery stderr is not automatically transmitted.",
+        "Actual cached connector status reconciles only readiness hints bound to existing local report receipts. Readiness becomes action-required evidence rather than recovery; already recovered matching hints are cleared and unlinked hints are retained. No remote receipt is fabricated and no case inputs are inferred."
       ]
     }
   ],
@@ -85,6 +86,6 @@
     "reviewed_at": "2026-10-13",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "166dc37c99efe7f00794d39a6a8a8d66d64dc62ff4f92f68355dc3cf43140b0a"
+    "source_fingerprint": "c9275f6f805b8ef1ff815ea2b1fa31c5627bd7da1a4562706e1f2bfde1ca8db4"
   }
 }
