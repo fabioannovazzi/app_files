@@ -73,7 +73,7 @@
     },
     {
       "path": "modules/deep-research-validator/scripts/package_validation.py",
-      "sha256": "8ae8c808d51af8c0ccfee0ebaf09a2ef7955aba4745efdd431a56a6f3ab00412"
+      "sha256": "3805d7bf44fe6e939c30a3aeae2b202b26b0facee1c52d388fd1ee87185f292f"
     },
     {
       "path": "modules/deep-research-validator/scripts/pipeline_review.py",
@@ -802,5 +802,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "c3ee232cdbb924da68d9b16ae7f8302b0c3d8b50436bdd017df33feae5d4650f"
+  "canonical_course_sha256": "d81c2ed417753a6114cb475f716f006e9a5f8729bc96b6de444ca94ce1a86ee8"
 }

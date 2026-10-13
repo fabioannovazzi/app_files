@@ -1804,9 +1804,9 @@ def write_validation_package(
     }
     if validated_document.strip():
         validated_md_path = output_dir / "validated_document.md"
-        validated_md_path.write_text(
-            validated_document.strip() + "\n",
-            encoding="utf-8",
+        # Preserve the reviewed text on every OS instead of translating LF to CRLF.
+        validated_md_path.write_bytes(
+            (validated_document.strip() + "\n").encode("utf-8")
         )
         paths["validated_document"] = validated_md_path
     if write_docx and validated_document.strip():

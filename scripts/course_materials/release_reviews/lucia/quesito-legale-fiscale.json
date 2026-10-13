@@ -2,9 +2,9 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "quesito-legale-fiscale",
-  "course_sha256": "faa76fd941389cdeb8be025af028cd2ab2352a7473fe2579203bb1614679b8b8",
+  "course_sha256": "64a9eaa244a504875cc58ecb9743fd87b9d1b4bbc1f73ba46c0bb45019dc9606",
   "reviewer": "Codex /root - tax-litigation fix source compatibility review",
-  "reviewed_at": "2026-10-13T22:58:23.914955+00:00",
+  "reviewed_at": "2026-10-13T23:15:03.827529+00:00",
   "review_scope": "Source compatibility review of unchanged authored lessons; fresh execution against each exact course digest remains required. Historical locale/editorial/artifact judgments retain their scope. No new learner, visual, installed-host or professional acceptance is claimed.",
   "languages": {
     "it": {
@@ -567,9 +567,9 @@
     "scope": "Reviewed answer identity, immutable original/text captures, typed issue evidence/effects, quotation anomaly treatment and retention of executed evaluations. No source selection or legal support classifier added. Fresh course execution and CI remain required; no professional, learner or installed-host acceptance is inferred."
   },
   "research_integrity_integration_review_20261014": {
-    "reviewed_at": "2026-10-13T22:58:23.914955+00:00",
-    "previous_course_sha256": "80dbd37dee64448207047ce4c767da7e70f57bef0e588e384bf449a490ec63d0",
-    "current_course_sha256": "faa76fd941389cdeb8be025af028cd2ab2352a7473fe2579203bb1614679b8b8",
+    "reviewed_at": "2026-10-13T23:15:03.827529+00:00",
+    "previous_course_sha256": "faa76fd941389cdeb8be025af028cd2ab2352a7473fe2579203bb1614679b8b8",
+    "current_course_sha256": "64a9eaa244a504875cc58ecb9743fd87b9d1b4bbc1f73ba46c0bb45019dc9606",
     "authored_content_unchanged": true,
     "scope": "Carry source bindings forward after integrating the independently released shared tax-litigation Archive fixes with legal/tax evidence-integrity changes. Authored multilingual lessons, materials and deliverables remain unchanged. Fresh exact-digest CI is required; no professional or installed-host acceptance inferred."
   }

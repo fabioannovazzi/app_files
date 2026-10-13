@@ -506,3 +506,35 @@ def test_verbatim_presence_preserves_letter_case(tmp_path):
         _answer_contract(generation_route="codex_direct"),
     )
     assert audit["delivery_readiness"] == "review_record_incomplete"
+
+
+def test_canonical_answer_writer_preserves_reviewed_bytes_on_windows(
+    tmp_path, monkeypatch
+):
+    package = load_script("canonical_windows_writer", "package_validation.py")
+    evidence = load_script("canonical_windows_identity", "evidence_refs.py")
+    reviewed = "# Fictional answer\nThe fictional period is 30 days."
+    inputs = _inputs(tmp_path / "inputs", reviewed)
+    original = Path.write_text
+
+    def windows_write(path, data, *args, **kwargs):
+        if path.name == "validated_document.md":
+            return path.write_bytes(data.replace("\n", "\r\n").encode("utf-8"))
+        return original(path, data, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "write_text", windows_write)
+    paths = package.write_validation_package(
+        inputs / "document_inventory.json",
+        inputs / "source_inventory.json",
+        inputs / "claims_review.json",
+        tmp_path / "output",
+        answer_contract_path=inputs / "answer_contract.json",
+    )
+    expected = (reviewed + "\n").encode("utf-8")
+    assert paths["validated_document"].read_bytes() == expected
+    assert (
+        evidence.verify_answer_identity(
+            paths["validated_document"], paths["claims_review"]
+        )
+        == hashlib.sha256(expected).hexdigest()
+    )
