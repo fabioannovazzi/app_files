@@ -1,7 +1,7 @@
 # Lucia Italian tax-litigation workflow: development evidence
 
 Review date: 13 October 2026. Source guidance:
-`plugins/lucia/skills/contenzioso-tributario/`. This is a source/package review,
+`plugins/_shared/vendor/modules/italian_tax_litigation/`. This is a source/package review,
 not acceptance on a real client file or a fresh installed conversation.
 
 ## What was authored

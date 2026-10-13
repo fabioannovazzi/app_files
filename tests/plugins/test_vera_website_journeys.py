@@ -895,7 +895,7 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
 def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     core = _section_markup(page, "core")
-    expected_module_count = 46
+    expected_module_count = 47
     module_hrefs = re.findall(
         r'<a class="module-row"[^>]+href="([^"]+)"', core, flags=re.DOTALL
     )
@@ -904,7 +904,7 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     assert len(module_hrefs) == expected_module_count
     assert len(module_hrefs) == len(set(module_hrefs))
     assert core.count('data-primary-workflow-link="') == 2
-    assert core.count('data-jurisdiction-item="it"') == 17
+    assert core.count('data-jurisdiction-item="it"') == 18
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
     for expected_href in (
@@ -914,6 +914,7 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
         "../dati-fiscali-strutturati/index.html",
         "../email-cliente/index.html",
         "../avviso-intake/index.html",
+        "../contenzioso-tributario/index.html?from=vera",
         "../fatture-xml-check/index.html",
         "../previdenza-inps/index.html",
         "../registro-imprese-sari/index.html",
@@ -1012,6 +1013,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Estrazione dati fiscali",
         "Richiesta documenti e chiarimenti",
         "Esame avvisi e cartelle",
+        "Prepara il contenzioso tributario italiano",
         "Controllo FatturaPA XML",
         "Revisione pratica INPS",
         "Pratiche Registro Imprese",
@@ -1060,6 +1062,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "module.newClient.includes.data": "Estrazione dati fiscali",
         "module.newClient.includes.email": "Richiesta documenti e chiarimenti",
         "module.notice.title": "Esame avvisi e cartelle",
+        "module.taxLitigation.title": "Prepara il contenzioso tributario italiano",
         "module.archiveOrganization.title": "Riordino della cartella cliente",
         "module.archive.title": "Archiviazione e ricerca nel fascicolo cliente",
         "module.sampling.title": "Campionamento scritture contabili",
@@ -1095,6 +1098,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "open-item-reconciliation": "Riconciliazione partite aperte",
         "bandi-agevolazioni": "Bandi e agevolazioni",
         "avviso-intake": "Esame avvisi e cartelle",
+        "contenzioso-tributario": "Prepara il contenzioso tributario italiano",
         "bilancio-oic": "Bilancio OIC e XBRL",
         "vouching": "Verifica documentale",
         "composizione-negoziata": "Composizione negoziata",
@@ -1134,7 +1138,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
     )["skills"]
 
     assert labels == expected_labels
-    assert len(labels) == 46
+    assert len(labels) == 47
     assert {
         workflow: marketplace_cards[workflow]["display_name"]
         for workflow in canonical_skill_labels

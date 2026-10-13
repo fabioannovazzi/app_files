@@ -7,7 +7,8 @@
     "scripts/model_data_report.py",
     "scripts/notarized_run_receipt.py",
     "skills/vera/SKILL.md",
-    "skills/vera/references/model-data-report-contract.md"
+    "skills/vera/references/model-data-report-contract.md",
+    "skills/contenzioso-tributario"
   ],
   "governed_repository_paths": [
     "modules/hosted_services/api.py",
@@ -15,7 +16,15 @@
     "modules/run_receipts/api.py",
     "modules/run_receipts/signing.py",
     "modules/run_receipts/store.py",
-    "templates/vera_run_receipt_verify.html"
+    "templates/vera_run_receipt_verify.html",
+    "plugins/_shared/vendor/modules/italian_tax_litigation",
+    "plugins/lucia/scripts/legal_documents.py",
+    "plugins/lucia/scripts/legal_docx.py",
+    "plugins/lucia/scripts/legal_documents_review.schema.json",
+    "plugins/lucia/scripts/legal_documents_labels.json",
+    "plugins/lucia/scripts/legal_matter.py",
+    "plugins/lucia/scripts/legal_matter.schema.json",
+    "plugins/lucia/scripts/legal_matter_labels.json"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -85,9 +94,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-06",
+    "reviewed_at": "2026-10-13",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "cfb97f45d29dc4c13902d19d62ed216a6560081db7ff7c6ee8f924121baf62e2"
+    "source_fingerprint": "143ac8441f6fb20d6ef2bf663a1f07ca56843c60f6fbfd6c430696f72f40b482"
   }
 }

@@ -1,2 +1,7 @@
 # Vera delegates runtime dependencies to the selected specialist module.
 defusedxml>=0.7.1,<1
+# Local evidence and progress helpers for Italian tax litigation.
+jsonschema>=4.23,<5
+lxml>=5.0,<7,!=6.0.0
+pypdf
+openpyxl

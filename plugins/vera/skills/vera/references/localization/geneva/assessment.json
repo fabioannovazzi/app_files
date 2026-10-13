@@ -59,6 +59,27 @@
       "implementation_status": "existing_or_unresolved_as_assessed"
     },
     {
+      "function_id": "agenzia-acquisition",
+      "name": "Agenzia delle Entrate acquisition",
+      "role": "function",
+      "disposition": "Unresolved",
+      "common_work": "Retrieve original invoices and portal summaries for review and later accounting import.",
+      "geneva_application": "No domestic Swiss source is implemented by this AdE-specific operation; cross-border use requires an evidenced Italian mandate.",
+      "required_change": "Assess an applicable Swiss source before proposing any adapter. The current worker uses fixed Italian Agenzia endpoints, Italian CF/P.IVA and bolli evidence.",
+      "adaptation_layers": [
+        "source system",
+        "tax identifiers",
+        "quarterly stamp-duty evidence"
+      ],
+      "acceptance_example": "A Geneva domestic request is not routed into Italian AdE merely because the explanation is in French.",
+      "sources": [
+        "plugins/browser-automation/scripts/ade_acquisition/portal.py",
+        "plugins/browser-automation/skills/agenzia-acquisition/SKILL.md"
+      ],
+      "verification": "Italian acquisition source and synthetic tests inspected. No Swiss source, real Geneva case or live AdE acceptance established.",
+      "implementation_status": "italian_source_only"
+    },
+    {
       "function_id": "aml-review",
       "name": "AML evidence review",
       "role": "function",
@@ -201,6 +222,24 @@
       "implementation_status": "adapted_with_documented_scope"
     },
     {
+      "function_id": "business-valuation",
+      "name": "Business valuation workpapers",
+      "role": "function",
+      "disposition": "Unresolved",
+      "common_work": "Prepare source-linked valuation workpapers with selected methods and explicit assumptions.",
+      "geneva_application": "Not assessed in this implementation; no Swiss professional-use claim.",
+      "required_change": "First establish the mandate, local professional requirements and source fit. The current report renderer is Italian; French website copy does not change report language.",
+      "adaptation_layers": [
+        "professional mandate assessment",
+        "report language"
+      ],
+      "acceptance_example": "A future assessment must inspect a representative Geneva mandate, supported methods, local source requirements and expected report before claiming readiness.",
+      "sources": [],
+      "verification": "Current valuation source and synthetic tests inspected; no Swiss legal-purpose review or Geneva client test.",
+      "implementation": "Common arithmetic and evidence workflow only.",
+      "implementation_status": "unassessed"
+    },
+    {
       "function_id": "centrale-rischi-review",
       "name": "Centrale Rischi review",
       "role": "function",
@@ -278,6 +317,23 @@
       "implementation_status": "existing_or_unresolved_as_assessed"
     },
     {
+      "function_id": "contenzioso-tributario",
+      "name": "Italian tax litigation",
+      "role": "function",
+      "disposition": "Unresolved",
+      "common_work": "Prepare procedural steps, source-bound deadlines, evidence and reviewed drafts with saved matter progress.",
+      "geneva_application": "The authored guide concerns Italian tax litigation; domestic Swiss or Geneva proceedings have not been qualified.",
+      "required_change": "Keep the explicit Italian scope. Assess the actual mandate, jurisdiction and authorized professional before any separate adaptation; French language does not select Swiss procedure.",
+      "adaptation_layers": [
+        "mandate and jurisdiction qualification"
+      ],
+      "acceptance_example": "A French request for domestic Geneva tax litigation does not use Italian procedure or imply a Swiss litigation adapter exists.",
+      "sources": [],
+      "verification": "Shared Italian guide and product adapter inspected; technical package regressions do not establish Swiss procedural correctness or Geneva client acceptance.",
+      "implementation": "Italian litigation adapter for authorized commercialisti; no Swiss procedural adapter.",
+      "implementation_status": "unresolved_not_qualified_for_target"
+    },
+    {
       "function_id": "datev-invoice-start",
       "name": "Specific DATEV/ECONS invoice starter",
       "role": "function",
@@ -312,6 +368,26 @@
       "verification": "Repository source inspected; synthetic/regression evidence recorded in the release validation. No real Geneva client acceptance.",
       "implementation": "Existing function retained with the recorded qualification limits.",
       "implementation_status": "existing_or_unresolved_as_assessed"
+    },
+    {
+      "function_id": "deep-research",
+      "name": "Shared legal and tax research method",
+      "role": "shared_helper",
+      "disposition": "Use",
+      "common_work": "Investigate the accepted question with source inspection, continuous validation and challenge, persistent issues and distinct final reviews.",
+      "geneva_application": "Internal research stage of quesito-legale-fiscale; retains its confirmed jurisdiction and source posture.",
+      "required_change": "No separate jurisdiction engine is introduced. Select applicable sources under the original answer contract; material source or framing gaps return to the same shared loop.",
+      "adaptation_layers": [
+        "case-specific source selection"
+      ],
+      "acceptance_example": "A supplied French-language question retains its confirmed governing framework, including during opposing investigation and final-review feedback.",
+      "sources": [
+        "plugins/deep-research-validator/skills/deep-research/SKILL.md",
+        "plugins/deep-research-validator/skills/legal-tax-answer-review/references/answer-journey.md"
+      ],
+      "verification": "Source and synthetic record-integrity checks; no current Swiss-law investigation, real Geneva case or professional acceptance is attested.",
+      "implementation": "The product adapter resolves the same method as Lucia; helpers bind declared research and exact artifacts without deciding legal correctness.",
+      "implementation_status": "shared_method_source_verified"
     },
     {
       "function_id": "email-cliente",
@@ -550,6 +626,25 @@
       "implementation_status": "existing_or_unresolved_as_assessed"
     },
     {
+      "function_id": "lipe",
+      "name": "LIPE",
+      "role": "function",
+      "disposition": "Unresolved",
+      "common_work": "Reconcile reviewed register evidence, periodic VAT figures and payment differences.",
+      "geneva_application": "The implemented VP form and arithmetic apply only to Italian periodic VAT communications. Domestic Swiss applicability has not been qualified.",
+      "required_change": "Establish the actual mandate and target reporting procedure before considering an adaptation. Preserve the explicit Italian scope for Italian cases.",
+      "adaptation_layers": [
+        "mandate and jurisdiction qualification"
+      ],
+      "acceptance_example": "A French request must retain the Italian LIPE scope and must not imply a Swiss VAT return is produced.",
+      "sources": [
+        "lipe_implementation"
+      ],
+      "verification": "Current implementation and official Italian source register inspected. Synthetic tests do not establish real professional or importer acceptance.",
+      "implementation": "Italian review pilot with real filing export blocked; no Swiss adapter.",
+      "implementation_status": "unresolved_not_qualified_for_target"
+    },
+    {
       "function_id": "management-control-pack",
       "name": "Management Control",
       "role": "function",
@@ -618,6 +713,37 @@
       "verification": "Repository source inspected; synthetic/regression evidence recorded in the release validation. No real Geneva client acceptance.",
       "implementation": "Explicit currency guidance; raw Geneva runs reject omitted currency. Existing reconciliation method retained.",
       "implementation_status": "adapted_with_documented_scope"
+    },
+    {
+      "function_id": "organizzazione-lavoro",
+      "name": "Organisation du travail",
+      "role": "function",
+      "disposition": "Reuse",
+      "common_work": "Maintain appointments, tasks, meeting actions and daily plans.",
+      "geneva_application": "Use the same operational register and connected calendars in a Geneva fiduciary practice.",
+      "required_change": "Configure the actual account, timezone, working hours and categories. Route legal or tax deadline judgments to locally reviewed specialist workflows.",
+      "adaptation_layers": [
+        "studio configuration"
+      ],
+      "limitations": "No unattended inbox listener or automatic legal deadline determination; live host and calendar acceptance remains outstanding."
+    },
+    {
+      "function_id": "patent-box-review",
+      "name": "Patent Box controlled preview",
+      "role": "function",
+      "disposition": "Unresolved",
+      "common_work": "Organize evidence and reviewed ledger costs, prepare draft dossiers, and retain authenticated professional review decisions.",
+      "geneva_application": "Not assessed. The current workflow targets Italian Patent Box work; no Swiss or Geneva applicability or professional acceptance is established.",
+      "required_change": "Qualify the mandate, governing sources, rules, evidence, professional authorization and outputs before considering a Geneva adaptation.",
+      "adaptation_layers": [
+        "mandate and legal-source qualification",
+        "rules and professional acceptance"
+      ],
+      "acceptance_example": "A Geneva request is not treated as qualified merely because the explanation page supports French; any proposed use retains an explicit unresolved target assessment.",
+      "sources": [],
+      "verification": "Patent Box implementation and controlled-preview boundaries inspected. No Swiss source research or Geneva professional acceptance performed.",
+      "implementation": "Italian controlled preview with real calculations gated by reviewed sources, rules and firm authorization; professional acceptance remains pending.",
+      "implementation_status": "unresolved_not_qualified_for_target"
     },
     {
       "function_id": "presenza-digitale-studio",
@@ -718,6 +844,25 @@
       "implementation_status": "existing_or_unresolved_as_assessed"
     },
     {
+      "function_id": "rating-legalita",
+      "name": "Italian AGCM legality-rating dossier",
+      "role": "function",
+      "disposition": "Unresolved",
+      "common_work": "Organize source-linked application evidence, professional control decisions, missing documents, event dates and measured review time.",
+      "geneva_application": "The implementation supports only a first Italian AGCM application. Equivalent domestic Geneva professional work has not been established; French output does not select Swiss rules.",
+      "required_change": "No Geneva adaptation is implemented. Establish an actual mandate and applicable target procedure before assessing adaptation; retain the existing function for explicitly Italian AGCM work.",
+      "adaptation_layers": [
+        "mandate and jurisdiction qualification"
+      ],
+      "acceptance_example": "A French-language request must retain the explicit Italian AGCM scope or leave Swiss applicability unresolved; it must not claim to prepare a Geneva rating application.",
+      "sources": [
+        "rating_legalita_implementation"
+      ],
+      "verification": "Component instructions, schema, arithmetic and evidence-history tests inspected. Synthetic cases do not establish legal interpretation from client documents or Geneva professional acceptance.",
+      "implementation": "Italy-only first-attribution dossier, event calendar and practical pilot safeguards; no submission and no Geneva adapter.",
+      "implementation_status": "unresolved_not_qualified_for_target"
+    },
+    {
       "function_id": "registro-imprese-sari",
       "name": "Commercial-register dossier preparation",
       "role": "function",
@@ -758,6 +903,27 @@
       "implementation_status": "existing_or_unresolved_as_assessed"
     },
     {
+      "function_id": "scissione-guidata",
+      "name": "Scissione guidata",
+      "role": "function",
+      "disposition": "Unresolved",
+      "common_work": "Maintain versioned operation evidence, allocations, values, decisions and reviewable ownership schedules for a corporate demerger.",
+      "geneva_application": "Not established. The current executable route is Italian OIC partial proportional scission into a new beneficiary, in EUR; CH-GE requests are outside that route.",
+      "required_change": "First establish a source-backed Swiss mandate, procedure and required deliverables. Assess jurisdiction, accounting, currency and document differences within this function before claiming an adaptation. French interface text does not establish Swiss support.",
+      "adaptation_layers": [
+        "unresolved Swiss professional and procedural mapping",
+        "accounting and currency qualification",
+        "output and review requirements"
+      ],
+      "acceptance_example": "A CH-GE scope must not execute the Italian OIC route. Any future adaptation requires its own reviewed Swiss case contract and acceptance evidence.",
+      "sources": [
+        "scissione_implementation"
+      ],
+      "verification": "Source scope and synthetic unsupported-route tests inspected; no current Swiss legal-source assessment or Geneva professional acceptance performed.",
+      "implementation": "Italian OIC route retained. CH-GE is explicitly unsupported by the initial runtime.",
+      "implementation_status": "unsupported_for_target_pending_assessment"
+    },
+    {
       "function_id": "studio-archive",
       "name": "Studio Archive",
       "role": "function",
@@ -777,6 +943,28 @@
       "verification": "Repository source inspected; synthetic/regression evidence recorded in the release validation. No real Geneva client acceptance.",
       "implementation": "Swiss IDE normalization and explicit OCR language through CLI/MCP; language changes trigger reindexing.",
       "implementation_status": "adapted_with_documented_scope"
+    },
+    {
+      "function_id": "studio-document-format",
+      "name": "Studio document format",
+      "role": "function",
+      "disposition": "Unresolved",
+      "common_work": "Infer a reusable Word format from selected studio examples and preferences, review two real previews, explicitly approve or revise the saved standard, and reuse it in financial-report DOCX.",
+      "geneva_application": "Potential studio-format configuration for a Geneva fiduciary; target-specific consumer acceptance has not been established.",
+      "required_change": "Verify the approved Word profile with an explicitly CH-GE financial-report case, French output and source-evidenced currency. Do not infer jurisdiction qualification from the translated course or the synthetic EUR example.",
+      "adaptation_layers": [
+        "target-specific report qualification"
+      ],
+      "acceptance_example": "The approved standard persists across two CH-GE reports without changing their jurisdiction, source currency or reviewed financial analysis; an unapproved proposal is not consumed.",
+      "sources": [
+        "plugins/vera/skills/studio-document-format/SKILL.md",
+        "plugins/comunicazione-professionale/scripts/studio_document_format.py",
+        "plugins/report-builder/scripts/studio_formatting.py",
+        "tests/plugins/test_studio_document_format.py"
+      ],
+      "verification": "Source and exact-package synthetic preview, approval, revision and report-reuse checks passed. No CH-GE consumer or real Geneva fiduciary acceptance was run.",
+      "implementation": "Shared Word standard pipeline; current output consumer is financial-report DOCX.",
+      "implementation_status": "target_acceptance_unresolved"
     },
     {
       "function_id": "trasformazione",
@@ -870,177 +1058,6 @@
       "verification": "Repository source inspected; synthetic/regression evidence recorded in the release validation. No real Geneva client acceptance.",
       "implementation": "Supporting-PDF intake for Geneva without FatturaPA-first assumptions; source currency and lineage preserved.",
       "implementation_status": "adapted_with_documented_scope"
-    },
-    {
-      "function_id": "business-valuation",
-      "name": "Business valuation workpapers",
-      "role": "function",
-      "disposition": "Unresolved",
-      "common_work": "Prepare source-linked valuation workpapers with selected methods and explicit assumptions.",
-      "geneva_application": "Not assessed in this implementation; no Swiss professional-use claim.",
-      "required_change": "First establish the mandate, local professional requirements and source fit. The current report renderer is Italian; French website copy does not change report language.",
-      "adaptation_layers": [
-        "professional mandate assessment",
-        "report language"
-      ],
-      "acceptance_example": "A future assessment must inspect a representative Geneva mandate, supported methods, local source requirements and expected report before claiming readiness.",
-      "sources": [],
-      "verification": "Current valuation source and synthetic tests inspected; no Swiss legal-purpose review or Geneva client test.",
-      "implementation": "Common arithmetic and evidence workflow only.",
-      "implementation_status": "unassessed"
-    },
-    {
-      "function_id": "patent-box-review",
-      "name": "Patent Box controlled preview",
-      "role": "function",
-      "disposition": "Unresolved",
-      "common_work": "Organize evidence and reviewed ledger costs, prepare draft dossiers, and retain authenticated professional review decisions.",
-      "geneva_application": "Not assessed. The current workflow targets Italian Patent Box work; no Swiss or Geneva applicability or professional acceptance is established.",
-      "required_change": "Qualify the mandate, governing sources, rules, evidence, professional authorization and outputs before considering a Geneva adaptation.",
-      "adaptation_layers": [
-        "mandate and legal-source qualification",
-        "rules and professional acceptance"
-      ],
-      "acceptance_example": "A Geneva request is not treated as qualified merely because the explanation page supports French; any proposed use retains an explicit unresolved target assessment.",
-      "sources": [],
-      "verification": "Patent Box implementation and controlled-preview boundaries inspected. No Swiss source research or Geneva professional acceptance performed.",
-      "implementation": "Italian controlled preview with real calculations gated by reviewed sources, rules and firm authorization; professional acceptance remains pending.",
-      "implementation_status": "unresolved_not_qualified_for_target"
-    },
-    {
-      "function_id": "scissione-guidata",
-      "name": "Scissione guidata",
-      "role": "function",
-      "disposition": "Unresolved",
-      "common_work": "Maintain versioned operation evidence, allocations, values, decisions and reviewable ownership schedules for a corporate demerger.",
-      "geneva_application": "Not established. The current executable route is Italian OIC partial proportional scission into a new beneficiary, in EUR; CH-GE requests are outside that route.",
-      "required_change": "First establish a source-backed Swiss mandate, procedure and required deliverables. Assess jurisdiction, accounting, currency and document differences within this function before claiming an adaptation. French interface text does not establish Swiss support.",
-      "adaptation_layers": [
-        "unresolved Swiss professional and procedural mapping",
-        "accounting and currency qualification",
-        "output and review requirements"
-      ],
-      "acceptance_example": "A CH-GE scope must not execute the Italian OIC route. Any future adaptation requires its own reviewed Swiss case contract and acceptance evidence.",
-      "sources": [
-        "scissione_implementation"
-      ],
-      "verification": "Source scope and synthetic unsupported-route tests inspected; no current Swiss legal-source assessment or Geneva professional acceptance performed.",
-      "implementation": "Italian OIC route retained. CH-GE is explicitly unsupported by the initial runtime.",
-      "implementation_status": "unsupported_for_target_pending_assessment"
-    },
-    {
-      "function_id": "studio-document-format",
-      "name": "Studio document format",
-      "role": "function",
-      "disposition": "Unresolved",
-      "common_work": "Infer a reusable Word format from selected studio examples and preferences, review two real previews, explicitly approve or revise the saved standard, and reuse it in financial-report DOCX.",
-      "geneva_application": "Potential studio-format configuration for a Geneva fiduciary; target-specific consumer acceptance has not been established.",
-      "required_change": "Verify the approved Word profile with an explicitly CH-GE financial-report case, French output and source-evidenced currency. Do not infer jurisdiction qualification from the translated course or the synthetic EUR example.",
-      "adaptation_layers": [
-        "target-specific report qualification"
-      ],
-      "acceptance_example": "The approved standard persists across two CH-GE reports without changing their jurisdiction, source currency or reviewed financial analysis; an unapproved proposal is not consumed.",
-      "sources": [
-        "plugins/vera/skills/studio-document-format/SKILL.md",
-        "plugins/comunicazione-professionale/scripts/studio_document_format.py",
-        "plugins/report-builder/scripts/studio_formatting.py",
-        "tests/plugins/test_studio_document_format.py"
-      ],
-      "verification": "Source and exact-package synthetic preview, approval, revision and report-reuse checks passed. No CH-GE consumer or real Geneva fiduciary acceptance was run.",
-      "implementation": "Shared Word standard pipeline; current output consumer is financial-report DOCX.",
-      "implementation_status": "target_acceptance_unresolved"
-    },
-    {
-      "function_id": "rating-legalita",
-      "name": "Italian AGCM legality-rating dossier",
-      "role": "function",
-      "disposition": "Unresolved",
-      "common_work": "Organize source-linked application evidence, professional control decisions, missing documents, event dates and measured review time.",
-      "geneva_application": "The implementation supports only a first Italian AGCM application. Equivalent domestic Geneva professional work has not been established; French output does not select Swiss rules.",
-      "required_change": "No Geneva adaptation is implemented. Establish an actual mandate and applicable target procedure before assessing adaptation; retain the existing function for explicitly Italian AGCM work.",
-      "adaptation_layers": [
-        "mandate and jurisdiction qualification"
-      ],
-      "acceptance_example": "A French-language request must retain the explicit Italian AGCM scope or leave Swiss applicability unresolved; it must not claim to prepare a Geneva rating application.",
-      "sources": [
-        "rating_legalita_implementation"
-      ],
-      "verification": "Component instructions, schema, arithmetic and evidence-history tests inspected. Synthetic cases do not establish legal interpretation from client documents or Geneva professional acceptance.",
-      "implementation": "Italy-only first-attribution dossier, event calendar and practical pilot safeguards; no submission and no Geneva adapter.",
-      "implementation_status": "unresolved_not_qualified_for_target"
-    },
-    {
-      "function_id": "lipe",
-      "name": "LIPE",
-      "role": "function",
-      "disposition": "Unresolved",
-      "common_work": "Reconcile reviewed register evidence, periodic VAT figures and payment differences.",
-      "geneva_application": "The implemented VP form and arithmetic apply only to Italian periodic VAT communications. Domestic Swiss applicability has not been qualified.",
-      "required_change": "Establish the actual mandate and target reporting procedure before considering an adaptation. Preserve the explicit Italian scope for Italian cases.",
-      "adaptation_layers": [
-        "mandate and jurisdiction qualification"
-      ],
-      "acceptance_example": "A French request must retain the Italian LIPE scope and must not imply a Swiss VAT return is produced.",
-      "sources": [
-        "lipe_implementation"
-      ],
-      "verification": "Current implementation and official Italian source register inspected. Synthetic tests do not establish real professional or importer acceptance.",
-      "implementation": "Italian review pilot with real filing export blocked; no Swiss adapter.",
-      "implementation_status": "unresolved_not_qualified_for_target"
-    },
-    {
-      "function_id": "organizzazione-lavoro",
-      "name": "Organisation du travail",
-      "role": "function",
-      "disposition": "Reuse",
-      "common_work": "Maintain appointments, tasks, meeting actions and daily plans.",
-      "geneva_application": "Use the same operational register and connected calendars in a Geneva fiduciary practice.",
-      "required_change": "Configure the actual account, timezone, working hours and categories. Route legal or tax deadline judgments to locally reviewed specialist workflows.",
-      "adaptation_layers": [
-        "studio configuration"
-      ],
-      "limitations": "No unattended inbox listener or automatic legal deadline determination; live host and calendar acceptance remains outstanding."
-    },
-    {
-      "function_id": "agenzia-acquisition",
-      "name": "Agenzia delle Entrate acquisition",
-      "role": "function",
-      "disposition": "Unresolved",
-      "common_work": "Retrieve original invoices and portal summaries for review and later accounting import.",
-      "geneva_application": "No domestic Swiss source is implemented by this AdE-specific operation; cross-border use requires an evidenced Italian mandate.",
-      "required_change": "Assess an applicable Swiss source before proposing any adapter. The current worker uses fixed Italian Agenzia endpoints, Italian CF/P.IVA and bolli evidence.",
-      "adaptation_layers": [
-        "source system",
-        "tax identifiers",
-        "quarterly stamp-duty evidence"
-      ],
-      "acceptance_example": "A Geneva domestic request is not routed into Italian AdE merely because the explanation is in French.",
-      "sources": [
-        "plugins/browser-automation/scripts/ade_acquisition/portal.py",
-        "plugins/browser-automation/skills/agenzia-acquisition/SKILL.md"
-      ],
-      "verification": "Italian acquisition source and synthetic tests inspected. No Swiss source, real Geneva case or live AdE acceptance established.",
-      "implementation_status": "italian_source_only"
-    },
-    {
-      "function_id": "deep-research",
-      "name": "Shared legal and tax research method",
-      "role": "shared_helper",
-      "disposition": "Use",
-      "common_work": "Investigate the accepted question with source inspection, continuous validation and challenge, persistent issues and distinct final reviews.",
-      "geneva_application": "Internal research stage of quesito-legale-fiscale; retains its confirmed jurisdiction and source posture.",
-      "required_change": "No separate jurisdiction engine is introduced. Select applicable sources under the original answer contract; material source or framing gaps return to the same shared loop.",
-      "adaptation_layers": [
-        "case-specific source selection"
-      ],
-      "acceptance_example": "A supplied French-language question retains its confirmed governing framework, including during opposing investigation and final-review feedback.",
-      "sources": [
-        "plugins/deep-research-validator/skills/deep-research/SKILL.md",
-        "plugins/deep-research-validator/skills/legal-tax-answer-review/references/answer-journey.md"
-      ],
-      "verification": "Source and synthetic record-integrity checks; no current Swiss-law investigation, real Geneva case or professional acceptance is attested.",
-      "implementation": "The product adapter resolves the same method as Lucia; helpers bind declared research and exact artifacts without deciding legal correctness.",
-      "implementation_status": "shared_method_source_verified"
     }
   ],
   "sources": {
@@ -1226,7 +1243,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "d923ad3980000dedbcde2a1c7b18497a5fc552998e18985d4b328a75f3b36599",
+  "catalogue_fingerprint": "872c4dec91e7f380d2674b18b86f4f6c88222c334f5f846011b14c8eafc7ae2e",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1617,8 +1634,8 @@
   },
   "source_binding_update": {
     "date": "2026-10-13",
-    "version": "0.1.370",
-    "reason": "Combined release identity after integrating the shared native legal/tax review UI and retained helper diagnostics linked to the original incident. Existing function IDs, target dispositions and professional acceptance limits remain unchanged; UI decisions and diagnostic delivery do not certify professional correctness.",
+    "version": "0.1.371",
+    "reason": "Adds the explicitly Italian tax-litigation entrypoint and routing after integrating the existing runtime diagnostics release. The new function remains unqualified for domestic Geneva litigation. Existing target dispositions and professional acceptance limits remain unchanged.",
     "fresh_geneva_acceptance": false
   }
 }

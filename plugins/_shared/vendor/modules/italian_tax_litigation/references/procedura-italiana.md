@@ -1,8 +1,8 @@
 # Metodo procedurale italiano: contenzioso tributario
 
 Base editoriale verificata il 13 ottobre 2026. Leggi `fonti.md` e le versioni
-applicabili nella pratica. Questa guida fornisce a Lucia le domande e la sequenza
-da esaminare: non richiede all'avvocato di costruire il procedimento e non decide
+applicabili nella pratica. Questa guida fornisce a L'assistente le domande e la sequenza
+da esaminare: non richiede al difensore incaricato di costruire il procedimento e non decide
 automaticamente quali regole si applichino. Il nome della fase non basta.
 
 ## Regime e perimetro prima del calendario
@@ -48,16 +48,16 @@ In caso di notifiche a più destinatari conserva eventi e ricevute separati.
    effettivamente letti e comparabili per questione, fatti, periodo e fase;
    separa norma, decisione, orientamento e tesi difensiva. Non dichiarare «nessun
    precedente contrario» per una ricerca senza risultati o «vizio presente» da
-   un'etichetta. L'avvocato sceglie domande, motivi e rimedi.
+   un'etichetta. L'difensore incaricato sceglie domande, motivi e rimedi.
 5. **Bozza e preparazione della notifica.** Prepara l'atto dai fatti verificati e
    dal modello scelto, controllando requisiti, parti, motivi, conclusioni, mandato
    e allegati (artt. 18–20 e 16-bis). Mantieni separate la bozza approvata, la
-   preparazione per la notifica e la notifica realmente compiuta dall'avvocato.
+   preparazione per la notifica e la notifica realmente compiuta dal difensore incaricato.
 6. **Dopo la proposizione: costituzione in giudizio.** La notifica del ricorso
    non conclude l'introduzione del giudizio. L'art. 22 prevede la costituzione
    del ricorrente entro 30 giorni dalla proposizione, a pena di inammissibilità.
    Quando arriva prova della proposizione, individua questo passaggio anche se
-   l'avvocato non lo ha menzionato; verifica evento e computo. Per il servizio
+   il difensore incaricato non lo ha menzionato; verifica evento e computo. Per il servizio
    postale universale, la giurisprudenza riportata nelle rassegne ufficiali in
    `fonti.md` distingue la ricezione del plico dalla spedizione per il termine
    di costituzione: non applicare 30 giorni dalla spedizione soltanto perché
@@ -95,7 +95,7 @@ e prova; controlla l'avviso ordinariamente almeno 30 giorni liberi prima
 | Istanza di pubblica udienza | Notifica nel termine richiamato dall'art. 33 e deposito con prova | Parti costituite, modalità richiesta e data di trattazione |
 
 Queste facoltà non sono tutte adempimenti obbligatori. Seleziona dal caso quelle
-necessarie o utili, motiva la scelta e distingue richiesta dell'avvocato da
+necessarie o utili, motiva la scelta e distingue richiesta del difensore incaricato da
 obbligo normativo. I giorni liberi non sono giorni lavorativi e un termine a
 ritroso non si sposta automaticamente al lunedì: segui `termini-e-ripresa.md`.
 Se cambia la data di trattazione, riapri il calendario e controlla gli effetti
@@ -122,7 +122,7 @@ prova/data della comunicazione; non far partire i 15 giorni da richiesta,
 pronuncia, ricezione di un atto fiscale o notifica della sentenza. Distinguere
 questa impugnazione dal ricorso di merito. Verifica anche notifiche, deposito,
 avviso di trattazione e la disciplina speciale di computo/sospensione, prima
-di scrivere il calendario. La scelta di impugnare spetta all'avvocato.
+di scrivere il calendario. La scelta di impugnare spetta al difensore incaricato.
 
 ### Dopo un accordo conciliativo
 

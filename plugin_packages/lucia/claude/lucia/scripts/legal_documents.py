@@ -494,7 +494,7 @@ def _retire_reports(run_dir: Path) -> None:
             path.rename(run_dir / f"previous-{_hash(path.read_bytes())[:12]}-{name}")
 
 
-def render(run_dir: Path, review_path: Path) -> Path:
+def render(run_dir: Path, review_path: Path, product: str = "Lucia") -> Path:
     """Save review context, evidence, coverage and comparison in each deliverable."""
     _retire_reports(run_dir)
     review = _load(review_path)
@@ -582,7 +582,7 @@ def render(run_dir: Path, review_path: Path) -> Path:
                 str(cov["original_inspected"]),
             ]
         )
-    title = "Lucia · " + labels["workflows"][pack["workflow"]]
+    title = product + " · " + labels["workflows"][pack["workflow"]]
     tables = _html_table(labels["context_headings"], context_rows)
     tables += f'<h2>{html.escape(labels["matrix"])}</h2>' + _html_table(
         matrix_headings, matrix_rows
@@ -808,6 +808,7 @@ def main(argv: list[str] | None = None) -> int:
     review = sub.add_parser("render")
     review.add_argument("--run-dir", type=Path, required=True)
     review.add_argument("--review", type=Path, required=True)
+    review.add_argument("--product", choices=("Vera", "Lucia"), default="Lucia")
     edit = sub.add_parser("draft")
     edit.add_argument("--run-dir", type=Path, required=True)
     edit.add_argument("--template", required=True)
@@ -823,7 +824,7 @@ def main(argv: list[str] | None = None) -> int:
                 compare(args.run_dir, args.before, args.after, args.view),
             )
         elif args.command == "render":
-            LOGGER.info("Review: %s", render(args.run_dir, args.review))
+            LOGGER.info("Review: %s", render(args.run_dir, args.review, args.product))
         else:
             LOGGER.info("Draft: %s", draft(args.run_dir, args.template, args.changes))
     except (ValueError, OSError, KeyError, TypeError) as error:

@@ -124,6 +124,13 @@ branches, signatures and filings remain unsupported. Use the specialist skill.
   available host browser tools. Submit only after explicit approval of the exact
   final application under the workflow's portal-preparation contract;
   declarations, signatures and payment remain with the user.
+- `contenzioso-tributario`: prepare or resume Italian tax litigation for an
+  authorized commercialista, with a procedural guide shared with Lucia,
+  source-verified steps/deadlines, evidence, Word drafts and saved progress.
+  Reuse a reviewed notice intake; preparation does not prove service or filing.
+  Select this for a litigation assignment and run canonical research within it;
+  a standalone tax question remains `quesito-legale-fiscale`.
+  Professional use is available; no authored/reviewed prepared tutorial exists.
 - `avviso-intake`: prepare first-intake analysis for Italian notices, avvisi,
   cartelle, HMRC letters, or Swiss cantonal tax letters.
 - `bilancio-oic`: understand accounting evidence and prepare, update,

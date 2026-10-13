@@ -2,7 +2,7 @@ Assistente AI per avvocati. Lucia affianca lo studio italiano nella ricerca, nel
 
 Rivede contratti, confronta versioni e conseguenze delle modifiche, estrae termini in tabelle e controlla nomi, importi, definizioni e rinvii. Per bozze, revisioni native e commenti Word usa la capacità Documents/Word dell’ambiente ospite. Si parte dal modello scelto dallo studio e dai fatti documentati.
 
-Le istruzioni dello studio possono essere modificate ed esportate in un editor locale. Domande, risposte e file prodotti restano collegati alla pratica, che può essere ripresa. I percorsi di contenzioso civile e tributario, M&A, lavoro e recupero crediti preparano prove, cronologie, questioni e bozze. Per il contenzioso tributario Lucia verifica regole, eventi e termini, indica i passaggi successivi e conserva il lavoro riprendibile. I calcoli usano Spreadsheets dell’host con dati e formule espliciti.
+Le istruzioni dello studio possono essere modificate ed esportate in un editor locale. Domande, risposte e file prodotti restano collegati alla pratica, che può essere ripresa. I percorsi di contenzioso civile e tributario, M&A, lavoro e recupero crediti preparano prove, cronologie, questioni e bozze. Il metodo di contenzioso tributario è condiviso con Vera. Lucia verifica regole, eventi e termini, indica i passaggi successivi e conserva il lavoro riprendibile. I calcoli usano Spreadsheets dell’host con dati e formule espliciti.
 
 I workflow documentali e di proofreading adattano metodi MIT di Mike; l’integrazione con Word, il registro e la verifica delle citazioni italiane sono sviluppati da Lucia. I nuovi helper operano localmente senza server o API modello separate; il modello della conversazione legge i materiali selezionati.
 

@@ -154,6 +154,26 @@
     {
       "path": "skills/quesito-legale-fiscale/SKILL.md",
       "sha256": "4c652ce4f9ce52e552d515a925e020c08cac8daa9c9c8c88923f269332bc39d6"
+    },
+    {
+      "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+      "sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5"
+    },
+    {
+      "path": "vendor/modules/italian_tax_litigation/references/fonti.md",
+      "sha256": "a0c1236e1d0eb9fb0a6f8559a2336f71b8b613778b66b5853600203672819493"
+    },
+    {
+      "path": "vendor/modules/italian_tax_litigation/references/procedura-italiana.md",
+      "sha256": "99ce64c08f64d8bbe96d0491d0b0e25af7d894af41705c47f2eae087fb0ebf5f"
+    },
+    {
+      "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+      "sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f"
+    },
+    {
+      "path": "vendor/modules/italian_tax_litigation/workflow.md",
+      "sha256": "9e32947e8840f2186e2011b4aae957e0eeb13b81a42004f279b16ccd6b4e3de1"
     }
   ],
   "files": [
@@ -670,5 +690,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "bc0f174587ebcce24ba888a9d7f9f1f57896ac0721ac6aa666992855cf789e2c"
+  "canonical_course_sha256": "37471eccaf061f3857352f7e07288a2e51d34a97cd23b030f39cc4c9da9e69c2"
 }

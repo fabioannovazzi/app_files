@@ -41,7 +41,7 @@ Il registro `matter.json` conserva gli stadi scelti, domande e risultati secondo
 
 Esempio di struttura, non calcolo legale: prova della proposizione del ricorso →
 verifica del termine di costituzione → preparazione del pacchetto → acquisizione
-di prova del deposito effettuato dall'avvocato. Il termine di proposizione del
+di prova del deposito effettuato dal difensore incaricato. Il termine di proposizione del
 ricorso parte da un evento diverso. Non aspettare che l'utente dica «ora B» per
 individuare e mostrare un passaggio successivo pertinente.
 
@@ -54,7 +54,7 @@ senza prova, e non compierla per chiudere il registro.
 ## Cambiamenti e ripresa
 
 All'arrivo di una ricevuta, nuova data di udienza, documento dell'ente, sentenza,
-risposta dell'avvocato o modifica della fonte, rileggi stato, output e presupposti.
+risposta del difensore incaricato o modifica della fonte, rileggi stato, output e presupposti.
 Individua nuove azioni/termini e aggiorna solo le conclusioni ancora sostenute.
 Se cambia una prova originale, prepara una nuova run come previsto dal contratto
 documentale e collega esplicitamente la precedente. Una risposta può chiudere
@@ -66,7 +66,7 @@ ricerca dell'elaborato precedente non vale per una bozza o fonte modificata;
 riapri la ricerca pertinente e completa la revisione dell'elaborato corrente.
 
 Al termine di ogni sessione mostra azioni successive, date verificate o
-condizionate, prove mancanti e decisioni dell'avvocato. Il registro è locale e
+condizionate, prove mancanti e decisioni del difensore incaricato. Il registro è locale e
 riapribile, non uno scadenziario che si sveglia da solo. Non promettere alert
 futuri: un servizio di promemoria/monitoraggio deve essere realmente configurato
 nell'host su richiesta, con data e contenuto coerenti con il calendario verificato.

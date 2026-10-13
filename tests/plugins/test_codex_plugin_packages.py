@@ -2990,6 +2990,13 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 assert "not make DATEV a browser application" in normalized_skill_text
                 assert "references/batch-review.md" in normalized_skill_text
                 continue
+            if plugin_root.name in {"vera", "lucia"} and (
+                skill_file.parent.name == "contenzioso-tributario"
+            ):
+                assert "vendor/modules/italian_tax_litigation" in skill_text
+                assert "workflow.md" in skill_text
+                assert "../quesito-legale-fiscale/SKILL.md" in skill_text
+                continue
             if plugin_root.name == "lucia" and skill_file.parent.name in {
                 "revisione-contratti",
                 "confronto-documenti",
@@ -3006,7 +3013,6 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 "metodo-studio": "scripts/legal_playbook.py",
                 "verifica-citazioni": "scripts/legal_citations.py",
                 "contenzioso-civile": "references/practice-workflow.md",
-                "contenzioso-tributario": "references/procedura-italiana.md",
                 "operazioni-ma": "references/practice-workflow.md",
                 "lavoro": "references/practice-workflow.md",
                 "recupero-crediti": "references/practice-workflow.md",
@@ -4154,9 +4160,9 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         )
         assert module is not None
         assert 'data-jurisdiction-item="it"' in module.group(0)
-    assert core.count(" data-module-link") == 46
-    assert core.count('class="module-row"') == 46
-    assert core.count('data-jurisdiction-item="it"') == 17
+    assert core.count(" data-module-link") == 47
+    assert core.count('class="module-row"') == 47
+    assert core.count('data-jurisdiction-item="it"') == 18
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
     for area_id in (

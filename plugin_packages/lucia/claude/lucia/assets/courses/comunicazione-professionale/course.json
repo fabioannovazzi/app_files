@@ -250,6 +250,26 @@
     {
       "path": "skills/comunicazione-professionale/references/lucia-lawyer-profile.md",
       "sha256": "0d6e2de403d0e5855b6c8031b45c86c2ebc3b0566f30fda2448f9ad5c3abac61"
+    },
+    {
+      "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+      "sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5"
+    },
+    {
+      "path": "vendor/modules/italian_tax_litigation/references/fonti.md",
+      "sha256": "a0c1236e1d0eb9fb0a6f8559a2336f71b8b613778b66b5853600203672819493"
+    },
+    {
+      "path": "vendor/modules/italian_tax_litigation/references/procedura-italiana.md",
+      "sha256": "99ce64c08f64d8bbe96d0491d0b0e25af7d894af41705c47f2eae087fb0ebf5f"
+    },
+    {
+      "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+      "sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f"
+    },
+    {
+      "path": "vendor/modules/italian_tax_litigation/workflow.md",
+      "sha256": "9e32947e8840f2186e2011b4aae957e0eeb13b81a42004f279b16ccd6b4e3de1"
     }
   ],
   "files": [
@@ -662,5 +682,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "2fa39635f48e3b31bcf8c3da419d0e6ef840833dcfa361f3062900781d9ef72a"
+  "canonical_course_sha256": "b0b434535a8bfebeb8f7a451124c699ceef27677ae57061748e8c80f4e4ce990"
 }

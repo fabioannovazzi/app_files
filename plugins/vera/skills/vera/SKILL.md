@@ -451,6 +451,12 @@ membership, packaged skill/entrypoint paths, managed-run artifacts and host
 qualification requirements. Do not infer suitability or current host support
 from a listed entrypoint. Semantic routing remains in the catalog and skills.
 
+For an Italian tax-litigation assignment, select `contenzioso-tributario` and
+read `../contenzioso-tributario/SKILL.md`. It reuses a reviewed notice intake and
+owns the procedural work; canonical legal-tax research runs within that same
+assignment. The commercialista confirms authorization and performs external
+professional acts. A prepared teaching kit is not available for this workflow.
+
 For an ordinary substantive legal, tax, or compliance question or source-backed
 professional drafting request, `quesito-legale-fiscale` is the matching
 specialist workflow. Its four stages are preparation, research and drafting,
