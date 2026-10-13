@@ -78,3 +78,10 @@ comparison of the 48 affected existing teaching kits: only source hashes changed
 and all authored lessons, inputs and execution contracts remain unchanged. Their
 historical locale and artifact judgments retain that scope. Fresh execution at
 exact current digests remains required by the unchanged teaching release gate.
+
+The existing filesystem test inventory now distinguishes this direct product
+skill from component-specific Python entrypoints, while retaining exact registry
+coverage, all component CLI classifications and managed-context checks. Its real
+Archive/MCP lifecycle and packaged generic helpers are covered separately. The
+Geneva catalogue release snapshot was refreshed with exactly the same function
+IDs and assessment rows; no Geneva procedural qualification is added.

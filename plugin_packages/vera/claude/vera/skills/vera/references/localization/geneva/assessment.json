@@ -1243,7 +1243,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "10c0391237aba07f656360ef7ad216edd4f41cf900bba233a91c7c4bb2e9cbed",
+  "catalogue_fingerprint": "971aa9f9e06ece11afb6d1d7d00ea5ec2b3b0ee6372031ba52428730a904fb38",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1642,6 +1642,17 @@
     "date": "2026-10-13",
     "version": "0.1.372",
     "reason": "Version-only catalogue refresh after the incident pipeline correction. Skill entrypoints, jurisdiction dispositions and professional acceptance limits remain unchanged.",
+    "fresh_geneva_acceptance": false
+  },
+  "tax_litigation_fix_release_binding_20261013": {
+    "date": "2026-10-13",
+    "version": "0.1.374",
+    "prior_catalogue_fingerprint": "10c0391237aba07f656360ef7ad216edd4f41cf900bba233a91c7c4bb2e9cbed",
+    "current_catalogue_fingerprint": "971aa9f9e06ece11afb6d1d7d00ea5ec2b3b0ee6372031ba52428730a904fb38",
+    "changed_entrypoints": [
+      "contenzioso-tributario"
+    ],
+    "reason": "Refresh the release baseline for the Archive registration, evidence subdirectory and sealed-run resume guidance. Existing jurisdiction dispositions, Italy-only litigation scope and professional acceptance limits are unchanged.",
     "fresh_geneva_acceptance": false
   }
 }
