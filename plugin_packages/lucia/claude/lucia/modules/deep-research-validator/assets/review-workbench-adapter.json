@@ -68,6 +68,41 @@
         "reviewer_action"
       ],
       "empty": "No disposition."
+    },
+    {
+      "title": "Research record",
+      "localized_titles": {
+        "it": "Registro di ricerca",
+        "en": "Research record",
+        "fr": "Dossier de recherche",
+        "de": "Rechercheprotokoll",
+        "es": "Registro de investigaci\u00f3n"
+      },
+      "variant": "prose",
+      "fields": [
+        "preview_notice",
+        "character_count",
+        "question",
+        "purpose",
+        "findings",
+        "validation",
+        "challenge",
+        "treatment",
+        "evidence",
+        "limits",
+        "cycle_ids",
+        "coverage_review",
+        "stopping_rationale",
+        "status",
+        "outcome",
+        "rationale",
+        "comparison",
+        "comparison_review",
+        "search_record",
+        "text",
+        "preview"
+      ],
+      "empty": "No research record fields."
     }
   ],
   "panels": [
@@ -80,37 +115,41 @@
     "Disposition"
   ],
   "localized": {
-    "es": {
-      "title": "Revisi\u00f3n de validaci\u00f3n de respuestas",
-      "reviewTitle": "Revisi\u00f3n de fuentes, razonamiento y juicio profesional",
-      "queueTitle": "Afirmaciones",
-      "detailTitle": "Evidencia de la afirmaci\u00f3n",
-      "detailHelp": "Revise por separado el respaldo de las fuentes, el razonamiento y los l\u00edmites del juicio profesional.",
-      "search": "Buscar afirmaci\u00f3n, cita, fuente, gravedad, salida"
-    },
     "it": {
-      "title": "Revisione validazione risposta",
-      "reviewTitle": "Revisione fonti, ragionamento e giudizio professionale",
+      "title": "Revisione ricerca legale e fiscale",
+      "reviewTitle": "Revisione ricerca legale e fiscale",
       "queueTitle": "Claim",
       "detailTitle": "Evidenza claim",
       "detailHelp": "Rivedi separatamente supporto delle fonti, ragionamento e limiti del giudizio professionale.",
       "search": "Cerca claim, citazione, fonte, severita, output"
     },
+    "en": {
+      "title": "Legal and tax research review",
+      "reviewTitle": "Legal and tax research review"
+    },
     "fr": {
-      "title": "Revue de validation de r\u00e9ponse",
-      "reviewTitle": "Revue des sources, du raisonnement et du jugement professionnel",
+      "title": "Revue de recherche juridique et fiscale",
+      "reviewTitle": "Revue de recherche juridique et fiscale",
       "queueTitle": "Assertions",
       "detailTitle": "Preuve de l'assertion",
       "detailHelp": "Examinez s\u00e9par\u00e9ment le support des sources, le raisonnement et les limites du jugement professionnel.",
       "search": "Chercher assertion, citation, source, severite, sortie"
     },
     "de": {
-      "title": "Review der Antwortvalidierung",
-      "reviewTitle": "Quellen-, Begr\u00fcndungs- und Ermessensreview",
+      "title": "Pr\u00fcfung der Rechts- und Steuerrecherche",
+      "reviewTitle": "Pr\u00fcfung der Rechts- und Steuerrecherche",
       "queueTitle": "Aussagen",
       "detailTitle": "Nachweis zur Aussage",
       "detailHelp": "Quellenst\u00fctzung, Begr\u00fcndung und professionellen Ermessensspielraum getrennt pr\u00fcfen.",
       "search": "Aussage, Zitat, Quelle, Schweregrad, Ausgabe suchen"
+    },
+    "es": {
+      "title": "Revisi\u00f3n de investigaci\u00f3n jur\u00eddica y fiscal",
+      "reviewTitle": "Revisi\u00f3n de investigaci\u00f3n jur\u00eddica y fiscal",
+      "queueTitle": "Afirmaciones",
+      "detailTitle": "Evidencia de la afirmaci\u00f3n",
+      "detailHelp": "Revise por separado el respaldo de las fuentes, el razonamiento y los l\u00edmites del juicio profesional.",
+      "search": "Buscar afirmaci\u00f3n, cita, fuente, gravedad, salida"
     }
   },
   "saveTool": "save_deep_research_decisions",

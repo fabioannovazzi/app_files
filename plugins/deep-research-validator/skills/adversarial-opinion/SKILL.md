@@ -87,6 +87,12 @@ present a preferred legal strategy as an established fact. If missing evidence
 or professional judgment prevents closure, preserve the partial package and
 state what remains rather than looping or manufacturing a resolution.
 
+Refresh the shared native research review with `research_record.py review-ui`
+after the comparison is reviewed. Include both exact opinion revisions and
+`adversarial_assessment.json` / `opinion_comparison.md`; consume saved/applied
+professional decisions through the shared issue loop. The UI must not treat
+acceptance as legal certification or replace either substantive review.
+
 Deliver the reviewed original, the reviewed opposing opinion or reasoned
 negative/limited result, their source and validation records, and the comparison.
 A client letter retains its requested form; the opposing opinion and comparison

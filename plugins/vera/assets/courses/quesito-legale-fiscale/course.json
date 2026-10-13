@@ -30,7 +30,7 @@
     {
       "path": "modules/deep-research-validator/assets/deep-research-review-widget.html",
       "repository_path": "plugins/deep-research-validator/assets/deep-research-review-widget.html",
-      "sha256": "11667f28222b7d49f18a3d6910d2afd37dedda13733dc41cef1cec2ec1578711"
+      "sha256": "206363fa5429c3fc42ad26eb6525719940c97bf6fae02a3f373bebf87715bbb9"
     },
     {
       "path": "modules/deep-research-validator/assets/icon.svg",
@@ -40,7 +40,7 @@
     {
       "path": "modules/deep-research-validator/assets/review-workbench-adapter.json",
       "repository_path": "plugins/deep-research-validator/assets/review-workbench-adapter.json",
-      "sha256": "5f295f506e378fee83909433dff20fe940ed9b5b0688fb7018d26fbff16535f8"
+      "sha256": "f74ce8ffe2133dd3b8677df4cd2103581c6a81c5806bb912ea5c09bfd11a4e17"
     },
     {
       "path": "modules/deep-research-validator/references/workflow-reference.md",
@@ -83,9 +83,14 @@
       "sha256": "750fe665e45574a0b64ef73640ace37fb7999d6e8f830d3ddfc2f13688d93ebb"
     },
     {
+      "path": "modules/deep-research-validator/scripts/pipeline_review.py",
+      "repository_path": "plugins/deep-research-validator/scripts/pipeline_review.py",
+      "sha256": "3c9967dd329f9b20f294105eb92b20c5af540587f9544e62818ad59aae8d2882"
+    },
+    {
       "path": "modules/deep-research-validator/scripts/research_record.py",
       "repository_path": "plugins/deep-research-validator/scripts/research_record.py",
-      "sha256": "43b22498a68c530a66eef6214f958c43ddf464eda9e31c825b24e9f3139236be"
+      "sha256": "2a0c8e3a694c74f757970511dd7699b19a4a8f125be56519a3aff024b13a9c3b"
     },
     {
       "path": "modules/deep-research-validator/scripts/review_session.py",
@@ -95,7 +100,7 @@
     {
       "path": "modules/deep-research-validator/skills/deep-research/SKILL.md",
       "repository_path": "plugins/deep-research-validator/skills/deep-research/SKILL.md",
-      "sha256": "6fd7c31a56266c989defaf976d0d3e3b1245752409337e2e49fea1d4180b7d76"
+      "sha256": "25cc92ef3ddaf37af120c1bc9a7f9110181e6cf9e31094417d1ebebab56142ac"
     },
     {
       "path": "modules/deep-research-validator/skills/deep-research/references/evaluation.md",
@@ -110,7 +115,7 @@
     {
       "path": "modules/deep-research-validator/skills/legal-tax-answer-review/SKILL.md",
       "repository_path": "plugins/deep-research-validator/skills/legal-tax-answer-review/SKILL.md",
-      "sha256": "a3f4a82104a7ff7c9a760338360ad46c4cf5a3ac5cf6891550bdfcc50a8449a9"
+      "sha256": "a2cf514e9710dbda8def2d7cdc7795b4aa4154152b15962c6ae28694f46b8e30"
     },
     {
       "path": "modules/deep-research-validator/skills/legal-tax-answer-review/references/adversarial-scope.md",

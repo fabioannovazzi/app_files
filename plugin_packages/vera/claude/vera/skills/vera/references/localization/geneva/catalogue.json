@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/.codex/worktrees/vera-incident-recovery/app_files/plugins/vera",
-  "version": "0.1.368",
-  "captured_at": "2026-10-12T21:36:53.308741+00:00",
-  "catalogue_fingerprint": "15385c76844d23cda590e802d07723e01285adc6e16539976457f529ee96fc8f",
-  "manifest_sha256": "60db311eefe63535656daae8e61bad881c9a87937211f2797b5833a1f5a17a33",
+  "root": "/private/tmp/app-files-legal-tax-native-ui/plugins/vera",
+  "version": "0.1.369",
+  "captured_at": "2026-10-13T06:06:44.215858+00:00",
+  "catalogue_fingerprint": "76f894491fbc5850bedc88598f785f7501e6030494697611262a22999945dec2",
+  "manifest_sha256": "1f01ab696b268e6740b941e1859d2f8c233e5f4e0b8cb2da4a5a0ecabf4a0ba6",
   "entries": [
     {
       "function_id": "adeguati-assetti",

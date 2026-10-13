@@ -34,3 +34,12 @@ Packaging tests compare the complete shared component bytes in Vera and Lucia
 for Codex, ChatGPT upload and Cowork, and execute sealed-run verification from
 all six packages. Product-specific code or a new recipient requires a new
 review; this record is not a legal compliance certification.
+
+Native intake uses an available, permitted question tool or chat without a mode
+switch. The research review displays the saved issues, cycles, source captures,
+available reviewed opinions and comparison through MCP Apps, with the existing
+compatibility/local/chat fallback. It validates exact evidence revisions before
+saving or applying decisions, preserves earlier decisions in local history,
+and returns consequential requests to the model-led issue loop. Review
+acceptance is not legal certification or completed investigation. This adds no
+new external recipient or separate model API.

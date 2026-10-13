@@ -56,6 +56,11 @@ const ITEM_TYPES = new Set([
   "source_limit",
   "audit_check",
   "validation_artifact",
+  "research_issue",
+  "research_cycle",
+  "research_completion",
+  "opinion_review",
+  "source_capture",
 ]);
 
 const RUNTIME_COPY = {
@@ -309,6 +314,7 @@ function toolDefinitions() {
     },
     {
       name: TOOL_NAMES.saveDecisions,
+      _meta: { ui: { visibility: ["model", "app"] } },
       title: "Save answer-validation decisions",
       description:
         "Validate answer-review decisions and persist them to ui_decisions.json when run_intake.output_dir is available.",
@@ -322,6 +328,7 @@ function toolDefinitions() {
     },
     {
       name: TOOL_NAMES.applyDecisions,
+      _meta: { ui: { visibility: ["model", "app"] } },
       title: "Apply answer-validation decisions",
       description:
         "Validate answer-review decisions, write applied_decisions.json, and update final_artifacts.json status when run_intake.output_dir is available.",
@@ -432,6 +439,26 @@ function validateReviewPayload(inputArgs) {
     throw new Error("review_payload.item_count must equal review_payload.items.length");
   }
   reviewPayload.items.forEach((item, index) => validateItem(item, index));
+  if (reviewPayload.review_type === "legal_tax_pipeline_review" &&
+      (!Array.isArray(reviewPayload.source_bindings) || !reviewPayload.source_bindings.length)) {
+    throw new Error("Research review must bind its evidence revision");
+  }
+  if (reviewPayload.source_bindings != null) {
+    const outputDir = resolveRunOutputDir(inputArgs);
+    if (!outputDir || !Array.isArray(reviewPayload.source_bindings)) {
+      throw new Error("Revision-bound research review requires local source bindings");
+    }
+    for (const binding of reviewPayload.source_bindings) {
+      if (!isPlainObject(binding) || !LOWERCASE_SHA256_RE.test(binding.sha256 || "")) {
+        throw new Error("Invalid research review source binding");
+      }
+      const target = resolveSafeRunOutputPath(outputDir, binding.path);
+      if (!target || !fs.existsSync(target.absolutePath) ||
+          crypto.createHash("sha256").update(fs.readFileSync(target.absolutePath)).digest("hex") !== binding.sha256) {
+        throw new Error(`Research evidence changed; regenerate the review: ${binding.path}`);
+      }
+    }
+  }
   const payload = {
     widget_type: "deep_research_review",
     run_intake: isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null,
@@ -1744,7 +1771,9 @@ function applyDecisionPayload(inputArgs) {
     new Set(effects.flatMap((effect) => nativeRegenerationPathsForEffect(effect))),
   );
   const blockerCount = effects.filter((effect) => effect.requires_followup).length;
-  const applicationStatus = statusFromEffects(effects, reviewPayload.items.length);
+  const status = statusFromEffects(effects, reviewPayload.items.length);
+  const applicationStatus = reviewPayload.review_type === "legal_tax_pipeline_review" && status === "final_ready"
+    ? "research_review_applied" : status;
   const appliedDecisions = {
     schema_version: reviewPayload.schema_version,
     plugin: reviewPayload.plugin,
