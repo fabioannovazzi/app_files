@@ -64,6 +64,7 @@ class Diagnostic(StrictModel):
 
 
 class Report(StrictModel):
+    evidence_for_report_id: UUID | None = None
     report_id: UUID
     product: Literal["vera"] = "vera"
     product_version: str = Field(

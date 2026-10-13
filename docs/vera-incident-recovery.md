@@ -1,8 +1,10 @@
 # Vera operational incident recovery
 
-Release candidate: the saved anonymous OAuth correction is approved and
-implemented. Security and incident regression tests pass. Deployment and native
-cross-task acceptance remain pending; see [the connection design](vera-incident-connection-design.md).
+The anonymous OAuth connection in Vera 0.1.368 is deployed and verified across
+a plugin update and two fresh native Cowork sessions. The current diagnostic
+capture correction is a release candidate until its packaged and native failure
+path passes. The active 15-minute monitor is read-only; recurring fixes, merges
+and deployments await separate authorization. See [the connection design](vera-incident-connection-design.md).
 
 Vera 0.1.368 adds a technical incident service, separate from optional feature
 suggestions. Failures are reported automatically; no support questionnaire or
@@ -84,3 +86,20 @@ After deployment, `MPARANZA_VERIFY_REMOTE_MCP=1` requires the live initialize an
 tools/list handshake. Production acceptance also performs report, operator queue,
 remedy delivery and outcome readback with explicitly synthetic technical data.
 These checks do not claim recovery on Nicola's or Francesco's private computer.
+
+## Retained helper diagnostics
+
+A failed managed helper spools complete stderr privately to disk, leaves
+professional stdout untouched, and emits a local review pointer. The startup
+context exposes pending pointers so the host AI reviews them automatically,
+including after a service outage. Raw stderr may contain unrelated private text;
+it is never forwarded automatically to Mparanza. The host AI selects all relevant
+technical evidence and excludes private/client content before supplementation.
+
+A reviewed Report sets `evidence_for_report_id` to the original report UUID.
+Ownership and exact execution metadata must match. Supplements are persisted
+separately and appear in the operator's `evidence` array. They cannot create a
+new failure episode, change the latest original report UUID, or reopen recovered
+deliveries. Retry UUIDs remain idempotent. Local raw files are removed only after
+a matching actual recorded supplemental receipt is acknowledged. Failed delivery
+or review retains them. Neither a supplement nor an update establishes recovery.

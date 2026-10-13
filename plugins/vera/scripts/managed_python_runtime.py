@@ -8,9 +8,13 @@ import importlib.util
 import json
 import logging
 import runpy
+import shutil
 import sqlite3
+import subprocess
 import sys
 import tempfile
+import traceback
+from contextlib import redirect_stderr
 from pathlib import Path
 
 __all__ = ["main"]
@@ -96,6 +100,60 @@ def _report_forced_termination(
         logging.error("Could not save forced-termination diagnostic: %s", error)
 
 
+def _execute_with_diagnostics(
+    root: Path, arguments: list[str]
+) -> tuple[int, Path | None]:
+    """Spool stderr to disk without capturing or buffering professional stdout."""
+    from operational_incidents import diagnostic_directory
+
+    try:
+        handle = tempfile.NamedTemporaryFile(
+            mode="w+",
+            encoding="utf-8",
+            errors="replace",
+            dir=diagnostic_directory(),
+            suffix=".stderr",
+            delete=False,
+        )
+    except (OSError, ValueError, sqlite3.Error):
+        logging.warning(
+            "Technical stderr retention unavailable; preserve the observed host tool error through the incident connector."
+        )
+        return _IMPLEMENTATION.main(root, arguments), None
+    path = Path(handle.name)
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
+    handler = logging.StreamHandler(handle)
+    _IMPLEMENTATION.LOGGER.addHandler(handler)
+    result = None
+    try:
+        with handle:
+            try:
+                with redirect_stderr(handle):
+                    result = _IMPLEMENTATION.main(root, arguments, stderr=handle)
+            except SystemExit as error:
+                result = (
+                    error.code
+                    if isinstance(error.code, int)
+                    else (0 if error.code is None else 1)
+                )
+            except (OSError, ValueError, subprocess.SubprocessError):
+                traceback.print_exc(file=handle)
+                result = 1
+            finally:
+                _IMPLEMENTATION.LOGGER.removeHandler(handler)
+            handle.flush()
+            handle.seek(0)
+            shutil.copyfileobj(handle, sys.stderr, length=16384)
+    finally:
+        _IMPLEMENTATION.LOGGER.removeHandler(handler)
+        if result is None:
+            path.unlink(missing_ok=True)
+    if result == 0:
+        path.unlink()
+        return result, None
+    return result, path
+
+
 def main(argv: list[str] | None = None) -> int:
     """Run Vera's managed runtime CLI."""
 
@@ -134,9 +192,17 @@ def main(argv: list[str] | None = None) -> int:
     except (OSError, ValueError) as error:
         logging.error("Vera installation verification failed: %s", error)
         return 1
-    result = _IMPLEMENTATION.main(root, arguments)
+    error_path = None
     if "run" in arguments and selection.module:
-        from operational_incidents import record_success, report_failure
+        result, error_path = _execute_with_diagnostics(root, arguments)
+    else:
+        result = _IMPLEMENTATION.main(root, arguments)
+    if "run" in arguments and selection.module:
+        from operational_incidents import (
+            record_success,
+            report_failure,
+            retain_diagnostic,
+        )
 
         operation = Path(arguments[arguments.index("run") + 1]).name
         if result == 0:
@@ -147,13 +213,31 @@ def main(argv: list[str] | None = None) -> int:
                     "Incident recovery receipt pending; professional output is preserved."
                 )
         else:
-            report_failure(
+            receipt = report_failure(
                 selection.module,
                 f"helper:{operation}",
                 f"Verified helper exited with status {result}. Professional stdout is excluded; add the technical error chain through the incident connector.",
                 error_type="HelperExit",
                 exit_code=result,
+                measurements={
+                    "diagnostic_review_pending": error_path is not None,
+                    "stderr_bytes": (
+                        error_path.stat().st_size if error_path is not None else 0
+                    ),
+                },
             )
+            if error_path is not None:
+                try:
+                    pointer = retain_diagnostic(error_path, receipt)
+                    logging.error(
+                        "VERA_TECHNICAL_EVIDENCE: %s. Automatically read the retained stderr locally, review complete relevant technical diagnostics without unrelated private/client content, then use vera_incident_report with evidence_for_report_id from its report before concluding diagnosis is blocked. Raw stderr is not uploaded.",
+                        pointer,
+                    )
+                except (OSError, ValueError, KeyError):
+                    logging.warning(
+                        "Retained helper stderr is at %s; metadata could not be saved. Use the independent incident connector for the observed error.",
+                        error_path,
+                    )
     if result < 0 or result in {137, 247}:
         _report_forced_termination(arguments, result, selection.module)
     return result

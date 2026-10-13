@@ -541,3 +541,150 @@ def test_saved_connection_cannot_close_an_unlinked_foreign_report(tmp_path):
         store.connection_outcome(actor, recovery)
 
     assert store.status(foreign)["incidents"][0]["status"] == "open"
+
+
+def test_reviewed_evidence_attaches_to_original_episode_and_is_idempotent(tmp_path):
+    store, owner = registered(tmp_path)
+    original = report()
+    receipt = store.report(owner, original)
+    evidence = original.model_copy(
+        update={
+            "report_id": uuid4(),
+            "evidence_for_report_id": original.report_id,
+            "diagnostics": original.diagnostics,
+        }
+    )
+
+    added = store.report(owner, evidence)
+
+    assert added["incident_id"] == receipt["incident_id"]
+    assert store.report(owner, evidence)["deduplicated"] is True
+    assert len(store.queue()) == 1
+    assert store.status(owner)["incidents"][0]["latest_report_id"] == str(
+        original.report_id
+    )
+    assert store.show(receipt["incident_id"])["evidence"][0][
+        "evidence_for_report_id"
+    ] == str(original.report_id)
+
+
+def test_supplement_cannot_access_foreign_report_or_change_execution_boundary(tmp_path):
+    store, owner = registered(tmp_path)
+    original = report()
+    store.report(owner, original)
+    other = credentials()
+    store.register(other)
+    evidence = original.model_copy(
+        update={"report_id": uuid4(), "evidence_for_report_id": original.report_id}
+    )
+
+    with pytest.raises(IncidentNotFound):
+        store.report(other, evidence)
+    with pytest.raises(IncidentConflict):
+        store.report(
+            owner, evidence.model_copy(update={"workflow": "different-workflow"})
+        )
+
+
+def test_late_diagnostics_do_not_reopen_recovered_original_episode(tmp_path):
+    store, owner = registered(tmp_path)
+    original = report()
+    receipt = store.report(owner, original)
+    store.outcome(
+        owner,
+        Outcome(
+            outcome_id=uuid4(),
+            incident_id=receipt["incident_id"],
+            report_id=original.report_id,
+            remedy_revision=1,
+            status="recovered",
+            execution_succeeded=True,
+        ),
+    )
+    evidence = original.model_copy(
+        update={"report_id": uuid4(), "evidence_for_report_id": original.report_id}
+    )
+
+    store.report(owner, evidence)
+
+    assert store.show(receipt["incident_id"])["status"] == "recovered"
+    assert store.status(owner)["incidents"][0]["latest_report_id"] == str(
+        original.report_id
+    )
+
+
+@pytest.mark.parametrize("linked", [True, False])
+def test_saved_connector_supplement_requires_original_installation_link(
+    tmp_path, linked
+):
+    from uuid import UUID
+
+    from modules.operational_incidents.store import ConnectionActor
+
+    store, owner = registered(tmp_path)
+    original = report()
+    receipt = store.report(owner, original)
+    app = FastAPI()
+    app.include_router(router)
+    app.dependency_overrides[get_incident_store] = lambda: store
+    client = TestClient(app)
+    headers = connection_headers(store)
+
+    def invoke(name, arguments):
+        return client.post(
+            "/mcp/vera-incidents",
+            headers=headers,
+            json={
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "tools/call",
+                "params": {"name": name, "arguments": arguments},
+            },
+        ).json()["result"]
+
+    registered_connection = invoke("vera_incident_register", {})["structuredContent"][
+        "installation_id"
+    ]
+    if linked:
+        actor = ConnectionActor(
+            UUID(registered_connection), UUID(registered_connection)
+        )
+        store.link_connection(actor, owner)
+    evidence = original.model_copy(
+        update={"report_id": uuid4(), "evidence_for_report_id": original.report_id}
+    )
+
+    result = invoke(
+        "vera_incident_report", {"report": evidence.model_dump(mode="json")}
+    )
+
+    assert result["isError"] is (not linked)
+    assert len(store.show(receipt["incident_id"])["evidence"]) == int(linked)
+    assert store.status(owner)["incidents"][0]["latest_report_id"] == str(
+        original.report_id
+    )
+
+
+@pytest.mark.parametrize(
+    "direction", ["execution-to-evidence", "evidence-to-execution"]
+)
+def test_report_uuid_cannot_be_reused_across_execution_and_supplement(
+    tmp_path, direction
+):
+    store, owner = registered(tmp_path)
+    original = report()
+    store.report(owner, original)
+    extra_id = original.report_id if direction == "execution-to-evidence" else uuid4()
+    evidence = original.model_copy(
+        update={"report_id": extra_id, "evidence_for_report_id": original.report_id}
+    )
+    if direction == "evidence-to-execution":
+        store.report(owner, evidence)
+    candidate = (
+        evidence
+        if direction == "execution-to-evidence"
+        else original.model_copy(update={"report_id": extra_id})
+    )
+
+    with pytest.raises(IncidentConflict):
+        store.report(owner, candidate)

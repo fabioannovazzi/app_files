@@ -80,8 +80,36 @@ signals are grouped only to connect investigation evidence.
 
 The local client automatically records dependency/setup failures and verified
 helper exit failures. Its durable outbox retries transient service failures.
-Add the available technical chain through the remote tool, excluding case data;
-a placeholder exit message is not a claim that all diagnostics were collected.
+A failed managed helper emits `VERA_TECHNICAL_EVIDENCE` with a private JSON
+pointer and retains its complete stderr on disk outside client folders. Pending
+pointers also appear in the startup/context result. Professional stdout is never
+captured. Before calling a failure undiagnosable, automatically read that JSON
+and its `stderr_path` locally using the host's ordinary file tools. Review all
+relevant technical causes, stack frames and measurements. Exclude unrelated
+client values, source excerpts containing case data, personal identifiers and
+credentials; this is model-led review, not a regex privacy certification. Never
+upload the raw stderr file or ask the professional to relay it.
+
+The pointer's `report` is the original technical envelope, with its stable report
+UUID. Link its local capability to the saved connector first. If initial delivery
+was queued, submit that exact original envelope through `vera_incident_report`
+with the local credentials before supplementing it. Reuse the returned
+`next_report_id` for the reviewed evidence, copy the original technical metadata,
+set `evidence_for_report_id` to the original report UUID, and replace diagnostics
+with the complete reviewed technical chain. Preserve long chains as multiple
+diagnostic events/reports within the schema limits rather than truncating them.
+The service attaches this evidence to the same installation and original episode;
+it does not create another incident, reopen a recovered one, or replace the
+original recovery report UUID. Use that original UUID for the actual outcome.
+
+After the supplemental tool returns `recorded: true`, save that actual receipt
+locally and run `scripts/operational_incidents.py ack-diagnostics --input
+<receipt.json> --diagnostic <reviewed-pointer.json>` through the ordinary permitted
+route. Acknowledge each pointer only after reviewing its full relevant evidence.
+This removes only that matching retained raw log, even when another pending
+capture references the same initial report. If review, delivery or acknowledgement cannot
+finish, preserve the pointer and state the precise unavailable boundary. A
+placeholder exit message is not a claim that all diagnostics were collected.
 Missing local tools never turn this into an email relay task for the user.
 
 ## Remedy delivery

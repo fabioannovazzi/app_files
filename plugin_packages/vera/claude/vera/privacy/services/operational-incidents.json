@@ -8,7 +8,8 @@
     "scripts/check_dependencies.py",
     "scripts/managed_python_runtime.py",
     "skills/vera/SKILL.md",
-    "skills/vera/references/incident-recovery.md"
+    "skills/vera/references/incident-recovery.md",
+    "scripts/_managed_python_runtime.py"
   ],
   "runtime_profiles": [
     "anthropic-cowork"
@@ -19,8 +20,8 @@
       "kind": "hosted_service",
       "destination": "Mparanza HTTPS operational-incident API and Streamable HTTP MCP endpoint",
       "purpose": "Diagnose observed execution/setup failures, return installation-specific remedies and receive actual recovery outcomes",
-      "content": "Random installation UUID and opaque capability, Vera/host/runtime versions, platform and workflow technical IDs, failed stage, complete available technical diagnostic chains and measurements, explicit missing-measurement reasons, retry IDs and actual recovery outcomes. No professional helper stdout, client documents, case text, user prompts or arbitrary task logs. Known path, email and credential patterns are removed from technical messages; this mechanical filter does not establish semantic privacy. The host agent must select technical evidence without unrelated personal/client material. The remote channel does not read local files. Saved anonymous connector authorization exchanges a random code with a PKCE verifier, client ID and fixed incident resource; the host saves access/refresh tokens. The server stores token/code hashes, technical callback metadata and a random connection UUID. No personal account signup, user profile, email or client-file permission is involved.",
-      "retention": "Local capabilities, pending reports and receipts persist outside client folders. In tested Cowork task containers this filesystem is task-local; the saved host connection retains its separate random UUID and credentials. Access tokens last one hour; rotating refresh grants expire after 90 idle days and can be revoked. Token/code hashes and incident records have no automatic deletion period. Access requires the local capability or the saved connector token, with explicit capability proof before linking local reports.",
+      "content": "Random installation UUID and opaque capability, Vera/host/runtime versions, platform and workflow technical IDs, failed stage, complete available technical diagnostic chains and measurements, explicit missing-measurement reasons, retry IDs and actual recovery outcomes. No professional helper stdout, client documents, case text, user prompts or arbitrary task logs. Known path, email and credential patterns are removed from technical messages; this mechanical filter does not establish semantic privacy. The host agent must select technical evidence without unrelated personal/client material. The remote channel does not read local files. Saved anonymous connector authorization exchanges a random code with a PKCE verifier, client ID and fixed incident resource; the host saves access/refresh tokens. The server stores token/code hashes, technical callback metadata and a random connection UUID. No personal account signup, user profile, email or client-file permission is involved. Failed helpers retain complete stderr privately on disk; stderr may include unrelated private/client text and is read by the selected host model for semantic review under its existing account. Raw stderr is not forwarded to Mparanza. Only reviewed relevant technical diagnostics, linked by the original report UUID, are submitted as supplemental evidence. Professional stdout is not captured.",
+      "retention": "Local capabilities, pending reports and receipts persist outside client folders. In tested Cowork task containers this filesystem is task-local; the saved host connection retains its separate random UUID and credentials. Access tokens last one hour; rotating refresh grants expire after 90 idle days and can be revoked. Token/code hashes and incident records have no automatic deletion period. Access requires the local capability or the saved connector token, with explicit capability proof before linking local reports. Pending diagnostic pointers and raw stderr persist in the private incident directory until a matching actual recorded supplementation receipt is acknowledged; unsuccessful review or delivery retains them. Supplementation never replaces the original recovery episode or reopens recovered records.",
       "activation": "automatic_session_start",
       "optional": false,
       "requires_confirmation": false,
@@ -33,7 +34,8 @@
         "The remote connector is independent of local command-process startup. If the host cannot expose/connect it, no successful report is claimed.",
         "Only two built-in setup/preparation retries may execute automatically, once per remedy revision. Client documents, ACLs and security settings are not changed.",
         "A published update is not recovery. The failed operation must actually execute successfully before that installation delivery closes.",
-        "The remote MCP requires OAuth access tokens for the fixed incident resource. Authorization uses S256 PKCE, exact registered callbacks and a single-use five-minute code. Refresh tokens rotate and a replay revokes the grant; raw OAuth credentials are never placed in model prompts or stored server records."
+        "The remote MCP requires OAuth access tokens for the fixed incident resource. Authorization uses S256 PKCE, exact registered callbacks and a single-use five-minute code. Refresh tokens rotate and a replay revokes the grant; raw OAuth credentials are never placed in model prompts or stored server records.",
+        "Supplemental diagnostics require ownership of the original report and matching execution metadata; they are stored separately and cannot change the original report UUID, delivery status or remedy revision. Raw local diagnostic files can only be removed by acknowledging a matching recorded supplement."
       ]
     }
   ],
@@ -48,9 +50,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-12",
+    "reviewed_at": "2026-10-13",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "08387c19ee96b11f9fbc7dbeae05fcc287851fb9100078ca1ab798e867e33230"
+    "source_fingerprint": "b9f839fc2e314fb5a67f55d5ffdf6b7611825bda965daa3559ecf05f310ce159"
   }
 }
