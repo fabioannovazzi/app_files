@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "bilancio-oic",
-  "course_sha256": "37a98d292fce2dab7f2cc92abea7c301de1ddf9ddc8418bdcd6403a3777c5c79",
+  "course_sha256": "c142d56e5a07192f103eb18a5473bcda29355fa34042f42af756b7cef3fde4f6",
   "reviewer": "Codex bounded teaching-material and source integration review",
   "reviewed_at": "2026-10-09T13:18:33.867033+00:00",
   "review_scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",

@@ -67,8 +67,8 @@
       "kind": "hosted_service",
       "destination": "Mparanza HTTPS operational-incident API and Streamable HTTP MCP endpoint",
       "purpose": "Diagnose observed execution/setup failures, return installation-specific remedies and receive actual recovery outcomes",
-      "content": "Random installation UUID and opaque capability, Vera/host/runtime versions, platform and workflow technical IDs, failed stage, complete available technical diagnostic chains and measurements, explicit missing-measurement reasons, retry IDs and actual recovery outcomes. No professional helper stdout, client documents, case text, user prompts or arbitrary task logs. Known path, email and credential patterns are removed from technical messages; this mechanical filter does not establish semantic privacy. The host agent must select technical evidence without unrelated personal/client material. The remote channel does not read local files.",
-      "retention": "Local capability, pending reports and receipts persist outside client folders. The service retains incident, report, remedy and outcome records; no automatic deletion period is enforced. Status access is scoped by the opaque capability.",
+      "content": "Random installation UUID and opaque capability, Vera/host/runtime versions, platform and workflow technical IDs, failed stage, complete available technical diagnostic chains and measurements, explicit missing-measurement reasons, retry IDs and actual recovery outcomes. No professional helper stdout, client documents, case text, user prompts or arbitrary task logs. Known path, email and credential patterns are removed from technical messages; this mechanical filter does not establish semantic privacy. The host agent must select technical evidence without unrelated personal/client material. The remote channel does not read local files. Failed helpers retain complete stderr privately on disk; stderr may include unrelated private/client text and is read by the selected host model for semantic review under its existing account. Raw stderr is not forwarded to Mparanza. Only reviewed relevant technical diagnostics, linked by the original report UUID, are submitted as supplemental evidence. Professional stdout is not captured.",
+      "retention": "Local capability, pending reports and receipts persist outside client folders. The service retains incident, report, remedy and outcome records; no automatic deletion period is enforced. Status access is scoped by the opaque capability. Pending diagnostic pointers and raw stderr persist in the private incident directory until a matching actual recorded supplementation receipt is acknowledged; unsuccessful review or delivery retains them. Supplementation never replaces the original recovery episode or reopens recovered records.",
       "activation": "automatic_on_first_use",
       "optional": false,
       "requires_confirmation": false,
@@ -80,7 +80,8 @@
         "The fixed HTTPS transport refuses redirects. Reporting failures retain the outbox and do not discard professional outputs.",
         "The remote connector is independent of local command-process startup. If the host cannot expose/connect it, no successful report is claimed.",
         "Only two built-in setup/preparation retries may execute automatically, once per remedy revision. Client documents, ACLs and security settings are not changed.",
-        "A published update is not recovery. The failed operation must actually execute successfully before that installation delivery closes."
+        "A published update is not recovery. The failed operation must actually execute successfully before that installation delivery closes.",
+        "Supplemental diagnostics require ownership of the original report and matching execution metadata; they are stored separately and cannot change the original report UUID, delivery status or remedy revision. Raw local diagnostic files can only be removed by acknowledging a matching recorded supplement."
       ]
     }
   ],
@@ -134,9 +135,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-10",
+    "reviewed_at": "2026-10-13",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "e72fe20a83b08845f88e1f19794d640f353d69d80a0f996c9a71698b1e13cc71"
+    "source_fingerprint": "71de673237515b0a65e6fdd0a50062463e5ab8612bb95d3f94abe2b963c23882"
   }
 }

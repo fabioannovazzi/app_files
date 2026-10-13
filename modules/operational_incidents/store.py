@@ -45,6 +45,7 @@ class IncidentNotFound(ValueError):
 
 
 _SCHEMA = (
+    "CREATE TABLE IF NOT EXISTS operational_report_evidence (report_id TEXT PRIMARY KEY, original_report_id TEXT NOT NULL, installation_id TEXT NOT NULL, incident_id TEXT NOT NULL, payload_hash TEXT NOT NULL, payload_json TEXT NOT NULL, created_at TEXT NOT NULL)",
     "CREATE TABLE IF NOT EXISTS operational_connection_links (connection_id TEXT NOT NULL, installation_id TEXT NOT NULL, PRIMARY KEY (connection_id, installation_id))",
     "CREATE TABLE IF NOT EXISTS operational_installations (installation_id TEXT PRIMARY KEY, key_hash TEXT NOT NULL, created_at TEXT NOT NULL)",
     "CREATE TABLE IF NOT EXISTS operational_incidents (incident_id TEXT PRIMARY KEY, signal_hash TEXT UNIQUE NOT NULL, status TEXT NOT NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL, revision INTEGER NOT NULL, remedy_json TEXT NOT NULL)",
@@ -218,11 +219,110 @@ class IncidentStore:
         member = ConnectionActor(UUID(identifier), actor.connection_id)
         return self.outcome(member, outcome)
 
+    def connection_report(
+        self, actor: ConnectionActor, report: Report
+    ) -> dict[str, Any]:
+        """Bind supplemental diagnostics to the original proven connection member."""
+        member = actor
+        if report.evidence_for_report_id is not None:
+            with self._connection() as connection:
+                self._schema(connection)
+                self._authorize(connection, actor)
+                row = connection.execute(
+                    self._sql(
+                        "SELECT installation_id FROM operational_reports WHERE report_id=?"
+                    ),
+                    (str(report.evidence_for_report_id),),
+                ).fetchone()
+            if row is None:
+                raise IncidentNotFound("Original report is unavailable")
+            member = ConnectionActor(UUID(row["installation_id"]), actor.connection_id)
+        return self.report(member, report)
+
+    def _supplement(
+        self, credentials: Credentials | ConnectionActor, report: Report
+    ) -> dict[str, Any]:
+        """Append reviewed evidence without creating, reopening or replacing an episode."""
+        payload = report.model_dump(mode="json")
+        encoded = _json(payload)
+        digest = hashlib.sha256(encoded.encode()).hexdigest()
+        with self._connection() as connection:
+            self._schema(connection)
+            self._authorize(connection, credentials)
+            original = connection.execute(
+                self._sql(
+                    "SELECT * FROM operational_reports WHERE report_id=? AND installation_id=?"
+                ),
+                (str(report.evidence_for_report_id), str(credentials.installation_id)),
+            ).fetchone()
+            if original is None:
+                raise IncidentNotFound(
+                    "Original report is outside the installation scope"
+                )
+            source = json.loads(original["payload_json"])
+            # Exact episode binding is a mechanical security rule, not diagnosis.
+            if any(
+                payload[key] != source[key]
+                for key in (
+                    "product",
+                    "product_version",
+                    "host",
+                    "platform",
+                    "workflow",
+                    "stage",
+                )
+            ):
+                raise IncidentConflict(
+                    "Supplemental evidence does not match the original execution"
+                )
+            existing = connection.execute(
+                self._sql(
+                    "SELECT * FROM operational_report_evidence WHERE report_id=?"
+                ),
+                (str(report.report_id),),
+            ).fetchone()
+            collision = connection.execute(
+                self._sql("SELECT 1 FROM operational_reports WHERE report_id=?"),
+                (str(report.report_id),),
+            ).fetchone()
+            if collision is not None or (
+                existing is not None and existing["payload_hash"] != digest
+            ):
+                raise IncidentConflict(
+                    "Report identifier already belongs to different evidence"
+                )
+            if existing is None:
+                connection.execute(
+                    self._sql(
+                        "INSERT INTO operational_report_evidence VALUES (?,?,?,?,?,?,?)"
+                    ),
+                    (
+                        str(report.report_id),
+                        str(report.evidence_for_report_id),
+                        str(credentials.installation_id),
+                        original["incident_id"],
+                        digest,
+                        encoded,
+                        _now(),
+                    ),
+                )
+        return {
+            "incident_id": original["incident_id"],
+            "report_id": str(report.report_id),
+            "evidence_for_report_id": str(report.evidence_for_report_id),
+            "recorded": True,
+            "deduplicated": existing is not None,
+        }
+
     def report(
         self, credentials: Credentials | ConnectionActor, report: Report
     ) -> dict[str, Any]:
         """Group exact technical signals for investigation, not assumed root causes."""
+        if report.evidence_for_report_id is not None:
+            return self._supplement(credentials, report)
         payload = report.model_dump(mode="json")
+        # Preserve old retry hashes when the optional evidence link is absent.
+        payload.pop("evidence_for_report_id", None)
         encoded = _json(payload)
         digest = hashlib.sha256(encoded.encode()).hexdigest()
         signal = {
@@ -259,6 +359,18 @@ class IncidentStore:
                     "recorded": True,
                     "deduplicated": True,
                 }
+            if (
+                connection.execute(
+                    self._sql(
+                        "SELECT 1 FROM operational_report_evidence WHERE report_id=?"
+                    ),
+                    (str(report.report_id),),
+                ).fetchone()
+                is not None
+            ):
+                raise IncidentConflict(
+                    "Report identifier already belongs to supplemental evidence"
+                )
             incident_id = str(uuid4())
             initial = Remedy(
                 kind="investigating",
@@ -509,6 +621,15 @@ class IncidentStore:
             for row in connection.execute(
                 self._sql(
                     "SELECT payload_json FROM operational_reports WHERE incident_id=? ORDER BY created_at"
+                ),
+                (incident["incident_id"],),
+            ).fetchall()
+        ]
+        incident["evidence"] = [
+            json.loads(row["payload_json"])
+            for row in connection.execute(
+                self._sql(
+                    "SELECT payload_json FROM operational_report_evidence WHERE incident_id=? ORDER BY created_at"
                 ),
                 (incident["incident_id"],),
             ).fetchall()

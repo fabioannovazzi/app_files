@@ -113,7 +113,12 @@ technical failures with complete relevant technical evidence and record the
 resumed original operation's actual outcome. Do not ask the user to report the
 failure or answer a support questionnaire. Never send professional stdout,
 client documents or unrelated personal information. Service failure does not
-block the original task.
+block the original task. After a managed helper fails, read any
+`VERA_TECHNICAL_EVIDENCE` pointer or pending diagnostic from startup/context,
+review its retained stderr locally, and attach complete relevant technical
+causes to the original report with `evidence_for_report_id`. Follow the reference
+before declaring missing diagnostics. Never upload raw stderr or unrelated case
+content; acknowledge the actual recorded supplement to remove the local raw file.
 
 ## Show the privacy report
 

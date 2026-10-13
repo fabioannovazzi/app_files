@@ -1363,6 +1363,7 @@ def _load_vera_manager(monkeypatch: pytest.MonkeyPatch) -> Any:
         SimpleNamespace(
             report_failure=lambda *args, **kwargs: {"reporting": "test-isolated"},
             record_success=lambda *args, **kwargs: None,
+            retain_diagnostic=lambda path, receipt: path,
         ),
     )
     spec = importlib.util.spec_from_file_location(
@@ -1371,6 +1372,13 @@ def _load_vera_manager(monkeypatch: pytest.MonkeyPatch) -> Any:
     assert spec and spec.loader
     manager = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(manager)
+    # These tests cover forced-exit output only; isolate fixture execution from
+    # the private diagnostic filesystem and real incident transport.
+    monkeypatch.setattr(
+        manager,
+        "_execute_with_diagnostics",
+        lambda root, args: (manager._IMPLEMENTATION.main(root, args), None),
+    )
     return manager
 
 

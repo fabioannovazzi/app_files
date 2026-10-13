@@ -467,3 +467,156 @@ def test_cli_context_returns_saved_identity_when_network_is_blocked(
     result = json.loads(capsys.readouterr().out)
     assert result["credentials"] == expected
     assert result["queued"] == 0
+
+
+@pytest.mark.parametrize("extra_stderr_bytes", [0, 100000])
+def test_real_failed_helper_retains_error_chain_without_uploading_raw_stderr(
+    tmp_path, monkeypatch, capfd, caplog, extra_stderr_bytes
+):
+    import sys
+    from types import SimpleNamespace
+
+    module, store, _ = client(tmp_path, monkeypatch)
+    monkeypatch.setitem(sys.modules, "operational_incidents", module)
+    spec = importlib.util.spec_from_file_location(
+        "diagnostic_capture_launcher",
+        ROOT / "plugins/vera/scripts/managed_python_runtime.py",
+    )
+    launcher = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(launcher)
+    helper = tmp_path / "helper.py"
+    helper.write_text(
+        "import sys\nsys.stdout.write('PROFESSIONAL_STDOUT_SENTINEL\\n')\nsys.stderr.write('PRIVATE_CASE_VALUE_SENTINEL\\n')\n"
+        + f"sys.stderr.write('X' * {extra_stderr_bytes})\n"
+        + "try:\n    raise OSError('synthetic underlying cause')\nexcept OSError as cause:\n    raise RuntimeError('synthetic transport failed') from cause\n"
+    )
+    monkeypatch.setattr(launcher, "prepare_execution_root", lambda *args: tmp_path)
+    monkeypatch.setattr(
+        launcher._IMPLEMENTATION,
+        "select_runtime",
+        lambda *args: SimpleNamespace(requirement_root=tmp_path),
+    )
+    monkeypatch.setattr(
+        launcher._IMPLEMENTATION,
+        "ensure_runtime",
+        lambda *args, **kwargs: (True, tmp_path, "ready"),
+    )
+    monkeypatch.setattr(
+        launcher._IMPLEMENTATION, "runtime_python", lambda *args: Path(sys.executable)
+    )
+    monkeypatch.setattr(
+        launcher._IMPLEMENTATION, "runtime_environment", lambda *args: None
+    )
+
+    result = launcher.main(["--module", "bandi-agevolazioni", "run", "helper.py"])
+
+    assert result == 1
+    path = Path(module.local_context()["pending_diagnostics"][0])
+    saved = json.loads(path.read_text())
+    raw = Path(saved["stderr_path"]).read_text()
+    assert "RuntimeError: synthetic transport failed" in raw
+    assert "OSError: synthetic underlying cause" in raw
+    assert "direct cause" in raw
+    assert raw.count("X") == extra_stderr_bytes
+    assert saved["report"]["measurements"]["diagnostic_review_pending"] is True
+    assert (
+        saved["report"]["measurements"]["stderr_bytes"]
+        == Path(saved["stderr_path"]).stat().st_size
+    )
+    assert "PRIVATE_CASE_VALUE_SENTINEL" in raw
+    assert "PROFESSIONAL_STDOUT_SENTINEL" not in raw
+    transmitted = json.dumps(store.queue())
+    assert "PRIVATE_CASE_VALUE_SENTINEL" not in transmitted
+    assert "synthetic transport failed" not in transmitted
+    assert (
+        saved["report"]["report_id"]
+        == store.status(
+            Credentials.model_validate(module.local_context()["credentials"])
+        )["incidents"][0]["latest_report_id"]
+    )
+    captured = capfd.readouterr()
+    assert "PROFESSIONAL_STDOUT_SENTINEL" in captured.out
+    assert "synthetic transport failed" in captured.err
+    assert "VERA_TECHNICAL_EVIDENCE" in caplog.text
+
+
+def test_diagnostic_ack_requires_matching_recorded_supplement(tmp_path, monkeypatch):
+    module, store, _ = client(tmp_path, monkeypatch)
+    receipt = module.report_failure(
+        "bandi-agevolazioni",
+        "helper:opportunity_radar.py",
+        "helper failed",
+        exit_code=1,
+    )
+    error_path = module.diagnostic_directory() / "test.stderr"
+    error_path.write_text("synthetic failure plus unrelated private content")
+    pointer = module.retain_diagnostic(error_path, receipt)
+    reviewed = Report.model_validate(
+        {
+            **receipt["report"],
+            "report_id": str(uuid4()),
+            "evidence_for_report_id": receipt["report"]["report_id"],
+            "diagnostics": [
+                {
+                    "component": "vera-runtime",
+                    "error_type": "RuntimeError",
+                    "message": "synthetic failure",
+                    "stage": "helper:opportunity_radar.py",
+                    "evidence_source": "technical-log",
+                    "exit_code": 1,
+                }
+            ],
+        }
+    )
+    ack = store.report(
+        Credentials.model_validate(module.local_context()["credentials"]), reviewed
+    )
+
+    module.acknowledge_diagnostic(ack, pointer)
+
+    assert not pointer.exists()
+    assert not error_path.exists()
+    assert module.local_context()["pending_diagnostics"] == []
+    assert (
+        store.show(ack["incident_id"])["evidence"][0]["diagnostics"][0]["message"]
+        == "synthetic failure"
+    )
+
+
+@pytest.mark.parametrize(
+    "receipt",
+    [{"recorded": False, "evidence_for_report_id": "unknown"}, {"recorded": True}],
+)
+def test_unrecorded_or_unbound_receipt_cannot_delete_local_diagnostics(
+    tmp_path, monkeypatch, receipt
+):
+    module, _, _ = client(tmp_path, monkeypatch)
+    path = module.diagnostic_directory() / "retained.stderr"
+    path.write_text("unreviewed technical evidence")
+
+    with pytest.raises(ValueError):
+        module.acknowledge_diagnostic(receipt, path.with_suffix(".json"))
+
+    assert path.read_text() == "unreviewed technical evidence"
+
+
+def test_acknowledging_one_capture_preserves_other_logs_for_the_same_report(
+    tmp_path, monkeypatch
+):
+    module, _, _ = client(tmp_path, monkeypatch)
+    receipt = module.report_failure(
+        "bandi-agevolazioni", "helper:opportunity_radar.py", "failed"
+    )
+    first = module.diagnostic_directory() / "first.stderr"
+    second = module.diagnostic_directory() / "second.stderr"
+    first.write_text("first complete error")
+    second.write_text("another pending error")
+    first_pointer = module.retain_diagnostic(first, receipt)
+    second_pointer = module.retain_diagnostic(second, receipt)
+    ack = {"recorded": True, "evidence_for_report_id": receipt["report"]["report_id"]}
+
+    module.acknowledge_diagnostic(ack, first_pointer)
+
+    assert not first.exists()
+    assert second.read_text() == "another pending error"
+    assert second_pointer.exists()

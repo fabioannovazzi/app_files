@@ -311,7 +311,10 @@ def test_managed_cli_delegates_to_private_root_and_keeps_helper_arguments(
         sys.modules,
         "operational_incidents",
         SimpleNamespace(
-            report_failure=record_failure, record_success=lambda *args: None
+            report_failure=record_failure,
+            record_success=lambda *args: None,
+            diagnostic_directory=lambda: tmp_path,
+            retain_diagnostic=lambda path, receipt: path,
         ),
     )
     spec = importlib.util.spec_from_file_location(
@@ -325,7 +328,7 @@ def test_managed_cli_delegates_to_private_root_and_keeps_helper_arguments(
     )
     delegated = []
 
-    def run(prepared, arguments):
+    def run(prepared, arguments, **kwargs):
         delegated.append((prepared, arguments))
         return 17
 
@@ -346,7 +349,14 @@ def test_managed_cli_delegates_to_private_root_and_keeps_helper_arguments(
             (
                 "journal-bank-reconciliation",
                 "helper:inspect_inputs.py",
-                {"error_type": "HelperExit", "exit_code": 17},
+                {
+                    "error_type": "HelperExit",
+                    "exit_code": 17,
+                    "measurements": {
+                        "diagnostic_review_pending": True,
+                        "stderr_bytes": 0,
+                    },
+                },
             )
         ]
         assert result == 17

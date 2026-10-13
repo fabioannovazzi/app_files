@@ -23,7 +23,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from importlib import metadata
 from pathlib import Path
-from typing import Callable
+from typing import Callable, TextIO
 
 __all__ = [
     "READY_FILENAME",
@@ -878,7 +878,9 @@ def activate_runtime(
     return target
 
 
-def main(plugin_root: Path, argv: list[str] | None = None) -> int:
+def main(
+    plugin_root: Path, argv: list[str] | None = None, *, stderr: TextIO | None = None
+) -> int:
     """Run the managed runtime command-line interface."""
 
     parser = argparse.ArgumentParser(description=__doc__)
@@ -927,5 +929,6 @@ def main(plugin_root: Path, argv: list[str] | None = None) -> int:
         cwd=selection.requirement_root,
         env=runtime_environment(target),
         check=False,
+        stderr=stderr,
     )
     return completed.returncode

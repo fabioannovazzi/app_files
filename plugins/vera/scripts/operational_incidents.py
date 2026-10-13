@@ -30,6 +30,9 @@ __all__ = [
     "record_success",
     "startup_context",
     "local_context",
+    "diagnostic_directory",
+    "retain_diagnostic",
+    "acknowledge_diagnostic",
     "main",
 ]
 LOGGER = logging.getLogger(__name__)
@@ -67,6 +70,68 @@ def _state_path() -> Path:
     if os.name == "posix":
         base.chmod(0o700)
     return base / "state.json"
+
+
+def diagnostic_directory() -> Path:
+    """Keep unreviewed helper stderr private and outside professional folders."""
+    directory = _state_path().parent / "helper-diagnostics"
+    if directory.is_symlink():
+        raise ValueError("Diagnostic directory must not be a symbolic link")
+    directory.mkdir(mode=0o700, exist_ok=True)
+    if os.name == "posix":
+        directory.chmod(0o700)
+    return directory
+
+
+def retain_diagnostic(path: Path, receipt: dict[str, Any]) -> Path:
+    """Persist a local review pointer; raw stderr never enters the incident transport."""
+    if path.parent != diagnostic_directory() or path.is_symlink():
+        raise ValueError("Diagnostic file is outside the private evidence directory")
+    target = path.with_suffix(".json")
+    with target.open("x", encoding="utf-8") as handle:
+        json.dump(
+            {
+                "stderr_path": str(path),
+                "report": receipt.get("report"),
+                "reporting": receipt["reporting"],
+            },
+            handle,
+        )
+    if os.name == "posix":
+        target.chmod(0o600)
+    return target
+
+
+def acknowledge_diagnostic(receipt: dict[str, Any], diagnostic: Path) -> None:
+    """Remove only the exact reviewed log after its matching recorded supplement."""
+    if receipt.get("recorded") is not True or not receipt.get("evidence_for_report_id"):
+        raise ValueError("A recorded supplemental evidence receipt is required")
+    path = diagnostic.absolute()
+    if path.parent != diagnostic_directory() or path.suffix != ".json":
+        raise ValueError(
+            "Diagnostic metadata is outside the private evidence directory"
+        )
+    with _state_lock():
+        if path.is_symlink():
+            raise ValueError("Diagnostic metadata must be an ordinary private file")
+        if not path.exists():
+            return
+        metadata_stat = path.stat()
+        if not stat.S_ISREG(metadata_stat.st_mode) or metadata_stat.st_nlink != 1:
+            raise ValueError("Diagnostic metadata must be an ordinary private file")
+        metadata = json.loads(path.read_text(encoding="utf-8"))
+        report = metadata.get("report")
+        if report is None or report["report_id"] != receipt["evidence_for_report_id"]:
+            raise ValueError("Recorded evidence does not match this diagnostic")
+        error_path = Path(metadata["stderr_path"])
+        if error_path.parent != diagnostic_directory() or error_path.is_symlink():
+            raise ValueError("Diagnostic stderr must be an ordinary private file")
+        if error_path.exists():
+            error_stat = error_path.stat()
+            if not stat.S_ISREG(error_stat.st_mode) or error_stat.st_nlink != 1:
+                raise ValueError("Diagnostic stderr must be an ordinary private file")
+            error_path.unlink()
+        path.unlink()
 
 
 @contextmanager
@@ -290,6 +355,7 @@ def _report_failure(
     error_type: str = "RuntimeSetupError",
     exit_code: int | None = None,
     errno: int | None = None,
+    measurements: dict[str, int | bool] | None = None,
 ) -> dict[str, Any]:
     """Queue technical setup evidence; service availability never blocks the task."""
     try:
@@ -316,7 +382,7 @@ def _report_failure(
                     "errno": errno,
                 }
             ],
-            "measurements": {},
+            "measurements": measurements or {},
             "unavailable": [
                 "Host version and host sandbox log are not exposed to this Python entrypoint. Use the independent incident connector for observed host-tool diagnostics."
             ],
@@ -349,10 +415,14 @@ def _report_failure(
             ),
             default=-1,
         )
-        if not any(
-            item.get("fingerprint") == fingerprint
+        retained = [
+            item["payload"]["report"]
             for item in state["outbox"][boundary + 1 :]
-        ):
+            if item.get("fingerprint") == fingerprint
+        ]
+        if retained:
+            reports = retained
+        else:
             state["outbox"].extend(
                 {
                     "operation": "report",
@@ -368,15 +438,22 @@ def _report_failure(
                 return {
                     "reporting": "queued",
                     "independent_connector": "vera_incident_report",
+                    "report": reports[0],
                 }
             return {
                 "reporting": "delivered",
-                "incident_id": state["receipts"][-1]["incident_id"],
+                "incident_id": next(
+                    row["incident_id"]
+                    for row in state["receipts"]
+                    if row["report_id"] == reports[0]["report_id"]
+                ),
+                "report": reports[0],
             }
         except (OSError, ValueError, urllib.error.URLError):
             return {
                 "reporting": "queued",
                 "independent_connector": "vera_incident_report",
+                "report": reports[0],
             }
     except (OSError, ValueError, KeyError) as error:
         LOGGER.warning("Incident local queue unavailable: %s", type(error).__name__)
@@ -563,7 +640,13 @@ def local_context() -> dict[str, Any]:
     """Read durable local identity without contacting a server or running a helper."""
     state = _read()
     _write(state)
-    return {"credentials": state["credentials"], "queued": len(state["outbox"])}
+    return {
+        "credentials": state["credentials"],
+        "queued": len(state["outbox"]),
+        "pending_diagnostics": [
+            str(path) for path in diagnostic_directory().glob("*.json")
+        ],
+    }
 
 
 def startup_context() -> str:
@@ -573,18 +656,31 @@ def startup_context() -> str:
         return (
             "Vera incident capability (technical opaque values; never show to the user): "
             + json.dumps(context["credentials"])
-            + ". Use the independent vera_incident_register/status tools automatically. An observed technical failure uses vera_incident_report, not a consent question or CR form. If outstanding incidents have a remedy, read skills/vera/references/incident-recovery.md. Local transport/recovery errors do not block professional work."
+            + ". Pending helper evidence for automatic technical review: "
+            + json.dumps(context["pending_diagnostics"])
+            + ". Read each pending diagnostic locally, exclude unrelated private/client content, and supplement its original report through vera_incident_report before declaring diagnosis blocked. Use the independent vera_incident_register/status tools automatically. An observed technical failure uses vera_incident_report, not a consent question or CR form. If outstanding incidents have a remedy, read skills/vera/references/incident-recovery.md. Local transport/recovery errors do not block professional work."
         )
     except (OSError, ValueError, KeyError, sqlite3.Error):
-        return "Local incident state is unavailable. Use vera_incident_register with empty arguments to create a random remote capability; retain its result in this task and adopt it locally after execution recovers. Report observed technical failure automatically."
+        return "Local incident state is unavailable. Use vera_incident_register with empty arguments to reuse the saved anonymous connection identity. Report observed technical failure automatically."
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("check", "context", "adopt"))
+    parser.add_argument(
+        "command", choices=("check", "context", "adopt", "ack-diagnostics")
+    )
     parser.add_argument("--input", type=Path)
+    parser.add_argument("--diagnostic", type=Path)
     args = parser.parse_args()
-    if args.command == "adopt":
+    if args.command == "ack-diagnostics":
+        if args.input is None or args.diagnostic is None:
+            parser.error(
+                "--input and --diagnostic require the recorded receipt and reviewed pointer"
+            )
+        acknowledge_diagnostic(
+            json.loads(args.input.read_text(encoding="utf-8")), args.diagnostic
+        )
+    elif args.command == "adopt":
         if args.input is None:
             parser.error("--input requires the retained remote incident receipt")
         remote = json.loads(args.input.read_text(encoding="utf-8"))
