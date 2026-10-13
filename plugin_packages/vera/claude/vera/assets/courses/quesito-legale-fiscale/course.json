@@ -81,7 +81,7 @@
     },
     {
       "path": "modules/deep-research-validator/scripts/research_evaluation.py",
-      "sha256": "51a74c3dbdbcb1bbbb61bdff3efe1ed36214589842b3135263b42d43939964ba"
+      "sha256": "49c2a19f5c7d92efc5f53b89742b6021357c4cc0f03414b86dcfe1c91f2ba586"
     },
     {
       "path": "modules/deep-research-validator/scripts/research_record.py",
@@ -101,7 +101,7 @@
     },
     {
       "path": "modules/deep-research-validator/skills/deep-research/references/evaluation.md",
-      "sha256": "9a19cd336b8567e3ecc66d21e0fe519d2c0691fc6a02d53d0cd9d4d8393af6e7"
+      "sha256": "0f2435b81c93039991d6bb301b9845b7d960e54257f8dbadfae4e514d3295a47"
     },
     {
       "path": "modules/deep-research-validator/skills/deep-research/references/research-loop.md",
@@ -802,5 +802,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "d81c2ed417753a6114cb475f716f006e9a5f8729bc96b6de444ca94ce1a86ee8"
+  "canonical_course_sha256": "bfe20d9ea1b69b2721f68c93b727ff8189aae0b02de4e9c26a33de944c0f0bbb"
 }

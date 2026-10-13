@@ -25,7 +25,7 @@ untreated issues, unsupported certainty, lost qualifications, factual invention,
 failure to revisit dependent claims and forced opposition. A coherent alternate
 interpretation can be appropriate without invalidating the original.
 
-For a quality comparison, retain standard Claude's output and the earlier pipeline's output on the same
+For a quality comparison, retain the `standard_codex` baseline's output and the earlier pipeline's output on the same
 assignment and have a professional review both outputs without workflow labels.
 Assess authority/version accuracy, material issue coverage, source entailment,
 reasoning, opposing-case quality, uncertainty and usefulness of the requested
@@ -58,7 +58,7 @@ version, package hash, host configuration and timestamps into an immutable run.
 
 Host configuration records the observed `host`, `model`, `research_date`,
 `research_tools` and `configuration_observation`, plus
-`observed_plugin_version` for a plugin run. A standard Claude baseline records
+`observed_plugin_version` for a plugin run. The `standard_codex` baseline records
 `specialist_plugins_exposed: []`; run it in a separate clean context with the
 same assignment/materials, model, tools and research date. File hashes cannot
 prove that this configuration was active or that a supplied transcript is true.

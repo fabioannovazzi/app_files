@@ -2,9 +2,9 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "quesito-legale-fiscale",
-  "course_sha256": "d81c2ed417753a6114cb475f716f006e9a5f8729bc96b6de444ca94ce1a86ee8",
+  "course_sha256": "bfe20d9ea1b69b2721f68c93b727ff8189aae0b02de4e9c26a33de944c0f0bbb",
   "reviewer": "Codex /root - tax-litigation fix source compatibility review",
-  "reviewed_at": "2026-10-13T23:15:03.827529+00:00",
+  "reviewed_at": "2026-10-13T23:20:54.144906+00:00",
   "review_scope": "Source compatibility review of unchanged authored lessons; fresh execution against each exact course digest remains required. Historical locale/editorial/artifact judgments retain their scope. No new learner, visual, installed-host or professional acceptance is claimed.",
   "languages": {
     "it": {
@@ -605,9 +605,9 @@
     "scope": "Reviewed answer identity, immutable original/text captures, typed issue evidence/effects, quotation anomaly treatment and retention of executed evaluations. No source selection or legal support classifier added. Fresh course execution and CI remain required; no professional, learner or installed-host acceptance is inferred."
   },
   "research_integrity_integration_review_20261014": {
-    "reviewed_at": "2026-10-13T23:15:03.827529+00:00",
-    "previous_course_sha256": "c3ee232cdbb924da68d9b16ae7f8302b0c3d8b50436bdd017df33feae5d4650f",
-    "current_course_sha256": "d81c2ed417753a6114cb475f716f006e9a5f8729bc96b6de444ca94ce1a86ee8",
+    "reviewed_at": "2026-10-13T23:20:54.144906+00:00",
+    "previous_course_sha256": "d81c2ed417753a6114cb475f716f006e9a5f8729bc96b6de444ca94ce1a86ee8",
+    "current_course_sha256": "bfe20d9ea1b69b2721f68c93b727ff8189aae0b02de4e9c26a33de944c0f0bbb",
     "authored_content_unchanged": true,
     "scope": "Carry source bindings forward after integrating the independently released shared tax-litigation Archive fixes with legal/tax evidence-integrity changes. Authored multilingual lessons, materials and deliverables remain unchanged. Fresh exact-digest CI is required; no professional or installed-host acceptance inferred."
   }

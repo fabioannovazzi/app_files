@@ -95,7 +95,7 @@
     {
       "path": "modules/deep-research-validator/scripts/research_evaluation.py",
       "repository_path": "plugins/deep-research-validator/scripts/research_evaluation.py",
-      "sha256": "b93f620a63706f2ea94006e0b6003eda41807151e484d7b26282efcb0ff4e2ac"
+      "sha256": "49c2a19f5c7d92efc5f53b89742b6021357c4cc0f03414b86dcfe1c91f2ba586"
     },
     {
       "path": "modules/deep-research-validator/scripts/research_record.py",
@@ -120,7 +120,7 @@
     {
       "path": "modules/deep-research-validator/skills/deep-research/references/evaluation.md",
       "repository_path": "plugins/deep-research-validator/skills/deep-research/references/evaluation.md",
-      "sha256": "3267e076bf09f428a8c3d068e41ea888eef79fd28468d2db6d3607347814290c"
+      "sha256": "c350da4ae5c5e9ddf633538136f6617e3395b9664e7a92c87b93166d0305ab1b"
     },
     {
       "path": "modules/deep-research-validator/skills/deep-research/references/research-loop.md",

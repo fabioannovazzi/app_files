@@ -127,7 +127,7 @@ def record_evaluation(root: Path, specification: dict[str, Any]) -> Path:
             or configuration.get("specialist_plugins_exposed") != []
         ):
             raise ValueError(
-                "Standard Codex requires an explicitly recorded specialist-free configuration"
+                "The standard_codex baseline requires an explicitly recorded specialist-free configuration"
             )
         product = None
     else:
