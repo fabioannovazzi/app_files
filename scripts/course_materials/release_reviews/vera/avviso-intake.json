@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "avviso-intake",
-  "course_sha256": "c4ef5daf9a09411d0d2cbd922b790e3bf2889ef7b3aca32a2f4a048c31729d9f",
-  "reviewer": "Codex: original fictional notice/update, five first-use outlines, native extraction tables and all ten source-bound Codex review notes",
-  "reviewed_at": "2026-09-14T16:57:28.170830+00:00",
-  "review_scope": "The current native pipeline imports and extracts the notice. Fixed model-authored test interpretations exercise the existing skill instruction to create codex_run_review.md in the actual run output; they are not native-code legal determinations or fresh model execution in CI, and are never shipped as learner results. The native ledger declares and seals those real output files. The wider client-file package and lexical fiscal classifications remain unapproved. No legal deadline, professional approval, sending, voice or learner understanding is attested. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+  "course_sha256": "4c1a1dd014f6984d33ffb8f07d461b9df32ec61d06148f5b8c15e6c58f68c6b8",
+  "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
+  "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
+  "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -513,5 +513,28 @@
     "source_changes": "Vera dependency checker re-enters the base interpreter when required; PDF geometry is persisted as decimal text; reviewed mapping contracts are exposed; run recipe containment is checked before output writes; reviewed currency reaches PDF postings; first-run instructions specify runtime, session identity, in-run recipe and finalization disclosure.",
     "evidence": "Final repair commit native teaching execution step passed before the editorial binding check; local packaged PDF pipeline and source regressions passed. Fresh CI must verify execution against these exact current course hashes.",
     "limits": "This source-only binding review does not claim new visual, learner, installed-host or professional acceptance. Existing review descriptions and output receipts retain their historical scope."
+  },
+  "tax_litigation_source_binding_review_20261013": {
+    "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
+    "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
+    "previous_review_identity": {
+      "reviewer": "Codex: original fictional notice/update, five first-use outlines, native extraction tables and all ten source-bound Codex review notes",
+      "reviewed_at": "2026-09-14T16:57:28.170830+00:00",
+      "review_scope": "The current native pipeline imports and extracts the notice. Fixed model-authored test interpretations exercise the existing skill instruction to create codex_run_review.md in the actual run output; they are not native-code legal determinations or fresh model execution in CI, and are never shipped as learner results. The native ledger declares and seals those real output files. The wider client-file package and lexical fiscal classifications remain unapproved. No legal deadline, professional approval, sending, voice or learner understanding is attested. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+      "course_sha256": "c4ef5daf9a09411d0d2cbd922b790e3bf2889ef7b3aca32a2f4a048c31729d9f"
+    },
+    "baseline_commit": "589aad7a9d400aaef2498a1a0c772af3cb4637a9",
+    "reviewed_source_commit": "ff753a8583961a88c3071b4f9d72223687e221e4",
+    "previous_course_sha256": "c4ef5daf9a09411d0d2cbd922b790e3bf2889ef7b3aca32a2f4a048c31729d9f",
+    "current_course_sha256": "4c1a1dd014f6984d33ffb8f07d461b9df32ec61d06148f5b8c15e6c58f68c6b8",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "source_review": "docs/releases/2026-10-13-tax-litigation-course-source-review.json",
+    "fresh_matching_junit_required": true,
+    "new_native_output_visual_review": false,
+    "learner_or_professional_acceptance": false,
+    "installed_host_acceptance": false
   }
 }

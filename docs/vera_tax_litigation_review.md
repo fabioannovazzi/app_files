@@ -55,8 +55,16 @@ host packages are rebuilt to avoid changing public bytes under version 0.1.269.
 Package regressions exercise the shipped Vera helpers: fictional evidence,
 Vera-labelled review output, saved preparation, an unresolved filing-proof
 question, reopening status and HTML progress. They also compare the maintained
-guide in every affected Codex, ChatGPT-upload and Cowork package. These are
+guide in every affected Codex, ChatGPT-upload, Cowork and Antigravity package:
+forty comparisons of procedural text across eight host packages. These are
 technical checks, not autonomous host acceptance or a real commercialista case.
 The existing document-helper, website, privacy and package regressions also
 apply. A reviewed prepared teaching kit has not been authored for this new
 professional workflow, so the lesson compiler does not advertise one.
+
+The 47 existing Vera/Lucia teaching kits changed only their source inventory.
+Their authored multilingual content, inputs and execution contracts match main.
+The bounded source compatibility review is recorded in
+`docs/releases/2026-10-13-tax-litigation-course-source-review.json`; historical
+editorial and artifact judgments are retained. Current native execution against
+each exact course digest remains required by the unchanged release verifier.

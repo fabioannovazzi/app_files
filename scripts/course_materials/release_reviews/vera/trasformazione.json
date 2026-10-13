@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "trasformazione",
-  "course_sha256": "abf8c6d4d69b680f7d87a0b071544b2b41cc95477fa6e1ebd14ed2cfdb515053",
-  "reviewer": "Codex bounded teaching-material and source integration review",
-  "reviewed_at": "2026-10-09T13:18:34.182538+00:00",
-  "review_scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
+  "course_sha256": "c268e527617873801f0a9ff00355cc72d9b92b9de3e6561ea5bfecb896375769",
+  "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
+  "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
+  "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -437,5 +437,28 @@
     "reason": "Automatic technical incident recovery routing; teaching content, files and earlier execution artifacts unchanged.",
     "date": "2026-10-12",
     "fresh_learner_acceptance": false
+  },
+  "tax_litigation_source_binding_review_20261013": {
+    "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
+    "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
+    "previous_review_identity": {
+      "reviewer": "Codex bounded teaching-material and source integration review",
+      "reviewed_at": "2026-10-09T13:18:34.182538+00:00",
+      "review_scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
+      "course_sha256": "abf8c6d4d69b680f7d87a0b071544b2b41cc95477fa6e1ebd14ed2cfdb515053"
+    },
+    "baseline_commit": "589aad7a9d400aaef2498a1a0c772af3cb4637a9",
+    "reviewed_source_commit": "ff753a8583961a88c3071b4f9d72223687e221e4",
+    "previous_course_sha256": "abf8c6d4d69b680f7d87a0b071544b2b41cc95477fa6e1ebd14ed2cfdb515053",
+    "current_course_sha256": "c268e527617873801f0a9ff00355cc72d9b92b9de3e6561ea5bfecb896375769",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "source_review": "docs/releases/2026-10-13-tax-litigation-course-source-review.json",
+    "fresh_matching_junit_required": true,
+    "new_native_output_visual_review": false,
+    "learner_or_professional_acceptance": false,
+    "installed_host_acceptance": false
   }
 }

@@ -1,0 +1,535 @@
+{
+  "schema": "mparanza.course_source_review.v1",
+  "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
+  "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
+  "baseline_commit": "589aad7a9d400aaef2498a1a0c772af3cb4637a9",
+  "reviewed_source_commit": "ff753a8583961a88c3071b4f9d72223687e221e4",
+  "scope": "Complete compiled-course comparison proves that all 47 affected courses changed only their source inventory. All authored locales, inputs, requests, checkpoints, deliverables, practice, pacing and original per-locale editorial/output-artifact reviews are retained.",
+  "source_compatibility_judgment": "Vera adds the five maintained Italian tax-litigation guide files and seven canonical Lucia evidence/progress helper files to its package source inventory. Lucia adds the five guide files. No existing source row changes or disappears. These additions serve the new separately invoked litigation adapter; existing prepared courses do not invoke that adapter. Existing helper commands remain intact and the document renderer keeps Lucia as its default label. No course content, input, execution contract or professional acceptance is altered. The new litigation workflow has no prepared lesson and is excluded by the compiler until one is authored and reviewed.",
+  "native_execution_evidence": {
+    "run_id": 38388289537,
+    "job_id": 115265407272,
+    "commit": "b561068a0474935100e47e08018ba016355fe9a5",
+    "native_stage_passed": 1642,
+    "explicit_skips": 3,
+    "coverage_percent": 90.43,
+    "later_gate": "failed on stale editorial source digest",
+    "final_head_fresh_ci_required": true
+  },
+  "source_additions_by_product": {
+    "vera": [
+      {
+        "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+        "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+        "sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5"
+      },
+      {
+        "path": "vendor/modules/italian_tax_litigation/references/fonti.md",
+        "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/fonti.md",
+        "sha256": "a0c1236e1d0eb9fb0a6f8559a2336f71b8b613778b66b5853600203672819493"
+      },
+      {
+        "path": "vendor/modules/italian_tax_litigation/references/procedura-italiana.md",
+        "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/procedura-italiana.md",
+        "sha256": "99ce64c08f64d8bbe96d0491d0b0e25af7d894af41705c47f2eae087fb0ebf5f"
+      },
+      {
+        "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+        "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+        "sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f"
+      },
+      {
+        "path": "vendor/modules/italian_tax_litigation/workflow.md",
+        "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/workflow.md",
+        "sha256": "9e32947e8840f2186e2011b4aae957e0eeb13b81a42004f279b16ccd6b4e3de1"
+      },
+      {
+        "path": "vendor/modules/scripts/legal_documents.py",
+        "repository_path": "plugins/lucia/scripts/legal_documents.py",
+        "sha256": "173992e6f709c114aca3e94c27038551763ceadebe8ca66974d067a05cb38d26"
+      },
+      {
+        "path": "vendor/modules/scripts/legal_documents_labels.json",
+        "repository_path": "plugins/lucia/scripts/legal_documents_labels.json",
+        "sha256": "8c9f4cb5db0e42b824aa6acce17592dd478eb7eaab45191f6298dc27e9ea7c0d"
+      },
+      {
+        "path": "vendor/modules/scripts/legal_documents_review.schema.json",
+        "repository_path": "plugins/lucia/scripts/legal_documents_review.schema.json",
+        "sha256": "4dca15c02f9ca12d010e4ddbc0bfc9b7e786ddee51987b86a39f9b1bb635e268"
+      },
+      {
+        "path": "vendor/modules/scripts/legal_docx.py",
+        "repository_path": "plugins/lucia/scripts/legal_docx.py",
+        "sha256": "f64755119c0d07e1630dc7718f179b6e0bb78aaa4155c1f18752bd6692f50fbf"
+      },
+      {
+        "path": "vendor/modules/scripts/legal_matter.py",
+        "repository_path": "plugins/lucia/scripts/legal_matter.py",
+        "sha256": "5fb388f7c5c480ed68debb09af523ddfbf08e8b68a40da4834b01c5f56dccad0"
+      },
+      {
+        "path": "vendor/modules/scripts/legal_matter.schema.json",
+        "repository_path": "plugins/lucia/scripts/legal_matter.schema.json",
+        "sha256": "b1fb25dd09d300a79cb7cd68eec45cec7c82afa18d1ba08d05a34d1447971586"
+      },
+      {
+        "path": "vendor/modules/scripts/legal_matter_labels.json",
+        "repository_path": "plugins/lucia/scripts/legal_matter_labels.json",
+        "sha256": "c03f840e81b1f3185cb4be0fedb955adf22845aafd13fc3e78b090c8185129ef"
+      }
+    ],
+    "lucia": [
+      {
+        "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+        "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+        "sha256": "07d901d926c34083ecd1843f55f9969f39e6628d0b5009d416301ac02c6d66c5"
+      },
+      {
+        "path": "vendor/modules/italian_tax_litigation/references/fonti.md",
+        "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/fonti.md",
+        "sha256": "a0c1236e1d0eb9fb0a6f8559a2336f71b8b613778b66b5853600203672819493"
+      },
+      {
+        "path": "vendor/modules/italian_tax_litigation/references/procedura-italiana.md",
+        "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/procedura-italiana.md",
+        "sha256": "99ce64c08f64d8bbe96d0491d0b0e25af7d894af41705c47f2eae087fb0ebf5f"
+      },
+      {
+        "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+        "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+        "sha256": "4d9fe229693d18749d04a90604b3d4f1fabcee735628f5a6faff85c86e274e3f"
+      },
+      {
+        "path": "vendor/modules/italian_tax_litigation/workflow.md",
+        "repository_path": "plugins/_shared/vendor/modules/italian_tax_litigation/workflow.md",
+        "sha256": "9e32947e8840f2186e2011b4aae957e0eeb13b81a42004f279b16ccd6b4e3de1"
+      }
+    ]
+  },
+  "kits": [
+    {
+      "kit": "lucia/apertura-pratica",
+      "previous_course_sha256": "6c97ee3a9aa8c264e3de86cc988c2bad24aad2916940e50797580caf4746cb57",
+      "current_course_sha256": "53a0f9ed740ae7bd0405556d7c69ce4cd3eca903219f0caf5800bbe0517498af",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "lucia/comunicazione-professionale",
+      "previous_course_sha256": "2fa39635f48e3b31bcf8c3da419d0e6ef840833dcfa361f3062900781d9ef72a",
+      "current_course_sha256": "b0b434535a8bfebeb8f7a451124c699ceef27677ae57061748e8c80f4e4ce990",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "lucia/presenza-digitale-studio",
+      "previous_course_sha256": "fa9123f4150d4ceb8a4ac2b805e3f70dc68c96bd3cf1c6231711a74ed42a4240",
+      "current_course_sha256": "c76b10baf010b34dd298e7cf1fca52e33a0139de319ab18efb70567dcee16759",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "lucia/quesito-legale-fiscale",
+      "previous_course_sha256": "bc0f174587ebcce24ba888a9d7f9f1f57896ac0721ac6aa666992855cf789e2c",
+      "current_course_sha256": "37471eccaf061f3857352f7e07288a2e51d34a97cd23b030f39cc4c9da9e69c2",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/adeguati-assetti",
+      "previous_course_sha256": "762083025f243843a37c8102fc9d14879e167c4b9516bf8cee873c7e79c00ae5",
+      "current_course_sha256": "fdbbb5d7b94aed19d8960faf82c8972e8b10a5e09e8636c4b63a2632cb443115",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/agenzia-acquisition",
+      "previous_course_sha256": "ab4e03293125cc34a6e974d44b39b8eee5f7b551caecc2487ed1076cfdeb8f18",
+      "current_course_sha256": "f23413a691733bb0d771d6288688b74de446d6dfbeec050676a23081878c1bb2",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/aml-review",
+      "previous_course_sha256": "4efb4f8c062ca687f176d6b7ed189dfc2d8978cf6e160e769dffec805fc3c481",
+      "current_course_sha256": "14dfc3a80e696bb6b772db0fc68264cb423fc4994ff13c62dce4d1624c4010d1",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/archive-organization",
+      "previous_course_sha256": "c6c682c2f92d7941feacb0d8d6845b2a34f08bd1e2d58ba300da057ae3e9f7db",
+      "current_course_sha256": "1afecedc6ffb81aff2a986ccb90bd031727be0d4499a10ad2aea139e9b772a56",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/avviso-intake",
+      "previous_course_sha256": "c4ef5daf9a09411d0d2cbd922b790e3bf2889ef7b3aca32a2f4a048c31729d9f",
+      "current_course_sha256": "4c1a1dd014f6984d33ffb8f07d461b9df32ec61d06148f5b8c15e6c58f68c6b8",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/bandi-agevolazioni",
+      "previous_course_sha256": "b8506b59ed3b98a757b55de7c8cf0bd19ce314dc717d31bd7c73a199d768ac8f",
+      "current_course_sha256": "05d0bceb2db691a83b38686497163ca97bf8071b968b367b9ef0386fd91f7947",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/bilancio-oic",
+      "previous_course_sha256": "c142d56e5a07192f103eb18a5473bcda29355fa34042f42af756b7cef3fde4f6",
+      "current_course_sha256": "21ae333aa0f19fa807bb1d6d39d012811d376a20baf32ba07888080450434c0a",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/browser-automation",
+      "previous_course_sha256": "34d69337f78cc418589a0fbad3ce9c094a75a98369965279664cdb49d47e2950",
+      "current_course_sha256": "72b43e2acf0886e50e2fb416ac9d4a96460378a6512869fe2b06b8cbb7ad3d88",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/business-planning",
+      "previous_course_sha256": "47f7e8ccd68f750d4b88f694513e0909534d536bf980ef35179af15837a2abd2",
+      "current_course_sha256": "eca2f34ae291c47e3f4ae9c7d2eb47c686a40076ae75b350415591af82eea04f",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/business-valuation",
+      "previous_course_sha256": "b501f06b07709fbc08f8d35d711d42487d27bee3cd735db25890b3264bf89eea",
+      "current_course_sha256": "b247f243eedd2d181071ee3248ae9bafe3a8790132e0719ad8bf2e1cd9935b58",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/centrale-rischi-review",
+      "previous_course_sha256": "a7e2137afa00e1551dd7ead0241438ae70b17c0f6ac72c3d9d7e7842fb4d7746",
+      "current_course_sha256": "7b28209805c7faa76127cf0cb461defd4f73f2b28408fc178bb2e4628401aeca",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/composizione-negoziata",
+      "previous_course_sha256": "f47d04e06fc35b4156ff238bac60a9f7d5c805589f1a860507e86d99552deba6",
+      "current_course_sha256": "0f48482c77bb6ea14e0013f51910ed9ad4ed0a167fe0474d760dbb7c82925386",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/comunicazione-professionale",
+      "previous_course_sha256": "802c9990544f7c78fd899957d52a8b806c40d48610523c71b69979e4c93ea1de",
+      "current_course_sha256": "5a46589d8d06d4e91830c1e1ec74533b90bbd5c35f8cfbee90f5fee5eec7a9a9",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/concordato-plan-review",
+      "previous_course_sha256": "a3245549276d3be842cf93ec25064e9184fe481827af550164dbafc38f69d46f",
+      "current_course_sha256": "65062dc03beb053db797a9e4b5d86593a342746f7975d887316226f6c8872b28",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/dati-fiscali-strutturati",
+      "previous_course_sha256": "825856f8cdc7c31de6058fd0e9b8975474b1451d39a73bdee6b67390d9b5116d",
+      "current_course_sha256": "35b70605379b5ca18c6ad630ef0c89e5f66918af3670a37bf9d8bb2acc8d51d9",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/email-cliente",
+      "previous_course_sha256": "e60b31755ecdd487f8aeb87eb677af7e930e4933dd30893abe5dc07419af4f44",
+      "current_course_sha256": "bae7be013c3c2c2320f222838cb76052ac9481beeee70abdec45b8e2e0aa8052",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/esg-reporting-assurance",
+      "previous_course_sha256": "e09c60c776aee399ff042d7c58c6254774ae147f11bb89f0b4cbfb9a91531a40",
+      "current_course_sha256": "5c8d03d5664ee6d510dc01c1773f97cceb535d39c0da6136ac691ba305928642",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/fatture-xml-check",
+      "previous_course_sha256": "f3229af167af98ed6d17cb5d0e67ab0efa55f4baaa00439851b58ebebfa3db6e",
+      "current_course_sha256": "dec00463cedf9eebac08b4f58ec5c745de186e9ab9316c83fcb8d9b2abdd6842",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/financial-analysis",
+      "previous_course_sha256": "6eda2ad3c792d691b56bb1ff383ef52d2155d0d2b14b89a0f913c10d16b9bf5f",
+      "current_course_sha256": "948bb77e5745bc0421bbc5c741e8f521ea2b8c7e9555e9fbb7cc006569cd2f44",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/financial-report-builder",
+      "previous_course_sha256": "a845800e168a63228c0d89911e5a14e379b97568aef72de17a4a2a71c21dfc9c",
+      "current_course_sha256": "dc9d743bdca86b201df48a2e773e6ded1a73c26d6c2f87fbeee9913bee916eab",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/fusione-guidata",
+      "previous_course_sha256": "188fea9a6839f43f63ec1bf0097e094527a941587ae2b95ecbdf479fdfb5d0c5",
+      "current_course_sha256": "0cf847a3ccf1a8287d8da1253f281d094413b1963810cc5c449dfa8410c2b1c7",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/invoice-xml",
+      "previous_course_sha256": "e63e0877d10254b06ef3cc5c8d70a8b447a35287781f7253b6bf8cc981b2791b",
+      "current_course_sha256": "ee0134fb0bba582ac2f1cd8db782353c5c9ac2837f82e9bb94e5c48903ad2c74",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/journal-bank-reconciliation",
+      "previous_course_sha256": "83a6064892639ef9b8fe7497ba33235321a04723440ff275f6b69a7b8304e69d",
+      "current_course_sha256": "8f2423c8846992b5edecef64fdf144f59b919301ede75056e712e3f95422a27b",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/journal-sampling",
+      "previous_course_sha256": "958b15cb33f8e4459511f382657a3263ab71aed61b5561cc9b6a41d9dc35043f",
+      "current_course_sha256": "35573f421e90be2d1f1d52428402369f79ba84b830efccdbadda779cef37499a",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/lipe",
+      "previous_course_sha256": "b2bfb3e0eeab9449387e181afb1fb47bb637266df0dd225fb85653033db0baf0",
+      "current_course_sha256": "dea17e17eb053bf5c4ab3dbe279a2e76de65213b3b0b89675eb6af6de7a88ea6",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/management-control-pack",
+      "previous_course_sha256": "19bdf4f937510e3b5cad7246cf0582de36029e95906f6b85458523ebcf01a40d",
+      "current_course_sha256": "8e6c3470cbbbd6e38656a1c4fdf46a12238054cf5bc67a4d88b3b8e7986da479",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/new-client",
+      "previous_course_sha256": "7ab1e2f3dc2c21708b9ba798dac327d216c75f9958c0a1374720ad6c0260dc84",
+      "current_course_sha256": "48550ec8d86f508ce8f736e44cee5df1318305252d06bfa5ed9611de3eff1c1a",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/open-item-reconciliation",
+      "previous_course_sha256": "522d5f581fa72425df82e5be4cb6b2c02f9d2768aabd1b5684bfd9480595523d",
+      "current_course_sha256": "7e29783599c905b541f15d68cc75668b78ff7475f501d5c82952bbc723327829",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/organizzazione-lavoro",
+      "previous_course_sha256": "f97b86f1d366a63fc3be6788123cff2ce409c045ead643248b3d56610dc516f3",
+      "current_course_sha256": "4495d0d97954ab5eafd5cb9542df4bccc2096dbfe935eaba5a56b6ccbff6e4de",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/patent-box-review",
+      "previous_course_sha256": "1fdf91e301e1e3666a7e84bcf2bec59b922316ba6e330e13009988646642bc68",
+      "current_course_sha256": "1239ad80cd17c8f46c95418a1ae14ba623f98513fc78ef0f831417f863b32d05",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/presenza-digitale-studio",
+      "previous_course_sha256": "2e0a12f802267d0506f36852920b4b3c140638d5c7ff14a11a99f0f8513d29e2",
+      "current_course_sha256": "9beb7fb94251e6c92386c5e8919257f9912a2df668998990c64ca84a38be95db",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/previdenza-inps",
+      "previous_course_sha256": "96b86e86136f43042187adfddb8f7e82d729411bba3c12a7fd0abba161ca8bb5",
+      "current_course_sha256": "b9a051f50a2002220998f98256c97b908969cea34418cf61d59690471d474b6f",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/purchase-invoice-review",
+      "previous_course_sha256": "63fb7e6a482c9be93a91d2abd41f4f64d85bd575122470edd1e366a9152ed5b6",
+      "current_course_sha256": "4e88600335d654b0b3c559d6ba40b5576ca0d86ede6288ff776652e323525d11",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/quesito-legale-fiscale",
+      "previous_course_sha256": "d9225f548a42aad9e9480825b60dafbc52590bf5f41643659cf0eff8700b29ff",
+      "current_course_sha256": "92b15075429514bb2e83d18fd6aff0b2d3e6f5565714f462380949db9cdcf640",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/registro-imprese-sari",
+      "previous_course_sha256": "d95bffaffb05c35ea1bb17559caa7a4340086ca20ba77fc6f18a88610c987cbb",
+      "current_course_sha256": "125add7e5fb6d1780a74404655d7f31d70c7af4018d07d7c15e2e856ee2521c9",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/sales-plan",
+      "previous_course_sha256": "bcb8575e6811fbca35f0ab5c938bceef23170b073915f09471baa1c42b5838da",
+      "current_course_sha256": "b76dc727e51f9b19d76dfe271ea66da164cf39b87b90d56bd1d9253ca40df47b",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/scissione-guidata",
+      "previous_course_sha256": "d5f9bd54b6c64e05b9611b510e14cf1fdc9d31eebcc401dee8e5302b57d7f5bf",
+      "current_course_sha256": "dfb86601a84d3bd8d65aacd9121a4af4979cc2d6443ee43339e92fa3dcb22e2f",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/studio-archive",
+      "previous_course_sha256": "01f8075fc41ff95073f8cabf6cafbc5834492536e185f45bb26be9113f1c52c5",
+      "current_course_sha256": "6139351bf464f1a7d7c6e061bb3d67d5f7781ab65b0ae0fca9af24bbc777e788",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/studio-document-format",
+      "previous_course_sha256": "b7a325310a978bd572ce9c0ad778db019bf5439014c46bcac9165e1f9876025a",
+      "current_course_sha256": "9f0098bda6412b779817d4b024a0010d5728ede0e1c96e95546a1d6b7098ff53",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/trasformazione",
+      "previous_course_sha256": "abf8c6d4d69b680f7d87a0b071544b2b41cc95477fa6e1ebd14ed2cfdb515053",
+      "current_course_sha256": "c268e527617873801f0a9ff00355cc72d9b92b9de3e6561ea5bfecb896375769",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/treasury-forecast",
+      "previous_course_sha256": "b39d1a5f778b0c3396577e97beea006175e319a2adf6cdc820fed5aed25cda55",
+      "current_course_sha256": "0adee7b8d29c03c66c82fe211b6772c2b65236a883919dd79b6e531f4098833f",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/variance-analysis",
+      "previous_course_sha256": "83bdb6726f70a09e0243920b6d35933739ceec898aed46ad47e2492b64569859",
+      "current_course_sha256": "a277cf1c6ec8cc3cd8150ea8e81c5fdcdf8dca1032f3478ac761b48188a642a9",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    },
+    {
+      "kit": "vera/vouching",
+      "previous_course_sha256": "d4a2c5f303d73b16eeb27e3ecc2f487cd887d230c510815e7d014f60b07a0929",
+      "current_course_sha256": "3ef762921b56b8b63e8cb45bf7ffec86fdb9b1749de46f8abcd803e13ec317b5",
+      "authored_content_unchanged": true,
+      "changed_fields": [
+        "sources"
+      ]
+    }
+  ]
+}
