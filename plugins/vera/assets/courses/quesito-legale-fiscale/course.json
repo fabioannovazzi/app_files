@@ -85,7 +85,7 @@
     {
       "path": "modules/deep-research-validator/scripts/pipeline_review.py",
       "repository_path": "plugins/deep-research-validator/scripts/pipeline_review.py",
-      "sha256": "3c9967dd329f9b20f294105eb92b20c5af540587f9544e62818ad59aae8d2882"
+      "sha256": "29fe95c4c3ce7cee87efc310d90d1da504039875fb263a843968421a0e617f79"
     },
     {
       "path": "modules/deep-research-validator/scripts/research_record.py",

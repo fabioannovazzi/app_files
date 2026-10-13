@@ -2,9 +2,9 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "quesito-legale-fiscale",
-  "course_sha256": "92b15075429514bb2e83d18fd6aff0b2d3e6f5565714f462380949db9cdcf640",
-  "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
-  "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
+  "course_sha256": "0a5ec2bbade778c58b2d4fd43c5b707fc21e0fb05dc864f15de13adcd6d196ad",
+  "reviewer": "Codex /root - source-preview encoding and unchanged teaching-material review",
+  "reviewed_at": "2026-10-13T19:28:41.735928+00:00",
   "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
   "languages": {
     "it": {
@@ -575,5 +575,9 @@
     "new_native_output_visual_review": false,
     "learner_or_professional_acceptance": false,
     "installed_host_acceptance": false
+  },
+  "encoding_preview_source_binding_review_20261013": {
+    "reviewed_at": "2026-10-13T19:28:41.735928+00:00",
+    "scope": "Reviewed the shared UI projection fix against unsupported-encoding, UTF-8 BOM and malformed-control regressions. Native source inventory changes only; authored lessons, multilingual inputs, deliverables and all prior professional-acceptance limits are preserved. Unsupported raw captures retain their bytes and hashes and display an explicit encoding limit. No new research method, law judgment, recipient or model API is introduced."
   }
 }

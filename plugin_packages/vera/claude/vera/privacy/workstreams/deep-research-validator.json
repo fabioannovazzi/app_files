@@ -188,12 +188,16 @@
     {
       "id": "revision-bound-native-research-review",
       "control": "The native review projects existing issue/cycle records, source captures, both available reviewed opinions and their comparison. Save/Apply rechecks the exact local source hashes as well as the review payload, so a stale screen cannot approve changed evidence. Reviewer decisions persist and feed the model-led issue loop; UI acceptance does not certify legal support or close unfinished research. Prior decision revisions remain in local review history. The MCP Apps bridge checks the parent window and pins its origin; window.openai is a feature-detected compatibility fallback. No new external recipient, model API, automatic anonymization or source selection is added."
+    },
+    {
+      "id": "faithful-source-encoding-preview",
+      "control": "Source review previews decode UTF-8 without modifying original captures. Unsupported source encodings remain explicit metadata limits; full original-byte hashes still bind review decisions. Required control records remain strict UTF-8."
     }
   ],
   "review": {
     "reviewed_at": "2026-10-13",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "2a818ffcae873a775b5ffd4b5b1eb16375a2a9b028b8bc3615f3f621a7e9f6be"
+    "source_fingerprint": "df0f1c1c3aab9fbabb0f799376e354aec8fdaf2a9df1f534aee52cca32ef434b"
   }
 }

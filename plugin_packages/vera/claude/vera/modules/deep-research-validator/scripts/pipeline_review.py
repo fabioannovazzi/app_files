@@ -35,6 +35,13 @@ PREVIEW_COPY = {
         "Texto guardado completo.",
     ),
 }
+ENCODING_LIMIT_COPY = {
+    "it": "Anteprima non disponibile: la codifica della fonte non è supportata. Apri il file originale.",
+    "en": "Text preview unavailable: the source encoding is unsupported. Open the original file.",
+    "fr": "Aperçu indisponible : l'encodage de la source n'est pas pris en charge. Ouvrez le fichier original.",
+    "de": "Textvorschau nicht verfügbar: Die Zeichenkodierung der Quelle wird nicht unterstützt. Öffnen Sie die Originaldatei.",
+    "es": "Vista previa no disponible: la codificación de la fuente no es compatible. Abra el archivo original.",
+}
 
 
 def write_pipeline_review(root: Path, context: dict[str, Any]) -> dict[str, Any]:
@@ -55,12 +62,16 @@ def write_pipeline_review(root: Path, context: dict[str, Any]) -> dict[str, Any]
             raise ValueError(f"Review output escapes the current run: {name}")
     bindings: list[dict[str, str]] = []
 
-    def read(relative: str, *, text: bool = True) -> str:
+    def read_bytes(relative: str) -> bytes:
         path = (root / relative).resolve(strict=True)
         if not path.is_file() or not path.is_relative_to(root):
             raise ValueError(f"Research review source escapes output: {relative}")
         raw = path.read_bytes()
         bindings.append({"path": relative, "sha256": hashlib.sha256(raw).hexdigest()})
+        return raw
+
+    def read(relative: str, *, text: bool = True) -> str:
+        raw = read_bytes(relative)
         return raw.decode("utf-8") if text else ""
 
     record = json.loads(read("research_review.json"))
@@ -69,10 +80,8 @@ def write_pipeline_review(root: Path, context: dict[str, Any]) -> dict[str, Any]
     if record.get("method") != "shared_agentic_legal_tax_research":
         raise ValueError("Research review requires the shared research record")
     items: list[dict[str, Any]] = []
-    preview_copy = PREVIEW_COPY.get(
-        str(context.get("language", "it")).lower().replace("_", "-").split("-")[0],
-        PREVIEW_COPY["en"],
-    )
+    locale = str(context.get("language", "it")).lower().replace("_", "-").split("-")[0]
+    preview_copy = PREVIEW_COPY.get(locale, PREVIEW_COPY["en"])
 
     def preview(text: str) -> dict[str, Any]:
         # Bound the display only; hash complete bytes and retain the original artifact.
@@ -83,6 +92,25 @@ def write_pipeline_review(root: Path, context: dict[str, Any]) -> dict[str, Any]
             "preview_notice": (
                 preview_copy[0] if len(text) > PREVIEW_CHARACTERS else preview_copy[1]
             ),
+        }
+
+    def source_preview(relative: str, *, textual: bool) -> dict[str, Any]:
+        # Preview decoding is mechanical; never guess an encoding or alter evidence.
+        raw = read_bytes(relative)
+        if textual:
+            try:
+                return preview(raw.decode("utf-8-sig"))
+            except UnicodeDecodeError:
+                return {
+                    "path": relative,
+                    "preview": ENCODING_LIMIT_COPY.get(
+                        locale, ENCODING_LIMIT_COPY["en"]
+                    ),
+                    "preview_status": "unsupported_encoding",
+                }
+        return {
+            "path": relative,
+            "preview": "Binary source capture; inspect the original artifact.",
         }
 
     def item(
@@ -182,26 +210,17 @@ def write_pipeline_review(root: Path, context: dict[str, Any]) -> dict[str, Any]
         for path in sorted(sources.rglob("*")):
             if path.is_file():
                 relative = path.relative_to(root).as_posix()
-                if path.suffix.lower() in {".txt", ".md", ".json", ".html"}:
-                    item(
-                        f"source-{relative}",
-                        "source_capture",
+                item(
+                    f"source-{relative}",
+                    "source_capture",
+                    relative,
+                    source_preview(
                         relative,
-                        preview(read(relative)),
-                        relative,
-                    )
-                else:
-                    read(relative, text=False)
-                    item(
-                        f"source-{relative}",
-                        "source_capture",
-                        relative,
-                        {
-                            "path": relative,
-                            "preview": "Binary source capture; inspect the original artifact.",
-                        },
-                        relative,
-                    )
+                        textual=path.suffix.lower()
+                        in {".txt", ".md", ".json", ".html"},
+                    ),
+                    relative,
+                )
     # Bind every explicitly declared artifact too, including phase sources outside
     # research/sources. The role is copied from the binding, never inferred from law.
     binding = record.get("binding", {})
@@ -216,23 +235,24 @@ def write_pipeline_review(root: Path, context: dict[str, Any]) -> dict[str, Any]
         if relative in seen:
             continue
         textual = Path(relative).suffix.lower() in {".md", ".txt", ".json", ".html"}
-        text = read(relative, text=textual)
-        item(
-            f"bound-{relative}",
-            (
-                "source_capture"
-                if artifact.get("role") == "source"
-                else "validation_artifact"
-            ),
-            relative,
-            (
+        source = artifact.get("role") == "source"
+        if source:
+            data = source_preview(relative, textual=textual)
+        else:
+            text = read(relative, text=textual)
+            data = (
                 preview(text)
                 if textual
                 else {
                     "path": relative,
                     "preview": "Binary artifact; inspect the original.",
                 }
-            ),
+            )
+        item(
+            f"bound-{relative}",
+            "source_capture" if source else "validation_artifact",
+            relative,
+            data,
             relative,
         )
         seen.add(relative)
