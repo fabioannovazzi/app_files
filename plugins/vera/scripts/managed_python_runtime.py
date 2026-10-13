@@ -10,7 +10,6 @@ import logging
 import runpy
 import shutil
 import sqlite3
-import subprocess
 import sys
 import tempfile
 import traceback
@@ -136,7 +135,7 @@ def _execute_with_diagnostics(
                     if isinstance(error.code, int)
                     else (0 if error.code is None else 1)
                 )
-            except (OSError, ValueError, subprocess.SubprocessError):
+            except (OSError, ValueError):
                 traceback.print_exc(file=handle)
                 result = 1
             finally:

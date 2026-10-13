@@ -929,6 +929,6 @@ def main(
         cwd=selection.requirement_root,
         env=runtime_environment(target),
         check=False,
-        **({"stderr": stderr} if stderr is not None else {}),
+        stderr=stderr,
     )
     return completed.returncode
