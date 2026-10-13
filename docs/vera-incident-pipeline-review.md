@@ -49,3 +49,10 @@ client coverage. Black, isort and mypy pass for the changed source. Bandit repor
 no medium or high findings. Package startup checks include all 22 Cowork
 connectors. Required PR CI, public artifact parity and native acceptance are
 independent release gates; the monitor remains paused.
+
+The shared course-review folder also governs Clara teaching privacy. Its unchanged
+record is rebound without changing review dates or data flows. Clara 0.1.271 is
+a binding-only companion package; Vera remains 0.1.372. ChatGPT upload archives
+are regenerated as downloads, without Marketplace submission. The expanded local
+package suite passes 641 tests with two environment-dependent skips; all 84
+Clara release/privacy checks pass.
