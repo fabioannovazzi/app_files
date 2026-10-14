@@ -56,7 +56,7 @@ jurisdiction from the language of the conversation.
    Infer the document type from the request, including short letters and memos.
    Follow `research-choice.md`: both products use one bundled research method,
    without a normal/deep selector or external research-plugin dependency.
-3. For new research, read and execute `<product-root>/skills/deep-research/SKILL.md` using the
+3. For new research, read and execute `<product-root>/skills/mparanza-deep-research/SKILL.md` using the
    accepted optimizer package. It resolves the canonical shared research
    method and opens the existing validation run early. Investigate material
    issues, validate provisional source support and reasoning, seek opposing
@@ -140,7 +140,7 @@ adversarial research, opposing review and final comparison.
 
 At delivery, show only the stages actually performed, using the invoking
 product's namespace: `quesito-legale-fiscale -> prompt-optimizer ->
-deep-research-validator`. Insert `deep-research` between preparation and
+deep-research-validator`. Insert `mparanza-deep-research` between preparation and
 validation only when the product-owned research skill ran, and append
 `adversarial-opinion` only when it ran.
 Keep the product's reporting and feedback rules. With no local tools, follow

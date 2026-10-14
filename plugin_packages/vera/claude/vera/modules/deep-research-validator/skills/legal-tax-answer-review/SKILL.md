@@ -179,7 +179,7 @@ is useful; never edit plugin source or generated ZIPs during a user-data run.
 
 ## Continuous review and final examination
 
-The shared `../deep-research/SKILL.md` method applies these same semantic
+The shared `../mparanza-deep-research/SKILL.md` method applies these same semantic
 review dimensions to provisional conclusions during research. Record material
 findings immediately in its persistent issue register and investigate or correct
 them before relying on affected conclusions. Do not generate full final review
