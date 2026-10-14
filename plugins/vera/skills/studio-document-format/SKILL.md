@@ -122,3 +122,12 @@ it and produce the corresponding financial report. Then revise that studio's
 format once and check that version 1 remains archived. Never copy a successful
 answer, adopt on the learner's behalf, or report practice complete without
 actual execution and participation. Ordinary work is available immediately.
+
+
+## Optional maintained Codex review panel
+
+Read `../vera/references/native-workspace.md` before opening the panel.
+
+On Codex, the optional **Pratiche e formato documenti** panel opens an existing, explicitly connected studio-format review. Read `../vera/references/native-practice-reviews.md` for the trusted local-service binding. Edit supported Word preferences and explicitly generate both new short and long previews. Open and inspect both through the host Word/file tools, with the ordinary render checks below. Adoption requires a separate named confirmation of the exact proposal and unchanged previews. Preparation leaves the current adopted profile intact; adoption uses the existing public studio writer. A copied chat request is not proof that the document was opened.
+
+The ordinary connected-file workflow remains available when the native panel is unavailable.

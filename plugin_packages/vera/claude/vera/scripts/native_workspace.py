@@ -295,6 +295,36 @@ def file_preparation_selection(
     """Map exact UI identities through the existing handoff producer's helpers."""
     context, records, _ = file_preparation_handoff(directory)
     selected = current["selection"]
+    if selected["item_type"] == "notice_extracted_reference":
+        return {
+            "selection_mode": "explicit_notice_reference",
+            "item": selected,
+            "instruction": "This date, amount or reference was extracted from the exact selected original. It is not a verified legal deadline or authority to act. Reuse the notice intake and professional source review.",
+        }
+    if selected["item_type"] == "xml_invoice_body":
+        return {
+            "selection_mode": "explicitly_selected_xml_body",
+            "item": selected,
+            "instruction": "This is the exact user-selected producer body metadata, not proof of reading the original XML or approval of its tax treatment. Never extend it to other invoices.",
+        }
+    if selected["item_type"] == "formal_xml_duplicate_group":
+        group = next(
+            (
+                item
+                for item in records
+                if item.get("group_ref") == selected["data"]["group_ref"]
+            ),
+            None,
+        )
+        if group is None:
+            raise ValueError(
+                "Selected duplicate group is absent from the maintained handoff"
+            )
+        return {
+            "selection_mode": "maintained_xml_duplicate_group",
+            "items": [group],
+            "content_policy": context["content_policy"],
+        }
     if selected["item_type"] in {"draft_memo_section", "draft_client_email"}:
         return {
             "selection_mode": "explicitly_selected_draft",
@@ -868,10 +898,49 @@ def snapshot(
             data["local_review_read_only"] = loaded["run"]["status"] != "running"
         revision = start_revision
         all_items = data["review_payload"]["items"]
+        intake_counts = None
+        if component == "client-file-preparation":
+            from native_intake_views import (
+                intake_queue,
+                notice_reference_page,
+                xml_invoice_page,
+            )
+
+            requested_view = args.get("view", "REVIEW")
+            all_items, intake_counts = intake_queue(
+                all_items,
+                (
+                    "REVIEW"
+                    if requested_view
+                    in {"INTAKE_XML_INVOICES", "INTAKE_NOTICE_REFERENCES"}
+                    else requested_view
+                ),
+            )
+            xml_page = xml_invoice_page(directory, offset, args.get("item_id"))
+            intake_counts["INTAKE_XML_INVOICES"] = xml_page["total"]
+            notice_page = notice_reference_page(directory, offset, args.get("item_id"))
+            intake_counts["INTAKE_NOTICE_REFERENCES"] = notice_page["total"]
         items, total = all_items[offset : offset + 30], len(all_items)
         selected = next(
             (row for row in all_items if row["id"] == args.get("item_id")), None
         )
+        if component == "client-file-preparation":
+            if requested_view == "INTAKE_XML_INVOICES":
+                items, total, selected = (
+                    xml_page["items"],
+                    xml_page["total"],
+                    xml_page["selection"],
+                )
+            elif str(args.get("item_id", "")).startswith("xml-body-"):
+                selected = xml_page["selection"]
+            if requested_view == "INTAKE_NOTICE_REFERENCES":
+                items, total, selected = (
+                    notice_page["items"],
+                    notice_page["total"],
+                    notice_page["selection"],
+                )
+            elif str(args.get("item_id", "")).startswith("notice-ref-"):
+                selected = notice_page["selection"]
         data = {
             key: data.get(key)
             for key in (
@@ -881,6 +950,15 @@ def snapshot(
                 "local_review_read_only",
             )
         }
+        if intake_counts is not None:
+            data["intake_view_counts"] = intake_counts
+            data["fiscal_correction_available"] = loaded["run"][
+                "status"
+            ] == "running" and "REVIEWER" in os.environ.get(
+                "VERA_WORKSPACE_ROLES", ""
+            ).split(
+                ","
+            )
         data["adapter"] = read_json(root / "assets/review-workbench-adapter.json")
         data["adapter"].pop("demo", None)
         if component == "concordato-plan-review":
@@ -1087,6 +1165,11 @@ def open_item_review(
 
 
 def dispatch(tool: str, args: dict[str, Any]) -> dict[str, Any]:
+    if tool.startswith("vera_workspace_practice_"):
+        from types import SimpleNamespace
+        from native_practice_reviews import dispatch as practice_dispatch
+
+        return practice_dispatch(tool, args, SimpleNamespace(**globals()))
     if tool.startswith("vera_workspace_browser_"):
         from types import SimpleNamespace
 
@@ -1451,6 +1534,11 @@ def dispatch(tool: str, args: dict[str, Any]) -> dict[str, Any]:
         raise PermissionError("Run is not authorised in this workspace")
     loaded = load_binding(binding)
     output = Path(loaded["output_dir"])
+    if tool == "vera_workspace_fiscal_correction_prepare":
+        from types import SimpleNamespace
+        from native_fiscal_corrections import prepare_correction
+
+        return prepare_correction(binding, loaded, args, SimpleNamespace(**globals()))
     if tool.startswith("vera_workspace_open_items_intake_"):
         from types import SimpleNamespace
 

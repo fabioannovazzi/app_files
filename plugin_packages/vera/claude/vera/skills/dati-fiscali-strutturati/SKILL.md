@@ -138,3 +138,12 @@ Resolve `../../modules/client-file-preparation` from this skill directory when i
 otherwise resolve `../../../client-file-preparation` in the repository. Read that
 module's `skills/dati-fiscali-strutturati/SKILL.md` completely and follow it.
 Treat the resolved module root as the plugin working directory for all commands.
+
+
+## Optional maintained professional review panel
+
+Read `../vera/references/native-workspace.md` before opening the panel.
+
+Open the maintained Studio Archive workspace on Claude and choose the exact client-file-preparation run. Select **Dati fiscali e copertura**: this filters the complete queue before paging. Inspect the original field, source evidence and extraction warnings. A reviewer may explicitly correct the value, enter the source basis and reviewer, and confirm regeneration. The public producer creates a separate same-engagement run with complete outputs and retained before/after provenance; the original run stays intact. Reopen the successor and review its remaining items. This does not approve fiscal treatment or complete either run.
+
+The ordinary connected-file workflow remains available when the native panel is unavailable.

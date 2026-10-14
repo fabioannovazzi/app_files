@@ -1,7 +1,32 @@
 {
-  "schema_version": 2,
-  "service_id": "run-receipt-stamping",
   "display_name": "Server-stamped run receipts",
+  "external_boundaries": [
+    {
+      "id": "automatic-server-stamped-run-receipt",
+      "kind": "hosted_service",
+      "destination": "Mparanza's fixed HTTPS Vera run-receipt endpoint and public verification page",
+      "purpose": "Bind one local model-data report to a Mparanza server timestamp and Ed25519 signature, then let the studio or its customer verify the retained proof",
+      "content": "Unless the user requests --local-only, each substantive run with a durable local report automatically sends exactly schema version, one random per-run receipt UUID, the Vera version when the request was first created, and the SHA-256 digest of the canonical local model-data report, plus ordinary connection metadata. The report itself, workflow and local run IDs, client or case data, professional purpose, phase labels, counts, filenames, file contents, source-document hashes, prompts, and model outputs are not sent. A later verification request sends the same opaque receipt UUID and report digest.",
+      "retention": "Mparanza retains the opaque receipt UUID, server timestamp, Vera version, report digest, signature, signature key ID, and implicit receipt schema version as the proof record, without an automatic deletion period. The local HTML and JSON receipt remain in the studio's run output, or in a supplementary run receipts directory for a retry after output finalization, until the studio removes them. Administrative deletion of the server proof must be requested from Mparanza and makes later verification impossible.",
+      "activation": "automatic_per_durable_run",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Vera report builds stamp by default. When the user prohibits external receipt transmission, --local-only writes the local JSON and readable report, returns not_requested/local_only, and skips receipt request construction and transport. It does not change host model processing. Do not retry stamping without a later explicit user request. Service failures leave completed work and the local report intact and return pending. The generic Studio Archive helper also disables server attestation.",
+        "The client constructs a four-field allow-listed request, restricts production traffic to the fixed Mparanza HTTPS route, permits HTTP only on an explicit loopback port for testing, bounds responses, and rejects additional or mismatched response fields. The default transport rejects HTTP redirects before any redirected request and rejects endpoint URLs containing credentials.",
+        "The server rejects additional request fields, assigns its own timestamp, signs the complete retained record with Ed25519, stores only the minimal proof fields, applies request-size and rate limits, and fails closed when signing or verification keys are unavailable.",
+        "The local customer receipt states that the proof covers existence, server time, and report integrity only; it does not claim who submitted the digest, provider delivery, analytical correctness, semantic necessity, DPIA completion, legal advice, or GDPR compliance.",
+        "Retries retain the original UUID and version. A retry after finalization verifies the retained report against the sealed artifact manifest and writes supplementary receipts outside the immutable output tree.",
+        "The workflow remains subject to host network permissions and action-specific approval rules. A denied transmission is not retried through another tool or destination; permission-denied retries wait for the required authorization.",
+        "OpenAI desktop onboarding is a local-only exception: reports beneath its .vera-onboarding-local-only directory marker return not_requested/local_onboarding before receipt request construction, including direct later stamp retries. The Claude projection omits this new onboarding behavior.",
+        "The report build returns the readable local report as display_markdown for the final response, including when stamping is pending. The show command renders a saved report after validating its recorded hashes; it reads no source documents, writes no files and makes no network or stamping request. Displaying the report uses the current model context and does not send its content to Mparanza."
+      ]
+    }
+  ],
   "governed_paths": [
     ".codex-plugin/plugin.json",
     "scripts/model_data_report.py",
@@ -31,37 +56,17 @@
     "plugins/lucia/scripts/legal_negotiation.schema.json",
     "plugins/lucia/scripts/legal_negotiation_labels.json"
   ],
+  "review": {
+    "basis": "external_boundary_review_of_shared_service_source",
+    "reviewed_at": "2026-10-14",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "700f8d067a40cd1c6c212427edab5157716d1f7d7edf8789bef65360406319a7"
+  },
   "runtime_profiles": [
     "openai-codex",
     "anthropic-cowork"
   ],
-  "external_boundaries": [
-    {
-      "id": "automatic-server-stamped-run-receipt",
-      "kind": "hosted_service",
-      "destination": "Mparanza's fixed HTTPS Vera run-receipt endpoint and public verification page",
-      "purpose": "Bind one local model-data report to a Mparanza server timestamp and Ed25519 signature, then let the studio or its customer verify the retained proof",
-      "content": "Unless the user requests --local-only, each substantive run with a durable local report automatically sends exactly schema version, one random per-run receipt UUID, the Vera version when the request was first created, and the SHA-256 digest of the canonical local model-data report, plus ordinary connection metadata. The report itself, workflow and local run IDs, client or case data, professional purpose, phase labels, counts, filenames, file contents, source-document hashes, prompts, and model outputs are not sent. A later verification request sends the same opaque receipt UUID and report digest.",
-      "retention": "Mparanza retains the opaque receipt UUID, server timestamp, Vera version, report digest, signature, signature key ID, and implicit receipt schema version as the proof record, without an automatic deletion period. The local HTML and JSON receipt remain in the studio's run output, or in a supplementary run receipts directory for a retry after output finalization, until the studio removes them. Administrative deletion of the server proof must be requested from Mparanza and makes later verification impossible.",
-      "activation": "automatic_per_durable_run",
-      "optional": false,
-      "requires_confirmation": false,
-      "runtime_profiles": [
-        "openai-codex",
-        "anthropic-cowork"
-      ],
-      "controls": [
-        "Vera report builds stamp by default. When the user prohibits external receipt transmission, --local-only writes the local JSON and readable report, returns not_requested/local_only, and skips receipt request construction and transport. It does not change host model processing. Do not retry stamping without a later explicit user request. Service failures leave completed work and the local report intact and return pending. The generic Studio Archive helper also disables server attestation.",
-        "The client constructs a four-field allow-listed request, restricts production traffic to the fixed Mparanza HTTPS route, permits HTTP only on an explicit loopback port for testing, bounds responses, and rejects additional or mismatched response fields. The default transport rejects HTTP redirects before any redirected request and rejects endpoint URLs containing credentials.",
-        "The server rejects additional request fields, assigns its own timestamp, signs the complete retained record with Ed25519, stores only the minimal proof fields, applies request-size and rate limits, and fails closed when signing or verification keys are unavailable.",
-        "The local customer receipt states that the proof covers existence, server time, and report integrity only; it does not claim who submitted the digest, provider delivery, analytical correctness, semantic necessity, DPIA completion, legal advice, or GDPR compliance.",
-        "Retries retain the original UUID and version. A retry after finalization verifies the retained report against the sealed artifact manifest and writes supplementary receipts outside the immutable output tree.",
-        "The workflow remains subject to host network permissions and action-specific approval rules. A denied transmission is not retried through another tool or destination; permission-denied retries wait for the required authorization.",
-        "OpenAI desktop onboarding is a local-only exception: reports beneath its .vera-onboarding-local-only directory marker return not_requested/local_onboarding before receipt request construction, including direct later stamp retries. The Claude projection omits this new onboarding behavior.",
-        "The report build returns the readable local report as display_markdown for the final response, including when stamping is pending. The show command renders a saved report after validating its recorded hashes; it reads no source documents, writes no files and makes no network or stamping request. Displaying the report uses the current model context and does not send its content to Mparanza."
-      ]
-    }
-  ],
+  "schema_version": 2,
   "security_controls": [
     {
       "id": "minimal-receipt-request-allow-list",
@@ -98,10 +103,5 @@
       "on_violation": "Oversized or excess requests receive an explicit 413 or 429 response without creating a receipt."
     }
   ],
-  "review": {
-    "reviewed_at": "2026-10-14",
-    "reviewed_by": "privacy-surface-review",
-    "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "f55eb67198c13a9511209aa83ae7fc9a337b165604ea5e17e1794791817d347b"
-  }
+  "service_id": "run-receipt-stamping"
 }

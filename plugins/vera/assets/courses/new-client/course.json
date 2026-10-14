@@ -59,7 +59,7 @@
     {
       "path": "modules/client-file-preparation/scripts/build_file_preparation_outputs.py",
       "repository_path": "plugins/client-file-preparation/scripts/build_file_preparation_outputs.py",
-      "sha256": "270521ce0e0a07f0cdc7da8e10a9a227c6b7d5aac30f5dda891c893da1d308f7"
+      "sha256": "b6be3c9f547775f0f3cfa839d9a43b5b1b1ad88fce6d1f3628cb555e8f2c3ae8"
     },
     {
       "path": "modules/client-file-preparation/scripts/check_dependencies.py",
@@ -82,6 +82,11 @@
       "sha256": "811ce6a6b2212c2550ab3c7c41e7c5e9d6662ce77256382b63d257a7419f87aa"
     },
     {
+      "path": "modules/client-file-preparation/scripts/fiscal_field_review.py",
+      "repository_path": "plugins/client-file-preparation/scripts/fiscal_field_review.py",
+      "sha256": "7f7fc02d59fe60d1a22091fa13b40cf4c94a1b3fe99fa572f8c4ee8c69c19050"
+    },
+    {
       "path": "modules/client-file-preparation/scripts/managed_ocr_runtime.py",
       "repository_path": "plugins/client-file-preparation/scripts/managed_ocr_runtime.py",
       "sha256": "52b9b0a70ba50f4145407c6c8dc075f19ae94239e77c5521e96c48fc5982b91a"
@@ -89,7 +94,7 @@
     {
       "path": "modules/client-file-preparation/scripts/model_handoff.py",
       "repository_path": "plugins/client-file-preparation/scripts/model_handoff.py",
-      "sha256": "9c46e69ad33e0087b7d23585442c0dad425cf6eb4551f164d460ba27ec6afb5f"
+      "sha256": "a981fdc61bbd3d9fcea30c227c7f3266e42a46e21b4be479ea43801ec5d3c1dc"
     },
     {
       "path": "modules/client-file-preparation/scripts/parse_fatturapa_xml.py",
@@ -104,7 +109,7 @@
     {
       "path": "modules/client-file-preparation/scripts/review_session.py",
       "repository_path": "plugins/client-file-preparation/scripts/review_session.py",
-      "sha256": "6b06c376237c2e1dfabfebda605ba1a6ac2030938fbbe8d298ff071b34232b7f"
+      "sha256": "64ee85bdd4f2384e891a5c74be951f9b4b7944d1dc06da987c6c6ef085bf57be"
     },
     {
       "path": "modules/client-file-preparation/scripts/scan_folder.py",
@@ -529,17 +534,17 @@
     {
       "path": "vendor/modules/scripts/legal_matter.py",
       "repository_path": "plugins/lucia/scripts/legal_matter.py",
-      "sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+      "sha256": "fcc4adf915968c442766899a5c8814cfe7a89f66445e12e9f1423ce8e01ed6ac"
     },
     {
       "path": "vendor/modules/scripts/legal_matter.schema.json",
       "repository_path": "plugins/lucia/scripts/legal_matter.schema.json",
-      "sha256": "b1fb25dd09d300a79cb7cd68eec45cec7c82afa18d1ba08d05a34d1447971586"
+      "sha256": "da7a79b9aae748d725c3d04d69efb299d0ed10bff2e9ea429288a8d18854906d"
     },
     {
       "path": "vendor/modules/scripts/legal_matter_labels.json",
       "repository_path": "plugins/lucia/scripts/legal_matter_labels.json",
-      "sha256": "c03f840e81b1f3185cb4be0fedb955adf22845aafd13fc3e78b090c8185129ef"
+      "sha256": "d9e3582c83ef6088388303b566d76a512b25b67fd553b0e35ff9109de006fd13"
     },
     {
       "path": "vendor/modules/scripts/legal_negotiation.py",

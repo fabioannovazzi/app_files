@@ -13,6 +13,7 @@ import pytest
 from openpyxl import load_workbook
 
 from tests._plugin_cli import workflow_cli
+from tests.conftest import vera_workflow_workspace as vera_workflow_workspace
 from tests.plugins import test_archive_organization_plugin as archive
 from tests.plugins import test_check_entries_plugin as vouching
 from tests.plugins import test_concordato_plan_review_plugin as concordato
@@ -2139,3 +2140,517 @@ def test_signed_ticket_rejects_forgery_before_domain_save(treasury_workspace):
     assert json.loads(result.stdout)["result"]["isError"] is True
     assert "Invalid review ticket" in result.stdout
     assert (output / "treasury_session.json").read_bytes() == before
+
+
+@pytest.mark.parametrize("view", ["INTAKE_FISCAL", "INTAKE_XML", "INTAKE_NOTES"])
+def test_intake_focus_view_filters_complete_producer_queue_before_paging(
+    file_preparation_workspace, view
+):
+    service, binding, _, output = file_preparation_workspace
+    original = service.read_json(output / "review_payload.json")["items"]
+    types = {
+        "INTAKE_FISCAL": {
+            "extracted_fiscal_field",
+            "document_inventory",
+            "uncertain_file",
+        },
+        "INTAKE_XML": {"formal_xml_anomaly", "formal_xml_duplicate_group"},
+        "INTAKE_NOTES": {
+            "draft_memo_section",
+            "missing_document_request",
+            "uncertain_file",
+        },
+    }[view]
+    expected = [item for item in original if item["item_type"] in types]
+    result = service.dispatch(
+        "vera_workspace_view", {"work_ref": binding["work_ref"], "view": view}
+    )
+
+    assert result["items"] == expected[:30]
+    assert result["total"] == len(expected)
+    assert result["data"]["intake_view_counts"][view] == len(expected)
+    assert result["data"]["intake_view_counts"]["INTAKE_XML_INVOICES"] == 0
+    assert service.read_json(output / "review_payload.json")["items"] == original
+
+
+def test_intake_focus_view_refuses_selection_from_another_queue(
+    file_preparation_workspace,
+):
+    service, binding, _, output = file_preparation_workspace
+    memo = next(
+        item
+        for item in service.read_json(output / "review_payload.json")["items"]
+        if item["item_type"] == "draft_memo_section"
+    )
+
+    with pytest.raises(ValueError, match="Unknown selection"):
+        service.dispatch(
+            "vera_workspace_view",
+            {
+                "work_ref": binding["work_ref"],
+                "view": "INTAKE_FISCAL",
+                "item_id": memo["id"],
+            },
+        )
+
+
+def test_intake_focus_view_refuses_unknown_view(file_preparation_workspace):
+    service, binding, _, _ = file_preparation_workspace
+
+    with pytest.raises(ValueError, match="Unknown intake review view"):
+        service.dispatch(
+            "vera_workspace_view",
+            {"work_ref": binding["work_ref"], "view": "UNBOUND_VIEW"},
+        )
+
+
+@pytest.mark.parametrize(
+    "fault", ["changed_source", "changed_field", "unconfirmed", "invalid_amount"]
+)
+def test_fiscal_correction_refuses_stale_or_unconfirmed_values(
+    file_preparation_workspace, monkeypatch, fault
+):
+    service, _, _, output = file_preparation_workspace
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/client-file-preparation/scripts"))
+    from fiscal_field_review import apply_field_corrections, field_identity
+    from parse_fiscal_forms import FiscalField
+
+    raw = next(
+        row
+        for row in (
+            json.loads(line)
+            for line in (output / "extracted/structured_fiscal_fields.jsonl")
+            .read_text()
+            .splitlines()
+        )
+        if row["value_type"] == "amount"
+    )
+    field = FiscalField(**raw)
+    review = next(
+        item
+        for item in service.read_json(output / "review_payload.json")["items"]
+        if item["data"].get("field_ref") == field_identity(field)
+    )
+    # Exact generated text, not a substitute snippet or guessed source path.
+    document = next(
+        item
+        for item in service.read_json(output / "review_payload.json")["items"]
+        if item["item_type"] == "document_inventory"
+        and item["source_path"] == field.relative_path
+    )
+    source_text = (output / "extracted" / document["data"]["text_path"]).read_text()
+    import hashlib
+
+    decision = {
+        "source_text_sha256": hashlib.sha256(source_text.encode()).hexdigest(),
+        "value": "25.000,00",
+        "basis": "Fictional professional correction from original document",
+        "reviewer": "fictional-reviewer",
+        "confirmed_by_user": True,
+    }
+    reference = field_identity(field)
+    if fault == "changed_source":
+        source_text += " changed evidence"
+    elif fault == "changed_field":
+        reference = "0" * 64
+    elif fault == "unconfirmed":
+        decision["confirmed_by_user"] = False
+    else:
+        decision["value"] = "NaN"
+
+    with pytest.raises(ValueError):
+        apply_field_corrections(
+            [field], {field.relative_path: source_text}, {reference: decision}
+        )
+
+
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+def test_fiscal_successor_regenerates_corrected_outputs_and_preserves_original(
+    file_preparation_workspace, vera_workflow_workspace, monkeypatch, language
+):
+    service, binding, _, output = file_preparation_workspace
+    original = {
+        path.relative_to(output).as_posix(): path.read_bytes()
+        for path in output.rglob("*")
+        if path.is_file()
+    }
+    review = next(
+        item
+        for item in service.read_json(output / "review_payload.json")["items"]
+        if item["item_type"] == "extracted_fiscal_field"
+        and item["data"]["value_type"] == "amount"
+    )
+    correction = {
+        review["data"]["field_ref"]: {
+            "source_text_sha256": review["data"]["source_text_sha256"],
+            "value": "25.000,00",
+            "basis": "Fictional professional correction from original document",
+            "reviewer": "fictional-reviewer",
+            "confirmed_by_user": True,
+        }
+    }
+    loaded = service.load_binding(binding)
+    import client_ledger
+
+    correction_file = (
+        service.ui_state_directory(output) / "reviewed-fiscal-corrections.json"
+    )
+    correction_file.write_text(json.dumps(correction))
+    imported = client_ledger.import_document(
+        Path(binding["client_root"]),
+        binding["client_id"],
+        binding["engagement_id"],
+        correction_file,
+        "support",
+    )
+    prepared = client_ledger.prepare_run(
+        Path(binding["client_root"]),
+        binding["client_id"],
+        binding["engagement_id"],
+        "client-file-preparation",
+        "test-version",
+        input_ids=[row["binding_id"] for row in loaded["input_manifest"]["inputs"]]
+        + [imported["receipt"]["input_id"]],
+        idempotency_key="fiscal-successor",
+        new_run=True,
+    )
+    running = client_ledger.start_run(
+        Path(binding["client_root"]),
+        binding["engagement_id"],
+        prepared["run"]["run_id"],
+    )
+    context = running["context"]
+    correction_input = next(
+        Path(row["path"])
+        for row in context["input_bindings"]
+        if Path(row["path"]).name == correction_file.name
+    )
+    successor = {
+        "input_dir": Path(context["input_dir"]),
+        "context_path": Path(running["context_path"]),
+        "output_dir": Path(running["output_dir"]),
+    }
+
+    subprocess.run(
+        workflow_cli(
+            ROOT
+            / "plugins/client-file-preparation/scripts/build_file_preparation_outputs.py"
+        )
+        + [
+            str(successor["input_dir"]),
+            "--client-engagement",
+            str(successor["context_path"]),
+            "--year",
+            "2025",
+            "--language",
+            language,
+            "--out",
+            str(successor["output_dir"]),
+            "--fiscal-field-corrections",
+            str(correction_input),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    payload = service.read_json(successor["output_dir"] / "review_payload.json")
+    updated = next(
+        item for item in payload["items"] if "reviewed_correction" in item["data"]
+    )
+    assert updated["data"]["value"] == "25.000,00"
+    assert updated["data"]["normalized_value"] == "25000.00"
+    assert (
+        updated["data"]["reviewed_correction"]["original"]["normalized_value"]
+        == review["data"]["normalized_value"]
+    )
+    assert original == {
+        path.relative_to(output).as_posix(): path.read_bytes()
+        for path in output.rglob("*")
+        if path.is_file()
+    }
+    _, records, _ = service.file_preparation_handoff(successor["output_dir"])
+    corrected_context = next(
+        record for record in records if "reviewed_correction" in record
+    )
+    assert corrected_context["normalized_value"] == "25000.00"
+    assert (
+        corrected_context["reviewed_correction"]["review"]["reviewer"]
+        == "fictional-reviewer"
+    )
+    assert (
+        "25000.00"
+        in (
+            successor["output_dir"] / "extracted/structured_fiscal_fields.csv"
+        ).read_text()
+    )
+
+
+def test_native_fiscal_correction_creates_one_exact_successor_and_replays_receipt(
+    file_preparation_workspace,
+):
+    service, binding, _, output = file_preparation_workspace
+    original = {
+        path.relative_to(output).as_posix(): path.read_bytes()
+        for path in output.rglob("*")
+        if path.is_file()
+    }
+    field = next(
+        item
+        for item in service.read_json(output / "review_payload.json")["items"]
+        if item["item_type"] == "extracted_fiscal_field"
+        and item["data"]["value_type"] == "amount"
+    )
+    view = service.dispatch(
+        "vera_workspace_view", {"work_ref": binding["work_ref"], "item_id": field["id"]}
+    )
+    request = {
+        "work_ref": binding["work_ref"],
+        "revision": view["revision"],
+        "item_id": field["id"],
+        "human_reviewed": True,
+        "idempotency_key": "fictional-fiscal-correction",
+        "value": "25.000,00",
+        "basis": "Original checked in this fictional case",
+        "reviewer": "fictional-reviewer",
+    }
+
+    result = service.dispatch("vera_workspace_fiscal_correction_prepare", request)
+    repeated = service.dispatch("vera_workspace_fiscal_correction_prepare", request)
+
+    assert result == repeated
+    assert result["archive_completed"] is False
+    assert result["successor_run_id"] != binding["run_id"]
+    assert original == {
+        path.relative_to(output).as_posix(): path.read_bytes()
+        for path in output.rglob("*")
+        if path.is_file()
+    }
+    payload = service.read_json(Path(result["output_dir"]) / "review_payload.json")
+    updated = next(
+        item for item in payload["items"] if item["data"].get("reviewed_correction")
+    )
+    assert updated["data"]["normalized_value"] == "25000.00"
+
+
+@pytest.fixture
+def xml_body_workspace(tmp_path, monkeypatch, vera_workflow_workspace):
+    body = """<FatturaElettronicaBody><DatiGenerali><DatiGeneraliDocumento><TipoDocumento>TD01</TipoDocumento><Divisa>EUR</Divisa><Data>2025-06-15</Data><Numero>1</Numero><ImportoTotaleDocumento>122.00</ImportoTotaleDocumento></DatiGeneraliDocumento></DatiGenerali><DatiBeniServizi><DettaglioLinee><NumeroLinea>1</NumeroLinea><Descrizione>Fictional service</Descrizione><Quantita>1</Quantita><PrezzoUnitario>100.00</PrezzoUnitario><PrezzoTotale>100.00</PrezzoTotale></DettaglioLinee><DatiRiepilogo><AliquotaIVA>22.00</AliquotaIVA><ImponibileImporto>100.00</ImponibileImporto><Imposta>22.00</Imposta></DatiRiepilogo></DatiBeniServizi></FatturaElettronicaBody>"""
+    source = (
+        "<FatturaElettronica><FatturaElettronicaHeader><CedentePrestatore><DatiAnagrafici><IdFiscaleIVA><IdPaese>IT</IdPaese><IdCodice>01234567890</IdCodice></IdFiscaleIVA><Anagrafica><Denominazione>Fictional Supplier</Denominazione></Anagrafica></DatiAnagrafici></CedentePrestatore><CessionarioCommittente><DatiAnagrafici><CodiceFiscale>TSTUSR80A01H501U</CodiceFiscale><Anagrafica><Denominazione>Fictional Client</Denominazione></Anagrafica></DatiAnagrafici></CessionarioCommittente></FatturaElettronicaHeader>"
+        + body * 35
+        + "</FatturaElettronica>"
+    )
+    workspace = vera_workflow_workspace(
+        "client-file-preparation", input_files={"invoices.xml": source}
+    )
+    output = workspace["output_dir"]
+    subprocess.run(
+        workflow_cli(
+            ROOT
+            / "plugins/client-file-preparation/scripts/build_file_preparation_outputs.py"
+        )
+        + [
+            str(workspace["input_dir"]),
+            "--client-engagement",
+            str(workspace["context_path"]),
+            "--year",
+            "2025",
+            "--out",
+            str(output),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    binding, _ = archived_review_binding(output, "client-file-preparation")
+    configure(monkeypatch, tmp_path, [binding])
+    return workspace_module(), binding, output
+
+
+def test_native_xml_body_page_preserves_all_bodies_and_separate_review_queue(
+    xml_body_workspace,
+):
+    service, binding, output = xml_body_workspace
+
+    first = service.dispatch(
+        "vera_workspace_view",
+        {"work_ref": binding["work_ref"], "view": "INTAKE_XML_INVOICES"},
+    )
+    last = service.dispatch(
+        "vera_workspace_view",
+        {
+            "work_ref": binding["work_ref"],
+            "view": "INTAKE_XML_INVOICES",
+            "offset": 30,
+            "item_id": "xml-body-35",
+        },
+    )
+
+    assert first["total"] == 35
+    assert len(first["items"]) == 30
+    assert first["has_more"] is True
+    assert len(last["items"]) == 5
+    assert last["selection"]["data"]["body_index"] == 35
+    assert last["selection"]["allowed_actions"] == []
+    assert not any(
+        item["item_type"] == "xml_invoice_body"
+        for item in service.read_json(output / "review_payload.json")["items"]
+    )
+
+
+def test_native_xml_duplicate_group_distinguishes_bodies_within_one_original(
+    xml_body_workspace,
+):
+    service, binding, output = xml_body_workspace
+    group = next(
+        item
+        for item in service.read_json(output / "review_payload.json")["items"]
+        if item["item_type"] == "formal_xml_duplicate_group"
+    )
+    view = service.dispatch(
+        "vera_workspace_view", {"work_ref": binding["work_ref"], "item_id": group["id"]}
+    )
+
+    explained = service.dispatch(
+        "vera_workspace_explain",
+        {
+            "work_ref": binding["work_ref"],
+            "revision": view["revision"],
+            "item_id": group["id"],
+        },
+    )
+
+    retained = explained["untrusted_evidence"]["items"][0]
+    assert retained["member_count"] == 35
+    assert retained["member_document_count"] == 1
+    assert len(retained["member_body_refs"]) == 35
+    assert retained["member_body_refs"][-1]["body_index"] == 35
+    assert "supplier_vat" not in json.dumps(retained)
+    assert "customer_name" not in json.dumps(retained)
+
+
+def test_native_xml_body_refuses_changed_producer_bytes(xml_body_workspace):
+    service, binding, output = xml_body_workspace
+    path = output / "extracted/fatture_xml.jsonl"
+    path.write_text(path.read_text().replace("122.00", "999.00"))
+
+    with pytest.raises(ValueError, match="final artifact sha256 mismatch"):
+        service.dispatch(
+            "vera_workspace_view",
+            {"work_ref": binding["work_ref"], "view": "INTAKE_XML_INVOICES"},
+        )
+
+
+def test_native_notice_reopens_exact_references_without_qualifying_deadlines(
+    tmp_path, monkeypatch, vera_workflow_workspace
+):
+    workspace = vera_workflow_workspace(
+        "client-file-preparation",
+        input_files={
+            "avviso_2025.txt": "Avviso di accertamento. Ricevuta del 12/05/2025. Data indicata 20/06/2025. Importo 1.250,00 euro. Protocollo ABC123."
+        },
+    )
+    output = workspace["output_dir"]
+    subprocess.run(
+        workflow_cli(
+            ROOT
+            / "plugins/client-file-preparation/scripts/build_file_preparation_outputs.py"
+        )
+        + [
+            str(workspace["input_dir"]),
+            "--client-engagement",
+            str(workspace["context_path"]),
+            "--year",
+            "2025",
+            "--out",
+            str(output),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    binding, _ = archived_review_binding(output, "client-file-preparation")
+    configure(monkeypatch, tmp_path, [binding])
+    service = workspace_module()
+    original = {
+        path.relative_to(output).as_posix(): path.read_bytes()
+        for path in output.rglob("*")
+        if path.is_file()
+    }
+
+    view = service.dispatch(
+        "vera_workspace_view",
+        {"work_ref": binding["work_ref"], "view": "INTAKE_NOTICE_REFERENCES"},
+    )
+    date = next(item for item in view["items"] if item["data"]["type"] == "date")
+    explained = service.dispatch(
+        "vera_workspace_explain",
+        {
+            "work_ref": binding["work_ref"],
+            "revision": view["revision"],
+            "item_id": date["id"],
+        },
+    )
+    repeated = service.dispatch(
+        "vera_workspace_view",
+        {"work_ref": binding["work_ref"], "view": "INTAKE_NOTICE_REFERENCES"},
+    )
+
+    assert view == repeated
+    assert date["allowed_actions"] == []
+    assert "verified legal deadline" in explained["untrusted_evidence"]["instruction"]
+    assert explained["untrusted_evidence"]["item"]["data"] == date["data"]
+    assert original == {
+        path.relative_to(output).as_posix(): path.read_bytes()
+        for path in output.rglob("*")
+        if path.is_file()
+    }
+
+
+def test_native_xml_candidate_decision_persists_without_changing_original(
+    xml_body_workspace,
+):
+    service, binding, output = xml_body_workspace
+    population = (output / "extracted/fatture_xml.jsonl").read_bytes()
+    view = service.dispatch(
+        "vera_workspace_view", {"work_ref": binding["work_ref"], "view": "INTAKE_XML"}
+    )
+    group = next(
+        item
+        for item in view["items"]
+        if item["item_type"] == "formal_xml_duplicate_group"
+    )
+    service.dispatch(
+        "vera_workspace_save",
+        {
+            "work_ref": binding["work_ref"],
+            "revision": view["revision"],
+            "item_id": group["id"],
+            "human_reviewed": True,
+            "idempotency_key": "group-check",
+            "decisions": [
+                {
+                    "item_id": group["id"],
+                    "action": "mark_unclear",
+                    "reviewer_note": "Fictional candidate needs original-source verification",
+                }
+            ],
+        },
+    )
+    reopened = service.dispatch(
+        "vera_workspace_view",
+        {"work_ref": binding["work_ref"], "view": "INTAKE_XML", "item_id": group["id"]},
+    )
+    decision = next(
+        row
+        for row in reopened["data"]["ui_decisions"]["decisions"]
+        if row["item_id"] == group["id"]
+    )
+    assert decision["action"] == "mark_unclear"
+    assert (
+        decision["reviewer_note"]
+        == "Fictional candidate needs original-source verification"
+    )
+    assert reopened["selection"]["data"]["candidate_body_count"] == 35
+    assert (output / "extracted/fatture_xml.jsonl").read_bytes() == population
