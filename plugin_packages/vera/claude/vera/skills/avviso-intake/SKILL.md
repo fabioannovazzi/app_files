@@ -138,3 +138,12 @@ Resolve `../../modules/client-file-preparation` from this skill directory when i
 otherwise resolve `../../../client-file-preparation` in the repository. Read that
 module's `skills/avviso-intake/SKILL.md` completely and follow it. Treat the
 resolved module root as the plugin working directory for all commands.
+
+
+## Optional maintained professional review panel
+
+Read `../vera/references/native-workspace.md` before opening the panel.
+
+Open the maintained Studio Archive workspace on Claude and choose the exact client-file-preparation run. **Avvisi · date e riferimenti** pages every saved date, amount and protocol reference from the public intake producer. **Memo e documenti mancanti** filters the complete review queue before paging. Keep extracted dates distinct from legally qualified deadlines; verify notification, procedural meaning and current sources through the ordinary specialist research workflow. The panel neither computes a legal deadline nor files an act.
+
+The ordinary connected-file workflow remains available when the native panel is unavailable.

@@ -2,9 +2,9 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "concordato-plan-review",
-  "course_sha256": "c1b7bd1dac1d939ecfcfee33efacbc8b0cceba962ec7ac5dba9eeedfb510aa10",
-  "reviewer": "Codex /root - tax-litigation fix source compatibility review",
-  "reviewed_at": "2026-10-13T21:38:57.946661+00:00",
+  "course_sha256": "e4e40aa09b3847f4b2561598abc8a8b2da165a2908772acc2cd93bfd2996f201",
+  "reviewer": "Codex /root - focused workflow UI source compatibility review",
+  "reviewed_at": "2026-10-14T08:06:05.128628+00:00",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -516,7 +516,7 @@
     "scope": "Lesson content unchanged from HEAD, MERGE_HEAD outside the source inventory. Reviewed additive workflow-ID registration and Studio Archive immutable snapshot functions. Prior editorial/artifact acceptance and professional limits retained; native CNC and valuation execution is verified separately.",
     "integrated_main": "8f662195f00bac3b605ac73077e1a0bd31d30253"
   },
-  "review_scope": "Source compatibility review of unchanged authored lessons; fresh execution against each exact course digest remains required. Historical locale/editorial/artifact judgments retain their scope. No new learner, visual, installed-host or professional acceptance is claimed.",
+  "review_scope": "Source compatibility review of unchanged authored lessons and teaching inputs. Existing localized editorial and output judgments retain their historical scope. Fresh execution against the exact new course digest remains required. No installed-host, new visual, learner or professional acceptance is claimed.",
   "patent_box_source_refresh_20260930": {
     "reviewer": "Codex /root - bounded source compatibility review",
     "reviewed_at": "2026-09-30T11:04:31.688736+00:00",
@@ -769,5 +769,17 @@
     "authored_content_unchanged": true,
     "source_review": "docs/releases/2026-10-13-tax-litigation-fixes-source-review.json",
     "fresh_matching_junit_required": true
+  },
+  "workflow_ui_source_compatibility_review_20261014": {
+    "previous_course_sha256": "c1b7bd1dac1d939ecfcfee33efacbc8b0cceba962ec7ac5dba9eeedfb510aa10",
+    "current_course_sha256": "e4e40aa09b3847f4b2561598abc8a8b2da165a2908772acc2cd93bfd2996f201",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "source_review": "docs/releases/2026-10-14-vera-workflow-ui-source-review.json",
+    "fresh_matching_junit_required": true,
+    "installed_host_acceptance": false,
+    "new_visual_or_learner_acceptance": false
   }
 }

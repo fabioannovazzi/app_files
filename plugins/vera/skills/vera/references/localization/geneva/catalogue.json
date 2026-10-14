@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/Users/fabio/Documents/GitHub/app_files/plugins/vera",
-  "version": "0.1.375",
-  "captured_at": "2026-10-13T23:20:54.718643+00:00",
-  "catalogue_fingerprint": "a278aa2a3a3796ec249cd961fef8db27ad8d4d2d5a29445488453eeec1770d37",
-  "manifest_sha256": "943a7c4d9a76c22cbb3ef22c73224d4b6b0073c045f91860730354ce9daaccec",
+  "version": "0.1.376",
+  "captured_at": "2026-10-14T08:12:01.972608+00:00",
+  "catalogue_fingerprint": "9014a3d963d9b6203638b6198f02bf24bdf5bdf4195d764de109fbb4122e857b",
+  "manifest_sha256": "cff27057452fcdb7c60a1670612e68d7271c43290165445d08f213331eef83e4",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -34,7 +34,7 @@
     {
       "function_id": "avviso-intake",
       "skill_path": "skills/avviso-intake/SKILL.md",
-      "sha256": "57a96dd9ea76aa5bf45dc36db05d00c2a6c0dc1cd4c5617e6d72b6bf284ac765"
+      "sha256": "179fbe0762abcb0cd6ca9c09f533a9e8e6858773005886b6e6df8b972e5a7df6"
     },
     {
       "function_id": "bandi-agevolazioni",
@@ -84,7 +84,7 @@
     {
       "function_id": "contenzioso-tributario",
       "skill_path": "skills/contenzioso-tributario/SKILL.md",
-      "sha256": "a6cd9df635b1d77f972ab90afb851e6fd7395961493c4b076ea4ac220cd01878"
+      "sha256": "a564cf1f3c62b751ca66e8bb36ee4c210a650cec3269f5e0a9cb488ef2a860da"
     },
     {
       "function_id": "datev-invoice-start",
@@ -94,7 +94,7 @@
     {
       "function_id": "dati-fiscali-strutturati",
       "skill_path": "skills/dati-fiscali-strutturati/SKILL.md",
-      "sha256": "55d9bb3e4447e4898b0e4bbd8b6ac6744fccf3c65860d1453d5856761e790c5b"
+      "sha256": "6f376cb32e6a98ab87993453805ac820779a655e6a09738f43597e929099d4f3"
     },
     {
       "function_id": "deep-research",
@@ -114,7 +114,7 @@
     {
       "function_id": "fatture-xml-check",
       "skill_path": "skills/fatture-xml-check/SKILL.md",
-      "sha256": "e810f4306c99d9b3bbc2fd9d6545ed80e97a2db652baf797e83c801664a90334"
+      "sha256": "64c3eb58d874844f7d6a7bb172784f27193a985dc206d0abafd63e40c273debc"
     },
     {
       "function_id": "financial-analysis",
@@ -244,7 +244,7 @@
     {
       "function_id": "studio-document-format",
       "skill_path": "skills/studio-document-format/SKILL.md",
-      "sha256": "a2dfae939f5078c3f8894e9e2593820e2b947aa4a747f4670c2067128c3d0012"
+      "sha256": "ca11b08fb1f9c87ae4ca34cc3021072c958f1d510db86ddfe2ae4790fd069633"
     },
     {
       "function_id": "trasformazione",

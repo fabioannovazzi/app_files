@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "studio-archive",
-  "course_sha256": "3e1b24adb4e5cf56be5485dd1fa7771e6750dc348f859267ce0f21f8abc24fdf",
-  "reviewer": "Codex /root - tax-litigation fix source compatibility review",
-  "reviewed_at": "2026-10-13T21:38:57.946661+00:00",
-  "review_scope": "Source compatibility review of unchanged authored lessons; fresh execution against each exact course digest remains required. Historical locale/editorial/artifact judgments retain their scope. No new learner, visual, installed-host or professional acceptance is claimed.",
+  "course_sha256": "4c67cfa54da6c452e68749a3220f91a2d613d03237ba0d5bdc1680628f945d5f",
+  "reviewer": "Codex /root - focused workflow UI source compatibility review",
+  "reviewed_at": "2026-10-14T08:06:05.622189+00:00",
+  "review_scope": "Source compatibility review of unchanged authored lessons and teaching inputs. Existing localized editorial and output judgments retain their historical scope. Fresh execution against the exact new course digest remains required. No installed-host, new visual, learner or professional acceptance is claimed.",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -689,5 +689,17 @@
     "authored_content_unchanged": true,
     "source_review": "docs/releases/2026-10-13-tax-litigation-fixes-source-review.json",
     "fresh_matching_junit_required": true
+  },
+  "workflow_ui_source_compatibility_review_20261014": {
+    "previous_course_sha256": "3e1b24adb4e5cf56be5485dd1fa7771e6750dc348f859267ce0f21f8abc24fdf",
+    "current_course_sha256": "4c67cfa54da6c452e68749a3220f91a2d613d03237ba0d5bdc1680628f945d5f",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "source_review": "docs/releases/2026-10-14-vera-workflow-ui-source-review.json",
+    "fresh_matching_junit_required": true,
+    "installed_host_acceptance": false,
+    "new_visual_or_learner_acceptance": false
   }
 }

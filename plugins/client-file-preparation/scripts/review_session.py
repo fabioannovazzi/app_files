@@ -7,10 +7,11 @@ import secrets
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any, Mapping, Sequence
 
 from detect_duplicates import DuplicateCandidate
 from extract_documents import DocumentEvidence
+from fiscal_field_review import field_identity
 from model_handoff import write_model_handoff
 from parse_fatturapa_xml import InvoiceXmlRecord, localize_formal_anomaly
 from parse_fiscal_forms import (
@@ -685,10 +686,23 @@ def _fiscal_field_items(
     fields: Sequence[FiscalField],
     *,
     language: str,
+    source_texts: Mapping[str, str] | None = None,
+    corrections: Mapping[str, dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     items: list[dict[str, Any]] = []
     for index, field in enumerate(fields, start=1):
         data = field.as_row()
+        identity = field_identity(field)
+        correction = (corrections or {}).get(identity)
+        data["field_ref"] = (
+            correction["original_field_sha256"] if correction else identity
+        )
+        if source_texts is not None and field.relative_path in source_texts:
+            data["source_text_sha256"] = hashlib.sha256(
+                source_texts[field.relative_path].encode("utf-8")
+            ).hexdigest()
+        if correction:
+            data["reviewed_correction"] = correction
         evidence_text = data.pop("evidence", "")
         data["label"] = localize_field_label(field.label, language)
         data["confidence"] = _localized_confidence(field.confidence, language)
@@ -815,6 +829,35 @@ def _xml_anomaly_items(
         )
         for index, record in enumerate(records, start=1)
         if record.malformed or record.anomalies
+    ]
+
+
+def _xml_duplicate_items(records: Sequence[InvoiceXmlRecord]) -> list[dict[str, Any]]:
+    """Expose the parser's existing formal candidate groups, never infer actual duplication."""
+    from model_handoff import _opaque_reference
+    from parse_fatturapa_xml import _duplicate_groups
+
+    return [
+        _base_item(
+            "xml-duplicate-" + _opaque_reference("xml-duplicate-group", key),
+            "formal_xml_duplicate_group",
+            f"XML · {len(group)}",
+            output_path="fatture/duplicate_candidates.csv",
+            allowed_actions=("accept", "reject", "mark_unclear", "skip"),
+            recommended_action="mark_unclear",
+            data={
+                "group_ref": _opaque_reference("xml-duplicate-group", key),
+                "candidate_body_count": len(group),
+                "invoices": [record.as_json() for record in group],
+            },
+            evidence=[
+                {
+                    "kind": "existing_parser_duplicate_candidate",
+                    "rule": "supplier_vat, invoice_number, invoice_date, total_amount; candidate only",
+                }
+            ],
+        )
+        for key, group in sorted(_duplicate_groups(records).items())
     ]
 
 
@@ -1180,6 +1223,7 @@ def write_run_intake(
     jurisdiction: str,
     language: str,
     run_root: Path | None = None,
+    max_pages: int = 50,
 ) -> RunIntakeResult:
     """Write the intake contract as soon as folder scope is known."""
 
@@ -1240,6 +1284,7 @@ def write_run_intake(
             "client_name": client_name,
             "target_year": target_year,
             "ocr_requested": enable_ocr,
+            "max_pages": max_pages,
             "ocr_language": ocr_lang,
             "working_language": language,
             "jurisdiction": jurisdiction,
@@ -1363,14 +1408,33 @@ def write_review_session_artifacts(
         )
     )
     items.extend(_missing_document_items(missing_items, language))
+    correction_path = output_dir / "extracted" / "fiscal_field_reviews.json"
+    correction_records = (
+        json.loads(correction_path.read_text(encoding="utf-8"))["corrections"]
+        if correction_path.is_file()
+        else []
+    )
+    source_texts = {
+        entry.relative_path: (output_dir / "extracted" / entry.text_path).read_text(
+            encoding="utf-8"
+        )
+        for entry in document_evidence
+        if entry.readable and entry.text_path
+    }
     items.extend(
         _fiscal_field_items(
             structured_fields,
             language=language,
+            source_texts=source_texts,
+            corrections={
+                record["corrected_field_sha256"]: record
+                for record in correction_records
+            },
         )
     )
     items.extend(_duplicate_items(duplicate_candidates, language))
     items.extend(_xml_anomaly_items(xml_records, language))
+    items.extend(_xml_duplicate_items(xml_records))
     items.append(
         _draft_item(
             "draft-studio-brief",

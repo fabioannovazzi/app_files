@@ -1658,3 +1658,10 @@ independent. Whole shared-renderer and strict ticket-encoding repairs, fresh
 independent package checks and actual installed native-host acceptance remain
 pending. Target portal repetitions remain required by the public prototype/
 qualification contracts and are not established by panel tests.
+
+
+## Fiscal extraction, XML checks, notices, tax calendar and studio format
+
+Client-file-preparation has focused views over its complete canonical queue: fiscal fields and coverage; formal XML anomalies and duplicate groups; memo and missing-document requests. Separate read-only views page every saved XML body and every notice date/amount/protocol reference. Filter before paging, keep the original evidence and refuse changed artifact hashes. Explicit fiscal correction regenerates a separate same-engagement run through the public producer, preserving the original and reviewed before/after provenance. No fiscal-treatment approval or Archive completion is inferred.
+
+For existing tax matters and studio-format reviews, read [the exact local connection and review contract](native-practice-reviews.md). The optional panel uses public matter/profile writers, saved versions, selected source citations and separately confirmed preview preparation/adoption. Extracted dates and authored terms remain unqualified until professional research and review. Actual installed-host acceptance is a separate release gate.

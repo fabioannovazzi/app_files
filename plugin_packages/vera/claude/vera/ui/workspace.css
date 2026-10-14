@@ -74,3 +74,6 @@ select{font:inherit}.custom-select{position:relative;min-width:0;max-width:600px
 /* Scoped proposal: prevent successive definition grids narrowing nested records. */
 .transformation-record dl dl{display:block;}
 .transformation-record dl dl dd{margin:.2rem 0 .75rem;}
+
+.xml-comparison { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 1rem; }
+.xml-comparison > article { min-width: 0; overflow-wrap: anywhere; }

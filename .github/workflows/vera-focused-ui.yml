@@ -1,0 +1,47 @@
+name: Vera focused workflow UI
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  focused-ui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install declared workflow dependencies and checks
+        run: >-
+          python -m pip install pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit polars numpy
+          -r plugins/client-file-preparation/requirements.txt
+          -r plugins/comunicazione-professionale/requirements.txt
+          -r plugins/report-builder/requirements.txt
+      - name: Verify public persistence, source scope, complete paging and UI consent
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_vera_native_workspace.py tests/plugins/test_vera_native_practice_reviews.py tests/plugins/test_vera_native_practice_ui.py
+          -k 'intake_focus or fiscal_correction or fiscal_successor or native_xml or native_notice or practice or format or event_edit or added_event or saved_calendar or viewer_can or no_host_message'
+          --cov=native_intake_views --cov=native_fiscal_corrections --cov=native_practice_reviews --cov=fiscal_field_review
+          --cov-report=term-missing --cov-fail-under=80 --junitxml=vera-focused-ui.xml
+      - name: Check new helper quality and UI syntax
+        run: |
+          python -m black --check plugins/vera/scripts/native_intake_views.py plugins/vera/scripts/native_fiscal_corrections.py plugins/vera/scripts/native_practice_reviews.py plugins/client-file-preparation/scripts/fiscal_field_review.py tests/plugins/test_vera_native_practice_reviews.py tests/plugins/test_vera_native_practice_ui.py
+          python -m isort --check-only plugins/vera/scripts/native_intake_views.py plugins/vera/scripts/native_fiscal_corrections.py plugins/vera/scripts/native_practice_reviews.py plugins/client-file-preparation/scripts/fiscal_field_review.py tests/plugins/test_vera_native_practice_reviews.py tests/plugins/test_vera_native_practice_ui.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/vera/scripts/native_intake_views.py plugins/vera/scripts/native_fiscal_corrections.py plugins/vera/scripts/native_practice_reviews.py plugins/client-file-preparation/scripts/fiscal_field_review.py
+          python -m bandit -q -ll plugins/vera/scripts/native_intake_views.py plugins/vera/scripts/native_fiscal_corrections.py plugins/vera/scripts/native_practice_reviews.py plugins/client-file-preparation/scripts/fiscal_field_review.py
+          node --check plugins/vera/ui/practice-reviews.js
+          node --check plugins/vera/ui/workspace.js
+          node --check plugins/vera/mcp/workspace.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: vera-focused-ui-results
+          path: vera-focused-ui.xml

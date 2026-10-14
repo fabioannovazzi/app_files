@@ -66,6 +66,7 @@ const ITEM_TYPES = new Set([
   "extracted_fiscal_field",
   "duplicate_warning",
   "formal_xml_anomaly",
+  "formal_xml_duplicate_group",
   "draft_memo_section",
   "draft_client_email",
 ]);

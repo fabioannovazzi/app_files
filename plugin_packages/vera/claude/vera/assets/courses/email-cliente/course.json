@@ -53,7 +53,7 @@
     },
     {
       "path": "modules/client-file-preparation/scripts/build_file_preparation_outputs.py",
-      "sha256": "e081fb3f478db184476627dcb92f9c9e194daa6e2cd9b1b2ce8cd6b673dc2418"
+      "sha256": "36bb900df56abb3082bb5b1a7a6b627d6829cd8caf3782ae122c20b540e8c613"
     },
     {
       "path": "modules/client-file-preparation/scripts/check_dependencies.py",
@@ -72,12 +72,16 @@
       "sha256": "811ce6a6b2212c2550ab3c7c41e7c5e9d6662ce77256382b63d257a7419f87aa"
     },
     {
+      "path": "modules/client-file-preparation/scripts/fiscal_field_review.py",
+      "sha256": "7f7fc02d59fe60d1a22091fa13b40cf4c94a1b3fe99fa572f8c4ee8c69c19050"
+    },
+    {
       "path": "modules/client-file-preparation/scripts/managed_ocr_runtime.py",
       "sha256": "664987b3e53f0b66bd1907493215f352c8487c75c7ec76347f8a41ba3336b222"
     },
     {
       "path": "modules/client-file-preparation/scripts/model_handoff.py",
-      "sha256": "9c46e69ad33e0087b7d23585442c0dad425cf6eb4551f164d460ba27ec6afb5f"
+      "sha256": "a981fdc61bbd3d9fcea30c227c7f3266e42a46e21b4be479ea43801ec5d3c1dc"
     },
     {
       "path": "modules/client-file-preparation/scripts/parse_fatturapa_xml.py",
@@ -89,7 +93,7 @@
     },
     {
       "path": "modules/client-file-preparation/scripts/review_session.py",
-      "sha256": "df5c9a8a2f47c6f6200c36f7d2a9e3c4db026f1c7c95492a734ba2f7305b1e3d"
+      "sha256": "6c3e3e27d5b5e84deae4a3ff5bd491b8af6d032f73faf806ffe78768ae984d7b"
     },
     {
       "path": "modules/client-file-preparation/scripts/scan_folder.py",
@@ -201,15 +205,15 @@
     },
     {
       "path": "vendor/modules/scripts/legal_matter.py",
-      "sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+      "sha256": "fcc4adf915968c442766899a5c8814cfe7a89f66445e12e9f1423ce8e01ed6ac"
     },
     {
       "path": "vendor/modules/scripts/legal_matter.schema.json",
-      "sha256": "b1fb25dd09d300a79cb7cd68eec45cec7c82afa18d1ba08d05a34d1447971586"
+      "sha256": "da7a79b9aae748d725c3d04d69efb299d0ed10bff2e9ea429288a8d18854906d"
     },
     {
       "path": "vendor/modules/scripts/legal_matter_labels.json",
-      "sha256": "c03f840e81b1f3185cb4be0fedb955adf22845aafd13fc3e78b090c8185129ef"
+      "sha256": "d9e3582c83ef6088388303b566d76a512b25b67fd553b0e35ff9109de006fd13"
     },
     {
       "path": "vendor/modules/vera_assurance/__init__.py",
@@ -570,5 +574,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "bad8916574d849c7dc7419a4056971fd26bd6fe578d2178245bd1163ce44a9b2"
+  "canonical_course_sha256": "596e0944bc49d1930ad9db5bea11fa12513f403650ee102d4947b5d503a6a768"
 }

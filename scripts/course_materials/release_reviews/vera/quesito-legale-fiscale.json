@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "quesito-legale-fiscale",
-  "course_sha256": "bfe20d9ea1b69b2721f68c93b727ff8189aae0b02de4e9c26a33de944c0f0bbb",
-  "reviewer": "Codex /root - tax-litigation fix source compatibility review",
-  "reviewed_at": "2026-10-13T23:20:54.144906+00:00",
-  "review_scope": "Source compatibility review of unchanged authored lessons; fresh execution against each exact course digest remains required. Historical locale/editorial/artifact judgments retain their scope. No new learner, visual, installed-host or professional acceptance is claimed.",
+  "course_sha256": "e37b81abdf2f3cc5e53162b7d4bddf231ad0dc5a6bc942f4f646e841916e4e01",
+  "reviewer": "Codex /root - focused workflow UI source compatibility review",
+  "reviewed_at": "2026-10-14T08:06:05.539345+00:00",
+  "review_scope": "Source compatibility review of unchanged authored lessons and teaching inputs. Existing localized editorial and output judgments retain their historical scope. Fresh execution against the exact new course digest remains required. No installed-host, new visual, learner or professional acceptance is claimed.",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -610,5 +610,17 @@
     "current_course_sha256": "bfe20d9ea1b69b2721f68c93b727ff8189aae0b02de4e9c26a33de944c0f0bbb",
     "authored_content_unchanged": true,
     "scope": "Carry source bindings forward after integrating the independently released shared tax-litigation Archive fixes with legal/tax evidence-integrity changes. Authored multilingual lessons, materials and deliverables remain unchanged. Fresh exact-digest CI is required; no professional or installed-host acceptance inferred."
+  },
+  "workflow_ui_source_compatibility_review_20261014": {
+    "previous_course_sha256": "bfe20d9ea1b69b2721f68c93b727ff8189aae0b02de4e9c26a33de944c0f0bbb",
+    "current_course_sha256": "e37b81abdf2f3cc5e53162b7d4bddf231ad0dc5a6bc942f4f646e841916e4e01",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "source_review": "docs/releases/2026-10-14-vera-workflow-ui-source-review.json",
+    "fresh_matching_junit_required": true,
+    "installed_host_acceptance": false,
+    "new_visual_or_learner_acceptance": false
   }
 }

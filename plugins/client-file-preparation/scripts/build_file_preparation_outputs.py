@@ -82,6 +82,7 @@ from parse_fiscal_forms import (  # noqa: E402
     write_fiscal_fields_jsonl,
     write_fiscal_fields_summary,
 )
+from fiscal_field_review import apply_field_corrections  # noqa: E402
 from review_session import (  # noqa: E402
     RunIntakeResult,
     write_review_session_artifacts,
@@ -1856,6 +1857,7 @@ def build_file_preparation_outputs(
     run_id: str | None = None,
     run_root: Path | None = None,
     kind_decisions: Mapping[str, Mapping[str, str]] | None = None,
+    field_corrections: Mapping[str, object] | None = None,
 ) -> BuildResult:
     """Run the prototype first-intake workflow on a customer folder."""
 
@@ -1901,6 +1903,21 @@ def build_file_preparation_outputs(
         )
         if previous != decision_bytes:
             raise ValueError("Document-kind decisions changed; prepare a successor run")
+    corrections_bytes = (
+        json.dumps(
+            dict(field_corrections or {}), sort_keys=True, ensure_ascii=False, indent=2
+        )
+        + "\n"
+    )
+    corrections_artifact = out_dir / "fiscal_field_corrections.json"
+    if resume_partial_run:
+        prior_corrections = (
+            corrections_artifact.read_text(encoding="utf-8")
+            if corrections_artifact.is_file()
+            else "{}\n"
+        )
+        if prior_corrections != corrections_bytes:
+            raise ValueError("Fiscal corrections changed; prepare a successor run")
     records = scan_folder(
         root,
         target_year=target_year,
@@ -1931,6 +1948,7 @@ def build_file_preparation_outputs(
     out_dir.mkdir(parents=True, exist_ok=True)
     out_dir.chmod(0o700)
     decision_artifact.write_text(decision_bytes, encoding="utf-8")
+    corrections_artifact.write_text(corrections_bytes, encoding="utf-8")
     missing_dependency_count, _ = _write_environment_report(
         out_dir / "00_environment_check.md",
         require_ocr=require_ocr and enable_ocr,
@@ -1951,6 +1969,7 @@ def build_file_preparation_outputs(
             jurisdiction=jurisdiction,
             language=language,
             run_root=run_root,
+            max_pages=max_pages,
         )
     write_index_markdown(
         records,
@@ -1974,6 +1993,18 @@ def build_file_preparation_outputs(
         document_evidence,
         out_dir / "extracted",
         kind_decisions=kind_decisions or {},
+    )
+    structured_fields, correction_records = apply_field_corrections(
+        structured_fields, evidence_texts, field_corrections or {}
+    )
+    (out_dir / "extracted" / "fiscal_field_reviews.json").write_text(
+        json.dumps(
+            {"schema_version": 1, "corrections": correction_records},
+            ensure_ascii=False,
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
     )
     write_fiscal_fields_csv(
         structured_fields,
@@ -2142,6 +2173,11 @@ def _parse_args() -> argparse.Namespace:
         type=Path,
         help="Reviewed, text-hash-bound decisions from an authorized engagement input.",
     )
+    parser.add_argument(
+        "--fiscal-field-corrections",
+        type=Path,
+        help="Exact source-bound corrections explicitly confirmed by the reviewer.",
+    )
     parser.add_argument("--year", type=int, default=None, help="Anno fiscale target.")
     parser.add_argument(
         "--out",
@@ -2184,7 +2220,10 @@ def main() -> int:
             args.client_engagement,
             expected_workflow_id="client-file-preparation",
             input_paths=[args.folder]
-            + ([args.document_kind_decisions] if args.document_kind_decisions else []),
+            + ([args.document_kind_decisions] if args.document_kind_decisions else [])
+            + (
+                [args.fiscal_field_corrections] if args.fiscal_field_corrections else []
+            ),
             output_dir=args.out,
         )
     except AssuranceContractError as exc:
@@ -2212,6 +2251,11 @@ def main() -> int:
         kind_decisions=(
             json.loads(args.document_kind_decisions.read_text(encoding="utf-8"))
             if args.document_kind_decisions
+            else None
+        ),
+        field_corrections=(
+            json.loads(args.fiscal_field_corrections.read_text(encoding="utf-8"))
+            if args.fiscal_field_corrections
             else None
         ),
     )

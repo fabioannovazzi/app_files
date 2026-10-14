@@ -132,7 +132,7 @@
     "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "e3d107d231701ef8bc6d0ae1577d162a6ffaac5264f326bf535ce341ecf0864b"
+    "source_fingerprint": "3fb13e7c23d054d0793b6aa4cfa81649029ba94d931d33f2a371e241f6707710"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md",

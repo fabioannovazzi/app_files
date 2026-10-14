@@ -1,0 +1,409 @@
+{
+  "scope": "Five focused Vera native UI workflows; existing maintained public producer and matter/profile persistence APIs",
+  "mechanical_controls": "Exact source identities, artifact hashes, JSON schema, actual date syntax, literal source quotations, current revisions, explicit reviewer confirmation, signed scope and retained idempotency intents. These do not decide legal deadlines, fiscal treatment, duplicate reality or source relevance.",
+  "privacy_review": "The native workspace shared UI/source reference binds the existing workstream manifests. Unchanged specialist data paths retain their existing reviewed boundaries. New fiscal corrections carry attributed before/after evidence through normal outputs. Explicit selected XML body discussion may include party identifiers; default duplicate groups remain opaque. Private tax/format navigation stays app-private; only explicit selected saved item/source units or preview identity enters model context. No new provider/network/filing routes.",
+  "tests": {
+    "focused_helper_coverage_percent": 82.93,
+    "practice_public_and_mcp_passed": 13,
+    "component_ui_events_passed": 6,
+    "producer_rerun_junit": "/private/tmp/vera-workflow-ui-intake-public-rerun-20261014.xml",
+    "producer_rerun_passed": 73,
+    "producer_rerun_skipped": 19,
+    "xml_candidate_decision_passed": 1
+  },
+  "course_source_bindings": [
+    {
+      "product": "vera",
+      "workflow": "adeguati-assetti",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "55be61656122b5ed7e6c425aaa07534d1cb6e7dcb828c744cb57ac19701f7f94",
+      "current_course_sha256": "d0aca9cd765f322af08c1b9c999f7d3ec1e42de6f8249b11e91a9e715076331f"
+    },
+    {
+      "product": "vera",
+      "workflow": "agenzia-acquisition",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "90d366b2130a2a9504609db371e2e242e5d50980ba2abe6be753d82883bef519",
+      "current_course_sha256": "2577b0b20fe7ef0c1b72e095f0803de8c3f72c4bcd2d5ae286e426384e9c70c1"
+    },
+    {
+      "product": "vera",
+      "workflow": "aml-review",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "1a31a623bba1701baede9923100c9eb095ee23dfc7119ad57ff8a4a9ae1f11dc",
+      "current_course_sha256": "4e306a231ba518b8f4824a90a7a0728b71c5947e58dfa1027a2c26a5e5fec02a"
+    },
+    {
+      "product": "vera",
+      "workflow": "archive-organization",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "03b731c871d87d64d254eba5a33818ff847aa21de3a156a575b18964797d1ae7",
+      "current_course_sha256": "1ffe23e06660159fb37dfeb862d5117d3b2a0c3d48ba842474d5fa6035077156"
+    },
+    {
+      "product": "vera",
+      "workflow": "avviso-intake",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "37d0f81bae733083b29e03554a5575c0d5860c0ad47b46ee5c2b2a293fcbb2c0",
+      "current_course_sha256": "4f675c2eea591dc0fe8c16730138938d3998bdeb450dd88977a50b025c2d163f"
+    },
+    {
+      "product": "vera",
+      "workflow": "bandi-agevolazioni",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "04e6aa615aa10883170e77df37e3cf1274dd7db9c27d9d5076365ab603ef4bd7",
+      "current_course_sha256": "f331d074c47c6e7a11f9e4c6a055f3a9b0478a7c99e620a68a0a71d9cf8d8fed"
+    },
+    {
+      "product": "vera",
+      "workflow": "bilancio-oic",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "72a2c33edddc13ac5c5d88dea03da17382801b71250fc1f9c7ba0783588ef402",
+      "current_course_sha256": "07d67ee576d17df4810a794c9d13260beccb41022142291bda5ae24dae3f4620"
+    },
+    {
+      "product": "vera",
+      "workflow": "browser-automation",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "d0cd22cae070901689e485da9ec854d73feddf3aa3fe60f7c8f8de27454ae98e",
+      "current_course_sha256": "85c3dedcfd4bc9b52b038f024d3c73de8211f6658966e59d6cea130ca538937b"
+    },
+    {
+      "product": "vera",
+      "workflow": "business-planning",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "6b21e74252160b2fe86fd50919b209b2ce2b251ab55c38febb95cdb416b98f4a",
+      "current_course_sha256": "a74c702e8841595428dd53f3e79ce90d0e4553bba66958a4d8382941788b113b"
+    },
+    {
+      "product": "vera",
+      "workflow": "business-valuation",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "1c6f5c6fc78e4f929649ca3824b9bb4b83610412c24208c8252af82b0c0975e7",
+      "current_course_sha256": "8fa49d392a9f4be0b52adc6491678c48f8cb8e569568004f29c8b597c2db580f"
+    },
+    {
+      "product": "vera",
+      "workflow": "centrale-rischi-review",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "79f6c8295cc5125e1d5dc3b32f9efe51ad834ebab65828b37f5cb0b6843869dd",
+      "current_course_sha256": "4944b3e05ade44c8198fc223e66b88cc97144ebf8f7ae30205f0d98afc200029"
+    },
+    {
+      "product": "vera",
+      "workflow": "composizione-negoziata",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "db4bc13354bb58b73d63d167827d96b9ed14fb7d18c90f99dc81a1185ece100a",
+      "current_course_sha256": "4514de786454afb57955c2a2addaee5130a1daabf6ba65e8a0609220439b4e2c"
+    },
+    {
+      "product": "vera",
+      "workflow": "comunicazione-professionale",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "1bb6148ee9db9722dd990087a97bf1457a52ca913934f060a59ff9869fe15dc1",
+      "current_course_sha256": "d9d50dda4e97bb07bfb374b257f58d2483df515d692beba4ce6f732a27b90d23"
+    },
+    {
+      "product": "vera",
+      "workflow": "concordato-plan-review",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "c1b7bd1dac1d939ecfcfee33efacbc8b0cceba962ec7ac5dba9eeedfb510aa10",
+      "current_course_sha256": "e4e40aa09b3847f4b2561598abc8a8b2da165a2908772acc2cd93bfd2996f201"
+    },
+    {
+      "product": "vera",
+      "workflow": "dati-fiscali-strutturati",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "82bec7599f28427d82d609ea15d10be1c0379f6fa42ee6cc49e1798560a58608",
+      "current_course_sha256": "d72b54f29bc2bfe8427afc7dc8c0cac40f23ce4af257513542a4f24db90884d9"
+    },
+    {
+      "product": "vera",
+      "workflow": "email-cliente",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "bad8916574d849c7dc7419a4056971fd26bd6fe578d2178245bd1163ce44a9b2",
+      "current_course_sha256": "596e0944bc49d1930ad9db5bea11fa12513f403650ee102d4947b5d503a6a768"
+    },
+    {
+      "product": "vera",
+      "workflow": "esg-reporting-assurance",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "25016a450b872c55553e2ee2e05edf79339b5a19b75cf168e97a13f73ecf29e1",
+      "current_course_sha256": "c6c33336d4d5cfb4129d7ecea571d9c72ad64a1ee232fabb8454096ee59bd1fd"
+    },
+    {
+      "product": "vera",
+      "workflow": "fatture-xml-check",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "2f6b29dca7e54d0e8ea8ec649a6350c1ab1dc4a2f7777a572a25e4be3e549bec",
+      "current_course_sha256": "17b158af796ec1b7ceab0f8fe08b78d57688ba14837e427894916c113d18dd33"
+    },
+    {
+      "product": "vera",
+      "workflow": "financial-analysis",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "d319e10d993f015963c7707635d3f53822fa9ebc3bf851cefb5648329e0172b7",
+      "current_course_sha256": "95969e770aa7b37f7097b03e9bd2d93f5da00abe6f08b6ad4c4f0c44d085c942"
+    },
+    {
+      "product": "vera",
+      "workflow": "financial-report-builder",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "3b88d3c75511e02fc5b1f9f712c06ff80ec8373d1d2114f8fe264d66fdfe1396",
+      "current_course_sha256": "e80d9188a00a848c04499722383a95854795f011eb3b1b13dd841dacb16555e6"
+    },
+    {
+      "product": "vera",
+      "workflow": "fusione-guidata",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "a472dd7bdaa0f1e54185d492c2da2dec84b09f151ce813561f791a19c775f40b",
+      "current_course_sha256": "8ecd791e818735a1ee51a53519e44c072963118da9bcafb01ce679db81864ec7"
+    },
+    {
+      "product": "vera",
+      "workflow": "invoice-xml",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "e052ef662becb59374c75c2ba342b916ec453db71214bef1bb5d5dea92eedf32",
+      "current_course_sha256": "d182f743048a82636bb8dccbb68d842ca631af4ec2a3096f7fb3b372ae8c0ac0"
+    },
+    {
+      "product": "vera",
+      "workflow": "journal-bank-reconciliation",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "30a363be039b4f0c0959a912aa3803a5f99e38be3bc640d7d07e804a7b453554",
+      "current_course_sha256": "6b817ffcd2017021b4f0c7a19e17285b48d210b27a10648f5110d13f350ac6f1"
+    },
+    {
+      "product": "vera",
+      "workflow": "journal-sampling",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "cbddfc9998f8eadaa4c597e15ea8c9446524f053fe124d543189c7ec1d44c699",
+      "current_course_sha256": "7abbbf6671c9658c757aae5cc4a9b6118890c3ac8913090a91725538913f333b"
+    },
+    {
+      "product": "vera",
+      "workflow": "lipe",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "2dec01948820cf783cfbfdcb811e2d6810c10acbd3d5117417ba39760a05b848",
+      "current_course_sha256": "5277d826cc69e1811fef3f9b56e8ecde4deb8e4d7870c9296491772cbbd8b9ba"
+    },
+    {
+      "product": "vera",
+      "workflow": "management-control-pack",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "b5b0f5325ea81c5d362276f045c144380a16321c46f321b0842f40b360a38d7e",
+      "current_course_sha256": "dae57afac3208a52c3cca0326b702dae3d2c75d8be5f661a8315a6ecc1c619c4"
+    },
+    {
+      "product": "vera",
+      "workflow": "new-client",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "cc90a1ce5b20a7d71c5c87e42f9f7649ae2c33730ad69aa39ea8c4720ad34dc8",
+      "current_course_sha256": "c1950145e1ff1b581bbd58733b4e76fae5458d16e2453016c8371e554101a177"
+    },
+    {
+      "product": "vera",
+      "workflow": "open-item-reconciliation",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "d4cf2ad1faf7943d9e613e923cff951d1a6361004d271df007d1fd6e475afc27",
+      "current_course_sha256": "f4db528edb846b69e069f8f8b10f75c8419d06bbf329276aea7ce749b1471dff"
+    },
+    {
+      "product": "vera",
+      "workflow": "organizzazione-lavoro",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "58b2de51e1802ccc81277e2eb3022f45456c507f7ea550677cd384855343f0ae",
+      "current_course_sha256": "bd85f592807e8aeb6dc80ce051e155e85c4f1d54124abe2064fb4882959a6f4d"
+    },
+    {
+      "product": "vera",
+      "workflow": "patent-box-review",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "7f571c802644668ec6dd8f945dabad4b80851d90caecb64ae3a51f5ebcce34a1",
+      "current_course_sha256": "06d82c15b8b5672a449363ae238b736614270e755e29d2d2c63b5ae80e42d5c6"
+    },
+    {
+      "product": "vera",
+      "workflow": "presenza-digitale-studio",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "1dfc6a4b7ed6bdb310392903de0743f6d188d7b4de5af4db565dc81fc3618f7e",
+      "current_course_sha256": "a952ec8e5a68f2d77a5642459423c028e0736edd33f236bb6a990156e46b76ce"
+    },
+    {
+      "product": "vera",
+      "workflow": "previdenza-inps",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "ed2d509f148cb8649e5682ff38137ce482dd1fb2fb8409ff7d02cae844f23e10",
+      "current_course_sha256": "f750b1f66df8c5d7611456fa8aa9d6902e414b9ddbf526f02556794ddc6ef1c5"
+    },
+    {
+      "product": "vera",
+      "workflow": "purchase-invoice-review",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "e808d615cba347fcab110f9aaeae1784354dfc977f31f9123bd5782c909e3b21",
+      "current_course_sha256": "0a641e302c5a7b84a512ac96dce872884fa8ee85371ae6d1648cfca8a142a1dc"
+    },
+    {
+      "product": "vera",
+      "workflow": "quesito-legale-fiscale",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "bfe20d9ea1b69b2721f68c93b727ff8189aae0b02de4e9c26a33de944c0f0bbb",
+      "current_course_sha256": "e37b81abdf2f3cc5e53162b7d4bddf231ad0dc5a6bc942f4f646e841916e4e01"
+    },
+    {
+      "product": "vera",
+      "workflow": "registro-imprese-sari",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "fbf6acfebc72795f71aedb6a0f9f0ff3259380b5202a085eb6fdbe8163768aa5",
+      "current_course_sha256": "d8951ef63543c91626d40ceeac9cb9267131bdcdd9e8f23abdf8c31eef7e66ff"
+    },
+    {
+      "product": "vera",
+      "workflow": "sales-plan",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "e2d4f284fdd8e9874814fe1ca31545fe791f5c6bb5635ab7da4ceabff76623e8",
+      "current_course_sha256": "a4806ce072cef414108238032f41d61d95641dc1883e21c5441a7105e3a35d25"
+    },
+    {
+      "product": "vera",
+      "workflow": "scissione-guidata",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "2d9ae6595c0d1f52e0c7e31402a4713133143e486d71a518e284cbca31f7fd6d",
+      "current_course_sha256": "1339085e4097ef4329d912193ebde38f4731f6e67804dcda31ad23efd6ea9c79"
+    },
+    {
+      "product": "vera",
+      "workflow": "studio-archive",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "3e1b24adb4e5cf56be5485dd1fa7771e6750dc348f859267ce0f21f8abc24fdf",
+      "current_course_sha256": "4c67cfa54da6c452e68749a3220f91a2d613d03237ba0d5bdc1680628f945d5f"
+    },
+    {
+      "product": "vera",
+      "workflow": "studio-document-format",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "300a024f1d12fd7e31ad5cb535f0f7aeb103b2ffa0fd9f605111e6d60da21b3c",
+      "current_course_sha256": "5de654c5bd90bdc53b417ba1b0e78d4bc85bbbf06ba4ebbc20ccc1c3f7a4bcd2"
+    },
+    {
+      "product": "vera",
+      "workflow": "trasformazione",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "6121632431b095d2117f34053d3210bc38873a3916286e62e5074221f9973244",
+      "current_course_sha256": "de2798d02880ed0a3313e13dbf77e79c39799c408fa5db20c0a5c7e565b89b37"
+    },
+    {
+      "product": "vera",
+      "workflow": "treasury-forecast",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "b87bc5883a8259a6f816a10bc335b8a3c63cbe8c4e5dae9abc9122c63ee57f9a",
+      "current_course_sha256": "54bd1ad6792bc004003769800402d999d57007e036697b444131a7dd4e46361a"
+    },
+    {
+      "product": "vera",
+      "workflow": "variance-analysis",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "62a7e7157b80142318b53c21f204b201cc9d890251421c7f5d9471e6c3eb5e85",
+      "current_course_sha256": "083f27a0acf7266cbbc1ac25ce16debd496878b7a9ffbba1aaf098e380e1f03b"
+    },
+    {
+      "product": "vera",
+      "workflow": "vouching",
+      "changed_fields": [
+        "sources"
+      ],
+      "previous_course_sha256": "b2510f29dc887b023318e19faa672b68ccaa1152cf4ce69b4192cf941e032e50",
+      "current_course_sha256": "ec43696c1a40f77878a3e4cfed3f248215fc8eaffafaeba6d32e4ad74d2692d2"
+    }
+  ],
+  "limits": [
+    "Fresh matching teaching execution required in CI",
+    "Actual native installed-host rendering/interaction/persistence acceptance outstanding",
+    "Current configured historical private pilot marketplace path is missing its supported manifest; enabled installation inspection is not yet successful",
+    "Marketplace publication is not authorized and will not be performed"
+  ]
+}

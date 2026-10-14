@@ -44,6 +44,14 @@
         "runtime_profiles": [
           "openai-codex"
         ]
+      },
+      {
+        "id": "native-selected-intake-record",
+        "purpose": "Explain an explicitly selected saved fiscal field, XML body/group or notice reference",
+        "content": "Focused queues and full XML body or notice-reference metadata remain app-private during navigation. Only an explicit discussion request reads the exact saved record: fiscal value and source evidence, full selected XML metadata with party identifiers, opaque default duplicate-group member/body references, or the literal notice date/amount/protocol. Fiscal correction retains source-linked before/after value, basis and declared reviewer through regenerated public outputs and the normal model handoff. These are real case data in the selected account, not automatic anonymization; no legal deadline or fiscal-treatment approval is inferred.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
       }
     ]
   },
@@ -102,9 +110,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-09",
+    "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "6ff2b5b8ab9ad29a83f59d276e87b33f09a11c54d9696ef52f8b4f438c776bf5"
+    "source_fingerprint": "09e2a95c661519e18d43c884b3519523262296e8fe3ae3cb31a56e9d2f61cbed"
   }
 }

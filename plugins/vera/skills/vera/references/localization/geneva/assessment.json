@@ -1243,7 +1243,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "a278aa2a3a3796ec249cd961fef8db27ad8d4d2d5a29445488453eeec1770d37",
+  "catalogue_fingerprint": "9014a3d963d9b6203638b6198f02bf24bdf5bdf4195d764de109fbb4122e857b",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1654,5 +1654,9 @@
     ],
     "reason": "Refresh the release baseline for the Archive registration, evidence subdirectory and sealed-run resume guidance. Existing jurisdiction dispositions, Italy-only litigation scope and professional acceptance limits are unchanged.",
     "fresh_geneva_acceptance": false
+  },
+  "workflow_ui_source_review_20261014": {
+    "scope": "Native review routing and mechanical source/correction/citation persistence only. Existing jurisdiction assessments remain unchanged; no Geneva professional or native-host acceptance is inferred.",
+    "source_review": "docs/releases/2026-10-14-vera-workflow-ui-source-review.json"
   }
 }
