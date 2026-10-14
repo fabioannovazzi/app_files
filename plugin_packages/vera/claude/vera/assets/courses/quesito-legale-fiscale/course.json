@@ -97,7 +97,7 @@
     },
     {
       "path": "modules/deep-research-validator/skills/deep-research/SKILL.md",
-      "sha256": "b8075da9b1858dcba2836d745a77fb8e47eab179356e4bc763a5564b2ef63d3a"
+      "sha256": "6b51c51e2e64383966e7c408309deeadbd47710e57eb2b987a0e63a6c1f8e691"
     },
     {
       "path": "modules/deep-research-validator/skills/deep-research/references/evaluation.md",
@@ -117,7 +117,7 @@
     },
     {
       "path": "modules/deep-research-validator/skills/legal-tax-answer-review/references/answer-journey.md",
-      "sha256": "51159dda3eee30d77e7e6bd33c0995d2ac80b4ee67ce76c341dd56a93572c0bc"
+      "sha256": "573dff143e21e6590fd283aaf8c9c66b5ddea9dd16defa5358641c966eb34be6"
     },
     {
       "path": "modules/deep-research-validator/skills/legal-tax-answer-review/references/research-choice.md",
@@ -164,12 +164,28 @@
       "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
     },
     {
+      "path": "modules/prompt-optimizer/assets/legal-tax-model.html",
+      "sha256": "94471cba2d58bd3b6990ace5bab70b4b69592aa52f251cd2d3f598efe96a91e7"
+    },
+    {
+      "path": "modules/prompt-optimizer/scripts/model-policy.cjs",
+      "sha256": "0e8415c322c2ef1d56abf713d16c7b969c41aa4a08ac6f08c61815701bd2ab43"
+    },
+    {
+      "path": "modules/prompt-optimizer/scripts/model_policy.py",
+      "sha256": "978591c738176e488984b9670a1d2b7dcfae9a93aec12a4aff3c51cfa813e445"
+    },
+    {
       "path": "skills/quesito-legale-fiscale/SKILL.md",
-      "sha256": "cf574913820d2a2b7631af2ccafa04a3cf9b9ab0234c87176a43056de121e07b"
+      "sha256": "dd9d33921d90493928e5d82a8151426356935bac6674aae5791610116a91fe8c"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
+    },
+    {
+      "path": "skills/vera/references/legal-tax-model-policy.md",
+      "sha256": "51d9256b26bd7a9cf5740c7040d6d7df93e6dc8f7fd7e48fdfb6544ef68a12da"
     },
     {
       "path": "skills/vera/references/research-subscriptions.md",
@@ -838,5 +854,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "d3894090a086cd3137e019ae202ca262ee0401c29f0772e065b5d6c7612b64d8"
+  "canonical_course_sha256": "0f5bf2d6f81ebf618a73d206687082db63d40a0e638c8a99b0716194e4af9669"
 }

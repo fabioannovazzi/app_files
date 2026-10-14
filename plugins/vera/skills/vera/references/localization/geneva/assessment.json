@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "cc80dcbbdae4385dbb6dbefac2d14b47fc859b06a27fedd8dc04928340fbb48a",
+  "catalogue_fingerprint": "c6daa56067d8850b90bfecbbcb4fc65f4412a1e12a1bab613f78dd00222936c5",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -1727,8 +1727,21 @@
     "scope": "Retain all current native-UI source qualifications and the optional research-source helper. No new Geneva or subscriber acceptance claimed.",
     "current_catalogue_fingerprint": "6541c45fb47d43fd9e7c3f9ccf4dba821c8f54b59b07ed624907de3240ece855"
   },
+  "legal_tax_model_selection_binding": {
+    "date": "2026-10-14",
+    "version": "0.1.380",
+    "changed_entrypoints": [
+      "adversarial-opinion",
+      "deep-research",
+      "legal-tax-answer-planner",
+      "legal-tax-answer-review",
+      "quesito-legale-fiscale"
+    ],
+    "scope": "Only model-selection and continuity requirements changed in the five legal/tax wrappers. Optional UI and Cowork chat use the same requirement. Existing Geneva legal applicability judgments, unresolved limitations and acceptance evidence are unchanged; no new Swiss-law qualification or installed-host acceptance is claimed.",
+    "integration_baseline": "20d6681b3"
+  },
   "remote_course_package_binding": {
-    "scope": "Only the product manifest version changes in the catalogue identity. All skill entrypoint bytes and existing Geneva dispositions are unchanged. Remote fictional lesson data packaging does not qualify additional jurisdictional workflows.",
-    "version": "0.1.380"
+    "version": "0.1.381",
+    "scope": "Preserve the latest model-policy source assessment and all existing Geneva dispositions. Shared lesson attachment transport remains hash-pinned; no additional jurisdictional workflow or installed-host acceptance claimed."
   }
 }

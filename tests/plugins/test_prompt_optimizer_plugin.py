@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -179,6 +180,328 @@ def _call_mcp_server(
     response = responses[-1]
     assert "error" not in response
     return response["result"]
+
+
+@pytest.fixture
+def model_policy_run(tmp_path: Path):
+    module = load_script("test_legal_tax_model_policy", "model_policy.py")
+    output, context_path, context = _running_customer_output(tmp_path)
+    request = {
+        "action": "prepare",
+        "client_engagement": str(context_path),
+        "output_dir": str(output),
+        "run_id": context["run_id"],
+        "host": "test-host",
+        "preferred_model": "capable-model",
+        "selection_basis": "Current host catalogue explicitly identifies this capability.",
+        "session_ref": "conversation-a",
+        "language": "it",
+    }
+    return module, request
+
+
+def test_model_policy_cowork_cli_needs_no_ui(model_policy_run) -> None:
+    _, request = model_policy_run
+
+    def invoke(payload):
+        result = subprocess.run(
+            [sys.executable, str(SCRIPTS_DIR / "model_policy.py")],
+            input=json.dumps(payload),
+            text=True,
+            capture_output=True,
+            check=True,
+        )
+        return json.loads(result.stdout)
+
+    pending = invoke(request)
+    assert not pending["can_continue"]
+    confirmed = invoke(
+        {
+            **request,
+            "action": "confirm",
+            "expected_sha256": pending["sha256"],
+            "confirmed_model": "capable-model",
+            "confirmation_source": "chat",
+            "confirmation_reference": "User: I selected capable-model.",
+        }
+    )
+    assert confirmed["can_continue"]
+    assert confirmed["record"]["identity_basis"] == "user_confirmed"
+    assert confirmed["host_switch_performed"] is False
+    phase = invoke(
+        {
+            **request,
+            "action": "phase",
+            "expected_sha256": confirmed["sha256"],
+            "phase": "research",
+            "model": "capable-model",
+            "execution_reference": "Same confirmed parent conversation.",
+        }
+    )
+    assert phase["record"]["phases"][0]["model"] == "capable-model"
+    assert invoke(request)["sha256"] == phase["sha256"]
+    assert invoke({**request, "action": "read"})["sha256"] == phase["sha256"]
+    assert (
+        len(
+            list(
+                Path(request["output_dir"])
+                .joinpath("model-policy-history")
+                .glob("*.json")
+            )
+        )
+        == 2
+    )
+
+
+def test_model_policy_cli_preserves_unicode_with_ascii_stdio(model_policy_run) -> None:
+    _, request = model_policy_run
+    request["preferred_model"] = "modèle-test"
+    request["selection_basis"] = "Selezionato perché è il più capace."
+    completed = subprocess.run(
+        [sys.executable, str(SCRIPTS_DIR / "model_policy.py")],
+        input=json.dumps(request, ensure_ascii=False).encode("utf-8"),
+        env={**os.environ, "PYTHONIOENCODING": "ascii"},
+        capture_output=True,
+        check=False,
+    )
+    assert completed.returncode == 0, completed.stderr.decode("utf-8")
+    result = json.loads(completed.stdout)
+    assert result["record"]["preferred_model"] == request["preferred_model"]
+    assert result["record"]["selection_basis"] == request["selection_basis"]
+
+
+@pytest.mark.parametrize(
+    "active,ready,status",
+    [
+        ("capable-model", True, "ready_host_reported"),
+        ("different-model", False, "requires_switch"),
+        (None, False, "awaiting_confirmation"),
+    ],
+)
+def test_model_policy_distinguishes_actual_identity_evidence(
+    model_policy_run, active, ready, status
+) -> None:
+    module, request = model_policy_run
+    if active:
+        request.update(
+            observed_model=active, observation_reference="Host session metadata."
+        )
+    result = module.apply_request(request)
+    assert result["can_continue"] is ready
+    assert result["record"]["status"] == status
+
+
+@pytest.mark.parametrize(
+    "changed",
+    [
+        {"model": "weaker-model"},
+        {"session_ref": "another-conversation"},
+        {"expected_sha256": "stale"},
+    ],
+)
+def test_model_policy_rejects_downgrade_session_change_and_stale_write(
+    model_policy_run, changed
+) -> None:
+    module, request = model_policy_run
+    accepted = module.apply_request(
+        {
+            **request,
+            "observed_model": "capable-model",
+            "observation_reference": "Host session metadata.",
+        }
+    )
+    before = Path(accepted["path"]).read_bytes()
+    with pytest.raises(ValueError):
+        module.apply_request(
+            {
+                **request,
+                "action": "phase",
+                "expected_sha256": accepted["sha256"],
+                "phase": "validation",
+                "model": "capable-model",
+                "execution_reference": "Same parent",
+                **changed,
+            }
+        )
+    assert Path(accepted["path"]).read_bytes() == before
+
+
+def test_model_policy_new_session_invalidates_previous_confirmation(
+    model_policy_run,
+) -> None:
+    module, request = model_policy_run
+    pending = module.apply_request(request)
+    module.apply_request(
+        {
+            **request,
+            "action": "confirm",
+            "expected_sha256": pending["sha256"],
+            "confirmed_model": "capable-model",
+            "confirmation_source": "chat",
+            "confirmation_reference": "User: selected.",
+        }
+    )
+    changed = module.apply_request({**request, "session_ref": "new-conversation"})
+    assert not changed["can_continue"]
+    assert changed["record"]["identity_basis"] == "unknown"
+    assert "confirmation_reference" not in changed["record"]
+
+
+def test_model_policy_pending_record_cannot_execute_or_forge_ready(
+    model_policy_run,
+) -> None:
+    module, request = model_policy_run
+    pending = module.apply_request(request)
+    with pytest.raises(ValueError, match="not satisfied"):
+        module.apply_request(
+            {
+                **request,
+                "action": "phase",
+                "expected_sha256": pending["sha256"],
+                "phase": "preparation",
+                "model": "capable-model",
+                "execution_reference": "Parent",
+            }
+        )
+    record = pending["record"]
+    record["status"] = "ready_host_reported"
+    Path(pending["path"]).write_text(json.dumps(record), encoding="utf-8")
+    with pytest.raises(ValueError, match="Inconsistent"):
+        module.apply_request({**request, "action": "read"})
+
+
+def test_model_policy_rejects_foreign_run_and_output(
+    model_policy_run, tmp_path
+) -> None:
+    module, request = model_policy_run
+    with pytest.raises(ValueError, match="identity mismatch"):
+        module.apply_request({**request, "run_id": "foreign"})
+    with pytest.raises(module.AssuranceContractError):
+        module.apply_request({**request, "output_dir": str(tmp_path / "foreign")})
+
+
+def test_model_policy_rejects_symlink_record(model_policy_run, tmp_path) -> None:
+    module, request = model_policy_run
+    target = tmp_path / "foreign.json"
+    target.write_text("{}", encoding="utf-8")
+    Path(request["output_dir"]).joinpath("legal_tax_model.json").symlink_to(target)
+    with pytest.raises(ValueError, match="Symlink"):
+        module.apply_request(request)
+    assert target.read_text(encoding="utf-8") == "{}"
+
+
+@pytest.mark.parametrize("workflow", ["prompt-optimizer", "deep-research-validator"])
+def test_model_policy_supports_standalone_preparation_and_direct_review(
+    tmp_path, workflow
+) -> None:
+    module = load_script("test_standalone_model_policy", "model_policy.py")
+    from vera_assurance.contracts import create_standalone_task
+
+    source = tmp_path / "question.txt"
+    source.write_text("Synthetic legal question", encoding="utf-8")
+    context = create_standalone_task(
+        tmp_path / "task",
+        workflow_id=workflow,
+        sources=[source],
+        label="Model policy test",
+        purpose="Check standalone model selection",
+    )
+    result = module.apply_request(
+        {
+            "action": "prepare",
+            "workflow_id": workflow,
+            "client_engagement": context["context_path"],
+            "output_dir": context["output_dir"],
+            "run_id": context["run_id"],
+            "host": "cowork",
+            "preferred_model": "capable-model",
+            "selection_basis": "Available host selector confirmed by user",
+            "session_ref": "test-session",
+        }
+    )
+    assert result["record"]["run_id"] == context["run_id"]
+    assert not result["can_continue"]
+    assert not list(tmp_path.rglob("client.json"))
+
+
+def test_model_policy_mcp_resources_and_persistent_confirmation(
+    model_policy_run,
+) -> None:
+    _, request = model_policy_run
+    if shutil.which("node") is None:
+        pytest.skip("node is required for MCP server checks")
+    with subprocess.Popen(
+        ["node", str(MCP_SERVER_PATH)],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    ) as process:
+
+        def call(method, params):
+            process.stdin.write(
+                json.dumps(
+                    {
+                        "jsonrpc": "2.0",
+                        "id": 1,
+                        "method": method,
+                        "params": params,
+                    }
+                )
+                + "\n"
+            )
+            process.stdin.flush()
+            return json.loads(process.stdout.readline())["result"]
+
+        try:
+            tools = call("tools/list", {})["tools"]
+            assert "check_legal_tax_model" in {tool["name"] for tool in tools}
+            html = call("resources/read", {"uri": "ui://widget/legal-tax-model.html"})[
+                "contents"
+            ][0]["text"]
+            assert "confirm_legal_tax_model" in html
+            pending = call(
+                "tools/call",
+                {
+                    "name": "check_legal_tax_model",
+                    "arguments": request,
+                },
+            )["structuredContent"]
+            confirmation = {
+                "token": pending["token"],
+                "expected_sha256": pending["sha256"],
+                "confirmed_model": "capable-model",
+                "confirmation_source": "plugin_ui",
+                "confirmation_reference": "I have selected capable-model in the host.",
+            }
+            saved = call(
+                "tools/call",
+                {
+                    "name": "confirm_legal_tax_model",
+                    "arguments": confirmation,
+                },
+            )
+            assert saved["structuredContent"]["can_continue"]
+            stale = call(
+                "tools/call",
+                {
+                    "name": "confirm_legal_tax_model",
+                    "arguments": confirmation,
+                },
+            )
+            assert stale["isError"]
+            assert "Stale" in stale["content"][0]["text"]
+            expired = call(
+                "tools/call",
+                {
+                    "name": "confirm_legal_tax_model",
+                    "arguments": {**confirmation, "token": "invalid"},
+                },
+            )
+            assert expired["isError"]
+        finally:
+            process.terminate()
+            process.wait(timeout=5)
 
 
 def test_inspect_question_extracts_deterministic_anchors(tmp_path: Path) -> None:

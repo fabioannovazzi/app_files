@@ -8,7 +8,8 @@
     "scripts",
     "mcp",
     "assets/review-workbench-adapter.json",
-    "assets/prompt-optimizer-review-widget.html"
+    "assets/prompt-optimizer-review-widget.html",
+    "assets/legal-tax-model.html"
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
@@ -22,7 +23,9 @@
     "mcp/research-sources.cjs",
     "scripts/research-subscriptions-store.cjs",
     "skills/legal-tax-answer-planner/SKILL.md",
-    "scripts/research-sources.cjs"
+    "scripts/research-sources.cjs",
+    "skills/vera/references/legal-tax-model-policy.md",
+    "skills/legal-tax-answer-review/SKILL.md"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -62,6 +65,15 @@
         "id": "optional-research-subscriptions",
         "purpose": "Use the user-authorised subscription evidence within the existing legal and tax assignment",
         "content": "Saved provider choices and bounded reported access metadata; actual research queries, returned results, document titles, citable links, source passages, adverse evidence, applicability assessments and access/retention limitations can enter the selected host model context. The profile-local helper makes no browser, network or model call and stores no document bodies or credentials.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "legal-tax-model-selection",
+        "purpose": "Maintain Vera's most-capable-available host model requirement through the legal/tax pipeline",
+        "content": "Required and observed model identifiers, the capability-selection basis, host/session reference, source of identity evidence, explicit user confirmation from the optional panel or chat, and actual phase-assignment references. This local record may enter the current host model context. It contains no credentials and is not model-provider attestation. Cowork can use the same managed Python helper and chat without UI or an external model API.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -151,12 +163,16 @@
     {
       "id": "portable-native-intake-and-review",
       "control": "Necessary intake choices use an available permitted host question tool or chat without requiring a conversation-mode change. Prompt review uses the standard MCP Apps tools/call bridge with parent/origin checks; feature-detected window.openai remains a compatibility fallback. Native save/apply tools retain the existing hash-bound local review and decision persistence. No new external recipient, model API, source selection or automatic anonymization is introduced."
+    },
+    {
+      "id": "legal-tax-model-continuity",
+      "control": "The local helper validates the managed or standalone run, output boundary, exact model identifier, session and record revision. UI confirmation is bound to the server-side run by a random expiring token. Host-reported identity, user-confirmed selection and unknown identity remain distinct. The UI does not switch host models. Chat fallback uses the same helper, with no new service, account, credentials, automatic anonymization or silent weaker-model fallback."
     }
   ],
   "review": {
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "eec205b59a1529e4612322e0af62007cb828294eafdedfac25562c702688dba1"
+    "source_fingerprint": "a8a634d5f06704939f4b6d1eecba4e8c6a8cecb65d0a6592a1182ccbb063f09e"
   }
 }

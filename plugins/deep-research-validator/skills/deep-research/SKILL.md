@@ -6,9 +6,12 @@ description: Research an accepted legal, tax or compliance assignment for the in
 # Research, validate and challenge
 
 Vera and Lucia invoke this same method through their product wrappers. Use the
-current host model and authorized tools. Do not invoke a separate research
-plugin, request model API credentials, change models or move case material to
-another account. Every new research assignment uses this method; breadth and
+host model accepted under the invoking product's model requirement and authorized
+tools. Preserve that requirement through every research and review stage and
+any authorized delegation. Resolve a required model change through the host
+before substantive work; never silently substitute another model. Do not invoke
+a separate research plugin, request model API credentials or move case material
+to another account. Every new research assignment uses this method; breadth and
 depth follow the question rather than a normal/deep selector.
 
 ## Retain the accepted preparation
