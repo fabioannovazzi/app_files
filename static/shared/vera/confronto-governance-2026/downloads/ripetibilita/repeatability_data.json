@@ -2112,6 +2112,1680 @@
   ],
   "rows": [
     {
+      "id": "C01",
+      "topic": "Tre sistemi e scelta del modello",
+      "expected": "I sistemi esistevano già; cambia la posizione normativa. La scelta e il cambio del modello richiedono lettura dello statuto.",
+      "source": "https://www.gazzettaufficiale.it/eli/gu/2026/04/14/86/so/14/sg/pdf",
+      "location": "Art. 9 → art. 2380 c.c.",
+      "group": "Nucleo",
+      "cells": {
+        "R01": {
+          "status": "U",
+          "refs": [
+            "P019",
+            "P020",
+            "P021"
+          ],
+          "passages": [
+            "Prima. L’art. 2380 c.c. presentava il sistema tradizionale come disciplina applicabile in mancanza di diversa previsione statutaria; dualistico e monistico erano sistemi alternativi, regolati anche attraverso rinvii alle disposizioni del primo.",
+            "Ora. Lo statuto adotta uno dei tre sistemi, descritti direttamente dal nuovo art. 2380. Le regole generali sono raccolte nel primo paragrafo della sezione dedicata ad amministrazione e controllo; seguono i tre modelli. Si passa a un’impostazione formalmente più paritaria, senza cancellare le rispettive competenze. Salvo diversa deliberazione, il cambiamento di sistema produce effetto alla riunione dell’organo competente per l’approvazione del bilancio dell’esercizio successivo. [2][5]",
+            "In concreto. Per una società esistente è opportuno verificare che lo statuto identifichi chiaramente il modello e non contenga clausole incompatibili o rinvii divenuti equivoci. Dal nuovo art. 2380 non discende, da solo, l’invalidità degli organi in carica né un obbligo generalizzato di trasformare il sistema tradizionale. Non è prevista nell’art. 11 una scadenza unica per riscrivere tutti gli statuti delle S.p.A. non quotate. La necessità di modifiche dipende dal testo delle clausole: è diversa la posizione di uno statuto che descrive compiutamente consiglio e collegio da quella di uno che rinvia soltanto a disposizioni abrogate. [2][4]"
+          ],
+          "note": "Distingue la precedente posizione del tradizionale dalla nuova struttura comune; esclude un cambio obbligatorio e collega la scelta allo statuto."
+        },
+        "R02": {
+          "status": "U",
+          "refs": [
+            "P007",
+            "P026",
+            "P027"
+          ],
+          "passages": [
+            "La novità di fondo è una disciplina comune ai tre sistemi, seguita da regole specifiche per ciascuno. Il modello con collegio sindacale perde la posizione di modello indicato dalla legge in mancanza di una diversa scelta statutaria. Non segue, però, un obbligo di passare al monistico o al dualistico: lo statuto sceglie il sistema, mentre il legislatore rende più comparabili responsabilità, informazione e controllo. Restano differenze decisive nella nomina degli organi, nell'approvazione del bilancio, nella collocazione dei controllori e nei poteri individuali. R2, art. 2380 c.c.; R7, confronto con il testo previgente.",
+            "Scelta statutaria. Il nuovo art. 2380 afferma che lo statuto adotta uno dei tre sistemi; prima la norma prevedeva il tradizionale salvo diversa disposizione statutaria. Per una nuova società la scelta va resa esplicita. Per una società esistente è opportuno controllare che lo statuto identifichi inequivocabilmente gli organi e le competenze: dalla sola riscrittura non si può dedurre l'invalidità automatica di tutti gli statuti anteriori o la decadenza degli organi in carica.",
+            "Passaggio di sistema. Salvo diversa disposizione della deliberazione, la variazione ha effetto alla riunione dell'organo competente per approvare il bilancio dell'esercizio successivo. Non è il bilancio dell'esercizio in cui si decide. Per una società con esercizio solare, una variazione deliberata nel 2026, senza diversa decorrenza, si collega al bilancio 2027, normalmente approvato nel 2028. Il calendario della transizione deve quindi essere deliberato consapevolmente. R2, art. 2380, secondo comma; R7."
+          ],
+          "note": "Confronta il vecchio regime residuale con la scelta statutaria e tratta anche il calendario del passaggio di sistema."
+        },
+        "R03": {
+          "status": "U",
+          "refs": [
+            "P016",
+            "P021"
+          ],
+          "passages": [
+            "Prima della riforma, l'art. 2380 c.c. individuava il sistema tradizionale come regime applicabile in mancanza di diversa scelta statutaria. Il nuovo articolo dispone che lo statuto adotti uno dei tre sistemi e introduce un nucleo di norme comuni. Non nasce un quarto sistema e non è disposta la conversione automatica delle società già esistenti. La necessità di esplicitare o correggere singole clausole va valutata sullo statuto concreto; il decreto non stabilisce una scadenza generale entro cui tutte le S.p.A. debbano cambiare statuto. Art. 2380 previgente Art. 9 del decreto Art. 11 del decreto",
+            "Di regola il cambiamento di sistema produce effetto alla riunione dell'organo competente per il bilancio relativo all'esercizio successivo, salvo diversa deliberazione. La riforma adegua il riferimento all'organo competente, rilevante nel dualistico, anziché riferirsi sempre all'assemblea. La scelta del modello richiede quindi anche un calendario di nomine, cessazioni e passaggio delle informazioni. Art. 9 del decreto"
+          ],
+          "note": "Spiega che i tre sistemi preesistevano, esclude conversioni automatiche e distingue la scelta statutaria dalla decorrenza del cambiamento."
+        },
+        "R04": {
+          "status": "U",
+          "refs": [
+            "P006",
+            "P007",
+            "P021"
+          ],
+          "passages": [
+            "Il cambiamento principale è l'organizzazione delle regole intorno a funzioni comuni ai tre sistemi di amministrazione e controllo. Il sistema con collegio sindacale, quello con consiglio di sorveglianza e quello con comitato per il controllo sulla gestione vengono presentati come opzioni statutarie sullo stesso piano. Il dualistico e il monistico esistevano già: la novità è la struttura della disciplina e, su punti specifici, l'avvicinamento delle funzioni e degli strumenti di vigilanza. D.lgs. 47/2026, art. 9",
+            "L'intervento operativo prioritario è riesaminare statuto, deleghe, flussi informativi e procedure di controllo. Non emerge un obbligo generale di cambiare sistema, rinnovare anticipatamente tutti gli organi o modificare ogni statuto entro il 31 dicembre 2026. Per le società soggette al TUF esistono invece specifici adempimenti e termini, illustrati nel calendario finale. Le indicazioni operative di questa circolare sono inferenze dalle norme: l'adozione di una clausola o la valutazione di una responsabilità richiedono i dati della singola società. D.lgs. 47/2026, art. 9 D.lgs. 47/2026, art. 11",
+            "Il nuovo art. 2380 c.c. affida allo statuto l'adozione di uno dei tre sistemi. Scompare la precedente formulazione che individuava il tradizionale come disciplina residuale in assenza di diversa scelta statutaria. Ciò rende opportuna una clausola chiara sul modello adottato e la revisione dei vecchi rinvii. Non consente, da solo, di affermare che gli organi di una società preesistente con statuto silente siano automaticamente decaduti. Un eventuale cambio di modello va deliberato e coordinato: salvo diversa previsione della delibera, ha effetto alla riunione dell'organo competente chiamato ad approvare il bilancio dell'esercizio successivo. D.lgs. 47/2026, art. 9"
+          ],
+          "note": "Individua continuità dei modelli, nuova collocazione normativa e necessità di leggere lo statuto prima di cambiare sistema."
+        }
+      }
+    },
+    {
+      "id": "C02",
+      "topic": "Assetti e differenza rispetto al passato",
+      "expected": "Gli assetti erano già dovuti. Distinguere istituzione, cura, valutazione e vigilanza; non presentare il 2026 come nascita del dovere.",
+      "source": "https://documenti.camera.it/leg19/dossier/pdf/FI0144.pdf",
+      "location": "Testo a fronte, artt. 2380-bis e 2381; raffronto con decreto finale",
+      "group": "Nucleo",
+      "cells": {
+        "R01": {
+          "status": "U",
+          "refs": [
+            "P037",
+            "P038"
+          ],
+          "passages": [
+            "Il nuovo art. 2380-bis attribuisce esclusivamente agli amministratori sia la gestione sia l’organizzazione dell’impresa, includendo l’istituzione dell’assetto organizzativo, amministrativo e contabile. L’obbligo di curare gli assetti non nasce nel 2026: era già presente nel quadro degli artt. 2086 e 2380-bis. La novità è la formulazione più esplicita dell’organizzazione come parte della competenza gestoria esclusiva. [2][5]",
+            "Gli organi delegati curano gli assetti; il consiglio ne valuta l’adeguatezza sulla base delle informazioni ricevute, esamina i piani quando elaborati e valuta l’andamento della gestione. L’organo di controllo vigila. Da questa ripartizione si ricava che un sindaco può chiedere informazioni, contestare carenze e sollecitare rimedi, ma non sostituirsi agli amministratori nell’adozione e gestione dei presidi organizzativi. [2]"
+          ],
+          "note": "Ricorda che gli assetti erano già dovuti e distingue istituzione, cura dei delegati, valutazione del consiglio e vigilanza dei controllori."
+        },
+        "R02": {
+          "status": "U",
+          "refs": [
+            "P031",
+            "P032",
+            "P046"
+          ],
+          "passages": [
+            "Il nuovo art. 2380-bis attribuisce esclusivamente agli amministratori sia la gestione sia l'organizzazione dell'impresa, compresa l'istituzione dell'assetto organizzativo, amministrativo e contabile. Le operazioni sono definite strumentali all'attuazione dell'oggetto sociale. Gli adeguati assetti non nascono con questa riforma: l'art. 2086 e il precedente art. 2381 già fondavano doveri organizzativi e di valutazione. La novità rende più esplicita la titolarità della funzione organizzativa e la inserisce nella disciplina comune. R2, artt. 2380-bis e 2381-bis; R7.",
+            "In concreto, il CdA non può considerare organigramma, contabilità, flussi di cassa e controlli semplici temi tecnici affidati al consulente. Gli esecutivi curano gli assetti; il consiglio ne valuta l'adeguatezza sulla base delle informazioni ricevute. Il ricorso a personale o consulenti non trasferisce a questi ultimi la titolarità delle competenze degli organi sociali. È opportuno poter ricostruire quali informazioni siano state esaminate e quali carenze siano state affrontate.",
+            "Gli artt. 2396-quinquies e seguenti costruiscono una disciplina comune della vigilanza. L'organo di controllo vigila su legge e statuto, corretta amministrazione, adeguatezza e concreto funzionamento degli assetti, incluso il sistema di controllo interno e gestione dei rischi e il coordinamento delle sue funzioni; riferisce all'assemblea sull'attività svolta. L'estensione della base comune rende esplicita, anche nel monistico, una vigilanza che non si riduce alla sola architettura organizzativa. R2 R7"
+          ],
+          "note": "Esclude che il dovere nasca nel 2026; ripartisce cura, valutazione e vigilanza, senza trasferire ai consulenti le competenze degli organi."
+        },
+        "R03": {
+          "status": "U",
+          "refs": [
+            "P024",
+            "P025",
+            "P041"
+          ],
+          "passages": [
+            "La gestione e l'organizzazione dell'impresa, compresa l'istituzione degli assetti dell'art. 2086 c.c., spettano agli amministratori. L'obbligo di assetti adeguati esisteva già: il nuovo art. 2380-bis riorganizza e rende più esplicita l'attribuzione, senza introdurre per la prima volta il dovere di prevenire e affrontare la crisi. Art. 2086 previgente Art. 2380-bis previgente Art. 9 del decreto",
+            "Il precedente art. 2381 viene distribuito fra presidenza del consiglio, deleghe (art. 2381-bis) e informazione consiliare (art. 2381-ter). La distinzione dei ruoli resta essenziale: i delegati curano gli assetti; il consiglio ne valuta l'adeguatezza sulla base delle informazioni ricevute, esamina i piani quando elaborati e valuta l'andamento generale. Può impartire direttive e avocare operazioni delegate. Non è introdotto, con questa disposizione, l'obbligo indistinto di redigere tutti i tipi di piano per qualsiasi S.p.A. Art. 2381 previgente Art. 9 del decreto",
+            "Il nuovo art. 2396-quinquies riunisce i doveri dell'organo di controllo: rispetto della legge e dello statuto, corretta amministrazione, adeguatezza e concreto funzionamento degli assetti, inclusi controllo interno, gestione dei rischi e coordinamento delle funzioni. È prevista la relazione all'assemblea sull'attività di vigilanza, sulle omissioni e sui fatti censurabili. Per le quotate operano le norme speciali del TUF. Art. 2403 previgente Art. 9 del decreto Art. 6 del decreto"
+          ],
+          "note": "Collega la continuità dell’obbligo agli artt. 2086 e 2380-bis e separa la cura dei delegati dalla valutazione e dalla vigilanza."
+        },
+        "R04": {
+          "status": "U",
+          "refs": [
+            "P022",
+            "P024",
+            "P042"
+          ],
+          "passages": [
+            "L'art. 2380-bis assegna espressamente agli amministratori gestione e organizzazione dell'impresa, inclusa l'istituzione dell'assetto organizzativo, amministrativo e contabile. È una precisazione e sistemazione di competenze già in larga parte presenti, da leggere insieme all'art. 2086: l'obbligo di adeguati assetti non nasce nel 2026. In concreto, soci e controllori non possono sostituirsi ordinariamente agli amministratori nella costruzione dell'organizzazione, mentre l'affidamento di attività a consulenti non trasferisce la responsabilità dell'organo. D.lgs. 47/2026, art. 9",
+            "Presidenza, deleghe e informazione sono ora disciplinate separatamente dagli artt. 2381, 2381-bis e 2381-ter. Il CdA, se autorizzato dallo statuto o dall'assemblea, può delegare a singoli componenti o a un comitato esecutivo. Il consiglio di gestione può delegare solo a propri componenti e se lo statuto lo consente. Il consiglio conserva direttive, avocazione, valutazione degli assetti, esame dei piani quando elaborati e valutazione dell'andamento della gestione: la delega non svuota il ruolo collegiale. D.lgs. 47/2026, art. 9",
+            "L'art. 2396-quinquies comprende espressamente, nell'adeguatezza dell'assetto organizzativo, il sistema di controllo interno e di gestione dei rischi e il coordinamento dei soggetti coinvolti; impone inoltre la relazione all'assemblea sull'attività svolta nell'esercizio. Per il collegio sindacale è soprattutto una specificazione; per il monistico l'estensione alla legalità e ai principi di corretta amministrazione modifica in modo più marcato il precedente perimetro testuale. D.lgs. 47/2026, art. 9"
+          ],
+          "note": "Presenta l’organizzazione come competenza gestoria già in larga parte esistente e distingue consiglio e controllori."
+        }
+      }
+    },
+    {
+      "id": "C03",
+      "topic": "Decisioni sulla crisi non delegabili",
+      "expected": "Riserva della decisione su accesso, proposta e condizioni del piano; distinguere istruttoria e attività esecutiva.",
+      "source": "https://www.gazzettaufficiale.it/eli/gu/2026/04/14/86/so/14/sg/pdf",
+      "location": "Art. 9 → art. 2381-bis c.c.",
+      "group": "Nucleo",
+      "cells": {
+        "R01": {
+          "status": "U",
+          "refs": [
+            "P041",
+            "P042"
+          ],
+          "passages": [
+            "Il precedente art. 2381 viene articolato nelle disposizioni sul presidente, sulle deleghe e sull’informazione consiliare. Non tutte le regole sono nuove: già prima il consiglio delimitava le deleghe, poteva impartire direttive e avocare operazioni; gli organi delegati dovevano riferire almeno ogni sei mesi. Il nuovo art. 2381-bis rende però espressamente non delegabili le decisioni di accesso agli strumenti di regolazione della crisi e dell’insolvenza, comprendendo il contenuto della proposta e le condizioni del piano. [2][5]",
+            "Esempio operativo. Una delega generale all’amministratore delegato non basta a trasferirgli la decisione di accesso e di approvazione del contenuto del piano. Il consiglio deve ricevere l’istruttoria e deliberare sulle materie riservate. Non se ne deduce che ogni colloquio preparatorio con banche o consulenti debba essere deliberato collegialmente: va distinta la preparazione dalla decisione riservata. [2]"
+          ],
+          "note": "Include proposta e condizioni del piano nella riserva; distingue espressamente colloqui preparatori e decisione consiliare."
+        },
+        "R02": {
+          "status": "U",
+          "refs": [
+            "P034",
+            "P035"
+          ],
+          "passages": [
+            "Il precedente art. 2381 è distribuito fra presidenza, deleghe e informazione consiliare: artt. 2381, 2381-bis e 2381-ter. Molte regole sono ricollocate, non create da zero. Per il CdA la delega a un comitato esecutivo o a uno o più componenti resta subordinata al consenso dello statuto o dell'assemblea. Per il consiglio di gestione occorre la previsione statutaria e la delega può andare solo a uno o più componenti, non a un comitato esecutivo. R2",
+            "Alle competenze già non delegabili si aggiungono espressamente le decisioni sull'accesso allo strumento di regolazione della crisi e dell'insolvenza, comprensive del contenuto della proposta e delle condizioni del piano. Un amministratore delegato può svolgere attività preparatorie nei limiti dei propri poteri; non può ricavare da una delega generale la competenza a decidere da solo ciò che la norma riserva al consiglio. L'inquadramento dello specifico percorso di crisi deve essere coordinato con la sua disciplina speciale: la formula non va tradotta in un'indistinta non delegabilità di qualsiasi atto collegato a difficoltà finanziarie. R2, art. 2381-bis, terzo comma."
+          ],
+          "note": "Distingue la decisione riservata dalle attività preparatorie e non estende il divieto a qualsiasi atto collegato a difficoltà finanziarie."
+        },
+        "R03": {
+          "status": "U",
+          "refs": [
+            "P027",
+            "P028",
+            "P029"
+          ],
+          "passages": [
+            "Nel consiglio di gestione, la delega a singoli componenti richiede ora il consenso dello statuto. Il CdA può invece delegare, se consentito dallo statuto o dall'assemblea, anche a un comitato esecutivo. Non si può trasferire automaticamente al dualistico la medesima architettura delle deleghe.",
+            "Sono espressamente non delegabili le decisioni sull'accesso allo strumento di regolazione della crisi e dell'insolvenza, comprese la proposta e le condizioni del piano. Il divieto si aggiunge alle materie già riservate, quali bilancio, progetti di fusione e scissione e le attribuzioni sul capitale indicate dalla legge. Non significa che ogni attività preparatoria o esecutiva debba essere svolta personalmente dall'intero consiglio. Art. 2409-novies previgente Art. 9 del decreto",
+            "Cosa fare. Verificare le delibere di delega e le autorizzazioni statutarie; individuare chi prepara i dati, chi propone e chi delibera; predisporre un percorso di tempestiva convocazione del consiglio quando emerge la necessità di accedere a uno strumento di regolazione della crisi. Il mero aggiornamento dei numeri degli articoli nei formulari non basta."
+          ],
+          "note": "Individua la decisione su accesso, proposta e piano; lascia distinta l’attività preparatoria o esecutiva."
+        },
+        "R04": {
+          "status": "U",
+          "refs": [
+            "P024",
+            "P025"
+          ],
+          "passages": [
+            "Presidenza, deleghe e informazione sono ora disciplinate separatamente dagli artt. 2381, 2381-bis e 2381-ter. Il CdA, se autorizzato dallo statuto o dall'assemblea, può delegare a singoli componenti o a un comitato esecutivo. Il consiglio di gestione può delegare solo a propri componenti e se lo statuto lo consente. Il consiglio conserva direttive, avocazione, valutazione degli assetti, esame dei piani quando elaborati e valutazione dell'andamento della gestione: la delega non svuota il ruolo collegiale. D.lgs. 47/2026, art. 9",
+            "Alla lista delle attribuzioni non delegabili si aggiungono espressamente le decisioni di accesso agli strumenti di regolazione della crisi e dell'insolvenza, comprese la determinazione del contenuto della proposta e le condizioni del piano. Una delega generale all'amministratore delegato non basta quindi a trasferire questa scelta. Occorre portare al consiglio l'effettivo contenuto della soluzione, non una ratifica meramente formale. Resta distinta l'esecuzione degli atti deliberati; il perimetro della riserva va verificato sullo specifico strumento, senza estenderlo automaticamente a qualsiasi trattativa finanziaria o difficoltà di liquidità. D.lgs. 47/2026, art. 9"
+          ],
+          "note": "Richiede una decisione sul contenuto effettivo della soluzione e separa esecuzione e trattative finanziarie dalla materia riservata."
+        }
+      }
+    },
+    {
+      "id": "C04",
+      "topic": "Deleghe nel consiglio di gestione",
+      "expected": "Necessaria previsione statutaria; delega a componenti, non a comitato esecutivo. Differenza utile fra modelli.",
+      "source": "https://www.gazzettaufficiale.it/eli/gu/2026/04/14/86/so/14/sg/pdf",
+      "location": "Art. 9 → art. 2381-bis c.c.",
+      "group": "Nucleo",
+      "cells": {
+        "R01": {
+          "status": "U",
+          "refs": [
+            "P028"
+          ],
+          "passages": [
+            "Il consiglio di gestione resta composto da almeno due membri; il consiglio di sorveglianza da almeno tre. La riforma collega la durata della gestione a quella della sorveglianza: la prima non può eccedere la seconda. Le deleghe del consiglio di gestione, se consentite dallo statuto, possono essere attribuite a singoli componenti, non a un comitato esecutivo. Sono inoltre disciplinate espressamente le deliberazioni e le impugnazioni del consiglio di sorveglianza; la delibera di approvazione del bilancio può essere impugnata anche dai soci secondo le disposizioni richiamate dal nuovo art. 2409-quaterdecies. [2]"
+          ],
+          "note": "Richiede la previsione statutaria per la gestione e limita le deleghe a singoli componenti, escludendo il comitato esecutivo."
+        },
+        "R02": {
+          "status": "U",
+          "refs": [
+            "P034"
+          ],
+          "passages": [
+            "Il precedente art. 2381 è distribuito fra presidenza, deleghe e informazione consiliare: artt. 2381, 2381-bis e 2381-ter. Molte regole sono ricollocate, non create da zero. Per il CdA la delega a un comitato esecutivo o a uno o più componenti resta subordinata al consenso dello statuto o dell'assemblea. Per il consiglio di gestione occorre la previsione statutaria e la delega può andare solo a uno o più componenti, non a un comitato esecutivo. R2"
+          ],
+          "note": "Confronta esplicitamente il consenso statutario o assembleare del CdA con la sola autorizzazione statutaria nel consiglio di gestione."
+        },
+        "R03": {
+          "status": "U",
+          "refs": [
+            "P027"
+          ],
+          "passages": [
+            "Nel consiglio di gestione, la delega a singoli componenti richiede ora il consenso dello statuto. Il CdA può invece delegare, se consentito dallo statuto o dall'assemblea, anche a un comitato esecutivo. Non si può trasferire automaticamente al dualistico la medesima architettura delle deleghe."
+          ],
+          "note": "Spiega il nuovo consenso statutario per il consiglio di gestione e la diversa possibilità del CdA di delegare a un comitato."
+        },
+        "R04": {
+          "status": "U",
+          "refs": [
+            "P024"
+          ],
+          "passages": [
+            "Presidenza, deleghe e informazione sono ora disciplinate separatamente dagli artt. 2381, 2381-bis e 2381-ter. Il CdA, se autorizzato dallo statuto o dall'assemblea, può delegare a singoli componenti o a un comitato esecutivo. Il consiglio di gestione può delegare solo a propri componenti e se lo statuto lo consente. Il consiglio conserva direttive, avocazione, valutazione degli assetti, esame dei piani quando elaborati e valutazione dell'andamento della gestione: la delega non svuota il ruolo collegiale. D.lgs. 47/2026, art. 9"
+          ],
+          "note": "Distingue autorizzazione e destinatari della delega nei due organi, senza trasferire al dualistico le regole del CdA."
+        }
+      }
+    },
+    {
+      "id": "C05",
+      "topic": "Ragionevole affidamento e responsabilità",
+      "expected": "Informazione e competenze; nessun esonero automatico, necessaria reazione a fatti pregiudizievoli. La diligenza era già graduata.",
+      "source": "https://www.gazzettaufficiale.it/eli/gu/2026/04/14/86/so/14/sg/pdf",
+      "location": "Art. 9 → artt. 2381-ter e 2392 c.c.; note al 2392",
+      "group": "Nucleo",
+      "cells": {
+        "R01": {
+          "status": "U",
+          "refs": [
+            "P044",
+            "P045",
+            "P046"
+          ],
+          "passages": [
+            "Il nuovo art. 2381-ter mantiene il dovere di agire informati e il diritto di chiedere che le informazioni siano fornite in consiglio. Aggiunge che gli amministratori non delegati fanno ragionevole affidamento, anche in relazione alle loro specifiche competenze, sulle informazioni ricevute conformemente alla legge e allo statuto. [2]",
+            "La disposizione valorizza la divisione dei compiti e l’affidabilità del processo informativo. Non introduce un’esenzione generale da responsabilità: restano il dovere di informazione e la disciplina dell’art. 2392. L’aggettivo “ragionevole” impedisce di equiparare l’affidamento a un’accettazione passiva di dati incoerenti o manifestamente incompleti. Questa lettura è un’inferenza sistematica, non una nuova fattispecie di immunità. [2]",
+            "Conseguenza pratica. Se una relazione prospetta liquidità sufficiente ma espone contemporaneamente scaduti rilevanti e revoche degli affidamenti, è prudente chiedere riconciliazioni, scenari e chiarimenti prima della decisione. La qualità del verbale dipende dal contenuto dell’istruttoria e dalle risposte, non da una formula standard con cui il consigliere dichiara di essersi “ragionevolmente affidato”. La valutazione della condotta resta riferita al caso, alle informazioni disponibili e alle competenze dell’interessato."
+          ],
+          "note": "Mantiene dovere informativo e art. 2392; l’esempio dei dati di cassa contraddittori rende concreto il limite dell’affidamento."
+        },
+        "R02": {
+          "status": "U",
+          "refs": [
+            "P038",
+            "P039"
+          ],
+          "passages": [
+            "L'art. 2381-ter introduce espressamente il ragionevole affidamento degli amministratori senza deleghe sulle informazioni ricevute secondo legge e statuto, tenendo conto anche delle loro competenze specifiche. Rimangono il dovere di agire informati, il compito del presidente di assicurare adeguate informazioni e il diritto di ciascun consigliere di chiedere chiarimenti in consiglio. L'art. 2392 conserva il raccordo con responsabilità, conoscenza di fatti pregiudizievoli e dovere di attivarsi. R2; R1, note all'art. 9.",
+            "L'inferenza corretta è una valutazione concreta della condotta; non un'esenzione di responsabilità. Una relazione degli esecutivi completa e coerente può sostenere l'affidamento. Dati contraddittori, ritardi reiterati o segnali di perdita di continuità aziendale rendono invece necessarie domande e iniziative proporzionate. Per esempio, a fronte di un forte deterioramento della cassa, il richiamo a un budget ottimistico non rende da solo ragionevole il voto favorevole del consigliere che conosce lo scostamento."
+          ],
+          "note": "Collega affidamento, competenze e reazione ai segnali d’allarme; non promette un esonero automatico."
+        },
+        "R03": {
+          "status": "U",
+          "refs": [
+            "P031",
+            "P032",
+            "P033",
+            "P057"
+          ],
+          "passages": [
+            "L'art. 2381-ter conserva il dovere di agire informati, la responsabilità del presidente per l'adeguatezza delle informazioni consiliari e la facoltà di ciascun amministratore di chiedere ai delegati informazioni in consiglio. La novità espressa è il ragionevole affidamento degli amministratori senza deleghe sulle informazioni ricevute secondo legge e statuto, tenendo conto anche delle loro specifiche competenze. Art. 2381 previgente Art. 9 del decreto",
+            "Questo criterio non è un'esenzione dalla responsabilità. L'art. 2392 mantiene il dovere di adoperarsi per impedire, eliminare o attenuare conseguenze dannose di fatti pregiudizievoli conosciuti. La ragionevolezza dell'affidamento va quindi valutata insieme a completezza dei materiali, competenze del consigliere, incoerenze e segnali d'allarme. Art. 2392 previgente Art. 9 del decreto",
+            "Esempio interpretativo. Un consigliere riceve dati di cassa rassicuranti, ma conosce ritardi sistematici nei pagamenti e richieste urgenti di finanziamento. Limitarsi a prendere atto della relazione del delegato rende più difficile sostenere che l'affidamento fosse ragionevole. Chiedere riconciliazioni, scenari e spiegazioni, facendo risultare domanda e risposta a verbale, rende invece verificabile il processo decisionale; non garantisce da solo l'esonero da responsabilità.",
+            "Consiglieri senza deleghe | Obbligo informativo e responsabilità secondo diligenza e ripartizione delle funzioni | Affidamento ragionevole espresso; restano obblighi di informarsi e intervenire sui fatti dannosi conosciuti"
+          ],
+          "note": "Distingue la nuova formula dalla precedente responsabilità secondo diligenza e funzioni, conservando il dovere di reagire."
+        },
+        "R04": {
+          "status": "U",
+          "refs": [
+            "P027",
+            "P028"
+          ],
+          "passages": [
+            "Restano il dovere di agire informati, il compito del presidente di assicurare informazioni adeguate sull'ordine del giorno e la possibilità di ciascun amministratore di chiedere informazioni in consiglio. Il nuovo art. 2381-ter esplicita che i non delegati fanno ragionevole affidamento, anche in relazione alle proprie competenze, sulle informazioni ricevute secondo legge e statuto. D.lgs. 47/2026, art. 9",
+            "Il punto non è un'esenzione dal controllo critico. La parola «ragionevole» e il coordinamento con l'art. 2392 impediscono di trasformare il flusso dell'AD in uno scudo automatico. Un report coerente e completo può fondare l'affidamento; dati contraddittori, anomalie evidenti o fatti dannosi conosciuti impongono approfondimenti e iniziative adeguate. È un'inferenza interpretativa: la responsabilità concreta dipenderà da conoscenze, competenze, condotta e nesso causale. La sola verbalizzazione del dissenso non esonera chi sia in colpa; l'art. 2392 conserva anche le condizioni della tempestiva annotazione e comunicazione scritta al presidente dell'organo di controllo. D.lgs. 47/2026, art. 9"
+          ],
+          "note": "Tratta informazione, competenze e fatti dannosi conosciuti; precisa anche che il solo dissenso verbalizzato non esonera chi è in colpa."
+        }
+      }
+    },
+    {
+      "id": "C06",
+      "topic": "Vigilanza effettiva prima e dopo",
+      "expected": "Il vecchio art. 2403 già richiedeva vigilanza sul concreto funzionamento degli assetti. Novità: formulazione comune e rischi/coordinamento espliciti.",
+      "source": "https://documenti.camera.it/leg19/dossier/pdf/FI0144.pdf",
+      "location": "Testo a fronte art. 2403, p. 93 stampata / 94 PDF",
+      "group": "Nucleo",
+      "cells": {
+        "R01": {
+          "status": "U",
+          "refs": [
+            "P054",
+            "P055",
+            "P056"
+          ],
+          "passages": [
+            "Il nuovo art. 2396-quinquies concentra i doveri dell’organo di controllo: osservanza della legge e dello statuto, rispetto dei principi di corretta amministrazione, adeguatezza e concreto funzionamento dell’assetto organizzativo, amministrativo e contabile, includendo il sistema di controllo interno e di gestione dei rischi e il coordinamento delle sue funzioni. [2]",
+            "Il vecchio art. 2403 già richiedeva al collegio sindacale di vigilare sugli assetti e sul loro funzionamento. Il cambiamento consiste nella collocazione comune e nell’esplicitazione del sistema dei rischi e del coordinamento, particolarmente significativa nelle società non quotate e nel modello monistico. Non è corretto descriverlo come passaggio da un controllo prima soltanto contabile a una vigilanza gestoria introdotta ora. [2][5]",
+            "In concreto. La presenza di un organigramma, di procedure approvate o di un rapporto periodico non prova da sola che il controllo funzioni. Diventa utile ricostruire chi individua un rischio, chi lo comunica, chi decide un intervento e come ne viene seguito l’esito. Per una S.p.A. industriale possono essere rilevanti, secondo dimensioni e attività, credito clienti, continuità delle forniture, tesoreria, sicurezza dei sistemi e concentrazione commerciale. Sono esempi di applicazione proporzionata, non un elenco di nuovi uffici obbligatori imposto dal decreto. [2]"
+          ],
+          "note": "Esplicita che il vecchio art. 2403 già riguardava il funzionamento degli assetti e localizza la novità in rischi, coordinamento e base comune."
+        },
+        "R02": {
+          "status": "U",
+          "refs": [
+            "P046",
+            "P064",
+            "P065"
+          ],
+          "passages": [
+            "Gli artt. 2396-quinquies e seguenti costruiscono una disciplina comune della vigilanza. L'organo di controllo vigila su legge e statuto, corretta amministrazione, adeguatezza e concreto funzionamento degli assetti, incluso il sistema di controllo interno e gestione dei rischi e il coordinamento delle sue funzioni; riferisce all'assemblea sull'attività svolta. L'estensione della base comune rende esplicita, anche nel monistico, una vigilanza che non si riduce alla sola architettura organizzativa. R2 R7",
+            "L'art. 149 ridefinisce la vigilanza dei controllori: oltre alla legalità e agli assetti, rileva il corretto funzionamento dell'organo amministrativo, in particolare la diligente osservanza delle regole istruttorie, procedimentali e decisionali elaborate dalle migliori prassi. Rispetto al precedente riferimento ai principi di corretta amministrazione, l'accento si sposta sul processo decisionale. Non ne deriva una vigilanza soltanto formale: informazione insufficiente, alternative ignorate o mancato coordinamento dei controlli possono compromettere proprio la qualità del processo. R3 R7",
+            "In concreto, il consiglio dovrebbe ricevere un quadro raccordato dei rischi, non soltanto relazioni separate di funzioni che non si confrontano. Il controllore deve poter ricostruire informazioni, verifiche e risposte alle anomalie. Le raccomandazioni organizzative vanno proporzionate all'impresa e alle competenze dei singoli organi."
+          ],
+          "note": "Presenta la vigilanza come base comune ed estensione nel monistico, senza inventare un precedente controllo soltanto formale; collega il processo ai rischi."
+        },
+        "R03": {
+          "status": "U",
+          "refs": [
+            "P041",
+            "P042",
+            "P052"
+          ],
+          "passages": [
+            "Il nuovo art. 2396-quinquies riunisce i doveri dell'organo di controllo: rispetto della legge e dello statuto, corretta amministrazione, adeguatezza e concreto funzionamento degli assetti, inclusi controllo interno, gestione dei rischi e coordinamento delle funzioni. È prevista la relazione all'assemblea sull'attività di vigilanza, sulle omissioni e sui fatti censurabili. Per le quotate operano le norme speciali del TUF. Art. 2403 previgente Art. 9 del decreto Art. 6 del decreto",
+            "Il significato pratico è che la vigilanza deve guardare anche ai collegamenti fra funzioni: chi rileva un rischio, chi lo valuta, a chi lo comunica e chi interviene. Un organigramma formalmente corretto non dimostra che il sistema funzioni. Questa è una conseguenza interpretativa dell'espressione legislativa relativa al concreto funzionamento, non l'imposizione di un modello organizzativo identico per tutte le società.",
+            "Monistico. Il CdA conserva almeno un terzo di indipendenti; il comitato è composto da amministratori indipendenti non esecutivi, con almeno un revisore iscritto. Nelle società che fanno ricorso al mercato del capitale di rischio i membri del comitato sono almeno tre. Alla precedente vigilanza espressamente incentrata sull'assetto organizzativo e contabile si sostituisce il richiamo ai più ampi doveri comuni, inclusi legge, statuto e corretta amministrazione. Art. 2409-octiesdecies previgente Art. 9 del decreto"
+          ],
+          "note": "Collega doveri comuni e funzionamento concreto alla distinzione storica del monistico; il controllo dei collegamenti tra funzioni è spiegato operativamente."
+        },
+        "R04": {
+          "status": "U",
+          "refs": [
+            "P039",
+            "P042",
+            "P043"
+          ],
+          "passages": [
+            "Vigilanza | Regole distribuite tra i modelli | Nucleo comune su legalità, corretta amministrazione, assetti e loro concreto funzionamento",
+            "L'art. 2396-quinquies comprende espressamente, nell'adeguatezza dell'assetto organizzativo, il sistema di controllo interno e di gestione dei rischi e il coordinamento dei soggetti coinvolti; impone inoltre la relazione all'assemblea sull'attività svolta nell'esercizio. Per il collegio sindacale è soprattutto una specificazione; per il monistico l'estensione alla legalità e ai principi di corretta amministrazione modifica in modo più marcato il precedente perimetro testuale. D.lgs. 47/2026, art. 9",
+            "In concreto occorre verificare chi rileva i rischi, chi li valuta, chi decide gli interventi e chi ne verifica l'attuazione. Un organigramma o una procedura formalmente esistente non dimostrano il concreto funzionamento. L'intensità dell'organizzazione va commisurata all'impresa: la norma non impone indistintamente a ogni piccola S.p.A. una nuova funzione autonoma di internal audit. D.lgs. 47/2026, art. 9"
+          ],
+          "note": "Qualifica il cambiamento per il collegio come specificazione e distingue la maggiore estensione testuale nel monistico."
+        }
+      }
+    },
+    {
+      "id": "C07",
+      "topic": "Indipendenza e rapporti di gruppo",
+      "expected": "Parenti quarto grado, affini secondo, unioni civili e convivenza; incarico di controllo nel gruppo non automaticamente incompatibile.",
+      "source": "https://www.gazzettaufficiale.it/eli/gu/2026/04/14/86/so/14/sg/pdf",
+      "location": "Art. 9 → art. 2396-septies c.c.",
+      "group": "Nucleo",
+      "cells": {
+        "R01": {
+          "status": "U",
+          "refs": [
+            "P062",
+            "P063",
+            "P064"
+          ],
+          "passages": [
+            "L’art. 2396-septies include espressamente l’altra parte dell’unione civile e i conviventi, mantiene il quarto grado per i parenti e porta al secondo grado il riferimento agli affini, prima esteso al quarto. Precisa inoltre che l’incarico in un organo di controllo di un’altra società del gruppo non costituisce di per sé causa di ineleggibilità o decadenza. Questa precisazione non neutralizza rapporti economici o professionali che compromettano l’indipendenza. [2][5]",
+            "La disciplina non è uniforme per tutti i modelli. L’art. 2409-duodecies esclude per il consiglio di sorveglianza le lettere b) e c) dell’art. 2396-septies e mantiene specifiche incompatibilità, tra cui l’appartenenza al consiglio di gestione e determinati rapporti di lavoro o consulenza. Non si possono quindi trasferire automaticamente al consiglio di sorveglianza non quotato tutte le esclusioni familiari previste per il collegio sindacale. Per gli emittenti quotati occorre invece applicare la disciplina speciale dell’art. 148 TUF, coordinata con l’art. 154. [2][3]",
+            "Le dichiarazioni di indipendenza vanno perciò aggiornate per modello e categoria di società. Un modulo unico che ignori queste differenze può sia omettere incompatibilità sia escludere persone per ragioni che quella disciplina non prevede."
+          ],
+          "note": "Riporta gradi di parentela e affinità, unioni civili e convivenze; distingue l’incarico infragruppo dai rapporti che compromettono l’indipendenza."
+        },
+        "R02": {
+          "status": "U",
+          "refs": [
+            "P048",
+            "P049"
+          ],
+          "passages": [
+            "Indipendenza. L'art. 2396-septies comprende coniuge, parte dell'unione civile, conviventi, parenti entro il quarto grado e affini entro il secondo. Il precedente art. 2399 considerava gli affini entro il quarto grado: vi è quindi insieme un ampliamento delle relazioni personali considerate e una riduzione del grado di affinità. Il cumulo di cariche di controllo nel medesimo gruppo non è, da solo, causa di ineleggibilità o decadenza; rimane da esaminare se altri rapporti compromettano l'indipendenza. Non basta perciò dichiarare «incarichi nello stesso gruppo» per concludere né incompatibilità né piena indipendenza. R2 R7",
+            "Nel dualistico ordinario vanno inoltre considerate le specifiche regole dell'art. 2409-duodecies, che non rinvia indistintamente a tutte le incompatibilità comuni. Per le quotate opera l'art. 148 TUF con proprie prescrizioni e con le esclusioni dell'art. 154: una scheda unica di indipendenza, senza distinguere sistema e tipo di emittente, rischia di produrre risultati sbagliati. R2 R3 R9"
+          ],
+          "note": "Spiega anche la riduzione del grado di affinità e respinge automatismi sia impeditivi sia permissivi nel gruppo."
+        },
+        "R03": {
+          "status": "U",
+          "refs": [
+            "P046",
+            "P047"
+          ],
+          "passages": [
+            "L'art. 2396-septies include espressamente unione civile e convivenza; conserva il quarto grado per i parenti e riduce dal quarto al secondo il grado degli affini. La presenza in organi di controllo di società dello stesso gruppo non costituisce di per sé causa di ineleggibilità o decadenza. Rimane necessaria la valutazione dei rapporti che compromettano l'indipendenza: la norma non rende irrilevanti dipendenza economica o incarichi incompatibili. Il consiglio di sorveglianza ha una disciplina specifica di compatibilità; nelle quotate occorre applicare l'art. 148 TUF, non estendere automaticamente le deroghe civilistiche. Art. 2399 previgente Art. 9 del decreto Art. 148 vigente",
+            "Cosa fare. Aggiornare le dichiarazioni di indipendenza e la mappa dei rapporti di gruppo, distinguendo requisiti legali, statutari e di eventuali codici di governance. Nel dualistico non va presentata come novità assoluta l'assenza delle stesse incompatibilità familiari del collegio sindacale: già il precedente art. 2409-duodecies prevedeva un regime diverso. Art. 2409-duodecies previgente Art. 9 del decreto"
+          ],
+          "note": "Indica le categorie personali e la regola sugli incarichi nel gruppo, mantenendo la verifica sostanziale dei rapporti."
+        },
+        "R04": {
+          "status": "U",
+          "refs": [
+            "P046",
+            "P047"
+          ],
+          "passages": [
+            "L'art. 2396-septies aggiorna le cause di ineleggibilità e decadenza: menziona unioni civili e convivenze, conserva i parenti entro il quarto grado e limita agli affini entro il secondo grado il relativo impedimento. Nel precedente art. 2399 il limite per gli affini era il quarto grado. Conferma i rapporti lavorativi, professionali continuativi retribuiti e patrimoniali compromettenti l'indipendenza. Precisa che ricoprire cariche di controllo in società del gruppo non costituisce di per sé causa di ineleggibilità o decadenza. D.lgs. 47/2026, art. 9 Camera, dossier FI0144, confronto con il testo previgente",
+            "La conseguenza pratica è una verifica sostanziale, senza automatismi né in senso impeditivo né permissivo: il solo cumulo infragruppo non basta a escludere l'indipendenza, ma compensi, altri rapporti e dipendenza economica possono rimanere rilevanti. Le eccezioni del dualistico e le norme speciali TUF impediscono di usare un unico modulo di indipendenza per tutti gli organi."
+          ],
+          "note": "Confronta i gradi vecchi e nuovi e chiarisce che incarichi, compensi e dipendenza economica richiedono una valutazione distinta."
+        }
+      }
+    },
+    {
+      "id": "C08",
+      "topic": "Eccezione per la sorveglianza",
+      "expected": "L’art. 2409-duodecies esclude le lettere b e c dell’art. 2396-septies e detta incompatibilità proprie; coordinare il TUF.",
+      "source": "https://www.gazzettaufficiale.it/eli/gu/2026/04/14/86/so/14/sg/pdf",
+      "location": "Art. 9 → art. 2409-duodecies c.c.",
+      "group": "Nucleo",
+      "cells": {
+        "R01": {
+          "status": "U",
+          "refs": [
+            "P063"
+          ],
+          "passages": [
+            "La disciplina non è uniforme per tutti i modelli. L’art. 2409-duodecies esclude per il consiglio di sorveglianza le lettere b) e c) dell’art. 2396-septies e mantiene specifiche incompatibilità, tra cui l’appartenenza al consiglio di gestione e determinati rapporti di lavoro o consulenza. Non si possono quindi trasferire automaticamente al consiglio di sorveglianza non quotato tutte le esclusioni familiari previste per il collegio sindacale. Per gli emittenti quotati occorre invece applicare la disciplina speciale dell’art. 148 TUF, coordinata con l’art. 154. [2][3]"
+          ],
+          "note": "Indica espressamente l’esclusione delle lettere b e c, le incompatibilità proprie e il coordinamento con il TUF."
+        },
+        "R02": {
+          "status": "U",
+          "refs": [
+            "P049"
+          ],
+          "passages": [
+            "Nel dualistico ordinario vanno inoltre considerate le specifiche regole dell'art. 2409-duodecies, che non rinvia indistintamente a tutte le incompatibilità comuni. Per le quotate opera l'art. 148 TUF con proprie prescrizioni e con le esclusioni dell'art. 154: una scheda unica di indipendenza, senza distinguere sistema e tipo di emittente, rischia di produrre risultati sbagliati. R2 R3 R9"
+          ],
+          "note": "Segnala le specifiche incompatibilità della sorveglianza e il diverso regime TUF. È una sintesi utile, come il corrispondente passaggio D06 del primo confronto, pur senza elencare le lettere escluse."
+        },
+        "R03": {
+          "status": "U",
+          "refs": [
+            "P046",
+            "P047"
+          ],
+          "passages": [
+            "L'art. 2396-septies include espressamente unione civile e convivenza; conserva il quarto grado per i parenti e riduce dal quarto al secondo il grado degli affini. La presenza in organi di controllo di società dello stesso gruppo non costituisce di per sé causa di ineleggibilità o decadenza. Rimane necessaria la valutazione dei rapporti che compromettano l'indipendenza: la norma non rende irrilevanti dipendenza economica o incarichi incompatibili. Il consiglio di sorveglianza ha una disciplina specifica di compatibilità; nelle quotate occorre applicare l'art. 148 TUF, non estendere automaticamente le deroghe civilistiche. Art. 2399 previgente Art. 9 del decreto Art. 148 vigente",
+            "Cosa fare. Aggiornare le dichiarazioni di indipendenza e la mappa dei rapporti di gruppo, distinguendo requisiti legali, statutari e di eventuali codici di governance. Nel dualistico non va presentata come novità assoluta l'assenza delle stesse incompatibilità familiari del collegio sindacale: già il precedente art. 2409-duodecies prevedeva un regime diverso. Art. 2409-duodecies previgente Art. 9 del decreto"
+          ],
+          "note": "Distingue la deroga civilistica, anche familiare, dalle regole delle quotate e ricorda che il diverso regime della sorveglianza preesisteva."
+        },
+        "R04": {
+          "status": "U",
+          "refs": [
+            "P056"
+          ],
+          "passages": [
+            "Attenzione all'indipendenza: l'art. 2409-duodecies esclude per i sorveglianti l'applicazione delle lettere b) e c) dell'art. 2396-septies e detta condizioni proprie. Per le quotate operano i requisiti TUF. Non si può quindi trasporre meccanicamente nel dualistico ordinario ogni incompatibilità familiare prevista per i sindaci, né concludere che in ogni dualistico siano ammissibili rapporti familiari o professionali senza esame della disciplina applicabile. D.lgs. 47/2026, art. 9 D.lgs. 47/2026, art. 6"
+          ],
+          "note": "Identifica le lettere b e c escluse, le condizioni proprie della sorveglianza e la necessità di applicare il TUF alle quotate."
+        }
+      }
+    },
+    {
+      "id": "C09",
+      "topic": "Durata della gestione nel dualistico",
+      "expected": "La durata dei componenti del consiglio di gestione non può superare quella del consiglio di sorveglianza.",
+      "source": "https://www.gazzettaufficiale.it/eli/gu/2026/04/14/86/so/14/sg/pdf",
+      "location": "Art. 9 → art. 2409-novies c.c.",
+      "group": "Nucleo",
+      "cells": {
+        "R01": {
+          "status": "U",
+          "refs": [
+            "P028",
+            "P029"
+          ],
+          "passages": [
+            "Il consiglio di gestione resta composto da almeno due membri; il consiglio di sorveglianza da almeno tre. La riforma collega la durata della gestione a quella della sorveglianza: la prima non può eccedere la seconda. Le deleghe del consiglio di gestione, se consentite dallo statuto, possono essere attribuite a singoli componenti, non a un comitato esecutivo. Sono inoltre disciplinate espressamente le deliberazioni e le impugnazioni del consiglio di sorveglianza; la delibera di approvazione del bilancio può essere impugnata anche dai soci secondo le disposizioni richiamate dal nuovo art. 2409-quaterdecies. [2]",
+            "La ricaduta è un maggiore coordinamento dei mandati e delle procedure. Una società che rinnova la sorveglianza deve riesaminare anche il calendario della gestione, senza presumere che i due organi possano avere scadenze del tutto autonome. Le ragioni per scegliere questo modello restano legate alla distribuzione dei poteri tra soci, supervisione e gestione, non a una presunta riduzione automatica degli obblighi di controllo."
+          ],
+          "note": "Esplicita il limite di durata della gestione e ne ricava il coordinamento dei rinnovi."
+        },
+        "R02": {
+          "status": "U",
+          "refs": [
+            "P055",
+            "P056"
+          ],
+          "passages": [
+            "La nomina dei gestori e l'approvazione del bilancio da parte della sorveglianza non sono novità del 2026. La riforma inserisce le funzioni nella nuova base comune e disciplina direttamente aspetti prima regolati con rinvii: retribuzione annuale per l'intero incarico, validità e impugnazione delle deliberazioni, pubblicità delle nomine e cessazioni e scambio di informazioni con il revisore. La durata del consiglio di gestione non può eccedere quella del consiglio di sorveglianza. R2, artt. 2409-novies, 2409-duodecies e seguenti; R7.",
+            "Quando lo statuto attribuisce alla sorveglianza competenze sulle operazioni strategiche e sui piani, rimane la responsabilità dei gestori per gli atti compiuti. Un passaggio in sorveglianza non equivale a liberazione della gestione. In concreto vanno coordinati durata degli organi, procedimenti di approvazione e tracciabilità delle informazioni; il bilancio non va trattato come una deliberazione sottratta alle tutele dei soci. R1, note; R2, artt. 2409-terdecies e 2409-quaterdecies."
+          ],
+          "note": "Indica che la durata della gestione non può eccedere quella della sorveglianza e collega il dato al calendario degli organi."
+        },
+        "R03": {
+          "status": "U",
+          "refs": [
+            "P051"
+          ],
+          "passages": [
+            "Dualistico. La durata del consiglio di gestione non può superare quella del consiglio di sorveglianza; occorre coordinare i rinnovi. Restano in capo alla sorveglianza nomina e revoca della gestione, approvazione del bilancio e, se previste dallo statuto, deliberazioni su operazioni strategiche e piani. Si disciplinano in modo espresso compenso dei sorveglianti, convocazione sostitutiva dell'assemblea in caso di omissione della gestione e impugnazione delle deliberazioni. La presenza di poteri di indirizzo non trasferisce alla sorveglianza la responsabilità degli atti gestori. Art. 2409-novies previgente Art. 2409-terdecies previgente Art. 9 del decreto"
+          ],
+          "note": "Enuncia il limite e la conseguente necessità di coordinare i rinnovi."
+        },
+        "R04": {
+          "status": "U",
+          "refs": [
+            "P055"
+          ],
+          "passages": [
+            "La durata dei gestori non può eccedere quella della sorveglianza che li nomina: i rinnovi vanno sincronizzati. Il compenso dei sorveglianti deve essere determinato dall'assemblea per l'intera durata dell'ufficio. Sono inoltre esplicitate regole sull'impugnazione delle deliberazioni della sorveglianza. D.lgs. 47/2026, art. 9"
+          ],
+          "note": "Espone il limite di durata e richiama la sincronizzazione dei rinnovi."
+        }
+      }
+    },
+    {
+      "id": "C10",
+      "topic": "Sostituzioni nel monistico",
+      "expected": "Cooptazione con approvazione del comitato; cessazione totale e convocazione disposta dal tribunale su istanza del socio.",
+      "source": "https://www.gazzettaufficiale.it/eli/gu/2026/04/14/86/so/14/sg/pdf",
+      "location": "Art. 9 → art. 2409-septiesdecies.1 c.c.",
+      "group": "Nucleo",
+      "cells": {
+        "R01": {
+          "status": "P",
+          "refs": [
+            "P033",
+            "P034"
+          ],
+          "passages": [
+            "La cooptazione degli amministratori nel monistico è regolata dal nuovo art. 2409-septiesdecies.1 e richiede anche l’approvazione del comitato per il controllo sulla gestione. La società deve quindi aggiornare il procedimento di sostituzione, mantenendo la maggioranza di amministratori nominati dall’assemblea richiesta dalla norma. [2]",
+            "Nel testo pubblicato dell’art. 2409-octiesdecies permane inoltre un rinvio all’art. 2386, abrogato, per la sostituzione di un componente del comitato. Lo schema correttivo A.G. 416 interviene sul rinvio. È un difetto di coordinamento da considerare nell’operazione concreta, non una ragione per applicare anticipatamente lo schema come legge vigente. [2][8]"
+          ],
+          "note": "Spiega l’approvazione della cooptazione da parte del comitato e il rinvio problematico; non sviluppa la cessazione di tutti gli amministratori e la convocazione giudiziale su istanza del socio."
+        },
+        "R02": {
+          "status": "U",
+          "refs": [
+            "P059"
+          ],
+          "passages": [
+            "La nuova disciplina della sostituzione degli amministratori richiede l'approvazione della cooptazione anche da parte del comitato. Se cessano tutti gli amministratori, la convocazione assembleare passa dal tribunale su istanza di ciascun socio. Il monistico richiede quindi un piano di continuità degli organi coerente con le nuove regole. R2, art. 2409-septiesdecies.1."
+          ],
+          "note": "Copre entrambi i punti: approvazione del comitato e, se cessano tutti gli amministratori, convocazione tramite il tribunale su istanza di ciascun socio."
+        },
+        "R03": {
+          "status": "U",
+          "refs": [
+            "P053"
+          ],
+          "passages": [
+            "La cooptazione nel CdA monistico richiede anche l'approvazione del comitato. Se vengono meno tutti gli amministratori, la convocazione dell'assemblea segue il meccanismo giudiziale previsto dal nuovo art. 2409-septiesdecies.1; non va presunta una generale gestione sostitutiva del comitato. Per irregolarità su materie consiliari, il comitato può chiedere i provvedimenti giudiziali indicati dall'art. 2396-quater soltanto se la maggioranza dei suoi componenti ha votato contro la determinazione consiliare. È quindi particolarmente importante verbalizzare il voto: il controllo dall'interno del CdA non è neutro rispetto alle decisioni cui si partecipa. Art. 9 del decreto"
+          ],
+          "note": "Tratta approvazione della cooptazione e cessazione totale con convocazione giudiziale; esclude una gestione sostitutiva generale del comitato. L’iniziativa del socio resta nel rinvio alla disposizione."
+        },
+        "R04": {
+          "status": "P",
+          "refs": [
+            "P060"
+          ],
+          "passages": [
+            "Per le materie di competenza del CdA, l'azione del comitato ai sensi dell'art. 2396-quater presuppone che la maggioranza dei suoi componenti abbia votato contro la determinazione all'origine della denuncia. L'astensione non equivale testualmente al voto contrario: i verbali assumono un peso concreto. Per le sostituzioni è introdotto l'art. 2409-septiesdecies.1; permane però nel testo pubblicato dell'art. 2409-octiesdecies un rinvio al soppresso art. 2386, oggetto del correttivo esaminato al § 10. La clausola di sostituzione va coordinata con assistenza notarile, senza correggere silenziosamente il testo di legge. D.lgs. 47/2026, art. 9"
+          ],
+          "note": "Richiama il nuovo articolo e il difetto di coordinamento, ma non illustra né l’approvazione della cooptazione da parte del comitato né la convocazione quando cessa l’intero consiglio."
+        }
+      }
+    },
+    {
+      "id": "C11",
+      "topic": "Rimedio giudiziario del comitato",
+      "expected": "Per materie consiliari il rimedio specifico richiede il voto contrario della maggioranza del comitato; l’astensione non è equivalente.",
+      "source": "https://www.gazzettaufficiale.it/eli/gu/2026/04/14/86/so/14/sg/pdf",
+      "location": "Art. 9 → art. 2409-octiesdecies, ultimo comma",
+      "group": "Nucleo",
+      "cells": {
+        "R01": {
+          "status": "U",
+          "refs": [
+            "P032"
+          ],
+          "passages": [
+            "Vi è una condizione da non trascurare: quando le gravi irregolarità riguardano materie di competenza consiliare, il comitato può richiedere i provvedimenti giudiziari richiamati dall’art. 2396-quater soltanto se la maggioranza dei suoi componenti ha votato contro la determinazione del consiglio. La semplice astensione non coincide con il voto contrario richiesto dalla norma. Operativamente, verbali e tracciabilità dei voti acquistano particolare rilievo. La condizione riguarda questo rimedio del comitato; non elimina gli altri doveri di vigilanza né le autonome iniziative consentite agli altri legittimati. [2]"
+          ],
+          "note": "Delimita il rimedio del comitato sulle materie consiliari, richiede la maggioranza contraria e distingue l’astensione dagli altri rimedi e doveri."
+        },
+        "R02": {
+          "status": "U",
+          "refs": [
+            "P060"
+          ],
+          "passages": [
+            "Per irregolarità relative a materie di competenza consiliare, l'ultimo comma dell'art. 2409-octiesdecies subordina l'iniziativa del comitato per i provvedimenti giudiziari richiamati alla circostanza che la maggioranza dei suoi componenti abbia votato contro la determinazione consiliare. Il controllo svolto dall'interno rende quindi particolarmente importante un dissenso effettivo e verbalizzato: l'astensione non coincide testualmente con il voto contrario. La disposizione non sopprime le autonome iniziative dei soci legittimati. Sul raccordo con l'art. 152 TUF vi è un problema di rinvio illustrato al § 10. R2 R3"
+          ],
+          "note": "Collega il voto contrario ai provvedimenti giudiziari richiamati; distingue astensione, iniziative dei soci e problema del rinvio nel TUF."
+        },
+        "R03": {
+          "status": "U",
+          "refs": [
+            "P053"
+          ],
+          "passages": [
+            "La cooptazione nel CdA monistico richiede anche l'approvazione del comitato. Se vengono meno tutti gli amministratori, la convocazione dell'assemblea segue il meccanismo giudiziale previsto dal nuovo art. 2409-septiesdecies.1; non va presunta una generale gestione sostitutiva del comitato. Per irregolarità su materie consiliari, il comitato può chiedere i provvedimenti giudiziali indicati dall'art. 2396-quater soltanto se la maggioranza dei suoi componenti ha votato contro la determinazione consiliare. È quindi particolarmente importante verbalizzare il voto: il controllo dall'interno del CdA non è neutro rispetto alle decisioni cui si partecipa. Art. 9 del decreto"
+          ],
+          "note": "Collega la condizione ai provvedimenti giudiziali indicati e richiede il voto contrario della maggioranza del comitato."
+        },
+        "R04": {
+          "status": "P",
+          "refs": [
+            "P060"
+          ],
+          "passages": [
+            "Per le materie di competenza del CdA, l'azione del comitato ai sensi dell'art. 2396-quater presuppone che la maggioranza dei suoi componenti abbia votato contro la determinazione all'origine della denuncia. L'astensione non equivale testualmente al voto contrario: i verbali assumono un peso concreto. Per le sostituzioni è introdotto l'art. 2409-septiesdecies.1; permane però nel testo pubblicato dell'art. 2409-octiesdecies un rinvio al soppresso art. 2386, oggetto del correttivo esaminato al § 10. La clausola di sostituzione va coordinata con assistenza notarile, senza correggere silenziosamente il testo di legge. D.lgs. 47/2026, art. 9"
+          ],
+          "note": "Indica voto contrario e non equivalenza dell’astensione, ma parla genericamente di azione del comitato: va circoscritto il riferimento ai provvedimenti del settimo comma, come precisa la nota T17."
+        }
+      }
+    },
+    {
+      "id": "C12",
+      "topic": "Concorrenza e soggetti obbligati",
+      "expected": "Art. 2390: amministratore che assume incarichi strategici presso concorrenti. Art. 2396-bis: distinta disciplina dei DG. Non equiparare tutti i dirigenti agli amministratori.",
+      "source": "https://www.gazzettaufficiale.it/eli/gu/2026/04/14/86/so/14/sg/pdf",
+      "location": "Art. 9 → artt. 2390 e 2396-bis c.c.",
+      "group": "Nucleo",
+      "cells": {
+        "R01": {
+          "status": "U",
+          "refs": [
+            "P049",
+            "P050",
+            "P051"
+          ],
+          "passages": [
+            "Il divieto di concorrenza dell’art. 2390 viene esteso espressamente all’assunzione di incarichi dirigenziali con responsabilità strategiche in società concorrenti, salva specifica autorizzazione assembleare. Il nuovo art. 2390-bis enuncia autonomamente il divieto di utilizzare a vantaggio proprio o di terzi dati, notizie o opportunità d’affari appresi nell’incarico, con conseguenze sul risarcimento e sulla revoca. Il precedente art. 2391 già prevedeva la responsabilità per l’utilizzo pregiudizievole di tali informazioni: è quindi inesatto presentare il tema come prima introduzione assoluta di un divieto di appropriazione delle opportunità sociali. Il nuovo art. 2396-bis disciplina anche i direttori generali, distinguendo l’autorizzazione alla concorrenza dal divieto di utilizzare informazioni e opportunità. [2][5]",
+            "Rimane l’obbligo dell’amministratore di comunicare ogni interesse in una determinata operazione, anche se non è già qualificabile come conflitto. L’amministratore delegato interessato si astiene dal compiere l’operazione e la rimette al consiglio; l’amministratore unico informa anche la prima assemblea utile. La riforma consente ulteriori condizioni di partecipazione alle decisioni nello statuto o nel regolamento consiliare. Non introduce una regola indistinta per cui ogni amministratore portatore di un interesse deve sempre astenersi da qualunque voto. [2]",
+            "La revisione operativa può riguardare dichiarazioni sugli incarichi esterni, procedure per gli interessi nelle operazioni, autorizzazioni alla concorrenza e accesso alle informazioni. Non basta controllare la partecipazione azionaria dell’amministratore: possono rilevare anche un incarico dirigenziale esterno, un rapporto professionale o un’opportunità commerciale conosciuta per effetto della carica."
+          ],
+          "note": "Descrive gli incarichi dirigenziali esterni dell’amministratore e tratta separatamente i direttori generali; non impone un divieto a tutti i dirigenti strategici."
+        },
+        "R02": {
+          "status": "U",
+          "refs": [
+            "P042",
+            "P043"
+          ],
+          "passages": [
+            "L'art. 2391 continua a richiedere la comunicazione di ogni interesse nell'operazione, non soltanto del conflitto già accertato. L'amministratore delegato interessato deve astenersi dal compierla e investire il consiglio; la decisione consiliare deve motivare ragioni e convenienza per la società. Statuto o regolamento del consiglio possono ora stabilire ulteriori condizioni, modalità e limiti alla partecipazione dell'interessato. Non discende dal testo un identico obbligo automatico di uscita dalla riunione per ogni amministratore non delegato interessato. R2",
+            "Il divieto di utilizzare informazioni e opportunità a vantaggio proprio o altrui è autonomamente collocato nell'art. 2390-bis; la tutela delle opportunità sociali era già presente nel precedente art. 2391. L'art. 2390 estende espressamente il divieto di ricoprire incarichi in concorrenti alle funzioni di dirigente con responsabilità strategiche e richiede una specifica autorizzazione assembleare. L'art. 2396-bis disciplina concorrenza e uso delle informazioni per i direttori generali. È quindi utile aggiornare dichiarazioni e autorizzazioni, distinguendo i diversi ruoli. R2 R7"
+          ],
+          "note": "La formula riguarda le funzioni ricoperte in un concorrente, nel contesto degli obblighi degli amministratori; i direttori generali sono distinti."
+        },
+        "R03": {
+          "status": "U",
+          "refs": [
+            "P036",
+            "P037"
+          ],
+          "passages": [
+            "Il divieto di concorrenza dell'art. 2390 include ora espressamente l'assunzione di incarichi di dirigente con responsabilità strategiche presso società concorrenti; l'autorizzazione assembleare deve essere specifica. Il nuovo art. 2390-bis configura autonomamente il divieto di utilizzare a vantaggio proprio o altrui dati, notizie e opportunità appresi nell'incarico, con revoca e responsabilità risarcitoria. La responsabilità per questo uso era già contemplata dall'ultimo comma del vecchio art. 2391: cambia la sistemazione e si esplicita il divieto, non nasce da zero la tutela. I nuovi richiami dell'art. 2396-bis interessano anche i direttori generali. Art. 2390 previgente Art. 2391 previgente Art. 9 del decreto",
+            "Restano la comunicazione di ogni interesse, proprio o di terzi, la motivazione della convenienza dell'operazione e, per l'amministratore delegato interessato, l'astensione dal compierla con rimessione al consiglio. Statuto o regolamento consiliare possono ora limitare la partecipazione dell'amministratore interessato alla decisione. Non si tratta di un nuovo divieto legale generale di voto per qualsiasi consigliere portatore di un interesse. Art. 9 del decreto"
+          ],
+          "note": "Tratta l’assunzione dell’incarico strategico presso concorrenti, l’autorizzazione specifica e il separato raccordo per i direttori generali."
+        },
+        "R04": {
+          "status": "U",
+          "refs": [
+            "P032"
+          ],
+          "passages": [
+            "L'art. 2390 amplia il divieto per l'amministratore di assumere incarichi presso concorrenti includendo il ruolo di dirigente con responsabilità strategiche, salvo specifica autorizzazione assembleare. L'art. 2390-bis rende autonomo il divieto di utilizzare a vantaggio proprio o altrui dati, notizie e opportunità appresi nell'incarico, con revoca e danni. La tutela contro l'appropriazione di opportunità era già presente nell'art. 2391: cambia la collocazione e l'esplicitazione del divieto. Il nuovo art. 2396-bis regola anche concorrenza e uso delle informazioni dei direttori generali. Operativamente vanno aggiornate dichiarazioni, autorizzazioni e regole sui conflitti, distinguendo i diversi destinatari. D.lgs. 47/2026, art. 9"
+          ],
+          "note": "Nomina espressamente l’amministratore come soggetto del divieto e distingue i direttori generali e l’uso delle informazioni."
+        }
+      }
+    },
+    {
+      "id": "C13",
+      "topic": "Rischi TUF e comunicazioni Consob",
+      "expected": "Compiti di delegati e consiglio; comunicazione di fatti accertati che possano costituire irregolarità o violazioni, non qualsiasi fatto.",
+      "source": "https://www.gazzettaufficiale.it/eli/gu/2026/04/14/86/so/14/sg/pdf",
+      "location": "Art. 6 → artt. 147-sexies e 149 TUF",
+      "group": "Nucleo",
+      "cells": {
+        "R01": {
+          "status": "U",
+          "refs": [
+            "P084",
+            "P085",
+            "P086"
+          ],
+          "passages": [
+            "L’art. 147-sexies TUF valorizza il coordinamento dei controlli e la rappresentazione unitaria e tempestiva dei rischi. Gli organi delegati curano il buon funzionamento e l’efficacia del sistema; il consiglio assicura e valuta il coordinamento delle funzioni coinvolte. Il comitato rischi o l’amministratore incaricato, ove previsti e nei limiti delle rispettive competenze, assicurano una rappresentazione unitaria basata anche su indicatori non finanziari e su criteri di materialità, da illustrare nella relazione sul governo societario. Il richiamo a comitati e amministratori incaricati non equivale, da solo, all’obbligo generalizzato di istituirli. [3]",
+            "L’art. 149 TUF sposta il riferimento dedicato alla corretta amministrazione sul corretto funzionamento dell’organo amministrativo e sulla diligente osservanza delle regole istruttorie, procedimentali e decisionali elaborate dalle migliori prassi. L’inferenza operativa è che la vigilanza deve esaminare come la decisione è stata preparata e assunta, senza trasformarsi in un ordinario potere di sostituire una diversa scelta imprenditoriale a quella degli amministratori. Restano i controlli di legalità, assetti e funzionamento. [3][5]",
+            "La comunicazione alla Consob riguarda, senza indugio, gli atti o fatti accertati che possano costituire irregolarità nella gestione o violazioni della legge o dello statuto, con la relativa documentazione. La formulazione richiede di valutare l’attivazione del flusso anche prima di una qualificazione definitivamente consolidata dell’irregolarità, senza equiparare un semplice sospetto privo di fatti accertati alla fattispecie prevista. È salva l’eccezione dell’art. 149, comma 3, per le società quotate soltanto in mercati regolamentati di altri Stati dell’Unione. [3]"
+          ],
+          "note": "Ripartisce i compiti sui rischi e conserva la condizione dei fatti accertati potenzialmente irregolari, senza equipararli a qualsiasi sospetto."
+        },
+        "R02": {
+          "status": "U",
+          "refs": [
+            "P063",
+            "P064",
+            "P076"
+          ],
+          "passages": [
+            "Il nuovo art. 147-sexies TUF affida agli organi delegati la cura del buon funzionamento e dell'efficacia del controllo interno e della gestione dei rischi; il CdA assicura e valuta il coordinamento delle funzioni, per ottenere una rappresentazione unitaria, tempestiva e sistematica. Comitato rischi e amministratore incaricato, ove previsti, operano nei limiti delle rispettive competenze, considerando anche indicatori non finanziari e materialità. Non viene imposto a ogni S.p.A. un comitato rischi distinto. R3",
+            "L'art. 149 ridefinisce la vigilanza dei controllori: oltre alla legalità e agli assetti, rileva il corretto funzionamento dell'organo amministrativo, in particolare la diligente osservanza delle regole istruttorie, procedimentali e decisionali elaborate dalle migliori prassi. Rispetto al precedente riferimento ai principi di corretta amministrazione, l'accento si sposta sul processo decisionale. Non ne deriva una vigilanza soltanto formale: informazione insufficiente, alternative ignorate o mancato coordinamento dei controlli possono compromettere proprio la qualità del processo. R3 R7",
+            "La segnalazione alla Consob deve avvenire senza indugio per atti o fatti accertati che possano costituire irregolarità o violazioni, con la documentazione utile. Il testo non richiede di attendere una qualificazione definitiva dell'illecito. È salva l'esclusione dell'art. 149, comma 3, per società quotate soltanto su mercati regolamentati di altri Stati UE. R3"
+          ],
+          "note": "Distingue cura, coordinamento e vigilanza; conserva i presupposti e le eccezioni della comunicazione senza indugio alla Consob."
+        },
+        "R03": {
+          "status": "U",
+          "refs": [
+            "P065",
+            "P066",
+            "P067"
+          ],
+          "passages": [
+            "L'art. 149 TUF riscrive la vigilanza sul funzionamento dell'organo amministrativo, con attenzione all'istruttoria, ai procedimenti e alle decisioni, oltre a legge, statuto, organizzazione, rischi e regole di governance dichiaratamente adottate. Il vecchio riferimento ai principi di corretta amministrazione non è riprodotto nello stesso modo: la lettura più coerente è una specificazione del controllo sui processi consiliari, non un'autorizzazione a trascurare la legalità o l'effettività degli assetti. Nel codice, peraltro, la vigilanza sulla corretta amministrazione resta espressa. Art. 149 previgente Art. 6 del decreto Art. 9 del decreto",
+            "L'art. 147-sexies TUF attribuisce ai delegati il presidio del sistema di controllo interno e gestione dei rischi e al consiglio compiti di valutazione, coordinamento e visione unitaria. La relazione di governance deve dare conto anche delle politiche eventualmente adottate su intelligenza artificiale, nuove tecnologie e sicurezza informatica. Se si adottano sistemi di controllo continui, automatici o predittivi, l'art. 149-ter ne richiede proporzionalità e adeguatezza. Non è introdotto un obbligo generale di acquistare o utilizzare IA, né di istituire sempre un nuovo comitato rischi. Art. 6 del decreto",
+            "Per l'organo di controllo rimane la comunicazione senza indugio alla Consob delle irregolarità riscontrate; la formulazione comprende irregolarità anche potenziali. Non va subordinata alla sola gravità richiesta per la denunzia giudiziale. Sono conservate le specifiche eccezioni previste per società quotate soltanto in altri mercati UE. Art. 149 previgente Art. 6 del decreto"
+          ],
+          "note": "Separa delegati, consiglio e controllori; descrive la comunicazione delle irregolarità anche potenziali, senza limitarla alla gravità del rimedio giudiziario."
+        },
+        "R04": {
+          "status": "U",
+          "refs": [
+            "P075",
+            "P076"
+          ],
+          "passages": [
+            "L'art. 147-sexies attribuisce agli organi delegati la cura del funzionamento ed efficacia del controllo interno e della gestione dei rischi e al consiglio il coordinamento necessario a una rappresentazione unitaria, tempestiva e sistematica. Per comitato rischi o amministratore incaricato, ove previsti, richiama materialità, caratteristiche dell'impresa e indicatori anche non finanziari. L'art. 149 amplia e specifica la vigilanza, compresa quella sul corretto funzionamento dell'organo amministrativo e sulle sue modalità procedurali e decisionali. D.lgs. 47/2026, art. 6",
+            "I controllori comunicano alla Consob senza indugio gli atti o fatti accertati che possano costituire irregolarità o violazioni, nel perimetro e con le eccezioni dell'art. 149. Non si deve attendere che ogni irregolarità raggiunga la soglia di gravità prevista per la denuncia al tribunale: sono strumenti diversi. I flussi verso il mercato, il consiglio e l'autorità vanno mappati separatamente. D.lgs. 47/2026, art. 6"
+          ],
+          "note": "Espone i compiti sui rischi e limita il flusso Consob agli atti o fatti accertati che possano costituire irregolarità o violazioni."
+        }
+      }
+    },
+    {
+      "id": "C14",
+      "topic": "Nomine e perdita dell’indipendenza",
+      "expected": "Criteri di composizione complessiva; decadenza per perdita di indipendenza subordinata all’insufficienza dei residui. Requisiti specifici restano applicabili.",
+      "source": "https://www.consob.it/documents/1912911/1962639/dlgs58_1998.pdf",
+      "location": "Artt. 147-bis.1, 147-ter, 148 e seguenti",
+      "group": "Nucleo",
+      "cells": {
+        "R01": {
+          "status": "U",
+          "refs": [
+            "P079",
+            "P080",
+            "P081"
+          ],
+          "passages": [
+            "Il nuovo art. 147-bis.1 TUF impone allo statuto disposizioni idonee a promuovere, nella composizione collettiva degli organi, professionalità, rappresentatività e diversità. La norma richiede una revisione coerente di candidature, informazioni e regole di composizione; non stabilisce da sola un identico profilo professionale per ogni emittente. L’adeguamento statutario ha la decorrenza specifica riportata nella sezione 11. [3][4]",
+            "Le quote di genere vengono riordinate nella disciplina dei controlli: due quinti al genere meno rappresentato, un terzo per organi di tre componenti, per sei mandati consecutivi secondo la norma. Non è una generale introduzione ex novo delle quote né risulta giustificato dedurne un automatico riavvio del conteggio dei mandati. Per il collegio si considerano i componenti effettivi. [3][5]",
+            "Nel sistema monistico quotato il presidente del comitato per il controllo sulla gestione viene nominato dall’assemblea tra i componenti eletti dalla minoranza. Per gli amministratori indipendenti, la perdita del requisito determina la decadenza secondo il nuovo art. 147-ter, comma 4-bis, se fa venir meno il numero minimo richiesto dalla legge o dallo statuto: la permanenza in carica non consente di continuare a qualificare come indipendente chi non lo è più. [3]"
+          ],
+          "note": "Collega la composizione complessiva a professionalità e diversità e la decadenza alla perdita del numero minimo di indipendenti."
+        },
+        "R02": {
+          "status": "U",
+          "refs": [
+            "P070",
+            "P071",
+            "P072",
+            "P073"
+          ],
+          "passages": [
+            "L'art. 147-bis.1 richiede norme statutarie che promuovano professionalità, rappresentatività e diversità della composizione complessiva degli organi. Non si esaurisce nel rispetto numerico delle quote di genere. La preparazione delle prossime nomine deve considerare competenze e composizione collegiale, nel calendario del § 2. R3 R4",
+            "L'art. 147-ter, comma 4-bis, supera la decadenza automatica dell'amministratore che perde l'indipendenza: decade se il numero residuo degli indipendenti non assicura il rispetto di legge e statuto. Un amministratore può dunque restare come non indipendente se i requisiti complessivi lo consentono. Restano da verificare l'idoneità a sedere in specifici comitati e le eventuali regole più severe di statuto, settore o disciplina applicabile. R3 R7",
+            "Nel consiglio di gestione è abrogato il comma 1 dell'art. 147-quater, che richiedeva almeno un indipendente quando i membri erano più di quattro; resta distinta la disciplina di genere del comma 1-bis. Il nuovo art. 148 accomuna la disciplina dei controllori, con almeno due quinti del genere meno rappresentato, oppure un terzo per un organo di tre persone, per sei mandati consecutivi. Il quadro delle quote preesisteva: non si tratta dell'introduzione ex novo di un obbligo del 40%. R3 R7",
+            "Le disposizioni 148.1–148.3 separano poi i tre modelli. Nel collegio il presidente è scelto dall'assemblea fra i sindaci di minoranza; nel monistico quotato la presidenza del comitato è attribuita dall'assemblea fra i componenti eletti dai soci di minoranza. La regola ordinaria di nomina del comitato da parte del CdA rimane derogabile dallo statuto. R3"
+          ],
+          "note": "Distingue qualità collettiva, requisiti residui e idoneità ai singoli comitati, trattando anche specificità di genere e dei modelli."
+        },
+        "R03": {
+          "status": "U",
+          "refs": [
+            "P064"
+          ],
+          "passages": [
+            "Il nuovo art. 147-bis.1 TUF impone che gli statuti promuovano professionalità, rappresentatività e diversità degli organi. Nel regime ordinario resta il voto di lista. La perdita dei requisiti dell'amministratore indipendente non produce più sempre e comunque la decadenza: occorre verificare se faccia scendere il numero degli indipendenti sotto il minimo legale o statutario; l'organo competente dichiara la decadenza nei casi previsti. Non viene eliminata l'indipendenza richiesta al consiglio. Art. 147-ter previgente Art. 6 del decreto"
+          ],
+          "note": "Indica i criteri statutari complessivi e condiziona la decadenza all’insufficienza del numero legale o statutario degli indipendenti."
+        },
+        "R04": {
+          "status": "U",
+          "refs": [
+            "P073",
+            "P074"
+          ],
+          "passages": [
+            "Il nuovo art. 147-bis.1 richiede regole statutarie coerenti con professionalità, rappresentatività e diversità nella composizione degli organi. L'adeguamento va effettuato in tempo per le nomine e i rinnovi dall'esercizio successivo a quello in corso il 29 aprile 2026. Per un esercizio coincidente con l'anno solare, il riferimento è dunque ai rinnovi dal 2027, senza attribuire automaticamente questa data a esercizi diversi. D.lgs. 47/2026, art. 6 D.lgs. 47/2026, art. 11",
+            "Il sistema generale delle liste non è abolito. Per gli indipendenti la perdita del requisito non determina sempre la decadenza: la disciplina considera la permanenza del numero minimo richiesto da legge e statuto. La nuova sistemazione dell'art. 148 detta requisiti e regole comuni di composizione dell'organo di controllo: al genere meno rappresentato spettano almeno due quinti dei componenti, oppure un terzo se l'organo è di tre persone, per sei mandati consecutivi. Restano specificità dei modelli; nel monistico quotato il presidente del comitato è nominato dall'assemblea fra i componenti eletti dalla minoranza, ai sensi dell'art. 148.3. Occorre aggiornare candidature, verifiche e gestione delle sostituzioni sulla disciplina applicabile. D.lgs. 47/2026, art. 6"
+          ],
+          "note": "Distingue composizione, quote e requisiti dei modelli; collega la perdita dell’indipendenza al numero minimo residuo."
+        }
+      }
+    },
+    {
+      "id": "C15",
+      "topic": "Responsabilità sindaci e MTF",
+      "expected": "Distinguere limite ex legge 35/2025 e art. 151.2; società italiane con azioni su MTF; restano danno, violazione e nesso causale.",
+      "source": "https://www.gazzettaufficiale.it/eli/gu/2026/04/14/86/so/14/sg/pdf",
+      "location": "Art. 6 → art. 151.2 TUF; legge 35/2025",
+      "group": "Nucleo",
+      "cells": {
+        "R01": {
+          "status": "U",
+          "refs": [
+            "P069",
+            "P070",
+            "P071",
+            "P072"
+          ],
+          "passages": [
+            "La legge n. 35/2025 aveva modificato l’art. 2407 c.c., prevedendo, fuori dal dolo, limiti di responsabilità collegati al compenso annuo percepito: quindici, dodici o dieci volte il compenso secondo gli scaglioni normativi. Il d.lgs. n. 47/2026 non elimina in via generale quella disciplina dal codice civile. [9]",
+            "Introduce però l’art. 151.2 TUF, secondo cui i componenti del collegio sindacale rispondono solidalmente con gli amministratori per i fatti o le omissioni di questi, quando il danno non si sarebbe prodotto se avessero vigilato secondo i propri doveri. L’art. 154 TUF esclude l’applicazione dell’art. 2407, secondo comma, alle quotate interessate; l’art. 151.2 estende espressamente la disciplina anche alle società italiane con azioni negoziate su sistemi multilaterali, in luogo del medesimo comma del codice. [3]",
+            "Esempio. Il compenso annuo di 20.000 euro conduce, nel campo applicativo della disciplina generale e fuori dal dolo, al limite di 240.000 euro. Il sindaco di una società italiana negoziata su MTF non può assumere che quel limite si applichi al proprio incarico: opera la disposizione speciale. L’esempio non determina il danno dovuto né risolve la disciplina temporale di condotte anteriori alla riforma. [3][9]",
+            "La responsabilità speciale resta collegata a violazione dei doveri, danno e nesso causale dell’omessa vigilanza; non fa dei sindaci garanti automatici di ogni perdita. E non è corretto estendere senza ulteriore analisi il tetto dell’art. 2407 a componenti di altri organi, soggetti a proprie disposizioni di responsabilità. Ne deriva l’opportunità di riesaminare incarico, documentazione delle verifiche e copertura assicurativa in base al mercato e al ruolo effettivi. [2][3]"
+          ],
+          "note": "Separa limite generale del 2025 e regime speciale per quotate e società italiane su MTF, conservando condotta, danno e causalità."
+        },
+        "R02": {
+          "status": "U",
+          "refs": [
+            "P079",
+            "P080",
+            "P081",
+            "P082"
+          ],
+          "passages": [
+            "La legge 35/2025 aveva introdotto nell'art. 2407, secondo comma, limiti risarcitori parametrati al compenso annuo, fuori dai casi di dolo: quindici volte fino a 10.000 euro, dodici volte nella fascia da 10.000 a 50.000, dieci volte oltre 50.000. Il decreto del 2026 non abroga in generale questa disciplina. R8",
+            "Per le quotate, però, il nuovo art. 154 TUF esclude l'applicazione del secondo comma dell'art. 2407; l'art. 151.2 prevede la responsabilità solidale dei sindaci con gli amministratori quando il danno non si sarebbe prodotto con una vigilanza conforme ai doveri. La stessa disposizione è espressamente estesa alle società italiane con azioni ammesse su MTF, in luogo del secondo comma dell'art. 2407. Non è quindi corretto applicare automaticamente a tali incarichi il tetto basato sul compenso. R3 R9",
+            "Esempio: un compenso annuo di 20.000 euro conduce, nel regime generale e ricorrendone tutti i presupposti, a un limite di 240.000 euro. Questa operazione aritmetica non determina il limite per il collegio di una quotata o di una società italiana con azioni su MTF nel nuovo regime. Rimangono da accertare condotta, danno, nesso causale e disciplina applicabile nel tempo: la solidarietà non equivale a responsabilità oggettiva.",
+            "L'implicazione concreta riguarda accettazione e rinnovo degli incarichi, tempo e risorse per la vigilanza, flussi informativi e coperture assicurative. Il regime dei sindaci non va trasferito automaticamente ai consiglieri di sorveglianza o ai membri del comitato monistico, per i quali operano specifiche responsabilità. Per fatti anteriori alla riforma serve un'autonoma analisi intertemporale; la circolare non presume retroattività."
+          ],
+          "note": "L’esempio numerico è circoscritto al regime generale; il testo esclude automatismi per MTF, altri organi e fatti anteriori."
+        },
+        "R03": {
+          "status": "U",
+          "refs": [
+            "P058",
+            "P060",
+            "P061"
+          ],
+          "passages": [
+            "Sindaci delle quotate e delle società italiane su MTF | Il testo generale dell'art. 2407, riformato nel 2025, prevedeva limiti risarcitori salvo dolo | Art. 151.2 TUF: responsabilità solidale con gli amministratori quando la vigilanza doverosa avrebbe evitato il danno, in luogo del secondo comma dell'art. 2407",
+            "Il nuovo art. 151.2 e l'art. 154 TUF impediscono di applicare ai sindaci delle quotate e delle società italiane su MTF i massimali generali del secondo comma dell'art. 2407. Non sono introdotti massimali per tutti dalla riforma del 2026: erano stati introdotti dalla legge n. 35/2025. Per il collegio di una S.p.A. ordinaria non quotata, fuori dal perimetro speciale e salvo dolo, restano i multipli del compenso annuo: 15 fino a 10.000 euro, 12 fra 10.000 e 50.000 euro, 10 oltre 50.000 euro. Un compenso di 20.000 euro corrisponde quindi, ricorrendone i presupposti, a 240.000 euro; questo calcolo non è applicabile automaticamente al sindaco di una società su MTF. Art. 2407 previgente Legge 35/2025 Art. 151.2 vigente Art. 154 vigente",
+            "Questa differenza incide su accettazione degli incarichi, risorse per la vigilanza, compensi e coperture assicurative. Non autorizza però a equiparare automaticamente la responsabilità del collegio a quella del consiglio di sorveglianza o dei componenti del comitato monistico, soggetti anche alle specifiche regole dei rispettivi ruoli. Art. 9 del decreto Art. 6 del decreto"
+          ],
+          "note": "Distingue legge 35/2025 e art. 151.2, espone il nesso dell’omessa vigilanza e non trasferisce i massimali agli altri organi."
+        },
+        "R04": {
+          "status": "U",
+          "refs": [
+            "P062",
+            "P063",
+            "P065",
+            "P066",
+            "P067",
+            "P068",
+            "P069"
+          ],
+          "passages": [
+            "Per i sindaci delle S.p.A. ordinarie va considerato l'art. 2407 come modificato dalla legge n. 35/2025, già anteriore alla riforma: fuori dal dolo prevede limiti parametrati al compenso annuo, articolati nei moltiplicatori 15, 12 e 10 per le fasce individuate dalla legge. Il d.lgs. 47/2026 non riscrive in generale questa norma. Legge 35/2025, art. 1",
+            "Il nuovo art. 151.2 TUF stabilisce invece la responsabilità solidale dei sindaci con gli amministratori per fatti od omissioni di questi, quando il danno non si sarebbe prodotto con la vigilanza dovuta. La disposizione sostituisce il secondo comma dell'art. 2407 nel proprio ambito e si estende espressamente alle società italiane con azioni negoziate su MTF. L'art. 154 TUF disapplica quel comma per i collegi delle quotate. È quindi errato ritenere che tutti i sindaci possano invocare i limiti introdotti nel 2025; è altrettanto errato configurare responsabilità automatica per ogni danno prodotto dagli amministratori. Restano necessari inadempimento e collegamento causale. D.lgs. 47/2026, art. 6",
+            "Collegio di S.p.A. ordinaria fuori dal regime speciale | Art. 2407, compresi dolo, limiti e presupposti applicabili",
+            "Collegio di quotata o società italiana con azioni su MTF | Art. 151.2 TUF e disapplicazione dei limiti del secondo comma dell'art. 2407",
+            "Consiglio di sorveglianza | Disciplina propria, inclusa responsabilità solidale per omessa vigilanza ex art. 2409-terdecies",
+            "Comitato monistico | Qualità di amministratore e specifici doveri di controllo; nessuna automatica trasposizione dei limiti dei sindaci",
+            "Questa differenziazione suggerisce di rivedere incarichi, compensi, disponibilità di tempo e coperture assicurative sulla base del ruolo effettivo e del mercato di negoziazione. Non permette di garantire preventivamente l'assenza di responsabilità, né di applicare retroattivamente il nuovo regime a ogni condotta senza un'analisi temporale. D.lgs. 47/2026, art. 6 D.lgs. 47/2026, art. 9 Legge 35/2025, art. 1"
+          ],
+          "note": "Distingue i ruoli e i mercati; esclude tanto l’applicazione universale del tetto quanto una responsabilità automatica dei sindaci."
+        }
+      }
+    },
+    {
+      "id": "C16",
+      "topic": "Azioni concorsuali e diritto transitorio",
+      "expected": "Decadenza biennale con perimetro e dies a quo; distinguere prescrizione e procedure pendenti. Non spacciare una lettura transitoria per norma certa.",
+      "source": "https://www.gazzettaufficiale.it/eli/gu/2026/04/14/86/so/14/sg/pdf",
+      "location": "Art. 9 → art. 2394-bis c.c.; vedi fonti giudiziarie nel rapporto",
+      "group": "Nucleo",
+      "cells": {
+        "R01": {
+          "status": "U",
+          "refs": [
+            "P074",
+            "P075",
+            "P076"
+          ],
+          "passages": [
+            "L’art. 2394-bis viene aggiornato alla liquidazione giudiziale e al concordato liquidatorio, includendo il liquidatore giudiziale tra i soggetti indicati. È aggiunto un termine di decadenza di due anni dall’apertura della liquidazione giudiziale o dalla dichiarazione dello stato di insolvenza per le azioni contemplate dalla disposizione. [2]",
+            "Non si tratta di una prescrizione biennale generalizzata di tutte le azioni contro amministratori e sindaci. L’azione sociale dell’art. 2393 conserva il proprio termine di cinque anni dalla cessazione dell’amministratore; il nuovo termine è un presidio speciale da coordinare con le azioni esercitate nella procedura. Non va inventato, per ogni fattispecie menzionata, un diverso dies a quo che il testo non esprime. [2]",
+            "Per procedure già aperte o fatti anteriori, il decreto non offre nell’art. 11 una specifica disciplina transitoria di questo termine. La questione richiede una valutazione intertemporale sul caso; non è prudente assumere né una retroattività automatica né un generale nuovo biennio dal 29 aprile 2026. Curatori e liquidatori devono identificare subito azioni, date e legittimazioni: il dossier giudiziario non può attendere la fine delle altre attività della procedura. [2][4]"
+          ],
+          "note": "Espone decadenza, eventi iniziali e perimetro; distingue prescrizione e azioni generali e mantiene aperto il diritto intertemporale."
+        },
+        "R02": {
+          "status": "U",
+          "refs": [
+            "P084",
+            "P085",
+            "P086"
+          ],
+          "passages": [
+            "Il nuovo art. 2394-bis introduce, per le azioni indicate dalla disposizione, una decadenza di due anni dalla sentenza di apertura della liquidazione giudiziale o dalla sentenza che dichiara lo stato d'insolvenza. Il testo aggiorna inoltre il riferimento alle procedure includendo il concordato liquidatorio e il liquidatore giudiziale. R2",
+            "Non è una prescrizione generale di due anni di tutte le azioni contro gli amministratori. Il termine quinquennale dell'azione sociale dell'art. 2393 rimane. La decadenza impone ai professionisti delle procedure una verifica precoce delle azioni; non basta rinviare l'analisi a quando la ricostruzione contabile sarà integralmente conclusa. R2",
+            "Il decreto non contiene, per questa innovazione, una disciplina intertemporale analitica. Inoltre il dies a quo è formulato con riferimento a liquidazione giudiziale e dichiarazione d'insolvenza, mentre il primo periodo comprende anche il concordato liquidatorio. Questi punti richiedono interpretazione nella procedura concreta: non si può dichiarare automaticamente decaduta un'azione preesistente contando due anni da un evento anteriore alla riforma, né inventare una decorrenza espressa per il concordato che il testo non indica."
+          ],
+          "note": "Distingue il biennio dal termine dell’azione sociale, segnala la lacuna per il concordato e non presume la decadenza delle azioni pregresse."
+        },
+        "R03": {
+          "status": "U",
+          "refs": [
+            "P059",
+            "P062",
+            "P101"
+          ],
+          "passages": [
+            "Azioni nelle procedure concorsuali | Art. 2394-bis senza autonomo termine biennale nel proprio testo | Nuova decadenza di due anni dall'apertura della liquidazione giudiziale o dalla dichiarazione d'insolvenza, nei termini e nell'ambito dell'articolo",
+            "Il nuovo art. 2394-bis aggiorna le procedure e include il concordato liquidatorio, attribuendo le azioni agli organi indicati dalla norma. La decadenza biennale non riduce indiscriminatamente a due anni qualsiasi azione contro amministratori e sindaci. Restano da esaminare, nel singolo contenzioso, legittimazione, procedimento, decorrenza e diritto intertemporale: il testo non contiene una generale disposizione che renda retroattive tutte le modifiche della responsabilità. Art. 2394-bis previgente Art. 9 del decreto Art. 11 del decreto",
+            "Responsabilità e transizione. Eventi dannosi, incarichi e procedimenti a cavallo della riforma richiedono una specifica analisi intertemporale. Gli esempi illustrano il regime e non risolvono la disciplina di controversie già sorte."
+          ],
+          "note": "Indica eventi iniziali e ambito, richiama il concordato e mantiene separata la verifica di decorrenza e diritto intertemporale."
+        },
+        "R04": {
+          "status": "U",
+          "refs": [
+            "P070"
+          ],
+          "passages": [
+            "L'art. 2394-bis aggiunge inoltre, per le azioni nelle procedure indicate, un termine di decadenza di due anni dalla sentenza che apre la liquidazione giudiziale o dichiara lo stato d'insolvenza. Non è una nuova prescrizione biennale di tutte le azioni societarie. Per procedure già aperte e fattispecie senza quel preciso evento iniziale occorre un esame specifico del regime intertemporale e del dies a quo; la circolare non ne deduce l'automatica estinzione delle azioni pendenti. D.lgs. 47/2026, art. 9"
+          ],
+          "note": "Individua le sentenze rilevanti, distingue decadenza da prescrizione e non considera automaticamente estinte le azioni pendenti."
+        }
+      }
+    },
+    {
+      "id": "C17",
+      "topic": "Decorrenze differenziate",
+      "expected": "Assemblee da svolgersi dopo 30 settembre, nomine esercizio successivo, relazioni esercizio in corso; regolamenti e termini specifici.",
+      "source": "https://www.gazzettaufficiale.it/eli/gu/2026/04/14/86/so/14/sg/pdf",
+      "location": "Art. 11, commi 5–10",
+      "group": "Nucleo",
+      "cells": {
+        "R01": {
+          "status": "U",
+          "refs": [
+            "P117",
+            "P118",
+            "P119",
+            "P120",
+            "P121",
+            "P122",
+            "P123",
+            "P124",
+            "P125"
+          ],
+          "passages": [
+            "29 aprile 2026 | Entrata in vigore generale, incluse le modifiche civilistiche salvo specifiche eccezioni | Riesaminare prassi, deleghe e controlli; non attendere il 2027 per i doveri già vigenti",
+            "Assemblee successive al 30 settembre 2026 | Disposizioni assembleari elencate nell’art. 11, comma 7 | Aggiornare avvisi, regolamenti, scadenze e modalità di partecipazione",
+            "Esercizio successivo a quello in corso al 29 aprile 2026 | Nomine e rinnovi cui si applica l’adeguamento statutario ex art. 147-bis.1 | Per società con esercizio solare: predisporre lo statuto in tempo utile per le nomine dal 2027",
+            "Relazioni riferite all’esercizio in corso al 29 aprile 2026 | Nuove informazioni indicate nell’art. 11, comma 10 | Per esercizio solare: coprire il 2026 nelle relazioni normalmente presentate nel 2027",
+            "29 gennaio 2027 | Termine generale di nove mesi per le disposizioni attuative Consob delle parti III e IV, salve deroghe | Verificare gli atti effettivamente adottati e la loro applicazione",
+            "29 aprile 2027 | Termine di dodici mesi per gli atti indicati dagli artt. 112-bis e 133 | Calendario distinto per le relative materie",
+            "29 luglio 2026 | Termine di tre mesi per l’attuazione dell’art. 154.4, comma 3 | La scadenza non prova, da sola, l’adozione o l’efficacia del regolamento",
+            "L’art. 11, comma 6, collega alcune modifiche — fra cui quelle dell’art. 147-quinquies sui requisiti degli esponenti — alla data di applicazione delle disposizioni attuative e, in ogni caso, alla scadenza del termine previsto. Non è corretto rinviare indistintamente tutte le norme TUF a gennaio 2027. [4]",
+            "Per l’esclusività statutaria delle modalità assembleari, il comma 8 considera le sole clausole adottate o modificate dopo l’entrata in vigore del decreto. Una vecchia clausola sulle assemblee a distanza non può quindi essere trattata automaticamente come scelta già conforme al nuovo art. 125-bis.1, comma 1. Le decorrenze legate alle nomine non impongono, da sole, la cessazione anticipata degli organi in carica. [4]"
+          ],
+          "note": "Il calendario distingue assemblee, nomine, relazioni e attuativi, senza trasformare i termini regolamentari in una proroga generale."
+        },
+        "R02": {
+          "status": "U",
+          "refs": [
+            "P013",
+            "P014",
+            "P015",
+            "P016",
+            "P017",
+            "P018",
+            "P019"
+          ],
+          "passages": [
+            "Regole civilistiche e norme senza differimento speciale | 29 aprile 2026 | Verificare subito procedure e riferimenti interni",
+            "Nuove regole TUF sulle assemblee richiamate dall'art. 11, comma 7 | Assemblee successive al 30 settembre 2026 | Usare il nuovo quadro per convocazioni e modalità di partecipazione interessate",
+            "Principi statutari sulla composizione degli organi, art. 147-bis.1 TUF | Statuto adeguato in tempo per nomine o rinnovi dall'esercizio successivo a quello in corso al 29 aprile 2026 | Per esercizi solari, nomine dal 2027; programmare prima la modifica",
+            "Informazioni su tecnologie, IA e sicurezza informatica, se pertinenti; informazioni sui doveri dei controllori | Relazioni riferite all'esercizio in corso al 29 aprile 2026 | Per esercizi solari, relazioni sul 2026 normalmente predisposte nel 2027",
+            "Art. 147-quinquies TUF, compresa l'attuazione per amministratori diversi da persone fisiche | Applicazione dei regolamenti previsti e comunque termine dell'art. 11, comma 5 | Termine generale di nove mesi: 29 gennaio 2027; verificare eventuale applicazione anteriore",
+            "Fonte della tabella: art. 11, commi 1, 5–10, del decreto. Il termine generale per i regolamenti Consob delle parti III e IV TUF è di nove mesi, con eccezioni: tre mesi per l'art. 154.4, comma 3, e dodici mesi per le disposizioni indicate sugli artt. 112-bis e 133. L'art. 148 TUF contiene inoltre un proprio termine di sei mesi per il regolamento sulle quote di genere. Questi termini non provano da soli che un regolamento sia stato adottato. R4 R3",
+            "Non esiste nel decreto una scadenza unica di adeguamento di tutti gli statuti di tutte le S.p.A. al 31 dicembre 2026. Il termine per la composizione degli organi delle quotate dipende dall'esercizio sociale e dalle nomine; altre regole operano già dal 29 aprile. L'assenza di una scadenza generale non autorizza a continuare ad applicare clausole incompatibili con norme imperative."
+          ],
+          "note": "Separa le decorrenze e le eccezioni; la data delle nomine è collegata all’esercizio sociale e non a un obbligo uniforme per tutti gli statuti."
+        },
+        "R03": {
+          "status": "U",
+          "refs": [
+            "P084",
+            "P085",
+            "P086",
+            "P087",
+            "P088",
+            "P089"
+          ],
+          "passages": [
+            "Dal 29 aprile 2026 | Vigenza generale; verifica delle nuove regole civilistiche e TUF non differite | Società e organi nei rispettivi ambiti",
+            "Assemblee dopo il 30 settembre 2026 | Applicazione delle modifiche assembleari elencate nell'art. 11, comma 7 | Quotate e MTF nei limiti dei richiami",
+            "Relazioni sull'esercizio in corso al 29 aprile 2026 | Nuove informazioni sulla vigilanza; per le quotate anche le informazioni tecnologiche previste | Per società solari: relazioni relative al 2026",
+            "Nomine dall'esercizio successivo a quello in corso al 29 aprile 2026 | Adeguamento statutario all'art. 147-bis.1 in tempo utile | Per società solari: nomine o rinnovi dal 2027",
+            "Atti attuativi Consob | Termine generale di nove mesi; eccezioni di tre e dodici mesi previste dall'art. 11 | Controllare il singolo rinvio, non differire tutta la riforma",
+            "Il termine generale di nove mesi corrisponde al 29 gennaio 2027; le eccezioni dell'art. 11, comma 5, conducono al 29 luglio 2026 per l'art. 154.4, comma 3, e al 29 aprile 2027 per gli artt. 112-bis, comma 7, e 133, comma 1-bis. Il comma 6 collega l'applicazione di determinate modifiche, tra cui l'art. 147-quinquies e il comma 8 dell'art. 123-ter, all'attuazione e comunque alla scadenza pertinente. Sono termini normativi: il loro decorso non certifica, da solo, l'adozione di un regolamento. Art. 11 del decreto"
+          ],
+          "note": "Distingue le quattro famiglie di decorrenze e i termini speciali, senza dedurre l’adozione del regolamento dal decorso del termine."
+        },
+        "R04": {
+          "status": "U",
+          "refs": [
+            "P089",
+            "P090",
+            "P091",
+            "P092",
+            "P093",
+            "P094",
+            "P095"
+          ],
+          "passages": [
+            "Dal 29 aprile 2026 | Regole civilistiche e norme senza differimento | Applicare i nuovi doveri; rivedere deleghe, flussi e rinvii",
+            "Assemblee dopo il 30 settembre 2026 | Art. 11, commi 7 e 8 | Aggiornare avvisi, modalità di partecipazione, regolamenti e termini",
+            "Relazioni sull'esercizio in corso il 29 aprile 2026 | Art. 11, comma 10 | Integrare informativa sull'attività dei controllori e, se adottate, sulle politiche tecnologiche",
+            "Nomine e rinnovi dall'esercizio successivo | Art. 11, comma 9 | Adeguare in tempo utile gli statuti all'art. 147-bis.1 TUF",
+            "Termine ordinario di nove mesi, 29 gennaio 2027 | Art. 11, commi 5 e 6 | Verificare gli atti Consob e le singole decorrenze; non rinviare indistintamente tutto il decreto",
+            "Termini speciali di tre o dodici mesi | Art. 11, comma 5 | Verificare le disposizioni attuative specificamente richiamate; il termine trimestrale per art. 154.4, comma 3, cadeva il 29 luglio 2026",
+            "Le scadenze regolamentari sono termini per l'attuazione e non attestazioni che il relativo regolamento sia già stato adottato. Le decorrenze previste per intermediari nella parte II del TUF non costituiscono una proroga generalizzata della governance delle S.p.A. D.lgs. 47/2026, art. 11"
+          ],
+          "note": "Distingue assemblee, esercizio delle relazioni, rinnovi e attuativi; esclude il rinvio indiscriminato della riforma."
+        }
+      }
+    },
+    {
+      "id": "C18",
+      "topic": "Statuti e rinvii",
+      "expected": "Modello già desumibile; rinvio numerico diverso dalla clausola riproduttiva; evitare obbligo generalizzato di riscrittura.",
+      "source": "https://www.assolombarda.it/servizi/diritto-di-impresa/documenti/consiglio-nazionale-del-notariato-n-63-2026-i",
+      "location": "Studio CNN 63-2026/I, interpretazione degli statuti",
+      "group": "Nucleo",
+      "cells": {
+        "R01": {
+          "status": "P",
+          "refs": [
+            "P021",
+            "P132"
+          ],
+          "passages": [
+            "In concreto. Per una società esistente è opportuno verificare che lo statuto identifichi chiaramente il modello e non contenga clausole incompatibili o rinvii divenuti equivoci. Dal nuovo art. 2380 non discende, da solo, l’invalidità degli organi in carica né un obbligo generalizzato di trasformare il sistema tradizionale. Non è prevista nell’art. 11 una scadenza unica per riscrivere tutti gli statuti delle S.p.A. non quotate. La necessità di modifiche dipende dal testo delle clausole: è diversa la posizione di uno statuto che descrive compiutamente consiglio e collegio da quella di uno che rinvia soltanto a disposizioni abrogate. [2][4]",
+            "Per amministratori e segreteria societaria. Ricostruire modello, mercato e discipline speciali; confrontare lo statuto con i nuovi articoli; aggiornare deleghe e materie riservate; stabilire contenuto, destinatari e tempestività delle informazioni. Il risultato utile è una procedura che permetta al consiglio di decidere con informazioni adeguate e di intervenire sulle criticità."
+          ],
+          "note": "Esclude riscritture generalizzate e distingue statuto descrittivo da rinvio ad articoli abrogati. Non sviluppa però la diversa sorte di un rinvio numerico e di una clausola che riproduce una vecchia regola, richiesta da C18."
+        },
+        "R02": {
+          "status": "P",
+          "refs": [
+            "P019",
+            "P026",
+            "P094"
+          ],
+          "passages": [
+            "Non esiste nel decreto una scadenza unica di adeguamento di tutti gli statuti di tutte le S.p.A. al 31 dicembre 2026. Il termine per la composizione degli organi delle quotate dipende dall'esercizio sociale e dalle nomine; altre regole operano già dal 29 aprile. L'assenza di una scadenza generale non autorizza a continuare ad applicare clausole incompatibili con norme imperative.",
+            "Scelta statutaria. Il nuovo art. 2380 afferma che lo statuto adotta uno dei tre sistemi; prima la norma prevedeva il tradizionale salvo diversa disposizione statutaria. Per una nuova società la scelta va resa esplicita. Per una società esistente è opportuno controllare che lo statuto identifichi inequivocabilmente gli organi e le competenze: dalla sola riscrittura non si può dedurre l'invalidità automatica di tutti gli statuti anteriori o la decadenza degli organi in carica.",
+            "Sostituzione nel monistico. L'art. 2409-octiesdecies continua a richiamare l'art. 2386, abrogato, mentre la nuova disciplina è nell'art. 2409-septiesdecies.1. Il raccordo sistematico è una possibile lettura, non la riproduzione letterale del rinvio vigente. R2"
+          ],
+          "note": "Tratta scelta riconoscibile, clausole incompatibili e rinvii problematici. Non spiega il confronto fra rinvio numerico e clausola riproduttiva con possibile efficacia autonoma."
+        },
+        "R03": {
+          "status": "P",
+          "refs": [
+            "P016",
+            "P099",
+            "P100"
+          ],
+          "passages": [
+            "Prima della riforma, l'art. 2380 c.c. individuava il sistema tradizionale come regime applicabile in mancanza di diversa scelta statutaria. Il nuovo articolo dispone che lo statuto adotti uno dei tre sistemi e introduce un nucleo di norme comuni. Non nasce un quarto sistema e non è disposta la conversione automatica delle società già esistenti. La necessità di esplicitare o correggere singole clausole va valutata sullo statuto concreto; il decreto non stabilisce una scadenza generale entro cui tutte le S.p.A. debbano cambiare statuto. Art. 2380 previgente Art. 9 del decreto Art. 11 del decreto",
+            "Coordinamento dei rinvii. Il testo del nuovo art. 2409-octiesdecies mantiene, nella sostituzione di un componente, un rinvio all'abrogato art. 2386, mentre la cooptazione monistica è disciplinata dall'art. 2409-septiesdecies.1. L'art. 152 TUF richiama il settimo comma del 2409-octiesdecies, mentre la condizione del voto contrario compare nell'ottavo. Nell'art. 16 del decreto si alternano richiami alla sezione V.1 e IV.1 e il comma 3 rinvia al comma 1 nel contesto della finestra collegata al regolamento del comma 2. Queste difformità sono presenti nei testi ufficiali consultati: non è prudente trasformare una ricostruzione sistematica in una certezza procedurale senza verifica del caso. Art. 9 del decreto Art. 152 vigente Art. 16 del decreto",
+            "S.r.l. e altri rinvii. La circolare riguarda le S.p.A. Non è corretto estendere automaticamente l'intera riforma alle S.r.l.; esistono tuttavia collegamenti, in particolare il richiamo dell'art. 2477 alla disciplina del collegio sindacale. I testi vigenti degli artt. 2475 e 2477 conservano inoltre richiami agli artt. 2381 e 2409, interessati dal riassetto. La continuità degli istituti e la portata dei rinvii richiedono una lettura coordinata; non si può dedurne né la scomparsa dei controlli nelle S.r.l. né l'applicazione meccanica di ogni nuova disposizione. Art. 2475 vigente Art. 2477 vigente Art. 9 del decreto"
+          ],
+          "note": "Esclude una scadenza universale e approfondisce i rinvii normativi. Non sviluppa la distinzione interpretativa fra rinvio statutario numerico e regola trascritta nello statuto."
+        },
+        "R04": {
+          "status": "P",
+          "refs": [
+            "P007",
+            "P021",
+            "P098",
+            "P107"
+          ],
+          "passages": [
+            "L'intervento operativo prioritario è riesaminare statuto, deleghe, flussi informativi e procedure di controllo. Non emerge un obbligo generale di cambiare sistema, rinnovare anticipatamente tutti gli organi o modificare ogni statuto entro il 31 dicembre 2026. Per le società soggette al TUF esistono invece specifici adempimenti e termini, illustrati nel calendario finale. Le indicazioni operative di questa circolare sono inferenze dalle norme: l'adozione di una clausola o la valutazione di una responsabilità richiedono i dati della singola società. D.lgs. 47/2026, art. 9 D.lgs. 47/2026, art. 11",
+            "Il nuovo art. 2380 c.c. affida allo statuto l'adozione di uno dei tre sistemi. Scompare la precedente formulazione che individuava il tradizionale come disciplina residuale in assenza di diversa scelta statutaria. Ciò rende opportuna una clausola chiara sul modello adottato e la revisione dei vecchi rinvii. Non consente, da solo, di affermare che gli organi di una società preesistente con statuto silente siano automaticamente decaduti. Un eventuale cambio di modello va deliberato e coordinato: salvo diversa previsione della delibera, ha effetto alla riunione dell'organo competente chiamato ad approvare il bilancio dell'esercizio successivo. D.lgs. 47/2026, art. 9",
+            "2. Rivedere statuto e deleghe. Identificare clausole incompatibili, rinvii superati e opzioni realmente utili; separare correzioni necessarie da scelte di governance.",
+            "Responsabilità e clausole concrete. Restano valutazioni riferite al singolo caso la ragionevolezza dell'affidamento, l'indipendenza sostanziale, la causalità dell'omessa vigilanza, il regime temporale delle azioni e l'effetto delle clausole pregresse. La riforma offre maggiore articolazione delle scelte, ma rende decisiva la coerenza tra modello adottato, poteri effettivi, informazioni e condotte documentate."
+          ],
+          "note": "Propone un riesame dello statuto senza modifiche indiscriminate. La distinzione fra rinvio numerico e clausola riproduttiva resta non sviluppata."
+        }
+      }
+    },
+    {
+      "id": "C19",
+      "topic": "Flussi semestrali e trimestrali",
+      "expected": "Art. 2381-bis: almeno semestrale; quotate art. 150 TUF almeno trimestrale. Non rinviare le urgenze.",
+      "source": "https://www.gazzettaufficiale.it/eli/gu/2026/04/14/86/so/14/sg/pdf",
+      "location": "Art. 9 → art. 2381-bis; note art. 150 TUF",
+      "group": "Nucleo",
+      "cells": {
+        "R01": {
+          "status": "U",
+          "refs": [
+            "P041",
+            "P047"
+          ],
+          "passages": [
+            "Il precedente art. 2381 viene articolato nelle disposizioni sul presidente, sulle deleghe e sull’informazione consiliare. Non tutte le regole sono nuove: già prima il consiglio delimitava le deleghe, poteva impartire direttive e avocare operazioni; gli organi delegati dovevano riferire almeno ogni sei mesi. Il nuovo art. 2381-bis rende però espressamente non delegabili le decisioni di accesso agli strumenti di regolazione della crisi e dell’insolvenza, comprendendo il contenuto della proposta e le condizioni del piano. [2][5]",
+            "Per le quotate va inoltre mantenuta distinta la periodicità speciale dell’art. 150 TUF: gli amministratori riferiscono tempestivamente e almeno trimestralmente all’organo di controllo. La cadenza semestrale del codice non consente di ridurre questo presidio. [3][7]"
+          ],
+          "note": "Colloca la cadenza semestrale nelle deleghe e conserva la tempestività e il minimo trimestrale delle quotate."
+        },
+        "R02": {
+          "status": "U",
+          "refs": [
+            "P040"
+          ],
+          "passages": [
+            "La periodicità minima comune dell'informazione dei delegati rimane semestrale, salva maggiore frequenza statutaria. Per le quotate rimane il flusso tempestivo e almeno trimestrale dell'art. 150 TUF verso i controllori: la norma civilistica non lo riduce. Un calendario minimo non giustifica attendere la scadenza davanti a fatti urgenti. R2, art. 2381-bis; R3, art. 150; R1, note."
+          ],
+          "note": "Distingue esplicitamente le due cadenze, i riferimenti e la necessità di anticipare i flussi nei casi urgenti."
+        },
+        "R03": {
+          "status": "U",
+          "refs": [
+            "P034"
+          ],
+          "passages": [
+            "Il flusso dei delegati verso consiglio e organo di controllo resta almeno semestrale nel codice. Per le quotate, il TUF conserva la cadenza almeno trimestrale dell'informativa all'organo di controllo, oltre alla tempestività. Non va ridotta a sei mesi una frequenza speciale più stringente. Art. 9 del decreto Art. 6 del decreto"
+          ],
+          "note": "Conserva il minimo semestrale civilistico e quello trimestrale TUF, oltre alla tempestività."
+        },
+        "R04": {
+          "status": "U",
+          "refs": [
+            "P029"
+          ],
+          "passages": [
+            "Sul piano organizzativo conviene stabilire tempi di invio dei documenti, contenuti minimi, responsabili dei dati, registro delle richieste e riscontro delle risposte. La relazione degli organi delegati prevista dal codice resta almeno semestrale; per le società soggette all'art. 150 TUF l'informazione è tempestiva e almeno trimestrale. Il decreto non autorizza ad allungare a sei mesi i flussi delle quotate. D.lgs. 47/2026, art. 9 D.lgs. 47/2026, art. 6"
+          ],
+          "note": "Individua entrambe le cadenze e vieta di usare il minimo civilistico per allungare i flussi delle quotate."
+        }
+      }
+    },
+    {
+      "id": "C20",
+      "topic": "Tecnologia facoltativa e controlli",
+      "expected": "Nessun obbligo generale di acquistare IA. Adeguatezza degli strumenti adottati e informazione sulle politiche, ove adottate.",
+      "source": "https://www.consob.it/documents/1912911/1962639/dlgs58_1998.pdf",
+      "location": "Artt. 123-bis e 149-ter",
+      "group": "Nucleo",
+      "cells": {
+        "R01": {
+          "status": "U",
+          "refs": [
+            "P089",
+            "P090"
+          ],
+          "passages": [
+            "L’art. 149-ter dispone che, qualora adottati, sistemi di monitoraggio continuo e strumenti automatici e predittivi siano adeguati e proporzionati a natura, dimensioni e rischi dell’impresa. L’art. 123-bis richiede inoltre di descrivere le politiche sull’impiego dell’intelligenza artificiale e di nuove tecnologie e quelle sui rischi informatici, se adottate, secondo le nuove lettere d-ter e d-quater. [3]",
+            "Il decreto non impone a tutte le società di comprare un sistema di intelligenza artificiale. Se uno strumento entra nel controllo, la sua adeguatezza va valutata: dati incompleti, falsi allarmi, mancata gestione delle segnalazioni e responsabilità poco chiare possono renderlo inidoneo. Questi esempi sono ricadute organizzative della proporzionalità richiesta dalla norma. La tecnologia non trasferisce la responsabilità legale dall’organo al fornitore del software. [3]"
+          ],
+          "note": "Separa facoltatività dell’adozione, adeguatezza degli strumenti e informativa sulle politiche; gli esempi chiariscono i limiti d’uso."
+        },
+        "R02": {
+          "status": "U",
+          "refs": [
+            "P067",
+            "P068"
+          ],
+          "passages": [
+            "L'art. 149-ter richiede che, qualora adottati, i sistemi di monitoraggio continuo e gli strumenti automatici e predittivi siano adeguati e proporzionati a impresa e rischi. L'art. 123-bis aggiunge informazioni sulle politiche, ove adottate, relative all'impiego delle tecnologie e dell'intelligenza artificiale e sulla sicurezza informatica. Non esiste in queste disposizioni un obbligo generale di acquistare strumenti di IA o di automatizzare il controllo. R3 R4",
+            "Se uno strumento è utilizzato, è ragionevole documentarne finalità, limiti, qualità dei dati, gestione degli allarmi e supervisione. Un indicatore automatico favorevole non sostituisce la valutazione degli organi. La norma rende rilevante l'adeguatezza dell'uso, non il semplice possesso della tecnologia."
+          ],
+          "note": "Esclude un acquisto obbligatorio e collega gli strumenti adottati a proporzionalità, qualità dei dati e supervisione."
+        },
+        "R03": {
+          "status": "U",
+          "refs": [
+            "P066"
+          ],
+          "passages": [
+            "L'art. 147-sexies TUF attribuisce ai delegati il presidio del sistema di controllo interno e gestione dei rischi e al consiglio compiti di valutazione, coordinamento e visione unitaria. La relazione di governance deve dare conto anche delle politiche eventualmente adottate su intelligenza artificiale, nuove tecnologie e sicurezza informatica. Se si adottano sistemi di controllo continui, automatici o predittivi, l'art. 149-ter ne richiede proporzionalità e adeguatezza. Non è introdotto un obbligo generale di acquistare o utilizzare IA, né di istituire sempre un nuovo comitato rischi. Art. 6 del decreto"
+          ],
+          "note": "Conserva le condizioni di adozione e non deduce un obbligo generale di IA o di un nuovo comitato rischi."
+        },
+        "R04": {
+          "status": "U",
+          "refs": [
+            "P078"
+          ],
+          "passages": [
+            "Gli artt. 149-ter e 123-bis considerano strumenti di controllo continuo, automatico o predittivo e politiche relative a tecnologie, intelligenza artificiale e rischi informatici. Le formule normative fanno riferimento a strumenti e politiche se adottati. Non impongono a tutte le società di acquistare un sistema di IA. Se la società li utilizza, deve valutarne adeguatezza e proporzionalità e fornire le informazioni richieste. Le relative informazioni entrano nelle relazioni sull'esercizio già in corso il 29 aprile 2026: per le società solari, il 2026. D.lgs. 47/2026, art. 6 D.lgs. 47/2026, art. 11"
+          ],
+          "note": "Esplicita gli obblighi condizionati all’uso, l’informativa e la decorrenza nelle relazioni dell’esercizio interessato."
+        }
+      }
+    },
+    {
+      "id": "A01",
+      "topic": "Assemblee e tutele dei soci",
+      "expected": "Modalità a distanza, condizioni deliberative e diritto della minoranza al luogo fisico. Non una facoltà senza condizioni.",
+      "source": "https://www.gazzettaufficiale.it/eli/gu/2026/04/14/86/so/14/sg/pdf",
+      "location": "Art. 6 → art. 125-bis.1 TUF",
+      "group": "Complemento",
+      "cells": {
+        "R01": {
+          "status": "U",
+          "refs": [
+            "P093",
+            "P094",
+            "P125"
+          ],
+          "passages": [
+            "Il nuovo art. 125-bis.1 permette di disciplinare assemblee esclusivamente fisiche, telematiche o tramite rappresentante designato. In mancanza della scelta statutaria esclusiva, la decisione dell’organo amministrativo incontra le condizioni previste dalla norma, comprese l’approvazione della maggioranza degli indipendenti o del consiglio di sorveglianza e, per le modalità indicate, un regolamento pubblicato. Soci rappresentanti almeno il 5% del capitale con diritto di voto sulle materie all’ordine del giorno, o la minore soglia statutaria, possono chiedere nei termini una riunione in luogo fisico: la richiesta va presentata entro cinque giorni dalla pubblicazione dell’avviso e la società provvede alla relativa informazione entro tre giorni dal ricevimento. [3]",
+            "Se vengono previste soglie per l’intervento nella discussione in assemblea fisica o telematica, esse non possono superare lo 0,5 per mille, cioè lo 0,05% del capitale. Non è una soglia generale per esercitare il voto. Le estensioni alle società italiane su MTF riguardano i commi espressamente richiamati dall’art. 125-bis.1, non tutta la disciplina assembleare delle quotate. Restano inoltre regole particolari per le cooperative. [3]",
+            "Per l’esclusività statutaria delle modalità assembleari, il comma 8 considera le sole clausole adottate o modificate dopo l’entrata in vigore del decreto. Una vecchia clausola sulle assemblee a distanza non può quindi essere trattata automaticamente come scelta già conforme al nuovo art. 125-bis.1, comma 1. Le decorrenze legate alle nomine non impongono, da sole, la cessazione anticipata degli organi in carica. [4]"
+          ],
+          "note": "Tratta scelta statutaria, approvazioni richieste, diritto della minoranza al luogo fisico e relativi termini; distingue gli MTF."
+        },
+        "R02": {
+          "status": "U",
+          "refs": [
+            "P088",
+            "P089"
+          ],
+          "passages": [
+            "Dal 1º ottobre 2026 opera il nuovo quadro assembleare TUF richiamato dall'art. 11. L'art. 125-bis.1 consente una disciplina statutaria delle modalità di svolgimento; in mancanza della scelta esclusiva statutaria rilevante, la decisione amministrativa per modalità esclusivamente a distanza o tramite rappresentante designato è sottoposta alle condizioni previste, inclusa l'approvazione degli indipendenti a maggioranza o della sorveglianza. Quando statuto o decisione amministrativa prevedono esclusivamente telecomunicazione o rappresentante designato, i soci che rappresentano almeno il 5% del capitale con diritto di voto sulle materie all'ordine del giorno, o la minore soglia statutaria, possono in ogni caso chiedere l'adunanza in un luogo fisico entro cinque giorni dall'avviso. Questa tutela opera anche contro la scelta statutaria esclusiva. I commi 1, 2, 3 e 5 si applicano anche alle società con azioni su MTF; per le cooperative operano soglie e termini particolari. R3, art. 125-bis.1; R4",
+            "Per la scelta statutaria esclusiva contano soltanto le clausole adottate o modificate dopo l'entrata in vigore del decreto. Una clausola precedente sul rappresentante designato non va quindi automaticamente trattata come la nuova scelta esclusiva dell'art. 125-bis.1, comma 1. Convocazione, regolamento assembleare, domande e proposte dei soci vanno coordinati con il testo applicabile alla specifica assemblea. R4, commi 7 e 8."
+          ],
+          "note": "Il diritto della minoranza al luogo fisico è esplicitato anche contro la scelta statutaria esclusiva; sono presenti condizioni e limiti delle estensioni."
+        },
+        "R03": {
+          "status": "U",
+          "refs": [
+            "P069",
+            "P071",
+            "P072",
+            "P073"
+          ],
+          "passages": [
+            "Le modalità assembleari sono ora disciplinate in modo organico dall'art. 125-bis.1 TUF. Lo statuto può individuare una modalità esclusiva; altrimenti decide l'organo amministrativo secondo efficienza e trasparenza. Per le scelte consiliari di assemblea esclusivamente a distanza o tramite rappresentante designato occorrono l'approvazione della maggioranza degli indipendenti, o del consiglio di sorveglianza, e un regolamento pubblicato con le garanzie prescritte. Art. 125-bis.1 vigente",
+            "Soci con almeno il 5% del capitale avente diritto di voto sulle materie all'ordine del giorno, o la minore quota statutaria, possono chiedere l'adunanza fisica entro cinque giorni dall'avviso; la notizia va pubblicata entro tre giorni. Le cooperative hanno soglie e termini propri.",
+            "L'eventuale soglia per intervenire nella discussione non può superare lo 0,5 per mille, cioè lo 0,05%. Non è una soglia generale per votare; restano le domande prima dell'assemblea e le proposte secondo la loro disciplina.",
+            "Solo i commi espressamente richiamati sono estesi agli MTF: non lo è automaticamente la soglia sulla discussione. Le vecchie clausole statutarie non valgono senz'altro come scelta esclusiva ai sensi del nuovo comma 1: l'art. 11, comma 8, considera quelle adottate o modificate dopo l'entrata in vigore del decreto. Art. 125-bis.1 vigente Art. 11 del decreto"
+          ],
+          "note": "Indica approvazioni, regolamento, soglia e termini della richiesta fisica e limiti della disciplina estesa agli MTF."
+        },
+        "R04": {
+          "status": "U",
+          "refs": [
+            "P083",
+            "P084"
+          ],
+          "passages": [
+            "Per le assemblee successive al 30 settembre 2026 opera il nuovo art. 125-bis.1. Lo statuto può regolare le modalità; in sua assenza provvede l'organo amministrativo. Il ricorso esclusivo a telecomunicazione o rappresentante designato comporta specifici presidi, tra cui, nei casi previsti, il voto favorevole della maggioranza degli indipendenti o l'approvazione della sorveglianza e un regolamento pubblicato. Le clausole statutarie rilevanti ai sensi del comma 1 sono quelle adottate o modificate dopo l'entrata in vigore del decreto. D.lgs. 47/2026, art. 6 D.lgs. 47/2026, art. 11",
+            "I soci con almeno il 5% del capitale con voto sulle materie all'ordine del giorno, o la minore soglia statutaria, possono chiedere entro cinque giorni dall'avviso un'adunanza in luogo fisico; l'integrazione dell'avviso segue entro tre giorni. Alcune di queste regole si estendono espressamente agli MTF. L'eventuale soglia per partecipare alla discussione, non superiore allo 0,5 per mille, riguarda la discussione nelle ipotesi previste: non è una soglia minima generale per il voto. Il calendario assembleare va anche aggiornato ai nuovi termini degli artt. 126-bis e 127-ter; le cooperative hanno regole specifiche. D.lgs. 47/2026, art. 6"
+          ],
+          "note": "Descrive i presidi per le modalità esclusive e quantifica soglia e termini della richiesta di adunanza fisica."
+        }
+      }
+    },
+    {
+      "id": "A02",
+      "topic": "Nuovi emittenti e PMI",
+      "expected": "Opzioni subordinate a requisiti, scelte statutarie, minoranze, recesso e attuazione; non tutte le PMI né tutte le quotate.",
+      "source": "https://www.gazzettaufficiale.it/eli/gu/2026/04/14/86/so/14/sg/pdf",
+      "location": "Artt. 6 e 16 → artt. 154.1–154.5 TUF",
+      "group": "Complemento",
+      "cells": {
+        "R01": {
+          "status": "U",
+          "refs": [
+            "P097",
+            "P098",
+            "P099",
+            "P100",
+            "P101"
+          ],
+          "passages": [
+            "Gli artt. 154.1–154.5 TUF introducono un regime statutario speciale, collegato soprattutto all’accesso alla quotazione, con specifiche regole su nomina degli organi, operazioni con parti correlate e modificazioni statutarie. L’adozione per una nuova quotazione richiede scelte precedenti alla domanda e acquista efficacia secondo le condizioni legali; non discende dal semplice fatto di diventare quotati. Il regime contempla tutele dei soci e il recesso nei casi previsti. [3]",
+            "Fra le opzioni vi sono il voto sui singoli candidati e, salvo diversa previsione, il voto cumulativo. La presenza di un amministratore proposto da soci non controllanti resta obbligatoria nei casi dell’art. 154.3, comma 5: voto plurimo o maggiorato, controllo pubblico oppure assenza di una maggioranza consiliare indipendente prevista dallo statuto. Per collegio sindacale e sorveglianza sono preservate le specifiche nomine da candidature dei soci non controllanti. [3]",
+            "Le deroghe statutarie alle procedure sulle parti correlate dell’art. 154.5 non possono eliminare le procedure per le operazioni in cui almeno un indice quantitativo supera il 10%; restano gli obblighi informativi e l’informazione almeno semestrale al consiglio sulle operazioni escluse. Le semplificazioni vanno dunque valutate insieme ai presidi che la legge conserva, non come esenzione complessiva dalla disciplina. [3]",
+            "L’art. 16 del decreto consente l’accesso anche a determinate PMI già quotate, alle condizioni ivi indicate, comprese quelle relative alla capitalizzazione nel periodo rilevante e al procedimento deliberativo. “PMI” va qui inteso nella disciplina finanziaria richiamata, non trasposto automaticamente dalla definizione contabile o europea usata per altri fini. Le condizioni di voto dei soci non legati al controllo e le disposizioni attuative richiedono una verifica dedicata. [6]",
+            "Non è corretto tradurre queste facoltà in una generale abolizione della rappresentanza di minoranza o dei controlli sulle parti correlate. Le deroghe hanno condizioni e limiti; la convenienza dipende da proprietà, investitori, capitale, voto e obiettivi della società. La presente circolare descrive la possibilità legislativa, senza attestare che ogni opzione sia concretamente esercitabile da ogni emittente al 14 ottobre 2026. [3][6][10]"
+          ],
+          "note": "Distingue nuove quotazioni e PMI ammesse al transitorio, opzioni statutarie, minoranze, recesso e dipendenza dall’attuazione."
+        },
+        "R02": {
+          "status": "U",
+          "refs": [
+            "P090",
+            "P091"
+          ],
+          "passages": [
+            "Il nuovo regime degli artt. 154.1–154.5 riguarda emittenti di nuova quotazione che esercitano l'opzione statutaria e, con condizioni transitorie, determinate PMI già quotate. Può incidere sul voto di lista e sulle modalità di elezione degli amministratori, comprese forme di voto individuale o cumulativo. Le deroghe non sono automaticamente disponibili a tutte le quotate: presupposti, protezioni delle minoranze, requisiti d'indipendenza e recesso devono essere esaminati insieme. R3 R6",
+            "Per le PMI già quotate l'art. 16 richiede, fra l'altro, il rispetto della soglia di capitalizzazione nei tre esercizi precedenti e al momento della modifica, nonché la particolare approvazione degli azionisti diversi dai soci di controllo individuati dalla norma, con la specifica soglia del voto contrario, e riconosce il recesso ai non consenzienti. Non basta essere una piccola impresa in senso economico. L'effettiva decisione di optare richiede verifica delle disposizioni Consob e dei problemi di coordinamento segnalati al § 10. Non si ricava da questa circolare un termine finale operativo della finestra di opzione senza aver prima verificato l'adozione del regolamento cui la legge lo collega."
+          ],
+          "note": "Espone il regime condizionato e i requisiti delle PMI, la deliberazione e il recesso; non presume un termine operativo senza verifica del regolamento."
+        },
+        "R03": {
+          "status": "U",
+          "refs": [
+            "P077",
+            "P078",
+            "P079",
+            "P080",
+            "P081"
+          ],
+          "passages": [
+            "Gli artt. 154.1–154.5 TUF consentono agli emittenti di nuova quotazione su mercato regolamentato italiano di scegliere un regime speciale mediante modifiche statutarie anteriori alla domanda, efficaci dal primo giorno di negoziazione; è previsto il recesso dei soci che non concorrono alla deliberazione. Tra le opzioni figurano elezione individuale degli amministratori con meccanismi di voto cumulativo salvo diversa previsione, disciplina specifica delle modifiche statutarie e maggiore flessibilità sulle parti correlate. Art. 6 del decreto Art. 16 del decreto",
+            "La rappresentanza delle minoranze non è sempre facoltativa: resta obbligatoria nelle ipotesi previste, fra cui voto plurimo o maggiorato, controllo pubblico o mancata previsione statutaria di un consiglio composto in maggioranza da indipendenti. Le esenzioni per parti correlate incontrano comunque la soglia del 10% degli indici quantitativi individuati dalla Consob, oltre la quale le procedure devono applicarsi; gli organi delegati riferiscono almeno semestralmente sulle operazioni escluse. Le scelte statutarie richiedono quindi una valutazione delle tutele residue. Art. 6 del decreto",
+            "Il regime speciale permette inoltre di prevedere la maggioranza del capitale rappresentato per le modifiche statutarie, fermi i quorum costitutivi e salvo voto plurimo o maggiorato. Consente di escludere diverse cause di recesso dell'art. 2437, primo comma, preservando quella per la modifica dell'oggetto che alteri significativamente il rischio, salvo l'ulteriore meccanismo di approvazione dei soci diversi da quelli di maggioranza previsto dal comma 3 dell'art. 154.4. Conseguenza: le regole future del rapporto sociale possono diventare più modificabili e l'uscita del socio dissenziente meno accessibile. L'opzione iniziale va valutata anche da questa prospettiva, e non soltanto come semplificazione della quotazione. Art. 6 del decreto",
+            "L'art. 16 apre una possibilità anche a PMI già quotate, nei limiti di capitalizzazione e con la storia triennale previsti dalla norma, subordinandola al meccanismo di voto dei soci diversi da quelli di maggioranza, alle relative eccezioni e al recesso. La qualifica di PMI è quella del TUF, non quella ordinaria contabile o europea. Per gli emittenti di nuova quotazione è prevista anche la facoltà di riservare una quota non superiore ai due terzi degli amministratori di minoranza a liste presentate da investitori istituzionali e gestori di attivi. Art. 16 del decreto",
+            "Prima di esercitare l'opzione, vanno verificati il regolamento attuativo Consob, i requisiti dell'emittente, il corretto procedimento e i costi del recesso. Il termine biennale dell'art. 16 è agganciato all'adozione del regolamento richiamato, non automaticamente al 29 aprile 2026. I rinvii testuali non perfettamente coordinati dell'articolo richiedono una verifica specifica, illustrata sotto."
+          ],
+          "note": "Approfondisce accesso, minoranze, OPC, recesso e attuazione. Il maggiore dettaglio resta un’osservazione qualitativa, senza creare criteri aggiuntivi."
+        },
+        "R04": {
+          "status": "U",
+          "refs": [
+            "P085",
+            "P086"
+          ],
+          "passages": [
+            "Gli artt. 154.1–154.5 prevedono per gli emittenti di nuova quotazione un regime opzionale, da attivare statutariamente prima della richiesta di ammissione, con effetti dall'ammissione e diritto di recesso per i soci non consenzienti nei termini di legge. Consente, tra l'altro, modalità alternative di elezione, inclusa la votazione individuale dei candidati, e specifiche opzioni su modifiche statutarie, recesso e OPC. Restano presidi sul genere meno rappresentato e, nelle ipotesi indicate, sulla rappresentanza delle minoranze. Non è un'autorizzazione per ogni società già quotata a eliminare immediatamente il voto di lista o il recesso. D.lgs. 47/2026, art. 6",
+            "L'art. 16 apre una via transitoria a determinate PMI già quotate, con requisiti dimensionali e temporali, protezione delle minoranze e recesso. La PMI rilevante è quella definita dal TUF, legata alla capitalizzazione, non automaticamente la PMI individuata da altre discipline. Per esercitare l'opzione occorre controllare puntualmente art. 16, rinvii, attuazione Consob e statuto; non è prudente ricavare da questa circolare una scadenza universale per tutte le quotate. D.lgs. 47/2026, art. 16"
+          ],
+          "note": "Copre in sintesi opzione, destinatari, requisiti, tutele e attuazione. È utile sul medesimo standard di A02, pur meno dettagliata sulle soglie delle OPC."
+        }
+      }
+    },
+    {
+      "id": "M01",
+      "topic": "Inferenza distinta dalla norma",
+      "expected": "Collegare disposizione, differenza, destinatario e conseguenza; segnalare interpretazione e proporzionalità senza inventare adempimenti.",
+      "source": "https://www.gazzettaufficiale.it/eli/gu/2026/04/14/86/so/14/sg/pdf",
+      "location": "Criterio editoriale ricavato dal prompt; esempi verificati sul decreto",
+      "group": "Metodo",
+      "cells": {
+        "R01": {
+          "status": "U",
+          "refs": [
+            "P006",
+            "P007",
+            "P038",
+            "P042",
+            "P045",
+            "P056",
+            "P136"
+          ],
+          "passages": [
+            "La conseguenza pratica è che occorre riesaminare come la società decide, riceve informazioni, controlla i rischi e documenta le reazioni alle anomalie. La sola sostituzione dei richiami numerici nello statuto non esaurisce il lavoro. Questa è un’inferenza organizzativa dalla combinazione dei nuovi artt. 2381-bis, 2381-ter e 2396-quinquies c.c.; non significa che ogni società debba cambiare sistema, costituire nuovi uffici o acquistare strumenti tecnologici. [2]",
+            "La circolare distingue il dato normativo, il confronto con la disciplina precedente e le ricadute operative ricavate dalla norma. Non tratta integralmente gli altri interventi del decreto su intermediari, gestione collettiva, offerte pubbliche e sanzioni. La ricostruzione distingue anche la forza delle fonti: il testo normativo fonda le regole, mentre documentazione preparatoria e inferenze aiutano a spiegarle. Si fonda sul testo pubblicato in Gazzetta, sul TUF consolidato dalla Consob a settembre 2026 e sui testi previgenti riprodotti nella documentazione parlamentare. Gli schemi correttivi e le consultazioni sono separati dal diritto vigente. La verifica degli atti attuativi successivi presenta i limiti precisati nella sezione 12. [1][4][5]",
+            "Gli organi delegati curano gli assetti; il consiglio ne valuta l’adeguatezza sulla base delle informazioni ricevute, esamina i piani quando elaborati e valuta l’andamento della gestione. L’organo di controllo vigila. Da questa ripartizione si ricava che un sindaco può chiedere informazioni, contestare carenze e sollecitare rimedi, ma non sostituirsi agli amministratori nell’adozione e gestione dei presidi organizzativi. [2]",
+            "Esempio operativo. Una delega generale all’amministratore delegato non basta a trasferirgli la decisione di accesso e di approvazione del contenuto del piano. Il consiglio deve ricevere l’istruttoria e deliberare sulle materie riservate. Non se ne deduce che ogni colloquio preparatorio con banche o consulenti debba essere deliberato collegialmente: va distinta la preparazione dalla decisione riservata. [2]",
+            "La disposizione valorizza la divisione dei compiti e l’affidabilità del processo informativo. Non introduce un’esenzione generale da responsabilità: restano il dovere di informazione e la disciplina dell’art. 2392. L’aggettivo “ragionevole” impedisce di equiparare l’affidamento a un’accettazione passiva di dati incoerenti o manifestamente incompleti. Questa lettura è un’inferenza sistematica, non una nuova fattispecie di immunità. [2]",
+            "In concreto. La presenza di un organigramma, di procedure approvate o di un rapporto periodico non prova da sola che il controllo funzioni. Diventa utile ricostruire chi individua un rischio, chi lo comunica, chi decide un intervento e come ne viene seguito l’esito. Per una S.p.A. industriale possono essere rilevanti, secondo dimensioni e attività, credito clienti, continuità delle forniture, tesoreria, sicurezza dei sistemi e concentrazione commerciale. Sono esempi di applicazione proporzionata, non un elenco di nuovi uffici obbligatori imposto dal decreto. [2]",
+            "Queste attività sono proposte operative ricavate dalle norme esaminate, non ulteriori adempimenti con una scadenza legale uniforme. Il prodotto del riesame dovrebbe individuare, per ciascun intervento necessario, il responsabile, il documento da aggiornare, la decisione competente e la relativa data."
+          ],
+          "note": "Identifica regole e inferenze, destinatari e conseguenze proporzionate. U valuta questo metodo: non assorbe l’errore storico distinto segnalato in T05."
+        },
+        "R02": {
+          "status": "U",
+          "refs": [
+            "P008",
+            "P009",
+            "P035",
+            "P039",
+            "P065",
+            "P109"
+          ],
+          "passages": [
+            "La conseguenza operativa è rivedere il funzionamento della governance. Una semplice sostituzione dei numeri degli articoli nello statuto non basta: occorre verificare chi decide, quali decisioni sono delegabili, come circolano le informazioni, chi può intervenire sulle irregolarità e come viene documentata la vigilanza. Questa è un'inferenza organizzativa dalle norme, non un adempimento documentale autonomo imposto con tale denominazione.",
+            "La circolare distingue: regole di legge; differenze rispetto al quadro precedente; indicazioni operative ricavate da tali differenze. Non valuta uno statuto o una responsabilità individuale. Per regolamenti attuativi e incongruenze testuali, i limiti della verifica sono indicati al § 10: il testo primario è stato acquisito; non si attesta un censimento completo dell'attuazione secondaria al 14 ottobre 2026.",
+            "Alle competenze già non delegabili si aggiungono espressamente le decisioni sull'accesso allo strumento di regolazione della crisi e dell'insolvenza, comprensive del contenuto della proposta e delle condizioni del piano. Un amministratore delegato può svolgere attività preparatorie nei limiti dei propri poteri; non può ricavare da una delega generale la competenza a decidere da solo ciò che la norma riserva al consiglio. L'inquadramento dello specifico percorso di crisi deve essere coordinato con la sua disciplina speciale: la formula non va tradotta in un'indistinta non delegabilità di qualsiasi atto collegato a difficoltà finanziarie. R2, art. 2381-bis, terzo comma.",
+            "L'inferenza corretta è una valutazione concreta della condotta; non un'esenzione di responsabilità. Una relazione degli esecutivi completa e coerente può sostenere l'affidamento. Dati contraddittori, ritardi reiterati o segnali di perdita di continuità aziendale rendono invece necessarie domande e iniziative proporzionate. Per esempio, a fronte di un forte deterioramento della cassa, il richiamo a un budget ottimistico non rende da solo ragionevole il voto favorevole del consigliere che conosce lo scostamento.",
+            "In concreto, il consiglio dovrebbe ricevere un quadro raccordato dei rischi, non soltanto relazioni separate di funzioni che non si confrontano. Il controllore deve poter ricostruire informazioni, verifiche e risposte alle anomalie. Le raccomandazioni organizzative vanno proporzionate all'impresa e alle competenze dei singoli organi.",
+            "Le attività della tabella sono proposte operative ricavate dalla riforma, da adattare alle dimensioni e alla situazione della società. Non rappresentano un elenco di nuovi documenti obbligatori per tutte le imprese."
+          ],
+          "note": "Distingue espressamente regole, differenze e indicazioni organizzative, evitando di trasformare esempi e documenti consigliati in obblighi autonomi."
+        },
+        "R03": {
+          "status": "U",
+          "refs": [
+            "P004",
+            "P022",
+            "P028",
+            "P033",
+            "P042",
+            "P096"
+          ],
+          "passages": [
+            "La riforma rende più autonoma la scelta fra i tre sistemi di governo societario e rende più espliciti compiti, informazioni e responsabilità. Il risultato pratico è una maggiore libertà organizzativa accompagnata da una maggiore importanza dei processi decisionali e della documentazione dei controlli. Questa è una lettura sistematica del decreto: la convenienza del modello prescelto dipende dalla struttura della società, non dal solo numero degli organi. Art. 9 del decreto Art. 6 del decreto",
+            "Inferenza operativa. Una società familiare non trova automaticamente nel monistico una soluzione meno onerosa: occorrono persone indipendenti idonee, capacità di controllo e revisione esterna. Il dualistico può separare meglio proprietà e gestione, ma attribuisce al consiglio di sorveglianza responsabilità ulteriori rispetto a un collegio sindacale. La comparazione dei costi deve includere questi compiti, non solo il numero delle cariche. Art. 9 del decreto",
+            "Sono espressamente non delegabili le decisioni sull'accesso allo strumento di regolazione della crisi e dell'insolvenza, comprese la proposta e le condizioni del piano. Il divieto si aggiunge alle materie già riservate, quali bilancio, progetti di fusione e scissione e le attribuzioni sul capitale indicate dalla legge. Non significa che ogni attività preparatoria o esecutiva debba essere svolta personalmente dall'intero consiglio. Art. 2409-novies previgente Art. 9 del decreto",
+            "Esempio interpretativo. Un consigliere riceve dati di cassa rassicuranti, ma conosce ritardi sistematici nei pagamenti e richieste urgenti di finanziamento. Limitarsi a prendere atto della relazione del delegato rende più difficile sostenere che l'affidamento fosse ragionevole. Chiedere riconciliazioni, scenari e spiegazioni, facendo risultare domanda e risposta a verbale, rende invece verificabile il processo decisionale; non garantisce da solo l'esonero da responsabilità.",
+            "Il significato pratico è che la vigilanza deve guardare anche ai collegamenti fra funzioni: chi rileva un rischio, chi lo valuta, a chi lo comunica e chi interviene. Un organigramma formalmente corretto non dimostra che il sistema funzioni. Questa è una conseguenza interpretativa dell'espressione legislativa relativa al concreto funzionamento, non l'imposizione di un modello organizzativo identico per tutte le società.",
+            "Queste attività costituiscono indicazioni organizzative per attuare le norme; non sono scadenze aggiuntive stabilite dal decreto."
+          ],
+          "note": "Etichetta inferenze ed esempi, collega i ruoli alle ricadute e distingue proporzionalità, preparazione e decisione."
+        },
+        "R04": {
+          "status": "U",
+          "refs": [
+            "P007",
+            "P022",
+            "P025",
+            "P028",
+            "P043",
+            "P103"
+          ],
+          "passages": [
+            "L'intervento operativo prioritario è riesaminare statuto, deleghe, flussi informativi e procedure di controllo. Non emerge un obbligo generale di cambiare sistema, rinnovare anticipatamente tutti gli organi o modificare ogni statuto entro il 31 dicembre 2026. Per le società soggette al TUF esistono invece specifici adempimenti e termini, illustrati nel calendario finale. Le indicazioni operative di questa circolare sono inferenze dalle norme: l'adozione di una clausola o la valutazione di una responsabilità richiedono i dati della singola società. D.lgs. 47/2026, art. 9 D.lgs. 47/2026, art. 11",
+            "L'art. 2380-bis assegna espressamente agli amministratori gestione e organizzazione dell'impresa, inclusa l'istituzione dell'assetto organizzativo, amministrativo e contabile. È una precisazione e sistemazione di competenze già in larga parte presenti, da leggere insieme all'art. 2086: l'obbligo di adeguati assetti non nasce nel 2026. In concreto, soci e controllori non possono sostituirsi ordinariamente agli amministratori nella costruzione dell'organizzazione, mentre l'affidamento di attività a consulenti non trasferisce la responsabilità dell'organo. D.lgs. 47/2026, art. 9",
+            "Alla lista delle attribuzioni non delegabili si aggiungono espressamente le decisioni di accesso agli strumenti di regolazione della crisi e dell'insolvenza, comprese la determinazione del contenuto della proposta e le condizioni del piano. Una delega generale all'amministratore delegato non basta quindi a trasferire questa scelta. Occorre portare al consiglio l'effettivo contenuto della soluzione, non una ratifica meramente formale. Resta distinta l'esecuzione degli atti deliberati; il perimetro della riserva va verificato sullo specifico strumento, senza estenderlo automaticamente a qualsiasi trattativa finanziaria o difficoltà di liquidità. D.lgs. 47/2026, art. 9",
+            "Il punto non è un'esenzione dal controllo critico. La parola «ragionevole» e il coordinamento con l'art. 2392 impediscono di trasformare il flusso dell'AD in uno scudo automatico. Un report coerente e completo può fondare l'affidamento; dati contraddittori, anomalie evidenti o fatti dannosi conosciuti impongono approfondimenti e iniziative adeguate. È un'inferenza interpretativa: la responsabilità concreta dipenderà da conoscenze, competenze, condotta e nesso causale. La sola verbalizzazione del dissenso non esonera chi sia in colpa; l'art. 2392 conserva anche le condizioni della tempestiva annotazione e comunicazione scritta al presidente dell'organo di controllo. D.lgs. 47/2026, art. 9",
+            "In concreto occorre verificare chi rileva i rischi, chi li valuta, chi decide gli interventi e chi ne verifica l'attuazione. Un organigramma o una procedura formalmente esistente non dimostrano il concreto funzionamento. L'intensità dell'organizzazione va commisurata all'impresa: la norma non impone indistintamente a ogni piccola S.p.A. una nuova funzione autonoma di internal audit. D.lgs. 47/2026, art. 9",
+            "Sono raccomandazioni organizzative desunte dalle norme analizzate, non sei nuovi adempimenti nominati dalla legge. Una S.p.A. familiare con collegio sindacale dovrà soprattutto rendere coerenti assetti e flussi; un emittente MTF dovrà anche considerare l'esposizione dei sindaci; una quotata dovrà aggiungere le procedure TUF; una società in IPO dovrà valutare le opzioni prima della domanda, stimandone anche gli effetti sulle minoranze."
+          ],
+          "note": "Dichiara la natura interpretativa delle indicazioni e separa conseguenze organizzative, obblighi e valutazione del caso concreto."
+        }
+      }
+    },
+    {
+      "id": "M02",
+      "topic": "Azioni con responsabili ed esiti",
+      "expected": "Una circolare operativa indica chi deve fare cosa e quale risultato conservare, distinguendo consigli da scadenze legali.",
+      "source": "https://www.gazzettaufficiale.it/eli/gu/2026/04/14/86/so/14/sg/pdf",
+      "location": "Criterio operativo del confronto; non un obbligo normativo",
+      "group": "Metodo",
+      "cells": {
+        "R01": {
+          "status": "U",
+          "refs": [
+            "P132",
+            "P133",
+            "P134",
+            "P135",
+            "P136"
+          ],
+          "passages": [
+            "Per amministratori e segreteria societaria. Ricostruire modello, mercato e discipline speciali; confrontare lo statuto con i nuovi articoli; aggiornare deleghe e materie riservate; stabilire contenuto, destinatari e tempestività delle informazioni. Il risultato utile è una procedura che permetta al consiglio di decidere con informazioni adeguate e di intervenire sulle criticità.",
+            "Per l’organo di controllo. Riesaminare requisiti, poteri esercitabili collegialmente o individualmente, calendario delle riunioni e piano di vigilanza. Collegare le verifiche sui rischi alle risposte degli amministratori e al seguito dato alle osservazioni. Per le quotate, aggiornare anche criteri e responsabilità del flusso verso Consob. Per il comitato interno al consiglio, presidiare i voti e le condizioni del ricorso giudiziario.",
+            "Per soci e consulenti. Valutare se l’assetto esistente sia adatto a proprietà, dimensioni e complessità dell’impresa. L’opportunità di cambiare modello non si deduce dalla nuova nomenclatura; richiede un confronto sui poteri di nomina, gestione, approvazione del bilancio, controllo e sui costi di funzionamento. Per una quotata, programmare in tempo utile l’adeguamento della composizione e valutare separatamente le opzioni statutarie.",
+            "Per curatori e liquidatori interessati. Effettuare all’inizio dell’incarico la ricognizione delle azioni e delle relative scadenze, includendo il nuovo art. 2394-bis e le questioni transitorie. Il termine speciale può incidere sulla strategia processuale prima che sia completata la ricostruzione di tutte le vicende societarie.",
+            "Queste attività sono proposte operative ricavate dalle norme esaminate, non ulteriori adempimenti con una scadenza legale uniforme. Il prodotto del riesame dovrebbe individuare, per ciascun intervento necessario, il responsabile, il documento da aggiornare, la decisione competente e la relativa data."
+          ],
+          "note": "L’agenda è articolata per amministratori, controllori, soci e professionisti delle procedure; collega riesami a procedure, piano, documenti e scadenze da assegnare, distinguendoli dagli obblighi legali."
+        },
+        "R02": {
+          "status": "U",
+          "refs": [
+            "P102",
+            "P103",
+            "P104",
+            "P105",
+            "P106",
+            "P107",
+            "P108",
+            "P109"
+          ],
+          "passages": [
+            "Soci e segreteria societaria | Sistema adottato, nomine, compensi, decorrenza di un cambio modello, rinvii statutari | Testo statutario e calendario coerenti; motivazione delle scelte",
+            "CdA, consiglio di gestione, delegati | Materie riservate, deleghe, assetti, decisioni di crisi, flussi e allarmi | Matrice delle competenze e informazione tempestiva documentata",
+            "Presidente e non esecutivi | Qualità, anticipo e completezza dell'informazione; gestione di lacune e dissenso | Verbali che rendano ricostruibile il processo decisionale",
+            "Collegio, sorveglianza e comitato | Perimetro della vigilanza, poteri collettivi e individuali, indipendenza, rapporti col revisore | Programma di vigilanza e procedure di intervento coerenti con il modello",
+            "Quotate | Composizione 2027 se esercizio solare; rischi, relazioni 2026, modalità assembleari | Coordinamento di statuto, regolamenti e documenti annuali",
+            "Sindaci di quotate e società italiane con azioni su MTF | Regime di responsabilità, risorse e copertura assicurativa | Accettazione/rinnovo dell'incarico su presupposti aggiornati",
+            "Organi delle procedure concorsuali | Azioni potenziali, date e applicazione del nuovo art. 2394-bis | Scadenzario motivato, senza assimilare decadenza e prescrizione",
+            "Le attività della tabella sono proposte operative ricavate dalla riforma, da adattare alle dimensioni e alla situazione della società. Non rappresentano un elenco di nuovi documenti obbligatori per tutte le imprese."
+          ],
+          "note": "La tabella associa destinatario, verifica e risultato utile, compresi delibere, verbali, piano di vigilanza e scadenzario motivato."
+        },
+        "R03": {
+          "status": "U",
+          "refs": [
+            "P091",
+            "P092",
+            "P093",
+            "P094",
+            "P095",
+            "P096"
+          ],
+          "passages": [
+            "Presidente e segreteria societaria | Rivedere agenda, tempi e contenuti delle informazioni; aggiornare rinvii e calendario assembleare | Regolamento, materiali, domande e verbali",
+            "CdA o consiglio di gestione | Rivedere deleghe, materie riservate e percorso di risposta alla crisi | Delibera aggiornata e responsabilità informative definite",
+            "Organo di controllo | Aggiornare requisiti, piano di vigilanza, verifica dei rischi e rapporti con revisore e funzioni interne | Dichiarazioni, piano, verbali e verifiche sulle azioni correttive",
+            "Soci e consulenti | Valutare modello e opzioni statutarie, minoranze e recesso | Comparazione motivata, requisiti e verifica del procedimento",
+            "Professionisti incaricati | Ricalibrare impegno, compenso e coperture sul regime effettivo di responsabilità | Lettera d'incarico, risorse e condizioni assicurative",
+            "Queste attività costituiscono indicazioni organizzative per attuare le norme; non sono scadenze aggiuntive stabilite dal decreto."
+          ],
+          "note": "La tabella associa responsabile, intervento ed evidenza da conservare e qualifica le attività come proposte organizzative."
+        },
+        "R04": {
+          "status": "P",
+          "refs": [
+            "P096",
+            "P097",
+            "P098",
+            "P099",
+            "P100",
+            "P101",
+            "P102",
+            "P103"
+          ],
+          "passages": [
+            "Si suggerisce al consiglio di approvare un intervento coordinato con queste priorità:",
+            "1. Classificare società e modello. Mercato regolamentato, MTF, capitale diffuso, settore vigilato e condizioni di eventuale nuova quotazione determinano obblighi diversi.",
+            "2. Rivedere statuto e deleghe. Identificare clausole incompatibili, rinvii superati e opzioni realmente utili; separare correzioni necessarie da scelte di governance.",
+            "3. Rendere verificabili i flussi. Calendario, contenuti, rischi, controllate, anomalie e seguito delle richieste devono risultare da documenti e verbali.",
+            "4. Aggiornare i controlli. Riesaminare requisiti dei componenti, piano di vigilanza, poteri esercitabili e coordinamento con revisore e funzioni aziendali.",
+            "5. Preparare relazioni e assemblee. Assegnare responsabilità sulla raccolta delle informazioni 2026 e sulla gestione dei rinnovi successivi.",
+            "6. Rivalutare responsabilità e coperture. Distinguere il regime del collegio ordinario da quello di quotate e MTF e dagli altri organi.",
+            "Sono raccomandazioni organizzative desunte dalle norme analizzate, non sei nuovi adempimenti nominati dalla legge. Una S.p.A. familiare con collegio sindacale dovrà soprattutto rendere coerenti assetti e flussi; un emittente MTF dovrà anche considerare l'esposizione dei sindaci; una quotata dovrà aggiungere le procedure TUF; una società in IPO dovrà valutare le opzioni prima della domanda, stimandone anche gli effetti sulle minoranze."
+          ],
+          "note": "La sequenza contiene azioni e alcuni risultati documentali, ma demanda al consiglio l’assegnazione delle responsabilità senza legare ciascun intervento a un responsabile e a un esito specifico: come nel criterio originario, resta parziale."
+        }
+      }
+    },
+    {
+      "id": "M03",
+      "topic": "Fonti primarie nel documento",
+      "expected": "Riferimenti pertinenti, collegabili alle affermazioni, e limiti di lettura dichiarati. La bibliografia non prova da sola l’accesso avvenuto nel run.",
+      "source": "https://www.gazzettaufficiale.it/eli/gu/2026/04/14/86/so/14/sg/pdf",
+      "location": "Valutazione delle fonti dichiarate nei documenti, con riscontri esterni mirati",
+      "group": "Metodo",
+      "cells": {
+        "R01": {
+          "status": "U",
+          "refs": [
+            "P007",
+            "P127",
+            "P128",
+            "P129",
+            "P138",
+            "P139",
+            "P140",
+            "P141",
+            "P142",
+            "P143",
+            "P144"
+          ],
+          "passages": [
+            "La circolare distingue il dato normativo, il confronto con la disciplina precedente e le ricadute operative ricavate dalla norma. Non tratta integralmente gli altri interventi del decreto su intermediari, gestione collettiva, offerte pubbliche e sanzioni. La ricostruzione distingue anche la forza delle fonti: il testo normativo fonda le regole, mentre documentazione preparatoria e inferenze aiutano a spiegarle. Si fonda sul testo pubblicato in Gazzetta, sul TUF consolidato dalla Consob a settembre 2026 e sui testi previgenti riprodotti nella documentazione parlamentare. Gli schemi correttivi e le consultazioni sono separati dal diritto vigente. La verifica degli atti attuativi successivi presenta i limiti precisati nella sezione 12. [1][4][5]",
+            "Sono stati confrontati il testo ufficiale del decreto e il TUF Consob recante l’aggiornamento di settembre 2026, che considera anche il d.lgs. n. 128/2026. Quest’ultimo aggiornamento non deve essere confuso con la riforma di governance del d.lgs. n. 47. [1][7]",
+            "L’A.G. 416 è stato esaminato come schema contenente disposizioni integrative e correttive. La pagina parlamentare consultata riporta il procedimento di parere; la ricerca svolta non ha fornito un testo finale promulgato e pubblicato che consenta di sostituire su tale base le disposizioni qui analizzate. Il documento è usato per segnalare problemi di coordinamento, non come fonte vigente. Questa constatazione descrive l’evidenza acquisita, non una certificazione dell’assenza di qualsiasi atto successivo. [8]",
+            "È stata inoltre acquisita la consultazione Consob del 1° luglio 2026 sul voto dei soci non collegati al controllo nell’accesso al regime speciale. Una consultazione non è un regolamento definitivo. L’acquisizione di alcune pagine del portale Consob è stata limitata da protezioni di accesso e non è stato verificato in modo esaustivo ogni provvedimento attuativo fino al 14 ottobre. Per utilizzare in concreto le opzioni che dipendono da tali atti occorre pertanto acquisire il provvedimento definitivo, la sua data di applicazione e il testo vigente del regolamento pertinente. La limitazione riguarda questa attuazione e gli eventuali correttivi successivi, non trasforma lo schema o la consultazione in diritto applicabile. [10]",
+            "[1] Gazzetta Ufficiale — d.lgs. 27 marzo 2026 n. 47, pubblicazione e testo. Fonte primaria della riforma.",
+            "[2] Gazzetta Ufficiale — d.lgs. 47/2026, art. 9, modifiche al codice civile e note. Gli articoli del codice citati sono identificati nel corpo della circolare.",
+            "[3] Gazzetta Ufficiale — d.lgs. 47/2026, art. 6, modifiche al TUF.",
+            "[4] Gazzetta Ufficiale — d.lgs. 47/2026, art. 11, decorrenze.",
+            "[5] Camera dei deputati — dossier sull’A.G. 331, 27 ottobre 2025. Utilizzate le colonne del testo allora vigente per il confronto storico; le proposte dello schema non sono state assunte come testo definitivo del decreto.",
+            "[6] Gazzetta Ufficiale — d.lgs. 47/2026, art. 16, disposizioni transitorie.",
+            "[7] Consob — Testo unico della finanza, versione acquisita settembre 2026. Copia effettivamente acquisita e conservata nel dossier; il collegamento è aggiornabile dalla fonte."
+          ],
+          "note": "Riferimenti primari sono collegati alle affermazioni e la distinzione fra decreto, consolidato, schema e consultazione è dichiarata. Il censimento degli attuativi resta incompleto, come chiarisce T18."
+        },
+        "R02": {
+          "status": "U",
+          "refs": [
+            "P098",
+            "P099",
+            "P112",
+            "P113",
+            "P114",
+            "P115",
+            "P118",
+            "P120"
+          ],
+          "passages": [
+            "La ricerca ha utilizzato il testo ufficiale in Gazzetta, le note, il dossier parlamentare con il testo previgente e un riscontro del vigente art. 154 TUF su Normattiva al 14 ottobre 2026. Il dossier sullo schema è stato usato come fonte storica e illustrativa; le sue formulazioni proposte non sono state scambiate per legge definitiva. Alcuni accessi alle fonti Consob e MEF hanno restituito limitazioni tecniche: non è stata acquisita una serie completa degli atti attuativi o correttivi successivi.",
+            "Effetto del limite: le conclusioni sul contenuto del d.lgs. 47/2026 sono fondate sul testo promulgato; la concreta operatività delle opzioni dipendenti da regolamenti, e l'eventuale correzione successiva dei rinvii segnalati, vanno riscontrate prima di adottare la specifica delibera. L'assenza di un documento nei risultati di ricerca non è stata trattata come prova della sua inesistenza.",
+            "1. Gazzetta Ufficiale, d.lgs. 27 marzo 2026, n. 47, GU n. 86 del 14 aprile 2026, S.O. n. 14: atto e pubblicazione; testo completo con note. Fonte normativa primaria.",
+            "2. Art. 9 del decreto: modifiche al codice civile. Fonte delle nuove disposizioni comuni e dei tre sistemi.",
+            "3. Art. 6 del decreto: modifiche alla parte IV TUF. Fonte delle disposizioni speciali per emittenti.",
+            "4. Art. 11 del decreto: entrata in vigore e decorrenze.",
+            "7. Camera dei deputati, dossier A.G. 331: analisi e confronto testuale dello schema. Usato per ricostruzione storica e ratio, subordinatamente al decreto definitivo.",
+            "9. Normattiva, art. 154 TUF al 14 ottobre 2026: deroghe al codice civile. Riscontro del testo vigente della disposizione sulla responsabilità dei sindaci quotati."
+          ],
+          "note": "Le regole rinviano agli articoli della fonte primaria; il dossier storico e i limiti di accesso sono distinti. U non attesta un censimento completo degli attuativi."
+        },
+        "R03": {
+          "status": "U",
+          "refs": [
+            "P098",
+            "P103",
+            "P104",
+            "P105",
+            "P106",
+            "P107"
+          ],
+          "passages": [
+            "Attuazione. Le disposizioni che rinviano a regolamenti Consob o ministeriali devono essere applicate tenendo conto dell'atto attuativo vigente e del relativo regime transitorio. La presente circolare non attesta che tutti gli atti attuativi siano stati adottati al 14 ottobre 2026: la verifica completa della loro pubblicazione resta necessaria prima di utilizzare le opzioni dipendenti da essi. Il limite riguarda soprattutto esenzioni per parti correlate, regime opzionale delle PMI, requisiti regolamentari e altre facoltà differite; non sospende le disposizioni già direttamente applicabili.",
+            "Il confronto è riferito al testo antecedente al 29 aprile 2026 e al decreto definitivamente pubblicato, con verifica degli articoli chiave su Normattiva al 14 ottobre 2026. Le conseguenze operative e gli esempi sono inferenze esplicitate a partire dalle disposizioni citate. I collegamenti nel testo rinviano alle fonti primarie; nel fascicolo di ricerca sono conservate le versioni acquisite e la revisione delle affermazioni rilevanti.",
+            "D.lgs. 27 marzo 2026, n. 47: in particolare artt. 6, 8, 9, 10, 11 e 16. D.lgs. 47/2026, Gazzetta Ufficiale",
+            "Codice civile: versioni storiche al 28 aprile 2026 e articoli vigenti richiamati nel testo. Art. 2380 previgente",
+            "TUF, d.lgs. 24 febbraio 1998, n. 58: versioni storiche e vigenti degli articoli richiamati. Art. 119 vigente",
+            "Legge 14 marzo 2025, n. 35, modifica della responsabilità dei sindaci. Legge 35/2025"
+          ],
+          "note": "I collegamenti nel testo distinguono decreto, versioni storiche e vigenti; i limiti attuativi sono espressi. La bibliografia non è una prova autonoma dell’esecuzione della ricerca."
+        },
+        "R04": {
+          "status": "U",
+          "refs": [
+            "P010",
+            "P105",
+            "P106",
+            "P109",
+            "P110",
+            "P111",
+            "P112",
+            "P113",
+            "P114",
+            "P116"
+          ],
+          "passages": [
+            "Il testo normativo di riferimento è quello pubblicato in Gazzetta Ufficiale. Il confronto storico utilizza il testo previgente riprodotto nel dossier parlamentare sull'atto del Governo n. 331, tenendolo distinto dalle proposte dello schema. La verifica degli aggiornamenti al 14 ottobre 2026 ha incontrato limiti di accesso al testo consolidato Consob e a Normattiva: i punti che dipendono dall'attuazione successiva sono indicati espressamente al § 10. Camera, dossier FI0144, confronto con il testo previgente",
+            "Correttivo e rinvii. È stato esaminato l'atto del Governo n. 416 e il relativo dossier FI0171, che propone anche correzioni al d.lgs. 47/2026. Fra queste figura il rinvio dell'art. 2409-octiesdecies al soppresso art. 2386: lo schema propone di sostituirlo con l'art. 2396-undecies. La scheda parlamentare consultata documenta l'esame e i pareri; non costituisce prova della pubblicazione del decreto definitivo. Non è stata acquisita una pubblicazione definitiva del correttivo che consenta di trattare quella proposta come norma vigente. Camera, dossier FI0171 sullo schema correttivo Camera, iter atto del Governo 416",
+            "Attuazione e versione corrente. L'indice Consob consultato segnala un TUF aggiornato anche al d.lgs. 128/2026 e regolamenti aggiornati nel maggio 2026. L'accesso ai PDF consolidati è stato impedito dal controllo automatico del sito; anche il recupero da Normattiva non ha fornito il testo consolidato utilizzabile. La presente circolare ricostruisce quindi le modifiche del d.lgs. 47/2026 sulla fonte primaria pubblicata, ma non certifica l'assenza di ogni successiva modifica o la piena operatività di ciascuna opzione regolamentare al 14 ottobre. In particolare, per OPC, nuove quotazioni e regimi transitori va acquisito il regolamento vigente prima della delibera applicativa. Un documento di consultazione o la scadenza del termine di attuazione non sostituiscono tale verifica. Consob, indice TUF e regolamenti",
+            "Le disposizioni sono identificate nel testo con articolo e collegamento alla fonte. Le copie consultate e il registro di ricerca sono conservati nel fascicolo separato.",
+            "D.lgs. 47/2026 in Gazzetta Ufficiale",
+            "D.lgs. 47/2026, art. 9",
+            "D.lgs. 47/2026, art. 6",
+            "D.lgs. 47/2026, art. 11",
+            "D.lgs. 47/2026, art. 16",
+            "Camera, dossier FI0144, confronto con il testo previgente"
+          ],
+          "note": "Il decreto primario è richiamato per articolo e le limitazioni sul consolidato sono esplicite. Su M03 ciò è distinto dal mancato accesso al testo primario del decreto: il limite attuativo rimane nella nota T18."
+        }
+      }
+    }
+  ],
+  "statuses": {
+    "U": "Trattazione utile",
+    "P": "Parziale / sintetica",
+    "A": "Non trattato",
+    "R": "Da correggere"
+  },
+  "observations": [
+    {
       "id": "T01",
       "topic": "Tre sistemi: base comune, nessun cambio obbligatorio",
       "group": "Convergenze",
@@ -2119,7 +3793,6 @@
       "source": "https://www.gazzettaufficiale.it/atto/serie_generale/caricaArticolo?art.codiceRedazionale=26G00064&art.dataPubblicazioneGazzetta=2026-04-14&art.flagTipoArticolo=0&art.idArticolo=9&art.idGruppo=0&art.idSottoArticolo=1&art.idSottoArticolo1=10&art.progressivo=0&art.versione=1",
       "cells": {
         "R01": {
-          "status": "U",
           "refs": [
             "P005",
             "P021"
@@ -2127,7 +3800,6 @@
           "note": ""
         },
         "R02": {
-          "status": "U",
           "refs": [
             "P007",
             "P026"
@@ -2135,14 +3807,12 @@
           "note": ""
         },
         "R03": {
-          "status": "U",
           "refs": [
             "P016"
           ],
           "note": ""
         },
         "R04": {
-          "status": "U",
           "refs": [
             "P006",
             "P021"
@@ -2159,7 +3829,6 @@
       "source": "https://www.gazzettaufficiale.it/atto/serie_generale/caricaArticolo?art.codiceRedazionale=26G00064&art.dataPubblicazioneGazzetta=2026-04-14&art.flagTipoArticolo=0&art.idArticolo=9&art.idGruppo=0&art.idSottoArticolo=1&art.idSottoArticolo1=10&art.progressivo=0&art.versione=1",
       "cells": {
         "R01": {
-          "status": "U",
           "refs": [
             "P044",
             "P045"
@@ -2167,7 +3836,6 @@
           "note": ""
         },
         "R02": {
-          "status": "U",
           "refs": [
             "P038",
             "P039"
@@ -2175,7 +3843,6 @@
           "note": ""
         },
         "R03": {
-          "status": "U",
           "refs": [
             "P031",
             "P032"
@@ -2183,7 +3850,6 @@
           "note": ""
         },
         "R04": {
-          "status": "U",
           "refs": [
             "P027",
             "P028"
@@ -2200,28 +3866,24 @@
       "source": "https://www.gazzettaufficiale.it/atto/serie_generale/caricaArticolo?art.codiceRedazionale=26G00064&art.dataPubblicazioneGazzetta=2026-04-14&art.flagTipoArticolo=0&art.idArticolo=9&art.idGruppo=0&art.idSottoArticolo=1&art.idSottoArticolo1=10&art.progressivo=0&art.versione=1",
       "cells": {
         "R01": {
-          "status": "U",
           "refs": [
             "P041"
           ],
           "note": ""
         },
         "R02": {
-          "status": "U",
           "refs": [
             "P035"
           ],
           "note": ""
         },
         "R03": {
-          "status": "U",
           "refs": [
             "P028"
           ],
           "note": ""
         },
         "R04": {
-          "status": "U",
           "refs": [
             "P025"
           ],
@@ -2237,7 +3899,6 @@
       "source": "https://www.gazzettaufficiale.it/atto/serie_generale/caricaArticolo?art.codiceRedazionale=26G00064&art.dataPubblicazioneGazzetta=2026-04-14&art.flagTipoArticolo=0&art.idArticolo=6&art.idGruppo=0&art.idSottoArticolo=1&art.idSottoArticolo1=10&art.progressivo=0&art.versione=1",
       "cells": {
         "R01": {
-          "status": "U",
           "refs": [
             "P069",
             "P070",
@@ -2246,7 +3907,6 @@
           "note": ""
         },
         "R02": {
-          "status": "U",
           "refs": [
             "P079",
             "P080",
@@ -2255,14 +3915,12 @@
           "note": ""
         },
         "R03": {
-          "status": "U",
           "refs": [
             "P060"
           ],
           "note": ""
         },
         "R04": {
-          "status": "U",
           "refs": [
             "P062",
             "P063"
@@ -2279,26 +3937,22 @@
       "source": "https://www.gazzettaufficiale.it/atto/serie_generale/caricaArticolo?art.codiceRedazionale=26G00064&art.dataPubblicazioneGazzetta=2026-04-14&art.flagTipoArticolo=0&art.idArticolo=9&art.idGruppo=0&art.idSottoArticolo=1&art.idSottoArticolo1=10&art.progressivo=0&art.versione=1",
       "cells": {
         "R01": {
-          "status": "R",
           "refs": [
             "P060"
           ],
           "note": "Errore storico, pagina 6 § 6.2: la frase «non è più necessariamente legata» attribuisce alla revoca una novità che riguarda invece la sostituzione ai fini della sospensione."
         },
         "R02": {
-          "status": "A",
           "refs": [],
           "note": ""
         },
         "R03": {
-          "status": "U",
           "refs": [
             "P044"
           ],
           "note": "Pagina 4 § 6: spiega la sostituzione dei soli amministratori e la facoltà del tribunale di richiedere anche quella dei controllori."
         },
         "R04": {
-          "status": "A",
           "refs": [],
           "note": ""
         }
@@ -2312,28 +3966,24 @@
       "source": "https://www.gazzettaufficiale.it/atto/serie_generale/caricaArticolo?art.codiceRedazionale=26G00064&art.dataPubblicazioneGazzetta=2026-04-14&art.flagTipoArticolo=0&art.idArticolo=6&art.idGruppo=0&art.idSottoArticolo=1&art.idSottoArticolo1=10&art.progressivo=0&art.versione=1",
       "cells": {
         "R01": {
-          "status": "P",
           "refs": [
             "P087"
           ],
           "note": ""
         },
         "R02": {
-          "status": "P",
           "refs": [
             "P074"
           ],
           "note": ""
         },
         "R03": {
-          "status": "U",
           "refs": [
             "P043"
           ],
           "note": ""
         },
         "R04": {
-          "status": "P",
           "refs": [
             "P044"
           ],
@@ -2349,26 +3999,22 @@
       "source": "https://www.gazzettaufficiale.it/atto/serie_generale/caricaArticolo?art.codiceRedazionale=26G00064&art.dataPubblicazioneGazzetta=2026-04-14&art.flagTipoArticolo=0&art.idArticolo=8&art.idGruppo=0&art.idSottoArticolo=1&art.idSottoArticolo1=10&art.progressivo=0&art.versione=1",
       "cells": {
         "R01": {
-          "status": "A",
           "refs": [],
           "note": ""
         },
         "R02": {
-          "status": "U",
           "refs": [
             "P044"
           ],
           "note": ""
         },
         "R03": {
-          "status": "U",
           "refs": [
             "P039"
           ],
           "note": ""
         },
         "R04": {
-          "status": "A",
           "refs": [],
           "note": ""
         }
@@ -2382,24 +4028,20 @@
       "source": "https://www.gazzettaufficiale.it/atto/serie_generale/caricaArticolo?art.codiceRedazionale=26G00064&art.dataPubblicazioneGazzetta=2026-04-14&art.flagTipoArticolo=0&art.idArticolo=6&art.idGruppo=0&art.idSottoArticolo=1&art.idSottoArticolo1=10&art.progressivo=0&art.versione=1",
       "cells": {
         "R01": {
-          "status": "A",
           "refs": [],
           "note": ""
         },
         "R02": {
-          "status": "U",
           "refs": [
             "P072"
           ],
           "note": ""
         },
         "R03": {
-          "status": "A",
           "refs": [],
           "note": ""
         },
         "R04": {
-          "status": "A",
           "refs": [],
           "note": ""
         }
@@ -2413,24 +4055,20 @@
       "source": "https://www.gazzettaufficiale.it/atto/serie_generale/caricaArticolo?art.codiceRedazionale=26G00064&art.dataPubblicazioneGazzetta=2026-04-14&art.flagTipoArticolo=0&art.idArticolo=9&art.idGruppo=0&art.idSottoArticolo=1&art.idSottoArticolo1=10&art.progressivo=0&art.versione=1",
       "cells": {
         "R01": {
-          "status": "A",
           "refs": [],
           "note": ""
         },
         "R02": {
-          "status": "U",
           "refs": [
             "P051"
           ],
           "note": ""
         },
         "R03": {
-          "status": "A",
           "refs": [],
           "note": ""
         },
         "R04": {
-          "status": "A",
           "refs": [],
           "note": ""
         }
@@ -2444,24 +4082,20 @@
       "source": "https://www.gazzettaufficiale.it/atto/serie_generale/caricaArticolo?art.codiceRedazionale=26G00064&art.dataPubblicazioneGazzetta=2026-04-14&art.flagTipoArticolo=0&art.idArticolo=9&art.idGruppo=0&art.idSottoArticolo=1&art.idSottoArticolo1=10&art.progressivo=0&art.versione=1",
       "cells": {
         "R01": {
-          "status": "A",
           "refs": [],
           "note": ""
         },
         "R02": {
-          "status": "A",
           "refs": [],
           "note": ""
         },
         "R03": {
-          "status": "U",
           "refs": [
             "P038"
           ],
           "note": ""
         },
         "R04": {
-          "status": "U",
           "refs": [
             "P080"
           ],
@@ -2477,7 +4111,6 @@
       "source": "https://www.gazzettaufficiale.it/atto/serie_generale/caricaArticolo?art.codiceRedazionale=26G00064&art.dataPubblicazioneGazzetta=2026-04-14&art.flagTipoArticolo=0&art.idArticolo=6&art.idGruppo=0&art.idSottoArticolo=1&art.idSottoArticolo1=10&art.progressivo=0&art.versione=1",
       "cells": {
         "R01": {
-          "status": "U",
           "refs": [
             "P098",
             "P099"
@@ -2485,7 +4118,6 @@
           "note": ""
         },
         "R02": {
-          "status": "P",
           "refs": [
             "P090",
             "P091"
@@ -2493,14 +4125,12 @@
           "note": ""
         },
         "R03": {
-          "status": "U",
           "refs": [
             "P078"
           ],
           "note": ""
         },
         "R04": {
-          "status": "P",
           "refs": [
             "P085",
             "P086"
@@ -2517,26 +4147,22 @@
       "source": "https://www.gazzettaufficiale.it/atto/serie_generale/caricaArticolo?art.codiceRedazionale=26G00064&art.dataPubblicazioneGazzetta=2026-04-14&art.flagTipoArticolo=0&art.idArticolo=6&art.idGruppo=0&art.idSottoArticolo=1&art.idSottoArticolo1=10&art.progressivo=0&art.versione=1",
       "cells": {
         "R01": {
-          "status": "U",
           "refs": [
             "P094"
           ],
           "note": ""
         },
         "R02": {
-          "status": "A",
           "refs": [],
           "note": ""
         },
         "R03": {
-          "status": "U",
           "refs": [
             "P072"
           ],
           "note": ""
         },
         "R04": {
-          "status": "U",
           "refs": [
             "P084"
           ],
@@ -2552,26 +4178,22 @@
       "source": "https://www.gazzettaufficiale.it/atto/serie_generale/caricaArticolo?art.codiceRedazionale=26G00064&art.dataPubblicazioneGazzetta=2026-04-14&art.flagTipoArticolo=0&art.idArticolo=9&art.idGruppo=0&art.idSottoArticolo=1&art.idSottoArticolo1=10&art.progressivo=0&art.versione=1",
       "cells": {
         "R01": {
-          "status": "U",
           "refs": [
             "P058"
           ],
           "note": ""
         },
         "R02": {
-          "status": "U",
           "refs": [
             "P047"
           ],
           "note": ""
         },
         "R03": {
-          "status": "A",
           "refs": [],
           "note": ""
         },
         "R04": {
-          "status": "U",
           "refs": [
             "P040"
           ],
@@ -2587,26 +4209,22 @@
       "source": "https://www.gazzettaufficiale.it/atto/serie_generale/caricaArticolo?art.codiceRedazionale=26G00064&art.dataPubblicazioneGazzetta=2026-04-14&art.flagTipoArticolo=0&art.idArticolo=6&art.idGruppo=0&art.idSottoArticolo=1&art.idSottoArticolo1=10&art.progressivo=0&art.versione=1",
       "cells": {
         "R01": {
-          "status": "U",
           "refs": [
             "P080"
           ],
           "note": ""
         },
         "R02": {
-          "status": "U",
           "refs": [
             "P072"
           ],
           "note": ""
         },
         "R03": {
-          "status": "A",
           "refs": [],
           "note": ""
         },
         "R04": {
-          "status": "U",
           "refs": [
             "P074"
           ],
@@ -2622,14 +4240,12 @@
       "source": "https://www.gazzettaufficiale.it/atto/serie_generale/caricaArticolo?art.codiceRedazionale=26G00064&art.dataPubblicazioneGazzetta=2026-04-14&art.flagTipoArticolo=0&art.idArticolo=9&art.idGruppo=0&art.idSottoArticolo=1&art.idSottoArticolo1=10&art.progressivo=0&art.versione=1",
       "cells": {
         "R01": {
-          "status": "P",
           "refs": [
             "P034"
           ],
           "note": ""
         },
         "R02": {
-          "status": "U",
           "refs": [
             "P094",
             "P095",
@@ -2638,14 +4254,12 @@
           "note": ""
         },
         "R03": {
-          "status": "U",
           "refs": [
             "P099"
           ],
           "note": ""
         },
         "R04": {
-          "status": "P",
           "refs": [
             "P105"
           ],
@@ -2661,24 +4275,20 @@
       "source": "https://www.gazzettaufficiale.it/atto/serie_generale/caricaArticolo?art.codiceRedazionale=26G00064&art.dataPubblicazioneGazzetta=2026-04-14&art.flagTipoArticolo=0&art.idArticolo=9&art.idGruppo=0&art.idSottoArticolo=1&art.idSottoArticolo1=10&art.progressivo=0&art.versione=1",
       "cells": {
         "R01": {
-          "status": "A",
           "refs": [],
           "note": ""
         },
         "R02": {
-          "status": "A",
           "refs": [],
           "note": ""
         },
         "R03": {
-          "status": "U",
           "refs": [
             "P100"
           ],
           "note": ""
         },
         "R04": {
-          "status": "A",
           "refs": [],
           "note": ""
         }
@@ -2692,28 +4302,24 @@
       "source": "https://www.gazzettaufficiale.it/atto/serie_generale/caricaArticolo?art.codiceRedazionale=26G00064&art.dataPubblicazioneGazzetta=2026-04-14&art.flagTipoArticolo=0&art.idArticolo=9&art.idGruppo=0&art.idSottoArticolo=1&art.idSottoArticolo1=10&art.progressivo=0&art.versione=1",
       "cells": {
         "R01": {
-          "status": "U",
           "refs": [
             "P032"
           ],
           "note": ""
         },
         "R02": {
-          "status": "U",
           "refs": [
             "P060"
           ],
           "note": ""
         },
         "R03": {
-          "status": "U",
           "refs": [
             "P053"
           ],
           "note": ""
         },
         "R04": {
-          "status": "P",
           "refs": [
             "P060"
           ],
@@ -2729,7 +4335,6 @@
       "source": "https://www.gazzettaufficiale.it/atto/serie_generale/caricaArticolo?art.codiceRedazionale=26G00064&art.dataPubblicazioneGazzetta=2026-04-14&art.flagTipoArticolo=0&art.idArticolo=11&art.idGruppo=0&art.idSottoArticolo=1&art.idSottoArticolo1=10&art.progressivo=0&art.versione=1",
       "cells": {
         "R01": {
-          "status": "P",
           "refs": [
             "P007",
             "P128"
@@ -2737,7 +4342,6 @@
           "note": ""
         },
         "R02": {
-          "status": "P",
           "refs": [
             "P098",
             "P099"
@@ -2745,14 +4349,12 @@
           "note": ""
         },
         "R03": {
-          "status": "P",
           "refs": [
             "P098"
           ],
           "note": ""
         },
         "R04": {
-          "status": "P",
           "refs": [
             "P106"
           ],
@@ -2761,12 +4363,6 @@
       }
     }
   ],
-  "statuses": {
-    "U": "Trattazione utile",
-    "P": "Parziale / da precisare",
-    "A": "Non sviluppato",
-    "R": "Da correggere"
-  },
   "provenance": {
     "date": "2026-10-14",
     "configuration": {
@@ -2778,7 +4374,7 @@
     "prompt": "Svolgi autonomamente il quesito qui sotto, usando la skill Vera. Questa è una prova indipendente: non leggere altre chat, circolari o risposte precedenti sullo stesso quesito e non condividere risultati con altre prove. Completa la ricerca e consegna il risultato finale della tua analisi. Non fermarti a un piano di lavoro.\n\n$vera  la riforma dei sistemi di amministrazione e controllo delle società per azioni recata dal d.lgs. n. 47/2026. Il decreto legislativo è stato adottato in attuazione della delega contenuta nella c.d. Legge capitali, con cui il legislatore ha ridisegnato la disciplina del codice civile e del Testo Unico della Finanza (TUF). riesci a fare inferenza tra ciò che è contenuto nella norma, cosa cambia rispetto a prima, cosa significa in concreto la nuova normativa e per chi? come se fossi incaricata di dover elaborare una circolare",
     "design": "Quattro chat nuove, stesso prompt e istruzione di autonomia; nessun risultato o suggerimento sostanziale condiviso fra le prove. Fonti, ricerche e contesto acquisito non sono stati congelati.",
     "limitation": "Prova 2: accesso tardivo a una riga di memoria su una precedente comparazione, dopo archiviazione della prima circolare. Il confronto Word e Markdown mostra soltanto la modifica della dichiarazione di indipendenza; contenuto giuridico invariato. La prova non è integralmente cieca. Le chat condividono installazione e istruzioni generali.",
-    "interpretation": "Campione esplorativo sullo stesso quesito, non misura statistica di affidabilità né stima dell’effetto del plugin. I criteri T sono selezionati per le convergenze e differenze osservate e non coincidono con i 25 criteri del primo esperimento.",
+    "interpretation": "Campione esplorativo sullo stesso quesito, non misura statistica di affidabilità né stima dell’effetto del plugin. La seconda matrice applica gli stessi 25 criteri e le stesse categorie della prima: C01–C20, A01–A02, M01–M03. Le osservazioni T01–T18 sono note qualitative separate, prive di punteggio.",
     "documents": [
       {
         "id": "R01",
@@ -2806,6 +4402,64 @@
       "origin_url": "https://www.normattiva.it/atto/caricaArticolo?art.versione=2&art.idGruppo=305&art.flagTipoArticolo=2&art.codiceRedazionale=042U0262&art.idArticolo=2409&art.idSottoArticolo=1&art.idSottoArticolo1=10&art.dataPubblicazioneGazzetta=1942-04-04&art.progressivo=0&art.dataVigenza=28%2F04%2F2026&art.tipoTesto=singolavigenza",
       "as_of": "2026-04-28",
       "sha256": "625a0993ba43f44d61d68a9f2428d9002ef2c78f031138b462c0b1fd4c89f7af"
+    },
+    "rubric": {
+      "source": "index.html#comparison-data",
+      "criteria_ids": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "C11",
+        "C12",
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C17",
+        "C18",
+        "C19",
+        "C20",
+        "A01",
+        "A02",
+        "M01",
+        "M02",
+        "M03"
+      ],
+      "criteria_count": 25,
+      "cell_count": 100,
+      "sha256": "b3e2a9d287a906ae8b41dcb0e4b835480e0d2d081d83184ea76178d242c60c1a",
+      "unchanged_fields": [
+        "id",
+        "topic",
+        "group",
+        "expected",
+        "source",
+        "location"
+      ],
+      "statuses": {
+        "U": "Trattazione utile",
+        "P": "Parziale / sintetica",
+        "A": "Non trattato",
+        "R": "Da correggere"
+      }
+    },
+    "correction": {
+      "date": "2026-10-14",
+      "reason": "La prima versione della seconda matrice usava 18 temi scelti dalle differenze osservate. È sostituita da una nuova valutazione sulle 25 righe originarie, senza modificare gli elaborati né le valutazioni degli otto documenti iniziali.",
+      "method": "Rilettura dei quattro testi integrali, confronto con gli standard e con le valutazioni già pubblicate, 100 motivazioni con passaggi. Nessuna conversione automatica dei giudizi T in giudizi C/A/M.",
+      "limits": "Le categorie misurano la trattazione del singolo criterio, non la completezza assoluta né l’assenza di ogni errore. Un medesimo U può accompagnare diversi livelli di dettaglio. La rubrica comune è applicata dopo la produzione dei testi, non viene presentata come preregistrazione del test."
+    },
+    "review_sources": {
+      "date": "2026-10-14",
+      "access": "Decreto in Gazzetta Ufficiale, dossier Camera FI0144 e studio CNN 63-2026/I riletti sul web. Il PDF consolidato Consob non è stato nuovamente acquisito in questa revisione; per i riscontri sulle disposizioni introdotte dal decreto si è usato il testo primario in Gazzetta.",
+      "scope": "Confronto documentale sulle stesse fonti e sullo stesso riferimento temporale; non è un nuovo censimento esaustivo di attuativi o correttivi."
     }
   }
 }
