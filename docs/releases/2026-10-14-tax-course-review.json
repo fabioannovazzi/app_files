@@ -17,5 +17,21 @@
     "Live legal research and final substantive pleading approval",
     "Voice and paired-window delivery"
   ],
-  "release_requirement": "Fresh exact-head CI teaching execution and release review checks, package parity and live course/attachment hashes"
+  "release_requirement": "Fresh exact-head CI teaching execution and release review checks, package parity and live course/attachment hashes",
+  "release_integrity_follow_up": {
+    "clara": "Shared course-material directory changed; reviewed unchanged Clara teaching and public-download boundaries. No Clara tax-litigation course added. Rebuild its metadata package at a new version.",
+    "vera_catalogue": "Manifest-only snapshot rebind; exact assessed skill entries and jurisdiction dispositions unchanged.",
+    "windows_test": "Observed Node process start exceeding 10-second timeout; use 30-second bounded timeout while retaining all assertions.",
+    "versions": {
+      "vera": "0.1.385",
+      "lucia": "0.1.108",
+      "clara": "0.1.283"
+    },
+    "concurrent_candidates_checked": {
+      "pull_request": 826,
+      "vera": "0.1.384",
+      "lucia": "0.1.107",
+      "clara": "0.1.282"
+    }
+  }
 }

@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "e0fb698d03c6076eb2ad8056cc07b5ba598e4df00d14def4714c6f747b0cb070",
+  "catalogue_fingerprint": "14cafc857741ce77d7e671b18fddecd57e17709096fadd5d5dbda3c31e6d23c3",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -1749,5 +1749,14 @@
   "remote_course_package_binding": {
     "version": "0.1.382",
     "scope": "Preserve the merged model-policy and calendar source reviews and existing Geneva dispositions. Shared remote lesson data remains hash-pinned. No additional jurisdictional workflow or installed-host acceptance claimed."
+  },
+  "tax_course_release_binding_20261014": {
+    "reviewed_at": "2026-10-14T15:29:56.247123+00:00",
+    "previous_version": "0.1.382",
+    "current_version": "0.1.385",
+    "previous_catalogue_fingerprint": "e0fb698d03c6076eb2ad8056cc07b5ba598e4df00d14def4714c6f747b0cb070",
+    "current_catalogue_fingerprint": "14cafc857741ce77d7e671b18fddecd57e17709096fadd5d5dbda3c31e6d23c3",
+    "scope": "Manifest-only rebind: exact skill IDs and bytes unchanged. New prepared Italian tax-litigation lessons do not change governing jurisdiction or establish Geneva qualification. Existing dispositions and acceptance limits retained.",
+    "unchanged_function_rows": true
   }
 }

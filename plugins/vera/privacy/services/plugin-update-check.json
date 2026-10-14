@@ -34,8 +34,7 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "b711f2f984d71554529a1e25d9636d9a78301b1c146094ec51267eb03cc1f497",
-    "reviewer": "Codex: tax-litigation course and version-only source review; existing host model, immutable public course download, update and receipt boundaries retained"
+    "source_fingerprint": "dd93330b63813b151102123324e39a2bfb8ac73e10d2613dd97e250c7579254f"
   },
   "runtime_profiles": [
     "openai-codex"
