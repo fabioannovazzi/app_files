@@ -123,6 +123,23 @@ def test_clara_release_contains_no_anthropic_reserved_research_skill():
     )
 
 
+def test_claude_vera_localization_catalogue_retains_its_source_fingerprint():
+    builder = _builder()
+    _, packages = builder.load_configuration()
+    package = next(item for item in packages if item.plugin == "vera")
+
+    entries = builder.claude_package_entries(package)
+
+    catalogue = json.loads(
+        entries["skills/vera/references/localization/geneva/catalogue.json"]
+    )
+    identity = {key: catalogue[key] for key in ("manifest_sha256", "entries")}
+    assert (
+        catalogue["catalogue_fingerprint"]
+        == hashlib.sha256(json.dumps(identity, sort_keys=True).encode()).hexdigest()
+    )
+
+
 def test_unbundled_native_research_reference_is_not_renamed():
     builder = _builder()
     original = {

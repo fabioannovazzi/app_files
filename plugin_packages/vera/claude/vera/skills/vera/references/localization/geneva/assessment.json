@@ -751,7 +751,7 @@
       ],
       "acceptance_example": "A supplied French-language question retains its confirmed governing framework, including during opposing investigation and final-review feedback.",
       "sources": [
-        "plugins/deep-research-validator/skills/mparanza-deep-research/SKILL.md",
+        "plugins/deep-research-validator/skills/deep-research/SKILL.md",
         "plugins/deep-research-validator/skills/legal-tax-answer-review/references/answer-journey.md"
       ],
       "verification": "Source and synthetic record-integrity checks; no current Swiss-law investigation, real Geneva case or professional acceptance is attested.",

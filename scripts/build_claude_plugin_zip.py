@@ -1206,7 +1206,12 @@ def project_cowork_skill_names(entries: dict[str, bytes]) -> dict[str, bytes]:
     path_pattern = r"(?<![a-z0-9-])deep-research(?=/)"
     projected: dict[str, bytes] = {}
     for name, content in entries.items():
-        if name.startswith("assets/courses/"):
+        # Localization JSON retains canonical source identities and fingerprints;
+        # its recorded paths are provenance, not links into the Claude tree.
+        if name.startswith("assets/courses/") or (
+            name.startswith("skills/vera/references/localization/")
+            and name.endswith(".json")
+        ):
             projected[name] = content
             continue
         destination = re.sub(path_pattern, alias, name)
