@@ -88,7 +88,7 @@
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
-      "sha256": "80dbd37dee64448207047ce4c767da7e70f57bef0e588e384bf449a490ec63d0",
+      "sha256": "a93fe82f129912d6db59a976affb88e923d35a25d7fd4ab86ca948521f6675aa",
       "languages": [
         "it",
         "en",

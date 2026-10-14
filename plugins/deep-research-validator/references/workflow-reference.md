@@ -173,5 +173,9 @@ semantically and packaged again.
 `validation_audit.json` is a guardrail, not a legal conclusion. Its
 `record_integrity_status` says whether required review fields and treatments
 were recorded. Its `delivery_readiness` aggregates those explicit statuses; it
-does not infer legal correctness. Exact passage absence is reported with the
-capture scope and never overrides semantic support.
+does not infer legal correctness. Passage observations are bound to the selected
+verified capture and its extraction scope. Literal checks preserve case for
+verbatim passages and translated originals while normalizing whitespace. A
+missing paraphrase does not invalidate semantic support. A missing quotation
+requires a documented original inspection or a disclosed evidence limit; an
+unexplained discrepancy or changed capture prevents a ready review.

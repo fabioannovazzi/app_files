@@ -368,17 +368,20 @@ def _execute_answer(tmp_path, monkeypatch, product, phase, language, prior=None)
         for s in inventory["sources"]
         if s.get("kind") == "file" and s.get("status") == "available"
     )
+    status_source = next(
+        s
+        for s in inventory["sources"]
+        if s.get("kind") == "file" and "legislative-status" in str(s)
+    )
     _write(
         output / "claims_review_draft.json",
         review(
             language,
             phase,
             official["source_id"],
-            next(
-                s["source_id"]
-                for s in inventory["sources"]
-                if s.get("kind") == "file" and "legislative-status" in str(s)
-            ),
+            status_source["source_id"],
+            official["capture_id"],
+            status_source["capture_id"],
         ),
     )
     _write(output / "answer_contract.json", _contract(language, phase))

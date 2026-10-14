@@ -60,7 +60,9 @@ def answer(language, phase):
     return document, claims
 
 
-def review(language, phase, source_ref, status_ref):
+def review(
+    language, phase, source_ref, status_ref, source_capture_id, status_capture_id
+):
     # Assessments below follow the actual supplied official Spanish PDF, pages5–8.
     # They describe the original directive, not an unverified national entitlement.
     document, claims = answer(language, phase)
@@ -91,6 +93,7 @@ def review(language, phase, source_ref, status_ref):
                 "source_checks": [
                     {
                         "source_ref": source_ref,
+                        "capture_id": source_capture_id,
                         "identity_status": "matches_cited_source",
                         "identity_analysis": "The supplied Spanish Official Journal PDF identifies Directive2011/7/EU, OJ L48/1–10; its package SHA is checked before this run.",
                         "authority_relation": "official_full_text",
@@ -101,6 +104,7 @@ def review(language, phase, source_ref, status_ref):
                             "No national implementation or individual entitlement assessed."
                         ],
                         "cited_passage": "",
+                        "passage_kind": "none",
                     }
                 ],
                 "support": {"status": "supported", "analysis": analyses[i]},
@@ -137,6 +141,7 @@ def review(language, phase, source_ref, status_ref):
     status_claim["source_checks"] = [
         {
             "source_ref": status_ref,
+            "capture_id": status_capture_id,
             "identity_status": "matches_cited_source",
             "identity_analysis": "Dated acquisition note identifies the exact official Parliament procedure URL and observed stage.",
             "authority_relation": "official_summary_or_headnote",
@@ -147,6 +152,7 @@ def review(language, phase, source_ref, status_ref):
                 "Dated procedural record; recheck during every live lesson."
             ],
             "cited_passage": "Awaiting Council's 1st reading position",
+            "passage_kind": "paraphrase",
         }
     ]
     status_claim["support"] = {
@@ -163,7 +169,7 @@ def review(language, phase, source_ref, status_ref):
     }
     records.append(status_claim)
     return {
-        "schema_version": "2.1",
+        "schema_version": "2.2",
         "language": language,
         "validation_objective": "question_to_validated_answer",
         "coverage_review": {

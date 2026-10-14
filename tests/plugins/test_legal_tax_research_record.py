@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import subprocess
@@ -11,6 +12,12 @@ from types import ModuleType
 from zipfile import ZipFile
 
 import pytest
+
+from tests.plugins.test_deep_research_validator_plugin import (
+    _answer_contract,
+    _claim_review,
+    _claims_review,
+)
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "plugins/deep-research-validator/scripts/research_record.py"
@@ -28,7 +35,7 @@ def research_module() -> ModuleType:
 def _run(root: Path, *, limited: bool = False) -> Path:
     root.mkdir(exist_ok=True)
     record = {
-        "schema_version": "1.0",
+        "schema_version": "2.0",
         "method": "shared_agentic_legal_tax_research",
         "cycles": [
             {
@@ -47,7 +54,11 @@ def _run(root: Path, *, limited: bool = False) -> Path:
                 "status": "evidence_limited" if limited else "qualified",
                 "cycle_ids": ["cycle-1"],
                 "treatment": "The answer now makes entitlement conditional on test X.",
-                "evidence": ["source.txt paragraph 1"],
+                "treatment_type": "qualification",
+                "evidence": [],
+                "effects": [],
+                "dependencies": [],
+                "dependency_review": "The answer remains conditional; there are no dependent claims.",
                 "limits": ["Test X requires evidence from the client."],
             }
         ],
@@ -58,12 +69,49 @@ def _run(root: Path, *, limited: bool = False) -> Path:
             "limits": ["Missing client evidence."] if limited else [],
         },
     }
-    (root / "research_review.json").write_text(json.dumps(record))
     (root / "answer.md").write_text("Entitlement requires test X.\n")
-    (root / "answer_contract.json").write_text('{"generation_route":"codex_direct"}')
-    (root / "claims_review.json").write_text('{"review":"condition restored"}')
+    (root / "answer_contract.json").write_text(
+        json.dumps(_answer_contract(generation_route="codex_direct"))
+    )
+    (root / "claims_review.json").write_text(
+        json.dumps(
+            _claims_review(
+                [_claim_review("Entitlement requires test X.")],
+                validated_document="Entitlement requires test X.",
+            )
+        )
+    )
     (root / "research_record.md").write_text("Examined the supplied provision.\n")
     (root / "source.txt").write_text("Entitlement requires test X.\n")
+    (root / "document_inventory.json").write_text(
+        json.dumps({"character_count": 28, "urls": []})
+    )
+    (root / "source_inventory.json").write_text(
+        json.dumps({"sources": [{"source_id": "source-001", "status": "available"}]})
+    )
+    record["answer_revision_sha256"] = hashlib.sha256(
+        (root / "answer.md").read_bytes()
+    ).hexdigest()
+    record["issues"][0]["evidence"] = [
+        {
+            "kind": "fact",
+            "artifact": "source.txt",
+            "sha256": hashlib.sha256((root / "source.txt").read_bytes()).hexdigest(),
+            "start_char": 0,
+            "end_char": len((root / "source.txt").read_text()),
+        }
+    ]
+    record["issues"][0]["effects"] = [
+        {
+            "kind": "claim",
+            "artifact": "claims_review.json",
+            "sha256": hashlib.sha256(
+                (root / "claims_review.json").read_bytes()
+            ).hexdigest(),
+            "claim_index": 1,
+        }
+    ]
+    (root / "research_review.json").write_text(json.dumps(record))
     return root
 
 
@@ -89,7 +137,7 @@ def test_bind_preserves_declared_limit_without_certifying_semantic_quality(
         "record_integrity": "verified",
         "declared_research_status": "evidence_limited" if limited else "complete",
         "semantic_quality": "not_certified_by_helper",
-        "artifact_count": 5,
+        "artifact_count": 7,
     }
 
 
@@ -387,3 +435,67 @@ def test_packaged_research_helper_loads_without_checkout_dependencies(
 
     assert result.returncode == 0, result.stderr
     assert "--client-engagement" in result.stdout
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("evidence", []),
+        ("evidence", ["invented source"]),
+        ("effects", []),
+        ("dependencies", ["missing-issue"]),
+        ("dependencies", ["issue-1"]),
+        ("dependency_review", ""),
+        ("treatment_type", "invented"),
+    ],
+)
+def test_closure_rejects_missing_traceability_before_writing(
+    tmp_path, research_module, field, value
+):
+    root = _run(tmp_path)
+    path = root / "research_review.json"
+    record = json.loads(path.read_text())
+    record["issues"][0][field] = value
+    path.write_text(json.dumps(record))
+    before = path.read_bytes()
+    with pytest.raises(ValueError):
+        _bind(research_module, root)
+    assert path.read_bytes() == before
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        "invented_claim",
+        "old_effect",
+        "old_answer",
+        "unreviewed_answer",
+        "unsupported_without_checks",
+    ],
+)
+def test_closure_rejects_invalid_current_answer_treatment(
+    tmp_path, research_module, change
+):
+    root = _run(tmp_path)
+    path = root / "research_review.json"
+    record = json.loads(path.read_text())
+    if change == "invented_claim":
+        record["issues"][0]["effects"][0]["claim_index"] = 99
+    elif change == "old_effect":
+        record["issues"][0]["effects"][0]["sha256"] = "0" * 64
+    elif change == "old_answer":
+        record["answer_revision_sha256"] = "0" * 64
+    elif change == "unreviewed_answer":
+        (root / "answer.md").write_text("A different conclusion.")
+    else:
+        review_path = root / "claims_review.json"
+        review = json.loads(review_path.read_text())
+        review["claims"][0]["source_checks"] = []
+        review_path.write_text(json.dumps(review))
+        record["issues"][0]["effects"][0]["sha256"] = hashlib.sha256(
+            review_path.read_bytes()
+        ).hexdigest()
+    path.write_text(json.dumps(record))
+    with pytest.raises(ValueError):
+        _bind(research_module, root)
+    assert "binding" not in json.loads(path.read_text())

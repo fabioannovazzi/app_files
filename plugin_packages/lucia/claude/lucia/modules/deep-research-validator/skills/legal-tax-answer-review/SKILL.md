@@ -261,13 +261,32 @@ research tools or supplied local sources and record that acquisition route.
    Record whether the review covers all material claims, selected material
    claims, or is limited. Also review whether the answer conforms to the
    contracted question, document type, audience, and evidence display.
-7. Write `claims_review_draft.json` using schema version `2.1`. Each material
+Retained source IDs identify resources across inspections. Select the actual
+`capture_id` examined, including a historical capture when appropriate. Read
+that snapshot and its scope; a later fetch does not supersede a historical
+version merely because it is newer. Capture hashes are checked again at review.
+Never refresh a hash to conceal changed evidence. Supplied excerpts remain
+explicitly excerpt-only and cannot establish access to a full authority.
+
+Classify each cited passage as `verbatim`, `paraphrase`, `translation`, or `none`.
+A translation records `original_passage`; literal presence is checked against
+that original. A paraphrase need not appear literally, but still requires the
+semantic support assessment. A missing supposed quotation requires a
+`passage_disposition` with analysis and the selected capture ID: either
+`evidence_limit` with disclosed `limitations`, or `verified_in_original` with
+a pinned `inspection_note` reference. The note identifies `capture_id`,
+`source_bytes_sha256`, `quoted_passage` and `original_locator` from an actual
+inspection of the retained original. Do not create a note without inspecting it.
+An extraction discrepancy is not automatically a false quotation. Hash or
+capture failures prevent a ready review regardless of quotation disposition.
+
+7. Write `claims_review_draft.json` using schema version `2.2`. Each material
    claim must keep source identity, semantic support, reasoning, professional
    judgment, issue treatment, disposition, and reviewer action separate:
 
 ```json
 {
-  "schema_version": "2.1",
+  "schema_version": "2.2",
   "language": "en",
   "validation_objective": "question_to_validated_answer",
   "coverage_review": {
@@ -293,7 +312,7 @@ research tools or supplied local sources and record that acquisition route.
       "claim_text": "Material claim text.",
       "claim_location": "Section 2, paragraph 1",
       "materiality": "material",
-      "source_checks": [{"source_ref": "source-001", "identity_status": "matches_cited_source", "identity_analysis": "Why this is the authority actually cited.", "authority_relation": "official_full_text", "official_text_access": "obtained", "text_fidelity": "verified_against_official_text", "access_analysis": "How the official text or historical archive was accessed and what the public search does or does not establish.", "limitations": [], "cited_passage": "Exact passage when available."}],
+      "source_checks": [{"source_ref": "source-001", "capture_id": "Actual selected capture_id from the inventory", "passage_kind": "verbatim", "identity_status": "matches_cited_source", "identity_analysis": "Why this is the authority actually cited.", "authority_relation": "official_full_text", "official_text_access": "obtained", "text_fidelity": "verified_against_official_text", "access_analysis": "How the official text or historical archive was accessed and what the public search does or does not establish.", "limitations": [], "cited_passage": "Exact passage when available."}],
       "support": {"status": "supported", "analysis": "Why the source semantically supports the claim."},
       "reasoning": {"status": "sound", "analysis": "Why the conclusion follows.", "supported_premises": ["Supported premise"], "missing_premises": []},
       "professional_judgment": {"status": "not_judgment_dependent", "analysis": "Why no additional professional choice is needed.", "factors": [], "alternative_interpretations": []},

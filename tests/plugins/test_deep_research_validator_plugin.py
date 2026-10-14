@@ -155,6 +155,7 @@ def _claim_review(
     claim_index: int = 1,
     source_ref: str = "source-001",
     cited_passage: str = "",
+    capture_id: str | None = None,
     support_status: str = "supported",
     support_analysis: str = "The source semantically supports the claim.",
     reasoning_status: str = "sound",
@@ -183,6 +184,8 @@ def _claim_review(
                 "access_analysis": "The official full text was obtained directly.",
                 "limitations": [],
                 "cited_passage": cited_passage,
+                "passage_kind": "paraphrase" if cited_passage else "none",
+                "capture_id": capture_id,
             }
         ],
         "support": {"status": support_status, "analysis": support_analysis},
@@ -240,7 +243,7 @@ def _claims_review(
         }[document_revision_status]
     )
     return {
-        "schema_version": "2.1",
+        "schema_version": "2.2",
         "language": language,
         "validation_objective": "question_to_validated_answer",
         "coverage_review": {
@@ -1366,6 +1369,7 @@ def test_source_capture_preserves_passage_beyond_preview(tmp_path: Path) -> None
                 _claim_review(
                     "The decisive rule applies.",
                     cited_passage=target_passage,
+                    capture_id=source["capture_id"],
                 )
             ]
         ),
@@ -1413,9 +1417,12 @@ def test_identical_source_captures_reuse_one_file_and_preserve_aliases(
     assert first["captured_text_path"] == second["captured_text_path"]
     assert second["duplicate_content_of_source_id"] == "source-001"
     assert second["capture_reused"] is True
-    assert [path.name for path in (output_dir / "sources").iterdir()] == [
-        "source-001.txt"
+    assert [path.name for path in (output_dir / "sources").glob("*.txt")] == [
+        Path(first["captured_text_path"]).name
     ]
+    assert (
+        output_dir / first["captured_original_path"]
+    ).read_bytes() == first_source.read_bytes()
 
 
 def test_exact_passage_is_not_searched_in_a_different_source() -> None:

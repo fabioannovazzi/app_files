@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/.codex/worktrees/tax-litigation-fixes/app_files/plugins/vera",
-  "version": "0.1.374",
-  "captured_at": "2026-10-13T21:59:46.931978+00:00",
-  "catalogue_fingerprint": "971aa9f9e06ece11afb6d1d7d00ea5ec2b3b0ee6372031ba52428730a904fb38",
-  "manifest_sha256": "d076570c31658ecba98e9d0fe356f560811ca46897d89799e8e0546cf392164f",
+  "root": "/Users/fabio/Documents/GitHub/app_files/plugins/vera",
+  "version": "0.1.375",
+  "captured_at": "2026-10-13T23:20:54.718643+00:00",
+  "catalogue_fingerprint": "a278aa2a3a3796ec249cd961fef8db27ad8d4d2d5a29445488453eeec1770d37",
+  "manifest_sha256": "943a7c4d9a76c22cbb3ef22c73224d4b6b0073c045f91860730354ce9daaccec",
   "entries": [
     {
       "function_id": "adeguati-assetti",

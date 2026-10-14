@@ -400,9 +400,11 @@
         "modules/deep-research-validator/scripts/adversarial_opinion.py",
         "modules/deep-research-validator/scripts/apply_review_edits.py",
         "modules/deep-research-validator/scripts/check_dependencies.py",
+        "modules/deep-research-validator/scripts/evidence_refs.py",
         "modules/deep-research-validator/scripts/inspect_document.py",
         "modules/deep-research-validator/scripts/inspect_sources.py",
         "modules/deep-research-validator/scripts/package_validation.py",
+        "modules/deep-research-validator/scripts/research_evaluation.py",
         "modules/deep-research-validator/scripts/research_record.py"
       ]
     },

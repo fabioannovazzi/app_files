@@ -29,10 +29,19 @@ for _vendor_root in (
             sys.path.insert(0, str(_vendor_root))
         break
 
+import importlib.util  # noqa: E402
+
 from vera_assurance import (  # noqa: E402
     AssuranceContractError,
     load_client_engagement_context_file,
 )
+
+_capture_spec = importlib.util.spec_from_file_location(
+    "legal_tax_source_captures", Path(__file__).with_name("source_captures.py")
+)
+assert _capture_spec and _capture_spec.loader
+_captures = importlib.util.module_from_spec(_capture_spec)
+_capture_spec.loader.exec_module(_captures)
 
 __all__ = ["inspect_sources", "write_source_inventory"]
 
@@ -206,11 +215,11 @@ def _extract_urls_from_inventory(path: Path) -> list[str]:
     return _ordered_unique(urls)
 
 
-def _source_file_record(
+def _source_reference(
     path: Path,
     *,
     run_root: Path | None = None,
-) -> dict[str, Any]:
+) -> tuple[Path, str, str]:
     resolved = path.expanduser().resolve()
     recorded_path = resolved.as_posix()
     path_reference = "absolute"
@@ -222,6 +231,11 @@ def _source_file_record(
                 "managed source file is outside the current customer run"
             ) from exc
         path_reference = "run_root_relative"
+    return resolved, recorded_path, path_reference
+
+
+def _source_file_record(path: Path, *, run_root: Path | None = None) -> dict[str, Any]:
+    resolved, recorded_path, path_reference = _source_reference(path, run_root=run_root)
     try:
         raw = resolved.read_bytes()
     except OSError as exc:
@@ -258,6 +272,7 @@ def _source_file_record(
         "extraction": extraction,
         "excerpt": re.sub(r"\s+", " ", text.strip())[:1200],
         "_captured_text": text,
+        "_captured_bytes": raw,
     }
 
 
@@ -488,6 +503,7 @@ def _fetch_url_record(url: str, timeout: float) -> dict[str, Any]:
         "excerpt": cleaned[:1200],
         "error": "",
         "_captured_text": cleaned,
+        "_captured_bytes": raw,
     }
 
 
@@ -496,37 +512,23 @@ def _persist_source_captures(
     *,
     capture_dir: Path | None,
     capture_base_dir: Path | None,
+    lock_held: bool = False,
 ) -> list[dict[str, Any]]:
-    """Assign stable IDs and optionally persist complete normalized snapshots."""
+    """Persist exact resource/capture identities, without deciding legal identity."""
 
     if capture_dir is not None:
-        capture_dir.mkdir(parents=True, exist_ok=True)
-    selected_base = capture_base_dir or capture_dir
-    base_dir = selected_base.resolve() if selected_base is not None else None
+        return _captures.persist_captures(
+            records, capture_dir, capture_base_dir or capture_dir, lock_held=lock_held
+        )
+
     out: list[dict[str, Any]] = []
-    canonical_captures: dict[str, tuple[str, str]] = {}
     for index, raw_record in enumerate(records, start=1):
         record = dict(raw_record)
+        record.pop("_captured_bytes", None)
         source_id = f"source-{index:03d}"
         record["source_id"] = source_id
-        captured_text = str(record.pop("_captured_text", "") or "")
-        if capture_dir is not None and base_dir is not None and captured_text:
-            content_hash = str(record.get("content_hash") or "")
-            canonical = canonical_captures.get(content_hash) if content_hash else None
-            if canonical is None:
-                capture_path = capture_dir / f"{source_id}.txt"
-                capture_path.write_text(captured_text, encoding="utf-8")
-                captured_text_path = (
-                    capture_path.resolve().relative_to(base_dir).as_posix()
-                )
-                record["captured_text_path"] = captured_text_path
-                if content_hash:
-                    canonical_captures[content_hash] = (source_id, captured_text_path)
-            else:
-                canonical_source_id, captured_text_path = canonical
-                record["captured_text_path"] = captured_text_path
-                record["duplicate_content_of_source_id"] = canonical_source_id
-                record["capture_reused"] = True
+        record.pop("_captured_text", None)
+        record["identity_scope"] = "unpersisted_inventory_only"
         out.append(record)
     return out
 
@@ -540,6 +542,7 @@ def inspect_sources(
     capture_dir: Path | None = None,
     capture_base_dir: Path | None = None,
     run_root: Path | None = None,
+    _capture_lock_held: bool = False,
 ) -> dict[str, Any]:
     """Return deterministic source inventory."""
 
@@ -567,6 +570,7 @@ def inspect_sources(
         [*url_records, *file_records],
         capture_dir=capture_dir,
         capture_base_dir=capture_base_dir,
+        lock_held=_capture_lock_held,
     )
     return {
         "path_reference": ("run_root_relative" if run_root is not None else "absolute"),
@@ -585,22 +589,29 @@ def write_source_inventory(
     fetch_urls: bool = True,
     run_root: Path | None = None,
 ) -> dict[str, Path]:
+    # Reject an unbound input before creating even the source-mutation lock.
+    for source in source_files or []:
+        _source_reference(source, run_root=run_root)
     output_dir.mkdir(parents=True, exist_ok=True)
-    payload = inspect_sources(
-        inventory_path,
-        source_files=source_files,
-        timeout=timeout,
-        fetch_urls=fetch_urls,
-        capture_dir=output_dir / "sources",
-        capture_base_dir=output_dir,
-        run_root=run_root,
-    )
-    path = output_dir / "source_inventory.json"
-    path.write_text(
-        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
-    return {"source_inventory": path}
+    with _captures.exclusive_file_lock(output_dir / ".source_capture_manifest.lock"):
+        payload = inspect_sources(
+            inventory_path,
+            source_files=source_files,
+            timeout=timeout,
+            fetch_urls=fetch_urls,
+            capture_dir=output_dir / "sources",
+            capture_base_dir=output_dir,
+            run_root=run_root,
+            _capture_lock_held=True,
+        )
+        raw = (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+        snapshot = _captures.write_inventory_snapshot(output_dir, raw)
+        path = _captures.write_current_inventory(output_dir, raw)
+    return {
+        "source_inventory": path,
+        "source_capture_manifest": output_dir / _captures.MANIFEST,
+        "source_inventory_snapshot": snapshot,
+    }
 
 
 def main() -> int:

@@ -136,6 +136,93 @@ def test_pipeline_review_labels_an_excerpt_and_binds_the_complete_source(
     assert binding["sha256"] == hashlib.sha256(source.read_bytes()).hexdigest()
 
 
+@pytest.mark.parametrize(
+    "relative", ["research/sources/capture.html", "bound-capture.html"]
+)
+@pytest.mark.parametrize("encoding", ["iso-8859-1", "utf-16"])
+@pytest.mark.parametrize(
+    "language,warning_term",
+    [
+        ("it", "codifica"),
+        ("en", "encoding"),
+        ("fr", "encodage"),
+        ("de", "Zeichenkodierung"),
+        ("es", "codificación"),
+    ],
+)
+def test_pipeline_review_preserves_unsupported_source_encoding_as_a_review_limit(
+    tmp_path, pipeline_module, relative, encoding, language, warning_term
+):
+    root, context = _case(tmp_path)
+    context["language"] = language
+    source = root / relative
+    source.parent.mkdir(parents=True, exist_ok=True)
+    original = (
+        f'<html><meta charset="{encoding}"><body>Attività e perché.</body></html>'
+    ).encode(encoding)
+    source.write_bytes(original)
+    record_path = root / "research_review.json"
+    record = json.loads(record_path.read_text())
+    record["binding"] = {"artifacts": [{"role": "source", "path": relative}]}
+    record_path.write_text(json.dumps(record))
+
+    result = pipeline_module.write_pipeline_review(root, context)
+
+    payload = json.loads((root / "review_payload.json").read_text())
+    view = next(item for item in payload["items"] if item["source_path"] == relative)
+    binding = next(
+        item for item in payload["source_bindings"] if item["path"] == relative
+    )
+    assert view["data"]["preview_status"] == "unsupported_encoding"
+    assert warning_term in view["data"]["preview"]
+    assert "original" in view["data"]["preview"].lower()
+    assert binding["sha256"] == hashlib.sha256(original).hexdigest()
+    assert source.read_bytes() == original
+    assert result["declared_research_status"] == "in_progress"
+
+
+def test_pipeline_review_displays_utf8_bom_source_without_modifying_its_capture(
+    tmp_path, pipeline_module
+):
+    root, context = _case(tmp_path)
+    source = root / "research/sources/capture.txt"
+    source.parent.mkdir(parents=True)
+    original = "Attività e perché.".encode("utf-8-sig")
+    source.write_bytes(original)
+
+    pipeline_module.write_pipeline_review(root, context)
+
+    payload = json.loads((root / "review_payload.json").read_text())
+    view = next(
+        item
+        for item in payload["items"]
+        if item["source_path"] == "research/sources/capture.txt"
+    )
+    binding = next(
+        item
+        for item in payload["source_bindings"]
+        if item["path"] == "research/sources/capture.txt"
+    )
+    assert view["data"]["text"] == "Attività e perché."
+    assert binding["sha256"] == hashlib.sha256(original).hexdigest()
+    assert source.read_bytes() == original
+
+
+def test_pipeline_review_rejects_invalid_control_record_encoding_before_writing(
+    tmp_path, pipeline_module
+):
+    root, context = _case(tmp_path)
+    record = root / "research_review.json"
+    original = record.read_text().encode("utf-16")
+    record.write_bytes(original)
+
+    with pytest.raises(UnicodeDecodeError):
+        pipeline_module.write_pipeline_review(root, context)
+
+    assert record.read_bytes() == original
+    assert not (root / "review_payload.json").exists()
+
+
 @pytest.mark.parametrize("changed", [False, True])
 def test_pipeline_review_retains_decisions_or_archives_the_previous_revision(
     tmp_path, pipeline_module, changed
