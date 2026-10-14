@@ -550,7 +550,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
     "terms": {
         "title": "Terms of Service",
         "eyebrow": "Mparanza LLC",
-        "effective_date": LEGAL_EFFECTIVE_DATE,
+        "effective_date": "October 14, 2026",
         "summary": (
             "These Terms govern access to and use of mparanza.com, Mparanza LLC web "
             "tools, downloadable plugins, and related services. Ordinary plugin "
@@ -841,6 +841,47 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "content from Mparanza LLC may not delete a copy held elsewhere. "
                         "Mparanza LLC is not responsible for external services, content, "
                         "failures, delays, suspensions, or changes."
+                    ),
+                ],
+            },
+            {
+                "id": "external-databases",
+                "title": "External Databases and Research Subscriptions",
+                "paragraphs": [
+                    (
+                        "You decide whether to connect an external database, research "
+                        "subscription, or other third-party content source, including "
+                        "Eutekne or One FISCALE. You are responsible for checking that "
+                        "your intended use complies with applicable law, your subscription "
+                        "or licence, and the provider's terms, and for obtaining any "
+                        "rights or permissions required for that use."
+                    ),
+                    (
+                        "This responsibility includes checking any restrictions on "
+                        "automated browser or connector access, searching, reading, "
+                        "extracting, copying or storing content, sending selected content "
+                        "to AI models or host providers, and using or sharing resulting "
+                        "outputs. Having a subscription, valid credentials, or a "
+                        "successful technical connection does not establish that these "
+                        "uses are permitted. Your instruction to the plugin does not "
+                        "grant permission on behalf of the content provider."
+                    ),
+                    (
+                        "Mparanza LLC does not assess or verify whether your individual "
+                        "subscription, licence, provider agreement, or applicable rights "
+                        "permit a particular connection or use, and makes no representation "
+                        "or warranty that they do. Listing a source or making a connection "
+                        "available does not imply the provider's affiliation, endorsement, "
+                        "or authorization."
+                    ),
+                    (
+                        "Use a connection only within the rights and permissions "
+                        "available to you. If you are unsure whether your intended use "
+                        "is allowed, clarify this with the provider and obtain any "
+                        "required permission before enabling that use. Do not bypass "
+                        "access controls or provider restrictions. This section does "
+                        "not exclude or limit any responsibility of Mparanza LLC that "
+                        "cannot lawfully be excluded or limited."
                     ),
                 ],
             },

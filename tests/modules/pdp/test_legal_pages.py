@@ -121,7 +121,7 @@ def test_terms_page_is_public_when_auth_enabled(
     page = context["page"]
     assert isinstance(page, dict)
     assert page["title"] == "Terms of Service"
-    assert page["effective_date"] == "July 31, 2026"
+    assert page["effective_date"] == "October 14, 2026"
     assert context["active_legal_page"] == "terms"
     terms_text = str(page)
     assert "https://mparanza.com/zero-retention" in terms_text
@@ -144,6 +144,13 @@ def test_terms_page_is_public_when_auth_enabled(
     assert "courts located in the Canton of Geneva" in terms_text
     assert "intentional misconduct, gross negligence" in terms_text
     assert "liability that cannot lawfully be excluded or limited" in terms_text
+    sections = {section["id"]: section for section in page["sections"]}
+    external_sources = str(sections["external-databases"])
+    assert "You are responsible for checking" in external_sources
+    assert "successful technical connection does not establish" in external_sources
+    assert "Mparanza LLC does not assess or verify" in external_sources
+    assert "sending selected content to AI models or host providers" in external_sources
+    assert "cannot lawfully be excluded or limited" in external_sources
     assert "New York" not in terms_text
     assert "jury trial" not in terms_text
     assert "improve, and develop" not in terms_text
