@@ -73,6 +73,15 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "legal-tax-model-selection",
+        "purpose": "Maintain Vera's most-capable-available host model requirement through the legal/tax pipeline",
+        "content": "Required and observed model identifiers, the capability-selection basis, host/session reference, source of identity evidence, explicit user confirmation from the optional panel or chat, and actual phase-assignment references. This local record may enter the current host model context. It contains no credentials and is not model-provider attestation. Cowork can use the same managed Python helper and chat without UI or an external model API.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -222,13 +231,17 @@
     {
       "id": "actual-evaluation-retention",
       "control": "Evaluation tooling copies selected existing artifacts locally, pins the actual product ZIP version and hash, records host/model/tool observation limits and binds any actual assessment to exact final-answer bytes. Comparison withholds workflow labels in a separate assessor directory while preserving content; file integrity cannot certify execution authenticity or professional quality."
+    },
+    {
+      "id": "legal-tax-model-continuity",
+      "control": "The local helper validates the managed or standalone run, output boundary, exact model identifier, session and record revision. UI confirmation is bound to the server-side run by a random expiring token. Host-reported identity, user-confirmed selection and unknown identity remain distinct. The UI does not switch host models. Chat fallback uses the same helper, with no new service, account, credentials, automatic anonymization or silent weaker-model fallback."
     }
   ],
   "review": {
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "77d2167eefcd767c7062ae74c77b99a75e7aa0efedefe9e85509ec8b06bb12ea"
+    "source_fingerprint": "445628c839068b2831e6504ac31ac4709e33ee101773757d196d19124541d7ca"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/quesito-legale-fiscale/SKILL.md",
@@ -242,6 +255,8 @@
     "plugins/vera/mcp/research-sources.cjs",
     "plugins/vera/scripts/research-subscriptions-store.cjs",
     "plugins/vera/skills/legal-tax-answer-review/SKILL.md",
-    "plugins/vera/scripts/research-sources.cjs"
+    "plugins/vera/scripts/research-sources.cjs",
+    "plugins/vera/skills/vera/references/legal-tax-model-policy.md",
+    "plugins/vera/skills/legal-tax-answer-planner/SKILL.md"
   ]
 }

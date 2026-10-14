@@ -115,7 +115,7 @@
     {
       "path": "modules/deep-research-validator/skills/deep-research/SKILL.md",
       "repository_path": "plugins/deep-research-validator/skills/deep-research/SKILL.md",
-      "sha256": "25cc92ef3ddaf37af120c1bc9a7f9110181e6cf9e31094417d1ebebab56142ac"
+      "sha256": "c23652f119b7e6c86484ac71a630788700d586b44a61157925d0db7bf2e0e743"
     },
     {
       "path": "modules/deep-research-validator/skills/deep-research/references/evaluation.md",
@@ -140,7 +140,7 @@
     {
       "path": "modules/deep-research-validator/skills/legal-tax-answer-review/references/answer-journey.md",
       "repository_path": "plugins/deep-research-validator/skills/legal-tax-answer-review/references/answer-journey.md",
-      "sha256": "547eea3b407da59b1f5a67c7dac8c4b7f849f686341297badf7ff998ce2ca50c"
+      "sha256": "30c5370893ed13f6d8b3b9afea4dc75444d30050912b1f8c823e91f302dfe6c4"
     },
     {
       "path": "modules/deep-research-validator/skills/legal-tax-answer-review/references/research-choice.md",

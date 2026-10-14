@@ -115,7 +115,7 @@
     {
       "path": "modules/deep-research-validator/skills/deep-research/SKILL.md",
       "repository_path": "plugins/deep-research-validator/skills/deep-research/SKILL.md",
-      "sha256": "25cc92ef3ddaf37af120c1bc9a7f9110181e6cf9e31094417d1ebebab56142ac"
+      "sha256": "c23652f119b7e6c86484ac71a630788700d586b44a61157925d0db7bf2e0e743"
     },
     {
       "path": "modules/deep-research-validator/skills/deep-research/references/evaluation.md",
@@ -140,7 +140,7 @@
     {
       "path": "modules/deep-research-validator/skills/legal-tax-answer-review/references/answer-journey.md",
       "repository_path": "plugins/deep-research-validator/skills/legal-tax-answer-review/references/answer-journey.md",
-      "sha256": "547eea3b407da59b1f5a67c7dac8c4b7f849f686341297badf7ff998ce2ca50c"
+      "sha256": "30c5370893ed13f6d8b3b9afea4dc75444d30050912b1f8c823e91f302dfe6c4"
     },
     {
       "path": "modules/deep-research-validator/skills/legal-tax-answer-review/references/research-choice.md",
@@ -198,14 +198,34 @@
       "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
     },
     {
+      "path": "modules/prompt-optimizer/assets/legal-tax-model.html",
+      "repository_path": "plugins/prompt-optimizer/assets/legal-tax-model.html",
+      "sha256": "94471cba2d58bd3b6990ace5bab70b4b69592aa52f251cd2d3f598efe96a91e7"
+    },
+    {
+      "path": "modules/prompt-optimizer/scripts/model-policy.cjs",
+      "repository_path": "plugins/prompt-optimizer/scripts/model-policy.cjs",
+      "sha256": "0e8415c322c2ef1d56abf713d16c7b969c41aa4a08ac6f08c61815701bd2ab43"
+    },
+    {
+      "path": "modules/prompt-optimizer/scripts/model_policy.py",
+      "repository_path": "plugins/prompt-optimizer/scripts/model_policy.py",
+      "sha256": "978591c738176e488984b9670a1d2b7dcfae9a93aec12a4aff3c51cfa813e445"
+    },
+    {
       "path": "skills/quesito-legale-fiscale/SKILL.md",
       "repository_path": "plugins/vera/skills/quesito-legale-fiscale/SKILL.md",
-      "sha256": "3af4dde15a892c7260d06ada0781c58267544bc2125b5647c63289198822b354"
+      "sha256": "adb7955e7963140e5a434e94716fd297bc527b7c5bbeb83e531540e6799c0b89"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
       "repository_path": "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
       "sha256": "435fb05b811742229828bb00d3a58f71e8a5b73a654e991973520bdabc28d0b3"
+    },
+    {
+      "path": "skills/vera/references/legal-tax-model-policy.md",
+      "repository_path": "plugins/vera/skills/vera/references/legal-tax-model-policy.md",
+      "sha256": "fd26ddb777032e5e545dae12d5617c6a89dd141aedd6c8683240c8a697a640f1"
     },
     {
       "path": "skills/vera/references/research-subscriptions.md",

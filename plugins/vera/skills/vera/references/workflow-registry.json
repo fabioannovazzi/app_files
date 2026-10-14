@@ -384,6 +384,7 @@
         "modules/prompt-optimizer/scripts/apply_review_edits.py",
         "modules/prompt-optimizer/scripts/check_dependencies.py",
         "modules/prompt-optimizer/scripts/inspect_question.py",
+        "modules/prompt-optimizer/scripts/model_policy.py",
         "modules/prompt-optimizer/scripts/run_fiscalprompt_benchmark.py",
         "modules/prompt-optimizer/scripts/summarize_fiscalprompt_benchmark.py",
         "modules/prompt-optimizer/scripts/validate_prompt.py"

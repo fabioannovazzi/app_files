@@ -5,6 +5,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const readline = require("node:readline");
 const { spawnSync } = require("node:child_process");
+const modelPolicy = require("../scripts/model-policy.cjs");
 
 const SERVER_NAME = "prompt-optimizer-widgets";
 const PLUGIN_ROOT = path.resolve(__dirname, "..");
@@ -273,6 +274,7 @@ function toolDefinitions() {
     ["decisions"],
   );
   return [
+    ...modelPolicy.definitions(),
     {
       name: TOOL_NAMES.validateReview,
       title: "Validate Prompt Optimizer review payload",
@@ -334,6 +336,14 @@ function toolDefinitions() {
 function resources() {
   return [
     {
+      uri: modelPolicy.URI,
+      name: "legal_tax_model_check",
+      title: "Legal/tax model selection",
+      description: "Required model, observed identity and explicit user confirmation before preparation.",
+      mimeType: WIDGET_MIME_TYPE,
+      _meta: widgetResourceMeta(modelPolicy.URI),
+    },
+    {
       uri: WIDGET_URI,
       name: "prompt_optimizer_review_widget",
       title: "Prompt Optimizer review widget",
@@ -346,6 +356,9 @@ function resources() {
 }
 
 function resourceText(uri) {
+  if (uri === modelPolicy.URI) {
+    return fs.readFileSync(path.join(PLUGIN_ROOT, "assets", "legal-tax-model.html"), "utf8");
+  }
   if (uri !== WIDGET_URI) {
   throw new Error(`unknown Prompt Optimizer widget resource: ${uri}`);
   }
@@ -1941,6 +1954,15 @@ function hasPromptOptimizerPromptEditTarget(appliedDecisions) {
 }
 
 function callTool(name, args = {}) {
+  const modelResult = modelPolicy.call(name, args, (request) => {
+    const completed = spawnSync(pythonExecutable(), [path.join(PLUGIN_ROOT, "scripts", "model_policy.py")], {
+      cwd: PLUGIN_ROOT, encoding: "utf8", input: JSON.stringify(request), timeout: 30000, maxBuffer: 2_000_000,
+    });
+    if (completed.error) throw completed.error;
+    if (completed.status !== 0) throw new Error(completed.stderr || "Model check failed");
+    return JSON.parse(completed.stdout);
+  });
+  if (modelResult) return modelResult;
   if (name === TOOL_NAMES.validateReview) {
     const resolvedArgs = inputWithReviewReference(args);
     const payload = validateReviewPayload(resolvedArgs);
@@ -1990,7 +2012,7 @@ function toolResult(payload, toolName) {
       payload?.application_status ||
       payload?.review_payload?.status ||
       null,
-    message: payload?.message || null,
+    message: payload?.message || (payload?.record ? `Legal/tax model: ${payload.record.preferred_model}; ${payload.record.status}. No model switch performed.` : null),
     review_reference: payload?.review_reference || null,
   };
   const result = {
@@ -2001,6 +2023,7 @@ function toolResult(payload, toolName) {
   if (toolName === TOOL_NAMES.renderReview) {
     result._meta = toolUiMeta(WIDGET_URI, toolName);
   }
+  if (toolName === modelPolicy.CHECK) result._meta = toolUiMeta(modelPolicy.URI);
   return result;
 }
 
