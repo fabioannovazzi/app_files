@@ -31,6 +31,7 @@ def test_help_copy_is_complete_in_five_languages_and_preserves_product_links():
         ],
         capture_output=True,
         text=True,
+        encoding="utf-8",
         timeout=10,
         check=False,
     )
@@ -56,16 +57,20 @@ def test_help_copy_is_complete_in_five_languages_and_preserves_product_links():
         assert "65c987e33045ac1beb5c7490859efb64a057bfbe" in copy["useWhen"]
         assert "Mike" in copy["useWhen"]
     for product in ("vera", "lucia"):
-        source = (ROOT / f"static/shared/{product}/index.html").read_text()
+        source = (ROOT / f"static/shared/{product}/index.html").read_text(
+            encoding="utf-8"
+        )
         assert f"../posizioni-negoziali/index.html?from={product}" in source
-    page_source = (ROOT / "static/shared/posizioni-negoziali/index.html").read_text()
+    page_source = (ROOT / "static/shared/posizioni-negoziali/index.html").read_text(
+        encoding="utf-8"
+    )
     assert "product-function-page.js" in page_source
     assert "deal-redux-pages.js" in page_source
 
 
 def test_upstream_attribution_snapshot_matches_its_recorded_bytes():
     upstream = ROOT / "plugins/_shared/vendor/modules/deal_redux/references/upstream"
-    provenance = json.loads((upstream / "PROVENANCE.json").read_text())
+    provenance = json.loads((upstream / "PROVENANCE.json").read_text(encoding="utf-8"))
     for source in provenance["files"]:
         assert (
             hashlib.sha256((upstream / source["bundled_file"]).read_bytes()).hexdigest()
@@ -134,13 +139,13 @@ def test_shipped_negotiation_helpers_deliver_bound_complete_outputs(
     provenance = json.loads(
         (
             package / "vendor/modules/deal_redux/references/upstream/PROVENANCE.json"
-        ).read_text()
+        ).read_text(encoding="utf-8")
     )
     assert provenance == json.loads(
         (
             ROOT
             / "plugins/_shared/vendor/modules/deal_redux/references/upstream/PROVENANCE.json"
-        ).read_text()
+        ).read_text(encoding="utf-8")
     )
     source = tracked_document(tmp_path)
     source_bytes = source.read_bytes()
@@ -168,7 +173,7 @@ def test_shipped_negotiation_helpers_deliver_bound_complete_outputs(
         "D001",
     )
     path = run / "negotiation.json"
-    review = json.loads(path.read_text())
+    review = json.loads(path.read_text(encoding="utf-8"))
     review["context"].update(
         {
             k: "Synthetic supplied context"
@@ -177,7 +182,9 @@ def test_shipped_negotiation_helpers_deliver_bound_complete_outputs(
         }
     )
     review["context"]["language"] = language
-    inventory = json.loads((run / "negotiation-inventory.json").read_text())
+    inventory = json.loads(
+        (run / "negotiation-inventory.json").read_text(encoding="utf-8")
+    )
     review["positions"] = [
         {
             "id": "P1",
@@ -229,7 +236,7 @@ def test_shipped_negotiation_helpers_deliver_bound_complete_outputs(
         product.title(),
     )
     command(package, "legal_negotiation.py", "verify", "--run-dir", str(run))
-    html = (run / "negotiation.html").read_text()
+    html = (run / "negotiation.html").read_text(encoding="utf-8")
     assert "@font-face" in html
     assert all(c["id"] in html for c in inventory["changes"])
     assert source.read_bytes() == source_bytes

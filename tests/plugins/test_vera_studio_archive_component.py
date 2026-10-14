@@ -2681,7 +2681,7 @@ def test_negotiation_round_retains_delivery_and_starts_a_separate_successor(
         ["Synthetic negotiation"],
     )
     review_path = scaffold(run, "D001")
-    review = json.loads(review_path.read_text())
+    review = json.loads(review_path.read_text(encoding="utf-8"))
     review["context"].update(
         {
             k: "Synthetic; professional review pending"
@@ -2690,7 +2690,9 @@ def test_negotiation_round_retains_delivery_and_starts_a_separate_successor(
         }
     )
     review["context"]["language"] = "it"
-    inventory = json.loads((run / "negotiation-inventory.json").read_text())
+    inventory = json.loads(
+        (run / "negotiation-inventory.json").read_text(encoding="utf-8")
+    )
     review["other_changes"] = [
         {
             "change_id": c["id"],
@@ -2755,9 +2757,11 @@ def test_negotiation_round_retains_delivery_and_starts_a_separate_successor(
     assert Path(successor["client_engagement"]["output_dir"]) != output
     assert (
         prepared["run"]["workflow_version"]
-        == json.loads((ROOT / "plugins/vera/.codex-plugin/plugin.json").read_text())[
-            "version"
-        ]
+        == json.loads(
+            (ROOT / "plugins/vera/.codex-plugin/plugin.json").read_text(
+                encoding="utf-8"
+            )
+        )["version"]
     )
     assert sealed == {
         p.relative_to(output).as_posix(): p.read_bytes()
