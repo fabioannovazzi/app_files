@@ -1,3 +1,49 @@
+# Confronto delle quattro prove: revisione sui 25 criteri comuni
+
+14 ottobre 2026 — correzione della matrice di ripetibilità.
+
+La seconda matrice usa gli stessi 25 criteri della prima: 20 di nucleo (C01–C20), 2 complementi (A01–A02) e 3 di metodo (M01–M03), nello stesso ordine e con gli stessi standard e categorie. Le 100 celle sono state rivalutate sui testi integrali, non ricavate dai precedenti 18 temi.
+
+U significa trattazione utile del criterio, non completezza assoluta né assenza di ogni errore. Dettagli diversi possono quindi ricevere la stessa categoria. I rilievi fuori dai 25 criteri restano nelle note complementari; nessun punteggio totale o classifica numerica.
+
+La prima versione della seconda matrice usava 18 temi ricavati dalle differenze osservate. Questa versione la sostituisce. Identificativi, ordine, descrizioni, standard, fonti e categorie sono gli stessi della prima matrice. Gli originali e le 200 valutazioni degli otto documenti iniziali non sono stati modificati. Le osservazioni T restano note complementari prive di punteggio.
+
+| Criterio comune | Prova 1 | Prova 2 | Prova 3 | Prova 4 |
+|---|---|---|---|---|
+| C01 · Tre sistemi e scelta del modello | U | U | U | U |
+| C02 · Assetti e differenza rispetto al passato | U | U | U | U |
+| C03 · Decisioni sulla crisi non delegabili | U | U | U | U |
+| C04 · Deleghe nel consiglio di gestione | U | U | U | U |
+| C05 · Ragionevole affidamento e responsabilità | U | U | U | U |
+| C06 · Vigilanza effettiva prima e dopo | U | U | U | U |
+| C07 · Indipendenza e rapporti di gruppo | U | U | U | U |
+| C08 · Eccezione per la sorveglianza | U | U | U | U |
+| C09 · Durata della gestione nel dualistico | U | U | U | U |
+| C10 · Sostituzioni nel monistico | P | U | U | P |
+| C11 · Rimedio giudiziario del comitato | U | U | U | P |
+| C12 · Concorrenza e soggetti obbligati | U | U | U | U |
+| C13 · Rischi TUF e comunicazioni Consob | U | U | U | U |
+| C14 · Nomine e perdita dell’indipendenza | U | U | U | U |
+| C15 · Responsabilità sindaci e MTF | U | U | U | U |
+| C16 · Azioni concorsuali e diritto transitorio | U | U | U | U |
+| C17 · Decorrenze differenziate | U | U | U | U |
+| C18 · Statuti e rinvii | P | P | P | P |
+| C19 · Flussi semestrali e trimestrali | U | U | U | U |
+| C20 · Tecnologia facoltativa e controlli | U | U | U | U |
+| A01 · Assemblee e tutele dei soci | U | U | U | U |
+| A02 · Nuovi emittenti e PMI | U | U | U | U |
+| M01 · Inferenza distinta dalla norma | U | U | U | U |
+| M02 · Azioni con responsabili ed esiti | U | U | U | P |
+| M03 · Fonti primarie nel documento | U | U | U | U |
+
+Le categorie differiscono in C10, C11 e M02; C18 è parziale in tutti i testi. Questo riepilogo non è un punteggio di affidabilità. In particolare, il rilievo storico sulla revoca nella prova 1 non viene nascosto dal valore U sul distinto rimedio del voto contrario in C11. Il giudizio sulle fonti M03 resta distinto dal censimento degli attuativi, ancora incompleto.
+
+[100 motivazioni e passaggi](../../ripetibilita.html) · [Matrice CSV](Matrice_25_criteri_4_prove.csv) · [Provenienza e metodo](provenienza.json)
+
+## Note qualitative della prima lettura
+
+La preferenza per la prova 3 formulata nelle note seguenti è un giudizio sui dettagli e sull’utilità come base di lavoro, non una graduatoria ricavata dalla matrice. Le differenze qui descritte non introducono ulteriori criteri.
+
 # Confronto delle quattro prove Vera sul d.lgs. 47/2026
 
 14 ottobre 2026 — confronto dei quattro elaborati conclusi.
