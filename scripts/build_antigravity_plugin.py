@@ -6,15 +6,18 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import tempfile
 from pathlib import Path
 from zipfile import ZIP_DEFLATED, BadZipFile, ZipFile, ZipInfo
 
 from build_codex_plugin_zip import (
     RUNTIME_SUPPORT_FILES,
+    add_vera_execution_manifest,
     expected_zip_entries,
     load_bundles,
     load_packages,
     verify_packaged_mcp,
+    verify_vera_execution_zip,
     verify_zip_entries,
 )
 
@@ -130,6 +133,8 @@ def package_entries(product: str = "vera") -> dict[str, bytes]:
                 b"modules, scripts and MCP servers.", b"modules and local scripts."
             )
         )
+    if product == "vera":
+        add_vera_execution_manifest(entries, "vera/")
     return dict(sorted(entries.items()))
 
 
@@ -160,6 +165,8 @@ def verify_package(
     )
     if errors:
         raise ValueError("\n".join(errors))
+    if product == "vera":
+        verify_vera_execution_zip(output, "vera")
 
 
 def build_package(
@@ -173,14 +180,21 @@ def build_package(
     metadata = metadata or output.with_suffix(".json")
     entries = package_entries(product)
     output.parent.mkdir(parents=True, exist_ok=True)
-    with ZipFile(output, "w", compression=ZIP_DEFLATED) as archive:
-        for name, content in entries.items():
-            info = ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
-            info.compress_type = ZIP_DEFLATED
-            info.external_attr = 0o100644 << 16
-            archive.writestr(info, content)
-    metadata.write_bytes(_metadata(entries, product))
-    verify_package(output, metadata, product=product)
+    with tempfile.TemporaryDirectory(
+        prefix=".antigravity-release-", dir=output.parent
+    ) as temporary:
+        candidate = Path(temporary) / output.name
+        candidate_metadata = candidate.with_suffix(".json")
+        with ZipFile(candidate, "w", compression=ZIP_DEFLATED) as archive:
+            for name, content in entries.items():
+                info = ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
+                info.compress_type = ZIP_DEFLATED
+                info.external_attr = 0o100644 << 16
+                archive.writestr(info, content)
+        candidate_metadata.write_bytes(_metadata(entries, product))
+        verify_package(candidate, candidate_metadata, product=product)
+        candidate.replace(output)
+        candidate_metadata.replace(metadata)
 
 
 def main(argv: list[str] | None = None) -> int:

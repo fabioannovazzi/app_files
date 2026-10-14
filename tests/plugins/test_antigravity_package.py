@@ -21,6 +21,8 @@ def builder_case(tmp_path: Path, monkeypatch):
     }
     monkeypatch.setattr(builder, "package_entries", lambda product: entries)
     monkeypatch.setattr(builder, "verify_packaged_mcp", lambda *args, **kwargs: [])
+    # This fixture tests archive mechanics; real Vera preflight uses full release fixtures.
+    monkeypatch.setattr(builder, "verify_vera_execution_zip", lambda *args: None)
     output = tmp_path / "vera.zip"
     metadata = tmp_path / "vera.json"
     builder.build_package(output, metadata)

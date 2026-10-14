@@ -10,6 +10,7 @@ source per plugin.
 from __future__ import annotations
 
 import argparse
+import ast
 import hashlib
 import importlib.util
 import json
@@ -28,6 +29,7 @@ from zipfile import ZIP_DEFLATED, BadZipFile, ZipFile, ZipInfo
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from scripts.course_materials.remote_files import externalize_course_files  # noqa: E402
+from scripts.verify_vera_package import verify_vera_execution_zip  # noqa: E402
 
 LICENSE_PATH = ROOT / "LICENSE"
 DEFAULT_CONFIG = ROOT / "scripts" / "codex_plugin_packages.json"
@@ -1876,6 +1878,7 @@ def project_chatgpt_course_sources(
             raise ValueError(f"Rebuild and review the source course: {workflow}")
         course = json.loads(original)
         projected = False
+        projections: set[str] = set()
         for source in course["sources"]:
             relative = source["path"]
             before = native.get(prefix + relative)
@@ -1887,13 +1890,20 @@ def project_chatgpt_course_sources(
             if before == after:
                 continue
             parts = relative.split("/")
-            if (
-                len(parts) != 3
-                or parts[0] != "skills"
-                or parts[2] != "SKILL.md"
-                or after != project_chatgpt_source_skill(before)
+            if len(parts) == 3 and parts[0] == "skills" and parts[2] == "SKILL.md":
+                expected_projection = project_chatgpt_source_skill(before)
+                projection = "project_chatgpt_source_skill"
+            elif (
+                relative.endswith("/scripts/implementation_bootstrap.py")
+                and parts[0] == "modules"
             ):
+                expected_projection = project_chatgpt_execution_contract(before)
+                projection = "project_chatgpt_execution_contract"
+            else:
                 raise ValueError(f"Unsupported teaching source projection: {relative}")
+            if after != expected_projection:
+                raise ValueError(f"Unsupported teaching source projection: {relative}")
+            projections.add(projection)
             source["source_sha256"] = source["sha256"]
             source["sha256"] = hashlib.sha256(after).hexdigest()
             projected = True
@@ -1901,7 +1911,7 @@ def project_chatgpt_course_sources(
             course["source_package"] = {
                 "surface": "chatgpt-upload",
                 "course_sha256": original_sha,
-                "projection": "project_chatgpt_source_skill",
+                "projection": " + ".join(sorted(projections)),
             }
             content = (json.dumps(course, ensure_ascii=False, indent=2) + "\n").encode()
             entries[course_path] = content
@@ -1912,6 +1922,61 @@ def project_chatgpt_course_sources(
         entries[index_path] = (
             json.dumps(index, ensure_ascii=False, indent=2) + "\n"
         ).encode()
+
+
+def project_chatgpt_execution_contract(content: bytes) -> bytes:
+    """Bind a static module boundary to the exact skills-only host layout.
+
+    This mechanical projection replaces only the three omitted host files with
+    the two packaged review helpers. Dynamic host-aware contracts stay intact.
+    The projected scanner still rejects missing, extra, linked and mixed code.
+    """
+    source = content.decode("utf-8")
+    tree = ast.parse(source)
+    assignments = {
+        node.targets[0].id: node
+        for node in tree.body
+        if isinstance(node, ast.Assign) and isinstance(node.targets[0], ast.Name)
+    }
+    if "CHATGPT_IMPLEMENTATION_CONTRACT" in assignments:
+        return content
+    declaration = assignments["IMPLEMENTATION_CONTRACT"]
+    contract = ast.literal_eval(declaration.value)
+    root_id = next(root for root, path in contract if path == "mcp/server.cjs")
+    omitted = {".app.json", ".mcp.json", "mcp/server.cjs"}
+    projected = tuple((root, path) for root, path in contract if path not in omitted)
+    for helper in ("scripts/review_mcp_server.cjs", "scripts/review_server.py"):
+        if (root_id, helper) not in projected:
+            projected += ((root_id, helper),)
+    lines = source.splitlines(keepends=True)
+    lines[declaration.lineno - 1 : declaration.end_lineno] = [
+        "IMPLEMENTATION_CONTRACT = (\n",
+        *(f"    {entry!r},\n" for entry in projected),
+        ")\n",
+    ]
+    source = "".join(lines)
+    scan = f'        ("{root_id}", _os.path.join(root, "mcp")),\n'
+    if source.count(scan) != 1:
+        raise ValueError("Unrecognized static implementation MCP scan")
+    source = source.replace(scan, "")
+    root_files = '    for relative_path in (".app.json", ".mcp.json"):\n'
+    expected_root_scan = int(
+        any(path in {".app.json", ".mcp.json"} for _, path in contract)
+    )
+    if source.count(root_files) != expected_root_scan:
+        raise ValueError("Unrecognized static implementation root-file scan")
+    source = source.replace(root_files, "    for relative_path in ():\n")
+    start = source.index("def validate_implementation_tree(")
+    boundary = "    root = _os.path.abspath(plugin_root)\n"
+    prelude, validator = source[:start], source[start:]
+    validator = validator.replace(
+        boundary,
+        boundary + "    if any(_os.path.lexists(_os.path.join(root, path)) for path in "
+        '(".app.json", ".mcp.json", "mcp")):\n'
+        '        raise RuntimeError("implementation host layouts cannot be mixed")\n',
+        1,
+    )
+    return (prelude + validator).encode("utf-8")
 
 
 def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
@@ -2035,6 +2100,10 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
             )
         elif name.endswith("/.codex-plugin/plugin.json"):
             content = project_chatgpt_component_manifest(content)
+        elif plugin_name == "vera" and name.endswith(
+            "/scripts/implementation_bootstrap.py"
+        ):
+            content = project_chatgpt_execution_contract(content)
         if (
             plugin_name in CROSS_SURFACE_PLUGINS
             and plugin_name not in SOURCE_PRESERVING_CHATGPT_PLUGINS
@@ -2240,6 +2309,8 @@ def build_package(package: BuildTarget) -> Path:
             errors = verify_packaged_mcp(temp_path, roots)
             if errors:
                 raise ValueError("\n".join(errors))
+        if "vera" in package.plugin_names:
+            verify_vera_execution_zip(temp_path, f"{package.package_root}/plugins/vera")
         temp_path.chmod(0o644)
         temp_path.replace(output)
         output.chmod(0o644)
@@ -2267,6 +2338,8 @@ def build_chatgpt_upload(package: BuildTarget, output: Path) -> Path:
             for name, content in entries.items():
                 write_entry(archive, name, content)
         verify_zip_entries(temp_path, entries)
+        if "vera" in package.plugin_names:
+            verify_vera_execution_zip(temp_path, ".")
         temp_path.chmod(0o644)
         temp_path.replace(output)
         output.chmod(0o644)
@@ -2293,6 +2366,11 @@ def verify_chatgpt_upload(package: BuildTarget, output: Path) -> list[str]:
         for name in sorted(expected_names & actual_names):
             if archive.read(name) != expected[name]:
                 errors.append(f"Content differs: {name}")
+    if not errors and "vera" in package.plugin_names:
+        try:
+            verify_vera_execution_zip(output, ".")
+        except ValueError as error:
+            errors.append(str(error))
     return errors
 
 
@@ -2320,6 +2398,13 @@ def verify_package(package: BuildTarget) -> list[str]:
     roots = _mcp_roots(package, expected)
     if not errors and roots:
         errors.extend(verify_packaged_mcp(package.output_zip, roots))
+    if not errors and "vera" in package.plugin_names:
+        try:
+            verify_vera_execution_zip(
+                package.output_zip, f"{package.package_root}/plugins/vera"
+            )
+        except ValueError as error:
+            errors.append(str(error))
     return errors
 
 

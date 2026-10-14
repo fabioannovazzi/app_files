@@ -53,6 +53,7 @@ from scripts.cowork_skill_names import (  # noqa: E402
     project_skill_names,
     validate_skill_zip,
 )
+from scripts.verify_vera_package import verify_vera_execution_zip  # noqa: E402
 
 DEFAULT_CONFIG = ROOT / "scripts" / "claude_plugin_packages.json"
 CODEX_BUILDER_PATH = ROOT / "scripts" / "build_codex_plugin_zip.py"
@@ -3395,7 +3396,7 @@ def _claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
     )
     _project_cowork_privacy_register(entries)
     _validate_cowork_instruction_entries(entries)
-    builder.add_vera_execution_manifest(entries)
+    # Seal only in claude_package_entries, after final skill-name projection.
 
     components = builder.embedded_plugin_names(ROOT / "plugins" / package.plugin)
     for component in components:
@@ -3526,6 +3527,8 @@ def build_package(package: ClaudePackage) -> tuple[Path, Path]:
             errors = _load_codex_builder().verify_packaged_mcp(candidate, ["."])
             if errors:
                 raise ValueError("\n".join(errors))
+        if package.plugin == "vera":
+            verify_vera_execution_zip(candidate, ".")
         _build_directory(package.output_directory, entries)
         _build_zip(package.output_zip, entries)
         if package.public_zip is not None:
@@ -3554,6 +3557,13 @@ def verify_package(package: ClaudePackage) -> list[str]:
         errors.extend(
             _load_codex_builder().verify_packaged_mcp(package.output_zip, ["."])
         )
+    if not errors and package.plugin == "vera":
+        for path in (package.output_zip, package.public_zip):
+            if path is not None:
+                try:
+                    verify_vera_execution_zip(path, ".")
+                except ValueError as error:
+                    errors.append(str(error))
     return errors
 
 
