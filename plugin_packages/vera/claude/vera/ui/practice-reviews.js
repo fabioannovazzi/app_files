@@ -9,7 +9,7 @@
       if(choices) for(const [value,text] of choices) {const option=node("option",text);option.value=value;input.append(option);}
       else if(type!=="textarea") input.type=type;
       input.value=value??"";input.maxLength=10000;wrap.append(node("span",label),input);parent.append(wrap);
-      input.addEventListener("input",()=>{onChange(input.value);changed();});
+      input.addEventListener(choices?"change":"input",()=>{onChange(input.value);changed();});
       return input;
     }
     function confirmation(parent) {
