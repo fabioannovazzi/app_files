@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "4c208633d469ec0599576bb5e915a2dcf2051765da23663f4c4d8536fb819d0c",
+  "catalogue_fingerprint": "891111ff94ae012552981a04b1f0fb1f63d24efed81f72d70e1df755e7345dcd",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -1753,5 +1753,11 @@
   "research_subscription_page_source_refresh": {
     "version": "0.1.383",
     "scope": "Only the canonical manifest version changed in the catalogue; all skill entrypoint bytes and function IDs remain identical. Public subscription responsibility copy and privacy fingerprints changed. Existing Geneva judgments remain unchanged; no additional jurisdiction acceptance is claimed."
+  },
+  "claude_skill_namespace_release_binding": {
+    "date": "2026-10-14",
+    "version": "0.1.386",
+    "previous_catalogue_fingerprint": "4c208633d469ec0599576bb5e915a2dcf2051765da23663f4c4d8536fb819d0c",
+    "scope": "All 55 canonical function IDs, source paths and skill bytes are unchanged. Only the product manifest/version binding advanced. Claude-exported skill identities receive the Mparanza prefix; existing Geneva dispositions and professional acceptance limits are preserved."
   }
 }

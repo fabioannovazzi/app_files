@@ -631,6 +631,11 @@ def test_lucia_and_vera_package_the_identical_opinion_component(
 
     assert vera == lucia
     assert "scripts/adversarial_opinion.py" in lucia
-    assert "skills/adversarial-opinion/SKILL.md" in lucia
-    assert "skills/legal-tax-answer-review/references/answer-journey.md" in lucia
-    assert "skills/legal-tax-answer-review/references/research-choice.md" in lucia
+    prefix = "mparanza-" if archive_suffix == "claude-plugin" else ""
+    assert f"skills/{prefix}adversarial-opinion/SKILL.md" in lucia
+    assert (
+        f"skills/{prefix}legal-tax-answer-review/references/answer-journey.md" in lucia
+    )
+    assert (
+        f"skills/{prefix}legal-tax-answer-review/references/research-choice.md" in lucia
+    )

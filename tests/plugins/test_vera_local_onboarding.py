@@ -509,8 +509,8 @@ def test_built_codex_and_local_work_load_the_same_profile_and_cowork_omits_featu
         )
         for name in (
             "scripts/notarized_run_receipt.py",
-            "skills/vera/SKILL.md",
-            "skills/fatture-xml-check/SKILL.md",
+            "skills/mparanza-vera/SKILL.md",
+            "skills/mparanza-fatture-xml-check/SKILL.md",
         ):
             assert b"VERA_OPENAI_ONBOARDING" not in archive.read(name)
         assert (

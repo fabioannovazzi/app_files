@@ -30,6 +30,10 @@ DOCUMENT_SKILLS = {
 }
 
 
+def installed_name(name: str, filename: str) -> str:
+    return f"mparanza-{name}" if filename.endswith("-claude-plugin.zip") else name
+
+
 def _run_packaged_script(plugin: Path, name: str, *arguments: str) -> None:
     completed = subprocess.run(
         [sys.executable, str(plugin / "scripts" / name), *arguments],
@@ -53,7 +57,7 @@ def test_document_workflows_execute_from_each_complete_package(tmp_path, filenam
     script = next((tmp_path / "package").rglob("scripts/legal_playbook.py"))
     plugin = script.parent.parent
     available = {p.parent.name for p in (plugin / "skills").glob("*/SKILL.md")}
-    assert DOCUMENT_SKILLS <= available
+    assert {installed_name(name, filename) for name in DOCUMENT_SKILLS} <= available
 
     source = tmp_path / "accordo.txt"
     source.write_text("Accordo fittizio. Durata: dodici mesi.\n", encoding="utf-8")
@@ -121,29 +125,31 @@ def test_packaged_lucia_workflow_references_resolve(filename: str) -> None:
     with ZipFile(ROOT / "plugin_packages" / "lucia" / filename) as archive:
         names = archive.namelist()
         for workflow in ("comunicazione-professionale", "presenza-digitale-studio"):
+            skill_name = installed_name(workflow, filename)
             wrapper = min(
                 (
                     name
                     for name in names
-                    if name.endswith(f"skills/{workflow}/SKILL.md")
+                    if name.endswith(f"skills/{skill_name}/SKILL.md")
                 ),
                 key=len,
             )
             text = " ".join(archive.read(wrapper).decode().split())
+            router = installed_name("lucia", filename)
             assert (
-                "`Plugin Improvement Feedback` section in `../lucia/SKILL.md`" in text
+                f"`Plugin Improvement Feedback` section in `../{router}/SKILL.md`"
+                in text
             )
             target = posixpath.normpath(
-                posixpath.join(posixpath.dirname(wrapper), "../lucia/SKILL.md")
+                posixpath.join(posixpath.dirname(wrapper), f"../{router}/SKILL.md")
             )
             assert "## Plugin Improvement Feedback" in archive.read(target).decode()
 
+        opening = installed_name("apertura-pratica", filename)
         skill = next(
             name
             for name in names
-            if name.endswith(
-                "modules/apertura-pratica/skills/apertura-pratica/SKILL.md"
-            )
+            if name.endswith(f"modules/apertura-pratica/skills/{opening}/SKILL.md")
         )
         reference = re.search(
             r"`([^`]*references/source-registry.json)`", archive.read(skill).decode()
@@ -168,11 +174,12 @@ def test_italian_method_and_shared_references_are_available_in_every_host(filena
             "revisione-documentale",
             "redazione-da-modello",
         ):
+            skill_name = installed_name(workflow, filename)
             skill = min(
                 (
                     name
                     for name in names
-                    if name.endswith(f"skills/{workflow}/SKILL.md")
+                    if name.endswith(f"skills/{skill_name}/SKILL.md")
                 ),
                 key=len,
             )

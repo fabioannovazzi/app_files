@@ -35,7 +35,8 @@ def test_release_index_matches_every_final_host_projected_byte(host):
     assert manifest["schema_version"] == 1
     assert manifest["files"] == expected
     assert "scripts/verified_execution.py" in expected
-    assert "skills/vera/references/execution-recovery.md" in expected
+    router = "mparanza-vera" if host == "claude" else "vera"
+    assert f"skills/{router}/references/execution-recovery.md" in expected
 
 
 @pytest.mark.parametrize("host", ["codex", "chatgpt-upload", "claude"])
