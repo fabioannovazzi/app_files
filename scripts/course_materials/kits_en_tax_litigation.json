@@ -1,0 +1,60 @@
+{
+  "vera/contenzioso-tributario": {
+    "title": "Prepare and resume Italian tax litigation with Vera",
+    "goal": "Learn to start from case documents, verify steps and deadlines, prepare a draft and update the same matter when new evidence arrives.",
+    "scenario": "Officina Cedro S.r.l. receives a 2024 IRES notice challenging maintenance costs. The initial folder contains the notice and only PEC acceptance; delivery evidence arrives during the short exercise.",
+    "scope": "Italian first-instance preparation from reading documents to a draft with open issues and saved progress. Explanation follows the chosen language; source documents and the pleading remain Italian. Appellate work, Supreme Court proceedings and electronic filing are outside this lesson.",
+    "inputs": "Open incarico-en.md, avviso.txt, accettazione.txt and fonti-da-verificare.md. These are readable fictional texts. Neither the notice date nor PEC acceptance alone proves the starting event. Add consegna.txt only during practice.",
+    "request": "Vera, review these documents for Officina Cedro’s Italian tax litigation. Organize evidence and gaps, verify current law, steps and deadlines from sources, and prepare a first Italian appeal draft. Save the work so we can resume when further evidence arrives.",
+    "steps": [
+      "Vera reads the selected fictional files and identifies party, tax, period and stage. Check the commercialista’s engagement and authority for the requested step. Explain actual work without simulating a real mandate.",
+      "Open the evidence matrix. Follow an amount back to the notice and its citation, and locate the missing receipt. Vera asks only for information that blocks a step and continues independent work.",
+      "Vera uses its own legal and tax research journey to check current rules, transitions, service and deadlines, including sources and contrary arguments. External searches use general legal references. A listed URL is not an acquired source.",
+      "Open the plan and calendar: distinguish evidenced events, conditional calculations and undetermined deadlines. Delivery evidence is absent initially; PEC acceptance must not become a confirmed starting date.",
+      "Open the Italian draft and check facts, attachments, sources and open issues. When Documents/Word is available, Vera uses the firm’s template and shows the actual DOCX; otherwise retain the text and show the outstanding Word step. Do not invent invoices or precedents.",
+      "Resume saved progress and add consegna.txt during practice. Vera prepares a subsequent run with the new evidence, revisits affected steps and preserves the first version. Open the updated outputs and the report on data actually read by the model."
+    ],
+    "deliverables": [
+      "Chronology and evidence matrix with document citations and missing items.",
+      "Procedural plan and calendar with sources, assumptions and unresolved deadlines.",
+      "Italian appeal draft, Word when available, resumable matter record and actual model-data report."
+    ],
+    "review": "Locate evidence for each event and the source of each proposed deadline. A missing receipt must stay visible; the draft must not invent facts or cases, and preparation must not be recorded as completed service or filing.",
+    "checkpoints": [
+      "Which files did you provide, and which evidence is missing for the starting event?",
+      "Where can you find a step’s source, assumption and unanswered question?"
+    ],
+    "practice": "Add consegna.txt to the saved matter and request updated plan, calendar and draft. Locate the stated delivery date, compare it with acceptance and check that Vera investigates applicable law before confirming a deadline. Cost invoices remain missing, and the first version must be retained.",
+    "success": "You can start from case documents, read evidence and deadline assumptions, review a draft and resume the same matter with new evidence while preserving earlier versions.",
+    "repeat": "For real work select the notice, receipts, documents and firm template; describe party and stage. Ask for tax-litigation preparation or resumption, then inspect plan, calendar, draft, sources and gaps. Confirm only answers you know. Explanation and short practice target 5–8 minutes; research and processing can take longer."
+  },
+  "lucia/contenzioso-tributario": {
+    "title": "Prepare and resume Italian tax litigation with Lucia",
+    "goal": "Learn to start from case documents, verify steps and deadlines, prepare a draft and update the same matter when new evidence arrives.",
+    "scenario": "Officina Cedro S.r.l. receives a 2024 IRES notice challenging maintenance costs. The initial folder contains the notice and only PEC acceptance; delivery evidence arrives during the short exercise.",
+    "scope": "Italian first-instance preparation from reading documents to a draft with open issues and saved progress. Explanation follows the chosen language; source documents and the pleading remain Italian. Appellate work, Supreme Court proceedings and electronic filing are outside this lesson.",
+    "inputs": "Open incarico-en.md, avviso.txt, accettazione.txt and fonti-da-verificare.md. These are readable fictional texts. Neither the notice date nor PEC acceptance alone proves the starting event. Add consegna.txt only during practice.",
+    "request": "Lucia, review these documents for Officina Cedro’s Italian tax litigation. Organize evidence and gaps, verify current law, steps and deadlines from sources, and prepare a first Italian appeal draft. Save the work so we can resume when further evidence arrives.",
+    "steps": [
+      "Lucia reads the selected fictional files and identifies party, tax, period and stage. Check the lawyer’s engagement and authority for the requested step. Explain actual work without simulating a real mandate.",
+      "Open the evidence matrix. Follow an amount back to the notice and its citation, and locate the missing receipt. Lucia asks only for information that blocks a step and continues independent work.",
+      "Lucia uses its own legal and tax research journey to check current rules, transitions, service and deadlines, including sources and contrary arguments. External searches use general legal references. A listed URL is not an acquired source.",
+      "Open the plan and calendar: distinguish evidenced events, conditional calculations and undetermined deadlines. Delivery evidence is absent initially; PEC acceptance must not become a confirmed starting date.",
+      "Open the Italian draft and check facts, attachments, sources and open issues. When Documents/Word is available, Lucia uses the firm’s template and shows the actual DOCX; otherwise retain the text and show the outstanding Word step. Do not invent invoices or precedents.",
+      "Resume saved progress and add consegna.txt during practice. Lucia prepares a subsequent run with the new evidence, revisits affected steps and preserves the first version. Open the updated outputs and the report on data actually read by the model."
+    ],
+    "deliverables": [
+      "Chronology and evidence matrix with document citations and missing items.",
+      "Procedural plan and calendar with sources, assumptions and unresolved deadlines.",
+      "Italian appeal draft, Word when available, resumable matter record and actual model-data report."
+    ],
+    "review": "Locate evidence for each event and the source of each proposed deadline. A missing receipt must stay visible; the draft must not invent facts or cases, and preparation must not be recorded as completed service or filing.",
+    "checkpoints": [
+      "Which files did you provide, and which evidence is missing for the starting event?",
+      "Where can you find a step’s source, assumption and unanswered question?"
+    ],
+    "practice": "Add consegna.txt to the saved matter and request updated plan, calendar and draft. Locate the stated delivery date, compare it with acceptance and check that Lucia investigates applicable law before confirming a deadline. Cost invoices remain missing, and the first version must be retained.",
+    "success": "You can start from case documents, read evidence and deadline assumptions, review a draft and resume the same matter with new evidence while preserving earlier versions.",
+    "repeat": "For real work select the notice, receipts, documents and firm template; describe party and stage. Ask for tax-litigation preparation or resumption, then inspect plan, calendar, draft, sources and gaps. Confirm only answers you know. Explanation and short practice target 5–8 minutes; research and processing can take longer."
+  }
+}

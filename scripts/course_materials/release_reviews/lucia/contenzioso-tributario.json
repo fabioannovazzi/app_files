@@ -1,0 +1,246 @@
+{
+  "schema": "mparanza.teaching_release_review.v1",
+  "product": "lucia",
+  "workflow": "contenzioso-tributario",
+  "course_sha256": "ac9bb785e4a3fa64af29e2a3141e3eb5f6c055b1203dd7e8bc0ea8a98d461bad",
+  "reviewer": "Codex /root: five-language authored lesson and real evidence/progress output review",
+  "reviewed_at": "2026-10-14T14:55:04.860976+00:00",
+  "review_scope": "Accepted prepared material and bounded real helper/Archive regressions. Semantic narrative and decisions are explicit test fixtures. This does not attest full live legal research, substantive pleading approval, native Word, native voice, installed-host learner execution or professional acceptance. Live lessons run the current specialist, not the fixtures.",
+  "languages": {
+    "it": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Reviewed the full authored first-instance Italian lesson: document intake, evidence gaps, current-source research, procedural calendar, draft and saved continuation. The selected product owns the actual workflow; the outline does not replace it.",
+        "inputs_and_request": "Read the selected-language engagement note, fictional IRES notice, PEC acceptance and initial source pointers. EUR 2,880 IRES and EUR 12,000 maintenance costs remain statements in the notice. There is no delivery evidence initially, no invoice evidence, no preapproved legal rule, deadline or pleading output. The delivery receipt is supplied only for practice.",
+        "execution_and_checkpoints": "The real current helpers import the exact course inputs through a local-only teaching case, produce source-linked HTML/CSV/XLSX, persist and reopen questions, stages and a calendar, and preserve a sealed first run. Practice binds the actual previous matter artifact in the same engagement and prepares a new evidence pack. Narrative and stage decisions are labelled regression fixtures; research, Word, native voice and learner participation are not exercised by these regressions.",
+        "deliverable_and_next_action": "Substantively inspected actual review.csv, bozza-intake.md and matter.html for demo and practice. Initial delivery date and due date are blank; practice adds source-cited 2026-10-02 while leaving due date blank pending law review. Missing cost documents and external filing remain visible. A working draft is not a reviewed pleading. The live outline requires actual source research, Word when available and a readable model-data report.",
+        "practice_and_repeat": "The second run adds the fictional delivery receipt rather than modifying the sealed evidence. Exact previous outputs remain byte-identical, same engagement is retained, the prior matter is selected upstream and the new receipt has current-pack citations. Acceptance on 2026-10-01 is not silently substituted for delivery on 2026-10-02. Legal review and filing questions remain open.",
+        "language_and_pacing": "Read the complete it outline: title, scope, files, request, six steps, deliverables, review, two checkpoints, practice, success and repeat. The narrative is localized; Italian sources, procedural jurisdiction and pleading language remain Italian. Six planned steps total 390 seconds; research and processing are expressly additional. No measured learner timing or understanding is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[demo-it-lucia]",
+        "result_review": "Actual evidence rendering, persisted source-linked calendar and bound archive lifecycle inspected. Unknown legal terms remain unknown. The initial acceptance receipt does not resolve delivery, legal research or filing.",
+        "reviewed_artifacts": [
+          {
+            "name": "review.csv",
+            "sha256": "3f28dd861fe16c0d2a5776bb997f90eac0a6d9a2846272b8b78042761c85f3a1"
+          },
+          {
+            "name": "bozza-intake.md",
+            "sha256": "803f7a8894f51bc7724ef5725425c8f5b2a770e5829ecd046e0d819318e81111"
+          },
+          {
+            "name": "matter.html",
+            "sha256": "15ecdfa0641827d60dbd901b37d00288467974fa4d508eb80d446ac171e3dfd0"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[practice-it-lucia]",
+        "result_review": "Actual evidence rendering, persisted source-linked calendar and bound archive lifecycle inspected. Unknown legal terms remain unknown. The second run imports the prior state, adds delivery evidence, changes only the supported event and preserves all previous output bytes.",
+        "reviewed_artifacts": [
+          {
+            "name": "review.csv",
+            "sha256": "8ccee7e005edb8878fdabc5f1a10d3ac2e4c61be008541547bac1288f07eb1a8"
+          },
+          {
+            "name": "bozza-intake.md",
+            "sha256": "0a91167611d9e60f8092aeb8b648669f56147a3c3fff85e08fb81450e3a84002"
+          },
+          {
+            "name": "matter.html",
+            "sha256": "d0dbc42d96eaf24a997711ea50d7bbb9ea79cdc3d8b8fc345dc7a4e2c1407843"
+          }
+        ]
+      }
+    },
+    "en": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Reviewed the full authored first-instance Italian lesson: document intake, evidence gaps, current-source research, procedural calendar, draft and saved continuation. The selected product owns the actual workflow; the outline does not replace it.",
+        "inputs_and_request": "Read the selected-language engagement note, fictional IRES notice, PEC acceptance and initial source pointers. EUR 2,880 IRES and EUR 12,000 maintenance costs remain statements in the notice. There is no delivery evidence initially, no invoice evidence, no preapproved legal rule, deadline or pleading output. The delivery receipt is supplied only for practice.",
+        "execution_and_checkpoints": "The real current helpers import the exact course inputs through a local-only teaching case, produce source-linked HTML/CSV/XLSX, persist and reopen questions, stages and a calendar, and preserve a sealed first run. Practice binds the actual previous matter artifact in the same engagement and prepares a new evidence pack. Narrative and stage decisions are labelled regression fixtures; research, Word, native voice and learner participation are not exercised by these regressions.",
+        "deliverable_and_next_action": "Substantively inspected actual review.csv, bozza-intake.md and matter.html for demo and practice. Initial delivery date and due date are blank; practice adds source-cited 2026-10-02 while leaving due date blank pending law review. Missing cost documents and external filing remain visible. A working draft is not a reviewed pleading. The live outline requires actual source research, Word when available and a readable model-data report.",
+        "practice_and_repeat": "The second run adds the fictional delivery receipt rather than modifying the sealed evidence. Exact previous outputs remain byte-identical, same engagement is retained, the prior matter is selected upstream and the new receipt has current-pack citations. Acceptance on 2026-10-01 is not silently substituted for delivery on 2026-10-02. Legal review and filing questions remain open.",
+        "language_and_pacing": "Read the complete en outline: title, scope, files, request, six steps, deliverables, review, two checkpoints, practice, success and repeat. The narrative is localized; Italian sources, procedural jurisdiction and pleading language remain Italian. Six planned steps total 390 seconds; research and processing are expressly additional. No measured learner timing or understanding is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[demo-en-lucia]",
+        "result_review": "Actual evidence rendering, persisted source-linked calendar and bound archive lifecycle inspected. Unknown legal terms remain unknown. The initial acceptance receipt does not resolve delivery, legal research or filing.",
+        "reviewed_artifacts": [
+          {
+            "name": "review.csv",
+            "sha256": "4e66e85d5f3cb0dbecad9cc5714f70f5a8b01d41ac17d7315da747bc0fa4b3f2"
+          },
+          {
+            "name": "bozza-intake.md",
+            "sha256": "803f7a8894f51bc7724ef5725425c8f5b2a770e5829ecd046e0d819318e81111"
+          },
+          {
+            "name": "matter.html",
+            "sha256": "c8b6075b66fe86dd5c43ab005885579dca06f6771add12e839e6b5aedd3460b6"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[practice-en-lucia]",
+        "result_review": "Actual evidence rendering, persisted source-linked calendar and bound archive lifecycle inspected. Unknown legal terms remain unknown. The second run imports the prior state, adds delivery evidence, changes only the supported event and preserves all previous output bytes.",
+        "reviewed_artifacts": [
+          {
+            "name": "review.csv",
+            "sha256": "afd2c2f52e47d9070bb0552fb22abb82f5314049c784bd1595f99f265bd04494"
+          },
+          {
+            "name": "bozza-intake.md",
+            "sha256": "0a91167611d9e60f8092aeb8b648669f56147a3c3fff85e08fb81450e3a84002"
+          },
+          {
+            "name": "matter.html",
+            "sha256": "7aa61bef7fc0ac9bf83fd6c38d5a8e6e82cddcb26400b4474d59010075a8c1d8"
+          }
+        ]
+      }
+    },
+    "fr": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Reviewed the full authored first-instance Italian lesson: document intake, evidence gaps, current-source research, procedural calendar, draft and saved continuation. The selected product owns the actual workflow; the outline does not replace it.",
+        "inputs_and_request": "Read the selected-language engagement note, fictional IRES notice, PEC acceptance and initial source pointers. EUR 2,880 IRES and EUR 12,000 maintenance costs remain statements in the notice. There is no delivery evidence initially, no invoice evidence, no preapproved legal rule, deadline or pleading output. The delivery receipt is supplied only for practice.",
+        "execution_and_checkpoints": "The real current helpers import the exact course inputs through a local-only teaching case, produce source-linked HTML/CSV/XLSX, persist and reopen questions, stages and a calendar, and preserve a sealed first run. Practice binds the actual previous matter artifact in the same engagement and prepares a new evidence pack. Narrative and stage decisions are labelled regression fixtures; research, Word, native voice and learner participation are not exercised by these regressions.",
+        "deliverable_and_next_action": "Substantively inspected actual review.csv, bozza-intake.md and matter.html for demo and practice. Initial delivery date and due date are blank; practice adds source-cited 2026-10-02 while leaving due date blank pending law review. Missing cost documents and external filing remain visible. A working draft is not a reviewed pleading. The live outline requires actual source research, Word when available and a readable model-data report.",
+        "practice_and_repeat": "The second run adds the fictional delivery receipt rather than modifying the sealed evidence. Exact previous outputs remain byte-identical, same engagement is retained, the prior matter is selected upstream and the new receipt has current-pack citations. Acceptance on 2026-10-01 is not silently substituted for delivery on 2026-10-02. Legal review and filing questions remain open.",
+        "language_and_pacing": "Read the complete fr outline: title, scope, files, request, six steps, deliverables, review, two checkpoints, practice, success and repeat. The narrative is localized; Italian sources, procedural jurisdiction and pleading language remain Italian. Six planned steps total 390 seconds; research and processing are expressly additional. No measured learner timing or understanding is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[demo-fr-lucia]",
+        "result_review": "Actual evidence rendering, persisted source-linked calendar and bound archive lifecycle inspected. Unknown legal terms remain unknown. The initial acceptance receipt does not resolve delivery, legal research or filing.",
+        "reviewed_artifacts": [
+          {
+            "name": "review.csv",
+            "sha256": "c08111c161d4db627f30288fbb3e4aa7c412359d7674c0688762e4ef7d822bdf"
+          },
+          {
+            "name": "bozza-intake.md",
+            "sha256": "803f7a8894f51bc7724ef5725425c8f5b2a770e5829ecd046e0d819318e81111"
+          },
+          {
+            "name": "matter.html",
+            "sha256": "280d8bc943f31920f94e34c3421a3017d80929d736585eaf9b26173f7fdd5e3e"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[practice-fr-lucia]",
+        "result_review": "Actual evidence rendering, persisted source-linked calendar and bound archive lifecycle inspected. Unknown legal terms remain unknown. The second run imports the prior state, adds delivery evidence, changes only the supported event and preserves all previous output bytes.",
+        "reviewed_artifacts": [
+          {
+            "name": "review.csv",
+            "sha256": "b1fc0b80782db5a8732a42e30cd2593f1cb1a07ed000caf6436feabd68c3342e"
+          },
+          {
+            "name": "bozza-intake.md",
+            "sha256": "0a91167611d9e60f8092aeb8b648669f56147a3c3fff85e08fb81450e3a84002"
+          },
+          {
+            "name": "matter.html",
+            "sha256": "a5aee4afc77802ed314ca6461eb1c8c83a0e27838cdcfcc55f8c3627aa527eb7"
+          }
+        ]
+      }
+    },
+    "de": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Reviewed the full authored first-instance Italian lesson: document intake, evidence gaps, current-source research, procedural calendar, draft and saved continuation. The selected product owns the actual workflow; the outline does not replace it.",
+        "inputs_and_request": "Read the selected-language engagement note, fictional IRES notice, PEC acceptance and initial source pointers. EUR 2,880 IRES and EUR 12,000 maintenance costs remain statements in the notice. There is no delivery evidence initially, no invoice evidence, no preapproved legal rule, deadline or pleading output. The delivery receipt is supplied only for practice.",
+        "execution_and_checkpoints": "The real current helpers import the exact course inputs through a local-only teaching case, produce source-linked HTML/CSV/XLSX, persist and reopen questions, stages and a calendar, and preserve a sealed first run. Practice binds the actual previous matter artifact in the same engagement and prepares a new evidence pack. Narrative and stage decisions are labelled regression fixtures; research, Word, native voice and learner participation are not exercised by these regressions.",
+        "deliverable_and_next_action": "Substantively inspected actual review.csv, bozza-intake.md and matter.html for demo and practice. Initial delivery date and due date are blank; practice adds source-cited 2026-10-02 while leaving due date blank pending law review. Missing cost documents and external filing remain visible. A working draft is not a reviewed pleading. The live outline requires actual source research, Word when available and a readable model-data report.",
+        "practice_and_repeat": "The second run adds the fictional delivery receipt rather than modifying the sealed evidence. Exact previous outputs remain byte-identical, same engagement is retained, the prior matter is selected upstream and the new receipt has current-pack citations. Acceptance on 2026-10-01 is not silently substituted for delivery on 2026-10-02. Legal review and filing questions remain open.",
+        "language_and_pacing": "Read the complete de outline: title, scope, files, request, six steps, deliverables, review, two checkpoints, practice, success and repeat. The narrative is localized; Italian sources, procedural jurisdiction and pleading language remain Italian. Six planned steps total 390 seconds; research and processing are expressly additional. No measured learner timing or understanding is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[demo-de-lucia]",
+        "result_review": "Actual evidence rendering, persisted source-linked calendar and bound archive lifecycle inspected. Unknown legal terms remain unknown. The initial acceptance receipt does not resolve delivery, legal research or filing.",
+        "reviewed_artifacts": [
+          {
+            "name": "review.csv",
+            "sha256": "c6973580855d566f5783bdc4070a579290015d418c46a690945b04fa7ca411c3"
+          },
+          {
+            "name": "bozza-intake.md",
+            "sha256": "803f7a8894f51bc7724ef5725425c8f5b2a770e5829ecd046e0d819318e81111"
+          },
+          {
+            "name": "matter.html",
+            "sha256": "f15fd1d178f6d2ae5cd7ae6f8eaf611eec6e86ce253d10fe2d4ff24398959451"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[practice-de-lucia]",
+        "result_review": "Actual evidence rendering, persisted source-linked calendar and bound archive lifecycle inspected. Unknown legal terms remain unknown. The second run imports the prior state, adds delivery evidence, changes only the supported event and preserves all previous output bytes.",
+        "reviewed_artifacts": [
+          {
+            "name": "review.csv",
+            "sha256": "6aae33d311389951e88eff36a8e13f1fa12560528d482a27a0a063db6fc4b57e"
+          },
+          {
+            "name": "bozza-intake.md",
+            "sha256": "0a91167611d9e60f8092aeb8b648669f56147a3c3fff85e08fb81450e3a84002"
+          },
+          {
+            "name": "matter.html",
+            "sha256": "c566c429cf82363d4d6a203ef222e817384880dae22292085ff239b81cb4d011"
+          }
+        ]
+      }
+    },
+    "es": {
+      "verdict": "accepted",
+      "editorial": {
+        "purpose_and_first_use": "Reviewed the full authored first-instance Italian lesson: document intake, evidence gaps, current-source research, procedural calendar, draft and saved continuation. The selected product owns the actual workflow; the outline does not replace it.",
+        "inputs_and_request": "Read the selected-language engagement note, fictional IRES notice, PEC acceptance and initial source pointers. EUR 2,880 IRES and EUR 12,000 maintenance costs remain statements in the notice. There is no delivery evidence initially, no invoice evidence, no preapproved legal rule, deadline or pleading output. The delivery receipt is supplied only for practice.",
+        "execution_and_checkpoints": "The real current helpers import the exact course inputs through a local-only teaching case, produce source-linked HTML/CSV/XLSX, persist and reopen questions, stages and a calendar, and preserve a sealed first run. Practice binds the actual previous matter artifact in the same engagement and prepares a new evidence pack. Narrative and stage decisions are labelled regression fixtures; research, Word, native voice and learner participation are not exercised by these regressions.",
+        "deliverable_and_next_action": "Substantively inspected actual review.csv, bozza-intake.md and matter.html for demo and practice. Initial delivery date and due date are blank; practice adds source-cited 2026-10-02 while leaving due date blank pending law review. Missing cost documents and external filing remain visible. A working draft is not a reviewed pleading. The live outline requires actual source research, Word when available and a readable model-data report.",
+        "practice_and_repeat": "The second run adds the fictional delivery receipt rather than modifying the sealed evidence. Exact previous outputs remain byte-identical, same engagement is retained, the prior matter is selected upstream and the new receipt has current-pack citations. Acceptance on 2026-10-01 is not silently substituted for delivery on 2026-10-02. Legal review and filing questions remain open.",
+        "language_and_pacing": "Read the complete es outline: title, scope, files, request, six steps, deliverables, review, two checkpoints, practice, success and repeat. The narrative is localized; Italian sources, procedural jurisdiction and pleading language remain Italian. Six planned steps total 390 seconds; research and processing are expressly additional. No measured learner timing or understanding is claimed."
+      },
+      "demo": {
+        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[demo-es-lucia]",
+        "result_review": "Actual evidence rendering, persisted source-linked calendar and bound archive lifecycle inspected. Unknown legal terms remain unknown. The initial acceptance receipt does not resolve delivery, legal research or filing.",
+        "reviewed_artifacts": [
+          {
+            "name": "review.csv",
+            "sha256": "ee3a09c8c2699f841931b63c76cdb5ca04b359fba78f9c89526e21f7dceeece4"
+          },
+          {
+            "name": "bozza-intake.md",
+            "sha256": "803f7a8894f51bc7724ef5725425c8f5b2a770e5829ecd046e0d819318e81111"
+          },
+          {
+            "name": "matter.html",
+            "sha256": "12f89ccd578f493ab753d41841d84647b8700acb9602e9bc4b775773caae3d80"
+          }
+        ]
+      },
+      "practice": {
+        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[practice-es-lucia]",
+        "result_review": "Actual evidence rendering, persisted source-linked calendar and bound archive lifecycle inspected. Unknown legal terms remain unknown. The second run imports the prior state, adds delivery evidence, changes only the supported event and preserves all previous output bytes.",
+        "reviewed_artifacts": [
+          {
+            "name": "review.csv",
+            "sha256": "07a67cd0e9502f8deedc9c27a24d2abe58b73bee89b7641fcb2eebed1d22ee99"
+          },
+          {
+            "name": "bozza-intake.md",
+            "sha256": "0a91167611d9e60f8092aeb8b648669f56147a3c3fff85e08fb81450e3a84002"
+          },
+          {
+            "name": "matter.html",
+            "sha256": "1560c8a4d46d177fd840f519833ac8f2e5b887e752931dc6a720419a273df225"
+          }
+        ]
+      }
+    }
+  }
+}

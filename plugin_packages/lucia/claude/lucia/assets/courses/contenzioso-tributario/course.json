@@ -1,0 +1,398 @@
+{
+  "schema": "mparanza.teaching_kit.v2",
+  "product": "lucia",
+  "workflow": "contenzioso-tributario",
+  "revision": "2026-10-14.1",
+  "seconds": [
+    45,
+    60,
+    105,
+    75,
+    45,
+    60
+  ],
+  "supported_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "language_basis": "product_conversation_language_and_workflow_narrative",
+  "group": "workflow",
+  "parent_workflow": null,
+  "execution": {
+    "mode": "current_native_workflow",
+    "local_tutorial": true,
+    "route": "italian_tax_evidence_plan_draft_then_delivery_update"
+  },
+  "sources": [
+    {
+      "path": "scripts/check_dependencies.py",
+      "sha256": "d8fe58ac68e4cb0e05783256d829fbffc2a29c802c83902ee3102ff432764b69"
+    },
+    {
+      "path": "scripts/managed_python_runtime.py",
+      "sha256": "ccc8f805bc8807b1c16a2a92dc43533571cb341bc20a68d850d25af04c879e69"
+    },
+    {
+      "path": "skills/contenzioso-tributario/SKILL.md",
+      "sha256": "33c3ad639e3fe50795baa43d873f6cced91d788f18f19c6cc14366886aeae341"
+    },
+    {
+      "path": "vendor/modules/deal_redux/references/evidence-and-rounds.md",
+      "sha256": "e44de40a8503a1f6f2a76aa5dc66b048ee864b28503f70d2babb20192a4ba1c7"
+    },
+    {
+      "path": "vendor/modules/deal_redux/references/upstream/LICENSE",
+      "sha256": "6e7c22106722c151ffc66d0faf2035155eca1ad91931f5679c6773891c08deef"
+    },
+    {
+      "path": "vendor/modules/deal_redux/references/upstream/PROVENANCE.json",
+      "sha256": "1bb874b6862a115a43760881590a2e410d5d05d3318d3c78f3179c455a158ca3"
+    },
+    {
+      "path": "vendor/modules/deal_redux/references/upstream/deal-redux.md",
+      "sha256": "b90f37e85e092869fc25b44eea91b40c3f04bcbd1cdfd3c65f809f60d53cc105"
+    },
+    {
+      "path": "vendor/modules/deal_redux/workflow.md",
+      "sha256": "9dee4dd1def980f5f6aaf4a723b45303fbed219a0f822402461b4673c1e252da"
+    },
+    {
+      "path": "vendor/modules/italian_tax_litigation/references/evidence-and-progress.md",
+      "sha256": "5dcad2c5191394310f8d44903a9803fde8f06950b328edb75d86891a4842623a"
+    },
+    {
+      "path": "vendor/modules/italian_tax_litigation/references/fonti.md",
+      "sha256": "a0c1236e1d0eb9fb0a6f8559a2336f71b8b613778b66b5853600203672819493"
+    },
+    {
+      "path": "vendor/modules/italian_tax_litigation/references/procedura-italiana.md",
+      "sha256": "99ce64c08f64d8bbe96d0491d0b0e25af7d894af41705c47f2eae087fb0ebf5f"
+    },
+    {
+      "path": "vendor/modules/italian_tax_litigation/references/termini-e-ripresa.md",
+      "sha256": "502fe40b4630955483c700897a570c9313d17339bacded04d96f99bf977874ae"
+    },
+    {
+      "path": "vendor/modules/italian_tax_litigation/workflow.md",
+      "sha256": "9e32947e8840f2186e2011b4aae957e0eeb13b81a42004f279b16ccd6b4e3de1"
+    }
+  ],
+  "files": [
+    {
+      "path": "files/input/avviso.txt",
+      "sha256": "6b35620ac31f349434e917096e874edf7b429f3e95b947623697a80d84cf316e",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/avviso.txt",
+      "sha256": "6b35620ac31f349434e917096e874edf7b429f3e95b947623697a80d84cf316e",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/accettazione.txt",
+      "sha256": "7fe059bac59cb379c2cbf6a02fd04283336138df8500a479958d007e8917b32d",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/accettazione.txt",
+      "sha256": "7fe059bac59cb379c2cbf6a02fd04283336138df8500a479958d007e8917b32d",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/practice/consegna.txt",
+      "sha256": "d097bff5ccd9272c52089ec082aabe0480508c259c1978fef792cad81d813cfc",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/fonti-da-verificare.md",
+      "sha256": "fc1d00de77bc5b97a41272a275130d70cbb93c2127a2ba1d5ed9d9d71531c160",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/fonti-da-verificare.md",
+      "sha256": "fc1d00de77bc5b97a41272a275130d70cbb93c2127a2ba1d5ed9d9d71531c160",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/incarico-it.md",
+      "sha256": "1a75486d5721104ee5569d3985001ddc04e549a581c704727a319a9c4d60e529",
+      "languages": [
+        "it"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/incarico-it.md",
+      "sha256": "1a75486d5721104ee5569d3985001ddc04e549a581c704727a319a9c4d60e529",
+      "languages": [
+        "it"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/incarico-en.md",
+      "sha256": "accf0eee2d4788d37717e1b512f9808530fe8ae218330e770a6d0ff5fab86df6",
+      "languages": [
+        "en"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/incarico-en.md",
+      "sha256": "accf0eee2d4788d37717e1b512f9808530fe8ae218330e770a6d0ff5fab86df6",
+      "languages": [
+        "en"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/incarico-fr.md",
+      "sha256": "eec5e5a4242b81cba0d3bfdd1915825ef62297d29528ac4fae0e1f96fce0ae95",
+      "languages": [
+        "fr"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/incarico-fr.md",
+      "sha256": "eec5e5a4242b81cba0d3bfdd1915825ef62297d29528ac4fae0e1f96fce0ae95",
+      "languages": [
+        "fr"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/incarico-de.md",
+      "sha256": "11a98b96c9940db2b3a9d3cb34602adf592d94e338d826430e3f14c42ea5b88e",
+      "languages": [
+        "de"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/incarico-de.md",
+      "sha256": "11a98b96c9940db2b3a9d3cb34602adf592d94e338d826430e3f14c42ea5b88e",
+      "languages": [
+        "de"
+      ],
+      "role": "practice"
+    },
+    {
+      "path": "files/input/incarico-es.md",
+      "sha256": "1033f4754a739b7f6cdc2f6cb618042bd5cd281b57a38d5e0ddd62376ebf08d9",
+      "languages": [
+        "es"
+      ],
+      "role": "source"
+    },
+    {
+      "path": "files/practice/incarico-es.md",
+      "sha256": "1033f4754a739b7f6cdc2f6cb618042bd5cd281b57a38d5e0ddd62376ebf08d9",
+      "languages": [
+        "es"
+      ],
+      "role": "practice"
+    }
+  ],
+  "locales": {
+    "it": {
+      "title": "Preparare e riprendere un contenzioso tributario con Lucia",
+      "goal": "Imparare a partire dagli atti, verificare passaggi e termini, preparare una bozza e aggiornare la stessa pratica quando arriva una nuova prova.",
+      "scenario": "Officina Cedro S.r.l. riceve un avviso IRES 2024. Il cliente contesta il recupero di costi di manutenzione. La prima cartella contiene l’avviso e soltanto l’accettazione PEC; la prova di consegna arriva nella breve esercitazione.",
+      "scope": "Preparazione italiana di primo grado, dalla lettura degli atti alla bozza con punti aperti e stato salvato. La spiegazione è nella lingua scelta; gli atti e la bozza processuale restano italiani. Non è una lezione su appello, Cassazione o deposito telematico.",
+      "inputs": "Apri incarico-it.md, avviso.txt, accettazione.txt e fonti-da-verificare.md. Sono testi fittizi leggibili. La data dell’avviso e l’accettazione PEC non provano da sole la decorrenza. consegna.txt va aggiunto soltanto nella breve prova.",
+      "request": "Lucia, esamina questi documenti per il contenzioso tributario italiano di Officina Cedro. Organizza prove e lacune, verifica disciplina, passaggi e termini con le fonti attuali e prepara una prima bozza italiana di ricorso. Salva il lavoro per riprenderlo quando arrivano nuove prove.",
+      "steps": [
+        "Lucia legge i file fittizi selezionati e inquadra parte, tributo, periodo e fase. Verifica incarico e abilitazione del avvocato per il passaggio richiesto. Spiega il lavoro in corso senza simulare un incarico reale.",
+        "Apri la matrice delle prove. Segui un importo dall’avviso alla sua citazione e individua la ricevuta mancante. Lucia chiede soltanto ciò che blocca un passaggio e continua le attività indipendenti.",
+        "Lucia usa il proprio percorso di ricerca legale e fiscale per verificare norme attuali, transizioni, notifiche e termini, con controllo delle fonti e delle tesi contrarie. Le query esterne usano riferimenti giuridici generali. Un indirizzo web indicato nei file non vale come fonte acquisita.",
+        "Apri piano e calendario: distingui eventi provati, calcoli condizionati e termini non determinabili. In questo fascicolo iniziale manca la consegna PEC: non trasformare l’accettazione in una decorrenza confermata.",
+        "Apri la bozza italiana e controlla fatti, allegati, fonti e punti ancora aperti. Se Documents/Word è disponibile, Lucia usa il modello dello studio e mostra il DOCX effettivamente prodotto; altrimenti conserva il testo e indica il passaggio Word aperto. Non inventare fatture o precedenti.",
+        "Riprendi lo stato salvato e aggiungi consegna.txt nella breve prova. Lucia prepara una lavorazione successiva con le nuove prove, riesamina i passaggi interessati e conserva la prima versione. Apri gli elaborati aggiornati e il report sui dati realmente letti dal modello."
+      ],
+      "deliverables": [
+        "Cronologia e matrice delle prove con citazioni agli atti e documenti mancanti.",
+        "Piano procedurale e calendario con fonti, presupposti e termini ancora aperti.",
+        "Bozza italiana di ricorso, Word quando disponibile, registro riprendibile e report dei dati della lavorazione."
+      ],
+      "review": "Trova la prova di ciascun evento e la fonte del termine proposto. Controlla che una ricevuta assente resti una lacuna, che la bozza non contenga fatti o sentenze inventati e che una preparazione non sia registrata come notifica o deposito eseguiti.",
+      "checkpoints": [
+        "Quali file hai fornito e quale prova manca per valutare la decorrenza?",
+        "Dove trovi la fonte di un passaggio, il suo presupposto e la domanda ancora aperta?"
+      ],
+      "practice": "Aggiungi consegna.txt alla pratica già salvata e chiedi di aggiornare piano, calendario e bozza. Individua la data dichiarata nella nuova ricevuta, verifica che sia diversa dall’accettazione e controlla che Lucia ricerchi la disciplina applicabile prima di confermare un termine. Le fatture dei costi restano mancanti; la prima versione va conservata.",
+      "success": "Sai avviare il lavoro dagli atti, leggere prove e termini con i loro presupposti, rivedere una bozza e riprendere la stessa pratica con una nuova prova senza perdere le versioni precedenti.",
+      "repeat": "Per una pratica reale seleziona atto, ricevute, documenti e modello dello studio; descrivi parte e fase. Chiedi preparazione o ripresa del contenzioso, poi apri piano, calendario e bozza e controlla fonti e lacune. Conferma le sole risposte che conosci. Spiegazione e breve prova mirano a 5–8 minuti; ricerca ed elaborazione possono richiedere più tempo."
+    },
+    "en": {
+      "title": "Prepare and resume Italian tax litigation with Lucia",
+      "goal": "Learn to start from case documents, verify steps and deadlines, prepare a draft and update the same matter when new evidence arrives.",
+      "scenario": "Officina Cedro S.r.l. receives a 2024 IRES notice challenging maintenance costs. The initial folder contains the notice and only PEC acceptance; delivery evidence arrives during the short exercise.",
+      "scope": "Italian first-instance preparation from reading documents to a draft with open issues and saved progress. Explanation follows the chosen language; source documents and the pleading remain Italian. Appellate work, Supreme Court proceedings and electronic filing are outside this lesson.",
+      "inputs": "Open incarico-en.md, avviso.txt, accettazione.txt and fonti-da-verificare.md. These are readable fictional texts. Neither the notice date nor PEC acceptance alone proves the starting event. Add consegna.txt only during practice.",
+      "request": "Lucia, review these documents for Officina Cedro’s Italian tax litigation. Organize evidence and gaps, verify current law, steps and deadlines from sources, and prepare a first Italian appeal draft. Save the work so we can resume when further evidence arrives.",
+      "steps": [
+        "Lucia reads the selected fictional files and identifies party, tax, period and stage. Check the lawyer’s engagement and authority for the requested step. Explain actual work without simulating a real mandate.",
+        "Open the evidence matrix. Follow an amount back to the notice and its citation, and locate the missing receipt. Lucia asks only for information that blocks a step and continues independent work.",
+        "Lucia uses its own legal and tax research journey to check current rules, transitions, service and deadlines, including sources and contrary arguments. External searches use general legal references. A listed URL is not an acquired source.",
+        "Open the plan and calendar: distinguish evidenced events, conditional calculations and undetermined deadlines. Delivery evidence is absent initially; PEC acceptance must not become a confirmed starting date.",
+        "Open the Italian draft and check facts, attachments, sources and open issues. When Documents/Word is available, Lucia uses the firm’s template and shows the actual DOCX; otherwise retain the text and show the outstanding Word step. Do not invent invoices or precedents.",
+        "Resume saved progress and add consegna.txt during practice. Lucia prepares a subsequent run with the new evidence, revisits affected steps and preserves the first version. Open the updated outputs and the report on data actually read by the model."
+      ],
+      "deliverables": [
+        "Chronology and evidence matrix with document citations and missing items.",
+        "Procedural plan and calendar with sources, assumptions and unresolved deadlines.",
+        "Italian appeal draft, Word when available, resumable matter record and actual model-data report."
+      ],
+      "review": "Locate evidence for each event and the source of each proposed deadline. A missing receipt must stay visible; the draft must not invent facts or cases, and preparation must not be recorded as completed service or filing.",
+      "checkpoints": [
+        "Which files did you provide, and which evidence is missing for the starting event?",
+        "Where can you find a step’s source, assumption and unanswered question?"
+      ],
+      "practice": "Add consegna.txt to the saved matter and request updated plan, calendar and draft. Locate the stated delivery date, compare it with acceptance and check that Lucia investigates applicable law before confirming a deadline. Cost invoices remain missing, and the first version must be retained.",
+      "success": "You can start from case documents, read evidence and deadline assumptions, review a draft and resume the same matter with new evidence while preserving earlier versions.",
+      "repeat": "For real work select the notice, receipts, documents and firm template; describe party and stage. Ask for tax-litigation preparation or resumption, then inspect plan, calendar, draft, sources and gaps. Confirm only answers you know. Explanation and short practice target 5–8 minutes; research and processing can take longer."
+    },
+    "fr": {
+      "title": "Préparer et reprendre un contentieux fiscal italien avec Lucia",
+      "goal": "Apprendre à partir des actes, vérifier étapes et délais, préparer une ébauche et actualiser le même dossier lorsqu’une nouvelle preuve arrive.",
+      "scenario": "Officina Cedro S.r.l. reçoit un avis IRES 2024 contestant des frais de maintenance. Le dossier initial contient l’avis et seulement l’acceptation PEC ; la preuve de remise arrive dans le bref exercice.",
+      "scope": "Préparation italienne de première instance, de la lecture des actes à une ébauche avec points ouverts et progression sauvegardée. L’explication suit la langue choisie ; pièces et acte restent italiens. Appel, cassation et dépôt électronique ne sont pas enseignés ici.",
+      "inputs": "Ouvrir incarico-fr.md, avviso.txt, accettazione.txt et fonti-da-verificare.md, textes fictifs lisibles. Ni date de l’avis ni acceptation PEC ne prouvent seules le point de départ. Ajouter consegna.txt seulement lors de l’exercice.",
+      "request": "Lucia, examine ces pièces du contentieux fiscal italien d’Officina Cedro. Organise preuves et lacunes, vérifie droit actuel, étapes et délais à partir des sources et prépare une première ébauche italienne de recours. Sauvegarde le travail pour le reprendre avec de nouvelles preuves.",
+      "steps": [
+        "Lucia lit les pièces fictives choisies et identifie partie, impôt, période et phase. Vérifier mandat et habilitation de l’avocat pour l’étape demandée. Expliquer le travail réel sans simuler un mandat.",
+        "Ouvrir la matrice des preuves. Relier un montant à l’avis et à sa citation, puis repérer la réception manquante. Lucia ne demande que les informations bloquant une étape et poursuit les tâches indépendantes.",
+        "Lucia suit son parcours de recherche juridique et fiscale pour vérifier règles actuelles, transitions, notifications et délais, sources et arguments contraires. Les recherches externes utilisent des références juridiques générales. Une URL indiquée ne constitue pas une source acquise.",
+        "Ouvrir plan et calendrier : distinguer événements prouvés, calculs conditionnels et délais indéterminés. La remise manque au départ ; l’acceptation PEC ne devient pas une date de départ confirmée.",
+        "Ouvrir l’ébauche italienne et vérifier faits, annexes, sources et points ouverts. Si Documents/Word est disponible, Lucia utilise le modèle du cabinet et montre le DOCX produit ; sinon conserver le texte et signaler l’étape Word ouverte. Ne pas inventer de factures ou de jurisprudence.",
+        "Reprendre l’état sauvegardé et ajouter consegna.txt lors de l’exercice. Lucia prépare une nouvelle exécution avec les preuves reçues, réexamine les étapes concernées et conserve la première version. Ouvrir résultats actualisés et rapport sur les données réellement lues par le modèle."
+      ],
+      "deliverables": [
+        "Chronologie et matrice des preuves avec citations des pièces et documents manquants.",
+        "Plan procédural et calendrier avec sources, hypothèses et délais ouverts.",
+        "Ébauche italienne de recours, Word si disponible, registre reprenable et rapport réel des données du modèle."
+      ],
+      "review": "Repérer la preuve de chaque événement et la source du délai proposé. Une réception absente reste une lacune ; aucun fait ou arrêt inventé dans l’ébauche ; préparation et notification ou dépôt effectifs restent distincts.",
+      "checkpoints": [
+        "Quelles pièces as-tu fournies et quelle preuve manque pour le point de départ ?",
+        "Où se trouvent source d’une étape, hypothèse et question encore ouverte ?"
+      ],
+      "practice": "Ajouter consegna.txt au dossier sauvegardé et demander plan, calendrier et ébauche actualisés. Repérer la date de remise déclarée, la comparer à l’acceptation et vérifier que Lucia recherche le droit applicable avant de confirmer un délai. Les factures restent manquantes ; conserver la première version.",
+      "success": "Tu sais commencer avec les actes, lire preuves et hypothèses des délais, revoir une ébauche et reprendre le même dossier avec une nouvelle preuve en conservant les versions antérieures.",
+      "repeat": "Pour un dossier réel, choisir acte, réceptions, pièces et modèle du cabinet ; décrire partie et phase. Demander préparation ou reprise, puis vérifier plan, calendrier, ébauche, sources et lacunes. Confirmer seulement les réponses connues. Explication et bref exercice visent 5–8 minutes ; recherche et traitement peuvent durer davantage."
+    },
+    "de": {
+      "title": "Italienischen Steuerstreit mit Lucia vorbereiten und fortsetzen",
+      "goal": "Mit den Akten beginnen, Schritte und Fristen prüfen, einen Entwurf vorbereiten und denselben Vorgang bei neuen Belegen aktualisieren lernen.",
+      "scenario": "Officina Cedro S.r.l. erhält einen IRES-Bescheid für 2024 mit beanstandeten Wartungskosten. Anfangs liegen nur Bescheid und PEC-Annahmebestätigung vor; der Zustellnachweis kommt in der kurzen Übung hinzu.",
+      "scope": "Italienische erstinstanzliche Vorbereitung von der Aktenlektüre bis zum Entwurf mit offenen Fragen und gespeichertem Stand. Erklärung in der gewählten Sprache, Akten und Schriftsatz auf Italienisch. Berufung, Kassation und elektronische Einreichung gehören nicht zu dieser Lektion.",
+      "inputs": "incarico-de.md, avviso.txt, accettazione.txt und fonti-da-verificare.md öffnen. Lesbare fiktive Texte. Bescheiddatum und PEC-Annahme beweisen für sich keinen Fristbeginn. consegna.txt erst für die Übung hinzufügen.",
+      "request": "Lucia, prüfe diese Unterlagen für den italienischen Steuerstreit von Officina Cedro. Ordne Belege und Lücken, prüfe aktuelles Recht, Schritte und Fristen anhand von Quellen und erstelle einen ersten italienischen Klageentwurf. Speichere die Arbeit für die Fortsetzung mit neuen Belegen.",
+      "steps": [
+        "Lucia liest die ausgewählten fiktiven Dateien und bestimmt Partei, Steuer, Zeitraum und Verfahrensstufe. Auftrag und Befugnis des Anwalts für den gewünschten Schritt prüfen. Die tatsächliche Arbeit erklären, ohne ein echtes Mandat zu simulieren.",
+        "Belegmatrix öffnen. Einen Betrag zum Bescheid und dessen Zitat zurückverfolgen und den fehlenden Nachweis finden. Lucia fragt nur nach Angaben, die einen Schritt blockieren, und setzt unabhängige Arbeiten fort.",
+        "Lucia nutzt den eigenen juristischen und steuerlichen Rechercheweg, um geltende Regeln, Übergänge, Zustellung und Fristen samt Quellen und Gegenargumenten zu prüfen. Externe Suchanfragen verwenden allgemeine Rechtsbezüge. Eine angegebene URL ist noch keine gelesene Quelle.",
+        "Plan und Kalender öffnen: belegte Ereignisse, bedingte Berechnungen und unbestimmbare Fristen unterscheiden. Anfangs fehlt der Zustellnachweis; die PEC-Annahme darf nicht als bestätigter Fristbeginn gelten.",
+        "Italienischen Entwurf öffnen und Tatsachen, Anlagen, Quellen und offene Punkte prüfen. Wenn Documents/Word verfügbar ist, nutzt Lucia die Kanzleivorlage und zeigt den erstellten DOCX; sonst Text erhalten und den offenen Word-Schritt nennen. Keine Rechnungen oder Urteile erfinden.",
+        "Gespeicherten Stand fortsetzen und für die Übung consegna.txt hinzufügen. Lucia erstellt einen Folgearbeitslauf mit den neuen Belegen, prüft betroffene Schritte erneut und erhält die erste Version. Aktualisierte Ergebnisse und Bericht über die tatsächlich vom Modell gelesenen Daten öffnen."
+      ],
+      "deliverables": [
+        "Chronologie und Belegmatrix mit Aktenzitaten und fehlenden Dokumenten.",
+        "Verfahrensplan und Kalender mit Quellen, Voraussetzungen und offenen Fristen.",
+        "Italienischer Klageentwurf, Word soweit verfügbar, fortsetzbares Vorgangsregister und tatsächlicher Modelldatenbericht."
+      ],
+      "review": "Beleg jedes Ereignisses und Quelle jeder vorgeschlagenen Frist finden. Ein fehlender Nachweis bleibt sichtbar; keine erfundenen Tatsachen oder Urteile; Vorbereitung wird nicht als erfolgte Zustellung oder Einreichung gespeichert.",
+      "checkpoints": [
+        "Welche Dateien hast du geliefert, und welcher Beleg fehlt für den Fristbeginn?",
+        "Wo findest du Quelle, Voraussetzung und offene Frage zu einem Schritt?"
+      ],
+      "practice": "consegna.txt zum gespeicherten Vorgang hinzufügen und Plan, Kalender sowie Entwurf aktualisieren lassen. Angegebenes Zustelldatum finden, mit der Annahme vergleichen und prüfen, ob Lucia vor einer Fristbestätigung das anwendbare Recht recherchiert. Kostenrechnungen fehlen weiterhin; die erste Version erhalten.",
+      "success": "Du kannst mit Akten beginnen, Belege und Fristvoraussetzungen lesen, einen Entwurf prüfen und denselben Vorgang mit neuen Belegen unter Erhalt früherer Versionen fortsetzen.",
+      "repeat": "Für echte Arbeit Bescheid, Nachweise, Unterlagen und Kanzleivorlage auswählen; Partei und Stufe beschreiben. Vorbereitung oder Fortsetzung anfordern und Plan, Kalender, Entwurf, Quellen sowie Lücken prüfen. Nur bekannte Antworten bestätigen. Erklärung und kurze Übung zielen auf 5–8 Minuten; Recherche und Verarbeitung können länger dauern."
+    },
+    "es": {
+      "title": "Preparar y retomar un litigio tributario italiano con Lucia",
+      "goal": "Aprender a partir de los documentos, verificar pasos y plazos, preparar un borrador y actualizar el mismo expediente al recibir nuevas pruebas.",
+      "scenario": "Officina Cedro S.r.l. recibe un aviso IRES de 2024 que cuestiona costes de mantenimiento. El expediente inicial solo contiene aviso y aceptación PEC; la prueba de entrega llega en el breve ejercicio.",
+      "scope": "Preparación italiana de primera instancia, desde lectura de documentos hasta borrador con asuntos abiertos y progreso guardado. Explicación en el idioma elegido; documentos y escrito siguen en italiano. Apelación, casación y presentación telemática quedan fuera de esta lección.",
+      "inputs": "Abrir incarico-es.md, avviso.txt, accettazione.txt y fonti-da-verificare.md, textos ficticios legibles. Ni fecha del aviso ni aceptación PEC prueban por sí solas el inicio. Añadir consegna.txt solo durante el ejercicio.",
+      "request": "Lucia, examina estos documentos del litigio tributario italiano de Officina Cedro. Organiza pruebas y lagunas, verifica normas actuales, pasos y plazos con sus fuentes y prepara un primer borrador italiano de recurso. Guarda el trabajo para retomarlo cuando lleguen nuevas pruebas.",
+      "steps": [
+        "Lucia lee los archivos ficticios seleccionados e identifica parte, impuesto, periodo y fase. Comprobar encargo y habilitación del abogado para el paso solicitado. Explicar el trabajo real sin simular un mandato auténtico.",
+        "Abrir la matriz de pruebas. Seguir un importe hasta el aviso y su cita, y localizar el recibo ausente. Lucia pregunta solo por datos que bloquean un paso y continúa las tareas independientes.",
+        "Lucia utiliza su propio recorrido de investigación jurídica y fiscal para verificar reglas vigentes, transiciones, notificaciones y plazos, fuentes y argumentos contrarios. Las consultas externas usan referencias jurídicas generales. Una URL indicada todavía no es una fuente adquirida.",
+        "Abrir plan y calendario: distinguir eventos probados, cálculos condicionados y plazos indeterminados. Al principio falta la entrega; la aceptación PEC no debe convertirse en un inicio confirmado.",
+        "Abrir el borrador italiano y comprobar hechos, anexos, fuentes y puntos abiertos. Si Documents/Word está disponible, Lucia usa la plantilla del despacho y muestra el DOCX producido; en caso contrario conserva el texto e indica el paso Word pendiente. No inventar facturas ni precedentes.",
+        "Retomar el estado guardado y añadir consegna.txt durante el ejercicio. Lucia prepara una ejecución posterior con las nuevas pruebas, revisa los pasos afectados y conserva la primera versión. Abrir resultados actualizados e informe sobre los datos realmente leídos por el modelo."
+      ],
+      "deliverables": [
+        "Cronología y matriz de pruebas con citas a documentos y elementos ausentes.",
+        "Plan procesal y calendario con fuentes, supuestos y plazos pendientes.",
+        "Borrador italiano de recurso, Word cuando esté disponible, registro retomable e informe real de datos del modelo."
+      ],
+      "review": "Localizar la prueba de cada evento y la fuente del plazo propuesto. Un recibo ausente sigue siendo una laguna; el borrador no inventa hechos o sentencias; preparación no equivale a notificación o presentación efectuadas.",
+      "checkpoints": [
+        "¿Qué archivos aportaste y qué prueba falta para valorar el inicio?",
+        "¿Dónde están la fuente de un paso, su supuesto y la pregunta pendiente?"
+      ],
+      "practice": "Añadir consegna.txt al expediente guardado y pedir plan, calendario y borrador actualizados. Encontrar la fecha de entrega declarada, compararla con la aceptación y comprobar que Lucia investiga la norma aplicable antes de confirmar un plazo. Las facturas siguen faltando; conservar la primera versión.",
+      "success": "Sabes empezar con los documentos, leer pruebas y supuestos de los plazos, revisar un borrador y retomar el mismo expediente con nuevas pruebas conservando versiones anteriores.",
+      "repeat": "Para un caso real seleccionar acto, recibos, documentos y plantilla del despacho; describir parte y fase. Pedir preparación o reanudación y comprobar plan, calendario, borrador, fuentes y lagunas. Confirmar solo respuestas conocidas. Explicación y breve ejercicio buscan 5–8 minutos; investigación y procesamiento pueden durar más."
+    }
+  },
+  "host": "cowork-written-single-conversation",
+  "canonical_course_sha256": "ac9bb785e4a3fa64af29e2a3141e3eb5f6c055b1203dd7e8bc0ea8a98d461bad"
+}

@@ -1,0 +1,41 @@
+{
+  "scope": "Vera and Lucia Italian tax-litigation prepared courses",
+  "base_commit": "b0e23333f9aca1c3f3ed33447a0a13450515e04d",
+  "prepared_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "input_scope": "Fictional notice, PEC acceptance, delivery update and selected-language engagement note; no real case data, final result or professional approval supplied",
+  "actual_execution": "20 real evidence-rendering and saved-matter/Archive regressions; 60 output artifacts substantively inspected",
+  "boundaries": "Existing immutable on-demand course downloads and selected host model context. No new recipient, credentials, connector, client-data upload or tutorial telemetry. Version-only update and run-receipt code unchanged.",
+  "not_verified": [
+    "Live learner participation",
+    "Native Word",
+    "Live legal research and final substantive pleading approval",
+    "Voice and paired-window delivery"
+  ],
+  "release_requirement": "Fresh exact-head CI teaching execution and release review checks, package parity and live course/attachment hashes",
+  "release_integrity_follow_up": {
+    "clara": "Shared course-material directory changed; reviewed unchanged Clara teaching and public-download boundaries. No Clara tax-litigation course added. Rebuild its metadata package at a new version.",
+    "vera_catalogue": "Manifest-only snapshot rebind; exact assessed skill entries and jurisdiction dispositions unchanged.",
+    "windows_test": "Observed Node process start exceeding 10-second timeout; use 30-second bounded timeout while retaining all assertions.",
+    "versions": {
+      "vera": "0.1.385",
+      "lucia": "0.1.108",
+      "clara": "0.1.283"
+    },
+    "concurrent_candidates_checked": {
+      "pull_request": 826,
+      "vera": "0.1.384",
+      "lucia": "0.1.107",
+      "clara": "0.1.282"
+    }
+  },
+  "main_integration": {
+    "commit": "26075c11d6104c2806527a690188de806ea1f292",
+    "changes_preserved": "Research skill namespace, research-subscription page and governance-matrix updates. Rebuilt generated packages from merged source; existing jurisdiction assessments retained."
+  }
+}

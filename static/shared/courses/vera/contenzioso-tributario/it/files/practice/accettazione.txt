@@ -1,0 +1,5 @@
+RICEVUTA FITTIZIA DI ACCETTAZIONE PEC — esercitazione, nessun valore legale.
+Messaggio DEMO-PEC-001 relativo all'avviso AVV-DEMO-24.
+Accettazione del messaggio: 1 ottobre 2026 alle 09:10.
+Questa è soltanto una ricevuta di accettazione: non contiene prova di avvenuta consegna.
+La ricevuta di avvenuta consegna non è inclusa nel fascicolo iniziale.
