@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "891111ff94ae012552981a04b1f0fb1f63d24efed81f72d70e1df755e7345dcd",
+  "catalogue_fingerprint": "0e13cae1383001f2d470e5cc6db5fb83bee9297375b66ee488035e0b573a1eb2",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -1774,5 +1774,10 @@
     "main_commit": "26075c11d6104c2806527a690188de806ea1f292",
     "version": "0.1.385",
     "scope": "Skill-entrypoint snapshot matches the reviewed main entries including the research namespace update. All main assessment rows and jurisdiction dispositions are preserved. Only the manifest version is newer. The Italian tax course does not establish Geneva qualification."
+  },
+  "installation_incident_binding": {
+    "reviewed_at": "2026-10-14",
+    "previous_catalogue_fingerprint": "891111ff94ae012552981a04b1f0fb1f63d24efed81f72d70e1df755e7345dcd",
+    "basis": "Manifest-only catalogue identity change for automatic installation incident reporting. All canonical professional skill IDs, paths, bytes and assessment dispositions are unchanged."
   }
 }

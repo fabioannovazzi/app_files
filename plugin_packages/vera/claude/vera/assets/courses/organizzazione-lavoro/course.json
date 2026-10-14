@@ -29,11 +29,11 @@
   "sources": [
     {
       "path": "scripts/check_dependencies.py",
-      "sha256": "f49a0a461a7dfedb9b0193e2be830b41b1963aa7843cb58917b2b7e86e6ce99f"
+      "sha256": "faeea239129331baf68b9e04c430aa867b13aa23a78cdd5e50cce8f527edf5ae"
     },
     {
       "path": "scripts/managed_python_runtime.py",
-      "sha256": "669fac49e567544244c10a4c23c627fb821c5e0b16e606c25e0286d5cbef72c1"
+      "sha256": "714a18f19a8ed3d8b9257574cf4294d5499e7bd209c3b2b9338dec2daeff04e2"
     },
     {
       "path": "scripts/model_data_report.py",
@@ -53,7 +53,7 @@
     },
     {
       "path": "scripts/verified_execution.py",
-      "sha256": "6c41ba4583fd91a9cfaa78d3ccfc07eadda49e8efef7e4a58b01f0560b5ad6c0"
+      "sha256": "5a218a5bfe7920a201c283d218988f5a105cc9ed436bbc26492ca517891bd730"
     },
     {
       "path": "skills/mparanza-organizzazione-lavoro/SKILL.md",
@@ -432,5 +432,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "257de02891426367f9acfd0beb4d135bf07fe529fe37f3daf4917748e1228ad3"
+  "canonical_course_sha256": "7d9c80945e7ccde9f9a89d1eb46cae366b02e96995e3938c4cdb0804992cc4d5"
 }
