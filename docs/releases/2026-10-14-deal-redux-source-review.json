@@ -539,5 +539,9 @@
     "path": "plugins/vera/skills/vera/references/workflow-registry.json",
     "sha256": "f7a72a52051bf2204c1604074c6b37ce9d4228e10aa5b9f30971f789140d8047",
     "change": "Added the canonical posizioni-negoziali skill path; component membership and semantic routing policy unchanged."
+  },
+  "integrated_main": {
+    "commit": "ea2febf86a8747af837ade40928b588a1049ce37",
+    "change": "Unrelated public governance comparison navigation from PR #817; no plugin, helper or authored lesson source changes."
   }
 }
