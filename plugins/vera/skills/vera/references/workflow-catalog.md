@@ -62,11 +62,11 @@ branches, signatures and filings remain unsupported. Use the specialist skill.
 
 ## Optional research sources
 
-- `research-subscriptions`: connect, check or disconnect an existing Eutekne or
-  One FISCALE subscription. Read `../../research-subscriptions/SKILL.md`.
-  This optional source setting supplies evidence to the existing legal/tax
-  journey; it is not an operational lesson or a separate research method.
-  Ordinary work requires no paid database or connection setup.
+`research-subscriptions` connects, checks or disconnects an existing Eutekne or
+One FISCALE subscription. Read `../../research-subscriptions/SKILL.md`.
+This optional source setting supplies evidence to the existing legal/tax
+journey; it is not an operational lesson or a separate research method.
+Ordinary work requires no paid database or connection setup.
 
 ## Professional workflows
 

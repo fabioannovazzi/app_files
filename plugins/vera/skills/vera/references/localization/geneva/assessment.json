@@ -906,6 +906,27 @@
       "implementation_status": "adapted_with_documented_scope"
     },
     {
+      "function_id": "research-subscriptions",
+      "name": "Optional existing research subscriptions",
+      "role": "helper",
+      "disposition": "Use",
+      "common_work": "Save the user-authorised choice of an existing subscription and hand actual access checks to the current host browser or connector.",
+      "geneva_application": "Optional evidence setting beneath the existing legal/tax question. Italian publisher evidence is used only when the actual mandate and source relevance support it; French output never selects Italian authorities.",
+      "required_change": "No jurisdiction-specific storage or permission change identified. This provider list does not establish Swiss domestic source coverage; source relevance and authority remain case-specific judgments.",
+      "adaptation_layers": [
+        "case-specific source selection and host access qualification"
+      ],
+      "acceptance_example": "A Geneva question continues with applicable public authorities without a subscription. An authorised Italian subscription is considered only for relevant evidence, and a saved connection alone is never reported as live access.",
+      "sources": [
+        "plugins/vera/skills/research-subscriptions/SKILL.md",
+        "plugins/vera/skills/vera/references/research-subscriptions.md",
+        "plugins/vera/scripts/research-subscriptions-store.cjs"
+      ],
+      "verification": "Source inspected and synthetic permission, transport and packaging checks run. No live subscriber account, Geneva professional case or installed-host acceptance established.",
+      "implementation": "Shared local permission register and optional native UI; existing research method and governing-jurisdiction boundaries retained.",
+      "implementation_status": "shared_helper_with_documented_access_limits"
+    },
+    {
       "function_id": "sales-plan",
       "name": "Sales Plan",
       "role": "function",
@@ -1266,7 +1287,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "a0836cefb9a3d10bd4eeff3cea13eeec6d4eb8bc34e550dc11d6e84050c0433f",
+  "catalogue_fingerprint": "8a97db59d80ae104c7b8790e0150d093f1dbf511ef8c6081831450b1ddf0ee90",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
@@ -1676,6 +1697,25 @@
       "contenzioso-tributario"
     ],
     "reason": "Refresh the release baseline for the Archive registration, evidence subdirectory and sealed-run resume guidance. Existing jurisdiction dispositions, Italy-only litigation scope and professional acceptance limits are unchanged.",
+    "fresh_geneva_acceptance": false
+  },
+  "research_subscriptions_release_binding_20261014": {
+    "date": "2026-10-14",
+    "version": "0.1.379",
+    "previous_catalogue_fingerprint": "a0836cefb9a3d10bd4eeff3cea13eeec6d4eb8bc34e550dc11d6e84050c0433f",
+    "current_catalogue_fingerprint": "8a97db59d80ae104c7b8790e0150d093f1dbf511ef8c6081831450b1ddf0ee90",
+    "added_helpers": [
+      "research-subscriptions"
+    ],
+    "changed_entrypoints": [
+      "adversarial-opinion",
+      "deep-research",
+      "legal-tax-answer-planner",
+      "legal-tax-answer-review",
+      "quesito-legale-fiscale",
+      "vera"
+    ],
+    "reason": "Inventory refresh for optional user-authorised subscription evidence in the existing research loop. Previous jurisdiction dispositions and acceptance limits retained; the source helper adds no Swiss legal or tax qualification.",
     "fresh_geneva_acceptance": false
   }
 }
