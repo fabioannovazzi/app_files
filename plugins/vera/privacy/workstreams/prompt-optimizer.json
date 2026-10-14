@@ -146,7 +146,7 @@
     "reviewed_at": "2026-10-13",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "79c103781c6793ba01c6e1a2334c7e9cdc2049bbd6b64b2a74ab8a6a84da7a61"
+    "source_fingerprint": "124a20698cc1d4d93df90ffe4a7e2d783b1039718a8d2c28430f921b3377d760"
   },
   "governed_repository_paths": [
     "plugins/deep-research-validator/skills/legal-tax-answer-review/references/adversarial-scope.md",

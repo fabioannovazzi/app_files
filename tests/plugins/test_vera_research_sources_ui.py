@@ -45,7 +45,7 @@ def test_connect_saves_choice_and_requests_real_host_check_without_claiming_succ
         tmp_path,
         "await ui.panel.open();await ui.button('Collega').action();process.stdout.write(JSON.stringify({text:ui.text(),calls:ui.calls,messages:ui.messages}));",
     )
-    assert "Verifica richiesta alla chat" in result["text"]
+    assert "Verifica in attesa" in result["text"]
     assert "Documento consultato" not in result["text"]
     assert [c["name"] for c in result["calls"]] == [
         "vera_research_sources_state",
@@ -74,7 +74,7 @@ def test_unavailable_message_capability_keeps_authorisation_and_explains_chat_fa
         {"message": False},
     )
     assert "Chiedi a Vera" in result["status"]
-    assert "Verifica richiesta" in result["text"]
+    assert "Verifica in attesa" in result["text"]
 
 
 @pytest.mark.parametrize(

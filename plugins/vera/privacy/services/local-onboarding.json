@@ -153,7 +153,7 @@
     "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "a241682e7949724e8de3b8c51130f2cfd48a7fb9135302325229ff89d77de84d"
+    "source_fingerprint": "9a456dff1b44d03a87132403e5cada2601657a120de78bf0766029d6f1cbc4a7"
   },
   "governed_repository_paths": [
     "static/shared/learn-with-vera/index.html",

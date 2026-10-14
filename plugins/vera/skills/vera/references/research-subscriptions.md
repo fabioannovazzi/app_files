@@ -35,6 +35,12 @@ permission merely to populate the panel.
 
 ## Check real access using callable host capabilities
 
+Before each new subscription search or document-open action, reread the saved
+choice and confirm current permission, including any explicit one-off request.
+Stop new subscription calls after disconnection or a user stop. A host action
+already in flight may have executed; do not claim that changing a preference
+cancelled that action or removed previously captured case evidence.
+
 1. Discover the actual callable connected search/read tools and browser API.
    A matching name, saved URL or stored `last_check` is not proof of current
    access. Use a suitable connected source when available, or the user's

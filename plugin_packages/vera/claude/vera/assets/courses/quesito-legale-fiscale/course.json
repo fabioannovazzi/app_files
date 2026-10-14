@@ -173,7 +173,7 @@
     },
     {
       "path": "skills/vera/references/research-subscriptions.md",
-      "sha256": "e90b3e5442a2dd8daff0cd3339fb31de15dd341d4c494eba392b17702c7331c7"
+      "sha256": "eeb392bd7d012588999153fb52bb8f4fbf99d2acfe95b240f952e9c19d2e05e6"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -806,5 +806,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "79bae474a222a4ade1bf318c6d292e67cb02e6a3e55b9630fda43e63fe4aa53e"
+  "canonical_course_sha256": "746877089d8436804a74b1b3464dd828ebc2d22e477a44eb199ddae47338fbc0"
 }

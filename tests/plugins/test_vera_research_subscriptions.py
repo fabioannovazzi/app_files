@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import subprocess
 from pathlib import Path
 from zipfile import ZipFile
@@ -382,3 +383,26 @@ def test_shipped_archives_execute_the_subscription_cli_and_render_the_panel(
     assert result["state"]["providers"][1]["last_check"] is None
     assert "VeraResearchSources" in result["html"]
     assert "/*__SELECT_JS__*/" not in result["html"]
+
+
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+@pytest.mark.parametrize("field", ["work", "modelData"])
+def test_question_page_qualifies_subscription_use_as_vera_specific_in_every_locale(
+    language, field
+):
+    source = (ROOT / "static/shared/product-function-pages.js").read_text()
+    start = source.index('    "quesito-legale-fiscale": {')
+    end = source.index('\n    "', start + 10)
+    section = re.search(
+        r"(?ms)^        " + language + r": \{(.*?)(?=^        \},)", source[start:end]
+    ).group(1)
+
+    value = json.loads(
+        re.search(r"(?m)^          " + field + r': ("(?:[^"\\]|\\.)*")', section).group(
+            1
+        )
+    )
+
+    assert "Eutekne" in value
+    assert "FISCALE" in value
+    assert "Vera" in value
