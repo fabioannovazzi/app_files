@@ -975,7 +975,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: python -m pip install pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit -r plugins/studio-archive/requirements.txt -r plugins/invoice-xml/requirements.txt -r plugins/prompt-optimizer/requirements.txt -r plugins/deep-research-validator/requirements.txt
+      - run: python -m pip install pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit -r plugins/studio-archive/requirements.txt -r plugins/invoice-xml/requirements.txt -r plugins/prompt-optimizer/requirements.txt -r plugins/deep-research-validator/requirements.txt -r plugins/lucia/requirements.txt
       - name: Verify fresh sessions, alias isolation, concurrency and task receipts
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
