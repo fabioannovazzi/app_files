@@ -12,7 +12,19 @@
     "integrity": "Integrità dei risultati",
     "unchanged": "Nessuna modifica ai file registrati",
     "notes": "Note e limiti",
-    "meaning": "Questo registro mostra domande, decisioni e file prodotti. Non attesta la completezza giuridica o l’approvazione professionale."
+    "meaning": "Questo registro mostra domande, decisioni e file prodotti. Non attesta la completezza giuridica o l’approvazione professionale.",
+    "calendar": "Cronologia e termini",
+    "calendar_boundary": "Il registro conserva date, basi e revisioni dichiarate. Non calcola termini legali né certifica la loro correttezza.",
+    "calendar_event": "Evento",
+    "calendar_event_date": "Data evento",
+    "calendar_due_date": "Termine indicato",
+    "calendar_status": "Stato",
+    "calendar_basis": "Base e condizioni",
+    "calendar_reviewer": "Revisore dichiarato",
+    "calendar_proposed": "Proposto",
+    "calendar_reviewed": "Riesaminato",
+    "calendar_conditional": "Condizionale",
+    "calendar_unknown": "Non determinato"
   },
   "en": {
     "questions": "Questions to resolve",
@@ -27,7 +39,19 @@
     "integrity": "Output integrity",
     "unchanged": "No changes to recorded files",
     "notes": "Notes and limitations",
-    "meaning": "This record shows questions, decisions and files produced. It does not certify legal completeness or professional approval."
+    "meaning": "This record shows questions, decisions and files produced. It does not certify legal completeness or professional approval.",
+    "calendar": "Chronology and deadlines",
+    "calendar_boundary": "The register retains declared dates, bases and reviews. It neither calculates legal deadlines nor certifies their correctness.",
+    "calendar_event": "Event",
+    "calendar_event_date": "Event date",
+    "calendar_due_date": "Declared deadline",
+    "calendar_status": "Status",
+    "calendar_basis": "Basis and conditions",
+    "calendar_reviewer": "Declared reviewer",
+    "calendar_proposed": "Proposed",
+    "calendar_reviewed": "Reviewed",
+    "calendar_conditional": "Conditional",
+    "calendar_unknown": "Undetermined"
   },
   "fr": {
     "questions": "Questions à résoudre",
@@ -42,7 +66,19 @@
     "integrity": "Intégrité des résultats",
     "unchanged": "Aucune modification des fichiers enregistrés",
     "notes": "Notes et limites",
-    "meaning": "Ce registre présente les questions, décisions et fichiers produits. Il ne certifie pas la complétude juridique ni l’approbation professionnelle."
+    "meaning": "Ce registre présente les questions, décisions et fichiers produits. Il ne certifie pas la complétude juridique ni l’approbation professionnelle.",
+    "calendar": "Chronologie et délais",
+    "calendar_boundary": "Le registre conserve les dates, bases et revues déclarées. Il ne calcule pas les délais légaux et ne certifie pas leur exactitude.",
+    "calendar_event": "Événement",
+    "calendar_event_date": "Date événement",
+    "calendar_due_date": "Délai indiqué",
+    "calendar_status": "État",
+    "calendar_basis": "Base et conditions",
+    "calendar_reviewer": "Réviseur déclaré",
+    "calendar_proposed": "Proposé",
+    "calendar_reviewed": "Revu",
+    "calendar_conditional": "Conditionnel",
+    "calendar_unknown": "Indéterminé"
   },
   "de": {
     "questions": "Offene Fragen",
@@ -57,7 +93,19 @@
     "integrity": "Integrität der Ergebnisse",
     "unchanged": "Keine Änderungen an gespeicherten Dateien",
     "notes": "Hinweise und Grenzen",
-    "meaning": "Dieses Protokoll zeigt Fragen, Entscheidungen und erstellte Dateien. Es bestätigt keine rechtliche Vollständigkeit oder fachliche Freigabe."
+    "meaning": "Dieses Protokoll zeigt Fragen, Entscheidungen und erstellte Dateien. Es bestätigt keine rechtliche Vollständigkeit oder fachliche Freigabe.",
+    "calendar": "Chronologie und Fristen",
+    "calendar_boundary": "Das Register bewahrt angegebene Daten, Grundlagen und Prüfungen. Es berechnet keine gesetzlichen Fristen und bestätigt nicht deren Richtigkeit.",
+    "calendar_event": "Ereignis",
+    "calendar_event_date": "Ereignisdatum",
+    "calendar_due_date": "Angegebene Frist",
+    "calendar_status": "Status",
+    "calendar_basis": "Grundlage und Bedingungen",
+    "calendar_reviewer": "Angegebener Prüfer",
+    "calendar_proposed": "Vorgeschlagen",
+    "calendar_reviewed": "Geprüft",
+    "calendar_conditional": "Bedingt",
+    "calendar_unknown": "Unbestimmt"
   },
   "es": {
     "questions": "Preguntas por resolver",
@@ -72,6 +120,18 @@
     "integrity": "Integridad de los resultados",
     "unchanged": "Sin cambios en los archivos registrados",
     "notes": "Notas y limitaciones",
-    "meaning": "Este registro muestra preguntas, decisiones y archivos producidos. No certifica la exhaustividad jurídica ni la aprobación profesional."
+    "meaning": "Este registro muestra preguntas, decisiones y archivos producidos. No certifica la exhaustividad jurídica ni la aprobación profesional.",
+    "calendar": "Cronología y plazos",
+    "calendar_boundary": "El registro conserva fechas, bases y revisiones declaradas. No calcula plazos legales ni certifica su corrección.",
+    "calendar_event": "Evento",
+    "calendar_event_date": "Fecha del evento",
+    "calendar_due_date": "Plazo indicado",
+    "calendar_status": "Estado",
+    "calendar_basis": "Base y condiciones",
+    "calendar_reviewer": "Revisor declarado",
+    "calendar_proposed": "Propuesto",
+    "calendar_reviewed": "Revisado",
+    "calendar_conditional": "Condicional",
+    "calendar_unknown": "Indeterminado"
   }
 }

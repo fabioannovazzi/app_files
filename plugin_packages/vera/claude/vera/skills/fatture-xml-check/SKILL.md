@@ -138,3 +138,12 @@ Resolve `../../modules/client-file-preparation` from this skill directory when i
 otherwise resolve `../../../client-file-preparation` in the repository. Read that
 module's `skills/fatture-xml-check/SKILL.md` completely and follow it. Treat the
 resolved module root as the plugin working directory for all commands.
+
+
+## Optional maintained professional review panel
+
+Read `../vera/references/native-workspace.md` before opening the panel.
+
+Open the maintained Studio Archive workspace on Claude and choose the exact client-file-preparation run. **Fatture XML · corpi** pages every retained invoice body as read-only metadata. **Anomalie XML e duplicati** pages the complete anomaly queue and compares all members of a formal duplicate candidate group side by side, including multiple bodies in one file. Record an explicit decision only on canonical review items. A candidate is not proof of a duplicate; no invoice is deleted or booked. Discussion exposes only the exact selected saved record after the user requests it.
+
+The ordinary connected-file workflow remains available when the native panel is unavailable.

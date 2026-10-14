@@ -27,6 +27,16 @@ MCP_SERVER_PATH = PLUGIN_ROOT / "mcp" / "server.cjs"
 import extract_documents as extraction_module
 import parse_fiscal_forms as fiscal_module
 
+fatturapa_module = importlib.import_module("parse_fatturapa_xml")
+
+
+@pytest.fixture(autouse=True)
+def local_script_imports(monkeypatch):
+    """Keep sibling imports available after other plugin tests isolate modules."""
+    monkeypatch.syspath_prepend(str(SCRIPT_DIR))
+    monkeypatch.setitem(sys.modules, "parse_fatturapa_xml", fatturapa_module)
+
+
 build_module = importlib.import_module("build_file_preparation_outputs")
 check_environment_module = importlib.import_module("check_environment")
 scan_module = importlib.import_module("scan_folder")

@@ -84,3 +84,12 @@ realmente letti, attività locali e servizi esterni realmente usati. Il report
 non prova elaborazione offline né anonimizzazione degli atti.
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
+
+
+## Optional maintained Codex review panel
+
+Read `../vera/references/native-workspace.md` before opening the panel.
+
+On Codex, the optional **Pratiche e formato documenti** panel opens an existing, explicitly connected tax matter. Read `../vera/references/native-practice-reviews.md` for the trusted local-service binding. It shows saved questions, stages, outputs and a source-linked calendar. Enter actual event/date/term/status, basis and reviewer; attach literal citations to existing source units. Save only after explicit confirmation. The unchanged public matter writer retains the prior version and verifies citations and dates. The calendar does not calculate or certify legal deadlines, authenticate the reviewer, notify, file or update an external calendar. Discussion reads only the exact saved selected item and its cited units.
+
+The ordinary connected-file workflow remains available when the native panel is unavailable.

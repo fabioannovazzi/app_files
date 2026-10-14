@@ -257,6 +257,8 @@ def _fiscal_field_items(
         for field in retained_fields:
             value = data.get(field)
             record[field] = _clean_text(value) if not isinstance(value, list) else value
+        if isinstance(data.get("reviewed_correction"), dict):
+            record["reviewed_correction"] = data["reviewed_correction"]
         records.append(record)
     return records
 
@@ -418,20 +420,27 @@ def _xml_duplicate_group_items(
     output_dir: Path,
     document_lookup: dict[str, str],
 ) -> list[dict[str, Any]]:
-    groups: dict[str, list[str]] = {}
+    groups: dict[str, list[dict[str, Any]]] = {}
     source_path = output_dir / "extracted" / "fatture_xml.jsonl"
     for record in _read_jsonl(source_path):
         duplicate_key = _clean_text(record.get("duplicate_key"))
         if bool(record.get("malformed")) or not duplicate_key.strip("|"):
             continue
         groups.setdefault(duplicate_key, []).append(
-            _document_reference(record.get("relative_path"), document_lookup)
+            {
+                "document_ref": _document_reference(
+                    record.get("relative_path"), document_lookup
+                ),
+                "body_index": record["body_index"],
+                "source_sha256": record["source_sha256"],
+            }
         )
     results: list[dict[str, Any]] = []
     for duplicate_key in sorted(groups, key=lambda value: value.encode("utf-8")):
-        member_refs = sorted(set(groups[duplicate_key]))
-        if len(member_refs) < 2:
+        bodies = groups[duplicate_key]
+        if len(bodies) < 2:
             continue
+        member_refs = sorted({body["document_ref"] for body in bodies})
         group_ref = _opaque_reference("xml-duplicate-group", duplicate_key)
         results.append(
             {
@@ -439,9 +448,12 @@ def _xml_duplicate_group_items(
                 "kind": "xml_duplicate_group",
                 "group_ref": group_ref,
                 "member_document_refs": member_refs,
-                "member_count": len(member_refs),
+                "member_document_count": len(member_refs),
+                "member_body_refs": bodies,
+                "member_count": len(bodies),
             }
         )
+
     return results
 
 

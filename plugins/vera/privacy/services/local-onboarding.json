@@ -1,33 +1,5 @@
 {
-  "schema_version": 2,
-  "service_id": "local-onboarding",
   "display_name": "Local onboarding and repeatable voice-first teaching in native OpenAI desktop sessions",
-  "governed_paths": [
-    "scripts/local_onboarding.py",
-    "scripts/local_onboarding_case.py",
-    "scripts/onboarding_session_start.py",
-    "hooks/hooks.json",
-    "skills/vera/references/local-onboarding.md",
-    "skills/vera/references/tutorial-cases.md",
-    "skills/vera/SKILL.md",
-    "scripts/notarized_run_receipt.py",
-    "assets/onboarding",
-    "scripts/local_teaching.py",
-    "skills/learn-with-vera",
-    "skills/vera/references/workflow-catalog.md",
-    "marketplace_skill_instructions.json",
-    "scripts/local_courses.py",
-    "assets/courses",
-    "scripts/course_chat_bridge.py",
-    "scripts/course_chat_mcp.cjs",
-    "scripts/_desktop_teaching.py",
-    "skills/learn-with-vera/references/chat-button.md",
-    "scripts/check_for_update.py",
-    "scripts/change_requests.py"
-  ],
-  "runtime_profiles": [
-    "openai-codex"
-  ],
   "external_boundaries": [
     {
       "id": "public-version-check",
@@ -64,6 +36,47 @@
       ]
     }
   ],
+  "governed_paths": [
+    "scripts/local_onboarding.py",
+    "scripts/local_onboarding_case.py",
+    "scripts/onboarding_session_start.py",
+    "hooks/hooks.json",
+    "skills/vera/references/local-onboarding.md",
+    "skills/vera/references/tutorial-cases.md",
+    "skills/vera/SKILL.md",
+    "scripts/notarized_run_receipt.py",
+    "assets/onboarding",
+    "scripts/local_teaching.py",
+    "skills/learn-with-vera",
+    "skills/vera/references/workflow-catalog.md",
+    "marketplace_skill_instructions.json",
+    "scripts/local_courses.py",
+    "assets/courses",
+    "scripts/course_chat_bridge.py",
+    "scripts/course_chat_mcp.cjs",
+    "scripts/_desktop_teaching.py",
+    "skills/learn-with-vera/references/chat-button.md",
+    "scripts/check_for_update.py",
+    "scripts/change_requests.py"
+  ],
+  "governed_repository_paths": [
+    "static/shared/learn-with-vera/index.html",
+    "static/shared/product-function-pages.js",
+    "plugins/_shared/vendor/modules/courseware",
+    "scripts/course_materials",
+    "static/shared/courses",
+    "scripts/cowork_teaching"
+  ],
+  "review": {
+    "basis": "external_boundary_review_of_shared_service_source",
+    "reviewed_at": "2026-10-14",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "5aa8edc0ae2d76a18484c889218217a55085ea684ddd293d72b2e2e196270b1c"
+  },
+  "runtime_profiles": [
+    "openai-codex"
+  ],
+  "schema_version": 2,
   "security_controls": [
     {
       "id": "local-state-only",
@@ -149,18 +162,5 @@
       "on_violation": "Block stale, expired, replaced, duplicate or interrupted claims; return to the teacher and preserve course files and progress."
     }
   ],
-  "review": {
-    "reviewed_at": "2026-10-14",
-    "reviewed_by": "privacy-surface-review",
-    "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "1a0c6668edde585bf524282d7e5840168ee1a9530fd51c9e9d5ae8ce91b9dac8"
-  },
-  "governed_repository_paths": [
-    "static/shared/learn-with-vera/index.html",
-    "static/shared/product-function-pages.js",
-    "plugins/_shared/vendor/modules/courseware",
-    "scripts/course_materials",
-    "static/shared/courses",
-    "scripts/cowork_teaching"
-  ]
+  "service_id": "local-onboarding"
 }

@@ -159,7 +159,16 @@
     "scripts/native_transformation_initial_bridge.py",
     "scripts/native_transformation_author.py",
     "scripts/native_open_items_intake.py",
-    "scripts/native_open_items_intake_bridge.py"
+    "scripts/native_open_items_intake_bridge.py",
+    "scripts/native_fiscal_corrections.py",
+    "scripts/native_intake_views.py",
+    "scripts/native_practice_reviews.py",
+    "skills/vera/references/native-practice-reviews.md",
+    "skills/dati-fiscali-strutturati/SKILL.md",
+    "skills/fatture-xml-check/SKILL.md",
+    "skills/avviso-intake/SKILL.md",
+    "skills/contenzioso-tributario/SKILL.md",
+    "skills/studio-document-format/SKILL.md"
   ],
   "governed_repository_paths": [
     "scripts/serve_review_workbench.py"
@@ -1029,12 +1038,24 @@
         "ui/open-items-intake.js"
       ],
       "on_violation": "Refuse the request before producer execution or require specialist recovery for an unresolved intent; preserve prior outputs and drafts."
+    },
+    {
+      "id": "focused-intake-and-practice-review",
+      "control": "Complete intake queues are filtered before paging; read-only XML body and notice-reference views verify exact saved artifact hashes. Explicit selected discussion alone exposes one full chosen record, including XML party fields only on that selection. Fiscal correction verifies the original complete field/source-text identity, attributed confirmation and signed current reviewer scope, imports a retained correction into a separate same-engagement public run, and preserves original outputs. Existing tax matters and studio-format reviews require exact owner/tenant trusted bindings outside Git; no folder discovery. Public matter CAS/history and literal source-unit citation checks retain calendar revisions without computing legal terms. Public format preparation generates both exact Word previews separately from named adoption. Draft edits clear consent; writes retain intent and exact retry receipts and refuse uncertain outcomes. No filing, notification, external calendar operation, Marketplace action or Archive completion. Logical identities and reviewer names are declarations, not authenticated signatures. Source tests do not establish installed-host rendering or acceptance.",
+      "on_violation": "Refuse changed sources/previews/revisions, foreign owners/items, viewer writes, missing explicit confirmation, invalid citations and uncertain operations; preserve original cases and outputs.",
+      "implemented_by": [
+        "scripts/native_intake_views.py",
+        "scripts/native_fiscal_corrections.py",
+        "scripts/native_practice_reviews.py",
+        "mcp/workspace.cjs",
+        "ui/practice-reviews.js"
+      ]
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-09",
+    "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "75cfec211c35baa5906ad3438bef4245e990a302fce430d64fe142653048eb72"
+    "source_fingerprint": "7787ffcb3b87567e20d5d2d2d8ac05c0f3212776846fb1963bf267afaf547acb"
   }
 }
