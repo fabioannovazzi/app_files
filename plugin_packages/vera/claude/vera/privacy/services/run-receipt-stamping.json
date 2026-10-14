@@ -38,7 +38,8 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "cd540c51bfdfcc61a9d0bfc38ee3ab3766e6299f6927f64a570bc0eb585eb43b"
+    "source_fingerprint": "cd540c51bfdfcc61a9d0bfc38ee3ab3766e6299f6927f64a570bc0eb585eb43b",
+    "reviewer": "Codex: tax-litigation course and version-only source review; existing host model, immutable public course download, update and receipt boundaries retained"
   },
   "runtime_profiles": [
     "anthropic-cowork"

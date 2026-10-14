@@ -1,0 +1,21 @@
+{
+  "scope": "Vera and Lucia Italian tax-litigation prepared courses",
+  "base_commit": "b0e23333f9aca1c3f3ed33447a0a13450515e04d",
+  "prepared_languages": [
+    "it",
+    "en",
+    "fr",
+    "de",
+    "es"
+  ],
+  "input_scope": "Fictional notice, PEC acceptance, delivery update and selected-language engagement note; no real case data, final result or professional approval supplied",
+  "actual_execution": "20 real evidence-rendering and saved-matter/Archive regressions; 60 output artifacts substantively inspected",
+  "boundaries": "Existing immutable on-demand course downloads and selected host model context. No new recipient, credentials, connector, client-data upload or tutorial telemetry. Version-only update and run-receipt code unchanged.",
+  "not_verified": [
+    "Live learner participation",
+    "Native Word",
+    "Live legal research and final substantive pleading approval",
+    "Voice and paired-window delivery"
+  ],
+  "release_requirement": "Fresh exact-head CI teaching execution and release review checks, package parity and live course/attachment hashes"
+}

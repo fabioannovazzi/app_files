@@ -1261,6 +1261,74 @@
       "sha256": "cec29c1f372b6bca4329ce913e4e889b4a3227b71cc8da7ed19dd2a0ed257fa2",
       "url_path": "_files/cec29c1f372b6bca4329ce913e4e889b4a3227b71cc8da7ed19dd2a0ed257fa2/practice-it.xlsx"
     },
+    "contenzioso-tributario/files/input/accettazione.txt": {
+      "sha256": "7fe059bac59cb379c2cbf6a02fd04283336138df8500a479958d007e8917b32d",
+      "url_path": "_files/7fe059bac59cb379c2cbf6a02fd04283336138df8500a479958d007e8917b32d/accettazione.txt"
+    },
+    "contenzioso-tributario/files/input/avviso.txt": {
+      "sha256": "6b35620ac31f349434e917096e874edf7b429f3e95b947623697a80d84cf316e",
+      "url_path": "_files/6b35620ac31f349434e917096e874edf7b429f3e95b947623697a80d84cf316e/avviso.txt"
+    },
+    "contenzioso-tributario/files/input/fonti-da-verificare.md": {
+      "sha256": "fc1d00de77bc5b97a41272a275130d70cbb93c2127a2ba1d5ed9d9d71531c160",
+      "url_path": "_files/fc1d00de77bc5b97a41272a275130d70cbb93c2127a2ba1d5ed9d9d71531c160/fonti-da-verificare.md"
+    },
+    "contenzioso-tributario/files/input/incarico-de.md": {
+      "sha256": "11a98b96c9940db2b3a9d3cb34602adf592d94e338d826430e3f14c42ea5b88e",
+      "url_path": "_files/11a98b96c9940db2b3a9d3cb34602adf592d94e338d826430e3f14c42ea5b88e/incarico-de.md"
+    },
+    "contenzioso-tributario/files/input/incarico-en.md": {
+      "sha256": "accf0eee2d4788d37717e1b512f9808530fe8ae218330e770a6d0ff5fab86df6",
+      "url_path": "_files/accf0eee2d4788d37717e1b512f9808530fe8ae218330e770a6d0ff5fab86df6/incarico-en.md"
+    },
+    "contenzioso-tributario/files/input/incarico-es.md": {
+      "sha256": "1033f4754a739b7f6cdc2f6cb618042bd5cd281b57a38d5e0ddd62376ebf08d9",
+      "url_path": "_files/1033f4754a739b7f6cdc2f6cb618042bd5cd281b57a38d5e0ddd62376ebf08d9/incarico-es.md"
+    },
+    "contenzioso-tributario/files/input/incarico-fr.md": {
+      "sha256": "eec5e5a4242b81cba0d3bfdd1915825ef62297d29528ac4fae0e1f96fce0ae95",
+      "url_path": "_files/eec5e5a4242b81cba0d3bfdd1915825ef62297d29528ac4fae0e1f96fce0ae95/incarico-fr.md"
+    },
+    "contenzioso-tributario/files/input/incarico-it.md": {
+      "sha256": "1a75486d5721104ee5569d3985001ddc04e549a581c704727a319a9c4d60e529",
+      "url_path": "_files/1a75486d5721104ee5569d3985001ddc04e549a581c704727a319a9c4d60e529/incarico-it.md"
+    },
+    "contenzioso-tributario/files/practice/accettazione.txt": {
+      "sha256": "7fe059bac59cb379c2cbf6a02fd04283336138df8500a479958d007e8917b32d",
+      "url_path": "_files/7fe059bac59cb379c2cbf6a02fd04283336138df8500a479958d007e8917b32d/accettazione.txt"
+    },
+    "contenzioso-tributario/files/practice/avviso.txt": {
+      "sha256": "6b35620ac31f349434e917096e874edf7b429f3e95b947623697a80d84cf316e",
+      "url_path": "_files/6b35620ac31f349434e917096e874edf7b429f3e95b947623697a80d84cf316e/avviso.txt"
+    },
+    "contenzioso-tributario/files/practice/consegna.txt": {
+      "sha256": "d097bff5ccd9272c52089ec082aabe0480508c259c1978fef792cad81d813cfc",
+      "url_path": "_files/d097bff5ccd9272c52089ec082aabe0480508c259c1978fef792cad81d813cfc/consegna.txt"
+    },
+    "contenzioso-tributario/files/practice/fonti-da-verificare.md": {
+      "sha256": "fc1d00de77bc5b97a41272a275130d70cbb93c2127a2ba1d5ed9d9d71531c160",
+      "url_path": "_files/fc1d00de77bc5b97a41272a275130d70cbb93c2127a2ba1d5ed9d9d71531c160/fonti-da-verificare.md"
+    },
+    "contenzioso-tributario/files/practice/incarico-de.md": {
+      "sha256": "11a98b96c9940db2b3a9d3cb34602adf592d94e338d826430e3f14c42ea5b88e",
+      "url_path": "_files/11a98b96c9940db2b3a9d3cb34602adf592d94e338d826430e3f14c42ea5b88e/incarico-de.md"
+    },
+    "contenzioso-tributario/files/practice/incarico-en.md": {
+      "sha256": "accf0eee2d4788d37717e1b512f9808530fe8ae218330e770a6d0ff5fab86df6",
+      "url_path": "_files/accf0eee2d4788d37717e1b512f9808530fe8ae218330e770a6d0ff5fab86df6/incarico-en.md"
+    },
+    "contenzioso-tributario/files/practice/incarico-es.md": {
+      "sha256": "1033f4754a739b7f6cdc2f6cb618042bd5cd281b57a38d5e0ddd62376ebf08d9",
+      "url_path": "_files/1033f4754a739b7f6cdc2f6cb618042bd5cd281b57a38d5e0ddd62376ebf08d9/incarico-es.md"
+    },
+    "contenzioso-tributario/files/practice/incarico-fr.md": {
+      "sha256": "eec5e5a4242b81cba0d3bfdd1915825ef62297d29528ac4fae0e1f96fce0ae95",
+      "url_path": "_files/eec5e5a4242b81cba0d3bfdd1915825ef62297d29528ac4fae0e1f96fce0ae95/incarico-fr.md"
+    },
+    "contenzioso-tributario/files/practice/incarico-it.md": {
+      "sha256": "1a75486d5721104ee5569d3985001ddc04e549a581c704727a319a9c4d60e529",
+      "url_path": "_files/1a75486d5721104ee5569d3985001ddc04e549a581c704727a319a9c4d60e529/incarico-it.md"
+    },
     "dati-fiscali-strutturati/files/input/CU-income.md": {
       "sha256": "37277e504c0c5d0a6d31cf5e52f960218118a925c93b5770d571812cb944cf1d",
       "url_path": "_files/37277e504c0c5d0a6d31cf5e52f960218118a925c93b5770d571812cb944cf1d/CU-income.md"

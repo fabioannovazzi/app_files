@@ -84,9 +84,9 @@ print(json.dumps({'workflows': len(index['courses']), 'locales': count}))
     assert (
         json.loads(result.stdout)
         == {
-            "vera": {"workflows": 43, "locales": 186},
+            "vera": {"workflows": 44, "locales": 191},
             "clara": {"workflows": 9, "locales": 42},
-            "lucia": {"workflows": 4, "locales": 20},
+            "lucia": {"workflows": 5, "locales": 25},
         }[product]
     )
     # Execute the actual thin CLI too: its eligible catalog must not come from
@@ -99,7 +99,7 @@ print(json.dumps({'workflows': len(index['courses']), 'locales': count}))
         check=True,
     )
     catalog = json.loads(result.stdout)
-    assert len(catalog) == {"vera": 43, "clara": 9, "lucia": 4}[product]
+    assert len(catalog) == {"vera": 44, "clara": 9, "lucia": 5}[product]
     assert (root / "vendor/modules/courseware/library.py").read_bytes() == (
         ROOT / "plugins/_shared/vendor/modules/courseware/library.py"
     ).read_bytes()

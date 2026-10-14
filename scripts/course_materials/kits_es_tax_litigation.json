@@ -1,0 +1,60 @@
+{
+  "vera/contenzioso-tributario": {
+    "title": "Preparar y retomar un litigio tributario italiano con Vera",
+    "goal": "Aprender a partir de los documentos, verificar pasos y plazos, preparar un borrador y actualizar el mismo expediente al recibir nuevas pruebas.",
+    "scenario": "Officina Cedro S.r.l. recibe un aviso IRES de 2024 que cuestiona costes de mantenimiento. El expediente inicial solo contiene aviso y aceptación PEC; la prueba de entrega llega en el breve ejercicio.",
+    "scope": "Preparación italiana de primera instancia, desde lectura de documentos hasta borrador con asuntos abiertos y progreso guardado. Explicación en el idioma elegido; documentos y escrito siguen en italiano. Apelación, casación y presentación telemática quedan fuera de esta lección.",
+    "inputs": "Abrir incarico-es.md, avviso.txt, accettazione.txt y fonti-da-verificare.md, textos ficticios legibles. Ni fecha del aviso ni aceptación PEC prueban por sí solas el inicio. Añadir consegna.txt solo durante el ejercicio.",
+    "request": "Vera, examina estos documentos del litigio tributario italiano de Officina Cedro. Organiza pruebas y lagunas, verifica normas actuales, pasos y plazos con sus fuentes y prepara un primer borrador italiano de recurso. Guarda el trabajo para retomarlo cuando lleguen nuevas pruebas.",
+    "steps": [
+      "Vera lee los archivos ficticios seleccionados e identifica parte, impuesto, periodo y fase. Comprobar encargo y habilitación del commercialista para el paso solicitado. Explicar el trabajo real sin simular un mandato auténtico.",
+      "Abrir la matriz de pruebas. Seguir un importe hasta el aviso y su cita, y localizar el recibo ausente. Vera pregunta solo por datos que bloquean un paso y continúa las tareas independientes.",
+      "Vera utiliza su propio recorrido de investigación jurídica y fiscal para verificar reglas vigentes, transiciones, notificaciones y plazos, fuentes y argumentos contrarios. Las consultas externas usan referencias jurídicas generales. Una URL indicada todavía no es una fuente adquirida.",
+      "Abrir plan y calendario: distinguir eventos probados, cálculos condicionados y plazos indeterminados. Al principio falta la entrega; la aceptación PEC no debe convertirse en un inicio confirmado.",
+      "Abrir el borrador italiano y comprobar hechos, anexos, fuentes y puntos abiertos. Si Documents/Word está disponible, Vera usa la plantilla del despacho y muestra el DOCX producido; en caso contrario conserva el texto e indica el paso Word pendiente. No inventar facturas ni precedentes.",
+      "Retomar el estado guardado y añadir consegna.txt durante el ejercicio. Vera prepara una ejecución posterior con las nuevas pruebas, revisa los pasos afectados y conserva la primera versión. Abrir resultados actualizados e informe sobre los datos realmente leídos por el modelo."
+    ],
+    "deliverables": [
+      "Cronología y matriz de pruebas con citas a documentos y elementos ausentes.",
+      "Plan procesal y calendario con fuentes, supuestos y plazos pendientes.",
+      "Borrador italiano de recurso, Word cuando esté disponible, registro retomable e informe real de datos del modelo."
+    ],
+    "review": "Localizar la prueba de cada evento y la fuente del plazo propuesto. Un recibo ausente sigue siendo una laguna; el borrador no inventa hechos o sentencias; preparación no equivale a notificación o presentación efectuadas.",
+    "checkpoints": [
+      "¿Qué archivos aportaste y qué prueba falta para valorar el inicio?",
+      "¿Dónde están la fuente de un paso, su supuesto y la pregunta pendiente?"
+    ],
+    "practice": "Añadir consegna.txt al expediente guardado y pedir plan, calendario y borrador actualizados. Encontrar la fecha de entrega declarada, compararla con la aceptación y comprobar que Vera investiga la norma aplicable antes de confirmar un plazo. Las facturas siguen faltando; conservar la primera versión.",
+    "success": "Sabes empezar con los documentos, leer pruebas y supuestos de los plazos, revisar un borrador y retomar el mismo expediente con nuevas pruebas conservando versiones anteriores.",
+    "repeat": "Para un caso real seleccionar acto, recibos, documentos y plantilla del despacho; describir parte y fase. Pedir preparación o reanudación y comprobar plan, calendario, borrador, fuentes y lagunas. Confirmar solo respuestas conocidas. Explicación y breve ejercicio buscan 5–8 minutos; investigación y procesamiento pueden durar más."
+  },
+  "lucia/contenzioso-tributario": {
+    "title": "Preparar y retomar un litigio tributario italiano con Lucia",
+    "goal": "Aprender a partir de los documentos, verificar pasos y plazos, preparar un borrador y actualizar el mismo expediente al recibir nuevas pruebas.",
+    "scenario": "Officina Cedro S.r.l. recibe un aviso IRES de 2024 que cuestiona costes de mantenimiento. El expediente inicial solo contiene aviso y aceptación PEC; la prueba de entrega llega en el breve ejercicio.",
+    "scope": "Preparación italiana de primera instancia, desde lectura de documentos hasta borrador con asuntos abiertos y progreso guardado. Explicación en el idioma elegido; documentos y escrito siguen en italiano. Apelación, casación y presentación telemática quedan fuera de esta lección.",
+    "inputs": "Abrir incarico-es.md, avviso.txt, accettazione.txt y fonti-da-verificare.md, textos ficticios legibles. Ni fecha del aviso ni aceptación PEC prueban por sí solas el inicio. Añadir consegna.txt solo durante el ejercicio.",
+    "request": "Lucia, examina estos documentos del litigio tributario italiano de Officina Cedro. Organiza pruebas y lagunas, verifica normas actuales, pasos y plazos con sus fuentes y prepara un primer borrador italiano de recurso. Guarda el trabajo para retomarlo cuando lleguen nuevas pruebas.",
+    "steps": [
+      "Lucia lee los archivos ficticios seleccionados e identifica parte, impuesto, periodo y fase. Comprobar encargo y habilitación del abogado para el paso solicitado. Explicar el trabajo real sin simular un mandato auténtico.",
+      "Abrir la matriz de pruebas. Seguir un importe hasta el aviso y su cita, y localizar el recibo ausente. Lucia pregunta solo por datos que bloquean un paso y continúa las tareas independientes.",
+      "Lucia utiliza su propio recorrido de investigación jurídica y fiscal para verificar reglas vigentes, transiciones, notificaciones y plazos, fuentes y argumentos contrarios. Las consultas externas usan referencias jurídicas generales. Una URL indicada todavía no es una fuente adquirida.",
+      "Abrir plan y calendario: distinguir eventos probados, cálculos condicionados y plazos indeterminados. Al principio falta la entrega; la aceptación PEC no debe convertirse en un inicio confirmado.",
+      "Abrir el borrador italiano y comprobar hechos, anexos, fuentes y puntos abiertos. Si Documents/Word está disponible, Lucia usa la plantilla del despacho y muestra el DOCX producido; en caso contrario conserva el texto e indica el paso Word pendiente. No inventar facturas ni precedentes.",
+      "Retomar el estado guardado y añadir consegna.txt durante el ejercicio. Lucia prepara una ejecución posterior con las nuevas pruebas, revisa los pasos afectados y conserva la primera versión. Abrir resultados actualizados e informe sobre los datos realmente leídos por el modelo."
+    ],
+    "deliverables": [
+      "Cronología y matriz de pruebas con citas a documentos y elementos ausentes.",
+      "Plan procesal y calendario con fuentes, supuestos y plazos pendientes.",
+      "Borrador italiano de recurso, Word cuando esté disponible, registro retomable e informe real de datos del modelo."
+    ],
+    "review": "Localizar la prueba de cada evento y la fuente del plazo propuesto. Un recibo ausente sigue siendo una laguna; el borrador no inventa hechos o sentencias; preparación no equivale a notificación o presentación efectuadas.",
+    "checkpoints": [
+      "¿Qué archivos aportaste y qué prueba falta para valorar el inicio?",
+      "¿Dónde están la fuente de un paso, su supuesto y la pregunta pendiente?"
+    ],
+    "practice": "Añadir consegna.txt al expediente guardado y pedir plan, calendario y borrador actualizados. Encontrar la fecha de entrega declarada, compararla con la aceptación y comprobar que Lucia investiga la norma aplicable antes de confirmar un plazo. Las facturas siguen faltando; conservar la primera versión.",
+    "success": "Sabes empezar con los documentos, leer pruebas y supuestos de los plazos, revisar un borrador y retomar el mismo expediente con nuevas pruebas conservando versiones anteriores.",
+    "repeat": "Para un caso real seleccionar acto, recibos, documentos y plantilla del despacho; describir parte y fase. Pedir preparación o reanudación y comprobar plan, calendario, borrador, fuentes y lagunas. Confirmar solo respuestas conocidas. Explicación y breve ejercicio buscan 5–8 minutos; investigación y procesamiento pueden durar más."
+  }
+}

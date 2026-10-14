@@ -29,8 +29,6 @@ LANGUAGES = ["it", "en", "fr", "de", "es"]
 EXCLUDED = {
     "research-subscriptions",  # Source configuration is not a professional lesson.
     "posizioni-negoziali",  # Professional workflow; no authored teaching kit.
-    # Professional method is available; no authored/reviewed tutorial kit exists.
-    "contenzioso-tributario",
     "legal-tax-answer-planner",
     "legal-tax-answer-review",
     "adversarial-opinion",

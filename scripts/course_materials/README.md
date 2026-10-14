@@ -384,3 +384,22 @@ identities are pinned in the normal release review record.
 
 Release evidence and remaining host boundaries are documented in
 `docs/cnc-practical-course-evidence.md`.
+
+## Italian tax-litigation course — 14 October 2026
+
+Vera and Lucia each expose `contenzioso-tributario` with five authored lesson
+languages. The same fictional Italian IRES notice and PEC acceptance are read
+first; practice adds the missing delivery receipt in a new run of the same
+engagement. Current legal research and the actual event must support a deadline;
+neither the notice date nor acceptance is treated as an approved starting date.
+Source documents and the pleading remain Italian. The outline teaches evidence,
+procedural plan, calendar, draft, actual model-data report and saved resumption.
+Word uses the host capability when available. No final result or approval ships
+with the inputs. The ordinary specialist remains usable without a lesson.
+
+Twenty localized regressions execute the actual evidence/progress helpers and
+Archive lifecycle, bind prior state and retain all earlier output bytes. Their
+narratives and choices are explicit fixtures; current legal research, native
+Word/voice, learner understanding and professional acceptance remain separate.
+The release reviews record this exact scope and fresh JUnit identities. Course
+data uses the existing immutable on-demand delivery; no new external route.
