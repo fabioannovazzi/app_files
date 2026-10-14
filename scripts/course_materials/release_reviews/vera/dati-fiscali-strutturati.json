@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "dati-fiscali-strutturati",
-  "course_sha256": "d72b54f29bc2bfe8427afc7dc8c0cac40f23ce4af257513542a4f24db90884d9",
+  "course_sha256": "c8d0b3f32bea14b481f08213c8d9b67aae3582adcf6b7a3e6a91639b59caf63d",
   "reviewer": "Codex /root - focused workflow UI source compatibility review",
   "reviewed_at": "2026-10-14T08:06:05.149101+00:00",
   "review_scope": "Source compatibility review of unchanged authored lessons and teaching inputs. Existing localized editorial and output judgments retain their historical scope. Fresh execution against the exact new course digest remains required. No installed-host, new visual, learner or professional acceptance is claimed.",
@@ -663,8 +663,8 @@
     "fresh_matching_junit_required": true
   },
   "workflow_ui_source_compatibility_review_20261014": {
-    "previous_course_sha256": "82bec7599f28427d82d609ea15d10be1c0379f6fa42ee6cc49e1798560a58608",
-    "current_course_sha256": "d72b54f29bc2bfe8427afc7dc8c0cac40f23ce4af257513542a4f24db90884d9",
+    "previous_course_sha256": "d72b54f29bc2bfe8427afc7dc8c0cac40f23ce4af257513542a4f24db90884d9",
+    "current_course_sha256": "c8d0b3f32bea14b481f08213c8d9b67aae3582adcf6b7a3e6a91639b59caf63d",
     "changed_fields": [
       "sources"
     ],

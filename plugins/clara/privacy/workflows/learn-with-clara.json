@@ -107,9 +107,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-13",
-    "reviewed_by": "privacy-surface-review",
+    "reviewed_at": "2026-10-14",
+    "reviewed_by": "privacy-surface-review - shared course source compatibility",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "671e04c3d098e120040a01de535d9f26fe45561878c5f16879274a04a71d9f8d"
+    "source_fingerprint": "b383a2eabc9186e316169c210fc3fed34c253b0c4eba07f5da5e4ab3a2c160bd"
   }
 }

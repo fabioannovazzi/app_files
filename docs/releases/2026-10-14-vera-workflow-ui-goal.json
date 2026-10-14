@@ -23,7 +23,8 @@
   "versions": {
     "vera": "0.1.376",
     "lucia": "0.1.102",
-    "client-file-preparation": "0.1.45"
+    "client-file-preparation": "0.1.45",
+    "clara": "0.1.275"
   },
   "remaining": [
     "Final source/archive parity checks",

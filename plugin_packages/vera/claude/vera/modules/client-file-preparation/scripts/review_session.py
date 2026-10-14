@@ -691,7 +691,7 @@ def _fiscal_field_items(
 ) -> list[dict[str, Any]]:
     items: list[dict[str, Any]] = []
     for index, field in enumerate(fields, start=1):
-        data = field.as_row()
+        data: dict[str, Any] = dict(field.as_row())
         identity = field_identity(field)
         correction = (corrections or {}).get(identity)
         data["field_ref"] = (

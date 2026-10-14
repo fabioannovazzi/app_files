@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "email-cliente",
-  "course_sha256": "596e0944bc49d1930ad9db5bea11fa12513f403650ee102d4947b5d503a6a768",
+  "course_sha256": "8c631f8eb35204477604c10d3823514f5e66f54f0385382ee3ecadd2eb84ca7b",
   "reviewer": "Codex /root - focused workflow UI source compatibility review",
   "reviewed_at": "2026-10-14T08:06:05.169329+00:00",
   "review_scope": "Source compatibility review of unchanged authored lessons and teaching inputs. Existing localized editorial and output judgments retain their historical scope. Fresh execution against the exact new course digest remains required. No installed-host, new visual, learner or professional acceptance is claimed.",
@@ -557,8 +557,8 @@
     "fresh_matching_junit_required": true
   },
   "workflow_ui_source_compatibility_review_20261014": {
-    "previous_course_sha256": "bad8916574d849c7dc7419a4056971fd26bd6fe578d2178245bd1163ce44a9b2",
-    "current_course_sha256": "596e0944bc49d1930ad9db5bea11fa12513f403650ee102d4947b5d503a6a768",
+    "previous_course_sha256": "596e0944bc49d1930ad9db5bea11fa12513f403650ee102d4947b5d503a6a768",
+    "current_course_sha256": "8c631f8eb35204477604c10d3823514f5e66f54f0385382ee3ecadd2eb84ca7b",
     "changed_fields": [
       "sources"
     ],

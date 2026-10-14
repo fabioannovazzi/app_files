@@ -110,7 +110,7 @@
     {
       "path": "modules/client-file-preparation/scripts/review_session.py",
       "repository_path": "plugins/client-file-preparation/scripts/review_session.py",
-      "sha256": "ba0b0ffe318caa27f5bc42e990f099d0f4f77131c627a1ea39da969dd733812a"
+      "sha256": "64ee85bdd4f2384e891a5c74be951f9b4b7944d1dc06da987c6c6ef085bf57be"
     },
     {
       "path": "modules/client-file-preparation/scripts/scan_folder.py",

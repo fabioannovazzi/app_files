@@ -104,7 +104,7 @@
     },
     "avviso-intake": {
       "path": "avviso-intake/course.json",
-      "sha256": "f750e4367e7decd690f34616e17b309283a30b26a67accd09d8ca1a854697be0",
+      "sha256": "5c4268dbb9269031f84145b40f4f5c27a614a7371df32499fbc564ebf1b2eeb9",
       "languages": [
         "it",
         "en",
@@ -342,7 +342,7 @@
     },
     "dati-fiscali-strutturati": {
       "path": "dati-fiscali-strutturati/course.json",
-      "sha256": "60bdbb8db3ef7c6891c72cfbaeff363139acf2fd97edad9186fe080723b959a0",
+      "sha256": "5a862862354f99fc7fca8b04e01d9f6f4734117a3e7f8e8defc4760b77adc3b2",
       "languages": [
         "it",
         "en",
@@ -370,7 +370,7 @@
     },
     "email-cliente": {
       "path": "email-cliente/course.json",
-      "sha256": "e0823f48bddbd3dac1a904f688a8f4c00322cf6ea53a7494cef6d4edbf7f62e2",
+      "sha256": "41231c5e7a36a755d00e3f4f9dd9015cea54b65f0fd2f41061836ad1975998fe",
       "languages": [
         "it",
         "en",
@@ -426,7 +426,7 @@
     },
     "fatture-xml-check": {
       "path": "fatture-xml-check/course.json",
-      "sha256": "0c02eecdb75485a0a2c0011b4244c7e00ce6766dc151e60770bfcae5caa7d97a",
+      "sha256": "08030291a0f649730d1900ace59e3b95b53eb8f6fe8cd8785befcac5cc43dce9",
       "languages": [
         "it",
         "en",
@@ -657,7 +657,7 @@
     },
     "new-client": {
       "path": "new-client/course.json",
-      "sha256": "a48590ce76c622f64a12b615ca06d348995114fe32034005d3193fb11ef7585e",
+      "sha256": "4ff5395c7998ab519be40299e7e2008df589a5f7412d9d66087b4f3b489885fa",
       "languages": [
         "it",
         "en",

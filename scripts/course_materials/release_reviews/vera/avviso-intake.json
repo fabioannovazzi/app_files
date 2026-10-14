@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "avviso-intake",
-  "course_sha256": "4f675c2eea591dc0fe8c16730138938d3998bdeb450dd88977a50b025c2d163f",
+  "course_sha256": "64349ecf437d37626b143ee33f4953d74dfd200fe7a5ab098b55f4f995def4f0",
   "reviewer": "Codex /root - focused workflow UI source compatibility review",
   "reviewed_at": "2026-10-14T08:06:04.941545+00:00",
   "review_scope": "Source compatibility review of unchanged authored lessons and teaching inputs. Existing localized editorial and output judgments retain their historical scope. Fresh execution against the exact new course digest remains required. No installed-host, new visual, learner or professional acceptance is claimed.",
@@ -556,8 +556,8 @@
     "fresh_matching_junit_required": true
   },
   "workflow_ui_source_compatibility_review_20261014": {
-    "previous_course_sha256": "37d0f81bae733083b29e03554a5575c0d5860c0ad47b46ee5c2b2a293fcbb2c0",
-    "current_course_sha256": "4f675c2eea591dc0fe8c16730138938d3998bdeb450dd88977a50b025c2d163f",
+    "previous_course_sha256": "4f675c2eea591dc0fe8c16730138938d3998bdeb450dd88977a50b025c2d163f",
+    "current_course_sha256": "64349ecf437d37626b143ee33f4953d74dfd200fe7a5ab098b55f4f995def4f0",
     "changed_fields": [
       "sources"
     ],

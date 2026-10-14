@@ -92,7 +92,7 @@
     },
     {
       "path": "modules/client-file-preparation/scripts/review_session.py",
-      "sha256": "6c3e3e27d5b5e84deae4a3ff5bd491b8af6d032f73faf806ffe78768ae984d7b"
+      "sha256": "f53327bf71ab6ac8b4e8a5f9b6f942ed94ccc85a080ce370767f843bee8863f5"
     },
     {
       "path": "modules/client-file-preparation/scripts/scan_folder.py",
@@ -465,5 +465,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "d72b54f29bc2bfe8427afc7dc8c0cac40f23ce4af257513542a4f24db90884d9"
+  "canonical_course_sha256": "c8d0b3f32bea14b481f08213c8d9b67aae3582adcf6b7a3e6a91639b59caf63d"
 }
