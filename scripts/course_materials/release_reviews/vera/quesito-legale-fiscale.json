@@ -111,7 +111,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "9534ef196697c659046499c336e5c0995c66bdfc55ee5488c1d9a36650cdbe7b",
+  "course_sha256": "0f5bf2d6f81ebf618a73d206687082db63d40a0e638c8a99b0716194e4af9669",
   "encoding_preview_source_binding_review_20261013": {
     "reviewed_at": "2026-10-13T19:28:41.735928+00:00",
     "scope": "Reviewed the shared UI projection fix against unsupported-encoding, UTF-8 BOM and malformed-control regressions. Native source inventory changes only; authored lessons, multilingual inputs, deliverables and all prior professional-acceptance limits are preserved. Unsupported raw captures retain their bytes and hashes and display an explicit encoding limit. No new research method, law judgment, recipient or model API is introduced."
@@ -664,5 +664,14 @@
     "integration_baseline": "20d6681b3",
     "stdio_review": "The model helper now decodes its JSON pipe as UTF-8 and emits ASCII-escaped JSON. A real CLI regression reproduces the prior failure under PYTHONIOENCODING=ascii and verifies preservation of accented model names and selection evidence after the repair. Authored teaching content and legal judgments remain unchanged.",
     "subscription_integration": "Retained the subscription source reference, source-access policy, UI helpers and privacy classes from main. The model restriction concerns model-provider accounts; authorized source subscriptions retain their own access policy. Authored course content is unchanged."
+  },
+  "remote_package_freshness_review": {
+    "reviewed_at": "2026-10-14",
+    "reviewed_by": "Codex source and package review",
+    "previous_course_sha256": "9534ef196697c659046499c336e5c0995c66bdfc55ee5488c1d9a36650cdbe7b",
+    "current_course_sha256": "0f5bf2d6f81ebf618a73d206687082db63d40a0e638c8a99b0716194e4af9669",
+    "authored_content_and_attachment_definitions_unchanged": true,
+    "scope": "Preserve the merged model-policy and subscription source reviews while refreshing shared remote-course source fingerprints. Authored lessons, locales, timing, input hashes and professional judgments are unchanged. The affected lessons were actually rerun against this combined source; existing artifact attestations are retained without claiming new human or installed-host acceptance.",
+    "native_junit_sha256": "15e74a096acb46c72e8b1bc8245a0d0a2386130690cff995645903df02208289"
   }
 }

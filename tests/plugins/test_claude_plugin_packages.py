@@ -458,6 +458,7 @@ def test_claude_manifest_uses_canonical_vera_identity_and_version(
         "description": template["description"],
         "author": template["author"],
         "homepage": template["homepage"],
+        "privacyPolicyUrl": template["privacyPolicyUrl"],
         "repository": template["repository"],
         "license": template["license"],
         "keywords": template["keywords"],
@@ -504,7 +505,11 @@ def test_root_anthropic_manifest_and_local_mcp_are_discoverable(
             else (
                 "${CLAUDE_PLUGIN_ROOT}/mcp/studio-work.cjs"
                 if name == "studioWork"
-                else "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
+                else (
+                    "${CLAUDE_PLUGIN_ROOT}/mcp/research-sources.cjs"
+                    if name == "researchSources"
+                    else "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
+                )
             )
         )
         for name, server in cowork_mcp["mcpServers"].items()
@@ -622,7 +627,11 @@ def test_optional_claude_mcp_projection_uses_only_installation_safe_paths() -> N
             else (
                 "${CLAUDE_PLUGIN_ROOT}/mcp/studio-work.cjs"
                 if name == "studioWork"
-                else "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
+                else (
+                    "${CLAUDE_PLUGIN_ROOT}/mcp/research-sources.cjs"
+                    if name == "researchSources"
+                    else "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
+                )
             )
         )
         assert len(server["args"]) == (

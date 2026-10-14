@@ -16,20 +16,30 @@ Mparanza interview, tutorial telemetry, change request or tutorial receipt is
 called. Helpers do not save audio or raw transcripts. Tutorial files remain below
 the compatibility local-only marker, including the actual private portable ledger.
 A selected real assignment follows its specialist's data and review contract;
-teaching state remains local even after completion. No Claude Cowork teaching.
+teaching state remains local even after completion. Native paired voice teaching
+does not apply to Cowork; its package offers written single-conversation lessons.
 
 Reviewed 2026-09-14 against scripts/local_onboarding.py, local_teaching.py,
 local_onboarding_case.py, onboarding_session_start.py, the bundled shared runtime,
 the learn-with-lucia skill and its local onboarding/session references.
 
 The prepared course library uses local stdlib code, authored case material and
-current-source hashes. It renders escaped HTML in a fresh directory without a
-network/model call, external assets, profile changes or completion records.
+current-source hashes. It renders escaped HTML in a fresh directory without a model call, profile
+changes or completion records. Repository attachments remain local; distributed
+packages fetch missing fictional lesson data from mparanza.com over HTTPS, only
+for the selected language. SHA-256 verification precedes atomic writing. Downloads
+allow only mparanza.com, including redirects, use a 30-second timeout and a 25 MB
+cap, and never download or execute code. No client files, profile, lesson answers,
+progress or feedback are uploaded; public file paths and ordinary connection
+metadata reach Mparanza. Host network permissions remain enforced.
 Course sources remain bound to Lucia’s own catalog. The native host may read the
 selected course for conversation. An authored specimen is not a newly executed
 workflow; supplementary actual starter outputs preserve separate provenance.
 Reviewed also against scripts/local_courses.py, assets/courses and the shared
-courseware module. No additional external recipient is introduced.
+courseware module. The public course-file GET is the additional Mparanza
+boundary; it sends no professional payload. Prepared files remain in the selected
+lesson folder; server access-log retention is outside the helper. Transport
+review updated 2026-10-14 against courseware/library.py and remote_files.py.
 
 Browser preview reviewed 2026-09-17 against courseware/preview.py.
 Browser preview is a separate optional local server: it binds only 127.0.0.1 on a free port, serves the rendered kit and relative assets, rejects resolved paths outside the kit and directory listings, and runs only for the lesson preview. It does not upload files, save access logs, change profiles or record completion. Browser/model inspection remains ordinary native model processing; loopback serving is not authentication against other local processes.

@@ -1,0 +1,1 @@
+Feedback per la correzione: nella slide sulle responsabilità sostituisci Sara con Elena come persona proposta per raccogliere e chiarire le richieste. Paolo resta incaricato della valutazione e del preventivo. Mantieni titoli, ordine, stile e contenuto delle altre slide. Questa nota aggiorna soltanto la responsabilità proposta; non dichiara la procedura approvata.

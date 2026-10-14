@@ -26,6 +26,9 @@ from typing import Any
 from zipfile import ZIP_DEFLATED, BadZipFile, ZipFile, ZipInfo
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from scripts.course_materials.remote_files import externalize_course_files  # noqa: E402
+
 LICENSE_PATH = ROOT / "LICENSE"
 DEFAULT_CONFIG = ROOT / "scripts" / "codex_plugin_packages.json"
 DEFAULT_VENDOR_MODULE_CONFIG = ROOT / "scripts" / "plugin_vendor_modules.json"
@@ -1394,6 +1397,9 @@ def expected_zip_entries(
             if component_server is not None:
                 entries[f"{component_root}/scripts/review_server.py"] = component_server
     for plugin_dir in plugin_dirs:
+        externalize_course_files(
+            entries, plugin_dir.name, f"{root}/plugins/{plugin_dir.name}/", root=ROOT
+        )
         if plugin_dir.name == "vera":
             named_browser_skill_cards(entries, f"{root}/plugins/vera/")
             if project_vera_privacy:
@@ -2066,6 +2072,7 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
     if ".codex-plugin/plugin.json" not in entries:
         raise ValueError("ChatGPT upload ZIP is missing .codex-plugin/plugin.json")
     project_chatgpt_course_sources(entries, packaged_entries, prefix)
+    externalize_course_files(entries, plugin_name, root=ROOT)
     if plugin_name == "vera":
         add_vera_execution_manifest(entries)
     return dict(sorted(entries.items()))

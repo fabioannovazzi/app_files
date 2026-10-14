@@ -176,3 +176,12 @@ Keep the preview process running while the learner needs its links. Stop only
 that process when the lesson is finished and no handoff needs the preview.
 The helper serves local files on loopback; it does not upload them or record
 lesson completion. Native model processing of content read in chat still applies.
+
+## Downloading prepared files
+
+Distributed packages fetch only the selected language’s prepared lesson data from
+mparanza.com over HTTPS. Each file is checked against the reviewed SHA-256 before
+being written. Repository checkouts continue to use their local attachments.
+If downloading is blocked in Cowork, allow mparanza.com under Settings →
+Capabilities (network egress), then retry preparation in the same empty folder.
+No learner files, answers, progress or feedback are uploaded by this download.

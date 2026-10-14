@@ -46,6 +46,9 @@ __all__ = [
 ]
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from scripts.course_materials.remote_files import externalize_course_files  # noqa: E402
+
 DEFAULT_CONFIG = ROOT / "scripts" / "claude_plugin_packages.json"
 CODEX_BUILDER_PATH = ROOT / "scripts" / "build_codex_plugin_zip.py"
 PRIVACY_VALIDATOR_PATH = (
@@ -124,6 +127,50 @@ def _expand_cowork_course_archives(entries: dict[str, bytes]) -> None:
         raise ValueError(f"Cowork cannot contain nested ZIP files: {nested}")
 
 
+# Inspected entry points already search the containing plugin's vendor/modules.
+# Management Control and Studio Archive still require component-local copies.
+_ROOT_VENDOR_FALLBACK_COMPONENTS = frozenset(
+    {
+        "adeguati-assetti",
+        "aml-review",
+        "business-valuation",
+        "new-client",
+        "patent-box-review",
+        "previdenza-inps",
+        "scissione-guidata",
+        "treasury-forecast",
+        "variance-analysis",
+    }
+)
+
+
+def _deduplicate_cowork_vendor(entries: dict[str, bytes]) -> None:
+    """Drop a complete identical package only for a reviewed root fallback."""
+    for component in sorted(_ROOT_VENDOR_FALLBACK_COMPONENTS):
+        prefix = f"modules/{component}/vendor/modules/"
+        packages = {
+            name.removeprefix(prefix).split("/")[0]
+            for name in entries
+            if name.startswith(prefix)
+        }
+        for package in sorted(packages):
+            nested_prefix = f"{prefix}{package}/"
+            root_prefix = f"vendor/modules/{package}/"
+            nested = {
+                name.removeprefix(nested_prefix): content
+                for name, content in entries.items()
+                if name.startswith(nested_prefix)
+            }
+            canonical = {
+                name.removeprefix(root_prefix): content
+                for name, content in entries.items()
+                if name.startswith(root_prefix)
+            }
+            if nested and nested == canonical:
+                for relative in nested:
+                    del entries[nested_prefix + relative]
+
+
 def _add_written_teaching(
     product: str, source: dict[str, bytes], entries: dict[str, bytes]
 ) -> None:
@@ -133,8 +180,14 @@ def _add_written_teaching(
     assert spec and spec.loader
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
+    _deduplicate_cowork_vendor(entries)
     module.add_written_teaching(ROOT, product, source, entries)
-    _expand_cowork_course_archives(entries)
+    # ZIP inputs remain passive remote data; the installer never sees nested archives.
+    if "assets/courses/remote.json" not in source:
+        _expand_cowork_course_archives(entries)
+    else:
+        entries["assets/courses/remote.json"] = source["assets/courses/remote.json"]
+    externalize_course_files(entries, product, root=ROOT)
     if product == "vera":
         path = "skills/learn-with-vera/SKILL.md"
         entries[path] = _inject_named_execution_contract(
@@ -935,6 +988,7 @@ def project_claude_manifest(
                     "description",
                     "author",
                     "homepage",
+                    "privacyPolicyUrl",
                     "repository",
                     "license",
                     "keywords",
@@ -2858,7 +2912,7 @@ def _clara_package_entries(
         elif "/references/" in relative and relative.endswith(".md"):
             content = _project_clara_cowork_reference(content)
         elif (
-            relative.startswith(("modules/", "scripts/"))
+            relative.startswith(("modules/", "scripts/", "vendor/modules/"))
             and Path(relative).suffix.lower() in RUNTIME_TEXT_SUFFIXES
         ):
             content = _project_cowork_runtime_text(
@@ -3220,7 +3274,7 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
         elif relative == "components.json":
             content = _project_vera_components(content)
         if (
-            relative.startswith("modules/")
+            relative.startswith(("modules/", "vendor/modules/"))
             and Path(relative).suffix.lower() in RUNTIME_TEXT_SUFFIXES
         ):
             content = _project_cowork_runtime_text(

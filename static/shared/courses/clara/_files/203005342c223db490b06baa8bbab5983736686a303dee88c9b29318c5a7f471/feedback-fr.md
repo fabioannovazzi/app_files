@@ -1,0 +1,1 @@
+Retour pour correction : sur la diapositive des responsabilités, remplacer Sara par Elena pour recueillir et clarifier les demandes. Paolo reste chargé de l’évaluation et du devis. Conserver titres, ordre, style et autres diapositives. Ce retour modifie seulement la responsabilité proposée, sans approuver la procédure.

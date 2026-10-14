@@ -11,6 +11,8 @@ from zipfile import ZipFile
 
 import pytest
 
+from tests.plugins._course_downloads import installed_course_command
+
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -27,7 +29,7 @@ def installed(request, tmp_path):
 
 def run(root, *args):
     return subprocess.run(
-        [sys.executable, str(root / "scripts/local_courses.py"), *map(str, args)],
+        installed_course_command(root, ROOT, *args),
         cwd=root.parent,
         capture_output=True,
         text=True,
@@ -298,7 +300,7 @@ def test_cowork_install_archive_has_root_manifest_and_no_nested_zips(product):
 
 
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
-def test_clara_attribute_lesson_preserves_expanded_demo_and_practice(
+def test_clara_attribute_lesson_downloads_original_demo_and_practice_archives(
     tmp_path, language
 ):
     root = tmp_path / "installed"
@@ -324,18 +326,10 @@ def test_clara_attribute_lesson_preserves_expanded_demo_and_practice(
             ROOT
             / f"plugins/clara/assets/courses/attribute-reporting/files/{role}/{stem}.zip"
         )
-        expanded = destination / "files" / role / stem
-        with ZipFile(original) as source:
-            expected = {name: source.read(name) for name in source.namelist()}
-        actual = {
-            path.relative_to(expanded).as_posix(): path.read_bytes()
-            for path in expanded.rglob("*")
-            if path.is_file()
-        }
-        assert actual == expected
-        assert stem + "/" in guide
-        assert stem + ".zip" not in guide
-        assert (
-            json.loads((expanded / "package_integrity.json").read_text())["status"]
-            == "pass"
-        )
+        downloaded = destination / "files" / role / (stem + ".zip")
+        assert downloaded.read_bytes() == original.read_bytes()
+        assert stem + ".zip" in guide
+        with ZipFile(downloaded) as archive:
+            assert (
+                json.loads(archive.read("package_integrity.json"))["status"] == "pass"
+            )

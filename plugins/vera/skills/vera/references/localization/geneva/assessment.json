@@ -1745,5 +1745,9 @@
     "previous_catalogue_fingerprint": "82fe8dabdd6b1c037b8b26eb0d194316508a723fd91fc98768ddaf87de9d954c",
     "scope": "Preserves the merged legal/tax model policy and all Geneva dispositions. The native calendar dropdown correction changes mechanical UI event handling only. All entrypoint hashes match the integrated main catalogue; no new Geneva professional acceptance is claimed.",
     "version": "0.1.382"
+  },
+  "remote_course_package_binding": {
+    "version": "0.1.382",
+    "scope": "Preserve the merged model-policy and calendar source reviews and existing Geneva dispositions. Shared remote lesson data remains hash-pinned. No additional jurisdictional workflow or installed-host acceptance claimed."
   }
 }

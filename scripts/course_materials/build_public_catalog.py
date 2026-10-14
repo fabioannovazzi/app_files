@@ -9,6 +9,7 @@ import tempfile
 from pathlib import Path
 
 from build_catalog import ROOT
+from remote_files import publish_remote_files
 from render_catalog import render
 
 __all__ = ["build_public", "main"]
@@ -34,15 +35,22 @@ def build_public(*, check: bool = False) -> int:
         render(generated, public=True)
         expected = _manifest(generated)
         if check:
-            if _manifest(target) != expected:
+            current = {
+                name: digest
+                for name, digest in _manifest(target).items()
+                if "/_files/" not in name
+            }
+            if current != expected:
                 raise ValueError(
                     "Public catalogue is stale; run build_public_catalog.py"
                 )
         else:
             target.mkdir(parents=True, exist_ok=True)
             for relative in _manifest(target).keys() - expected.keys():
-                (target / relative).unlink()
+                if "/_files/" not in relative:
+                    (target / relative).unlink()
             shutil.copytree(generated, target, dirs_exist_ok=True)
+    publish_remote_files(ROOT, check=check)
     return len(expected)
 
 

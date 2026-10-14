@@ -1,8 +1,8 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/.codex/worktrees/vera-workflow-ui/app_files/plugins/vera",
+  "root": "/Users/fabio/Documents/Codex/2026-10-14/is-x20/work/app_files/plugins/vera",
   "version": "0.1.382",
-  "captured_at": "2026-10-14T12:57:11.529243+00:00",
+  "captured_at": "2026-10-14T14:03:45.037025+00:00",
   "catalogue_fingerprint": "e0fb698d03c6076eb2ad8056cc07b5ba598e4df00d14def4714c6f747b0cb070",
   "manifest_sha256": "d66d206f299525ef3c5c740cb37a2ae669a720348f8e838de4351ed0ff42a0dd",
   "entries": [

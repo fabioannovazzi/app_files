@@ -224,7 +224,10 @@ change-request, hosted interview, hosted demonstration or receipt-stamping tools
 for a lesson. Stay within the prepared fictional case; real client work requires
 a separate explicit transition under the normal specialist workflow. Public
 research required by a supported method retains its normal source boundaries.
-The helper itself has no network calls. Claude processes the conversation and
+Preparing a lesson downloads its selected-language fictional input files from
+mparanza.com over HTTPS and verifies their reviewed hashes before writing.
+If blocked, allow mparanza.com under Settings → Capabilities (network egress)
+and retry. It sends no lesson answers, progress, client files or feedback. Claude processes the conversation and
 files it reads under the user's Anthropic account; saving a file in a connected
 folder does not promise offline processing or exclude host-managed storage.
 

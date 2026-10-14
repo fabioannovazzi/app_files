@@ -9,6 +9,7 @@
     "url": "https://mparanza.com"
   },
   "homepage": "https://mparanza.com/static/shared/clara/index.html?lang=en",
+  "privacyPolicyUrl": "https://mparanza.com/privacy",
   "repository": "https://github.com/fabioannovazzi/app_files",
   "license": "AGPL-3.0-only",
   "keywords": [
@@ -29,7 +30,7 @@
     "reporting",
     "data-analysis"
   ],
-  "version": "0.1.279",
+  "version": "0.1.280",
   "skills": "./skills/",
   "agents": [
     "./agents/clara.md"

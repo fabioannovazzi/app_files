@@ -9,6 +9,7 @@
     "url": "https://mparanza.com"
   },
   "homepage": "https://mparanza.com/static/shared/lucia/index.html?lang=it",
+  "privacyPolicyUrl": "https://mparanza.com/privacy",
   "repository": "https://github.com/fabioannovazzi/app_files",
   "license": "AGPL-3.0-only",
   "keywords": [
@@ -22,6 +23,6 @@
     "law-firm-website",
     "professional-services"
   ],
-  "version": "0.1.105",
+  "version": "0.1.106",
   "skills": "./skills/"
 }

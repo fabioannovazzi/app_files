@@ -285,7 +285,7 @@
     {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "5541b625ce8100e5f72a3acf08ed18d4d2d43d7b50db8522b4a998ad0d66a275"
+      "sha256": "888a3fc6f6ba005e9a9aff844c4d63d623af8be921354632f7f77ef6bd69d737"
     },
     {
       "path": "vendor/modules/courseware/native.cjs",

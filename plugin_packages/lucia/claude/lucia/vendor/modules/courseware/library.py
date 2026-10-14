@@ -1,4 +1,4 @@
-"""Load reviewed course content and render it without model or network calls.
+"""Load reviewed courses and fetch only hash-pinned lesson data when rendering.
 
 The checks here concern exact product membership, file identity and language
 coverage. They do not judge professional relevance, correctness or understanding.
@@ -16,8 +16,13 @@ import os
 import re
 import shutil
 import sys
+import tempfile
+from http.client import HTTPException
 from pathlib import Path
 from typing import Any
+from urllib.error import URLError
+from urllib.parse import quote, unquote, urlsplit
+from urllib.request import HTTPRedirectHandler, build_opener
 
 from .access import CourseAccessError, verify_course_access
 from .policy import local_unavailability, unavailable_local_workflows
@@ -83,6 +88,111 @@ def _inside(root: Path, relative: str) -> Path:
     if not path.is_file() or not path.resolve().is_relative_to(root.resolve()):
         raise CourseError(f"Missing or foreign course file: {relative}")
     return path
+
+
+_MAX_ATTACHMENT_BYTES = 25 * 1024 * 1024
+_DATA_SUFFIXES = frozenset(
+    {
+        ".md",
+        ".json",
+        ".csv",
+        ".pdf",
+        ".xml",
+        ".zip",
+        ".xlsx",
+        ".xlsm",
+        ".docx",
+        ".txt",
+        ".html",
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".webp",
+    }
+)
+
+
+def _attachment_path(root: Path, relative: str) -> Path:
+    """Validate containment even when an attachment is intentionally absent."""
+    path = root / relative
+    if (
+        not relative
+        or Path(relative).is_absolute()
+        or ".." in Path(relative).parts
+        or "\\" in relative
+        or not path.resolve().is_relative_to(root.resolve())
+    ):
+        raise CourseError("Course paths must be relative and contained")
+    if path.exists() and not path.is_file():
+        raise CourseError(f"Invalid teaching input: {relative}")
+    return path
+
+
+def _verified_url(url: str) -> str:
+    parsed = urlsplit(url)
+    if (
+        parsed.scheme != "https"
+        or parsed.hostname != "mparanza.com"
+        or parsed.netloc != "mparanza.com"
+        or parsed.username
+        or parsed.password
+        or parsed.query
+        or parsed.fragment
+        or not parsed.path.startswith("/static/shared/courses/")
+    ):
+        raise CourseError("Lesson downloads require HTTPS on mparanza.com")
+    return url
+
+
+class _CourseRedirects(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return super().redirect_request(
+            req, fp, code, msg, headers, _verified_url(newurl)
+        )
+
+
+def urlopen(url: str, *, timeout: int):
+    """Open a public course file with the same host policy on every redirect."""
+    return build_opener(_CourseRedirects()).open(_verified_url(url), timeout=timeout)
+
+
+def _download_attachment(url: str, target: Path, expected: str) -> None:
+    """Check a bounded download before atomically exposing its original bytes."""
+    temporary: Path | None = None
+    try:
+        with urlopen(url, timeout=30) as response:
+            _verified_url(response.geturl())
+            declared = response.headers.get("Content-Length")
+            if declared is not None and (
+                not declared.isdecimal() or int(declared) > _MAX_ATTACHMENT_BYTES
+            ):
+                raise CourseError("Lesson attachment exceeds the 25 MB download limit")
+            with tempfile.NamedTemporaryFile(dir=target.parent, delete=False) as output:
+                temporary = Path(output.name)
+                digest = hashlib.sha256()
+                total = 0
+                while chunk := response.read(64 * 1024):
+                    total += len(chunk)
+                    if total > _MAX_ATTACHMENT_BYTES:
+                        raise CourseError(
+                            "Lesson attachment exceeds the 25 MB download limit"
+                        )
+                    digest.update(chunk)
+                    output.write(chunk)
+            if digest.hexdigest() != expected:
+                raise CourseError(
+                    "Downloaded lesson attachment failed its SHA-256 check"
+                )
+            temporary.replace(target)
+    except (OSError, URLError, HTTPException) as exc:
+        raise CourseError(
+            "Lesson files come from mparanza.com. Check the network connection; "
+            "in Cowork, allow mparanza.com under Settings → Capabilities "
+            "(network egress), then retry."
+        ) from exc
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
 
 
 def _esc(value: Any) -> str:
@@ -393,6 +503,18 @@ class CourseLibrary:
         self.product = _read(self.root / ".claude-plugin/plugin.json")["name"]
         self.assets = self.root / "assets/courses"
         self.index = _read(self.assets / "index.json")
+        self.remote = (
+            _read(self.assets / "remote.json")
+            if (self.assets / "remote.json").is_file()
+            else None
+        )
+        if self.remote is not None and (
+            self.remote.get("schema") != "mparanza.course_files_remote.v1"
+            or self.remote.get("base")
+            != f"https://mparanza.com/static/shared/courses/{self.product}/"
+            or not isinstance(self.remote.get("files"), dict)
+        ):
+            raise CourseError("Invalid or foreign remote course catalogue")
         self.eligible = eligible - unavailable_local_workflows(self.product)
         if self.index.get("product") != self.product:
             raise CourseError("The course catalog belongs to another product")
@@ -404,6 +526,28 @@ class CourseLibrary:
             for key, value in sorted(self.index["courses"].items())
             if key in self.eligible
         ]
+
+    def _remote_url(self, workflow: str, asset: dict[str, Any]) -> str:
+        record = (
+            self.remote["files"].get(f"{workflow}/{asset['path']}")
+            if self.remote
+            else None
+        )
+        if not isinstance(record, dict) or record.get("sha256") != asset["sha256"]:
+            raise CourseError(
+                f"Missing or mismatched remote lesson file: {asset['path']}"
+            )
+        relative = record.get("url_path", "")
+        if (
+            not isinstance(relative, str)
+            or unquote(relative) != relative
+            or relative.startswith("/")
+            or ".." in relative.split("/")
+            or any(char in relative for char in "\\?#:")
+            or Path(relative).suffix.lower() not in _DATA_SUFFIXES
+        ):
+            raise CourseError("Remote lessons may download only contained data files")
+        return _verified_url(self.remote["base"] + quote(relative, safe="/"))
 
     def load(self, workflow: str, language: str) -> dict[str, Any]:
         """Fail closed on foreign, unavailable, altered or stale course content."""
@@ -491,9 +635,14 @@ class CourseLibrary:
         selected_roles = set()
         seen_paths = set()
         for asset in course.get("files", []):
-            path = _inside(manifest.parent, asset["path"])
-            if _digest(path) != asset["sha256"]:
-                raise CourseError("Teaching input changed; review and rebuild its kit")
+            path = _attachment_path(manifest.parent, asset["path"])
+            if path.is_file():
+                if _digest(path) != asset["sha256"]:
+                    raise CourseError(
+                        "Teaching input changed; review and rebuild its kit"
+                    )
+            else:
+                self._remote_url(workflow, asset)
             if (
                 asset["path"] in seen_paths
                 or asset["role"] not in {"source", "practice"}
@@ -531,6 +680,27 @@ class CourseLibrary:
         ):
             raise CourseError("Use a fresh course directory; preserve existing work")
         verify_course_access([destination])
+        source_dir = (self.assets / self.index["courses"][workflow]["path"]).parent
+        # Complete all network work before exposing any prepared lesson files.
+        # A blocked download leaves an empty destination that can be retried.
+        with tempfile.TemporaryDirectory(
+            prefix=".course-download-", dir=destination
+        ) as pending:
+            downloaded = []
+            for index, asset in enumerate(course.get("files", [])):
+                if language not in asset["languages"]:
+                    continue
+                local = _attachment_path(source_dir, asset["path"])
+                if not local.is_file():
+                    staged = Path(pending) / str(index)
+                    _download_attachment(
+                        self._remote_url(workflow, asset), staged, asset["sha256"]
+                    )
+                    downloaded.append((staged, asset["path"]))
+            for staged, relative in downloaded:
+                target = destination / relative
+                target.parent.mkdir(parents=True, exist_ok=True)
+                staged.replace(target)
         copy = course["locales"][language]
         shared_assets = Path(__file__).parent / "assets"
         ui = _read(shared_assets / "languages.json")[language]
@@ -548,7 +718,11 @@ class CourseLibrary:
                 continue
             target = destination / asset["path"]
             target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(_inside(source_dir, asset["path"]), target)
+            local = _attachment_path(source_dir, asset["path"])
+            if local.is_file():
+                shutil.copyfile(local, target)
+            if _digest(target) != asset["sha256"]:
+                raise CourseError("Teaching input changed while preparing its kit")
             displayed = dict(asset)
             # A linked XML/Markdown file is not a browser document in every host.
             # Provide an escaped reading view; the workflow still receives the

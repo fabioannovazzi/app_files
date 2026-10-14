@@ -14,6 +14,19 @@
         "The check is rate-limited locally and fails open without blocking Clara.",
         "This custom update check is included only in the OpenAI package, not the Claude Cowork package."
       ]
+    },
+    {
+      "id": "prepared-course-download",
+      "kind": "hosted_service",
+      "purpose": "Download reviewed fictional lesson data omitted from distributable packages when the user requests preparation.",
+      "content": "Fixed public GET paths identifying prepared assets by SHA-256 and original filename, plus ordinary connection metadata. No client files, local paths, teaching profile, answers, progress or feedback are sent.",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "HTTPS and mparanza.com only, including redirects; no credentials or query parameters; passive lesson-data extensions only; 30-second request timeout and 25 MB cap; SHA-256 checked before atomic write; only selected-language attachments are fetched; no code is downloaded or executed."
+      ],
+      "hosted_service_id": "prepared-course-files",
+      "destination": "https://mparanza.com/static/shared/courses/clara/"
     }
   ],
   "codex_account_boundary": {
@@ -64,7 +77,8 @@
     "scripts/course_chat_mcp.cjs"
   ],
   "hosted_service_ids": [
-    "plugin-update-check"
+    "plugin-update-check",
+    "prepared-course-files"
   ],
   "ordinary_codex_model_processing": {
     "scope": "content_supplied_to_the_codex_model",
@@ -78,17 +92,17 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "bf82baf63ebf923523ac6b355846aed004a678282d3ea05d5ebcdb4ca6062878"
+    "source_fingerprint": "991b41d3ace24023aef6f8bee5633d24f6769d109c43263cd33c7b4ac71c4899"
   },
   "schema_version": 1,
   "security_controls": [
     {
       "id": "local-teaching-state",
-      "control": "The stdlib helpers have no network client; profile, progress, examples and feedback remain local. Exact product identity prevents cross-product profile loading. Current request outranks stored preferences. Hosted interviews, Mparanza feedback and receipt stamping are excluded for tutorials; CR polling is suppressed while pending, inaccessible or active. The independent public-version GET sends only ordinary connection metadata, never tutorial/profile/lesson content, the installed version or local paths, and does not depend on onboarding completion. Lesson planning and dispatch require an own-catalog workflow and a skill inside the same installed Clara root; worker responses bind the product and exact skill path. The native teacher and worker follow only that product's lesson contract. A directly requested course can create local enrollment without completing the optional introduction. It validates the own-product workflow and distinct native chat pair first; the profile stays null unless confirmed, and existing interview and lesson records are preserved."
+      "control": "The profile and progress helpers have no network client; profile, progress, examples and feedback remain local. Exact product identity prevents cross-product profile loading. Current request outranks stored preferences. Hosted interviews, Mparanza feedback and receipt stamping are excluded for tutorials; CR polling is suppressed while pending, inaccessible or active. The independent public-version GET sends only ordinary connection metadata, never tutorial/profile/lesson content, the installed version or local paths, and does not depend on onboarding completion. Lesson planning and dispatch require an own-catalog workflow and a skill inside the same installed Clara root; worker responses bind the product and exact skill path. The native teacher and worker follow only that product's lesson contract. A directly requested course can create local enrollment without completing the optional introduction. It validates the own-product workflow and distinct native chat pair first; the profile stays null unless confirmed, and existing interview and lesson records are preserved."
     },
     {
       "id": "prepared-course-integrity",
-      "control": "The local course loader checks own-product identity, authored language, current source fingerprints and attachment hashes before rendering escaped HTML in a fresh ordinary directory. New and retained lessons both enumerate prepared artifact hashes, so those files and renamed copies cannot serve as native execution outputs. Progress requires distinct input, run-record and output files bound to the selected workflow, phase and working-thread ID. These checks do not authenticate the host or judge understanding. The renderer has no network or model client and performs no profile or completion write. The public catalogue removes local execution requests and local-path provenance. Brand Fit, Hosted Interview and Research Video remain unavailable in local teaching. Browser preview is a separate optional local server: it binds only 127.0.0.1 on a free port, serves the rendered kit and relative assets, rejects resolved paths outside the kit and directory listings, and runs only for the lesson preview. It does not upload files, save access logs, change profiles or record completion. Browser/model inspection remains ordinary native model processing; loopback serving is not authentication against other local processes. XML, Markdown and text inputs have escaped reading views while execution keeps the original bytes. The optional results view checks the live execution record and input/output hashes, then renders selected CSV/text outputs in a fresh directory outside the sealed run. It retains source identities, performs no workflow execution or completion write, and uses only the same loopback preview and native model boundaries. PDF reading views render original pages locally with the already declared PyMuPDF dependency. Page images and an original-file download remain inside the lesson; the original PDF bytes remain the execution inputs. Rendering adds no external route or model call."
+      "control": "The local course loader checks own-product identity, authored language, current source fingerprints and attachment hashes before rendering escaped HTML in a fresh ordinary directory. New and retained lessons both enumerate prepared artifact hashes, so those files and renamed copies cannot serve as native execution outputs. Progress requires distinct input, run-record and output files bound to the selected workflow, phase and working-thread ID. These checks do not authenticate the host or judge understanding. The renderer makes no model call and performs no profile or completion write. Repository attachments remain local; distributed packages download missing fictional lesson files through the prepared-course-files boundary, only for the selected language, with SHA-256 verification before writing. The public catalogue removes local execution requests and local-path provenance. Brand Fit, Hosted Interview and Research Video remain unavailable in local teaching. Browser preview is a separate optional local server: it binds only 127.0.0.1 on a free port, serves the rendered kit and relative assets, rejects resolved paths outside the kit and directory listings, and runs only for the lesson preview. It does not upload files, save access logs, change profiles or record completion. Browser/model inspection remains ordinary native model processing; loopback serving is not authentication against other local processes. XML, Markdown and text inputs have escaped reading views while execution keeps the original bytes. The optional results view checks the live execution record and input/output hashes, then renders selected CSV/text outputs in a fresh directory outside the sealed run. It retains source identities, performs no workflow execution or completion write, and uses only the same loopback preview and native model boundaries. PDF reading views render original pages locally with the already declared PyMuPDF dependency. Page images and an original-file download remain inside the lesson; the original PDF bytes remain the execution inputs. Rendering uses the declared prepared-course-files download boundary and makes no model call."
     },
     {
       "id": "recorded-input-citation-reading",

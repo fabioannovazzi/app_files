@@ -1,0 +1,1 @@
+Exercice de correction indépendant : repartir de la présentation originale. Sur la conclusion, remplacer la proposition de test par une demande de recueillir d’abord les questions du personnel sur la fiche. Ne pas lancer ni annoncer de test. Conserver le reste et les deux copies corrigées.
