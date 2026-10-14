@@ -534,5 +534,10 @@
     "clara": "0.1.275",
     "studio-archive": "0.1.47"
   },
-  "version_reservation": "Raised Vera and Lucia above concurrent PR #815 source versions; no source or runtime behavior changed."
+  "version_reservation": "Raised Vera and Lucia above concurrent PR #815 source versions; no source or runtime behavior changed.",
+  "generated_inventory": {
+    "path": "plugins/vera/skills/vera/references/workflow-registry.json",
+    "sha256": "f7a72a52051bf2204c1604074c6b37ce9d4228e10aa5b9f30971f789140d8047",
+    "change": "Added the canonical posizioni-negoziali skill path; component membership and semantic routing policy unchanged."
+  }
 }
