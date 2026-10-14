@@ -22,5 +22,6 @@
     "law-firm-website",
     "professional-services"
   ],
-  "skills": "./skills/"
+  "skills": "./skills/",
+  "privacyPolicyUrl": "https://mparanza.com/privacy"
 }

@@ -1,3 +1,0 @@
-# Proposta e decisione
-
-Caso interamente fittizio: Ciclo Arco sta valutando un servizio locale di ritiro e riconsegna biciclette per riparazioni. Il cliente paga il trasporto, mentre la riparazione è fatturata separatamente e non rientra in questo progetto. L’obiettivo è decidere se provare il servizio con un pilota, non richiedere finanziamenti. Tre clienti hanno manifestato informalmente interesse, senza ordine né accettazione di un prezzo. L’alternativa attuale è portare la bicicletta in officina. Nessuna ricerca di mercato esterna o contatto con clienti è richiesto dalla lezione. Le persone e le imprese citate sono inventate.

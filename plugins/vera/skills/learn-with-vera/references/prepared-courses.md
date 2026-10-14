@@ -847,3 +847,12 @@ manifest only when the ordinary specialist requirements are met. Developer
 regression outputs are not learner decisions, participation or professional
 acceptance. Cowork reuses these fictional materials through its existing written
 single-conversation lesson; native voice and teacher/worker chats do not apply.
+
+## Downloading prepared files
+
+Distributed packages fetch only the selected language’s prepared lesson data from
+mparanza.com over HTTPS. Each file is checked against the reviewed SHA-256 before
+being written. Repository checkouts continue to use their local attachments.
+If downloading is blocked in Cowork, allow mparanza.com under Settings →
+Capabilities (network egress), then retry preparation in the same empty folder.
+No learner files, answers, progress or feedback are uploaded by this download.

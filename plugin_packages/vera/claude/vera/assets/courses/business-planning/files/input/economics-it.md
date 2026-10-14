@@ -1,3 +1,0 @@
-# Ipotesi economiche
-
-Ipotesi del promotore, da rivedere, non risultati osservati: nel pilota gennaio–marzo 2027 si stimano 20, 30 e 40 ordini mensili. Prezzo netto del solo trasporto 45 EUR per ordine, costo variabile 18 EUR, costi fissi 800 EUR al mese. Il costo variabile comprende conducente, carburante e gestione della singola prenotazione; i fissi comprendono noleggio del mezzo, coordinamento e promozione. Sono stime, non preventivi vincolanti. Mancano conferme su assicurazione, trattamento fiscale, termini di pagamento, investimenti iniziali e fabbisogno di cassa. Il CSV descrive economia operativa parziale, non un modello finanziario completo. Nessun saldo, imposta o finanziamento mancante può essere assunto pari a zero.

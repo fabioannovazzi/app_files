@@ -84,6 +84,7 @@ def main(argv: list[str] | None = None) -> int:
     commands = [
         ["scripts/check_shared_runtime_revision.py"],
         ["scripts/course_materials/build_catalog.py", "--check"],
+        ["scripts/course_materials/remote_files.py", *suffix],
         ["scripts/build_codex_plugin_zip.py", *products, *suffix],
     ]
     commands.extend(

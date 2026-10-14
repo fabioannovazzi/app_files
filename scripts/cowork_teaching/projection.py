@@ -61,6 +61,14 @@ def add_written_teaching(
                 raise ValueError(
                     f"Course needs source review: {product}/{workflow}: {path}"
                 )
+            if (
+                path not in entries
+                and path.startswith("modules/")
+                and "/vendor/modules/" in path
+            ):
+                canonical = "vendor/modules/" + path.split("/vendor/modules/", 1)[1]
+                if canonical in entries and source.get(canonical) == source[path]:
+                    path = canonical
             if path in entries:
                 projected_sources.append(
                     {"path": path, "sha256": hashlib.sha256(entries[path]).hexdigest()}
@@ -80,7 +88,15 @@ def add_written_teaching(
             if relative.is_absolute() or ".." in relative.parts:
                 raise ValueError("Invalid course attachment path")
             path = (Path(manifest).parent / relative).as_posix()
-            content = source[path]
+            content = source.get(path)
+            if content is None:
+                remote = json.loads(source[assets + "remote.json"])["files"]
+                if (
+                    remote.get(f"{workflow}/{item['path']}", {}).get("sha256")
+                    != item["sha256"]
+                ):
+                    raise ValueError(f"Missing remote course attachment: {path}")
+                continue
             if hashlib.sha256(content).hexdigest() != item["sha256"]:
                 raise ValueError(f"Unreviewed course attachment: {path}")
             entries[path] = content

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "quesito-legale-fiscale",
-  "course_sha256": "3a68cd83d2ad7aa89abbcd1d1a78e900d28d25dd587b623dd64e1a844087c04c",
+  "course_sha256": "eeb39098804bd64d15bc38e4a5254916f5b5db204a30e4209cd2e8392283a2fa",
   "reviewer": "Codex /root - Deal Redux source compatibility review",
   "reviewed_at": "2026-10-14T08:00:57.892378+00:00",
   "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
@@ -572,5 +572,15 @@
     "current_course_sha256": "a93fe82f129912d6db59a976affb88e923d35a25d7fd4ab86ca948521f6675aa",
     "authored_content_unchanged": true,
     "scope": "Carry source bindings forward after integrating the independently released shared tax-litigation Archive fixes with legal/tax evidence-integrity changes. Authored multilingual lessons, materials and deliverables remain unchanged. Fresh exact-digest CI is required; no professional or installed-host acceptance inferred."
+  },
+  "remote_package_freshness_review": {
+    "reviewed_at": "2026-10-14",
+    "reviewed_by": "Codex source and package review",
+    "previous_course_sha256": "3a68cd83d2ad7aa89abbcd1d1a78e900d28d25dd587b623dd64e1a844087c04c",
+    "current_course_sha256": "eeb39098804bd64d15bc38e4a5254916f5b5db204a30e4209cd2e8392283a2fa",
+    "authored_content_and_attachment_definitions_unchanged": true,
+    "scope": "Source fingerprints refreshed for the shared on-demand course-data loader. Full authored course content, locales, timings, attachment hashes and workflow execution contracts are unchanged. Existing editorial judgments and reviewed artifact records are retained; this does not claim new human understanding or professional approval.",
+    "native_junit_sha256": "cd30b01112bfed6e8afdb23199c8c258438b7e0c921ee431ca00905923065f79",
+    "package_tests": "tests/plugins/test_remote_course_files.py and tests/plugins/test_cowork_teaching.py verify source and remote materialization, exact original input bytes, selected languages, hash failures, size limits, host restrictions, retry and immutable assets."
   }
 }

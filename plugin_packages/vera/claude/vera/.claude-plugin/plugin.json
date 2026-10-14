@@ -9,6 +9,7 @@
     "url": "https://mparanza.com"
   },
   "homepage": "https://mparanza.com/static/shared/vera/index.html?lang=it",
+  "privacyPolicyUrl": "https://mparanza.com/privacy",
   "repository": "https://github.com/fabioannovazzi/app_files",
   "license": "AGPL-3.0-only",
   "keywords": [
@@ -61,7 +62,7 @@
     "analyse-financière",
     "genève"
   ],
-  "version": "0.1.379",
+  "version": "0.1.380",
   "skills": "./skills/",
   "agents": [
     "./agents/vera.md",

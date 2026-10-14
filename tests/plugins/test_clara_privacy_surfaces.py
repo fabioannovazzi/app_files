@@ -25,6 +25,7 @@ EXPECTED_HOSTED_SERVICES = {
     "plugin-update-check",
     "research-video-voice",
     "retail-data",
+    "prepared-course-files",
 }
 
 

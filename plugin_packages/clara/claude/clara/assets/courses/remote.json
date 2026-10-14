@@ -1,0 +1,618 @@
+{
+  "base": "https://mparanza.com/static/shared/courses/clara/",
+  "files": {
+    "advisory-brief-planner/files/input/assignment-de.md": {
+      "sha256": "1a61c7bb653687dcc3c6e3b54b12ba0c174e6563d5e6599701c4b2bf70566c58",
+      "url_path": "_files/1a61c7bb653687dcc3c6e3b54b12ba0c174e6563d5e6599701c4b2bf70566c58/assignment-de.md"
+    },
+    "advisory-brief-planner/files/input/assignment-en.md": {
+      "sha256": "b82d4b916c260ac81e66fb64888f0d645a9c35a1bd86f32620db5f815ff83571",
+      "url_path": "_files/b82d4b916c260ac81e66fb64888f0d645a9c35a1bd86f32620db5f815ff83571/assignment-en.md"
+    },
+    "advisory-brief-planner/files/input/assignment-es.md": {
+      "sha256": "3f3aa30ee3ce0b3447c32fbef8dcf0db5ef9714fa8d09e46a4cb5a8b8f443728",
+      "url_path": "_files/3f3aa30ee3ce0b3447c32fbef8dcf0db5ef9714fa8d09e46a4cb5a8b8f443728/assignment-es.md"
+    },
+    "advisory-brief-planner/files/input/assignment-fr.md": {
+      "sha256": "abc3c900bae063479709775ef1ab6b92973917192e50d13433e009b28eaf2529",
+      "url_path": "_files/abc3c900bae063479709775ef1ab6b92973917192e50d13433e009b28eaf2529/assignment-fr.md"
+    },
+    "advisory-brief-planner/files/input/assignment-it.md": {
+      "sha256": "4a007cb48b0f718504e633dfff996823a739810cea7c4e4b7c8a8013c2ba6978",
+      "url_path": "_files/4a007cb48b0f718504e633dfff996823a739810cea7c4e4b7c8a8013c2ba6978/assignment-it.md"
+    },
+    "advisory-brief-planner/files/input/notes-de.md": {
+      "sha256": "d3ab12e88268758a3a3eee9ecc1a64cc4f809ae3c0dff4742a3eaa9a2a9f8585",
+      "url_path": "_files/d3ab12e88268758a3a3eee9ecc1a64cc4f809ae3c0dff4742a3eaa9a2a9f8585/notes-de.md"
+    },
+    "advisory-brief-planner/files/input/notes-en.md": {
+      "sha256": "03cf0a00073274ea8817ab632505aca5c94008fcc89d90b4b29aac71f5c0dbe9",
+      "url_path": "_files/03cf0a00073274ea8817ab632505aca5c94008fcc89d90b4b29aac71f5c0dbe9/notes-en.md"
+    },
+    "advisory-brief-planner/files/input/notes-es.md": {
+      "sha256": "7edda147e20f7b5f33faab0eee7a55bd67a400ef1bcb3b79c32d48ca2856251b",
+      "url_path": "_files/7edda147e20f7b5f33faab0eee7a55bd67a400ef1bcb3b79c32d48ca2856251b/notes-es.md"
+    },
+    "advisory-brief-planner/files/input/notes-fr.md": {
+      "sha256": "0d65e1a705756ef1c9d4194372586c4b7c5340ee04b9aca45023d2038d67a504",
+      "url_path": "_files/0d65e1a705756ef1c9d4194372586c4b7c5340ee04b9aca45023d2038d67a504/notes-fr.md"
+    },
+    "advisory-brief-planner/files/input/notes-it.md": {
+      "sha256": "5a4921c49a21aaa1749eb79477e0b5ef4ab3d7acdac915c70f8c141478993724",
+      "url_path": "_files/5a4921c49a21aaa1749eb79477e0b5ef4ab3d7acdac915c70f8c141478993724/notes-it.md"
+    },
+    "advisory-brief-planner/files/practice/assignment-de.md": {
+      "sha256": "1a61c7bb653687dcc3c6e3b54b12ba0c174e6563d5e6599701c4b2bf70566c58",
+      "url_path": "_files/1a61c7bb653687dcc3c6e3b54b12ba0c174e6563d5e6599701c4b2bf70566c58/assignment-de.md"
+    },
+    "advisory-brief-planner/files/practice/assignment-en.md": {
+      "sha256": "b82d4b916c260ac81e66fb64888f0d645a9c35a1bd86f32620db5f815ff83571",
+      "url_path": "_files/b82d4b916c260ac81e66fb64888f0d645a9c35a1bd86f32620db5f815ff83571/assignment-en.md"
+    },
+    "advisory-brief-planner/files/practice/assignment-es.md": {
+      "sha256": "3f3aa30ee3ce0b3447c32fbef8dcf0db5ef9714fa8d09e46a4cb5a8b8f443728",
+      "url_path": "_files/3f3aa30ee3ce0b3447c32fbef8dcf0db5ef9714fa8d09e46a4cb5a8b8f443728/assignment-es.md"
+    },
+    "advisory-brief-planner/files/practice/assignment-fr.md": {
+      "sha256": "abc3c900bae063479709775ef1ab6b92973917192e50d13433e009b28eaf2529",
+      "url_path": "_files/abc3c900bae063479709775ef1ab6b92973917192e50d13433e009b28eaf2529/assignment-fr.md"
+    },
+    "advisory-brief-planner/files/practice/assignment-it.md": {
+      "sha256": "4a007cb48b0f718504e633dfff996823a739810cea7c4e4b7c8a8013c2ba6978",
+      "url_path": "_files/4a007cb48b0f718504e633dfff996823a739810cea7c4e4b7c8a8013c2ba6978/assignment-it.md"
+    },
+    "advisory-brief-planner/files/practice/notes-de.md": {
+      "sha256": "d3ab12e88268758a3a3eee9ecc1a64cc4f809ae3c0dff4742a3eaa9a2a9f8585",
+      "url_path": "_files/d3ab12e88268758a3a3eee9ecc1a64cc4f809ae3c0dff4742a3eaa9a2a9f8585/notes-de.md"
+    },
+    "advisory-brief-planner/files/practice/notes-en.md": {
+      "sha256": "03cf0a00073274ea8817ab632505aca5c94008fcc89d90b4b29aac71f5c0dbe9",
+      "url_path": "_files/03cf0a00073274ea8817ab632505aca5c94008fcc89d90b4b29aac71f5c0dbe9/notes-en.md"
+    },
+    "advisory-brief-planner/files/practice/notes-es.md": {
+      "sha256": "7edda147e20f7b5f33faab0eee7a55bd67a400ef1bcb3b79c32d48ca2856251b",
+      "url_path": "_files/7edda147e20f7b5f33faab0eee7a55bd67a400ef1bcb3b79c32d48ca2856251b/notes-es.md"
+    },
+    "advisory-brief-planner/files/practice/notes-fr.md": {
+      "sha256": "0d65e1a705756ef1c9d4194372586c4b7c5340ee04b9aca45023d2038d67a504",
+      "url_path": "_files/0d65e1a705756ef1c9d4194372586c4b7c5340ee04b9aca45023d2038d67a504/notes-fr.md"
+    },
+    "advisory-brief-planner/files/practice/notes-it.md": {
+      "sha256": "5a4921c49a21aaa1749eb79477e0b5ef4ab3d7acdac915c70f8c141478993724",
+      "url_path": "_files/5a4921c49a21aaa1749eb79477e0b5ef4ab3d7acdac915c70f8c141478993724/notes-it.md"
+    },
+    "advisory-brief-planner/files/practice/revised-assignment-de.md": {
+      "sha256": "8093eb55f3a7d2b1f75ae457efcd0fd221798f498b28d1d265cde1786130c233",
+      "url_path": "_files/8093eb55f3a7d2b1f75ae457efcd0fd221798f498b28d1d265cde1786130c233/revised-assignment-de.md"
+    },
+    "advisory-brief-planner/files/practice/revised-assignment-en.md": {
+      "sha256": "f18d42dbd8062b2207cbf79e706a4d313ecdb2fb7e2dc5a780d26695f8cf94ef",
+      "url_path": "_files/f18d42dbd8062b2207cbf79e706a4d313ecdb2fb7e2dc5a780d26695f8cf94ef/revised-assignment-en.md"
+    },
+    "advisory-brief-planner/files/practice/revised-assignment-es.md": {
+      "sha256": "84e13545103283571571819b1d507889e0900d8e9dceff3fa35d773d38893799",
+      "url_path": "_files/84e13545103283571571819b1d507889e0900d8e9dceff3fa35d773d38893799/revised-assignment-es.md"
+    },
+    "advisory-brief-planner/files/practice/revised-assignment-fr.md": {
+      "sha256": "fa5b8d3039be29d6f3929e81ca55f937c6cdc7921196f6a5cf0550623d059222",
+      "url_path": "_files/fa5b8d3039be29d6f3929e81ca55f937c6cdc7921196f6a5cf0550623d059222/revised-assignment-fr.md"
+    },
+    "advisory-brief-planner/files/practice/revised-assignment-it.md": {
+      "sha256": "8e7a3856fe78ecf3053b32ce1f899094425859921b78c986a68d00b3aa5d0316",
+      "url_path": "_files/8e7a3856fe78ecf3053b32ce1f899094425859921b78c986a68d00b3aa5d0316/revised-assignment-it.md"
+    },
+    "advisory-brief-planner/files/practice/update-de.md": {
+      "sha256": "90f0981b19520d2e51edae37b12994415158108ada466c14e6a8564c6f1ec516",
+      "url_path": "_files/90f0981b19520d2e51edae37b12994415158108ada466c14e6a8564c6f1ec516/update-de.md"
+    },
+    "advisory-brief-planner/files/practice/update-en.md": {
+      "sha256": "a31453bcfbc933c681f99a4406e0318f90b80ae32bf4493f10d166160c5abfb8",
+      "url_path": "_files/a31453bcfbc933c681f99a4406e0318f90b80ae32bf4493f10d166160c5abfb8/update-en.md"
+    },
+    "advisory-brief-planner/files/practice/update-es.md": {
+      "sha256": "832e12c7a7d71a8e4b3ebc2459de73b16ed1f097e32dc6487f7df395ef4ce2e6",
+      "url_path": "_files/832e12c7a7d71a8e4b3ebc2459de73b16ed1f097e32dc6487f7df395ef4ce2e6/update-es.md"
+    },
+    "advisory-brief-planner/files/practice/update-fr.md": {
+      "sha256": "e2b00c3a2339dfd913b8bfa03ed427da9db57f8da33a8a9e86913d7ea156f8fc",
+      "url_path": "_files/e2b00c3a2339dfd913b8bfa03ed427da9db57f8da33a8a9e86913d7ea156f8fc/update-fr.md"
+    },
+    "advisory-brief-planner/files/practice/update-it.md": {
+      "sha256": "a599116ddbffabd623c998837779209fff52d8673c83905d94d9ab1c07a745fc",
+      "url_path": "_files/a599116ddbffabd623c998837779209fff52d8673c83905d94d9ab1c07a745fc/update-it.md"
+    },
+    "advisory-case-director/files/input/assignment-de.md": {
+      "sha256": "1a61c7bb653687dcc3c6e3b54b12ba0c174e6563d5e6599701c4b2bf70566c58",
+      "url_path": "_files/1a61c7bb653687dcc3c6e3b54b12ba0c174e6563d5e6599701c4b2bf70566c58/assignment-de.md"
+    },
+    "advisory-case-director/files/input/assignment-en.md": {
+      "sha256": "b82d4b916c260ac81e66fb64888f0d645a9c35a1bd86f32620db5f815ff83571",
+      "url_path": "_files/b82d4b916c260ac81e66fb64888f0d645a9c35a1bd86f32620db5f815ff83571/assignment-en.md"
+    },
+    "advisory-case-director/files/input/assignment-es.md": {
+      "sha256": "3f3aa30ee3ce0b3447c32fbef8dcf0db5ef9714fa8d09e46a4cb5a8b8f443728",
+      "url_path": "_files/3f3aa30ee3ce0b3447c32fbef8dcf0db5ef9714fa8d09e46a4cb5a8b8f443728/assignment-es.md"
+    },
+    "advisory-case-director/files/input/assignment-fr.md": {
+      "sha256": "abc3c900bae063479709775ef1ab6b92973917192e50d13433e009b28eaf2529",
+      "url_path": "_files/abc3c900bae063479709775ef1ab6b92973917192e50d13433e009b28eaf2529/assignment-fr.md"
+    },
+    "advisory-case-director/files/input/assignment-it.md": {
+      "sha256": "4a007cb48b0f718504e633dfff996823a739810cea7c4e4b7c8a8013c2ba6978",
+      "url_path": "_files/4a007cb48b0f718504e633dfff996823a739810cea7c4e4b7c8a8013c2ba6978/assignment-it.md"
+    },
+    "advisory-case-director/files/input/notes-de.md": {
+      "sha256": "d3ab12e88268758a3a3eee9ecc1a64cc4f809ae3c0dff4742a3eaa9a2a9f8585",
+      "url_path": "_files/d3ab12e88268758a3a3eee9ecc1a64cc4f809ae3c0dff4742a3eaa9a2a9f8585/notes-de.md"
+    },
+    "advisory-case-director/files/input/notes-en.md": {
+      "sha256": "03cf0a00073274ea8817ab632505aca5c94008fcc89d90b4b29aac71f5c0dbe9",
+      "url_path": "_files/03cf0a00073274ea8817ab632505aca5c94008fcc89d90b4b29aac71f5c0dbe9/notes-en.md"
+    },
+    "advisory-case-director/files/input/notes-es.md": {
+      "sha256": "7edda147e20f7b5f33faab0eee7a55bd67a400ef1bcb3b79c32d48ca2856251b",
+      "url_path": "_files/7edda147e20f7b5f33faab0eee7a55bd67a400ef1bcb3b79c32d48ca2856251b/notes-es.md"
+    },
+    "advisory-case-director/files/input/notes-fr.md": {
+      "sha256": "0d65e1a705756ef1c9d4194372586c4b7c5340ee04b9aca45023d2038d67a504",
+      "url_path": "_files/0d65e1a705756ef1c9d4194372586c4b7c5340ee04b9aca45023d2038d67a504/notes-fr.md"
+    },
+    "advisory-case-director/files/input/notes-it.md": {
+      "sha256": "5a4921c49a21aaa1749eb79477e0b5ef4ab3d7acdac915c70f8c141478993724",
+      "url_path": "_files/5a4921c49a21aaa1749eb79477e0b5ef4ab3d7acdac915c70f8c141478993724/notes-it.md"
+    },
+    "advisory-case-director/files/practice/assignment-de.md": {
+      "sha256": "1a61c7bb653687dcc3c6e3b54b12ba0c174e6563d5e6599701c4b2bf70566c58",
+      "url_path": "_files/1a61c7bb653687dcc3c6e3b54b12ba0c174e6563d5e6599701c4b2bf70566c58/assignment-de.md"
+    },
+    "advisory-case-director/files/practice/assignment-en.md": {
+      "sha256": "b82d4b916c260ac81e66fb64888f0d645a9c35a1bd86f32620db5f815ff83571",
+      "url_path": "_files/b82d4b916c260ac81e66fb64888f0d645a9c35a1bd86f32620db5f815ff83571/assignment-en.md"
+    },
+    "advisory-case-director/files/practice/assignment-es.md": {
+      "sha256": "3f3aa30ee3ce0b3447c32fbef8dcf0db5ef9714fa8d09e46a4cb5a8b8f443728",
+      "url_path": "_files/3f3aa30ee3ce0b3447c32fbef8dcf0db5ef9714fa8d09e46a4cb5a8b8f443728/assignment-es.md"
+    },
+    "advisory-case-director/files/practice/assignment-fr.md": {
+      "sha256": "abc3c900bae063479709775ef1ab6b92973917192e50d13433e009b28eaf2529",
+      "url_path": "_files/abc3c900bae063479709775ef1ab6b92973917192e50d13433e009b28eaf2529/assignment-fr.md"
+    },
+    "advisory-case-director/files/practice/assignment-it.md": {
+      "sha256": "4a007cb48b0f718504e633dfff996823a739810cea7c4e4b7c8a8013c2ba6978",
+      "url_path": "_files/4a007cb48b0f718504e633dfff996823a739810cea7c4e4b7c8a8013c2ba6978/assignment-it.md"
+    },
+    "advisory-case-director/files/practice/notes-de.md": {
+      "sha256": "d3ab12e88268758a3a3eee9ecc1a64cc4f809ae3c0dff4742a3eaa9a2a9f8585",
+      "url_path": "_files/d3ab12e88268758a3a3eee9ecc1a64cc4f809ae3c0dff4742a3eaa9a2a9f8585/notes-de.md"
+    },
+    "advisory-case-director/files/practice/notes-en.md": {
+      "sha256": "03cf0a00073274ea8817ab632505aca5c94008fcc89d90b4b29aac71f5c0dbe9",
+      "url_path": "_files/03cf0a00073274ea8817ab632505aca5c94008fcc89d90b4b29aac71f5c0dbe9/notes-en.md"
+    },
+    "advisory-case-director/files/practice/notes-es.md": {
+      "sha256": "7edda147e20f7b5f33faab0eee7a55bd67a400ef1bcb3b79c32d48ca2856251b",
+      "url_path": "_files/7edda147e20f7b5f33faab0eee7a55bd67a400ef1bcb3b79c32d48ca2856251b/notes-es.md"
+    },
+    "advisory-case-director/files/practice/notes-fr.md": {
+      "sha256": "0d65e1a705756ef1c9d4194372586c4b7c5340ee04b9aca45023d2038d67a504",
+      "url_path": "_files/0d65e1a705756ef1c9d4194372586c4b7c5340ee04b9aca45023d2038d67a504/notes-fr.md"
+    },
+    "advisory-case-director/files/practice/notes-it.md": {
+      "sha256": "5a4921c49a21aaa1749eb79477e0b5ef4ab3d7acdac915c70f8c141478993724",
+      "url_path": "_files/5a4921c49a21aaa1749eb79477e0b5ef4ab3d7acdac915c70f8c141478993724/notes-it.md"
+    },
+    "advisory-case-director/files/practice/update-de.md": {
+      "sha256": "90f0981b19520d2e51edae37b12994415158108ada466c14e6a8564c6f1ec516",
+      "url_path": "_files/90f0981b19520d2e51edae37b12994415158108ada466c14e6a8564c6f1ec516/update-de.md"
+    },
+    "advisory-case-director/files/practice/update-en.md": {
+      "sha256": "a31453bcfbc933c681f99a4406e0318f90b80ae32bf4493f10d166160c5abfb8",
+      "url_path": "_files/a31453bcfbc933c681f99a4406e0318f90b80ae32bf4493f10d166160c5abfb8/update-en.md"
+    },
+    "advisory-case-director/files/practice/update-es.md": {
+      "sha256": "832e12c7a7d71a8e4b3ebc2459de73b16ed1f097e32dc6487f7df395ef4ce2e6",
+      "url_path": "_files/832e12c7a7d71a8e4b3ebc2459de73b16ed1f097e32dc6487f7df395ef4ce2e6/update-es.md"
+    },
+    "advisory-case-director/files/practice/update-fr.md": {
+      "sha256": "e2b00c3a2339dfd913b8bfa03ed427da9db57f8da33a8a9e86913d7ea156f8fc",
+      "url_path": "_files/e2b00c3a2339dfd913b8bfa03ed427da9db57f8da33a8a9e86913d7ea156f8fc/update-fr.md"
+    },
+    "advisory-case-director/files/practice/update-it.md": {
+      "sha256": "a599116ddbffabd623c998837779209fff52d8673c83905d94d9ab1c07a745fc",
+      "url_path": "_files/a599116ddbffabd623c998837779209fff52d8673c83905d94d9ab1c07a745fc/update-it.md"
+    },
+    "advisory-deliverable-validator/files/input/assignment-de.md": {
+      "sha256": "1a61c7bb653687dcc3c6e3b54b12ba0c174e6563d5e6599701c4b2bf70566c58",
+      "url_path": "_files/1a61c7bb653687dcc3c6e3b54b12ba0c174e6563d5e6599701c4b2bf70566c58/assignment-de.md"
+    },
+    "advisory-deliverable-validator/files/input/assignment-en.md": {
+      "sha256": "b82d4b916c260ac81e66fb64888f0d645a9c35a1bd86f32620db5f815ff83571",
+      "url_path": "_files/b82d4b916c260ac81e66fb64888f0d645a9c35a1bd86f32620db5f815ff83571/assignment-en.md"
+    },
+    "advisory-deliverable-validator/files/input/assignment-es.md": {
+      "sha256": "3f3aa30ee3ce0b3447c32fbef8dcf0db5ef9714fa8d09e46a4cb5a8b8f443728",
+      "url_path": "_files/3f3aa30ee3ce0b3447c32fbef8dcf0db5ef9714fa8d09e46a4cb5a8b8f443728/assignment-es.md"
+    },
+    "advisory-deliverable-validator/files/input/assignment-fr.md": {
+      "sha256": "abc3c900bae063479709775ef1ab6b92973917192e50d13433e009b28eaf2529",
+      "url_path": "_files/abc3c900bae063479709775ef1ab6b92973917192e50d13433e009b28eaf2529/assignment-fr.md"
+    },
+    "advisory-deliverable-validator/files/input/assignment-it.md": {
+      "sha256": "4a007cb48b0f718504e633dfff996823a739810cea7c4e4b7c8a8013c2ba6978",
+      "url_path": "_files/4a007cb48b0f718504e633dfff996823a739810cea7c4e4b7c8a8013c2ba6978/assignment-it.md"
+    },
+    "advisory-deliverable-validator/files/input/external-memo-de.md": {
+      "sha256": "c8619aff4d40052a4d133738bfcd9f0a9bf3ab939f925439492313ba803b845d",
+      "url_path": "_files/c8619aff4d40052a4d133738bfcd9f0a9bf3ab939f925439492313ba803b845d/external-memo-de.md"
+    },
+    "advisory-deliverable-validator/files/input/external-memo-en.md": {
+      "sha256": "f3e1a0ab4707fe5397fa5425b6ca3fd54e140bc039eb0ba67d898024b2ca16f3",
+      "url_path": "_files/f3e1a0ab4707fe5397fa5425b6ca3fd54e140bc039eb0ba67d898024b2ca16f3/external-memo-en.md"
+    },
+    "advisory-deliverable-validator/files/input/external-memo-es.md": {
+      "sha256": "7c131701fe0039893b37d7327388c727d68d4be6721d14d53415e8240a42dccd",
+      "url_path": "_files/7c131701fe0039893b37d7327388c727d68d4be6721d14d53415e8240a42dccd/external-memo-es.md"
+    },
+    "advisory-deliverable-validator/files/input/external-memo-fr.md": {
+      "sha256": "75a3b41edea9fb6ad58601337b9cccad08eff98b9c7f01db9001e2297569f026",
+      "url_path": "_files/75a3b41edea9fb6ad58601337b9cccad08eff98b9c7f01db9001e2297569f026/external-memo-fr.md"
+    },
+    "advisory-deliverable-validator/files/input/external-memo-it.md": {
+      "sha256": "282601d9a6f22b27b030de8623c827e69a213cc02726f83e031535b6e613cd8c",
+      "url_path": "_files/282601d9a6f22b27b030de8623c827e69a213cc02726f83e031535b6e613cd8c/external-memo-it.md"
+    },
+    "advisory-deliverable-validator/files/input/notes-de.md": {
+      "sha256": "d3ab12e88268758a3a3eee9ecc1a64cc4f809ae3c0dff4742a3eaa9a2a9f8585",
+      "url_path": "_files/d3ab12e88268758a3a3eee9ecc1a64cc4f809ae3c0dff4742a3eaa9a2a9f8585/notes-de.md"
+    },
+    "advisory-deliverable-validator/files/input/notes-en.md": {
+      "sha256": "03cf0a00073274ea8817ab632505aca5c94008fcc89d90b4b29aac71f5c0dbe9",
+      "url_path": "_files/03cf0a00073274ea8817ab632505aca5c94008fcc89d90b4b29aac71f5c0dbe9/notes-en.md"
+    },
+    "advisory-deliverable-validator/files/input/notes-es.md": {
+      "sha256": "7edda147e20f7b5f33faab0eee7a55bd67a400ef1bcb3b79c32d48ca2856251b",
+      "url_path": "_files/7edda147e20f7b5f33faab0eee7a55bd67a400ef1bcb3b79c32d48ca2856251b/notes-es.md"
+    },
+    "advisory-deliverable-validator/files/input/notes-fr.md": {
+      "sha256": "0d65e1a705756ef1c9d4194372586c4b7c5340ee04b9aca45023d2038d67a504",
+      "url_path": "_files/0d65e1a705756ef1c9d4194372586c4b7c5340ee04b9aca45023d2038d67a504/notes-fr.md"
+    },
+    "advisory-deliverable-validator/files/input/notes-it.md": {
+      "sha256": "5a4921c49a21aaa1749eb79477e0b5ef4ab3d7acdac915c70f8c141478993724",
+      "url_path": "_files/5a4921c49a21aaa1749eb79477e0b5ef4ab3d7acdac915c70f8c141478993724/notes-it.md"
+    },
+    "advisory-deliverable-validator/files/practice/assignment-de.md": {
+      "sha256": "1a61c7bb653687dcc3c6e3b54b12ba0c174e6563d5e6599701c4b2bf70566c58",
+      "url_path": "_files/1a61c7bb653687dcc3c6e3b54b12ba0c174e6563d5e6599701c4b2bf70566c58/assignment-de.md"
+    },
+    "advisory-deliverable-validator/files/practice/assignment-en.md": {
+      "sha256": "b82d4b916c260ac81e66fb64888f0d645a9c35a1bd86f32620db5f815ff83571",
+      "url_path": "_files/b82d4b916c260ac81e66fb64888f0d645a9c35a1bd86f32620db5f815ff83571/assignment-en.md"
+    },
+    "advisory-deliverable-validator/files/practice/assignment-es.md": {
+      "sha256": "3f3aa30ee3ce0b3447c32fbef8dcf0db5ef9714fa8d09e46a4cb5a8b8f443728",
+      "url_path": "_files/3f3aa30ee3ce0b3447c32fbef8dcf0db5ef9714fa8d09e46a4cb5a8b8f443728/assignment-es.md"
+    },
+    "advisory-deliverable-validator/files/practice/assignment-fr.md": {
+      "sha256": "abc3c900bae063479709775ef1ab6b92973917192e50d13433e009b28eaf2529",
+      "url_path": "_files/abc3c900bae063479709775ef1ab6b92973917192e50d13433e009b28eaf2529/assignment-fr.md"
+    },
+    "advisory-deliverable-validator/files/practice/assignment-it.md": {
+      "sha256": "4a007cb48b0f718504e633dfff996823a739810cea7c4e4b7c8a8013c2ba6978",
+      "url_path": "_files/4a007cb48b0f718504e633dfff996823a739810cea7c4e4b7c8a8013c2ba6978/assignment-it.md"
+    },
+    "advisory-deliverable-validator/files/practice/external-memo-de.md": {
+      "sha256": "c8619aff4d40052a4d133738bfcd9f0a9bf3ab939f925439492313ba803b845d",
+      "url_path": "_files/c8619aff4d40052a4d133738bfcd9f0a9bf3ab939f925439492313ba803b845d/external-memo-de.md"
+    },
+    "advisory-deliverable-validator/files/practice/external-memo-en.md": {
+      "sha256": "f3e1a0ab4707fe5397fa5425b6ca3fd54e140bc039eb0ba67d898024b2ca16f3",
+      "url_path": "_files/f3e1a0ab4707fe5397fa5425b6ca3fd54e140bc039eb0ba67d898024b2ca16f3/external-memo-en.md"
+    },
+    "advisory-deliverable-validator/files/practice/external-memo-es.md": {
+      "sha256": "7c131701fe0039893b37d7327388c727d68d4be6721d14d53415e8240a42dccd",
+      "url_path": "_files/7c131701fe0039893b37d7327388c727d68d4be6721d14d53415e8240a42dccd/external-memo-es.md"
+    },
+    "advisory-deliverable-validator/files/practice/external-memo-fr.md": {
+      "sha256": "75a3b41edea9fb6ad58601337b9cccad08eff98b9c7f01db9001e2297569f026",
+      "url_path": "_files/75a3b41edea9fb6ad58601337b9cccad08eff98b9c7f01db9001e2297569f026/external-memo-fr.md"
+    },
+    "advisory-deliverable-validator/files/practice/external-memo-it.md": {
+      "sha256": "282601d9a6f22b27b030de8623c827e69a213cc02726f83e031535b6e613cd8c",
+      "url_path": "_files/282601d9a6f22b27b030de8623c827e69a213cc02726f83e031535b6e613cd8c/external-memo-it.md"
+    },
+    "advisory-deliverable-validator/files/practice/notes-de.md": {
+      "sha256": "d3ab12e88268758a3a3eee9ecc1a64cc4f809ae3c0dff4742a3eaa9a2a9f8585",
+      "url_path": "_files/d3ab12e88268758a3a3eee9ecc1a64cc4f809ae3c0dff4742a3eaa9a2a9f8585/notes-de.md"
+    },
+    "advisory-deliverable-validator/files/practice/notes-en.md": {
+      "sha256": "03cf0a00073274ea8817ab632505aca5c94008fcc89d90b4b29aac71f5c0dbe9",
+      "url_path": "_files/03cf0a00073274ea8817ab632505aca5c94008fcc89d90b4b29aac71f5c0dbe9/notes-en.md"
+    },
+    "advisory-deliverable-validator/files/practice/notes-es.md": {
+      "sha256": "7edda147e20f7b5f33faab0eee7a55bd67a400ef1bcb3b79c32d48ca2856251b",
+      "url_path": "_files/7edda147e20f7b5f33faab0eee7a55bd67a400ef1bcb3b79c32d48ca2856251b/notes-es.md"
+    },
+    "advisory-deliverable-validator/files/practice/notes-fr.md": {
+      "sha256": "0d65e1a705756ef1c9d4194372586c4b7c5340ee04b9aca45023d2038d67a504",
+      "url_path": "_files/0d65e1a705756ef1c9d4194372586c4b7c5340ee04b9aca45023d2038d67a504/notes-fr.md"
+    },
+    "advisory-deliverable-validator/files/practice/notes-it.md": {
+      "sha256": "5a4921c49a21aaa1749eb79477e0b5ef4ab3d7acdac915c70f8c141478993724",
+      "url_path": "_files/5a4921c49a21aaa1749eb79477e0b5ef4ab3d7acdac915c70f8c141478993724/notes-it.md"
+    },
+    "advisory-deliverable-validator/files/practice/update-de.md": {
+      "sha256": "90f0981b19520d2e51edae37b12994415158108ada466c14e6a8564c6f1ec516",
+      "url_path": "_files/90f0981b19520d2e51edae37b12994415158108ada466c14e6a8564c6f1ec516/update-de.md"
+    },
+    "advisory-deliverable-validator/files/practice/update-en.md": {
+      "sha256": "a31453bcfbc933c681f99a4406e0318f90b80ae32bf4493f10d166160c5abfb8",
+      "url_path": "_files/a31453bcfbc933c681f99a4406e0318f90b80ae32bf4493f10d166160c5abfb8/update-en.md"
+    },
+    "advisory-deliverable-validator/files/practice/update-es.md": {
+      "sha256": "832e12c7a7d71a8e4b3ebc2459de73b16ed1f097e32dc6487f7df395ef4ce2e6",
+      "url_path": "_files/832e12c7a7d71a8e4b3ebc2459de73b16ed1f097e32dc6487f7df395ef4ce2e6/update-es.md"
+    },
+    "advisory-deliverable-validator/files/practice/update-fr.md": {
+      "sha256": "e2b00c3a2339dfd913b8bfa03ed427da9db57f8da33a8a9e86913d7ea156f8fc",
+      "url_path": "_files/e2b00c3a2339dfd913b8bfa03ed427da9db57f8da33a8a9e86913d7ea156f8fc/update-fr.md"
+    },
+    "advisory-deliverable-validator/files/practice/update-it.md": {
+      "sha256": "a599116ddbffabd623c998837779209fff52d8673c83905d94d9ab1c07a745fc",
+      "url_path": "_files/a599116ddbffabd623c998837779209fff52d8673c83905d94d9ab1c07a745fc/update-it.md"
+    },
+    "attribute-reporting/files/input/assortment-demo-de.zip": {
+      "sha256": "788a8d7b5904f942d0e27c94f2cdbe4a53e41011d0eee3dc6e94bae372f92355",
+      "url_path": "_files/788a8d7b5904f942d0e27c94f2cdbe4a53e41011d0eee3dc6e94bae372f92355/assortment-demo-de.zip"
+    },
+    "attribute-reporting/files/input/assortment-demo-en.zip": {
+      "sha256": "8994d8a093c832022a541d477068c0c5896a5518d4893fef4b8469256ecff4ad",
+      "url_path": "_files/8994d8a093c832022a541d477068c0c5896a5518d4893fef4b8469256ecff4ad/assortment-demo-en.zip"
+    },
+    "attribute-reporting/files/input/assortment-demo-es.zip": {
+      "sha256": "7d022ccd11cd4f818cce636356ea2586d0db8fc58d871e5ed2023839c076fa2d",
+      "url_path": "_files/7d022ccd11cd4f818cce636356ea2586d0db8fc58d871e5ed2023839c076fa2d/assortment-demo-es.zip"
+    },
+    "attribute-reporting/files/input/assortment-demo-fr.zip": {
+      "sha256": "2fdb6514d0252b5f9ba94eee8d76adafc14f9602eb1b9e425c3d3e653d7d7dee",
+      "url_path": "_files/2fdb6514d0252b5f9ba94eee8d76adafc14f9602eb1b9e425c3d3e653d7d7dee/assortment-demo-fr.zip"
+    },
+    "attribute-reporting/files/input/assortment-demo-it.zip": {
+      "sha256": "54721bc089e23f620665b2afe33d8152f6336cf126ffdb01169780be3e522f2b",
+      "url_path": "_files/54721bc089e23f620665b2afe33d8152f6336cf126ffdb01169780be3e522f2b/assortment-demo-it.zip"
+    },
+    "attribute-reporting/files/input/brief-de.md": {
+      "sha256": "a94da65c32baf7283ebac72b5e229467efd16743690e40f217a3bd5dc9ee3431",
+      "url_path": "_files/a94da65c32baf7283ebac72b5e229467efd16743690e40f217a3bd5dc9ee3431/brief-de.md"
+    },
+    "attribute-reporting/files/input/brief-en.md": {
+      "sha256": "4609bb9c0a6020e8e4add3fd038a0e3eabbfb090fa69d577035828f182349d1a",
+      "url_path": "_files/4609bb9c0a6020e8e4add3fd038a0e3eabbfb090fa69d577035828f182349d1a/brief-en.md"
+    },
+    "attribute-reporting/files/input/brief-es.md": {
+      "sha256": "74cc06a52a5d4ad6efba821b11323b73e1cab60449c5ec9adf69ef002ee32804",
+      "url_path": "_files/74cc06a52a5d4ad6efba821b11323b73e1cab60449c5ec9adf69ef002ee32804/brief-es.md"
+    },
+    "attribute-reporting/files/input/brief-fr.md": {
+      "sha256": "b0a31cba3f001e0e60da301d82da279dc56ea5682193dddcc7e1e22a238c36c4",
+      "url_path": "_files/b0a31cba3f001e0e60da301d82da279dc56ea5682193dddcc7e1e22a238c36c4/brief-fr.md"
+    },
+    "attribute-reporting/files/input/brief-it.md": {
+      "sha256": "3eb5a34bfd6134063e2e60ce984fb30e802305ffa3a4783009326544d59fc6d9",
+      "url_path": "_files/3eb5a34bfd6134063e2e60ce984fb30e802305ffa3a4783009326544d59fc6d9/brief-it.md"
+    },
+    "attribute-reporting/files/practice/assortment-practice-de.zip": {
+      "sha256": "9abf1b0d5cda93784b6303a5931e8c179b7d37ef9adff448e4e5b7a36c8ef56c",
+      "url_path": "_files/9abf1b0d5cda93784b6303a5931e8c179b7d37ef9adff448e4e5b7a36c8ef56c/assortment-practice-de.zip"
+    },
+    "attribute-reporting/files/practice/assortment-practice-en.zip": {
+      "sha256": "31f2df68210f5ac712360491a573aa00d183e625cf6d63c5e947b2a549b45b36",
+      "url_path": "_files/31f2df68210f5ac712360491a573aa00d183e625cf6d63c5e947b2a549b45b36/assortment-practice-en.zip"
+    },
+    "attribute-reporting/files/practice/assortment-practice-es.zip": {
+      "sha256": "04ca9c95ba2be620b86207e4dec4cd893d98b1ff268abd3e15510bdfc1608c80",
+      "url_path": "_files/04ca9c95ba2be620b86207e4dec4cd893d98b1ff268abd3e15510bdfc1608c80/assortment-practice-es.zip"
+    },
+    "attribute-reporting/files/practice/assortment-practice-fr.zip": {
+      "sha256": "da4142b3971e38d3eb5cbc0197ba843c469bc18faa36ad94a6188ed1da9965a4",
+      "url_path": "_files/da4142b3971e38d3eb5cbc0197ba843c469bc18faa36ad94a6188ed1da9965a4/assortment-practice-fr.zip"
+    },
+    "attribute-reporting/files/practice/assortment-practice-it.zip": {
+      "sha256": "0d689c8ea53e4f72692ad9f1e8c27d3ab51f84c79905a28b825d9cab103cad7f",
+      "url_path": "_files/0d689c8ea53e4f72692ad9f1e8c27d3ab51f84c79905a28b825d9cab103cad7f/assortment-practice-it.zip"
+    },
+    "attribute-reporting/files/practice/brief-de.md": {
+      "sha256": "a94da65c32baf7283ebac72b5e229467efd16743690e40f217a3bd5dc9ee3431",
+      "url_path": "_files/a94da65c32baf7283ebac72b5e229467efd16743690e40f217a3bd5dc9ee3431/brief-de.md"
+    },
+    "attribute-reporting/files/practice/brief-en.md": {
+      "sha256": "4609bb9c0a6020e8e4add3fd038a0e3eabbfb090fa69d577035828f182349d1a",
+      "url_path": "_files/4609bb9c0a6020e8e4add3fd038a0e3eabbfb090fa69d577035828f182349d1a/brief-en.md"
+    },
+    "attribute-reporting/files/practice/brief-es.md": {
+      "sha256": "74cc06a52a5d4ad6efba821b11323b73e1cab60449c5ec9adf69ef002ee32804",
+      "url_path": "_files/74cc06a52a5d4ad6efba821b11323b73e1cab60449c5ec9adf69ef002ee32804/brief-es.md"
+    },
+    "attribute-reporting/files/practice/brief-fr.md": {
+      "sha256": "b0a31cba3f001e0e60da301d82da279dc56ea5682193dddcc7e1e22a238c36c4",
+      "url_path": "_files/b0a31cba3f001e0e60da301d82da279dc56ea5682193dddcc7e1e22a238c36c4/brief-fr.md"
+    },
+    "attribute-reporting/files/practice/brief-it.md": {
+      "sha256": "3eb5a34bfd6134063e2e60ce984fb30e802305ffa3a4783009326544d59fc6d9",
+      "url_path": "_files/3eb5a34bfd6134063e2e60ce984fb30e802305ffa3a4783009326544d59fc6d9/brief-it.md"
+    },
+    "business-planning/files/input/economics-en.md": {
+      "sha256": "886a6eac53a55dac853b03e0c9bda41e89d163387625296bf3a2255b4c33e049",
+      "url_path": "_files/886a6eac53a55dac853b03e0c9bda41e89d163387625296bf3a2255b4c33e049/economics-en.md"
+    },
+    "business-planning/files/input/economics-it.md": {
+      "sha256": "e8811abcb21c2b8858fa62773061242d7dd738a6b81396e83566e66f9cd32c2e",
+      "url_path": "_files/e8811abcb21c2b8858fa62773061242d7dd738a6b81396e83566e66f9cd32c2e/economics-it.md"
+    },
+    "business-planning/files/input/operations-en.md": {
+      "sha256": "16460a84a4f63322ca193519c010871554a2393beeef7eb4d34e7c55b606580e",
+      "url_path": "_files/16460a84a4f63322ca193519c010871554a2393beeef7eb4d34e7c55b606580e/operations-en.md"
+    },
+    "business-planning/files/input/operations-it.md": {
+      "sha256": "9f321e7f7a6d8478cdae31447c11f2c1c99403481191a6df43f6a9f47589a981",
+      "url_path": "_files/9f321e7f7a6d8478cdae31447c11f2c1c99403481191a6df43f6a9f47589a981/operations-it.md"
+    },
+    "business-planning/files/input/pilot-economics.csv": {
+      "sha256": "c208baa03a09a3b69ca2a6abce6861b1206c43e40ac479ee8e4325a3b67b74c3",
+      "url_path": "_files/c208baa03a09a3b69ca2a6abce6861b1206c43e40ac479ee8e4325a3b67b74c3/pilot-economics.csv"
+    },
+    "business-planning/files/input/proposal-en.md": {
+      "sha256": "4eb9190682d12d155468ab6e51dd74eb3aa7c355c8b0692de9d2015ba23bf31e",
+      "url_path": "_files/4eb9190682d12d155468ab6e51dd74eb3aa7c355c8b0692de9d2015ba23bf31e/proposal-en.md"
+    },
+    "business-planning/files/input/proposal-it.md": {
+      "sha256": "2f4d9b83eed9f921b524e5a5d7dd76c8135b2a0611ad036d9cc68a2fb51e3645",
+      "url_path": "_files/2f4d9b83eed9f921b524e5a5d7dd76c8135b2a0611ad036d9cc68a2fb51e3645/proposal-it.md"
+    },
+    "business-planning/files/practice/economics-en.md": {
+      "sha256": "886a6eac53a55dac853b03e0c9bda41e89d163387625296bf3a2255b4c33e049",
+      "url_path": "_files/886a6eac53a55dac853b03e0c9bda41e89d163387625296bf3a2255b4c33e049/economics-en.md"
+    },
+    "business-planning/files/practice/economics-it.md": {
+      "sha256": "e8811abcb21c2b8858fa62773061242d7dd738a6b81396e83566e66f9cd32c2e",
+      "url_path": "_files/e8811abcb21c2b8858fa62773061242d7dd738a6b81396e83566e66f9cd32c2e/economics-it.md"
+    },
+    "business-planning/files/practice/operations-en.md": {
+      "sha256": "16460a84a4f63322ca193519c010871554a2393beeef7eb4d34e7c55b606580e",
+      "url_path": "_files/16460a84a4f63322ca193519c010871554a2393beeef7eb4d34e7c55b606580e/operations-en.md"
+    },
+    "business-planning/files/practice/operations-it.md": {
+      "sha256": "9f321e7f7a6d8478cdae31447c11f2c1c99403481191a6df43f6a9f47589a981",
+      "url_path": "_files/9f321e7f7a6d8478cdae31447c11f2c1c99403481191a6df43f6a9f47589a981/operations-it.md"
+    },
+    "business-planning/files/practice/pilot-economics.csv": {
+      "sha256": "c208baa03a09a3b69ca2a6abce6861b1206c43e40ac479ee8e4325a3b67b74c3",
+      "url_path": "_files/c208baa03a09a3b69ca2a6abce6861b1206c43e40ac479ee8e4325a3b67b74c3/pilot-economics.csv"
+    },
+    "business-planning/files/practice/proposal-en.md": {
+      "sha256": "4eb9190682d12d155468ab6e51dd74eb3aa7c355c8b0692de9d2015ba23bf31e",
+      "url_path": "_files/4eb9190682d12d155468ab6e51dd74eb3aa7c355c8b0692de9d2015ba23bf31e/proposal-en.md"
+    },
+    "business-planning/files/practice/proposal-it.md": {
+      "sha256": "2f4d9b83eed9f921b524e5a5d7dd76c8135b2a0611ad036d9cc68a2fb51e3645",
+      "url_path": "_files/2f4d9b83eed9f921b524e5a5d7dd76c8135b2a0611ad036d9cc68a2fb51e3645/proposal-it.md"
+    },
+    "business-planning/files/practice/update-en.md": {
+      "sha256": "a08cdc87f90cd7251aa4160a1326213406ea61b34c219bed36c57ab857f60d04",
+      "url_path": "_files/a08cdc87f90cd7251aa4160a1326213406ea61b34c219bed36c57ab857f60d04/update-en.md"
+    },
+    "business-planning/files/practice/update-it.md": {
+      "sha256": "d5046fe8ff4597aee8618399c636dbd9e0a52e82106b9b4dcd061321fb6ef0da",
+      "url_path": "_files/d5046fe8ff4597aee8618399c636dbd9e0a52e82106b9b4dcd061321fb6ef0da/update-it.md"
+    },
+    "html-deck/files/input/brief-de.md": {
+      "sha256": "b47d06b9b6d40ea5d5f6d79dcfad8bc46a9b331691146353b4dd43cb5c96a196",
+      "url_path": "_files/b47d06b9b6d40ea5d5f6d79dcfad8bc46a9b331691146353b4dd43cb5c96a196/brief-de.md"
+    },
+    "html-deck/files/input/brief-en.md": {
+      "sha256": "9aa41c3024759e369dcaf2cb6a39df7df42a76193c47600ce7f62aeeaa2bed03",
+      "url_path": "_files/9aa41c3024759e369dcaf2cb6a39df7df42a76193c47600ce7f62aeeaa2bed03/brief-en.md"
+    },
+    "html-deck/files/input/brief-es.md": {
+      "sha256": "b1b8205441cc395b4e6c401f31a54d712e4922292254d1356d37b5a54d2f5514",
+      "url_path": "_files/b1b8205441cc395b4e6c401f31a54d712e4922292254d1356d37b5a54d2f5514/brief-es.md"
+    },
+    "html-deck/files/input/brief-fr.md": {
+      "sha256": "a74522e513cd23a5a7b8cd881654989eefde8ccdd4cac5b5f4eb4d41722c7ad0",
+      "url_path": "_files/a74522e513cd23a5a7b8cd881654989eefde8ccdd4cac5b5f4eb4d41722c7ad0/brief-fr.md"
+    },
+    "html-deck/files/input/brief-it.md": {
+      "sha256": "3ad43754e87524cfd4499d41bca74f57dead5a1de8565739630cea00b401dd3d",
+      "url_path": "_files/3ad43754e87524cfd4499d41bca74f57dead5a1de8565739630cea00b401dd3d/brief-it.md"
+    },
+    "html-deck/files/practice/brief-de.md": {
+      "sha256": "b47d06b9b6d40ea5d5f6d79dcfad8bc46a9b331691146353b4dd43cb5c96a196",
+      "url_path": "_files/b47d06b9b6d40ea5d5f6d79dcfad8bc46a9b331691146353b4dd43cb5c96a196/brief-de.md"
+    },
+    "html-deck/files/practice/brief-en.md": {
+      "sha256": "9aa41c3024759e369dcaf2cb6a39df7df42a76193c47600ce7f62aeeaa2bed03",
+      "url_path": "_files/9aa41c3024759e369dcaf2cb6a39df7df42a76193c47600ce7f62aeeaa2bed03/brief-en.md"
+    },
+    "html-deck/files/practice/brief-es.md": {
+      "sha256": "b1b8205441cc395b4e6c401f31a54d712e4922292254d1356d37b5a54d2f5514",
+      "url_path": "_files/b1b8205441cc395b4e6c401f31a54d712e4922292254d1356d37b5a54d2f5514/brief-es.md"
+    },
+    "html-deck/files/practice/brief-fr.md": {
+      "sha256": "a74522e513cd23a5a7b8cd881654989eefde8ccdd4cac5b5f4eb4d41722c7ad0",
+      "url_path": "_files/a74522e513cd23a5a7b8cd881654989eefde8ccdd4cac5b5f4eb4d41722c7ad0/brief-fr.md"
+    },
+    "html-deck/files/practice/brief-it.md": {
+      "sha256": "3ad43754e87524cfd4499d41bca74f57dead5a1de8565739630cea00b401dd3d",
+      "url_path": "_files/3ad43754e87524cfd4499d41bca74f57dead5a1de8565739630cea00b401dd3d/brief-it.md"
+    },
+    "html-deck/files/practice/new-audience-de.md": {
+      "sha256": "fd3b207376188d826a3379b9f9b8988a05d9b1bd506f6ff9a27efcd70286236d",
+      "url_path": "_files/fd3b207376188d826a3379b9f9b8988a05d9b1bd506f6ff9a27efcd70286236d/new-audience-de.md"
+    },
+    "html-deck/files/practice/new-audience-en.md": {
+      "sha256": "c6d3c87b44f519d71be124031a9fbc916f730efc34e58909ae7edc96300f4e47",
+      "url_path": "_files/c6d3c87b44f519d71be124031a9fbc916f730efc34e58909ae7edc96300f4e47/new-audience-en.md"
+    },
+    "html-deck/files/practice/new-audience-es.md": {
+      "sha256": "eda87d791933f9365d474773884682c1e73473881cbe5a81812460dee1ea4b88",
+      "url_path": "_files/eda87d791933f9365d474773884682c1e73473881cbe5a81812460dee1ea4b88/new-audience-es.md"
+    },
+    "html-deck/files/practice/new-audience-fr.md": {
+      "sha256": "12b92fdf7d3fa4b7813240c265b5177bd519929e4e96a8622b57dcee3b9ecf00",
+      "url_path": "_files/12b92fdf7d3fa4b7813240c265b5177bd519929e4e96a8622b57dcee3b9ecf00/new-audience-fr.md"
+    },
+    "html-deck/files/practice/new-audience-it.md": {
+      "sha256": "dfe476a603d7763de8993eb3c492df8c2f4e5d3936a9bb1e59900ef923bcdb5b",
+      "url_path": "_files/dfe476a603d7763de8993eb3c492df8c2f4e5d3936a9bb1e59900ef923bcdb5b/new-audience-it.md"
+    },
+    "reporting-engine/files/input/actual-budget.xlsx": {
+      "sha256": "5540ffaa5d8dad4b30de5899f15ccef6c83100b2c673acfeaef6a209b7aba8f0",
+      "url_path": "_files/5540ffaa5d8dad4b30de5899f15ccef6c83100b2c673acfeaef6a209b7aba8f0/actual-budget.xlsx"
+    },
+    "reporting-engine/files/input/facts-de.md": {
+      "sha256": "709a7b6d3af2e093fc805cf5f1fe11143200cd199038f1fe7d20b84392b855a6",
+      "url_path": "_files/709a7b6d3af2e093fc805cf5f1fe11143200cd199038f1fe7d20b84392b855a6/facts-de.md"
+    },
+    "reporting-engine/files/input/facts-en.md": {
+      "sha256": "86137c1a1ae2f0eac6736f1749f75d166d32b41aa2a412aa6e404cb0e9ded4cd",
+      "url_path": "_files/86137c1a1ae2f0eac6736f1749f75d166d32b41aa2a412aa6e404cb0e9ded4cd/facts-en.md"
+    },
+    "reporting-engine/files/input/facts-es.md": {
+      "sha256": "1f6654330b5ea977ec4e0ff68feedd3c3b48b57998e979a2d1d43417301ebde6",
+      "url_path": "_files/1f6654330b5ea977ec4e0ff68feedd3c3b48b57998e979a2d1d43417301ebde6/facts-es.md"
+    },
+    "reporting-engine/files/input/facts-fr.md": {
+      "sha256": "5a7ca46664211fff5cc0cb2b3688b0c0a18d05bbd197dbd1df5b071d7b337783",
+      "url_path": "_files/5a7ca46664211fff5cc0cb2b3688b0c0a18d05bbd197dbd1df5b071d7b337783/facts-fr.md"
+    },
+    "reporting-engine/files/input/facts-it.md": {
+      "sha256": "e6d453933c55d15d78115894ed39bb9f742f0903fcdd78a37d37746f15eb29eb",
+      "url_path": "_files/e6d453933c55d15d78115894ed39bb9f742f0903fcdd78a37d37746f15eb29eb/facts-it.md"
+    },
+    "reporting-engine/files/practice/actual-budget-march.xlsx": {
+      "sha256": "526cea3fe0d3befacee14153e4edf63c78cd7e2b9c13a2e2fcca791f64d7a675",
+      "url_path": "_files/526cea3fe0d3befacee14153e4edf63c78cd7e2b9c13a2e2fcca791f64d7a675/actual-budget-march.xlsx"
+    },
+    "reporting-engine/files/practice/facts-de.md": {
+      "sha256": "709a7b6d3af2e093fc805cf5f1fe11143200cd199038f1fe7d20b84392b855a6",
+      "url_path": "_files/709a7b6d3af2e093fc805cf5f1fe11143200cd199038f1fe7d20b84392b855a6/facts-de.md"
+    },
+    "reporting-engine/files/practice/facts-en.md": {
+      "sha256": "86137c1a1ae2f0eac6736f1749f75d166d32b41aa2a412aa6e404cb0e9ded4cd",
+      "url_path": "_files/86137c1a1ae2f0eac6736f1749f75d166d32b41aa2a412aa6e404cb0e9ded4cd/facts-en.md"
+    },
+    "reporting-engine/files/practice/facts-es.md": {
+      "sha256": "1f6654330b5ea977ec4e0ff68feedd3c3b48b57998e979a2d1d43417301ebde6",
+      "url_path": "_files/1f6654330b5ea977ec4e0ff68feedd3c3b48b57998e979a2d1d43417301ebde6/facts-es.md"
+    },
+    "reporting-engine/files/practice/facts-fr.md": {
+      "sha256": "5a7ca46664211fff5cc0cb2b3688b0c0a18d05bbd197dbd1df5b071d7b337783",
+      "url_path": "_files/5a7ca46664211fff5cc0cb2b3688b0c0a18d05bbd197dbd1df5b071d7b337783/facts-fr.md"
+    },
+    "reporting-engine/files/practice/facts-it.md": {
+      "sha256": "e6d453933c55d15d78115894ed39bb9f742f0903fcdd78a37d37746f15eb29eb",
+      "url_path": "_files/e6d453933c55d15d78115894ed39bb9f742f0903fcdd78a37d37746f15eb29eb/facts-it.md"
+    }
+  },
+  "schema": "mparanza.course_files_remote.v1"
+}

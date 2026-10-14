@@ -135,7 +135,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "598151cb1efc80526920dc3c30d77d6a5ae69805174680ea60d57d355fc1f954",
+  "course_sha256": "d02d7f0294d4b64bd7c60c6bbce421ad1f767f2d4690df4a7b797b0cc2ebe156",
   "discovery_source_refresh": {
     "reviewed_by": "Codex /root",
     "reviewed_at": "2026-10-01T11:44:13.200192+00:00",
@@ -774,5 +774,15 @@
     "fresh_matching_junit_required": true,
     "installed_host_acceptance": false,
     "new_visual_or_learner_acceptance": false
+  },
+  "remote_package_freshness_review": {
+    "reviewed_at": "2026-10-14",
+    "reviewed_by": "Codex source and package review",
+    "previous_course_sha256": "598151cb1efc80526920dc3c30d77d6a5ae69805174680ea60d57d355fc1f954",
+    "current_course_sha256": "d02d7f0294d4b64bd7c60c6bbce421ad1f767f2d4690df4a7b797b0cc2ebe156",
+    "authored_content_and_attachment_definitions_unchanged": true,
+    "scope": "Source fingerprints refreshed for the shared on-demand course-data loader. Full authored course content, locales, timings, attachment hashes and workflow execution contracts are unchanged. Existing editorial judgments and reviewed artifact records are retained; this does not claim new human understanding or professional approval.",
+    "native_junit_sha256": "cd30b01112bfed6e8afdb23199c8c258438b7e0c921ee431ca00905923065f79",
+    "package_tests": "tests/plugins/test_remote_course_files.py and tests/plugins/test_cowork_teaching.py verify source and remote materialization, exact original input bytes, selected languages, hash failures, size limits, host restrictions, retry and immutable assets."
   }
 }

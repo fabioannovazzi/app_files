@@ -1,0 +1,1 @@
+Pratica di correzione, indipendente dal primo intervento: parti dalla presentazione originale. Nella slide conclusiva sostituisci la proposta di prova con la richiesta di raccogliere prima i dubbi del personale sulla scheda. Non avviare o annunciare la prova. Mantieni tutto il resto e conserva entrambe le copie corrette.

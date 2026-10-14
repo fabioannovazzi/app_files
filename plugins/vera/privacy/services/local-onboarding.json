@@ -34,6 +34,23 @@
       "controls": [
         "No local prior-submission receipts means no request. Unfinished or inaccessible onboarding and active or inaccessible teaching suppress this route. Polling does not create feedback or mark a lesson complete; the plugin-feedback register governs the bounded transport and response."
       ]
+    },
+    {
+      "id": "prepared-course-download",
+      "kind": "hosted_service",
+      "destination": "https://mparanza.com/static/shared/courses/vera/",
+      "purpose": "Download reviewed fictional lesson data omitted from distributable packages when the user requests preparation.",
+      "content": "Fixed public GET paths identifying prepared assets by SHA-256 and original filename, plus ordinary connection metadata. No client files, local paths, teaching profile, answers, progress or feedback are sent.",
+      "retention": "Hash-verified lesson files stay in the selected local lesson folder. Website access-log retention is outside this helper.",
+      "activation": "automatic_on_first_use",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex"
+      ],
+      "controls": [
+        "HTTPS and mparanza.com only, including redirects; no credentials or query parameters; passive lesson-data extensions only; 30-second request timeout and 25 MB cap; SHA-256 checked before atomic write; only selected-language attachments are fetched; no code is downloaded or executed."
+      ]
     }
   ],
   "governed_paths": [
@@ -71,7 +88,7 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "fefc8c431fa2d80c1c48396eedf60b87d437ccf4de554b83d32d61c1da1abbb3"
+    "source_fingerprint": "7e97abb6ccb3c4626f5deb8b7d150121868861e07efe2deaffc8fa4616245ba8"
   },
   "runtime_profiles": [
     "openai-codex"
@@ -113,7 +130,7 @@
     },
     {
       "id": "prepared-course-integrity",
-      "control": "The local loader supports both new teaching kits and explicitly retained published lessons. It verifies own-product identity, authored language, current source fingerprints and attachment hashes, then renders escaped HTML in a fresh ordinary directory without network or model calls. Both formats enumerate prepared artifact hashes; local progress checks reject those bytes even when copied or renamed. The working host must attest actual input, native-run and output files in the paired lesson. Hash and thread checks do not authenticate a host or prove semantic quality. Rendering performs no profile, understanding or execution-completion write. The static public catalogue contains prepared fictional materials and relative-only provenance, with no local execution requests, profile or progress files. Native OpenAI conversation is ordinary model processing, not offline inference. Browser preview is a separate optional local server: it binds only 127.0.0.1 on a free port, serves the rendered kit and relative assets, rejects resolved paths outside the kit and directory listings, and runs only for the lesson preview. It does not upload files, save access logs, change profiles or record completion. Browser/model inspection remains ordinary native model processing; loopback serving is not authentication against other local processes. XML, Markdown and text inputs have escaped reading views while execution keeps the original bytes. The optional results view checks the live execution record and input/output hashes, then renders selected CSV/text outputs in a fresh directory outside the sealed run. It retains source identities, performs no workflow execution or completion write, and uses only the same loopback preview and native model boundaries. PDF reading views render original pages locally with the already declared PyMuPDF dependency. Page images and an original-file download remain inside the lesson; the original PDF bytes remain the execution inputs. Rendering adds no external route or model call.",
+      "control": "The local loader supports both new teaching kits and explicitly retained published lessons. It verifies own-product identity, authored language, current source fingerprints and attachment hashes, then renders escaped HTML in a fresh ordinary directory without model calls. Repository course files remain local; distributable packages fetch missing hash-pinned fictional attachments through the prepared-course-download boundary. Both formats enumerate prepared artifact hashes; local progress checks reject those bytes even when copied or renamed. The working host must attest actual input, native-run and output files in the paired lesson. Hash and thread checks do not authenticate a host or prove semantic quality. Rendering performs no profile, understanding or execution-completion write. The static public catalogue contains prepared fictional materials and relative-only provenance, with no local execution requests, profile or progress files. Native OpenAI conversation is ordinary model processing, not offline inference. Browser preview is a separate optional local server: it binds only 127.0.0.1 on a free port, serves the rendered kit and relative assets, rejects resolved paths outside the kit and directory listings, and runs only for the lesson preview. It does not upload files, save access logs, change profiles or record completion. Browser/model inspection remains ordinary native model processing; loopback serving is not authentication against other local processes. XML, Markdown and text inputs have escaped reading views while execution keeps the original bytes. The optional results view checks the live execution record and input/output hashes, then renders selected CSV/text outputs in a fresh directory outside the sealed run. It retains source identities, performs no workflow execution or completion write, and uses only the same loopback preview and native model boundaries. PDF reading views render original pages locally with the already declared PyMuPDF dependency. Page images and an original-file download remain inside the lesson; the original PDF bytes remain the execution inputs. Rendering uses the declared prepared-course-download route for absent attachments and makes no model call.",
       "implemented_by": [
         "scripts/local_courses.py",
         "skills/learn-with-vera/references/prepared-courses.md"

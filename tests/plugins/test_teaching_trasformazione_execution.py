@@ -8,6 +8,7 @@ from pathlib import Path
 
 import pytest
 
+from tests.plugins._course_downloads import installed_course_command
 from tests.plugins._teaching_release import record_native_check
 
 __all__ = []
@@ -419,17 +420,17 @@ def test_packaged_transformation_course_renders_and_executes_without_repository_
     plugin = manifest.parents[1]
     kit = tmp_path / "kit"
     result = subprocess.run(
-        [
-            sys.executable,
-            str(plugin / "scripts/local_courses.py"),
+        installed_course_command(
+            plugin,
+            ROOT,
             "render",
             "--workflow",
             "trasformazione",
             "--language",
             "it",
             "--output-dir",
-            str(kit),
-        ],
+            kit,
+        ),
         cwd=tmp_path,
         check=True,
         capture_output=True,

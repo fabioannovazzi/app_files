@@ -50,7 +50,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "a0f726b84ab49beb1d0067800f9a4779b3d288b18827df56dfb32d888912d717",
+  "course_sha256": "85f8c71a2bb30cb98184b41a02022e6c7fc825fefe30077eebc9e192320f96d9",
   "integration_refresh": {
     "reviewer": "Codex /root",
     "date": "2026-10-02",
@@ -545,5 +545,15 @@
     ],
     "authored_content_unchanged": true,
     "scope": "Retain native-UI source and all authored lessons, inputs and existing acceptance limits. Legal/tax adds the optional subscription reference; document-format retains the existing onboarding method while excluding source settings from lessons. Fresh exact-digest native execution is required; no professional or installed-host acceptance inferred."
+  },
+  "remote_package_freshness_review": {
+    "reviewed_at": "2026-10-14",
+    "reviewed_by": "Codex source and package review",
+    "previous_course_sha256": "a0f726b84ab49beb1d0067800f9a4779b3d288b18827df56dfb32d888912d717",
+    "current_course_sha256": "85f8c71a2bb30cb98184b41a02022e6c7fc825fefe30077eebc9e192320f96d9",
+    "authored_content_and_attachment_definitions_unchanged": true,
+    "scope": "Source fingerprints refreshed for the shared on-demand course-data loader. Full authored course content, locales, timings, attachment hashes and workflow execution contracts are unchanged. Existing editorial judgments and reviewed artifact records are retained; this does not claim new human understanding or professional approval.",
+    "native_junit_sha256": "cd30b01112bfed6e8afdb23199c8c258438b7e0c921ee431ca00905923065f79",
+    "package_tests": "tests/plugins/test_remote_course_files.py and tests/plugins/test_cowork_teaching.py verify source and remote materialization, exact original input bytes, selected languages, hash failures, size limits, host restrictions, retry and immutable assets."
   }
 }

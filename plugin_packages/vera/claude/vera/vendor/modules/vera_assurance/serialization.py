@@ -49,7 +49,7 @@ def build_review_execution_step(
         "step_id": f"{workflow_name}_review_session",
         "kind": "deterministic_review_session",
         "status": "passed",
-        "execution_location": "local_codex_workspace",
+        "execution_location": "cowork_connected_folder",
         "command": list(command),
         "inputs": [str(entry) for entry in inputs if entry],
     }

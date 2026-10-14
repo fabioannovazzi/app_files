@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "source": "case_notes_hosted_voice",
+  "captured_at": "2026-03-10T10:00:00+00:00",
+  "language": "es",
+  "capture_source": "fictional_teaching_fixture",
+  "model": "none-fictional-authored-text",
+  "user_transcript": "Ejemplo ficticio. Soy Sara Campione y estoy preparando la próxima reunión con Ciclo Arco. He recogido las observaciones de los clientes, pero aún faltan el precio de la recogida y la ruta. Elena me pidió llevar estas dos preguntas a la reunión. Todavía no hemos decidido poner en marcha el servicio.",
+  "assistant_transcript": "",
+  "source_metadata": {
+    "source_type": "fictional teaching transcript",
+    "recording_type": "authored text; no audio",
+    "title": "Ciclo Arco — fictional teaching input",
+    "participants": "Sara Campione",
+    "notes": "Paquete ficticio para aprender la importación. El texto se escribió para la lección: ningún servicio grabó ni transcribió audio. La primera nota tiene una sola voz que se presenta como Sara Campione. Las identidades del segundo intercambio no están documentadas; conservar Voz 1 y Voz 2. No añadir juicios ni decisiones al expediente."
+  },
+  "extraction_json": {
+    "cleaned_notes_markdown": "",
+    "entries": [],
+    "open_questions": []
+  }
+}
