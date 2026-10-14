@@ -59,10 +59,11 @@ def test_host_packages_retain_resolvable_direct_knowledge_contracts(
     filename: str,
 ) -> None:
     entries = _package_entries(filename)
-
-    assert REFERENCE in entries
+    prefix = "mparanza-" if filename == "vera-claude-plugin.zip" else ""
+    reference = REFERENCE.replace("skills/vera/", f"skills/{prefix}vera/")
+    assert reference in entries
     for skill in PROFESSIONAL_SKILLS:
-        name = f"skills/{skill}/SKILL.md"
+        name = f"skills/{prefix}{skill}/SKILL.md"
         # A host may deliberately omit a desktop-only professional function.
         if name not in entries:
             continue
@@ -74,7 +75,7 @@ def test_host_packages_retain_resolvable_direct_knowledge_contracts(
         links = re.findall(r"`([^`]+\.md)`", block)
         assert len(links) == 1
         target = posixpath.normpath(posixpath.join(posixpath.dirname(name), links[0]))
-        assert target == REFERENCE
+        assert target == reference
         assert target in entries
     # Shared components also serve other products: the new Vera wrapper policy
     # must never leak into their executable contracts.
@@ -124,7 +125,8 @@ def test_studio_work_service_uses_register_and_host_calendar_contract(
 ) -> None:
     """The operational service does not acquire a workpaper repository contract."""
     entries = _package_entries(filename)
-    text = entries["skills/organizzazione-lavoro/SKILL.md"].decode()
+    prefix = "mparanza-" if filename == "vera-claude-plugin.zip" else ""
+    text = entries[f"skills/{prefix}organizzazione-lavoro/SKILL.md"].decode()
     assert "vera_studio_work_*" in text
     assert "connected calendar plugin" in text
     assert MARKER not in text
