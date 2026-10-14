@@ -31,7 +31,19 @@ def record(path, run):
 
 
 @pytest.fixture
-def prepared(tmp_path):
+def prepared(tmp_path, monkeypatch):
+    def download(url, destination, expected):
+        from urllib.parse import unquote, urlsplit
+
+        source = ROOT / unquote(urlsplit(url).path).lstrip("/")
+        assert source.resolve().is_relative_to(
+            (ROOT / "static/shared/courses/vera").resolve()
+        )
+        data = source.read_bytes()
+        assert hashlib.sha256(data).hexdigest() == expected
+        destination.write_bytes(data)
+
+    monkeypatch.setattr(acceptance, "_download_attachment", download)
     run = tmp_path / "acceptance"
     acceptance.prepare(PACKAGE, run, package_url="https://example.test/vera.zip")
     return run

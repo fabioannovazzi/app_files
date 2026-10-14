@@ -13,15 +13,21 @@ import hashlib
 import json
 import logging
 import shutil
+import sys
+import tempfile
 from datetime import datetime, timezone
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 from zipfile import BadZipFile, ZipFile
 
 __all__ = ["prepare", "verify", "main"]
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "plugins/_shared/vendor/modules"))
+from courseware.library import _download_attachment  # noqa: E402
+
 CATALOG = Path(__file__).with_name("cowork_acceptance_cases.json")
 ROUTES = ("guided", "ordinary")
 PHASES = ("demo", "practice", "resume")
@@ -119,6 +125,17 @@ def prepare(
         if metadata["name"] != "vera":
             raise ValueError("Use the downloadable Vera Cowork package")
         manifest["version"] = metadata["version"]
+        remote = (
+            json.loads(archive.read("assets/courses/remote.json"))
+            if "assets/courses/remote.json" in names
+            else None
+        )
+        if remote is not None and (
+            remote.get("schema") != "mparanza.course_files_remote.v1"
+            or remote.get("base") != "https://mparanza.com/static/shared/courses/vera/"
+            or not isinstance(remote.get("files"), dict)
+        ):
+            raise ValueError("Invalid remote acceptance fixtures")
         for case, spec in catalog["cases"].items():
             workflow = spec["workflow"]
             prefix = f"assets/courses/{workflow}/"
@@ -152,7 +169,30 @@ def prepare(
                     relative = Path(entry["path"])
                     if relative.is_absolute() or ".." in relative.parts:
                         raise ValueError("Foreign fixture path")
-                    data = archive.read(prefix + entry["path"])
+                    if prefix + entry["path"] in names:
+                        data = archive.read(prefix + entry["path"])
+                    else:
+                        record = (
+                            remote["files"].get(f"{workflow}/{entry['path']}")
+                            if remote
+                            else None
+                        )
+                        expected_path = f"_files/{entry['sha256']}/{relative.name}"
+                        if record != {
+                            "sha256": entry["sha256"],
+                            "url_path": expected_path,
+                        }:
+                            raise ValueError(
+                                "Missing or mismatched remote acceptance fixture"
+                            )
+                        with tempfile.TemporaryDirectory() as staging:
+                            downloaded = Path(staging) / relative.name
+                            _download_attachment(
+                                remote["base"] + quote(expected_path, safe="/"),
+                                downloaded,
+                                entry["sha256"],
+                            )
+                            data = downloaded.read_bytes()
                     if hashlib.sha256(data).hexdigest() != entry["sha256"]:
                         raise ValueError("Package fixture hash mismatch")
                     phase = "demo" if entry["role"] == "source" else "practice"
