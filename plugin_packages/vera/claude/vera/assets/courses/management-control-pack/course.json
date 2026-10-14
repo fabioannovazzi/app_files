@@ -108,11 +108,11 @@
       "sha256": "69ef1cbde7526f347c45bf51758f9356796cb583c64a484bacaa04014d266fdd"
     },
     {
-      "path": "modules/management-control-pack/skills/management-control-pack/SKILL.md",
-      "sha256": "031376e51ae11f261b78c7d9e0f25b70ea9b581791a7bf0ee082ea4ad1a1b45f"
+      "path": "modules/management-control-pack/skills/mparanza-management-control-pack/SKILL.md",
+      "sha256": "b71fa42ad766e079a55541159899fe170485c90d61c88d93469ed85f164c4a09"
     },
     {
-      "path": "modules/management-control-pack/skills/management-control-pack/references/sites-delivery.md",
+      "path": "modules/management-control-pack/skills/mparanza-management-control-pack/references/sites-delivery.md",
       "sha256": "12d9a79f93c192433729d1bce13f4951cad613545c1bec9c409398bc53f7dc52"
     },
     {
@@ -160,11 +160,11 @@
       "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
     },
     {
-      "path": "skills/management-control-pack/SKILL.md",
-      "sha256": "d46a9d081275057b1c118395051f83f6a0f797f61ab6c9c2e8b19e01633bc7b6"
+      "path": "skills/mparanza-management-control-pack/SKILL.md",
+      "sha256": "55ccf938370cd0595627a5c62529615daca5e5da74e8e080f4ca7fabff97b873"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

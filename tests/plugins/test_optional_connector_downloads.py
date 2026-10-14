@@ -32,8 +32,12 @@ def test_vera_host_zip_includes_optional_guidance_without_installing_engines(
     path, prefix
 ):
     with ZipFile(ROOT / path) as archive:
-        guide = archive.read(prefix + GUIDE).decode()
-        skill = archive.read(prefix + "skills/vera/SKILL.md").decode()
+        installed_guide = (
+            GUIDE.replace("skills/", "skills/mparanza-") if "cowork" in path else GUIDE
+        )
+        guide = archive.read(prefix + installed_guide).decode()
+        installed_skill = "mparanza-vera" if "cowork" in path else "vera"
+        skill = archive.read(prefix + f"skills/{installed_skill}/SKILL.md").decode()
         names = archive.namelist()
     assert "anonymization-connectors.zip" in guide
     assert "Codex" in guide and "Cowork" in guide and "Antigravity" in guide

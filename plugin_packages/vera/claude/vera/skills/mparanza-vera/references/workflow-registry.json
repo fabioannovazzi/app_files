@@ -1,0 +1,641 @@
+{
+  "schema_version": 1,
+  "membership_source": "components.json",
+  "routing_policy": "Use the semantic workflow catalog and selected skill; entrypoint presence is not workflow suitability or host qualification.",
+  "managed_run_required_artifacts": [
+    "model_data_report.json",
+    "model_data_report.md"
+  ],
+  "host_qualification": {
+    "native_semantic_worker": {
+      "components": [
+        "journal-bank-reconciliation",
+        "passive-invoice-audit"
+      ],
+      "diagnostic": "modules/journal-bank-reconciliation/scripts/semantic_review.py host-status",
+      "requirement": "Exact qualified native capsule and launch-time canaries; inspect current host before promising execution."
+    },
+    "agenzia_acquisition": {
+      "component": "browser-automation",
+      "requirement": "Installed Chrome on the operator local graphical desktop and shared Python 3.12 with declared acquisition dependencies. Manual authentication. Optional MCP Apps panel and ordinary commands share one worker."
+    },
+    "browser_automation": {
+      "component": "browser-automation",
+      "requirement": "inspect, explain or edit a supplied sanitized developer pack or capability JSON, and run packaged local evidence/capability pipelines through the managed Python launcher. Live browser discovery, execution and replay validation are unavailable in this package. Do not operate authenticated websites or claim that local pipeline checks prove live validation."
+    }
+  },
+  "components": [
+    {
+      "component_id": "scissione-guidata",
+      "skills": [
+        "modules/scissione-guidata/skills/mparanza-scissione-guidata/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/scissione-guidata/scripts/check_dependencies.py",
+        "modules/scissione-guidata/scripts/run_scissione.py"
+      ]
+    },
+    {
+      "component_id": "open-item-reconciliation",
+      "skills": [
+        "modules/open-item-reconciliation/skills/mparanza-open-item-reconciliation/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/open-item-reconciliation/scripts/audit_assurance.py",
+        "modules/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
+        "modules/open-item-reconciliation/scripts/build_review_sample.py",
+        "modules/open-item-reconciliation/scripts/check_dependencies.py",
+        "modules/open-item-reconciliation/scripts/implementation_bootstrap.py",
+        "modules/open-item-reconciliation/scripts/raw_input_runner.py",
+        "modules/open-item-reconciliation/scripts/review_server.py"
+      ]
+    },
+    {
+      "component_id": "archive-organization",
+      "skills": [
+        "modules/archive-organization/skills/mparanza-archive-organization/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/archive-organization/scripts/archive_organization.py",
+        "modules/archive-organization/scripts/check_dependencies.py"
+      ]
+    },
+    {
+      "component_id": "client-file-preparation",
+      "skills": [
+        "modules/client-file-preparation/skills/mparanza-avviso-intake/SKILL.md",
+        "modules/client-file-preparation/skills/mparanza-client-file-preparation/SKILL.md",
+        "modules/client-file-preparation/skills/mparanza-dati-fiscali-strutturati/SKILL.md",
+        "modules/client-file-preparation/skills/mparanza-email-cliente/SKILL.md",
+        "modules/client-file-preparation/skills/mparanza-fatture-xml-check/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/client-file-preparation/scripts/build_file_preparation_outputs.py",
+        "modules/client-file-preparation/scripts/check_dependencies.py",
+        "modules/client-file-preparation/scripts/check_environment.py",
+        "modules/client-file-preparation/scripts/managed_ocr_runtime.py",
+        "modules/client-file-preparation/scripts/model_handoff.py",
+        "modules/client-file-preparation/scripts/parse_fatturapa_xml.py",
+        "modules/client-file-preparation/scripts/parse_fiscal_forms.py"
+      ]
+    },
+    {
+      "component_id": "new-client",
+      "skills": [
+        "modules/new-client/skills/mparanza-new-client/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/new-client/scripts/check_dependencies.py",
+        "modules/new-client/scripts/delivery_manifest.py",
+        "modules/new-client/scripts/initialize_case.py",
+        "modules/new-client/scripts/jurisdiction_setup.py",
+        "modules/new-client/scripts/package_new_client.py",
+        "modules/new-client/scripts/promote_client_file_preparation.py"
+      ]
+    },
+    {
+      "component_id": "aml-review",
+      "skills": [
+        "modules/aml-review/skills/mparanza-aml-review/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/aml-review/scripts/aml_review.py",
+        "modules/aml-review/scripts/check_dependencies.py"
+      ]
+    },
+    {
+      "component_id": "adeguati-assetti",
+      "skills": [
+        "modules/adeguati-assetti/skills/mparanza-adeguati-assetti/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/adeguati-assetti/scripts/assetti_construction.py",
+        "modules/adeguati-assetti/scripts/assetti_review.py",
+        "modules/adeguati-assetti/scripts/check_dependencies.py"
+      ]
+    },
+    {
+      "component_id": "journal-sampling",
+      "skills": [
+        "modules/journal-sampling/skills/mparanza-journal-sampling/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/journal-sampling/scripts/check_dependencies.py",
+        "modules/journal-sampling/scripts/implementation_bootstrap.py",
+        "modules/journal-sampling/scripts/inspect_journal.py",
+        "modules/journal-sampling/scripts/normalize_journal.py",
+        "modules/journal-sampling/scripts/replay_normalization.py",
+        "modules/journal-sampling/scripts/review_successor.py",
+        "modules/journal-sampling/scripts/run_sample.py"
+      ]
+    },
+    {
+      "component_id": "check-entries",
+      "skills": [
+        "modules/check-entries/skills/mparanza-vouching/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/check-entries/scripts/apply_review_edits.py",
+        "modules/check-entries/scripts/check_dependencies.py",
+        "modules/check-entries/scripts/implementation_bootstrap.py",
+        "modules/check-entries/scripts/inspect_entries.py",
+        "modules/check-entries/scripts/run_checks.py"
+      ]
+    },
+    {
+      "component_id": "journal-bank-reconciliation",
+      "skills": [
+        "modules/journal-bank-reconciliation/skills/mparanza-journal-bank-reconciliation/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/journal-bank-reconciliation/scripts/apply_review_edits.py",
+        "modules/journal-bank-reconciliation/scripts/check_dependencies.py",
+        "modules/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
+        "modules/journal-bank-reconciliation/scripts/inspect_inputs.py",
+        "modules/journal-bank-reconciliation/scripts/run_reconciliation.py",
+        "modules/journal-bank-reconciliation/scripts/seal_review_receipts.py",
+        "modules/journal-bank-reconciliation/scripts/semantic_review.py"
+      ]
+    },
+    {
+      "component_id": "passive-invoice-audit",
+      "skills": [
+        "modules/passive-invoice-audit/skills/mparanza-purchase-invoice-review/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/passive-invoice-audit/scripts/check_dependencies.py",
+        "modules/passive-invoice-audit/scripts/evaluate_audit.py",
+        "modules/passive-invoice-audit/scripts/run_audit.py"
+      ]
+    },
+    {
+      "component_id": "invoice-xml",
+      "skills": [
+        "modules/invoice-xml/skills/mparanza-invoice-xml/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/invoice-xml/scripts/check_dependencies.py",
+        "modules/invoice-xml/scripts/invoice_workflow.py",
+        "modules/invoice-xml/scripts/source_evidence.py"
+      ]
+    },
+    {
+      "component_id": "sales-plan",
+      "skills": [
+        "modules/sales-plan/skills/mparanza-sales-plan/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/sales-plan/scripts/check_dependencies.py",
+        "modules/sales-plan/scripts/model_use.py",
+        "modules/sales-plan/scripts/prepare_sales_plan_case.py",
+        "modules/sales-plan/scripts/run_plan.py"
+      ]
+    },
+    {
+      "component_id": "business-planning",
+      "skills": [
+        "modules/business-planning/skills/mparanza-business-planning/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/business-planning/scripts/check_dependencies.py",
+        "modules/business-planning/scripts/prepare_report_site.py",
+        "modules/business-planning/scripts/run_business_plan.py",
+        "modules/business-planning/scripts/run_strategic_plan.py"
+      ]
+    },
+    {
+      "component_id": "business-valuation",
+      "skills": [
+        "modules/business-valuation/skills/mparanza-business-valuation/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/business-valuation/scripts/check_dependencies.py",
+        "modules/business-valuation/scripts/run_valuation.py",
+        "modules/business-valuation/scripts/valuation_benchmarks.py"
+      ]
+    },
+    {
+      "component_id": "variance-analysis",
+      "skills": [
+        "modules/variance-analysis/skills/mparanza-variance-analysis/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/variance-analysis/scripts/check_dependencies.py",
+        "modules/variance-analysis/scripts/inspect_column_values.py",
+        "modules/variance-analysis/scripts/inspect_inputs.py",
+        "modules/variance-analysis/scripts/model_use.py",
+        "modules/variance-analysis/scripts/review_preflight.py",
+        "modules/variance-analysis/scripts/run_variance.py"
+      ]
+    },
+    {
+      "component_id": "management-control-pack",
+      "skills": [
+        "modules/management-control-pack/skills/mparanza-management-control-pack/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/management-control-pack/scripts/check_dependencies.py",
+        "modules/management-control-pack/scripts/finalize_pack.py",
+        "modules/management-control-pack/scripts/inspect_inputs.py",
+        "modules/management-control-pack/scripts/prepare_report_site.py",
+        "modules/management-control-pack/scripts/preview_report.py",
+        "modules/management-control-pack/scripts/run_costing.py",
+        "modules/management-control-pack/scripts/run_pack.py"
+      ]
+    },
+    {
+      "component_id": "treasury-forecast",
+      "skills": [
+        "modules/treasury-forecast/skills/mparanza-treasury-forecast/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/treasury-forecast/scripts/check_dependencies.py",
+        "modules/treasury-forecast/scripts/run_treasury.py"
+      ]
+    },
+    {
+      "component_id": "centrale-rischi-review",
+      "skills": [
+        "modules/centrale-rischi-review/skills/mparanza-centrale-rischi-review/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/centrale-rischi-review/scripts/check_dependencies.py",
+        "modules/centrale-rischi-review/scripts/evaluate_pdf_corpus.py",
+        "modules/centrale-rischi-review/scripts/finalize_analysis.py",
+        "modules/centrale-rischi-review/scripts/inspect_inputs.py",
+        "modules/centrale-rischi-review/scripts/run_analysis.py",
+        "modules/centrale-rischi-review/scripts/run_gold_benchmark.py"
+      ]
+    },
+    {
+      "component_id": "financial-analysis",
+      "skills": [
+        "modules/financial-analysis/skills/mparanza-financial-analysis/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/financial-analysis/scripts/check_dependencies.py",
+        "modules/financial-analysis/scripts/model_use.py",
+        "modules/financial-analysis/scripts/prepare_customer_concentration_case.py",
+        "modules/financial-analysis/scripts/prepare_fdd_case.py",
+        "modules/financial-analysis/scripts/prepare_monthly_pnl_case.py",
+        "modules/financial-analysis/scripts/prepare_working_capital_case.py",
+        "modules/financial-analysis/scripts/run_annual_statements.py",
+        "modules/financial-analysis/scripts/run_pack.py",
+        "modules/financial-analysis/scripts/validate_case_contracts.py"
+      ]
+    },
+    {
+      "component_id": "report-builder",
+      "skills": [
+        "modules/report-builder/skills/mparanza-financial-report-builder/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/report-builder/scripts/apply_review_edits.py",
+        "modules/report-builder/scripts/build_report.py",
+        "modules/report-builder/scripts/check_dependencies.py",
+        "modules/report-builder/scripts/expand_model_context.py",
+        "modules/report-builder/scripts/implementation_bootstrap.py",
+        "modules/report-builder/scripts/inspect_inputs.py",
+        "modules/report-builder/scripts/prepared_contract.py",
+        "modules/report-builder/scripts/review_numeric_measures.py",
+        "modules/report-builder/scripts/seal_review_integrity.py",
+        "modules/report-builder/scripts/validate_review_integrity.py"
+      ]
+    },
+    {
+      "component_id": "concordato-plan-review",
+      "skills": [
+        "modules/concordato-plan-review/skills/mparanza-concordato-plan-review/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/concordato-plan-review/scripts/apply_review_edits.py",
+        "modules/concordato-plan-review/scripts/check_dependencies.py",
+        "modules/concordato-plan-review/scripts/finalize_output_closure.py",
+        "modules/concordato-plan-review/scripts/implementation_bootstrap.py",
+        "modules/concordato-plan-review/scripts/replay_assurance.py",
+        "modules/concordato-plan-review/scripts/review_case_model.py",
+        "modules/concordato-plan-review/scripts/review_source_roles.py",
+        "modules/concordato-plan-review/scripts/run_concordato_review.py"
+      ]
+    },
+    {
+      "component_id": "composizione-negoziata",
+      "skills": [
+        "modules/composizione-negoziata/skills/mparanza-composizione-negoziata/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/composizione-negoziata/scripts/check_dependencies.py",
+        "modules/composizione-negoziata/scripts/cnc_case.py"
+      ]
+    },
+    {
+      "component_id": "comunicazione-professionale",
+      "skills": [
+        "modules/comunicazione-professionale/skills/mparanza-comunicazione-professionale/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/comunicazione-professionale/scripts/check_dependencies.py",
+        "modules/comunicazione-professionale/scripts/initialize_workspace.py",
+        "modules/comunicazione-professionale/scripts/package_communications.py",
+        "modules/comunicazione-professionale/scripts/prepare_creative_direction_handoff.py",
+        "modules/comunicazione-professionale/scripts/prepare_model_phase.py",
+        "modules/comunicazione-professionale/scripts/prepare_run.py",
+        "modules/comunicazione-professionale/scripts/promote_studio_profile.py",
+        "modules/comunicazione-professionale/scripts/qualify_editorial_assessor.py",
+        "modules/comunicazione-professionale/scripts/record_contribution.py",
+        "modules/comunicazione-professionale/scripts/record_creative_direction_decision.py",
+        "modules/comunicazione-professionale/scripts/record_external_delivery.py",
+        "modules/comunicazione-professionale/scripts/record_history_privacy_assessment.py",
+        "modules/comunicazione-professionale/scripts/record_history_pseudonymization.py",
+        "modules/comunicazione-professionale/scripts/record_review.py",
+        "modules/comunicazione-professionale/scripts/record_visual_assessment.py",
+        "modules/comunicazione-professionale/scripts/render_visuals.py",
+        "modules/comunicazione-professionale/scripts/review_document_format.py",
+        "modules/comunicazione-professionale/scripts/studio_document_format.py",
+        "modules/comunicazione-professionale/scripts/validate_run.py"
+      ]
+    },
+    {
+      "component_id": "presenza-digitale-studio",
+      "skills": [
+        "modules/presenza-digitale-studio/skills/mparanza-presenza-digitale-studio/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/presenza-digitale-studio/scripts/check_dependencies.py",
+        "modules/presenza-digitale-studio/scripts/initialize_workspace.py",
+        "modules/presenza-digitale-studio/scripts/package_website.py",
+        "modules/presenza-digitale-studio/scripts/prepare_run.py",
+        "modules/presenza-digitale-studio/scripts/prepare_sites_binding.py",
+        "modules/presenza-digitale-studio/scripts/record_external_delivery.py",
+        "modules/presenza-digitale-studio/scripts/record_quality_assessment.py",
+        "modules/presenza-digitale-studio/scripts/record_review.py",
+        "modules/presenza-digitale-studio/scripts/record_site_brief.py",
+        "modules/presenza-digitale-studio/scripts/record_sites_delivery.py",
+        "modules/presenza-digitale-studio/scripts/validate_run.py",
+        "modules/presenza-digitale-studio/scripts/validate_site.py"
+      ]
+    },
+    {
+      "component_id": "prompt-optimizer",
+      "skills": [
+        "modules/prompt-optimizer/skills/mparanza-legal-tax-answer-planner/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/prompt-optimizer/scripts/apply_review_edits.py",
+        "modules/prompt-optimizer/scripts/check_dependencies.py",
+        "modules/prompt-optimizer/scripts/inspect_question.py",
+        "modules/prompt-optimizer/scripts/model_policy.py",
+        "modules/prompt-optimizer/scripts/run_fiscalprompt_benchmark.py",
+        "modules/prompt-optimizer/scripts/summarize_fiscalprompt_benchmark.py",
+        "modules/prompt-optimizer/scripts/validate_prompt.py"
+      ]
+    },
+    {
+      "component_id": "deep-research-validator",
+      "skills": [
+        "modules/deep-research-validator/skills/mparanza-adversarial-opinion/SKILL.md",
+        "modules/deep-research-validator/skills/mparanza-deep-research/SKILL.md",
+        "modules/deep-research-validator/skills/mparanza-legal-tax-answer-review/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/deep-research-validator/scripts/adversarial_opinion.py",
+        "modules/deep-research-validator/scripts/apply_review_edits.py",
+        "modules/deep-research-validator/scripts/check_dependencies.py",
+        "modules/deep-research-validator/scripts/evidence_refs.py",
+        "modules/deep-research-validator/scripts/inspect_document.py",
+        "modules/deep-research-validator/scripts/inspect_sources.py",
+        "modules/deep-research-validator/scripts/package_validation.py",
+        "modules/deep-research-validator/scripts/research_evaluation.py",
+        "modules/deep-research-validator/scripts/research_record.py"
+      ]
+    },
+    {
+      "component_id": "previdenza-inps",
+      "skills": [
+        "modules/previdenza-inps/skills/mparanza-previdenza-inps/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/previdenza-inps/scripts/check_dependencies.py",
+        "modules/previdenza-inps/scripts/inventory_case.py",
+        "modules/previdenza-inps/scripts/package_case.py",
+        "modules/previdenza-inps/scripts/reconcile_contributions.py",
+        "modules/previdenza-inps/scripts/register_portal_export.py",
+        "modules/previdenza-inps/scripts/validate_case_records.py"
+      ]
+    },
+    {
+      "component_id": "registro-imprese-sari",
+      "skills": [
+        "modules/registro-imprese-sari/skills/mparanza-registro-imprese-sari/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/registro-imprese-sari/scripts/check_dependencies.py",
+        "modules/registro-imprese-sari/scripts/initialize_case.py",
+        "modules/registro-imprese-sari/scripts/inventory_case.py",
+        "modules/registro-imprese-sari/scripts/package_practice.py",
+        "modules/registro-imprese-sari/scripts/register_official_source.py",
+        "modules/registro-imprese-sari/scripts/sari_connector.py",
+        "modules/registro-imprese-sari/scripts/validate_practice_case.py"
+      ]
+    },
+    {
+      "component_id": "bandi-agevolazioni",
+      "skills": [
+        "modules/bandi-agevolazioni/skills/mparanza-bandi-agevolazioni/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/bandi-agevolazioni/scripts/check_dependencies.py",
+        "modules/bandi-agevolazioni/scripts/evaluate_intelligence.py",
+        "modules/bandi-agevolazioni/scripts/initialize_case.py",
+        "modules/bandi-agevolazioni/scripts/intelligence_workflow.py",
+        "modules/bandi-agevolazioni/scripts/link_sources.py",
+        "modules/bandi-agevolazioni/scripts/opportunity_radar.py",
+        "modules/bandi-agevolazioni/scripts/package_dossier.py",
+        "modules/bandi-agevolazioni/scripts/record_review.py",
+        "modules/bandi-agevolazioni/scripts/register_source.py",
+        "modules/bandi-agevolazioni/scripts/validate_application.py"
+      ]
+    },
+    {
+      "component_id": "bilancio-xbrl-it",
+      "skills": [
+        "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/bilancio-xbrl-it/scripts/audit_schedule_taxonomy.py",
+        "modules/bilancio-xbrl-it/scripts/audit_statutory_presentation.py",
+        "modules/bilancio-xbrl-it/scripts/benchmark_performance.py",
+        "modules/bilancio-xbrl-it/scripts/build_taxonomy_catalogue.py",
+        "modules/bilancio-xbrl-it/scripts/check_dependencies.py",
+        "modules/bilancio-xbrl-it/scripts/check_review_invariants.py",
+        "modules/bilancio-xbrl-it/scripts/evaluate_intelligence_quality.py",
+        "modules/bilancio-xbrl-it/scripts/jurisdiction_accounts.py",
+        "modules/bilancio-xbrl-it/scripts/managed_ocr_runtime.py",
+        "modules/bilancio-xbrl-it/scripts/run_background_job.py",
+        "modules/bilancio-xbrl-it/scripts/run_golden_cases.py",
+        "modules/bilancio-xbrl-it/scripts/run_xbrl_conformance.py",
+        "modules/bilancio-xbrl-it/scripts/service_bridge.py",
+        "modules/bilancio-xbrl-it/scripts/validate_xbrl.py",
+        "modules/bilancio-xbrl-it/scripts/xbrl_case.py"
+      ]
+    },
+    {
+      "component_id": "browser-automation",
+      "skills": [
+        "modules/browser-automation/skills/mparanza-agenzia-acquisition/SKILL.md",
+        "modules/browser-automation/skills/mparanza-browser-automation/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/browser-automation/scripts/acceptance_fixture.py",
+        "modules/browser-automation/scripts/agenzia_acquire.py",
+        "modules/browser-automation/scripts/agenzia_demo.py",
+        "modules/browser-automation/scripts/agenzia_runtime.py",
+        "modules/browser-automation/scripts/agenzia_ui.py",
+        "modules/browser-automation/scripts/batch_review.py",
+        "modules/browser-automation/scripts/capability_pipeline.py",
+        "modules/browser-automation/scripts/check_dependencies.py",
+        "modules/browser-automation/scripts/check_installation.py",
+        "modules/browser-automation/scripts/development_request.py",
+        "modules/browser-automation/scripts/discovery_pack.py",
+        "modules/browser-automation/scripts/process_lifecycle.py",
+        "modules/browser-automation/scripts/process_skills.py",
+        "modules/browser-automation/scripts/teaching_checkpoint.py"
+      ]
+    },
+    {
+      "component_id": "studio-archive",
+      "skills": [
+        "modules/studio-archive/skills/mparanza-studio-archive/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/studio-archive/scripts/build_model_data_report.py",
+        "modules/studio-archive/scripts/check_dependencies.py",
+        "modules/studio-archive/scripts/studio_archive.py"
+      ]
+    },
+    {
+      "component_id": "esg-reporting-assurance",
+      "skills": [
+        "modules/esg-reporting-assurance/skills/mparanza-esg-reporting-assurance/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/esg-reporting-assurance/scripts/check_dependencies.py",
+        "modules/esg-reporting-assurance/scripts/demo_esg.py",
+        "modules/esg-reporting-assurance/scripts/esg_case.py"
+      ]
+    },
+    {
+      "component_id": "trasformazione",
+      "skills": [
+        "modules/trasformazione/skills/mparanza-trasformazione/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/trasformazione/scripts/check_dependencies.py",
+        "modules/trasformazione/scripts/demo.py",
+        "modules/trasformazione/scripts/transform_case.py"
+      ]
+    },
+    {
+      "component_id": "fusione-guidata",
+      "skills": [
+        "modules/fusione-guidata/skills/mparanza-fusione-guidata/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/fusione-guidata/scripts/check_dependencies.py",
+        "modules/fusione-guidata/scripts/run_fusione.py"
+      ]
+    },
+    {
+      "component_id": "patent-box-review",
+      "skills": [
+        "modules/patent-box-review/skills/mparanza-patent-box-review/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/patent-box-review/scripts/check_dependencies.py",
+        "modules/patent-box-review/scripts/patent_box_sources.py",
+        "modules/patent-box-review/scripts/patent_box_workflow.py"
+      ]
+    },
+    {
+      "component_id": "rating-legalita",
+      "skills": [
+        "modules/rating-legalita/skills/mparanza-rating-legalita/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/rating-legalita/scripts/check_dependencies.py",
+        "modules/rating-legalita/scripts/rating_case.py"
+      ]
+    },
+    {
+      "component_id": "lipe",
+      "skills": [
+        "modules/lipe/skills/mparanza-lipe/SKILL.md"
+      ],
+      "python_entrypoints": [
+        "modules/lipe/scripts/check_dependencies.py",
+        "modules/lipe/scripts/lipe.py",
+        "modules/lipe/scripts/lipe_approval.py",
+        "modules/lipe/scripts/lipe_catalog.py",
+        "modules/lipe/scripts/lipe_catalog_authorization.py",
+        "modules/lipe/scripts/lipe_export.py",
+        "modules/lipe/scripts/lipe_metrics.py",
+        "modules/lipe/scripts/lipe_receipt.py"
+      ]
+    }
+  ],
+  "vera_wrapper_skills": [
+    "skills/mparanza-adeguati-assetti/SKILL.md",
+    "skills/mparanza-adversarial-opinion/SKILL.md",
+    "skills/mparanza-agenzia-acquisition/SKILL.md",
+    "skills/mparanza-aml-review/SKILL.md",
+    "skills/mparanza-archive-organization/SKILL.md",
+    "skills/mparanza-avviso-intake/SKILL.md",
+    "skills/mparanza-bandi-agevolazioni/SKILL.md",
+    "skills/mparanza-bilancio-oic/SKILL.md",
+    "skills/mparanza-browser-automation/SKILL.md",
+    "skills/mparanza-business-planning/SKILL.md",
+    "skills/mparanza-business-valuation/SKILL.md",
+    "skills/mparanza-centrale-rischi-review/SKILL.md",
+    "skills/mparanza-composizione-negoziata/SKILL.md",
+    "skills/mparanza-comunicazione-professionale/SKILL.md",
+    "skills/mparanza-concordato-plan-review/SKILL.md",
+    "skills/mparanza-contenzioso-tributario/SKILL.md",
+    "skills/mparanza-dati-fiscali-strutturati/SKILL.md",
+    "skills/mparanza-deep-research/SKILL.md",
+    "skills/mparanza-email-cliente/SKILL.md",
+    "skills/mparanza-esg-reporting-assurance/SKILL.md",
+    "skills/mparanza-fatture-xml-check/SKILL.md",
+    "skills/mparanza-financial-analysis/SKILL.md",
+    "skills/mparanza-financial-report-builder/SKILL.md",
+    "skills/mparanza-fusione-guidata/SKILL.md",
+    "skills/mparanza-invoice-xml/SKILL.md",
+    "skills/mparanza-journal-bank-reconciliation/SKILL.md",
+    "skills/mparanza-journal-sampling/SKILL.md",
+    "skills/mparanza-learn-with-vera/SKILL.md",
+    "skills/mparanza-legal-tax-answer-planner/SKILL.md",
+    "skills/mparanza-legal-tax-answer-review/SKILL.md",
+    "skills/mparanza-lipe/SKILL.md",
+    "skills/mparanza-management-control-pack/SKILL.md",
+    "skills/mparanza-new-client/SKILL.md",
+    "skills/mparanza-open-item-reconciliation/SKILL.md",
+    "skills/mparanza-organizzazione-lavoro/SKILL.md",
+    "skills/mparanza-patent-box-review/SKILL.md",
+    "skills/mparanza-posizioni-negoziali/SKILL.md",
+    "skills/mparanza-presenza-digitale-studio/SKILL.md",
+    "skills/mparanza-previdenza-inps/SKILL.md",
+    "skills/mparanza-purchase-invoice-review/SKILL.md",
+    "skills/mparanza-quesito-legale-fiscale/SKILL.md",
+    "skills/mparanza-rating-legalita/SKILL.md",
+    "skills/mparanza-registro-imprese-sari/SKILL.md",
+    "skills/mparanza-research-subscriptions/SKILL.md",
+    "skills/mparanza-sales-plan/SKILL.md",
+    "skills/mparanza-scissione-guidata/SKILL.md",
+    "skills/mparanza-studio-archive/SKILL.md",
+    "skills/mparanza-studio-document-format/SKILL.md",
+    "skills/mparanza-trasformazione/SKILL.md",
+    "skills/mparanza-treasury-forecast/SKILL.md",
+    "skills/mparanza-variance-analysis/SKILL.md",
+    "skills/mparanza-vera/SKILL.md",
+    "skills/mparanza-vouching/SKILL.md"
+  ]
+}

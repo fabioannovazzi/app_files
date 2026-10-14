@@ -95,24 +95,24 @@
       "sha256": "0bc0b15ddbddd9902e39177797e8bbf6d428f0f5d736eca2e1b9bde068b83235"
     },
     {
-      "path": "modules/apertura-pratica/skills/apertura-pratica/SKILL.md",
-      "sha256": "0f84c57ee0ba62333e933cb1f5384b7dbc8b4fa363362375c1b334a137f349c2"
+      "path": "modules/apertura-pratica/skills/mparanza-apertura-pratica/SKILL.md",
+      "sha256": "5a06475675a0012d86008b3c7e63e48e8c247e50ac83e6af209e5340e25cbb39"
     },
     {
-      "path": "modules/apertura-pratica/skills/apertura-pratica/agents/openai.yaml",
+      "path": "modules/apertura-pratica/skills/mparanza-apertura-pratica/agents/openai.yaml",
       "sha256": "2b81b8a45bf1bb2fa701b1194d4301ac88b894d258750c9c271cb320064dcabd"
     },
     {
-      "path": "modules/apertura-pratica/skills/apertura-pratica/references/italian-professional-boundaries.md",
+      "path": "modules/apertura-pratica/skills/mparanza-apertura-pratica/references/italian-professional-boundaries.md",
       "sha256": "a5467e243f38ab457b72c3cebec02249b7705337fdf4eeff2e187a34f4524174"
     },
     {
-      "path": "modules/apertura-pratica/skills/apertura-pratica/references/workflow-method.md",
+      "path": "modules/apertura-pratica/skills/mparanza-apertura-pratica/references/workflow-method.md",
       "sha256": "5563100adda1efadf59a706ce4fda24d185f7c265b68d810e1ee6474528073bf"
     },
     {
-      "path": "skills/apertura-pratica/SKILL.md",
-      "sha256": "ac835b948b937a4c906f8f38f79d4172674aec05d8f60caa9897abda852ad2f8"
+      "path": "skills/mparanza-apertura-pratica/SKILL.md",
+      "sha256": "45cd8b21896b0c5422b8d59b72067f782c85243e7816c7853e140f25e19d72a5"
     },
     {
       "path": "vendor/modules/deal_redux/references/evidence-and-rounds.md",

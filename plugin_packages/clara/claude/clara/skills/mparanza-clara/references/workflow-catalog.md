@@ -1,0 +1,62 @@
+# Clara workflow catalog
+
+Read this catalog before routing professional work. The user describes the
+task; Clara selects the workflow. Use semantic judgment, then read the selected
+skill completely. Do not select from keywords or use a cross-cutting assurance
+skill to imitate a missing operational workflow.
+
+`advisory-case-director` owns durable advisory-case direction: the current
+answer, the case-specific analytical spine, the next decision-relevant work,
+the integration of returned evidence and partner judgement, and the timing of
+working deliverable updates. The main `clara` skill routes work and provides
+shared case-workspace mechanics. Use the other specialist workflows below when
+their bounded purpose matches the requested contribution.
+
+## Professional workflows
+
+- `mparanza-advisory-brief-planner`: turn a natural advisory assignment into the
+  reviewable `advisory_contract.json` assignment and generation-handoff
+  contract, then route execution to the existing Clara workflow that retains
+  procedural authority.
+- `mparanza-advisory-case-director`: direct a durable advisory case after assignment
+  framing; state the answer first, maintain the partner-readable analytical
+  spine and cumulative evidence lineage, choose the next research, interview,
+  data, or deliverable branch, integrate what returns, and revise the position
+  when evidence or partner judgement warrants it.
+- `mparanza-advisory-deliverable-validator`: validate a completed advisory memo, report,
+  analysis, presentation, or other supported professional document by walking
+  generation-time evidence and claim dependencies when available, or by
+  explicitly labelled matched support for an external document; assess it
+  against `advisory_contract.json` while composing with rather than duplicating
+  the applicable format-specific Clara checks.
+- `mparanza-attribute-reporting`: map retailer products to a central taxonomy, compare a
+  retailer-defined cohort with the remaining assortment, and create a checked
+  private Retailer Signals report.
+- `mparanza-brand-fit`: compare checked retailer signals with the brand's current
+  retailer presence and brand-owned catalogue in the stored snapshot.
+- `mparanza-business-planning`: prepare one business plan for a startup, new venture or
+  established company. Assess customers, market, operations, economics, cash,
+  options, recommendation and next actions using one case, financial model and
+  report. Vera and Clara expose this exact same function. The business question
+  determines scope; the entry product never changes the angle or required work.
+- `mparanza-html-deck`: build or revise a source-faithful, standalone HTML presentation
+  with fixed-stage rendering, motion, navigation, and browser QA.
+- `mparanza-research-video`: prepare a source-faithful scene plan and narration;
+  render an MP4 locally only when a matching approved voice bundle is
+  supplied. Hosted voice generation is unavailable in Cowork. Without
+  the bundle, report the missing input and deliver preparation only.
+- `mparanza-reporting-engine`: review dataset semantics, select meaningful business
+  analysis, and prepare deterministic calculations, charts, or reporting
+  evidence from CSV, XLSX, or Parquet inputs.
+
+## Cross-cutting assurance
+
+- `mparanza-claim-basis-map`: create or audit a readable sidecar mapping presentation
+  claims to sources, calculations, prior claims, reasoning, assumptions, or an
+  explicit ungrounded status.
+
+Use this assurance workflow when its own trigger conditions apply. It does not
+replace a missing presentation, research, analysis, or advisory workflow.
+
+
+- `mparanza-learn-with-clara`: learn an installed function in writing using prepared files, actual execution and practice in one conversation.

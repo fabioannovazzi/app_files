@@ -372,7 +372,7 @@ def dispatch(
                     current["output"] / "practice_plan_draft.json"
                 ),
                 "selected_originals": selected,
-                "public_skill": str(root / "skills/registro-imprese-sari/SKILL.md"),
+                "public_skill": str(root / "skills/mparanza-registro-imprese-sari/SKILL.md"),
                 "schemas": {
                     name: json.loads(
                         (root / "schemas" / (name + ".schema.json")).read_bytes()

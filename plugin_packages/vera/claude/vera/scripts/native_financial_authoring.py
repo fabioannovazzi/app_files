@@ -323,7 +323,7 @@ def grant_page(current: dict, loaded: dict, args: dict, root: Path, api: Any) ->
             {**r, "authorized_path": str(registered(loaded, r["input_id"]))}
             for r in mandate["sources"]
         ]
-        data["method_path"] = str(root / "skills/financial-analysis/SKILL.md")
+        data["method_path"] = str(root / "skills/mparanza-financial-analysis/SKILL.md")
         if mandate["fields"]["pack_id"] not in {
             "monthly_pnl",
             "working_capital",

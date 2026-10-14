@@ -46,7 +46,7 @@ The user may leave the course for ordinary work; that is not course progress.
 
 Use the root of this installed plugin, derived from this skill's location.
 Run `python3 <plugin-root>/scripts/local_courses.py list`. Select only from that
-catalogue and read the selected `skills/<workflow>/SKILL.md` and its delegated
+catalogue and read the selected `skills/mparanza-<workflow>/SKILL.md` and its delegated
 procedure completely. Never substitute another product's workflow. If the user
 has already chosen a function, start there; otherwise ask what they want to do
 today and offer 3–4 relevant choices. Do not teach all of them at once.

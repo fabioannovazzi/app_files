@@ -119,8 +119,8 @@
       "sha256": "8d6826f9c8757308d9f6e530f75014cdae633c35626211a54590726bdf9e27db"
     },
     {
-      "path": "modules/business-valuation/skills/business-valuation/SKILL.md",
-      "sha256": "eedd16748e495fe5f83fd4bf082d82a29ffabd2c2005b151e14e1f16292730c4"
+      "path": "modules/business-valuation/skills/mparanza-business-valuation/SKILL.md",
+      "sha256": "f4de8c66150bf70a2527383988525654703112466e8e2a35131da1e78249448e"
     },
     {
       "path": "modules/business-valuation/vendor/modules/__init__.py",
@@ -167,11 +167,11 @@
       "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
     },
     {
-      "path": "skills/business-valuation/SKILL.md",
-      "sha256": "3b723447d91fee0dcfa7ead1fdd0e4e4e9c86eebf3f6c73565fe371b86831a5c"
+      "path": "skills/mparanza-business-valuation/SKILL.md",
+      "sha256": "6b3c472ef62960d7ef730a6c255d0bfd564fe0dd14080a3989966e231609127a"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

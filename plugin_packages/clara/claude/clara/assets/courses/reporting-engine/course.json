@@ -151,8 +151,8 @@
       "sha256": "05f0d8e338742e9b04ba98f9e4af4ca336354aea7c40fc16579f177d2b10d4e2"
     },
     {
-      "path": "skills/reporting-engine/SKILL.md",
-      "sha256": "41d5ae2f3732d4548bb0091bb9d3c4552f01ebeb5bd96a2d5365174ee73f46d4"
+      "path": "skills/mparanza-reporting-engine/SKILL.md",
+      "sha256": "2efd93d0aecc0f721f88a0df91c37a66e56005daf0b2e7c23b4edd45c175f8be"
     },
     {
       "path": "vendor/modules/__init__.py",

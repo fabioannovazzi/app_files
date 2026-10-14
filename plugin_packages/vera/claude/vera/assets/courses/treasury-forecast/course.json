@@ -87,11 +87,11 @@
       "sha256": "a4e8b1c6ec47fa357910a73f884cdc916153a8b261d844d2ea1f02cfcc8a74eb"
     },
     {
-      "path": "modules/treasury-forecast/skills/treasury-forecast/SKILL.md",
-      "sha256": "324aacec46cbdda6f969f867ed2203812d9dcf454b75aca27117a2cbacb5bfe9"
+      "path": "modules/treasury-forecast/skills/mparanza-treasury-forecast/SKILL.md",
+      "sha256": "f103dded95de431270d29c680447de91cbed196aa7e2d6e479442607a9cb6f72"
     },
     {
-      "path": "modules/treasury-forecast/skills/treasury-forecast/references/geneva.md",
+      "path": "modules/treasury-forecast/skills/mparanza-treasury-forecast/references/geneva.md",
       "sha256": "01724604d70dbe839259908ccc1c6cd9b509063b34e20d72b2d54df78af70efe"
     },
     {
@@ -135,11 +135,11 @@
       "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
     },
     {
-      "path": "skills/treasury-forecast/SKILL.md",
-      "sha256": "ccdf754b6a670b3dc46df4b8418894d586cd73f06024ff34ac464ca650a5267d"
+      "path": "skills/mparanza-treasury-forecast/SKILL.md",
+      "sha256": "1d1099e53cbb04d429865fcb02f471e471ced0c8b725c8a8f00c6a9f52aba0dc"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

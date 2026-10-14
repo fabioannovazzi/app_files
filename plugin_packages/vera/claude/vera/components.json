@@ -53,7 +53,8 @@
       "kind": "workflow",
       "internal_engines": [
         "client-file-preparation"
-      ]
+      ],
+      "skill": "mparanza-new-client"
     },
     "client-file-preparation": {
       "kind": "internal_engine",
@@ -61,27 +62,120 @@
     },
     "prompt-optimizer": {
       "kind": "workflow",
-      "skill": "legal-tax-answer-planner"
+      "skill": "mparanza-legal-tax-answer-planner"
     },
     "deep-research-validator": {
       "kind": "workflow",
-      "skill": "legal-tax-answer-review"
+      "skill": "mparanza-legal-tax-answer-review"
     },
     "check-entries": {
       "kind": "workflow",
-      "skill": "vouching"
+      "skill": "mparanza-vouching"
     },
     "bilancio-xbrl-it": {
       "kind": "workflow",
-      "skill": "bilancio-oic"
+      "skill": "mparanza-bilancio-oic"
     },
     "passive-invoice-audit": {
       "kind": "workflow",
-      "skill": "purchase-invoice-review"
+      "skill": "mparanza-purchase-invoice-review"
     },
     "report-builder": {
       "kind": "workflow",
-      "skill": "financial-report-builder"
+      "skill": "mparanza-financial-report-builder"
+    },
+    "scissione-guidata": {
+      "skill": "mparanza-scissione-guidata"
+    },
+    "open-item-reconciliation": {
+      "skill": "mparanza-open-item-reconciliation"
+    },
+    "archive-organization": {
+      "skill": "mparanza-archive-organization"
+    },
+    "aml-review": {
+      "skill": "mparanza-aml-review"
+    },
+    "adeguati-assetti": {
+      "skill": "mparanza-adeguati-assetti"
+    },
+    "journal-sampling": {
+      "skill": "mparanza-journal-sampling"
+    },
+    "journal-bank-reconciliation": {
+      "skill": "mparanza-journal-bank-reconciliation"
+    },
+    "invoice-xml": {
+      "skill": "mparanza-invoice-xml"
+    },
+    "sales-plan": {
+      "skill": "mparanza-sales-plan"
+    },
+    "business-planning": {
+      "skill": "mparanza-business-planning"
+    },
+    "business-valuation": {
+      "skill": "mparanza-business-valuation"
+    },
+    "variance-analysis": {
+      "skill": "mparanza-variance-analysis"
+    },
+    "management-control-pack": {
+      "skill": "mparanza-management-control-pack"
+    },
+    "treasury-forecast": {
+      "skill": "mparanza-treasury-forecast"
+    },
+    "centrale-rischi-review": {
+      "skill": "mparanza-centrale-rischi-review"
+    },
+    "financial-analysis": {
+      "skill": "mparanza-financial-analysis"
+    },
+    "concordato-plan-review": {
+      "skill": "mparanza-concordato-plan-review"
+    },
+    "composizione-negoziata": {
+      "skill": "mparanza-composizione-negoziata"
+    },
+    "comunicazione-professionale": {
+      "skill": "mparanza-comunicazione-professionale"
+    },
+    "presenza-digitale-studio": {
+      "skill": "mparanza-presenza-digitale-studio"
+    },
+    "previdenza-inps": {
+      "skill": "mparanza-previdenza-inps"
+    },
+    "registro-imprese-sari": {
+      "skill": "mparanza-registro-imprese-sari"
+    },
+    "bandi-agevolazioni": {
+      "skill": "mparanza-bandi-agevolazioni"
+    },
+    "browser-automation": {
+      "skill": "mparanza-browser-automation"
+    },
+    "studio-archive": {
+      "skill": "mparanza-studio-archive"
+    },
+    "esg-reporting-assurance": {
+      "skill": "mparanza-esg-reporting-assurance"
+    },
+    "trasformazione": {
+      "skill": "mparanza-trasformazione"
+    },
+    "fusione-guidata": {
+      "skill": "mparanza-fusione-guidata"
+    },
+    "patent-box-review": {
+      "skill": "mparanza-patent-box-review"
+    },
+    "rating-legalita": {
+      "skill": "mparanza-rating-legalita"
+    },
+    "lipe": {
+      "skill": "mparanza-lipe"
     }
   }
 }

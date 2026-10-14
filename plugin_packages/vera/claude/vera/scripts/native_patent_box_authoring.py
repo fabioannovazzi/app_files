@@ -256,7 +256,7 @@ def snapshot(binding: dict, root: Path, api: Any) -> dict:
                 Path(__file__).parents[1] / "ui/patent-box-authoring.js",
             )
         },
-        "public_method": file_hash(root / "skills/patent-box-review/SKILL.md"),
+        "public_method": file_hash(root / "skills/mparanza-patent-box-review/SKILL.md"),
     }
     home = api.ui_state_directory(base["output"], create=False) / (
         "patent-box-author-" + stamp(identity["owner"])
@@ -367,7 +367,7 @@ def model_packet(
             },
             "control_catalog": api.read_json(root / "config/control_catalog.json"),
             "method_root": str(root),
-            "public_skill": (root / "skills/patent-box-review/SKILL.md").read_text(),
+            "public_skill": (root / "skills/mparanza-patent-box-review/SKILL.md").read_text(),
             "real_rules": api.read_json(root / "config/ruleset.proposed.json"),
             "untrusted_evidence": True,
             "no_automatic_anonymization": True,

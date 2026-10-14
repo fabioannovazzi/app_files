@@ -49,6 +49,10 @@ __all__ = [
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from scripts.course_materials.remote_files import externalize_course_files  # noqa: E402
+from scripts.cowork_skill_names import (  # noqa: E402
+    project_skill_names,
+    validate_skill_zip,
+)
 
 DEFAULT_CONFIG = ROOT / "scripts" / "claude_plugin_packages.json"
 CODEX_BUILDER_PATH = ROOT / "scripts" / "build_codex_plugin_zip.py"
@@ -3035,7 +3039,7 @@ def _lucia_package_entries(
     )
     if vera_package is None:
         raise ValueError("lucia: Vera must be configured for shared assurance")
-    vera_entries = claude_package_entries(vera_package)
+    vera_entries = _claude_package_entries(vera_package)
 
     entries: dict[str, bytes] = {}
     for component in sorted(LUCIA_SHARED_COWORK_COMPONENTS):
@@ -3195,7 +3199,7 @@ def _lucia_package_entries(
     return dict(sorted(project_cowork_skill_names(entries).items()))
 
 
-def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
+def _claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
     """Return a self-contained Anthropic plugin tree derived from repo source."""
 
     builder = _load_codex_builder()
@@ -3403,6 +3407,27 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
     return dict(sorted(entries.items()))
 
 
+def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
+    """Seal the complete projection after enforcing all custom skill identities."""
+    entries = project_skill_names(_claude_package_entries(package))
+    if package.plugin == "lucia":
+        _, packages = load_configuration()
+        vera = next(item for item in packages if item.plugin == "vera")
+        shared = claude_package_entries(vera)
+        for component in LUCIA_SHARED_COWORK_COMPONENTS:
+            prefix = f"modules/{component}/"
+            entries.update(
+                {path: data for path, data in shared.items() if path.startswith(prefix)}
+            )
+        # Shared methods retain exact Vera bytes; course provenance must bind
+        # those final bytes rather than Lucia's earlier intermediate projection.
+        entries = project_skill_names(entries)
+    if package.plugin == "vera":
+        _project_cowork_privacy_register(entries)
+        _load_codex_builder().add_vera_execution_manifest(entries)
+    return dict(sorted(entries.items()))
+
+
 def _write_zip(path: Path, entries: dict[str, bytes]) -> None:
     with ZipFile(path, "w", compression=ZIP_DEFLATED) as archive:
         for name, content in entries.items():
@@ -3496,6 +3521,7 @@ def build_package(package: ClaudePackage) -> tuple[Path, Path]:
     with tempfile.TemporaryDirectory(prefix="cowork-release-") as temporary:
         candidate = Path(temporary) / "candidate.zip"
         _write_zip(candidate, entries)
+        validate_skill_zip(candidate)
         if package.plugin == "vera" or ".mcp.json" in entries:
             errors = _load_codex_builder().verify_packaged_mcp(candidate, ["."])
             if errors:
@@ -3517,6 +3543,13 @@ def verify_package(package: ClaudePackage) -> list[str]:
     ]
     if package.public_zip is not None:
         errors.extend(verify_zip(package.public_zip, entries))
+    if not errors:
+        for path in (package.output_zip, package.public_zip):
+            if path is not None:
+                try:
+                    validate_skill_zip(path)
+                except ValueError as exc:
+                    errors.append(str(exc))
     if not errors and (package.plugin == "vera" or ".mcp.json" in entries):
         errors.extend(
             _load_codex_builder().verify_packaged_mcp(package.output_zip, ["."])

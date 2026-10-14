@@ -5,7 +5,7 @@ description: Execute Lucia's prepared legal, tax or compliance research with rep
 
 # Research the prepared question
 
-Without an accepted preparation, enter `../quesito-legale-fiscale/SKILL.md`
+Without an accepted preparation, enter `../mparanza-quesito-legale-fiscale/SKILL.md`
 first. Preparation-only and supplied-answer review requests retain their scope.
 
 Resolve `../../modules/deep-research-validator` from this skill directory when

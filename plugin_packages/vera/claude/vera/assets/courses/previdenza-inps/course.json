@@ -100,15 +100,15 @@
       "sha256": "7c6fbade21bf4f80621c0e9c3fbf3eb1f0d53ad6100118a60d49f5028792f752"
     },
     {
-      "path": "modules/previdenza-inps/skills/previdenza-inps/SKILL.md",
-      "sha256": "ce3c2e577456251e43eed614a21bfac9bdbff88378e42eab1690eb56b8b02d73"
+      "path": "modules/previdenza-inps/skills/mparanza-previdenza-inps/SKILL.md",
+      "sha256": "68021293866c823ac066350cfd67fbbe92bb95e93e8920796b28f9d4cbe012df"
     },
     {
-      "path": "modules/previdenza-inps/skills/previdenza-inps/agents/openai.yaml",
+      "path": "modules/previdenza-inps/skills/mparanza-previdenza-inps/agents/openai.yaml",
       "sha256": "bbe8ab077fed5caf28db2ff4fb6e12c5ac6ff4c5cfe5fb4b7f5d2e3b817e891f"
     },
     {
-      "path": "modules/previdenza-inps/skills/previdenza-inps/references/geneva.md",
+      "path": "modules/previdenza-inps/skills/mparanza-previdenza-inps/references/geneva.md",
       "sha256": "304b17162da3f8db6afc0cf2fb082a473bb6d8ef6a36efc98d57162d0634c2a3"
     },
     {
@@ -152,11 +152,11 @@
       "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
     },
     {
-      "path": "skills/previdenza-inps/SKILL.md",
-      "sha256": "03bcf90b5f22888483ecbf7a7bf678e5b71f484aeadc7aa861894edbb6989885"
+      "path": "skills/mparanza-previdenza-inps/SKILL.md",
+      "sha256": "51f234cfaf706ce9ba090804a567eb65dc3931e1ec6243578fd84245aef25ae5"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

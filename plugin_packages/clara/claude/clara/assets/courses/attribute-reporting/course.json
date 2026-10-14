@@ -120,15 +120,15 @@
       "sha256": "a7830b778e12b039b7b55fc75e50a4c34b29e068d230a6fe77c4bdc3b479bfe6"
     },
     {
-      "path": "modules/attribute-reporting/skills/attribute-reporting/SKILL.md",
-      "sha256": "eef39c0f659d7b802bb0c0e873c53490b59a5e839f4e75f03a2723769bab9957"
+      "path": "modules/attribute-reporting/skills/mparanza-attribute-reporting/SKILL.md",
+      "sha256": "0c7e4d324adfce34455751c03b64cf3dd69cb5fa9b4a580427d494603452e23c"
     },
     {
-      "path": "modules/attribute-reporting/skills/attribute-reporting/references/server-boundary.md",
+      "path": "modules/attribute-reporting/skills/mparanza-attribute-reporting/references/server-boundary.md",
       "sha256": "baf87dbd483fb7b05c5e12078ab874367ca8433ed5b9f0269299ab5a9ed05bda"
     },
     {
-      "path": "modules/attribute-reporting/skills/attribute-reporting/references/workflow-reference.md",
+      "path": "modules/attribute-reporting/skills/mparanza-attribute-reporting/references/workflow-reference.md",
       "sha256": "fab708edbf3f8dc249c24cdaaa7d14ca069304de9ee0dab536ac91a171f4b8c8"
     },
     {
@@ -168,8 +168,8 @@
       "sha256": "6f1e29d38fa4ff7919a507ddcb95df81d4bdf600b2ab6fc392956772d846d76d"
     },
     {
-      "path": "skills/attribute-reporting/SKILL.md",
-      "sha256": "69f62d12143410b3520ec48dd979be98799ac0d0045040b5abb36ff013bffe3f"
+      "path": "skills/mparanza-attribute-reporting/SKILL.md",
+      "sha256": "1e5a75a50920da688bfe4ce2c062fcc90ff75d27403c219364ed3d4a15f4ad30"
     },
     {
       "path": "vendor/modules/__init__.py",

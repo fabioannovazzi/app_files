@@ -111,14 +111,14 @@ def test_clara_cowork_includes_claude_agent(clara_entries) -> None:
 
 def test_clara_cowork_retains_specialist_runtime_files(clara_entries) -> None:
     required_runtime_files = {
-        "skills/advisory-deliverable-validator/scripts/advisory_validation.py",
-        "skills/advisory-deliverable-validator/references/advisory-contract.md",
-        "skills/advisory-deliverable-validator/references/advisory_validation_review.schema.json",
-        "skills/claim-basis-map/scripts/render_claim_basis_map.py",
-        "skills/html-deck/assets/deck-engine/deck.css",
-        "skills/html-deck/scripts/build_html_deck.py",
-        "skills/html-deck/scripts/validate_html_deck.py",
-        "skills/research-video/scripts/research_video.py",
+        "skills/mparanza-advisory-deliverable-validator/scripts/advisory_validation.py",
+        "skills/mparanza-advisory-deliverable-validator/references/advisory-contract.md",
+        "skills/mparanza-advisory-deliverable-validator/references/advisory_validation_review.schema.json",
+        "skills/mparanza-claim-basis-map/scripts/render_claim_basis_map.py",
+        "skills/mparanza-html-deck/assets/deck-engine/deck.css",
+        "skills/mparanza-html-deck/scripts/build_html_deck.py",
+        "skills/mparanza-html-deck/scripts/validate_html_deck.py",
+        "skills/mparanza-research-video/scripts/research_video.py",
     }
 
     assert required_runtime_files <= set(clara_entries)
@@ -134,7 +134,7 @@ def test_clara_cowork_exposes_only_reviewed_root_skills(clara_entries) -> None:
         and len(Path(name).parts) == 3
     }
 
-    assert root_skills == EXPECTED_ROOT_SKILLS
+    assert root_skills == {f"mparanza-{name}" for name in EXPECTED_ROOT_SKILLS}
     for omitted in (
         "beautify-deck",
         "deck-correction",
@@ -142,7 +142,9 @@ def test_clara_cowork_exposes_only_reviewed_root_skills(clara_entries) -> None:
         "privacy-surface-review",
         "transcribe",
     ):
-        assert not any(name.startswith(f"skills/{omitted}/") for name in clara_entries)
+        assert not any(
+            name.startswith(f"skills/mparanza-{omitted}/") for name in clara_entries
+        )
 
 
 def test_clara_cowork_includes_reviewed_feedback_and_omits_other_host_paths(
@@ -215,8 +217,10 @@ def test_clara_cowork_vendors_every_registered_analysis_component(
 def test_cowork_research_video_preserves_local_bundle_path_without_hosted_action(
     clara_entries,
 ) -> None:
-    skill = clara_entries["skills/research-video/SKILL.md"].decode()
-    catalog = clara_entries["skills/clara/references/workflow-catalog.md"].decode()
+    skill = clara_entries["skills/mparanza-research-video/SKILL.md"].decode()
+    catalog = clara_entries[
+        "skills/mparanza-clara/references/workflow-catalog.md"
+    ].decode()
 
     assert "https://mparanza.com/case-notes/research-video/voice" not in skill
     assert "Hosted voice generation is unavailable in Cowork" in catalog
@@ -247,23 +251,35 @@ def test_clara_cowork_instructions_are_host_neutral(clara_entries) -> None:
     combined = "\n".join(instruction_docs.values())
 
     assert (
-        "This package is for Claude Cowork" in instruction_docs["skills/clara/SKILL.md"]
+        "This package is for Claude Cowork"
+        in instruction_docs["skills/mparanza-clara/SKILL.md"]
     )
-    assert "image-generation capability" in instruction_docs["skills/clara/SKILL.md"]
-    assert "## Plugin Improvement Feedback" in instruction_docs["skills/clara/SKILL.md"]
-    assert "If the occurred time" in instruction_docs["skills/clara/SKILL.md"]
-    assert "submit-problem" in instruction_docs["skills/clara/SKILL.md"]
-    assert "Professional capability gap" in instruction_docs["skills/clara/SKILL.md"]
+    assert (
+        "image-generation capability"
+        in instruction_docs["skills/mparanza-clara/SKILL.md"]
+    )
+    assert (
+        "## Plugin Improvement Feedback"
+        in instruction_docs["skills/mparanza-clara/SKILL.md"]
+    )
+    assert "If the occurred time" in instruction_docs["skills/mparanza-clara/SKILL.md"]
+    assert "submit-problem" in instruction_docs["skills/mparanza-clara/SKILL.md"]
+    assert (
+        "Professional capability gap"
+        in instruction_docs["skills/mparanza-clara/SKILL.md"]
+    )
     assert (
         "Clara workflow: clara:<specialist-skill>"
-        in instruction_docs["skills/clara/SKILL.md"]
+        in instruction_docs["skills/mparanza-clara/SKILL.md"]
     )
-    catalog = instruction_docs["skills/clara/references/workflow-catalog.md"]
+    catalog = instruction_docs["skills/mparanza-clara/references/workflow-catalog.md"]
     catalogued = set(re.findall(r"^- `([a-z0-9-]+)`:", catalog, re.MULTILINE))
-    assert catalogued == EXPECTED_ROOT_SKILLS - {"clara"}
+    assert catalogued == {
+        f"mparanza-{name}" for name in EXPECTED_ROOT_SKILLS - {"clara"}
+    }
     assert (
-        "../clara/references/workflow-catalog.md"
-        in instruction_docs["skills/advisory-brief-planner/SKILL.md"]
+        "../mparanza-clara/references/workflow-catalog.md"
+        in instruction_docs["skills/mparanza-advisory-brief-planner/SKILL.md"]
     )
     for marker in (
         "ChatGPT",
@@ -288,6 +304,7 @@ def test_clara_cowork_directory_and_zip_are_deterministic(
         package,
         output_directory=tmp_path / "clara",
         output_zip=tmp_path / "clara-claude-plugin.zip",
+        public_zip=tmp_path / "public-clara-cowork-plugin.zip",
     )
 
     builder.build_package(isolated)

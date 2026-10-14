@@ -12,20 +12,20 @@
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
-    "skills/quesito-legale-fiscale/SKILL.md",
-    "skills/adversarial-opinion/SKILL.md",
-    "skills/vera/references/connected-studio-knowledge.md",
+    "skills/mparanza-quesito-legale-fiscale/SKILL.md",
+    "skills/mparanza-adversarial-opinion/SKILL.md",
+    "skills/mparanza-vera/references/connected-studio-knowledge.md",
     "scripts/standalone_work.py",
-    "skills/vera/references/standalone-work.md",
+    "skills/mparanza-vera/references/standalone-work.md",
     "skills/mparanza-deep-research/SKILL.md",
-    "skills/vera/references/research-subscriptions.md",
-    "skills/research-subscriptions/SKILL.md",
+    "skills/mparanza-vera/references/research-subscriptions.md",
+    "skills/mparanza-research-subscriptions/SKILL.md",
     "mcp/research-sources.cjs",
     "scripts/research-subscriptions-store.cjs",
-    "skills/legal-tax-answer-review/SKILL.md",
+    "skills/mparanza-legal-tax-answer-review/SKILL.md",
     "scripts/research-sources.cjs",
-    "skills/vera/references/legal-tax-model-policy.md",
-    "skills/legal-tax-answer-planner/SKILL.md"
+    "skills/mparanza-vera/references/legal-tax-model-policy.md",
+    "skills/mparanza-legal-tax-answer-planner/SKILL.md"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -255,6 +255,6 @@
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "eb97586039cbedd7456eb6c3b76b0fb8ecc578fc5e68cfd2035c38b55ad9d53f"
+    "source_fingerprint": "7f0ae11fe6ad63bd16eb13e1add82d13e2351dba395ffa0915f256a1a9abc60a"
   }
 }

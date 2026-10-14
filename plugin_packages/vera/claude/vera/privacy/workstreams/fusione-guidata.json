@@ -117,7 +117,7 @@
     "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "6b0f7e6e4ce962ad9c1c818ab9b02274dffa7b62f2fcef3a089cca5860c6a5fb"
+    "source_fingerprint": "d7b7af4b72490e5c4ee70e4c81de845ab4cf22b58a61255eaee9ff10e1e7a43f"
   },
   "governed_shared_paths": [
     "modules/fusione-guidata/vendor/modules/model_data_report.py",
@@ -125,11 +125,11 @@
     "scripts/model_data_report.py",
     "modules/fusione-guidata/vendor/modules/client_ledger.py",
     "modules/studio-archive/scripts/client_ledger.py",
-    "skills/vera/references/connected-studio-knowledge.md",
+    "skills/mparanza-vera/references/connected-studio-knowledge.md",
     "scripts/native_fusion.py",
     "scripts/native_fusion_bridge.py",
     "ui/fusion.js",
-    "skills/fusione-guidata/SKILL.md",
+    "skills/mparanza-fusione-guidata/SKILL.md",
     "ui/model-data-report.js"
   ]
 }

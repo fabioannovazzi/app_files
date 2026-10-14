@@ -68,17 +68,17 @@
     "vendor/modules/vera_assurance",
     "modules/fusione-guidata/vendor/modules/client_ledger.py",
     "modules/studio-archive/scripts/client_ledger.py",
-    "skills/vera/references/connected-studio-knowledge.md",
+    "skills/mparanza-vera/references/connected-studio-knowledge.md",
     "scripts/native_cnc.py",
     "scripts/native_cnc_bridge.py",
-    "skills/vera/references/native-workspace.md",
+    "skills/mparanza-vera/references/native-workspace.md",
     "scripts/native_cnc_history.py",
     "scripts/native_cnc_authenticated.py",
     "scripts/native_cnc_authenticated_bridge.py",
     "mcp/workspace.cjs",
     "ui/workspace.js",
     "scripts/native_workspace.py",
-    "skills/composizione-negoziata/SKILL.md"
+    "skills/mparanza-composizione-negoziata/SKILL.md"
   ],
   "model_context": {
     "policy": "real_case_data_may_enter_selected_runtime_model_context",
@@ -132,7 +132,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "1040721ef481e4c64c3703a55d1e3b92e041bb5262b776057e1c77c2bdeaec7d"
+    "source_fingerprint": "0067f2980053b4050cc93f5d94ca7a09aa80dc5c21150bc5b732e9ee13fe8ed3"
   },
   "role": "workflow",
   "runtime_profiles": [

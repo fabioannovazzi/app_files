@@ -13,7 +13,7 @@
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
     "vendor/modules/vera_journal_pdf",
-    "skills/vera/references/connected-studio-knowledge.md"
+    "skills/mparanza-vera/references/connected-studio-knowledge.md"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -158,6 +158,6 @@
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "089ad97b340fe1087fa6d95c767f85228313262e809cc4c823128daf4c471874"
+    "source_fingerprint": "7b28211fd59a5598add7a648a1b10dedae2e2a78419c9ffec97af9416290620a"
   }
 }

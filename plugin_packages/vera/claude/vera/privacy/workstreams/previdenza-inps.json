@@ -84,12 +84,12 @@
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
     "vendor/modules/vera_ocr",
-    "skills/vera/references/connected-studio-knowledge.md",
+    "skills/mparanza-vera/references/connected-studio-knowledge.md",
     "scripts/native_inps.py",
     "scripts/native_inps_bridge.py",
     "scripts/native_inps_rpc.cjs",
     "scripts/native_archive_closure.py",
-    "skills/previdenza-inps/SKILL.md",
+    "skills/mparanza-previdenza-inps/SKILL.md",
     "mcp/workspace.cjs",
     "ui/workspace.js",
     "scripts/native_workspace.py"
@@ -138,7 +138,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "7384ce2ad283fc1ffb235033e38c09a702ae5e0dc5989049f43a53f74b775061"
+    "source_fingerprint": "bbbbce162cfb804947c6657798572054766c49d5f6b9b0d125af3f4bf900b19b"
   },
   "role": "workflow",
   "runtime_profiles": [

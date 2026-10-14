@@ -39,7 +39,7 @@ def test_claude_release_research_skill_avoids_anthropic_reserved_name(product):
     assert "skills/deep-research/SKILL.md" not in entries
     assert (
         b"../mparanza-deep-research/SKILL.md"
-        in entries["skills/quesito-legale-fiscale/SKILL.md"]
+        in entries["skills/mparanza-quesito-legale-fiscale/SKILL.md"]
     )
     course = json.loads(entries["assets/courses/quesito-legale-fiscale/course.json"])
     course_sources = {source["path"]: source["sha256"] for source in course["sources"]}
@@ -131,7 +131,7 @@ def test_claude_vera_localization_catalogue_retains_its_source_fingerprint():
     entries = builder.claude_package_entries(package)
 
     catalogue = json.loads(
-        entries["skills/vera/references/localization/geneva/catalogue.json"]
+        entries["skills/mparanza-vera/references/localization/geneva/catalogue.json"]
     )
     identity = {key: catalogue[key] for key in ("manifest_sha256", "entries")}
     assert (

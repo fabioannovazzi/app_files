@@ -213,39 +213,39 @@
       "sha256": "c05f03a0ee4647f67d3df3f250031bd1c3617b0e5050551bfb816a06402f3eb6"
     },
     {
-      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/SKILL.md",
-      "sha256": "c7bc8703a96df6ea0e319b7303aea529045092df2e0cea5e4bedb3a8eca11fd3"
+      "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/SKILL.md",
+      "sha256": "c80a2612157476e237c0f6f766ca156142eb2283b259548972a540afeed716bf"
     },
     {
-      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/agents/openai.yaml",
+      "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/agents/openai.yaml",
       "sha256": "cde9b4f80adceba6c596c6954649291c44fcd4e71980bc8e41b7cd97deb5e966"
     },
     {
-      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/acceptance-matrix.md",
+      "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/references/acceptance-matrix.md",
       "sha256": "8d16a690b95209a25a029d30f4d5e1184a66155c6d8fa3e94a5628ad245acd66"
     },
     {
-      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/conformance-evidence.md",
+      "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/references/conformance-evidence.md",
       "sha256": "9d1f26c85afc803f1e46fec8ea89be62cb5a3a3be1047d95b168212a0c68be8b"
     },
     {
-      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/geneva.md",
+      "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/references/geneva.md",
       "sha256": "8bf1de017cabebda7fc44dc7a0dd4d96007dbcb16ad2b8c66aed296be728c07d"
     },
     {
-      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/implementation-status.md",
+      "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/references/implementation-status.md",
       "sha256": "d2829c74154d35a27ce6f84c7bd81ceec02057763e6b25025acabe20b8859a15"
     },
     {
-      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/performance-evidence.md",
+      "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/references/performance-evidence.md",
       "sha256": "ff05d92f60c697bbfc6465b7255c2198a780e37954c741b52c16d9ee705c6e72"
     },
     {
-      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/product-thesis.md",
+      "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/references/product-thesis.md",
       "sha256": "0ef0a8323bc2fcc8e7f79fb80696b17ba5a3ce0c2fc4e26d61852d317d9ad7f0"
     },
     {
-      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/taxonomy-spike.md",
+      "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/references/taxonomy-spike.md",
       "sha256": "d2404a29d14a50e593bbb1d6f9018880c3e29149b5323d49000529d99ebdfa5a"
     },
     {
@@ -266,18 +266,18 @@
     },
     {
       "path": "scripts/operational_incidents.py",
-      "sha256": "739b9390ccdd77ead53fdc6536217af4a50e3f16f9b27fa8002cecaae2c06147"
+      "sha256": "0fbb09e44c16de819e0531da3ad7a836ac92d69380f10d6dce4ca9674e5019de"
     },
     {
       "path": "scripts/verified_execution.py",
       "sha256": "6c41ba4583fd91a9cfaa78d3ccfc07eadda49e8efef7e4a58b01f0560b5ad6c0"
     },
     {
-      "path": "skills/bilancio-oic/SKILL.md",
-      "sha256": "b529375fe70aac568452601ab896253d538908be646b6a279ba6cb3525acadf0"
+      "path": "skills/mparanza-bilancio-oic/SKILL.md",
+      "sha256": "b49e5754fb7d61fe5e7190b367289126576280807ae4827e2e8fbb75948fae5f"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

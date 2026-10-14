@@ -122,6 +122,13 @@ def add_written_teaching(
             content = content.replace(
                 b".codex-plugin/plugin.json", b".claude-plugin/plugin.json"
             )
+        if path.endswith("/library.py"):
+            canonical = b'/ "skills" / workflow / "SKILL.md"'
+            if content.count(canonical) != 1:
+                raise ValueError("Cowork course skill path needs source review")
+            content = content.replace(
+                canonical, b'/ "skills" / ("mparanza-" + workflow) / "SKILL.md"'
+            )
         if path.endswith(("/languages.json", "/legacy-languages.json")):
             locales = json.loads(content)
             for language, copy in locales.items():

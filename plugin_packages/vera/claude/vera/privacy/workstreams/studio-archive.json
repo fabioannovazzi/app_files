@@ -127,9 +127,9 @@
     "modules/studio-archive/vendor/modules/model_data_report.py",
     "scripts/model_data_report.py",
     "modules/studio-archive/vendor/modules/model-data-report-contract.md",
-    "skills/vera/references/model-data-report-contract.md",
+    "skills/mparanza-vera/references/model-data-report-contract.md",
     "modules/studio-archive/scripts/build_model_data_report.py",
-    "skills/vera/references/connected-studio-knowledge.md",
+    "skills/mparanza-vera/references/connected-studio-knowledge.md",
     "scripts/native_archive_closure.py",
     "scripts/native_archive_closure_bridge.py",
     "scripts/native_archive_navigation.py",
@@ -138,8 +138,8 @@
     "ui/workspace.js",
     "ui/workspace.html",
     "ui/workspace.css",
-    "skills/studio-archive/SKILL.md",
-    "skills/vera/references/native-workspace.md",
+    "skills/mparanza-studio-archive/SKILL.md",
+    "skills/mparanza-vera/references/native-workspace.md",
     "scripts/native_archive_imports.py"
   ],
   "model_context": {
@@ -256,7 +256,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "555999c11c5fff36f041938e2e4a6aa741bbbd3780fb704d71ba48ce0b7a5f6f"
+    "source_fingerprint": "2a392d30fcfcb3d8cdd50b37131ecca4fde43e15756f4ad2bcc504a1fd1098c1"
   },
   "role": "workflow",
   "runtime_profiles": [

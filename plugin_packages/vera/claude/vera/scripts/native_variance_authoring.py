@@ -333,7 +333,7 @@ def grant_page(
         result["suggested_recipe_path"] = str(
             current["output"] / grant["intake_ref"] / "suggested_recipe.json"
         )
-        result["method_path"] = str(root / "skills/variance-analysis/SKILL.md")
+        result["method_path"] = str(root / "skills/mparanza-variance-analysis/SKILL.md")
         result["boundary"] = (
             "Read the complete public skill and only the explicitly authorized originals. Inspection samples cover at most ten rows of suggested candidate columns, not the source population; inspect complete authorized originals with maintained readers when needed. Author the entire public recipe with literal reviewed periods, measures, optional units, dimensions, filters/cohorts and accounting declarations; retain unknowns. Suggested mappings are unapproved proposals. Do not invent economic causes, human approval, root-cause acceptance or reading claims. The new recipe professional_review and root_cause_review must stay pending; prior raw reviews remain separately preserved. Stage proposal={recipe:complete_recipe,note:open_items}. Full named readback, immutable conservation in a new same-engagement run, calculation and professional decisions are separate. Record only actual model exposure. No provider worker is launched."
         )

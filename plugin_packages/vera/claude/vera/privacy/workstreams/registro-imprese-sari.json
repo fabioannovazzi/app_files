@@ -86,10 +86,10 @@
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
     "vendor/modules/vera_ocr",
-    "skills/vera/references/connected-studio-knowledge.md",
+    "skills/mparanza-vera/references/connected-studio-knowledge.md",
     "scripts/native_sari_intake.py",
     "scripts/native_sari_intake_bridge.py",
-    "skills/registro-imprese-sari/SKILL.md",
+    "skills/mparanza-registro-imprese-sari/SKILL.md",
     "scripts/native_sari_authoring.py",
     "scripts/native_sari_author_bridge.py",
     "scripts/native_sari_review.py",
@@ -160,7 +160,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "e254b4e4afd6b57d480adbe2cf13ea81cf42f07d31fef6f63246bdbd69105ec8"
+    "source_fingerprint": "171d611ca01918abd08c868f87845bd09eb9fd969207bac4e2adb949450ea3fa"
   },
   "role": "workflow",
   "runtime_profiles": [

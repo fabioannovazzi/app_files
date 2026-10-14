@@ -13,5 +13,16 @@
     "set-overlap-analysis",
     "statement-analysis",
     "variance-analysis"
-  ]
+  ],
+  "workflow_roles": {
+    "attribute-reporting": {
+      "skill": "mparanza-attribute-reporting"
+    },
+    "business-planning": {
+      "skill": "mparanza-business-planning"
+    },
+    "reporting-engine": {
+      "skill": "mparanza-reporting-engine"
+    }
+  }
 }

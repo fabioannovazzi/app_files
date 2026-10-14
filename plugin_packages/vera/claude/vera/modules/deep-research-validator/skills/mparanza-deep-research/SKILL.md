@@ -268,7 +268,7 @@ reviewed original and opposing opinions, assessment and comparison into the
 same native answer-review widget. It displays the model's declared status;
 it does not certify closure or legal quality. Validate the hash-bound local
 review reference, then call `render_deep_research_review` as documented in
-`../legal-tax-answer-review/SKILL.md`. Pass the returned token to save/apply.
+`../mparanza-legal-tax-answer-review/SKILL.md`. Pass the returned token to save/apply.
 Use the MCP Apps bridge on compatible hosts; retain the local/chat fallback
 when rendering is unavailable. Simple questions do not need this workbench.
 UI excerpts are labelled and bounded for display; read the original artifacts

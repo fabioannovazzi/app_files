@@ -50,9 +50,9 @@
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
-    "skills/vera/references/connected-studio-knowledge.md",
-    "skills/scissione-guidata/SKILL.md",
-    "skills/vera/references/native-workspace.md",
+    "skills/mparanza-vera/references/connected-studio-knowledge.md",
+    "skills/mparanza-scissione-guidata/SKILL.md",
+    "skills/mparanza-vera/references/native-workspace.md",
     "scripts/native_scissione.py",
     "scripts/native_scissione_bridge.py",
     "scripts/native_workspace.py",
@@ -118,7 +118,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "310b1de5cc54b44ef9c150a514e4516d9f8985dd52eead205348dcb7a072b366"
+    "source_fingerprint": "22db386cb7212ef6d548ac0fcf602fe6b2b72da8d1b6b289241e672cf744a372"
   },
   "role": "workflow",
   "runtime_profiles": [

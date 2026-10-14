@@ -99,19 +99,19 @@
       "sha256": "771dec6416bb5bd0eb2453caed09fbd9644c1386dab1c187c1d2b859e377d8ef"
     },
     {
-      "path": "skills/advisory-deliverable-validator/SKILL.md",
-      "sha256": "a31cc0544500ef3e8af9ae17bdd6e49c35986752604db47ca5b057e9dec06430"
+      "path": "skills/mparanza-advisory-deliverable-validator/SKILL.md",
+      "sha256": "caf8ebe0cc654238e1b2e3eb3ce417434d70471ad978481fb000e1fe4f062d01"
     },
     {
-      "path": "skills/advisory-deliverable-validator/references/advisory-contract.md",
+      "path": "skills/mparanza-advisory-deliverable-validator/references/advisory-contract.md",
       "sha256": "c34fc34c7a642dc2e08f02c9fd4bc1038f559ccb14114f8a2127fa4d1e71dd79"
     },
     {
-      "path": "skills/advisory-deliverable-validator/scripts/advisory_review_render.py",
+      "path": "skills/mparanza-advisory-deliverable-validator/scripts/advisory_review_render.py",
       "sha256": "0aed18e4209aa68d5caedf2cf1b3136a4d6a7caf86dd4fc5bf8a844a2c0e6783"
     },
     {
-      "path": "skills/advisory-deliverable-validator/scripts/advisory_validation.py",
+      "path": "skills/mparanza-advisory-deliverable-validator/scripts/advisory_validation.py",
       "sha256": "0dd40590d97c29a5e357cdeb6cd555c2ddace6a960882315f1cbb339c25003ab"
     },
     {

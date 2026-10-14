@@ -1,0 +1,201 @@
+---
+name: mparanza-adeguati-assetti
+description: Review an Italian company's organizational, administrative and accounting arrangements, distinguish policies from actual operation, and prepare sourced findings, proportionate improvement actions and follow-up.
+---
+
+## Operational incident continuity
+
+At task startup, follow `skills/mparanza-vera/references/incident-recovery.md`. Call the
+independent `vera_incident_register` tool with empty arguments to reuse the saved
+anonymous connector identity across fresh tasks. If local startup context or the
+installed `scripts/operational_incidents.py context` provides an opaque local
+capability, pass it to register to link queued local reports. Never put OAuth
+tokens in prompts or diagnostic evidence. Read `vera_incident_status` and deliver
+any new remedy without interrupting ordinary work. Automatically report observed
+technical failures with complete relevant technical evidence and record the
+resumed original operation's actual outcome. Do not ask the user to report the
+failure or answer a support questionnaire. Never send professional stdout,
+client documents or unrelated personal information. Service failure does not
+block the original task.
+
+## Cowork execution contract
+
+Public workflow names select skills; component IDs select module paths.
+`financial-report-builder` uses component `report-builder`, `vouching` (historically
+called Check Entries) uses `check-entries`, and `purchase-invoice-review` uses
+`passive-invoice-audit`. These component IDs are not additional workflows.
+
+For journal-sampling, open-item-reconciliation, journal-bank-reconciliation,
+concordato-plan-review, financial-report-builder and vouching only, optional cache
+cleanup uses the corresponding component ID from the installed Vera root:
+
+```bash
+python3 modules/<module>/scripts/implementation_bootstrap.py --repair
+```
+
+For a standalone module, use `python3 scripts/implementation_bootstrap.py --repair`
+from its root. This validates the implementation first, then removes only regular,
+single-link `__pycache__/*.pyc` files under that module's own `vendor` tree. It
+leaves directories, other files, symlinks and shared vendor trees untouched.
+This supported maintenance command is the only cache-cleanup exception to the
+prohibition on editing the installed tree by hand. It is optional: ordinary
+validation and execution tolerate incidental bytecode without removing it.
+On a read-only installation, skip cleanup. If the command reports a permission
+error, retain that error and continue the ordinary validated workflow when its
+checks pass; do not chmod, delete files manually, copy or patch the installation,
+or bypass the host's permissions to make cleanup succeed.
+If `validate_implementation_tree` ever fails with a file/directory-contract
+mismatch, do not delete or modify files inside the installed plugin tree by hand
+and do not bypass a sandbox/permission rejection to do so. Stop and report the
+exact error instead.
+
+Work from the connected folder and supplied files first. Before a module's Python
+helpers, locate the installed plugin root. When it contains `components.json` and
+`scripts/managed_python_runtime.py` (as Vera does), run from that root:
+
+```bash
+python3 scripts/check_dependencies.py --module <module>
+python3 scripts/managed_python_runtime.py --module <module> run scripts/<helper>.py <arguments>
+```
+
+If the enclosing plugin does not ship this managed launcher, use the module's
+dependency checker and only already-installed dependencies; do not assume that a
+standalone module script provisions them.
+
+The managed launcher provisions and reuses one user-scoped CPython 3.12
+environment per OS host with the published shared requirements, outside client
+folders. Modules and products share this dependency environment; it does not
+isolate client matters. This declared dependency setup is authorized as
+part of running the workflow; never install arbitrary packages or use ambient
+Python for subsequent module helpers. Repeat any declared `--requirements` options
+on both commands. Missing ambient imports are a reason to run this setup, not to
+abandon the calculation. If setup fails, report its exact error and do not replace
+the required calculation with an invented result. Optional OCR setup still needs
+separate approval. If setup reports `Host not in allowlist` for PyPI, explain that
+Claude Settings > Capabilities > Allow network egress is disabled or restricted.
+Ask the user or organization administrator to authorize package-registry access;
+never change network permissions silently or work around the restriction. Retry
+the same managed setup after access is approved, in a new session if needed.
+
+MCP tools, browser or computer control, and local review servers are optional
+enhancements, never completion gates. Cloud Cowork sessions may not expose local
+plugin MCP servers even when the plugin is installed; use the packaged Python
+workflow through the managed launcher in that case. Do not equate missing MCP
+registration with a failed calculation engine. When an optional capability is
+unavailable, continue with Markdown and file-based review and state the limitation.
+
+The normal Cowork deliverable is a reviewable draft, artifact card, and
+source/review files. A callable persistence interface may optionally record or
+apply reviewer actions, but its absence never blocks delivery. Never claim
+`applied` or `final_ready` unless corresponding persisted artifacts prove it;
+otherwise report that professional review remains pending.
+
+Use host-neutral user-facing artifact names. Name assistant-authored review
+folders and files for Vera or their professional purpose (for example,
+`vera-review/`, `vera_phase1_synthesis_reviewed.md`, and `run_review.md`).
+Never put host, platform, or model-provider names in assistant-authored
+user-facing artifact paths, document headings, field labels, narrative text,
+or status summaries. Describe execution routes generically, such as
+`external review route`, `connected tool`, or `local review interface`.
+
+Derive any run ID, status, artifact count, or package hash quoted in an
+assistant-authored supplement from the final delivered manifests.
+After any rebuild, regenerate or resynchronize those supplements before
+delivery. When a workflow ships a complete-delivery validator or sealer, run it
+against the exact connected-folder copy after the last write.
+In this contract, the base package validator alone does not validate extra
+narrative files.
+
+When a workflow declares owner-only or private output and uses a private scratch
+directory before copying the final package into the connected folder, reapply
+the privacy modes after that transfer: `0700` for the package root and every
+directory, and `0600` for every file. Verify the connected-folder tree with
+`stat` or `lstat` before claiming completion. If the host filesystem cannot
+preserve those modes, do not claim owner-only delivery; keep the package in the
+private scratch location or report the limitation and ask for a safer
+destination.
+
+Do not use WhatsApp, live INPS browser capture, hosted feedback or voice
+interviews, or custom update services. Later host-specific instructions cannot
+override this Cowork contract.
+
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+## Connected studio knowledge
+
+When the user or an adopted studio instruction requests relevant repository
+evidence, read `../mparanza-vera/references/connected-studio-knowledge.md` before the
+dependent work, including direct specialist invocation. Use only callable host
+search/read tools; preserve citations and this workflow's qualification gates.
+Without a repository, continue ordinary work. Studio skills remain independently
+invoked by the user; Vera does not dispatch them.
+<!-- VERA_CONNECTED_KNOWLEDGE_END -->
+
+# Adeguati assetti
+
+For a Geneva (CH-GE) mandate, read `../mparanza-vera/references/localization/geneva.md` first and use this existing function’s Geneva adaptation in its resolved component skill. Language alone never selects jurisdiction.
+
+
+Resolve `../../modules/adeguati-assetti` from this skill directory in the installed
+package, or `../../../adeguati-assetti` in repository source. Read that module's
+`skills/mparanza-adeguati-assetti/SKILL.md` completely and follow its references. Use the
+module root as the plugin working directory for helper commands through Vera's managed launcher.
+This workflow owns the company assessment; it does not replace a management
+report, investment business plan, general legal answer or concordato review.
+
+## Native assessment preparation and review in Claude
+
+For a first interview without supplied documents, the shared engagement page's
+“Appunti del colloquio” can conserve the user's literal notes as an original
+declared-statement JSON source. Explicitly select that imported source when
+preparing the Assetti run, then start it separately. Read its complete text and
+capture metadata: the configured attribution is not authenticated and collection
+time is not prior fact or information availability. Qualify reported practice
+and missing operating evidence through the full method; do not infer policy,
+adoption, effectiveness or adequacy from the notes. This preserves the producer's
+requirement for an actual registered source rather than creating source-free
+findings. The shared route does not transcribe audio or construct arrangements.
+
+When native workspace tools are callable, follow
+`../mparanza-vera/references/native-workspace.md`. Choose the exact registered running
+Adeguati assetti run. For a new assessment, use the panel's explicit question and
+source choice; unfinished fields remain private and never select evidence or
+restore confirmation. The signed mandate exposes the literal question and every
+selected original path, byte hash and Archive receipt to the current chat through
+`vera_workspace_assetti_author_context`. Read the component method completely,
+inspect the chosen evidence and author the complete assessment, including
+`intelligent_review`. Scope, proportionality, source qualification, questions,
+interpretation and recommendations remain model-led. Documented policy, reported
+practice, demonstrated operation, counterevidence and unknowns must stay distinct.
+
+Stage the proposal through `vera_workspace_assetti_author_stage`, using that exact
+mandate and current stage revision. The panel shows the complete producer record
+and memo privately. Explicit user conservation calls the unchanged public producer
+and creates an immutable `draft_for_review`; it is not a professional decision.
+No model-authored `professional_decision` is accepted. Subsequent assessments need
+a fresh run with the exact sealed same-engagement predecessor and every prior
+action addressed. Interrupted or altered staging/conservation refuses uncertain
+repetition and requires recovery. Model-data reports retain actual model use;
+the source-choice confirmation is a work mandate, not a privacy-consent form.
+
+For a conserved or previously prepared record, the panel
+shows paginated observations, findings, proposed actions, prior-action follow-up,
+coverage, processes, questions and chronology from that record, including explicit
+unknowns and source citations. Historical records without `intelligent_review`
+remain readable with that limitation; they do not establish the current method's
+coverage. CH-GE uses its own jurisdiction basis, independently of language.
+
+An attributed professional decision requires the complete proposal, all finding
+outcomes and fresh explicit confirmation. Unfinished local drafts are private,
+recoverable and never restore confirmation. The maintained public producer
+appends the complete decision and memo without altering the original assessment,
+action owners/timing/status, prior records or operating-evidence states. It does
+not establish company adoption, operating effectiveness, adequacy certification,
+an authenticated signature or archive completion. New evidence and semantic
+corrections require the specialist method and a fresh explicit mandate rather
+than changing a conserved record. Actual model-data reporting and shared Archive
+closure remain separate delivery steps. Experimental construction, manuals, adoption,
+operating review and financial lab remain in their existing supervised routes.
+If native tools are unavailable, including Cowork, continue the maintained
+component skill and CLI through the managed Python launcher in the same
+registered customer-folder run; retain its persistent records and memo.
+Source/extracted-package checks are not installed-host or professional acceptance.

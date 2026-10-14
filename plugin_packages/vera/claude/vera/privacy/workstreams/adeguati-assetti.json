@@ -48,9 +48,9 @@
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
-    "skills/vera/references/connected-studio-knowledge.md",
-    "skills/adeguati-assetti/SKILL.md",
-    "skills/vera/references/native-workspace.md",
+    "skills/mparanza-vera/references/connected-studio-knowledge.md",
+    "skills/mparanza-adeguati-assetti/SKILL.md",
+    "skills/mparanza-vera/references/native-workspace.md",
     "scripts/native_assetti.py",
     "scripts/native_aml.py",
     "scripts/native_aml_bridge.py",
@@ -106,7 +106,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "ffa74c2637c7269f42f600ec31211cc50be40c950aa1dbf26517a9cc872cb8c1"
+    "source_fingerprint": "c37c87277b3faeead18fe043e0fc8acfa7a56ee725fdb9bfa64adb63697eb5e8"
   },
   "role": "workflow",
   "runtime_profiles": [

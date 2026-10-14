@@ -60,79 +60,79 @@
       "sha256": "771dec6416bb5bd0eb2453caed09fbd9644c1386dab1c187c1d2b859e377d8ef"
     },
     {
-      "path": "skills/html-deck/SKILL.md",
-      "sha256": "9b6fef76a9214845af17d8981ba93a04ab6dbf3ed8695ccbd4753ecb6295206d"
+      "path": "skills/mparanza-html-deck/SKILL.md",
+      "sha256": "352b97f87fcd76684d01f64e295a6575e07b71c42c22e6d42d80922442a587c2"
     },
     {
-      "path": "skills/html-deck/references/evidence-bindings.md",
-      "sha256": "d8f83b25430898ff126ee98d67fff63c49b19b965d775e8d8e86d09345c86827"
+      "path": "skills/mparanza-html-deck/references/evidence-bindings.md",
+      "sha256": "fed6bd6f35a24f5f7f2214788617acf57ea1abceddf5e355003708dbdbfba6f8"
     },
     {
-      "path": "skills/html-deck/references/quality-bar.md",
+      "path": "skills/mparanza-html-deck/references/quality-bar.md",
       "sha256": "77424a8af1eb619d3b50f2ee31673c340822dc57b0bccfdcf68abc5f5b281604"
     },
     {
-      "path": "skills/html-deck/references/revision-workflow.md",
-      "sha256": "f7bef902a6d909b4991f4c536e5a740d08770a9bdd9f16d0aa6c32b3cc2ee6e3"
+      "path": "skills/mparanza-html-deck/references/revision-workflow.md",
+      "sha256": "0e91448d86d7545131d25bb25af15793d677c4c66e2b354ec20de5c0d7ae2ffd"
     },
     {
-      "path": "skills/html-deck/references/static-compatibility.md",
-      "sha256": "678e5e7ba40b572c72b80c1a37cea8b0e3ef9d9c9f231e01372c39fdf1ecb3c2"
+      "path": "skills/mparanza-html-deck/references/static-compatibility.md",
+      "sha256": "46f6a7514c203fdd0b54548e556fa5b5c2b2d7e123fabced3a198ffd4c678e67"
     },
     {
-      "path": "skills/html-deck/references/structured-authoring.md",
-      "sha256": "536273cfba96d4b11639208eec5843eb61ee5673d10beb2b354c27b873b570a7"
+      "path": "skills/mparanza-html-deck/references/structured-authoring.md",
+      "sha256": "31e4a03df8b6f8b31dffe13e25c51242167186e78f2cb459d863d0de8e5e49fe"
     },
     {
-      "path": "skills/html-deck/scripts/browser_qa_html_deck.py",
+      "path": "skills/mparanza-html-deck/scripts/browser_qa_html_deck.py",
       "sha256": "91be95f050c8b245c4dedc4c045cee5a69d706808cb31a377acc540f0cf1d5ce"
     },
     {
-      "path": "skills/html-deck/scripts/build_html_deck.py",
+      "path": "skills/mparanza-html-deck/scripts/build_html_deck.py",
       "sha256": "b797e5a2487d9c43a3a5a595be791d1c4d9ed76b3f04a14f49265c2519fff2d1"
     },
     {
-      "path": "skills/html-deck/scripts/build_layout_gallery.py",
+      "path": "skills/mparanza-html-deck/scripts/build_layout_gallery.py",
       "sha256": "30f99ae7546d5d5ffbdadbd31094210224d4f032b9c0ff03d569eb9594aa79e5"
     },
     {
-      "path": "skills/html-deck/scripts/compare_html_deck_revision.py",
+      "path": "skills/mparanza-html-deck/scripts/compare_html_deck_revision.py",
       "sha256": "190549f12c819fc860b0e96eb5408ec59855e15a80c57d714054670ca109db9c"
     },
     {
-      "path": "skills/html-deck/scripts/compose_html_deck.py",
+      "path": "skills/mparanza-html-deck/scripts/compose_html_deck.py",
       "sha256": "7d2d6ea4926e8ec6532236bc35c757936cf11b983332e0488839b911daff28fe"
     },
     {
-      "path": "skills/html-deck/scripts/content_ledger.py",
+      "path": "skills/mparanza-html-deck/scripts/content_ledger.py",
       "sha256": "b5037e72556596b3a201cc310fa724aa80552d663ade1da258d7415c9d8a3b38"
     },
     {
-      "path": "skills/html-deck/scripts/data_visuals.py",
+      "path": "skills/mparanza-html-deck/scripts/data_visuals.py",
       "sha256": "68a195e3ea68be169994b16a79ee5dcf76573e2def869071884176394b62c9b5"
     },
     {
-      "path": "skills/html-deck/scripts/evidence_bindings.py",
+      "path": "skills/mparanza-html-deck/scripts/evidence_bindings.py",
       "sha256": "c4c08750d2dd79cbf6b4961a8647664491299f336e91480fb8fbba15685d7266"
     },
     {
-      "path": "skills/html-deck/scripts/html_deck_revision.py",
+      "path": "skills/mparanza-html-deck/scripts/html_deck_revision.py",
       "sha256": "ace7f2144b416258d4ca00d14ebb333133674529ca7f0e1f0305595435f9e7bf"
     },
     {
-      "path": "skills/html-deck/scripts/init_html_deck.py",
+      "path": "skills/mparanza-html-deck/scripts/init_html_deck.py",
       "sha256": "5c47bd53b7aac2f64844f377aac475179109392b672a4c934707c7a74865e94c"
     },
     {
-      "path": "skills/html-deck/scripts/inspect_html_deck.py",
+      "path": "skills/mparanza-html-deck/scripts/inspect_html_deck.py",
       "sha256": "52759a5789f5b063620610970461992521353c2fda61de53908b31c3d5a732cd"
     },
     {
-      "path": "skills/html-deck/scripts/validate_html_deck.py",
+      "path": "skills/mparanza-html-deck/scripts/validate_html_deck.py",
       "sha256": "225c3bb0f0f1ba5a4c59ecf73222f9a78c9bc5cac371e633f655c0c9bdced335"
     },
     {
-      "path": "skills/html-deck/scripts/validate_revision_map.py",
+      "path": "skills/mparanza-html-deck/scripts/validate_revision_map.py",
       "sha256": "321e8228f54bb51902d6f20c3cfc085c2974bc38e0abddb99d9b84dcb4ec097c"
     },
     {

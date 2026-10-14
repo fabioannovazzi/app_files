@@ -11,23 +11,26 @@
   "workflow_roles": {
     "prompt-optimizer": {
       "kind": "public_workflow",
-      "skill": "legal-tax-answer-planner"
+      "skill": "mparanza-legal-tax-answer-planner"
     },
     "deep-research-validator": {
       "kind": "public_workflow",
-      "skill": "legal-tax-answer-review"
+      "skill": "mparanza-legal-tax-answer-review"
     },
     "comunicazione-professionale": {
       "kind": "public_workflow",
-      "profile": "lucia-lawyer"
+      "profile": "lucia-lawyer",
+      "skill": "mparanza-comunicazione-professionale"
     },
     "presenza-digitale-studio": {
       "kind": "public_workflow",
-      "profile": "lucia-lawyer"
+      "profile": "lucia-lawyer",
+      "skill": "mparanza-presenza-digitale-studio"
     },
     "apertura-pratica": {
       "kind": "public_workflow",
-      "profile": "lucia-legal-matter-opening"
+      "profile": "lucia-legal-matter-opening",
+      "skill": "mparanza-apertura-pratica"
     },
     "studio-archive": {
       "kind": "internal_runtime",
@@ -35,7 +38,8 @@
         "prompt-optimizer",
         "deep-research-validator",
         "apertura-pratica"
-      ]
+      ],
+      "skill": "mparanza-studio-archive"
     }
   }
 }

@@ -115,11 +115,11 @@
       "sha256": "7fd05f523aecca085a549f497dab25a9e74b889c610766996aa98eed37072b7b"
     },
     {
-      "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
-      "sha256": "024deea4706ccbe9bb0098caa99a135a206dfbe44abe51aaa23962489bfd6839"
+      "path": "modules/open-item-reconciliation/skills/mparanza-open-item-reconciliation/SKILL.md",
+      "sha256": "76d2ceced31a26e4f4553cfc79f2d10abf9c5440d636d5052d1ab701007434df"
     },
     {
-      "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/references/geneva.md",
+      "path": "modules/open-item-reconciliation/skills/mparanza-open-item-reconciliation/references/geneva.md",
       "sha256": "0ec548e42512efe55621d1f922098793090ba82ea887bf8b0072c7ed5ea9b174"
     },
     {
@@ -163,11 +163,11 @@
       "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
     },
     {
-      "path": "skills/open-item-reconciliation/SKILL.md",
-      "sha256": "7fb652c159610fa6320a8611342eed6fc6c3a1c01540dccb9174cec24e8744a7"
+      "path": "skills/mparanza-open-item-reconciliation/SKILL.md",
+      "sha256": "db58ba0207c7472b1d0a7d78701334add3452f8d1cc91f28a68ec215d28e4a28"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

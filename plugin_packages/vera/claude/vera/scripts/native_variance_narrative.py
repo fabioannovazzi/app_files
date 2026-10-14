@@ -192,8 +192,8 @@ def model_context(current: dict, root: Path, args: dict, api: Any) -> dict:
             "sha256": file_hash(manifest_path),
         },
         "public_skill": {
-            "authorized_path": str(root / "skills/variance-analysis/SKILL.md"),
-            "sha256": file_hash(root / "skills/variance-analysis/SKILL.md"),
+            "authorized_path": str(root / "skills/mparanza-variance-analysis/SKILL.md"),
+            "sha256": file_hash(root / "skills/mparanza-variance-analysis/SKILL.md"),
         },
         "artifacts": records[start : start + 30],
         "total": len(records),

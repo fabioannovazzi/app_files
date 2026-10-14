@@ -64,8 +64,8 @@
       "sha256": "99f5a56d9f8b8280aaf06bcef58c79bfd1450c298181a94f639eba1afabe05b8"
     },
     {
-      "path": "modules/trasformazione/skills/trasformazione/SKILL.md",
-      "sha256": "fbab5917e62f04cbd75b135a3810b4bc926c3f02e7157b2ffa422e92b1893446"
+      "path": "modules/trasformazione/skills/mparanza-trasformazione/SKILL.md",
+      "sha256": "93693d66d2bb13f49701a1a7d6c0f748cc20562b51bac0129e83476706ddacc9"
     },
     {
       "path": "scripts/check_dependencies.py",
@@ -77,18 +77,18 @@
     },
     {
       "path": "scripts/operational_incidents.py",
-      "sha256": "739b9390ccdd77ead53fdc6536217af4a50e3f16f9b27fa8002cecaae2c06147"
+      "sha256": "0fbb09e44c16de819e0531da3ad7a836ac92d69380f10d6dce4ca9674e5019de"
     },
     {
       "path": "scripts/verified_execution.py",
       "sha256": "6c41ba4583fd91a9cfaa78d3ccfc07eadda49e8efef7e4a58b01f0560b5ad6c0"
     },
     {
-      "path": "skills/trasformazione/SKILL.md",
-      "sha256": "d576bfb1dc99dd95293120def510de908aa02e2ca6e50bb225de0f70c1e3018b"
+      "path": "skills/mparanza-trasformazione/SKILL.md",
+      "sha256": "36c6abec9e2ca0d7976a091d34693181e764caf49a37a62008c4037ef3aca6e2"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

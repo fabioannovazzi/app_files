@@ -73,10 +73,23 @@ def test_installed_introduction_references_are_complete(surface):
     with ZipFile(ROOT / f"plugin_packages/vera/vera-{surface}.zip") as archive:
         for name in ("get-started.md", "get-started.json"):
             assert (
-                archive.read(prefix + REFERENCE + name)
+                archive.read(
+                    prefix
+                    + (
+                        REFERENCE.replace("skills/", "skills/mparanza-")
+                        if surface == "claude-plugin"
+                        else REFERENCE
+                    )
+                    + name
+                )
                 == (ROOT / "plugins/vera" / REFERENCE / name).read_bytes()
             )
-        skill = archive.read(prefix + "skills/learn-with-vera/SKILL.md").decode()
+        skill_name = (
+            "mparanza-learn-with-vera"
+            if surface == "claude-plugin"
+            else "learn-with-vera"
+        )
+        skill = archive.read(prefix + f"skills/{skill_name}/SKILL.md").decode()
         assert "references/get-started.md" in skill
         if surface == "claude-plugin":
             assert "written single-conversation contract" in skill

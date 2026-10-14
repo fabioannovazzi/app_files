@@ -29,13 +29,13 @@
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
-    "skills/vera/references/connected-studio-knowledge.md",
+    "skills/mparanza-vera/references/connected-studio-knowledge.md",
     "scripts/native_sales_plan.py",
     "scripts/native_sales_plan_bridge.py",
     "scripts/native_workspace.py",
     "mcp/workspace.cjs",
     "ui/workspace.js",
-    "skills/vera/references/native-workspace.md",
+    "skills/mparanza-vera/references/native-workspace.md",
     "scripts/native_sales_plan_authoring.py",
     "ui/custom_select.js",
     "ui/workspace.html",
@@ -94,7 +94,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "7810e23e3559878f04b7816805ca1bffdcbb228cf040eaccf7bfd959a08361d3"
+    "source_fingerprint": "9841d0c3b43c467f9c155a0889597f19fd4157fab4373bbeb8fdd064efb61c3f"
   },
   "role": "workflow",
   "runtime_profiles": [

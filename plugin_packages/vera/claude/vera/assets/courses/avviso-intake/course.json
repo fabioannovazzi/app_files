@@ -99,8 +99,8 @@
       "sha256": "b4e5bb6dd0347b9c66e1e21b3f21a7e1a84805f58008401857cc613e90043789"
     },
     {
-      "path": "modules/client-file-preparation/skills/avviso-intake/SKILL.md",
-      "sha256": "0be9b05ba8dfe3ecd9e6d3174998f6f6a4d18c99131fdb6910c8959a26d6ef07"
+      "path": "modules/client-file-preparation/skills/mparanza-avviso-intake/SKILL.md",
+      "sha256": "c3cc4dc9718cb14f980513e7c188187f52cc3b93e2b39d58cd36c2e2854b9879"
     },
     {
       "path": "modules/client-file-preparation/templates/email_documenti_mancanti.md",
@@ -151,11 +151,11 @@
       "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
     },
     {
-      "path": "skills/avviso-intake/SKILL.md",
-      "sha256": "6b383f20616f9e747f60255c2e142619a241d841ca6fe079044aac3af4ecb264"
+      "path": "skills/mparanza-avviso-intake/SKILL.md",
+      "sha256": "5bacd9ac12a24dc7cb3d13d879863ef74ab0a5bd1e5b9991bfe35ffb26e1bb35"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

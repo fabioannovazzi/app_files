@@ -50,7 +50,7 @@ def test_installed_cowork_prepares_every_supported_course_and_language(installed
     ]
     for entry in written_courses:
         workflow = entry["workflow"]
-        assert (root / f"skills/{workflow}/SKILL.md").is_file()
+        assert (root / f"skills/mparanza-{workflow}/SKILL.md").is_file()
         for language in entry["languages"]:
             destination = output / workflow / language
             result = run(
@@ -148,7 +148,7 @@ def test_cowork_rejects_changed_workflow_before_preparing(installed):
     _, root, output = installed
     catalog = json.loads(run(root, "list").stdout)
     entry = catalog[0]
-    skill = root / f'skills/{entry["workflow"]}/SKILL.md'
+    skill = root / f'skills/mparanza-{entry["workflow"]}/SKILL.md'
     skill.write_text(skill.read_text() + "\nChanged procedure\n")
     result = run(
         root,

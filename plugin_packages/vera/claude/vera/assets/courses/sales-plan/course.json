@@ -56,8 +56,8 @@
       "sha256": "ef97fda91c08cb9592c3fe7e492ddb0a6d1a83cf17a9066099c3233388a1d44d"
     },
     {
-      "path": "modules/sales-plan/skills/sales-plan/SKILL.md",
-      "sha256": "4997bbfac75e8f24324fba666ba45f9b0f0465fdae62fb99ac01c5ce56e5440d"
+      "path": "modules/sales-plan/skills/mparanza-sales-plan/SKILL.md",
+      "sha256": "988ed6fafd7b97d7fa9babb99e8759ea1c2d388fa485b12362fb3c0ee9957272"
     },
     {
       "path": "modules/sales-plan/vendor/modules/__init__.py",
@@ -100,11 +100,11 @@
       "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
     },
     {
-      "path": "skills/sales-plan/SKILL.md",
-      "sha256": "618f083f83dfd0cd0f4ec463e30ef0447a1c22bfac5559f3a597c10d9b0f8e18"
+      "path": "skills/mparanza-sales-plan/SKILL.md",
+      "sha256": "15beac270b17835d215d31d9aefc7319b3e6a47ac7392ba701e0ae8c3f24a2c6"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

@@ -52,11 +52,11 @@
       "sha256": "15d8f34c69f08edbd769e737202cfa1100a1830eaa7a3f3ffd9fc771fb818e0c"
     },
     {
-      "path": "modules/aml-review/skills/aml-review/SKILL.md",
-      "sha256": "d38bab4c1ce0089ae32573e8c5d1e81a79b997874bb1e8ef15d22b3af963167b"
+      "path": "modules/aml-review/skills/mparanza-aml-review/SKILL.md",
+      "sha256": "373e64de149b38e9312a0d1e7854a033eb674b11f98b91f02fef8ef6e41d4ccc"
     },
     {
-      "path": "modules/aml-review/skills/aml-review/references/geneva.md",
+      "path": "modules/aml-review/skills/mparanza-aml-review/references/geneva.md",
       "sha256": "6bf4ade45a37407890f2b48cfd33b27cddc6977ff1db9d6fd7b027086d7d17fe"
     },
     {
@@ -100,11 +100,11 @@
       "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
     },
     {
-      "path": "skills/aml-review/SKILL.md",
-      "sha256": "6f55ed0cf12292eb7ce005480e658bd168356f1ea9f0f8a6b4ac122fd0a508d8"
+      "path": "skills/mparanza-aml-review/SKILL.md",
+      "sha256": "178494efaa93c993c28381f7e06af166a80eecd5a49a2de0505df2925b8440a8"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

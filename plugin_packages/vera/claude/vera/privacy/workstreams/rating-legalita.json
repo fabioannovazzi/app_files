@@ -47,8 +47,8 @@
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
-    "skills/rating-legalita/SKILL.md",
-    "skills/vera/references/connected-studio-knowledge.md",
+    "skills/mparanza-rating-legalita/SKILL.md",
+    "skills/mparanza-vera/references/connected-studio-knowledge.md",
     "scripts/native_rating.py",
     "scripts/native_rating_bridge.py",
     "ui/rating.js",
@@ -75,7 +75,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "8fe90f8d5df02cd9ba53382cc37ea42cfa49e18c4321d8ebb30dd6780504547d"
+    "source_fingerprint": "20df4229068a88553d66c0d5ca0905ce34a8fd8782e7cf403b37bb2ff624980c"
   },
   "role": "workflow",
   "runtime_profiles": [

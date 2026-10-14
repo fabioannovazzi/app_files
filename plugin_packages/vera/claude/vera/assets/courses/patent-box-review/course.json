@@ -169,7 +169,7 @@
     },
     {
       "path": "modules/patent-box-review/references/INTEGRAZIONE_VERA.md",
-      "sha256": "91634aa8a3c3e1f35708bd5fd87c43bb4f4d0fb8e179ed79fa407d137ef37763"
+      "sha256": "89237db7bde3461491060315f9fe5981e45a738fdd5cab15f5ff0c517c6d42b0"
     },
     {
       "path": "modules/patent-box-review/references/SPECIFICA_FUNZIONALE.md",
@@ -272,8 +272,8 @@
       "sha256": "6b8c279ab270edbdaeba433bb2e54af560bf1d4206a9adfc417afb5d1aadb504"
     },
     {
-      "path": "modules/patent-box-review/skills/patent-box-review/SKILL.md",
-      "sha256": "af5135e9a03f57adbfe510a550540fba8ff4ad7fea8bac8d57ec5acbf648e8ed"
+      "path": "modules/patent-box-review/skills/mparanza-patent-box-review/SKILL.md",
+      "sha256": "5f15e1a3ef76a81d5f60d918fb0d9ccb8b25f9a3b054080f966110914f4ac1ac"
     },
     {
       "path": "modules/patent-box-review/templates/declaration_bridge.csv",
@@ -336,11 +336,11 @@
       "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
     },
     {
-      "path": "skills/patent-box-review/SKILL.md",
-      "sha256": "d31f88ff60a9feaec9fc4c5a4221564852a33c3a949bc81b0bbadc18a54702c2"
+      "path": "skills/mparanza-patent-box-review/SKILL.md",
+      "sha256": "f5f3630c1506d6281e20993f7197684199a6ea2c78f6f33d6bc6d7aaf405f8d2"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
