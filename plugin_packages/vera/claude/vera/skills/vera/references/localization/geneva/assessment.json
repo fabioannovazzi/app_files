@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "e0fb698d03c6076eb2ad8056cc07b5ba598e4df00d14def4714c6f747b0cb070",
+  "catalogue_fingerprint": "57f82bdb9be80964464d82e587b681d85ad4b427143cb5c45b5d067eadf4609d",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -1749,5 +1749,9 @@
   "remote_course_package_binding": {
     "version": "0.1.382",
     "scope": "Preserve the merged model-policy and calendar source reviews and existing Geneva dispositions. Shared remote lesson data remains hash-pinned. No additional jurisdictional workflow or installed-host acceptance claimed."
+  },
+  "research_subscription_page_source_refresh": {
+    "version": "0.1.383",
+    "scope": "Only the canonical manifest version changed in the catalogue; all skill entrypoint bytes and function IDs remain identical. Public subscription responsibility copy and privacy fingerprints changed. Existing Geneva judgments remain unchanged; no additional jurisdiction acceptance is claimed."
   }
 }
