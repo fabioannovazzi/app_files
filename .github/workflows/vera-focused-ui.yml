@@ -20,7 +20,7 @@ jobs:
           node-version: '22'
       - name: Install declared workflow dependencies and checks
         run: >-
-          python -m pip install pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit polars numpy
+          python -m pip install pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit polars numpy beautifulsoup4
           -r plugins/client-file-preparation/requirements.txt
           -r plugins/comunicazione-professionale/requirements.txt
           -r plugins/report-builder/requirements.txt
