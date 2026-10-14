@@ -23,7 +23,9 @@
     "mcp/research-sources.cjs",
     "scripts/research-subscriptions-store.cjs",
     "skills/legal-tax-answer-review/SKILL.md",
-    "scripts/research-sources.cjs"
+    "scripts/research-sources.cjs",
+    "skills/vera/references/legal-tax-model-policy.md",
+    "skills/legal-tax-answer-planner/SKILL.md"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -81,6 +83,15 @@
         "id": "optional-research-subscriptions",
         "purpose": "Use the user-authorised subscription evidence within the existing legal and tax assignment",
         "content": "Saved provider choices and bounded reported access metadata; actual research queries, returned results, document titles, citable links, source passages, adverse evidence, applicability assessments and access/retention limitations can enter the selected host model context. The profile-local helper makes no browser, network or model call and stores no document bodies or credentials.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "legal-tax-model-selection",
+        "purpose": "Maintain Vera's most-capable-available host model requirement through the legal/tax pipeline",
+        "content": "Required and observed model identifiers, the capability-selection basis, host/session reference, source of identity evidence, explicit user confirmation from the optional panel or chat, and actual phase-assignment references. This local record may enter the current host model context. It contains no credentials and is not model-provider attestation. Cowork can use the same managed Python helper and chat without UI or an external model API.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -234,12 +245,16 @@
     {
       "id": "actual-evaluation-retention",
       "control": "Evaluation tooling copies selected existing artifacts locally, pins the actual product ZIP version and hash, records host/model/tool observation limits and binds any actual assessment to exact final-answer bytes. Comparison withholds workflow labels in a separate assessor directory while preserving content; file integrity cannot certify execution authenticity or professional quality."
+    },
+    {
+      "id": "legal-tax-model-continuity",
+      "control": "The local helper validates the managed or standalone run, output boundary, exact model identifier, session and record revision. UI confirmation is bound to the server-side run by a random expiring token. Host-reported identity, user-confirmed selection and unknown identity remain distinct. The UI does not switch host models. Chat fallback uses the same helper, with no new service, account, credentials, automatic anonymization or silent weaker-model fallback."
     }
   ],
   "review": {
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "da41e3e104bf0710b27dd6253b71fff3915bda3235df1a014e125c0056476292"
+    "source_fingerprint": "5ef62b35deca6c35db1266d5825401d1fc412c1ef69cb38cd754d35beb6a448c"
   }
 }

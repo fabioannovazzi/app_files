@@ -27,6 +27,14 @@ Tutorial profiles, progress, examples and feedback remain local; never send a
 change request, stamp a tutorial receipt or call hosted interviews for a tutorial.
 Current user requests take precedence over saved preferences.
 <!-- VERA_OPENAI_ONBOARDING_END -->
+## Legal/tax model requirement
+
+Before substantive work, read `../vera/references/legal-tax-model-policy.md`
+and satisfy or reuse the same run/session model check. Use the most capable
+available host model for this stage and any authorized delegation. The plugin
+UI is optional: Cowork and other hosts without it use the identical chat and
+local-record fallback. Never silently downgrade or claim an automatic switch.
+
 # Risposta a quesiti legali e fiscali
 
 This is Vera's user-facing journey from a substantive legal, tax or

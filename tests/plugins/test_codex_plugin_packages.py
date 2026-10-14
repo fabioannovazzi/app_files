@@ -1298,6 +1298,25 @@ def test_projected_vera_upload_keeps_executable_new_client_review_bridges(
         assert workbench.mcp_server_path == projected_server
 
 
+def test_projected_vera_upload_keeps_legal_tax_model_helper(tmp_path: Path) -> None:
+    builder = load_builder()
+    vera = {bundle.name: bundle for bundle in builder.load_bundles()}["vera"]
+    entries = builder.chatgpt_upload_entries(vera)
+    prefix = "modules/prompt-optimizer/"
+    for name, content in entries.items():
+        if name.startswith(prefix):
+            target = tmp_path / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(content)
+    root = tmp_path / prefix
+    assert (root / "scripts/model_policy.py").is_file()
+    assert (root / "assets/legal-tax-model.html").is_file()
+    tools = _projected_review_tools(
+        _bundled_node_or_skip(), root / "scripts/review_mcp_server.cjs"
+    )
+    assert {"check_legal_tax_model", "confirm_legal_tax_model"} <= tools
+
+
 @pytest.mark.parametrize(
     "component_name",
     ("journal-bank-reconciliation", "report-builder"),
