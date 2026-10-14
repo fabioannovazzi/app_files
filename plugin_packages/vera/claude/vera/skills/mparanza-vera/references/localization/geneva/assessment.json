@@ -1757,7 +1757,22 @@
   "claude_skill_namespace_release_binding": {
     "date": "2026-10-14",
     "version": "0.1.386",
-    "previous_catalogue_fingerprint": "4c208633d469ec0599576bb5e915a2dcf2051765da23663f4c4d8536fb819d0c",
-    "scope": "All 55 canonical function IDs, source paths and skill bytes are unchanged. Only the product manifest/version binding advanced. Claude-exported skill identities receive the Mparanza prefix; existing Geneva dispositions and professional acceptance limits are preserved."
+    "previous_catalogue_fingerprint": "14cafc857741ce77d7e671b18fddecd57e17709096fadd5d5dbda3c31e6d23c3",
+    "scope": "All 55 canonical function IDs, source paths and skill bytes are unchanged. Only the product manifest/version binding advanced. Claude-exported skill identities receive the Mparanza prefix; existing Geneva dispositions and professional acceptance limits are preserved.",
+    "integrated_main": "de79812a5"
+  },
+  "tax_course_release_binding_20261014": {
+    "reviewed_at": "2026-10-14T15:29:56.247123+00:00",
+    "previous_version": "0.1.382",
+    "current_version": "0.1.385",
+    "previous_catalogue_fingerprint": "e0fb698d03c6076eb2ad8056cc07b5ba598e4df00d14def4714c6f747b0cb070",
+    "current_catalogue_fingerprint": "14cafc857741ce77d7e671b18fddecd57e17709096fadd5d5dbda3c31e6d23c3",
+    "scope": "Manifest-only rebind: exact skill IDs and bytes unchanged. New prepared Italian tax-litigation lessons do not change governing jurisdiction or establish Geneva qualification. Existing dispositions and acceptance limits retained.",
+    "unchanged_function_rows": true
+  },
+  "tax_course_main_integration_binding_20261014": {
+    "main_commit": "26075c11d6104c2806527a690188de806ea1f292",
+    "version": "0.1.385",
+    "scope": "Skill-entrypoint snapshot matches the reviewed main entries including the research namespace update. All main assessment rows and jurisdiction dispositions are preserved. Only the manifest version is newer. The Italian tax course does not establish Geneva qualification."
   }
 }

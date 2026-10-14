@@ -58,6 +58,34 @@
         "es": "Aprender a partir de un tema y fuentes seleccionadas, preparar una comunicación para un público concreto y revisar el paquete antes de utilizarlo."
       }
     },
+    "contenzioso-tributario": {
+      "path": "contenzioso-tributario/course.json",
+      "sha256": "a300ff0eb1cd0316fe578bab84c6fc14a814bf59ec83fa145690fdd0cd5fb59d",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Preparare e riprendere un contenzioso tributario con Lucia",
+        "en": "Prepare and resume Italian tax litigation with Lucia",
+        "fr": "Préparer et reprendre un contentieux fiscal italien avec Lucia",
+        "de": "Italienischen Steuerstreit mit Lucia vorbereiten und fortsetzen",
+        "es": "Preparar y retomar un litigio tributario italiano con Lucia"
+      },
+      "goals": {
+        "it": "Imparare a partire dagli atti, verificare passaggi e termini, preparare una bozza e aggiornare la stessa pratica quando arriva una nuova prova.",
+        "en": "Learn to start from case documents, verify steps and deadlines, prepare a draft and update the same matter when new evidence arrives.",
+        "fr": "Apprendre à partir des actes, vérifier étapes et délais, préparer une ébauche et actualiser le même dossier lorsqu’une nouvelle preuve arrive.",
+        "de": "Mit den Akten beginnen, Schritte und Fristen prüfen, einen Entwurf vorbereiten und denselben Vorgang bei neuen Belegen aktualisieren lernen.",
+        "es": "Aprender a partir de los documentos, verificar pasos y plazos, preparar un borrador y actualizar el mismo expediente al recibir nuevas pruebas."
+      }
+    },
     "presenza-digitale-studio": {
       "path": "presenza-digitale-studio/course.json",
       "sha256": "0dde97195167e77fb1a63ac0ecba9ceeb8316f3a3ae20bae9ecdc804e93edfa2",

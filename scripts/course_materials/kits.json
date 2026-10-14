@@ -9708,5 +9708,355 @@
         ]
       }
     ]
+  },
+  "vera/contenzioso-tributario": {
+    "group": "workflow",
+    "revision": "2026-10-14.1",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "italian_tax_evidence_plan_draft_then_delivery_update"
+    },
+    "files": [
+      {
+        "source": "contenzioso-tributario/avviso.txt",
+        "path": "files/input/avviso.txt",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/avviso.txt",
+        "path": "files/practice/avviso.txt",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/accettazione.txt",
+        "path": "files/input/accettazione.txt",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/accettazione.txt",
+        "path": "files/practice/accettazione.txt",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/consegna.txt",
+        "path": "files/practice/consegna.txt",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/fonti-da-verificare.md",
+        "path": "files/input/fonti-da-verificare.md",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/fonti-da-verificare.md",
+        "path": "files/practice/fonti-da-verificare.md",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/incarico-it.md",
+        "path": "files/input/incarico-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/incarico-it.md",
+        "path": "files/practice/incarico-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/incarico-en.md",
+        "path": "files/input/incarico-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/incarico-en.md",
+        "path": "files/practice/incarico-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/incarico-fr.md",
+        "path": "files/input/incarico-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/incarico-fr.md",
+        "path": "files/practice/incarico-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/incarico-de.md",
+        "path": "files/input/incarico-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/incarico-de.md",
+        "path": "files/practice/incarico-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/incarico-es.md",
+        "path": "files/input/incarico-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/incarico-es.md",
+        "path": "files/practice/incarico-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
+  },
+  "lucia/contenzioso-tributario": {
+    "group": "workflow",
+    "revision": "2026-10-14.1",
+    "execution": {
+      "mode": "current_native_workflow",
+      "local_tutorial": true,
+      "route": "italian_tax_evidence_plan_draft_then_delivery_update"
+    },
+    "files": [
+      {
+        "source": "contenzioso-tributario/avviso.txt",
+        "path": "files/input/avviso.txt",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/avviso.txt",
+        "path": "files/practice/avviso.txt",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/accettazione.txt",
+        "path": "files/input/accettazione.txt",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/accettazione.txt",
+        "path": "files/practice/accettazione.txt",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/consegna.txt",
+        "path": "files/practice/consegna.txt",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/fonti-da-verificare.md",
+        "path": "files/input/fonti-da-verificare.md",
+        "role": "source",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/fonti-da-verificare.md",
+        "path": "files/practice/fonti-da-verificare.md",
+        "role": "practice",
+        "languages": [
+          "it",
+          "en",
+          "fr",
+          "de",
+          "es"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/incarico-it.md",
+        "path": "files/input/incarico-it.md",
+        "role": "source",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/incarico-it.md",
+        "path": "files/practice/incarico-it.md",
+        "role": "practice",
+        "languages": [
+          "it"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/incarico-en.md",
+        "path": "files/input/incarico-en.md",
+        "role": "source",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/incarico-en.md",
+        "path": "files/practice/incarico-en.md",
+        "role": "practice",
+        "languages": [
+          "en"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/incarico-fr.md",
+        "path": "files/input/incarico-fr.md",
+        "role": "source",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/incarico-fr.md",
+        "path": "files/practice/incarico-fr.md",
+        "role": "practice",
+        "languages": [
+          "fr"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/incarico-de.md",
+        "path": "files/input/incarico-de.md",
+        "role": "source",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/incarico-de.md",
+        "path": "files/practice/incarico-de.md",
+        "role": "practice",
+        "languages": [
+          "de"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/incarico-es.md",
+        "path": "files/input/incarico-es.md",
+        "role": "source",
+        "languages": [
+          "es"
+        ]
+      },
+      {
+        "source": "contenzioso-tributario/incarico-es.md",
+        "path": "files/practice/incarico-es.md",
+        "role": "practice",
+        "languages": [
+          "es"
+        ]
+      }
+    ]
   }
 }

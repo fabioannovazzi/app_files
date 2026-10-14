@@ -1,8 +1,8 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/.codex/worktrees/claude-skill-namespace/app_files/plugins/vera",
+  "root": "plugins/vera",
   "version": "0.1.386",
-  "captured_at": "2026-10-14T17:16:13.666317+00:00",
+  "captured_at": "2026-10-14T18:00:24.742379+00:00",
   "catalogue_fingerprint": "891111ff94ae012552981a04b1f0fb1f63d24efed81f72d70e1df755e7345dcd",
   "manifest_sha256": "46e5fc773ad8730e3f960df30c579fa5d735ace8cbbafa925018a451233c8457",
   "entries": [

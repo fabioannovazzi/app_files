@@ -340,6 +340,34 @@
         "es": "Aprender a iniciar la revisión de una propuesta y un plan, aportar documentos y usar el expediente producido en el trabajo profesional."
       }
     },
+    "contenzioso-tributario": {
+      "path": "contenzioso-tributario/course.json",
+      "sha256": "1099465642a1454e3933531a1f4dce10eb397d5f9ee15002b881c43034b825b9",
+      "languages": [
+        "it",
+        "en",
+        "fr",
+        "de",
+        "es"
+      ],
+      "duration_seconds": 390,
+      "group": "workflow",
+      "parent_workflow": null,
+      "titles": {
+        "it": "Preparare e riprendere un contenzioso tributario con Vera",
+        "en": "Prepare and resume Italian tax litigation with Vera",
+        "fr": "Préparer et reprendre un contentieux fiscal italien avec Vera",
+        "de": "Italienischen Steuerstreit mit Vera vorbereiten und fortsetzen",
+        "es": "Preparar y retomar un litigio tributario italiano con Vera"
+      },
+      "goals": {
+        "it": "Imparare a partire dagli atti, verificare passaggi e termini, preparare una bozza e aggiornare la stessa pratica quando arriva una nuova prova.",
+        "en": "Learn to start from case documents, verify steps and deadlines, prepare a draft and update the same matter when new evidence arrives.",
+        "fr": "Apprendre à partir des actes, vérifier étapes et délais, préparer une ébauche et actualiser le même dossier lorsqu’une nouvelle preuve arrive.",
+        "de": "Mit den Akten beginnen, Schritte und Fristen prüfen, einen Entwurf vorbereiten und denselben Vorgang bei neuen Belegen aktualisieren lernen.",
+        "es": "Aprender a partir de los documentos, verificar pasos y plazos, preparar un borrador y actualizar el mismo expediente al recibir nuevas pruebas."
+      }
+    },
     "dati-fiscali-strutturati": {
       "path": "dati-fiscali-strutturati/course.json",
       "sha256": "a403c26b5a219fec5915cdeda3663ed515b15f0294e9e973de95c7a6e245c720",

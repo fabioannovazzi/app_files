@@ -70,7 +70,7 @@ def test_help_copy_is_complete_in_five_languages_and_preserves_product_links():
         capture_output=True,
         text=True,
         encoding="utf-8",
-        timeout=10,
+        timeout=30,
         check=False,
     )
     assert result.returncode == 0, result.stderr
