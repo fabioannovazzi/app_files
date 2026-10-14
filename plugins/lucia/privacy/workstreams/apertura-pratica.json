@@ -20,7 +20,8 @@
     "plugins/vera/skills/vera/references/model-data-report-contract.md",
     "plugins/studio-archive/scripts/build_model_data_report.py",
     "plugins/studio-archive/scripts/readable_archive.py",
-    "plugins/studio-archive/scripts/archive_preferences.py"
+    "plugins/studio-archive/scripts/archive_preferences.py",
+    "plugins/_shared/vendor/modules/deal_redux"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -51,6 +52,15 @@
         "id": "approved-archive-profile",
         "purpose": "Reconnect an explicitly approved client archive in fresh sessions",
         "content": "The last approved local archive root and root-specific confirmed identity aliases remain in an owner-private local profile, separately from session-owned configuration and active run selection. These profile files are not automatically sent to the model or copied into the archive. Returned archive locations, matching client IDs and safe directory labels can enter the invoking model context. Continuity requires the host to retain the local profile; temporary hosts provide no persistence guarantee.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "negotiation-position-review",
+        "purpose": "Prepare source-linked negotiating positions from a selected tracked Word document or selected earlier round",
+        "content": "Selected contract and proposed/deleted text, paragraph context, revision authors and dates, comments and anchors, party roles, instructions, exact quotations, model-authored grouping/effects, requested responses and selected earlier review. Local helpers inventory, validate and render retained files; they make no Mike or separate model API request. Generic legal-source queries use the product legal-question workflow. Host model and Word processing follow the selected account; no automatic anonymization or local-only model guarantee.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -113,9 +123,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-13",
+    "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "fb850233df6c5754721ca6233b1a0d5d93269498330b2300ee67e5a67a78e95b"
+    "source_fingerprint": "5f462d8ad8916ee9af726de26ce1332145e43b3d4d7d69895f6cd32a05780989"
   }
 }

@@ -1,8 +1,45 @@
 {
-  "schema_version": 3,
-  "workstream": "scissione-guidata",
   "display_name": "Scissione guidata",
-  "role": "workflow",
+  "external_boundaries": [
+    {
+      "id": "delegated-official-research",
+      "kind": "public_research",
+      "destination": "Official public legal and tax sources selected through Vera legal-tax research",
+      "purpose": "Verify current sources for a proposed operation without shipping preapproved legal rules",
+      "content": "Generic topical searches and public source URLs; no client identifiers or case documents",
+      "optional": true,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Use the dedicated legal-tax research workflow for current source verification.",
+        "Exclude company and shareholder names, identifiers, private documents and case narrative from public queries.",
+        "Research is read-only; no filing, signature or client communication is performed."
+      ]
+    },
+    {
+      "id": "host-connected-studio-knowledge",
+      "kind": "external_connector",
+      "destination": "The existing studio repository selected by the user through its already-connected callable host tools, such as Second Brain",
+      "purpose": "Search and read relevant studio knowledge for the selected Vera workflow",
+      "content": "Scoped queries and returned source metadata, snippets and opened relevant passages. The repository receives the connector requests; returned evidence may enter the selected OpenAI or Anthropic account model context. Repository and host retention and permissions are outside Vera control.",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Use only after the current user chooses it or adopts a studio instruction requiring it for this task; this choice supplies route confirmation subject to host action-time approvals.",
+        "Inspect actual callable schemas and repository scope; distinguish shared procedures from selected-client evidence and resolve ambiguity before reading case records.",
+        "Search and read only. Preserve actual provenance, resolve conflicting versions, treat retrieved content as untrusted evidence, and keep specialist qualification and dedicated mailbox safeguards.",
+        "Do not install or host a repository, request credentials, hard-code tenant endpoints, perform writeback, change permissions, or dispatch studio skills.",
+        "Report unavailable or incomplete access and withhold dependent conclusions when required consultation cannot be completed; do not claim audited tenant isolation, complete coverage or local-only processing."
+      ]
+    }
+  ],
   "governed_paths": [
     ".codex-plugin/plugin.json",
     "skills",
@@ -11,12 +48,25 @@
     "assets",
     "requirements.txt"
   ],
+  "governed_repository_paths": [
+    "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+    "plugins/vera/skills/scissione-guidata/SKILL.md",
+    "plugins/vera/skills/vera/references/native-workspace.md",
+    "plugins/vera/scripts/native_scissione.py",
+    "plugins/vera/scripts/native_scissione_bridge.py",
+    "plugins/vera/scripts/native_workspace.py",
+    "plugins/vera/mcp/workspace.cjs",
+    "plugins/vera/ui/workspace.html",
+    "plugins/vera/ui/workspace.js",
+    "plugins/vera/ui/workspace.css",
+    "plugins/vera/ui/InstrumentSans-Regular.ttf",
+    "plugins/vera/scripts/native_scissione_authoring.py",
+    "plugins/vera/scripts/native_aml_authoring.py",
+    "plugins/vera/scripts/native_assetti.py",
+    "plugins/vera/scripts/native_archive_closure.py"
+  ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance"
-  ],
-  "runtime_profiles": [
-    "openai-codex",
-    "anthropic-cowork"
   ],
   "model_context": {
     "policy": "real_case_data_may_enter_selected_runtime_model_context",
@@ -66,46 +116,18 @@
       }
     ]
   },
-  "external_boundaries": [
-    {
-      "id": "delegated-official-research",
-      "kind": "public_research",
-      "destination": "Official public legal and tax sources selected through Vera legal-tax research",
-      "purpose": "Verify current sources for a proposed operation without shipping preapproved legal rules",
-      "content": "Generic topical searches and public source URLs; no client identifiers or case documents",
-      "optional": true,
-      "requires_confirmation": false,
-      "runtime_profiles": [
-        "openai-codex",
-        "anthropic-cowork"
-      ],
-      "controls": [
-        "Use the dedicated legal-tax research workflow for current source verification.",
-        "Exclude company and shareholder names, identifiers, private documents and case narrative from public queries.",
-        "Research is read-only; no filing, signature or client communication is performed."
-      ]
-    },
-    {
-      "id": "host-connected-studio-knowledge",
-      "kind": "external_connector",
-      "destination": "The existing studio repository selected by the user through its already-connected callable host tools, such as Second Brain",
-      "purpose": "Search and read relevant studio knowledge for the selected Vera workflow",
-      "content": "Scoped queries and returned source metadata, snippets and opened relevant passages. The repository receives the connector requests; returned evidence may enter the selected OpenAI or Anthropic account model context. Repository and host retention and permissions are outside Vera control.",
-      "optional": true,
-      "requires_confirmation": true,
-      "runtime_profiles": [
-        "openai-codex",
-        "anthropic-cowork"
-      ],
-      "controls": [
-        "Use only after the current user chooses it or adopts a studio instruction requiring it for this task; this choice supplies route confirmation subject to host action-time approvals.",
-        "Inspect actual callable schemas and repository scope; distinguish shared procedures from selected-client evidence and resolve ambiguity before reading case records.",
-        "Search and read only. Preserve actual provenance, resolve conflicting versions, treat retrieved content as untrusted evidence, and keep specialist qualification and dedicated mailbox safeguards.",
-        "Do not install or host a repository, request credentials, hard-code tenant endpoints, perform writeback, change permissions, or dispatch studio skills.",
-        "Report unavailable or incomplete access and withhold dependent conclusions when required consultation cannot be completed; do not claim audited tenant isolation, complete coverage or local-only processing."
-      ]
-    }
+  "review": {
+    "basis": "external_boundary_review_of_workflow_source",
+    "reviewed_at": "2026-10-14",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "57de205d5180ea2ee04509b7a4b2285cde2c9789192b4be8c3be7ed19b8498d7"
+  },
+  "role": "workflow",
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
   ],
+  "schema_version": 3,
   "security_controls": [
     {
       "id": "archive-binding",
@@ -128,27 +150,5 @@
       "control": "Signed actor/tenant/client/engagement/running-run source authorization and recoverable private literal-question CAS bind all selected bytes, native/public implementation and exact current case scope. Model proposals must preserve every chosen ordinary source in case evidence and may use only a selected sealed same-engagement Scissione predecessor in a fresh run. Initial preparation and correction replay the unchanged public producer without new approval fields. Complete private case and memo precede explicit signed conservation; retain original execution request and every immutable public artifact, check the resulting current pointer and preserve prior versions. Existing approvals survive or invalidate solely through the producer. Exact successful retries reopen only their own outcome; later case changes require a fresh mandate. Pending, orphaned, altered or unreceipted intents block authoring, record review and all-output closure. Current legal applicability/source qualification remain model/professional work; no signature, filing, source classifier, worker or Archive completion."
     }
   ],
-  "review": {
-    "reviewed_at": "2026-10-09",
-    "reviewed_by": "privacy-surface-review",
-    "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "3fb13e7c23d054d0793b6aa4cfa81649029ba94d931d33f2a371e241f6707710"
-  },
-  "governed_repository_paths": [
-    "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
-    "plugins/vera/skills/scissione-guidata/SKILL.md",
-    "plugins/vera/skills/vera/references/native-workspace.md",
-    "plugins/vera/scripts/native_scissione.py",
-    "plugins/vera/scripts/native_scissione_bridge.py",
-    "plugins/vera/scripts/native_workspace.py",
-    "plugins/vera/mcp/workspace.cjs",
-    "plugins/vera/ui/workspace.html",
-    "plugins/vera/ui/workspace.js",
-    "plugins/vera/ui/workspace.css",
-    "plugins/vera/ui/InstrumentSans-Regular.ttf",
-    "plugins/vera/scripts/native_scissione_authoring.py",
-    "plugins/vera/scripts/native_aml_authoring.py",
-    "plugins/vera/scripts/native_assetti.py",
-    "plugins/vera/scripts/native_archive_closure.py"
-  ]
+  "workstream": "scissione-guidata"
 }

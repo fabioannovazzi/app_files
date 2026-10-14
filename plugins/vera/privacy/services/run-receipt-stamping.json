@@ -1,35 +1,5 @@
 {
-  "schema_version": 2,
-  "service_id": "run-receipt-stamping",
   "display_name": "Server-stamped run receipts",
-  "governed_paths": [
-    ".codex-plugin/plugin.json",
-    "scripts/model_data_report.py",
-    "scripts/notarized_run_receipt.py",
-    "skills/vera/SKILL.md",
-    "skills/vera/references/model-data-report-contract.md",
-    "skills/contenzioso-tributario"
-  ],
-  "governed_repository_paths": [
-    "modules/hosted_services/api.py",
-    "modules/run_receipts/__init__.py",
-    "modules/run_receipts/api.py",
-    "modules/run_receipts/signing.py",
-    "modules/run_receipts/store.py",
-    "templates/vera_run_receipt_verify.html",
-    "plugins/_shared/vendor/modules/italian_tax_litigation",
-    "plugins/lucia/scripts/legal_documents.py",
-    "plugins/lucia/scripts/legal_docx.py",
-    "plugins/lucia/scripts/legal_documents_review.schema.json",
-    "plugins/lucia/scripts/legal_documents_labels.json",
-    "plugins/lucia/scripts/legal_matter.py",
-    "plugins/lucia/scripts/legal_matter.schema.json",
-    "plugins/lucia/scripts/legal_matter_labels.json"
-  ],
-  "runtime_profiles": [
-    "openai-codex",
-    "anthropic-cowork"
-  ],
   "external_boundaries": [
     {
       "id": "automatic-server-stamped-run-receipt",
@@ -57,6 +27,46 @@
       ]
     }
   ],
+  "governed_paths": [
+    ".codex-plugin/plugin.json",
+    "scripts/model_data_report.py",
+    "scripts/notarized_run_receipt.py",
+    "skills/vera/SKILL.md",
+    "skills/vera/references/model-data-report-contract.md",
+    "skills/contenzioso-tributario",
+    "skills/posizioni-negoziali"
+  ],
+  "governed_repository_paths": [
+    "modules/hosted_services/api.py",
+    "modules/run_receipts/__init__.py",
+    "modules/run_receipts/api.py",
+    "modules/run_receipts/signing.py",
+    "modules/run_receipts/store.py",
+    "templates/vera_run_receipt_verify.html",
+    "plugins/_shared/vendor/modules/italian_tax_litigation",
+    "plugins/lucia/scripts/legal_documents.py",
+    "plugins/lucia/scripts/legal_docx.py",
+    "plugins/lucia/scripts/legal_documents_review.schema.json",
+    "plugins/lucia/scripts/legal_documents_labels.json",
+    "plugins/lucia/scripts/legal_matter.py",
+    "plugins/lucia/scripts/legal_matter.schema.json",
+    "plugins/lucia/scripts/legal_matter_labels.json",
+    "plugins/_shared/vendor/modules/deal_redux",
+    "plugins/lucia/scripts/legal_negotiation.py",
+    "plugins/lucia/scripts/legal_negotiation.schema.json",
+    "plugins/lucia/scripts/legal_negotiation_labels.json"
+  ],
+  "review": {
+    "basis": "external_boundary_review_of_shared_service_source",
+    "reviewed_at": "2026-10-14",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "700f8d067a40cd1c6c212427edab5157716d1f7d7edf8789bef65360406319a7"
+  },
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "schema_version": 2,
   "security_controls": [
     {
       "id": "minimal-receipt-request-allow-list",
@@ -93,10 +103,5 @@
       "on_violation": "Oversized or excess requests receive an explicit 413 or 429 response without creating a receipt."
     }
   ],
-  "review": {
-    "reviewed_at": "2026-10-13",
-    "reviewed_by": "privacy-surface-review",
-    "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "04d8e41bf1f804b309b959c6a4e8d231a19b15773f8785b1a648f5c82645f775"
-  }
+  "service_id": "run-receipt-stamping"
 }

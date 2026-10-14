@@ -1,136 +1,5 @@
 {
-  "schema_version": 3,
-  "workstream": "studio-archive",
   "display_name": "Vera · Archivio dello Studio",
-  "role": "workflow",
-  "governed_paths": [
-    "README.md",
-    ".codex-plugin/plugin.json",
-    "skills",
-    "scripts",
-    "mcp",
-    ".mcp.json",
-    "requirements.txt",
-    "requirements-ocr.txt"
-  ],
-  "governed_shared_paths": [
-    "vendor/modules/vera_assurance",
-    "vendor/modules/vera_ocr"
-  ],
-  "runtime_profiles": [
-    "openai-codex",
-    "anthropic-cowork"
-  ],
-  "model_context": {
-    "policy": "real_case_data_may_enter_selected_runtime_model_context",
-    "classes": [
-      {
-        "id": "studio-archive-evidence",
-        "purpose": "Find and interpret prior studio documents within an explicit archive scope",
-        "content": "User questions; the selected connected-file or configured archive scope; relative document paths; search snippets or opened source passages; file, page, paragraph, sheet-row, message-line, or text-line locators; source hashes when available; extraction and coverage limitations; and Vera's source-backed synthesis",
-        "runtime_profiles": [
-          "openai-codex",
-          "anthropic-cowork"
-        ]
-      },
-      {
-        "id": "studio-archive-access-diagnostic",
-        "purpose": "Explain why a selected local or network archive root cannot be opened before client registration begins",
-        "content": "During guided setup, the operating system's native folder chooser passes the selected archive path directly to the local helper; the model receives setup status, path-safe diagnostic fields, discovered scope labels and counts, but not the selected absolute root. If the native picker is unavailable and the user supplies the manual fallback path in chat, that path is already present in the active model request. The diagnostic returns only path kind, failed access stage, a mechanically classified host-sandbox, SMB-session, network-reachability, filesystem-permission, missing-path or unclassified status, numeric errno or Windows error code when available, host-approved retry state, and one bounded next action. It does not echo the private path, request or return SMB credentials, create a client, or create an engagement",
-        "runtime_profiles": [
-          "openai-codex",
-          "anthropic-cowork"
-        ]
-      },
-      {
-        "id": "studio-client-folder-binding",
-        "purpose": "Bind Vera workflows to one stable registered client and current Studio Archive folder without copying the private identity registry",
-        "content": "The stable opaque client ID; current opaque folder scope ID; absolute archive and client-folder paths; archive-relative scope path and display name; and a deterministic content digest. The binding contains no email address, legal name, tax identifier, document content, Gmail content, or authentication material",
-        "runtime_profiles": [
-          "openai-codex",
-          "anthropic-cowork"
-        ]
-      },
-      {
-        "id": "studio-client-selection-directory",
-        "purpose": "Select one registered client without copying the studio-wide private identity registry into model context",
-        "content": "All current registered and unregistered client directory rows with opaque client and scope IDs, display labels, registration or profile status, and counts of stored emails, legal names and tax identifiers. Stored identity values remain local. When the user supplies one email address, exact legal name or tax identifier in the current chat, local exact matching returns only matching safe directory rows and does not echo the supplied or stored value",
-        "runtime_profiles": [
-          "openai-codex",
-          "anthropic-cowork"
-        ]
-      },
-      {
-        "id": "studio-client-engagement-intake",
-        "purpose": "Create or resume any registered client-bound Vera workflow across separate runtime sessions",
-        "content": "The selected customer-folder manifest and current local folder binding, plus a Google Drive folder binding only when the selected runtime supports that route; explicit engagement, workflow and run IDs; source, journal, support, local-folder snapshot, Google Drive snapshot when supported, or upstream-artifact roles; canonical input-receipt and run execution-copy paths; original filenames; run labels, purposes and lifecycle state; portable run contexts and input and artifact manifests; exact workflow output paths; artifact purposes, audiences and media types; and recovery or retention inventories. Archive Organization receives the full bounded snapshot population through opaque inventory and item references with projected relative paths, names, MIME types, sizes, timestamps, opening availability, exclusions and opaque exact-duplicate relationships; raw snapshot hashes, Drive file and parent IDs, versions, capabilities, checksums and absolute source paths remain in the local receipt and are resolved only by deterministic code. Selected opened content, locators, citations and limitations may enter model context after local identity revalidation. Email addresses, legal-name aliases, tax identifiers and OAuth token contents remain in private local state except when the user supplies non-token identity facts in the current chat",
-        "runtime_profiles": [
-          "openai-codex",
-          "anthropic-cowork"
-        ]
-      },
-      {
-        "id": "gmail-client-evidence",
-        "purpose": "Find and interpret Gmail correspondence for one explicitly selected studio client",
-        "content": "Client name or identifier and full email or PEC addresses supplied or confirmed in the current task; an optional private local archive scope and identity profile only when the selected runtime supports them; bounded discovery and exact-address Gmail queries; connected account profile; candidate and matching message or thread identifiers; returned sender and recipient fields; subjects, timestamps, snippets and labels; selected message or thread bodies; selected attachment metadata or content when the connector supports them; exact-address routing evidence; ambiguity findings; search coverage; and Vera's source-backed synthesis",
-        "runtime_profiles": [
-          "openai-codex",
-          "anthropic-cowork"
-        ]
-      },
-      {
-        "id": "whatsapp-client-evidence",
-        "purpose": "Inspect and interpret visible messages in one verified local WhatsApp Desktop chat for an explicitly selected studio client",
-        "content": "The selected client name or identifier and complete international phone supplied or confirmed in the current task; sanitized guarded-search status and a fresh target result index; verified one-to-one chat identity; the exact target ChatMessagesTableView subtree only after phone verification; visible sender or profile name; visible message text or captions, timestamps and on-screen locators; unreadable media, read-state, history and coverage limitations; focus or identity failures; and Vera's source-backed synthesis. Raw pre-verification accessibility snapshots remain inside the local Computer Use JavaScript call so unrelated sidebar previews are not returned to model context",
-        "runtime_profiles": [
-          "openai-codex"
-        ]
-      },
-      {
-        "id": "connected-studio-knowledge",
-        "purpose": "Consult relevant studio procedures, precedents or case evidence when requested",
-        "content": "Repository and selected studio/client scope; scoped search queries; returned metadata and snippets; opened relevant passages; source IDs, links and locators; version, date and approval metadata when exposed; coverage and access limitations. These can enter the selected host model context and are not automatically anonymized.",
-        "runtime_profiles": [
-          "openai-codex",
-          "anthropic-cowork"
-        ]
-      },
-      {
-        "id": "native-selected-file-transport",
-        "purpose": "Conserve explicitly selected file bytes and declared roles in one owned engagement through the maintained public importer",
-        "content": "The optional native app receives each explicitly selected complete file, up to 64 MiB, through the selected host app/tool channel in 64 KiB chunks. File.name, size, SHA-256, explicit journal/source/support role, portable client/engagement IDs and signed transport authority accompany the requests. The original absolute OS path is unavailable; receipts label that limitation. Chunk bytes and private import progress are not dispatched as a model explanation or separate model call by this transport. Ordinary selected host/account processing applies; this does not establish local-only processing or anonymization. The unchanged importer conserves exact verified bytes and receipts locally in the engagement without starting a run. Later explicitly chosen workflow reads can expose selected source content under their own model-context contract. No new external connector, provider request or Mparanza upload is performed.",
-        "runtime_profiles": [
-          "openai-codex"
-        ]
-      },
-      {
-        "id": "native-literal-user-statement",
-        "purpose": "Preserve original interview notes before explicitly selecting them for a specialist workflow",
-        "content": "Complete literal user text, chosen JSON filename, optional declared speaker and original capture provenance (configured actor, tenant, client and engagement references, actual UTC capture time and identity_authenticated=false) pass through the host app/tool channel. Private draft fields and original source text are app-private metadata, not automatic explanation context or a model-access grant. The imported source and provenance may later enter the selected workflow model context completely when explicitly selected. This transport makes no separate provider call, records no audio, authenticates no speaker and performs no automatic anonymization. Ordinary selected account/host processing applies; Vera is not a separate recipient. Capture time does not establish historical availability and the statement is not independent operating evidence.",
-        "runtime_profiles": [
-          "openai-codex"
-        ]
-      },
-      {
-        "id": "studio-archive-readable-navigation",
-        "purpose": "Return the local readable archive navigation after explicit ledger mutations",
-        "content": "Readable-view availability, generated local index path, engagement and execution counts or a bounded view-generation error. Local HTML pages use only existing ledger client labels, dates, lifecycle states, exact input links and artifact purposes; they do not copy underlying documents, make external requests or certify professional approval. Pages and named navigation folders remain rebuildable under Vera and are excluded from document search.",
-        "runtime_profiles": [
-          "openai-codex",
-          "anthropic-cowork"
-        ]
-      },
-      {
-        "id": "approved-archive-profile",
-        "purpose": "Reconnect an approved archive and recover confirmed aliases across isolated sessions",
-        "content": "The approved archive absolute root and root-specific confirmed emails, legal-name aliases and tax identifiers remain in an owner-private profile on the current host. A fresh session revalidates that root and returns only the existing safe directory labels, IDs, counts and path-safe access status. Root changes do not change an active session. Profile persistence depends on the host retaining the owner storage; it is not a claim of persistence across ephemeral Cowork homes. No profile contents, indexes, OAuth tokens or client documents are transmitted by this helper. Task-selected file reads retain their existing selected model-runtime boundary.",
-        "runtime_profiles": [
-          "openai-codex",
-          "anthropic-cowork"
-        ]
-      }
-    ]
-  },
   "external_boundaries": [
     {
       "id": "codex-google-drive-client-archive",
@@ -243,6 +112,159 @@
       ]
     }
   ],
+  "governed_paths": [
+    "README.md",
+    ".codex-plugin/plugin.json",
+    "skills",
+    "scripts",
+    "mcp",
+    ".mcp.json",
+    "requirements.txt",
+    "requirements-ocr.txt"
+  ],
+  "governed_repository_paths": [
+    "plugins/vera/scripts/model_data_report.py",
+    "plugins/vera/skills/vera/references/model-data-report-contract.md",
+    "plugins/studio-archive/scripts/build_model_data_report.py",
+    "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+    "plugins/vera/scripts/native_archive_closure.py",
+    "plugins/vera/scripts/native_archive_closure_bridge.py",
+    "plugins/vera/scripts/native_archive_navigation.py",
+    "plugins/vera/scripts/native_workspace.py",
+    "plugins/vera/mcp/workspace.cjs",
+    "plugins/vera/ui/workspace.js",
+    "plugins/vera/ui/workspace.html",
+    "plugins/vera/ui/workspace.css",
+    "plugins/vera/skills/studio-archive/SKILL.md",
+    "plugins/vera/skills/vera/references/native-workspace.md",
+    "plugins/vera/scripts/native_archive_imports.py"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance",
+    "vendor/modules/vera_ocr"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "studio-archive-evidence",
+        "purpose": "Find and interpret prior studio documents within an explicit archive scope",
+        "content": "User questions; the selected connected-file or configured archive scope; relative document paths; search snippets or opened source passages; file, page, paragraph, sheet-row, message-line, or text-line locators; source hashes when available; extraction and coverage limitations; and Vera's source-backed synthesis",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "studio-archive-access-diagnostic",
+        "purpose": "Explain why a selected local or network archive root cannot be opened before client registration begins",
+        "content": "During guided setup, the operating system's native folder chooser passes the selected archive path directly to the local helper; the model receives setup status, path-safe diagnostic fields, discovered scope labels and counts, but not the selected absolute root. If the native picker is unavailable and the user supplies the manual fallback path in chat, that path is already present in the active model request. The diagnostic returns only path kind, failed access stage, a mechanically classified host-sandbox, SMB-session, network-reachability, filesystem-permission, missing-path or unclassified status, numeric errno or Windows error code when available, host-approved retry state, and one bounded next action. It does not echo the private path, request or return SMB credentials, create a client, or create an engagement",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "studio-client-folder-binding",
+        "purpose": "Bind Vera workflows to one stable registered client and current Studio Archive folder without copying the private identity registry",
+        "content": "The stable opaque client ID; current opaque folder scope ID; absolute archive and client-folder paths; archive-relative scope path and display name; and a deterministic content digest. The binding contains no email address, legal name, tax identifier, document content, Gmail content, or authentication material",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "studio-client-selection-directory",
+        "purpose": "Select one registered client without copying the studio-wide private identity registry into model context",
+        "content": "All current registered and unregistered client directory rows with opaque client and scope IDs, display labels, registration or profile status, and counts of stored emails, legal names and tax identifiers. Stored identity values remain local. When the user supplies one email address, exact legal name or tax identifier in the current chat, local exact matching returns only matching safe directory rows and does not echo the supplied or stored value",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "studio-client-engagement-intake",
+        "purpose": "Create or resume any registered client-bound Vera workflow across separate runtime sessions",
+        "content": "The selected customer-folder manifest and current local folder binding, plus a Google Drive folder binding only when the selected runtime supports that route; explicit engagement, workflow and run IDs; source, journal, support, local-folder snapshot, Google Drive snapshot when supported, or upstream-artifact roles; canonical input-receipt and run execution-copy paths; original filenames; run labels, purposes and lifecycle state; portable run contexts and input and artifact manifests; exact workflow output paths; artifact purposes, audiences and media types; and recovery or retention inventories. Archive Organization receives the full bounded snapshot population through opaque inventory and item references with projected relative paths, names, MIME types, sizes, timestamps, opening availability, exclusions and opaque exact-duplicate relationships; raw snapshot hashes, Drive file and parent IDs, versions, capabilities, checksums and absolute source paths remain in the local receipt and are resolved only by deterministic code. Selected opened content, locators, citations and limitations may enter model context after local identity revalidation. Email addresses, legal-name aliases, tax identifiers and OAuth token contents remain in private local state except when the user supplies non-token identity facts in the current chat",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "gmail-client-evidence",
+        "purpose": "Find and interpret Gmail correspondence for one explicitly selected studio client",
+        "content": "Client name or identifier and full email or PEC addresses supplied or confirmed in the current task; an optional private local archive scope and identity profile only when the selected runtime supports them; bounded discovery and exact-address Gmail queries; connected account profile; candidate and matching message or thread identifiers; returned sender and recipient fields; subjects, timestamps, snippets and labels; selected message or thread bodies; selected attachment metadata or content when the connector supports them; exact-address routing evidence; ambiguity findings; search coverage; and Vera's source-backed synthesis",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "whatsapp-client-evidence",
+        "purpose": "Inspect and interpret visible messages in one verified local WhatsApp Desktop chat for an explicitly selected studio client",
+        "content": "The selected client name or identifier and complete international phone supplied or confirmed in the current task; sanitized guarded-search status and a fresh target result index; verified one-to-one chat identity; the exact target ChatMessagesTableView subtree only after phone verification; visible sender or profile name; visible message text or captions, timestamps and on-screen locators; unreadable media, read-state, history and coverage limitations; focus or identity failures; and Vera's source-backed synthesis. Raw pre-verification accessibility snapshots remain inside the local Computer Use JavaScript call so unrelated sidebar previews are not returned to model context",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
+        "id": "connected-studio-knowledge",
+        "purpose": "Consult relevant studio procedures, precedents or case evidence when requested",
+        "content": "Repository and selected studio/client scope; scoped search queries; returned metadata and snippets; opened relevant passages; source IDs, links and locators; version, date and approval metadata when exposed; coverage and access limitations. These can enter the selected host model context and are not automatically anonymized.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "native-selected-file-transport",
+        "purpose": "Conserve explicitly selected file bytes and declared roles in one owned engagement through the maintained public importer",
+        "content": "The optional native app receives each explicitly selected complete file, up to 64 MiB, through the selected host app/tool channel in 64 KiB chunks. File.name, size, SHA-256, explicit journal/source/support role, portable client/engagement IDs and signed transport authority accompany the requests. The original absolute OS path is unavailable; receipts label that limitation. Chunk bytes and private import progress are not dispatched as a model explanation or separate model call by this transport. Ordinary selected host/account processing applies; this does not establish local-only processing or anonymization. The unchanged importer conserves exact verified bytes and receipts locally in the engagement without starting a run. Later explicitly chosen workflow reads can expose selected source content under their own model-context contract. No new external connector, provider request or Mparanza upload is performed.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
+        "id": "native-literal-user-statement",
+        "purpose": "Preserve original interview notes before explicitly selecting them for a specialist workflow",
+        "content": "Complete literal user text, chosen JSON filename, optional declared speaker and original capture provenance (configured actor, tenant, client and engagement references, actual UTC capture time and identity_authenticated=false) pass through the host app/tool channel. Private draft fields and original source text are app-private metadata, not automatic explanation context or a model-access grant. The imported source and provenance may later enter the selected workflow model context completely when explicitly selected. This transport makes no separate provider call, records no audio, authenticates no speaker and performs no automatic anonymization. Ordinary selected account/host processing applies; Vera is not a separate recipient. Capture time does not establish historical availability and the statement is not independent operating evidence.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
+        "id": "studio-archive-readable-navigation",
+        "purpose": "Return the local readable archive navigation after explicit ledger mutations",
+        "content": "Readable-view availability, generated local index path, engagement and execution counts or a bounded view-generation error. Local HTML pages use only existing ledger client labels, dates, lifecycle states, exact input links and artifact purposes; they do not copy underlying documents, make external requests or certify professional approval. Pages and named navigation folders remain rebuildable under Vera and are excluded from document search.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "approved-archive-profile",
+        "purpose": "Reconnect an approved archive and recover confirmed aliases across isolated sessions",
+        "content": "The approved archive absolute root and root-specific confirmed emails, legal-name aliases and tax identifiers remain in an owner-private profile on the current host. A fresh session revalidates that root and returns only the existing safe directory labels, IDs, counts and path-safe access status. Root changes do not change an active session. Profile persistence depends on the host retaining the owner storage; it is not a claim of persistence across ephemeral Cowork homes. No profile contents, indexes, OAuth tokens or client documents are transmitted by this helper. Task-selected file reads retain their existing selected model-runtime boundary.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "review": {
+    "basis": "external_boundary_review_of_workflow_source",
+    "reviewed_at": "2026-10-14",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "f99c068ad61b2b2badac9170f151cd44cc22e83e6fca8db92a190ce23f61a149"
+  },
+  "role": "workflow",
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "schema_version": 3,
   "security_controls": [
     {
       "id": "versioned-workflow-snapshots",
@@ -337,27 +359,5 @@
       "control": "Only explicit configuration records an approved root. Fresh default sessions revalidate it into independent session-owned configuration; explicit state directories remain isolated unless an explicit private profile is supplied. Root-specific identity read/modify/write is serialized with short OS locks and private regular-file records; private aliases are not returned in safe directory rows. Current-session aliases migrate only after validation. Shared profile state stays outside source archives and contains no active run selection or credentials."
     }
   ],
-  "review": {
-    "reviewed_at": "2026-10-09",
-    "reviewed_by": "privacy-surface-review",
-    "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "28f07b71ace5f584b8abdd3c07eb6e0ac496baedb74a39bd20b415b8ef2bdbf3"
-  },
-  "governed_repository_paths": [
-    "plugins/vera/scripts/model_data_report.py",
-    "plugins/vera/skills/vera/references/model-data-report-contract.md",
-    "plugins/studio-archive/scripts/build_model_data_report.py",
-    "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
-    "plugins/vera/scripts/native_archive_closure.py",
-    "plugins/vera/scripts/native_archive_closure_bridge.py",
-    "plugins/vera/scripts/native_archive_navigation.py",
-    "plugins/vera/scripts/native_workspace.py",
-    "plugins/vera/mcp/workspace.cjs",
-    "plugins/vera/ui/workspace.js",
-    "plugins/vera/ui/workspace.html",
-    "plugins/vera/ui/workspace.css",
-    "plugins/vera/skills/studio-archive/SKILL.md",
-    "plugins/vera/skills/vera/references/native-workspace.md",
-    "plugins/vera/scripts/native_archive_imports.py"
-  ]
+  "workstream": "studio-archive"
 }

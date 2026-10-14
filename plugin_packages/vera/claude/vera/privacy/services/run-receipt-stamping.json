@@ -1,17 +1,5 @@
 {
-  "schema_version": 2,
-  "service_id": "run-receipt-stamping",
   "display_name": "Server-stamped run receipts",
-  "governed_paths": [
-    "scripts/model_data_report.py",
-    "scripts/notarized_run_receipt.py",
-    "skills/vera/SKILL.md",
-    "skills/vera/references/model-data-report-contract.md",
-    "skills/contenzioso-tributario"
-  ],
-  "runtime_profiles": [
-    "anthropic-cowork"
-  ],
   "external_boundaries": [
     {
       "id": "automatic-server-stamped-run-receipt",
@@ -38,6 +26,24 @@
       ]
     }
   ],
+  "governed_paths": [
+    "scripts/model_data_report.py",
+    "scripts/notarized_run_receipt.py",
+    "skills/vera/SKILL.md",
+    "skills/vera/references/model-data-report-contract.md",
+    "skills/contenzioso-tributario",
+    "skills/posizioni-negoziali"
+  ],
+  "review": {
+    "basis": "external_boundary_review_of_shared_service_source",
+    "reviewed_at": "2026-10-14",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "cd540c51bfdfcc61a9d0bfc38ee3ab3766e6299f6927f64a570bc0eb585eb43b"
+  },
+  "runtime_profiles": [
+    "anthropic-cowork"
+  ],
+  "schema_version": 2,
   "security_controls": [
     {
       "id": "minimal-receipt-request-allow-list",
@@ -56,10 +62,5 @@
       "on_violation": "The client aborts before making a network request."
     }
   ],
-  "review": {
-    "reviewed_at": "2026-10-13",
-    "reviewed_by": "privacy-surface-review",
-    "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "644fe0e36d6da298a1508a6179b22f92b77c060224c443043cb88b2975eb7363"
-  }
+  "service_id": "run-receipt-stamping"
 }

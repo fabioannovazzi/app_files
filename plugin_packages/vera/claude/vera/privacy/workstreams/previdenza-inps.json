@@ -1,72 +1,5 @@
 {
-  "schema_version": 3,
-  "workstream": "previdenza-inps",
   "display_name": "Previdenza INPS",
-  "role": "workflow",
-  "governed_paths": [
-    "skills",
-    "scripts",
-    "mcp",
-    "schemas",
-    "assets/previdenza-inps-review-widget.html"
-  ],
-  "governed_shared_paths": [
-    "vendor/modules/vera_assurance",
-    "vendor/modules/vera_ocr",
-    "skills/vera/references/connected-studio-knowledge.md",
-    "scripts/native_inps.py",
-    "scripts/native_inps_bridge.py",
-    "scripts/native_inps_rpc.cjs",
-    "scripts/native_archive_closure.py",
-    "skills/previdenza-inps/SKILL.md",
-    "mcp/workspace.cjs",
-    "ui/workspace.js",
-    "scripts/native_workspace.py"
-  ],
-  "runtime_profiles": [
-    "openai-codex",
-    "anthropic-cowork"
-  ],
-  "model_context": {
-    "policy": "real_case_data_may_enter_selected_runtime_model_context",
-    "classes": [
-      {
-        "id": "inps-case-evidence",
-        "purpose": "Structure facts, resolve evidence conflicts, and apply supported sources to the case",
-        "content": "INPS records and exports or captured page evidence; contracts, F24s, emails and scans; extracted text; page quotes; facts; timelines; official sources; calculation basis; draft findings and review decisions",
-        "runtime_profiles": [
-          "openai-codex",
-          "anthropic-cowork"
-        ]
-      },
-      {
-        "id": "geneva-adaptation",
-        "purpose": "Prepare the existing professional deliverable under an explicit CH-GE mandate",
-        "content": "A Geneva case additionally records the competent Swiss institution, mandate, period and jurisdiction basis. Local contribution evidence uses the existing facts, chronology, authored claims and reviewed arithmetic. The INPS browser and portal-export routes remain specific to Italy; the Geneva adaptation introduces no Swiss portal access or connector.",
-        "runtime_profiles": [
-          "openai-codex",
-          "anthropic-cowork"
-        ]
-      },
-      {
-        "id": "connected-studio-knowledge",
-        "purpose": "Consult relevant studio procedures, precedents or case evidence when requested",
-        "content": "Repository and selected studio/client scope; scoped search queries; returned metadata and snippets; opened relevant passages; source IDs, links and locators; version, date and approval metadata when exposed; coverage and access limitations. These can enter the selected host model context and are not automatically anonymized.",
-        "runtime_profiles": [
-          "openai-codex",
-          "anthropic-cowork"
-        ]
-      },
-      {
-        "id": "native-explicit-inps-review-item",
-        "purpose": "Discuss only the whole prepared public evidence item explicitly selected by the user.",
-        "content": "In optional Codex native review, an exact owner/run/revision/source/item selection returns that whole public review record, including its data, quotes, locators, uncertainty, public source references and allowed actions, within 64000 UTF-8 serialized bytes or refuses. Public acquisition metadata is not an instruction. Unsent reviewer name, chosen action, reason, edit and document-request fields, original document paths and authentication material are not included in this tool response. Ordinary specialist phases can separately read selected real case originals under the existing workflow; there is no anonymization, local-only model-processing guarantee or attestation of actual reads. The candidate forwards exact running client-engagement context to token-based Render/Apply; the production correction remains separately proposed, unapplied and unreleased. Complete app readback is bounded to 2000000 UTF-8 serialized bytes without sampling; private metadata handling depends on installed-host behavior and does not attest original/model reading.",
-        "runtime_profiles": [
-          "openai-codex"
-        ]
-      }
-    ]
-  },
   "external_boundaries": [
     {
       "id": "official-source-research",
@@ -141,6 +74,78 @@
       ]
     }
   ],
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "mcp",
+    "schemas",
+    "assets/previdenza-inps-review-widget.html"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance",
+    "vendor/modules/vera_ocr",
+    "skills/vera/references/connected-studio-knowledge.md",
+    "scripts/native_inps.py",
+    "scripts/native_inps_bridge.py",
+    "scripts/native_inps_rpc.cjs",
+    "scripts/native_archive_closure.py",
+    "skills/previdenza-inps/SKILL.md",
+    "mcp/workspace.cjs",
+    "ui/workspace.js",
+    "scripts/native_workspace.py"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "inps-case-evidence",
+        "purpose": "Structure facts, resolve evidence conflicts, and apply supported sources to the case",
+        "content": "INPS records and exports or captured page evidence; contracts, F24s, emails and scans; extracted text; page quotes; facts; timelines; official sources; calculation basis; draft findings and review decisions",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "geneva-adaptation",
+        "purpose": "Prepare the existing professional deliverable under an explicit CH-GE mandate",
+        "content": "A Geneva case additionally records the competent Swiss institution, mandate, period and jurisdiction basis. Local contribution evidence uses the existing facts, chronology, authored claims and reviewed arithmetic. The INPS browser and portal-export routes remain specific to Italy; the Geneva adaptation introduces no Swiss portal access or connector.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "connected-studio-knowledge",
+        "purpose": "Consult relevant studio procedures, precedents or case evidence when requested",
+        "content": "Repository and selected studio/client scope; scoped search queries; returned metadata and snippets; opened relevant passages; source IDs, links and locators; version, date and approval metadata when exposed; coverage and access limitations. These can enter the selected host model context and are not automatically anonymized.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "native-explicit-inps-review-item",
+        "purpose": "Discuss only the whole prepared public evidence item explicitly selected by the user.",
+        "content": "In optional Codex native review, an exact owner/run/revision/source/item selection returns that whole public review record, including its data, quotes, locators, uncertainty, public source references and allowed actions, within 64000 UTF-8 serialized bytes or refuses. Public acquisition metadata is not an instruction. Unsent reviewer name, chosen action, reason, edit and document-request fields, original document paths and authentication material are not included in this tool response. Ordinary specialist phases can separately read selected real case originals under the existing workflow; there is no anonymization, local-only model-processing guarantee or attestation of actual reads. The candidate forwards exact running client-engagement context to token-based Render/Apply; the production correction remains separately proposed, unapplied and unreleased. Complete app readback is bounded to 2000000 UTF-8 serialized bytes without sampling; private metadata handling depends on installed-host behavior and does not attest original/model reading.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      }
+    ]
+  },
+  "review": {
+    "basis": "external_boundary_review_of_workflow_source",
+    "reviewed_at": "2026-10-14",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "b5d77c8f6baf060db6b901468ef4ec54388f61104fae0bd806764f1e188f4714"
+  },
+  "role": "workflow",
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "schema_version": 3,
   "security_controls": [
     {
       "id": "private-case-folder",
@@ -163,10 +168,5 @@
       "control": "Optional prepared-case integration binds owner, run, closed input manifest, implementation, acquisition posture and complete output hashes. Literal reviewer/item action/reason/edit/document-request drafts are app-only, generation-bound and never inherit confirmation. Explicit selected-item context returns the whole current public evidence record within 64000 UTF-8 serialized bytes or refuses, without original paths or unsent private fields. Signed named confirmation invokes unchanged public INPS Apply; requested edits are not applied to the memo and professional-review ceilings remain. Durable uncertain intents block further native writes and shared native Archive closure. Closed sealed runs consult the public shape validator without acquiring persistence authority. Canonical running source reads/applications lose client_engagement context in token-based Render/Apply. The candidate passes that exact context through both unchanged public calls; this separately qualified correction remains unapproved, unapplied and unreleased. Initial preparation, actual model reads, installed-host and professional acceptance remain unverified."
     }
   ],
-  "review": {
-    "reviewed_at": "2026-10-09",
-    "reviewed_by": "privacy-surface-review",
-    "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "e102654dad9ede2e6e38d596d44e81cf4ab292042f577485fc23e3969a97eedb"
-  }
+  "workstream": "previdenza-inps"
 }

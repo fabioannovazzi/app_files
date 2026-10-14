@@ -1,11 +1,178 @@
 {
-  "schema": "mparanza.teaching_release_review.v1",
-  "product": "vera",
-  "workflow": "business-valuation",
-  "course_sha256": "8fa49d392a9f4be0b52adc6491678c48f8cb8e569568004f29c8b597c2db580f",
-  "reviewer": "Codex /root - focused workflow UI source compatibility review",
-  "reviewed_at": "2026-10-14T08:06:05.045539+00:00",
-  "review_scope": "Source compatibility review of unchanged authored lessons and teaching inputs. Existing localized editorial and output judgments retain their historical scope. Fresh execution against the exact new course digest remains required. No installed-host, new visual, learner or professional acceptance is claimed.",
+  "benchmark_acquisition_review": {
+    "scope": "Reviewed the versioned NYU country-risk HTML adapter, separate public evidence preparation and local replay of exact imported acquisition records and documents. Both freshly executed annual teaching reports preserve 750000 / 583333.33 EUR indications, pending review, development-only purpose coverage and all 18 artifacts. The lesson does not use an acquired benchmark or claim to teach source acquisition.",
+    "tests": "214 valuation and shared public-transport tests pass at 93.67% component coverage. Exact percent-to-ratio conversion, source revisions, missing observation dates, failure persistence, historical cutoffs, review invalidation, immutable snapshots and network destination/body boundaries are covered.",
+    "artifact_review": "All five DOCX and four native PDF pages of the synthetic acquisition-bound example were visually inspected and are readable, including the separate network boundary in the final model-data section. Its original 2.50 percent observation is replayed as ratio 0.025. Existing workbook arithmetic is unchanged from the independently recalculated examples.",
+    "live_source_limit": "The live NYU HTML retrieval preserved the landing page, usage terms and data bytes. It returned metadata_or_value_missing because no observation date was established; no live source was silently adopted into a professional case. Published/last-updated and retrieved dates do not prove historical availability.",
+    "previous_reviewed_at": "2026-09-29T19:29:57.892588+00:00"
+  },
+  "claim_registry_review": {
+    "scope": "Reviewed the explicit claim contract, numeric bindings and separate local attestations, plus the named JSON workpaper projections. Read both fresh annual lesson reports; results remain 750000 and 583333.33 EUR with pending review and development-only purpose coverage. Both native runs now retain all 18 numerical workpapers. The lesson has no authored claim registry and does not claim to teach that optional extension. Separate synthetic claim DOCX/PDF and workbook were inspected; no human or PIV approval is inferred.",
+    "tests": "140 valuation tests pass at 94.66% coverage, including stale claim/conclusion review, unavailable evidence, numeric mismatches, normalization tax-dependency and conditional scenario references.",
+    "artifact_review": "All five DOCX and four native PDF pages of the synthetic claim example are readable. LibreOffice independently matches its 75 calculation cells plus the linked 750 EUR claim value at 1e-12 relative / 1e-9 absolute tolerance.",
+    "previous_reviewed_at": "2026-09-29T18:56:11.711307+00:00"
+  },
+  "committed_shared_contract_integration_20261008": {
+    "product": "vera",
+    "workflow": "business-valuation",
+    "reviewer": "Codex /root - bounded shared-contract integration review",
+    "reviewed_at": "2026-10-08T12:40:13.875499+00:00",
+    "source_change": "Shared assurance contracts add a separately allowlisted standalone task context; ordinary registered client contexts and this lesson content remain unchanged. Other source changes were reviewed in the included bank and Archive commits.",
+    "comparison": "Complete course payload excluding source inventory is identical to all three inspected committed parents, including every localized lesson, input, checkpoint and expectation.",
+    "limits": "Preserves prior named editorial and artifact judgments; does not attest new learner participation, professional acceptance or installed native host behavior. Current CI must execute exact demo/practice identities against current course bytes.",
+    "parents": [
+      {
+        "commit": "c324cb0",
+        "course_sha256": "2871cf86d3cfc2f2e336791b387800f8b44bff20bf5313b9fafcf13eb2a9315f"
+      },
+      {
+        "commit": "f70d90d",
+        "course_sha256": "2871cf86d3cfc2f2e336791b387800f8b44bff20bf5313b9fafcf13eb2a9315f"
+      },
+      {
+        "commit": "0bb963db",
+        "course_sha256": "245b4a757f6713e143abf4993e36d3dacd29a45df35ec9d5791eeac95646738c"
+      }
+    ],
+    "course_sha256": "245b4a757f6713e143abf4993e36d3dacd29a45df35ec9d5791eeac95646738c"
+  },
+  "connected_studio_knowledge_source_binding_20261002": {
+    "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+    "reviewed_at": "2026-10-01T22:12:55.543414+00:00",
+    "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+    "previous_course_sha256": "2faafd5469c339e4d9f2ad79e493a90e3fd272f892f2697688bc0b192dc5ad38",
+    "current_course_sha256": "251b811db3eb07b5a9da2269be7af6e889121552f090206b2bc2c20823f373e6",
+    "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+    "changed_sources": [
+      "skills/business-valuation/SKILL.md",
+      "skills/vera/references/connected-studio-knowledge.md"
+    ],
+    "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+    "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+  },
+  "course_expansion_20261001": {
+    "same_engagement_test": "tests.plugins.test_business_valuation::test_valuation_teaching_four_runs_reopen_sealed_artifacts_in_one_engagement",
+    "missing_test": "tests.plugins.test_business_valuation::test_valuation_teaching_missing_terminal_requires_new_evidence[missing]",
+    "recovery_test": "tests.plugins.test_business_valuation::test_valuation_teaching_missing_terminal_requires_new_evidence[recovery]",
+    "observed_states": [
+      "partial",
+      "partial",
+      "blocked",
+      "partial"
+    ],
+    "recovery_equity": "750000",
+    "artifacts": {
+      "missing": [
+        {
+          "name": "valuation.json",
+          "sha256": "83cd4cc021b0ebda6b377a69c90bb75225420e046074f4339bf98bdca147afd1"
+        },
+        {
+          "name": "valuation_report.md",
+          "sha256": "e46553a3fad35cb6fd7e5d1ad6671dd0dc5fed5eb50457bc6acf95fe09b2bd2c"
+        },
+        {
+          "name": "valuation_report.docx",
+          "sha256": "1c970065d95cd71397c60197890abac1190760d199d2b431820dfa44302c2f5e"
+        },
+        {
+          "name": "valuation_report.pdf",
+          "sha256": "7a6d6398ee164f72d79f422c54c8a98900cea365bdfb26dec624dbfd70cb9dad"
+        },
+        {
+          "name": "valuation_workbook.xlsx",
+          "sha256": "131b8abd25fb44ee4ef950ff1115c5c0655d11e65c471978c5fa2b455dd23933"
+        }
+      ],
+      "recovery": [
+        {
+          "name": "valuation.json",
+          "sha256": "9194b1245307bb6cbdee35a3f505e06379c39c1a4543468520ef2dcc1658d979"
+        },
+        {
+          "name": "valuation_report.md",
+          "sha256": "289a17a0c9628a31a16fea843a7a70785a75e4b9bda5ed3214bd420b4fb05d87"
+        },
+        {
+          "name": "valuation_report.docx",
+          "sha256": "bb37730cd16683799f3730461eefc8fe3168408e73f3cbd112400b6853c2dc08"
+        },
+        {
+          "name": "valuation_report.pdf",
+          "sha256": "888ed07cd9315cecf7935986d9c21fe9ba44cd65a4fe283f52bcafe5c05dcbc9"
+        },
+        {
+          "name": "valuation_workbook.xlsx",
+          "sha256": "3895d2f7c05bf7a4c3ac4ca442e00096948eac5d6cf172b5146d72a950f9bc64"
+        }
+      ]
+    },
+    "privacy": "No new workflow destination or API. The fictional notes and outputs may enter selected host model context during reading/modeling/review. Test fixtures execute no model call; their no-model disclosure does not establish a real lesson transmission boundary.",
+    "packaged_checks": {
+      "hosts": [
+        "Codex ZIP",
+        "Cowork ZIP"
+      ],
+      "runs": [
+        "demo",
+        "practice",
+        "missing",
+        "recovery"
+      ],
+      "result": "Fresh extracted packages ran native calculations and rendered the Italian course; independent expected equity values matched; missing terminal blocked; all conclusions remained null. This is extracted-package verification, not fresh installed-host or learner acceptance."
+    },
+    "privacy_amendment": "After integrating main PR #728, the Italian lesson distinguishes native model context from local arithmetic/rendering and Mparanza receipt metadata. Codex local tutorial stamping is excluded; outside that boundary the Vera report builder may request the automatic four-field receipt. Cowork does not inherit that Codex-only exclusion merely from a tutorial name. Documents, reports and calculations are not sent to the receipt service. This is source review, not live-provider or installed Cowork acceptance."
+  },
+  "course_sha256": "d7ae16d9c8ed0347a8cc82017c9fa1c780795d109f7eae5837d0079c81a7084a",
+  "dated_calculation_review": {
+    "scope": "Reviewed the optional dated DCF source and formula contract. The Italian first-use lesson still uses annual flows; both freshly executed native demo/practice reports preserve the expected 750000 / 583333.33 EUR equity indications, development-only purpose coverage and pending review. Inspected all five pages of the final forward/mid-period DOCX, including the Italian timing labels and displayed factors. No PIV approval, human case acceptance, installed-host or live learner acceptance is implied.",
+    "tests": "103 valuation tests pass at 92.66% coverage, including both fresh native teaching phases, dated numerical cases, invalid timing, annual plan relabelling rejection and curve sensitivity boundaries.",
+    "independent_workbook_review": "Three dated workbooks (monthly continuous, spot mid-period and interval-forward mid-period) were independently recalculated by LibreOffice. All 300 calculation cells match the Decimal ledger within 1e-12 relative / 1e-9 absolute tolerance.",
+    "previous_reviewed_at": "2026-09-29T18:16:00.914541+00:00"
+  },
+  "ecb_acquisition_review": {
+    "reviewed_at": "2026-09-29T21:56:11.634342+00:00",
+    "scope": "Reviewed exact-series ECB AAA spot CSV parsing and the separate public acquisition boundary. Percent-to-ratio conversion retains continuous compounding; missing publication and vintage evidence prevent automatic binding. The live helper captured the actual official landing, linked usage terms and CSV. A failed request using a differently spelled URL remains preserved; the successful request uses the literal captured href. No live benchmark was adopted into a case.",
+    "tests": "336 valuation and shared-transport tests pass at 94.31% component coverage; Black, isort, Mypy and Bandit pass across all 14 component scripts. Forty-four additional cases cover ECB source shape, selected date/series, signed/missing values, rate/status/unit changes, revisions, download boundaries and fabricated vintage rejection.",
+    "artifact_review": "Read both freshly executed teaching reports in full and inspected all four DOCX and three native PDF pages per case. Both keep their expected 750000 / 583333.33 EUR indications, 18 artifacts, partial mandate and no accepted conclusion. The final model-data paragraph now includes the separate ECB acquisition route. Formula generation and valuation arithmetic are unchanged; prior independent workbook checks remain the relevant arithmetic evidence. The lesson does not claim to teach benchmark acquisition.",
+    "privacy_review": "Reviewed the new bounded public GETs to www.ecb.europa.eu and data-api.ecb.europa.eu, with selected public URLs and connection metadata but no client-case body, credentials or cookies. Updated five public-page translations and the output paragraph. Clara hosted-voice fingerprint changed only because the same shared JavaScript file governs its review; that service content and source are unchanged."
+  },
+  "finite_income_review": {
+    "reviewed_at": "2026-09-29T22:15:33.243210+00:00",
+    "scope": "Reviewed the separate finite-duration equity-income contract, independent horizon residual, explicit timing and source-bound capital maintenance/reinvestment/distribution/residual basis. The compiler does not equate income with cash, select economic life or residual, infer perpetual growth or deduct debt again. Method review binds the explanations and their sources. All 21 purpose profiles remain professionally disabled.",
+    "tests": "373 valuation/acquisition/shared-transport tests pass at 94.43% component coverage; 37 new tests cover numerical conventions, signed and missing amounts, source/basis status, review invalidation, formula lineage, FCFF misuse, literal exports and archive receipts. Static, formatting and Bandit checks pass for 14 scripts.",
+    "artifact_review": "LibreOffice independently matched 103 annual, 109 mid-period and 103 continuous-rate calculation cells at 1e-12 relative / 1e-9 absolute tolerance. Each workbook retains four literal source-bound basis rows. All seven DOCX and five native PDF pages of both annual and archive-bound finite-income examples were visually inspected. The standalone mid-period and continuous report layouts were not separately rendered; their workbooks and numerical tests were checked. Both native teaching reports preserve the fully read prior Markdown text except receipt IDs, expected 750000 / 583333.33 EUR indications, 18 artifacts, partial mandate and no accepted conclusion; all four DOCX and three PDF pages per case were visually inspected. The lesson does not claim to teach the optional finite-income variant.",
+    "privacy_review": "The new income, residual and professional basis records remain within existing selected engagement/model-context boundaries. No external request, recipient or automatic professional acceptance is added. The five public function descriptions now name the finite-duration variant. The shared Research Video page content remains unchanged."
+  },
+  "holding_sotp_review": {
+    "reviewed_at": "2026-09-29T23:34:08.173644+00:00",
+    "scope": "Ten explicit calculation variants now include holding/SOTP. Three part bases preserve subsidiary equity bridges, explicit ownership/rights, already-valued interests and parent-only adjustments. Model/professional selection and economic overlap review remain outside mechanical checks; no purpose profile is activated.",
+    "source_review": "Inspected engine, schema, source/review dependency closure, report projection, fixture and all five localized function-page changes. The Italian course differs from HEAD only in its sources array; no holding lesson is claimed.",
+    "verification": "474 valuation/transport tests pass at 95.13% coverage, including 61 holding cases. Static checks pass across 16 scripts. Three fresh native holding/demo/practice runs pass. LibreOffice independently matches 428 calculation cells and 108 linked holding cells across four cases, with 36 literal basis rows each.",
+    "artifact_review": "Inspected all 48 DOCX and 34 native PDF pages across the standard, negative-equity, tax-credit, receipt-bound holding and two teaching outputs. All 18 artifact hashes per output verify. Two scenario notes were clarified and exported as new immutable revisions; production source was unchanged. No clipped text or overlapping content observed. Existing lesson Markdown matches prior reviewed output after receipt identity normalization; indications remain 750000 / 583333.33 EUR with incomplete mandate and no accepted conclusion.",
+    "privacy_review": "Holding identities, values, ownership denominators, rights, parent exposures, tax/cost bases and eliminations may enter selected model context. No new external destination/request. Only the business-valuation block changed in the shared public function-page file; unrelated research-video content is unchanged."
+  },
+  "integration_refresh": {
+    "reviewer": "Codex /root",
+    "date": "2026-10-02",
+    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
+  },
+  "journal_pdf_source_binding_review_20261009": {
+    "reviewed_at": "2026-10-09T17:33:15.873470+00:00",
+    "reviewer": "Codex source-bound PDF workflow review",
+    "previous_course_sha256": "9f9281bfe92d34aeaaa27e0f93694784e90001a9dccdc22ff9126ce81052d988",
+    "current_course_sha256": "d4abb721faf4fcfc5bec897689bf2745505e5a1ef90387b216179a2c1acee903",
+    "changed_fields": [
+      "revision",
+      "sources"
+    ],
+    "unchanged_materials": [
+      "All localized lesson text",
+      "Input bytes and execution contracts",
+      "Editorial and artifact review history"
+    ],
+    "scope": "Source inventory only: reviewed registration PDF adapter, page-cache release and worker diagnostics. Complete authored lesson content is identical to the prior main baseline. Prior output and editorial judgments remain historical; no renewed visual, installed-host, learner or Nicola-file acceptance is claimed. Fresh source-bound execution is required by CI teaching release verification."
+  },
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -389,50 +556,19 @@
       }
     }
   },
-  "source_revision_review": {
-    "scope": "Inspected the final source delta after the recorded teaching runs: method kind is validated as text and unsupported methods retain a readable blocked label in partial exports. The DCF used by both lessons is unchanged. The full 49-case suite, including both teaching phases, passed after that source correction; CI will bind fresh teaching JUnit to the compiled course."
-  },
-  "purpose_coverage_review": {
-    "scope": "Reviewed all 21 explicit intake profiles, dependency binding and development-only availability. Read both fresh demo/practice Markdown reports, including the Strategy and governance profile and unchanged 750000 / 583333.33 EUR results. Rendered the fresh seven-method DOCX and inspected all five pages: readable with complete method blocks, source text and the new availability section. No professional profile approval, PIV review or live learner acceptance is implied.",
-    "tests": "72 valuation tests pass at 91.27% coverage, including both fresh native teaching phases and 21 intake profiles.",
-    "previous_reviewed_at": "2026-09-29T17:43:56.264741+00:00"
-  },
-  "dated_calculation_review": {
-    "scope": "Reviewed the optional dated DCF source and formula contract. The Italian first-use lesson still uses annual flows; both freshly executed native demo/practice reports preserve the expected 750000 / 583333.33 EUR equity indications, development-only purpose coverage and pending review. Inspected all five pages of the final forward/mid-period DOCX, including the Italian timing labels and displayed factors. No PIV approval, human case acceptance, installed-host or live learner acceptance is implied.",
-    "tests": "103 valuation tests pass at 92.66% coverage, including both fresh native teaching phases, dated numerical cases, invalid timing, annual plan relabelling rejection and curve sensitivity boundaries.",
-    "independent_workbook_review": "Three dated workbooks (monthly continuous, spot mid-period and interval-forward mid-period) were independently recalculated by LibreOffice. All 300 calculation cells match the Decimal ledger within 1e-12 relative / 1e-9 absolute tolerance.",
-    "previous_reviewed_at": "2026-09-29T18:16:00.914541+00:00"
-  },
-  "normalization_review": {
-    "scope": "Reviewed the structured signed-adjustment journal and its reported-to-adjusted reconciliation, explicit accounting/economic/tax/reversibility explanations, exact local review dependencies and transitive method formulas. Read both fresh native teaching reports: the unchanged annual lesson retains the expected values and review-pending state. Inspected all six pages of the separate normalization DOCX; no clipped text or hidden adjustment status was observed. The journal is not used as an invented professional review or an automatic accounting classifier.",
-    "tests": "124 valuation tests pass at 93.47% coverage. Missing amounts, inconsistent reconciliation, changed review explanations, duplicate amounts and untrusted export text are covered.",
-    "independent_workbook_review": "LibreOffice recalculated all 82 normalization-workbook calculation cells; all match the Decimal register at 1e-12 relative / 1e-9 absolute tolerance. The separate journal links preserve 90 reported +20 -10 =100 adjusted.",
-    "previous_reviewed_at": "2026-09-29T18:42:03.899149+00:00"
-  },
-  "claim_registry_review": {
-    "scope": "Reviewed the explicit claim contract, numeric bindings and separate local attestations, plus the named JSON workpaper projections. Read both fresh annual lesson reports; results remain 750000 and 583333.33 EUR with pending review and development-only purpose coverage. Both native runs now retain all 18 numerical workpapers. The lesson has no authored claim registry and does not claim to teach that optional extension. Separate synthetic claim DOCX/PDF and workbook were inspected; no human or PIV approval is inferred.",
-    "tests": "140 valuation tests pass at 94.66% coverage, including stale claim/conclusion review, unavailable evidence, numeric mismatches, normalization tax-dependency and conditional scenario references.",
-    "artifact_review": "All five DOCX and four native PDF pages of the synthetic claim example are readable. LibreOffice independently matches its 75 calculation cells plus the linked 750 EUR claim value at 1e-12 relative / 1e-9 absolute tolerance.",
-    "previous_reviewed_at": "2026-09-29T18:56:11.711307+00:00"
-  },
-  "schema_validation_review": {
-    "scope": "Reviewed the bundled Draft 2020-12 schema and local runtime integration. Case shape is checked before nested-source discovery; selected method payloads are checked within partial-workpaper boundaries. No external schema retrieval or professional acceptance is introduced. Read both freshly executed annual lesson reports: unchanged 750000 and 583333.33 EUR equity indications, pending review, development-only purpose coverage and 18 artifacts each. Report renderer and document layout are unchanged from the previous visual review.",
-    "tests": "160 valuation tests pass at 93.72% coverage, including invalid canonical dates and numbers, bounded records, missing receipt path fields, private-value redaction, partial method/sensitivity diagnostics and excluded specialist methods.",
-    "previous_reviewed_at": "2026-09-29T19:15:08.903348+00:00"
-  },
-  "benchmark_acquisition_review": {
-    "scope": "Reviewed the versioned NYU country-risk HTML adapter, separate public evidence preparation and local replay of exact imported acquisition records and documents. Both freshly executed annual teaching reports preserve 750000 / 583333.33 EUR indications, pending review, development-only purpose coverage and all 18 artifacts. The lesson does not use an acquired benchmark or claim to teach source acquisition.",
-    "tests": "214 valuation and shared public-transport tests pass at 93.67% component coverage. Exact percent-to-ratio conversion, source revisions, missing observation dates, failure persistence, historical cutoffs, review invalidation, immutable snapshots and network destination/body boundaries are covered.",
-    "artifact_review": "All five DOCX and four native PDF pages of the synthetic acquisition-bound example were visually inspected and are readable, including the separate network boundary in the final model-data section. Its original 2.50 percent observation is replayed as ratio 0.025. Existing workbook arithmetic is unchanged from the independently recalculated examples.",
-    "live_source_limit": "The live NYU HTML retrieval preserved the landing page, usage terms and data bytes. It returned metadata_or_value_missing because no observation date was established; no live source was silently adopted into a professional case. Published/last-updated and retrieved dates do not prove historical availability.",
-    "previous_reviewed_at": "2026-09-29T19:29:57.892588+00:00"
-  },
-  "monthly_plan_review": {
-    "scope": "Reviewed selected whole-month and complete-calendar-year bindings against original business-plan v3 replay. Monthly FCFF requires explicit opening working capital and taxes, exact dated flow order and month ends, and a separate annual terminal assumption. Read both fresh annual teaching reports: unchanged 750000 / 583333.33 EUR indications, 18 artifacts, pending review and development-only purpose coverage. The lesson does not claim to teach this optional monthly-plan extension. No intramonth proration, professional approval, live learner or installed-host acceptance is inferred.",
-    "tests": "235 valuation/acquisition/shared-transport tests pass at 93.35% component coverage. Selected horizons, leap-year month ends, tax and lineage gaps, date/order/terminal misuse, input cycles and dependent review invalidation are covered. All eleven component scripts pass Mypy, Black, isort and Bandit.",
-    "artifact_review": "LibreOffice independently recalculated 255 calculation, monthly bridge and linked-input cells across the final monthly and annual examples, all matching at 1e-12 relative / 1e-9 absolute tolerance. All six DOCX and five native PDF pages per example were visually inspected. The final Word contents match the rendered documents exactly; PDF headings remain with following text. Formula workbooks expose opening/closing stocks, tax links and monthly or annual flow links.",
-    "privacy_review": "The extension changes local plan selection, formula lineage and report content. Existing plan evidence, assumptions and rendered outputs may be read in the selected host model context. It adds no external recipient or network call.",
-    "previous_reviewed_at": "2026-09-29T19:59:46.447104+00:00"
+  "lipe_source_binding_20261002": {
+    "reviewer": "Codex /root - bounded LIPE source compatibility review",
+    "reviewed_at": "2026-10-02T20:25:14.425278+00:00",
+    "baseline_commit": "bebefc9b5f187bbcc5619a1b603363581ec68158",
+    "previous_course_sha256": "e80a4dc45e7a4563123af3feb8c4c74109588c5f113b4c42aae777b4d9ecc872",
+    "current_course_sha256": "40ec97610b9dfbbfd1d5440188549e140fa999eb62df1621a00bafa2e67acbd9",
+    "content_review": "Compared the complete compiled course JSON against the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are retained. This is not a new editorial, visual, professional or learner acceptance review.",
+    "changed_sources": [
+      "modules/business-valuation/vendor/modules/vera_assurance/contracts.py",
+      "vendor/modules/vera_assurance/contracts.py"
+    ],
+    "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
+    "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
   },
   "mandate_review": {
     "scope": "Reviewed the structured mandate and rights contract, explicit source/ratio bindings and separate local mandate attestation. A missing field stays null; missing or unreviewed information marks the whole case partial while preserving independent arithmetic. Complete-case/conclusion acceptance requires a current mandate review. Changed mandate dependencies invalidate methods, adjustments, claims and conclusion; changing only the mandate reviewer preserves arithmetic reviews and expires conclusion review. No legal suitability, competence, independence or authenticated identity is inferred.",
@@ -441,43 +577,48 @@
     "privacy_review": "Structured commissioning, competence, conflict and rights evidence may be read by the selected host model, with source identities and local review records. The feature adds local records and output fields only; no new recipient, API, external request or authorization to publish.",
     "previous_reviewed_at": "2026-09-29T20:40:10.735452+00:00"
   },
-  "statement_review": {
-    "reviewed_at": "2026-09-29T21:30:30.700945+00:00",
-    "scope": "Reviewed the new source-bound statement arithmetic and dependency integration. The teaching inputs and instructions are unchanged; only governed-source fingerprints changed. Both native runs preserve expected 750000 / 583333.33 EUR equity indications, 18 artifacts, no accepted conclusion and partial mandate status. All output pages inspected. Separate statement fixture has 112 independently recalculated calculation cells and 24 linked reconciliation cells; seven DOCX and six native PDF pages inspected. Synthetic local attestations are not real professional approval."
+  "monthly_plan_review": {
+    "scope": "Reviewed selected whole-month and complete-calendar-year bindings against original business-plan v3 replay. Monthly FCFF requires explicit opening working capital and taxes, exact dated flow order and month ends, and a separate annual terminal assumption. Read both fresh annual teaching reports: unchanged 750000 / 583333.33 EUR indications, 18 artifacts, pending review and development-only purpose coverage. The lesson does not claim to teach this optional monthly-plan extension. No intramonth proration, professional approval, live learner or installed-host acceptance is inferred.",
+    "tests": "235 valuation/acquisition/shared-transport tests pass at 93.35% component coverage. Selected horizons, leap-year month ends, tax and lineage gaps, date/order/terminal misuse, input cycles and dependent review invalidation are covered. All eleven component scripts pass Mypy, Black, isort and Bandit.",
+    "artifact_review": "LibreOffice independently recalculated 255 calculation, monthly bridge and linked-input cells across the final monthly and annual examples, all matching at 1e-12 relative / 1e-9 absolute tolerance. All six DOCX and five native PDF pages per example were visually inspected. The final Word contents match the rendered documents exactly; PDF headings remain with following text. Formula workbooks expose opening/closing stocks, tax links and monthly or annual flow links.",
+    "privacy_review": "The extension changes local plan selection, formula lineage and report content. Existing plan evidence, assumptions and rendered outputs may be read in the selected host model context. It adds no external recipient or network call.",
+    "previous_reviewed_at": "2026-09-29T19:59:46.447104+00:00"
   },
-  "ecb_acquisition_review": {
-    "reviewed_at": "2026-09-29T21:56:11.634342+00:00",
-    "scope": "Reviewed exact-series ECB AAA spot CSV parsing and the separate public acquisition boundary. Percent-to-ratio conversion retains continuous compounding; missing publication and vintage evidence prevent automatic binding. The live helper captured the actual official landing, linked usage terms and CSV. A failed request using a differently spelled URL remains preserved; the successful request uses the literal captured href. No live benchmark was adopted into a case.",
-    "tests": "336 valuation and shared-transport tests pass at 94.31% component coverage; Black, isort, Mypy and Bandit pass across all 14 component scripts. Forty-four additional cases cover ECB source shape, selected date/series, signed/missing values, rate/status/unit changes, revisions, download boundaries and fabricated vintage rejection.",
-    "artifact_review": "Read both freshly executed teaching reports in full and inspected all four DOCX and three native PDF pages per case. Both keep their expected 750000 / 583333.33 EUR indications, 18 artifacts, partial mandate and no accepted conclusion. The final model-data paragraph now includes the separate ECB acquisition route. Formula generation and valuation arithmetic are unchanged; prior independent workbook checks remain the relevant arithmetic evidence. The lesson does not claim to teach benchmark acquisition.",
-    "privacy_review": "Reviewed the new bounded public GETs to www.ecb.europa.eu and data-api.ecb.europa.eu, with selected public URLs and connection metadata but no client-case body, credentials or cookies. Updated five public-page translations and the output paragraph. Clara hosted-voice fingerprint changed only because the same shared JavaScript file governs its review; that service content and source are unchanged."
+  "normalization_review": {
+    "scope": "Reviewed the structured signed-adjustment journal and its reported-to-adjusted reconciliation, explicit accounting/economic/tax/reversibility explanations, exact local review dependencies and transitive method formulas. Read both fresh native teaching reports: the unchanged annual lesson retains the expected values and review-pending state. Inspected all six pages of the separate normalization DOCX; no clipped text or hidden adjustment status was observed. The journal is not used as an invented professional review or an automatic accounting classifier.",
+    "tests": "124 valuation tests pass at 93.47% coverage. Missing amounts, inconsistent reconciliation, changed review explanations, duplicate amounts and untrusted export text are covered.",
+    "independent_workbook_review": "LibreOffice recalculated all 82 normalization-workbook calculation cells; all match the Decimal register at 1e-12 relative / 1e-9 absolute tolerance. The separate journal links preserve 90 reported +20 -10 =100 adjusted.",
+    "previous_reviewed_at": "2026-09-29T18:42:03.899149+00:00"
   },
-  "finite_income_review": {
-    "reviewed_at": "2026-09-29T22:15:33.243210+00:00",
-    "scope": "Reviewed the separate finite-duration equity-income contract, independent horizon residual, explicit timing and source-bound capital maintenance/reinvestment/distribution/residual basis. The compiler does not equate income with cash, select economic life or residual, infer perpetual growth or deduct debt again. Method review binds the explanations and their sources. All 21 purpose profiles remain professionally disabled.",
-    "tests": "373 valuation/acquisition/shared-transport tests pass at 94.43% component coverage; 37 new tests cover numerical conventions, signed and missing amounts, source/basis status, review invalidation, formula lineage, FCFF misuse, literal exports and archive receipts. Static, formatting and Bandit checks pass for 14 scripts.",
-    "artifact_review": "LibreOffice independently matched 103 annual, 109 mid-period and 103 continuous-rate calculation cells at 1e-12 relative / 1e-9 absolute tolerance. Each workbook retains four literal source-bound basis rows. All seven DOCX and five native PDF pages of both annual and archive-bound finite-income examples were visually inspected. The standalone mid-period and continuous report layouts were not separately rendered; their workbooks and numerical tests were checked. Both native teaching reports preserve the fully read prior Markdown text except receipt IDs, expected 750000 / 583333.33 EUR indications, 18 artifacts, partial mandate and no accepted conclusion; all four DOCX and three PDF pages per case were visually inspected. The lesson does not claim to teach the optional finite-income variant.",
-    "privacy_review": "The new income, residual and professional basis records remain within existing selected engagement/model-context boundaries. No external request, recipient or automatic professional acceptance is added. The five public function descriptions now name the finite-duration variant. The shared Research Video page content remains unchanged."
+  "pdf_first_run_source_binding_20261012": {
+    "reviewed_at": "2026-10-12T09:07:16.006899+00:00",
+    "previous_course_sha256": "d4abb721faf4fcfc5bec897689bf2745505e5a1ef90387b216179a2c1acee903",
+    "current_course_sha256": "b501f06b07709fbc08f8d35d711d42487d27bee3cd735db25890b3264bf89eea",
+    "scope": "Bounded source integration review: authored lesson content, localized prompts, fixtures, acceptance judgments and historical output artifact receipts are unchanged; only sources bindings changed.",
+    "source_changes": "Vera dependency checker re-enters the base interpreter when required; PDF geometry is persisted as decimal text; reviewed mapping contracts are exposed; run recipe containment is checked before output writes; reviewed currency reaches PDF postings; first-run instructions specify runtime, session identity, in-run recipe and finalization disclosure.",
+    "evidence": "Final repair commit native teaching execution step passed before the editorial binding check; local packaged PDF pipeline and source regressions passed. Fresh CI must verify execution against these exact current course hashes.",
+    "limits": "This source-only binding review does not claim new visual, learner, installed-host or professional acceptance. Existing review descriptions and output receipts retain their historical scope."
   },
-  "residual_income_review": {
-    "reviewed_at": "2026-09-29T22:41:00.415155+00:00",
-    "scope": "Separate clean-surplus residual-income equity variant with explicit changing book capital, independently supplied incomes/distributions/contributions, end-period conventions, same-factor interval charges, terminal equity less final book equity, and an owner-cash-flow algebraic cross-check. Accounting adjustments, terminal valuation, distributability and professional purpose qualification remain professional judgments. No PIV compliance is claimed.",
-    "tests": "413 valuation/acquisition/shared-transport regressions pass at 94.66% component coverage, including 40 new cases. Black, Isort, Mypy and Bandit pass on 15 scripts. A Mypy internal cache error cleared using an isolated cache without code or dependency changes. The first test run had a plan fixture date mismatch; only that test fixture was corrected.",
-    "artifact_review": "LibreOffice independently matches 400 calculation and 66 linked reconciliation cells across annual, spot-curve and short-period examples, with five literal basis rows per workbook. Read the annual Markdown report fully and inspected every eight DOCX and six native PDF pages of all three examples and the native archive-bound residual case. Both fresh native lesson reports match the previously read Markdown except receipt IDs, preserve 750000 / 583333.33 EUR indications, partial mandate, 18 artifacts and no accepted conclusion; all four DOCX and three PDF pages per lesson output were inspected. The Italian lesson still teaches DCF and does not claim to cover the optional residual-income variant.",
-    "privacy_review": "New capital, income, owner-transaction, terminal equity and accounting-basis records stay within existing selected engagement/model-context boundaries. No new external recipient or request. Five public descriptions now name residual income; the shared Research Video page content is unchanged."
+  "product": "vera",
+  "purpose_coverage_review": {
+    "scope": "Reviewed all 21 explicit intake profiles, dependency binding and development-only availability. Read both fresh demo/practice Markdown reports, including the Strategy and governance profile and unchanged 750000 / 583333.33 EUR results. Rendered the fresh seven-method DOCX and inspected all five pages: readable with complete method blocks, source text and the new availability section. No professional profile approval, PIV review or live learner acceptance is implied.",
+    "tests": "72 valuation tests pass at 91.27% coverage, including both fresh native teaching phases and 21 intake profiles.",
+    "previous_reviewed_at": "2026-09-29T17:43:56.264741+00:00"
   },
-  "holding_sotp_review": {
-    "reviewed_at": "2026-09-29T23:34:08.173644+00:00",
-    "scope": "Ten explicit calculation variants now include holding/SOTP. Three part bases preserve subsidiary equity bridges, explicit ownership/rights, already-valued interests and parent-only adjustments. Model/professional selection and economic overlap review remain outside mechanical checks; no purpose profile is activated.",
-    "source_review": "Inspected engine, schema, source/review dependency closure, report projection, fixture and all five localized function-page changes. The Italian course differs from HEAD only in its sources array; no holding lesson is claimed.",
-    "verification": "474 valuation/transport tests pass at 95.13% coverage, including 61 holding cases. Static checks pass across 16 scripts. Three fresh native holding/demo/practice runs pass. LibreOffice independently matches 428 calculation cells and 108 linked holding cells across four cases, with 36 literal basis rows each.",
-    "artifact_review": "Inspected all 48 DOCX and 34 native PDF pages across the standard, negative-equity, tax-credit, receipt-bound holding and two teaching outputs. All 18 artifact hashes per output verify. Two scenario notes were clarified and exported as new immutable revisions; production source was unchanged. No clipped text or overlapping content observed. Existing lesson Markdown matches prior reviewed output after receipt identity normalization; indications remain 750000 / 583333.33 EUR with incomplete mandate and no accepted conclusion.",
-    "privacy_review": "Holding identities, values, ownership denominators, rights, parent exposures, tax/cost bases and eliminations may enter selected model context. No new external destination/request. Only the business-valuation block changed in the shared public function-page file; unrelated research-video content is unchanged."
-  },
-  "valuation_cnc_integration": {
-    "reviewed_at": "2026-09-29T23:43:34.820726+00:00",
-    "scope": "Lesson content unchanged from HEAD outside the source inventory. Reviewed additive workflow-ID registration and Studio Archive immutable snapshot functions. Prior editorial/artifact acceptance and professional limits retained; native CNC and valuation execution is verified separately.",
-    "integrated_main": "8f662195f00bac3b605ac73077e1a0bd31d30253"
+  "rating_legalita_source_binding_20261002": {
+    "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+    "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+    "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+    "previous_course_sha256": "a3c8a15cc1ab08de0fdbba92db545b38ad234e27d08a76dfb11243d7977574b6",
+    "current_course_sha256": "e80a4dc45e7a4563123af3feb8c4c74109588c5f113b4c42aae777b4d9ecc872",
+    "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+    "changed_sources": [
+      "modules/business-valuation/vendor/modules/vera_assurance/contracts.py",
+      "vendor/modules/courseware/policy.py",
+      "vendor/modules/vera_assurance/contracts.py"
+    ],
+    "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+    "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
   },
   "release_review_history": [
     {
@@ -896,6 +1037,22 @@
       }
     }
   ],
+  "residual_income_review": {
+    "reviewed_at": "2026-09-29T22:41:00.415155+00:00",
+    "scope": "Separate clean-surplus residual-income equity variant with explicit changing book capital, independently supplied incomes/distributions/contributions, end-period conventions, same-factor interval charges, terminal equity less final book equity, and an owner-cash-flow algebraic cross-check. Accounting adjustments, terminal valuation, distributability and professional purpose qualification remain professional judgments. No PIV compliance is claimed.",
+    "tests": "413 valuation/acquisition/shared-transport regressions pass at 94.66% component coverage, including 40 new cases. Black, Isort, Mypy and Bandit pass on 15 scripts. A Mypy internal cache error cleared using an isolated cache without code or dependency changes. The first test run had a plan fixture date mismatch; only that test fixture was corrected.",
+    "artifact_review": "LibreOffice independently matches 400 calculation and 66 linked reconciliation cells across annual, spot-curve and short-period examples, with five literal basis rows per workbook. Read the annual Markdown report fully and inspected every eight DOCX and six native PDF pages of all three examples and the native archive-bound residual case. Both fresh native lesson reports match the previously read Markdown except receipt IDs, preserve 750000 / 583333.33 EUR indications, partial mandate, 18 artifacts and no accepted conclusion; all four DOCX and three PDF pages per lesson output were inspected. The Italian lesson still teaches DCF and does not claim to cover the optional residual-income variant.",
+    "privacy_review": "New capital, income, owner-transaction, terminal equity and accounting-basis records stay within existing selected engagement/model-context boundaries. No new external recipient or request. Five public descriptions now name residual income; the shared Research Video page content is unchanged."
+  },
+  "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
+  "reviewed_at": "2026-10-14T08:00:57.880787+00:00",
+  "reviewer": "Codex /root - Deal Redux source compatibility review",
+  "schema": "mparanza.teaching_release_review.v1",
+  "schema_validation_review": {
+    "scope": "Reviewed the bundled Draft 2020-12 schema and local runtime integration. Case shape is checked before nested-source discovery; selected method payloads are checked within partial-workpaper boundaries. No external schema retrieval or professional acceptance is introduced. Read both freshly executed annual lesson reports: unchanged 750000 and 583333.33 EUR equity indications, pending review, development-only purpose coverage and 18 artifacts each. Report renderer and document layout are unchanged from the previous visual review.",
+    "tests": "160 valuation tests pass at 93.72% coverage, including invalid canonical dates and numbers, bounded records, missing receipt path fields, private-value redaction, partial method/sensitivity diagnostics and excluded specialist methods.",
+    "previous_reviewed_at": "2026-09-29T19:15:08.903348+00:00"
+  },
   "scissione_integration_refresh_20260930": {
     "previous_course_sha256": "5e2bcb518ef0e9a08ca8bb9ae2ceef883e541c8dcfea9e581c744f51df6ff0bb",
     "new_course_sha256": "bc2d4eb3b334c0ecfecfba93e96de84332caa6abe2c804e8f0037c11fa4c2a54",
@@ -903,162 +1060,6 @@
       "plugins/_shared/vendor/modules/vera_assurance/contracts.py"
     ],
     "review": "Every authored lesson field and input record matches current main. The sole shared source change adds scissione-guidata to the supported workflow IDs; existing workflow behavior is unchanged. Original reviewers, dates, judgments and output hashes are preserved. Fresh native teaching executions are required in CI; no new professional or learner acceptance is claimed."
-  },
-  "course_expansion_20261001": {
-    "same_engagement_test": "tests.plugins.test_business_valuation::test_valuation_teaching_four_runs_reopen_sealed_artifacts_in_one_engagement",
-    "missing_test": "tests.plugins.test_business_valuation::test_valuation_teaching_missing_terminal_requires_new_evidence[missing]",
-    "recovery_test": "tests.plugins.test_business_valuation::test_valuation_teaching_missing_terminal_requires_new_evidence[recovery]",
-    "observed_states": [
-      "partial",
-      "partial",
-      "blocked",
-      "partial"
-    ],
-    "recovery_equity": "750000",
-    "artifacts": {
-      "missing": [
-        {
-          "name": "valuation.json",
-          "sha256": "83cd4cc021b0ebda6b377a69c90bb75225420e046074f4339bf98bdca147afd1"
-        },
-        {
-          "name": "valuation_report.md",
-          "sha256": "e46553a3fad35cb6fd7e5d1ad6671dd0dc5fed5eb50457bc6acf95fe09b2bd2c"
-        },
-        {
-          "name": "valuation_report.docx",
-          "sha256": "1c970065d95cd71397c60197890abac1190760d199d2b431820dfa44302c2f5e"
-        },
-        {
-          "name": "valuation_report.pdf",
-          "sha256": "7a6d6398ee164f72d79f422c54c8a98900cea365bdfb26dec624dbfd70cb9dad"
-        },
-        {
-          "name": "valuation_workbook.xlsx",
-          "sha256": "131b8abd25fb44ee4ef950ff1115c5c0655d11e65c471978c5fa2b455dd23933"
-        }
-      ],
-      "recovery": [
-        {
-          "name": "valuation.json",
-          "sha256": "9194b1245307bb6cbdee35a3f505e06379c39c1a4543468520ef2dcc1658d979"
-        },
-        {
-          "name": "valuation_report.md",
-          "sha256": "289a17a0c9628a31a16fea843a7a70785a75e4b9bda5ed3214bd420b4fb05d87"
-        },
-        {
-          "name": "valuation_report.docx",
-          "sha256": "bb37730cd16683799f3730461eefc8fe3168408e73f3cbd112400b6853c2dc08"
-        },
-        {
-          "name": "valuation_report.pdf",
-          "sha256": "888ed07cd9315cecf7935986d9c21fe9ba44cd65a4fe283f52bcafe5c05dcbc9"
-        },
-        {
-          "name": "valuation_workbook.xlsx",
-          "sha256": "3895d2f7c05bf7a4c3ac4ca442e00096948eac5d6cf172b5146d72a950f9bc64"
-        }
-      ]
-    },
-    "privacy": "No new workflow destination or API. The fictional notes and outputs may enter selected host model context during reading/modeling/review. Test fixtures execute no model call; their no-model disclosure does not establish a real lesson transmission boundary.",
-    "packaged_checks": {
-      "hosts": [
-        "Codex ZIP",
-        "Cowork ZIP"
-      ],
-      "runs": [
-        "demo",
-        "practice",
-        "missing",
-        "recovery"
-      ],
-      "result": "Fresh extracted packages ran native calculations and rendered the Italian course; independent expected equity values matched; missing terminal blocked; all conclusions remained null. This is extracted-package verification, not fresh installed-host or learner acceptance."
-    },
-    "privacy_amendment": "After integrating main PR #728, the Italian lesson distinguishes native model context from local arithmetic/rendering and Mparanza receipt metadata. Codex local tutorial stamping is excluded; outside that boundary the Vera report builder may request the automatic four-field receipt. Cowork does not inherit that Codex-only exclusion merely from a tutorial name. Documents, reports and calculations are not sent to the receipt service. This is source review, not live-provider or installed Cowork acceptance."
-  },
-  "connected_studio_knowledge_source_binding_20261002": {
-    "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
-    "reviewed_at": "2026-10-01T22:12:55.543414+00:00",
-    "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
-    "previous_course_sha256": "2faafd5469c339e4d9f2ad79e493a90e3fd272f892f2697688bc0b192dc5ad38",
-    "current_course_sha256": "251b811db3eb07b5a9da2269be7af6e889121552f090206b2bc2c20823f373e6",
-    "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
-    "changed_sources": [
-      "skills/business-valuation/SKILL.md",
-      "skills/vera/references/connected-studio-knowledge.md"
-    ],
-    "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
-    "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
-  },
-  "integration_refresh": {
-    "reviewer": "Codex /root",
-    "date": "2026-10-02",
-    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
-  },
-  "rating_legalita_source_binding_20261002": {
-    "reviewer": "Codex - bounded Rating di legalita source compatibility review",
-    "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
-    "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
-    "previous_course_sha256": "a3c8a15cc1ab08de0fdbba92db545b38ad234e27d08a76dfb11243d7977574b6",
-    "current_course_sha256": "e80a4dc45e7a4563123af3feb8c4c74109588c5f113b4c42aae777b4d9ecc872",
-    "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
-    "changed_sources": [
-      "modules/business-valuation/vendor/modules/vera_assurance/contracts.py",
-      "vendor/modules/courseware/policy.py",
-      "vendor/modules/vera_assurance/contracts.py"
-    ],
-    "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
-    "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
-  },
-  "lipe_source_binding_20261002": {
-    "reviewer": "Codex /root - bounded LIPE source compatibility review",
-    "reviewed_at": "2026-10-02T20:25:14.425278+00:00",
-    "baseline_commit": "bebefc9b5f187bbcc5619a1b603363581ec68158",
-    "previous_course_sha256": "e80a4dc45e7a4563123af3feb8c4c74109588c5f113b4c42aae777b4d9ecc872",
-    "current_course_sha256": "40ec97610b9dfbbfd1d5440188549e140fa999eb62df1621a00bafa2e67acbd9",
-    "content_review": "Compared the complete compiled course JSON against the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are retained. This is not a new editorial, visual, professional or learner acceptance review.",
-    "changed_sources": [
-      "modules/business-valuation/vendor/modules/vera_assurance/contracts.py",
-      "vendor/modules/vera_assurance/contracts.py"
-    ],
-    "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
-    "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
-  },
-  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
-  "committed_shared_contract_integration_20261008": {
-    "product": "vera",
-    "workflow": "business-valuation",
-    "reviewer": "Codex /root - bounded shared-contract integration review",
-    "reviewed_at": "2026-10-08T12:40:13.875499+00:00",
-    "source_change": "Shared assurance contracts add a separately allowlisted standalone task context; ordinary registered client contexts and this lesson content remain unchanged. Other source changes were reviewed in the included bank and Archive commits.",
-    "comparison": "Complete course payload excluding source inventory is identical to all three inspected committed parents, including every localized lesson, input, checkpoint and expectation.",
-    "limits": "Preserves prior named editorial and artifact judgments; does not attest new learner participation, professional acceptance or installed native host behavior. Current CI must execute exact demo/practice identities against current course bytes.",
-    "parents": [
-      {
-        "commit": "c324cb0",
-        "course_sha256": "2871cf86d3cfc2f2e336791b387800f8b44bff20bf5313b9fafcf13eb2a9315f"
-      },
-      {
-        "commit": "f70d90d",
-        "course_sha256": "2871cf86d3cfc2f2e336791b387800f8b44bff20bf5313b9fafcf13eb2a9315f"
-      },
-      {
-        "commit": "0bb963db",
-        "course_sha256": "245b4a757f6713e143abf4993e36d3dacd29a45df35ec9d5791eeac95646738c"
-      }
-    ],
-    "course_sha256": "245b4a757f6713e143abf4993e36d3dacd29a45df35ec9d5791eeac95646738c"
-  },
-  "studio_archive_adoption_source_binding_20261008": {
-    "reviewer": "Codex /root - bounded source compatibility review",
-    "reviewed_at": "2026-10-08T12:39:27.596925+00:00",
-    "baseline_commit": "c324cb0cbc1d1965676c53e0c2c6dd11905a5393",
-    "previous_course_sha256": "2871cf86d3cfc2f2e336791b387800f8b44bff20bf5313b9fafcf13eb2a9315f",
-    "current_course_sha256": "245b4a757f6713e143abf4993e36d3dacd29a45df35ec9d5791eeac95646738c",
-    "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
-    "source_review": "docs/studio_archive/course-source-compatibility-review.json",
-    "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
   },
   "source_binding_review_20261009": {
     "reviewer": "Codex bounded teaching-material and source integration review",
@@ -1096,30 +1097,41 @@
     "learner_or_professional_acceptance": false,
     "scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance."
   },
-  "journal_pdf_source_binding_review_20261009": {
-    "reviewed_at": "2026-10-09T17:33:15.873470+00:00",
-    "reviewer": "Codex source-bound PDF workflow review",
-    "previous_course_sha256": "9f9281bfe92d34aeaaa27e0f93694784e90001a9dccdc22ff9126ce81052d988",
-    "current_course_sha256": "d4abb721faf4fcfc5bec897689bf2745505e5a1ef90387b216179a2c1acee903",
+  "source_revision_review": {
+    "scope": "Inspected the final source delta after the recorded teaching runs: method kind is validated as text and unsupported methods retain a readable blocked label in partial exports. The DCF used by both lessons is unchanged. The full 49-case suite, including both teaching phases, passed after that source correction; CI will bind fresh teaching JUnit to the compiled course."
+  },
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
+  "statement_review": {
+    "reviewed_at": "2026-09-29T21:30:30.700945+00:00",
+    "scope": "Reviewed the new source-bound statement arithmetic and dependency integration. The teaching inputs and instructions are unchanged; only governed-source fingerprints changed. Both native runs preserve expected 750000 / 583333.33 EUR equity indications, 18 artifacts, no accepted conclusion and partial mandate status. All output pages inspected. Separate statement fixture has 112 independently recalculated calculation cells and 24 linked reconciliation cells; seven DOCX and six native PDF pages inspected. Synthetic local attestations are not real professional approval."
+  },
+  "studio_archive_adoption_source_binding_20261008": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "reviewed_at": "2026-10-08T12:39:27.596925+00:00",
+    "baseline_commit": "c324cb0cbc1d1965676c53e0c2c6dd11905a5393",
+    "previous_course_sha256": "2871cf86d3cfc2f2e336791b387800f8b44bff20bf5313b9fafcf13eb2a9315f",
+    "current_course_sha256": "245b4a757f6713e143abf4993e36d3dacd29a45df35ec9d5791eeac95646738c",
+    "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
+    "source_review": "docs/studio_archive/course-source-compatibility-review.json",
+    "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  },
+  "tax_litigation_fixes_source_review_20261013": {
+    "baseline_commit": "3fbd29e58ad50c7e6db571ba45c6e604fea7eed2",
+    "reviewed_at": "2026-10-13T21:38:57.946661+00:00",
+    "previous_review_identity": {
+      "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
+      "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
+      "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
+      "course_sha256": "b247f243eedd2d181071ee3248ae9bafe3a8790132e0719ad8bf2e1cd9935b58"
+    },
+    "previous_course_sha256": "b247f243eedd2d181071ee3248ae9bafe3a8790132e0719ad8bf2e1cd9935b58",
+    "current_course_sha256": "1c6f5c6fc78e4f929649ca3824b9bb4b83610412c24208c8252af82b0c0975e7",
     "changed_fields": [
-      "revision",
       "sources"
     ],
-    "unchanged_materials": [
-      "All localized lesson text",
-      "Input bytes and execution contracts",
-      "Editorial and artifact review history"
-    ],
-    "scope": "Source inventory only: reviewed registration PDF adapter, page-cache release and worker diagnostics. Complete authored lesson content is identical to the prior main baseline. Prior output and editorial judgments remain historical; no renewed visual, installed-host, learner or Nicola-file acceptance is claimed. Fresh source-bound execution is required by CI teaching release verification."
-  },
-  "pdf_first_run_source_binding_20261012": {
-    "reviewed_at": "2026-10-12T09:07:16.006899+00:00",
-    "previous_course_sha256": "d4abb721faf4fcfc5bec897689bf2745505e5a1ef90387b216179a2c1acee903",
-    "current_course_sha256": "b501f06b07709fbc08f8d35d711d42487d27bee3cd735db25890b3264bf89eea",
-    "scope": "Bounded source integration review: authored lesson content, localized prompts, fixtures, acceptance judgments and historical output artifact receipts are unchanged; only sources bindings changed.",
-    "source_changes": "Vera dependency checker re-enters the base interpreter when required; PDF geometry is persisted as decimal text; reviewed mapping contracts are exposed; run recipe containment is checked before output writes; reviewed currency reaches PDF postings; first-run instructions specify runtime, session identity, in-run recipe and finalization disclosure.",
-    "evidence": "Final repair commit native teaching execution step passed before the editorial binding check; local packaged PDF pipeline and source regressions passed. Fresh CI must verify execution against these exact current course hashes.",
-    "limits": "This source-only binding review does not claim new visual, learner, installed-host or professional acceptance. Existing review descriptions and output receipts retain their historical scope."
+    "authored_content_unchanged": true,
+    "source_review": "docs/releases/2026-10-13-tax-litigation-fixes-source-review.json",
+    "fresh_matching_junit_required": true
   },
   "tax_litigation_source_binding_review_20261013": {
     "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
@@ -1144,27 +1156,15 @@
     "learner_or_professional_acceptance": false,
     "installed_host_acceptance": false
   },
-  "tax_litigation_fixes_source_review_20261013": {
-    "baseline_commit": "3fbd29e58ad50c7e6db571ba45c6e604fea7eed2",
-    "reviewed_at": "2026-10-13T21:38:57.946661+00:00",
-    "previous_review_identity": {
-      "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
-      "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
-      "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
-      "course_sha256": "b247f243eedd2d181071ee3248ae9bafe3a8790132e0719ad8bf2e1cd9935b58"
-    },
-    "previous_course_sha256": "b247f243eedd2d181071ee3248ae9bafe3a8790132e0719ad8bf2e1cd9935b58",
-    "current_course_sha256": "1c6f5c6fc78e4f929649ca3824b9bb4b83610412c24208c8252af82b0c0975e7",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "source_review": "docs/releases/2026-10-13-tax-litigation-fixes-source-review.json",
-    "fresh_matching_junit_required": true
+  "valuation_cnc_integration": {
+    "reviewed_at": "2026-09-29T23:43:34.820726+00:00",
+    "scope": "Lesson content unchanged from HEAD outside the source inventory. Reviewed additive workflow-ID registration and Studio Archive immutable snapshot functions. Prior editorial/artifact acceptance and professional limits retained; native CNC and valuation execution is verified separately.",
+    "integrated_main": "8f662195f00bac3b605ac73077e1a0bd31d30253"
   },
+  "workflow": "business-valuation",
   "workflow_ui_source_compatibility_review_20261014": {
-    "previous_course_sha256": "1c6f5c6fc78e4f929649ca3824b9bb4b83610412c24208c8252af82b0c0975e7",
-    "current_course_sha256": "8fa49d392a9f4be0b52adc6491678c48f8cb8e569568004f29c8b597c2db580f",
+    "previous_course_sha256": "03b3d858ab20307de3a30978b1e38e3c553a2ad830196fffe4af947595a6545b",
+    "current_course_sha256": "d7ae16d9c8ed0347a8cc82017c9fa1c780795d109f7eae5837d0079c81a7084a",
     "changed_fields": [
       "sources"
     ],

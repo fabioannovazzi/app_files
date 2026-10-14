@@ -31,6 +31,7 @@ from vera_assurance import (  # noqa: E402
 # Direct skills use the public Archive lifecycle and generic packaged helpers;
 # their execution is covered by the tax lifecycle and packaged-helper regressions.
 DIRECT_CLIENT_SKILLS = {
+    "posizioni-negoziali": ROOT / "plugins/vera/skills/posizioni-negoziali/SKILL.md",
     "contenzioso-tributario": ROOT
     / "plugins/vera/skills/contenzioso-tributario/SKILL.md",
 }

@@ -21,10 +21,10 @@
   },
   "marketplace": "Do not publish",
   "versions": {
-    "vera": "0.1.376",
-    "lucia": "0.1.102",
+    "vera": "0.1.378",
+    "lucia": "0.1.104",
     "client-file-preparation": "0.1.45",
-    "clara": "0.1.275"
+    "clara": "0.1.276"
   },
   "remaining": [
     "Final source/archive parity checks",

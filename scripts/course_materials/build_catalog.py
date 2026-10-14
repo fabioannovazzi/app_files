@@ -27,6 +27,7 @@ from courseware.policy import unavailable_local_workflows  # noqa: E402
 AUTHORING = Path(__file__).parent
 LANGUAGES = ["it", "en", "fr", "de", "es"]
 EXCLUDED = {
+    "posizioni-negoziali",  # Professional workflow; no authored teaching kit.
     # Professional method is available; no authored/reviewed tutorial kit exists.
     "contenzioso-tributario",
     "legal-tax-answer-planner",

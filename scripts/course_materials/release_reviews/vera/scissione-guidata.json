@@ -1,11 +1,64 @@
 {
-  "schema": "mparanza.teaching_release_review.v1",
-  "product": "vera",
-  "workflow": "scissione-guidata",
-  "course_sha256": "1339085e4097ef4329d912193ebde38f4731f6e67804dcda31ad23efd6ea9c79",
-  "reviewer": "Codex /root - focused workflow UI source compatibility review",
-  "reviewed_at": "2026-10-14T08:06:05.602439+00:00",
-  "review_scope": "Source compatibility review of unchanged authored lessons and teaching inputs. Existing localized editorial and output judgments retain their historical scope. Fresh execution against the exact new course digest remains required. No installed-host, new visual, learner or professional acceptance is claimed.",
+  "committed_shared_contract_integration_20261008": {
+    "product": "vera",
+    "workflow": "scissione-guidata",
+    "reviewer": "Codex /root - bounded shared-contract integration review",
+    "reviewed_at": "2026-10-08T12:40:14.651772+00:00",
+    "source_change": "Shared assurance contracts add a separately allowlisted standalone task context; ordinary registered client contexts and this lesson content remain unchanged. Other source changes were reviewed in the included bank and Archive commits.",
+    "comparison": "Complete course payload excluding source inventory is identical to all three inspected committed parents, including every localized lesson, input, checkpoint and expectation.",
+    "limits": "Preserves prior named editorial and artifact judgments; does not attest new learner participation, professional acceptance or installed native host behavior. Current CI must execute exact demo/practice identities against current course bytes.",
+    "parents": [
+      {
+        "commit": "c324cb0",
+        "course_sha256": "375bc991552e399111e9fb810bc78fc4fd434d8bdc8a1d7dcf9a0a05c64d1be4"
+      },
+      {
+        "commit": "f70d90d",
+        "course_sha256": "375bc991552e399111e9fb810bc78fc4fd434d8bdc8a1d7dcf9a0a05c64d1be4"
+      },
+      {
+        "commit": "0bb963db",
+        "course_sha256": "25f71c1027d5e0d0cae7c738d681673389d39f8139e3ad31dea69324366ed820"
+      }
+    ],
+    "course_sha256": "25f71c1027d5e0d0cae7c738d681673389d39f8139e3ad31dea69324366ed820"
+  },
+  "connected_studio_knowledge_source_binding_20261002": {
+    "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+    "reviewed_at": "2026-10-01T22:12:56.000958+00:00",
+    "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+    "previous_course_sha256": "6acc3c36475f0fa23d3e10585879e805d70f69b2f7159bf061211776387eab93",
+    "current_course_sha256": "9d3e14360293c05b7462292a391558cfdf95846c3b07dfcf5f001512832733f8",
+    "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+    "changed_sources": [
+      "skills/scissione-guidata/SKILL.md",
+      "skills/vera/references/connected-studio-knowledge.md"
+    ],
+    "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
+    "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+  },
+  "course_sha256": "b974cd05f8c59f9c0c75f1ee59cfc6ec320ade89bd3d04ce5cc695e794ec805e",
+  "integration_refresh": {
+    "reviewer": "Codex /root",
+    "date": "2026-10-02",
+    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
+  },
+  "journal_pdf_source_binding_review_20261009": {
+    "reviewed_at": "2026-10-09T17:33:16.008543+00:00",
+    "reviewer": "Codex source-bound PDF workflow review",
+    "previous_course_sha256": "5001dcf54030e04da4bf2cd1a098adad58daf68895982dcb8080029f3b221c4f",
+    "current_course_sha256": "1f677cc265124cb3f7d56f5ba61f1d8e41e56f81fa0a206561e7e484483b12c9",
+    "changed_fields": [
+      "revision",
+      "sources"
+    ],
+    "unchanged_materials": [
+      "All localized lesson text",
+      "Input bytes and execution contracts",
+      "Editorial and artifact review history"
+    ],
+    "scope": "Source inventory only: reviewed registration PDF adapter, page-cache release and worker diagnostics. Complete authored lesson content is identical to the prior main baseline. Prior output and editorial judgments remain historical; no renewed visual, installed-host, learner or Nicola-file acceptance is claimed. Fresh source-bound execution is required by CI teaching release verification."
+  },
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -283,40 +336,6 @@
       }
     }
   },
-  "connected_studio_knowledge_source_binding_20261002": {
-    "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
-    "reviewed_at": "2026-10-01T22:12:56.000958+00:00",
-    "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
-    "previous_course_sha256": "6acc3c36475f0fa23d3e10585879e805d70f69b2f7159bf061211776387eab93",
-    "current_course_sha256": "9d3e14360293c05b7462292a391558cfdf95846c3b07dfcf5f001512832733f8",
-    "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
-    "changed_sources": [
-      "skills/scissione-guidata/SKILL.md",
-      "skills/vera/references/connected-studio-knowledge.md"
-    ],
-    "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
-    "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
-  },
-  "integration_refresh": {
-    "reviewer": "Codex /root",
-    "date": "2026-10-02",
-    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
-  },
-  "rating_legalita_source_binding_20261002": {
-    "reviewer": "Codex - bounded Rating di legalita source compatibility review",
-    "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
-    "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
-    "previous_course_sha256": "20bd99b4d98f866a45faf0ecb32582b1ade8191974fdecb528db2b5efb8e9f71",
-    "current_course_sha256": "acf60ca46508f9b3a207544f75fee4b33122242b28e1436485d5575846f8f285",
-    "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
-    "changed_sources": [
-      "modules/scissione-guidata/vendor/modules/vera_assurance/contracts.py",
-      "vendor/modules/courseware/policy.py",
-      "vendor/modules/vera_assurance/contracts.py"
-    ],
-    "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
-    "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
-  },
   "lipe_source_binding_20261002": {
     "reviewer": "Codex /root - bounded LIPE source compatibility review",
     "reviewed_at": "2026-10-02T20:25:14.425278+00:00",
@@ -330,53 +349,6 @@
     ],
     "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
     "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
-  },
-  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
-  "committed_shared_contract_integration_20261008": {
-    "product": "vera",
-    "workflow": "scissione-guidata",
-    "reviewer": "Codex /root - bounded shared-contract integration review",
-    "reviewed_at": "2026-10-08T12:40:14.651772+00:00",
-    "source_change": "Shared assurance contracts add a separately allowlisted standalone task context; ordinary registered client contexts and this lesson content remain unchanged. Other source changes were reviewed in the included bank and Archive commits.",
-    "comparison": "Complete course payload excluding source inventory is identical to all three inspected committed parents, including every localized lesson, input, checkpoint and expectation.",
-    "limits": "Preserves prior named editorial and artifact judgments; does not attest new learner participation, professional acceptance or installed native host behavior. Current CI must execute exact demo/practice identities against current course bytes.",
-    "parents": [
-      {
-        "commit": "c324cb0",
-        "course_sha256": "375bc991552e399111e9fb810bc78fc4fd434d8bdc8a1d7dcf9a0a05c64d1be4"
-      },
-      {
-        "commit": "f70d90d",
-        "course_sha256": "375bc991552e399111e9fb810bc78fc4fd434d8bdc8a1d7dcf9a0a05c64d1be4"
-      },
-      {
-        "commit": "0bb963db",
-        "course_sha256": "25f71c1027d5e0d0cae7c738d681673389d39f8139e3ad31dea69324366ed820"
-      }
-    ],
-    "course_sha256": "25f71c1027d5e0d0cae7c738d681673389d39f8139e3ad31dea69324366ed820"
-  },
-  "studio_archive_adoption_source_binding_20261008": {
-    "reviewer": "Codex /root - bounded source compatibility review",
-    "reviewed_at": "2026-10-08T12:39:27.596925+00:00",
-    "baseline_commit": "c324cb0cbc1d1965676c53e0c2c6dd11905a5393",
-    "previous_course_sha256": "375bc991552e399111e9fb810bc78fc4fd434d8bdc8a1d7dcf9a0a05c64d1be4",
-    "current_course_sha256": "25f71c1027d5e0d0cae7c738d681673389d39f8139e3ad31dea69324366ed820",
-    "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
-    "source_review": "docs/studio_archive/course-source-compatibility-review.json",
-    "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
-  },
-  "native_record_source_binding_20261007": {
-    "reviewed_at": "2026-10-07",
-    "reviewer": "Codex /root - bounded source compatibility review",
-    "previous_course_sha256": "375bc991552e399111e9fb810bc78fc4fd434d8bdc8a1d7dcf9a0a05c64d1be4",
-    "current_course_sha256": "75b3ee7feba961b2007601b06f0e0948c7dbe51b153c53bc85aa8e1707752f26",
-    "changed_sources": [
-      "skills/scissione-guidata/SKILL.md"
-    ],
-    "content_review": "All authored localized lessons, inputs, expected outputs and timing remain identical as JSON values; only the current wrapper skill SHA changes. Retain original editorial and historical artifact reviews without claiming new learner or professional acceptance.",
-    "source_review": "Inspected maintained Scissione producer and contract. Optional native exact-version record review preserves case and uses unchanged professional gates, dependencies, approvals, unknown values and immutable artifacts. Initial authoring, source qualification, unsupported routes, signing/filing and model-data/finalization remain specialist-led. Cowork keeps maintained managed-runtime CLI and persistent folder; no native requirement.",
-    "execution_requirement": "Validate current Scissione examples/producer gates and fresh package/privacy source bindings. Source/headless/extracted checks do not establish installed or professional acceptance."
   },
   "native_main_integration_observation_20261009": {
     "recorded_at": "2026-10-09T05:12:43.741443+00:00",
@@ -397,6 +369,47 @@
     "current_release_acceptance_renewed": false,
     "review_scope": "Preserve both source-review histories and their actual original course pins. Current lesson content matches the candidate reviewed baseline and the two histories have identical locale reviews. Compiler, source hashes and render success do not renew editorial/native output acceptance. Existing current-main reviewer/date/scope/language/artifact fields remain unchanged. The retained course_sha256 is not rewritten to claim current-candidate acceptance."
   },
+  "native_record_source_binding_20261007": {
+    "reviewed_at": "2026-10-07",
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "previous_course_sha256": "375bc991552e399111e9fb810bc78fc4fd434d8bdc8a1d7dcf9a0a05c64d1be4",
+    "current_course_sha256": "75b3ee7feba961b2007601b06f0e0948c7dbe51b153c53bc85aa8e1707752f26",
+    "changed_sources": [
+      "skills/scissione-guidata/SKILL.md"
+    ],
+    "content_review": "All authored localized lessons, inputs, expected outputs and timing remain identical as JSON values; only the current wrapper skill SHA changes. Retain original editorial and historical artifact reviews without claiming new learner or professional acceptance.",
+    "source_review": "Inspected maintained Scissione producer and contract. Optional native exact-version record review preserves case and uses unchanged professional gates, dependencies, approvals, unknown values and immutable artifacts. Initial authoring, source qualification, unsupported routes, signing/filing and model-data/finalization remain specialist-led. Cowork keeps maintained managed-runtime CLI and persistent folder; no native requirement.",
+    "execution_requirement": "Validate current Scissione examples/producer gates and fresh package/privacy source bindings. Source/headless/extracted checks do not establish installed or professional acceptance."
+  },
+  "pdf_first_run_source_binding_20261012": {
+    "reviewed_at": "2026-10-12T09:07:16.006899+00:00",
+    "previous_course_sha256": "1f677cc265124cb3f7d56f5ba61f1d8e41e56f81fa0a206561e7e484483b12c9",
+    "current_course_sha256": "d5f9bd54b6c64e05b9611b510e14cf1fdc9d31eebcc401dee8e5302b57d7f5bf",
+    "scope": "Bounded source integration review: authored lesson content, localized prompts, fixtures, acceptance judgments and historical output artifact receipts are unchanged; only sources bindings changed.",
+    "source_changes": "Vera dependency checker re-enters the base interpreter when required; PDF geometry is persisted as decimal text; reviewed mapping contracts are exposed; run recipe containment is checked before output writes; reviewed currency reaches PDF postings; first-run instructions specify runtime, session identity, in-run recipe and finalization disclosure.",
+    "evidence": "Final repair commit native teaching execution step passed before the editorial binding check; local packaged PDF pipeline and source regressions passed. Fresh CI must verify execution against these exact current course hashes.",
+    "limits": "This source-only binding review does not claim new visual, learner, installed-host or professional acceptance. Existing review descriptions and output receipts retain their historical scope."
+  },
+  "product": "vera",
+  "rating_legalita_source_binding_20261002": {
+    "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+    "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+    "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+    "previous_course_sha256": "20bd99b4d98f866a45faf0ecb32582b1ade8191974fdecb528db2b5efb8e9f71",
+    "current_course_sha256": "acf60ca46508f9b3a207544f75fee4b33122242b28e1436485d5575846f8f285",
+    "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+    "changed_sources": [
+      "modules/scissione-guidata/vendor/modules/vera_assurance/contracts.py",
+      "vendor/modules/courseware/policy.py",
+      "vendor/modules/vera_assurance/contracts.py"
+    ],
+    "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
+    "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+  },
+  "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
+  "reviewed_at": "2026-10-14T08:00:57.890155+00:00",
+  "reviewer": "Codex /root - Deal Redux source compatibility review",
+  "schema": "mparanza.teaching_release_review.v1",
   "source_binding_review_20261009": {
     "reviewer": "Codex bounded teaching-material and source integration review",
     "reviewed_at": "2026-10-09T13:18:34.148506+00:00",
@@ -433,30 +446,34 @@
     "learner_or_professional_acceptance": false,
     "scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance."
   },
-  "journal_pdf_source_binding_review_20261009": {
-    "reviewed_at": "2026-10-09T17:33:16.008543+00:00",
-    "reviewer": "Codex source-bound PDF workflow review",
-    "previous_course_sha256": "5001dcf54030e04da4bf2cd1a098adad58daf68895982dcb8080029f3b221c4f",
-    "current_course_sha256": "1f677cc265124cb3f7d56f5ba61f1d8e41e56f81fa0a206561e7e484483b12c9",
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
+  "studio_archive_adoption_source_binding_20261008": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "reviewed_at": "2026-10-08T12:39:27.596925+00:00",
+    "baseline_commit": "c324cb0cbc1d1965676c53e0c2c6dd11905a5393",
+    "previous_course_sha256": "375bc991552e399111e9fb810bc78fc4fd434d8bdc8a1d7dcf9a0a05c64d1be4",
+    "current_course_sha256": "25f71c1027d5e0d0cae7c738d681673389d39f8139e3ad31dea69324366ed820",
+    "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
+    "source_review": "docs/studio_archive/course-source-compatibility-review.json",
+    "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+  },
+  "tax_litigation_fixes_source_review_20261013": {
+    "baseline_commit": "3fbd29e58ad50c7e6db571ba45c6e604fea7eed2",
+    "reviewed_at": "2026-10-13T21:38:57.946661+00:00",
+    "previous_review_identity": {
+      "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
+      "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
+      "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
+      "course_sha256": "dfb86601a84d3bd8d65aacd9121a4af4979cc2d6443ee43339e92fa3dcb22e2f"
+    },
+    "previous_course_sha256": "dfb86601a84d3bd8d65aacd9121a4af4979cc2d6443ee43339e92fa3dcb22e2f",
+    "current_course_sha256": "2d9ae6595c0d1f52e0c7e31402a4713133143e486d71a518e284cbca31f7fd6d",
     "changed_fields": [
-      "revision",
       "sources"
     ],
-    "unchanged_materials": [
-      "All localized lesson text",
-      "Input bytes and execution contracts",
-      "Editorial and artifact review history"
-    ],
-    "scope": "Source inventory only: reviewed registration PDF adapter, page-cache release and worker diagnostics. Complete authored lesson content is identical to the prior main baseline. Prior output and editorial judgments remain historical; no renewed visual, installed-host, learner or Nicola-file acceptance is claimed. Fresh source-bound execution is required by CI teaching release verification."
-  },
-  "pdf_first_run_source_binding_20261012": {
-    "reviewed_at": "2026-10-12T09:07:16.006899+00:00",
-    "previous_course_sha256": "1f677cc265124cb3f7d56f5ba61f1d8e41e56f81fa0a206561e7e484483b12c9",
-    "current_course_sha256": "d5f9bd54b6c64e05b9611b510e14cf1fdc9d31eebcc401dee8e5302b57d7f5bf",
-    "scope": "Bounded source integration review: authored lesson content, localized prompts, fixtures, acceptance judgments and historical output artifact receipts are unchanged; only sources bindings changed.",
-    "source_changes": "Vera dependency checker re-enters the base interpreter when required; PDF geometry is persisted as decimal text; reviewed mapping contracts are exposed; run recipe containment is checked before output writes; reviewed currency reaches PDF postings; first-run instructions specify runtime, session identity, in-run recipe and finalization disclosure.",
-    "evidence": "Final repair commit native teaching execution step passed before the editorial binding check; local packaged PDF pipeline and source regressions passed. Fresh CI must verify execution against these exact current course hashes.",
-    "limits": "This source-only binding review does not claim new visual, learner, installed-host or professional acceptance. Existing review descriptions and output receipts retain their historical scope."
+    "authored_content_unchanged": true,
+    "source_review": "docs/releases/2026-10-13-tax-litigation-fixes-source-review.json",
+    "fresh_matching_junit_required": true
   },
   "tax_litigation_source_binding_review_20261013": {
     "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
@@ -481,27 +498,10 @@
     "learner_or_professional_acceptance": false,
     "installed_host_acceptance": false
   },
-  "tax_litigation_fixes_source_review_20261013": {
-    "baseline_commit": "3fbd29e58ad50c7e6db571ba45c6e604fea7eed2",
-    "reviewed_at": "2026-10-13T21:38:57.946661+00:00",
-    "previous_review_identity": {
-      "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
-      "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
-      "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
-      "course_sha256": "dfb86601a84d3bd8d65aacd9121a4af4979cc2d6443ee43339e92fa3dcb22e2f"
-    },
-    "previous_course_sha256": "dfb86601a84d3bd8d65aacd9121a4af4979cc2d6443ee43339e92fa3dcb22e2f",
-    "current_course_sha256": "2d9ae6595c0d1f52e0c7e31402a4713133143e486d71a518e284cbca31f7fd6d",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "source_review": "docs/releases/2026-10-13-tax-litigation-fixes-source-review.json",
-    "fresh_matching_junit_required": true
-  },
+  "workflow": "scissione-guidata",
   "workflow_ui_source_compatibility_review_20261014": {
-    "previous_course_sha256": "2d9ae6595c0d1f52e0c7e31402a4713133143e486d71a518e284cbca31f7fd6d",
-    "current_course_sha256": "1339085e4097ef4329d912193ebde38f4731f6e67804dcda31ad23efd6ea9c79",
+    "previous_course_sha256": "16f4ed0e7142a942edf3c0338114dfc379d0b323f20d56c47b9116a902d981e6",
+    "current_course_sha256": "b974cd05f8c59f9c0c75f1ee59cfc6ec320ade89bd3d04ce5cc695e794ec805e",
     "changed_fields": [
       "sources"
     ],

@@ -1,44 +1,5 @@
 {
-  "schema_version": 3,
-  "workstream": "rating-legalita",
   "display_name": "AGCM legality-rating initial application",
-  "role": "workflow",
-  "governed_paths": [
-    "skills",
-    "scripts",
-    "schemas",
-    "references"
-  ],
-  "governed_shared_paths": [
-    "vendor/modules/vera_assurance",
-    "skills/rating-legalita/SKILL.md",
-    "skills/vera/references/connected-studio-knowledge.md",
-    "scripts/native_rating.py",
-    "scripts/native_rating_bridge.py",
-    "ui/rating.js",
-    "scripts/native_archive_closure.py",
-    "mcp/workspace.cjs",
-    "ui/workspace.js",
-    "scripts/native_workspace.py"
-  ],
-  "runtime_profiles": [
-    "openai-codex",
-    "anthropic-cowork"
-  ],
-  "model_context": {
-    "policy": "real_case_data_may_enter_selected_runtime_model_context",
-    "classes": [
-      {
-        "id": "rating-evidence",
-        "purpose": "Review initial-application eligibility, subjects, obstacles, premiums and gaps",
-        "content": "Selected corporate, personal and judicial documents, tax and payment information, original sources and readable extractions, exact quotations and locators, attributed declarations, conflicts, professional decisions and drafts. The current Codex or Cowork model interprets evidence. No automatic anonymization or local-only guarantee. Local Python checks schema, receipts, exact quotations, hashes, history and arithmetic; it makes no model or network calls. Reviewed mandate responsibilities, information-notice and judicial-data authority decisions, retention criteria, access roles, event dates and external notice receipts, reviewer identities and recorded working-time intervals may also be read by the selected model. The optional OpenAI native prepared-dossier read routes put complete case/assessment and Markdown in app-private metadata after public prerequisite and receipt checks. They expose no Rating model route and make no model or public-research call. Case authoring, legal interpretation and professional decisions continue through the selected specialist runtime; canonical native-write repairs remain unapplied and installed-host acceptance is pending. In the candidate, private exact saved case/predecessor selection and complete preview can separately confirm one unchanged public dossier render. Full private complete readback refuses UTF-8 serialized envelopes above 2000000 bytes without sampling; there is still no Rating model-context or initial/model-authoring route. App-only/_meta separation depends on actual installed-host handling and is not a local-only guarantee.",
-        "runtime_profiles": [
-          "openai-codex",
-          "anthropic-cowork"
-        ]
-      }
-    ]
-  },
   "external_boundaries": [
     {
       "id": "current-source-research",
@@ -78,6 +39,50 @@
       ]
     }
   ],
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "schemas",
+    "references"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance",
+    "skills/rating-legalita/SKILL.md",
+    "skills/vera/references/connected-studio-knowledge.md",
+    "scripts/native_rating.py",
+    "scripts/native_rating_bridge.py",
+    "ui/rating.js",
+    "scripts/native_archive_closure.py",
+    "mcp/workspace.cjs",
+    "ui/workspace.js",
+    "scripts/native_workspace.py"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "rating-evidence",
+        "purpose": "Review initial-application eligibility, subjects, obstacles, premiums and gaps",
+        "content": "Selected corporate, personal and judicial documents, tax and payment information, original sources and readable extractions, exact quotations and locators, attributed declarations, conflicts, professional decisions and drafts. The current Codex or Cowork model interprets evidence. No automatic anonymization or local-only guarantee. Local Python checks schema, receipts, exact quotations, hashes, history and arithmetic; it makes no model or network calls. Reviewed mandate responsibilities, information-notice and judicial-data authority decisions, retention criteria, access roles, event dates and external notice receipts, reviewer identities and recorded working-time intervals may also be read by the selected model. The optional OpenAI native prepared-dossier read routes put complete case/assessment and Markdown in app-private metadata after public prerequisite and receipt checks. They expose no Rating model route and make no model or public-research call. Case authoring, legal interpretation and professional decisions continue through the selected specialist runtime; canonical native-write repairs remain unapplied and installed-host acceptance is pending. In the candidate, private exact saved case/predecessor selection and complete preview can separately confirm one unchanged public dossier render. Full private complete readback refuses UTF-8 serialized envelopes above 2000000 bytes without sampling; there is still no Rating model-context or initial/model-authoring route. App-only/_meta separation depends on actual installed-host handling and is not a local-only guarantee.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "review": {
+    "basis": "external_boundary_review_of_workflow_source",
+    "reviewed_at": "2026-10-14",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "ec87785cb121ca0cac78044abf05e9a3ef19936f4fd58f43ec373c66f7206009"
+  },
+  "role": "workflow",
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "schema_version": 3,
   "security_controls": [
     {
       "id": "archive-binding",
@@ -96,10 +101,5 @@
       "control": "Prepared native readback uses the exact registered case and same-engagement sealed Rating predecessor, verifies every evidence receipt and replays public prerequisites, quotations and append-only history before app projection. These checks do not certify legal facts, mandate validity, reviewer authenticity or authority for judicial data. Canonical first-save/signed-scope repairs remain unapplied. Candidate first-save/write reload uses the exact binding and existing public prerequisite/evidence/quote/history producer. Initial rendering requires running reviewer authority, exact saved whole selection, signed current scope, complete verified preview, renewed confirmation and retained intent. Historical dossiers and exact declared artifacts stay intact; unknown, disputed and conditional-scenario limitations and submission_authorized=false remain. Uncertain outcomes require specialist recovery; no legal decision or reviewer authenticity is inferred."
     }
   ],
-  "review": {
-    "reviewed_at": "2026-10-09",
-    "reviewed_by": "privacy-surface-review",
-    "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "fee71ef4c68479ca3d6403446ca872d11648d059a154f1a148b32f5715922c8f"
-  }
+  "workstream": "rating-legalita"
 }

@@ -1,8 +1,25 @@
 {
-  "schema_version": 3,
-  "workstream": "client-file-preparation",
   "display_name": "New Client · File Preparation",
-  "role": "internal_engine",
+  "external_boundaries": [
+    {
+      "id": "approved-managed-ocr-runtime",
+      "kind": "public_research",
+      "destination": "Python Package Index (PyPI) and PaddleOCR model-weight hosts",
+      "purpose": "Install and initialize the optional shared PaddleOCR runtime after the user approves the roughly 500 MB first-use download",
+      "content": "Declared OCR package names and version constraints from the published requirements-ocr.txt, requested OCR language and model files, plus ordinary package-host request metadata; no user files, document contents, prompts, client data, or extracted evidence are sent",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "The input preflight requests setup only for images or visual-only PDFs that require OCR.",
+        "The workflow requires explicit user approval before installation and the automatic document retry that initializes missing OCR models.",
+        "The installer uses only the published OCR requirements and writes to a fingerprinted user-scoped runtime shared with Vera and Clara."
+      ]
+    }
+  ],
   "governed_paths": [
     "skills",
     "scripts",
@@ -11,12 +28,17 @@
     "assets/review-workbench-adapter.json",
     "assets/client-file-preparation-review-widget.html"
   ],
+  "governed_repository_paths": [
+    "plugins/vera/scripts/native_passive_sources.py",
+    "plugins/vera/scripts/native_passive_sources_bridge.py",
+    "plugins/vera/scripts/native_workspace.py",
+    "plugins/vera/scripts/native_archive_navigation.py",
+    "plugins/vera/mcp/workspace.cjs",
+    "plugins/vera/ui/workspace.js",
+    "plugins/vera/ui/workspace.css"
+  ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance"
-  ],
-  "runtime_profiles": [
-    "openai-codex",
-    "anthropic-cowork"
   ],
   "model_context": {
     "policy": "real_case_data_may_enter_selected_runtime_model_context",
@@ -48,26 +70,18 @@
       }
     ]
   },
-  "external_boundaries": [
-    {
-      "id": "approved-managed-ocr-runtime",
-      "kind": "public_research",
-      "destination": "Python Package Index (PyPI) and PaddleOCR model-weight hosts",
-      "purpose": "Install and initialize the optional shared PaddleOCR runtime after the user approves the roughly 500 MB first-use download",
-      "content": "Declared OCR package names and version constraints from the published requirements-ocr.txt, requested OCR language and model files, plus ordinary package-host request metadata; no user files, document contents, prompts, client data, or extracted evidence are sent",
-      "optional": true,
-      "requires_confirmation": true,
-      "runtime_profiles": [
-        "openai-codex",
-        "anthropic-cowork"
-      ],
-      "controls": [
-        "The input preflight requests setup only for images or visual-only PDFs that require OCR.",
-        "The workflow requires explicit user approval before installation and the automatic document retry that initializes missing OCR models.",
-        "The installer uses only the published OCR requirements and writes to a fingerprinted user-scoped runtime shared with Vera and Clara."
-      ]
-    }
+  "review": {
+    "basis": "external_boundary_review_of_workflow_source",
+    "reviewed_at": "2026-10-14",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "b381c1a7ff91191da7aef5d14465b10445e588f609dd6f7b793e0fc2f874eccb"
+  },
+  "role": "internal_engine",
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
   ],
+  "schema_version": 3,
   "security_controls": [
     {
       "id": "source-and-package-integrity",
@@ -102,19 +116,5 @@
       "control": "The local review server requests component-only private review metadata only for the registered render tool. The browser receives that payload locally; normal MCP callers continue to receive structuredContent. This is transport separation, not anonymization of data selected for model review."
     }
   ],
-  "review": {
-    "reviewed_at": "2026-10-14",
-    "reviewed_by": "privacy-surface-review",
-    "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "2efdb0cda2c0905d785aa9eb8004caf3859d30c347ef959c4415aaac2e4f30f1"
-  },
-  "governed_repository_paths": [
-    "plugins/vera/scripts/native_passive_sources.py",
-    "plugins/vera/scripts/native_passive_sources_bridge.py",
-    "plugins/vera/scripts/native_workspace.py",
-    "plugins/vera/scripts/native_archive_navigation.py",
-    "plugins/vera/mcp/workspace.cjs",
-    "plugins/vera/ui/workspace.js",
-    "plugins/vera/ui/workspace.css"
-  ]
+  "workstream": "client-file-preparation"
 }

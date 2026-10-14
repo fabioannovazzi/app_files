@@ -13,6 +13,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 
 DOCUMENT_SKILLS = {
+    "posizioni-negoziali",
     "revisione-contratti",
     "confronto-documenti",
     "revisione-documentale",

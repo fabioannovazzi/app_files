@@ -1,20 +1,389 @@
 {
-  "schema": "vera.localization.assessment.v1",
+  "agenzia_acquisition_release_binding": {
+    "date": "2026-10-08",
+    "version": "0.1.352",
+    "previous_catalogue_fingerprint": "56568435133705961b89c97b4e7a5f0cf97a1f50e20d19b62cbe14cd98968acf",
+    "added_skills": [
+      "agenzia-acquisition"
+    ],
+    "changed_existing_entrypoints": [
+      "browser-automation"
+    ],
+    "scope": "Register the new AdE acquisition separately from generic browser teaching; preserve existing jurisdiction judgments. Optional native UI and translated pages do not qualify Swiss portal support."
+  },
+  "archive_profile_bootstrap_source_refresh": {
+    "version": "0.1.355",
+    "scope": "Only canonical product version changed in the captured catalogue; function IDs and all skill bytes match the 0.1.354 snapshot. Existing Geneva dispositions remain unchanged. Secure legacy profile bootstrap preserves existing approval and source isolation; no additional legal adaptation or Geneva acceptance claimed."
+  },
   "assessment_date": "2026-09-28",
-  "target": {
-    "id": "CH-GE",
-    "country": "Switzerland",
-    "subdivision": "Canton of Geneva",
-    "output_language": "fr",
-    "reporting_currency": "CHF unless evidence specifies otherwise",
-    "user_scope": "Generalist fiduciary serving SMEs; assumed example profile, not a surveyed firm",
-    "mandate_scope": "Domestic Geneva work; cross-border cases only when evidenced"
+  "assetti_construction_release_binding": {
+    "version": "0.1.283",
+    "reviewed_at": "2026-09-29",
+    "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
+  },
+  "assetti_course_release_binding": {
+    "date": "2026-10-01",
+    "source_version": "0.1.311",
+    "scope": "Manifest version advanced; all 46 skill entrypoint hashes are unchanged. Existing Geneva dispositions and jurisdiction limits are retained. The Italian Adeguati assetti teaching expansion does not establish Geneva construction acceptance."
   },
   "baseline": {
     "repository_base_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
     "source_version": "0.1.272",
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
+  },
+  "catalogue_fingerprint": "28a12efe56722e7e76a93a357c3d916e0364bacfbbbe2d318e23d5c09cd96791",
+  "catalogue_update": {
+    "date": "2026-09-30",
+    "source_version": "0.1.286",
+    "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification."
+  },
+  "cnc_discovery_release_binding": {
+    "date": "2026-10-01",
+    "version": "0.1.313",
+    "integrated_main": "a5b52b157ebbd2c90cbe591abb68165db53bbe54",
+    "scope": "Inspected all ten changed skill entrypoints: nine specialist descriptions clarify existing accounting outcome selection; router description and ordinary request section clarify routing and ambiguity. No jurisdiction law, calculation, target disposition or acceptance basis changes. Existing dated Geneva assessments and unresolved limitations are preserved; this binding does not assert professional acceptance."
+  },
+  "cnc_release_binding": {
+    "version": "0.1.285",
+    "reviewed_at": "2026-09-29",
+    "previous_catalogue_fingerprint": "500598f2e1c2bbaf1ffd4cb41f8b2eb21ae6a68fd64cc126084daa34d97dcd43",
+    "added_skills": [
+      "composizione-negoziata"
+    ],
+    "review": "Add the Italian CNC workflow as unresolved for CH-GE. Preserve all prior Geneva assessments and the merger foundation; the combined release does not establish Swiss applicability. Preserve the newly merged synthetic-only transformation prototype."
+  },
+  "combined_release_binding": {
+    "version": "0.1.280",
+    "reviewed_at": "2026-09-29",
+    "review": "Combines the existing fusione-guidata P0 and synthetic-only trasformazione entries. All prior target judgments and both unresolved entries are preserved. No new professional or jurisdiction qualification is inferred."
+  },
+  "connected_studio_knowledge_fusione_integration": {
+    "reviewed_at": "2026-10-02",
+    "version": "0.1.328",
+    "integrated_main": "5b1cc09afc599862d87a609648303073187b587e",
+    "review": "Preserves the newly merged synthetic Italian Fusione P1 course, its router description and all existing Geneva target judgments. Optional source consultation gates remain intact. This source integration does not qualify Swiss merger implementation or Nicola-host connector acceptance."
+  },
+  "connected_studio_knowledge_release_binding": {
+    "reviewed_at": "2026-10-02",
+    "version": "0.1.328",
+    "integrated_main": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
+    "previous_catalogue_fingerprint": "48fad5304246c8c3ff2840b3da29a228f89dba28a76e0c7f4d9d91f0470fab18",
+    "changed_entrypoints": [
+      "adeguati-assetti",
+      "adversarial-opinion",
+      "aml-review",
+      "archive-organization",
+      "avviso-intake",
+      "bandi-agevolazioni",
+      "bilancio-oic",
+      "browser-automation",
+      "business-planning",
+      "business-valuation",
+      "centrale-rischi-review",
+      "composizione-negoziata",
+      "comunicazione-professionale",
+      "concordato-plan-review",
+      "datev-invoice-start",
+      "dati-fiscali-strutturati",
+      "email-cliente",
+      "esg-reporting-assurance",
+      "fatture-xml-check",
+      "financial-analysis",
+      "financial-report-builder",
+      "fusione-guidata",
+      "invoice-xml",
+      "journal-bank-reconciliation",
+      "journal-sampling",
+      "legal-tax-answer-planner",
+      "legal-tax-answer-review",
+      "management-control-pack",
+      "new-client",
+      "open-item-reconciliation",
+      "patent-box-review",
+      "presenza-digitale-studio",
+      "previdenza-inps",
+      "purchase-invoice-review",
+      "quesito-legale-fiscale",
+      "registro-imprese-sari",
+      "sales-plan",
+      "scissione-guidata",
+      "studio-archive",
+      "studio-document-format",
+      "trasformazione",
+      "treasury-forecast",
+      "variance-analysis",
+      "vera",
+      "vouching"
+    ],
+    "review": "Reviewed the optional host-connected studio knowledge consultation contract and its professional entrypoint gates. No function IDs, Geneva dispositions, jurisdiction qualification, calculations or professional acceptance limits change. Studio knowledge supplies cited task context only and cannot replace current primary legal verification. Studios independently invoke their own skills. Neither a repository nor Microsoft 365 is required. Source/package checks do not establish Nicola-host connector acceptance."
+  },
+  "costing_release_binding": {
+    "reviewed_at": "2026-10-03",
+    "version": "0.1.337",
+    "previous_catalogue_fingerprint": "ae2d3201b5d87f1d12c566ba4bfa236d2532c1d9f5be7ce9808f940afc75c336",
+    "changed_existing_entrypoints": [
+      "vera",
+      "management-control-pack"
+    ],
+    "review": "Same function identities. The new costing path is limited to EUR and Italian/English reports. It does not inherit the recurring reporting path's CHF/French qualification. Existing Geneva reporting assessment is preserved with this explicit scope distinction; no new local-case acceptance is claimed."
+  },
+  "course_entry_release_binding": {
+    "version": "0.1.277",
+    "change": "Remove redundant catalogue jump link and refresh release identity; skill entrypoints and Geneva dispositions unchanged."
+  },
+  "course_file_access_release_binding": {
+    "date": "2026-10-03",
+    "version": "0.1.339",
+    "previous_catalogue_fingerprint": "bf91761d554760069d3294167bcb2f14ffbe976333d3687eb7463fba5b24b2df",
+    "changed_entrypoints": [
+      "learn-with-vera"
+    ],
+    "review": "Only course workspace setup and filesystem readiness changed. Existing country applicability decisions and limitations are unchanged; no new jurisdiction or live-host acceptance is claimed."
+  },
+  "course_qa_release_binding": {
+    "reviewed_at": "2026-09-28T09:31:31.050351+00:00",
+    "previous_version": "0.1.272",
+    "source_version": "0.1.273",
+    "previous_catalogue_fingerprint": "a5d6b853e848c53b6f748b71c5921d8b7db3702a0453be84ade958a3b146aae9",
+    "changed_skills": [
+      "learn-with-vera",
+      "open-item-reconciliation"
+    ],
+    "review": "Single-course startup no longer requires an interview; teaching accurately discloses model-context reads. Open-item instructions separate the sealed native reconciliation output from the run-level model-data disclosure, without weakening its assurance boundary. Existing Geneva dispositions, jurisdiction boundaries and unanswered professional-fit questions are preserved. This is catalogue identity integration, not a new Geneva professional acceptance."
+  },
+  "cowork_packaging_release_binding": {
+    "reviewed_at": "2026-10-01",
+    "version": "0.1.299",
+    "previous_catalogue_fingerprint": "8e3d54f9359fbca867287ad57183488948f1880e1ac89fa62be0b0a7efa9aecf",
+    "review": "Refreshes the manifest/version binding for the Cowork packaging repair. All 46 canonical skill entrypoints are byte-identical to the previous catalogue. Existing Geneva judgments and evidence limits are preserved."
+  },
+  "cowork_yaml_source_binding_20261012": {
+    "date": "2026-10-12",
+    "version": "0.1.360",
+    "prior_catalogue_fingerprint": "2966e4569ad3a8f6914b5bcd1db45d5e8fb110fa434bc3aa1f493c2f0491ac59",
+    "current_catalogue_fingerprint": "85ec9acac73797a84cb23dc374ab8a6699121d6fc2a6b189358f248cb59f5920",
+    "changed_entrypoints": [
+      "business-planning"
+    ],
+    "scope": "Quote the existing colon-bearing description as valid YAML; parsed wording and all function IDs, jurisdiction dispositions and acceptance limits are unchanged."
+  },
+  "esg_combined_binding_20260930": {
+    "version": "0.1.286",
+    "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
+  },
+  "esg_deployment_binding_20260930": {
+    "version": "0.1.291",
+    "scope": "Integrates Fusione P1 and CNC completion; retains all recorded target dispositions. ESG remains unresolved for Swiss professional use."
+  },
+  "esg_release_binding": {
+    "source_version": "0.1.282",
+    "previous_catalogue_fingerprint": "3cc41a2fd81c4fc73df1d70cfd218bdadd735fc82596ec4c431e6f9f7dd67c86",
+    "change": "Add esg-reporting-assurance as Unresolved. Preserve earlier assessments; no new Swiss legal conclusions or professional acceptance. Merge current main retaining the separate fusione-guidata unresolved assessment. Preserve the subsequent synthetic transformation route and its unresolved assessment."
+  },
+  "esg_wording_release_binding": {
+    "date": "2026-10-04",
+    "version": "0.1.341",
+    "previous_catalogue_fingerprint": "301d7801c3857f65ad91f414a9f30c17842432edb1cb3350d0b6c6051abd4bc9",
+    "changed_entrypoints": [],
+    "review": "Only the canonical version and fictional ESG practice wording changed. All skill entrypoint hashes and existing jurisdiction judgments are preserved. No new professional or native-host acceptance is claimed."
+  },
+  "fusione_p0_release_binding": {
+    "version": "0.1.279",
+    "reviewed_at": "2026-09-29",
+    "previous_version": "0.1.277",
+    "previous_catalogue_fingerprint": "3cc41a2fd81c4fc73df1d70cfd218bdadd735fc82596ec4c431e6f9f7dd67c86",
+    "added_skills": [
+      "fusione-guidata"
+    ],
+    "changed_skills": [
+      "vera"
+    ],
+    "review": "Register the new structural P0 foundation as unresolved for CH-GE. The Vera router adds only that foundation. Existing function dispositions and source assessments are preserved; no Swiss merger capability or current legal review is established."
+  },
+  "fusione_p1_release_binding": {
+    "reviewed_at": "2026-09-30",
+    "previous_catalogue_fingerprint": "6b6600d71b764ee71b86cd54adcf5aa46257bf72ef43606a36dc59562d2fd5cd",
+    "candidate_version": "0.1.287",
+    "review": "Updates the fusione-guidata and Vera router entrypoints for two domestic Italian OIC branches. Geneva dispositions and professional-fit limits remain unchanged; this is catalogue maintenance, not Swiss qualification."
+  },
+  "get_started_release_binding": {
+    "version": "0.1.275",
+    "reviewed_at": "2026-09-29",
+    "change": "Optional introductory single-course teaching route; professional workflow scope and Geneva dispositions unchanged. Language alone never selects jurisdiction."
+  },
+  "hardlink_execution_release_binding_20261007": {
+    "date": "2026-10-07",
+    "version": "0.1.348",
+    "previous_catalogue_fingerprint": "f06b6752dfac9f4c82cfa09cb7045d9abab10ed697807d6a632cab4f5fbdda8d",
+    "changed_entrypoints": [
+      "concordato-plan-review",
+      "financial-report-builder",
+      "journal-bank-reconciliation",
+      "journal-sampling",
+      "open-item-reconciliation",
+      "vera",
+      "vouching"
+    ],
+    "scope": "Internal verified private code preparation for hardlinked installed modules. Existing function IDs, jurisdiction dispositions, professional findings and acceptance limitations are unchanged. No Geneva or affected-user host acceptance is claimed."
+  },
+  "holding_release_binding": {
+    "reviewed_at": "2026-09-29T23:34:08.160128+00:00",
+    "version": "0.1.287",
+    "previous_catalogue_fingerprint": "a9ceba58dffbd53dcaa7f1c47cc9ebee8f005d6e71ac0f2394ce7cccc209766a",
+    "scope": "Manifest identity refresh for the holding/SOTP development workpaper; all 42 skill-entrypoint hashes match the previous catalogue. Existing dispositions including business-valuation Unresolved are preserved. No Swiss professional qualification inferred."
+  },
+  "host_marker_version_binding_20261010": {
+    "prior_catalogue_fingerprint": "6095d1ba78f32558a97251062e72aab277edcac9c0544b9ffc48fb5532406c70",
+    "current_catalogue_fingerprint": "2966e4569ad3a8f6914b5bcd1db45d5e8fb110fa434bc3aa1f493c2f0491ac59",
+    "version": "0.1.359",
+    "changed_entrypoints": [],
+    "scope": "Canonical release metadata only; all skill hashes, jurisdiction judgments and acceptance limits are unchanged."
+  },
+  "incident_pipeline_release_binding": {
+    "date": "2026-10-13",
+    "version": "0.1.372",
+    "reason": "Version-only catalogue refresh after the incident pipeline correction. Skill entrypoints, jurisdiction dispositions and professional acceptance limits remain unchanged.",
+    "fresh_geneva_acceptance": false
+  },
+  "intel_macos_shared_runtime_release_binding": {
+    "date": "2026-10-09",
+    "version": "0.1.356",
+    "previous_catalogue_fingerprint": "139fab3e72da3830ac158f17254e298c0c0f13f149b0d6edda890e1b7bc4b93d",
+    "changed_entrypoints": [],
+    "scope": "Only the canonical product version changed in the captured catalogue; function IDs and all skill entrypoint bytes are unchanged. Intel macOS shared-runtime dependency selection adds no jurisdiction adaptation, professional capability, or Geneva acceptance claim. Existing Geneva dispositions and verification limits remain unchanged."
+  },
+  "invoice_windows_release_refresh_20261004": {
+    "previous_version": "0.1.341",
+    "version": "0.1.342",
+    "previous_catalogue_fingerprint": "9818e8c63870d968d1b2eaee8f2203f1180b20cbfd09da1fa506027b0f69894e",
+    "scope": "Manifest version refreshed; all recorded skill entrypoint IDs and hashes are unchanged. Italian invoice fiscal-ID and reviewed-transmitter checks plus shared Windows cross-volume bootstrap fix do not establish Geneva invoice support. Existing dispositions, professional findings and verification limits remain unchanged."
+  },
+  "journal_pdf_source_snapshot_review_20261009": {
+    "prior_catalogue_fingerprint": "f7aaac4208ac52b3ab5efff001a5372f35cb66b29df4f02c77fd5934c9806396",
+    "current_catalogue_fingerprint": "6095d1ba78f32558a97251062e72aab277edcac9c0544b9ffc48fb5532406c70",
+    "version": "0.1.358",
+    "changed_entrypoints": [
+      "journal-bank-reconciliation",
+      "journal-sampling"
+    ],
+    "scope": "Reviewed registration-style PDF intake and existing professional/source qualification boundaries. Existing Geneva relevance dispositions remain unchanged. The adapter still needs reviewed coordinates and full registration closure; no legal adaptation, actual Geneva-client or installed-host acceptance is claimed.",
+    "evidence": "docs/releases/2026-10-09-vera-registration-pdf.md"
+  },
+  "lipe_course_release_binding": {
+    "date": "2026-10-03",
+    "version": "0.1.338",
+    "previous_catalogue_fingerprint": "c92a4175a52c31e930a52d064c39e76131731a89159d8bec4f42204fd5c029b8",
+    "review": "Merged the existing LIPE and costing assessment rows without changing their territorial judgments. Canonical version advanced; LIPE remains an Italian VAT workflow. The new Italian course adds no Swiss qualification."
+  },
+  "lipe_release_binding": {
+    "reviewed_at": "2026-10-02",
+    "version": "0.1.336",
+    "previous_catalogue_fingerprint": "ae2d3201b5d87f1d12c566ba4bfa236d2532c1d9f5be7ce9808f940afc75c336",
+    "added_skills": [
+      "lipe"
+    ],
+    "changed_existing_entrypoints": [],
+    "review": "Register LIPE as unresolved for CH-GE. Preserve all existing jurisdiction decisions. Translated pages and synthetic tests do not establish Swiss applicability or professional acceptance."
+  },
+  "native_deployment_snapshot_review": {
+    "date": "2026-10-09",
+    "source_version": "0.1.357",
+    "changed_skill_ids": [
+      "adeguati-assetti",
+      "aml-review",
+      "archive-organization",
+      "bilancio-oic",
+      "browser-automation",
+      "business-planning",
+      "business-valuation",
+      "centrale-rischi-review",
+      "composizione-negoziata",
+      "concordato-plan-review",
+      "esg-reporting-assurance",
+      "financial-analysis",
+      "financial-report-builder",
+      "fusione-guidata",
+      "invoice-xml",
+      "journal-bank-reconciliation",
+      "journal-sampling",
+      "lipe",
+      "management-control-pack",
+      "new-client",
+      "open-item-reconciliation",
+      "organizzazione-lavoro",
+      "patent-box-review",
+      "presenza-digitale-studio",
+      "previdenza-inps",
+      "purchase-invoice-review",
+      "rating-legalita",
+      "registro-imprese-sari",
+      "sales-plan",
+      "scissione-guidata",
+      "studio-archive",
+      "trasformazione",
+      "treasury-forecast",
+      "variance-analysis",
+      "vera",
+      "vouching"
+    ],
+    "basis": "Reviewed native workspace source, retained producer methods, explicit jurisdiction and professional-review boundaries, privacy register and synthetic source regressions. Existing Geneva dispositions and qualification limits are retained; no additional Geneva client or installed native-host acceptance is claimed.",
+    "native_host_acceptance": false,
+    "evidence": "docs/releases/2026-10-09-native-workspace-current-main-branch-integration.json"
+  },
+  "optional_connectors_release_binding": {
+    "reviewed_at": "2026-10-02",
+    "version": "0.1.335",
+    "previous_catalogue_fingerprint": "7e1e095a856a6f1d4c56f41d9f6c0f405086b2da0bfb8e173cddc993c9d8ab7a",
+    "changed_existing_entrypoints": [
+      "vera"
+    ],
+    "review": "The Vera router now links optional connector setup for Codex, Cowork and Antigravity. No function IDs, Geneva dispositions, jurisdiction adaptations or professional acceptance claims change. The standalone installer and Second Brain guidance do not establish acceptance in a user account."
+  },
+  "patent_box_course_release_binding": {
+    "reviewed_at": "2026-10-01",
+    "version": "0.1.304",
+    "previous_catalogue_fingerprint": "bf072498ef5fbdaeea8e46e4c0cde6fe4e7161dee4313b9f96200efdc39aaec6",
+    "review": "Refreshes the manifest/version binding for the five-language fictional Patent Box course. All 46 skill entrypoints are byte-identical to the recorded baseline. Existing Geneva judgments are preserved; translated teaching does not qualify the Italian preview for Swiss use or establish professional acceptance."
+  },
+  "patent_box_privacy_release_binding": {
+    "version": "0.1.295",
+    "reviewed_at": "2026-09-30",
+    "review": "Refreshes only the canonical version binding after the teaching-review privacy refresh. Existing assessments, including the unresolved Patent Box target assessment, are preserved."
+  },
+  "patent_box_release_binding": {
+    "reviewed_at": "2026-09-30",
+    "version": "0.1.294",
+    "previous_catalogue_fingerprint": "06895e9748b15b956cd7d74fbf3c2cb46753c225a72b8757e11600ed7e735069",
+    "added_skills": [
+      "patent-box-review"
+    ],
+    "review": "Refreshes the release identity and adds the Italian Patent Box controlled preview as unresolved for CH-GE. All existing professional assessments and limitations are preserved."
+  },
+  "rating_legalita_release_binding": {
+    "reviewed_at": "2026-10-02",
+    "version": "0.1.334",
+    "previous_catalogue_fingerprint": "51d6d9dac2621f2b1de16251e3b6490294d256b1eba4d51fabbe86d03fdaafd1",
+    "added_skills": [
+      "rating-legalita"
+    ],
+    "changed_existing_entrypoints": [],
+    "review": "Register the new Italian AGCM workflow as Unresolved for CH-GE, refresh the manifest and entrypoint identity, and preserve all prior target judgments. Translated explanation pages do not qualify Swiss applicability; professional document-led pilot acceptance remains pending. Preserves the newer French discovery keywords and Antigravity documentation; neither changes the recorded jurisdiction qualifications.",
+    "integrated_main": "67bb16e247170f60a2d6122d0decf1e0dc9c7a9a"
+  },
+  "release_baseline_refresh": {
+    "date": "2026-10-02",
+    "reviewer": "Codex /root",
+    "previous_version": "0.1.328",
+    "version": "0.1.331",
+    "changed_skill_ids": [
+      "vera"
+    ],
+    "note": "Integrated main fiscal, annual-accounts and audit entry points plus ESG course. Function identities and existing jurisdiction dispositions retained; no new jurisdiction capability claimed."
+  },
+  "release_revalidation": {
+    "version": "0.1.274",
+    "scope": "All skill entrypoint hashes are unchanged from the preceding snapshot. Release manifest identity refreshed for the Cowork archive startup and session fix; existing jurisdiction assessments are unchanged."
   },
   "rows": [
     {
@@ -746,6 +1115,29 @@
       "implementation_status": "unresolved_not_qualified_for_target"
     },
     {
+      "function_id": "posizioni-negoziali",
+      "name": "Negotiating positions from tracked Word revisions",
+      "role": "function",
+      "disposition": "Unresolved",
+      "common_work": "Group tracked revisions into source-linked negotiating positions, retain every raw revision and comment, and compare selected earlier rounds.",
+      "geneva_application": "The local Word evidence and French output mechanics can be exercised with selected documents; Geneva mandate fit and governing-law judgments remain unqualified.",
+      "required_change": "Establish the actual governing law, party role, mandate and requested negotiation advice before professional use. Use the existing Swiss-context legal research workflow where needed; do not import Italian legal conclusions.",
+      "adaptation_layers": [
+        "mandate qualification",
+        "governing-law source research",
+        "host Word acceptance"
+      ],
+      "acceptance_example": "A selected tracked DOCX produces complete revision accounting and source-linked positions in French, with an earlier round retained. Applicable Swiss conclusions and host Word use require separate evidence.",
+      "sources": [
+        "plugins/vera/skills/posizioni-negoziali/SKILL.md",
+        "plugins/_shared/vendor/modules/deal_redux/workflow.md",
+        "plugins/lucia/scripts/legal_negotiation.py"
+      ],
+      "verification": "Local helper regression and packaged execution cover document mechanics; no Swiss legal validation, Geneva fiduciary case or live Word acceptance established.",
+      "implementation": "Shared local evidence helper and localized table; Geneva professional scope remains unresolved.",
+      "implementation_status": "existing_or_unresolved_as_assessed"
+    },
+    {
       "function_id": "presenza-digitale-studio",
       "name": "Firm website",
       "role": "function",
@@ -1060,6 +1452,33 @@
       "implementation_status": "adapted_with_documented_scope"
     }
   ],
+  "schema": "vera.localization.assessment.v1",
+  "scissione_course_release_binding": {
+    "reviewed_at": "2026-10-01",
+    "version": "0.1.308",
+    "previous_catalogue_fingerprint": "bf072498ef5fbdaeea8e46e4c0cde6fe4e7161dee4313b9f96200efdc39aaec6",
+    "review": "Refreshes only the canonical manifest/version binding. All 46 skill entrypoints are byte-identical to the previous catalogue. Preserves every Geneva disposition and evidence limit. The new five-language course demonstrates an Italian OIC synthetic case; translated lessons do not qualify Swiss applicability or professional acceptance.",
+    "integrated_main": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
+    "source_version": "0.1.322"
+  },
+  "scissione_release_binding": {
+    "reviewed_at": "2026-09-30",
+    "source_version": "0.1.297",
+    "integrated_main_commit": "84f230804d295f1fe6cfdbc682cb0c1f5990447c",
+    "review": "Adds the retained Italian OIC partial proportional/new-beneficiary Scissione path. Preserves every current-main target disposition and source. Swiss applicability remains unresolved; no professional acceptance is inferred."
+  },
+  "shared_research_release_binding": {
+    "reviewed_at": "2026-10-12",
+    "version": "0.1.363",
+    "previous_catalogue_fingerprint": "bf22ce9cd7ab289f6fca9e242a73efa291ca20b75a5aba7f5fa7c06267e2691c",
+    "review": "Adds one internal research stage beneath the existing legal/tax question function. Retains previous target dispositions and professional-acceptance limits. Language never selects jurisdiction. New continuous reviews and final feedback preserve the accepted contract and sources; source/package checks do not establish Geneva legal correctness."
+  },
+  "source_binding_update": {
+    "date": "2026-10-14",
+    "version": "0.1.375",
+    "reason": "Current product identity after integrating the released tax-litigation Archive handoffs and research evidence-integrity fixes. Preserve existing Geneva dispositions and acceptance limits. No new qualification inferred.",
+    "fresh_geneva_acceptance": false
+  },
   "sources": {
     "profession": {
       "title": "FIDUCIAIRE Suisse: professional services, page 15",
@@ -1170,183 +1589,6 @@
       "consulted": "2026-10-02"
     }
   },
-  "course_qa_release_binding": {
-    "reviewed_at": "2026-09-28T09:31:31.050351+00:00",
-    "previous_version": "0.1.272",
-    "source_version": "0.1.273",
-    "previous_catalogue_fingerprint": "a5d6b853e848c53b6f748b71c5921d8b7db3702a0453be84ade958a3b146aae9",
-    "changed_skills": [
-      "learn-with-vera",
-      "open-item-reconciliation"
-    ],
-    "review": "Single-course startup no longer requires an interview; teaching accurately discloses model-context reads. Open-item instructions separate the sealed native reconciliation output from the run-level model-data disclosure, without weakening its assurance boundary. Existing Geneva dispositions, jurisdiction boundaries and unanswered professional-fit questions are preserved. This is catalogue identity integration, not a new Geneva professional acceptance."
-  },
-  "release_revalidation": {
-    "version": "0.1.274",
-    "scope": "All skill entrypoint hashes are unchanged from the preceding snapshot. Release manifest identity refreshed for the Cowork archive startup and session fix; existing jurisdiction assessments are unchanged."
-  },
-  "get_started_release_binding": {
-    "version": "0.1.275",
-    "reviewed_at": "2026-09-29",
-    "change": "Optional introductory single-course teaching route; professional workflow scope and Geneva dispositions unchanged. Language alone never selects jurisdiction."
-  },
-  "course_entry_release_binding": {
-    "version": "0.1.277",
-    "change": "Remove redundant catalogue jump link and refresh release identity; skill entrypoints and Geneva dispositions unchanged."
-  },
-  "esg_release_binding": {
-    "source_version": "0.1.282",
-    "previous_catalogue_fingerprint": "3cc41a2fd81c4fc73df1d70cfd218bdadd735fc82596ec4c431e6f9f7dd67c86",
-    "change": "Add esg-reporting-assurance as Unresolved. Preserve earlier assessments; no new Swiss legal conclusions or professional acceptance. Merge current main retaining the separate fusione-guidata unresolved assessment. Preserve the subsequent synthetic transformation route and its unresolved assessment."
-  },
-  "fusione_p0_release_binding": {
-    "version": "0.1.279",
-    "reviewed_at": "2026-09-29",
-    "previous_version": "0.1.277",
-    "previous_catalogue_fingerprint": "3cc41a2fd81c4fc73df1d70cfd218bdadd735fc82596ec4c431e6f9f7dd67c86",
-    "added_skills": [
-      "fusione-guidata"
-    ],
-    "changed_skills": [
-      "vera"
-    ],
-    "review": "Register the new structural P0 foundation as unresolved for CH-GE. The Vera router adds only that foundation. Existing function dispositions and source assessments are preserved; no Swiss merger capability or current legal review is established."
-  },
-  "transformation_prototype_catalogue_binding": {
-    "version": "0.1.280",
-    "reviewed_at": "2026-09-29",
-    "previous_catalogue_fingerprint": "3cc41a2fd81c4fc73df1d70cfd218bdadd735fc82596ec4c431e6f9f7dd67c86",
-    "added_skills": [
-      "trasformazione"
-    ],
-    "changed_skills": [
-      "vera"
-    ],
-    "review": "Adds the explicit synthetic-only transformation route and candidate manifest identity. The new row remains Unresolved for CH-GE. Existing assessment rows and their professional-evidence limits are preserved; this update is catalogue integration, not a Swiss capability release."
-  },
-  "combined_release_binding": {
-    "version": "0.1.280",
-    "reviewed_at": "2026-09-29",
-    "review": "Combines the existing fusione-guidata P0 and synthetic-only trasformazione entries. All prior target judgments and both unresolved entries are preserved. No new professional or jurisdiction qualification is inferred."
-  },
-  "cnc_release_binding": {
-    "version": "0.1.285",
-    "reviewed_at": "2026-09-29",
-    "previous_catalogue_fingerprint": "500598f2e1c2bbaf1ffd4cb41f8b2eb21ae6a68fd64cc126084daa34d97dcd43",
-    "added_skills": [
-      "composizione-negoziata"
-    ],
-    "review": "Add the Italian CNC workflow as unresolved for CH-GE. Preserve all prior Geneva assessments and the merger foundation; the combined release does not establish Swiss applicability. Preserve the newly merged synthetic-only transformation prototype."
-  },
-  "assetti_construction_release_binding": {
-    "version": "0.1.283",
-    "reviewed_at": "2026-09-29",
-    "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
-  },
-  "catalogue_fingerprint": "9014a3d963d9b6203638b6198f02bf24bdf5bdf4195d764de109fbb4122e857b",
-  "esg_combined_binding_20260930": {
-    "version": "0.1.286",
-    "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."
-  },
-  "fusione_p1_release_binding": {
-    "reviewed_at": "2026-09-30",
-    "previous_catalogue_fingerprint": "6b6600d71b764ee71b86cd54adcf5aa46257bf72ef43606a36dc59562d2fd5cd",
-    "candidate_version": "0.1.287",
-    "review": "Updates the fusione-guidata and Vera router entrypoints for two domestic Italian OIC branches. Geneva dispositions and professional-fit limits remain unchanged; this is catalogue maintenance, not Swiss qualification."
-  },
-  "esg_deployment_binding_20260930": {
-    "version": "0.1.291",
-    "scope": "Integrates Fusione P1 and CNC completion; retains all recorded target dispositions. ESG remains unresolved for Swiss professional use."
-  },
-  "catalogue_update": {
-    "date": "2026-09-30",
-    "source_version": "0.1.286",
-    "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification."
-  },
-  "holding_release_binding": {
-    "reviewed_at": "2026-09-29T23:34:08.160128+00:00",
-    "version": "0.1.287",
-    "previous_catalogue_fingerprint": "a9ceba58dffbd53dcaa7f1c47cc9ebee8f005d6e71ac0f2394ce7cccc209766a",
-    "scope": "Manifest identity refresh for the holding/SOTP development workpaper; all 42 skill-entrypoint hashes match the previous catalogue. Existing dispositions including business-valuation Unresolved are preserved. No Swiss professional qualification inferred."
-  },
-  "valuation_cnc_integration": {
-    "reviewed_at": "2026-09-29T23:44:22.110465+00:00",
-    "version": "0.1.288",
-    "scope": "Merged all existing target dispositions from both parents. Added CNC remains unresolved; valuation remains unresolved. The 43-entry inventory reflects the combined candidate only, not Swiss qualification."
-  },
-  "valuation_fusione_integration": {
-    "version": "0.1.291",
-    "source_main": "c3f09ad78f69a96445762e3772b7c05ec88d5862",
-    "scope": "Preserves all existing Geneva dispositions and adopts the upstream Fusione P1 row verbatim. Both valuation and merger remain Unresolved. This is combined-source inventory maintenance, not new Swiss qualification."
-  },
-  "patent_box_release_binding": {
-    "reviewed_at": "2026-09-30",
-    "version": "0.1.294",
-    "previous_catalogue_fingerprint": "06895e9748b15b956cd7d74fbf3c2cb46753c225a72b8757e11600ed7e735069",
-    "added_skills": [
-      "patent-box-review"
-    ],
-    "review": "Refreshes the release identity and adds the Italian Patent Box controlled preview as unresolved for CH-GE. All existing professional assessments and limitations are preserved."
-  },
-  "patent_box_privacy_release_binding": {
-    "version": "0.1.295",
-    "reviewed_at": "2026-09-30",
-    "review": "Refreshes only the canonical version binding after the teaching-review privacy refresh. Existing assessments, including the unresolved Patent Box target assessment, are preserved."
-  },
-  "scissione_release_binding": {
-    "reviewed_at": "2026-09-30",
-    "source_version": "0.1.297",
-    "integrated_main_commit": "84f230804d295f1fe6cfdbc682cb0c1f5990447c",
-    "review": "Adds the retained Italian OIC partial proportional/new-beneficiary Scissione path. Preserves every current-main target disposition and source. Swiss applicability remains unresolved; no professional acceptance is inferred."
-  },
-  "cowork_packaging_release_binding": {
-    "reviewed_at": "2026-10-01",
-    "version": "0.1.299",
-    "previous_catalogue_fingerprint": "8e3d54f9359fbca867287ad57183488948f1880e1ac89fa62be0b0a7efa9aecf",
-    "review": "Refreshes the manifest/version binding for the Cowork packaging repair. All 46 canonical skill entrypoints are byte-identical to the previous catalogue. Existing Geneva judgments and evidence limits are preserved."
-  },
-  "patent_box_course_release_binding": {
-    "reviewed_at": "2026-10-01",
-    "version": "0.1.304",
-    "previous_catalogue_fingerprint": "bf072498ef5fbdaeea8e46e4c0cde6fe4e7161dee4313b9f96200efdc39aaec6",
-    "review": "Refreshes the manifest/version binding for the five-language fictional Patent Box course. All 46 skill entrypoints are byte-identical to the recorded baseline. Existing Geneva judgments are preserved; translated teaching does not qualify the Italian preview for Swiss use or establish professional acceptance."
-  },
-  "assetti_course_release_binding": {
-    "date": "2026-10-01",
-    "source_version": "0.1.311",
-    "scope": "Manifest version advanced; all 46 skill entrypoint hashes are unchanged. Existing Geneva dispositions and jurisdiction limits are retained. The Italian Adeguati assetti teaching expansion does not establish Geneva construction acceptance."
-  },
-  "cnc_discovery_release_binding": {
-    "date": "2026-10-01",
-    "version": "0.1.313",
-    "integrated_main": "a5b52b157ebbd2c90cbe591abb68165db53bbe54",
-    "scope": "Inspected all ten changed skill entrypoints: nine specialist descriptions clarify existing accounting outcome selection; router description and ordinary request section clarify routing and ambiguity. No jurisdiction law, calculation, target disposition or acceptance basis changes. Existing dated Geneva assessments and unresolved limitations are preserved; this binding does not assert professional acceptance."
-  },
-  "transformation_course_release_binding": {
-    "date": "2026-10-01",
-    "version": "0.1.317",
-    "integrated_main": "bee5f7cd0d1b0c1a988b3665ac5e011fae495438",
-    "changed_entrypoints": [
-      "browser-automation",
-      "learn-with-vera",
-      "trasformazione"
-    ],
-    "scope": "Reviewed the three changed entrypoints and current manifest. Browser changes tighten ECONS status bindings and executor evidence within the existing application-specific qualification limits. Teaching changes add an explicitly synthetic Italian transformation lesson with no Studio Archive adapter, real mandate or Swiss legal-effect claim. Language remains independent of jurisdiction. All 46 existing function IDs, Geneva dispositions, adaptation requirements, source references and professional acceptance limitations are preserved. Trasformazione remains an unassessed synthetic prototype for Geneva; this source binding is not client or installed-host acceptance."
-  },
-  "technical_instruction_audit_binding": {
-    "reviewed_at": "2026-10-01",
-    "version": "0.1.321",
-    "previous_catalogue_fingerprint": "3538bdec8b05585e790befc8f5dc03b322aca3f93aca7c76087c9e51018ea8c7",
-    "review": "Clarifies the existing final-approval grants submission boundary in the router. Refreshes catalogue identity; existing Geneva dispositions and professional-fit limits are preserved. No new jurisdictional acceptance or execution authority is inferred. The merged Patent Box, Adeguati assetti and CNC courses, discovery routing and their separate recorded limits are preserved."
-  },
-  "scissione_course_release_binding": {
-    "reviewed_at": "2026-10-01",
-    "version": "0.1.308",
-    "previous_catalogue_fingerprint": "bf072498ef5fbdaeea8e46e4c0cde6fe4e7161dee4313b9f96200efdc39aaec6",
-    "review": "Refreshes only the canonical manifest/version binding. All 46 skill entrypoints are byte-identical to the previous catalogue. Preserves every Geneva disposition and evidence limit. The new five-language course demonstrates an Italian OIC synthetic case; translated lessons do not qualify Swiss applicability or professional acceptance.",
-    "integrated_main": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
-    "source_version": "0.1.322"
-  },
   "studio_format_release_binding": {
     "reviewed_at": "2026-10-01",
     "version": "0.1.324",
@@ -1366,283 +1608,19 @@
     "previous_catalogue_fingerprint": "75b768599e3642baa05d070255fd58427d1190bd40e203563daef6838934f23c",
     "review": "All 47 skill entrypoints are byte-identical to the reviewed studio-format source. Preserves every current main target judgment and the additional unresolved studio-format row. Refreshes the canonical manifest/version binding after integrating the valuation course; no new Geneva professional acceptance is claimed."
   },
-  "connected_studio_knowledge_release_binding": {
-    "reviewed_at": "2026-10-02",
-    "version": "0.1.328",
-    "integrated_main": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
-    "previous_catalogue_fingerprint": "48fad5304246c8c3ff2840b3da29a228f89dba28a76e0c7f4d9d91f0470fab18",
-    "changed_entrypoints": [
-      "adeguati-assetti",
-      "adversarial-opinion",
-      "aml-review",
-      "archive-organization",
-      "avviso-intake",
-      "bandi-agevolazioni",
-      "bilancio-oic",
-      "browser-automation",
-      "business-planning",
-      "business-valuation",
-      "centrale-rischi-review",
-      "composizione-negoziata",
-      "comunicazione-professionale",
-      "concordato-plan-review",
-      "datev-invoice-start",
-      "dati-fiscali-strutturati",
-      "email-cliente",
-      "esg-reporting-assurance",
-      "fatture-xml-check",
-      "financial-analysis",
-      "financial-report-builder",
-      "fusione-guidata",
-      "invoice-xml",
-      "journal-bank-reconciliation",
-      "journal-sampling",
-      "legal-tax-answer-planner",
-      "legal-tax-answer-review",
-      "management-control-pack",
-      "new-client",
-      "open-item-reconciliation",
-      "patent-box-review",
-      "presenza-digitale-studio",
-      "previdenza-inps",
-      "purchase-invoice-review",
-      "quesito-legale-fiscale",
-      "registro-imprese-sari",
-      "sales-plan",
-      "scissione-guidata",
-      "studio-archive",
-      "studio-document-format",
-      "trasformazione",
-      "treasury-forecast",
-      "variance-analysis",
-      "vera",
-      "vouching"
-    ],
-    "review": "Reviewed the optional host-connected studio knowledge consultation contract and its professional entrypoint gates. No function IDs, Geneva dispositions, jurisdiction qualification, calculations or professional acceptance limits change. Studio knowledge supplies cited task context only and cannot replace current primary legal verification. Studios independently invoke their own skills. Neither a repository nor Microsoft 365 is required. Source/package checks do not establish Nicola-host connector acceptance."
-  },
-  "connected_studio_knowledge_fusione_integration": {
-    "reviewed_at": "2026-10-02",
-    "version": "0.1.328",
-    "integrated_main": "5b1cc09afc599862d87a609648303073187b587e",
-    "review": "Preserves the newly merged synthetic Italian Fusione P1 course, its router description and all existing Geneva target judgments. Optional source consultation gates remain intact. This source integration does not qualify Swiss merger implementation or Nicola-host connector acceptance."
-  },
-  "release_baseline_refresh": {
-    "date": "2026-10-02",
-    "reviewer": "Codex /root",
-    "previous_version": "0.1.328",
-    "version": "0.1.331",
-    "changed_skill_ids": [
-      "vera"
-    ],
-    "note": "Integrated main fiscal, annual-accounts and audit entry points plus ESG course. Function identities and existing jurisdiction dispositions retained; no new jurisdiction capability claimed."
-  },
-  "rating_legalita_release_binding": {
-    "reviewed_at": "2026-10-02",
-    "version": "0.1.334",
-    "previous_catalogue_fingerprint": "51d6d9dac2621f2b1de16251e3b6490294d256b1eba4d51fabbe86d03fdaafd1",
-    "added_skills": [
-      "rating-legalita"
-    ],
-    "changed_existing_entrypoints": [],
-    "review": "Register the new Italian AGCM workflow as Unresolved for CH-GE, refresh the manifest and entrypoint identity, and preserve all prior target judgments. Translated explanation pages do not qualify Swiss applicability; professional document-led pilot acceptance remains pending. Preserves the newer French discovery keywords and Antigravity documentation; neither changes the recorded jurisdiction qualifications.",
-    "integrated_main": "67bb16e247170f60a2d6122d0decf1e0dc9c7a9a"
-  },
-  "optional_connectors_release_binding": {
-    "reviewed_at": "2026-10-02",
-    "version": "0.1.335",
-    "previous_catalogue_fingerprint": "7e1e095a856a6f1d4c56f41d9f6c0f405086b2da0bfb8e173cddc993c9d8ab7a",
-    "changed_existing_entrypoints": [
-      "vera"
-    ],
-    "review": "The Vera router now links optional connector setup for Codex, Cowork and Antigravity. No function IDs, Geneva dispositions, jurisdiction adaptations or professional acceptance claims change. The standalone installer and Second Brain guidance do not establish acceptance in a user account."
-  },
-  "lipe_release_binding": {
-    "reviewed_at": "2026-10-02",
-    "version": "0.1.336",
-    "previous_catalogue_fingerprint": "ae2d3201b5d87f1d12c566ba4bfa236d2532c1d9f5be7ce9808f940afc75c336",
-    "added_skills": [
-      "lipe"
-    ],
-    "changed_existing_entrypoints": [],
-    "review": "Register LIPE as unresolved for CH-GE. Preserve all existing jurisdiction decisions. Translated pages and synthetic tests do not establish Swiss applicability or professional acceptance."
-  },
-  "costing_release_binding": {
-    "reviewed_at": "2026-10-03",
-    "version": "0.1.337",
-    "previous_catalogue_fingerprint": "ae2d3201b5d87f1d12c566ba4bfa236d2532c1d9f5be7ce9808f940afc75c336",
-    "changed_existing_entrypoints": [
-      "vera",
-      "management-control-pack"
-    ],
-    "review": "Same function identities. The new costing path is limited to EUR and Italian/English reports. It does not inherit the recurring reporting path's CHF/French qualification. Existing Geneva reporting assessment is preserved with this explicit scope distinction; no new local-case acceptance is claimed."
-  },
-  "lipe_course_release_binding": {
-    "date": "2026-10-03",
-    "version": "0.1.338",
-    "previous_catalogue_fingerprint": "c92a4175a52c31e930a52d064c39e76131731a89159d8bec4f42204fd5c029b8",
-    "review": "Merged the existing LIPE and costing assessment rows without changing their territorial judgments. Canonical version advanced; LIPE remains an Italian VAT workflow. The new Italian course adds no Swiss qualification."
-  },
-  "course_file_access_release_binding": {
-    "date": "2026-10-03",
-    "version": "0.1.339",
-    "previous_catalogue_fingerprint": "bf91761d554760069d3294167bcb2f14ffbe976333d3687eb7463fba5b24b2df",
-    "changed_entrypoints": [
-      "learn-with-vera"
-    ],
-    "review": "Only course workspace setup and filesystem readiness changed. Existing country applicability decisions and limitations are unchanged; no new jurisdiction or live-host acceptance is claimed."
-  },
-  "esg_wording_release_binding": {
-    "date": "2026-10-04",
-    "version": "0.1.341",
-    "previous_catalogue_fingerprint": "301d7801c3857f65ad91f414a9f30c17842432edb1cb3350d0b6c6051abd4bc9",
-    "changed_entrypoints": [],
-    "review": "Only the canonical version and fictional ESG practice wording changed. All skill entrypoint hashes and existing jurisdiction judgments are preserved. No new professional or native-host acceptance is claimed."
-  },
-  "invoice_windows_release_refresh_20261004": {
-    "previous_version": "0.1.341",
-    "version": "0.1.342",
-    "previous_catalogue_fingerprint": "9818e8c63870d968d1b2eaee8f2203f1180b20cbfd09da1fa506027b0f69894e",
-    "scope": "Manifest version refreshed; all recorded skill entrypoint IDs and hashes are unchanged. Italian invoice fiscal-ID and reviewed-transmitter checks plus shared Windows cross-volume bootstrap fix do not establish Geneva invoice support. Existing dispositions, professional findings and verification limits remain unchanged."
-  },
-  "website_download_release_refresh_20261004": {
-    "previous_version": "0.1.342",
-    "version": "0.1.343",
-    "previous_catalogue_fingerprint": "e703d67d57d108eb878b5f045d4a3718b711539f435bc1c4787652af1381920d",
-    "scope": "Canonical manifest version and listing category refreshed to 0.1.343 and Finance. All recorded skill entrypoint IDs and hashes are unchanged. Existing dispositions, professional findings and verification limits remain unchanged."
-  },
-  "hardlink_execution_release_binding_20261007": {
-    "date": "2026-10-07",
-    "version": "0.1.348",
-    "previous_catalogue_fingerprint": "f06b6752dfac9f4c82cfa09cb7045d9abab10ed697807d6a632cab4f5fbdda8d",
-    "changed_entrypoints": [
-      "concordato-plan-review",
-      "financial-report-builder",
-      "journal-bank-reconciliation",
-      "journal-sampling",
-      "open-item-reconciliation",
-      "vera",
-      "vouching"
-    ],
-    "scope": "Internal verified private code preparation for hardlinked installed modules. Existing function IDs, jurisdiction dispositions, professional findings and acceptance limitations are unchanged. No Geneva or affected-user host acceptance is claimed."
-  },
   "studio_work_course_source_refresh": {
     "version": "0.1.350",
     "previous_catalogue_fingerprint": "d7630254b8fb6648782492583ccb7641a9bfea170777d92b9c07d9c2f7d48f2e",
     "scope": "Prepared five-language local organizer course; unchanged function coverage and Geneva disposition. No new learner, native voice or live-calendar acceptance."
   },
-  "agenzia_acquisition_release_binding": {
-    "date": "2026-10-08",
-    "version": "0.1.352",
-    "previous_catalogue_fingerprint": "56568435133705961b89c97b4e7a5f0cf97a1f50e20d19b62cbe14cd98968acf",
-    "added_skills": [
-      "agenzia-acquisition"
-    ],
-    "changed_existing_entrypoints": [
-      "browser-automation"
-    ],
-    "scope": "Register the new AdE acquisition separately from generic browser teaching; preserve existing jurisdiction judgments. Optional native UI and translated pages do not qualify Swiss portal support."
-  },
-  "archive_profile_bootstrap_source_refresh": {
-    "version": "0.1.355",
-    "scope": "Only canonical product version changed in the captured catalogue; function IDs and all skill bytes match the 0.1.354 snapshot. Existing Geneva dispositions remain unchanged. Secure legacy profile bootstrap preserves existing approval and source isolation; no additional legal adaptation or Geneva acceptance claimed."
-  },
-  "intel_macos_shared_runtime_release_binding": {
-    "date": "2026-10-09",
-    "version": "0.1.356",
-    "previous_catalogue_fingerprint": "139fab3e72da3830ac158f17254e298c0c0f13f149b0d6edda890e1b7bc4b93d",
-    "changed_entrypoints": [],
-    "scope": "Only the canonical product version changed in the captured catalogue; function IDs and all skill entrypoint bytes are unchanged. Intel macOS shared-runtime dependency selection adds no jurisdiction adaptation, professional capability, or Geneva acceptance claim. Existing Geneva dispositions and verification limits remain unchanged."
-  },
-  "native_deployment_snapshot_review": {
-    "date": "2026-10-09",
-    "source_version": "0.1.357",
-    "changed_skill_ids": [
-      "adeguati-assetti",
-      "aml-review",
-      "archive-organization",
-      "bilancio-oic",
-      "browser-automation",
-      "business-planning",
-      "business-valuation",
-      "centrale-rischi-review",
-      "composizione-negoziata",
-      "concordato-plan-review",
-      "esg-reporting-assurance",
-      "financial-analysis",
-      "financial-report-builder",
-      "fusione-guidata",
-      "invoice-xml",
-      "journal-bank-reconciliation",
-      "journal-sampling",
-      "lipe",
-      "management-control-pack",
-      "new-client",
-      "open-item-reconciliation",
-      "organizzazione-lavoro",
-      "patent-box-review",
-      "presenza-digitale-studio",
-      "previdenza-inps",
-      "purchase-invoice-review",
-      "rating-legalita",
-      "registro-imprese-sari",
-      "sales-plan",
-      "scissione-guidata",
-      "studio-archive",
-      "trasformazione",
-      "treasury-forecast",
-      "variance-analysis",
-      "vera",
-      "vouching"
-    ],
-    "basis": "Reviewed native workspace source, retained producer methods, explicit jurisdiction and professional-review boundaries, privacy register and synthetic source regressions. Existing Geneva dispositions and qualification limits are retained; no additional Geneva client or installed native-host acceptance is claimed.",
-    "native_host_acceptance": false,
-    "evidence": "docs/releases/2026-10-09-native-workspace-current-main-branch-integration.json"
-  },
-  "journal_pdf_source_snapshot_review_20261009": {
-    "prior_catalogue_fingerprint": "f7aaac4208ac52b3ab5efff001a5372f35cb66b29df4f02c77fd5934c9806396",
-    "current_catalogue_fingerprint": "6095d1ba78f32558a97251062e72aab277edcac9c0544b9ffc48fb5532406c70",
-    "version": "0.1.358",
-    "changed_entrypoints": [
-      "journal-bank-reconciliation",
-      "journal-sampling"
-    ],
-    "scope": "Reviewed registration-style PDF intake and existing professional/source qualification boundaries. Existing Geneva relevance dispositions remain unchanged. The adapter still needs reviewed coordinates and full registration closure; no legal adaptation, actual Geneva-client or installed-host acceptance is claimed.",
-    "evidence": "docs/releases/2026-10-09-vera-registration-pdf.md"
-  },
-  "host_marker_version_binding_20261010": {
-    "prior_catalogue_fingerprint": "6095d1ba78f32558a97251062e72aab277edcac9c0544b9ffc48fb5532406c70",
-    "current_catalogue_fingerprint": "2966e4569ad3a8f6914b5bcd1db45d5e8fb110fa434bc3aa1f493c2f0491ac59",
-    "version": "0.1.359",
-    "changed_entrypoints": [],
-    "scope": "Canonical release metadata only; all skill hashes, jurisdiction judgments and acceptance limits are unchanged."
-  },
-  "cowork_yaml_source_binding_20261012": {
-    "date": "2026-10-12",
-    "version": "0.1.360",
-    "prior_catalogue_fingerprint": "2966e4569ad3a8f6914b5bcd1db45d5e8fb110fa434bc3aa1f493c2f0491ac59",
-    "current_catalogue_fingerprint": "85ec9acac73797a84cb23dc374ab8a6699121d6fc2a6b189358f248cb59f5920",
-    "changed_entrypoints": [
-      "business-planning"
-    ],
-    "scope": "Quote the existing colon-bearing description as valid YAML; parsed wording and all function IDs, jurisdiction dispositions and acceptance limits are unchanged."
-  },
-  "shared_research_release_binding": {
-    "reviewed_at": "2026-10-12",
-    "version": "0.1.363",
-    "previous_catalogue_fingerprint": "bf22ce9cd7ab289f6fca9e242a73efa291ca20b75a5aba7f5fa7c06267e2691c",
-    "review": "Adds one internal research stage beneath the existing legal/tax question function. Retains previous target dispositions and professional-acceptance limits. Language never selects jurisdiction. New continuous reviews and final feedback preserve the accepted contract and sources; source/package checks do not establish Geneva legal correctness."
-  },
-  "source_binding_update": {
-    "date": "2026-10-14",
-    "version": "0.1.375",
-    "reason": "Current product identity after integrating the released tax-litigation Archive handoffs and research evidence-integrity fixes. Preserve existing Geneva dispositions and acceptance limits. No new qualification inferred.",
-    "fresh_geneva_acceptance": false
-  },
-  "incident_pipeline_release_binding": {
-    "date": "2026-10-13",
-    "version": "0.1.372",
-    "reason": "Version-only catalogue refresh after the incident pipeline correction. Skill entrypoints, jurisdiction dispositions and professional acceptance limits remain unchanged.",
-    "fresh_geneva_acceptance": false
+  "target": {
+    "id": "CH-GE",
+    "country": "Switzerland",
+    "subdivision": "Canton of Geneva",
+    "output_language": "fr",
+    "reporting_currency": "CHF unless evidence specifies otherwise",
+    "user_scope": "Generalist fiduciary serving SMEs; assumed example profile, not a surveyed firm",
+    "mandate_scope": "Domestic Geneva work; cross-border cases only when evidenced"
   },
   "tax_litigation_fix_release_binding_20261013": {
     "date": "2026-10-13",
@@ -1654,6 +1632,51 @@
     ],
     "reason": "Refresh the release baseline for the Archive registration, evidence subdirectory and sealed-run resume guidance. Existing jurisdiction dispositions, Italy-only litigation scope and professional acceptance limits are unchanged.",
     "fresh_geneva_acceptance": false
+  },
+  "technical_instruction_audit_binding": {
+    "reviewed_at": "2026-10-01",
+    "version": "0.1.321",
+    "previous_catalogue_fingerprint": "3538bdec8b05585e790befc8f5dc03b322aca3f93aca7c76087c9e51018ea8c7",
+    "review": "Clarifies the existing final-approval grants submission boundary in the router. Refreshes catalogue identity; existing Geneva dispositions and professional-fit limits are preserved. No new jurisdictional acceptance or execution authority is inferred. The merged Patent Box, Adeguati assetti and CNC courses, discovery routing and their separate recorded limits are preserved."
+  },
+  "transformation_course_release_binding": {
+    "date": "2026-10-01",
+    "version": "0.1.317",
+    "integrated_main": "bee5f7cd0d1b0c1a988b3665ac5e011fae495438",
+    "changed_entrypoints": [
+      "browser-automation",
+      "learn-with-vera",
+      "trasformazione"
+    ],
+    "scope": "Reviewed the three changed entrypoints and current manifest. Browser changes tighten ECONS status bindings and executor evidence within the existing application-specific qualification limits. Teaching changes add an explicitly synthetic Italian transformation lesson with no Studio Archive adapter, real mandate or Swiss legal-effect claim. Language remains independent of jurisdiction. All 46 existing function IDs, Geneva dispositions, adaptation requirements, source references and professional acceptance limitations are preserved. Trasformazione remains an unassessed synthetic prototype for Geneva; this source binding is not client or installed-host acceptance."
+  },
+  "transformation_prototype_catalogue_binding": {
+    "version": "0.1.280",
+    "reviewed_at": "2026-09-29",
+    "previous_catalogue_fingerprint": "3cc41a2fd81c4fc73df1d70cfd218bdadd735fc82596ec4c431e6f9f7dd67c86",
+    "added_skills": [
+      "trasformazione"
+    ],
+    "changed_skills": [
+      "vera"
+    ],
+    "review": "Adds the explicit synthetic-only transformation route and candidate manifest identity. The new row remains Unresolved for CH-GE. Existing assessment rows and their professional-evidence limits are preserved; this update is catalogue integration, not a Swiss capability release."
+  },
+  "valuation_cnc_integration": {
+    "reviewed_at": "2026-09-29T23:44:22.110465+00:00",
+    "version": "0.1.288",
+    "scope": "Merged all existing target dispositions from both parents. Added CNC remains unresolved; valuation remains unresolved. The 43-entry inventory reflects the combined candidate only, not Swiss qualification."
+  },
+  "valuation_fusione_integration": {
+    "version": "0.1.291",
+    "source_main": "c3f09ad78f69a96445762e3772b7c05ec88d5862",
+    "scope": "Preserves all existing Geneva dispositions and adopts the upstream Fusione P1 row verbatim. Both valuation and merger remain Unresolved. This is combined-source inventory maintenance, not new Swiss qualification."
+  },
+  "website_download_release_refresh_20261004": {
+    "previous_version": "0.1.342",
+    "version": "0.1.343",
+    "previous_catalogue_fingerprint": "e703d67d57d108eb878b5f045d4a3718b711539f435bc1c4787652af1381920d",
+    "scope": "Canonical manifest version and listing category refreshed to 0.1.343 and Finance. All recorded skill entrypoint IDs and hashes are unchanged. Existing dispositions, professional findings and verification limits remain unchanged."
   },
   "workflow_ui_source_review_20261014": {
     "scope": "Native review routing and mechanical source/correction/citation persistence only. Existing jurisdiction assessments remain unchanged; no Geneva professional or native-host acceptance is inferred.",
