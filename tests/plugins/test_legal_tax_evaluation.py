@@ -350,13 +350,20 @@ def test_cli_retains_and_verifies_an_actual_run(
 
 
 @pytest.mark.parametrize("product", ["vera", "lucia"])
-@pytest.mark.parametrize("host", ["plugin", "claude-plugin"])
-def test_packaged_evaluation_preserves_the_requested_codex_comparator(product, host):
+@pytest.mark.parametrize(
+    ("host", "skill"),
+    [("plugin", "deep-research"), ("claude-plugin", "mparanza-deep-research")],
+)
+def test_packaged_evaluation_preserves_the_requested_codex_comparator(
+    product, host, skill
+):
     root = Path(__file__).resolve().parents[2]
     with zipfile.ZipFile(
         root / f"plugin_packages/{product}/{product}-{host}.zip"
     ) as package:
-        suffix = "modules/deep-research-validator/skills/deep-research/references/evaluation.md"
+        suffix = (
+            f"modules/deep-research-validator/skills/{skill}/references/evaluation.md"
+        )
         path = next(name for name in package.namelist() if name.endswith(suffix))
         guidance = package.read(path).decode("utf-8")
     assert "the `standard_codex` baseline's output" in guidance

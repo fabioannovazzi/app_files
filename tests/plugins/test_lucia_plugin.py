@@ -469,10 +469,19 @@ def test_lucia_marketplace_cards_use_vera_canonical_assurance_copy() -> None:
         "Il repository è facoltativo; le skill dello studio si richiamano separatamente "
         "e Vera non le instrada. Restano validi i requisiti del workflow specialistico."
     )
+    vera_optional_research_suffix = (
+        " Leggi ../vera/references/research-subscriptions.md e usa le scelte di "
+        "abbonamento salvate, quando pertinenti, nello stesso workflow. Verifica "
+        "l’accesso reale e conserva passaggi, citazioni e limiti; non avviare "
+        "configurazione per chi non ha collegato fonti. Le lezioni preparate "
+        "usano soltanto i materiali assegnati."
+    )
     for workflow in ASSURANCE_SKILLS.values():
         for field in ("display_name", "short_description", "default_prompt"):
             assert lucia_cards[workflow][field] == vera_cards[workflow][field]
         instructions = vera_cards[workflow]["instructions"]
+        assert instructions.endswith(vera_optional_research_suffix)
+        instructions = instructions.removesuffix(vera_optional_research_suffix)
         assert instructions.endswith(vera_optional_knowledge_suffix)
         assert instructions.count(vera_optional_knowledge_suffix) == 1
         shared_instructions = instructions.removesuffix(vera_optional_knowledge_suffix)

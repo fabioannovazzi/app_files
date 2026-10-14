@@ -122,7 +122,7 @@ instruction to omit the stage; do not change `not_required` merely because
 research has produced conclusions. Do not apply this stage to other
 product workflows merely because their output mentions law or tax.
 
-Early challenges within `../deep-research/SKILL.md` guide research but never
+Early challenges within `../mparanza-deep-research/SKILL.md` guide research but never
 complete this final assignment. Re-read the reviewed original and sources under
 an opposing assignment rather than endorsing the research narrative. Keep
 adverse evidence and alternative interpretations visible.

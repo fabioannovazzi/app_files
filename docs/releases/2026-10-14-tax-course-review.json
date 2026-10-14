@@ -33,5 +33,9 @@
       "lucia": "0.1.107",
       "clara": "0.1.282"
     }
+  },
+  "main_integration": {
+    "commit": "26075c11d6104c2806527a690188de806ea1f292",
+    "changes_preserved": "Research skill namespace, research-subscription page and governance-matrix updates. Rebuilt generated packages from merged source; existing jurisdiction assessments retained."
   }
 }

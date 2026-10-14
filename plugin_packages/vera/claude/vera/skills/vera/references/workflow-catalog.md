@@ -231,7 +231,7 @@ Ordinary work requires no paid database or connection setup.
 - `quesito-legale-fiscale`: answer a substantive legal, tax, or compliance
   question, or prepare source-backed professional drafting, through one
   question-to-reviewed-answer journey. It orchestrates prompt preparation,
-  Vera's bundled `skills/deep-research/SKILL.md` using the current session
+  Vera's bundled `skills/mparanza-deep-research/SKILL.md` using the current session
   model and research tools, continuous validation and adversarial challenge,
   persistent issues and targeted follow-up, then distinct final answer review.
   Both products resolve the same method without a normal/deep selector.
@@ -239,7 +239,7 @@ Ordinary work requires no paid database or connection setup.
   separately required adversarial opinion and comparison,
   without asking the user to select those internal stages. It does
   not substitute for an operational return, declaration, filing, or form.
-  Its internal research stage is registered at `../../deep-research/SKILL.md`;
+  Its internal research stage is registered at `../../mparanza-deep-research/SKILL.md`;
   it uses the same accepted question and final-review journey, not a separate
   professional assignment.
 

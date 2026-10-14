@@ -455,7 +455,7 @@ python scripts/validate_prompt.py <managed-question-file> <client-run-output>/dr
    `prompt_contract_review.json`,
    `source_domains_comma.txt`, `source_domains.txt`, `prompt_package.md`,
    `README_HUMAN.md`, and `prompt_audit.json`. For new research, continue with
-   the invoking product's bundled `deep-research` skill in the current host.
+   the invoking product's bundled `mparanza-deep-research` skill in the current host.
    Its shared method investigates, validates and challenges provisional
    conclusions, then completes distinct final reviews. No normal/deep choice,
    external research plugin or separate model API is required. A supplied

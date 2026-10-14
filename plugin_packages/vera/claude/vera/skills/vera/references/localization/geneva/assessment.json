@@ -1750,6 +1750,10 @@
     "version": "0.1.382",
     "scope": "Preserve the merged model-policy and calendar source reviews and existing Geneva dispositions. Shared remote lesson data remains hash-pinned. No additional jurisdictional workflow or installed-host acceptance claimed."
   },
+  "research_subscription_page_source_refresh": {
+    "version": "0.1.383",
+    "scope": "Only the canonical manifest version changed in the catalogue; all skill entrypoint bytes and function IDs remain identical. Public subscription responsibility copy and privacy fingerprints changed. Existing Geneva judgments remain unchanged; no additional jurisdiction acceptance is claimed."
+  },
   "tax_course_release_binding_20261014": {
     "reviewed_at": "2026-10-14T15:29:56.247123+00:00",
     "previous_version": "0.1.382",
@@ -1758,5 +1762,10 @@
     "current_catalogue_fingerprint": "14cafc857741ce77d7e671b18fddecd57e17709096fadd5d5dbda3c31e6d23c3",
     "scope": "Manifest-only rebind: exact skill IDs and bytes unchanged. New prepared Italian tax-litigation lessons do not change governing jurisdiction or establish Geneva qualification. Existing dispositions and acceptance limits retained.",
     "unchanged_function_rows": true
+  },
+  "tax_course_main_integration_binding_20261014": {
+    "main_commit": "26075c11d6104c2806527a690188de806ea1f292",
+    "version": "0.1.385",
+    "scope": "Skill-entrypoint snapshot matches the reviewed main entries including the research namespace update. All main assessment rows and jurisdiction dispositions are preserved. Only the manifest version is newer. The Italian tax course does not establish Geneva qualification."
   }
 }

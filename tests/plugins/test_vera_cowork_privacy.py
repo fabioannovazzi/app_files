@@ -142,6 +142,7 @@ def test_vera_cowork_services_include_shared_runtime_and_run_receipts() -> None:
         "plugin-feedback": ["openai-codex"],
         "plugin-update-check": ["openai-codex"],
         "run-receipt-stamping": RUNTIME_PROFILE_IDS,
+        "research-subscriptions": RUNTIME_PROFILE_IDS,
         "studio-work": RUNTIME_PROFILE_IDS,
         "operational-incidents": RUNTIME_PROFILE_IDS,
     }

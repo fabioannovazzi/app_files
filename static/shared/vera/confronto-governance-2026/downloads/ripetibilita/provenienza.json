@@ -9,7 +9,7 @@
   "prompt": "Svolgi autonomamente il quesito qui sotto, usando la skill Vera. Questa è una prova indipendente: non leggere altre chat, circolari o risposte precedenti sullo stesso quesito e non condividere risultati con altre prove. Completa la ricerca e consegna il risultato finale della tua analisi. Non fermarti a un piano di lavoro.\n\n$vera  la riforma dei sistemi di amministrazione e controllo delle società per azioni recata dal d.lgs. n. 47/2026. Il decreto legislativo è stato adottato in attuazione della delega contenuta nella c.d. Legge capitali, con cui il legislatore ha ridisegnato la disciplina del codice civile e del Testo Unico della Finanza (TUF). riesci a fare inferenza tra ciò che è contenuto nella norma, cosa cambia rispetto a prima, cosa significa in concreto la nuova normativa e per chi? come se fossi incaricata di dover elaborare una circolare",
   "design": "Quattro chat nuove, stesso prompt e istruzione di autonomia; nessun risultato o suggerimento sostanziale condiviso fra le prove. Fonti, ricerche e contesto acquisito non sono stati congelati.",
   "limitation": "Prova 2: accesso tardivo a una riga di memoria su una precedente comparazione, dopo archiviazione della prima circolare. Il confronto Word e Markdown mostra soltanto la modifica della dichiarazione di indipendenza; contenuto giuridico invariato. La prova non è integralmente cieca. Le chat condividono installazione e istruzioni generali.",
-  "interpretation": "Campione esplorativo sullo stesso quesito, non misura statistica di affidabilità né stima dell’effetto del plugin. I criteri T sono selezionati per le convergenze e differenze osservate e non coincidono con i 25 criteri del primo esperimento.",
+  "interpretation": "Campione esplorativo sullo stesso quesito, non misura statistica di affidabilità né stima dell’effetto del plugin. La seconda matrice applica gli stessi 25 criteri e le stesse categorie della prima: C01–C20, A01–A02, M01–M03. Le osservazioni T01–T18 sono note qualitative separate, prive di punteggio.",
   "documents": [
     {
       "id": "R01",
@@ -37,5 +37,63 @@
     "origin_url": "https://www.normattiva.it/atto/caricaArticolo?art.versione=2&art.idGruppo=305&art.flagTipoArticolo=2&art.codiceRedazionale=042U0262&art.idArticolo=2409&art.idSottoArticolo=1&art.idSottoArticolo1=10&art.dataPubblicazioneGazzetta=1942-04-04&art.progressivo=0&art.dataVigenza=28%2F04%2F2026&art.tipoTesto=singolavigenza",
     "as_of": "2026-04-28",
     "sha256": "625a0993ba43f44d61d68a9f2428d9002ef2c78f031138b462c0b1fd4c89f7af"
+  },
+  "rubric": {
+    "source": "index.html#comparison-data",
+    "criteria_ids": [
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C06",
+      "C07",
+      "C08",
+      "C09",
+      "C10",
+      "C11",
+      "C12",
+      "C13",
+      "C14",
+      "C15",
+      "C16",
+      "C17",
+      "C18",
+      "C19",
+      "C20",
+      "A01",
+      "A02",
+      "M01",
+      "M02",
+      "M03"
+    ],
+    "criteria_count": 25,
+    "cell_count": 100,
+    "sha256": "b3e2a9d287a906ae8b41dcb0e4b835480e0d2d081d83184ea76178d242c60c1a",
+    "unchanged_fields": [
+      "id",
+      "topic",
+      "group",
+      "expected",
+      "source",
+      "location"
+    ],
+    "statuses": {
+      "U": "Trattazione utile",
+      "P": "Parziale / sintetica",
+      "A": "Non trattato",
+      "R": "Da correggere"
+    }
+  },
+  "correction": {
+    "date": "2026-10-14",
+    "reason": "La prima versione della seconda matrice usava 18 temi scelti dalle differenze osservate. È sostituita da una nuova valutazione sulle 25 righe originarie, senza modificare gli elaborati né le valutazioni degli otto documenti iniziali.",
+    "method": "Rilettura dei quattro testi integrali, confronto con gli standard e con le valutazioni già pubblicate, 100 motivazioni con passaggi. Nessuna conversione automatica dei giudizi T in giudizi C/A/M.",
+    "limits": "Le categorie misurano la trattazione del singolo criterio, non la completezza assoluta né l’assenza di ogni errore. Un medesimo U può accompagnare diversi livelli di dettaglio. La rubrica comune è applicata dopo la produzione dei testi, non viene presentata come preregistrazione del test."
+  },
+  "review_sources": {
+    "date": "2026-10-14",
+    "access": "Decreto in Gazzetta Ufficiale, dossier Camera FI0144 e studio CNN 63-2026/I riletti sul web. Il PDF consolidato Consob non è stato nuovamente acquisito in questa revisione; per i riscontri sulle disposizioni introdotte dal decreto si è usato il testo primario in Gazzetta.",
+    "scope": "Confronto documentale sulle stesse fonti e sullo stesso riferimento temporale; non è un nuovo censimento esaustivo di attuativi o correttivi."
   }
 }
