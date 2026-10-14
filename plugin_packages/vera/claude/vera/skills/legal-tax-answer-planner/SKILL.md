@@ -157,6 +157,6 @@ module at `../../modules/deep-research-validator` from this skill directory, or
 `../../../deep-research-validator` in repository source. Read its
 `skills/legal-tax-answer-review/references/research-choice.md` before finalizing
 the contract. New research always uses `generation_route: codex_direct` and
-`../deep-research/SKILL.md`, which resolves the one method shared by both
+`../mparanza-deep-research/SKILL.md`, which resolves the one method shared by both
 products. Do not offer a normal/deep choice or an external research-plugin route.
 Preparation-only and supplied-answer review requests retain their scope.

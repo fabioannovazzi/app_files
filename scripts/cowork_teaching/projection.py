@@ -28,7 +28,12 @@ def _written_copy(value: Any, replacements: list[list[str]]) -> Any:
 
 
 def add_written_teaching(
-    root: Path, product: str, source: dict[str, bytes], entries: dict[str, bytes]
+    root: Path,
+    product: str,
+    source: dict[str, bytes],
+    entries: dict[str, bytes],
+    *,
+    path_aliases: dict[str, str] | None = None,
 ) -> None:
     """Reuse reviewed materials, excluding workflows absent from this host."""
     assets = "assets/courses/"
@@ -61,6 +66,8 @@ def add_written_teaching(
                 raise ValueError(
                     f"Course needs source review: {product}/{workflow}: {path}"
                 )
+            if path not in entries and path_aliases is not None:
+                path = path_aliases.get(path, path)
             if (
                 path not in entries
                 and path.startswith("modules/")

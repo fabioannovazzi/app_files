@@ -85,6 +85,15 @@ or a decision needed from Fabio. Feature requests retain their existing queue.
 
 ## Acceptance boundaries
 
+The incident queue observes evidence delivered by an installed, connected host.
+It cannot inspect a user's Claude Team upload or organization-publishing screen
+before that host can run Vera. An empty or unchanged queue does not establish
+that those publication steps succeeded. The reported Anthropic reserved-name
+rejection for `deep-research` is prevented by the Cowork builder's
+`mparanza-deep-research` export, including matching directories, internal
+references and the shared research module. Release regressions inspect these
+exact generated entries; they do not certify a user's organization publication.
+
 The regression suite exercises idempotency, offline retries, concurrent local
 writers, long diagnostics, capability isolation, unsupported actions, remote
 intake with local subprocess unavailable and actual matching-operation outcomes.

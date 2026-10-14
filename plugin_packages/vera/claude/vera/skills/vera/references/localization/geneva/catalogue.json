@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/Users/fabio/Documents/Codex/2026-10-14/is-x20/work/app_files/plugins/vera",
-  "version": "0.1.382",
+  "version": "0.1.384",
   "captured_at": "2026-10-14T14:03:45.037025+00:00",
-  "catalogue_fingerprint": "e0fb698d03c6076eb2ad8056cc07b5ba598e4df00d14def4714c6f747b0cb070",
-  "manifest_sha256": "d66d206f299525ef3c5c740cb37a2ae669a720348f8e838de4351ed0ff42a0dd",
+  "catalogue_fingerprint": "4c208633d469ec0599576bb5e915a2dcf2051765da23663f4c4d8536fb819d0c",
+  "manifest_sha256": "dec3be4f44e7cbd463799302af6b8f58e44d43916ae15ebc183d027ecaf59cc0",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -98,7 +98,7 @@
     },
     {
       "function_id": "deep-research",
-      "skill_path": "skills/deep-research/SKILL.md",
+      "skill_path": "skills/mparanza-deep-research/SKILL.md",
       "sha256": "4d8ff32cbb5902b95e99bbab775fc504bfbbeabaa9288f3de49774402e2e2266"
     },
     {

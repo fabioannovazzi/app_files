@@ -38,6 +38,7 @@ __all__ = [
     "project_claude_manifest",
     "project_claude_mcp",
     "project_cowork_skill",
+    "project_cowork_skill_names",
     "project_cowork_workflow_registry",
     "verify_catalog",
     "verify_directory",
@@ -181,7 +182,14 @@ def _add_written_teaching(
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     _deduplicate_cowork_vendor(entries)
-    module.add_written_teaching(ROOT, product, source, entries)
+    path_aliases = {
+        name: name.replace("/deep-research/", "/mparanza-deep-research/")
+        for name in source
+        if "/deep-research/" in name
+    }
+    module.add_written_teaching(
+        ROOT, product, source, entries, path_aliases=path_aliases
+    )
     # ZIP inputs remain passive remote data; the installer never sees nested archives.
     if "assets/courses/remote.json" not in source:
         _expand_cowork_course_archives(entries)
@@ -738,7 +746,7 @@ LUCIA_ORCHESTRATION_COWORK_SKILLS = frozenset(
 )
 LUCIA_COWORK_SKILLS = (
     (LUCIA_COWORK_COMPONENTS - {"prompt-optimizer", "deep-research-validator"})
-    | {"legal-tax-answer-planner", "legal-tax-answer-review"}
+    | {"legal-tax-answer-planner", "legal-tax-answer-review", "deep-research"}
     | LUCIA_ORCHESTRATION_COWORK_SKILLS
     | LUCIA_DOCUMENT_COWORK_SKILLS
 )
@@ -1181,6 +1189,57 @@ def _skill_frontmatter(text: str) -> str:
     if closing < 0:
         raise ValueError("Skill Markdown has unterminated YAML frontmatter")
     return text[: closing + len("\n---\n")].rstrip()
+
+
+def project_cowork_skill_names(entries: dict[str, bytes]) -> dict[str, bytes]:
+    """Avoid the observed Anthropic reserved name without changing research logic."""
+    # Claude Team rejects the exact name deep-research. This is a mechanical
+    # host packaging contract, not a classifier for research scope or meaning.
+    alias = "mparanza-deep-research"
+    name_pattern = r"(?m)^name:[ \t]*(['\"]?)deep-research\1[ \t]*$"
+    if not any(
+        re.search(name_pattern, _skill_frontmatter(content.decode("utf-8")))
+        for name, content in entries.items()
+        if name.endswith("/SKILL.md")
+    ):
+        return dict(entries)
+    path_pattern = r"(?<![a-z0-9-])deep-research(?=/)"
+    projected: dict[str, bytes] = {}
+    for name, content in entries.items():
+        if name.startswith("assets/courses/"):
+            projected[name] = content
+            continue
+        destination = re.sub(path_pattern, alias, name)
+        if destination in projected:
+            raise ValueError(f"Claude skill name projection collides: {destination}")
+        if Path(name).suffix.lower() in RUNTIME_TEXT_SUFFIXES | {".md"}:
+            text = content.decode("utf-8")
+            text = re.sub(path_pattern, alias, text)
+            text = text.replace("`deep-research`", f"`{alias}`")
+            if name.endswith("/SKILL.md"):
+                frontmatter = _skill_frontmatter(text)
+                renamed = re.sub(
+                    name_pattern,
+                    f"name: {alias}",
+                    frontmatter,
+                )
+                text = renamed + text[len(frontmatter) :]
+            content = text.encode("utf-8")
+        projected[destination] = content
+    index_path = "assets/courses/index.json"
+    if index_path in projected:
+        index = json.loads(projected[index_path])
+        for record in index["courses"].values():
+            manifest_path = "assets/courses/" + record["path"]
+            course = json.loads(projected[manifest_path])
+            for source in course["sources"]:
+                source_path = re.sub(path_pattern, alias, source["path"])
+                source["path"] = source_path
+                source["sha256"] = hashlib.sha256(projected[source_path]).hexdigest()
+            projected[manifest_path] = _json_bytes(course)
+            record["sha256"] = hashlib.sha256(projected[manifest_path]).hexdigest()
+        projected[index_path] = _json_bytes(index)
+    return projected
 
 
 def _inject_cowork_execution_contract(text: str) -> str:
@@ -3038,7 +3097,7 @@ def _lucia_package_entries(
         if wrapper is None:
             raise ValueError(f"lucia: wrapper skill is missing: {component}")
         wrapper_text = re.sub(
-            r"(?m)^After substantive use of this workflow,.*\n\n",
+            r"(?m)^After substantive use of this workflow,[^\n]*(?:\n\n|\n?\Z)",
             "",
             _without_openai_onboarding(wrapper).decode("utf-8"),
             count=1,
@@ -3128,7 +3187,7 @@ def _lucia_package_entries(
         if lucia_component != vera_component:
             raise ValueError(f"lucia: Cowork component differs from Vera: {component}")
     _add_written_teaching("lucia", source_entries, entries)
-    return dict(sorted(entries.items()))
+    return dict(sorted(project_cowork_skill_names(entries).items()))
 
 
 def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
@@ -3137,10 +3196,12 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
     builder = _load_codex_builder()
     source_target = _source_build_target(package)
     if package.plugin == "clara":
-        return _clara_package_entries(
-            package,
-            builder=builder,
-            source_target=source_target,
+        return project_cowork_skill_names(
+            _clara_package_entries(
+                package,
+                builder=builder,
+                source_target=source_target,
+            )
         )
     if package.plugin == "lucia":
         return _lucia_package_entries(
@@ -3318,6 +3379,7 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
         heading="## Operational incident continuity",
         contract=continuity,
     ).encode("utf-8")
+    entries = project_cowork_skill_names(entries)
     registry_path = "skills/vera/references/workflow-registry.json"
     entries[registry_path] = project_cowork_workflow_registry(
         entries[registry_path], entries=entries

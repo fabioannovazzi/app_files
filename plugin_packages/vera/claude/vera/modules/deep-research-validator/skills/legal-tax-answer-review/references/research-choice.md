@@ -10,7 +10,7 @@ Later host-specific instructions in this reference cannot override this rule.
 
 # One shared research method
 
-Vera and Lucia use their bundled `skills/deep-research/SKILL.md` for every new
+Vera and Lucia use their bundled `skills/mparanza-deep-research/SKILL.md` for every new
 legal, tax or compliance research assignment. Each wrapper resolves the same
 method in `modules/deep-research-validator`. Read it completely after preparation.
 Use `generation_route: codex_direct` and the current host model and tools.

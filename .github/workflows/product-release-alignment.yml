@@ -53,4 +53,4 @@ jobs:
       - name: Verify optional connector download and host setup guides
         run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_optional_connector_downloads.py
       - name: Verify renamed skill identities in every host package
-        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_skill_name_alignment.py
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_skill_name_alignment.py tests/plugins/test_claude_skill_names.py

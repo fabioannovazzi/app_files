@@ -89,7 +89,7 @@ Choose both with model-led judgment or user confirmation. Deterministic scripts
 only validate that the explicit contract has the required fields and allowed
 codes. They must not infer the route or document type from keywords.
 
-New research uses the invoking product's bundled `deep-research` wrapper,
+New research uses the invoking product's bundled `mparanza-deep-research` wrapper,
 which resolves the same agentic method for Vera and Lucia in the current host.
 There is no ordinary/deep selector or external-plugin dependency. Prepare a
 research assignment requiring investigation, continuous validation and

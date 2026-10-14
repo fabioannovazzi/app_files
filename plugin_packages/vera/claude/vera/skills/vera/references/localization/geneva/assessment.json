@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "e0fb698d03c6076eb2ad8056cc07b5ba598e4df00d14def4714c6f747b0cb070",
+  "catalogue_fingerprint": "4c208633d469ec0599576bb5e915a2dcf2051765da23663f4c4d8536fb819d0c",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -751,7 +751,7 @@
       ],
       "acceptance_example": "A supplied French-language question retains its confirmed governing framework, including during opposing investigation and final-review feedback.",
       "sources": [
-        "plugins/deep-research-validator/skills/deep-research/SKILL.md",
+        "plugins/deep-research-validator/skills/mparanza-deep-research/SKILL.md",
         "plugins/deep-research-validator/skills/legal-tax-answer-review/references/answer-journey.md"
       ],
       "verification": "Source and synthetic record-integrity checks; no current Swiss-law investigation, real Geneva case or professional acceptance is attested.",
