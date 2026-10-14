@@ -2800,6 +2800,12 @@
         "pages": 9,
         "sha256": "e4270a60505a437efb9b253d21161e0653e3009e808873797c2aa96bbaa4d82b"
       }
-    ]
+    ],
+    "historical_source": {
+      "file": "art_2409_al_28_aprile_2026.txt",
+      "origin_url": "https://www.normattiva.it/atto/caricaArticolo?art.versione=2&art.idGruppo=305&art.flagTipoArticolo=2&art.codiceRedazionale=042U0262&art.idArticolo=2409&art.idSottoArticolo=1&art.idSottoArticolo1=10&art.dataPubblicazioneGazzetta=1942-04-04&art.progressivo=0&art.dataVigenza=28%2F04%2F2026&art.tipoTesto=singolavigenza",
+      "as_of": "2026-04-28",
+      "sha256": "625a0993ba43f44d61d68a9f2428d9002ef2c78f031138b462c0b1fd4c89f7af"
+    }
   }
 }
