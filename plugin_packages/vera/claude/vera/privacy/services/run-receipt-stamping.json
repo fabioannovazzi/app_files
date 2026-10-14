@@ -7,7 +7,8 @@
     "scripts/notarized_run_receipt.py",
     "skills/vera/SKILL.md",
     "skills/vera/references/model-data-report-contract.md",
-    "skills/contenzioso-tributario"
+    "skills/contenzioso-tributario",
+    "skills/posizioni-negoziali"
   ],
   "runtime_profiles": [
     "anthropic-cowork"
@@ -57,9 +58,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-13",
+    "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "9cf10422cdec470ba8a6b56099f8b86a9c88f5368338752dc9ca7e801999f9c1"
+    "source_fingerprint": "4c9bf604e711d4239aa2bdb3b429a49154c6763507eac4481ecccfc0de52ef13"
   }
 }

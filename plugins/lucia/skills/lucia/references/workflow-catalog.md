@@ -12,6 +12,7 @@ They are available for ordinary work, outside the prepared-course inventory belo
 | --- | --- |
 | `revisione-contratti` | Review a selected contract for the represented party with quoted clauses and proposed changes. |
 | `controllo-documento` | Systematically inspect a legal document and its hidden structure for errors, inconsistencies and proposed corrections. |
+| `posizioni-negoziali` | Summarize a tracked Word agreement into source-linked negotiating positions with exact revision/comment accounting and saved round comparisons. |
 | `confronto-documenti` | Compare selected versions or agreements with source-specific terms and explained differences. |
 | `revisione-documentale` | Examine selected documents against common questions and deliver an evidence-linked matrix. |
 | `estrazione-clausole` | Extract the actual terms of one contract into a source-linked table, retaining conditions and missing information. |

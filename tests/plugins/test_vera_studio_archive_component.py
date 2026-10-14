@@ -29,6 +29,7 @@ ARCHIVE_CORE_PATH = COMPONENT_ROOT / "scripts" / "archive_core.py"
 CHECK_DEPENDENCIES_PATH = COMPONENT_ROOT / "scripts" / "check_dependencies.py"
 MCP_SERVER_PATH = COMPONENT_ROOT / "mcp" / "server.cjs"
 EXPECTED_CLIENT_WORKFLOW_IDS = (
+    "posizioni-negoziali",
     "contenzioso-tributario",
     "lipe",
     "rating-legalita",
@@ -2629,6 +2630,145 @@ def test_configuration_change_during_operation_fails_at_return(
         archive_core.ArchiveError, match="configuration changed during this run"
     ):
         archive_core.studio_archive_status(state_dir=indexed_archive.state)
+
+
+def test_negotiation_round_retains_delivery_and_starts_a_separate_successor(
+    indexed_archive: SimpleNamespace, archive_core: ModuleType
+) -> None:
+    from tests.plugins.test_lucia_negotiation import (
+        prepare,
+        render_positions,
+        scaffold,
+        tracked_document,
+        verify_delivery,
+    )
+
+    registered = archive_core.set_studio_client_identity(
+        indexed_archive.scopes["Rossi"],
+        legal_names=["Rossi SRL"],
+        state_dir=indexed_archive.state,
+    )
+    client = registered["client"]["client_id"]
+    engagement = archive_core.create_studio_client_engagement(
+        client,
+        "Synthetic negotiation",
+        state_dir=indexed_archive.state,
+    )["engagement"]["engagement_id"]
+    original = tracked_document(indexed_archive.root.parent)
+    imported = archive_core.import_studio_client_document(
+        client,
+        original,
+        "source",
+        engagement_id=engagement,
+        state_dir=indexed_archive.state,
+    )
+    prepared = archive_core.prepare_studio_client_workflow(
+        engagement,
+        "posizioni-negoziali",
+        input_ids=[imported["input_id"]],
+        state_dir=indexed_archive.state,
+    )
+    run_id = prepared["run"]["run_id"]
+    archive_core.start_studio_client_workflow(
+        client, engagement, run_id, state_dir=indexed_archive.state
+    )
+    output = Path(prepared["client_engagement"]["output_dir"])
+    run = output / "word-review"
+    prepare(
+        run,
+        [Path(imported["imported_path"])],
+        "revisione-documentale",
+        ["Synthetic negotiation"],
+    )
+    review_path = scaffold(run, "D001")
+    review = json.loads(review_path.read_text(encoding="utf-8"))
+    review["context"].update(
+        {
+            k: "Synthetic; professional review pending"
+            for k in review["context"]
+            if k != "assumptions"
+        }
+    )
+    review["context"]["language"] = "it"
+    inventory = json.loads(
+        (run / "negotiation-inventory.json").read_text(encoding="utf-8")
+    )
+    review["other_changes"] = [
+        {
+            "change_id": c["id"],
+            "reason": "Full record retained; substantive assessment pending.",
+        }
+        for c in inventory["changes"]
+    ]
+    review["comment_reviews"] = [
+        {
+            "comment_id": c["id"],
+            "analysis": "Retained comment; substantive assessment pending.",
+            "position_ids": [],
+        }
+        for c in inventory["comments"]
+    ]
+    review_path.write_text(json.dumps(review), encoding="utf-8")
+    render_positions(run, review_path, "Vera")
+    assert verify_delivery(run)["valid"] is True
+    artifacts = [
+        {
+            "artifact_id": f"negotiation-{i}",
+            "path": p.relative_to(output).as_posix(),
+            "purpose": "Retain exact negotiation round evidence and review",
+            "audience": "internal",
+            "media_type": "application/octet-stream",
+        }
+        for i, p in enumerate(sorted(run.rglob("*")))
+        if p.is_file()
+    ]
+    archive_core.finalize_studio_client_workflow(
+        client,
+        engagement,
+        run_id,
+        [*write_no_model_report(output, "posizioni-negoziali", run_id), *artifacts],
+        state_dir=indexed_archive.state,
+    )
+    archive_core.complete_studio_client_workflow(
+        client, engagement, run_id, state_dir=indexed_archive.state
+    )
+    sealed = {
+        p.relative_to(output).as_posix(): p.read_bytes()
+        for p in output.rglob("*")
+        if p.is_file()
+    }
+    snapshot = next(
+        a for a in artifacts if a["path"] == "word-review/negotiation-reviewed.json"
+    )
+    successor = archive_core.prepare_studio_client_workflow(
+        engagement,
+        "posizioni-negoziali",
+        input_ids=[imported["input_id"]],
+        upstream_artifacts=[
+            {
+                "role": "prior-negotiation",
+                "run_id": run_id,
+                "artifact_id": snapshot["artifact_id"],
+            }
+        ],
+        state_dir=indexed_archive.state,
+    )
+    assert successor["run"]["run_id"] != run_id
+    assert Path(successor["client_engagement"]["output_dir"]) != output
+    assert (
+        prepared["run"]["workflow_version"]
+        == json.loads(
+            (ROOT / "plugins/vera/.codex-plugin/plugin.json").read_text(
+                encoding="utf-8"
+            )
+        )["version"]
+    )
+    assert sealed == {
+        p.relative_to(output).as_posix(): p.read_bytes()
+        for p in output.rglob("*")
+        if p.is_file()
+    }
+    assert original.read_bytes() == Path(imported["imported_path"]).read_bytes()
 
 
 def test_tax_litigation_reuses_sealed_intake_in_a_distinct_resumable_archive_run(

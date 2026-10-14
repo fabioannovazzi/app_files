@@ -62,6 +62,11 @@ branches, signatures and filings remain unsupported. Use the specialist skill.
 
 ## Professional workflows
 
+- `posizioni-negoziali`: source-linked negotiating positions from a selected
+  tracked Word agreement; model-led grouping, complete revision/comment ledger,
+  blank responses unless requested and retained round comparisons. Read
+  `../../posizioni-negoziali/SKILL.md`. No authored teaching kit is included.
+
 - `organizzazione-lavoro`: studio appointments, activities, deadlines, waiting
   items, delegations, source-based meeting actions and daily planning. Persistent
   local register in Codex/Cowork, with actual host calendar connections and

@@ -12,7 +12,7 @@ Later host-specific instructions in this reference cannot override this rule.
 
 Updated 2026-10-02 (catalogue integration only; prior professional assessment retained). Target: CH-GE; example user: a generalist fiduciary serving SMEs. French output and CHF are explicit case settings, not selectors of governing law.
 
-The current inventory covers all 51 skill entrypoints, including internal helpers and development prototypes. All prior professional judgments are retained; catalogue coverage does not establish target-country acceptance.
+The current inventory covers all 54 skill entrypoints, including internal helpers and development prototypes. All prior professional judgments are retained; catalogue coverage does not establish target-country acceptance.
 
 The release adds bounded adapters and instructions, not a blanket claim that every fiduciary mandate is supported. Original evidence and professional decisions remain necessary. No real Geneva client workflow has been accepted.
 
@@ -48,6 +48,7 @@ The release adds bounded adapters and instructions, not a blanket claim that eve
 | management-control-pack | Use | Existing function retained with the recorded qualification limits. |
 | new-client | Adapt | Geneva source-bound setup adapter with identity, mandate, ownership, AML applicability, privacy-role and document-state review; Italian scoring excluded. |
 | open-item-reconciliation | Adapt | Explicit currency guidance; raw Geneva runs reject omitted currency. Existing reconciliation method retained. |
+| posizioni-negoziali | Unresolved | Shared Word evidence and French table mechanics; Geneva mandate, legal conclusions and live Word acceptance remain unqualified. |
 | presenza-digitale-studio | Use | Existing function retained with the recorded qualification limits. |
 | previdenza-inps | Adapt | Explicit Swiss institutional context for local contribution-evidence review; shared chronology/arithmetic pipeline and Geneva memo framing. INPS portal adapters remain Italy-specific. |
 | privacy-surface-review | Use | Existing function retained with the recorded qualification limits. |

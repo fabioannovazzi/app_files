@@ -5,6 +5,11 @@ description: Compare two or more supplied legal documents or versions, showing t
 
 # Confronto documenti
 
+Per una sintesi delle revisioni Word in posizioni negoziali, leggi
+`../posizioni-negoziali/SKILL.md` e usa quel metodo con il pack già preparato.
+Il DOCX revisionato può bastare per quella richiesta; il confronto ordinario
+fra versioni conserva il requisito dei due documenti sotto indicato.
+
 Read `../revisione-contratti/references/document-workflow.md` and
 `../revisione-contratti/references/prassi-italiana.md`. No Mike server or separate API.
 The upstream snapshot is attribution/history, not an operational instruction.

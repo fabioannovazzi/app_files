@@ -1,0 +1,20 @@
+{
+  "repository": "https://github.com/open-legal-products/mike-workflows",
+  "commit": "65c987e33045ac1beb5c7490859efb64a057bfbe",
+  "license": "MIT",
+  "copyright": "Copyright (c) 2026 Mike",
+  "files": [
+    {
+      "bundled_file": "deal-redux.md",
+      "upstream_path": "assistant-workflows/deal-redux/SKILL.md",
+      "sha256": "b90f37e85e092869fc25b44eea91b40c3f04bcbd1cdfd3c65f809f60d53cc105"
+    },
+    {
+      "bundled_file": "LICENSE",
+      "upstream_path": "LICENSE",
+      "sha256": "6e7c22106722c151ffc66d0faf2035155eca1ad91931f5679c6773891c08deef"
+    }
+  ],
+  "adaptation": "Unchanged MIT source retained for attribution and comparison. Vera and Lucia use their shared independently maintained instructions, existing source evidence and host model. Grouping and legal significance remain model-led; accounting and file integrity are mechanically checked. No Mike application, backend, Word add-in or separate model API.",
+  "update_policy": "Deliberate reviewed adoption only; no automatic replacement or runtime downloads."
+}

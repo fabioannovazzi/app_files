@@ -32,6 +32,7 @@ LAWYER_PROFILED_WORKFLOWS = {
 }
 LUCIA_NATIVE_WORKFLOWS = {"apertura-pratica"}
 DOCUMENT_WORKFLOWS = {
+    "posizioni-negoziali",
     "revisione-documentale",
     "confronto-documenti",
     "revisione-contratti",
@@ -664,6 +665,7 @@ def test_lucia_marketplace_and_website_use_identical_canonical_names() -> None:
     """Exact labels should match mechanically across the two public surfaces."""
 
     canonical_labels = {
+        "posizioni-negoziali": "Sintetizza le revisioni in posizioni negoziali",
         "revisione-contratti": "Rivedi un contratto per il tuo cliente",
         "confronto-documenti": "Confronta versioni e conseguenze delle modifiche",
         "revisione-documentale": "Rivedi più documenti in una tabella",
@@ -711,6 +713,7 @@ def test_lucia_marketplace_and_website_use_identical_canonical_names() -> None:
         "presenza-digitale-studio": "module.website.title",
     }
     website_keys.update({key: f"module.{key}.title" for key in DOCUMENT_WORKFLOWS})
+    website_keys["posizioni-negoziali"] = "module.negotiation.title"
 
     assert {
         workflow: cards[workflow]["display_name"] for workflow in canonical_labels
@@ -719,6 +722,7 @@ def test_lucia_marketplace_and_website_use_identical_canonical_names() -> None:
         assert cards[workflow]["display_name"] == vera_cards[workflow]["display_name"]
     assert directory_labels == [
         canonical_labels["revisione-contratti"],
+        canonical_labels["posizioni-negoziali"],
         canonical_labels["confronto-documenti"],
         canonical_labels["revisione-documentale"],
         canonical_labels["redazione-da-modello"],
