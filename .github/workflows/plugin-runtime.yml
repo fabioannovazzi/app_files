@@ -687,10 +687,6 @@ jobs:
           tests/plugins/test_vera_verified_execution.py
           tests/plugins/test_python_bootstrap.py
           tests/plugins/test_cowork_archive_session.py
-      - name: Verify negotiation delivery and immutable round successors
-        run: >-
-          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
-          tests/plugins/test_vera_studio_archive_component.py::test_negotiation_round_retains_delivery_and_starts_a_separate_successor
 
   managed-runtime-quality:
     runs-on: ubuntu-latest
@@ -986,6 +982,10 @@ jobs:
           tests/plugins/test_studio_archive_adoption.py
           tests/plugins/test_vera_standalone_work.py
           tests/plugins/test_cowork_archive_session.py
+      - name: Verify negotiation delivery and immutable round successors
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_vera_studio_archive_component.py::test_negotiation_round_retains_delivery_and_starts_a_separate_successor
       - name: Check added helper quality
         run: |
           python -m black --check plugins/studio-archive/scripts/archive_preferences.py plugins/_shared/vendor/modules/vera_assurance/contracts.py plugins/vera/scripts/standalone_work.py tests/plugins/test_studio_archive_adoption.py tests/plugins/test_vera_standalone_work.py
