@@ -51,7 +51,7 @@
   [
     "Prepara il contenzioso tributario italiano",
     "Esamina atti e ricevute, verifica passaggi e termini e prepara ricorso, appello o memorie per la revisione del professionista incaricato.",
-    "Per un contenzioso tributario italiano nuovo o già avviato. Vera e Lucia condividono la guida procedurale e verificano la disciplina della pratica prima di applicare la sequenza.",
+    "Per un contenzioso tributario italiano nuovo o già avviato. Vera e Lucia condividono la guida procedurale e verificano la disciplina della pratica prima di applicare la sequenza.<br><br><a href=\"https://mikeoss.com/\">Mike</a> è una piattaforma AI open source per analisi, ricerca e redazione di documenti legali. Questo percorso adatta i suoi <a href=\"https://github.com/open-legal-products/mike-workflows\">workflow documentali</a>, pubblicati da Open Legal Products con licenza MIT. Vera e Lucia aggiungono e mantengono la guida procedurale italiana e la propria ricerca legale e fiscale.",
     "Atto fiscale, allegati, prove di notifica, atti già prodotti, provvedimenti e comunicazioni; parte assistita, obiettivo e modello dello studio quando disponibile.",
     "Distingue notifica dell’atto, proposizione del ricorso e costituzione in giudizio. Ricerca fonti e precedenti, collega ogni termine al suo evento e verifica computo, sospensioni e transizioni. Dopo un nuovo evento individua gli adempimenti conseguenti e aggiorna il piano.",
     "Matrice delle prove, piano procedurale, calendario con fonti e presupposti, questioni aperte e bozza Word quando richiesta. Il registro conserva domande, risposte e risultati per riprendere il lavoro.",
@@ -63,7 +63,7 @@
   [
     "Prepare Italian tax litigation",
     "Reviews tax acts and service evidence, checks procedural steps and deadlines and drafts appeals or submissions for the authorized professional’s review.",
-    "For a new or ongoing Italian tax dispute. Vera and Lucia share one procedural guide and verify the case’s applicable rules before applying the sequence.",
+    "For a new or ongoing Italian tax dispute. Vera and Lucia share one procedural guide and verify the case’s applicable rules before applying the sequence.<br><br><a href=\"https://mikeoss.com/\">Mike</a> is an open-source AI platform for legal document analysis, research and drafting. This workflow adapts its <a href=\"https://github.com/open-legal-products/mike-workflows\">document workflows</a>, published by Open Legal Products under the MIT license. Vera and Lucia add and maintain the Italian procedural guide and their own legal and tax research.",
     "Tax act, attachments, service evidence, existing pleadings, orders and court communications; represented party, objective and selected firm template when available.",
     "Separates service of the tax act, commencement of the appeal and filing. Researches authorities and precedents, links each deadline to its trigger and checks counting, suspensions and transitional rules. New events prompt a review of subsequent steps and the plan.",
     "Evidence matrix, procedural plan, sourced calendar with assumptions, open questions and a Word draft when requested. Saved questions, answers and outputs support resuming the matter.",
@@ -75,7 +75,7 @@
   [
     "Préparer un contentieux fiscal italien",
     "Examine actes fiscaux et preuves de notification, vérifie étapes et délais et prépare recours, appel ou mémoire pour revue par le professionnel habilité.",
-    "Pour un contentieux fiscal italien nouveau ou en cours. Vera et Lucia partagent un guide procédural et vérifient le régime du dossier avant d’appliquer la séquence.",
+    "Pour un contentieux fiscal italien nouveau ou en cours. Vera et Lucia partagent un guide procédural et vérifient le régime du dossier avant d’appliquer la séquence.<br><br><a href=\"https://mikeoss.com/\">Mike</a> est une plateforme IA open source pour analyser, rechercher et rédiger des documents juridiques. Ce parcours adapte ses <a href=\"https://github.com/open-legal-products/mike-workflows\">workflows documentaires</a>, publiés par Open Legal Products sous licence MIT. Vera et Lucia ajoutent et maintiennent le guide procédural italien et leur propre recherche juridique et fiscale.",
     "Acte fiscal, annexes, preuves de notification, actes déjà produits, décisions et communications du greffe ; partie représentée, objectif et modèle choisi lorsqu’il est disponible.",
     "Distingue notification de l’acte fiscal, introduction du recours et dépôt. Recherche sources et jurisprudence, relie chaque délai à son événement et contrôle calcul, suspensions et transitions. Chaque nouvel événement conduit à examiner les étapes suivantes et actualiser le plan.",
     "Matrice des preuves, plan procédural, calendrier sourcé avec hypothèses, questions ouvertes et projet Word sur demande. Le registre conserve questions, réponses et livrables pour reprendre le dossier.",
@@ -87,7 +87,7 @@
   [
     "Italienisches Steuerverfahren vorbereiten",
     "Prüft Steuerakte und Zustellnachweise, kontrolliert Verfahrensschritte und Fristen und erstellt Rechtsbehelfe oder Schriftsätze zur Prüfung durch die befugte Fachperson.",
-    "Für neue oder laufende italienische Steuerstreitigkeiten. Vera und Lucia teilen einen Verfahrensleitfaden und prüfen das einschlägige Recht vor Anwendung des Ablaufs.",
+    "Für neue oder laufende italienische Steuerstreitigkeiten. Vera und Lucia teilen einen Verfahrensleitfaden und prüfen das einschlägige Recht vor Anwendung des Ablaufs.<br><br><a href=\"https://mikeoss.com/\">Mike</a> ist eine Open-Source-KI-Plattform für juristische Dokumentenanalyse, Recherche und Entwürfe. Dieser Ablauf passt seine <a href=\"https://github.com/open-legal-products/mike-workflows\">Dokumentenworkflows</a> an, die Open Legal Products unter der MIT-Lizenz veröffentlicht. Vera und Lucia ergänzen und pflegen den italienischen Verfahrensleitfaden und ihre eigene Rechts- und Steuerrecherche.",
     "Steuerakt, Anlagen, Zustellnachweise, vorhandene Schriftsätze, Beschlüsse und gerichtliche Mitteilungen; vertretene Partei, Ziel und gewählte Kanzleivorlage, sofern vorhanden.",
     "Trennt Zustellung des Steuerakts, Einleitung des Verfahrens und Einreichung. Recherchiert Rechtsquellen und Entscheidungen, ordnet Fristen ihren Auslösern zu und prüft Berechnung, Hemmungen und Übergangsrecht. Neue Ereignisse führen zur Prüfung der Folgeschritte und Aktualisierung des Plans.",
     "Beweismatrix, Verfahrensplan, belegter Fristenkalender mit Annahmen, offene Fragen und auf Wunsch Word-Entwurf. Gespeicherte Fragen, Antworten und Ergebnisse ermöglichen die Fortsetzung.",
@@ -99,7 +99,7 @@
   [
     "Preparar un litigio tributario italiano",
     "Examina actos y pruebas de notificación, verifica pasos y plazos y prepara recurso, apelación o escrito para revisión del profesional habilitado.",
-    "Para un litigio tributario italiano nuevo o en curso. Vera y Lucia comparten una guía procesal y verifican el régimen del asunto antes de aplicar la secuencia.",
+    "Para un litigio tributario italiano nuevo o en curso. Vera y Lucia comparten una guía procesal y verifican el régimen del asunto antes de aplicar la secuencia.<br><br><a href=\"https://mikeoss.com/\">Mike</a> es una plataforma de IA de código abierto para analizar, investigar y redactar documentos jurídicos. Este recorrido adapta sus <a href=\"https://github.com/open-legal-products/mike-workflows\">flujos documentales</a>, publicados por Open Legal Products bajo licencia MIT. Vera y Lucia añaden y mantienen la guía procesal italiana y su propia investigación jurídica y fiscal.",
     "Acto tributario, anexos, pruebas de notificación, escritos existentes, resoluciones y comunicaciones judiciales; parte representada, objetivo y modelo del despacho cuando esté disponible.",
     "Distingue notificación del acto tributario, interposición y presentación ante el tribunal. Investiga fuentes y jurisprudencia, vincula cada plazo a su evento y verifica cómputo, suspensiones y transiciones. Los nuevos eventos requieren revisar los pasos siguientes y actualizar el plan.",
     "Matriz de pruebas, plan procesal, calendario con fuentes e hipótesis, preguntas abiertas y borrador Word si se solicita. El registro conserva preguntas, respuestas y resultados para retomar el asunto.",
