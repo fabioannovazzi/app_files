@@ -147,6 +147,9 @@ CLIENT_WORKFLOW_OUTPUT_DISCOVERY_WRITERS = (
 
 # Maintenance, inspection and validated-report delivery do not start a workflow.
 CLIENT_WORKFLOW_CLI_ALLOWLIST = (
+    # Model-selection evidence belongs to an already validated running context;
+    # JSON CLI ownership/downgrade checks live in test_prompt_optimizer_plugin.
+    ("prompt-optimizer", "model_policy.py"),
     ("rating-legalita", "check_dependencies.py"),
     ("lipe", "check_dependencies.py"),
     # Studio maintenance/measurements reuse existing cases rather than start a run.

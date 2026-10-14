@@ -642,5 +642,26 @@
     ],
     "authored_content_unchanged": true,
     "scope": "Retain native-UI source and all authored lessons, inputs and existing acceptance limits. Legal/tax adds the optional subscription reference; document-format retains the existing onboarding method while excluding source settings from lessons. Fresh exact-digest native execution is required; no professional or installed-host acceptance inferred."
+  },
+  "legal_tax_model_source_review_20261014": {
+    "reviewed_at": "2026-10-14T11:07:19.054382+00:00",
+    "previous_review_identity": {
+      "reviewer": "Codex /root - Deal Redux source compatibility review",
+      "reviewed_at": "2026-10-14T08:00:57.864536+00:00",
+      "course_sha256": "737afd1d057e8e57ef129e94b6a1253a01fba050886be9b37025e471fd52e1d3"
+    },
+    "changed_sources": [
+      "modules/deep-research-validator/skills/deep-research/SKILL.md",
+      "modules/deep-research-validator/skills/legal-tax-answer-review/references/answer-journey.md",
+      "skills/quesito-legale-fiscale/SKILL.md",
+      "skills/vera/references/legal-tax-model-policy.md",
+      "modules/prompt-optimizer/scripts/model_policy.py",
+      "modules/prompt-optimizer/scripts/model-policy.cjs",
+      "modules/prompt-optimizer/assets/legal-tax-model.html"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Reviewed the new Vera-only strongest-available-model requirement, optional panel and identical Cowork chat/local-helper path. Shared instructions preserve the invoking product requirement. Model identity comparisons do not rank capabilities or attest provider execution. Local managed/standalone and CLI/MCP regressions cover confirmation, model/session changes and stale or foreign writes. Existing lesson content and historical artifact reviews are unchanged; fresh current-digest teaching regression is required. This source review does not claim live model, learner, professional or installed-host acceptance.",
+    "integration_baseline": "20d6681b3",
+    "stdio_review": "The model helper now decodes its JSON pipe as UTF-8 and emits ASCII-escaped JSON. A real CLI regression reproduces the prior failure under PYTHONIOENCODING=ascii and verifies preservation of accented model names and selection evidence after the repair. Authored teaching content and legal judgments remain unchanged."
   }
 }

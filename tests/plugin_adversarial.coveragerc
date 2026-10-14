@@ -6,6 +6,7 @@ include =
     plugins/deep-research-validator/scripts/evidence_refs.py
     plugins/deep-research-validator/scripts/source_captures.py
     plugins/deep-research-validator/scripts/research_evaluation.py
+    plugins/prompt-optimizer/scripts/model_policy.py
 relative_files = True
 
 [report]

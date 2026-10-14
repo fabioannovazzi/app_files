@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "quesito-legale-fiscale",
-  "course_sha256": "3a68cd83d2ad7aa89abbcd1d1a78e900d28d25dd587b623dd64e1a844087c04c",
+  "course_sha256": "017e6b7dccfc4bfa4fe818c828277db45eb18875b687f4a99dd82ca77378c3a8",
   "reviewer": "Codex /root - Deal Redux source compatibility review",
   "reviewed_at": "2026-10-14T08:00:57.892378+00:00",
   "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
@@ -572,5 +572,20 @@
     "current_course_sha256": "a93fe82f129912d6db59a976affb88e923d35a25d7fd4ab86ca948521f6675aa",
     "authored_content_unchanged": true,
     "scope": "Carry source bindings forward after integrating the independently released shared tax-litigation Archive fixes with legal/tax evidence-integrity changes. Authored multilingual lessons, materials and deliverables remain unchanged. Fresh exact-digest CI is required; no professional or installed-host acceptance inferred."
+  },
+  "legal_tax_model_source_review_20261014": {
+    "reviewed_at": "2026-10-14T11:07:19.068105+00:00",
+    "previous_review_identity": {
+      "reviewer": "Codex /root - Deal Redux source compatibility review",
+      "reviewed_at": "2026-10-14T08:00:57.892378+00:00",
+      "course_sha256": "3a68cd83d2ad7aa89abbcd1d1a78e900d28d25dd587b623dd64e1a844087c04c"
+    },
+    "changed_sources": [
+      "modules/deep-research-validator/skills/deep-research/SKILL.md",
+      "modules/deep-research-validator/skills/legal-tax-answer-review/references/answer-journey.md"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Reviewed the new Vera-only strongest-available-model requirement, optional panel and identical Cowork chat/local-helper path. Shared instructions preserve the invoking product requirement. Model identity comparisons do not rank capabilities or attest provider execution. Local managed/standalone and CLI/MCP regressions cover confirmation, model/session changes and stale or foreign writes. Existing lesson content and historical artifact reviews are unchanged; fresh current-digest teaching regression is required. This source review does not claim live model, learner, professional or installed-host acceptance.",
+    "integration_baseline": "d43d30ef3"
   }
 }
