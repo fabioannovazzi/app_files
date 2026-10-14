@@ -30,6 +30,11 @@ Current user requests take precedence over saved preferences.
 
 # Validate Answer
 
+For subscription evidence, read `../vera/references/research-subscriptions.md`.
+Review the actual retained passages and their recorded access/retention limits;
+use genuine captures with `--no-fetch` when an authenticated source cannot be
+publicly fetched. A saved connection or access-check result is never claim support.
+
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
 
 Resolve `../../modules/deep-research-validator` from this skill directory when

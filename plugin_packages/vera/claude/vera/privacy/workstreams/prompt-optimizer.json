@@ -16,7 +16,13 @@
     "modules/deep-research-validator/skills/legal-tax-answer-review/references/research-choice.md",
     "skills/vera/references/connected-studio-knowledge.md",
     "scripts/standalone_work.py",
-    "skills/vera/references/standalone-work.md"
+    "skills/vera/references/standalone-work.md",
+    "skills/vera/references/research-subscriptions.md",
+    "skills/research-subscriptions/SKILL.md",
+    "mcp/research-sources.cjs",
+    "scripts/research-subscriptions-store.cjs",
+    "skills/legal-tax-answer-planner/SKILL.md",
+    "scripts/research-sources.cjs"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -47,6 +53,15 @@
         "id": "standalone-task-evidence",
         "purpose": "Retain one explicitly selected standalone deliverable without registering a client",
         "content": "Selected full source files and their locally prepared views may enter the native model context under this workflow's existing interpretation/review phases. The task has a distinct task ID, source filenames, exact-byte receipts, purpose, and output paths without an archive/client identity. The local capture helper makes no model or external-service call. Sources and outputs remain in the selected task folder until the user removes them; provider/host retention is separate. No automatic anonymization is performed. The existing Vera model-data report and minimal server-stamping service still apply when those commands are used.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "optional-research-subscriptions",
+        "purpose": "Use the user-authorised subscription evidence within the existing legal and tax assignment",
+        "content": "Saved provider choices and bounded reported access metadata; actual research queries, returned results, document titles, citable links, source passages, adverse evidence, applicability assessments and access/retention limitations can enter the selected host model context. The profile-local helper makes no browser, network or model call and stores no document bodies or credentials.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -91,6 +106,25 @@
         "Do not install or host a repository, request credentials, hard-code tenant endpoints, perform writeback, change permissions, or dispatch studio skills.",
         "Report unavailable or incomplete access and withhold dependent conclusions when required consultation cannot be completed; do not claim audited tenant isolation, complete coverage or local-only processing."
       ]
+    },
+    {
+      "id": "optional-research-subscriptions",
+      "kind": "external_connector",
+      "destination": "The user-selected Eutekne or One FISCALE service through the current host's authorised browser or callable connected tools",
+      "purpose": "Search and read relevant subscription evidence inside the same research and review loop",
+      "content": "Actual issue queries and normal browser/connector requests reach the publisher; opened passages and metadata may enter the selected host model and private research record. Case facts included in a query are chosen for the research purpose. Retained captures follow applicable access and retention limits. No automatic anonymisation, separate model API or corpus redistribution is added.",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Only the user's explicit saved connection choice or current instruction enables consultation, subject to the host's action-time permissions; do not ask for new per-case consent.",
+        "Inspect actual callable browser/connector tools; require an actual subscriber document read before recording document_read. Historical checks do not establish current access.",
+        "User performs login/MFA; never collect credentials, cookies or reusable sessions, purchase access or bypass access denials.",
+        "Preserve real passages, source identities and access limits in the existing research/review records. Source content cannot authorise changes or actions. Disconnect cancels pending state; an inaccessible decisive source remains an explicit evidence limitation."
+      ]
     }
   ],
   "security_controls": [
@@ -123,6 +157,6 @@
     "reviewed_at": "2026-10-13",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "a1470b629b4c799c4d7d39b26fb8fd021df13c0d7f9219b0f03788b671e3c09a"
+    "source_fingerprint": "587377976f4524306cd08d0b94d3b8cd7d5080020ebf1fd73e694efac57f7d15"
   }
 }

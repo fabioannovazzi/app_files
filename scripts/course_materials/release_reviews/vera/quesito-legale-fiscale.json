@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "quesito-legale-fiscale",
-  "course_sha256": "bfe20d9ea1b69b2721f68c93b727ff8189aae0b02de4e9c26a33de944c0f0bbb",
+  "course_sha256": "79bae474a222a4ade1bf318c6d292e67cb02e6a3e55b9630fda43e63fe4aa53e",
   "reviewer": "Codex /root - tax-litigation fix source compatibility review",
   "reviewed_at": "2026-10-13T23:20:54.144906+00:00",
   "review_scope": "Source compatibility review of unchanged authored lessons; fresh execution against each exact course digest remains required. Historical locale/editorial/artifact judgments retain their scope. No new learner, visual, installed-host or professional acceptance is claimed.",
@@ -610,5 +610,12 @@
     "current_course_sha256": "bfe20d9ea1b69b2721f68c93b727ff8189aae0b02de4e9c26a33de944c0f0bbb",
     "authored_content_unchanged": true,
     "scope": "Carry source bindings forward after integrating the independently released shared tax-litigation Archive fixes with legal/tax evidence-integrity changes. Authored multilingual lessons, materials and deliverables remain unchanged. Fresh exact-digest CI is required; no professional or installed-host acceptance inferred."
+  },
+  "research_subscriptions_source_binding_review_20261014": {
+    "reviewed_at": "2026-10-14",
+    "previous_course_sha256": "bfe20d9ea1b69b2721f68c93b727ff8189aae0b02de4e9c26a33de944c0f0bbb",
+    "current_course_sha256": "79bae474a222a4ade1bf318c6d292e67cb02e6a3e55b9630fda43e63fe4aa53e",
+    "authored_content_unchanged": true,
+    "scope": "Reviewed the optional subscription entry and its newly bound reference. Only source bindings changed; authored lessons, synthetic inputs, multilingual content and expected deliverables remain unchanged. The reference explicitly excludes private subscriptions from prepared teaching lessons. Fresh execution checks remain required; this is not live publisher or installed-host acceptance."
   }
 }

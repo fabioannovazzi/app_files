@@ -132,6 +132,11 @@ invoked by the user; Vera does not dispatch them.
 
 # Plan The Answer
 
+Read `../vera/references/research-subscriptions.md` and the saved optional source
+choices before preparing the brief. Include relevant enabled subscriptions in
+the same source plan; access remains unverified until actually checked. Never
+require a subscription, API or publisher partnership to prepare the question.
+
 
 
 Resolve `../../modules/prompt-optimizer` from this skill directory when it

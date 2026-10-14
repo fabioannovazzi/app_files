@@ -132,6 +132,11 @@ invoked by the user; Vera does not dispatch them.
 
 # Validate Answer
 
+For subscription evidence, read `../vera/references/research-subscriptions.md`.
+Review the actual retained passages and their recorded access/retention limits;
+use genuine captures with `--no-fetch` when an authenticated source cannot be
+publicly fetched. A saved connection or access-check result is never claim support.
+
 
 
 Resolve `../../modules/deep-research-validator` from this skill directory when

@@ -1,0 +1,41 @@
+{
+  "schema_version": 2,
+  "service_id": "research-subscriptions",
+  "display_name": "Optional existing research subscriptions",
+  "governed_paths": [
+    "mcp/research-sources.cjs",
+    "scripts/research-subscriptions-store.cjs",
+    "ui/research-sources.html",
+    "ui/research-sources.css",
+    "ui/research-sources.js",
+    "ui/InstrumentSans-Regular.ttf",
+    "skills/research-subscriptions",
+    "skills/vera/references/research-subscriptions.md",
+    "ui/workspace.css",
+    "ui/custom_select.js",
+    "scripts/research-sources.cjs"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "external_boundaries": [],
+  "security_controls": [
+    {
+      "id": "owner-local-choice-and-revision",
+      "control": "The local helper accepts no model-supplied storage path, stores only fixed provider choices and bounded reported access metadata in the OS profile, rejects symlink directories/files and linked records, uses private POSIX file permissions and serializes writes with exact revision and pending request identity. Disconnect cancels pending checks and removes access metadata. Windows protection relies on the owner profile ACL. The host supplies the user authorisation and observations; the helper does not independently authenticate them.",
+      "implemented_by": [
+        "scripts/research-subscriptions-store.cjs",
+        "mcp/research-sources.cjs",
+        "scripts/research-sources.cjs"
+      ],
+      "on_violation": "Refuse invalid, stale, cancelled, corrupt or unsafe-storage writes; preserve the existing register for inspection."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-10-14",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_shared_service_source",
+    "source_fingerprint": "f6adb2b70036682578e04d3aab3e8734918c9338194c6e8645b8be8b38048452"
+  }
+}

@@ -136,6 +136,10 @@ This is Vera's user-facing journey from a substantive legal, tax or
 compliance question to a reviewed answer. Select it automatically for the
 requested complete answer; the user need not choose internal stages.
 
+Read `../vera/references/research-subscriptions.md` before preparation. Consult
+the same optional saved choices; enabled subscriptions contribute evidence in
+the existing journey. Missing subscriptions never require setup or a new route.
+
 Resolve `../../modules/deep-research-validator` from this skill directory when
 it exists; otherwise resolve `../../../deep-research-validator` in repository
 source. Read that module's

@@ -30,6 +30,11 @@ Current user requests take precedence over saved preferences.
 
 # Plan The Answer
 
+Read `../vera/references/research-subscriptions.md` and the saved optional source
+choices before preparing the brief. Include relevant enabled subscriptions in
+the same source plan; access remains unverified until actually checked. Never
+require a subscription, API or publisher partnership to prepare the question.
+
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
 
 Resolve `../../modules/prompt-optimizer` from this skill directory when it

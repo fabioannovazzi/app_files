@@ -51,7 +51,8 @@
     "cnc-authenticated-review",
     "native-workspace",
     "studio-work",
-    "operational-incidents"
+    "operational-incidents",
+    "research-subscriptions"
   ],
   "workflow_roles": {
     "new-client": {

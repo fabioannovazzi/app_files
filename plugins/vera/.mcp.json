@@ -411,6 +411,16 @@
       "url": "https://mparanza.com/mcp/vera-incidents",
       "title": "Vera · Ripristino operativo",
       "description": "Automatic technical incident reporting, incident-specific remedies and recovery outcomes. Independent of local command execution."
+    },
+    "researchSources": {
+      "title": "Vera · Fonti di ricerca",
+      "description": "Optional existing Eutekne and One FISCALE subscriptions, using the authorised host browser or connected tools inside the same research.",
+      "cwd": ".",
+      "command": "node",
+      "args": [
+        "./mcp/research-sources.cjs",
+        "--stdio"
+      ]
     }
   }
 }

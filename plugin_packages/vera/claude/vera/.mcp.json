@@ -112,6 +112,13 @@
         "report-builder"
       ]
     },
+    "researchSources": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/mcp/research-sources.cjs",
+        "--stdio"
+      ]
+    },
     "studioWork": {
       "command": "node",
       "args": [

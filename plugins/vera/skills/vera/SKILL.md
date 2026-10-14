@@ -41,6 +41,13 @@ materials say to do so. Use only the user's authorized scope and destination.
 
 ## ChatGPT and Codex Runtime
 
+For a request to connect, check or disconnect an existing Eutekne or One FISCALE
+subscription, use `../research-subscriptions/SKILL.md` and its optional native
+`vera_research_sources_open` panel. Legal/tax preparation and research consult
+the same saved optional source choices under
+`references/research-subscriptions.md`; the user does not manage a separate
+research process. No subscription or connection setup is required for Vera.
+
 For a request to open a saved native workspace or discuss its exact selection,
 read `references/native-workspace.md`. Use its callable tools only for their
 supported existing runs; retain the selected specialist's preparation and
