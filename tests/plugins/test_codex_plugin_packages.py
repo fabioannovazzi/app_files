@@ -2900,6 +2900,16 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 assert "host-transcribed voice" in normalized_skill_text
                 assert "model_data_report.py" in skill_text
                 continue
+            if (
+                plugin_root.name == "vera"
+                and skill_file.parent.name == "research-subscriptions"
+            ):
+                # This optional source-owned service uses the same CLI on every host.
+                assert "../vera/references/research-subscriptions.md" in skill_text
+                assert "scripts/research-sources.cjs --state" in skill_text
+                assert "vera_research_sources_open" in skill_text
+                assert "never establishes live subscriber access" in skill_text
+                continue
             if plugin_root.name == "business-valuation":
                 # Test the actual fixed output contract rather than a legacy filename.
                 assert "## Calculation and review" in skill_text

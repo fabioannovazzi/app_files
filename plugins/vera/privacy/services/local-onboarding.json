@@ -60,18 +60,18 @@
     "scripts/change_requests.py"
   ],
   "governed_repository_paths": [
-    "static/shared/learn-with-vera/index.html",
-    "static/shared/product-function-pages.js",
     "plugins/_shared/vendor/modules/courseware",
     "scripts/course_materials",
+    "scripts/cowork_teaching",
     "static/shared/courses",
-    "scripts/cowork_teaching"
+    "static/shared/learn-with-vera/index.html",
+    "static/shared/product-function-pages.js"
   ],
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "5aa8edc0ae2d76a18484c889218217a55085ea684ddd293d72b2e2e196270b1c"
+    "source_fingerprint": "fefc8c431fa2d80c1c48396eedf60b87d437ccf4de554b83d32d61c1da1abbb3"
   },
   "runtime_profiles": [
     "openai-codex"

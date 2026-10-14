@@ -853,7 +853,7 @@
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
-      "sha256": "153b6f724e6ec59c0e2e51813be1c81954ca3f13007378a335a793b9a76c90cb",
+      "sha256": "16992e1253e3493232b17ee3d445262d2bbeda709b84743c64dd0fb3742ba886",
       "languages": [
         "it",
         "en",
@@ -993,7 +993,7 @@
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "880490e5208924c1146f34927502b59c3d33dd4d97501bf5c062901801057bb1",
+      "sha256": "a0f726b84ab49beb1d0067800f9a4779b3d288b18827df56dfb32d888912d717",
       "languages": [
         "it",
         "en",

@@ -111,7 +111,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "153b6f724e6ec59c0e2e51813be1c81954ca3f13007378a335a793b9a76c90cb",
+  "course_sha256": "16992e1253e3493232b17ee3d445262d2bbeda709b84743c64dd0fb3742ba886",
   "encoding_preview_source_binding_review_20261013": {
     "reviewed_at": "2026-10-13T19:28:41.735928+00:00",
     "scope": "Reviewed the shared UI projection fix against unsupported-encoding, UTF-8 BOM and malformed-control regressions. Native source inventory changes only; authored lessons, multilingual inputs, deliverables and all prior professional-acceptance limits are preserved. Unsupported raw captures retain their bytes and hashes and display an explicit encoding limit. No new research method, law judgment, recipient or model API is introduced."
@@ -622,5 +622,25 @@
     "fresh_matching_junit_required": true,
     "installed_host_acceptance": false,
     "new_visual_or_learner_acceptance": false
+  },
+  "research_subscriptions_source_binding_review_20261014": {
+    "reviewed_at": "2026-10-14",
+    "previous_course_sha256": "bfe20d9ea1b69b2721f68c93b727ff8189aae0b02de4e9c26a33de944c0f0bbb",
+    "current_course_sha256": "3afd2b2a3f13f5f51d9c6276663755a5e413121f7142cef17418ae2900a352b1",
+    "authored_content_unchanged": true,
+    "scope": "Reviewed the optional subscription entry and its newly bound reference. Only source bindings changed; authored lessons, synthetic inputs, multilingual content and expected deliverables remain unchanged. The reference explicitly excludes private subscriptions from prepared teaching lessons. Fresh execution checks remain required; this is not live publisher or installed-host acceptance."
+  },
+  "research_subscriptions_main_integration_20261014": {
+    "scope": "Preserve the released Deal Redux method and shared assurance source while integrating optional subscription evidence. Only source bindings change in this lesson; authored materials and deliverables remain unchanged. Fresh CI and host acceptance stay distinct.",
+    "current_course_sha256": "3afd2b2a3f13f5f51d9c6276663755a5e413121f7142cef17418ae2900a352b1"
+  },
+  "research_subscriptions_native_ui_integration_20261014": {
+    "previous_course_sha256": "153b6f724e6ec59c0e2e51813be1c81954ca3f13007378a335a793b9a76c90cb",
+    "current_course_sha256": "16992e1253e3493232b17ee3d445262d2bbeda709b84743c64dd0fb3742ba886",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Retain native-UI source and all authored lessons, inputs and existing acceptance limits. Legal/tax adds the optional subscription reference; document-format retains the existing onboarding method while excluding source settings from lessons. Fresh exact-digest native execution is required; no professional or installed-host acceptance inferred."
   }
 }

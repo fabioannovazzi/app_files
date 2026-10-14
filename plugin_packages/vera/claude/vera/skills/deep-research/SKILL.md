@@ -132,6 +132,12 @@ invoked by the user; Vera does not dispatch them.
 
 # Research the prepared question
 
+Read `../vera/references/research-subscriptions.md` and the current saved source
+choices. Use relevant authorised subscriptions through actual callable browser
+or connector tools inside the shared loop; recheck access in this run and pass
+real passages, provenance and access/retention limits to the existing reviews.
+Do not start connection setup for an unsubscribed user or fork the method.
+
 Without an accepted preparation, enter `../quesito-legale-fiscale/SKILL.md`
 first. Preparation-only and supplied-answer review requests retain their scope.
 

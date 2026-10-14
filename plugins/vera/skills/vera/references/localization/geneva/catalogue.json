@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/Documents/GitHub/app_files/plugins/vera",
-  "version": "0.1.378",
-  "captured_at": "2026-10-14T10:03:17.727887+00:00",
-  "catalogue_fingerprint": "28a12efe56722e7e76a93a357c3d916e0364bacfbbbe2d318e23d5c09cd96791",
-  "manifest_sha256": "2fb44edec9bf39fde9d45b96285980fcb87faf2ba6d44d2343ae2a16d7bcd84f",
+  "root": "/private/tmp/app-files-research-subscriptions/plugins/vera",
+  "version": "0.1.379",
+  "captured_at": "2026-10-14T10:58:08.473478+00:00",
+  "catalogue_fingerprint": "6541c45fb47d43fd9e7c3f9ccf4dba821c8f54b59b07ed624907de3240ece855",
+  "manifest_sha256": "488b18989fb8b06ff968d2e7571301f5e4fbd0720acf1dc2428788ae6b22b42c",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -14,7 +14,7 @@
     {
       "function_id": "adversarial-opinion",
       "skill_path": "skills/adversarial-opinion/SKILL.md",
-      "sha256": "e0a6d6119986763c0015dcb62d2bae3e980dbbfbe59d57d59ca6df3f740f8fab"
+      "sha256": "0cc2756479ba79211f72d0b148a6b441e0465b9970389d7753ec42f5140bf3af"
     },
     {
       "function_id": "agenzia-acquisition",
@@ -99,7 +99,7 @@
     {
       "function_id": "deep-research",
       "skill_path": "skills/deep-research/SKILL.md",
-      "sha256": "068a5578e0e752e8d9f7e6b7d0d7b5bb6fb717303fb7bee2cfd0da92e0113974"
+      "sha256": "35603f375f48d927e95f9a4a6656d924067996ec266f4f27023d86784f6e7567"
     },
     {
       "function_id": "email-cliente",
@@ -154,12 +154,12 @@
     {
       "function_id": "legal-tax-answer-planner",
       "skill_path": "skills/legal-tax-answer-planner/SKILL.md",
-      "sha256": "30f23171058090e81d3bcabaa4cd0ac62de6e22890f18d48a50f3a419075fa75"
+      "sha256": "ace3652204f88ea6957dac1e33e7c8024bfefe216860874236355738b831ef1c"
     },
     {
       "function_id": "legal-tax-answer-review",
       "skill_path": "skills/legal-tax-answer-review/SKILL.md",
-      "sha256": "288ed254af5641659a0ab51cad0d45ac3d83469c0cb8c95022e78e3c8cf6f445"
+      "sha256": "19c8b2f6bd08dcbe1be58ff11490cfc6809c5898a9727c0d5c3fcda96138c32a"
     },
     {
       "function_id": "lipe",
@@ -219,7 +219,7 @@
     {
       "function_id": "quesito-legale-fiscale",
       "skill_path": "skills/quesito-legale-fiscale/SKILL.md",
-      "sha256": "3943d6da4003fa2a41c22fe1ce5b804d6187b24f0139fa4c146f16efeb16dbf7"
+      "sha256": "3af4dde15a892c7260d06ada0781c58267544bc2125b5647c63289198822b354"
     },
     {
       "function_id": "rating-legalita",
@@ -230,6 +230,11 @@
       "function_id": "registro-imprese-sari",
       "skill_path": "skills/registro-imprese-sari/SKILL.md",
       "sha256": "617c4579fe2db5a90fad9e76ef094533f66d0e5de6696f57cf06d512ba7e13a3"
+    },
+    {
+      "function_id": "research-subscriptions",
+      "skill_path": "skills/research-subscriptions/SKILL.md",
+      "sha256": "079f7d1e76f342da6fb2750121bd3b9b516ef9c79d52faf83224eaae7eb3d8a4"
     },
     {
       "function_id": "sales-plan",
@@ -269,7 +274,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "a80015fbd2395f6ac65dbb5822f05cd09dcd2625b4b62959c9e9554257326b42"
+      "sha256": "94d1f17503f06849ecc73fbeb45aa79d6a27ed5234ccdc3622cecf81e5a629b4"
     },
     {
       "function_id": "vouching",

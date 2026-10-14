@@ -50,7 +50,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "880490e5208924c1146f34927502b59c3d33dd4d97501bf5c062901801057bb1",
+  "course_sha256": "a0f726b84ab49beb1d0067800f9a4779b3d288b18827df56dfb32d888912d717",
   "integration_refresh": {
     "reviewer": "Codex /root",
     "date": "2026-10-02",
@@ -536,5 +536,14 @@
     "fresh_matching_junit_required": true,
     "installed_host_acceptance": false,
     "new_visual_or_learner_acceptance": false
+  },
+  "research_subscriptions_native_ui_integration_20261014": {
+    "previous_course_sha256": "880490e5208924c1146f34927502b59c3d33dd4d97501bf5c062901801057bb1",
+    "current_course_sha256": "a0f726b84ab49beb1d0067800f9a4779b3d288b18827df56dfb32d888912d717",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Retain native-UI source and all authored lessons, inputs and existing acceptance limits. Legal/tax adds the optional subscription reference; document-format retains the existing onboarding method while excluding source settings from lessons. Fresh exact-digest native execution is required; no professional or installed-host acceptance inferred."
   }
 }

@@ -27,6 +27,7 @@ from courseware.policy import unavailable_local_workflows  # noqa: E402
 AUTHORING = Path(__file__).parent
 LANGUAGES = ["it", "en", "fr", "de", "es"]
 EXCLUDED = {
+    "research-subscriptions",  # Source configuration is not a professional lesson.
     "posizioni-negoziali",  # Professional workflow; no authored teaching kit.
     # Professional method is available; no authored/reviewed tutorial kit exists.
     "contenzioso-tributario",
@@ -125,6 +126,8 @@ def _source_records(product: str, workflow: str) -> list[dict[str, str]]:
     paths = {skill}
     if product == "vera":
         paths.add(root / "skills/vera/references/connected-studio-knowledge.md")
+        if workflow == "quesito-legale-fiscale":
+            paths.add(root / "skills/vera/references/research-subscriptions.md")
     paths.update(
         path for path in skill.parent.rglob("*.md") if path.name != "cowork-runtime.md"
     )

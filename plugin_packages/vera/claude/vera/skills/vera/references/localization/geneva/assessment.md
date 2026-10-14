@@ -10,9 +10,9 @@ Later host-specific instructions in this reference cannot override this rule.
 
 # Vera — Geneva localization assessment and implementation
 
-Updated 2026-10-02 (catalogue integration only; prior professional assessment retained). Target: CH-GE; example user: a generalist fiduciary serving SMEs. French output and CHF are explicit case settings, not selectors of governing law.
+Updated 2026-10-14 (catalogue integration only; prior professional assessment retained). Target: CH-GE; example user: a generalist fiduciary serving SMEs. French output and CHF are explicit case settings, not selectors of governing law.
 
-The current inventory covers all 54 skill entrypoints, including internal helpers and development prototypes. All prior professional judgments are retained; catalogue coverage does not establish target-country acceptance.
+The current inventory covers all 55 skill entrypoints, including internal helpers and development prototypes. All prior professional judgments are retained; catalogue coverage does not establish target-country acceptance.
 
 The release adds bounded adapters and instructions, not a blanket claim that every fiduciary mandate is supported. Original evidence and professional decisions remain necessary. No real Geneva client workflow has been accepted.
 
@@ -56,6 +56,7 @@ The release adds bounded adapters and instructions, not a blanket claim that eve
 | quesito-legale-fiscale | Use | Existing function retained with the recorded qualification limits. |
 | rating-legalita | Unresolved | First Italian AGCM application only. No Geneva adaptation or equivalent domestic mandate established; translated output does not establish Swiss applicability. |
 | registro-imprese-sari | Adapt | Explicit CH-GE intake/plan, official Swiss source hosts, local authority/position handling and French labels; no portal filing. |
+| research-subscriptions | Use (helper) | Optional permission setting for existing Eutekne/One FISCALE evidence. Case-specific relevance and actual host access remain required; no Swiss source coverage or live subscriber acceptance established. |
 | sales-plan | Use | Existing function retained with the recorded qualification limits. |
 | studio-archive | Adapt | Swiss IDE normalization and explicit OCR language through CLI/MCP; language changes trigger reindexing. |
 | studio-document-format | Unresolved | Shared Word format proposal, previews, approval and financial-report DOCX reuse. An explicit CH-GE/French/currency-qualified consumer case and real fiduciary acceptance remain unverified. |

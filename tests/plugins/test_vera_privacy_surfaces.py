@@ -141,6 +141,7 @@ def test_vera_shared_services_separate_runtime_update_and_feedback() -> None:
         "run-receipt-stamping",
         "studio-work",
         "operational-incidents",
+        "research-subscriptions",
     }
     runtime_boundaries = manifests["managed-python-runtime"]["external_boundaries"]
     assert [boundary["id"] for boundary in runtime_boundaries] == [

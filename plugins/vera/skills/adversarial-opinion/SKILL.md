@@ -30,6 +30,11 @@ Current user requests take precedence over saved preferences.
 
 # Parere contrapposto
 
+Read `../vera/references/research-subscriptions.md` before source investigation.
+Use relevant currently authorised subscription evidence in the same opposing
+examination, with actual access checks and retained passages; a prior connection
+or the original opinion's access observation never establishes current access.
+
 Resolve `../../modules/deep-research-validator` from this skill directory when
 it exists; otherwise resolve `../../../deep-research-validator` in repository
 source. Read its `skills/adversarial-opinion/SKILL.md` completely and follow it.

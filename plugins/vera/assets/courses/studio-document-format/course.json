@@ -605,7 +605,7 @@
     {
       "path": "scripts/local_onboarding.py",
       "repository_path": "plugins/vera/scripts/local_onboarding.py",
-      "sha256": "a09b950acd534cc19b35455eafc6d8d7d774ff149931227d9d578bd3a4ee3947"
+      "sha256": "0a10d857df5d9111b5ad36dee1dcfd3aca4b9df30283f9fbfc0dc7f14577fc42"
     },
     {
       "path": "scripts/studio_document_format.py",
