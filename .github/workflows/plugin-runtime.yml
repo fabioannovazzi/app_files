@@ -983,13 +983,17 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: python -m pip install pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit -r plugins/studio-archive/requirements.txt -r plugins/invoice-xml/requirements.txt -r plugins/prompt-optimizer/requirements.txt -r plugins/deep-research-validator/requirements.txt
+      - run: python -m pip install pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit -r plugins/studio-archive/requirements.txt -r plugins/invoice-xml/requirements.txt -r plugins/prompt-optimizer/requirements.txt -r plugins/deep-research-validator/requirements.txt -r plugins/lucia/requirements.txt
       - name: Verify fresh sessions, alias isolation, concurrency and task receipts
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_studio_archive_adoption.py
           tests/plugins/test_vera_standalone_work.py
           tests/plugins/test_cowork_archive_session.py
+      - name: Verify negotiation delivery and immutable round successors
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_vera_studio_archive_component.py::test_negotiation_round_retains_delivery_and_starts_a_separate_successor
       - name: Check added helper quality
         run: |
           python -m black --check plugins/studio-archive/scripts/archive_preferences.py plugins/_shared/vendor/modules/vera_assurance/contracts.py plugins/vera/scripts/standalone_work.py tests/plugins/test_studio_archive_adoption.py tests/plugins/test_vera_standalone_work.py

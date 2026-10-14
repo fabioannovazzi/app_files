@@ -428,6 +428,31 @@
       "sha256": "f230f86272201bae7bc34f1868d8cb6013b47ce9ccc8b876acdfb0bc257637d5"
     },
     {
+      "path": "vendor/modules/deal_redux/references/evidence-and-rounds.md",
+      "repository_path": "plugins/_shared/vendor/modules/deal_redux/references/evidence-and-rounds.md",
+      "sha256": "e44de40a8503a1f6f2a76aa5dc66b048ee864b28503f70d2babb20192a4ba1c7"
+    },
+    {
+      "path": "vendor/modules/deal_redux/references/upstream/LICENSE",
+      "repository_path": "plugins/_shared/vendor/modules/deal_redux/references/upstream/LICENSE",
+      "sha256": "6e7c22106722c151ffc66d0faf2035155eca1ad91931f5679c6773891c08deef"
+    },
+    {
+      "path": "vendor/modules/deal_redux/references/upstream/PROVENANCE.json",
+      "repository_path": "plugins/_shared/vendor/modules/deal_redux/references/upstream/PROVENANCE.json",
+      "sha256": "1bb874b6862a115a43760881590a2e410d5d05d3318d3c78f3179c455a158ca3"
+    },
+    {
+      "path": "vendor/modules/deal_redux/references/upstream/deal-redux.md",
+      "repository_path": "plugins/_shared/vendor/modules/deal_redux/references/upstream/deal-redux.md",
+      "sha256": "b90f37e85e092869fc25b44eea91b40c3f04bcbd1cdfd3c65f809f60d53cc105"
+    },
+    {
+      "path": "vendor/modules/deal_redux/workflow.md",
+      "repository_path": "plugins/_shared/vendor/modules/deal_redux/workflow.md",
+      "sha256": "9dee4dd1def980f5f6aaf4a723b45303fbed219a0f822402461b4673c1e252da"
+    },
+    {
       "path": "vendor/modules/desktop_teaching/__init__.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/__init__.py",
       "sha256": "361dab625f1122781bef9bc5fa04c7d62cf31e6fc55a10433e818a96f4bc4309"

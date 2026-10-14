@@ -8,7 +8,8 @@
     "scripts/notarized_run_receipt.py",
     "skills/vera/SKILL.md",
     "skills/vera/references/model-data-report-contract.md",
-    "skills/contenzioso-tributario"
+    "skills/contenzioso-tributario",
+    "skills/posizioni-negoziali"
   ],
   "governed_repository_paths": [
     "modules/hosted_services/api.py",
@@ -24,7 +25,11 @@
     "plugins/lucia/scripts/legal_documents_labels.json",
     "plugins/lucia/scripts/legal_matter.py",
     "plugins/lucia/scripts/legal_matter.schema.json",
-    "plugins/lucia/scripts/legal_matter_labels.json"
+    "plugins/lucia/scripts/legal_matter_labels.json",
+    "plugins/_shared/vendor/modules/deal_redux",
+    "plugins/lucia/scripts/legal_negotiation.py",
+    "plugins/lucia/scripts/legal_negotiation.schema.json",
+    "plugins/lucia/scripts/legal_negotiation_labels.json"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -94,9 +99,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-13",
+    "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "45209821884b6f2cb5bcf8b0bf707915b8b69e4b7b10714aa1106839502d3099"
+    "source_fingerprint": "48d20ccfe0b2f548ad50d887bee13e90d61632540704bfe6f8acf5f5b1dc31c7"
   }
 }

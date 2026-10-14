@@ -167,6 +167,7 @@ def eligible_workflows() -> set[str]:
         "legal-tax-answer-review",
         "adversarial-opinion",
         "privacy-surface-review",
+        "research-subscriptions",  # Source configuration has no operational lesson.
         "datev-invoice-start",
         "learn-with-vera",
     }

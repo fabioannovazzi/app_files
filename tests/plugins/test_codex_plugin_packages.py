@@ -821,6 +821,7 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         assert "## Required Questions" in full_workflow
     if plugin_name == "lucia":
         assert set(card_bodies) == {
+            "skills/posizioni-negoziali/SKILL.md",
             "skills/controllo-documento/SKILL.md",
             "skills/estrazione-clausole/SKILL.md",
             "skills/metodo-studio/SKILL.md",
@@ -2981,6 +2982,23 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 assert "../legal-tax-answer-planner/SKILL.md" in normalized_skill_text
                 assert "../legal-tax-answer-review/SKILL.md" in normalized_skill_text
                 continue
+            if (
+                plugin_root.name in {"lucia", "vera"}
+                and skill_file.parent.name == "posizioni-negoziali"
+            ):
+                assert "../../vendor/modules/deal_redux" in skill_text
+                assert "workflow.md" in skill_text
+                assert "../quesito-legale-fiscale/SKILL.md" in skill_text
+                assert (
+                    "Documents/Word"
+                    in (
+                        ROOT / "plugins/_shared/vendor/modules/deal_redux/workflow.md"
+                    ).read_text()
+                )
+                assert (
+                    ROOT / "plugins/_shared/vendor/modules/deal_redux/workflow.md"
+                ).is_file()
+                continue
             if plugin_root.name in {"vera", "lucia"} and (
                 skill_file.parent.name == "adversarial-opinion"
             ):
@@ -4170,8 +4188,8 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         )
         assert module is not None
         assert 'data-jurisdiction-item="it"' in module.group(0)
-    assert core.count(" data-module-link") == 47
-    assert core.count('class="module-row"') == 47
+    assert core.count(" data-module-link") == 48
+    assert core.count('class="module-row"') == 48
     assert core.count('data-jurisdiction-item="it"') == 18
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core

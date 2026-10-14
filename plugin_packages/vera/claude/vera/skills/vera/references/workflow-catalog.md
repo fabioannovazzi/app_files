@@ -47,7 +47,20 @@ branches, signatures and filings remain unsupported. Use the specialist skill.
   host automation. Without local tools, only bounded preparation is supported.
   Read `../../organizzazione-lavoro/SKILL.md`.
 
+## Optional research sources
+
+- `research-subscriptions`: connect, check or disconnect an existing Eutekne or
+  One FISCALE subscription. Read `../../research-subscriptions/SKILL.md`.
+  This optional source setting supplies evidence to the existing legal/tax
+  journey; it is not an operational lesson or a separate research method.
+  Ordinary work requires no paid database or connection setup.
+
 ## Professional workflows
+
+- `posizioni-negoziali`: source-linked negotiating positions from a selected
+  tracked Word agreement; model-led grouping, complete revision/comment ledger,
+  blank responses unless requested and retained round comparisons. Read
+  `../../posizioni-negoziali/SKILL.md`. No authored teaching kit is included.
 
 - `organizzazione-lavoro`: studio appointments, activities, deadlines, waiting
   items, delegations, source-based meeting actions and daily planning. Persistent

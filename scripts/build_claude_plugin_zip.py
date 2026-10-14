@@ -664,6 +664,7 @@ LUCIA_COWORK_COMPONENTS = (
 )
 LUCIA_DOCUMENT_COWORK_SKILLS = frozenset(
     {
+        "posizioni-negoziali",
         "controllo-documento",
         "estrazione-clausole",
         "metodo-studio",
@@ -3022,7 +3023,11 @@ def _lucia_package_entries(
         if name in ROOT_OMITTED_PATHS:
             continue
         if name.startswith(
-            ("scripts/", "vendor/modules/italian_tax_litigation/")
+            (
+                "scripts/",
+                "vendor/modules/italian_tax_litigation/",
+                "vendor/modules/deal_redux/",
+            )
         ) or name in {
             "requirements.txt",
             "requirements-shared-core.txt",

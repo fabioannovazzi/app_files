@@ -5,6 +5,9 @@ description: Review supplied contracts for a represented party, producing clause
 
 # Revisione contratti
 
+Se l'utente richiede la tabella delle posizioni negoziali di un Word revisionato,
+leggi `../posizioni-negoziali/SKILL.md` e riusa prove e contesto già preparati.
+
 Read `references/document-workflow.md` and `references/prassi-italiana.md` before
 starting. Use `references/contratti-italiani.md` for contract/NDA reading questions. This is a native Lucia workflow: no Mike application,
 server, API key, external model API, remote document service or automatic research.
