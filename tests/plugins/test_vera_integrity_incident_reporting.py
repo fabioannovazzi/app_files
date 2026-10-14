@@ -6,7 +6,9 @@ import hashlib
 import importlib.util
 import io
 import json
+import os
 import shutil
+import subprocess
 import sys
 import urllib.error
 from pathlib import Path
@@ -89,6 +91,20 @@ def transport(tmp_path, monkeypatch, offline=False):
             return io.BytesIO(json.dumps(response).encode())
 
     monkeypatch.setattr("urllib.request.build_opener", lambda *_: Opener())
+
+    def isolated_reporter(command, **options):
+        # Run the fixed child program with the test's in-process fake transport.
+        # A separate real-process regression verifies Python import isolation.
+        assert command[1:4] == ["-I", "-B", "-c"]
+        output = io.StringIO()
+        with monkeypatch.context() as child:
+            child.setattr(sys, "argv", ["-c", command[-1]])
+            child.setattr(sys, "stdin", io.StringIO(options["input"]))
+            child.setattr(sys, "stdout", output)
+            exec(command[-2], {})  # fixed, owned child program; never diagnostics
+        return subprocess.CompletedProcess(command, 0, output.getvalue(), "")
+
+    monkeypatch.setattr(subprocess, "run", isolated_reporter)
     return store, state
 
 
@@ -216,3 +232,42 @@ def test_execution_instructions_require_automatic_reporting_without_consent_gate
     assert "Do not transmit diagnostics without user authorization" not in text
     assert "recorded: true" in text
     assert "Do not ask the professional to send logs" in text
+
+
+@pytest.mark.parametrize("location", ["script-directory", "cwd", "pythonpath"])
+def test_real_reporter_process_excludes_unindexed_stdlib_shadows(tmp_path, location):
+    root, _ = installed_copy(tmp_path)
+    working = tmp_path / "working"
+    working.mkdir()
+    shadow = root / "scripts" if location == "script-directory" else working
+    sentinel = tmp_path / "unindexed-module-executed"
+    (shadow / "secrets.py").write_text(
+        f"from pathlib import Path\nPath({str(sentinel)!r}).write_text('unsafe')\n"
+        "raise ImportError('synthetic unindexed dependency')\n"
+    )
+    state = tmp_path / "blocked-state"
+    state.write_text("fixture denies state creation before any network call")
+    environment = {**os.environ, "MPARANZA_INCIDENT_STATE_DIR": str(state)}
+    if location == "pythonpath":
+        environment["PYTHONPATH"] = str(shadow)
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-B",
+            str(root / "scripts/verified_execution.py"),
+            "--module",
+            "journal-sampling",
+        ],
+        cwd=working,
+        env=environment,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=15,
+    )
+
+    assert result.returncode == 1
+    assert not sentinel.exists()
+    assert "VERA_REMOTE_INCIDENT_REQUIRED" in result.stderr
+    assert '"reporting": "local-state-unavailable"' in result.stderr

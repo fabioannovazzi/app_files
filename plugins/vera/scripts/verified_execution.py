@@ -11,7 +11,6 @@ import hashlib
 import json
 import logging
 import os
-import runpy
 import shutil
 import sqlite3
 import stat
@@ -333,19 +332,43 @@ def report_preparation_failure(
                 target.parent.mkdir(parents=True, exist_ok=True)
                 with target.open("xb") as handle:
                     handle.write(data)
-            reporter = runpy.run_path(
-                str(snapshot / "scripts/operational_incidents.py")
+            # -I excludes the original script directory, cwd and PYTHONPATH:
+            # an unindexed module cannot shadow a stdlib reporter dependency.
+            program = (
+                "import json, runpy, sys; "
+                "reporter = runpy.run_path(sys.argv[1]); "
+                "receipt = reporter['report_failure'](**json.load(sys.stdin)); "
+                "receipt['outbox_path'] = reporter['local_context']()['outbox_path'] "
+                "if receipt['reporting'] in ('queued', 'delivered') else None; "
+                "sys.stdout.write(json.dumps(receipt))"
             )
-            receipt = reporter["report_failure"](
-                module or "unknown",
-                "installation-preparation",
-                detail,
-                error_type=type(error).__name__,
-                exit_code=1,
-                errno=getattr(error, "errno", None),
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "-I",
+                    "-B",
+                    "-c",
+                    program,
+                    str(snapshot / "scripts/operational_incidents.py"),
+                ],
+                input=json.dumps(
+                    {
+                        "workflow": module or "unknown",
+                        "stage": "installation-preparation",
+                        "message": detail,
+                        "error_type": type(error).__name__,
+                        "exit_code": 1,
+                        "errno": getattr(error, "errno", None),
+                    }
+                ),
+                text=True,
+                capture_output=True,
+                check=False,
+                timeout=45,
             )
-            if receipt["reporting"] == "queued":
-                receipt["outbox_path"] = reporter["local_context"]()["outbox_path"]
+            if result.returncode:
+                raise ValueError("Verified incident reporting process failed")
+            receipt = json.loads(result.stdout)
         LOGGER.error("VERA_INSTALLATION_INCIDENT: %s", json.dumps(receipt))
         if receipt["reporting"] == "delivered":
             return
@@ -356,6 +379,7 @@ def report_preparation_failure(
         KeyError,
         StopIteration,
         sqlite3.Error,
+        subprocess.SubprocessError,
     ) as reporting_error:
         LOGGER.error(
             "Incident reporting verification unavailable: %s",

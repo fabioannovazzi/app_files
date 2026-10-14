@@ -53,7 +53,7 @@
     },
     {
       "path": "scripts/verified_execution.py",
-      "sha256": "ad61a2f4dbf51a2c61c23d927d5750ed5f4c2db3b16357e03f6d22eb68a3bcef"
+      "sha256": "5a218a5bfe7920a201c283d218988f5a105cc9ed436bbc26492ca517891bd730"
     },
     {
       "path": "skills/mparanza-organizzazione-lavoro/SKILL.md",
@@ -432,5 +432,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "4e672a58a8f0d1215226e3201a9513849e206ba4d5639f78ed797e3dc9035433"
+  "canonical_course_sha256": "7d9c80945e7ccde9f9a89d1eb46cae366b02e96995e3938c4cdb0804992cc4d5"
 }

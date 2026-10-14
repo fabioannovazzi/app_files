@@ -146,8 +146,9 @@ attach the actual complete relevant cause to the original report.
 All three preflight entrypoints (standalone verification, dependency checking and
 managed execution) report failures before returning a blocked result. They verify
 the stdlib reporter, preflight script and product metadata separately against a
-stable index, snapshot only that code, then use the existing durable incident
-outbox. The damaged workflow never runs. Content mismatches include the indexed
+stable index, snapshot only that code, and run it in isolated Python (`-I -B`),
+then use the existing durable incident outbox. No imports can come from the
+damaged installation, current directory or PYTHONPATH. The damaged workflow never runs. Content mismatches include the indexed
 relative file and both exact digests; other failures use a fixed technical message
 and available exception type/errno, leaving raw error selection to the host AI.
 
