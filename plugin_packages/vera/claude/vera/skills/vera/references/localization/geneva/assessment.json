@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "6541c45fb47d43fd9e7c3f9ccf4dba821c8f54b59b07ed624907de3240ece855",
+  "catalogue_fingerprint": "443d14a7ce7433f570666b805e4665fe6926199342483b6108a731e3c562d9df",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -1496,8 +1496,8 @@
   },
   "source_binding_update": {
     "date": "2026-10-14",
-    "version": "0.1.375",
-    "reason": "Current product identity after integrating the released tax-litigation Archive handoffs and research evidence-integrity fixes. Preserve existing Geneva dispositions and acceptance limits. No new qualification inferred.",
+    "version": "0.1.381",
+    "reason": "Release identity for the native calendar dropdown event fix. All function-entry hashes, IDs, target dispositions and prior acceptance limits are unchanged. The event correction is separately covered by native-workspace review and focused UI regressions.",
     "fresh_geneva_acceptance": false
   },
   "sources": {
