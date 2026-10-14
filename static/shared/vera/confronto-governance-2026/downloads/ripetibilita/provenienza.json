@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-14",
+  "configuration": {
+    "model": "gpt-6-astra",
+    "reasoning_effort": "xhigh",
+    "plugin": "Vera 0.1.378",
+    "evidence": "Metadati turn_context delle quattro chat e skill usata nei run; configurazione registrata, non attestazione firmata del provider."
+  },
+  "prompt": "Svolgi autonomamente il quesito qui sotto, usando la skill Vera. Questa è una prova indipendente: non leggere altre chat, circolari o risposte precedenti sullo stesso quesito e non condividere risultati con altre prove. Completa la ricerca e consegna il risultato finale della tua analisi. Non fermarti a un piano di lavoro.\n\n$vera  la riforma dei sistemi di amministrazione e controllo delle società per azioni recata dal d.lgs. n. 47/2026. Il decreto legislativo è stato adottato in attuazione della delega contenuta nella c.d. Legge capitali, con cui il legislatore ha ridisegnato la disciplina del codice civile e del Testo Unico della Finanza (TUF). riesci a fare inferenza tra ciò che è contenuto nella norma, cosa cambia rispetto a prima, cosa significa in concreto la nuova normativa e per chi? come se fossi incaricata di dover elaborare una circolare",
+  "design": "Quattro chat nuove, stesso prompt e istruzione di autonomia; nessun risultato o suggerimento sostanziale condiviso fra le prove. Fonti, ricerche e contesto acquisito non sono stati congelati.",
+  "limitation": "Prova 2: accesso tardivo a una riga di memoria su una precedente comparazione, dopo archiviazione della prima circolare. Il confronto Word e Markdown mostra soltanto la modifica della dichiarazione di indipendenza; contenuto giuridico invariato. La prova non è integralmente cieca. Le chat condividono installazione e istruzioni generali.",
+  "interpretation": "Campione esplorativo sullo stesso quesito, non misura statistica di affidabilità né stima dell’effetto del plugin. I criteri T sono selezionati per le convergenze e differenze osservate e non coincidono con i 25 criteri del primo esperimento.",
+  "documents": [
+    {
+      "id": "R01",
+      "pages": 14,
+      "sha256": "3435b849a3a03daec0f81025966596894cd199ece9adc703ee5664458c54fbd3"
+    },
+    {
+      "id": "R02",
+      "pages": 11,
+      "sha256": "d87fc708ed858985853fe71af7de595ce09a438b281424bab1aaf38c44895f47"
+    },
+    {
+      "id": "R03",
+      "pages": 10,
+      "sha256": "a442510d737850e563b43c06a22b090c666b0a0a95cceabfb4713afe5dc4d22c"
+    },
+    {
+      "id": "R04",
+      "pages": 9,
+      "sha256": "e4270a60505a437efb9b253d21161e0653e3009e808873797c2aa96bbaa4d82b"
+    }
+  ]
+}
