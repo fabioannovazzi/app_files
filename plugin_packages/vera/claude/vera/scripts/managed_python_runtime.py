@@ -18,9 +18,9 @@ from pathlib import Path
 
 __all__ = ["main"]
 
-prepare_execution_root = runpy.run_path(
-    str(Path(__file__).with_name("verified_execution.py"))
-)["prepare_execution_root"]
+_VERIFICATION = runpy.run_path(str(Path(__file__).with_name("verified_execution.py")))
+prepare_execution_root = _VERIFICATION["prepare_execution_root"]
+report_preparation_failure = _VERIFICATION["report_preparation_failure"]
 
 
 def _implementation_path() -> Path:
@@ -214,9 +214,7 @@ def main(argv: list[str] | None = None) -> int:
         root = prepare_execution_root(root, selection.module)
     except (OSError, ValueError) as error:
         logging.error("Vera installation verification failed: %s", error)
-        _independent_failure(
-            "installation-preparation", selection.module, type(error).__name__
-        )
+        report_preparation_failure(root, selection.module, error)
         return 1
     error_path = None
     if "run" in arguments and selection.module:

@@ -10,7 +10,9 @@
     "scripts/onboarding_session_start.py",
     "skills/vera/SKILL.md",
     "skills/vera/references/incident-recovery.md",
-    "scripts/_managed_python_runtime.py"
+    "scripts/_managed_python_runtime.py",
+    "scripts/verified_execution.py",
+    "skills/vera/references/execution-recovery.md"
   ],
   "governed_repository_paths": [
     "modules/operational_incidents",
@@ -27,7 +29,7 @@
       "kind": "hosted_service",
       "destination": "Mparanza HTTPS operational-incident API and Streamable HTTP MCP endpoint",
       "purpose": "Diagnose observed execution/setup failures, return installation-specific remedies and receive actual recovery outcomes",
-      "content": "Random installation UUID and opaque capability, Vera/host/runtime versions, platform and workflow technical IDs, failed stage, complete available technical diagnostic chains and measurements, explicit missing-measurement reasons, retry IDs and actual recovery outcomes. No professional helper stdout, client documents, case text, user prompts or arbitrary task logs. Known path, email and credential patterns are removed from technical messages; this mechanical filter does not establish semantic privacy. The host agent must select technical evidence without unrelated personal/client material. The remote channel does not read local files. Saved anonymous connector authorization exchanges a random code with a PKCE verifier, client ID and fixed incident resource; the host saves access/refresh tokens. The server stores token/code hashes, technical callback metadata and a random connection UUID. No personal account signup, user profile, email or client-file permission is involved. Failed helpers retain complete stderr privately on disk; stderr may include unrelated private/client text and is read by the selected host model for semantic review under its existing account. Raw stderr is not forwarded to Mparanza. Only reviewed relevant technical diagnostics, linked by the original report UUID, are submitted as supplemental evidence. Professional stdout is not captured.",
+      "content": "Random installation UUID and opaque capability, Vera/host/runtime versions, platform and workflow technical IDs, failed stage, complete available technical diagnostic chains and measurements, explicit missing-measurement reasons, retry IDs and actual recovery outcomes. No professional helper stdout, client documents, case text, user prompts or arbitrary task logs. Known path, email and credential patterns are removed from technical messages; this mechanical filter does not establish semantic privacy. The host agent must select technical evidence without unrelated personal/client material. The remote channel does not read local files. Saved anonymous connector authorization exchanges a random code with a PKCE verifier, client ID and fixed incident resource; the host saves access/refresh tokens. The server stores token/code hashes, technical callback metadata and a random connection UUID. No personal account signup, user profile, email or client-file permission is involved. Failed helpers retain complete stderr privately on disk; stderr may include unrelated private/client text and is read by the selected host model for semantic review under its existing account. Raw stderr is not forwarded to Mparanza. Only reviewed relevant technical diagnostics, linked by the original report UUID, are submitted as supplemental evidence. Professional stdout is not captured. Installation-preparation failures submit only a fixed technical message, exception type/errno, or the indexed package-relative file name and expected/observed SHA-256 values for a content mismatch. No altered file contents or professional files are read for this report.",
       "retention": "Local capabilities, pending reports and receipts persist outside client folders. In tested Cowork task containers this filesystem is task-local; the saved host connection retains its separate random UUID and credentials. Access tokens last one hour; rotating refresh grants expire after 90 idle days and can be revoked. Token/code hashes and incident records have no automatic deletion period. Access requires the local capability or the saved connector token, with explicit capability proof before linking local reports. Pending diagnostic pointers and raw stderr persist in the private incident directory until a matching actual recorded supplementation receipt is acknowledged; unsuccessful review or delivery retains them. Supplementation never replaces the original recovery episode or reopens recovered records. Recorded original/outcome receipts can acknowledge only their exact local queued UUID without replacing the local capability or saved connector identity. Remedy revisions are retained from the surviving migration revision onward; overwritten legacy revisions are not reconstructed.",
       "activation": "automatic_session_start",
       "optional": false,
@@ -48,7 +50,8 @@
         "A cached actual connector status permits only the two fixed retries for an existing matching local receipt and latest report. It performs no direct HTTP polling or identity adoption. Missing local receipts cannot be fabricated to authorise a retry.",
         "A helper success records readiness. Host AI verification of the original task and inputs is required for all recovered outcomes, including setup/startup. Delayed failures cannot reopen an already recovered episode.",
         "Failed fixed retries retain complete stderr privately for semantic review. Raw recovery stderr is not automatically transmitted.",
-        "Actual cached connector status reconciles only readiness hints bound to existing local report receipts. Readiness becomes action-required evidence rather than recovery; already recovered matching hints are cleared and unlinked hints are retained. No remote receipt is fabricated and no case inputs are inferred."
+        "Actual cached connector status reconciles only readiness hints bound to existing local report receipts. Readiness becomes action-required evidence rather than recovery; already recovered matching hints are cleared and unlinked hints are retained. No remote receipt is fabricated and no case inputs are inferred.",
+        "Before reporting an installation-preparation failure, the preflight verifies the reporting script, preflight script and product metadata against a stable build index, then snapshots them in a fresh private temporary directory. Damaged workflow code does not run. Unverifiable reporting components require the independent connector; queued delivery never implies recorded or recovered."
       ]
     }
   ],
@@ -86,6 +89,6 @@
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "0219fd377762ff254caccb8701a902518031d5df914477bf33997f9f6f5ad30b"
+    "source_fingerprint": "5b101625dbb560b9158f913040e41514b7df3146dd409497e022bb3f68af10de"
   }
 }

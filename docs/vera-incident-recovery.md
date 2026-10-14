@@ -1,10 +1,11 @@
 # Vera operational incident recovery
 
 The anonymous OAuth connection is deployed and its independent transport is
-verified. The pipeline correction in this branch is a release candidate until
-required CI, deployment and installed-host acceptance pass. The recurring
-monitor is paused at Fabio's request and must remain paused during this review.
-See [the pipeline review](vera-incident-pipeline-review.md).
+verified. The recurring AI monitor inspects delivered technical reports; it
+cannot detect a failure that never reaches the service. Current scheduled
+monitoring is read-only, with technical event alerts to Fabio. Unattended code
+fixes, merges and deployments remain outside that monitoring authorization.
+See [the earlier pipeline review](vera-incident-pipeline-review.md).
 
 Vera 0.1.368 adds a technical incident service, separate from optional feature
 suggestions. Failures are reported automatically; no support questionnaire or
@@ -139,3 +140,21 @@ its case context is available. Missing original folder access is a real boundary
 Failed fixed retries retain complete stderr privately for host AI review. Their
 outcome transports only a technical placeholder until reviewed supplements
 attach the actual complete relevant cause to the original report.
+
+## Installation preparation failures
+
+All three preflight entrypoints (standalone verification, dependency checking and
+managed execution) report failures before returning a blocked result. They verify
+the stdlib reporter, preflight script and product metadata separately against a
+stable index, snapshot only that code, then use the existing durable incident
+outbox. The damaged workflow never runs. Content mismatches include the indexed
+relative file and both exact digests; other failures use a fixed technical message
+and available exception type/errno, leaving raw error selection to the host AI.
+
+A delivered receipt means the service recorded the report; queued means local
+retention. Queued or unavailable reporting must continue through the independent
+connector using the original envelope and UUID. An unverifiable reporting component
+never runs and requires that remote route. When both channels are unavailable,
+the host must expose that precise reporting boundary. Reinstallation, a package
+update or a successful preparation still does not prove recovery of the user's
+original professional task.

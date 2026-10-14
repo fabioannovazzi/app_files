@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "contenzioso-tributario",
-  "course_sha256": "7bacb4de2f3848a667a72a08460a08b650c597c2f23d404f3d42faec776ab848",
+  "course_sha256": "1cad3cee21af70f1974d1772c16794f03ac2a3db031491eb88888cf6d50b5aa2",
   "reviewer": "Codex /root: five-language authored lesson and real evidence/progress output review",
   "reviewed_at": "2026-10-14T14:55:04.859840+00:00",
   "review_scope": "Accepted prepared material and bounded real helper/Archive regressions. Semantic narrative and decisions are explicit test fixtures. This does not attest full live legal research, substantive pleading approval, native Word, native voice, installed-host learner execution or professional acceptance. Live lessons run the current specialist, not the fixtures.",
@@ -242,5 +242,10 @@
         ]
       }
     }
+  },
+  "installation_incident_binding": {
+    "reviewed_at": "2026-10-14",
+    "previous_course_sha256": "7bacb4de2f3848a667a72a08460a08b650c597c2f23d404f3d42faec776ab848",
+    "basis": "Release metadata/source binding after automatic integrity-incident reporting correction. Existing authored lessons, professional methods, inputs and review dispositions remain unchanged. No new learner or customer recovery acceptance claimed."
   }
 }

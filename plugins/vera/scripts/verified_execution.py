@@ -11,14 +11,23 @@ import hashlib
 import json
 import logging
 import os
+import runpy
 import shutil
+import sqlite3
 import stat
 import subprocess
 import sys
 import tempfile
 from pathlib import Path, PurePosixPath, PureWindowsPath
 
-__all__ = ["ASSURED_MODULES", "MANIFEST", "prepare_execution_root", "main"]
+__all__ = [
+    "ASSURED_MODULES",
+    "InstallationContentMismatch",
+    "MANIFEST",
+    "prepare_execution_root",
+    "report_preparation_failure",
+    "main",
+]
 
 ASSURED_MODULES = frozenset(
     {
@@ -236,7 +245,9 @@ def prepare_execution_root(root: Path, module: str | None) -> Path:
     for name, digest in expected.items():
         data, links = _read_regular(observed[name])
         if hashlib.sha256(data).hexdigest() != digest:
-            raise ValueError(f"Installation content mismatch: {name}")
+            raise InstallationContentMismatch(
+                name, digest, hashlib.sha256(data).hexdigest()
+            )
         contents[name] = data
         hardlinks = hardlinks or links > 1
     if not hardlinks:
@@ -267,6 +278,100 @@ def prepare_execution_root(root: Path, module: str | None) -> Path:
     return private
 
 
+class InstallationContentMismatch(ValueError):
+    """Carry exact build-relative evidence, never client content or file excerpts."""
+
+    def __init__(self, name: str, expected: str, observed: str) -> None:
+        self.name = name
+        self.expected = expected
+        self.observed = observed
+        super().__init__(f"Installation content mismatch: {name}")
+
+
+def report_preparation_failure(
+    root: Path, module: str | None, error: Exception
+) -> None:
+    """Report through independently index-verified code while keeping work blocked.
+
+    Exact byte checks are mechanical trust controls, not a semantic classifier.
+    The reporter uses only stdlib; snapshot it and product metadata before loading
+    so altered workflow code and host-cache aliases never execute for telemetry.
+    """
+    try:
+        manifest, _ = _read_regular(root / MANIFEST)
+        expected = _manifest(manifest)
+        metadata = next(
+            name
+            for name in (".codex-plugin/plugin.json", ".claude-plugin/plugin.json")
+            if name in expected
+        )
+        contents = {}
+        for name in (
+            "scripts/verified_execution.py",
+            "scripts/operational_incidents.py",
+            metadata,
+        ):
+            data, _ = _read_regular(root / name)
+            if hashlib.sha256(data).hexdigest() != expected[name]:
+                raise ValueError(
+                    "Incident reporting component failed byte verification"
+                )
+            contents[name] = data
+        # Detect an index replacement during the independent verification too.
+        if _read_regular(root / MANIFEST)[0] != manifest:
+            raise ValueError("Incident reporting index changed during verification")
+        detail = "Installed Vera failed its installation preparation check."
+        if isinstance(error, InstallationContentMismatch):
+            detail = (
+                f"Installation content mismatch: {error.name}; "
+                f"expected SHA-256={error.expected}; observed SHA-256={error.observed}."
+            )
+        with tempfile.TemporaryDirectory(prefix="vera-incident-verified-") as directory:
+            snapshot = Path(directory)
+            for name, data in contents.items():
+                target = snapshot / name
+                target.parent.mkdir(parents=True, exist_ok=True)
+                with target.open("xb") as handle:
+                    handle.write(data)
+            reporter = runpy.run_path(
+                str(snapshot / "scripts/operational_incidents.py")
+            )
+            receipt = reporter["report_failure"](
+                module or "unknown",
+                "installation-preparation",
+                detail,
+                error_type=type(error).__name__,
+                exit_code=1,
+                errno=getattr(error, "errno", None),
+            )
+            if receipt["reporting"] == "queued":
+                receipt["outbox_path"] = reporter["local_context"]()["outbox_path"]
+        LOGGER.error("VERA_INSTALLATION_INCIDENT: %s", json.dumps(receipt))
+        if receipt["reporting"] == "delivered":
+            return
+        # The queued original envelope keeps its stable UUID for remote retries.
+    except (
+        OSError,
+        ValueError,
+        KeyError,
+        StopIteration,
+        sqlite3.Error,
+    ) as reporting_error:
+        LOGGER.error(
+            "Incident reporting verification unavailable: %s",
+            type(reporting_error).__name__,
+        )
+    LOGGER.error(
+        "VERA_REMOTE_INCIDENT_REQUIRED: workflow=%s stage=installation-preparation error_type=%s. "
+        "Use the saved veraIncidents connector automatically. Deliver the exact queued "
+        "original envelope when available; otherwise report the observed technical failure "
+        "without running unverified plugin code. Verify recorded:true before claiming delivery. "
+        "Do not ask the professional to report it or consent again.",
+        module or "unknown",
+        type(error).__name__,
+    )
+
+
 def main(argv: list[str] | None = None) -> int:
     """Prepare the workflow internally; the professional does not run a terminal."""
 
@@ -278,6 +383,7 @@ def main(argv: list[str] | None = None) -> int:
         prepared = prepare_execution_root(root, args.module)
     except (OSError, ValueError) as error:
         LOGGER.error("Preparazione di Vera bloccata: %s", error)
+        report_preparation_failure(root, args.module, error)
         return 1
     sys.stdout.write(json.dumps({"execution_root": str(prepared)}) + "\n")
     return 0

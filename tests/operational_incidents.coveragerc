@@ -7,3 +7,4 @@ source =
 include =
     modules/operational_incidents/*
     plugins/vera/scripts/operational_incidents.py
+    plugins/vera/scripts/verified_execution.py

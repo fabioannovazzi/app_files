@@ -416,11 +416,11 @@
     },
     {
       "path": "scripts/check_dependencies.py",
-      "sha256": "f49a0a461a7dfedb9b0193e2be830b41b1963aa7843cb58917b2b7e86e6ce99f"
+      "sha256": "faeea239129331baf68b9e04c430aa867b13aa23a78cdd5e50cce8f527edf5ae"
     },
     {
       "path": "scripts/managed_python_runtime.py",
-      "sha256": "669fac49e567544244c10a4c23c627fb821c5e0b16e606c25e0286d5cbef72c1"
+      "sha256": "714a18f19a8ed3d8b9257574cf4294d5499e7bd209c3b2b9338dec2daeff04e2"
     },
     {
       "path": "scripts/operational_incidents.py",
@@ -428,7 +428,7 @@
     },
     {
       "path": "scripts/verified_execution.py",
-      "sha256": "6c41ba4583fd91a9cfaa78d3ccfc07eadda49e8efef7e4a58b01f0560b5ad6c0"
+      "sha256": "ad61a2f4dbf51a2c61c23d927d5750ed5f4c2db3b16357e03f6d22eb68a3bcef"
     },
     {
       "path": "skills/mparanza-variance-analysis/SKILL.md",
@@ -821,5 +821,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "4f274f0563cbedaf58d51fd4edaf76f3f8abecad9a39495ea9a0e3986437f84e"
+  "canonical_course_sha256": "5b1e6cfc259a449b676ce7b18962bf6e9a04173cbd3fdfced5ad49e1ef5322fa"
 }

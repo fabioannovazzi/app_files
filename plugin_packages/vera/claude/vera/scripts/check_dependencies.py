@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 
 from managed_python_runtime import ensure_runtime, runtime_environment, runtime_python
-from verified_execution import prepare_execution_root
+from verified_execution import prepare_execution_root, report_preparation_failure
 
 __all__ = ["main"]
 
@@ -66,6 +66,7 @@ def main(argv: list[str] | None = None) -> int:
         execution_root = prepare_execution_root(PLUGIN_ROOT, args.module)
     except (OSError, ValueError) as error:
         LOGGER.error("Vera installation verification failed: %s", error)
+        report_preparation_failure(PLUGIN_ROOT, args.module, error)
         return 1
     component_root = (
         execution_root / "modules" / args.module
