@@ -687,6 +687,10 @@ jobs:
           tests/plugins/test_vera_verified_execution.py
           tests/plugins/test_python_bootstrap.py
           tests/plugins/test_cowork_archive_session.py
+      - name: Verify negotiation delivery and immutable round successors
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_vera_studio_archive_component.py::test_negotiation_round_retains_delivery_and_starts_a_separate_successor
 
   managed-runtime-quality:
     runs-on: ubuntu-latest
