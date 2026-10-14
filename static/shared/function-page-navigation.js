@@ -137,7 +137,7 @@
     "apertura-pratica": [["lucia", "area-matters"]],
     "revisione-contratti": [["lucia", "area-documents"]],
     "confronto-documenti": [["lucia", "area-documents"]],
-    "posizioni-negoziali": [["vera", "area-clients"], ["lucia", "area-documents"]],
+    "posizioni-negoziali": [["vera", "area-matters"], ["lucia", "area-documents"]],
     "revisione-documentale": [["lucia", "area-documents"]],
     "redazione-da-modello": [["lucia", "area-documents"]],
     "controllo-documento": [["lucia", "area-documents"]],
