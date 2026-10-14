@@ -746,6 +746,29 @@
       "implementation_status": "unresolved_not_qualified_for_target"
     },
     {
+      "function_id": "posizioni-negoziali",
+      "name": "Negotiating positions from tracked Word revisions",
+      "role": "function",
+      "disposition": "Unresolved",
+      "common_work": "Group tracked revisions into source-linked negotiating positions, retain every raw revision and comment, and compare selected earlier rounds.",
+      "geneva_application": "The local Word evidence and French output mechanics can be exercised with selected documents; Geneva mandate fit and governing-law judgments remain unqualified.",
+      "required_change": "Establish the actual governing law, party role, mandate and requested negotiation advice before professional use. Use the existing Swiss-context legal research workflow where needed; do not import Italian legal conclusions.",
+      "adaptation_layers": [
+        "mandate qualification",
+        "governing-law source research",
+        "host Word acceptance"
+      ],
+      "acceptance_example": "A selected tracked DOCX produces complete revision accounting and source-linked positions in French, with an earlier round retained. Applicable Swiss conclusions and host Word use require separate evidence.",
+      "sources": [
+        "plugins/vera/skills/posizioni-negoziali/SKILL.md",
+        "plugins/_shared/vendor/modules/deal_redux/workflow.md",
+        "plugins/lucia/scripts/legal_negotiation.py"
+      ],
+      "verification": "Local helper regression and packaged execution cover document mechanics; no Swiss legal validation, Geneva fiduciary case or live Word acceptance established.",
+      "implementation": "Shared local evidence helper and localized table; Geneva professional scope remains unresolved.",
+      "implementation_status": "existing_or_unresolved_as_assessed"
+    },
+    {
       "function_id": "presenza-digitale-studio",
       "name": "Firm website",
       "role": "function",
@@ -1243,7 +1266,7 @@
     "reviewed_at": "2026-09-29",
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation."
   },
-  "catalogue_fingerprint": "a278aa2a3a3796ec249cd961fef8db27ad8d4d2d5a29445488453eeec1770d37",
+  "catalogue_fingerprint": "2afbf3c84cb3859e98679751affcf02d7f886669e64f71f98a72d061bbd9f6dd",
   "esg_combined_binding_20260930": {
     "version": "0.1.286",
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE."

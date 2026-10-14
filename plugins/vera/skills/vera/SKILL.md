@@ -451,6 +451,11 @@ membership, packaged skill/entrypoint paths, managed-run artifacts and host
 qualification requirements. Do not infer suitability or current host support
 from a listed entrypoint. Semantic routing remains in the catalog and skills.
 
+For a tracked Word agreement to summarize into negotiating positions, select
+`posizioni-negoziali` and read `../posizioni-negoziali/SKILL.md`. The shared
+method retains every revision and comment, model-led grouping, blank responses
+by default and saved round comparisons; it does not accept or send changes.
+
 For an Italian tax-litigation assignment, select `contenzioso-tributario` and
 read `../contenzioso-tributario/SKILL.md`. It reuses a reviewed notice intake and
 owns the procedural work; canonical legal-tax research runs within that same

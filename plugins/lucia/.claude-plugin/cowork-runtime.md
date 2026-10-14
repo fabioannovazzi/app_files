@@ -53,6 +53,7 @@ whole request semantically and select the narrowest registered workflow:
 | A complete route from question to delivery | Read `../quesito-legale-fiscale/SKILL.md` completely and follow it. |
 | Revisione contratti on supplied documents | Read `../revisione-contratti/SKILL.md` completely and follow it. |
 | Confronto documenti on supplied documents | Read `../confronto-documenti/SKILL.md` completely and follow it. |
+| Negotiating positions from a tracked Word agreement | Read `../posizioni-negoziali/SKILL.md` completely, use its shared method and retain the complete revision/comment ledger and selected earlier round. |
 | Revisione documentale on supplied documents | Read `../revisione-documentale/SKILL.md` completely and follow it. |
 | Redazione da modello on supplied documents | Read `../redazione-da-modello/SKILL.md` completely and follow it. |
 | No registered workflow covers the request | Stop and say only that Lucia does not yet have a suitable workflow; do not answer the substance through a generic route. |

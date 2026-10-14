@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "business-valuation",
-  "course_sha256": "1c6f5c6fc78e4f929649ca3824b9bb4b83610412c24208c8252af82b0c0975e7",
-  "reviewer": "Codex /root - tax-litigation fix source compatibility review",
-  "reviewed_at": "2026-10-13T21:38:57.946661+00:00",
-  "review_scope": "Source compatibility review of unchanged authored lessons; fresh execution against each exact course digest remains required. Historical locale/editorial/artifact judgments retain their scope. No new learner, visual, installed-host or professional acceptance is claimed.",
+  "course_sha256": "03b3d858ab20307de3a30978b1e38e3c553a2ad830196fffe4af947595a6545b",
+  "reviewer": "Codex /root - Deal Redux source compatibility review",
+  "reviewed_at": "2026-10-14T08:00:57.880787+00:00",
+  "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
   "languages": {
     "it": {
       "verdict": "accepted",

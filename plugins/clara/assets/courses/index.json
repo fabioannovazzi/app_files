@@ -116,7 +116,7 @@
     },
     "business-planning": {
       "path": "business-planning/course.json",
-      "sha256": "4ef1feeac3eaed1188b098a1828967620d7316730b0e8d2e319b5847bc267f1e",
+      "sha256": "60ea1d04903abbc65672038df27e574198340545c4adbd3e4c0da1c991e6c356",
       "languages": [
         "it",
         "en"

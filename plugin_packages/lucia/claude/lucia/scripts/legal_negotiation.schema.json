@@ -1,0 +1,250 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "inventory_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "context": {
+      "type": "object"
+    },
+    "response_mode": {
+      "enum": [
+        "blank",
+        "user_requested"
+      ]
+    },
+    "response_request": {
+      "type": "string"
+    },
+    "original_inspected": {
+      "type": "boolean"
+    },
+    "visual_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "pending",
+            "complete"
+          ]
+        },
+        "evidence": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "evidence"
+      ]
+    },
+    "positions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "effect": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "grouping_reason": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "change_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "uniqueItems": true,
+            "minItems": 1
+          },
+          "citations": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "source_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "anchor": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "quote": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                }
+              },
+              "required": [
+                "source_id",
+                "anchor",
+                "quote"
+              ]
+            }
+          },
+          "response": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "effect",
+          "grouping_reason",
+          "change_ids",
+          "citations",
+          "response"
+        ]
+      }
+    },
+    "other_changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "change_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "required": [
+          "change_id",
+          "reason"
+        ]
+      }
+    },
+    "comment_reviews": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "comment_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "analysis": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "position_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "comment_id",
+          "analysis",
+          "position_ids"
+        ]
+      }
+    },
+    "round_comparison": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "previous_position_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "uniqueItems": true
+          },
+          "current_position_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "uniqueItems": true
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "analysis": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "required": [
+          "previous_position_ids",
+          "current_position_ids",
+          "status",
+          "analysis"
+        ]
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S"
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "inventory_sha256",
+    "context",
+    "response_mode",
+    "response_request",
+    "original_inspected",
+    "visual_review",
+    "positions",
+    "other_changes",
+    "comment_reviews",
+    "round_comparison",
+    "limitations"
+  ]
+}

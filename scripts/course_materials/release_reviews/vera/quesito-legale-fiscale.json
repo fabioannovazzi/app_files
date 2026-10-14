@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "quesito-legale-fiscale",
-  "course_sha256": "bfe20d9ea1b69b2721f68c93b727ff8189aae0b02de4e9c26a33de944c0f0bbb",
-  "reviewer": "Codex /root - tax-litigation fix source compatibility review",
-  "reviewed_at": "2026-10-13T23:20:54.144906+00:00",
-  "review_scope": "Source compatibility review of unchanged authored lessons; fresh execution against each exact course digest remains required. Historical locale/editorial/artifact judgments retain their scope. No new learner, visual, installed-host or professional acceptance is claimed.",
+  "course_sha256": "737afd1d057e8e57ef129e94b6a1253a01fba050886be9b37025e471fd52e1d3",
+  "reviewer": "Codex /root - Deal Redux source compatibility review",
+  "reviewed_at": "2026-10-14T08:00:57.864536+00:00",
+  "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
   "languages": {
     "it": {
       "verdict": "accepted",

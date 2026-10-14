@@ -1,0 +1,531 @@
+{
+  "privacy_records_refreshed": [
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/services/managed-python-runtime.json",
+      "sha256": "5ebee9e84bd652dc60e6a7c31c798b16d29057a13d882437094822f15789aded"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/services/operational-incidents.json",
+      "sha256": "23d27aabca51d42181775cd9661f4e7c842407bcfdd1afe3d69af7bf29f5ac37"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/services/run-receipt-stamping.json",
+      "sha256": "f65425f9493e99578bcce1afa5ff33682ed71a30b1d23cfef48a7303493e0095"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/adeguati-assetti.json",
+      "sha256": "c26ac48ef98deb1fee09874bfeb5c9b1ea61e1295044f82aa3869616e5b4a73c"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/aml-review.json",
+      "sha256": "92eaf42673eda8d4ef04979821136234da61cf453d3c9a3bc6b00b1bb747010f"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/archive-organization.json",
+      "sha256": "bb5dbbcfbc3cd590e18f40d5ebb12dd3e209cae877c51f2978190b2cf2554c69"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/bandi-agevolazioni.json",
+      "sha256": "964a8200fc7cd4cd7608f8210b0009f358f94682a68c094ece2f6400c1d085bf"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/business-planning.json",
+      "sha256": "c3217c8ec01aeb1900a85f908203e164e255219c169d98fd5b162e43e3d1c503"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/business-valuation.json",
+      "sha256": "9f5c610abef30afead7e1fee07786e56b217cd4c6c56ccfed131e88b9bbd9c32"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/centrale-rischi-review.json",
+      "sha256": "6d88e139a5b3b4c9fa98ff7a6e9c524aefe36a70e6c45415629b656de24322f6"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/check-entries.json",
+      "sha256": "3a178a3dd1042152b0d54b427d50350fc2aec2de722176f4bf1cbfbdd591e418"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/client-file-preparation.json",
+      "sha256": "9f02dea5d9bceb637a6795ac0cafff529544b069ba4a00de71383690610a3bd3"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/composizione-negoziata.json",
+      "sha256": "68a978a01f8b436d2f8209da5ecef6f4a77bd576e0c1304f300b2b3860c816ee"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/concordato-plan-review.json",
+      "sha256": "321e5066bc3a6b4ff0750c3fd637bb95884052a3fab4928b16cceec1585c3c0d"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/deep-research-validator.json",
+      "sha256": "8a286ab3258d1eb3efc974e4b92abf4f4833566b72d706d44e357b37d73e44e0"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/esg-reporting-assurance.json",
+      "sha256": "d45d4a5c50ed6526dcd33f11e72219d15c6438050ddfa2a2759042254784dadd"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/financial-analysis.json",
+      "sha256": "11bb8146e449ad199820f5405ea5ed30b69fa65b80e959a79bb38f4c4a69f74d"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/invoice-xml.json",
+      "sha256": "ee70f533aaea59121e9115c9ec4a9fc95d667f0ca179e4fe8afd2b61d33b7a9d"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/journal-bank-reconciliation.json",
+      "sha256": "86046893859d4dc01a05bcfdfead6564a06cc00bb11502afaf53d9f226ff1ba4"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/journal-sampling.json",
+      "sha256": "d4e458e4fb42287614f9f1f3653c35ad5d1546ad7c8046997ae3f57addd17897"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/lipe.json",
+      "sha256": "47f3fa43bd266bebfe4c761bf32a6003a20bac295386d82fbaf0d03221a51fc6"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/management-control-pack.json",
+      "sha256": "ae52dd9489a2f9c25203699e8e4d38b1b6a74f96a2984b055cdc7cd39c638ec5"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/new-client.json",
+      "sha256": "a795cf941ca6b2cdc35e12251dbd61e276a7477e5b1bbc36a5ba9248278d4e6e"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/open-item-reconciliation.json",
+      "sha256": "0b1cdb9f9f706eaf3e84387baf5861e780520c8c6ba8ef00c9426d1be2737c75"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/passive-invoice-audit.json",
+      "sha256": "e7763e5aee26927c00a2e945c8d769fd2c7cd0f7bfd33f51c6c3d2f4c13404b8"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/patent-box-review.json",
+      "sha256": "50afe110b687da98fcafc38e75c46838fe78c1a783ce23648a30c43a5ddbdde9"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/previdenza-inps.json",
+      "sha256": "517916cb4c22a8b4eab29328acce27d920511123579a84df880a1e4e35adc793"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/prompt-optimizer.json",
+      "sha256": "cb8fbc9d411798c99deb2441143b87f1758c8a7285c0d537fd6f2e267095881d"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/rating-legalita.json",
+      "sha256": "54f2e9d299a995ab25eac36cfcb155493aa5d1defa001da96d9e783801ad3767"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/registro-imprese-sari.json",
+      "sha256": "3a45a98f8c13f6158e4f72bd809d859eefa95ec741329396bd91a6ea9140fafc"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/report-builder.json",
+      "sha256": "bdce4b71cf3c470c0577cee30e80dddcee303cce1c955d7da88268da5eb79309"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/sales-plan.json",
+      "sha256": "d75adbe46c3d4c26ec61ec60aec2a4f5d829e7b9cabae4ce04328e46bd76ce9c"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/scissione-guidata.json",
+      "sha256": "e211b68f391bc631757addcb8d021c9a52b4ed8503976cc5b976b09ce2ebc35e"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/studio-archive.json",
+      "sha256": "3da80a40019d5e788aa9fb6418da2517b6d2218f7f9039df143b57fbe862e940"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/treasury-forecast.json",
+      "sha256": "4e15bf24ebd7ef255128183aca641e8aacb5f20ce2798d9ff10091d9d9c892c4"
+    },
+    {
+      "path": "plugin_packages/vera/claude/vera/privacy/workstreams/variance-analysis.json",
+      "sha256": "73d625b815823eb439854b5598cf7e7dab5dd011c47692b18269aff2b4acfcb1"
+    },
+    {
+      "path": "plugins/clara/privacy/hosted-services/plugin-update-check.json",
+      "sha256": "2e378fa907b3bfa1ef56a38bbe9bfc31d91a2c0e2d8336a38926219c120e4297"
+    },
+    {
+      "path": "plugins/clara/privacy/workflows/clara.json",
+      "sha256": "9c235e56360ea06efc82f5a5fe908db679c70bbc356cece598d8940205c4a37f"
+    },
+    {
+      "path": "plugins/clara/privacy/workflows/learn-with-clara.json",
+      "sha256": "d3122172b406d30d8f9098bf11cd4223e6e2fb2904fe0fa64817df9f4ed18546"
+    },
+    {
+      "path": "plugins/lucia/privacy/workstreams/apertura-pratica.json",
+      "sha256": "0295b74750d9766c1dd14d50c422f3c7c5b7aa880f141c3d0f37de83b573ec5a"
+    },
+    {
+      "path": "plugins/vera/privacy/services/datev-starter.json",
+      "sha256": "bf303f5e38a5a6b9cdc2cc8b3964d4f84d76739d3c74b8cd8d459b40412cc150"
+    },
+    {
+      "path": "plugins/vera/privacy/services/local-onboarding.json",
+      "sha256": "b12d954ec9aaf04e02ef4ba1227f67941fa681892cd76dcf7341e16a3b79db2e"
+    },
+    {
+      "path": "plugins/vera/privacy/services/managed-python-runtime.json",
+      "sha256": "6100286bcb73690bf428852658e2edb1c61e845f8bc03e4889810f50c287f448"
+    },
+    {
+      "path": "plugins/vera/privacy/services/operational-incidents.json",
+      "sha256": "5cf34f4b115563a145e360ec3ee0d3df243ebc5b48917d3708869542621b43ea"
+    },
+    {
+      "path": "plugins/vera/privacy/services/plugin-feedback.json",
+      "sha256": "63bd52527c964f56d62b0abc8a68f487e107800b35bd17a1c5e4c81d1d1bddf0"
+    },
+    {
+      "path": "plugins/vera/privacy/services/plugin-update-check.json",
+      "sha256": "a65cddaa3cb354b8777ed30e0a4cac73ae68f005bb66e726a8ae5afe24ab6005"
+    },
+    {
+      "path": "plugins/vera/privacy/services/run-receipt-stamping.json",
+      "sha256": "3eaf161de70848a71398fb9d62cc0f2009e97d02ebfe5c2acf514eb6e8ff17c8"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/adeguati-assetti.json",
+      "sha256": "3789158ea746937b656c0e05be8886c507e1d90a019c021aa32d88d86e793061"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/aml-review.json",
+      "sha256": "87dcb4b3216c29a77bc7deb6e7cb63ce9329cceb4282728469f757957127654d"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/archive-organization.json",
+      "sha256": "bd82159c4afa424f94916f766d27b2f2ef77f36b86989915b41b310e29c233b7"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/bandi-agevolazioni.json",
+      "sha256": "5ab69465759f18a7a34709a4767ae180bb5fcaeaa5bf071a8e018da29dca8ceb"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/business-planning.json",
+      "sha256": "6634355e72b789e9da10c32e217711601b388b8cf57981e4c9aee0632ad391a7"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/business-valuation.json",
+      "sha256": "fe14869bf3769f5a8c7ff01101896f44b32f048792646998e4570f793a8c398c"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/centrale-rischi-review.json",
+      "sha256": "c8b4f15677242104e68200706258938ca12f1f887558f08d294ef653866b51ad"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/check-entries.json",
+      "sha256": "ef7a3f1f3af629166c71dba9cae6a87a124382e0df0e79afb576e9a0f00b7f7d"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/client-file-preparation.json",
+      "sha256": "c4356c677a9a664970752638b6fd5f71ec31d285ae8cb62c2ac4fba32003ce6f"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/composizione-negoziata.json",
+      "sha256": "17f83a52f06c44ea1b91a57c8d7f9d8ba4c69a870ac7ef4a29234a3c942a84ba"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/concordato-plan-review.json",
+      "sha256": "963d72448086acf1eb93047a470284bcdd8c4b1fc531ecc3e1206634423533c7"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/deep-research-validator.json",
+      "sha256": "a025a05ed9954100feb7efe18094538f8a3008aa07f48c9c322f709002328e52"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/esg-reporting-assurance.json",
+      "sha256": "b88a4f1a5194854bdaadcd6a14deed4c8c1fb257286aed3a201a5f59f6e2533d"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/financial-analysis.json",
+      "sha256": "942c9b12c4a899a401391ac6c6c4bdb745de8eb42ec7221683da686b41764f81"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/invoice-xml.json",
+      "sha256": "72b474f22da593de47b696a3a9dce5e18363bc137bebc93271843bbb72b1f1a4"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/journal-bank-reconciliation.json",
+      "sha256": "7f9deb164b12ca2f4f0ddaa32da43788bfe2b883fdddad21f090dd0f79944ccd"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/journal-sampling.json",
+      "sha256": "607266efa13d02471f65c83fedc843e6e98ccb7e885f2e010a098f91ea56c76e"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/lipe.json",
+      "sha256": "612c35c9fce9b882f324c92ea468cb47036d12e285def789ddd7aa2fa1e2779d"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/management-control-pack.json",
+      "sha256": "87b80c5428cbe46b6df18992ce1689e0b7fadd2209a84b2da413b5ae09ad1552"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/new-client.json",
+      "sha256": "611582d0ffd2641be45b79d8df8ab8203b98f5ad22d0d983cd945c886a427aa2"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/open-item-reconciliation.json",
+      "sha256": "9e25cc37f98c011d0771817687981909cb1bdf83b91a40f141fece46627c35f6"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/passive-invoice-audit.json",
+      "sha256": "6d5c13e8d28891fef6da2252d5a82fd98248a40640f74dbfa386cc907eddb16b"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/patent-box-review.json",
+      "sha256": "8eda8e6206ec496859486d3e4a3924ebaa30d9be741e2f93da947359c3d596d4"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/previdenza-inps.json",
+      "sha256": "12d03106efeb0cace22cf16b4b1033415ac5d1e154aa57d7a9946737383e84ff"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/prompt-optimizer.json",
+      "sha256": "cdbafa5a3d43fd63529e456f11e4981e084da3b01c0cdb1b0492aec9101b55e3"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/rating-legalita.json",
+      "sha256": "8f5e1f48c5919162fe923d8b965222e5a6b9b1ca0ca177959828023a2f99c790"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/registro-imprese-sari.json",
+      "sha256": "5bbf4a77a132da3b5910201542992b404d33a14fc3b59d1b31f88f003fc43d5f"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/report-builder.json",
+      "sha256": "a7ee9712c8fe191ff97e97e73331bf80a121ab648f9c8f517d959c6fe7225026"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/sales-plan.json",
+      "sha256": "19059ccd559d0877d3f1b932201c0f0b8d5529f267ef35efada1837b23ee46d6"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/scissione-guidata.json",
+      "sha256": "a4823a26ca33f38706c1af290a5326942a40c19fe126730c2935a963e526c344"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/studio-archive.json",
+      "sha256": "6a2c1696186d3aa56c22937fde9475e9058fa85cfd8e69c36b2ae09e18a4a4af"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/treasury-forecast.json",
+      "sha256": "bfed39de709bd45bd332e2a44821979e64823c8d583281051cd1a437f50e55f2"
+    },
+    {
+      "path": "plugins/vera/privacy/workstreams/variance-analysis.json",
+      "sha256": "fafd46b9943128c89e8939e768b3a84357c59c42602e59a25a20eeef81bd8323"
+    }
+  ],
+  "unchanged_lessons_rebound": [
+    {
+      "path": "plugins/vera/assets/courses/previdenza-inps/course.json",
+      "sha256": "719e686a6a6307e099716f0e22a6c30dea197aff8cd2bc67db9bb56a150961b9"
+    },
+    {
+      "path": "plugins/vera/assets/courses/new-client/course.json",
+      "sha256": "d0c9a2c74d1a7aafbe47e266e5de38e466765ee2239bd59c4d2dd73689592cc1"
+    },
+    {
+      "path": "plugins/vera/assets/courses/aml-review/course.json",
+      "sha256": "ddaa2d80f5437221c38f95063acc3caa5e339bf22c053c865af38e13efa40dad"
+    },
+    {
+      "path": "plugins/vera/assets/courses/management-control-pack/course.json",
+      "sha256": "d8368675c89bc0dce78623d0b131dab41e5be8c77c8a19c938214278ff2e3859"
+    },
+    {
+      "path": "plugins/vera/assets/courses/financial-analysis/course.json",
+      "sha256": "8da84f0556848f59ef9c975856432f5939943951619e63ca39c4df45eb228ea8"
+    },
+    {
+      "path": "plugins/vera/assets/courses/financial-report-builder/course.json",
+      "sha256": "36eaf28d5963162b5f84e6389725fbb80d71dbfb8e2555aaca1c4f8dae636b8d"
+    },
+    {
+      "path": "plugins/vera/assets/courses/dati-fiscali-strutturati/course.json",
+      "sha256": "1270eec1c2485312198753208b125a7a9048d7d96b6b41c62d512bd7c440db52"
+    },
+    {
+      "path": "plugins/vera/assets/courses/treasury-forecast/course.json",
+      "sha256": "fb1c50491b4b2c17c611220faf69ca637fab3246e6649c17567ed1db9d000fe1"
+    },
+    {
+      "path": "plugins/vera/assets/courses/quesito-legale-fiscale/course.json",
+      "sha256": "737afd1d057e8e57ef129e94b6a1253a01fba050886be9b37025e471fd52e1d3"
+    },
+    {
+      "path": "plugins/vera/assets/courses/business-planning/course.json",
+      "sha256": "01afa21ce2ef2599e15af621dd0d0fe543e8aadb71d47d360d1b85bb776d7f7b"
+    },
+    {
+      "path": "plugins/vera/assets/courses/lipe/course.json",
+      "sha256": "e0888ee95dcfe621562c4a6833db08cf516ca7b6e82bb0341c1c7739473183ac"
+    },
+    {
+      "path": "plugins/vera/assets/courses/registro-imprese-sari/course.json",
+      "sha256": "2a30189672a70ffa1d719aeccda90c2012619d7737b1a712f5b9705a88d81fdf"
+    },
+    {
+      "path": "plugins/vera/assets/courses/comunicazione-professionale/course.json",
+      "sha256": "e5afd1b898fd79e7d1e00355afae635c75b13608ba1dab8e9ad27d053a4398dc"
+    },
+    {
+      "path": "plugins/vera/assets/courses/journal-sampling/course.json",
+      "sha256": "ec2a404e5b41a73fcfd5293a14aa913202b8d2ad85696e2ea8c1442d323cf114"
+    },
+    {
+      "path": "plugins/vera/assets/courses/studio-archive/course.json",
+      "sha256": "4dcdd2df546e823f74adfa3f7e48f4cc2df9a6a6399a074a125300f7dbe22ffa"
+    },
+    {
+      "path": "plugins/vera/assets/courses/sales-plan/course.json",
+      "sha256": "f311752d10ef2f4e09df9cbddfd268b229462c0d0bb4e51a52ee05a2829c5539"
+    },
+    {
+      "path": "plugins/vera/assets/courses/composizione-negoziata/course.json",
+      "sha256": "bbb1dd4cacdfda143db9ef8c64414c089dd262271270c68b15c69da0341f4124"
+    },
+    {
+      "path": "plugins/vera/assets/courses/archive-organization/course.json",
+      "sha256": "9528645d2dbdb39e17813a63017908d68748e8d22fab545c3f22595776087f94"
+    },
+    {
+      "path": "plugins/vera/assets/courses/presenza-digitale-studio/course.json",
+      "sha256": "43a4ad373c9069c8a702487ef5607fdf46d9ae884a4c4d2c18b887ffe729995c"
+    },
+    {
+      "path": "plugins/vera/assets/courses/trasformazione/course.json",
+      "sha256": "a55729682965b02ee5bf61b521ea39b28d4f911fc5ddc45ee0651904af36ac22"
+    },
+    {
+      "path": "plugins/vera/assets/courses/bilancio-oic/course.json",
+      "sha256": "efe8243a2ed5eaa9cc6c97cb4e97fef2a304afc8154738d8dc9914b81910bea7"
+    },
+    {
+      "path": "plugins/vera/assets/courses/fusione-guidata/course.json",
+      "sha256": "563b9f1c05b185d62ce3ad9d1c5821567709e38b882215a04259feab9a05f7c7"
+    },
+    {
+      "path": "plugins/vera/assets/courses/vouching/course.json",
+      "sha256": "49030e5ba2a9ea9d5319ad82cde4a8540c9a97a7129915c139c31aaf9bc70ba5"
+    },
+    {
+      "path": "plugins/vera/assets/courses/invoice-xml/course.json",
+      "sha256": "9024c8e6069239dea325239848345d02f270f555659504dd6f6dd78c9bff0db1"
+    },
+    {
+      "path": "plugins/vera/assets/courses/esg-reporting-assurance/course.json",
+      "sha256": "29831887b5b855732550a44dfc9dac97a1517e6a37dbb94ac6d430859508cee6"
+    },
+    {
+      "path": "plugins/vera/assets/courses/open-item-reconciliation/course.json",
+      "sha256": "c21f787b11389d5651fc50ea1e9c04b4156fdcc44bf2816a98dfbea608bc46ac"
+    },
+    {
+      "path": "plugins/vera/assets/courses/avviso-intake/course.json",
+      "sha256": "f44451944046eb9be0b93f90e094669b4c2ff2d01fddd0193a4e356128e2f706"
+    },
+    {
+      "path": "plugins/vera/assets/courses/organizzazione-lavoro/course.json",
+      "sha256": "95de4e661ed97e391ba1318b364fd1e2be3a26109bed4bdf19b637b32457138f"
+    },
+    {
+      "path": "plugins/vera/assets/courses/agenzia-acquisition/course.json",
+      "sha256": "185c4bb06efa33a6a680307a323e68a736757ead3eae94223eaa34d82d9b940d"
+    },
+    {
+      "path": "plugins/vera/assets/courses/business-valuation/course.json",
+      "sha256": "03b3d858ab20307de3a30978b1e38e3c553a2ad830196fffe4af947595a6545b"
+    },
+    {
+      "path": "plugins/vera/assets/courses/bandi-agevolazioni/course.json",
+      "sha256": "d1118c7d7afe0324e4b2e9bcce7264d7706aa087bc0b2e03fa2fe2f18492af05"
+    },
+    {
+      "path": "plugins/vera/assets/courses/patent-box-review/course.json",
+      "sha256": "30b0cbf52881cae89cf1ee8014aa26618d126e57c9fca8a64ed6cadf6ea3a80c"
+    },
+    {
+      "path": "plugins/vera/assets/courses/studio-document-format/course.json",
+      "sha256": "e743e87428e1d766262a4b295fdcb7f47d7e238a1f06792ff0c9a51a2d08cb13"
+    },
+    {
+      "path": "plugins/vera/assets/courses/centrale-rischi-review/course.json",
+      "sha256": "1c4d3cae2a15ff0d6fef0358339d05f20e963c48c873e63cfc212992cd93a656"
+    },
+    {
+      "path": "plugins/vera/assets/courses/fatture-xml-check/course.json",
+      "sha256": "460111abcfbf46607fce843793e8012705c1cb7f009b136e44204abbf0d3566a"
+    },
+    {
+      "path": "plugins/vera/assets/courses/adeguati-assetti/course.json",
+      "sha256": "14c5bf037536f383b0d64b9ffc1d2cd6c105cacab411eab1835fc388497303ab"
+    },
+    {
+      "path": "plugins/vera/assets/courses/purchase-invoice-review/course.json",
+      "sha256": "82bdbd4d07b33c9ab2c77660659b7280112395618d2e2f58fcc9cc983ea1fafe"
+    },
+    {
+      "path": "plugins/vera/assets/courses/journal-bank-reconciliation/course.json",
+      "sha256": "b0fed4a6ffcbcb82eacfd048551d0aacd4d6fe84a79b9267c9ed5bf4eeaecb7e"
+    },
+    {
+      "path": "plugins/vera/assets/courses/browser-automation/course.json",
+      "sha256": "bf127bcb4bd5ccdd5b1c666fcdaec7756aeef9e1734e0d2a7ac37c8a6819bb28"
+    },
+    {
+      "path": "plugins/vera/assets/courses/variance-analysis/course.json",
+      "sha256": "54d7cd32a313e6616ff87bd94932e7f3e57917f4b355489a5b3384c649944c60"
+    },
+    {
+      "path": "plugins/vera/assets/courses/scissione-guidata/course.json",
+      "sha256": "16f4ed0e7142a942edf3c0338114dfc379d0b323f20d56c47b9116a902d981e6"
+    },
+    {
+      "path": "plugins/vera/assets/courses/email-cliente/course.json",
+      "sha256": "00d61ec878e6fb0c6ec877608f237bdc791bebfefb348f010a41db0906564ff0"
+    },
+    {
+      "path": "plugins/vera/assets/courses/concordato-plan-review/course.json",
+      "sha256": "bdd5d7391d86bf42dd3c999acbd362b72a45beaaa1beb1d1c0f4eb0366158aa6"
+    },
+    {
+      "path": "plugins/lucia/assets/courses/quesito-legale-fiscale/course.json",
+      "sha256": "3a68cd83d2ad7aa89abbcd1d1a78e900d28d25dd587b623dd64e1a844087c04c"
+    },
+    {
+      "path": "plugins/lucia/assets/courses/comunicazione-professionale/course.json",
+      "sha256": "39915b53abdd84a0e6b2af7048aad1e54dc04b431e1c4aab16772d2306d35b9e"
+    },
+    {
+      "path": "plugins/lucia/assets/courses/presenza-digitale-studio/course.json",
+      "sha256": "b5ea86f192c46c0806adef71432c63513b0c5431d09b2f83c75af11575a32ab5"
+    },
+    {
+      "path": "plugins/lucia/assets/courses/apertura-pratica/course.json",
+      "sha256": "40438fd939ddb062a355469cc2d8b0f358a21f5e99f8d9c721e7856102d06bdc"
+    },
+    {
+      "path": "plugins/clara/assets/courses/business-planning/course.json",
+      "sha256": "60ea1d04903abbc65672038df27e574198340545c4adbd3e4c0da1c991e6c356"
+    }
+  ],
+  "scope": "No authored lesson, input, method or output contract changed. Fresh CI/native execution is required before merge. Shared Archive change only registers one direct workflow and reads its owning product version. New negotiation helper is local; substantive legal judgments retain product query pipeline; receipt payload remains the four existing fields.",
+  "source_review": {
+    "reviewed_at": "2026-10-14",
+    "reviewer": "Codex /root",
+    "base_commit": "c575f4cb033f6ecc7552e5d9472df17999619688",
+    "changes": "A single shared negotiation method, additive direct-workflow registration, canonical local Word inventory/render helper, routing and public help. Semantic grouping/effects remain authored by the host model; legal questions use the existing product research method. The helper does not make network or model calls. No Mike backend or Word add-in is installed.",
+    "model_material": "Selected original and proposed/deleted contract text, metadata, comments/anchors, firm instructions, chosen prior review, model grouping/effects and requested responses. Optional public research uses generic queries. Vera receipt transport retains the existing four-field allow-list; selected host model/Word processing follows its account.",
+    "qualification": "Unit and packaged synthetic executions and source binding checks; no live Word, real negotiation, Geneva legal qualification, learner or installed-host acceptance."
+  },
+  "baseline_public_tests": {
+    "record": "/private/tmp/deal-redux-baseline-public.xml",
+    "result": "9 failures and 20 passes reproduced using exported main public source before this feature; these broad historical architecture assertions are outside required CI and unchanged by this task. Feature-specific help and required website checks are verified separately."
+  }
+}

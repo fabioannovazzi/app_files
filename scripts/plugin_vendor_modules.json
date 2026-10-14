@@ -62,7 +62,8 @@
         "reporting_table.py",
         "courseware",
         "vera_journal_pdf",
-        "italian_tax_litigation"
+        "italian_tax_litigation",
+        "deal_redux"
       ],
       "overlays": [
         {
@@ -74,7 +75,10 @@
             "scripts/legal_documents_labels.json",
             "scripts/legal_matter.py",
             "scripts/legal_matter.schema.json",
-            "scripts/legal_matter_labels.json"
+            "scripts/legal_matter_labels.json",
+            "scripts/legal_negotiation.py",
+            "scripts/legal_negotiation.schema.json",
+            "scripts/legal_negotiation_labels.json"
           ]
         }
       ]
@@ -230,7 +234,8 @@
       "module_roots": [
         "desktop_teaching",
         "courseware",
-        "italian_tax_litigation"
+        "italian_tax_litigation",
+        "deal_redux"
       ]
     },
     "invoice-xml": {

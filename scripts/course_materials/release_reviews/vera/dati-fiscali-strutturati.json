@@ -2,10 +2,10 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "dati-fiscali-strutturati",
-  "course_sha256": "82bec7599f28427d82d609ea15d10be1c0379f6fa42ee6cc49e1798560a58608",
-  "reviewer": "Codex /root - tax-litigation fix source compatibility review",
-  "reviewed_at": "2026-10-13T21:38:57.946661+00:00",
-  "review_scope": "Source compatibility review of unchanged authored lessons; fresh execution against each exact course digest remains required. Historical locale/editorial/artifact judgments retain their scope. No new learner, visual, installed-host or professional acceptance is claimed.",
+  "course_sha256": "1270eec1c2485312198753208b125a7a9048d7d96b6b41c62d512bd7c440db52",
+  "reviewer": "Codex /root - Deal Redux source compatibility review",
+  "reviewed_at": "2026-10-14T08:00:57.863138+00:00",
+  "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
   "languages": {
     "it": {
       "verdict": "accepted",

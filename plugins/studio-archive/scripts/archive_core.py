@@ -3064,7 +3064,7 @@ def _workflow_version(workflow_id: str) -> str:
 
     components = Path(__file__).resolve().parents[2]
     component_root = components / workflow_id
-    if workflow_id == "contenzioso-tributario":
+    if workflow_id in {"contenzioso-tributario", "posizioni-negoziali"}:
         # This direct skill is released with Vera, not as a standalone component.
         component_root = (
             components.parent if components.name == "modules" else components / "vera"

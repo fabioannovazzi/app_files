@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/Users/fabio/Documents/GitHub/app_files/plugins/vera",
-  "version": "0.1.375",
-  "captured_at": "2026-10-13T23:20:54.718643+00:00",
-  "catalogue_fingerprint": "a278aa2a3a3796ec249cd961fef8db27ad8d4d2d5a29445488453eeec1770d37",
-  "manifest_sha256": "943a7c4d9a76c22cbb3ef22c73224d4b6b0073c045f91860730354ce9daaccec",
+  "version": "0.1.376",
+  "captured_at": "2026-10-14T08:08:08.624253+00:00",
+  "catalogue_fingerprint": "2afbf3c84cb3859e98679751affcf02d7f886669e64f71f98a72d061bbd9f6dd",
+  "manifest_sha256": "cff27057452fcdb7c60a1670612e68d7271c43290165445d08f213331eef83e4",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -192,6 +192,11 @@
       "sha256": "38ccb5ec008de71368ceda02b28fdd48261d313b2ef51ea0db5abb786a6ab1d6"
     },
     {
+      "function_id": "posizioni-negoziali",
+      "skill_path": "skills/posizioni-negoziali/SKILL.md",
+      "sha256": "5df624de8140874be3fec07e3eaa1c5be20263a6a680f11442e61c92eb697c22"
+    },
+    {
       "function_id": "presenza-digitale-studio",
       "skill_path": "skills/presenza-digitale-studio/SKILL.md",
       "sha256": "e7f17236ce72cf42a560e47d2430fc5d9acc04e4f2ad6c0ceb4a94fd3ba7d849"
@@ -264,7 +269,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "0b8b9a2084852d5ce64b0e55e6914784c235dd5ebf55ab49b01ad3ec5ca9256c"
+      "sha256": "a80015fbd2395f6ac65dbb5822f05cd09dcd2625b4b62959c9e9554257326b42"
     },
     {
       "function_id": "vouching",

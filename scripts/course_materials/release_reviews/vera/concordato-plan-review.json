@@ -2,9 +2,9 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "concordato-plan-review",
-  "course_sha256": "c1b7bd1dac1d939ecfcfee33efacbc8b0cceba962ec7ac5dba9eeedfb510aa10",
-  "reviewer": "Codex /root - tax-litigation fix source compatibility review",
-  "reviewed_at": "2026-10-13T21:38:57.946661+00:00",
+  "course_sha256": "bdd5d7391d86bf42dd3c999acbd362b72a45beaaa1beb1d1c0f4eb0366158aa6",
+  "reviewer": "Codex /root - Deal Redux source compatibility review",
+  "reviewed_at": "2026-10-14T08:00:57.891545+00:00",
   "languages": {
     "it": {
       "verdict": "accepted",
@@ -516,7 +516,7 @@
     "scope": "Lesson content unchanged from HEAD, MERGE_HEAD outside the source inventory. Reviewed additive workflow-ID registration and Studio Archive immutable snapshot functions. Prior editorial/artifact acceptance and professional limits retained; native CNC and valuation execution is verified separately.",
     "integrated_main": "8f662195f00bac3b605ac73077e1a0bd31d30253"
   },
-  "review_scope": "Source compatibility review of unchanged authored lessons; fresh execution against each exact course digest remains required. Historical locale/editorial/artifact judgments retain their scope. No new learner, visual, installed-host or professional acceptance is claimed.",
+  "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
   "patent_box_source_refresh_20260930": {
     "reviewer": "Codex /root - bounded source compatibility review",
     "reviewed_at": "2026-09-30T11:04:31.688736+00:00",
