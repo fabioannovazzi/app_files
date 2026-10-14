@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "6541c45fb47d43fd9e7c3f9ccf4dba821c8f54b59b07ed624907de3240ece855",
+  "catalogue_fingerprint": "82fe8dabdd6b1c037b8b26eb0d194316508a723fd91fc98768ddaf87de9d954c",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -1737,6 +1737,7 @@
       "legal-tax-answer-review",
       "quesito-legale-fiscale"
     ],
-    "scope": "Only model-selection and continuity requirements changed in the five legal/tax wrappers. Optional UI and Cowork chat use the same requirement. Existing Geneva legal applicability judgments, unresolved limitations and acceptance evidence are unchanged; no new Swiss-law qualification or installed-host acceptance is claimed."
+    "scope": "Only model-selection and continuity requirements changed in the five legal/tax wrappers. Optional UI and Cowork chat use the same requirement. Existing Geneva legal applicability judgments, unresolved limitations and acceptance evidence are unchanged; no new Swiss-law qualification or installed-host acceptance is claimed.",
+    "integration_baseline": "20d6681b3"
   }
 }

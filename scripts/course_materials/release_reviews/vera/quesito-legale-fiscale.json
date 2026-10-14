@@ -111,7 +111,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "16992e1253e3493232b17ee3d445262d2bbeda709b84743c64dd0fb3742ba886",
+  "course_sha256": "9534ef196697c659046499c336e5c0995c66bdfc55ee5488c1d9a36650cdbe7b",
   "encoding_preview_source_binding_review_20261013": {
     "reviewed_at": "2026-10-13T19:28:41.735928+00:00",
     "scope": "Reviewed the shared UI projection fix against unsupported-encoding, UTF-8 BOM and malformed-control regressions. Native source inventory changes only; authored lessons, multilingual inputs, deliverables and all prior professional-acceptance limits are preserved. Unsupported raw captures retain their bytes and hashes and display an explicit encoding limit. No new research method, law judgment, recipient or model API is introduced."
@@ -662,6 +662,7 @@
     "authored_content_unchanged": true,
     "scope": "Reviewed the new Vera-only strongest-available-model requirement, optional panel and identical Cowork chat/local-helper path. Shared instructions preserve the invoking product requirement. Model identity comparisons do not rank capabilities or attest provider execution. Local managed/standalone and CLI/MCP regressions cover confirmation, model/session changes and stale or foreign writes. Existing lesson content and historical artifact reviews are unchanged; fresh current-digest teaching regression is required. This source review does not claim live model, learner, professional or installed-host acceptance.",
     "integration_baseline": "20d6681b3",
-    "stdio_review": "The model helper now decodes its JSON pipe as UTF-8 and emits ASCII-escaped JSON. A real CLI regression reproduces the prior failure under PYTHONIOENCODING=ascii and verifies preservation of accented model names and selection evidence after the repair. Authored teaching content and legal judgments remain unchanged."
+    "stdio_review": "The model helper now decodes its JSON pipe as UTF-8 and emits ASCII-escaped JSON. A real CLI regression reproduces the prior failure under PYTHONIOENCODING=ascii and verifies preservation of accented model names and selection evidence after the repair. Authored teaching content and legal judgments remain unchanged.",
+    "subscription_integration": "Retained the subscription source reference, source-access policy, UI helpers and privacy classes from main. The model restriction concerns model-provider accounts; authorized source subscriptions retain their own access policy. Authored course content is unchanged."
   }
 }

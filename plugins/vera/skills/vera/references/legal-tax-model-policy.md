@@ -4,8 +4,9 @@ Use the most capable model available in the user's current host/account for
 preparation, research, drafting, validation, the opposing opinion when required,
 and final revision. This applies only to this pipeline, including directly
 invoked stages. Do not choose cheaper/faster models or weaker delegated agents.
-Keep the existing host, account, tools and case boundaries; no model API, new
-credentials or cross-provider transfer is introduced.
+Keep the existing host, model account, tools and case boundaries. Do not add a
+model API, request model-provider credentials or transfer work to another model
+account. Authorized research-subscription access follows its separate policy.
 
 ## Before substantive preparation
 
