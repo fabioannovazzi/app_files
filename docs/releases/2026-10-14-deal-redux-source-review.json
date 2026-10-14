@@ -182,11 +182,11 @@
     },
     {
       "path": "plugins/vera/privacy/services/plugin-update-check.json",
-      "sha256": "a65cddaa3cb354b8777ed30e0a4cac73ae68f005bb66e726a8ae5afe24ab6005"
+      "sha256": "b4fefc31fb5ea80ad2bf1b13e586969cfe8f7224b8d3b3ce898bce8d2a456b62"
     },
     {
       "path": "plugins/vera/privacy/services/run-receipt-stamping.json",
-      "sha256": "3eaf161de70848a71398fb9d62cc0f2009e97d02ebfe5c2acf514eb6e8ff17c8"
+      "sha256": "545a528ad9835b19c44c7994ae893c31df24ab573e39f95270a06a08a6099ce8"
     },
     {
       "path": "plugins/vera/privacy/workstreams/adeguati-assetti.json",
@@ -527,5 +527,12 @@
   "baseline_public_tests": {
     "record": "/private/tmp/deal-redux-baseline-public.xml",
     "result": "9 failures and 20 passes reproduced using exported main public source before this feature; these broad historical architecture assertions are outside required CI and unchanged by this task. Feature-specific help and required website checks are verified separately."
-  }
+  },
+  "release_versions": {
+    "vera": "0.1.377",
+    "lucia": "0.1.103",
+    "clara": "0.1.275",
+    "studio-archive": "0.1.47"
+  },
+  "version_reservation": "Raised Vera and Lucia above concurrent PR #815 source versions; no source or runtime behavior changed."
 }
