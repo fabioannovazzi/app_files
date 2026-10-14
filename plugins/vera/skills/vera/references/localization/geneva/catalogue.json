@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/Users/fabio/.codex/worktrees/vera-workflow-ui/app_files/plugins/vera",
-  "version": "0.1.381",
-  "captured_at": "2026-10-14T12:00:08.150985+00:00",
-  "catalogue_fingerprint": "443d14a7ce7433f570666b805e4665fe6926199342483b6108a731e3c562d9df",
-  "manifest_sha256": "ae59dcea4136a1cede29916f103c12e41d376af56fcac7b440bc56758d108b0f",
+  "version": "0.1.382",
+  "captured_at": "2026-10-14T12:57:11.529243+00:00",
+  "catalogue_fingerprint": "e0fb698d03c6076eb2ad8056cc07b5ba598e4df00d14def4714c6f747b0cb070",
+  "manifest_sha256": "d66d206f299525ef3c5c740cb37a2ae669a720348f8e838de4351ed0ff42a0dd",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -14,7 +14,7 @@
     {
       "function_id": "adversarial-opinion",
       "skill_path": "skills/adversarial-opinion/SKILL.md",
-      "sha256": "0cc2756479ba79211f72d0b148a6b441e0465b9970389d7753ec42f5140bf3af"
+      "sha256": "d717b399ab08f82d411b21d4186f259e19000a06afce6ca3ec78e73129b221f8"
     },
     {
       "function_id": "agenzia-acquisition",
@@ -99,7 +99,7 @@
     {
       "function_id": "deep-research",
       "skill_path": "skills/deep-research/SKILL.md",
-      "sha256": "35603f375f48d927e95f9a4a6656d924067996ec266f4f27023d86784f6e7567"
+      "sha256": "4d8ff32cbb5902b95e99bbab775fc504bfbbeabaa9288f3de49774402e2e2266"
     },
     {
       "function_id": "email-cliente",
@@ -154,12 +154,12 @@
     {
       "function_id": "legal-tax-answer-planner",
       "skill_path": "skills/legal-tax-answer-planner/SKILL.md",
-      "sha256": "ace3652204f88ea6957dac1e33e7c8024bfefe216860874236355738b831ef1c"
+      "sha256": "ea1807318cc6d65b11331277c167e03b91296e31558747464c9d4ca60e63dd77"
     },
     {
       "function_id": "legal-tax-answer-review",
       "skill_path": "skills/legal-tax-answer-review/SKILL.md",
-      "sha256": "19c8b2f6bd08dcbe1be58ff11490cfc6809c5898a9727c0d5c3fcda96138c32a"
+      "sha256": "0a2259bd4d3cc3cbbea9f159e9c8f77463f156d4c3a08901c91a290baa312e30"
     },
     {
       "function_id": "lipe",
@@ -219,7 +219,7 @@
     {
       "function_id": "quesito-legale-fiscale",
       "skill_path": "skills/quesito-legale-fiscale/SKILL.md",
-      "sha256": "3af4dde15a892c7260d06ada0781c58267544bc2125b5647c63289198822b354"
+      "sha256": "adb7955e7963140e5a434e94716fd297bc527b7c5bbeb83e531540e6799c0b89"
     },
     {
       "function_id": "rating-legalita",

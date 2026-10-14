@@ -128,6 +128,15 @@ def _source_records(product: str, workflow: str) -> list[dict[str, str]]:
         paths.add(root / "skills/vera/references/connected-studio-knowledge.md")
         if workflow == "quesito-legale-fiscale":
             paths.add(root / "skills/vera/references/research-subscriptions.md")
+            paths.add(root / "skills/vera/references/legal-tax-model-policy.md")
+            paths.update(
+                ROOT / "plugins/prompt-optimizer" / relative
+                for relative in (
+                    "scripts/model_policy.py",
+                    "scripts/model-policy.cjs",
+                    "assets/legal-tax-model.html",
+                )
+            )
     paths.update(
         path for path in skill.parent.rglob("*.md") if path.name != "cowork-runtime.md"
     )

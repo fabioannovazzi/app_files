@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Legal and tax research · Model</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#fff;color:#182d46;font:16px/1.5 "Instrument Sans",Arial,sans-serif}main{max-width:660px;margin:0 auto;padding:28px}h1{font-size:25px;line-height:1.2;margin:6px 0 12px;color:#002060}.eyebrow{color:#426a8a;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}p{margin:12px 0}dl{margin:24px 0;border-top:1px solid #dce4ec}dl>div{padding:14px 0;border-bottom:1px solid #dce4ec}dt{font-size:13px;color:#567087}dd{margin:4px 0 0;font-weight:600;overflow-wrap:anywhere}.note{color:#52687a;font-size:14px}.status{font-weight:600;color:#002060}label{display:flex;gap:12px;align-items:flex-start;margin:18px 0}input{margin-top:6px;accent-color:#002060}button{padding:11px 18px;background:#002060;color:white;border:0;border-radius:5px;font:inherit;cursor:pointer}button:disabled{opacity:.5;cursor:default}button:focus-visible,input:focus-visible{outline:3px solid #19a8d9;outline-offset:3px}[hidden]{display:none!important}#error{color:#a82b27;overflow-wrap:anywhere}details{font-size:14px;margin-top:22px}summary{cursor:pointer}#basis{white-space:pre-wrap;overflow-wrap:anywhere}@media(max-width:400px){main{padding:20px}h1{font-size:23px}}
+</style></head><body><main>
+<div class="eyebrow" id="eyebrow">Legal and tax research</div><h1 id="title">Model selection</h1>
+<p id="intro">Use the most capable model available in your host for every stage.</p>
+<dl><div><dt id="required-label">Required model</dt><dd id="required">—</dd></div><div><dt id="active-label">Active model</dt><dd id="active">—</dd></div></dl>
+<p class="status" id="status" role="status">Waiting for the model check…</p><p class="note" id="guidance"></p>
+<form id="confirmation" hidden><label><input type="checkbox" id="selected"><span id="selected-label"></span></label><button id="save" disabled>Confirm selection</button></form>
+<p class="note" id="boundary">This panel records your selection. It does not change the chat’s model.</p>
+<p id="error" role="alert"></p><details id="details" hidden><summary id="basis-label">Selection basis</summary><p id="basis"></p></details>
+</main><script id="host-bridge">
+"use strict";
+// Embedded in the legal/tax widgets; source and origin checks protect review writes.
+(() => {
+  const pending = new Map(), listeners = new Set();
+  let sequence = 0, initialized = false, origin = null, host = {};
+  const framed = Boolean(window.parent && window.parent !== window);
+  function request(method, params, timeout = 15000) {
+    return new Promise((resolve, reject) => {
+      const id = `review-ui-${++sequence}`;
+      const timer = setTimeout(() => {
+        pending.delete(id);
+        reject(new Error(`Review host did not respond to ${method}.`));
+      }, timeout);
+      pending.set(id, { resolve, reject, timer });
+      window.parent.postMessage({ jsonrpc: "2.0", id, method, params }, origin || "*");
+    });
+  }
+  window.addEventListener("message", (event) => {
+    if (!framed || event.source !== window.parent || (origin && event.origin !== origin)) return;
+    const message = event.data;
+    if (!message || message.jsonrpc !== "2.0") return;
+    const entry = pending.get(message.id);
+    if (entry) {
+      // Pin the actual parent after our initialization response, before any case data.
+      origin = event.origin;
+      clearTimeout(entry.timer);
+      pending.delete(message.id);
+      if (message.error) entry.reject(new Error(message.error.message || "Review host request failed."));
+      else entry.resolve(message.result);
+      return;
+    }
+    if (origin && message.method === "ui/notifications/tool-result") {
+      for (const listener of listeners) listener(message.params);
+    }
+  });
+  const ready = framed ? request("ui/initialize", {
+    protocolVersion: "2026-01-26",
+    appInfo: { name: "Mparanza legal and tax review", version: "1.0.0" },
+    appCapabilities: {},
+  }, 15000).then((result) => {
+    host = result || {};
+    initialized = true;
+    window.parent.postMessage({ jsonrpc: "2.0", method: "ui/notifications/initialized", params: {} }, origin);
+    window.dispatchEvent(new Event("mparanza:review-host-ready"));
+    return true;
+  }).catch(() => false) : Promise.resolve(false);
+  window.mparanzaReviewHost = {
+    canCallTools: () => initialized || typeof window.openai?.callTool === "function",
+    async callTool(name, args) {
+      if (await ready) return request("tools/call", { name, arguments: args });
+      if (typeof window.openai?.callTool === "function") return window.openai.callTool(name, args);
+      throw new Error("Review host is unavailable. Keep decisions pending or export them for fallback review.");
+    },
+    onToolResult: (listener) => listeners.add(listener),
+    async continueInChat(text) {
+      if (await ready && host.hostCapabilities?.message?.text) {
+        const result = await request("ui/message", { role: "user", content: [{ type: "text", text }] });
+        return !result?.isError;
+      }
+      return false;
+    },
+  };
+})();
+</script><script>
+"use strict";
+const COPY = {
+en:["Legal and tax research","Model selection","Use the most capable model available in your host for every stage.","Required model","Active model","Not detectable","Reported by the host","Confirmed by you","Research can continue.","Select the required model in your host’s model selector, then confirm here.","I have selected {model} in the host.","Confirm selection","This panel records your selection. It does not change the chat’s model.","Selection basis","Saving…","Selection saved. Continue in the chat.","The panel connection is unavailable. Confirm the selected model in chat instead."],
+it:["Ricerca legale e fiscale","Scelta del modello","Usa il modello più capace disponibile nel tuo ambiente per tutte le fasi.","Modello richiesto","Modello attivo","Non rilevabile","Segnalato dall’ambiente","Confermato da te","La ricerca può proseguire.","Seleziona il modello richiesto nel selettore dell’applicazione, poi conferma qui.","Ho selezionato {model} nell’applicazione.","Conferma la selezione","Questo pannello registra la selezione. Non cambia il modello della chat.","Motivo della scelta","Salvataggio…","Selezione salvata. Prosegui nella chat.","Il collegamento del pannello non è disponibile. Conferma il modello nella chat."],
+fr:["Recherche juridique et fiscale","Choix du modèle","Utilisez le modèle le plus performant disponible dans votre application à chaque étape.","Modèle requis","Modèle actif","Non détectable","Signalé par l’application","Confirmé par vous","La recherche peut continuer.","Sélectionnez le modèle requis dans votre application, puis confirmez ici.","J’ai sélectionné {model} dans l’application.","Confirmer la sélection","Ce panneau enregistre votre sélection. Il ne change pas le modèle de la conversation.","Motif du choix","Enregistrement…","Sélection enregistrée. Continuez dans la conversation.","Connexion au panneau indisponible. Confirmez le modèle dans la conversation."],
+de:["Rechtliche und steuerliche Recherche","Modellauswahl","Verwenden Sie in jeder Phase das leistungsfähigste verfügbare Modell Ihrer Anwendung.","Erforderliches Modell","Aktives Modell","Nicht erkennbar","Von der Anwendung gemeldet","Von Ihnen bestätigt","Die Recherche kann fortgesetzt werden.","Wählen Sie das erforderliche Modell in der Anwendung und bestätigen Sie es hier.","Ich habe {model} in der Anwendung ausgewählt.","Auswahl bestätigen","Dieses Fenster speichert Ihre Auswahl. Es ändert das Chatmodell nicht.","Grundlage der Auswahl","Wird gespeichert…","Auswahl gespeichert. Setzen Sie den Chat fort.","Die Verbindung ist nicht verfügbar. Bestätigen Sie das Modell im Chat."],
+es:["Investigación jurídica y fiscal","Selección del modelo","Utilice el modelo más capaz disponible en su aplicación en todas las fases.","Modelo requerido","Modelo activo","No detectable","Indicado por la aplicación","Confirmado por usted","La investigación puede continuar.","Seleccione el modelo requerido en la aplicación y confirme aquí.","He seleccionado {model} en la aplicación.","Confirmar selección","Este panel registra la selección. No cambia el modelo de la conversación.","Motivo de la selección","Guardando…","Selección guardada. Continúe en la conversación.","La conexión no está disponible. Confirme el modelo en la conversación."]
+};
+const el=id=>document.getElementById(id);let state=null,copy=COPY.en,busy=false;
+function unwrap(value){return value?.structuredContent || value?.toolOutput || value;}
+function render(value){const data=unwrap(value);if(!data?.record||!data?.sha256)return;state=data;const r=data.record;copy=COPY[r.language]||COPY.en;document.documentElement.lang=r.language||"en";
+for(const [id,i] of Object.entries({eyebrow:0,title:1,intro:2,"required-label":3,"active-label":4,boundary:12,"basis-label":13}))el(id).textContent=copy[i];
+el("required").textContent=r.preferred_model;el("active").textContent=r.active_model ? `${r.active_model} · ${copy[r.identity_basis==="host_reported"?6:7]}` : copy[5];
+el("status").textContent=data.can_continue?copy[8]:copy[9];el("guidance").textContent="";el("confirmation").hidden=data.can_continue;el("selected-label").textContent=copy[10].replace("{model}",r.preferred_model);el("save").textContent=copy[11];el("selected").checked=false;el("save").disabled=true;el("basis").textContent=r.selection_basis;el("details").hidden=false;el("error").textContent="";
+}
+el("selected").addEventListener("change",()=>{el("save").disabled=busy||!el("selected").checked;});
+el("confirmation").addEventListener("submit",async event=>{event.preventDefault();if(!state||busy||!el("selected").checked)return;busy=true;el("save").disabled=true;el("save").textContent=copy[14];el("error").textContent="";
+try{if(!window.mparanzaReviewHost?.canCallTools())throw new Error(copy[16]);const result=await window.mparanzaReviewHost.callTool("confirm_legal_tax_model",{token:state.token,expected_sha256:state.sha256,confirmed_model:state.record.preferred_model,confirmation_source:"plugin_ui",confirmation_reference:el("selected-label").textContent});if(result.isError)throw new Error(result.content?.[0]?.text||"Save failed");render(result);el("status").textContent=copy[15];await window.mparanzaReviewHost.continueInChat("The legal/tax model selection was explicitly confirmed and saved. Reload the model check for the current run and continue the requested work. This is user confirmation, not a host model change.").catch(()=>false);}
+catch(error){el("error").textContent=error.message;el("save").textContent=copy[11];}finally{busy=false;el("save").disabled=!el("selected").checked;}});
+window.mparanzaReviewHost?.onToolResult(render);
+window.addEventListener("openai:set_globals",event=>render(event.detail?.globals?.toolOutput||event.detail?.globals?.toolResponseMetadata));
+render(window.openai?.toolOutput||window.openai?.toolResponseMetadata);
+</script></body></html>

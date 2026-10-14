@@ -873,8 +873,13 @@ def test_non_plotting_review_resources_declare_local_widget_metadata(
         )
     }
     resources = responses[1]["result"]["resources"]
-    assert len(resources) == 1
-    resource = resources[0]
+    review_resources = [
+        resource
+        for resource in resources
+        if resource["name"].endswith("_review_widget")
+    ]
+    assert len(review_resources) == 1
+    resource = review_resources[0]
     uri = resource["uri"]
     assert uri.startswith("ui://widget/")
     assert uri.endswith(".html")
