@@ -52,15 +52,15 @@
       "sha256": "9eb774ace8ea92e47f485094a34714e454ec6d4fe7d6f7f8bad8dba4d4b5120f"
     },
     {
-      "path": "modules/esg-reporting-assurance/skills/esg-reporting-assurance/SKILL.md",
-      "sha256": "825c1638c7c6b9fc2356f64c65fe52b8a0b4e83579e94f51c2800e37423bc769"
+      "path": "modules/esg-reporting-assurance/skills/mparanza-esg-reporting-assurance/SKILL.md",
+      "sha256": "f9efc5500d14ee8395690c34b672e6a34b0926e34643a17d7ed177e834f25f77"
     },
     {
-      "path": "skills/esg-reporting-assurance/SKILL.md",
-      "sha256": "adaa6e536270e162888e2f75d1f7ce888100be773f8735e51775cec7d35acca6"
+      "path": "skills/mparanza-esg-reporting-assurance/SKILL.md",
+      "sha256": "c98350e829b4f1f8e196dbe367359bc3e2984b4f429bbebf4132ed482fac4d09"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

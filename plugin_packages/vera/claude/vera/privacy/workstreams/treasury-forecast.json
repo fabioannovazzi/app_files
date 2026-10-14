@@ -32,7 +32,7 @@
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
-    "skills/vera/references/connected-studio-knowledge.md",
+    "skills/mparanza-vera/references/connected-studio-knowledge.md",
     "scripts/native_treasury_preparation.py",
     "scripts/native_treasury_bridge.py",
     "scripts/native_workspace.py",
@@ -78,7 +78,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "eaeaf094c01892e49f0e801817a65d8ff526aac544e83ff0ef73e990760f6c4e"
+    "source_fingerprint": "4e9ee1f6eddb2705c655489306244cb7c5167e3a40d11a1d649e6b06e2b815cb"
   },
   "role": "workflow",
   "runtime_profiles": [

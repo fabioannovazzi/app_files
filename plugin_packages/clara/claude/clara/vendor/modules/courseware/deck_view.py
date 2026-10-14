@@ -81,7 +81,7 @@ def deck_files(
     expected = sorted(
         [
             runtime.fixed_16_9_deck_js().strip(),
-            (plugin_root / "skills/html-deck/assets/deck-engine/deck.js")
+            (plugin_root / "skills/mparanza-html-deck/assets/deck-engine/deck.js")
             .read_text()
             .strip(),
         ]

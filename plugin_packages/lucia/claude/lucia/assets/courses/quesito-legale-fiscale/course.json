@@ -97,7 +97,7 @@
     },
     {
       "path": "modules/deep-research-validator/skills/mparanza-deep-research/SKILL.md",
-      "sha256": "eb715b54b97748cc0a4407f24ad5b6379321eeb39383d4ce739261791950a30d"
+      "sha256": "dd1da6ee2deeed91b8b117e7ecf4e85879d6631d8f5579f55a54c1bfc5ce4d0b"
     },
     {
       "path": "modules/deep-research-validator/skills/mparanza-deep-research/references/evaluation.md",
@@ -108,19 +108,19 @@
       "sha256": "d2ea840a053771a338e0b6adc5d771f3672114e3d459aadb60222ef1d56b8135"
     },
     {
-      "path": "modules/deep-research-validator/skills/legal-tax-answer-review/SKILL.md",
-      "sha256": "c3fdc7a7f482b92a8bd0010db11e9e7e889db55b45ea7177a950a369a6a2de85"
+      "path": "modules/deep-research-validator/skills/mparanza-legal-tax-answer-review/SKILL.md",
+      "sha256": "3944b54df7b14f92471a6fef3f3e52d36392618e750a40f170aaf6183ea06468"
     },
     {
-      "path": "modules/deep-research-validator/skills/legal-tax-answer-review/references/adversarial-scope.md",
-      "sha256": "7e7c399e9dd80f01a0ef0c8243a563ba6c07a585e2d45d5e0e7fa4399c405db5"
+      "path": "modules/deep-research-validator/skills/mparanza-legal-tax-answer-review/references/adversarial-scope.md",
+      "sha256": "debea75fd15158b42f2f413e4df52182e88270790dc8621333494be59597fd63"
     },
     {
-      "path": "modules/deep-research-validator/skills/legal-tax-answer-review/references/answer-journey.md",
-      "sha256": "e11c8805137ceb9638d7c8b6ec7e10bd4d31a888ce9413525c7a3e499d8cb50e"
+      "path": "modules/deep-research-validator/skills/mparanza-legal-tax-answer-review/references/answer-journey.md",
+      "sha256": "bf6283f867eddce95b5fdfe391be4ad7f2f69a86e784820284fd959f64a69a2a"
     },
     {
-      "path": "modules/deep-research-validator/skills/legal-tax-answer-review/references/research-choice.md",
+      "path": "modules/deep-research-validator/skills/mparanza-legal-tax-answer-review/references/research-choice.md",
       "sha256": "591b5cf7d690e810a9b837214e47b12b54f91cccee6f228774a5e9caaae8662f"
     },
     {
@@ -164,8 +164,8 @@
       "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
     },
     {
-      "path": "skills/quesito-legale-fiscale/SKILL.md",
-      "sha256": "649af9923243795714bafc56538dbb816713799ab46d38aedf307eaa4fa52b46"
+      "path": "skills/mparanza-quesito-legale-fiscale/SKILL.md",
+      "sha256": "788c7085cb5ac19dda5fdf2dc1826165d4064daf4ab78849e24f224a6af06564"
     },
     {
       "path": "vendor/modules/deal_redux/references/evidence-and-rounds.md",

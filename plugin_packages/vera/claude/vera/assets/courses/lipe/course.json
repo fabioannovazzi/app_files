@@ -208,15 +208,15 @@
       "sha256": "a9ea8bf56d122f25741210199f667717103e27ec2c5b584701efb453b5fc1b48"
     },
     {
-      "path": "modules/lipe/skills/lipe/SKILL.md",
-      "sha256": "e7f0d1ea478045830034d69042cebe44e1a961d883f555608a55b313334056ad"
+      "path": "modules/lipe/skills/mparanza-lipe/SKILL.md",
+      "sha256": "109adc1233534ee59ae66072b0fb4d27a77fbf4219e803d7a2b77df6d63bb375"
     },
     {
-      "path": "skills/lipe/SKILL.md",
-      "sha256": "5dfa0e41274d77523abd12266b4debaa75e5c88af175407dd51af638643f7605"
+      "path": "skills/mparanza-lipe/SKILL.md",
+      "sha256": "e7019ac3a8e564f65b4b6478c306524cf0bc6469aa32220f9902a72e995df98b"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

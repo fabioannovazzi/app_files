@@ -63,7 +63,7 @@
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
-    "skills/vera/references/connected-studio-knowledge.md",
+    "skills/mparanza-vera/references/connected-studio-knowledge.md",
     "scripts/native_patent_box.py",
     "scripts/native_patent_box_bridge.py",
     "scripts/native_patent_box_authoring.py",
@@ -73,7 +73,7 @@
     "ui/patent-box-authoring.js",
     "ui/workspace.js",
     "scripts/native_archive_closure.py",
-    "skills/patent-box-review/SKILL.md"
+    "skills/mparanza-patent-box-review/SKILL.md"
   ],
   "model_context": {
     "policy": "real_case_data_may_enter_selected_runtime_model_context",
@@ -119,7 +119,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "768e0dfd2b7856298c68c917f8d2202170734fed72438e94c31c5875aa28b8d8"
+    "source_fingerprint": "58eece6df5918269f7be2a877b4b61edf54c8ba01e9e1fddc1df91f960ccef28"
   },
   "role": "workflow",
   "runtime_profiles": [

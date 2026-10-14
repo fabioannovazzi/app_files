@@ -354,7 +354,7 @@ def page(
             "fields": grant["mandate"]["fields"],
             "sources": sources,
             "intake_path": str(current["output"] / grant["intake_ref"]),
-            "public_skill_path": str(root / "skills/management-control-pack/SKILL.md"),
+            "public_skill_path": str(root / "skills/mparanza-management-control-pack/SKILL.md"),
             "costing_method_path": str(root / "references/costing.md"),
             "actual_model_reads_verified": False,
             "boundary": "Read the complete public specialist method and only explicitly granted original sources. Reporting inspection samples are not the complete population; suggested recipe roles remain unapproved. Focused costing has no ledger requirement. Author the entire ordinary recipe/costing payload and open-items note. Keep a new reporting mapping_review exactly not_reviewed with empty reviewer/time; retain prior actual case/reviews separately. Do not invent amounts, classifications, drivers, accounting completeness, review, identity or actual-reading claims. Stage proposal={case:whole_public_payload,note:open_items}. Named complete-case readback, registration into a new same-engagement run, calculation and commentary/report review are separate. No provider worker is launched; record actual model exposure in the ordinary run-level report.",

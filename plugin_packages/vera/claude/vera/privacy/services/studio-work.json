@@ -5,7 +5,7 @@
   "governed_paths": [
     "scripts/studio_work.py",
     "mcp/studio-work.cjs",
-    "skills/organizzazione-lavoro/SKILL.md",
+    "skills/mparanza-organizzazione-lavoro/SKILL.md",
     "scripts/studio_work_runtime.py",
     "scripts/native_studio_work.py",
     "mcp/studio-work-panel.cjs",
@@ -72,6 +72,6 @@
     "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "2ae673e5671449c80c242d9b9f9d19bce39d805f2ac4766cb8a04ab2a23fe62e"
+    "source_fingerprint": "9d7073199cfbe50a45e18f5f5c2e05dbfea4c991d57a829640c8ccfcd009e719"
   }
 }

@@ -80,11 +80,11 @@
       "sha256": "6d84ccf1844b6fce6395655e04c9b3b70df67ebff6e253ad94f2e09d144e0581"
     },
     {
-      "path": "modules/composizione-negoziata/skills/composizione-negoziata/SKILL.md",
-      "sha256": "ec9b2bb739ccc4b76df536dc61f9ffd2365e47e22599962445266a16e34d2111"
+      "path": "modules/composizione-negoziata/skills/mparanza-composizione-negoziata/SKILL.md",
+      "sha256": "1465e3bf9839e2481908ff66bcf420f3926e6b45a028c134e40e9d1ab5152455"
     },
     {
-      "path": "modules/composizione-negoziata/skills/composizione-negoziata/agents/openai.yaml",
+      "path": "modules/composizione-negoziata/skills/mparanza-composizione-negoziata/agents/openai.yaml",
       "sha256": "15a2bc5644f4dfe718150e02a0bfad2c5c9d3819211167bca097985f74c30834"
     },
     {
@@ -93,7 +93,7 @@
     },
     {
       "path": "scripts/native_cnc.py",
-      "sha256": "ade9ea24db353e255ff4ea96205906ef4f4819e3e664bbaa7d3428f5ce847dca"
+      "sha256": "ff6d195c3d114173bbbb7d78d2fd9ec48a5f4279c1f41786fa8a4aed44f245c1"
     },
     {
       "path": "scripts/native_cnc_authenticated.py",
@@ -112,11 +112,11 @@
       "sha256": "1d9e454021ee54853f12ddc51fbc7c75f2661556e4c325ccb12b760c1920ad31"
     },
     {
-      "path": "skills/composizione-negoziata/SKILL.md",
-      "sha256": "f4720fa6a27b3261c622ba092c2767aea3d32c9a182aa032f6e5ca8eecc4519c"
+      "path": "skills/mparanza-composizione-negoziata/SKILL.md",
+      "sha256": "0e1cedc7aa9ab19b605f971bcae9e16ffa4e9d3cddcbbaa82a2456c6e1ba446b"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

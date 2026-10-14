@@ -3,7 +3,7 @@
   "service_id": "cnc-authenticated-review",
   "display_name": "Authenticated CNC review decisions",
   "governed_paths": [
-    "skills/composizione-negoziata/SKILL.md"
+    "skills/mparanza-composizione-negoziata/SKILL.md"
   ],
   "runtime_profiles": [
     "anthropic-cowork"
@@ -36,7 +36,7 @@
       "id": "explicit-professional-review",
       "control": "The routed CNC skill requires the user to choose the hosted route, then the professional personally reviews the exact draft. Ordinary drafting continues without the service.",
       "implemented_by": [
-        "skills/composizione-negoziata/SKILL.md"
+        "skills/mparanza-composizione-negoziata/SKILL.md"
       ],
       "on_violation": "Do not transmit review metadata or claim authenticated approval."
     }
@@ -45,6 +45,6 @@
     "reviewed_at": "2026-09-30",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "d4cb9ccb6517c1855a31f9512b9d229f277e6df2b61bbdbe9d8d6645e5b3afc0"
+    "source_fingerprint": "d08ec3f67de3137a1d47425d7370591cb2190a4c73b9f9f74cbf80e472892ac4"
   }
 }

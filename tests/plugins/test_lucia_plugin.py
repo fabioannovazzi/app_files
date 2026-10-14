@@ -542,8 +542,8 @@ def test_lucia_cowork_release_is_installable_and_reuses_vera_assurance() -> None
         assert "giudizio professionale restano all’avvocato" in cowork_description
         assert manifest["skills"] == "./skills/"
         assert set(components["plugins"]) == PUBLIC_WORKFLOWS | {"studio-archive"}
-        assert "skills/lucia/SKILL.md" in lucia_names
-        assert "skills/quesito-legale-fiscale/SKILL.md" in lucia_names
+        assert "skills/mparanza-lucia/SKILL.md" in lucia_names
+        assert "skills/mparanza-quesito-legale-fiscale/SKILL.md" in lucia_names
         assert not any(name.startswith(".codex-plugin/") for name in lucia_names)
         assert any(name.startswith("modules/studio-archive/") for name in lucia_names)
 
@@ -565,11 +565,12 @@ def test_lucia_cowork_release_is_installable_and_reuses_vera_assurance() -> None
         for workflow in LAWYER_PROFILED_WORKFLOWS:
             assert any(name.startswith(f"modules/{workflow}/") for name in lucia_names)
             assert (
-                f"skills/{workflow}/references/lucia-lawyer-profile.md" in lucia_names
+                f"skills/mparanza-{workflow}/references/lucia-lawyer-profile.md"
+                in lucia_names
             )
 
         assert any(name.startswith("modules/apertura-pratica/") for name in lucia_names)
-        assert "skills/apertura-pratica/SKILL.md" in lucia_names
+        assert "skills/mparanza-apertura-pratica/SKILL.md" in lucia_names
 
     assert LUCIA_PUBLIC_COWORK_ZIP.read_bytes() == LUCIA_CLAUDE_ZIP.read_bytes()
 

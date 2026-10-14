@@ -31,6 +31,23 @@ Include generated distributions in the release PR. Merge and deploy only after
 all checks pass. `make release-products` and `make check-product-releases` are
 aliases for these commands.
 
+Every custom skill in a Claude package uses the owned `mparanza-` prefix. The
+builder applies it to future skills automatically, including shared component
+instructions, and updates their folders, explicit links and bundled runtime
+paths. Canonical Codex skill names, component IDs and course workflow IDs stay
+unchanged. Public invocations also retain the host's product namespace, for
+example `/vera:mparanza-journal-sampling`.
+
+Before replacing a download, the builder reads the finished candidate ZIP and
+rejects unprefixed names, invalid or provider-reserved words, name/folder
+mismatches, duplicate members and broken explicit owned-skill links. The same
+validation runs on both built and public archives during `--check` in CI. Course
+hashes, privacy fingerprints and Vera's execution index bind the renamed bytes;
+canonical localization provenance and passive course input data retain their
+original identities. These checks enforce our naming contract and currently
+documented Anthropic restrictions; they do not guarantee acceptance under a
+future provider policy or prove an organization's successful upload.
+
 This aligns release artifacts. It does not claim that an installed copy updated
 itself or that a Marketplace submission is published. Keep the public update
 notice tied to confirmed Marketplace publication. Native agent acceptance, when

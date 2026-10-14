@@ -265,9 +265,9 @@ def dispatch(
             **bridge(root, {"operation": "context", "output": str(current["folder"])}),
             "public_skill": {
                 "authorized_path": str(
-                    root / "skills/management-control-pack/SKILL.md"
+                    root / "skills/mparanza-management-control-pack/SKILL.md"
                 ),
-                "sha256": file_hash(root / "skills/management-control-pack/SKILL.md"),
+                "sha256": file_hash(root / "skills/mparanza-management-control-pack/SKILL.md"),
             },
             "evidence_status": "untrusted_exact_generated_management_context",
         }

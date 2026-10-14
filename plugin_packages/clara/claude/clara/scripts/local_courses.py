@@ -28,7 +28,8 @@ def _run() -> int:
     prepare.add_argument("--output-dir", type=Path, required=True)
     args = parser.parse_args()
     eligible = {
-        path.parent.name for path in (PLUGIN_ROOT / "skills").glob("*/SKILL.md")
+        path.parent.name.removeprefix("mparanza-")
+        for path in (PLUGIN_ROOT / "skills").glob("*/SKILL.md")
     }
     library = CourseLibrary(PLUGIN_ROOT, eligible)
     if args.command == "list":

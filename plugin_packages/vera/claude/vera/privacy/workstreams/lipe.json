@@ -47,8 +47,8 @@
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
-    "skills/lipe/SKILL.md",
-    "skills/vera/references/connected-studio-knowledge.md",
+    "skills/mparanza-lipe/SKILL.md",
+    "skills/mparanza-vera/references/connected-studio-knowledge.md",
     "modules/patent-box-review/patent_box/__init__.py",
     "modules/patent-box-review/patent_box/contracts.py",
     "modules/patent-box-review/patent_box/formalities.py",
@@ -82,7 +82,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "abeaed4c46fe9368b62701d9f19bce82a55d3befe265c875534f37cbb261245d"
+    "source_fingerprint": "6f2e48d28ba4baa46f4ab82e6c8782962bb4326d2e23b9358539e8bd8b95d9f9"
   },
   "role": "workflow",
   "runtime_profiles": [

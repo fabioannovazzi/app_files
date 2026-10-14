@@ -33,7 +33,7 @@
     "modules/journal-bank-reconciliation/scripts/semantic_review.py",
     "agents/passive-invoice-reviewer.md",
     "references/passive-invoice-cowork.md",
-    "skills/vera/references/connected-studio-knowledge.md",
+    "skills/mparanza-vera/references/connected-studio-knowledge.md",
     "scripts/native_passive_audit.py",
     "scripts/native_passive_audit_bridge.py",
     "scripts/native_passive_service.py",
@@ -107,7 +107,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "1ccd9c5d7c2457443af67a07d1832efb8f0318e4fe2506997dbac8c47b72ff00"
+    "source_fingerprint": "6a50835c9e0662941c8c238709a8908ed1d8447bca852c54b7ccf364d414940a"
   },
   "role": "workflow",
   "runtime_profiles": [

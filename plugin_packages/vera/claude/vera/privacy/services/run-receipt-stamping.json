@@ -29,16 +29,16 @@
   "governed_paths": [
     "scripts/model_data_report.py",
     "scripts/notarized_run_receipt.py",
-    "skills/vera/SKILL.md",
-    "skills/vera/references/model-data-report-contract.md",
-    "skills/contenzioso-tributario",
-    "skills/posizioni-negoziali"
+    "skills/mparanza-vera/SKILL.md",
+    "skills/mparanza-vera/references/model-data-report-contract.md",
+    "skills/mparanza-contenzioso-tributario",
+    "skills/mparanza-posizioni-negoziali"
   ],
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "cd540c51bfdfcc61a9d0bfc38ee3ab3766e6299f6927f64a570bc0eb585eb43b"
+    "source_fingerprint": "9b47344cba1c07a4ce08ca1dd71eacd8a0b75ed168914279b95fe60345b7f2af"
   },
   "runtime_profiles": [
     "anthropic-cowork"

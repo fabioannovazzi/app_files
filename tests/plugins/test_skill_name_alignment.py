@@ -38,7 +38,8 @@ def test_installed_skill_identity_matches_approved_name(
     }
     filename, prefix = archives[host]
     old_path = f"{prefix}skills/{retired}/SKILL.md"
-    new_path = f"{prefix}skills/{skill}/SKILL.md"
+    installed_name = f"mparanza-{skill}" if host == "cowork" else skill
+    new_path = f"{prefix}skills/{installed_name}/SKILL.md"
 
     with ZipFile(ROOT / "plugin_packages" / product / filename) as archive:
         assert old_path not in archive.namelist()
@@ -48,7 +49,7 @@ def test_installed_skill_identity_matches_approved_name(
             return
         text = archive.read(new_path).decode("utf-8")
 
-    assert f"\nname: {skill}\n" in text
+    assert f"\nname: {installed_name}\n" in text
     assert not (ROOT / "plugins" / product / "skills" / retired).exists()
 
 
@@ -67,8 +68,11 @@ def test_packaged_opposing_opinion_scope_reference_resolves(
         "cowork": (f"{product}-claude-plugin.zip", ""),
     }
     filename, prefix = archives[host]
+    installed_name = (
+        "mparanza-adversarial-opinion" if host == "cowork" else "adversarial-opinion"
+    )
     skill_path = (
-        f"{prefix}modules/deep-research-validator/skills/adversarial-opinion/SKILL.md"
+        f"{prefix}modules/deep-research-validator/skills/{installed_name}/SKILL.md"
     )
     with ZipFile(ROOT / "plugin_packages" / product / filename) as archive:
         instruction = archive.read(skill_path).decode("utf-8")

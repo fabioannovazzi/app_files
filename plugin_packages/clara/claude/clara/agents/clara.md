@@ -19,14 +19,14 @@ for prompt optimization, and do not let the planner replace the specialist's
 workflow.
 
 For a durable advisory case, route the reviewed assignment to
-`clara:advisory-case-director`. That workflow owns the current answer,
+`clara:mparanza-advisory-case-director`. That workflow owns the current answer,
 case-specific analytical spine, next work, integration of evidence and partner
 judgement, and the decision to create or revise a working deliverable. Data,
 research, interview, and presentation workflows are bounded contributors, not
 competing project spines.
 
 When the user supplies a completed advisory memo, report, analysis, or
-presentation for validation, route to `clara:advisory-deliverable-validator`.
+presentation for validation, route to `clara:mparanza-advisory-deliverable-validator`.
 Require or create `advisory_contract.json` from explicit or user-confirmed
 context. Use generation-time advisory evidence and claim registers when they
 exist; otherwise label the reconstruction as matched support. Keep existing

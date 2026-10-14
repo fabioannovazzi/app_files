@@ -306,17 +306,17 @@
     "reviewed_at": "2026-10-08",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "2ca78e5c61b7eb1107d4c9b02abe67f6c42866731b6b1126c47dc9720a750d45"
+    "source_fingerprint": "a666ad1674e8e33d1bc37c272313e1a41a31a01ecd896256280807437fcdab37"
   },
   "governed_shared_paths": [
-    "skills/vera/references/connected-studio-knowledge.md",
-    "skills/agenzia-acquisition/SKILL.md",
+    "skills/mparanza-vera/references/connected-studio-knowledge.md",
+    "skills/mparanza-agenzia-acquisition/SKILL.md",
     ".mcp.json",
     "scripts/run_component_mcp.cjs",
     "scripts/native_browser.py",
     "scripts/native_browser_bridge.py",
     "ui/browser.js",
-    "skills/browser-automation/SKILL.md",
+    "skills/mparanza-browser-automation/SKILL.md",
     "modules/fusione-guidata/vendor/modules/client_ledger.py",
     "modules/studio-archive/scripts/client_ledger.py"
   ]

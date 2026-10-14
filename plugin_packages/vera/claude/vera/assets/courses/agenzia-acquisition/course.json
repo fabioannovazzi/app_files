@@ -149,7 +149,7 @@
     },
     {
       "path": "modules/browser-automation/scripts/check_installation.py",
-      "sha256": "450f70ae92956302113c7b0bd29e448c50a2dced649ac464ecd2bdfc0bc744a9"
+      "sha256": "afb3811e14eb61b533d2faa39665d37152d71d400285c06ce3de3c0074b8a20d"
     },
     {
       "path": "modules/browser-automation/scripts/development_request.py",
@@ -196,15 +196,15 @@
       "sha256": "25d266b4e1162b6df2e0e9e0e6f91fe63355d5f205d872f7002b018246ecf0da"
     },
     {
-      "path": "modules/browser-automation/skills/agenzia-acquisition/SKILL.md",
-      "sha256": "62fa6b68a420a2b5dea2f43d2bc37eb1d5f056fe938ccbac65c0152ab8626fb9"
+      "path": "modules/browser-automation/skills/mparanza-agenzia-acquisition/SKILL.md",
+      "sha256": "b0a72bec263459f49e5aa72ad6474391dc56519a93cf3dbd1204ff6ec177b7e6"
     },
     {
-      "path": "skills/agenzia-acquisition/SKILL.md",
-      "sha256": "dd2cd0947858691a1b97fcf2dc32b58ad7975abe1222d3bcce5d4b000b3e3b87"
+      "path": "skills/mparanza-agenzia-acquisition/SKILL.md",
+      "sha256": "ad73a4b61c8a34237006fdb4ba19262a8e2ccd0b4140b6ce3394bf9d850ebf62"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

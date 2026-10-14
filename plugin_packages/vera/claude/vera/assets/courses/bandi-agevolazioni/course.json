@@ -132,47 +132,47 @@
       "sha256": "2c8b5489e1d6c01cf06483782eb0e8f24bffe0caff332bb072348242d603e97b"
     },
     {
-      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/SKILL.md",
-      "sha256": "529ea86def8e5770bd0a1046b0d60c37e550c27c33a87cb660cb6736efc1ccf2"
+      "path": "modules/bandi-agevolazioni/skills/mparanza-bandi-agevolazioni/SKILL.md",
+      "sha256": "f7fecf7a502030ee83177a7b074929dba52b299e8dbbbc649cbbc86414ac5921"
     },
     {
-      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/agents/openai.yaml",
+      "path": "modules/bandi-agevolazioni/skills/mparanza-bandi-agevolazioni/agents/openai.yaml",
       "sha256": "8c6e48f9f0391adad001d0c6fb0a712de15195c585810e54db7238198026a532"
     },
     {
-      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/acceptance-matrix.md",
+      "path": "modules/bandi-agevolazioni/skills/mparanza-bandi-agevolazioni/references/acceptance-matrix.md",
       "sha256": "80735f99f9a14500117cb7d60df5c4e1d6763557acb672a6708f148d3894937e"
     },
     {
-      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/geneva.md",
+      "path": "modules/bandi-agevolazioni/skills/mparanza-bandi-agevolazioni/references/geneva.md",
       "sha256": "64cbc9e7768c83d3f56d24a2774beb348f28d44b7a923c8bbe7ac6bc17b6ad02"
     },
     {
-      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/implementation-status.md",
+      "path": "modules/bandi-agevolazioni/skills/mparanza-bandi-agevolazioni/references/implementation-status.md",
       "sha256": "ef8b3abfdcca7d129be551f609d0cafe2bee1a9f5025848d316375f62685d229"
     },
     {
-      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/institutional-discovery.md",
+      "path": "modules/bandi-agevolazioni/skills/mparanza-bandi-agevolazioni/references/institutional-discovery.md",
       "sha256": "2ec6a9c164304e4967bf07ef60d5258aaf8797eeb4a4841fe6bf32c7b9224dff"
     },
     {
-      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/opportunity-radar.md",
+      "path": "modules/bandi-agevolazioni/skills/mparanza-bandi-agevolazioni/references/opportunity-radar.md",
       "sha256": "53058f5a23a32954cc4e2483537fe6cb31621d13324861cb6e9c6ccbb9a5c723"
     },
     {
-      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/portal-preparation.md",
+      "path": "modules/bandi-agevolazioni/skills/mparanza-bandi-agevolazioni/references/portal-preparation.md",
       "sha256": "5c0fedaa7e2eb81e96449a0e0be31b3bba3167b290cc7d4df3c65c294531cec0"
     },
     {
-      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/product-thesis.md",
+      "path": "modules/bandi-agevolazioni/skills/mparanza-bandi-agevolazioni/references/product-thesis.md",
       "sha256": "eb32e201d4b73bcf58a8ab3263d78b2dbc516d580050f99a51a482cf27ccca8a"
     },
     {
-      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/source-first-discovery.md",
+      "path": "modules/bandi-agevolazioni/skills/mparanza-bandi-agevolazioni/references/source-first-discovery.md",
       "sha256": "82b3b7cbe978d638a5020ad33d3bac493cad89485ce61856285a76bb795e9d21"
     },
     {
-      "path": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/workflow-method.md",
+      "path": "modules/bandi-agevolazioni/skills/mparanza-bandi-agevolazioni/references/workflow-method.md",
       "sha256": "5e07f71b6475540996a7d4d263b0c7de05caaa7bb165e56f160f4278723a0d21"
     },
     {
@@ -216,11 +216,11 @@
       "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
     },
     {
-      "path": "skills/bandi-agevolazioni/SKILL.md",
-      "sha256": "f4bebe1b573f9eeac7988656166be019e7e0f8d7ed8f5fb4ced7d02930e3d013"
+      "path": "skills/mparanza-bandi-agevolazioni/SKILL.md",
+      "sha256": "4dcfbcb4dcca80de8909648862f53fb030b29464a5c9d14b6a7fef6be0e99ed1"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

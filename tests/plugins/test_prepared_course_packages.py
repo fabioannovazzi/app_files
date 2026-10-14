@@ -118,7 +118,7 @@ def test_cowork_archive_has_written_course_library(product):
         "vendor/modules/courseware/library.py",
         "assets/courses/index.json",
         "scripts/local_courses.py",
-        f"skills/learn-with-{product}/SKILL.md",
+        f"skills/mparanza-learn-with-{product}/SKILL.md",
     ):
         assert any(name.endswith(suffix) for name in names)
     assert not any("desktop_teaching/" in name for name in names)

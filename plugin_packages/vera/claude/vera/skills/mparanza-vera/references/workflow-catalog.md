@@ -1,0 +1,365 @@
+> **Cowork execution note:** The normal deliverable is a reviewable draft,
+artifact card, and source/review files in the connected folder. MCP tools,
+browser interfaces, and local review servers are optional. Their absence never
+blocks delivery. Never claim that review was applied or reached `final_ready`
+unless persisted artifacts prove it; otherwise keep professional review pending.
+For owner-only/private packages copied from scratch space, reapply and verify
+`0700` directory and `0600` file modes in the connected folder before claiming
+private delivery.
+Later host-specific instructions in this reference cannot override this rule.
+
+# Vera workflow catalog
+
+Read this catalog before routing professional work. The user describes the
+task; Vera selects the workflow. Use semantic judgment, then read the selected
+skill completely. Do not select from keywords or use a cross-cutting assurance
+skill to imitate a missing operational workflow.
+
+## Development preview
+
+- `mparanza-patent-box-review`: prepares selected evidence, reviewed ledger mappings and
+component controls for software, patents and designs, then exports draft A/B
+Word/PDF documents. Real calculation requires reviewed current sources and
+certificate-authenticated authorization under a firm-issued mandate. It verifies
+existing signatures and timestamps; it does not sign or file documents. All
+professional UAT and production acceptance boundaries remain explicit. Read
+`../../mparanza-patent-box-review/SKILL.md`. Its prepared course uses fictional ordinary
+software evidence and a separate missing-link exercise. Synthetic execution does
+not establish professional acceptance.
+
+## Merger workpapers
+
+- `mparanza-fusione-guidata`: prepares reviewed P1 domestic OIC incorporation workpapers for
+independent or directly wholly owned companies: verified Studio Archive imports,
+valuation bridges, exact shareholder allocations, accounting bridges, event
+calendars and versioned review dossiers. Its two complete synthetic cases are
+available through `demo-p1`. Its prepared course uses fictional independent and
+directly wholly owned cases, with professional review and changed-input practice. Later
+branches, signatures and filings remain unsupported. Use the specialist skill.
+
+## Studio organisation
+
+- `mparanza-organizzazione-lavoro`: studio appointments, activities, deadlines, waiting
+  items, delegations, source-based meeting actions and daily planning. Persistent
+  local register in Claude/Cowork, with actual host calendar connections and
+  read-back verification. Accepts typed or host-transcribed voice instructions.
+  No unattended inbox listener; recurring briefings require separately configured
+  host automation. Without local tools, only bounded preparation is supported.
+  Read `../../mparanza-organizzazione-lavoro/SKILL.md`.
+
+## Optional research sources
+
+`research-subscriptions` connects, checks or disconnects an existing Eutekne or
+One FISCALE subscription. Read `../../mparanza-research-subscriptions/SKILL.md`.
+This optional source setting supplies evidence to the existing legal/tax
+journey; it is not an operational lesson or a separate research method.
+Ordinary work requires no paid database or connection setup.
+
+## Professional workflows
+
+- `mparanza-posizioni-negoziali`: source-linked negotiating positions from a selected
+  tracked Word agreement; model-led grouping, complete revision/comment ledger,
+  blank responses unless requested and retained round comparisons. Read
+  `../../mparanza-posizioni-negoziali/SKILL.md`. No authored teaching kit is included.
+
+- `mparanza-organizzazione-lavoro`: studio appointments, activities, deadlines, waiting
+  items, delegations, source-based meeting actions and daily planning. Persistent
+  local register in Claude/Cowork, with actual host calendar connections and
+  read-back verification. Accepts typed or host-transcribed voice instructions.
+  No unattended inbox listener; recurring briefings require separately configured
+  host automation. Without local tools, only bounded preparation is supported.
+  Read `../../mparanza-organizzazione-lavoro/SKILL.md`.
+
+- `mparanza-lipe`: **LIPE** reconciles Italian VAT registers with source evidence and
+  prepares reviewed VP drafts. Preserve code confirmations, distinct VAT periods,
+  opening balances and payment differences. Pilot for ordinary 2024–2026 cases;
+  unsigned XML export requires fresh signed approval and mandate verification.
+  Signing, transmission and accounting-software acceptance remain external.
+  Use the LIPE specialist and state its unsupported-case boundaries.
+
+- `mparanza-rating-legalita`: prepare an Italian AGCM initial-application dossier, even
+  from no documents; distinguish declarations, verified evidence, obstacles,
+  optional premiums and conditional improvements. Preserve T0, link every
+  conclusion to sources, and stop at professional review. Renewal, monitoring
+  and WebRating submission are outside this initial-application implementation.
+
+- `mparanza-esg-reporting-assurance`: organize the first ESG evidence and decision
+  foundation inside an existing client engagement; bind CSV cells or text lines,
+  retain versions and decisions, flag stale dependencies and export partial drafts.
+  It does not yet produce complete ESG reports, ESRS/taxonomy assessments or
+  assurance opinions. Use the dedicated skill and state those limits. Its prepared
+  lesson uses fictional CSV evidence, a same-engagement update and a separate
+  practice case; prior decisions and drafts remain visible when outdated.
+
+
+- `mparanza-invoice-xml`: prepare ordinary FPR12 invoice XML from supplied PDFs, photos
+  or confirmed structured data; combine source views, retain field evidence,
+  surface missing or uncertain facts, review domestic or foreign TD17/18/19
+  treatment, and export only the exact professionally reviewed draft after
+  schema and local arithmetic checks. No signing, issuance or SdI submission.
+
+- `mparanza-adeguati-assetti`: assess an Italian company's organizational, administrative
+  and accounting arrangements using proportionate review of responsibilities,
+  processes and actual reporting/operating evidence; prepare findings, improvement
+  actions and subsequent reviews. When construction is requested, use the same
+  engagement for attributed interviews, qualified evidence, reasoned professional
+  overrides, control design, versioned manuals/registers, separate adoption and
+  sampled operating review. The numerical method is experimental; a manual does
+  not prove operation. A management report alone is not an assetti
+  assessment; general legal questions remain in quesito-legale-fiscale.
+
+- `mparanza-aml-review`: review Italian client AML evidence at onboarding or later review,
+  reconstruct ownership and economic explanations, investigate inconsistencies,
+  compare prior assessments and record professional decisions. New Client owns
+  whole-client onboarding; this workflow owns substantive AML analysis.
+
+- `mparanza-archive-organization`: screen one registered local or Google Drive client folder, use semantic
+  judgment to propose studio-policy categories and destinations, detect exact
+  duplicates by hash and probable duplicates by reviewed model judgment,
+  collect persistent collaborator decisions, and only then apply explicit
+  no-overwrite local or Drive moves with a journal and rollback; Drive mode
+  preserves file IDs, links, permissions, and history while changing parent
+  and name.
+- `mparanza-open-item-reconciliation`: start from a population reported as open at a
+  cut-off and test each item against ledgers, statements, payments, factoring,
+  advances, compensation, and other accounting evidence to determine which
+  items are closed, partly closed, or still open; produce reviewable
+  workpapers. Do not use it for a direct statement-to-journal match when no
+  open-item population is being tested.
+- `mparanza-bandi-agevolazioni`: discover and monitor source-backed Italian grant,
+  subsidy, tax-credit, or subsidized-finance opportunities through a reviewed
+  priority-source registry, a professionally reviewed query-scoped source
+  selection for every territory and category, and explicit temporal scans of
+  institutional sources before complementary semantic web search; match them to
+  opaque client profiles and prepare a traceable application dossier after
+  selection, without contacting clients, authenticating or signing. After project
+  approval and a request to compile, prepare the approved portal draft using
+  available host browser tools. Submit only after explicit approval of the exact
+  final application under the workflow's portal-preparation contract;
+  declarations, signatures and payment remain with the user.
+- `mparanza-contenzioso-tributario`: prepare or resume Italian tax litigation for an
+  authorized commercialista, with a procedural guide shared with Lucia,
+  source-verified steps/deadlines, evidence, Word drafts and saved progress.
+  Reuse a reviewed notice intake; preparation does not prove service or filing.
+  Select this for a litigation assignment and run canonical research within it;
+  a standalone tax question remains `quesito-legale-fiscale`.
+  Professional use is available; no authored/reviewed prepared tutorial exists.
+- `mparanza-avviso-intake`: prepare first-intake analysis for Italian notices, avvisi,
+  cartelle, HMRC letters, or Swiss cantonal tax letters.
+- `mparanza-bilancio-oic`: understand accounting evidence and prepare, update,
+  reconcile, review, validate, or export an individual Italian OIC civil-law
+  annual financial statement; XBRL is an output, not the workflow identity.
+- `mparanza-agenzia-acquisition`: acquire Agenzia invoices, corrispettivi and quarterly stamp-duty evidence for selected delegated clients; review exceptions, resume verified originals and prepare an explicitly reviewed F24 working paper. Uses one local visible-Chrome worker with optional native panel; no payment or fiscal submission.
+- `mparanza-browser-automation`: inspect, explain or edit a supplied sanitized developer pack or capability JSON, and run packaged local evidence/capability pipelines through the managed Python launcher. Live browser discovery, execution and replay validation are unavailable in this package. Do not operate authenticated websites or claim that local pipeline checks prove live validation.
+- `mparanza-vouching`: compare a qualified Journal Sampling population with
+  FatturaPA XML or supporting PDFs using exact evidence bindings.
+- `mparanza-concordato-plan-review`: review an Italian concordato preventivo across the
+  procedure, proposal, plan, attestation, creditors, treatment, liquidity,
+  evidence consistency, and open issues.
+- `mparanza-composizione-negoziata`: guide an Italian CNC case as company advisor or
+  independent expert, with separate role guidance, evidence gaps, existing Vera
+  analyses, drafts, case revisions and dependency impact. Local review records
+  do not authenticate professional identity or authorize filing.
+- `mparanza-studio-document-format`: teach a studio's reusable Word report format from
+  exact selected examples and preferences; inspect formatting, review generated
+  short/long previews, explicitly adopt a private versioned standard, and reuse
+  or revise it in supported financial reports. Includes a prepared course with
+  fictional inputs and distinct practice. Studio-wide setup shares the authorized
+  communications workspace; it is not a client run or model fine-tuning.
+
+- `mparanza-comunicazione-professionale`: decide whether a current tax, legal,
+  regulatory, accounting, or professional development is worth communicating;
+  learn only from exact prior studio communications selected by the
+  professional, with local mechanical stripping of explicit identifiers, then
+  one isolated model-led pass that creates complete pseudonymized derivatives
+  and a second derivative-only privacy review before generation. Only
+  generation receives the accepted derivatives; claim, editorial, and visual
+  review use smaller packets without prior communications. Transient stripped
+  inputs are deleted while originals and the local identity map remain with the
+  Studio. These mechanics are the same in Claude and Cowork. Then prepare a
+  source-backed, studio-formatted client email, circular, LinkedIn post,
+  newsletter, website article, FAQ, client alert, or graphical explainer for
+  professional review and optional publication. `no_publish` is a successful
+  editorial outcome. This studio-wide workflow embeds the validated-answer
+  journey through its own `answer_contract` and separate `claim_assurance`
+  artifacts; do not duplicate it with client-bound assurance runs.
+- `mparanza-financial-analysis`: prepare controlled historical accounting analysis and
+  fixed financial due-diligence calculations.
+- `mparanza-management-control-pack`: turn reviewed connectorless accounting exports
+  into one recurring management pack with every supported monthly P&L, Budget,
+  aging, cash, concentration, and profitability section plus a bounded
+  model-led interpretation layer; missing optional data remains visible and
+  the workflow does not require or simulate an ERP connector.
+  For a focused costing question, the same workflow supports reviewed Direct,
+  Direct Evoluto, Full and ABC methods by job, product or customer, plus
+  incremental-order, make-or-buy and discontinuation comparisons. This path
+  uses its own reviewed source totals and does not require the full ledger pack.
+- `mparanza-centrale-rischi-review`: normalize an official native-text Italian Centrale
+  Rischi PDF or analyse a reviewed CSV or Excel export; classify exposures
+  through professional-confirmed maturity and risk-category mappings;
+  calculate guarantees, non-suffering overruns, concentration, available
+  resources and source-supported KPIs; keep guarantors of the holder,
+  guarantees received, ceded debtors, other risk information, summary totals,
+  inframonthly events and information requests separate; quarantine ambiguous
+  merged grids instead of turning them into client facts; and keep missing
+  financial-statement ratios and prejudicial evidence explicitly unavailable.
+  Portal acquisition remains an optional upstream adapter rather than part of
+  the calculation contract.
+- `mparanza-journal-bank-reconciliation`: start from bank-statement movements and match
+  them directly with journal or ledger entries using reviewed mappings and
+  matching evidence. The presence of a bank statement does not by itself make
+  an open-item request a bank-reconciliation request; route by the population
+  being tested.
+- `mparanza-purchase-invoice-review`: screen passive FatturaPA XML populations against
+  actual booked ledger movements, apply deterministic arithmetic and matching
+  checks, then use the workflow's configured native semantic worker on compact
+  matched-invoice packets to produce an exception-focused professional workpaper.
+  Read the selected skill for the host's worker and qualification requirements;
+  a screening result is not professional approval or an audit opinion.
+- `mparanza-journal-sampling`: qualify and normalize journal entries and generate
+  reproducible audit samples with diagnostics.
+- `mparanza-new-client`: prepare a source-bound client setup covering files, identity,
+  engagement, privacy, AML, missing evidence, and monitoring.
+- `mparanza-previdenza-inps`: review an Italian INPS social-security case from supplied
+  documents, official exports, and permitted read-only evidence.
+- `mparanza-presenza-digitale-studio`: assess and refresh an existing informational
+  website for a commercialista or professional studio, or create the studio's
+  first website from verified materials and conservative proposed defaults;
+  produce a working responsive implementation, unlisted review preview and
+  approval-bound release package without inventing professional claims or
+  autonomously publishing.
+- `mparanza-quesito-legale-fiscale`: answer a substantive legal, tax, or compliance
+  question, or prepare source-backed professional drafting, through one
+  question-to-reviewed-answer journey. It orchestrates prompt preparation,
+  Vera's bundled `skills/mparanza-deep-research/SKILL.md` using the current session
+  model and research tools, continuous validation and adversarial challenge,
+  persistent issues and targeted follow-up, then distinct final answer review.
+  Both products resolve the same method without a normal/deep selector.
+  Final findings reopen the research loop. Concrete opinions include the
+  separately required adversarial opinion and comparison,
+  without asking the user to select those internal stages. It does
+  not substitute for an operational return, declaration, filing, or form.
+  Its internal research stage is registered at `../../mparanza-deep-research/SKILL.md`;
+  it uses the same accepted question and final-review journey, not a separate
+  professional assignment.
+
+- `mparanza-registro-imprese-sari`: prepare Registro Imprese, REA, Comunicazione Unica,
+  or DIRE work from official guidance without filing or signing.
+- `mparanza-financial-report-builder`: map financial Excel, CSV, or text-PDF evidence into
+  reviewable Markdown, DOCX, or JSON reports.
+- `mparanza-sales-plan`: create a forward-looking sales Plan from reviewed Actuals and
+  confirmed commercial or FX assumptions.
+- `mparanza-treasury-forecast`: prepare and maintain a dated cash forecast from the documented
+  bank, outstanding-item, planned-flow, allocation and adjustment tables. Review
+  expected dates, preserve applicable decisions, compare successive accepted
+  forecasts and produce Excel/HTML workpapers. Required missing data stops this
+  workflow; optional supplied XML is invoice evidence, not payment proof. No
+  business-planning dependency or automatic Agenzia download.
+- `mparanza-business-valuation`: prepare source-backed PMI valuation workpapers using selected
+  DCF, income, NAV, mixed, multiples and APV methods; reuse the same-engagement
+  business plan, retain calculations and review decisions, and export reports
+  and a formula workbook. Does not sign or certify PIV/legal-purpose conformity.
+- `mparanza-business-planning`: prepare one business plan for a startup, new venture or
+  established company. Assess customers, market, operations, economics, cash,
+  options, recommendation and next actions using one case, financial model and
+  report. Vera and Clara expose this exact same function. The business question
+  determines scope; the entry product never changes the angle or required work.
+- `mparanza-variance-analysis`: compare Actual, Budget, Forecast, or prior-period
+  accounting performance; reconcile source totals; calculate amount-only or
+  price-volume-mix variances when the data contract supports them; and produce
+  reviewable waterfall, bridge, small-multiple, and drilldown plots without
+  assigning semantic causes or materiality automatically.
+- `mparanza-studio-archive`: create or resume a durable client engagement; use its
+  authorized local-document, Google Drive or Shared Drive, Gmail, or
+  capability-gated WhatsApp evidence routes without mixing clients.
+
+## Synthetic development prototypes
+
+- `mparanza-trasformazione`: prepare a synthetic Italian company-transformation case,
+  import evidence, propose findings, check exact arithmetic, record explicit
+  simulated/user review and export a versioned dossier. Changed evidence reopens
+  dependent approvals. This increment does not accept real client mandates,
+  qualify legal/tax effects, compute statutory deadlines or perform external
+  actions. It has no Studio Archive adapter. Select only for an explicitly
+  requested synthetic prototype or demonstration.
+
+## Subordinate intake workflows
+
+These skills support `new-client` and related intake work. Select them directly
+only when the request is specifically limited to their bounded output.
+
+- `mparanza-dati-fiscali-strutturati`: extract or review structured fiscal fields from
+  readable Italian, Geneva, Zurich, or UK customer documents.
+- `mparanza-email-cliente`: draft an operational client email requesting missing
+  documents or clarifications identified during intake.
+- `mparanza-fatture-xml-check`: inspect Italian FatturaPA XML metadata and identify
+  malformed XML, date issues, or duplicate candidates.
+
+## Cross-cutting answer assurance
+
+- `mparanza-legal-tax-answer-planner`: create the answer contract, current-source posture, and
+  generation instructions for an accepted legal, tax, or compliance question.
+- `mparanza-legal-tax-answer-review`: validate the generated or supplied answer against
+  that contract, sources, reasoning, and professional-judgment boundary.
+
+- `mparanza-adversarial-opinion`: in `quesito-legale-fiscale`, apply
+  the shared `adversarial-scope.md` resolved by that workflow. Informational research
+  ends after validation. An opinion on a concrete position or an explicit
+  request includes the opposing examination, subject to user instructions.
+  When required, develop, review and compare the strongest evidence-bound
+  opposing case regardless of the original validation outcome, using the
+  current model.
+
+Use the planner and validator automatically for accepted source-backed question and
+drafting work through `quesito-legale-fiscale` or another registered workflow.
+They are sequential internal stages, not the specialist workflow the user must
+select. They do not establish the completeness or correctness of an
+operational return, declaration, filing, or other unsupported professional
+artifact. The studio-wide `comunicazione-professionale` workflow satisfies this
+requirement with its registered in-workstream equivalent because it cannot be
+stored in a single client's Studio Archive engagement.
+
+## Run-wide model-data evidence
+
+Showing or explaining an existing privacy/model-data report is supported artifact
+retrieval. Follow **Show an existing report** in `model-data-report-contract.md`
+without selecting a new professional workflow or starting another run.
+
+Every substantive professional workflow follows
+`model-data-report-contract.md` after its model-visible phases. The report is a
+cross-pipeline run artifact, not a specialist workflow: it records what was
+processed locally, what reached each model phase, what remained local, the
+evidence basis, and a possible narrower code path only when the run evidence
+supports one. Full-document or full-population model treatment remains a valid
+outcome when required by the professional purpose.
+
+## Developer governance
+
+- `privacy-surface-review`: review and register model-context and external-data
+  boundaries when a Vera workflow or shared service changes. This is not a
+  customer-case workflow.
+
+## Public process explanations
+
+Every public page or named product-page section that explains one registered
+professional workflow includes a localized **“Quali dati arrivano al modello”**
+/ **“What data reaches the model”** block. Follow
+`public-process-page-contract.md`. The entire block is always the final block in
+the process explanation, after all other process content and calls to action.
+Nothing in the process explanation follows it.
+
+Use model-led judgment from the inspected workflow evidence to choose whether
+the model-data distinction is `relevant` or `not-relevant`. When relevant,
+explain the actual local/full-population work, every model-visible phase,
+bounds and Claude-versus-Cowork differences. When not relevant, say so and give
+the concrete reason. A deterministic test enforces only presence, registered
+identity, allowed status, order and localization; it never chooses the status
+or validates the professional reason. Keep `/data-handling` global rather than
+recreating a central function register.
+
+## Scissione: initial operational path
+
+- `mparanza-scissione-guidata`: prepare a versioned dossier and ownership/allocation schedules for an Italian OIC partial proportional scission into a new beneficiary. Require authorized entity evidence and exact-version professional decisions; preserve unknowns, separate book/tax/economic/shareholder tax values and reopen dependent approvals after changes. No automatic legal rules, accounting entries, statutory deadlines, signatures or filings. Other routes are explicitly unsupported.
+The prepared local lesson uses fictional inputs and an independent changed-evidence practice. Read `../../mparanza-scissione-guidata/SKILL.md`; actual professional confirmations remain necessary.
+
+- `mparanza-learn-with-vera`: learn an installed function in writing using prepared files, actual execution and practice in one conversation.

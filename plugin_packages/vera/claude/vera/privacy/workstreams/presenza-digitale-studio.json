@@ -211,14 +211,14 @@
     "reviewed_at": "2026-10-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "477b3d12b3ea7b5df1e7636956b81f6308d9fb031e0c6ebbe2b5b05a9af5f0c0"
+    "source_fingerprint": "31a6d3721324b0c02139f5f77b95c51f0aca832fd140093fa2df560ddf4a826f"
   },
   "governed_shared_paths": [
-    "skills/vera/references/connected-studio-knowledge.md",
+    "skills/mparanza-vera/references/connected-studio-knowledge.md",
     "scripts/native_website.py",
     "scripts/native_website_bridge.py",
     "ui/website.js",
-    "skills/presenza-digitale-studio/SKILL.md",
+    "skills/mparanza-presenza-digitale-studio/SKILL.md",
     "mcp/workspace.cjs",
     "ui/workspace.js",
     "scripts/native_workspace.py"

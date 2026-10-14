@@ -690,7 +690,7 @@ def dispatch(
                 )
                 value["previous_case"] = previous
                 value["skill_path"] = str(
-                    root / "skills/esg-reporting-assurance/SKILL.md"
+                    root / "skills/mparanza-esg-reporting-assurance/SKILL.md"
                 )
                 value["proposal_contract_path"] = str(
                     root / "schemas/foundation.schema.json"

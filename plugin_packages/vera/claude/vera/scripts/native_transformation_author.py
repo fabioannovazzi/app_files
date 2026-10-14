@@ -480,7 +480,7 @@ def dispatch(tool: str, args: dict, module: Path, api: Any) -> dict:
                         "sources": value["sources"],
                         "state": value["state"],
                         "record_contract": value["record_contract"],
-                        "skill_path": str(module / "skills/trasformazione/SKILL.md"),
+                        "skill_path": str(module / "skills/mparanza-trasformazione/SKILL.md"),
                         "stage_revision": stamp(state),
                         "proposal_keys": [
                             "operation",

@@ -45,7 +45,7 @@
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
-    "skills/vera/references/connected-studio-knowledge.md",
+    "skills/mparanza-vera/references/connected-studio-knowledge.md",
     "scripts/native_invoice.py",
     "scripts/native_invoice_bridge.py",
     "scripts/native_workspace.py",
@@ -54,14 +54,14 @@
     "ui/workspace.js",
     "ui/workspace.css",
     "ui/InstrumentSans-Regular.ttf",
-    "skills/invoice-xml/SKILL.md",
-    "skills/vera/references/native-workspace.md",
+    "skills/mparanza-invoice-xml/SKILL.md",
+    "skills/mparanza-vera/references/native-workspace.md",
     "scripts/native_invoice_authoring.py",
     "scripts/native_aml_authoring.py",
     "scripts/native_assetti.py",
     "scripts/native_archive_closure.py",
     "scripts/standalone_work.py",
-    "skills/vera/references/standalone-work.md"
+    "skills/mparanza-vera/references/standalone-work.md"
   ],
   "model_context": {
     "policy": "real_case_data_may_enter_selected_runtime_model_context",
@@ -125,7 +125,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "3946ace77c99c983624903cf4f712767deb97c168e47923a0ef8b321a62f848a"
+    "source_fingerprint": "b66fe34bbeea8205ccf993f757a202a8fbdc53c2ca4dae927774a05840aff69c"
   },
   "role": "workflow",
   "runtime_profiles": [

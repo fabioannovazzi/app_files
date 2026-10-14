@@ -87,11 +87,11 @@
       "sha256": "9e6c1f12de9f3723d310022f59f7a29b40620b1b1cd940b5f24d0049ba66247b"
     },
     {
-      "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "a34632a2fbc6a76780ffd12b6624d0031e383f9de0feb43cd2d1ad6aca5cc9d9"
+      "path": "modules/journal-bank-reconciliation/skills/mparanza-journal-bank-reconciliation/SKILL.md",
+      "sha256": "f985e009de7d00dd978ed23f8f9b807e4e83d84290a666c9b63cf9df05ed7cf8"
     },
     {
-      "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/references/geneva.md",
+      "path": "modules/journal-bank-reconciliation/skills/mparanza-journal-bank-reconciliation/references/geneva.md",
       "sha256": "c710799fd599845e08abd8cd71caad1035fcb31771e7f094f10ee1818ec7401d"
     },
     {
@@ -139,11 +139,11 @@
       "sha256": "dd88f8273d2eab075178de060385d12014e12b213b1a1e6733568688fdc6cb21"
     },
     {
-      "path": "skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "45e70b14db689cba26d07c2121a18eac3b3338a3b69135b639f7f42ac7a69958"
+      "path": "skills/mparanza-journal-bank-reconciliation/SKILL.md",
+      "sha256": "126d4d521c2877c336c17b8f51e975ce96fcbe2becca560fb4bcf6b0f2196eca"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

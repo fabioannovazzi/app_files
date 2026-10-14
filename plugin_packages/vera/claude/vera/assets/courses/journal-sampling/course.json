@@ -83,11 +83,11 @@
       "sha256": "97659943d2e52bde9c6df65bd09c4dfa508fb2a99b11b92865b8bb9fec8d2a23"
     },
     {
-      "path": "modules/journal-sampling/skills/journal-sampling/SKILL.md",
-      "sha256": "6bd99d3516ea25b78796c0e49522084e4689d30e010d6263b6054c24cc44c3dc"
+      "path": "modules/journal-sampling/skills/mparanza-journal-sampling/SKILL.md",
+      "sha256": "e921f214b6177d2fc7c1233b33da9518a16d3da948c49262823a70429cefc364"
     },
     {
-      "path": "modules/journal-sampling/skills/journal-sampling/references/geneva.md",
+      "path": "modules/journal-sampling/skills/mparanza-journal-sampling/references/geneva.md",
       "sha256": "78a1b1575273d28559a0ae007d596a601715da810ac10d47cf52bb2dbdd82962"
     },
     {
@@ -135,11 +135,11 @@
       "sha256": "dd88f8273d2eab075178de060385d12014e12b213b1a1e6733568688fdc6cb21"
     },
     {
-      "path": "skills/journal-sampling/SKILL.md",
-      "sha256": "e42a79ef69ac168c7d98fb69784ac6d1ab2efa7b5c739d44b015e91526363049"
+      "path": "skills/mparanza-journal-sampling/SKILL.md",
+      "sha256": "ee1f237c051f942e8b221a00d2937c005089e7b3ea18a1c01f20fe163a1aa956"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

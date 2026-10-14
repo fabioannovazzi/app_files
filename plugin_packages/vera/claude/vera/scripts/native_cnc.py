@@ -479,7 +479,7 @@ def dispatch(
                     else None
                 )
                 value["skill_path"] = str(
-                    root / "skills/composizione-negoziata/SKILL.md"
+                    root / "skills/mparanza-composizione-negoziata/SKILL.md"
                 )
                 value["selected_proposal"] = (
                     {

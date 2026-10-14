@@ -129,11 +129,11 @@
       "sha256": "7f5360c69a0441de3647e6077fe7b0a876eaa194366afc38c3bf04a7a1b5fb51"
     },
     {
-      "path": "modules/business-planning/skills/business-planning/SKILL.md",
-      "sha256": "afb7bf27c6eaa72e7292f520aa7adda5159d9cd4b99f71c99f71a23a89266dd1"
+      "path": "modules/business-planning/skills/mparanza-business-planning/SKILL.md",
+      "sha256": "4b90d96e90b69f60c56c2c271a32f0c119f3cb85603bd6365b9fbe8941d74b85"
     },
     {
-      "path": "modules/business-planning/skills/business-planning/references/geneva.md",
+      "path": "modules/business-planning/skills/mparanza-business-planning/references/geneva.md",
       "sha256": "979d3c4c7e94502580f4143d28884be963f6b511546eb5802681d7f2fc407356"
     },
     {
@@ -181,11 +181,11 @@
       "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
     },
     {
-      "path": "skills/business-planning/SKILL.md",
-      "sha256": "980bf5b0ca4375a0f8b701187de7c98fb4bbf33f835b513b1e4436f89bfc2288"
+      "path": "skills/mparanza-business-planning/SKILL.md",
+      "sha256": "97b6c83f51aa2d5fcc82592440373435dfe3d57ca674bd5fb5bfe29772cae197"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

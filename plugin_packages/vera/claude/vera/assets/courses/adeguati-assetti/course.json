@@ -100,11 +100,11 @@
       "sha256": "6a9d86c20841afe42d8a4c1cad64757744b1d7f8ca93d44d46636ed14dbee569"
     },
     {
-      "path": "modules/adeguati-assetti/skills/adeguati-assetti/SKILL.md",
-      "sha256": "75fa5068e27358f2000d130892feb7d71479e688beeef31b20dfe9f672c8a878"
+      "path": "modules/adeguati-assetti/skills/mparanza-adeguati-assetti/SKILL.md",
+      "sha256": "5b818cfec4b1d20eff6daf52a44fe84b4f26ce51994e407d2401b02bb8f93c36"
     },
     {
-      "path": "modules/adeguati-assetti/skills/adeguati-assetti/references/geneva.md",
+      "path": "modules/adeguati-assetti/skills/mparanza-adeguati-assetti/references/geneva.md",
       "sha256": "27ec251d36f99996d47ad5377a3ea8e96a956ff4b42e4dfa68cc444147475672"
     },
     {
@@ -148,11 +148,11 @@
       "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
     },
     {
-      "path": "skills/adeguati-assetti/SKILL.md",
-      "sha256": "044ccf918cc7874d877b2260a9030053fcbb7b009fd6cdc5c852d132e437fef3"
+      "path": "skills/mparanza-adeguati-assetti/SKILL.md",
+      "sha256": "204c57606de031b810f8c6983ef0a45e61579c94504b3882bbcef350200d36ff"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

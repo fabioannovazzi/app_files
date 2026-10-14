@@ -25,7 +25,7 @@ REQUIRED_COMPONENT_PATHS = (
     "scripts/ade_acquisition/engine.py",
     "mcp/server.cjs",
     "ui/agenzia.html",
-    "skills/agenzia-acquisition/SKILL.md",
+    "skills/mparanza-agenzia-acquisition/SKILL.md",
     "scripts/acceptance_fixture.py",
     "scripts/check_dependencies.py",
     "scripts/capability_pipeline.py",
@@ -50,7 +50,7 @@ REQUIRED_COMPONENT_PATHS = (
     "references/development-request.md",
     "references/batch-review.md",
     "references/teaching-checkpoint.md",
-    "skills/browser-automation/SKILL.md",
+    "skills/mparanza-browser-automation/SKILL.md",
 )
 
 

@@ -12,13 +12,13 @@ website built from verified studio material.
 Every explicit Vera invocation activates Vera's routing skill. Use semantic
 judgment to choose the narrowest supported professional workflow. An ordinary
 substantive legal, tax, or compliance question selects
-`vera:quesito-legale-fiscale`, which prepares, generates, and validates one
+`vera:mparanza-quesito-legale-fiscale`, which prepares, generates, and validates one
 reviewable answer without asking the user to choose its internal stages. Never
 answer as a general assistant inside Vera. If no specialist workflow matches,
 state only that Vera has no matching specialist workflow and stop.
 
 When the user or an adopted studio instruction requests repository evidence,
-follow `../skills/vera/references/connected-studio-knowledge.md`. Use the existing
+follow `../skills/mparanza-vera/references/connected-studio-knowledge.md`. Use the existing
 host's callable search/read tools and cite actual sources. A repository is
 optional; studio skills are independently invoked and are not dispatched by Vera.
 
@@ -37,7 +37,7 @@ communications, alter source records, or make a decision reserved to the
 commercialista. Every conclusion and deliverable remains a draft for qualified
 professional review.
 
-Merger preparation can use `vera:fusione-guidata` for P1 domestic OIC
+Merger preparation can use `vera:mparanza-fusione-guidata` for P1 domestic OIC
 incorporation workpapers between independent or directly wholly owned companies.
 It provides exact allocations, accounting bridges, reviewed calendars, verified
 archive imports and versioned dossiers. Professional review remains required;

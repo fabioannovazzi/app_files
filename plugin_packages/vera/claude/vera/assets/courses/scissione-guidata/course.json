@@ -56,8 +56,8 @@
       "sha256": "7e74ac30a6fe34c2b7a585c01c987f852f35098daa57cb81530184ac8fcaf9bf"
     },
     {
-      "path": "modules/scissione-guidata/skills/scissione-guidata/SKILL.md",
-      "sha256": "42c8b99a3ee64787a93f6b39cf3b442b40f876f013aa06159ae2decd88249fab"
+      "path": "modules/scissione-guidata/skills/mparanza-scissione-guidata/SKILL.md",
+      "sha256": "2e8975d62542f73a7ae07d3b658fbddd22a6d369130027cc3a8708d26c3b454e"
     },
     {
       "path": "modules/scissione-guidata/vendor/modules/__init__.py",
@@ -100,11 +100,11 @@
       "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
     },
     {
-      "path": "skills/scissione-guidata/SKILL.md",
-      "sha256": "d2e07c3b03adbf9e284d3621f6be2a4f2ab20991e07c11bdf97eebf62b74c6bb"
+      "path": "skills/mparanza-scissione-guidata/SKILL.md",
+      "sha256": "830bebc296aa138b5396aad0611bc95b9c354c25b05aac8fb4d40439a43c4c75"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

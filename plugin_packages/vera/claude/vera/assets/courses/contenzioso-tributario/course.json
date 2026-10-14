@@ -37,18 +37,18 @@
     },
     {
       "path": "scripts/operational_incidents.py",
-      "sha256": "739b9390ccdd77ead53fdc6536217af4a50e3f16f9b27fa8002cecaae2c06147"
+      "sha256": "0fbb09e44c16de819e0531da3ad7a836ac92d69380f10d6dce4ca9674e5019de"
     },
     {
       "path": "scripts/verified_execution.py",
       "sha256": "6c41ba4583fd91a9cfaa78d3ccfc07eadda49e8efef7e4a58b01f0560b5ad6c0"
     },
     {
-      "path": "skills/contenzioso-tributario/SKILL.md",
-      "sha256": "c12cf21e998f6b7c5fd9f597815a9b82d76142758bacb3cd3ed56e0999b940aa"
+      "path": "skills/mparanza-contenzioso-tributario/SKILL.md",
+      "sha256": "932c878d70d48d6f17b4ac078222f609129723742808f030b0b94b76049f515f"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

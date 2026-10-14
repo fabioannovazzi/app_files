@@ -104,39 +104,39 @@
       "sha256": "d3cef57e45011809f997da6903ff1fc04f2617f4682601f675d4e9662112b9d4"
     },
     {
-      "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/SKILL.md",
-      "sha256": "7e8ba97ab0f1081da2ea203e192a4c5eb091200c74709ad31181127f34d5dc15"
+      "path": "modules/presenza-digitale-studio/skills/mparanza-presenza-digitale-studio/SKILL.md",
+      "sha256": "a71fd4ed214127802566ff68deeade45b5c7f63592b750603ee52a1a4b964e16"
     },
     {
-      "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/agents/openai.yaml",
+      "path": "modules/presenza-digitale-studio/skills/mparanza-presenza-digitale-studio/agents/openai.yaml",
       "sha256": "55bf9675e95b959824081d6fe39e05a363c478c123fca73b8de05530d05a17c6"
     },
     {
-      "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/references/product-thesis.md",
+      "path": "modules/presenza-digitale-studio/skills/mparanza-presenza-digitale-studio/references/product-thesis.md",
       "sha256": "146a5d008d51ca69c608a1e5465d29950b4ecc2dfa94220d01aed38b0cf73fed"
     },
     {
-      "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/references/sites-handoff.md",
+      "path": "modules/presenza-digitale-studio/skills/mparanza-presenza-digitale-studio/references/sites-handoff.md",
       "sha256": "acb78509ff897048de073f8ca978129531ee08124e507b8fb181f7a99ac65c45"
     },
     {
-      "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/references/skill-orchestration.md",
+      "path": "modules/presenza-digitale-studio/skills/mparanza-presenza-digitale-studio/references/skill-orchestration.md",
       "sha256": "90385deab7022beb9260dade7fd542d9f7edf017958657e50191c8bc3a21be3a"
     },
     {
-      "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/references/website-quality-standard.md",
+      "path": "modules/presenza-digitale-studio/skills/mparanza-presenza-digitale-studio/references/website-quality-standard.md",
       "sha256": "23821e70357e62d70e3c556f09c9fe418378bd597ffd5143392963630c5718d1"
     },
     {
-      "path": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/references/workflow-method.md",
+      "path": "modules/presenza-digitale-studio/skills/mparanza-presenza-digitale-studio/references/workflow-method.md",
       "sha256": "3c5a4c5dba4742c27684937723532fc9b7ab7303e470c7b1550a5667d6e095a2"
     },
     {
-      "path": "skills/presenza-digitale-studio/SKILL.md",
-      "sha256": "b47a45dc0f5b4083571e83bb6e3056b4fff03c8e957a09a14c45c9ea5be6becd"
+      "path": "skills/mparanza-presenza-digitale-studio/SKILL.md",
+      "sha256": "f1d1e702952f5ca154fbd1edfcf82bf220c7c21883ca37d54a44be70f06fc23f"
     },
     {
-      "path": "skills/presenza-digitale-studio/references/lucia-lawyer-profile.md",
+      "path": "skills/mparanza-presenza-digitale-studio/references/lucia-lawyer-profile.md",
       "sha256": "66240f049efd9f76ec3e8d8f6ca45aa234c754bb68a699cf9d66bd118b89a2e9"
     },
     {

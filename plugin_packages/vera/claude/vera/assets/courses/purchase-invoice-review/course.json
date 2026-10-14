@@ -72,11 +72,11 @@
       "sha256": "c3f7be20e2a98dbcfcfed9be514417411f1fe8f93d683895f33b185e608a9251"
     },
     {
-      "path": "modules/passive-invoice-audit/skills/purchase-invoice-review/SKILL.md",
-      "sha256": "76692162ec6dc07fb140f088f94d908c61bdd792df5d42700c9095361db5dfeb"
+      "path": "modules/passive-invoice-audit/skills/mparanza-purchase-invoice-review/SKILL.md",
+      "sha256": "e92dc75d216952475596e45793d37ec75dc0d9445ad7dcf062a0d8824db6a600"
     },
     {
-      "path": "modules/passive-invoice-audit/skills/purchase-invoice-review/references/geneva.md",
+      "path": "modules/passive-invoice-audit/skills/mparanza-purchase-invoice-review/references/geneva.md",
       "sha256": "e18ddd3d01fb7edf100179868b04bd22dcc414bafb222fdbb037dde0c599b19b"
     },
     {
@@ -120,11 +120,11 @@
       "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
     },
     {
-      "path": "skills/purchase-invoice-review/SKILL.md",
-      "sha256": "3096de5b268d3415e3a6d63763a4f006fa8efded8c1564c60a6f5f20365c82cd"
+      "path": "skills/mparanza-purchase-invoice-review/SKILL.md",
+      "sha256": "3d3ed6e49970b9d8f10c49e10af04859672e2555ace4c8aa4c9e9aa2b83ac700"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

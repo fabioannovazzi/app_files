@@ -68,11 +68,11 @@
       "sha256": "0b2213807528cda8f6ab9979b75a69debb00cdb7c15f69972237982c3aca622d"
     },
     {
-      "path": "modules/archive-organization/skills/archive-organization/SKILL.md",
-      "sha256": "6297b2354de4683040a728a83273c66f1295409039589731aeef7c2bd85710d1"
+      "path": "modules/archive-organization/skills/mparanza-archive-organization/SKILL.md",
+      "sha256": "2836a1449367ab16ce691249bc058fad2a0b212ce6773280a5f50e9948bdda4a"
     },
     {
-      "path": "modules/archive-organization/skills/archive-organization/agents/openai.yaml",
+      "path": "modules/archive-organization/skills/mparanza-archive-organization/agents/openai.yaml",
       "sha256": "a23c1b5ef7425f17ca70e23a43923cf160690f8cdb632112a4e70c701cec283c"
     },
     {
@@ -116,11 +116,11 @@
       "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
     },
     {
-      "path": "skills/archive-organization/SKILL.md",
-      "sha256": "dbf8c3b0966e42d027651112c44232581ec4db1a36de23196ebc43c91ea1f2d0"
+      "path": "skills/mparanza-archive-organization/SKILL.md",
+      "sha256": "8c1dc33d0bfb1e9450f401fdc369893ec2498831bb92a61d8976b13482fd2823"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

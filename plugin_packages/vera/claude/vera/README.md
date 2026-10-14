@@ -3,14 +3,14 @@
 Optional anonymization connectors have a
 [separate download](https://mparanza.com/static/shared/vera-integrazioni/downloads/anonymization-connectors.zip)
 with setup for Codex, Claude Cowork and Google Antigravity desktop. See
-`skills/vera/references/optional-integrations.md`. Choose an engine during setup;
+`skills/mparanza-vera/references/optional-integrations.md`. Choose an engine during setup;
 installing Vera does not install a model or activate a connector. Second Brain
 uses its provider's existing connection and has no installer supplied by Vera.
 
 Vera can consult an existing studio knowledge repository, such as Second Brain,
 through search/read tools already connected in the user's host, when requested
 by the user or an adopted studio instruction. See
-`skills/vera/references/connected-studio-knowledge.md` for scope, source citation,
+`skills/mparanza-vera/references/connected-studio-knowledge.md` for scope, source citation,
 access limitations and model-context boundaries. Vera does not supply or require
 a repository or Microsoft 365. Studio skills remain independently invoked.
 
@@ -27,7 +27,7 @@ qualified professional.
 `lipe` reconciles VAT-register evidence and produces VP review drafts. It is a
 2024–2026 ordinary-VAT pilot with explicit source, mapping and balance checks.
 Real XML export is blocked pending professional, authentication and importer
-acceptance. See `modules/lipe/skills/lipe/SKILL.md` in the installed package.
+acceptance. See `modules/lipe/skills/mparanza-lipe/SKILL.md` in the installed package.
 
 ## Business valuation
 
@@ -71,7 +71,7 @@ app; those still need representative host-level smoke tests.
 ## Skill identities
 
 Vera owns one public skill namespace. Codex exposes every registered specialist
-as `vera:<skill-name>`, for example `vera:journal-sampling`. Skill frontmatter
+as `vera:<skill-name>`, for example `vera:mparanza-journal-sampling`. Skill frontmatter
 keeps only the bare internal name because the host supplies `vera:`. A bare
 specialist name is not a public Vera identity, and a frontmatter name that
 already contains `vera:` would create a redundant namespace.
@@ -217,7 +217,7 @@ user's behalf. Every substantive output remains a draft for qualified review.
 
 ## AML review
 
-`vera:aml-review` examines ownership, economic explanations, evidence discrepancies
+`vera:mparanza-aml-review` examines ownership, economic explanations, evidence discrepancies
 and changes since a prior assessment for Italian clients. It prepares a sourced
 memo and records professional decisions through the existing client archive.
 Its Python helper reuses validated New Client arithmetic when available; screening
@@ -235,12 +235,12 @@ including for the base portable ledger in Cowork.
 
 ## Adeguati assetti
 
-`vera:composizione-negoziata` guides an Italian CNC case with separate advisor
+`vera:mparanza-composizione-negoziata` guides an Italian CNC case with separate advisor
 and expert instructions, existing Vera analyses, evidence-linked drafts and
 case revisions. Changed dependencies trigger review; recorded confirmations
 are not authenticated signatures. No filing or automatic monitoring is included.
 
-`vera:adeguati-assetti` evaluates organizational, administrative and accounting
+`vera:mparanza-adeguati-assetti` evaluates organizational, administrative and accounting
 arrangements from company evidence. It distinguishes documented procedures,
 reported practices, operating evidence and unknowns; delivers a memo, findings,
 proportionate action plan and version record; and revisits prior actions.

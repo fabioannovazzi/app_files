@@ -216,39 +216,39 @@
       "sha256": "e7fb34cd0b443b0fab6e4afd1cc0ccedb05d0c8dcb9e7befb157e732bede3831"
     },
     {
-      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/SKILL.md",
-      "sha256": "4131312fd1992510b22ffd394bdf90952295f433952f43e53ab9a53f83f3406f"
+      "path": "modules/comunicazione-professionale/skills/mparanza-comunicazione-professionale/SKILL.md",
+      "sha256": "46f41754b7ed0763e8414ba90a43be571d715ae8d5799ef0dad7ba519681f864"
     },
     {
-      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/agents/openai.yaml",
+      "path": "modules/comunicazione-professionale/skills/mparanza-comunicazione-professionale/agents/openai.yaml",
       "sha256": "1f89631cf95b1e7954a0430a0a64725ec0c729f9b37996641ddd4ac7ec365252"
     },
     {
-      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/references/model-contribution-contract.md",
+      "path": "modules/comunicazione-professionale/skills/mparanza-comunicazione-professionale/references/model-contribution-contract.md",
       "sha256": "96789db8b67bdccf822f574fdfee09a077c9a724e66a375a37439bb18d217181"
     },
     {
-      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/references/product-thesis.md",
+      "path": "modules/comunicazione-professionale/skills/mparanza-comunicazione-professionale/references/product-thesis.md",
       "sha256": "5d4327d32cfb67b01c43085dcab635d0c4bcd0bd4a62d131ff2d7694a041751d"
     },
     {
-      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/references/professional-circular-pattern.md",
+      "path": "modules/comunicazione-professionale/skills/mparanza-comunicazione-professionale/references/professional-circular-pattern.md",
       "sha256": "b6e4caece0df1f610d90e6c7f302e5014423480c41e2c6563e3c4f5d3c38761e"
     },
     {
-      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/references/visual-system.md",
+      "path": "modules/comunicazione-professionale/skills/mparanza-comunicazione-professionale/references/visual-system.md",
       "sha256": "fafeb05519cf3e34a46323e66db8232b874561ac201592815d9668bdd6a1cf8f"
     },
     {
-      "path": "modules/comunicazione-professionale/skills/comunicazione-professionale/references/workflow-method.md",
+      "path": "modules/comunicazione-professionale/skills/mparanza-comunicazione-professionale/references/workflow-method.md",
       "sha256": "a6b1846ea5367eef0d0a0c3fe54d060b1a1418024791b2d9ac47b45124224621"
     },
     {
-      "path": "skills/comunicazione-professionale/SKILL.md",
-      "sha256": "27a58442f519c7226cdf943a45a6cb835ca8f3038b779312beb029fe3619e577"
+      "path": "skills/mparanza-comunicazione-professionale/SKILL.md",
+      "sha256": "02824ed7a2bd25c5a61132b8332888f2b134d8ba919654a110325cec12881039"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

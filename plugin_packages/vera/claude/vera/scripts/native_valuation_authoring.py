@@ -326,7 +326,7 @@ def grant_page(current: dict, loaded: dict, root: Path, args: dict, api: Any) ->
         base_id = grant["mandate"]["fields"]["base_input_id"]
         if base_id:
             page["predecessor_case"] = selected(base_id, loaded, root, api)[1]
-        page["method_path"] = str(root / "skills/business-valuation/SKILL.md")
+        page["method_path"] = str(root / "skills/mparanza-business-valuation/SKILL.md")
         page["contract_path"] = str(root / "references/case-contract.md")
         page["schema_path"] = str(root / "references/valuation-case.schema.json")
         page["boundary"] = (

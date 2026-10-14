@@ -154,7 +154,12 @@ def test_shipped_negotiation_helpers_deliver_bound_complete_outputs(
             if n.endswith(helpers + "/legal_negotiation.py")
         )
         prefix = entry.removesuffix(helpers + "/legal_negotiation.py")
-        assert prefix + "skills/posizioni-negoziali/SKILL.md" in archive.namelist()
+        skill = (
+            "mparanza-posizioni-negoziali"
+            if host == "claude-plugin"
+            else "posizioni-negoziali"
+        )
+        assert prefix + f"skills/{skill}/SKILL.md" in archive.namelist()
         package = tmp_path / product
         for name in archive.namelist():
             relative = name.removeprefix(prefix)

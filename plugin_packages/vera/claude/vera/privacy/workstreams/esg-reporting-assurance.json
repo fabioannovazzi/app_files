@@ -14,10 +14,10 @@
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
-    "skills/vera/references/connected-studio-knowledge.md",
+    "skills/mparanza-vera/references/connected-studio-knowledge.md",
     "scripts/native_esg.py",
     "scripts/native_esg_bridge.py",
-    "skills/esg-reporting-assurance/SKILL.md",
+    "skills/mparanza-esg-reporting-assurance/SKILL.md",
     "scripts/native_esg_authoring.py",
     "scripts/native_esg_author_bridge.py",
     "scripts/native_archive_closure.py"
@@ -115,6 +115,6 @@
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "c9dcf6c33f9e5e8a9b7cdfde88945088c38d6e7a1629ad94cf3c7eef75fa5d1b"
+    "source_fingerprint": "e28bd4c78e2dd0a98649bb518f7af59148388019dc55ba7c4c016205d5016a6f"
   }
 }

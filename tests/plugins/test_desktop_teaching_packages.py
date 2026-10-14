@@ -59,7 +59,7 @@ def test_cowork_written_teaching_has_no_native_onboarding_gate(product):
         ROOT / f"plugin_packages/{product}/{product}-claude-plugin.zip"
     ) as archive:
         assert any(
-            name.endswith(f"skills/learn-with-{product}/SKILL.md")
+            name.endswith(f"skills/mparanza-learn-with-{product}/SKILL.md")
             for name in archive.namelist()
         )
         for name in archive.namelist():

@@ -99,8 +99,8 @@
       "sha256": "b4e5bb6dd0347b9c66e1e21b3f21a7e1a84805f58008401857cc613e90043789"
     },
     {
-      "path": "modules/client-file-preparation/skills/dati-fiscali-strutturati/SKILL.md",
-      "sha256": "01bbc6ec42ab8feb7a69ff81ebe1dcc296ff7e2b5c01905a092ba4adff5b10e7"
+      "path": "modules/client-file-preparation/skills/mparanza-dati-fiscali-strutturati/SKILL.md",
+      "sha256": "18320f7920dc8bd8162f4f415ef9dcedf6d8be0a608397158d477b9bf57b051c"
     },
     {
       "path": "modules/client-file-preparation/templates/email_documenti_mancanti.md",
@@ -151,11 +151,11 @@
       "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
     },
     {
-      "path": "skills/dati-fiscali-strutturati/SKILL.md",
-      "sha256": "dcb72a2aa26ee1e1507d0cfec13da7ef1f9c44118db11220f603d97f4337d709"
+      "path": "skills/mparanza-dati-fiscali-strutturati/SKILL.md",
+      "sha256": "f63946df08d0d08144275d53d7a95b4578c2a6bae80817a184bf242a50c77d1a"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

@@ -7,7 +7,7 @@
     "scripts/check_dependencies.py",
     "scripts/_managed_python_runtime.py",
     "scripts/managed_python_runtime.py",
-    "skills/vera/SKILL.md",
+    "skills/mparanza-vera/SKILL.md",
     "scripts/_shared_python_runtime.py",
     "requirements-shared-core.txt",
     "requirements-shared-ocr.txt",
@@ -16,7 +16,7 @@
     "scripts/studio_archive_session.py",
     "scripts/studio_archive_windows.ps1",
     "scripts/verified_execution.py",
-    "skills/vera/references/execution-recovery.md",
+    "skills/mparanza-vera/references/execution-recovery.md",
     "scripts/operational_incidents.py"
   ],
   "runtime_profiles": [
@@ -142,6 +142,6 @@
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "034ce0ac404e83593c2e1e47617d2798322bacaf5fc46f52d8f4419fdb1e29dc"
+    "source_fingerprint": "488d950417179c054424c44b18a95f4cbe36505a3ae13c8cbedaaf7feb992333"
   }
 }

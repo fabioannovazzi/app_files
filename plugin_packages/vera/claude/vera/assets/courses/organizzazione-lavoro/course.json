@@ -45,7 +45,7 @@
     },
     {
       "path": "scripts/operational_incidents.py",
-      "sha256": "739b9390ccdd77ead53fdc6536217af4a50e3f16f9b27fa8002cecaae2c06147"
+      "sha256": "0fbb09e44c16de819e0531da3ad7a836ac92d69380f10d6dce4ca9674e5019de"
     },
     {
       "path": "scripts/studio_work.py",
@@ -56,11 +56,11 @@
       "sha256": "6c41ba4583fd91a9cfaa78d3ccfc07eadda49e8efef7e4a58b01f0560b5ad6c0"
     },
     {
-      "path": "skills/organizzazione-lavoro/SKILL.md",
-      "sha256": "e5b0a09f6ea5682f33e2a9f19216038c8d50d6b0fe3b8a5cb481a9bf1b58fb9a"
+      "path": "skills/mparanza-organizzazione-lavoro/SKILL.md",
+      "sha256": "fb14b2003c859f066738670d92f0e3204affe3c97898fbcf1b696a56efb34eba"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

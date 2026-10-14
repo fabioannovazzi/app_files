@@ -793,7 +793,7 @@ class CourseLibrary:
             "product": self.product,
             "workflow": workflow,
             "language": language,
-            "skill": str(self.root / "skills" / workflow / "SKILL.md"),
+            "skill": str(self.root / "skills" / ("mparanza-" + workflow) / "SKILL.md"),
             "request": copy["request"],
             "source_files": [
                 str(destination / f["path"]) for f in files if f["role"] == "source"

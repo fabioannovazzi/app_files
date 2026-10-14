@@ -5,7 +5,7 @@ description: Execute Vera's prepared legal, tax or compliance research with repe
 
 ## Operational incident continuity
 
-At task startup, follow `skills/vera/references/incident-recovery.md`. Call the
+At task startup, follow `skills/mparanza-vera/references/incident-recovery.md`. Call the
 independent `vera_incident_register` tool with empty arguments to reuse the saved
 anonymous connector identity across fresh tasks. If local startup context or the
 installed `scripts/operational_incidents.py context` provides an opaque local
@@ -123,7 +123,7 @@ override this Cowork contract.
 ## Connected studio knowledge
 
 When the user or an adopted studio instruction requests relevant repository
-evidence, read `../vera/references/connected-studio-knowledge.md` before the
+evidence, read `../mparanza-vera/references/connected-studio-knowledge.md` before the
 dependent work, including direct specialist invocation. Use only callable host
 search/read tools; preserve citations and this workflow's qualification gates.
 Without a repository, continue ordinary work. Studio skills remain independently
@@ -132,7 +132,7 @@ invoked by the user; Vera does not dispatch them.
 
 ## Legal/tax model requirement
 
-Before substantive work, read `../vera/references/legal-tax-model-policy.md`
+Before substantive work, read `../mparanza-vera/references/legal-tax-model-policy.md`
 and satisfy or reuse the same run/session model check. Use the most capable
 available host model for this stage and any authorized delegation. The plugin
 UI is optional: Cowork and other hosts without it use the identical chat and
@@ -140,13 +140,13 @@ local-record fallback. Never silently downgrade or claim an automatic switch.
 
 # Research the prepared question
 
-Read `../vera/references/research-subscriptions.md` and the current saved source
+Read `../mparanza-vera/references/research-subscriptions.md` and the current saved source
 choices. Use relevant authorised subscriptions through actual callable browser
 or connector tools inside the shared loop; recheck access in this run and pass
 real passages, provenance and access/retention limits to the existing reviews.
 Do not start connection setup for an unsubscribed user or fork the method.
 
-Without an accepted preparation, enter `../quesito-legale-fiscale/SKILL.md`
+Without an accepted preparation, enter `../mparanza-quesito-legale-fiscale/SKILL.md`
 first. Preparation-only and supplied-answer review requests retain their scope.
 
 Resolve `../../modules/deep-research-validator` from this skill directory when

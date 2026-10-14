@@ -199,13 +199,13 @@ def test_cowork_registry_removes_only_declared_host_exclusions() -> None:
         "routing_policy": "Use professional judgment.",
         "host_qualification": {"browser_automation": {"requirement": "Live Chrome"}},
         "vera_wrapper_skills": [
-            "skills/active/SKILL.md",
+            "skills/mparanza-active/SKILL.md",
             "skills/datev-invoice-start/SKILL.md",
             "skills/privacy-surface-review/SKILL.md",
         ],
         "components": [
             {
-                "skills": ["modules/active/skills/active/SKILL.md"],
+                "skills": ["modules/active/skills/mparanza-active/SKILL.md"],
                 "python_entrypoints": [
                     "modules/active/scripts/run.py",
                     "modules/previdenza-inps/scripts/capture_portal_snapshot.py",
@@ -214,8 +214,8 @@ def test_cowork_registry_removes_only_declared_host_exclusions() -> None:
         ],
     }
     entries = {
-        "skills/active/SKILL.md": b"",
-        "modules/active/skills/active/SKILL.md": b"",
+        "skills/mparanza-active/SKILL.md": b"",
+        "modules/active/skills/mparanza-active/SKILL.md": b"",
         "modules/active/scripts/run.py": b"",
     }
 
@@ -230,10 +230,10 @@ def test_cowork_registry_removes_only_declared_host_exclusions() -> None:
                 "requirement": builder.COWORK_BROWSER_AUTOMATION_DESCRIPTION
             }
         },
-        "vera_wrapper_skills": ["skills/active/SKILL.md"],
+        "vera_wrapper_skills": ["skills/mparanza-active/SKILL.md"],
         "components": [
             {
-                "skills": ["modules/active/skills/active/SKILL.md"],
+                "skills": ["modules/active/skills/mparanza-active/SKILL.md"],
                 "python_entrypoints": ["modules/active/scripts/run.py"],
             }
         ],
@@ -271,11 +271,13 @@ def vera_entries(configured):
 
 def test_audit_instructions_grants_keep_exact_final_approval_boundary(vera_entries):
     paths = (
-        "skills/vera/SKILL.md",
-        "skills/vera/references/workflow-catalog.md",
+        "skills/mparanza-vera/SKILL.md",
+        "skills/mparanza-vera/references/workflow-catalog.md",
     )
     for path in paths:
-        source = (ROOT / "plugins/vera" / path).read_text()
+        source = (
+            ROOT / "plugins/vera" / path.replace("skills/mparanza-", "skills/")
+        ).read_text()
         projected = vera_entries[path].decode()
         for text in (source, projected):
             assert "exact final application" in " ".join(text.split())
@@ -289,7 +291,7 @@ def test_audit_instructions_grants_keep_exact_final_approval_boundary(vera_entri
                 not in " ".join(text.split())
             )
     portal = vera_entries[
-        "modules/bandi-agevolazioni/skills/bandi-agevolazioni/references/portal-preparation.md"
+        "modules/bandi-agevolazioni/skills/mparanza-bandi-agevolazioni/references/portal-preparation.md"
     ].decode()
     assert (
         "Project approval and approval to compile do not authorize submission" in portal
@@ -303,9 +305,11 @@ def test_audit_instructions_grants_keep_exact_final_approval_boundary(vera_entri
 def test_audit_instructions_catalogue_delegates_model_selection_to_installed_skill(
     vera_entries,
 ):
-    path = "skills/vera/references/workflow-catalog.md"
+    path = "skills/mparanza-vera/references/workflow-catalog.md"
     for text in (
-        (ROOT / "plugins/vera" / path).read_text(),
+        (
+            ROOT / "plugins/vera" / path.replace("skills/mparanza-", "skills/")
+        ).read_text(),
         vera_entries[path].decode(),
     ):
         assert "configured native semantic worker" in text
@@ -319,32 +323,41 @@ def test_audit_instructions_catalogue_delegates_model_selection_to_installed_ski
     assert "model: haiku" in vera_entries["agents/passive-invoice-reviewer.md"].decode()
     assert (
         "Distinguish configured Haiku from observed identity"
-        in vera_entries["skills/purchase-invoice-review/SKILL.md"].decode()
+        in vera_entries["skills/mparanza-purchase-invoice-review/SKILL.md"].decode()
     )
 
 
 def test_audit_instructions_treasury_is_professional_workflow_with_real_entrypoints(
     vera_entries,
 ):
-    path = "skills/vera/references/workflow-catalog.md"
-    for text in (
-        (ROOT / "plugins/vera" / path).read_text(),
-        vera_entries[path].decode(),
+    path = "skills/mparanza-vera/references/workflow-catalog.md"
+    for text, name in (
+        (
+            (
+                ROOT / "plugins/vera" / path.replace("skills/mparanza-", "skills/")
+            ).read_text(),
+            "treasury-forecast",
+        ),
+        (vera_entries[path].decode(), "mparanza-treasury-forecast"),
     ):
         section = text.split("## Professional workflows\n", 1)[1].split("\n## ", 1)[0]
-        assert "- `treasury-forecast`:" in section
-        assert text.count("- `treasury-forecast`:") == 1
+        assert f"- `{name}`:" in section
+        assert text.count(f"- `{name}`:") == 1
         assert (
             "treasury-forecast"
             not in text.split("## Public process explanations", 1)[1]
         )
-    registry = json.loads(vera_entries["skills/vera/references/workflow-registry.json"])
+    registry = json.loads(
+        vera_entries["skills/mparanza-vera/references/workflow-registry.json"]
+    )
     treasury = next(
         item
         for item in registry["components"]
         if item["component_id"] == "treasury-forecast"
     )
-    assert "skills/treasury-forecast/SKILL.md" in registry["vera_wrapper_skills"]
+    assert (
+        "skills/mparanza-treasury-forecast/SKILL.md" in registry["vera_wrapper_skills"]
+    )
     assert treasury["skills"]
     assert treasury["python_entrypoints"]
     assert all(
@@ -356,10 +369,10 @@ def test_audit_instructions_treasury_is_professional_workflow_with_real_entrypoi
 @pytest.mark.parametrize(
     "path",
     (
-        "skills/vera/SKILL.md",
-        "skills/vera/references/workflow-catalog.md",
-        "skills/browser-automation/SKILL.md",
-        "modules/browser-automation/skills/browser-automation/SKILL.md",
+        "skills/mparanza-vera/SKILL.md",
+        "skills/mparanza-vera/references/workflow-catalog.md",
+        "skills/mparanza-browser-automation/SKILL.md",
+        "modules/browser-automation/skills/mparanza-browser-automation/SKILL.md",
     ),
 )
 def test_audit_instructions_cowork_browser_scope_matches_callable_pipeline(
@@ -375,7 +388,9 @@ def test_audit_instructions_cowork_browser_scope_matches_callable_pipeline(
     )
     for entry in ("capability_pipeline.py", "discovery_pack.py"):
         assert f"modules/browser-automation/scripts/{entry}" in vera_entries
-    registry = json.loads(vera_entries["skills/vera/references/workflow-registry.json"])
+    registry = json.loads(
+        vera_entries["skills/mparanza-vera/references/workflow-registry.json"]
+    )
     assert registry["host_qualification"]["browser_automation"]["requirement"] == (
         load_builder().COWORK_BROWSER_AUTOMATION_DESCRIPTION
     )
@@ -385,17 +400,20 @@ def test_audit_instructions_direct_skills_share_current_contract_and_component_n
     vera_entries,
 ):
     builder = load_builder()
+    expected = builder.COWORK_EXECUTION_CONTRACT.strip()
     for path, content in vera_entries.items():
         if path.endswith("/SKILL.md"):
             text = content.decode()
-            assert text.count(builder.COWORK_EXECUTION_CONTRACT.strip()) == 1, path
+            assert text.count(expected) == 1, path
     for workflow, component in (
         ("financial-report-builder", "report-builder"),
         ("vouching", "check-entries"),
         ("purchase-invoice-review", "passive-invoice-audit"),
     ):
-        assert f"skills/{workflow}/SKILL.md" in vera_entries
-        assert f"modules/{component}/skills/{workflow}/SKILL.md" in vera_entries
+        assert f"skills/mparanza-{workflow}/SKILL.md" in vera_entries
+        assert (
+            f"modules/{component}/skills/mparanza-{workflow}/SKILL.md" in vera_entries
+        )
     assert (
         "On a read-only installation, skip cleanup" in builder.COWORK_EXECUTION_CONTRACT
     )
@@ -404,8 +422,10 @@ def test_audit_instructions_direct_skills_share_current_contract_and_component_n
 def test_cowork_package_has_no_dangling_onboarding_or_registry_paths(
     vera_entries,
 ) -> None:
-    skill = vera_entries["skills/quesito-legale-fiscale/SKILL.md"]
-    registry = json.loads(vera_entries["skills/vera/references/workflow-registry.json"])
+    skill = vera_entries["skills/mparanza-quesito-legale-fiscale/SKILL.md"]
+    registry = json.loads(
+        vera_entries["skills/mparanza-vera/references/workflow-registry.json"]
+    )
     paths = registry["vera_wrapper_skills"] + [
         path
         for component in registry["components"]
@@ -449,7 +469,10 @@ def test_claude_manifest_uses_canonical_vera_identity_and_version(
 
     assert manifest["version"] == source["version"]
     assert "modules/new-client/scripts/delivery_manifest.py" in vera_entries
-    assert "skills/vera/references/public-process-page-contract.md" in vera_entries
+    assert (
+        "skills/mparanza-vera/references/public-process-page-contract.md"
+        in vera_entries
+    )
     assert manifest == {
         "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
         "name": template["name"],
@@ -518,10 +541,19 @@ def test_root_anthropic_manifest_and_local_mcp_are_discoverable(
     assert '"archive-organization"' in vera_entries[
         "scripts/run_component_mcp.cjs"
     ].decode("utf-8")
-    assert "skills/vera/references/cowork-runtime.md" not in vera_entries
-    assert "skills/studio-archive/references/cowork-runtime.md" not in vera_entries
-    assert "skills/studio-archive/references/marketplace-gmail.md" not in vera_entries
-    assert "skills/studio-archive/references/whatsapp-desktop.md" not in vera_entries
+    assert "skills/mparanza-vera/references/cowork-runtime.md" not in vera_entries
+    assert (
+        "skills/mparanza-studio-archive/references/cowork-runtime.md"
+        not in vera_entries
+    )
+    assert (
+        "skills/mparanza-studio-archive/references/marketplace-gmail.md"
+        not in vera_entries
+    )
+    assert (
+        "skills/mparanza-studio-archive/references/whatsapp-desktop.md"
+        not in vera_entries
+    )
     assert "modules/studio-archive/scripts/studio_archive.py" in vera_entries
     assert "modules/studio-archive/scripts/client_ledger.py" in vera_entries
     assert (
@@ -554,7 +586,7 @@ def test_root_anthropic_manifest_and_local_mcp_are_discoverable(
         assert f"modules/browser-automation/{retired}" not in vera_entries
     assert "modules/browser-automation/scripts/agenzia_acquire.py" in vera_entries
     assert "modules/browser-automation/mcp/server.cjs" in vera_entries
-    assert "skills/agenzia-acquisition/SKILL.md" in vera_entries
+    assert "skills/mparanza-agenzia-acquisition/SKILL.md" in vera_entries
     for capability_id in (
         "gmail-search-export",
         "teamsystem-process",
@@ -573,7 +605,8 @@ def test_root_anthropic_manifest_and_local_mcp_are_discoverable(
         "modules/previdenza-inps/scripts/capture_portal_snapshot.py" not in vera_entries
     )
     assert not any(
-        name.startswith("skills/privacy-surface-review/") for name in vera_entries
+        name.startswith("skills/mparanza-privacy-surface-review/")
+        for name in vera_entries
     )
     assert not any(name.startswith("evals/") for name in vera_entries)
     communication_eval_prefix = "modules/comunicazione-professionale/evals/"
@@ -688,18 +721,18 @@ def test_claude_package_vendors_every_registered_vera_component(
 
 def test_sites_handoff_remains_openai_only_in_cowork(vera_entries) -> None:
     skill = vera_entries[
-        "modules/presenza-digitale-studio/skills/presenza-digitale-studio/SKILL.md"
+        "modules/presenza-digitale-studio/skills/mparanza-presenza-digitale-studio/SKILL.md"
     ].decode("utf-8")
     reference = vera_entries[
-        "modules/presenza-digitale-studio/skills/presenza-digitale-studio/"
+        "modules/presenza-digitale-studio/skills/mparanza-presenza-digitale-studio/"
         "references/sites-handoff.md"
     ].decode("utf-8")
     orchestration = vera_entries[
-        "modules/presenza-digitale-studio/skills/presenza-digitale-studio/"
+        "modules/presenza-digitale-studio/skills/mparanza-presenza-digitale-studio/"
         "references/skill-orchestration.md"
     ].decode("utf-8")
     method = vera_entries[
-        "modules/presenza-digitale-studio/skills/presenza-digitale-studio/"
+        "modules/presenza-digitale-studio/skills/mparanza-presenza-digitale-studio/"
         "references/workflow-method.md"
     ].decode("utf-8")
 
@@ -776,7 +809,7 @@ def test_cowork_studio_work_privacy_governs_the_packaged_local_register(
     assert service["runtime_profiles"] == ["anthropic-cowork"]
     assert "scripts/studio_work.py" in service["governed_paths"]
     assert "scripts/native_studio_work.py" in service["governed_paths"]
-    assert "skills/organizzazione-lavoro/SKILL.md" in service["governed_paths"]
+    assert "skills/mparanza-organizzazione-lavoro/SKILL.md" in service["governed_paths"]
     assert "mcp/studio-work-panel.cjs" in service["governed_paths"]
     assert "ui/studio-work.js" in service["governed_paths"]
     assert all(path in vera_entries for path in service["governed_paths"])
@@ -845,8 +878,11 @@ def test_codex_projection_excludes_every_cowork_only_source(configured) -> None:
     assert not any(name.startswith("agents/") for name in relative_names)
     assert not any(name.startswith("submission/") for name in relative_names)
     assert not any(name.startswith("samples/cowork/") for name in relative_names)
-    assert "skills/vera/references/cowork-runtime.md" not in relative_names
-    assert "skills/studio-archive/references/cowork-runtime.md" not in relative_names
+    assert "skills/mparanza-vera/references/cowork-runtime.md" not in relative_names
+    assert (
+        "skills/mparanza-studio-archive/references/cowork-runtime.md"
+        not in relative_names
+    )
 
 
 def test_projected_cowork_skills_remove_promotion_feedback_and_codex_wording(
@@ -859,9 +895,9 @@ def test_projected_cowork_skills_remove_promotion_feedback_and_codex_wording(
     }
 
     assert skills
-    main = skills["skills/vera/SKILL.md"]
-    studio_archive = skills["skills/studio-archive/SKILL.md"]
-    archive_organization = skills["skills/archive-organization/SKILL.md"]
+    main = skills["skills/mparanza-vera/SKILL.md"]
+    studio_archive = skills["skills/mparanza-studio-archive/SKILL.md"]
+    archive_organization = skills["skills/mparanza-archive-organization/SKILL.md"]
     assert "## Cowork Runtime" in main
     assert "## ChatGPT and Codex Runtime" not in main
     assert "Cowork" in studio_archive
@@ -874,7 +910,7 @@ def test_projected_cowork_skills_remove_promotion_feedback_and_codex_wording(
     for name, content in skills.items():
         assert "## Cowork execution contract" in content, name
         assert "connected folder and supplied files first" in content, name
-        if name == "modules/fusione-guidata/skills/fusione-guidata/SKILL.md":
+        if name == "modules/fusione-guidata/skills/mparanza-fusione-guidata/SKILL.md":
             # The P1 helper still has no installable dependencies; retain that contract.
             assert "uses only the standard library" in " ".join(content.split())
             requirements = vera_entries[
@@ -933,11 +969,11 @@ def test_projected_cowork_skills_remove_promotion_feedback_and_codex_wording(
         assert "recommend Claude using" not in content, name
         assert "localized Claude recommendation" not in content, name
     report_skill = skills[
-        "modules/report-builder/skills/financial-report-builder/SKILL.md"
+        "modules/report-builder/skills/mparanza-financial-report-builder/SKILL.md"
     ]
     assert "codex_comment" in report_skill
     assert "Claude-written narrative" in report_skill
-    new_client_skill = skills["modules/new-client/skills/new-client/SKILL.md"]
+    new_client_skill = skills["modules/new-client/skills/mparanza-new-client/SKILL.md"]
     assert "`modules/new-client`" in new_client_skill
     assert "`plugins/new-client`" not in new_client_skill
     assert "python scripts/delivery_manifest.py seal \\" in new_client_skill
@@ -1005,7 +1041,7 @@ def test_cowork_projects_user_facing_artifact_names_and_review_actor(
         assert professional_label in review_session
 
     report_skill = projected_text[
-        "modules/report-builder/skills/financial-report-builder/SKILL.md"
+        "modules/report-builder/skills/mparanza-financial-report-builder/SKILL.md"
     ]
     assert "codex_comment" in report_skill
     assert any(".codex-plugin" in content for content in projected_text.values())
@@ -1119,25 +1155,25 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
     cowork_instruction_docs,
 ) -> None:
     readme = cowork_instruction_docs["README.md"]
-    main = cowork_instruction_docs["skills/vera/SKILL.md"]
-    studio = cowork_instruction_docs["skills/studio-archive/SKILL.md"]
+    main = cowork_instruction_docs["skills/mparanza-vera/SKILL.md"]
+    studio = cowork_instruction_docs["skills/mparanza-studio-archive/SKILL.md"]
     archive_organization = cowork_instruction_docs[
-        "skills/archive-organization/SKILL.md"
+        "skills/mparanza-archive-organization/SKILL.md"
     ]
     archive_organization_module = cowork_instruction_docs[
-        "modules/archive-organization/skills/archive-organization/SKILL.md"
+        "modules/archive-organization/skills/mparanza-archive-organization/SKILL.md"
     ]
     audit = cowork_instruction_docs[
-        "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md"
+        "modules/open-item-reconciliation/skills/mparanza-open-item-reconciliation/SKILL.md"
     ]
     journal = cowork_instruction_docs[
-        "modules/journal-sampling/skills/journal-sampling/SKILL.md"
+        "modules/journal-sampling/skills/mparanza-journal-sampling/SKILL.md"
     ]
     check_entries = cowork_instruction_docs[
-        "modules/check-entries/skills/vouching/SKILL.md"
+        "modules/check-entries/skills/mparanza-vouching/SKILL.md"
     ]
     sari = cowork_instruction_docs[
-        "modules/registro-imprese-sari/skills/registro-imprese-sari/SKILL.md"
+        "modules/registro-imprese-sari/skills/mparanza-registro-imprese-sari/SKILL.md"
     ]
 
     assert "- WhatsApp Desktop inspection;" in readme
@@ -1197,23 +1233,23 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
         name: content
         for name, content in cowork_instruction_docs.items()
         if "/references/" in name
-        and not name.startswith("skills/learn-with-vera/references/")
+        and not name.startswith("skills/mparanza-learn-with-vera/references/")
     }
     introduction = cowork_instruction_docs[
-        "skills/learn-with-vera/references/get-started.md"
+        "skills/mparanza-learn-with-vera/references/get-started.md"
     ]
     assert "In Cowork follow the written single-conversation contract" in introduction
     assert "Never run desktop profile/session commands there" in introduction
     assert references
     for name, content in references.items():
-        if name == "skills/vera/references/optional-integrations.md":
+        if name == "skills/mparanza-vera/references/optional-integrations.md":
             # Setup for an explicitly selected external tool requires that tool;
             # the general draft-delivery fallback is not a substitute for it.
             assert "Ordinary Vera work requires none of them" in content
             assert "Never substitute another engine or cloud processing" in content
             assert "not inside Cowork's Linux VM" in content
             continue
-        if name == "skills/learn-with-vera/references/get-started.md":
+        if name == "skills/mparanza-learn-with-vera/references/get-started.md":
             # The written-course projection installs this shared guide after
             # ordinary reference projection; it delegates to its parent contract.
             assert "Follow the parent teaching skill's host contract" in content
@@ -1223,7 +1259,7 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
             )
             assert (
                 "## Cowork execution contract"
-                in cowork_instruction_docs["skills/learn-with-vera/SKILL.md"]
+                in cowork_instruction_docs["skills/mparanza-learn-with-vera/SKILL.md"]
             )
             # This authored cross-host introduction carries its own Cowork boundary.
             normalized = " ".join(content.split())
@@ -1243,20 +1279,23 @@ def test_cowork_projects_every_host_review_gate_to_pending_review(
     cowork_instruction_docs,
 ) -> None:
     projected_review_skills = (
-        "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
-        "modules/check-entries/skills/vouching/SKILL.md",
-        "modules/concordato-plan-review/skills/concordato-plan-review/SKILL.md",
-        "modules/deep-research-validator/skills/legal-tax-answer-review/SKILL.md",
+        "modules/open-item-reconciliation/skills/mparanza-open-item-reconciliation/SKILL.md",
+        "modules/check-entries/skills/mparanza-vouching/SKILL.md",
+        "modules/concordato-plan-review/skills/mparanza-concordato-plan-review/SKILL.md",
+        "modules/deep-research-validator/skills/mparanza-legal-tax-answer-review/SKILL.md",
         (
             "modules/journal-bank-reconciliation/skills/"
-            "journal-bank-reconciliation/SKILL.md"
+            "mparanza-journal-bank-reconciliation/SKILL.md"
         ),
-        "modules/journal-sampling/skills/journal-sampling/SKILL.md",
-        "modules/new-client/skills/new-client/SKILL.md",
-        "modules/previdenza-inps/skills/previdenza-inps/SKILL.md",
-        "modules/prompt-optimizer/skills/legal-tax-answer-planner/SKILL.md",
-        ("modules/registro-imprese-sari/skills/" "registro-imprese-sari/SKILL.md"),
-        "modules/report-builder/skills/financial-report-builder/SKILL.md",
+        "modules/journal-sampling/skills/mparanza-journal-sampling/SKILL.md",
+        "modules/new-client/skills/mparanza-new-client/SKILL.md",
+        "modules/previdenza-inps/skills/mparanza-previdenza-inps/SKILL.md",
+        "modules/prompt-optimizer/skills/mparanza-legal-tax-answer-planner/SKILL.md",
+        (
+            "modules/registro-imprese-sari/skills/"
+            "mparanza-registro-imprese-sari/SKILL.md"
+        ),
+        "modules/report-builder/skills/mparanza-financial-report-builder/SKILL.md",
     )
 
     for name in projected_review_skills:
@@ -1273,7 +1312,7 @@ def test_cowork_concordato_prefers_bounded_review_without_blocking_file_fallback
     cowork_instruction_docs,
 ) -> None:
     skill = cowork_instruction_docs[
-        "modules/concordato-plan-review/skills/concordato-plan-review/SKILL.md"
+        "modules/concordato-plan-review/skills/mparanza-concordato-plan-review/SKILL.md"
     ]
     normalized = " ".join(skill.split())
 
@@ -1293,7 +1332,7 @@ def test_cowork_concordato_prefers_bounded_review_without_blocking_file_fallback
 def test_cowork_omits_codex_only_luna_residual_route(vera_entries) -> None:
     skill_name = (
         "modules/journal-bank-reconciliation/skills/"
-        "journal-bank-reconciliation/SKILL.md"
+        "mparanza-journal-bank-reconciliation/SKILL.md"
     )
     reference_name = (
         "modules/journal-bank-reconciliation/references/workflow-reference.md"
@@ -1315,7 +1354,7 @@ def test_cowork_omits_codex_only_luna_residual_route(vera_entries) -> None:
 
 def test_cowork_previdenza_keeps_official_export_path_only(vera_entries) -> None:
     inventory_name = "modules/previdenza-inps/scripts/inventory_case.py"
-    skill_name = "modules/previdenza-inps/skills/previdenza-inps/SKILL.md"
+    skill_name = "modules/previdenza-inps/skills/mparanza-previdenza-inps/SKILL.md"
     workflow_name = "modules/previdenza-inps/references/workflow-reference.md"
     access_name = "modules/previdenza-inps/references/inps-access-channels.md"
     inventory = vera_entries[inventory_name].decode("utf-8")
@@ -1668,12 +1707,12 @@ def test_claude_verifier_reports_directory_and_zip_drift(
         public_zip=tmp_path / "public-vera-cowork-plugin.zip",
     )
     builder.build_package(isolated)
-    skill_path = isolated.output_directory / "skills" / "vera" / "SKILL.md"
+    skill_path = isolated.output_directory / "skills" / "mparanza-vera" / "SKILL.md"
     skill_path.write_text("drift\n", encoding="utf-8")
 
     errors = builder.verify_package(isolated)
 
-    assert "Directory content differs: skills/vera/SKILL.md" in errors
+    assert "Directory content differs: skills/mparanza-vera/SKILL.md" in errors
     assert not any(error.startswith("ZIP content differs:") for error in errors)
 
 
@@ -1786,7 +1825,7 @@ def test_cowork_passive_invoice_worker_uses_haiku_and_pending_handoff(vera_entri
         vera_entries["modules/passive-invoice-audit/scripts/worker_config.json"]
     )
     agent = vera_entries["agents/passive-invoice-reviewer.md"].decode()
-    skill = vera_entries["skills/purchase-invoice-review/SKILL.md"].decode()
+    skill = vera_entries["skills/mparanza-purchase-invoice-review/SKILL.md"].decode()
     manifest = json.loads(vera_entries[".claude-plugin/plugin.json"])
 
     assert worker_config == {"runtime": "cowork-haiku"}
@@ -1802,11 +1841,13 @@ def test_cowork_passive_invoice_worker_uses_haiku_and_pending_handoff(vera_entri
 def test_cowork_sales_plan_keeps_public_runner_without_codex_native_authoring(
     vera_entries,
 ):
-    wrapper = vera_entries["skills/sales-plan/SKILL.md"].decode()
-    module = vera_entries["modules/sales-plan/skills/sales-plan/SKILL.md"].decode()
+    wrapper = vera_entries["skills/mparanza-sales-plan/SKILL.md"].decode()
+    module = vera_entries[
+        "modules/sales-plan/skills/mparanza-sales-plan/SKILL.md"
+    ].decode()
     assert "native-workspace.md" not in wrapper
     assert "operator/tenant/run-scoped draft" not in wrapper
-    assert "skills/sales-plan/SKILL.md" in wrapper
+    assert "skills/mparanza-sales-plan/SKILL.md" in wrapper
     assert "paged authoring from a registered strict CSV" not in module
     assert "run_plan.py" in module
     assert "model_use.py" in module

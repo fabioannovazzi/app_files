@@ -128,8 +128,8 @@
       "sha256": "c4632f361e2fda6be0e66e3242a8093a5e43696730a9cc51ea1c41d0eea60c39"
     },
     {
-      "path": "modules/report-builder/skills/financial-report-builder/SKILL.md",
-      "sha256": "e77d145280cc22454788407ad95c05dae4ffc167731749ad4a23ca8b7c36d667"
+      "path": "modules/report-builder/skills/mparanza-financial-report-builder/SKILL.md",
+      "sha256": "6ee05ef8b8b66e1d36c5e025a6e88e22dee3466ddec36cf77381bbde9045d644"
     },
     {
       "path": "modules/report-builder/vendor/modules/__init__.py",
@@ -172,11 +172,11 @@
       "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
     },
     {
-      "path": "skills/financial-report-builder/SKILL.md",
-      "sha256": "0088df7094a41b2a203f29cf58f2e06212e25248666de9b3d17695f69fc0c71e"
+      "path": "skills/mparanza-financial-report-builder/SKILL.md",
+      "sha256": "9a9fd00210d414878fdc27265f5ef841495c3b06bb05e9efa7f9a25a4be4b7a5"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

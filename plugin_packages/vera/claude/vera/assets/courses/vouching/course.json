@@ -92,11 +92,11 @@
       "sha256": "461e2a558b67a1563aed5bba936739656bae23ac0a5627111805cf56da3585f0"
     },
     {
-      "path": "modules/check-entries/skills/vouching/SKILL.md",
-      "sha256": "bcb210a49411e7efb83e3a8025f8d16899c915def5d967d9c51b7acd76ff8565"
+      "path": "modules/check-entries/skills/mparanza-vouching/SKILL.md",
+      "sha256": "e8c62d0f237098f1380c6c2b3603b6233b265ad1c90526531a97a668edf09bbb"
     },
     {
-      "path": "modules/check-entries/skills/vouching/references/geneva.md",
+      "path": "modules/check-entries/skills/mparanza-vouching/references/geneva.md",
       "sha256": "ef103d52e2ff6608d67dfe4b3af3ae9a8d01c64a4db31d4fd0585b85ccd50e2c"
     },
     {
@@ -144,12 +144,12 @@
       "sha256": "dd88f8273d2eab075178de060385d12014e12b213b1a1e6733568688fdc6cb21"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {
-      "path": "skills/vouching/SKILL.md",
-      "sha256": "52f98feffc523cb05d12e3a561c1db5f5520f77dfcde792e1ffa5e8c85a48a84"
+      "path": "skills/mparanza-vouching/SKILL.md",
+      "sha256": "7cd498e8f8d28fe4875985e1bac393c302748a74850cff61391111e9e12edfe3"
     },
     {
       "path": "vendor/modules/__init__.py",

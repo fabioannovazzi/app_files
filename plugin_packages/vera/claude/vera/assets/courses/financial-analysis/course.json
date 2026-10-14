@@ -92,8 +92,8 @@
       "sha256": "93b67dad98b701c09cfd2f856d6505a9319a9f1f280ea0921bec6aba110a6c32"
     },
     {
-      "path": "modules/financial-analysis/skills/financial-analysis/SKILL.md",
-      "sha256": "4076f07b615722da5bab40734cb9daed54ab290ec58a86f1680b9e65c1d23662"
+      "path": "modules/financial-analysis/skills/mparanza-financial-analysis/SKILL.md",
+      "sha256": "9412ae495dcb5e20eda89bedb8cc20985f2e94ccf2f1164a9513391d05bb5349"
     },
     {
       "path": "modules/financial-analysis/vendor/modules/__init__.py",
@@ -152,11 +152,11 @@
       "sha256": "fc8a49d6bb38e2b41bcade743ffb38377718c55f26d0966b3e7a29a931d94a90"
     },
     {
-      "path": "skills/financial-analysis/SKILL.md",
-      "sha256": "6b35bda9a7728066885ea99f125e374e7a569ffc2ee423877eb843d11d75b00b"
+      "path": "skills/mparanza-financial-analysis/SKILL.md",
+      "sha256": "d216524eeb41146bd176656b9765be08a76143abb425fb7f21888429dc606ffe"
     },
     {
-      "path": "skills/vera/references/connected-studio-knowledge.md",
+      "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
       "sha256": "7a746746eeb60e6fc14ede77fc28de991627f84cc541d986ba9ebed576381621"
     },
     {

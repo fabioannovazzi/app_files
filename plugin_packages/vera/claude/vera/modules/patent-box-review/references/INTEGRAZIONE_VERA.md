@@ -12,11 +12,11 @@ Later host-specific instructions in this reference cannot override this rule.
 
 ## Identità e stato
 
-Identità proposta: `vera:patent-box-review`. Componente proposta: `patent-box-review`.
+Identità proposta: `vera:mparanza-patent-box-review`. Componente proposta: `patent-box-review`.
 
 Il catalogo e `components.json` della versione Vera 0.1.258 consultata non includono questa componente. Questo pacchetto non modifica il plugin installato e non crea una skill personale. Le istruzioni in ISTRUZIONI_ASSISTENTE.md sono materiale da trasformare in skill dal manutentore del prodotto dopo l'integrazione.
 
-Il workflow può riutilizzare `vera:quesito-legale-fiscale` per un quesito interpretativo specifico sorto nella pratica, conservando il relativo contratto e risultato. Questo non sostituisce i contratti del Patent Box per popolazione, calcolo, evidenze e dichiarazione.
+Il workflow può riutilizzare `vera:mparanza-quesito-legale-fiscale` per un quesito interpretativo specifico sorto nella pratica, conservando il relativo contratto e risultato. Questo non sostituisce i contratti del Patent Box per popolazione, calcolo, evidenze e dichiarazione.
 
 ## Contratti da collegare
 
