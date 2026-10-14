@@ -159,6 +159,85 @@
         "type": "string",
         "pattern": "^[a-f0-9]{64}$"
       }
+    },
+    "calendar": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "event": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000
+          },
+          "event_date": {
+            "type": "string",
+            "maxLength": 10
+          },
+          "due_date": {
+            "type": "string",
+            "maxLength": 10
+          },
+          "status": {
+            "enum": [
+              "proposed",
+              "reviewed",
+              "conditional",
+              "unknown"
+            ]
+          },
+          "basis": {
+            "type": "string",
+            "maxLength": 10000
+          },
+          "reviewer_ref": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "citations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "source_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "anchor": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "quote": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "source_id",
+                "anchor",
+                "quote"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "id",
+          "event",
+          "event_date",
+          "due_date",
+          "status",
+          "basis",
+          "reviewer_ref",
+          "citations"
+        ],
+        "additionalProperties": false
+      }
     }
   },
   "required": [

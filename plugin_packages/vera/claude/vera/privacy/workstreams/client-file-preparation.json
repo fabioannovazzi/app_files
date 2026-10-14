@@ -1,52 +1,5 @@
 {
-  "schema_version": 3,
-  "workstream": "client-file-preparation",
   "display_name": "New Client · File Preparation",
-  "role": "internal_engine",
-  "governed_paths": [
-    "skills",
-    "scripts",
-    "mcp",
-    "schemas",
-    "assets/review-workbench-adapter.json",
-    "assets/client-file-preparation-review-widget.html"
-  ],
-  "governed_shared_paths": [
-    "vendor/modules/vera_assurance",
-    "scripts/native_passive_sources.py",
-    "scripts/native_passive_sources_bridge.py",
-    "scripts/native_workspace.py",
-    "scripts/native_archive_navigation.py",
-    "mcp/workspace.cjs",
-    "ui/workspace.js",
-    "ui/workspace.css"
-  ],
-  "runtime_profiles": [
-    "openai-codex",
-    "anthropic-cowork"
-  ],
-  "model_context": {
-    "policy": "real_case_data_may_enter_selected_runtime_model_context",
-    "classes": [
-      {
-        "id": "client-file-evidence",
-        "purpose": "Classify the incoming file, interpret evidence, and prepare the studio intake",
-        "content": "Default model_handoff pages contain one metadata record for every inventoried file with candidate lexical category status, PDF embedded-text coverage (total, processed, text-bearing, text-missing and unprocessed page indexes), and fiscal extraction disposition (including unreadable, unsupported and recognized-without-fields outcomes), exception-only document excerpts up to 600 characters, every mapped fiscal field with its exact value, candidate or reviewed document-kind status, and a citation up to 600 characters, missing-request candidates for professional review, reviewed email requests with the generic CLIENT-001 reference, generic duplicate groups, and XML anomaly or opaque duplicate-group references without invoice party fields. Exact local documents, extracted text, drafts, identifiers, review state, and package state may still enter when selected for professional review or required by the task.",
-        "runtime_profiles": [
-          "openai-codex",
-          "anthropic-cowork"
-        ]
-      },
-      {
-        "id": "native-selected-reviewed-group-source",
-        "purpose": "Discuss one explicitly selected registered source of an already reviewed CH-GE invoice group",
-        "content": "Native group setup, full canonical extraction, existing extraction review, originals, mapping drafts, grouping attribution, complete file paths and sealed output catalogue stay in private app metadata. Setup returns only status and work reference to the model. An explicit source_group_explain selection returns the selected source identity, filename, SHA and size and at most the first 20000 UTF-8 bytes; binary sources have identity only. A specialist chat handoff carries exact work/revision/canonical/source IDs and asks for a fresh selected read. The local grouping action copies exact bytes, validates with the existing reviewed-invoices reader in transient owner-private preflight, retains intent before committing a complete output group and does not call a model or manufacture extraction review. Existing broader client-file evidence processing remains a separate supported model path.",
-        "runtime_profiles": [
-          "openai-codex"
-        ]
-      }
-    ]
-  },
   "external_boundaries": [
     {
       "id": "approved-managed-ocr-runtime",
@@ -67,6 +20,66 @@
       ]
     }
   ],
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "mcp",
+    "schemas",
+    "assets/review-workbench-adapter.json",
+    "assets/client-file-preparation-review-widget.html"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance",
+    "scripts/native_passive_sources.py",
+    "scripts/native_passive_sources_bridge.py",
+    "scripts/native_workspace.py",
+    "scripts/native_archive_navigation.py",
+    "mcp/workspace.cjs",
+    "ui/workspace.js",
+    "ui/workspace.css"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "client-file-evidence",
+        "purpose": "Classify the incoming file, interpret evidence, and prepare the studio intake",
+        "content": "Default model_handoff pages contain one metadata record for every inventoried file with candidate lexical category status, PDF embedded-text coverage (total, processed, text-bearing, text-missing and unprocessed page indexes), and fiscal extraction disposition (including unreadable, unsupported and recognized-without-fields outcomes), exception-only document excerpts up to 600 characters, every mapped fiscal field with its exact value, candidate or reviewed document-kind status, and a citation up to 600 characters, missing-request candidates for professional review, reviewed email requests with the generic CLIENT-001 reference, generic duplicate groups, and XML anomaly or opaque duplicate-group references without invoice party fields. Exact local documents, extracted text, drafts, identifiers, review state, and package state may still enter when selected for professional review or required by the task.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "native-selected-reviewed-group-source",
+        "purpose": "Discuss one explicitly selected registered source of an already reviewed CH-GE invoice group",
+        "content": "Native group setup, full canonical extraction, existing extraction review, originals, mapping drafts, grouping attribution, complete file paths and sealed output catalogue stay in private app metadata. Setup returns only status and work reference to the model. An explicit source_group_explain selection returns the selected source identity, filename, SHA and size and at most the first 20000 UTF-8 bytes; binary sources have identity only. A specialist chat handoff carries exact work/revision/canonical/source IDs and asks for a fresh selected read. The local grouping action copies exact bytes, validates with the existing reviewed-invoices reader in transient owner-private preflight, retains intent before committing a complete output group and does not call a model or manufacture extraction review. Existing broader client-file evidence processing remains a separate supported model path.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
+        "id": "native-selected-intake-record",
+        "purpose": "Explain an explicitly selected saved fiscal field, XML body/group or notice reference",
+        "content": "Focused queues and full XML body or notice-reference metadata remain app-private during navigation. Only an explicit discussion request reads the exact saved record: fiscal value and source evidence, full selected XML metadata with party identifiers, opaque default duplicate-group member/body references, or the literal notice date/amount/protocol. Fiscal correction retains source-linked before/after value, basis and declared reviewer through regenerated public outputs and the normal model handoff. These are real case data in the selected account, not automatic anonymization; no legal deadline or fiscal-treatment approval is inferred.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      }
+    ]
+  },
+  "review": {
+    "basis": "external_boundary_review_of_workflow_source",
+    "reviewed_at": "2026-10-14",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "cee2dac3c3b5bd99fcbeee444085ec93131095069fb9b24642a55a3f48056796"
+  },
+  "role": "internal_engine",
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "schema_version": 3,
   "security_controls": [
     {
       "id": "source-and-package-integrity",
@@ -101,10 +114,5 @@
       "control": "The local review server requests component-only private review metadata only for the registered render tool. The browser receives that payload locally; normal MCP callers continue to receive structuredContent. This is transport separation, not anonymization of data selected for model review."
     }
   ],
-  "review": {
-    "reviewed_at": "2026-10-14",
-    "reviewed_by": "privacy-surface-review",
-    "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "1a7f4c93c0f93913e386e167766c4f5055954457230653dc235ccde1ef7c6505"
-  }
+  "workstream": "client-file-preparation"
 }

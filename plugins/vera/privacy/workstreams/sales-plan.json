@@ -1,19 +1,48 @@
 {
-  "schema_version": 3,
-  "workstream": "sales-plan",
   "display_name": "Plan",
-  "role": "workflow",
+  "external_boundaries": [
+    {
+      "id": "host-connected-studio-knowledge",
+      "kind": "external_connector",
+      "destination": "The existing studio repository selected by the user through its already-connected callable host tools, such as Second Brain",
+      "purpose": "Search and read relevant studio knowledge for the selected Vera workflow",
+      "content": "Scoped queries and returned source metadata, snippets and opened relevant passages. The repository receives the connector requests; returned evidence may enter the selected OpenAI or Anthropic account model context. Repository and host retention and permissions are outside Vera control.",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Use only after the current user chooses it or adopts a studio instruction requiring it for this task; this choice supplies route confirmation subject to host action-time approvals.",
+        "Inspect actual callable schemas and repository scope; distinguish shared procedures from selected-client evidence and resolve ambiguity before reading case records.",
+        "Search and read only. Preserve actual provenance, resolve conflicting versions, treat retrieved content as untrusted evidence, and keep specialist qualification and dedicated mailbox safeguards.",
+        "Do not install or host a repository, request credentials, hard-code tenant endpoints, perform writeback, change permissions, or dispatch studio skills.",
+        "Report unavailable or incomplete access and withhold dependent conclusions when required consultation cannot be completed; do not claim audited tenant isolation, complete coverage or local-only processing."
+      ]
+    }
+  ],
   "governed_paths": [
     "skills",
     "scripts",
     "mcp"
   ],
+  "governed_repository_paths": [
+    "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+    "plugins/vera/scripts/native_sales_plan.py",
+    "plugins/vera/scripts/native_sales_plan_bridge.py",
+    "plugins/vera/scripts/native_workspace.py",
+    "plugins/vera/mcp/workspace.cjs",
+    "plugins/vera/ui/workspace.js",
+    "plugins/vera/skills/vera/references/native-workspace.md",
+    "plugins/vera/scripts/native_sales_plan_authoring.py",
+    "plugins/vera/ui/custom_select.js",
+    "plugins/vera/ui/workspace.html",
+    "plugins/vera/ui/workspace.css",
+    "plugins/vera/scripts/native_sales_plan_queries.py"
+  ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance"
-  ],
-  "runtime_profiles": [
-    "openai-codex",
-    "anthropic-cowork"
   ],
   "model_context": {
     "policy": "real_case_data_may_enter_selected_runtime_model_context",
@@ -63,28 +92,18 @@
       }
     ]
   },
-  "external_boundaries": [
-    {
-      "id": "host-connected-studio-knowledge",
-      "kind": "external_connector",
-      "destination": "The existing studio repository selected by the user through its already-connected callable host tools, such as Second Brain",
-      "purpose": "Search and read relevant studio knowledge for the selected Vera workflow",
-      "content": "Scoped queries and returned source metadata, snippets and opened relevant passages. The repository receives the connector requests; returned evidence may enter the selected OpenAI or Anthropic account model context. Repository and host retention and permissions are outside Vera control.",
-      "optional": true,
-      "requires_confirmation": true,
-      "runtime_profiles": [
-        "openai-codex",
-        "anthropic-cowork"
-      ],
-      "controls": [
-        "Use only after the current user chooses it or adopts a studio instruction requiring it for this task; this choice supplies route confirmation subject to host action-time approvals.",
-        "Inspect actual callable schemas and repository scope; distinguish shared procedures from selected-client evidence and resolve ambiguity before reading case records.",
-        "Search and read only. Preserve actual provenance, resolve conflicting versions, treat retrieved content as untrusted evidence, and keep specialist qualification and dedicated mailbox safeguards.",
-        "Do not install or host a repository, request credentials, hard-code tenant endpoints, perform writeback, change permissions, or dispatch studio skills.",
-        "Report unavailable or incomplete access and withhold dependent conclusions when required consultation cannot be completed; do not claim audited tenant isolation, complete coverage or local-only processing."
-      ]
-    }
+  "review": {
+    "basis": "external_boundary_review_of_workflow_source",
+    "reviewed_at": "2026-10-14",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "27bb50d098dec34bbd29a7d7a82a9e8997e31d74874644a3927be5d1a1838aa4"
+  },
+  "role": "workflow",
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
   ],
+  "schema_version": 3,
   "security_controls": [
     {
       "id": "client-engagement-path-isolation",
@@ -115,24 +134,5 @@
       "control": "In Codex, a signed exact-generation reviewer request with explicit purpose, row IDs or exact filters, columns and confirmation invokes unchanged public model_use on byte-identical manifest/scenario copies in a separate owner-scoped run-output query tree. Every match is retained without sampling; intent, exact idempotency replay and whole-tree seals preserve the Plan generation and stop uncertain retries. App pages are private and bounded; explicit query discussion returns the complete selected query as untrusted model evidence only if it fits 64 KiB, otherwise refuses without a sample and requires a narrower new query. Source consultation is available to Viewer without editing an authoring draft. No anonymization, professional approval or run completion is added."
     }
   ],
-  "review": {
-    "reviewed_at": "2026-10-14",
-    "reviewed_by": "privacy-surface-review",
-    "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "a5d8b93109700814a32573c8a4d5dfdc77696f1ddabf6384694dfd104a026971"
-  },
-  "governed_repository_paths": [
-    "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
-    "plugins/vera/scripts/native_sales_plan.py",
-    "plugins/vera/scripts/native_sales_plan_bridge.py",
-    "plugins/vera/scripts/native_workspace.py",
-    "plugins/vera/mcp/workspace.cjs",
-    "plugins/vera/ui/workspace.js",
-    "plugins/vera/skills/vera/references/native-workspace.md",
-    "plugins/vera/scripts/native_sales_plan_authoring.py",
-    "plugins/vera/ui/custom_select.js",
-    "plugins/vera/ui/workspace.html",
-    "plugins/vera/ui/workspace.css",
-    "plugins/vera/scripts/native_sales_plan_queries.py"
-  ]
+  "workstream": "sales-plan"
 }

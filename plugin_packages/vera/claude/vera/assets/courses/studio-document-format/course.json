@@ -485,7 +485,7 @@
     },
     {
       "path": "skills/studio-document-format/SKILL.md",
-      "sha256": "2e7553b5b476967e509d152f24488795afc0df595d01be21d8b9fc2faa7338bb"
+      "sha256": "8c5b42d86533fa5c28ad354e99e4f01f036d18c0b49b429ad10a604ad2accf59"
     },
     {
       "path": "skills/studio-document-format/references/procedure.md",
@@ -565,15 +565,15 @@
     },
     {
       "path": "vendor/modules/scripts/legal_matter.py",
-      "sha256": "c00b29728f5356a5299783239d465336b443159d5b2feea34b38212ed72a5965"
+      "sha256": "fcc4adf915968c442766899a5c8814cfe7a89f66445e12e9f1423ce8e01ed6ac"
     },
     {
       "path": "vendor/modules/scripts/legal_matter.schema.json",
-      "sha256": "b1fb25dd09d300a79cb7cd68eec45cec7c82afa18d1ba08d05a34d1447971586"
+      "sha256": "da7a79b9aae748d725c3d04d69efb299d0ed10bff2e9ea429288a8d18854906d"
     },
     {
       "path": "vendor/modules/scripts/legal_matter_labels.json",
-      "sha256": "c03f840e81b1f3185cb4be0fedb955adf22845aafd13fc3e78b090c8185129ef"
+      "sha256": "d9e3582c83ef6088388303b566d76a512b25b67fd553b0e35ff9109de006fd13"
     },
     {
       "path": "vendor/modules/scripts/legal_negotiation.py",
@@ -858,5 +858,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "00ba71dc57dd35bec7e985d3044b32a4b5762db856f6f1d10b254b7744e39a61"
+  "canonical_course_sha256": "a0f726b84ab49beb1d0067800f9a4779b3d288b18827df56dfb32d888912d717"
 }

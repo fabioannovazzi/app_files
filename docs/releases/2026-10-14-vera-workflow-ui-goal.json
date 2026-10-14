@@ -1,0 +1,47 @@
+{
+  "goal": "Five workflow UI improvements end to end",
+  "base_commit": "c575f4cb033f6ecc7552e5d9472df17999619688",
+  "base_vera_version": "0.1.375",
+  "scope": [
+    "dati-fiscali-strutturati",
+    "fatture-xml-check",
+    "contenzioso-tributario",
+    "avviso-intake",
+    "studio-document-format"
+  ],
+  "implementation_complete": true,
+  "gates": {
+    "source": true,
+    "regressions": true,
+    "privacy": true,
+    "packages": true,
+    "CI": false,
+    "deployment": false,
+    "installed_host_acceptance": false
+  },
+  "marketplace": "Do not publish",
+  "versions": {
+    "vera": "0.1.378",
+    "lucia": "0.1.104",
+    "client-file-preparation": "0.1.45",
+    "clara": "0.1.276"
+  },
+  "remaining": [
+    "Final source/archive parity checks",
+    "Required green exact-head CI",
+    "Git merge/deployment and live ZIP/hash verification",
+    "Actual fresh installed-host rendering/interaction/persistence acceptance",
+    "Task branch/worktree cleanup"
+  ],
+  "checks": {
+    "final_focused_tests_passed": 55,
+    "helper_coverage_percent": 82.93,
+    "public_producer_tests_passed": 73,
+    "public_producer_skipped": 19,
+    "package_and_wider_regressions": "One version-gate failure corrected by client-file-preparation 0.1.45 and verified separately; other package/wider cases passed.",
+    "type_check": "5 changed helper files passed",
+    "security_check": "No medium or high findings",
+    "privacy_register": "complete and current",
+    "catalogue": "53 entries; no missing or duplicate IDs"
+  }
+}

@@ -29,11 +29,11 @@
   let sariReviewContext,sariReviewTimer,sariReviewTask=Promise.resolve();
   let sariFollowupContext,sariFollowupTimer,sariFollowupTask=Promise.resolve();
   let bandiContext,bandiTimer,bandiTask=Promise.resolve();
-  let openItemsIntakePanel,bandiAuthorPanel,patentBoxPanel,communicationPanel,websitePanel,transformationPanel,ratingPanel,fusionPanel,browserPanel;
+  let practicePanel,openItemsIntakePanel,bandiAuthorPanel,patentBoxPanel,communicationPanel,websitePanel,transformationPanel,ratingPanel,fusionPanel,browserPanel;
   const names = { "bilancio-xbrl-it": "Bilancio OIC", "journal-bank-reconciliation": "Giornale e banca", "treasury-forecast": "Budget di tesoreria", "open-item-reconciliation": "Partite aperte", "journal-sampling": "Campionamento", "check-entries": "Verifica documentale", "new-client": "Nuovo cliente", "client-file-preparation": "Nuovo cliente · Documenti", "archive-organization": "Riordino archivio", "report-builder": "Report finanziario", "financial-analysis": "Analisi finanziaria", "concordato-plan-review": "Piano di concordato", "prompt-optimizer": "Piano della risposta", "deep-research-validator": "Revisione della risposta" };
   Object.assign(names, { lipe: "LIPE", "scissione-guidata": "Scissione", "esg-reporting-assurance": "Rendicontazione ESG", "aml-review": "Antiriciclaggio", "adeguati-assetti": "Adeguati assetti", "passive-invoice-audit": "Controllo fatture passive", "invoice-xml": "Fattura XML", "sales-plan": "Piano vendite", "business-planning": "Business plan", "business-valuation": "Valutazione d’azienda", "variance-analysis": "Analisi scostamenti", "management-control-pack": "Controllo di gestione", "centrale-rischi-review": "Centrale dei Rischi", "composizione-negoziata": "Composizione negoziata", "previdenza-inps": "Previdenza INPS", "registro-imprese-sari": "Registro Imprese", "bandi-agevolazioni": "Bandi e agevolazioni", "patent-box-review": "Patent Box" });
   const financialRecipes = { monthly_pnl: "Conto economico mensile", working_capital: "Capitale circolante", customer_concentration: "Concentrazione dei clienti", quality_of_earnings: "EBITDA rettificato", net_debt: "Debito netto", normalized_working_capital: "Capitale circolante normalizzato", capex: "Investimenti", deal_bridges: "Ponti EBITDA/cassa e valore d’impresa/capitale proprio" };
-  const labels = { description: "Descrizione", cash_amount: "Flusso", outstanding_amount: "Importo aperto", amount: "Importo", expected_date: "Data attesa", due_date: "Scadenza fonte", basis: "Motivazione", counterparty: "Controparte", journal_date: "Data scrittura", bank_date: "Data movimento", journal_amount: "Importo scrittura", bank_amount: "Importo banca", journal_description: "Descrizione scrittura", bank_description: "Descrizione banca", amount_delta: "Differenza", date_diff_days: "Giorni di differenza", status: "Stato", review_note: "Nota di revisione", reason: "Motivazione", requested_document: "Documento richiesto", entry: "Scrittura", bank_line: "Riga banca", account: "Conto", match_basis: "Base del confronto", shared_references: "Riferimenti comuni", source_path: "Fonte", output_path: "Output", raw_value: "Valore fonte", sheet: "Foglio", row: "Riga", column: "Colonna", cell: "Cella", file_name: "Documento", message: "Esito", review_status: "Revisione", action: "Decisione", reviewed_by: "Revisore", reviewed_at: "Data di revisione", reviewer_note: "Nota del revisore", note: "Nota", edit_value: "Valore modificato", source_due_date: "Scadenza fonte", date_origin: "Origine della data", direction: "Direzione", currency: "Valuta" };
+  const labels = { supplier_name:"Fornitore", supplier_vat:"Partita IVA del fornitore", customer_name:"Cliente", customer_tax_id:"Identificativo fiscale del cliente", invoice_date:"Data fattura", invoice_number:"Numero fattura", document_type:"Tipo documento", total_amount:"Totale documento", vat_summary:"Riepilogo IVA", natura_codes:"Natura IVA", withholding_summary:"Ritenute", stamp_duty:"Bollo", payment_methods:"Modalità di pagamento", line_count:"Numero righe", body_index:"Corpo XML", anomalies:"Anomalie formali", value:"Valore estratto", confidence:"Confidenza dell’estrazione", warnings:"Avvertenze", reviewed_correction:"Correzione riveduta", field_code:"Campo", value_type:"Tipo di valore", description: "Descrizione", cash_amount: "Flusso", outstanding_amount: "Importo aperto", amount: "Importo", expected_date: "Data attesa", due_date: "Scadenza fonte", basis: "Motivazione", counterparty: "Controparte", journal_date: "Data scrittura", bank_date: "Data movimento", journal_amount: "Importo scrittura", bank_amount: "Importo banca", journal_description: "Descrizione scrittura", bank_description: "Descrizione banca", amount_delta: "Differenza", date_diff_days: "Giorni di differenza", status: "Stato", review_note: "Nota di revisione", reason: "Motivazione", requested_document: "Documento richiesto", entry: "Scrittura", bank_line: "Riga banca", account: "Conto", match_basis: "Base del confronto", shared_references: "Riferimenti comuni", source_path: "Fonte", output_path: "Output", raw_value: "Valore fonte", sheet: "Foglio", row: "Riga", column: "Colonna", cell: "Cella", file_name: "Documento", message: "Esito", review_status: "Revisione", action: "Decisione", reviewed_by: "Revisore", reviewed_at: "Data di revisione", reviewer_note: "Nota del revisore", note: "Nota", edit_value: "Valore modificato", source_due_date: "Scadenza fonte", date_origin: "Origine della data", direction: "Direzione", currency: "Valuta" };
   const actionLabels = { accept: "Accetta", reject: "Rifiuta", edit: "Modifica", mark_unclear: "Da chiarire", request_more_documents: "Richiedi documenti", skip: "Lascia da esaminare" };
   const statusLabels = { running: "In lavorazione", ready_for_review: "Da rivedere", completed: "Completato", accepted: "Accettato", needs_review: "Da rivedere", draft_for_review: "Bozza da rivedere", matched: "Abbinato", unmatched: "Non abbinato", needs_evidence: "Evidenza mancante", UNREVIEWED: "Da esaminare", ACKNOWLEDGED: "Presa visione salvata", OVERRIDDEN: "Deroga registrata", VALIDATION_FAILED: "Controlli da completare" };
   Object.assign(statusLabels, { professional_decision_recorded:"Decisione professionale registrata", prepared: "Preparato · motore da eseguire", failed: "Lavorazione interrotta", cancelled: "Annullato" });
@@ -46,7 +46,7 @@
   Object.assign(statusLabels,{awaiting_professional_review:"In attesa di revisione professionale",blocked:"Dati da completare o correggere",known:"Conosciuto",unknown:"Ignoto",contested:"Controverso",partial:"Parziale",unsupported:"Percorso non supportato",prepared_for_review:"Preparato per il riesame"});
   Object.assign(labels,{recipe:"Confronto",mappings:"Periodi, misure e dimensioni",options:"Scelte del confronto",accounting_review:"Controlli dichiarati",accounting_readiness:"Controlli del motore",declared_controls:"Controlli e decisioni dichiarati",professional_review:"Revisione professionale",root_cause_review:"Revisione della sequenza",source_tie_out:"Quadratura delle fonti",favorable_adverse_convention:"Convenzione favorevole/sfavorevole",materiality:"Materialità",baseline_source_total:"Totale fonte di riferimento",comparison_source_total:"Totale fonte confrontata",baseline_calculated_total:"Totale calcolato di riferimento",comparison_calculated_total:"Totale calcolato confrontato",tolerance:"Tolleranza dichiarata",component_bridge:"Quadratura dei contributi",max_abs_reconciliation_delta:"Residuo massimo assoluto",accounting_status:"Esito contabile",client_report_status:"Stato del rapporto",unresolved_items:"Questioni aperte",selected_alternative:"Sequenza scelta",alternative_result:"Sequenza",decision_basis:"Motivazione della decisione",other_residual:"Residuo Other",period_column:"Colonna periodo o scenario",baseline_period:"Periodo o scenario di riferimento",comparison_period:"Periodo o scenario confrontato",amount_column:"Colonna importi",units_column:"Colonna quantità",dimensions:"Dimensioni",calculation_grain:"Dettaglio di calcolo",comparison_basis:"Base del confronto",period_comparison_mode:"Tipo di confronto tra periodi"});
   names["rating-legalita"] = "Rating di legalità";
-  const technicalKeys = new Set(["id", "event_id", "issue_id", "source_ref", "document_id", "content_sha256", "record_sha256", "proposal_sha256", "target_artifact", "target_id_field", "target_record_id", "target_field", "rule_id", "model_context", "context_sha256", "review_ticket"]);
+  const technicalKeys = new Set(["id", "event_id", "issue_id", "source_ref", "document_id", "content_sha256", "record_sha256", "proposal_sha256", "target_artifact", "target_id_field", "target_record_id", "target_field", "rule_id", "model_context", "context_sha256", "review_ticket", "field_ref", "source_text_sha256", "source_sha256", "group_ref", "duplicate_key"]);
   const itemId = item => item.issue_id || item.id || item.event_id;
   const title = item => item.title || item.description || item.message || "Elemento da esaminare";
   const node = (tag, text, cls) => { const el = document.createElement(tag); if (text !== undefined) el.textContent = text; if (cls) el.className = cls; return el; };
@@ -85,6 +85,7 @@
   async function openWork(workRef, offset = 0, selected, revision, sourceRef, view) {
     leaveDraft(); await draftTask; const generation = ++epoch;
     if (!sourceRef && state?.work_ref === workRef && ["invoice", "lipe", "aml", "assetti", "scissione", "sales"].includes(state.kind)) sourceRef = state.data.selection.source_ref;
+    if (!view && state?.work_ref === workRef && state.workflow === "client-file-preparation") view = state.view;
     say("Lettura dello stato salvato…");
     const next = await call("vera_workspace_view", { work_ref: workRef, offset, ...(selected ? { item_id: selected } : {}), ...(revision ? { revision } : {}), ...(sourceRef ? { source_ref: sourceRef } : {}), ...(view ? { view } : {}) });
     if (generation !== epoch) return;
@@ -95,6 +96,7 @@
     if (generation === epoch && draft.draft) showDraft(draft.draft);
   }
   function shell() {
+    practicePanel?.dispose();
     openItemsIntakePanel?.dispose();
     browserPanel?.dispose();
     fusionPanel?.dispose();
@@ -134,6 +136,7 @@
   }
   function renderCatalogue() {
     const { nav, main } = shell(); nav.append(button("Clienti e incarichi", loadCatalogue),button("Comunicazioni dello studio",()=>communicationPanel.catalogue()),button("Sito dello studio",()=>websitePanel.catalogue()),button("Automazione web · processi e lotti",()=>browserPanel.catalogue()),button("Fusione guidata",()=>fusionPanel.catalogue()),button("Trasformazione · prototipi sintetici",()=>transformationPanel.catalogue()));
+    nav.append(button("Pratiche e formato documenti",()=>practicePanel.catalogue()));
     nav.append(button("Organizzazione del lavoro", async () => {
       leaveDraft();
       const text = "Apri vera_studio_work_panel_open per consultare il registro degli impegni, le riunioni e le ricevute calendario dello studio. Usa lo stesso registro owner-local di organizzazione-lavoro. Questa richiesta non autorizza operazioni calendario né configura automazioni.";
@@ -2994,6 +2997,15 @@
     if (state.workflow === "archive-organization") nav.append(button("Esecuzione del piano", () => openWork(state.work_ref, 0, undefined, undefined, undefined, "ARCHIVE_EXECUTION")));
     const header = node("header"); header.append(node("p", names[state.workflow] || state.workflow, "eyebrow"), node("h1", state.label));
     technical(header, { lavoro: state.work_ref, cliente: state.client_id, incarico: state.engagement_id, revisione: state.revision }); main.append(header);
+    if (state.workflow === "client-file-preparation") {
+      const views = node("nav", undefined, "actions"); views.setAttribute("aria-label", "Viste della revisione documenti");
+      for (const [view, label] of [["REVIEW", "Tutti gli elementi"], ["INTAKE_FISCAL", "Dati fiscali e copertura"], ["INTAKE_XML_INVOICES", "Fatture XML · corpi"], ["INTAKE_XML", "Anomalie XML e duplicati"], ["INTAKE_NOTICE_REFERENCES", "Avvisi · date e riferimenti"], ["INTAKE_NOTES", "Memo e documenti mancanti"]]) {
+        const count = state.data.intake_view_counts?.[view];
+        const choice = button(label + (count === undefined ? "" : ` (${count})`), () => openWork(state.work_ref, 0, undefined, undefined, undefined, view));
+        choice.setAttribute("aria-pressed", String(state.view === view)); views.append(choice);
+      }
+      main.append(views, node("p", "Ogni vista comprende l’intera coda salvata, suddivisa in pagine. Le anomalie XML e i duplicati sono candidati da verificare; una data estratta non è una scadenza legale confermata.", "caption"));
+    }
     if (state.workflow === "archive-organization" && state.view === "ARCHIVE_EXECUTION") { renderArchiveExecution(main); return; }
     if (state.workflow === "new-client") {
       const final = state.data.final_artifacts || {}, gate = final.export_gate || {};
@@ -3061,6 +3073,18 @@
         const concordatoGroups = { "Procedure and Documents": "Procedura e documenti", "Creditor Treatment": "Trattamento dei creditori", "Feasibility and Issues": "Fattibilità e rilievi" };
         const groupTitle = state.workflow === "concordato-plan-review" ? concordatoGroups[group.title] || group.title : group.title;
         evidence.append(node("h3", groupTitle), Object.keys(values).length ? readFields(values) : node("p", "Nessun dato registrato in questo gruppo.", "caption")); parent.append(evidence);
+      }
+      if (state.workflow === "client-file-preparation") {
+        const {invoices, ...record} = selected.data || {};
+        parent.append(node("h3", "Dati conservati dall’estrazione"), readFields(record,0,10000,20));
+        technical(parent, record);
+        if (Array.isArray(invoices)) {
+          parent.append(node("p", "Il parser segnala un possibile duplicato per gli stessi dati formali. Confronta ciascun corpo e registra la tua decisione; nessuna fattura viene cancellata o contabilizzata.", "caption"));
+          const comparison = node("div", undefined, "xml-comparison");
+          for (const invoice of invoices) { const card = node("article", undefined, "evidence-group"); card.append(node("h3", invoice.file_name + " · " + invoice.body_index), readFields(invoice,0,10000,20)); technical(card,invoice); comparison.append(card); }
+          parent.append(comparison);
+        }
+        if (selected.item_type === "extracted_fiscal_field") parent.append(node("p", "Il valore e la copertura provengono dall’estrazione. Una decisione di revisione non corregge automaticamente il valore: usa il modulo di correzione, quando disponibile, per rigenerare una run separata.", "caption"));
       }
       parent.append(readFields({ source_path: selected.source_path }), readFields({ evidence: selected.evidence }));
     } else if (state.kind === "bilancio") {
@@ -3136,6 +3160,7 @@
       parent.append(button("Riprendi Analisi finanziaria nella chat", () => resumeWorkInChat(parent, { work_ref: state.work_ref, label: state.label, workflow: state.workflow })));
       return;
     }
+    if (state.workflow === "client-file-preparation" && state.data.fiscal_correction_available && selected.item_type === "extracted_fiscal_field" && selected.data.field_ref && selected.data.source_text_sha256) renderFiscalCorrection(parent, selected);
     renderDecision(parent, selected);
   }
   function renderPreparedArtifact(parent, page) {
@@ -3203,7 +3228,29 @@
       say("Modifiche non applicate scartate.");
     }));
   }
+  function renderFiscalCorrection(parent, selected) {
+    const form = node("section", undefined, "evidence-group");
+    form.append(node("h3", "Correggi il valore in una nuova run"), node("p", "Confronta il valore con il documento originale. La correzione conserva estrazione ed evidenza originali e rigenera tutti gli elaborati in una run separata. Non chiude il lavoro né conferma il trattamento fiscale.", "caption"));
+    input(form, "Valore corretto", "correction_value", fields.correction_value ?? selected.data.value);
+    input(form, "Motivazione e riscontro nell’originale", "correction_basis", fields.correction_basis || "", "textarea", 4000);
+    input(form, "Riferimento del revisore", "correction_reviewer", fields.correction_reviewer || "", "text", 160);
+    const confirm = confirmation(form, "Ho confrontato il campo con l’originale e confermo questa correzione e la rigenerazione separata.");
+    let requestKey;
+    for (const control of form.querySelectorAll("input:not([type=checkbox]), textarea")) control.addEventListener("input", () => { confirm.checked = false; requestKey = undefined; });
+    form.append(button("Conserva correzione e rigenera", async () => {
+      if (!confirm.checked) throw new Error("Conferma la correzione dopo aver verificato l’originale.");
+      requestKey ||= "fiscal-" + crypto.randomUUID();
+      const result = await call("vera_workspace_fiscal_correction_prepare", {...scope(), review_ticket:state.review_ticket, human_reviewed:true, idempotency_key:requestKey, value:fields.correction_value, basis:fields.correction_basis, reviewer:fields.correction_reviewer});
+      dirty = false; confirm.checked = false;
+      if (result.native_successor_available) await openWork(result.successor_work_ref, 0, undefined, undefined, undefined, "INTAKE_FISCAL");
+      else { form.append(node("p", "Correzione rigenerata nella run " + result.successor_run_id + ". Questo pilot richiede il collegamento esplicito della nuova run prima di riaprirla nel pannello.", "notice")); }
+      say("Correzione conservata; gli output originali sono preservati. La nuova run resta da rivedere e chiudere separatamente.");
+    }, "primary"));
+    parent.append(form);
+  }
   function renderDecision(parent, selected) {
+    if (selected.item_type === "notice_extracted_reference") { parent.append(node("p", "Data, importo o riferimento estratti dalla fonte. Il termine legale richiede una valutazione separata. Rivedi il memo e i documenti mancanti nella loro vista, senza reinizializzare l’intake.", "caption")); return; }
+    if (selected.item_type === "xml_invoice_body") { parent.append(node("p", "Metadati del corpo letti dal produttore. Questo controllo in sola lettura non conferma il trattamento fiscale. Le anomalie e i candidati duplicati hanno una decisione separata.", "caption")); return; }
     parent.append(node("h3", "La tua decisione"));
     if (state.run_status !== "running" || state.data.local_review_read_only || state.data.status === "accepted") { parent.append(node("p", "Questo lavoro è in consultazione. Riprendi il run o crea un aggiornamento attraverso Studio Archive per modificarlo.", "notice")); return; }
     if (state.kind === "bilancio" && (!state.data.validation_current || selected.severity === "BLOCKER" || !selected.override_allowed)) { parent.append(node("p", "Correggi i dati o completa le evidenze e rivalida il fascicolo. Questo rilievo non può essere superato da qui.", "notice")); return; }
@@ -3363,17 +3410,18 @@
     if (!output.outputs.length) list.append(node("p", "Non ci sono ancora output dichiarati disponibili. Completa la fase prevista dal flusso e aggiorna questa vista.", "empty"));
     main.append(button("← Torna alla revisione", async () => renderWork()));
   }
-  openItemsIntakePanel = globalThis.VeraOpenItemsIntake.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,openWorks:loadCatalogue,openReview:openWork,setDirty(value){dirty=value;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
-  browserPanel = globalThis.VeraBrowser.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,openWorks:loadCatalogue,setDirty(value){dirty=value;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
-  fusionPanel = globalThis.VeraFusion.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,openWorks:loadCatalogue,setDirty(value){dirty=value;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
-  ratingPanel = globalThis.VeraRating.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,openWorks:loadCatalogue,setDirty(value){dirty=value;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
-  transformationPanel = globalThis.VeraTransformation.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,async sendToChat(text){if(!host.hostCapabilities?.message?.text)return false;const result=await request("ui/message",{role:"user",content:[{type:"text",text}]});if(result?.isError)throw new Error("La chat non ha confermato la richiesta. Verifica prima di riprovare.");return true;},openWorks:loadCatalogue,setDirty(value){dirty=value;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
-  websitePanel = globalThis.VeraWebsite.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,openWorks:loadCatalogue,setDirty(value){dirty=value;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
-  communicationPanel = globalThis.VeraCommunication.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,openWorks:loadCatalogue,setDirty(value){dirty=value;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
+  openItemsIntakePanel = globalThis.VeraOpenItemsIntake.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,openWorks:loadCatalogue,openReview:openWork,setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
+  browserPanel = globalThis.VeraBrowser.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,openWorks:loadCatalogue,setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
+  fusionPanel = globalThis.VeraFusion.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,openWorks:loadCatalogue,setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
+  ratingPanel = globalThis.VeraRating.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,openWorks:loadCatalogue,setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
+  transformationPanel = globalThis.VeraTransformation.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,async sendToChat(text){if(!host.hostCapabilities?.message?.text)return false;const result=await request("ui/message",{role:"user",content:[{type:"text",text}]});if(result?.isError)throw new Error("La chat non ha confermato la richiesta. Verifica prima di riprovare.");return true;},openWorks:loadCatalogue,setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
+  websitePanel = globalThis.VeraWebsite.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,openWorks:loadCatalogue,setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
+  practicePanel = globalThis.VeraPracticeReviews.create({node,button,call,say,shell,leaveDraft,openWorks:loadCatalogue,request,host:()=>host,setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
+  communicationPanel = globalThis.VeraCommunication.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,openWorks:loadCatalogue,setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
   patentBoxPanel = globalThis.VeraPatentBox.create({
     node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,
     async sendToChat(text){if(!host.hostCapabilities?.message?.text)return false;const result=await request("ui/message",{role:"user",content:[{type:"text",text}]});if(result?.isError)throw new Error("La chat non ha confermato la richiesta. Verifica prima di riprovare.");return true;},
-    openWorks:loadCatalogue,setDirty(value){dirty=value;},enter(){state=null;return ++epoch;},
+    openWorks:loadCatalogue,setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},
     isCurrent(generation){return generation===epoch;}
   });
   bandiAuthorPanel = globalThis.VeraBandiContributions.create({
@@ -3382,7 +3430,7 @@
     setDirty(value){dirty=value;}, enter(){state=null;return ++epoch;},
     isCurrent(generation){return generation===epoch;}
   });
-  document.getElementById("refresh").addEventListener("click", () => run(() => openItemsIntakePanel.active() ? openItemsIntakePanel.refresh() : browserPanel.active() ? browserPanel.refresh() : fusionPanel.active() ? fusionPanel.refresh() : ratingPanel.active() ? ratingPanel.refresh() : transformationPanel.active() ? transformationPanel.refresh() : websitePanel.active() ? websitePanel.refresh() : patentBoxPanel.active() ? patentBoxPanel.refresh() : bandiAuthorPanel.active ? bandiAuthorPanel.refresh() : noteContext ? Promise.reject(new Error("Conserva gli appunti e torna all’incarico prima di aggiornare.")) : amlAuthorContext ? Promise.reject(new Error("Conserva la bozza AML e torna ai record prima di aggiornare.")) : planningIntakeContext ? Promise.reject(new Error("Conserva la bozza e torna all’incarico prima di aggiornare.")) : planningReviewContext ? Promise.reject(new Error("Conserva la bozza e torna al piano prima di aggiornare.")) : treasuryIntakeContext || salesAuthorContext ? Promise.reject(new Error("Conserva e torna ai lavori prima di aggiornare la preparazione.")) : closureContext ? Promise.reject(new Error("Conserva e torna ai lavori prima di aggiornare la chiusura.")) : amlDraftContext ? Promise.reject(new Error("Conserva e torna al record prima di aggiornare il riesame.")) : financialWork && financialPage ? financialPage() : crWork && crPage ? crPage() : amlWork ? openAml(amlWork.workRef, 0, amlWork.workflow) : planningAuthorWork ? planningAuthorWork.exact ? openPlanningMandate(planningAuthorWork.exact,planningAuthorWork.stageRef) : renderPlanningAuthor(planningAuthorWork.selected) : businessPlanWork ? openBusinessPlan(businessPlanWork) : salesWork ? openSales(salesWork) : lipeWork ? openLipe(lipeWork) : bankWork ? openBank(bankWork) : state ? openWork(state.work_ref, state.offset) : loadCatalogue()));
+  document.getElementById("refresh").addEventListener("click", () => run(() => practicePanel.active() ? practicePanel.refresh() : openItemsIntakePanel.active() ? openItemsIntakePanel.refresh() : browserPanel.active() ? browserPanel.refresh() : fusionPanel.active() ? fusionPanel.refresh() : ratingPanel.active() ? ratingPanel.refresh() : transformationPanel.active() ? transformationPanel.refresh() : websitePanel.active() ? websitePanel.refresh() : patentBoxPanel.active() ? patentBoxPanel.refresh() : bandiAuthorPanel.active ? bandiAuthorPanel.refresh() : noteContext ? Promise.reject(new Error("Conserva gli appunti e torna all’incarico prima di aggiornare.")) : amlAuthorContext ? Promise.reject(new Error("Conserva la bozza AML e torna ai record prima di aggiornare.")) : planningIntakeContext ? Promise.reject(new Error("Conserva la bozza e torna all’incarico prima di aggiornare.")) : planningReviewContext ? Promise.reject(new Error("Conserva la bozza e torna al piano prima di aggiornare.")) : treasuryIntakeContext || salesAuthorContext ? Promise.reject(new Error("Conserva e torna ai lavori prima di aggiornare la preparazione.")) : closureContext ? Promise.reject(new Error("Conserva e torna ai lavori prima di aggiornare la chiusura.")) : amlDraftContext ? Promise.reject(new Error("Conserva e torna al record prima di aggiornare il riesame.")) : financialWork && financialPage ? financialPage() : crWork && crPage ? crPage() : amlWork ? openAml(amlWork.workRef, 0, amlWork.workflow) : planningAuthorWork ? planningAuthorWork.exact ? openPlanningMandate(planningAuthorWork.exact,planningAuthorWork.stageRef) : renderPlanningAuthor(planningAuthorWork.selected) : businessPlanWork ? openBusinessPlan(businessPlanWork) : salesWork ? openSales(salesWork) : lipeWork ? openLipe(lipeWork) : bankWork ? openBank(bankWork) : state ? openWork(state.work_ref, state.offset) : loadCatalogue()));
   window.addEventListener("message", event => {
     if (event.source !== window.parent || event.data?.jsonrpc !== "2.0") return;
     const message = event.data;

@@ -9,6 +9,7 @@ import json
 import logging
 import os
 import tempfile
+from datetime import date
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
@@ -51,6 +52,7 @@ def initialize(run_dir: Path, kind: str, purpose: str) -> Path:
         "purpose": purpose,
         "language": "it",
         "questions": [],
+        "calendar": [],
         "stages": [],
         "notes": [],
         "output_hashes": {},
@@ -96,6 +98,34 @@ def _check(run_dir: Path, state: dict[str, Any], verify_files: bool = True) -> N
     units = {
         (s["id"], u["anchor"]): u["text"] for s in pack["sources"] for u in s["units"]
     }
+    calendar = state.get("calendar", [])
+    if len({event["id"] for event in calendar}) != len(calendar):
+        raise ValueError("Calendar event IDs must be unique")
+    for event in calendar:
+        # Calendar syntax, literal provenance and attribution are mechanical;
+        # no legal deadline, governing rule or source relevance is inferred.
+        for key in ("event_date", "due_date"):
+            if event[key]:
+                if date.fromisoformat(event[key]).isoformat() != event[key]:
+                    raise ValueError("Calendar dates require YYYY-MM-DD")
+        if event["status"] == "reviewed" and (
+            not event["reviewer_ref"].strip()
+            or not event["basis"].strip()
+            or not event["citations"]
+            or not (event["event_date"] or event["due_date"])
+        ):
+            raise ValueError(
+                "A reviewed calendar event requires a date, reviewer, basis and source citations"
+            )
+        if event["status"] == "conditional" and not event["basis"].strip():
+            raise ValueError("A conditional calendar event requires its assumptions")
+        for citation in event["citations"]:
+            value = units.get((citation["source_id"], citation["anchor"]), "")
+            quote_text = " ".join(citation["quote"].split())
+            if not quote_text or quote_text not in " ".join(value.split()):
+                raise ValueError(
+                    "Calendar evidence quotation does not match the source"
+                )
     blocked = set()
     for question in state["questions"]:
         if set(question["blocks"]) - set(stage_ids):
@@ -264,12 +294,31 @@ def render(run_dir: Path) -> Path:
         + "</td></tr>"
         for stage in state["stages"]
     )
+    calendar_rows = "".join(
+        f"<tr><th>{esc(event['event'])}</th><td>{esc(event['event_date'])}</td><td>{esc(event['due_date'])}</td><td>{esc(labels['calendar_' + event['status']])}</td><td>{esc(event['basis'])}</td><td>{esc(event['reviewer_ref'])}</td></tr>"
+        for event in state.get("calendar", [])
+    )
+    calendar = (
+        f"<h2>{esc(labels['calendar'])}</h2><p>{esc(labels['calendar_boundary'])}</p><table><thead><tr>"
+        + "".join(
+            f"<th>{esc(labels[key])}</th>"
+            for key in [
+                "calendar_event",
+                "calendar_event_date",
+                "calendar_due_date",
+                "calendar_status",
+                "calendar_basis",
+                "calendar_reviewer",
+            ]
+        )
+        + f"</tr></thead><tbody>{calendar_rows}</tbody></table>"
+    )
     target = run_dir / "matter.html"
     target.write_text(
         f"""<!doctype html><html lang="{state['language']}"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{esc(state['purpose'])}</title>
 <style>body{{font:16px/1.6 'Instrument Sans',Arial,sans-serif;max-width:1000px;margin:40px auto;padding:0 24px;color:#172b4d}}table{{width:100%;border-collapse:collapse}}td,th{{border:1px solid #ccd5df;padding:12px;text-align:left;vertical-align:top}}article{{border-top:1px solid #ccd5df;padding:12px 0}}a{{color:#145ca4}}h1{{line-height:1.2}}</style>
 <main><h1>{esc(state['purpose'])}</h1><p>{esc(labels['meaning'])}</p><h2>{esc(labels['questions'])}</h2>{questions}<h2>{esc(labels['stages'])}</h2><table>{stages}</table>
-<h2>{esc(labels['integrity'])}</h2><p>{esc(', '.join(current['changed_outputs']) or labels['unchanged'])}</p><h2>{esc(labels['notes'])}</h2><ul>{''.join('<li>'+esc(n)+'</li>' for n in state['notes'])}</ul></main></html>""",
+{calendar}<h2>{esc(labels['integrity'])}</h2><p>{esc(', '.join(current['changed_outputs']) or labels['unchanged'])}</p><h2>{esc(labels['notes'])}</h2><ul>{''.join('<li>'+esc(n)+'</li>' for n in state['notes'])}</ul></main></html>""",
         encoding="utf-8",
     )
     return target
