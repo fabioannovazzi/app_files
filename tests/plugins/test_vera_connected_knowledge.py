@@ -17,7 +17,13 @@ REFERENCE = "skills/vera/references/connected-studio-knowledge.md"
 MARKER = "<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->"
 PROFESSIONAL_SKILLS = {
     path.parent.name for path in (VERA / "skills").glob("*/SKILL.md")
-} - {"learn-with-vera", "privacy-surface-review", "organizzazione-lavoro"}
+} - {
+    "learn-with-vera",
+    "privacy-surface-review",
+    "organizzazione-lavoro",
+    # A source-permission setting does not consult professional case evidence.
+    "research-subscriptions",
+}
 
 
 def _package_entries(filename: str) -> dict[str, bytes]:
