@@ -111,4 +111,4 @@ Le consultazioni iniziali di memoria nelle prove 1, 2 e 4 riguardavano metodo e 
 
 
 
-Configurazione verificata nei registri delle quattro chat: gpt-6-astra, ragionamento xhigh, Vera 0.1.378. La seconda matrice pubblica comprende 18 criteri mirati e 72 valutazioni; non è una rivalutazione sui 25 criteri del primo esperimento.
+Configurazione verificata nei registri delle quattro chat: gpt-6-astra, ragionamento xhigh, Vera 0.1.378. La versione iniziale della seconda matrice aveva 18 temi e 72 valutazioni. La revisione qui pubblicata la sostituisce con i 25 criteri comuni e 100 valutazioni; i temi iniziali restano soltanto note complementari.
