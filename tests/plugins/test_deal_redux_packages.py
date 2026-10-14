@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import shutil
 import subprocess
 import sys
+from html.parser import HTMLParser
 from pathlib import Path
 from zipfile import ZipFile
 
@@ -13,6 +15,42 @@ import pytest
 from tests.plugins.test_lucia_negotiation import tracked_document
 
 ROOT = Path(__file__).resolve().parents[2]
+
+
+class WorkAreaParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.area = ""
+        self.negotiation_area = ""
+
+    def handle_starttag(self, tag, attributes):
+        attrs = dict(attributes)
+        if tag == "article":
+            self.area = attrs.get("id", "")
+        if tag == "a" and "posizioni-negoziali/index.html" in attrs.get("href", ""):
+            self.negotiation_area = self.area
+
+    def handle_endtag(self, tag):
+        if tag == "article":
+            self.area = ""
+
+
+def test_breadcrumb_returns_to_the_work_area_containing_each_product_link():
+    navigation = (ROOT / "static/shared/function-page-navigation.js").read_text(
+        encoding="utf-8"
+    )
+    mapping = re.search(
+        r'^\s*"posizioni-negoziali":\s*(\[.*\]),\s*$', navigation, re.MULTILINE
+    )
+    assert mapping is not None
+    contexts = json.loads(mapping.group(1))
+    for product in ("vera", "lucia"):
+        parser = WorkAreaParser()
+        parser.feed(
+            (ROOT / f"static/shared/{product}/index.html").read_text(encoding="utf-8")
+        )
+        assert parser.negotiation_area
+        assert [product, parser.negotiation_area] in contexts
 
 
 def test_help_copy_is_complete_in_five_languages_and_preserves_product_links():
