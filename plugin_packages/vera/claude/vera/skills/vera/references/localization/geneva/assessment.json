@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "82fe8dabdd6b1c037b8b26eb0d194316508a723fd91fc98768ddaf87de9d954c",
+  "catalogue_fingerprint": "e0fb698d03c6076eb2ad8056cc07b5ba598e4df00d14def4714c6f747b0cb070",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -1739,5 +1739,11 @@
     ],
     "scope": "Only model-selection and continuity requirements changed in the five legal/tax wrappers. Optional UI and Cowork chat use the same requirement. Existing Geneva legal applicability judgments, unresolved limitations and acceptance evidence are unchanged; no new Swiss-law qualification or installed-host acceptance is claimed.",
     "integration_baseline": "20d6681b3"
+  },
+  "native_calendar_release_integration_20261014": {
+    "integrated_main": "fd10aa3deb2db33010c3cd4b145c015320a6456c",
+    "previous_catalogue_fingerprint": "82fe8dabdd6b1c037b8b26eb0d194316508a723fd91fc98768ddaf87de9d954c",
+    "scope": "Preserves the merged legal/tax model policy and all Geneva dispositions. The native calendar dropdown correction changes mechanical UI event handling only. All entrypoint hashes match the integrated main catalogue; no new Geneva professional acceptance is claimed.",
+    "version": "0.1.382"
   }
 }

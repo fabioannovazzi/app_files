@@ -73,3 +73,23 @@ def test_no_host_message_returns_copyable_exact_selection_request():
     assert "revision-one" in result["prompt"]
     assert result["messages"] == []
     assert len(result["calls"]) == 2
+
+
+def test_calendar_source_change_populates_sections_and_resets_confirmation():
+    result = events(
+        "const ui=fixture(source,'tax',{sources:[{id:'D001',units:[{anchor:'line:1',text:'Fictional source passage.'}]}]});await ui.panel.catalogue();await ui.button('Apri revisione').action();ui.checks()[0].checked=true;const sourceField=ui.field('Fonte');sourceField.value='D001';sourceField.dispatch('change');const units=ui.field('Pagina o sezione');const choices=units.children.map(e=>e.value);units.value='line:1';units.dispatch('change');process.stdout.write(JSON.stringify({choices,checked:ui.checks()[0].checked,preview:ui.elements().filter(e=>e.tagName==='PRE').map(e=>e.textContent)}));"
+    )
+    assert result["choices"] == ["", "line:1"]
+    assert result["checked"] is False
+    assert "Fictional source passage." in result["preview"]
+
+
+def test_calendar_select_changes_save_literal_citation_and_status():
+    result = events(
+        "const ui=fixture(source,'tax',{sources:[{id:'D001',units:[{anchor:'line:1',text:'Fictional source passage.'}]}]});await ui.panel.catalogue();await ui.button('Apri revisione').action();const select=(label,value)=>{const e=ui.field(label);e.value=value;e.dispatch('change');};select('Fonte','D001');select('Pagina o sezione','line:1');const quote=ui.field('Citazione letterale da conservare');quote.value='Fictional source passage.';quote.dispatch('input');await ui.button('Aggiungi il riscontro scelto').action();ui.checks()[0].checked=true;select('Stato del termine','conditional');const cleared=!ui.checks()[0].checked;ui.checks()[0].checked=true;await ui.button('Conserva la revisione nel registro').action();await ui.panel.refresh();process.stdout.write(JSON.stringify({cleared,status:ui.field('Stato del termine').value,calendar:ui.page.data.matter.calendar}));"
+    )
+    assert result["cleared"] is True
+    assert result["status"] == "conditional"
+    assert result["calendar"][0]["citations"] == [
+        {"source_id": "D001", "anchor": "line:1", "quote": "Fictional source passage."}
+    ]

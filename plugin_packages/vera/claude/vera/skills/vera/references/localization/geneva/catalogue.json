@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/Documents/Codex/2026-10-13/please-compare-these-two-analysis-made/work/legal-tax-model-policy/plugins/vera",
-  "version": "0.1.380",
-  "captured_at": "2026-10-14T11:51:37.152377+00:00",
-  "catalogue_fingerprint": "82fe8dabdd6b1c037b8b26eb0d194316508a723fd91fc98768ddaf87de9d954c",
-  "manifest_sha256": "e114da91a265f2389c2fb621d00408eaf53a0cfa43f384c7923c576fde0f5801",
+  "root": "/Users/fabio/.codex/worktrees/vera-workflow-ui/app_files/plugins/vera",
+  "version": "0.1.382",
+  "captured_at": "2026-10-14T12:57:11.529243+00:00",
+  "catalogue_fingerprint": "e0fb698d03c6076eb2ad8056cc07b5ba598e4df00d14def4714c6f747b0cb070",
+  "manifest_sha256": "d66d206f299525ef3c5c740cb37a2ae669a720348f8e838de4351ed0ff42a0dd",
   "entries": [
     {
       "function_id": "adeguati-assetti",
