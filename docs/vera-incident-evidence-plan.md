@@ -57,7 +57,7 @@ because that grants a separate file/device control scope. Its technical-only
 acceptance approval is pending. Do not infer a native host from the saved remote
 connection or substitute simulated subprocess tests for this host acceptance.
 The local Vera 0.1.391 candidate integrates the green Cowork packaging-fix head
-from PR 833. Final green release CI, production deployment, live acceptance and
+from PR 833 and the merged complete release guard from PR 835. Final green release CI, production deployment, live acceptance and
 monitor activation changes remain outstanding. Keep this task's existing
 branch/worktree active.
 
@@ -97,3 +97,7 @@ remain pending deployment. No production report has been sent for this test.
 vera candidate Cowork ZIP SHA-256: `012eee6eb7bd087b2528e3f450220ac6e6d78fe8d522d313909aea8b3a82db58`.
 
 clara candidate Cowork ZIP SHA-256: `47d8d001a8a76c287faf75e29f3aa272a51623e69e78d4fbcff0f8b33c905449`.
+
+After integrating main at 095b5548a, both products rebuilt successfully with
+the expanded installed CLI/course-source/archive-timestamp guard. Its 44 tests
+passed with 100% coverage. Native acceptance archive hashes remain unchanged.
