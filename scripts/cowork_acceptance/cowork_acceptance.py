@@ -177,11 +177,27 @@ def prepare(
                             if remote
                             else None
                         )
-                        expected_path = f"_files/{entry['sha256']}/{relative.name}"
-                        if record != {
-                            "sha256": entry["sha256"],
-                            "url_path": expected_path,
-                        }:
+                        # Authorize only the same reviewed bytes at either published
+                        # layout, never an arbitrary path from package metadata.
+                        allowed_paths = {
+                            f"_files/{entry['sha256']}/{relative.name}",
+                            *(
+                                f"{workflow}/{language}/{relative.as_posix()}"
+                                for language in entry["languages"]
+                            ),
+                        }
+                        expected_path = (
+                            record.get("url_path") if isinstance(record, dict) else None
+                        )
+                        if (
+                            not isinstance(expected_path, str)
+                            or expected_path not in allowed_paths
+                            or record
+                            != {
+                                "sha256": entry["sha256"],
+                                "url_path": expected_path,
+                            }
+                        ):
                             raise ValueError(
                                 "Missing or mismatched remote acceptance fixture"
                             )
