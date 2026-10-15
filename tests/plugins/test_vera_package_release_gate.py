@@ -122,7 +122,7 @@ def test_final_skill_edit_is_rejected_by_the_packaged_verifier(tmp_path, host):
 
     with pytest.raises(
         ValueError,
-        match="Installation content mismatch: .*contenzioso-tributario/SKILL.md",
+        match="Installation content mismatch: .*journal-sampling/SKILL.md",
     ):
         verify_vera_execution_zip(archive, root)
 
