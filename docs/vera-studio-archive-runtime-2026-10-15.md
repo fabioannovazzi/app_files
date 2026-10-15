@@ -140,3 +140,15 @@ retain this release's .393/.288/.113 versions and explicit course exclusions,
 and rebuild every host archive from the combined source. No course website
 files are restored. Archive/Lucia regressions: 154 passed; the two portable
 regressions pass under both CPython 3.9.6 and 3.12.13.
+
+## Course withdrawal execution evidence
+
+The native teaching CI phase at 7bf1a395 passed 1674 cases and skipped three;
+its 20 failures attempted to execute the two withdrawn lessons. Gate those
+lesson-only cases using the existing exact prepared-kit condition, add positive
+assertions for both withdrawn catalogues, and remove their orphaned active
+release reviews. The legal workflows and authored lesson definitions remain.
+The retained archive and document-format courses have identical non-source
+content in all five languages; only the two archive Python source bindings
+changed. Their compatibility review preserves existing editorial and historical
+artifact judgments and requires fresh native JUnit validation in CI.
