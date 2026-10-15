@@ -37,5 +37,14 @@ confirms the component selector cannot re-enter Vera's top-level checker.
 Device-linking activation is awaiting Fabio's explicit response to automatic
 approval review. No new host capability has been sent, no production deployment
 or Marketplace action has occurred, and the monitor automation is unchanged.
-Release preparation must integrate the active Cowork packaging fix before
-building a final candidate. Keep this task's existing branch/worktree active.
+The local Vera 0.1.391 candidate integrates the green Cowork packaging-fix head
+from PR 833. Final green release CI, production deployment, live acceptance and
+monitor activation changes remain outstanding. Keep this task's existing
+branch/worktree active.
+
+Local candidate evidence (2026-10-15): 221 focused tests passed with 86.35%
+coverage; 482 wider package/update/metadata tests passed, two skipped. Black,
+Isort, Mypy and Bandit passed. Full product-release `--check` confirms Vera
+0.1.391 source/package parity and version alignment. Cowork ZIP SHA-256:
+`8cdacbdd3f0f6937efc88f7e75dc6ea8ca7691c1f7779654bddf423e74214a2f`.
+These are local candidate results, not production or affected-user recovery.

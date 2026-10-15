@@ -38,7 +38,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "95a519d3903974b703ec9d64b552d551dc6296f2afa3a09570386c8fc70cb510",
+  "course_sha256": "dea96dfe129fc19b27442e7e3fb7ffa82e38216ad088a13b631fbd3aa7d47207",
   "host_marker_source_binding_review_20261010": {
     "prior_course_sha256": "64bc06545792bcb1f92f254b78725da6bb0e05a19f2c503ea22ca2826c67a78f",
     "current_course_sha256": "b37f5d86d6167ecccdbe4365e05b43b7bd6fcc7b414a3b954b0bcdde08d2438e",
@@ -513,5 +513,35 @@
     "reviewed_at": "2026-10-14",
     "previous_course_sha256": "037042e997f2fde7370d3c240a0dd6a9205497b405d19fe84f196ad2ee93c712",
     "basis": "Release metadata/source binding after automatic integrity-incident reporting correction. Existing authored lessons, professional methods, inputs and review dispositions remain unchanged. No new learner or customer recovery acceptance claimed."
+  },
+  "incident_capture_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-15",
+    "previous_course_sha256": "95a519d3903974b703ec9d64b552d551dc6296f2afa3a09570386c8fc70cb510",
+    "source_changes": [
+      {
+        "path": "scripts/check_dependencies.py",
+        "before": "faeea239129331baf68b9e04c430aa867b13aa23a78cdd5e50cce8f527edf5ae",
+        "after": "4b68c6b70dfaf49f11d593117c559c6d24abe34bbaeba8f02722261dfe2bf5b5"
+      },
+      {
+        "path": "scripts/managed_python_runtime.py",
+        "before": "714a18f19a8ed3d8b9257574cf4294d5499e7bd209c3b2b9338dec2daeff04e2",
+        "after": "7955f763c39a8d74959791f3f6abbe877f9c57e59318d803de7a79a4843017f6"
+      },
+      {
+        "path": "scripts/operational_incidents.py",
+        "before": "739b9390ccdd77ead53fdc6536217af4a50e3f16f9b27fa8002cecaae2c06147",
+        "after": "7e7895e8759c965dc98f64f17116dbe6d306d207271ee40a996e16cf8b9ae63b"
+      },
+      {
+        "path": "scripts/verified_execution.py",
+        "before": "5a218a5bfe7920a201c283d218988f5a105cc9ed436bbc26492ca517891bd730",
+        "after": "8817cdb519cce486adf79d4f8feaf7bc3d4f89a810361855da823c6d9a852c31"
+      }
+    ],
+    "content_review": "Complete course comparison confirms every field except source bindings is unchanged: localized teaching, fictional inputs, checkpoints, practice, timing and execution definitions. Existing editorial and artifact reviews remain historical.",
+    "source_review": "Reviewed the technical reporting changes in these four runtime helpers: package-relative structured errors and retained stderr, explicit capture gaps, operation-bound retries and host verification before recovery. Component dependency checks use the same path; an actual component-selector subprocess regression ruled out top-level recursion. No professional calculation or teaching output was changed.",
+    "limits": "Bounded source review only. No fresh learner, voice, installed-host or professional acceptance is asserted. Current complete native teaching CI remains required."
   }
 }

@@ -36,6 +36,9 @@ __all__ = [
     "retain_diagnostic",
     "acknowledge_diagnostic",
     "acknowledge_delivery",
+    "execution_identity",
+    "record_execution_progress",
+    "verify_original_task",
     "main",
 ]
 LOGGER = logging.getLogger(__name__)
@@ -840,6 +843,7 @@ def verify_original_task(value: dict[str, Any]) -> dict[str, Any]:
             "original_task_verified",
             "execution_succeeded",
         )
+        if key in value
     }
     if value.get("input_binding") is not None:
         outcome["input_binding"] = value["input_binding"]

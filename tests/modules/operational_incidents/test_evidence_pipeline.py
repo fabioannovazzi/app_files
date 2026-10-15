@@ -70,6 +70,29 @@ def test_observed_reporter_requires_matching_installation_capability(tmp_path):
     assert store.installation(str(owner.installation_id))["reporter_sessions"] == []
 
 
+def test_new_preflight_report_requires_original_task_verification_even_without_operation_id(
+    tmp_path,
+):
+    store, owner = registered(tmp_path)
+    original = report().model_copy(update={"capture_state": "unavailable"})
+    receipt = store.report(owner, original)
+    readiness = Outcome(
+        outcome_id=uuid4(),
+        incident_id=receipt["incident_id"],
+        report_id=original.report_id,
+        remedy_revision=1,
+        status="recovered",
+        execution_succeeded=True,
+    )
+
+    with pytest.raises(IncidentConflict, match="verification of the original task"):
+        store.outcome(owner, readiness)
+
+    assert store.show(receipt["incident_id"])["status"] == "open"
+    store.outcome(owner, readiness.model_copy(update={"original_task_verified": True}))
+    assert store.show(receipt["incident_id"])["status"] == "recovered"
+
+
 def test_missing_capture_becomes_overdue_without_continuously_changing_evidence():
     original = report().model_dump(mode="json")
     before = capture_coverage(

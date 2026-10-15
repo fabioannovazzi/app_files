@@ -1136,6 +1136,7 @@ def test_cached_recorded_recovery_clears_only_matching_readiness_hint(
             remedy_revision=1,
             status="recovered",
             execution_succeeded=True,
+            original_task_verified=True,
         ),
     )
     remote = cached_connector_status(store, own)
