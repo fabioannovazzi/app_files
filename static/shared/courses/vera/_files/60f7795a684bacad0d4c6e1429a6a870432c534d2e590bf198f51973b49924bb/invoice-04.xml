@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<p:FatturaElettronica xmlns:p="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2" versione="FPR12">
+  <FatturaElettronicaHeader>
+    <DatiTrasmissione><IdTrasmittente><IdPaese>IT</IdPaese><IdCodice>00000000000</IdCodice></IdTrasmittente><ProgressivoInvio>DEMO4</ProgressivoInvio><FormatoTrasmissione>FPR12</FormatoTrasmissione><CodiceDestinatario>0000000</CodiceDestinatario></DatiTrasmissione>
+    <CedentePrestatore><DatiAnagrafici><IdFiscaleIVA><IdPaese>IT</IdPaese><IdCodice>00000000000</IdCodice></IdFiscaleIVA><Anagrafica><Denominazione>FORNITORE FITTIZIO - SOLO ESERCITAZIONE</Denominazione></Anagrafica><RegimeFiscale>RF01</RegimeFiscale></DatiAnagrafici></CedentePrestatore>
+    <CessionarioCommittente><DatiAnagrafici><IdFiscaleIVA><IdPaese>IT</IdPaese><IdCodice>00000000000</IdCodice></IdFiscaleIVA><Anagrafica><Denominazione>CLIENTE FITTIZIO - SOLO ESERCITAZIONE</Denominazione></Anagrafica></DatiAnagrafici></CessionarioCommittente>
+  </FatturaElettronicaHeader>
+  <FatturaElettronicaBody>
+    <DatiGenerali><DatiGeneraliDocumento><TipoDocumento>TD01</TipoDocumento><Divisa>EUR</Divisa><Data>2026-04-03</Data><Numero>DEMO-004</Numero><ImportoTotaleDocumento>976.00</ImportoTotaleDocumento><Causale>Esempio sintetico, non inviare a SdI</Causale></DatiGeneraliDocumento></DatiGenerali>
+    <DatiBeniServizi>
+      <DettaglioLinee><NumeroLinea>1</NumeroLinea><Descrizione>Manutenzione ordinaria dimostrativa</Descrizione><Quantita>1.00</Quantita><PrezzoUnitario>800.00</PrezzoUnitario><PrezzoTotale>800.00</PrezzoTotale><AliquotaIVA>22.00</AliquotaIVA></DettaglioLinee>
+      <DatiRiepilogo><AliquotaIVA>22.00</AliquotaIVA><ImponibileImporto>800.00</ImponibileImporto><Imposta>176.00</Imposta><EsigibilitaIVA>I</EsigibilitaIVA></DatiRiepilogo>
+    </DatiBeniServizi>
+  </FatturaElettronicaBody>
+</p:FatturaElettronica>

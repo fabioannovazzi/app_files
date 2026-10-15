@@ -1,0 +1,5 @@
+Officina Arco CNC es una sociedad italiana totalmente ficticia. Al 31 de octubre de 2026: préstamo EUR 120.000, caja disponible EUR 50.000, depósito restringido EUR 10.000, proveedores EUR 80.000. Cobro supuesto EUR 100.000 el 15 de noviembre; pago EUR 80.000 el 30 de noviembre. Faltan antigüedad de saldos, confirmación de recuperabilidad, pedidos, nombramiento y justificantes. Las posiciones aportadas son incompletas.
+
+Leer caso, balances.csv y treasury-demo. Tablas vacías significan datos no aportados, no ausencia de actividad real. treasury-practice y treasury-independent acompañan actualización y ejercicio autónomo. El brief de investigación incluye pregunta pública genérica y URL por verificar, no legislación actual ni respuesta aprobada.
+
+Vera, asesoro a la ficticia Officina Arco CNC. Lee pruebas, separa hechos, supuestos y carencias, ejecuta los flujos financieros y de tesorería existentes y prepara una propuesta condicionada. Guía mi revisión de la versión exacta. Todo local, sin envíos ni aceptación profesional simulada.

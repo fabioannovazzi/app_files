@@ -1,0 +1,5 @@
+source_row_id,period,product,transaction_currency,units,gross_sales_local,discount_local,cogs_local,fx_rate_to_reporting
+urban-jan,2026-01,Urban bicycle,EUR,50,25000,1250,15000,1
+trekking-jan,2026-01,Trekking bicycle,EUR,20,16000,800,9600,1
+urban-feb,2026-02,Urban bicycle,EUR,60,30000,1500,18000,1
+trekking-feb,2026-02,Trekking bicycle,EUR,25,20000,1000,12000,1

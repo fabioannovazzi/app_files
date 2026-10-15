@@ -4380,7 +4380,7 @@ def _discover_files(
                 )
                 continue
             try:
-                metadata = path.stat(follow_symlinks=False)
+                metadata = path.lstat()
             except OSError:
                 issues.append(
                     ScanIssue(
@@ -5269,7 +5269,7 @@ def refresh_archive(
                 source_path, enable_ocr=enable_ocr, ocr_language=ocr_language
             )
             try:
-                post_metadata = source_path.stat(follow_symlinks=False)
+                post_metadata = source_path.lstat()
                 post_sha256 = _sha256_file(source_path)
             except (ArchiveError, OSError) as exc:
                 extraction = ExtractionResult(

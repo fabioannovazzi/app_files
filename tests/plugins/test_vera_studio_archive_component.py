@@ -28,6 +28,153 @@ COMPONENT_ROOT = ROOT / "plugins" / "studio-archive"
 ARCHIVE_CORE_PATH = COMPONENT_ROOT / "scripts" / "archive_core.py"
 CHECK_DEPENDENCIES_PATH = COMPONENT_ROOT / "scripts" / "check_dependencies.py"
 MCP_SERVER_PATH = COMPONENT_ROOT / "mcp" / "server.cjs"
+
+
+@pytest.fixture(scope="module", autouse=True)
+def isolated_mcp_launcher(tmp_path_factory):
+    """Exercise managed routing without installing shared dependencies in tests."""
+    product = tmp_path_factory.mktemp("archive-product")
+    component = product / "modules" / "studio-archive"
+    (component / "mcp").mkdir(parents=True)
+    (component / ".codex-plugin").mkdir()
+    server = component / "mcp" / "server.cjs"
+    shutil.copy2(MCP_SERVER_PATH, server)
+    shutil.copy2(
+        COMPONENT_ROOT / ".codex-plugin" / "plugin.json",
+        component / ".codex-plugin" / "plugin.json",
+    )
+    (product / "scripts").mkdir()
+    (product / "scripts" / "managed_python_runtime.py").write_text(
+        "import subprocess, sys\n"
+        "assert sys.argv[1:5] == ['--module', 'studio-archive', 'run', "
+        "'scripts/studio_archive.py']\n"
+        f"raise SystemExit(subprocess.call([{sys.executable!r}, "
+        f"{str(COMPONENT_ROOT / 'scripts' / 'studio_archive.py')!r}, *sys.argv[5:]]))\n",
+        encoding="utf-8",
+    )
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setattr(sys.modules[__name__], "MCP_SERVER_PATH", server)
+        yield
+
+
+def test_scope_refresh_with_symlink_allows_document_import(
+    indexed_archive: SimpleNamespace,
+    archive_core: ModuleType,
+) -> None:
+    registration = archive_core.set_studio_client_identity(
+        indexed_archive.scopes["Rossi"],
+        legal_names=["Rossi SRL"],
+        state_dir=indexed_archive.state,
+    )
+    client_id = registration["client"]["client_id"]
+    engagement = archive_core.create_studio_client_engagement(
+        client_id, "Scope change regression", state_dir=indexed_archive.state
+    )["engagement"]
+    (indexed_archive.root / "Rossi" / "linked.md").symlink_to(indexed_archive.source)
+    new_scope = indexed_archive.root / "Verdi"
+    new_scope.mkdir()
+    (new_scope / "note.txt").write_text("New client scope", encoding="utf-8")
+    source = indexed_archive.root.parent / "document.txt"
+    source.write_bytes(b"unchanged imported source")
+    with pytest.raises(archive_core.ArchiveError, match="Top-level archive scopes"):
+        archive_core.import_studio_client_document(
+            client_id,
+            source,
+            "source",
+            engagement_id=engagement["engagement_id"],
+            state_dir=indexed_archive.state,
+        )
+
+    refreshed = archive_core.refresh_archive(state_dir=indexed_archive.state)
+    imported = archive_core.import_studio_client_document(
+        client_id,
+        source,
+        "source",
+        engagement_id=engagement["engagement_id"],
+        state_dir=indexed_archive.state,
+    )
+
+    assert refreshed["scope_configuration_changed"] is True
+    assert refreshed["document_count"] == 4
+    assert imported["status"] == "imported"
+    assert Path(imported["imported_path"]).read_bytes() == source.read_bytes()
+    assert (indexed_archive.root / "Rossi" / "linked.md").is_symlink()
+
+
+@pytest.mark.skipif(
+    not Path("/usr/bin/python3").is_file(), reason="macOS bootstrap unavailable"
+)
+def test_mcp_old_bootstrap_delegates_to_managed_worker(tmp_path: Path) -> None:
+    environment = {
+        **os.environ,
+        "VERA_STUDIO_ARCHIVE_PYTHON": "/usr/bin/python3",
+        "VERA_STUDIO_ARCHIVE_STATE_DIR": str(tmp_path / "state"),
+    }
+    request = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "tools/call",
+        "params": {"name": "list_studio_archive_clients", "arguments": {}},
+    }
+    completed = subprocess.run(
+        [_node_executable(), str(MCP_SERVER_PATH), "--stdio"],
+        input=json.dumps(request) + "\n",
+        text=True,
+        capture_output=True,
+        env=environment,
+        check=True,
+        timeout=30,
+    )
+    assert json.loads(completed.stdout)["result"]["isError"] is False
+
+
+@pytest.mark.parametrize("interpreter", [sys.executable, "/usr/bin/python3"])
+def test_discovery_regression_under_each_available_interpreter(
+    interpreter: str,
+) -> None:
+    if not Path(interpreter).is_file():
+        pytest.skip("Requested interpreter unavailable on this host")
+    result = subprocess.run(
+        [
+            interpreter,
+            str(ROOT / "tests/plugins/studio_archive_discovery_regression.py"),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.skipif(
+    not Path("/usr/bin/python3").is_file(), reason="macOS bootstrap unavailable"
+)
+def test_cli_rejects_unsupported_python_with_version_and_path() -> None:
+    interpreter = "/usr/bin/python3"
+    version = subprocess.check_output(
+        [
+            interpreter,
+            "-c",
+            "import sys; print(sys.version.split()[0]); print(sys.executable)",
+        ],
+        text=True,
+    ).splitlines()
+    if version[0].startswith("3.12."):
+        pytest.skip("System Python is already supported")
+    result = subprocess.run(
+        [interpreter, str(COMPONENT_ROOT / "scripts/studio_archive.py"), "status"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    error = json.loads(result.stdout)["error"]
+    assert result.returncode == 1
+    assert error["code"] == "unsupported_python_runtime"
+    assert version[0] in error["message"]
+    assert version[1] in error["message"]
+    assert "Traceback" not in result.stderr
+
+
 EXPECTED_CLIENT_WORKFLOW_IDS = (
     "posizioni-negoziali",
     "contenzioso-tributario",

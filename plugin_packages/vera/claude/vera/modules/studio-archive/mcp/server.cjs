@@ -790,6 +790,28 @@ function pythonExecutable() {
   return "python3";
 }
 
+function workerArguments(command) {
+  // Repository components and product packages use different layouts. Always
+  // let the product launcher choose the worker interpreter when it is present.
+  const candidates = [
+    path.resolve(PLUGIN_ROOT, "..", "..", "scripts", "managed_python_runtime.py"),
+    ...["vera", "clara", "lucia"].map((product) =>
+      path.resolve(
+        PLUGIN_ROOT, "..", product, "scripts", "managed_python_runtime.py",
+      ),
+    ),
+  ];
+  const launcher = candidates.find((candidate) => fs.existsSync(candidate));
+  if (launcher) {
+    return [
+      launcher, "--module", "studio-archive", "run",
+      "scripts/studio_archive.py", ...command,
+    ];
+  }
+  // Standalone component installations enforce the same contract in the CLI.
+  return [CLI_PATH, ...command];
+}
+
 function requirePlainObject(value) {
   if (value == null || typeof value !== "object" || Array.isArray(value)) {
     throw new Error("Tool arguments must be an object.");
@@ -1523,7 +1545,7 @@ function callTool(name, args) {
   }
   const completed = spawnSync(
     pythonExecutable(),
-    [CLI_PATH, ...commandForTool(name, args)],
+    workerArguments(commandForTool(name, args)),
     spawnOptions,
   );
   if (completed.error) throw completed.error;

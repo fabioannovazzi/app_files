@@ -57,9 +57,11 @@
     "vera/trasformazione",
     "vera/treasury-forecast",
     "vera/variance-analysis",
-    "vera/vouching",
+    "vera/vouching"
+  ],
+  "retained": {},
+  "excluded": [
     "vera/contenzioso-tributario",
     "lucia/contenzioso-tributario"
-  ],
-  "retained": {}
+  ]
 }

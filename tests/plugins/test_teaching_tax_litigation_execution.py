@@ -14,7 +14,7 @@ from pathlib import Path
 
 import pytest
 
-from tests.plugins._teaching_release import record_native_check
+from tests.plugins._teaching_release import prepared_kit, record_native_check
 from tests.plugins.test_teaching_kit_execution import (
     _bound_case,
     _complete_teaching_case,
@@ -23,7 +23,10 @@ from tests.plugins.test_teaching_kit_execution import (
     _write,
 )
 
-__all__ = ["test_tax_course_preserves_evidence_unknown_terms_and_prior_run"]
+__all__ = [
+    "test_tax_course_preserves_evidence_unknown_terms_and_prior_run",
+    "test_withdrawn_tax_course_is_absent_from_release_catalogue",
+]
 
 ROOT = Path(__file__).resolve().parents[2]
 WORKFLOW = "contenzioso-tributario"
@@ -261,6 +264,7 @@ def _command_status(matter):
     return result.stderr.strip()
 
 
+@prepared_kit("vera/contenzioso-tributario", "lucia/contenzioso-tributario")
 @pytest.mark.parametrize("product", ["vera", "lucia"])
 @pytest.mark.parametrize("language", LANGUAGES)
 @pytest.mark.parametrize("phase", ["demo", "practice"])
@@ -345,3 +349,19 @@ def test_tax_course_preserves_evidence_unknown_terms_and_prior_run(
         language=language,
         phase=phase,
     )
+
+
+@pytest.mark.parametrize("product", ["vera", "lucia"])
+def test_withdrawn_tax_course_is_absent_from_release_catalogue(product: str) -> None:
+    """Withdraw lesson delivery while retaining its authored professional workflow."""
+    plan = _read(ROOT / "scripts/course_materials/release_plan.json")
+    catalogue = _read(ROOT / "plugins" / product / "assets/courses/index.json")
+    authored = _read(ROOT / "scripts/course_materials/kits.json")
+    key = f"{product}/{WORKFLOW}"
+
+    assert key in plan["excluded"]
+    assert key not in plan["prepared"]
+    assert key in authored
+    assert WORKFLOW not in catalogue["courses"]
+    assert not (ROOT / "plugins" / product / "assets/courses" / WORKFLOW).exists()
+    assert (ROOT / "plugins" / product / "skills" / WORKFLOW / "SKILL.md").is_file()

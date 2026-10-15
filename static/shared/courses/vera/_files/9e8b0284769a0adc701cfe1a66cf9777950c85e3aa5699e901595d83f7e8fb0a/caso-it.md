@@ -1,0 +1,5 @@
+Officina Arco CNC è una società italiana interamente fittizia. Al 31 ottobre 2026: finanziamento EUR 120.000, cassa disponibile EUR 50.000, deposito vincolato EUR 10.000, debiti commerciali EUR 80.000. Incasso ipotizzato EUR 100.000 il 15 novembre; pagamento EUR 80.000 il 30 novembre. Mancano aging, conferma di recuperabilità, ordini, nomina e ricevute. Sono solo le posizioni fornite, non una situazione completa.
+
+Apri il caso e balances.csv, poi le tabelle treasury-demo. Le tabelle vuote indicano assenza di dati forniti, non assenza di movimenti reali. Le cartelle treasury-practice e treasury-independent accompagnano aggiornamento e prova autonoma. Il brief di ricerca contiene solo una domanda pubblica generica e URL da verificare; nessun testo giuridico vigente o risposta approvata è fornito.
+
+Vera, assisto Officina Arco CNC come advisor in questa esercitazione fittizia. Leggi il fascicolo, separa fatti, ipotesi e lacune; usa analisi finanziaria e tesoreria esistenti, prepara una bozza condizionata alle evidenze e guidami nella revisione. Mantieni tutto locale, senza invii né approvazioni professionali simulate.

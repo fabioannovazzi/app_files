@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "0135436fc4e44298b6ac8d26a86abb7015c5d9a19a93b743696bfd8eab45247f",
+  "catalogue_fingerprint": "0f2a57a48bb11cc00d033f5af98f0b60186842a1b8e8796142862eba27409102",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -1804,6 +1804,11 @@
     "version": "0.1.391",
     "date": "2026-10-15",
     "scope": "Canonical version and manifest hash only. Exact full skill entrypoint inventory and bytes are unchanged from the prior catalogue. Existing jurisdiction judgments are retained; no new Geneva professional acceptance is asserted."
+  },
+  "studio_archive_runtime_release_binding": {
+    "version": "0.1.393",
+    "date": "2026-10-15",
+    "scope": "Canonical version and manifest identity only. The exact full skill entrypoint inventory and bytes are unchanged. Existing jurisdiction dispositions and evidence limits are retained; no new Geneva professional acceptance is asserted."
   },
   "incident_agent_recovery_release_binding": {
     "date": "2026-10-15",

@@ -1,0 +1,14 @@
+{
+  "fictional": true,
+  "entity": "Officina Arco",
+  "as_of": "2026-03-31",
+  "population": "monthly close cycles",
+  "interview_date": "2026-03-31",
+  "missing_attachment": "budget-not-supplied.xlsx",
+  "observed_cycles": "1",
+  "timely_cycles": "1",
+  "unverified_collection": null,
+  "substitute_access": null,
+  "professional_approval": false,
+  "company_adoption": false
+}

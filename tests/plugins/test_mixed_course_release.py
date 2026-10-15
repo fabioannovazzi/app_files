@@ -148,7 +148,7 @@ def test_public_catalogue_links_every_language_and_contains_no_local_requests():
     guides = set(directory.glob("*/*/*/course.html"))
     introductions = set(directory.glob("vera/get-started/*/course.html"))
     expected_public_guides = (
-        248  # The two tax-litigation website lessons were withdrawn.
+        248  # Tax-litigation courses were withdrawn for both products.
     )
     assert len(guides - introductions) == expected_public_guides
     assert {path.parent.name for path in introductions} == {

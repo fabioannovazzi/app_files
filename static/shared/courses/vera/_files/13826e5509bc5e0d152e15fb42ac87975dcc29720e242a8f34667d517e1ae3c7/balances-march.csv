@@ -1,0 +1,5 @@
+row_id,description,as_of_date,amount,currency
+loan,Bank loan outstanding,2026-03-31,66000,EUR
+cash,Unrestricted bank cash,2026-03-31,35000,EUR
+deposit,Restricted deposit,2026-03-31,5000,EUR
+payables,Ordinary trade payables,2026-03-31,53000,EUR

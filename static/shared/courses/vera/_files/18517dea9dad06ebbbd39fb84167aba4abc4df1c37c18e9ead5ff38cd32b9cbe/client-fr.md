@@ -1,0 +1,3 @@
+# Client et mission
+
+Tous les noms, documents et références sont fictifs et réservés à la leçon. Officina Arco est une société italienne de réparation automobile pour clients locaux. Le cabinet tient ses comptes depuis janvier 2026. Elena Bianchi se présente comme dirigeante et interlocutrice. La revue vise à reconstituer client, personnes et documents disponibles et à préparer une analyse antiblanchiment pour le professionnel. Aucune pièce d’identité, vérification au registre ni rapport de filtrage n’est fourni. Un contrôle absent n’est pas un résultat négatif. Ne contacter personne et ne transmettre aucune déclaration.

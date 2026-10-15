@@ -1,0 +1,3 @@
+# Officina Arco
+
+Tutti i dati sono fittizi. Un conto banca, EUR, date ISO, punto decimale, nessun separatore delle migliaia. Nei file bancari e nel mastro i pagamenti sono negativi. Reference è il riferimento bancario, Document il numero fattura, Account 1000 il conto banca. Marzo comprende DEMO-001 per 1220,00 EUR e DEMO-002 per 732,00 EUR, con riferimenti TRN-001 e TRN-002. Il saldo passa da 6000,00 a 4048,00 EUR. I file cumulativi di aprile aggiungono DEMO-003 per 488,00 EUR il 4 aprile, riferimento TRN-003; saldo finale 3560,00 EUR. Nessun altro movimento o conto è incluso. Questi fatti non costituiscono una revisione professionale.

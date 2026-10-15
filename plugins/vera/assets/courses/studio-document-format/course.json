@@ -490,7 +490,7 @@
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
       "repository_path": "plugins/studio-archive/scripts/archive_core.py",
-      "sha256": "012cabe9dde4f66f3ebda6215eb76a7de4912abdec58fb7f189473320d774c9c"
+      "sha256": "886eaca111be852970f3ff701592af744108ad601c9443368683b1eddcbcfe55"
     },
     {
       "path": "modules/studio-archive/scripts/archive_preferences.py",
@@ -525,7 +525,7 @@
     {
       "path": "modules/studio-archive/scripts/studio_archive.py",
       "repository_path": "plugins/studio-archive/scripts/studio_archive.py",
-      "sha256": "eabd25d050c726a55d8975fa626ac8ceab265788bbb891fdc516488a19a34089"
+      "sha256": "d17cd1abe39e1a6eed4cd946b759bac2f0ad243fb950c1bf4a66ea69f6d4e53a"
     },
     {
       "path": "modules/studio-archive/scripts/whatsapp_desktop_guard.mjs",

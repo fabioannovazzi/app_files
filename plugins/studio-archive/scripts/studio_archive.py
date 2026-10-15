@@ -11,6 +11,28 @@ import sys
 from pathlib import Path
 from typing import Any
 
+# Check before importing the worker and its dependencies so an unsupported
+# interpreter reports the launch error instead of failing on a newer API.
+if sys.implementation.name != "cpython" or sys.version_info[:2] != (3, 12):
+    sys.stdout.write(
+        json.dumps(
+            {
+                "error": {
+                    "code": "unsupported_python_runtime",
+                    "message": (
+                        "Studio Archive requires CPython 3.12; running "
+                        f"{sys.implementation.name} {sys.version.split()[0]} at "
+                        f"{sys.executable}. Launch through "
+                        "scripts/managed_python_runtime.py --module studio-archive "
+                        "run scripts/studio_archive.py."
+                    ),
+                }
+            }
+        )
+        + "\n"
+    )
+    raise SystemExit(1)
+
 from archive_core import (
     CLIENT_WORKFLOW_IDS,
     VERA_CLIENT_WORKFLOW_IDS,

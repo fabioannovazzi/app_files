@@ -50,7 +50,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "85f8c71a2bb30cb98184b41a02022e6c7fc825fefe30077eebc9e192320f96d9",
+  "course_sha256": "9c3b7dc6d84376e26b92ff3c2d1f78fed2ae4e36c23db6c702497b39b4e36e60",
   "integration_refresh": {
     "reviewer": "Codex /root",
     "date": "2026-10-02",
@@ -555,5 +555,27 @@
     "scope": "Source fingerprints refreshed for the shared on-demand course-data loader. Full authored course content, locales, timings, attachment hashes and workflow execution contracts are unchanged. Existing editorial judgments and reviewed artifact records are retained; this does not claim new human understanding or professional approval.",
     "native_junit_sha256": "cd30b01112bfed6e8afdb23199c8c258438b7e0c921ee431ca00905923065f79",
     "package_tests": "tests/plugins/test_remote_course_files.py and tests/plugins/test_cowork_teaching.py verify source and remote materialization, exact original input bytes, selected languages, hash failures, size limits, host restrictions, retry and immutable assets."
+  },
+  "studio_archive_runtime_source_review": {
+    "reviewer": "Codex /root - archive runtime source compatibility review",
+    "reviewed_at": "2026-10-15T16:10:23.859219+00:00",
+    "baseline_commit": "4093d142f0305519f51055784495048b4e1e312e",
+    "previous_course_sha256": "85f8c71a2bb30cb98184b41a02022e6c7fc825fefe30077eebc9e192320f96d9",
+    "source_changes": [
+      {
+        "path": "modules/studio-archive/scripts/archive_core.py",
+        "before": "012cabe9dde4f66f3ebda6215eb76a7de4912abdec58fb7f189473320d774c9c",
+        "after": "886eaca111be852970f3ff701592af744108ad601c9443368683b1eddcbcfe55"
+      },
+      {
+        "path": "modules/studio-archive/scripts/studio_archive.py",
+        "before": "eabd25d050c726a55d8975fa626ac8ceab265788bbb891fdc516488a19a34089",
+        "after": "d17cd1abe39e1a6eed4cd946b759bac2f0ad243fb950c1bf4a66ea69f6d4e53a"
+      }
+    ],
+    "content_review": "All compiled fields except sources are identical, including all five localized lesson contents, inputs, demo/practice requests and pacing. Existing editorial judgments and historical artifact reviews are retained; this is a source compatibility binding, not a new learner or professional approval.",
+    "source_review": "The archive CLI enforces CPython 3.12 before imports and metadata reads use lstat. The product MCP launcher selects the managed runtime. File identity, scope separation, immutable inputs and receipt formats are retained. Actual Cowork refresh and same-engagement imports succeeded with the original input bytes.",
+    "native_evidence": "GitHub run 38760188504 job 116509106637 at 7bf1a395: 1674 native teaching tests passed, three skipped, and 20 execution tests for withdrawn courses failed. This is not a green whole-run claim. Those retired-course tests are now conditional; fresh CI must independently validate each retained native demo/practice identity and current course digest.",
+    "limits": "No new independent editorial judgment, learner completion, voice acceptance or professional approval is asserted."
   }
 }
