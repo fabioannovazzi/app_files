@@ -29,6 +29,7 @@ from zipfile import ZIP_DEFLATED, BadZipFile, ZipFile, ZipInfo
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from scripts.course_materials.remote_files import externalize_course_files  # noqa: E402
+from scripts.validate_plugin_skills import validate_skill_archive  # noqa: E402
 from scripts.verify_vera_package import verify_vera_execution_zip  # noqa: E402
 
 LICENSE_PATH = ROOT / "LICENSE"
@@ -2178,6 +2179,7 @@ def verify_zip_entries(zip_path: Path, entries: dict[str, bytes]) -> None:
         for name, content in entries.items():
             if archive.read(name) != content:
                 raise ValueError(f"Temporary ZIP verification failed: {name}")
+    validate_skill_archive(zip_path)
 
 
 def verify_packaged_mcp(
@@ -2366,6 +2368,11 @@ def verify_chatgpt_upload(package: BuildTarget, output: Path) -> list[str]:
         for name in sorted(expected_names & actual_names):
             if archive.read(name) != expected[name]:
                 errors.append(f"Content differs: {name}")
+    if not errors:
+        try:
+            validate_skill_archive(output)
+        except ValueError as error:
+            errors.append(str(error))
     if not errors and "vera" in package.plugin_names:
         try:
             verify_vera_execution_zip(output, ".")
@@ -2395,6 +2402,11 @@ def verify_package(package: BuildTarget) -> list[str]:
             actual = archive.read(name)
             if actual != expected[name]:
                 errors.append(f"Content differs: {name}")
+    if not errors:
+        try:
+            validate_skill_archive(package.output_zip)
+        except ValueError as error:
+            errors.append(str(error))
     roots = _mcp_roots(package, expected)
     if not errors and roots:
         errors.extend(verify_packaged_mcp(package.output_zip, roots))

@@ -53,6 +53,7 @@ from scripts.cowork_skill_names import (  # noqa: E402
     project_skill_names,
     validate_skill_zip,
 )
+from scripts.validate_plugin_skills import validate_skill_archive  # noqa: E402
 from scripts.verify_vera_package import verify_vera_execution_zip  # noqa: E402
 
 DEFAULT_CONFIG = ROOT / "scripts" / "claude_plugin_packages.json"
@@ -3455,7 +3456,8 @@ def _build_directory(path: Path, entries: dict[str, bytes]) -> None:
         staging.replace(path)
 
 
-def _build_zip(path: Path, entries: dict[str, bytes]) -> None:
+def _copy_verified_zip(path: Path, candidate: Path) -> None:
+    """Publish the exact checked archive without serializing a second time."""
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary_path: Path | None = None
     try:
@@ -3466,7 +3468,7 @@ def _build_zip(path: Path, entries: dict[str, bytes]) -> None:
             delete=False,
         ) as temporary:
             temporary_path = Path(temporary.name)
-        _write_zip(temporary_path, entries)
+        shutil.copyfile(candidate, temporary_path)
         temporary_path.chmod(0o644)
         temporary_path.replace(path)
         path.chmod(0o644)
@@ -3522,6 +3524,10 @@ def build_package(package: ClaudePackage) -> tuple[Path, Path]:
     with tempfile.TemporaryDirectory(prefix="cowork-release-") as temporary:
         candidate = Path(temporary) / "candidate.zip"
         _write_zip(candidate, entries)
+        errors = verify_zip(candidate, entries)
+        if errors:
+            raise ValueError("\n".join(errors))
+        validate_skill_archive(candidate)
         validate_skill_zip(candidate)
         if package.plugin == "vera" or ".mcp.json" in entries:
             errors = _load_codex_builder().verify_packaged_mcp(candidate, ["."])
@@ -3530,9 +3536,9 @@ def build_package(package: ClaudePackage) -> tuple[Path, Path]:
         if package.plugin == "vera":
             verify_vera_execution_zip(candidate, ".")
         _build_directory(package.output_directory, entries)
-        _build_zip(package.output_zip, entries)
+        _copy_verified_zip(package.output_zip, candidate)
         if package.public_zip is not None:
-            _build_zip(package.public_zip, entries)
+            _copy_verified_zip(package.public_zip, candidate)
     return package.output_directory, package.output_zip
 
 
@@ -3550,6 +3556,7 @@ def verify_package(package: ClaudePackage) -> list[str]:
         for path in (package.output_zip, package.public_zip):
             if path is not None:
                 try:
+                    validate_skill_archive(path)
                     validate_skill_zip(path)
                 except ValueError as exc:
                     errors.append(str(exc))

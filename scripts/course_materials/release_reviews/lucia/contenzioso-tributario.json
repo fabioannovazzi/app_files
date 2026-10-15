@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "contenzioso-tributario",
-  "course_sha256": "ac9bb785e4a3fa64af29e2a3141e3eb5f6c055b1203dd7e8bc0ea8a98d461bad",
+  "course_sha256": "5832962d37ff0e98ad6fefcf96623bdcda15e05211d1cb2e268a6f79a39d115c",
   "reviewer": "Codex /root: five-language authored lesson and real evidence/progress output review",
   "reviewed_at": "2026-10-14T14:55:04.860976+00:00",
   "review_scope": "Accepted prepared material and bounded real helper/Archive regressions. Semantic narrative and decisions are explicit test fixtures. This does not attest full live legal research, substantive pleading approval, native Word, native voice, installed-host learner execution or professional acceptance. Live lessons run the current specialist, not the fixtures.",
@@ -242,5 +242,6 @@
         ]
       }
     }
-  }
+  },
+  "source_binding_note": "2026-10-15: Quoted the colon-bearing skill description as valid YAML. Course content, inputs, procedural instructions, prior execution evidence and editorial judgments are unchanged."
 }

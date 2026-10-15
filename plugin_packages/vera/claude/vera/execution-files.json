@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "files": {
-    ".claude-plugin/plugin.json": "5f9312260f05270962ee48bc85430eba2b6dd6a7fb3498552bc8d6b33ee9611b",
+    ".claude-plugin/plugin.json": "63d58d8983f06a0428f1948678a4b2d9766b6389750aa31d58b5cded95b1b890",
     ".mcp.json": "a96a4125fe649fd4dd38408cf5f4ed11c24aea2a3c2c87a90a74ac3e07da34bd",
     "LICENSE": "0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0",
     "README.md": "7ce8d84035255470b33dd3d9548b83165508e1a2359b2fe590180b7489882cfd",
@@ -1603,9 +1603,9 @@
     "skills/mparanza-vera/references/incident-recovery.md": "e93cb0bf807df831575720b0a06896ccf66fad8fa13076f2cfb1d338b30024a8",
     "skills/mparanza-vera/references/legal-tax-model-policy.md": "51d9256b26bd7a9cf5740c7040d6d7df93e6dc8f7fd7e48fdfb6544ef68a12da",
     "skills/mparanza-vera/references/localization/geneva.md": "86c083237f5d428b8bdb1347403b8ac36eff2040686e7230c208475c6709267e",
-    "skills/mparanza-vera/references/localization/geneva/assessment.json": "8b0039a25c5cd72748ee8edacf0b32ad78ff458f32abc165607f4346641b3553",
+    "skills/mparanza-vera/references/localization/geneva/assessment.json": "e8f454f46566797eb7ea49e37f74d0bfbe11de87414ef345aaa39151846891f5",
     "skills/mparanza-vera/references/localization/geneva/assessment.md": "092f559f5b43e90568fe46eead4bb996124fbaac3e432fa43ae40215466f7350",
-    "skills/mparanza-vera/references/localization/geneva/catalogue.json": "b5d29c7758569af16b78c81ff0931364fcb09d10ef5531b5b1ac35e8b4528713",
+    "skills/mparanza-vera/references/localization/geneva/catalogue.json": "c4b65c30bdf575cab4bf1403ac1ce71dc89075cc3004fc9af22113f429cb8bc9",
     "skills/mparanza-vera/references/model-data-report-contract.md": "4665bce3922819792632d2fbb43913a930b2f30deda1ebfb14f3b5c085cc87c8",
     "skills/mparanza-vera/references/native-practice-reviews.md": "08f6be4df6db9f05b03ef5135c4a3c4c9054bdc7e06fc4beaf43950765ba502f",
     "skills/mparanza-vera/references/native-workspace.md": "0c5c2f04dd34315334981bbae25c2d751c8108b9535d1ad7b51d720f54654c43",
