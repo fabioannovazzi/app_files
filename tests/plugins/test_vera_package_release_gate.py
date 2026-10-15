@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
+import shutil
 import stat
 import subprocess
 import sys
@@ -25,6 +27,34 @@ HOSTS = {
     "cowork": ("plugin_packages/vera/vera-claude-plugin.zip", "."),
     "antigravity": ("static/shared/vera/downloads/vera-antigravity-plugin.zip", "vera"),
 }
+
+
+@pytest.mark.skipif(shutil.which("zip") is None, reason="System ZIP path requires zip")
+def test_system_zip_has_stable_file_times_despite_later_staged_content(
+    tmp_path, monkeypatch
+):
+    builder = load_builder("build_codex_plugin_zip")
+    original_writer = builder.write_entries_to_directory
+
+    def stage_with_later_content(root, entries):
+        original_writer(root, entries)
+        os.utime(root / "vera/execution-files.json", (1700000000, 1700000000))
+        os.utime(root / "vera/skill.md", (1800000000, 1800000000))
+
+    monkeypatch.setattr(builder, "write_entries_to_directory", stage_with_later_content)
+    archive_path = tmp_path / "package.zip"
+    builder.write_system_zip(
+        archive_path,
+        {"vera/execution-files.json": b"index", "vera/skill.md": b"content"},
+        "vera",
+    )
+
+    with ZipFile(archive_path) as archive:
+        assert (
+            archive.getinfo("vera/skill.md").date_time
+            == archive.getinfo("vera/execution-files.json").date_time
+        )
+        assert archive.read("vera/skill.md") == b"content"
 
 
 def load_builder(name):

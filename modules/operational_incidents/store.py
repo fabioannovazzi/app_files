@@ -88,6 +88,7 @@ def _report_payload(report: Report) -> dict[str, Any]:
         "input_binding",
         "worker_runtime_version",
         "worker_platform",
+        "response_to_remedy_revision",
     ):
         if payload[name] is None:
             payload.pop(name)
@@ -357,6 +358,7 @@ class IncidentStore:
             "installation_id": str(actor.connection_id),
             "binding": "saved-connector",
             "incidents": incidents,
+            "poll_after_seconds": 60,
         }
 
     def connection_outcome(
@@ -454,6 +456,24 @@ class IncidentStore:
                 raise IncidentConflict(
                     "Report identifier already belongs to different evidence"
                 )
+            if report.response_to_remedy_revision is not None:
+                request = connection.execute(
+                    self._sql(
+                        "SELECT remedy_json FROM operational_remedy_revisions WHERE incident_id=? AND revision=?"
+                    ),
+                    (original["incident_id"], report.response_to_remedy_revision),
+                ).fetchone()
+                request_value = json.loads(request["remedy_json"]) if request else {}
+                if request_value.get(
+                    "kind"
+                ) != "diagnostic-request" or request_value.get(
+                    "target_report_id"
+                ) != str(
+                    report.evidence_for_report_id
+                ):
+                    raise IncidentConflict(
+                        "Diagnostic reply does not match a retained request for this report"
+                    )
             if existing is None:
                 connection.execute(
                     self._sql(
@@ -656,6 +676,17 @@ class IncidentStore:
                     supplements,
                     original_row["created_at"],
                 )
+                if remedy["kind"] == "diagnostic-request":
+                    replies = [
+                        item["report_id"]
+                        for item in supplements
+                        if item.get("response_to_remedy_revision") == revision
+                    ]
+                    incidents[-1]["diagnostic_exchange"] = {
+                        "request_revision": revision,
+                        "state": "responded" if replies else "awaiting-vera",
+                        "response_report_ids": replies,
+                    }
         for incident in incidents:
             if incident["remedy"]["kind"] != "investigating":
                 self.progress(
@@ -672,7 +703,7 @@ class IncidentStore:
                         operation_id=incident["report_metadata"].get("operation_id"),
                     ),
                 )
-        return {"incidents": incidents}
+        return {"incidents": incidents, "poll_after_seconds": 60}
 
     def progress(
         self, credentials: Credentials | ConnectionActor, event: RecoveryEvent
@@ -760,7 +791,9 @@ class IncidentStore:
             "incident_id": str(event.incident_id),
         }
 
-    def remedy(self, incident_id: str, remedy: Remedy) -> dict[str, Any]:
+    def remedy(
+        self, incident_id: str, remedy: Remedy, *, expected_revision: int | None = None
+    ) -> dict[str, Any]:
         """Operator-only publication; clients cannot deliver executable commands."""
         if remedy.kind != "investigating" and remedy.target_report_id is None:
             raise IncidentConflict("A remedy must target its diagnosed original report")
@@ -780,6 +813,10 @@ class IncidentStore:
             ).fetchone()
             if row is None:
                 raise IncidentNotFound("Incident is unavailable")
+            if expected_revision is not None and row["revision"] != expected_revision:
+                raise IncidentConflict(
+                    "Incident changed since diagnosis; inspect it again"
+                )
             if remedy.target_report_id is not None:
                 original = connection.execute(
                     self._sql(
@@ -807,6 +844,21 @@ class IncidentStore:
                     raise IncidentConflict(
                         "Remedy target is obsolete or already recovered"
                     )
+                applicable_revision, applicable = self._applicable_remedy(
+                    connection,
+                    incident_id,
+                    str(remedy.target_report_id),
+                    row["revision"],
+                )
+                # Exact equality prevents repeated polls from triggering another retry.
+                # This is delivery idempotency, not semantic diagnosis.
+                if Remedy.model_validate(applicable) == remedy:
+                    return {
+                        "incident_id": incident_id,
+                        "revision": applicable_revision,
+                        "status": "awaiting-recovery",
+                        "deduplicated": True,
+                    }
             self._save_remedy_revision(connection, incident_id)
             revision = row["revision"] + 1
             connection.execute(
@@ -820,6 +872,7 @@ class IncidentStore:
             "incident_id": incident_id,
             "revision": revision,
             "status": "awaiting-recovery",
+            "deduplicated": False,
         }
 
     def outcome(
@@ -850,7 +903,7 @@ class IncidentStore:
                 ),
                 (str(outcome.incident_id), str(credentials.installation_id)),
             ).fetchone()
-            revision, _ = self._applicable_remedy(
+            revision, applicable = self._applicable_remedy(
                 connection,
                 str(outcome.incident_id),
                 latest["report_id"],
@@ -859,6 +912,13 @@ class IncidentStore:
             if revision != outcome.remedy_revision:
                 raise IncidentConflict(
                     "Remedy changed; read current status before reporting recovery"
+                )
+            if (
+                applicable["kind"] == "diagnostic-request"
+                and outcome.status == "recovered"
+            ):
+                raise IncidentConflict(
+                    "A diagnostic exchange cannot certify original-task recovery"
                 )
             previous = connection.execute(
                 self._sql(

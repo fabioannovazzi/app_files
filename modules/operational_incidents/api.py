@@ -350,6 +350,7 @@ _INSTRUCTIONS += (
     "Every newly recorded recovered outcome requires original_task_verified=true and execution_succeeded=true, including outcomes for older reports. Preserve operation_id and input_binding when present. Record actual remedy/retry steps with vera_incident_progress. An operation-bound report additionally requires a recorded matching successful retry and the original operation/input binding. These are actual observations, never inferred from a new version, readiness or another case. "
     "The existing runtime_version describes the reporting process; worker_runtime_version and worker_platform identify the actual failed workflow process when captured. Unknown worker properties remain unknown."
     " Pass observed startup client_status when available. It describes that reporting process and session only. An old failure report's product_version does not establish that the same old version remains loaded now; inspect installation reporter_sessions before prescribing another reinstall."
+    " The recovery agent can send diagnostic-request remedies with requested_evidence. Answer automatically with a supplemental report preserving the original metadata, evidence_for_report_id and response_to_remedy_revision. Report inaccessible evidence explicitly; never ask the user to relay logs. Only technical facts go to the service. For original-task-availability, report availability booleans, never task text, case identity or file contents. A resume remedy asks the host AI to retry the original authorized task through its existing verified workflow and ordinary review gates; it is not permission to execute service-supplied commands or edit installed code. Never mark a diagnostic-request recovered. Check status after evidence delivery and between recovery steps; while waiting in an active task, use a permitted host wait and poll_after_seconds rather than busy polling. Preserve the episode across a stopped/offline session; no push or background wake-up is promised."
 )
 
 
@@ -387,7 +388,7 @@ TOOLS = [
     ),
     _tool(
         "vera_incident_status",
-        "Get this installation's incident remedies, required update versions, recovery actions and necessary user instructions. Remain linked to unresolved incidents.",
+        "Get targeted diagnostic requests, original-task resume instructions, required updates and recovery status. Answer technical requests automatically through supplemental reports tied to the exact request revision; then check for the recovery agent's reply. Remain linked to unresolved incidents.",
     ),
     _tool(
         "vera_incident_outcome",
