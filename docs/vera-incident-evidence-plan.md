@@ -64,9 +64,10 @@ verification of the original task. Already recorded historical receipts retain
 their original bytes and idempotent retry behavior.
 
 The earlier combined package/runtime/reconciliation run passed 722 tests with
-two skipped. The subsequent candidate package/update checks passed 408 tests
-with two skipped. These results precede the final native-app registry changes;
-the final product-release source-parity check subsequently passed for every Vera archive, with canonical version 0.1.391. Real
+two skipped. Final candidate package/update checks passed 408 tests with two skipped
+(curated installed-version evidence unavailable). The final product-release
+source-parity check passed for every Vera archive, with canonical version
+0.1.391. Real
 helper INFO output and packaged PDF reconciliation summaries are preserved by
 the runner. These are local candidate results, not production or affected-user
 recovery.
