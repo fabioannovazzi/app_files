@@ -948,9 +948,11 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     assert core.index('id="studio-archive"') < core.index('id="archive-organization"')
     assert 'data-vera-subordinate-workflow="fatture-xml-check"' in core
     assert 'data-jurisdiction-item="it"' in core
-    assert (
-        'data-i18n="module.newClient.includes.xml">Controllo FatturaPA XML</h4>' in core
+    xml_label = BeautifulSoup(core, "html.parser").select_one(
+        '[data-i18n="module.newClient.includes.xml"]'
     )
+    assert xml_label is not None
+    assert xml_label.get_text() == "Controllo FatturaPA XML"
     assert "Verifica documentale · FatturaPA" not in core
     for area_href in (
         "#area-clients",
@@ -999,9 +1001,9 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         )
     )
     labels = [
-        match.group(1)
+        heading.get_text()
         for row in italian_rows
-        if (match := re.search(r"<h4[^>]*>([^<]+)</h4>", row)) is not None
+        if (heading := BeautifulSoup(row, "html.parser").find("h4")) is not None
     ]
     expected_labels = [
         "Impara con Vera",
