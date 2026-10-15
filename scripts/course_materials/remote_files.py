@@ -8,10 +8,27 @@ import re
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-__all__ = ["externalize_course_files", "immutable_path", "publish_remote_files"]
+__all__ = [
+    "externalize_course_files",
+    "immutable_path",
+    "publish_remote_files",
+    "withdrawn_public_lesson",
+]
 
 ROOT = Path(__file__).resolve().parents[2]
 PRODUCTS = frozenset({"vera", "clara", "lucia"})
+
+
+def _publication_policy(root: Path) -> dict[str, Any]:
+    path = root / "scripts/course_materials/publication_policy.json"
+    return json.loads(path.read_bytes()) if path.is_file() else {}
+
+
+def withdrawn_public_lesson(root: Path, product: str, workflow: str) -> bool:
+    """Apply the owner's explicit lesson withdrawals, never infer from absence."""
+    return f"{product}/{workflow}" in _publication_policy(root).get(
+        "withdrawn_lessons", []
+    )
 
 
 def _relative(value: str) -> PurePosixPath:
@@ -58,9 +75,17 @@ def publish_remote_files(root: Path = ROOT, *, check: bool = False) -> int:
         assets = root / "plugins" / product / "assets/courses"
         index = json.loads((assets / "index.json").read_bytes())
         for workflow, entry in index["courses"].items():
+            if withdrawn_public_lesson(root, product, workflow):
+                continue
             course = json.loads((assets / _relative(entry["path"])).read_bytes())
             for asset in course["files"]:
                 source = _public_file(root, product, workflow, asset)
+                if product in _publication_policy(root).get(
+                    "existing_language_downloads", []
+                ):
+                    # Existing bytes were hash-checked above; do not recreate _files.
+                    count += 1
+                    continue
                 target = (
                     root / "static/shared/courses" / product / immutable_path(asset)
                 )
@@ -89,11 +114,21 @@ def externalize_course_files(
     previous = json.loads(entries.get(assets + "remote.json", b'{"files":{}}'))["files"]
     remote = {}
     removals = set()
-    for workflow, entry in index["courses"].items():
+    index_changed = False
+    for workflow, entry in list(index["courses"].items()):
         manifest = assets + _relative(entry["path"]).as_posix()
         course = json.loads(entries[manifest])
         if course["schema"] != "mparanza.teaching_kit.v2":
             raise ValueError(f"Unsupported remote course schema: {manifest}")
+        if withdrawn_public_lesson(root, product, workflow):
+            # Only the prepared lesson is withdrawn, not its professional skill.
+            del index["courses"][workflow]
+            index_changed = True
+            folder = str(PurePosixPath(manifest).parent) + "/"
+            for name in list(entries):
+                if name.startswith(folder):
+                    del entries[name]
+            continue
         for asset in course["files"]:
             key = f"{workflow}/{_relative(asset['path'])}"
             packaged = (PurePosixPath(manifest).parent / asset["path"]).as_posix()
@@ -103,8 +138,14 @@ def externalize_course_files(
                     raise ValueError(f"Unreviewed packaged attachment: {packaged}")
             elif previous.get(key, {}).get("sha256") != asset["sha256"]:
                 raise ValueError(f"Missing packaged attachment: {packaged}")
-            _public_file(root, product, workflow, asset)
+            source = _public_file(root, product, workflow, asset)
             url_path = immutable_path(asset)
+            if product in _publication_policy(root).get(
+                "existing_language_downloads", []
+            ):
+                url_path = source.relative_to(
+                    root / "static/shared/courses" / product
+                ).as_posix()
             public = root / "static/shared/courses" / product / url_path
             if (
                 not public.is_file()
@@ -126,6 +167,10 @@ def externalize_course_files(
         raise ValueError(f"Unlisted course attachments remain: {unexpected}")
     for name in removals:
         entries.pop(name, None)
+    if index_changed:
+        entries[assets + "index.json"] = (
+            json.dumps(index, ensure_ascii=False, indent=2) + "\n"
+        ).encode()
     entries[assets + "remote.json"] = (
         json.dumps(
             {

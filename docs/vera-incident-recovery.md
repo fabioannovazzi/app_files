@@ -9,8 +9,11 @@ Use them before prescribing another reinstall from an old report alone.
 The anonymous OAuth connection is deployed and its independent transport is
 verified. The recurring AI monitor inspects delivered technical reports; it
 cannot detect a failure that never reaches the service. Current scheduled
-monitoring is read-only, with technical event alerts to Fabio. Unattended code
-fixes, merges and deployments remain outside that monitoring authorization.
+recovery is authorized end to end, including targeted diagnostic requests,
+verified source fixes, green-CI merges and Git deployments. The active agent's
+runbook is [Vera autonomous recovery](vera-autonomous-recovery.md). Technical
+event alerts still go to Fabio; communication with the affected Vera uses the
+incident service.
 See [the earlier pipeline review](vera-incident-pipeline-review.md).
 
 Vera 0.1.368 adds a technical incident service, separate from optional feature
@@ -107,7 +110,8 @@ pending stderr review remain `review-pending`; overdue review is a reporting
 failure to investigate, not a reason to wait silently. Old exit-only reports
 remain accepted and explicitly incomplete. New evidence must never be labelled
 a controlled fixture merely because its error text resembles a prior fixture.
-Preserve the monitor's existing exact-ID/hash fixture ledger and read-only scope.
+Preserve the monitor's existing exact-ID/hash fixture ledger and the active
+recovery authorization boundaries in the runbook.
 
 New original-operation reports carry a stable opaque `operation_id` and process
 session ID. When an existing engagement receipt is available, `input_binding`
@@ -146,6 +150,19 @@ retry, or one diagnosed necessary user action. New software fixes use the normal
 Git PR, green required CI and deployment path. Never publish to Marketplace.
 An update remedy is rejected unless both deployed host ZIPs carry that version.
 Host/security changes remain under their ordinary authority.
+
+Vera 0.1.392 adds `diagnostic-request` and `resume` messages. A diagnostic request
+names permitted technical evidence surfaces and its exact original report;
+the affected Vera responds automatically with supplemental evidence carrying
+`response_to_remedy_revision`. Status exposes the request/reply IDs separately
+from recovery. Delayed replies remain evidence for their original request, and
+a diagnostic exchange cannot close the original task. A `resume` message
+delivers a diagnosed correction through the existing verified workflow, with
+its ordinary prerequisites and review gates; service text never becomes code.
+All operator publications should use `--expected-revision` and `--input -` to
+avoid stale decisions and interpolating diagnostic text into shell commands.
+Identical applicable remedies return their original revision without retriggering
+another retry. No additional diagnostic endpoint or customer contact is needed.
 
 Each connected task reads status. The fixed built-in actions run once per remedy
 revision and accept no downloaded code or shell text. Setup success means ready

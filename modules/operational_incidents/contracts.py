@@ -66,7 +66,7 @@ class ReporterStatus(StrictModel):
     """Observed reporting-process capabilities, separate from an old failure."""
 
     session_id: UUID
-    protocol: int = Field(ge=0, le=2)
+    protocol: int = Field(ge=0, le=3)
     product_version: str = Field(
         min_length=1, max_length=100, pattern=r"^[A-Za-z0-9_.+-]+$"
     )
@@ -115,6 +115,7 @@ class Diagnostic(StrictModel):
 
 class Report(StrictModel):
     evidence_for_report_id: UUID | None = None
+    response_to_remedy_revision: int | None = Field(default=None, ge=1)
     report_id: UUID
     product: Literal["vera"] = "vera"
     product_version: str = Field(
@@ -145,6 +146,11 @@ class Report(StrictModel):
     @model_validator(mode="after")
     def structured_capture(self) -> Report:
         """A completeness claim requires an actual technical code or source location."""
+        if (
+            self.response_to_remedy_revision is not None
+            and self.evidence_for_report_id is None
+        ):
+            raise ValueError("A diagnostic reply must supplement its original report")
         if self.capture_state == "complete" and not any(
             item.error_code or item.technical_frames for item in self.diagnostics
         ):
@@ -168,7 +174,14 @@ class Report(StrictModel):
 
 class Remedy(StrictModel):
     target_report_id: UUID | None = None
-    kind: Literal["investigating", "update", "automatic", "user-action"]
+    kind: Literal[
+        "investigating",
+        "diagnostic-request",
+        "resume",
+        "update",
+        "automatic",
+        "user-action",
+    ]
     summary: str = Field(min_length=1, max_length=4000)
     evidence: str = Field(min_length=1, max_length=16000)
     required_version: str | None = Field(default=None, pattern=r"^\d+\.\d+\.\d+$")
@@ -177,6 +190,30 @@ class Remedy(StrictModel):
     )
     instructions: str | None = Field(default=None, max_length=8000)
     expected_outcome: str = Field(min_length=1, max_length=4000)
+    requested_evidence: list[
+        Literal[
+            "retained-technical-error",
+            "package-integrity",
+            "worker-runtime",
+            "host-tool-availability",
+            "original-task-availability",
+        ]
+    ] = Field(default_factory=list, max_length=5)
+
+    @model_validator(mode="after")
+    def agent_exchange(self) -> Remedy:
+        """Limit requests to technical evidence; no remote executable payloads."""
+        if self.kind == "diagnostic-request" and (
+            not self.requested_evidence or not self.instructions
+        ):
+            raise ValueError(
+                "A diagnostic request needs evidence fields and instructions"
+            )
+        if self.kind != "diagnostic-request" and self.requested_evidence:
+            raise ValueError("Only a diagnostic request can request evidence")
+        if self.kind == "resume" and not self.instructions:
+            raise ValueError("Resuming the original task needs diagnosed instructions")
+        return self
 
 
 class Outcome(StrictModel):

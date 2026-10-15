@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
+import shutil
 import stat
 import subprocess
 import sys
@@ -25,6 +27,34 @@ HOSTS = {
     "cowork": ("plugin_packages/vera/vera-claude-plugin.zip", "."),
     "antigravity": ("static/shared/vera/downloads/vera-antigravity-plugin.zip", "vera"),
 }
+
+
+@pytest.mark.skipif(shutil.which("zip") is None, reason="System ZIP path requires zip")
+def test_system_zip_has_stable_file_times_despite_later_staged_content(
+    tmp_path, monkeypatch
+):
+    builder = load_builder("build_codex_plugin_zip")
+    original_writer = builder.write_entries_to_directory
+
+    def stage_with_later_content(root, entries):
+        original_writer(root, entries)
+        os.utime(root / "vera/execution-files.json", (1700000000, 1700000000))
+        os.utime(root / "vera/skill.md", (1800000000, 1800000000))
+
+    monkeypatch.setattr(builder, "write_entries_to_directory", stage_with_later_content)
+    archive_path = tmp_path / "package.zip"
+    builder.write_system_zip(
+        archive_path,
+        {"vera/execution-files.json": b"index", "vera/skill.md": b"content"},
+        "vera",
+    )
+
+    with ZipFile(archive_path) as archive:
+        assert (
+            archive.getinfo("vera/skill.md").date_time
+            == archive.getinfo("vera/execution-files.json").date_time
+        )
+        assert archive.read("vera/skill.md") == b"content"
 
 
 def load_builder(name):
@@ -59,7 +89,7 @@ def alter_skill(entries):
     name = next(
         name
         for name in entries
-        if name.endswith("contenzioso-tributario/SKILL.md") and "/modules/" not in name
+        if name.endswith("journal-sampling/SKILL.md") and "/modules/" not in name
     )
     entries[name] += b"\nSynthetic final edit after sealing.\n"
     return name
@@ -92,7 +122,7 @@ def test_final_skill_edit_is_rejected_by_the_packaged_verifier(tmp_path, host):
 
     with pytest.raises(
         ValueError,
-        match="Installation content mismatch: .*contenzioso-tributario/SKILL.md",
+        match="Installation content mismatch: .*journal-sampling/SKILL.md",
     ):
         verify_vera_execution_zip(archive, root)
 
@@ -252,7 +282,7 @@ def test_course_hash_drift_is_rejected_even_when_execution_index_matches(tmp_pat
 )
 def test_invalid_course_source_blocks_release(tmp_path, source, message):
     entries, root = release_entries("cowork")
-    course_path = "assets/courses/contenzioso-tributario/course.json"
+    course_path = "assets/courses/journal-sampling/course.json"
     course = json.loads(entries[course_path])
     course["sources"][0]["path"] = source
     entries[course_path] = json.dumps(course).encode()

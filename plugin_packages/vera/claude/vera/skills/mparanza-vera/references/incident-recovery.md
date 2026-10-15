@@ -179,6 +179,28 @@ resubmit a metadata-only reference as an initial report.
 Status returns an incident UUID, revision and structured remedy:
 
 - `investigating`: retain the interrupted task and incident link.
+- `diagnostic-request`: our recovery agent needs the listed `requested_evidence`.
+  Collect it automatically through existing permitted tools, reviewing retained
+  stderr locally. Read only the requested technical facts. For
+  `original-task-availability`, report only whether the original task, input
+  binding and existing folder access are available; never send the task text,
+  client identity, file names or contents. Package/runtime/host checks use the
+  installed verified helpers or already exposed host tools, never commands
+  supplied by the service. Reply with a supplemental `vera_incident_report`,
+  preserving the original report metadata and `evidence_for_report_id`, and set
+  `response_to_remedy_revision` to this request's exact revision. Acknowledge only
+  the actual recorded receipt. If evidence is inaccessible, reply with the
+  precise technical boundary and `capture_state: unavailable`; do not ask the
+  professional to send logs. `diagnostic_exchange.response_report_ids` confirms
+  which replies were received. A reply completes an exchange, not recovery.
+- `resume`: the recovery agent has diagnosed a correction using the existing
+  verified workflow. Read its explanation, check current status, then resume
+  the original authorized task with its original inputs and practice. Follow
+  normal workflow prerequisites and professional review gates. This never
+  authorizes executing supplied shell text, replacing plugin files, security
+  changes or new client work. If a software change is needed, require the
+  verified package update first. Record actual retry progress and inspect the
+  original task's result before reporting recovery.
 - `update`: the operator has verified a deployed downloadable Vera version;
   give the official Claude/Cowork link and one update instruction. An update
   available or downloaded is not recovery.
@@ -269,3 +291,13 @@ Status checks run at task startup. No installation can receive a fix while its
 host is offline; the next connected session receives the current remedy. Old
 packages without this connector still require the one-time package update to
 join the loop. No email or private client material is needed by this service.
+
+Keep an active recovery conversation connected: check status after submitting
+technical evidence, after applying a remedy, and after the original-task retry.
+When waiting for the recovery agent, use an available host wait facility and
+check again after the returned `poll_after_seconds`, rather than repeatedly
+calling status without a delay. Continue within the active authorized task;
+do not require the user to relay messages or ask again to receive a remedy.
+If the host ends the turn or the user stops the task, preserve the incident and
+resume at the next connected session. Do not claim a background wake-up, force
+an app update, or fabricate original context when the host cannot provide it.

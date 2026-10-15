@@ -3,567 +3,499 @@
   "files": {
     "apertura-pratica/files/input/register.csv": {
       "sha256": "650a1a34d298e7f4a93545dbac60d144e6f269fe916bc75487f8de110f2eb0bf",
-      "url_path": "_files/650a1a34d298e7f4a93545dbac60d144e6f269fe916bc75487f8de110f2eb0bf/register.csv"
+      "url_path": "apertura-pratica/it/files/input/register.csv"
     },
     "apertura-pratica/files/input/request-de.md": {
       "sha256": "9d6b9b51a674229553e314789058da16cc3ebd12e0f46585f9337b3d14286463",
-      "url_path": "_files/9d6b9b51a674229553e314789058da16cc3ebd12e0f46585f9337b3d14286463/request-de.md"
+      "url_path": "apertura-pratica/de/files/input/request-de.md"
     },
     "apertura-pratica/files/input/request-en.md": {
       "sha256": "00d87acaee57b30c1e91f3e9e6a6522d93f24d4caca5546ed0332ed1e88ba77b",
-      "url_path": "_files/00d87acaee57b30c1e91f3e9e6a6522d93f24d4caca5546ed0332ed1e88ba77b/request-en.md"
+      "url_path": "apertura-pratica/en/files/input/request-en.md"
     },
     "apertura-pratica/files/input/request-es.md": {
       "sha256": "b9e50c3b94897934e50182d3d09a28ab86fc14595b341b902ff4ec64f745bc86",
-      "url_path": "_files/b9e50c3b94897934e50182d3d09a28ab86fc14595b341b902ff4ec64f745bc86/request-es.md"
+      "url_path": "apertura-pratica/es/files/input/request-es.md"
     },
     "apertura-pratica/files/input/request-fr.md": {
       "sha256": "f9b7e3fba388401ca11f80b182d62d8fa52e8ca400fb1635bbc8a1ecfe796238",
-      "url_path": "_files/f9b7e3fba388401ca11f80b182d62d8fa52e8ca400fb1635bbc8a1ecfe796238/request-fr.md"
+      "url_path": "apertura-pratica/fr/files/input/request-fr.md"
     },
     "apertura-pratica/files/input/request-it.md": {
       "sha256": "7e57dd4fac673557030e5f45c60d6fab3cccdacd4176992ad3b01164e817e1ea",
-      "url_path": "_files/7e57dd4fac673557030e5f45c60d6fab3cccdacd4176992ad3b01164e817e1ea/request-it.md"
+      "url_path": "apertura-pratica/it/files/input/request-it.md"
     },
     "apertura-pratica/files/input/supply-de.md": {
       "sha256": "7d1459053141165e53eaaaa3cc595b4c9ad8ca62cb86313e2545882d7426184e",
-      "url_path": "_files/7d1459053141165e53eaaaa3cc595b4c9ad8ca62cb86313e2545882d7426184e/supply-de.md"
+      "url_path": "apertura-pratica/de/files/input/supply-de.md"
     },
     "apertura-pratica/files/input/supply-en.md": {
       "sha256": "76eec87f0afbaf087219342aefa7531524aea9a5a2a8722bc9850e07d59786e5",
-      "url_path": "_files/76eec87f0afbaf087219342aefa7531524aea9a5a2a8722bc9850e07d59786e5/supply-en.md"
+      "url_path": "apertura-pratica/en/files/input/supply-en.md"
     },
     "apertura-pratica/files/input/supply-es.md": {
       "sha256": "daebd05212b5ce0c43ab634972b07c9447fa6e8c08d680187612a50fd7d741c7",
-      "url_path": "_files/daebd05212b5ce0c43ab634972b07c9447fa6e8c08d680187612a50fd7d741c7/supply-es.md"
+      "url_path": "apertura-pratica/es/files/input/supply-es.md"
     },
     "apertura-pratica/files/input/supply-fr.md": {
       "sha256": "52199ae2e19a1d513b7f96337333aa6dff911164f9e90684328884ba3e8410f8",
-      "url_path": "_files/52199ae2e19a1d513b7f96337333aa6dff911164f9e90684328884ba3e8410f8/supply-fr.md"
+      "url_path": "apertura-pratica/fr/files/input/supply-fr.md"
     },
     "apertura-pratica/files/input/supply-it.md": {
       "sha256": "735d9b1b6d7d2e1f61f7bb42201eae101253181029f52682155b725d97c63e87",
-      "url_path": "_files/735d9b1b6d7d2e1f61f7bb42201eae101253181029f52682155b725d97c63e87/supply-it.md"
+      "url_path": "apertura-pratica/it/files/input/supply-it.md"
     },
     "apertura-pratica/files/practice/register.csv": {
       "sha256": "650a1a34d298e7f4a93545dbac60d144e6f269fe916bc75487f8de110f2eb0bf",
-      "url_path": "_files/650a1a34d298e7f4a93545dbac60d144e6f269fe916bc75487f8de110f2eb0bf/register.csv"
+      "url_path": "apertura-pratica/it/files/practice/register.csv"
     },
     "apertura-pratica/files/practice/request-de.md": {
       "sha256": "9d6b9b51a674229553e314789058da16cc3ebd12e0f46585f9337b3d14286463",
-      "url_path": "_files/9d6b9b51a674229553e314789058da16cc3ebd12e0f46585f9337b3d14286463/request-de.md"
+      "url_path": "apertura-pratica/de/files/practice/request-de.md"
     },
     "apertura-pratica/files/practice/request-en.md": {
       "sha256": "00d87acaee57b30c1e91f3e9e6a6522d93f24d4caca5546ed0332ed1e88ba77b",
-      "url_path": "_files/00d87acaee57b30c1e91f3e9e6a6522d93f24d4caca5546ed0332ed1e88ba77b/request-en.md"
+      "url_path": "apertura-pratica/en/files/practice/request-en.md"
     },
     "apertura-pratica/files/practice/request-es.md": {
       "sha256": "b9e50c3b94897934e50182d3d09a28ab86fc14595b341b902ff4ec64f745bc86",
-      "url_path": "_files/b9e50c3b94897934e50182d3d09a28ab86fc14595b341b902ff4ec64f745bc86/request-es.md"
+      "url_path": "apertura-pratica/es/files/practice/request-es.md"
     },
     "apertura-pratica/files/practice/request-fr.md": {
       "sha256": "f9b7e3fba388401ca11f80b182d62d8fa52e8ca400fb1635bbc8a1ecfe796238",
-      "url_path": "_files/f9b7e3fba388401ca11f80b182d62d8fa52e8ca400fb1635bbc8a1ecfe796238/request-fr.md"
+      "url_path": "apertura-pratica/fr/files/practice/request-fr.md"
     },
     "apertura-pratica/files/practice/request-it.md": {
       "sha256": "7e57dd4fac673557030e5f45c60d6fab3cccdacd4176992ad3b01164e817e1ea",
-      "url_path": "_files/7e57dd4fac673557030e5f45c60d6fab3cccdacd4176992ad3b01164e817e1ea/request-it.md"
+      "url_path": "apertura-pratica/it/files/practice/request-it.md"
     },
     "apertura-pratica/files/practice/supply-de.md": {
       "sha256": "7d1459053141165e53eaaaa3cc595b4c9ad8ca62cb86313e2545882d7426184e",
-      "url_path": "_files/7d1459053141165e53eaaaa3cc595b4c9ad8ca62cb86313e2545882d7426184e/supply-de.md"
+      "url_path": "apertura-pratica/de/files/practice/supply-de.md"
     },
     "apertura-pratica/files/practice/supply-en.md": {
       "sha256": "76eec87f0afbaf087219342aefa7531524aea9a5a2a8722bc9850e07d59786e5",
-      "url_path": "_files/76eec87f0afbaf087219342aefa7531524aea9a5a2a8722bc9850e07d59786e5/supply-en.md"
+      "url_path": "apertura-pratica/en/files/practice/supply-en.md"
     },
     "apertura-pratica/files/practice/supply-es.md": {
       "sha256": "daebd05212b5ce0c43ab634972b07c9447fa6e8c08d680187612a50fd7d741c7",
-      "url_path": "_files/daebd05212b5ce0c43ab634972b07c9447fa6e8c08d680187612a50fd7d741c7/supply-es.md"
+      "url_path": "apertura-pratica/es/files/practice/supply-es.md"
     },
     "apertura-pratica/files/practice/supply-fr.md": {
       "sha256": "52199ae2e19a1d513b7f96337333aa6dff911164f9e90684328884ba3e8410f8",
-      "url_path": "_files/52199ae2e19a1d513b7f96337333aa6dff911164f9e90684328884ba3e8410f8/supply-fr.md"
+      "url_path": "apertura-pratica/fr/files/practice/supply-fr.md"
     },
     "apertura-pratica/files/practice/supply-it.md": {
       "sha256": "735d9b1b6d7d2e1f61f7bb42201eae101253181029f52682155b725d97c63e87",
-      "url_path": "_files/735d9b1b6d7d2e1f61f7bb42201eae101253181029f52682155b725d97c63e87/supply-it.md"
+      "url_path": "apertura-pratica/it/files/practice/supply-it.md"
     },
     "apertura-pratica/files/practice/update-de.md": {
       "sha256": "2bfe3da6a5fe935e758999920ac4e26b6d615c0269146ce23f1dc06035f076e2",
-      "url_path": "_files/2bfe3da6a5fe935e758999920ac4e26b6d615c0269146ce23f1dc06035f076e2/update-de.md"
+      "url_path": "apertura-pratica/de/files/practice/update-de.md"
     },
     "apertura-pratica/files/practice/update-en.md": {
       "sha256": "f4766c684c9dc0dbe543d4180fceb402809cce222a25d244d37decb0f5b48382",
-      "url_path": "_files/f4766c684c9dc0dbe543d4180fceb402809cce222a25d244d37decb0f5b48382/update-en.md"
+      "url_path": "apertura-pratica/en/files/practice/update-en.md"
     },
     "apertura-pratica/files/practice/update-es.md": {
       "sha256": "affa2ec712001a0e8c21de1a74f4bceb4e8dea276a781717cdcfdc6ab2bba32d",
-      "url_path": "_files/affa2ec712001a0e8c21de1a74f4bceb4e8dea276a781717cdcfdc6ab2bba32d/update-es.md"
+      "url_path": "apertura-pratica/es/files/practice/update-es.md"
     },
     "apertura-pratica/files/practice/update-fr.md": {
       "sha256": "eab6ecb5c331abe854e025bb67e96ba62f1b058f1bd641753a13460d8ef1f53d",
-      "url_path": "_files/eab6ecb5c331abe854e025bb67e96ba62f1b058f1bd641753a13460d8ef1f53d/update-fr.md"
+      "url_path": "apertura-pratica/fr/files/practice/update-fr.md"
     },
     "apertura-pratica/files/practice/update-it.md": {
       "sha256": "1289e19415eb939b2dafe7b9b0889fdd554bf3873d8b1c12ab209d5f99d4751f",
-      "url_path": "_files/1289e19415eb939b2dafe7b9b0889fdd554bf3873d8b1c12ab209d5f99d4751f/update-it.md"
+      "url_path": "apertura-pratica/it/files/practice/update-it.md"
     },
     "comunicazione-professionale/files/input/brief-de.md": {
       "sha256": "e3429092f67836b7bf56ebe179df13dca5719e2abb523e4f996c60c1c54fb48c",
-      "url_path": "_files/e3429092f67836b7bf56ebe179df13dca5719e2abb523e4f996c60c1c54fb48c/brief-de.md"
+      "url_path": "comunicazione-professionale/de/files/input/brief-de.md"
     },
     "comunicazione-professionale/files/input/brief-en.md": {
       "sha256": "f120478a3804be90262b717e01ea9ebe222a20686e2d3403848746ccd64d86e4",
-      "url_path": "_files/f120478a3804be90262b717e01ea9ebe222a20686e2d3403848746ccd64d86e4/brief-en.md"
+      "url_path": "comunicazione-professionale/en/files/input/brief-en.md"
     },
     "comunicazione-professionale/files/input/brief-es.md": {
       "sha256": "9e3a2181693b41513fe175dec77b55122e8a875717aa7ec97885cd7495f96e80",
-      "url_path": "_files/9e3a2181693b41513fe175dec77b55122e8a875717aa7ec97885cd7495f96e80/brief-es.md"
+      "url_path": "comunicazione-professionale/es/files/input/brief-es.md"
     },
     "comunicazione-professionale/files/input/brief-fr.md": {
       "sha256": "ab8409761679dd3285f54518621c9d2b246c910a9b37a52ac4003770fb7d77a2",
-      "url_path": "_files/ab8409761679dd3285f54518621c9d2b246c910a9b37a52ac4003770fb7d77a2/brief-fr.md"
+      "url_path": "comunicazione-professionale/fr/files/input/brief-fr.md"
     },
     "comunicazione-professionale/files/input/brief-it.md": {
       "sha256": "537a3686f5e582dd7552fdd9e0a9137f91a0bc0558b9ef06f6384762fdbdc6b4",
-      "url_path": "_files/537a3686f5e582dd7552fdd9e0a9137f91a0bc0558b9ef06f6384762fdbdc6b4/brief-it.md"
+      "url_path": "comunicazione-professionale/it/files/input/brief-it.md"
     },
     "comunicazione-professionale/files/input/source-de-provenance.json": {
       "sha256": "eaa7fb097004033731a00c1c8d733d8ad6625c831aa8e7eee6eb1cb86ef6ed27",
-      "url_path": "_files/eaa7fb097004033731a00c1c8d733d8ad6625c831aa8e7eee6eb1cb86ef6ed27/source-de-provenance.json"
+      "url_path": "comunicazione-professionale/de/files/input/source-de-provenance.json"
     },
     "comunicazione-professionale/files/input/source-de.md": {
       "sha256": "42a61615cce6ee54aa9c2533423da021eeb1ae5237d13924e2a795910baa8068",
-      "url_path": "_files/42a61615cce6ee54aa9c2533423da021eeb1ae5237d13924e2a795910baa8068/source-de.md"
+      "url_path": "comunicazione-professionale/de/files/input/source-de.md"
     },
     "comunicazione-professionale/files/input/source-en-provenance.json": {
       "sha256": "92fd09ad935a5f9f3082309b32b6bd64ba79ef67ef0ee0f815658f3e6fdbf56a",
-      "url_path": "_files/92fd09ad935a5f9f3082309b32b6bd64ba79ef67ef0ee0f815658f3e6fdbf56a/source-en-provenance.json"
+      "url_path": "comunicazione-professionale/en/files/input/source-en-provenance.json"
     },
     "comunicazione-professionale/files/input/source-en.md": {
       "sha256": "75b96074c44743ff328f139d45ad296dd8b392a854809b499ff9b8733aff079d",
-      "url_path": "_files/75b96074c44743ff328f139d45ad296dd8b392a854809b499ff9b8733aff079d/source-en.md"
+      "url_path": "comunicazione-professionale/en/files/input/source-en.md"
     },
     "comunicazione-professionale/files/input/source-es-provenance.json": {
       "sha256": "ec0909b8cf3b7f14103b6b0032ddac870241a38a7aa42bd708eab7781ab9f952",
-      "url_path": "_files/ec0909b8cf3b7f14103b6b0032ddac870241a38a7aa42bd708eab7781ab9f952/source-es-provenance.json"
+      "url_path": "comunicazione-professionale/es/files/input/source-es-provenance.json"
     },
     "comunicazione-professionale/files/input/source-es.md": {
       "sha256": "3591b39412f7dbbcfa9c8beedc4a86e75d85b6b2c125aec2d4fc7e65e800bfb6",
-      "url_path": "_files/3591b39412f7dbbcfa9c8beedc4a86e75d85b6b2c125aec2d4fc7e65e800bfb6/source-es.md"
+      "url_path": "comunicazione-professionale/es/files/input/source-es.md"
     },
     "comunicazione-professionale/files/input/source-fr-provenance.json": {
       "sha256": "a39f603e496e9fec2423c682d63ec0668847457dfb3f88c1a90731ef7309e535",
-      "url_path": "_files/a39f603e496e9fec2423c682d63ec0668847457dfb3f88c1a90731ef7309e535/source-fr-provenance.json"
+      "url_path": "comunicazione-professionale/fr/files/input/source-fr-provenance.json"
     },
     "comunicazione-professionale/files/input/source-fr.md": {
       "sha256": "531675a284d296bb8eef0c6ec8458aca65378fd691f814959bc3d9a70f5e275c",
-      "url_path": "_files/531675a284d296bb8eef0c6ec8458aca65378fd691f814959bc3d9a70f5e275c/source-fr.md"
+      "url_path": "comunicazione-professionale/fr/files/input/source-fr.md"
     },
     "comunicazione-professionale/files/input/source-it-provenance.json": {
       "sha256": "d4faa7f37c608fae9a43eb04e5d6caf9407bb3334a98d1d9b684d1939f44a07d",
-      "url_path": "_files/d4faa7f37c608fae9a43eb04e5d6caf9407bb3334a98d1d9b684d1939f44a07d/source-it-provenance.json"
+      "url_path": "comunicazione-professionale/it/files/input/source-it-provenance.json"
     },
     "comunicazione-professionale/files/input/source-it.md": {
       "sha256": "c4c8f51c2ed0f1e76a6b2d6f01cf40e702ef5683f7dba3c8be88e0634573d2c8",
-      "url_path": "_files/c4c8f51c2ed0f1e76a6b2d6f01cf40e702ef5683f7dba3c8be88e0634573d2c8/source-it.md"
+      "url_path": "comunicazione-professionale/it/files/input/source-it.md"
     },
     "comunicazione-professionale/files/practice/brief-de.md": {
       "sha256": "e3429092f67836b7bf56ebe179df13dca5719e2abb523e4f996c60c1c54fb48c",
-      "url_path": "_files/e3429092f67836b7bf56ebe179df13dca5719e2abb523e4f996c60c1c54fb48c/brief-de.md"
+      "url_path": "comunicazione-professionale/de/files/practice/brief-de.md"
     },
     "comunicazione-professionale/files/practice/brief-en.md": {
       "sha256": "f120478a3804be90262b717e01ea9ebe222a20686e2d3403848746ccd64d86e4",
-      "url_path": "_files/f120478a3804be90262b717e01ea9ebe222a20686e2d3403848746ccd64d86e4/brief-en.md"
+      "url_path": "comunicazione-professionale/en/files/practice/brief-en.md"
     },
     "comunicazione-professionale/files/practice/brief-es.md": {
       "sha256": "9e3a2181693b41513fe175dec77b55122e8a875717aa7ec97885cd7495f96e80",
-      "url_path": "_files/9e3a2181693b41513fe175dec77b55122e8a875717aa7ec97885cd7495f96e80/brief-es.md"
+      "url_path": "comunicazione-professionale/es/files/practice/brief-es.md"
     },
     "comunicazione-professionale/files/practice/brief-fr.md": {
       "sha256": "ab8409761679dd3285f54518621c9d2b246c910a9b37a52ac4003770fb7d77a2",
-      "url_path": "_files/ab8409761679dd3285f54518621c9d2b246c910a9b37a52ac4003770fb7d77a2/brief-fr.md"
+      "url_path": "comunicazione-professionale/fr/files/practice/brief-fr.md"
     },
     "comunicazione-professionale/files/practice/brief-it.md": {
       "sha256": "537a3686f5e582dd7552fdd9e0a9137f91a0bc0558b9ef06f6384762fdbdc6b4",
-      "url_path": "_files/537a3686f5e582dd7552fdd9e0a9137f91a0bc0558b9ef06f6384762fdbdc6b4/brief-it.md"
+      "url_path": "comunicazione-professionale/it/files/practice/brief-it.md"
     },
     "comunicazione-professionale/files/practice/practice-de.md": {
       "sha256": "2bba3c1f2b3c6f36bb4f0875b08b5aef3fefabe936dfd15f457ee2e5499e4159",
-      "url_path": "_files/2bba3c1f2b3c6f36bb4f0875b08b5aef3fefabe936dfd15f457ee2e5499e4159/practice-de.md"
+      "url_path": "comunicazione-professionale/de/files/practice/practice-de.md"
     },
     "comunicazione-professionale/files/practice/practice-en.md": {
       "sha256": "1ac855a62ab75e8b1dfda2721c1a58d704ed048eb58aef6db3651baf3ac197a7",
-      "url_path": "_files/1ac855a62ab75e8b1dfda2721c1a58d704ed048eb58aef6db3651baf3ac197a7/practice-en.md"
+      "url_path": "comunicazione-professionale/en/files/practice/practice-en.md"
     },
     "comunicazione-professionale/files/practice/practice-es.md": {
       "sha256": "829466f9c59c8b99aecb00534a622e5c3800ae121f0bb51a742345e07e775fdc",
-      "url_path": "_files/829466f9c59c8b99aecb00534a622e5c3800ae121f0bb51a742345e07e775fdc/practice-es.md"
+      "url_path": "comunicazione-professionale/es/files/practice/practice-es.md"
     },
     "comunicazione-professionale/files/practice/practice-fr.md": {
       "sha256": "2a3b50913467d3a7e60b8f8d4f6e82a4e8b3eb5a01bcad88d7ebc90bd6256435",
-      "url_path": "_files/2a3b50913467d3a7e60b8f8d4f6e82a4e8b3eb5a01bcad88d7ebc90bd6256435/practice-fr.md"
+      "url_path": "comunicazione-professionale/fr/files/practice/practice-fr.md"
     },
     "comunicazione-professionale/files/practice/practice-it.md": {
       "sha256": "dc77bac707b4e559ef8a7c2eefdfbec49a9af3584b13e3ec5793d5fbff902e57",
-      "url_path": "_files/dc77bac707b4e559ef8a7c2eefdfbec49a9af3584b13e3ec5793d5fbff902e57/practice-it.md"
+      "url_path": "comunicazione-professionale/it/files/practice/practice-it.md"
     },
     "comunicazione-professionale/files/practice/source-de-provenance.json": {
       "sha256": "eaa7fb097004033731a00c1c8d733d8ad6625c831aa8e7eee6eb1cb86ef6ed27",
-      "url_path": "_files/eaa7fb097004033731a00c1c8d733d8ad6625c831aa8e7eee6eb1cb86ef6ed27/source-de-provenance.json"
+      "url_path": "comunicazione-professionale/de/files/practice/source-de-provenance.json"
     },
     "comunicazione-professionale/files/practice/source-de.md": {
       "sha256": "42a61615cce6ee54aa9c2533423da021eeb1ae5237d13924e2a795910baa8068",
-      "url_path": "_files/42a61615cce6ee54aa9c2533423da021eeb1ae5237d13924e2a795910baa8068/source-de.md"
+      "url_path": "comunicazione-professionale/de/files/practice/source-de.md"
     },
     "comunicazione-professionale/files/practice/source-en-provenance.json": {
       "sha256": "92fd09ad935a5f9f3082309b32b6bd64ba79ef67ef0ee0f815658f3e6fdbf56a",
-      "url_path": "_files/92fd09ad935a5f9f3082309b32b6bd64ba79ef67ef0ee0f815658f3e6fdbf56a/source-en-provenance.json"
+      "url_path": "comunicazione-professionale/en/files/practice/source-en-provenance.json"
     },
     "comunicazione-professionale/files/practice/source-en.md": {
       "sha256": "75b96074c44743ff328f139d45ad296dd8b392a854809b499ff9b8733aff079d",
-      "url_path": "_files/75b96074c44743ff328f139d45ad296dd8b392a854809b499ff9b8733aff079d/source-en.md"
+      "url_path": "comunicazione-professionale/en/files/practice/source-en.md"
     },
     "comunicazione-professionale/files/practice/source-es-provenance.json": {
       "sha256": "ec0909b8cf3b7f14103b6b0032ddac870241a38a7aa42bd708eab7781ab9f952",
-      "url_path": "_files/ec0909b8cf3b7f14103b6b0032ddac870241a38a7aa42bd708eab7781ab9f952/source-es-provenance.json"
+      "url_path": "comunicazione-professionale/es/files/practice/source-es-provenance.json"
     },
     "comunicazione-professionale/files/practice/source-es.md": {
       "sha256": "3591b39412f7dbbcfa9c8beedc4a86e75d85b6b2c125aec2d4fc7e65e800bfb6",
-      "url_path": "_files/3591b39412f7dbbcfa9c8beedc4a86e75d85b6b2c125aec2d4fc7e65e800bfb6/source-es.md"
+      "url_path": "comunicazione-professionale/es/files/practice/source-es.md"
     },
     "comunicazione-professionale/files/practice/source-fr-provenance.json": {
       "sha256": "a39f603e496e9fec2423c682d63ec0668847457dfb3f88c1a90731ef7309e535",
-      "url_path": "_files/a39f603e496e9fec2423c682d63ec0668847457dfb3f88c1a90731ef7309e535/source-fr-provenance.json"
+      "url_path": "comunicazione-professionale/fr/files/practice/source-fr-provenance.json"
     },
     "comunicazione-professionale/files/practice/source-fr.md": {
       "sha256": "531675a284d296bb8eef0c6ec8458aca65378fd691f814959bc3d9a70f5e275c",
-      "url_path": "_files/531675a284d296bb8eef0c6ec8458aca65378fd691f814959bc3d9a70f5e275c/source-fr.md"
+      "url_path": "comunicazione-professionale/fr/files/practice/source-fr.md"
     },
     "comunicazione-professionale/files/practice/source-it-provenance.json": {
       "sha256": "d4faa7f37c608fae9a43eb04e5d6caf9407bb3334a98d1d9b684d1939f44a07d",
-      "url_path": "_files/d4faa7f37c608fae9a43eb04e5d6caf9407bb3334a98d1d9b684d1939f44a07d/source-it-provenance.json"
+      "url_path": "comunicazione-professionale/it/files/practice/source-it-provenance.json"
     },
     "comunicazione-professionale/files/practice/source-it.md": {
       "sha256": "c4c8f51c2ed0f1e76a6b2d6f01cf40e702ef5683f7dba3c8be88e0634573d2c8",
-      "url_path": "_files/c4c8f51c2ed0f1e76a6b2d6f01cf40e702ef5683f7dba3c8be88e0634573d2c8/source-it.md"
-    },
-    "contenzioso-tributario/files/input/accettazione.txt": {
-      "sha256": "7fe059bac59cb379c2cbf6a02fd04283336138df8500a479958d007e8917b32d",
-      "url_path": "_files/7fe059bac59cb379c2cbf6a02fd04283336138df8500a479958d007e8917b32d/accettazione.txt"
-    },
-    "contenzioso-tributario/files/input/avviso.txt": {
-      "sha256": "6b35620ac31f349434e917096e874edf7b429f3e95b947623697a80d84cf316e",
-      "url_path": "_files/6b35620ac31f349434e917096e874edf7b429f3e95b947623697a80d84cf316e/avviso.txt"
-    },
-    "contenzioso-tributario/files/input/fonti-da-verificare.md": {
-      "sha256": "fc1d00de77bc5b97a41272a275130d70cbb93c2127a2ba1d5ed9d9d71531c160",
-      "url_path": "_files/fc1d00de77bc5b97a41272a275130d70cbb93c2127a2ba1d5ed9d9d71531c160/fonti-da-verificare.md"
-    },
-    "contenzioso-tributario/files/input/incarico-de.md": {
-      "sha256": "11a98b96c9940db2b3a9d3cb34602adf592d94e338d826430e3f14c42ea5b88e",
-      "url_path": "_files/11a98b96c9940db2b3a9d3cb34602adf592d94e338d826430e3f14c42ea5b88e/incarico-de.md"
-    },
-    "contenzioso-tributario/files/input/incarico-en.md": {
-      "sha256": "accf0eee2d4788d37717e1b512f9808530fe8ae218330e770a6d0ff5fab86df6",
-      "url_path": "_files/accf0eee2d4788d37717e1b512f9808530fe8ae218330e770a6d0ff5fab86df6/incarico-en.md"
-    },
-    "contenzioso-tributario/files/input/incarico-es.md": {
-      "sha256": "1033f4754a739b7f6cdc2f6cb618042bd5cd281b57a38d5e0ddd62376ebf08d9",
-      "url_path": "_files/1033f4754a739b7f6cdc2f6cb618042bd5cd281b57a38d5e0ddd62376ebf08d9/incarico-es.md"
-    },
-    "contenzioso-tributario/files/input/incarico-fr.md": {
-      "sha256": "eec5e5a4242b81cba0d3bfdd1915825ef62297d29528ac4fae0e1f96fce0ae95",
-      "url_path": "_files/eec5e5a4242b81cba0d3bfdd1915825ef62297d29528ac4fae0e1f96fce0ae95/incarico-fr.md"
-    },
-    "contenzioso-tributario/files/input/incarico-it.md": {
-      "sha256": "1a75486d5721104ee5569d3985001ddc04e549a581c704727a319a9c4d60e529",
-      "url_path": "_files/1a75486d5721104ee5569d3985001ddc04e549a581c704727a319a9c4d60e529/incarico-it.md"
-    },
-    "contenzioso-tributario/files/practice/accettazione.txt": {
-      "sha256": "7fe059bac59cb379c2cbf6a02fd04283336138df8500a479958d007e8917b32d",
-      "url_path": "_files/7fe059bac59cb379c2cbf6a02fd04283336138df8500a479958d007e8917b32d/accettazione.txt"
-    },
-    "contenzioso-tributario/files/practice/avviso.txt": {
-      "sha256": "6b35620ac31f349434e917096e874edf7b429f3e95b947623697a80d84cf316e",
-      "url_path": "_files/6b35620ac31f349434e917096e874edf7b429f3e95b947623697a80d84cf316e/avviso.txt"
-    },
-    "contenzioso-tributario/files/practice/consegna.txt": {
-      "sha256": "d097bff5ccd9272c52089ec082aabe0480508c259c1978fef792cad81d813cfc",
-      "url_path": "_files/d097bff5ccd9272c52089ec082aabe0480508c259c1978fef792cad81d813cfc/consegna.txt"
-    },
-    "contenzioso-tributario/files/practice/fonti-da-verificare.md": {
-      "sha256": "fc1d00de77bc5b97a41272a275130d70cbb93c2127a2ba1d5ed9d9d71531c160",
-      "url_path": "_files/fc1d00de77bc5b97a41272a275130d70cbb93c2127a2ba1d5ed9d9d71531c160/fonti-da-verificare.md"
-    },
-    "contenzioso-tributario/files/practice/incarico-de.md": {
-      "sha256": "11a98b96c9940db2b3a9d3cb34602adf592d94e338d826430e3f14c42ea5b88e",
-      "url_path": "_files/11a98b96c9940db2b3a9d3cb34602adf592d94e338d826430e3f14c42ea5b88e/incarico-de.md"
-    },
-    "contenzioso-tributario/files/practice/incarico-en.md": {
-      "sha256": "accf0eee2d4788d37717e1b512f9808530fe8ae218330e770a6d0ff5fab86df6",
-      "url_path": "_files/accf0eee2d4788d37717e1b512f9808530fe8ae218330e770a6d0ff5fab86df6/incarico-en.md"
-    },
-    "contenzioso-tributario/files/practice/incarico-es.md": {
-      "sha256": "1033f4754a739b7f6cdc2f6cb618042bd5cd281b57a38d5e0ddd62376ebf08d9",
-      "url_path": "_files/1033f4754a739b7f6cdc2f6cb618042bd5cd281b57a38d5e0ddd62376ebf08d9/incarico-es.md"
-    },
-    "contenzioso-tributario/files/practice/incarico-fr.md": {
-      "sha256": "eec5e5a4242b81cba0d3bfdd1915825ef62297d29528ac4fae0e1f96fce0ae95",
-      "url_path": "_files/eec5e5a4242b81cba0d3bfdd1915825ef62297d29528ac4fae0e1f96fce0ae95/incarico-fr.md"
-    },
-    "contenzioso-tributario/files/practice/incarico-it.md": {
-      "sha256": "1a75486d5721104ee5569d3985001ddc04e549a581c704727a319a9c4d60e529",
-      "url_path": "_files/1a75486d5721104ee5569d3985001ddc04e549a581c704727a319a9c4d60e529/incarico-it.md"
+      "url_path": "comunicazione-professionale/it/files/practice/source-it.md"
     },
     "presenza-digitale-studio/files/input/lucia-studio-de.md": {
       "sha256": "59436451e8cb0db86ed2f3519b0f6f0cf65f81f93fe0de464366a117ad217ef0",
-      "url_path": "_files/59436451e8cb0db86ed2f3519b0f6f0cf65f81f93fe0de464366a117ad217ef0/lucia-studio-de.md"
+      "url_path": "presenza-digitale-studio/de/files/input/lucia-studio-de.md"
     },
     "presenza-digitale-studio/files/input/lucia-studio-en.md": {
       "sha256": "717b33c4c9f3773b9886c9ffc705ceca42cca41c4ffd9c50b762432a63b92886",
-      "url_path": "_files/717b33c4c9f3773b9886c9ffc705ceca42cca41c4ffd9c50b762432a63b92886/lucia-studio-en.md"
+      "url_path": "presenza-digitale-studio/en/files/input/lucia-studio-en.md"
     },
     "presenza-digitale-studio/files/input/lucia-studio-es.md": {
       "sha256": "57c42f9a63384ce665591c56ad1783738ba75d3acb4b9a283f58345c6b6451f8",
-      "url_path": "_files/57c42f9a63384ce665591c56ad1783738ba75d3acb4b9a283f58345c6b6451f8/lucia-studio-es.md"
+      "url_path": "presenza-digitale-studio/es/files/input/lucia-studio-es.md"
     },
     "presenza-digitale-studio/files/input/lucia-studio-fr.md": {
       "sha256": "d6cbcce68b0775102c2d3c04f531949fc5da5aab47c2b9a5c56a2fb53032e486",
-      "url_path": "_files/d6cbcce68b0775102c2d3c04f531949fc5da5aab47c2b9a5c56a2fb53032e486/lucia-studio-fr.md"
+      "url_path": "presenza-digitale-studio/fr/files/input/lucia-studio-fr.md"
     },
     "presenza-digitale-studio/files/input/lucia-studio-it.md": {
       "sha256": "f2a658f9168a53e9010bc7d5ffacbed1d449beaa2e6b81ee01209777504c41f9",
-      "url_path": "_files/f2a658f9168a53e9010bc7d5ffacbed1d449beaa2e6b81ee01209777504c41f9/lucia-studio-it.md"
+      "url_path": "presenza-digitale-studio/it/files/input/lucia-studio-it.md"
     },
     "presenza-digitale-studio/files/practice/lucia-studio-de.md": {
       "sha256": "59436451e8cb0db86ed2f3519b0f6f0cf65f81f93fe0de464366a117ad217ef0",
-      "url_path": "_files/59436451e8cb0db86ed2f3519b0f6f0cf65f81f93fe0de464366a117ad217ef0/lucia-studio-de.md"
+      "url_path": "presenza-digitale-studio/de/files/practice/lucia-studio-de.md"
     },
     "presenza-digitale-studio/files/practice/lucia-studio-en.md": {
       "sha256": "717b33c4c9f3773b9886c9ffc705ceca42cca41c4ffd9c50b762432a63b92886",
-      "url_path": "_files/717b33c4c9f3773b9886c9ffc705ceca42cca41c4ffd9c50b762432a63b92886/lucia-studio-en.md"
+      "url_path": "presenza-digitale-studio/en/files/practice/lucia-studio-en.md"
     },
     "presenza-digitale-studio/files/practice/lucia-studio-es.md": {
       "sha256": "57c42f9a63384ce665591c56ad1783738ba75d3acb4b9a283f58345c6b6451f8",
-      "url_path": "_files/57c42f9a63384ce665591c56ad1783738ba75d3acb4b9a283f58345c6b6451f8/lucia-studio-es.md"
+      "url_path": "presenza-digitale-studio/es/files/practice/lucia-studio-es.md"
     },
     "presenza-digitale-studio/files/practice/lucia-studio-fr.md": {
       "sha256": "d6cbcce68b0775102c2d3c04f531949fc5da5aab47c2b9a5c56a2fb53032e486",
-      "url_path": "_files/d6cbcce68b0775102c2d3c04f531949fc5da5aab47c2b9a5c56a2fb53032e486/lucia-studio-fr.md"
+      "url_path": "presenza-digitale-studio/fr/files/practice/lucia-studio-fr.md"
     },
     "presenza-digitale-studio/files/practice/lucia-studio-it.md": {
       "sha256": "f2a658f9168a53e9010bc7d5ffacbed1d449beaa2e6b81ee01209777504c41f9",
-      "url_path": "_files/f2a658f9168a53e9010bc7d5ffacbed1d449beaa2e6b81ee01209777504c41f9/lucia-studio-it.md"
+      "url_path": "presenza-digitale-studio/it/files/practice/lucia-studio-it.md"
     },
     "presenza-digitale-studio/files/practice/lucia-update-de.md": {
       "sha256": "9884034d23d87c9d470482b7c684f2a57a8cf9087114fdca7be398c2b55152b7",
-      "url_path": "_files/9884034d23d87c9d470482b7c684f2a57a8cf9087114fdca7be398c2b55152b7/lucia-update-de.md"
+      "url_path": "presenza-digitale-studio/de/files/practice/lucia-update-de.md"
     },
     "presenza-digitale-studio/files/practice/lucia-update-en.md": {
       "sha256": "f1d7e7f3e6a3a12450d4594d91dd6eccfb3b8c02d99cf69b3fa811f80f93adb0",
-      "url_path": "_files/f1d7e7f3e6a3a12450d4594d91dd6eccfb3b8c02d99cf69b3fa811f80f93adb0/lucia-update-en.md"
+      "url_path": "presenza-digitale-studio/en/files/practice/lucia-update-en.md"
     },
     "presenza-digitale-studio/files/practice/lucia-update-es.md": {
       "sha256": "5323f6529498d654c7868bccfca4c2e61a3212146b98cee59823263f31846c75",
-      "url_path": "_files/5323f6529498d654c7868bccfca4c2e61a3212146b98cee59823263f31846c75/lucia-update-es.md"
+      "url_path": "presenza-digitale-studio/es/files/practice/lucia-update-es.md"
     },
     "presenza-digitale-studio/files/practice/lucia-update-fr.md": {
       "sha256": "04ddb25e18a3c40c0a0860c95568c5d6202bc5f337f9b5fbc28d2c4d197ba643",
-      "url_path": "_files/04ddb25e18a3c40c0a0860c95568c5d6202bc5f337f9b5fbc28d2c4d197ba643/lucia-update-fr.md"
+      "url_path": "presenza-digitale-studio/fr/files/practice/lucia-update-fr.md"
     },
     "presenza-digitale-studio/files/practice/lucia-update-it.md": {
       "sha256": "648f6f07e2072be75624538ac589afb29d39e5f06356015edbd760d70a123701",
-      "url_path": "_files/648f6f07e2072be75624538ac589afb29d39e5f06356015edbd760d70a123701/lucia-update-it.md"
+      "url_path": "presenza-digitale-studio/it/files/practice/lucia-update-it.md"
     },
     "quesito-legale-fiscale/files/input/directive-original-es.pdf": {
       "sha256": "1b6a68e172965e8bd7cfcc74a1a892f0f32045e5f94fc339d5f1125b422bf1c8",
-      "url_path": "_files/1b6a68e172965e8bd7cfcc74a1a892f0f32045e5f94fc339d5f1125b422bf1c8/directive-original-es.pdf"
+      "url_path": "quesito-legale-fiscale/it/files/input/directive-original-es.pdf"
     },
     "quesito-legale-fiscale/files/input/guide-de.md": {
       "sha256": "3542e8439ee81608bb9fe3e47ca3a2625eca3fb74854fb726b86471eedc7817a",
-      "url_path": "_files/3542e8439ee81608bb9fe3e47ca3a2625eca3fb74854fb726b86471eedc7817a/guide-de.md"
+      "url_path": "quesito-legale-fiscale/de/files/input/guide-de.md"
     },
     "quesito-legale-fiscale/files/input/guide-en.md": {
       "sha256": "9bdfed2dfe94df52e12f0916eb36329b1d24911e023a7195932ea9b8eecc34d7",
-      "url_path": "_files/9bdfed2dfe94df52e12f0916eb36329b1d24911e023a7195932ea9b8eecc34d7/guide-en.md"
+      "url_path": "quesito-legale-fiscale/en/files/input/guide-en.md"
     },
     "quesito-legale-fiscale/files/input/guide-es.md": {
       "sha256": "28eae2224635f2e150e538c888cac681c032dd7a466a8996829df0da0013d9d5",
-      "url_path": "_files/28eae2224635f2e150e538c888cac681c032dd7a466a8996829df0da0013d9d5/guide-es.md"
+      "url_path": "quesito-legale-fiscale/es/files/input/guide-es.md"
     },
     "quesito-legale-fiscale/files/input/guide-fr.md": {
       "sha256": "b48e314a81c8712a17b4c80278d281c5aefa69ac02d850d328382fc010c21b30",
-      "url_path": "_files/b48e314a81c8712a17b4c80278d281c5aefa69ac02d850d328382fc010c21b30/guide-fr.md"
+      "url_path": "quesito-legale-fiscale/fr/files/input/guide-fr.md"
     },
     "quesito-legale-fiscale/files/input/guide-it.md": {
       "sha256": "4980f464edea93a96a8497206e614ac2d213cfebf2d9d7912a757511f976872c",
-      "url_path": "_files/4980f464edea93a96a8497206e614ac2d213cfebf2d9d7912a757511f976872c/guide-it.md"
+      "url_path": "quesito-legale-fiscale/it/files/input/guide-it.md"
     },
     "quesito-legale-fiscale/files/input/question-de.md": {
       "sha256": "f2a90353d4807d63ecac8fd449f4ee812d1aab8584b550fcc3546bd9ef4cf926",
-      "url_path": "_files/f2a90353d4807d63ecac8fd449f4ee812d1aab8584b550fcc3546bd9ef4cf926/question-de.md"
+      "url_path": "quesito-legale-fiscale/de/files/input/question-de.md"
     },
     "quesito-legale-fiscale/files/input/question-en.md": {
       "sha256": "54eb6f2eedfefa5ac42ab82d4f16fbc0399d9aa15fa17300822389b702dc26f3",
-      "url_path": "_files/54eb6f2eedfefa5ac42ab82d4f16fbc0399d9aa15fa17300822389b702dc26f3/question-en.md"
+      "url_path": "quesito-legale-fiscale/en/files/input/question-en.md"
     },
     "quesito-legale-fiscale/files/input/question-es.md": {
       "sha256": "3c93b90be9489c684a08238546e27960999dfd9690a7a43861abf9587852ff64",
-      "url_path": "_files/3c93b90be9489c684a08238546e27960999dfd9690a7a43861abf9587852ff64/question-es.md"
+      "url_path": "quesito-legale-fiscale/es/files/input/question-es.md"
     },
     "quesito-legale-fiscale/files/input/question-fr.md": {
       "sha256": "018b71a83123908dfcd830ebdb1ab805e92a37f63c77110c570931c488164055",
-      "url_path": "_files/018b71a83123908dfcd830ebdb1ab805e92a37f63c77110c570931c488164055/question-fr.md"
+      "url_path": "quesito-legale-fiscale/fr/files/input/question-fr.md"
     },
     "quesito-legale-fiscale/files/input/question-it.md": {
       "sha256": "fc054c044e7207f1b51aa1090e0817f3a6080d92798604ffb3705cbb5b7c6c60",
-      "url_path": "_files/fc054c044e7207f1b51aa1090e0817f3a6080d92798604ffb3705cbb5b7c6c60/question-it.md"
+      "url_path": "quesito-legale-fiscale/it/files/input/question-it.md"
     },
     "quesito-legale-fiscale/files/input/source-provenance-de.json": {
       "sha256": "7fe1e2dbae17ac1976ab75c5f1f6b57b6b80a7060966c5648fbb32d0aedf4476",
-      "url_path": "_files/7fe1e2dbae17ac1976ab75c5f1f6b57b6b80a7060966c5648fbb32d0aedf4476/source-provenance-de.json"
+      "url_path": "quesito-legale-fiscale/de/files/input/source-provenance-de.json"
     },
     "quesito-legale-fiscale/files/input/source-provenance-en.json": {
       "sha256": "f861377fbdc1c4f394899bedbf51069f1fa6d4c51db3923a4803a9d4550c30ed",
-      "url_path": "_files/f861377fbdc1c4f394899bedbf51069f1fa6d4c51db3923a4803a9d4550c30ed/source-provenance-en.json"
+      "url_path": "quesito-legale-fiscale/en/files/input/source-provenance-en.json"
     },
     "quesito-legale-fiscale/files/input/source-provenance-es.json": {
       "sha256": "e6902555d5ccc8823ca306b704f8e4962cb285a142d27071b1f0a9b3b22a7f23",
-      "url_path": "_files/e6902555d5ccc8823ca306b704f8e4962cb285a142d27071b1f0a9b3b22a7f23/source-provenance-es.json"
+      "url_path": "quesito-legale-fiscale/es/files/input/source-provenance-es.json"
     },
     "quesito-legale-fiscale/files/input/source-provenance-fr.json": {
       "sha256": "b687cebc26d85d3f1121a8b1da4613faef65b219e0017b06bd6293ca3659f7cc",
-      "url_path": "_files/b687cebc26d85d3f1121a8b1da4613faef65b219e0017b06bd6293ca3659f7cc/source-provenance-fr.json"
+      "url_path": "quesito-legale-fiscale/fr/files/input/source-provenance-fr.json"
     },
     "quesito-legale-fiscale/files/input/source-provenance-it.json": {
       "sha256": "eb85bc6b20216283d72eb52328bbcbc6fb67d7c1d80434eea3a1eff231d1a184",
-      "url_path": "_files/eb85bc6b20216283d72eb52328bbcbc6fb67d7c1d80434eea3a1eff231d1a184/source-provenance-it.json"
+      "url_path": "quesito-legale-fiscale/it/files/input/source-provenance-it.json"
     },
     "quesito-legale-fiscale/files/input/sources-de.md": {
       "sha256": "858cc3c773e95b5abf2993f612ec722ae3abdaeed659cbedf8a78909fb515735",
-      "url_path": "_files/858cc3c773e95b5abf2993f612ec722ae3abdaeed659cbedf8a78909fb515735/sources-de.md"
+      "url_path": "quesito-legale-fiscale/de/files/input/sources-de.md"
     },
     "quesito-legale-fiscale/files/input/sources-en.md": {
       "sha256": "84cd3b6db5c551ab6916df3e1cefe9afc27f9be5ce8af15960cd200d43b363a5",
-      "url_path": "_files/84cd3b6db5c551ab6916df3e1cefe9afc27f9be5ce8af15960cd200d43b363a5/sources-en.md"
+      "url_path": "quesito-legale-fiscale/en/files/input/sources-en.md"
     },
     "quesito-legale-fiscale/files/input/sources-es.md": {
       "sha256": "31a79e0a9b1f46579b1316d0b049f170c14368fd0d4a0b9b45d1fb3dc833be13",
-      "url_path": "_files/31a79e0a9b1f46579b1316d0b049f170c14368fd0d4a0b9b45d1fb3dc833be13/sources-es.md"
+      "url_path": "quesito-legale-fiscale/es/files/input/sources-es.md"
     },
     "quesito-legale-fiscale/files/input/sources-fr.md": {
       "sha256": "8d6a667b753783b3bf00b411a9c2197b9ca16ccec77f956cfc6ee59a91a688b0",
-      "url_path": "_files/8d6a667b753783b3bf00b411a9c2197b9ca16ccec77f956cfc6ee59a91a688b0/sources-fr.md"
+      "url_path": "quesito-legale-fiscale/fr/files/input/sources-fr.md"
     },
     "quesito-legale-fiscale/files/input/sources-it.md": {
       "sha256": "083906eee3824b1668b362ff56bedc7c8a3f6cd028d12fde8d1ab90d3755a2a0",
-      "url_path": "_files/083906eee3824b1668b362ff56bedc7c8a3f6cd028d12fde8d1ab90d3755a2a0/sources-it.md"
+      "url_path": "quesito-legale-fiscale/it/files/input/sources-it.md"
     },
     "quesito-legale-fiscale/files/practice/directive-original-es.pdf": {
       "sha256": "1b6a68e172965e8bd7cfcc74a1a892f0f32045e5f94fc339d5f1125b422bf1c8",
-      "url_path": "_files/1b6a68e172965e8bd7cfcc74a1a892f0f32045e5f94fc339d5f1125b422bf1c8/directive-original-es.pdf"
+      "url_path": "quesito-legale-fiscale/it/files/practice/directive-original-es.pdf"
     },
     "quesito-legale-fiscale/files/practice/guide-de.md": {
       "sha256": "3542e8439ee81608bb9fe3e47ca3a2625eca3fb74854fb726b86471eedc7817a",
-      "url_path": "_files/3542e8439ee81608bb9fe3e47ca3a2625eca3fb74854fb726b86471eedc7817a/guide-de.md"
+      "url_path": "quesito-legale-fiscale/de/files/practice/guide-de.md"
     },
     "quesito-legale-fiscale/files/practice/guide-en.md": {
       "sha256": "9bdfed2dfe94df52e12f0916eb36329b1d24911e023a7195932ea9b8eecc34d7",
-      "url_path": "_files/9bdfed2dfe94df52e12f0916eb36329b1d24911e023a7195932ea9b8eecc34d7/guide-en.md"
+      "url_path": "quesito-legale-fiscale/en/files/practice/guide-en.md"
     },
     "quesito-legale-fiscale/files/practice/guide-es.md": {
       "sha256": "28eae2224635f2e150e538c888cac681c032dd7a466a8996829df0da0013d9d5",
-      "url_path": "_files/28eae2224635f2e150e538c888cac681c032dd7a466a8996829df0da0013d9d5/guide-es.md"
+      "url_path": "quesito-legale-fiscale/es/files/practice/guide-es.md"
     },
     "quesito-legale-fiscale/files/practice/guide-fr.md": {
       "sha256": "b48e314a81c8712a17b4c80278d281c5aefa69ac02d850d328382fc010c21b30",
-      "url_path": "_files/b48e314a81c8712a17b4c80278d281c5aefa69ac02d850d328382fc010c21b30/guide-fr.md"
+      "url_path": "quesito-legale-fiscale/fr/files/practice/guide-fr.md"
     },
     "quesito-legale-fiscale/files/practice/guide-it.md": {
       "sha256": "4980f464edea93a96a8497206e614ac2d213cfebf2d9d7912a757511f976872c",
-      "url_path": "_files/4980f464edea93a96a8497206e614ac2d213cfebf2d9d7912a757511f976872c/guide-it.md"
+      "url_path": "quesito-legale-fiscale/it/files/practice/guide-it.md"
     },
     "quesito-legale-fiscale/files/practice/practice-de.md": {
       "sha256": "b826ce81ec3db22953f53e56615608278913c05b41ff182601ee7a94a4361e0e",
-      "url_path": "_files/b826ce81ec3db22953f53e56615608278913c05b41ff182601ee7a94a4361e0e/practice-de.md"
+      "url_path": "quesito-legale-fiscale/de/files/practice/practice-de.md"
     },
     "quesito-legale-fiscale/files/practice/practice-en.md": {
       "sha256": "4dbf8cd9a2de835cdd929ecc529cf18bd6c5ce7b151f7abe3c6b1a033ce547b2",
-      "url_path": "_files/4dbf8cd9a2de835cdd929ecc529cf18bd6c5ce7b151f7abe3c6b1a033ce547b2/practice-en.md"
+      "url_path": "quesito-legale-fiscale/en/files/practice/practice-en.md"
     },
     "quesito-legale-fiscale/files/practice/practice-es.md": {
       "sha256": "b9c574edcf33cb98bd65c4e2f323f6704683d35350811caf8524231fd3ef5bc7",
-      "url_path": "_files/b9c574edcf33cb98bd65c4e2f323f6704683d35350811caf8524231fd3ef5bc7/practice-es.md"
+      "url_path": "quesito-legale-fiscale/es/files/practice/practice-es.md"
     },
     "quesito-legale-fiscale/files/practice/practice-fr.md": {
       "sha256": "ac2808d22f92c4072a12b3cded8c7789cc186269439cd8944312197d41494338",
-      "url_path": "_files/ac2808d22f92c4072a12b3cded8c7789cc186269439cd8944312197d41494338/practice-fr.md"
+      "url_path": "quesito-legale-fiscale/fr/files/practice/practice-fr.md"
     },
     "quesito-legale-fiscale/files/practice/practice-it.md": {
       "sha256": "26b4324e25264aeb69c4d5ea70c12938e48b6e8daf212b355c331769133e864f",
-      "url_path": "_files/26b4324e25264aeb69c4d5ea70c12938e48b6e8daf212b355c331769133e864f/practice-it.md"
+      "url_path": "quesito-legale-fiscale/it/files/practice/practice-it.md"
     },
     "quesito-legale-fiscale/files/practice/question-de.md": {
       "sha256": "f2a90353d4807d63ecac8fd449f4ee812d1aab8584b550fcc3546bd9ef4cf926",
-      "url_path": "_files/f2a90353d4807d63ecac8fd449f4ee812d1aab8584b550fcc3546bd9ef4cf926/question-de.md"
+      "url_path": "quesito-legale-fiscale/de/files/practice/question-de.md"
     },
     "quesito-legale-fiscale/files/practice/question-en.md": {
       "sha256": "54eb6f2eedfefa5ac42ab82d4f16fbc0399d9aa15fa17300822389b702dc26f3",
-      "url_path": "_files/54eb6f2eedfefa5ac42ab82d4f16fbc0399d9aa15fa17300822389b702dc26f3/question-en.md"
+      "url_path": "quesito-legale-fiscale/en/files/practice/question-en.md"
     },
     "quesito-legale-fiscale/files/practice/question-es.md": {
       "sha256": "3c93b90be9489c684a08238546e27960999dfd9690a7a43861abf9587852ff64",
-      "url_path": "_files/3c93b90be9489c684a08238546e27960999dfd9690a7a43861abf9587852ff64/question-es.md"
+      "url_path": "quesito-legale-fiscale/es/files/practice/question-es.md"
     },
     "quesito-legale-fiscale/files/practice/question-fr.md": {
       "sha256": "018b71a83123908dfcd830ebdb1ab805e92a37f63c77110c570931c488164055",
-      "url_path": "_files/018b71a83123908dfcd830ebdb1ab805e92a37f63c77110c570931c488164055/question-fr.md"
+      "url_path": "quesito-legale-fiscale/fr/files/practice/question-fr.md"
     },
     "quesito-legale-fiscale/files/practice/question-it.md": {
       "sha256": "fc054c044e7207f1b51aa1090e0817f3a6080d92798604ffb3705cbb5b7c6c60",
-      "url_path": "_files/fc054c044e7207f1b51aa1090e0817f3a6080d92798604ffb3705cbb5b7c6c60/question-it.md"
+      "url_path": "quesito-legale-fiscale/it/files/practice/question-it.md"
     },
     "quesito-legale-fiscale/files/practice/source-provenance-de.json": {
       "sha256": "7fe1e2dbae17ac1976ab75c5f1f6b57b6b80a7060966c5648fbb32d0aedf4476",
-      "url_path": "_files/7fe1e2dbae17ac1976ab75c5f1f6b57b6b80a7060966c5648fbb32d0aedf4476/source-provenance-de.json"
+      "url_path": "quesito-legale-fiscale/de/files/practice/source-provenance-de.json"
     },
     "quesito-legale-fiscale/files/practice/source-provenance-en.json": {
       "sha256": "f861377fbdc1c4f394899bedbf51069f1fa6d4c51db3923a4803a9d4550c30ed",
-      "url_path": "_files/f861377fbdc1c4f394899bedbf51069f1fa6d4c51db3923a4803a9d4550c30ed/source-provenance-en.json"
+      "url_path": "quesito-legale-fiscale/en/files/practice/source-provenance-en.json"
     },
     "quesito-legale-fiscale/files/practice/source-provenance-es.json": {
       "sha256": "e6902555d5ccc8823ca306b704f8e4962cb285a142d27071b1f0a9b3b22a7f23",
-      "url_path": "_files/e6902555d5ccc8823ca306b704f8e4962cb285a142d27071b1f0a9b3b22a7f23/source-provenance-es.json"
+      "url_path": "quesito-legale-fiscale/es/files/practice/source-provenance-es.json"
     },
     "quesito-legale-fiscale/files/practice/source-provenance-fr.json": {
       "sha256": "b687cebc26d85d3f1121a8b1da4613faef65b219e0017b06bd6293ca3659f7cc",
-      "url_path": "_files/b687cebc26d85d3f1121a8b1da4613faef65b219e0017b06bd6293ca3659f7cc/source-provenance-fr.json"
+      "url_path": "quesito-legale-fiscale/fr/files/practice/source-provenance-fr.json"
     },
     "quesito-legale-fiscale/files/practice/source-provenance-it.json": {
       "sha256": "eb85bc6b20216283d72eb52328bbcbc6fb67d7c1d80434eea3a1eff231d1a184",
-      "url_path": "_files/eb85bc6b20216283d72eb52328bbcbc6fb67d7c1d80434eea3a1eff231d1a184/source-provenance-it.json"
+      "url_path": "quesito-legale-fiscale/it/files/practice/source-provenance-it.json"
     },
     "quesito-legale-fiscale/files/practice/sources-de.md": {
       "sha256": "858cc3c773e95b5abf2993f612ec722ae3abdaeed659cbedf8a78909fb515735",
-      "url_path": "_files/858cc3c773e95b5abf2993f612ec722ae3abdaeed659cbedf8a78909fb515735/sources-de.md"
+      "url_path": "quesito-legale-fiscale/de/files/practice/sources-de.md"
     },
     "quesito-legale-fiscale/files/practice/sources-en.md": {
       "sha256": "84cd3b6db5c551ab6916df3e1cefe9afc27f9be5ce8af15960cd200d43b363a5",
-      "url_path": "_files/84cd3b6db5c551ab6916df3e1cefe9afc27f9be5ce8af15960cd200d43b363a5/sources-en.md"
+      "url_path": "quesito-legale-fiscale/en/files/practice/sources-en.md"
     },
     "quesito-legale-fiscale/files/practice/sources-es.md": {
       "sha256": "31a79e0a9b1f46579b1316d0b049f170c14368fd0d4a0b9b45d1fb3dc833be13",
-      "url_path": "_files/31a79e0a9b1f46579b1316d0b049f170c14368fd0d4a0b9b45d1fb3dc833be13/sources-es.md"
+      "url_path": "quesito-legale-fiscale/es/files/practice/sources-es.md"
     },
     "quesito-legale-fiscale/files/practice/sources-fr.md": {
       "sha256": "8d6a667b753783b3bf00b411a9c2197b9ca16ccec77f956cfc6ee59a91a688b0",
-      "url_path": "_files/8d6a667b753783b3bf00b411a9c2197b9ca16ccec77f956cfc6ee59a91a688b0/sources-fr.md"
+      "url_path": "quesito-legale-fiscale/fr/files/practice/sources-fr.md"
     },
     "quesito-legale-fiscale/files/practice/sources-it.md": {
       "sha256": "083906eee3824b1668b362ff56bedc7c8a3f6cd028d12fde8d1ab90d3755a2a0",
-      "url_path": "_files/083906eee3824b1668b362ff56bedc7c8a3f6cd028d12fde8d1ab90d3755a2a0/sources-it.md"
+      "url_path": "quesito-legale-fiscale/it/files/practice/sources-it.md"
     }
   },
   "schema": "mparanza.course_files_remote.v1"

@@ -1,0 +1,8 @@
+{
+  "withdrawn_lessons": [
+    "vera/contenzioso-tributario",
+    "lucia/contenzioso-tributario"
+  ],
+  "existing_language_downloads": ["vera", "lucia"],
+  "evidence": "The owner deleted the two website lessons and both _files folders in 9b74daa6030302ac3fe277d04da9178b8405afc1 and explicitly prohibited restoration. All 885 other affected download references have SHA-256-identical files at their existing language URLs; preserve those bytes and exclude only the two withdrawn lessons from download packages."
+}

@@ -34,7 +34,10 @@ def main() -> None:
     commands.add_parser("registry")
     remedy = commands.add_parser("remedy")
     remedy.add_argument("incident_id")
-    remedy.add_argument("--input", type=Path, required=True)
+    remedy.add_argument(
+        "--input", type=Path, required=True, help="Remedy JSON file, or - for stdin"
+    )
+    remedy.add_argument("--expected-revision", type=int)
     args = parser.parse_args()
     load_env_from_secrets_file()
     store = IncidentStore(args.sqlite_path)
@@ -50,7 +53,11 @@ def main() -> None:
     elif args.command == "registry":
         result = store.registry()
     else:
-        value = Remedy.model_validate_json(args.input.read_text(encoding="utf-8"))
+        value = Remedy.model_validate_json(
+            sys.stdin.read()
+            if str(args.input) == "-"
+            else args.input.read_text(encoding="utf-8")
+        )
         if value.kind == "update":
             import zipfile
 
@@ -83,7 +90,9 @@ def main() -> None:
                         parser.error(
                             "Required version is not the deployed downloadable Vera release on both hosts"
                         )
-        result = store.remedy(args.incident_id, value)
+        result = store.remedy(
+            args.incident_id, value, expected_revision=args.expected_revision
+        )
     sys.stdout.write(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
 
 

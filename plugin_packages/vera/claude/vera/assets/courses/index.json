@@ -160,7 +160,7 @@
     },
     "bilancio-oic": {
       "path": "bilancio-oic/course.json",
-      "sha256": "443aa122555390b40c044c93e3bcff318704b518b02a59b768421a4a0999e207",
+      "sha256": "934a3f4691e650d1f237745e4464bb5664dac276c38c7f227ee79b5ab901491f",
       "languages": [
         "it",
         "en"
@@ -338,34 +338,6 @@
         "fr": "Apprendre à lancer la revue d’une proposition et d’un plan, fournir les documents et utiliser le dossier produit dans le travail professionnel.",
         "de": "Lernen Sie, die Prüfung von Vorschlag und Plan zu starten, Unterlagen bereitzustellen und die erzeugte Akte fachlich zu nutzen.",
         "es": "Aprender a iniciar la revisión de una propuesta y un plan, aportar documentos y usar el expediente producido en el trabajo profesional."
-      }
-    },
-    "contenzioso-tributario": {
-      "path": "contenzioso-tributario/course.json",
-      "sha256": "3204f4a16ccc66573f8787375281e54d82d658059f4c563d3fd6f7fd6a7a003e",
-      "languages": [
-        "it",
-        "en",
-        "fr",
-        "de",
-        "es"
-      ],
-      "duration_seconds": 390,
-      "group": "workflow",
-      "parent_workflow": null,
-      "titles": {
-        "it": "Preparare e riprendere un contenzioso tributario con Vera",
-        "en": "Prepare and resume Italian tax litigation with Vera",
-        "fr": "Préparer et reprendre un contentieux fiscal italien avec Vera",
-        "de": "Italienischen Steuerstreit mit Vera vorbereiten und fortsetzen",
-        "es": "Preparar y retomar un litigio tributario italiano con Vera"
-      },
-      "goals": {
-        "it": "Imparare a partire dagli atti, verificare passaggi e termini, preparare una bozza e aggiornare la stessa pratica quando arriva una nuova prova.",
-        "en": "Learn to start from case documents, verify steps and deadlines, prepare a draft and update the same matter when new evidence arrives.",
-        "fr": "Apprendre à partir des actes, vérifier étapes et délais, préparer une ébauche et actualiser le même dossier lorsqu’une nouvelle preuve arrive.",
-        "de": "Mit den Akten beginnen, Schritte und Fristen prüfen, einen Entwurf vorbereiten und denselben Vorgang bei neuen Belegen aktualisieren lernen.",
-        "es": "Aprender a partir de los documentos, verificar pasos y plazos, preparar un borrador y actualizar el mismo expediente al recibir nuevas pruebas."
       }
     },
     "dati-fiscali-strutturati": {
@@ -741,7 +713,7 @@
     },
     "organizzazione-lavoro": {
       "path": "organizzazione-lavoro/course.json",
-      "sha256": "c484db7d0545923bd7cd7558de2007f7b94cec00bb090cb96432fd5e79be0d22",
+      "sha256": "c2e76ba9cd3544c35da894a0c470ef1fd7f20ccc29e929c49e99cbbe2a29f93a",
       "languages": [
         "it",
         "en",
@@ -1049,7 +1021,7 @@
     },
     "trasformazione": {
       "path": "trasformazione/course.json",
-      "sha256": "4cb737408c95164bc80dceb179f82656ee36f300201c5c86eb64e2e3e16e311f",
+      "sha256": "f39c4e0c4b7aa6e2d86c76ec5df3a877caec2d3d382744f020605fe8b2fbb62a",
       "languages": [
         "it",
         "en",
@@ -1093,7 +1065,7 @@
     },
     "variance-analysis": {
       "path": "variance-analysis/course.json",
-      "sha256": "eb8c55dfcecc75346d38bf6538c9716c604114644928c7d8b612060de054a184",
+      "sha256": "ddaa8bcd26eab5f00633fba3764b9e1c0120e06f91d062a3241c341644fd0c66",
       "languages": [
         "it",
         "en",
