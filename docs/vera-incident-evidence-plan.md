@@ -79,7 +79,8 @@ The preceding candidate's combined package/runtime/reconciliation run passed
 722 tests with two skipped; its package/update checks passed 408 tests with two
 skipped. Both products subsequently passed full source/package parity and canonical
 version alignment after the approved native and root-capture changes. Final
-package/update checks are being refreshed. Real
+package/update checks passed 408 tests, with two installed-version checks
+skipped because the curated installed-version evidence was unavailable. Real
 helper INFO output and packaged PDF reconciliation summaries are preserved by
 the runner. These are local candidate results, not production or affected-user
 recovery.
