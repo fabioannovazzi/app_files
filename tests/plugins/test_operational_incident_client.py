@@ -24,6 +24,133 @@ from modules.operational_incidents.store import IncidentStore
 ROOT = Path(__file__).resolve().parents[2]
 
 
+def test_agent_diagnosis_reply_and_corrected_original_task_end_to_end(
+    tmp_path, monkeypatch
+):
+    """Two agent turns must end in the original calculation, not helper readiness."""
+    import sys
+    from types import SimpleNamespace
+
+    from modules.operational_incidents.contracts import Remedy
+    from tests.modules.operational_incidents.test_agent_exchange import (
+        reply_to,
+        request_for,
+    )
+
+    module, store, _ = client(tmp_path, monkeypatch)
+    monkeypatch.setitem(sys.modules, "operational_incidents", module)
+    spec = importlib.util.spec_from_file_location(
+        "agent_exchange_launcher",
+        ROOT / "plugins/vera/scripts/managed_python_runtime.py",
+    )
+    launcher = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(launcher)
+    (tmp_path / "scripts").mkdir()
+    (tmp_path / "scripts/technical_runner.py").write_bytes(
+        (ROOT / "plugins/vera/scripts/technical_runner.py").read_bytes()
+    )
+    (tmp_path / "calculate.py").write_text(
+        "import argparse,json\nfrom pathlib import Path\n"
+        "p=argparse.ArgumentParser()\np.add_argument('--input',required=True)\n"
+        "p.add_argument('--output',required=True)\np.add_argument('--mode',default='unsupported')\n"
+        "p.add_argument('--client-engagement')\na=p.parse_args()\n"
+        "if a.mode != 'sum': raise ValueError('Unsupported calculation mode')\n"
+        "values=json.loads(Path(a.input).read_text())['values']\n"
+        "Path(a.output).write_text(json.dumps({'total':sum(values)}))\n"
+    )
+    source = tmp_path / "source.json"
+    source.write_text('{"values":[3,5]}')
+    original_bytes = source.read_bytes()
+    output = tmp_path / "result.json"
+    engagement = tmp_path / "engagement.json"
+    engagement.write_text(
+        json.dumps({"run_id": "synthetic-run", "input_manifest_sha256": "a" * 64})
+    )
+    monkeypatch.setattr(launcher, "prepare_execution_root", lambda *_: tmp_path)
+    monkeypatch.setattr(
+        launcher._IMPLEMENTATION,
+        "select_runtime",
+        lambda *_: SimpleNamespace(requirement_root=tmp_path),
+    )
+    monkeypatch.setattr(
+        launcher._IMPLEMENTATION,
+        "ensure_runtime",
+        lambda *_, **__: (True, tmp_path, "ready"),
+    )
+    monkeypatch.setattr(
+        launcher._IMPLEMENTATION, "runtime_python", lambda *_: Path(sys.executable)
+    )
+    monkeypatch.setattr(
+        launcher._IMPLEMENTATION, "runtime_environment", lambda *_: None
+    )
+    arguments = [
+        "--input",
+        str(source),
+        "--output",
+        str(output),
+        "--client-engagement",
+        str(engagement),
+    ]
+
+    assert launcher.main(["run", "calculate.py", *arguments]) == 1
+    incident = store.queue()[0]
+    original = Report.model_validate(incident["reports"][0])
+    request = store.remedy(incident["incident_id"], request_for(original.report_id))
+    pending = module.check_incidents(recover=False)["pending"][0]
+    assert pending["diagnostic_exchange"]["state"] == "awaiting-vera"
+    pointer = json.loads(
+        Path(module.local_context()["pending_diagnostics"][0]).read_text()
+    )
+    assert "Unsupported calculation mode" in Path(pointer["stderr_path"]).read_text()
+    owner = Credentials.model_validate(module.local_context()["credentials"])
+    store.report(owner, reply_to(original, request["revision"]))
+    assert store.show(incident["incident_id"])["status"] == "open"
+    correction = store.remedy(
+        incident["incident_id"],
+        Remedy(
+            target_report_id=original.report_id,
+            kind="resume",
+            summary="Riprendi il calcolo originale",
+            evidence="Reviewed stderr and helper source establish an unsupported mode.",
+            instructions="Resume the original calculation using the supported sum mode.",
+            expected_outcome="The original source values total 8.",
+        ),
+    )
+    module.check_incidents(recover=False)
+
+    assert (
+        launcher.main(
+            [
+                "--incident-report-id",
+                str(original.report_id),
+                "run",
+                "calculate.py",
+                *arguments,
+                "--mode",
+                "sum",
+            ]
+        )
+        == 0
+    )
+    assert json.loads(output.read_text()) == {"total": 8}
+    assert source.read_bytes() == original_bytes
+    assert store.show(incident["incident_id"])["status"] == "open"
+    result = module.verify_original_task(
+        {
+            "incident_id": incident["incident_id"],
+            "report_id": str(original.report_id),
+            "remedy_revision": correction["revision"],
+            "operation_id": str(original.operation_id),
+            "input_binding": original.input_binding,
+            "execution_succeeded": True,
+            "original_task_verified": True,
+        }
+    )
+
+    assert result["reporting"] == "delivered"
+    assert store.show(incident["incident_id"])["status"] == "recovered"
+
+
 @pytest.mark.parametrize("component", ["deep-research-validator", None])
 def test_real_argument_failure_through_registry_retry_and_original_task_recovery(
     tmp_path,

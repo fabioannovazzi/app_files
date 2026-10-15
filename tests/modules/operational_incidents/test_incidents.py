@@ -339,7 +339,7 @@ def test_installation_with_no_reports_sees_no_other_incidents(tmp_path):
     store.report(first, report())
     second = credentials()
     store.register(second)
-    assert store.status(second) == {"incidents": []}
+    assert store.status(second)["incidents"] == []
 
 
 def test_update_available_is_not_recovered_and_stale_outcome_is_rejected(tmp_path):

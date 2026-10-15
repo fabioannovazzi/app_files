@@ -15,11 +15,13 @@ import hashlib
 import importlib.util
 import json
 import logging
+import os
 import shutil
 import stat
 import subprocess
 import sys
 import tempfile
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from types import ModuleType
@@ -2285,6 +2287,11 @@ def write_system_zip(
     ) as staging_name:
         staging = Path(staging_name)
         write_entries_to_directory(staging, entries)
+        # ZIP chronology must be reproducible, not depend on staging crossing
+        # a two-second DOS timestamp boundary after writing the integrity index.
+        timestamp = time.mktime((*FIXED_ZIP_DATE, 0, 0, -1))
+        for name in entries:
+            os.utime(staging / name, (timestamp, timestamp))
         if zip_path.exists():
             zip_path.unlink()
         subprocess.run(

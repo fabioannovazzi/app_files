@@ -131,3 +131,12 @@ the shared archive implementation. Review the changed launcher and retain the
 existing case-data boundaries; document managed runtime downloads before worker
 execution and refresh this exact governed-source binding. All 26 Lucia plugin
 regressions pass. Rebuild Lucia 0.1.113 after this review update.
+
+## Integration with the deployed recovery release
+
+Integrate main commit 4093d142f0305519f51055784495048b4e1e312e before shipping.
+Retain its original-report recovery service and course publication policy,
+retain this release's .393/.288/.113 versions and explicit course exclusions,
+and rebuild every host archive from the combined source. No course website
+files are restored. Archive/Lucia regressions: 154 passed; the two portable
+regressions pass under both CPython 3.9.6 and 3.12.13.

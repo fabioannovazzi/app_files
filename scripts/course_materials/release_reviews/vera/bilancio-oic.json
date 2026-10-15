@@ -70,7 +70,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "98320cf37da958108b9e6b36abc5caafa8d35ea5a7d4062660ba469d4304aa89",
+  "course_sha256": "9a11565e0004f24e43386c4d1ca13c2e8d304619529180c4ca03e06ba436cd72",
   "discovery_source_refresh": {
     "reviewed_by": "Codex /root",
     "reviewed_at": "2026-10-01T11:44:13.108677+00:00",
@@ -546,5 +546,22 @@
     "previous_course_sha256": "470d4b0b645bfc803aabf097bb78f28171f460433de126946773011b0e46bae1",
     "scope": "Only source bindings changed. Root helpers launched without --module now use the same structured failure, retry and original-task verification path. Built-in root recovery omits a nonexistent component selector. Authored lessons, prepared inputs and professional algorithms are unchanged; prior editorial/artifact judgments remain historical and fresh teaching CI is required.",
     "validation": "161 runtime/launcher/recovery regressions passed; real argument-failure-to-original-task recovery case covers component and root paths."
+  },
+  "autonomous_recovery_source_binding_20261015": {
+    "baseline_commit": "5a731acd05307a259f477b515382ff50b9ba38d5",
+    "changed_sources": [
+      {
+        "after": "aeed7ab2c2e48ff38150393c114f0937643bede4dfb77f97b12addbc369540f3",
+        "before": "4f677e0d846326d688e6b0b537756636550a9f451fdc8512962b8015445460dc",
+        "path": "scripts/operational_incidents.py"
+      }
+    ],
+    "content_review": "Compared the complete compiled JSON with the reviewed baseline: every field except sources is identical, including all authored languages, inputs, requests, checkpoints, practice and pacing. Existing editorial judgments, dates and historical artifact reviews are preserved.",
+    "current_course_sha256": "9a11565e0004f24e43386c4d1ca13c2e8d304619529180c4ca03e06ba436cd72",
+    "limits": "Source-binding review only; no new learner, visual, professional or installed-host acceptance is asserted. Fresh CI must pass native demo and practice checks against these exact course hashes.",
+    "previous_course_sha256": "98320cf37da958108b9e6b36abc5caafa8d35ea5a7d4062660ba469d4304aa89",
+    "reviewed_at": "2026-10-15T13:14:28.442330+00:00",
+    "reviewer": "Codex /root - bounded incident-client source review",
+    "source_review": "Inspected the exact operational_incidents.py diff: reporter protocol changes from 2 to 3, and startup guidance routes the host AI through typed technical requests, revision-linked replies, active status checks and verified original-task retry. No course execution or professional calculation logic changes."
   }
 }

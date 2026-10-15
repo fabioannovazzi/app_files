@@ -40,7 +40,7 @@
       "kind": "hosted_service",
       "destination": "https://mparanza.com/static/shared/courses/vera/",
       "purpose": "Download reviewed fictional lesson data omitted from distributable packages when the user requests preparation.",
-      "content": "Fixed public GET paths identifying prepared assets by SHA-256 and original filename, plus ordinary connection metadata. No client files, local paths, teaching profile, answers, progress or feedback are sent.",
+      "content": "Fixed public GET paths for selected prepared assets, bound locally to exact SHA-256 values, plus ordinary connection metadata. No client files, local paths, teaching profile, answers, progress or feedback are sent.",
       "retention": "Hash-verified lesson files stay in the selected local lesson folder. Website access-log retention is outside this helper.",
       "activation": "automatic_on_first_use",
       "optional": false,
@@ -49,7 +49,8 @@
         "openai-codex"
       ],
       "controls": [
-        "HTTPS and mparanza.com only, including redirects; no credentials or query parameters; passive lesson-data extensions only; 30-second request timeout and 25 MB cap; SHA-256 checked before atomic write; only selected-language attachments are fetched; no code is downloaded or executed."
+        "HTTPS and mparanza.com only, including redirects; no credentials or query parameters; passive lesson-data extensions only; 30-second request timeout and 25 MB cap; SHA-256 checked before atomic write; only selected-language attachments are fetched; no code is downloaded or executed.",
+        "The release omits the explicitly withdrawn tax-litigation lesson. Retained Vera attachments use existing language-file URLs whose bytes match the course SHA-256; packaging does not recreate the removed website folders or embed the removed lesson."
       ]
     }
   ],
@@ -88,7 +89,7 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "c8f6fb21b08b1a2d7587aac1b8418f32f6e7e72058488d92d1ff8bd6b6a04635"
+    "source_fingerprint": "3b7c7392e11edc7f85b5ecaebcf0c760f3d4c9bed2f72f4acafa75f22ef7045c"
   },
   "runtime_profiles": [
     "openai-codex"

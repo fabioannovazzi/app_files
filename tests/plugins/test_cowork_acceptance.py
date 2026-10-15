@@ -8,6 +8,7 @@ import json
 import subprocess
 import sys
 from pathlib import Path
+from zipfile import ZipFile
 
 import pymupdf  # Keep native bindings in the test isolation import snapshot.
 import pytest
@@ -47,6 +48,38 @@ def prepared(tmp_path, monkeypatch):
     run = tmp_path / "acceptance"
     acceptance.prepare(PACKAGE, run, package_url="https://example.test/vera.zip")
     return run
+
+
+@pytest.mark.parametrize(
+    "path", ["../foreign.csv", "https://foreign.example/a.csv", "other/it/files/a.csv"]
+)
+def test_preparation_rejects_unbound_download_paths_before_network(
+    tmp_path, monkeypatch, path
+):
+    cases = json.loads(acceptance.CATALOG.read_text())
+    workflow = cases["cases"]["bank"]["workflow"]
+    with ZipFile(PACKAGE) as archive:
+        entries = {name: archive.read(name) for name in archive.namelist()}
+    course = json.loads(entries[f"assets/courses/{workflow}/course.json"])
+    asset = next(
+        item for item in course["files"] if cases["language"] in item["languages"]
+    )
+    remote = json.loads(entries["assets/courses/remote.json"])
+    remote["files"][f"{workflow}/{asset['path']}"]["url_path"] = path
+    entries["assets/courses/remote.json"] = json.dumps(remote).encode()
+    changed = tmp_path / "changed.zip"
+    with ZipFile(changed, "w") as archive:
+        for name, data in entries.items():
+            archive.writestr(name, data)
+
+    def forbidden(*args):
+        pytest.fail("Unbound paths must be rejected before download")
+
+    monkeypatch.setattr(acceptance, "_download_attachment", forbidden)
+    with pytest.raises(ValueError, match="remote acceptance fixture"):
+        acceptance.prepare(
+            changed, tmp_path / "run", package_url="https://example.test"
+        )
 
 
 def reviewed(run, case="bank", phase="demo", route="ordinary"):

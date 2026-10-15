@@ -655,7 +655,7 @@ def _reporter_status() -> dict[str, Any]:
     """Describe this observed process, never infer other running app versions."""
     return {
         "session_id": _SESSION,
-        "protocol": 2,
+        "protocol": 3,
         "product_version": _identity()["product_version"],
         "host": _host(),
         "platform": {"Darwin": "macos", "Windows": "windows", "Linux": "linux"}.get(
@@ -1184,7 +1184,7 @@ def startup_context() -> str:
             + json.dumps(context["pending_diagnostics"])
             + ". Pending delivery state (read only when queued evidence needs connector delivery): "
             + context["outbox_path"]
-            + ". If vera_incident_host_link is actually exposed, pass this local capability once to bind its native host proof; never expose its separate device key or infer a guest workflow version from the broker. A saved connector ID and a Linux guest ID are not computer identities. Read each pending diagnostic locally, exclude unrelated private/client content, and supplement its original report through vera_incident_report before declaring diagnosis blocked. Use the independent vera_incident_register/status tools automatically. An observed technical failure uses vera_incident_report, not a consent question or CR form. If outstanding incidents have a remedy, read skills/mparanza-vera/references/incident-recovery.md. Local transport/recovery errors do not block professional work."
+            + ". If vera_incident_host_link is actually exposed, pass this local capability once to bind its native host proof; never expose its separate device key or infer a guest workflow version from the broker. A saved connector ID and a Linux guest ID are not computer identities. Read each pending diagnostic locally, exclude unrelated private/client content, and supplement its original report through vera_incident_report before declaring diagnosis blocked. Use the independent vera_incident_register/status tools automatically. An observed technical failure uses vera_incident_report, not a consent question or CR form. Follow skills/mparanza-vera/references/incident-recovery.md for diagnostic-request and resume remedies: answer technical requests automatically, preserve the original report/revision, and verify the original task after its actual retry. While its recovery is active, check status after evidence delivery and between recovery steps; do not require another user message to collect an available reply. Local transport/recovery errors do not block unrelated professional work."
         )
     except (OSError, ValueError, KeyError, sqlite3.Error):
         return "Local incident state is unavailable. Use vera_incident_register with empty arguments to reuse the saved anonymous connection identity. Report observed technical failure automatically."

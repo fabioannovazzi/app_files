@@ -1809,5 +1809,10 @@
     "version": "0.1.393",
     "date": "2026-10-15",
     "scope": "Canonical version and manifest identity only. The exact full skill entrypoint inventory and bytes are unchanged. Existing jurisdiction dispositions and evidence limits are retained; no new Geneva professional acceptance is asserted."
+  },
+  "incident_agent_recovery_release_binding": {
+    "date": "2026-10-15",
+    "version": "0.1.392",
+    "scope": "Canonical manifest/version refresh. All 55 recorded skill entrypoints are unchanged; only the shared technical incident conversation and recovery service changed. Preserve existing Geneva judgments and jurisdiction limits; no additional professional workflow or Geneva acceptance is claimed."
   }
 }
