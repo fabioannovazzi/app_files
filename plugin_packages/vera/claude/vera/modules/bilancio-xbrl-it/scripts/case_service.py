@@ -21,6 +21,15 @@ from typing import Any, Callable, Iterator, Mapping
 from access_control import RequestContext, authorize
 from artifact_delivery import SignedArtifactDelivery
 from build_taxonomy_catalogue import build_catalogue
+from closing_workflow import (
+    closing_status,
+    ingest_closing_trial_balance,
+    open_closing_reconsideration,
+    propose_closing_adjustment,
+    propose_closing_review,
+    record_closing_decision,
+    start_closing_workflow,
+)
 from intelligence_contract import (
     build_intelligence_packet,
     build_next_intelligence_packet,
@@ -76,6 +85,12 @@ from xbrl_case import (
 __all__ = ["CaseService", "LONG_RUNNING_OPERATIONS"]
 
 OPERATION_CAPABILITIES = {
+    "start_closing_workflow": "OVERRIDE",
+    "propose_closing_adjustment": "PREPARE",
+    "propose_closing_review": "PREPARE",
+    "record_closing_decision": "OVERRIDE",
+    "open_closing_reconsideration": "PREPARE",
+    "ingest_closing_trial_balance": "INGEST",
     "ingest": "INGEST",
     "ingest_pdf": "INGEST",
     "ingest_prior_xbrl": "INGEST",
@@ -183,6 +198,23 @@ def _summary(case: Mapping[str, Any]) -> dict[str, Any]:
     validation = case.get("validation") or {}
     presentation = case.get("statutory_presentation") or {}
     return {
+        "closing": (
+            {
+                key: value
+                for key, value in closing_status(case).items()
+                if key
+                in {
+                    "fascicolo_sufficient",
+                    "baseline_screened",
+                    "form_and_mapping_allowed",
+                    "closure_allowed",
+                    "register_count",
+                    "selected_version_id",
+                }
+            }
+            if case.get("closing_workflow")
+            else None
+        ),
         "case_id": case["case_id"],
         "revision_id": case["revision_id"],
         "state": case["state"],
@@ -1365,6 +1397,21 @@ class CaseService:
         actor: str,
         revision: str,
     ) -> dict[str, Any]:
+        closing_operations = {
+            "start_closing_workflow": start_closing_workflow,
+            "propose_closing_adjustment": propose_closing_adjustment,
+            "propose_closing_review": propose_closing_review,
+            "record_closing_decision": record_closing_decision,
+            "open_closing_reconsideration": open_closing_reconsideration,
+        }
+        if operation in closing_operations:
+            return closing_operations[operation](case, payload, actor, revision)
+        if operation == "ingest_closing_trial_balance":
+            source, receipt = self._controlled_input(payload["source_path"])
+            updated = ingest_closing_trial_balance(
+                case, source, payload, actor, revision
+            )
+            return self._record_input_scan(updated, receipt, actor)
         if operation == "ingest":
             source, receipt = self._controlled_input(payload["source_path"])
             updated = ingest_trial_balance(
@@ -1373,6 +1420,10 @@ class CaseService:
                 actor,
                 revision,
                 str(payload["sheet"]) if payload.get("sheet") else None,
+                column_mapping=payload.get("column_mapping"),
+                blank_balance_cells_are_zero=payload.get(
+                    "blank_balance_cells_are_zero", False
+                ),
             )
             return self._record_input_scan(updated, receipt, actor)
         if operation == "ingest_pdf":

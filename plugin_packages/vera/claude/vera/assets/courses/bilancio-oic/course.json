@@ -102,7 +102,7 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/case_service.py",
-      "sha256": "5e98b4be38206d559e2f8a7613355ff332fca201385073a562b3a51caffc360d"
+      "sha256": "64106356ed0e17b4fb3f8c9ffffa1c3bea4754543294cc9dadc54a069254fc29"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/check_dependencies.py",
@@ -115,6 +115,10 @@
     {
       "path": "modules/bilancio-xbrl-it/scripts/client_history.py",
       "sha256": "44577069791d4cefe0d2b2b6b2812f081ce963843c4434f8a2e8fe16a11f9a60"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/closing_workflow.py",
+      "sha256": "7015ca5e15297ea34c9c06688fb6884158f74ca4a0b498834bdee9e6e8b2db9b"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/disclosure_engine.py",
@@ -138,7 +142,7 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/intelligence_contract.py",
-      "sha256": "b51e335025e68e7ace102fd223d7bda0dee93245fedd3f02704bdb7f636d39b6"
+      "sha256": "c6b798f80f65a08c06bd1ca48d79c7aab11d8d796e2a70caca57661880d3fe06"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/intelligence_runner.py",
@@ -166,7 +170,7 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/review_views.py",
-      "sha256": "ac817c27964b56ed4f70b2ca206692e93b478701af2585d7bcd860353536a77c"
+      "sha256": "a7d4b6462804b4a5924bca17b104d7b8aaf4a75ac7e7300d92abae158f564c22"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/run_background_job.py",
@@ -190,7 +194,7 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/service_bridge.py",
-      "sha256": "5096fa3eb029c9741959368c55080851423467bbad6c034079df7f6ca1925a87"
+      "sha256": "c878830359c99b5539b0840c7fa09f466d163f8cb8938ead3b55e2f0d2fdabf7"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/statutory_presentation.py",
@@ -210,11 +214,11 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/xbrl_case.py",
-      "sha256": "c05f03a0ee4647f67d3df3f250031bd1c3617b0e5050551bfb816a06402f3eb6"
+      "sha256": "2b7472a113a0e583c8c92978536b3e96e50bf64d065486b601e67c033587e3d9"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/SKILL.md",
-      "sha256": "c80a2612157476e237c0f6f766ca156142eb2283b259548972a540afeed716bf"
+      "sha256": "ee3fcb0305dedc99001a814b346dbe65749cca9ea76eca258637bdfc3d3642eb"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/agents/openai.yaml",
@@ -222,7 +226,11 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/references/acceptance-matrix.md",
-      "sha256": "8d16a690b95209a25a029d30f4d5e1184a66155c6d8fa3e94a5628ad245acd66"
+      "sha256": "2c6b10efd38a7bd29694819215df0c5bd777bf0739e1a4a5ca3ca96b1921adc8"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/references/closing-workflow.md",
+      "sha256": "e3b8a07cc046d24c7ac6bf5c3a04a1a63a67cacfde74e215abf85db65507d6a8"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/references/conformance-evidence.md",
@@ -234,7 +242,7 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/references/implementation-status.md",
-      "sha256": "d2829c74154d35a27ce6f84c7bd81ceec02057763e6b25025acabe20b8859a15"
+      "sha256": "dff6de75ee9614ed0730151d526d1980d77d8aec8e5bf2797fac3799bc339b44"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/references/performance-evidence.md",
@@ -274,7 +282,7 @@
     },
     {
       "path": "skills/mparanza-bilancio-oic/SKILL.md",
-      "sha256": "b49e5754fb7d61fe5e7190b367289126576280807ae4827e2e8fbb75948fae5f"
+      "sha256": "ad88ef0995cc468ff520b7c44fa88bfb1b32a10a03c1946d97b98cc4023dda4c"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -548,7 +556,7 @@
       "title": "Preparare una bozza di bilancio con Vera",
       "goal": "Imparare a fornire i documenti, rivedere le proposte di Vera e leggere una bozza di bilancio con prospetti, informazioni di supporto e controlli.",
       "scenario": "Uno studio prepara il primo bilancio di una piccola società di servizi. Seguiamo il lavoro dai file del cliente ai prospetti e alla revisione, poi aggiorniamo la bozza con una fattura dimenticata.",
-      "scope": "Preparazione di un bilancio individuale OIC italiano per una piccola società al primo esercizio. Segui il lavoro dai documenti alla bozza e alla verifica locale del candidato XBRL. La revisione e l’approvazione professionale restano il passo successivo.",
+      "scope": "Preparazione di un bilancio individuale OIC italiano per una piccola società al primo esercizio. Segui il lavoro dai documenti alla bozza e alla verifica locale del candidato XBRL. La revisione e l’approvazione professionale restano il passo successivo. La lezione parte dai saldi di chiusura forniti: non esercita il percorso Alfa di proposta, sostituzione e riesame delle rettifiche, collaudato separatamente.",
       "inputs": "Apri company-it.md, trial-balance-it.csv e year-end-it.txt. Contengono i dati della società, nove conti con movimenti e saldi e le informazioni di fine esercizio. Sono documenti di fantasia da elaborare, senza un bilancio già pronto. Le imposte sono un dato fornito dal prospetto fiscale esterno.",
       "request": "Vera, prepara una bozza del bilancio OIC da questi file. Guidami nella revisione della forma e delle classificazioni, poi mostrami il bilancio, le sue fonti e i controlli prima dell’approvazione.",
       "steps": [
@@ -573,7 +581,7 @@
       "title": "Prepare draft annual accounts with Vera",
       "goal": "Learn to supply the documents, review Vera’s proposals and read draft annual accounts with statements, supporting information and checks.",
       "scenario": "An accounting firm prepares the first annual accounts for a small service company. Follow the work from client files to statements and review, then update the draft after a missing invoice is recorded.",
-      "scope": "Prepare individual Italian OIC annual accounts for a small company in its first year. Follow the work from documents to the draft and local validation of an XBRL candidate. Professional review and approval remain the next step.",
+      "scope": "Prepare individual Italian OIC annual accounts for a small company in its first year. Follow the work from documents to the draft and local validation of an XBRL candidate. Professional review and approval remain the next step. This lesson starts from supplied closing balances. It does not exercise the separately tested Alfa path for proposing, replacing and reconsidering closing adjustments.",
       "inputs": "Open company-en.md, trial-balance-en.csv and year-end-en.txt. They contain the company details, nine accounts with movements and balances, and year-end information. These are fictional documents to process, with no finished accounts. Tax is an input supplied by the external tax workpaper.",
       "request": "Vera, prepare draft OIC annual accounts from these files. Guide me through review of the form and classifications, then show the accounts, their sources and the checks before approval.",
       "steps": [
@@ -596,5 +604,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "9a11565e0004f24e43386c4d1ca13c2e8d304619529180c4ca03e06ba436cd72"
+  "canonical_course_sha256": "f66fd8872e5fffc34b2ccbe84bfff666c015fe9f70fcc302dc7d428bbaf2b495"
 }

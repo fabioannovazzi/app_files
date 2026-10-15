@@ -91,6 +91,13 @@ Missing scope flags are not evidence of eligibility.
 
 ## Run workflow
 
+For preparation of the closing accounts, read `references/closing-workflow.md`
+completely and follow its reviewed path before form selection and mapping.
+Use the same canonical case and authenticated service. Retain proposals,
+professional decisions, replacement balances and reconsiderations; never turn
+adjustment approval into an accounting posting. Use the documented bounded
+evidence views for document interpretation rather than a raw case/source read.
+
 Resolve the module root as the directory two levels above this skill. Run the
 dependency check before helper scripts:
 

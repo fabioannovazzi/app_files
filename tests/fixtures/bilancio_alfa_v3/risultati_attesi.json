@@ -1,0 +1,955 @@
+{
+ "caso": "Alfa Servizi S.r.l. (fittizia), esercizio 2025",
+ "versione_caso": "v3",
+ "origine_contabilita": "CONTABILITA_ESTERNA",
+ "origine_contabilita_indicata": {
+  "autore": "P1 approvatore",
+  "data": "2026-01-08",
+  "dove": "scheda del caso",
+  "nel_registro_decisioni": false,
+  "motivo": "dato di apertura del caso, non decisione sul merito"
+ },
+ "fascicolo_iniziale": {
+  "requisiti": {
+   "R1": "AVAILABLE_SUFFICIENT",
+   "R2": "AVAILABLE_SUFFICIENT",
+   "R3": "AVAILABLE_SUFFICIENT",
+   "R4": "AVAILABLE_STALE",
+   "R5": "MISSING",
+   "R6": "NOT_APPLICABLE",
+   "R7": "REVIEW_REQUIRED"
+  },
+  "esito": "INSUFFICIENT",
+  "bozze_richiesta_cliente": 1,
+  "voci_in_bozza": [
+   "R4",
+   "R5"
+  ],
+  "R7_in_bozza": false,
+  "invio_automatico": false,
+  "decisione": "D-FASC1",
+  "invio": "solo dopo approvazione (D-FASC1)"
+ },
+ "fascicolo_dopo_integrazione": {
+  "esito": "SUFFICIENT",
+  "decisione_R7": "D-R7",
+  "conferma": "D-FASC2",
+  "si_apre": "screening",
+  "forma_e_mapping": "bloccati"
+ },
+ "screening_doc01": {
+  "quadratura_2025": 807800,
+  "quadratura_2024": 727200,
+  "chiusure_incluse": false,
+  "conferma": "D-SCR1",
+  "si_apre": "rettifiche (solo dopo D-SCR1)"
+ },
+ "rettifiche": {
+  "A1": {
+   "dare": "4140",
+   "avere": "1015",
+   "importo": 12000,
+   "fonte": "02"
+  },
+  "A2": {
+   "dare": "4210",
+   "avere": "2410",
+   "importo": 1000,
+   "fonte": "03"
+  }
+ },
+ "doc10": {
+  "uguale_a": "doc01 + A1 + A2",
+  "totale": 820800,
+  "risultato_ante_imposte": 48600,
+  "si_aprono": [
+   "forma",
+   "mapping"
+  ],
+  "conferma_screening": "D-SCR2",
+  "non_attesta_completamento": true,
+  "questioni_aperte": [
+   "imposte 2025 (area Imposte)",
+   "valutazione della vertenza (area Fondi per rischi e oneri)"
+  ]
+ },
+ "forma": {
+  "micro_ammissibile": false,
+  "abbreviato_ammissibile": true,
+  "scelta": "abbreviato",
+  "decisione": "D-FORMA"
+ },
+ "aree": {
+  "attive": [
+   "Immobilizzazioni materiali",
+   "Crediti e ricavi",
+   "Cassa e banche",
+   "Debiti e finanziamenti",
+   "Personale e TFR",
+   "Imposte",
+   "Ratei e risconti",
+   "Patrimonio netto",
+   "Fondi per rischi e oneri",
+   "Altre componenti economiche"
+  ],
+  "escluse_con_motivo_specifico": {
+   "Rimanenze": "nessun conto e nessun documento; societa di servizi; esclusione non prova assenza",
+   "Rendiconto finanziario": "bilancio abbreviato: non obbligatorio"
+  },
+  "escluse_senza_segnali": [
+   "Cambiamenti, errori e fatti successivi",
+   "Immobilizzazioni immateriali",
+   "Partecipazioni e gruppo",
+   "Leasing",
+   "Patrimoni e finanziamenti destinati",
+   "Fusioni e scissioni",
+   "Quote di emissione",
+   "Titoli di debito",
+   "Lavori in corso su ordinazione",
+   "Operazioni in valuta estera",
+   "Bilanci intermedi",
+   "Strumenti finanziari derivati",
+   "Passaggio ai principi contabili nazionali"
+  ],
+  "totale": 25,
+  "esclusioni": {
+   "stato_iniziale": "esclusione proposta",
+   "stato_dopo_decisione": "esclusione confermata",
+   "decisione": "D-ESCL",
+   "numero": 15,
+   "nota": "l'assenza di conti o documenti da sola non dimostra la non applicabilita"
+  }
+ },
+ "fondi_rischi": {
+  "proposta_da_doc05": "non determinabile",
+  "decisione_professionale_richiesta": true,
+  "accantonamento_automatico": false,
+  "D-R7_decide": "dove valutare la vertenza, non se accantonare",
+  "decisione_accantonamento": "aperta (il caso si ferma prima)"
+ },
+ "registro_decisioni_dopo_fase5": {
+  "eventi": [
+   {
+    "record": "D-FASC1",
+    "oggetto": "valutazione del fascicolo iniziale: carenze R4 e R5, non applicabilita di R6, richiesta al cliente (2 voci)",
+    "proposta_da": "sistema",
+    "decisa_da": "P1 approvatore",
+    "esito": "carenze e non applicabilita confermate; richiesta approvata",
+    "data": "2026-01-09",
+    "motivazione": "Estratto conto fermo al 30/11; prospetto TFR assente; societa di servizi senza conti di magazzino",
+    "evidenze": [
+     "01",
+     "04"
+    ]
+   },
+   {
+    "record": "D-R7",
+    "oggetto": "R7 contenziosi e rischi: dove valutare la vertenza citata nel verbale",
+    "proposta_da": "sistema (segnalazione)",
+    "decisa_da": "P1 approvatore",
+    "esito": "vertenza da valutare nell'area Fondi per rischi e oneri; nessuna richiesta al cliente",
+    "data": "2026-01-12",
+    "motivazione": "La richiesta di penali da 8.000 euro richiede una valutazione professionale, non documenti dal cliente",
+    "evidenze": [
+     "05"
+    ]
+   },
+   {
+    "record": "D-FASC2",
+    "oggetto": "sufficienza del fascicolo dopo l'integrazione",
+    "proposta_da": "sistema (controlli meccanici)",
+    "decisa_da": "P1 approvatore",
+    "esito": "fascicolo sufficiente per iniziare",
+    "data": "2026-01-12",
+    "motivazione": "Saldo banca al 31/12 e fondo TFR coincidono con i conti 1410 e 2110; R7 decisa con D-R7",
+    "evidenze": [
+     "06",
+     "07"
+    ],
+    "decisioni_collegate": [
+     "D-R7"
+    ]
+   },
+   {
+    "record": "D-SCR1",
+    "oggetto": "screening del bilancio di verifica doc. 01, controllo per controllo",
+    "proposta_da": "sistema (controlli meccanici)",
+    "decisa_da": "P1 approvatore",
+    "esito": "confermato: chiusure non incluse, si apre la fase delle rettifiche",
+    "data": "2026-01-13",
+    "motivazione": "Quadrature 807.800 e 727.200; convenzione Dare/Avere confermata; ammortamento e rateo 2025 a zero nonostante registro cespiti e contratto",
+    "evidenze": [
+     "01",
+     "02",
+     "03"
+    ]
+   },
+   {
+    "record": "D-A1",
+    "oggetto": "A1",
+    "proposta_da": "C1 preparatore",
+    "decisa_da": "P1 approvatore",
+    "esito": "approvata",
+    "data": "2026-01-15",
+    "motivazione": "Quota 2025 del registro cespiti non registrata",
+    "evidenze": [
+     "02"
+    ]
+   },
+   {
+    "record": "D-A2",
+    "oggetto": "A2",
+    "proposta_da": "C1 preparatore",
+    "decisa_da": "P1 approvatore",
+    "esito": "approvata",
+    "data": "2026-01-15",
+    "motivazione": "Interessi ott-dic 2025 maturati e non pagati al 31/12",
+    "evidenze": [
+     "03"
+    ]
+   },
+   {
+    "record": "D-SCR2",
+    "oggetto": "screening del bilancio di verifica doc. 10",
+    "proposta_da": "sistema (controlli meccanici)",
+    "decisa_da": "P1 approvatore",
+    "esito": "confermato: recepisce esattamente A1 e A2; si aprono forma e mapping",
+    "data": "2026-01-16",
+    "motivazione": "Documento 10 = documento 01 + A1 + A2; quadratura 820.800",
+    "evidenze": [
+     "01",
+     "10"
+    ],
+    "decisioni_collegate": [
+     "D-A1",
+     "D-A2"
+    ]
+   }
+  ],
+  "vista_stato": {
+   "D-FASC1": "valida",
+   "D-R7": "valida",
+   "D-FASC2": "valida",
+   "D-SCR1": "valida",
+   "D-A1": "valida",
+   "D-A2": "valida",
+   "D-SCR2": "valida"
+  }
+ },
+ "registro_decisioni_dopo_fase7": {
+  "eventi": [
+   {
+    "record": "D-FASC1",
+    "oggetto": "valutazione del fascicolo iniziale: carenze R4 e R5, non applicabilita di R6, richiesta al cliente (2 voci)",
+    "proposta_da": "sistema",
+    "decisa_da": "P1 approvatore",
+    "esito": "carenze e non applicabilita confermate; richiesta approvata",
+    "data": "2026-01-09",
+    "motivazione": "Estratto conto fermo al 30/11; prospetto TFR assente; societa di servizi senza conti di magazzino",
+    "evidenze": [
+     "01",
+     "04"
+    ]
+   },
+   {
+    "record": "D-R7",
+    "oggetto": "R7 contenziosi e rischi: dove valutare la vertenza citata nel verbale",
+    "proposta_da": "sistema (segnalazione)",
+    "decisa_da": "P1 approvatore",
+    "esito": "vertenza da valutare nell'area Fondi per rischi e oneri; nessuna richiesta al cliente",
+    "data": "2026-01-12",
+    "motivazione": "La richiesta di penali da 8.000 euro richiede una valutazione professionale, non documenti dal cliente",
+    "evidenze": [
+     "05"
+    ]
+   },
+   {
+    "record": "D-FASC2",
+    "oggetto": "sufficienza del fascicolo dopo l'integrazione",
+    "proposta_da": "sistema (controlli meccanici)",
+    "decisa_da": "P1 approvatore",
+    "esito": "fascicolo sufficiente per iniziare",
+    "data": "2026-01-12",
+    "motivazione": "Saldo banca al 31/12 e fondo TFR coincidono con i conti 1410 e 2110; R7 decisa con D-R7",
+    "evidenze": [
+     "06",
+     "07"
+    ],
+    "decisioni_collegate": [
+     "D-R7"
+    ]
+   },
+   {
+    "record": "D-SCR1",
+    "oggetto": "screening del bilancio di verifica doc. 01, controllo per controllo",
+    "proposta_da": "sistema (controlli meccanici)",
+    "decisa_da": "P1 approvatore",
+    "esito": "confermato: chiusure non incluse, si apre la fase delle rettifiche",
+    "data": "2026-01-13",
+    "motivazione": "Quadrature 807.800 e 727.200; convenzione Dare/Avere confermata; ammortamento e rateo 2025 a zero nonostante registro cespiti e contratto",
+    "evidenze": [
+     "01",
+     "02",
+     "03"
+    ]
+   },
+   {
+    "record": "D-A1",
+    "oggetto": "A1",
+    "proposta_da": "C1 preparatore",
+    "decisa_da": "P1 approvatore",
+    "esito": "approvata",
+    "data": "2026-01-15",
+    "motivazione": "Quota 2025 del registro cespiti non registrata",
+    "evidenze": [
+     "02"
+    ]
+   },
+   {
+    "record": "D-A2",
+    "oggetto": "A2",
+    "proposta_da": "C1 preparatore",
+    "decisa_da": "P1 approvatore",
+    "esito": "approvata",
+    "data": "2026-01-15",
+    "motivazione": "Interessi ott-dic 2025 maturati e non pagati al 31/12",
+    "evidenze": [
+     "03"
+    ]
+   },
+   {
+    "record": "D-SCR2",
+    "oggetto": "screening del bilancio di verifica doc. 10",
+    "proposta_da": "sistema (controlli meccanici)",
+    "decisa_da": "P1 approvatore",
+    "esito": "confermato: recepisce esattamente A1 e A2; si aprono forma e mapping",
+    "data": "2026-01-16",
+    "motivazione": "Documento 10 = documento 01 + A1 + A2; quadratura 820.800",
+    "evidenze": [
+     "01",
+     "10"
+    ],
+    "decisioni_collegate": [
+     "D-A1",
+     "D-A2"
+    ]
+   },
+   {
+    "record": "D-FORMA",
+    "oggetto": "forma del bilancio",
+    "proposta_da": "sistema",
+    "decisa_da": "P1 approvatore",
+    "esito": "abbreviato (art. 2435-bis)",
+    "data": "2026-01-16",
+    "motivazione": "Micro-impresa non ammissibile: limiti superati in entrambi gli esercizi; abbreviato ammissibile",
+    "evidenze": [
+     "10",
+     "scheda della societa: dipendenti medi"
+    ]
+   },
+   {
+    "record": "D-ESCL",
+    "oggetto": "conferma delle 15 esclusioni proposte",
+    "proposta_da": "sistema",
+    "decisa_da": "P1 approvatore",
+    "esito": "confermata",
+    "data": "2026-01-16",
+    "motivazione": "Nessuna fattispecie emersa dal bilancio di verifica e dai documenti 01-07",
+    "evidenze": [
+     "01",
+     "02",
+     "03",
+     "04",
+     "05",
+     "06",
+     "07"
+    ]
+   }
+  ],
+  "vista_stato": {
+   "D-FASC1": "valida",
+   "D-R7": "valida",
+   "D-FASC2": "valida",
+   "D-SCR1": "valida",
+   "D-A1": "valida",
+   "D-A2": "valida",
+   "D-SCR2": "valida",
+   "D-FORMA": "valida",
+   "D-ESCL": "valida"
+  }
+ },
+ "modifica_doc11": {
+  "qualificazione": "fatto successivo da recepire (OIC 29), condizione esistente al 31/12",
+  "area_attivata": "Cambiamenti, errori e fatti successivi",
+  "A2": "sostituita, consultabile, non valida",
+  "A2-bis": {
+   "dare": "4210",
+   "avere": "2410",
+   "importo": 1125,
+   "fonte": "11"
+  },
+  "A1": "resta valida",
+  "stato_intermedio_20_22_gennaio": {
+   "evento": {
+    "record": "R-A2",
+    "oggetto": "apertura del riesame di A2 e dell'esclusione dell'area Cambiamenti, errori e fatti successivi",
+    "proposta_da": "C1 preparatore",
+    "esito": "riesame aperto",
+    "data": "2026-01-20",
+    "motivazione": "Nuova evidenza sul tasso, che e anche un segnale per l'area esclusa",
+    "evidenze": [
+     "11"
+    ]
+   },
+   "esclusione_area_cambiamenti_errori_fatti_successivi": "da riesaminare",
+   "altre_14_esclusioni": "valide",
+   "A2": "da riesaminare (ancora in vigore, non definitiva)",
+   "A1": "valida",
+   "D-A2_modificato": false,
+   "validazione_sospesa": [
+    "area Ratei e risconti",
+    "area Debiti e finanziamenti",
+    "area Cambiamenti, errori e fatti successivi",
+    "mapping 4210 e 2410",
+    "validazione complessiva"
+   ],
+   "restano_confermati": [
+    "fascicolo",
+    "forma"
+   ],
+   "ultimo_bdv": "doc10",
+   "chiusura_consentita": false,
+   "questioni_aperte": [
+    "imposte 2025 (area Imposte)",
+    "valutazione della vertenza (area Fondi per rischi e oneri)"
+   ],
+   "sostituzione_di_A2": "solo con approvazione di A2-bis (2026-01-22)"
+  },
+  "registro_decisioni": {
+   "regola": "append-only: i record non si modificano; lo stato e una vista calcolata",
+   "completezza": "completo al 2026-01-22: le undici decisioni professionali del caso piu l'apertura del riesame (R-A2)",
+   "non_contiene": [
+    "origine della contabilita (dato di apertura del caso)",
+    "singoli esiti dei controlli automatici (stato dei requisiti, quadrature, confronto tra bilanci di verifica): nel registro ci sono le conferme del professionista (D-FASC1, D-FASC2, D-SCR1, D-SCR2)",
+    "decisione se accantonare per la vertenza (non ancora presa)"
+   ],
+   "eventi": [
+    {
+     "record": "D-FASC1",
+     "oggetto": "valutazione del fascicolo iniziale: carenze R4 e R5, non applicabilita di R6, richiesta al cliente (2 voci)",
+     "proposta_da": "sistema",
+     "decisa_da": "P1 approvatore",
+     "esito": "carenze e non applicabilita confermate; richiesta approvata",
+     "data": "2026-01-09",
+     "motivazione": "Estratto conto fermo al 30/11; prospetto TFR assente; societa di servizi senza conti di magazzino",
+     "evidenze": [
+      "01",
+      "04"
+     ]
+    },
+    {
+     "record": "D-R7",
+     "oggetto": "R7 contenziosi e rischi: dove valutare la vertenza citata nel verbale",
+     "proposta_da": "sistema (segnalazione)",
+     "decisa_da": "P1 approvatore",
+     "esito": "vertenza da valutare nell'area Fondi per rischi e oneri; nessuna richiesta al cliente",
+     "data": "2026-01-12",
+     "motivazione": "La richiesta di penali da 8.000 euro richiede una valutazione professionale, non documenti dal cliente",
+     "evidenze": [
+      "05"
+     ]
+    },
+    {
+     "record": "D-FASC2",
+     "oggetto": "sufficienza del fascicolo dopo l'integrazione",
+     "proposta_da": "sistema (controlli meccanici)",
+     "decisa_da": "P1 approvatore",
+     "esito": "fascicolo sufficiente per iniziare",
+     "data": "2026-01-12",
+     "motivazione": "Saldo banca al 31/12 e fondo TFR coincidono con i conti 1410 e 2110; R7 decisa con D-R7",
+     "evidenze": [
+      "06",
+      "07"
+     ],
+     "decisioni_collegate": [
+      "D-R7"
+     ]
+    },
+    {
+     "record": "D-SCR1",
+     "oggetto": "screening del bilancio di verifica doc. 01, controllo per controllo",
+     "proposta_da": "sistema (controlli meccanici)",
+     "decisa_da": "P1 approvatore",
+     "esito": "confermato: chiusure non incluse, si apre la fase delle rettifiche",
+     "data": "2026-01-13",
+     "motivazione": "Quadrature 807.800 e 727.200; convenzione Dare/Avere confermata; ammortamento e rateo 2025 a zero nonostante registro cespiti e contratto",
+     "evidenze": [
+      "01",
+      "02",
+      "03"
+     ]
+    },
+    {
+     "record": "D-A1",
+     "oggetto": "A1",
+     "proposta_da": "C1 preparatore",
+     "decisa_da": "P1 approvatore",
+     "esito": "approvata",
+     "data": "2026-01-15",
+     "motivazione": "Quota 2025 del registro cespiti non registrata",
+     "evidenze": [
+      "02"
+     ]
+    },
+    {
+     "record": "D-A2",
+     "oggetto": "A2",
+     "proposta_da": "C1 preparatore",
+     "decisa_da": "P1 approvatore",
+     "esito": "approvata",
+     "data": "2026-01-15",
+     "motivazione": "Interessi ott-dic 2025 maturati e non pagati al 31/12",
+     "evidenze": [
+      "03"
+     ]
+    },
+    {
+     "record": "D-SCR2",
+     "oggetto": "screening del bilancio di verifica doc. 10",
+     "proposta_da": "sistema (controlli meccanici)",
+     "decisa_da": "P1 approvatore",
+     "esito": "confermato: recepisce esattamente A1 e A2; si aprono forma e mapping",
+     "data": "2026-01-16",
+     "motivazione": "Documento 10 = documento 01 + A1 + A2; quadratura 820.800",
+     "evidenze": [
+      "01",
+      "10"
+     ],
+     "decisioni_collegate": [
+      "D-A1",
+      "D-A2"
+     ]
+    },
+    {
+     "record": "D-FORMA",
+     "oggetto": "forma del bilancio",
+     "proposta_da": "sistema",
+     "decisa_da": "P1 approvatore",
+     "esito": "abbreviato (art. 2435-bis)",
+     "data": "2026-01-16",
+     "motivazione": "Micro-impresa non ammissibile: limiti superati in entrambi gli esercizi; abbreviato ammissibile",
+     "evidenze": [
+      "10",
+      "scheda della societa: dipendenti medi"
+     ]
+    },
+    {
+     "record": "D-ESCL",
+     "oggetto": "conferma delle 15 esclusioni proposte",
+     "proposta_da": "sistema",
+     "decisa_da": "P1 approvatore",
+     "esito": "confermata",
+     "data": "2026-01-16",
+     "motivazione": "Nessuna fattispecie emersa dal bilancio di verifica e dai documenti 01-07",
+     "evidenze": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07"
+     ]
+    },
+    {
+     "record": "R-A2",
+     "oggetto": "apertura del riesame di A2 e dell'esclusione dell'area Cambiamenti, errori e fatti successivi",
+     "proposta_da": "C1 preparatore",
+     "esito": "riesame aperto",
+     "data": "2026-01-20",
+     "motivazione": "Nuova evidenza sul tasso, che e anche un segnale per l'area esclusa",
+     "evidenze": [
+      "11"
+     ]
+    },
+    {
+     "record": "D-FS",
+     "oggetto": "qualificazione doc. 11 come fatto successivo da recepire",
+     "proposta_da": "C1 preparatore",
+     "decisa_da": "P1 approvatore",
+     "esito": "confermata",
+     "data": "2026-01-22",
+     "motivazione": "Condizione esistente al 31/12 (tasso dal 01/10/2025)",
+     "evidenze": [
+      "11"
+     ]
+    },
+    {
+     "record": "D-A2-bis",
+     "oggetto": "A2-bis",
+     "proposta_da": "C1 preparatore",
+     "decisa_da": "P1 approvatore",
+     "esito": "approvata",
+     "data": "2026-01-22",
+     "motivazione": "Rateo ricalcolato al 4,50%",
+     "evidenze": [
+      "03",
+      "11"
+     ],
+     "sostituisce": "D-A2"
+    }
+   ],
+   "vista_stato": {
+    "dal_2026-01-20_al_2026-01-22": {
+     "D-FASC1": "valida",
+     "D-R7": "valida",
+     "D-FASC2": "valida",
+     "D-SCR1": "valida",
+     "D-A1": "valida",
+     "D-A2": "da riesaminare",
+     "D-SCR2": "valida (il doc. 10 resta la base in attesa del riesame)",
+     "D-FORMA": "valida",
+     "D-ESCL": "valida per 14 aree; da riesaminare per l'area Cambiamenti, errori e fatti successivi",
+     "R-A2": "aperto"
+    },
+    "dal_2026-01-22": {
+     "D-FASC1": "valida",
+     "D-R7": "valida",
+     "D-FASC2": "valida",
+     "D-SCR1": "valida",
+     "D-A1": "valida",
+     "D-A2": "sostituita da D-A2-bis, consultabile, non valida",
+     "D-SCR2": "superata: il doc. 10 recepisce A2, sostituita; serve un nuovo screening sul doc. 12 (D-SCR3)",
+     "D-FORMA": "valida",
+     "D-ESCL": "valida; superata da D-FS per l'area Cambiamenti, errori e fatti successivi",
+     "R-A2": "chiuso da D-A2-bis",
+     "D-FS": "valida",
+     "D-A2-bis": "valida"
+    }
+   },
+   "eventi_precedenti_invariati": true,
+   "record_aggiunto_con_doc12": "D-SCR3"
+  },
+  "registro_dopo_doc12": {
+   "data": "2026-01-23",
+   "evento_aggiunto": {
+    "record": "D-SCR3",
+    "oggetto": "screening del bilancio di verifica doc. 12",
+    "proposta_da": "sistema (controlli meccanici)",
+    "decisa_da": "P1 approvatore",
+    "esito": "confermato: recepisce esattamente A1 e A2-bis; riprendono le validazioni dipendenti",
+    "data": "2026-01-23",
+    "motivazione": "Documento 12 = documento 01 + A1 + A2-bis; quadratura 820.925",
+    "evidenze": [
+     "01",
+     "12"
+    ],
+    "decisioni_collegate": [
+     "D-A1",
+     "D-A2-bis"
+    ]
+   },
+   "eventi": [
+    {
+     "record": "D-FASC1",
+     "oggetto": "valutazione del fascicolo iniziale: carenze R4 e R5, non applicabilita di R6, richiesta al cliente (2 voci)",
+     "proposta_da": "sistema",
+     "decisa_da": "P1 approvatore",
+     "esito": "carenze e non applicabilita confermate; richiesta approvata",
+     "data": "2026-01-09",
+     "motivazione": "Estratto conto fermo al 30/11; prospetto TFR assente; societa di servizi senza conti di magazzino",
+     "evidenze": [
+      "01",
+      "04"
+     ]
+    },
+    {
+     "record": "D-R7",
+     "oggetto": "R7 contenziosi e rischi: dove valutare la vertenza citata nel verbale",
+     "proposta_da": "sistema (segnalazione)",
+     "decisa_da": "P1 approvatore",
+     "esito": "vertenza da valutare nell'area Fondi per rischi e oneri; nessuna richiesta al cliente",
+     "data": "2026-01-12",
+     "motivazione": "La richiesta di penali da 8.000 euro richiede una valutazione professionale, non documenti dal cliente",
+     "evidenze": [
+      "05"
+     ]
+    },
+    {
+     "record": "D-FASC2",
+     "oggetto": "sufficienza del fascicolo dopo l'integrazione",
+     "proposta_da": "sistema (controlli meccanici)",
+     "decisa_da": "P1 approvatore",
+     "esito": "fascicolo sufficiente per iniziare",
+     "data": "2026-01-12",
+     "motivazione": "Saldo banca al 31/12 e fondo TFR coincidono con i conti 1410 e 2110; R7 decisa con D-R7",
+     "evidenze": [
+      "06",
+      "07"
+     ],
+     "decisioni_collegate": [
+      "D-R7"
+     ]
+    },
+    {
+     "record": "D-SCR1",
+     "oggetto": "screening del bilancio di verifica doc. 01, controllo per controllo",
+     "proposta_da": "sistema (controlli meccanici)",
+     "decisa_da": "P1 approvatore",
+     "esito": "confermato: chiusure non incluse, si apre la fase delle rettifiche",
+     "data": "2026-01-13",
+     "motivazione": "Quadrature 807.800 e 727.200; convenzione Dare/Avere confermata; ammortamento e rateo 2025 a zero nonostante registro cespiti e contratto",
+     "evidenze": [
+      "01",
+      "02",
+      "03"
+     ]
+    },
+    {
+     "record": "D-A1",
+     "oggetto": "A1",
+     "proposta_da": "C1 preparatore",
+     "decisa_da": "P1 approvatore",
+     "esito": "approvata",
+     "data": "2026-01-15",
+     "motivazione": "Quota 2025 del registro cespiti non registrata",
+     "evidenze": [
+      "02"
+     ]
+    },
+    {
+     "record": "D-A2",
+     "oggetto": "A2",
+     "proposta_da": "C1 preparatore",
+     "decisa_da": "P1 approvatore",
+     "esito": "approvata",
+     "data": "2026-01-15",
+     "motivazione": "Interessi ott-dic 2025 maturati e non pagati al 31/12",
+     "evidenze": [
+      "03"
+     ]
+    },
+    {
+     "record": "D-SCR2",
+     "oggetto": "screening del bilancio di verifica doc. 10",
+     "proposta_da": "sistema (controlli meccanici)",
+     "decisa_da": "P1 approvatore",
+     "esito": "confermato: recepisce esattamente A1 e A2; si aprono forma e mapping",
+     "data": "2026-01-16",
+     "motivazione": "Documento 10 = documento 01 + A1 + A2; quadratura 820.800",
+     "evidenze": [
+      "01",
+      "10"
+     ],
+     "decisioni_collegate": [
+      "D-A1",
+      "D-A2"
+     ]
+    },
+    {
+     "record": "D-FORMA",
+     "oggetto": "forma del bilancio",
+     "proposta_da": "sistema",
+     "decisa_da": "P1 approvatore",
+     "esito": "abbreviato (art. 2435-bis)",
+     "data": "2026-01-16",
+     "motivazione": "Micro-impresa non ammissibile: limiti superati in entrambi gli esercizi; abbreviato ammissibile",
+     "evidenze": [
+      "10",
+      "scheda della societa: dipendenti medi"
+     ]
+    },
+    {
+     "record": "D-ESCL",
+     "oggetto": "conferma delle 15 esclusioni proposte",
+     "proposta_da": "sistema",
+     "decisa_da": "P1 approvatore",
+     "esito": "confermata",
+     "data": "2026-01-16",
+     "motivazione": "Nessuna fattispecie emersa dal bilancio di verifica e dai documenti 01-07",
+     "evidenze": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07"
+     ]
+    },
+    {
+     "record": "R-A2",
+     "oggetto": "apertura del riesame di A2 e dell'esclusione dell'area Cambiamenti, errori e fatti successivi",
+     "proposta_da": "C1 preparatore",
+     "esito": "riesame aperto",
+     "data": "2026-01-20",
+     "motivazione": "Nuova evidenza sul tasso, che e anche un segnale per l'area esclusa",
+     "evidenze": [
+      "11"
+     ]
+    },
+    {
+     "record": "D-FS",
+     "oggetto": "qualificazione doc. 11 come fatto successivo da recepire",
+     "proposta_da": "C1 preparatore",
+     "decisa_da": "P1 approvatore",
+     "esito": "confermata",
+     "data": "2026-01-22",
+     "motivazione": "Condizione esistente al 31/12 (tasso dal 01/10/2025)",
+     "evidenze": [
+      "11"
+     ]
+    },
+    {
+     "record": "D-A2-bis",
+     "oggetto": "A2-bis",
+     "proposta_da": "C1 preparatore",
+     "decisa_da": "P1 approvatore",
+     "esito": "approvata",
+     "data": "2026-01-22",
+     "motivazione": "Rateo ricalcolato al 4,50%",
+     "evidenze": [
+      "03",
+      "11"
+     ],
+     "sostituisce": "D-A2"
+    },
+    {
+     "record": "D-SCR3",
+     "oggetto": "screening del bilancio di verifica doc. 12",
+     "proposta_da": "sistema (controlli meccanici)",
+     "decisa_da": "P1 approvatore",
+     "esito": "confermato: recepisce esattamente A1 e A2-bis; riprendono le validazioni dipendenti",
+     "data": "2026-01-23",
+     "motivazione": "Documento 12 = documento 01 + A1 + A2-bis; quadratura 820.925",
+     "evidenze": [
+      "01",
+      "12"
+     ],
+     "decisioni_collegate": [
+      "D-A1",
+      "D-A2-bis"
+     ]
+    }
+   ],
+   "precedenti_invariati": true,
+   "vista_stato": {
+    "D-FASC1": "valida",
+    "D-R7": "valida",
+    "D-FASC2": "valida",
+    "D-SCR1": "valida",
+    "D-A1": "valida",
+    "D-A2": "sostituita da D-A2-bis, consultabile, non valida",
+    "D-SCR2": "superata da D-SCR3",
+    "D-FORMA": "valida",
+    "D-ESCL": "valida; superata da D-FS per l'area Cambiamenti, errori e fatti successivi",
+    "R-A2": "chiuso da D-A2-bis",
+    "D-FS": "valida",
+    "D-A2-bis": "valida",
+    "D-SCR3": "valida"
+   }
+  },
+  "stato_dopo_A2bis_prima_del_doc12": {
+   "dal": "2026-01-22",
+   "fino_a": "acquisizione e controllo del documento 12",
+   "R-A2": "chiuso da D-A2-bis",
+   "A2": "sostituita da A2-bis (consultabile, non valida)",
+   "A2-bis": "valida",
+   "A1": "valida",
+   "area_cambiamenti_errori_fatti_successivi": "attiva (D-FS)",
+   "chiusura_riesame_sblocca_validazioni": false,
+   "validazione_sospesa": [
+    "area Ratei e risconti",
+    "area Debiti e finanziamenti",
+    "area Cambiamenti, errori e fatti successivi",
+    "mapping 4210 e 2410",
+    "validazione complessiva"
+   ],
+   "ultimo_bdv_acquisito": "doc10",
+   "doc10_base_valida": false,
+   "motivo_doc10": "recepisce A2, non A2-bis",
+   "condizioni_per_riprendere_le_validazioni": [
+    "documento 12 acquisito",
+    "nuovo screening: doc12 = doc01 + A1 + A2-bis",
+    "screening confermato dal professionista (D-SCR3)"
+   ],
+   "condizioni_per_chiudere_le_validazioni": [
+    "carte di lavoro e controlli ripetuti per aree e mapping riaperti"
+   ],
+   "se_arriva_doc14_al_posto_del_doc12": "stato invariato (prova E2)",
+   "restano_confermati": [
+    "fascicolo",
+    "forma"
+   ],
+   "questioni_aperte": [
+    "imposte 2025 (area Imposte)",
+    "valutazione della vertenza (area Fondi per rischi e oneri)"
+   ],
+   "chiusura_consentita": false
+  },
+  "doc12": {
+   "uguale_a": "doc01 + A1 + A2-bis",
+   "totale": 820925,
+   "risultato_ante_imposte": 48475,
+   "data_acquisizione": "2026-01-23",
+   "conferma_screening": "D-SCR3"
+  },
+  "si_riaprono": [
+   "screening",
+   "mapping 4210 e 2410",
+   "area Ratei e risconti",
+   "area Debiti e finanziamenti",
+   "area Cambiamenti, errori e fatti successivi",
+   "validazione"
+  ],
+  "non_si_riaprono": [
+   "fascicolo (D-FASC1, D-R7, D-FASC2)",
+   "screening del doc. 01 (D-SCR1)",
+   "A1",
+   "scelta della forma (D-FORMA)"
+  ],
+  "questioni_aperte_dopo_doc12": [
+   "imposte 2025 (area Imposte)",
+   "valutazione della vertenza (area Fondi per rischi e oneri)"
+  ]
+ },
+ "prove_errore": {
+  "E1": {
+   "file": "13",
+   "al_posto_di": "doc10",
+   "totale": 821300,
+   "differenze_non_autorizzate": {
+    "1210": 500,
+    "3010": -500
+   },
+   "atteso": [
+    "bilancio non accettato",
+    "forma e mapping bloccati",
+    "questione aperta per il professionista",
+    "nessuna correzione automatica"
+   ]
+  },
+  "E2": {
+   "file": "14",
+   "al_posto_di": "doc12",
+   "totale": 821925,
+   "interessi_4210": 5125,
+   "ratei_2410": 2125,
+   "differenza_pari_ad_A2": {
+    "4210": 1000,
+    "2410": -1000
+   },
+   "atteso": [
+    "bilancio non accettato",
+    "segnalazione: A2 sostituita, non sommabile ad A2-bis",
+    "mai due rettifiche valide sullo stesso rateo",
+    "nessuna conferma dello screening: D-SCR3 non viene creato"
+   ]
+  }
+ },
+ "fuori_perimetro": [
+  "imposte 2025",
+  "raccordo con XBRL 2024",
+  "nota integrativa"
+ ]
+}

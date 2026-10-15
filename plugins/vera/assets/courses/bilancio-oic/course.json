@@ -122,7 +122,7 @@
     {
       "path": "modules/bilancio-xbrl-it/scripts/case_service.py",
       "repository_path": "plugins/bilancio-xbrl-it/scripts/case_service.py",
-      "sha256": "5e98b4be38206d559e2f8a7613355ff332fca201385073a562b3a51caffc360d"
+      "sha256": "64106356ed0e17b4fb3f8c9ffffa1c3bea4754543294cc9dadc54a069254fc29"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/check_dependencies.py",
@@ -138,6 +138,11 @@
       "path": "modules/bilancio-xbrl-it/scripts/client_history.py",
       "repository_path": "plugins/bilancio-xbrl-it/scripts/client_history.py",
       "sha256": "44577069791d4cefe0d2b2b6b2812f081ce963843c4434f8a2e8fe16a11f9a60"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/closing_workflow.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/closing_workflow.py",
+      "sha256": "7015ca5e15297ea34c9c06688fb6884158f74ca4a0b498834bdee9e6e8b2db9b"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/disclosure_engine.py",
@@ -167,7 +172,7 @@
     {
       "path": "modules/bilancio-xbrl-it/scripts/intelligence_contract.py",
       "repository_path": "plugins/bilancio-xbrl-it/scripts/intelligence_contract.py",
-      "sha256": "b51e335025e68e7ace102fd223d7bda0dee93245fedd3f02704bdb7f636d39b6"
+      "sha256": "c6b798f80f65a08c06bd1ca48d79c7aab11d8d796e2a70caca57661880d3fe06"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/intelligence_runner.py",
@@ -202,7 +207,7 @@
     {
       "path": "modules/bilancio-xbrl-it/scripts/review_views.py",
       "repository_path": "plugins/bilancio-xbrl-it/scripts/review_views.py",
-      "sha256": "ac817c27964b56ed4f70b2ca206692e93b478701af2585d7bcd860353536a77c"
+      "sha256": "a7d4b6462804b4a5924bca17b104d7b8aaf4a75ac7e7300d92abae158f564c22"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/run_background_job.py",
@@ -232,7 +237,7 @@
     {
       "path": "modules/bilancio-xbrl-it/scripts/service_bridge.py",
       "repository_path": "plugins/bilancio-xbrl-it/scripts/service_bridge.py",
-      "sha256": "5096fa3eb029c9741959368c55080851423467bbad6c034079df7f6ca1925a87"
+      "sha256": "c878830359c99b5539b0840c7fa09f466d163f8cb8938ead3b55e2f0d2fdabf7"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/statutory_presentation.py",
@@ -257,12 +262,12 @@
     {
       "path": "modules/bilancio-xbrl-it/scripts/xbrl_case.py",
       "repository_path": "plugins/bilancio-xbrl-it/scripts/xbrl_case.py",
-      "sha256": "c05f03a0ee4647f67d3df3f250031bd1c3617b0e5050551bfb816a06402f3eb6"
+      "sha256": "2b7472a113a0e583c8c92978536b3e96e50bf64d065486b601e67c033587e3d9"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/SKILL.md",
       "repository_path": "plugins/bilancio-xbrl-it/skills/bilancio-oic/SKILL.md",
-      "sha256": "5b6bdc3ba2c95d0baf864e16d6e293b961dd80c75db89065dd03e1300623fcc5"
+      "sha256": "428c398bd078272fdbf0dd775f7dd0381e3aa9eae8603538dab233502a250226"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/agents/openai.yaml",
@@ -272,7 +277,12 @@
     {
       "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/acceptance-matrix.md",
       "repository_path": "plugins/bilancio-xbrl-it/skills/bilancio-oic/references/acceptance-matrix.md",
-      "sha256": "ae6b9595ae69d322875c333c99b0d983f4917976f1cac6f91a656694f052bbb9"
+      "sha256": "a234e06c2dc5535a99811f17dfdf6b2c9a48da5d566221e096e98779bd9a5104"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/closing-workflow.md",
+      "repository_path": "plugins/bilancio-xbrl-it/skills/bilancio-oic/references/closing-workflow.md",
+      "sha256": "b1fb0f20c392bed682e596c9e3505391138ede5196271852e23c04f961916010"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/conformance-evidence.md",
@@ -287,7 +297,7 @@
     {
       "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/implementation-status.md",
       "repository_path": "plugins/bilancio-xbrl-it/skills/bilancio-oic/references/implementation-status.md",
-      "sha256": "c14bfd6947e143f3ccca2a0ef9b66f7daf9ac2daac4221d6e6ebe0886d17344d"
+      "sha256": "59966e5f68739122f0eab283dd21fcd5f368d228fd88df2310fc935d1e5161a7"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/performance-evidence.md",
@@ -337,7 +347,7 @@
     {
       "path": "skills/bilancio-oic/SKILL.md",
       "repository_path": "plugins/vera/skills/bilancio-oic/SKILL.md",
-      "sha256": "2c3d7b2d9549414a4ac7d1f3f9792926c9816c99585718f0792e00c89f350f44"
+      "sha256": "8fef8a7f1bc3a20e585acc66c263c0dfa36b6dbc43c1c4a9e88335de89579e66"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -764,7 +774,7 @@
       "title": "Preparare una bozza di bilancio con Vera",
       "goal": "Imparare a fornire i documenti, rivedere le proposte di Vera e leggere una bozza di bilancio con prospetti, informazioni di supporto e controlli.",
       "scenario": "Uno studio prepara il primo bilancio di una piccola società di servizi. Seguiamo il lavoro dai file del cliente ai prospetti e alla revisione, poi aggiorniamo la bozza con una fattura dimenticata.",
-      "scope": "Preparazione di un bilancio individuale OIC italiano per una piccola società al primo esercizio. Segui il lavoro dai documenti alla bozza e alla verifica locale del candidato XBRL. La revisione e l’approvazione professionale restano il passo successivo.",
+      "scope": "Preparazione di un bilancio individuale OIC italiano per una piccola società al primo esercizio. Segui il lavoro dai documenti alla bozza e alla verifica locale del candidato XBRL. La revisione e l’approvazione professionale restano il passo successivo. La lezione parte dai saldi di chiusura forniti: non esercita il percorso Alfa di proposta, sostituzione e riesame delle rettifiche, collaudato separatamente.",
       "inputs": "Apri company-it.md, trial-balance-it.csv e year-end-it.txt. Contengono i dati della società, nove conti con movimenti e saldi e le informazioni di fine esercizio. Sono documenti di fantasia da elaborare, senza un bilancio già pronto. Le imposte sono un dato fornito dal prospetto fiscale esterno.",
       "request": "Vera, prepara una bozza del bilancio OIC da questi file. Guidami nella revisione della forma e delle classificazioni, poi mostrami il bilancio, le sue fonti e i controlli prima dell’approvazione.",
       "steps": [
@@ -789,7 +799,7 @@
       "title": "Prepare draft annual accounts with Vera",
       "goal": "Learn to supply the documents, review Vera’s proposals and read draft annual accounts with statements, supporting information and checks.",
       "scenario": "An accounting firm prepares the first annual accounts for a small service company. Follow the work from client files to statements and review, then update the draft after a missing invoice is recorded.",
-      "scope": "Prepare individual Italian OIC annual accounts for a small company in its first year. Follow the work from documents to the draft and local validation of an XBRL candidate. Professional review and approval remain the next step.",
+      "scope": "Prepare individual Italian OIC annual accounts for a small company in its first year. Follow the work from documents to the draft and local validation of an XBRL candidate. Professional review and approval remain the next step. This lesson starts from supplied closing balances. It does not exercise the separately tested Alfa path for proposing, replacing and reconsidering closing adjustments.",
       "inputs": "Open company-en.md, trial-balance-en.csv and year-end-en.txt. They contain the company details, nine accounts with movements and balances, and year-end information. These are fictional documents to process, with no finished accounts. Tax is an input supplied by the external tax workpaper.",
       "request": "Vera, prepare draft OIC annual accounts from these files. Guide me through review of the form and classifications, then show the accounts, their sources and the checks before approval.",
       "steps": [

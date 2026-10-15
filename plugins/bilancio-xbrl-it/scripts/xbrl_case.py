@@ -537,6 +537,11 @@ def _available_evidence_refs(case: Mapping[str, Any]) -> set[str]:
         for anchor in (case.get("trial_balance") or {}).get("source_anchors", [])
     )
     refs.update(
+        str(anchor["source_ref"])
+        for version in (case.get("closing_workflow") or {}).get("versions", [])
+        for anchor in version["trial_balance"]["source_anchors"]
+    )
+    refs.update(
         str((fact.get("source_anchor") or {}).get("source_ref"))
         for fact in (case.get("prior_xbrl") or {}).get("facts", [])
         if (fact.get("source_anchor") or {}).get("source_ref")
@@ -831,6 +836,9 @@ def load_case(case_dir: Path) -> dict[str, Any]:
     payload = json.loads(record)
     if payload.get("schema_version") != SCHEMA_VERSION:
         raise ValueError("Unsupported case schema version")
+    from closing_workflow import verify_closing_register
+
+    verify_closing_register(payload)
     return payload
 
 
@@ -1696,8 +1704,15 @@ def attach_supporting_document(
         "content_treated_as_untrusted": True,
         "attached_at": _now(),
     }
+    closing_extract = None
+    if case.get("closing_workflow"):
+        from closing_workflow import closing_source_extract
+
+        closing_extract = closing_source_extract(resolved, document)
     _mutate(case, actor, "supporting_evidence_attached")
     case.setdefault("source_documents", []).append(document)
+    if closing_extract is not None:
+        case["closing_workflow"]["source_extracts"].append(closing_extract)
     case["validation"] = None
     _record_event(case, "document_uploaded", actor, {"document_id": document_id})
     _record_evidence_attached(case, actor, document)
@@ -1920,7 +1935,10 @@ def _calibrate(rows: Sequence[Mapping[str, Any]], tolerance: Decimal) -> dict[st
 
 
 def _trial_balance_layout(
-    normalized_headers: Sequence[str], first_year: bool
+    normalized_headers: Sequence[str],
+    first_year: bool,
+    *,
+    allow_closing_only: bool = False,
 ) -> tuple[bool, bool]:
     """Return mechanically supported layout flags or reject the source shape."""
 
@@ -1935,12 +1953,30 @@ def _trial_balance_layout(
         "closing_debit",
         "closing_credit",
     }.issubset(normalized_headers)
+    # A reviewed header map may identify a closing-balance-only export. Missing
+    # opening balances and turnover remain unavailable, never invented zeros.
+    movement_headers = {
+        "opening_debit",
+        "opening_credit",
+        "opening_signed",
+        "period_debit",
+        "period_credit",
+    }
+    closing_only = allow_closing_only and not movement_headers.intersection(
+        normalized_headers
+    )
+    if closing_only:
+        separate_current_layout = {"closing_debit", "closing_credit"}.issubset(
+            normalized_headers
+        )
     signed_current_layout = {
         "opening_signed",
         "period_debit",
         "period_credit",
         "closing_signed",
     }.issubset(normalized_headers)
+    if closing_only:
+        signed_current_layout = "closing_signed" in normalized_headers
     comparative_columns = {
         "prior_closing_debit",
         "prior_closing_credit",
@@ -1975,13 +2011,57 @@ def _parse_trial_balance_rows(
     parser_profile: str,
     tolerance: Decimal,
     anchor_metadata: Mapping[tuple[int, int], Mapping[str, Any]] | None = None,
+    column_mapping: Mapping[str, str] | None = None,
+    blank_balance_cells_are_zero: bool = False,
 ) -> dict[str, Any]:
     """Normalize one reviewed table while retaining source-specific coordinates."""
 
     header_columns = _normalized_header_columns(headers)
+    if column_mapping is not None:
+        if not isinstance(column_mapping, Mapping) or not column_mapping:
+            raise ValueError("Explicit trial-balance column mapping must be non-empty")
+        if not set(column_mapping) <= {
+            item["column_header"] for item in header_columns
+        }:
+            raise ValueError(
+                "Trial-balance column mapping references unknown source headers"
+            )
+        if not set(column_mapping.values()) <= TRIAL_BALANCE_COLUMNS:
+            raise ValueError(
+                "Trial-balance column mapping references unknown canonical fields"
+            )
+        for item in header_columns:
+            if item["column_header"] in column_mapping:
+                item["normalized_column"] = column_mapping[item["column_header"]]
+        if len({item["normalized_column"] for item in header_columns}) != len(
+            header_columns
+        ):
+            raise ValueError(
+                "Explicit trial-balance column mapping contains header collisions"
+            )
     normalized_headers = [item["normalized_column"] for item in header_columns]
     first_year = case["entity"].get("first_financial_year") is True
-    separate_layout, _ = _trial_balance_layout(normalized_headers, first_year)
+    separate_layout, _ = _trial_balance_layout(
+        normalized_headers, first_year, allow_closing_only=column_mapping is not None
+    )
+    unavailable_fields = [
+        field
+        for field in (
+            "opening_debit",
+            "opening_credit",
+            "opening_signed",
+            "period_debit",
+            "period_credit",
+        )
+        if field not in normalized_headers
+    ]
+    closing_only = column_mapping is not None and len(unavailable_fields) == 5
+    if not isinstance(blank_balance_cells_are_zero, bool):
+        raise ValueError("Blank balance-cell convention must be an explicit boolean")
+    if blank_balance_cells_are_zero and not closing_only:
+        raise ValueError(
+            "Blank balance-cell convention applies only to closing-only sources"
+        )
     entries: list[dict[str, Any]] = []
     seen: set[str] = set()
     anchors: list[dict[str, Any]] = []
@@ -1991,6 +2071,19 @@ def _parse_trial_balance_rows(
             name: values[pos] if pos < len(values) else None
             for pos, name in enumerate(normalized_headers)
         }
+        if blank_balance_cells_are_zero:
+            for field in (
+                "closing_debit",
+                "closing_credit",
+                "closing_signed",
+                "prior_closing_debit",
+                "prior_closing_credit",
+                "prior_closing_signed",
+            ):
+                if field in row and (
+                    row[field] is None or str(row[field]).strip() == ""
+                ):
+                    row[field] = "0"
         code = str(row.get("account_code") or "").strip()
         description = str(row.get("account_description") or "").strip()
         if not code and not description:
@@ -2003,8 +2096,12 @@ def _parse_trial_balance_rows(
             )
         seen.add(code)
         if separate_layout:
-            opening_debit = _row_decimal(row, "opening_debit")
-            opening_credit = _row_decimal(row, "opening_credit")
+            opening_debit = (
+                Decimal(0) if closing_only else _row_decimal(row, "opening_debit")
+            )
+            opening_credit = (
+                Decimal(0) if closing_only else _row_decimal(row, "opening_credit")
+            )
             closing_debit = _row_decimal(row, "closing_debit")
             closing_credit = _row_decimal(row, "closing_credit")
             prior_debit = (
@@ -2021,7 +2118,9 @@ def _parse_trial_balance_rows(
                 else prior_debit - prior_credit
             )
         else:
-            opening_signed = _row_decimal(row, "opening_signed")
+            opening_signed = (
+                Decimal(0) if closing_only else _row_decimal(row, "opening_signed")
+            )
             closing_signed = _row_decimal(row, "closing_signed")
             prior_signed = (
                 None if first_year else _row_decimal(row, "prior_closing_signed")
@@ -2036,8 +2135,10 @@ def _parse_trial_balance_rows(
             prior_credit = (
                 None if prior_signed is None else max(-prior_signed, Decimal("0"))
             )
-        period_debit = _row_decimal(row, "period_debit")
-        period_credit = _row_decimal(row, "period_credit")
+        period_debit = Decimal(0) if closing_only else _row_decimal(row, "period_debit")
+        period_credit = (
+            Decimal(0) if closing_only else _row_decimal(row, "period_credit")
+        )
         source_refs: list[str] = []
         account_id = f"acc_{len(entries) + 1:06d}"
         for column in header_columns:
@@ -2108,14 +2209,26 @@ def _parse_trial_balance_rows(
                 "source_refs": source_refs,
             }
         )
-    calibration = _calibrate(entries, tolerance)
+    if closing_only:
+        for entry in entries:
+            for field in unavailable_fields:
+                entry[field] = None
+        calibration = _calibrate([], tolerance)
+        calibration["unavailable_fields"] = unavailable_fields
+        calibration["blank_balance_cells_are_zero"] = blank_balance_cells_are_zero
+    else:
+        calibration = _calibrate(entries, tolerance)
     debit_total = sum(Decimal(row["closing_debit"]) for row in entries)
     credit_total = sum(Decimal(row["closing_credit"]) for row in entries)
     calibration["closing_debit_total"] = _decimal_text(debit_total)
     calibration["closing_credit_total"] = _decimal_text(credit_total)
     calibration["closing_difference"] = _decimal_text(debit_total - credit_total)
     return {
-        "layout": "SEPARATE_DEBIT_CREDIT" if separate_layout else "SIGNED_BALANCES",
+        "layout": (
+            "CLOSING_BALANCES_ONLY"
+            if closing_only
+            else ("SEPARATE_DEBIT_CREDIT" if separate_layout else "SIGNED_BALANCES")
+        ),
         "comparative_status": (
             "NOT_APPLICABLE_FIRST_FINANCIAL_YEAR" if first_year else "PRESENT"
         ),
@@ -2138,6 +2251,9 @@ def _install_trial_balance(
     pdf_candidate: Mapping[str, Any] | None = None,
 ) -> None:
     """Install a validated table into the canonical case in one mutation."""
+
+    if (case.get("closing_workflow") or {}).get("versions"):
+        raise ValueError("Use reviewed replacement intake for a closing trial balance")
 
     _mutate(case, actor, action)
     document_id = str(document["document_id"])
@@ -2173,6 +2289,20 @@ def _install_trial_balance(
     case["statutory_presentation"] = None
     case["schedules"] = []
     case["validation"] = None
+    if case.get("closing_workflow"):
+        workflow = case["closing_workflow"]
+        if workflow["versions"]:
+            raise ValueError(
+                "Use reviewed replacement intake for a closing trial balance"
+            )
+        workflow["versions"].append(
+            {
+                "version_id": "baseline",
+                "document_id": document_id,
+                "trial_balance": deepcopy(case["trial_balance"]),
+                "reconciliation": None,
+            }
+        )
 
 
 def ingest_trial_balance(
@@ -2182,10 +2312,15 @@ def ingest_trial_balance(
     expected_revision: str,
     sheet: str | None = None,
     tolerance: Decimal = Decimal("0.01"),
+    *,
+    column_mapping: Mapping[str, str] | None = None,
+    blank_balance_cells_are_zero: bool = False,
 ) -> dict[str, Any]:
     """Parse one source-anchored CSV/XLSX trial balance."""
 
     _ensure_revision(case, expected_revision)
+    if (case.get("closing_workflow") or {}).get("versions"):
+        raise ValueError("Use reviewed replacement intake for a closing trial balance")
     if case["state"] == CaseState.UNSUPPORTED:
         raise ValueError("Unsupported cases cannot ingest accounting data")
     if source_path.is_symlink() or not source_path.is_file():
@@ -2201,6 +2336,8 @@ def ingest_trial_balance(
         sheet_name=sheet_name,
         parser_profile="generic-it-trial-balance-parser-v1",
         tolerance=tolerance,
+        column_mapping=column_mapping,
+        blank_balance_cells_are_zero=blank_balance_cells_are_zero,
     )
     document = {
         "document_id": document_id,
@@ -3105,6 +3242,11 @@ def confirm_parser(
     selected = ParserConvention(convention)
     if selected is ParserConvention.UNKNOWN:
         raise ValueError("UNKNOWN cannot be confirmed")
+    if (
+        case["trial_balance"]["layout"] == "CLOSING_BALANCES_ONLY"
+        and selected is not ParserConvention.SIGNED_BALANCE_ONLY
+    ):
+        raise ValueError("A closing-only source has no turnover columns to confirm")
     closing_difference = Decimal(
         str(case["trial_balance"]["calibration"]["closing_difference"])
     )
@@ -3472,6 +3614,9 @@ def determine_forms(
     """Calculate effective-dated form eligibility without selecting the form."""
 
     _ensure_revision(case, expected_revision)
+    from closing_workflow import require_closing_ready
+
+    require_closing_ready(case, "form")
     if case["state"] == CaseState.UNSUPPORTED:
         raise ValueError("Unsupported cases have no eligible MVP form")
     if (
@@ -3647,6 +3792,10 @@ def select_form(
     """Record the user's form choice after deterministic eligibility analysis."""
 
     _ensure_revision(case, expected_revision)
+    if case.get("closing_workflow"):
+        raise ValueError(
+            "Use a reviewer-owned closing FORM decision to select the form"
+        )
     analysis = case.get("form_analysis") or {}
     selected = selected_form.upper()
     if selected not in analysis.get("eligible_forms", []):
@@ -3677,6 +3826,9 @@ def generate_mapping_candidates(
     """Attach exact tenant-isolated approved mapping candidates for review."""
 
     _ensure_revision(case, expected_revision)
+    from closing_workflow import require_closing_ready
+
+    require_closing_ready(case, "mapping")
     trial_balance = case.get("trial_balance")
     if not trial_balance or not trial_balance.get("confirmed_convention"):
         raise ValueError(
@@ -3772,6 +3924,10 @@ def apply_mapping_decisions(
     expected_revision: str,
 ) -> dict[str, Any]:
     """Apply reviewed, balancing account mappings and explicit exclusions."""
+
+    from closing_workflow import require_closing_ready
+
+    require_closing_ready(case, "mapping")
 
     _ensure_revision(case, expected_revision)
     trial_balance = case.get("trial_balance")
@@ -4618,6 +4774,10 @@ def build_statements(
     case: dict[str, Any], actor: str, expected_revision: str
 ) -> dict[str, Any]:
     """Aggregate reviewed mappings into exact current/comparative statement facts."""
+
+    from closing_workflow import require_closing_ready
+
+    require_closing_ready(case, "mapping")
 
     _ensure_revision(case, expected_revision)
     entries = (case.get("trial_balance") or {}).get("entries", [])
@@ -5854,6 +6014,11 @@ def validate_case(case: dict[str, Any]) -> dict[str, Any]:
 
     def add(rule_id: str, severity: str, message: str) -> None:
         issues.append(_issue(rule_id, severity, message, len(issues) + 1))
+
+    from closing_workflow import closing_validation_issues
+
+    for closing_issue in closing_validation_issues(case):
+        add(closing_issue["rule_id"], "BLOCKER", closing_issue["message"])
 
     if case["state"] == CaseState.UNSUPPORTED or case.get("unsupported_reasons"):
         add("INPUT.UNSUPPORTED_CASE", "BLOCKER", "The entity is outside the MVP scope")
@@ -7730,6 +7895,7 @@ def export_case(
         "taxonomy_mapping_index": snapshot.get("taxonomy_mapping_index"),
         "mappings": snapshot["mappings"],
         "adjustments": snapshot.get("adjustments", []),
+        "closing_workflow": snapshot.get("closing_workflow"),
         "taxonomy_facts": snapshot.get("taxonomy_facts", []),
         "schedule_taxonomy_adapter": snapshot.get("schedule_taxonomy_adapter"),
         "schedule_taxonomy_facts": snapshot.get("schedule_taxonomy_facts", []),

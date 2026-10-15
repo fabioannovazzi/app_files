@@ -20,6 +20,12 @@ ACTIVE_QUESTION_STATES = frozenset(
 NEXT_REVIEW_ACTIONS = frozenset(
     {
         "STOP_UNSUPPORTED",
+        "REVIEW_CLOSING_FASCICOLO",
+        "REVIEW_CLOSING_SCREENING",
+        "REVIEW_CLOSING_RECONSIDERATION",
+        "REVIEW_CLOSING_ADJUSTMENTS",
+        "INGEST_CLOSING_TRIAL_BALANCE",
+        "REVIEW_CLOSING_CONTROLS",
         "REVIEW_PDF_EXTRACTION",
         "REPLACE_PDF_SOURCE",
         "INGEST_TRIAL_BALANCE",
@@ -46,6 +52,14 @@ NEXT_REVIEW_ACTIONS = frozenset(
 REVIEW_VIEWS = frozenset(
     {
         "CASE_DASHBOARD",
+        "CLOSING_OVERVIEW",
+        "CLOSING_DECISIONS",
+        "CLOSING_ADJUSTMENTS",
+        "CLOSING_PROPOSALS",
+        "CLOSING_EVIDENCE",
+        "CLOSING_VERSIONS",
+        "CLOSING_RECONCILIATION",
+        "CLOSING_AREAS",
         "SOURCE_REVIEW",
         "MAPPING_GRID",
         "STATEMENTS",
@@ -84,6 +98,20 @@ def next_review_action(case: Mapping[str, Any]) -> str:
 
     if case.get("unsupported_reasons"):
         return "STOP_UNSUPPORTED"
+    if case.get("closing_workflow"):
+        from closing_workflow import closing_status
+
+        closing = closing_status(case)
+        if not closing["fascicolo_sufficient"]:
+            return "REVIEW_CLOSING_FASCICOLO"
+        if not closing["baseline_screened"]:
+            return "REVIEW_CLOSING_SCREENING"
+        if any(r["state"] == "OPEN" for r in closing["reconsiderations"].values()):
+            return "REVIEW_CLOSING_RECONSIDERATION"
+        if closing["pending_adjustment_proposals"]:
+            return "REVIEW_CLOSING_ADJUSTMENTS"
+        if not closing["form_and_mapping_allowed"]:
+            return "INGEST_CLOSING_TRIAL_BALANCE"
     pdf_candidate = case.get("pdf_trial_balance_candidate") or {}
     if pdf_candidate.get("status") == "PENDING_REVIEW":
         return "REVIEW_PDF_EXTRACTION"
@@ -109,6 +137,8 @@ def next_review_action(case: Mapping[str, Any]) -> str:
         return "REVIEW_MAPPINGS"
     if not case.get("statements"):
         return "COMPUTE_STATEMENTS"
+    if case.get("closing_workflow") and not closing["closure_allowed"]:
+        return "REVIEW_CLOSING_CONTROLS"
     if case.get("statutory_presentation_required", True):
         presentation = case.get("statutory_presentation") or {}
         if presentation.get("status") != "COMPLETE":
@@ -194,6 +224,34 @@ def _dashboard(case: Mapping[str, Any]) -> dict[str, Any]:
             for item in case.get("schedules", [])
         ],
         "next_action": next_review_action(case),
+        "closing": _closing_overview(case) if case.get("closing_workflow") else None,
+    }
+
+
+def _closing_overview(case: Mapping[str, Any]) -> dict[str, Any]:
+    from closing_workflow import closing_status
+
+    status = closing_status(case)
+    collections = {
+        "requirements",
+        "decision_states",
+        "areas",
+        "open_issues",
+        "reconsiderations",
+        "dependencies",
+        "active_adjustments",
+    }
+    return {
+        key: value
+        for key, value in status.items()
+        if key not in collections and key != "request_draft"
+    } | {
+        "counts": {key: len(status[key]) for key in collections},
+        "request_draft": {
+            "status": "DRAFT",
+            "sent": False,
+            "item_count": len(status["request_draft"]["items"]),
+        },
     }
 
 
@@ -211,6 +269,69 @@ def build_review_view(
         raise ValueError(f"Unsupported Bilancio review view: {view}")
     if selected == "CASE_DASHBOARD":
         return _dashboard(case)
+    if selected.startswith("CLOSING_"):
+        from closing_workflow import closing_status
+
+        status = closing_status(case)
+        workflow = case["closing_workflow"]
+        if selected == "CLOSING_DECISIONS":
+            records = [
+                dict(event, current_state=status["decision_states"][event["record_id"]])
+                for event in workflow["events"]
+            ]
+        elif selected == "CLOSING_ADJUSTMENTS":
+            records = workflow["proposals"]
+        elif selected == "CLOSING_PROPOSALS":
+            records = workflow["review_proposals"]
+        elif selected == "CLOSING_EVIDENCE":
+            records = workflow["source_extracts"]
+            import json
+
+            if len(json.dumps(records[offset : offset + limit]).encode()) > 65536:
+                raise ValueError(
+                    "Select fewer closing evidence documents to stay within the 64 KiB view bound"
+                )
+        elif selected == "CLOSING_VERSIONS":
+            records = [
+                {
+                    "version_id": v["version_id"],
+                    "document_id": v["document_id"],
+                    "calibration": v["trial_balance"]["calibration"],
+                    "reconciliation_status": (v["reconciliation"] or {}).get("status"),
+                    "difference_count": len(
+                        (v["reconciliation"] or {}).get("differences", [])
+                    ),
+                }
+                for v in workflow["versions"]
+            ]
+        elif selected == "CLOSING_RECONCILIATION":
+            records = [
+                dict(d, version_id=v["version_id"])
+                for v in workflow["versions"]
+                for d in (v["reconciliation"] or {}).get("differences", [])
+            ]
+        elif selected == "CLOSING_AREAS":
+            records = status["areas"]
+        else:
+            records = [
+                dict(r, record_kind="REQUIREMENT") for r in status["requirements"]
+            ]
+            records += [
+                dict(r, record_kind="OPEN_ISSUE") for r in status["open_issues"]
+            ]
+            records += [
+                {"record_kind": "DEPENDENCY", "scope": key, "status": value}
+                for key, value in status["dependencies"].items()
+            ]
+            records += [
+                dict(r, record_kind="REQUEST_DRAFT")
+                for r in status["request_draft"]["items"]
+            ]
+        return {
+            **_base(case, selected),
+            "summary": _closing_overview(case),
+            **_page(records, offset, limit),
+        }
     if selected == "SOURCE_REVIEW":
         trial_balance = case.get("trial_balance") or {}
         pdf_candidate = case.get("pdf_trial_balance_candidate") or {}

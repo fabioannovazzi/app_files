@@ -437,6 +437,16 @@ jobs:
           python -m isort --check-only plugins/bilancio-xbrl-it/scripts/accounts_preview.py plugins/bilancio-xbrl-it/scripts/accounts_preview_text.py plugins/bilancio-xbrl-it/scripts/xbrl_case.py tests/plugins/test_bilancio_preview_presentation.py tests/plugins/test_bilancio_xbrl_it_plugin.py
           python -m mypy --follow-imports=skip plugins/bilancio-xbrl-it/scripts/accounts_preview.py plugins/bilancio-xbrl-it/scripts/accounts_preview_text.py plugins/bilancio-xbrl-it/scripts/xbrl_case.py
           python -m bandit -q plugins/bilancio-xbrl-it/scripts/accounts_preview.py plugins/bilancio-xbrl-it/scripts/accounts_preview_text.py plugins/bilancio-xbrl-it/scripts/xbrl_case.py
+      # Closing-account arithmetic is mechanical; interpretation remains a
+      # model proposal followed by a separately authorized reviewer decision.
+      - name: Check reviewed closing-account implementation
+        run: |
+          python -m black --check plugins/bilancio-xbrl-it/scripts/closing_workflow.py scripts/run_bilancio_alfa_v3_acceptance.py tests/plugins/test_bilancio_closing_workflow.py tests/plugins/conftest.py
+          python -m isort --check-only plugins/bilancio-xbrl-it/scripts/closing_workflow.py scripts/run_bilancio_alfa_v3_acceptance.py tests/plugins/test_bilancio_closing_workflow.py tests/plugins/conftest.py
+          python -m mypy --follow-imports=skip plugins/bilancio-xbrl-it/scripts/closing_workflow.py scripts/run_bilancio_alfa_v3_acceptance.py
+          python -m bandit -ll plugins/bilancio-xbrl-it/scripts/closing_workflow.py scripts/run_bilancio_alfa_v3_acceptance.py
+          python scripts/run_bilancio_alfa_v3_acceptance.py --output "$RUNNER_TEMP/bilancio-alfa-v3"
+          python scripts/run_bilancio_alfa_v3_acceptance.py --transport mcp --output "$RUNNER_TEMP/bilancio-alfa-v3-mcp"
       - name: Check private Bilancio workspace integration
         run: |
           python -m black --check plugins/bilancio-xbrl-it/scripts/workspace_bridge.py plugins/bilancio-xbrl-it/scripts/workspace_contract.py scripts/build_vera_workspace_pilot.py tests/plugins/test_bilancio_native_workspace.py

@@ -30,6 +30,12 @@ Current user requests take precedence over saved preferences.
 
 # Bilancio intelligente
 
+Per chiudere i conti prima di forma e mapping, segui anche
+`skills/bilancio-oic/references/closing-workflow.md` del modulo risolto sotto:
+fascicolo e screening rivisti, proposte di rettifica, decisioni professionali,
+confronto esatto del nuovo bilancio di verifica e riesame delle verifiche
+interessate. Nessuna registrazione contabile o richiesta al cliente è automatica.
+
 For an existing Bilancio case, use `vera_workspace_open` when callable and the
 exact case and Studio Archive run have trusted operator bindings. Read
 `../vera/references/native-workspace.md` before the handoff. The panel inspects
