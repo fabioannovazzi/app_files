@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import stat
 import subprocess
 import sys
@@ -51,7 +52,7 @@ def release_entries(host):
 def write_zip(path, entries):
     with ZipFile(path, "w") as archive:
         for name, content in entries.items():
-            archive.writestr(name, content)
+            archive.writestr(ZipInfo(name, (1980, 1, 1, 0, 0, 0)), content)
 
 
 def alter_skill(entries):
@@ -218,3 +219,116 @@ def test_chatgpt_module_contract_rejects_invalid_layout_even_with_fresh_index(
 
     with pytest.raises(ValueError, match="Module integrity check failed"):
         verify_vera_execution_zip(archive, root)
+
+
+def test_course_hash_drift_is_rejected_even_when_execution_index_matches(tmp_path):
+    entries, root = release_entries("cowork")
+    alter_skill(entries)
+    load_builder("build_codex_plugin_zip").add_vera_execution_manifest(entries)
+    archive = tmp_path / "stale-course.zip"
+    write_zip(archive, entries)
+
+    with pytest.raises(ValueError, match="Course source hash mismatch"):
+        verify_vera_execution_zip(archive, root)
+
+
+@pytest.mark.parametrize(
+    ("source", "message"),
+    [
+        ("missing.py", "Missing course source"),
+        ("../outside.py", "Unsafe course source path"),
+    ],
+)
+def test_invalid_course_source_blocks_release(tmp_path, source, message):
+    entries, root = release_entries("cowork")
+    course_path = "assets/courses/contenzioso-tributario/course.json"
+    course = json.loads(entries[course_path])
+    course["sources"][0]["path"] = source
+    entries[course_path] = json.dumps(course).encode()
+    load_builder("build_codex_plugin_zip").add_vera_execution_manifest(entries)
+    archive = tmp_path / "invalid-course.zip"
+    write_zip(archive, entries)
+
+    with pytest.raises(ValueError, match=message):
+        verify_vera_execution_zip(archive, root)
+
+
+def test_index_older_than_indexed_member_blocks_release_even_with_matching_hashes(
+    tmp_path,
+):
+    entries, root = release_entries("cowork")
+    archive = tmp_path / "older-index.zip"
+    with ZipFile(archive, "w") as handle:
+        for name, content in entries.items():
+            date = (
+                (1980, 1, 2, 0, 0, 0) if name == "README.md" else (1980, 1, 1, 0, 0, 0)
+            )
+            handle.writestr(ZipInfo(name, date), content)
+
+    with pytest.raises(ValueError, match="execution-files.json is older.*README.md"):
+        verify_vera_execution_zip(archive, root)
+
+
+def test_finished_archive_executes_each_real_cli_in_isolation(monkeypatch):
+    original = subprocess.run
+    commands = []
+
+    def record(command, **kwargs):
+        if "--module" in command:
+            commands.append(command)
+        return original(command, **kwargs)
+
+    monkeypatch.setattr("scripts.verify_vera_package.subprocess.run", record)
+
+    verify_vera_execution_zip(ROOT / HOSTS["cowork"][0], ".")
+
+    assert [command[-1] for command in commands] == [
+        "check-entries",
+        "concordato-plan-review",
+        "journal-bank-reconciliation",
+        "journal-sampling",
+        "open-item-reconciliation",
+        "report-builder",
+    ]
+    assert all("-I" in command and "-B" in command for command in commands)
+
+
+@pytest.mark.parametrize(
+    "failed_module",
+    [
+        "check-entries",
+        "concordato-plan-review",
+        "journal-bank-reconciliation",
+        "journal-sampling",
+        "open-item-reconciliation",
+        "report-builder",
+    ],
+)
+def test_nonzero_cli_exit_blocks_release(monkeypatch, failed_module):
+    original = subprocess.run
+
+    def fail_one_cli(command, **kwargs):
+        if "--module" in command and command[-1] == failed_module:
+            return subprocess.CompletedProcess(command, 7, "", "synthetic CLI failure")
+        return original(command, **kwargs)
+
+    monkeypatch.setattr("scripts.verify_vera_package.subprocess.run", fail_one_cli)
+
+    with pytest.raises(
+        ValueError, match=f"CLI verification failed: {failed_module}.*exit 7"
+    ):
+        verify_vera_execution_zip(ROOT / HOSTS["cowork"][0], ".")
+
+
+def test_hung_cli_blocks_release(monkeypatch):
+    original = subprocess.run
+
+    def hang_cli(command, **kwargs):
+        if "--module" in command:
+            raise subprocess.TimeoutExpired(command, kwargs["timeout"])
+        return original(command, **kwargs)
+
+    monkeypatch.setattr("scripts.verify_vera_package.subprocess.run", hang_cli)
+
+    with pytest.raises(ValueError, match="CLI verification timed out: check-entries"):
+        verify_vera_execution_zip(ROOT / HOSTS["cowork"][0], ".")
