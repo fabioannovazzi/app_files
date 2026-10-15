@@ -47,6 +47,8 @@ const TOOLS = [
         document_kind: { enum: ["TRIAL_BALANCE", "PDF_TRIAL_BALANCE", "PRIOR_XBRL"] },
         source_path: { type: "string", minLength: 1 },
         sheet: { type: "string" },
+        column_mapping: { type: "object", additionalProperties: { type: "string" } },
+        blank_balance_cells_are_zero: { type: "boolean" },
         ocr_enabled: { type: "boolean" },
         ocr_language: { enum: ["it", "en"] },
       },
@@ -62,6 +64,13 @@ const TOOLS = [
         ...COMMON_MUTATION,
         operation: {
           enum: [
+            "start_closing_workflow",
+            "propose_closing_adjustment",
+            "propose_closing_review",
+            "record_closing_decision",
+            "open_closing_reconsideration",
+            "ingest_closing_trial_balance",
+            "attach_supporting_document",
             "confirm_parser",
             "review_pdf_extraction",
             "migrate_regulatory_versions",
@@ -298,6 +307,14 @@ const TOOLS = [
         view: {
           enum: [
             "CASE_DASHBOARD",
+            "CLOSING_OVERVIEW",
+            "CLOSING_DECISIONS",
+            "CLOSING_ADJUSTMENTS",
+            "CLOSING_PROPOSALS",
+            "CLOSING_EVIDENCE",
+            "CLOSING_VERSIONS",
+            "CLOSING_RECONCILIATION",
+            "CLOSING_AREAS",
             "SOURCE_REVIEW",
             "MAPPING_GRID",
             "STATEMENTS",

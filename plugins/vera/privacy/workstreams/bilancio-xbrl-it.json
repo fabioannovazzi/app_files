@@ -72,6 +72,15 @@
         "runtime_profiles": [
           "openai-codex"
         ]
+      },
+      {
+        "id": "reviewed-closing-accounts",
+        "purpose": "Interpret selected closing evidence, propose journal adjustments and applicability, and review replacement balances and professional decisions",
+        "content": "The selected runtime can receive explicit accounting origin; confirmed documentary requirements and one unsent client-request draft; selected complete UTF-8 CSV, Markdown, text or JSON supporting extracts up to 64 KiB per file, with document identity, source and extracted-content hashes, through an explicitly requested evidence view capped at 64 KiB per page. Other formats or larger sources remain marked as requiring qualified extraction. Paginated closing views expose non-authoritative interpretation proposals, balanced debit/credit adjustment proposals with account codes, amounts and evidence, replacement trial-balance metadata and exact reconciliation differences, area decisions, suspended dependencies, and the hash-chained professional register with actors, roles, reasons and evidence. Workflow-guidance packets include at most 20 requirements, 20 open issues and 20 dependencies with full available counts. Text may contain real company and personal data; no automatic anonymization or local-only processing is promised. Source bytes, the full case and immutable snapshots are not automatically placed in model context.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -253,13 +262,17 @@
     {
       "id": "native-view-scope",
       "control": "The bridge authorizes case reads through the existing service context, requires the exact current revision when supplied, bounds views and context payloads, rejects unknown case source references and requires signed expiring UI tickets for issue review. The existing reviewer-role, case/run binding and idempotency checks remain authoritative."
+    },
+    {
+      "id": "closing-review-integrity",
+      "control": "The authenticated case service requires reviewer authority for closing decisions and a distinct actor for adjustment approval. Every mutation is revision-bound and idempotent. Closing decisions form a verified append-only hash chain binding actors, roles, evidence hashes, reviewed proposals and screened versions. Replacement accounts cannot become canonical without exact per-account reconciliation and professional screening; suspended controls and open professional issues block existing validation and approval."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-01",
+    "reviewed_at": "2026-10-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "05d5da25fb47188739670821e0162b12894a17cb7464187fc15c8ab9f99a2569"
+    "source_fingerprint": "6e4e513d3cc88b97db0207a5a8738f8cbf982381064193e098628e6f6d631cda"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"

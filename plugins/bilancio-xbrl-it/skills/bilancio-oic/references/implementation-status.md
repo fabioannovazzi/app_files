@@ -1,5 +1,26 @@
 # Implementation status
 
+## Reviewed closing accounts (2026-10-15)
+
+The existing case service now supports explicit accounting origin, reviewed
+documentary requirements and an unsent request draft, baseline screening,
+evidence-linked balanced closing-entry proposals, reviewer approval/rejection,
+exact replacement trial-balance reconciliation, area interpretation proposals
+and confirmed applicability, and an independently hash-chained decision register.
+New evidence suspends affected reviews; replacement approval does not resume
+them before the new accounts are acquired and professionally screened. Changed
+account mappings require review; unrelated decisions and the form choice remain.
+
+`scripts/run_bilancio_alfa_v3_acceptance.py` at repository root executes the
+unchanged contributor fixture through persistent `CaseService` with simulated
+P1/C1 identities. The local run covers E1, E2, the 20–22 January suspension and
+the post-A2-bis/pre-document-12 suspension, and retains expected/observed
+comparisons, checkpoint cases, execution trace and source hashes. This proves
+the tested service behavior, not model interpretation quality, a currently
+enabled installation, a native UI, complete accounts or a real-client pilot.
+Taxes and litigation remain open; no final approval or filing is performed.
+See `references/closing-workflow.md` for exact operations and context bounds.
+
 ## Implemented foundation
 
 - MVP scope blocking for legal form, OIC, listed, regulated, consolidated, and

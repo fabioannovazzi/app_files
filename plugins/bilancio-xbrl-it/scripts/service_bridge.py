@@ -171,6 +171,10 @@ def _dispatch(
             {
                 "source_path": arguments["source_path"],
                 "sheet": arguments.get("sheet"),
+                "column_mapping": arguments.get("column_mapping"),
+                "blank_balance_cells_are_zero": arguments.get(
+                    "blank_balance_cells_are_zero", False
+                ),
                 "ocr_enabled": arguments.get("ocr_enabled", True),
                 "ocr_language": arguments.get("ocr_language", "it"),
             },

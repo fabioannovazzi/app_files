@@ -797,6 +797,30 @@ def build_intelligence_packet(
                 "review_data": "use the paginated professional review view",
             },
         }
+    if selected_task is IntelligenceTask.WORKFLOW_GUIDANCE and case.get(
+        "closing_workflow"
+    ):
+        from closing_workflow import closing_status
+
+        closing = closing_status(case)
+        base["reviewed_context"]["closing"] = {
+            "fascicolo_sufficient": closing["fascicolo_sufficient"],
+            "form_and_mapping_allowed": closing["form_and_mapping_allowed"],
+            "closure_allowed": closing["closure_allowed"],
+            "current_trial_balance_valid": closing["current_trial_balance_valid"],
+            "requirements": closing["requirements"][:MAX_WORKFLOW_ITEMS],
+            "open_issues": closing["open_issues"][:MAX_WORKFLOW_ITEMS],
+            "dependencies": list(closing["dependencies"].items())[:MAX_WORKFLOW_ITEMS],
+        }
+        base["context_scope"]["available"]["closing_requirements"] = len(
+            closing["requirements"]
+        )
+        base["context_scope"]["available"]["closing_open_issues"] = len(
+            closing["open_issues"]
+        )
+        base["context_scope"]["available"]["closing_dependencies"] = len(
+            closing["dependencies"]
+        )
     return _finalize_packet(base, subject_ids=subject_ids)
 
 

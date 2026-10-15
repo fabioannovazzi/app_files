@@ -70,7 +70,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "9a11565e0004f24e43386c4d1ca13c2e8d304619529180c4ca03e06ba436cd72",
+  "course_sha256": "f66fd8872e5fffc34b2ccbe84bfff666c015fe9f70fcc302dc7d428bbaf2b495",
   "discovery_source_refresh": {
     "reviewed_by": "Codex /root",
     "reviewed_at": "2026-10-01T11:44:13.108677+00:00",
@@ -140,7 +140,7 @@
     "it": {
       "verdict": "accepted",
       "editorial": {
-        "purpose_and_first_use": "The lesson follows the complete ordinary preparation of first-year Italian OIC accounts: identify documents, import, review interpretation and classification, generate a draft, trace a source and understand the checks before approval.",
+        "purpose_and_first_use": "The lesson follows the complete ordinary preparation of first-year Italian OIC accounts: identify documents, import, review interpretation and classification, generate a draft, trace a source and understand the checks before approval. The supplied closing-balance scope is distinct from the separately tested Alfa closing-adjustment and reconsideration path.",
         "inputs_and_request": "Fictional company details, nine-account trial balance and year-end declarations provide the case. Tax is expressly a supplied external-workpaper input; the assistant is not asked to invent a tax calculation. There is no precomputed set of accounts in the input kit.",
         "execution_and_checkpoints": "The native case engine reads the balances, records proposed classifications, builds statements and schedules, renders the HTML draft and locally validates an XBRL candidate with the official taxonomy. The lesson asks the learner to review actual proposals; automated fixture decisions are not used as evidence of their participation.",
         "deliverable_and_next_action": "The drafts show EUR27000 assets, EUR6500 liabilities, EUR10000 capital and EUR10500 current result, with the result represented in equity. Four supporting schedules reconcile. The footnote disclosures link to the fictional declaration. Technical validation passes while case approval remains absent; signature and filing are separate.",
@@ -179,7 +179,7 @@
     "en": {
       "verdict": "accepted",
       "editorial": {
-        "purpose_and_first_use": "The lesson follows the complete ordinary preparation of first-year Italian OIC accounts: identify documents, import, review interpretation and classification, generate a draft, trace a source and understand the checks before approval.",
+        "purpose_and_first_use": "The lesson follows the complete ordinary preparation of first-year Italian OIC accounts: identify documents, import, review interpretation and classification, generate a draft, trace a source and understand the checks before approval. The supplied closing-balance scope is distinct from the separately tested Alfa closing-adjustment and reconsideration path.",
         "inputs_and_request": "Fictional company details, nine-account trial balance and year-end declarations provide the case. Tax is expressly a supplied external-workpaper input; the assistant is not asked to invent a tax calculation. There is no precomputed set of accounts in the input kit.",
         "execution_and_checkpoints": "The native case engine reads the balances, records proposed classifications, builds statements and schedules, renders the HTML draft and locally validates an XBRL candidate with the official taxonomy. The lesson asks the learner to review actual proposals; automated fixture decisions are not used as evidence of their participation.",
         "deliverable_and_next_action": "The drafts show EUR27000 assets, EUR6500 liabilities, EUR10000 capital and EUR10500 current result, with the result represented in equity. Four supporting schedules reconcile. The footnote disclosures link to the fictional declaration. Technical validation passes while case approval remains absent; signature and filing are separate.",
@@ -563,5 +563,15 @@
     "reviewed_at": "2026-10-15T13:14:28.442330+00:00",
     "reviewer": "Codex /root - bounded incident-client source review",
     "source_review": "Inspected the exact operational_incidents.py diff: reporter protocol changes from 2 to 3, and startup guidance routes the host AI through typed technical requests, revision-linked replies, active status checks and verified original-task retry. No course execution or professional calculation logic changes."
+  },
+  "closing_accounts_source_review_20261015": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-15",
+    "previous_course_sha256": "9a11565e0004f24e43386c4d1ca13c2e8d304619529180c4ca03e06ba436cd72",
+    "course_sha256": "f66fd8872e5fffc34b2ccbe84bfff666c015fe9f70fcc302dc7d428bbaf2b495",
+    "source_review": "Inspected the new optional reviewed-closing path, source-header conventions, service role/revision guards, hash-chained decisions, replacement reconciliation, reconsideration and bounded evidence views. The ordinary path for already supplied closing balances remains available; no closing proposal is automatically approved or posted.",
+    "content_review": "Read both complete authored Bilancio lessons. Added an explicit Italian/English scope statement that these lessons start from supplied closing balances and do not exercise the separate Alfa adjustment/reconsideration case. Other lesson inputs, narrative, checkpoints and historical artifact reviews remain unchanged.",
+    "execution_requirement": "Rerun all four Italian/English demonstration/practice identities against this exact compiled course digest. Alfa v3 runs independently through CaseService.",
+    "limits": "No fresh learner, voice, installed-host, visual or professional acceptance is asserted by a source fingerprint refresh."
   }
 }

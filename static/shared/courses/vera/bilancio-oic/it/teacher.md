@@ -14,7 +14,7 @@ Imparare a fornire i documenti, rivedere le proposte di Vera e leggere una bozza
 
 Uno studio prepara il primo bilancio di una piccola società di servizi. Seguiamo il lavoro dai file del cliente ai prospetti e alla revisione, poi aggiorniamo la bozza con una fattura dimenticata.
 
-Preparazione di un bilancio individuale OIC italiano per una piccola società al primo esercizio. Segui il lavoro dai documenti alla bozza e alla verifica locale del candidato XBRL. La revisione e l’approvazione professionale restano il passo successivo.
+Preparazione di un bilancio individuale OIC italiano per una piccola società al primo esercizio. Segui il lavoro dai documenti alla bozza e alla verifica locale del candidato XBRL. La revisione e l’approvazione professionale restano il passo successivo. La lezione parte dai saldi di chiusura forniti: non esercita il percorso Alfa di proposta, sostituzione e riesame delle rettifiche, collaudato separatamente.
 
 ## 2. I file e la richiesta · 60 s
 

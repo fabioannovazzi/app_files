@@ -3,6 +3,7 @@ include =
     */plugins/bilancio-xbrl-it/scripts/accounts_preview.py
     */plugins/bilancio-xbrl-it/scripts/accounts_preview_text.py
     */plugins/bilancio-xbrl-it/scripts/xbrl_case.py
+    */plugins/bilancio-xbrl-it/scripts/closing_workflow.py
 patch = subprocess
 
 [report]

@@ -1,0 +1,26 @@
+codice;descrizione;dare_2025;avere_2025;dare_2024;avere_2024
+1010;Impianti e macchinari;80000,00;;80000,00;
+1015;Fondo ammortamento impianti e macchinari;;30000,00;;18000,00
+1210;Crediti verso clienti;95500,00;;80000,00;
+1250;Erario c/IVA;4000,00;;2500,00;
+1410;Banca c/c;129800,00;;81800,00;
+1420;Cassa;600,00;;900,00;
+2010;Capitale sociale;;20000,00;;20000,00
+2020;Riserva legale;;4000,00;;4000,00
+2030;Utili portati a nuovo;;36000,00;;18000,00
+2110;Fondo TFR;;18500,00;;15500,00
+2210;Debiti verso fornitori;;42000,00;;38000,00
+2220;Debiti tributari;;6200,00;;9800,00
+2230;Debiti verso istituti previdenziali;;3100,00;;2900,00
+2310;Finanziamento bancario;;100000,00;;100000,00
+2410;Ratei passivi;;1000,00;;1000,00
+3010;Ricavi delle prestazioni;;560500,00;;500000,00
+4010;Costi per servizi;210000,00;;190000,00;
+4020;Affitto locali (godimento beni di terzi);36000,00;;36000,00;
+4110;Salari e stipendi;180000,00;;165000,00;
+4120;Oneri sociali;54000,00;;49500,00;
+4130;Accantonamento TFR;12600,00;;11500,00;
+4140;Ammortamento impianti e macchinari;12000,00;;12000,00;
+4210;Interessi passivi su finanziamenti;4000,00;;4000,00;
+4310;Oneri diversi di gestione;2800,00;;2500,00;
+4910;Imposte correnti;;;11500,00;
