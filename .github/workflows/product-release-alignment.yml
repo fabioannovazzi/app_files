@@ -13,7 +13,8 @@ jobs:
   alignment:
     name: Codex and Cowork release alignment
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # Finished archives now execute all six isolated Vera CLIs on each host build.
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
