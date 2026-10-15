@@ -51,6 +51,11 @@ def _runtime_environment(root: Path, tmp_path: Path) -> dict[str, str]:
     return {
         **os.environ,
         "MPARANZA_RUNTIME_ROOT": str(runtime_root),
+        "MPARANZA_INCIDENT_STATE_DIR": str(tmp_path / "incident-state"),
+        "HTTPS_PROXY": "http://127.0.0.1:9",
+        "https_proxy": "http://127.0.0.1:9",
+        "NO_PROXY": "localhost,127.0.0.1",
+        "no_proxy": "localhost,127.0.0.1",
         "PYTHONDONTWRITEBYTECODE": "1",
     }
 

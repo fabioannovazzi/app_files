@@ -90,6 +90,17 @@ def test_required_argument_error_reaches_structured_event_with_missing_flag(tmp_
     )
 
 
+def test_runner_preserves_helper_logging_configuration_and_info_output(tmp_path):
+    completed, data = execute(
+        tmp_path,
+        "import logging\nlogging.basicConfig(level=logging.INFO,format='RESULT %(message)s')\nlogging.info('matched=2')\n",
+    )
+
+    assert completed.returncode == 0
+    assert completed.stderr == "RESULT matched=2\n"
+    assert data is None
+
+
 def test_application_validation_error_is_distinct_from_argument_error(tmp_path):
     source = "import argparse\np=argparse.ArgumentParser()\ntry:\n    raise ValueError('Research artifact bindings missing')\nexcept ValueError as error:\n    p.error(str(error))\n"
     completed, data = execute(tmp_path, source)

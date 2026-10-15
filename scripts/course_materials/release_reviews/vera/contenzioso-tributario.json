@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "contenzioso-tributario",
-  "course_sha256": "12b10ecb1105a09802eadbbd4ad1f8073e0be246ab1135c0230117987b5bddca",
+  "course_sha256": "eaf07c332f4301b10707e0f289a5e7264a1570f167c00208375289bf074ffe04",
   "reviewer": "Codex /root: five-language authored lesson and real evidence/progress output review",
   "reviewed_at": "2026-10-14T14:55:04.859840+00:00",
   "review_scope": "Accepted prepared material and bounded real helper/Archive regressions. Semantic narrative and decisions are explicit test fixtures. This does not attest full live legal research, substantive pleading approval, native Word, native voice, installed-host learner execution or professional acceptance. Live lessons run the current specialist, not the fixtures.",
@@ -267,7 +267,7 @@
       {
         "path": "scripts/operational_incidents.py",
         "before": "739b9390ccdd77ead53fdc6536217af4a50e3f16f9b27fa8002cecaae2c06147",
-        "after": "7e7895e8759c965dc98f64f17116dbe6d306d207271ee40a996e16cf8b9ae63b"
+        "after": "3ee9c0b68be4ccd7b2059b037e488eb0e08a1875a16678f85f3c5908973f761c"
       },
       {
         "path": "scripts/verified_execution.py",

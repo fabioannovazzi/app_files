@@ -6,6 +6,7 @@ import argparse
 import json
 import sys
 from pathlib import Path
+from typing import Any
 
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -35,6 +36,7 @@ def main() -> None:
     args = parser.parse_args()
     load_env_from_secrets_file()
     store = IncidentStore(args.sqlite_path)
+    result: dict[str, Any] | list[dict[str, Any]]
     if args.command == "list":
         result = store.queue(args.limit)
     elif args.command == "show":

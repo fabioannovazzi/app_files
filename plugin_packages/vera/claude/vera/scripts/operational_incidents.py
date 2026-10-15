@@ -491,7 +491,7 @@ def _expand_success(
     if status is None:
         status = _post("status", {"credentials": state["credentials"]})
     outcomes = []
-    processed = set()
+    processed: set[str] = set()
     for incident in status["incidents"]:
         matching = [
             row for row in receipts if row["incident_id"] == incident["incident_id"]
@@ -643,7 +643,7 @@ def _report_failure(
     """Queue technical setup evidence; service availability never blocks the task."""
     try:
         state = _read()
-        report = {
+        report: dict[str, Any] = {
             "report_id": str(uuid4()),
             **_identity(),
             "host": _host(),
@@ -685,7 +685,7 @@ def _report_failure(
         }
         if technical_diagnostics:
             report["diagnostics"] = technical_diagnostics
-        events = []
+        events: list[dict[str, Any]] = []
         for diagnostic in report["diagnostics"]:
             cleaned = _clean(diagnostic["message"])
             events.extend(

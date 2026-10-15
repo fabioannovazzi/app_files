@@ -24,7 +24,7 @@
     ],
     "course_sha256": "0e740c47f86034c69a3ca838844ead9c2a2c6b60593c09fbbbce1c40b0b17c77"
   },
-  "course_sha256": "e23cf3cb82b7223eb41da76fcc3bf0d8cb4a207aa1178f845a39c5ed3c6af857",
+  "course_sha256": "920834e8b31988a59fe2b9d4890fd480133191e83f25e4343b0f57f9c04a00ee",
   "host_marker_source_binding_review_20261010": {
     "prior_course_sha256": "c8787aa02e4e38d7b209da29ae1d8725bf86a83fe0ee06cbe80cb6669350ae74",
     "current_course_sha256": "5bcf5fb4a9c80d90dbe59e88b844a9567569a90c267e747b16213801082c9d96",
@@ -365,7 +365,7 @@
       {
         "path": "scripts/operational_incidents.py",
         "before": "739b9390ccdd77ead53fdc6536217af4a50e3f16f9b27fa8002cecaae2c06147",
-        "after": "7e7895e8759c965dc98f64f17116dbe6d306d207271ee40a996e16cf8b9ae63b"
+        "after": "3ee9c0b68be4ccd7b2059b037e488eb0e08a1875a16678f85f3c5908973f761c"
       },
       {
         "path": "scripts/verified_execution.py",

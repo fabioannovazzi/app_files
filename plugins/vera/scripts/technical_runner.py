@@ -17,7 +17,7 @@ import runpy
 import sys
 from pathlib import Path
 from types import TracebackType
-from typing import Any
+from typing import Any, NoReturn
 
 __all__ = ["main", "exception_events"]
 
@@ -27,7 +27,11 @@ def _template(node: ast.AST) -> str | None:
         return node.value
     if isinstance(node, ast.JoinedStr):
         return "".join(
-            value.value if isinstance(value, ast.Constant) else "{value}"
+            (
+                value.value
+                if isinstance(value, ast.Constant) and isinstance(value.value, str)
+                else "{value}"
+            )
             for value in node.values
         )
     if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Mod):
@@ -107,7 +111,9 @@ def exception_events(error: BaseException, root: Path) -> list[dict[str, Any]]:
                     or "Exception at the recorded package source location; dynamic detail retained for review.",
                     "errno": error.errno if isinstance(error, OSError) else None,
                     "technical_frames": frames,
-                    "detail_available": (bool(message) and "{value}" not in message)
+                    "detail_available": (
+                        message is not None and "{value}" not in message
+                    )
                     or isinstance(error, OSError),
                 }
             )
@@ -122,8 +128,9 @@ def main() -> int:
     arguments = sys.argv[4:]
     events: list[dict[str, Any]] = []
     original_error = argparse.ArgumentParser.error
+    original_handle = logging.Logger.handle
 
-    def parser_error(parser: argparse.ArgumentParser, message: str) -> Any:
+    def parser_error(parser: argparse.ArgumentParser, message: str) -> NoReturn:
         context = sys.exception()
         cause = exception_events(context, root) if context else []
         if cause:
@@ -156,7 +163,7 @@ def main() -> int:
                     "detail_available": bool(missing),
                 }
             )
-        return original_error(parser, message)
+        original_error(parser, message)
 
     class Errors(logging.Handler):
         def emit(self, record: logging.LogRecord) -> None:
@@ -185,9 +192,17 @@ def main() -> int:
                     }
                 )
 
-    argparse.ArgumentParser.error = parser_error
+    setattr(argparse.ArgumentParser, "error", parser_error)
     handler = Errors()
-    logging.getLogger().addHandler(handler)
+
+    def handle(logger: logging.Logger, record: logging.LogRecord) -> None:
+        # Adding a root handler would suppress the helper's basicConfig().
+        # Observe records without changing its handlers, levels or formatting.
+        if record.levelno >= logging.ERROR:
+            handler.emit(record)
+        original_handle(logger, record)
+
+    setattr(logging.Logger, "handle", handle)
     sys.path.insert(0, str(script.parent))
     sys.argv = [str(script), *arguments]
     result = 0
@@ -204,8 +219,8 @@ def main() -> int:
         if not isinstance(error.code, (int, type(None))):
             sys.stderr.write(str(error.code) + "\n")
     finally:
-        logging.getLogger().removeHandler(handler)
-        argparse.ArgumentParser.error = original_error
+        setattr(logging.Logger, "handle", original_handle)
+        setattr(argparse.ArgumentParser, "error", original_error)
         # On an unhandled exception, sys.exception() is still available in finally.
         current = sys.exception()
         if current is not None and not isinstance(current, SystemExit):
@@ -225,10 +240,10 @@ def main() -> int:
                     "linux": "linux",
                 }.get(sys.platform, "unknown"),
             }
-            with destination.open("x", encoding="utf-8") as handle:
+            with destination.open("x", encoding="utf-8") as sink:
                 if os.name == "posix":
                     destination.chmod(0o600)
-                json.dump(payload, handle)
+                json.dump(payload, sink)
     return result
 
 

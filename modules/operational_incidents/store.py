@@ -301,7 +301,7 @@ class IncidentStore:
 
     def connection_status(self, actor: ConnectionActor) -> dict[str, Any]:
         """Read remedies across saved local identities, including expired task containers."""
-        incidents = []
+        incidents: list[dict[str, Any]] = []
         for identifier in self.connection_members(actor):
             member = ConnectionActor(UUID(identifier), actor.connection_id)
             incidents.extend(
