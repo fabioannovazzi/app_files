@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "0f2a57a48bb11cc00d033f5af98f0b60186842a1b8e8796142862eba27409102",
+  "catalogue_fingerprint": "7f25a49bd0cf918f1bd57d9c50bbf2a167299be022cf07842338aea389277c8b",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -1814,5 +1814,14 @@
     "date": "2026-10-15",
     "version": "0.1.392",
     "scope": "Canonical manifest/version refresh. All 55 recorded skill entrypoints are unchanged; only the shared technical incident conversation and recovery service changed. Preserve existing Geneva judgments and jurisdiction limits; no additional professional workflow or Geneva acceptance is claimed."
+  },
+  "bilancio_closing_release_binding_20261015": {
+    "date": "2026-10-15",
+    "version": "0.1.394",
+    "previous_catalogue_fingerprint": "0f2a57a48bb11cc00d033f5af98f0b60186842a1b8e8796142862eba27409102",
+    "changed_entrypoints": [
+      "bilancio-oic"
+    ],
+    "scope": "Italian OIC closing-account workflow and Alfa v3 synthetic acceptance only. Existing function IDs and Geneva dispositions are retained. No Swiss accounting framework, Geneva professional acceptance, native-host acceptance or filing capability is added or claimed."
   }
 }

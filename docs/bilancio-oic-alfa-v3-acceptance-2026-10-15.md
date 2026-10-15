@@ -76,3 +76,20 @@ not modify those baseline inputs.
 The Italian non-technical announcement was posted and read back at
 <https://discord.com/channels/1550191335917625474/1560040735871336458/1560328362734391407>.
 Marketplace publication is outside this implementation.
+
+## Shared Clara fingerprint alignment
+
+CI detected two Clara reviews whose governed paths include the shared product
+page and course-material tree. Reviewed changes are limited to Bilancio model-data
+copy and the Vera lesson scope/release bindings; Clara teaching and hosted voice
+processing, access and retention source are unchanged. The two source fingerprints
+were refreshed after that comparison. Clara packages are rebuilt together at
+0.1.289 to retain source/package parity. Two further Clara fingerprints bind
+the canonical manifest and are refreshed only for that patch-version change;
+no Clara runtime behavior changes.
+
+The release catalogue is rebound from Vera 0.1.393 to 0.1.394 after comparing
+all 55 function IDs and entrypoint hashes. Only the existing `bilancio-oic`
+entrypoint changed. The Geneva assessment retains its prior dispositions and
+records the new work as Italian OIC acceptance only; it establishes no new
+Swiss-framework or Geneva professional qualification.
