@@ -327,6 +327,28 @@ html[dir="rtl"] .skip-link {
   margin: 32px 0 0;
 }
 
+.pf-steps {
+  margin: 40px 0 0;
+  padding-left: 1.5rem;
+  max-width: 80ch;
+}
+
+.pf-steps li { padding: 16px 0 16px 12px; }
+.pf-steps li::marker { color: var(--pf-blue); font-weight: 700; }
+.pf-steps h3 { margin: 0; color: var(--pf-ink); }
+.pf-steps p { margin: 8px 0 0; }
+
+.pf-results { margin-top: 40px; overflow-x: auto; }
+.pf-results table { width: 100%; border-collapse: collapse; text-align: left; }
+.pf-results caption { padding-bottom: 20px; text-align: left; color: var(--pf-muted); }
+.pf-results th, .pf-results td { padding: 20px 16px; border-bottom: 1px solid var(--pf-line); vertical-align: top; }
+.pf-results thead th { color: var(--pf-ink); border-bottom: 2px solid var(--pf-ink); }
+.pf-results tbody th { width: 28%; min-width: 145px; color: var(--pf-ink); }
+.pf-results td { min-width: 250px; }
+.pf-detail-note { max-width: 80ch; margin: 24px 0 0; }
+.pf-detail-note a { color: var(--pf-blue); text-underline-offset: 4px; }
+.pf-results:focus-visible { outline: 3px solid var(--pf-cyan); outline-offset: 3px; }
+
 .pf-process-item h3 {
   color: var(--pf-ink);
 }

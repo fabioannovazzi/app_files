@@ -1818,6 +1818,73 @@ def test_vera_formerly_unplaced_guides_are_mounted_on_subject_pages() -> None:
     assert (SHARED_ROOT / "avviso-intake" / "index.html").is_file()
 
 
+@pytest.mark.parametrize(
+    ("language", "heading"),
+    [
+        ("it", "Alfa v3: risultati e sospensioni"),
+        ("en", "Alfa v3: results and suspensions"),
+        ("fr", "Alfa v3 : résultats et suspensions"),
+        ("de", "Alfa v3: Ergebnisse und Aussetzungen"),
+        ("es", "Alfa v3: resultados y suspensiones"),
+    ],
+)
+def test_bilancio_page_renders_closing_workflow_and_acceptance_in_each_locale(
+    language: str, heading: str
+) -> None:
+    """Execute the page's actual scripts, including its function-specific copy."""
+    node = shutil.which("node")
+    assert node is not None
+    shared = ROOT / "static" / "shared"
+    page_path = shared / "bilancio-xbrl-it" / "index.html"
+    page = BeautifulSoup(page_path.read_text(encoding="utf-8"), "html.parser")
+    sources = [
+        (page_path.parent / script["src"].split("?", 1)[0]).read_text(encoding="utf-8")
+        for script in page.select("script[src]")
+    ]
+    script = """
+const vm = require('node:vm');
+const input = JSON.parse(require('node:fs').readFileSync(0, 'utf8'));
+const root = { innerHTML: '', querySelectorAll() { return []; } };
+const document = {
+  currentScript: null, documentElement: {},
+  body: { dataset: { functionPage: 'bilancio-xbrl-it' } },
+  getElementById() { return root; }, querySelector() { return null; }
+};
+const window = { location: { search: '?lang=' + input.language,
+  href: 'https://mparanza.com/static/shared/bilancio-xbrl-it/index.html' } };
+const context = vm.createContext({ window, document, URLSearchParams, URL });
+for (const source of input.sources) vm.runInContext(source, context, { timeout: 1000 });
+process.stdout.write(JSON.stringify({ html: root.innerHTML, lang: document.documentElement.lang }));
+"""
+    result = subprocess.run(
+        [node, "-e", script],
+        input=json.dumps({"language": language, "sources": sources}),
+        text=True,
+        capture_output=True,
+        check=True,
+    )
+
+    rendered = json.loads(result.stdout)
+
+    html = BeautifulSoup(rendered["html"], "html.parser")
+    assert rendered["lang"] == language
+    assert html.select_one("#alfa-v3-acceptance-title").get_text() == heading
+    assert len(html.select("#closing-workflow li")) == 6
+    assert len(html.select("#alfa-v3-acceptance tbody tr")) == 7
+    assert "131/131" in html.get_text()
+    assert "D-SCR3" in html.get_text()
+    assert "undefined" not in rendered["html"]
+    assert "E1" in html.select_one("#alfa-v3-acceptance tbody").get_text()
+    assert "E2" in html.select_one("#alfa-v3-acceptance tbody").get_text()
+    assert html.select_one(".pf-public-example__primary")["href"].endswith(
+        "/bilancio-xbrl-it/prototype/index.html"
+    )
+    assert (
+        html.select_one("main > section:last-child")["data-model-data-workflow"]
+        == "bilancio-xbrl-it"
+    )
+
+
 def test_vera_hub_links_bilancio_to_its_separate_function_page() -> None:
     page_path = SHARED_ROOT / "vera" / "index.html"
     page = page_path.read_text(encoding="utf-8")

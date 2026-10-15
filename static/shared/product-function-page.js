@@ -167,6 +167,22 @@
     )
     .join("");
 
+  const detailSections = (text.detailSections || []).map((section) => `
+    <section class="pf-section" id="${section.id}" aria-labelledby="${section.id}-title">
+      <div class="pf-section__head">
+        <div><p class="pf-section__label">${section.label}</p><h2 id="${section.id}-title">${section.title}</h2></div>
+        <p class="pf-section__copy">${section.intro}</p>
+      </div>
+      ${section.steps ? `<ol class="pf-steps">${section.steps.map((step) => `<li><h3>${step.title}</h3><p>${step.copy}</p></li>`).join("")}</ol>` : ""}
+      ${section.table ? `<div class="pf-results" role="region" aria-labelledby="${section.id}-title" tabindex="0"><table>
+        <caption>${section.table.caption}</caption>
+        <thead><tr>${section.table.headings.map((heading) => `<th scope="col">${heading}</th>`).join("")}</tr></thead>
+        <tbody>${section.table.rows.map((row) => `<tr><th scope="row">${row[0]}</th><td>${row[1]}</td></tr>`).join("")}</tbody>
+      </table></div>` : ""}
+      ${(section.notes || []).map((note) => `<p class="pf-detail-note">${note}</p>`).join("")}
+      ${section.evidence ? `<p class="pf-detail-note"><a href="${section.evidence.href}">${section.evidence.label}</a></p>` : ""}
+    </section>`).join("");
+
   const publicExample = page.publicExampleHref && text.publicExampleTitle
     ? `
       <section class="pf-section pf-public-example" aria-labelledby="${pageKey}-public-example-title">
@@ -228,6 +244,7 @@
         <article class="pf-fact"><h2>${text.workLabel || ui.work}</h2><p>${text.work}</p></article>
         <article class="pf-fact"><h2>${text.outputLabel || ui.output}</h2><p>${text.output}</p></article>
       </section>
+      ${detailSections}
       ${publicExample}
       ${processSections}
       <section class="pf-section">
