@@ -332,6 +332,28 @@
       transition: color 160ms ease-out, transform 160ms ease-out;
     }
 
+    .function-test-legend { margin-block: 20px 28px; font-size: 0.8125rem; color: var(--blue); }
+    .function-test-legend__items { display: flex; flex-wrap: wrap; gap: 10px 24px; margin-bottom: 8px; }
+    .function-test-legend__items > span { display: inline-flex; align-items: center; gap: 8px; }
+    .function-test-indicator {
+      display: inline-block;
+      width: 11px;
+      height: 11px;
+      flex: 0 0 11px;
+      border: 1px solid #5685ab;
+      border-radius: 50%;
+      position: relative;
+      overflow: hidden;
+      vertical-align: 0.04em;
+    }
+    h4 .function-test-indicator { margin-left: 9px; }
+    .function-test-indicator[data-test-status="tried"],
+    .function-test-indicator[data-test-status="repeated"] { color: var(--blue); border-color: currentColor; }
+    .function-test-indicator[data-test-status="tried"]::after {
+      content: ""; position: absolute; inset: 0 50% 0 0; background: currentColor;
+    }
+    .function-test-indicator[data-test-status="repeated"] { background: currentColor; }
+
     .module-row p { max-width: 690px; color: var(--blue); }
     .module-row h4 {
       font-size: clamp(1.2rem, 1.8vw, 1.5rem);
@@ -1491,7 +1513,16 @@
         <p data-i18n="core.copy">Seleziona una funzione per aprire la pagina con input, metodo, output, responsabilità e informazioni sui dati che arrivano al modello.</p>
       </div>
 
-      <a class="module-row" href="../learn-with-vera/index.html" data-module-link data-vera-teaching="learn-with-vera"><h4 data-i18n="module.learn.title">Impara con Vera</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+      <div class="function-test-legend">
+        <div class="function-test-legend__items">
+          <span><span class="function-test-indicator" data-test-status="untried" aria-hidden="true"></span><span data-i18n="testing.untried">Da provare su casi concreti</span></span>
+          <span><span class="function-test-indicator" data-test-status="tried" aria-hidden="true"></span><span data-i18n="testing.tried">Provata su casi concreti</span></span>
+          <span><span class="function-test-indicator" data-test-status="repeated" aria-hidden="true"></span><span data-i18n="testing.repeated">Provata più volte su casi concreti</span></span>
+        </div>
+        <p data-i18n="testing.note">Le prove riguardano casi specifici, non garantiscono ogni possibile utilizzo.</p>
+      </div>
+
+      <a class="module-row" href="../learn-with-vera/index.html" data-module-link data-vera-teaching="learn-with-vera"><h4><span data-i18n="module.learn.title">Impara con Vera</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
 
       <div class="workstreams">
         <article class="workstream" id="area-clients">
@@ -1502,25 +1533,25 @@
           </header>
           <div class="module-directory">
             <a class="module-row" id="new-client" href="../new-client/index.html#journey" data-module-link data-vera-workflow="new-client">
-              <h4 data-i18n="module.newClient.title">Apertura del fascicolo cliente</h4>
+              <h4><span data-i18n="module.newClient.title">Apertura del fascicolo cliente</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" href="../aml-review/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="aml-review"><h4 data-i18n="module.amlReview.title">Verifica antiriciclaggio del cliente</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
-            <a class="module-row" href="../organizzazione-lavoro/index.html" data-module-link data-vera-workflow="organizzazione-lavoro"><h4 data-i18n="module.workOrganization.title">Organizzazione del lavoro di studio</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" href="../aml-review/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="aml-review"><h4><span data-i18n="module.amlReview.title">Verifica antiriciclaggio del cliente</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" href="../organizzazione-lavoro/index.html" data-module-link data-vera-workflow="organizzazione-lavoro"><h4><span data-i18n="module.workOrganization.title">Organizzazione del lavoro di studio</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" id="studio-archive" href="../studio-archive/index.html" data-module-link data-vera-workflow="studio-archive">
-              <h4 data-i18n="module.archive.title">Archiviazione e ricerca nel fascicolo cliente</h4>
+              <h4><span data-i18n="module.archive.title">Archiviazione e ricerca nel fascicolo cliente</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" id="archive-organization" href="../archive-organization/index.html" data-module-link data-vera-workflow="archive-organization">
-              <h4 data-i18n="module.archiveOrganization.title">Riordino della cartella cliente</h4>
+              <h4><span data-i18n="module.archiveOrganization.title">Riordino della cartella cliente</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../dati-fiscali-strutturati/index.html" data-module-link data-vera-subordinate-workflow="dati-fiscali-strutturati">
-              <h4 data-i18n="module.newClient.includes.data">Estrazione dati fiscali</h4>
+              <h4><span data-i18n="module.newClient.includes.data">Estrazione dati fiscali</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../email-cliente/index.html" data-module-link data-vera-subordinate-workflow="email-cliente">
-              <h4 data-i18n="module.newClient.includes.email">Richiesta documenti e chiarimenti</h4>
+              <h4><span data-i18n="module.newClient.includes.email">Richiesta documenti e chiarimenti</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
@@ -1534,46 +1565,46 @@
           </header>
           <div class="module-directory">
             <a class="module-row" id="notice-intake" href="../avviso-intake/index.html" data-module-link data-vera-workflow="avviso-intake">
-              <h4 data-i18n="module.notice.title">Esame avvisi e cartelle</h4>
+              <h4><span data-i18n="module.notice.title">Esame avvisi e cartelle</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../posizioni-negoziali/index.html?from=vera" data-module-link data-vera-workflow="posizioni-negoziali">
-              <h4 data-i18n="module.negotiation.title">Sintetizza le revisioni in posizioni negoziali</h4>
+              <h4><span data-i18n="module.negotiation.title">Sintetizza le revisioni in posizioni negoziali</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../contenzioso-tributario/index.html?from=vera" data-module-link data-jurisdiction-item="it" data-vera-workflow="contenzioso-tributario" hidden>
-              <h4 data-i18n="module.taxLitigation.title">Prepara il contenzioso tributario italiano</h4>
+              <h4><span data-i18n="module.taxLitigation.title">Prepara il contenzioso tributario italiano</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../fatture-xml-check/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-subordinate-workflow="fatture-xml-check" hidden>
-              <h4 data-i18n="module.newClient.includes.xml">Controllo FatturaPA XML</h4>
+              <h4><span data-i18n="module.newClient.includes.xml">Controllo FatturaPA XML</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../previdenza-inps/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-workflow="previdenza-inps" hidden>
-              <h4>Revisione pratica INPS</h4>
+              <h4>Revisione pratica INPS<span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../registro-imprese-sari/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-workflow="registro-imprese-sari" hidden>
-              <h4>Pratiche Registro Imprese</h4>
+              <h4>Pratiche Registro Imprese<span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../bilancio-xbrl-it/index.html" data-module-link data-native-language="it" data-vera-workflow="bilancio-xbrl-it" data-jurisdiction-item="it" data-primary-workflow-link="bilancio-intelligente" hidden>
-              <h4>Bilancio OIC e XBRL</h4>
+              <h4>Bilancio OIC e XBRL<span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" href="../composizione-negoziata/index.html" data-module-link data-jurisdiction-item="it" data-vera-workflow="composizione-negoziata"><h4>Composizione negoziata</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" href="../composizione-negoziata/index.html" data-module-link data-jurisdiction-item="it" data-vera-workflow="composizione-negoziata"><h4>Composizione negoziata<span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" href="../fusione-guidata/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-workflow="fusione-guidata" hidden>
-              <h4>Fusione per incorporazione</h4>
+              <h4>Fusione per incorporazione<span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" href="../patent-box-review/index.html" data-module-link data-jurisdiction-item="it" data-vera-workflow="patent-box-review" hidden><h4>Patent Box · anteprima</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" href="../patent-box-review/index.html" data-module-link data-jurisdiction-item="it" data-vera-workflow="patent-box-review" hidden><h4>Patent Box · anteprima<span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" href="../concordato-plan-review/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-workflow="concordato-plan-review" hidden>
-              <h4>Revisione concordato preventivo</h4>
+              <h4>Revisione concordato preventivo<span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" href="../agenzia-acquisition/index.html" data-module-link data-jurisdiction-item="it" data-vera-workflow="agenzia-acquisition"><h4 data-i18n="module.agenziaAcquisition.title">Acquisizione Agenzia delle Entrate</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" href="../agenzia-acquisition/index.html" data-module-link data-jurisdiction-item="it" data-vera-workflow="agenzia-acquisition"><h4><span data-i18n="module.agenziaAcquisition.title">Acquisizione Agenzia delle Entrate</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" id="browser-automation" href="../browser-automation/index.html" data-module-link data-vera-workflow="browser-automation">
-              <h4 data-i18n="module.browserAutomation.title">Automazione web</h4>
+              <h4><span data-i18n="module.browserAutomation.title">Automazione web</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
@@ -1587,28 +1618,28 @@
           </header>
           <div class="module-directory">
             <a class="module-row" href="../journal-sampling/index.html" data-module-link data-vera-workflow="journal-sampling">
-              <h4 data-i18n="module.sampling.title">Campionamento scritture contabili</h4>
+              <h4><span data-i18n="module.sampling.title">Campionamento scritture contabili</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../check-entries/index.html#journey" data-module-link data-vera-workflow="check-entries">
-              <h4 data-i18n="module.entries.title">Verifica documentale</h4>
+              <h4><span data-i18n="module.entries.title">Verifica documentale</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../invoice-xml/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="invoice-xml">
-              <h4 data-i18n="module.invoiceXml.title">Preparazione fatture XML</h4>
+              <h4><span data-i18n="module.invoiceXml.title">Preparazione fatture XML</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" href="../lipe/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="lipe"><h4 data-i18n="module.lipe.title">LIPE</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" href="../lipe/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="lipe"><h4><span data-i18n="module.lipe.title">LIPE</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" href="../passive-invoice-audit/index.html" data-module-link data-vera-workflow="passive-invoice-audit">
-              <h4 data-i18n="module.passiveAudit.title">Audit delle fatture passive</h4>
+              <h4><span data-i18n="module.passiveAudit.title">Audit delle fatture passive</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../journal-bank-reconciliation/index.html" data-module-link data-vera-workflow="journal-bank-reconciliation">
-              <h4 data-i18n="module.bank.title">Riconciliazione banca-contabilità</h4>
+              <h4><span data-i18n="module.bank.title">Riconciliazione banca-contabilità</span><span class="function-test-indicator" data-test-status="tried" role="img" aria-label="Provata su casi concreti" title="Provata su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../riconciliazione-partite/index.html" data-module-link data-vera-workflow="open-item-reconciliation">
-              <h4 data-i18n="module.reconciliation.title">Riconciliazione partite aperte</h4>
+              <h4><span data-i18n="module.reconciliation.title">Riconciliazione partite aperte</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
@@ -1622,41 +1653,41 @@
           </header>
           <div class="module-directory">
             <a class="module-row" id="sales-plan" href="../sales-plan/index.html" data-module-link data-vera-workflow="sales-plan">
-              <h4 data-i18n="module.plan.title">Preparazione piano vendite</h4>
+              <h4><span data-i18n="module.plan.title">Preparazione piano vendite</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" id="business-valuation" href="../business-valuation/index.html" data-module-link data-vera-workflow="business-valuation"><h4 data-i18n="module.valuation.title">Valutazione d’impresa</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" id="business-valuation" href="../business-valuation/index.html" data-module-link data-vera-workflow="business-valuation"><h4><span data-i18n="module.valuation.title">Valutazione d’impresa</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" id="business-planning" href="../business-planning/index.html" data-module-link data-vera-workflow="business-planning">
-              <h4 data-i18n="module.businessPlanning.title">Preparare un business plan</h4>
+              <h4><span data-i18n="module.businessPlanning.title">Preparare un business plan</span><span class="function-test-indicator" data-test-status="tried" role="img" aria-label="Provata su casi concreti" title="Provata su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" id="variance-analysis" href="../variance-analysis/index.html" data-module-link data-vera-workflow="variance-analysis">
-              <h4 data-i18n="module.variance.title">Analisi scostamenti</h4>
+              <h4><span data-i18n="module.variance.title">Analisi scostamenti</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" href="../rating-legalita/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="rating-legalita"><h4 data-i18n="module.ratingLegalita.title">Rating di legalità</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
-            <a class="module-row" href="../adeguati-assetti/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="adeguati-assetti"><h4 data-i18n="module.assetti.title">Adeguati assetti</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
-            <a class="module-row" id="scissione-guidata" href="../scissione-guidata/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="scissione-guidata"><h4 data-i18n="module.scissione.title">Scissione guidata</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
-            <a class="module-row" id="esg-reporting-assurance" href="../esg-reporting-assurance/index.html" data-module-link data-vera-workflow="esg-reporting-assurance"><h4 data-i18n="module.esg.title">Fascicolo ESG · in sviluppo</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
-            <a class="module-row" id="treasury-forecast" href="../treasury-forecast/index.html" data-module-link data-vera-workflow="treasury-forecast"><h4 data-i18n="module.treasury.title">Budget di tesoreria</h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" href="../rating-legalita/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="rating-legalita"><h4><span data-i18n="module.ratingLegalita.title">Rating di legalità</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" href="../adeguati-assetti/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="adeguati-assetti"><h4><span data-i18n="module.assetti.title">Adeguati assetti</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" id="scissione-guidata" href="../scissione-guidata/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="scissione-guidata"><h4><span data-i18n="module.scissione.title">Scissione guidata</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" id="esg-reporting-assurance" href="../esg-reporting-assurance/index.html" data-module-link data-vera-workflow="esg-reporting-assurance"><h4><span data-i18n="module.esg.title">Fascicolo ESG · in sviluppo</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" id="treasury-forecast" href="../treasury-forecast/index.html" data-module-link data-vera-workflow="treasury-forecast"><h4><span data-i18n="module.treasury.title">Budget di tesoreria</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" id="management-control-pack" href="../management-control-pack/index.html" data-module-link data-vera-workflow="management-control-pack">
-              <h4 data-i18n="module.managementPack.title">Pacchetto controllo di gestione</h4>
+              <h4><span data-i18n="module.managementPack.title">Pacchetto controllo di gestione</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" id="centrale-rischi-review" href="../centrale-rischi-review/index.html" data-module-link data-vera-workflow="centrale-rischi-review">
-              <h4 data-i18n="module.centraleRischi.title">Analisi Centrale Rischi</h4>
+              <h4><span data-i18n="module.centraleRischi.title">Analisi Centrale Rischi</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" id="financial-analysis" href="../financial-analysis/index.html" data-module-link data-vera-workflow="financial-analysis">
-              <h4 data-i18n="module.financialAnalysis.title">Analisi finanziaria e due diligence</h4>
+              <h4><span data-i18n="module.financialAnalysis.title">Analisi finanziaria e due diligence</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../report-builder/index.html" data-module-link data-vera-workflow="report-builder">
-              <h4 data-i18n="module.report.title">Preparazione report finanziario</h4>
+              <h4><span data-i18n="module.report.title">Preparazione report finanziario</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../report-enti-locali/index.html" data-module-link data-jurisdiction-item="it" hidden>
-              <h4>Report finanziario enti locali</h4>
+              <h4>Report finanziario enti locali<span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
@@ -1670,15 +1701,15 @@
           </header>
           <div class="module-directory">
             <a class="module-row" href="../bandi-agevolazioni/index.html" data-module-link data-native-language="it" data-vera-workflow="bandi-agevolazioni" data-jurisdiction-item="it" data-primary-workflow-link="bandi-agevolazioni" hidden>
-              <h4>Bandi e agevolazioni</h4>
+              <h4>Bandi e agevolazioni<span class="function-test-indicator" data-test-status="tried" role="img" aria-label="Provata su casi concreti" title="Provata su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../quesito-legale-fiscale/index.html" data-module-link data-vera-workflow="quesito-legale-fiscale">
-              <h4 data-i18n="module.question.title">Risposta a quesiti legali e fiscali</h4>
+              <h4><span data-i18n="module.question.title">Risposta a quesiti legali e fiscali</span><span class="function-test-indicator" data-test-status="tried" role="img" aria-label="Provata su casi concreti" title="Provata su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../adversarial-opinion/index.html" data-module-link data-vera-assurance-workflow="adversarial-opinion">
-              <h4 data-i18n="module.adversarial.title">Parere contrapposto</h4>
+              <h4><span data-i18n="module.adversarial.title">Parere contrapposto</span><span class="function-test-indicator" data-test-status="tried" role="img" aria-label="Provata su casi concreti" title="Provata su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
@@ -1692,15 +1723,15 @@
           </header>
           <div class="module-directory">
             <a class="module-row" href="../studio-document-format/index.html" data-module-link data-vera-workflow="studio-document-format">
-              <h4 data-i18n="module.studio-format.title">Formato dei documenti dello studio</h4>
+              <h4><span data-i18n="module.studio-format.title">Formato dei documenti dello studio</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" id="professional-communication" href="../comunicazione-professionale/index.html" data-module-link data-vera-workflow="comunicazione-professionale">
-              <h4 data-i18n="module.communication.title">Comunicazione professionale</h4>
+              <h4><span data-i18n="module.communication.title">Comunicazione professionale</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" id="studio-website" href="../presenza-digitale-studio/index.html" data-module-link data-vera-workflow="presenza-digitale-studio">
-              <h4 data-i18n="module.website.title">Sito dello studio</h4>
+              <h4><span data-i18n="module.website.title">Sito dello studio</span><span class="function-test-indicator" data-test-status="tried" role="img" aria-label="Provata su casi concreti" title="Provata su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
@@ -1789,6 +1820,10 @@
   <script>
     const copy = {
       it: {
+        "testing.untried": "Da provare su casi concreti",
+        "testing.tried": "Provata su casi concreti",
+        "testing.repeated": "Provata più volte su casi concreti",
+        "testing.note": "Le prove riguardano casi specifici, non garantiscono ogni possibile utilizzo.",
         "footer.socialLabel": "Profili social di Vera",
         "meta.title": "Vera · Codex per commercialisti",
         "meta.description": "Vera aggiunge a Codex fascicoli cliente, controlli contabili, riconciliazioni, analisi, report, comunicazione e ricerca.",
@@ -2026,6 +2061,10 @@
         "footer.data": "Gestione dei dati"
       },
       en: {
+        "testing.untried": "To be tried on real cases",
+        "testing.tried": "Tried on real cases",
+        "testing.repeated": "Tried repeatedly on real cases",
+        "testing.note": "Trials cover specific cases and do not guarantee every possible use.",
         "footer.socialLabel": "Vera social profiles",
         "meta.title": "Vera · Codex for accountants",
         "meta.description": "Vera adds client files, accounting checks, reconciliations, analysis, reporting, communication, and research to Codex.",
@@ -2263,6 +2302,10 @@
         "footer.data": "Data handling"
       },
       fr: {
+        "testing.untried": "À essayer sur des cas concrets",
+        "testing.tried": "Essayée sur des cas concrets",
+        "testing.repeated": "Essayée plusieurs fois sur des cas concrets",
+        "testing.note": "Les essais portent sur des cas précis et ne garantissent pas tous les usages possibles.",
         "footer.socialLabel": "Profils de Vera sur les réseaux sociaux",
         "meta.title": "Vera · Codex pour les experts-comptables",
         "meta.description": "Vera ajoute à Codex les dossiers clients, les contrôles comptables, les rapprochements, l'analyse, les rapports, la communication et la recherche.",
@@ -2500,6 +2543,10 @@
         "footer.data": "Gestion des données"
       },
       de: {
+        "testing.untried": "An konkreten Fällen zu erproben",
+        "testing.tried": "An konkreten Fällen erprobt",
+        "testing.repeated": "Mehrfach an konkreten Fällen erprobt",
+        "testing.note": "Die Erprobung betrifft bestimmte Fälle und garantiert nicht jede mögliche Anwendung.",
         "footer.socialLabel": "Vera in sozialen Netzwerken",
         "meta.title": "Vera · Codex für Steuerberaterinnen und Steuerberater",
         "meta.description": "Vera ergänzt Codex um Mandantenakten, Buchungsprüfungen, Abstimmungen, Analysen, Berichte, Kommunikation und Recherche.",
@@ -2737,6 +2784,10 @@
         "footer.data": "Datenverarbeitung"
       },
       es: {
+        "testing.untried": "Por probar en casos concretos",
+        "testing.tried": "Probada en casos concretos",
+        "testing.repeated": "Probada varias veces en casos concretos",
+        "testing.note": "Las pruebas abarcan casos específicos y no garantizan todos los usos posibles.",
         "footer.socialLabel": "Perfiles de Vera en redes sociales",
         "meta.title": "Vera · Codex para asesores fiscales y contables",
         "meta.description": "Vera añade a Codex expedientes de clientes, controles contables, conciliaciones, análisis, informes, comunicación e investigación.",
@@ -3048,6 +3099,11 @@
       document.querySelectorAll("[data-i18n]").forEach((node) => {
         const key = node.dataset.i18n;
         if (Object.prototype.hasOwnProperty.call(strings, key)) node.textContent = strings[key];
+      });
+      document.querySelectorAll('.function-test-indicator[role="img"]').forEach((indicator) => {
+        const label = strings[`testing.${indicator.dataset.testStatus}`];
+        indicator.setAttribute("aria-label", label);
+        indicator.title = label;
       });
       document.querySelectorAll("[data-i18n-aria-label]").forEach((node) => {
         const key = node.dataset.i18nAriaLabel;
