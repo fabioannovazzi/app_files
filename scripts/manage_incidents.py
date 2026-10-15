@@ -6,6 +6,7 @@ import argparse
 import json
 import sys
 from pathlib import Path
+from typing import Any
 
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -26,16 +27,28 @@ def main() -> None:
     listing.add_argument("--limit", type=int, default=100)
     show = commands.add_parser("show")
     show.add_argument("incident_id")
+    installation = commands.add_parser("installation")
+    installation.add_argument("installation_id")
+    app = commands.add_parser("app")
+    app.add_argument("app_installation_id")
+    commands.add_parser("registry")
     remedy = commands.add_parser("remedy")
     remedy.add_argument("incident_id")
     remedy.add_argument("--input", type=Path, required=True)
     args = parser.parse_args()
     load_env_from_secrets_file()
     store = IncidentStore(args.sqlite_path)
+    result: dict[str, Any] | list[dict[str, Any]]
     if args.command == "list":
         result = store.queue(args.limit)
     elif args.command == "show":
         result = store.show(args.incident_id)
+    elif args.command == "installation":
+        result = store.installation(args.installation_id)
+    elif args.command == "app":
+        result = store.app_installation(args.app_installation_id)
+    elif args.command == "registry":
+        result = store.registry()
     else:
         value = Remedy.model_validate_json(args.input.read_text(encoding="utf-8"))
         if value.kind == "update":

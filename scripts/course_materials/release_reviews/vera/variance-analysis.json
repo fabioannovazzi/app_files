@@ -93,7 +93,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "7068c6e95ab7dc0f68f25ca51672bd974086e1d97c4d06c8e77dbea09f238785",
+  "course_sha256": "47cacd5f6573711af8da100163fc0ef46daacdf1845033adfdd3b755432164e5",
   "discovery_source_refresh": {
     "reviewed_by": "Codex /root",
     "reviewed_at": "2026-10-01T11:44:13.076890+00:00",
@@ -891,5 +891,55 @@
     "reviewed_at": "2026-10-14",
     "previous_course_sha256": "4f274f0563cbedaf58d51fd4edaf76f3f8abecad9a39495ea9a0e3986437f84e",
     "basis": "Release metadata/source binding after automatic integrity-incident reporting correction. Existing authored lessons, professional methods, inputs and review dispositions remain unchanged. No new learner or customer recovery acceptance claimed."
+  },
+  "incident_capture_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-15",
+    "previous_course_sha256": "7068c6e95ab7dc0f68f25ca51672bd974086e1d97c4d06c8e77dbea09f238785",
+    "source_changes": [
+      {
+        "path": "scripts/check_dependencies.py",
+        "before": "faeea239129331baf68b9e04c430aa867b13aa23a78cdd5e50cce8f527edf5ae",
+        "after": "4b68c6b70dfaf49f11d593117c559c6d24abe34bbaeba8f02722261dfe2bf5b5"
+      },
+      {
+        "path": "scripts/managed_python_runtime.py",
+        "before": "714a18f19a8ed3d8b9257574cf4294d5499e7bd209c3b2b9338dec2daeff04e2",
+        "after": "7955f763c39a8d74959791f3f6abbe877f9c57e59318d803de7a79a4843017f6"
+      },
+      {
+        "path": "scripts/operational_incidents.py",
+        "before": "739b9390ccdd77ead53fdc6536217af4a50e3f16f9b27fa8002cecaae2c06147",
+        "after": "9ddd89ed0c4f8e715c13ec513af309a3f3397a2c4a43a8ff21227753f151a55d"
+      },
+      {
+        "path": "scripts/verified_execution.py",
+        "before": "5a218a5bfe7920a201c283d218988f5a105cc9ed436bbc26492ca517891bd730",
+        "after": "8817cdb519cce486adf79d4f8feaf7bc3d4f89a810361855da823c6d9a852c31"
+      }
+    ],
+    "content_review": "Complete course comparison confirms every field except source bindings is unchanged: localized teaching, fictional inputs, checkpoints, practice, timing and execution definitions. Existing editorial and artifact reviews remain historical.",
+    "source_review": "Reviewed the technical reporting changes in these four runtime helpers: package-relative structured errors and retained stderr, explicit capture gaps, operation-bound retries and host verification before recovery. Component dependency checks use the same path; an actual component-selector subprocess regression ruled out top-level recursion. No professional calculation or teaching output was changed.",
+    "limits": "Bounded source review only. No fresh learner, voice, installed-host or professional acceptance is asserted. Current complete native teaching CI remains required."
+  },
+  "native_identity_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-15",
+    "previous_course_sha256": "afec2d27dc26c8ce9fc9788dbb957fefef87d28428dc6d006da91c0254c37ba2",
+    "changed_sources": [
+      {
+        "path": "scripts/operational_incidents.py",
+        "before": "9ddd89ed0c4f8e715c13ec513af309a3f3397a2c4a43a8ff21227753f151a55d",
+        "after": "702b97c78e3387efdae0874364817c5f46c1c81bf0cf117c341e2f475d341973"
+      }
+    ],
+    "scope": "Compared every authored field and input definition: unchanged outside source bindings. Reviewed the incident helper change: persistent native host proof, native broker observations separated from guest versions, and best-effort identity linking without blocking original reports. No professional algorithm, lesson content or artifact review changed. Historical editorial/output judgments are retained; fresh native teaching CI remains required."
+  },
+  "root_helper_capture_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-15",
+    "previous_course_sha256": "ca3e9440c94eaa8ceabc7cdfff9182676a4920a780e64a9a90aa3c916ece9f38",
+    "scope": "Only source bindings changed. Root helpers launched without --module now use the same structured failure, retry and original-task verification path. Built-in root recovery omits a nonexistent component selector. Authored lessons, prepared inputs and professional algorithms are unchanged; prior editorial/artifact judgments remain historical and fresh teaching CI is required.",
+    "validation": "161 runtime/launcher/recovery regressions passed; real argument-failure-to-original-task recovery case covers component and root paths."
   }
 }

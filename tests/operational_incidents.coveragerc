@@ -1,4 +1,5 @@
 [run]
+patch = subprocess
 source =
     modules/operational_incidents
     plugins/vera/scripts
@@ -8,3 +9,4 @@ include =
     modules/operational_incidents/*
     plugins/vera/scripts/operational_incidents.py
     plugins/vera/scripts/verified_execution.py
+    plugins/vera/scripts/technical_runner.py

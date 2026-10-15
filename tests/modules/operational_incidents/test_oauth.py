@@ -416,6 +416,7 @@ def test_saved_connector_links_local_reports_and_recovers_only_original_member(h
         "remedy_revision": 1,
         "status": "recovered",
         "execution_succeeded": True,
+        "original_task_verified": True,
     }
 
     rejected = rpc(

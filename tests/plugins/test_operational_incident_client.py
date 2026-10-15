@@ -11,10 +11,155 @@ from uuid import uuid4
 
 import pytest
 
-from modules.operational_incidents.contracts import Credentials, Outcome, Report
+from modules.operational_incidents.contracts import (
+    Credentials,
+    DeviceCredentials,
+    Outcome,
+    RecoveryEvent,
+    Report,
+    ReporterStatus,
+)
 from modules.operational_incidents.store import IncidentStore
 
 ROOT = Path(__file__).resolve().parents[2]
+
+
+@pytest.mark.parametrize("component", ["deep-research-validator", None])
+def test_real_argument_failure_through_registry_retry_and_original_task_recovery(
+    tmp_path,
+    monkeypatch,
+    component,
+):
+    """A real failure must be diagnosable before its exact successful rerun closes."""
+    import sys
+    from types import SimpleNamespace
+
+    module, store, _ = client(tmp_path, monkeypatch)
+    monkeypatch.setattr(module.platform, "python_version", lambda: "3.13.4")
+    monkeypatch.setitem(sys.modules, "operational_incidents", module)
+    spec = importlib.util.spec_from_file_location(
+        "evidence_pipeline_launcher",
+        ROOT / "plugins/vera/scripts/managed_python_runtime.py",
+    )
+    launcher = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(launcher)
+    (tmp_path / "scripts").mkdir()
+    (tmp_path / "scripts/technical_runner.py").write_bytes(
+        (ROOT / "plugins/vera/scripts/technical_runner.py").read_bytes()
+    )
+    helper = tmp_path / "helper.py"
+    helper.write_text(
+        "import argparse\np=argparse.ArgumentParser()\np.add_argument('--required',required=True)\np.parse_args()\n"
+    )
+    monkeypatch.setattr(launcher, "prepare_execution_root", lambda *_args: tmp_path)
+    monkeypatch.setattr(
+        launcher._IMPLEMENTATION,
+        "select_runtime",
+        lambda *_args: SimpleNamespace(requirement_root=tmp_path),
+    )
+    monkeypatch.setattr(
+        launcher._IMPLEMENTATION,
+        "ensure_runtime",
+        lambda *_args, **_kwargs: (True, tmp_path, "ready"),
+    )
+    monkeypatch.setattr(
+        launcher._IMPLEMENTATION, "runtime_python", lambda *_args: Path(sys.executable)
+    )
+    monkeypatch.setattr(
+        launcher._IMPLEMENTATION, "runtime_environment", lambda *_args: None
+    )
+    command = (["--module", component] if component else []) + ["run", "helper.py"]
+
+    assert launcher.main(command) == 2
+    original = store.queue()[0]
+    report = original["reports"][0]
+    assert report["workflow"] == (component or "vera-core")
+    assert report["runtime_version"] == "3.13.4"
+    assert report["worker_runtime_version"] == sys.version.split()[0]
+    assert report["diagnostics"][0]["message"] == "Missing required options: --required"
+    assert original["reporting_summary"]["evidence_received"] == 1
+    module.check_incidents(recover=False)
+    helper.write_text(
+        "import argparse\np=argparse.ArgumentParser()\np.add_argument('--required')\np.parse_args()\n"
+    )
+
+    assert launcher.main(command) == 0
+    ready = store.show(original["incident_id"])
+    assert ready["status"] == "open"
+    assert [event["kind"] for event in ready["recovery_events"]] == [
+        "retry-started",
+        "retry-succeeded",
+    ]
+    verified = module.verify_original_task(
+        {
+            "incident_id": original["incident_id"],
+            "report_id": report["report_id"],
+            "remedy_revision": 1,
+            "operation_id": report["operation_id"],
+            "execution_succeeded": True,
+            "original_task_verified": True,
+        }
+    )
+
+    assert verified["reporting"] == "delivered"
+    recovered = store.show(original["incident_id"])
+    assert recovered["status"] == "recovered"
+    assert recovered["outcomes"][0]["report_id"] == report["report_id"]
+    assert recovered["outcomes"][0]["operation_id"] == report["operation_id"]
+
+
+def test_execution_binding_uses_existing_receipt_without_disclosing_its_fields(
+    tmp_path, monkeypatch
+):
+    module, _, _ = client(tmp_path, monkeypatch)
+    context = tmp_path / "context.json"
+    context.write_text(
+        json.dumps(
+            {
+                "run_id": "PRIVATE_RUN",
+                "input_manifest_sha256": "a" * 64,
+                "label": "PRIVATE_CASE",
+            }
+        )
+    )
+    arguments = ["run", "helper.py", "--client-engagement", str(context)]
+
+    first = module.execution_identity("deep-research-validator", arguments)
+    same = module.execution_identity("deep-research-validator", arguments)
+    context.write_text(
+        json.dumps({"run_id": "PRIVATE_RUN", "input_manifest_sha256": "b" * 64})
+    )
+    changed = module.execution_identity("deep-research-validator", arguments)
+
+    assert first == same
+    assert changed["operation_id"] != first["operation_id"]
+    assert changed["input_binding"] != first["input_binding"]
+    assert "PRIVATE" not in json.dumps(first)
+    assert "a" * 64 != first["input_binding"]
+
+
+def test_resume_rejects_a_different_original_input_receipt(tmp_path, monkeypatch):
+    module, _, _ = client(tmp_path, monkeypatch)
+    context = tmp_path / "context.json"
+    context.write_text(
+        json.dumps({"run_id": "private-run", "input_manifest_sha256": "a" * 64})
+    )
+    arguments = ["run", "helper.py", "--client-engagement", str(context)]
+    execution = module.execution_identity("deep-research-validator", arguments)
+    receipt = module.report_failure(
+        "deep-research-validator",
+        "helper:helper.py",
+        "Observed technical failure",
+        execution=execution,
+    )
+    context.write_text(
+        json.dumps({"run_id": "private-run", "input_manifest_sha256": "b" * 64})
+    )
+
+    with pytest.raises(ValueError, match="input receipt binding has changed"):
+        module.execution_identity(
+            "deep-research-validator", arguments, receipt["report"]["report_id"]
+        )
 
 
 def client(tmp_path, monkeypatch):
@@ -36,15 +181,92 @@ def client(tmp_path, monkeypatch):
     def post(operation, payload):
         credentials = Credentials.model_validate(payload["credentials"])
         if operation == "register":
-            return store.register(credentials)
+            return store.register(
+                credentials,
+                (
+                    DeviceCredentials.model_validate(payload["device"])
+                    if payload.get("device")
+                    else None
+                ),
+                (
+                    ReporterStatus.model_validate(payload["native_status"])
+                    if payload.get("native_status")
+                    else None
+                ),
+            )
         if operation == "report":
             return store.report(credentials, Report.model_validate(payload["report"]))
         if operation == "status":
             return store.status(credentials)
+        if operation == "progress":
+            return store.progress(
+                credentials, RecoveryEvent.model_validate(payload["progress"])
+            )
         return store.outcome(credentials, Outcome.model_validate(payload["outcome"]))
 
     monkeypatch.setattr(module, "_post", post)
     return module, store, post
+
+
+def test_fresh_native_cowork_instances_keep_one_host_and_app_identity(
+    tmp_path, monkeypatch
+):
+    monkeypatch.setenv("MPARANZA_INCIDENT_DEVICE_DIR", str(tmp_path / "native"))
+    monkeypatch.setenv("MPARANZA_INCIDENT_HOST", "cowork")
+    first, store, transport = client(tmp_path / "one", monkeypatch)
+    monkeypatch.setattr(first.platform, "system", lambda: "Darwin")
+    one = first.report_failure(
+        "journal-sampling", "execution-startup", "synthetic failure"
+    )
+    first_context = first.local_context()
+    second, _, _ = client(tmp_path / "two", monkeypatch)
+    monkeypatch.setattr(second, "_post", transport)
+    second.report_failure("journal-sampling", "execution-startup", "synthetic failure")
+    second_context = second.local_context()
+
+    assert first_context["credentials"] != second_context["credentials"]
+    assert first_context["host_binding"] == second_context["host_binding"]
+    assert store.registry()["reporting_instances"] == 2
+    assert store.registry()["linked_app_installations"] == 1
+    assert (
+        store.show(one["incident_id"])["reporting_summary"]["linked_host_devices"] == 1
+    )
+    app = store.app_installation(first_context["host_binding"]["app_installation_id"])
+    assert len(app["native_broker_sessions"]) == 2
+    assert len(app["reports"]) == 2
+    identity = json.loads((tmp_path / "native/identity.json").read_text())
+    assert identity["device_key"] not in json.dumps(first_context)
+
+
+def test_cowork_guest_never_invents_a_native_host_identity(tmp_path, monkeypatch):
+    module, store, _ = client(tmp_path, monkeypatch)
+    monkeypatch.setenv("MPARANZA_INCIDENT_HOST", "cowork")
+    monkeypatch.setattr(module.platform, "system", lambda: "Linux")
+
+    module.report_failure("journal-sampling", "execution-startup", "synthetic failure")
+
+    assert module.host_identity()["binding"] == "unlinked-guest"
+    assert store.registry()["linked_host_devices"] == 0
+    assert module.local_context()["host_binding"] is None
+
+
+def test_broken_host_identity_cannot_block_the_original_failure_report(
+    tmp_path, monkeypatch
+):
+    module, store, _ = client(tmp_path, monkeypatch)
+    monkeypatch.setattr(
+        module,
+        "_host_credentials",
+        lambda: (_ for _ in ()).throw(ValueError("invalid identity")),
+    )
+
+    result = module.report_failure(
+        "journal-sampling", "execution-startup", "synthetic failure"
+    )
+
+    assert result["reporting"] == "delivered"
+    assert len(store.queue()) == 1
+    assert store.registry()["linked_host_devices"] == 0
 
 
 def test_failure_delivers_automatically_and_persists_receipt(tmp_path, monkeypatch):
@@ -60,7 +282,7 @@ def test_failure_delivers_automatically_and_persists_receipt(tmp_path, monkeypat
     assert saved["receipts"][0]["incident_id"] == store.queue()[0]["incident_id"]
 
 
-def queued_connector_report(tmp_path, monkeypatch):
+def queued_connector_report(tmp_path, monkeypatch, workflow="journal-sampling"):
     module, store, _ = client(tmp_path, monkeypatch)
 
     def offline(*_args):
@@ -68,7 +290,7 @@ def queued_connector_report(tmp_path, monkeypatch):
 
     monkeypatch.setattr(module, "_post", offline)
     queued = module.report_failure(
-        "journal-sampling", "dependency-setup", "synthetic setup failure"
+        workflow, "dependency-setup", "synthetic setup failure"
     )
     own = Credentials.model_validate(module.local_context()["credentials"])
     store.register(own)
@@ -136,12 +358,15 @@ def test_blocked_direct_poll_returns_independent_route_and_preserves_queue(
     assert module.local_context()["credentials"] == own.model_dump(mode="json")
 
 
+@pytest.mark.parametrize("workflow", ["journal-sampling", "vera-core"])
 def test_remote_status_runs_fixed_retry_once_offline_and_retains_private_error_for_review(
-    tmp_path, monkeypatch
+    tmp_path, monkeypatch, workflow
 ):
     from modules.operational_incidents.contracts import Remedy
 
-    module, store, own, queued, receipt = queued_connector_report(tmp_path, monkeypatch)
+    module, store, own, queued, receipt = queued_connector_report(
+        tmp_path, monkeypatch, workflow
+    )
     module.acknowledge_delivery(receipt)
     store.remedy(
         receipt["incident_id"],
@@ -175,7 +400,7 @@ def test_remote_status_runs_fixed_retry_once_offline_and_retains_private_error_f
     repeated = module.check_incidents(remote_status=remote)
 
     assert len(calls) == 1
-    assert calls[0][-2:] == ["--module", "journal-sampling"]
+    assert calls[0][2:] == ([] if workflow == "vera-core" else ["--module", workflow])
     assert result["queued"] == repeated["queued"] == 1
     state = module._read()
     assert state["outbox"][0]["payload"]["outcome"]["execution_succeeded"] is False
@@ -825,6 +1050,10 @@ def test_real_failed_helper_retains_error_chain_without_uploading_raw_stderr(
     monkeypatch.setattr(
         launcher._IMPLEMENTATION, "runtime_environment", lambda *args: None
     )
+    (tmp_path / "scripts").mkdir()
+    (tmp_path / "scripts/technical_runner.py").write_bytes(
+        (ROOT / "plugins/vera/scripts/technical_runner.py").read_bytes()
+    )
 
     result = launcher.main(["--module", "bandi-agevolazioni", "run", "helper.py"])
 
@@ -845,7 +1074,9 @@ def test_real_failed_helper_retains_error_chain_without_uploading_raw_stderr(
     assert "PROFESSIONAL_STDOUT_SENTINEL" not in raw
     transmitted = json.dumps(store.queue())
     assert "PRIVATE_CASE_VALUE_SENTINEL" not in transmitted
-    assert "synthetic transport failed" not in transmitted
+    assert "synthetic transport failed" in transmitted
+    assert "synthetic underlying cause" in transmitted
+    assert saved["report"]["capture_state"] == "complete"
     assert (
         saved["report"]["report_id"]
         == store.status(
@@ -986,6 +1217,7 @@ def test_cached_recorded_recovery_clears_only_matching_readiness_hint(
             remedy_revision=1,
             status="recovered",
             execution_succeeded=True,
+            original_task_verified=True,
         ),
     )
     remote = cached_connector_status(store, own)

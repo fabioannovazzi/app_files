@@ -29,11 +29,11 @@
   "sources": [
     {
       "path": "scripts/check_dependencies.py",
-      "sha256": "faeea239129331baf68b9e04c430aa867b13aa23a78cdd5e50cce8f527edf5ae"
+      "sha256": "4b68c6b70dfaf49f11d593117c559c6d24abe34bbaeba8f02722261dfe2bf5b5"
     },
     {
       "path": "scripts/managed_python_runtime.py",
-      "sha256": "714a18f19a8ed3d8b9257574cf4294d5499e7bd209c3b2b9338dec2daeff04e2"
+      "sha256": "4c818a1c172f02b07625ef26a6cbe12672e6b52844948b0ee7fefce325a58c69"
     },
     {
       "path": "scripts/model_data_report.py",
@@ -45,7 +45,7 @@
     },
     {
       "path": "scripts/operational_incidents.py",
-      "sha256": "0fbb09e44c16de819e0531da3ad7a836ac92d69380f10d6dce4ca9674e5019de"
+      "sha256": "7845d2f4669a5f7cfe7e8bfcb99ca5881189f8fde71b87401cdd2f3d1d1bc69f"
     },
     {
       "path": "scripts/studio_work.py",
@@ -53,7 +53,7 @@
     },
     {
       "path": "scripts/verified_execution.py",
-      "sha256": "5a218a5bfe7920a201c283d218988f5a105cc9ed436bbc26492ca517891bd730"
+      "sha256": "8817cdb519cce486adf79d4f8feaf7bc3d4f89a810361855da823c6d9a852c31"
     },
     {
       "path": "skills/mparanza-organizzazione-lavoro/SKILL.md",
@@ -432,5 +432,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "7d9c80945e7ccde9f9a89d1eb46cae366b02e96995e3938c4cdb0804992cc4d5"
+  "canonical_course_sha256": "a76d47f0cb3a3ed1867cf1c12ec003091aa49b6f147d1248a6ce2eb1c7fca874"
 }

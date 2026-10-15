@@ -421,6 +421,15 @@
         "./mcp/research-sources.cjs",
         "--stdio"
       ]
+    },
+    "veraIncidentHost": {
+      "title": "Vera · Identità tecnica locale",
+      "description": "Bind an existing incident reporter to the native host without client files or device-key disclosure.",
+      "cwd": ".",
+      "command": "node",
+      "args": [
+        "./scripts/incident_host_mcp.cjs"
+      ]
     }
   }
 }

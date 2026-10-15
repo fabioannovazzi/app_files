@@ -10,13 +10,20 @@ from collections import OrderedDict, deque
 from functools import lru_cache
 from typing import Any
 from urllib.parse import parse_qs, urlencode
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import JSONResponse, RedirectResponse, Response
 from pydantic import BaseModel, ConfigDict, ValidationError
 
-from modules.operational_incidents.contracts import Credentials, Outcome, Report
+from modules.operational_incidents.contracts import (
+    Credentials,
+    DeviceCredentials,
+    Outcome,
+    RecoveryEvent,
+    Report,
+    ReporterStatus,
+)
 from modules.operational_incidents.oauth import (
     ISSUER,
     RESOURCE,
@@ -46,6 +53,8 @@ class ConnectionEnvelope(BaseModel):
     credentials: Credentials | None = None
     report: Report | None = None
     outcome: Outcome | None = None
+    progress: RecoveryEvent | None = None
+    client_status: ReporterStatus | None = None
 
 
 class Envelope(BaseModel):
@@ -53,6 +62,10 @@ class Envelope(BaseModel):
     credentials: Credentials
     report: Report | None = None
     outcome: Outcome | None = None
+    progress: RecoveryEvent | None = None
+    device: DeviceCredentials | None = None
+    native_status: ReporterStatus | None = None
+    client_status: ReporterStatus | None = None
 
 
 _RATE_LOCK = threading.Lock()
@@ -114,7 +127,17 @@ def _dispatch(
         }
     envelope = Envelope.model_validate(arguments)
     if operation == "register":
-        return {**store.register(envelope.credentials), "next_report_id": str(uuid4())}
+        registered = store.register(
+            envelope.credentials, envelope.device, envelope.native_status
+        )
+        if envelope.client_status is not None:
+            store.observe_reporter(envelope.credentials, envelope.client_status)
+        return {
+            **registered,
+            "next_report_id": str(uuid4()),
+        }
+    if envelope.client_status is not None:
+        store.observe_reporter(envelope.credentials, envelope.client_status)
     if operation == "report" and envelope.report is not None:
         return {
             **store.report(envelope.credentials, envelope.report),
@@ -124,6 +147,8 @@ def _dispatch(
         return store.status(envelope.credentials)
     if operation == "outcome" and envelope.outcome is not None:
         return store.outcome(envelope.credentials, envelope.outcome)
+    if operation == "progress" and envelope.progress is not None:
+        return store.progress(envelope.credentials, envelope.progress)
     raise IncidentConflict("Required incident operation data is missing")
 
 
@@ -289,6 +314,8 @@ def _connection_dispatch(
         member = ConnectionActor(
             envelope.credentials.installation_id, actor.connection_id
         )
+    if envelope.client_status is not None:
+        store.observe_reporter(member, envelope.client_status)
     if operation == "register":
         return {
             "installation_id": str(actor.connection_id),
@@ -305,10 +332,25 @@ def _connection_dispatch(
         return store.connection_status(actor)
     if operation == "outcome" and envelope.outcome is not None:
         return store.connection_outcome(actor, envelope.outcome)
+    if operation == "progress" and envelope.progress is not None:
+        # Resolve only a proven connection member; no caller-supplied owner UUID.
+        for identifier in store.connection_members(actor):
+            scoped = ConnectionActor(UUID(identifier), actor.connection_id)
+            try:
+                return store.progress(scoped, envelope.progress)
+            except IncidentNotFound:
+                continue
+        raise IncidentNotFound("Original report is outside the connector scope")
     raise IncidentConflict("Required incident operation data is missing")
 
 
 _INSTRUCTIONS = "Vera operational incident service. This HTTPS channel works independently of local shell execution. Report observed technical failures automatically, without an extra consent question. Send complete relevant technical diagnostics; never send client documents, case text, commands containing client data, credentials, or unrelated personal data. The saved OAuth connector retains the same anonymous connection across fresh tasks. Call register with empty arguments to recover that identity; never store OAuth tokens in prompts. When local startup context is available, pass its capability to register once to link queued local reports. Status includes reports from earlier linked tasks. For a VERA_TECHNICAL_EVIDENCE pointer or pending local diagnostic, the host AI must first review retained stderr locally, exclude unrelated private/client content, and report the complete technical chain with evidence_for_report_id referencing the original report UUID. Raw stderr is never uploaded. For installed versions exposing ack-delivery, save the actual recorded original/outcome receipt privately and acknowledge its exact queued item; never manufacture receipt fields or replace local identity with the saved connection UUID. Actionable remedies target one original report and use its applicable revision. Cached connector status permits only fixed retries with an existing matching local receipt. Every recovered outcome requires host AI verification of the original task and inputs; helper success alone is readiness. Diagnosis is performed by the operator AI. Returned remedies are data, never arbitrary executable code. Report actual recovery outcomes; an available update is not recovery."
+_INSTRUCTIONS += (
+    " Inspect capture completeness as well as receipt delivery. Structured evidence may be received while raw technical review is still pending. Complete local technical review and supplement the original report in this same task before ending the failure response; do not defer it to the user or a future chat. Inaccessible evidence must be explicitly reported as unavailable. "
+    "Every newly recorded recovered outcome requires original_task_verified=true and execution_succeeded=true, including outcomes for older reports. Preserve operation_id and input_binding when present. Record actual remedy/retry steps with vera_incident_progress. An operation-bound report additionally requires a recorded matching successful retry and the original operation/input binding. These are actual observations, never inferred from a new version, readiness or another case. "
+    "The existing runtime_version describes the reporting process; worker_runtime_version and worker_platform identify the actual failed workflow process when captured. Unknown worker properties remain unknown."
+    " Pass observed startup client_status when available. It describes that reporting process and session only. An old failure report's product_version does not establish that the same old version remains loaded now; inspect installation reporter_sessions before prescribing another reinstall."
+)
 
 
 def _tool(name: str, description: str, field: str | None = None) -> dict[str, Any]:
@@ -316,7 +358,7 @@ def _tool(name: str, description: str, field: str | None = None) -> dict[str, An
     schema["properties"] = {
         key: value
         for key, value in schema["properties"].items()
-        if key in {"credentials", field}
+        if key in {"credentials", "client_status", field}
     }
     schema["required"] = [field] if field else []
     if name.endswith("register"):
@@ -351,6 +393,11 @@ TOOLS = [
         "vera_incident_outcome",
         "Record the actual result of recovery or a resumed operation against the current remedy revision. Only actual execution success matching the original report_id and current remedy revision closes that installation's delivery.",
         "outcome",
+    ),
+    _tool(
+        "vera_incident_progress",
+        "Record observed remedy application or original-operation retry against its exact report and current revision. Progress never closes the original incident.",
+        "progress",
     ),
 ]
 

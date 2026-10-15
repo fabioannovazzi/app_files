@@ -44,6 +44,10 @@ def installed_fixture(tmp_path, product, monkeypatch):
             scripts / "managed_ocr_runtime.py",
         )
     if product == "vera":
+        monkeypatch.setenv("HTTPS_PROXY", "http://127.0.0.1:9")
+        monkeypatch.setenv("https_proxy", "http://127.0.0.1:9")
+        monkeypatch.setenv("NO_PROXY", "localhost,127.0.0.1")
+        monkeypatch.setenv("no_proxy", "localhost,127.0.0.1")
         monkeypatch.setenv(
             "MPARANZA_INCIDENT_STATE_DIR", str(tmp_path / "incident-state")
         )
@@ -54,6 +58,10 @@ def installed_fixture(tmp_path, product, monkeypatch):
         shutil.copyfile(
             ROOT / "plugins/vera/scripts/verified_execution.py",
             scripts / "verified_execution.py",
+        )
+        shutil.copyfile(
+            ROOT / "plugins/vera/scripts/technical_runner.py",
+            scripts / "technical_runner.py",
         )
     component = "reporting-engine" if product == "clara" else "studio-archive"
     (root / "components.json").write_text(json.dumps({"plugins": [component]}))

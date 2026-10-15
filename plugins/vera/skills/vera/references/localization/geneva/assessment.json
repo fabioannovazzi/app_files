@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "284c2e2b036bc825ee28ea033131c474f804ec558fd644a427871be07d110285",
+  "catalogue_fingerprint": "6a9f2800c40c5dd497ddb462290222364ec7f1eb7583b86dca6fa443d6cf155e",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -1799,5 +1799,10 @@
     "version": "0.1.390",
     "previous_catalogue_fingerprint": "e52bce0caa807333d0dfb6eebed845f9e68b38a4ae7161a029110494d477a54a",
     "scope": "All 55 entrypoints and existing jurisdiction judgments remain unchanged from the 0.1.389 source repair. Mandatory source and final-archive YAML validation covers all product builders; no new jurisdiction or installed-host acceptance is claimed."
+  },
+  "incident_reporting_release_binding": {
+    "version": "0.1.391",
+    "date": "2026-10-15",
+    "scope": "Canonical version and manifest hash only. Exact full skill entrypoint inventory and bytes are unchanged from the prior catalogue. Existing jurisdiction judgments are retained; no new Geneva professional acceptance is asserted."
   }
 }

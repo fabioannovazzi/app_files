@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import importlib.util
 import json
 import os
@@ -29,11 +30,25 @@ def load_runtime() -> Any:
 
 
 @pytest.mark.parametrize("product", ["clara", "lucia"])
-def test_products_share_the_same_runtime_implementation(product: str) -> None:
+def test_products_share_the_same_runtime_policy_outside_product_cli(
+    product: str,
+) -> None:
     product_runtime = (
         ROOT / "plugins" / product / "scripts" / "_managed_python_runtime.py"
     )
-    assert product_runtime.read_bytes() == RUNTIME_SOURCE.read_bytes()
+
+    # Vera's CLI adds optional source-bound diagnostic capture. Runtime selection,
+    # recipes, provisioning, locks and leases must still share the exact policy.
+    def policy(path: Path) -> str:
+        tree = ast.parse(path.read_text())
+        tree.body = [
+            node
+            for node in tree.body
+            if not (isinstance(node, ast.FunctionDef) and node.name == "main")
+        ]
+        return ast.dump(tree)
+
+    assert policy(product_runtime) == policy(RUNTIME_SOURCE)
 
 
 @pytest.mark.parametrize("payload", [[], None, {}, {"generation": "../outside"}])
@@ -112,6 +127,9 @@ def make_packaged_component(root: Path) -> Path:
     (scripts / "managed_python_runtime.py").write_bytes(VERA_MANAGER.read_bytes())
     (scripts / "verified_execution.py").write_bytes(
         (VERA_MANAGER.parent / "verified_execution.py").read_bytes()
+    )
+    (scripts / "technical_runner.py").write_bytes(
+        (VERA_MANAGER.parent / "technical_runner.py").read_bytes()
     )
     (scripts / "_managed_python_runtime.py").write_bytes(RUNTIME_SOURCE.read_bytes())
     (scripts / "_shared_python_runtime.py").write_bytes(
@@ -714,6 +732,13 @@ def test_managed_launcher_imports_ready_component_target(
     environment = dict(os.environ)
     environment["PLUGIN_DATA"] = str(data_dir)
     environment["MPARANZA_INCIDENT_STATE_DIR"] = str(tmp_path / "incidents")
+    # A broken fixture must retain its local evidence without contacting production.
+    environment.update(
+        HTTPS_PROXY="http://127.0.0.1:9",
+        https_proxy="http://127.0.0.1:9",
+        NO_PROXY="localhost,127.0.0.1",
+        no_proxy="localhost,127.0.0.1",
+    )
     (plugin_root / "scripts/operational_incidents.py").write_bytes(
         (ROOT / "plugins/vera/scripts/operational_incidents.py").read_bytes()
     )
@@ -1364,6 +1389,8 @@ def _load_vera_manager(monkeypatch: pytest.MonkeyPatch) -> Any:
             report_failure=lambda *args, **kwargs: {"reporting": "test-isolated"},
             record_success=lambda *args, **kwargs: None,
             retain_diagnostic=lambda path, receipt: path,
+            execution_identity=lambda *args, **kwargs: {},
+            record_execution_progress=lambda *args, **kwargs: None,
         ),
     )
     spec = importlib.util.spec_from_file_location(

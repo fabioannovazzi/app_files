@@ -30,12 +30,12 @@
     {
       "path": "scripts/check_dependencies.py",
       "repository_path": "plugins/vera/scripts/check_dependencies.py",
-      "sha256": "faeea239129331baf68b9e04c430aa867b13aa23a78cdd5e50cce8f527edf5ae"
+      "sha256": "4b68c6b70dfaf49f11d593117c559c6d24abe34bbaeba8f02722261dfe2bf5b5"
     },
     {
       "path": "scripts/managed_python_runtime.py",
       "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
-      "sha256": "714a18f19a8ed3d8b9257574cf4294d5499e7bd209c3b2b9338dec2daeff04e2"
+      "sha256": "4c818a1c172f02b07625ef26a6cbe12672e6b52844948b0ee7fefce325a58c69"
     },
     {
       "path": "scripts/model_data_report.py",
@@ -50,7 +50,7 @@
     {
       "path": "scripts/operational_incidents.py",
       "repository_path": "plugins/vera/scripts/operational_incidents.py",
-      "sha256": "739b9390ccdd77ead53fdc6536217af4a50e3f16f9b27fa8002cecaae2c06147"
+      "sha256": "4f677e0d846326d688e6b0b537756636550a9f451fdc8512962b8015445460dc"
     },
     {
       "path": "scripts/studio_work.py",
@@ -60,7 +60,7 @@
     {
       "path": "scripts/verified_execution.py",
       "repository_path": "plugins/vera/scripts/verified_execution.py",
-      "sha256": "5a218a5bfe7920a201c283d218988f5a105cc9ed436bbc26492ca517891bd730"
+      "sha256": "8817cdb519cce486adf79d4f8feaf7bc3d4f89a810361855da823c6d9a852c31"
     },
     {
       "path": "skills/organizzazione-lavoro/SKILL.md",

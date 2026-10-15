@@ -288,7 +288,13 @@ class InstallationContentMismatch(ValueError):
 
 
 def report_preparation_failure(
-    root: Path, module: str | None, error: Exception
+    root: Path,
+    module: str | None,
+    error: Exception,
+    *,
+    stage: str = "installation-preparation",
+    technical_code: str | None = None,
+    technical_type: str | None = None,
 ) -> None:
     """Report through independently index-verified code while keeping work blocked.
 
@@ -320,7 +326,12 @@ def report_preparation_failure(
         if _read_regular(root / MANIFEST)[0] != manifest:
             raise ValueError("Incident reporting index changed during verification")
         detail = "Installed Vera failed its installation preparation check."
+        complete = technical_code is not None
+        if technical_code is not None:
+            detail = f"Vera could not start the published helper: {technical_type or type(error).__name__}."
         if isinstance(error, InstallationContentMismatch):
+            technical_code = "installation.content-mismatch"
+            complete = True
             detail = (
                 f"Installation content mismatch: {error.name}; "
                 f"expected SHA-256={error.expected}; observed SHA-256={error.observed}."
@@ -354,11 +365,25 @@ def report_preparation_failure(
                 input=json.dumps(
                     {
                         "workflow": module or "unknown",
-                        "stage": "installation-preparation",
+                        "stage": stage,
                         "message": detail,
                         "error_type": type(error).__name__,
                         "exit_code": 1,
                         "errno": getattr(error, "errno", None),
+                        "capture_state": "complete" if complete else "unavailable",
+                        "technical_diagnostics": [
+                            {
+                                "component": "vera-runtime",
+                                "stage": stage,
+                                "error_type": technical_type or type(error).__name__,
+                                "error_code": technical_code
+                                or "reporting.preflight-evidence-missing",
+                                "message": detail,
+                                "exit_code": 1,
+                                "errno": getattr(error, "errno", None),
+                                "evidence_source": "runtime-exception",
+                            }
+                        ],
                     }
                 ),
                 text=True,

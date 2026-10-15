@@ -11,7 +11,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from managed_python_runtime import ensure_runtime, runtime_environment, runtime_python
+from managed_python_runtime import ensure_runtime, run_verified_helper
 from verified_execution import prepare_execution_root, report_preparation_failure
 
 __all__ = ["main"]
@@ -57,6 +57,14 @@ def main(argv: list[str] | None = None) -> int:
     missing = [name for name in COMPONENTS if not _component_root(name).is_dir()]
     if missing:
         LOGGER.error("Missing Vera modules: %s", ", ".join(missing))
+        report_preparation_failure(
+            PLUGIN_ROOT,
+            args.module,
+            ValueError("Missing packaged Vera components"),
+            stage="dependency-setup",
+            technical_code="runtime.missing-components",
+            technical_type="MissingComponents",
+        )
         return 1
     if args.module is None:
         LOGGER.info("All %s Vera modules are available.", len(COMPONENTS))
@@ -76,6 +84,14 @@ def main(argv: list[str] | None = None) -> int:
     checker = component_root / "scripts" / "check_dependencies.py"
     if not checker.exists():
         LOGGER.error("Dependency checker not found for %s: %s", args.module, checker)
+        report_preparation_failure(
+            PLUGIN_ROOT,
+            args.module,
+            ValueError("Published dependency checker is missing"),
+            stage="dependency-setup",
+            technical_code="runtime.missing-checker",
+            technical_type="MissingDependencyChecker",
+        )
         return 1
     delegated_args = list(remaining)
     for requirement in args.requirements or []:
@@ -107,16 +123,34 @@ def main(argv: list[str] | None = None) -> int:
         from operational_incidents import report_failure
 
         if not os.environ.get("MPARANZA_INCIDENT_RECOVERY_ACTIVE"):
-            report_failure(args.module, "dependency-setup", detail)
+            report_failure(
+                args.module,
+                "dependency-setup",
+                detail,
+                capture_state="complete",
+                technical_diagnostics=[
+                    {
+                        "component": "vera-runtime",
+                        "stage": "dependency-setup",
+                        "error_type": "RuntimeSetupError",
+                        "error_code": "runtime.setup-failed",
+                        "message": detail,
+                        "evidence_source": "observed-tool-result",
+                    }
+                ],
+            )
         LOGGER.error("Vera managed Python runtime setup failed: %s", detail)
         return 1
-    completed = subprocess.run(
-        [str(runtime_python(target)), str(checker), *delegated_args],
-        cwd=component_root,
-        env=runtime_environment(target),
-        check=False,
+    # The actual selector resolves this relative path under the selected component,
+    # not this top-level Vera checker (covered by a real-process regression).
+    runtime_args = ["--module", args.module]
+    for requirement in args.requirements or []:
+        runtime_args.extend(["--requirements", requirement])
+    return run_verified_helper(
+        execution_root,
+        [*runtime_args, "run", "scripts/check_dependencies.py", *delegated_args],
+        args.module,
     )
-    return completed.returncode
 
 
 if __name__ == "__main__":

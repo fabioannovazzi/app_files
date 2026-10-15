@@ -1,5 +1,11 @@
 # Vera operational incident recovery
 
+Installation lookup also exposes `reporter_sessions`: observed process version,
+protocol capabilities, app, runtime and server receipt time. These observations
+are separate from historical failure versions. They establish neither that all
+open conversations updated nor the version of an unobserved worker process.
+Use them before prescribing another reinstall from an old report alone.
+
 The anonymous OAuth connection is deployed and its independent transport is
 verified. The recurring AI monitor inspects delivered technical reports; it
 cannot detect a failure that never reaches the service. Current scheduled
@@ -39,6 +45,79 @@ In Claude, connect `veraIncidents` once from Vera's Connectors panel after
 installation; this is the host's normal connector setup.
 
 ## Operator workflow
+
+The registry exposes `report_records`, `reporting_summary` and `recovery_events`.
+`outcome_records` additionally retains each outcome's actual reporter owner and
+server receipt time, including older payloads missing an original report ID.
+The raw outcome remains unchanged; missing original-task evidence stays unknown.
+Every original report has its installation ID, server receipt time, host link
+when proven, and capture status. Legacy/absent structured evidence remains
+explicitly incomplete. Pending evidence becomes overdue after 15 minutes;
+`capture_due_at` is stable, so unchanged monitoring does not generate changing
+age hashes on every poll. Supplementation does not close the original episode.
+
+Use `manage_incidents.py installation <installation-id>` to inspect all that
+installation's open and recovered history without credentials or direct SQL.
+Summary counts distinguish reporting installations, capability-linked host
+identities and unlinked installations. They describe received evidence, not
+the population of all Vera users. Connector and guest IDs never imply a device
+match. Root-cause diagnosis remains AI-led; identical signals only group evidence.
+`manage_incidents.py registry` counts all recorded reporting identities and
+unresolved linked/unlinked hosts independently of the queue's display limit.
+
+Reporter identities and native app profiles are separate units. Cowork task
+containers can create different reporter-instance UUIDs for one installed app.
+`reporting_instances` counts those reporting identities; legacy fields named
+`reporting_installations` are aliases for that count. Do not interpret them as
+physical computers, installed app copies or people. `linked_app_installations`
+counts native app profiles proven by the installation capability and native-host
+capability together. A reported app name alone does not qualify that link.
+Unlinked app/host instances remain explicit unknowns. Host IDs are user-scoped
+native identities, not hardware serial numbers or a physical-device census.
+
+The native stdio server `veraIncidentHost` supplies `vera_incident_host_context`
+and `vera_incident_host_link`. It snapshots only its indexed reporter and product
+metadata into isolated Python; no diagnostic commands or client paths are inputs.
+Host UUID and scoped key persist in `~/.mparanza/vera/host-identity`, independently
+of Codex/Cowork task state. The key is sent only to the fixed incident register
+endpoint, stored server-side only as a hash, and never returned in tool results.
+Each app profile retains `native_broker_sessions` separately from guest reporter
+sessions and failure-worker versions. Native linking errors do not block failure
+delivery. `registry.linked_host_devices` counts all proven linked host profiles;
+the unresolved counts remain separate.
+
+Native plugin tools may be unavailable in cloud Cowork. The saved remote
+connection still preserves cross-task reports and recovery ownership, but does
+not prove a physical host. Leave that linkage unknown. Do not expand native
+computer/folder access merely to fill the gap. A fresh Claude capability inventory
+on 2026-10-15 exposed the remote connector and no native plugin tools; enabling
+its connected-computer group was rejected by automatic approval review as a
+separate access expansion. Full native cloud-host acceptance remains pending
+that authority and actual capability evidence.
+
+Use `manage_incidents.py app <app-installation-id>` for scoped original reports,
+supplements, deliveries, outcome ownership and retry events across the profile's
+reporter instances, including recovered history. Use `show` on its incident IDs
+for full investigation and remedy revisions. App grouping grants no additional
+client status or outcome access, and never closes another reporter's delivery.
+
+The monitor must inspect `report_records[].capture`, structured diagnostics,
+supplements and every recovery event/outcome. Received structured facts with a
+pending stderr review remain `review-pending`; overdue review is a reporting
+failure to investigate, not a reason to wait silently. Old exit-only reports
+remain accepted and explicitly incomplete. New evidence must never be labelled
+a controlled fixture merely because its error text resembles a prior fixture.
+Preserve the monitor's existing exact-ID/hash fixture ledger and read-only scope.
+
+New original-operation reports carry a stable opaque `operation_id` and process
+session ID. When an existing engagement receipt is available, `input_binding`
+is a keyed digest of its run/input-receipt identity. Client values, receipt paths
+and raw input hashes are not transmitted. The launcher records actual retries;
+recovery additionally requires host verification of the original task and inputs.
+Original reports and applicable remedy revisions remain the closure boundary.
+`runtime_version` is the reporting interpreter for legacy compatibility.
+`worker_runtime_version` and `worker_platform` come from the actual child
+process. Do not infer a worker Python mismatch from its launcher's version.
 
 Use the production checkout and its environment:
 
@@ -114,7 +193,10 @@ it is never forwarded automatically to Mparanza. The host AI selects all relevan
 technical evidence and excludes private/client content before supplementation.
 
 A reviewed Report sets `evidence_for_report_id` to the original report UUID.
-Ownership and exact execution metadata must match. Supplements are persisted
+Ownership and exact execution metadata, including original session, operation and
+input binding when present, must match. A supplement only completes capture when
+it explicitly declares complete capture with technical evidence and no pending
+review. Partial or legacy supplements remain visible as incomplete. Supplements are persisted
 separately and appear in the operator's `evidence` array. They cannot create a
 new failure episode, change the latest original report UUID, or reopen recovered
 deliveries. Retry UUIDs remain idempotent. Local raw files are removed only after
