@@ -111,3 +111,13 @@ must preserve the original session, operation and input binding. Eleven addition
 regressions cover rejected mismatches, matching evidence and incomplete review.
 The final focused suite passes 250 tests with 88.33% coverage; strict Mypy and
 format/security checks remain green. Packaged client bytes are unchanged.
+
+After the final server validation correction, the reviewed source binding and
+Vera packages were rebuilt. The exact CI-failed package checks pass locally
+(24 tests). Actual native processes from both final indexed archives again
+return the same retained host code. Their reporter, collector, launcher and
+bridge source bytes match the original offline failure extraction.
+
+Final codex archive SHA-256: `b1cf6231e6352ab35fe42abd4ad06cc33ebc3eb1cb44e65bb09ee837777fbfce`.
+
+Final cowork archive SHA-256: `012eee6eb7bd087b2528e3f450220ac6e6d78fe8d522d313909aea8b3a82db58`.
