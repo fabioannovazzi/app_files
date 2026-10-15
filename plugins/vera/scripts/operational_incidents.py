@@ -1014,8 +1014,11 @@ def check_incidents(
                     [
                         sys.executable,
                         str(ROOT / script),
-                        "--module",
-                        receipt["workflow"],
+                        *(
+                            []
+                            if receipt["workflow"] == "vera-core"
+                            else ["--module", receipt["workflow"]]
+                        ),
                     ],
                     cwd=ROOT,
                     stdout=subprocess.DEVNULL,

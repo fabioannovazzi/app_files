@@ -38,7 +38,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "6b4cb8947fcc226ba11e476e29e1369d48aaf5d0ba87db1a03f9418a69e80529",
+  "course_sha256": "1b9a1cfb1977bd987fab39a6dfdb459a3a66d6de9e5d3154d7e31034dca1155b",
   "host_marker_source_binding_review_20261010": {
     "prior_course_sha256": "64bc06545792bcb1f92f254b78725da6bb0e05a19f2c503ea22ca2826c67a78f",
     "current_course_sha256": "b37f5d86d6167ecccdbe4365e05b43b7bd6fcc7b414a3b954b0bcdde08d2438e",
@@ -556,5 +556,12 @@
       }
     ],
     "scope": "Compared every authored field and input definition: unchanged outside source bindings. Reviewed the incident helper change: persistent native host proof, native broker observations separated from guest versions, and best-effort identity linking without blocking original reports. No professional algorithm, lesson content or artifact review changed. Historical editorial/output judgments are retained; fresh native teaching CI remains required."
+  },
+  "root_helper_capture_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-15",
+    "previous_course_sha256": "6b4cb8947fcc226ba11e476e29e1369d48aaf5d0ba87db1a03f9418a69e80529",
+    "scope": "Only source bindings changed. Root helpers launched without --module now use the same structured failure, retry and original-task verification path. Built-in root recovery omits a nonexistent component selector. Authored lessons, prepared inputs and professional algorithms are unchanged; prior editorial/artifact judgments remain historical and fresh teaching CI is required.",
+    "validation": "161 runtime/launcher/recovery regressions passed; real argument-failure-to-original-task recovery case covers component and root paths."
   }
 }

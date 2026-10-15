@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "contenzioso-tributario",
-  "course_sha256": "5a9e9e308f6a493ad78a45d5c3b902f61d5d6ccaf34a13bd093df7c4786ce81c",
+  "course_sha256": "950a083cd9c0b08354298b21957c24f966fc3d2dd8f3a5ce3a998f00d0c5742a",
   "reviewer": "Codex /root: five-language authored lesson and real evidence/progress output review",
   "reviewed_at": "2026-10-14T14:55:04.859840+00:00",
   "review_scope": "Accepted prepared material and bounded real helper/Archive regressions. Semantic narrative and decisions are explicit test fixtures. This does not attest full live legal research, substantive pleading approval, native Word, native voice, installed-host learner execution or professional acceptance. Live lessons run the current specialist, not the fixtures.",
@@ -291,5 +291,12 @@
       }
     ],
     "scope": "Compared every authored field and input definition: unchanged outside source bindings. Reviewed the incident helper change: persistent native host proof, native broker observations separated from guest versions, and best-effort identity linking without blocking original reports. No professional algorithm, lesson content or artifact review changed. Historical editorial/output judgments are retained; fresh native teaching CI remains required."
+  },
+  "root_helper_capture_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-15",
+    "previous_course_sha256": "5a9e9e308f6a493ad78a45d5c3b902f61d5d6ccaf34a13bd093df7c4786ce81c",
+    "scope": "Only source bindings changed. Root helpers launched without --module now use the same structured failure, retry and original-task verification path. Built-in root recovery omits a nonexistent component selector. Authored lessons, prepared inputs and professional algorithms are unchanged; prior editorial/artifact judgments remain historical and fresh teaching CI is required.",
+    "validation": "161 runtime/launcher/recovery regressions passed; real argument-failure-to-original-task recovery case covers component and root paths."
   }
 }

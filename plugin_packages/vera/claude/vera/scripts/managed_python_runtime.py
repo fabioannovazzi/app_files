@@ -307,9 +307,9 @@ def main(argv: list[str] | None = None) -> int:
         logging.error("Vera installation verification failed: %s", error)
         report_preparation_failure(root, selection.module, error)
         return 1
-    if "run" in arguments and selection.module:
+    if "run" in arguments:
         return run_verified_helper(
-            root, arguments, selection.module, original_report_id
+            root, arguments, selection.module or "vera-core", original_report_id
         )
     return _IMPLEMENTATION.main(root, arguments)
 

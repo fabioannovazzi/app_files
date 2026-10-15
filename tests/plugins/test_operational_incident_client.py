@@ -24,9 +24,11 @@ from modules.operational_incidents.store import IncidentStore
 ROOT = Path(__file__).resolve().parents[2]
 
 
+@pytest.mark.parametrize("component", ["deep-research-validator", None])
 def test_real_argument_failure_through_registry_retry_and_original_task_recovery(
     tmp_path,
     monkeypatch,
+    component,
 ):
     """A real failure must be diagnosable before its exact successful rerun closes."""
     import sys
@@ -66,11 +68,12 @@ def test_real_argument_failure_through_registry_retry_and_original_task_recovery
     monkeypatch.setattr(
         launcher._IMPLEMENTATION, "runtime_environment", lambda *_args: None
     )
-    command = ["--module", "deep-research-validator", "run", "helper.py"]
+    command = (["--module", component] if component else []) + ["run", "helper.py"]
 
     assert launcher.main(command) == 2
     original = store.queue()[0]
     report = original["reports"][0]
+    assert report["workflow"] == (component or "vera-core")
     assert report["runtime_version"] == "3.13.4"
     assert report["worker_runtime_version"] == sys.version.split()[0]
     assert report["diagnostics"][0]["message"] == "Missing required options: --required"
@@ -279,7 +282,7 @@ def test_failure_delivers_automatically_and_persists_receipt(tmp_path, monkeypat
     assert saved["receipts"][0]["incident_id"] == store.queue()[0]["incident_id"]
 
 
-def queued_connector_report(tmp_path, monkeypatch):
+def queued_connector_report(tmp_path, monkeypatch, workflow="journal-sampling"):
     module, store, _ = client(tmp_path, monkeypatch)
 
     def offline(*_args):
@@ -287,7 +290,7 @@ def queued_connector_report(tmp_path, monkeypatch):
 
     monkeypatch.setattr(module, "_post", offline)
     queued = module.report_failure(
-        "journal-sampling", "dependency-setup", "synthetic setup failure"
+        workflow, "dependency-setup", "synthetic setup failure"
     )
     own = Credentials.model_validate(module.local_context()["credentials"])
     store.register(own)
@@ -355,12 +358,15 @@ def test_blocked_direct_poll_returns_independent_route_and_preserves_queue(
     assert module.local_context()["credentials"] == own.model_dump(mode="json")
 
 
+@pytest.mark.parametrize("workflow", ["journal-sampling", "vera-core"])
 def test_remote_status_runs_fixed_retry_once_offline_and_retains_private_error_for_review(
-    tmp_path, monkeypatch
+    tmp_path, monkeypatch, workflow
 ):
     from modules.operational_incidents.contracts import Remedy
 
-    module, store, own, queued, receipt = queued_connector_report(tmp_path, monkeypatch)
+    module, store, own, queued, receipt = queued_connector_report(
+        tmp_path, monkeypatch, workflow
+    )
     module.acknowledge_delivery(receipt)
     store.remedy(
         receipt["incident_id"],
@@ -394,7 +400,7 @@ def test_remote_status_runs_fixed_retry_once_offline_and_retains_private_error_f
     repeated = module.check_incidents(remote_status=remote)
 
     assert len(calls) == 1
-    assert calls[0][-2:] == ["--module", "journal-sampling"]
+    assert calls[0][2:] == ([] if workflow == "vera-core" else ["--module", workflow])
     assert result["queued"] == repeated["queued"] == 1
     state = module._read()
     assert state["outbox"][0]["payload"]["outcome"]["execution_succeeded"] is False

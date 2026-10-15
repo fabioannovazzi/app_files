@@ -61,12 +61,15 @@ from PR 833. Final green release CI, production deployment, live acceptance and
 monitor activation changes remain outstanding. Keep this task's existing
 branch/worktree active.
 
-Local candidate evidence (2026-10-15): 237 focused tests passed with 88.33%
+Local candidate evidence (2026-10-15): 239 focused tests passed with 88.33%
 coverage, including actual native stdio/isolated Python/HTTP/store integration,
 fresh reporter identity continuity, native/guest version separation and damaged
 reporter refusal. Clara's metadata/privacy and the icon-theme checks passed
 16 tests. Black, Isort, strict Mypy 2.4 for all eight incident files and Bandit
-passed. CI uses that strict type
+passed. A further 161 runtime, launcher and fixed-recovery regressions passed.
+Root helpers without --module now use the same source-bound capture and
+original-task verification path under the vera-core technical scope; their
+built-in retry omits an invalid component selector. CI uses that strict type
 configuration, not the application's suppressed-error configuration. All new
 recovery outcomes, including those for legacy reports, require explicit host
 verification of the original task. Already recorded historical receipts retain
@@ -74,10 +77,22 @@ their original bytes and idempotent retry behavior.
 
 The preceding candidate's combined package/runtime/reconciliation run passed
 722 tests with two skipped; its package/update checks passed 408 tests with two
-skipped. New source/package parity and package/update checks are required after
-the approved native and Clara changes. Real
+skipped. Both products subsequently passed full source/package parity and canonical
+version alignment after the approved native and root-capture changes. Final
+package/update checks are being refreshed. Real
 helper INFO output and packaged PDF reconciliation summaries are preserved by
 the runner. These are local candidate results, not production or affected-user
 recovery.
 
-The previous Cowork archive hash is superseded by the native bridge changes.
+Actual indexed native Codex and Cowork package processes on the Mac returned
+the same public host code, retained only in the private acceptance evidence. This is
+standalone package-process acceptance, not enabled-plugin routing in Claude.
+The actual packaged root helper retained one original report and operation
+during an intentionally offline test; their exact UUIDs remain in the private
+acceptance evidence.
+Its private stderr was inspected; semantic supplementation and live recovery
+remain pending deployment. No production report has been sent for this test.
+
+vera candidate Cowork ZIP SHA-256: `012eee6eb7bd087b2528e3f450220ac6e6d78fe8d522d313909aea8b3a82db58`.
+
+clara candidate Cowork ZIP SHA-256: `47d8d001a8a76c287faf75e29f3aa272a51623e69e78d4fbcff0f8b33c905449`.

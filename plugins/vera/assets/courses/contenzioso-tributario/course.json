@@ -35,12 +35,12 @@
     {
       "path": "scripts/managed_python_runtime.py",
       "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
-      "sha256": "7955f763c39a8d74959791f3f6abbe877f9c57e59318d803de7a79a4843017f6"
+      "sha256": "4c818a1c172f02b07625ef26a6cbe12672e6b52844948b0ee7fefce325a58c69"
     },
     {
       "path": "scripts/operational_incidents.py",
       "repository_path": "plugins/vera/scripts/operational_incidents.py",
-      "sha256": "702b97c78e3387efdae0874364817c5f46c1c81bf0cf117c341e2f475d341973"
+      "sha256": "4f677e0d846326d688e6b0b537756636550a9f451fdc8512962b8015445460dc"
     },
     {
       "path": "scripts/verified_execution.py",
