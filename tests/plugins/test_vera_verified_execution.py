@@ -313,6 +313,10 @@ def test_managed_cli_delegates_to_private_root_and_keeps_helper_arguments(
         SimpleNamespace(
             report_failure=record_failure,
             record_success=lambda *args: None,
+            execution_identity=lambda *args: {
+                "operation_id": "00000000-0000-0000-0000-000000000001"
+            },
+            record_execution_progress=lambda *args: None,
             diagnostic_directory=lambda: tmp_path,
             retain_diagnostic=lambda path, receipt: path,
         ),
@@ -345,20 +349,23 @@ def test_managed_cli_delegates_to_private_root_and_keeps_helper_arguments(
     result = launcher.main(arguments)
 
     try:
-        assert reports == [
-            (
-                "journal-bank-reconciliation",
-                "helper:inspect_inputs.py",
-                {
-                    "error_type": "HelperExit",
-                    "exit_code": 17,
-                    "measurements": {
-                        "diagnostic_review_pending": True,
-                        "stderr_bytes": 0,
-                    },
-                },
-            )
-        ]
+        assert len(reports) == 1
+        assert reports[0][:2] == (
+            "journal-bank-reconciliation",
+            "helper:inspect_inputs.py",
+        )
+        details = reports[0][2]
+        assert details["error_type"] == "HelperExit"
+        assert details["exit_code"] == 17
+        assert details["measurements"] == {
+            "diagnostic_review_pending": True,
+            "stderr_bytes": 0,
+        }
+        assert details["capture_state"] == "unavailable"
+        assert (
+            details["technical_diagnostics"][0]["error_code"]
+            == "reporting.evidence-missing"
+        )
         assert result == 17
         assert len(delegated) == 1
         assert delegated[0][0] != root

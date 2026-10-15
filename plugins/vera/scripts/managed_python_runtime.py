@@ -16,7 +16,7 @@ import traceback
 from contextlib import redirect_stderr
 from pathlib import Path
 
-__all__ = ["main"]
+__all__ = ["main", "run_verified_helper"]
 
 _VERIFICATION = runpy.run_path(str(Path(__file__).with_name("verified_execution.py")))
 prepare_execution_root = _VERIFICATION["prepare_execution_root"]
@@ -128,7 +128,12 @@ def _execute_with_diagnostics(
         with handle:
             try:
                 with redirect_stderr(handle):
-                    result = _IMPLEMENTATION.main(root, arguments, stderr=handle)
+                    result = _IMPLEMENTATION.main(
+                        root,
+                        arguments,
+                        stderr=handle,
+                        diagnostic_path=path.with_suffix(".technical.json"),
+                    )
             except SystemExit as error:
                 result = (
                     error.code
@@ -153,6 +158,78 @@ def _execute_with_diagnostics(
     return result, path
 
 
+def _technical_events(
+    path: Path | None, stage: str, result: int
+) -> tuple[list[dict], str, dict[str, str]]:
+    """Read source-bound events as data; missing collection remains explicit."""
+    if path is not None:
+        event_path = path.with_suffix(".technical.json")
+        try:
+            if (
+                event_path.is_symlink()
+                or event_path.stat().st_nlink != 1
+                or event_path.stat().st_size > 2 * 1024 * 1024
+            ):
+                raise ValueError("Unavailable technical event file")
+            data = json.loads(event_path.read_text(encoding="utf-8"))
+            if (
+                not isinstance(data, dict)
+                or not isinstance(data.get("events"), list)
+                or type(data.get("capture_complete")) is not bool
+            ):
+                raise ValueError("Invalid technical event envelope")
+            if not all(
+                isinstance(event, dict)
+                and isinstance(event.get("message"), str)
+                and isinstance(event.get("error_type"), str)
+                for event in data["events"]
+            ):
+                raise ValueError("Invalid technical event records")
+            events = [
+                {
+                    key: value
+                    for key, value in event.items()
+                    if key != "detail_available"
+                }
+                for event in data["events"]
+            ]
+            for event in events:
+                event.update(
+                    component="vera-runtime",
+                    stage=stage,
+                    exit_code=result,
+                    evidence_source="runtime-exception",
+                )
+            if events:
+                worker = {
+                    key: data[key]
+                    for key in ("worker_runtime_version", "worker_platform")
+                    if isinstance(data.get(key), str)
+                }
+                return (
+                    events,
+                    "complete" if data["capture_complete"] is True else "pending",
+                    worker,
+                )
+        except (OSError, ValueError, KeyError, TypeError):
+            pass  # Preserve stderr and explicitly report that collection failed.
+    return (
+        [
+            {
+                "component": "vera-runtime",
+                "stage": stage,
+                "error_type": "DiagnosticCaptureUnavailable",
+                "error_code": "reporting.evidence-missing",
+                "exit_code": result,
+                "message": "Execution failed without a structured technical cause. Retained stderr requires automatic host review.",
+                "evidence_source": "runtime-exception",
+            }
+        ],
+        "unavailable",
+        {},
+    )
+
+
 def _independent_failure(stage: str, module: str | None, error_type: str) -> None:
     """Route pre-execution failures without running an unverified incident helper."""
     logging.error(
@@ -162,6 +239,14 @@ def _independent_failure(stage: str, module: str | None, error_type: str) -> Non
         module or "unknown",
         stage,
         error_type,
+    )
+    report_preparation_failure(
+        Path(__file__).absolute().parents[1],
+        module,
+        ValueError(error_type),
+        stage=stage,
+        technical_code=f"runtime.{error_type}",
+        technical_type=error_type,
     )
 
 
@@ -179,7 +264,13 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(add_help=False, allow_abbrev=False)
     parser.add_argument("--module")
     parser.add_argument("--requirements", action="append")
+    parser.add_argument("--incident-report-id")
     selection, _ = parser.parse_known_args(prefix)
+    original_report_id = None
+    if "--incident-report-id" in prefix:
+        index = arguments.index("--incident-report-id")
+        original_report_id = arguments[index + 1]
+        del arguments[index : index + 2]
     root = Path(__file__).absolute().parents[1]
     # Reject an invalid entrypoint before provisioning, with an exact boundary
     # diagnostic rather than conflating an outside script with a missing file.
@@ -216,54 +307,87 @@ def main(argv: list[str] | None = None) -> int:
         logging.error("Vera installation verification failed: %s", error)
         report_preparation_failure(root, selection.module, error)
         return 1
-    error_path = None
     if "run" in arguments and selection.module:
-        result, error_path = _execute_with_diagnostics(root, arguments)
-    else:
-        result = _IMPLEMENTATION.main(root, arguments)
-    if "run" in arguments and selection.module:
-        from operational_incidents import (
-            record_success,
-            report_failure,
-            retain_diagnostic,
+        return run_verified_helper(
+            root, arguments, selection.module, original_report_id
         )
+    return _IMPLEMENTATION.main(root, arguments)
 
-        operation = Path(arguments[arguments.index("run") + 1]).name
-        if result == 0:
-            try:
-                record_success(selection.module, operation)
-            except (OSError, ValueError, KeyError, sqlite3.Error):
-                logging.warning(
-                    "Incident recovery receipt pending; professional output is preserved."
-                )
-        else:
-            receipt = report_failure(
-                selection.module,
-                f"helper:{operation}",
-                f"Verified helper exited with status {result}. Professional stdout is excluded; add the technical error chain through the incident connector.",
-                error_type="HelperExit",
-                exit_code=result,
-                measurements={
-                    "diagnostic_review_pending": error_path is not None,
-                    "stderr_bytes": (
-                        error_path.stat().st_size if error_path is not None else 0
-                    ),
-                },
+
+def run_verified_helper(
+    root: Path, arguments: list[str], module: str, original_report_id: str | None = None
+) -> int:
+    """Run a helper after its caller has verified the installation root."""
+    error_path = None
+    execution = None
+    from operational_incidents import execution_identity, record_execution_progress
+
+    try:
+        execution = execution_identity(module, arguments, original_report_id)
+        record_execution_progress(execution, "retry-started")
+    except (OSError, ValueError, sqlite3.Error):
+        execution = None
+        logging.warning(
+            "Incident identity/progress is unavailable; use the saved incident connector. Professional execution continues."
+        )
+    result, error_path = _execute_with_diagnostics(root, arguments)
+    from operational_incidents import (
+        record_success,
+        report_failure,
+        retain_diagnostic,
+    )
+
+    operation = Path(arguments[arguments.index("run") + 1]).name
+    if execution is not None:
+        try:
+            record_execution_progress(
+                execution, "retry-succeeded" if result == 0 else "retry-failed"
             )
-            if error_path is not None:
-                try:
-                    pointer = retain_diagnostic(error_path, receipt)
-                    logging.error(
-                        "VERA_TECHNICAL_EVIDENCE: %s. Automatically read the retained stderr locally, review complete relevant technical diagnostics without unrelated private/client content, then use vera_incident_report with evidence_for_report_id from its report before concluding diagnosis is blocked. Raw stderr is not uploaded.",
-                        pointer,
-                    )
-                except (OSError, ValueError, KeyError):
-                    logging.warning(
-                        "Retained helper stderr is at %s; metadata could not be saved. Use the independent incident connector for the observed error.",
-                        error_path,
-                    )
+        except (OSError, ValueError, sqlite3.Error):
+            logging.warning(
+                "Actual execution result preserved; incident progress delivery remains pending."
+            )
+    if result == 0:
+        try:
+            record_success(module, operation)
+        except (OSError, ValueError, KeyError, sqlite3.Error):
+            logging.warning(
+                "Incident recovery receipt pending; professional output is preserved."
+            )
+    else:
+        diagnostics, capture, worker = _technical_events(
+            error_path, f"helper:{operation}", result
+        )
+        receipt = report_failure(
+            module,
+            f"helper:{operation}",
+            f"Verified helper exited with status {result}. Professional stdout is excluded; add the technical error chain through the incident connector.",
+            error_type="HelperExit",
+            exit_code=result,
+            technical_diagnostics=diagnostics,
+            capture_state=capture,
+            execution={**(execution or {}), **worker},
+            measurements={
+                "diagnostic_review_pending": error_path is not None,
+                "stderr_bytes": (
+                    error_path.stat().st_size if error_path is not None else 0
+                ),
+            },
+        )
+        if error_path is not None:
+            try:
+                pointer = retain_diagnostic(error_path, receipt)
+                logging.error(
+                    "VERA_TECHNICAL_EVIDENCE: %s. Automatically read the retained stderr locally, review complete relevant technical diagnostics without unrelated private/client content, then use vera_incident_report with evidence_for_report_id from its report before concluding diagnosis is blocked. Raw stderr is not uploaded.",
+                    pointer,
+                )
+            except (OSError, ValueError, KeyError):
+                logging.warning(
+                    "Retained helper stderr is at %s; metadata could not be saved. Use the independent incident connector for the observed error.",
+                    error_path,
+                )
     if result < 0 or result in {137, 247}:
-        _report_forced_termination(arguments, result, selection.module)
+        _report_forced_termination(arguments, result, module)
     return result
 
 

@@ -18,7 +18,8 @@
     "skills/studio-archive/references/cowork-runtime.md",
     "scripts/verified_execution.py",
     "skills/vera/references/execution-recovery.md",
-    "scripts/operational_incidents.py"
+    "scripts/operational_incidents.py",
+    "scripts/technical_runner.py"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -71,7 +72,7 @@
       "kind": "hosted_service",
       "destination": "Mparanza HTTPS operational-incident API and Streamable HTTP MCP endpoint",
       "purpose": "Diagnose observed execution/setup failures, return installation-specific remedies and receive actual recovery outcomes",
-      "content": "Random installation UUID and opaque capability, Vera/host/runtime versions, platform and workflow technical IDs, failed stage, complete available technical diagnostic chains and measurements, explicit missing-measurement reasons, retry IDs and actual recovery outcomes. No professional helper stdout, client documents, case text, user prompts or arbitrary task logs. Known path, email and credential patterns are removed from technical messages; this mechanical filter does not establish semantic privacy. The host agent must select technical evidence without unrelated personal/client material. The remote channel does not read local files. Failed helpers retain complete stderr privately on disk; stderr may include unrelated private/client text and is read by the selected host model for semantic review under its existing account. Raw stderr is not forwarded to Mparanza. Only reviewed relevant technical diagnostics, linked by the original report UUID, are submitted as supplemental evidence. Professional stdout is not captured.",
+      "content": "Random installation UUID and opaque capability, Vera/host/runtime versions, platform and workflow technical IDs, failed stage, complete available technical diagnostic chains and measurements, explicit missing-measurement reasons, retry IDs and actual recovery outcomes. No professional helper stdout, client documents, case text, user prompts or arbitrary task logs. Known path, email and credential patterns are removed from technical messages; this mechanical filter does not establish semantic privacy. The host agent must select technical evidence without unrelated personal/client material. The remote channel does not read local files. Failed helpers retain complete stderr privately on disk; stderr may include unrelated private/client text and is read by the selected host model for semantic review under its existing account. Raw stderr is not forwarded to Mparanza. Only reviewed relevant technical diagnostics, linked by the original report UUID, are submitted as supplemental evidence. Professional stdout is not captured. Managed helpers also send source-bound exception classes, OS error numbers, package-relative stack coordinates, developer-authored error templates and missing required option names automatically. Dynamic exception/argument values, locals, professional stdout and arbitrary source excerpts are not part of these structured events. Process-session UUIDs, persistent operation UUIDs and optional keyed digests of existing run/input-receipt identities bind attempts without disclosing receipt fields or raw client-input hashes. Actual worker interpreter/platform fields are separate from the reporter's interpreter. Capture completeness, pending semantic review, exact remedy/retry events and host verification of the original task remain distinct evidence states; a structured event is not a semantic diagnosis.",
       "retention": "Local capability, pending reports and receipts persist outside client folders. The service retains incident, report, remedy and outcome records; no automatic deletion period is enforced. Status access is scoped by the opaque capability. Pending diagnostic pointers and raw stderr persist in the private incident directory until a matching actual recorded supplementation receipt is acknowledged; unsuccessful review or delivery retains them. Supplementation never replaces the original recovery episode or reopens recovered records. Recorded original/outcome receipts can acknowledge only their exact local queued UUID without replacing the local capability or saved connector identity. Remedy revisions are retained from the surviving migration revision onward; overwritten legacy revisions are not reconstructed.",
       "activation": "automatic_on_first_use",
       "optional": false,
@@ -144,9 +145,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-14",
+    "reviewed_at": "2026-10-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "f4381ddc8775ab038520b3e6a14d1325eabcdcfc6752ea3933d0b5fdbdbecb2c"
+    "source_fingerprint": "9b49746b0b0a480858fc148c1007d232277533634b95b522fecb61308ffafe69"
   }
 }

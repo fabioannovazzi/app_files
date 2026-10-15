@@ -26,6 +26,9 @@ def main() -> None:
     listing.add_argument("--limit", type=int, default=100)
     show = commands.add_parser("show")
     show.add_argument("incident_id")
+    installation = commands.add_parser("installation")
+    installation.add_argument("installation_id")
+    commands.add_parser("registry")
     remedy = commands.add_parser("remedy")
     remedy.add_argument("incident_id")
     remedy.add_argument("--input", type=Path, required=True)
@@ -36,6 +39,10 @@ def main() -> None:
         result = store.queue(args.limit)
     elif args.command == "show":
         result = store.show(args.incident_id)
+    elif args.command == "installation":
+        result = store.installation(args.installation_id)
+    elif args.command == "registry":
+        result = store.registry()
     else:
         value = Remedy.model_validate_json(args.input.read_text(encoding="utf-8"))
         if value.kind == "update":

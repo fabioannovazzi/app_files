@@ -1,5 +1,11 @@
 # Vera operational incident recovery
 
+Installation lookup also exposes `reporter_sessions`: observed process version,
+protocol capabilities, app, runtime and server receipt time. These observations
+are separate from historical failure versions. They establish neither that all
+open conversations updated nor the version of an unobserved worker process.
+Use them before prescribing another reinstall from an old report alone.
+
 The anonymous OAuth connection is deployed and its independent transport is
 verified. The recurring AI monitor inspects delivered technical reports; it
 cannot detect a failure that never reaches the service. Current scheduled
@@ -39,6 +45,40 @@ In Claude, connect `veraIncidents` once from Vera's Connectors panel after
 installation; this is the host's normal connector setup.
 
 ## Operator workflow
+
+The registry exposes `report_records`, `reporting_summary` and `recovery_events`.
+Every original report has its installation ID, server receipt time, host link
+when proven, and capture status. Legacy/absent structured evidence remains
+explicitly incomplete. Pending evidence becomes overdue after 15 minutes;
+`capture_due_at` is stable, so unchanged monitoring does not generate changing
+age hashes on every poll. Supplementation does not close the original episode.
+
+Use `manage_incidents.py installation <installation-id>` to inspect all that
+installation's open and recovered history without credentials or direct SQL.
+Summary counts distinguish reporting installations, capability-linked host
+identities and unlinked installations. They describe received evidence, not
+the population of all Vera users. Connector and guest IDs never imply a device
+match. Root-cause diagnosis remains AI-led; identical signals only group evidence.
+`manage_incidents.py registry` counts all recorded reporting identities and
+unresolved linked/unlinked hosts independently of the queue's display limit.
+
+The monitor must inspect `report_records[].capture`, structured diagnostics,
+supplements and every recovery event/outcome. Received structured facts with a
+pending stderr review remain `review-pending`; overdue review is a reporting
+failure to investigate, not a reason to wait silently. Old exit-only reports
+remain accepted and explicitly incomplete. New evidence must never be labelled
+a controlled fixture merely because its error text resembles a prior fixture.
+Preserve the monitor's existing exact-ID/hash fixture ledger and read-only scope.
+
+New original-operation reports carry a stable opaque `operation_id` and process
+session ID. When an existing engagement receipt is available, `input_binding`
+is a keyed digest of its run/input-receipt identity. Client values, receipt paths
+and raw input hashes are not transmitted. The launcher records actual retries;
+recovery additionally requires host verification of the original task and inputs.
+Original reports and applicable remedy revisions remain the closure boundary.
+`runtime_version` is the reporting interpreter for legacy compatibility.
+`worker_runtime_version` and `worker_platform` come from the actual child
+process. Do not infer a worker Python mismatch from its launcher's version.
 
 Use the production checkout and its environment:
 

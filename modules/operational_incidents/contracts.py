@@ -6,9 +6,20 @@ import re
 from typing import Any, Literal
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
-__all__ = ["Diagnostic", "Report", "Remedy", "Credentials", "Outcome", "scrub"]
+__all__ = [
+    "Diagnostic",
+    "TechnicalFrame",
+    "Report",
+    "Remedy",
+    "Credentials",
+    "DeviceCredentials",
+    "ReporterStatus",
+    "Outcome",
+    "RecoveryEvent",
+    "scrub",
+]
 
 # These rules remove mechanically identifiable paths/credentials from technical
 # messages. They do not decide the incident's cause or classify user documents.
@@ -43,6 +54,43 @@ class Credentials(StrictModel):
     )
 
 
+class DeviceCredentials(StrictModel):
+    """Proof of an anonymous identity persisted by the native host helper."""
+
+    device_id: UUID
+    device_key: str = Field(min_length=32, max_length=128, pattern=r"^[A-Za-z0-9_-]+$")
+
+
+class ReporterStatus(StrictModel):
+    """Observed reporting-process capabilities, separate from an old failure."""
+
+    session_id: UUID
+    protocol: int = Field(ge=0, le=2)
+    product_version: str = Field(
+        min_length=1, max_length=100, pattern=r"^[A-Za-z0-9_.+-]+$"
+    )
+    host: Literal["codex", "cowork", "unknown"]
+    platform: Literal["macos", "windows", "linux", "unknown"]
+    runtime_version: str | None = Field(
+        default=None, max_length=100, pattern=r"^[A-Za-z0-9_. +()-]+$"
+    )
+
+
+class TechnicalFrame(StrictModel):
+    """Package-relative source coordinates; never locals, arguments or case text."""
+
+    file: str = Field(max_length=250, pattern=r"^[A-Za-z0-9_./-]+$")
+    line: int = Field(ge=1)
+    function: str = Field(max_length=200, pattern=r"^[A-Za-z0-9_.<>]+$")
+
+    @field_validator("file")
+    @classmethod
+    def relative_source(cls, value: str) -> str:
+        if value.startswith("/") or ".." in value.split("/"):
+            raise ValueError("Technical source must be package-relative")
+        return value
+
+
 class Diagnostic(StrictModel):
     component: str = Field(min_length=1, max_length=100, pattern=r"^[A-Za-z0-9_.:-]+$")
     error_type: str = Field(min_length=1, max_length=150, pattern=r"^[A-Za-z0-9_.:-]+$")
@@ -56,6 +104,7 @@ class Diagnostic(StrictModel):
     evidence_source: Literal[
         "observed-tool-result", "runtime-exception", "technical-log"
     ]
+    technical_frames: list[TechnicalFrame] = Field(default_factory=list, max_length=100)
 
     @field_validator("message")
     @classmethod
@@ -78,11 +127,28 @@ class Report(StrictModel):
     runtime_version: str | None = Field(
         default=None, max_length=100, pattern=r"^[A-Za-z0-9_. +()-]+$"
     )
+    worker_runtime_version: str | None = Field(
+        default=None, max_length=100, pattern=r"^[A-Za-z0-9_. +()-]+$"
+    )
+    worker_platform: Literal["macos", "windows", "linux", "unknown"] | None = None
     workflow: str = Field(min_length=1, max_length=100, pattern=r"^[A-Za-z0-9_.:-]+$")
     stage: str = Field(min_length=1, max_length=100, pattern=r"^[A-Za-z0-9_.:-]+$")
     diagnostics: list[Diagnostic] = Field(min_length=1, max_length=512)
     measurements: dict[str, int | bool] = Field(default_factory=dict, max_length=100)
     unavailable: list[str] = Field(default_factory=list, max_length=100)
+    capture_state: Literal["legacy", "pending", "complete", "unavailable"] = "legacy"
+    session_id: UUID | None = None
+    operation_id: UUID | None = None
+    input_binding: str | None = Field(default=None, pattern=r"^[a-f0-9]{64}$")
+
+    @model_validator(mode="after")
+    def structured_capture(self) -> Report:
+        """A completeness claim requires an actual technical code or source location."""
+        if self.capture_state == "complete" and not any(
+            item.error_code or item.technical_frames for item in self.diagnostics
+        ):
+            raise ValueError("Complete capture requires technical evidence")
+        return self
 
     @field_validator("unavailable")
     @classmethod
@@ -120,3 +186,24 @@ class Outcome(StrictModel):
     status: Literal["recovered", "failed", "action-required"]
     diagnostics: list[Diagnostic] = Field(default_factory=list, max_length=512)
     execution_succeeded: bool = False
+    operation_id: UUID | None = None
+    input_binding: str | None = Field(default=None, pattern=r"^[a-f0-9]{64}$")
+    original_task_verified: bool = False
+
+
+class RecoveryEvent(StrictModel):
+    """An observed step for one original report and applicable remedy revision."""
+
+    event_id: UUID
+    incident_id: UUID
+    report_id: UUID
+    remedy_revision: int = Field(ge=1)
+    kind: Literal[
+        "remedy-received",
+        "remedy-applied",
+        "retry-started",
+        "retry-failed",
+        "retry-succeeded",
+        "capture-unavailable",
+    ]
+    operation_id: UUID | None = None

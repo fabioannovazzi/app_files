@@ -63,26 +63,19 @@ def test_vera_delegates_component_dependency_check(
     checker = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(checker)
     target = tmp_path / "runtime"
-    python = target / "bin" / "python"
     ensure = Mock(return_value=(True, target, "ready"))
-    run = Mock(return_value=subprocess.CompletedProcess([], 0))
+    run = Mock(return_value=0)
     monkeypatch.setattr(checker, "ensure_runtime", ensure)
-    monkeypatch.setattr(checker, "runtime_python", lambda target: python)
-    monkeypatch.setattr(
-        checker, "runtime_environment", lambda target: {"TEST_RUNTIME": "1"}
-    )
-    monkeypatch.setattr(checker.subprocess, "run", run)
+    monkeypatch.setattr(checker, "run_verified_helper", run)
 
     result = checker.main(["--module", component_name])
 
     assert result == 0
     ensure.assert_called_once_with(VERA_ROOT, component_name, requirements=None)
-    component = ROOT / "plugins" / component_name
     run.assert_called_once_with(
-        [str(python), str(component / "scripts" / "check_dependencies.py")],
-        cwd=component,
-        env={"TEST_RUNTIME": "1"},
-        check=False,
+        VERA_ROOT,
+        ["--module", component_name, "run", "scripts/check_dependencies.py"],
+        component_name,
     )
 
 

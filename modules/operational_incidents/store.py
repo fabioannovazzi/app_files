@@ -13,11 +13,20 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
-from uuid import UUID, uuid4
+from uuid import NAMESPACE_URL, UUID, uuid4, uuid5
 
 import psycopg
 
-from modules.operational_incidents.contracts import Credentials, Outcome, Remedy, Report
+from modules.operational_incidents.contracts import (
+    Credentials,
+    DeviceCredentials,
+    Outcome,
+    RecoveryEvent,
+    Remedy,
+    Report,
+    ReporterStatus,
+)
+from modules.operational_incidents.evidence import capture_coverage, incident_summary
 from modules.pdp.postgres_compat import (
     DICT_ROW_FACTORY,
     connect_pdp_database,
@@ -45,6 +54,10 @@ class IncidentNotFound(ValueError):
 
 
 _SCHEMA = (
+    "CREATE TABLE IF NOT EXISTS operational_reporter_sessions (installation_id TEXT NOT NULL, session_id TEXT NOT NULL, payload_json TEXT NOT NULL, last_seen TEXT NOT NULL, PRIMARY KEY (installation_id,session_id))",
+    "CREATE TABLE IF NOT EXISTS operational_devices (device_id TEXT PRIMARY KEY, key_hash TEXT NOT NULL, created_at TEXT NOT NULL)",
+    "CREATE TABLE IF NOT EXISTS operational_device_links (installation_id TEXT PRIMARY KEY, device_id TEXT NOT NULL, recorded_at TEXT NOT NULL)",
+    "CREATE TABLE IF NOT EXISTS operational_recovery_events (event_id TEXT PRIMARY KEY, installation_id TEXT NOT NULL, incident_id TEXT NOT NULL, payload_json TEXT NOT NULL, created_at TEXT NOT NULL)",
     "CREATE TABLE IF NOT EXISTS operational_remedy_revisions (incident_id TEXT NOT NULL, revision INTEGER NOT NULL, remedy_json TEXT NOT NULL, recorded_at TEXT NOT NULL, PRIMARY KEY (incident_id,revision))",
     "CREATE TABLE IF NOT EXISTS operational_report_evidence (report_id TEXT PRIMARY KEY, original_report_id TEXT NOT NULL, installation_id TEXT NOT NULL, incident_id TEXT NOT NULL, payload_hash TEXT NOT NULL, payload_json TEXT NOT NULL, created_at TEXT NOT NULL)",
     "CREATE TABLE IF NOT EXISTS operational_connection_links (connection_id TEXT NOT NULL, installation_id TEXT NOT NULL, PRIMARY KEY (connection_id, installation_id))",
@@ -62,6 +75,26 @@ def _now() -> str:
 
 def _json(value: Any) -> str:
     return json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+
+
+def _report_payload(report: Report) -> dict[str, Any]:
+    """Keep immutable legacy retry bytes while adding optional evidence fields."""
+    payload = report.model_dump(mode="json")
+    for name in (
+        "session_id",
+        "operation_id",
+        "input_binding",
+        "worker_runtime_version",
+        "worker_platform",
+    ):
+        if payload[name] is None:
+            payload.pop(name)
+    if payload["capture_state"] == "legacy":
+        payload.pop("capture_state")
+    for diagnostic in payload["diagnostics"]:
+        if not diagnostic["technical_frames"]:
+            diagnostic.pop("technical_frames")
+    return payload
 
 
 class IncidentStore:
@@ -178,8 +211,10 @@ class IncidentStore:
         if row is None or not hmac.compare_digest(row["key_hash"], actual):
             raise IncidentNotFound("Installation capability is unavailable")
 
-    def register(self, credentials: Credentials) -> dict[str, Any]:
-        """Idempotently register a random installation ID, never a machine identity."""
+    def register(
+        self, credentials: Credentials, device: DeviceCredentials | None = None
+    ) -> dict[str, Any]:
+        """Register an installation; host linkage requires both local capabilities."""
         with self._connection() as connection:
             self._schema(connection)
             connection.execute(
@@ -193,7 +228,47 @@ class IncidentStore:
                 ),
             )
             self._authorize(connection, credentials)
-        return {"installation_id": str(credentials.installation_id), "registered": True}
+            if device is not None:
+                self._link_device(connection, credentials, device)
+        result = {
+            "installation_id": str(credentials.installation_id),
+            "registered": True,
+        }
+        if device is not None:
+            result["device_id"] = str(device.device_id)
+        return result
+
+    def _link_device(
+        self, connection: Any, credentials: Credentials, device: DeviceCredentials
+    ) -> None:
+        """Match opaque host and installation proofs, never hostnames or IPs."""
+        digest = hashlib.sha256(device.device_key.encode()).hexdigest()
+        connection.execute(
+            self._sql(
+                "INSERT INTO operational_devices VALUES (?,?,?) ON CONFLICT (device_id) DO NOTHING"
+            ),
+            (str(device.device_id), digest, _now()),
+        )
+        recorded = connection.execute(
+            self._sql("SELECT key_hash FROM operational_devices WHERE device_id=?"),
+            (str(device.device_id),),
+        ).fetchone()
+        if recorded is None or not hmac.compare_digest(recorded["key_hash"], digest):
+            raise IncidentNotFound("Host capability is unavailable")
+        previous = connection.execute(
+            self._sql(
+                "SELECT device_id FROM operational_device_links WHERE installation_id=?"
+            ),
+            (str(credentials.installation_id),),
+        ).fetchone()
+        if previous is not None and previous["device_id"] != str(device.device_id):
+            raise IncidentConflict("Installation already belongs to another host")
+        connection.execute(
+            self._sql(
+                "INSERT INTO operational_device_links VALUES (?,?,?) ON CONFLICT (installation_id) DO NOTHING"
+            ),
+            (str(credentials.installation_id), str(device.device_id), _now()),
+        )
 
     def link_connection(self, actor: ConnectionActor, credentials: Credentials) -> None:
         """Link local state only with proof of both the connection and local capability."""
@@ -283,7 +358,7 @@ class IncidentStore:
         self, credentials: Credentials | ConnectionActor, report: Report
     ) -> dict[str, Any]:
         """Append reviewed evidence without creating, reopening or replacing an episode."""
-        payload = report.model_dump(mode="json")
+        payload = _report_payload(report)
         encoded = _json(payload)
         digest = hashlib.sha256(encoded.encode()).hexdigest()
         with self._connection() as connection:
@@ -361,7 +436,7 @@ class IncidentStore:
         """Group exact technical signals for investigation, not assumed root causes."""
         if report.evidence_for_report_id is not None:
             return self._supplement(credentials, report)
-        payload = report.model_dump(mode="json")
+        payload = _report_payload(report)
         # Preserve old retry hashes when the optional evidence link is absent.
         payload.pop("evidence_for_report_id", None)
         encoded = _json(payload)
@@ -513,7 +588,129 @@ class IncidentStore:
                         ),
                     }
                 )
+                original_row = connection.execute(
+                    self._sql(
+                        "SELECT payload_json,created_at FROM operational_reports WHERE report_id=?"
+                    ),
+                    (row["latest_report_id"],),
+                ).fetchone()
+                supplements = [
+                    json.loads(item["payload_json"])
+                    for item in connection.execute(
+                        self._sql(
+                            "SELECT payload_json FROM operational_report_evidence WHERE original_report_id=?"
+                        ),
+                        (row["latest_report_id"],),
+                    ).fetchall()
+                ]
+                incidents[-1]["capture"] = capture_coverage(
+                    json.loads(original_row["payload_json"]),
+                    supplements,
+                    original_row["created_at"],
+                )
+        for incident in incidents:
+            if incident["remedy"]["kind"] != "investigating":
+                self.progress(
+                    credentials,
+                    RecoveryEvent(
+                        event_id=uuid5(
+                            NAMESPACE_URL,
+                            f"{credentials.installation_id}:{incident['latest_report_id']}:{incident['revision']}:received",
+                        ),
+                        incident_id=incident["incident_id"],
+                        report_id=incident["latest_report_id"],
+                        remedy_revision=incident["revision"],
+                        kind="remedy-received",
+                        operation_id=incident["report_metadata"].get("operation_id"),
+                    ),
+                )
         return {"incidents": incidents}
+
+    def progress(
+        self, credentials: Credentials | ConnectionActor, event: RecoveryEvent
+    ) -> dict[str, Any]:
+        """Record an observed step; progress never closes an original task."""
+        encoded = _json(event.model_dump(mode="json"))
+        with self._connection() as connection:
+            self._schema(connection)
+            self._authorize(connection, credentials)
+            original = connection.execute(
+                self._sql(
+                    "SELECT * FROM operational_reports WHERE report_id=? AND installation_id=? AND incident_id=?"
+                ),
+                (
+                    str(event.report_id),
+                    str(credentials.installation_id),
+                    str(event.incident_id),
+                ),
+            ).fetchone()
+            if original is None:
+                raise IncidentNotFound(
+                    "Original report is outside the installation scope"
+                )
+            latest = connection.execute(
+                self._sql(
+                    "SELECT report_id FROM operational_reports WHERE installation_id=? AND incident_id=? ORDER BY created_at DESC LIMIT 1"
+                ),
+                (str(credentials.installation_id), str(event.incident_id)),
+            ).fetchone()
+            row = connection.execute(
+                self._sql(
+                    "SELECT revision FROM operational_incidents WHERE incident_id=?"
+                ),
+                (str(event.incident_id),),
+            ).fetchone()
+            revision, _ = self._applicable_remedy(
+                connection,
+                str(event.incident_id),
+                str(event.report_id),
+                row["revision"],
+            )
+            payload = json.loads(original["payload_json"])
+            if (
+                latest["report_id"] != str(event.report_id)
+                or revision != event.remedy_revision
+            ):
+                raise IncidentConflict(
+                    "Progress does not match the current original episode"
+                )
+            if payload.get("operation_id") is not None and payload[
+                "operation_id"
+            ] != str(event.operation_id):
+                raise IncidentConflict("Progress belongs to another operation")
+            previous = connection.execute(
+                self._sql(
+                    "SELECT payload_json,installation_id FROM operational_recovery_events WHERE event_id=?"
+                ),
+                (str(event.event_id),),
+            ).fetchone()
+            if previous is not None and (
+                previous["payload_json"] != encoded
+                or previous["installation_id"] != str(credentials.installation_id)
+            ):
+                raise IncidentConflict(
+                    "Recovery event identifier belongs to different evidence"
+                )
+            connection.execute(
+                self._sql(
+                    "INSERT INTO operational_recovery_events VALUES (?,?,?,?,?) ON CONFLICT (event_id) DO NOTHING"
+                ),
+                (
+                    str(event.event_id),
+                    str(credentials.installation_id),
+                    str(event.incident_id),
+                    encoded,
+                    _now(),
+                ),
+            )
+        return {
+            "recorded": True,
+            "event_id": str(event.event_id),
+            "kind": event.kind,
+            "installation_id": str(credentials.installation_id),
+            "report_id": str(event.report_id),
+            "incident_id": str(event.incident_id),
+        }
 
     def remedy(self, incident_id: str, remedy: Remedy) -> dict[str, Any]:
         """Operator-only publication; clients cannot deliver executable commands."""
@@ -583,7 +780,11 @@ class IncidentStore:
         """Close this delivery only after an actual successful execution receipt."""
         if outcome.status == "recovered" and not outcome.execution_succeeded:
             raise IncidentConflict("Recovery requires successful execution evidence")
-        encoded = _json(outcome.model_dump(mode="json"))
+        payload = outcome.model_dump(mode="json")
+        for name in ("operation_id", "input_binding", "original_task_verified"):
+            if not payload[name]:
+                payload.pop(name)
+        encoded = _json(payload)
         with self._connection() as connection:
             self._schema(connection)
             self._authorize(connection, credentials)
@@ -642,6 +843,43 @@ class IncidentStore:
                 raise IncidentConflict(
                     "A newer failure exists; recovery must match the reported episode"
                 )
+            source = json.loads(
+                connection.execute(
+                    self._sql(
+                        "SELECT payload_json FROM operational_reports WHERE report_id=?"
+                    ),
+                    (latest["report_id"],),
+                ).fetchone()["payload_json"]
+            )
+            if outcome.status == "recovered" and source.get("operation_id") is not None:
+                if (
+                    not outcome.original_task_verified
+                    or source["operation_id"] != str(outcome.operation_id)
+                    or (
+                        source.get("input_binding") is not None
+                        and source["input_binding"] != outcome.input_binding
+                    )
+                ):
+                    raise IncidentConflict(
+                        "Recovery requires verification of the original operation and inputs"
+                    )
+                attempts = connection.execute(
+                    self._sql(
+                        "SELECT payload_json FROM operational_recovery_events WHERE installation_id=? AND incident_id=?"
+                    ),
+                    (str(credentials.installation_id), str(outcome.incident_id)),
+                ).fetchall()
+                if not any(
+                    (event := json.loads(attempt["payload_json"]))["kind"]
+                    == "retry-succeeded"
+                    and event["report_id"] == str(outcome.report_id)
+                    and event["remedy_revision"] == outcome.remedy_revision
+                    and event["operation_id"] == str(outcome.operation_id)
+                    for attempt in attempts
+                ):
+                    raise IncidentConflict(
+                        "Recovery requires a successful original-operation retry"
+                    )
             connection.execute(
                 self._sql(
                     "INSERT INTO operational_outcomes VALUES (?,?,?,?,?) ON CONFLICT (outcome_id) DO NOTHING"
@@ -716,6 +954,96 @@ class IncidentStore:
             ).fetchall()
             return [self._details(connection, dict(row)) for row in rows]
 
+    def observe_reporter(
+        self, credentials: Credentials | ConnectionActor, status: ReporterStatus
+    ) -> None:
+        """Save observed capabilities without claiming other sessions updated."""
+        with self._connection() as connection:
+            self._schema(connection)
+            self._authorize(connection, credentials)
+            connection.execute(
+                self._sql(
+                    "INSERT INTO operational_reporter_sessions(installation_id,session_id,payload_json,last_seen) VALUES(?,?,?,?) ON CONFLICT(installation_id,session_id) DO UPDATE SET payload_json=excluded.payload_json,last_seen=excluded.last_seen"
+                ),
+                (
+                    str(credentials.installation_id),
+                    str(status.session_id),
+                    _json(status.model_dump(mode="json")),
+                    _now(),
+                ),
+            )
+
+    def installation(self, installation_id: str) -> dict[str, Any]:
+        """Operator lookup includes history and host links, without any credential."""
+        identifier = str(UUID(installation_id))
+        with self._connection() as connection:
+            self._schema(connection)
+            row = connection.execute(
+                self._sql(
+                    "SELECT installation_id,created_at FROM operational_installations WHERE installation_id=?"
+                ),
+                (identifier,),
+            ).fetchone()
+            if row is None:
+                raise IncidentNotFound("Installation is unavailable")
+            device = connection.execute(
+                self._sql(
+                    "SELECT device_id,recorded_at FROM operational_device_links WHERE installation_id=?"
+                ),
+                (identifier,),
+            ).fetchone()
+            connections = connection.execute(
+                self._sql(
+                    "SELECT connection_id FROM operational_connection_links WHERE installation_id=?"
+                ),
+                (identifier,),
+            ).fetchall()
+            incidents = connection.execute(
+                self._sql(
+                    "SELECT i.* FROM operational_incidents i JOIN operational_deliveries d ON i.incident_id=d.incident_id WHERE d.installation_id=? ORDER BY i.created_at"
+                ),
+                (identifier,),
+            ).fetchall()
+            sessions = connection.execute(
+                self._sql(
+                    "SELECT payload_json,last_seen FROM operational_reporter_sessions WHERE installation_id=? ORDER BY last_seen DESC"
+                ),
+                (identifier,),
+            ).fetchall()
+            return {
+                **dict(row),
+                "host_link": dict(device) if device else None,
+                "saved_connections": [item["connection_id"] for item in connections],
+                "reporter_sessions": [
+                    {**json.loads(item["payload_json"]), "last_seen": item["last_seen"]}
+                    for item in sessions
+                ],
+                "incidents": [
+                    self._details(connection, dict(item)) for item in incidents
+                ],
+            }
+
+    def registry(self) -> dict[str, Any]:
+        """Count all recorded affected identities without a queue-size assumption."""
+        queries = {
+            "registered_installations": "SELECT COUNT(*) AS n FROM operational_installations",
+            "reports_received": "SELECT COUNT(*) AS n FROM operational_reports",
+            "reporting_installations": "SELECT COUNT(DISTINCT installation_id) AS n FROM operational_reports",
+            "unresolved_installations": "SELECT COUNT(DISTINCT installation_id) AS n FROM operational_deliveries WHERE status!='recovered'",
+            "unresolved_linked_host_devices": "SELECT COUNT(DISTINCT h.device_id) AS n FROM operational_device_links h JOIN operational_deliveries d ON d.installation_id=h.installation_id WHERE d.status!='recovered'",
+            "unresolved_unlinked_installations": "SELECT COUNT(DISTINCT d.installation_id) AS n FROM operational_deliveries d LEFT JOIN operational_device_links h ON h.installation_id=d.installation_id WHERE d.status!='recovered' AND h.device_id IS NULL",
+        }
+        with self._connection() as connection:
+            self._schema(connection)
+            result = {
+                name: connection.execute(query).fetchone()["n"]
+                for name, query in queries.items()
+            }
+        return {
+            **result,
+            "coverage_basis": "registered and reporting identities only; unknown installations are not measured",
+        }
+
     def show(self, incident_id: str) -> dict[str, Any]:
         with self._connection() as connection:
             self._schema(connection)
@@ -742,15 +1070,13 @@ class IncidentStore:
                 (incident["incident_id"],),
             ).fetchall()
         ]
-        incident["reports"] = [
-            json.loads(row["payload_json"])
-            for row in connection.execute(
-                self._sql(
-                    "SELECT payload_json FROM operational_reports WHERE incident_id=? ORDER BY created_at"
-                ),
-                (incident["incident_id"],),
-            ).fetchall()
-        ]
+        report_rows = connection.execute(
+            self._sql(
+                "SELECT report_id,installation_id,created_at,payload_json FROM operational_reports WHERE incident_id=? ORDER BY created_at"
+            ),
+            (incident["incident_id"],),
+        ).fetchall()
+        incident["reports"] = [json.loads(row["payload_json"]) for row in report_rows]
         incident["evidence"] = [
             json.loads(row["payload_json"])
             for row in connection.execute(
@@ -774,6 +1100,50 @@ class IncidentStore:
             for row in connection.execute(
                 self._sql(
                     "SELECT payload_json FROM operational_outcomes WHERE incident_id=? ORDER BY created_at"
+                ),
+                (incident["incident_id"],),
+            ).fetchall()
+        ]
+        devices = {
+            row["installation_id"]: row["device_id"]
+            for row in connection.execute(
+                "SELECT installation_id,device_id FROM operational_device_links"
+            ).fetchall()
+        }
+        records = [
+            {
+                "report_id": row["report_id"],
+                "installation_id": row["installation_id"],
+                "created_at": row["created_at"],
+                "payload": payload,
+            }
+            for row, payload in zip(report_rows, incident["reports"])
+        ]
+        coverage = [
+            capture_coverage(row["payload"], incident["evidence"], row["created_at"])
+            for row in records
+        ]
+        incident["report_records"] = [
+            {
+                **{
+                    key: row[key]
+                    for key in ("report_id", "installation_id", "created_at")
+                },
+                "device_id": devices.get(row["installation_id"]),
+                "capture": capture,
+            }
+            for row, capture in zip(records, coverage)
+        ]
+        incident["reporting_summary"] = incident_summary(records, devices, coverage)
+        incident["recovery_events"] = [
+            {
+                "installation_id": row["installation_id"],
+                "recorded_at": row["created_at"],
+                **json.loads(row["payload_json"]),
+            }
+            for row in connection.execute(
+                self._sql(
+                    "SELECT installation_id,created_at,payload_json FROM operational_recovery_events WHERE incident_id=? ORDER BY created_at"
                 ),
                 (incident["incident_id"],),
             ).fetchall()
