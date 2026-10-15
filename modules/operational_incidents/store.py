@@ -54,6 +54,7 @@ class IncidentNotFound(ValueError):
 
 
 _SCHEMA = (
+    "CREATE TABLE IF NOT EXISTS operational_app_links (installation_id TEXT PRIMARY KEY, app_installation_id TEXT NOT NULL, native_app TEXT NOT NULL, recorded_at TEXT NOT NULL)",
     "CREATE TABLE IF NOT EXISTS operational_reporter_sessions (installation_id TEXT NOT NULL, session_id TEXT NOT NULL, payload_json TEXT NOT NULL, last_seen TEXT NOT NULL, PRIMARY KEY (installation_id,session_id))",
     "CREATE TABLE IF NOT EXISTS operational_devices (device_id TEXT PRIMARY KEY, key_hash TEXT NOT NULL, created_at TEXT NOT NULL)",
     "CREATE TABLE IF NOT EXISTS operational_device_links (installation_id TEXT PRIMARY KEY, device_id TEXT NOT NULL, recorded_at TEXT NOT NULL)",
@@ -236,6 +237,11 @@ class IncidentStore:
         }
         if device is not None:
             result["device_id"] = str(device.device_id)
+            if device.native_app is not None:
+                result["app_installation_id"] = str(
+                    uuid5(device.device_id, "vera-app:" + device.native_app)
+                )
+                result["native_app"] = device.native_app
         return result
 
     def _link_device(
@@ -268,6 +274,25 @@ class IncidentStore:
                 "INSERT INTO operational_device_links VALUES (?,?,?) ON CONFLICT (installation_id) DO NOTHING"
             ),
             (str(credentials.installation_id), str(device.device_id), _now()),
+        )
+        if device.native_app is None:
+            return
+        app_id = str(uuid5(device.device_id, "vera-app:" + device.native_app))
+        previous_app = connection.execute(
+            self._sql(
+                "SELECT app_installation_id FROM operational_app_links WHERE installation_id=?"
+            ),
+            (str(credentials.installation_id),),
+        ).fetchone()
+        if previous_app is not None and previous_app["app_installation_id"] != app_id:
+            raise IncidentConflict(
+                "Reporter instance already belongs to another native app"
+            )
+        connection.execute(
+            self._sql(
+                "INSERT INTO operational_app_links VALUES (?,?,?,?) ON CONFLICT (installation_id) DO NOTHING"
+            ),
+            (str(credentials.installation_id), app_id, device.native_app, _now()),
         )
 
     def link_connection(self, actor: ConnectionActor, credentials: Credentials) -> None:
@@ -996,6 +1021,12 @@ class IncidentStore:
                 ),
                 (identifier,),
             ).fetchone()
+            app = connection.execute(
+                self._sql(
+                    "SELECT app_installation_id,native_app,recorded_at FROM operational_app_links WHERE installation_id=?"
+                ),
+                (identifier,),
+            ).fetchone()
             connections = connection.execute(
                 self._sql(
                     "SELECT connection_id FROM operational_connection_links WHERE installation_id=?"
@@ -1017,6 +1048,7 @@ class IncidentStore:
             return {
                 **dict(row),
                 "host_link": dict(device) if device else None,
+                "app_link": dict(app) if app else None,
                 "saved_connections": [item["connection_id"] for item in connections],
                 "reporter_sessions": [
                     {**json.loads(item["payload_json"]), "last_seen": item["last_seen"]}
@@ -1025,6 +1057,55 @@ class IncidentStore:
                 "incidents": [
                     self._details(connection, dict(item)) for item in incidents
                 ],
+            }
+
+    def app_installation(self, app_installation_id: str) -> dict[str, Any]:
+        """Inspect one proven app profile across task-local reporter instances."""
+        identifier = str(UUID(app_installation_id))
+        queries = {
+            "reports": "SELECT r.* FROM operational_reports r JOIN operational_app_links a ON a.installation_id=r.installation_id WHERE a.app_installation_id=? ORDER BY r.created_at",
+            "evidence": "SELECT e.* FROM operational_report_evidence e JOIN operational_app_links a ON a.installation_id=e.installation_id WHERE a.app_installation_id=? ORDER BY e.created_at",
+            "outcomes": "SELECT o.* FROM operational_outcomes o JOIN operational_app_links a ON a.installation_id=o.installation_id WHERE a.app_installation_id=? ORDER BY o.created_at",
+            "recovery_events": "SELECT e.* FROM operational_recovery_events e JOIN operational_app_links a ON a.installation_id=e.installation_id WHERE a.app_installation_id=? ORDER BY e.created_at",
+        }
+        with self._connection() as connection:
+            self._schema(connection)
+            members = connection.execute(
+                self._sql(
+                    "SELECT a.installation_id,a.native_app,a.recorded_at,d.device_id FROM operational_app_links a JOIN operational_device_links d ON d.installation_id=a.installation_id WHERE a.app_installation_id=? ORDER BY a.installation_id"
+                ),
+                (identifier,),
+            ).fetchall()
+            if not members:
+                raise IncidentNotFound("Native app installation is unavailable")
+            evidence: dict[str, Any] = {}
+            for name, query in queries.items():
+                records = []
+                for row in connection.execute(
+                    self._sql(query), (identifier,)
+                ).fetchall():
+                    record = dict(row)
+                    payload = json.loads(record.pop("payload_json"))
+                    records.append({**record, "payload": payload})
+                evidence[name] = records
+            deliveries = [
+                dict(row)
+                for row in connection.execute(
+                    self._sql(
+                        "SELECT d.* FROM operational_deliveries d JOIN operational_app_links a ON a.installation_id=d.installation_id WHERE a.app_installation_id=? ORDER BY d.incident_id,d.installation_id"
+                    ),
+                    (identifier,),
+                ).fetchall()
+            ]
+            return {
+                "app_installation_id": identifier,
+                "native_app": members[0]["native_app"],
+                "device_id": members[0]["device_id"],
+                "reporter_instances": [dict(row) for row in members],
+                "incident_ids": sorted({row["incident_id"] for row in deliveries}),
+                "deliveries": deliveries,
+                **evidence,
+                "scope": "Only this linked native app profile. Use show on each incident ID for full investigation and applicable remedy history. Delivery state alone does not certify original-task recovery.",
             }
 
     def registry(self) -> dict[str, Any]:
@@ -1036,6 +1117,9 @@ class IncidentStore:
             "unresolved_installations": "SELECT COUNT(DISTINCT installation_id) AS n FROM operational_deliveries WHERE status!='recovered'",
             "unresolved_linked_host_devices": "SELECT COUNT(DISTINCT h.device_id) AS n FROM operational_device_links h JOIN operational_deliveries d ON d.installation_id=h.installation_id WHERE d.status!='recovered'",
             "unresolved_unlinked_installations": "SELECT COUNT(DISTINCT d.installation_id) AS n FROM operational_deliveries d LEFT JOIN operational_device_links h ON h.installation_id=d.installation_id WHERE d.status!='recovered' AND h.device_id IS NULL",
+            "linked_app_installations": "SELECT COUNT(DISTINCT app_installation_id) AS n FROM operational_app_links",
+            "unresolved_linked_app_installations": "SELECT COUNT(DISTINCT a.app_installation_id) AS n FROM operational_app_links a JOIN operational_deliveries d ON d.installation_id=a.installation_id WHERE d.status!='recovered'",
+            "unresolved_app_unlinked_instances": "SELECT COUNT(DISTINCT d.installation_id) AS n FROM operational_deliveries d LEFT JOIN operational_app_links a ON a.installation_id=d.installation_id WHERE d.status!='recovered' AND a.installation_id IS NULL",
         }
         with self._connection() as connection:
             self._schema(connection)
@@ -1045,7 +1129,11 @@ class IncidentStore:
             }
         return {
             **result,
-            "coverage_basis": "registered and reporting identities only; unknown installations are not measured",
+            "registered_reporter_instances": result["registered_installations"],
+            "reporting_instances": result["reporting_installations"],
+            "unresolved_instances": result["unresolved_installations"],
+            "identity_units": "Legacy installation-count fields count reporter instances, which may be task-local. Linked app installations are proven native app profiles under host identities; they are not plugin-copy or population counts.",
+            "coverage_basis": "registered and reporting identities only; unlinked app and host identities remain unknown",
         }
 
     def show(self, incident_id: str) -> dict[str, Any]:
@@ -1099,19 +1187,37 @@ class IncidentStore:
                 (incident["incident_id"],),
             ).fetchall()
         ]
-        incident["outcomes"] = [
-            json.loads(row["payload_json"])
-            for row in connection.execute(
-                self._sql(
-                    "SELECT payload_json FROM operational_outcomes WHERE incident_id=? ORDER BY created_at"
-                ),
-                (incident["incident_id"],),
-            ).fetchall()
+        outcome_rows = connection.execute(
+            self._sql(
+                "SELECT installation_id,created_at,payload_json FROM operational_outcomes WHERE incident_id=? ORDER BY created_at"
+            ),
+            (incident["incident_id"],),
+        ).fetchall()
+        incident["outcomes"] = [json.loads(row["payload_json"]) for row in outcome_rows]
+        incident["outcome_records"] = [
+            {
+                "installation_id": row["installation_id"],
+                "recorded_at": row["created_at"],
+                "payload": payload,
+            }
+            for row, payload in zip(outcome_rows, incident["outcomes"])
         ]
         devices = {
             row["installation_id"]: row["device_id"]
             for row in connection.execute(
                 "SELECT installation_id,device_id FROM operational_device_links"
+            ).fetchall()
+        }
+        apps = {
+            row["installation_id"]: {
+                key: row[key]
+                for key in ("app_installation_id", "native_app", "recorded_at")
+            }
+            for row in connection.execute(
+                self._sql(
+                    "SELECT DISTINCT a.* FROM operational_app_links a JOIN operational_reports r ON a.installation_id=r.installation_id WHERE r.incident_id=?"
+                ),
+                (incident["incident_id"],),
             ).fetchall()
         }
         records = [
@@ -1134,11 +1240,21 @@ class IncidentStore:
                     for key in ("report_id", "installation_id", "created_at")
                 },
                 "device_id": devices.get(row["installation_id"]),
+                "reporter_instance_id": row["installation_id"],
+                "app_link": apps.get(row["installation_id"]),
                 "capture": capture,
             }
             for row, capture in zip(records, coverage)
         ]
-        incident["reporting_summary"] = incident_summary(records, devices, coverage)
+        incident["reporting_summary"] = incident_summary(
+            records,
+            devices,
+            coverage,
+            {
+                identifier: value["app_installation_id"]
+                for identifier, value in apps.items()
+            },
+        )
         incident["recovery_events"] = [
             {
                 "installation_id": row["installation_id"],

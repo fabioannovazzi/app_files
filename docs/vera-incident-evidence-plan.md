@@ -33,6 +33,13 @@ Observed reporting-process versions and protocol capabilities are retained per
 session separately from historical failure versions. Component dependency
 checkers use the same verified-helper capture path; a real-process regression
 confirms the component selector cannot re-enter Vera's top-level checker.
+Server models now distinguish task-local reporter instances, persistent native
+app profiles and host identities. App lookup preserves scoped original reports,
+supplements, deliveries and exact outcome ownership across reporter instances.
+It does not widen client permissions. Native activation must still prove stable
+identities across fresh Cowork sessions and preserve the distinction between
+native-broker observations and the actual guest workflow version. A broker update
+alone is not evidence that a running guest workflow updated.
 
 Device-linking activation is awaiting Fabio's explicit response to automatic
 approval review. No new host capability has been sent, no production deployment
@@ -47,14 +54,21 @@ from PR 833. Final green release CI, production deployment, live acceptance and
 monitor activation changes remain outstanding. Keep this task's existing
 branch/worktree active.
 
-Local candidate evidence (2026-10-15): 222 focused tests passed with 86.39%
-coverage. The combined package/runtime/reconciliation run passed 722 tests,
-with two skipped; its remaining worktree-version guard passed separately after
-committing the finalized candidate. Black, Isort, strict Mypy for all eight
-incident files, and Bandit passed. CI now uses that strict type configuration,
-not the application's suppressed-error configuration. Real helper INFO output
-and packaged PDF reconciliation summaries are preserved by the runner.
-Full product-release `--check` confirms Vera
-0.1.391 source/package parity and version alignment. Cowork ZIP SHA-256:
-`c793fd417e2ac60bce1c3a46af5eadef61c00df3d38aea3692e78f8388379d56`.
-These are local candidate results, not production or affected-user recovery.
+Local candidate evidence (2026-10-15): 228 focused tests passed with 86.65%
+coverage. The 28 evidence-pipeline checks then passed without warnings after
+correcting the test supplement's UUID type. Black, Isort, strict Mypy 2.4 for
+all eight incident files, and Bandit passed. CI uses that strict type
+configuration, not the application's suppressed-error configuration. All new
+recovery outcomes, including those for legacy reports, require explicit host
+verification of the original task. Already recorded historical receipts retain
+their original bytes and idempotent retry behavior.
+
+The earlier combined package/runtime/reconciliation run passed 722 tests with
+two skipped. The subsequent candidate package/update checks passed 408 tests
+with two skipped. These results precede the final native-app registry changes;
+the final product-release source-parity check subsequently passed for every Vera archive, with canonical version 0.1.391. Real
+helper INFO output and packaged PDF reconciliation summaries are preserved by
+the runner. These are local candidate results, not production or affected-user
+recovery.
+
+Final candidate Cowork ZIP SHA-256: `0e3c4726e1be7605d12aef8a25d44c95a66ecf1d5d5937ddd980eae7e42ce57c`.

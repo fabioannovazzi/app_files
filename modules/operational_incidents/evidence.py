@@ -53,15 +53,23 @@ def incident_summary(
     reports: list[dict[str, Any]],
     devices: dict[str, str],
     coverage: list[dict[str, Any]],
+    app_installations: dict[str, str] | None = None,
 ) -> dict[str, Any]:
     """Count proven identifiers; an unlinked installation is not a physical PC."""
     installations = {row["installation_id"] for row in reports}
     linked = {
         devices[identifier] for identifier in installations if identifier in devices
     }
+    apps = app_installations or {}
     return {
         "report_count": len(reports),
         "reporting_installations": len(installations),
+        "reporting_instances": len(installations),
+        "linked_app_installations": len(
+            {apps[identifier] for identifier in installations if identifier in apps}
+        ),
+        "app_unlinked_instances": len(installations - apps.keys()),
+        "app_linkage_complete": installations <= apps.keys(),
         "linked_host_devices": len(linked),
         "unlinked_installations": len(installations - devices.keys()),
         "host_linkage_complete": installations <= devices.keys(),
@@ -74,5 +82,5 @@ def incident_summary(
         "reported_versions": sorted(
             {row["payload"]["product_version"] for row in reports}
         ),
-        "coverage_basis": "received reports only; not all installed users",
+        "coverage_basis": "received reports only; reporter instances may be task-local; app and host counts require native proof",
     }

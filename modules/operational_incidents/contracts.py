@@ -59,6 +59,7 @@ class DeviceCredentials(StrictModel):
 
     device_id: UUID
     device_key: str = Field(min_length=32, max_length=128, pattern=r"^[A-Za-z0-9_-]+$")
+    native_app: Literal["codex", "cowork"] | None = None
 
 
 class ReporterStatus(StrictModel):

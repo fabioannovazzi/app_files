@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import sqlite3
 from datetime import datetime, timezone
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 import pytest
 
@@ -18,7 +18,11 @@ from modules.operational_incidents.contracts import (
     ReporterStatus,
 )
 from modules.operational_incidents.evidence import capture_coverage
-from modules.operational_incidents.store import IncidentConflict, IncidentNotFound
+from modules.operational_incidents.store import (
+    IncidentConflict,
+    IncidentNotFound,
+    IncidentStore,
+)
 from tests.modules.operational_incidents.test_incidents import registered, report
 
 
@@ -194,6 +198,152 @@ def test_registry_distinguishes_attempts_installations_and_unlinked_hosts(tmp_pa
     assert registry["reporting_installations"] == 1
     assert registry["unresolved_linked_host_devices"] == 0
     assert registry["unresolved_unlinked_installations"] == 1
+    assert registry["reporting_instances"] == 1
+    assert registry["linked_app_installations"] == 0
+    assert registry["unresolved_app_unlinked_instances"] == 1
+
+
+def test_fresh_cowork_reporters_share_one_native_app_without_duplicating_host(tmp_path):
+    from tests.modules.operational_incidents.test_incidents import credentials
+
+    store, first = registered(tmp_path)
+    second, codex = credentials(), credentials()
+    host = DeviceCredentials(
+        device_id=uuid4(), device_key=uuid4().hex, native_app="cowork"
+    )
+    first_binding = store.register(first, host)
+    store = IncidentStore(tmp_path / "incidents.sqlite3")
+    second_binding = store.register(second, host)
+    codex_binding = store.register(
+        codex, host.model_copy(update={"native_app": "codex"})
+    )
+    original = store.report(first, report().model_copy(update={"host": "cowork"}))
+    store.report(second, report().model_copy(update={"host": "cowork"}))
+    store.report(codex, report())
+
+    registry = store.registry()
+    cowork = store.show(original["incident_id"])
+
+    assert first_binding["app_installation_id"] == second_binding["app_installation_id"]
+    assert first_binding["app_installation_id"] != codex_binding["app_installation_id"]
+    assert registry["reporting_instances"] == 3
+    assert registry["unresolved_linked_host_devices"] == 1
+    assert registry["unresolved_linked_app_installations"] == 2
+    assert registry["unresolved_app_unlinked_instances"] == 0
+    assert cowork["reporting_summary"]["reporting_instances"] == 2
+    assert cowork["reporting_summary"]["linked_app_installations"] == 1
+    assert cowork["reporting_summary"]["app_linkage_complete"] is True
+    assert cowork["report_records"][0]["app_link"]["native_app"] == "cowork"
+
+
+def test_app_linkage_is_not_inferred_from_reported_app_name(tmp_path):
+    store, owner = registered(tmp_path)
+    store.register(owner, DeviceCredentials(device_id=uuid4(), device_key=uuid4().hex))
+    receipt = store.report(owner, report().model_copy(update={"host": "cowork"}))
+
+    shown = store.show(receipt["incident_id"])
+
+    assert shown["reporting_summary"]["linked_host_devices"] == 1
+    assert shown["reporting_summary"]["linked_app_installations"] == 0
+    assert shown["reporting_summary"]["app_linkage_complete"] is False
+    assert shown["report_records"][0]["app_link"] is None
+
+
+def test_native_app_link_cannot_be_silently_reassigned(tmp_path):
+    store, owner = registered(tmp_path)
+    host = DeviceCredentials(
+        device_id=uuid4(), device_key=uuid4().hex, native_app="codex"
+    )
+    original = store.register(owner, host)
+
+    with pytest.raises(IncidentConflict, match="another native app"):
+        store.register(owner, host.model_copy(update={"native_app": "cowork"}))
+
+    assert (
+        store.installation(str(owner.installation_id))["app_link"][
+            "app_installation_id"
+        ]
+        == original["app_installation_id"]
+    )
+    assert store.registry()["linked_app_installations"] == 1
+
+
+def test_shared_native_app_link_does_not_grant_other_reporter_access(tmp_path):
+    from tests.modules.operational_incidents.test_incidents import credentials
+
+    store, first = registered(tmp_path)
+    second = credentials()
+    host = DeviceCredentials(
+        device_id=uuid4(), device_key=uuid4().hex, native_app="cowork"
+    )
+    store.register(first, host)
+    store.register(second, host)
+    one, two = store.report(first, report()), store.report(second, report())
+    foreign = Outcome(
+        outcome_id=uuid4(),
+        incident_id=two["incident_id"],
+        report_id=two["report_id"],
+        remedy_revision=1,
+        status="recovered",
+        execution_succeeded=True,
+        original_task_verified=True,
+    )
+
+    with pytest.raises(IncidentConflict, match="newer failure"):
+        store.outcome(first, foreign)
+
+    assert store.status(first)["incidents"][0]["latest_report_id"] == one["report_id"]
+    assert str(two["report_id"]) not in json.dumps(store.status(first))
+    assert store.status(second)["incidents"][0]["status"] == "open"
+
+
+def test_app_history_scopes_reports_and_outcomes_in_a_shared_investigation(tmp_path):
+    from tests.modules.operational_incidents.test_incidents import credentials
+
+    store, one = registered(tmp_path)
+    two, other_app = credentials(), credentials()
+    host = DeviceCredentials(
+        device_id=uuid4(), device_key=uuid4().hex, native_app="cowork"
+    )
+    binding = store.register(one, host)
+    store.register(two, host)
+    store.register(other_app, host.model_copy(update={"native_app": "codex"}))
+    first, second, third = (
+        store.report(one, report()),
+        store.report(two, report()),
+        store.report(other_app, report()),
+    )
+    supplement = report().model_copy(
+        update={"evidence_for_report_id": UUID(first["report_id"])}
+    )
+    store.report(one, supplement)
+    recovered = Outcome(
+        outcome_id=uuid4(),
+        incident_id=first["incident_id"],
+        report_id=first["report_id"],
+        remedy_revision=1,
+        status="recovered",
+        execution_succeeded=True,
+        original_task_verified=True,
+    )
+    store.outcome(one, recovered)
+
+    app = store.app_installation(binding["app_installation_id"])
+
+    assert app["incident_ids"] == [first["incident_id"]]
+    assert {row["report_id"] for row in app["reports"]} == {
+        first["report_id"],
+        second["report_id"],
+    }
+    assert third["report_id"] not in json.dumps(app)
+    assert app["evidence"][0]["report_id"] == str(supplement.report_id)
+    assert {row["status"] for row in app["deliveries"]} == {"open", "recovered"}
+    assert app["outcomes"][0]["installation_id"] == str(one.installation_id)
+    assert app["outcomes"][0]["payload"]["original_task_verified"] is True
+    full = store.show(first["incident_id"])
+    assert full["outcome_records"][0]["installation_id"] == str(one.installation_id)
+    with pytest.raises(IncidentNotFound):
+        store.app_installation(str(uuid4()))
 
 
 def test_structured_receipt_keeps_incomplete_host_review_visible():

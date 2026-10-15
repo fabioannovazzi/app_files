@@ -47,6 +47,9 @@ installation; this is the host's normal connector setup.
 ## Operator workflow
 
 The registry exposes `report_records`, `reporting_summary` and `recovery_events`.
+`outcome_records` additionally retains each outcome's actual reporter owner and
+server receipt time, including older payloads missing an original report ID.
+The raw outcome remains unchanged; missing original-task evidence stays unknown.
 Every original report has its installation ID, server receipt time, host link
 when proven, and capture status. Legacy/absent structured evidence remains
 explicitly incomplete. Pending evidence becomes overdue after 15 minutes;
@@ -61,6 +64,22 @@ the population of all Vera users. Connector and guest IDs never imply a device
 match. Root-cause diagnosis remains AI-led; identical signals only group evidence.
 `manage_incidents.py registry` counts all recorded reporting identities and
 unresolved linked/unlinked hosts independently of the queue's display limit.
+
+Reporter identities and native app profiles are separate units. Cowork task
+containers can create different reporter-instance UUIDs for one installed app.
+`reporting_instances` counts those reporting identities; legacy fields named
+`reporting_installations` are aliases for that count. Do not interpret them as
+physical computers, installed app copies or people. `linked_app_installations`
+counts native app profiles proven by the installation capability and native-host
+capability together. A reported app name alone does not qualify that link.
+Unlinked app/host instances remain explicit unknowns. Host IDs are user-scoped
+native identities, not hardware serial numbers or a physical-device census.
+
+Use `manage_incidents.py app <app-installation-id>` for scoped original reports,
+supplements, deliveries, outcome ownership and retry events across the profile's
+reporter instances, including recovered history. Use `show` on its incident IDs
+for full investigation and remedy revisions. App grouping grants no additional
+client status or outcome access, and never closes another reporter's delivery.
 
 The monitor must inspect `report_records[].capture`, structured diagnostics,
 supplements and every recovery event/outcome. Received structured facts with a

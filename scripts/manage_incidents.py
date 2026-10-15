@@ -29,6 +29,8 @@ def main() -> None:
     show.add_argument("incident_id")
     installation = commands.add_parser("installation")
     installation.add_argument("installation_id")
+    app = commands.add_parser("app")
+    app.add_argument("app_installation_id")
     commands.add_parser("registry")
     remedy = commands.add_parser("remedy")
     remedy.add_argument("incident_id")
@@ -43,6 +45,8 @@ def main() -> None:
         result = store.show(args.incident_id)
     elif args.command == "installation":
         result = store.installation(args.installation_id)
+    elif args.command == "app":
+        result = store.app_installation(args.app_installation_id)
     elif args.command == "registry":
         result = store.registry()
     else:
