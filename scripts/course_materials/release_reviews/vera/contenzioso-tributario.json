@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "contenzioso-tributario",
-  "course_sha256": "daac49eaf80de4101a9a3fa8a0a1296d0437d0a96074bcd1a9a7cbd0b1882532",
+  "course_sha256": "5a9e9e308f6a493ad78a45d5c3b902f61d5d6ccaf34a13bd093df7c4786ce81c",
   "reviewer": "Codex /root: five-language authored lesson and real evidence/progress output review",
   "reviewed_at": "2026-10-14T14:55:04.859840+00:00",
   "review_scope": "Accepted prepared material and bounded real helper/Archive regressions. Semantic narrative and decisions are explicit test fixtures. This does not attest full live legal research, substantive pleading approval, native Word, native voice, installed-host learner execution or professional acceptance. Live lessons run the current specialist, not the fixtures.",
@@ -278,5 +278,18 @@
     "content_review": "Complete course comparison confirms every field except source bindings is unchanged: localized teaching, fictional inputs, checkpoints, practice, timing and execution definitions. Existing editorial and artifact reviews remain historical.",
     "source_review": "Reviewed the technical reporting changes in these four runtime helpers: package-relative structured errors and retained stderr, explicit capture gaps, operation-bound retries and host verification before recovery. Component dependency checks use the same path; an actual component-selector subprocess regression ruled out top-level recursion. No professional calculation or teaching output was changed.",
     "limits": "Bounded source review only. No fresh learner, voice, installed-host or professional acceptance is asserted. Current complete native teaching CI remains required."
+  },
+  "native_identity_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-15",
+    "previous_course_sha256": "daac49eaf80de4101a9a3fa8a0a1296d0437d0a96074bcd1a9a7cbd0b1882532",
+    "changed_sources": [
+      {
+        "path": "scripts/operational_incidents.py",
+        "before": "9ddd89ed0c4f8e715c13ec513af309a3f3397a2c4a43a8ff21227753f151a55d",
+        "after": "702b97c78e3387efdae0874364817c5f46c1c81bf0cf117c341e2f475d341973"
+      }
+    ],
+    "scope": "Compared every authored field and input definition: unchanged outside source bindings. Reviewed the incident helper change: persistent native host proof, native broker observations separated from guest versions, and best-effort identity linking without blocking original reports. No professional algorithm, lesson content or artifact review changed. Historical editorial/output judgments are retained; fresh native teaching CI remains required."
   }
 }

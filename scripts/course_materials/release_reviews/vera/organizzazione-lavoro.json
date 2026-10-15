@@ -24,7 +24,7 @@
     ],
     "course_sha256": "0e740c47f86034c69a3ca838844ead9c2a2c6b60593c09fbbbce1c40b0b17c77"
   },
-  "course_sha256": "2343700eba8f6e4b0574a7b036f251e095603972b654d33ff446ac9f1548f019",
+  "course_sha256": "af2679c78da23c4e68656c4f4596c4aba2a3b8575650b9380d85ba0e3f24ed6f",
   "host_marker_source_binding_review_20261010": {
     "prior_course_sha256": "c8787aa02e4e38d7b209da29ae1d8725bf86a83fe0ee06cbe80cb6669350ae74",
     "current_course_sha256": "5bcf5fb4a9c80d90dbe59e88b844a9567569a90c267e747b16213801082c9d96",
@@ -376,5 +376,18 @@
     "content_review": "Complete course comparison confirms every field except source bindings is unchanged: localized teaching, fictional inputs, checkpoints, practice, timing and execution definitions. Existing editorial and artifact reviews remain historical.",
     "source_review": "Reviewed the technical reporting changes in these four runtime helpers: package-relative structured errors and retained stderr, explicit capture gaps, operation-bound retries and host verification before recovery. Component dependency checks use the same path; an actual component-selector subprocess regression ruled out top-level recursion. No professional calculation or teaching output was changed.",
     "limits": "Bounded source review only. No fresh learner, voice, installed-host or professional acceptance is asserted. Current complete native teaching CI remains required."
+  },
+  "native_identity_source_refresh": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-15",
+    "previous_course_sha256": "2343700eba8f6e4b0574a7b036f251e095603972b654d33ff446ac9f1548f019",
+    "changed_sources": [
+      {
+        "path": "scripts/operational_incidents.py",
+        "before": "9ddd89ed0c4f8e715c13ec513af309a3f3397a2c4a43a8ff21227753f151a55d",
+        "after": "702b97c78e3387efdae0874364817c5f46c1c81bf0cf117c341e2f475d341973"
+      }
+    ],
+    "scope": "Compared every authored field and input definition: unchanged outside source bindings. Reviewed the incident helper change: persistent native host proof, native broker observations separated from guest versions, and best-effort identity linking without blocking original reports. No professional algorithm, lesson content or artifact review changed. Historical editorial/output judgments are retained; fresh native teaching CI remains required."
   }
 }

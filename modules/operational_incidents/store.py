@@ -54,6 +54,7 @@ class IncidentNotFound(ValueError):
 
 
 _SCHEMA = (
+    "CREATE TABLE IF NOT EXISTS operational_host_sessions (device_id TEXT NOT NULL, session_id TEXT NOT NULL, payload_json TEXT NOT NULL, last_seen TEXT NOT NULL, PRIMARY KEY (device_id,session_id))",
     "CREATE TABLE IF NOT EXISTS operational_app_links (installation_id TEXT PRIMARY KEY, app_installation_id TEXT NOT NULL, native_app TEXT NOT NULL, recorded_at TEXT NOT NULL)",
     "CREATE TABLE IF NOT EXISTS operational_reporter_sessions (installation_id TEXT NOT NULL, session_id TEXT NOT NULL, payload_json TEXT NOT NULL, last_seen TEXT NOT NULL, PRIMARY KEY (installation_id,session_id))",
     "CREATE TABLE IF NOT EXISTS operational_devices (device_id TEXT PRIMARY KEY, key_hash TEXT NOT NULL, created_at TEXT NOT NULL)",
@@ -213,7 +214,10 @@ class IncidentStore:
             raise IncidentNotFound("Installation capability is unavailable")
 
     def register(
-        self, credentials: Credentials, device: DeviceCredentials | None = None
+        self,
+        credentials: Credentials,
+        device: DeviceCredentials | None = None,
+        native_status: ReporterStatus | None = None,
     ) -> dict[str, Any]:
         """Register an installation; host linkage requires both local capabilities."""
         with self._connection() as connection:
@@ -231,6 +235,22 @@ class IncidentStore:
             self._authorize(connection, credentials)
             if device is not None:
                 self._link_device(connection, credentials, device)
+            if native_status is not None:
+                if device is None or device.native_app != native_status.host:
+                    raise IncidentConflict(
+                        "Native observation requires matching host proof"
+                    )
+                connection.execute(
+                    self._sql(
+                        "INSERT INTO operational_host_sessions VALUES (?,?,?,?) ON CONFLICT (device_id,session_id) DO UPDATE SET payload_json=excluded.payload_json,last_seen=excluded.last_seen"
+                    ),
+                    (
+                        str(device.device_id),
+                        str(native_status.session_id),
+                        _json(native_status.model_dump(mode="json")),
+                        _now(),
+                    ),
+                )
         result = {
             "installation_id": str(credentials.installation_id),
             "registered": True,
@@ -1102,6 +1122,17 @@ class IncidentStore:
                 "native_app": members[0]["native_app"],
                 "device_id": members[0]["device_id"],
                 "reporter_instances": [dict(row) for row in members],
+                "native_broker_sessions": [
+                    {**json.loads(row["payload_json"]), "last_seen": row["last_seen"]}
+                    for row in connection.execute(
+                        self._sql(
+                            "SELECT payload_json,last_seen FROM operational_host_sessions WHERE device_id=? ORDER BY last_seen"
+                        ),
+                        (members[0]["device_id"],),
+                    ).fetchall()
+                    if json.loads(row["payload_json"])["host"]
+                    == members[0]["native_app"]
+                ],
                 "incident_ids": sorted({row["incident_id"] for row in deliveries}),
                 "deliveries": deliveries,
                 **evidence,
@@ -1112,6 +1143,7 @@ class IncidentStore:
         """Count all recorded affected identities without a queue-size assumption."""
         queries = {
             "registered_installations": "SELECT COUNT(*) AS n FROM operational_installations",
+            "linked_host_devices": "SELECT COUNT(DISTINCT device_id) AS n FROM operational_device_links",
             "reports_received": "SELECT COUNT(*) AS n FROM operational_reports",
             "reporting_installations": "SELECT COUNT(DISTINCT installation_id) AS n FROM operational_reports",
             "unresolved_installations": "SELECT COUNT(DISTINCT installation_id) AS n FROM operational_deliveries WHERE status!='recovered'",

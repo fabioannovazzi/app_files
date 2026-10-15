@@ -75,6 +75,26 @@ capability together. A reported app name alone does not qualify that link.
 Unlinked app/host instances remain explicit unknowns. Host IDs are user-scoped
 native identities, not hardware serial numbers or a physical-device census.
 
+The native stdio server `veraIncidentHost` supplies `vera_incident_host_context`
+and `vera_incident_host_link`. It snapshots only its indexed reporter and product
+metadata into isolated Python; no diagnostic commands or client paths are inputs.
+Host UUID and scoped key persist in `~/.mparanza/vera/host-identity`, independently
+of Codex/Cowork task state. The key is sent only to the fixed incident register
+endpoint, stored server-side only as a hash, and never returned in tool results.
+Each app profile retains `native_broker_sessions` separately from guest reporter
+sessions and failure-worker versions. Native linking errors do not block failure
+delivery. `registry.linked_host_devices` counts all proven linked host profiles;
+the unresolved counts remain separate.
+
+Native plugin tools may be unavailable in cloud Cowork. The saved remote
+connection still preserves cross-task reports and recovery ownership, but does
+not prove a physical host. Leave that linkage unknown. Do not expand native
+computer/folder access merely to fill the gap. A fresh Claude capability inventory
+on 2026-10-15 exposed the remote connector and no native plugin tools; enabling
+its connected-computer group was rejected by automatic approval review as a
+separate access expansion. Full native cloud-host acceptance remains pending
+that authority and actual capability evidence.
+
 Use `manage_incidents.py app <app-installation-id>` for scoped original reports,
 supplements, deliveries, outcome ownership and retry events across the profile's
 reporter instances, including recovered history. Use `show` on its incident IDs

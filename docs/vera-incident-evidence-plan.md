@@ -36,40 +36,48 @@ confirms the component selector cannot re-enter Vera's top-level checker.
 Server models now distinguish task-local reporter instances, persistent native
 app profiles and host identities. App lookup preserves scoped original reports,
 supplements, deliveries and exact outcome ownership across reporter instances.
-It does not widen client permissions. Native activation must still prove stable
-identities across fresh Cowork sessions and preserve the distinction between
-native-broker observations and the actual guest workflow version. A broker update
-alone is not evidence that a running guest workflow updated.
+It does not widen client permissions. The approved native bridge now uses the
+same persistent host proof across native app profiles and accepts only the
+existing reporter capability. It runs an indexed isolated reporter/collector
+snapshot and returns public IDs or source-bound technical failure facts. Raw
+stderr and device keys are not returned. Native broker observations are retained
+separately from guest workflow versions; a broker update does not update a guest.
 
-Device-linking activation is awaiting Fabio's explicit response to automatic
-approval review. No new host capability has been sent, no production deployment
-or Marketplace action has occurred, and the monitor automation is unchanged.
-The Clara catalogue binding also requires a separate metadata-only release:
-its validator governs the shared lesson-review directory changed by Vera.
-Automatic approval review rejected that separate product release; Fabio's
-second approval card is pending. Clara source and packages remain unchanged
-from the merged base.
+Fabio explicitly approved persistent device linking and the metadata-only Clara
+0.1.286 release on 2026-10-15. Both source changes are implemented. No production
+deployment or Marketplace action has occurred; the monitor is unchanged.
+Clara's three affected bindings cover its canonical version and the shared
+lesson-review directory. Authored lessons and features are unchanged.
+
+Native activation must still prove stable identities across fresh Cowork
+sessions. A fresh actual Claude session exposed the remote incident connector
+and no local plugin MCP tools; no version was available from that tool catalog.
+Automatic approval review rejected enabling Claude's connected-computer group
+because that grants a separate file/device control scope. Its technical-only
+acceptance approval is pending. Do not infer a native host from the saved remote
+connection or substitute simulated subprocess tests for this host acceptance.
 The local Vera 0.1.391 candidate integrates the green Cowork packaging-fix head
 from PR 833. Final green release CI, production deployment, live acceptance and
 monitor activation changes remain outstanding. Keep this task's existing
 branch/worktree active.
 
-Local candidate evidence (2026-10-15): 228 focused tests passed with 86.65%
-coverage. The 28 evidence-pipeline checks then passed without warnings after
-correcting the test supplement's UUID type. Black, Isort, strict Mypy 2.4 for
-all eight incident files, and Bandit passed. CI uses that strict type
+Local candidate evidence (2026-10-15): 237 focused tests passed with 88.33%
+coverage, including actual native stdio/isolated Python/HTTP/store integration,
+fresh reporter identity continuity, native/guest version separation and damaged
+reporter refusal. Clara's metadata/privacy and the icon-theme checks passed
+16 tests. Black, Isort, strict Mypy 2.4 for all eight incident files and Bandit
+passed. CI uses that strict type
 configuration, not the application's suppressed-error configuration. All new
 recovery outcomes, including those for legacy reports, require explicit host
 verification of the original task. Already recorded historical receipts retain
 their original bytes and idempotent retry behavior.
 
-The earlier combined package/runtime/reconciliation run passed 722 tests with
-two skipped. Final candidate package/update checks passed 408 tests with two skipped
-(curated installed-version evidence unavailable). The final product-release
-source-parity check passed for every Vera archive, with canonical version
-0.1.391. Real
+The preceding candidate's combined package/runtime/reconciliation run passed
+722 tests with two skipped; its package/update checks passed 408 tests with two
+skipped. New source/package parity and package/update checks are required after
+the approved native and Clara changes. Real
 helper INFO output and packaged PDF reconciliation summaries are preserved by
 the runner. These are local candidate results, not production or affected-user
 recovery.
 
-Final candidate Cowork ZIP SHA-256: `0e3c4726e1be7605d12aef8a25d44c95a66ecf1d5d5937ddd980eae7e42ce57c`.
+The previous Cowork archive hash is superseded by the native bridge changes.

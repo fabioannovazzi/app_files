@@ -13,9 +13,11 @@ import pytest
 
 from modules.operational_incidents.contracts import (
     Credentials,
+    DeviceCredentials,
     Outcome,
     RecoveryEvent,
     Report,
+    ReporterStatus,
 )
 from modules.operational_incidents.store import IncidentStore
 
@@ -176,7 +178,19 @@ def client(tmp_path, monkeypatch):
     def post(operation, payload):
         credentials = Credentials.model_validate(payload["credentials"])
         if operation == "register":
-            return store.register(credentials)
+            return store.register(
+                credentials,
+                (
+                    DeviceCredentials.model_validate(payload["device"])
+                    if payload.get("device")
+                    else None
+                ),
+                (
+                    ReporterStatus.model_validate(payload["native_status"])
+                    if payload.get("native_status")
+                    else None
+                ),
+            )
         if operation == "report":
             return store.report(credentials, Report.model_validate(payload["report"]))
         if operation == "status":
@@ -189,6 +203,67 @@ def client(tmp_path, monkeypatch):
 
     monkeypatch.setattr(module, "_post", post)
     return module, store, post
+
+
+def test_fresh_native_cowork_instances_keep_one_host_and_app_identity(
+    tmp_path, monkeypatch
+):
+    monkeypatch.setenv("MPARANZA_INCIDENT_DEVICE_DIR", str(tmp_path / "native"))
+    monkeypatch.setenv("MPARANZA_INCIDENT_HOST", "cowork")
+    first, store, transport = client(tmp_path / "one", monkeypatch)
+    monkeypatch.setattr(first.platform, "system", lambda: "Darwin")
+    one = first.report_failure(
+        "journal-sampling", "execution-startup", "synthetic failure"
+    )
+    first_context = first.local_context()
+    second, _, _ = client(tmp_path / "two", monkeypatch)
+    monkeypatch.setattr(second, "_post", transport)
+    second.report_failure("journal-sampling", "execution-startup", "synthetic failure")
+    second_context = second.local_context()
+
+    assert first_context["credentials"] != second_context["credentials"]
+    assert first_context["host_binding"] == second_context["host_binding"]
+    assert store.registry()["reporting_instances"] == 2
+    assert store.registry()["linked_app_installations"] == 1
+    assert (
+        store.show(one["incident_id"])["reporting_summary"]["linked_host_devices"] == 1
+    )
+    app = store.app_installation(first_context["host_binding"]["app_installation_id"])
+    assert len(app["native_broker_sessions"]) == 2
+    assert len(app["reports"]) == 2
+    identity = json.loads((tmp_path / "native/identity.json").read_text())
+    assert identity["device_key"] not in json.dumps(first_context)
+
+
+def test_cowork_guest_never_invents_a_native_host_identity(tmp_path, monkeypatch):
+    module, store, _ = client(tmp_path, monkeypatch)
+    monkeypatch.setenv("MPARANZA_INCIDENT_HOST", "cowork")
+    monkeypatch.setattr(module.platform, "system", lambda: "Linux")
+
+    module.report_failure("journal-sampling", "execution-startup", "synthetic failure")
+
+    assert module.host_identity()["binding"] == "unlinked-guest"
+    assert store.registry()["linked_host_devices"] == 0
+    assert module.local_context()["host_binding"] is None
+
+
+def test_broken_host_identity_cannot_block_the_original_failure_report(
+    tmp_path, monkeypatch
+):
+    module, store, _ = client(tmp_path, monkeypatch)
+    monkeypatch.setattr(
+        module,
+        "_host_credentials",
+        lambda: (_ for _ in ()).throw(ValueError("invalid identity")),
+    )
+
+    result = module.report_failure(
+        "journal-sampling", "execution-startup", "synthetic failure"
+    )
+
+    assert result["reporting"] == "delivered"
+    assert len(store.queue()) == 1
+    assert store.registry()["linked_host_devices"] == 0
 
 
 def test_failure_delivers_automatically_and_persists_receipt(tmp_path, monkeypatch):

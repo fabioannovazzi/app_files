@@ -64,6 +64,7 @@ class Envelope(BaseModel):
     outcome: Outcome | None = None
     progress: RecoveryEvent | None = None
     device: DeviceCredentials | None = None
+    native_status: ReporterStatus | None = None
     client_status: ReporterStatus | None = None
 
 
@@ -126,7 +127,9 @@ def _dispatch(
         }
     envelope = Envelope.model_validate(arguments)
     if operation == "register":
-        registered = store.register(envelope.credentials, envelope.device)
+        registered = store.register(
+            envelope.credentials, envelope.device, envelope.native_status
+        )
         if envelope.client_status is not None:
             store.observe_reporter(envelope.credentials, envelope.client_status)
         return {

@@ -39,13 +39,19 @@ __all__ = [
     "execution_identity",
     "record_execution_progress",
     "verify_original_task",
+    "host_identity",
+    "link_host",
     "main",
 ]
 LOGGER = logging.getLogger(__name__)
 SERVER = "https://mparanza.com/api/operational-incidents"
 ROOT = Path(__file__).resolve().parents[1]
 _LIMIT = 2 * 1024 * 1024
-_SESSION = str(uuid4())
+_SESSION = (
+    str(UUID(os.environ["MPARANZA_INCIDENT_HOST_SESSION"]))
+    if os.environ.get("MPARANZA_INCIDENT_HOST_SESSION")
+    else str(uuid4())
+)
 
 
 def _host() -> str:
@@ -105,8 +111,14 @@ def _host_credentials() -> dict[str, str] | None:
             if not stat.S_ISREG(metadata.st_mode) or metadata.st_nlink != 1:
                 raise ValueError("Host identity must be an ordinary private file")
             value = json.loads(path.read_text(encoding="utf-8"))
+            if not isinstance(value, dict) or set(value) != {"device_id", "device_key"}:
+                raise ValueError("Invalid host identity")
+            if not isinstance(value["device_id"], str):
+                raise ValueError("Invalid host identity")
             UUID(value["device_id"])
-            if not re.fullmatch(r"[A-Za-z0-9_-]{32,128}", value["device_key"]):
+            if not isinstance(value["device_key"], str) or not re.fullmatch(
+                r"[A-Za-z0-9_-]{32,128}", value["device_key"]
+            ):
                 raise ValueError("Invalid host capability")
             return value
         value = {"device_id": str(uuid4()), "device_key": secrets.token_urlsafe(32)}
@@ -124,6 +136,8 @@ def host_identity() -> dict[str, Any]:
         "device_id": device["device_id"] if device else None,
         "binding": "native-host" if device else "unlinked-guest",
         "platform": platform.system(),
+        "native_app": _host(),
+        "broker_status": _reporter_status(),
     }
 
 
@@ -135,7 +149,26 @@ def link_host(credentials: dict[str, str]) -> dict[str, Any]:
     device = _host_credentials()
     if device is None:
         raise ValueError("Host linkage requires the native host helper")
-    return _post("register", {"credentials": credentials, "device": device})
+    receipt = _post(
+        "register",
+        {
+            "credentials": credentials,
+            "device": {**device, "native_app": _host()},
+            "native_status": _reporter_status(),
+        },
+    )
+    return {
+        name: receipt[name]
+        for name in (
+            "installation_id",
+            "registered",
+            "device_id",
+            "app_installation_id",
+            "native_app",
+            "next_report_id",
+        )
+        if name in receipt
+    }
 
 
 def _input_receipt_identity(arguments: list[str]) -> dict[str, Any] | None:
@@ -460,7 +493,9 @@ class _NoRedirect(urllib.request.HTTPRedirectHandler):
 
 
 def _post(operation: str, payload: dict[str, Any]) -> dict[str, Any]:
-    payload = {**payload, "client_status": _reporter_status()}
+    # A native broker linking a guest must never claim the guest ran its version.
+    if "native_status" not in payload:
+        payload = {**payload, "client_status": _reporter_status()}
     data = json.dumps(payload).encode("utf-8")
     if len(data) > _LIMIT:
         raise ValueError("Technical report exceeds 2 MiB; split diagnostic events")
@@ -563,6 +598,24 @@ def _flush(state: dict[str, Any]) -> None:
         _post("register", {"credentials": state["credentials"]})
         state["registered"] = True
         _write(state)
+    if state.get("host_binding_session") != _SESSION:
+        try:
+            device = _host_credentials()
+            if device is not None:
+                receipt = link_host(state["credentials"])
+                if receipt.get("device_id") == device["device_id"] and receipt.get(
+                    "app_installation_id"
+                ):
+                    state["host_binding"] = {
+                        name: receipt[name]
+                        for name in ("device_id", "app_installation_id", "native_app")
+                    }
+                    state["host_binding_session"] = _SESSION
+                    _write(state)
+        except (OSError, ValueError, KeyError, sqlite3.Error):
+            LOGGER.warning(
+                "Native incident identity could not be linked; technical reporting continues."
+            )
     deadline = time.monotonic() + 16
     delivered = 0
     while state["outbox"] and delivered < 3 and time.monotonic() < deadline:
@@ -1102,6 +1155,7 @@ def local_context() -> dict[str, Any]:
         "client_status": _reporter_status(),
         "pending_diagnostics": _pending_diagnostics(),
         "outbox_path": str(_state_path()),
+        "host_binding": state.get("host_binding"),
     }
 
 
@@ -1127,7 +1181,7 @@ def startup_context() -> str:
             + json.dumps(context["pending_diagnostics"])
             + ". Pending delivery state (read only when queued evidence needs connector delivery): "
             + context["outbox_path"]
-            + ". Read each pending diagnostic locally, exclude unrelated private/client content, and supplement its original report through vera_incident_report before declaring diagnosis blocked. Use the independent vera_incident_register/status tools automatically. An observed technical failure uses vera_incident_report, not a consent question or CR form. If outstanding incidents have a remedy, read skills/vera/references/incident-recovery.md. Local transport/recovery errors do not block professional work."
+            + ". If vera_incident_host_link is actually exposed, pass this local capability once to bind its native host proof; never expose its separate device key or infer a guest workflow version from the broker. A saved connector ID and a Linux guest ID are not computer identities. Read each pending diagnostic locally, exclude unrelated private/client content, and supplement its original report through vera_incident_report before declaring diagnosis blocked. Use the independent vera_incident_register/status tools automatically. An observed technical failure uses vera_incident_report, not a consent question or CR form. If outstanding incidents have a remedy, read skills/vera/references/incident-recovery.md. Local transport/recovery errors do not block professional work."
         )
     except (OSError, ValueError, KeyError, sqlite3.Error):
         return "Local incident state is unavailable. Use vera_incident_register with empty arguments to reuse the saved anonymous connection identity. Report observed technical failure automatically."
@@ -1144,12 +1198,22 @@ def main() -> None:
             "ack-diagnostics",
             "ack-delivery",
             "verify-task",
+            "host-context",
+            "host-link",
         ),
     )
     parser.add_argument("--input", type=Path)
     parser.add_argument("--diagnostic", type=Path)
     args = parser.parse_args()
-    if args.command == "verify-task":
+    if args.command == "host-context":
+        sys.stdout.write(json.dumps(host_identity()) + "\n")
+    elif args.command == "host-link":
+        # Native MCP supplies only the guest's existing capability over stdin.
+        value = json.load(sys.stdin)
+        if not isinstance(value, dict) or set(value) != {"credentials"}:
+            parser.error("A local incident capability is required")
+        sys.stdout.write(json.dumps(link_host(value["credentials"])) + "\n")
+    elif args.command == "verify-task":
         if args.input is None:
             parser.error("--input requires the actual original-task verification")
         result = verify_original_task(

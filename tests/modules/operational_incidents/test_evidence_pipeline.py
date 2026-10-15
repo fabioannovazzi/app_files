@@ -123,6 +123,44 @@ def test_observed_reporter_requires_matching_installation_capability(tmp_path):
     assert store.installation(str(owner.installation_id))["reporter_sessions"] == []
 
 
+def test_native_broker_observation_does_not_claim_guest_workflow_updated(tmp_path):
+    from modules.operational_incidents.api import _dispatch
+
+    store, guest = registered(tmp_path)
+    original = store.report(guest, report())
+    host = DeviceCredentials(
+        device_id=uuid4(), device_key=uuid4().hex, native_app="cowork"
+    )
+    broker = ReporterStatus(
+        session_id=uuid4(),
+        protocol=2,
+        product_version="0.1.999",
+        host="cowork",
+        platform="macos",
+    )
+
+    receipt = _dispatch(
+        store,
+        "register",
+        {
+            "credentials": guest.model_dump(mode="json"),
+            "device": host.model_dump(mode="json"),
+            "native_status": broker.model_dump(mode="json"),
+        },
+    )
+
+    assert store.installation(str(guest.installation_id))["reporter_sessions"] == []
+    app = store.app_installation(receipt["app_installation_id"])
+    assert app["native_broker_sessions"][0]["product_version"] == "0.1.999"
+    assert app["reports"][0]["payload"]["product_version"] == report().product_version
+    assert (
+        store.show(original["incident_id"])["reports"][0]["product_version"]
+        == report().product_version
+    )
+    with pytest.raises(IncidentConflict, match="matching host proof"):
+        store.register(guest, native_status=broker)
+
+
 @pytest.mark.parametrize("capture_state", ["legacy", "pending", "unavailable"])
 def test_recovery_requires_original_task_verification_even_without_operation_id(
     tmp_path,
