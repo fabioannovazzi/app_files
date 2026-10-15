@@ -41,7 +41,10 @@ def test_installed_cowork_prepares_every_supported_course_and_language(installed
     result = run(root, "list")
     assert result.returncode == 0, result.stderr
     catalog = json.loads(result.stdout)
-    assert len(catalog) == {"vera": 44, "clara": 7, "lucia": 5}[product]
+    assert len(catalog) == {"vera": 43, "clara": 7, "lucia": 4}[product]
+    if product in {"vera", "lucia"}:
+        assert all(entry["workflow"] != "contenzioso-tributario" for entry in catalog)
+        assert (root / "skills/mparanza-contenzioso-tributario/SKILL.md").is_file()
     # Native-only outlines retain their platform limitation; checked separately.
     written_courses = [
         entry
