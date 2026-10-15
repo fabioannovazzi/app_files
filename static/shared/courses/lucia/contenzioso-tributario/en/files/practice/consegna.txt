@@ -1,0 +1,6 @@
+RICEVUTA FITTIZIA DI AVVENUTA CONSEGNA PEC — esercitazione, nessun valore legale.
+Messaggio DEMO-PEC-001 relativo all'avviso AVV-DEMO-24.
+Avvenuta consegna dichiarata nella ricevuta: 2 ottobre 2026 alle 09:14.
+Questo documento arriva soltanto nella seconda fase della lezione.
+Collegamento al messaggio e integrità della ricevuta sono dati da verificare nella pratica reale.
+La ricevuta non prova la notifica di un ricorso né il deposito giudiziario.
