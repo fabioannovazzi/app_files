@@ -89,7 +89,7 @@ def alter_skill(entries):
     name = next(
         name
         for name in entries
-        if name.endswith("contenzioso-tributario/SKILL.md") and "/modules/" not in name
+        if name.endswith("journal-sampling/SKILL.md") and "/modules/" not in name
     )
     entries[name] += b"\nSynthetic final edit after sealing.\n"
     return name
@@ -282,7 +282,7 @@ def test_course_hash_drift_is_rejected_even_when_execution_index_matches(tmp_pat
 )
 def test_invalid_course_source_blocks_release(tmp_path, source, message):
     entries, root = release_entries("cowork")
-    course_path = "assets/courses/contenzioso-tributario/course.json"
+    course_path = "assets/courses/journal-sampling/course.json"
     course = json.loads(entries[course_path])
     course["sources"][0]["path"] = source
     entries[course_path] = json.dumps(course).encode()
