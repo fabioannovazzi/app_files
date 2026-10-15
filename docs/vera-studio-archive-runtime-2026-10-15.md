@@ -123,3 +123,11 @@ the shared course build and public catalogue. The inspected course-manifest
 withdrawal changes that fingerprint without adding a recipient or data class.
 Refresh that binding and the root/update-service version bindings, then rebuild
 Clara 0.1.288 from its unchanged workflow source. Clara privacy regressions pass.
+
+## Shared Lucia archive review binding
+
+The packaged-runtime CI also checks Lucia's native matter-opening review against
+the shared archive implementation. Review the changed launcher and retain the
+existing case-data boundaries; document managed runtime downloads before worker
+execution and refresh this exact governed-source binding. All 26 Lucia plugin
+regressions pass. Rebuild Lucia 0.1.113 after this review update.
