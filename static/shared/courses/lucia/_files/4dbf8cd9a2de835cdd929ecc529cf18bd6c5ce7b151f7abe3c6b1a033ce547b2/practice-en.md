@@ -1,0 +1,7 @@
+# Imprese Arco
+
+Fictional case for learning the workflow. The association and assignment are invented; the attached public sources are authentic.
+
+The fictional Imprese Arco association is preparing an introductory meeting for small businesses selling goods or services to other businesses in the European Union. The professional needs a briefing of no more than two pages on the common EU late-payment rules: scope, conditions for interest, contractual payment periods and recovery-cost compensation. Add a list of documents to obtain before examining an individual debt. This is general information, not an opinion on a particular creditor’s entitlement. There are no real invoices, contracts or disputes. Do not calculate interest or conduct debt recovery. Distinguish the EU framework from national implementation, which must be checked for the country governing the contract. Briefing language: English. Fictional assignment date: 14 September 2026. Use official sources, check updates and show references and limitations. The Commission guide and directive text are starting sources to inspect, not already validated conclusions.
+
+New assignment version: the same meeting now includes businesses supplying goods or services to public authorities. Update the briefing to compare the two customer types clearly and identify the checks that change. Preserve the informational purpose, sources and two-page limit. Keep the previous briefing. Do not invent an individual debt or dispute.

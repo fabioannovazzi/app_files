@@ -1,0 +1,16 @@
+ESERCIZIO INTERAMENTE FITTIZIO — Bottega Aurora, secondo trimestre 2026.
+Nessuna partita IVA, nessun contribuente o documento reale.
+
+Perimetro proposto: IVA ordinaria italiana, periodicità mensile, aprile-giugno.
+Gestionale didattico: SYNTHETIC, versione 1. Nessun regime speciale.
+V22 identifica le vendite imponibili al 22%; A22 identifica gli acquisti al 22%.
+Per questo esercizio si propone la detrazione dell'intera imposta degli acquisti.
+Registrazione, esigibilità e detrazione ricadono nello stesso mese.
+I registri testuali riassumono tutte le righe del caso fittizio; nessun sezionale
+aggiuntivo, corrispettivo o integrazione è previsto. Non sono stampe Reviso/Mexal.
+Saldo precedente e rettifiche sono dichiarati nel file registri.txt.
+I pagamenti sono informazioni didattiche, non F24 autenticati.
+
+Le informazioni vanno esaminate: questo documento non conferma classificazioni,
+completezza, saldi o detraibilità e non approva alcun risultato.
+Il docente non firma, non invia XML e non contatta un cliente.

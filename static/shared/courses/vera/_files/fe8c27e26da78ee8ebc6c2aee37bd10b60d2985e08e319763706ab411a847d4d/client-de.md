@@ -1,0 +1,3 @@
+# Mandant und Auftrag
+
+Alle Namen, Dokumente und Referenzen sind fiktiv und nur für die Übung bestimmt. Officina Arco ist eine italienische Kfz-Werkstatt für lokale Kunden. Die Kanzlei führt seit Januar 2026 die Buchhaltung. Elena Bianchi stellt sich als Geschäftsführerin und Ansprechpartnerin vor. Die Prüfung soll Mandant, Beteiligte und Unterlagen nachvollziehen und eine Geldwäschebeurteilung zur fachlichen Prüfung vorbereiten. Identitätsdokumente, Registerprüfung und Screeningberichte fehlen. Fehlende Prüfungen sind keine negativen Trefferergebnisse. Niemanden kontaktieren und keine Meldungen versenden.

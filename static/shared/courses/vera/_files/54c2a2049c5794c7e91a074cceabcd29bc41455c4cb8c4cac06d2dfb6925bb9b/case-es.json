@@ -1,0 +1,60 @@
+{
+  "fictional": true,
+  "phase": "demo",
+  "language": "es",
+  "studio": "Studio Riva",
+  "day": "2026-11-10",
+  "request": "Vera, organiza los compromisos del despacho ficticio del archivo: guarda la cita, cámbiala como se solicita, conserva las tareas de reunión y muestra la jornada. Indica qué se guardó localmente y qué no se escribió en el calendario.",
+  "preferences": {
+    "timezone": "Europe/Rome",
+    "calendar_id": "tutorial-local-only",
+    "working_hours": {
+      "start": "09:00",
+      "end": "18:00"
+    },
+    "durations": {
+      "appointment": 60
+    }
+  },
+  "busy_periods": [
+    {
+      "start": "2026-11-10T09:00:00+01:00",
+      "end": "2026-11-10T10:00:00+01:00",
+      "label": "Franja ficticia de ejemplo; sin comprobación del conector"
+    }
+  ],
+  "appointment": {
+    "title": "Reunión con Paola",
+    "kind": "appointment",
+    "client": "Studio Riva",
+    "owner": "Sara",
+    "start_time": "2026-11-10T11:00:00+01:00",
+    "end_time": "2026-11-10T12:00:00+01:00",
+    "duration_minutes": 60,
+    "source": "case-es.json"
+  },
+  "reschedule_request": {
+    "start_time": "2026-11-10T14:00:00+01:00",
+    "end_time": "2026-11-10T15:00:00+01:00"
+  },
+  "meeting_notes": {
+    "title": "Reunión del cliente",
+    "date": "2026-11-10",
+    "client": "Studio Riva",
+    "participants": [
+      "Paola",
+      "Sara"
+    ],
+    "source": "case-es.json",
+    "notes": "Se acordó obtener los extractos bancarios que faltan. Sara: Enviar la solicitud de documentos antes de la fecha indicada. 2026-11-16."
+  },
+  "task_request": {
+    "title": "Solicitar extractos bancarios",
+    "kind": "follow_up",
+    "owner": "Sara",
+    "client": "Studio Riva",
+    "due_date": "2026-11-16",
+    "source": "case-es.json"
+  },
+  "live_calendar_authorized": false
+}

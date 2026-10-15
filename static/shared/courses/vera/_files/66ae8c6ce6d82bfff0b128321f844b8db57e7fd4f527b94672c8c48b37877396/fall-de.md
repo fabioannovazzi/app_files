@@ -1,0 +1,5 @@
+Officina Arco CNC ist ein vollständig fiktives italienisches Unternehmen. Zum 31. Oktober 2026: Darlehen EUR 120.000, verfügbare Bankmittel EUR 50.000, gesperrte Einlage EUR 10.000, Lieferverbindlichkeiten EUR 80.000. Angenommener Eingang EUR 100.000 am 15. November, Zahlung EUR 80.000 am 30. November. Altersstruktur, Einbringlichkeitsnachweis, Aufträge, Bestellung und Einreichungsbelege fehlen. Die gelieferten Positionen sind unvollständig.
+
+Fall, balances.csv und treasury-demo lesen. Leere Tabellen bedeuten nicht gelieferte Daten, nicht fehlende reale Geschäftsvorfälle. treasury-practice und treasury-independent begleiten Änderung und selbständige Übung. Der Rechercheauftrag enthält eine allgemeine öffentliche Frage und zu prüfende URLs, kein aktuelles Rechtskorpus oder genehmigtes Ergebnis.
+
+Vera, ich berate die fiktive Officina Arco CNC. Lies Belege, trenne Fakten, Annahmen und Lücken, führe vorhandene Finanz- und Liquiditätsanalysen aus und entwerfe einen belegabhängigen Vorschlag. Begleite meine Prüfung der exakten Fassung. Alles bleibt lokal, ohne Versand oder simulierte fachliche Genehmigung.

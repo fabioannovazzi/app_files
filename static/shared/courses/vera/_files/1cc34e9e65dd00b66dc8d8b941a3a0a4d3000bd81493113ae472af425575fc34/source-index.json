@@ -1,0 +1,22 @@
+{
+  "references": [
+    {
+      "id": "RI-COMPANIES",
+      "title": "Area per le società — Domicilio digitale / PEC",
+      "url": "https://www.registroimprese.it/per-le-societa",
+      "publisher": "InfoCamere / Registro Imprese",
+      "territory": "Italy"
+    },
+    {
+      "id": "MILANO-SARI",
+      "title": "Elenco degli adempimenti Registro Imprese/REA consultabili sulla piattaforma SARI",
+      "url": "https://www.milomb.camcom.it/elenco-degli-adempimenti-registro-imprese/rea-consultabili-sulla-piattaforma-sari",
+      "publisher": "Camera di commercio Milano Monza Brianza Lodi",
+      "territory": "Milano Monza Brianza Lodi"
+    }
+  ],
+  "checked_on": "2026-09-14",
+  "page_copies_included": false,
+  "sari_card_selected": false,
+  "current_source_review_required": true
+}

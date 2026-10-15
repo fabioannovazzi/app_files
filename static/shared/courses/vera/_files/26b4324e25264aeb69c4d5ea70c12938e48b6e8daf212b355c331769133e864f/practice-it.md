@@ -1,0 +1,7 @@
+# Imprese Arco
+
+Caso fittizio per imparare il workflow. L’associazione e l’incarico sono inventati; le fonti pubbliche allegate sono autentiche.
+
+L’associazione fittizia Imprese Arco sta preparando un incontro introduttivo per piccole imprese che vendono beni o servizi ad altre imprese nell’Unione europea. Serve al professionista una nota di massimo due pagine sulle regole comuni UE contro i ritardi di pagamento: ambito, condizioni per gli interessi, termini contrattuali e rimborso dei costi di recupero. Aggiungi un elenco dei documenti da acquisire prima di esaminare un credito concreto. Si tratta di informazione generale, non di un parere sul diritto di un singolo creditore. Non ci sono fatture, contratti o controversie reali. Non calcolare interessi né svolgere la procedura di recupero. Distingui il quadro UE dall’attuazione nazionale, che dovrà essere verificata per il paese del contratto. Lingua della nota: italiano. Data dell’incarico fittizio: 14 settembre 2026. Usa fonti ufficiali, verifica gli aggiornamenti e mostra riferimenti e limiti. La guida della Commissione e il testo della direttiva sono fonti iniziali da esaminare, non conclusioni già validate.
+
+Nuova versione dell’incarico: lo stesso incontro comprende anche imprese che forniscono beni o servizi a pubbliche amministrazioni. Aggiorna la nota per confrontare in modo chiaro i due tipi di cliente e indicare quali verifiche cambiano. Mantieni il taglio informativo, le fonti e il limite di due pagine. Conserva la nota precedente. Non inventare un credito specifico o una controversia.

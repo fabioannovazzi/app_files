@@ -1,0 +1,3 @@
+# Company and assignment
+
+Entirely fictional case: Officina Arco, an Italian company, one site, twelve staff, vehicle repairs for local customers. Elena Bianchi manages the company and authorizes payments; Paolo Neri supervises the workshop; Sara Rossi manages documents and the due-date list. The external practice keeps accounts and prepares the monthly summary but does not collect customer payments. The request concerns responsibilities, monthly closing and use of information for collections at 31 March 2026. It is not a complete assessment of every company process. A procedure and one February operating example are supplied. No forward cash forecast or additional closing cycle is attached.

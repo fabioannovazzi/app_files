@@ -1,0 +1,285 @@
+{
+  "synthetic": true,
+  "branch": "ordinary_domestic_oic",
+  "as_of": "2026-09-30",
+  "facts": {
+    "accounting_policy": {
+      "company": "alpha",
+      "value": "SYNTHETIC selected accounting allocation, with separately reviewed tax effects; not a real goodwill or tax determination",
+      "value_kind": "text"
+    },
+    "allocation_policy": {
+      "company": "alpha",
+      "value": "SYNTHETIC exact whole shares; no cash adjustment or hidden rounding",
+      "value_kind": "text"
+    },
+    "alpha_capital": {
+      "company": "alpha",
+      "value": "-60000",
+      "value_kind": "decimal"
+    },
+    "alpha_cash": {
+      "company": "alpha",
+      "value": "500000",
+      "value_kind": "decimal"
+    },
+    "alpha_reserves": {
+      "company": "alpha",
+      "value": "-440000",
+      "value_kind": "decimal"
+    },
+    "annual_accounts_actual": {
+      "company": "alpha",
+      "value": "2026-09-30",
+      "value_kind": "date"
+    },
+    "annual_accounts_anchor_0": {
+      "company": "alpha",
+      "value": "2026-03-31",
+      "value_kind": "date"
+    },
+    "balance_date_a": {
+      "company": "alpha",
+      "value": "2026-09-30",
+      "value_kind": "date"
+    },
+    "branch_rationale": {
+      "company": "alpha",
+      "value": "SYNTHETIC manual branch selection and reviewed scope",
+      "value_kind": "text"
+    },
+    "calendar_owner": {
+      "company": "alpha",
+      "value": "SYNTHETIC responsible professional",
+      "value_kind": "text"
+    },
+    "calendar_policy": {
+      "company": "alpha",
+      "value": "SYNTHETIC declared ordinary terms; no inferred waivers or holiday adjustments",
+      "value_kind": "text"
+    },
+    "creditor_wait_anchor_0": {
+      "company": "alpha",
+      "value": "2026-10-02",
+      "value_kind": "date"
+    },
+    "creditor_wait_anchor_1": {
+      "company": "beta",
+      "value": "2026-10-03",
+      "value_kind": "date"
+    },
+    "documents_available_actual": {
+      "company": "alpha",
+      "value": "2026-10-02",
+      "value_kind": "date"
+    },
+    "documents_available_anchor_0": {
+      "company": "alpha",
+      "value": "2026-09-02",
+      "value_kind": "date"
+    },
+    "domestic_oic": {
+      "company": "alpha",
+      "value": true,
+      "value_kind": "boolean"
+    },
+    "equity_alpha": {
+      "company": "alpha",
+      "value": "600000.00",
+      "value_kind": "decimal"
+    },
+    "homogeneous_rights": {
+      "company": "alpha",
+      "value": true,
+      "value_kind": "boolean"
+    },
+    "incorporation": {
+      "company": "alpha",
+      "value": true,
+      "value_kind": "boolean"
+    },
+    "method_alpha": {
+      "company": "alpha",
+      "value": "SYNTHETIC professionally supplied equity; no automated valuation",
+      "value_kind": "text"
+    },
+    "no_cash_adjustment": {
+      "company": "alpha",
+      "value": true,
+      "value_kind": "boolean"
+    },
+    "no_mlbo": {
+      "company": "alpha",
+      "value": true,
+      "value_kind": "boolean"
+    },
+    "no_own_or_reciprocal_holdings": {
+      "company": "alpha",
+      "value": true,
+      "value_kind": "boolean"
+    },
+    "no_special_regulated_or_crisis_case": {
+      "company": "alpha",
+      "value": true,
+      "value_kind": "boolean"
+    },
+    "nominal": {
+      "company": "alpha",
+      "value": "1.00",
+      "value_kind": "decimal"
+    },
+    "owner_a": {
+      "company": "alpha",
+      "value": "SYNTHETIC Alice",
+      "value_kind": "text"
+    },
+    "owner_a_units": {
+      "company": "alpha",
+      "value": "60000",
+      "value_kind": "decimal"
+    },
+    "ownership": {
+      "company": "alpha",
+      "value": "0/1",
+      "value_kind": "fraction"
+    },
+    "project_notice_actual": {
+      "company": "alpha",
+      "value": "2026-10-02",
+      "value_kind": "date"
+    },
+    "project_notice_anchor_0": {
+      "company": "alpha",
+      "value": "2026-09-01",
+      "value_kind": "date"
+    },
+    "project_notice_anchor_1": {
+      "company": "beta",
+      "value": "2026-09-02",
+      "value_kind": "date"
+    },
+    "source_note": {
+      "company": "alpha",
+      "value": "SYNTHETIC rule text for software testing; not a legal authority.",
+      "value_kind": "text"
+    },
+    "statement_age_actual": {
+      "company": "alpha",
+      "value": "2026-09-30",
+      "value_kind": "date"
+    },
+    "statement_age_anchor_0": {
+      "company": "alpha",
+      "value": "2026-06-02",
+      "value_kind": "date"
+    },
+    "units_a": {
+      "company": "alpha",
+      "value": "60000",
+      "value_kind": "decimal"
+    },
+    "valuation_date_alpha": {
+      "company": "alpha",
+      "value": "2026-09-30",
+      "value_kind": "date"
+    },
+    "balance_date_b": {
+      "company": "beta",
+      "value": "2026-09-30",
+      "value_kind": "date"
+    },
+    "beta_assets": {
+      "company": "beta",
+      "value": "350000",
+      "value_kind": "decimal"
+    },
+    "beta_equity": {
+      "company": "beta",
+      "value": "-150000",
+      "value_kind": "decimal"
+    },
+    "beta_liabilities": {
+      "company": "beta",
+      "value": "-200000",
+      "value_kind": "decimal"
+    },
+    "beta_reviewed_merger_reserve": {
+      "company": "beta",
+      "value": "-110000",
+      "value_kind": "decimal"
+    },
+    "equity_beta": {
+      "company": "beta",
+      "value": "400000.00",
+      "value_kind": "decimal"
+    },
+    "method_beta": {
+      "company": "beta",
+      "value": "SYNTHETIC professionally supplied equity; no automated valuation",
+      "value_kind": "text"
+    },
+    "owner_b": {
+      "company": "beta",
+      "value": "SYNTHETIC Bruno",
+      "value_kind": "text"
+    },
+    "owner_b_units": {
+      "company": "beta",
+      "value": "20000",
+      "value_kind": "decimal"
+    },
+    "tax_assessment": {
+      "company": "beta",
+      "value": "SYNTHETIC tax bases kept distinct; tax treatment and deferred taxes require case-specific professional review",
+      "value_kind": "text"
+    },
+    "tax_basis": {
+      "company": "beta",
+      "value": "350000",
+      "value_kind": "decimal"
+    },
+    "tax_book": {
+      "company": "beta",
+      "value": "350000",
+      "value_kind": "decimal"
+    },
+    "tax_owner": {
+      "company": "beta",
+      "value": "SYNTHETIC beta",
+      "value_kind": "text"
+    },
+    "units_b": {
+      "company": "beta",
+      "value": "20000",
+      "value_kind": "decimal"
+    },
+    "valuation_date_beta": {
+      "company": "beta",
+      "value": "2026-09-30",
+      "value_kind": "date"
+    }
+  },
+  "calendar_conventions": {
+    "project_notice": {
+      "count": 30,
+      "unit": "days"
+    },
+    "documents_available": {
+      "count": 30,
+      "unit": "days"
+    },
+    "creditor_wait": {
+      "count": 60,
+      "unit": "days"
+    },
+    "annual_accounts": {
+      "count": 6,
+      "unit": "months"
+    },
+    "statement_age": {
+      "count": 120,
+      "unit": "days"
+    }
+  },
+  "boundary": "Fictional hypotheses only. No reviewed legal authority, professional approval, signature or filing. Case sections must be authored from these facts, with gaps explicit."
+}

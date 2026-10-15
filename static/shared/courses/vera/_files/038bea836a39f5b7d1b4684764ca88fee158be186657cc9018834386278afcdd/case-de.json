@@ -1,0 +1,60 @@
+{
+  "fictional": true,
+  "phase": "demo",
+  "language": "de",
+  "studio": "Studio Riva",
+  "day": "2026-11-10",
+  "request": "Vera, organisiere die Verpflichtungen der fiktiven Kanzlei aus dieser Datei: speichere den Termin, verschiebe ihn wie angefragt, bewahre die Besprechungsaufgaben auf und zeige den Tag. Sage, was lokal gespeichert und was nicht in den Kalender geschrieben wurde.",
+  "preferences": {
+    "timezone": "Europe/Rome",
+    "calendar_id": "tutorial-local-only",
+    "working_hours": {
+      "start": "09:00",
+      "end": "18:00"
+    },
+    "durations": {
+      "appointment": 60
+    }
+  },
+  "busy_periods": [
+    {
+      "start": "2026-11-10T09:00:00+01:00",
+      "end": "2026-11-10T10:00:00+01:00",
+      "label": "Fiktives Zeitfenster als Beispiel; kein Nachweis vom Konnektor"
+    }
+  ],
+  "appointment": {
+    "title": "Termin mit Paola",
+    "kind": "appointment",
+    "client": "Studio Riva",
+    "owner": "Sara",
+    "start_time": "2026-11-10T11:00:00+01:00",
+    "end_time": "2026-11-10T12:00:00+01:00",
+    "duration_minutes": 60,
+    "source": "case-de.json"
+  },
+  "reschedule_request": {
+    "start_time": "2026-11-10T14:00:00+01:00",
+    "end_time": "2026-11-10T15:00:00+01:00"
+  },
+  "meeting_notes": {
+    "title": "Mandantenbesprechung",
+    "date": "2026-11-10",
+    "client": "Studio Riva",
+    "participants": [
+      "Paola",
+      "Sara"
+    ],
+    "source": "case-de.json",
+    "notes": "Die fehlenden Kontoauszüge sollen beschafft werden. Sara: Die Dokumentenanfrage bis zum angegebenen Datum senden. 2026-11-16."
+  },
+  "task_request": {
+    "title": "Kontoauszüge anfordern",
+    "kind": "follow_up",
+    "owner": "Sara",
+    "client": "Studio Riva",
+    "due_date": "2026-11-16",
+    "source": "case-de.json"
+  },
+  "live_calendar_authorized": false
+}

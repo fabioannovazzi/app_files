@@ -1,0 +1,3 @@
+# Domanda e perimetro della revisione
+
+Caso interamente fittizio. Marta Bianchi chiede di esaminare la documentazione della propria posizione contributiva INPS relativa al lavoro dipendente privato in Italia, dal 2025-01-01 al 2025-06-30. Il datore indicato è Riva Servizi. Vuole capire cosa risulta dai documenti e quali chiarimenti servono prima di una eventuale segnalazione. Data della revisione: 2026-09-14. Non sono indicati avvisi, contenziosi o scadenze. Non si richiedono calcolo di pensione, aliquote, importi dovuti, accesso al portale o invio di segnalazioni. Nomi e documenti sono inventati.
