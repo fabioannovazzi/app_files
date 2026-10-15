@@ -193,7 +193,10 @@ it is never forwarded automatically to Mparanza. The host AI selects all relevan
 technical evidence and excludes private/client content before supplementation.
 
 A reviewed Report sets `evidence_for_report_id` to the original report UUID.
-Ownership and exact execution metadata must match. Supplements are persisted
+Ownership and exact execution metadata, including original session, operation and
+input binding when present, must match. A supplement only completes capture when
+it explicitly declares complete capture with technical evidence and no pending
+review. Partial or legacy supplements remain visible as incomplete. Supplements are persisted
 separately and appear in the operator's `evidence` array. They cannot create a
 new failure episode, change the latest original report UUID, or reopen recovered
 deliveries. Retry UUIDs remain idempotent. Local raw files are removed only after

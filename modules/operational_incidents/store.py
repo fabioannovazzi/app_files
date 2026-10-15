@@ -431,6 +431,9 @@ class IncidentStore:
                     "workflow",
                     "stage",
                 )
+            ) or any(
+                payload.get(key) != source.get(key)
+                for key in ("session_id", "operation_id", "input_binding")
             ):
                 raise IncidentConflict(
                     "Supplemental evidence does not match the original execution"

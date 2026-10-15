@@ -61,7 +61,7 @@ from PR 833 and the merged complete release guard from PR 835. Final green relea
 monitor activation changes remain outstanding. Keep this task's existing
 branch/worktree active.
 
-Local candidate evidence (2026-10-15): 239 focused tests passed with 88.33%
+Local candidate evidence (2026-10-15): 250 focused tests passed with 88.33%
 coverage, including actual native stdio/isolated Python/HTTP/store integration,
 fresh reporter identity continuity, native/guest version separation and damaged
 reporter refusal. Clara's metadata/privacy and the icon-theme checks passed
@@ -104,3 +104,10 @@ passed with 100% coverage. Cowork archive bytes remain unchanged. The Codex arch
 because 2,617 ZIP-entry timestamps changed; every archived file has identical
 content to the native acceptance extraction. Preserve the original acceptance
 archive hashes and record the new archive hash separately.
+
+Final source review also found and corrected two server-side acceptance gaps:
+partial/legacy supplements no longer complete technical capture, and supplements
+must preserve the original session, operation and input binding. Eleven additional
+regressions cover rejected mismatches, matching evidence and incomplete review.
+The final focused suite passes 250 tests with 88.33% coverage; strict Mypy and
+format/security checks remain green. Packaged client bytes are unchanged.

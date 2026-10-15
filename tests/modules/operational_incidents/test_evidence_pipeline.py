@@ -410,13 +410,23 @@ def test_technical_supplement_completes_capture_without_closing_original(tmp_pat
     store.report(
         owner,
         original.model_copy(
-            update={"report_id": uuid4(), "evidence_for_report_id": original.report_id}
+            update={
+                "report_id": uuid4(),
+                "evidence_for_report_id": original.report_id,
+                "capture_state": "complete",
+                "diagnostics": [
+                    original.diagnostics[0].model_copy(
+                        update={"error_code": "host.process.startup"}
+                    )
+                ],
+            }
         ),
     )
 
     record = store.show(receipt["incident_id"])
 
     assert record["reporting_summary"]["evidence_received"] == 1
+    assert record["report_records"][0]["capture"]["capture_complete"] is True
     assert record["reporting_summary"]["report_count"] == 1
     assert record["status"] == "open"
 
@@ -590,3 +600,104 @@ def test_another_installation_cannot_write_progress_for_original(tmp_path):
                 kind="retry-started",
             ),
         )
+
+
+@pytest.mark.parametrize("capture_state", ["legacy", "pending", "unavailable"])
+def test_partial_supplement_keeps_original_capture_incomplete(tmp_path, capture_state):
+    store, owner = registered(tmp_path)
+    original = report().model_copy(
+        update={
+            "capture_state": "pending",
+            "measurements": {"diagnostic_review_pending": True},
+        }
+    )
+    receipt = store.report(owner, original)
+    supplement = original.model_copy(
+        update={
+            "report_id": uuid4(),
+            "evidence_for_report_id": original.report_id,
+            "capture_state": capture_state,
+        }
+    )
+
+    store.report(owner, supplement)
+
+    capture = store.show(receipt["incident_id"])["report_records"][0]["capture"]
+    assert capture["technical_evidence_received"] is True
+    assert capture["capture_complete"] is False
+    assert capture["review_pending"] is True
+    assert capture["next_step"] == "review-and-supplement-retained-evidence"
+
+
+def test_complete_supplement_with_pending_review_keeps_capture_incomplete(tmp_path):
+    store, owner = registered(tmp_path)
+    original = report().model_copy(update={"capture_state": "pending"})
+    receipt = store.report(owner, original)
+    supplement = original.model_copy(
+        update={
+            "report_id": uuid4(),
+            "evidence_for_report_id": original.report_id,
+            "capture_state": "complete",
+            "measurements": {"diagnostic_review_pending": True},
+            "diagnostics": [
+                original.diagnostics[0].model_copy(
+                    update={"error_code": "host.process.startup"}
+                )
+            ],
+        }
+    )
+
+    store.report(owner, supplement)
+
+    capture = store.show(receipt["incident_id"])["report_records"][0]["capture"]
+    assert capture["capture_complete"] is False
+    assert capture["review_pending"] is True
+
+
+@pytest.mark.parametrize("field", ["session_id", "operation_id", "input_binding"])
+@pytest.mark.parametrize("omit", [True, False])
+def test_supplement_cannot_change_original_operation_binding(tmp_path, field, omit):
+    store, owner = registered(tmp_path)
+    original = report().model_copy(
+        update={
+            "session_id": uuid4(),
+            "operation_id": uuid4(),
+            "input_binding": "a" * 64,
+        }
+    )
+    store.report(owner, original)
+    other = "b" * 64 if field == "input_binding" else uuid4()
+    supplement = original.model_copy(
+        update={
+            "report_id": uuid4(),
+            "evidence_for_report_id": original.report_id,
+            field: None if omit else other,
+        }
+    )
+
+    with pytest.raises(IncidentConflict, match="original execution"):
+        store.report(owner, supplement)
+
+    assert store.show(store.queue()[0]["incident_id"])["evidence"] == []
+
+
+def test_supplement_preserves_matching_original_operation_binding(tmp_path):
+    store, owner = registered(tmp_path)
+    original = report().model_copy(
+        update={
+            "session_id": uuid4(),
+            "operation_id": uuid4(),
+            "input_binding": "a" * 64,
+        }
+    )
+    receipt = store.report(owner, original)
+    supplement = original.model_copy(
+        update={"report_id": uuid4(), "evidence_for_report_id": original.report_id}
+    )
+
+    added = store.report(owner, supplement)
+
+    assert added["recorded"] is True
+    assert store.show(receipt["incident_id"])["evidence"][0]["operation_id"] == str(
+        original.operation_id
+    )

@@ -21,11 +21,16 @@ def capture_coverage(
     ]
     state = report.get("capture_state", "legacy")
     received = state == "complete" or bool(linked)
-    review_pending = (
-        report.get("measurements", {}).get("diagnostic_review_pending") is True
-        and not linked
+    # A delivered supplement is not proof that its own capture/review finished.
+    complete = any(
+        item.get("capture_state") == "complete"
+        and item.get("measurements", {}).get("diagnostic_review_pending") is not True
+        for item in (report, *linked)
     )
-    complete = received and not review_pending
+    review_pending = not complete and any(
+        item.get("measurements", {}).get("diagnostic_review_pending") is True
+        for item in (report, *linked)
+    )
     due = datetime.fromisoformat(created_at) + timedelta(minutes=15)
     return {
         "state": (
@@ -42,7 +47,7 @@ def capture_coverage(
             if review_pending
             else (
                 "diagnose-evidence"
-                if received
+                if complete
                 else "collect-missing-technical-evidence"
             )
         ),
