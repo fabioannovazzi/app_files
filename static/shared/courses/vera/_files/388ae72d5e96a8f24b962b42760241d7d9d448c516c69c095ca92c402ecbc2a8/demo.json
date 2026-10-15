@@ -1,0 +1,49 @@
+{
+  "schema_version": "vera-agenzia-teaching/v1",
+  "synthetic": true,
+  "phase": "demo",
+  "plan": {
+    "schema_version": "vera-agenzia-plan/v1",
+    "clients": [
+      {
+        "name": "Ditta Esempio (fittizia)",
+        "tax_code": "01234567890",
+        "vat_number": "01234567890"
+      }
+    ],
+    "date_from": "2026-01-01",
+    "date_to": "2026-03-31",
+    "operations": [
+      "ricevute",
+      "corrispettivi",
+      "bolli"
+    ]
+  },
+  "invoice_numbers": [
+    "DEMO-001",
+    "DEMO-002"
+  ],
+  "unavailable_originals": [
+    "DEMO-002"
+  ],
+  "cash_rows": [
+    {
+      "ID invio": "INVIO-001",
+      "Matricola": "RT-ESEMPIO",
+      "Data e ora rilevazione": "02/01/2026 18:00:00",
+      "Ammontare totale": "100,00",
+      "Imponibile": "81,97",
+      "Imposta": "18,03"
+    },
+    {
+      "ID invio": "INVIO-002",
+      "Matricola": "RT-ESEMPIO",
+      "Data e ora rilevazione": "03/01/2026 18:00:00",
+      "Ammontare totale": "—",
+      "Imponibile": "—",
+      "Imposta": "—"
+    }
+  ],
+  "stamp_amount": "24.00",
+  "payment_status": "Scenario didattico: versamento parziale di EUR 12,00 da riscontrare."
+}

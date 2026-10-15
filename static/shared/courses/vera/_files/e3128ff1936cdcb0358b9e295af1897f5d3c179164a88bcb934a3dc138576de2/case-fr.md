@@ -1,0 +1,3 @@
+# Officina Arco
+
+Toutes les données sont fictives. Un compte bancaire, EUR, dates ISO, point décimal, sans séparateur de milliers. Les paiements sont négatifs dans le relevé et le grand livre. Reference est la référence bancaire, Document le numéro de facture, Account 1000 le compte bancaire. Mars comprend DEMO-001 pour 1 220 EUR et DEMO-002 pour 732 EUR, références TRN-001 et TRN-002. Le solde passe de 6 000 à 4 048 EUR. Les exports cumulés d’avril ajoutent DEMO-003 pour 488 EUR le 4 avril, référence TRN-003 ; solde final 3 560 EUR. Aucun autre mouvement ni compte n’est inclus. Ces faits ne constituent pas une revue professionnelle.

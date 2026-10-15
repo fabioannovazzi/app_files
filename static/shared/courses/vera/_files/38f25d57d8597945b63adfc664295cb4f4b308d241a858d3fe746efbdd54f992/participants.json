@@ -1,0 +1,21 @@
+{
+  "synthetic_only": true,
+  "participants": [
+    {
+      "id": "P1",
+      "name": "Ada (inventata)",
+      "capital_share": "3/5",
+      "vote_share": "1/2",
+      "profit_share": "7/10",
+      "consent": null
+    },
+    {
+      "id": "P2",
+      "name": "Bruno (inventato)",
+      "capital_share": "2/5",
+      "vote_share": "1/2",
+      "profit_share": "3/10",
+      "consent": null
+    }
+  ]
+}

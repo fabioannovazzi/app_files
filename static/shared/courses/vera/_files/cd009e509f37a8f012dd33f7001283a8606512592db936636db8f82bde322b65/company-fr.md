@@ -1,0 +1,3 @@
+# Entreprise et mission
+
+Cas entièrement fictif : Officina Arco, société italienne, un site, douze collaborateurs, réparation de véhicules pour clients locaux. Elena Bianchi dirige et autorise les paiements ; Paolo Neri coordonne l’atelier ; Sara Rossi gère documents et échéancier. Le cabinet externe tient les comptes et prépare la synthèse mensuelle sans gérer les encaissements. La demande porte sur responsabilités, clôture mensuelle et utilisation des informations de recouvrement au 31 mars 2026. Elle ne couvre pas tous les processus. Une procédure et un exemple opérationnel de février sont fournis, sans prévision de trésorerie ni autre cycle de clôture.

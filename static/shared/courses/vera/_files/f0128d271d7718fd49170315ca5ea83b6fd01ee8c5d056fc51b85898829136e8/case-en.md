@@ -1,0 +1,5 @@
+Officina Arco CNC is entirely fictional and Italian. At 31 October 2026: loan EUR 120,000, available cash EUR 50,000, restricted deposit EUR 10,000, trade payables EUR 80,000. Assumed receipt EUR 100,000 on 15 November; payment EUR 80,000 on 30 November. Aging, collectability confirmation, orders, appointment and filing receipts are absent. These selected positions are incomplete.
+
+Read the case, balances.csv and treasury-demo tables. Empty tables mean no supplied evidence, not no real activity. treasury-practice and treasury-independent accompany the update and independent exercise. The research brief contains a generic public question and URLs to verify, not current law or an approved answer.
+
+Vera, I advise fictional Officina Arco CNC. Read the evidence, separate facts, assumptions and gaps, execute the existing financial and treasury workflows and draft an evidence-conditioned proposal. Guide my exact-version review. Keep the tutorial local without external sends or simulated professional acceptance.

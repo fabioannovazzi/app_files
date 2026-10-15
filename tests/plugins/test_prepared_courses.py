@@ -2262,3 +2262,17 @@ def test_public_transformation_course_discloses_cowork_unavailability(
     assert startup_copy["unavailable"] in page
     assert 'id="cowork-start-request"' not in page
     assert 'data-copy-target="cowork-start-request"' not in page
+
+
+@pytest.mark.parametrize("product", ["vera", "lucia"])
+def test_withdrawn_tax_litigation_course_is_absent_from_release_manifest(product):
+    index = json.loads(
+        (ROOT / f"plugins/{product}/assets/courses/index.json").read_text()
+    )
+    plan = json.loads((ROOT / "scripts/course_materials/release_plan.json").read_text())
+    assert f"{product}/contenzioso-tributario" in plan["excluded"]
+    assert "contenzioso-tributario" not in index["courses"]
+    assert "contenzioso-tributario" not in builder._eligible(product)
+    assert (
+        ROOT / f"plugins/{product}/skills/contenzioso-tributario/SKILL.md"
+    ).is_file()

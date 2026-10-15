@@ -1,0 +1,8 @@
+{
+  "synthetic": true,
+  "fact": "beta_liabilities",
+  "company": "beta",
+  "value": "-200100",
+  "value_kind": "decimal",
+  "reason": "Fictional revised creditor balance; closing equity and difference allocation have not been adjusted. Reconcile before recomputation or renewed approval."
+}

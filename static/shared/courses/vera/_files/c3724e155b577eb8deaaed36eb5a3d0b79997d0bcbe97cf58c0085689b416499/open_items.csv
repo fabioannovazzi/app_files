@@ -1,0 +1,4 @@
+item_id,party_id,party_name,side,document_type,document_number,document_date,installment,due_date,amount,replaces_flow_id
+ar-01,customer-1,Cliente Aurora fittizio,receivable,invoice,AR-001,2026-03-10,1,2026-04-10,18000.00,
+ap-01,supplier-1,Fornitore Levante fittizio,payable,invoice,AP-001,2026-03-20,1,2026-04-15,9000.00,
+ar-02,customer-2,Cliente Borgo fittizio,receivable,invoice,AR-002,2026-03-25,1,2026-04-24,12000.00,

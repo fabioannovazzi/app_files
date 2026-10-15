@@ -2156,7 +2156,10 @@ def write_entry(archive: ZipFile, name: str, content: bytes) -> None:
 
 
 def write_entries_to_directory(root: Path, entries: dict[str, bytes]) -> None:
-    for name, content in entries.items():
+    # System zip retains file timestamps. Seal indices after all their members,
+    # even when a large package takes several ZIP clock ticks to materialize.
+    for name in sorted(entries, key=lambda name: name.endswith("execution-files.json")):
+        content = entries[name]
         target = root / name
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(content)

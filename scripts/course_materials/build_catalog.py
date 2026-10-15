@@ -80,6 +80,8 @@ def _eligible(product: str) -> set[str]:
         - EXCLUDED
         - unavailable_local_workflows(product)
     )
+    withdrawn = _json(AUTHORING / "release_plan.json").get("excluded", [])
+    ids -= {key.split("/", 1)[1] for key in withdrawn if key.startswith(f"{product}/")}
     if product != "vera":
         ids.discard("studio-archive")
     return {
@@ -324,6 +326,13 @@ def build(*, require_complete: bool = True, check: bool = False) -> dict[str, An
     definitions = _json(AUTHORING / "kits.json")
     expected = {f"{p}/{w}" for p in ("vera", "clara", "lucia") for w in _eligible(p)}
     release = _json(AUTHORING / "release_plan.json")
+    withdrawn = set(release.get("excluded", []))
+    if withdrawn - set(definitions):
+        raise ValueError("A withdrawn course must name an existing authored kit")
+    definitions = {
+        key: value for key, value in definitions.items() if key not in withdrawn
+    }
+    locales = {key: value for key, value in locales.items() if key not in withdrawn}
     prepared = set(release["prepared"])
     retained = release["retained"]
     if prepared & set(retained) or prepared | set(retained) != expected:

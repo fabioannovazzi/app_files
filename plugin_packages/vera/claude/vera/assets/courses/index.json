@@ -340,34 +340,6 @@
         "es": "Aprender a iniciar la revisión de una propuesta y un plan, aportar documentos y usar el expediente producido en el trabajo profesional."
       }
     },
-    "contenzioso-tributario": {
-      "path": "contenzioso-tributario/course.json",
-      "sha256": "3204f4a16ccc66573f8787375281e54d82d658059f4c563d3fd6f7fd6a7a003e",
-      "languages": [
-        "it",
-        "en",
-        "fr",
-        "de",
-        "es"
-      ],
-      "duration_seconds": 390,
-      "group": "workflow",
-      "parent_workflow": null,
-      "titles": {
-        "it": "Preparare e riprendere un contenzioso tributario con Vera",
-        "en": "Prepare and resume Italian tax litigation with Vera",
-        "fr": "Préparer et reprendre un contentieux fiscal italien avec Vera",
-        "de": "Italienischen Steuerstreit mit Vera vorbereiten und fortsetzen",
-        "es": "Preparar y retomar un litigio tributario italiano con Vera"
-      },
-      "goals": {
-        "it": "Imparare a partire dagli atti, verificare passaggi e termini, preparare una bozza e aggiornare la stessa pratica quando arriva una nuova prova.",
-        "en": "Learn to start from case documents, verify steps and deadlines, prepare a draft and update the same matter when new evidence arrives.",
-        "fr": "Apprendre à partir des actes, vérifier étapes et délais, préparer une ébauche et actualiser le même dossier lorsqu’une nouvelle preuve arrive.",
-        "de": "Mit den Akten beginnen, Schritte und Fristen prüfen, einen Entwurf vorbereiten und denselben Vorgang bei neuen Belegen aktualisieren lernen.",
-        "es": "Aprender a partir de los documentos, verificar pasos y plazos, preparar un borrador y actualizar el mismo expediente al recibir nuevas pruebas."
-      }
-    },
     "dati-fiscali-strutturati": {
       "path": "dati-fiscali-strutturati/course.json",
       "sha256": "a403c26b5a219fec5915cdeda3663ed515b15f0294e9e973de95c7a6e245c720",
@@ -993,7 +965,7 @@
     },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "d91ce5b5ef1f8c811d9e2aef923d016f10fb92342442e9e1bf147b9c01e62a93",
+      "sha256": "f7a1a4bc0020450a962860ef469834febd1d7ce7e76d059d393ce952b3668e70",
       "languages": [
         "it",
         "en",
@@ -1021,7 +993,7 @@
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "a0dfe67b3ad5a945b965548c21fcf5435e610170f827f57c079301a4480c6b48",
+      "sha256": "67b5ceca72fe541e8d85ccac26220b37ddbd4a3201d2249fd027771dbc47239e",
       "languages": [
         "it",
         "en",

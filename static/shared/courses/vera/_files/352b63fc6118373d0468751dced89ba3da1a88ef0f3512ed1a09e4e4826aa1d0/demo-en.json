@@ -1,0 +1,31 @@
+{
+  "synthetic": true,
+  "studio_name": "Studio Riva",
+  "font": "Arial",
+  "size_pt": 10,
+  "heading_pt": 16,
+  "color": "152F52",
+  "margins_mm": {
+    "top": 30,
+    "bottom": 22,
+    "left": 22,
+    "right": 22
+  },
+  "title": "Fictional management report",
+  "body": "Fictional course document.",
+  "footer": "Studio Riva · Fictional course document.",
+  "item_label": "Item",
+  "rows": [
+    [
+      "Revenue",
+      "42000.00"
+    ],
+    [
+      "Costs",
+      "-27500.00"
+    ]
+  ],
+  "report_period": "2026-09-01 to 2026-09-30",
+  "currency": "EUR",
+  "language": "en"
+}

@@ -1,0 +1,21 @@
+# Visita e costruzione — caso interamente fittizio
+
+## 1. Ascoltare e riprendere
+Elena, 31 marzo: «Quando Sara manca, Paolo raccoglie le fatture, ma non so se possa aprire lo scadenziario». Sara: «Per febbraio ho inviato i documenti il 10 marzo; non ho la prova dell’incasso promesso». Nessun sostituto è stato nominato; il budget richiesto non è allegato. Non è prova che il budget non esista.
+Chiedi un esempio e una domanda per volta. Conserva queste parole, speaker e data; scrivi la sintesi separatamente, senza inventare risposte del partecipante. Usa il modulo HTML con domande contestuali su C02/C09; marca incasso e allegato come da verificare. Esporta Markdown prima di chiudere: non c’è salvataggio automatico nel browser. Reimporta l’originale in Studio Archive, poi nella pratica; verifica identità, revisione e parentela. Mostra il cursore e riprendi la stessa visita.
+
+## 2. Qualificare, senza certificare
+Collega il registro di febbraio a periodo, autore, limite e criterio C09; la dichiarazione su sostituzione riguarda C02. Altri criteri restano ignoti, non zero. BASE-1 assegna null/0/1/2/3/4 a ignoto/assenza/parziale/progettato/operante/monitorato solo dopo revisione esplicita della qualificazione. Il dichiarato è separato dal verificato; N/A richiede motivo e revisione. Una contraddizione materiale lascia la base non verificata.
+Una scelta professionale può discostarsi dalla base su 0–4: conserva motivo, alternativa, rischio residuo, effetto sulle azioni e prossimo riesame. Mostra una proposta, non un voto approvato. Registra la scelta solo su istruzione effettiva del professionista; il nome dichiarato non autentica una firma. Mostra base, scelta, obiettivo e copertura senza verdetto UNI o automatico di adeguatezza.
+
+## 3. Progettare un controllo proporzionato
+Segui fonte → rilievo sul rischio di consegne tardive → controllo di chiusura → azione. Proponi: Sara prepara, Elena decide, sostituto da concordare; raccolta documenti, verifica completezza, invio allo studio, consegna report, riesame e risposta alle anomalie. Specifica input, output/destinatario, frequenza, tempi proposti, eccezioni, archivio e prova da conservare. Un controllo per dodici addetti, senza burocrazia non motivata. Registro: periodo, data invio, preparatore/sostituto, report ricevuto, data riesame, anomalia, decisione, evidenza di chiusura. L’azione non si chiude con il solo documento.
+
+## 4. Consegnare e decidere
+Compila la versione del manuale; apri Word, PDF e Markdown e il CSV vuoto modificabile. Confronta la stessa procedura e il manifest; controlla visivamente pagine e tabelle. Le intestazioni fisse sono in italiano. Bozza, revisione professionale e adozione dell’impresa sono distinti: non crearle per completare la lezione. Per registrare adozione servono persona competente, decisione esplicita, esatta versione, data di efficacia, riserve e prova. Il manuale non modifica i punteggi delle evidenze.
+
+## 5. Osservare e cambiare
+Registra un ciclo con esatta versione del controllo/manuale, periodo, esecutore, destinatario, anomalie, decisione e prova. Qui ogni esecuzione è simulation. Il riesame copre campione e tutte le azioni: resta design_only, limitato al processo, senza efficacia reale. In un incarico vero distinguere operating_supported, operating_not_supported e limited dalle sole procedure scritte. Nuove risposte/evidenze rendono obsolete qualificazioni e scelte dipendenti; cambiare un controllo rende il vecchio manuale da riesaminare. Conserva tutti gli originali, crea una nuova bozza, chiedi nuova revisione ed eventuale nuova adozione.
+
+## Quali dati arrivano al modello
+Il modulo offline incorpora dati della pratica e risposte in memoria, senza rete, audio, telemetria o localStorage. Esporta soltanto su azione esplicita. Quando restituisci il Markdown, conversazione, originali, evidenze, decisioni, manuali, registri, KPI e artefatti finanziari selezionati possono entrare nel contesto del modello dell’account scelto. Nessuna anonimizzazione automatica o garanzia di inferenza locale. Le ricerche pubbliche usano temi generici senza identificativi del cliente. Nessun connettore aziendale o invio esterno è incorporato. Profilo e progressi didattici restano locali.

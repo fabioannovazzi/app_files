@@ -1,0 +1,60 @@
+{
+  "fictional": true,
+  "phase": "practice",
+  "language": "fr",
+  "studio": "Studio Selva",
+  "day": "2026-11-12",
+  "request": "Vera, organise les engagements du cabinet fictif à partir du fichier : enregistre le rendez-vous, déplace-le comme demandé, conserve les actions de réunion et montre la journée. Précise ce qui est enregistré localement et ce qui n’est pas écrit dans le calendrier.",
+  "preferences": {
+    "timezone": "Europe/Rome",
+    "calendar_id": "tutorial-local-only",
+    "working_hours": {
+      "start": "09:00",
+      "end": "18:00"
+    },
+    "durations": {
+      "appointment": 60
+    }
+  },
+  "busy_periods": [
+    {
+      "start": "2026-11-12T09:00:00+01:00",
+      "end": "2026-11-12T10:00:00+01:00",
+      "label": "Créneau fictif donné en exemple ; aucune vérification par le connecteur"
+    }
+  ],
+  "appointment": {
+    "title": "Rendez-vous avec Luca",
+    "kind": "appointment",
+    "client": "Studio Selva",
+    "owner": "Elena",
+    "start_time": "2026-11-12T10:00:00+01:00",
+    "end_time": "2026-11-12T11:00:00+01:00",
+    "duration_minutes": 60,
+    "source": "case-fr.json"
+  },
+  "reschedule_request": {
+    "start_time": "2026-11-12T15:00:00+01:00",
+    "end_time": "2026-11-12T16:00:00+01:00"
+  },
+  "meeting_notes": {
+    "title": "Réunion client",
+    "date": "2026-11-12",
+    "client": "Studio Selva",
+    "participants": [
+      "Luca",
+      "Elena"
+    ],
+    "source": "case-fr.json",
+    "notes": "Accord pour obtenir les relevés bancaires manquants. Elena: Envoyer la demande de documents avant la date indiquée. 2026-11-16."
+  },
+  "task_request": {
+    "title": "Demander les relevés bancaires",
+    "kind": "follow_up",
+    "owner": "Elena",
+    "client": "Studio Selva",
+    "due_date": "2026-11-16",
+    "source": "case-fr.json"
+  },
+  "live_calendar_authorized": false
+}

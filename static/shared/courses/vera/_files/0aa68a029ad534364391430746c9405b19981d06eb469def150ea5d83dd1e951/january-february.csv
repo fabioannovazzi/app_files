@@ -1,0 +1,13 @@
+Scenario,Month,Category,Amount
+PL,2026-01,Revenue,100000
+PL,2026-01,COGS,-65000
+PL,2026-02,Revenue,115000
+PL,2026-02,COGS,-69000
+PL,2026-01,Operating expenses,-17000
+PL,2026-02,Operating expenses,-17000
+AC,2026-01,Revenue,120000
+AC,2026-01,COGS,-72000
+AC,2026-02,Revenue,110000
+AC,2026-02,COGS,-68000
+AC,2026-01,Operating expenses,-18000
+AC,2026-02,Operating expenses,-19000

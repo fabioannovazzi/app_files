@@ -110,6 +110,23 @@
         "Do not install or host a repository, request credentials, hard-code tenant endpoints, perform writeback, change permissions, or dispatch studio skills.",
         "Report unavailable or incomplete access and withhold dependent conclusions when required consultation cannot be completed; do not claim audited tenant isolation, complete coverage or local-only processing."
       ]
+    },
+    {
+      "id": "managed-python-runtime-setup",
+      "kind": "public_research",
+      "destination": "The existing managed-runtime installer endpoints for uv, CPython 3.12 and the published shared Python dependency recipes",
+      "purpose": "Prepare or repair the shared CPython 3.12 environment before executing a local archive worker",
+      "content": "Runtime and package identifiers, published requirements and constraints, and ordinary connection metadata. The installer is invoked before the archive command; no client files, archive index, identities, receipt bytes or case content are sent to dependency endpoints.",
+      "workflow_conditions": "The archive MCP server invokes the product managed launcher. A ready shared runtime is reused; missing runtime dependencies may require network access under host permissions. Failed setup stops worker execution. Optional OCR remains separately approved.",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Use the existing shared CPython 3.12 runtime and declared recipes; do not install arbitrary packages from archive input. Host network denials stop setup rather than selecting an unsupported worker interpreter."
+      ]
     }
   ],
   "governed_paths": [
@@ -254,9 +271,9 @@
   },
   "review": {
     "basis": "external_boundary_review_of_workflow_source",
-    "reviewed_at": "2026-10-14",
+    "reviewed_at": "2026-10-15",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "2a392d30fcfcb3d8cdd50b37131ecca4fde43e15756f4ad2bcc504a1fd1098c1"
+    "source_fingerprint": "025d359525dd4599f2a048b0c4b0d143b85cfc3da6b9e7323cbf89b0964eef15"
   },
   "role": "workflow",
   "runtime_profiles": [

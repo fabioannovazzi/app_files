@@ -229,9 +229,9 @@ The managed workflow launcher requires **CPython 3.12**. It reuses an installed
 3.12 interpreter or provisions one with uv; when uv is absent, the bootstrap
 downloads its pinned wheel and verifies its SHA-256. Setup installs the published
 shared requirements into the common environment. A failed setup stops execution.
-The underlying Studio Archive CLI does not itself enforce a Python minor version;
-run it through the managed launcher to enforce this supported-runtime contract,
-including for the base portable ledger in Cowork.
+Studio Archive's MCP server invokes the product's managed launcher, including
+for the base portable ledger in Cowork. The CLI also rejects unsupported
+interpreters before importing its dependencies, reporting the version and path.
 
 ## Adeguati assetti
 

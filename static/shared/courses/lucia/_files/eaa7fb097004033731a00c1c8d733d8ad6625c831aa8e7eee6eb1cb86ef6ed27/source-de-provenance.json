@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "source_url": "https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_de",
+  "retrieved_on": "2026-09-14",
+  "source_language": "de",
+  "source_html_sha256": "a0dddc368f963cfd5ad00450598abfa1047d0c727a53e454bc691775d88fc242",
+  "extract_sha256": "42a61615cce6ee54aa9c2533423da021eeb1ae5237d13924e2a795910baa8068",
+  "selection": "Rights overview, handling requests, and right of access; complete text blocks from official page DOM; no images/video.",
+  "reuse_url": "https://www.edpb.europa.eu/copyright_en"
+}

@@ -1,0 +1,3 @@
+# Ciclo Arco
+
+Caso totalmente ficticio: Ciclo Arco vende bicicletas urbanas y de trekking. actual-sales.csv contiene datos reales del caso para enero y febrero de 2026 en EUR: unidades, ventas brutas, descuentos y coste de ventas. Importes positivos, punto decimal sin miles; cambio uno. Preparar enero y febrero de 2027 desde los mismos meses de 2026. Hipótesis: unidades +10 % en ambos productos, precios unitarios sin cambio, descuentos y coste proporcionales a ventas. Sin conversión, hipótesis superpuestas ni estimación de meses ausentes. La solicitud de escenario se reformula y confirma durante la lección; no prueba demanda futura ni contiene aprobación profesional.

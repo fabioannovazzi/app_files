@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 import stat
 import subprocess
 import sys
@@ -234,7 +235,11 @@ def test_chatgpt_module_contract_rejects_invalid_layout_even_with_fresh_index(
 
 def test_course_hash_drift_is_rejected_even_when_execution_index_matches(tmp_path):
     entries, root = release_entries("cowork")
-    alter_skill(entries)
+    course = json.loads(entries["assets/courses/studio-archive/course.json"])
+    source = next(
+        row["path"] for row in course["sources"] if row["path"].startswith("skills/")
+    )
+    entries[source] += b"\nSynthetic final edit after sealing.\n"
     load_builder("build_codex_plugin_zip").add_vera_execution_manifest(entries)
     archive = tmp_path / "stale-course.zip"
     write_zip(archive, entries)
@@ -252,7 +257,7 @@ def test_course_hash_drift_is_rejected_even_when_execution_index_matches(tmp_pat
 )
 def test_invalid_course_source_blocks_release(tmp_path, source, message):
     entries, root = release_entries("cowork")
-    course_path = "assets/courses/contenzioso-tributario/course.json"
+    course_path = "assets/courses/studio-archive/course.json"
     course = json.loads(entries[course_path])
     course["sources"][0]["path"] = source
     entries[course_path] = json.dumps(course).encode()
@@ -343,3 +348,35 @@ def test_hung_cli_blocks_release(monkeypatch):
 
     with pytest.raises(ValueError, match="CLI verification timed out: check-entries"):
         verify_vera_execution_zip(ROOT / HOSTS["cowork"][0], ".")
+
+
+def test_directory_staging_seals_execution_index_after_all_members(
+    tmp_path, monkeypatch
+):
+    builder = load_builder("build_codex_plugin_zip")
+    original = Path.write_bytes
+    ticks = iter([315532800, 315532804, 315532808])
+
+    def slow_write(path, content):
+        result = original(path, content)
+        instant = next(ticks)
+        os.utime(path, (instant, instant))
+        return result
+
+    monkeypatch.setattr(Path, "write_bytes", slow_write)
+    builder.write_entries_to_directory(
+        tmp_path,
+        {
+            "execution-files.json": b"{}",
+            "README.md": b"source",
+            "scripts/worker.py": b"worker",
+        },
+    )
+
+    with ZipFile(tmp_path / "staged.zip", "w") as archive:
+        for name in ["execution-files.json", "README.md", "scripts/worker.py"]:
+            archive.write(tmp_path / name, name)
+    with ZipFile(tmp_path / "staged.zip") as archive:
+        sealed = archive.getinfo("execution-files.json").date_time
+        assert sealed >= archive.getinfo("README.md").date_time
+        assert sealed >= archive.getinfo("scripts/worker.py").date_time

@@ -1,0 +1,31 @@
+{
+  "synthetic": true,
+  "studio_name": "Studio Selva",
+  "font": "Times New Roman",
+  "size_pt": 12,
+  "heading_pt": 20,
+  "color": "563128",
+  "margins_mm": {
+    "top": 30,
+    "bottom": 22,
+    "left": 27,
+    "right": 27
+  },
+  "title": "Report gestionale fittizio",
+  "body": "Documento fittizio per il corso.",
+  "footer": "Studio Selva · Documento fittizio per il corso.",
+  "item_label": "Voce",
+  "rows": [
+    [
+      "Ricavi",
+      "56300.00"
+    ],
+    [
+      "Costi",
+      "-31200.00"
+    ]
+  ],
+  "report_period": "2026-09-01 to 2026-09-30",
+  "currency": "EUR",
+  "language": "it"
+}

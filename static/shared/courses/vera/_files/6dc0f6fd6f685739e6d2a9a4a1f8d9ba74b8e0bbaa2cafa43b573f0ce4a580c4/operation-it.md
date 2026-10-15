@@ -1,0 +1,3 @@
+# Esempio di funzionamento
+
+Esempio operativo fittizio. Registro di invio: documenti di febbraio trasmessi da Sara allo studio il 10 marzo 2026. Registro di consegna: riepilogo di febbraio ricevuto il 20 marzo. Nota firmata internamente da Elena il 24 marzo: esaminato il riepilogo, individuata una fattura cliente in ritardo e richiesto a Sara un contatto. Annotazione del 25 marzo attribuita a Sara: il cliente promette pagamento per il 5 aprile. Nessuna prova del pagamento è presente al 31 marzo. I registri mostrano questo ciclo, non continuità su altri mesi; non provano l’esecuzione di ogni controllo del lunedì.
