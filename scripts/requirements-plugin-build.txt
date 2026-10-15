@@ -1,0 +1,2 @@
+# Build-time parser only; never installed by a customer workflow.
+PyYAML>=6.0,<7

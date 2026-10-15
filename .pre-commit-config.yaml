@@ -23,6 +23,12 @@ repos:
   # Prevent pandas idioms from creeping back in
   - repo: local
     hooks:
+      - id: plugin-skill-metadata
+        name: "Reject malformed plugin skill metadata"
+        entry: python scripts/validate_plugin_skills.py
+        language: python
+        additional_dependencies: ["PyYAML>=6.0,<7"]
+        files: ^plugins/.*/SKILL\.md$
       - id: gitleaks-staged
         name: "Scan staged changes for secrets"
         entry: gitleaks git --staged --redact --no-banner

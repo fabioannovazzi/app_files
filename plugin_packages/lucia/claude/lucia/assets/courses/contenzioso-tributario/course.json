@@ -37,7 +37,7 @@
     },
     {
       "path": "skills/mparanza-contenzioso-tributario/SKILL.md",
-      "sha256": "31947b9368f0673de047b5bc5dac86a5c4d7d2307bc0542d8aa364212c3a46e7"
+      "sha256": "14f2f934cda8ddd2f60fe3bb6c7d2badee195c81a4bedfe1cf911d262586df6d"
     },
     {
       "path": "vendor/modules/deal_redux/references/evidence-and-rounds.md",
@@ -394,5 +394,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "ac9bb785e4a3fa64af29e2a3141e3eb5f6c055b1203dd7e8bc0ea8a98d461bad"
+  "canonical_course_sha256": "5832962d37ff0e98ad6fefcf96623bdcda15e05211d1cb2e268a6f79a39d115c"
 }

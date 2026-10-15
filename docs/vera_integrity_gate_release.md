@@ -43,3 +43,64 @@ contracts to that host's exact layout: omitted `.app.json`, `.mcp.json` and
 Journal-bank-reconciliation and report-builder already select their host contract
 at runtime. The four projected scanners reject mixed native-host files, missing
 helpers and unexpected scripts even when the outer package index is regenerated.
+
+
+## Cowork frontmatter repair (0.1.389)
+
+The affected local Cowork cache was inspected on 2026-10-15. Its manifest
+reported 0.1.388 and exactly one of 1,699 indexed files differed:
+`skills/mparanza-contenzioso-tributario/SKILL.md`. Compared with the public
+archive, the cached file only added double quotes around `description`.
+That exact change produces the reported `748d403d...` hash instead of
+`932c878d...`.
+
+The original description contains an unquoted colon followed by a space.
+A YAML parser rejects the packaged frontmatter; the quoted installed variant
+parses. This establishes a source-format defect and a post-package difference,
+not evidence of two different public 0.1.388 builds. The precise host stage
+that added the quotes was not observed.
+
+The source description is now quoted before packaging and index generation.
+CI parses every shipped skill entrypoint in all four Vera archives with
+`yaml.safe_load`, requiring string name and description fields. This complements
+the real execution verifier: matching digests alone do not prove the host can
+parse the skills without repairing their bytes. Teaching content and legal
+instructions are unchanged; their source bindings were refreshed explicitly.
+
+A separate local launch failure was traced to `node` being absent from the
+Claude application's logged search path. Making the already installed Node
+runtime callable on that path allowed all 22 local servers in the affected
+installation to complete initialize/tools-list checks. This environment repair
+is separate from package integrity and does not prove a professional workflow.
+
+## Mandatory metadata gate across products (Vera 0.1.390)
+
+This failure recurred after #801 fixed the business-planning description in
+Vera 0.1.360 and Clara 0.1.263. Those regression tests named only that skill.
+The tax-litigation skills added later had the same invalid unquoted YAML scalar;
+the broader scan also found the defect in Lucia's source.
+
+The shared `validate_plugin_skills.py` gate parses every `SKILL.md` in the
+finished Codex, ChatGPT, Cowork and Antigravity archives, including embedded
+modules and newly introduced names, for every product. Invalid UTF-8, missing
+or malformed frontmatter, duplicate mapping keys, invalid required field types,
+empty names/descriptions and duplicate ZIP members stop the build. The parser
+is a declared build dependency; its absence stops validation rather than
+silently reducing it. Skills are never repaired after hashing.
+
+All builders run the check before replacing release files and during `--check`.
+Cowork publishes the exact checked archive instead of serializing it again.
+The unchanged Vera verifier continues to reject inventory, byte and component
+contract mismatches for all six assured modules. Pre-commit checks changed
+skill sources; release CI checks the complete source inventory and every shipped
+product archive. Regression cases inject malformed unknown skills into all
+twelve product/host combinations and verify that failed builds preserve prior
+ZIPs, public downloads, directories and version metadata. A separate regression
+simulates an unstable second serialization to ensure only checked bytes ship.
+
+Build dependency setup: `python -m pip install -r scripts/requirements-plugin-build.txt`.
+The family release versions are Vera 0.1.390, Clara 0.1.285 and Lucia 0.1.111.
+Course content and professional instructions are unchanged; source fingerprints
+and reviewed version bindings are refreshed. These gates reject the documented
+failure modes; they do not certify arbitrary future host transformations or a
+professional workflow in an already-open session.

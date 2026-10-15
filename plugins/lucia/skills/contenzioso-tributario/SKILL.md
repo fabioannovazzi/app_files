@@ -1,6 +1,6 @@
 ---
 name: contenzioso-tributario
-description: Prepare or resume Italian tax litigation for a lawyer: case events, procedural steps, sourced deadlines, evidence, first-instance appeals, appellate pleadings and subsequent submissions. Preparation and saved progress only; not filing, service, signature or background reminders.
+description: "Prepare or resume Italian tax litigation for a lawyer: case events, procedural steps, sourced deadlines, evidence, first-instance appeals, appellate pleadings and subsequent submissions. Preparation and saved progress only; not filing, service, signature or background reminders."
 ---
 
 # Contenzioso tributario con Lucia

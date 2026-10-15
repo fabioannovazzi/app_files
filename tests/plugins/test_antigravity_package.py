@@ -16,7 +16,7 @@ def builder_case(tmp_path: Path, monkeypatch):
     builder = importlib.import_module("build_antigravity_plugin")
     entries = {
         "vera/.codex-plugin/plugin.json": b'{"name":"vera","version":"0.1.333"}',
-        "vera/skills/vera/SKILL.md": b"source skill",
+        "vera/skills/vera/SKILL.md": b"---\nname: vera\ndescription: Source skill\n---\nBody\n",
         "vera/mcp_config.json": b'{"mcpServers":{"test":{"command":"node"}}}',
     }
     monkeypatch.setattr(builder, "package_entries", lambda product: entries)

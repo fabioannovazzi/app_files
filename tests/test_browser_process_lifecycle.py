@@ -1005,9 +1005,11 @@ def test_named_skill_export_cannot_overwrite_existing_operation(lifecycle, tmp_p
     assert b"\r\n" not in original
 
 
-@pytest.mark.parametrize("package_format", ["chatgpt", "cowork"])
+@pytest.mark.parametrize(
+    ("package_format", "skill_prefix"), [("chatgpt", ""), ("cowork", "mparanza-")]
+)
 def test_named_skill_is_discoverable_and_bound_in_package(
-    lifecycle, tmp_path, monkeypatch, package_format
+    lifecycle, tmp_path, monkeypatch, package_format, skill_prefix
 ):
     store, process = registered(lifecycle, tmp_path)
     skills = importlib.import_module("process_skills")
@@ -1046,13 +1048,13 @@ def test_named_skill_is_discoverable_and_bound_in_package(
 
     packaged = package_builder()
 
-    entry = f"skills/{skill.name}/"
+    entry = f"skills/{skill_prefix}{skill.name}/"
     assert json.loads(packaged[entry + "process.json"])["process_id"] == process
     assert (
         packaged[entry + "capability.json"] == (skill / "capability.json").read_bytes()
     )
     assert f"${skill.name}" in packaged[entry + "agents/openai.yaml"].decode()
-    assert root_route in packaged["skills/vera/SKILL.md"].decode()
+    assert root_route in packaged[f"skills/{skill_prefix}vera/SKILL.md"].decode()
     assert "process_skills.py begin" in packaged[entry + "SKILL.md"].decode()
 
 

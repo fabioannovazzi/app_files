@@ -38,6 +38,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
+      - name: Install plugin build dependencies
+        run: python -m pip install -r scripts/requirements-plugin-build.txt
       - uses: actions/setup-node@v4
         with:
           node-version: '22'

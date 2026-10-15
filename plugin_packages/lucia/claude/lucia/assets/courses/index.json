@@ -60,7 +60,7 @@
     },
     "contenzioso-tributario": {
       "path": "contenzioso-tributario/course.json",
-      "sha256": "a300ff0eb1cd0316fe578bab84c6fc14a814bf59ec83fa145690fdd0cd5fb59d",
+      "sha256": "242b4fb9d1add7ec0831a5748d65780d1744b95da19df49a2fa5cb97faf98080",
       "languages": [
         "it",
         "en",

@@ -224,6 +224,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+      - name: Install plugin build dependencies
+        run: python -m pip install -r scripts/requirements-plugin-build.txt
       - name: Install local teaching lifecycle test dependencies
         run: >-
           python -m pip install pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit reportlab
@@ -292,6 +294,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+      - name: Install plugin build dependencies
+        run: python -m pip install -r scripts/requirements-plugin-build.txt
       - name: Install declared workflow dependencies and verification tools
         run: >-
           python -m pip install pytest pytest-cov 'coverage>=7.10' black==25.1.0 isort==6.0.1 mypy bandit reportlab 'jsonschema>=4.23,<5'
@@ -746,6 +750,8 @@ jobs:
           node-version: "22"
       # The packaged open-item bootstrap also loads its workpaper helper.
       # Install that component's declared dependencies in the clean CI environment.
+      - name: Install plugin build dependencies
+        run: python -m pip install -r scripts/requirements-plugin-build.txt
       - run: python -m pip install pytest -r plugins/open-item-reconciliation/requirements.txt
       - name: Exercise clean ZIPs and reject broken releases
         # These stdlib/Node checks do not need the application-wide fixtures.
@@ -782,6 +788,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+      - name: Install plugin build dependencies
+        run: python -m pip install -r scripts/requirements-plugin-build.txt
       - name: Install each supported Polars major with declared component dependencies
         run: >-
           python -m pip install pytest pytest-cov "polars==${{ matrix.polars }}"
