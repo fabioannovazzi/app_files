@@ -14,7 +14,7 @@ from uuid import uuid4
 
 import pytest
 
-from modules.operational_incidents.api import _dispatch
+from modules.operational_incidents.api import TOOLS, _dispatch
 from modules.operational_incidents.contracts import Credentials, ReporterStatus
 from modules.operational_incidents.store import IncidentStore
 from tests.modules.operational_incidents.test_incidents import report
@@ -224,3 +224,39 @@ def test_native_identity_read_failure_returns_source_facts_without_key(tmp_path)
     assert facts["events"][0]["error_type"] == "ValueError"
     assert "complete_stderr" not in json.dumps(result)
     assert secret not in json.dumps(result)
+
+
+@pytest.mark.parametrize(
+    "variant",
+    [
+        "deployed-contract",
+        "missing-progress",
+        "duplicate",
+        "wrong-name",
+        "invalid-schema",
+        "invalid-list",
+    ],
+)
+def test_release_checker_requires_the_actual_remote_incident_tool_contract(variant):
+    tools = json.loads(json.dumps(TOOLS))
+    if variant == "missing-progress":
+        tools.pop()
+    elif variant == "duplicate":
+        tools[-1] = tools[0]
+    elif variant == "wrong-name":
+        tools[-1]["name"] = "unrelated_tool"
+    elif variant == "invalid-schema":
+        tools[-1]["inputSchema"] = {"type": "array"}
+    elif variant == "invalid-list":
+        tools = None
+    checker = ROOT / "scripts/check_packaged_mcp.cjs"
+    program = "const {validIncidentTools}=require(process.argv[1]); process.stdout.write(JSON.stringify(validIncidentTools(JSON.parse(process.argv[2]))));"
+
+    result = subprocess.run(
+        ["node", "-e", program, str(checker), json.dumps(tools)],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    assert json.loads(result.stdout) is (variant == "deployed-contract")

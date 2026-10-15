@@ -7,6 +7,14 @@ const { spawn, spawnSync } = require("node:child_process");
 const readline = require("node:readline");
 const crypto = require("node:crypto");
 
+function validIncidentTools(tools) {
+  // Tool names are an exact transport contract, not a diagnostic classifier.
+  const expected = new Set(["vera_incident_register", "vera_incident_report", "vera_incident_status", "vera_incident_outcome", "vera_incident_progress"]);
+  return Array.isArray(tools) && tools.length === expected.size &&
+    tools.every(tool => tool && tool.inputSchema?.type === "object" && expected.delete(tool.name)) &&
+    expected.size === 0;
+}
+
 async function checkRemoteServer(name, config) {
   let url;
   try { url = new URL(config.url); } catch { return {name, error: "Invalid remote MCP URL"}; }
@@ -67,7 +75,7 @@ async function checkRemoteServer(name, config) {
     const initialized = await rpc(1, "initialize", {protocolVersion: "2025-03-26", capabilities: {}, clientInfo: {name: "package-release-verifier", version: "1"}});
     if (!initialized.serverInfo?.name || !initialized.capabilities?.tools) throw new Error("Invalid remote initialize response");
     const listed = await rpc(2, "tools/list", {});
-    if (!Array.isArray(listed.tools) || listed.tools.length !== 4) throw new Error("Invalid remote incident tools/list");
+    if (!validIncidentTools(listed.tools)) throw new Error("Invalid remote incident tools/list");
     return {name, transport: "http", tools: listed.tools.length, remoteRuntimeChecked: true};
   } catch (error) { return {name, error: error.message}; }
   finally {
@@ -212,7 +220,8 @@ async function main() {
   process.exitCode = results.some((result) => result.error) ? 1 : 0;
 }
 
-main().catch((error) => {
+module.exports = { validIncidentTools };
+if (require.main === module) main().catch((error) => {
   process.stderr.write(`${error.stack}\n`);
   process.exitCode = 1;
 });

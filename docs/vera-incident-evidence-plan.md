@@ -61,7 +61,7 @@ from PR 833 and the merged complete release guard from PR 835. Final green relea
 monitor activation changes remain outstanding. Keep this task's existing
 branch/worktree active.
 
-Local candidate evidence (2026-10-15): 250 focused tests passed with 88.33%
+Local candidate evidence (2026-10-15): 256 focused tests passed with 88.33%
 coverage, including actual native stdio/isolated Python/HTTP/store integration,
 fresh reporter identity continuity, native/guest version separation and damaged
 reporter refusal. Clara's metadata/privacy and the icon-theme checks passed
@@ -109,7 +109,7 @@ Final source review also found and corrected two server-side acceptance gaps:
 partial/legacy supplements no longer complete technical capture, and supplements
 must preserve the original session, operation and input binding. Eleven additional
 regressions cover rejected mismatches, matching evidence and incomplete review.
-The final focused suite passes 250 tests with 88.33% coverage; strict Mypy and
+The final focused suite passes 256 tests with 88.33% coverage; strict Mypy and
 format/security checks remain green. Packaged client bytes are unchanged.
 
 After the final server validation correction, the reviewed source binding and
@@ -121,3 +121,7 @@ bridge source bytes match the original offline failure extraction.
 Final codex archive SHA-256: `b1cf6231e6352ab35fe42abd4ad06cc33ebc3eb1cb44e65bb09ee837777fbfce`.
 
 Final cowork archive SHA-256: `012eee6eb7bd087b2528e3f450220ac6e6d78fe8d522d313909aea8b3a82db58`.
+
+The live remote MCP verifier now validates the exact five-tool incident contract,
+including progress. Six regressions reject missing, duplicate, foreign or invalid
+tools against the actual server catalogue without making network requests.
