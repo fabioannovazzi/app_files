@@ -2265,14 +2265,14 @@ def test_public_transformation_course_discloses_cowork_unavailability(
 
 
 @pytest.mark.parametrize("product", ["vera", "lucia"])
-def test_withdrawn_tax_litigation_course_is_absent_from_release_manifest(product):
+def test_restored_tax_litigation_course_is_in_release_manifest(product):
     index = json.loads(
         (ROOT / f"plugins/{product}/assets/courses/index.json").read_text()
     )
     plan = json.loads((ROOT / "scripts/course_materials/release_plan.json").read_text())
-    assert f"{product}/contenzioso-tributario" in plan["excluded"]
-    assert "contenzioso-tributario" not in index["courses"]
-    assert "contenzioso-tributario" not in builder._eligible(product)
+    assert f"{product}/contenzioso-tributario" not in plan["excluded"]
+    assert "contenzioso-tributario" in index["courses"]
+    assert "contenzioso-tributario" in builder._eligible(product)
     assert (
         ROOT / f"plugins/{product}/skills/contenzioso-tributario/SKILL.md"
     ).is_file()

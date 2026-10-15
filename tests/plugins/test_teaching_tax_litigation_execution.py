@@ -25,7 +25,7 @@ from tests.plugins.test_teaching_kit_execution import (
 
 __all__ = [
     "test_tax_course_preserves_evidence_unknown_terms_and_prior_run",
-    "test_withdrawn_tax_course_is_absent_from_release_catalogue",
+    "test_restored_tax_course_is_in_release_catalogue",
 ]
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -352,16 +352,16 @@ def test_tax_course_preserves_evidence_unknown_terms_and_prior_run(
 
 
 @pytest.mark.parametrize("product", ["vera", "lucia"])
-def test_withdrawn_tax_course_is_absent_from_release_catalogue(product: str) -> None:
-    """Withdraw lesson delivery while retaining its authored professional workflow."""
+def test_restored_tax_course_is_in_release_catalogue(product: str) -> None:
+    """Keep restored lesson delivery aligned with its authored professional workflow."""
     plan = _read(ROOT / "scripts/course_materials/release_plan.json")
     catalogue = _read(ROOT / "plugins" / product / "assets/courses/index.json")
     authored = _read(ROOT / "scripts/course_materials/kits.json")
     key = f"{product}/{WORKFLOW}"
 
-    assert key in plan["excluded"]
-    assert key not in plan["prepared"]
+    assert key not in plan["excluded"]
+    assert key in plan["prepared"]
     assert key in authored
-    assert WORKFLOW not in catalogue["courses"]
-    assert not (ROOT / "plugins" / product / "assets/courses" / WORKFLOW).exists()
+    assert WORKFLOW in catalogue["courses"]
+    assert (ROOT / "plugins" / product / "assets/courses" / WORKFLOW).is_dir()
     assert (ROOT / "plugins" / product / "skills" / WORKFLOW / "SKILL.md").is_file()

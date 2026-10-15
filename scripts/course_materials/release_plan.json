@@ -13,6 +13,7 @@
     "clara/transcribe",
     "lucia/apertura-pratica",
     "lucia/comunicazione-professionale",
+    "lucia/contenzioso-tributario",
     "lucia/presenza-digitale-studio",
     "lucia/quesito-legale-fiscale",
     "vera/adeguati-assetti",
@@ -29,6 +30,7 @@
     "vera/composizione-negoziata",
     "vera/comunicazione-professionale",
     "vera/concordato-plan-review",
+    "vera/contenzioso-tributario",
     "vera/dati-fiscali-strutturati",
     "vera/email-cliente",
     "vera/esg-reporting-assurance",
@@ -60,8 +62,5 @@
     "vera/vouching"
   ],
   "retained": {},
-  "excluded": [
-    "vera/contenzioso-tributario",
-    "lucia/contenzioso-tributario"
-  ]
+  "excluded": []
 }

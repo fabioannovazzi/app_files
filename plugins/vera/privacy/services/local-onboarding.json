@@ -50,7 +50,7 @@
       ],
       "controls": [
         "HTTPS and mparanza.com only, including redirects; no credentials or query parameters; passive lesson-data extensions only; 30-second request timeout and 25 MB cap; SHA-256 checked before atomic write; only selected-language attachments are fetched; no code is downloaded or executed.",
-        "The release omits the explicitly withdrawn tax-litigation lesson. Retained Vera attachments use existing language-file URLs whose bytes match the course SHA-256; packaging does not recreate the removed website folders or embed the removed lesson."
+        "The restored tax-litigation lesson is included in the prepared catalogue and packages. Vera attachments use existing language-file URLs whose bytes match each course SHA-256; restored immutable URLs remain available for older packages."
       ]
     }
   ],
@@ -89,7 +89,7 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "e813913cdb3d26a0c35b431dedb429c298d9fcfbb2ec7aa53425f00a926e8ee2"
+    "source_fingerprint": "b84e63b7e76fa2433e75ca19d02d5882221c7e4b16f722ea1ae6499e0380fec1"
   },
   "runtime_profiles": [
     "openai-codex"

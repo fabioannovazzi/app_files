@@ -263,6 +263,11 @@ def test_actual_packages_contain_only_course_metadata_and_complete_remote_maps(
             for name in names
         )
         index = json.loads(zipped.read(assets + "index.json"))
+        if product in {"vera", "lucia"}:
+            canonical = json.loads(
+                (ROOT / f"plugins/{product}/assets/courses/index.json").read_bytes()
+            )
+            assert set(index["courses"]) == set(canonical["courses"])
         remote = json.loads(zipped.read(assets + "remote.json"))
         keys = set()
         for workflow, entry in index["courses"].items():
