@@ -93,3 +93,14 @@ all 55 function IDs and entrypoint hashes. Only the existing `bilancio-oic`
 entrypoint changed. The Geneva assessment retains its prior dispositions and
 records the new work as Italian OIC acceptance only; it establishes no new
 Swiss-framework or Geneva professional qualification.
+
+The four generated public lesson files for Italian and English are rebuilt from
+the same authored Bilancio scope and pass `build_public_catalog.py --check`.
+Only the related onboarding privacy fingerprints are refreshed; lesson inputs,
+worked outputs and Bilancio runtime behavior are unchanged.
+
+The subsequent course-compiler formatting, typing and security commands pass
+locally. The final four CI test groups also pass locally: Concordato 136 tests
+at 89.75% coverage, Registry 61 at 85.82%, website evidence 71 at 80.65%, and
+matter opening 13 at 83.63%. The full fresh native JUnit release verification
+remains a CI gate; no replacement execution evidence is manufactured.

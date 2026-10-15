@@ -14,7 +14,7 @@ Learn to supply the documents, review Vera’s proposals and read draft annual a
 
 An accounting firm prepares the first annual accounts for a small service company. Follow the work from client files to statements and review, then update the draft after a missing invoice is recorded.
 
-Prepare individual Italian OIC annual accounts for a small company in its first year. Follow the work from documents to the draft and local validation of an XBRL candidate. Professional review and approval remain the next step.
+Prepare individual Italian OIC annual accounts for a small company in its first year. Follow the work from documents to the draft and local validation of an XBRL candidate. Professional review and approval remain the next step. This lesson starts from supplied closing balances. It does not exercise the separately tested Alfa path for proposing, replacing and reconsidering closing adjustments.
 
 ## 2. Files and request · 60 s
 
