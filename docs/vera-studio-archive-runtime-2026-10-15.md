@@ -3,7 +3,7 @@
 Incident: `41b95b28-ae17-4a0a-8b7d-4a4ae8ccfdeb`.
 Original report: `b3f1c6a2-7d54-4e0b-9a1e-5c2d8f6e4a71`.
 Release source: `9b74daa60` (`origin/main`, Vera 0.1.391).
-Candidate: Vera 0.1.393; Studio Archive 0.1.48; Lucia 0.1.113.
+Candidate: Vera 0.1.393; Studio Archive 0.1.48; Lucia 0.1.113; Clara 0.1.288.
 
 ## Observed
 
@@ -115,3 +115,11 @@ with the original selected archive/client/engagement, verify the imported
 receipt and retained source, then record the actual outcome against the
 original report and applicable remedy revision. Keep the incident open until
 that original-task verification succeeds.
+
+## Shared Clara review binding
+
+CI identified a stale `learn-with-clara` engineering review because it governs
+the shared course build and public catalogue. The inspected course-manifest
+withdrawal changes that fingerprint without adding a recipient or data class.
+Refresh that binding and the root/update-service version bindings, then rebuild
+Clara 0.1.288 from its unchanged workflow source. Clara privacy regressions pass.
