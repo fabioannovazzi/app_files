@@ -98,8 +98,8 @@ pull into or replace unrelated primary-checkout files. Record the helper's Git
 commit and source hash with the snapshot and resulting summary.
 
 Explicit AI-reviewed exclusions live in `ledger.json` under `monitor_reviews`,
-keyed by incident ID. Each review contains `kind` (one of the two exclusion
-group names above), `reviewed_at`, `reason`, `evidence_refs`, the complete exact
+keyed by incident ID. Each review contains `kind` (`controlled_fixture` or
+`technical_recovery_pending_closure`), `reviewed_at`, `reason`, `evidence_refs`, the complete exact
 `report_hashes` mapping and `evidence_sha256` computed by the helper's
 `evidence_hash`. Do not turn old free-text dispositions into rules. An agent
 must inspect the supporting evidence before creating or refreshing a review.
