@@ -24,7 +24,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: python -m pip install pytest pytest-cov beautifulsoup4 black==25.1.0 isort==6.0.1 mypy bandit
+      - run: python -m pip install pytest pytest-cov beautifulsoup4 pyyaml black==25.1.0 isort==6.0.1 mypy bandit
       - name: Reject shared recipe changes without a policy revision upgrade
         env:
           BASE_REF: ${{ github.event.pull_request.base.sha || github.event.before }}

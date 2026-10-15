@@ -43,3 +43,32 @@ contracts to that host's exact layout: omitted `.app.json`, `.mcp.json` and
 Journal-bank-reconciliation and report-builder already select their host contract
 at runtime. The four projected scanners reject mixed native-host files, missing
 helpers and unexpected scripts even when the outer package index is regenerated.
+
+
+## Cowork frontmatter repair (0.1.389)
+
+The affected local Cowork cache was inspected on 2026-10-15. Its manifest
+reported 0.1.388 and exactly one of 1,699 indexed files differed:
+`skills/mparanza-contenzioso-tributario/SKILL.md`. Compared with the public
+archive, the cached file only added double quotes around `description`.
+That exact change produces the reported `748d403d...` hash instead of
+`932c878d...`.
+
+The original description contains an unquoted colon followed by a space.
+A YAML parser rejects the packaged frontmatter; the quoted installed variant
+parses. This establishes a source-format defect and a post-package difference,
+not evidence of two different public 0.1.388 builds. The precise host stage
+that added the quotes was not observed.
+
+The source description is now quoted before packaging and index generation.
+CI parses every shipped skill entrypoint in all four Vera archives with
+`yaml.safe_load`, requiring string name and description fields. This complements
+the real execution verifier: matching digests alone do not prove the host can
+parse the skills without repairing their bytes. Teaching content and legal
+instructions are unchanged; their source bindings were refreshed explicitly.
+
+A separate local launch failure was traced to `node` being absent from the
+Claude application's logged search path. Making the already installed Node
+runtime callable on that path allowed all 22 local servers in the affected
+installation to complete initialize/tools-list checks. This environment repair
+is separate from package integrity and does not prove a professional workflow.

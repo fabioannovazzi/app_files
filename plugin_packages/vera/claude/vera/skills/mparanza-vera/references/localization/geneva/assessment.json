@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "663e48a510e3ba07b4dd10aba06fd4d0131998d9e6a059acc140b2179eb4aae5",
+  "catalogue_fingerprint": "e52bce0caa807333d0dfb6eebed845f9e68b38a4ae7161a029110494d477a54a",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -1785,5 +1785,14 @@
     "version": "0.1.388",
     "previous_catalogue_fingerprint": "0e13cae1383001f2d470e5cc6db5fb83bee9297375b66ee488035e0b573a1eb2",
     "scope": "Only the product manifest version changes in this catalogue snapshot; all 55 skill entrypoint hashes are unchanged. Existing Geneva judgments are retained. Finished-archive execution checks establish package consistency, not jurisdiction qualification or installed-host acceptance."
+  },
+  "cowork_frontmatter_release_binding": {
+    "version": "0.1.389",
+    "reviewed_at": "2026-10-15",
+    "previous_catalogue_fingerprint": "663e48a510e3ba07b4dd10aba06fd4d0131998d9e6a059acc140b2179eb4aae5",
+    "changed_entrypoints": [
+      "contenzioso-tributario"
+    ],
+    "scope": "Quote the unchanged tax-litigation description as valid YAML. The other 54 entrypoints and all existing Geneva jurisdiction judgments remain unchanged. No new jurisdiction acceptance is claimed."
   }
 }

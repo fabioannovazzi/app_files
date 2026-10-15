@@ -11,6 +11,7 @@ from pathlib import Path
 from zipfile import ZipFile, ZipInfo
 
 import pytest
+import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
@@ -24,6 +25,33 @@ HOSTS = {
     "cowork": ("plugin_packages/vera/vera-claude-plugin.zip", "."),
     "antigravity": ("static/shared/vera/downloads/vera-antigravity-plugin.zip", "vera"),
 }
+
+
+def packaged_skill_cases():
+    """Enumerate shipped skill entrypoints, including embedded modules."""
+    cases = []
+    for host, (filename, _) in HOSTS.items():
+        with ZipFile(ROOT / filename) as archive:
+            cases.extend(
+                (host, name)
+                for name in archive.namelist()
+                if name.endswith("/SKILL.md")
+            )
+    return cases
+
+
+@pytest.mark.parametrize("host,skill", packaged_skill_cases())
+def test_finished_skill_yaml_requires_no_install_time_repair(host, skill):
+    # YAML syntax is a mechanical host contract. A digest-consistent ZIP may
+    # still be rewritten by the host when a description contains an unquoted colon.
+    with ZipFile(ROOT / HOSTS[host][0]) as archive:
+        source = archive.read(skill).decode("utf-8")
+    frontmatter = source.split("\n---\n", 1)[0].removeprefix("---\n")
+
+    metadata = yaml.safe_load(frontmatter)
+
+    assert isinstance(metadata["name"], str)
+    assert isinstance(metadata["description"], str)
 
 
 def load_builder(name):

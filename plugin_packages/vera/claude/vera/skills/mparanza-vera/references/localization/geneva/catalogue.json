@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "plugins/vera",
-  "version": "0.1.388",
-  "captured_at": "2026-10-14T21:21:46.884464+00:00",
-  "catalogue_fingerprint": "663e48a510e3ba07b4dd10aba06fd4d0131998d9e6a059acc140b2179eb4aae5",
-  "manifest_sha256": "dd929b6bf440a0cb4e550eab77a68883d86ed55aee757d60cd2d478201650819",
+  "root": "/Users/fabio/.codex/worktrees/vera-cowork-frontmatter/app_files/plugins/vera",
+  "version": "0.1.389",
+  "captured_at": "2026-10-15T05:44:14.368011+00:00",
+  "catalogue_fingerprint": "e52bce0caa807333d0dfb6eebed845f9e68b38a4ae7161a029110494d477a54a",
+  "manifest_sha256": "c3f04183b7b589fe2da89499f151d984a8fd011a56cbeb5d80a32c223d4af90b",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -84,7 +84,7 @@
     {
       "function_id": "contenzioso-tributario",
       "skill_path": "skills/contenzioso-tributario/SKILL.md",
-      "sha256": "a564cf1f3c62b751ca66e8bb36ee4c210a650cec3269f5e0a9cb488ef2a860da"
+      "sha256": "6f0669e4c9766a2b38970f3b3c11ddd0915599df22387276b50c92a8fc158127"
     },
     {
       "function_id": "datev-invoice-start",
