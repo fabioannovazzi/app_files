@@ -12,6 +12,7 @@ from pathlib import Path
 from build_catalog import ROOT, _eligible, build
 from course_start import add_course_start
 from get_started import render_introduction
+from remote_files import withdrawn_public_lesson
 
 sys.path.insert(0, str(ROOT / "plugins/_shared/vendor/modules"))
 from courseware.library import CourseLibrary  # noqa: E402
@@ -58,6 +59,8 @@ def render(destination: Path, *, preview: bool = False, public: bool = False) ->
         )
         groups = {"workflow": [], "supporting_task": []}
         for workflow, entry in index["courses"].items():
+            if public and withdrawn_public_lesson(ROOT, product, workflow):
+                continue
             default_language = (
                 "it" if "it" in entry["languages"] else entry["languages"][0]
             )

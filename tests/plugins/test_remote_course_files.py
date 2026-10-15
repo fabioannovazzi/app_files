@@ -318,3 +318,76 @@ def test_immutable_attachment_cannot_be_overwritten(tmp_path, monkeypatch):
         publish_remote_files(tmp_path)
 
     assert immutable.read_bytes() == b"unexpected alteration"
+
+
+def write_publication_policy(root, *, withdrawn=(), language_downloads=()):
+    directory = root / "scripts/course_materials"
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / "publication_policy.json").write_text(
+        json.dumps(
+            {
+                "withdrawn_lessons": list(withdrawn),
+                "existing_language_downloads": list(language_downloads),
+            }
+        )
+    )
+
+
+def test_language_downloads_keep_exact_hash_and_never_recreate_removed_files(
+    tmp_path, monkeypatch
+):
+    from scripts.course_materials import remote_files
+
+    entries, public, immutable = public_case(tmp_path)
+    original_hash = hashlib.sha256(public.read_bytes()).hexdigest()
+    immutable.unlink()
+    write_publication_policy(tmp_path, language_downloads=("vera",))
+    monkeypatch.setattr(remote_files, "PRODUCTS", frozenset({"vera"}))
+
+    assert publish_remote_files(tmp_path, check=True) == 1
+    externalize_course_files(entries, "vera", root=tmp_path)
+    externalize_course_files(entries, "vera", root=tmp_path)
+    publish_remote_files(tmp_path)
+
+    remote = json.loads(entries["assets/courses/remote.json"])
+    assert remote["files"]["sample/files/input.txt"] == {
+        "url_path": "sample/en/files/input.txt",
+        "sha256": original_hash,
+    }
+    assert not immutable.exists()
+    assert hashlib.sha256(public.read_bytes()).hexdigest() == original_hash
+
+
+def test_language_downloads_reject_altered_or_missing_existing_material(tmp_path):
+    entries, public, immutable = public_case(tmp_path)
+    immutable.unlink()
+    write_publication_policy(tmp_path, language_downloads=("vera",))
+    public.write_bytes(b"different material")
+
+    with pytest.raises(ValueError, match="byte-identical"):
+        externalize_course_files(entries, "vera", root=tmp_path)
+
+
+def test_explicit_withdrawal_removes_only_lesson_and_never_regenerates_it(
+    tmp_path, monkeypatch
+):
+    from scripts.course_materials import remote_files
+
+    entries, public, immutable = public_case(tmp_path)
+    public.unlink()
+    immutable.unlink()
+    entries["skills/sample/SKILL.md"] = b"professional workflow remains available"
+    write_publication_policy(tmp_path, withdrawn=("vera/sample",))
+    monkeypatch.setattr(remote_files, "PRODUCTS", frozenset({"vera"}))
+
+    assert publish_remote_files(tmp_path) == 0
+    externalize_course_files(entries, "vera", root=tmp_path)
+
+    assert json.loads(entries["assets/courses/index.json"])["courses"] == {}
+    assert json.loads(entries["assets/courses/remote.json"])["files"] == {}
+    assert not any(name.startswith("assets/courses/sample/") for name in entries)
+    assert (
+        entries["skills/sample/SKILL.md"] == b"professional workflow remains available"
+    )
+    assert not public.exists()
+    assert not immutable.exists()
