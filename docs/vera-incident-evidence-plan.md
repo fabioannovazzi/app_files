@@ -100,4 +100,7 @@ clara candidate Cowork ZIP SHA-256: `47d8d001a8a76c287faf75e29f3aa272a51623e69e7
 
 After integrating main at 095b5548a, both products rebuilt successfully with
 the expanded installed CLI/course-source/archive-timestamp guard. Its 44 tests
-passed with 100% coverage. Native acceptance archive hashes remain unchanged.
+passed with 100% coverage. Cowork archive bytes remain unchanged. The Codex archive hash changed only
+because 2,617 ZIP-entry timestamps changed; every archived file has identical
+content to the native acceptance extraction. Preserve the original acceptance
+archive hashes and record the new archive hash separately.
