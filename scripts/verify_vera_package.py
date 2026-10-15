@@ -26,7 +26,9 @@ ASSURED_MODULES = (
 
 def _verify_release_references(archive_path: Path, root: Path, prefix: str) -> None:
     """Compare exact course bytes and stored ZIP times, not extraction times."""
-    index = json.loads((root / "execution-files.json").read_text())["files"]
+    index = json.loads((root / "execution-files.json").read_text(encoding="utf-8"))[
+        "files"
+    ]
     with ZipFile(archive_path) as archive:
         sealed_at = archive.getinfo(f"{prefix}execution-files.json").date_time
         for name in index:
@@ -35,7 +37,7 @@ def _verify_release_references(archive_path: Path, root: Path, prefix: str) -> N
                     f"execution-files.json is older than indexed file: {name}"
                 )
     for course in sorted(root.glob("assets/courses/*/course.json")):
-        for source in json.loads(course.read_text())["sources"]:
+        for source in json.loads(course.read_text(encoding="utf-8"))["sources"]:
             path = (root / source["path"]).resolve()
             if not path.is_relative_to(root):
                 raise ValueError(f"Unsafe course source path: {source['path']}")

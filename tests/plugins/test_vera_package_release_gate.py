@@ -72,6 +72,17 @@ def test_finished_archive_passes_all_assured_modules(host):
     assert verify_vera_execution_zip(ROOT / HOSTS[host][0], root) is None
 
 
+def test_utf8_course_manifests_pass_with_a_non_utf8_host_default(monkeypatch):
+    read_text = Path.read_text
+
+    def legacy_default(path, encoding=None, errors=None):
+        return read_text(path, encoding=encoding or "cp1252", errors=errors)
+
+    monkeypatch.setattr(Path, "read_text", legacy_default)
+
+    assert verify_vera_execution_zip(ROOT / HOSTS["cowork"][0], ".") is None
+
+
 @pytest.mark.parametrize("host", HOSTS)
 def test_final_skill_edit_is_rejected_by_the_packaged_verifier(tmp_path, host):
     entries, root = release_entries(host)
