@@ -65,6 +65,67 @@ success. No central process reads the user's professional files.
    from launcher and native-broker observations. A saved OAuth connection,
    task-local reporter, native app profile and native host are different units.
 
+## Count effective open items
+
+Report **distinct unresolved technical incidents**, not the raw queue length,
+number of reports, reporter identities or machines. An offline host or an
+unanswered diagnostic request still counts as an open technical problem.
+Keep these three groups visible separately:
+
+- `effective_open_incidents`: technical cases still requiring diagnosis or
+  original-task recovery, including unknowns and stale reviews.
+- `technical_recovery_pending_closure_incidents`: the original technical scope
+  and unchanged inputs were actually verified, but the registry still needs
+  its proper host-owned closure. This remains administrative follow-up work;
+  it is not a protocol-level recovered outcome.
+- `controlled_fixture_incidents`: exact reviewed technical tests excluded from
+  customer incident counts. Similar new errors are never excluded automatically.
+
+Use `scripts/summarize_incident_monitor.py` after each complete audit, before
+updating `last_monitor_check.queue_ids`. Save a private JSON snapshot containing
+`queue_limit: 1000`, `queue` (the full `list` result) and `incidents` (the full
+`show` results for all queued and previously unresolved IDs, including any that
+disappeared). Run it with `--snapshot <snapshot.json> --ledger <ledger.json>`.
+It requires every show, rejects inconsistent or possibly truncated queues and
+never modifies the registry or either input. On failure, retain the last complete
+count and label it stale; never report zero or overwrite the last baseline.
+
+The primary checkout may be stale or dirty. In that case read the helper from
+the exact verified deployed Git commit into the private monitor output directory
+using `git show <deployed-sha>:scripts/summarize_incident_monitor.py`, then run
+that standalone standard-library file with the activated local venv. Do not
+pull into or replace unrelated primary-checkout files. Record the helper's Git
+commit and source hash with the snapshot and resulting summary.
+
+Explicit AI-reviewed exclusions live in `ledger.json` under `monitor_reviews`,
+keyed by incident ID. Each review contains `kind` (`controlled_fixture` or
+`technical_recovery_pending_closure`), `reviewed_at`, `reason`, `evidence_refs`, the complete exact
+`report_hashes` mapping and `evidence_sha256` computed by the helper's
+`evidence_hash`. Do not turn old free-text dispositions into rules. An agent
+must inspect the supporting evidence before creating or refreshing a review.
+The mechanical hash checks make the count reproducible; they do not diagnose
+errors or decide whether the original task worked.
+
+A technical-recovery review additionally requires `verification` containing
+`original_task_verified: true`, `original_inputs_preserved: true`, a precise
+`scope` and the inspected `result`. Cite actual host acceptance evidence for the
+same original report, owner and remedy episode. A successful retry, software
+update or another case alone is insufficient. Preserve missing historical
+bindings as unknown. Never fabricate a missing host verification flag or modify
+an old outcome to make this projection pass. If those facts cannot be verified,
+the case stays in `effective_open_incidents`.
+
+Any changed report, supplement, owner, remedy revision, retry or outcome makes
+the reviewed exclusion stale and returns that case to the effective open count
+until fresh AI inspection. Derived time-dependent capture summaries alone do
+not invalidate the evidence review. All original evidence is retained.
+
+Persist the successful output as `last_monitor_check.open_items` and preserve
+the raw count for audit. Use its `summary_it` when reporting counts in the chat
+or an already-warranted email. Do not say “eight open problems” when that is
+only the raw registry total. Do not send an extra email for this bookkeeping
+correction or duplicate an old recovery alert. Unchanged checks stay quiet.
+
 ## Communicate directly with the affected Vera
 
 Use scoped incident remedies as the conversation. Do not require Fabio or the
@@ -173,6 +234,16 @@ actual successful retry event. Also require `execution_succeeded: true` and
 `original_task_verified: true` after the affected Vera inspects the actual
 original task's result. Existing workflow receipts, controls and professional
 review still apply; technical execution success does not waive them.
+
+Define the original task's technical scope from its original failure and the
+applicable remedy's expected outcome. For example, an archive refresh/import
+failure is verified by the original refresh and unchanged original imports;
+an unrelated downstream reconciliation's professional review is a separate
+workflow state. Do not record the archive recovery as `action-required` solely
+because that later review remains. Conversely, if the original failure was in
+reconciliation itself, archive readiness does not prove reconciliation recovered.
+This scope distinction never bypasses a professional approval or permits the
+central agent to forge a host outcome.
 
 The central agent must not manufacture host progress, verification or outcomes,
 use operator access to close a case, reuse another case's result, or equate merge,
