@@ -51,6 +51,13 @@ success. No central process reads the user's professional files.
    payload/evidence hashes already recorded in that ledger. The exit-17 cases
    investigated in PR 805 and controlled acceptance records are specific
    evidence, not keyword rules. New similar reports require investigation.
+   An explicitly active controlled acceptance can exercise the recovery loop
+   when its exact original report ID and payload hash are recorded in
+   `active_recovery_acceptance` in that ledger. Diagnose and communicate with
+   that case while its `active` flag is true, suppressing customer/email alerts
+   for that exact test only. After verified original-task recovery, record its
+   final exact evidence and end the active exercise. Never infer this treatment
+   from an error string, workflow name or a reported test label.
 5. Diagnose with AI reasoning over the actual technical evidence and relevant
    source. State observations, supported inference and unknowns separately.
    Never infer a cause from an exit code, OS label, workflow name, generic error
@@ -80,6 +87,9 @@ Choose the next step with AI judgment:
   `evidence_for_report_id` and `response_to_remedy_revision`. Inspect its actual
   receipt/evidence before proceeding. Inaccessible evidence must be reported as
   such; it must not be silently treated as collected.
+  A runtime/availability observation alone does not complete capture of a missing
+  original technical error. Preserve `pending` or `unavailable` capture until
+  the original relevant error chain was actually reviewed.
 - **Evidence already sufficient:** diagnose it directly; do not request more
   data by habit. A legacy capture flag can be incomplete even when a specific
   received integrity digest establishes a useful technical fact.
@@ -128,7 +138,13 @@ boundary review. Do not broaden work to unrelated features or weaken integrity,
 professional review, host security or provenance controls to make a case pass.
 
 Inspect `origin/main`, the server and open release PRs. Preserve unrelated dirty
-work. Use at most one temporary branch/worktree for active work; never edit
+work. The local repository is `/Users/fabio/Documents/GitHub/app_files`; the
+monitoring chat may start at `/`, so use explicit working directories. Work
+from a clean temporary worktree based on current `origin/main`, leaving the
+primary checkout's unrelated changes untouched. Use the managed worktree tools
+when the calling chat has repository context, or Git's worktree commands from
+the explicit repository directory otherwise. Use at most one temporary
+branch/worktree for active work; never edit
 tracked production files outside Git. Add a meaningful regression reproducing
 the actual boundary, run appropriate broader checks, and merge only after **all
 required CI checks are green** with coverage at least 80%. Resume an existing
