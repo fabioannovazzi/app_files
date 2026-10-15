@@ -851,11 +851,7 @@ class IncidentStore:
                     (latest["report_id"],),
                 ).fetchone()["payload_json"]
             )
-            if (
-                outcome.status == "recovered"
-                and source.get("capture_state", "legacy") != "legacy"
-                and not outcome.original_task_verified
-            ):
+            if outcome.status == "recovered" and not outcome.original_task_verified:
                 raise IncidentConflict(
                     "Recovery requires verification of the original task"
                 )

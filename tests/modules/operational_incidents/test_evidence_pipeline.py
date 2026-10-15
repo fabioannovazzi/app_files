@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+import sqlite3
 from datetime import datetime, timezone
 from uuid import uuid4
 
@@ -18,6 +20,53 @@ from modules.operational_incidents.contracts import (
 from modules.operational_incidents.evidence import capture_coverage
 from modules.operational_incidents.store import IncidentConflict, IncidentNotFound
 from tests.modules.operational_incidents.test_incidents import registered, report
+
+
+def test_historical_recorded_outcome_retries_without_rewriting_its_evidence(tmp_path):
+    store, owner = registered(tmp_path)
+    original = report()
+    receipt = store.report(owner, original)
+    legacy = Outcome(
+        outcome_id=uuid4(),
+        incident_id=receipt["incident_id"],
+        report_id=original.report_id,
+        remedy_revision=1,
+        status="recovered",
+        execution_succeeded=True,
+    )
+    payload = legacy.model_dump(mode="json")
+    for field in ("operation_id", "input_binding", "original_task_verified"):
+        payload.pop(field)
+    encoded = json.dumps(
+        payload, sort_keys=True, ensure_ascii=False, separators=(",", ":")
+    )
+    # Seed an actual old-format committed recovery, not a newly allowed closure.
+    with sqlite3.connect(tmp_path / "incidents.sqlite3") as connection:
+        connection.execute(
+            "INSERT INTO operational_outcomes VALUES (?,?,?,?,?)",
+            (
+                str(legacy.outcome_id),
+                str(owner.installation_id),
+                receipt["incident_id"],
+                encoded,
+                "2026-01-01T00:00:00+00:00",
+            ),
+        )
+        connection.execute(
+            "UPDATE operational_deliveries SET status='recovered' WHERE installation_id=? AND incident_id=?",
+            (str(owner.installation_id), receipt["incident_id"]),
+        )
+        connection.execute(
+            "UPDATE operational_incidents SET status='recovered' WHERE incident_id=?",
+            (receipt["incident_id"],),
+        )
+    before = store.show(receipt["incident_id"])["outcomes"]
+
+    repeated = store.outcome(owner, legacy)
+
+    assert repeated["recorded"] is True
+    assert repeated["outcome_id"] == str(legacy.outcome_id)
+    assert store.show(receipt["incident_id"])["outcomes"] == before
 
 
 def test_observed_reporter_upgrade_does_not_rewrite_old_failure(tmp_path):
@@ -70,11 +119,13 @@ def test_observed_reporter_requires_matching_installation_capability(tmp_path):
     assert store.installation(str(owner.installation_id))["reporter_sessions"] == []
 
 
-def test_new_preflight_report_requires_original_task_verification_even_without_operation_id(
+@pytest.mark.parametrize("capture_state", ["legacy", "pending", "unavailable"])
+def test_recovery_requires_original_task_verification_even_without_operation_id(
     tmp_path,
+    capture_state,
 ):
     store, owner = registered(tmp_path)
-    original = report().model_copy(update={"capture_state": "unavailable"})
+    original = report().model_copy(update={"capture_state": capture_state})
     receipt = store.report(owner, original)
     readiness = Outcome(
         outcome_id=uuid4(),
@@ -262,9 +313,16 @@ def test_progress_cannot_close_original_operation(tmp_path, kind):
     assert store.show(receipt["incident_id"])["status"] == "open"
 
 
-@pytest.mark.parametrize("mismatch", ["operation", "inputs", "original-task"])
+@pytest.mark.parametrize(
+    "mismatch, message",
+    [
+        ("operation", "original operation and inputs"),
+        ("inputs", "original operation and inputs"),
+        ("original-task", "original task"),
+    ],
+)
 def test_recovery_requires_original_operation_inputs_and_host_verification(
-    tmp_path, mismatch
+    tmp_path, mismatch, message
 ):
     store, owner = registered(tmp_path)
     original = report().model_copy(
@@ -283,7 +341,7 @@ def test_recovery_requires_original_operation_inputs_and_host_verification(
         input_binding="b" * 64 if mismatch == "inputs" else original.input_binding,
     )
 
-    with pytest.raises(IncidentConflict, match="original operation and inputs"):
+    with pytest.raises(IncidentConflict, match=message):
         store.outcome(owner, outcome)
 
 

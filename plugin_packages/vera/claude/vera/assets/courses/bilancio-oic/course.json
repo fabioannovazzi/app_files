@@ -266,7 +266,7 @@
     },
     {
       "path": "scripts/operational_incidents.py",
-      "sha256": "158aed58ef1f285a1ad0f9e44f6419f818afcc4b318809936add7c58da796c9a"
+      "sha256": "fc5880ea19cc1d4d911b6abea17d266dcd5a27b42cf7f67b45d6ee16ffc52756"
     },
     {
       "path": "scripts/verified_execution.py",
@@ -596,5 +596,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "b2d08931fbf6a4657ab9132c3ec512b435129382b4305dc915783febe23a032e"
+  "canonical_course_sha256": "d1b7fcb3fe678da8ac21864eb9a2baac97daf6c510cdc7ee33b8e402ea553322"
 }

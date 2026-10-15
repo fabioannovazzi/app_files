@@ -833,7 +833,7 @@ def verify_original_task(value: dict[str, Any]) -> dict[str, Any]:
         "input_binding"
     ) != original.get("input_binding"):
         raise ValueError("Verification belongs to another operation or input binding")
-    outcome = {
+    outcome: dict[str, Any] = {
         key: value[key]
         for key in (
             "incident_id",

@@ -197,6 +197,12 @@ installed `verify-task --input <actual-verification.json>` command durably queue
 this actual verification for either transport. A successful helper alone remains
 readiness, not professional-task acceptance. Never fabricate a verification.
 
+This original-task verification is also required when closing an older report.
+When that report lacks an operation or input identity, do not invent or infer
+those bindings from the workflow name. Preserve the missing evidence as unknown;
+only actual verification of its original task can support recovery. Historical
+recorded receipts remain history and exact idempotent retries do not rewrite them.
+
 Every actionable remedy targets one `target_report_id`. Exact identical exit
 messages can share an investigation while having different causes. A remedy for
 another report is not an instruction for this case. Each delivery receives the

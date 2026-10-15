@@ -93,7 +93,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "0d7c59fc15dc95db79a1709ea28d18385b22656c742bdd10ea60b7cce0033c16",
+  "course_sha256": "afec2d27dc26c8ce9fc9788dbb957fefef87d28428dc6d006da91c0254c37ba2",
   "discovery_source_refresh": {
     "reviewed_by": "Codex /root",
     "reviewed_at": "2026-10-01T11:44:13.076890+00:00",
@@ -910,7 +910,7 @@
       {
         "path": "scripts/operational_incidents.py",
         "before": "739b9390ccdd77ead53fdc6536217af4a50e3f16f9b27fa8002cecaae2c06147",
-        "after": "3ee9c0b68be4ccd7b2059b037e488eb0e08a1875a16678f85f3c5908973f761c"
+        "after": "9ddd89ed0c4f8e715c13ec513af309a3f3397a2c4a43a8ff21227753f151a55d"
       },
       {
         "path": "scripts/verified_execution.py",

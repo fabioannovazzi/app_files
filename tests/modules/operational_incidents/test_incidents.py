@@ -119,6 +119,7 @@ def test_other_target_remedy_preserves_first_applicable_revision_and_recovery(tm
             remedy_revision=original_revision,
             status="recovered",
             execution_succeeded=True,
+            original_task_verified=True,
         ),
     )
 
@@ -214,6 +215,7 @@ def test_delayed_failure_for_recovered_episode_is_recorded_without_reopening(tmp
             remedy_revision=1,
             status="recovered",
             execution_succeeded=True,
+            original_task_verified=True,
         ),
     )
 
@@ -276,6 +278,7 @@ def test_full_incident_remedy_delivery_and_actual_recovery(tmp_path):
             remedy_revision=delivery["revision"],
             status="recovered",
             execution_succeeded=True,
+            original_task_verified=True,
         ),
     )
     assert result["status"] == "recovered"
@@ -301,6 +304,7 @@ def test_identical_signals_share_investigation_without_closing_other_users(tmp_p
             remedy_revision=1,
             status="recovered",
             execution_succeeded=True,
+            original_task_verified=True,
         ),
     )
     assert store.queue()[0]["status"] == "open"
@@ -363,6 +367,7 @@ def test_update_available_is_not_recovered_and_stale_outcome_is_rejected(tmp_pat
                 remedy_revision=1,
                 status="recovered",
                 execution_succeeded=True,
+                original_task_verified=True,
             ),
         )
 
@@ -418,6 +423,7 @@ def test_recurrence_reopens_a_recovered_delivery(tmp_path):
             remedy_revision=1,
             status="recovered",
             execution_succeeded=True,
+            original_task_verified=True,
         ),
     )
     next_receipt = store.report(first, report())
@@ -555,6 +561,7 @@ def test_retry_of_old_outcome_cannot_close_a_new_failure(tmp_path):
         remedy_revision=1,
         status="recovered",
         execution_succeeded=True,
+        original_task_verified=True,
     )
     store.outcome(first, recovered)
     store.report(first, report())
@@ -593,6 +600,7 @@ def test_delayed_success_cannot_close_a_newer_reported_episode(tmp_path):
                 remedy_revision=1,
                 status="recovered",
                 execution_succeeded=True,
+                original_task_verified=True,
             ),
         )
     assert store.queue()[0]["status"] == "open"
@@ -610,6 +618,7 @@ def test_recovery_without_report_identity_cannot_close_an_episode(tmp_path):
                 remedy_revision=1,
                 status="recovered",
                 execution_succeeded=True,
+                original_task_verified=True,
             ),
         )
     assert store.queue()[0]["status"] == "open"
@@ -628,6 +637,7 @@ def test_old_failed_recovery_keeps_evidence_without_reopening_newer_success(tmp_
             remedy_revision=1,
             status="recovered",
             execution_succeeded=True,
+            original_task_verified=True,
         ),
     )
     recorded = store.outcome(
@@ -709,6 +719,7 @@ def test_saved_connection_recovery_closes_only_the_original_linked_report(tmp_pa
         remedy_revision=1,
         status="recovered",
         execution_succeeded=True,
+        original_task_verified=True,
     )
 
     result = store.connection_outcome(actor, recovery)
@@ -737,6 +748,7 @@ def test_saved_connection_cannot_close_an_unlinked_foreign_report(tmp_path):
         remedy_revision=1,
         status="recovered",
         execution_succeeded=True,
+        original_task_verified=True,
     )
 
     with pytest.raises(IncidentNotFound):
@@ -801,6 +813,7 @@ def test_late_diagnostics_do_not_reopen_recovered_original_episode(tmp_path):
             remedy_revision=1,
             status="recovered",
             execution_succeeded=True,
+            original_task_verified=True,
         ),
     )
     evidence = original.model_copy(
