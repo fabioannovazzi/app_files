@@ -58,6 +58,15 @@ release gates. Server deployment and downloadable packages do not establish that
 an already-open session or any user's installed plugin changed. Marketplace
 publication remains a separate action.
 
+The existing Italian/English Bilancio lessons are byte-equivalent to the main
+baseline except for their source inventory. Their historical editorial judgments
+and output reviews are retained by a bounded source-compatibility record; the new
+area-review extension is not silently added to those lessons. That release-review
+record belongs to the shared course-authoring tree governed by both Vera and
+Clara. Vera 0.1.395 and Clara 0.1.290 therefore ship refreshed privacy fingerprints
+and matching host packages. Clara's professional functions and course content
+are unchanged.
+
 ## Source and model boundary
 
 Account meaning, documentary relevance, sufficient evidence, complexity and
