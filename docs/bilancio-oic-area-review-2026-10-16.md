@@ -33,7 +33,7 @@ remain authoritative.
   extension oracle, including reviewed account assignments and independent
   expected affected/unaffected areas. It is engineering material, not Gerardo's
   professional approval of the extension.
-- 33 extension tests pass. New review/workbook code coverage: 92.20% in the
+- 34 extension tests pass. New review/workbook code coverage: 92.21% in the
   recorded focused run. Tests include actual service and stdio MCP execution,
   source-only applicability, exact-quote rejection, prior-only rejection,
   complete population coverage, stale plan/control rejection, source revision
@@ -50,8 +50,8 @@ remain authoritative.
   and mobile rendering with no page errors. This is local browser evidence,
   not a Codex/Claude installed-host or real-client acceptance claim.
 - The existing Italian/English demo/practice lesson tests pass after editorial
-  source refresh. The lesson explicitly excludes the new area-review extension
-  rather than claiming to teach it without an execution case.
+  source refresh. The lesson retains its supplied-closing-balances scope. The new
+  area-review extension is exercised separately by its explicit synthetic fixture.
 
 The complete Bilancio CI suite, package parity and production verification are
 release gates. Server deployment and downloadable packages do not establish that

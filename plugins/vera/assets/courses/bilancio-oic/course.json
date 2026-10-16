@@ -102,7 +102,7 @@
     {
       "path": "modules/bilancio-xbrl-it/scripts/area_review.py",
       "repository_path": "plugins/bilancio-xbrl-it/scripts/area_review.py",
-      "sha256": "8f71cdbdb2269fe6e804e6a5b62acb08bde56828792fe32f09c646255ceb21a6"
+      "sha256": "419f2e51d4ddbfc0f579be650f17e61b213518eea3519606e25ad0cd168388c5"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/artifact_delivery.py",
@@ -222,7 +222,7 @@
     {
       "path": "modules/bilancio-xbrl-it/scripts/review_workbook.py",
       "repository_path": "plugins/bilancio-xbrl-it/scripts/review_workbook.py",
-      "sha256": "9387c9c4f1f90217eec0a5dd48eeefd5116f61c689994e898eca6d9128540d42"
+      "sha256": "dd1274e29c3c03c034dc03b967d0f627054cb9a486beb4b525c0430c5f072d18"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/run_background_job.py",
@@ -794,7 +794,7 @@
       "title": "Preparare una bozza di bilancio con Vera",
       "goal": "Imparare a fornire i documenti, rivedere le proposte di Vera e leggere una bozza di bilancio con prospetti, informazioni di supporto e controlli.",
       "scenario": "Uno studio prepara il primo bilancio di una piccola società di servizi. Seguiamo il lavoro dai file del cliente ai prospetti e alla revisione, poi aggiorniamo la bozza con una fattura dimenticata.",
-      "scope": "Preparazione di un bilancio individuale OIC italiano per una piccola società al primo esercizio. Segui il lavoro dai documenti alla bozza e alla verifica locale del candidato XBRL. La revisione e l’approvazione professionale restano il passo successivo. La lezione parte dai saldi di chiusura forniti: non esercita il percorso Alfa di proposta, sostituzione e riesame delle rettifiche, collaudato separatamente. Le nuove carte per area, l’applicabilità documentale e il documento Excel di revisione sono descritti nel workflow ma non sono esercitati da questa lezione.",
+      "scope": "Preparazione di un bilancio individuale OIC italiano per una piccola società al primo esercizio. Segui il lavoro dai documenti alla bozza e alla verifica locale del candidato XBRL. La revisione e l’approvazione professionale restano il passo successivo. La lezione parte dai saldi di chiusura forniti: non esercita il percorso Alfa di proposta, sostituzione e riesame delle rettifiche, collaudato separatamente.",
       "inputs": "Apri company-it.md, trial-balance-it.csv e year-end-it.txt. Contengono i dati della società, nove conti con movimenti e saldi e le informazioni di fine esercizio. Sono documenti di fantasia da elaborare, senza un bilancio già pronto. Le imposte sono un dato fornito dal prospetto fiscale esterno.",
       "request": "Vera, prepara una bozza del bilancio OIC da questi file. Guidami nella revisione della forma e delle classificazioni, poi mostrami il bilancio, le sue fonti e i controlli prima dell’approvazione.",
       "steps": [
@@ -819,7 +819,7 @@
       "title": "Prepare draft annual accounts with Vera",
       "goal": "Learn to supply the documents, review Vera’s proposals and read draft annual accounts with statements, supporting information and checks.",
       "scenario": "An accounting firm prepares the first annual accounts for a small service company. Follow the work from client files to statements and review, then update the draft after a missing invoice is recorded.",
-      "scope": "Prepare individual Italian OIC annual accounts for a small company in its first year. Follow the work from documents to the draft and local validation of an XBRL candidate. Professional review and approval remain the next step. This lesson starts from supplied closing balances. It does not exercise the separately tested Alfa path for proposing, replacing and reconsidering closing adjustments. The new area workpapers, documentary applicability and Excel review document are described in the workflow but are not exercised by this lesson.",
+      "scope": "Prepare individual Italian OIC annual accounts for a small company in its first year. Follow the work from documents to the draft and local validation of an XBRL candidate. Professional review and approval remain the next step. This lesson starts from supplied closing balances. It does not exercise the separately tested Alfa path for proposing, replacing and reconsidering closing adjustments.",
       "inputs": "Open company-en.md, trial-balance-en.csv and year-end-en.txt. They contain the company details, nine accounts with movements and balances, and year-end information. These are fictional documents to process, with no finished accounts. Tax is an input supplied by the external tax workpaper.",
       "request": "Vera, prepare draft OIC annual accounts from these files. Guide me through review of the form and classifications, then show the accounts, their sources and the checks before approval.",
       "steps": [

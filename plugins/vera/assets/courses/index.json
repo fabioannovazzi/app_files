@@ -160,7 +160,7 @@
     },
     "bilancio-oic": {
       "path": "bilancio-oic/course.json",
-      "sha256": "0fc404ed9f9338fc24f7afdca0be2573136c6d68d49a26e1dfcd5e2c1501e39c",
+      "sha256": "8a0e6278978ae0fe8541acde4c56bcf9ae154c672e6043c51aa630aaa74f1374",
       "languages": [
         "it",
         "en"

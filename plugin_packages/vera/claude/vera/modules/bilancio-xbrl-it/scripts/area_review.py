@@ -587,10 +587,9 @@ def build_area_review(case: Mapping[str, Any]) -> dict[str, Any]:
             },
         )
         population = [e for e in entries if assignment.get(e["account_id"]) == area_id]
+        population_ids = {e["account_id"] for e in population}
         mappings = [
-            m
-            for m in case.get("mappings", [])
-            if m["account_id"] in {e["account_id"] for e in population}
+            m for m in case.get("mappings", []) if m["account_id"] in population_ids
         ]
         allocation_keys = {
             (

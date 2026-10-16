@@ -776,3 +776,24 @@ def test_fact_links_do_not_cross_statement_concept_or_sign_when_labels_match(
     )
     assert area["links"][0]["fact_ids"] == ["correct"]
     assert [f["fact_id"] for f in area["facts"]] == ["correct"]
+
+
+def test_workbook_core_properties_keep_bound_qname_prefixes(case: dict) -> None:
+    from zipfile import ZipFile
+
+    from lxml import etree
+
+    confirm(case)
+    with ZipFile(BytesIO(build_review_workbook(case))) as archive:
+        root = etree.fromstring(archive.read("docProps/core.xml"))
+    typed = root.xpath(
+        "//*[@xsi:type]",
+        namespaces={"xsi": "http://www.w3.org/2001/XMLSchema-instance"},
+    )
+    assert len(typed) == 2
+    for node in typed:
+        qualified_type = node.get("{http://www.w3.org/2001/XMLSchema-instance}type")
+        assert qualified_type == "dcterms:W3CDTF"
+        assert (
+            node.nsmap[qualified_type.split(":", 1)[0]] == "http://purl.org/dc/terms/"
+        )

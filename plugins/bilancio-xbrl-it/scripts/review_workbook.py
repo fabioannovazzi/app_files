@@ -341,7 +341,7 @@ def build_review_workbook(case: Mapping[str, Any]) -> bytes:
     book.properties.modified = frozen
     book.save(buffer)
     canonical = BytesIO()
-    from xml.etree import ElementTree
+    from lxml import etree
 
     with (
         ZipFile(buffer) as source,
@@ -351,11 +351,14 @@ def build_review_workbook(case: Mapping[str, Any]) -> bytes:
             content = source.read(name)
             if name == "docProps/core.xml":
                 # This XML is generated locally, never parsed from user input.
-                root = ElementTree.fromstring(content)  # nosec B314
+                root = etree.fromstring(
+                    content,
+                    parser=etree.XMLParser(resolve_entities=False, no_network=True),
+                )
                 for child in root:
                     if child.tag.endswith("}modified"):
                         child.text = frozen.isoformat() + "Z"
-                content = ElementTree.tostring(root)
+                content = etree.tostring(root)
             item = ZipInfo(name, (2000, 1, 1, 0, 0, 0))
             item.compress_type = ZIP_DEFLATED
             destination.writestr(item, content)
