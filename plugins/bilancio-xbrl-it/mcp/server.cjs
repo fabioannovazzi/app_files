@@ -64,6 +64,11 @@ const TOOLS = [
         ...COMMON_MUTATION,
         operation: {
           enum: [
+            "propose_area_review",
+            "confirm_area_review",
+            "propose_qualitative_evidence",
+            "review_qualitative_evidence",
+            "record_area_controls",
             "start_closing_workflow",
             "propose_closing_adjustment",
             "propose_closing_review",
@@ -307,7 +312,7 @@ const TOOLS = [
         view: {
           enum: [
             "CASE_DASHBOARD",
-            "CLOSING_OVERVIEW",
+            "REVIEW_SOURCES", "AREA_DASHBOARD", "AREA_WORKPAPERS", "OIC_CATALOGUE", "AREA_CONTROLS", "QUALITATIVE_EVIDENCE", "CLOSING_OVERVIEW",
             "CLOSING_DECISIONS",
             "CLOSING_ADJUSTMENTS",
             "CLOSING_PROPOSALS",

@@ -24,7 +24,7 @@
           ["Fatti nuovi e sospensioni", "Una revisione conserva la decisione precedente e indica autore, ruolo, data, motivazione e prove. Le aree, i mapping e la validazione interessati restano sospesi anche dopo la chiusura del riesame, finché saldi e controlli non sono nuovamente verificati."],
           ["Prospetti, nota e XBRL", "Dopo le revisioni necessarie si prosegue con forma di bilancio, mapping, informative e validazione. Questioni aperte e controlli sospesi restano visibili e possono bloccare approvazione ed esportazione."]
         ],
-        "Il registro conserva gli eventi precedenti e collega le revisioni con impronte di integrità. Checklist OIC estese, riepiloghi Excel e dashboard non fanno parte di questa fase."
+        "Il registro conserva gli eventi precedenti e collega le revisioni con impronte di integrità. Le carte di lavoro per area, i controlli professionali, la dashboard e il documento Excel proseguono sullo stesso fascicolo."
       ],
       acceptance: [
         "Collaudo documentato", "Alfa v3: risultati e sospensioni",
@@ -66,7 +66,7 @@
           ["New facts and suspended checks", "A review retains the earlier decision and records author, role, date, reason and evidence. Affected areas, mappings and validation remain suspended after the reconsideration closes until balances and checks have been reviewed again."],
           ["Statements, notes and XBRL", "After the necessary reviews, continue with statement form, mappings, disclosures and validation. Open issues and suspended checks remain visible and can block approval and export."]
         ],
-        "The register retains earlier events and links revisions with integrity hashes. Extended OIC checklists, Excel summaries and dashboards are outside this phase."
+        "The register retains earlier events and links revisions with integrity hashes. Area workpapers, professional controls, the dashboard and the Excel review document continue in the same case."
       ],
       acceptance: [
         "Documented acceptance test", "Alfa v3: results and suspensions",
@@ -108,7 +108,7 @@
           ["Faits nouveaux et suspensions", "La révision conserve la décision précédente et indique auteur, rôle, date, motif et preuves. Les domaines, affectations et validations concernés restent suspendus après la clôture du réexamen, jusqu'à une nouvelle vérification des soldes et contrôles."],
           ["États, annexe et XBRL", "Après les révisions nécessaires, poursuivre avec la forme des comptes, les affectations, les informations annexes et la validation. Les questions ouvertes et contrôles suspendus restent visibles et peuvent bloquer approbation et export."]
         ],
-        "Le registre conserve les événements antérieurs et relie les révisions par des empreintes d'intégrité. Les listes OIC étendues, synthèses Excel et tableaux de bord sont hors de cette phase."
+        "Le registre conserve les événements antérieurs et relie les révisions par des empreintes d'intégrité. Les feuilles de travail par domaine, contrôles professionnels, tableau de bord et document Excel prolongent le même dossier."
       ],
       acceptance: [
         "Test de réception documenté", "Alfa v3 : résultats et suspensions",
@@ -150,7 +150,7 @@
           ["Neue Fakten und Aussetzungen", "Eine Revision bewahrt die frühere Entscheidung und erfasst Urheber, Rolle, Datum, Grund und Nachweise. Betroffene Bereiche, Zuordnungen und Validierung bleiben nach Abschluss der erneuten Entscheidungskontrolle ausgesetzt, bis Salden und Prüfungen erneut geprüft wurden."],
           ["Abschluss, Anhang und XBRL", "Nach den nötigen Revisionen folgen Abschlussform, Zuordnungen, Angaben und Validierung. Offene Fragen und ausgesetzte Prüfungen bleiben sichtbar und können Freigabe und Export blockieren."]
         ],
-        "Das Register bewahrt frühere Ereignisse und verknüpft Revisionen mit Integritäts-Hashes. Erweiterte OIC-Checklisten, Excel-Übersichten und Dashboards gehören nicht zu dieser Phase."
+        "Das Register bewahrt frühere Ereignisse und verknüpft Revisionen mit Integritäts-Hashes. Bereichsarbeitspapiere, fachliche Kontrollen, Dashboard und Excel-Prüfungsdokument führen dieselbe Akte weiter."
       ],
       acceptance: [
         "Dokumentierter Abnahmetest", "Alfa v3: Ergebnisse und Aussetzungen",
@@ -192,7 +192,7 @@
           ["Nuevos hechos y suspensiones", "La revisión conserva la decisión anterior y registra autor, función, fecha, motivo y pruebas. Áreas, mapeos y validaciones afectados siguen suspendidos al cerrar la reconsideración, hasta revisar de nuevo saldos y controles."],
           ["Estados, memoria y XBRL", "Tras las revisiones necesarias se continúa con la forma de las cuentas, mapeos, información y validación. Las cuestiones abiertas y controles suspendidos siguen visibles y pueden bloquear aprobación y exportación."]
         ],
-        "El registro conserva los eventos anteriores y vincula revisiones mediante huellas de integridad. Las listas OIC ampliadas, resúmenes Excel y paneles quedan fuera de esta fase."
+        "El registro conserva los eventos anteriores y vincula revisiones mediante huellas de integridad. Los papeles de trabajo por área, controles profesionales, panel y documento Excel continúan en el mismo expediente."
       ],
       acceptance: [
         "Prueba de aceptación documentada", "Alfa v3: resultados y suspensiones",
@@ -215,16 +215,37 @@
     }
   };
 
+  const areaCopy = {
+    it: ["Revisione per area", "Conti, documenti e controlli nello stesso fascicolo", "Il professionista conferma la popolazione dei conti e le aree da lavorare. Anche un contratto o un verbale può attivare un’area senza saldi contabili: la proposta conserva il brano e il periodo della fonte.", "Le carte collegano conti, mapping, fatti, prospetti, questioni aperte e nota integrativa. Dal pannello si aprono aree, controlli e brani dei documenti registrati. Una fonte reimportata in una nuova versione riapre i controlli dipendenti; le altre decisioni restano consultabili.", "Il percorso snello per micro e abbreviati semplici con contabilità interna raggruppa gli stessi obiettivi; ordinario e casi complessi mantengono il percorso completo. L’Excel è un documento della revisione: modificarlo non cambia il fascicolo.", "Il catalogo indicizza 29 principi e propone 96 controlli professionali su 12 principi, con copertura parziale dichiarata. Il revisore verifica le fonti rispetto al pacchetto OIC dell’esercizio. Il collaudo è sintetico; la verifica professionale su casi reali resta da svolgere."],
+    en: ["Area review", "Accounts, documents and controls in one case", "The professional confirms account populations and areas to review. A contract or resolution can activate an area without an account balance: the proposal retains the quoted passage and source period.", "Workpapers connect accounts, mappings, facts, schedules, open issues and notes. The panel opens areas, controls and registered document excerpts. Reimporting a changed source reopens dependent controls while retaining other decisions.", "The streamlined route for simple micro and abbreviated cases with internal bookkeeping groups the same objectives; ordinary and complex cases retain full depth. Excel is a review document: editing it does not change the case.", "The index covers 29 standards and proposes 96 professional controls for 12 standards, with explicit partial coverage. The reviewer checks sources against the reporting-period OIC pack. Tests are synthetic; independent professional acceptance on real cases remains pending."],
+    fr: ["Révision par domaine", "Comptes, documents et contrôles dans le même dossier", "Le professionnel confirme les populations de comptes et les domaines à examiner. Un contrat ou un procès-verbal peut activer un domaine sans solde comptable : la proposition conserve le passage cité et sa période.", "Les feuilles de travail relient comptes, correspondances, faits, tableaux, questions ouvertes et annexe. Le panneau ouvre domaines, contrôles et extraits enregistrés. La réimportation d’une source modifiée rouvre les contrôles dépendants et conserve les autres décisions.", "Le parcours allégé des cas micro et abrégés simples à comptabilité interne regroupe les mêmes objectifs ; les cas ordinaires et complexes gardent le parcours complet. Excel reste un document de révision : sa modification ne change pas le dossier.", "L’index recense 29 normes et propose 96 contrôles professionnels pour 12 normes, avec une couverture partielle explicite. Le réviseur vérifie les sources selon le paquet OIC de l’exercice. Les tests sont synthétiques ; la validation professionnelle sur cas réels reste ouverte."],
+    de: ["Prüfung nach Bereichen", "Konten, Dokumente und Kontrollen in einer Akte", "Die Fachperson bestätigt Kontenpopulationen und Prüfungsbereiche. Ein Vertrag oder Beschluss kann auch ohne Kontensaldo einen Bereich aktivieren; der Vorschlag bewahrt Textstelle und Berichtszeitraum.", "Arbeitspapiere verbinden Konten, Zuordnungen, Fakten, Tabellen, offene Fragen und Anhang. Das Panel öffnet Bereiche, Kontrollen und registrierte Dokumentauszüge. Eine geänderte, erneut importierte Quelle öffnet abhängige Kontrollen und bewahrt andere Entscheidungen.", "Der schlanke Ablauf für einfache Mikro- und verkürzte Abschlüsse mit interner Buchhaltung bündelt dieselben Prüfziele; ordentliche und komplexe Fälle behalten den vollständigen Ablauf. Excel ist ein Prüfungsdokument; Änderungen daran verändern die Akte nicht.", "Der Index enthält 29 Standards und 96 fachliche Prüffragen zu 12 Standards bei ausdrücklich teilweiser Abdeckung. Die Fachperson prüft Quellen anhand des OIC-Pakets für das Geschäftsjahr. Die Tests sind synthetisch; die fachliche Abnahme an realen Fällen steht aus."],
+    es: ["Revisión por área", "Cuentas, documentos y controles en el mismo expediente", "El profesional confirma las poblaciones de cuentas y áreas que deben revisarse. Un contrato o acta puede activar un área sin saldo contable: la propuesta conserva el pasaje citado y su período.", "Los papeles de trabajo vinculan cuentas, mapeos, hechos, cuadros, cuestiones abiertas y memoria. El panel abre áreas, controles y extractos registrados. Reimportar una fuente modificada reabre los controles dependientes y conserva las otras decisiones.", "El recorrido simplificado para casos micro y abreviados sencillos con contabilidad interna agrupa los mismos objetivos; los casos ordinarios y complejos mantienen el recorrido completo. Excel es un documento de revisión: editarlo no cambia el expediente.", "El índice contiene 29 normas y propone 96 controles profesionales sobre 12 normas, con cobertura parcial explícita. El revisor verifica las fuentes según el paquete OIC del ejercicio. Las pruebas son sintéticas; la aceptación profesional en casos reales sigue pendiente."]
+  };
+
+  const modelDataCopy = {
+    it: "Il modello può leggere i dati della società forniti per il caso, saldi e mappature selezionati, prospetti, risposte, testi di nota, rilievi, decisioni e brani documentali con fonte e periodo. Le viste richieste esplicitamente sono paginate; l’interpretazione resta una proposta. Il codice locale esegue calcoli, quadrature, controlli di versione e genera l’Excel, scaricato dal pannello senza allegarne automaticamente i byte al modello. Nomi e dati personali non sono anonimizzati automaticamente: si applica l’account Codex o Cowork scelto dallo studio e l’elaborazione non è garantita locale. L’eventuale invio a TEBENI resta una scelta esterna del professionista.",
+    en: "The model may read company details supplied for the case, selected balances and mappings, schedules, answers, draft notes, issues, decisions and document excerpts with source and period. Explicitly requested views are paginated; interpretation remains a proposal. Local code calculates, reconciles, checks versions and generates the Excel document, downloaded from the panel without automatically attaching its bytes to the model. Names and personal data are not automatically anonymized: the firm’s selected Codex or Cowork account applies and processing is not guaranteed local. Any TEBENI upload remains a separate professional choice.",
+    fr: "Le modèle peut lire les données de la société fournies pour le dossier, soldes et correspondances sélectionnés, tableaux, réponses, textes d’annexe, questions, décisions et extraits avec source et période. Les vues expressément demandées sont paginées ; l’interprétation reste une proposition. Le code local calcule, rapproche, vérifie les versions et génère le document Excel, téléchargé depuis le panneau sans joindre automatiquement ses octets au modèle. Les noms et données personnelles ne sont pas anonymisés automatiquement : le compte Codex ou Cowork choisi par le cabinet s’applique et un traitement uniquement local n’est pas garanti. Tout envoi à TEBENI reste un choix distinct du professionnel.",
+    de: "Das Modell kann bereitgestellte Unternehmensdaten, ausgewählte Salden und Zuordnungen, Tabellen, Antworten, Anhangsentwürfe, Fragen, Entscheidungen und Dokumentauszüge mit Quelle und Zeitraum lesen. Ausdrücklich angeforderte Ansichten sind paginiert; Interpretationen bleiben Vorschläge. Lokaler Code berechnet, gleicht ab, prüft Versionen und erzeugt das Excel-Dokument. Beim Download aus dem Panel werden dessen Bytes nicht automatisch an das Modell angehängt. Namen und personenbezogene Daten werden nicht automatisch anonymisiert; maßgeblich ist das gewählte Codex- oder Cowork-Konto der Kanzlei, eine ausschließlich lokale Verarbeitung ist nicht garantiert. Ein TEBENI-Upload bleibt eine gesonderte fachliche Entscheidung.",
+    es: "El modelo puede leer los datos de la sociedad aportados al expediente, saldos y mapeos seleccionados, cuadros, respuestas, borradores de memoria, cuestiones, decisiones y extractos con fuente y período. Las vistas solicitadas expresamente se paginan; la interpretación sigue siendo una propuesta. El código local calcula, concilia, comprueba versiones y genera el documento Excel, descargado del panel sin adjuntar automáticamente sus bytes al modelo. Los nombres y datos personales no se anonimizan automáticamente: se aplica la cuenta Codex o Cowork elegida por el despacho y no se garantiza un procesamiento solo local. Cualquier envío a TEBENI sigue siendo una decisión profesional separada."
+  };
+
   const evidenceHref = "https://github.com/fabioannovazzi/app_files/blob/56a1c90f69591e852ba4fa3ca43e9fb68da34ed8/docs/bilancio-oic-alfa-v3-acceptance-2026-10-15.md";
   const page = window.MPARANZA_FUNCTION_PAGES["bilancio-xbrl-it"];
   for (const [language, localized] of Object.entries(copy)) {
     const { workflow, acceptance, ...overview } = localized;
     Object.assign(page.copy[language], overview, {
+      modelDataStatus: "relevant", modelData: modelDataCopy[language],
       detailSections: [
         {
           id: "closing-workflow", label: workflow[0], title: workflow[1], intro: workflow[2],
           steps: workflow[3].map(([title, stepCopy]) => ({ title, copy: stepCopy })),
           notes: [workflow[4]]
+        },
+        {
+          id: "area-review", label: areaCopy[language][0], title: areaCopy[language][1], intro: areaCopy[language][2],
+          notes: areaCopy[language].slice(3)
         },
         {
           id: "alfa-v3-acceptance", label: acceptance[0], title: acceptance[1], intro: acceptance[2],

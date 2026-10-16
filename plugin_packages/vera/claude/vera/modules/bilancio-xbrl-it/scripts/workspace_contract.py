@@ -26,6 +26,43 @@ def build_workspace_snapshot(
 
     if not 1 <= limit <= 50:
         raise ValueError("Workspace pages contain at most 50 records")
+    if view == "AREA_SOURCE":
+        from area_review import review_source
+
+        review = {"view": view, **review_source(case, source_ref or "", offset=offset)}
+    else:
+        review = build_review_view(case, view, offset=offset, limit=limit)
+        if source_ref and view in {"AREA_WORKPAPERS", "AREA_CONTROLS"}:
+            # Filter exact stable area identity before pagination, never by text.
+            from area_review import build_area_review
+            from review_views import _page
+
+            data = build_area_review(case)
+            if source_ref not in {a["area_id"] for a in data["workpapers"]}:
+                raise ValueError("Unknown review area")
+            if view == "AREA_CONTROLS":
+                rows = [c for c in data["controls"] if c["area_id"] == source_ref]
+            else:
+                area = next(a for a in data["workpapers"] if a["area_id"] == source_ref)
+                rows = [
+                    {"area_id": source_ref, "record_kind": key, "record": item}
+                    for key in (
+                        "accounts",
+                        "mappings",
+                        "links",
+                        "reconciliations",
+                        "facts",
+                        "schedules",
+                        "questions",
+                        "notes",
+                        "open_issues",
+                        "documents",
+                        "controls",
+                    )
+                    for item in area[key]
+                ]
+            review["records"] = _page(rows, offset, limit)
+            review["area_id"] = source_ref
     result = {
         "case_id": case["case_id"],
         "revision_id": case["revision_id"],
@@ -36,7 +73,7 @@ def build_workspace_snapshot(
         )
         == case["revision_id"],
         "dashboard": build_review_view(case, "CASE_DASHBOARD"),
-        "review": build_review_view(case, view, offset=offset, limit=limit),
+        "review": review,
         "selection": None,
     }
     if issue_id:

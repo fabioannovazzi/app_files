@@ -1869,6 +1869,12 @@ process.stdout.write(JSON.stringify({ html: root.innerHTML, lang: document.docum
     html = BeautifulSoup(rendered["html"], "html.parser")
     assert rendered["lang"] == language
     assert html.select_one("#alfa-v3-acceptance-title").get_text() == heading
+    assert (
+        html.select_one(".function-model-data")["data-model-data-status"] == "relevant"
+    )
+    assert html.select_one("#area-review-title") is not None
+    assert "29" in html.select_one("#area-review").get_text()
+    assert "96" in html.select_one("#area-review").get_text()
     assert len(html.select("#closing-workflow li")) == 6
     assert len(html.select("#alfa-v3-acceptance tbody tr")) == 7
     assert "131/131" in html.get_text()

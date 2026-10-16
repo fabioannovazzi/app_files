@@ -124,6 +124,8 @@
     const header = el("div", undefined, "case-head"); header.append(el("p", snapshot.archive.label, "eyebrow"), el("h1", snapshot.legal_name), el("p", `Esercizio ${snapshot.period.start} — ${snapshot.period.end}`, "sub"));
     const context = el("div", undefined, "context"); context.append(el("span", states[snapshot.dashboard.state] || snapshot.dashboard.state), el("span", snapshot.revision_id), el("span", snapshot.case_id)); header.append(context); main.append(header);
     if (!snapshot.validation_current) main.append(el("p", "La validazione non è aggiornata a questa revisione. Le decisioni salvate restano nel fascicolo; esegui nuovamente i controlli prima di proseguire.", "notice"));
+    if (globalThis.VeraBilancioReview.render(main, {data:snapshot, view, node:el, button, fields,
+      open:(target, ref, page=0)=>openCase(selectedCase,target,page,undefined,ref)})) return;
     if (view === "ISSUES_PANEL") renderIssues(main);
     else if (view === "CASE_DASHBOARD") {
       main.append(el("h2", "Stato del fascicolo"), fields(snapshot.dashboard));

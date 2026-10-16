@@ -9,7 +9,7 @@ const MIME = "text/html;profile=mcp-app";
 const secret = randomBytes(32);
 const text = { type: "string", minLength: 1, maxLength: 200 };
 const scope = { case_id: text, revision_id: text };
-const views = ["CASE_DASHBOARD", "SOURCE_REVIEW", "MAPPING_GRID", "STATEMENTS", "SCHEDULES", "QUESTIONNAIRE", "NOTES_EDITOR", "ISSUES_PANEL", "PREVIEW", "APPROVAL_EXPORT"];
+const views = ["AREA_DASHBOARD", "AREA_WORKPAPERS", "AREA_CONTROLS", "OIC_CATALOGUE", "QUALITATIVE_EVIDENCE", "AREA_SOURCE", "AREA_WORKBOOK", "CASE_DASHBOARD", "SOURCE_REVIEW", "MAPPING_GRID", "STATEMENTS", "SCHEDULES", "QUESTIONNAIRE", "NOTES_EDITOR", "ISSUES_PANEL", "PREVIEW", "APPROVAL_EXPORT"];
 const schema = (properties, required = []) => ({ type: "object", properties, required, additionalProperties: false });
 const tool = (name, title, description, inputSchema, appOnly = true, write = false) => ({
   name, title, description, inputSchema,
@@ -70,7 +70,7 @@ function readResource() {
   const assets = path.join(ROOT, "ui");
   const html = fs.readFileSync(path.join(assets, "workspace.html"), "utf8")
     .replace("/*__CSS__*/", fs.readFileSync(path.join(assets, "workspace.css"), "utf8"))
-    .replace("/*__JS__*/", ["explanation-message.js", "workspace.js"].map(name => fs.readFileSync(path.join(assets, name), "utf8")).join("\n"))
+    .replace("/*__JS__*/", ["explanation-message.js", "area-review.js", "workspace.js"].map(name => fs.readFileSync(path.join(assets, name), "utf8")).join("\n"))
     .replace("__FONT__", fs.readFileSync(path.join(assets, "InstrumentSans-Regular.ttf")).toString("base64"));
   return { contents: [{ uri: URI, mimeType: MIME, text: html, _meta: { ui: { prefersBorder: false, csp: { connectDomains: [], resourceDomains: [] } }, "openai/ui": { preferredDisplayMode: "fullscreen", availableDisplayModes: ["inline", "fullscreen"] } } }] };
 }

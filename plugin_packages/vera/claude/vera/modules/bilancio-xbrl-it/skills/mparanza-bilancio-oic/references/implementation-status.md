@@ -10,6 +10,29 @@ Later host-specific instructions in this reference cannot override this rule.
 
 # Implementation status
 
+## Living area review (2026-10-16)
+
+The existing case service now retains proposed and reviewed complete account-area
+assignments, exact quoted documentary interpretations with periods, an explicit
+29-principle index and 96 professional prompts for twelve principles. A separate
+reviewer confirmation binds the catalogue to the case's locked exercise-specific
+OIC checksum. The prototype's 295 generic section checks are excluded. Historical
+source editions still need professional verification; no full OIC codification
+or automatic applicability judgment is claimed.
+
+Living workpapers expose account/mapping/fact links and reconciliations, required
+schedules, sources, questions, note sections and control conclusions. The simple
+internal-bookkeeping micro/abbreviated route groups all objectives; ordinary and
+complex engagements retain full depth. Registered source replacement reopens
+only dependent reviews, retaining the event chain. The existing native panels
+navigate areas, controls and exact source excerpts and export a private,
+revision-bound Excel review document. Filesystem changes require reimport and
+panel refresh; there is no background file watcher or Excel decision import.
+
+The extension fixture and service/MCP regressions remain synthetic engineering
+evidence. Gerardo's independent professional pilot, a freshly enabled host and
+complete statutory accounts remain separate acceptance gates.
+
 ## Reviewed closing accounts (2026-10-15)
 
 The existing case service now supports explicit accounting origin, reviewed

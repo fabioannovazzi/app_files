@@ -91,7 +91,7 @@
     if (generation !== epoch) return;
     state = next; salesWork = null; bankWork = null; lipeWork = null; amlWork = null; amlDraftContext = null; invoiceContext = null; fields = {}; submission = null; renderWork(); say("Stato letto dal lavoro salvato.");
     if (["invoice", "lipe", "aml", "assetti", "scissione", "sales"].includes(state.kind)) { if (selected && window.innerWidth < 760) document.getElementById("detail").scrollIntoView({block:"start"}); return; }
-    if (state.view === "ARCHIVE_EXECUTION") return;
+    if (state.view === "ARCHIVE_EXECUTION" || (state.kind === "bilancio" && state.view?.startsWith("AREA_"))) return;
     const draft = await call("vera_workspace_draft_read", { work_ref: state.work_ref });
     if (generation === epoch && draft.draft) showDraft(draft.draft);
   }
@@ -3037,6 +3037,10 @@
       if(state.data.review)main.append(node("h2","Approvazione conservata"),readFields({reviewer:state.data.review.reviewer,reviewed_at:state.data.review.reviewed_at,riferimento_all_approvazione_professionale:state.data.review.approval_basis}));
       else main.append(button("Riesamina per esportare XML",()=>openInvoiceReview()));
     }
+    if (state.kind === "bilancio" && globalThis.VeraBilancioReview.render(main, {
+      data:state.data,view:state.view,node,button,fields:readFields,
+      open:(view,ref,offset=0)=>openWork(state.work_ref,offset,undefined,undefined,ref,view)
+    })) return;
     if (state.kind === "bilancio" && !state.data.validation_current) main.append(node("p", "La validazione non è aggiornata a questa revisione. Rivalida il fascicolo prima di registrare una nuova decisione.", "notice"));
     const split = node("div", undefined, "split"), queue = node("section", undefined, "queue"), detail = node("section", undefined, "detail"); detail.id = "detail"; detail.setAttribute("aria-label", "Evidenza e decisione");
     queue.append(node("h2", state.kind === "treasury" ? "Eventi e date" : "Elementi da esaminare"));

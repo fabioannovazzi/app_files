@@ -1,0 +1,1498 @@
+{
+  "schema_version": 1,
+  "id": "BILANCIO_REVIEW_2026.1",
+  "catalogue_as_of": "2026-10-16",
+  "official_index": "https://www.fondazioneoic.eu/principi-contabili-category/2025/",
+  "provenance": {
+    "message": "https://discord.com/channels/1550191335917625474/1560040735871336458/1560759839590977657",
+    "archive_sha256": "7677fea5166ddbe880faf62f18b45c50e3ed46c02b264197d4cc68a639b6d850",
+    "content": "Contributor applicability metadata and professional prompts adapted from the supplied prototype. No prototype Python is used; no OIC publication text is bundled."
+  },
+  "policy": {
+    "semantic_owner": "MODEL_AND_PROFESSIONAL",
+    "absence_is_not_exclusion": true,
+    "source_version_confirmation_required": true,
+    "section_controls_included": false,
+    "coverage": "PARTIAL_PROFESSIONAL_PROMPTS"
+  },
+  "areas": [
+    {
+      "id": "FIXED_ASSETS",
+      "title": "Immobilizzazioni materiali",
+      "schedule_types": [
+        "FIXED_ASSETS"
+      ],
+      "note_sections": [
+        "ASSETS"
+      ]
+    },
+    {
+      "id": "INTANGIBLE_ASSETS",
+      "title": "Immobilizzazioni immateriali",
+      "schedule_types": [],
+      "note_sections": [
+        "ASSETS"
+      ]
+    },
+    {
+      "id": "INVENTORIES",
+      "title": "Rimanenze",
+      "schedule_types": [
+        "INVENTORIES"
+      ],
+      "note_sections": [
+        "ASSETS"
+      ]
+    },
+    {
+      "id": "RECEIVABLES_REVENUE",
+      "title": "Crediti e ricavi",
+      "schedule_types": [
+        "RECEIVABLES"
+      ],
+      "note_sections": [
+        "ASSETS"
+      ]
+    },
+    {
+      "id": "CASH_BANKS",
+      "title": "Cassa e banche",
+      "schedule_types": [],
+      "note_sections": [
+        "ASSETS"
+      ]
+    },
+    {
+      "id": "PAYABLES_FINANCING",
+      "title": "Debiti e finanziamenti",
+      "schedule_types": [
+        "PAYABLES"
+      ],
+      "note_sections": [
+        "LIABILITIES_EQUITY"
+      ]
+    },
+    {
+      "id": "EMPLOYEES_TFR",
+      "title": "Personale e TFR",
+      "schedule_types": [
+        "TFR"
+      ],
+      "note_sections": [
+        "EMPLOYEES_BODIES"
+      ]
+    },
+    {
+      "id": "TAXES",
+      "title": "Imposte",
+      "schedule_types": [
+        "TAXES"
+      ],
+      "note_sections": [
+        "TAXES"
+      ]
+    },
+    {
+      "id": "ACCRUALS_DEFERRALS",
+      "title": "Ratei e risconti",
+      "schedule_types": [],
+      "note_sections": [
+        "ASSETS"
+      ]
+    },
+    {
+      "id": "EQUITY",
+      "title": "Patrimonio netto",
+      "schedule_types": [
+        "EQUITY"
+      ],
+      "note_sections": [
+        "LIABILITIES_EQUITY"
+      ]
+    },
+    {
+      "id": "PROVISIONS",
+      "title": "Fondi per rischi e oneri",
+      "schedule_types": [
+        "PROVISIONS"
+      ],
+      "note_sections": [
+        "LIABILITIES_EQUITY"
+      ]
+    },
+    {
+      "id": "PARTICIPATIONS_GROUP",
+      "title": "Partecipazioni e gruppo",
+      "schedule_types": [],
+      "note_sections": [
+        "GROUP_PARTICIPATIONS"
+      ]
+    },
+    {
+      "id": "LEASES",
+      "title": "Leasing",
+      "schedule_types": [],
+      "note_sections": [
+        "LEASES"
+      ]
+    },
+    {
+      "id": "OTHER_INCOME_EXPENSE",
+      "title": "Altre componenti economiche",
+      "schedule_types": [],
+      "note_sections": [
+        "INCOME_STATEMENT"
+      ]
+    },
+    {
+      "id": "CASH_FLOW",
+      "title": "Rendiconto finanziario",
+      "schedule_types": [
+        "CASH_FLOW"
+      ],
+      "note_sections": [
+        "ADDITIONAL"
+      ]
+    },
+    {
+      "id": "SPECIAL_PURPOSE_ASSETS",
+      "title": "Patrimoni e finanziamenti destinati",
+      "schedule_types": [],
+      "note_sections": [
+        "ADDITIONAL"
+      ]
+    },
+    {
+      "id": "BUSINESS_COMBINATIONS",
+      "title": "Fusioni e scissioni",
+      "schedule_types": [],
+      "note_sections": [
+        "ADDITIONAL"
+      ]
+    },
+    {
+      "id": "EMISSION_ALLOWANCES",
+      "title": "Quote di emissione",
+      "schedule_types": [],
+      "note_sections": [
+        "ADDITIONAL"
+      ]
+    },
+    {
+      "id": "DEBT_SECURITIES",
+      "title": "Titoli di debito",
+      "schedule_types": [],
+      "note_sections": [
+        "ADDITIONAL"
+      ]
+    },
+    {
+      "id": "CONTRACT_WORK",
+      "title": "Lavori in corso su ordinazione",
+      "schedule_types": [],
+      "note_sections": [
+        "ADDITIONAL"
+      ]
+    },
+    {
+      "id": "FOREIGN_CURRENCY",
+      "title": "Operazioni in valuta estera",
+      "schedule_types": [],
+      "note_sections": [
+        "ADDITIONAL"
+      ]
+    },
+    {
+      "id": "ACCOUNTING_CHANGES_EVENTS",
+      "title": "Cambiamenti, errori e fatti successivi",
+      "schedule_types": [],
+      "note_sections": [
+        "POST_CLOSING_GOING_CONCERN"
+      ]
+    },
+    {
+      "id": "INTERIM_REPORTING",
+      "title": "Bilanci intermedi",
+      "schedule_types": [],
+      "note_sections": [
+        "ADDITIONAL"
+      ]
+    },
+    {
+      "id": "DERIVATIVES",
+      "title": "Strumenti finanziari derivati",
+      "schedule_types": [],
+      "note_sections": [
+        "FINANCIAL_INSTRUMENTS"
+      ]
+    },
+    {
+      "id": "FIRST_TIME_OIC",
+      "title": "Passaggio ai principi contabili nazionali",
+      "schedule_types": [],
+      "note_sections": [
+        "ADDITIONAL"
+      ]
+    }
+  ],
+  "standards": [
+    {
+      "id": "OIC_2",
+      "number": 2,
+      "title": "Patrimoni e finanziamenti destinati ad uno specifico affare",
+      "source_version": "ottobre 2005",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2005-10-26-OIC-2-Patrimoni-destinati.pdf",
+      "engine_scope": "SUPPORTED_CONDITIONAL",
+      "areas": [
+        "SPECIAL_PURPOSE_ASSETS"
+      ],
+      "coverage_level": "APPLICABILITY_GATE"
+    },
+    {
+      "id": "OIC_4",
+      "number": 4,
+      "title": "Fusione e scissione",
+      "source_version": "gennaio 2007",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2007-01-24-OIC-4-Fusione-e-scissione.pdf",
+      "engine_scope": "SUPPORTED_CONDITIONAL",
+      "areas": [
+        "BUSINESS_COMBINATIONS"
+      ],
+      "coverage_level": "APPLICABILITY_GATE"
+    },
+    {
+      "id": "OIC_5",
+      "number": 5,
+      "title": "Bilanci di liquidazione",
+      "source_version": "giugno 2008",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2008-06-25-OIC-5-Bilanci-di-liquidazione.pdf",
+      "engine_scope": "OUT_OF_SCOPE_ENGINE",
+      "areas": [
+        "LIQUIDATION"
+      ],
+      "coverage_level": "OUT_OF_SCOPE_ENGINE"
+    },
+    {
+      "id": "OIC_8",
+      "number": 8,
+      "title": "Le quote di emissione di gas ad effetto serra",
+      "source_version": "febbraio 2013",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2013-02-OIC-8-Le-quote-di-emissione-di-gas-ad-effetto-serra.pdf",
+      "engine_scope": "SUPPORTED_CONDITIONAL",
+      "areas": [
+        "EMISSION_ALLOWANCES"
+      ],
+      "coverage_level": "APPLICABILITY_GATE"
+    },
+    {
+      "id": "OIC_9",
+      "number": 9,
+      "title": "Svalutazioni per perdite durevoli di valore",
+      "source_version": "dicembre 2016, aggiornato gennaio 2022",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2016-12-OIC-9-Svalutazioni-per-perdite-durevoli_ult-agg-genn-22.pdf",
+      "engine_scope": "SUPPORTED_INDIVIDUAL",
+      "areas": [
+        "FIXED_ASSETS",
+        "INTANGIBLE_ASSETS",
+        "PARTICIPATIONS_GROUP"
+      ],
+      "coverage_level": "APPLICABILITY_GATE"
+    },
+    {
+      "id": "OIC_10",
+      "number": 10,
+      "title": "Rendiconto finanziario",
+      "source_version": "dicembre 2016",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2016-12-OIC-10-Rendiconto-finanziario.pdf",
+      "engine_scope": "SUPPORTED_INDIVIDUAL",
+      "areas": [
+        "CASH_FLOW"
+      ],
+      "coverage_level": "PARTIAL_CONTROL_RULES"
+    },
+    {
+      "id": "OIC_11",
+      "number": 11,
+      "title": "Finalità e postulati del bilancio d'esercizio",
+      "source_version": "marzo 2018",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2018-03-OIC-11-Postulati.pdf",
+      "engine_scope": "SUPPORTED_INDIVIDUAL",
+      "areas": [
+        "GENERAL_FRAMEWORK"
+      ],
+      "coverage_level": "APPLICABILITY_GATE"
+    },
+    {
+      "id": "OIC_12",
+      "number": 12,
+      "title": "Composizione e schemi del bilancio d'esercizio",
+      "source_version": "dicembre 2016",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2016-12-OIC-12-Composizione-e-schemi-del-bilancio.pdf",
+      "engine_scope": "SUPPORTED_INDIVIDUAL",
+      "areas": [
+        "GENERAL_FRAMEWORK"
+      ],
+      "coverage_level": "PARTIAL_CONTROL_RULES"
+    },
+    {
+      "id": "OIC_13",
+      "number": 13,
+      "title": "Rimanenze",
+      "source_version": "dicembre 2016, aggiornato dicembre 2025",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2016-12-OIC-13-Rimanenze.pdf",
+      "engine_scope": "SUPPORTED_INDIVIDUAL",
+      "areas": [
+        "INVENTORIES"
+      ],
+      "coverage_level": "PARTIAL_CONTROL_RULES"
+    },
+    {
+      "id": "OIC_14",
+      "number": 14,
+      "title": "Disponibilità liquide",
+      "source_version": "dicembre 2016",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2016-12-OIC-14-Disponibilita-liquide.pdf",
+      "engine_scope": "SUPPORTED_INDIVIDUAL",
+      "areas": [
+        "CASH_BANKS"
+      ],
+      "coverage_level": "APPLICABILITY_GATE"
+    },
+    {
+      "id": "OIC_15",
+      "number": 15,
+      "title": "Crediti",
+      "source_version": "dicembre 2016",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2016-12-OIC-15-Crediti.pdf",
+      "engine_scope": "SUPPORTED_INDIVIDUAL",
+      "areas": [
+        "RECEIVABLES_REVENUE"
+      ],
+      "coverage_level": "APPLICABILITY_GATE"
+    },
+    {
+      "id": "OIC_16",
+      "number": 16,
+      "title": "Immobilizzazioni materiali",
+      "source_version": "dicembre 2016, aggiornato dicembre 2025",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2016-12-OIC-16-Immobilizzazioni-materiali.pdf",
+      "engine_scope": "SUPPORTED_INDIVIDUAL",
+      "areas": [
+        "FIXED_ASSETS"
+      ],
+      "coverage_level": "PARTIAL_CONTROL_RULES"
+    },
+    {
+      "id": "OIC_17",
+      "number": 17,
+      "title": "Bilancio consolidato e metodo del patrimonio netto",
+      "source_version": "dicembre 2016",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2016-12-OIC-17-Bilancio-Consolidato-e-Metodo-del-PN.pdf",
+      "engine_scope": "PARTIAL_SCOPE",
+      "areas": [
+        "PARTICIPATIONS_GROUP",
+        "CONSOLIDATION"
+      ],
+      "coverage_level": "APPLICABILITY_GATE"
+    },
+    {
+      "id": "OIC_18",
+      "number": 18,
+      "title": "Ratei e risconti",
+      "source_version": "dicembre 2016",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2016-12-OIC-18-Ratei-e-Risconti.pdf",
+      "engine_scope": "SUPPORTED_INDIVIDUAL",
+      "areas": [
+        "ACCRUALS_DEFERRALS"
+      ],
+      "coverage_level": "APPLICABILITY_GATE"
+    },
+    {
+      "id": "OIC_19",
+      "number": 19,
+      "title": "Debiti",
+      "source_version": "dicembre 2016",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2016-12-OIC-19-Debiti.pdf",
+      "engine_scope": "SUPPORTED_INDIVIDUAL",
+      "areas": [
+        "PAYABLES_FINANCING"
+      ],
+      "coverage_level": "APPLICABILITY_GATE"
+    },
+    {
+      "id": "OIC_20",
+      "number": 20,
+      "title": "Titoli di debito",
+      "source_version": "dicembre 2016",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2016-12-OIC-20-Titoli-di-debito.pdf",
+      "engine_scope": "SUPPORTED_CONDITIONAL",
+      "areas": [
+        "DEBT_SECURITIES"
+      ],
+      "coverage_level": "APPLICABILITY_GATE"
+    },
+    {
+      "id": "OIC_21",
+      "number": 21,
+      "title": "Partecipazioni",
+      "source_version": "dicembre 2016",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2016-12-OIC-21-Partecipazioni.pdf",
+      "engine_scope": "SUPPORTED_INDIVIDUAL",
+      "areas": [
+        "PARTICIPATIONS_GROUP"
+      ],
+      "coverage_level": "APPLICABILITY_GATE"
+    },
+    {
+      "id": "OIC_23",
+      "number": 23,
+      "title": "Lavori in corso su ordinazione",
+      "source_version": "dicembre 2016",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2016-12-OIC-23-Lavori-in-corso-su-ordinazione.pdf",
+      "engine_scope": "SUPPORTED_CONDITIONAL",
+      "areas": [
+        "CONTRACT_WORK"
+      ],
+      "coverage_level": "APPLICABILITY_GATE"
+    },
+    {
+      "id": "OIC_24",
+      "number": 24,
+      "title": "Immobilizzazioni immateriali",
+      "source_version": "dicembre 2016, aggiornato dicembre 2025",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2016-12-OIC-24-Immobilizzazioni-immateriali.pdf",
+      "engine_scope": "SUPPORTED_INDIVIDUAL",
+      "areas": [
+        "INTANGIBLE_ASSETS"
+      ],
+      "coverage_level": "PARTIAL_CONTROL_RULES"
+    },
+    {
+      "id": "OIC_25",
+      "number": 25,
+      "title": "Imposte sul reddito",
+      "source_version": "dicembre 2016, aggiornato dicembre 2025",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2016-12-OIC-25-Imposte-sul-reddito.pdf",
+      "engine_scope": "SUPPORTED_INDIVIDUAL",
+      "areas": [
+        "TAXES"
+      ],
+      "coverage_level": "PARTIAL_CONTROL_RULES"
+    },
+    {
+      "id": "OIC_26",
+      "number": 26,
+      "title": "Operazioni, attività e passività in valuta estera",
+      "source_version": "dicembre 2016",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2016-12-OIC-26-Operazioni-attivita-e-passivita-in-valuta-estera.pdf",
+      "engine_scope": "SUPPORTED_CONDITIONAL",
+      "areas": [
+        "FOREIGN_CURRENCY"
+      ],
+      "coverage_level": "APPLICABILITY_GATE"
+    },
+    {
+      "id": "OIC_28",
+      "number": 28,
+      "title": "Patrimonio netto",
+      "source_version": "dicembre 2016",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2016-12-OIC-28-Patrimonio-netto.pdf",
+      "engine_scope": "SUPPORTED_INDIVIDUAL",
+      "areas": [
+        "EQUITY"
+      ],
+      "coverage_level": "APPLICABILITY_GATE"
+    },
+    {
+      "id": "OIC_29",
+      "number": 29,
+      "title": "Cambiamenti di principi e stime, correzione di errori e fatti successivi",
+      "source_version": "dicembre 2016",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2016-12-OIC-29-Cambiamenti-di-principi-contabili.pdf",
+      "engine_scope": "SUPPORTED_CONDITIONAL",
+      "areas": [
+        "ACCOUNTING_CHANGES_EVENTS"
+      ],
+      "coverage_level": "APPLICABILITY_GATE"
+    },
+    {
+      "id": "OIC_30",
+      "number": 30,
+      "title": "I bilanci intermedi",
+      "source_version": "giugno 2025; mandatory for periods beginning 2026-01-01",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2025-06-OIC-30-I-bilanci-intermedi.pdf",
+      "engine_scope": "SUPPORTED_CONDITIONAL",
+      "areas": [
+        "INTERIM_REPORTING"
+      ],
+      "coverage_level": "APPLICABILITY_GATE"
+    },
+    {
+      "id": "OIC_31",
+      "number": 31,
+      "title": "Fondi per rischi e oneri e trattamento di fine rapporto",
+      "source_version": "dicembre 2016, aggiornato dicembre 2025",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2016-12-OIC-31-Fondi-per-rischi-e-oneri-e-TFR.pdf",
+      "engine_scope": "SUPPORTED_INDIVIDUAL",
+      "areas": [
+        "PROVISIONS",
+        "EMPLOYEES_TFR"
+      ],
+      "coverage_level": "PARTIAL_CONTROL_RULES"
+    },
+    {
+      "id": "OIC_32",
+      "number": 32,
+      "title": "Strumenti finanziari derivati",
+      "source_version": "dicembre 2016",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2016-12-OIC-32-Strumenti-finanziari-derivati.pdf",
+      "engine_scope": "SUPPORTED_CONDITIONAL",
+      "areas": [
+        "DERIVATIVES"
+      ],
+      "coverage_level": "APPLICABILITY_GATE"
+    },
+    {
+      "id": "OIC_33",
+      "number": 33,
+      "title": "Passaggio ai principi contabili nazionali",
+      "source_version": "marzo 2020",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2020-03-OIC-33-Passaggio-ai-principi-contabili-nazionali.pdf",
+      "engine_scope": "SUPPORTED_CONDITIONAL",
+      "areas": [
+        "FIRST_TIME_OIC"
+      ],
+      "coverage_level": "APPLICABILITY_GATE"
+    },
+    {
+      "id": "OIC_34",
+      "number": 34,
+      "title": "Ricavi",
+      "source_version": "aprile 2023",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2023-04-OIC-34-Ricavi.pdf",
+      "engine_scope": "SUPPORTED_INDIVIDUAL",
+      "areas": [
+        "RECEIVABLES_REVENUE"
+      ],
+      "coverage_level": "PARTIAL_CONTROL_RULES"
+    },
+    {
+      "id": "OIC_35",
+      "number": 35,
+      "title": "Principio contabile ETS",
+      "source_version": "febbraio 2022",
+      "source_url": "https://www.fondazioneoic.eu/wp-content/uploads/2026/01/2022-02-OIC-35-ETS.pdf",
+      "engine_scope": "OUT_OF_SCOPE_ENGINE",
+      "areas": [
+        "ETS_REPORTING"
+      ],
+      "coverage_level": "OUT_OF_SCOPE_ENGINE"
+    }
+  ],
+  "controls": [
+    {
+      "id": "OIC_11.APPLICABILITY",
+      "standard_id": "OIC_11",
+      "facet": "APPLICABILITY",
+      "objective": "Documentare il quadro OIC applicato e l'eventuale politica sviluppata per fattispecie non disciplinate, verificando finalità e postulati del bilancio.",
+      "minimum": true,
+      "evidence_requested": "Fatti, saldi, contratti, politiche contabili e decisione di perimetro che supportino l'applicazione o l'esclusione del principio."
+    },
+    {
+      "id": "OIC_11.INITIAL_RECOGNITION",
+      "standard_id": "OIC_11",
+      "facet": "INITIAL_RECOGNITION",
+      "objective": "Verificare che le decisioni di iscrizione derivino da prudenza, sostanza dei diritti e obblighi contrattuali e competenza economica.",
+      "minimum": false,
+      "evidence_requested": "Documenti originari, contratti, scritture, date, quantità e calcoli che supportino il momento e il valore della rilevazione iniziale."
+    },
+    {
+      "id": "OIC_11.SUBSEQUENT_MEASUREMENT",
+      "standard_id": "OIC_11",
+      "facet": "SUBSEQUENT_MEASUREMENT",
+      "objective": "Verificare che stime e valutazioni successive rispettino prudenza, continuità, costanza, rilevanza e comparabilità.",
+      "minimum": false,
+      "evidence_requested": "Prospetto di valutazione successiva, movimenti, stime, assunzioni, impairment o rettifiche e riconciliazione ai saldi finali."
+    },
+    {
+      "id": "OIC_11.CLASSIFICATION_PRESENTATION",
+      "standard_id": "OIC_11",
+      "facet": "CLASSIFICATION_PRESENTATION",
+      "objective": "Verificare chiarezza, neutralità, sostanza economica e comparabilità della presentazione complessiva.",
+      "minimum": true,
+      "evidence_requested": "Mapping dei conti, prospetto di bilancio, dettaglio delle voci e riconciliazione alla presentazione statutaria selezionata."
+    },
+    {
+      "id": "OIC_11.DISCLOSURE",
+      "standard_id": "OIC_11",
+      "facet": "DISCLOSURE",
+      "objective": "Individuare informative complementari, deroghe eccezionali, incertezze sulla continuità e cambiamenti rilevanti da spiegare.",
+      "minimum": true,
+      "evidence_requested": "Matrice informativa, prospetti di supporto, bozza di nota integrativa e riferimenti alle evidenze accettate."
+    },
+    {
+      "id": "OIC_11.SIMPLIFIED_FORM_EXCEPTIONS",
+      "standard_id": "OIC_11",
+      "facet": "SIMPLIFIED_FORM_EXCEPTIONS",
+      "objective": "Verificare gli esoneri collegati alla forma senza omettere informazioni rilevanti necessarie alla rappresentazione veritiera e corretta.",
+      "minimum": false,
+      "evidence_requested": "Forma statutaria selezionata, requisiti di accesso, scelta delle semplificazioni ed elenco delle informazioni comunque necessarie."
+    },
+    {
+      "id": "OIC_11.EVIDENCE_COMPLETENESS",
+      "standard_id": "OIC_11",
+      "facet": "EVIDENCE_COMPLETENESS",
+      "objective": "Raccogliere evidenze per ciascun postulato rilevante, incluse valutazione di continuità, contratti, stime e comparativi.",
+      "minimum": true,
+      "evidence_requested": "Indice delle fonti, riconciliazioni, elementi mancanti, fonti contrarie e dichiarazioni negative esplicite quando necessarie."
+    },
+    {
+      "id": "OIC_11.PROFESSIONAL_CONCLUSION",
+      "standard_id": "OIC_11",
+      "facet": "PROFESSIONAL_CONCLUSION",
+      "objective": "Concludere se le politiche e le scelte di bilancio sono coerenti con finalità e postulati, registrando eccezioni e giudizi riservati.",
+      "minimum": true,
+      "evidence_requested": "Esiti dei controlli collegati, eccezioni, rettifiche proposte o registrate, rilievi residui, preparatore e revisore."
+    },
+    {
+      "id": "OIC_12.APPLICABILITY",
+      "standard_id": "OIC_12",
+      "facet": "APPLICABILITY",
+      "objective": "Confermare componenti obbligatorie del bilancio e semplificazioni coerenti con la forma statutaria selezionata.",
+      "minimum": true,
+      "evidence_requested": "Fatti, saldi, contratti, politiche contabili e decisione di perimetro che supportino l'applicazione o l'esclusione del principio."
+    },
+    {
+      "id": "OIC_12.INITIAL_RECOGNITION",
+      "standard_id": "OIC_12",
+      "facet": "INITIAL_RECOGNITION",
+      "objective": "Verificare che l'impostazione iniziale degli schemi rispetti ordine, suddivisioni, raggruppamenti, nuove voci e comparativi ammessi.",
+      "minimum": false,
+      "evidence_requested": "Documenti originari, contratti, scritture, date, quantità e calcoli che supportino il momento e il valore della rilevazione iniziale."
+    },
+    {
+      "id": "OIC_12.SUBSEQUENT_MEASUREMENT",
+      "standard_id": "OIC_12",
+      "facet": "SUBSEQUENT_MEASUREMENT",
+      "objective": "Verificare continuità di classificazione e comparabilità, documentando adattamenti e informazioni necessarie in presenza di variazioni.",
+      "minimum": false,
+      "evidence_requested": "Prospetto di valutazione successiva, movimenti, stime, assunzioni, impairment o rettifiche e riconciliazione ai saldi finali."
+    },
+    {
+      "id": "OIC_12.CLASSIFICATION_PRESENTATION",
+      "standard_id": "OIC_12",
+      "facet": "CLASSIFICATION_PRESENTATION",
+      "objective": "Riconciliare stato patrimoniale e conto economico agli schemi applicabili, verificando classificazione, aggregazioni e divieto di compensazioni improprie.",
+      "minimum": true,
+      "evidence_requested": "Mapping dei conti, prospetto di bilancio, dettaglio delle voci e riconciliazione alla presentazione statutaria selezionata."
+    },
+    {
+      "id": "OIC_12.DISCLOSURE",
+      "standard_id": "OIC_12",
+      "facet": "DISCLOSURE",
+      "objective": "Verificare la matrice delle informazioni di nota integrativa e delle informazioni civilistiche ulteriori attivate dal caso.",
+      "minimum": true,
+      "evidence_requested": "Matrice informativa, prospetti di supporto, bozza di nota integrativa e riferimenti alle evidenze accettate."
+    },
+    {
+      "id": "OIC_12.SIMPLIFIED_FORM_EXCEPTIONS",
+      "standard_id": "OIC_12",
+      "facet": "SIMPLIFIED_FORM_EXCEPTIONS",
+      "objective": "Applicare solo le semplificazioni previste per abbreviato o micro e documentare le informazioni residue e gli eventuali piè di pagina.",
+      "minimum": false,
+      "evidence_requested": "Forma statutaria selezionata, requisiti di accesso, scelta delle semplificazioni ed elenco delle informazioni comunque necessarie."
+    },
+    {
+      "id": "OIC_12.EVIDENCE_COMPLETENESS",
+      "standard_id": "OIC_12",
+      "facet": "EVIDENCE_COMPLETENESS",
+      "objective": "Raccogliere schemi, mapping, comparativi, dettaglio aggregazioni e matrice informativa necessari a spiegare ogni scelta di presentazione.",
+      "minimum": true,
+      "evidence_requested": "Indice delle fonti, riconciliazioni, elementi mancanti, fonti contrarie e dichiarazioni negative esplicite quando necessarie."
+    },
+    {
+      "id": "OIC_12.PROFESSIONAL_CONCLUSION",
+      "standard_id": "OIC_12",
+      "facet": "PROFESSIONAL_CONCLUSION",
+      "objective": "Concludere sulla conformità e leggibilità degli schemi e dell'informativa rispetto alla forma selezionata.",
+      "minimum": true,
+      "evidence_requested": "Esiti dei controlli collegati, eccezioni, rettifiche proposte o registrate, rilievi residui, preparatore e revisore."
+    },
+    {
+      "id": "OIC_13.APPLICABILITY",
+      "standard_id": "OIC_13",
+      "facet": "APPLICABILITY",
+      "objective": "Identificare categorie di rimanenze, titolarità, rischi e benefici e fattispecie disciplinate da altri principi.",
+      "minimum": true,
+      "evidence_requested": "Fatti, saldi, contratti, politiche contabili e decisione di perimetro che supportino l'applicazione o l'esclusione del principio."
+    },
+    {
+      "id": "OIC_13.INITIAL_RECOGNITION",
+      "standard_id": "OIC_13",
+      "facet": "INITIAL_RECOGNITION",
+      "objective": "Riconciliare quantità e costi iniziali, distinguendo acquisto e produzione e documentando componenti incluse, escluse e metodi adottati.",
+      "minimum": false,
+      "evidence_requested": "Documenti originari, contratti, scritture, date, quantità e calcoli che supportino il momento e il valore della rilevazione iniziale."
+    },
+    {
+      "id": "OIC_13.SUBSEQUENT_MEASUREMENT",
+      "standard_id": "OIC_13",
+      "facet": "SUBSEQUENT_MEASUREMENT",
+      "objective": "Confrontare costo e valore desumibile dal mercato, documentare svalutazioni, ripristini e metodo di determinazione del costo.",
+      "minimum": false,
+      "evidence_requested": "Prospetto di valutazione successiva, movimenti, stime, assunzioni, impairment o rettifiche e riconciliazione ai saldi finali."
+    },
+    {
+      "id": "OIC_13.CLASSIFICATION_PRESENTATION",
+      "standard_id": "OIC_13",
+      "facet": "CLASSIFICATION_PRESENTATION",
+      "objective": "Riconciliare le categorie di rimanenze alle voci di bilancio e alle variazioni rilevate nel conto economico.",
+      "minimum": true,
+      "evidence_requested": "Mapping dei conti, prospetto di bilancio, dettaglio delle voci e riconciliazione alla presentazione statutaria selezionata."
+    },
+    {
+      "id": "OIC_13.DISCLOSURE",
+      "standard_id": "OIC_13",
+      "facet": "DISCLOSURE",
+      "objective": "Verificare criteri di valutazione, metodi di costo, svalutazioni, ripristini, gravami e altre informazioni attivate dal caso.",
+      "minimum": true,
+      "evidence_requested": "Matrice informativa, prospetti di supporto, bozza di nota integrativa e riferimenti alle evidenze accettate."
+    },
+    {
+      "id": "OIC_13.SIMPLIFIED_FORM_EXCEPTIONS",
+      "standard_id": "OIC_13",
+      "facet": "SIMPLIFIED_FORM_EXCEPTIONS",
+      "objective": "Verificare le informative richieste per la forma selezionata e documentare le semplificazioni effettivamente applicate.",
+      "minimum": false,
+      "evidence_requested": "Forma statutaria selezionata, requisiti di accesso, scelta delle semplificazioni ed elenco delle informazioni comunque necessarie."
+    },
+    {
+      "id": "OIC_13.EVIDENCE_COMPLETENESS",
+      "standard_id": "OIC_13",
+      "facet": "EVIDENCE_COMPLETENESS",
+      "objective": "Raccogliere inventari, valorizzazioni, cut-off, obsolescenza, contratti, gravami e riconciliazione contabile.",
+      "minimum": true,
+      "evidence_requested": "Indice delle fonti, riconciliazioni, elementi mancanti, fonti contrarie e dichiarazioni negative esplicite quando necessarie."
+    },
+    {
+      "id": "OIC_13.PROFESSIONAL_CONCLUSION",
+      "standard_id": "OIC_13",
+      "facet": "PROFESSIONAL_CONCLUSION",
+      "objective": "Concludere su esistenza, competenza, costo, recuperabilità, classificazione e informativa delle rimanenze.",
+      "minimum": true,
+      "evidence_requested": "Esiti dei controlli collegati, eccezioni, rettifiche proposte o registrate, rilievi residui, preparatore e revisore."
+    },
+    {
+      "id": "OIC_15.APPLICABILITY",
+      "standard_id": "OIC_15",
+      "facet": "APPLICABILITY",
+      "objective": "Identificare diritti di credito, origine, scadenza, natura, valuta, parti correlate e fattispecie disciplinate altrove.",
+      "minimum": true,
+      "evidence_requested": "Fatti, saldi, contratti, politiche contabili e decisione di perimetro che supportino l'applicazione o l'esclusione del principio."
+    },
+    {
+      "id": "OIC_15.INITIAL_RECOGNITION",
+      "standard_id": "OIC_15",
+      "facet": "INITIAL_RECOGNITION",
+      "objective": "Verificare momento di iscrizione, valore iniziale, costo ammortizzato, attualizzazione, costi di transazione e semplificazioni applicate.",
+      "minimum": false,
+      "evidence_requested": "Documenti originari, contratti, scritture, date, quantità e calcoli che supportino il momento e il valore della rilevazione iniziale."
+    },
+    {
+      "id": "OIC_15.SUBSEQUENT_MEASUREMENT",
+      "standard_id": "OIC_15",
+      "facet": "SUBSEQUENT_MEASUREMENT",
+      "objective": "Riconciliare valutazione successiva, incassi, interessi, perdite attese o analitiche, svalutazioni, ripristini e cancellazioni.",
+      "minimum": false,
+      "evidence_requested": "Prospetto di valutazione successiva, movimenti, stime, assunzioni, impairment o rettifiche e riconciliazione ai saldi finali."
+    },
+    {
+      "id": "OIC_15.CLASSIFICATION_PRESENTATION",
+      "standard_id": "OIC_15",
+      "facet": "CLASSIFICATION_PRESENTATION",
+      "objective": "Riconciliare crediti per destinazione, natura, esigibilità e rapporti con imprese del gruppo alle voci applicabili.",
+      "minimum": true,
+      "evidence_requested": "Mapping dei conti, prospetto di bilancio, dettaglio delle voci e riconciliazione alla presentazione statutaria selezionata."
+    },
+    {
+      "id": "OIC_15.DISCLOSURE",
+      "standard_id": "OIC_15",
+      "facet": "DISCLOSURE",
+      "objective": "Verificare criteri, variazioni, durata residua, concentrazioni, garanzie, cessioni e altre informazioni attivate dal caso.",
+      "minimum": true,
+      "evidence_requested": "Matrice informativa, prospetti di supporto, bozza di nota integrativa e riferimenti alle evidenze accettate."
+    },
+    {
+      "id": "OIC_15.SIMPLIFIED_FORM_EXCEPTIONS",
+      "standard_id": "OIC_15",
+      "facet": "SIMPLIFIED_FORM_EXCEPTIONS",
+      "objective": "Documentare l'eventuale esonero dal costo ammortizzato o dall'attualizzazione e le informative residue della forma selezionata.",
+      "minimum": false,
+      "evidence_requested": "Forma statutaria selezionata, requisiti di accesso, scelta delle semplificazioni ed elenco delle informazioni comunque necessarie."
+    },
+    {
+      "id": "OIC_15.EVIDENCE_COMPLETENESS",
+      "standard_id": "OIC_15",
+      "facet": "EVIDENCE_COMPLETENESS",
+      "objective": "Raccogliere scadenzario, conferme o evidenze alternative, incassi successivi, contenziosi, garanzie e calcolo del fondo svalutazione.",
+      "minimum": true,
+      "evidence_requested": "Indice delle fonti, riconciliazioni, elementi mancanti, fonti contrarie e dichiarazioni negative esplicite quando necessarie."
+    },
+    {
+      "id": "OIC_15.PROFESSIONAL_CONCLUSION",
+      "standard_id": "OIC_15",
+      "facet": "PROFESSIONAL_CONCLUSION",
+      "objective": "Concludere su esistenza, titolarità, recuperabilità, valutazione, cancellazione, classificazione e informativa dei crediti.",
+      "minimum": true,
+      "evidence_requested": "Esiti dei controlli collegati, eccezioni, rettifiche proposte o registrate, rilievi residui, preparatore e revisore."
+    },
+    {
+      "id": "OIC_16.APPLICABILITY",
+      "standard_id": "OIC_16",
+      "facet": "APPLICABILITY",
+      "objective": "Identificare beni materiali destinati all'uso durevole, componenti, beni in corso, cespiti non più utilizzati e fattispecie escluse.",
+      "minimum": true,
+      "evidence_requested": "Fatti, saldi, contratti, politiche contabili e decisione di perimetro che supportino l'applicazione o l'esclusione del principio."
+    },
+    {
+      "id": "OIC_16.INITIAL_RECOGNITION",
+      "standard_id": "OIC_16",
+      "facet": "INITIAL_RECOGNITION",
+      "objective": "Riconciliare data di disponibilità, costo di acquisto o produzione, oneri accessori, smantellamento, permute e contributi.",
+      "minimum": false,
+      "evidence_requested": "Documenti originari, contratti, scritture, date, quantità e calcoli che supportino il momento e il valore della rilevazione iniziale."
+    },
+    {
+      "id": "OIC_16.SUBSEQUENT_MEASUREMENT",
+      "standard_id": "OIC_16",
+      "facet": "SUBSEQUENT_MEASUREMENT",
+      "objective": "Verificare ammortamento per componenti, vita utile, valore residuo, manutenzioni, svalutazioni, rivalutazioni, dismissioni e casi particolari.",
+      "minimum": false,
+      "evidence_requested": "Prospetto di valutazione successiva, movimenti, stime, assunzioni, impairment o rettifiche e riconciliazione ai saldi finali."
+    },
+    {
+      "id": "OIC_16.CLASSIFICATION_PRESENTATION",
+      "standard_id": "OIC_16",
+      "facet": "CLASSIFICATION_PRESENTATION",
+      "objective": "Riconciliare classi di cespiti, fondi, immobilizzazioni in corso, anticipi, plus/minusvalenze e contributi alle voci di bilancio.",
+      "minimum": true,
+      "evidence_requested": "Mapping dei conti, prospetto di bilancio, dettaglio delle voci e riconciliazione alla presentazione statutaria selezionata."
+    },
+    {
+      "id": "OIC_16.DISCLOSURE",
+      "standard_id": "OIC_16",
+      "facet": "DISCLOSURE",
+      "objective": "Verificare criteri, movimenti, ammortamenti, svalutazioni, rivalutazioni, gravami, impegni e altre informazioni attivate.",
+      "minimum": true,
+      "evidence_requested": "Matrice informativa, prospetti di supporto, bozza di nota integrativa e riferimenti alle evidenze accettate."
+    },
+    {
+      "id": "OIC_16.SIMPLIFIED_FORM_EXCEPTIONS",
+      "standard_id": "OIC_16",
+      "facet": "SIMPLIFIED_FORM_EXCEPTIONS",
+      "objective": "Verificare il dettaglio informativo richiesto dalla forma selezionata senza ridurre i prospetti necessari alla riconciliazione dei cespiti.",
+      "minimum": false,
+      "evidence_requested": "Forma statutaria selezionata, requisiti di accesso, scelta delle semplificazioni ed elenco delle informazioni comunque necessarie."
+    },
+    {
+      "id": "OIC_16.EVIDENCE_COMPLETENESS",
+      "standard_id": "OIC_16",
+      "facet": "EVIDENCE_COMPLETENESS",
+      "objective": "Raccogliere registro cespiti, fatture, collaudi, vite utili, dismissioni, contributi, impairment e riconciliazione dei movimenti.",
+      "minimum": true,
+      "evidence_requested": "Indice delle fonti, riconciliazioni, elementi mancanti, fonti contrarie e dichiarazioni negative esplicite quando necessarie."
+    },
+    {
+      "id": "OIC_16.PROFESSIONAL_CONCLUSION",
+      "standard_id": "OIC_16",
+      "facet": "PROFESSIONAL_CONCLUSION",
+      "objective": "Concludere su esistenza, titolarità, capitalizzazione, ammortamento, recuperabilità, classificazione e informativa dei cespiti.",
+      "minimum": true,
+      "evidence_requested": "Esiti dei controlli collegati, eccezioni, rettifiche proposte o registrate, rilievi residui, preparatore e revisore."
+    },
+    {
+      "id": "OIC_18.APPLICABILITY",
+      "standard_id": "OIC_18",
+      "facet": "APPLICABILITY",
+      "objective": "Identificare costi o ricavi comuni a più esercizi con maturazione temporale e distinguere poste che non sono ratei o risconti.",
+      "minimum": true,
+      "evidence_requested": "Fatti, saldi, contratti, politiche contabili e decisione di perimetro che supportino l'applicazione o l'esclusione del principio."
+    },
+    {
+      "id": "OIC_18.INITIAL_RECOGNITION",
+      "standard_id": "OIC_18",
+      "facet": "INITIAL_RECOGNITION",
+      "objective": "Verificare competenza temporale, durata del periodo comune e calcolo iniziale della quota rinviata o maturata.",
+      "minimum": false,
+      "evidence_requested": "Documenti originari, contratti, scritture, date, quantità e calcoli che supportino il momento e il valore della rilevazione iniziale."
+    },
+    {
+      "id": "OIC_18.SUBSEQUENT_MEASUREMENT",
+      "standard_id": "OIC_18",
+      "facet": "SUBSEQUENT_MEASUREMENT",
+      "objective": "Ricalcolare quote, recuperabilità dei risconti attivi, estinzione dei ratei e rettifiche conseguenti a nuove informazioni.",
+      "minimum": false,
+      "evidence_requested": "Prospetto di valutazione successiva, movimenti, stime, assunzioni, impairment o rettifiche e riconciliazione ai saldi finali."
+    },
+    {
+      "id": "OIC_18.CLASSIFICATION_PRESENTATION",
+      "standard_id": "OIC_18",
+      "facet": "CLASSIFICATION_PRESENTATION",
+      "objective": "Riconciliare ratei e risconti attivi e passivi alle voci patrimoniali e ai correlati componenti economici.",
+      "minimum": true,
+      "evidence_requested": "Mapping dei conti, prospetto di bilancio, dettaglio delle voci e riconciliazione alla presentazione statutaria selezionata."
+    },
+    {
+      "id": "OIC_18.DISCLOSURE",
+      "standard_id": "OIC_18",
+      "facet": "DISCLOSURE",
+      "objective": "Verificare composizione, criteri e informazioni necessarie per importi rilevanti o con durata significativa.",
+      "minimum": true,
+      "evidence_requested": "Matrice informativa, prospetti di supporto, bozza di nota integrativa e riferimenti alle evidenze accettate."
+    },
+    {
+      "id": "OIC_18.SIMPLIFIED_FORM_EXCEPTIONS",
+      "standard_id": "OIC_18",
+      "facet": "SIMPLIFIED_FORM_EXCEPTIONS",
+      "objective": "Verificare le informazioni richieste dalla forma selezionata e conservare il dettaglio necessario alla competenza economica.",
+      "minimum": false,
+      "evidence_requested": "Forma statutaria selezionata, requisiti di accesso, scelta delle semplificazioni ed elenco delle informazioni comunque necessarie."
+    },
+    {
+      "id": "OIC_18.EVIDENCE_COMPLETENESS",
+      "standard_id": "OIC_18",
+      "facet": "EVIDENCE_COMPLETENESS",
+      "objective": "Raccogliere contratti, fatture, periodi di maturazione, calcoli pro-rata e riconciliazione con i conti economici collegati.",
+      "minimum": true,
+      "evidence_requested": "Indice delle fonti, riconciliazioni, elementi mancanti, fonti contrarie e dichiarazioni negative esplicite quando necessarie."
+    },
+    {
+      "id": "OIC_18.PROFESSIONAL_CONCLUSION",
+      "standard_id": "OIC_18",
+      "facet": "PROFESSIONAL_CONCLUSION",
+      "objective": "Concludere su natura, competenza, calcolo, recuperabilità, classificazione e informativa di ratei e risconti.",
+      "minimum": true,
+      "evidence_requested": "Esiti dei controlli collegati, eccezioni, rettifiche proposte o registrate, rilievi residui, preparatore e revisore."
+    },
+    {
+      "id": "OIC_19.APPLICABILITY",
+      "standard_id": "OIC_19",
+      "facet": "APPLICABILITY",
+      "objective": "Identificare obbligazioni certe, origine, scadenza, garanzie, valuta, parti correlate e fattispecie disciplinate altrove.",
+      "minimum": true,
+      "evidence_requested": "Fatti, saldi, contratti, politiche contabili e decisione di perimetro che supportino l'applicazione o l'esclusione del principio."
+    },
+    {
+      "id": "OIC_19.INITIAL_RECOGNITION",
+      "standard_id": "OIC_19",
+      "facet": "INITIAL_RECOGNITION",
+      "objective": "Verificare momento di iscrizione, valore iniziale, costo ammortizzato, attualizzazione, costi di transazione e semplificazioni applicate.",
+      "minimum": false,
+      "evidence_requested": "Documenti originari, contratti, scritture, date, quantità e calcoli che supportino il momento e il valore della rilevazione iniziale."
+    },
+    {
+      "id": "OIC_19.SUBSEQUENT_MEASUREMENT",
+      "standard_id": "OIC_19",
+      "facet": "SUBSEQUENT_MEASUREMENT",
+      "objective": "Riconciliare interessi, rimborsi, rinegoziazioni, eliminazioni, conversioni e trattamenti particolari fino al saldo finale.",
+      "minimum": false,
+      "evidence_requested": "Prospetto di valutazione successiva, movimenti, stime, assunzioni, impairment o rettifiche e riconciliazione ai saldi finali."
+    },
+    {
+      "id": "OIC_19.CLASSIFICATION_PRESENTATION",
+      "standard_id": "OIC_19",
+      "facet": "CLASSIFICATION_PRESENTATION",
+      "objective": "Riconciliare debiti per natura, scadenza, garanzie e rapporti con imprese del gruppo alle voci applicabili.",
+      "minimum": true,
+      "evidence_requested": "Mapping dei conti, prospetto di bilancio, dettaglio delle voci e riconciliazione alla presentazione statutaria selezionata."
+    },
+    {
+      "id": "OIC_19.DISCLOSURE",
+      "standard_id": "OIC_19",
+      "facet": "DISCLOSURE",
+      "objective": "Verificare criteri, scadenze, garanzie, ristrutturazioni, finanziamenti soci e altre informazioni attivate dal caso.",
+      "minimum": true,
+      "evidence_requested": "Matrice informativa, prospetti di supporto, bozza di nota integrativa e riferimenti alle evidenze accettate."
+    },
+    {
+      "id": "OIC_19.SIMPLIFIED_FORM_EXCEPTIONS",
+      "standard_id": "OIC_19",
+      "facet": "SIMPLIFIED_FORM_EXCEPTIONS",
+      "objective": "Documentare l'eventuale esonero dal costo ammortizzato o dall'attualizzazione e le informative residue della forma selezionata.",
+      "minimum": false,
+      "evidence_requested": "Forma statutaria selezionata, requisiti di accesso, scelta delle semplificazioni ed elenco delle informazioni comunque necessarie."
+    },
+    {
+      "id": "OIC_19.EVIDENCE_COMPLETENESS",
+      "standard_id": "OIC_19",
+      "facet": "EVIDENCE_COMPLETENESS",
+      "objective": "Raccogliere scadenzario, contratti, estratti, pagamenti successivi, garanzie, covenant, rinegoziazioni e riconciliazioni.",
+      "minimum": true,
+      "evidence_requested": "Indice delle fonti, riconciliazioni, elementi mancanti, fonti contrarie e dichiarazioni negative esplicite quando necessarie."
+    },
+    {
+      "id": "OIC_19.PROFESSIONAL_CONCLUSION",
+      "standard_id": "OIC_19",
+      "facet": "PROFESSIONAL_CONCLUSION",
+      "objective": "Concludere su completezza, esistenza dell'obbligazione, valutazione, eliminazione, classificazione e informativa dei debiti.",
+      "minimum": true,
+      "evidence_requested": "Esiti dei controlli collegati, eccezioni, rettifiche proposte o registrate, rilievi residui, preparatore e revisore."
+    },
+    {
+      "id": "OIC_24.APPLICABILITY",
+      "standard_id": "OIC_24",
+      "facet": "APPLICABILITY",
+      "objective": "Identificare attività immateriali, oneri pluriennali, beni immateriali, avviamento, immobilizzazioni in corso e fattispecie escluse.",
+      "minimum": true,
+      "evidence_requested": "Fatti, saldi, contratti, politiche contabili e decisione di perimetro che supportino l'applicazione o l'esclusione del principio."
+    },
+    {
+      "id": "OIC_24.INITIAL_RECOGNITION",
+      "standard_id": "OIC_24",
+      "facet": "INITIAL_RECOGNITION",
+      "objective": "Verificare identificabilità, controllo, benefici futuri, misurabilità, consenso richiesto e costo iniziale delle diverse categorie.",
+      "minimum": false,
+      "evidence_requested": "Documenti originari, contratti, scritture, date, quantità e calcoli che supportino il momento e il valore della rilevazione iniziale."
+    },
+    {
+      "id": "OIC_24.SUBSEQUENT_MEASUREMENT",
+      "standard_id": "OIC_24",
+      "facet": "SUBSEQUENT_MEASUREMENT",
+      "objective": "Verificare vita utile, ammortamento, valore residuo, impairment, rivalutazioni, dismissioni e casi particolari.",
+      "minimum": false,
+      "evidence_requested": "Prospetto di valutazione successiva, movimenti, stime, assunzioni, impairment o rettifiche e riconciliazione ai saldi finali."
+    },
+    {
+      "id": "OIC_24.CLASSIFICATION_PRESENTATION",
+      "standard_id": "OIC_24",
+      "facet": "CLASSIFICATION_PRESENTATION",
+      "objective": "Riconciliare categorie, fondi, immobilizzazioni in corso, anticipi e componenti economici alle voci applicabili.",
+      "minimum": true,
+      "evidence_requested": "Mapping dei conti, prospetto di bilancio, dettaglio delle voci e riconciliazione alla presentazione statutaria selezionata."
+    },
+    {
+      "id": "OIC_24.DISCLOSURE",
+      "standard_id": "OIC_24",
+      "facet": "DISCLOSURE",
+      "objective": "Verificare criteri, movimenti, vite utili, ammortamenti, svalutazioni, rivalutazioni, vincoli e altre informazioni attivate.",
+      "minimum": true,
+      "evidence_requested": "Matrice informativa, prospetti di supporto, bozza di nota integrativa e riferimenti alle evidenze accettate."
+    },
+    {
+      "id": "OIC_24.SIMPLIFIED_FORM_EXCEPTIONS",
+      "standard_id": "OIC_24",
+      "facet": "SIMPLIFIED_FORM_EXCEPTIONS",
+      "objective": "Verificare limiti e semplificazioni della forma selezionata, inclusa la documentazione necessaria per oneri pluriennali e avviamento.",
+      "minimum": false,
+      "evidence_requested": "Forma statutaria selezionata, requisiti di accesso, scelta delle semplificazioni ed elenco delle informazioni comunque necessarie."
+    },
+    {
+      "id": "OIC_24.EVIDENCE_COMPLETENESS",
+      "standard_id": "OIC_24",
+      "facet": "EVIDENCE_COMPLETENESS",
+      "objective": "Raccogliere contratti, fatture, progetti, autorizzazioni, benefici attesi, vite utili, impairment e riconciliazione dei movimenti.",
+      "minimum": true,
+      "evidence_requested": "Indice delle fonti, riconciliazioni, elementi mancanti, fonti contrarie e dichiarazioni negative esplicite quando necessarie."
+    },
+    {
+      "id": "OIC_24.PROFESSIONAL_CONCLUSION",
+      "standard_id": "OIC_24",
+      "facet": "PROFESSIONAL_CONCLUSION",
+      "objective": "Concludere su capitalizzabilità, titolarità, ammortamento, recuperabilità, classificazione e informativa delle immobilizzazioni immateriali.",
+      "minimum": true,
+      "evidence_requested": "Esiti dei controlli collegati, eccezioni, rettifiche proposte o registrate, rilievi residui, preparatore e revisore."
+    },
+    {
+      "id": "OIC_25.APPLICABILITY",
+      "standard_id": "OIC_25",
+      "facet": "APPLICABILITY",
+      "objective": "Identificare imposte correnti, anticipate e differite, differenze temporanee, perdite fiscali e regimi particolari applicabili.",
+      "minimum": true,
+      "evidence_requested": "Fatti, saldi, contratti, politiche contabili e decisione di perimetro che supportino l'applicazione o l'esclusione del principio."
+    },
+    {
+      "id": "OIC_25.INITIAL_RECOGNITION",
+      "standard_id": "OIC_25",
+      "facet": "INITIAL_RECOGNITION",
+      "objective": "Riconciliare fiscalità corrente e differita, distinguendo differenze imponibili e deducibili e condizioni per le attività fiscali differite.",
+      "minimum": false,
+      "evidence_requested": "Documenti originari, contratti, scritture, date, quantità e calcoli che supportino il momento e il valore della rilevazione iniziale."
+    },
+    {
+      "id": "OIC_25.SUBSEQUENT_MEASUREMENT",
+      "standard_id": "OIC_25",
+      "facet": "SUBSEQUENT_MEASUREMENT",
+      "objective": "Aggiornare aliquote, recuperabilità, riversamenti, compensazioni ammesse e variazioni delle attività e passività fiscali.",
+      "minimum": false,
+      "evidence_requested": "Prospetto di valutazione successiva, movimenti, stime, assunzioni, impairment o rettifiche e riconciliazione ai saldi finali."
+    },
+    {
+      "id": "OIC_25.CLASSIFICATION_PRESENTATION",
+      "standard_id": "OIC_25",
+      "facet": "CLASSIFICATION_PRESENTATION",
+      "objective": "Riconciliare crediti, debiti, fondi e componenti fiscali correnti e differiti alle voci patrimoniali ed economiche applicabili.",
+      "minimum": true,
+      "evidence_requested": "Mapping dei conti, prospetto di bilancio, dettaglio delle voci e riconciliazione alla presentazione statutaria selezionata."
+    },
+    {
+      "id": "OIC_25.DISCLOSURE",
+      "standard_id": "OIC_25",
+      "facet": "DISCLOSURE",
+      "objective": "Verificare riconciliazioni fiscali, differenze temporanee, perdite, aliquote, attività non rilevate e altre informazioni attivate.",
+      "minimum": true,
+      "evidence_requested": "Matrice informativa, prospetti di supporto, bozza di nota integrativa e riferimenti alle evidenze accettate."
+    },
+    {
+      "id": "OIC_25.SIMPLIFIED_FORM_EXCEPTIONS",
+      "standard_id": "OIC_25",
+      "facet": "SIMPLIFIED_FORM_EXCEPTIONS",
+      "objective": "Verificare le informative fiscali richieste dalla forma selezionata e conservare i calcoli che giustificano ogni semplificazione espositiva.",
+      "minimum": false,
+      "evidence_requested": "Forma statutaria selezionata, requisiti di accesso, scelta delle semplificazioni ed elenco delle informazioni comunque necessarie."
+    },
+    {
+      "id": "OIC_25.EVIDENCE_COMPLETENESS",
+      "standard_id": "OIC_25",
+      "facet": "EVIDENCE_COMPLETENESS",
+      "objective": "Raccogliere dichiarazioni, imponibile, aliquote, scadenze di riversamento, perdite fiscali, previsioni e riconciliazioni con il bilancio.",
+      "minimum": true,
+      "evidence_requested": "Indice delle fonti, riconciliazioni, elementi mancanti, fonti contrarie e dichiarazioni negative esplicite quando necessarie."
+    },
+    {
+      "id": "OIC_25.PROFESSIONAL_CONCLUSION",
+      "standard_id": "OIC_25",
+      "facet": "PROFESSIONAL_CONCLUSION",
+      "objective": "Concludere su completezza, competenza, valutazione, recuperabilità, classificazione e informativa della fiscalità corrente e differita.",
+      "minimum": true,
+      "evidence_requested": "Esiti dei controlli collegati, eccezioni, rettifiche proposte o registrate, rilievi residui, preparatore e revisore."
+    },
+    {
+      "id": "OIC_28.APPLICABILITY",
+      "standard_id": "OIC_28",
+      "facet": "APPLICABILITY",
+      "objective": "Identificare capitale, riserve, utili o perdite, strumenti e operazioni tra società e soci nella loro qualità di soci.",
+      "minimum": true,
+      "evidence_requested": "Fatti, saldi, contratti, politiche contabili e decisione di perimetro che supportino l'applicazione o l'esclusione del principio."
+    },
+    {
+      "id": "OIC_28.INITIAL_RECOGNITION",
+      "standard_id": "OIC_28",
+      "facet": "INITIAL_RECOGNITION",
+      "objective": "Verificare delibere, versamenti, aumenti o riduzioni, acquisti di azioni proprie, distribuzioni e rinunce o apporti dei soci.",
+      "minimum": false,
+      "evidence_requested": "Documenti originari, contratti, scritture, date, quantità e calcoli che supportino il momento e il valore della rilevazione iniziale."
+    },
+    {
+      "id": "OIC_28.SUBSEQUENT_MEASUREMENT",
+      "standard_id": "OIC_28",
+      "facet": "SUBSEQUENT_MEASUREMENT",
+      "objective": "Riconciliare destinazioni del risultato, disponibilità e distribuibilità delle riserve, coperture perdite e movimenti successivi.",
+      "minimum": false,
+      "evidence_requested": "Prospetto di valutazione successiva, movimenti, stime, assunzioni, impairment o rettifiche e riconciliazione ai saldi finali."
+    },
+    {
+      "id": "OIC_28.CLASSIFICATION_PRESENTATION",
+      "standard_id": "OIC_28",
+      "facet": "CLASSIFICATION_PRESENTATION",
+      "objective": "Riconciliare ciascuna componente del patrimonio netto alle voci applicabili e separare correttamente debito e patrimonio.",
+      "minimum": true,
+      "evidence_requested": "Mapping dei conti, prospetto di bilancio, dettaglio delle voci e riconciliazione alla presentazione statutaria selezionata."
+    },
+    {
+      "id": "OIC_28.DISCLOSURE",
+      "standard_id": "OIC_28",
+      "facet": "DISCLOSURE",
+      "objective": "Verificare movimenti, origine, possibilità di utilizzo, distribuibilità, utilizzazioni pregresse e altre informazioni attivate.",
+      "minimum": true,
+      "evidence_requested": "Matrice informativa, prospetti di supporto, bozza di nota integrativa e riferimenti alle evidenze accettate."
+    },
+    {
+      "id": "OIC_28.SIMPLIFIED_FORM_EXCEPTIONS",
+      "standard_id": "OIC_28",
+      "facet": "SIMPLIFIED_FORM_EXCEPTIONS",
+      "objective": "Verificare le informazioni sul patrimonio netto richieste dalla forma selezionata e mantenere il prospetto interno completo dei movimenti.",
+      "minimum": false,
+      "evidence_requested": "Forma statutaria selezionata, requisiti di accesso, scelta delle semplificazioni ed elenco delle informazioni comunque necessarie."
+    },
+    {
+      "id": "OIC_28.EVIDENCE_COMPLETENESS",
+      "standard_id": "OIC_28",
+      "facet": "EVIDENCE_COMPLETENESS",
+      "objective": "Raccogliere statuto, verbali, visure, contabili bancarie, libri sociali, prospetto riserve e riconciliazione con risultato e dividendi.",
+      "minimum": true,
+      "evidence_requested": "Indice delle fonti, riconciliazioni, elementi mancanti, fonti contrarie e dichiarazioni negative esplicite quando necessarie."
+    },
+    {
+      "id": "OIC_28.PROFESSIONAL_CONCLUSION",
+      "standard_id": "OIC_28",
+      "facet": "PROFESSIONAL_CONCLUSION",
+      "objective": "Concludere su esistenza, diritti, vincoli, classificazione, movimenti e informativa delle componenti di patrimonio netto.",
+      "minimum": true,
+      "evidence_requested": "Esiti dei controlli collegati, eccezioni, rettifiche proposte o registrate, rilievi residui, preparatore e revisore."
+    },
+    {
+      "id": "OIC_31.APPLICABILITY",
+      "standard_id": "OIC_31",
+      "facet": "APPLICABILITY",
+      "objective": "Identificare obbligazioni certe o probabili, passività potenziali, fondi per oneri, quiescenza e TFR, distinguendoli dai debiti.",
+      "minimum": true,
+      "evidence_requested": "Fatti, saldi, contratti, politiche contabili e decisione di perimetro che supportino l'applicazione o l'esclusione del principio."
+    },
+    {
+      "id": "OIC_31.INITIAL_RECOGNITION",
+      "standard_id": "OIC_31",
+      "facet": "INITIAL_RECOGNITION",
+      "objective": "Verificare evento originario, probabilità, stimabilità, natura determinata, accantonamento iniziale e maturazione del TFR.",
+      "minimum": false,
+      "evidence_requested": "Documenti originari, contratti, scritture, date, quantità e calcoli che supportino il momento e il valore della rilevazione iniziale."
+    },
+    {
+      "id": "OIC_31.SUBSEQUENT_MEASUREMENT",
+      "standard_id": "OIC_31",
+      "facet": "SUBSEQUENT_MEASUREMENT",
+      "objective": "Aggiornare stime, utilizzi, eccedenze, orizzonte temporale, passività potenziali e riconciliazione del TFR maturato e trasferito.",
+      "minimum": false,
+      "evidence_requested": "Prospetto di valutazione successiva, movimenti, stime, assunzioni, impairment o rettifiche e riconciliazione ai saldi finali."
+    },
+    {
+      "id": "OIC_31.CLASSIFICATION_PRESENTATION",
+      "standard_id": "OIC_31",
+      "facet": "CLASSIFICATION_PRESENTATION",
+      "objective": "Riconciliare fondi e TFR alle voci patrimoniali e classificare accantonamenti, utilizzi ed eccedenze per natura economica.",
+      "minimum": true,
+      "evidence_requested": "Mapping dei conti, prospetto di bilancio, dettaglio delle voci e riconciliazione alla presentazione statutaria selezionata."
+    },
+    {
+      "id": "OIC_31.DISCLOSURE",
+      "standard_id": "OIC_31",
+      "facet": "DISCLOSURE",
+      "objective": "Verificare natura, movimenti, incertezze, passività potenziali, attività potenziali e informazioni sul TFR attivate dal caso.",
+      "minimum": true,
+      "evidence_requested": "Matrice informativa, prospetti di supporto, bozza di nota integrativa e riferimenti alle evidenze accettate."
+    },
+    {
+      "id": "OIC_31.SIMPLIFIED_FORM_EXCEPTIONS",
+      "standard_id": "OIC_31",
+      "facet": "SIMPLIFIED_FORM_EXCEPTIONS",
+      "objective": "Verificare le informative richieste dalla forma selezionata senza omettere rischi, incertezze o passività potenziali rilevanti.",
+      "minimum": false,
+      "evidence_requested": "Forma statutaria selezionata, requisiti di accesso, scelta delle semplificazioni ed elenco delle informazioni comunque necessarie."
+    },
+    {
+      "id": "OIC_31.EVIDENCE_COMPLETENESS",
+      "standard_id": "OIC_31",
+      "facet": "EVIDENCE_COMPLETENESS",
+      "objective": "Raccogliere pareri, contratti, contenziosi, stime, eventi successivi, payroll, Fondo Tesoreria, previdenza e riconciliazione dei movimenti.",
+      "minimum": true,
+      "evidence_requested": "Indice delle fonti, riconciliazioni, elementi mancanti, fonti contrarie e dichiarazioni negative esplicite quando necessarie."
+    },
+    {
+      "id": "OIC_31.PROFESSIONAL_CONCLUSION",
+      "standard_id": "OIC_31",
+      "facet": "PROFESSIONAL_CONCLUSION",
+      "objective": "Concludere su completezza, probabilità, stimabilità, valutazione, utilizzo, classificazione e informativa di fondi e TFR.",
+      "minimum": true,
+      "evidence_requested": "Esiti dei controlli collegati, eccezioni, rettifiche proposte o registrate, rilievi residui, preparatore e revisore."
+    },
+    {
+      "id": "OIC_34.APPLICABILITY",
+      "standard_id": "OIC_34",
+      "facet": "APPLICABILITY",
+      "objective": "Identificare operazioni generatrici di ricavi, unità elementari di contabilizzazione, corrispettivi variabili e fattispecie disciplinate altrove.",
+      "minimum": true,
+      "evidence_requested": "Fatti, saldi, contratti, politiche contabili e decisione di perimetro che supportino l'applicazione o l'esclusione del principio."
+    },
+    {
+      "id": "OIC_34.INITIAL_RECOGNITION",
+      "standard_id": "OIC_34",
+      "facet": "INITIAL_RECOGNITION",
+      "objective": "Segmentare il contratto, determinare il prezzo complessivo, allocarlo e verificare le condizioni temporali per vendita di beni e prestazioni di servizi.",
+      "minimum": false,
+      "evidence_requested": "Documenti originari, contratti, scritture, date, quantità e calcoli che supportino il momento e il valore della rilevazione iniziale."
+    },
+    {
+      "id": "OIC_34.SUBSEQUENT_MEASUREMENT",
+      "standard_id": "OIC_34",
+      "facet": "SUBSEQUENT_MEASUREMENT",
+      "objective": "Aggiornare stime del corrispettivo, avanzamento e componenti variabili e contabilizzare gli effetti secondo il trattamento applicabile.",
+      "minimum": false,
+      "evidence_requested": "Prospetto di valutazione successiva, movimenti, stime, assunzioni, impairment o rettifiche e riconciliazione ai saldi finali."
+    },
+    {
+      "id": "OIC_34.CLASSIFICATION_PRESENTATION",
+      "standard_id": "OIC_34",
+      "facet": "CLASSIFICATION_PRESENTATION",
+      "objective": "Riconciliare ricavi, rettifiche, resi, garanzie e componenti separate alle voci economiche e patrimoniali applicabili.",
+      "minimum": true,
+      "evidence_requested": "Mapping dei conti, prospetto di bilancio, dettaglio delle voci e riconciliazione alla presentazione statutaria selezionata."
+    },
+    {
+      "id": "OIC_34.DISCLOSURE",
+      "standard_id": "OIC_34",
+      "facet": "DISCLOSURE",
+      "objective": "Verificare criteri, disaggregazioni, giudizi, politiche e altre informazioni sui ricavi attivate dal caso.",
+      "minimum": true,
+      "evidence_requested": "Matrice informativa, prospetti di supporto, bozza di nota integrativa e riferimenti alle evidenze accettate."
+    },
+    {
+      "id": "OIC_34.SIMPLIFIED_FORM_EXCEPTIONS",
+      "standard_id": "OIC_34",
+      "facet": "SIMPLIFIED_FORM_EXCEPTIONS",
+      "objective": "Verificare le semplificazioni informative della forma selezionata e la documentazione delle politiche di riconoscimento comunque necessaria.",
+      "minimum": false,
+      "evidence_requested": "Forma statutaria selezionata, requisiti di accesso, scelta delle semplificazioni ed elenco delle informazioni comunque necessarie."
+    },
+    {
+      "id": "OIC_34.EVIDENCE_COMPLETENESS",
+      "standard_id": "OIC_34",
+      "facet": "EVIDENCE_COMPLETENESS",
+      "objective": "Raccogliere contratti, ordini, consegne, collaudi, avanzamento, listini, sconti, resi, garanzie e riconciliazione con fatture e incassi.",
+      "minimum": true,
+      "evidence_requested": "Indice delle fonti, riconciliazioni, elementi mancanti, fonti contrarie e dichiarazioni negative esplicite quando necessarie."
+    },
+    {
+      "id": "OIC_34.PROFESSIONAL_CONCLUSION",
+      "standard_id": "OIC_34",
+      "facet": "PROFESSIONAL_CONCLUSION",
+      "objective": "Concludere su segmentazione, prezzo, allocazione, competenza, valutazione successiva, classificazione e informativa dei ricavi.",
+      "minimum": true,
+      "evidence_requested": "Esiti dei controlli collegati, eccezioni, rettifiche proposte o registrate, rilievi residui, preparatore e revisore."
+    }
+  ],
+  "qualitative_flags": [
+    {
+      "flag": "EMPLOYEES_OR_BODIES_PRESENT",
+      "areas": [
+        "EMPLOYEES_TFR"
+      ],
+      "engine_scope": "SUPPORTED"
+    },
+    {
+      "flag": "GROUP_OR_PARTICIPATIONS_PRESENT",
+      "areas": [
+        "PARTICIPATIONS_GROUP"
+      ],
+      "engine_scope": "SUPPORTED"
+    },
+    {
+      "flag": "FINANCE_LEASES_PRESENT",
+      "areas": [
+        "LEASES"
+      ],
+      "engine_scope": "SUPPORTED"
+    },
+    {
+      "flag": "REVENUE_OR_EXCEPTIONAL_DETAIL_REQUIRED",
+      "areas": [
+        "RECEIVABLES_REVENUE",
+        "OTHER_INCOME_EXPENSE"
+      ],
+      "engine_scope": "SUPPORTED"
+    },
+    {
+      "flag": "INTANGIBLE_ASSETS_PRESENT",
+      "areas": [
+        "INTANGIBLE_ASSETS"
+      ],
+      "engine_scope": "SUPPORTED"
+    },
+    {
+      "flag": "SPECIAL_PURPOSE_ASSETS_PRESENT",
+      "areas": [
+        "SPECIAL_PURPOSE_ASSETS"
+      ],
+      "engine_scope": "SUPPORTED"
+    },
+    {
+      "flag": "MERGER_OR_DEMERGER_PRESENT",
+      "areas": [
+        "BUSINESS_COMBINATIONS"
+      ],
+      "engine_scope": "SUPPORTED"
+    },
+    {
+      "flag": "EMISSION_ALLOWANCES_PRESENT",
+      "areas": [
+        "EMISSION_ALLOWANCES"
+      ],
+      "engine_scope": "SUPPORTED"
+    },
+    {
+      "flag": "DEBT_SECURITIES_PRESENT",
+      "areas": [
+        "DEBT_SECURITIES"
+      ],
+      "engine_scope": "SUPPORTED"
+    },
+    {
+      "flag": "LONG_TERM_CONTRACTS_PRESENT",
+      "areas": [
+        "CONTRACT_WORK"
+      ],
+      "engine_scope": "SUPPORTED"
+    },
+    {
+      "flag": "FOREIGN_CURRENCY_PRESENT",
+      "areas": [
+        "FOREIGN_CURRENCY"
+      ],
+      "engine_scope": "SUPPORTED"
+    },
+    {
+      "flag": "ACCOUNTING_POLICY_CHANGE_PRESENT",
+      "areas": [
+        "ACCOUNTING_CHANGES_EVENTS"
+      ],
+      "engine_scope": "SUPPORTED"
+    },
+    {
+      "flag": "ESTIMATE_CHANGE_PRESENT",
+      "areas": [
+        "ACCOUNTING_CHANGES_EVENTS"
+      ],
+      "engine_scope": "SUPPORTED"
+    },
+    {
+      "flag": "ERROR_CORRECTION_PRESENT",
+      "areas": [
+        "ACCOUNTING_CHANGES_EVENTS"
+      ],
+      "engine_scope": "SUPPORTED"
+    },
+    {
+      "flag": "POST_BALANCE_SHEET_EVENTS_PRESENT",
+      "areas": [
+        "ACCOUNTING_CHANGES_EVENTS"
+      ],
+      "engine_scope": "SUPPORTED"
+    },
+    {
+      "flag": "INTERIM_FINANCIAL_STATEMENTS",
+      "areas": [
+        "INTERIM_REPORTING"
+      ],
+      "engine_scope": "SUPPORTED"
+    },
+    {
+      "flag": "DERIVATIVES_PRESENT",
+      "areas": [
+        "DERIVATIVES"
+      ],
+      "engine_scope": "SUPPORTED"
+    },
+    {
+      "flag": "FIRST_TIME_OIC_ADOPTION",
+      "areas": [
+        "FIRST_TIME_OIC"
+      ],
+      "engine_scope": "SUPPORTED"
+    },
+    {
+      "flag": "PROVISIONS_OR_LITIGATION_PRESENT",
+      "areas": [
+        "PROVISIONS"
+      ],
+      "engine_scope": "SUPPORTED"
+    }
+  ]
+}

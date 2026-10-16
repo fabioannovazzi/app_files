@@ -85,6 +85,11 @@ from xbrl_case import (
 __all__ = ["CaseService", "LONG_RUNNING_OPERATIONS"]
 
 OPERATION_CAPABILITIES = {
+    "propose_area_review": "PREPARE",
+    "confirm_area_review": "OVERRIDE",
+    "propose_qualitative_evidence": "PREPARE",
+    "review_qualitative_evidence": "OVERRIDE",
+    "record_area_controls": "OVERRIDE",
     "start_closing_workflow": "OVERRIDE",
     "propose_closing_adjustment": "PREPARE",
     "propose_closing_review": "PREPARE",
@@ -1366,6 +1371,48 @@ class CaseService:
         authorize(context, "READ", case)
         return build_review_view(case, view, offset=offset, limit=limit)
 
+    def review_workbook(
+        self, context: RequestContext, case_id: str, revision: str
+    ) -> dict[str, Any]:
+        """Persist a private revision-bound document and return it only to the UI."""
+        import base64
+        import hashlib
+
+        from review_workbook import build_review_workbook
+
+        case_dir = self._case_dir(context.tenant_id, case_id)
+        with self._case_lock(case_dir):
+            case = load_case(case_dir)
+            authorize(context, "READ", case)
+            if revision != case["revision_id"]:
+                raise ValueError(
+                    "Stale revision: reload before exporting the review document"
+                )
+            content = build_review_workbook(case)
+            if len(content) > 4_000_000:
+                raise ValueError("Review workbook exceeds the bounded UI download size")
+            digest = hashlib.sha256(content).hexdigest()
+            destination = case_dir / "review-workbooks"
+            if destination.is_symlink():
+                raise ValueError("Workbook destination must not be a symbolic link")
+            destination.mkdir(exist_ok=True)
+            target = destination / (digest + ".xlsx")
+            if target.is_symlink():
+                raise ValueError("Workbook artifact must not be a symbolic link")
+            if not target.exists():
+                with target.open("xb") as stream:
+                    stream.write(content)
+            if hashlib.sha256(target.read_bytes()).hexdigest() != digest:
+                raise ValueError("Workbook artifact checksum mismatch")
+            return {
+                "file_name": "Bilancio-revisione-" + revision + ".xlsx",
+                "revision_id": revision,
+                "sha256": digest,
+                "size_bytes": len(content),
+                "resource_id": "xbrl-review-workbook://" + case_id + "/" + digest,
+                "content_base64": base64.b64encode(content).decode("ascii"),
+            }
+
     def workspace_snapshot(
         self,
         context: RequestContext,
@@ -1386,6 +1433,12 @@ class CaseService:
         authorize(context, "READ", case)
         if expected_revision and case["revision_id"] != expected_revision:
             raise ValueError("Stale revision: reload the case before continuing")
+        if view == "AREA_WORKBOOK":
+            result = build_workspace_snapshot(case, "AREA_DASHBOARD", None, 0, 1)
+            result["workbook"] = self.review_workbook(
+                context, case_id, case["revision_id"]
+            )
+            return result
         return build_workspace_snapshot(case, view, issue_id, offset, limit, source_ref)
 
     def _dispatch(
@@ -1397,6 +1450,23 @@ class CaseService:
         actor: str,
         revision: str,
     ) -> dict[str, Any]:
+        from area_review import (
+            confirm_area_review,
+            propose_area_review,
+            propose_qualitative_evidence,
+            record_area_controls,
+            review_qualitative_evidence,
+        )
+
+        area_operations = {
+            "propose_area_review": propose_area_review,
+            "confirm_area_review": confirm_area_review,
+            "propose_qualitative_evidence": propose_qualitative_evidence,
+            "review_qualitative_evidence": review_qualitative_evidence,
+            "record_area_controls": record_area_controls,
+        }
+        if operation in area_operations:
+            return area_operations[operation](case, payload, actor, revision)
         closing_operations = {
             "start_closing_workflow": start_closing_workflow,
             "propose_closing_adjustment": propose_closing_adjustment,
@@ -1445,6 +1515,13 @@ class CaseService:
             updated = ingest_prior_xbrl(case, source, actor, revision)
             return self._record_input_scan(updated, receipt, actor)
         if operation == "attach_supporting_document":
+            old_document = payload.get("replaces_document_id")
+            if old_document:
+                from area_review import _current_document, _docs
+
+                _docs(case, [old_document])
+                if _current_document(case, old_document) != old_document:
+                    raise ValueError("Replace the current document revision only")
             source, receipt = self._controlled_input(payload["source_path"])
             updated = attach_supporting_document(
                 case,
@@ -1454,6 +1531,16 @@ class CaseService:
                 actor,
                 revision,
             )
+            if old_document:
+                from area_review import record_review_source_replacement
+
+                record_review_source_replacement(
+                    updated,
+                    old_document,
+                    updated["source_documents"][-1]["document_id"],
+                    actor,
+                    updated["revision_id"],
+                )
             return self._record_input_scan(updated, receipt, actor)
         if operation == "confirm_parser":
             return confirm_parser(case, str(payload["convention"]), actor, revision)

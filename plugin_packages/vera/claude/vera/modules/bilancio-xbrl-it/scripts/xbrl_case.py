@@ -839,6 +839,9 @@ def load_case(case_dir: Path) -> dict[str, Any]:
     from closing_workflow import verify_closing_register
 
     verify_closing_register(payload)
+    from area_review import verify_area_review
+
+    verify_area_review(payload)
     return payload
 
 
@@ -1705,14 +1708,16 @@ def attach_supporting_document(
         "attached_at": _now(),
     }
     closing_extract = None
-    if case.get("closing_workflow"):
-        from closing_workflow import closing_source_extract
+    from closing_workflow import closing_source_extract
 
-        closing_extract = closing_source_extract(resolved, document)
+    closing_extract = closing_source_extract(resolved, document)
     _mutate(case, actor, "supporting_evidence_attached")
     case.setdefault("source_documents", []).append(document)
     if closing_extract is not None:
-        case["closing_workflow"]["source_extracts"].append(closing_extract)
+        if case.get("closing_workflow"):
+            case["closing_workflow"]["source_extracts"].append(closing_extract)
+        else:
+            case.setdefault("review_source_extracts", []).append(closing_extract)
     case["validation"] = None
     _record_event(case, "document_uploaded", actor, {"document_id": document_id})
     _record_evidence_attached(case, actor, document)
@@ -6015,7 +6020,11 @@ def validate_case(case: dict[str, Any]) -> dict[str, Any]:
     def add(rule_id: str, severity: str, message: str) -> None:
         issues.append(_issue(rule_id, severity, message, len(issues) + 1))
 
+    from area_review import review_validation_issues
     from closing_workflow import closing_validation_issues
+
+    for review_issue in review_validation_issues(case):
+        add(review_issue["rule_id"], "BLOCKER", review_issue["message"])
 
     for closing_issue in closing_validation_issues(case):
         add(closing_issue["rule_id"], "BLOCKER", closing_issue["message"])
