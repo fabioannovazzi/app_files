@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "plugins/vera",
-  "version": "0.1.394",
-  "captured_at": "2026-10-15T17:32:07.823994+00:00",
-  "catalogue_fingerprint": "7f25a49bd0cf918f1bd57d9c50bbf2a167299be022cf07842338aea389277c8b",
-  "manifest_sha256": "3d36841834f13144b85d2c98ca42f432e10b968a76c3130d9c23f04c749bb84a",
+  "version": "0.1.395",
+  "captured_at": "2026-10-16T22:22:15.454894+00:00",
+  "catalogue_fingerprint": "f6092ccdfe9d186ab17a91ff632e8fe192d9b3737ffe1984ab3b428a638d80d1",
+  "manifest_sha256": "73ea071ba6a6e4f475660468b5224614af8f42469d2a0464cbb83aec88361b91",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -44,7 +44,7 @@
     {
       "function_id": "bilancio-oic",
       "skill_path": "skills/bilancio-oic/SKILL.md",
-      "sha256": "8fef8a7f1bc3a20e585acc66c263c0dfa36b6dbc43c1c4a9e88335de89579e66"
+      "sha256": "90dbb156ae6374b1b9d2741865e241c72c3c146b822800049068520818d1d7cd"
     },
     {
       "function_id": "browser-automation",
