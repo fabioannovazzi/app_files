@@ -60,6 +60,11 @@
       "sha256": "70dd926e175ff1c50874cbd6b856eabfdeab9308d2e27674a9c4d46cb493084b"
     },
     {
+      "path": "modules/bilancio-xbrl-it/rulepacks/it/review-catalogue-2026.1.json",
+      "repository_path": "plugins/bilancio-xbrl-it/rulepacks/it/review-catalogue-2026.1.json",
+      "sha256": "77ec90cef5ca4a6c91fc30c625e99783a1ccb8b6a53e2fadcd8254f975c673ec"
+    },
+    {
       "path": "modules/bilancio-xbrl-it/rulepacks/it/schedule-taxonomy-2026.1.json",
       "repository_path": "plugins/bilancio-xbrl-it/rulepacks/it/schedule-taxonomy-2026.1.json",
       "sha256": "030f62d38592dc7cd4a497c2695bed271246bc3aa149806c24ce1361397aa599"
@@ -95,6 +100,11 @@
       "sha256": "f9324e3158dd90e6f09d5d99a4aa095762538b3e585d006703caaeced3e7515e"
     },
     {
+      "path": "modules/bilancio-xbrl-it/scripts/area_review.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/area_review.py",
+      "sha256": "419f2e51d4ddbfc0f579be650f17e61b213518eea3519606e25ad0cd168388c5"
+    },
+    {
       "path": "modules/bilancio-xbrl-it/scripts/artifact_delivery.py",
       "repository_path": "plugins/bilancio-xbrl-it/scripts/artifact_delivery.py",
       "sha256": "ca6fc5a66f8e1dc1c2a9a28cd8e46865b1fdf1447030161b6839a5af956a946f"
@@ -122,7 +132,7 @@
     {
       "path": "modules/bilancio-xbrl-it/scripts/case_service.py",
       "repository_path": "plugins/bilancio-xbrl-it/scripts/case_service.py",
-      "sha256": "64106356ed0e17b4fb3f8c9ffffa1c3bea4754543294cc9dadc54a069254fc29"
+      "sha256": "4c8e74264fbbf68671d988c16f5001bbc93e1b8170b86d1f421b21043aeadf48"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/check_dependencies.py",
@@ -142,7 +152,7 @@
     {
       "path": "modules/bilancio-xbrl-it/scripts/closing_workflow.py",
       "repository_path": "plugins/bilancio-xbrl-it/scripts/closing_workflow.py",
-      "sha256": "7015ca5e15297ea34c9c06688fb6884158f74ca4a0b498834bdee9e6e8b2db9b"
+      "sha256": "789ffdb51f933122cba8330dee0c57b3c047b6faf7da2108bddfdf7c89dbe71d"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/disclosure_engine.py",
@@ -172,7 +182,7 @@
     {
       "path": "modules/bilancio-xbrl-it/scripts/intelligence_contract.py",
       "repository_path": "plugins/bilancio-xbrl-it/scripts/intelligence_contract.py",
-      "sha256": "c6b798f80f65a08c06bd1ca48d79c7aab11d8d796e2a70caca57661880d3fe06"
+      "sha256": "b11314d5a6c410acf5c540a7c0c32bf02c724a42d9c13e7541c9a0f0052d83e5"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/intelligence_runner.py",
@@ -207,7 +217,12 @@
     {
       "path": "modules/bilancio-xbrl-it/scripts/review_views.py",
       "repository_path": "plugins/bilancio-xbrl-it/scripts/review_views.py",
-      "sha256": "a7d4b6462804b4a5924bca17b104d7b8aaf4a75ac7e7300d92abae158f564c22"
+      "sha256": "9a9ede565eba88dd06ed4a624bed224b658b95297c99d182f679c45f932a1f23"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/review_workbook.py",
+      "repository_path": "plugins/bilancio-xbrl-it/scripts/review_workbook.py",
+      "sha256": "dd1274e29c3c03c034dc03b967d0f627054cb9a486beb4b525c0430c5f072d18"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/run_background_job.py",
@@ -257,17 +272,17 @@
     {
       "path": "modules/bilancio-xbrl-it/scripts/workspace_contract.py",
       "repository_path": "plugins/bilancio-xbrl-it/scripts/workspace_contract.py",
-      "sha256": "eadef6e7f231ec611d86edc1ec41a88a6408bed5e8d1cb98d88d8fdc6075d293"
+      "sha256": "8a04cec6aff9864064d60ffa56d960d3e4c41dfaf5d2ea50afb75b654bbbb295"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/xbrl_case.py",
       "repository_path": "plugins/bilancio-xbrl-it/scripts/xbrl_case.py",
-      "sha256": "2b7472a113a0e583c8c92978536b3e96e50bf64d065486b601e67c033587e3d9"
+      "sha256": "349e13650eb7fb95a024412139782dded5be4aa66399a89b3530de6c442b6dc6"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/SKILL.md",
       "repository_path": "plugins/bilancio-xbrl-it/skills/bilancio-oic/SKILL.md",
-      "sha256": "428c398bd078272fdbf0dd775f7dd0381e3aa9eae8603538dab233502a250226"
+      "sha256": "f1919a253b9c55bde1e4eef843dac7eaeca8d9d5abbe7f28815f24932238a93e"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/agents/openai.yaml",
@@ -278,6 +293,11 @@
       "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/acceptance-matrix.md",
       "repository_path": "plugins/bilancio-xbrl-it/skills/bilancio-oic/references/acceptance-matrix.md",
       "sha256": "a234e06c2dc5535a99811f17dfdf6b2c9a48da5d566221e096e98779bd9a5104"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/area-review.md",
+      "repository_path": "plugins/bilancio-xbrl-it/skills/bilancio-oic/references/area-review.md",
+      "sha256": "b86ef5699ee2b4535fd0208341aee0d0f43f2c010efa0856cf998569d37a99d3"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/closing-workflow.md",
@@ -297,7 +317,7 @@
     {
       "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/implementation-status.md",
       "repository_path": "plugins/bilancio-xbrl-it/skills/bilancio-oic/references/implementation-status.md",
-      "sha256": "59966e5f68739122f0eab283dd21fcd5f368d228fd88df2310fc935d1e5161a7"
+      "sha256": "245180e0be649513736c4d17371f4df4fe0c9086d75b74ca6e2f16a8de4f2065"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/references/performance-evidence.md",
@@ -347,7 +367,7 @@
     {
       "path": "skills/bilancio-oic/SKILL.md",
       "repository_path": "plugins/vera/skills/bilancio-oic/SKILL.md",
-      "sha256": "8fef8a7f1bc3a20e585acc66c263c0dfa36b6dbc43c1c4a9e88335de89579e66"
+      "sha256": "90dbb156ae6374b1b9d2741865e241c72c3c146b822800049068520818d1d7cd"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

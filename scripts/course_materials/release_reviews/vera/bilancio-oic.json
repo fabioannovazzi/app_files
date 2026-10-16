@@ -70,7 +70,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "f66fd8872e5fffc34b2ccbe84bfff666c015fe9f70fcc302dc7d428bbaf2b495",
+  "course_sha256": "8a0e6278978ae0fe8541acde4c56bcf9ae154c672e6043c51aa630aaa74f1374",
   "discovery_source_refresh": {
     "reviewed_by": "Codex /root",
     "reviewed_at": "2026-10-01T11:44:13.108677+00:00",
@@ -573,5 +573,16 @@
     "content_review": "Read both complete authored Bilancio lessons. Added an explicit Italian/English scope statement that these lessons start from supplied closing balances and do not exercise the separate Alfa adjustment/reconsideration case. Other lesson inputs, narrative, checkpoints and historical artifact reviews remain unchanged.",
     "execution_requirement": "Rerun all four Italian/English demonstration/practice identities against this exact compiled course digest. Alfa v3 runs independently through CaseService.",
     "limits": "No fresh learner, voice, installed-host, visual or professional acceptance is asserted by a source fingerprint refresh."
+  },
+  "area_review_source_binding_20261017": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "reviewed_at": "2026-10-16T23:14:23.599820+00:00",
+    "previous_course_sha256": "f66fd8872e5fffc34b2ccbe84bfff666c015fe9f70fcc302dc7d428bbaf2b495",
+    "current_course_sha256": "8a0e6278978ae0fe8541acde4c56bcf9ae154c672e6043c51aa630aaa74f1374",
+    "authored_content_unchanged": true,
+    "content_review": "Complete compiled-course comparison against origin/main proves equality of every field except sources, including both Italian/English lessons, supplied fictional inputs, checkpoints, practice, timing and execution definitions. Existing editorial judgments, dates and historical artifact reviews are preserved.",
+    "source_review": "Reviewed the additive Italian area workpapers, period-bound OIC review index, quoted document interpretation, explicit professional plan/control conclusions, proportionate grouping, selective dependency reopening, existing-panel navigation and private Excel review export. The lesson retains its supplied-closing-balances scope; the new area-review extension is tested separately and is not silently taught or approved by the retained lesson.",
+    "execution_evidence": "CI run 38975780463 job 117224759464 passed the native teaching stage, all 481 Bilancio regressions and subsequent area-review/closing/workspace quality gates before the stale editorial source-binding check. Final CI must execute both Italian/English demo and practice identities against the unchanged current course digest.",
+    "limits": "Source compatibility refresh only. No new learner, voice, installed-host, visual or professional acceptance is asserted."
   }
 }

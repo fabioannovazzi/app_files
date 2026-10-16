@@ -252,6 +252,35 @@ def closing_source_extract(source: Path, document: Mapping[str, Any]) -> dict[st
         "status": "REQUIRES_QUALIFIED_EXTRACTION",
         "untrusted_content": True,
     }
+    if source.suffix.lower() == ".pdf":
+        import fitz
+
+        content = source.read_bytes()
+        if hashlib.sha256(content).hexdigest() != document["sha256"]:
+            raise ValueError("Review PDF changed during evidence extraction")
+        try:
+            with fitz.open(stream=content, filetype="pdf") as pdf:
+                if pdf.is_encrypted or len(pdf) > 200:
+                    return record
+                pages = [page.get_text() for page in pdf]
+        except (fitz.FileDataError, RuntimeError):
+            return record
+        # Never present an incomplete or image-only document as extracted text.
+        if not pages or any(not page.strip() for page in pages):
+            return record
+        text = "\n".join(pages)
+        if len(text.encode()) > 65536:
+            return record
+        return {
+            **record,
+            "status": "EXTRACTED_UNREVIEWED",
+            "text": text,
+            "text_sha256": _hash(text),
+            "locator": "PDF pages in source order",
+            "pages": [
+                {"page": i + 1, "characters": len(t)} for i, t in enumerate(pages)
+            ],
+        }
     if (
         source.suffix.lower() not in {".txt", ".md", ".csv", ".json"}
         or source.stat().st_size > 65536
@@ -590,6 +619,24 @@ def closing_status(case: Mapping[str, Any]) -> dict[str, Any]:
         for proposal in workflow["proposals"]
         for ref in proposal["evidence"]
     }
+    area_data = case.get("area_review") or {}
+    for event in area_data.get("events", []):
+        payload = event["payload"]
+        if event["kind"] == "PLAN":
+            proposal = next(
+                p for p in area_data["proposals"] if p["id"] == payload["proposal_id"]
+            )
+            covered_documents.update(proposal["evidence"])
+            covered_documents.update(
+                ref for a in proposal["content"]["areas"] for ref in a["evidence_refs"]
+            )
+        elif event["kind"] == "QUALITATIVE":
+            proposal = next(
+                p for p in area_data["qualitative"] if p["id"] == payload["proposal_id"]
+            )
+            covered_documents.add(proposal["document_id"])
+        elif event["kind"] == "CONTROL":
+            covered_documents.update(payload["evidence_refs"])
     unreviewed_sources = (
         [
             d["document_id"]

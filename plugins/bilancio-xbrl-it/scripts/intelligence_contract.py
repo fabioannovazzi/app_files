@@ -821,6 +821,26 @@ def build_intelligence_packet(
         base["context_scope"]["available"]["closing_dependencies"] = len(
             closing["dependencies"]
         )
+    if selected_task is IntelligenceTask.WORKFLOW_GUIDANCE and case.get("area_review"):
+        from area_review import build_area_review
+
+        review = build_area_review(case)
+        base["reviewed_context"]["area_review"] = {
+            "status": review["status"],
+            "profile": review["profile"],
+            "catalogue_id": review["catalogue_id"],
+            "oic_rule_pack": review["oic_rule_pack"],
+            "unassigned_account_count": len(review["unassigned_accounts"]),
+            "controls": [
+                {k: c[k] for k in ("id", "area_id", "status", "objective")}
+                for c in review["controls"][:MAX_WORKFLOW_ITEMS]
+            ],
+            "policy": "Professional conclusions remain unconfirmed; use exact paginated review views and source excerpts for evidence.",
+        }
+        base["context_scope"]["available"]["area_controls"] = len(review["controls"])
+        base["context_scope"]["available"]["area_workpapers"] = len(
+            review["workpapers"]
+        )
     return _finalize_packet(base, subject_ids=subject_ids)
 
 

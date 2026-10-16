@@ -444,6 +444,13 @@ jobs:
           python -m isort --check-only plugins/bilancio-xbrl-it/scripts/accounts_preview.py plugins/bilancio-xbrl-it/scripts/accounts_preview_text.py plugins/bilancio-xbrl-it/scripts/xbrl_case.py tests/plugins/test_bilancio_preview_presentation.py tests/plugins/test_bilancio_xbrl_it_plugin.py
           python -m mypy --follow-imports=skip plugins/bilancio-xbrl-it/scripts/accounts_preview.py plugins/bilancio-xbrl-it/scripts/accounts_preview_text.py plugins/bilancio-xbrl-it/scripts/xbrl_case.py
           python -m bandit -q plugins/bilancio-xbrl-it/scripts/accounts_preview.py plugins/bilancio-xbrl-it/scripts/accounts_preview_text.py plugins/bilancio-xbrl-it/scripts/xbrl_case.py
+      - name: Check living area workpapers and source-bound review
+        run: |
+          python -m black --check plugins/bilancio-xbrl-it/scripts/area_review.py plugins/bilancio-xbrl-it/scripts/review_workbook.py tests/plugins/test_bilancio_area_review.py
+          python -m isort --check-only plugins/bilancio-xbrl-it/scripts/area_review.py plugins/bilancio-xbrl-it/scripts/review_workbook.py tests/plugins/test_bilancio_area_review.py
+          python -m mypy --follow-imports=skip plugins/bilancio-xbrl-it/scripts/area_review.py plugins/bilancio-xbrl-it/scripts/review_workbook.py
+          python -m bandit -ll -q plugins/bilancio-xbrl-it/scripts/area_review.py plugins/bilancio-xbrl-it/scripts/review_workbook.py
+          node --check plugins/bilancio-xbrl-it/ui/area-review.js
       # Closing-account arithmetic is mechanical; interpretation remains a
       # model proposal followed by a separately authorized reviewer decision.
       - name: Check reviewed closing-account implementation

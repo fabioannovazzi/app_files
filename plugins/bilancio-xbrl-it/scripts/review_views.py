@@ -20,6 +20,8 @@ ACTIVE_QUESTION_STATES = frozenset(
 NEXT_REVIEW_ACTIONS = frozenset(
     {
         "STOP_UNSUPPORTED",
+        "REVIEW_AREA_PLAN",
+        "REVIEW_AREA_CONTROLS",
         "REVIEW_CLOSING_FASCICOLO",
         "REVIEW_CLOSING_SCREENING",
         "REVIEW_CLOSING_RECONSIDERATION",
@@ -51,6 +53,12 @@ NEXT_REVIEW_ACTIONS = frozenset(
 
 REVIEW_VIEWS = frozenset(
     {
+        "REVIEW_SOURCES",
+        "AREA_DASHBOARD",
+        "AREA_WORKPAPERS",
+        "OIC_CATALOGUE",
+        "AREA_CONTROLS",
+        "QUALITATIVE_EVIDENCE",
         "CASE_DASHBOARD",
         "CLOSING_OVERVIEW",
         "CLOSING_DECISIONS",
@@ -126,6 +134,17 @@ def next_review_action(case: Mapping[str, Any]) -> str:
         return "DETERMINE_FORMS"
     if not case.get("selected_form"):
         return "SELECT_FORM"
+    area_review = None
+    if case.get("area_review"):
+        from area_review import build_area_review
+
+        area_review = build_area_review(case)
+        if (
+            area_review["status"] == "PLAN_REQUIRED"
+            or not area_review.get("registry_current")
+            or area_review["unassigned_accounts"]
+        ):
+            return "REVIEW_AREA_PLAN"
     entries = trial_balance.get("entries", [])
     if (
         case.get("statutory_presentation_required", True)
@@ -137,6 +156,8 @@ def next_review_action(case: Mapping[str, Any]) -> str:
         return "REVIEW_MAPPINGS"
     if not case.get("statements"):
         return "COMPUTE_STATEMENTS"
+    if area_review and area_review["status"] != "REVIEWED":
+        return "REVIEW_AREA_CONTROLS"
     if case.get("closing_workflow") and not closing["closure_allowed"]:
         return "REVIEW_CLOSING_CONTROLS"
     if case.get("statutory_presentation_required", True):
@@ -267,6 +288,123 @@ def build_review_view(
     selected = view.upper()
     if selected not in REVIEW_VIEWS:
         raise ValueError(f"Unsupported Bilancio review view: {view}")
+    if selected == "REVIEW_SOURCES":
+        extracts = [
+            *(case.get("closing_workflow") or {}).get("source_extracts", []),
+            *case.get("review_source_extracts", []),
+        ]
+        rows = [
+            {
+                "document_id": e["document_id"],
+                "source_sha256": e["source_sha256"],
+                "status": e["status"],
+                "start": start,
+                "excerpt": e.get("text", "")[start : start + 4000],
+                "untrusted_content": True,
+            }
+            for e in extracts
+            for start in range(0, max(1, len(e.get("text", ""))), 4000)
+        ]
+        page = _page(rows, offset, limit)
+        import json
+
+        if len(json.dumps(page).encode()) > 65536:
+            raise ValueError("Select fewer evidence excerpts to stay within 64 KiB")
+        return {**_base(case, selected), "records": page}
+    if selected.startswith("AREA_") or selected in {
+        "OIC_CATALOGUE",
+        "QUALITATIVE_EVIDENCE",
+    }:
+        from area_review import build_area_review
+
+        review = build_area_review(case)
+        collection = {
+            "AREA_DASHBOARD": "workpapers",
+            "AREA_WORKPAPERS": "workpapers",
+            "OIC_CATALOGUE": "standards",
+            "AREA_CONTROLS": "controls",
+            "QUALITATIVE_EVIDENCE": "qualitative",
+        }[selected]
+        rows = review[collection]
+        if selected == "AREA_WORKPAPERS":
+            rows = [
+                {"area_id": a["area_id"], "record_kind": kind, "record": record}
+                for a in rows
+                for kind in (
+                    "accounts",
+                    "mappings",
+                    "links",
+                    "reconciliations",
+                    "facts",
+                    "schedules",
+                    "questions",
+                    "notes",
+                    "open_issues",
+                    "documents",
+                    "controls",
+                )
+                for record in a[kind]
+            ]
+        if selected == "AREA_DASHBOARD":
+            rows = [
+                {
+                    k: a[k]
+                    for k in (
+                        "area_id",
+                        "title",
+                        "status",
+                        "reason",
+                        "basis_sha256",
+                        "documents",
+                        "missing_schedule_types",
+                    )
+                }
+                | {
+                    "account_count": len(a["accounts"]),
+                    "control_count": len(a["controls"]),
+                    "open_controls": sum(
+                        c["status"] not in {"PASS", "NOT_APPLICABLE"}
+                        for c in a["controls"]
+                    ),
+                }
+                for a in rows
+            ]
+        if selected == "AREA_DASHBOARD":
+            rows.sort(
+                key=lambda row: (
+                    {
+                        "REVIEW_REQUIRED": 0,
+                        "UNDETERMINABLE": 0,
+                        "OUT_OF_SCOPE": 0,
+                        "ACTIVE": 1,
+                        "EXCLUDED": 2,
+                    }[row["status"]],
+                    row["title"],
+                )
+            )
+        result = {
+            **_base(case, selected),
+            **{
+                k: review[k]
+                for k in (
+                    "status",
+                    "profile",
+                    "catalogue_id",
+                    "catalogue_sha256",
+                    "oic_rule_pack",
+                    "oic_rule_pack_checksum",
+                    "coverage",
+                    "unassigned_accounts",
+                )
+            },
+            "records": _page(rows, offset, limit),
+        }
+        import json
+
+        if len(json.dumps(result).encode()) > 65536:
+            raise ValueError("Select fewer area review records to stay within 64 KiB")
+        return result
+
     if selected == "CASE_DASHBOARD":
         return _dashboard(case)
     if selected.startswith("CLOSING_"):

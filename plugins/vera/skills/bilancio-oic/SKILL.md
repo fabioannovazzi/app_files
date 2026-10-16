@@ -36,6 +36,13 @@ fascicolo e screening rivisti, proposte di rettifica, decisioni professionali,
 confronto esatto del nuovo bilancio di verifica e riesame delle verifiche
 interessate. Nessuna registrazione contabile o richiesta al cliente è automatica.
 
+Per carte di lavoro per area, applicabilità ricavata dai documenti, controlli OIC,
+percorso proporzionato, dashboard ed Excel di revisione, segui anche
+`skills/bilancio-oic/references/area-review.md` nel modulo risolto. Il pannello
+esistente apre le aree e i documenti registrati; fonti reimportate e controlli
+riaperti conservano le decisioni precedenti. I giudizi richiedono conferma
+professionale separata.
+
 For an existing Bilancio case, use `vera_workspace_open` when callable and the
 exact case and Studio Archive run have trusted operator bindings. Read
 `../vera/references/native-workspace.md` before the handoff. The panel inspects

@@ -10,9 +10,11 @@ Later host-specific instructions in this reference cannot override this rule.
 
 # Vera — Geneva localization assessment and implementation
 
-Updated 2026-10-14 (catalogue integration only; prior professional assessment retained). Target: CH-GE; example user: a generalist fiduciary serving SMEs. French output and CHF are explicit case settings, not selectors of governing law.
+Updated 2026-10-17 (catalogue integration only; prior professional assessment retained). Target: CH-GE; example user: a generalist fiduciary serving SMEs. French output and CHF are explicit case settings, not selectors of governing law.
 
 The current inventory covers all 55 skill entrypoints, including internal helpers and development prototypes. All prior professional judgments are retained; catalogue coverage does not establish target-country acceptance.
+
+The 0.1.395 catalogue refresh records the manifest and Italian Bilancio OIC area-review entrypoint change. The Italian extension does not qualify the new controls, catalogue or Excel review path for Swiss accounting. Existing Geneva dispositions and the qualified Swiss draft-adapter scope remain unchanged.
 
 The release adds bounded adapters and instructions, not a blanket claim that every fiduciary mandate is supported. Original evidence and professional decisions remain necessary. No real Geneva client workflow has been accepted.
 

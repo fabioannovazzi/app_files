@@ -89,6 +89,14 @@ Reject listed, IFRS, regulated, insurance/banking, consolidated-note,
 sector-taxonomy, ETS, public-sector, and final-liquidation cases in the MVP.
 Missing scope flags are not evidence of eligibility.
 
+## Area workpapers and review dashboard
+
+After the closing path, read `references/area-review.md` completely and use its
+reviewed account populations, source-linked applicability, period-bound OIC
+review prompts, proportionate workpapers and existing native-panel Excel export.
+Proposals require separate professional confirmation; unresolved or stale area
+reviews remain blocking.
+
 ## Run workflow
 
 For preparation of the closing accounts, read `references/closing-workflow.md`

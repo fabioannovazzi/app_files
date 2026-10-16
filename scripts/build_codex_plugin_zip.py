@@ -1210,11 +1210,21 @@ def _project_vera_codex_privacy(
         if service_id == "native-workspace":
             original = "scripts/serve_review_workbench.py"
             installed = "scripts/serve_review_workbench.py"
-            if payload.get("governed_repository_paths") != [original]:
+            repository_paths = payload.get("governed_repository_paths", [])
+            if repository_paths.count(original) != 1 or len(repository_paths) != len(
+                set(repository_paths)
+            ):
                 raise ValueError("Native hosted/local server governance changed")
             if entries[prefix + installed] != (source_root / original).read_bytes():
                 raise ValueError("Injected review server differs from reviewed source")
             mapping = {original: [installed]}
+            # Additional native assets must have verified, byte-identical
+            # projections into a registered component; never drop governance.
+            for path in repository_paths:
+                if path != original:
+                    mapping[path] = _vera_repository_projections(
+                        path, entries, prefix, workstreams, source_root, vendor_sources
+                    )
         paths = list(payload["governed_paths"])
         for values in mapping.values():
             paths.extend(values)

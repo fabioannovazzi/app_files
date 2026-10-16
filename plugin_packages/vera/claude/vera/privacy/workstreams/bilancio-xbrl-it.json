@@ -81,6 +81,15 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "living-area-review",
+        "purpose": "Interpret selected documents and review account populations, applicability and area workpapers",
+        "content": "Model-facing REVIEW_SOURCES rows disclose exact registered source IDs, hashes, character offsets and up to 4,000 characters of untrusted text, with a 64 KiB response ceiling. Complete UTF-8 and every-page text-PDF extraction is bounded to 64 KiB per source; image-only, encrypted, partial or oversized PDF text requires qualified extraction. Paginated area views expose account balances, accepted mapping/fact links, reconciliations, schedule metadata and evidence, questions, note sections, professional prompts, interpretation proposals and their quoted passages, periods, documentary provenance and reviewer decisions. No automatic anonymization or local-only guarantee applies. Native source pages stay in app result metadata unless explicitly requested through the model-facing review service. The revision-bound Excel is generated locally from the same private case, persisted beneath that case and delivered as bounded app-only metadata; no workbook bytes enter the model-visible tool summary. Editing Excel never imports decisions.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -266,13 +275,17 @@
     {
       "id": "closing-review-integrity",
       "control": "The authenticated case service requires reviewer authority for closing decisions and a distinct actor for adjustment approval. Every mutation is revision-bound and idempotent. Closing decisions form a verified append-only hash chain binding actors, roles, evidence hashes, reviewed proposals and screened versions. Replacement accounts cannot become canonical without exact per-account reconciliation and professional screening; suspended controls and open professional issues block existing validation and approval."
+    },
+    {
+      "id": "area-review-dependency-integrity",
+      "control": "Area planning requires exact complete account coverage, registered evidence and separate reviewer confirmation bound to the selected OIC checksum and the retained proposal hash. Exact source quotes and periods are checked before accepting interpretation proposals; prior-only sources cannot confirm current applicability. Source revisions and per-area dependency hashes reopen affected controls while retaining a verified append-only review chain. Model-facing pages refuse payloads above 64 KiB; native source views return exact bounded excerpts without arbitrary path reads. Private workbook output rejects stale revisions, symlink destinations, large cells and oversized downloads; all untrusted Excel cells are literal strings rather than formulas or links."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-15",
+    "reviewed_at": "2026-10-16",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "68276b944f41638325819822fd6af091388a144b086a18e2ac6d1d4dce19d6b4"
+    "source_fingerprint": "762e7746064a338dca004fb1f5b18b1578eff88dab244fcd919f615f34665976"
   },
   "governed_shared_paths": [
     "skills/mparanza-vera/references/connected-studio-knowledge.md"

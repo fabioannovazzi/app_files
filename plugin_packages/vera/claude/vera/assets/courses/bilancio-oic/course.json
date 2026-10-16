@@ -53,6 +53,10 @@
       "sha256": "70dd926e175ff1c50874cbd6b856eabfdeab9308d2e27674a9c4d46cb493084b"
     },
     {
+      "path": "modules/bilancio-xbrl-it/rulepacks/it/review-catalogue-2026.1.json",
+      "sha256": "77ec90cef5ca4a6c91fc30c625e99783a1ccb8b6a53e2fadcd8254f975c673ec"
+    },
+    {
       "path": "modules/bilancio-xbrl-it/rulepacks/it/schedule-taxonomy-2026.1.json",
       "sha256": "030f62d38592dc7cd4a497c2695bed271246bc3aa149806c24ce1361397aa599"
     },
@@ -81,6 +85,10 @@
       "sha256": "f9324e3158dd90e6f09d5d99a4aa095762538b3e585d006703caaeced3e7515e"
     },
     {
+      "path": "modules/bilancio-xbrl-it/scripts/area_review.py",
+      "sha256": "419f2e51d4ddbfc0f579be650f17e61b213518eea3519606e25ad0cd168388c5"
+    },
+    {
       "path": "modules/bilancio-xbrl-it/scripts/artifact_delivery.py",
       "sha256": "ca6fc5a66f8e1dc1c2a9a28cd8e46865b1fdf1447030161b6839a5af956a946f"
     },
@@ -102,7 +110,7 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/case_service.py",
-      "sha256": "64106356ed0e17b4fb3f8c9ffffa1c3bea4754543294cc9dadc54a069254fc29"
+      "sha256": "4c8e74264fbbf68671d988c16f5001bbc93e1b8170b86d1f421b21043aeadf48"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/check_dependencies.py",
@@ -118,7 +126,7 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/closing_workflow.py",
-      "sha256": "7015ca5e15297ea34c9c06688fb6884158f74ca4a0b498834bdee9e6e8b2db9b"
+      "sha256": "789ffdb51f933122cba8330dee0c57b3c047b6faf7da2108bddfdf7c89dbe71d"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/disclosure_engine.py",
@@ -142,7 +150,7 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/intelligence_contract.py",
-      "sha256": "c6b798f80f65a08c06bd1ca48d79c7aab11d8d796e2a70caca57661880d3fe06"
+      "sha256": "b11314d5a6c410acf5c540a7c0c32bf02c724a42d9c13e7541c9a0f0052d83e5"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/intelligence_runner.py",
@@ -170,7 +178,11 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/review_views.py",
-      "sha256": "a7d4b6462804b4a5924bca17b104d7b8aaf4a75ac7e7300d92abae158f564c22"
+      "sha256": "9a9ede565eba88dd06ed4a624bed224b658b95297c99d182f679c45f932a1f23"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/scripts/review_workbook.py",
+      "sha256": "dd1274e29c3c03c034dc03b967d0f627054cb9a486beb4b525c0430c5f072d18"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/run_background_job.py",
@@ -210,15 +222,15 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/workspace_contract.py",
-      "sha256": "eadef6e7f231ec611d86edc1ec41a88a6408bed5e8d1cb98d88d8fdc6075d293"
+      "sha256": "8a04cec6aff9864064d60ffa56d960d3e4c41dfaf5d2ea50afb75b654bbbb295"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/xbrl_case.py",
-      "sha256": "2b7472a113a0e583c8c92978536b3e96e50bf64d065486b601e67c033587e3d9"
+      "sha256": "349e13650eb7fb95a024412139782dded5be4aa66399a89b3530de6c442b6dc6"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/SKILL.md",
-      "sha256": "ee3fcb0305dedc99001a814b346dbe65749cca9ea76eca258637bdfc3d3642eb"
+      "sha256": "1d3b142a425db1526a451a250623f299d5204a092def3612ef584bd4d21b97ee"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/agents/openai.yaml",
@@ -227,6 +239,10 @@
     {
       "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/references/acceptance-matrix.md",
       "sha256": "2c6b10efd38a7bd29694819215df0c5bd777bf0739e1a4a5ca3ca96b1921adc8"
+    },
+    {
+      "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/references/area-review.md",
+      "sha256": "e3dff6aabe152a2bb4d9ac98d087bfd35b40b65080b452e743c3ec8eb8927b0d"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/references/closing-workflow.md",
@@ -242,7 +258,7 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/references/implementation-status.md",
-      "sha256": "dff6de75ee9614ed0730151d526d1980d77d8aec8e5bf2797fac3799bc339b44"
+      "sha256": "d1e264e035ca831d0822ba7a7cd9092201fc7b61ca04f3f160c076acf818f7a9"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/references/performance-evidence.md",
@@ -282,7 +298,7 @@
     },
     {
       "path": "skills/mparanza-bilancio-oic/SKILL.md",
-      "sha256": "ad88ef0995cc468ff520b7c44fa88bfb1b32a10a03c1946d97b98cc4023dda4c"
+      "sha256": "85a9b42267797c6c0c769f2c55254b15570a5fb299cf140a71a235d54f4885ab"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -604,5 +620,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "f66fd8872e5fffc34b2ccbe84bfff666c015fe9f70fcc302dc7d428bbaf2b495"
+  "canonical_course_sha256": "8a0e6278978ae0fe8541acde4c56bcf9ae154c672e6043c51aa630aaa74f1374"
 }

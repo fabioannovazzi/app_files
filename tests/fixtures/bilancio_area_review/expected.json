@@ -1,0 +1,14 @@
+{
+  "description": "Synthetic extension of Alfa v3, prepared for engineering acceptance; professional pilot acceptance remains pending.",
+  "account_areas": {
+    "1010": "FIXED_ASSETS", "1015": "FIXED_ASSETS", "1210": "RECEIVABLES_REVENUE", "1250": "TAXES", "1410": "CASH_BANKS", "1420": "CASH_BANKS", "2010": "EQUITY", "2020": "EQUITY", "2030": "EQUITY", "2110": "EMPLOYEES_TFR", "2210": "PAYABLES_FINANCING", "2220": "TAXES", "2230": "EMPLOYEES_TFR", "2310": "PAYABLES_FINANCING", "2410": "ACCRUALS_DEFERRALS", "3010": "RECEIVABLES_REVENUE", "4010": "OTHER_INCOME_EXPENSE", "4020": "OTHER_INCOME_EXPENSE", "4110": "EMPLOYEES_TFR", "4120": "EMPLOYEES_TFR", "4130": "EMPLOYEES_TFR", "4140": "FIXED_ASSETS", "4210": "PAYABLES_FINANCING", "4310": "OTHER_INCOME_EXPENSE", "4910": "TAXES"
+  },
+  "catalogue_standards": 29,
+  "semantic_prompts": 96,
+  "document_only_area": "PROVISIONS",
+  "source_replacement_affected": "PAYABLES_FINANCING",
+  "source_replacement_unaffected": "FIXED_ASSETS",
+  "prior_only_confirmation": "REJECTED",
+  "unassigned_account": "REJECTED",
+  "original_alfa_checks": 131
+}

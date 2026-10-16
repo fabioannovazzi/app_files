@@ -171,7 +171,8 @@
     "skills/studio-document-format/SKILL.md"
   ],
   "governed_repository_paths": [
-    "scripts/serve_review_workbench.py"
+    "scripts/serve_review_workbench.py",
+    "plugins/bilancio-xbrl-it/ui/area-review.js"
   ],
   "runtime_profiles": [
     "openai-codex"
@@ -1050,12 +1051,21 @@
         "mcp/workspace.cjs",
         "ui/practice-reviews.js"
       ]
+    },
+    {
+      "id": "bilancio-area-review-navigation",
+      "implemented_by": [
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "control": "The existing panel bundles the specialist area renderer. It reads current authorized case views, selects exact area or registered source IDs and returns private workbook download bytes in app metadata. It does not save area conclusions or import Excel edits. Source text is displayed as textContent; source-version changes require controlled reimport and refresh.",
+      "on_violation": "Reject unbound case/source references, stale revisions and oversized native projections."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-14",
+    "reviewed_at": "2026-10-16",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "ab9b4582977c72bddeff6e6b50539e55d131b13567bf1c174068fdf35bfeaa7a"
+    "source_fingerprint": "6007e272a3adb26144ffd5204cb4ca23ffa1d2ba807404553f68bdc76b332969"
   }
 }
