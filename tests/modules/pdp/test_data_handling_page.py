@@ -446,6 +446,7 @@ def test_data_handling_page_explains_only_stable_global_boundaries() -> None:
         "local-execution",
         "workflow-boundaries",
         "run-evidence",
+        "workflow-usage",
         "connected-sources",
         "hosted-features",
     }
@@ -496,6 +497,18 @@ def test_data_handling_localizes_vera_run_evidence(
     assert automatic_word in run_evidence["paragraphs"][2].casefold()
     assert pending_phrase in run_evidence["paragraphs"][2].casefold()
     assert "run_example" not in page
+
+
+@pytest.mark.parametrize("language", ("en", "it", "fr", "de", "es"))
+def test_usage_disclosure_is_available_once_in_each_language(language: str) -> None:
+    page = get_data_handling_content(language)
+
+    sections = [
+        section for section in page["sections"] if section["id"] == "workflow-usage"
+    ]
+
+    assert len(sections) == 1
+    assert len(sections[0]["paragraphs"]) == 4
 
 
 def test_data_handling_template_does_not_link_a_synthetic_server_receipt() -> None:

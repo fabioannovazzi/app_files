@@ -67,7 +67,7 @@ def test_zero_retention_page_is_public_when_auth_enabled(
         "Mparanza LLC's products use two processing categories: ordinary plugin "
         "functions and Mparanza LLC-hosted services."
     )
-    assert page["effective_date"] == "July 31, 2026"
+    assert page["effective_date"] == "October 17, 2026"
     assert "OpenAI Codex or Anthropic Cowork" in str(page)
     assert "does not automatically anonymize" in str(page)
     assert "Ordinary Plugin Functions" in str(page)
@@ -121,7 +121,7 @@ def test_terms_page_is_public_when_auth_enabled(
     page = context["page"]
     assert isinstance(page, dict)
     assert page["title"] == "Terms of Service"
-    assert page["effective_date"] == "October 14, 2026"
+    assert page["effective_date"] == "October 17, 2026"
     assert context["active_legal_page"] == "terms"
     terms_text = str(page)
     assert "https://mparanza.com/zero-retention" in terms_text
