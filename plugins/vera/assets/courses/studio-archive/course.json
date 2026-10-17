@@ -75,7 +75,7 @@
     {
       "path": "modules/studio-archive/scripts/studio_archive.py",
       "repository_path": "plugins/studio-archive/scripts/studio_archive.py",
-      "sha256": "d17cd1abe39e1a6eed4cd946b759bac2f0ad243fb950c1bf4a66ea69f6d4e53a"
+      "sha256": "caf83eb965861dd50b680228c81bcb3ee949ff1586e342fab07332aae94669e3"
     },
     {
       "path": "modules/studio-archive/scripts/whatsapp_desktop_guard.mjs",

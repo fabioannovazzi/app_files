@@ -26,7 +26,11 @@ from modules.operational_incidents.contracts import (
     Report,
     ReporterStatus,
 )
-from modules.operational_incidents.evidence import capture_coverage, incident_summary
+from modules.operational_incidents.evidence import (
+    capture_coverage,
+    diagnostic_followup,
+    incident_summary,
+)
 from modules.pdp.postgres_compat import (
     DICT_ROW_FACTORY,
     connect_pdp_database,
@@ -1363,4 +1367,40 @@ class IncidentStore:
                 (incident["incident_id"],),
             ).fetchall()
         ]
+        latest = {row["installation_id"]: row for row in records}
+        incident["diagnostic_requests"] = []
+        for delivery in incident["deliveries"]:
+            if delivery["status"] == "recovered":
+                continue
+            original = latest[delivery["installation_id"]]
+            revision, remedy = self._applicable_remedy(
+                connection,
+                incident["incident_id"],
+                original["report_id"],
+                incident["revision"],
+            )
+            if remedy["kind"] != "diagnostic-request":
+                continue
+            published = next(
+                row["recorded_at"]
+                for row in incident["remedy_revisions"]
+                if row["revision"] == revision
+            )
+            seen = connection.execute(
+                self._sql(
+                    "SELECT MAX(last_seen) AS last_seen FROM operational_reporter_sessions WHERE installation_id=?"
+                ),
+                (original["installation_id"],),
+            ).fetchone()["last_seen"]
+            incident["diagnostic_requests"].append(
+                diagnostic_followup(
+                    report_id=original["report_id"],
+                    installation_id=original["installation_id"],
+                    revision=revision,
+                    published_at=published,
+                    supplements=incident["evidence"],
+                    events=incident["recovery_events"],
+                    last_reporter_seen_at=seen,
+                )
+            )
         return incident

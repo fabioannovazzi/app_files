@@ -267,14 +267,23 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "handled-archive-error-review",
+        "purpose": "Diagnose a handled Archive helper failure through the existing local host review",
+        "content": "Handled Archive, OS, value and SQLite exceptions are logged before the unchanged structured JSON error returns. The full traceback stays in retained local stderr and can enter the selected host model context for review; it can contain dynamic paths or case values and is not automatically anonymized. Source-bound exception classes, errno, package-relative frames and developer-authored templates may be reported centrally. Only reviewed relevant technical facts are supplemented; professional stdout and raw stderr are not forwarded.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
   "review": {
     "basis": "external_boundary_review_of_workflow_source",
-    "reviewed_at": "2026-10-15",
+    "reviewed_at": "2026-10-17",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "be01df4fc72f0c42e24508631d072ea36cc369c8c9e6fe08099bb29e98ce56dc"
+    "source_fingerprint": "0880c3cf459db4afede89ed74d7a5db1a35dfcf3c9df390820386c67059b10a9"
   },
   "role": "workflow",
   "runtime_profiles": [

@@ -65,6 +65,45 @@ success. No central process reads the user's professional files.
    from launcher and native-broker observations. A saved OAuth connection,
    task-local reporter, native app profile and native host are different units.
 
+## Verify diagnostic delivery and progress
+
+Inspect `show.diagnostic_requests` on every complete audit, including when the
+technical evidence hash is unchanged. This operator projection exposes only the
+applicable diagnostic request for each unresolved reporting owner:
+
+- `published-awaiting-receipt`: publication exists, but no matching host receipt
+  was recorded. Publication is not delivery.
+- `received-awaiting-reply`: the matching owner/report/revision receipt exists,
+  but its exact-revision supplemental reply has not arrived.
+- `responded`: the matching supplemental reply arrived. Inspect its contents;
+  an unavailable reply answers the request without diagnosing or recovering it.
+
+`reply_due_at` uses the existing 15-minute collection deadline, starting at
+publication until receipt, then at receipt for the reply. `overdue` identifies a
+missed deadline, not an offline computer or a root cause. `last_reporter_seen_at`
+and `reporter_seen_after_publication` describe service contact by that reporting
+owner only; contact is not a request receipt or evidence of host-model activity.
+Absence of later contact does not establish whether the physical computer is on.
+Read-only operator inspection never acknowledges a request for the host.
+
+Persist an audit of these exact report/revision/phase facts in the private ledger.
+On an overdue transition, inspect the transport, reporting source and retained
+technical evidence. State what arrived and what did not. Reproduce and fix a
+supported capture or delivery fault without waiting indefinitely for an unanswered
+request. When an old package loses the handled exception, deliver one verified
+update that repairs capture, preserving the unknown original cause and recovery.
+Do not repeatedly publish the same request or instruct blind reinstalls. Use one
+specific human-only action only when evidence establishes that it is necessary.
+
+Deduplicate attention by original report, revision and phase. Record each handled
+overdue transition once; unchanged deadlines and contact timestamps are quiet.
+The derived projection does not change the technical-evidence digest or invalidate
+reviewed exclusions; actual requests, receipts and replies still do. Preserve the
+email baseline. Send one meaningful event alert only when new failure evidence,
+a diagnosed reporting fault, a materially failed recovery or a concrete human
+decision warrants it. Do not send an alert merely for adding this projection.
+Do not describe an unreceived or overdue request as a successful conversation.
+
 ## Count effective open items
 
 Report **distinct unresolved technical incidents**, not the raw queue length,
@@ -117,8 +156,8 @@ the case stays in `effective_open_incidents`.
 
 Any changed report, supplement, owner, remedy revision, retry or outcome makes
 the reviewed exclusion stale and returns that case to the effective open count
-until fresh AI inspection. Derived time-dependent capture summaries alone do
-not invalidate the evidence review. All original evidence is retained.
+until fresh AI inspection. Derived time-dependent capture summaries and diagnostic delivery/deadline
+projections alone do not invalidate the evidence review. All original evidence is retained.
 
 Persist the successful output as `last_monitor_check.open_items` and preserve
 the raw count for audit. Use its `summary_it` when reporting counts in the chat

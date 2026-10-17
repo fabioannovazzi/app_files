@@ -993,7 +993,7 @@
     },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "f7a1a4bc0020450a962860ef469834febd1d7ce7e76d059d393ce952b3668e70",
+      "sha256": "66c5005118dcf4297b2a0d7dd18bdf6197ece97b583806ed8068fe48032f86ff",
       "languages": [
         "it",
         "en",
@@ -1021,7 +1021,7 @@
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "67b5ceca72fe541e8d85ccac26220b37ddbd4a3201d2249fd027771dbc47239e",
+      "sha256": "2dceeb820e27162e620f014c54956c60bed32ddc474d863083fd865f2eb5ce5e",
       "languages": [
         "it",
         "en",

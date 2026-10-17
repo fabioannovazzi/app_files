@@ -50,7 +50,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "9c3b7dc6d84376e26b92ff3c2d1f78fed2ae4e36c23db6c702497b39b4e36e60",
+  "course_sha256": "268c118f6309de535f0c4c6bf9458c752d3d4e6a807f03213b212765109893c7",
   "integration_refresh": {
     "reviewer": "Codex /root",
     "date": "2026-10-02",
@@ -577,5 +577,24 @@
     "source_review": "The archive CLI enforces CPython 3.12 before imports and metadata reads use lstat. The product MCP launcher selects the managed runtime. File identity, scope separation, immutable inputs and receipt formats are retained. Actual Cowork refresh and same-engagement imports succeeded with the original input bytes.",
     "native_evidence": "GitHub run 38760188504 job 116509106637 at 7bf1a395: 1674 native teaching tests passed, three skipped, and 20 execution tests for withdrawn courses failed. This is not a green whole-run claim. Those retired-course tests are now conditional; fresh CI must independently validate each retained native demo/practice identity and current course digest.",
     "limits": "No new independent editorial judgment, learner completion, voice acceptance or professional approval is asserted."
+  },
+  "archive_error_capture_source_review": {
+    "reviewer": "Codex /root - bounded Archive error-capture source review",
+    "reviewed_at": "2026-10-17T08:28:35.957367+00:00",
+    "baseline_commit": "90e5d155e8ad4f1734c21f591e584e1b24b12fb8",
+    "previous_course_sha256": "9c3b7dc6d84376e26b92ff3c2d1f78fed2ae4e36c23db6c702497b39b4e36e60",
+    "current_course_sha256": "268c118f6309de535f0c4c6bf9458c752d3d4e6a807f03213b212765109893c7",
+    "source_changes": [
+      {
+        "path": "modules/studio-archive/scripts/studio_archive.py",
+        "before": "d17cd1abe39e1a6eed4cd946b759bac2f0ad243fb950c1bf4a66ea69f6d4e53a",
+        "after": "caf83eb965861dd50b680228c81bcb3ee949ff1586e342fab07332aae94669e3"
+      }
+    ],
+    "content_review": "Compared every compiled field except sources: all localized content, input definitions, demo/practice requests, checkpoints and pacing are identical. Preserve the existing editorial judgments and historical artifact reviews. This is a source compatibility binding, not a new independent editorial or learner review.",
+    "source_review": "The CLI logs the active handled Archive/OS/value/SQLite exception before its existing JSON error and exit1, and logs its unsupported-runtime guard. Success output, archive selection, source files, ledger formats, professional gates and lesson workflows are unchanged. Source-bound technical reporting and local traceback review are verified separately.",
+    "native_evidence": "GitHub run39014478919 job117343617766 at122df52d1 passed1710 native teaching tests with3 skips. Its later metadata gate rejected these stale course digests; the whole job was not green. A fresh local run of the20 affected localized demo/practice checks passed with actual JUnit properties for the current course digests. Final CI must still execute and verify the full native suite.",
+    "local_junit_sha256": "24b6da63f95a940d07ea10c01a22e6979a1a0e8da7925464b6daad3df0fbbedc",
+    "limits": "No new installed-host, live learner, voice, visual or professional acceptance is asserted."
   }
 }

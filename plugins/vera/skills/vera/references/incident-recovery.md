@@ -137,6 +137,15 @@ client values, source excerpts containing case data, personal identifiers and
 credentials; this is model-led review, not a regex privacy certification. Never
 upload the raw stderr file or ask the professional to relay it.
 
+Studio Archive also retains handled exceptions before returning its structured
+JSON error. The source-bound collector can therefore report the actual exception
+class and developer-authored message; its full traceback remains local for this
+review. JSON output and exit status retain their ordinary meanings. For a legacy
+capture with empty stderr, inspect the original structured tool error locally if
+it is still available, selecting only the technical cause. If neither source is
+available, reply with that precise unavailable boundary. An empty file or exit
+code alone must not remain an apparently progressing diagnostic exchange.
+
 The pointer's `report` is the original technical envelope, with its stable report
 UUID. Link its local capability to the saved connector first. If initial delivery
 was queued, submit that exact original envelope through `vera_incident_report`

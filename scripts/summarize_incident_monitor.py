@@ -32,6 +32,9 @@ def evidence_hash(incident: dict[str, Any]) -> str:
     """Pin all inspected evidence except derived wall-clock capture summaries."""
     evidence = copy.deepcopy(incident)
     evidence.pop("reporting_summary", None)
+    # Receipt/reply payloads are already pinned below. Deadlines and reporter
+    # heartbeats are derived monitoring facts, not new technical evidence.
+    evidence.pop("diagnostic_requests", None)
     for record in evidence.get("report_records", []):
         # Derived from report/evidence payloads and the current clock; those
         # original payloads and reporting identities remain in this digest.
