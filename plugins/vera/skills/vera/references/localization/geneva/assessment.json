@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "1044d1988aaa4a372776367fd66c00c11b4627da9e205ca8d32818488243860e",
+  "catalogue_fingerprint": "57dd467274a1aa3bc7998696f028b7d7565dc53e0312b5fe9a92521676cb1847",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -1838,5 +1838,11 @@
     "version": "0.1.396",
     "previous_catalogue_fingerprint": "f6092ccdfe9d186ab17a91ff632e8fe192d9b3737ffe1984ab3b428a638d80d1",
     "scope": "Only the canonical product manifest/version changed in this catalogue identity; every skill entrypoint hash is unchanged. The handled Archive error and diagnostic delivery changes do not establish Geneva professional acceptance. Existing jurisdiction judgments and limitations are preserved."
+  },
+  "actionable_incident_reporting_release_binding": {
+    "date": "2026-10-17",
+    "version": "0.1.398",
+    "previous_catalogue_fingerprint": "1044d1988aaa4a372776367fd66c00c11b4627da9e205ca8d32818488243860e",
+    "scope": "Only canonical product manifest/version changes in this catalogue identity. All 55 skill entrypoint bytes and jurisdiction judgments are unchanged. Hosted incident reporting and exact remedy followup add no professional or Geneva acceptance."
   }
 }
