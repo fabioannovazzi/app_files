@@ -624,12 +624,15 @@ def test_every_user_process_wrapper_keeps_lifecycle_on_cowork_projection():
     from scripts.build_claude_plugin_zip import project_cowork_skill
 
     root = Path(__file__).resolve().parents[3]
+    entrypoints = json.loads((root / "plugins/vera/usage/pipelines.json").read_text())[
+        "entrypoints"
+    ]
     # These are protocol/package coverage assertions, not claims of user adoption.
     for pipeline in [
         "vera",
         *(name for name in pipeline_catalog() if name != "datev-invoice-start"),
     ]:
-        relative = f"skills/{pipeline}/SKILL.md"
+        relative = f"skills/{entrypoints.get(pipeline, pipeline)}/SKILL.md"
         content = (root / "plugins/vera" / relative).read_bytes()
         projected = project_cowork_skill(
             content,

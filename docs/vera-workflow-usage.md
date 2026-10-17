@@ -91,5 +91,8 @@ last received state with an availability note if the service is unreachable.
 
 Every visible row starts at `untried`. Explicit aliases connect the Bilancio,
 vouching, passive-invoice and financial-report rows to their actual primary
-pipeline IDs. Infrastructure and functions without a recorded primary pipeline
-stay `untried`; a nested helper invocation does not manufacture a new user run.
+pipeline IDs. Standalone opposing opinions and the Italian local-authority report preset have
+separate primary IDs, so unrelated legal work or ordinary reports cannot promote
+those icons. All professional function rows are mapped. Studio Archive and
+learning remain infrastructure, outside this process counter; their icons stay
+`untried`. A nested helper invocation does not manufacture a new user run.

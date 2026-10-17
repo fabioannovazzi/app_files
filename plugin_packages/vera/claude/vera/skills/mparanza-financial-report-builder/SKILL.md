@@ -145,6 +145,12 @@ at task startup and after outcomes. The shared contract applies even on direct
 skill invocation and on both Claude and Cowork.
 <!-- VERA_WORKFLOW_USAGE_END -->
 
+For a standalone Italian local-authority report using the enti-locali preset,
+choose primary pipeline `report-enti-locali`; other standalone financial reports
+use `financial-report-builder`. A report produced inside an existing mandate
+keeps that task's run UUID and primary pipeline.
+
+
 
 <!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 ## Connected studio knowledge

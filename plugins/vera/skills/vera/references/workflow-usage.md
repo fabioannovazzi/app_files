@@ -11,6 +11,10 @@ Choose the primary user-facing process using the actual user mandate and
 `usage/pipelines.json`. This is an AI decision, not keyword matching. Generate
 and retain one random run UUID in this task's durable private context. Do not use
 an Archive run ID, client name, document path, prompt or chat URL as its value.
+Standalone opposing opinions use `adversarial-opinion`. The Italian local-authority
+report preset uses `report-enti-locali` through the financial-report-builder
+entrypoint declared in the inventory; ordinary financial reports retain their
+own primary ID. Nested use of either remains part of its original task.
 Start before setup or substantive work, so blocked startup remains observable.
 Use `sample_kind=user` for actual user work; `synthetic` or `agent_test` for
 fixtures/agent acceptance. Tutorials remain local under their existing contract.

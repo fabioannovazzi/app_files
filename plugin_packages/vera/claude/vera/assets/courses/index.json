@@ -510,7 +510,7 @@
     },
     "financial-report-builder": {
       "path": "financial-report-builder/course.json",
-      "sha256": "727c856e76c3c6d7b3bb5d94cb412c58af517dca30371032cf6377682c51fe6b",
+      "sha256": "011ed22a09ebd8a36f6bd2daa207890b813dbeb845bd7fed743ff74cbe7d3b7b",
       "languages": [
         "it",
         "en",

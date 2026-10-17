@@ -48,7 +48,14 @@ def device():
     return DeviceCredentials(device_id=uuid4(), device_key=uuid4().hex)
 
 
-def record(store, owner, kind="completed", sample="user", occurred=AFTER):
+def record(
+    store,
+    owner,
+    kind="completed",
+    sample="user",
+    occurred=AFTER,
+    pipeline="journal-sampling",
+):
     run_id = uuid4()
     common = {"run_id": run_id, "product_version": "0.1.405", "occurred_at": occurred}
     store.workflow_record(
@@ -58,7 +65,7 @@ def record(store, owner, kind="completed", sample="user", occurred=AFTER):
             event_id=uuid4(),
             sequence=1,
             kind="started",
-            pipeline="journal-sampling",
+            pipeline=pipeline,
             host="codex",
             sample_kind=sample,
         ),
@@ -89,6 +96,27 @@ def test_unconfigured_service_starts_every_pipeline_at_untried(tmp_path):
     assert result["epoch_id"] is None
     assert set(result["pipelines"]) == set(pipeline_catalog())
     assert {row["status"] for row in result["pipelines"].values()} == {"untried"}
+
+
+@pytest.mark.parametrize(
+    "primary,other",
+    [
+        ("adversarial-opinion", "quesito-legale-fiscale"),
+        ("report-enti-locali", "financial-report-builder"),
+    ],
+)
+def test_standalone_specialist_completion_promotes_only_its_own_function(
+    setup, primary, other
+):
+    store, _, _ = setup
+    owner = register(store, device())
+    run_id = record(store, owner, pipeline=primary)
+
+    result = store.workflow_testing()["pipelines"]
+
+    assert result[primary]["status"] == "tried"
+    assert result[other]["status"] == "untried"
+    assert list(result[primary]["professional_devices"].values()) == [[run_id]]
 
 
 def test_reset_clears_levels_without_deleting_runs_or_incidents(setup, monkeypatch):
@@ -296,6 +324,13 @@ def test_page_resets_every_icon_and_maps_package_aliases_to_primary_pipelines():
         node["data-testing-pipeline"] for node in page.select("[data-testing-pipeline]")
     }
     assert mapped <= pipeline_catalog().keys()
+    unmapped = {
+        node.find_parent("a")["href"]
+        for node in indicators
+        if not node.has_attr("data-testing-pipeline")
+    }
+    assert unmapped == {"../studio-archive/index.html", "../learn-with-vera/index.html"}
+    assert {"adversarial-opinion", "report-enti-locali"} <= mapped
     assert "studio-archive" not in mapped
     assert page.select_one('script[src="../vera-testing-status.js"]') is not None
 
