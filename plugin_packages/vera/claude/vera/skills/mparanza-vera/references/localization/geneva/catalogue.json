@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/Documents/Codex/2026-10-17-verifica-la-ripresa-dei-workflow-di/deploy/source/plugins/vera",
-  "version": "0.1.400",
-  "captured_at": "2026-10-17T10:53:22.502908+00:00",
-  "catalogue_fingerprint": "4356cf4e3184494ac064b5d4ae3625fd8bef5186217d28d1a1d8cb5730cafe28",
-  "manifest_sha256": "193768872c29f65d010cf34cec3bf69db2b75ff33d2403be54a3f35893c064ac",
+  "root": "/Users/fabio/Documents/Codex/2026-10-17/vera-40-scenari-ripresa-gpt-6-1/work/archive-concurrency-deploy/plugins/vera",
+  "version": "0.1.401",
+  "captured_at": "2026-10-17T13:46:52.204578+00:00",
+  "catalogue_fingerprint": "5ce99562f7d8545cfb29d496852b39f9bc2d6ddcd7c73850002d6345d1c4e6a6",
+  "manifest_sha256": "19e157b62afdf7c68cd73b65818a8626d49ba73e26ad3211d70044e4e9f2bfc8",
   "entries": [
     {
       "function_id": "adeguati-assetti",
