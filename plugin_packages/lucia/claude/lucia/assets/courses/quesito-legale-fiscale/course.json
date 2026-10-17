@@ -97,7 +97,7 @@
     },
     {
       "path": "modules/deep-research-validator/skills/mparanza-deep-research/SKILL.md",
-      "sha256": "d57fff49e203ad3c06a126e93709073e4257b563f4dac284738726ce46663fe4"
+      "sha256": "26ce2a97378259403bfff5c975ccbc1e336417692ca3b9f55c758ff27f0b838f"
     },
     {
       "path": "modules/deep-research-validator/skills/mparanza-deep-research/references/evaluation.md",
@@ -109,7 +109,7 @@
     },
     {
       "path": "modules/deep-research-validator/skills/mparanza-legal-tax-answer-review/SKILL.md",
-      "sha256": "3944b54df7b14f92471a6fef3f3e52d36392618e750a40f170aaf6183ea06468"
+      "sha256": "ed5c4ec5b8fa97769f613f2b0b8dce32994ce50df6e6ecc6f7060cbcb3770b93"
     },
     {
       "path": "modules/deep-research-validator/skills/mparanza-legal-tax-answer-review/references/adversarial-scope.md",

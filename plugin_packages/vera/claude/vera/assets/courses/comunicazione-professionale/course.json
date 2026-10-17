@@ -217,7 +217,7 @@
     },
     {
       "path": "modules/comunicazione-professionale/skills/mparanza-comunicazione-professionale/SKILL.md",
-      "sha256": "cb5cab4ab422fe73690241b7944144df686d7c72e41cc7333880a6bef1267624"
+      "sha256": "1feb1a0832bf279176ecc8548b87a30f6be15343c599bf1691e1d165bd773a79"
     },
     {
       "path": "modules/comunicazione-professionale/skills/mparanza-comunicazione-professionale/agents/openai.yaml",
@@ -245,7 +245,7 @@
     },
     {
       "path": "skills/mparanza-comunicazione-professionale/SKILL.md",
-      "sha256": "c0f51b5e40fddca742472879df9ef363bae6a350a8fdb837b4318fcb233b8a7b"
+      "sha256": "c226e5ee7378cccaabca76d6b1d9440608c04dd876ab0b705f4e13e9b05dcfb0"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",

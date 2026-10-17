@@ -100,7 +100,7 @@
     },
     {
       "path": "modules/client-file-preparation/skills/mparanza-client-file-preparation/SKILL.md",
-      "sha256": "f2a6fbec835a33740bd34ce06eba09c69eaab3e4ab610b4bd02cbd4e530fe051"
+      "sha256": "54edf25d262d7c981432a55d11d268153dc7879a95c595b2c78a2b7a31e2e700"
     },
     {
       "path": "modules/client-file-preparation/templates/email_documenti_mancanti.md",
@@ -220,7 +220,7 @@
     },
     {
       "path": "modules/new-client/skills/mparanza-new-client/SKILL.md",
-      "sha256": "caf54d1a66ff8866fceef74d626c552812ece2e8fda6dffce84cbbe84a95018a"
+      "sha256": "afaf79f7c28cdd3e6bb12146c4bcacc5266ac6d3930f1888b231ef4817a98619"
     },
     {
       "path": "modules/new-client/skills/mparanza-new-client/references/geneva.md",
@@ -268,7 +268,7 @@
     },
     {
       "path": "skills/mparanza-new-client/SKILL.md",
-      "sha256": "757011956d304f2aeba81ce00ae00165b65b36fb758919c46ec5b522161d66aa"
+      "sha256": "26fd9f8ed6ead1eee928d7e416edf83fbc39b419ca0fd27bc34ea04832fc3538"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",

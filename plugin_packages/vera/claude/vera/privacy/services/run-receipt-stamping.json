@@ -39,7 +39,7 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "8f26384a807517f4395419799eb295755d1c4e9debe2770e5d3a9d269455f067"
+    "source_fingerprint": "ca7f3377ebf05ac1ab54291df94526a826af0a5bf1df518212514ba889cb23aa"
   },
   "runtime_profiles": [
     "anthropic-cowork"
