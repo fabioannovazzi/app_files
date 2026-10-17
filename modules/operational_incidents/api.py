@@ -42,6 +42,7 @@ from modules.run_receipts.signing import get_run_receipt_signer
 from modules.run_receipts.store import get_run_receipt_store
 from modules.workflow_usage.contracts import WorkflowEvent
 from modules.workflow_usage.repository import WorkflowConflict
+from modules.workflow_usage.testing import public_status
 
 __all__ = ["router", "get_incident_store"]
 router = APIRouter(tags=["operational-incidents"])
@@ -541,6 +542,17 @@ class WorkflowFeedback(BaseModel):
     event_id: UUID
     stars: int = Field(ge=1, le=5, strict=True)
     comment: str | None = Field(default=None, max_length=2000)
+
+
+@router.get("/api/vera/testing-status")
+def workflow_testing_status(
+    store: IncidentStore = Depends(get_incident_store),
+) -> JSONResponse:
+    """Public aggregate legend states; writes remain operator-only."""
+    return JSONResponse(
+        public_status(store.workflow_testing()),
+        headers={"Cache-Control": "no-store"},
+    )
 
 
 @router.get("/vera/feedback/{run_id}", response_class=HTMLResponse)

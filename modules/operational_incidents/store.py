@@ -39,6 +39,7 @@ from modules.pdp.postgres_compat import (
 )
 from modules.utilities.cache import get_cache_dir
 from modules.workflow_usage import repository as workflow_repository
+from modules.workflow_usage import testing as workflow_testing
 from modules.workflow_usage.contracts import WorkflowEvent
 from modules.workflow_usage.reporting import evidence_hash
 
@@ -63,6 +64,7 @@ class IncidentNotFound(ValueError):
 
 _SCHEMA = (
     *workflow_repository.SCHEMA,
+    *workflow_testing.SCHEMA,
     "CREATE TABLE IF NOT EXISTS operational_host_sessions (device_id TEXT NOT NULL, session_id TEXT NOT NULL, payload_json TEXT NOT NULL, last_seen TEXT NOT NULL, PRIMARY KEY (device_id,session_id))",
     "CREATE TABLE IF NOT EXISTS operational_app_links (installation_id TEXT PRIMARY KEY, app_installation_id TEXT NOT NULL, native_app TEXT NOT NULL, recorded_at TEXT NOT NULL)",
     "CREATE TABLE IF NOT EXISTS operational_reporter_sessions (installation_id TEXT NOT NULL, session_id TEXT NOT NULL, payload_json TEXT NOT NULL, last_seen TEXT NOT NULL, PRIMARY KEY (installation_id,session_id))",
@@ -325,6 +327,18 @@ class IncidentStore:
         with self._connection() as connection:
             self._schema(connection)
             return workflow_repository.overview(connection, self._sql, limit)
+
+    def workflow_testing_reset(self, agent_devices: list[str]) -> dict[str, Any]:
+        """Operator-only reset of the public testing counter; preserve all work."""
+        with self._connection() as connection:
+            self._schema(connection)
+            return workflow_testing.reset(connection, self._sql, agent_devices, _now())
+
+    def workflow_testing(self) -> dict[str, Any]:
+        """Operator evidence for the current public testing levels."""
+        with self._connection() as connection:
+            self._schema(connection)
+            return workflow_testing.inspect(connection, self._sql)
 
     def register(
         self,

@@ -2,6 +2,7 @@
   "schema_version": 1,
   "pipelines": {
     "adeguati-assetti": "Adeguati assetti",
+    "adversarial-opinion": "Parere contrapposto",
     "agenzia-acquisition": "Acquisizione Agenzia delle Entrate",
     "aml-review": "Antiriciclaggio",
     "archive-organization": "Organizzazione archivio",
@@ -41,6 +42,7 @@
     "quesito-legale-fiscale": "Quesito legale e fiscale",
     "rating-legalita": "Rating di legalità",
     "registro-imprese-sari": "Registro Imprese e SARI",
+    "report-enti-locali": "Report finanziario enti locali",
     "sales-plan": "Piano vendite",
     "scissione-guidata": "Scissione",
     "studio-document-format": "Formato documenti dello studio",
@@ -53,10 +55,12 @@
     "studio-archive",
     "legal-tax-answer-planner",
     "legal-tax-answer-review",
-    "adversarial-opinion",
     "research-subscriptions",
     "privacy-surface-review",
     "learn-with-vera"
   ],
-  "instrumented_from_version": "0.1.404"
+  "instrumented_from_version": "0.1.404",
+  "entrypoints": {
+    "report-enti-locali": "financial-report-builder"
+  }
 }
