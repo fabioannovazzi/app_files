@@ -283,7 +283,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-17",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "06ed059e011c4012b21be72213fa531dfbe97b1df02d5aaf402ddb8f69347858"
+    "source_fingerprint": "ed32c2046a4ea36fd3b82d57fc8d83ad57a83c0637354aac36f5ad5c39d3a880"
   },
   "role": "workflow",
   "runtime_profiles": [
@@ -382,7 +382,7 @@
     },
     {
       "id": "approved-root-and-private-identity-continuity",
-      "control": "Only explicit configuration records an approved root. Fresh default sessions revalidate it into independent session-owned configuration; explicit state directories remain isolated unless an explicit private profile is supplied. Root-specific identity read/modify/write is serialized with short OS locks and private regular-file records; private aliases are not returned in safe directory rows. Current-session aliases migrate only after validation. Shared profile state stays outside source archives and contains no active run selection or credentials."
+      "control": "Only explicit configuration records an approved root. Fresh default sessions revalidate it into independent session-owned configuration; explicit state directories remain isolated unless an explicit private profile is supplied. Root-specific identity read/modify/write is serialized with short OS locks and private regular-file records; private aliases are not returned in safe directory rows. Current-session aliases migrate only after validation. Shared profile state stays outside source archives and contains no active run selection or credentials. Contending identity writers wait up to ten seconds for the existing OS lock and fail with a retryable busy message without deleting or stealing that lock. Client-directory metadata is revalidated independently of document indexing, so another session adding a client does not require reading other clients source documents or changing the approved root. Portable manifest identity checks and session configuration ownership remain enforced; indexed search and source opening still require an explicitly refreshed index."
     }
   ],
   "workstream": "studio-archive"

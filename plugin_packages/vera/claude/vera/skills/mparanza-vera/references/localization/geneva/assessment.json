@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "4356cf4e3184494ac064b5d4ae3625fd8bef5186217d28d1a1d8cb5730cafe28",
+  "catalogue_fingerprint": "5ce99562f7d8545cfb29d496852b39f9bc2d6ddcd7c73850002d6345d1c4e6a6",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -1865,5 +1865,10 @@
     ],
     "scope": "Mechanical source binding for follow-up preservation instructions, preserving all current official Geneva judgments and incident-release metadata. No new jurisdiction or professional acceptance.",
     "review": "docs/releases/2026-10-17-archive-followup-preservation.json"
+  },
+  "studio_archive_concurrency_release_binding": {
+    "date": "2026-10-17",
+    "version": "0.1.401",
+    "scope": "Product manifest version binding updated. Vera skill entrypoint bytes and existing Geneva dispositions are unchanged. Shared archive runtime now serializes registry writes with bounded waits and refreshes directory metadata independently of the content index. No new jurisdiction or host acceptance is claimed."
   }
 }

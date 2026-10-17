@@ -1552,11 +1552,7 @@ def list_studio_client_identities(
     private_state = _state_dir(state_dir)
     stored_config = _load_config(private_state, validate_scope_roots=False)
     config, scopes_changed = _current_scope_view(stored_config)
-    records = (
-        _load_client_identities(private_state)
-        if scopes_changed
-        else _synchronize_client_identities(private_state, config)
-    )
+    records = _synchronize_client_identities(private_state, config)
     records_by_scope = {record.scope_id: record for record in records}
     active_scope_ids = {scope.scope_id for scope in config.scopes}
     clients = [
@@ -1674,11 +1670,7 @@ def list_studio_clients(
         }
     stored_config = _load_config(private_state, validate_scope_roots=False)
     config, scopes_changed = _current_scope_view(stored_config)
-    records = (
-        _load_client_identities(private_state)
-        if scopes_changed
-        else _synchronize_client_identities(private_state, config)
-    )
+    records = _synchronize_client_identities(private_state, config)
     records_by_scope = {record.scope_id: record for record in records}
     active_scope_ids = {scope.scope_id for scope in config.scopes}
     clients = [
@@ -1746,11 +1738,7 @@ def resolve_studio_client_identity(
     private_state = _state_dir(state_dir)
     stored_config = _load_config(private_state, validate_scope_roots=False)
     config, scopes_changed = _current_scope_view(stored_config)
-    records = (
-        _load_client_identities(private_state)
-        if scopes_changed
-        else _synchronize_client_identities(private_state, config)
-    )
+    records = _synchronize_client_identities(private_state, config)
     scopes_by_id = {scope.scope_id: scope for scope in config.scopes}
     matches: list[dict[str, Any]] = []
     for record in records:
@@ -1789,11 +1777,9 @@ def get_studio_client_folder(
 
     private_state = _state_dir(state_dir)
     stored_config = _load_config(private_state, validate_scope_roots=False)
-    config, scopes_changed = _current_scope_view(stored_config)
-    if scopes_changed:
-        raise ArchiveError(
-            "Top-level archive scopes changed; refresh before selecting a client folder."
-        )
+    # Client selection uses live directory metadata and portable identities.
+    # A content-index refresh is separate and must not gate an unrelated client.
+    config, _ = _current_scope_view(stored_config)
     identities = _synchronize_client_identities(private_state, config)
     identity = next(
         (item for item in identities if item.client_id == client_id),
@@ -1844,12 +1830,8 @@ def set_studio_client_identity(
     """Replace one scope's confirmed private Gmail identity profile."""
 
     private_state = _state_dir(state_dir)
-    config = _load_config(private_state, validate_scope_roots=False)
-    _, scopes_changed = _current_scope_view(config)
-    if scopes_changed:
-        raise ArchiveError(
-            "Top-level archive scopes changed; refresh before configuring clients."
-        )
+    stored = _load_config(private_state, validate_scope_roots=False)
+    config, _ = _current_scope_view(stored)
     scopes_by_id = {scope.scope_id: scope for scope in config.scopes}
     scope = scopes_by_id.get(scope_id)
     if scope is None:
@@ -2033,12 +2015,8 @@ def create_studio_client(
     """Create one registered client folder after the user chooses New client."""
 
     private_state = _state_dir(state_dir)
-    config = _load_config(private_state, validate_scope_roots=False)
-    _, scopes_changed = _current_scope_view(config)
-    if scopes_changed:
-        raise ArchiveError(
-            "Top-level archive scopes changed; refresh before creating a client."
-        )
+    stored = _load_config(private_state, validate_scope_roots=False)
+    config, _ = _current_scope_view(stored)
     normalized_names = _normalize_legal_names([legal_name])
     normalized_emails = _normalize_email_addresses(email_addresses)
     normalized_tax_ids = _normalize_tax_identifiers(tax_identifiers)
@@ -3101,11 +3079,7 @@ def prepare_studio_client_workflow(
         raise ArchiveError("Workflow is not supported by the client engagement gate.")
     private_state = _state_dir(state_dir)
     config = _load_config(private_state, validate_scope_roots=False)
-    current, scopes_changed = _current_scope_view(config)
-    if scopes_changed:
-        raise ArchiveError(
-            "Top-level archive scopes changed; refresh before preparing a run."
-        )
+    current, _ = _current_scope_view(config)
     identities = _synchronize_client_identities(private_state, current)
     matches: list[tuple[ClientIdentity, Scope]] = []
     for identity in identities:

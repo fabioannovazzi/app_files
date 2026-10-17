@@ -102,6 +102,18 @@ precedenti, senza modificare input, output o manifesti sigillati.
 
 ### Archive-root access preflight
 
+Independent chats may work in the same approved archive. The client directory,
+exact client selection, controlled imports and run preparation revalidate live
+top-level directory metadata and portable client identities. Another chat adding
+a client does not require a folder selection or a full document-index refresh.
+The content index remains separately marked stale until an explicit refresh;
+search and indexed-source opening keep their existing freshness checks. This
+directory revalidation does not read or index other clients' source documents.
+Shared identity transactions wait up to ten seconds for the existing OS lock.
+If that wait expires, retain the operation and retry after the owner finishes;
+never delete or force a lock, recreate a client, or change the archive root to
+work around contention. Session configuration ownership remains independent.
+
 A fresh session reuses the last explicitly approved root from the owner-private
 profile after access revalidation. Existing sessions keep their own pinned root,
 run selection and index. Confirmed aliases persist privately per archive root;
