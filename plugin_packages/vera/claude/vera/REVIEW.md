@@ -49,6 +49,13 @@ course manifest. Downloads are written to a temporary file; only verified bytes
 are moved to the lesson destination. The cap is 25 MiB per file. HTTPS, the exact
 mparanza.com host and the course path are checked, including every redirect.
 
+## Local review tokens (flagged as "Uses a credential")
+Review servers create `secrets.token_urlsafe(32)` at startup and inject it into their widgets as `X-Mparanza-Review-Token`. It is used only on loopback (default `127.0.0.1`, also localhost/IPv6 loopback), is not sent to remote hosts by the review bridge, and expires with the server session. These random review tokens are not user credentials and are not read from the user's environment or files.
+Vera's check-entries creates `persistence_token` with `crypto.randomBytes(32)` during validation, bound to an expiring in-memory review context. It is an opaque review reference, not a user credential. It travels over local MCP stdio in model-visible tool results/arguments, so the host may include it in model context; it is not the loopback HTTP token or remote authentication.
+Scanner-listed review files: `modules/archive-organization/scripts/review_server.py`, `modules/client-file-preparation/scripts/review_server.py`, `modules/check-entries/mcp/server.cjs`.
+The flagged `.claude-plugin/plugin.json` contains plugin metadata, not these tokens or user credential values.
+The Python installer (`scripts/_python_bootstrap.py`) gives `uv` only an allowlisted environment: host paths, locale, proxy and CA settings, with private `UV_PYTHON_*` / `UV_CACHE_DIR` overrides; no inherited token or API-key variables.
+
 ## Font references (UNREAD_ASSET_REFERENCED)
 - `mcp/workspace.cjs`: Base64-embeds Instrument Sans Regular in widget CSS @font-face.
 - `mcp/studio-work-panel.cjs`: Base64-embeds Instrument Sans Regular in panel CSS @font-face.

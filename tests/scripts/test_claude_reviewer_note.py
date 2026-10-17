@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import json
+import re
+from pathlib import Path
+from zipfile import ZipFile
 
 import pytest
 
@@ -40,6 +43,27 @@ def test_reviewer_note_lists_only_declared_servers_and_existing_fonts(
     assert ("`luciaStudioArchive`" in note) == (product == "lucia")
     assert ("`mcp/workspace.cjs`" in note) == (product == "vera")
     assert "fabio@mparanza.com" in note
+    assert 'Local review tokens (flagged as "Uses a credential")' in note
+    assert "no inherited token or API-key variables" in note
+    assert ("check-entries" in note) == (product == "vera")
+    assert ("`secrets.token_urlsafe(32)`" in note) == (product != "clara")
+    assert ("`secrets.token_urlsafe(24)`" in note) == (product == "clara")
+    assert ("may include it in model context" in note) == (product == "vera")
+
+
+@pytest.mark.parametrize("product", ["vera", "lucia", "clara"])
+def test_packaged_reviewer_note_names_existing_token_files(product: str) -> None:
+    root = Path(__file__).resolve().parents[2]
+    directory = root / "plugin_packages" / product
+    with ZipFile(directory / f"{product}-claude-plugin.zip") as archive:
+        note = archive.read("REVIEW.md").decode()
+        referenced_files = set(
+            re.findall(r"`([^`\n]+/[^`\n]+\.(?:py|cjs|html|json))`", note)
+        )
+        assert referenced_files <= set(archive.namelist())
+    assert note == (directory / "claude" / product / "REVIEW.md").read_text()
+    assert len(note.splitlines()) <= 80
+    assert 'Local review tokens (flagged as "Uses a credential")' in note
 
 
 def test_reviewer_note_rejects_undescribed_remote_server() -> None:
