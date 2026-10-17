@@ -347,8 +347,12 @@
       vertical-align: 0.04em;
     }
     h4 .function-test-indicator { margin-left: 9px; }
+    .function-test-indicator[data-test-status="agent"],
     .function-test-indicator[data-test-status="tried"],
     .function-test-indicator[data-test-status="repeated"] { color: var(--blue); border-color: currentColor; }
+    .function-test-indicator[data-test-status="agent"]::after {
+      content: ""; position: absolute; inset: 0 0 50% 50%; background: currentColor;
+    }
     .function-test-indicator[data-test-status="tried"]::after {
       content: ""; position: absolute; inset: 0 50% 0 0; background: currentColor;
     }
@@ -1516,6 +1520,7 @@
       <div class="function-test-legend">
         <div class="function-test-legend__items">
           <span><span class="function-test-indicator" data-test-status="untried" aria-hidden="true"></span><span data-i18n="testing.untried">Da provare su casi concreti</span></span>
+          <span><span class="function-test-indicator" data-test-status="agent" aria-hidden="true"></span><span data-i18n="testing.agent">Provata con dati sintetici da un agente</span></span>
           <span><span class="function-test-indicator" data-test-status="tried" aria-hidden="true"></span><span data-i18n="testing.tried">Provata con successo da un professionista</span></span>
           <span><span class="function-test-indicator" data-test-status="repeated" aria-hidden="true"></span><span data-i18n="testing.repeated">Provata con successo da almeno tre professionisti</span></span>
         </div>
@@ -1821,6 +1826,7 @@
     const copy = {
       it: {
         "testing.untried": "Da provare su casi concreti",
+        "testing.agent": "Provata con dati sintetici da un agente",
         "testing.tried": "Provata con successo da un professionista",
         "testing.repeated": "Provata con successo da almeno tre professionisti",
         "testing.note": "Le prove riguardano casi specifici, non garantiscono ogni possibile utilizzo.",
@@ -2062,6 +2068,7 @@
       },
       en: {
         "testing.untried": "To be tried on real cases",
+        "testing.agent": "Tested with synthetic data by an agent",
         "testing.tried": "Successfully tested by a professional",
         "testing.repeated": "Successfully tested by at least three professionals",
         "testing.note": "Trials cover specific cases and do not guarantee every possible use.",
@@ -2303,6 +2310,7 @@
       },
       fr: {
         "testing.untried": "À essayer sur des cas concrets",
+        "testing.agent": "Testée avec des données synthétiques par un agent",
         "testing.tried": "Testée avec succès par un professionnel",
         "testing.repeated": "Testée avec succès par au moins trois professionnels",
         "testing.note": "Les essais portent sur des cas précis et ne garantissent pas tous les usages possibles.",
@@ -2544,6 +2552,7 @@
       },
       de: {
         "testing.untried": "An konkreten Fällen zu erproben",
+        "testing.agent": "Von einem Agenten mit synthetischen Daten erprobt",
         "testing.tried": "Von einer Fachperson erfolgreich erprobt",
         "testing.repeated": "Von mindestens drei Fachleuten erfolgreich erprobt",
         "testing.note": "Die Erprobung betrifft bestimmte Fälle und garantiert nicht jede mögliche Anwendung.",
@@ -2785,6 +2794,7 @@
       },
       es: {
         "testing.untried": "Por probar en casos concretos",
+        "testing.agent": "Probada con datos sintéticos por un agente",
         "testing.tried": "Probada con éxito por un profesional",
         "testing.repeated": "Probada con éxito por al menos tres profesionales",
         "testing.note": "Las pruebas abarcan casos específicos y no garantizan todos los usos posibles.",

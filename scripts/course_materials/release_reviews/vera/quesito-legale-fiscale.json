@@ -111,7 +111,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "0f5bf2d6f81ebf618a73d206687082db63d40a0e638c8a99b0716194e4af9669",
+  "course_sha256": "8830c9bd236794f7dea934b25541fab0cab69995405b0f5dd623aa81925ad97c",
   "encoding_preview_source_binding_review_20261013": {
     "reviewed_at": "2026-10-13T19:28:41.735928+00:00",
     "scope": "Reviewed the shared UI projection fix against unsupported-encoding, UTF-8 BOM and malformed-control regressions. Native source inventory changes only; authored lessons, multilingual inputs, deliverables and all prior professional-acceptance limits are preserved. Unsupported raw captures retain their bytes and hashes and display an explicit encoding limit. No new research method, law judgment, recipient or model API is introduced."
@@ -673,5 +673,67 @@
     "authored_content_and_attachment_definitions_unchanged": true,
     "scope": "Preserve the merged model-policy and subscription source reviews while refreshing shared remote-course source fingerprints. Authored lessons, locales, timing, input hashes and professional judgments are unchanged. The affected lessons were actually rerun against this combined source; existing artifact attestations are retained without claiming new human or installed-host acceptance.",
     "native_junit_sha256": "15e74a096acb46c72e8b1bc8245a0d0a2386130690cff995645903df02208289"
+  },
+  "source_binding_review_20261017": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "reviewed_at": "2026-10-17T13:53:01.528070+00:00",
+    "baseline_commit": "b0e23333f9aca1c3f3ed33447a0a13450515e04d",
+    "previous_course_sha256": "0f5bf2d6f81ebf618a73d206687082db63d40a0e638c8a99b0716194e4af9669",
+    "current_course_sha256": "8830c9bd236794f7dea934b25541fab0cab69995405b0f5dd623aa81925ad97c",
+    "authored_content_unchanged": true,
+    "changed_sources": [
+      {
+        "path": "modules/deep-research-validator/skills/deep-research/SKILL.md",
+        "repository_path": "plugins/deep-research-validator/skills/deep-research/SKILL.md",
+        "previous_sha256": "c23652f119b7e6c86484ac71a630788700d586b44a61157925d0db7bf2e0e743",
+        "current_sha256": "df003e9807ceb6f62573fdb7c79d514bb3493432069d5ac2af22baf178a79dfc"
+      },
+      {
+        "path": "modules/deep-research-validator/skills/legal-tax-answer-review/references/answer-journey.md",
+        "repository_path": "plugins/deep-research-validator/skills/legal-tax-answer-review/references/answer-journey.md",
+        "previous_sha256": "30c5370893ed13f6d8b3b9afea4dc75444d30050912b1f8c823e91f302dfe6c4",
+        "current_sha256": "e33644c19e2b55bdfeddc3d1ac79b9bbd93496f20b7d329cd385c85ccc36fc90"
+      },
+      {
+        "path": "modules/prompt-optimizer/assets/legal-tax-model.html",
+        "repository_path": "plugins/prompt-optimizer/assets/legal-tax-model.html",
+        "previous_sha256": "94471cba2d58bd3b6990ace5bab70b4b69592aa52f251cd2d3f598efe96a91e7",
+        "current_sha256": "5b6e48b0cd3c633a203cb9fe02ca7d45cc8d7a7ab02fcce19ed70d1efa69fe74"
+      },
+      {
+        "path": "modules/prompt-optimizer/scripts/model-policy.cjs",
+        "repository_path": "plugins/prompt-optimizer/scripts/model-policy.cjs",
+        "previous_sha256": "0e8415c322c2ef1d56abf713d16c7b969c41aa4a08ac6f08c61815701bd2ab43",
+        "current_sha256": "5348578c82d29b6f76e6eabd5f7961573cc5c80bb95756b38ecd984605e4ff34"
+      },
+      {
+        "path": "modules/prompt-optimizer/scripts/model_policy.py",
+        "repository_path": "plugins/prompt-optimizer/scripts/model_policy.py",
+        "previous_sha256": "978591c738176e488984b9670a1d2b7dcfae9a93aec12a4aff3c51cfa813e445",
+        "current_sha256": "16c6ae9bb4bca8747e4a36a0839c9fe1f2fdc1bcc9908fe75f9cc8554e1817eb"
+      },
+      {
+        "path": "skills/quesito-legale-fiscale/SKILL.md",
+        "repository_path": "plugins/vera/skills/quesito-legale-fiscale/SKILL.md",
+        "previous_sha256": "adb7955e7963140e5a434e94716fd297bc527b7c5bbeb83e531540e6799c0b89",
+        "current_sha256": "85207db5c3dfcb38be72ba95b1bd4842a37e5a6d06ff770241d5ffac76fc5f12"
+      },
+      {
+        "path": "skills/vera/references/legal-tax-model-policy.md",
+        "repository_path": "plugins/vera/skills/vera/references/legal-tax-model-policy.md",
+        "previous_sha256": "fd26ddb777032e5e545dae12d5617c6a89dd141aedd6c8683240c8a697a640f1",
+        "current_sha256": "227fd94eac9ba1108ec9cfad96c888972418aeb2f74441c0ec126eaaf2895fb5"
+      }
+    ],
+    "source_review": "Inspected every changed bound source against the exact previously reviewed course. The shared research and answer-journey instructions now treat model preference as advice, preserve truthful provenance, and continue when model identity differs, changes or is unknown. Vera additionally updates the model-policy helper, tool descriptions, panel and wrapper: optional model advice replaces blocking selection and confirmation; run ownership, stale-write rejection, saved history, case/account boundaries and substantive source/claim/professional review requirements remain. No model API is added or automatically switched. This alters the model-selection prerequisite, not the authored lesson text, fictional inputs, locale content, expected deliverables or prior artifact-review judgments.",
+    "local_validation": "58 focused model-policy, Archive follow-up and release-review contract tests passed. Current lesson execution and final-head CI are separate evidence gates.",
+    "execution_requirement": "The complete native teaching CI suite must execute the current course digests and pass verify_release.py on the final PR head before merge.",
+    "limitations": "Preserves historical localized editorial and artifact reviews with their original scope. This source-compatibility review does not attest new rendered-output review, live model inference, learner participation, installed-host acceptance, professional approval, or a function-rating upgrade.",
+    "local_native_execution": {
+      "suite": "tests/plugins/test_teaching_question_execution.py",
+      "result": "40 passed; 20 localized demo/practice native checks bound to current Vera/Lucia course digests",
+      "junit_sha256": "878b4b011680830bedfa7a06fc63f41246aace9a51694988b872dd7c02346bc0",
+      "scope": "Authored regression fixtures through actual local workflow code; not live model inference, learner participation, rendered-output re-review or professional acceptance."
+    }
   }
 }
