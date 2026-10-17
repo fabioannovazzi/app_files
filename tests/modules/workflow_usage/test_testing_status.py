@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+from contextlib import contextmanager
 from pathlib import Path
 from uuid import uuid4
 
@@ -16,6 +17,7 @@ from modules.operational_incidents import api
 from modules.operational_incidents import store as incident_store
 from modules.operational_incidents.contracts import Credentials, DeviceCredentials
 from modules.operational_incidents.store import IncidentStore
+from modules.pdp.postgres_compat import PostgresCompatCursor
 from modules.workflow_usage.contracts import WorkflowEvent, pipeline_catalog
 
 BEFORE = "2026-10-17T10:00:00+00:00"
@@ -96,6 +98,31 @@ def test_unconfigured_service_starts_every_pipeline_at_untried(tmp_path):
     assert result["epoch_id"] is None
     assert set(result["pipelines"]) == set(pipeline_catalog())
     assert {row["status"] for row in result["pipelines"].values()} == {"untried"}
+
+
+def test_completed_run_is_counted_through_production_postgres_cursor(
+    setup, monkeypatch
+):
+    store, _, owner = setup
+    run_id = record(store, owner)
+    original_connection = store._connection
+
+    @contextmanager
+    def production_cursor_connection():
+        with original_connection() as connection:
+
+            class Connection:
+                def execute(self, *args):
+                    return PostgresCompatCursor(connection, connection.execute(*args))
+
+            yield Connection()
+
+    monkeypatch.setattr(store, "_connection", production_cursor_connection)
+
+    result = store.workflow_testing()["pipelines"]["journal-sampling"]
+
+    assert result["status"] == "agent"
+    assert result["agent_runs"] == [run_id]
 
 
 @pytest.mark.parametrize(

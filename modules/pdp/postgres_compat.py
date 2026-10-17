@@ -369,6 +369,10 @@ class PostgresCompatCursor:
             )
             return self._cursor.fetchone()
 
+    def fetchmany(self, size: int = 1) -> list[Any]:
+        """Read a batch without replaying a partially consumed result."""
+        return list(self._cursor.fetchmany(size))
+
     def fetchall(self) -> list[Any]:
         try:
             return list(self._cursor.fetchall())
