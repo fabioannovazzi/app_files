@@ -212,7 +212,7 @@ function toolDefinitions() {
       name: TOOL_NAMES.importDocument,
       title: "Import a document into one client engagement",
       description:
-        "After the user confirms the exact client and copy action, preserve the original file and copy one regular source, journal, or support file into a managed client engagement with a byte receipt.",
+        "Copy one authorized source, journal, or support file into the selected engagement with an immutable byte receipt. For a user-authorized document-only continuation, save the clearly identified Vera-derived follow-up with role support; a chat-workspace copy alone is not saved engagement progress. Reuse established client/copy authority, then re-list the engagement and read back the controlled copy before reporting a successful save.",
       inputSchema: objectSchema(
         {
           client_id: {
@@ -223,7 +223,7 @@ function toolDefinitions() {
             type: "string",
             minLength: 1,
             maxLength: 4096,
-            description: "Absolute path to the user-selected source, journal, or support file.",
+            description: "Absolute path to the selected source/journal/support file, including a derived follow-up prepared under the user's authority to continue this engagement.",
           },
           role: {
             type: "string",
@@ -349,7 +349,7 @@ function toolDefinitions() {
       name: TOOL_NAMES.engagements,
       title: "List one client's Studio engagements",
       description:
-        "List durable engagement IDs, imported-file receipts, persisted workflow contexts, and exact available output paths for one stable client so a later chat can resume the journal engagement without relying on chat history.",
+        "List durable engagements, imported receipts (including saved derived support notes), persisted runs and available output paths. Resume from these records without chat history. An engagement can have follow-up notes without a workflow run. Verify a new document-only continuation's import receipt here before reporting that it is saved.",
       inputSchema: objectSchema(
         {
           client_id: {

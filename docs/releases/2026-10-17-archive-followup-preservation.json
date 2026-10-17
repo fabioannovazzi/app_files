@@ -1,0 +1,18 @@
+{
+  "scope": "Document-only engagement follow-up preservation using the existing controlled support importer",
+  "observed_failure": "Fresh chat recovered the correct client and engagement but left its new memo only in its workspace; preserved before edits in the task evidence.",
+  "baseline_commit": "1f6e6e86b7faac29e6999cb262e8ef980a33c49b",
+  "change_type": "Agent instructions and existing MCP tool descriptions; storage engine and ledger schema unchanged",
+  "reviewed_at": "2026-10-17T10:43:19.003345+00:00",
+  "instructions": "Reuse recovered engagement, identify the memo as derived, import as support, re-list and verify controlled bytes, return archived copy; exact retry deduplicates, changed content preserves earlier notes. Do not bypass specialist finalization.",
+  "external_boundaries_changed": false,
+  "privacy": "Same user-selected runtime can read source, note, receipts and paths. No separate model API or new service. No automatic anonymization or local-only processing claim.",
+  "verification_required": [
+    "existing importer/lifecycle and fresh-process integration regressions",
+    "actual fresh Codex host continuation with real MCP import and readback",
+    "another fresh host recovers the saved note without the prior workspace/history"
+  ],
+  "limits": "Workflow guidance does not intercept arbitrary shell writes. A saved continuation is claimed only after the actual controlled import/readback.",
+  "integrated_official_base": "043c1b732b4149c1b2137c38425cf7519c71563a",
+  "native_acceptance": "Two actual fresh Codex CLI sessions with existing ChatGPT authentication. A saved, re-listed and read back the support memo. B, with no history and A workspace unavailable, read that archived memo and saved a second support note. Original test case remains preserved separately."
+}

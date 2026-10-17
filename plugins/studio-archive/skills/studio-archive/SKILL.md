@@ -1,6 +1,6 @@
 ---
 name: studio-archive
-description: Use when Vera must identify or create one client workspace, import source, journal, or support files into a durable engagement, bind and snapshot one Google Drive client folder, search one client's connected Gmail, inspect one verified local WhatsApp Desktop chat, or search a shared local studio archive without mixing clients.
+description: Use when Vera must identify or resume a client engagement, preserve its follow-up notes, import source, journal, or support files, bind and snapshot one Google Drive client folder, search one client's connected Gmail, inspect one verified local WhatsApp Desktop chat, or search a shared local studio archive without mixing clients.
 ---
 
 ## Surface routing
@@ -48,6 +48,11 @@ contact metadata in the machine-local state directory, normally
 `~/.mparanza/vera-studio-archive/sessions/<session-key>`. Never place that private state inside the
 shared archive. It is not the source of truth for engagement inputs, runs, or
 artifacts.
+
+An engagement can exist without a specialist workflow run. Its generated
+follow-up documents use the controlled document-import route described below;
+do not invent a `studio-archive` run or treat a chat-workspace file as a saved
+engagement result.
 
 # Vera · Archivio dello Studio
 
@@ -277,7 +282,46 @@ Use this exact chat workflow whenever a professional starts client work:
    `client_id`. It returns imported-file receipts and persisted workflow runs,
    including lifecycle, exact input manifests, artifact purposes, and
    mechanical availability. Resume the exact engagement and run instead of
-relying on chat history.
+   relying on chat history. Inspect the engagement's support imports as well
+   as its original sources: a prior derived follow-up may be saved there even
+   when no workflow run exists.
+
+### Preserve a follow-up when there is no workflow run
+
+When the user asks to continue an existing engagement and preserve progress,
+recovering its source is only the first step. Preserve the new work in that
+same engagement before reporting that the continuation is saved:
+
+1. Retain the selected `client_id` and `engagement_id`. If a specialist run
+   already owns this work, follow its exact output and finalization contract;
+   do not import its outputs as a substitute for run finalization or modify a
+   sealed output tree. For a document-only archive follow-up without such a
+   run, use the steps below. Do not create an unsupported archive workflow run,
+   another engagement or another client just to save the memo.
+2. Prepare a separately named follow-up document in the current authorized
+   working folder outside the plugin/Git workspace. Identify it as a
+   **Vera-derived working note**, distinguish source facts from conclusions,
+   cite the prior source/receipt, and retain open questions and the next step.
+   It is not an external original, independently verified evidence or
+   professional approval. This working copy alone is not the durable result.
+3. Call `import_studio_client_document` with the same selected client and
+   engagement, the working file's exact `source_path`, and `role: "support"`.
+   Reuse the user's established authority to continue and save this case;
+   do not ask again when its association and write scope are already clear.
+   The maintained importer copies immutable bytes and returns an `input_id`,
+   receipt, digest and `imported_path`. Never hand-write files or receipts in
+   the engagement's managed input tree. An identical retry reuses the existing
+   import; a changed follow-up gets a new receipt and preserves the old copy.
+4. Call `list_studio_client_engagements` again. Verify that this same engagement
+   lists the returned `input_id`, `support` role, path, byte count and digest;
+   read back the controlled copy and verify that its bytes match the working
+   file. Deliver the archived copy's path and the readable engagement link,
+   with the remaining work. A file link in the chat workspace is insufficient.
+
+If import or verification fails, state that the new memo is **not yet saved
+in the engagement** and retain the working file for recovery. Do not claim a
+successful saved continuation or silently switch its destination. Ordinary
+read-only questions answered in chat do not require a new document import.
 
 For `archive-organization`, select the intake that matches the real archive:
 `snapshot_studio_client_folder` for a local tree, or Drive status, exact binding,
@@ -715,9 +759,11 @@ are not choices to propose.
 5. End with an Artifact Card naming the private index status, searched scope,
    opened sources, evidence limits, and next action.
 
-Create `codex_run_review.md` only when the user requests a durable search memo,
-and write it outside the Git workspace. Never edit plugin source or generated
-ZIPs during an archive run.
+Create `codex_run_review.md` only when the user requests a durable search memo.
+For continued client-engagement work that must retain progress, apply the
+follow-up preservation steps above and deliver the controlled archived copy;
+the chat workspace is only a working location. Never edit plugin source or
+generated ZIPs during an archive run.
 
 ## Failure rules
 
@@ -762,6 +808,9 @@ ZIPs during an archive run.
   its output folder as available.
 - Artifacts do not close the physical output tree: do not complete the run;
   fix or remove the unexplained output and finalize again.
+- A document-only continuation is present only in the chat workspace: the
+  engagement save is incomplete. Import it as a derived support note and
+  verify the returned receipt and controlled bytes before reporting success.
 - Gmail message matches another client: exclude it from the selected client's
   answer.
 - Gmail headers are incomplete or unparseable: do not route automatically.
