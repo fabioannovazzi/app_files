@@ -117,7 +117,6 @@
       "destination": "The existing managed-runtime installer endpoints for uv, CPython 3.12 and the published shared Python dependency recipes",
       "purpose": "Prepare or repair the shared CPython 3.12 environment before executing a local archive worker",
       "content": "Runtime and package identifiers, published requirements and constraints, and ordinary connection metadata. The installer is invoked before the archive command; no client files, archive index, identities, receipt bytes or case content are sent to dependency endpoints.",
-      "workflow_conditions": "The archive MCP server invokes the product managed launcher. A ready shared runtime is reused; missing runtime dependencies may require network access under host permissions. Failed setup stops worker execution. Optional OCR remains separately approved.",
       "optional": false,
       "requires_confirmation": false,
       "runtime_profiles": [
@@ -125,6 +124,7 @@
         "anthropic-cowork"
       ],
       "controls": [
+        "The archive MCP server invokes the product managed launcher. A ready shared runtime is reused; missing runtime dependencies may require network access under host permissions. Failed setup stops worker execution. Optional OCR remains separately approved.",
         "Use the existing shared CPython 3.12 runtime and declared recipes; do not install arbitrary packages from archive input. Host network denials stop setup rather than selecting an unsupported worker interpreter."
       ]
     }

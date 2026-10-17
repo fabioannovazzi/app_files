@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "a38cc951ba6c1859e3c7ae07eeae6664e9f5b416fee807e1e7ecd1287d91775d",
+  "catalogue_fingerprint": "4356cf4e3184494ac064b5d4ae3625fd8bef5186217d28d1a1d8cb5730cafe28",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -1857,5 +1857,13 @@
     "previous_catalogue_fingerprint": "72903c0b1741e1afe9497807abe13e14400c95535df2054276d92fb7094ebda2",
     "scope": "Canonical manifest/version refresh above the merged model-advisory release. All current main skill entrypoint bytes and jurisdiction judgments are preserved. Hosted incident followup and actionable operator alerts establish no additional professional or Geneva acceptance.",
     "integrated_main": "1f6e6e86b7faac29e6999cb262e8ef980a33c49b"
+  },
+  "archive_followup_source_binding_20261017": {
+    "previous_catalogue_fingerprint": "a38cc951ba6c1859e3c7ae07eeae6664e9f5b416fee807e1e7ecd1287d91775d",
+    "changed_function_ids": [
+      "studio-archive"
+    ],
+    "scope": "Mechanical source binding for follow-up preservation instructions, preserving all current official Geneva judgments and incident-release metadata. No new jurisdiction or professional acceptance.",
+    "review": "docs/releases/2026-10-17-archive-followup-preservation.json"
   }
 }
