@@ -220,6 +220,13 @@ stdout is neither captured nor forwarded. A regression must exercise the actual
 handled-error CLI path and assert its real exception, local traceback, unchanged
 response, and exclusion of dynamic case values from structured reporting.
 
+Archive CLI source changes also invalidate source hashes in the Archive and
+studio-format lesson manifests. Compare all non-source course fields before
+carrying forward their editorial judgments, record a bounded source-compatibility
+review and run the exact localized demo/practice checks. Check every release-review
+course digest and the canonical-version catalogue binding locally before CI.
+These mechanical checks do not replace fresh native execution or teaching review.
+
 For old zero-stderr captures, the host reviews its original structured tool error
 locally if available. Missing original evidence is an explicit unavailable reply,
 not proof that collection succeeded. The original cause and task recovery remain
