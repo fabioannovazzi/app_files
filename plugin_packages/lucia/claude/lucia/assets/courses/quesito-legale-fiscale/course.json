@@ -97,7 +97,7 @@
     },
     {
       "path": "modules/deep-research-validator/skills/mparanza-deep-research/SKILL.md",
-      "sha256": "dd1da6ee2deeed91b8b117e7ecf4e85879d6631d8f5579f55a54c1bfc5ce4d0b"
+      "sha256": "d57fff49e203ad3c06a126e93709073e4257b563f4dac284738726ce46663fe4"
     },
     {
       "path": "modules/deep-research-validator/skills/mparanza-deep-research/references/evaluation.md",
@@ -117,7 +117,7 @@
     },
     {
       "path": "modules/deep-research-validator/skills/mparanza-legal-tax-answer-review/references/answer-journey.md",
-      "sha256": "bf6283f867eddce95b5fdfe391be4ad7f2f69a86e784820284fd959f64a69a2a"
+      "sha256": "695a20ab5964882de6024ee51efee047b9bc0f2f158712655912a44a3c77cf07"
     },
     {
       "path": "modules/deep-research-validator/skills/mparanza-legal-tax-answer-review/references/research-choice.md",
@@ -722,5 +722,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "9c3741b6c791981c7da5c3180a2d564c7f9860a055b70f2981cab5d5ee3da928"
+  "canonical_course_sha256": "7402cb563f4abee1ce8744350ed22a073545d6b2d8008aba79a9861877adb991"
 }

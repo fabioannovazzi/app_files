@@ -1,7 +1,7 @@
-"""Persist the legal/tax model requirement without choosing or calling a model.
+"""Record advisory legal/tax model preferences without choosing or calling a model.
 
-Model capability is a host/user-informed judgment. Code only checks exact
-identities, session continuity, revisions and run ownership for auditability.
+Model capability is a host/user-informed judgment. Model identity never gates work. Code preserves evidence, revisions and run
+ownership for auditability, including when the model or conversation changes.
 """
 
 from __future__ import annotations
@@ -42,7 +42,6 @@ PHASES = {
     "opposing_opinion",
     "revision",
 }
-READY = {"ready_host_reported", "ready_user_confirmed"}
 
 
 def _text(value: Any, name: str, limit: int = 1000) -> str:
@@ -82,7 +81,10 @@ def _read(root: Path, run_id: str) -> dict[str, Any] | None:
         or value.get("run_id") != run_id
     ):
         raise ValueError("Model-policy record belongs to another run")
-    required = _text(value.get("preferred_model"), "preferred_model", 160)
+    required = value.get("preferred_model")
+    if required is not None:
+        _text(required, "preferred_model", 160)
+    advisory = value.get("enforcement") == "advisory"
     for field, limit in (("host", 80), ("session_ref", 240), ("selection_basis", 3000)):
         _text(value.get(field), field, limit)
     identity = value.get("identity_basis")
@@ -90,9 +92,15 @@ def _read(root: Path, run_id: str) -> dict[str, Any] | None:
     if identity == "host_reported":
         _text(active, "active_model", 160)
         _text(value.get("observation_reference"), "observation_reference", 3000)
-        expected = "ready_host_reported" if active == required else "requires_switch"
+        expected = (
+            "ready_host_reported"
+            if advisory or active == required
+            else "requires_switch"
+        )
     elif identity == "user_confirmed":
-        if active != required or value.get("confirmation_source") not in {
+        if (not advisory and active != required) or value.get(
+            "confirmation_source"
+        ) not in {
             "plugin_ui",
             "chat",
         }:
@@ -100,7 +108,7 @@ def _read(root: Path, run_id: str) -> dict[str, Any] | None:
         _text(value.get("confirmation_reference"), "confirmation_reference", 3000)
         expected = "ready_user_confirmed"
     elif identity == "unknown" and active is None:
-        expected = "awaiting_confirmation"
+        expected = "ready_unknown" if advisory else "awaiting_confirmation"
     else:
         raise ValueError("Invalid model identity evidence")
     if (
@@ -135,9 +143,18 @@ def _apply(request: dict[str, Any], root: Path, run_id: str) -> dict[str, Any]:
     now = datetime.now(timezone.utc).isoformat()
     if action == "prepare":
         host = _text(request.get("host"), "host", 80)
-        required = _text(request.get("preferred_model"), "preferred_model", 160)
+        required = request.get("preferred_model")
+        if required is not None:
+            required = _text(required, "preferred_model", 160)
         session = _text(request.get("session_ref"), "session_ref", 240)
-        basis = _text(request.get("selection_basis"), "selection_basis", 3000)
+        basis = _text(
+            request.get(
+                "selection_basis",
+                "No capability recommendation available; continue with the current host model.",
+            ),
+            "selection_basis",
+            3000,
+        )
         language = request.get("language", "en")
         if language not in {"it", "en", "fr", "de", "es"}:
             raise ValueError("Unsupported language")
@@ -162,6 +179,7 @@ def _apply(request: dict[str, Any], root: Path, run_id: str) -> dict[str, Any]:
                 "schema_version": "vera.legal_tax_model.v1",
                 "run_id": run_id,
                 "policy": "most_capable_available",
+                "enforcement": "advisory",
                 "host": host,
                 "preferred_model": required,
                 "selection_basis": basis,
@@ -172,32 +190,29 @@ def _apply(request: dict[str, Any], root: Path, run_id: str) -> dict[str, Any]:
                 "observation_reference": (
                     request.get("observation_reference") if observed else None
                 ),
-                "status": (
-                    "ready_host_reported"
-                    if observed == required
-                    else "requires_switch" if observed else "awaiting_confirmation"
+                "status": ("ready_host_reported" if observed else "ready_unknown"),
+                "phases": (
+                    json.loads(json.dumps(previous["phases"])) if previous else []
                 ),
-                "phases": [],
                 "updated_at": now,
                 "previous_sha256": _digest(previous) if previous else None,
             }
     else:
         if previous is None:
-            raise ValueError("Prepare the model requirement first")
+            raise ValueError("Prepare the model record first")
         record = json.loads(json.dumps(previous))
         if action in {"confirm", "phase"}:
             if request.get("expected_sha256") != _digest(previous):
                 raise ValueError("Stale model check; reload before continuing")
-            if request.get("session_ref") != previous["session_ref"]:
-                raise ValueError("Session changed; prepare a fresh model check")
+            session = _text(request.get("session_ref"), "session_ref", 240)
         if action == "confirm":
             if request.get("confirmation_source") not in {"plugin_ui", "chat"}:
                 raise ValueError("An explicit UI or chat confirmation is required")
-            if request.get("confirmed_model") != previous["preferred_model"]:
-                raise ValueError("Selected model does not match the required model")
+            confirmed = _text(request.get("confirmed_model"), "confirmed_model", 160)
             record.update(
                 {
-                    "active_model": previous["preferred_model"],
+                    "active_model": confirmed,
+                    "session_ref": session,
                     "identity_basis": "user_confirmed",
                     "status": "ready_user_confirmed",
                     "observation_reference": None,
@@ -214,18 +229,39 @@ def _apply(request: dict[str, Any], root: Path, run_id: str) -> dict[str, Any]:
             phase = request.get("phase")
             if phase not in PHASES:
                 raise ValueError("Unsupported legal/tax phase")
-            if previous["status"] not in READY:
-                raise ValueError("Model requirement is not satisfied")
-            model = _text(request.get("model"), "model", 160)
-            if model != previous["preferred_model"]:
-                raise ValueError(
-                    "Model downgrade/substitution rejected; recheck selection"
+            model = request.get("model")
+            if model is not None:
+                model = _text(model, "model", 160)
+            same_identity = (
+                session == previous["session_ref"] and model == previous["active_model"]
+            )
+            identity = previous["identity_basis"] if same_identity else "unknown"
+            observation = request.get("observation_reference")
+            if observation is not None and model is not None:
+                _text(observation, "observation_reference", 3000)
+                identity = "host_reported"
+            if not same_identity:
+                record.update(
+                    session_ref=session,
+                    active_model=None,
+                    identity_basis="unknown",
+                    observation_reference=None,
+                )
+                record.pop("confirmation_reference", None)
+                record.pop("confirmation_source", None)
+            if identity == "host_reported":
+                record.update(
+                    active_model=model,
+                    identity_basis=identity,
+                    observation_reference=observation
+                    or previous["observation_reference"],
                 )
             record["phases"].append(
                 {
                     "phase": phase,
                     "model": model,
-                    "identity_basis": previous["identity_basis"],
+                    "identity_basis": identity,
+                    "session_ref": session,
                     "execution_reference": _text(
                         request.get("execution_reference"), "execution_reference", 3000
                     ),
@@ -235,13 +271,25 @@ def _apply(request: dict[str, Any], root: Path, run_id: str) -> dict[str, Any]:
             record["updated_at"] = now
         elif action != "read":
             raise ValueError("Unknown model-policy action")
-    if action != "read" and record != previous:
-        _write(root, record, previous)
+    # Reading a finalized run must not invalidate its saved artifact receipts.
+    # Legacy statuses are historical evidence; they never gate continuation.
+    if action != "read":
+        record = json.loads(json.dumps(record))
+        record["enforcement"] = "advisory"
+        record["status"] = {
+            "host_reported": "ready_host_reported",
+            "user_confirmed": "ready_user_confirmed",
+            "unknown": "ready_unknown",
+        }[record["identity_basis"]]
+        if record != previous:
+            _write(root, record, previous)
     return {
         "ok": True,
         "record": record,
         "sha256": _digest(record),
-        "can_continue": record["status"] in READY,
+        "can_continue": True,
+        "enforcement": "advisory",
+        "model_selection_required": False,
         "path": str(root / FILENAME),
         "host_switch_performed": False,
     }
@@ -274,9 +322,9 @@ def apply_request(request: dict[str, Any]) -> dict[str, Any]:
     )
     if request.get("run_id") != context["run_id"]:
         raise ValueError("Model check run identity mismatch")
-    root.mkdir(parents=True, exist_ok=True)
     if request["action"] == "read":
         return _apply(request, root, context["run_id"])
+    root.mkdir(parents=True, exist_ok=True)
     lock = _safe_file(root, ".model-policy.lock")
     try:
         lock.mkdir()
