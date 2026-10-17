@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
+from uuid import uuid4
 
 import pytest
 
@@ -182,3 +184,109 @@ def test_parser_never_serializes_argument_values(tmp_path, argument):
     assert completed.returncode == 2
     assert argument not in json.dumps(data)
     assert data["capture_complete"] is False
+
+
+def archive_command(tmp_path, arguments, *, injected_failure=None):
+    """Exercise the real Archive CLI handler with isolated synthetic state."""
+    root = RUNNER.parents[3]
+    cli = root / "plugins/studio-archive/scripts/studio_archive.py"
+    destination = tmp_path / f"archive-{uuid4().hex}.technical.json"
+    environment = {
+        **os.environ,
+        "VERA_STUDIO_ARCHIVE_STATE_DIR": str((tmp_path / "state").resolve()),
+        "VERA_STUDIO_ARCHIVE_PROFILE_DIR": str((tmp_path / "profile").resolve()),
+        "VERA_STUDIO_ARCHIVE_SESSION_ID": "handled-error-regression",
+    }
+    command = [
+        sys.executable,
+        str(RUNNER),
+        str(root),
+        str(destination),
+        str(cli),
+        *arguments,
+    ]
+    if injected_failure:
+        # Replace only the selected core call in this child. The published CLI,
+        # exception handler and technical collector execute unchanged.
+        driver = (
+            "import runpy,sys\n"
+            f"sys.path.insert(0,{str(cli.parent)!r})\n"
+            "import archive_core,sqlite3\n"
+            "def fail(**kwargs):\n"
+            f"    raise {injected_failure}\n"
+            "archive_core.refresh_archive=fail\n"
+            f"sys.argv={command[1:]!r}\n"
+            f"runpy.run_path({str(RUNNER)!r},run_name='__main__')\n"
+        )
+        command = [sys.executable, "-c", driver]
+    completed = subprocess.run(
+        command, env=environment, capture_output=True, text=True, check=False
+    )
+    data = json.loads(destination.read_text()) if destination.exists() else None
+    return completed, data
+
+
+def test_real_archive_handled_error_retains_cause_without_changing_json(tmp_path):
+    completed, data = archive_command(tmp_path, ["refresh"])
+
+    assert completed.returncode == 1
+    assert json.loads(completed.stdout)["error"]["code"] == "archive_not_configured"
+    assert "ArchiveNotConfiguredError" in completed.stderr
+    assert data["capture_complete"] is True
+    assert data["events"][0]["error_type"] == "ArchiveNotConfiguredError"
+    assert data["events"][0]["message"] == (
+        "Studio Archive is not configured. Start the guided folder setup first."
+    )
+    assert data["events"][0]["technical_frames"][-1]["file"].endswith("archive_core.py")
+
+
+@pytest.mark.parametrize(
+    ("failure", "expected_type", "expected_code"),
+    [
+        (
+            "archive_core.ArchiveError('PRIVATE_CASE_VALUE')",
+            "ArchiveError",
+            "archive_error",
+        ),
+        (
+            "OSError(13, 'PRIVATE_CASE_VALUE')",
+            "PermissionError",
+            "archive_operation_failed",
+        ),
+        ("ValueError('PRIVATE_CASE_VALUE')", "ValueError", "archive_operation_failed"),
+        ("sqlite3.Error('PRIVATE_CASE_VALUE')", "Error", "archive_operation_failed"),
+    ],
+)
+def test_all_archive_caught_error_classes_reach_diagnostics_with_private_review(
+    tmp_path, failure, expected_type, expected_code
+):
+    completed, data = archive_command(tmp_path, ["refresh"], injected_failure=failure)
+
+    assert completed.returncode == 1
+    assert json.loads(completed.stdout)["error"]["code"] == expected_code
+    assert "PRIVATE_CASE_VALUE" in completed.stderr
+    assert "PRIVATE_CASE_VALUE" not in json.dumps(data)
+    assert data["events"][0]["error_type"] == expected_type
+    assert data["events"][0]["technical_frames"][0]["file"].endswith(
+        "studio_archive.py"
+    )
+
+
+def test_successful_archive_command_does_not_emit_failure(tmp_path):
+    archive = tmp_path / "archive"
+    archive.mkdir()
+
+    completed, data = archive_command(
+        tmp_path,
+        [
+            "configure",
+            "--archive-root",
+            str(archive.resolve()),
+            "--host-folder-access-approved",
+        ],
+    )
+
+    assert completed.returncode == 0
+    assert "error" not in json.loads(completed.stdout)
+    assert completed.stderr == ""
+    assert data is None

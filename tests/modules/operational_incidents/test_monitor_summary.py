@@ -163,6 +163,18 @@ def test_derived_clock_capture_changes_do_not_reopen_reviewed_case():
     assert result["controlled_fixture_incidents"] == 1
 
 
+def test_derived_diagnostic_deadlines_do_not_change_reviewed_technical_evidence():
+    row = incident()
+    ledger = reviewed(row)
+    row["diagnostic_requests"] = [
+        {"state": "published-awaiting-receipt", "overdue": True}
+    ]
+
+    result = summarize(snapshot(row), ledger)
+
+    assert result["controlled_fixture_incidents"] == 1
+
+
 def test_repeated_reports_count_one_incident_not_two_machines():
     row = incident()
     row["reports"].append({"report_id": "second", "exit_code": 1})

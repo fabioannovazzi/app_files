@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import os
 import sqlite3
 import sys
@@ -14,6 +15,7 @@ from typing import Any
 # Check before importing the worker and its dependencies so an unsupported
 # interpreter reports the launch error instead of failing on a newer API.
 if sys.implementation.name != "cpython" or sys.version_info[:2] != (3, 12):
+    logging.error("Studio Archive requires CPython 3.12; use its managed launcher.")
     sys.stdout.write(
         json.dumps(
             {
@@ -455,6 +457,9 @@ def main(argv: list[str] | None = None) -> int:
                 expected_scope_id=args.expected_scope_id,
             )
     except (ArchiveError, OSError, ValueError, sqlite3.Error) as exc:
+        # Keep the exception alive for the source-bound collector and retain
+        # its traceback locally; the JSON response remains the caller's result.
+        logging.exception("Studio Archive operation failed")
         error = {
             "code": getattr(exc, "code", "archive_operation_failed"),
             "message": str(exc),

@@ -209,6 +209,22 @@ including after a service outage. Raw stderr may contain unrelated private text;
 it is never forwarded automatically to Mparanza. The host AI selects all relevant
 technical evidence and excludes private/client content before supplementation.
 
+A CLI that handles an exception and returns an error JSON must log the active
+exception before emitting that response, using `logging.exception` or equivalent
+`exc_info`. Otherwise the technical collector sees only the final exit code and
+the retained stderr can be empty. Studio Archive follows this contract for its
+handled Archive, OS, value and SQLite errors. Its JSON response and exit status
+are unchanged. The collector extracts source-bound classes, templates and errno;
+raw traceback details stay local for the host AI's existing review. Professional
+stdout is neither captured nor forwarded. A regression must exercise the actual
+handled-error CLI path and assert its real exception, local traceback, unchanged
+response, and exclusion of dynamic case values from structured reporting.
+
+For old zero-stderr captures, the host reviews its original structured tool error
+locally if available. Missing original evidence is an explicit unavailable reply,
+not proof that collection succeeded. The original cause and task recovery remain
+unknown until fresh relevant evidence and the actual retry are received.
+
 A reviewed Report sets `evidence_for_report_id` to the original report UUID.
 Ownership and exact execution metadata, including original session, operation and
 input binding when present, must match. A supplement only completes capture when

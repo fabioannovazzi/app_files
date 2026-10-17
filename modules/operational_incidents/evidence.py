@@ -5,7 +5,67 @@ from __future__ import annotations
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
-__all__ = ["capture_coverage", "incident_summary"]
+__all__ = ["capture_coverage", "diagnostic_followup", "incident_summary"]
+
+
+def diagnostic_followup(
+    *,
+    report_id: str,
+    installation_id: str,
+    revision: int,
+    published_at: str,
+    supplements: list[dict[str, Any]],
+    events: list[dict[str, Any]],
+    last_reporter_seen_at: str | None,
+    now: datetime | None = None,
+) -> dict[str, Any]:
+    """Expose exact receipts and the existing 15-minute collection deadline.
+
+    These are mechanical delivery facts, not a diagnosis of host availability
+    or a rule choosing a remedy. Only the agent decides the next recovery step.
+    """
+    replies = [
+        item["report_id"]
+        for item in supplements
+        if item.get("evidence_for_report_id") == report_id
+        and item.get("response_to_remedy_revision") == revision
+    ]
+    receipts = [
+        item["recorded_at"]
+        for item in events
+        if item["installation_id"] == installation_id
+        and item["report_id"] == report_id
+        and item["remedy_revision"] == revision
+        and item["kind"] == "remedy-received"
+    ]
+    received_at = min(receipts) if receipts else None
+    published = datetime.fromisoformat(published_at)
+    due = datetime.fromisoformat(received_at or published_at) + timedelta(minutes=15)
+    return {
+        "report_id": report_id,
+        "installation_id": installation_id,
+        "request_revision": revision,
+        "published_at": published_at,
+        "received_at": received_at,
+        "response_report_ids": replies,
+        "state": (
+            "responded"
+            if replies
+            else (
+                "received-awaiting-reply"
+                if received_at
+                else "published-awaiting-receipt"
+            )
+        ),
+        "reply_due_at": due.isoformat(),
+        "overdue": not replies and (now or datetime.now(timezone.utc)) >= due,
+        "last_reporter_seen_at": last_reporter_seen_at,
+        "reporter_seen_after_publication": (
+            datetime.fromisoformat(last_reporter_seen_at) >= published
+            if last_reporter_seen_at
+            else None
+        ),
+    }
 
 
 def capture_coverage(
