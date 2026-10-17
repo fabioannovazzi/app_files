@@ -46,6 +46,36 @@ ASSETS = {
     ),
 }
 MAX_DOWNLOAD = 64 * 1024 * 1024
+# Standalone bootstrap: copy host/path names from local_helper_environment.json,
+# omit helper/runtime overrides, and add only installer proxy/CA/cache settings.
+# A fixed allowlist keeps unrelated credentials out of networked subprocesses.
+INSTALLER_ENVIRONMENT_NAMES = frozenset(
+    {
+        "PATH",
+        "HOME",
+        "USERPROFILE",
+        "SYSTEMROOT",
+        "WINDIR",
+        "COMSPEC",
+        "PATHEXT",
+        "LOCALAPPDATA",
+        "APPDATA",
+        "TEMP",
+        "TMP",
+        "TMPDIR",
+        "LANG",
+        "LC_ALL",
+        "HTTPS_PROXY",
+        "HTTP_PROXY",
+        "ALL_PROXY",
+        "NO_PROXY",
+        "SSL_CERT_FILE",
+        "SSL_CERT_DIR",
+        "REQUESTS_CA_BUNDLE",
+        "XDG_CACHE_HOME",
+        "XDG_DATA_HOME",
+    }
+)
 
 
 def _replace_download(temporary: Path, binary: Path) -> None:
@@ -124,10 +154,9 @@ def provision(base: Path, runner: Any = subprocess.run) -> str:
         raise ValueError("Private Python storage cannot be a symlink")
     uv = _uv(base / "bootstrap")
     environment = {
-        key: value
-        for key, value in os.environ.items()
-        if not key.startswith("UV_")
-        and key not in {"VIRTUAL_ENV", "CONDA_PREFIX", "PYTHONHOME", "PYTHONPATH"}
+        key: os.environ[key]
+        for key in os.environ
+        if key.upper() in INSTALLER_ENVIRONMENT_NAMES
     }
     environment.update(
         {

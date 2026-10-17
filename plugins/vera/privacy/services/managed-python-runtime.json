@@ -144,6 +144,14 @@
       "on_violation": "A worker failure remains failure; diagnostic persistence errors are logged rather than converted into a success."
     },
     {
+      "id": "python-installer-environment-allowlist",
+      "control": "The standalone Python bootstrap passes uv only declared host paths, locale, proxy, CA and cache settings, preserving original environment-name casing. Unrelated token/API-key variables and inherited UV_*, VIRTUAL_ENV, CONDA_PREFIX, PYTHONHOME and PYTHONPATH are excluded; private UV_PYTHON_* and UV_CACHE_DIR values are set by the bootstrap. The same environment is used for interpreter discovery and its local probe.",
+      "implemented_by": [
+        "scripts/_python_bootstrap.py"
+      ],
+      "on_violation": "Undeclared environment names are absent from every bootstrap child process."
+    },
+    {
       "id": "helper-environment-allowlist",
       "control": "The built-in incident dependency-setup retry uses the shared host/runtime environment allowlist, named runtime/state locations and recovery recursion guard instead of inheriting unrelated user tokens and keys.",
       "implemented_by": [
@@ -156,6 +164,6 @@
     "reviewed_at": "2026-10-17",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "2e225a624eb5f5edc66dc23565b1141f6fd3f3ff935badd9474f93f0753eb6af"
+    "source_fingerprint": "746bf3b0cb3d99eba4833098a5383f80a1db8681e80ed5eed0195fbd5d7a9b46"
   }
 }
