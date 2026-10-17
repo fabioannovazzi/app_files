@@ -1,0 +1,13 @@
+{
+  "mcp/workspace.cjs": "Base64-embeds Instrument Sans Regular in widget CSS @font-face.",
+  "mcp/studio-work-panel.cjs": "Base64-embeds Instrument Sans Regular in panel CSS @font-face.",
+  "modules/bilancio-xbrl-it/mcp/native-workspace.cjs": "Base64-embeds Instrument Sans Regular in widget CSS @font-face.",
+  "modules/browser-automation/mcp/server.cjs": "Base64-embeds Instrument Sans Regular/SemiBold in browser-review CSS @font-face.",
+  "scripts/research-sources.cjs": "Base64-embeds Instrument Sans Regular in research-choice CSS @font-face.",
+  "scripts/native_studio_work.py": "Hashes the Regular TTF as part of panel scope/version identity.",
+  "execution-files.json": "Records font SHA-256 hashes for package integrity, not execution.",
+  "modules/comunicazione-professionale/scripts/render_visuals.py": "Loads bundled Instrument Sans TTFs with Pillow/ReportLab for PNG/PDF text; fontTools checks glyph coverage.",
+  "modules/comunicazione-professionale/scripts/check_dependencies.py": "Checks that the three bundled TTF files exist.",
+  "modules/comunicazione-professionale/scripts/studio_document_format.py": "Reads/sets Word style font names and sizes; does not load TTF bytes.",
+  "modules/comunicazione-professionale/scripts/package_communications.py": "Names Instrument Sans in HTML CSS; does not load TTF bytes."
+}

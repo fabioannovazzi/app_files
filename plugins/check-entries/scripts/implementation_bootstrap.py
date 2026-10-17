@@ -44,6 +44,9 @@ IMPLEMENTATION_CONTRACT = (
     ("implementation", "scripts/implementation_contract.py"),
     ("implementation", "scripts/inspect_entries.py"),
     ("implementation", "scripts/invoice_support.py"),
+    ("implementation", "scripts/local_helper_environment.cjs"),
+    ("implementation", "scripts/local_helper_environment.json"),
+    ("implementation", "scripts/local_helper_environment.py"),
     ("implementation", "scripts/physical_output_set.py"),
     ("implementation", "scripts/review_session.py"),
     ("implementation", "scripts/run_checks.py"),
@@ -212,7 +215,7 @@ def validate_implementation_tree(
 
     if observed_files != set(IMPLEMENTATION_CONTRACT):
         raise RuntimeError(
-            "implementation filesystem does not match the exact 26-file contract"
+            "implementation filesystem does not match the declared file contract"
         )
     if observed_directories != _expected_directories(IMPLEMENTATION_CONTRACT):
         raise RuntimeError("implementation directories do not match the exact contract")

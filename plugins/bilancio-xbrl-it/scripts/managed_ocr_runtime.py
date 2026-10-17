@@ -16,6 +16,12 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Callable
 
+_HELPER_SCRIPTS = Path(__file__).resolve().parent
+if not (_HELPER_SCRIPTS / "local_helper_environment.py").is_file():
+    _HELPER_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+sys.path.insert(0, str(_HELPER_SCRIPTS))
+from local_helper_environment import local_helper_environment  # noqa: E402
+
 __all__ = [
     "INSTALL_FAILURE_MESSAGE",
     "INSTALL_SUCCESS_MESSAGE",
@@ -283,7 +289,12 @@ def _prefetch_models(target: Path, runner: Runner, python: Path) -> None:
     completed = runner(
         [str(python), "-c", code],
         cwd=target,
-        env={**os.environ, "MPARANZA_RUNTIME_INSTALLING": "1"},
+        env={
+            **local_helper_environment(),
+            "MPARANZA_RUNTIME_INSTALLING": "1",
+            "PYTHONPATH": str(target),
+            "PADDLE_PDX_CACHE_HOME": str(_model_cache(target)),
+        },
         capture_output=True,
         check=False,
         text=True,

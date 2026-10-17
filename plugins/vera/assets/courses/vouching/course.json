@@ -65,12 +65,12 @@
     {
       "path": "modules/check-entries/scripts/check_entries_core.py",
       "repository_path": "plugins/check-entries/scripts/check_entries_core.py",
-      "sha256": "bd10e2831c274cea590ed860c5da8b5349ac7e3c9c29c83397cdf701b1bf6d44"
+      "sha256": "d8a7ec7031489c079e5dbade5523d447e5eab8feeb2527e06862df38c2200a69"
     },
     {
       "path": "modules/check-entries/scripts/implementation_bootstrap.py",
       "repository_path": "plugins/check-entries/scripts/implementation_bootstrap.py",
-      "sha256": "f0c9bed9fd831429054287cc75cc6e55da04b79cbb8ef0afc898d2a3cbd3c277"
+      "sha256": "baeee0ba90dd7adff407069ca60e3acc74f1ae2ba4d8c2d054f64f17a0803a58"
     },
     {
       "path": "modules/check-entries/scripts/implementation_contract.py",
@@ -86,6 +86,21 @@
       "path": "modules/check-entries/scripts/invoice_support.py",
       "repository_path": "plugins/check-entries/scripts/invoice_support.py",
       "sha256": "7ccefa3cbca3f21642782e3ce7263f7d1b1e99345cfa5ebe23cb7bc13f97a026"
+    },
+    {
+      "path": "modules/check-entries/scripts/local_helper_environment.cjs",
+      "repository_path": "plugins/check-entries/scripts/local_helper_environment.cjs",
+      "sha256": "677fc62c1d292b6618e0890ded49618f1f6a59fdcaa6e303878e441eaa6cb35a"
+    },
+    {
+      "path": "modules/check-entries/scripts/local_helper_environment.json",
+      "repository_path": "plugins/check-entries/scripts/local_helper_environment.json",
+      "sha256": "bc99261b918b8d772d3c1ccdcd7ef140fa0c49ffff0c78e824dea306d0cedd92"
+    },
+    {
+      "path": "modules/check-entries/scripts/local_helper_environment.py",
+      "repository_path": "plugins/check-entries/scripts/local_helper_environment.py",
+      "sha256": "3c0c1127adc3d1deb778b3e8d93ee7505ac70ea1281128d05256acd9c29e14ad"
     },
     {
       "path": "modules/check-entries/scripts/physical_output_set.py",

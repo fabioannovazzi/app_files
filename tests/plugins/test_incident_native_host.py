@@ -31,6 +31,9 @@ def installed(tmp_path: Path, endpoint: str | None = None) -> Path:
         "technical_runner.py",
     ):
         shutil.copyfile(ROOT / "plugins/vera/scripts" / name, root / "scripts" / name)
+    for suffix in ("py", "json"):
+        filename = f"local_helper_environment.{suffix}"
+        shutil.copyfile(ROOT / "scripts" / filename, root / "scripts" / filename)
     if endpoint is not None:
         # Only this owned fixture changes transport. Production has no URL override.
         script = root / "scripts/operational_incidents.py"

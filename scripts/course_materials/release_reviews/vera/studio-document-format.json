@@ -50,7 +50,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "0aa224559d096e0917a225ade8707ab5f910be4282669d72fc23a8047ebf1239",
+  "course_sha256": "082a650cfe45502a1dc15ccdadddb2dc76aa6042ebcd74a211b8909fbab3b0e9",
   "integration_refresh": {
     "reviewer": "Codex /root",
     "date": "2026-10-02",
@@ -622,5 +622,16 @@
     "source_review": "Inspected complete Archive core, identity-lock and workflow-instruction diffs merged in PR #850. Client-directory operations synchronize portable identities from live directory metadata independently of the content index. Indexed search/source-opening freshness checks remain separate. Shared identity writes use the existing OS lock with a bounded ten-second contention wait; expiry never removes the lock, changes the client or changes the archive root. Session selection remains separate. No model call, hosted recipient or new external data path is added. All authored lesson fields except source bindings match the exact previously reviewed course.",
     "execution_requirement": "Full final-head teaching CI must execute the exact current course digests and pass verify_release.py before merge.",
     "limitations": "Historical editorial and artifact reviews retain their original scope. This is source compatibility review, not new visual, learner, professional or installed-host acceptance and not a function-rating upgrade."
+  },
+  "workflow_usage_source_binding_review_20261017": {
+    "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
+    "reviewed_at": "2026-10-17T17:11:41.800043+00:00",
+    "baseline_commit": "6048ffff4f98a94854888598871c4ab23c595813",
+    "previous_course_sha256": "0aa224559d096e0917a225ade8707ab5f910be4282669d72fc23a8047ebf1239",
+    "current_course_sha256": "082a650cfe45502a1dc15ccdadddb2dc76aa6042ebcd74a211b8909fbab3b0e9",
+    "authored_content_unchanged": true,
+    "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json",
+    "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
+    "fresh_matching_junit_required": true
   }
 }

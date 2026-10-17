@@ -6,6 +6,8 @@ const path = require("node:path");
 const readline = require("node:readline");
 const { spawnSync } = require("node:child_process");
 
+const { localHelperEnvironment } = require("../scripts/local_helper_environment.cjs");
+
 const SERVER_NAME = "check-entries-widgets";
 const PLUGIN_ROOT = path.resolve(__dirname, "..");
 const CHECK_ENTRIES_PLUGIN_IMPLEMENTATION_PATHS = [
@@ -23,6 +25,9 @@ const CHECK_ENTRIES_PLUGIN_IMPLEMENTATION_PATHS = [
   "scripts/implementation_contract.py",
   "scripts/inspect_entries.py",
   "scripts/invoice_support.py",
+  "scripts/local_helper_environment.cjs",
+  "scripts/local_helper_environment.json",
+  "scripts/local_helper_environment.py",
   "scripts/physical_output_set.py",
   "scripts/review_session.py",
   "scripts/run_checks.py",
@@ -4569,6 +4574,7 @@ function runWorkflowPython(args, phase) {
       ["-I", "-B", ...args],
       {
         cwd: PLUGIN_ROOT,
+        env: localHelperEnvironment(),
         encoding: "utf8",
         maxBuffer: CHILD_OUTPUT_MAX_BYTES,
       },

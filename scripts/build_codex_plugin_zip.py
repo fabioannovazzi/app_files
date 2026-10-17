@@ -1412,6 +1412,29 @@ def expected_zip_entries(
             component_server = review_workbench_server_entry(component_dir)
             if component_server is not None:
                 entries[f"{component_root}/scripts/review_server.py"] = component_server
+    # Generated source copies used by Check Entries' exact-tree contract still
+    # package the canonical shared bytes, never an independently maintained list.
+    for name in list(entries):
+        if name.endswith(
+            (
+                "/scripts/local_helper_environment.cjs",
+                "/scripts/local_helper_environment.json",
+                "/scripts/local_helper_environment.py",
+            )
+        ):
+            entries[name] = (ROOT / "scripts" / Path(name).name).read_bytes()
+
+    # Inject shared helper siblings for each Python consumer, including generated servers.
+    for name in list(entries):
+        if (
+            name.endswith(".py")
+            and "/scripts/" in name
+            and b"from local_helper_environment import" in entries[name]
+        ):
+            directory = name.rsplit("/", 1)[0] + "/"
+            for suffix in ("py", "json"):
+                helper = f"local_helper_environment.{suffix}"
+                entries[directory + helper] = (ROOT / "scripts" / helper).read_bytes()
     for plugin_dir in plugin_dirs:
         externalize_course_files(
             entries, plugin_dir.name, f"{root}/plugins/{plugin_dir.name}/", root=ROOT

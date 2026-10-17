@@ -38,6 +38,14 @@ PUBLIC_PROCESS_PAGE_CONTRACT = (
 )
 
 
+def _copy_local_helper_environment(directory: Path) -> None:
+    """Include the real shared subprocess dependency in isolated review fixtures."""
+    directory.mkdir(parents=True, exist_ok=True)
+    for suffix in ("py", "json"):
+        name = f"local_helper_environment.{suffix}"
+        shutil.copy2(ROOT / "scripts" / name, directory / name)
+
+
 def _validator_module():
     spec = importlib.util.spec_from_file_location("vera_privacy_validator", VALIDATOR)
     assert spec and spec.loader
@@ -647,6 +655,7 @@ def test_vera_privacy_validator_reports_unregistered_manifest_gap(
     validator = _validator_module()
     vera_root = tmp_path / "plugins" / "vera"
     shutil.copytree(VERA_ROOT, vera_root)
+    _copy_local_helper_environment(vera_root / "scripts")
     missing = vera_root / "privacy" / "workstreams" / "check-entries.json"
     missing.unlink()
 
@@ -661,6 +670,7 @@ def test_vera_privacy_validator_reports_shared_service_manifest_gap(
     validator = _validator_module()
     vera_root = tmp_path / "plugins" / "vera"
     shutil.copytree(VERA_ROOT, vera_root)
+    _copy_local_helper_environment(vera_root / "scripts")
     missing = vera_root / "privacy" / "services" / "plugin-feedback.json"
     missing.unlink()
 
@@ -677,6 +687,7 @@ def test_vera_privacy_validator_detects_changed_shared_service_source(
     validator = _validator_module()
     vera_root = tmp_path / "plugins" / "vera"
     shutil.copytree(VERA_ROOT, vera_root)
+    _copy_local_helper_environment(vera_root / "scripts")
     components = json.loads((vera_root / "components.json").read_text(encoding="utf-8"))
     components["plugins"] = []
     components["workflow_roles"] = {}
@@ -730,6 +741,7 @@ def test_vera_privacy_validator_detects_changed_governed_source(
         plugins_root / "_shared" / "vendor" / "modules" / "vera_assurance"
     )
     shutil.copytree(VERA_ROOT, vera_root)
+    _copy_local_helper_environment(vera_root / "scripts")
     shutil.copytree(ROOT / "plugins" / "prompt-optimizer", component_root)
     shared_references = Path(
         "plugins/deep-research-validator/skills/legal-tax-answer-review/references"
@@ -807,6 +819,7 @@ def test_privacy_fingerprint_governs_projected_local_review_server(
         plugins_root / "_shared" / "vendor" / "modules" / "vera_assurance"
     )
     shutil.copytree(VERA_ROOT, vera_root)
+    _copy_local_helper_environment(vera_root / "scripts")
     shutil.copytree(ROOT / "plugins" / "client-file-preparation", component_root)
     shutil.copytree(
         ROOT / "plugins" / "_shared" / "vendor" / "modules" / "vera_assurance",
@@ -839,6 +852,7 @@ def test_privacy_fingerprint_governs_projected_local_review_server(
     packaged_component = vera_root / "modules" / "client-file-preparation"
     shutil.copytree(component_root, packaged_component)
     shutil.copy2(shared_server, packaged_component / "scripts" / "review_server.py")
+    _copy_local_helper_environment(packaged_component / "scripts")
     shutil.copytree(
         shared_assurance,
         vera_root / "vendor" / "modules" / "vera_assurance",
@@ -874,6 +888,7 @@ def test_privacy_fingerprint_governs_workflow_wrapper_references(
         scripts_root / "plugin_vendor_modules.json",
     )
     shutil.copytree(VERA_ROOT, vera_root)
+    _copy_local_helper_environment(vera_root / "scripts")
     shutil.copytree(ROOT / "plugins" / "studio-archive", component_root)
     shutil.copytree(
         ROOT / "plugins" / "_shared" / "vendor" / "modules" / "vera_assurance",
@@ -926,6 +941,7 @@ def test_privacy_fingerprint_governs_shared_ocr_source(
     )
     shared_ocr = plugins_root / "_shared" / "vendor" / "modules" / "vera_ocr"
     shutil.copytree(VERA_ROOT, vera_root)
+    _copy_local_helper_environment(vera_root / "scripts")
     shutil.copytree(ROOT / "plugins" / "previdenza-inps", component_root)
     shutil.copytree(
         ROOT / "plugins" / "_shared" / "vendor" / "modules" / "vera_assurance",
@@ -975,6 +991,7 @@ def test_packaged_ocr_consumer_cannot_fall_back_to_repository_shared_source(
     )
     shared_ocr = plugins_root / "_shared" / "vendor" / "modules" / "vera_ocr"
     shutil.copytree(VERA_ROOT, vera_root)
+    _copy_local_helper_environment(vera_root / "scripts")
     shutil.copytree(ROOT / "plugins" / "previdenza-inps", source_component)
     shutil.copytree(
         ROOT / "plugins" / "_shared" / "vendor" / "modules" / "vera_assurance",
@@ -1018,6 +1035,7 @@ def test_vera_privacy_validator_rejects_confirmation_on_required_boundary(
     validator = _validator_module()
     vera_root = tmp_path / "plugins" / "vera"
     shutil.copytree(VERA_ROOT, vera_root)
+    _copy_local_helper_environment(vera_root / "scripts")
     manifest_path = (
         vera_root / "privacy" / "workstreams" / "deep-research-validator.json"
     )

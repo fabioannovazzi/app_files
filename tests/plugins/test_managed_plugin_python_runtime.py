@@ -742,6 +742,11 @@ def test_managed_launcher_imports_ready_component_target(
     (plugin_root / "scripts/operational_incidents.py").write_bytes(
         (ROOT / "plugins/vera/scripts/operational_incidents.py").read_bytes()
     )
+    for suffix in ("py", "json"):
+        filename = f"local_helper_environment.{suffix}"
+        (plugin_root / "scripts" / filename).write_bytes(
+            (ROOT / "scripts" / filename).read_bytes()
+        )
 
     completed = subprocess.run(
         [

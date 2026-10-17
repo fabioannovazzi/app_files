@@ -12,6 +12,9 @@ import tempfile
 from pathlib import Path
 from zipfile import ZipFile
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from local_helper_environment import local_helper_environment  # noqa: E402
+
 __all__ = ["verify_vera_execution_zip"]
 
 ASSURED_MODULES = (
@@ -101,7 +104,7 @@ def verify_vera_execution_zip(archive_path: Path, plugin_root: str) -> None:
         _verify_release_references(archive_path, root, prefix)
         # Keep unexpected CLI incident reports local to this build fixture.
         environment = {
-            **os.environ,
+            **local_helper_environment(),
             "MPARANZA_INCIDENT_STATE_DIR": str(staging / "incidents"),
             "https_proxy": "http://127.0.0.1:9",
             "HTTPS_PROXY": "http://127.0.0.1:9",

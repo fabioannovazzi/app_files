@@ -162,7 +162,7 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/managed_ocr_runtime.py",
-      "sha256": "70145e61f1e5f1c5ef3183f1d18a14e426f0fe5280ffe3d158795f4a271841a3"
+      "sha256": "970b4578f908a4e93eca08f77caf69fca365d5fe435ff637062acf86bde0efd8"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/mapping_memory.py",
@@ -298,7 +298,7 @@
     },
     {
       "path": "scripts/operational_incidents.py",
-      "sha256": "8d486cbd5edf75520d5b83329795f704d580ea6ab4c0cbe2145a1ba79c1e375e"
+      "sha256": "2553616257314e720108ee23d7e1dcd3d681334dc1f1b911a6235b14dcf015c8"
     },
     {
       "path": "scripts/verified_execution.py",
@@ -632,5 +632,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "2a9c9c8d6606b2513f056bbfb4e927888f1991e5b9d0d90f1f383a2f29778818"
+  "canonical_course_sha256": "da57d0251d5033f4e9736711b26d65291ed95283dd7caee2a040e8c2d7861bc7"
 }

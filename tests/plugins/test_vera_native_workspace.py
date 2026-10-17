@@ -117,7 +117,16 @@ def new_client_workspace(tmp_path, monkeypatch, vera_workflow_workspace):
         "constructor(...args) { super(...(args.length ? args : ['2026-07-20T12:00:00Z'])); }"
         "static now() { return new RealDate('2026-07-20T12:00:00Z').getTime(); } };"
     )
-    monkeypatch.setenv("NODE_OPTIONS", "--require " + str(clock))
+    # Keep the clock explicit in test argv: production helpers intentionally
+    # exclude NODE_OPTIONS, which can inject arbitrary startup code.
+    run = subprocess.run
+
+    def with_fixture_clock(command, *args, **kwargs):
+        if Path(command[0]).stem == "node":
+            command = [command[0], "--require", str(clock), *command[1:]]
+        return run(command, *args, **kwargs)
+
+    monkeypatch.setattr(subprocess, "run", with_fixture_clock)
     output = new_client._generate_package(vera_workflow_workspace)
     binding, _ = archived_review_binding(output, "new-client")
     configure(monkeypatch, tmp_path, [binding])
@@ -1151,13 +1160,12 @@ def test_new_client_native_apply_rejects_expired_package_without_changing_dossie
 ):
     service, binding, output = new_client_workspace
     before = (output / "final_artifacts.json").read_bytes()
-    clock = tmp_path / "expired-clock.cjs"
+    clock = tmp_path / "new-client-clock.cjs"
     clock.write_text(
         "const RealDate = Date; global.Date = class extends RealDate {"
         "constructor(...args) { super(...(args.length ? args : ['2099-01-01T12:00:00Z'])); }"
         "static now() { return new RealDate('2099-01-01T12:00:00Z').getTime(); } };"
     )
-    monkeypatch.setenv("NODE_OPTIONS", "--require " + str(clock))
     view = service.dispatch("vera_workspace_view", {"work_ref": binding["work_ref"]})
     item = view["items"][0]
 

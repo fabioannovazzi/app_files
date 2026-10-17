@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "contenzioso-tributario",
-  "course_sha256": "6550e2c990e4bf5bb85d63438bca34e82d5991a3d7d7b242a5513357bbf237ec",
+  "course_sha256": "f828f0d4a44032d933b8230aa1f983c2b48d3e8658fea938099a792562d468b6",
   "reviewer": "Codex /root: five-language authored lesson and real evidence/progress output review",
   "reviewed_at": "2026-10-14T14:55:04.859840+00:00",
   "review_scope": "Accepted prepared material and bounded real helper/Archive regressions. Semantic narrative and decisions are explicit test fixtures. This does not attest full live legal research, substantive pleading approval, native Word, native voice, installed-host learner execution or professional acceptance. Live lessons run the current specialist, not the fixtures.",
@@ -303,5 +303,16 @@
     "previous_course_sha256": "950a083cd9c0b08354298b21957c24f966fc3d2dd8f3a5ce3a998f00d0c5742a",
     "scope": "Compared against 9b74daa parent: every authored course field and fictional input is unchanged; only the source hash for plugins/vera/scripts/operational_incidents.py changes. Inspected diff: observed reporter protocol 2 to 3 and updated startup recovery guidance. Course legal workflow, narrative, steps and evidence inputs are unchanged. Original editorial dates, findings and artifact hashes remain historical; current demo/practice regressions are rerun separately.",
     "source_path": "plugins/vera/scripts/operational_incidents.py"
+  },
+  "workflow_usage_source_binding_review_20261017": {
+    "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
+    "reviewed_at": "2026-10-17T17:11:41.800043+00:00",
+    "baseline_commit": "6048ffff4f98a94854888598871c4ab23c595813",
+    "previous_course_sha256": "6550e2c990e4bf5bb85d63438bca34e82d5991a3d7d7b242a5513357bbf237ec",
+    "current_course_sha256": "f828f0d4a44032d933b8230aa1f983c2b48d3e8658fea938099a792562d468b6",
+    "authored_content_unchanged": true,
+    "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json",
+    "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
+    "fresh_matching_junit_required": true
   }
 }

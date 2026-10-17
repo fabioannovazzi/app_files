@@ -59,12 +59,20 @@
         "scripts/operational_incidents.py"
       ],
       "on_violation": "Reject unsupported actions and keep the incident open."
+    },
+    {
+      "id": "helper-environment-allowlist",
+      "control": "Built-in recovery children receive the shared host/runtime environment allowlist, explicit named runtime/state locations and the recovery recursion guard. Unrelated user tokens and keys are not inherited.",
+      "implemented_by": [
+        "scripts/operational_incidents.py"
+      ],
+      "on_violation": "Undeclared environment names are absent from the child environment."
     }
   ],
   "review": {
     "reviewed_at": "2026-10-17",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "c7e4ff1d6ad94acd3dd78365f9accd6f75aedae147fd035b9c337bb5481d3ebc"
+    "source_fingerprint": "ec0e4a429b36bded599c753821bcd021df2a06fbc5a6880e7b61d9e974f798e3"
   }
 }
