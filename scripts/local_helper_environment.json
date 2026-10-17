@@ -1,0 +1,19 @@
+[
+  "PATH",
+  "HOME",
+  "USERPROFILE",
+  "SYSTEMROOT",
+  "WINDIR",
+  "COMSPEC",
+  "PATHEXT",
+  "LOCALAPPDATA",
+  "APPDATA",
+  "TEMP",
+  "TMP",
+  "TMPDIR",
+  "LANG",
+  "LC_ALL",
+  "VIRTUAL_ENV",
+  "MPARANZA_REVIEW_NODE",
+  "PYTHON"
+]

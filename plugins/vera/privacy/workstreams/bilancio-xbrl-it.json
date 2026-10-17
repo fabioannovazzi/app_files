@@ -279,13 +279,17 @@
     {
       "id": "area-review-dependency-integrity",
       "control": "Area planning requires exact complete account coverage, registered evidence and separate reviewer confirmation bound to the selected OIC checksum and the retained proposal hash. Exact source quotes and periods are checked before accepting interpretation proposals; prior-only sources cannot confirm current applicability. Source revisions and per-area dependency hashes reopen affected controls while retaining a verified append-only review chain. Model-facing pages refuse payloads above 64 KiB; native source views return exact bounded excerpts without arbitrary path reads. Private workbook output rejects stale revisions, symlink destinations, large cells and oversized downloads; all untrusted Excel cells are literal strings rather than formulas or links."
+    },
+    {
+      "id": "ocr-prefetch-environment-allowlist",
+      "control": "The OCR model-prefetch child receives the shared host/runtime environment allowlist plus its explicit module directory, model cache and installation guard, rather than unrelated user tokens and keys."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-16",
+    "reviewed_at": "2026-10-17",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "9fa823aa0e787701b7042a591f0a58654b23314c255aae1510abd4df73de5cd1"
+    "source_fingerprint": "40db1a5999581908e97ec1177055b6b4821faa38eb001477a0564a0050f196e0"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"

@@ -14,6 +14,12 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, Iterator
 
+_HELPER_SCRIPTS = Path(__file__).resolve().parent
+if not (_HELPER_SCRIPTS / "local_helper_environment.py").is_file():
+    _HELPER_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+sys.path.insert(0, str(_HELPER_SCRIPTS))
+from local_helper_environment import local_helper_environment  # noqa: E402
+
 __all__ = ["dispatch", "module_root"]
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -1124,7 +1130,7 @@ def engine_context(
         text=True,
         capture_output=True,
         timeout=40,
-        env={**os.environ, "PYTHON": os.environ.get("PYTHON") or sys.executable},
+        env=local_helper_environment(python=os.environ.get("PYTHON") or sys.executable),
         check=False,
     )
     if completed.returncode:
@@ -1167,6 +1173,7 @@ def open_item_review(
 def dispatch(tool: str, args: dict[str, Any]) -> dict[str, Any]:
     if tool.startswith("vera_workspace_practice_"):
         from types import SimpleNamespace
+
         from native_practice_reviews import dispatch as practice_dispatch
 
         return practice_dispatch(tool, args, SimpleNamespace(**globals()))
@@ -1536,6 +1543,7 @@ def dispatch(tool: str, args: dict[str, Any]) -> dict[str, Any]:
     output = Path(loaded["output_dir"])
     if tool == "vera_workspace_fiscal_correction_prepare":
         from types import SimpleNamespace
+
         from native_fiscal_corrections import prepare_correction
 
         return prepare_correction(binding, loaded, args, SimpleNamespace(**globals()))

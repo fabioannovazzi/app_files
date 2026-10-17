@@ -32,6 +32,7 @@ from invoice_support import (
     load_invoice_payloads,
     match_invoice,
 )
+from local_helper_environment import local_helper_environment
 from stable_ooxml import write_stable_xlsx
 
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -1668,7 +1669,7 @@ def _run_journal_sampling_replay(
                 check=False,
                 timeout=120,
                 env={
-                    **os.environ,
+                    **local_helper_environment(),
                     "PYTHONDONTWRITEBYTECODE": "1",
                     "PYTHONPYCACHEPREFIX": str(temporary_root / "pycache"),
                 },

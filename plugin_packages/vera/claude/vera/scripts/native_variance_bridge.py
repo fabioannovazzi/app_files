@@ -11,6 +11,12 @@ import subprocess
 import sys
 from pathlib import Path
 
+_HELPER_SCRIPTS = Path(__file__).resolve().parent
+if not (_HELPER_SCRIPTS / "local_helper_environment.py").is_file():
+    _HELPER_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+sys.path.insert(0, str(_HELPER_SCRIPTS))
+from local_helper_environment import local_helper_environment  # noqa: E402
+
 __all__ = ["main"]
 
 
@@ -138,7 +144,7 @@ def main() -> None:
             text=True,
             capture_output=True,
             timeout=35,
-            env={**os.environ, "PYTHON": sys.executable},
+            env=local_helper_environment(python=sys.executable),
             check=False,
         )
         if checked.returncode:
