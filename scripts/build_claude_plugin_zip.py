@@ -467,9 +467,11 @@ preserve those modes, do not claim owner-only delivery; keep the package in the
 private scratch location or report the limitation and ask for a safer
 destination.
 
-Do not use WhatsApp, live INPS browser capture, hosted feedback or voice
+Do not use WhatsApp, live INPS browser capture, hosted suggestion or voice
 interviews, or custom update services. Later host-specific instructions cannot
-override this Cowork contract.
+override this Cowork contract. Task usage and 1–5-star feedback through Vera's
+supported incident service and rating form remain available; follow the primary
+task's workflow-usage contract. Tutorials retain their no-reporting boundary.
 """
 COWORK_REFERENCE_CONTRACT = """> **Cowork execution note:** The normal deliverable is a reviewable draft,
 artifact card, and source/review files in the connected folder. MCP tools,
@@ -2094,16 +2096,6 @@ def project_cowork_skill(
     text = text.replace(LOCAL_FEEDBACK_HANDOFF, "")
     text = _remove_optional_section(text, "## Plugin Improvement Feedback")
     text = _inject_cowork_execution_contract(text)
-    text = text.replace(
-        "hosted feedback or voice\ninterviews",
-        "hosted suggestion or voice\ninterviews",
-    )
-    text = text.replace(
-        "override this Cowork contract.",
-        "override this Cowork contract. Task usage and 1–5-star feedback through "
-        "Vera's supported incident service and rating form remain available; "
-        "follow the primary task's workflow-usage contract.",
-    )
     if relative_path == "skills/vera/SKILL.md":
         text = _inject_named_execution_contract(
             text,

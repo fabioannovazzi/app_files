@@ -541,7 +541,7 @@ def test_unlinked_new_receipt_is_a_coverage_gap_and_old_receipts_are_not_counted
         "complete": True,
         "receipts": [
             {"receipt_id": str(uuid4()), "plugin_version": "0.1.400"},
-            {"receipt_id": str(uuid4()), "plugin_version": "0.1.402"},
+            {"receipt_id": str(uuid4()), "plugin_version": "0.1.403"},
         ],
     }
 
@@ -550,7 +550,7 @@ def test_unlinked_new_receipt_is_a_coverage_gap_and_old_receipts_are_not_counted
     assert report["totals"]["runs"] == 0
     assert report["legacy_unattributed_receipt_count"] == 1
     assert len(report["unattributed_receipts"]) == 1
-    assert report["unattributed_receipts"][0]["plugin_version"] == "0.1.402"
+    assert report["unattributed_receipts"][0]["plugin_version"] == "0.1.403"
 
 
 def test_direct_cli_persists_and_reads_the_same_run(installed_client, capsys):

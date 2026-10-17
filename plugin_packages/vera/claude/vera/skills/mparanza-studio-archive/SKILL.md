@@ -128,7 +128,9 @@ destination.
 
 Do not use WhatsApp, live INPS browser capture, hosted suggestion or voice
 interviews, or custom update services. Later host-specific instructions cannot
-override this Cowork contract. Task usage and 1–5-star feedback through Vera's supported incident service and rating form remain available; follow the primary task's workflow-usage contract.
+override this Cowork contract. Task usage and 1–5-star feedback through Vera's
+supported incident service and rating form remain available; follow the primary
+task's workflow-usage contract. Tutorials retain their no-reporting boundary.
 
 # Archivio dello Studio
 

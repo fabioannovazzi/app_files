@@ -101,7 +101,7 @@
     },
     {
       "path": "modules/previdenza-inps/skills/mparanza-previdenza-inps/SKILL.md",
-      "sha256": "69b7f1295633ffcfd2fa7e134ab131eeb5750e9969b030c7f8e0d750b3c90424"
+      "sha256": "fc71157692e44bd1ad8ecd7bb41eda84db30b3a0cec22f1c8fc0deb06bee02a3"
     },
     {
       "path": "modules/previdenza-inps/skills/mparanza-previdenza-inps/agents/openai.yaml",
@@ -153,7 +153,7 @@
     },
     {
       "path": "skills/mparanza-previdenza-inps/SKILL.md",
-      "sha256": "8793e62b6e8fa7d9c8270ca0feadbc087bb169e6d9e006f0dbdf00ca869d6f9b"
+      "sha256": "e9dae56b6bc45859cb09e86c83ff0b0b1db4bbc3c8a3b70d80a1f1d9abd2b17f"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",

@@ -963,12 +963,9 @@ def test_projected_cowork_skills_remove_promotion_feedback_and_codex_wording(
         assert "`applied` or `final_ready`" in content, name
         assert "Do not use WhatsApp" in content, name
         assert "live INPS browser capture" in content, name
-        if name == "skills/mparanza-learn-with-vera/SKILL.md":
-            # Tutorials retain their existing no-reporting contract.
-            assert "hosted feedback or voice" in content, name
-        else:
-            assert "hosted suggestion or voice" in content, name
-            assert "Task usage and 1–5-star feedback" in content, name
+        assert "hosted suggestion or voice" in content, name
+        assert "Task usage and 1–5-star feedback" in content, name
+        assert "Tutorials retain their no-reporting boundary" in content, name
         assert "custom update services" in content, name
         assert "Later host-specific instructions" in content, name
         assert "override this Cowork contract" in content, name

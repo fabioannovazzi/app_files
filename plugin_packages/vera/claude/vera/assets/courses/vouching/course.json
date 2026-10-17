@@ -93,7 +93,7 @@
     },
     {
       "path": "modules/check-entries/skills/mparanza-vouching/SKILL.md",
-      "sha256": "fa7e56575f5c5c85fb487b5dd2a54fd9705a63ca0e0aa02b0d7d9409a1d2d21d"
+      "sha256": "f83e60a983498e638d517a012b2157e57bacb767695c447a557eb37923e95ed5"
     },
     {
       "path": "modules/check-entries/skills/mparanza-vouching/references/geneva.md",
@@ -149,7 +149,7 @@
     },
     {
       "path": "skills/mparanza-vouching/SKILL.md",
-      "sha256": "c5c33146f8513bae6e54751725f063424fc90f8bc12773b22b1ff060c34e62d1"
+      "sha256": "e081929038dd39d27b0899fba78ab40ccb23603f5b507f8ec81cc103ef71707c"
     },
     {
       "path": "vendor/modules/__init__.py",

@@ -29,12 +29,12 @@
         "openai-codex",
         "anthropic-cowork"
       ],
-      "retention": "Task events, optional feedback and receipt links remain in the service until administrative deletion; no automatic expiry is implemented. Local queued events and acknowledgements remain in the existing private per-installation state directory. The server never stores client documents or professional output for this service.",
+      "retention": "Task events, optional feedback and receipt links remain in the service until administrative deletion; no automatic expiry is implemented. Local queued events and acknowledgements remain in the existing private per-installation state directory. Lifecycle events exclude client documents and professional output. Optional feedback stores only the comment deliberately supplied by the user; its contents are not automatically anonymized.",
       "id": "automatic-task-lifecycle",
       "kind": "hosted_service",
       "destination": "Existing Mparanza HTTPS operational-incidents API and saved veraIncidents OAuth connector",
       "purpose": "Measure which user processes run and their observed outcome; link existing signed model-data receipts and technical reports without copying their professional content",
-      "content": "The existing installation capability authenticates closed-schema events: random run and event UUIDs, sequence, catalog pipeline ID, host, observed product version, timestamps, explicit user/synthetic/agent-test classification and started/resumed/completed/failed/cancelled state. Optional links contain only an existing signed receipt UUID/report digest or an owned incident report UUID. Receipt ownership and signature are checked server-side. The service receives no task text, client identity, filenames, source data, prompt or professional output. Existing connection metadata and rate limiting apply. Saved connector identity is not inferred to be a native computer.",
+      "content": "The existing installation capability authenticates closed-schema events: random run and event UUIDs, sequence, catalog pipeline ID, host, observed product version, timestamps, explicit user/synthetic/agent-test classification and started/resumed/completed/failed/cancelled state. Optional links contain only an existing signed receipt UUID/report digest or an owned incident report UUID. Run ownership, single-run receipt binding and the retained signature are checked server-side. The original stamping service does not attest the identity of the author of a report. The service receives no task text, client identity, filenames, source data, prompt or professional output. Existing connection metadata and rate limiting apply. Saved connector identity is not inferred to be a native computer.",
       "activation": "automatic_on_first_use",
       "optional": false,
       "requires_confirmation": false,
@@ -49,7 +49,7 @@
         "openai-codex",
         "anthropic-cowork"
       ],
-      "retention": "Task events, optional feedback and receipt links remain in the service until administrative deletion; no automatic expiry is implemented. Local queued events and acknowledgements remain in the existing private per-installation state directory. The server never stores client documents or professional output for this service.",
+      "retention": "Task events, optional feedback and receipt links remain in the service until administrative deletion; no automatic expiry is implemented. Local queued events and acknowledgements remain in the existing private per-installation state directory. Lifecycle events exclude client documents and professional output. Optional feedback stores only the comment deliberately supplied by the user; its contents are not automatically anonymized.",
       "id": "optional-task-rating",
       "kind": "hosted_service",
       "destination": "Mparanza task feedback through the same authenticated connector/client or the per-run hosted form",
@@ -99,6 +99,6 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-10-17",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "96691b580dd179f27761a4634b3d10d3f4691f1552343811104dfc9466788ed2"
+    "source_fingerprint": "531694ad84d3b5d3bec04a8d8cc641b27a5dbc0e49c44938c3ad5a440af86496"
   }
 }

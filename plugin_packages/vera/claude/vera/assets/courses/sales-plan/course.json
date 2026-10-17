@@ -57,7 +57,7 @@
     },
     {
       "path": "modules/sales-plan/skills/mparanza-sales-plan/SKILL.md",
-      "sha256": "1ede6de3c6ba164056fab9a9e385191d1cdede153f54e0fa06e078cf769d2922"
+      "sha256": "66e213d5b1dd7f9dc462639622576ad7b66533965684065aa627d25b7c41af3d"
     },
     {
       "path": "modules/sales-plan/vendor/modules/__init__.py",
@@ -101,7 +101,7 @@
     },
     {
       "path": "skills/mparanza-sales-plan/SKILL.md",
-      "sha256": "dc6d508cbe9fc61667a27b7fb5694e52508b4112bcae01e8291842a70accaf25"
+      "sha256": "e2cf8bd98357a04c6736ecdd76d3afc030126c9264e95fea6750db47b8d728cf"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",

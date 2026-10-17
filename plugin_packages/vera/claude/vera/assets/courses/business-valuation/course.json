@@ -120,7 +120,7 @@
     },
     {
       "path": "modules/business-valuation/skills/mparanza-business-valuation/SKILL.md",
-      "sha256": "afff09278c9e24441e96f00112a5599415d359d1b385aacb228d60d916f8c311"
+      "sha256": "68ae41c541d77a93d0beee5b541686307061af1d2cc3ab035ba1c22d79a7805a"
     },
     {
       "path": "modules/business-valuation/vendor/modules/__init__.py",
@@ -168,7 +168,7 @@
     },
     {
       "path": "skills/mparanza-business-valuation/SKILL.md",
-      "sha256": "5b23fcd2bd5e8b4425ff81441febbffd5cc1ffc587dfaee4b72cb7c97e4a78d4"
+      "sha256": "852b3087fe6b658fbd0b71e65ecf31101e955df608a8fc542eab1bd3a107821a"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",

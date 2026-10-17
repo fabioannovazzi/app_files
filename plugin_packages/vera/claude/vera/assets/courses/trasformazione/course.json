@@ -65,7 +65,7 @@
     },
     {
       "path": "modules/trasformazione/skills/mparanza-trasformazione/SKILL.md",
-      "sha256": "4f8b339ad0f5c023d4e41f30edf6494791305b108ec6203cecbcbba5d27d59ea"
+      "sha256": "5f7d6abd6d3355ca60b8663bc692f2ee9164e5a2f6a2b69fbe6fec6ec5fea72b"
     },
     {
       "path": "scripts/check_dependencies.py",
@@ -97,7 +97,7 @@
     },
     {
       "path": "skills/mparanza-trasformazione/SKILL.md",
-      "sha256": "90837c6dcde4e6b6d7095a6f52fb2ef62af02e44136573b5f2e85cd1d0fd0975"
+      "sha256": "625e0497aaffcf4f092756fab6261621fc835147a6223d1f2d654c6482829360"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
