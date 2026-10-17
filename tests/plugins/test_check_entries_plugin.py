@@ -3162,12 +3162,17 @@ def test_mcp_launches_python_with_isolated_no_bytecode_flags(
         monkeypatch,
         tmp_path,
     )
+    monkeypatch.setenv("GITHUB_TOKEN", "fake-token")
+    monkeypatch.setenv("OPENAI_API_KEY", "fake-key")
     wrapper = tmp_path / "isolated-python-wrapper"
     wrapper.write_text(
         "\n".join(
             [
                 "#!/usr/bin/env python3",
                 "import subprocess",
+                "import os",
+                'if any(key in os.environ for key in ("GITHUB_TOKEN", "OPENAI_API_KEY")):',
+                "    raise SystemExit(92)",
                 "import sys",
                 f"real = {sys.executable!r}",
                 'if sys.argv[1:3] != ["-I", "-B"]:',
@@ -7952,7 +7957,7 @@ def test_mcp_post_preflight_symlink_swap_rolls_back_without_external_edit(
                 "sys.stderr.buffer.write(completed.stderr)",
                 'if completed.returncode == 0 and "--preflight-only" in sys.argv:',
                 '    out = Path(sys.argv[sys.argv.index("--output-dir") + 1])',
-                '    outside = Path(os.environ["CE_TEST_OUTSIDE"])',
+                f"    outside = Path({outside.as_posix()!r})",
                 '    target = out / "check_results.csv"',
                 "    outside.write_bytes(target.read_bytes())",
                 "    target.unlink()",
@@ -7965,7 +7970,6 @@ def test_mcp_post_preflight_symlink_swap_rolls_back_without_external_edit(
     )
     wrapper.chmod(0o700)
     monkeypatch.setenv("PYTHON", wrapper.as_posix())
-    monkeypatch.setenv("CE_TEST_OUTSIDE", outside.as_posix())
     item = next(
         entry
         for entry in review_payload["items"]
@@ -8037,8 +8041,8 @@ def test_mcp_apply_phase_link_swap_is_rejected_before_external_mutation(
                 "    completed = subprocess.run([real, *sys.argv[1:]])",
                 "    raise SystemExit(completed.returncode)",
                 'out = Path(sys.argv[sys.argv.index("--output-dir") + 1])',
-                'outside = Path(os.environ["CE_TEST_OUTSIDE"])',
-                'link_kind = os.environ["CE_TEST_LINK_KIND"]',
+                f"outside = Path({outside.as_posix()!r})",
+                f"link_kind = {link_kind!r}",
                 'target = out / "applied_decisions.json"',
                 "outside.write_bytes(target.read_bytes())",
                 "target.unlink()",
@@ -8055,8 +8059,6 @@ def test_mcp_apply_phase_link_swap_is_rejected_before_external_mutation(
     )
     wrapper.chmod(0o700)
     monkeypatch.setenv("PYTHON", wrapper.as_posix())
-    monkeypatch.setenv("CE_TEST_OUTSIDE", outside.as_posix())
-    monkeypatch.setenv("CE_TEST_LINK_KIND", link_kind)
 
     # Act
     response = _call_mcp_server(
@@ -8360,8 +8362,8 @@ def test_mcp_preflight_child_failure_is_bounded_and_discloses_no_paths(
                 'if "--client-run-preflight-only" in sys.argv:',
                 "    completed = subprocess.run([real, *sys.argv[1:]])",
                 "    raise SystemExit(completed.returncode)",
-                'posix_path = os.environ["CE_TEST_POSIX_PATH"]',
-                'windows_path = os.environ["CE_TEST_WINDOWS_PATH"]',
+                f"posix_path = {posix_path!r}",
+                f"windows_path = {windows_path!r}",
                 'sys.stdout.write(f"arbitrary child output {posix_path} {windows_path}\\n")',
                 'sys.stderr.write("Traceback (most recent call last):\\n")',
                 "sys.stderr.write(f'  File \"{posix_path}\", line 9, in child\\n')",
@@ -8374,8 +8376,6 @@ def test_mcp_preflight_child_failure_is_bounded_and_discloses_no_paths(
     )
     wrapper.chmod(0o700)
     monkeypatch.setenv("PYTHON", wrapper.as_posix())
-    monkeypatch.setenv("CE_TEST_POSIX_PATH", posix_path)
-    monkeypatch.setenv("CE_TEST_WINDOWS_PATH", windows_path)
 
     # Act
     response = _call_mcp_server(
@@ -8436,12 +8436,12 @@ def test_mcp_apply_child_failure_is_bounded_and_rolls_back_link_swap(
                 "    sys.stderr.buffer.write(completed.stderr)",
                 "    raise SystemExit(completed.returncode)",
                 'out = Path(sys.argv[sys.argv.index("--output-dir") + 1])',
-                'outside = Path(os.environ["CE_TEST_OUTSIDE"])',
+                f"outside = Path({outside.as_posix()!r})",
                 'target = out / "applied_decisions.json"',
                 "target.unlink()",
                 "target.symlink_to(outside)",
-                'posix_path = os.environ["CE_TEST_POSIX_PATH"]',
-                'windows_path = os.environ["CE_TEST_WINDOWS_PATH"]',
+                f"posix_path = {posix_path!r}",
+                f"windows_path = {windows_path!r}",
                 'sys.stdout.write(f"untrusted stdout {posix_path}\\n")',
                 'sys.stderr.write("Traceback (most recent call last):\\n")',
                 "sys.stderr.write(f'  File \"{posix_path}\", line 12, in apply\\n')",
@@ -8454,9 +8454,6 @@ def test_mcp_apply_child_failure_is_bounded_and_rolls_back_link_swap(
     )
     wrapper.chmod(0o700)
     monkeypatch.setenv("PYTHON", wrapper.as_posix())
-    monkeypatch.setenv("CE_TEST_OUTSIDE", outside.as_posix())
-    monkeypatch.setenv("CE_TEST_POSIX_PATH", posix_path)
-    monkeypatch.setenv("CE_TEST_WINDOWS_PATH", windows_path)
 
     # Act
     response = _call_mcp_server(
@@ -8652,7 +8649,7 @@ def test_mcp_status_zero_invalid_child_result_fails_closed_and_rolls_back(
                 "import subprocess",
                 "import sys",
                 f"real = {str(real_python)!r}",
-                'phase = os.environ["CE_TEST_INVALID_PHASE"]',
+                f"phase = {phase!r}",
                 'if "--client-run-preflight-only" in sys.argv:',
                 "    completed = subprocess.run([real, *sys.argv[1:]], capture_output=True)",
                 "    sys.stdout.buffer.write(completed.stdout)",
@@ -8663,7 +8660,7 @@ def test_mcp_status_zero_invalid_child_result_fails_closed_and_rolls_back(
                 "    sys.stdout.buffer.write(completed.stdout)",
                 "    sys.stderr.buffer.write(completed.stderr)",
                 "    raise SystemExit(completed.returncode)",
-                'payload = os.environ["CE_TEST_INVALID_OUTPUT"]',
+                f"payload = {child_output!r}",
                 "sys.stdout.write(payload)",
                 'if payload and not payload.endswith("\\n"):',
                 '    sys.stdout.write("\\n")',
@@ -8675,8 +8672,6 @@ def test_mcp_status_zero_invalid_child_result_fails_closed_and_rolls_back(
     )
     wrapper.chmod(0o700)
     monkeypatch.setenv("PYTHON", wrapper.as_posix())
-    monkeypatch.setenv("CE_TEST_INVALID_PHASE", phase)
-    monkeypatch.setenv("CE_TEST_INVALID_OUTPUT", child_output)
 
     # Act
     response = _call_mcp_server(
@@ -8902,9 +8897,7 @@ def test_mcp_ignores_forged_top_level_child_path_metadata(
                 "    raise SystemExit(0)",
                 "lines = [line for line in completed.stdout.decode().splitlines() if line]",
                 "payload = json.loads(lines[-1])",
-                'payload[os.environ["CE_TEST_FORGED_FIELD"]] = json.loads(',
-                '    os.environ["CE_TEST_FORGED_VALUE"]',
-                ")",
+                f"payload[{field_name!r}] = {[*forged_value, outside.as_posix()]!r}",
                 "sys.stdout.write(json.dumps(payload) + '\\n')",
                 "raise SystemExit(0)",
                 "",
@@ -8914,11 +8907,6 @@ def test_mcp_ignores_forged_top_level_child_path_metadata(
     )
     wrapper.chmod(0o700)
     monkeypatch.setenv("PYTHON", wrapper.as_posix())
-    monkeypatch.setenv("CE_TEST_FORGED_FIELD", field_name)
-    monkeypatch.setenv(
-        "CE_TEST_FORGED_VALUE",
-        json.dumps([*forged_value, outside.as_posix()]),
-    )
 
     # Act
     response = _call_mcp_server(
@@ -9041,7 +9029,7 @@ def test_mcp_contradictory_persisted_child_state_fails_closed(
                 'final_path = out / "final_artifacts.json"',
                 "applied = json.loads(applied_path.read_text())",
                 "final = json.loads(final_path.read_text())",
-                'kind = os.environ["CE_TEST_CONTRADICTION"]',
+                f"kind = {mutation_kind!r}",
                 'if kind == "native_count":',
                 '    applied["native_regenerated_count"] = 777',
                 '    payload["updated_effect_count"] = 777',
@@ -9111,7 +9099,6 @@ def test_mcp_contradictory_persisted_child_state_fails_closed(
     )
     wrapper.chmod(0o700)
     monkeypatch.setenv("PYTHON", wrapper.as_posix())
-    monkeypatch.setenv("CE_TEST_CONTRADICTION", mutation_kind)
 
     # Act
     response = _call_mcp_server(

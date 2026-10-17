@@ -89,12 +89,20 @@
         "repository:modules/operational_incidents/store.py"
       ],
       "on_violation": "Reject invalid authorization, token or resource proof without returning caller inputs or another connection record."
+    },
+    {
+      "id": "helper-environment-allowlist",
+      "control": "Built-in recovery children receive the shared host/runtime environment allowlist, explicit named runtime/state locations and the recovery recursion guard. Unrelated user tokens and keys are not inherited.",
+      "implemented_by": [
+        "scripts/operational_incidents.py"
+      ],
+      "on_violation": "Undeclared environment names are absent from the child environment."
     }
   ],
   "review": {
     "reviewed_at": "2026-10-17",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "cf714b24d1e820417b5bdbb67e26b593287f67a4e37a44b0c266643ee2e9f4b7"
+    "source_fingerprint": "f99d65f18d6a5f6f61d37d4d560572d5df90ba60985ac82b1034c7fb13dc91a0"
   }
 }

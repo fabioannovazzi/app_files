@@ -197,7 +197,7 @@
     {
       "path": "modules/bilancio-xbrl-it/scripts/managed_ocr_runtime.py",
       "repository_path": "plugins/bilancio-xbrl-it/scripts/managed_ocr_runtime.py",
-      "sha256": "52216b53d3501ebe79b537a5d671ae989731a874d8a7a272307c6b1443f7c42c"
+      "sha256": "9462375dd4dbcf6fb262c26e6f69c8c8f42018a38c0b018b25ea72ea5ec975ef"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/mapping_memory.py",
@@ -357,7 +357,7 @@
     {
       "path": "scripts/operational_incidents.py",
       "repository_path": "plugins/vera/scripts/operational_incidents.py",
-      "sha256": "aeed7ab2c2e48ff38150393c114f0937643bede4dfb77f97b12addbc369540f3"
+      "sha256": "ecb84b35d442a574479a9f37f9f77d64f7ef5014b61ce03393bd9175b3a6ce86"
     },
     {
       "path": "scripts/verified_execution.py",

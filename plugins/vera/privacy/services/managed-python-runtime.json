@@ -142,12 +142,20 @@
         "scripts/managed_python_runtime.py"
       ],
       "on_violation": "A worker failure remains failure; diagnostic persistence errors are logged rather than converted into a success."
+    },
+    {
+      "id": "helper-environment-allowlist",
+      "control": "The built-in incident dependency-setup retry uses the shared host/runtime environment allowlist, named runtime/state locations and recovery recursion guard instead of inheriting unrelated user tokens and keys.",
+      "implemented_by": [
+        "scripts/operational_incidents.py"
+      ],
+      "on_violation": "Undeclared environment names are absent from the child environment."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-15",
+    "reviewed_at": "2026-10-17",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "af22fc0e0c5b3714a1ac1ad8a77881d7231fdfa6c5324ce51cc90e466d194277"
+    "source_fingerprint": "a864691c9b52f5fc20cdd35ef5e376d028fb830891f2c38bd7e26f8e5377a86d"
   }
 }

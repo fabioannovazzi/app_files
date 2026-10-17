@@ -10,6 +10,23 @@ permissions:
   contents: read
 
 jobs:
+  helper-environments:
+    name: Local helper environment (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: python -m pip install pytest pytest-cov pyyaml
+      - run: python -m pytest -q -o addopts='' --confcutdir=tests/scripts tests/scripts/test_local_helper_environment.py tests/scripts/test_claude_reviewer_note.py --cov=scripts.local_helper_environment --cov-report=term-missing --cov-fail-under=80
+
   operational-incidents:
     name: Operational incident recovery loop
     runs-on: ubuntu-latest

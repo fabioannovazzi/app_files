@@ -517,6 +517,26 @@ def _fingerprint(
             )
         logical_files[projected_review_server] = shared_review_server
 
+    # The package builder injects the same shared helper next to its consumers.
+    # Include those bytes in repository reviews as well as installed reviews.
+    if any(
+        path.suffix == ".py"
+        and b"from local_helper_environment import" in path.read_bytes()
+        for path in logical_files.values()
+    ):
+        for suffix in ("py", "json"):
+            name = f"scripts/local_helper_environment.{suffix}"
+            candidate = component_root / name
+            if not candidate.is_file():
+                if vera_root is None:
+                    raise ValueError("vera_root is required for shared helper review")
+                candidate = vera_root / name
+                if not candidate.is_file():
+                    candidate = vera_root.parents[1] / name
+            if not candidate.is_file():
+                raise FileNotFoundError(f"Shared helper source not found: {name}")
+            logical_files[name] = candidate
+
     digest = hashlib.sha256()
     for logical_path, path in sorted(logical_files.items()):
         relative = logical_path.encode("utf-8")

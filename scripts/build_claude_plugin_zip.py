@@ -3409,6 +3409,78 @@ def _claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
     return dict(sorted(entries.items()))
 
 
+def _reviewer_note(product: str, entries: dict[str, bytes]) -> bytes:
+    """Render versioned reviewer copy against the final package inventory."""
+    source = ROOT / "scripts/claude_review_notes"
+    descriptions = json.loads((source / "servers.json").read_bytes())
+    servers = json.loads(entries.get(".mcp.json", b'{"mcpServers":{}}'))["mcpServers"]
+    local = []
+    remote = []
+    for name, config in servers.items():
+        if "url" in config:
+            if (
+                name != "veraIncidents"
+                or config["url"] != "https://mparanza.com/mcp/vera-incidents"
+            ):
+                raise ValueError(f"Unreviewed remote server: {name}")
+            remote.extend(
+                [
+                    "Remote: `veraIncidents` at https://mparanza.com/mcp/vera-incidents.",
+                    "Receives technical incident metadata, reviewed diagnostics and recovery outcomes;",
+                    "authenticates with its own installation/connection credentials. It has no client",
+                    "document upload or case-text field. Diagnostics must exclude client documents,",
+                    "case text and user passwords/API keys; its own credentials are authentication only.",
+                    "Privacy policy: https://mparanza.com/privacy.",
+                ]
+            )
+        else:
+            if config.get("command") != "node":
+                raise ValueError(f"Unreviewed local transport: {name}")
+            local.append(f"- `{name}`: {descriptions[name]}")
+    lines = [
+        "These servers run locally over stdio, exchanging data with local files and",
+        "helper processes on the user's machine.",
+    ]
+    if remote:
+        lines.extend(
+            [
+                "This is their MCP transport, not an offline guarantee: browser acquisition",
+                "can access user-selected websites; incident identity/recovery can contact",
+                "the service below. Review widgets do not upload client documents.",
+            ]
+        )
+    server_text = (
+        "\n".join([*lines, "", *local, "", *remote])
+        if local
+        else "This package declares no MCP servers (.mcp.json is absent)."
+    )
+    font_descriptions = json.loads((source / "fonts.json").read_bytes())
+    fonts = [
+        f"- `{name}`: {purpose}"
+        for name, purpose in font_descriptions.items()
+        if name in entries
+    ]
+    if not fonts:
+        fonts.append(
+            "None of the listed scanner font-reference paths is present in this package."
+        )
+    note = (
+        (source / "review.md")
+        .read_text()
+        .format(
+            product=product,
+            servers=server_text,
+            fonts="\n".join(fonts),
+            workflows=sum(
+                bool(re.fullmatch(r"skills/[^/]+/SKILL\.md", name)) for name in entries
+            ),
+        )
+    )
+    if len(note.splitlines()) > 80:
+        raise ValueError(f"{product}: reviewer note exceeds 80 lines")
+    return note.encode()
+
+
 def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
     """Seal the complete projection after enforcing all custom skill identities."""
     entries = project_skill_names(_claude_package_entries(package))
@@ -3424,6 +3496,7 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
         # Shared methods retain exact Vera bytes; course provenance must bind
         # those final bytes rather than Lucia's earlier intermediate projection.
         entries = project_skill_names(entries)
+    entries["REVIEW.md"] = _reviewer_note(package.plugin, entries)
     if package.plugin == "vera":
         _project_cowork_privacy_register(entries)
         _load_codex_builder().add_vera_execution_manifest(entries)
