@@ -5,7 +5,12 @@ from __future__ import annotations
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
-__all__ = ["capture_coverage", "diagnostic_followup", "incident_summary"]
+__all__ = [
+    "capture_coverage",
+    "diagnostic_followup",
+    "incident_summary",
+    "remedy_followup",
+]
 
 
 def diagnostic_followup(
@@ -66,6 +71,147 @@ def diagnostic_followup(
             else None
         ),
     }
+
+
+def remedy_followup(
+    *,
+    original: dict[str, Any],
+    remedy: dict[str, Any],
+    revision: int,
+    published_at: str,
+    supplements: list[dict[str, Any]],
+    events: list[dict[str, Any]],
+    outcomes: list[dict[str, Any]],
+    reporter_contact: dict[str, Any] | None,
+    now: datetime | None = None,
+) -> dict[str, Any]:
+    """Project exact delivery/progress facts for every actionable remedy.
+
+    ID matching and a 15-minute attention cadence are mechanically verifiable.
+    An overdue check is not a failed task, offline host or diagnosis. The agent
+    owns the next action; only a matching original-task outcome proves recovery.
+    """
+    report_id = original["report_id"]
+    owner = original["installation_id"]
+    payload = original["payload"]
+    result = diagnostic_followup(
+        report_id=report_id,
+        installation_id=owner,
+        revision=revision,
+        published_at=published_at,
+        supplements=supplements,
+        events=events,
+        last_reporter_seen_at=(
+            reporter_contact["last_seen"] if reporter_contact else None
+        ),
+        now=now,
+    )
+    matching_events = [
+        event
+        for event in events
+        if event["installation_id"] == owner
+        and event["report_id"] == report_id
+        and event["remedy_revision"] == revision
+    ]
+    matching_outcomes = [
+        row
+        for row in outcomes
+        if row["installation_id"] == owner
+        and row["payload"].get("report_id") == report_id
+        and row["payload"]["remedy_revision"] == revision
+    ]
+    latest_event = max(
+        (event for event in matching_events if event["kind"] != "remedy-received"),
+        key=lambda row: row["recorded_at"],
+        default=None,
+    )
+    latest_outcome = max(
+        matching_outcomes, key=lambda row: row["recorded_at"], default=None
+    )
+    outcome = latest_outcome["payload"] if latest_outcome else {}
+    verified = (
+        remedy["kind"] != "diagnostic-request"
+        and outcome.get("status") == "recovered"
+        and outcome.get("execution_succeeded") is True
+        and outcome.get("original_task_verified") is True
+        and (
+            payload.get("operation_id") is None
+            or (
+                outcome.get("operation_id") == payload["operation_id"]
+                and any(
+                    event["kind"] == "retry-succeeded"
+                    and event.get("operation_id") == payload["operation_id"]
+                    for event in matching_events
+                )
+            )
+        )
+        and (
+            payload.get("input_binding") is None
+            or outcome.get("input_binding") == payload["input_binding"]
+        )
+    )
+    if remedy["kind"] != "diagnostic-request":
+        state = (
+            "received-awaiting-action"
+            if result["received_at"]
+            else "published-awaiting-receipt"
+        )
+        transitions = {
+            "remedy-applied": "applied-awaiting-original-task",
+            "retry-started": "retry-in-progress",
+            "retry-failed": "retry-failed",
+            "retry-succeeded": "awaiting-original-task-verification",
+            "capture-unavailable": "evidence-unavailable",
+        }
+        if latest_event:
+            state = transitions.get(latest_event["kind"], state)
+        if latest_outcome and (
+            not latest_event
+            or latest_outcome["recorded_at"] >= latest_event["recorded_at"]
+        ):
+            state = {
+                "failed": "outcome-failed",
+                "action-required": "action-required",
+            }.get(outcome["status"], state)
+        if verified:
+            state = "verified-recovered"
+        timestamps = [published_at]
+        timestamps.extend(
+            row["recorded_at"] for row in matching_events + matching_outcomes
+        )
+        due = max(datetime.fromisoformat(value) for value in timestamps) + timedelta(
+            minutes=15
+        )
+        result.update(
+            state=state,
+            overdue=not verified and (now or datetime.now(timezone.utc)) >= due,
+        )
+        result.pop("reply_due_at")
+        result["next_check_due_at"] = due.isoformat()
+    else:
+        result["next_check_due_at"] = result["reply_due_at"]
+    progress_id = latest_event.get("event_id", "") if latest_event else ""
+    outcome_id = outcome.get("outcome_id", "")
+    response_ids = ",".join(result["response_report_ids"])
+    result.update(
+        remedy_revision=revision,
+        remedy_kind=remedy["kind"],
+        required_version=remedy.get("required_version"),
+        original_reported_at=original["created_at"],
+        original_version=payload["product_version"],
+        workflow=payload["workflow"],
+        host=payload["host"],
+        platform=payload["platform"],
+        operation_id=payload.get("operation_id"),
+        input_binding_present=payload.get("input_binding") is not None,
+        reporter_contact=reporter_contact,
+        latest_progress=latest_event,
+        latest_outcome=latest_outcome,
+        original_task_verified=verified,
+        attention_key=f"{owner}|{report_id}|{revision}|{result['state']}|{progress_id}|{outcome_id}|{response_ids}",
+        deadline_basis="attention cadence; never a task execution timeout",
+    )
+    return result
 
 
 def capture_coverage(

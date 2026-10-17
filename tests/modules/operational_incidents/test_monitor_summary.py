@@ -166,6 +166,9 @@ def test_derived_clock_capture_changes_do_not_reopen_reviewed_case():
 def test_derived_diagnostic_deadlines_do_not_change_reviewed_technical_evidence():
     row = incident()
     ledger = reviewed(row)
+    row["remedy_followups"] = [
+        {"overdue": True, "reporter_contact": {"last_seen": "now"}}
+    ]
     row["diagnostic_requests"] = [
         {"state": "published-awaiting-receipt", "overdue": True}
     ]
