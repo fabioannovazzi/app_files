@@ -104,6 +104,89 @@ a diagnosed reporting fault, a materially failed recovery or a concrete human
 decision warrants it. Do not send an alert merely for adding this projection.
 Do not describe an unreceived or overdue request as a successful conversation.
 
+## Follow every remedy through to an accountable next action
+
+Inspect `show.remedy_followups` for every reporting owner: initial investigation
+as well as update, resume, automatic, user-action and diagnostic-request. An
+`investigating` row has no published scoped remedy or receipt; it still permits
+a first alert with the agent’s diagnostic next action. The existing `diagnostic_requests`
+view remains available. Each row binds one original owner/report and its
+applicable revision; a grouped incident or another owner's receipt cannot advance
+it. Read-only operator lookup never creates host receipts. Keep the original
+failure date/version separate from the proposed update and the latest observed
+reporter contact. A reporter observation is not current installed-version proof;
+a native broker observation is not a refreshed guest conversation.
+
+The projection exposes exact receipt, applied/retry events, outcome and verified
+original-task recovery. Retry success without the original-task outcome remains
+`awaiting-original-task-verification`. `next_check_due_at` and `overdue` use a
+15-minute **attention cadence**, not an execution timeout: a long-running task is
+not failed by the clock. Diagnostic replies retain their separate completion
+meaning. Recovery still requires the exact original task and unchanged inputs.
+Derived followup fields do not change technical evidence or reviewed exclusions.
+
+For an update without receipt, audit its exact publication, original reporter's
+last contact, proven app profile and permitted broker/contact evidence. Determine
+whether there is a supported transport/collection fault that the agent can fix.
+The service cannot wake an old conversation or force an update. Do not label the
+computer offline or assume it has the offered version. When no connected consumer
+can be established, persist that concrete delivery blocker and select an
+accountable next action; do not leave the action assigned indefinitely to an
+uncontacted Vera. If resuming the original conversation requires its operator,
+state one justified human action: open that app/conversation and ask Vera to
+check the existing incident and resume its original task. Check the actual loaded
+version before prescribing an update; do not repeat blind reinstall instructions.
+For Fabio's proven machine this action may be addressed to Fabio. For other
+machines do not invent their owner's identity or send customer messages.
+
+Persist the exact `attention_key`, first overdue audit, investigation evidence,
+AI-selected action ID, owner, reason, evidence references and next scheduled check
+under private `remedy_followups`. Inspect changing receipts/retries at each run;
+unchanged waiting remains quiet. A new failed attempt or exact-revision reply
+can justify renewed diagnosis; rewriting the same action cannot justify another
+email. Respect active source-fix ownership, including `actionable_reporting_fix`.
+
+## Required actionable alert preparation
+
+For every newly warranted incident alert, use the deployed
+`scripts/render_incident_alert.py` before the existing verified Gmail send. This
+is rendering/validation, not an email sender or an autonomous diagnostic rule.
+
+1. Save the fresh operator `show` JSON locally. Run
+   `python scripts/render_incident_alert.py --incident <show.json>` to obtain the
+   exact followup and `followup_sha256`. Use the activated local venv and obtain
+   source from the verified deployed commit if the primary checkout is stale.
+   For a private renderer runtime mirror these five Git-managed files under one
+   private output directory, retaining their relative paths: `modules/__init__.py`,
+   `modules/operational_incidents/__init__.py`, `contracts.py`, `reporting.py` and
+   `scripts/render_incident_alert.py` (the two modules stay in their package).
+   Record the deployed commit and hashes. Run that runtime script with the local
+   venv; never overwrite unrelated primary-checkout source.
+2. The AI writes one `AlertReview` JSON: `incident_id`, `report_id`,
+   `remedy_revision`, `followup_sha256`, concise Italian `observed`, `inferred`,
+   `unknown`, `blocker`, `next_action` and timezone-aware `next_check_at`.
+   `next_action` requires stable `action_id`, `owner` (`monitor`, `vera`, `fabio`),
+   concrete `instruction`, `reason` and inspected `evidence_refs`. The next check
+   must be in the future and inside the existing operating window. An unreceived
+   or overdue remedy requires a monitor action or an evidenced human action;
+   assigning it back to Vera does not resolve the delivery blocker. Do not assert
+   that Fabio need do nothing without an established automatic next step.
+3. Run `python scripts/render_incident_alert.py --incident <show.json> --review
+   <review.json> --ledger <private-ledger.json> --output <alert.json>`. Review the
+   generated alert. It must identify the machine/app, original date/version,
+   proposed version separately, observed last contact, delivery/progress state,
+   blocker, owner/action, next check and the original-task verification criterion.
+4. A human-readable label such as “Il tuo Mac” is allowed only via private
+   `ledger.device_labels[device_id]` with `label`, `verified_at` and an inspected
+   `evidence_ref` for that exact native device. Otherwise use the opaque machine
+   code or explicit unknown. Do not infer ownership from OS, OAuth identity,
+   reporter UUID or the fact that Fabio received the email.
+5. Use the rendered stable `event_key` within the existing batching/SENT-receipt
+   process. Next-check timestamps and wording changes alone are not new events.
+   Preserve existing sent keys, baselines and exact fixture reviews. A corrected
+   report that establishes a previously unreported concrete human action is one
+   meaningful new event; pure formatting or bookkeeping creates no new alert.
+
 ## Count effective open items
 
 Report **distinct unresolved technical incidents**, not the raw queue length,
@@ -320,9 +403,11 @@ marking delivered. Save its immutable Gmail ID. Uncertain receipts remain pendin
 never resend a matching verified Sent message. One continuing queue outage is
 one alert episode, cleared only after a complete successful read.
 
-Keep emails to roughly 3–6 direct sentences. Link to
+Keep alerts concise using the required labelled facts and action format above. Link to
 `codex://threads/01a13901-2f7d-72a2-ba4c-fd1b1a898889`, named exactly
 **Vera incident monitoring**, and say that it opens in Codex. No raw diagnostics,
-client content, identifiers or credentials in email. Surface concrete blockers
+client content, personal identifiers or credentials in email. Opaque incident/machine
+codes and evidence-proven operator device labels are permitted for identification.
+Surface concrete blockers
 in that chat as well. No customer emails, Discord, WhatsApp or messages to other
 tasks are part of this support channel. Unchanged checks stay quiet.

@@ -35,6 +35,7 @@ def evidence_hash(incident: dict[str, Any]) -> str:
     # Receipt/reply payloads are already pinned below. Deadlines and reporter
     # heartbeats are derived monitoring facts, not new technical evidence.
     evidence.pop("diagnostic_requests", None)
+    evidence.pop("remedy_followups", None)
     for record in evidence.get("report_records", []):
         # Derived from report/evidence payloads and the current clock; those
         # original payloads and reporting identities remain in this digest.

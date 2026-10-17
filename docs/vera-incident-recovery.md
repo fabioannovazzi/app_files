@@ -281,3 +281,26 @@ never runs and requires that remote route. When both channels are unavailable,
 the host must expose that precise reporting boundary. Reinstallation, a package
 update or a successful preparation still does not prove recovery of the user's
 original professional task.
+
+
+## Operator remedy followup and actionable reports
+
+`show.remedy_followups` exposes the exact applicable remedy for each reporting
+owner, including updates and recovered deliveries. It includes original failure
+date/version, proven device/app links, latest observed original-reporter contact,
+actual receipts/progress/outcomes and a 15-minute attention check. These are
+operator projections only; no schema migration, client update or fabricated host
+acknowledgement is involved. An attention deadline is not a task timeout.
+
+`remedy-received` establishes a service receipt only. `retry-succeeded` alone
+leaves original-task verification pending. A different reporter, report, operation
+or revision cannot supply the missing proof. Legacy bindings remain unknown.
+A published update does not establish that an old conversation can receive it.
+
+The AI selects the diagnosis and next action. Use the actionable alert preparation
+contract in `docs/vera-autonomous-recovery.md`: an alert must identify the exact
+machine/app or say unknown, distinguish the original failure from the offered
+update, name the delivery blocker and accountable next action, and state a real
+next check. Use `scripts/render_incident_alert.py` with an exact reviewed followup.
+Do not present “waiting for Vera; no Fabio action” as an actionable plan without
+evidence of a connected automatic next step.

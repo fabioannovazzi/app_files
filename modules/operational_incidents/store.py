@@ -30,6 +30,7 @@ from modules.operational_incidents.evidence import (
     capture_coverage,
     diagnostic_followup,
     incident_summary,
+    remedy_followup,
 )
 from modules.pdp.postgres_compat import (
     DICT_ROW_FACTORY,
@@ -1369,9 +1370,8 @@ class IncidentStore:
         ]
         latest = {row["installation_id"]: row for row in records}
         incident["diagnostic_requests"] = []
+        incident["remedy_followups"] = []
         for delivery in incident["deliveries"]:
-            if delivery["status"] == "recovered":
-                continue
             original = latest[delivery["installation_id"]]
             revision, remedy = self._applicable_remedy(
                 connection,
@@ -1379,28 +1379,53 @@ class IncidentStore:
                 original["report_id"],
                 incident["revision"],
             )
-            if remedy["kind"] != "diagnostic-request":
-                continue
             published = next(
                 row["recorded_at"]
                 for row in incident["remedy_revisions"]
                 if row["revision"] == revision
             )
-            seen = connection.execute(
+            session = connection.execute(
                 self._sql(
-                    "SELECT MAX(last_seen) AS last_seen FROM operational_reporter_sessions WHERE installation_id=?"
+                    "SELECT payload_json,last_seen FROM operational_reporter_sessions WHERE installation_id=? ORDER BY last_seen DESC LIMIT 1"
                 ),
                 (original["installation_id"],),
-            ).fetchone()["last_seen"]
-            incident["diagnostic_requests"].append(
-                diagnostic_followup(
-                    report_id=original["report_id"],
-                    installation_id=original["installation_id"],
-                    revision=revision,
-                    published_at=published,
-                    supplements=incident["evidence"],
-                    events=incident["recovery_events"],
-                    last_reporter_seen_at=seen,
-                )
+            ).fetchone()
+            contact = (
+                {
+                    **json.loads(session["payload_json"]),
+                    "last_seen": session["last_seen"],
+                }
+                if session
+                else None
             )
+            followup = remedy_followup(
+                original=original,
+                remedy=remedy,
+                revision=revision,
+                published_at=published,
+                supplements=incident["evidence"],
+                events=incident["recovery_events"],
+                outcomes=incident["outcome_records"],
+                reporter_contact=contact,
+            )
+            followup.update(
+                device_id=devices.get(original["installation_id"]),
+                app_link=apps.get(original["installation_id"]),
+            )
+            incident["remedy_followups"].append(followup)
+            if (
+                remedy["kind"] == "diagnostic-request"
+                and delivery["status"] != "recovered"
+            ):
+                incident["diagnostic_requests"].append(
+                    diagnostic_followup(
+                        report_id=original["report_id"],
+                        installation_id=original["installation_id"],
+                        revision=revision,
+                        published_at=published,
+                        supplements=incident["evidence"],
+                        events=incident["recovery_events"],
+                        last_reporter_seen_at=contact["last_seen"] if contact else None,
+                    )
+                )
         return incident
