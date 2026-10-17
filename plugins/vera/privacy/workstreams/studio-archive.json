@@ -117,7 +117,6 @@
       "destination": "The existing managed-runtime installer endpoints for uv, CPython 3.12 and the published shared Python dependency recipes",
       "purpose": "Prepare or repair the shared CPython 3.12 environment before executing a local archive worker",
       "content": "Runtime and package identifiers, published requirements and constraints, and ordinary connection metadata. The installer is invoked before the archive command; no client files, archive index, identities, receipt bytes or case content are sent to dependency endpoints.",
-      "workflow_conditions": "The archive MCP server invokes the product managed launcher. A ready shared runtime is reused; missing runtime dependencies may require network access under host permissions. Failed setup stops worker execution. Optional OCR remains separately approved.",
       "optional": false,
       "requires_confirmation": false,
       "runtime_profiles": [
@@ -125,6 +124,7 @@
         "anthropic-cowork"
       ],
       "controls": [
+        "The archive MCP server invokes the product managed launcher. A ready shared runtime is reused; missing runtime dependencies may require network access under host permissions. Failed setup stops worker execution. Optional OCR remains separately approved.",
         "Use the existing shared CPython 3.12 runtime and declared recipes; do not install arbitrary packages from archive input. Host network denials stop setup rather than selecting an unsupported worker interpreter."
       ]
     }
@@ -202,7 +202,7 @@
       {
         "id": "studio-client-engagement-intake",
         "purpose": "Create or resume any registered client-bound Vera workflow across separate runtime sessions",
-        "content": "The selected customer-folder manifest and current local folder binding, plus a Google Drive folder binding only when the selected runtime supports that route; explicit engagement, workflow and run IDs; source, journal, support, local-folder snapshot, Google Drive snapshot when supported, or upstream-artifact roles; canonical input-receipt and run execution-copy paths; original filenames; run labels, purposes and lifecycle state; portable run contexts and input and artifact manifests; exact workflow output paths; artifact purposes, audiences and media types; and recovery or retention inventories. Archive Organization receives the full bounded snapshot population through opaque inventory and item references with projected relative paths, names, MIME types, sizes, timestamps, opening availability, exclusions and opaque exact-duplicate relationships; raw snapshot hashes, Drive file and parent IDs, versions, capabilities, checksums and absolute source paths remain in the local receipt and are resolved only by deterministic code. Selected opened content, locators, citations and limitations may enter model context after local identity revalidation. Email addresses, legal-name aliases, tax identifiers and OAuth token contents remain in private local state except when the user supplies non-token identity facts in the current chat",
+        "content": "The selected customer-folder manifest and current local folder binding, plus a Google Drive folder binding only when the selected runtime supports that route; explicit engagement, workflow and run IDs; source, journal, support, local-folder snapshot, Google Drive snapshot when supported, or upstream-artifact roles; canonical input-receipt and run execution-copy paths; original filenames; run labels, purposes and lifecycle state; portable run contexts and input and artifact manifests; exact workflow output paths; artifact purposes, audiences and media types; and recovery or retention inventories. Archive Organization receives the full bounded snapshot population through opaque inventory and item references with projected relative paths, names, MIME types, sizes, timestamps, opening availability, exclusions and opaque exact-duplicate relationships; raw snapshot hashes, Drive file and parent IDs, versions, capabilities, checksums and absolute source paths remain in the local receipt and are resolved only by deterministic code. Selected opened content, locators, citations and limitations may enter model context after local identity revalidation. Email addresses, legal-name aliases, tax identifiers and OAuth token contents remain in private local state except when the user supplies non-token identity facts in the current chat For a document-only continuation without a specialist run, the user-authorized Vera-derived working note is imported with role support; its content, receipt, digest, exact controlled path and readback may enter the same selected model context. It remains derived work rather than an external original or professional approval. No new connector or external recipient is introduced.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -283,7 +283,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-17",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "0880c3cf459db4afede89ed74d7a5db1a35dfcf3c9df390820386c67059b10a9"
+    "source_fingerprint": "06ed059e011c4012b21be72213fa531dfbe97b1df02d5aaf402ddb8f69347858"
   },
   "role": "workflow",
   "runtime_profiles": [

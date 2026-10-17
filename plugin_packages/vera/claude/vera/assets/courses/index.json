@@ -993,7 +993,7 @@
     },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "66c5005118dcf4297b2a0d7dd18bdf6197ece97b583806ed8068fe48032f86ff",
+      "sha256": "eb6212aca059ba921af4965cbca809802e0cec12524f78a26fc21db949b2f6bb",
       "languages": [
         "it",
         "en",

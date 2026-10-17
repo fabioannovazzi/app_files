@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/Users/fabio/Documents/Codex/2026-10-17-verifica-la-ripresa-dei-workflow-di/deploy/source/plugins/vera",
-  "version": "0.1.399",
-  "captured_at": "2026-10-17T10:11:11.423161+00:00",
-  "catalogue_fingerprint": "a38cc951ba6c1859e3c7ae07eeae6664e9f5b416fee807e1e7ecd1287d91775d",
-  "manifest_sha256": "c0417e80185d20fff9fe73c2c207e01135beb10a00517441b6145006fa418377",
+  "version": "0.1.400",
+  "captured_at": "2026-10-17T10:53:22.502908+00:00",
+  "catalogue_fingerprint": "4356cf4e3184494ac064b5d4ae3625fd8bef5186217d28d1a1d8cb5730cafe28",
+  "manifest_sha256": "193768872c29f65d010cf34cec3bf69db2b75ff33d2403be54a3f35893c064ac",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -249,7 +249,7 @@
     {
       "function_id": "studio-archive",
       "skill_path": "skills/studio-archive/SKILL.md",
-      "sha256": "dd7e2f80997622e229da68d2bd9d2da38c2fb982293c8a7a877108a8f6b61745"
+      "sha256": "e95fb2f59c7e3d18de7171126d870090b4baa490d5e1551b7a6ca9c281f771d2"
     },
     {
       "function_id": "studio-document-format",

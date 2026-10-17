@@ -59,6 +59,15 @@ exact `engagements/` ledger. A completed execution does not imply professional
 approval. Check the returned readable-view status before claiming navigation
 is available.
 
+For a resumed local engagement without a specialist run, preserve a generated
+follow-up as a clearly identified Vera-derived support note through the shared
+component's `import_studio_client_document` route. Re-list that engagement and
+read back its controlled copy before claiming progress is saved. Return the
+archived copy, not only a memo in the chat workspace. Exact retries reuse its
+receipt; changed notes preserve earlier copies. Do not invent an archive run
+or bypass a specialist run's output/finalization contract. Read the component's
+complete follow-up preservation steps before doing this work.
+
 When the Codex native workspace is callable, read
 `../vera/references/native-workspace.md` and open “Lavori dello studio”. Its
 ordinary directory uses this workflow's owned local archive session and portable
