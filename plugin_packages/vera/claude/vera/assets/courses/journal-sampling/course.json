@@ -84,7 +84,7 @@
     },
     {
       "path": "modules/journal-sampling/skills/mparanza-journal-sampling/SKILL.md",
-      "sha256": "e921f214b6177d2fc7c1233b33da9518a16d3da948c49262823a70429cefc364"
+      "sha256": "036bba75efab0e05e63d60d6256963d55293677f2feb7e5258b104276c85a2f3"
     },
     {
       "path": "modules/journal-sampling/skills/mparanza-journal-sampling/references/geneva.md",
@@ -136,7 +136,7 @@
     },
     {
       "path": "skills/mparanza-journal-sampling/SKILL.md",
-      "sha256": "ee1f237c051f942e8b221a00d2937c005089e7b3ea18a1c01f20fe163a1aa956"
+      "sha256": "594bb9a1be3f13c1e81ac1f1b6f481831e186a54ec7aeb0b3b08959b0e7c3463"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -525,5 +525,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "543a9ff1da4e6b2ce153ff17b44c5df4fb475907cfe0089036fb430ddb8eea8d"
+  "canonical_course_sha256": "36479f2de375fc6e2e896c966d0fec09ce60fd0294a3eda5496792e9fa645192"
 }

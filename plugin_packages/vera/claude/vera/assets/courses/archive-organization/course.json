@@ -69,7 +69,7 @@
     },
     {
       "path": "modules/archive-organization/skills/mparanza-archive-organization/SKILL.md",
-      "sha256": "2836a1449367ab16ce691249bc058fad2a0b212ce6773280a5f50e9948bdda4a"
+      "sha256": "76c186cc96f701a664e75818e4eae4ffcfa2395c60ac7beefd7bba3d665bc5ae"
     },
     {
       "path": "modules/archive-organization/skills/mparanza-archive-organization/agents/openai.yaml",
@@ -117,7 +117,7 @@
     },
     {
       "path": "skills/mparanza-archive-organization/SKILL.md",
-      "sha256": "8c1dc33d0bfb1e9450f401fdc369893ec2498831bb92a61d8976b13482fd2823"
+      "sha256": "d7308e187540b552c60027c5b1d6b16a1d796ec79ea3860c6294e60c03a40007"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -682,5 +682,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "7bff8cca2c7835e12d20fa99a93edc21cba61e1763476b4b4bb0e63132dbf264"
+  "canonical_course_sha256": "43b6e20a7a15b1dea3d957e4deb3b3009d723e8361339feff8012a77752b11d3"
 }

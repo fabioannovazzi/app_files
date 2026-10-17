@@ -36,16 +36,28 @@
       "sha256": "4c818a1c172f02b07625ef26a6cbe12672e6b52844948b0ee7fefce325a58c69"
     },
     {
+      "path": "scripts/model_data_report.py",
+      "sha256": "0e7a99ef631ed67a1aa25eb10ce7ed158625f6c0c09dcf8546eeb132a238262d"
+    },
+    {
+      "path": "scripts/notarized_run_receipt.py",
+      "sha256": "ecdad6c6aa491ab9fbcff84d85090b0568874305ad61a96af8120a47802bd165"
+    },
+    {
       "path": "scripts/operational_incidents.py",
-      "sha256": "c17d9517b23fd6f3d9c6387acb7b8492a49674f2e4a745b12aae1d4624ec027f"
+      "sha256": "2553616257314e720108ee23d7e1dcd3d681334dc1f1b911a6235b14dcf015c8"
     },
     {
       "path": "scripts/verified_execution.py",
       "sha256": "8817cdb519cce486adf79d4f8feaf7bc3d4f89a810361855da823c6d9a852c31"
     },
     {
+      "path": "scripts/workflow_usage.py",
+      "sha256": "20edb05ee55c84f5624ee22376c72318789563be7bc0d3851ef4fbc0da62c395"
+    },
+    {
       "path": "skills/mparanza-contenzioso-tributario/SKILL.md",
-      "sha256": "748d403ddf801c54d4d329aad7216110d4e9594526f133415244d411c9b7b2c2"
+      "sha256": "fcb084352461fd00f5cfd6d1bdfbe3d6ac22ffe8625b8fdede410e8128c943f4"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -514,5 +526,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "e60fb08f87bffe440e77ffba7abfa5fa390460bc001c6b791c3c73cb6bb4b534"
+  "canonical_course_sha256": "f430967f07637dc4e0dd8b0a3e767ba66ad770cb0f7a29b956781f0bd93acead"
 }

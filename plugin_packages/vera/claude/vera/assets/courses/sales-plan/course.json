@@ -57,7 +57,7 @@
     },
     {
       "path": "modules/sales-plan/skills/mparanza-sales-plan/SKILL.md",
-      "sha256": "988ed6fafd7b97d7fa9babb99e8759ea1c2d388fa485b12362fb3c0ee9957272"
+      "sha256": "5eb2c510f762098b4c39ad7c0d98d0722f7bc6d7b4532a6d97b27b690fc566e9"
     },
     {
       "path": "modules/sales-plan/vendor/modules/__init__.py",
@@ -101,7 +101,7 @@
     },
     {
       "path": "skills/mparanza-sales-plan/SKILL.md",
-      "sha256": "15beac270b17835d215d31d9aefc7319b3e6a47ac7392ba701e0ae8c3f24a2c6"
+      "sha256": "62a478842a29621b6671737e7552970e0d4859078d9172fcc3e51973651c9dab"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -490,5 +490,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "f132bf3b385c20aaf94a01f47b653fd773c9c5950d7d217eb3c370efe7df0c41"
+  "canonical_course_sha256": "b67e6b1dcead2c6cb658fa89312892358144bf6240bf2c3a0dad7ddc79cf83f5"
 }

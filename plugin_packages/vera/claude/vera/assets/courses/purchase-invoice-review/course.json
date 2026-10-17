@@ -73,7 +73,7 @@
     },
     {
       "path": "modules/passive-invoice-audit/skills/mparanza-purchase-invoice-review/SKILL.md",
-      "sha256": "e92dc75d216952475596e45793d37ec75dc0d9445ad7dcf062a0d8824db6a600"
+      "sha256": "c7e3a0eb0a21c6f0b3caa3774f4def71bb6189b73c616ee0de66be83ad0e2ce9"
     },
     {
       "path": "modules/passive-invoice-audit/skills/mparanza-purchase-invoice-review/references/geneva.md",
@@ -121,7 +121,7 @@
     },
     {
       "path": "skills/mparanza-purchase-invoice-review/SKILL.md",
-      "sha256": "3d3ed6e49970b9d8f10c49e10af04859672e2555ace4c8aa4c9e9aa2b83ac700"
+      "sha256": "078489a5b37f1ea3271a5d870edb253bd42550c9d7da0d1b9a0d9882fbd1ab83"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -594,5 +594,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "181e4d702a8c50c4b66cfb7f874d286983660ca68619efb683844d473daa17c4"
+  "canonical_course_sha256": "6865fc8847c4a3548d3ebac246eb281387330e7595d214bc7cce6392bd069119"
 }

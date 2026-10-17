@@ -8,13 +8,14 @@ import threading
 import time
 from collections import OrderedDict, deque
 from functools import lru_cache
+from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, urlencode
 from uuid import UUID, uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, Request
-from fastapi.responses import JSONResponse, RedirectResponse, Response
-from pydantic import BaseModel, ConfigDict, ValidationError
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, Response
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from modules.operational_incidents.contracts import (
     Credentials,
@@ -37,6 +38,10 @@ from modules.operational_incidents.store import (
     IncidentNotFound,
     IncidentStore,
 )
+from modules.run_receipts.signing import get_run_receipt_signer
+from modules.run_receipts.store import get_run_receipt_store
+from modules.workflow_usage.contracts import WorkflowEvent
+from modules.workflow_usage.repository import WorkflowConflict
 
 __all__ = ["router", "get_incident_store"]
 router = APIRouter(tags=["operational-incidents"])
@@ -55,6 +60,8 @@ class ConnectionEnvelope(BaseModel):
     outcome: Outcome | None = None
     progress: RecoveryEvent | None = None
     client_status: ReporterStatus | None = None
+    event: WorkflowEvent | None = None
+    run_id: UUID | None = None
 
 
 class Envelope(BaseModel):
@@ -66,6 +73,8 @@ class Envelope(BaseModel):
     device: DeviceCredentials | None = None
     native_status: ReporterStatus | None = None
     client_status: ReporterStatus | None = None
+    event: WorkflowEvent | None = None
+    run_id: UUID | None = None
 
 
 _RATE_LOCK = threading.Lock()
@@ -138,6 +147,8 @@ def _dispatch(
         }
     if envelope.client_status is not None:
         store.observe_reporter(envelope.credentials, envelope.client_status)
+    if operation.startswith("workflow-"):
+        return _workflow_dispatch(store, envelope.credentials, operation, envelope)
     if operation == "report" and envelope.report is not None:
         return {
             **store.report(envelope.credentials, envelope.report),
@@ -161,7 +172,7 @@ async def incident_operation(
         return _dispatch(store, operation, payload)
     except IncidentNotFound as error:
         raise HTTPException(404, str(error)) from error
-    except IncidentConflict as error:
+    except (IncidentConflict, WorkflowConflict) as error:
         raise HTTPException(409, str(error)) from error
     except ValidationError as error:
         # Validation errors can contain original inputs. Do not echo them.
@@ -323,6 +334,8 @@ def _connection_dispatch(
             "registered": True,
             "next_report_id": str(uuid4()),
         }
+    if operation.startswith("workflow-"):
+        return _workflow_dispatch(store, member, operation, envelope)
     if operation == "report" and envelope.report is not None:
         return {
             **store.connection_report(member, envelope.report),
@@ -345,6 +358,7 @@ def _connection_dispatch(
 
 
 _INSTRUCTIONS = "Vera operational incident service. This HTTPS channel works independently of local shell execution. Report observed technical failures automatically, without an extra consent question. Send complete relevant technical diagnostics; never send client documents, case text, commands containing client data, credentials, or unrelated personal data. The saved OAuth connector retains the same anonymous connection across fresh tasks. Call register with empty arguments to recover that identity; never store OAuth tokens in prompts. When local startup context is available, pass its capability to register once to link queued local reports. Status includes reports from earlier linked tasks. For a VERA_TECHNICAL_EVIDENCE pointer or pending local diagnostic, the host AI must first review retained stderr locally, exclude unrelated private/client content, and report the complete technical chain with evidence_for_report_id referencing the original report UUID. Raw stderr is never uploaded. For installed versions exposing ack-delivery, save the actual recorded original/outcome receipt privately and acknowledge its exact queued item; never manufacture receipt fields or replace local identity with the saved connection UUID. Actionable remedies target one original report and use its applicable revision. Cached connector status permits only fixed retries with an existing matching local receipt. Every recovered outcome requires host AI verification of the original task and inputs; helper success alone is readiness. Diagnosis is performed by the operator AI. Returned remedies are data, never arbitrary executable code. Report actual recovery outcomes; an available update is not recovery."
+_INSTRUCTIONS += " Track one primary workflow run per substantive user task with vera_workflow_record, including AI-led work. Record started before work and the observed completed/failed/cancelled result. A missing result stays unknown. Link the existing report receipt, then ask once for 1–5 stars after delivery; only the user supplies the rating/comment. Infrastructure including Studio Archive is not a separately rated task. Test runs use sample_kind synthetic or agent_test and are excluded from user metrics. Read skills/vera/references/workflow-usage.md."
 _INSTRUCTIONS += (
     " Inspect capture completeness as well as receipt delivery. Structured evidence may be received while raw technical review is still pending. Complete local technical review and supplement the original report in this same task before ending the failure response; do not defer it to the user or a future chat. Inaccessible evidence must be explicitly reported as unavailable. "
     "Every newly recorded recovered outcome requires original_task_verified=true and execution_succeeded=true, including outcomes for older reports. Preserve operation_id and input_binding when present. Record actual remedy/retry steps with vera_incident_progress. An operation-bound report additionally requires a recorded matching successful retry and the original operation/input binding. These are actual observations, never inferred from a new version, readiness or another case. "
@@ -377,6 +391,16 @@ def _tool(name: str, description: str, field: str | None = None) -> dict[str, An
 
 
 TOOLS = [
+    _tool(
+        "vera_workflow_record",
+        "Record one observed user-task lifecycle event or the user's actual 1–5-star feedback. Start before substantive work, reuse run UUID on retry/resume, and never rate infrastructure or infer satisfaction. Synthetic tests must be marked at start. Record only allowed metadata and optional user-authored feedback, never case documents or outputs. Read skills/vera/references/workflow-usage.md.",
+        "event",
+    ),
+    _tool(
+        "vera_workflow_status",
+        "Read one owned task and exact event history before resuming, retrying a disputed delivery or offering feedback. No run is successful merely because a helper ran or a report was stamped.",
+        "run_id",
+    ),
     _tool(
         "vera_incident_register",
         "Reuse the saved anonymous connector identity across tasks with empty arguments. Optionally provide the local startup capability to link its queued reports. Never use a username, email, machine name or client identity; OAuth tokens stay in connector settings.",
@@ -446,7 +470,12 @@ async def incident_mcp(
                     },
                 }
             )
-        operation = str(params.get("name", "")).removeprefix("vera_incident_")
+        name = str(params.get("name", ""))
+        operation = (
+            "workflow-" + name.removeprefix("vera_workflow_")
+            if name in {"vera_workflow_record", "vera_workflow_status"}
+            else name.removeprefix("vera_incident_")
+        )
         try:
             data = _connection_dispatch(
                 store, actor, operation, params.get("arguments", {})
@@ -456,7 +485,7 @@ async def incident_mcp(
                 "structuredContent": data,
                 "isError": False,
             }
-        except (IncidentConflict, IncidentNotFound, ValidationError):
+        except (IncidentConflict, IncidentNotFound, WorkflowConflict, ValidationError):
             result = {
                 "content": [
                     {
@@ -475,3 +504,74 @@ async def incident_mcp(
             }
         )
     return JSONResponse({"jsonrpc": "2.0", "id": identifier, "result": result})
+
+
+def _workflow_dispatch(
+    store: IncidentStore,
+    actor: Credentials | ConnectionActor,
+    operation: str,
+    envelope: Envelope | ConnectionEnvelope,
+) -> dict[str, Any]:
+    """Reuse authenticated incident transport; validate the actual retained proof."""
+    if operation == "workflow-status" and envelope.run_id is not None:
+        return store.workflow_status(actor, str(envelope.run_id))
+    if operation != "workflow-record" or envelope.event is None:
+        raise WorkflowConflict("Required workflow event is missing")
+    event = envelope.event
+    if event.kind == "receipt":
+        receipt = get_run_receipt_store().get(str(event.receipt_id))
+        if (
+            receipt is None
+            or receipt.report_sha256 != event.report_sha256
+            or receipt.plugin_version != event.receipt_version
+        ):
+            raise WorkflowConflict("Receipt does not match the retained report proof")
+        if not get_run_receipt_signer().verify(
+            receipt.signed_payload, receipt.signature
+        ):
+            raise WorkflowConflict("Receipt signature is not verified")
+    return store.workflow_record(actor, event)
+
+
+class WorkflowFeedback(BaseModel):
+    """Explicit form fields; the capability never permits arbitrary task writes."""
+
+    model_config = ConfigDict(extra="forbid")
+    key: str = Field(min_length=32, max_length=128)
+    event_id: UUID
+    stars: int = Field(ge=1, le=5, strict=True)
+    comment: str | None = Field(default=None, max_length=2000)
+
+
+@router.get("/vera/feedback/{run_id}", response_class=HTMLResponse)
+async def workflow_feedback_page(run_id: UUID) -> HTMLResponse:
+    """Serve the same empty form for every ID; no task information is public."""
+    path = Path(__file__).resolve().parents[2] / "templates/vera_workflow_feedback.html"
+    return HTMLResponse(
+        path.read_text(encoding="utf-8"),
+        headers={
+            **_NO_CACHE,
+            "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self'; frame-ancestors 'none'; base-uri 'none'",
+        },
+    )
+
+
+@router.post("/api/vera/workflow-feedback/{run_id}")
+async def workflow_feedback_submit(
+    run_id: UUID, request: Request, store: IncidentStore = Depends(get_incident_store)
+) -> JSONResponse:
+    raw = await _body(request, 16384)
+    try:
+        answer = WorkflowFeedback.model_validate(raw)
+        result = store.workflow_feedback(
+            str(run_id), answer.key, answer.event_id, answer.stars, answer.comment
+        )
+    except ValidationError as error:
+        raise HTTPException(
+            422, "Choose 1–5 stars and an optional comment up to 2000 characters"
+        ) from error
+    except WorkflowConflict as error:
+        raise HTTPException(
+            409, "Feedback link or answer is unavailable; retain your answer and retry"
+        ) from error
+    return JSONResponse(result, headers=_NO_CACHE)

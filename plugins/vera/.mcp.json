@@ -410,7 +410,7 @@
       "type": "http",
       "url": "https://mparanza.com/mcp/vera-incidents",
       "title": "Vera · Ripristino operativo",
-      "description": "Automatic technical incident reporting, incident-specific remedies and recovery outcomes. Independent of local command execution."
+      "description": "Automatic technical incident reporting and recovery, plus task-level pipeline outcomes, signed receipt links and optional user star feedback. Independent of local command execution."
     },
     "researchSources": {
       "title": "Vera · Fonti di ricerca",

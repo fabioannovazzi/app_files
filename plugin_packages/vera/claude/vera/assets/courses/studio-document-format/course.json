@@ -217,7 +217,7 @@
     },
     {
       "path": "modules/comunicazione-professionale/skills/mparanza-comunicazione-professionale/SKILL.md",
-      "sha256": "46f41754b7ed0763e8414ba90a43be571d715ae8d5799ef0dad7ba519681f864"
+      "sha256": "1feb1a0832bf279176ecc8548b87a30f6be15343c599bf1691e1d165bd773a79"
     },
     {
       "path": "modules/comunicazione-professionale/skills/mparanza-comunicazione-professionale/agents/openai.yaml",
@@ -345,7 +345,7 @@
     },
     {
       "path": "modules/report-builder/skills/mparanza-financial-report-builder/SKILL.md",
-      "sha256": "6ee05ef8b8b66e1d36c5e025a6e88e22dee3466ddec36cf77381bbde9045d644"
+      "sha256": "2004644539b7e42a1041fa0bcb984d7dca6b4c2689ec560a9953e82db5cba854"
     },
     {
       "path": "modules/report-builder/vendor/modules/__init__.py",
@@ -485,7 +485,7 @@
     },
     {
       "path": "skills/mparanza-studio-document-format/SKILL.md",
-      "sha256": "91387a49b81fc3fa79b104b3af60bce6a9227b5698946fb85dae644919ff80fc"
+      "sha256": "919a70c00b443f3637e632dc162eb60f88131221cd6b0e7a2152554fdab3cac8"
     },
     {
       "path": "skills/mparanza-studio-document-format/references/procedure.md",
@@ -858,5 +858,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "0aa224559d096e0917a225ade8707ab5f910be4282669d72fc23a8047ebf1239"
+  "canonical_course_sha256": "082a650cfe45502a1dc15ccdadddb2dc76aa6042ebcd74a211b8909fbab3b0e9"
 }

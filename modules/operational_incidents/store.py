@@ -38,6 +38,9 @@ from modules.pdp.postgres_compat import (
     is_postgres_enabled,
 )
 from modules.utilities.cache import get_cache_dir
+from modules.workflow_usage import repository as workflow_repository
+from modules.workflow_usage.contracts import WorkflowEvent
+from modules.workflow_usage.reporting import evidence_hash
 
 __all__ = ["IncidentStore", "IncidentConflict", "IncidentNotFound", "ConnectionActor"]
 
@@ -59,6 +62,7 @@ class IncidentNotFound(ValueError):
 
 
 _SCHEMA = (
+    *workflow_repository.SCHEMA,
     "CREATE TABLE IF NOT EXISTS operational_host_sessions (device_id TEXT NOT NULL, session_id TEXT NOT NULL, payload_json TEXT NOT NULL, last_seen TEXT NOT NULL, PRIMARY KEY (device_id,session_id))",
     "CREATE TABLE IF NOT EXISTS operational_app_links (installation_id TEXT PRIMARY KEY, app_installation_id TEXT NOT NULL, native_app TEXT NOT NULL, recorded_at TEXT NOT NULL)",
     "CREATE TABLE IF NOT EXISTS operational_reporter_sessions (installation_id TEXT NOT NULL, session_id TEXT NOT NULL, payload_json TEXT NOT NULL, last_seen TEXT NOT NULL, PRIMARY KEY (installation_id,session_id))",
@@ -218,6 +222,109 @@ class IncidentStore:
         actual = hashlib.sha256(credentials.installation_key.encode()).hexdigest()
         if row is None or not hmac.compare_digest(row["key_hash"], actual):
             raise IncidentNotFound("Installation capability is unavailable")
+
+    def workflow_record(
+        self, actor: Credentials | ConnectionActor, event: WorkflowEvent
+    ) -> dict[str, Any]:
+        """Record task events using the already-proven installation identity."""
+        with self._connection() as connection:
+            self._schema(connection)
+            self._authorize(connection, actor)
+            owner = self._workflow_owner(connection, actor, str(event.run_id))
+            return workflow_repository.record(
+                connection, self._sql, owner, event, _now()
+            )
+
+    def _workflow_owner(
+        self, connection: Any, actor: Credentials | ConnectionActor, run_id: str
+    ) -> str:
+        row = workflow_repository.get_run(connection, self._sql, run_id)
+        owner = (
+            row["installation_id"] if row is not None else str(actor.installation_id)
+        )
+        if owner != str(actor.installation_id):
+            if not isinstance(actor, ConnectionActor):
+                raise IncidentNotFound("Run is outside this installation")
+            self._authorize(
+                connection, ConnectionActor(UUID(owner), actor.connection_id)
+            )
+        return owner
+
+    def workflow_status(
+        self, actor: Credentials | ConnectionActor, run_id: str
+    ) -> dict[str, Any]:
+        """Return one authorized task with all exact event evidence."""
+        with self._connection() as connection:
+            self._schema(connection)
+            self._authorize(connection, actor)
+            self._workflow_owner(connection, actor, run_id)
+            row = workflow_repository.get_run(connection, self._sql, run_id)
+            if row is None:
+                raise IncidentNotFound("Task has not reached the server")
+            events = connection.execute(
+                self._sql(
+                    "SELECT payload_json,received_at,sequence FROM vera_workflow_events WHERE run_id=? ORDER BY sequence"
+                ),
+                (run_id,),
+            ).fetchall()
+            return {
+                **json.loads(row["projection_json"]),
+                "events": [
+                    {
+                        "event": json.loads(item["payload_json"]),
+                        "server_sequence": item["sequence"],
+                        "received_at": item["received_at"],
+                    }
+                    for item in events
+                ],
+                "feedback_url": f"https://mparanza.com/vera/feedback/{run_id}#{row['feedback_key']}",
+            }
+
+    def workflow_feedback(
+        self, run_id: str, key: str, event_id: UUID, stars: int, comment: str | None
+    ) -> dict[str, Any]:
+        """Persist an explicit form answer under its run-specific capability."""
+        with self._connection() as connection:
+            self._schema(connection)
+            return workflow_repository.feedback(
+                connection, self._sql, run_id, key, event_id, stars, comment, _now()
+            )
+
+    def workflow_inspect(self, run_id: str) -> dict[str, Any]:
+        """Operator-only exact evidence; no capability keys or client material."""
+        UUID(run_id)
+        with self._connection() as connection:
+            self._schema(connection)
+            row = workflow_repository.get_run(connection, self._sql, run_id)
+            if row is None:
+                raise IncidentNotFound("Unknown workflow run")
+            events = connection.execute(
+                self._sql(
+                    "SELECT payload_json,received_at FROM vera_workflow_events WHERE run_id=? ORDER BY sequence"
+                ),
+                (run_id,),
+            ).fetchall()
+            projection = json.loads(row["projection_json"])
+            inspected = {
+                "run": projection,
+                "events": [
+                    {
+                        "event": json.loads(item["payload_json"]),
+                        "received_at": item["received_at"],
+                    }
+                    for item in events
+                ],
+            }
+
+            return {**inspected, "evidence_sha256": evidence_hash(inspected)}
+
+    def workflow_overview(self, limit: int = 10000) -> dict[str, Any]:
+        """Operator-only inventory; never expose installation usage publicly."""
+        if not 1 <= limit <= 100000:
+            raise ValueError("Usage inventory limit must be 1–100000")
+        with self._connection() as connection:
+            self._schema(connection)
+            return workflow_repository.overview(connection, self._sql, limit)
 
     def register(
         self,

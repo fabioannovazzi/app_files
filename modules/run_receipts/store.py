@@ -204,6 +204,25 @@ class RunReceiptStore:
                 "Run-receipt storage is unavailable."
             ) from exc
 
+    def inventory(self, limit: int = 10000) -> dict[str, Any]:
+        """Operator-only proof inventory for missing usage-link coverage."""
+        if not 1 <= limit <= 100000:
+            raise ValueError("Receipt inventory limit must be 1–100000")
+        self._ensure_schema()
+        with self._connect() as connection:
+            total = connection.execute(
+                "SELECT COUNT(*) AS n FROM mparanza_vera_run_receipts"
+            ).fetchone()["n"]
+            rows = connection.execute(
+                "SELECT receipt_id,plugin_version,report_sha256,stamped_at FROM mparanza_vera_run_receipts ORDER BY stamped_at DESC LIMIT ?",
+                (limit,),
+            ).fetchall()
+            return {
+                "receipts": [dict(row) for row in rows],
+                "total": total,
+                "complete": total <= limit,
+            }
+
     def get(self, receipt_id: str) -> RunReceiptRecord | None:
         """Return one public receipt proof by its opaque identifier."""
 

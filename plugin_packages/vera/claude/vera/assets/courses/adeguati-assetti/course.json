@@ -101,7 +101,7 @@
     },
     {
       "path": "modules/adeguati-assetti/skills/mparanza-adeguati-assetti/SKILL.md",
-      "sha256": "5b818cfec4b1d20eff6daf52a44fe84b4f26ce51994e407d2401b02bb8f93c36"
+      "sha256": "4ee17a950bd2d3d603cdaf9a365e86ca94bd8f68e1f2452ce256908d7fb1f2b2"
     },
     {
       "path": "modules/adeguati-assetti/skills/mparanza-adeguati-assetti/references/geneva.md",
@@ -149,7 +149,7 @@
     },
     {
       "path": "skills/mparanza-adeguati-assetti/SKILL.md",
-      "sha256": "204c57606de031b810f8c6983ef0a45e61579c94504b3882bbcef350200d36ff"
+      "sha256": "a3e7aeb3a614337a95a7dacbc3bcc5866092ef9a1ac4ff45e4d782a73459062d"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -967,5 +967,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "5c23a68004051d8338434695a659beedb2216b847be527642d102c27f7182353"
+  "canonical_course_sha256": "2a8700e310c4fa04cf03a2a5d297b74a4e3ec0eb27884e16528a7ea026a8ebef"
 }

@@ -10,6 +10,12 @@ const crypto = require("node:crypto");
 function validIncidentTools(tools) {
   // Tool names are an exact transport contract, not a diagnostic classifier.
   const expected = new Set(["vera_incident_register", "vera_incident_report", "vera_incident_status", "vera_incident_outcome", "vera_incident_progress"]);
+  // A release is built before its API deployment. Accept the existing incident
+  // contract or the complete usage extension, never a half-deployed pair.
+  if (Array.isArray(tools) && tools.some(tool => typeof tool?.name === "string" && tool.name.startsWith("vera_workflow_"))) {
+    expected.add("vera_workflow_record");
+    expected.add("vera_workflow_status");
+  }
   return Array.isArray(tools) && tools.length === expected.size &&
     tools.every(tool => tool && tool.inputSchema?.type === "object" && expected.delete(tool.name)) &&
     expected.size === 0;

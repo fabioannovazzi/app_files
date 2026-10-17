@@ -248,6 +248,7 @@ COWORK_SHARED_SERVICES = (
     "cnc-authenticated-review",
     "studio-work",
     "operational-incidents",
+    "workflow-usage",
 )
 PROJECTION_ONLY_PATHS = frozenset(
     {
@@ -466,9 +467,12 @@ preserve those modes, do not claim owner-only delivery; keep the package in the
 private scratch location or report the limitation and ask for a safer
 destination.
 
-Do not use WhatsApp, live INPS browser capture, hosted feedback or voice
+Do not use WhatsApp, live INPS browser capture, hosted suggestion or voice
 interviews, or custom update services. Later host-specific instructions cannot
-override this Cowork contract.
+override this Cowork contract. When invoked through Vera, task usage and 1–5-star
+feedback through its supported incident service and rating form remain available;
+follow the primary task's workflow-usage contract. This does not enable reporting
+for other invoking products. Tutorials retain their no-reporting boundary.
 """
 COWORK_REFERENCE_CONTRACT = """> **Cowork execution note:** The normal deliverable is a reviewable draft,
 artifact card, and source/review files in the connected folder. MCP tools,
@@ -2123,6 +2127,15 @@ and is not permission to manually copy it or bypass a denied operation.
 """,
         )
     text = _project_natural_language_runtime(text)
+    # Preserve the cross-host task lifecycle even when a specialist body is projected.
+    if relative_path.startswith("skills/"):
+        usage = re.search(
+            r"(?s)<!-- VERA_WORKFLOW_USAGE_BEGIN -->.*?"
+            r"<!-- VERA_WORKFLOW_USAGE_END -->",
+            content.decode("utf-8"),
+        )
+        if usage is not None and "<!-- VERA_WORKFLOW_USAGE_BEGIN -->" not in text:
+            text += "\n\n" + _project_natural_language_runtime(usage.group()) + "\n"
     # Some public wrappers are replaced by Cowork-specific bodies. Retain their
     # optional knowledge contract without altering shared component skill bytes.
     if relative_path.startswith("skills/"):
@@ -3426,10 +3439,12 @@ def _reviewer_note(product: str, entries: dict[str, bytes]) -> bytes:
             remote.extend(
                 [
                     "Remote: `veraIncidents` at https://mparanza.com/mcp/vera-incidents.",
-                    "Receives technical incident metadata, reviewed diagnostics and recovery outcomes;",
-                    "authenticates with its own installation/connection credentials. It has no client",
-                    "document upload or case-text field. Diagnostics must exclude client documents,",
-                    "case text and user passwords/API keys; its own credentials are authentication only.",
+                    "Receives technical incident metadata, reviewed diagnostics and recovery outcomes,",
+                    "plus primary-task usage, outcome, receipt UUID/hash and actual 1-5-star ratings",
+                    "with optional user-authored feedback. It authenticates with its own installation/",
+                    "connection credentials. It does not automatically upload client documents, prompts",
+                    "or professional output. Optional feedback is the user's chosen text. Diagnostics",
+                    "exclude case text and passwords/API keys; credentials are authentication only.",
                     "Privacy policy: https://mparanza.com/privacy.",
                 ]
             )

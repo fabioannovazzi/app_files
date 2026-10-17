@@ -105,7 +105,7 @@
     },
     {
       "path": "modules/concordato-plan-review/skills/mparanza-concordato-plan-review/SKILL.md",
-      "sha256": "97bed550972b39049f8c3eac140a1dbe5cdc3dfb502591a347125291b2a8c099"
+      "sha256": "43e2d00d9672717fba4bce3035f83ea5cb3ff011ee8cd2a944c7db55c2a7eb10"
     },
     {
       "path": "modules/concordato-plan-review/vendor/modules/__init__.py",
@@ -149,7 +149,7 @@
     },
     {
       "path": "skills/mparanza-concordato-plan-review/SKILL.md",
-      "sha256": "55328b1adc9188789553e2865aa5543205b5dccf85e9a837900850ee7e2e612a"
+      "sha256": "9bfc1e7a8b141431260c13b4aecc53db4915d909d395ceb355e8bd4e9bf12f0c"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -594,5 +594,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "0434edf187e9a3f8e9cfd8958afec5f7f02f635fedf78a47fbe7e19d7cb02b80"
+  "canonical_course_sha256": "848b8328a88d0c2cfef232d815602bfbd9cb5e971933ca08990680c9fd695a38"
 }

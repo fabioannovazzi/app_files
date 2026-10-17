@@ -93,7 +93,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "b2e765bcf339c28b5cd6775db6f254e1a12647a8e4df4bbd7cabd0e92860ba69",
+  "course_sha256": "c45a4d9e1ae63f1a41782a92ab3ba7215a830330a74ce054af9a9740401e0f3b",
   "discovery_source_refresh": {
     "reviewed_by": "Codex /root",
     "reviewed_at": "2026-10-01T11:44:13.076890+00:00",
@@ -958,5 +958,16 @@
     "reviewed_at": "2026-10-15T13:14:28.486414+00:00",
     "reviewer": "Codex /root - bounded incident-client source review",
     "source_review": "Inspected the exact operational_incidents.py diff: reporter protocol changes from 2 to 3, and startup guidance routes the host AI through typed technical requests, revision-linked replies, active status checks and verified original-task retry. No course execution or professional calculation logic changes."
+  },
+  "workflow_usage_source_binding_review_20261017": {
+    "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
+    "reviewed_at": "2026-10-17T17:31:14.919382+00:00",
+    "baseline_commit": "6048ffff4f98a94854888598871c4ab23c595813",
+    "previous_course_sha256": "b2e765bcf339c28b5cd6775db6f254e1a12647a8e4df4bbd7cabd0e92860ba69",
+    "current_course_sha256": "c45a4d9e1ae63f1a41782a92ab3ba7215a830330a74ce054af9a9740401e0f3b",
+    "authored_content_unchanged": true,
+    "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json",
+    "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
+    "fresh_matching_junit_required": true
   }
 }

@@ -209,11 +209,11 @@
     },
     {
       "path": "modules/lipe/skills/mparanza-lipe/SKILL.md",
-      "sha256": "109adc1233534ee59ae66072b0fb4d27a77fbf4219e803d7a2b77df6d63bb375"
+      "sha256": "8853284cd2392767a2dc754716ddfee3ace869f6bd7fe4bbfe1e87b2549cda22"
     },
     {
       "path": "skills/mparanza-lipe/SKILL.md",
-      "sha256": "e7019ac3a8e564f65b4b6478c306524cf0bc6469aa32220f9902a72e995df98b"
+      "sha256": "0afb4d8767cc12a90f94fc9e70be5d719fe5d6a6211e6a791d9dcf2c514dd49f"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -438,5 +438,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "6645c3ec14e3599f221c84b3b9f70074d8274d58d30e7ae942ed2659d5492f56"
+  "canonical_course_sha256": "4445716d8a0d1edf69afd62f082a7bc8d733339c55a7e33ec740576f8d8d298a"
 }

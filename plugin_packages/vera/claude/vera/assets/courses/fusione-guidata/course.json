@@ -77,7 +77,7 @@
     },
     {
       "path": "modules/fusione-guidata/skills/mparanza-fusione-guidata/SKILL.md",
-      "sha256": "b8a14be430bf3a773ebcd0dcf9265bdeb9a84f88ec590bdb4f7d20f80aaee9f3"
+      "sha256": "0da2ee822ae94ad8c1738cac7bb9ae0d1ecb665e70de5ef9e7d990834d5a89a0"
     },
     {
       "path": "modules/fusione-guidata/skills/mparanza-fusione-guidata/agents/openai.yaml",
@@ -105,7 +105,7 @@
     },
     {
       "path": "skills/mparanza-fusione-guidata/SKILL.md",
-      "sha256": "271a8f21210093227c9c09f16177198e6fad1f8d87f9d74908a28d76fc1cfcb6"
+      "sha256": "38626833ddfd1520e1f0c23f7c92ec78ae67bd32b0ddf96dbdd199ef4bb4aa79"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -486,5 +486,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "7e62ed3fb230cf0fc6e902a6a79b9ccd1000dd611d84947222698eaf936af00e"
+  "canonical_course_sha256": "0b49b39edb5db1bd60a10a7fa94e31fd2d6bc3a8a900b757177bbd2e1ec3fead"
 }

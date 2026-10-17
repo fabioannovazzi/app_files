@@ -105,7 +105,7 @@
     },
     {
       "path": "modules/presenza-digitale-studio/skills/mparanza-presenza-digitale-studio/SKILL.md",
-      "sha256": "a71fd4ed214127802566ff68deeade45b5c7f63592b750603ee52a1a4b964e16"
+      "sha256": "ade3234e78a6111bc6c26c7b2e27408a6c2c9e2c451b9f7478a7d7597460b00b"
     },
     {
       "path": "modules/presenza-digitale-studio/skills/mparanza-presenza-digitale-studio/agents/openai.yaml",
@@ -133,7 +133,7 @@
     },
     {
       "path": "skills/mparanza-presenza-digitale-studio/SKILL.md",
-      "sha256": "3a5c016fc4e42d2452daeff75ab23fcd1bca887c53a5add3e3437ce483d9c9cb"
+      "sha256": "177c8903b908f4ba47f9c691f042628d774c41b55662e65bd964b73b659756b3"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -538,5 +538,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "feacdb072dff51e0d3d02d523392fa75481d939c412f769e23a4fab6babe7c1c"
+  "canonical_course_sha256": "30f591bf575ad05c36eae91f18e41f85b3ffde107530641fb0e5846869c95eda"
 }

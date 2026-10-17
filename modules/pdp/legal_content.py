@@ -168,6 +168,16 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 ],
             },
             {
+                "id": "workflow-usage",
+                "title": "Vera Process Usage and Optional Feedback",
+                "paragraphs": [
+                    "Vera records one opaque task ID for each substantive user process, its existing installation ID, process name from a fixed catalogue, host, version, timestamps and observed start, completion, failure or cancellation. An interrupted task remains outcome unknown. Studio Archive is supporting infrastructure, not a separately rated process.",
+                    "The usage service can link the task to its existing signed report receipt ID and SHA-256 digest and to an owned technical incident. This does not send the report, client documents, task text, filenames, prompts or professional outputs. Synthetic and agent-test activity is marked and excluded from ordinary usage statistics.",
+                    "After delivering the result, Vera offers one optional 1–5-star rating and optional comment. Your answer or the form’s submit button sends that feedback to the Vera team; there is no second confirmation. No answer remains unrated. Comments are user-authored text, not automatically copied case material. Service records are retained until administrative deletion without automatic expiry.",
+                    "The team reviews usage, outcomes and feedback to identify defects, quality and usability issues. A successful task, a hash receipt or a high rating does not establish professional validation or close a technical incident. Older uninstrumented versions and undelivered events remain coverage gaps, not proof of no use.",
+                ],
+            },
+            {
                 "id": "run-receipts",
                 "title": "Vera Technical Receipts",
                 "paragraphs": [

@@ -24,7 +24,7 @@
     ],
     "course_sha256": "0e740c47f86034c69a3ca838844ead9c2a2c6b60593c09fbbbce1c40b0b17c77"
   },
-  "course_sha256": "dc26612fa30daa86ddc04e034b3dd199e2a5ad8ffc4f2e0d967c293ca53f6bfb",
+  "course_sha256": "1e749b15430c47b024d50cfe9d3df003b32b24f948c15d40a3046254e32ee662",
   "host_marker_source_binding_review_20261010": {
     "prior_course_sha256": "c8787aa02e4e38d7b209da29ae1d8725bf86a83fe0ee06cbe80cb6669350ae74",
     "current_course_sha256": "5bcf5fb4a9c80d90dbe59e88b844a9567569a90c267e747b16213801082c9d96",
@@ -413,5 +413,16 @@
     "reviewed_at": "2026-10-15T13:14:28.464062+00:00",
     "reviewer": "Codex /root - bounded incident-client source review",
     "source_review": "Inspected the exact operational_incidents.py diff: reporter protocol changes from 2 to 3, and startup guidance routes the host AI through typed technical requests, revision-linked replies, active status checks and verified original-task retry. No course execution or professional calculation logic changes."
+  },
+  "workflow_usage_source_binding_review_20261017": {
+    "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
+    "reviewed_at": "2026-10-17T17:31:14.919382+00:00",
+    "baseline_commit": "6048ffff4f98a94854888598871c4ab23c595813",
+    "previous_course_sha256": "dc26612fa30daa86ddc04e034b3dd199e2a5ad8ffc4f2e0d967c293ca53f6bfb",
+    "current_course_sha256": "1e749b15430c47b024d50cfe9d3df003b32b24f948c15d40a3046254e32ee662",
+    "authored_content_unchanged": true,
+    "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json",
+    "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
+    "fresh_matching_junit_required": true
   }
 }

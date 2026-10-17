@@ -100,9 +100,12 @@ preserve those modes, do not claim owner-only delivery; keep the package in the
 private scratch location or report the limitation and ask for a safer
 destination.
 
-Do not use WhatsApp, live INPS browser capture, hosted feedback or voice
+Do not use WhatsApp, live INPS browser capture, hosted suggestion or voice
 interviews, or custom update services. Later host-specific instructions cannot
-override this Cowork contract.
+override this Cowork contract. When invoked through Vera, task usage and 1–5-star
+feedback through its supported incident service and rating form remain available;
+follow the primary task's workflow-usage contract. This does not enable reporting
+for other invoking products. Tutorials retain their no-reporting boundary.
 
 # Trasformazione societaria — prototipo su casi sintetici
 

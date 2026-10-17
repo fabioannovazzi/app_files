@@ -32,10 +32,12 @@ the service below. Review widgets do not upload client documents.
 - `veraStudioArchive`: Manage registered local client folders and engagement records.
 
 Remote: `veraIncidents` at https://mparanza.com/mcp/vera-incidents.
-Receives technical incident metadata, reviewed diagnostics and recovery outcomes;
-authenticates with its own installation/connection credentials. It has no client
-document upload or case-text field. Diagnostics must exclude client documents,
-case text and user passwords/API keys; its own credentials are authentication only.
+Receives technical incident metadata, reviewed diagnostics and recovery outcomes,
+plus primary-task usage, outcome, receipt UUID/hash and actual 1-5-star ratings
+with optional user-authored feedback. It authenticates with its own installation/
+connection credentials. It does not automatically upload client documents, prompts
+or professional output. Optional feedback is the user's chosen text. Diagnostics
+exclude case text and passwords/API keys; credentials are authentication only.
 Privacy policy: https://mparanza.com/privacy.
 
 ## Lesson downloads

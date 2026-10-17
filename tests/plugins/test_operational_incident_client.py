@@ -301,6 +301,17 @@ def client(tmp_path, monkeypatch):
     (root / ".codex-plugin/plugin.json").write_text(
         json.dumps({"name": "vera", "version": "0.1.361"})
     )
+    # The installed startup now imports its usage sibling; bind that sibling to
+    # this isolated capability rather than the real user's installation state.
+    import sys
+
+    monkeypatch.setitem(sys.modules, "operational_incidents", module)
+    usage_spec = importlib.util.spec_from_file_location(
+        "workflow_usage", ROOT / "plugins/vera/scripts/workflow_usage.py"
+    )
+    usage_module = importlib.util.module_from_spec(usage_spec)
+    usage_spec.loader.exec_module(usage_module)
+    monkeypatch.setitem(sys.modules, "workflow_usage", usage_module)
     monkeypatch.setattr(module, "ROOT", root)
     monkeypatch.setenv("MPARANZA_INCIDENT_STATE_DIR", str(tmp_path / "private"))
     store = IncidentStore(tmp_path / "server.sqlite3")

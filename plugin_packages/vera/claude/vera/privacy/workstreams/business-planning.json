@@ -159,7 +159,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "d3d298ca90dd2151c7ed919303b8a3833152a0171aab3cd6dcd2b00740485b86"
+    "source_fingerprint": "c68c544368047b43d99e6139184b66a6b4bdb245846420d82723519495baa2ab"
   },
   "role": "workflow",
   "runtime_profiles": [
