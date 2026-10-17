@@ -543,7 +543,7 @@
   },
   "workflow_usage_source_binding_review_20261017": {
     "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
-    "reviewed_at": "2026-10-17T17:11:41.800043+00:00",
+    "reviewed_at": "2026-10-17T17:31:14.919382+00:00",
     "baseline_commit": "6048ffff4f98a94854888598871c4ab23c595813",
     "previous_course_sha256": "9ee53a6aa4f96f09838bfd7c99a729492da6c4f640e492207bd85281f43f7759",
     "current_course_sha256": "43fe88bbe46988a0006636fa2493652b2f09e02b295f14a8a2b9d730bb1cb9e6",

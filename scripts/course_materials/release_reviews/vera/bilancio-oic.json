@@ -70,7 +70,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "da57d0251d5033f4e9736711b26d65291ed95283dd7caee2a040e8c2d7861bc7",
+  "course_sha256": "f0119ddf23b9ec4c1e18b27333ab67b8699182eec87d5c6e90d648b2e0e7895f",
   "discovery_source_refresh": {
     "reviewed_by": "Codex /root",
     "reviewed_at": "2026-10-01T11:44:13.108677+00:00",
@@ -587,10 +587,10 @@
   },
   "workflow_usage_source_binding_review_20261017": {
     "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
-    "reviewed_at": "2026-10-17T17:11:41.800043+00:00",
+    "reviewed_at": "2026-10-17T17:31:14.919382+00:00",
     "baseline_commit": "6048ffff4f98a94854888598871c4ab23c595813",
     "previous_course_sha256": "8a0e6278978ae0fe8541acde4c56bcf9ae154c672e6043c51aa630aaa74f1374",
-    "current_course_sha256": "da57d0251d5033f4e9736711b26d65291ed95283dd7caee2a040e8c2d7861bc7",
+    "current_course_sha256": "f0119ddf23b9ec4c1e18b27333ab67b8699182eec87d5c6e90d648b2e0e7895f",
     "authored_content_unchanged": true,
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",

@@ -19,8 +19,14 @@ At task startup, run `python scripts/workflow_usage.py flush`. With local
 execution available, use the managed interpreter from the installed Vera root:
 
 ```
-python scripts/workflow_usage.py start --run-id <retained-uuid> --pipeline <catalog-id> --sample-kind user
+python scripts/workflow_usage.py start --run-id <retained-uuid> --pipeline <catalog-id> --host <observed-app> --sample-kind user
 ```
+
+Use the actual app: `codex`, `cowork`, `chatgpt` or `antigravity`. Use `unknown`
+when it cannot be established. A package format, operating system or incident
+connection's default host does not establish the app running this task. This
+same rule applies to the connector's `host` field below and does not change the
+original installation or connection owner.
 
 Do not ask the user to run commands. Repeating start with the same UUID is safe.
 Save/reuse this UUID when work resumes, when updating Vera, and through recovery.

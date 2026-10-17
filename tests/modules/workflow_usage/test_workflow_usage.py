@@ -340,6 +340,41 @@ def installed_client(setup, tmp_path, monkeypatch):
     return usage
 
 
+@pytest.mark.parametrize("host", ["codex", "cowork", "chatgpt", "antigravity"])
+def test_observed_app_is_recorded_without_changing_installation_owner(
+    installed_client, host
+):
+    usage = installed_client
+    owner = usage.incidents.local_context()["credentials"]["installation_id"]
+    run = str(uuid4())
+
+    usage.start(run, "journal-sampling", sample_kind="user", host=host)
+
+    result = usage.status(run)["remote"]
+    assert result["host"] == host
+    assert result["installation_id"] == owner
+
+
+def test_unobserved_app_stays_unknown_despite_incident_default(installed_client):
+    usage = installed_client
+    assert usage.incidents.local_context()["client_status"]["host"] in {
+        "codex",
+        "cowork",
+    }
+    run = str(uuid4())
+
+    usage.start(run, "journal-sampling", sample_kind="user")
+
+    assert usage.status(run)["remote"]["host"] == "unknown"
+
+
+def test_unrecognized_app_is_rejected_before_task_is_started(installed_client):
+    with pytest.raises(ValueError, match="observed app"):
+        installed_client.start(
+            str(uuid4()), "journal-sampling", sample_kind="user", host="personal laptop"
+        )
+
+
 def test_offline_outbox_restarts_retries_exact_bytes_and_receives_acks(
     setup, installed_client, monkeypatch
 ):
@@ -566,6 +601,8 @@ def test_direct_cli_persists_and_reads_the_same_run(installed_client, capsys):
                 "quesito-legale-fiscale",
                 "--sample-kind",
                 "agent_test",
+                "--host",
+                "codex",
             ]
         )
         == 0

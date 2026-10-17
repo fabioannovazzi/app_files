@@ -544,7 +544,7 @@
     {
       "path": "scripts/workflow_usage.py",
       "repository_path": "plugins/vera/scripts/workflow_usage.py",
-      "sha256": "ceb4218beba4cbbb762b716acded5f2d4463ee484e89a1f24bd60403ce8379cf"
+      "sha256": "066c0639a272e8d9b5466d83beee1e623c495e3cb0f05bba3257b6384d88a62b"
     },
     {
       "path": "skills/variance-analysis/SKILL.md",

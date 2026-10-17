@@ -14,6 +14,9 @@ The original failure remains in the event history after successful resumption.
 
 The existing installation capability or saved OAuth connector authenticates
 writes. These are installation counts, not people or inferred computer counts.
+A task records its observed app explicitly (Codex, Cowork, ChatGPT or
+Antigravity); if unconfirmed, its app stays unknown. Package format and the
+incident service's default host are not evidence of the app executing the task.
 A retained native host binding may identify shared hosts; absent binding stays
 unknown. Technical incident closure remains governed by its exact original
 report and remedy episode. Usage completion and stars never close incidents.

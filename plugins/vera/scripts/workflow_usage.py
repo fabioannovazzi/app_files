@@ -236,7 +236,12 @@ def status(run_id: str, *, remote: bool = True) -> dict[str, Any]:
 
 
 def start(
-    run_id: str, pipeline: str, *, sample_kind: str, deliver: bool = True
+    run_id: str,
+    pipeline: str,
+    *,
+    sample_kind: str,
+    host: str = "unknown",
+    deliver: bool = True,
 ) -> dict[str, Any]:
     """Start once with a retained UUID; never count internal helpers as new work."""
     run_id = str(UUID(run_id))
@@ -249,7 +254,9 @@ def start(
         raise ValueError(
             "Choose a registered primary pipeline and explicit sample kind"
         )
-    credentials, host = _owner()
+    if host not in {"codex", "cowork", "chatgpt", "antigravity", "unknown"}:
+        raise ValueError("Choose the observed app or unknown")
+    credentials, _ = _owner()
     connection = _database()
     try:
         with connection:
@@ -529,6 +536,11 @@ def main(argv: list[str] | None = None) -> int:
     begin.add_argument("--run-id", required=True)
     begin.add_argument("--pipeline", required=True)
     begin.add_argument(
+        "--host",
+        choices=("codex", "cowork", "chatgpt", "antigravity", "unknown"),
+        required=True,
+    )
+    begin.add_argument(
         "--sample-kind", choices=("user", "synthetic", "agent_test"), required=True
     )
     emit = commands.add_parser("record")
@@ -561,7 +573,9 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     try:
         if args.command == "start":
-            result = start(args.run_id, args.pipeline, sample_kind=args.sample_kind)
+            result = start(
+                args.run_id, args.pipeline, sample_kind=args.sample_kind, host=args.host
+            )
         elif args.command == "record":
             fields = (
                 json.loads(args.fields.read_text(encoding="utf-8"))

@@ -41,7 +41,7 @@ class WorkflowEvent(BaseModel):
     occurred_at: datetime
     product_version: str = Field(pattern=r"^[0-9]+\.[0-9]+\.[0-9]+$", max_length=32)
     pipeline: str | None = Field(default=None, max_length=80)
-    host: Literal["codex", "cowork", "chatgpt", "unknown"] | None = None
+    host: Literal["codex", "cowork", "chatgpt", "antigravity", "unknown"] | None = None
     sample_kind: Literal["user", "synthetic", "agent_test"] | None = None
     receipt_id: UUID | None = None
     receipt_version: str | None = Field(

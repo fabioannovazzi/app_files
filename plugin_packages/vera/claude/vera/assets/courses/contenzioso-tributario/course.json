@@ -53,7 +53,7 @@
     },
     {
       "path": "scripts/workflow_usage.py",
-      "sha256": "75b616d35c9cb53a5ca257f00db39ebc3a73ee8be3778176e6dd8d7d9a5435d5"
+      "sha256": "20edb05ee55c84f5624ee22376c72318789563be7bc0d3851ef4fbc0da62c395"
     },
     {
       "path": "skills/mparanza-contenzioso-tributario/SKILL.md",
@@ -526,5 +526,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "f828f0d4a44032d933b8230aa1f983c2b48d3e8658fea938099a792562d468b6"
+  "canonical_course_sha256": "f430967f07637dc4e0dd8b0a3e767ba66ad770cb0f7a29b956781f0bd93acead"
 }

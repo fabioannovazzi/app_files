@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "reviewed_at": "2026-10-17T17:11:41.800043+00:00",
+  "reviewed_at": "2026-10-17T17:31:14.919382+00:00",
   "baseline_commit": "6048ffff4f98a94854888598871c4ab23c595813",
   "integrated_main": "ca971774139328ea2fa03d7ef2276dc637807012",
   "version": "0.1.404",
@@ -153,7 +153,7 @@
     {
       "workflow": "vera/bilancio-oic",
       "previous_course_sha256": "8a0e6278978ae0fe8541acde4c56bcf9ae154c672e6043c51aa630aaa74f1374",
-      "current_course_sha256": "da57d0251d5033f4e9736711b26d65291ed95283dd7caee2a040e8c2d7861bc7",
+      "current_course_sha256": "f0119ddf23b9ec4c1e18b27333ab67b8699182eec87d5c6e90d648b2e0e7895f",
       "changed_fields": [
         "sources"
       ],
@@ -208,7 +208,7 @@
           "current": {
             "path": "scripts/workflow_usage.py",
             "repository_path": "plugins/vera/scripts/workflow_usage.py",
-            "sha256": "ceb4218beba4cbbb762b716acded5f2d4463ee484e89a1f24bd60403ce8379cf"
+            "sha256": "066c0639a272e8d9b5466d83beee1e623c495e3cb0f05bba3257b6384d88a62b"
           }
         },
         {
@@ -398,7 +398,7 @@
     {
       "workflow": "vera/contenzioso-tributario",
       "previous_course_sha256": "6550e2c990e4bf5bb85d63438bca34e82d5991a3d7d7b242a5513357bbf237ec",
-      "current_course_sha256": "f828f0d4a44032d933b8230aa1f983c2b48d3e8658fea938099a792562d468b6",
+      "current_course_sha256": "f430967f07637dc4e0dd8b0a3e767ba66ad770cb0f7a29b956781f0bd93acead",
       "changed_fields": [
         "sources"
       ],
@@ -440,7 +440,7 @@
           "current": {
             "path": "scripts/workflow_usage.py",
             "repository_path": "plugins/vera/scripts/workflow_usage.py",
-            "sha256": "ceb4218beba4cbbb762b716acded5f2d4463ee484e89a1f24bd60403ce8379cf"
+            "sha256": "066c0639a272e8d9b5466d83beee1e623c495e3cb0f05bba3257b6384d88a62b"
           }
         },
         {
@@ -798,7 +798,7 @@
     {
       "workflow": "vera/organizzazione-lavoro",
       "previous_course_sha256": "dc26612fa30daa86ddc04e034b3dd199e2a5ad8ffc4f2e0d967c293ca53f6bfb",
-      "current_course_sha256": "b41b8589e0c63eb1df2dfbd9f8be588d84db6164afa1d75e67cbd15e49a59aaa",
+      "current_course_sha256": "1e749b15430c47b024d50cfe9d3df003b32b24f948c15d40a3046254e32ee662",
       "changed_fields": [
         "sources"
       ],
@@ -822,7 +822,7 @@
           "current": {
             "path": "scripts/workflow_usage.py",
             "repository_path": "plugins/vera/scripts/workflow_usage.py",
-            "sha256": "ceb4218beba4cbbb762b716acded5f2d4463ee484e89a1f24bd60403ce8379cf"
+            "sha256": "066c0639a272e8d9b5466d83beee1e623c495e3cb0f05bba3257b6384d88a62b"
           }
         },
         {
@@ -1060,7 +1060,7 @@
     {
       "workflow": "vera/trasformazione",
       "previous_course_sha256": "ff0cbfc99bc0d815fd10e202f91d29a865e53815a25008497772c0d7fa2c6c3c",
-      "current_course_sha256": "302cf3a70cb9c142fbd1ae0567121da4767202e9d4ea10832c9bbcc96fb68f9f",
+      "current_course_sha256": "ba80d84e214e80c035155a749f762efca7ff877d0840a1f8cf9d923a812dc2e6",
       "changed_fields": [
         "sources"
       ],
@@ -1102,7 +1102,7 @@
           "current": {
             "path": "scripts/workflow_usage.py",
             "repository_path": "plugins/vera/scripts/workflow_usage.py",
-            "sha256": "ceb4218beba4cbbb762b716acded5f2d4463ee484e89a1f24bd60403ce8379cf"
+            "sha256": "066c0639a272e8d9b5466d83beee1e623c495e3cb0f05bba3257b6384d88a62b"
           }
         },
         {
@@ -1148,7 +1148,7 @@
     {
       "workflow": "vera/variance-analysis",
       "previous_course_sha256": "b2e765bcf339c28b5cd6775db6f254e1a12647a8e4df4bbd7cabd0e92860ba69",
-      "current_course_sha256": "eaaf1654780ad215ebadce21f2243f6c6575581d93d35e2544587fc05777e37f",
+      "current_course_sha256": "c45a4d9e1ae63f1a41782a92ab3ba7215a830330a74ce054af9a9740401e0f3b",
       "changed_fields": [
         "sources"
       ],
@@ -1190,7 +1190,7 @@
           "current": {
             "path": "scripts/workflow_usage.py",
             "repository_path": "plugins/vera/scripts/workflow_usage.py",
-            "sha256": "ceb4218beba4cbbb762b716acded5f2d4463ee484e89a1f24bd60403ce8379cf"
+            "sha256": "066c0639a272e8d9b5466d83beee1e623c495e3cb0f05bba3257b6384d88a62b"
           }
         },
         {
