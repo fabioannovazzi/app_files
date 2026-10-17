@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "contenzioso-tributario",
-  "course_sha256": "f430967f07637dc4e0dd8b0a3e767ba66ad770cb0f7a29b956781f0bd93acead",
+  "course_sha256": "35bcf1bcb38b8406c972622947caa073f3e59aa543729750034329562e022c66",
   "reviewer": "Codex /root: five-language authored lesson and real evidence/progress output review",
   "reviewed_at": "2026-10-14T14:55:04.859840+00:00",
   "review_scope": "Accepted prepared material and bounded real helper/Archive regressions. Semantic narrative and decisions are explicit test fixtures. This does not attest full live legal research, substantive pleading approval, native Word, native voice, installed-host learner execution or professional acceptance. Live lessons run the current specialist, not the fixtures.",
@@ -314,5 +314,18 @@
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "fresh_matching_junit_required": true
+  },
+  "usage_computer_binding_20261017": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "baseline_commit": "54da75ab0110a6f8ab32bd24952fbdd874cfe2fe",
+    "previous_course_sha256": "f430967f07637dc4e0dd8b0a3e767ba66ad770cb0f7a29b956781f0bd93acead",
+    "current_course_sha256": "35bcf1bcb38b8406c972622947caa073f3e59aa543729750034329562e022c66",
+    "authored_content_unchanged": true,
+    "changed_sources": [
+      "scripts/operational_incidents.py"
+    ],
+    "source_review": "Inspected the exact operational_incidents.py change: workflow_transport now attaches the existing native host proof and observed app to its existing register request when available. Missing native proof leaves delivery available and linkage unknown. Workflow event bytes, helper execution, source files, professional output and incident recovery are unchanged. All authored lesson fields are byte-equivalent as JSON outside the source inventory.",
+    "validation": "76 focused usage/receipt tests and 298 incident/native-host regressions passed. Full native lesson CI remains required at the final PR head.",
+    "limits": "Retains original editorial and rendered-artifact review scope. This source-binding refresh is not a new professional test, learner acceptance or installed-host UI verification."
   }
 }

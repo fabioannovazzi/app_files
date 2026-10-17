@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/app-files-installer-isolation/plugins/vera",
-  "version": "0.1.405",
-  "captured_at": "2026-10-17T19:06:56.468942+00:00",
-  "catalogue_fingerprint": "60e76f78f93e7a2efeea76cccaac1ff84c978307d2f05af4063d0b320c877977",
-  "manifest_sha256": "cdc9eea285cd89bfcd9f48a010c5e1e098dd5b5a53d952ef6ecf92074582feed",
+  "root": "/private/tmp/vera-testing-evidence/plugins/vera",
+  "version": "0.1.406",
+  "captured_at": "2026-10-17T19:55:15.103649+00:00",
+  "catalogue_fingerprint": "7786dfdabfeb9ad9c7f190ed8be53364ce5776333e525ad8026f95c32d1de64f",
+  "manifest_sha256": "165a6ff7ecf2b4d67083ddcadb9d73d0f677237d41817e5fa3e22e83be15a881",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -14,7 +14,7 @@
     {
       "function_id": "adversarial-opinion",
       "skill_path": "skills/adversarial-opinion/SKILL.md",
-      "sha256": "afd6c9e891f6d3706be27ab4a5da81493ab39774026eeae8f017c57ccd8fb117"
+      "sha256": "926dcf5a29d56c3720c9a5ef5f21bb55d0cbbada42a3006610b8dc51eb96dbe5"
     },
     {
       "function_id": "agenzia-acquisition",
@@ -124,7 +124,7 @@
     {
       "function_id": "financial-report-builder",
       "skill_path": "skills/financial-report-builder/SKILL.md",
-      "sha256": "238f14861eedabf67c060cb1367f8f1b94cf07fb2c882f2f5ea43f021c06553a"
+      "sha256": "db80a7eb6cdf92daca89e85308af1b567f3d4950780c9c7504a2a967d9571fc0"
     },
     {
       "function_id": "fusione-guidata",

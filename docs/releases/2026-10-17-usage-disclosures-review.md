@@ -17,6 +17,7 @@ The root Clara workflow review is also refreshed because its governed manifest
 now identifies the rebuilt package version; its workflow instructions are unchanged.
 
 Clara's downloadable packages are rebuilt from the updated review records.
-Version 0.1.297 is above main's 0.1.295 and the 0.1.296 candidate in PR #854.
+Version 0.1.297 follows the 0.1.296 release merged in PR #854. The branch
+includes that change and the packages are rebuilt against the combined source.
 This is package maintenance associated with the public documentation update,
 not a Marketplace publication or installed-host acceptance claim.

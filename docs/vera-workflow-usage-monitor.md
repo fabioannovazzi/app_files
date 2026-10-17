@@ -31,8 +31,9 @@ is not grounds for another alert. Re-check an active source fix or incident
 before opening another. A failed task with a linked original report uses the
 existing authorized recovery loop. Missing incident linkage or diagnostic content
 is a reporting gap to investigate, not permission to invent a customer incident.
-A low rating is not automatically a bug. A later high rating or usage completion
-never closes an operational incident or upgrades the professional testing label.
+A low rating is not automatically a bug. A later high rating never closes an operational incident or changes a testing icon.
+Completed runs separately feed the public testing levels through the explicit
+computer-based policy in docs/vera-workflow-usage.md; they never close incidents.
 
 `unattributed_receipts` contains proofs from instrumented versions that have no
 usage link. They are coverage gaps, not inferred user runs. Older unlinked proofs
@@ -67,3 +68,12 @@ For an operator view, the same CLI can write `summary --html <private-path>`.
 The HTML escapes comments, has no network calls, and is not a public dashboard.
 The JSON remains the authoritative machine-readable evidence. Do not publish
 feedback or the operator inventory.
+
+
+Also inspect `scripts/manage_workflow_usage.py testing-status` when checking
+reporting coverage. This private evidence report contains the active testing
+baseline and exact contributing runs, computer groups, and unlinked completions.
+An unlinked completion is a host-binding gap, not evidence of another computer.
+Use the existing native identity bridge when available; never infer a machine
+from an OS, app, saved OAuth connection or reporter UUID. Do not reset this
+baseline or promote statuses manually during routine monitoring.
