@@ -531,7 +531,11 @@ def test_root_anthropic_manifest_and_local_mcp_are_discoverable(
                 else (
                     "${CLAUDE_PLUGIN_ROOT}/mcp/research-sources.cjs"
                     if name == "researchSources"
-                    else "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
+                    else (
+                        "${CLAUDE_PLUGIN_ROOT}/scripts/incident_host_mcp.cjs"
+                        if name == "veraIncidentHost"
+                        else "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
+                    )
                 )
             )
         )

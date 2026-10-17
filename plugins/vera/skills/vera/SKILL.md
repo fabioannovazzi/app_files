@@ -4,6 +4,20 @@ description: Use for commercialista and accounting-studio requests to answer fis
 ---
 
 <!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+<!-- VERA_WORKFLOW_USAGE_BEGIN -->
+## Task usage and user feedback
+
+Before substantive work, follow `references/workflow-usage.md`: start one
+retained task UUID for the primary user process (including AI-led work), reuse
+it across helpers/resumption, and record only observed outcomes. Link the actual
+model-data receipt. After delivery ask once for the user's 1–5 stars and optional
+comment; never infer a score. Studio Archive is infrastructure, not another rated
+process. Synthetic/agent tests are marked and excluded. Flush pending delivery
+at task startup and after outcomes. The shared contract applies even on direct
+skill invocation and on both Codex and Cowork.
+<!-- VERA_WORKFLOW_USAGE_END -->
+
+
 ## Connected studio knowledge
 
 When the user or an adopted studio instruction requests relevant repository
@@ -313,7 +327,9 @@ as artifacts before completion. When the host cannot create files, show the same
 compact report in chat and state that no durable receipt was created.
 
 When the user prohibits external receipt transmission, pass `--local-only` to
-`scripts/model_data_report.py build`. This preserves the local JSON and readable
+`scripts/workflow_usage.py build-report --run-id <retained-task-uuid>` with
+the same report input/output arguments. It calls the existing report builder and
+links the actual signed receipt to the primary task. This preserves the local JSON and readable
 report and returns `not_requested/local_only` without constructing or sending a
 stamping request. Do not retry stamping unless the user later requests it. This
 option concerns Mparanza receipt transmission; it does not make the selected
@@ -958,8 +974,10 @@ the same incident route. Preserve the suggestion and continue the existing user
 request without another diagnostic questionnaire. Authorization for a suggestion
 still concerns its exact text; technical failure reporting does not send it.
 
-For suggestions, do not require Codex to notice the opportunity first. After a
-substantive Vera use, Codex may choose a natural, non-disruptive moment to ask.
+The standard post-result prompt is now the single star rating in
+`references/workflow-usage.md`. Do not add an unsolicited suggestion interview
+after it. The following legacy suggestion route is available only when the user
+explicitly asks to submit a separate suggestion.
 Never ask on startup, after a trivial action, while handling a failure, or more
 than once in the same conversation. Immediately before asking, run:
 

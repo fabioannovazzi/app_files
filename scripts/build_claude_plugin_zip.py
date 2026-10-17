@@ -248,6 +248,7 @@ COWORK_SHARED_SERVICES = (
     "cnc-authenticated-review",
     "studio-work",
     "operational-incidents",
+    "workflow-usage",
 )
 PROJECTION_ONLY_PATHS = frozenset(
     {
@@ -2123,6 +2124,15 @@ and is not permission to manually copy it or bypass a denied operation.
 """,
         )
     text = _project_natural_language_runtime(text)
+    # Preserve the cross-host task lifecycle even when a specialist body is projected.
+    if relative_path.startswith("skills/"):
+        usage = re.search(
+            r"(?s)<!-- VERA_WORKFLOW_USAGE_BEGIN -->.*?"
+            r"<!-- VERA_WORKFLOW_USAGE_END -->",
+            content.decode("utf-8"),
+        )
+        if usage is not None and usage.group() not in text:
+            text += "\n\n" + usage.group() + "\n"
     # Some public wrappers are replaced by Cowork-specific bodies. Retain their
     # optional knowledge contract without altering shared component skill bytes.
     if relative_path.startswith("skills/"):

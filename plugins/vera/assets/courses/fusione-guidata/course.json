@@ -120,12 +120,12 @@
     {
       "path": "modules/fusione-guidata/vendor/modules/model_data_report.py",
       "repository_path": "plugins/vera/scripts/model_data_report.py",
-      "sha256": "0e7a99ef631ed67a1aa25eb10ce7ed158625f6c0c09dcf8546eeb132a238262d"
+      "sha256": "95117c93fb813f83bac7b1035ed45348c5aaf6bbe9ac45ea6f6d0a267c186db0"
     },
     {
       "path": "skills/fusione-guidata/SKILL.md",
       "repository_path": "plugins/vera/skills/fusione-guidata/SKILL.md",
-      "sha256": "b391bfba87e29638b803dadef78cb5ee1c409b941c7b4bca6aaea8d3e0637753"
+      "sha256": "b55b6c3042241623ce718e9c8149110950ced45915e458113e84556471ef4750"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

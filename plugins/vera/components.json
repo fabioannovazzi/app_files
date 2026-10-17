@@ -52,7 +52,8 @@
     "native-workspace",
     "studio-work",
     "operational-incidents",
-    "research-subscriptions"
+    "research-subscriptions",
+    "workflow-usage"
   ],
   "workflow_roles": {
     "new-client": {

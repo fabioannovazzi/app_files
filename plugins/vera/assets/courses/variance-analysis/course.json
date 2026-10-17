@@ -524,7 +524,7 @@
     {
       "path": "scripts/operational_incidents.py",
       "repository_path": "plugins/vera/scripts/operational_incidents.py",
-      "sha256": "aeed7ab2c2e48ff38150393c114f0937643bede4dfb77f97b12addbc369540f3"
+      "sha256": "1d5778a493ecf9f30efff4cce88238c482927b72b91f3329f99bce6204fb9658"
     },
     {
       "path": "scripts/verified_execution.py",
@@ -532,9 +532,14 @@
       "sha256": "8817cdb519cce486adf79d4f8feaf7bc3d4f89a810361855da823c6d9a852c31"
     },
     {
+      "path": "scripts/workflow_usage.py",
+      "repository_path": "plugins/vera/scripts/workflow_usage.py",
+      "sha256": "af559e2c1cf38b32f503968342d9d8abcd768b0502d5860d24f1d8ca84c370c3"
+    },
+    {
       "path": "skills/variance-analysis/SKILL.md",
       "repository_path": "plugins/vera/skills/variance-analysis/SKILL.md",
-      "sha256": "715f973afe3e5a8316a59256532531b65ccc020bde0fd7fbdcaa5861a1904d98"
+      "sha256": "d95a65b28ac942b55fb5dca3224bde59079d01f8d8b4daa1e47ce2f987d3936a"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

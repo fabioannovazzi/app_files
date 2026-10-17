@@ -1039,6 +1039,7 @@ def _project_vera_repository_reviews(
         "plugin-feedback",
         "run-receipt-stamping",
         "operational-incidents",
+        "workflow-usage",
     ):
         name = f"privacy/services/{service_id}.json"
         original_bytes = (vera / name).read_bytes()

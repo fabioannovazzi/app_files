@@ -28,6 +28,20 @@ only if the register revision still matches. This is not authorization for an
 external write. Continue the calendar cycle below with actual connector reads
 and the current user's authorization. If the panel is unavailable, retain the
 ordinary tools and managed-Python/Cowork route described below
+<!-- VERA_WORKFLOW_USAGE_BEGIN -->
+## Task usage and user feedback
+
+Before substantive work, follow `../vera/references/workflow-usage.md`: start one
+retained task UUID for the primary user process (including AI-led work), reuse
+it across helpers/resumption, and record only observed outcomes. Link the actual
+model-data receipt. After delivery ask once for the user's 1–5 stars and optional
+comment; never infer a score. Studio Archive is infrastructure, not another rated
+process. Synthetic/agent tests are marked and excluded. Flush pending delivery
+at task startup and after outcomes. The shared contract applies even on direct
+skill invocation and on both Codex and Cowork.
+<!-- VERA_WORKFLOW_USAGE_END -->
+
+
 ## Prepared teaching course
 
 When the user asks to learn or try this workflow, use `learn-with-vera` and the
