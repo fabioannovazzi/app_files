@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "1044d1988aaa4a372776367fd66c00c11b4627da9e205ca8d32818488243860e",
+  "catalogue_fingerprint": "72903c0b1741e1afe9497807abe13e14400c95535df2054276d92fb7094ebda2",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -1838,5 +1838,17 @@
     "version": "0.1.396",
     "previous_catalogue_fingerprint": "f6092ccdfe9d186ab17a91ff632e8fe192d9b3737ffe1984ab3b428a638d80d1",
     "scope": "Only the canonical product manifest/version changed in this catalogue identity; every skill entrypoint hash is unchanged. The handled Archive error and diagnostic delivery changes do not establish Geneva professional acceptance. Existing jurisdiction judgments and limitations are preserved."
+  },
+  "model_advisory_release_binding_20261017": {
+    "version": "0.1.398",
+    "previous_catalogue_fingerprint": "1044d1988aaa4a372776367fd66c00c11b4627da9e205ca8d32818488243860e",
+    "changed_entrypoints": [
+      "adversarial-opinion",
+      "deep-research",
+      "legal-tax-answer-planner",
+      "legal-tax-answer-review",
+      "quesito-legale-fiscale"
+    ],
+    "scope": "Model choice is advisory: different, unknown or changed models and sessions do not block work or require confirmation. Host evidence remains distinct from user statements, legacy records resume, and reading finished runs preserves their bytes. Existing jurisdiction dispositions, professional review requirements and Geneva acceptance limitations remain unchanged."
   }
 }
