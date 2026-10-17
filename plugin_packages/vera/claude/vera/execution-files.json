@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "files": {
-    ".claude-plugin/plugin.json": "4cda0f1ece425f9f859113c0f3b7d639c53e90b1d904e8cc8e2fe51b37290258",
+    ".claude-plugin/plugin.json": "34d866528e2108dd0d998a35e713d6b319132c31c88cea916fcc182f2d904ef2",
     ".mcp.json": "550a37556109771ec95aca5bd7d9eb3937b8077c5c1086843f1a3c211009bcc6",
     "LICENSE": "0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0",
     "README.md": "c8f7d5c4a556da2f799192fd0c11c65ed4a5ecda0b90746b60dd38fd26c701da",
@@ -1363,7 +1363,7 @@
     "privacy/services/cnc-authenticated-review.json": "3e86405e71fcfeb5c659d66c7b9e224edb266acbf6dcdac714424fc6936c6ad3",
     "privacy/services/managed-python-runtime.json": "21196fa6ec7d8603a26fcd87d32d2d016bf90fdae19b8ef51e35b518eebc8a76",
     "privacy/services/operational-incidents.json": "041ef4ae7a6d76110d494923a93035671b3d07c9d699f3833470dedac4887e3c",
-    "privacy/services/run-receipt-stamping.json": "6a73fc2fd732a829144dab1503d1aa819ad54a83ce1bc8ad43d650ed8cefe895",
+    "privacy/services/run-receipt-stamping.json": "8bb83e02514bcfd8272f6ce91681f0ca0e72491e0fba86bd95c46d71f683f6ce",
     "privacy/services/studio-work.json": "764a6d07d4eee75c1e9786ae8df36cde88299d649c4652e6233e0a9bf1a24493",
     "privacy/workstreams/adeguati-assetti.json": "dd572aadb1459cb02bb54b68a34605b303202cf024c18ad006b8b3b51f58ffcc",
     "privacy/workstreams/aml-review.json": "2e12485d6c2b17c165bc4e09e008680b3a5b4135829824e63f1e3ff24723e220",
