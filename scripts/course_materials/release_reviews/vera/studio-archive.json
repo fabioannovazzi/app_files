@@ -116,7 +116,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "972557b4346d0383ce19a1e3a1ed9d63c7d5ade0a270141dd990082e95564f4c",
+  "course_sha256": "61cb4323f56777e73232c11c6b5819b2c6a1be8e5831a3214476d6348bd5ca89",
   "esg_source_refresh_20260930": {
     "reviewer": "Codex /root - bounded source review",
     "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
@@ -752,5 +752,63 @@
     "native_evidence": "GitHub run39014478919 job117343617766 at122df52d1 passed1710 native teaching tests with3 skips. Its later metadata gate rejected these stale course digests; the whole job was not green. A fresh local run of the20 affected localized demo/practice checks passed with actual JUnit properties for the current course digests. Final CI must still execute and verify the full native suite.",
     "local_junit_sha256": "24b6da63f95a940d07ea10c01a22e6979a1a0e8da7925464b6daad3df0fbbedc",
     "limits": "No new installed-host, live learner, voice, visual or professional acceptance is asserted."
+  },
+  "source_binding_review_20261017": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "reviewed_at": "2026-10-17T13:53:01.580339+00:00",
+    "baseline_commit": "c75a5f7f46a6c8846b6a92b8d9dd2cf5c2f409f1",
+    "previous_course_sha256": "972557b4346d0383ce19a1e3a1ed9d63c7d5ade0a270141dd990082e95564f4c",
+    "current_course_sha256": "33216e006a9b6b36575d9afe3c2c3b845cde55841c1a871f458e6ce08d4d8c21",
+    "authored_content_unchanged": true,
+    "changed_sources": [
+      {
+        "path": "modules/studio-archive/skills/studio-archive/SKILL.md",
+        "repository_path": "plugins/studio-archive/skills/studio-archive/SKILL.md",
+        "previous_sha256": "643d02b33c08f529c98bc7d3f565c55c4eeda0ee246cfc48405b4306fb759ccd",
+        "current_sha256": "4423da8b6b2c66312745f47046bcb8726248a85ba747f2e31809001994978a53"
+      },
+      {
+        "path": "skills/studio-archive/SKILL.md",
+        "repository_path": "plugins/vera/skills/studio-archive/SKILL.md",
+        "previous_sha256": "dd7e2f80997622e229da68d2bd9d2da38c2fb982293c8a7a877108a8f6b61745",
+        "current_sha256": "e95fb2f59c7e3d18de7171126d870090b4baa490d5e1551b7a6ca9c281f771d2"
+      }
+    ],
+    "source_review": "Inspected both changed Archive skill sources against the exact previously reviewed course. The new instructions preserve document-only engagement continuations as explicitly derived support notes through the existing controlled importer, followed by engagement re-listing and controlled-copy readback. They distinguish working copies from saved engagement evidence, retain old versions and retry deduplication, and prohibit invented archive runs or bypassing specialist finalization. The authored local-search lesson content, fictional inputs, locales, expected deliverables and existing artifact-review judgments are unchanged.",
+    "local_validation": "58 focused model-policy, Archive follow-up and release-review contract tests passed. Current lesson execution and final-head CI are separate evidence gates.",
+    "execution_requirement": "The complete native teaching CI suite must execute the current course digests and pass verify_release.py on the final PR head before merge.",
+    "limitations": "Preserves historical localized editorial and artifact reviews with their original scope. This source-compatibility review does not attest new rendered-output review, live model inference, learner participation, installed-host acceptance, professional approval, or a function-rating upgrade."
+  },
+  "archive_concurrency_source_binding_review_20261017": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "reviewed_at": "2026-10-17T14:13:09.616847+00:00",
+    "baseline_commit": "906fdb911d428eafdd6bc14bbfc2e0ee28178c09",
+    "integrated_commit": "6ef0cd0a2674aecac5c861b42a7012e19660f770",
+    "previous_course_sha256": "33216e006a9b6b36575d9afe3c2c3b845cde55841c1a871f458e6ce08d4d8c21",
+    "current_course_sha256": "61cb4323f56777e73232c11c6b5819b2c6a1be8e5831a3214476d6348bd5ca89",
+    "authored_content_unchanged": true,
+    "changed_sources": [
+      {
+        "path": "modules/studio-archive/scripts/archive_core.py",
+        "repository_path": "plugins/studio-archive/scripts/archive_core.py",
+        "previous_sha256": "886eaca111be852970f3ff701592af744108ad601c9443368683b1eddcbcfe55",
+        "current_sha256": "5de0bbb8d69e4519a189e158cfce743878cd487eb7b2d4392868e4aaf9767037"
+      },
+      {
+        "path": "modules/studio-archive/scripts/archive_preferences.py",
+        "repository_path": "plugins/studio-archive/scripts/archive_preferences.py",
+        "previous_sha256": "a3bba1a9dd32607c26afdb7fd02fac8fb6f8094524bb3d4d60f15d8958008b28",
+        "current_sha256": "f5ca3c7295c3dcb78f211cb7fe7bb399a73db5888a77a876a2a969af00e4a58a"
+      },
+      {
+        "path": "modules/studio-archive/skills/studio-archive/SKILL.md",
+        "repository_path": "plugins/studio-archive/skills/studio-archive/SKILL.md",
+        "previous_sha256": "4423da8b6b2c66312745f47046bcb8726248a85ba747f2e31809001994978a53",
+        "current_sha256": "5776776e5fad8df0e7c6277a183cea50e276d2e6e2d13df1e17696131ba49490"
+      }
+    ],
+    "source_review": "Inspected complete Archive core, identity-lock and workflow-instruction diffs merged in PR #850. Client-directory operations synchronize portable identities from live directory metadata independently of the content index. Indexed search/source-opening freshness checks remain separate. Shared identity writes use the existing OS lock with a bounded ten-second contention wait; expiry never removes the lock, changes the client or changes the archive root. Session selection remains separate. No model call, hosted recipient or new external data path is added. All authored lesson fields except source bindings match the exact previously reviewed course.",
+    "execution_requirement": "Full final-head teaching CI must execute the exact current course digests and pass verify_release.py before merge.",
+    "limitations": "Historical editorial and artifact reviews retain their original scope. This is source compatibility review, not new visual, learner, professional or installed-host acceptance and not a function-rating upgrade."
   }
 }

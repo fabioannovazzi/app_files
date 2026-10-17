@@ -1876,5 +1876,11 @@
     "reviewed_at": "2026-10-17",
     "previous_catalogue_fingerprint": "5ce99562f7d8545cfb29d496852b39f9bc2d6ddcd7c73850002d6345d1c4e6a6",
     "scope": "Adds the same task-level usage, outcome and optional 1-5-star reporting contract to existing user processes. Function identities and prior Geneva professional dispositions are unchanged. Usage, technical receipts and satisfaction do not establish professional testing or Geneva acceptance."
+  },
+  "manual_trial_status_release_binding": {
+    "date": "2026-10-17",
+    "version": "0.1.402",
+    "previous_catalogue_fingerprint": "5ce99562f7d8545cfb29d496852b39f9bc2d6ddcd7c73850002d6345d1c4e6a6",
+    "scope": "Mechanical manifest/version binding refresh for the manual function-trial legend and reviewed teaching-source evidence. All function IDs and skill-entrypoint hashes match the 0.1.401 snapshot. Existing Geneva dispositions and limits are unchanged; no new jurisdiction, host, learner or professional acceptance is claimed."
   }
 }

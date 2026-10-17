@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "quesito-legale-fiscale",
-  "course_sha256": "9c3741b6c791981c7da5c3180a2d564c7f9860a055b70f2981cab5d5ee3da928",
+  "course_sha256": "7402cb563f4abee1ce8744350ed22a073545d6b2d8008aba79a9861877adb991",
   "reviewer": "Codex /root - Deal Redux source compatibility review",
   "reviewed_at": "2026-10-14T08:00:57.892378+00:00",
   "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
@@ -596,5 +596,37 @@
     "authored_content_and_attachment_definitions_unchanged": true,
     "scope": "Preserve the merged model-policy and subscription source reviews while refreshing shared remote-course source fingerprints. Authored lessons, locales, timing, input hashes and professional judgments are unchanged. The affected lessons were actually rerun against this combined source; existing artifact attestations are retained without claiming new human or installed-host acceptance.",
     "native_junit_sha256": "15e74a096acb46c72e8b1bc8245a0d0a2386130690cff995645903df02208289"
+  },
+  "source_binding_review_20261017": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "reviewed_at": "2026-10-17T13:53:01.553481+00:00",
+    "baseline_commit": "b0e23333f9aca1c3f3ed33447a0a13450515e04d",
+    "previous_course_sha256": "9c3741b6c791981c7da5c3180a2d564c7f9860a055b70f2981cab5d5ee3da928",
+    "current_course_sha256": "7402cb563f4abee1ce8744350ed22a073545d6b2d8008aba79a9861877adb991",
+    "authored_content_unchanged": true,
+    "changed_sources": [
+      {
+        "path": "modules/deep-research-validator/skills/deep-research/SKILL.md",
+        "repository_path": "plugins/deep-research-validator/skills/deep-research/SKILL.md",
+        "previous_sha256": "c23652f119b7e6c86484ac71a630788700d586b44a61157925d0db7bf2e0e743",
+        "current_sha256": "df003e9807ceb6f62573fdb7c79d514bb3493432069d5ac2af22baf178a79dfc"
+      },
+      {
+        "path": "modules/deep-research-validator/skills/legal-tax-answer-review/references/answer-journey.md",
+        "repository_path": "plugins/deep-research-validator/skills/legal-tax-answer-review/references/answer-journey.md",
+        "previous_sha256": "30c5370893ed13f6d8b3b9afea4dc75444d30050912b1f8c823e91f302dfe6c4",
+        "current_sha256": "e33644c19e2b55bdfeddc3d1ac79b9bbd93496f20b7d329cd385c85ccc36fc90"
+      }
+    ],
+    "source_review": "Inspected every changed bound source against the exact previously reviewed course. The shared research and answer-journey instructions now treat model preference as advice, preserve truthful provenance, and continue when model identity differs, changes or is unknown. Vera additionally updates the model-policy helper, tool descriptions, panel and wrapper: optional model advice replaces blocking selection and confirmation; run ownership, stale-write rejection, saved history, case/account boundaries and substantive source/claim/professional review requirements remain. No model API is added or automatically switched. This alters the model-selection prerequisite, not the authored lesson text, fictional inputs, locale content, expected deliverables or prior artifact-review judgments.",
+    "local_validation": "58 focused model-policy, Archive follow-up and release-review contract tests passed. Current lesson execution and final-head CI are separate evidence gates.",
+    "execution_requirement": "The complete native teaching CI suite must execute the current course digests and pass verify_release.py on the final PR head before merge.",
+    "limitations": "Preserves historical localized editorial and artifact reviews with their original scope. This source-compatibility review does not attest new rendered-output review, live model inference, learner participation, installed-host acceptance, professional approval, or a function-rating upgrade.",
+    "local_native_execution": {
+      "suite": "tests/plugins/test_teaching_question_execution.py",
+      "result": "40 passed; 20 localized demo/practice native checks bound to current Vera/Lucia course digests",
+      "junit_sha256": "878b4b011680830bedfa7a06fc63f41246aace9a51694988b872dd7c02346bc0",
+      "scope": "Authored regression fixtures through actual local workflow code; not live model inference, learner participation, rendered-output re-review or professional acceptance."
+    }
   }
 }
