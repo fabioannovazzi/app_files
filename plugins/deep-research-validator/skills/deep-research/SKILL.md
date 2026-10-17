@@ -6,10 +6,10 @@ description: Research an accepted legal, tax or compliance assignment for the in
 # Research, validate and challenge
 
 Vera and Lucia invoke this same method through their product wrappers. Use the
-host model accepted under the invoking product's model requirement and authorized
-tools. Preserve that requirement through every research and review stage and
-any authorized delegation. Resolve a required model change through the host
-before substantive work; never silently substitute another model. Do not invoke
+current host model and authorized tools. Prefer the invoking product's recommended
+model when available, without blocking for a mismatch, unknown identity, model
+change or new session. Record provenance and preserve normal quality reviews.
+Do not invoke
 a separate research plugin, request model API credentials or move case material
 to another account. Every new research assignment uses this method; breadth and
 depth follow the question rather than a normal/deep selector.

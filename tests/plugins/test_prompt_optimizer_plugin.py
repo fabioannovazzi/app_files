@@ -214,7 +214,7 @@ def test_model_policy_cowork_cli_needs_no_ui(model_policy_run) -> None:
         return json.loads(result.stdout)
 
     pending = invoke(request)
-    assert not pending["can_continue"]
+    assert pending["can_continue"]
     confirmed = invoke(
         {
             **request,
@@ -274,8 +274,8 @@ def test_model_policy_cli_preserves_unicode_with_ascii_stdio(model_policy_run) -
     "active,ready,status",
     [
         ("capable-model", True, "ready_host_reported"),
-        ("different-model", False, "requires_switch"),
-        (None, False, "awaiting_confirmation"),
+        ("different-model", True, "ready_host_reported"),
+        (None, True, "ready_unknown"),
     ],
 )
 def test_model_policy_distinguishes_actual_identity_evidence(
@@ -294,14 +294,10 @@ def test_model_policy_distinguishes_actual_identity_evidence(
 @pytest.mark.parametrize(
     "changed",
     [
-        {"model": "weaker-model"},
-        {"session_ref": "another-conversation"},
         {"expected_sha256": "stale"},
     ],
 )
-def test_model_policy_rejects_downgrade_session_change_and_stale_write(
-    model_policy_run, changed
-) -> None:
+def test_model_policy_rejects_stale_write(model_policy_run, changed) -> None:
     module, request = model_policy_run
     accepted = module.apply_request(
         {
@@ -326,7 +322,7 @@ def test_model_policy_rejects_downgrade_session_change_and_stale_write(
     assert Path(accepted["path"]).read_bytes() == before
 
 
-def test_model_policy_new_session_invalidates_previous_confirmation(
+def test_model_policy_new_session_continues_without_reusing_identity(
     model_policy_run,
 ) -> None:
     module, request = model_policy_run
@@ -342,32 +338,166 @@ def test_model_policy_new_session_invalidates_previous_confirmation(
         }
     )
     changed = module.apply_request({**request, "session_ref": "new-conversation"})
-    assert not changed["can_continue"]
+    assert changed["can_continue"]
     assert changed["record"]["identity_basis"] == "unknown"
     assert "confirmation_reference" not in changed["record"]
 
 
-def test_model_policy_pending_record_cannot_execute_or_forge_ready(
+@pytest.mark.parametrize(
+    "legacy_status,active",
+    [("requires_switch", "different-model"), ("awaiting_confirmation", None)],
+)
+def test_model_policy_resumes_legacy_blocked_record_with_history(
+    model_policy_run, legacy_status, active
+) -> None:
+    module, request = model_policy_run
+    ready = module.apply_request(request)
+    record = ready["record"]
+    record.pop("enforcement")
+    record.update(
+        status=legacy_status,
+        active_model=active,
+        identity_basis="host_reported" if active else "unknown",
+        observation_reference="Original host metadata" if active else None,
+    )
+    path = Path(ready["path"])
+    path.write_text(
+        json.dumps(record, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    original = path.read_bytes()
+
+    resumed = module.apply_request({**request, "action": "read"})
+
+    assert resumed["can_continue"]
+    assert resumed["enforcement"] == "advisory"
+    assert path.read_bytes() == original
+    assert resumed["record"]["status"] == legacy_status
+    assert resumed["record"]["active_model"] == active
+    assert resumed["record"]["identity_basis"] == record["identity_basis"]
+    assert "confirmation_reference" not in resumed["record"]
+    written = module.apply_request(
+        {
+            **request,
+            "action": "phase",
+            "expected_sha256": resumed["sha256"],
+            "session_ref": "resumed-chat",
+            "phase": "preparation",
+            "execution_reference": "Resumed with no model confirmation",
+        }
+    )
+    assert written["can_continue"]
+    assert written["record"]["enforcement"] == "advisory"
+    assert (
+        path.parent.joinpath(
+            "model-policy-history", hashlib.sha256(original).hexdigest() + ".json"
+        ).read_bytes()
+        == original
+    )
+
+
+@pytest.mark.parametrize("changed_model", ["newer-model", "different-model", None])
+def test_model_policy_phase_accepts_model_and_session_changes(
+    model_policy_run, changed_model
+) -> None:
+    module, request = model_policy_run
+    first = module.apply_request(
+        {
+            **request,
+            "observed_model": "capable-model",
+            "observation_reference": "Host A",
+        }
+    )
+    preparation = module.apply_request(
+        {
+            **request,
+            "action": "phase",
+            "expected_sha256": first["sha256"],
+            "phase": "preparation",
+            "model": "capable-model",
+            "execution_reference": "Prepared in chat A",
+        }
+    )
+    phase_request = {
+        **request,
+        "action": "phase",
+        "expected_sha256": preparation["sha256"],
+        "phase": "research",
+        "session_ref": "chat-B",
+        "model": changed_model,
+        "execution_reference": "Resumed in chat B",
+    }
+    if changed_model:
+        phase_request["observation_reference"] = "Host B"
+
+    result = module.apply_request(phase_request)
+
+    assert result["can_continue"]
+    assert result["record"]["session_ref"] == "chat-B"
+    assert result["record"]["active_model"] == changed_model
+    assert result["record"]["phases"][0]["execution_reference"] == "Prepared in chat A"
+    assert result["record"]["phases"][1]["model"] == changed_model
+    assert result["record"]["phases"][1]["session_ref"] == "chat-B"
+
+
+def test_model_policy_refresh_retains_phase_history_without_catalogue(
     model_policy_run,
 ) -> None:
     module, request = model_policy_run
-    pending = module.apply_request(request)
-    with pytest.raises(ValueError, match="not satisfied"):
-        module.apply_request(
-            {
-                **request,
-                "action": "phase",
-                "expected_sha256": pending["sha256"],
-                "phase": "preparation",
-                "model": "capable-model",
-                "execution_reference": "Parent",
-            }
+    first = module.apply_request(request)
+    phase = module.apply_request(
+        {
+            **request,
+            "action": "phase",
+            "expected_sha256": first["sha256"],
+            "phase": "preparation",
+            "execution_reference": "Saved work",
+        }
+    )
+    request.pop("preferred_model")
+    request.pop("selection_basis")
+
+    refreshed = module.apply_request({**request, "session_ref": "new-chat"})
+
+    assert refreshed["can_continue"]
+    assert refreshed["record"]["preferred_model"] is None
+    assert refreshed["record"]["phases"] == phase["record"]["phases"]
+    assert refreshed["record"]["identity_basis"] == "unknown"
+
+
+@pytest.mark.parametrize("status", ["ready_for_review", "completed"])
+def test_model_policy_read_preserves_finalized_run_bytes(
+    model_policy_run, status
+) -> None:
+    module, request = model_policy_run
+    ready = module.apply_request(request)
+    record = ready["record"]
+    record.pop("enforcement")
+    record["status"] = "awaiting_confirmation"
+    Path(ready["path"]).write_text(json.dumps(record), encoding="utf-8")
+    context = module.load_client_engagement_context_file(
+        request["client_engagement"],
+        expected_workflow_id="prompt-optimizer",
+        output_dir=request["output_dir"],
+    )
+    manifest_path = Path(context["run_manifest_path"])
+    manifest = json.loads(manifest_path.read_text())
+    manifest["status"] = status
+    manifest["status_history"].append(
+        {"status": "ready_for_review", "at": manifest["updated_at"]}
+    )
+    if status == "completed":
+        manifest["status_history"].append(
+            {"status": "completed", "at": manifest["updated_at"]}
         )
-    record = pending["record"]
-    record["status"] = "ready_host_reported"
-    Path(pending["path"]).write_text(json.dumps(record), encoding="utf-8")
-    with pytest.raises(ValueError, match="Inconsistent"):
-        module.apply_request({**request, "action": "read"})
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    snapshot = _file_snapshot(manifest_path.parent)
+
+    result = module.apply_request({**request, "action": "read"})
+
+    assert result["can_continue"]
+    assert result["enforcement"] == "advisory"
+    assert _file_snapshot(manifest_path.parent) == snapshot
 
 
 def test_model_policy_rejects_foreign_run_and_output(
@@ -420,7 +550,7 @@ def test_model_policy_supports_standalone_preparation_and_direct_review(
         }
     )
     assert result["record"]["run_id"] == context["run_id"]
-    assert not result["can_continue"]
+    assert result["can_continue"]
     assert not list(tmp_path.rglob("client.json"))
 
 
@@ -459,7 +589,8 @@ def test_model_policy_mcp_resources_and_persistent_confirmation(
             html = call("resources/read", {"uri": "ui://widget/legal-tax-model.html"})[
                 "contents"
             ][0]["text"]
-            assert "confirm_legal_tax_model" in html
+            assert "No model switch or confirmation is required" in html
+            assert '<form id="confirmation"' not in html
             pending = call(
                 "tools/call",
                 {

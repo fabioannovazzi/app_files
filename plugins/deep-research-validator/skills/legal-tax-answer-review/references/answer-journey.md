@@ -7,11 +7,10 @@ preparation and `skills/legal-tax-answer-review/SKILL.md` completely before
 review. These wrappers resolve the canonical stage implementations. They do
 not create a second implementation of this journey.
 
-Honor the invoking product's model requirement before preparation and preserve
-it through all stages, including the opposing examination and final revision.
-For Vera, reuse its `legal_tax_model.json` check and record the actual phases;
-UI and Cowork chat confirmation follow the same policy. A missing plugin UI
-does not require another host or a weaker model.
+Treat the invoking product's model preference as advice throughout all stages.
+Continue with the active model when it differs, changes or is unknown. For Vera,
+reuse its advisory `legal_tax_model.json` record and preserve truthful phase
+provenance. Neither model confirmation nor a plugin UI is required to proceed.
 
 Read `adversarial-scope.md` before finalizing the answer contract. Informational
 research ends after validation; an opinion on a concrete position or an explicit
