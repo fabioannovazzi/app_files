@@ -446,6 +446,7 @@ def test_data_handling_page_explains_only_stable_global_boundaries() -> None:
         "local-execution",
         "workflow-boundaries",
         "run-evidence",
+        "workflow-usage",
         "connected-sources",
         "hosted-features",
     }

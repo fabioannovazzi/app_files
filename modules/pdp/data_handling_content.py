@@ -166,6 +166,41 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 ],
             },
             {
+                "id": "workflow-usage",
+                "title": "Anonymous usage and satisfaction monitoring",
+                "paragraphs": [
+                    (
+                        "Vera automatically records which processes are used and their "
+                        "observed outcome: started, completed, failed or cancelled. A run "
+                        "with no observed outcome remains unknown. A random installation "
+                        "identifier, without a named account, also allows repeat usage to be "
+                        "measured. Records include the process, host application, Vera "
+                        "version and event timestamps."
+                    ),
+                    (
+                        "Users can rate the result from 1 to 5 stars and add an optional "
+                        "comment to help improve Vera. Without a response, the result "
+                        "remains unrated. Periodic "
+                        "AI monitoring reviews usage, outcomes and feedback to identify "
+                        "problems and improve the functions."
+                    ),
+                    (
+                        "Usage events contain no client documents, task text, filenames, "
+                        "prompts or professional outputs. They can link to an existing "
+                        "technical receipt through its identifier and report hash without "
+                        "sending the report. Studio Archive and supporting operations are not "
+                        "counted as separate processes; synthetic and agent tests are "
+                        "excluded from ordinary usage statistics."
+                    ),
+                    (
+                        "The service operates in Finland. Events, ratings, optional comments "
+                        "and receipt links are retained until administrative deletion, "
+                        "without automatic expiry. Events awaiting delivery remain in the "
+                        "local queue until receipt is acknowledged."
+                    ),
+                ],
+            },
+            {
                 "id": "connected-sources",
                 "title": "Connectors and sends use their own destination.",
                 "paragraphs": [
@@ -586,6 +621,82 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 ],
             },
             {
+                "id": "workflow-usage",
+                "title": "Monitoraggio anonimo dell’uso e della soddisfazione",
+                "paragraphs": [
+                    (
+                        "Vera registra automaticamente quali processi vengono utilizzati e il "
+                        "loro esito: avviati, completati, falliti o annullati. Se manca un "
+                        "esito osservato, la lavorazione resta senza esito noto. Un "
+                        "identificativo casuale dell’installazione, senza account nominativo, "
+                        "permette di misurare anche l’utilizzo ripetuto. I record includono "
+                        "il processo, l’applicazione utilizzata, la versione di Vera e le "
+                        "date degli eventi."
+                    ),
+                    (
+                        "L’utente può valutare il risultato da 1 a 5 stelle e aggiungere un "
+                        "commento facoltativo, per aiutarci a migliorare Vera. La mancata "
+                        "risposta resta una valutazione non fornita. Il monitoraggio "
+                        "periodico con AI esamina utilizzo, esiti e feedback per individuare "
+                        "problemi e migliorare le funzioni."
+                    ),
+                    (
+                        "Gli eventi di utilizzo non contengono documenti dei clienti, testo "
+                        "dell’incarico, nomi dei file, prompt o elaborati. Possono essere "
+                        "collegati alla ricevuta tecnica già esistente tramite il suo "
+                        "identificativo e l’hash del report, senza trasmettere il report. "
+                        "Studio Archive e le operazioni di supporto non vengono contati come "
+                        "processi autonomi; le prove sintetiche e i test degli agenti sono "
+                        "esclusi dalle statistiche di utilizzo ordinario."
+                    ),
+                    (
+                        "Il servizio opera in Finlandia. Gli eventi, le valutazioni, gli "
+                        "eventuali commenti e i collegamenti alle ricevute sono conservati "
+                        "fino alla cancellazione amministrativa, senza scadenza automatica. "
+                        "Gli eventi in attesa di invio restano nella coda locale fino alla "
+                        "conferma di ricezione."
+                    ),
+                ],
+            },
+            {
+                "id": "workflow-usage",
+                "title": "Suivi anonyme de l’utilisation et de la satisfaction",
+                "paragraphs": [
+                    (
+                        "Vera enregistre automatiquement les processus utilisés et leur "
+                        "résultat observé : démarrés, terminés, échoués ou annulés. Sans "
+                        "résultat observé, l’issue reste inconnue. Un identifiant aléatoire "
+                        "de l’installation, sans compte nominatif, permet aussi de mesurer "
+                        "les utilisations répétées. Les enregistrements comprennent le "
+                        "processus, l’application utilisée, la version de Vera et les dates "
+                        "des événements."
+                    ),
+                    (
+                        "L’utilisateur peut noter le résultat de 1 à 5 étoiles et ajouter un "
+                        "commentaire facultatif pour nous aider à améliorer Vera. L’absence "
+                        "de réponse reste une absence de note. Le suivi périodique par IA "
+                        "examine l’utilisation, les résultats et les retours pour repérer les "
+                        "problèmes et améliorer les fonctions."
+                    ),
+                    (
+                        "Les événements d’utilisation ne contiennent ni documents clients, ni "
+                        "texte de la mission, ni noms de fichiers, ni prompts, ni livrables. "
+                        "Ils peuvent être liés à un reçu technique existant par son "
+                        "identifiant et l’empreinte du rapport, sans transmettre le rapport. "
+                        "Studio Archive et les opérations de soutien ne sont pas comptés "
+                        "comme des processus distincts ; les essais synthétiques et les tests "
+                        "des agents sont exclus des statistiques d’utilisation ordinaire."
+                    ),
+                    (
+                        "Le service fonctionne en Finlande. Les événements, notes, "
+                        "commentaires éventuels et liens vers les reçus sont conservés "
+                        "jusqu’à leur suppression administrative, sans expiration "
+                        "automatique. Les événements en attente d’envoi restent dans la file "
+                        "locale jusqu’à confirmation de réception."
+                    ),
+                ],
+            },
+            {
                 "id": "connected-sources",
                 "title": "Les connecteurs et les envois utilisent leur propre destination.",
                 "paragraphs": [
@@ -807,6 +918,44 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 ],
             },
             {
+                "id": "workflow-usage",
+                "title": "Anonyme Erfassung von Nutzung und Zufriedenheit",
+                "paragraphs": [
+                    (
+                        "Vera erfasst automatisch, welche Prozesse genutzt werden und welchen "
+                        "beobachteten Status sie haben: gestartet, abgeschlossen, "
+                        "fehlgeschlagen oder abgebrochen. Ohne beobachtetes Ergebnis bleibt "
+                        "der Ausgang unbekannt. Eine zufällige Installationskennung ohne "
+                        "namentliches Konto ermöglicht auch die Messung wiederholter Nutzung. "
+                        "Die Einträge enthalten den Prozess, die verwendete Anwendung, die "
+                        "Vera-Version und die Zeitpunkte der Ereignisse."
+                    ),
+                    (
+                        "Nutzer können das Ergebnis mit 1 bis 5 Sternen bewerten und einen "
+                        "freiwilligen Kommentar hinzufügen, um Vera zu verbessern. Ohne "
+                        "Antwort bleibt das Ergebnis unbewertet. Die regelmäßige KI-gestützte "
+                        "Auswertung untersucht Nutzung, Ergebnisse und Rückmeldungen, um "
+                        "Probleme zu erkennen und die Funktionen zu verbessern."
+                    ),
+                    (
+                        "Nutzungsereignisse enthalten keine Mandantenunterlagen, "
+                        "Auftragstexte, Dateinamen, Prompts oder Arbeitsergebnisse. Sie "
+                        "können über die Kennung und den Hash des Berichts mit einem "
+                        "vorhandenen technischen Beleg verknüpft werden, ohne den Bericht zu "
+                        "übertragen. Studio Archive und unterstützende Vorgänge werden nicht "
+                        "als eigene Prozesse gezählt; synthetische Tests und Agententests "
+                        "sind von den Statistiken zur regulären Nutzung ausgeschlossen."
+                    ),
+                    (
+                        "Der Dienst wird in Finnland betrieben. Ereignisse, Bewertungen, "
+                        "freiwillige Kommentare und Belegverknüpfungen werden bis zur "
+                        "administrativen Löschung ohne automatischen Ablauf gespeichert. Noch "
+                        "nicht übermittelte Ereignisse bleiben bis zur Empfangsbestätigung in "
+                        "der lokalen Warteschlange."
+                    ),
+                ],
+            },
+            {
                 "id": "connected-sources",
                 "title": "Connectoren und Sendefunktionen nutzen ihr eigenes Ziel.",
                 "paragraphs": [
@@ -1019,6 +1168,44 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "correspondencia entre hashes y personas. La confidencialidad se "
                         "protege excluyendo los contenidos de la solicitud; el envío "
                         "automático crea el recibo técnico."
+                    ),
+                ],
+            },
+            {
+                "id": "workflow-usage",
+                "title": "Seguimiento anónimo del uso y de la satisfacción",
+                "paragraphs": [
+                    (
+                        "Vera registra automáticamente qué procesos se utilizan y su "
+                        "resultado observado: iniciados, completados, fallidos o cancelados. "
+                        "Si no se observa un resultado, este queda como desconocido. Un "
+                        "identificador aleatorio de la instalación, sin cuenta nominativa, "
+                        "permite medir también el uso repetido. Los registros incluyen el "
+                        "proceso, la aplicación utilizada, la versión de Vera y las fechas de "
+                        "los eventos."
+                    ),
+                    (
+                        "El usuario puede valorar el resultado de 1 a 5 estrellas y añadir un "
+                        "comentario opcional para ayudarnos a mejorar Vera. La falta de "
+                        "respuesta queda sin valoración. El seguimiento periódico con IA "
+                        "examina el uso, los resultados y los comentarios para detectar "
+                        "problemas y mejorar las funciones."
+                    ),
+                    (
+                        "Los eventos de uso no contienen documentos de clientes, texto del "
+                        "encargo, nombres de archivos, prompts ni resultados profesionales. "
+                        "Pueden enlazarse con un recibo técnico existente mediante su "
+                        "identificador y el hash del informe, sin transmitir el informe. "
+                        "Studio Archive y las operaciones de apoyo no se cuentan como "
+                        "procesos independientes; las pruebas sintéticas y de agentes se "
+                        "excluyen de las estadísticas de uso ordinario."
+                    ),
+                    (
+                        "El servicio opera en Finlandia. Los eventos, las valoraciones, los "
+                        "comentarios opcionales y los enlaces a recibos se conservan hasta su "
+                        "eliminación administrativa, sin caducidad automática. Los eventos "
+                        "pendientes de envío permanecen en la cola local hasta la "
+                        "confirmación de recepción."
                     ),
                 ],
             },
