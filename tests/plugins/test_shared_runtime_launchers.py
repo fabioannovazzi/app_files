@@ -44,6 +44,9 @@ def installed_fixture(tmp_path, product, monkeypatch):
             scripts / "managed_ocr_runtime.py",
         )
     if product == "vera":
+        for suffix in ("py", "json"):
+            filename = f"local_helper_environment.{suffix}"
+            shutil.copyfile(ROOT / "scripts" / filename, scripts / filename)
         monkeypatch.setenv("HTTPS_PROXY", "http://127.0.0.1:9")
         monkeypatch.setenv("https_proxy", "http://127.0.0.1:9")
         monkeypatch.setenv("NO_PROXY", "localhost,127.0.0.1")

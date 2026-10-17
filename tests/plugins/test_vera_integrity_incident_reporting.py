@@ -33,6 +33,9 @@ def installed_copy(tmp_path, host="codex"):
         "check_dependencies.py",
     ):
         shutil.copyfile(ROOT / "plugins/vera/scripts" / name, root / "scripts" / name)
+    for suffix in ("py", "json"):
+        filename = f"local_helper_environment.{suffix}"
+        shutil.copyfile(ROOT / "scripts" / filename, root / "scripts" / filename)
     metadata = (
         ".codex-plugin/plugin.json" if host == "codex" else ".claude-plugin/plugin.json"
     )
