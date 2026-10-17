@@ -15,5 +15,6 @@
   "limits": "Workflow guidance does not intercept arbitrary shell writes. A saved continuation is claimed only after the actual controlled import/readback.",
   "integrated_official_base": "043c1b732b4149c1b2137c38425cf7519c71563a",
   "native_acceptance": "Two actual fresh Codex CLI sessions with existing ChatGPT authentication. A saved, re-listed and read back the support memo. B, with no history and A workspace unavailable, read that archived memo and saved a second support note. Original test case remains preserved separately.",
-  "existing_metadata_schema_correction": "Official-base Archive manifest had unsupported workflow_conditions on managed-python-runtime-setup. Its full text is retained verbatim in the allowed controls array. No transport, recipient, scope or runtime behavior changes."
+  "existing_metadata_schema_correction": "Official-base Archive manifest had unsupported workflow_conditions on managed-python-runtime-setup. Its full text is retained verbatim in the allowed controls array. No transport, recipient, scope or runtime behavior changes.",
+  "lucia_dependent_source_binding": "Refreshed apertura-pratica privacy fingerprint for its governed shared Studio Archive MCP description change. Existing boundaries, controls, lifecycle code and professional judgments retained; no new legal-case acceptance claimed."
 }
