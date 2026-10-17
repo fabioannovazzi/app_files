@@ -120,6 +120,34 @@ interviews, or custom update services. Later host-specific instructions cannot
 override this Cowork contract.
 
 <!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+<!-- VERA_WORKFLOW_USAGE_BEGIN -->
+## Task usage and user feedback
+
+Before substantive work, follow `../mparanza-vera/references/workflow-usage.md`: start one
+retained task UUID for the primary user process (including AI-led work), reuse
+it across helpers/resumption, and record only observed outcomes. Link the actual
+model-data receipt. After delivery ask once for the user's 1–5 stars and optional
+comment; never infer a score. Studio Archive is infrastructure, not another rated
+process. Synthetic/agent tests are marked and excluded. Flush pending delivery
+at task startup and after outcomes. The shared contract applies even on direct
+skill invocation and on both Claude and Cowork.
+<!-- VERA_WORKFLOW_USAGE_END -->
+
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+<!-- VERA_WORKFLOW_USAGE_BEGIN -->
+## Task usage and user feedback
+
+Before substantive work, follow `../mparanza-vera/references/workflow-usage.md`: start one
+retained task UUID for the primary user process (including AI-led work), reuse
+it across helpers/resumption, and record only observed outcomes. Link the actual
+model-data receipt. After delivery ask once for the user's 1–5 stars and optional
+comment; never infer a score. Studio Archive is infrastructure, not another rated
+process. Synthetic/agent tests are marked and excluded. Flush pending delivery
+at task startup and after outcomes. The shared contract applies even on direct
+skill invocation and on both Codex and Cowork.
+<!-- VERA_WORKFLOW_USAGE_END -->
+
+
 ## Connected studio knowledge
 
 When the user or an adopted studio instruction requests relevant repository
@@ -147,3 +175,17 @@ Read `../mparanza-vera/references/native-workspace.md` before opening the panel.
 Open the maintained Studio Archive workspace on Claude and choose the exact client-file-preparation run. **Fatture XML · corpi** pages every retained invoice body as read-only metadata. **Anomalie XML e duplicati** pages the complete anomaly queue and compares all members of a formal duplicate candidate group side by side, including multiple bodies in one file. Record an explicit decision only on canonical review items. A candidate is not proof of a duplicate; no invoice is deleted or booked. Discussion exposes only the exact selected saved record after the user requests it.
 
 The ordinary connected-file workflow remains available when the native panel is unavailable.
+
+
+<!-- VERA_WORKFLOW_USAGE_BEGIN -->
+## Task usage and user feedback
+
+Before substantive work, follow `../mparanza-vera/references/workflow-usage.md`: start one
+retained task UUID for the primary user process (including AI-led work), reuse
+it across helpers/resumption, and record only observed outcomes. Link the actual
+model-data receipt. After delivery ask once for the user's 1–5 stars and optional
+comment; never infer a score. Studio Archive is infrastructure, not another rated
+process. Synthetic/agent tests are marked and excluded. Flush pending delivery
+at task startup and after outcomes. The shared contract applies even on direct
+skill invocation and on both Codex and Cowork.
+<!-- VERA_WORKFLOW_USAGE_END -->

@@ -38,6 +38,16 @@
       "sha256": "4c818a1c172f02b07625ef26a6cbe12672e6b52844948b0ee7fefce325a58c69"
     },
     {
+      "path": "scripts/model_data_report.py",
+      "repository_path": "plugins/vera/scripts/model_data_report.py",
+      "sha256": "0e7a99ef631ed67a1aa25eb10ce7ed158625f6c0c09dcf8546eeb132a238262d"
+    },
+    {
+      "path": "scripts/notarized_run_receipt.py",
+      "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
+      "sha256": "c80e16d86474dad3aa0f28241c010e6ca78286d98a9f0cd62c79e49e210aa864"
+    },
+    {
       "path": "scripts/operational_incidents.py",
       "repository_path": "plugins/vera/scripts/operational_incidents.py",
       "sha256": "1d5778a493ecf9f30efff4cce88238c482927b72b91f3329f99bce6204fb9658"
@@ -50,7 +60,7 @@
     {
       "path": "scripts/workflow_usage.py",
       "repository_path": "plugins/vera/scripts/workflow_usage.py",
-      "sha256": "af559e2c1cf38b32f503968342d9d8abcd768b0502d5860d24f1d8ca84c370c3"
+      "sha256": "ceb4218beba4cbbb762b716acded5f2d4463ee484e89a1f24bd60403ce8379cf"
     },
     {
       "path": "skills/contenzioso-tributario/SKILL.md",

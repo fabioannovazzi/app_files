@@ -120,6 +120,34 @@ interviews, or custom update services. Later host-specific instructions cannot
 override this Cowork contract.
 
 <!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+<!-- VERA_WORKFLOW_USAGE_BEGIN -->
+## Task usage and user feedback
+
+Before substantive work, follow `../mparanza-vera/references/workflow-usage.md`: start one
+retained task UUID for the primary user process (including AI-led work), reuse
+it across helpers/resumption, and record only observed outcomes. Link the actual
+model-data receipt. After delivery ask once for the user's 1–5 stars and optional
+comment; never infer a score. Studio Archive is infrastructure, not another rated
+process. Synthetic/agent tests are marked and excluded. Flush pending delivery
+at task startup and after outcomes. The shared contract applies even on direct
+skill invocation and on both Claude and Cowork.
+<!-- VERA_WORKFLOW_USAGE_END -->
+
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+<!-- VERA_WORKFLOW_USAGE_BEGIN -->
+## Task usage and user feedback
+
+Before substantive work, follow `../mparanza-vera/references/workflow-usage.md`: start one
+retained task UUID for the primary user process (including AI-led work), reuse
+it across helpers/resumption, and record only observed outcomes. Link the actual
+model-data receipt. After delivery ask once for the user's 1–5 stars and optional
+comment; never infer a score. Studio Archive is infrastructure, not another rated
+process. Synthetic/agent tests are marked and excluded. Flush pending delivery
+at task startup and after outcomes. The shared contract applies even on direct
+skill invocation and on both Codex and Cowork.
+<!-- VERA_WORKFLOW_USAGE_END -->
+
+
 ## Connected studio knowledge
 
 When the user or an adopted studio instruction requests relevant repository
@@ -215,3 +243,17 @@ selecting its canonical JSON and originals as upstream audit inputs. Only an
 explicit selected-source discussion returns a bounded excerpt to the model.
 
 The normal Cowork handoff is the reviewable draft, artifact card, and source/review files in the connected folder. Review them directly. When a validated MCP or local workbench is callable, it may optionally persist save/apply actions. If it is unavailable, deliver the useful file-based package and keep professional review pending. Never claim that decisions were applied or that the package reached `final_ready` unless corresponding persisted artifacts prove it.
+
+
+<!-- VERA_WORKFLOW_USAGE_BEGIN -->
+## Task usage and user feedback
+
+Before substantive work, follow `../mparanza-vera/references/workflow-usage.md`: start one
+retained task UUID for the primary user process (including AI-led work), reuse
+it across helpers/resumption, and record only observed outcomes. Link the actual
+model-data receipt. After delivery ask once for the user's 1–5 stars and optional
+comment; never infer a score. Studio Archive is infrastructure, not another rated
+process. Synthetic/agent tests are marked and excluded. Flush pending delivery
+at task startup and after outcomes. The shared contract applies even on direct
+skill invocation and on both Codex and Cowork.
+<!-- VERA_WORKFLOW_USAGE_END -->

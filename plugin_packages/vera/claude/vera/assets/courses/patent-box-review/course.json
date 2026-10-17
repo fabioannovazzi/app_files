@@ -337,7 +337,7 @@
     },
     {
       "path": "skills/mparanza-patent-box-review/SKILL.md",
-      "sha256": "f5f3630c1506d6281e20993f7197684199a6ea2c78f6f33d6bc6d7aaf405f8d2"
+      "sha256": "ae30f1db4e8ec8bff8d764e4315fd9556fc99c6122329203ebebe48d664ec263"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -750,5 +750,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "eba81057817eab100db1a30be2ec4dd1022d119788fdcaf277b4ac79ba18240f"
+  "canonical_course_sha256": "449703a03f37c4eb096005cb92a6d8dc9b1ff354ba35e524e73d0c484608c1a8"
 }

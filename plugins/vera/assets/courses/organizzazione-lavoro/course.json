@@ -40,12 +40,12 @@
     {
       "path": "scripts/model_data_report.py",
       "repository_path": "plugins/vera/scripts/model_data_report.py",
-      "sha256": "95117c93fb813f83bac7b1035ed45348c5aaf6bbe9ac45ea6f6d0a267c186db0"
+      "sha256": "0e7a99ef631ed67a1aa25eb10ce7ed158625f6c0c09dcf8546eeb132a238262d"
     },
     {
       "path": "scripts/notarized_run_receipt.py",
       "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
-      "sha256": "c69da378772721cb48a8b6d3a0d8e91bab902a6021c96b5f34174d44360d196e"
+      "sha256": "c80e16d86474dad3aa0f28241c010e6ca78286d98a9f0cd62c79e49e210aa864"
     },
     {
       "path": "scripts/operational_incidents.py",
@@ -65,7 +65,7 @@
     {
       "path": "scripts/workflow_usage.py",
       "repository_path": "plugins/vera/scripts/workflow_usage.py",
-      "sha256": "af559e2c1cf38b32f503968342d9d8abcd768b0502d5860d24f1d8ca84c370c3"
+      "sha256": "ceb4218beba4cbbb762b716acded5f2d4463ee484e89a1f24bd60403ce8379cf"
     },
     {
       "path": "skills/organizzazione-lavoro/SKILL.md",

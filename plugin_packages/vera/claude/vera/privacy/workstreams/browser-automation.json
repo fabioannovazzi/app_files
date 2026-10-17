@@ -306,7 +306,7 @@
     "reviewed_at": "2026-10-08",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "ca812aee9be8fee8ca3452c013f1bdc7dcd1809ba9400ce4e4ec11d6c2f46957"
+    "source_fingerprint": "a423951da0160b48278907de378f1ce5987cb7e3a7f2308b74243b551d1f2987"
   },
   "governed_shared_paths": [
     "skills/mparanza-vera/references/connected-studio-knowledge.md",

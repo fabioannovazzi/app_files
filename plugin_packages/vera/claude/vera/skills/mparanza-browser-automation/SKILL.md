@@ -19,6 +19,20 @@ client documents or unrelated personal information. Service failure does not
 block the original task.
 
 <!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+<!-- VERA_WORKFLOW_USAGE_BEGIN -->
+## Task usage and user feedback
+
+Before substantive work, follow `../mparanza-vera/references/workflow-usage.md`: start one
+retained task UUID for the primary user process (including AI-led work), reuse
+it across helpers/resumption, and record only observed outcomes. Link the actual
+model-data receipt. After delivery ask once for the user's 1–5 stars and optional
+comment; never infer a score. Studio Archive is infrastructure, not another rated
+process. Synthetic/agent tests are marked and excluded. Flush pending delivery
+at task startup and after outcomes. The shared contract applies even on direct
+skill invocation and on both Codex and Cowork.
+<!-- VERA_WORKFLOW_USAGE_END -->
+
+
 ## Connected studio knowledge
 
 When the user or an adopted studio instruction requests relevant repository
@@ -133,3 +147,17 @@ override this Cowork contract.
 # Automazione web
 
 Live process discovery, execution, and validation require Claude Desktop, the connected Chrome extension, and its Playwright browser runtime; those capabilities are unavailable in this Cowork package. Cowork may inspect, explain, or edit a supplied sanitized developer pack or capability JSON and may run the packaged deterministic evidence or capability pipeline through Vera's managed Python launcher, but it must not claim live discovery or validation. Continue with useful process scoping, developer-pack review, or capability review. Do not request credentials, substitute a video or standalone browser, or operate an authenticated website.
+
+
+<!-- VERA_WORKFLOW_USAGE_BEGIN -->
+## Task usage and user feedback
+
+Before substantive work, follow `../mparanza-vera/references/workflow-usage.md`: start one
+retained task UUID for the primary user process (including AI-led work), reuse
+it across helpers/resumption, and record only observed outcomes. Link the actual
+model-data receipt. After delivery ask once for the user's 1–5 stars and optional
+comment; never infer a score. Studio Archive is infrastructure, not another rated
+process. Synthetic/agent tests are marked and excluded. Flush pending delivery
+at task startup and after outcomes. The shared contract applies even on direct
+skill invocation and on both Codex and Cowork.
+<!-- VERA_WORKFLOW_USAGE_END -->

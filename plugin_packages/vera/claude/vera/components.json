@@ -46,7 +46,8 @@
     "managed-python-runtime",
     "cnc-authenticated-review",
     "studio-work",
-    "operational-incidents"
+    "operational-incidents",
+    "workflow-usage"
   ],
   "workflow_roles": {
     "new-client": {

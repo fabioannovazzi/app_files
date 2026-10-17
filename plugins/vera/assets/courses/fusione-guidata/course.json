@@ -120,7 +120,7 @@
     {
       "path": "modules/fusione-guidata/vendor/modules/model_data_report.py",
       "repository_path": "plugins/vera/scripts/model_data_report.py",
-      "sha256": "95117c93fb813f83bac7b1035ed45348c5aaf6bbe9ac45ea6f6d0a267c186db0"
+      "sha256": "0e7a99ef631ed67a1aa25eb10ce7ed158625f6c0c09dcf8546eeb132a238262d"
     },
     {
       "path": "skills/fusione-guidata/SKILL.md",

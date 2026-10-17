@@ -119,6 +119,34 @@ interviews, or custom update services. Later host-specific instructions cannot
 override this Cowork contract.
 
 <!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+<!-- VERA_WORKFLOW_USAGE_BEGIN -->
+## Task usage and user feedback
+
+Before substantive work, follow `references/workflow-usage.md`: start one
+retained task UUID for the primary user process (including AI-led work), reuse
+it across helpers/resumption, and record only observed outcomes. Link the actual
+model-data receipt. After delivery ask once for the user's 1–5 stars and optional
+comment; never infer a score. Studio Archive is infrastructure, not another rated
+process. Synthetic/agent tests are marked and excluded. Flush pending delivery
+at task startup and after outcomes. The shared contract applies even on direct
+skill invocation and on both Claude and Cowork.
+<!-- VERA_WORKFLOW_USAGE_END -->
+
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
+<!-- VERA_WORKFLOW_USAGE_BEGIN -->
+## Task usage and user feedback
+
+Before substantive work, follow `references/workflow-usage.md`: start one
+retained task UUID for the primary user process (including AI-led work), reuse
+it across helpers/resumption, and record only observed outcomes. Link the actual
+model-data receipt. After delivery ask once for the user's 1–5 stars and optional
+comment; never infer a score. Studio Archive is infrastructure, not another rated
+process. Synthetic/agent tests are marked and excluded. Flush pending delivery
+at task startup and after outcomes. The shared contract applies even on direct
+skill invocation and on both Codex and Cowork.
+<!-- VERA_WORKFLOW_USAGE_END -->
+
+
 ## Connected studio knowledge
 
 When the user or an adopted studio instruction requests relevant repository
@@ -335,7 +363,9 @@ as artifacts before completion. When the host cannot create files, show the same
 compact report in chat and state that no durable receipt was created.
 
 When the user prohibits external receipt transmission, pass `--local-only` to
-`scripts/model_data_report.py build`. This preserves the local JSON and readable
+`scripts/workflow_usage.py build-report --run-id <retained-task-uuid>` with
+the same report input/output arguments. It calls the existing report builder and
+links the actual signed receipt to the primary task. This preserves the local JSON and readable
 report and returns `not_requested/local_only` without constructing or sending a
 stamping request. Do not retry stamping unless the user later requests it. This
 option concerns Mparanza receipt transmission; it does not make the selected
@@ -853,3 +883,17 @@ For an ESG case requiring source locators, version history and recorded
 professional decisions, read `../mparanza-esg-reporting-assurance/SKILL.md`. This first
 delivery supports partial foundation drafts only; full ESG reporting and
 assurance remain outside its implemented scope.
+
+
+<!-- VERA_WORKFLOW_USAGE_BEGIN -->
+## Task usage and user feedback
+
+Before substantive work, follow `references/workflow-usage.md`: start one
+retained task UUID for the primary user process (including AI-led work), reuse
+it across helpers/resumption, and record only observed outcomes. Link the actual
+model-data receipt. After delivery ask once for the user's 1–5 stars and optional
+comment; never infer a score. Studio Archive is infrastructure, not another rated
+process. Synthetic/agent tests are marked and excluded. Flush pending delivery
+at task startup and after outcomes. The shared contract applies even on direct
+skill invocation and on both Codex and Cowork.
+<!-- VERA_WORKFLOW_USAGE_END -->

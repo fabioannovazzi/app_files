@@ -149,7 +149,7 @@
     },
     {
       "path": "skills/mparanza-adeguati-assetti/SKILL.md",
-      "sha256": "204c57606de031b810f8c6983ef0a45e61579c94504b3882bbcef350200d36ff"
+      "sha256": "80f1e4535ee91203253a25ad56e4eb8a2967ccc211c7c1ded78c185897c7287a"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -967,5 +967,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "5c23a68004051d8338434695a659beedb2216b847be527642d102c27f7182353"
+  "canonical_course_sha256": "80688e21de1177c9339a8de027c581b07564424423e2d8a71a4cdf6e0bec7a45"
 }

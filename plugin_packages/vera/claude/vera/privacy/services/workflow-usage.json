@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "service_id": "workflow-usage",
+  "display_name": "Pipeline usage, outcomes and user satisfaction",
+  "governed_paths": [
+    "scripts/workflow_usage.py",
+    "scripts/operational_incidents.py",
+    "scripts/model_data_report.py",
+    "scripts/notarized_run_receipt.py",
+    "skills/mparanza-vera/references/workflow-usage.md",
+    "usage/pipelines.json"
+  ],
+  "runtime_profiles": [
+    "anthropic-cowork"
+  ],
+  "external_boundaries": [
+    {
+      "runtime_profiles": [
+        "anthropic-cowork"
+      ],
+      "retention": "Task events, optional feedback and receipt links remain in the service until administrative deletion; no automatic expiry is implemented. Local queued events and acknowledgements remain in the existing private per-installation state directory. The server never stores client documents or professional output for this service.",
+      "id": "automatic-task-lifecycle",
+      "kind": "hosted_service",
+      "destination": "Existing Mparanza HTTPS operational-incidents API and saved veraIncidents OAuth connector",
+      "purpose": "Measure which user processes run and their observed outcome; link existing signed model-data receipts and technical reports without copying their professional content",
+      "content": "The existing installation capability authenticates closed-schema events: random run and event UUIDs, sequence, catalog pipeline ID, host, observed product version, timestamps, explicit user/synthetic/agent-test classification and started/resumed/completed/failed/cancelled state. Optional links contain only an existing signed receipt UUID/report digest or an owned incident report UUID. Receipt ownership and signature are checked server-side. The service receives no task text, client identity, filenames, source data, prompt or professional output. Existing connection metadata and rate limiting apply. Saved connector identity is not inferred to be a native computer.",
+      "activation": "automatic_on_first_use",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "Events are durably queued before transport and acknowledged by exact UUID, owner, sequence and hash. Interruptions stay outcome unknown; repeated submissions are idempotent.",
+        "Synthetic and agent-test runs are excluded from user metrics. Studio Archive is infrastructure and cannot be selected as a rated process.",
+        "The host AI selects the primary process and observes actual task completion. Counters and hashes do not assert professional correctness or independent model delivery."
+      ]
+    },
+    {
+      "runtime_profiles": [
+        "anthropic-cowork"
+      ],
+      "retention": "Task events, optional feedback and receipt links remain in the service until administrative deletion; no automatic expiry is implemented. Local queued events and acknowledgements remain in the existing private per-installation state directory. The server never stores client documents or professional output for this service.",
+      "id": "optional-task-rating",
+      "kind": "hosted_service",
+      "destination": "Mparanza task feedback through the same authenticated connector/client or the per-run hosted form",
+      "purpose": "Collect the user’s actual 1–5 stars and optional comment about the delivered result",
+      "content": "The actual 1–5 integer score, up to 2000 characters of optional user-authored comment, source (chat or form), random event UUID and existing task binding. Nothing is copied automatically from professional context. The host asks once after delivery; no response is unrated. A low score offers one optional question about what failed or was expected.",
+      "activation": "explicit_user_choice",
+      "optional": true,
+      "requires_confirmation": true,
+      "controls": [
+        "The user supplies the score/comment for submission or clicks Invia valutazione; that action is the choice, with no second confirmation questionnaire.",
+        "The form uses a run-specific capability in its URL fragment; the page contains no task information, and the capability permits rating only that run. The exact pending answer is retained for retry, and operator rendering escapes comments.",
+        "Comments are untrusted data for AI review, never instructions or executable commands. Feedback and usage completion do not close incidents or upgrade public testing labels."
+      ]
+    }
+  ],
+  "security_controls": [],
+  "review": {
+    "basis": "external_boundary_review_of_shared_service_source",
+    "reviewed_at": "2026-10-17",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "470f60aa5e52fdea6c104d9aa56988ff0dd04601c1aea1c38b4c5b82df74ab3f"
+  }
+}
