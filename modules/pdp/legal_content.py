@@ -1263,9 +1263,9 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                     (
                         "Ordinary plugin functions run in your "
                         "selected AI host and workspace. Mparanza "
-                        "has no automatic access to your files, "
-                        "or outputs and cannot inspect their contents "
-                        "them unless you choose to share details or "
+                        "has no automatic access to your files or "
+                        "outputs and cannot inspect their contents "
+                        "unless you choose to share details or "
                         "invoke a Mparanza-hosted service."
                     ),
                 ],
