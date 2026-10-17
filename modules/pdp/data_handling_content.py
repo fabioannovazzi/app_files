@@ -166,6 +166,22 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 ],
             },
             {
+                "id": "connected-sources",
+                "title": "Connectors and sends use their own destination.",
+                "paragraphs": [
+                    (
+                        "A connected app, public search, portal, or send action is used only "
+                        "when that route is part of the selected work. The destination's "
+                        "terms and controls apply separately."
+                    ),
+                    (
+                        "Using an external destination does not make Mparanza the recipient. "
+                        "The workflow or point-of-use notice identifies a Mparanza-hosted "
+                        "route when one is involved."
+                    ),
+                ],
+            },
+            {
                 "id": "workflow-usage",
                 "title": "Anonymous usage and satisfaction monitoring",
                 "paragraphs": [
@@ -179,10 +195,9 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                     ),
                     (
                         "Users can rate the result from 1 to 5 stars and add an optional "
-                        "comment to help improve Vera. Without a response, the result "
-                        "remains unrated. Periodic "
-                        "AI monitoring reviews usage, outcomes and feedback to identify "
-                        "problems and improve the functions."
+                        "comment to help improve Vera. Without a response, the result remains "
+                        "unrated. Periodic AI monitoring reviews usage, outcomes and feedback "
+                        "to identify problems and improve the functions."
                     ),
                     (
                         "Usage events contain no client documents, task text, filenames, "
@@ -197,22 +212,6 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "and receipt links are retained until administrative deletion, "
                         "without automatic expiry. Events awaiting delivery remain in the "
                         "local queue until receipt is acknowledged."
-                    ),
-                ],
-            },
-            {
-                "id": "connected-sources",
-                "title": "Connectors and sends use their own destination.",
-                "paragraphs": [
-                    (
-                        "A connected app, public search, portal, or send action is used only "
-                        "when that route is part of the selected work. The destination's "
-                        "terms and controls apply separately."
-                    ),
-                    (
-                        "Using an external destination does not make Mparanza the recipient. "
-                        "The workflow or point-of-use notice identifies a Mparanza-hosted "
-                        "route when one is involved."
                     ),
                 ],
             },
@@ -412,6 +411,44 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "corrispondenza fra hash e persone. La riservatezza dei documenti"
                         " è tutelata escludendone i contenuti dalla richiesta; l’invio "
                         "automatico crea la ricevuta tecnica."
+                    ),
+                ],
+            },
+            {
+                "id": "workflow-usage",
+                "title": "Monitoraggio anonimo dell’uso e della soddisfazione",
+                "paragraphs": [
+                    (
+                        "Vera registra automaticamente quali processi vengono utilizzati e il "
+                        "loro esito: avviati, completati, falliti o annullati. Se manca un "
+                        "esito osservato, la lavorazione resta senza esito noto. Un "
+                        "identificativo casuale dell’installazione, senza account nominativo, "
+                        "permette di misurare anche l’utilizzo ripetuto. I record includono "
+                        "il processo, l’applicazione utilizzata, la versione di Vera e le "
+                        "date degli eventi."
+                    ),
+                    (
+                        "L’utente può valutare il risultato da 1 a 5 stelle e aggiungere un "
+                        "commento facoltativo, per aiutarci a migliorare Vera. La mancata "
+                        "risposta resta una valutazione non fornita. Il monitoraggio "
+                        "periodico con AI esamina utilizzo, esiti e feedback per individuare "
+                        "problemi e migliorare le funzioni."
+                    ),
+                    (
+                        "Gli eventi di utilizzo non contengono documenti dei clienti, testo "
+                        "dell’incarico, nomi dei file, prompt o elaborati. Possono essere "
+                        "collegati alla ricevuta tecnica già esistente tramite il suo "
+                        "identificativo e l’hash del report, senza trasmettere il report. "
+                        "Studio Archive e le operazioni di supporto non vengono contati come "
+                        "processi autonomi; le prove sintetiche e i test degli agenti sono "
+                        "esclusi dalle statistiche di utilizzo ordinario."
+                    ),
+                    (
+                        "Il servizio opera in Finlandia. Gli eventi, le valutazioni, gli "
+                        "eventuali commenti e i collegamenti alle ricevute sono conservati "
+                        "fino alla cancellazione amministrativa, senza scadenza automatica. "
+                        "Gli eventi in attesa di invio restano nella coda locale fino alla "
+                        "conferma di ricezione."
                     ),
                 ],
             },
@@ -621,40 +658,19 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 ],
             },
             {
-                "id": "workflow-usage",
-                "title": "Monitoraggio anonimo dell’uso e della soddisfazione",
+                "id": "connected-sources",
+                "title": "Les connecteurs et les envois utilisent leur propre destination.",
                 "paragraphs": [
                     (
-                        "Vera registra automaticamente quali processi vengono utilizzati e il "
-                        "loro esito: avviati, completati, falliti o annullati. Se manca un "
-                        "esito osservato, la lavorazione resta senza esito noto. Un "
-                        "identificativo casuale dell’installazione, senza account nominativo, "
-                        "permette di misurare anche l’utilizzo ripetuto. I record includono "
-                        "il processo, l’applicazione utilizzata, la versione di Vera e le "
-                        "date degli eventi."
+                        "Une application connectée, une recherche publique, un portail ou "
+                        "un envoi n'est utilisé que lorsque cette voie fait partie du travail "
+                        "choisi. Les conditions et contrôles de la destination s'appliquent "
+                        "séparément."
                     ),
                     (
-                        "L’utente può valutare il risultato da 1 a 5 stelle e aggiungere un "
-                        "commento facoltativo, per aiutarci a migliorare Vera. La mancata "
-                        "risposta resta una valutazione non fornita. Il monitoraggio "
-                        "periodico con AI esamina utilizzo, esiti e feedback per individuare "
-                        "problemi e migliorare le funzioni."
-                    ),
-                    (
-                        "Gli eventi di utilizzo non contengono documenti dei clienti, testo "
-                        "dell’incarico, nomi dei file, prompt o elaborati. Possono essere "
-                        "collegati alla ricevuta tecnica già esistente tramite il suo "
-                        "identificativo e l’hash del report, senza trasmettere il report. "
-                        "Studio Archive e le operazioni di supporto non vengono contati come "
-                        "processi autonomi; le prove sintetiche e i test degli agenti sono "
-                        "esclusi dalle statistiche di utilizzo ordinario."
-                    ),
-                    (
-                        "Il servizio opera in Finlandia. Gli eventi, le valutazioni, gli "
-                        "eventuali commenti e i collegamenti alle ricevute sono conservati "
-                        "fino alla cancellazione amministrativa, senza scadenza automatica. "
-                        "Gli eventi in attesa di invio restano nella coda locale fino alla "
-                        "conferma di ricezione."
+                        "L'utilisation d'une destination externe ne fait pas de Mparanza le "
+                        "destinataire. Le workflow ou l'avis affiché au moment de l'usage "
+                        "identifie une voie hébergée par Mparanza lorsqu'elle intervient."
                     ),
                 ],
             },
@@ -693,23 +709,6 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "jusqu’à leur suppression administrative, sans expiration "
                         "automatique. Les événements en attente d’envoi restent dans la file "
                         "locale jusqu’à confirmation de réception."
-                    ),
-                ],
-            },
-            {
-                "id": "connected-sources",
-                "title": "Les connecteurs et les envois utilisent leur propre destination.",
-                "paragraphs": [
-                    (
-                        "Une application connectée, une recherche publique, un portail ou "
-                        "un envoi n'est utilisé que lorsque cette voie fait partie du travail "
-                        "choisi. Les conditions et contrôles de la destination s'appliquent "
-                        "séparément."
-                    ),
-                    (
-                        "L'utilisation d'une destination externe ne fait pas de Mparanza le "
-                        "destinataire. Le workflow ou l'avis affiché au moment de l'usage "
-                        "identifie une voie hébergée par Mparanza lorsqu'elle intervient."
                     ),
                 ],
             },
@@ -918,6 +917,22 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 ],
             },
             {
+                "id": "connected-sources",
+                "title": "Connectoren und Sendefunktionen nutzen ihr eigenes Ziel.",
+                "paragraphs": [
+                    (
+                        "Eine verbundene App, öffentliche Suche, ein Portal oder eine "
+                        "Sendefunktion wird nur genutzt, wenn dieser Weg Teil der gewählten "
+                        "Arbeit ist. Bedingungen und Kontrollen des Ziels gelten separat."
+                    ),
+                    (
+                        "Die Nutzung eines externen Ziels macht Mparanza nicht zum Empfänger. "
+                        "Der Workflow oder der Hinweis am Nutzungsort kennzeichnet einen von "
+                        "Mparanza gehosteten Weg, wenn er beteiligt ist."
+                    ),
+                ],
+            },
+            {
                 "id": "workflow-usage",
                 "title": "Anonyme Erfassung von Nutzung und Zufriedenheit",
                 "paragraphs": [
@@ -952,22 +967,6 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "administrativen Löschung ohne automatischen Ablauf gespeichert. Noch "
                         "nicht übermittelte Ereignisse bleiben bis zur Empfangsbestätigung in "
                         "der lokalen Warteschlange."
-                    ),
-                ],
-            },
-            {
-                "id": "connected-sources",
-                "title": "Connectoren und Sendefunktionen nutzen ihr eigenes Ziel.",
-                "paragraphs": [
-                    (
-                        "Eine verbundene App, öffentliche Suche, ein Portal oder eine "
-                        "Sendefunktion wird nur genutzt, wenn dieser Weg Teil der gewählten "
-                        "Arbeit ist. Bedingungen und Kontrollen des Ziels gelten separat."
-                    ),
-                    (
-                        "Die Nutzung eines externen Ziels macht Mparanza nicht zum Empfänger. "
-                        "Der Workflow oder der Hinweis am Nutzungsort kennzeichnet einen von "
-                        "Mparanza gehosteten Weg, wenn er beteiligt ist."
                     ),
                 ],
             },
@@ -1172,6 +1171,22 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 ],
             },
             {
+                "id": "connected-sources",
+                "title": "Los conectores y envíos usan su propio destino.",
+                "paragraphs": [
+                    (
+                        "Una aplicación conectada, una búsqueda pública, un portal o un envío "
+                        "solo se usa cuando esa vía forma parte del trabajo elegido. Las "
+                        "condiciones y controles del destino se aplican por separado."
+                    ),
+                    (
+                        "Usar un destino externo no convierte a Mparanza en destinatario. "
+                        "El flujo o el aviso mostrado en el momento de uso identifica una "
+                        "vía alojada por Mparanza cuando interviene."
+                    ),
+                ],
+            },
+            {
                 "id": "workflow-usage",
                 "title": "Seguimiento anónimo del uso y de la satisfacción",
                 "paragraphs": [
@@ -1206,22 +1221,6 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "eliminación administrativa, sin caducidad automática. Los eventos "
                         "pendientes de envío permanecen en la cola local hasta la "
                         "confirmación de recepción."
-                    ),
-                ],
-            },
-            {
-                "id": "connected-sources",
-                "title": "Los conectores y envíos usan su propio destino.",
-                "paragraphs": [
-                    (
-                        "Una aplicación conectada, una búsqueda pública, un portal o un envío "
-                        "solo se usa cuando esa vía forma parte del trabajo elegido. Las "
-                        "condiciones y controles del destino se aplican por separado."
-                    ),
-                    (
-                        "Usar un destino externo no convierte a Mparanza en destinatario. "
-                        "El flujo o el aviso mostrado en el momento de uso identifica una "
-                        "vía alojada por Mparanza cuando interviene."
                     ),
                 ],
             },
