@@ -106,8 +106,10 @@ Do not describe an unreceived or overdue request as a successful conversation.
 
 ## Follow every remedy through to an accountable next action
 
-Inspect `show.remedy_followups` for **all** actionable kinds: update, resume,
-automatic, user-action and diagnostic-request. The existing `diagnostic_requests`
+Inspect `show.remedy_followups` for every reporting owner: initial investigation
+as well as update, resume, automatic, user-action and diagnostic-request. An
+`investigating` row has no published scoped remedy or receipt; it still permits
+a first alert with the agent’s diagnostic next action. The existing `diagnostic_requests`
 view remains available. Each row binds one original owner/report and its
 applicable revision; a grouped incident or another owner's receipt cannot advance
 it. Read-only operator lookup never creates host receipts. Keep the original

@@ -593,3 +593,57 @@ def test_next_check_outside_existing_monitoring_window_is_rejected(tmp_path):
 
     with pytest.raises(ValidationError, match="operating window"):
         AlertReview.model_validate(payload)
+
+
+def test_first_incident_can_be_reported_before_any_remedy_is_assigned(tmp_path):
+    store, owner = registered(tmp_path)
+    original = report()
+    saved = store.report(owner, original)
+
+    actual = store.show(saved["incident_id"])
+
+    row = actual["remedy_followups"][0]
+    assert row["state"] == "investigating"
+    assert row["published_at"] is None
+    assert row["received_at"] is None
+    assert row["reporter_seen_after_publication"] is None
+    assert row["original_task_verified"] is False
+    assert actual["recovery_events"] == []
+
+
+def test_new_unassigned_owner_does_not_inherit_another_reports_publication(tmp_path):
+    store, first = registered(tmp_path)
+    second = credentials()
+    store.register(second)
+    one, two = report(), report()
+    saved = store.report(first, one)
+    store.remedy(saved["incident_id"], update_for(one))
+    store.report(second, two)
+
+    row = next(
+        r
+        for r in store.show(saved["incident_id"])["remedy_followups"]
+        if r["report_id"] == str(two.report_id)
+    )
+
+    assert row["state"] == "investigating"
+    assert row["published_at"] is None
+    assert row["received_at"] is None
+
+
+def test_investigating_incident_has_an_actionable_alert_without_a_host_remedy(tmp_path):
+    actual, review, labels = alert_case(tmp_path)
+    row = actual["remedy_followups"][0]
+    row.update(
+        state="investigating",
+        remedy_kind="investigating",
+        required_version=None,
+        published_at=None,
+    )
+    review = review.model_copy(update={"followup_sha256": followup_hash(row)})
+
+    rendered = render_alert(actual, review, labels, now=NOW)
+
+    assert "in diagnosi; nessun rimedio assegnato" in rendered["html"]
+    assert "Agente di monitoraggio" in rendered["html"]
+    assert "versione proposta" not in rendered["html"]

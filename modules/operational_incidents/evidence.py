@@ -156,6 +156,14 @@ def remedy_followup(
             if result["received_at"]
             else "published-awaiting-receipt"
         )
+        if remedy["kind"] == "investigating":
+            # A fallback investigation is not a published scoped remedy.
+            state = "investigating"
+            result.update(
+                published_at=None,
+                received_at=None,
+                reporter_seen_after_publication=None,
+            )
         transitions = {
             "remedy-applied": "applied-awaiting-original-task",
             "retry-started": "retry-in-progress",
@@ -175,7 +183,13 @@ def remedy_followup(
             }.get(outcome["status"], state)
         if verified:
             state = "verified-recovered"
-        timestamps = [published_at]
+        timestamps = [
+            (
+                original["created_at"]
+                if remedy["kind"] == "investigating"
+                else published_at
+            )
+        ]
         timestamps.extend(
             row["recorded_at"] for row in matching_events + matching_outcomes
         )

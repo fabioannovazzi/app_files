@@ -1379,8 +1379,6 @@ class IncidentStore:
                 original["report_id"],
                 incident["revision"],
             )
-            if remedy["kind"] == "investigating":
-                continue
             published = next(
                 row["recorded_at"]
                 for row in incident["remedy_revisions"]

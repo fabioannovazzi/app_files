@@ -146,6 +146,7 @@ def render_alert(
         else "nessun contatto del reporter originale registrato"
     )
     state_names = {
+        "investigating": "in diagnosi; nessun rimedio assegnato",
         "published-awaiting-receipt": "pubblicato, ricevuta assente",
         "received-awaiting-reply": "ricevuto, risposta diagnostica assente",
         "responded": "risposta diagnostica ricevuta; recupero non dimostrato",
