@@ -26,6 +26,12 @@ from pathlib import Path
 from typing import Any
 from uuid import UUID, uuid4
 
+_HELPER_SCRIPTS = Path(__file__).resolve().parent
+if not (_HELPER_SCRIPTS / "local_helper_environment.py").is_file():
+    _HELPER_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+sys.path.insert(0, str(_HELPER_SCRIPTS))
+from local_helper_environment import local_helper_environment  # noqa: E402
+
 __all__ = [
     "report_failure",
     "check_incidents",
@@ -1026,7 +1032,23 @@ def check_incidents(
                     text=True,
                     timeout=600,
                     check=False,
-                    env={**os.environ, "MPARANZA_INCIDENT_RECOVERY_ACTIVE": "1"},
+                    env={
+                        **local_helper_environment(),
+                        **{
+                            key: os.environ[key]
+                            for key in (
+                                "MPARANZA_RUNTIME_ROOT",
+                                "CLAUDE_PLUGIN_DATA",
+                                "PLUGIN_DATA",
+                                "MPARANZA_INCIDENT_STATE_DIR",
+                                "MPARANZA_INCIDENT_DEVICE_DIR",
+                                "MPARANZA_INCIDENT_HOST",
+                                "MPARANZA_INCIDENT_HOST_SESSION",
+                            )
+                            if key in os.environ
+                        },
+                        "MPARANZA_INCIDENT_RECOVERY_ACTIVE": "1",
+                    },
                 )
             except (subprocess.TimeoutExpired, OSError):
                 traceback.print_exc(file=handle)

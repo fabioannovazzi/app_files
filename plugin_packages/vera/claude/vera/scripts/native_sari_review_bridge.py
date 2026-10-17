@@ -9,6 +9,12 @@ import subprocess
 import sys
 from pathlib import Path
 
+_HELPER_SCRIPTS = Path(__file__).resolve().parent
+if not (_HELPER_SCRIPTS / "local_helper_environment.py").is_file():
+    _HELPER_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+sys.path.insert(0, str(_HELPER_SCRIPTS))
+from local_helper_environment import local_helper_environment  # noqa: E402
+
 __all__ = ["main"]
 
 
@@ -143,7 +149,7 @@ def main() -> None:
         check=False,
         timeout=75,
         env={
-            **os.environ,
+            **local_helper_environment(),
             "PYTHON": sys.executable,
             "VERA_CLIENT_WORKFLOW_PYTHON": sys.executable,
         },

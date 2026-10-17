@@ -22,6 +22,9 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from local_helper_environment import local_helper_environment  # noqa: E402
+
 __all__ = [
     "LocalReviewWorkbench",
     "build_session_payload",
@@ -785,7 +788,7 @@ def _mcp_tool_result(
         # The local server is already running in the selected environment.
         # Its Node bridge defaults to that Python even when launched directly
         # without shell activation. Preserve an explicit component override.
-        env={**os.environ, "PYTHON": os.environ.get("PYTHON") or sys.executable},
+        env=local_helper_environment(python=os.environ.get("PYTHON") or sys.executable),
         timeout=30,
     )
     if completed.returncode != 0:
