@@ -1896,5 +1896,10 @@
     "date": "2026-10-17",
     "previous_catalogue_fingerprint": "20c3266ee7159ace336b5a39ef500420ffcf4d0813ba0ec6c180de6943f5b0d4",
     "scope": "Only the canonical product version changed in the catalogue identity. All skill entrypoint hashes are unchanged. Completed-run testing icons and native reporting linkage do not change Geneva dispositions or establish professional acceptance."
+  },
+  "installer_environment_release_binding": {
+    "version": "0.1.405",
+    "previous_catalogue_fingerprint": "20c3266ee7159ace336b5a39ef500420ffcf4d0813ba0ec6c180de6943f5b0d4",
+    "scope": "Only the canonical manifest version changes this catalogue identity; every skill entrypoint hash is unchanged. The Python installer environment allowlist and directory reviewer notes do not change existing Geneva dispositions or establish additional localization acceptance."
   }
 }

@@ -89,6 +89,11 @@ def test_bootstrap_ignores_host_environment_and_never_changes_global_python(
     monkeypatch.setattr(module, "_uv", lambda base: base / "uv")
     monkeypatch.setenv("VIRTUAL_ENV", "/some/project")
     monkeypatch.setenv("UV_PYTHON_INSTALL_DIR", "/global/python")
+    monkeypatch.setenv("GITHUB_TOKEN", "fake-github-token")
+    monkeypatch.setenv("OPENAI_API_KEY", "fake-openai-key")
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "fake-anthropic-key")
+    monkeypatch.setenv("PATH", "/bin")
+    monkeypatch.setenv("HTTPS_PROXY", "http://proxy.example:8080")
     python = tmp_path / "python/bin/python3.12"
     python.parent.mkdir(parents=True)
     python.touch()
@@ -103,7 +108,86 @@ def test_bootstrap_ignores_host_environment_and_never_changes_global_python(
     assert "--no-project" in commands[1][0]
     assert "--system" in commands[1][0]
     assert "VIRTUAL_ENV" not in commands[0][1]
+    assert "GITHUB_TOKEN" not in commands[0][1]
+    assert "OPENAI_API_KEY" not in commands[0][1]
+    assert "ANTHROPIC_API_KEY" not in commands[0][1]
+    assert commands[0][1]["PATH"] == "/bin"
+    assert commands[0][1]["HTTPS_PROXY"] == "http://proxy.example:8080"
     assert commands[0][1]["UV_PYTHON_INSTALL_DIR"] == str(tmp_path / "python")
+
+
+@pytest.mark.parametrize("casing", ["upper", "lower", "title"])
+def test_bootstrap_allowlists_every_child_environment_preserving_casing(
+    tmp_path, monkeypatch, casing
+):
+    module = bootstrap()
+    monkeypatch.setattr(module, "_uv", lambda base: base / "uv")
+    allowed = {
+        "PATH": "/bin",
+        "HOME": "/home/user",
+        "USERPROFILE": "C:/Users/user",
+        "SYSTEMROOT": "C:/Windows",
+        "WINDIR": "C:/Windows",
+        "COMSPEC": "C:/Windows/System32/cmd.exe",
+        "PATHEXT": ".COM;.EXE;.BAT;.CMD",
+        "APPDATA": "C:/Users/user/AppData/Roaming",
+        "LOCALAPPDATA": "C:/Users/user/AppData/Local",
+        "TEMP": "/tmp",
+        "TMP": "/tmp",
+        "TMPDIR": "/tmp",
+        "LANG": "en_US.UTF-8",
+        "LC_ALL": "en_US.UTF-8",
+        "HTTPS_PROXY": "http://proxy.example:8080",
+        "HTTP_PROXY": "http://proxy.example:8080",
+        "ALL_PROXY": "socks5://proxy.example:1080",
+        "NO_PROXY": "localhost,127.0.0.1",
+        "SSL_CERT_FILE": "/certs/corporate.pem",
+        "SSL_CERT_DIR": "/certs",
+        "REQUESTS_CA_BUNDLE": "/certs/corporate.pem",
+        "XDG_CACHE_HOME": "/home/user/.cache",
+        "XDG_DATA_HOME": "/home/user/.local/share",
+    }
+    allowed = {getattr(key, casing)(): value for key, value in allowed.items()}
+    forbidden = {
+        "GITHUB_TOKEN": "fake-github-token",
+        "OPENAI_API_KEY": "fake-openai-key",
+        "ANTHROPIC_API_KEY": "fake-anthropic-key",
+        "UNRELATED_SETTING": "not explicitly allowed",
+        "UV_INDEX_URL": "https://untrusted.example",
+        "UV_PYTHON_INSTALL_DIR": "/global/python",
+        "UV_PYTHON_BIN_DIR": "/global/bin",
+        "UV_PYTHON_INSTALL_BIN": "1",
+        "UV_CACHE_DIR": "/global/cache",
+        "VIRTUAL_ENV": "/project/.venv",
+        "CONDA_PREFIX": "/conda",
+        "PYTHONHOME": "/global/python",
+        "PYTHONPATH": "/project",
+    }
+    host = {
+        **allowed,
+        **{getattr(key, casing)(): value for key, value in forbidden.items()},
+    }
+    # A plain mapping also exercises mixed-case Windows keys on POSIX runners.
+    monkeypatch.setattr(module.os, "environ", host)
+    python = tmp_path / "python/bin/python3.12"
+    python.parent.mkdir(parents=True)
+    python.touch()
+    environments = []
+
+    def runner(command, **kwargs):
+        environments.append(kwargs["env"].copy())
+        return subprocess.CompletedProcess(command, 0, str(python), "")
+
+    module.provision(tmp_path, runner)
+
+    expected = {
+        **allowed,
+        "UV_PYTHON_INSTALL_DIR": str(tmp_path / "python"),
+        "UV_CACHE_DIR": str(tmp_path / "bootstrap/cache"),
+        "UV_PYTHON_BIN_DIR": str(tmp_path / "bootstrap/bin"),
+        "UV_PYTHON_INSTALL_BIN": "0",
+    }
+    assert environments == [expected, expected, expected]
 
 
 @pytest.mark.parametrize("product", ["clara", "lucia"])

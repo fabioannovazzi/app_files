@@ -3486,6 +3486,7 @@ def _reviewer_note(product: str, entries: dict[str, bytes]) -> bytes:
             product=product,
             servers=server_text,
             fonts="\n".join(fonts),
+            local_tokens=(source / f"{product}-local-tokens.md").read_text().strip(),
             workflows=sum(
                 bool(re.fullmatch(r"skills/[^/]+/SKILL\.md", name)) for name in entries
             ),
