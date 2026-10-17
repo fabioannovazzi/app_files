@@ -85,19 +85,20 @@ class DiscoveryRegression(unittest.TestCase):
                 (archive / "New/added.txt").write_bytes(b"new source")
                 incoming = base / "incoming.txt"
                 incoming.write_bytes(b"incoming source")
-                with self.assertRaisesRegex(
-                    core.ArchiveError, "Top-level archive scopes"
-                ):
-                    core.import_studio_client_document(
-                        client_id,
-                        incoming,
-                        "source",
-                        engagement_id=engagement["engagement_id"],
-                        state_dir=state,
-                    )
-
-                result = core.refresh_archive(state_dir=state)
                 imported = core.import_studio_client_document(
+                    client_id,
+                    incoming,
+                    "source",
+                    engagement_id=engagement["engagement_id"],
+                    state_dir=state,
+                )
+                self.assertTrue(
+                    core.studio_archive_status(state_dir=state)[
+                        "index_requires_refresh"
+                    ]
+                )
+                result = core.refresh_archive(state_dir=state)
+                repeated = core.import_studio_client_document(
                     client_id,
                     incoming,
                     "source",
@@ -106,8 +107,10 @@ class DiscoveryRegression(unittest.TestCase):
                 )
 
                 self.assertTrue(result["scope_configuration_changed"])
-                self.assertEqual(result["document_count"], 2)
+                self.assertEqual(result["document_count"], 3)
                 self.assertEqual(imported["status"], "imported")
+                self.assertEqual(repeated["status"], "already_imported")
+                self.assertEqual(repeated["input_id"], imported["input_id"])
                 self.assertEqual(
                     Path(imported["imported_path"]).read_bytes(), b"incoming source"
                 )

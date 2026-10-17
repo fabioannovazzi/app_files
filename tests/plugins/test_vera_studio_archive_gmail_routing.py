@@ -308,7 +308,7 @@ def test_unmatched_third_party_message_is_not_persisted_or_auto_assigned(
             assert marker.encode("utf-8") not in path.read_bytes()
 
 
-def test_renamed_scope_profile_is_recovered_from_manifest_after_refresh(
+def test_renamed_scope_identity_recovers_before_content_index_refresh(
     archive_core: ModuleType,
     configured_clients: SimpleNamespace,
 ) -> None:
@@ -325,8 +325,12 @@ def test_renamed_scope_profile_is_recovered_from_manifest_after_refresh(
     )
 
     assert profiles["scope_configuration_changed"] is True
-    assert profiles["orphaned_profile_count"] == 1
-    assert profiles["orphaned_profiles"][0]["scope_id"] == rossi_scope
+    assert profiles["orphaned_profile_count"] == 0
+    moved = next(
+        item for item in profiles["clients"] if item["display_name"] == "Rossi-Nuovo"
+    )
+    assert moved["client_id"] == registered["client"]["client_id"]
+    assert moved["email_addresses"] == ["amministrazione@rossi.it"]
     with pytest.raises(archive_core.ArchiveError, match="refresh before planning"):
         archive_core.plan_gmail_client_search(
             rossi_scope,

@@ -57,7 +57,7 @@ def isolated_mcp_launcher(tmp_path_factory):
         yield
 
 
-def test_scope_refresh_with_symlink_allows_document_import(
+def test_unrelated_scope_change_allows_import_without_content_refresh(
     indexed_archive: SimpleNamespace,
     archive_core: ModuleType,
 ) -> None:
@@ -76,16 +76,6 @@ def test_scope_refresh_with_symlink_allows_document_import(
     (new_scope / "note.txt").write_text("New client scope", encoding="utf-8")
     source = indexed_archive.root.parent / "document.txt"
     source.write_bytes(b"unchanged imported source")
-    with pytest.raises(archive_core.ArchiveError, match="Top-level archive scopes"):
-        archive_core.import_studio_client_document(
-            client_id,
-            source,
-            "source",
-            engagement_id=engagement["engagement_id"],
-            state_dir=indexed_archive.state,
-        )
-
-    refreshed = archive_core.refresh_archive(state_dir=indexed_archive.state)
     imported = archive_core.import_studio_client_document(
         client_id,
         source,
@@ -94,8 +84,21 @@ def test_scope_refresh_with_symlink_allows_document_import(
         state_dir=indexed_archive.state,
     )
 
+    status = archive_core.studio_archive_status(state_dir=indexed_archive.state)
+    assert status["index_requires_refresh"] is True
+    assert status["document_count"] == 3
+    # Search still requires an explicitly refreshed index; import does not.
+    with pytest.raises(archive_core.ArchiveError, match="Top-level archive scopes"):
+        archive_core.search_archive(
+            "cessione",
+            scope_id=indexed_archive.scopes["Rossi"],
+            state_dir=indexed_archive.state,
+        )
+    refreshed = archive_core.refresh_archive(state_dir=indexed_archive.state)
+
     assert refreshed["scope_configuration_changed"] is True
-    assert refreshed["document_count"] == 4
+    # Three indexed originals, the new scope source, and the imported snapshot.
+    assert refreshed["document_count"] == 5
     assert imported["status"] == "imported"
     assert Path(imported["imported_path"]).read_bytes() == source.read_bytes()
     assert (indexed_archive.root / "Rossi" / "linked.md").is_symlink()
