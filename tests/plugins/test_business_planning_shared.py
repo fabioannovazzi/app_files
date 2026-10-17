@@ -102,6 +102,15 @@ def test_registered_business_workflow_preserves_shared_analysis_contract() -> No
                 flags=re.DOTALL,
             )
             assert knowledge_blocks == 1
+            normalized, usage_blocks = re.subn(
+                r"\n<!-- VERA_WORKFLOW_USAGE_BEGIN -->\n.*?"
+                r"<!-- VERA_WORKFLOW_USAGE_END -->\n\n",
+                "",
+                normalized,
+                count=1,
+                flags=re.DOTALL,
+            )
+            assert usage_blocks == 1
         workflows.append(normalized)
     vera_workflow, clara_workflow = workflows
     assert vera_workflow == clara_workflow
