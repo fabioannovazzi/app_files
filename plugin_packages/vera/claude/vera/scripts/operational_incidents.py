@@ -26,12 +26,6 @@ from pathlib import Path
 from typing import Any
 from uuid import UUID, uuid4
 
-_HELPER_SCRIPTS = Path(__file__).resolve().parent
-if not (_HELPER_SCRIPTS / "local_helper_environment.py").is_file():
-    _HELPER_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
-sys.path.insert(0, str(_HELPER_SCRIPTS))
-from local_helper_environment import local_helper_environment  # noqa: E402
-
 __all__ = [
     "report_failure",
     "check_incidents",
@@ -1016,6 +1010,14 @@ def check_incidents(
         ) as handle:
             error_path = Path(handle.name)
             try:
+                # Identity/report-only snapshots stay stdlib-only. Resolve this
+                # dependency only when a verified built-in recovery launches.
+                _HELPER_SCRIPTS = Path(__file__).resolve().parent
+                if not (_HELPER_SCRIPTS / "local_helper_environment.py").is_file():
+                    _HELPER_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+                sys.path.insert(0, str(_HELPER_SCRIPTS))
+                from local_helper_environment import local_helper_environment
+
                 completed = subprocess.run(
                     [
                         sys.executable,
