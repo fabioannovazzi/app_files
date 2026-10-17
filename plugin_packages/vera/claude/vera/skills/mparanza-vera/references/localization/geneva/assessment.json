@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "20c3266ee7159ace336b5a39ef500420ffcf4d0813ba0ec6c180de6943f5b0d4",
+  "catalogue_fingerprint": "021991ba473161a678f0430e8ace9cac84f560ec3f873844b925370ab679b6c7",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -1890,5 +1890,11 @@
     "previous_catalogue_fingerprint": "5ce99562f7d8545cfb29d496852b39f9bc2d6ddcd7c73850002d6345d1c4e6a6",
     "scope": "Canonical version binding refreshed; all 55 skill entrypoint hashes match the recorded snapshot. Existing jurisdiction judgments are retained. Reviewer notes and local helper environment filtering add no jurisdiction or host acceptance claim. Main PR #849 is integrated with its release evidence retained; skill hashes remain unchanged.",
     "integrated_main": "6048ffff4"
+  },
+  "testing_status_release_binding": {
+    "version": "0.1.406",
+    "date": "2026-10-17",
+    "previous_catalogue_fingerprint": "20c3266ee7159ace336b5a39ef500420ffcf4d0813ba0ec6c180de6943f5b0d4",
+    "scope": "Only the canonical product version changed in the catalogue identity. All skill entrypoint hashes are unchanged. Completed-run testing icons and native reporting linkage do not change Geneva dispositions or establish professional acceptance."
   }
 }
