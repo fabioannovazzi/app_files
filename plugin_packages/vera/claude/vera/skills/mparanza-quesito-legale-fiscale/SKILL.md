@@ -130,13 +130,13 @@ Without a repository, continue ordinary work. Studio skills remain independently
 invoked by the user; Vera does not dispatch them.
 <!-- VERA_CONNECTED_KNOWLEDGE_END -->
 
-## Legal/tax model requirement
+## Legal/tax model preference
 
-Before substantive work, read `../mparanza-vera/references/legal-tax-model-policy.md`
-and satisfy or reuse the same run/session model check. Use the most capable
-available host model for this stage and any authorized delegation. The plugin
-UI is optional: Cowork and other hosts without it use the identical chat and
-local-record fallback. Never silently downgrade or claim an automatic switch.
+Read `../mparanza-vera/references/legal-tax-model-policy.md`. Prefer the most capable
+available host model; this is advice, never a gate. Continue with the active
+model when it differs, is unknown or changes, including in a new chat or any
+authorized delegation. Record available provenance without requiring a switch,
+confirmation, plugin UI or model API credentials.
 
 # Risposta a quesiti legali e fiscali
 

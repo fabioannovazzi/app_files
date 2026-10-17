@@ -90,8 +90,8 @@
       },
       {
         "id": "legal-tax-model-selection",
-        "purpose": "Maintain Vera's most-capable-available host model requirement through the legal/tax pipeline",
-        "content": "Required and observed model identifiers, the capability-selection basis, host/session reference, source of identity evidence, explicit user confirmation from the optional panel or chat, and actual phase-assignment references. This local record may enter the current host model context. It contains no credentials and is not model-provider attestation. Cowork can use the same managed Python helper and chat without UI or an external model API.",
+        "purpose": "Record Vera's advisory model preference and truthful model provenance without blocking the legal/tax pipeline",
+        "content": "Optional recommended and observed model identifiers, the capability-selection basis, host/session reference, source of identity evidence, voluntary user statements from chat or the legacy confirmation tool, and actual phase-assignment references. This local record may enter the current host model context. It contains no credentials and is not model-provider attestation. Cowork can use the same managed Python helper and chat without UI or an external model API.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -248,13 +248,13 @@
     },
     {
       "id": "legal-tax-model-continuity",
-      "control": "The local helper validates the managed or standalone run, output boundary, exact model identifier, session and record revision. UI confirmation is bound to the server-side run by a random expiring token. Host-reported identity, user-confirmed selection and unknown identity remain distinct. The UI does not switch host models. Chat fallback uses the same helper, with no new service, account, credentials, automatic anonymization or silent weaker-model fallback."
+      "control": "The local helper validates the managed or standalone run, output boundary and record revision. Model mismatch, unknown identity and model/session changes never block work; legacy blocked records never block continuation, read leaves saved artifacts unchanged, and subsequent writes retain prior versions. UI confirmation is bound to the server-side run by a random expiring token. Host-reported identity, user-confirmed selection and unknown identity remain distinct. The UI does not switch host models. Chat fallback uses the same helper, with no new service, account, credentials, automatic anonymization or automatic model switching."
     }
   ],
   "review": {
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "7f0ae11fe6ad63bd16eb13e1add82d13e2351dba395ffa0915f256a1a9abc60a"
+    "source_fingerprint": "74ffec866f870d34f36063678e9f648c65df7fa6fd7a2d27668281035978339a"
   }
 }

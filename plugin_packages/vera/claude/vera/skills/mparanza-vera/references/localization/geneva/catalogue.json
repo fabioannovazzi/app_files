@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "plugins/vera",
-  "version": "0.1.396",
-  "captured_at": "2026-10-17T07:36:37.025275+00:00",
-  "catalogue_fingerprint": "1044d1988aaa4a372776367fd66c00c11b4627da9e205ca8d32818488243860e",
-  "manifest_sha256": "7c235e5c0e448acccf198dedcb29f49f6e0a8b4b03a791a7df4ec961635382a0",
+  "root": "/Users/fabio/Documents/Codex/2026-10-17-verifica-la-ripresa-dei-workflow-di/deploy/source/plugins/vera",
+  "version": "0.1.398",
+  "captured_at": "2026-10-17T09:20:34.439825+00:00",
+  "catalogue_fingerprint": "72903c0b1741e1afe9497807abe13e14400c95535df2054276d92fb7094ebda2",
+  "manifest_sha256": "08dcac7a62b2a444bdb60b5a524f287f3e2589f7b4ba1b10307e29e05cd4e8b6",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -14,7 +14,7 @@
     {
       "function_id": "adversarial-opinion",
       "skill_path": "skills/adversarial-opinion/SKILL.md",
-      "sha256": "d717b399ab08f82d411b21d4186f259e19000a06afce6ca3ec78e73129b221f8"
+      "sha256": "afd6c9e891f6d3706be27ab4a5da81493ab39774026eeae8f017c57ccd8fb117"
     },
     {
       "function_id": "agenzia-acquisition",
@@ -99,7 +99,7 @@
     {
       "function_id": "deep-research",
       "skill_path": "skills/deep-research/SKILL.md",
-      "sha256": "4d8ff32cbb5902b95e99bbab775fc504bfbbeabaa9288f3de49774402e2e2266"
+      "sha256": "d1336834db563d8e57a7cb273a84e726fb90d5ab040c85807acb1d807260bfb8"
     },
     {
       "function_id": "email-cliente",
@@ -154,12 +154,12 @@
     {
       "function_id": "legal-tax-answer-planner",
       "skill_path": "skills/legal-tax-answer-planner/SKILL.md",
-      "sha256": "ea1807318cc6d65b11331277c167e03b91296e31558747464c9d4ca60e63dd77"
+      "sha256": "9b1850dd6fb6e98c66f60ddfa5dc5c016ba3a5198ab4593efdef76ba429fe473"
     },
     {
       "function_id": "legal-tax-answer-review",
       "skill_path": "skills/legal-tax-answer-review/SKILL.md",
-      "sha256": "0a2259bd4d3cc3cbbea9f159e9c8f77463f156d4c3a08901c91a290baa312e30"
+      "sha256": "3903f66b3ac1ea70fc6a9e147a625f5c5ac46c2e3fc357299346fad2585e7e59"
     },
     {
       "function_id": "lipe",
@@ -219,7 +219,7 @@
     {
       "function_id": "quesito-legale-fiscale",
       "skill_path": "skills/quesito-legale-fiscale/SKILL.md",
-      "sha256": "adb7955e7963140e5a434e94716fd297bc527b7c5bbeb83e531540e6799c0b89"
+      "sha256": "85207db5c3dfcb38be72ba95b1bd4842a37e5a6d06ff770241d5ffac76fc5f12"
     },
     {
       "function_id": "rating-legalita",

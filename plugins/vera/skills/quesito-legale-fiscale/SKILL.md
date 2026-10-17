@@ -27,13 +27,13 @@ Tutorial profiles, progress, examples and feedback remain local; never send a
 change request, stamp a tutorial receipt or call hosted interviews for a tutorial.
 Current user requests take precedence over saved preferences.
 <!-- VERA_OPENAI_ONBOARDING_END -->
-## Legal/tax model requirement
+## Legal/tax model preference
 
-Before substantive work, read `../vera/references/legal-tax-model-policy.md`
-and satisfy or reuse the same run/session model check. Use the most capable
-available host model for this stage and any authorized delegation. The plugin
-UI is optional: Cowork and other hosts without it use the identical chat and
-local-record fallback. Never silently downgrade or claim an automatic switch.
+Read `../vera/references/legal-tax-model-policy.md`. Prefer the most capable
+available host model; this is advice, never a gate. Continue with the active
+model when it differs, is unknown or changes, including in a new chat or any
+authorized delegation. Record available provenance without requiring a switch,
+confirmation, plugin UI or model API credentials.
 
 # Risposta a quesiti legali e fiscali
 

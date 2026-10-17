@@ -97,7 +97,7 @@
     },
     {
       "path": "modules/deep-research-validator/skills/mparanza-deep-research/SKILL.md",
-      "sha256": "dd1da6ee2deeed91b8b117e7ecf4e85879d6631d8f5579f55a54c1bfc5ce4d0b"
+      "sha256": "d57fff49e203ad3c06a126e93709073e4257b563f4dac284738726ce46663fe4"
     },
     {
       "path": "modules/deep-research-validator/skills/mparanza-deep-research/references/evaluation.md",
@@ -117,7 +117,7 @@
     },
     {
       "path": "modules/deep-research-validator/skills/mparanza-legal-tax-answer-review/references/answer-journey.md",
-      "sha256": "bf6283f867eddce95b5fdfe391be4ad7f2f69a86e784820284fd959f64a69a2a"
+      "sha256": "695a20ab5964882de6024ee51efee047b9bc0f2f158712655912a44a3c77cf07"
     },
     {
       "path": "modules/deep-research-validator/skills/mparanza-legal-tax-answer-review/references/research-choice.md",
@@ -165,19 +165,19 @@
     },
     {
       "path": "modules/prompt-optimizer/assets/legal-tax-model.html",
-      "sha256": "94471cba2d58bd3b6990ace5bab70b4b69592aa52f251cd2d3f598efe96a91e7"
+      "sha256": "5b6e48b0cd3c633a203cb9fe02ca7d45cc8d7a7ab02fcce19ed70d1efa69fe74"
     },
     {
       "path": "modules/prompt-optimizer/scripts/model-policy.cjs",
-      "sha256": "0e8415c322c2ef1d56abf713d16c7b969c41aa4a08ac6f08c61815701bd2ab43"
+      "sha256": "5348578c82d29b6f76e6eabd5f7961573cc5c80bb95756b38ecd984605e4ff34"
     },
     {
       "path": "modules/prompt-optimizer/scripts/model_policy.py",
-      "sha256": "978591c738176e488984b9670a1d2b7dcfae9a93aec12a4aff3c51cfa813e445"
+      "sha256": "16c6ae9bb4bca8747e4a36a0839c9fe1f2fdc1bcc9908fe75f9cc8554e1817eb"
     },
     {
       "path": "skills/mparanza-quesito-legale-fiscale/SKILL.md",
-      "sha256": "c79c0c07814791247c98e45d96e3a198d7e847c766239c3db6a76cda3c672068"
+      "sha256": "63ff8cf693ef23fd6855a8c5675b1328b53120185b2f7eef9c57916a38940689"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -185,7 +185,7 @@
     },
     {
       "path": "skills/mparanza-vera/references/legal-tax-model-policy.md",
-      "sha256": "51d9256b26bd7a9cf5740c7040d6d7df93e6dc8f7fd7e48fdfb6544ef68a12da"
+      "sha256": "8c3ec884f49a68afa39771c6ddb1293094e8a659a9d8b22412e8dc958338e2e5"
     },
     {
       "path": "skills/mparanza-vera/references/research-subscriptions.md",
@@ -854,5 +854,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "0f5bf2d6f81ebf618a73d206687082db63d40a0e638c8a99b0716194e4af9669"
+  "canonical_course_sha256": "8830c9bd236794f7dea934b25541fab0cab69995405b0f5dd623aa81925ad97c"
 }

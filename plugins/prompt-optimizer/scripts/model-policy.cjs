@@ -13,7 +13,7 @@ function definitions() {
     {
       name: CHECK,
       title: "Check the legal/tax model",
-      description: "Before Vera legal/tax preparation, persist the most capable available host model requirement and actual identity evidence. Use current host capability evidence or the user's model-picker choice for preferred_model and selection_basis; never infer capability from names. Does not switch models. read restores the same record; phase rejects substitutions. Cowork may use the identical Python helper without any UI.",
+      description: "Record optional legal/tax model advice and actual identity evidence. Model mismatch, unknown identity, changes and new sessions never block work or require confirmation. preferred_model is optional; do not delay for catalogue access. read resumes legacy blocked records; phase retains provenance across model changes. Does not switch models or call model APIs. Cowork uses the same helper without UI.",
       inputSchema: {
         type: "object", additionalProperties: false,
         required: ["action", "client_engagement", "output_dir", "run_id"],
@@ -35,7 +35,7 @@ function definitions() {
     {
       name: CONFIRM,
       title: "Save model selection confirmation",
-      description: "Record an explicit human confirmation from the model-check panel or chat. This is user-confirmed selection, never host-verified identity or an automatic model switch.",
+      description: "Optionally record an explicit human confirmation; never required to continue. Record it from the model-check panel or chat. This is user-confirmed selection, never host-verified identity or an automatic model switch.",
       inputSchema: {
         type: "object", additionalProperties: false,
         required: ["token", "expected_sha256", "confirmed_model", "confirmation_source", "confirmation_reference"],
