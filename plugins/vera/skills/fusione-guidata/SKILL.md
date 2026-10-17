@@ -3,7 +3,6 @@ name: fusione-guidata
 description: Prepare P1 domestic OIC incorporation workpapers for independent or directly wholly owned companies, with verified archive evidence, exact exchange allocations, accounting bridges, event calendars and reviewed dossiers. Later branches remain unsupported.
 ---
 
-<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 <!-- VERA_WORKFLOW_USAGE_BEGIN -->
 ## Task usage and user feedback
 
@@ -18,6 +17,7 @@ skill invocation and on both Codex and Cowork.
 <!-- VERA_WORKFLOW_USAGE_END -->
 
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 ## Connected studio knowledge
 
 When the user or an adopted studio instruction requests relevant repository

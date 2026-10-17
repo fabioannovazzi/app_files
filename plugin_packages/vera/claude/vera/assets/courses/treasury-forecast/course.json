@@ -88,7 +88,7 @@
     },
     {
       "path": "modules/treasury-forecast/skills/mparanza-treasury-forecast/SKILL.md",
-      "sha256": "f103dded95de431270d29c680447de91cbed196aa7e2d6e479442607a9cb6f72"
+      "sha256": "74ae8496757f2603a3f1e9db931abedcae82845701b10c549eefa02d63821adf"
     },
     {
       "path": "modules/treasury-forecast/skills/mparanza-treasury-forecast/references/geneva.md",
@@ -136,7 +136,7 @@
     },
     {
       "path": "skills/mparanza-treasury-forecast/SKILL.md",
-      "sha256": "9d2ea07604c7e19d020dfc4c6d6f2b6fed8ed50eca96bf398c8d0c5ca49eaffd"
+      "sha256": "f4569038efa748a07b3aa6dde82ba3de639c6c29891b18f46c07067e54f1a03f"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -434,5 +434,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "b8c52f00886d400fbb7ffc6a189e7532a3030093799f6b74bf753cc17990a802"
+  "canonical_course_sha256": "43fe88bbe46988a0006636fa2493652b2f09e02b295f14a8a2b9d730bb1cb9e6"
 }

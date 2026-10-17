@@ -93,7 +93,7 @@
     },
     {
       "path": "modules/check-entries/skills/mparanza-vouching/SKILL.md",
-      "sha256": "e8c62d0f237098f1380c6c2b3603b6233b265ad1c90526531a97a668edf09bbb"
+      "sha256": "fa7e56575f5c5c85fb487b5dd2a54fd9705a63ca0e0aa02b0d7d9409a1d2d21d"
     },
     {
       "path": "modules/check-entries/skills/mparanza-vouching/references/geneva.md",
@@ -149,7 +149,7 @@
     },
     {
       "path": "skills/mparanza-vouching/SKILL.md",
-      "sha256": "1a9115f3ffebdb5c4093ee26a8296c3092262e0419685ef8db6d2affd8ac975a"
+      "sha256": "c5c33146f8513bae6e54751725f063424fc90f8bc12773b22b1ff060c34e62d1"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -606,5 +606,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "975f7e5d87cae44c1fd8c91c48d1d4643dbd653f63c4541e2d181aec844eea53"
+  "canonical_course_sha256": "ebc6c4c806e0ac795471b1742ca7262c66d88bb0a0a12106093759ce15080bd4"
 }

@@ -3,7 +3,6 @@ name: studio-document-format
 description: Teach Vera a professional studio's reusable Word report format from selected examples and preferences, show short and long previews, adopt an explicitly approved standard, or revise and reuse it. Use for requests such as “learn our house style”, “use our letterhead” or “teach Vera our studio format”.
 ---
 
-<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 <!-- VERA_WORKFLOW_USAGE_BEGIN -->
 ## Task usage and user feedback
 
@@ -18,6 +17,7 @@ skill invocation and on both Codex and Cowork.
 <!-- VERA_WORKFLOW_USAGE_END -->
 
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 ## Connected studio knowledge
 
 When the user or an adopted studio instruction requests relevant repository

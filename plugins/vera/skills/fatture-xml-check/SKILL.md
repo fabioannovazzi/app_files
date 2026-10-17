@@ -3,7 +3,6 @@ name: fatture-xml-check
 description: "Use when checking Italian FatturaPA XML files in a customer folder, summarizing invoice metadata, and identifying malformed XML, date issues, or duplicate candidates."
 ---
 
-<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 <!-- VERA_WORKFLOW_USAGE_BEGIN -->
 ## Task usage and user feedback
 
@@ -18,6 +17,7 @@ skill invocation and on both Codex and Cowork.
 <!-- VERA_WORKFLOW_USAGE_END -->
 
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 ## Connected studio knowledge
 
 When the user or an adopted studio instruction requests relevant repository

@@ -3,7 +3,6 @@ name: presenza-digitale-studio
 description: Use when Vera must refresh an existing professional-studio website or create a first informational website from verified studio materials, with responsive implementation, reviewable preview, validation, and approval-bound publication.
 ---
 
-<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 <!-- VERA_WORKFLOW_USAGE_BEGIN -->
 ## Task usage and user feedback
 
@@ -18,6 +17,7 @@ skill invocation and on both Codex and Cowork.
 <!-- VERA_WORKFLOW_USAGE_END -->
 
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 ## Connected studio knowledge
 
 When the user or an adopted studio instruction requests relevant repository

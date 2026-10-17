@@ -602,8 +602,10 @@ def test_every_user_process_wrapper_keeps_lifecycle_on_cowork_projection():
             ).read_bytes(),
             studio_archive_reference=b"## Cowork Runtime\n\nUse the selected workspace.",
         )
-        assert b"VERA_WORKFLOW_USAGE_BEGIN" in projected, pipeline
+        assert projected.count(b"VERA_WORKFLOW_USAGE_BEGIN") == 1, pipeline
         assert b"workflow-usage.md" in projected, pipeline
+        assert b"Codex" not in projected, pipeline
+        assert b"hosted feedback or voice" not in projected, pipeline
 
 
 def test_independent_connector_acknowledges_the_exact_local_outbox_item(

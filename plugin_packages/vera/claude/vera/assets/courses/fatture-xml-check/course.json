@@ -100,7 +100,7 @@
     },
     {
       "path": "modules/client-file-preparation/skills/mparanza-fatture-xml-check/SKILL.md",
-      "sha256": "34c6439266692424209b5f04fe35c2ea3ef58e1272ef0fee6b6ce5198ae3717d"
+      "sha256": "0383742bc5fe4d3eb07c2b0546a7b568c49c299b364f6b7a9175caaf5799f38e"
     },
     {
       "path": "modules/client-file-preparation/templates/email_documenti_mancanti.md",
@@ -152,7 +152,7 @@
     },
     {
       "path": "skills/mparanza-fatture-xml-check/SKILL.md",
-      "sha256": "2ed38b2a62d7608b1f33f25a5f475554f4c1b0a4b9eb2f8fd442b551b28cd3d4"
+      "sha256": "5b966fa80d6d10d4d8a1a9a8023eae3ecf12533ca0288613636fddd168597477"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -561,5 +561,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "fcf9e3c76b37de82045b92f5991fa6df5b8d31a47b41f6e7ce5323c011e33891"
+  "canonical_course_sha256": "ad279dc4871b6e3aceba849a5ebacd81f0d3b4108e0033625b0cbcea0ca25271"
 }

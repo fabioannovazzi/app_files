@@ -112,7 +112,7 @@
     },
     {
       "path": "modules/variance-analysis/skills/mparanza-variance-analysis/SKILL.md",
-      "sha256": "f5fe00abc39e030b0c9264368fa8cf8be055cd02fe191aff98851c67264b3b3b"
+      "sha256": "017824ec99efbe9661f65b6abcfd06f07a707ea3a13d72bdb7a0171f6e0efe29"
     },
     {
       "path": "modules/variance-analysis/vendor/modules/__init__.py",
@@ -444,7 +444,7 @@
     },
     {
       "path": "skills/mparanza-variance-analysis/SKILL.md",
-      "sha256": "b1ec7aff22f1bad22cbea7a8a50953e98d260df83954f024e816aa2d38c41673"
+      "sha256": "1ab623aca6781ca1357995db8e3ec064ede1d6acc3738875d2b9bad3b5365576"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -833,5 +833,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "2ed6d1143afd97af90ffedac572d6ad5bd3d159a72e2ee3ad1714802d3ff1af4"
+  "canonical_course_sha256": "5d71b89042664da85b9c677196cebfc27a7be1309aac261ce141fc5f46b3d00f"
 }

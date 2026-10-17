@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "5ce99562f7d8545cfb29d496852b39f9bc2d6ddcd7c73850002d6345d1c4e6a6",
+  "catalogue_fingerprint": "be8a9df790353f282031d12d519aa0a08edd216d8eaa0b0a5f6c02c902d26cab",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -1870,5 +1870,11 @@
     "date": "2026-10-17",
     "version": "0.1.401",
     "scope": "Product manifest version binding updated. Vera skill entrypoint bytes and existing Geneva dispositions are unchanged. Shared archive runtime now serializes registry writes with bounded waits and refreshes directory metadata independently of the content index. No new jurisdiction or host acceptance is claimed."
+  },
+  "workflow_usage_release_binding": {
+    "version": "0.1.402",
+    "reviewed_at": "2026-10-17",
+    "previous_catalogue_fingerprint": "5ce99562f7d8545cfb29d496852b39f9bc2d6ddcd7c73850002d6345d1c4e6a6",
+    "scope": "Adds the same task-level usage, outcome and optional 1-5-star reporting contract to existing user processes. Function identities and prior Geneva professional dispositions are unchanged. Usage, technical receipts and satisfaction do not establish professional testing or Geneva acceptance."
   }
 }

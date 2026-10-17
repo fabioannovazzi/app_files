@@ -3,7 +3,6 @@ name: deep-research
 description: Execute Vera's prepared legal, tax or compliance research with repeated source investigation, continuous validation and adversarial challenge. Use the shared method also used by Lucia, then complete final answer review. Direct invocation enters quesito-legale-fiscale first.
 ---
 
-<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 <!-- VERA_WORKFLOW_USAGE_BEGIN -->
 ## Task usage and user feedback
 
@@ -18,6 +17,7 @@ skill invocation and on both Codex and Cowork.
 <!-- VERA_WORKFLOW_USAGE_END -->
 
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 ## Connected studio knowledge
 
 When the user or an adopted studio instruction requests relevant repository

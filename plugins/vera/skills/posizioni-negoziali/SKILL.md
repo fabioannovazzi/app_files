@@ -3,7 +3,6 @@ name: posizioni-negoziali
 description: Summarize a selected tracked Word agreement into source-linked negotiating positions for a commercialista, with complete revision/comment accounting, saved rounds and blank responses unless requested. Uses shared document helpers; does not accept changes or send negotiation material.
 ---
 
-<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 <!-- VERA_WORKFLOW_USAGE_BEGIN -->
 ## Task usage and user feedback
 
@@ -18,6 +17,7 @@ skill invocation and on both Codex and Cowork.
 <!-- VERA_WORKFLOW_USAGE_END -->
 
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 ## Connected studio knowledge
 
 When the user or an adopted studio instruction requests relevant repository

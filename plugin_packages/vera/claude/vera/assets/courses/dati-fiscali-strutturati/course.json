@@ -100,7 +100,7 @@
     },
     {
       "path": "modules/client-file-preparation/skills/mparanza-dati-fiscali-strutturati/SKILL.md",
-      "sha256": "18320f7920dc8bd8162f4f415ef9dcedf6d8be0a608397158d477b9bf57b051c"
+      "sha256": "c6a53e5e84ab0012d105e17e4b2d72e1809893d6bf50ebf7956af606c60aa78d"
     },
     {
       "path": "modules/client-file-preparation/templates/email_documenti_mancanti.md",
@@ -152,7 +152,7 @@
     },
     {
       "path": "skills/mparanza-dati-fiscali-strutturati/SKILL.md",
-      "sha256": "378e76125f683cd1bc19cb55b1fffd4dfca72b93a0374d178f261e03508a2234"
+      "sha256": "b79ff659c3918f1f27cc337313392cca70cedd250874a16afb6d249b372195ac"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -497,5 +497,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "384d5c27c27407db97d568089c891061bfc848d725ccb99ad67e06c0576b0d17"
+  "canonical_course_sha256": "16d7e6d8aa57bb5b4e7dc364845728188d20fba4cb0702de94b871e6f9f1b231"
 }

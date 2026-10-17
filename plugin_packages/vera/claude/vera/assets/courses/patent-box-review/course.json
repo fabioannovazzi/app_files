@@ -273,7 +273,7 @@
     },
     {
       "path": "modules/patent-box-review/skills/mparanza-patent-box-review/SKILL.md",
-      "sha256": "5f15e1a3ef76a81d5f60d918fb0d9ccb8b25f9a3b054080f966110914f4ac1ac"
+      "sha256": "4ed6f63ee31227ae099b2414bae6d672d138d99183284fd5d92191b74e9f9782"
     },
     {
       "path": "modules/patent-box-review/templates/declaration_bridge.csv",
@@ -337,7 +337,7 @@
     },
     {
       "path": "skills/mparanza-patent-box-review/SKILL.md",
-      "sha256": "ae30f1db4e8ec8bff8d764e4315fd9556fc99c6122329203ebebe48d664ec263"
+      "sha256": "ca248a4f835a144f2c6c113900a60429393c6e05d77e0b4d9eab4f4feb1db254"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -750,5 +750,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "449703a03f37c4eb096005cb92a6d8dc9b1ff354ba35e524e73d0c484608c1a8"
+  "canonical_course_sha256": "0ec1c41416545e3da9255066ce8d02d0d0163693167ebaf718c7f05ffb605e93"
 }

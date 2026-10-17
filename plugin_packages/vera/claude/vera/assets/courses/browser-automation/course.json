@@ -201,11 +201,11 @@
     },
     {
       "path": "modules/browser-automation/skills/mparanza-browser-automation/SKILL.md",
-      "sha256": "bb5b7e7328365370bfcc8f433735afd1ba8812be0845a3287762b1d09078867c"
+      "sha256": "5fde7995f5cba933684e5a6813a0ef60ec281b92b2771e7d912a8a62b0309c45"
     },
     {
       "path": "skills/mparanza-browser-automation/SKILL.md",
-      "sha256": "0110b79ee5858b4837bc184ef9489b714eefa0cabe17a87928095a1fad36d2c8"
+      "sha256": "607d0a307e2e9bd72456b26abcb3b195805633797c0dcf99ac96298c558abf83"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -570,5 +570,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "48340aa56161e72ff0f9ff95a6fda9ebf1375ff1f25c34a97e0b2c39e768d76d"
+  "canonical_course_sha256": "4fb3e32498525af95013feacbdd06f6976a35a5f9c8032e09888421a71084398"
 }

@@ -3,7 +3,6 @@ name: variance-analysis
 description: Use to explain scostamenti Actual versus Budget, Forecast or prior-period accounting results by account, cost centre or available dimensions. Produces reconciled value or supported price-volume-mix variances, charts and reviewable workpapers. For an integrated pack with aging, cash and customer margins use management-control-pack.
 ---
 
-<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 <!-- VERA_WORKFLOW_USAGE_BEGIN -->
 ## Task usage and user feedback
 
@@ -18,6 +17,7 @@ skill invocation and on both Codex and Cowork.
 <!-- VERA_WORKFLOW_USAGE_END -->
 
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 ## Connected studio knowledge
 
 When the user or an adopted studio instruction requests relevant repository

@@ -3,7 +3,6 @@ name: purchase-invoice-review
 description: Use to check a population of fatture passive FatturaPA XML against actual prima nota or booked ledger entries. Produces an exception workpaper for amounts, IVA, duplicates, reconciliation and reviewed account coherence. For only an already qualified journal sample use vouching; for XML validity without accounting entries use fatture-xml-check. Does not book invoices or write to the gestionale.
 ---
 
-<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 <!-- VERA_WORKFLOW_USAGE_BEGIN -->
 ## Task usage and user feedback
 
@@ -18,6 +17,7 @@ skill invocation and on both Codex and Cowork.
 <!-- VERA_WORKFLOW_USAGE_END -->
 
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 ## Connected studio knowledge
 
 When the user or an adopted studio instruction requests relevant repository

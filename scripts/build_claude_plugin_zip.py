@@ -2094,6 +2094,16 @@ def project_cowork_skill(
     text = text.replace(LOCAL_FEEDBACK_HANDOFF, "")
     text = _remove_optional_section(text, "## Plugin Improvement Feedback")
     text = _inject_cowork_execution_contract(text)
+    text = text.replace(
+        "hosted feedback or voice\ninterviews",
+        "hosted suggestion or voice\ninterviews",
+    )
+    text = text.replace(
+        "override this Cowork contract.",
+        "override this Cowork contract. Task usage and 1–5-star feedback through "
+        "Vera's supported incident service and rating form remain available; "
+        "follow the primary task's workflow-usage contract.",
+    )
     if relative_path == "skills/vera/SKILL.md":
         text = _inject_named_execution_contract(
             text,
@@ -2131,8 +2141,8 @@ and is not permission to manually copy it or bypass a denied operation.
             r"<!-- VERA_WORKFLOW_USAGE_END -->",
             content.decode("utf-8"),
         )
-        if usage is not None and usage.group() not in text:
-            text += "\n\n" + usage.group() + "\n"
+        if usage is not None and "<!-- VERA_WORKFLOW_USAGE_BEGIN -->" not in text:
+            text += "\n\n" + _project_natural_language_runtime(usage.group()) + "\n"
     # Some public wrappers are replaced by Cowork-specific bodies. Retain their
     # optional knowledge contract without altering shared component skill bytes.
     if relative_path.startswith("skills/"):

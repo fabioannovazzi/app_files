@@ -667,12 +667,18 @@ def test_optional_claude_mcp_projection_uses_only_installation_safe_paths() -> N
                 else (
                     "${CLAUDE_PLUGIN_ROOT}/mcp/research-sources.cjs"
                     if name == "researchSources"
-                    else "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
+                    else (
+                        "${CLAUDE_PLUGIN_ROOT}/scripts/incident_host_mcp.cjs"
+                        if name == "veraIncidentHost"
+                        else "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
+                    )
                 )
             )
         )
         assert len(server["args"]) == (
-            1 if name in {"veraNativeWorkspace", "studioWork"} else 2
+            1
+            if name in {"veraNativeWorkspace", "studioWork", "veraIncidentHost"}
+            else 2
         )
         assert "cwd" not in server
         assert "icons" not in server
@@ -770,6 +776,7 @@ def test_cowork_privacy_register_keeps_supported_receipts_and_omits_openai_servi
         "cnc-authenticated-review",
         "studio-work",
         "operational-incidents",
+        "workflow-usage",
     ]
     assert {name for name in vera_entries if name.startswith("privacy/services/")} == {
         "privacy/services/run-receipt-stamping.json",
@@ -777,6 +784,7 @@ def test_cowork_privacy_register_keeps_supported_receipts_and_omits_openai_servi
         "privacy/services/cnc-authenticated-review.json",
         "privacy/services/studio-work.json",
         "privacy/services/operational-incidents.json",
+        "privacy/services/workflow-usage.json",
     }
     assert "privacy/workstreams/studio-archive.json" in vera_entries
     runtime_service = json.loads(
@@ -955,7 +963,12 @@ def test_projected_cowork_skills_remove_promotion_feedback_and_codex_wording(
         assert "`applied` or `final_ready`" in content, name
         assert "Do not use WhatsApp" in content, name
         assert "live INPS browser capture" in content, name
-        assert "hosted feedback or voice" in content, name
+        if name == "skills/mparanza-learn-with-vera/SKILL.md":
+            # Tutorials retain their existing no-reporting contract.
+            assert "hosted feedback or voice" in content, name
+        else:
+            assert "hosted suggestion or voice" in content, name
+            assert "Task usage and 1–5-star feedback" in content, name
         assert "custom update services" in content, name
         assert "Later host-specific instructions" in content, name
         assert "override this Cowork contract" in content, name

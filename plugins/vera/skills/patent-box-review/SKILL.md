@@ -3,7 +3,6 @@ name: patent-box-review
 description: Prepare software, patent and design evidence, reviewed ledger costs and control proposals; export draft Word/PDF dossiers and verify signed professional reviews. Real calculations require current reviewed sources and configured firm authorization; professional acceptance remains pending.
 ---
 
-<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 <!-- VERA_WORKFLOW_USAGE_BEGIN -->
 ## Task usage and user feedback
 
@@ -18,6 +17,7 @@ skill invocation and on both Codex and Cowork.
 <!-- VERA_WORKFLOW_USAGE_END -->
 
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 ## Connected studio knowledge
 
 When the user or an adopted studio instruction requests relevant repository

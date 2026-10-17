@@ -3,7 +3,6 @@ name: vera
 description: Use for commercialista and accounting-studio requests to answer fiscal or legal questions through the reviewed-report workflow, prepare bilanci OIC/XBRL and financial analysis, or support auditing through bank and open-item reconciliations, journal sampling, invoice checks and accounting-export review, even when the user does not name Vera. Also use whenever Vera or @vera is explicitly invoked and to reopen a Vera privacy report. Select the narrowest supported specialist; clarify an ambiguous outcome. Explicit invocation does not add unsupported services.
 ---
 
-<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 <!-- VERA_WORKFLOW_USAGE_BEGIN -->
 ## Task usage and user feedback
 
@@ -18,6 +17,7 @@ skill invocation and on both Codex and Cowork.
 <!-- VERA_WORKFLOW_USAGE_END -->
 
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 ## Connected studio knowledge
 
 When the user or an adopted studio instruction requests relevant repository

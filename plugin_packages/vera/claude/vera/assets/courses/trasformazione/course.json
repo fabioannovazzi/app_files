@@ -65,7 +65,7 @@
     },
     {
       "path": "modules/trasformazione/skills/mparanza-trasformazione/SKILL.md",
-      "sha256": "93693d66d2bb13f49701a1a7d6c0f748cc20562b51bac0129e83476706ddacc9"
+      "sha256": "4f8b339ad0f5c023d4e41f30edf6494791305b108ec6203cecbcbba5d27d59ea"
     },
     {
       "path": "scripts/check_dependencies.py",
@@ -97,7 +97,7 @@
     },
     {
       "path": "skills/mparanza-trasformazione/SKILL.md",
-      "sha256": "2655d53bc3165e3f1bb6b452732e444d488bfae680a83a3fa608ca803bcaf10f"
+      "sha256": "90837c6dcde4e6b6d7095a6f52fb2ef62af02e44136573b5f2e85cd1d0fd0975"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -502,5 +502,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "c4e4e6353368d9e68523d36b287d6438178cb9d8dda4e49796c7434c06d2cc53"
+  "canonical_course_sha256": "0be998ef2a70ad097db7b01750447206f314cd1323cba4f9057cf3d7ea2023c3"
 }

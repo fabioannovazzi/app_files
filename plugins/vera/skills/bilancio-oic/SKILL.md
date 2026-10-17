@@ -3,7 +3,6 @@ name: bilancio-oic
 description: Use to prepare or review an individual Italian bilancio civilistico OIC from a bilancio di verifica in CSV/XLSX or readable/scanned PDF, prior XBRL and supporting schedules. Produces reviewed mappings, prospetti, nota integrativa and validation before XBRL export. For historical ratios or comparison alone use financial-analysis. Does not sign, approve corporate accounts or deposit/file them.
 ---
 
-<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 <!-- VERA_WORKFLOW_USAGE_BEGIN -->
 ## Task usage and user feedback
 
@@ -18,6 +17,7 @@ skill invocation and on both Codex and Cowork.
 <!-- VERA_WORKFLOW_USAGE_END -->
 
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 ## Connected studio knowledge
 
 When the user or an adopted studio instruction requests relevant repository

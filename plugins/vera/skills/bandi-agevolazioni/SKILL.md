@@ -3,7 +3,6 @@ name: bandi-agevolazioni
 description: Use when Vera must discover source-first through a professionally reviewed query-scoped source selection, monitor, match, prepare, or review Italian grants, subsidies, tax credits, or subsidized finance without contacting clients, authenticating or signing; can prepare an approved portal draft and submit only after explicit final approval.
 ---
 
-<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 <!-- VERA_WORKFLOW_USAGE_BEGIN -->
 ## Task usage and user feedback
 
@@ -18,6 +17,7 @@ skill invocation and on both Codex and Cowork.
 <!-- VERA_WORKFLOW_USAGE_END -->
 
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 ## Connected studio knowledge
 
 When the user or an adopted studio instruction requests relevant repository

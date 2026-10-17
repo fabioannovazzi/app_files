@@ -3,7 +3,6 @@ name: financial-analysis
 description: Use to analyse historical accounting or compare bilanci through source-linked financial schedules, reconciliations, ratios and supported financial due-diligence calculations. For preparing the new bilancio civilistico OIC, nota integrativa or XBRL use bilancio-oic; for a forward-looking business plan use business-planning.
 ---
 
-<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 <!-- VERA_WORKFLOW_USAGE_BEGIN -->
 ## Task usage and user feedback
 
@@ -18,6 +17,7 @@ skill invocation and on both Codex and Cowork.
 <!-- VERA_WORKFLOW_USAGE_END -->
 
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 ## Connected studio knowledge
 
 When the user or an adopted studio instruction requests relevant repository

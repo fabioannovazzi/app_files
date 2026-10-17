@@ -57,7 +57,7 @@
     },
     {
       "path": "modules/scissione-guidata/skills/mparanza-scissione-guidata/SKILL.md",
-      "sha256": "2e8975d62542f73a7ae07d3b658fbddd22a6d369130027cc3a8708d26c3b454e"
+      "sha256": "ea7e2472eaa58c456b41210d73ec28f25dcfae8cef24bc660b054f2f0a32e3be"
     },
     {
       "path": "modules/scissione-guidata/vendor/modules/__init__.py",
@@ -101,7 +101,7 @@
     },
     {
       "path": "skills/mparanza-scissione-guidata/SKILL.md",
-      "sha256": "7fe39011123abefb8f1be9bff5f66c49a8203539a3373dfce129ccb6b0d9b9d3"
+      "sha256": "d512fce722ef6c48515778b46123f00c55d5fa0209789a251370acbc573b5fe7"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -530,5 +530,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "67c615fe7064a7a6440760200027fc22b2bda8092d284d94876cb47e6eb81fb2"
+  "canonical_course_sha256": "0bf3008b109bbcf7dd25ebb58287bf47f2c7e1f5bfa72cd9f4a98d292b5813e0"
 }

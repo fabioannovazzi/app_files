@@ -97,7 +97,7 @@
     },
     {
       "path": "modules/registro-imprese-sari/skills/mparanza-registro-imprese-sari/SKILL.md",
-      "sha256": "a5607a0a277109ca8bc5ef6bd51dc11c7ba11de44d4a6ce16447a8145e0729b9"
+      "sha256": "f5cfaab46f2b11e917d5e3f522831f0e11c39fd3cbc3a42be423349e73e08fb6"
     },
     {
       "path": "modules/registro-imprese-sari/skills/mparanza-registro-imprese-sari/agents/openai.yaml",
@@ -149,7 +149,7 @@
     },
     {
       "path": "skills/mparanza-registro-imprese-sari/SKILL.md",
-      "sha256": "ff9d5f44103305b912d48c009d15b049974f052b8db1b6ce96a6afe96454404b"
+      "sha256": "73c0aebeafabf95afaf1c9d0aebe71d7cb72ccf7ebf439f9925741f6cfa9ff78"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -658,5 +658,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "64562b4cec41d5bf0a41eaa27c5c36c53f416a9f6aa0a863c3acc0aa1acbb585"
+  "canonical_course_sha256": "d3d0badb861e903644513217d0ad051dc7110f2e67814345ec4378a9911e728e"
 }

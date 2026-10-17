@@ -197,11 +197,11 @@
     },
     {
       "path": "modules/browser-automation/skills/mparanza-agenzia-acquisition/SKILL.md",
-      "sha256": "b0a72bec263459f49e5aa72ad6474391dc56519a93cf3dbd1204ff6ec177b7e6"
+      "sha256": "33dbac324a18ccf8688fd81a24bc3f4e3db99655e3c8950404f1780b6d7870fd"
     },
     {
       "path": "skills/mparanza-agenzia-acquisition/SKILL.md",
-      "sha256": "0447909b8875e8941ede211db4e6b5df89e06d5dc25e4bc858a302f118a508f5"
+      "sha256": "66c63eb22d15cca98129fe31d5139e30e28ba340e559a2ac3f10be581c8247a3"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -418,5 +418,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "d5503104461b7424ac7d2fa7681570d4d19f0cbb6b6f08449a9cc59334119bde"
+  "canonical_course_sha256": "0eb23a198885bb0ad6b6f0fdcc600f4eb72fbec654a9548f01b9a193febce42e"
 }

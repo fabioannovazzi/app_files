@@ -81,7 +81,7 @@
     },
     {
       "path": "modules/composizione-negoziata/skills/mparanza-composizione-negoziata/SKILL.md",
-      "sha256": "1465e3bf9839e2481908ff66bcf420f3926e6b45a028c134e40e9d1ab5152455"
+      "sha256": "c5f743dcc56c55e4a15e84604e4ad064537865d0a1fdaf85aa04f7892c39f712"
     },
     {
       "path": "modules/composizione-negoziata/skills/mparanza-composizione-negoziata/agents/openai.yaml",
@@ -113,7 +113,7 @@
     },
     {
       "path": "skills/mparanza-composizione-negoziata/SKILL.md",
-      "sha256": "30a69de694e25b588f609bca8242e5636564ef1eabfaf24648922d1dd5b1e000"
+      "sha256": "25e30fae1bd6d74c7bcd2e8107e194c549279ba8ea3b1e9a884a368fe7f9277c"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -821,5 +821,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "2cfcdfcf5206728c97223ce9b3c5700e8d13333f332a5fc7780536b36274249c"
+  "canonical_course_sha256": "59526a6b3d26cceb04381925df426eb07c1789ef8f91f14a0493cf8600d6f45f"
 }

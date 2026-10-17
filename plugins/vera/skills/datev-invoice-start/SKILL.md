@@ -3,7 +3,6 @@ name: datev-invoice-start
 description: Avviare o riprendere una prova reale delle fatture passive in DATEV nativo Windows con la procedura ECONS già nota, controllo nativo dell'host quando disponibile, progressi locali, report per cliente e richiesta di adattamento revisionabile.
 ---
 
-<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 <!-- VERA_WORKFLOW_USAGE_BEGIN -->
 ## Task usage and user feedback
 
@@ -18,6 +17,7 @@ skill invocation and on both Codex and Cowork.
 <!-- VERA_WORKFLOW_USAGE_END -->
 
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 ## Connected studio knowledge
 
 When the user or an adopted studio instruction requests relevant repository

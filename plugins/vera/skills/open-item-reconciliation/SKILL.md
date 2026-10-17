@@ -3,7 +3,6 @@ name: open-item-reconciliation
 description: Use to verify a supplied elenco partite aperte clienti o fornitori at a cut-off against mastrini, journal, bank statements, payments, factoring, advances or compensation. Produces closed, partly closed and still-open items, residuals and exceptions. For direct estratto conto versus prima nota matching use journal-bank-reconciliation.
 ---
 
-<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 <!-- VERA_WORKFLOW_USAGE_BEGIN -->
 ## Task usage and user feedback
 
@@ -18,6 +17,7 @@ skill invocation and on both Codex and Cowork.
 <!-- VERA_WORKFLOW_USAGE_END -->
 
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 ## Connected studio knowledge
 
 When the user or an adopted studio instruction requests relevant repository

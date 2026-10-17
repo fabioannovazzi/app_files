@@ -3,7 +3,6 @@ name: management-control-pack
 description: Prepara il controllo di gestione da export contabili oppure analizza costi e margini per commessa, prodotto o cliente, con Direct, Direct Evoluto, Full o ABC e scenari decisionali riveduti. Include P&L, budget/forecast, aging e cassa quando pertinenti. Per i soli scostamenti usa variance-analysis.
 ---
 
-<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 <!-- VERA_WORKFLOW_USAGE_BEGIN -->
 ## Task usage and user feedback
 
@@ -18,6 +17,7 @@ skill invocation and on both Codex and Cowork.
 <!-- VERA_WORKFLOW_USAGE_END -->
 
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 ## Connected studio knowledge
 
 When the user or an adopted studio instruction requests relevant repository

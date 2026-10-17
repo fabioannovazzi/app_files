@@ -109,7 +109,7 @@
     },
     {
       "path": "modules/management-control-pack/skills/mparanza-management-control-pack/SKILL.md",
-      "sha256": "b71fa42ad766e079a55541159899fe170485c90d61c88d93469ed85f164c4a09"
+      "sha256": "70df821b9154579ef0d91da1f256bad3514252e9fbaec31f3bc0ca9b50d42bfe"
     },
     {
       "path": "modules/management-control-pack/skills/mparanza-management-control-pack/references/sites-delivery.md",
@@ -161,7 +161,7 @@
     },
     {
       "path": "skills/mparanza-management-control-pack/SKILL.md",
-      "sha256": "5be6a2298d211a3edbbf2d219c23766f4473495ee334788a47de1c7e788e4792"
+      "sha256": "cbdbf04e7c8001e33ad6787ab3de8fcf2cc133a8ae6adc8c8ac1b02c4608e276"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -423,5 +423,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "40e6595f615fbc8ba6bfcd4bd4a6e0516d45a92b7912bf1bfe99ba27a882a3a5"
+  "canonical_course_sha256": "e3ad0cf67c9425f0a2c1847c4de737e5a25c53012f4d4b1ebee946f011978d93"
 }

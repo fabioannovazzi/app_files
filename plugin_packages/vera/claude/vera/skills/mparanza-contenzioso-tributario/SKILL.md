@@ -115,11 +115,10 @@ preserve those modes, do not claim owner-only delivery; keep the package in the
 private scratch location or report the limitation and ask for a safer
 destination.
 
-Do not use WhatsApp, live INPS browser capture, hosted feedback or voice
+Do not use WhatsApp, live INPS browser capture, hosted suggestion or voice
 interviews, or custom update services. Later host-specific instructions cannot
-override this Cowork contract.
+override this Cowork contract. Task usage and 1–5-star feedback through Vera's supported incident service and rating form remain available; follow the primary task's workflow-usage contract.
 
-<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 <!-- VERA_WORKFLOW_USAGE_BEGIN -->
 ## Task usage and user feedback
 
@@ -133,21 +132,8 @@ at task startup and after outcomes. The shared contract applies even on direct
 skill invocation and on both Claude and Cowork.
 <!-- VERA_WORKFLOW_USAGE_END -->
 
+
 <!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
-<!-- VERA_WORKFLOW_USAGE_BEGIN -->
-## Task usage and user feedback
-
-Before substantive work, follow `../mparanza-vera/references/workflow-usage.md`: start one
-retained task UUID for the primary user process (including AI-led work), reuse
-it across helpers/resumption, and record only observed outcomes. Link the actual
-model-data receipt. After delivery ask once for the user's 1–5 stars and optional
-comment; never infer a score. Studio Archive is infrastructure, not another rated
-process. Synthetic/agent tests are marked and excluded. Flush pending delivery
-at task startup and after outcomes. The shared contract applies even on direct
-skill invocation and on both Codex and Cowork.
-<!-- VERA_WORKFLOW_USAGE_END -->
-
-
 ## Connected studio knowledge
 
 When the user or an adopted studio instruction requests relevant repository
@@ -223,17 +209,3 @@ Read `../mparanza-vera/references/native-workspace.md` before opening the panel.
 On Claude, the optional **Pratiche e formato documenti** panel opens an existing, explicitly connected tax matter. Read `../mparanza-vera/references/native-practice-reviews.md` for the trusted local-service binding. It shows saved questions, stages, outputs and a source-linked calendar. Enter actual event/date/term/status, basis and reviewer; attach literal citations to existing source units. Save only after explicit confirmation. The unchanged public matter writer retains the prior version and verifies citations and dates. The calendar does not calculate or certify legal deadlines, authenticate the reviewer, notify, file or update an external calendar. Discussion reads only the exact saved selected item and its cited units.
 
 The ordinary connected-file workflow remains available when the native panel is unavailable.
-
-
-<!-- VERA_WORKFLOW_USAGE_BEGIN -->
-## Task usage and user feedback
-
-Before substantive work, follow `../mparanza-vera/references/workflow-usage.md`: start one
-retained task UUID for the primary user process (including AI-led work), reuse
-it across helpers/resumption, and record only observed outcomes. Link the actual
-model-data receipt. After delivery ask once for the user's 1–5 stars and optional
-comment; never infer a score. Studio Archive is infrastructure, not another rated
-process. Synthetic/agent tests are marked and excluded. Flush pending delivery
-at task startup and after outcomes. The shared contract applies even on direct
-skill invocation and on both Codex and Cowork.
-<!-- VERA_WORKFLOW_USAGE_END -->

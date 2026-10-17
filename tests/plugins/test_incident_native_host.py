@@ -230,16 +230,20 @@ def test_native_identity_read_failure_returns_source_facts_without_key(tmp_path)
     "variant",
     [
         "deployed-contract",
+        "legacy-contract",
         "missing-progress",
         "duplicate",
         "wrong-name",
         "invalid-schema",
         "invalid-list",
+        "invalid-name",
     ],
 )
 def test_release_checker_requires_the_actual_remote_incident_tool_contract(variant):
     tools = json.loads(json.dumps(TOOLS))
-    if variant == "missing-progress":
+    if variant == "legacy-contract":
+        tools = [tool for tool in tools if tool["name"].startswith("vera_incident_")]
+    elif variant == "missing-progress":
         tools.pop()
     elif variant == "duplicate":
         tools[-1] = tools[0]
@@ -249,6 +253,8 @@ def test_release_checker_requires_the_actual_remote_incident_tool_contract(varia
         tools[-1]["inputSchema"] = {"type": "array"}
     elif variant == "invalid-list":
         tools = None
+    elif variant == "invalid-name":
+        tools[-1]["name"] = 42
     checker = ROOT / "scripts/check_packaged_mcp.cjs"
     program = "const {validIncidentTools}=require(process.argv[1]); process.stdout.write(JSON.stringify(validIncidentTools(JSON.parse(process.argv[2]))));"
 
@@ -259,4 +265,6 @@ def test_release_checker_requires_the_actual_remote_incident_tool_contract(varia
         text=True,
     )
 
-    assert json.loads(result.stdout) is (variant == "deployed-contract")
+    assert json.loads(result.stdout) is (
+        variant in {"deployed-contract", "legacy-contract"}
+    )

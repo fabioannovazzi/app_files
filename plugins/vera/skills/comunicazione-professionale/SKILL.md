@@ -3,7 +3,6 @@ name: comunicazione-professionale
 description: Use when Vera must decide whether a professional development is worth communicating and prepare claim-assured, source-backed client emails, LinkedIn posts, newsletters, articles, FAQs, client alerts, or branded visual explainers in an evidence-aware approved studio voice, with optional selected Creative Production art direction, without sending or publishing before professional review.
 ---
 
-<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 <!-- VERA_WORKFLOW_USAGE_BEGIN -->
 ## Task usage and user feedback
 
@@ -18,6 +17,7 @@ skill invocation and on both Codex and Cowork.
 <!-- VERA_WORKFLOW_USAGE_END -->
 
 
+<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 ## Connected studio knowledge
 
 When the user or an adopted studio instruction requests relevant repository

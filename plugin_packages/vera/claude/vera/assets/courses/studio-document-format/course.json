@@ -217,7 +217,7 @@
     },
     {
       "path": "modules/comunicazione-professionale/skills/mparanza-comunicazione-professionale/SKILL.md",
-      "sha256": "46f41754b7ed0763e8414ba90a43be571d715ae8d5799ef0dad7ba519681f864"
+      "sha256": "31ab7837c4e92b9583cb74115726713d118f7c71ce8ed5d4b387ec798298138b"
     },
     {
       "path": "modules/comunicazione-professionale/skills/mparanza-comunicazione-professionale/agents/openai.yaml",
@@ -345,7 +345,7 @@
     },
     {
       "path": "modules/report-builder/skills/mparanza-financial-report-builder/SKILL.md",
-      "sha256": "6ee05ef8b8b66e1d36c5e025a6e88e22dee3466ddec36cf77381bbde9045d644"
+      "sha256": "f3cd1211bcc76f26651795a4a2607e750b1733d927f884cee3295a2e3518321e"
     },
     {
       "path": "modules/report-builder/vendor/modules/__init__.py",
@@ -485,7 +485,7 @@
     },
     {
       "path": "skills/mparanza-studio-document-format/SKILL.md",
-      "sha256": "17c2a29f5a304781b45f46a81611ccf2f168c90c781d7915732d1e26f06e2b4d"
+      "sha256": "e7dbc683a53baf15b235de97e4a753e663bf374f7d3439d922fc40a13bb75894"
     },
     {
       "path": "skills/mparanza-studio-document-format/references/procedure.md",
@@ -858,5 +858,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "519648a3741abc69a3b55e7b55d117f94446f9b06fb9a137e2e2e26e4f0e84f1"
+  "canonical_course_sha256": "082a650cfe45502a1dc15ccdadddb2dc76aa6042ebcd74a211b8909fbab3b0e9"
 }
