@@ -23,7 +23,7 @@
       "kind": "hosted_service",
       "destination": "Existing Mparanza HTTPS operational-incidents API and saved veraIncidents OAuth connector",
       "purpose": "Measure which user processes run and their observed outcome; link existing signed model-data receipts and technical reports without copying their professional content",
-      "content": "The existing installation capability authenticates closed-schema events: random run and event UUIDs, sequence, catalog pipeline ID, host, observed product version, timestamps, explicit user/synthetic/agent-test classification and started/resumed/completed/failed/cancelled state. Optional links contain only an existing signed receipt UUID/report digest or an owned incident report UUID. Run ownership, single-run receipt binding and the retained signature are checked server-side. The original stamping service does not attest the identity of the author of a report. The service receives no task text, client identity, filenames, source data, prompt or professional output. Existing connection metadata and rate limiting apply. Saved connector identity is not inferred to be a native computer.",
+      "content": "The existing installation capability authenticates closed-schema events: random run and event UUIDs, sequence, catalog pipeline ID, host, observed product version, timestamps, explicit user/synthetic/agent-test classification and started/resumed/completed/failed/cancelled state. Optional links contain only an existing signed receipt UUID/report digest or an owned incident report UUID. Run ownership, single-run receipt binding and the retained signature are checked server-side. The original stamping service does not attest the identity of the author of a report. The service receives no task text, client identity, filenames, source data, prompt or professional output. Existing connection metadata and rate limiting apply. Saved connector identity is not inferred to be a native computer. Native senders also present the existing anonymous native-computer capability and observed native app when available. The server retains the established computer binding; unlinked guests and standalone OAuth connections remain unlinked.",
       "activation": "automatic_on_first_use",
       "optional": false,
       "requires_confirmation": false,
@@ -49,7 +49,26 @@
       "controls": [
         "The user supplies the score/comment for submission or clicks Invia valutazione; that action is the choice, with no second confirmation questionnaire.",
         "The form uses a run-specific capability in its URL fragment; the page contains no task information, and the capability permits rating only that run. The exact pending answer is retained for retry, and operator rendering escapes comments.",
-        "Comments are untrusted data for AI review, never instructions or executable commands. Feedback and usage completion do not close incidents or upgrade public testing labels."
+        "Comments are untrusted data for AI review, never instructions or executable commands. Feedback never changes public testing levels or closes incidents. Completed pipeline runs feed a separately resettable computer-based testing counter and never close incidents."
+      ]
+    },
+    {
+      "id": "public-completed-pipeline-status",
+      "kind": "hosted_service",
+      "destination": "Mparanza public GET /api/vera/testing-status and Vera function catalogue",
+      "purpose": "Automatically show testing levels from concluded pipelines after an explicit fresh baseline",
+      "content": "Only catalog pipeline IDs, four testing-level names and counting epoch UUID/time are public. The service privately groups completed runs by proven anonymous computer IDs: the owner-designated computer counts as agent testing, other computers as professional use. Stars, comments, report digests, client documents, task prompts, computer IDs, run IDs and capabilities are not in this response. The owner convention counts computers, not authenticated people; completion does not certify professional correctness. No model call is made by this public projection.",
+      "runtime_profiles": [
+        "anthropic-cowork"
+      ],
+      "retention": "Counting epochs and underlying retained events persist until administrative deletion. A reset preserves history and starts new public counts.",
+      "activation": "automatic_per_durable_run",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "Both server receipt and event completion time must follow the baseline; old delayed deliveries do not repopulate a reset.",
+        "Native computer IDs deduplicate apps and reporter instances. Unlinked completions stay pending until proven linkage; explicit test fixtures on other devices do not count as professionals.",
+        "The public response is an allowlisted projection of status-only fields; reset is available only to the server operator."
       ]
     }
   ],
@@ -58,6 +77,6 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-10-17",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "fb1cf25eebd0c150a599d0e935333f42668ee2420fc70e087ddd6941340e82c7"
+    "source_fingerprint": "8e5fdf5112a7596a7fd815c758f6b5452bc7c5013c60e3bf7ee957486b39897b"
   }
 }

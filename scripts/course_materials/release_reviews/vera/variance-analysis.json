@@ -93,7 +93,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "c45a4d9e1ae63f1a41782a92ab3ba7215a830330a74ce054af9a9740401e0f3b",
+  "course_sha256": "f416d7bf26f14265bd5b4513c0aafc2e0c1dfd3b245fd53aa95cea9adce8eddb",
   "discovery_source_refresh": {
     "reviewed_by": "Codex /root",
     "reviewed_at": "2026-10-01T11:44:13.076890+00:00",
@@ -969,5 +969,18 @@
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "fresh_matching_junit_required": true
+  },
+  "usage_computer_binding_20261017": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "baseline_commit": "54da75ab0110a6f8ab32bd24952fbdd874cfe2fe",
+    "previous_course_sha256": "c45a4d9e1ae63f1a41782a92ab3ba7215a830330a74ce054af9a9740401e0f3b",
+    "current_course_sha256": "f416d7bf26f14265bd5b4513c0aafc2e0c1dfd3b245fd53aa95cea9adce8eddb",
+    "authored_content_unchanged": true,
+    "changed_sources": [
+      "scripts/operational_incidents.py"
+    ],
+    "source_review": "Inspected the exact operational_incidents.py change: workflow_transport now attaches the existing native host proof and observed app to its existing register request when available. Missing native proof leaves delivery available and linkage unknown. Workflow event bytes, helper execution, source files, professional output and incident recovery are unchanged. All authored lesson fields are byte-equivalent as JSON outside the source inventory.",
+    "validation": "76 focused usage/receipt tests and 298 incident/native-host regressions passed. Full native lesson CI remains required at the final PR head.",
+    "limits": "Retains original editorial and rendered-artifact review scope. This source-binding refresh is not a new professional test, learner acceptance or installed-host UI verification."
   }
 }

@@ -27,6 +27,9 @@ def main() -> None:
     summary.add_argument("--html", type=Path)
     show = commands.add_parser("show")
     show.add_argument("run_id")
+    commands.add_parser("testing-status")
+    reset = commands.add_parser("testing-reset")
+    reset.add_argument("--agent-device", action="append", required=True)
     args = parser.parse_args()
     load_env_from_secrets_file()
     store = IncidentStore(args.sqlite_path)
@@ -38,8 +41,12 @@ def main() -> None:
         if args.html:
             args.html.write_text(render_html(result), encoding="utf-8")
             args.html.chmod(0o600)
-    else:
+    elif args.command == "show":
         result = store.workflow_inspect(args.run_id)
+    elif args.command == "testing-reset":
+        result = store.workflow_testing_reset(args.agent_device)
+    else:
+        result = store.workflow_testing()
     sys.stdout.write(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
 
 

@@ -1520,11 +1520,12 @@
       <div class="function-test-legend">
         <div class="function-test-legend__items">
           <span><span class="function-test-indicator" data-test-status="untried" aria-hidden="true"></span><span data-i18n="testing.untried">Da provare su casi concreti</span></span>
-          <span><span class="function-test-indicator" data-test-status="agent" aria-hidden="true"></span><span data-i18n="testing.agent">Provata con dati sintetici da un agente</span></span>
+          <span><span class="function-test-indicator" data-test-status="agent" aria-hidden="true"></span><span data-i18n="testing.agent">Provata da un agente</span></span>
           <span><span class="function-test-indicator" data-test-status="tried" aria-hidden="true"></span><span data-i18n="testing.tried">Provata con successo da un professionista</span></span>
           <span><span class="function-test-indicator" data-test-status="repeated" aria-hidden="true"></span><span data-i18n="testing.repeated">Provata con successo da almeno tre professionisti</span></span>
         </div>
-        <p data-i18n="testing.note">Le prove riguardano casi specifici, non garantiscono ogni possibile utilizzo.</p>
+        <p data-i18n="testing.note">Lo stato si aggiorna dai processi conclusi. Ogni computer conta una volta; le stelle restano separate.</p>
+        <p data-testing-unavailable data-i18n="testing.unavailable" hidden>Aggiornamento dello stato temporaneamente non disponibile.</p>
       </div>
 
       <a class="module-row" href="../learn-with-vera/index.html" data-module-link data-vera-teaching="learn-with-vera"><h4><span data-i18n="module.learn.title">Impara con Vera</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
@@ -1538,25 +1539,25 @@
           </header>
           <div class="module-directory">
             <a class="module-row" id="new-client" href="../new-client/index.html#journey" data-module-link data-vera-workflow="new-client">
-              <h4><span data-i18n="module.newClient.title">Apertura del fascicolo cliente</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
+              <h4><span data-i18n="module.newClient.title">Apertura del fascicolo cliente</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="new-client"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" href="../aml-review/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="aml-review"><h4><span data-i18n="module.amlReview.title">Verifica antiriciclaggio del cliente</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
-            <a class="module-row" href="../organizzazione-lavoro/index.html" data-module-link data-vera-workflow="organizzazione-lavoro"><h4><span data-i18n="module.workOrganization.title">Organizzazione del lavoro di studio</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" href="../aml-review/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="aml-review"><h4><span data-i18n="module.amlReview.title">Verifica antiriciclaggio del cliente</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="aml-review"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" href="../organizzazione-lavoro/index.html" data-module-link data-vera-workflow="organizzazione-lavoro"><h4><span data-i18n="module.workOrganization.title">Organizzazione del lavoro di studio</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="organizzazione-lavoro"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" id="studio-archive" href="../studio-archive/index.html" data-module-link data-vera-workflow="studio-archive">
               <h4><span data-i18n="module.archive.title">Archiviazione e ricerca nel fascicolo cliente</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" id="archive-organization" href="../archive-organization/index.html" data-module-link data-vera-workflow="archive-organization">
-              <h4><span data-i18n="module.archiveOrganization.title">Riordino della cartella cliente</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
+              <h4><span data-i18n="module.archiveOrganization.title">Riordino della cartella cliente</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="archive-organization"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../dati-fiscali-strutturati/index.html" data-module-link data-vera-subordinate-workflow="dati-fiscali-strutturati">
-              <h4><span data-i18n="module.newClient.includes.data">Estrazione dati fiscali</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
+              <h4><span data-i18n="module.newClient.includes.data">Estrazione dati fiscali</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="dati-fiscali-strutturati"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../email-cliente/index.html" data-module-link data-vera-subordinate-workflow="email-cliente">
-              <h4><span data-i18n="module.newClient.includes.email">Richiesta documenti e chiarimenti</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
+              <h4><span data-i18n="module.newClient.includes.email">Richiesta documenti e chiarimenti</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="email-cliente"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
@@ -1570,46 +1571,46 @@
           </header>
           <div class="module-directory">
             <a class="module-row" id="notice-intake" href="../avviso-intake/index.html" data-module-link data-vera-workflow="avviso-intake">
-              <h4><span data-i18n="module.notice.title">Esame avvisi e cartelle</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
+              <h4><span data-i18n="module.notice.title">Esame avvisi e cartelle</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="avviso-intake"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../posizioni-negoziali/index.html?from=vera" data-module-link data-vera-workflow="posizioni-negoziali">
-              <h4><span data-i18n="module.negotiation.title">Sintetizza le revisioni in posizioni negoziali</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
+              <h4><span data-i18n="module.negotiation.title">Sintetizza le revisioni in posizioni negoziali</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="posizioni-negoziali"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../contenzioso-tributario/index.html?from=vera" data-module-link data-jurisdiction-item="it" data-vera-workflow="contenzioso-tributario" hidden>
-              <h4><span data-i18n="module.taxLitigation.title">Prepara il contenzioso tributario italiano</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
+              <h4><span data-i18n="module.taxLitigation.title">Prepara il contenzioso tributario italiano</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="contenzioso-tributario"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../fatture-xml-check/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-subordinate-workflow="fatture-xml-check" hidden>
-              <h4><span data-i18n="module.newClient.includes.xml">Controllo FatturaPA XML</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
+              <h4><span data-i18n="module.newClient.includes.xml">Controllo FatturaPA XML</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="fatture-xml-check"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../previdenza-inps/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-workflow="previdenza-inps" hidden>
-              <h4>Revisione pratica INPS<span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
+              <h4>Revisione pratica INPS<span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="previdenza-inps"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../registro-imprese-sari/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-workflow="registro-imprese-sari" hidden>
-              <h4>Pratiche Registro Imprese<span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
+              <h4>Pratiche Registro Imprese<span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="registro-imprese-sari"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../bilancio-xbrl-it/index.html" data-module-link data-native-language="it" data-vera-workflow="bilancio-xbrl-it" data-jurisdiction-item="it" data-primary-workflow-link="bilancio-intelligente" hidden>
-              <h4>Bilancio OIC e XBRL<span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
+              <h4>Bilancio OIC e XBRL<span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="bilancio-oic"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" href="../composizione-negoziata/index.html" data-module-link data-jurisdiction-item="it" data-vera-workflow="composizione-negoziata"><h4>Composizione negoziata<span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" href="../composizione-negoziata/index.html" data-module-link data-jurisdiction-item="it" data-vera-workflow="composizione-negoziata"><h4>Composizione negoziata<span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="composizione-negoziata"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" href="../fusione-guidata/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-workflow="fusione-guidata" hidden>
-              <h4>Fusione per incorporazione<span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
+              <h4>Fusione per incorporazione<span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="fusione-guidata"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" href="../patent-box-review/index.html" data-module-link data-jurisdiction-item="it" data-vera-workflow="patent-box-review" hidden><h4>Patent Box · anteprima<span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" href="../patent-box-review/index.html" data-module-link data-jurisdiction-item="it" data-vera-workflow="patent-box-review" hidden><h4>Patent Box · anteprima<span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="patent-box-review"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" href="../concordato-plan-review/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-workflow="concordato-plan-review" hidden>
-              <h4>Revisione concordato preventivo<span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
+              <h4>Revisione concordato preventivo<span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="concordato-plan-review"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" href="../agenzia-acquisition/index.html" data-module-link data-jurisdiction-item="it" data-vera-workflow="agenzia-acquisition"><h4><span data-i18n="module.agenziaAcquisition.title">Acquisizione Agenzia delle Entrate</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" href="../agenzia-acquisition/index.html" data-module-link data-jurisdiction-item="it" data-vera-workflow="agenzia-acquisition"><h4><span data-i18n="module.agenziaAcquisition.title">Acquisizione Agenzia delle Entrate</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="agenzia-acquisition"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" id="browser-automation" href="../browser-automation/index.html" data-module-link data-vera-workflow="browser-automation">
-              <h4><span data-i18n="module.browserAutomation.title">Automazione web</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
+              <h4><span data-i18n="module.browserAutomation.title">Automazione web</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="browser-automation"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
@@ -1623,28 +1624,28 @@
           </header>
           <div class="module-directory">
             <a class="module-row" href="../journal-sampling/index.html" data-module-link data-vera-workflow="journal-sampling">
-              <h4><span data-i18n="module.sampling.title">Campionamento scritture contabili</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
+              <h4><span data-i18n="module.sampling.title">Campionamento scritture contabili</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="journal-sampling"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../check-entries/index.html#journey" data-module-link data-vera-workflow="check-entries">
-              <h4><span data-i18n="module.entries.title">Verifica documentale</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
+              <h4><span data-i18n="module.entries.title">Verifica documentale</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="vouching"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../invoice-xml/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="invoice-xml">
-              <h4><span data-i18n="module.invoiceXml.title">Preparazione fatture XML</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
+              <h4><span data-i18n="module.invoiceXml.title">Preparazione fatture XML</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="invoice-xml"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" href="../lipe/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="lipe"><h4><span data-i18n="module.lipe.title">LIPE</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" href="../lipe/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="lipe"><h4><span data-i18n="module.lipe.title">LIPE</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="lipe"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" href="../passive-invoice-audit/index.html" data-module-link data-vera-workflow="passive-invoice-audit">
-              <h4><span data-i18n="module.passiveAudit.title">Audit delle fatture passive</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
+              <h4><span data-i18n="module.passiveAudit.title">Audit delle fatture passive</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="purchase-invoice-review"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../journal-bank-reconciliation/index.html" data-module-link data-vera-workflow="journal-bank-reconciliation">
-              <h4><span data-i18n="module.bank.title">Riconciliazione banca-contabilità</span><span class="function-test-indicator" data-test-status="tried" role="img" aria-label="Provata con successo da un professionista" title="Provata con successo da un professionista"></span></h4>
+              <h4><span data-i18n="module.bank.title">Riconciliazione banca-contabilità</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="journal-bank-reconciliation"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../riconciliazione-partite/index.html" data-module-link data-vera-workflow="open-item-reconciliation">
-              <h4><span data-i18n="module.reconciliation.title">Riconciliazione partite aperte</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
+              <h4><span data-i18n="module.reconciliation.title">Riconciliazione partite aperte</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="open-item-reconciliation"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
@@ -1658,37 +1659,37 @@
           </header>
           <div class="module-directory">
             <a class="module-row" id="sales-plan" href="../sales-plan/index.html" data-module-link data-vera-workflow="sales-plan">
-              <h4><span data-i18n="module.plan.title">Preparazione piano vendite</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
+              <h4><span data-i18n="module.plan.title">Preparazione piano vendite</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="sales-plan"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" id="business-valuation" href="../business-valuation/index.html" data-module-link data-vera-workflow="business-valuation"><h4><span data-i18n="module.valuation.title">Valutazione d’impresa</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" id="business-valuation" href="../business-valuation/index.html" data-module-link data-vera-workflow="business-valuation"><h4><span data-i18n="module.valuation.title">Valutazione d’impresa</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="business-valuation"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" id="business-planning" href="../business-planning/index.html" data-module-link data-vera-workflow="business-planning">
-              <h4><span data-i18n="module.businessPlanning.title">Preparare un business plan</span><span class="function-test-indicator" data-test-status="tried" role="img" aria-label="Provata con successo da un professionista" title="Provata con successo da un professionista"></span></h4>
+              <h4><span data-i18n="module.businessPlanning.title">Preparare un business plan</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="business-planning"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" id="variance-analysis" href="../variance-analysis/index.html" data-module-link data-vera-workflow="variance-analysis">
-              <h4><span data-i18n="module.variance.title">Analisi scostamenti</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
+              <h4><span data-i18n="module.variance.title">Analisi scostamenti</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="variance-analysis"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" href="../rating-legalita/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="rating-legalita"><h4><span data-i18n="module.ratingLegalita.title">Rating di legalità</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
-            <a class="module-row" href="../adeguati-assetti/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="adeguati-assetti"><h4><span data-i18n="module.assetti.title">Adeguati assetti</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
-            <a class="module-row" id="scissione-guidata" href="../scissione-guidata/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="scissione-guidata"><h4><span data-i18n="module.scissione.title">Scissione guidata</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
-            <a class="module-row" id="esg-reporting-assurance" href="../esg-reporting-assurance/index.html" data-module-link data-vera-workflow="esg-reporting-assurance"><h4><span data-i18n="module.esg.title">Fascicolo ESG · in sviluppo</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
-            <a class="module-row" id="treasury-forecast" href="../treasury-forecast/index.html" data-module-link data-vera-workflow="treasury-forecast"><h4><span data-i18n="module.treasury.title">Budget di tesoreria</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" href="../rating-legalita/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="rating-legalita"><h4><span data-i18n="module.ratingLegalita.title">Rating di legalità</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="rating-legalita"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" href="../adeguati-assetti/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="adeguati-assetti"><h4><span data-i18n="module.assetti.title">Adeguati assetti</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="adeguati-assetti"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" id="scissione-guidata" href="../scissione-guidata/index.html" data-jurisdiction-item="it" data-module-link data-vera-workflow="scissione-guidata"><h4><span data-i18n="module.scissione.title">Scissione guidata</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="scissione-guidata"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" id="esg-reporting-assurance" href="../esg-reporting-assurance/index.html" data-module-link data-vera-workflow="esg-reporting-assurance"><h4><span data-i18n="module.esg.title">Fascicolo ESG · in sviluppo</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="esg-reporting-assurance"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
+            <a class="module-row" id="treasury-forecast" href="../treasury-forecast/index.html" data-module-link data-vera-workflow="treasury-forecast"><h4><span data-i18n="module.treasury.title">Budget di tesoreria</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="treasury-forecast"></span></h4><span class="module-row__arrow" aria-hidden="true">↗</span></a>
             <a class="module-row" id="management-control-pack" href="../management-control-pack/index.html" data-module-link data-vera-workflow="management-control-pack">
-              <h4><span data-i18n="module.managementPack.title">Pacchetto controllo di gestione</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
+              <h4><span data-i18n="module.managementPack.title">Pacchetto controllo di gestione</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="management-control-pack"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" id="centrale-rischi-review" href="../centrale-rischi-review/index.html" data-module-link data-vera-workflow="centrale-rischi-review">
-              <h4><span data-i18n="module.centraleRischi.title">Analisi Centrale Rischi</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
+              <h4><span data-i18n="module.centraleRischi.title">Analisi Centrale Rischi</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="centrale-rischi-review"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" id="financial-analysis" href="../financial-analysis/index.html" data-module-link data-vera-workflow="financial-analysis">
-              <h4><span data-i18n="module.financialAnalysis.title">Analisi finanziaria e due diligence</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
+              <h4><span data-i18n="module.financialAnalysis.title">Analisi finanziaria e due diligence</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="financial-analysis"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../report-builder/index.html" data-module-link data-vera-workflow="report-builder">
-              <h4><span data-i18n="module.report.title">Preparazione report finanziario</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
+              <h4><span data-i18n="module.report.title">Preparazione report finanziario</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="financial-report-builder"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../report-enti-locali/index.html" data-module-link data-jurisdiction-item="it" hidden>
@@ -1706,15 +1707,15 @@
           </header>
           <div class="module-directory">
             <a class="module-row" href="../bandi-agevolazioni/index.html" data-module-link data-native-language="it" data-vera-workflow="bandi-agevolazioni" data-jurisdiction-item="it" data-primary-workflow-link="bandi-agevolazioni" hidden>
-              <h4>Bandi e agevolazioni<span class="function-test-indicator" data-test-status="tried" role="img" aria-label="Provata con successo da un professionista" title="Provata con successo da un professionista"></span></h4>
+              <h4>Bandi e agevolazioni<span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="bandi-agevolazioni"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../quesito-legale-fiscale/index.html" data-module-link data-vera-workflow="quesito-legale-fiscale">
-              <h4><span data-i18n="module.question.title">Risposta a quesiti legali e fiscali</span><span class="function-test-indicator" data-test-status="tried" role="img" aria-label="Provata con successo da un professionista" title="Provata con successo da un professionista"></span></h4>
+              <h4><span data-i18n="module.question.title">Risposta a quesiti legali e fiscali</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="quesito-legale-fiscale"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../adversarial-opinion/index.html" data-module-link data-vera-assurance-workflow="adversarial-opinion">
-              <h4><span data-i18n="module.adversarial.title">Parere contrapposto</span><span class="function-test-indicator" data-test-status="tried" role="img" aria-label="Provata con successo da un professionista" title="Provata con successo da un professionista"></span></h4>
+              <h4><span data-i18n="module.adversarial.title">Parere contrapposto</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
@@ -1728,15 +1729,15 @@
           </header>
           <div class="module-directory">
             <a class="module-row" href="../studio-document-format/index.html" data-module-link data-vera-workflow="studio-document-format">
-              <h4><span data-i18n="module.studio-format.title">Formato dei documenti dello studio</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
+              <h4><span data-i18n="module.studio-format.title">Formato dei documenti dello studio</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="studio-document-format"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" id="professional-communication" href="../comunicazione-professionale/index.html" data-module-link data-vera-workflow="comunicazione-professionale">
-              <h4><span data-i18n="module.communication.title">Comunicazione professionale</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
+              <h4><span data-i18n="module.communication.title">Comunicazione professionale</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="comunicazione-professionale"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" id="studio-website" href="../presenza-digitale-studio/index.html" data-module-link data-vera-workflow="presenza-digitale-studio">
-              <h4><span data-i18n="module.website.title">Sito dello studio</span><span class="function-test-indicator" data-test-status="tried" role="img" aria-label="Provata con successo da un professionista" title="Provata con successo da un professionista"></span></h4>
+              <h4><span data-i18n="module.website.title">Sito dello studio</span><span class="function-test-indicator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti" data-testing-pipeline="presenza-digitale-studio"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
@@ -1826,10 +1827,11 @@
     const copy = {
       it: {
         "testing.untried": "Da provare su casi concreti",
-        "testing.agent": "Provata con dati sintetici da un agente",
+        "testing.agent": "Provata da un agente",
         "testing.tried": "Provata con successo da un professionista",
         "testing.repeated": "Provata con successo da almeno tre professionisti",
-        "testing.note": "Le prove riguardano casi specifici, non garantiscono ogni possibile utilizzo.",
+        "testing.note": "Lo stato si aggiorna dai processi conclusi. Ogni computer conta una volta; le stelle restano separate.",
+        "testing.unavailable": "Aggiornamento dello stato temporaneamente non disponibile.",
         "footer.socialLabel": "Profili social di Vera",
         "meta.title": "Vera · Codex per commercialisti",
         "meta.description": "Vera aggiunge a Codex fascicoli cliente, controlli contabili, riconciliazioni, analisi, report, comunicazione e ricerca.",
@@ -2068,10 +2070,11 @@
       },
       en: {
         "testing.untried": "To be tried on real cases",
-        "testing.agent": "Tested with synthetic data by an agent",
+        "testing.agent": "Tested by an agent",
         "testing.tried": "Successfully tested by a professional",
         "testing.repeated": "Successfully tested by at least three professionals",
-        "testing.note": "Trials cover specific cases and do not guarantee every possible use.",
+        "testing.note": "Status updates from completed processes. Each computer counts once; stars remain separate.",
+        "testing.unavailable": "Status updates are temporarily unavailable.",
         "footer.socialLabel": "Vera social profiles",
         "meta.title": "Vera · Codex for accountants",
         "meta.description": "Vera adds client files, accounting checks, reconciliations, analysis, reporting, communication, and research to Codex.",
@@ -2310,10 +2313,11 @@
       },
       fr: {
         "testing.untried": "À essayer sur des cas concrets",
-        "testing.agent": "Testée avec des données synthétiques par un agent",
+        "testing.agent": "Testée par un agent",
         "testing.tried": "Testée avec succès par un professionnel",
         "testing.repeated": "Testée avec succès par au moins trois professionnels",
-        "testing.note": "Les essais portent sur des cas précis et ne garantissent pas tous les usages possibles.",
+        "testing.note": "Le statut se met à jour à partir des processus terminés. Chaque ordinateur compte une fois ; les étoiles restent distinctes.",
+        "testing.unavailable": "La mise à jour du statut est temporairement indisponible.",
         "footer.socialLabel": "Profils de Vera sur les réseaux sociaux",
         "meta.title": "Vera · Codex pour les experts-comptables",
         "meta.description": "Vera ajoute à Codex les dossiers clients, les contrôles comptables, les rapprochements, l'analyse, les rapports, la communication et la recherche.",
@@ -2552,10 +2556,11 @@
       },
       de: {
         "testing.untried": "An konkreten Fällen zu erproben",
-        "testing.agent": "Von einem Agenten mit synthetischen Daten erprobt",
+        "testing.agent": "Von einem Agenten erprobt",
         "testing.tried": "Von einer Fachperson erfolgreich erprobt",
         "testing.repeated": "Von mindestens drei Fachleuten erfolgreich erprobt",
-        "testing.note": "Die Erprobung betrifft bestimmte Fälle und garantiert nicht jede mögliche Anwendung.",
+        "testing.note": "Der Status wird anhand abgeschlossener Prozesse aktualisiert. Jeder Computer zählt einmal; Sterne bleiben getrennt.",
+        "testing.unavailable": "Statusaktualisierungen sind vorübergehend nicht verfügbar.",
         "footer.socialLabel": "Vera in sozialen Netzwerken",
         "meta.title": "Vera · Codex für Steuerberaterinnen und Steuerberater",
         "meta.description": "Vera ergänzt Codex um Mandantenakten, Buchungsprüfungen, Abstimmungen, Analysen, Berichte, Kommunikation und Recherche.",
@@ -2794,10 +2799,11 @@
       },
       es: {
         "testing.untried": "Por probar en casos concretos",
-        "testing.agent": "Probada con datos sintéticos por un agente",
+        "testing.agent": "Probada por un agente",
         "testing.tried": "Probada con éxito por un profesional",
         "testing.repeated": "Probada con éxito por al menos tres profesionales",
-        "testing.note": "Las pruebas abarcan casos específicos y no garantizan todos los usos posibles.",
+        "testing.note": "El estado se actualiza con los procesos terminados. Cada ordenador cuenta una vez; las estrellas se mantienen separadas.",
+        "testing.unavailable": "La actualización del estado no está disponible temporalmente.",
         "footer.socialLabel": "Perfiles de Vera en redes sociales",
         "meta.title": "Vera · Codex para asesores fiscales y contables",
         "meta.description": "Vera añade a Codex expedientes de clientes, controles contables, conciliaciones, análisis, informes, comunicación e investigación.",
@@ -3096,6 +3102,17 @@
       document.getElementById("vera-install-video-duration").textContent = installVideo.duration;
     }
 
+    function updateTestingLabels(strings) {
+      document.querySelectorAll('.function-test-indicator[role="img"]').forEach((indicator) => {
+        const label = strings[`testing.${indicator.dataset.testStatus}`];
+        indicator.setAttribute("aria-label", label);
+        indicator.title = label;
+      });
+    }
+    document.addEventListener("vera-testing-status-updated", () => {
+      updateTestingLabels(copy[document.documentElement.lang] || copy.it);
+    });
+
     function setLanguage(requested, updateHistory = true) {
       const lang = supported.has(requested) ? requested : "it";
       const strings = copy[lang];
@@ -3110,11 +3127,7 @@
         const key = node.dataset.i18n;
         if (Object.prototype.hasOwnProperty.call(strings, key)) node.textContent = strings[key];
       });
-      document.querySelectorAll('.function-test-indicator[role="img"]').forEach((indicator) => {
-        const label = strings[`testing.${indicator.dataset.testStatus}`];
-        indicator.setAttribute("aria-label", label);
-        indicator.title = label;
-      });
+      updateTestingLabels(strings);
       document.querySelectorAll("[data-i18n-aria-label]").forEach((node) => {
         const key = node.dataset.i18nAriaLabel;
         if (Object.prototype.hasOwnProperty.call(strings, key)) node.setAttribute("aria-label", strings[key]);
@@ -3198,5 +3211,6 @@
 
     setLanguage(params.get("lang") || "it", false);
   </script>
+  <script src="../vera-testing-status.js"></script>
 </body>
 </html>
