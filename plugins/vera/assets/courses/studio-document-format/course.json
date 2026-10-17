@@ -490,12 +490,12 @@
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
       "repository_path": "plugins/studio-archive/scripts/archive_core.py",
-      "sha256": "886eaca111be852970f3ff701592af744108ad601c9443368683b1eddcbcfe55"
+      "sha256": "5de0bbb8d69e4519a189e158cfce743878cd487eb7b2d4392868e4aaf9767037"
     },
     {
       "path": "modules/studio-archive/scripts/archive_preferences.py",
       "repository_path": "plugins/studio-archive/scripts/archive_preferences.py",
-      "sha256": "a3bba1a9dd32607c26afdb7fd02fac8fb6f8094524bb3d4d60f15d8958008b28"
+      "sha256": "f5ca3c7295c3dcb78f211cb7fe7bb399a73db5888a77a876a2a969af00e4a58a"
     },
     {
       "path": "modules/studio-archive/scripts/build_model_data_report.py",

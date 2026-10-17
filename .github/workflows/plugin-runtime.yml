@@ -1055,6 +1055,7 @@ jobs:
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_studio_archive_adoption.py
+          tests/plugins/test_studio_archive_concurrency.py
           tests/plugins/test_vera_standalone_work.py
           tests/plugins/test_cowork_archive_session.py
       - name: Verify negotiation delivery and immutable round successors

@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import errno
 import hashlib
 import json
 import os
 import stat
+import time
 from contextlib import contextmanager
 from pathlib import Path
 from threading import RLock, local
@@ -81,12 +83,50 @@ def read_json(path: Path) -> dict[str, Any] | None:
     return payload
 
 
+def _acquire_registry_lock(descriptor: int, deadline: float) -> None:
+    """Wait briefly for genuine contention; never remove or steal an OS lock."""
+    while True:
+        try:
+            if os.name == "nt":
+                import msvcrt
+
+                if os.fstat(descriptor).st_size == 0:
+                    os.write(descriptor, b"0")
+                os.lseek(descriptor, 0, os.SEEK_SET)
+                msvcrt.locking(descriptor, msvcrt.LK_NBLCK, 1)
+            else:
+                import fcntl
+
+                fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            return
+        except OSError as exc:
+            if exc.errno not in {
+                errno.EACCES,
+                errno.EAGAIN,
+                errno.EDEADLK,
+                errno.EINTR,
+            }:
+                raise
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                raise TimeoutError(
+                    "Archive identity registry is busy; retry after the other "
+                    "operation finishes. No lock was removed or client changed."
+                ) from exc
+            time.sleep(min(0.05, remaining))
+
+
 @contextmanager
-def registry_lock(profile: Path, archive_root: Path) -> Iterator[Path]:
+def registry_lock(
+    profile: Path, archive_root: Path, *, timeout_seconds: float = 10.0
+) -> Iterator[Path]:
     """Serialize root-specific identity read/modify/write, never session selection."""
     root_key = hashlib.sha256(str(archive_root).encode()).hexdigest()
     directory = profile / "archives" / root_key
-    with _LOCK:
+    deadline = time.monotonic() + timeout_seconds
+    if not _LOCK.acquire(timeout=max(0.0, timeout_seconds)):
+        raise TimeoutError("Archive identity registry is busy; retry later.")
+    try:
         held = getattr(_HELD, "paths", set())
         if directory in held:
             yield directory
@@ -107,16 +147,7 @@ def registry_lock(profile: Path, archive_root: Path) -> Iterator[Path]:
             observed = os.fstat(descriptor)
             if not stat.S_ISREG(observed.st_mode) or observed.st_nlink != 1:
                 raise ValueError("Archive identity lock must be an ordinary file.")
-            if os.name == "nt":
-                import msvcrt
-
-                os.write(descriptor, b"0")
-                os.lseek(descriptor, 0, os.SEEK_SET)
-                msvcrt.locking(descriptor, msvcrt.LK_NBLCK, 1)
-            else:
-                import fcntl
-
-                fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            _acquire_registry_lock(descriptor, deadline)
             _HELD.paths = held | {directory}
             try:
                 yield directory
@@ -124,3 +155,5 @@ def registry_lock(profile: Path, archive_root: Path) -> Iterator[Path]:
                 _HELD.paths = held
         finally:
             os.close(descriptor)
+    finally:
+        _LOCK.release()
