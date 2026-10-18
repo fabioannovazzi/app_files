@@ -772,6 +772,19 @@ def _run_captured_process(
 ) -> dict[str, Any]:
     """Run a process with bounded pipe capture and a hard process-group timeout."""
 
+    if os.name == "nt":
+        from windows_worker_process import run_captured
+
+        return run_captured(
+            command,
+            cwd=cwd,
+            stdin_path=stdin_path,
+            stdout_limit=stdout_limit,
+            stderr_limit=stderr_limit,
+            timeout_seconds=timeout_seconds,
+            environment=_worker_environment(),
+        )
+
     started = time.monotonic()
     stdin_value: Any = subprocess.DEVNULL
     stdin_handle: io.BufferedReader | None = None

@@ -53,6 +53,7 @@ IMPLEMENTATION_FILES = (
     SCRIPTS_DIR / "prepare_sales_plan_case.py",
     SCRIPTS_DIR / "run_plan.py",
     SCRIPTS_DIR / "plan_contract_kernel.py",
+    SCRIPTS_DIR / "windows_contract_io.py",
     SCRIPTS_DIR / "model_use.py",
 )
 

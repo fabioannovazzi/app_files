@@ -89,9 +89,13 @@ def preparation_catalogue(root: Path, args: dict[str, Any]) -> dict[str, Any]:
     # Artifact eligibility is the public ledger's mechanical receipt/byte gate,
     # not a choice of document relevance. Operators choose every actual reuse.
     upstream, unavailable, source_revisions = [], [], []
-    for loaded in core.ledger.list_runs(
+    inventory = core.ledger.inspect_runs(
         folder, args["engagement_id"], verify_inputs=False
-    ):
+    )
+    unavailable.extend(
+        {**issue, "label": "Unavailable run"} for issue in inventory["blocked_runs"]
+    )
+    for loaded in inventory["runs"]:
         run = loaded["run"]
         if run["status"] not in {"ready_for_review", "completed"}:
             continue
@@ -223,9 +227,28 @@ def catalogue(root: Path, args: dict[str, Any]) -> dict[str, Any]:
     if engagement is None:
         raise PermissionError("Engagement does not belong to the selected client")
     rows = []
-    for loaded in core.ledger.list_runs(
+    inventory = core.ledger.inspect_runs(
         folder, selected_engagement, verify_inputs=False
-    ):
+    )
+    for issue in inventory["blocked_runs"]:
+        rows.append(
+            {
+                **issue,
+                "label": "Unavailable run",
+                "status": "blocked",
+                "created_at": None,
+                "client_id": selected_client,
+                "client_label": selected["display_name"],
+                "engagement_id": selected_engagement,
+                "engagement_label": engagement["label"],
+                "workflow": None,
+                "scope_revision": fingerprint(issue),
+                "work_ref": work_ref(
+                    selected_client, selected_engagement, issue["run_id"]
+                ),
+            }
+        )
+    for loaded in inventory["runs"]:
         run = loaded["run"]
         rows.append(
             {

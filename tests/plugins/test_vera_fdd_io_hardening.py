@@ -72,6 +72,7 @@ def test_fdd_success_is_deterministic_and_delivers_complete_receipts(
         "scripts/model_use.py",
         "scripts/prepare_fdd_case.py",
         "scripts/preparation_contract_kernel.py",
+        "scripts/windows_contract_io.py",
         "scripts/run_pack.py",
         "scripts/validate_case_contracts.py",
         "modules/vera_assurance/__init__.py",

@@ -1,0 +1,20 @@
+name: Windows pipeline portability
+on:
+  pull_request:
+  push:
+    branches: [codex/windows-pipeline-portability]
+jobs:
+  native-boundaries:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install pytest pytest-cov
+      - run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_windows_contract_io.py tests/plugins/test_windows_worker_process.py
