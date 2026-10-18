@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+import builtins
+import errno
 import hashlib
 import importlib.util
 import json
 import subprocess
 import sys
+import types
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
@@ -30,6 +33,136 @@ def _load_module(name: str):
 
 access_control = _load_module("access_control")
 case_service = _load_module("case_service")
+
+
+def test_windows_service_import_and_both_locks_without_fcntl(monkeypatch, tmp_path):
+    """A Windows worker must import the real service and retain exclusive locks."""
+    calls = []
+    attempts = 0
+    native = types.ModuleType("msvcrt")
+    native.LK_NBLCK, native.LK_UNLCK = 2, 0
+
+    def locking(descriptor, mode, length):
+        nonlocal attempts
+        import os
+
+        calls.append((mode, length, os.lseek(descriptor, 0, os.SEEK_CUR)))
+        if mode == native.LK_NBLCK:
+            attempts += 1
+            if attempts == 1:
+                raise OSError(errno.EACCES, "Controlled contention")
+
+    native.locking = locking
+    original_import = builtins.__import__
+
+    def windows_import(name, *args, **kwargs):
+        if name == "fcntl":
+            raise ModuleNotFoundError("No module named 'fcntl'")
+        return original_import(name, *args, **kwargs)
+
+    monkeypatch.setitem(sys.modules, "msvcrt", native)
+    monkeypatch.setattr(sys, "platform", "win32")
+    monkeypatch.setattr(builtins, "__import__", windows_import)
+    service_module = _load_module("case_service")
+    service = service_module.CaseService(tmp_path)
+    case_dir = tmp_path / "tenant" / "case"
+    with service._case_lock(case_dir):
+        pass
+    with pytest.raises(ValueError, match="controlled body"):
+        with service._job_execution_lock(case_dir, "job_1"):
+            raise ValueError("controlled body")
+    assert calls == [(2, 1, 0), (2, 1, 0), (0, 1, 0), (2, 1, 0), (0, 1, 0)]
+    # A held case mutex must survive quarantine of the protected directory.
+    lock_path = case_dir.parent / ".case-locks" / "case.lock"
+    with service._case_lock(case_dir):
+        case_dir.replace(case_dir.with_name("quarantine"))
+        assert lock_path.is_file()
+    assert lock_path.is_file()
+
+
+def test_windows_case_lock_rejects_redirected_lock_directory(monkeypatch, tmp_path):
+    monkeypatch.setattr(case_service, "_WINDOWS_LOCKS", True)
+    target = tmp_path / "outside"
+    target.mkdir()
+    lock_root = tmp_path / ".case-locks"
+    try:
+        lock_root.symlink_to(target, target_is_directory=True)
+    except OSError:
+        pytest.skip("Host does not permit directory symlinks")
+    with pytest.raises(ValueError, match="lock directory.*symbolic link"):
+        with case_service.CaseService(tmp_path)._case_lock(tmp_path / "case"):
+            pytest.fail("Redirected lock directory was accepted")
+
+
+def test_windows_lock_error_never_enters_case_mutation(monkeypatch, tmp_path):
+    """Unexpected native lock errors must fail before protected work runs."""
+
+    def broken_lock(*args):
+        raise OSError(errno.EBADF, "Controlled descriptor failure")
+
+    monkeypatch.setattr(case_service, "_WINDOWS_LOCKS", True)
+    monkeypatch.setattr(
+        case_service,
+        "_FILE_LOCK",
+        types.SimpleNamespace(locking=broken_lock, LK_NBLCK=2, LK_UNLCK=0),
+    )
+    with pytest.raises(OSError, match="Controlled descriptor"):
+        with case_service.CaseService(tmp_path)._case_lock(tmp_path / "case"):
+            pytest.fail("Mutation ran without an exclusive lock")
+
+
+@pytest.mark.parametrize("kind", ["case", "job"])
+def test_native_service_lock_excludes_another_process_and_releases(tmp_path, kind):
+    """Exercise the actual OS lock, with a pipe handshake instead of timing."""
+    case_dir = tmp_path / "case"
+    command = (
+        "import sys; from pathlib import Path; "
+        "sys.path.insert(0, sys.argv[1]); from case_service import CaseService; "
+        "s=CaseService(Path(sys.argv[2])); p=Path(sys.argv[2])/'case'; "
+        "lock=s._case_lock(p) if sys.argv[3]=='case' else s._job_execution_lock(p,'job_1'); "
+        "lock.__enter__(); print('locked',flush=True); "
+        "sys.stdin.readline(); lock.__exit__(None,None,None)"
+    )
+    process = subprocess.Popen(
+        [sys.executable, "-c", command, str(SCRIPTS), str(tmp_path), kind],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    try:
+        assert process.stdout.readline().strip() == "locked"
+        path = case_dir / (
+            ".service.lock" if kind == "case" else ".jobs/job_1.run.lock"
+        )
+        if kind == "case" and case_service._WINDOWS_LOCKS:
+            path = case_dir.parent / ".case-locks" / f"{case_dir.name}.lock"
+        with path.open("r+b") as handle:
+            with pytest.raises(OSError):
+                if case_service._WINDOWS_LOCKS:
+                    case_service._FILE_LOCK.locking(
+                        handle.fileno(), case_service._FILE_LOCK.LK_NBLCK, 1
+                    )
+                else:
+                    case_service._FILE_LOCK.flock(
+                        handle.fileno(),
+                        case_service._FILE_LOCK.LOCK_EX
+                        | case_service._FILE_LOCK.LOCK_NB,
+                    )
+        _, errors = process.communicate("release\n", timeout=10)
+        assert process.returncode == 0, errors
+        service = case_service.CaseService(tmp_path)
+        lock = (
+            service._case_lock(case_dir)
+            if kind == "case"
+            else service._job_execution_lock(case_dir, "job_1")
+        )
+        with lock:
+            pass
+    finally:
+        if process.poll() is None:
+            process.kill()
+            process.communicate(timeout=10)
 
 
 def _context(tenant_id: str = "tenant_1", roles: tuple[str, ...] = ("PREPARER",)):
