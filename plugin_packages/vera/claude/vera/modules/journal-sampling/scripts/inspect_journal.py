@@ -62,6 +62,7 @@ if _SCRIPTS_DIR not in _bootstrap_sys.path:
     _bootstrap_sys.path.insert(0, _SCRIPTS_DIR)
 
 import argparse
+import json
 import logging
 from pathlib import Path
 
@@ -70,6 +71,7 @@ from journal_sampling_core import (
     configure_logging,
     inspect_path,
     load_client_engagement_context,
+    recover_pdf_layout,
 )
 
 LOGGER = logging.getLogger(__name__)
@@ -93,9 +95,30 @@ def main() -> int:
         required=True,
         help="Studio Archive client workflow context JSON.",
     )
+    from vera_journal_pdf.recovery import add_recovery_args
+
+    add_recovery_args(parser)
     add_common_args(parser)
     args = parser.parse_args()
     configure_logging(args.verbose)
+
+    if args.pdf_recovery:
+        if not args.pdf_currency:
+            parser.error("--pdf-currency is required for recovery")
+        result = recover_pdf_layout(
+            args.input,
+            args.output_dir,
+            args.recipe,
+            client_engagement=load_client_engagement_context(args.client_engagement),
+            action=args.pdf_recovery,
+            currency=args.pdf_currency,
+            pages=args.pdf_pages,
+            region=args.pdf_region,
+            reason=args.pdf_reason,
+            render=args.pdf_render,
+        )
+        LOGGER.info("%s", json.dumps(result, ensure_ascii=False))
+        return 0
 
     result = inspect_path(
         args.input,
