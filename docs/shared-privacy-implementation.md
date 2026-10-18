@@ -104,8 +104,8 @@ recovery claim or external message was created by these acceptance operations.
 
 Private evidence, exact package/report/contract hashes, report files and signed
 receipts are retained in
-`outputs/shared-privacy-acceptance/2026-10-18/portable-release/`, with preceding
-candidate evidence retained separately in `final/`, `verified-release/` and `public-candidate/`. The local review also covered
+`outputs/shared-privacy-acceptance/2026-10-18/validated-release/`, with preceding
+candidate evidence retained separately in `final/`, `verified-release/`, `public-candidate/` and `portable-release/`. The local review also covered
 Clara's Italian explanation, Lucia's English explanation and Vera's nested
 integration page. Thirty-six public-page tests passed; six renderer tests cover
 product separation, language and unavailable-review behavior.
@@ -133,3 +133,11 @@ editorial and output judgments remain historical. Fresh CI execution is still re
 Manifest and review readers use explicit UTF-8. Regression coverage runs all three
 product package projections with both UTF-8 and CP1252 defaults and reversed
 filesystem enumeration; neither environment may change the projected bytes.
+
+The final integration review also registers the already authorized, read-only
+studio-repository route for twelve direct Vera workflows and its router. The
+localized explanations identify the relevant process and distinguish optional
+queries/returned passages from the ordinary task. Fifty-one skill-level checks
+cover every applicable entrypoint; the calendar-only workflow retains its own
+service boundary. The Geneva catalogue is refreshed to 0.1.409 with all existing
+professional assessment rows and limitations preserved.

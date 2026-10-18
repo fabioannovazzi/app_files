@@ -141,3 +141,11 @@ teaching. Its worker targets the Italian AdE portal. Its Geneva disposition is
 Unresolved: no Swiss source adapter or domestic-case acceptance has been assessed.
 All prior jurisdiction judgments remain unchanged. The 51-entry snapshot is
 catalogue coverage, not a new professional qualification.
+
+## Shared privacy catalogue integration — 18 October 2026
+
+Vera 0.1.409 retains the same 55 skill entrypoints. Only the developer privacy-review
+helper changed: it now uses the shared Vera/Clara/Lucia register, host profiles,
+public-page contracts and actual-run report binding. Its technical-review purpose
+is unchanged. All existing Geneva judgments and professional acceptance limits
+are preserved; this release adds no Swiss legal or client-workflow qualification.

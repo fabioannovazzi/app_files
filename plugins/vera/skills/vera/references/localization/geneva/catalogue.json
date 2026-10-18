@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/var/folders/rt/cw29lbc116n1ct5n0m_8b7yr0000gn/T/vera-release-catalogue-k6d8kz7n/vera",
-  "version": "0.1.408",
-  "captured_at": "2026-10-18T10:59:36.858099+00:00",
-  "catalogue_fingerprint": "d88fdf323b18281debd89554c334171b609b93728192348c00afd0ad02418f37",
-  "manifest_sha256": "1aea9787212e4c78fcaaed95073ff59b332182a61dd01c7760e1e09917efde89",
+  "root": "/private/tmp/mparanza-shared-privacy/plugins/vera",
+  "version": "0.1.409",
+  "captured_at": "2026-10-18T13:24:12.665125+00:00",
+  "catalogue_fingerprint": "928eb839d0f619f103333ca3962d02c09b0bed915b1b295a2a2c64745db78b2d",
+  "manifest_sha256": "a1333cf0c8560f7e5d1a51f206f58a6caa0ea1e51ac4e5cd4349ce4db6f9c7e7",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -209,7 +209,7 @@
     {
       "function_id": "privacy-surface-review",
       "skill_path": "skills/privacy-surface-review/SKILL.md",
-      "sha256": "8dab36eab3e6ca911e80702637ce0d6fb70f38e7f9e14321197761850d341ca6"
+      "sha256": "17339be89956e62cb980d91eba7732b8fec37ff92d3f744ca6417dbd2373ec8a"
     },
     {
       "function_id": "purchase-invoice-review",

@@ -97,23 +97,30 @@ def test_compiled_vera_lessons_pin_shared_knowledge_source() -> None:
         assert matches[0]["sha256"] == expected_digest
 
 
-def test_repository_boundary_is_registered_for_each_professional_workstream() -> None:
-    manifests = list((VERA / "privacy/workstreams").glob("*.json"))
-    assert manifests
-    for path in manifests:
-        manifest = json.loads(path.read_text())
-        if manifest["role"] != "workflow":
-            continue
-        boundaries = [
-            boundary
-            for boundary in manifest["external_boundaries"]
-            if boundary["id"] == "host-connected-studio-knowledge"
-        ]
-        assert len(boundaries) == 1, path
-        assert boundaries[0]["kind"] == "external_connector"
-        assert boundaries[0]["optional"] is True
-        assert boundaries[0]["requires_confirmation"] is True
-        assert f"plugins/vera/{REFERENCE}" in manifest["governed_repository_paths"]
+@pytest.mark.parametrize("skill", sorted(PROFESSIONAL_SKILLS))
+def test_repository_boundary_is_registered_for_each_professional_skill(skill) -> None:
+    registry = json.loads((VERA / "privacy/registry.json").read_text(encoding="utf-8"))
+    owners = [
+        name
+        for name, entry in registry["workstreams"].items()
+        if skill in entry["skills"]
+    ]
+    assert len(owners) == 1
+    manifest = json.loads(
+        (VERA / f"privacy/workstreams/{owners[0]}.json").read_text(encoding="utf-8")
+    )
+
+    boundaries = [
+        boundary
+        for boundary in manifest["external_boundaries"]
+        if boundary["id"] == "host-connected-studio-knowledge"
+    ]
+
+    assert len(boundaries) == 1
+    assert boundaries[0]["kind"] == "external_connector"
+    assert boundaries[0]["optional"] is True
+    assert boundaries[0]["requires_confirmation"] is True
+    assert f"plugins/vera/{REFERENCE}" in manifest["governed_repository_paths"]
 
 
 @pytest.mark.parametrize(
