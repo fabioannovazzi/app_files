@@ -432,6 +432,16 @@ customer-folder engagement, receipt, and run. Recovery does not restore private
 email, PEC, legal-name, or tax-ID values. Never edit an ID, path, or digest to
 make another customer's input appear to belong to the selected client.
 
+Recovery can return `recovered_with_issues`, `recovery_complete: false` and
+`blocked_runs`. This means the archive inventory is incomplete. Report the
+unavailable activities explicitly; healthy, individually validated activities
+remain usable. For a selected blocked activity, stop and retain the same client,
+engagement and run identity while obtaining its diagnostic evidence. Do not
+rewrite, reseal or replace its manifests, prepare a replacement for the same
+request, or use its inputs or outputs in another pipeline. A malformed immutable
+run header also blocks new preparation when its prior request identity cannot
+be verified.
+
 Close an engagement only after every active run is completed or cancelled.
 `report_studio_client_retention` reports age, size, lifecycle, and candidates
 for professional review without deleting anything. Deletion is never automatic

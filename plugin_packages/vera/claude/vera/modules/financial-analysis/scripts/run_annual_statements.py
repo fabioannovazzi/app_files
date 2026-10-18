@@ -75,6 +75,7 @@ def run_annual_statements(
             "annual_statements_render.py",
             "run_annual_statements.py",
             "preparation_contract_kernel.py",
+            "windows_contract_io.py",
         )
     ]
     implementation = {

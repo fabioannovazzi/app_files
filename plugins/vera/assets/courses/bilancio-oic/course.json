@@ -132,7 +132,7 @@
     {
       "path": "modules/bilancio-xbrl-it/scripts/case_service.py",
       "repository_path": "plugins/bilancio-xbrl-it/scripts/case_service.py",
-      "sha256": "4c8e74264fbbf68671d988c16f5001bbc93e1b8170b86d1f421b21043aeadf48"
+      "sha256": "30a89db4ff0c313b99a61dd3c75ad3dfec06ba2355fd25a06b4774eae34aaa86"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/check_dependencies.py",

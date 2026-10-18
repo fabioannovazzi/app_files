@@ -48,6 +48,14 @@ CASE_ID = "case.synthetic"
 SCOPE_ID = "scope.synthetic"
 ENTITY_REFS = ["entity.synthetic"]
 CURRENCY = "EUR"
+
+
+@pytest.fixture(autouse=True)
+def script_runtime_imports(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Mirror the CLI path for platform-specific imports made during execution."""
+    monkeypatch.syspath_prepend(str(SCRIPT_ROOT))
+
+
 UNIT = "EUR_units"
 PERIOD = {"start": "2025-01-01", "end": "2025-12-31"}
 ARTIFACT_REF = "artifact.source"

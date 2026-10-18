@@ -25,13 +25,13 @@ for _vendor_root in (
             sys.path.insert(0, str(_vendor_root))
         break
 
+from model_use import build_manifest, write_manifest  # noqa: E402
 from plan_contract_kernel import (  # noqa: E402
     PinnedDirectory,
     canonical_json_sha256,
     file_snapshot_beneath,
     pinned_directory,
 )
-from model_use import build_manifest, write_manifest  # noqa: E402
 from prepare_sales_plan_case import (  # noqa: E402
     ENGINE_VERSION,
     RECIPE_ID,
@@ -53,6 +53,7 @@ IMPLEMENTATION_FILES = (
     SCRIPTS_DIR / "prepare_sales_plan_case.py",
     SCRIPTS_DIR / "run_plan.py",
     SCRIPTS_DIR / "plan_contract_kernel.py",
+    SCRIPTS_DIR / "windows_contract_io.py",
     SCRIPTS_DIR / "model_use.py",
 )
 

@@ -61,7 +61,7 @@
     },
     {
       "path": "modules/financial-analysis/scripts/preparation_contract_kernel.py",
-      "sha256": "2518145f44eb5b1d1bf814fa16065768de5e8e81cf33a2614cace607b33a535c"
+      "sha256": "0640feb42b5bff59a330345f5417350533c3ee599888572d5fadac664aebf293"
     },
     {
       "path": "modules/financial-analysis/scripts/prepare_customer_concentration_case.py",
@@ -81,15 +81,19 @@
     },
     {
       "path": "modules/financial-analysis/scripts/run_annual_statements.py",
-      "sha256": "fbe0e56c63766efb98e79ce7b12bbb9a238bae372cc7b4d5131d779fad3ea647"
+      "sha256": "dc011102f95a77c3728e17ac08219ffe4f007530aa61e5324633458cc858ddb7"
     },
     {
       "path": "modules/financial-analysis/scripts/run_pack.py",
-      "sha256": "9e328729f528e0ef8af93cc27d1234c24eef0c7abc5e754d63ee780903e57612"
+      "sha256": "b77631c2465a9ea00e6ca11631fba068407feb0b79199808f53d8c12d5c2f6cc"
     },
     {
       "path": "modules/financial-analysis/scripts/validate_case_contracts.py",
       "sha256": "93b67dad98b701c09cfd2f856d6505a9319a9f1f280ea0921bec6aba110a6c32"
+    },
+    {
+      "path": "modules/financial-analysis/scripts/windows_contract_io.py",
+      "sha256": "7be78584b3f4b07ba1abfecae95907bd375087d3fbf3bd182bdca239406ffa84"
     },
     {
       "path": "modules/financial-analysis/skills/mparanza-financial-analysis/SKILL.md",
@@ -550,5 +554,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "bd8b910c033a107a0636a912dad5b79f5bae2c83fe4fb84fcfa3040caa96f70b"
+  "canonical_course_sha256": "bd0ada54af9ff7452da6e4d278e57d62e324c832afbd6fe43ad9ac1c37ce86e7"
 }

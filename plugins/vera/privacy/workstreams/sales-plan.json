@@ -94,9 +94,9 @@
   },
   "review": {
     "basis": "external_boundary_review_of_workflow_source",
-    "reviewed_at": "2026-10-14",
+    "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "45df6624350b573f04ee86536c381f4f0690867ec357f261b91e88b89ca06065"
+    "source_fingerprint": "1c7a6d178662f2c52bc4052a373faf0b18debce97af97fd0018a7d16a64caa8f"
   },
   "role": "workflow",
   "runtime_profiles": [
@@ -132,6 +132,10 @@
     {
       "id": "native-purpose-bound-scenario-query",
       "control": "In Codex, a signed exact-generation reviewer request with explicit purpose, row IDs or exact filters, columns and confirmation invokes unchanged public model_use on byte-identical manifest/scenario copies in a separate owner-scoped run-output query tree. Every match is retained without sampling; intent, exact idempotency replay and whole-tree seals preserve the Plan generation and stop uncertain retries. App pages are private and bounded; explicit query discussion returns the complete selected query as untrusted model evidence only if it fits 64 KiB, otherwise refuses without a sample and requires a narrower new query. Source consultation is available to Viewer without editing an authoring draft. No anonymization, professional approval or run completion is added."
+    },
+    {
+      "id": "native-windows-contract-io",
+      "control": "Windows contract reads and writes use pinned native directory handles and handle-relative opens, reject reparse points and multiple hard links, and bind exact bytes and file identities. These local controls do not change model payloads, network destinations, permissions or professional approvals."
     }
   ],
   "workstream": "sales-plan",

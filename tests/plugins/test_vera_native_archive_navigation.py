@@ -19,18 +19,131 @@ from tests.plugins.test_vera_native_workspace import (
     ROOT,
     SERVER,
     treasury_binding,
+    workspace_module,
 )
 
 ARCHIVE = ROOT / "plugins/studio-archive/scripts/studio_archive.py"
+
+
+@pytest.mark.parametrize("body_fails", [False, True])
+def test_workspace_lock_excludes_contenders_and_releases_after_exit(
+    tmp_path, body_fails
+):
+    workspace = workspace_module()
+    output = tmp_path / "outputs"
+    output.mkdir()
+    lock_path = workspace.ui_state_directory(output) / "write.lock"
+    failure = OSError("simulated domain write failure")
+    caught = False
+    try:
+        with workspace.write_lock(output):
+            with pytest.raises(OSError):
+                with workspace.write_lock(output):
+                    pytest.fail("Concurrent writer acquired the lock")
+            assert lock_path.is_file()
+            if body_fails:
+                raise failure
+    except OSError as exc:
+        assert body_fails and exc is failure
+        caught = True
+    assert caught == body_fails
+    assert not lock_path.exists()
+    with workspace.write_lock(output):
+        assert lock_path.is_file()
+    assert not lock_path.exists()
 
 
 def process_environment() -> dict[str, str]:
     """Keep runtime/OS paths without unrelated account credentials in fixtures."""
     return {
         key: os.environ[key]
-        for key in ("PATH", "HOME", "TMPDIR", "LANG", "LC_ALL", "SYSTEMROOT", "WINDIR")
+        for key in (
+            "PATH",
+            "HOME",
+            "USERPROFILE",
+            "HOMEDRIVE",
+            "HOMEPATH",
+            "TMPDIR",
+            "TEMP",
+            "TMP",
+            "LANG",
+            "LC_ALL",
+            "SYSTEMROOT",
+            "WINDIR",
+            "PYTHONDONTWRITEBYTECODE",
+        )
         if key in os.environ
     }
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows legacy sharing semantics")
+def test_windows_workspace_recovers_only_unheld_legacy_lock(tmp_path):
+    workspace = workspace_module()
+    output = tmp_path / "outputs"
+    output.mkdir()
+    lock_path = workspace.ui_state_directory(output) / "write.lock"
+    with lock_path.open("x"):
+        with pytest.raises(OSError):
+            with workspace.write_lock(output):
+                pytest.fail("Active legacy writer was displaced")
+        with pytest.raises(PermissionError):
+            lock_path.unlink()  # Reproduce the previous Windows save failure.
+    assert lock_path.exists()
+    with workspace.write_lock(output):
+        assert lock_path.exists()
+    assert not lock_path.exists()
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows native close-on-exit cleanup")
+def test_windows_workspace_process_exit_releases_lock(tmp_path):
+    output = tmp_path / "outputs"
+    output.mkdir()
+    code = """
+import os, sys
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+import native_workspace
+lock = native_workspace.write_lock(Path(sys.argv[2]))
+lock.__enter__()
+os._exit(17)
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", code, str(ROOT / "plugins/vera/scripts"), str(output)],
+        env=process_environment(),
+        capture_output=True,
+        timeout=30,
+        check=False,
+    )
+    assert result.returncode == 17, result.stderr
+    workspace = workspace_module()
+    assert not (workspace.ui_state_directory(output) / "write.lock").exists()
+    with workspace.write_lock(output):
+        pass
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows legacy lock recovery")
+@pytest.mark.parametrize("foreign_kind", ["nonempty", "hardlink", "symlink"])
+def test_windows_workspace_preserves_foreign_lock_objects(tmp_path, foreign_kind):
+    workspace = workspace_module()
+    output = tmp_path / "outputs"
+    output.mkdir()
+    path = workspace.ui_state_directory(output) / "write.lock"
+    outside = tmp_path / "preserve.txt"
+    outside.write_bytes(b"" if foreign_kind == "hardlink" else b"preserve me")
+    if foreign_kind == "hardlink":
+        os.link(outside, path)
+    elif foreign_kind == "symlink":
+        path.symlink_to(outside)
+    else:
+        path.write_bytes(b"preserve me")
+    before = outside.read_bytes()
+    with pytest.raises(ValueError, match="empty regular file"):
+        with workspace.write_lock(output):
+            pytest.fail("Foreign lock object was removed")
+    assert path.exists()
+    assert outside.read_bytes() == before
+    if foreign_kind == "nonempty":
+        assert path.read_bytes() == b"preserve me"
 
 
 def archive_cli(env: dict[str, str], *arguments: str) -> dict:

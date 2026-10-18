@@ -162,13 +162,17 @@
     {
       "id": "source-bound-registration-pdf-layout",
       "control": "The mapping receipt binds reviewed physical bands and header/footer exclusions to the source digest. Overlapping bands, unmapped money, missing-text body pages, incomplete registrations or unequal registration debit/credit totals withhold the complete source. Page caches are released after each page. No PDF posting is qualified by text readability alone."
+    },
+    {
+      "id": "windows-process-lifecycle",
+      "control": "The Windows process capture helper uses bounded pipe readers and a kill-on-close Job Object. A fixed gate waits for successful job assignment before launching the requested command. This is local process lifecycle control, not filesystem isolation qualification: the semantic worker remains unavailable outside its explicitly qualified host profiles; no sandbox or payload restriction is relaxed."
     }
   ],
   "review": {
     "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "7a972154209d0330e56bbe09a462501a978c78d479a4dfa44ec55cea64c32ca5"
+    "source_fingerprint": "da761e8d9f1a293be28d62cdb6487d781b661fa0d1ff9005f12defb6aded74ca"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"

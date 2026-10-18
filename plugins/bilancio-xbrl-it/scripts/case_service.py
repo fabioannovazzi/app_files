@@ -9,14 +9,18 @@ authorization, idempotency, and optimistic concurrency.
 
 from __future__ import annotations
 
-import fcntl
+import errno
 import hashlib
+import importlib
 import json
+import os
 import shutil
+import sys
+import time
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Callable, Iterator, Mapping
+from typing import Any, BinaryIO, Callable, Iterator, Mapping
 
 from access_control import RequestContext, authorize
 from artifact_delivery import SignedArtifactDelivery
@@ -83,6 +87,40 @@ from xbrl_case import (
 )
 
 __all__ = ["CaseService", "LONG_RUNNING_OPERATIONS"]
+
+_WINDOWS_LOCKS = sys.platform == "win32"
+_FILE_LOCK = importlib.import_module("msvcrt" if _WINDOWS_LOCKS else "fcntl")
+
+
+@contextmanager
+def _exclusive_file_lock(handle: BinaryIO) -> Iterator[None]:
+    """Preserve mechanical cross-process exclusion using the host's native lock."""
+    descriptor = handle.fileno()
+    if not _WINDOWS_LOCKS:
+        _FILE_LOCK.flock(descriptor, _FILE_LOCK.LOCK_EX)
+        try:
+            yield
+        finally:
+            _FILE_LOCK.flock(descriptor, _FILE_LOCK.LOCK_UN)
+        return
+    if os.fstat(descriptor).st_size == 0:
+        handle.write(b"\0")
+        handle.flush()
+    while True:
+        os.lseek(descriptor, 0, os.SEEK_SET)
+        try:
+            _FILE_LOCK.locking(descriptor, _FILE_LOCK.LK_NBLCK, 1)
+            break
+        except OSError as exc:
+            if exc.errno not in {errno.EACCES, errno.EDEADLK}:
+                raise
+            time.sleep(0.05)
+    try:
+        yield
+    finally:
+        os.lseek(descriptor, 0, os.SEEK_SET)
+        _FILE_LOCK.locking(descriptor, _FILE_LOCK.LK_UNLCK, 1)
+
 
 OPERATION_CAPABILITIES = {
     "propose_area_review": "PREPARE",
@@ -485,14 +523,20 @@ class CaseService:
             raise ValueError("Case directory must not be a symbolic link")
         case_dir.mkdir(parents=True, exist_ok=True)
         lock_path = case_dir / ".service.lock"
+        if _WINDOWS_LOCKS:
+            # Windows cannot rename a directory containing an open CRT handle.
+            # Keep the mutex outside that directory and never unlink its inode:
+            # deletion and waiting writers must still share the same OS lock.
+            lock_root = case_dir.parent / ".case-locks"
+            if lock_root.is_symlink():
+                raise ValueError("Case lock directory must not be a symbolic link")
+            lock_root.mkdir(parents=True, exist_ok=True)
+            lock_path = lock_root / f"{case_dir.name}.lock"
         if lock_path.is_symlink():
             raise ValueError("Case lock must not be a symbolic link")
         with lock_path.open("a+b") as handle:
-            fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
-            try:
+            with _exclusive_file_lock(handle):
                 yield
-            finally:
-                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
 
     def _idempotency_paths(self, case_dir: Path, key: str) -> tuple[Path, Path]:
         if not SAFE_ID.fullmatch(key):
@@ -599,11 +643,8 @@ class CaseService:
     def _job_execution_lock(self, case_dir: Path, job_id: str) -> Iterator[None]:
         _, _, lock_path = self._job_paths(case_dir, job_id)
         with lock_path.open("a+b") as handle:
-            fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
-            try:
+            with _exclusive_file_lock(handle):
                 yield
-            finally:
-                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
 
     def _idempotent(
         self,

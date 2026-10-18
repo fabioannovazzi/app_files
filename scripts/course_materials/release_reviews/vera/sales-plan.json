@@ -92,7 +92,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "594505d56ce664fdce328f11b20e3a0f1cc0de717dfa12a42cb795568f992adc",
+  "course_sha256": "f4c1fdedd5f946be70bdfcba9026aabca0dbd88e591e6317e81999de9c9a7a1f",
   "esg_source_refresh_20260930": {
     "reviewer": "Codex /root - bounded source review",
     "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
@@ -1043,5 +1043,48 @@
     "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required.",
     "fresh_matching_junit_required": true,
     "limits": "No new visual, learner, installed-host or professional acceptance is asserted."
+  },
+  "windows_archive_source_compatibility_20261018": {
+    "reviewer": "Codex source inspection and exact course comparison",
+    "reviewed_at": "2026-10-18",
+    "baseline_commit": "9361a54e9",
+    "previous_course_sha256": "594505d56ce664fdce328f11b20e3a0f1cc0de717dfa12a42cb795568f992adc",
+    "current_course_sha256": "c6ca01c93165bf66278fb0824e2017cfed5f12a465906bb4de630ab5a37fbcd3",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Local Archive invalid-run isolation, native Windows file boundaries and process lifecycle control. Every non-source field of the compiled course equals the reviewed baseline, including localized content, inputs, exercises, checkpoints and timing. Existing editorial judgments and historical artifact reviews remain unchanged. Windows process controls do not qualify semantic worker isolation. Fresh CI must independently match native demo/practice identities to this exact course digest.",
+    "fresh_matching_junit_required": true,
+    "native_ui_qualified": false
+  },
+  "combined_windows_archive_integration_20261018": {
+    "reviewer": "Codex exact source and retained-course comparison",
+    "reviewed_at": "2026-10-18",
+    "parents": [
+      {
+        "label": "windows_bilancio",
+        "commit": "82df4c1d3e2195ce7d3dcb765dd521a5e142c99d",
+        "course_sha256": "c6ca01c93165bf66278fb0824e2017cfed5f12a465906bb4de630ab5a37fbcd3",
+        "authored_content_unchanged": true
+      },
+      {
+        "label": "archive_unicode",
+        "commit": "4370e78cf321b8c99b3251cff666499a2f15c8a4",
+        "course_sha256": "594505d56ce664fdce328f11b20e3a0f1cc0de717dfa12a42cb795568f992adc",
+        "authored_content_unchanged": true
+      }
+    ],
+    "current_course_sha256": "d7196090fbd72b434a5c8735286a54756ff0c4277cb8db8821ed8232dd53ade5",
+    "changed_fields": [
+      "sources"
+    ],
+    "source_review": "Combined Windows file/process controls, Bilancio locking, Archive encoding and per-run invalid-record isolation. Strict POSIX no-follow flags remain required. Guidance explicitly distinguishes incomplete inventory from a valid selected activity and prohibits changing or replacing blocked records. Complete non-source course objects match both parents; both prior review histories and historical artifact judgments are retained.",
+    "fresh_matching_junit_required": true,
+    "native_ui_qualified": false
+  },
+  "windows_error_lifecycle_source_binding_20261018": {
+    "base_commit": "46f0a17b16a0c40ab6d49df09a0e179f05cee289",
+    "scope": "Only governed source hashes changed. The Windows directory context now preserves errors raised by the protected operation and releases its handle; native workspace closes the existing exclusive lock stream before deletion. All course content, language, input and professional review judgments remain unchanged. Native Windows CI is a separate release requirement."
   }
 }

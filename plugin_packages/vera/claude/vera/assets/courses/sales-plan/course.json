@@ -45,7 +45,7 @@
     },
     {
       "path": "modules/sales-plan/scripts/plan_contract_kernel.py",
-      "sha256": "e3c8dc36fbf616b45ac6192de68ef93aadd9a0e56ed2fc93fceb3c05b0257661"
+      "sha256": "668776ed5a1ad2a19f86f08afc0d9a2591aa84cf161f3ce6602d71d7632feb28"
     },
     {
       "path": "modules/sales-plan/scripts/prepare_sales_plan_case.py",
@@ -53,7 +53,11 @@
     },
     {
       "path": "modules/sales-plan/scripts/run_plan.py",
-      "sha256": "ef97fda91c08cb9592c3fe7e492ddb0a6d1a83cf17a9066099c3233388a1d44d"
+      "sha256": "3fc2feeda0fd80cf5670d86a255765e9db40667ac53b8599e824111dbaf8b3e2"
+    },
+    {
+      "path": "modules/sales-plan/scripts/windows_contract_io.py",
+      "sha256": "7be78584b3f4b07ba1abfecae95907bd375087d3fbf3bd182bdca239406ffa84"
     },
     {
       "path": "modules/sales-plan/skills/mparanza-sales-plan/SKILL.md",
@@ -498,5 +502,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "594505d56ce664fdce328f11b20e3a0f1cc0de717dfa12a42cb795568f992adc"
+  "canonical_course_sha256": "f4c1fdedd5f946be70bdfcba9026aabca0dbd88e591e6317e81999de9c9a7a1f"
 }

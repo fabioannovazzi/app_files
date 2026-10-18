@@ -1,0 +1,27 @@
+name: Archive JSON output encodings
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cli-encodings:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install pytest -r plugins/studio-archive/requirements.txt
+      - name: Preserve Unicode through UTF-8, CP1252 and ASCII output pipes
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_studio_archive_readable.py -k cli_creates_readable

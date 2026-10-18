@@ -3433,9 +3433,10 @@ def list_studio_client_engagements(
         engagement_id = engagement["engagement_id"]
         try:
             imports = list(ledger.list_inputs(client_root, engagement_id))
-            stored_runs = ledger.list_runs(
+            inventory = ledger.inspect_runs(
                 client_root, engagement_id, verify_inputs=False
             )
+            stored_runs = inventory["runs"]
         except ledger.LedgerError as exc:
             raise ArchiveError(f"Customer-folder ledger is invalid: {exc}") from exc
         workflow_runs: list[dict[str, Any]] = []
@@ -3524,8 +3525,11 @@ def list_studio_client_engagements(
             {
                 **engagement,
                 "imports": imports,
-                "workflow_run_count": len(workflow_runs),
+                "workflow_run_count": len(workflow_runs)
+                + len(inventory["blocked_runs"]),
                 "workflow_runs": workflow_runs,
+                "blocked_runs": inventory["blocked_runs"],
+                "ledger_complete": inventory["complete"],
             }
         )
     return {
@@ -3706,6 +3710,7 @@ def recover_studio_client_ledger(
     engagement_count = 0
     input_count = 0
     run_count = 0
+    blocked_runs: list[dict[str, Any]] = []
     for identity in identities:
         scope = next(
             (item for item in current.scopes if item.scope_id == identity.scope_id),
@@ -3724,7 +3729,16 @@ def recover_studio_client_ledger(
                 input_count += len(
                     ledger.list_inputs(root, engagement["engagement_id"])
                 )
-                runs = ledger.list_runs(root, engagement["engagement_id"])
+                inventory = ledger.inspect_runs(root, engagement["engagement_id"])
+                runs = inventory["runs"]
+                blocked_runs.extend(
+                    {
+                        "client_id": identity.client_id,
+                        "engagement_id": engagement["engagement_id"],
+                        **issue,
+                    }
+                    for issue in inventory["blocked_runs"]
+                )
                 for loaded in runs:
                     if loaded["run"]["status"] in {
                         "ready_for_review",
@@ -3742,7 +3756,9 @@ def recover_studio_client_ledger(
 
         refresh_readable_archive(root, ledger)
     return {
-        "status": "recovered",
+        "status": "recovered_with_issues" if blocked_runs else "recovered",
+        "recovery_complete": not blocked_runs,
+        "blocked_runs": blocked_runs,
         "client_count": len(_discover_ledger_clients(current)),
         "engagement_count": engagement_count,
         "input_count": input_count,

@@ -160,7 +160,7 @@
     },
     "bilancio-oic": {
       "path": "bilancio-oic/course.json",
-      "sha256": "936750ba9db9591ab2e3d70f5002f3cad92e4794fc28753d941fca011536a62c",
+      "sha256": "a370607f163c23164509e0de0955274a2f634d0cfa5a9433595095d474918003",
       "languages": [
         "it",
         "en"
@@ -482,7 +482,7 @@
     },
     "financial-analysis": {
       "path": "financial-analysis/course.json",
-      "sha256": "afcfc0d79c499deca45268278bba8a35153969e95bd09082c21140b35b797e44",
+      "sha256": "c542dec6b6a106a0bbfbde432a4d37f3abf1fddac5618a6321ea29eb5145c026",
       "languages": [
         "it",
         "en",
@@ -538,7 +538,7 @@
     },
     "fusione-guidata": {
       "path": "fusione-guidata/course.json",
-      "sha256": "39accbd75300cd17edeb8cd0273a752941a53d8371c4168c5c939e484442e7d0",
+      "sha256": "e70daf871ebd37856d4a425d48f075338ff812221e7125006da384ff855bb4e6",
       "languages": [
         "it",
         "en",
@@ -594,7 +594,7 @@
     },
     "journal-bank-reconciliation": {
       "path": "journal-bank-reconciliation/course.json",
-      "sha256": "b27b561ec16693795dcafc5c9faff864c77f256b1f1442349b209d9d3d1447f7",
+      "sha256": "98cd5ae0ab60cb5a0369df7400faaf7d3b5a682af52a8828789cfd548ba1cb20",
       "languages": [
         "it",
         "en",
@@ -937,7 +937,7 @@
     },
     "sales-plan": {
       "path": "sales-plan/course.json",
-      "sha256": "3e9fa60de7d38b796242ac9d348322b6ffea1f718b7f1d266e9fc6cbc61cc40d",
+      "sha256": "decf4f1b8b29a0d0a73735518b9c5a3e2f584e7eb2475c7bbe9ae7cc5eaa4a7a",
       "languages": [
         "it",
         "en",
@@ -993,7 +993,7 @@
     },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "0d8d6b9dd4b167a59f1b6b86efeb237a29ef133bc0cae012117dde14e08efa48",
+      "sha256": "2e1fc815f3da4a342c8ec4204f251fb1f9060b5ad0aa29379ac0574b1a8f7037",
       "languages": [
         "it",
         "en",
@@ -1021,7 +1021,7 @@
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "c460f737a8fcc393828349fb8b644d56fe2ff1449bd59dea15eba91ca91d99f7",
+      "sha256": "4b96d151eecfe0724e8fcd8a1efb34a2bc63ba55e38cd0b64f407f9fb0b98b0c",
       "languages": [
         "it",
         "en",

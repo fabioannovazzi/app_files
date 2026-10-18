@@ -176,16 +176,21 @@ def test_view_is_rebuildable_without_touching_outputs(tmp_path: Path) -> None:
     assert ledger.validate_run_artifacts(root, eid, run["run"]["run_id"])
 
 
-def test_cli_creates_readable_client_and_engagement(tmp_path: Path) -> None:
+@pytest.mark.parametrize("stdout_encoding", ["utf-8", "cp1252", "ascii"])
+def test_cli_creates_readable_client_and_engagement(
+    tmp_path: Path, stdout_encoding: str
+) -> None:
     import os
     import subprocess
 
-    archive = tmp_path / "Studio"
+    archive = tmp_path / "Studio 漢"
     archive.mkdir()
     env = dict(
         os.environ,
         VERA_STUDIO_ARCHIVE_STATE_DIR=str(tmp_path / "private"),
         VERA_STUDIO_ARCHIVE_SESSION_ID="readable-test-" + tmp_path.name,
+        MPARANZA_INCIDENT_STATE_DIR=str(tmp_path / "incidents"),
+        PYTHONIOENCODING=stdout_encoding + ":strict",
     )
 
     def command(*args: str) -> dict:
@@ -199,7 +204,7 @@ def test_cli_creates_readable_client_and_engagement(tmp_path: Path) -> None:
         return json.loads(result.stdout)
 
     command("configure", "--archive-root", str(archive))
-    created = command("create-client", "--legal-name", "Cliente leggibile")
+    created = command("create-client", "--legal-name", "Cliente già 漢 🧾")
     assert created["readable_archive"]["status"] == "ready"
     cid = created["client"]["client_id"]
     engagement = command(
@@ -207,12 +212,11 @@ def test_cli_creates_readable_client_and_engagement(tmp_path: Path) -> None:
         "--client-id",
         cid,
         "--engagement-label",
-        "Verifiche ottobre",
+        "Verifiche già 漢 🧾",
     )
     assert engagement["readable_archive"]["engagement_count"] == 1
-    assert (
-        "Verifiche ottobre"
-        in Path(engagement["readable_archive"]["index_path"]).read_text()
-    )
+    assert "Verifiche già 漢 🧾" in Path(
+        engagement["readable_archive"]["index_path"]
+    ).read_text(encoding="utf-8")
     recovered = command("recover-ledger")
     assert recovered["engagement_count"] == 1

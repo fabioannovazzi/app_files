@@ -397,7 +397,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
-      "sha256": "3085215d8f4cc954713782e3a8bdcf63a0ae3365615defb41a78b7ec55fb60b3"
+      "sha256": "89d889aba4d8e5d42c576be0d166efd00262b66a4452a3892a7bcf457736c6d6"
     },
     {
       "path": "modules/studio-archive/scripts/archive_preferences.py",
@@ -413,7 +413,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/client_ledger.py",
-      "sha256": "45c0a9ae6fb12df07b5e72270f9c4dd5577d77098dcef44d87a01b00cb46c94b"
+      "sha256": "47d79916eef2b09759c50fad6c875f9e62ba00f8b55c00441401bbff5c6c83f6"
     },
     {
       "path": "modules/studio-archive/scripts/folder_intake.py",
@@ -429,11 +429,11 @@
     },
     {
       "path": "modules/studio-archive/scripts/readable_archive.py",
-      "sha256": "2e00fdb39bb484867a50e96e4d69713cfdd0713c513e49f6ad0b1c1cd1085a1d"
+      "sha256": "1f36b8dbce69fa821becdf926e757efaaf2f2d445ebe1ad3afc7452bc8a086f8"
     },
     {
       "path": "modules/studio-archive/scripts/studio_archive.py",
-      "sha256": "3aead5a72768b0f6abfc84d1c185dcdfed91304528af8cd91c572d7dd0b47488"
+      "sha256": "f18bb4f7a5fb06592d70f2961d70243c0f911a8027abd5a23e6b82d17c2e2964"
     },
     {
       "path": "modules/studio-archive/vendor/modules/__init__.py",
@@ -878,5 +878,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "4ee7763c764b8236f98f7fe0dfd8613de414afa79c55ad121496d86a231edc7b"
+  "canonical_course_sha256": "09b62155fab34a5d180d08d878a62ab5625f754f45eeb8e602f65a291b56f6f5"
 }

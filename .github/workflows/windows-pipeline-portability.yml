@@ -1,0 +1,48 @@
+name: Windows pipeline portability
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  native-boundaries:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: >-
+          python -m pip install pytest pytest-cov pypdf beautifulsoup4 reportlab
+          -r scripts/requirements-plugin-build.txt
+          -r plugins/financial-analysis/requirements.txt
+          -r plugins/journal-bank-reconciliation/requirements.txt
+          -r plugins/check-entries/requirements.txt
+          -r plugins/concordato-plan-review/requirements.txt
+          -r plugins/report-builder/requirements.txt
+          -r plugins/open-item-reconciliation/requirements.txt
+          -r plugins/client-file-preparation/requirements.txt
+      - if: runner.os != 'Windows'
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_windows_contract_io.py tests/plugins/test_windows_worker_process.py
+      - if: runner.os == 'Windows'
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_windows_contract_io.py tests/plugins/test_windows_worker_process.py --cov=windows_contract_io --cov=windows_worker_process --cov-report=term-missing --cov-fail-under=80
+      - name: Exercise the actual pipelines in isolated Python interpreters
+        shell: bash
+        run: |
+          set -euo pipefail
+          result=0
+          for suite in test_archive_run_isolation test_studio_archive_readable test_vera_native_archive_navigation test_vera_financial_analysis test_vera_fdd_io_hardening test_vera_sales_plan_preparation; do
+            python -m pytest -q -o addopts='' --confcutdir=tests/plugins "tests/plugins/${suite}.py" || result=1
+          done
+          exit "$result"

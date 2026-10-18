@@ -851,6 +851,22 @@
         "scripts/native_workspace.py"
       ],
       "on_violation": "Undeclared environment names are absent from the child environment."
+    },
+    {
+      "id": "invalid-archive-run-projection",
+      "control": "A run whose integrity validation fails is represented only by its ordinary directory identifier and a fixed blocked label. Invalid contents never supply selectable preparation artifacts, execution authorization or closure controls.",
+      "implemented_by": [
+        "scripts/native_archive_navigation.py"
+      ],
+      "on_violation": "Keep the record unavailable and preserve its original bytes."
+    },
+    {
+      "id": "windows-write-lock-lifecycle",
+      "control": "On Windows hold a noninherited native handle with no file sharing and deletion on close for the reserved UI write lock. Recover a legacy lock only after exclusive acquisition verifies one empty regular non-reparse file with one link; delete that exact held object. Active current or legacy writers, foreign content and linked objects are not displaced. No elapsed-time or process-ID inference authorizes recovery. Domain review and transaction guards remain unchanged.",
+      "implemented_by": [
+        "scripts/native_workspace.py"
+      ],
+      "on_violation": "Reject a held, nonempty, linked, reparse or inaccessible UI lock without altering it or any domain record."
     }
   ],
   "governed_paths": [
@@ -1066,7 +1082,7 @@
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "c38190bcd17549d3da6687bad7b6aef80f9b5272a152862b30c27e025104fa4c",
+    "source_fingerprint": "f64df5d3573f22a0533aff855403863ca8f3fceaefb39dd57c7352f495972053",
     "reviewed_at": "2026-10-18"
   },
   "governed_repository_paths": [

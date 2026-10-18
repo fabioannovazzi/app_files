@@ -154,13 +154,17 @@
     {
       "id": "annual-statements-import-binding",
       "control": "run_annual_statements.py requires a running financial-analysis Archive context and an exact input_binding_id and matching SHA256 for every original. Source-cell parsing rejects formulas, error cells, duplicate mappings and changed source bytes; output must be a new directory beneath the managed run. The receipt binds case, implementation and delivered output bytes. Missing cells propagate as unavailable and source exceptions remain explicit. Commentary reference closure does not verify its meaning or source-page coverage."
+    },
+    {
+      "id": "native-windows-contract-io",
+      "control": "Windows contract reads and writes use pinned native directory handles and handle-relative opens, reject reparse points and multiple hard links, and bind exact bytes and file identities. These local controls do not change model payloads, network destinations, permissions or professional approvals."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-14",
+    "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "becdaaf71b6c00509213ee6482c2e46cf2c948c24447d21206d316dc6c7bf397"
+    "source_fingerprint": "6d9403ad8280d0ec5e9fc246592839516e549a11ff9c7763c8c36b7ea0bcdf92"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"

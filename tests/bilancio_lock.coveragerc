@@ -1,0 +1,6 @@
+[run]
+include =
+    */plugins/bilancio-xbrl-it/scripts/case_service.py
+
+[report]
+show_missing = True

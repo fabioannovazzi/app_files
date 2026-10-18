@@ -24,6 +24,12 @@ FIXTURES = runpy.run_path(
 )
 
 
+@pytest.fixture(autouse=True)
+def script_runtime_imports(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Mirror the CLI path for platform-specific imports made during execution."""
+    monkeypatch.syspath_prepend(str(SCRIPT_ROOT))
+
+
 def _case_bundle(
     tmp_path: Path,
     *,
@@ -72,6 +78,7 @@ def test_fdd_success_is_deterministic_and_delivers_complete_receipts(
         "scripts/model_use.py",
         "scripts/prepare_fdd_case.py",
         "scripts/preparation_contract_kernel.py",
+        "scripts/windows_contract_io.py",
         "scripts/run_pack.py",
         "scripts/validate_case_contracts.py",
         "modules/vera_assurance/__init__.py",
@@ -255,7 +262,7 @@ def test_fdd_case_path_substitution_cannot_redirect_input(
         substitute_case_then_snapshot,
     )
 
-    with pytest.raises(ValueError, match="safely open file"):
+    with pytest.raises(ValueError, match="could not safely open"):
         pack_runner.run_pack(
             pack_id="quality_of_earnings",
             case_path=bundle_path,

@@ -48,6 +48,7 @@ __all__ = [
     "finalize_run",
     "find_client_manifests",
     "import_document",
+    "inspect_runs",
     "list_engagements",
     "list_inputs",
     "list_runs",
@@ -1666,6 +1667,34 @@ def load_run(
     }
 
 
+def _run_headers(client_root: Path, engagement_id: str) -> list[dict[str, Any]]:
+    """Validate ownership and immutable request identities before selecting a run.
+
+    A malformed header still blocks selection: it could conceal an existing
+    idempotency key. Invalid inputs in an unrelated run do not affect selection.
+    """
+    client = load_client_manifest(client_root)
+    load_engagement_manifest(client_root, engagement_id)
+    runs_root = _engagement_root(client_root.resolve(), engagement_id) / "runs"
+    result = []
+    for directory in _iter_manifest_directories(
+        runs_root, prefix="run", maximum=_MAX_RUNS
+    ):
+        header = _validate_run_manifest(
+            _read_json(directory / "run.json", label="run manifest")
+        )
+        if (
+            header["client_id"] != client["client_id"]
+            or header["engagement_id"] != engagement_id
+            or header["run_id"] != directory.name
+        ):
+            raise LedgerError(
+                "Run header belongs to another client, engagement or directory."
+            )
+        result.append(header)
+    return result
+
+
 def _iter_runs(client_root: Path, engagement_id: str) -> list[dict[str, Any]]:
     runs_root = _engagement_root(client_root.resolve(), engagement_id) / "runs"
     result: list[dict[str, Any]] = []
@@ -1710,15 +1739,58 @@ def list_runs(
     )
 
 
+def inspect_runs(
+    client_root: Path,
+    engagement_id: str,
+    *,
+    verify_inputs: bool = True,
+) -> dict[str, Any]:
+    """Inventory valid and blocked runs without weakening execution validation.
+
+    Per-run integrity is mechanically checked. A failed record remains on disk
+    and cannot supply context or artifacts; it must not hide unrelated runs.
+    Collection, client, and engagement safety checks still fail closed.
+    """
+
+    load_engagement_manifest(client_root, engagement_id)
+    runs_root = _engagement_root(client_root.resolve(), engagement_id) / "runs"
+    runs: list[dict[str, Any]] = []
+    blocked: list[dict[str, Any]] = []
+    for directory in _iter_manifest_directories(
+        runs_root, prefix="run", maximum=_MAX_RUNS
+    ):
+        try:
+            runs.append(
+                load_run(
+                    client_root,
+                    engagement_id,
+                    directory.name,
+                    verify_inputs=verify_inputs,
+                )
+            )
+        except LedgerError:
+            # Do not promote fields or paths read from an unvalidated record.
+            blocked.append(
+                {
+                    "run_id": directory.name,
+                    "issue_code": "invalid_run_record",
+                    "reason": "Run integrity validation failed; original records are preserved.",
+                    "available": False,
+                }
+            )
+    runs.sort(key=lambda item: (item["run"]["created_at"], item["run"]["run_id"]))
+    return {"runs": runs, "blocked_runs": blocked, "complete": not blocked}
+
+
 def _workflow_history_locked(
     client_root: Path, engagement_id: str, workflow_id: str
 ) -> list[dict[str, Any]]:
     """Replay immutable snapshots across managed runs of one workflow."""
     history: list[dict[str, Any]] = []
-    for loaded in list_runs(client_root, engagement_id):
-        run = loaded["run"]
+    for run in _run_headers(client_root, engagement_id):
         if run["workflow_id"] != workflow_id:
             continue
+        loaded = load_run(client_root, engagement_id, run["run_id"])
         for path in sorted(Path(loaded["output_dir"]).glob("workflow-revision-*.json")):
             row = _validate_seal(
                 _read_json(path, label="workflow snapshot"), label="workflow snapshot"
@@ -1907,11 +1979,10 @@ def prepare_run(
             raise LedgerError("Selected client and engagement do not match.")
         if engagement["status"] != "open":
             raise LedgerError("A workflow cannot be prepared in a closed engagement.")
-        existing_runs = _iter_runs(root, engagement_id)
-        for existing in existing_runs:
-            run = existing["run"]
+        for run in _run_headers(root, engagement_id):
             if run["idempotency_key"] != stored_key:
                 continue
+            existing = load_run(root, engagement_id, run["run_id"])
             existing_request = {
                 "client_id": run["client_id"],
                 "engagement_id": run["engagement_id"],

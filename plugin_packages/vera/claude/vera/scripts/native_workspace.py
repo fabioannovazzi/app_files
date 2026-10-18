@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import ctypes
+import errno
 import hashlib
 import importlib.util
 import json
@@ -11,6 +13,7 @@ import subprocess
 import sys
 import tempfile
 from contextlib import contextmanager
+from ctypes import wintypes
 from pathlib import Path
 from typing import Any, Iterator
 
@@ -1027,14 +1030,124 @@ def ui_state_directory(output: Path, *, create: bool = True) -> Path:
 
 
 @contextmanager
+def _windows_write_lock(path: Path) -> Iterator[None]:
+    """Hold an exclusive, noninherited lock that Windows deletes on close."""
+    api = ctypes.WinDLL("kernel32", use_last_error=True)
+    api.CreateFileW.argtypes = [
+        wintypes.LPCWSTR,
+        wintypes.DWORD,
+        wintypes.DWORD,
+        wintypes.LPVOID,
+        wintypes.DWORD,
+        wintypes.DWORD,
+        wintypes.HANDLE,
+    ]
+    api.CreateFileW.restype = wintypes.HANDLE
+    api.CloseHandle.argtypes = [wintypes.HANDLE]
+    api.CloseHandle.restype = wintypes.BOOL
+    for name in ("GetFileInformationByHandleEx", "SetFileInformationByHandle"):
+        function = getattr(api, name)
+        function.argtypes = [
+            wintypes.HANDLE,
+            ctypes.c_int,
+            wintypes.LPVOID,
+            wintypes.DWORD,
+        ]
+        function.restype = wintypes.BOOL
+    invalid = ctypes.c_void_p(-1).value
+
+    def acquire(disposition: int, *, delete_on_close: bool = True) -> Any:
+        # GENERIC_READ | GENERIC_WRITE | DELETE, no sharing and no reparse
+        # traversal. A legacy writer's open stream prevents this acquisition.
+        handle = api.CreateFileW(
+            str(path),
+            0xC0010000,
+            0,
+            None,
+            disposition,
+            0x00200080 | (0x04000000 if delete_on_close else 0),
+            None,
+        )
+        if handle == invalid:
+            raise ctypes.WinError(ctypes.get_last_error())
+        return handle
+
+    def close(handle: Any) -> None:
+        if not api.CloseHandle(handle):
+            raise ctypes.WinError(ctypes.get_last_error())
+
+    try:
+        handle = acquire(1)  # CREATE_NEW
+    except OSError as exc:
+        if exc.winerror not in {80, 183}:  # Existing reserved lock path only.
+            raise
+        try:
+            orphan = acquire(3, delete_on_close=False)  # OPEN_EXISTING
+        except OSError as busy:
+            if busy.winerror in {5, 32, 33}:
+                raise FileExistsError(
+                    errno.EEXIST, "Native workspace write lock is held", str(path)
+                ) from busy
+            if busy.winerror != 2:  # Another owner may just have released it.
+                raise
+        else:
+            try:
+
+                class StandardInfo(ctypes.Structure):
+                    _fields_ = [
+                        ("allocation", ctypes.c_longlong),
+                        ("size", ctypes.c_longlong),
+                        ("links", wintypes.DWORD),
+                        ("delete_pending", ctypes.c_ubyte),
+                        ("directory", ctypes.c_ubyte),
+                    ]
+
+                standard = StandardInfo()
+                attributes = (wintypes.DWORD * 2)()
+                for kind, info in ((1, standard), (9, attributes)):
+                    if not api.GetFileInformationByHandleEx(
+                        orphan, kind, ctypes.byref(info), ctypes.sizeof(info)
+                    ):
+                        raise ctypes.WinError(ctypes.get_last_error())
+                if (
+                    standard.size != 0
+                    or standard.links != 1
+                    or standard.directory
+                    or attributes[0] & 0x400
+                ):
+                    raise ValueError("Legacy UI lock must be one empty regular file")
+                # Delete only this exclusively held empty object. No age/PID
+                # guess, path-based unlink, or active writer displacement.
+                disposition = ctypes.c_ubyte(1)
+                if not api.SetFileInformationByHandle(
+                    orphan, 4, ctypes.byref(disposition), 1
+                ):
+                    raise ctypes.WinError(ctypes.get_last_error())
+            finally:
+                close(orphan)
+        handle = acquire(1)
+    try:
+        yield
+    finally:
+        close(handle)
+
+
+@contextmanager
 def write_lock(output: Path) -> Iterator[None]:
     """Serialize shared UI writes; domain engines retain their own transactions."""
     path = ui_state_directory(output) / "write.lock"
-    with path.open("x"):
-        try:
+    if os.name == "nt":
+        with _windows_write_lock(path):
             yield
-        finally:
-            path.unlink(missing_ok=True)
+        return
+    lock = path.open("x")
+    try:
+        with lock:
+            yield
+    finally:
+        # Windows refuses deletion while our stream is open. Acquisition stays
+        # outside the try so a contending writer never removes another lock.
+        path.unlink(missing_ok=True)
 
 
 def draft_path(output: Path, actor: str, *, create: bool = True) -> Path:

@@ -70,7 +70,7 @@
     {
       "path": "modules/financial-analysis/scripts/preparation_contract_kernel.py",
       "repository_path": "plugins/financial-analysis/scripts/preparation_contract_kernel.py",
-      "sha256": "2518145f44eb5b1d1bf814fa16065768de5e8e81cf33a2614cace607b33a535c"
+      "sha256": "0640feb42b5bff59a330345f5417350533c3ee599888572d5fadac664aebf293"
     },
     {
       "path": "modules/financial-analysis/scripts/prepare_customer_concentration_case.py",
@@ -95,17 +95,22 @@
     {
       "path": "modules/financial-analysis/scripts/run_annual_statements.py",
       "repository_path": "plugins/financial-analysis/scripts/run_annual_statements.py",
-      "sha256": "95ae9def4eb352077ea6c22e0ccc2fc36365b72d267c92043ca5e08c246b94da"
+      "sha256": "ab30f188d4a2d03a6a31887217286ef4b38ef4a791575f0041a22afcb6e03a7a"
     },
     {
       "path": "modules/financial-analysis/scripts/run_pack.py",
       "repository_path": "plugins/financial-analysis/scripts/run_pack.py",
-      "sha256": "9e328729f528e0ef8af93cc27d1234c24eef0c7abc5e754d63ee780903e57612"
+      "sha256": "b77631c2465a9ea00e6ca11631fba068407feb0b79199808f53d8c12d5c2f6cc"
     },
     {
       "path": "modules/financial-analysis/scripts/validate_case_contracts.py",
       "repository_path": "plugins/financial-analysis/scripts/validate_case_contracts.py",
       "sha256": "93b67dad98b701c09cfd2f856d6505a9319a9f1f280ea0921bec6aba110a6c32"
+    },
+    {
+      "path": "modules/financial-analysis/scripts/windows_contract_io.py",
+      "repository_path": "plugins/financial-analysis/scripts/windows_contract_io.py",
+      "sha256": "7be78584b3f4b07ba1abfecae95907bd375087d3fbf3bd182bdca239406ffa84"
     },
     {
       "path": "modules/financial-analysis/skills/financial-analysis/SKILL.md",
