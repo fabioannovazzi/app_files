@@ -326,6 +326,30 @@ def test_saved_oauth_connection_cannot_cross_product_resources(service):
         )
 
 
+@pytest.mark.parametrize("product", PIPELINES)
+@pytest.mark.parametrize("method", ["initialize", "tools/list"])
+def test_remote_guidance_uses_the_host_exposed_primary_skill(service, product, method):
+    client, store, _, _, _, _ = service
+    grant = oauth_grant(store, product)
+
+    response = client.post(
+        f"/mcp/{product}-incidents",
+        headers={"Authorization": "Bearer " + grant["access_token"]},
+        json={"jsonrpc": "2.0", "id": 1, "method": method},
+    )
+
+    assert response.status_code == 200
+    result = response.json()["result"]
+    guidance = (
+        result["instructions"]
+        if method == "initialize"
+        else result["tools"][0]["description"]
+    )
+    assert "references/workflow-usage.md" in guidance
+    assert "directory exposed by your host" in guidance
+    assert "skills/" not in guidance
+
+
 def test_clara_receipt_cannot_attach_to_lucia_task(service):
     client, store, _, _, owners, _ = service
     run_id = uuid4()

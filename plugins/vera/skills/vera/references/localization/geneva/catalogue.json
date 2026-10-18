@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/Users/fabio/Documents/Codex/2026-10-18/studio-archive-01-ripartenza-0408/work/archive-verification-src/plugins/vera",
-  "version": "0.1.410",
-  "captured_at": "2026-10-18T14:24:27.626233+00:00",
-  "catalogue_fingerprint": "7c528861ca96f3862ca55a452dabbf4e284f1d40c873f2534017a76c5b9b5cd5",
-  "manifest_sha256": "1b1deabec0b100857dd5d7e3426c6e77bf762151b2fa3ddac3200e2ed0adf6ea",
+  "version": "0.1.411",
+  "captured_at": "2026-10-18T15:27:22.654628+00:00",
+  "catalogue_fingerprint": "c2365fa5185e5691644ce87f7d23b2ad6b0c3bf5cb1d17bc6b0c9cfa14b4d44a",
+  "manifest_sha256": "b169c7375e6defb0771ce08a266379c426fa5b48d4df48c77ecefa9f5fa925c7",
   "entries": [
     {
       "function_id": "adeguati-assetti",

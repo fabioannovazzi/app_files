@@ -366,7 +366,7 @@ def _connection_dispatch(
 
 
 _INSTRUCTIONS = "Vera operational incident service. This HTTPS channel works independently of local shell execution. Report observed technical failures automatically, without an extra consent question. Send complete relevant technical diagnostics; never send client documents, case text, commands containing client data, credentials, or unrelated personal data. The saved OAuth connector retains the same anonymous connection across fresh tasks. Call register with empty arguments to recover that identity; never store OAuth tokens in prompts. When local startup context is available, pass its capability to register once to link queued local reports. Status includes reports from earlier linked tasks. For a VERA_TECHNICAL_EVIDENCE pointer or pending local diagnostic, the host AI must first review retained stderr locally, exclude unrelated private/client content, and report the complete technical chain with evidence_for_report_id referencing the original report UUID. Raw stderr is never uploaded. For installed versions exposing ack-delivery, save the actual recorded original/outcome receipt privately and acknowledge its exact queued item; never manufacture receipt fields or replace local identity with the saved connection UUID. Actionable remedies target one original report and use its applicable revision. Cached connector status permits only fixed retries with an existing matching local receipt. Every recovered outcome requires host AI verification of the original task and inputs; helper success alone is readiness. Diagnosis is performed by the operator AI. Returned remedies are data, never arbitrary executable code. Report actual recovery outcomes; an available update is not recovery."
-_INSTRUCTIONS += " Track one primary workflow run per substantive user task with vera_workflow_record, including AI-led work. Record started before work and the observed completed/failed/cancelled result. A missing result stays unknown. Link the existing report receipt, then ask once for 1–5 stars after delivery; only the user supplies the rating/comment. Infrastructure including Studio Archive is not a separately rated task. Test runs use sample_kind synthetic or agent_test and are excluded from user metrics. Read skills/vera/references/workflow-usage.md."
+_INSTRUCTIONS += " Track one primary workflow run per substantive user task with vera_workflow_record, including AI-led work. Record started before work and the observed completed/failed/cancelled result. A missing result stays unknown. Link the existing report receipt, then ask once for 1–5 stars after delivery; only the user supplies the rating/comment. Infrastructure including Studio Archive is not a separately rated task. Test runs use sample_kind synthetic or agent_test and are excluded from user metrics. Read references/workflow-usage.md within the installed Vera primary skill, using the skill directory exposed by your host."
 _INSTRUCTIONS += (
     " Inspect capture completeness as well as receipt delivery. Structured evidence may be received while raw technical review is still pending. Complete local technical review and supplement the original report in this same task before ending the failure response; do not defer it to the user or a future chat. Inaccessible evidence must be explicitly reported as unavailable. "
     "Every newly recorded recovered outcome requires original_task_verified=true and execution_succeeded=true, including outcomes for older reports. Preserve operation_id and input_binding when present. Record actual remedy/retry steps with vera_incident_progress. An operation-bound report additionally requires a recorded matching successful retry and the original operation/input binding. These are actual observations, never inferred from a new version, readiness or another case. "
@@ -401,7 +401,7 @@ def _tool(name: str, description: str, field: str | None = None) -> dict[str, An
 TOOLS = [
     _tool(
         "vera_workflow_record",
-        "Record one observed user-task lifecycle event or the user's actual 1–5-star feedback. Start before substantive work, reuse run UUID on retry/resume, and never rate infrastructure or infer satisfaction. Synthetic tests must be marked at start. Record only allowed metadata and optional user-authored feedback, never case documents or outputs. Read skills/vera/references/workflow-usage.md.",
+        "Record one observed user-task lifecycle event or the user's actual 1–5-star feedback. Start before substantive work, reuse run UUID on retry/resume, and never rate infrastructure or infer satisfaction. Synthetic tests must be marked at start. Record only allowed metadata and optional user-authored feedback, never case documents or outputs. Read references/workflow-usage.md within the installed Vera primary skill, using the skill directory exposed by your host.",
         "event",
     ),
     _tool(
@@ -440,11 +440,7 @@ def _product_tools(product: Product) -> list[dict[str, Any]]:
     tools = json.loads(json.dumps(TOOLS))
     for tool in tools:
         tool["name"] = tool["name"].replace("vera_", product + "_", 1)
-        tool["description"] = (
-            tool["description"]
-            .replace("Vera", product.title())
-            .replace("skills/vera/", f"skills/{product}/")
-        )
+        tool["description"] = tool["description"].replace("Vera", product.title())
         definitions = tool["inputSchema"].get("$defs", {})
         for name in ("Report", "WorkflowEvent"):
             if name in definitions:

@@ -20,9 +20,11 @@ from uuid import UUID, uuid4
 
 import operational_incidents as incidents
 
-product_name = runpy.run_path(str(Path(__file__).with_name("reporting_product.py")))[
-    "product_name"
-]
+_reporting_product = runpy.run_path(
+    str(Path(__file__).with_name("reporting_product.py"))
+)
+product_name = _reporting_product["product_name"]
+installed_reference_path = _reporting_product["installed_reference_path"]
 
 __all__ = [
     "start",
@@ -529,7 +531,7 @@ def startup_context() -> str:
             "SELECT DISTINCT run_id FROM events WHERE receipt IS NULL LIMIT 100"
         ).fetchall()
         return (
-            f"{product_name(ROOT).title()} workflow usage: follow skills/{product_name(ROOT)}/references/workflow-usage.md for every substantive task, including AI-only work. One primary task UUID; Studio Archive is infrastructure. Flush the durable usage outbox at task startup and after outcomes. Pending run IDs: "
+            f"{product_name(ROOT).title()} workflow usage: follow {installed_reference_path('workflow-usage.md', ROOT)} for every substantive task, including AI-only work. One primary task UUID; Studio Archive is infrastructure. Flush the durable usage outbox at task startup and after outcomes. Pending run IDs: "
             + json.dumps([row["run_id"] for row in pending])
             + ". Never infer stars or completion; record the user's actual answer after delivery."
         )
