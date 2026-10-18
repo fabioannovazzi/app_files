@@ -23,7 +23,7 @@
     ],
     "course_sha256": "0ccb644d2664fd721a71860df0baa31c535caaf401686fa0b1e03c7aece2c86a"
   },
-  "course_sha256": "0eb23a198885bb0ad6b6f0fdcc600f4eb72fbec654a9548f01b9a193febce42e",
+  "course_sha256": "2b8fc918537036e8d2e223aacb89637565311f2bc74d0071a4928acaf27375fc",
   "journal_pdf_source_binding_review_20261009": {
     "reviewed_at": "2026-10-09T17:33:15.861554+00:00",
     "reviewer": "Codex source-bound PDF workflow review",
@@ -203,5 +203,22 @@
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "fresh_matching_junit_required": true
+  },
+  "cowork_reporting_source_refresh_20261018": {
+    "reviewer": "Codex /root - bounded reporting source compatibility review",
+    "reviewed_at": "2026-10-18T18:09:58.219384+00:00",
+    "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
+    "previous_course_sha256": "0eb23a198885bb0ad6b6f0fdcc600f4eb72fbec654a9548f01b9a193febce42e",
+    "current_course_sha256": "2b8fc918537036e8d2e223aacb89637565311f2bc74d0071a4928acaf27375fc",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "changed_sources": [
+      "plugins/vera/skills/agenzia-acquisition/SKILL.md"
+    ],
+    "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
+    "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash.",
+    "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance."
   }
 }

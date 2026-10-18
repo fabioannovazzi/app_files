@@ -123,7 +123,7 @@
     },
     "privacy_amendment": "After integrating main PR #728, the Italian lesson distinguishes native model context from local arithmetic/rendering and Mparanza receipt metadata. Codex local tutorial stamping is excluded; outside that boundary the Vera report builder may request the automatic four-field receipt. Cowork does not inherit that Codex-only exclusion merely from a tutorial name. Documents, reports and calculations are not sent to the receipt service. This is source review, not live-provider or installed Cowork acceptance."
   },
-  "course_sha256": "30cb45d1a4d19b361ec1e6ef953be177f920213e737f58f4c3f1a6245b4d7372",
+  "course_sha256": "fbc62c45ca95487cc0788f7faa4c64bbfd3fb9ef346832db9fca97593bba7969",
   "dated_calculation_review": {
     "scope": "Reviewed the optional dated DCF source and formula contract. The Italian first-use lesson still uses annual flows; both freshly executed native demo/practice reports preserve the expected 750000 / 583333.33 EUR equity indications, development-only purpose coverage and pending review. Inspected all five pages of the final forward/mid-period DOCX, including the Italian timing labels and displayed factors. No PIV approval, human case acceptance, installed-host or live learner acceptance is implied.",
     "tests": "103 valuation tests pass at 92.66% coverage, including both fresh native teaching phases, dated numerical cases, invalid timing, annual plan relabelling rejection and curve sensitivity boundaries.",
@@ -1194,5 +1194,22 @@
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "fresh_matching_junit_required": true
+  },
+  "cowork_reporting_source_refresh_20261018": {
+    "reviewer": "Codex /root - bounded reporting source compatibility review",
+    "reviewed_at": "2026-10-18T18:09:58.640014+00:00",
+    "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
+    "previous_course_sha256": "30cb45d1a4d19b361ec1e6ef953be177f920213e737f58f4c3f1a6245b4d7372",
+    "current_course_sha256": "fbc62c45ca95487cc0788f7faa4c64bbfd3fb9ef346832db9fca97593bba7969",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "changed_sources": [
+      "plugins/vera/skills/business-valuation/SKILL.md"
+    ],
+    "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
+    "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash.",
+    "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance."
   }
 }
