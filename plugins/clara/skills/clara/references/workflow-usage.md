@@ -63,7 +63,7 @@ Linux container. The fixed native tool needs no client folder or shell access.
 Use the exact capability that owns this task: the local reporter capability if
 started locally, or the original capability returned by remote registration if
 started through the connector. Call the native host-link tool with that
-capability; the native tool supplies its own private host proof. Then inspect
+`{credentials: {installation_id, installation_key}}` using those existing values. The argument is `credentials`, not `capability`; omit `run_id`. The native tool supplies its own private host proof. Then inspect
 `clara_workflow_status` for this same run and confirm the server's
 `reporting.computer_link` and `reporting.computer_id`. The public context tool
 alone is not proof that the run is linked. Never copy a host key into task files,
@@ -114,6 +114,17 @@ ID link and an actual linked signed receipt are separate facts. Follow any
 `reporting.next_steps` without rerunning the completed professional task. If stamping is pending,
 keep the local report and retry with `workflow_usage.py stamp-report --run-id
 <uuid> --report <model_data_report.json> --output-dir <receipt-output-directory>`.
+If the local receipt service is unreachable but the saved connector is available,
+call `clara_workflow_stamp` with this original run UUID, its existing
+credentials and `receipt_request` copied exactly from the retained
+`model_data_receipt_request.json`. Only this small allow-listed request is sent,
+never the report or its input. Save the exact returned JSON as
+`model_data_receipt.json` beside that request, then repeat `stamp-report` above.
+It validates the response against the unchanged report and request, renders the
+portable proof and queues the receipt link. Deliver that queued event through the
+saved connector and acknowledge it as described below. Do not replace a conflicting
+request or a previously stored receipt. A denied permission is not network failure.
+
 A pre-existing valid receipt can be linked using:
 
 ```

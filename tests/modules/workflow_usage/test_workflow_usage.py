@@ -311,6 +311,103 @@ def test_saved_oauth_connector_records_ai_only_work_and_retains_identity(setup):
     assert store.workflow_overview()["total"] == 1
 
 
+def test_saved_connector_stamps_exact_pending_receipt_and_links_original_run(setup):
+    store, owner, client = setup
+    run_id = uuid4()
+    post(client, owner, event(run_id, host="cowork", sample_kind="agent_test"))
+    headers = connection_headers(store)
+    proof = {
+        "receipt_id": str(uuid4()),
+        "report_sha256": "b" * 64,
+        "plugin_version": "0.1.400",
+        "schema_version": 1,
+    }
+    call = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "tools/call",
+        "params": {
+            "name": "vera_workflow_stamp",
+            "arguments": {
+                "credentials": owner.model_dump(mode="json"),
+                "run_id": str(run_id),
+                "receipt_request": proof,
+            },
+        },
+    }
+
+    first = client.post("/mcp/vera-incidents", json=call, headers=headers).json()[
+        "result"
+    ]
+    retry = client.post("/mcp/vera-incidents", json=call, headers=headers).json()[
+        "result"
+    ]
+    linked = post(
+        client,
+        owner,
+        event(
+            run_id,
+            2,
+            "receipt",
+            receipt_id=proof["receipt_id"],
+            report_sha256=proof["report_sha256"],
+            receipt_version=proof["plugin_version"],
+        ),
+    )
+
+    assert first["isError"] is False
+    assert first == retry
+    assert first["structuredContent"]["signature_valid"] is True
+    assert first["structuredContent"]["receipt_id"] == proof["receipt_id"]
+    assert linked.json()["reporting"]["model_data_receipt"] == "linked"
+    assert store.workflow_status(owner, str(run_id))["state"] == "unknown"
+
+
+@pytest.mark.parametrize(
+    "invalid", ["owner", "product", "private_content", "missing_run"]
+)
+def test_workflow_stamp_rejects_wrong_scope_and_unrelated_content(setup, invalid):
+    store, owner, client = setup
+    run_id = uuid4()
+    post(client, owner, event(run_id))
+    actor = owner
+    proof = {
+        "receipt_id": str(uuid4()),
+        "report_sha256": "c" * 64,
+        "plugin_version": "0.1.400",
+        "schema_version": 1,
+    }
+    if invalid == "owner":
+        actor = Credentials(installation_id=uuid4(), installation_key=uuid4().hex)
+        store.register(actor)
+    if invalid == "product":
+        proof.update(schema_version=2, product="clara")
+    if invalid == "private_content":
+        proof["report"] = "PRIVATE_SENTINEL"
+    payload = {
+        "credentials": actor.model_dump(mode="json"),
+        "run_id": str(run_id),
+        "receipt_request": proof,
+    }
+    if invalid == "missing_run":
+        del payload["run_id"]
+
+    result = client.post(
+        "/mcp/vera-incidents",
+        headers=connection_headers(store),
+        json={
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "tools/call",
+            "params": {"name": "vera_workflow_stamp", "arguments": payload},
+        },
+    ).json()["result"]
+
+    assert result["isError"] is True
+    assert "PRIVATE_SENTINEL" not in json.dumps(result)
+    assert api.get_run_receipt_store().get(proof["receipt_id"]) is None
+
+
 def test_form_capability_cannot_read_tasks_and_retry_does_not_duplicate(setup):
     store, owner, client = setup
     run = uuid4()
