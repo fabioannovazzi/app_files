@@ -168,7 +168,7 @@
     },
     {
       "path": "skills/mparanza-business-valuation/SKILL.md",
-      "sha256": "1aa3d1f47ab8ac830191622f17a5d01a7b157500e209bd403cae37144fad3144"
+      "sha256": "87ae7c3935163290bf28d8f8cd3407812c63382faddc22c6d2727030570d7578"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -408,5 +408,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "30cb45d1a4d19b361ec1e6ef953be177f920213e737f58f4c3f1a6245b4d7372"
+  "canonical_course_sha256": "fbc62c45ca95487cc0788f7faa4c64bbfd3fb9ef346832db9fca97593bba7969"
 }

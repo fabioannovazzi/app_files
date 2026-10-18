@@ -170,7 +170,7 @@
     {
       "path": "skills/transcribe/SKILL.md",
       "repository_path": "plugins/clara/skills/transcribe/SKILL.md",
-      "sha256": "b59c4878f4774de4001bbe2337f62b5b54d61e27cdae5cccc1e2b33226194778"
+      "sha256": "8506705cd279c7cb94fe66e0e29875e9c5db385119371c06cc5d566a0f99b69c"
     },
     {
       "path": "vendor/modules/__init__.py",

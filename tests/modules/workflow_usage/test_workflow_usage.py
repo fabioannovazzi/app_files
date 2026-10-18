@@ -15,7 +15,7 @@ from fastapi.testclient import TestClient
 from pydantic import ValidationError
 
 from modules.operational_incidents import api
-from modules.operational_incidents.contracts import Credentials
+from modules.operational_incidents.contracts import Credentials, DeviceCredentials
 from modules.operational_incidents.store import IncidentNotFound, IncidentStore
 from modules.run_receipts import api as receipt_api
 from modules.run_receipts.signing import RunReceiptSigner
@@ -114,6 +114,7 @@ def test_complete_task_receipt_feedback_and_operator_metrics(setup):
 
     assert stamped.status_code == 201
     assert linked.status_code == 200
+    assert linked.json()["reporting"]["model_data_receipt"] == "linked"
     assert report["totals"]["completed"] == 1
     assert report["totals"]["receipt_linked_runs"] == 1
     assert report["totals"]["stars"] == {"1": 0, "2": 1, "3": 0, "4": 0, "5": 0}
@@ -122,6 +123,61 @@ def test_complete_task_receipt_feedback_and_operator_metrics(setup):
     assert "feedback_key" not in json.dumps(report)
     assert "installation_key" not in json.dumps(report)
     assert len(store.workflow_inspect(str(run_id))["events"]) == 5
+
+
+def test_cowork_completion_exposes_missing_link_and_receipt_without_failing_work(setup):
+    store, owner, client = setup
+    run_id = uuid4()
+    post(client, owner, event(run_id, host="cowork", sample_kind="agent_test"))
+
+    reply = post(client, owner, event(run_id, 2, "completed")).json()
+
+    assert reply["reporting"]["computer_link"] == "unlinked"
+    assert reply["reporting"]["computer_id"] is None
+    assert reply["reporting"]["model_data_receipt"] == "missing"
+    assert len(reply["reporting"]["next_steps"]) == 2
+    assert store.workflow_status(owner, str(run_id))["state"] == "completed"
+    assert summarize(store.workflow_overview())["included_user_runs"] == 0
+
+
+def test_native_binding_updates_same_cowork_run_status_without_event_replay(setup):
+    store, owner, client = setup
+    run_id = uuid4()
+    device = DeviceCredentials(
+        device_id=uuid4(), device_key=uuid4().hex, native_app="cowork"
+    )
+    post(client, owner, event(run_id, host="cowork", sample_kind="agent_test"))
+    post(client, owner, event(run_id, 2, "completed"))
+    store.register(owner, device)
+
+    status = store.workflow_status(owner, str(run_id))
+
+    assert status["installation_id"] == str(owner.installation_id)
+    assert status["run_id"] == str(run_id)
+    assert status["sequence"] == 2
+    assert status["reporting"]["computer_link"] == "verified"
+    assert status["reporting"]["computer_id"] == str(device.device_id)
+    assert status["reporting"]["model_data_receipt"] == "missing"
+    assert len(status["reporting"]["next_steps"]) == 1
+    assert device.device_key not in json.dumps(status)
+    assert owner.installation_key not in json.dumps(status)
+
+
+def test_duplicate_event_ack_refreshes_link_without_changing_acknowledged_bytes(setup):
+    store, owner, client = setup
+    start = event(uuid4(), host="cowork", sample_kind="agent_test")
+    original = post(client, owner, start).json()
+    device = DeviceCredentials(
+        device_id=uuid4(), device_key=uuid4().hex, native_app="cowork"
+    )
+    store.register(owner, device)
+
+    replay = post(client, owner, start).json()
+
+    assert replay["event_id"] == original["event_id"]
+    assert replay["payload_sha256"] == original["payload_sha256"]
+    assert replay["reporting"]["computer_id"] == str(device.device_id)
+    assert store.workflow_status(owner, str(start.run_id))["sequence"] == 1
 
 
 def test_silence_is_unknown_unrated_and_tests_are_excluded(setup):

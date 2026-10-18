@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -31,6 +32,8 @@ def main() -> None:
     show = commands.add_parser("show")
     show.add_argument("run_id")
     commands.add_parser("testing-status")
+    computers = commands.add_parser("computers")
+    computers.add_argument("--days", type=int, default=30)
     reset = commands.add_parser("testing-reset")
     reset.add_argument("--agent-device", action="append", required=True)
     args = parser.parse_args()
@@ -53,6 +56,15 @@ def main() -> None:
                 parser.error("HTML requires one explicit product")
             args.html.write_text(render_html(result), encoding="utf-8")
             args.html.chmod(0o600)
+    elif args.command == "computers":
+        if not 1 <= args.days <= 3650:
+            parser.error("Computer activity window must be 1–3650 days")
+        since = (datetime.now(timezone.utc) - timedelta(days=args.days)).isoformat()
+        result = (
+            {product: store.workflow_computers(since, product) for product in PRODUCTS}
+            if args.product == "all"
+            else store.workflow_computers(since, args.product)
+        )
     elif args.command == "show":
         result = store.workflow_inspect(args.run_id)
     elif args.command == "testing-reset":

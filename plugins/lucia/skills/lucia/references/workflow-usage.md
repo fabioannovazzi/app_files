@@ -52,6 +52,27 @@ unacknowledged events in the existing task's durable private context where
 available; if no durable storage exists, report that limitation, never pretend
 that a retry is persisted. Do not route around a denied host permission.
 
+## Verify the Computer ID before substantive work
+
+Discover `lucia_incident_host_context` and `lucia_incident_host_link`
+through the host's tool search/catalog, including deferred tools. Absence from
+the initial tool list is not evidence of unavailability. In Cowork, the plugin
+can expose these on the connected computer even while task scripts run in a
+Linux container. The fixed native tool needs no client folder or shell access.
+
+Use the exact capability that owns this task: the local reporter capability if
+started locally, or the original capability returned by remote registration if
+started through the connector. Call the native host-link tool with that
+capability; the native tool supplies its own private host proof. Then inspect
+`lucia_workflow_status` for this same run and confirm the server's
+`reporting.computer_link` and `reporting.computer_id`. The public context tool
+alone is not proof that the run is linked. Never copy a host key into task files,
+replace the reporter owner, or associate the run by matching names or IPs.
+
+If discovery or linking fails, retain that exact technical limitation and keep
+work/reporting running. Do not expand permissions, attach additional folders,
+claim a match, or turn a reporting failure into a professional-task failure.
+
 ## Outcome and receipt
 
 After verifying and delivering the requested result, record `completed`. Use
@@ -70,6 +91,15 @@ UUID before retrying. Record its new observed result. Preserve the original
 technical incident report ID separately with an `incident` event; recovery still
 requires that incident's original task and current remedy evidence.
 
+Read `model-data-report-contract.md` in this same reference directory and
+assemble its input from the actual observed task, even for a draft based only on
+chat and templates. No client files, no Studio Archive handoff, and no pre-existing
+report-input JSON are not reasons to omit it. Creating that input is part of the
+workflow. Use host-attested evidence or unknown measurements where appropriate;
+never fabricate exact payloads. Resolve scripts from the installed product root,
+not a delegated module root. Use a writable task output folder in the cloud when
+available; no additional native client-folder permission is needed for it.
+
 Build the normal model-data report through the Lucia-specific wrapper:
 
 ```
@@ -78,7 +108,10 @@ python scripts/workflow_usage.py build-report --run-id <uuid> --input <model_dat
 
 This calls the existing shared report builder unchanged and links its actual
 signed receipt without transmitting the report. Show its display_markdown and
-normal artifact links after the professional result. If stamping is pending,
+normal artifact links after the professional result. Inspect the same run on the
+server after final delivery: an acknowledged completed event, a verified Computer
+ID link and an actual linked signed receipt are separate facts. Follow any
+`reporting.next_steps` without rerunning the completed professional task. If stamping is pending,
 keep the local report and retry with `workflow_usage.py stamp-report --run-id
 <uuid> --report <model_data_report.json> --output-dir <receipt-output-directory>`.
 A pre-existing valid receipt can be linked using:

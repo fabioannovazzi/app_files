@@ -38,6 +38,7 @@ from modules.pdp.postgres_compat import (
     is_postgres_enabled,
 )
 from modules.utilities.cache import get_cache_dir
+from modules.workflow_usage import computers as workflow_computers
 from modules.workflow_usage import repository as workflow_repository
 from modules.workflow_usage import testing as workflow_testing
 from modules.workflow_usage.contracts import WorkflowEvent
@@ -239,7 +240,7 @@ class IncidentStore:
             self._schema(connection)
             self._authorize(connection, actor)
             owner = self._workflow_owner(connection, actor, str(event.run_id))
-            return workflow_repository.record(
+            acknowledgement = workflow_repository.record(
                 connection,
                 self._sql,
                 owner,
@@ -247,6 +248,43 @@ class IncidentStore:
                 _now(),
                 product=self._installation_product(connection, owner),
             )
+            row = workflow_repository.get_run(connection, self._sql, str(event.run_id))
+            return {
+                **acknowledgement,
+                "reporting": self._workflow_reporting(connection, row),
+            }
+
+    def _workflow_reporting(self, connection: Any, row: Any) -> dict[str, Any]:
+        """Expose proven linkage and outstanding delivery separately from outcome."""
+        run = json.loads(row["projection_json"])
+        link = connection.execute(
+            self._sql(
+                "SELECT device_id FROM operational_device_links WHERE installation_id=?"
+            ),
+            (row["installation_id"],),
+        ).fetchone()
+        product = self._installation_product(connection, row["installation_id"])
+        next_steps = []
+        if link is None:
+            next_steps.append(
+                f"Discover {product}_incident_host_link in the host tool catalog and "
+                "call it with this run owner's existing capability. A tool omitted "
+                "from the initial list may be deferred. If unavailable, preserve "
+                "the unlinked state; never infer a Computer ID or request broader access."
+            )
+        if not run["receipts"] and run["state"] != "unknown":
+            next_steps.append(
+                "Build the model-data report from this task's observed phases, "
+                "including chat-only inputs, obtain its actual signed receipt and "
+                "link it to this same run. Preserve pending delivery on failure; "
+                "do not rerun completed work or invent evidence."
+            )
+        return {
+            "computer_id": link["device_id"] if link else None,
+            "computer_link": "verified" if link else "unlinked",
+            "model_data_receipt": "linked" if run["receipts"] else "missing",
+            "next_steps": next_steps,
+        }
 
     def _workflow_owner(
         self, connection: Any, actor: Credentials | ConnectionActor, run_id: str
@@ -282,6 +320,7 @@ class IncidentStore:
             ).fetchall()
             return {
                 **json.loads(row["projection_json"]),
+                "reporting": self._workflow_reporting(connection, row),
                 "events": [
                     {
                         "event": json.loads(item["payload_json"]),
@@ -352,6 +391,23 @@ class IncidentStore:
         with self._connection() as connection:
             self._schema(connection)
             return workflow_repository.overview(connection, self._sql, limit)
+
+    def workflow_computers(
+        self, since: str, product: Product = "vera"
+    ) -> dict[str, Any]:
+        """Operator-only observed computer activity, excluding known tests."""
+        cutoff = datetime.fromisoformat(since)
+        if cutoff.tzinfo is None:
+            raise ValueError("Computer activity cutoff requires a timezone")
+        product_name(product)
+        with self._connection() as connection:
+            self._schema(connection)
+            return workflow_computers.inspect(
+                connection,
+                self._sql,
+                cutoff.astimezone(timezone.utc).isoformat(),
+                product,
+            )
 
     def workflow_testing_reset(
         self, agent_devices: list[str], product: Product = "vera"

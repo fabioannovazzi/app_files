@@ -57,7 +57,7 @@
     },
     {
       "path": "skills/mparanza-esg-reporting-assurance/SKILL.md",
-      "sha256": "038a1e7636296d6e3f9656764456f83dc9f272e98eed3374ca3e1188fce1c24d"
+      "sha256": "301a0790218692b5bdcdeaf004d388c8c5ddea5d9b5bdf8568b620a80976e1d9"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -470,5 +470,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "0a862e015cf3fe72637645a0adf6bdaef085489dad8fe94d27e8d36bb1b2ae40"
+  "canonical_course_sha256": "f7d591fe7e98f4825f956a5b2787c5280d03e25213f08a3cdd4108fd6d15cf6f"
 }

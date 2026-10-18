@@ -235,7 +235,7 @@
     {
       "path": "skills/deck-correction/SKILL.md",
       "repository_path": "plugins/clara/skills/deck-correction/SKILL.md",
-      "sha256": "94e4bd9886230be48687ee7ba35ffd80e6e8b388c2262bf927f6603859e8f81c"
+      "sha256": "4f9ec8a017b2a513de8f1d1d2a03e70bc07a6e6e5b7e69475910ca436d4259ed"
     },
     {
       "path": "vendor/modules/__init__.py",

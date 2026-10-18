@@ -245,7 +245,7 @@
     },
     {
       "path": "skills/mparanza-comunicazione-professionale/SKILL.md",
-      "sha256": "72dd29068c6a4286bf745eb2810c5e184afb40438916fd2a329d06fa2fc4957c"
+      "sha256": "4868bfba367725020437ade5c9914237419feeb25998c2366cd760bc529fc3a2"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -810,5 +810,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "58c2ea25ff1a4aa7b0c5fab744fc06e975375e381dd4311f01809eaa30a882d9"
+  "canonical_course_sha256": "b504935e3cd53d611588601e5473cb77fdb67c0b7082b7d9dfba6a3e6711ccb6"
 }

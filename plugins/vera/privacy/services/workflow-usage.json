@@ -35,7 +35,8 @@
         "Synthetic and agent-test runs are excluded from user metrics. Studio Archive is infrastructure and cannot be selected as a rated process.",
         "The host AI selects the primary process and observes actual task completion. Counters and hashes do not assert professional correctness or independent model delivery.",
         "The operational client honors an explicitly selected local-only HTTP delivery setting for this execution; this does not change synthetic-run exclusion, rating authorization or model-provider processing.",
-        "The shared implementation binds registrations, OAuth resources, task events, report signatures, feedback and update downloads to one product. Existing unmapped installations and receipt schema 1 remain Vera. Physical-computer identity is shared, while usage catalogues and testing epochs are separated by product."
+        "The shared implementation binds registrations, OAuth resources, task events, report signatures, feedback and update downloads to one product. Existing unmapped installations and receipt schema 1 remain Vera. Physical-computer identity is shared, while usage catalogues and testing epochs are separated by product.",
+        "Authenticated event acknowledgements and run status expose the original owner's proven Computer ID and whether an actual signed receipt is linked. Missing linkage remains explicit and returns bounded follow-up instructions. Neither reporting gap changes the professional outcome or authorizes broader host access."
       ],
       "id": "automatic-task-lifecycle",
       "purpose": "Measure which user processes run and their observed outcome; link existing signed model-data receipts and technical reports without copying their professional content",
@@ -135,6 +136,6 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "4619870b026d6102a8b1feb9c01812aa14b2291f427c0982c47f901aec0ef58e"
+    "source_fingerprint": "e10e2a4efb5003db54e38a3a571edcde02e359943bf8a345c7824fe9d12d32e2"
   }
 }

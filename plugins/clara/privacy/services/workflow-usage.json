@@ -51,7 +51,8 @@
         "Events are durably queued before transport and acknowledged by exact UUID, owner, sequence and hash. Interruptions stay outcome unknown; repeated submissions are idempotent.",
         "Synthetic and agent-test runs are excluded from user metrics. Studio Archive is infrastructure and cannot be selected as a rated process.",
         "The host AI selects the primary process and observes actual task completion. Counters and hashes do not assert professional correctness or independent model delivery.",
-        "The shared implementation binds registrations, OAuth resources, task events, report signatures, feedback and update downloads to one product. Existing unmapped installations and receipt schema 1 remain Vera. Physical-computer identity is shared, while usage catalogues and testing epochs are separated by product."
+        "The shared implementation binds registrations, OAuth resources, task events, report signatures, feedback and update downloads to one product. Existing unmapped installations and receipt schema 1 remain Vera. Physical-computer identity is shared, while usage catalogues and testing epochs are separated by product.",
+        "Authenticated event acknowledgements and run status expose the original owner's proven Computer ID and whether an actual signed receipt is linked. Missing linkage remains explicit and returns bounded follow-up instructions. Neither reporting gap changes the professional outcome or authorizes broader host access."
       ]
     },
     {
@@ -142,7 +143,7 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "2ab249e1d6d91be3980d74adc7a9a4d54a7f639a1f35cbed521252914569498d"
+    "source_fingerprint": "96b7d83ebbe3974696dc4ed85ed418ecd8ab6369bf2c47e6bca2d1e7e172303d"
   },
   "service_details": {
     "trigger": "Automatic technical reporting and per-primary-task events; one optional user rating after delivery. Local-only tutorials and nested infrastructure are not separate rated tasks.",
