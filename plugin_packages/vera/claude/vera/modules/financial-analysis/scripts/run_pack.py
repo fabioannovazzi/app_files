@@ -128,6 +128,7 @@ FDD_IMPLEMENTATION_FILES = (
     _script_path("model_use.py"),
     _script_path("run_pack.py"),
     _script_path("preparation_contract_kernel.py"),
+    _script_path("windows_contract_io.py"),
     _script_path("validate_case_contracts.py"),
     _vendor_module_path("__init__.py"),
     _vendor_module_path("fdd.py"),

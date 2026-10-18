@@ -128,6 +128,7 @@ class PinnedDirectory:
     descriptor: int
     _directory_identity: tuple[int, int, int]
     _tracked: dict[str, _TrackedFile] = field(default_factory=dict)
+    _native: Any = None
 
     @staticmethod
     def _file_name(value: str) -> str:
@@ -141,6 +142,14 @@ class PinnedDirectory:
     def verify_identity(self) -> None:
         """Fail if the lexical output path no longer identifies this directory."""
 
+        if self._native is not None:
+            try:
+                self._native.verify()
+            except OSError as exc:
+                raise ContractValidationError(
+                    "output directory identity changed"
+                ) from exc
+            return
         try:
             current = self.path.lstat()
             pinned = os.fstat(self.descriptor)
@@ -171,7 +180,9 @@ class PinnedDirectory:
 
         self.verify_identity()
         try:
-            names = sorted(os.listdir(self.descriptor))
+            names = sorted(
+                os.listdir(self.path if self._native is not None else self.descriptor)
+            )
         except OSError as exc:
             raise ContractValidationError(
                 f"could not list pinned output directory: {self.path}"
@@ -182,15 +193,15 @@ class PinnedDirectory:
     def _snapshot_name(self, name: str) -> _TrackedFile:
         normalized_name = self._file_name(name)
         self.verify_identity()
-        flags = os.O_RDONLY | os.O_NOFOLLOW
+        flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
         if hasattr(os, "O_CLOEXEC"):
             flags |= os.O_CLOEXEC
         descriptor: int | None = None
         try:
-            descriptor = os.open(
-                normalized_name,
-                flags,
-                dir_fd=self.descriptor,
+            descriptor = (
+                self._native.open(normalized_name)
+                if self._native is not None
+                else os.open(normalized_name, flags, dir_fd=self.descriptor)
             )
             before = os.fstat(descriptor)
             if not stat.S_ISREG(before.st_mode) or before.st_nlink != 1:
@@ -213,10 +224,12 @@ class PinnedDirectory:
                 raise ContractValidationError(
                     f"output changed while it was read: {normalized_name}"
                 )
-            current = os.stat(
-                normalized_name,
-                dir_fd=self.descriptor,
-                follow_symlinks=False,
+            current = (
+                self._native.stat(normalized_name)
+                if self._native is not None
+                else os.stat(
+                    normalized_name, dir_fd=self.descriptor, follow_symlinks=False
+                )
             )
             if _snapshot_identity(after) != _snapshot_identity(current):
                 raise ContractValidationError(
@@ -267,17 +280,16 @@ class PinnedDirectory:
             + "\n"
         ).encode("utf-8")
         self.verify_identity()
-        flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW
+        flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0)
         if hasattr(os, "O_CLOEXEC"):
             flags |= os.O_CLOEXEC
         descriptor: int | None = None
         created_object_identity: tuple[int, int, int] | None = None
         try:
-            descriptor = os.open(
-                normalized_name,
-                flags,
-                0o600,
-                dir_fd=self.descriptor,
+            descriptor = (
+                self._native.open(normalized_name, create=True)
+                if self._native is not None
+                else os.open(normalized_name, flags, 0o600, dir_fd=self.descriptor)
             )
             created = os.fstat(descriptor)
             if not stat.S_ISREG(created.st_mode) or created.st_nlink != 1:
@@ -338,10 +350,10 @@ class PinnedDirectory:
         failures: list[str] = []
         for name, expected in reversed(list(self._tracked.items())):
             try:
-                current = os.stat(
-                    name,
-                    dir_fd=self.descriptor,
-                    follow_symlinks=False,
+                current = (
+                    self._native.stat(name)
+                    if self._native is not None
+                    else os.stat(name, dir_fd=self.descriptor, follow_symlinks=False)
                 )
             except FileNotFoundError:
                 continue
@@ -357,7 +369,10 @@ class PinnedDirectory:
                 failures.append(name)
                 continue
             try:
-                os.unlink(name, dir_fd=self.descriptor)
+                if self._native is not None:
+                    self._native.unlink(name, _file_object_identity(expected.identity))
+                else:
+                    os.unlink(name, dir_fd=self.descriptor)
             except OSError:
                 failures.append(name)
         self._tracked.clear()
@@ -373,7 +388,22 @@ def pinned_directory(path: Path) -> Iterator[PinnedDirectory]:
     """Pin one existing output directory for no-follow descriptor operations."""
 
     directory_path = Path(path).absolute()
-    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+    if os.name == "nt":
+        from windows_contract_io import directory
+
+        try:
+            with directory(directory_path) as native:
+                boundary = PinnedDirectory(
+                    directory_path, -1, native.identity, _native=native
+                )
+                yield boundary
+                boundary.verify_identity()
+        except OSError as exc:
+            raise ContractValidationError(
+                "could not pin output directory on Windows"
+            ) from exc
+        return
+    flags = os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0)
     if hasattr(os, "O_CLOEXEC"):
         flags |= os.O_CLOEXEC
     descriptor: int | None = None
@@ -565,7 +595,7 @@ def _snapshot_identity(stat_result: os.stat_result) -> tuple[int, ...]:
         stat_result.st_nlink,
         stat_result.st_size,
         stat_result.st_mtime_ns,
-        stat_result.st_ctime_ns,
+        stat_result.st_ctime_ns if os.name != "nt" else 0,
     )
 
 
@@ -627,8 +657,20 @@ def _open_regular_file_beneath(
             f"file path must not traverse outside the declared root: {path}"
         )
 
-    directory_flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
-    file_flags = os.O_RDONLY | os.O_NOFOLLOW
+    if os.name == "nt":
+        from windows_contract_io import open_beneath
+
+        try:
+            with open_beneath(root_path, relative_path.parts) as descriptor:
+                yield descriptor
+        except OSError as exc:
+            raise ContractValidationError(
+                "could not safely open Windows contract input"
+            ) from exc
+        return
+
+    directory_flags = os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0)
+    file_flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
     if hasattr(os, "O_CLOEXEC"):
         directory_flags |= os.O_CLOEXEC
         file_flags |= os.O_CLOEXEC

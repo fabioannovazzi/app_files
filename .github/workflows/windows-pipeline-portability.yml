@@ -9,6 +9,8 @@ jobs:
   native-boundaries:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 25
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
     strategy:
       fail-fast: false
       matrix:

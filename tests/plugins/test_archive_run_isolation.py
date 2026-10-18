@@ -153,8 +153,16 @@ def test_same_request_cannot_replace_invalid_run_but_unrelated_preparation_works
     )
     assert replay["status"] == "already_prepared"
     assert replay["run"]["run_id"] == second["run"]["run_id"]
+    new_run = core.ledger.prepare_run(
+        client, cid, eid, "new-workflow", "1.0.0", input_ids=[input_id]
+    )
+    assert new_run["status"] == "prepared"
+    assert new_run["run"]["run_id"] not in {
+        first["run"]["run_id"],
+        second["run"]["run_id"],
+    }
     assert path.read_bytes() == before
-    assert len(core.ledger.inspect_runs(client, eid)["runs"]) == 1
+    assert len(core.ledger.inspect_runs(client, eid)["runs"]) == 2
 
 
 def test_unknown_header_still_blocks_new_work_to_preserve_idempotency(archive):

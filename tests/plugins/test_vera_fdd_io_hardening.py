@@ -24,6 +24,12 @@ FIXTURES = runpy.run_path(
 )
 
 
+@pytest.fixture(autouse=True)
+def script_runtime_imports(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Mirror the CLI path for platform-specific imports made during execution."""
+    monkeypatch.syspath_prepend(str(SCRIPT_ROOT))
+
+
 def _case_bundle(
     tmp_path: Path,
     *,

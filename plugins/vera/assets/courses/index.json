@@ -482,7 +482,7 @@
     },
     "financial-analysis": {
       "path": "financial-analysis/course.json",
-      "sha256": "bd8b910c033a107a0636a912dad5b79f5bae2c83fe4fb84fcfa3040caa96f70b",
+      "sha256": "8630d5044412bdd15844a3fb2be89d5709a10251514b6507b665e05559ab9483",
       "languages": [
         "it",
         "en",
@@ -538,7 +538,7 @@
     },
     "fusione-guidata": {
       "path": "fusione-guidata/course.json",
-      "sha256": "5cc514919f8f007e4fb2b465e3016c5dcba6686c5f852468d3454b543c40acd0",
+      "sha256": "8a2338dff09d64c1b955b77e4200189111ddd6099c2559dc049719683f2bc99b",
       "languages": [
         "it",
         "en",
@@ -594,7 +594,7 @@
     },
     "journal-bank-reconciliation": {
       "path": "journal-bank-reconciliation/course.json",
-      "sha256": "e89a4b4ed0c1cda4104aa3406dc6aded74382004318172172362c24d3ba6ad0f",
+      "sha256": "1fc8fb1b51fcb671a507f8632f699db3cf7f14b6277a033e7e292eccb9f3de4d",
       "languages": [
         "it",
         "en",
@@ -937,7 +937,7 @@
     },
     "sales-plan": {
       "path": "sales-plan/course.json",
-      "sha256": "594505d56ce664fdce328f11b20e3a0f1cc0de717dfa12a42cb795568f992adc",
+      "sha256": "c6ca01c93165bf66278fb0824e2017cfed5f12a465906bb4de630ab5a37fbcd3",
       "languages": [
         "it",
         "en",
@@ -993,7 +993,7 @@
     },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "bf1d1f6945dfcc23844c11837a6ef2a3345e89f401f73f43ee71c3aea34c6a2c",
+      "sha256": "c3cc7debcc9eb7a9c7013f88cbad0f53c611f3996dfebd91055ac70e529c9297",
       "languages": [
         "it",
         "en",
@@ -1021,7 +1021,7 @@
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "4ee7763c764b8236f98f7fe0dfd8613de414afa79c55ad121496d86a231edc7b",
+      "sha256": "0b4c4cd3bf701795ef8d39d386a45dc5b765c9d97f37c78c1dd6ff9e0aff1708",
       "languages": [
         "it",
         "en",

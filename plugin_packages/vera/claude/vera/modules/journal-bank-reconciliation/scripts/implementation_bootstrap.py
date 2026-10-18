@@ -46,6 +46,7 @@ IMPLEMENTATION_CONTRACT = (
     ("plugin", "scripts/run_reconciliation.py"),
     ("plugin", "scripts/seal_review_receipts.py"),
     ("plugin", "scripts/semantic_review.py"),
+    ("plugin", "scripts/windows_worker_process.py"),
     ("shared_assurance", "__init__.py"),
     ("shared_assurance", "contracts.py"),
     ("shared_assurance", "decisions.py"),

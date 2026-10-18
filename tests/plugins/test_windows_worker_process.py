@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import os
 import subprocess
 import sys
@@ -84,3 +85,24 @@ def test_assignment_failure_never_executes_command(tmp_path, monkeypatch):
     with pytest.raises(OSError, match="assignment denied"):
         run(f"open({str(marker)!r},'w').write('executed')", tmp_path)
     assert not marker.exists()
+
+
+def test_native_host_status_does_not_claim_worker_isolation(tmp_path):
+    command = ROOT / "plugins/journal-bank-reconciliation/scripts/semantic_review.py"
+    result = subprocess.run(
+        [sys.executable, str(command), "host-status"],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        check=True,
+        env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"},
+        timeout=20,
+    )
+    payload = json.loads(result.stdout)
+    assert payload["status"] == "unsupported"
+    assert payload["worker_executed"] is False
+    assert payload["canaries_executed"] is False
+    assert any(
+        check["check"] == "os_build" and check["status"] == "unsupported"
+        for check in payload["checks"]
+    )

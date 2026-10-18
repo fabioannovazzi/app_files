@@ -209,7 +209,15 @@ def refresh_readable_archive(root: Path, ledger: ModuleType) -> dict[str, Any]:
                 )
                 detail += _input_table(page, list(ledger.list_inputs(root, eid)), root)
                 detail += "</section><section><h2>Attività ed esecuzioni</h2><ul>"
-                for loaded in ledger.list_runs(root, eid):
+                inventory = ledger.inspect_runs(root, eid)
+                for issue in inventory["blocked_runs"]:
+                    detail += (
+                        "<li>Attività non disponibile: <code>"
+                        + html.escape(issue["run_id"])
+                        + "</code> — verifica di integrità non superata. "
+                        "Documenti e registri originali conservati; risultati non utilizzabili.</li>"
+                    )
+                for loaded in inventory["runs"]:
                     run = loaded["run"]
                     title = _NAMES.get(run["workflow_id"], run["label"])
                     run_dir = directory / (_slug(title) + "--" + run["run_id"])
