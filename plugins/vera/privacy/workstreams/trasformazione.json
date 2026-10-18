@@ -98,7 +98,28 @@
     "plugins/vera/ui/transformation.js",
     "plugins/vera/scripts/native_transformation_author.py"
   ],
-  "public_explanations": {},
+  "public_explanations": {
+    "trasformazione": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Il modello della sessione può leggere documenti sintetici selezionati, dati della pratica, fonti, analisi, ipotesi e decisioni. Python copia i file, conserva hash e versioni, calcola e scrive il dossier localmente; non chiama modelli né servizi esterni. Non misura il contesto del provider e non anonimizza. Codex usa l’account OpenAI selezionato; Cowork quello Anthropic. Le prove sintetiche non inviano ricevute al server."
+        ],
+        "en": [
+          "The session model may read selected synthetic documents, case attributes, sources, analysis, assumptions and decisions. Python copies files, retains hashes and versions, calculates and writes the dossier locally; it calls no model or external service. It does not measure provider context or anonymize. Codex uses the selected OpenAI account; Cowork uses the Anthropic account. Synthetic demonstrations send no server receipts."
+        ],
+        "fr": [
+          "Le modèle de la session peut lire les documents synthétiques sélectionnés, les données du dossier, les sources, analyses, hypothèses et décisions. Python copie les fichiers, conserve empreintes et versions, calcule et écrit localement ; il n’appelle aucun modèle ou service externe. Il ne mesure pas le contexte du fournisseur et n’anonymise pas. Codex utilise le compte OpenAI sélectionné, Cowork le compte Anthropic. Les démonstrations synthétiques n’envoient aucun reçu au serveur."
+        ],
+        "de": [
+          "Das Sitzungsmodell kann ausgewählte synthetische Dokumente, Falldaten, Quellen, Analysen, Annahmen und Entscheidungen lesen. Python kopiert Dateien, speichert Hashes und Versionen, rechnet und schreibt lokal; es ruft weder Modelle noch externe Dienste auf. Es misst keinen Providerkontext und anonymisiert nicht. Codex nutzt das gewählte OpenAI-Konto, Cowork das Anthropic-Konto. Synthetische Demonstrationen senden keine Serverbelege."
+        ],
+        "es": [
+          "El modelo de la sesión puede leer documentos sintéticos seleccionados, datos del caso, fuentes, análisis, hipótesis y decisiones. Python copia archivos, conserva hashes y versiones, calcula y escribe localmente; no llama a modelos ni servicios externos. No mide el contexto del proveedor ni anonimiza. Codex usa la cuenta OpenAI seleccionada y Cowork la de Anthropic. Las demostraciones sintéticas no envían recibos al servidor."
+        ]
+      }
+    }
+  },
   "service_ids": [
     "managed-python-runtime",
     "operational-incidents",

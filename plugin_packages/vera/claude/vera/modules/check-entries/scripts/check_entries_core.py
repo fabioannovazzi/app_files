@@ -3642,7 +3642,7 @@ def _contains_labeled_movement_identifier(
         return False
     identifier = r"[^a-z0-9]+".join(re.escape(part) for part in parts)
     label = (
-        r"(?:movement|movimento|registrazione|entry|posting|asiento|"
+        r"(?:movement|movimento|registrazione(?:[^a-z0-9]+contabile)?|entry|posting|asiento|"
         r"ecriture|buchung)"
     )
     text = _norm_label(value)
@@ -5042,8 +5042,8 @@ def _build_entry_checks_run(
     output_dir: Path,
     recipe_path: Path | None = None,
     *,
-    amount_tolerance: Decimal | str | int = "0",
-    date_window_days: int = 0,
+    amount_tolerance: Decimal | str | int | None = None,
+    date_window_days: int | None = None,
     language: object | None = None,
     document_language: object | None = None,
     connector_name: str | None = None,
@@ -5052,6 +5052,14 @@ def _build_entry_checks_run(
 ) -> CheckRunResult:
     """Build one Check Entries run in an otherwise empty output directory."""
 
+    recipe, recipe_source_bytes = _captured_recipe(recipe_path)
+    checks = recipe.get("checks", {})
+    if not isinstance(checks, dict):
+        raise ValueError("Recipe checks must be an object.")
+    if amount_tolerance is None:
+        amount_tolerance = checks.get("amount_tolerance", "0")
+    if date_window_days is None:
+        date_window_days = checks.get("date_window_days", 0)
     if (
         not isinstance(date_window_days, int)
         or isinstance(date_window_days, bool)
@@ -5060,7 +5068,6 @@ def _build_entry_checks_run(
         raise ValueError("date_window_days must be a non-negative integer.")
     tolerance = _parse_tolerance(amount_tolerance)
     tolerance_text = decimal_text(tolerance)
-    recipe, recipe_source_bytes = _captured_recipe(recipe_path)
     languages = language_assumptions(
         recipe, language=language, document_language=document_language
     )
@@ -5197,6 +5204,7 @@ def _build_entry_checks_run(
         mapping=journal_diag["mapping"],
         journal_row_count=entries.height,
         pdf_count=len(pdfs),
+        currencies=entries.get_column("currency").to_list(),
         invoice_count=len(invoices),
         connector_name=connector_name,
         client_engagement=normalized_client_engagement,
@@ -5710,8 +5718,8 @@ def run_entry_checks(
     output_dir: Path,
     recipe_path: Path | None = None,
     *,
-    amount_tolerance: Decimal | str | int = "0",
-    date_window_days: int = 0,
+    amount_tolerance: Decimal | str | int | None = None,
+    date_window_days: int | None = None,
     language: object | None = None,
     document_language: object | None = None,
     connector_name: str | None = None,

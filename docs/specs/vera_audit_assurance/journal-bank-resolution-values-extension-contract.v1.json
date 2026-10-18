@@ -1,0 +1,26 @@
+{
+  "schema_version": "journal_bank.resolution_values_extension.v1",
+  "emitted_schemas": [
+    "journal_bank.resolution_funnel.v2",
+    "journal_bank.human_review_queue.v2"
+  ],
+  "reason": "Gross bank values cannot be added across different currency or unit dimensions",
+  "rules": [
+    "Population and cumulative counts are dimension-independent",
+    "value_totals partitions amounts by currency and unit",
+    "Scalar gross_absolute_value is withheld as null for mixed or missing dimensions or unavailable amounts",
+    "Empty selections have count zero, scalar zero and no denomination buckets",
+    "No FX or unit conversion is inferred",
+    "Strict source, match, relationship and material-value artifacts remain unchanged"
+  ],
+  "required_cases": [
+    "single currency and unit",
+    "EUR and USD",
+    "same currency with distinct units",
+    "unknown currency or unit",
+    "missing amount",
+    "empty population",
+    "mixed-currency fully reached cumulative levels",
+    "mixed and single-currency residual subsets"
+  ]
+}

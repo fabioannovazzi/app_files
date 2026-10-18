@@ -55,6 +55,7 @@ if str(_SCRIPT_DIRECTORY) not in sys.path:
 
 import archive_preferences as preferences  # noqa: E402
 import client_ledger as ledger  # noqa: E402
+import folder_intake  # noqa: E402
 import google_drive as drive  # noqa: E402
 from vera_assurance import (  # noqa: E402
     JOURNAL_SAMPLING_CHECK_ENTRIES_HANDOFF,
@@ -84,6 +85,7 @@ __all__ = [
     "authorize_studio_google_drive",
     "bind_studio_client_google_drive",
     "import_studio_client_document",
+    "copy_studio_client_source_folder",
     "list_studio_client_engagements",
     "list_studio_client_identities",
     "list_studio_clients",
@@ -3268,6 +3270,51 @@ def start_check_entries_from_sample(
         "client_engagement": active["context"],
         "client_engagement_path": active["context_path"],
     }
+
+
+@_readable_after_write
+def copy_studio_client_source_folder(
+    client_id: str,
+    engagement_id: str,
+    source_path: Path,
+    *,
+    copy_authorized: bool,
+    destination_name: str | None = None,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Copy an explicitly authorized external tree into client working files."""
+
+    if copy_authorized is not True:
+        raise ArchiveError(
+            "Folder intake requires the user's explicit copy authorization."
+        )
+    private_state = _state_dir(state_dir)
+    root = _selected_ledger_root(client_id, engagement_id, state_dir=private_state)
+    folder = get_studio_client_folder(client_id, state_dir=private_state)[
+        "client_folder"
+    ]
+    try:
+        source = source_path.expanduser()
+        if not source.is_absolute():
+            raise ArchiveError("Select an absolute folder intake source.")
+        resolved = source.resolve(strict=True)
+        archive_root = Path(folder["archive_root"])
+        if _path_is_within(resolved, archive_root) or _path_is_within(
+            archive_root, resolved
+        ):
+            raise ArchiveError(
+                "Folder intake must be external to the approved archive tree."
+            )
+        result = folder_intake.copy_source_folder(
+            root,
+            client_id,
+            engagement_id,
+            source,
+            destination_name=destination_name,
+        )
+    except (ledger.LedgerError, OSError) as exc:
+        raise ArchiveError(f"Client working-folder intake failed: {exc}") from exc
+    return {**result, "client_id": client_id, "engagement_id": engagement_id}
 
 
 @_readable_after_write

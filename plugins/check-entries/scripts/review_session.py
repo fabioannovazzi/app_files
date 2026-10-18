@@ -978,6 +978,7 @@ def write_run_intake(
     journal_row_count: int,
     pdf_count: int,
     invoice_count: int = 0,
+    currencies: Sequence[str] | None = None,
     connector_name: str | None = None,
     client_engagement: dict[str, Any] | None = None,
 ) -> RunIntakeResult:
@@ -1021,6 +1022,13 @@ def write_run_intake(
         local_files_read.append(recipe_ref)
     managed_run = isinstance(run_root_value, str) and bool(run_root_value.strip())
     persisted_client_engagement = _portable_client_engagement(client_engagement)
+    checked_currencies = sorted(
+        {
+            value.strip().upper()
+            for value in (currencies or [])
+            if isinstance(value, str) and value.strip()
+        }
+    )
     payload = {
         "schema_version": SCHEMA_VERSION,
         "plugin": PLUGIN_NAME,
@@ -1045,7 +1053,9 @@ def write_run_intake(
         "assumptions": {
             "amount_tolerance": amount_tolerance,
             "date_window_days": date_window_days,
-            "currency": "EUR",
+            "currency": checked_currencies[0] if len(checked_currencies) == 1 else None,
+            "currencies": checked_currencies,
+            "currency_scope": "checked_entries",
             "mapping": mapping,
             "source_preparation_status": "qualified",
             "journal_row_count": journal_row_count,

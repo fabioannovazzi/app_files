@@ -559,6 +559,21 @@ Codex may inspect individual rows and explain unresolved items, but should keep 
 
 ## MCP Review UI
 
+For the reduced operational bank-exception view after semantic preparation,
+pass only `review_payload_path` pointing to
+`semantic-review/operational_review_payload.json` and, when available, the
+current `client_engagement`. Do not combine this sibling payload with the
+reconciliation folder's `run_intake_path`, `ui_decisions_path` or
+`final_artifacts_path`. This operational handoff is read-only: its render has
+`decision_policy.can_persist=false`. It does not record professional decisions
+or alter strict reconciliation. Validate it, render using the returned opaque
+reference, and request only selected cases as below.
+
+The separate strict reconciliation review uses the four sibling files listed
+below and supports its maintained decision-persistence route. Do not substitute
+it for the reduced operational queue or move/copy payloads between folders to
+bypass the path check.
+
 When the local MCP server is available, prefer the OpenAI-style review handoff:
 
 1. Locate `run_intake.json`, `review_payload.json`, `ui_decisions.json`, and

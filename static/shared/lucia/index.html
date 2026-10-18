@@ -197,6 +197,7 @@
             <h3 data-i18n="stream.research.title">Ricerca legale</h3>
           </header>
           <div class="module-directory">
+            <a class="module-row" href="../deep-research/index.html" data-module-link data-base-href="../deep-research/index.html"><h4><span data-i18n="functions.privacy.deep-research">Research an accepted question</span><span class="function-test-indicator" data-testing-pipeline="deep-research" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span aria-hidden="true">↗</span></a>
             <a class="module-row" href="../quesito-legale-fiscale/index.html?lang=it" data-module-link data-base-href="../quesito-legale-fiscale/index.html">
               <h4><span data-i18n="module.question.title">Risposta a quesiti legali e fiscali</span><span class="function-test-indicator" data-testing-pipeline="quesito-legale-fiscale" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
@@ -618,6 +619,8 @@
       de: { id: "1LJCCTxGL_8", duration: "1:20" },
       es: { id: "RKcy1G79RAs", duration: "1:20" }
     };
+    const privacyFunctionNames = {"it": {"functions.privacy.deep-research": "Ricerca approfondita del quesito"}, "en": {"functions.privacy.deep-research": "Research an accepted question"}, "fr": {"functions.privacy.deep-research": "Recherche approfondie du dossier"}, "de": {"functions.privacy.deep-research": "Vertiefte Recherche zur Fragestellung"}, "es": {"functions.privacy.deep-research": "Investigación profunda del asunto"}};
+    Object.entries(privacyFunctionNames).forEach(([code, names]) => Object.assign(copy[code], names));
     const params = new URLSearchParams(window.location.search);
     const descriptionMeta = document.getElementById("meta-description");
     const openGraphTitle = document.getElementById("og-title");

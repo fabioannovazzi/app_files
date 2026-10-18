@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "reporting-engine",
-  "course_sha256": "852c45f5c39ccad4dcfcc41f6379e4802abe567e1405b189f38175a3ffffcfd8",
+  "course_sha256": "d93012f0c3f9918a1757f10d128e1f42ec883a7b52c9c34cddf45e9125215424",
   "reviewer": "Codex lesson and actual generated report review",
   "reviewed_at": "2026-09-23T11:51:00.788201+00:00",
   "review_scope": "Reviewed localized lessons, prepared workbook meanings and generated demo/practice narratives and tables. Current native execution checks recalculate the workbook and retain the previous report. Authored commentary is replayed as a fixture, not represented as fresh model inference. The shared Italian dashboard was also inspected in Chrome and its February selector verified. No learner participation, professional approval, live voice or all-locale visual inspection is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
@@ -315,5 +315,16 @@
     "scope": "All authored lesson fields, locales, fictional inputs, checkpoints and execution definitions are unchanged. Source bindings incorporate shared product-bound reporting, verified helper execution and primary-task reporting instructions. Tutorials remain excluded from ordinary task reporting. Historical editorial and output-artifact judgments are preserved.",
     "fresh_matching_junit_required": true,
     "limits": "No new learner, visual, installed-host or professional acceptance is asserted."
+  },
+  "archive_release_shared_runtime_compatibility_20261018": {
+    "reviewer": "Codex /root - bounded complete-course comparison",
+    "reviewed_at": "2026-10-18",
+    "previous_course_sha256": "852c45f5c39ccad4dcfcc41f6379e4802abe567e1405b189f38175a3ffffcfd8",
+    "current_course_sha256": "0c293c66f82615a8366c7dd9348d47dd69639f4de7b25ee270d0ff7142c12cba",
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "scope": "Complete authored course content is unchanged from the integrated candidate. Tested Vera isolated-launcher imports and explicitly selected local-only incident delivery are retained in the new canonical shared reporting runtime and synchronized with the repository tool. Ordinary automatic delivery and product-bound authorization remain unchanged when the test setting is unset. Existing editorial judgments and historical artifact reviews remain preserved; current native teaching CI against exact new digests is required. No new learner, native visual or professional acceptance is asserted."
   }
 }

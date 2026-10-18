@@ -347,7 +347,6 @@ def _minimal_clara(tmp_path: Path) -> Path:
     registry = json.loads((root / "privacy/registry.json").read_text())
     entry = registry["workstreams"]["claim-basis-map"]
     entry["components"] = []
-    entry["public_pages"] = []
     registry["workstreams"] = {"claim-basis-map": entry}
     registry["services"] = []
     registry.pop("host_omissions", None)
@@ -364,7 +363,6 @@ def _minimal_clara(tmp_path: Path) -> Path:
         file.unlink()
     path = root / "privacy/workstreams/claim-basis-map.json"
     manifest = json.loads(path.read_text())
-    manifest["public_explanations"] = {}
     manifest["service_ids"] = []
     path.write_text(json.dumps(manifest))
     return root
@@ -400,3 +398,16 @@ def test_clara_privacy_validator_reports_new_skill_without_manifest(
     errors = validator.validate_privacy_surfaces(root)
 
     assert "future-workflow: skill has no privacy registration" in errors
+
+
+def test_clara_workflow_without_explanation_page_blocks_release(tmp_path: Path) -> None:
+    validator = _validator_module()
+    root = _minimal_clara(tmp_path)
+    path = root / "privacy/registry.json"
+    registry = json.loads(path.read_text())
+    registry["workstreams"]["claim-basis-map"]["public_pages"] = []
+    path.write_text(json.dumps(registry))
+
+    errors = validator.validate_privacy_surfaces(root)
+
+    assert "claim-basis-map: workflow requires a public explanation page" in errors

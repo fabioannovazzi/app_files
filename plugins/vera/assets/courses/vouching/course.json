@@ -45,7 +45,7 @@
     {
       "path": "modules/check-entries/references/workflow-reference.md",
       "repository_path": "plugins/check-entries/references/workflow-reference.md",
-      "sha256": "5ea38167f0c0cbf3daa6f9a81fb36dea600eebef04c473b30381bfc1637cb228"
+      "sha256": "c01aa0eafb3693bf45792c8834f18706db1a4def598409f8331c697cb2da9ad3"
     },
     {
       "path": "modules/check-entries/requirements.txt",
@@ -65,7 +65,7 @@
     {
       "path": "modules/check-entries/scripts/check_entries_core.py",
       "repository_path": "plugins/check-entries/scripts/check_entries_core.py",
-      "sha256": "d8a7ec7031489c079e5dbade5523d447e5eab8feeb2527e06862df38c2200a69"
+      "sha256": "ba62e6a9c27ac97a5874f76294d3f634983f6ad04a1decd0e60a0110d1e37cec"
     },
     {
       "path": "modules/check-entries/scripts/implementation_bootstrap.py",
@@ -110,12 +110,12 @@
     {
       "path": "modules/check-entries/scripts/review_session.py",
       "repository_path": "plugins/check-entries/scripts/review_session.py",
-      "sha256": "eda372310a15de4aeca0c548ac08920c6fcd07271d6e7596f026dfb2c0700e02"
+      "sha256": "7f4e00669217b0a42d775ab96fe9f41ee817d57b86c6f2c95e84bbc0552f05c7"
     },
     {
       "path": "modules/check-entries/scripts/run_checks.py",
       "repository_path": "plugins/check-entries/scripts/run_checks.py",
-      "sha256": "66168e82f9b60e46e1a36c07be05735e4eb401b9f3206cb9881ac3ff618ee91a"
+      "sha256": "f15240fae505bb2f801dc231050961e7b31a5f94786cdb6de77f904130065fb0"
     },
     {
       "path": "modules/check-entries/scripts/stable_ooxml.py",

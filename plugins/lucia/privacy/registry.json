@@ -293,7 +293,19 @@
       "workflow_ids": [
         "deep-research"
       ],
-      "public_pages": []
+      "public_pages": [
+        {
+          "page_id": "deep-research",
+          "path": "static/shared/deep-research/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
     },
     "estrazione-clausole": {
       "source": "product",

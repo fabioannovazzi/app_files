@@ -37,7 +37,7 @@
     "source_review": "Preserves main’s synthetic Italian Fusione P1 teaching expansion and task’s optional host-connected repository consultation gates. Synthetic lessons use their bound inputs and do not query private repositories. Specialist calculations and qualification limits are unchanged.",
     "execution_requirement": "Fresh CI must execute the existing demo and practice cases bound to this exact compiled course digest before merge."
   },
-  "course_sha256": "0b49b39edb5db1bd60a10a7fa94e31fd2d6bc3a8a900b757177bbd2e1ec3fead",
+  "course_sha256": "dd11ecca2ca3aeb1cf9954efb0dfd9bc09468da5fb8eafa6c3ba0d16982873ee",
   "integration_refresh": {
     "reviewer": "Codex /root",
     "date": "2026-10-02",
@@ -500,5 +500,16 @@
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "fresh_matching_junit_required": true
+  },
+  "deploy_final_source_compatibility_20261018": {
+    "reviewer": "Codex /root - bounded complete-course comparison",
+    "reviewed_at": "2026-10-18",
+    "previous_course_sha256": "0b49b39edb5db1bd60a10a7fa94e31fd2d6bc3a8a900b757177bbd2e1ec3fead",
+    "current_course_sha256": "3ff88f8558874cbaedc8fedbada29ad2741e43686864fcac33c795231c9439ab",
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "scope": "Complete authored lesson JSON is identical to the retained tested candidate; only source fingerprints changed. Preserves all previous editorial and historical artifact reviews. Integrated main usage/device registration is unchanged from main; tested workflow logic is preserved. Open-item import ordering was normalized without changing imported names or statements. No new learner, visual-host or professional acceptance claimed; current native teaching CI remains required."
   }
 }

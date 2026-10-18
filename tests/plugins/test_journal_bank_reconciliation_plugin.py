@@ -6788,6 +6788,91 @@ def test_relationship_policy_prevents_cross_currency_and_missing_perimeter(
     assert exc_info.value.code == "relationship_perimeter_incomplete"
 
 
+@pytest.mark.parametrize("shape", ["one_to_one", "one_to_many"])
+@pytest.mark.parametrize("missing_side", ["bank", "journal", "both"])
+def test_required_party_missing_rows_remain_residual_without_blocking_population(
+    tmp_path: Path,
+    shape: str,
+    missing_side: str,
+) -> None:
+    core = load_core()
+    bank_path = tmp_path / "bank.csv"
+    journal_path = tmp_path / "journal.csv"
+    header = ["Date", "Amount", "Reference", "party_ref"]
+    _save_csv(
+        bank_path,
+        [
+            header,
+            ["2025-03-10", "100.00", "INV-100", "CLIENT-A"],
+            [
+                "2025-03-10",
+                "80.00",
+                "INV-200",
+                "" if missing_side in {"bank", "both"} else "CLIENT-B",
+            ],
+            ["2025-03-10", "90.00", "INV-300", "CLIENT-C"],
+        ],
+    )
+    complete = (
+        [
+            ["2025-03-10", "60.00", "INV-100", "CLIENT-A"],
+            ["2025-03-10", "40.00", "INV-100", "CLIENT-A"],
+        ]
+        if shape == "one_to_many"
+        else [["2025-03-10", "100.00", "INV-100", "CLIENT-A"]]
+    )
+    _save_csv(
+        journal_path,
+        [
+            header,
+            *complete,
+            [
+                "2025-03-10",
+                "80.00",
+                "INV-200",
+                "" if missing_side in {"journal", "both"} else "CLIENT-B",
+            ],
+            ["2025-03-10", "90.00", "INV-300", "CLIENT-D"],
+        ],
+    )
+    recipe_path = _prepare_reviewed_recipe(
+        core,
+        bank_path,
+        journal_path,
+        tmp_path / "recipe",
+        tolerance="0",
+        date_window_days=0,
+        policy_updates={
+            "relationship_shape": shape,
+            "require_same_party": True,
+            "default_party_ref": None,
+            "direction_policy": "same_sign",
+        },
+    )
+    result = core.run_reconciliation(
+        bank_path,
+        journal_path,
+        tmp_path / "run",
+        recipe_path,
+        tolerance="0",
+        date_window_days=0,
+    )
+    assert result.matches.height == len(complete)
+    assert result.unmatched_bank.height == result.unmatched_journal.height == 2
+    assert set(result.unmatched_bank["reference"].to_list()) == {"INV-200", "INV-300"}
+    assert set(result.unmatched_journal["reference"].to_list()) == {
+        "INV-200",
+        "INV-300",
+    }
+    assert result.audit["status"] == "completed_with_unresolved_reconciliation"
+    for side in ("bank", "journal"):
+        if missing_side in {side, "both"}:
+            rows = getattr(result, "unmatched_" + side).to_dicts()
+            row = next(row for row in rows if row["reference"] == "INV-200")
+            assert row["party_ref"] is None
+    core.validate_material_value_ledger(tmp_path / "run")
+
+
 def test_sample_failure_preserves_independent_source_gate(
     tmp_path: Path,
 ) -> None:
@@ -8660,6 +8745,58 @@ def test_semantic_prepare_cli_replays_renamed_managed_run_and_closes_outputs(
         running["run"]["run_id"],
     )
     assert completed["run"]["status"] == "completed"
+
+
+def test_operational_review_path_only_handoff_is_read_only_and_preserves_strict_paths(
+    tmp_path: Path,
+) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+    before = _tree_snapshot(reconciliation_dir)
+    payload_path = semantic_dir / "operational_review_payload.json"
+    payload = json.loads(payload_path.read_text())
+    messages = []
+    for index, name in enumerate(
+        ["validate_journal_bank_review", "render_journal_bank_review"], 1
+    ):
+        messages.append(
+            {
+                "jsonrpc": "2.0",
+                "id": index,
+                "method": "tools/call",
+                "params": {
+                    "name": name,
+                    "arguments": {"review_payload_path": str(payload_path)},
+                },
+            }
+        )
+    messages.append(
+        {
+            "jsonrpc": "2.0",
+            "id": 3,
+            "method": "tools/call",
+            "params": {
+                "name": "validate_journal_bank_review",
+                "arguments": {
+                    "review_payload_path": str(payload_path),
+                    "run_intake_path": str(reconciliation_dir / "run_intake.json"),
+                },
+            },
+        }
+    )
+    replies = {r["id"]: r["result"] for r in _call_mcp_server(messages)}
+    assert replies[1]["structuredContent"]["ok"] is True
+    assert replies[1]["structuredContent"]["item_count"] == payload["item_count"]
+    assert "review_payload" not in replies[1]["structuredContent"]
+    private = replies[2]["_meta"]["private_review_payload"]
+    assert private["review_payload"] == payload
+    assert private["decision_policy"]["can_persist"] is False
+    assert private["run_intake"] is None
+    assert replies[3]["isError"] is True
+    assert "must be in the run output folder" in json.dumps(replies[3])
+    assert _tree_snapshot(reconciliation_dir) == before
 
 
 def test_semantic_prepare_builds_bounded_hash_bound_advisory_graph(
@@ -13511,3 +13648,278 @@ def test_registration_pdf_journal_reconciliation_closes_or_blocks_stale_layout(
     assert [row["source_sheet"] for row in rows] == ["PDF page 1", "PDF page 2"]
     assert [row["amount_signed"] for row in rows] == ["100", "-100"]
     assert (tmp_path / "results" / "journal_bank_reconciliation.xlsx").is_file()
+
+
+@pytest.mark.parametrize("reference", ["C101", "A17", "A1", "INV-1", "AB/12"])
+def test_short_whole_reference_conserves_split_payment(
+    tmp_path: Path, reference: str
+) -> None:
+    core = load_core()
+    bank_path, journal_path = tmp_path / "bank.csv", tmp_path / "journal.csv"
+    _save_csv(
+        bank_path,
+        [["Date", "Amount", "Reference"], ["2026-09-03", "1000.00", reference]],
+    )
+    _save_csv(
+        journal_path,
+        [
+            ["Date", "Amount", "Reference"],
+            ["2026-09-02", "600.00", reference],
+            ["2026-09-03", "400.00", reference],
+        ],
+    )
+    recipe = _prepare_reviewed_recipe(
+        core,
+        bank_path,
+        journal_path,
+        tmp_path / "recipe",
+        tolerance="0",
+        date_window_days=3,
+        policy_updates={"relationship_shape": "one_to_many"},
+    )
+
+    result = core.run_reconciliation(
+        bank_path,
+        journal_path,
+        tmp_path / "out",
+        recipe,
+        tolerance="0",
+        date_window_days=3,
+    )
+
+    assert result.matches.height == 2
+    assert set(result.matches.get_column("stage")) == {"reference_group"}
+    assert result.unmatched_bank.is_empty()
+    assert result.unmatched_journal.is_empty()
+    assert (
+        json.loads((tmp_path / "out/relationship_ledger.json").read_text())["balanced"]
+        is True
+    )
+    assert (tmp_path / "out/material_value_ledger.json").is_file()
+
+
+@pytest.mark.parametrize(
+    "bank_ref,journal_ref",
+    [
+        ("A1", "A2"),
+        ("A-1", "A1"),
+        ("FY26", "FY26"),
+        ("Q1", "Q1"),
+        ("2026", "2026"),
+        ("invoice C101", "invoice C101"),
+    ],
+)
+def test_short_reference_does_not_merge_distinct_ids_or_generic_fragments(
+    tmp_path: Path, bank_ref: str, journal_ref: str
+) -> None:
+    core = load_core()
+    bank_path, journal_path = tmp_path / "bank.csv", tmp_path / "journal.csv"
+    _save_csv(
+        bank_path,
+        [["Date", "Amount", "Reference"], ["2026-09-03", "1000.00", bank_ref]],
+    )
+    _save_csv(
+        journal_path,
+        [
+            ["Date", "Amount", "Reference"],
+            ["2026-09-03", "600.00", journal_ref],
+            ["2026-09-03", "400.00", journal_ref],
+        ],
+    )
+    recipe = _prepare_reviewed_recipe(
+        core,
+        bank_path,
+        journal_path,
+        tmp_path / "recipe",
+        tolerance="0",
+        date_window_days=3,
+        policy_updates={"relationship_shape": "one_to_many"},
+    )
+
+    result = core.run_reconciliation(
+        bank_path,
+        journal_path,
+        tmp_path / "out",
+        recipe,
+        tolerance="0",
+        date_window_days=3,
+    )
+
+    assert result.matches.is_empty()
+    assert result.unmatched_bank.height == 1
+    assert result.unmatched_journal.height == 2
+
+
+def test_repeated_short_reference_does_not_choose_arbitrary_counterpart(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    bank_path, journal_path = tmp_path / "bank.csv", tmp_path / "journal.csv"
+    _save_csv(
+        bank_path, [["Date", "Amount", "Reference"], ["2026-09-03", "500.00", "C101"]]
+    )
+    _save_csv(
+        journal_path,
+        [
+            ["Date", "Amount", "Reference"],
+            ["2026-09-03", "500.00", "C101"],
+            ["2026-09-03", "500.00", "C101"],
+        ],
+    )
+    recipe = _prepare_reviewed_recipe(
+        core,
+        bank_path,
+        journal_path,
+        tmp_path / "recipe",
+        tolerance="0",
+        date_window_days=3,
+        policy_updates={"relationship_shape": "one_to_many"},
+    )
+
+    result = core.run_reconciliation(
+        bank_path,
+        journal_path,
+        tmp_path / "out",
+        recipe,
+        tolerance="0",
+        date_window_days=3,
+    )
+
+    assert result.matches.is_empty()
+    assert result.unmatched_bank.height == 1
+    assert result.unmatched_journal.height == 2
+
+
+@pytest.mark.parametrize(
+    "dimensions,expected_scalar,expected_status",
+    [
+        ([("EUR", "1", "100"), ("EUR", "1", "200.5")], "300.5", "single_currency_unit"),
+        ([("EUR", "1", "100"), ("USD", "1", "200")], None, "mixed_currency_or_unit"),
+        ([("EUR", "1", "100"), ("EUR", "1000", "200")], None, "mixed_currency_or_unit"),
+        ([("EUR", "1", "100"), (None, "1", "200")], None, "missing_currency_or_unit"),
+        ([("EUR", None, "100")], None, "missing_currency_or_unit"),
+        ([("EUR", "1", None)], None, "missing_amount"),
+        ([], "0", "empty"),
+    ],
+)
+def test_funnel_gross_values_respect_currency_unit_dimensions(
+    dimensions: list[tuple[str | None, str | None, str | None]],
+    expected_scalar: str | None,
+    expected_status: str,
+) -> None:
+    semantic = load_semantic_review()
+    rows = [
+        {"amount_abs": amount, "bank_evidence": {"currency": currency, "unit": unit}}
+        for currency, unit, amount in dimensions
+    ]
+
+    summary = semantic._gross_value_summary(rows)
+
+    assert summary["gross_absolute_value"] == expected_scalar
+    assert summary["value_aggregation_status"] == expected_status
+    assert sum(row["movement_count"] for row in summary["value_totals"]) == len(
+        dimensions
+    )
+
+
+@pytest.mark.parametrize("eur_journal_amount,review_count", [("100", 1), ("90", 2)])
+def test_mixed_currency_funnel_and_queue_never_emit_combined_monetary_value(
+    tmp_path: Path, eur_journal_amount: str, review_count: int
+) -> None:
+    core, semantic = load_core(), load_semantic_review()
+    bank_path, journal_path = tmp_path / "bank.csv", tmp_path / "journal.csv"
+    _save_csv(
+        bank_path,
+        [
+            ["Date", "Amount", "Reference", "Currency"],
+            ["2026-09-03", "100", "EU101", "EUR"],
+            ["2026-09-03", "200", "US101", "USD"],
+        ],
+    )
+    _save_csv(
+        journal_path,
+        [
+            ["Date", "Amount", "Reference", "Currency"],
+            ["2026-09-03", eur_journal_amount, "EU101", "EUR"],
+            ["2026-09-03", "180", "US101", "USD"],
+        ],
+    )
+    recipe = _prepare_reviewed_recipe(
+        core,
+        bank_path,
+        journal_path,
+        tmp_path / "recipe",
+        tolerance="0",
+        date_window_days=3,
+    )
+    recon, output = tmp_path / "reconciliation", tmp_path / "semantic-review"
+    core.run_reconciliation(
+        bank_path, journal_path, recon, recipe, tolerance="0", date_window_days=3
+    )
+    strict_before = _tree_snapshot(recon)
+
+    semantic.prepare_semantic_review(
+        recon, output, required_resolution_level="perfect_match"
+    )
+
+    funnel = json.loads((output / "resolution_funnel.json").read_text())
+    queue = json.loads((output / "human_review_queue.json").read_text())
+    assert funnel["schema_version"] == "journal_bank.resolution_funnel.v2"
+    assert funnel["total"]["gross_absolute_value"] is None
+    assert funnel["total"]["value_aggregation_status"] == "mixed_currency_or_unit"
+    assert {
+        (row["currency"], row["gross_absolute_value"])
+        for row in funnel["total"]["value_totals"]
+    } == {("EUR", "100"), ("USD", "200")}
+    assert queue["schema_version"] == "journal_bank.human_review_queue.v2"
+    assert queue["movement_count"] == review_count
+    assert queue["value_totals"][-1]["currency"] == "USD"
+    assert queue["value_totals"][-1]["gross_absolute_value"] == "200"
+    assert queue["gross_absolute_value"] == ("200" if review_count == 1 else None)
+    assert _tree_snapshot(recon) == strict_before
+
+
+def test_fully_matched_mixed_currency_levels_keep_separate_values(
+    tmp_path: Path,
+) -> None:
+    core, semantic = load_core(), load_semantic_review()
+    bank_path, journal_path = tmp_path / "bank.csv", tmp_path / "journal.csv"
+    rows = [
+        ["Date", "Amount", "Reference", "Currency"],
+        ["2026-09-03", "100", "EU101", "EUR"],
+        ["2026-09-03", "200", "US101", "USD"],
+    ]
+    _save_csv(bank_path, rows)
+    _save_csv(journal_path, rows)
+    recipe = _prepare_reviewed_recipe(
+        core,
+        bank_path,
+        journal_path,
+        tmp_path / "recipe",
+        tolerance="0",
+        date_window_days=3,
+    )
+    recon, output = tmp_path / "reconciliation", tmp_path / "semantic-review"
+    core.run_reconciliation(
+        bank_path, journal_path, recon, recipe, tolerance="0", date_window_days=3
+    )
+    strict_before = _tree_snapshot(recon)
+
+    semantic.prepare_semantic_review(
+        recon, output, required_resolution_level="perfect_match"
+    )
+
+    funnel = json.loads((output / "resolution_funnel.json").read_text())
+    assert [row["movement_count"] for row in funnel["at_least"]] == [2, 2, 2, 2, 2]
+    assert [row["gross_absolute_value"] for row in funnel["at_least"]] == [
+        None,
+        None,
+        None,
+        None,
+        None,
+    ]
+    assert funnel["at_least"][-1]["value_totals"] == funnel["total"]["value_totals"]
+    assert funnel["human_review"]["movement_count"] == 0
+    assert funnel["human_review"]["gross_absolute_value"] == "0"
+    assert funnel["human_review"]["value_totals"] == []
+    assert _tree_snapshot(recon) == strict_before

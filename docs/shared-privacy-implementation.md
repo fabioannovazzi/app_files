@@ -7,17 +7,17 @@ reports. It does not change user case files or reset usage/testing history.
 
 ## Completion evidence
 
-- [ ] Register every top-level skill, embedded component and shared service.
-- [ ] Review the governed implementation of every newly registered surface.
-- [ ] Migrate Clara's Codex-only records and complete Lucia's register.
-- [ ] Keep Studio Archive classified as infrastructure.
-- [ ] Use one canonical source for the review skill, schemas and validators.
-- [ ] Bind localized public explanations to reviewed product/workflow contracts.
-- [ ] Bind new actual-run reports to those contracts without deriving observations
+- [x] Register every top-level skill, embedded component and shared service.
+- [x] Review the governed implementation of every newly registered surface.
+- [x] Migrate Clara's Codex-only records and complete Lucia's register.
+- [x] Keep Studio Archive classified as infrastructure.
+- [x] Use one canonical source for the review skill, schemas and validators.
+- [x] Bind localized public explanations to reviewed product/workflow contracts.
+- [x] Bind new actual-run reports to those contracts without deriving observations
       from expected behavior; preserve old report bytes and receipt verification.
 - [ ] Validate source freshness, registration coverage, translations, public
       bindings and every generated host package.
-- [ ] Exercise real synthetic runs, readable delivery, saved-report reopening and
+- [x] Exercise real synthetic runs, readable delivery, saved-report reopening and
       signed receipts; record exactly which host/session was exercised.
 - [ ] Pass required CI, deploy the exact merged commit and verify public bytes.
 - [ ] Remove only this task's temporary branch/worktree and record repository counts.
@@ -50,7 +50,7 @@ products receive identical schemas, review skill, references and validator.
 owner. It records explicit host service/workstream/path omissions. Source review
 fingerprints cover implementation files; rebuilding does not refresh them.
 
-There are 104 registered workflow/infrastructure records and 89 product/page
+There are 104 registered workflow/infrastructure records and 98 product/page
 bindings. Product service registers retain the original source-specific payload,
 access and retention declarations. No new provider account or per-case privacy
 questionnaire is introduced.
@@ -73,6 +73,38 @@ and seal the final execution manifests. The common release command checks shared
 source synchronization and public contract drift before building all hosts.
 
 Local release candidate: Vera 0.1.409, Clara 0.1.299, Lucia 0.1.122. All twelve
-archives built. Shared privacy tests: 67 passed, binding module coverage 87.36%.
+archives built. Shared privacy tests: 71 passed, binding module coverage 87.36%.
 Renderer behavior tests: six passed. Black, Isort, Mypy and Bandit passed for the
-new implementation. Final CI, deployment and live acceptance are pending.
+new implementation. Signed-receipt acceptance passed for all three products. Final CI and deployment are pending.
+
+Every user-facing workflow now requires a registered explanation page. Five missing pages were added with five-language source-reviewed descriptions; existing planner, research-validator and transformation pages are now bound for Vera as well. Internal engines remain explicitly separate.
+
+## Controlled acceptance
+
+On 18 October 2026, downloaded Codex-format packages ran the following synthetic
+operations in the local Python environment. This is packaged-CLI evidence, not a
+fresh installed Codex, Cowork, ChatGPT or Antigravity conversation acceptance.
+
+| Product | Observed operation | Report and receipt |
+| --- | --- | --- |
+| Vera 0.1.409 | Three source rows normalized; two systematic sample rows generated | Schema 2, public contract matched; saved report reopened unchanged; server signature verified |
+| Clara 0.1.299 | Current one-slide PPTX claim matched its retained source map | Schema 2, public contract matched; saved report reopened unchanged; server signature verified |
+| Lucia 0.1.122 | Three-line document rendered with the 100-versus-90 inconsistency and unresolved correct amount | Schema 2, public contract matched; saved report reopened unchanged; server signature verified |
+
+The Vera technical test deliberately inspected the complete tiny normalized
+population as well as its sample. Its report retains `divergence`, documenting
+that extra exposure rather than presenting it as the ordinary minimized review.
+Clara and Lucia record an agent-authored `consistent` comparison for the inspected
+phases. These judgments do not attest provider-side delivery or legal correctness.
+
+The actual receipt requests contained four fields for Vera and five for Clara
+and Lucia (adding product). No source content or full report was sent. Existing
+receipt protocols remain unchanged. No usage reset, rating, user completion,
+recovery claim or external message was created by these acceptance operations.
+
+Private evidence, exact package/report/contract hashes, report files and signed
+receipts are retained in
+`outputs/shared-privacy-acceptance/2026-10-18/final/`. The local review also covered
+Clara's Italian explanation, Lucia's English explanation and Vera's nested
+integration page. Thirty-six public-page tests passed; six renderer tests cover
+product separation, language and unavailable-review behavior.

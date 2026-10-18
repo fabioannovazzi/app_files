@@ -669,7 +669,19 @@
         "prompt-optimizer",
         "legal-tax-answer-planner"
       ],
-      "public_pages": []
+      "public_pages": [
+        {
+          "page_id": "prompt-optimizer",
+          "path": "static/shared/prompt-optimizer/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
     },
     "deep-research-validator": {
       "source": "deep-research-validator",
@@ -684,7 +696,19 @@
         "deep-research-validator",
         "legal-tax-answer-review"
       ],
-      "public_pages": []
+      "public_pages": [
+        {
+          "page_id": "deep-research-validator",
+          "path": "static/shared/deep-research-validator/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
     },
     "previdenza-inps": {
       "source": "previdenza-inps",
@@ -881,7 +905,19 @@
       "workflow_ids": [
         "trasformazione"
       ],
-      "public_pages": []
+      "public_pages": [
+        {
+          "page_id": "trasformazione",
+          "path": "static/shared/trasformazione/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
     },
     "fusione-guidata": {
       "source": "fusione-guidata",
@@ -1093,7 +1129,19 @@
       "workflow_ids": [
         "datev-invoice-start"
       ],
-      "public_pages": []
+      "public_pages": [
+        {
+          "page_id": "datev-invoice-start",
+          "path": "static/shared/datev-invoice-start/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
     },
     "dati-fiscali-strutturati": {
       "source": "client-file-preparation",
@@ -1129,7 +1177,19 @@
       "workflow_ids": [
         "deep-research"
       ],
-      "public_pages": []
+      "public_pages": [
+        {
+          "page_id": "deep-research",
+          "path": "static/shared/deep-research/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
     },
     "email-cliente": {
       "source": "client-file-preparation",

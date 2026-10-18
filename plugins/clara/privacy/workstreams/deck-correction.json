@@ -164,11 +164,32 @@
     "run-receipt-stamping",
     "workflow-usage"
   ],
-  "public_explanations": {},
+  "public_explanations": {
+    "clara-deck-correction": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Il modello può leggere testo, immagini, note e struttura del deck, trascrizioni e fotogrammi del feedback, commenti, fonti e piano di revisione. Possono entrare nel contesto slide renderizzate, diagnostica, approvazioni e risultati. Copie, cache e tentativi di conversione restano locali finché non vengono rimossi; leggerli ne espone il contenuto al modello. La cattura vocale, quando usata, segue il servizio dichiarato separatamente. Nessuna anonimizzazione automatica."
+        ],
+        "en": [
+          "The model may read deck text, images, notes and structure, feedback transcripts and frames, comments, sources and revision plans. Rendered slides, diagnostics, approvals and results may enter context. Copies, caches and conversion attempts remain local until removed; reading them exposes their content to the model. Voice capture, when used, follows its separately declared service. There is no automatic anonymization."
+        ],
+        "fr": [
+          "Le modèle peut lire textes, images, notes et structure du deck, transcriptions et images du feedback, commentaires, sources et plans de révision. Rendus, diagnostics, approbations et résultats peuvent entrer dans le contexte. Copies, caches et tentatives de conversion restent locales jusqu’à suppression ; leur lecture expose leur contenu au modèle. La capture vocale suit son service déclaré séparément. Aucune anonymisation automatique."
+        ],
+        "de": [
+          "Das Modell kann Folientext, Bilder, Notizen, Struktur, Feedbacktranskripte und Einzelbilder, Kommentare, Quellen und Änderungspläne lesen. Gerenderte Folien, Diagnosen, Freigaben und Ergebnisse können in den Kontext gelangen. Kopien, Caches und Konvertierungsversuche bleiben bis zur Löschung lokal; beim Lesen erhält das Modell ihren Inhalt. Sprachaufnahmen folgen dem separat beschriebenen Dienst. Keine automatische Anonymisierung."
+        ],
+        "es": [
+          "El modelo puede leer textos, imágenes, notas y estructura, transcripciones y fotogramas del feedback, comentarios, fuentes y planes. Diapositivas renderizadas, diagnósticos, aprobaciones y resultados pueden entrar en contexto. Copias, cachés e intentos de conversión permanecen locales hasta su eliminación; leerlos expone su contenido al modelo. La captura de voz utiliza su servicio declarado por separado. No hay anonimización automática."
+        ]
+      }
+    }
+  },
   "review": {
-    "reviewed_at": "2026-10-06",
+    "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "bd0f34ef2c354df370cb228392da09d83a29359d69ba55eea92f9dc14a151f23"
+    "source_fingerprint": "93912df3e494d4077de51dae8cde893ddb552706a0f740658482cd1763ac8a4c"
   }
 }

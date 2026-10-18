@@ -24,7 +24,7 @@
       {
         "id": "bounded-column-mapping-and-run-review",
         "purpose": "Map source columns before deterministic reconciliation and review run-level controls and limitations",
-        "content": "User instructions; source file metadata and raw column names; at most the first 20 normalized preview rows per qualified source; mapping assumptions and decisions; aggregate match and exception counts; assurance gates, limitations, review notes and artifact paths; when a worker selection is reviewed, its model/effort, reviewer reference, review status and benchmark digest may be read in the parent runtime. The selection review is retained in local evidence and is not added to the subordinate worker prompt.",
+        "content": "User instructions; source file metadata and raw column names; at most the first 20 normalized preview rows per qualified source; mapping assumptions and decisions; aggregate match and exception counts; assurance gates, limitations, review notes and artifact paths; when a worker selection is reviewed, its model/effort, reviewer reference, review status and benchmark digest may be read in the parent runtime. The selection review is retained in local evidence and is not added to the subordinate worker prompt. Resolution-funnel and human-review aggregate values are partitioned by explicit currency and measurement unit. Mixed or unknown denominations withhold a scalar total and expose the qualification; no conversion is inferred.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -33,7 +33,7 @@
       {
         "id": "non-identifying-review-index-and-selected-cases",
         "purpose": "Select and interpret review cases without sending the complete ordinary review payload",
-        "content": "The model first receives aggregate item-type counts and an index of opaque per-run case handles, item type, normalized categorical review status, recommended action and only the names of present mechanical signal classes; signal values and source facts remain out. Accepted non-interpretive artifact items remain available to the human widget but are omitted. The model can then request at most 25 selected cases per call. Selected context contains only populated mapped fields such as side, dates, signed amounts, currency, description, beneficiary or counterparty, account name, entity, party, direction, deterministic match stage and deltas, and missing-evidence reason. Unmapped raw columns, empty fields, physical source locators, technical row IDs, review write targets, duplicate facts and the redundant absolute amount are omitted. Exact references, movement numbers, shared references and account codes are off by default and can be requested only for selected cases. Real names, descriptions and other accounting facts can remain; opaque handles are routing controls, not anonymization or pseudonymization of the professional case data.",
+        "content": "The model first receives aggregate item-type counts and an index of opaque per-run case handles, item type, normalized categorical review status, recommended action and only the names of present mechanical signal classes; signal values and source facts remain out. Accepted non-interpretive artifact items remain available to the human widget but are omitted. The model can then request at most 25 selected cases per call. Selected context contains only populated mapped fields such as side, dates, signed amounts, currency, description, beneficiary or counterparty, account name, entity, party, direction, deterministic match stage and deltas, and missing-evidence reason. Unmapped raw columns, empty fields, physical source locators, technical row IDs, review write targets, duplicate facts and the redundant absolute amount are omitted. Exact references, movement numbers, shared references and account codes are off by default and can be requested only for selected cases. Real names, descriptions and other accounting facts can remain; opaque handles are routing controls, not anonymization or pseudonymization of the professional case data. Producer-generated document requests can quote exact identifiers, so selected-case model projection also withholds requested_document unless include_exact_identifiers is true. This field gate applies in both data and evidence. The full human review remains unchanged. Mapped descriptions and other selected source text are not automatically anonymized.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -167,7 +167,7 @@
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "d52c46420c8bc81e35f63b0666fb9aeac0eb053b753e61f9dac3d706eb27edbd"
+    "source_fingerprint": "36fe103cf81427f859a3651c1376d200ec7ebd81bddea95cbd92dfda330756c1"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"

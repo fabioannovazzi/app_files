@@ -221,6 +221,8 @@ earlier Check Entries input manifest or cause it to scan the engagement folder.
 
 ## Supported V2 Inputs
 
+CSV intake recognizes a single consistent comma, semicolon, tab or pipe separator, preserving quoted delimiters and multiline fields. Ambiguous separators or malformed records withhold the source; do not repair or drop source rows silently. Separator recognition does not qualify monetary mappings, currency or source semantics.
+
 - reviewed native Excel/CSV journals with explicit mappings;
 - reviewed registration-style text-PDF journals with cross-page registration closure;
 - reviewed print-friendly Excel exports using the bounded

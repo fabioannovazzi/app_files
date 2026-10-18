@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "contenzioso-tributario",
-  "course_sha256": "2dc5f561080eb40066018e9b53515c92be666bd52423ff3a89ea1209d39ba07a",
+  "course_sha256": "360d1845faee499eb958cbfc7b5084761469b14b685f3892f2aebac5e4d1c3b9",
   "reviewer": "Codex /root: five-language authored lesson and real evidence/progress output review",
   "reviewed_at": "2026-10-14T14:55:04.860976+00:00",
   "review_scope": "Accepted prepared material and bounded real helper/Archive regressions. Semantic narrative and decisions are explicit test fixtures. This does not attest full live legal research, substantive pleading approval, native Word, native voice, installed-host learner execution or professional acceptance. Live lessons run the current specialist, not the fixtures.",
@@ -255,5 +255,16 @@
     "scope": "All authored lesson fields, locales, fictional inputs, checkpoints and execution definitions are unchanged. Source bindings incorporate shared product-bound reporting, verified helper execution and primary-task reporting instructions. Tutorials remain excluded from ordinary task reporting. Historical editorial and output-artifact judgments are preserved.",
     "fresh_matching_junit_required": true,
     "limits": "No new learner, visual, installed-host or professional acceptance is asserted."
+  },
+  "archive_release_shared_runtime_compatibility_20261018": {
+    "reviewer": "Codex /root - bounded complete-course comparison",
+    "reviewed_at": "2026-10-18",
+    "previous_course_sha256": "2dc5f561080eb40066018e9b53515c92be666bd52423ff3a89ea1209d39ba07a",
+    "current_course_sha256": "118eb8a3d5c2accb7b504f17dc304bf8f72536d4bc2db71c0225b3db662c5b9e",
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "scope": "Complete authored course content is unchanged from the integrated candidate. Tested Vera isolated-launcher imports and explicitly selected local-only incident delivery are retained in the new canonical shared reporting runtime and synchronized with the repository tool. Ordinary automatic delivery and product-bound authorization remain unchanged when the test setting is unset. Existing editorial judgments and historical artifact reviews remain preserved; current native teaching CI against exact new digests is required. No new learner, native visual or professional acceptance is asserted."
   }
 }

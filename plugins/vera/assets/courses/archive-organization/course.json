@@ -55,12 +55,12 @@
     {
       "path": "modules/archive-organization/references/proposal-contract.md",
       "repository_path": "plugins/archive-organization/references/proposal-contract.md",
-      "sha256": "ce1d2bf3eb180f619e866b909b11b47d6ebd410c49e1bcba41f36010e7a5a30e"
+      "sha256": "5a3dfee5cfd7197593ae14aaa069907ce287cc9f3d761bdaffcdce501cff8d82"
     },
     {
       "path": "modules/archive-organization/references/review-labels.json",
       "repository_path": "plugins/archive-organization/references/review-labels.json",
-      "sha256": "ce1464a869f5823b9260336bc28e4c2f0d3cfba982650cb2c92e9a31feff776a"
+      "sha256": "ab567a2220cc1c27146d5e0780ae61e3f57a88f1bff4acec8ac60cea4dadabf1"
     },
     {
       "path": "modules/archive-organization/requirements.txt",
@@ -70,7 +70,7 @@
     {
       "path": "modules/archive-organization/scripts/archive_organization.py",
       "repository_path": "plugins/archive-organization/scripts/archive_organization.py",
-      "sha256": "7a6ff25a01163a828a8673e6e522291695cab75302b91f1dfa0ac81b8b4b8063"
+      "sha256": "5d8a3314789214e912bb62f2bbc435695017cb94a9732f9409e57fa9e622603c"
     },
     {
       "path": "modules/archive-organization/scripts/check_dependencies.py",
@@ -80,7 +80,7 @@
     {
       "path": "modules/archive-organization/skills/archive-organization/SKILL.md",
       "repository_path": "plugins/archive-organization/skills/archive-organization/SKILL.md",
-      "sha256": "fc5f82995bd87abadb9ccf9ccdab19adad62bd2d0b8a924246c036a76fb1dcea"
+      "sha256": "415e112448701e0fdff272df940eff29f4426b2b569e5df438c92adae571d840"
     },
     {
       "path": "modules/archive-organization/skills/archive-organization/agents/openai.yaml",

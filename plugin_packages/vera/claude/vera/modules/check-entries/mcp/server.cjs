@@ -238,7 +238,6 @@ const MODEL_CASE_DATA_FIELDS = new Set([
   "amount_found",
   "date_found",
   "beneficiary_found",
-  "requested_document",
   "reason",
   "extractable_text",
   "text_chars",
@@ -259,6 +258,8 @@ const MODEL_CONTEXT_EXACT_IDENTIFIER_FIELDS = new Set([
   "tax_id",
   "vat_number",
   "fiscal_code",
+  // Producer-authored requests can quote the exact reference or movement ID.
+  "requested_document",
 ]);
 const MODEL_CONTEXT_EVIDENCE_FIELDS = new Set([
   "kind",
@@ -273,7 +274,6 @@ const MODEL_CONTEXT_EVIDENCE_FIELDS = new Set([
   "professional_conclusion",
   "assurance_gate_status",
   "value",
-  "requested_document",
   "reason",
   "extractable_text",
   "text_chars",
@@ -652,7 +652,7 @@ function toolDefinitions() {
       },
       include_exact_identifiers: {
         type: "boolean",
-        description: "Include exact movement, invoice, account, tax, or reference identifiers only when the selected evidence judgment requires them.",
+        description: "Include exact identifiers and generated document requests that may quote them only when required for the selected accounting judgment.",
       },
     },
     ["persistence_token", "case_handles"],
@@ -1013,28 +1013,17 @@ function modelContextProjectEvidenceFacts(value, includeExactIdentifiers, depth 
     return result.length ? result : undefined;
   }
   if (!isPlainObject(value)) return modelContextCleanValue(value, depth);
-  const technicalFields = new Set([
-    "prepared_entry_id",
-    "support_artifact_id",
-    "source_file",
-    "source_path",
-    "source_row",
-    "source_page",
-    "source_locator",
-    "path",
-    "filename",
-  ]);
   const result = {};
+  // Candidate identity stays in the private review payload; ambiguity and its
+  // size remain useful to the model without exposing receipt IDs or filenames.
+  if (Array.isArray(value.candidate_filenames)) {
+    result.candidate_count = value.candidate_filenames.length;
+  }
   for (const [key, entry] of Object.entries(value)) {
     const normalizedKey = key.toLowerCase();
     if (
-      technicalFields.has(normalizedKey)
-      || normalizedKey === "id"
-      || normalizedKey.endsWith("_id")
-      || normalizedKey.endsWith("_path")
-      || normalizedKey.endsWith("_file")
-      || normalizedKey.endsWith("_filename")
-      || normalizedKey.endsWith("_locator")
+      /(?:^|_)(?:ids?|paths?|files?|filenames?|locators?)$/.test(normalizedKey)
+      || /^(?:source_rows?|source_pages?)$/.test(normalizedKey)
       || normalizedKey.startsWith("target_")
       || normalizedKey.startsWith("output_")
     ) {
@@ -1770,6 +1759,9 @@ function validateCheckEntriesTransactionInput(outputDir) {
 }
 
 function readOnlyAssuredReviewArgs(inputArgs) {
+  // File-backed review inputs must be loaded before deciding whether the
+  // current run requires parent-bound authorization and fresh reperformance.
+  inputArgs = materializePrivateReviewArgs(inputArgs);
   const outputDir = resolveRunOutputDir(inputArgs);
   if (!outputDir || !hasAssuredCheckEntriesMarker(outputDir)) {
     return inputArgs;
@@ -4445,6 +4437,73 @@ function pythonExecutable() {
   return "python3";
 }
 
+const CHECK_ENTRIES_MANAGED_PYTHON_RESOLVER = String.raw`
+import importlib.util
+import json
+import sys
+from pathlib import Path
+
+launcher = Path(sys.argv[1]).resolve()
+spec = importlib.util.spec_from_file_location("check_entries_managed_runtime", launcher)
+if spec is None or spec.loader is None:
+    raise RuntimeError("Managed runtime loader is unavailable.")
+runtime = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = runtime
+spec.loader.exec_module(runtime)
+target = runtime.activate_runtime(launcher.parents[1], "check-entries")
+if target is None:
+    raise RuntimeError("Managed Python runtime is not ready.")
+print(json.dumps({"python": str(runtime.runtime_python(target)), "virtual_env": str(target)}))
+`;
+
+let checkEntriesManagedPython;
+
+function checkEntriesAssuranceChildPython() {
+  if (process.env.VERA_COMPONENT_HOST !== "1") {
+    return { executable: pythonExecutable(), environment: process.env };
+  }
+  if (checkEntriesManagedPython) return checkEntriesManagedPython;
+  const launchers = [
+    path.resolve(PLUGIN_ROOT, "..", "..", "scripts", "managed_python_runtime.py"),
+    ...["vera", "clara", "lucia"].map((product) =>
+      path.resolve(PLUGIN_ROOT, "..", product, "scripts", "managed_python_runtime.py"),
+    ),
+  ];
+  const launcher = launchers.find((candidate) => fs.existsSync(candidate));
+  if (!launcher) {
+    throw new Error("Vouching managed Python runtime is unavailable.");
+  }
+  // Resolve an already prepared runtime. MCP review never installs dependencies.
+  const completed = spawnSync(
+    pythonExecutable(),
+    ["-I", "-B", "-c", CHECK_ENTRIES_MANAGED_PYTHON_RESOLVER, launcher],
+    { cwd: PLUGIN_ROOT, encoding: "utf8", timeout: 60_000, maxBuffer: 64 * 1024, env: localHelperEnvironment() },
+  );
+  if (completed.error || completed.status !== 0) {
+    throw new Error("Vouching managed Python runtime is not ready; run the maintained workflow setup.");
+  }
+  let resolved;
+  try {
+    resolved = JSON.parse(completed.stdout.trim());
+  } catch {
+    throw new Error("Vouching managed Python runtime returned invalid data.");
+  }
+  if (!isPlainObject(resolved) || typeof resolved.python !== "string" ||
+      !path.isAbsolute(resolved.python) || !fs.existsSync(resolved.python) ||
+      typeof resolved.virtual_env !== "string" || !path.isAbsolute(resolved.virtual_env)) {
+    throw new Error("Vouching managed Python runtime returned invalid paths.");
+  }
+  const environment = {
+    ...process.env,
+    PATH: [path.dirname(resolved.python), process.env.PATH].filter(Boolean).join(path.delimiter),
+    VIRTUAL_ENV: resolved.virtual_env,
+    MPARANZA_MANAGED_RUNTIME_VERIFY: "1",
+  };
+  delete environment.PYTHONHOME;
+  checkEntriesManagedPython = { executable: resolved.python, environment };
+  return checkEntriesManagedPython;
+}
+
 function noAssurancePreflight() {
   return {
     ok: true,
@@ -4567,14 +4626,15 @@ function parseWorkflowScriptOutput(completed, phase) {
 }
 
 function runWorkflowPython(args, phase) {
+  const childPython = checkEntriesAssuranceChildPython();
   let completed;
   try {
     completed = spawnSync(
-      pythonExecutable(),
+      childPython.executable,
       ["-I", "-B", ...args],
       {
         cwd: PLUGIN_ROOT,
-        env: localHelperEnvironment(),
+        env: localHelperEnvironment(childPython.environment),
         encoding: "utf8",
         maxBuffer: CHILD_OUTPUT_MAX_BYTES,
       },

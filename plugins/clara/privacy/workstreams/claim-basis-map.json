@@ -85,11 +85,32 @@
     "run-receipt-stamping",
     "workflow-usage"
   ],
-  "public_explanations": {},
+  "public_explanations": {
+    "clara-claim-basis-map": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Il modello può leggere il testo di tutte le slide, nomi delle forme, affermazioni, titoli e URL delle fonti, calcoli, ipotesi e riferimenti tra slide. Il controllo conserva anche testi brevi e note per la revisione semantica. Nel caso condiviso può leggere identificativi di prove e affermazioni, dipendenze e impronte degli elaborati. Il contenitore PPTX viene elaborato localmente; le immagini entrano nel contesto quando vengono ispezionate. Nessuna anonimizzazione automatica."
+        ],
+        "en": [
+          "The model may read all slide text, shape names, claims, source titles and URLs, calculations, assumptions and cross-slide references. The audit retains short text and footnotes for semantic review. Shared cases can also expose evidence and claim IDs, dependencies and output fingerprints. The PPTX container is processed locally; images enter context when inspected. There is no automatic anonymization."
+        ],
+        "fr": [
+          "Le modèle peut lire tous les textes des diapositives, noms de formes, affirmations, titres et URL des sources, calculs, hypothèses et références entre diapositives. Le contrôle conserve textes courts et notes pour la revue sémantique. Un dossier partagé peut exposer identifiants des preuves et affirmations, dépendances et empreintes des livrables. Le conteneur PPTX est traité localement ; les images entrent dans le contexte lorsqu’elles sont examinées. Aucune anonymisation automatique."
+        ],
+        "de": [
+          "Das Modell kann sämtliche Folientexte, Formnamen, Aussagen, Quellentitel und URLs, Berechnungen, Annahmen und Folienverweise lesen. Die Prüfung erhält auch kurze Texte und Fußnoten für die semantische Prüfung. Gemeinsame Fälle können Beleg- und Aussagenkennungen, Abhängigkeiten und Ergebnisprüfsummen enthalten. Der PPTX-Container wird lokal verarbeitet; Bilder gelangen bei Sichtprüfung in den Kontext. Keine automatische Anonymisierung."
+        ],
+        "es": [
+          "El modelo puede leer todos los textos de las diapositivas, nombres de formas, afirmaciones, títulos y URL de fuentes, cálculos, supuestos y referencias entre diapositivas. El control conserva textos breves y notas para la revisión semántica. Los casos compartidos pueden mostrar identificadores de pruebas y afirmaciones, dependencias y huellas de resultados. El contenedor PPTX se procesa localmente; las imágenes entran en contexto al inspeccionarlas. No hay anonimización automática."
+        ]
+      }
+    }
+  },
   "review": {
-    "reviewed_at": "2026-09-15",
+    "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "18b26132e767685f9fc9f189bc400d09a95f80d940aeed9661807219bb243b37"
+    "source_fingerprint": "515595c801fea830b4dc6f987a0f24de0785489d41b388a9a89bdcd40506e5d9"
   }
 }

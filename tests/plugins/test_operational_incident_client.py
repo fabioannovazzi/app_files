@@ -25,6 +25,58 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 @pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
+def test_local_delivery_retains_failure_and_success_without_transport(
+    tmp_path, monkeypatch, product
+):
+    module, store, _ = client(tmp_path, monkeypatch, product)
+    monkeypatch.setenv("MPARANZA_INCIDENT_DELIVERY", "local-only")
+    receipt = module.report_failure(
+        "journal-sampling", "execution-startup", "Synthetic argument failure"
+    )
+    assert receipt["reporting"] == "queued"
+    assert store.queue() == []
+    state = json.loads(module._state_path().read_text())
+    assert state["registered"] is False and state["receipts"] == []
+    assert state["delivery_mode"] == "local-only"
+    assert [item["operation"] for item in state["outbox"]] == ["report"]
+    installation_id = state["credentials"]["installation_id"]
+    module.record_success("journal-sampling", "run_sample.py")
+    state = json.loads(module._state_path().read_text())
+    assert state["credentials"]["installation_id"] == installation_id
+    assert [item["operation"] for item in state["outbox"]] == [
+        "report",
+        "observed-success",
+    ]
+    assert store.queue() == [] and state["receipts"] == []
+    monkeypatch.delenv("MPARANZA_INCIDENT_DELIVERY")
+    module._flush(state)
+    assert store.queue() == []
+
+
+@pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
+@pytest.mark.parametrize(
+    "mode,error", [("local-only", urllib.error.URLError), ("invalid", ValueError)]
+)
+def test_incident_delivery_setting_blocks_direct_http(
+    tmp_path, monkeypatch, mode, error, product
+):
+    spec = importlib.util.spec_from_file_location(
+        "local_only_incident_transport",
+        ROOT / "plugins" / product / "scripts/operational_incidents.py",
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    monkeypatch.setenv("MPARANZA_INCIDENT_DELIVERY", mode)
+    monkeypatch.setattr(
+        module.urllib.request,
+        "build_opener",
+        lambda *_args: pytest.fail("Incident transport must not open a connection"),
+    )
+    with pytest.raises(error):
+        module._post("status", {"credentials": {}})
+
+
+@pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
 def test_agent_diagnosis_reply_and_corrected_original_task_end_to_end(
     tmp_path, monkeypatch, product
 ):
@@ -1155,13 +1207,15 @@ def test_cli_context_returns_saved_identity_when_network_is_blocked(
 
 
 @pytest.mark.parametrize("extra_stderr_bytes", [0, 100000])
+@pytest.mark.parametrize("delivery", ["automatic", "local-only"])
 def test_real_failed_helper_retains_error_chain_without_uploading_raw_stderr(
-    tmp_path, monkeypatch, capfd, caplog, extra_stderr_bytes
+    tmp_path, monkeypatch, capfd, caplog, extra_stderr_bytes, delivery
 ):
     import sys
     from types import SimpleNamespace
 
     module, store, _ = client(tmp_path, monkeypatch)
+    monkeypatch.setenv("MPARANZA_INCIDENT_DELIVERY", delivery)
     monkeypatch.setitem(sys.modules, "operational_incidents", module)
     spec = importlib.util.spec_from_file_location(
         "diagnostic_capture_launcher",
@@ -1216,15 +1270,24 @@ def test_real_failed_helper_retains_error_chain_without_uploading_raw_stderr(
     assert "PROFESSIONAL_STDOUT_SENTINEL" not in raw
     transmitted = json.dumps(store.queue())
     assert "PRIVATE_CASE_VALUE_SENTINEL" not in transmitted
-    assert "synthetic transport failed" in transmitted
-    assert "synthetic underlying cause" in transmitted
     assert saved["report"]["capture_state"] == "complete"
-    assert (
-        saved["report"]["report_id"]
-        == store.status(
-            Credentials.model_validate(module.local_context()["credentials"])
-        )["incidents"][0]["latest_report_id"]
-    )
+    if delivery == "local-only":
+        assert store.queue() == []
+        state = json.loads(module._state_path().read_text())
+        assert state["registered"] is False and state["receipts"] == []
+        assert (
+            state["outbox"][0]["payload"]["report"]["report_id"]
+            == saved["report"]["report_id"]
+        )
+    else:
+        assert "synthetic transport failed" in transmitted
+        assert "synthetic underlying cause" in transmitted
+        assert (
+            saved["report"]["report_id"]
+            == store.status(
+                Credentials.model_validate(module.local_context()["credentials"])
+            )["incidents"][0]["latest_report_id"]
+        )
     captured = capfd.readouterr()
     assert "PROFESSIONAL_STDOUT_SENTINEL" in captured.out
     assert "synthetic transport failed" in captured.err

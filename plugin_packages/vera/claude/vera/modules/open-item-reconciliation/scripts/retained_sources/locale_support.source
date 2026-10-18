@@ -1283,6 +1283,354 @@ WORD_OUTPUT_LABELS.update(
 )
 
 
+# Exact renderer-owned rules and categories; source descriptions remain unchanged.
+WORD_OUTPUT_LABELS.update(
+    {
+        "exact_document_partial_bank_payment": {
+            "it": "Pagamento bancario parziale con riferimento esatto al documento",
+            "en": "Partial bank payment with exact document reference",
+            "fr": "Paiement bancaire partiel avec référence exacte au document",
+            "de": "Teilzahlung per Bank mit genauem Belegbezug",
+            "es": "Pago bancario parcial con referencia exacta al documento",
+        },
+        "exact_document_partial_compensation": {
+            "it": "Compensazione documentata parziale",
+            "en": "Partial documented set-off",
+            "fr": "Compensation partielle documentée",
+            "de": "Teilweise dokumentierte Aufrechnung",
+            "es": "Compensación documentada parcial",
+        },
+        "other_external": {
+            "it": "Altra evidenza esterna",
+            "en": "Other external evidence",
+            "fr": "Autre justificatif externe",
+            "de": "Sonstiger externer Beleg",
+            "es": "Otra evidencia externa",
+        },
+        "factor_or_operator_debit_fee": {
+            "it": "Addebito o commissione del factor o operatore",
+            "en": "Factor or operator debit or fee",
+            "fr": "Débit ou commission du factor ou opérateur",
+            "de": "Belastung oder Gebühr des Factors oder Dienstleisters",
+            "es": "Cargo o comisión del factor u operador",
+        },
+        "bank_advance_repayment": {
+            "it": "Rimborso di anticipo bancario",
+            "en": "Bank advance repayment",
+            "fr": "Remboursement d’avance bancaire",
+            "de": "Rückzahlung eines Bankvorschusses",
+            "es": "Reembolso de anticipo bancario",
+        },
+        "bank_advance_credit": {
+            "it": "Accredito di anticipo bancario",
+            "en": "Bank advance credit",
+            "fr": "Crédit d’avance bancaire",
+            "de": "Gutschrift eines Bankvorschusses",
+            "es": "Abono de anticipo bancario",
+        },
+        "factor_operator_cash_inflow": {
+            "it": "Incasso da factor o operatore",
+            "en": "Receipt from factor or operator",
+            "fr": "Encaissement du factor ou opérateur",
+            "de": "Zahlungseingang vom Factor oder Dienstleister",
+            "es": "Cobro del factor u operador",
+        },
+        "direct_counterparty_bank_receipt": {
+            "it": "Incasso bancario diretto dalla controparte",
+            "en": "Direct bank receipt from counterparty",
+            "fr": "Encaissement bancaire direct de la contrepartie",
+            "de": "Direkter Bankeingang von der Gegenpartei",
+            "es": "Cobro bancario directo de la contraparte",
+        },
+        "direct_counterparty_bank_payment": {
+            "it": "Pagamento bancario diretto alla controparte",
+            "en": "Direct bank payment to counterparty",
+            "fr": "Paiement bancaire direct à la contrepartie",
+            "de": "Direkte Bankzahlung an die Gegenpartei",
+            "es": "Pago bancario directo a la contraparte",
+        },
+        "counterparty_bank_other": {
+            "it": "Altro movimento bancario della controparte",
+            "en": "Other counterparty bank movement",
+            "fr": "Autre mouvement bancaire de la contrepartie",
+            "de": "Sonstige Bankbewegung der Gegenpartei",
+            "es": "Otro movimiento bancario de la contraparte",
+        },
+        "factor_operator_other": {
+            "it": "Altro movimento del factor o operatore",
+            "en": "Other factor or operator movement",
+            "fr": "Autre mouvement du factor ou opérateur",
+            "de": "Sonstige Bewegung des Factors oder Dienstleisters",
+            "es": "Otro movimiento del factor u operador",
+        },
+    }
+)
+
+
+# Known review signals and evidence levels emitted by the specialist.
+WORD_OUTPUT_LABELS.update(
+    {
+        "evidence_weak_internal": {
+            "it": "Evidenza interna debole",
+            "en": "Weak internal evidence",
+            "fr": "Justificatif interne faible",
+            "de": "Schwacher interner Beleg",
+            "es": "Evidencia interna débil",
+        },
+        "evidence_bridge_only": {
+            "it": "Solo evidenza ponte",
+            "en": "Bridge evidence only",
+            "fr": "Justificatif intermédiaire uniquement",
+            "de": "Nur Überleitungsbeleg",
+            "es": "Solo evidencia puente",
+        },
+        "old_open_item": {
+            "it": "Partita datata",
+            "en": "Long-outstanding item",
+            "fr": "Poste ouvert ancien",
+            "de": "Seit Langem offener Posten",
+            "es": "Partida antigua",
+        },
+        "payment_order_bridge": {
+            "it": "Distinta come evidenza ponte",
+            "en": "Payment order as bridge evidence",
+            "fr": "Ordre de paiement comme justificatif intermédiaire",
+            "de": "Zahlungsauftrag als Überleitungsbeleg",
+            "es": "Orden de pago como evidencia puente",
+        },
+        "same_document_same_absolute_amount": {
+            "it": "Stesso documento e importo assoluto",
+            "en": "Same document and absolute amount",
+            "fr": "Même document et même montant absolu",
+            "de": "Gleicher Beleg und gleicher Absolutbetrag",
+            "es": "Mismo documento e importe absoluto",
+        },
+        "reversal_or_compensation_keyword": {
+            "it": "Indicazione di storno o compensazione",
+            "en": "Reversal or set-off wording",
+            "fr": "Mention d’annulation ou de compensation",
+            "de": "Hinweis auf Storno oder Aufrechnung",
+            "es": "Mención de anulación o compensación",
+        },
+        "closure_or_compensation_type": {
+            "it": "Registrazione di chiusura o compensazione",
+            "en": "Closing or set-off entry type",
+            "fr": "Écriture de solde ou de compensation",
+            "de": "Ausgleichs- oder Aufrechnungsbuchung",
+            "es": "Registro de cierre o compensación",
+        },
+        "weak_internal": {
+            "it": "Evidenza interna debole",
+            "en": "Weak internal evidence",
+            "fr": "Justificatif interne faible",
+            "de": "Schwacher interner Beleg",
+            "es": "Evidencia interna débil",
+        },
+        "bridge_only": {
+            "it": "Solo evidenza ponte",
+            "en": "Bridge evidence only",
+            "fr": "Justificatif intermédiaire uniquement",
+            "de": "Nur Überleitungsbeleg",
+            "es": "Solo evidencia puente",
+        },
+        "probable_external": {
+            "it": "Evidenza esterna probabile",
+            "en": "Probable external evidence",
+            "fr": "Justificatif externe probable",
+            "de": "Wahrscheinlicher externer Beleg",
+            "es": "Evidencia externa probable",
+        },
+        "configured_strong": {
+            "it": "Evidenza qualificata secondo la regola configurata",
+            "en": "Evidence qualified under configured policy",
+            "fr": "Justificatif qualifié selon la règle configurée",
+            "de": "Nach konfigurierter Regel qualifizierter Beleg",
+            "es": "Evidencia calificada según la regla configurada",
+        },
+    }
+)
+
+
+WORD_OUTPUT_LABELS.update(
+    {
+        "high_value": {
+            "it": "Importo elevato",
+            "en": "High amount",
+            "fr": "Montant élevé",
+            "de": "Hoher Betrag",
+            "es": "Importe elevado",
+        },
+        "exact_amount_match": {
+            "it": "Importo esatto",
+            "en": "Exact amount",
+            "fr": "Montant exact",
+            "de": "Genauer Betrag",
+            "es": "Importe exacto",
+        },
+        "opposite_sign_amount": {
+            "it": "Importo di segno opposto",
+            "en": "Opposite-sign amount",
+            "fr": "Montant de signe opposé",
+            "de": "Betrag mit umgekehrtem Vorzeichen",
+            "es": "Importe de signo opuesto",
+        },
+    }
+)
+
+
+WORD_OUTPUT_LABELS.update(
+    {
+        "partially_paid_amount": {
+            "it": "Importo delle partite regolate parzialmente",
+            "en": "Face amount of partly settled items",
+            "fr": "Montant nominal des postes partiellement soldés",
+            "de": "Nennbetrag teilweise ausgeglichener Posten",
+            "es": "Importe nominal de partidas parcialmente liquidadas",
+        }
+    }
+)
+
+
+# Professional assumption captions; diagnostic source-review metadata stays canonical.
+WORD_OUTPUT_LABELS.update(
+    {
+        "jurisdiction": {
+            "it": "Giurisdizione",
+            "en": "Jurisdiction",
+            "fr": "Juridiction",
+            "de": "Rechtsordnung",
+            "es": "Jurisdicción",
+        },
+        "locale": {
+            "it": "Convenzioni locali",
+            "en": "Locale conventions",
+            "fr": "Conventions locales",
+            "de": "Gebietsschema",
+            "es": "Convenciones locales",
+        },
+        "unit": {
+            "it": "Unità di misura",
+            "en": "Unit of measure",
+            "fr": "Unité de mesure",
+            "de": "Maßeinheit",
+            "es": "Unidad de medida",
+        },
+        "entity_ref": {
+            "it": "Soggetto esaminato",
+            "en": "Entity under review",
+            "fr": "Entité examinée",
+            "de": "Geprüfte Einheit",
+            "es": "Entidad examinada",
+        },
+        "party_ref": {
+            "it": "Controparte",
+            "en": "Counterparty",
+            "fr": "Contrepartie",
+            "de": "Gegenpartei",
+            "es": "Contraparte",
+        },
+        "amount_tolerance": {
+            "it": "Tolleranza sugli importi",
+            "en": "Amount tolerance",
+            "fr": "Tolérance sur les montants",
+            "de": "Betragstoleranz",
+            "es": "Tolerancia de importes",
+        },
+        "rollforward_amount_tolerance": {
+            "it": "Tolleranza sulla quadratura dei saldi",
+            "en": "Balance rollforward tolerance",
+            "fr": "Tolérance sur le rapprochement des soldes",
+            "de": "Toleranz der Saldenüberleitung",
+            "es": "Tolerancia en la conciliación de saldos",
+        },
+        "document_date_tolerance_days": {
+            "it": "Tolleranza sulle date dei documenti in giorni",
+            "en": "Document date tolerance in days",
+            "fr": "Tolérance sur les dates des documents en jours",
+            "de": "Toleranz der Belegdaten in Tagen",
+            "es": "Tolerancia de fechas de documentos en días",
+        },
+        "promote_probable_bank_payments": {
+            "it": "Utilizza le proposte di pagamento bancario",
+            "en": "Use probable bank-payment candidates",
+            "fr": "Utiliser les propositions de paiement bancaire",
+            "de": "Kandidaten für wahrscheinliche Bankzahlungen verwenden",
+            "es": "Utilizar propuestas de pago bancario",
+        },
+        "probable_bank_exact_matches_close": {
+            "it": "Chiudi le partite con pagamento probabile e abbinamento esatto",
+            "en": "Clear probable payments with exact matches",
+            "fr": "Solder les paiements probables avec correspondance exacte",
+            "de": "Wahrscheinliche Zahlungen bei genauer Zuordnung ausgleichen",
+            "es": "Cerrar pagos probables con coincidencia exacta",
+        },
+        "sample_kind": {
+            "it": "Tipo di campione",
+            "en": "Sample type",
+            "fr": "Type d’échantillon",
+            "de": "Stichprobenart",
+            "es": "Tipo de muestra",
+        },
+        "human_confirmation": {
+            "it": "Conferma umana",
+            "en": "Human confirmation",
+            "fr": "Confirmation humaine",
+            "de": "Menschliche Bestätigung",
+            "es": "Confirmación humana",
+        },
+        "professional_approval": {
+            "it": "Approvazione professionale",
+            "en": "Professional approval",
+            "fr": "Approbation professionnelle",
+            "de": "Fachliche Freigabe",
+            "es": "Aprobación profesional",
+        },
+        "agent_test": {
+            "it": "Prova sintetica automatizzata",
+            "en": "Automated synthetic test",
+            "fr": "Test synthétique automatisé",
+            "de": "Automatisierter synthetischer Test",
+            "es": "Prueba sintética automatizada",
+        },
+        "auto": {
+            "it": "Rilevamento automatico",
+            "en": "Automatic detection",
+            "fr": "Détection automatique",
+            "de": "Automatische Erkennung",
+            "es": "Detección automática",
+        },
+        "factoring_operator_keywords": {
+            "it": "Parole chiave degli operatori di factoring",
+            "en": "Factoring operator keywords",
+            "fr": "Mots-clés des opérateurs d’affacturage",
+            "de": "Suchbegriffe der Factoringanbieter",
+            "es": "Palabras clave de operadores de factoring",
+        },
+        "review_high_value_threshold": {
+            "it": "Soglia di segnalazione degli importi elevati",
+            "en": "High-amount review threshold",
+            "fr": "Seuil de revue des montants élevés",
+            "de": "Prüfschwelle für hohe Beträge",
+            "es": "Umbral de revisión de importes elevados",
+        },
+        "review_old_age_days": {
+            "it": "Soglia delle partite datate in giorni",
+            "en": "Long-outstanding item threshold in days",
+            "fr": "Seuil des postes anciens en jours",
+            "de": "Schwelle für lange offene Posten in Tagen",
+            "es": "Umbral de partidas antiguas en días",
+        },
+        "cutoff_window_days": {
+            "it": "Intervallo di controllo intorno al cut-off in giorni",
+            "en": "Cutoff review window in days",
+            "fr": "Période de contrôle autour de la date de référence en jours",
+            "de": "Prüfzeitraum um den Stichtag in Tagen",
+            "es": "Periodo de revisión alrededor del corte en días",
+        },
+    }
+)
+
+
 def canonical_word_label(value: object) -> object:
     """Resolve exact renderer-owned captions; leave source text untouched."""
     if not isinstance(value, str):

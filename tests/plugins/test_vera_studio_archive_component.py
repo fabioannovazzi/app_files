@@ -1940,6 +1940,7 @@ def test_mcp_lists_thirty_three_strict_local_tools(tmp_path: Path) -> None:
         "create_studio_archive_client",
         "create_studio_client_engagement",
         "import_studio_client_document",
+        "copy_studio_client_source_folder",
         "snapshot_studio_client_folder",
         "studio_archive_google_drive_status",
         "bind_studio_client_google_drive",
@@ -3266,3 +3267,141 @@ def test_tax_litigation_reuses_sealed_intake_in_a_distinct_resumable_archive_run
         for p in output.rglob("*")
         if p.is_file()
     }
+
+
+def test_mcp_folder_delivery_requires_authority_and_reaches_organization_snapshot(
+    tmp_path: Path,
+) -> None:
+    state = tmp_path / "state"
+    archive = tmp_path / "Studio"
+    archive.mkdir()
+    assert (
+        _mcp_tool(
+            "configure_studio_archive",
+            {"archive_root": str(archive)},
+            state_dir=state,
+        )["isError"]
+        is False
+    )
+    client = _mcp_tool(
+        "create_studio_archive_client",
+        {"legal_name": "Synthetic folder intake"},
+        state_dir=state,
+    )["structuredContent"]["client"]["client_id"]
+    engagement = _mcp_tool(
+        "create_studio_client_engagement",
+        {"client_id": client, "engagement_label": "Organization delivery"},
+        state_dir=state,
+    )["structuredContent"]["engagement"]["engagement_id"]
+    source = tmp_path / "Received files"
+    (source / "2025").mkdir(parents=True)
+    (source / "2025/invoice.txt").write_text("Invoice source preserved")
+    args = {
+        "client_id": client,
+        "engagement_id": engagement,
+        "source_path": str(source),
+        "copy_authorized": False,
+    }
+
+    refused = _mcp_tool("copy_studio_client_source_folder", args, state_dir=state)
+    copied = _mcp_tool(
+        "copy_studio_client_source_folder",
+        {**args, "copy_authorized": True},
+        state_dir=state,
+    )
+    snapshot = _mcp_tool(
+        "snapshot_studio_client_folder",
+        {"client_id": client, "engagement_id": engagement},
+        state_dir=state,
+    )
+
+    assert refused["isError"] is True
+    assert "explicit user copy authorization" in json.dumps(refused)
+    assert copied["isError"] is False
+    assert copied["structuredContent"]["file_count"] == 1
+    assert (
+        Path(copied["structuredContent"]["destination_path"])
+        .joinpath("2025/invoice.txt")
+        .read_bytes()
+        == (source / "2025/invoice.txt").read_bytes()
+    )
+    assert snapshot["isError"] is False
+    assert "Received files/2025/invoice.txt" in json.dumps(snapshot)
+
+
+def test_source_folder_copy_core_preserves_snapshot_visible_files(
+    indexed_archive: SimpleNamespace,
+    archive_core: ModuleType,
+    tmp_path: Path,
+) -> None:
+    registered = archive_core.set_studio_client_identity(
+        indexed_archive.scopes["Rossi"],
+        legal_names=["Rossi SRL"],
+        state_dir=indexed_archive.state,
+    )
+    cid = registered["client"]["client_id"]
+    eid = archive_core.create_studio_client_engagement(
+        cid,
+        "External delivery",
+        state_dir=indexed_archive.state,
+    )["engagement"]["engagement_id"]
+    source = tmp_path / "delivery"
+    (source / "2025").mkdir(parents=True)
+    (source / "2025/invoice.txt").write_bytes(b"Unchanged external document")
+
+    first = archive_core.copy_studio_client_source_folder(
+        cid,
+        eid,
+        source,
+        copy_authorized=True,
+        state_dir=indexed_archive.state,
+    )
+    retry = archive_core.copy_studio_client_source_folder(
+        cid,
+        eid,
+        source,
+        copy_authorized=True,
+        state_dir=indexed_archive.state,
+    )
+
+    assert first["status"] == "copied"
+    assert retry["status"] == "already_copied"
+    assert (
+        Path(first["destination_path"]).joinpath("2025/invoice.txt").read_bytes()
+        == b"Unchanged external document"
+    )
+    assert first["receipt_path"] == retry["receipt_path"]
+
+
+def test_snapshot_refuses_directory_entries_added_during_capture(
+    indexed_archive: SimpleNamespace,
+    archive_core: ModuleType,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    registered = archive_core.set_studio_client_identity(
+        indexed_archive.scopes["Rossi"],
+        legal_names=["Rossi SRL"],
+        state_dir=indexed_archive.state,
+    )
+    cid = registered["client"]["client_id"]
+    eid = archive_core.create_studio_client_engagement(
+        cid,
+        "Concurrent arrival",
+        state_dir=indexed_archive.state,
+    )["engagement"]["engagement_id"]
+    original = archive_core.ledger._stable_file_identity
+
+    def new_arrival(path, *, label):
+        result = original(path, label=label)
+        if path == indexed_archive.source:
+            path.with_name("new-arrival.txt").write_text("Arrived during snapshot")
+        return result
+
+    monkeypatch.setattr(archive_core.ledger, "_stable_file_identity", new_arrival)
+
+    with pytest.raises(archive_core.ArchiveError, match="changed during the snapshot"):
+        archive_core.snapshot_studio_client_folder(
+            cid,
+            eid,
+            state_dir=indexed_archive.state,
+        )

@@ -1150,6 +1150,8 @@ def _registration_errors(root: Path) -> list[str]:
                 "registry: every embedded component requires exactly one privacy owner"
             )
         for name, entry in entries.items():
+            if entry["role"] == "workflow" and not entry["public_pages"]:
+                errors.append(f"{name}: workflow requires a public explanation page")
             if entry["source"] != "product" and entry["source"] not in components:
                 errors.append(f"{name}: source is not a registered embedded component")
             if name == "studio-archive" and entry["role"] != "internal_engine":

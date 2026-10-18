@@ -187,7 +187,7 @@ IBAN fragments, or other stable identifiers. Only explicit `reference` and
 `movement_number` fields participate in the reference stage. Descriptions and
 beneficiary names remain review context. Generic words such as `invoice`,
 `payment`, `document`, or `transfer` are not stable identifiers; reference
-tokens must contain a non-generic identifier with digits.
+tokens must contain a non-generic identifier with digits. A complete short mixed-alphanumeric value in a mapped reference or movement-number field (for example C101, A17 or INV-1) is retained as an exact whole-field identifier, with punctuation preserved. This exception never promotes short fragments from free text, bare numbers or generic period labels. All amount, date, perimeter, no-reuse and ambiguity controls still apply.
 
 `currency`, `unit`, `entity_ref`, `party_ref`, and `direction` define the
 relationship perimeter. Missing required values may be supplied only through a
@@ -452,3 +452,31 @@ Codex must not:
 - hide unresolved ambiguity;
 - make direct OpenAI API calls from helper scripts;
 - ask the user to operate CLI scripts directly.
+
+
+## Resolution value dimensions
+
+The v2 resolution funnel and human-review queue preserve counts across the whole bank population but partition gross values in `value_totals` by exact currency and unit. `gross_absolute_value` is a scalar only for a single known currency/unit pair (or zero for an empty set). Mixed currencies or units, missing denomination, or a missing amount withhold that scalar as `null` and explain `value_aggregation_status`. Cumulative levels and the unresolved queue use the same partitioning. No exchange rate or unit conversion is implied, and the strict reconciliation ledgers remain unchanged.
+
+
+## Selected model context and document requests
+
+The selected-case tool withholds exact identifier fields by default. The generated `requested_document` can quote those identifiers and therefore follows the same `include_exact_identifiers` flag in data and evidence. The model can explicitly request it for the selected accounting judgment; the human review retains the full request throughout. This field projection does not anonymize mapped source descriptions or other purposeful free text.
+
+## Operational MCP handoff
+
+The reduced `semantic-review/operational_review_payload.json` is read-only in
+the MCP workbench. Validate it with `review_payload_path` alone, optionally
+including the current `client_engagement`, then render the opaque reference and
+select only needed cases. Do not supply the strict reconciliation folder's
+intake, decision or artifact paths for this separate payload. The existing path
+check intentionally requires the strict handoff's four files to be siblings;
+it must not be bypassed by copying payloads or widening directory access.
+Operational rendering has `decision_policy.can_persist=false`; professional
+decision persistence is supported by the separate strict reconciliation
+handoff, not by this reduced operational view. Neither rendering clears the
+unresolved queue or approves a professional result.
+
+## Missing counterparties under a required-party policy
+
+`require_same_party=true` permits an allocation only when both mapped party identifiers are present and equal. A missing counterparty remains unresolved in the normalized population, unmatched outputs and review queue; it does not block independent allocations elsewhere in the population. Two missing values never prove equality. Do not invent a counterparty or relax the reviewed policy to obtain a match. Currency, unit and required entity completeness checks remain in force. This is specified by the additive required-party residual extension contract; historical evaluation contracts remain unchanged.

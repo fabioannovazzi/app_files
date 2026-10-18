@@ -45,5 +45,26 @@
     "run-receipt-stamping",
     "workflow-usage"
   ],
-  "public_explanations": {}
+  "public_explanations": {
+    "datev-invoice-start": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Il modello può vedere schermate e testo di accessibilità DATEV, descrizioni delle fatture, conti, IVA, importi e prove di registrazione effettivamente aperte. L’operatore accede senza mostrare le credenziali. Avanzamento e report per cliente restano locali ma entrano nel contesto se letti. Solo una richiesta di adattamento separata e revisionata può andare al servizio tecnico: esclude schermate grezze, report del cliente e credenziali."
+        ],
+        "en": [
+          "The model may see DATEV screens and accessibility text, invoice descriptions, accounts, VAT, amounts and posting evidence actually opened. The operator logs in without exposing credentials. Progress and per-client reports remain local but enter context if read. Only a separate reviewed adaptation request may reach the technical service; it excludes raw screenshots, client reports and credentials."
+        ],
+        "fr": [
+          "Le modèle peut voir écrans et texte d’accessibilité DATEV, descriptions des factures, comptes, TVA, montants et preuves d’écriture ouverts. L’opérateur se connecte sans exposer ses identifiants. Avancement et rapports restent locaux mais entrent dans le contexte s’ils sont lus. Seule une demande d’adaptation distincte et revue peut être transmise au service technique, sans captures brutes, rapports client ni identifiants."
+        ],
+        "de": [
+          "Das Modell kann geöffnete DATEV-Bildschirme und Zugriffstexte, Rechnungsbeschreibungen, Konten, Umsatzsteuer, Beträge und Buchungsbelege sehen. Die Anmeldung erfolgt ohne Offenlegung von Zugangsdaten. Fortschritt und Mandantenberichte bleiben lokal, gelangen aber beim Lesen in den Kontext. Nur eine separate geprüfte Anpassungsanfrage darf den technischen Dienst erreichen; rohe Screenshots, Mandantenberichte und Zugangsdaten sind ausgeschlossen."
+        ],
+        "es": [
+          "El modelo puede ver pantallas y texto de accesibilidad DATEV, descripciones de facturas, cuentas, IVA, importes y pruebas de asientos abiertos. El operador accede sin exponer credenciales. Avances e informes quedan locales, pero entran en contexto si se leen. Solo una solicitud de adaptación separada y revisada puede llegar al servicio técnico; excluye capturas sin filtrar, informes del cliente y credenciales."
+        ]
+      }
+    }
+  }
 }

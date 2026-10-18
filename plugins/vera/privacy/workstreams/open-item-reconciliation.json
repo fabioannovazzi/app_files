@@ -53,7 +53,7 @@
       {
         "id": "bounded-source-structure-and-mapping",
         "purpose": "Understand source structure and confirm the accounting meaning of columns before deterministic reconciliation",
-        "content": "User instructions; selected source names and column labels; a limited set of source rows opened for mapping; proposed and reviewed source roles, field mappings, period, currency, entity, party and evidence assumptions. A professional may still direct the selected runtime to open more source evidence when mapping cannot be resolved from the limited rows; the workflow does not call a model API itself and does not claim that source files are anonymized.",
+        "content": "User instructions; selected source names and column labels; a limited set of source rows opened for mapping; proposed and reviewed source roles, field mappings, period, currency, entity, party and evidence assumptions. A professional may still direct the selected runtime to open more source evidence when mapping cannot be resolved from the limited rows; the workflow does not call a model API itself and does not claim that source files are anonymized. The reviewed CSV/XLSX adapter also retains explicit sheet, delimiter, row bounds, exact header mappings and per-value journal evidence mappings. Exact source cells are read for qualification and assurance replay; the selected runtime can inspect source cells needed for its semantic mapping. Formulas in mapped cells are rejected and numeric XLSX money is read from exact XML values. No additional provider call or external destination is introduced.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -80,7 +80,7 @@
       {
         "id": "selected-case-context",
         "purpose": "Interpret or verify only the reconciliation cases selected from the index",
-        "content": "At most 25 requested cases per call: populated allowlisted accounting fields such as dates, signed amounts, currency, account name, description, beneficiary or counterparty, deterministic status and rule, evidence level, match type, review flags and instructions, relationship or allocation status, exceptions and requested evidence. Physical source locators, technical record IDs, write targets, empty fields, unmapped columns and duplicate facts are omitted. Exact document, invoice, movement and reference values are excluded by default and can be requested only for selected cases when exact identity is required. Real names, descriptions, amounts and other case facts can therefore enter model context; the opaque handle is a routing control, not anonymization or pseudonymization of the professional case data.",
+        "content": "At most 25 requested cases per call: populated allowlisted accounting fields such as dates, signed amounts, currency, account name, description, beneficiary or counterparty, deterministic status and rule, evidence level, match type, review flags and instructions, relationship or allocation status, exceptions and requested evidence. Physical source locators, technical record IDs, write targets, empty fields, unmapped columns and duplicate facts are omitted. Exact document, invoice, movement and reference values are excluded by default and can be requested only for selected cases when exact identity is required. Real names, descriptions, amounts and other case facts can therefore enter model context; the opaque handle is a routing control, not anonymization or pseudonymization of the professional case data. Producer-generated document requests can quote exact identifiers, so selected-case model projection also withholds requested_document unless include_exact_identifiers is true. This field gate applies in both data and evidence. The full human review remains unchanged. Mapped descriptions and other selected source text are not automatically anonymized.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -94,14 +94,23 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "selected-check-diagnostic-projection",
+        "purpose": "Expose useful typed check outcomes without default producer diagnostic traces containing row IDs or source locators",
+        "content": "The default selected-case model response withholds diagnostic note fields and structured or text actual/expected values, retaining typed numeric counts and booleans. An explicit exact-identifier request can restore those selected diagnostic fields. The component-only private review payload retains the original data. Other declared semantic text is not automatically anonymized; the existing selected Codex or Cowork account processing arrangement applies.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
   "review": {
     "basis": "external_boundary_review_of_workflow_source",
-    "reviewed_at": "2026-10-14",
+    "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "7d4416c18b25a5c66ab48413ae67c615f2c3e7d1c8f05c745dc7db97b46d585c"
+    "source_fingerprint": "9e9b9b760f666af26fb633b77707c996b93cfb005fba4c36c19ab34d427fdc27"
   },
   "role": "workflow",
   "runtime_profiles": [

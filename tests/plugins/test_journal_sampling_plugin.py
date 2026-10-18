@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import csv
 import importlib._bootstrap_external
 import importlib.util
 import json
@@ -23,6 +24,113 @@ SCRIPT_DIR = ROOT / "plugins" / "journal-sampling" / "scripts"
 CORE_PATH = SCRIPT_DIR / "journal_sampling_core.py"
 CHECK_DEPENDENCIES_PATH = SCRIPT_DIR / "check_dependencies.py"
 MCP_SERVER_PATH = ROOT / "plugins" / "journal-sampling" / "mcp" / "server.cjs"
+
+
+@pytest.mark.parametrize("currencies", [[], ["EUR", "CHF", "CHF"]])
+def test_review_intake_has_no_invented_single_currency(
+    tmp_path: Path, currencies: list[str]
+) -> None:
+    core = load_core()
+    core.write_run_intake(
+        tmp_path,
+        normalized_csv=tmp_path / "normalized.csv",
+        method="random",
+        size=1,
+        group_column="account",
+        include_accounts=[],
+        exclude_accounts=[],
+        date_start=None,
+        date_end=None,
+        min_abs=None,
+        keyword=None,
+        language="it",
+        currencies=currencies,
+    )
+    assumptions = json.loads((tmp_path / "run_intake.json").read_text())["assumptions"]
+    assert assumptions["currency"] is None
+    assert assumptions["currencies"] == sorted(set(currencies))
+    assert assumptions["currency_scope"] == "normalized_population"
+
+
+def test_review_currency_replays_normalized_population(tmp_path: Path) -> None:
+    core = load_core()
+    output_dir, _ = _real_journal_review_case(core, tmp_path)
+    intake_path = output_dir / "run_intake.json"
+    intake = json.loads(intake_path.read_text())
+    intake["assumptions"]["currency"] = "CHF"
+    intake["assumptions"]["currencies"] = ["CHF"]
+    core.write_json(intake_path, intake)
+    audit = core.read_json(output_dir / "sampling_audit.json")
+    with pytest.raises(ValueError, match="currency no longer closes to the population"):
+        core._review_item_contract(output_dir, audit)
+
+
+@pytest.mark.parametrize("separator", [",", ";", "\t", "|"])
+def test_csv_separator_preserves_quoted_posting_fields(
+    tmp_path: Path, separator: str
+) -> None:
+    core = load_core()
+    path = tmp_path / "journal.csv"
+    records = [
+        [
+            "Data",
+            "Registrazione",
+            "Riga",
+            "Conto",
+            "Descrizione",
+            "Dare CHF",
+            "Avere CHF",
+            "Importo documento CHF",
+        ],
+        [
+            "01/09/2026",
+            "REG-01",
+            "1",
+            "600100",
+            "Acquisto; lotto, speciale\nseconda riga | controllo",
+            "1.250,75",
+            "0,00",
+            "1.525,92",
+        ],
+        [
+            "02/09/2026",
+            "REG-02",
+            "1",
+            "600100",
+            'Storno "documento"',
+            "-250,25",
+            "0,00",
+            "-305,31",
+        ],
+    ]
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.writer(handle, delimiter=separator, quoting=csv.QUOTE_ALL)
+        writer.writerows(records)
+    captured = path.read_bytes()
+    raw = core._read_csv_raw(path, source_bytes=captured)
+    assert raw.width == 8 and raw.height == 3
+    assert raw.rows() == [tuple(row) for row in records]
+    assert path.read_bytes() == captured
+
+
+@pytest.mark.parametrize(
+    "content",
+    [
+        "date,amount;other\n2026-09-01,100;200\n",
+        "date;amount\n2026-09-01;100;unexpected\n",
+        '"date";"amount"\n"2026-09-01";"unterminated\n',
+    ],
+)
+def test_csv_ambiguous_or_malformed_records_abstain(
+    tmp_path: Path, content: str
+) -> None:
+    core = load_core()
+    path = tmp_path / "journal.csv"
+    path.write_text(content, encoding="utf-8")
+    with pytest.raises(ValueError, match="ambiguous or records are malformed"):
+        core._read_csv_raw(path)
+
+
 TRANSITIVE_IMPLEMENTATION_ATTACKS = [
     ("plugin", "scripts/check_dependencies.py"),
     ("plugin", "scripts/implementation_bootstrap.py"),
@@ -3079,6 +3187,103 @@ def test_mcp_replay_rejects_each_transitive_implementation_mutation(
     }
 
 
+@pytest.mark.parametrize("runtime_ready", [True, False])
+def test_embedded_mcp_uses_ready_managed_python_instead_of_system_python(
+    tmp_path: Path,
+    runtime_ready: bool,
+) -> None:
+    core = load_core()
+    (tmp_path / "case").mkdir()
+    output_dir, arguments = _real_journal_review_case(core, tmp_path / "case")
+    copied_plugin, _ = _copy_journal_implementation_tree(tmp_path / "installation")
+    launcher = copied_plugin.parent / "vera/scripts/managed_python_runtime.py"
+    launcher.parent.mkdir(parents=True)
+    launcher.write_text(
+        "from pathlib import Path\n"
+        "def activate_runtime(root, module):\n"
+        "    assert module == 'journal-sampling'\n"
+        f"    return Path({sys.prefix!r}) if {runtime_ready!r} else None\n"
+        "def runtime_python(target):\n"
+        f"    return Path({sys.executable!r})\n",
+        encoding="utf-8",
+    )
+    bootstrap = copied_plugin.parent / "system-python"
+    bootstrap.write_text(
+        f"#!{sys.executable}\n"
+        "import os, sys\n"
+        "if '-c' in sys.argv:\n"
+        f"    os.execv({sys.executable!r}, [{sys.executable!r}, *sys.argv[1:]])\n"
+        'sys.stderr.write("ModuleNotFoundError: No module named fastexcel\\n")\n'
+        "sys.exit(1)\n",
+        encoding="utf-8",
+    )
+    bootstrap.chmod(0o700)
+    result = _journal_transaction_call(
+        "validate_journal_sampling_review",
+        {
+            "client_engagement": arguments["client_engagement"],
+            "model_review_context": arguments["model_review_context"],
+        },
+        server_path=copied_plugin / "mcp/server.cjs",
+        env={
+            "VERA_COMPONENT_HOST": "1",
+            "PYTHON": str(bootstrap),
+            "JOURNAL_SAMPLING_PYTHON": "",
+            "VIRTUAL_ENV": "",
+        },
+    )
+    if runtime_ready:
+        assert result["ok"] is True, result
+        assert (
+            core.validate_sample_assurance(output_dir)["output_set"]["stage"]["kind"]
+            == "initial"
+        )
+    else:
+        assert result["ok"] is False
+        assert "managed Python runtime is not ready" in json.dumps(result)
+
+
+def test_real_sample_document_request_survives_save_and_apply(tmp_path: Path) -> None:
+    core = load_core()
+    output_dir, arguments = _real_journal_review_case(core, tmp_path)
+    before_csv = (output_dir / "journal_sample.csv").read_bytes()
+    before_xlsx = (output_dir / "journal_sample.xlsx").read_bytes()
+    item = next(
+        x
+        for x in arguments["review_payload"]["items"]
+        if x["item_type"] == "sampled_entry"
+    )
+    decisions = [
+        {
+            "item_id": item["id"],
+            "action": "request_more_documents",
+            "requested_documents": ["Original invoice supporting this sampled posting"],
+            "reviewer_note": "Synthetic document request; no professional approval",
+        }
+    ]
+    arguments["decisions"] = decisions
+    saved = _journal_transaction_call("save_journal_sampling_decisions", arguments)
+    assert saved["ok"] is True, saved
+    current = _current_real_journal_review_arguments(output_dir, decisions)
+    applied = _journal_transaction_call("apply_journal_sampling_decisions", current)
+    assert applied["ok"] is True, applied
+    replay = core.validate_sample_assurance(output_dir)
+    assert replay["output_set"]["stage"]["index"] == 2
+    assert replay["output_set"]["stage"]["kind"] == "apply"
+    effect = core.read_json(output_dir / "applied_decisions.json")["effects"][0]
+    assert effect["requires_followup"] is True
+    assert effect["requested_documents"] == decisions[0]["requested_documents"]
+    assert effect["followup_context"]["source_file"] == item["data"]["source_file"]
+    assert effect["followup_context"]["record_id"] == str(item["data"]["source_row"])
+    assert (output_dir / "journal_sample.csv").read_bytes() == before_csv
+    assert (output_dir / "journal_sample.xlsx").read_bytes() == before_xlsx
+    gates = replay["assurance_envelope"]["gate_register"]
+    assert gates["gates"]["semantic_review"]["status"] == "not_assessed"
+    assert gates["gates"]["reporting"]["status"] == "blocked"
+    assert gates["gates"]["publication"]["status"] == "withheld"
+    assert gates["report_ready"] is False
+
+
 def test_real_journal_review_save_mints_replayable_limited_successor(
     tmp_path: Path,
 ) -> None:
@@ -4378,6 +4583,15 @@ def test_fresh_registration_pdf_inspection_writes_review_contract_then_managed_s
     assert normalized.frame.get_column("currency").to_list() == [currency, currency]
     assert normalized.frame.get_column("amount_signed").to_list() == ["100", "-100"]
     assert sampled.frame.height == 1
+    intake = json.loads((outputs / "sample/run_intake.json").read_text())
+    model_context = json.loads(
+        (outputs / "sample/model_review_context.json").read_text()
+    )
+    assert intake["assumptions"]["currency"] == currency
+    assert intake["assumptions"]["currencies"] == [currency]
+    assert intake["assumptions"]["currency_scope"] == "normalized_population"
+    assert model_context["intake"]["assumptions"]["currency"] == currency
+    assert model_context["intake"]["assumptions"]["currencies"] == [currency]
     assert (outputs / "sample/journal_sample.xlsx").is_file()
     assert (
         json.loads(

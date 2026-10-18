@@ -64,7 +64,8 @@
         "Before reporting an installation-preparation failure, the preflight verifies the reporting script, preflight script and product metadata against a stable build index, then snapshots them in a fresh private temporary directory and executes the reporter in isolated Python. Original-installation, cwd and PYTHONPATH imports are excluded. Damaged workflow code does not run. Unverifiable reporting components require the independent connector; queued delivery never implies recorded or recovered.",
         "A diagnostic reply requires ownership and exact original execution metadata, plus a retained diagnostic-request revision targeting that original report. A late reply cannot answer a newer request. A diagnostic exchange cannot be marked recovered.",
         "Operator publications can require the inspected current revision. Identical applicable remedies are idempotent and do not create another retry episode. Resume instructions use existing verified workflow tools and ordinary professional gates; service text is never executed as a command.",
-        "The shared implementation binds registrations, OAuth resources, task events, report signatures, feedback and update downloads to one product. Existing unmapped installations and receipt schema 1 remain Vera. Physical-computer identity is shared, while usage catalogues and testing epochs are separated by product."
+        "The shared implementation binds registrations, OAuth resources, task events, report signatures, feedback and update downloads to one product. Existing unmapped installations and receipt schema 1 remain Vera. Physical-computer identity is shared, while usage catalogues and testing epochs are separated by product.",
+        "An explicitly selected MPARANZA_INCIDENT_DELIVERY=local-only setting blocks automatic client HTTP transport for this execution while preserving local evidence. Incident queues are durably marked and not automatically flushed later; this does not make model-provider processing local-only."
       ]
     }
   ],
@@ -110,7 +111,7 @@
     "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "604eff629b214fcc5b1d93868dd74d4194d4b2a638f8d91a806f876a5cf3de9c"
+    "source_fingerprint": "60b8ce7c38a008167e804ba1556261af65fb41713cdee2089de9da2b04d617cd"
   },
   "service_details": {
     "trigger": "Automatic technical reporting and per-primary-task events; one optional user rating after delivery. Local-only tutorials and nested infrastructure are not separate rated tasks.",

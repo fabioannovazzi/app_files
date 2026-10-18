@@ -116,7 +116,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "61cb4323f56777e73232c11c6b5819b2c6a1be8e5831a3214476d6348bd5ca89",
+  "course_sha256": "5e6841ceaa9b8df7bf7236874517826154ee54f416f1393ca59c62cf4e6c8472",
   "esg_source_refresh_20260930": {
     "reviewer": "Codex /root - bounded source review",
     "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
@@ -810,5 +810,16 @@
     "source_review": "Inspected complete Archive core, identity-lock and workflow-instruction diffs merged in PR #850. Client-directory operations synchronize portable identities from live directory metadata independently of the content index. Indexed search/source-opening freshness checks remain separate. Shared identity writes use the existing OS lock with a bounded ten-second contention wait; expiry never removes the lock, changes the client or changes the archive root. Session selection remains separate. No model call, hosted recipient or new external data path is added. All authored lesson fields except source bindings match the exact previously reviewed course.",
     "execution_requirement": "Full final-head teaching CI must execute the exact current course digests and pass verify_release.py before merge.",
     "limitations": "Historical editorial and artifact reviews retain their original scope. This is source compatibility review, not new visual, learner, professional or installed-host acceptance and not a function-rating upgrade."
+  },
+  "deploy_final_source_compatibility_20261018": {
+    "reviewer": "Codex /root - bounded complete-course comparison",
+    "reviewed_at": "2026-10-18",
+    "previous_course_sha256": "61cb4323f56777e73232c11c6b5819b2c6a1be8e5831a3214476d6348bd5ca89",
+    "current_course_sha256": "65292f97295418be569ca5a73b2a231887b23c0f70d4d4701fecf03af9d5c7a0",
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "scope": "Complete authored lesson JSON is identical to the retained tested candidate; only source fingerprints changed. Preserves all previous editorial and historical artifact reviews. Integrated main usage/device registration is unchanged from main; tested workflow logic is preserved. Open-item import ordering was normalized without changing imported names or statements. No new learner, visual-host or professional acceptance claimed; current native teaching CI remains required."
   }
 }

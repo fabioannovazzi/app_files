@@ -147,7 +147,19 @@
       "workflow_ids": [
         "advisory-case-director"
       ],
-      "public_pages": []
+      "public_pages": [
+        {
+          "page_id": "clara-advisory-case-director",
+          "path": "static/shared/clara-advisory-case-director/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
     },
     "advisory-deliverable-validator": {
       "source": "product",
@@ -259,7 +271,19 @@
       "workflow_ids": [
         "claim-basis-map"
       ],
-      "public_pages": []
+      "public_pages": [
+        {
+          "page_id": "clara-claim-basis-map",
+          "path": "static/shared/clara-claim-basis-map/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
     },
     "clara": {
       "source": "product",
@@ -296,7 +320,19 @@
       "workflow_ids": [
         "deck-correction"
       ],
-      "public_pages": []
+      "public_pages": [
+        {
+          "page_id": "clara-deck-correction",
+          "path": "static/shared/clara-deck-correction/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
     },
     "hosted-interview": {
       "source": "product",

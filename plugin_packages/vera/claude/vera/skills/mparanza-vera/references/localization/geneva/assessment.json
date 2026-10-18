@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "4a63d0d4c2a6edbf73d8dbbe2fdf5d987822fddb3876e20618b4bf0efc43f122",
+  "catalogue_fingerprint": "d88fdf323b18281debd89554c334171b609b93728192348c00afd0ad02418f37",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -1914,5 +1914,15 @@
     "date": "2026-10-18",
     "previous_catalogue_fingerprint": "7786dfdabfeb9ad9c7f190ed8be53364ce5776333e525ad8026f95c32d1de64f",
     "scope": "Refresh only the canonical product manifest/version binding. Every recorded skill entrypoint and function ID is byte-identical to the preceding snapshot. Preserve existing Geneva dispositions; shared operational reporting does not establish new jurisdiction acceptance."
+  },
+  "studio_archive_release_source_binding_20261018": {
+    "version": "0.1.408",
+    "reviewed_at": "2026-10-18",
+    "previous_catalogue_fingerprint": "4a63d0d4c2a6edbf73d8dbbe2fdf5d987822fddb3876e20618b4bf0efc43f122",
+    "changed_existing_entrypoints": [
+      "studio-archive"
+    ],
+    "entrypoint_set_unchanged": true,
+    "scope": "Only the Studio Archive wrapper adds the maintained explicitly authorized external working-folder delivery route, retaining the selected client/engagement, source tree and receipts. All existing Geneva assessment rows, dispositions, legal-source references and limits are preserved. No new jurisdiction adaptation, Swiss legal conclusion, live client or professional acceptance is asserted."
   }
 }

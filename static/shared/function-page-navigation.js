@@ -129,6 +129,12 @@
   };
 
   const pageContexts = {
+    "clara-claim-basis-map": [["clara", "area-deliverables"]],
+    "clara-deck-correction": [["clara", "area-deliverables"]],
+    "clara-advisory-case-director": [["clara", "area-analysis"]],
+    "datev-invoice-start": [["vera", "area-matters"]],
+    "deep-research": [["vera", "area-research"], ["lucia", "area-research"]],
+
     "organizzazione-lavoro": [["vera", "area-clients"]],
     "contenzioso-tributario": [["vera", "area-matters"], ["lucia", "area-matters"]],
     "rating-legalita": [["vera", "area-matters"]],

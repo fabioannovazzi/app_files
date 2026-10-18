@@ -2741,6 +2741,17 @@ def _reference_tokens(*values: Any) -> set[str]:
         )
         if generic_period or generic_year_range:
             continue
+        # A complete explicitly mapped identifier is mechanically comparable
+        # even when short. Preserve its punctuation; never promote short
+        # fragments from free text, bare numbers or generic period labels.
+        if (
+            len(compact) < 5
+            and re.fullmatch(r"[a-z0-9]+(?:[-/.][a-z0-9]+)*", text) is not None
+            and any(character.isalpha() for character in text)
+            and any(character.isdigit() for character in text)
+            and compact not in GENERIC_PERIOD_WORDS
+        ):
+            tokens.add(text)
         candidates = list(parts)
         if parts[0] not in REFERENCE_GENERIC_TOKENS:
             candidates.append(compact)
@@ -4972,8 +4983,9 @@ def _relationship_perimeter_error(
     required = ["currency", "unit"]
     if policy["require_same_entity"]:
         required.append("entity_ref")
-    if policy["require_same_party"]:
-        required.append("party_ref")
+    # Party equality is mechanically enforced per allocation by
+    # _same_required_perimeter. Missing parties must stay unmatched, without
+    # withholding unrelated allocations or inventing a population-wide default.
     for side, frame in (("bank", bank), ("journal", journal)):
         for field in required:
             missing = frame.filter(

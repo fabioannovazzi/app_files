@@ -42,7 +42,7 @@
       {
         "id": "selected-entry-and-support-case-context",
         "purpose": "Interpret or verify only cases selected from the review index",
-        "content": "At most 25 requested cases per call: populated allowlisted fields such as status, entry date, signed amount, account name, description, beneficiary or counterparty, currency, checks, mismatches, review notes, support type and match signals, professional and assurance status, extracted amount, date or beneficiary, missing-document reason and bounded extracted evidence facts. Physical paths and filenames, prepared-entry and support-artifact IDs, write targets, empty and unmapped fields and duplicate facts are omitted. Exact movement, invoice, account, tax and reference identifiers are represented only as presence facts by default and can be requested for selected cases when exact identity comparison is required. Real names and case facts can remain; opaque handles are routing controls, not anonymization or pseudonymization of the professional case data.",
+        "content": "At most 25 requested cases per call: populated allowlisted fields such as status, entry date, signed amount, account name, description, beneficiary or counterparty, currency, checks, mismatches, review notes, support type and match signals, professional and assurance status, extracted amount, date or beneficiary, missing-document reason and bounded extracted evidence facts. Physical paths and filenames, prepared-entry and support-artifact IDs, write targets, empty and unmapped fields and duplicate facts are omitted. Exact movement, invoice, account, tax and reference identifiers are represented only as presence facts by default and can be requested for selected cases when exact identity comparison is required. Real names and case facts can remain; opaque handles are routing controls, not anonymization or pseudonymization of the professional case data. Producer-generated document requests can quote exact identifiers, so selected-case model projection also withholds requested_document unless include_exact_identifiers is true. This field gate applies in both data and evidence. The full human review remains unchanged. Mapped descriptions and other selected source text are not automatically anonymized. Recursive projection covers singular and plural technical fields, including JSON-encoded evidence facts. Candidate filenames remain in the private human payload; only candidate_count and the ambiguity status are projected to the model. Enabling exact professional identifiers does not expose technical candidate filenames or receipt IDs. File-backed intake and review payloads are materialized privately before output-directory resolution, parent-bound authorization and fresh read-only assurance replay; explicit paths and sibling-discovered intake use the same checks as inline review requests. Invalid evidence cannot issue a review reference. Embedded Vera MCP assurance and review helpers select the already prepared shared CheckEntries Python runtime through the maintained local activation resolver. Review does not install dependencies. The resolver and workflow children receive the existing allowlisted local-helper environment; resolved interpreter paths remain local technical metadata. An unprepared runtime fails before review persistence.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -151,13 +151,21 @@
     {
       "id": "local-review-output-download",
       "control": "The local review server requires the session token for output downloads. It accepts only files declared by the local run, within its output directory, rejects symlinks and traversal, and limits downloads to 50 MB. Files are downloaded as opaque bytes; HTML is not executed in the review origin. This does not claim atomic protection from concurrent filesystem changes. The browser may retain a user-requested downloaded copy; this route does not send document content to the model or an external service."
+    },
+    {
+      "id": "reviewed-settings-and-checked-currency",
+      "control": "Explicit CLI amount tolerance and date window override the corresponding captured recipe checks, including zero; omitted flags use recipe values and only absent values default to zero. Invalid types or negative values stop with transactional rollback. The audit and intake retain effective values while execution_recipe preserves exact original recipe bytes. Intake currency comes from the exact checked entries, never output language or a fixed EUR default; mixed/unknown currency has no invented single value. Fresh material replay compares intake assumptions and results."
+    },
+    {
+      "id": "bounded-italian-accounting-label",
+      "control": "PDF identity accepts the explicit Italian accounting label Registrazione contabile, optionally with a number label, only beside the exact distinctive movement identifier. It does not infer identity from filenames, generic numeric references, amount/date coincidence or intervening unrelated words; party, direction, relationship and professional gates remain unchanged."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-14",
+    "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "a360b44dfec4b691242125187ef4371dc14f7c189fa58257341403b50deea1c2"
+    "source_fingerprint": "d969c1ab85822089a922f0aef5b2ee24e4d5c2c7a83bcc7fc5f3bde9fe2936e3"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"

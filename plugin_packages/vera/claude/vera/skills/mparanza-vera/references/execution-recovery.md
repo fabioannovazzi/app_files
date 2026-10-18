@@ -10,6 +10,16 @@ Later host-specific instructions in this reference cannot override this rule.
 
 # Automatic execution preparation
 
+For an explicitly requested execution without incident transmission, set
+`MPARANZA_INCIDENT_DELIVERY=local-only` on every managed command, alongside the
+chosen private `MPARANZA_INCIDENT_STATE_DIR`. Diagnostics, identities and queued
+failure/success evidence remain persistent. Automatic incident HTTP requests are
+blocked in that execution; the marked queue is not automatically flushed later
+even if the setting is omitted. Do not submit its reports through the independent
+connector while this no-transmission choice applies. This overrides the automatic
+delivery instructions below, including generic connector suggestions in retained
+stderr. It does not make model processing local-only or qualify a failed run.
+
 Before reading or executing an assured installed module, run this preflight
 internally from the currently exposed installed Vera root:
 

@@ -1999,6 +1999,73 @@ function journalAssurancePythonExecutable() {
   return "python3";
 }
 
+const JOURNAL_MANAGED_PYTHON_RESOLVER = String.raw`
+import importlib.util
+import json
+import sys
+from pathlib import Path
+
+launcher = Path(sys.argv[1]).resolve()
+spec = importlib.util.spec_from_file_location("journal_managed_runtime", launcher)
+if spec is None or spec.loader is None:
+    raise RuntimeError("Managed runtime loader is unavailable.")
+runtime = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = runtime
+spec.loader.exec_module(runtime)
+target = runtime.activate_runtime(launcher.parents[1], "journal-sampling")
+if target is None:
+    raise RuntimeError("Managed Python runtime is not ready.")
+print(json.dumps({"python": str(runtime.runtime_python(target)), "virtual_env": str(target)}))
+`;
+
+let journalManagedPython;
+
+function journalAssuranceChildPython() {
+  if (process.env.JOURNAL_SAMPLING_PYTHON || process.env.VERA_COMPONENT_HOST !== "1") {
+    return { executable: journalAssurancePythonExecutable(), environment: process.env };
+  }
+  if (journalManagedPython) return journalManagedPython;
+  const launchers = [
+    path.resolve(PLUGIN_ROOT, "..", "..", "scripts", "managed_python_runtime.py"),
+    ...["vera", "clara", "lucia"].map((product) =>
+      path.resolve(PLUGIN_ROOT, "..", product, "scripts", "managed_python_runtime.py"),
+    ),
+  ];
+  const launcher = launchers.find((candidate) => fs.existsSync(candidate));
+  if (!launcher) {
+    throw new Error("Journal Sampling managed Python runtime is unavailable.");
+  }
+  // Resolve an already prepared runtime. MCP review never installs dependencies.
+  const completed = childProcess.spawnSync(
+    journalAssurancePythonExecutable(),
+    ["-I", "-B", "-c", JOURNAL_MANAGED_PYTHON_RESOLVER, launcher],
+    { cwd: PLUGIN_ROOT, encoding: "utf8", timeout: 60_000, maxBuffer: 64 * 1024, env: process.env },
+  );
+  if (completed.error || completed.status !== 0) {
+    throw new Error("Journal Sampling managed Python runtime is not ready; run the maintained workflow setup.");
+  }
+  let resolved;
+  try {
+    resolved = JSON.parse(completed.stdout.trim());
+  } catch {
+    throw new Error("Journal Sampling managed Python runtime returned invalid data.");
+  }
+  if (!isPlainObject(resolved) || typeof resolved.python !== "string" ||
+      !path.isAbsolute(resolved.python) || !fs.existsSync(resolved.python) ||
+      typeof resolved.virtual_env !== "string" || !path.isAbsolute(resolved.virtual_env)) {
+    throw new Error("Journal Sampling managed Python runtime returned invalid paths.");
+  }
+  const environment = {
+    ...process.env,
+    PATH: [path.dirname(resolved.python), process.env.PATH].filter(Boolean).join(path.delimiter),
+    VIRTUAL_ENV: resolved.virtual_env,
+    MPARANZA_MANAGED_RUNTIME_VERIFY: "1",
+  };
+  delete environment.PYTHONHOME;
+  journalManagedPython = { executable: resolved.python, environment };
+  return journalManagedPython;
+}
+
 function journalCustomerRunPaths(outputDir) {
   let candidate = path.resolve(outputDir);
   while (true) {
@@ -2055,15 +2122,16 @@ function runJournalAssuranceBridge(command, outputDir, kind = null) {
     customerRun.persistentOutputDir,
   ];
   if (kind) args.push("--kind", kind);
+  const python = journalAssuranceChildPython();
   const completed = childProcess.spawnSync(
-    journalAssurancePythonExecutable(),
+    python.executable,
     ["-I", "-B", ...args],
     {
       cwd: PLUGIN_ROOT,
       encoding: "utf8",
       timeout: 60_000,
       maxBuffer: 16 * 1024 * 1024,
-      env: process.env,
+      env: python.environment,
     },
   );
   if (

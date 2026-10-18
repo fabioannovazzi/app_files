@@ -1,0 +1,177 @@
+{
+  "jurisdiction": "IT",
+  "locale": "it",
+  "report_language": "it",
+  "document_language": "it",
+  "scope_year": 2026,
+  "cutoff_date": "2026-09-30",
+  "assurance_run_date": "2026-10-18",
+  "currency": "EUR",
+  "unit": "1",
+  "entity_ref": "RETE",
+  "party_ref": "FARO",
+  "amount_tolerance": "0",
+  "rollforward_amount_tolerance": "0",
+  "document_date_tolerance_days": "0",
+  "post_cutoff_events_excluded": true,
+  "payment_orders_are_bank_evidence": false,
+  "factoring_pro_soluto_closes_item": true,
+  "compensation_requires_bank": false,
+  "promote_probable_bank_payments": false,
+  "probable_bank_exact_matches_close": false,
+  "sample_kind": "agent_test",
+  "human_confirmation": false,
+  "professional_approval": false,
+  "reviewed_source_decisions": {
+    "partite_aperte.xlsx": {
+      "role": "open_items",
+      "adapter_family": "reviewed_tabular_accounting_v1",
+      "reviewer_ref": "codex_test_agent",
+      "reviewed_on": "2026-10-18",
+      "perimeter": {
+        "entity_ref": "RETE",
+        "party_ref": "FARO",
+        "currency": "EUR",
+        "unit": "1",
+        "direction_policy": "customer",
+        "allocation_policy": "one_to_one"
+      },
+      "money": {
+        "decimal_separator": ",",
+        "thousands_separator": ".",
+        "reported_unit": "1",
+        "reported_increment": "0.01"
+      },
+      "date": {
+        "order": "day_first"
+      },
+      "tabular": {
+        "sheet": "Partite",
+        "header_row": 1,
+        "first_data_row": 2,
+        "last_data_row": 7,
+        "delimiter": null,
+        "columns": {
+          "currency": "Valuta",
+          "unit": "Unita",
+          "entity_ref": "Societa",
+          "party_ref": "Controparte",
+          "source_record_id": "Id partita",
+          "document_no": "Documento",
+          "document_date": "Data documento",
+          "due_date": "Scadenza",
+          "amount": "Importo originale",
+          "balance": "Saldo segnalato aperto",
+          "description": "Descrizione",
+          "evidence_type": "Tipo"
+        },
+        "evidence_type_map": {
+          "credito cliente": "open_item"
+        },
+        "default_evidence_type": null
+      }
+    },
+    "movimenti_contabili.xlsx": {
+      "role": "journal",
+      "adapter_family": "reviewed_tabular_accounting_v1",
+      "reviewer_ref": "codex_test_agent",
+      "reviewed_on": "2026-10-18",
+      "perimeter": {
+        "entity_ref": "RETE",
+        "party_ref": "FARO",
+        "currency": "EUR",
+        "unit": "1",
+        "direction_policy": "customer",
+        "allocation_policy": "one_to_one"
+      },
+      "money": {
+        "decimal_separator": ",",
+        "thousands_separator": ".",
+        "reported_unit": "1",
+        "reported_increment": "0.01"
+      },
+      "date": {
+        "order": "day_first"
+      },
+      "tabular": {
+        "sheet": "Movimenti",
+        "header_row": 1,
+        "first_data_row": 2,
+        "last_data_row": 3,
+        "delimiter": null,
+        "columns": {
+          "currency": "Valuta",
+          "unit": "Unita",
+          "entity_ref": "Societa",
+          "party_ref": "Controparte",
+          "source_record_id": "Id registrazione",
+          "posting_date": "Data registrazione",
+          "support_document_no": "Documento supporto",
+          "document_no": "Fattura collegata",
+          "document_date": "Data fattura",
+          "amount": "Importo",
+          "evidence_type": "Evidenza",
+          "description": "Descrizione"
+        },
+        "evidence_type_map": {
+          "compensazione documentata": "compensation",
+          "segnalazione interna": "internal_accounting"
+        },
+        "default_evidence_type": null
+      }
+    },
+    "movimenti_banca.csv": {
+      "role": "bank_statement",
+      "adapter_family": "reviewed_tabular_accounting_v1",
+      "reviewer_ref": "codex_test_agent",
+      "reviewed_on": "2026-10-18",
+      "perimeter": {
+        "entity_ref": "RETE",
+        "party_ref": "FARO",
+        "currency": "EUR",
+        "unit": "1",
+        "direction_policy": "customer",
+        "allocation_policy": "one_to_one"
+      },
+      "money": {
+        "decimal_separator": ",",
+        "thousands_separator": ".",
+        "reported_unit": "1",
+        "reported_increment": "0.01"
+      },
+      "date": {
+        "order": "day_first"
+      },
+      "tabular": {
+        "sheet": null,
+        "header_row": 1,
+        "first_data_row": 2,
+        "last_data_row": 6,
+        "delimiter": ";",
+        "columns": {
+          "currency": "Valuta",
+          "unit": "Unita",
+          "entity_ref": "Societa",
+          "party_ref": "Controparte",
+          "source_record_id": "Id movimento",
+          "posting_date": "Data contabile",
+          "value_date": "Data valuta",
+          "amount": "Importo",
+          "document_no": "Documento",
+          "document_date": "Data documento",
+          "description": "Causale"
+        },
+        "evidence_type_map": {},
+        "default_evidence_type": "external_bank"
+      }
+    }
+  },
+  "source_review_notes": {
+    "authority": "Current actual source review by codex_test_agent; unsigned synthetic agent test. No human confirmation or professional approval.",
+    "source_path_keys": "Exact paths relative to bound inputs.",
+    "population_bounds": "Partite rows2-7; Movimenti rows2-3; CSVrows2-6. Explanatory notes excluded.",
+    "meaning": "Documented credit-note compensation is permitted by the delivery instruction; internal annotation is not cash proof. Preserve later payments and explicit invoice references.",
+    "instruction_context_path": "/studio-private/rete/instruction-note.txt",
+    "instruction_context_sha256": "870d2d331512a219ffc8e2753e7bc3ef7ee61bd436bbe39969d761920ec06365"
+  }
+}

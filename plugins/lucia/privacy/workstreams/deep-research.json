@@ -64,5 +64,26 @@
     "run-receipt-stamping",
     "workflow-usage"
   ],
-  "public_explanations": {}
+  "public_explanations": {
+    "deep-research": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Il modello corrente può leggere brief completo, requisiti della risposta, fatti e documenti selezionati, fonti recuperate, cicli di ricerca, bozze e revisioni. Le ricerche pubbliche possono trasmettere ai siti scelti i termini del quesito e i fatti necessari. I controlli locali verificano struttura e riferimenti, non correttezza giuridica; le copie delle fonti restano nella cartella di lavoro. Non c’è anonimizzazione automatica."
+        ],
+        "en": [
+          "The current model may read the full brief, answer requirements, selected facts and documents, retrieved sources, research cycles, drafts and reviews. Public searches may send question terms and necessary facts to selected sites. Local checks verify structure and references, not legal correctness; source captures remain in the work folder. There is no automatic anonymization."
+        ],
+        "fr": [
+          "Le modèle courant peut lire brief complet, exigences de réponse, faits et documents sélectionnés, sources récupérées, cycles de recherche, projets et revues. Les recherches publiques peuvent transmettre les termes et faits nécessaires aux sites choisis. Les contrôles locaux vérifient structure et références, pas la justesse juridique ; les captures restent dans le dossier de travail. Aucune anonymisation automatique."
+        ],
+        "de": [
+          "Das aktuelle Modell kann vollständigen Brief, Antwortanforderungen, ausgewählte Fakten und Dokumente, abgerufene Quellen, Recherchezyklen, Entwürfe und Prüfungen lesen. Öffentliche Suchen können Fragestellungen und nötige Fakten an ausgewählte Websites senden. Lokale Kontrollen prüfen Struktur und Referenzen, nicht rechtliche Richtigkeit; Quellenkopien bleiben im Arbeitsordner. Keine automatische Anonymisierung."
+        ],
+        "es": [
+          "El modelo actual puede leer brief completo, requisitos, hechos y documentos seleccionados, fuentes recuperadas, ciclos de investigación, borradores y revisiones. Las búsquedas públicas pueden transmitir términos y hechos necesarios a los sitios elegidos. Los controles locales verifican estructura y referencias, no corrección jurídica; las copias quedan en la carpeta de trabajo. No hay anonimización automática."
+        ]
+      }
+    }
+  }
 }

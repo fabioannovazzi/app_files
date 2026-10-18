@@ -92,7 +92,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "cd716c5afb389b563fc04b5e83d609e46706bbbb338c3dbc1d9d6bca79080e02",
+  "course_sha256": "1fee14c8dc994a97e59456d2e1c2ca5a26c3fd70ef4c452ffe80c05e860aa760",
   "discovery_source_refresh": {
     "reviewed_by": "Codex /root",
     "reviewed_at": "2026-10-01T11:44:12.998454+00:00",
@@ -756,5 +756,16 @@
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "fresh_matching_junit_required": true
+  },
+  "deploy_final_source_compatibility_20261018": {
+    "reviewer": "Codex /root - bounded complete-course comparison",
+    "reviewed_at": "2026-10-18",
+    "previous_course_sha256": "cd716c5afb389b563fc04b5e83d609e46706bbbb338c3dbc1d9d6bca79080e02",
+    "current_course_sha256": "1fee14c8dc994a97e59456d2e1c2ca5a26c3fd70ef4c452ffe80c05e860aa760",
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "scope": "Complete authored lesson JSON is identical to the retained tested candidate; only source fingerprints changed. Preserves all previous editorial and historical artifact reviews. Integrated main usage/device registration is unchanged from main; tested workflow logic is preserved. Open-item import ordering was normalized without changing imported names or statements. No new learner, visual-host or professional acceptance claimed; current native teaching CI remains required."
   }
 }

@@ -196,10 +196,10 @@
     }
   },
   "review": {
-    "reviewed_at": "2026-09-15",
+    "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "1e59ff38640011097b8e65f7ea842d3009c2a878d65d8cb68179f6f566affccd"
+    "source_fingerprint": "16d6cf4fa50a4137debf9c32c0d634809dc9fa273e00cdc47cbe23f367f808db"
   },
   "governed_repository_paths": [
     "plugins/business-planning/.codex-plugin/plugin.json",

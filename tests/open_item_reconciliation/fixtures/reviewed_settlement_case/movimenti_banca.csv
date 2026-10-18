@@ -1,0 +1,6 @@
+"Id movimento";"Data contabile";"Data valuta";"Importo";"Valuta";"Unita";"Societa";"Controparte";"Documento";"Data documento";"Causale"
+"B001";"28/09/2026";"28/09/2026";"600,00";"EUR";"1";"RETE";"FARO";"26FE00/000101";"10/09/2026";"Incasso parziale fattura 101-FE"
+"B002";"25/09/2026";"25/09/2026";"500,00";"EUR";"1";"RETE";"FARO";"26FE00/000102";"12/09/2026";"Incasso fattura 102-FE"
+"B003";"05/10/2026";"05/10/2026";"400,00";"EUR";"1";"RETE";"FARO";"26FE00/000101";"10/09/2026";"Saldo fattura 101-FE successivo al cut-off"
+"B004";"05/10/2026";"05/10/2026";"300,00";"EUR";"1";"RETE";"FARO";"26FE00/000104";"20/09/2026";"Incasso fattura 104-FE successivo al cut-off"
+"B005";"26/09/2026";"26/09/2026";"200,00";"EUR";"1";"RETE";"FARO";"26FE00/000999";"18/09/2026";"Incasso con riferimento esplicito a fattura non inclusa"

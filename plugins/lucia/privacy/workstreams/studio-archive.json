@@ -217,14 +217,23 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "working-folder-delivery-intake",
+        "purpose": "Bring one explicitly authorized external delivery tree into the selected client working folder for subsequent organization",
+        "content": "The selected client and engagement IDs, user-supplied external source path and optional readable delivery name can enter the model request. The copy tool returns status, destination and receipt paths, counts and an opaque intake reference, without returning document bytes or document meaning. Sealed local receipts retain source basename, relative directory/file names, byte counts and exact hashes, but no original absolute source path. Later snapshot and source opening retain their existing model-context boundary. The copy helper calls no provider, connector or hosted service.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
   "review": {
     "basis": "external_boundary_review_of_workflow_source",
-    "reviewed_at": "2026-10-17",
+    "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "8aa2cb58c61f4da1d10656bd9ad9b2e310c60fe3d09e1e1f9d379a67cb2be223"
+    "source_fingerprint": "94224687d8ce3b0427c7a0771eab71b1cc76e8781dcb12f632379c26da1b51b6"
   },
   "role": "internal_engine",
   "runtime_profiles": [
@@ -324,6 +333,10 @@
     {
       "id": "approved-root-and-private-identity-continuity",
       "control": "Only explicit configuration records an approved root. Fresh default sessions revalidate it into independent session-owned configuration; explicit state directories remain isolated unless an explicit private profile is supplied. Root-specific identity read/modify/write is serialized with short OS locks and private regular-file records; private aliases are not returned in safe directory rows. Current-session aliases migrate only after validation. Shared profile state stays outside source archives and contains no active run selection or credentials. Contending identity writers wait up to ten seconds for the existing OS lock and fail with a retryable busy message without deleting or stealing that lock. Client-directory metadata is revalidated independently of document indexing, so another session adding a client does not require reading other clients source documents or changing the approved root. Portable manifest identity checks and session configuration ownership remain enforced; indexed search and source opening still require an explicitly refreshed index."
+    },
+    {
+      "id": "authorized-working-folder-delivery",
+      "control": "Require explicit exact-client/open-engagement/source copy authority. Reject sources inside or containing the approved archive tree, linked/non-ordinary entries, unsafe portable names, protected Vera destinations and over-limit trees. Copy into a new readable delivery folder with exclusive per-file publication, a sealed intent/receipt and engagement OS lock. Never merge an occupied unreceipted destination or overwrite existing content. Exact retries revalidate bytes and reuse one receipt; pending intake markers block organization snapshots until the same request completes. Refuse changed/foreign/uncertain retained state rather than deleting or silently adopting it. Intake preserves duplicate paths and does not classify client ownership, approve or apply an organization plan."
     }
   ],
   "workstream": "studio-archive",

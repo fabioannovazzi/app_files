@@ -173,6 +173,13 @@ and post-preflight path swaps fail closed. Revision, CSV, XLSX, envelope,
 manifest, or final trace failure restores the exact prior tree.
 
 For an assured run, validation is not limited to replaying local hashes.
+Explicit `--amount-tolerance` and `--date-window-days` options override the
+corresponding `checks` fields in the recipe, including an explicit zero. Omitted
+options use the recipe values; zero applies only when neither supplies a value.
+The audit and intake record the effective values. Intake currency describes the
+entries actually checked: a single currency only when unambiguous, otherwise the
+currency list with no invented single currency. Output language never chooses it.
+
 `execution_recipe.json` preserves and receipts the exact recipe bytes used by
 the run. Each Python preflight reconstructs a fresh baseline from the original
 normalized journal, current support source, and original recipe in a private
@@ -203,3 +210,26 @@ established package attestation and reviewer authority.
 ## Improvement Policy
 
 When a run exposes a missing parser, brittle matching rule, or repetitive manual step, Codex should offer to draft a concise GitHub issue for the repository. Creating the issue still requires the user's confirmation.
+
+## Selected Case Context
+
+The model-facing selected-case projection omits physical filenames, paths,
+locators and internal artifact IDs, including plural fields nested in JSON
+encoded evidence facts. `candidate_filenames` remains in the private human
+review payload; its length is exposed as `candidate_count`, alongside the
+support match status and other professional facts. Enabling exact professional
+identifiers does not enable these technical fields.
+
+File-backed review requests load their private intake and payload before
+resolving the run output directory. Explicit run_intake_path and
+review_payload_path-only sibling discovery receive the same parent-bound
+authorization and fresh read-only assurance replay as inline review objects.
+No review reference is issued when persisted or freshly rederived evidence
+fails that verification.
+
+Embedded Vera MCP review resolves the already prepared shared Python runtime
+for CheckEntries before launching assurance or review helpers. It does not
+install dependencies during review. An unprepared runtime stops with an
+actionable setup error. Resolver and helper child environments retain the
+existing allowlist; standalone component execution retains its configured
+Python selection.

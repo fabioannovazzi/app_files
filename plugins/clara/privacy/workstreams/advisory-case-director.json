@@ -172,11 +172,32 @@
     "run-receipt-stamping",
     "workflow-usage"
   ],
-  "public_explanations": {},
+  "public_explanations": {
+    "clara-advisory-case-director": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Il modello può leggere incarico, identità di cliente e interlocutori, documenti, interviste, dati economici, registri di prove e affermazioni, giudizi, questioni aperte e versioni degli elaborati. Le revisioni narrative e i commenti possono essere riletti. I tentativi locali di conversione possono conservare documenti e diagnostica anche dopo un errore; il loro contenuto entra nel contesto quando viene letto. I helper non aggiungono un servizio modello e non anonimizzano automaticamente."
+        ],
+        "en": [
+          "The model may read the assignment, client and stakeholder identities, documents, interviews, business data, evidence and claim registers, judgments, open questions and deliverable versions. Narrative revisions and comments may be read again. Local conversion attempts can retain documents and diagnostics after failure; their contents enter context when read. The helpers add no model service and do not automatically anonymize data."
+        ],
+        "fr": [
+          "Le modèle peut lire mission, identités du client et des interlocuteurs, documents, entretiens, données économiques, registres de preuves et affirmations, jugements, questions ouvertes et versions des livrables. Révisions et commentaires peuvent être relus. Les tentatives locales de conversion peuvent conserver documents et diagnostics après un échec ; leur contenu entre dans le contexte lorsqu’il est lu. Les helpers n’ajoutent aucun service modèle et n’anonymisent pas automatiquement."
+        ],
+        "de": [
+          "Das Modell kann Auftrag, Mandanten- und Beteiligtenidentitäten, Dokumente, Interviews, Geschäftsdaten, Beleg- und Aussagenregister, Urteile, offene Fragen und Ergebnisversionen lesen. Textrevisionen und Kommentare können erneut gelesen werden. Lokale Konvertierungsversuche können Dokumente und Diagnosen nach Fehlern behalten; deren Inhalt gelangt beim Lesen in den Kontext. Die Hilfsprogramme ergänzen keinen Modelldienst und anonymisieren nicht automatisch."
+        ],
+        "es": [
+          "El modelo puede leer encargo, identidades del cliente e interlocutores, documentos, entrevistas, datos económicos, registros de pruebas y afirmaciones, juicios, preguntas abiertas y versiones de entregables. Puede releer revisiones y comentarios. Los intentos locales de conversión pueden conservar documentos y diagnósticos después de un fallo; su contenido entra en contexto al leerlo. Los helpers no añaden un servicio modelo ni anonimizan automáticamente."
+        ]
+      }
+    }
+  },
   "review": {
-    "reviewed_at": "2026-10-06",
+    "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "df2e5f8a3bd797ef758c4062e77720e405943d8f9bb1604c29151839baae48ef"
+    "source_fingerprint": "cff7bdca9f5dec81a5a2acf51220a5300dbcfce8be5aa360edd14a9b695d5b62"
   }
 }

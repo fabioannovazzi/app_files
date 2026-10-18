@@ -211,7 +211,6 @@ const MODEL_CASE_DATA_FIELDS = new Set([
   "stage",
   "amount_delta",
   "date_diff_days",
-  "requested_document",
   "reason",
   "status",
   "shown_count",
@@ -222,6 +221,8 @@ const MODEL_CONTEXT_EXACT_IDENTIFIER_FIELDS = new Set([
   "movement_number",
   "shared_references",
   "account",
+  // Producer-authored requests can quote the exact reference or movement ID.
+  "requested_document",
 ]);
 const MODEL_CONTEXT_EVIDENCE_FIELDS = new Set([
   "kind",
@@ -231,7 +232,6 @@ const MODEL_CONTEXT_EVIDENCE_FIELDS = new Set([
   "amount_delta",
   "date_diff_days",
   "reason",
-  "requested_document",
 ]);
 const ALLOWED_ACTIONS = new Set([
   "accept",
@@ -397,7 +397,7 @@ function toolDefinitions() {
       },
       include_exact_identifiers: {
         type: "boolean",
-        description: "Include exact references, movement numbers, shared references, or account codes only when required for the selected accounting judgment.",
+        description: "Include exact identifiers and generated document requests that may quote them only when required for the selected accounting judgment.",
       },
     },
     ["persistence_token", "case_handles"],

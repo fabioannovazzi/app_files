@@ -352,3 +352,16 @@ def test_package_rejects_an_unreviewed_missing_helper(tmp_path, monkeypatch):
 
     with pytest.raises(ValueError, match="omissions differ"):
         project_privacy(entries, "lucia", host="anthropic-cowork", source_root=ROOT)
+
+
+@pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
+def test_every_user_workflow_has_a_public_explanation(product):
+    registry = json.loads(
+        (ROOT / "plugins" / product / "privacy/registry.json").read_text()
+    )
+    missing = [
+        name
+        for name, entry in registry["workstreams"].items()
+        if entry["role"] == "workflow" and not entry["public_pages"]
+    ]
+    assert missing == []
