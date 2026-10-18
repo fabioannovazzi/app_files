@@ -828,6 +828,9 @@ def test_identical_offline_failures_do_not_duplicate_pending_report(
 
 def test_startup_retains_capability_without_network_or_shell(tmp_path, monkeypatch):
     module, _, _ = client(tmp_path, monkeypatch)
+    reference = module.ROOT / "skills/vera/references/incident-recovery.md"
+    reference.parent.mkdir(parents=True)
+    reference.write_text("Synthetic recovery reference", encoding="utf-8")
     monkeypatch.setattr(
         module,
         "_post",

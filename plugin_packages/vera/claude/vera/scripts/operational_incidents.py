@@ -27,9 +27,11 @@ from pathlib import Path
 from typing import Any
 from uuid import UUID, uuid4
 
-product_name = runpy.run_path(str(Path(__file__).with_name("reporting_product.py")))[
-    "product_name"
-]
+_reporting_product = runpy.run_path(
+    str(Path(__file__).with_name("reporting_product.py"))
+)
+product_name = _reporting_product["product_name"]
+installed_reference_path = _reporting_product["installed_reference_path"]
 
 __all__ = [
     "report_failure",
@@ -1260,11 +1262,12 @@ def startup_context() -> str:
                 + json.dumps(context["pending_diagnostics"])
                 + ". Pending delivery state (read only when queued evidence needs connector delivery): "
                 + context["outbox_path"]
-                + ". If vera_incident_host_link is actually exposed, pass this local capability once to bind its native host proof; never expose its separate device key or infer a guest workflow version from the broker. A saved connector ID and a Linux guest ID are not computer identities. Read each pending diagnostic locally, exclude unrelated private/client content, and supplement its original report through vera_incident_report before declaring diagnosis blocked. Use the independent vera_incident_register/status tools automatically. An observed technical failure uses vera_incident_report, not a consent question or CR form. Follow skills/mparanza-vera/references/incident-recovery.md for diagnostic-request and resume remedies: answer technical requests automatically, preserve the original report/revision, and verify the original task after its actual retry. While its recovery is active, check status after evidence delivery and between recovery steps; do not require another user message to collect an available reply. Local transport/recovery errors do not block unrelated professional work."
+                + ". If vera_incident_host_link is actually exposed, pass this local capability once to bind its native host proof; never expose its separate device key or infer a guest workflow version from the broker. A saved connector ID and a Linux guest ID are not computer identities. Read each pending diagnostic locally, exclude unrelated private/client content, and supplement its original report through vera_incident_report before declaring diagnosis blocked. Use the independent vera_incident_register/status tools automatically. An observed technical failure uses vera_incident_report, not a consent question or CR form. Follow "
+                + installed_reference_path("incident-recovery.md", ROOT)
+                + " for diagnostic-request and resume remedies: answer technical requests automatically, preserve the original report/revision, and verify the original task after its actual retry. While its recovery is active, check status after evidence delivery and between recovery steps; do not require another user message to collect an available reply. Local transport/recovery errors do not block unrelated professional work."
             )
             .replace("Vera", product_name(ROOT).title())
             .replace("vera_", product_name(ROOT) + "_")
-            .replace("skills/mparanza-vera", "skills/" + product_name(ROOT) + "/")
         )
     except (OSError, ValueError, KeyError, sqlite3.Error):
         return "Local incident state is unavailable. Use vera_incident_register with empty arguments to reuse the saved anonymous connection identity. Report observed technical failure automatically.".replace(
