@@ -47,7 +47,9 @@ def main() -> None:
                 raise ValueError("Model-data report exceeds native validation limit")
             value = json.loads(path.read_bytes())
             markdown = producer.render_model_data_report(value, evidence_root=output)
-            if (output / "model_data_report.md").read_text() != markdown:
+            if (output / "model_data_report.md").read_text(
+                encoding="utf-8"
+            ) != markdown:
                 raise ValueError(
                     "Disclosure differs from the maintained report/rendered Markdown"
                 )

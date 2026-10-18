@@ -50,8 +50,12 @@ def project_privacy(
         raise ValueError(
             f"{product}: source privacy review failed: " + "; ".join(errors)
         )
-    registry = json.loads((source / "privacy/registry.json").read_text())
-    source_index = json.loads((source / "privacy/contracts/index.json").read_text())
+    registry = json.loads(
+        (source / "privacy/registry.json").read_text(encoding="utf-8")
+    )
+    source_index = json.loads(
+        (source / "privacy/contracts/index.json").read_text(encoding="utf-8")
+    )
     source_contracts = {}
     for name in registry["workstreams"]:
         raw = (source / f"privacy/contracts/{name}.json").read_bytes()
@@ -177,8 +181,8 @@ def project_privacy(
         ):
             for name in names:
                 relative = f"privacy/{kind}/{name}.json"
-                payload = json.loads((source / relative).read_text())
-                original = json.loads((source / relative).read_text())
+                payload = json.loads((source / relative).read_text(encoding="utf-8"))
+                original = json.loads((source / relative).read_text(encoding="utf-8"))
                 payload["packaged_for_runtime"] = host
                 component = (
                     validator._component_root(package, name)

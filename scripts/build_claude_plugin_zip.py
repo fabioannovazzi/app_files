@@ -3523,12 +3523,14 @@ def _reviewer_note(product: str, entries: dict[str, bytes]) -> bytes:
         )
     note = (
         (source / "review.md")
-        .read_text()
+        .read_text(encoding="utf-8")
         .format(
             product=product,
             servers=server_text,
             fonts="\n".join(fonts),
-            local_tokens=(source / f"{product}-local-tokens.md").read_text().strip(),
+            local_tokens=(source / f"{product}-local-tokens.md")
+            .read_text(encoding="utf-8")
+            .strip(),
             workflows=sum(
                 bool(re.fullmatch(r"skills/[^/]+/SKILL\.md", name)) for name in entries
             ),

@@ -601,7 +601,9 @@ def _fingerprint(
             and not (component_root / relative).exists()
             and (component_root / "components.json").is_file()
         ):
-            components = json.loads((component_root / "components.json").read_text())
+            components = json.loads(
+                (component_root / "components.json").read_text(encoding="utf-8")
+            )
             if parts[1] not in components["plugins"]:
                 raise ValueError(f"unregistered governed component: {parts[1]}")
             external_root = component_root.parent / parts[1]
@@ -1118,7 +1120,9 @@ def _registration_errors(root: Path) -> list[str]:
         registry = json.loads(path.read_text(encoding="utf-8"))
         from jsonschema import Draft202012Validator
 
-        schema = json.loads((root / "privacy/registry.schema.json").read_text())
+        schema = json.loads(
+            (root / "privacy/registry.schema.json").read_text(encoding="utf-8")
+        )
         errors = [
             f"registry: {error.json_path}: {error.message}"
             for error in Draft202012Validator(schema).iter_errors(registry)
@@ -1128,7 +1132,7 @@ def _registration_errors(root: Path) -> list[str]:
         metadata = root / ".codex-plugin/plugin.json"
         if not metadata.is_file():
             metadata = root / ".claude-plugin/plugin.json"
-        product = json.loads(metadata.read_text())["name"]
+        product = json.loads(metadata.read_text(encoding="utf-8"))["name"]
         if registry["product"] != product:
             errors.append("registry: product does not match installed product")
         entries = registry["workstreams"]
@@ -1141,7 +1145,9 @@ def _registration_errors(root: Path) -> list[str]:
             errors.append(f"{missing}: skill has no privacy registration")
         for extra in sorted(registered - present):
             errors.append(f"{extra}: registered skill is missing")
-        components = json.loads((root / "components.json").read_text())["plugins"]
+        components = json.loads((root / "components.json").read_text(encoding="utf-8"))[
+            "plugins"
+        ]
         owned = [
             component for entry in entries.values() for component in entry["components"]
         ]
@@ -1167,7 +1173,7 @@ def _registration_errors(root: Path) -> list[str]:
             )
         usage = root / "usage/pipelines.json"
         if usage.is_file():
-            pipelines = json.loads(usage.read_text())["pipelines"]
+            pipelines = json.loads(usage.read_text(encoding="utf-8"))["pipelines"]
             for missing in sorted(set(pipelines) - set(aliases)):
                 errors.append(f"{missing}: primary pipeline has no privacy contract")
         return errors
@@ -1181,7 +1187,7 @@ def _schema_errors(
     """Enforce the published closed schema, not just selected required fields."""
     from jsonschema import Draft202012Validator
 
-    schema = json.loads((root / "privacy" / schema_name).read_text())
+    schema = json.loads((root / "privacy" / schema_name).read_text(encoding="utf-8"))
     return [
         f"{subject}: {error.json_path}: {error.message}"
         for error in Draft202012Validator(schema).iter_errors(payload)
@@ -1221,7 +1227,9 @@ def validate_privacy_surfaces(vera_root: Path | None = None) -> list[str]:
                 manifest_errors.append(
                     f"{workstream}: unknown service reference: {service}"
                 )
-        registry = json.loads((root / "privacy/registry.json").read_text())
+        registry = json.loads(
+            (root / "privacy/registry.json").read_text(encoding="utf-8")
+        )
         pages = registry["workstreams"][workstream]["public_pages"]
         explanations = payload.get("public_explanations", {})
         if isinstance(explanations, dict):

@@ -2155,7 +2155,7 @@ def verify_packaged_mcp(
             if not config_path.is_file():
                 errors.append(f"{relative_root}: packaged MCP configuration is missing")
                 continue
-            configuration = json.loads(config_path.read_text())
+            configuration = json.loads(config_path.read_text(encoding="utf-8"))
             count = len(configuration["mcpServers"])
             try:
                 result = subprocess.run(

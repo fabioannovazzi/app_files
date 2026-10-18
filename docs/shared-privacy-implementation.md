@@ -73,7 +73,7 @@ and seal the final execution manifests. The common release command checks shared
 source synchronization and public contract drift before building all hosts.
 
 Local release candidate: Vera 0.1.409, Clara 0.1.299, Lucia 0.1.122. All twelve
-archives built. Shared privacy tests: 74 passed, binding module coverage 87.36%.
+archives built. Shared privacy tests: 79 passed, binding module coverage 87.36%.
 Renderer behavior tests: six passed. Black, Isort, Mypy and Bandit passed for the
 new implementation. Signed-receipt acceptance passed for all three products. Final CI and deployment are pending.
 
@@ -104,8 +104,8 @@ recovery claim or external message was created by these acceptance operations.
 
 Private evidence, exact package/report/contract hashes, report files and signed
 receipts are retained in
-`outputs/shared-privacy-acceptance/2026-10-18/public-candidate/`, with preceding
-candidate evidence retained separately in `final/` and `verified-release/`. The local review also covered
+`outputs/shared-privacy-acceptance/2026-10-18/portable-release/`, with preceding
+candidate evidence retained separately in `final/`, `verified-release/` and `public-candidate/`. The local review also covered
 Clara's Italian explanation, Lucia's English explanation and Vera's nested
 integration page. Thirty-six public-page tests passed; six renderer tests cover
 product separation, language and unavailable-review behavior.
@@ -129,3 +129,7 @@ course payloads were compared with commit `32f7e7e0d90a3191e4c1ea80489eb0b750b76
 after excluding `sources` and `retained_from`, and their authored content was identical.
 Only the current course digest in each release review was advanced; all dated
 editorial and output judgments remain historical. Fresh CI execution is still required.
+
+Manifest and review readers use explicit UTF-8. Regression coverage runs all three
+product package projections with both UTF-8 and CP1252 defaults and reversed
+filesystem enumeration; neither environment may change the projected bytes.

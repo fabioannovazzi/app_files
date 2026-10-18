@@ -42,7 +42,9 @@ def build(root: Path = ROOT, *, check: bool = False) -> list[str]:
             raise ValueError(
                 f"{product}: unreviewed source register: " + "; ".join(errors)
             )
-        registry = json.loads((product_root / "privacy/registry.json").read_text())
+        registry = json.loads(
+            (product_root / "privacy/registry.json").read_text(encoding="utf-8")
+        )
         index = {
             "schema_version": 1,
             "product": product,

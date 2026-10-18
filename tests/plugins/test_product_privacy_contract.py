@@ -374,20 +374,35 @@ def test_package_rejects_an_unreviewed_missing_helper(tmp_path, monkeypatch):
         project_privacy(entries, "lucia", host="anthropic-cowork", source_root=ROOT)
 
 
-def test_package_privacy_is_identical_with_reversed_filesystem_enumeration(monkeypatch):
+@pytest.mark.parametrize("default_encoding", ["utf-8", "cp1252"])
+@pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
+def test_package_privacy_is_identical_with_reversed_filesystem_enumeration(
+    monkeypatch, default_encoding, product
+):
     from zipfile import ZipFile
 
     monkeypatch.syspath_prepend(str(ROOT / "scripts"))
     import project_product_privacy as projection
 
-    with ZipFile(ROOT / "plugin_packages/lucia/lucia-claude-plugin.zip") as archive:
+    read_text = Path.read_text
+
+    def platform_read_text(path, *args, **kwargs):
+        if not args and kwargs.get("encoding") is None:
+            kwargs["encoding"] = default_encoding
+        return read_text(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", platform_read_text)
+
+    with ZipFile(
+        ROOT / f"plugin_packages/{product}/{product}-claude-plugin.zip"
+    ) as archive:
         original = {
             name: archive.read(name)
             for name in archive.namelist()
             if not name.endswith("/")
         }
     expected = dict(original)
-    projection.project_privacy(expected, "lucia", host="anthropic-cowork")
+    projection.project_privacy(expected, product, host="anthropic-cowork")
     load = projection._load
 
     def reverse_source_enumeration(path, name):
@@ -401,7 +416,7 @@ def test_package_privacy_is_identical_with_reversed_filesystem_enumeration(monke
 
     monkeypatch.setattr(projection, "_load", reverse_source_enumeration)
 
-    projection.project_privacy(original, "lucia", host="anthropic-cowork")
+    projection.project_privacy(original, product, host="anthropic-cowork")
 
     assert original == expected
 
