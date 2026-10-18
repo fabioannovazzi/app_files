@@ -2829,6 +2829,8 @@ def test_all_repo_plugins_include_end_of_run_feedback_policy() -> None:
                 in normalized_skill_text
             )
             for skill_file in skill_files:
+                if skill_file.parent.name == "privacy-surface-review":
+                    continue  # Developer governance is not a rated professional run.
                 text = skill_file.read_text(encoding="utf-8")
                 for snippet in builder.SHARED_REPORTING_SNIPPETS:
                     assert snippet in text, skill_file
@@ -2858,6 +2860,13 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
 
         for skill_file in skill_files:
             skill_text = skill_file.read_text(encoding="utf-8")
+            if skill_file.parent.name == "privacy-surface-review":
+                canonical = (
+                    ROOT
+                    / "plugins/_shared/privacy-runtime/skills/privacy-surface-review/SKILL.md"
+                )
+                assert skill_text == canonical.read_text(encoding="utf-8")
+                continue
             if skill_file.parent.name == "deep-research" and plugin_root.name in {
                 "vera",
                 "lucia",
@@ -3705,17 +3714,39 @@ def test_new_client_page_describes_one_connected_client_journey() -> None:
         assert stale_snippet not in page
 
 
+def reviewed_model_data(page_name: str) -> str:
+    """Inspect the real page binding and authoritative localized public contract."""
+    from bs4 import BeautifulSoup
+
+    page = (ROOT / "static/shared" / page_name / "index.html").read_text()
+    document = BeautifulSoup(page, "html.parser")
+    section = document.select_one("main > section:last-child")
+    assert section is not None and "function-model-data" in section["class"]
+    assert section["data-model-data-status"] == "placeholder"
+    assert any(
+        "function-model-data.js" in item.get("src", "")
+        for item in document.select("script[src]")
+    )
+    catalog = json.loads(
+        (ROOT / "static/shared/privacy-contracts/vera.json").read_text()
+    )
+    entry = catalog["pages"][page_name]
+    assert entry["status"] == "relevant"
+    assert re.fullmatch(r"[a-f0-9]{64}", entry["contract_sha256"])
+    assert set(entry["copy"]) == {"it", "en", "fr", "de", "es"}
+    assert all(paragraphs and all(paragraphs) for paragraphs in entry["copy"].values())
+    return "\n".join(
+        paragraph for paragraphs in entry["copy"].values() for paragraph in paragraphs
+    )
+
+
 def test_new_client_page_explains_which_private_data_reaches_the_model() -> None:
     page = (ROOT / "static" / "shared" / "new-client" / "index.html").read_text(
         encoding="utf-8"
     )
 
-    assert (
-        'id="model-data" data-model-data-workflow="new-client" '
-        'data-model-data-status="relevant"'
-    ) in page
-    main = page[page.index('<main class="page-shell"') : page.index("</main>")]
-    assert main.rstrip().endswith("</section>")
+    model_data = reviewed_model_data("new-client")
+    labels = (ROOT / "static/shared/function-model-data.js").read_text()
     for snippet in (
         "Quali dati arrivano al modello",
         "What data reaches the model",
@@ -3731,18 +3762,7 @@ def test_new_client_page_explains_which_private_data_reaches_the_model() -> None
         "CLIENT-001",
         "senza nomi delle parti, codici fiscali del cliente",
     ):
-        assert snippet in page
-    for key in (
-        "model.title",
-        "model.local.copy",
-        "model.files.copy",
-        "model.relationship.copy",
-        "model.runtime.copy",
-        "model.identifiers.title",
-        "model.note",
-    ):
-        assert f'data-i18n="{key}"' in page
-        assert page.count(f'"{key}":') == 5
+        assert snippet in model_data + labels
 
 
 def test_new_client_jurisdiction_pages_render_current_model_data_last() -> None:
@@ -3797,16 +3817,7 @@ def test_new_client_jurisdiction_pages_render_current_model_data_last() -> None:
 def test_vera_process_model_data_copy_omits_provider_mapping(
     relative_path: Path,
 ) -> None:
-    from bs4 import BeautifulSoup
-
-    page = (ROOT / relative_path).read_text(encoding="utf-8")
-    section = BeautifulSoup(page, "html.parser").select_one(
-        "[data-model-data-workflow]"
-    )
-    assert section is not None
-    # Check the data explanation and its translations, not unrelated later script copy.
-    translations = re.findall(r'"model\.[^"]+"\s*:\s*"((?:\\.|[^"\\])*)"', page)
-    model_data = section.get_text(" ", strip=True) + "\n" + "\n".join(translations)
+    model_data = reviewed_model_data(relative_path.parent.name)
 
     assert "OpenAI" not in model_data
     assert "Anthropic" not in model_data
@@ -4174,9 +4185,9 @@ def test_vera_page_scopes_market_specific_functions_without_a_separate_bucket() 
         )
         assert module is not None
         assert 'data-jurisdiction-item="it"' in module.group(0)
-    assert core.count(" data-module-link") == 48
-    assert core.count('class="module-row"') == 48
-    assert core.count('data-jurisdiction-item="it"') == 18
+    assert core.count(" data-module-link") == 50
+    assert core.count('class="module-row"') == 50
+    assert core.count('data-jurisdiction-item="it"') == 19
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
     for area_id in (
@@ -4674,8 +4685,8 @@ def test_financial_analysis_page_explains_accounting_fdd_and_review_boundary() -
         "model_use_manifest.json",
         "contingent_liability_register.json",
         "financial_issue_register.json",
-        'data-model-data-workflow="financial-analysis"',
-        'data-model-data-status="relevant"',
+        'data-model-data-status="placeholder"',
+        'src="../function-model-data.js',
         "Quali dati arrivano al modello",
         "What data reaches the model",
         "legge le celle Excel mappate esplicitamente",
@@ -4692,7 +4703,9 @@ def test_financial_analysis_page_explains_accounting_fdd_and_review_boundary() -
     for copy_key in visible_copy_keys:
         assert page.count(f'"{copy_key}":') == 5, copy_key
 
-    assert page.count('class="function-model-data__copy" data-i18n="model.copy.') == 3
+    assert "totali dichiarati, totali ricostruiti" in reviewed_model_data(
+        "financial-analysis"
+    )
 
     for stale_snippet in (
         "Tre analisi finanziarie",
@@ -4742,8 +4755,12 @@ def test_accounting_process_page_ends_with_model_data_block(
     main = page[page.index('<main class="page-shell"') : page.index("</main>")]
 
     assert main.count('class="function-model-data"') == 1
-    assert f'data-model-data-workflow="{workflow_id}"' in main
-    assert 'data-model-data-status="relevant"' in main
+    reviewed_model_data(page_name)
+    catalog = json.loads(
+        (ROOT / "static/shared/privacy-contracts/vera.json").read_text()
+    )
+    assert catalog["pages"][page_name]["workstream"] == workflow_id
+    assert 'data-model-data-status="placeholder"' in main
     assert main.rstrip().endswith("</section>")
     assert main.rindex('class="function-model-data"') > main.rindex('id="prompt"')
 
@@ -4800,8 +4817,8 @@ def test_sales_plan_page_explains_actual_to_plan_and_review_boundary() -> None:
         "reconciliation.json",
         "prepared_evidence_manifest.json",
         "plan_execution_receipt.json",
-        'data-model-data-workflow="sales-plan"',
-        'data-model-data-status="relevant"',
+        'data-model-data-status="placeholder"',
+        'src="../function-model-data.js',
         "Quali dati arrivano al modello",
         "What data reaches the model",
         "tutte le righe Actual osservate nel perimetro",
@@ -5205,15 +5222,8 @@ def test_journal_bank_page_explains_the_bounded_model_data_flow() -> None:
         ROOT / "static" / "shared" / "journal-bank-reconciliation" / "index.html"
     ).read_text(encoding="utf-8")
 
-    assert (
-        'id="model-data" data-model-data-workflow="journal-bank-reconciliation" '
-        'data-model-data-status="relevant"'
-    ) in page
-    main = page[page.index("<main>") : page.index("</main>")]
-    assert main.rstrip().endswith("</section>")
-    assert main.rindex('<section class="function-model-data"') == main.index(
-        '<section class="function-model-data" id="model-data"'
-    )
+    model_data = reviewed_model_data("journal-bank-reconciliation")
+    labels = (ROOT / "static/shared/function-model-data.js").read_text()
     for snippet in (
         "Quali dati arrivano al modello",
         "What data reaches the model",
@@ -5227,19 +5237,7 @@ def test_journal_bank_page_explains_the_bounded_model_data_flow() -> None:
         "Il modello richiede il contesto di un caso quando serve",
         "I dati professionali non vengono anonimizzati né pseudonimizzati automaticamente",
     ):
-        assert snippet in page
-    for key in (
-        "model.title",
-        "model.structure.copy",
-        "model.local.copy",
-        "model.index.copy",
-        "model.context.copy",
-        "model.residual.title",
-        "model.residual.copy",
-        "model.note",
-    ):
-        assert f'data-journey="{key}"' in page
-        assert page.count(f'"{key}":') == 5
+        assert snippet in model_data + labels
 
     for snippet in (
         "Solo nel runtime Codex",
@@ -5306,15 +5304,8 @@ def test_report_builder_page_explains_bounded_model_data_flow() -> None:
         encoding="utf-8"
     )
 
-    assert (
-        'id="model-data" data-model-data-workflow="report-builder" '
-        'data-model-data-status="relevant"'
-    ) in page
-    main = page[page.index("<main>") : page.index("</main>")]
-    assert main.rstrip().endswith("</section>")
-    assert main.rindex('<section class="function-model-data"') == main.index(
-        '<section class="function-model-data" id="model-data"'
-    )
+    model_data = reviewed_model_data("report-builder")
+    labels = (ROOT / "static/shared/function-model-data.js").read_text()
     for snippet in (
         "Quali dati arrivano al modello",
         "What data reaches the model",
@@ -5330,10 +5321,7 @@ def test_report_builder_page_explains_bounded_model_data_flow() -> None:
         "Gli stessi limiti si applicano in ogni ambiente supportato",
         "the helper is not replaced by a direct read",
     ):
-        assert snippet in page
-    for key in ("model.label", "model.title", "model.conclusion", "model.copy"):
-        assert f'data-i18n="{key}"' in page
-        assert page.count(f'"{key}":') == 5
+        assert snippet in model_data + labels
 
 
 @pytest.mark.parametrize(
@@ -5405,7 +5393,7 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
     assert 'id="data-handling"' not in page
     assert 'id="presentations"' not in page
     assert 'id="videos"' not in page
-    assert page.count('class="function-link"') == 12
+    assert page.count('class="function-link"') == 15
     for stale_snippet in (
         "Clara prepares the work. The judgment remains yours.",
         "Clara prepara il lavoro. Il giudizio resta tuo.",
@@ -5514,8 +5502,15 @@ def test_clara_public_page_language_buttons_and_copy_keys_stay_in_sync() -> None
 
     assert language_buttons == copy_languages == {"en", "it", "fr", "de", "es"}
     assert visible_keys
+    added_names, _ = json.JSONDecoder().raw_decode(
+        page.split("const privacyFunctionNames = ", 1)[1]
+    )
+    assert set(added_names) == copy_languages
     for key in visible_keys:
-        assert copy_block.count(f'"{key}"') == len(copy_languages), key
+        if key.startswith("functions.privacy."):
+            assert all(added_names[language][key] for language in copy_languages)
+        else:
+            assert copy_block.count(f'"{key}"') == len(copy_languages), key
     for language in copy_languages:
         assert f'hreflang="{language}"' in page
 
@@ -6097,7 +6092,7 @@ def test_clara_public_page_uses_vera_visual_system() -> None:
     assert 'href="clara-page.css?v=' in page
     assert 'src="icon.svg"' in page
     assert 'class="function-directory"' in page
-    assert page.count('class="function-link"') == 12
+    assert page.count('class="function-link"') == 15
     for color in ("#002060", "#0070C0", "#00B0F0", "#FFFFFF"):
         assert color in stylesheet
     for black in ("#000000", "#171816"):
