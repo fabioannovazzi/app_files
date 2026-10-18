@@ -116,7 +116,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "65292f97295418be569ca5a73b2a231887b23c0f70d4d4701fecf03af9d5c7a0",
+  "course_sha256": "7a5cc92caa0f77c8c3dbd543bfc1342d31f8aaca93fc0694d9a39e8752dbbe10",
   "esg_source_refresh_20260930": {
     "reviewer": "Codex /root - bounded source review",
     "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
@@ -821,5 +821,49 @@
       "sources"
     ],
     "scope": "Complete authored lesson JSON is identical to the retained tested candidate; only source fingerprints changed. Preserves all previous editorial and historical artifact reviews. Integrated main usage/device registration is unchanged from main; tested workflow logic is preserved. Open-item import ordering was normalized without changing imported names or statements. No new learner, visual-host or professional acceptance claimed; current native teaching CI remains required."
+  },
+  "archive_input_verification_source_review": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "reviewed_at": "2026-10-18T13:49:42.008164+00:00",
+    "baseline_commit": "2ac3787368ff68a4592311245a2c0e66d27909b0",
+    "previous_course_sha256": "65292f97295418be569ca5a73b2a231887b23c0f70d4d4701fecf03af9d5c7a0",
+    "current_course_sha256": "7a5cc92caa0f77c8c3dbd543bfc1342d31f8aaca93fc0694d9a39e8752dbbe10",
+    "changed_sources": [
+      {
+        "path": "modules/studio-archive/scripts/archive_core.py",
+        "before": "76af2b1545894a4de14d8e2eafa686292a09d1385750401ab998648a035bdebb",
+        "after": "39a2e9fd500bac5090ee8e5a32bba3ceba07fc61dd1b5795b958db58678a6916"
+      },
+      {
+        "path": "modules/studio-archive/scripts/input_verification.py",
+        "before": null,
+        "after": "00d4ac63e8ee22553b51c709f38c2917a088e0435961465a244503af5255ce8f"
+      },
+      {
+        "path": "modules/studio-archive/scripts/studio_archive.py",
+        "before": "58e80630ead93644796c075862a5235f343935650e963f4c368a907aa0dca4d0",
+        "after": "3aead5a72768b0f6abfc84d1c185dcdfed91304528af8cd91c572d7dd0b47488"
+      },
+      {
+        "path": "modules/studio-archive/skills/studio-archive/SKILL.md",
+        "before": "aaf3cc522c1d31a0b5c718d2e8ca934cc9641f39f082580158bc0c7c5bc4fae9",
+        "after": "e851697b113899a1da8f674e62074785d7294dacfb0198a08f66e9b20591bd85"
+      },
+      {
+        "path": "modules/studio-archive/skills/studio-archive/references/input-verification.md",
+        "before": null,
+        "after": "52e3da59ec7c56b34f48a1a8e21672bbd6540503c8c7e2ecc1b5cdf5b3f137b8"
+      },
+      {
+        "path": "skills/studio-archive/SKILL.md",
+        "before": "86fb69413e766e2ee96810a36c836788cd834d940182ccad6b8b68dd24cc5e48",
+        "after": "67f4fd8675e68a0d4c2acebaf9cfbdd040a0c4fae42a3266b12de72ad25c0939"
+      }
+    ],
+    "content_review": "Compared the complete compiled course with the reviewed main baseline. Every field except the source inventory is identical, including all five localized lesson texts, input definitions, requests, checkpoints, demo, practice and timing. Existing editorial judgments and historical artifact hashes are preserved.",
+    "source_review": "Reviewed the additive Archive verification module, the guarded public wrapper, CLI dispatch and skill guidance. They use the maintained receipt reader to check complete selected file bytes and optional earlier receipt seals without modifying the client archive. Existing local-search and studio-document-format routes retain their prior behavior. Their native teaching fixtures remain isolated and do not invoke a replacement client or acceptance run.",
+    "execution_evidence": "GitHub Actions run 39129516593, teaching-kits job 117681627582, commit c927186ddd3575816fb923b23b6f39bb03189673: the native teaching stage passed 1710 tests with 3 skips and 90.54% coverage. The later editorial freshness check failed; this run is not represented as green. Fresh final CI must bind all required demo and practice cases to the current course hashes.",
+    "limits": "This is a source compatibility refresh of unchanged teaching content, not a new independent editorial review. Historical output reviews remain historical. No new learner, voice, native visual, professional or installed-host acceptance is claimed.",
+    "local_native_evidence": "Twenty fresh local demo/practice executions passed across both workflows and all five languages. The maintained release validator matched every required demo/practice identity and current course SHA-256 against their actual JUnit properties. Existing editorial judgments and historical artifact reviews remain preserved; final full CI is still required."
   }
 }
