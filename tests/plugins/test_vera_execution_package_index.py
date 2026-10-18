@@ -42,12 +42,16 @@ def test_release_index_matches_every_final_host_projected_byte(host, product):
     assert "scripts/reporting_product.py" in expected
     assert "scripts/model_data_report.py" in expected
     assert "scripts/workflow_usage.py" in expected
+    assert "usage/pipelines.json" in expected
     with ZipFile(ROOT / "plugin_packages" / product / filename) as archive:
-        connector = json.loads(archive.read(prefix + ".mcp.json"))["mcpServers"]
-        assert (
-            connector[f"{product}Incidents"]["url"]
-            == f"https://mparanza.com/mcp/{product}-incidents"
-        )
+        if host != "chatgpt-upload":
+            connector = json.loads(archive.read(prefix + ".mcp.json"))["mcpServers"]
+            assert (
+                connector[f"{product}Incidents"]["url"]
+                == f"https://mparanza.com/mcp/{product}-incidents"
+            )
+        else:
+            assert prefix + ".mcp.json" not in archive.namelist()
         if product != "vera":
             root_contract = archive.read(prefix + f"skills/{router}/SKILL.md").decode()
             assert "MPARANZA_REPORTING_BEGIN" in root_contract

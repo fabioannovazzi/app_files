@@ -3192,6 +3192,16 @@ def _lucia_package_entries(
         }
     )
     entries[".mcp.json"] = project_claude_mcp(source_entries[".mcp.json"])
+    entries["usage/pipelines.json"] = source_entries["usage/pipelines.json"]
+    for reference in (
+        "workflow-usage",
+        "incident-recovery",
+        "model-data-report-contract",
+    ):
+        name = f"skills/lucia/references/{reference}.md"
+        entries[name] = _project_cowork_reference(
+            source_entries[name], relative_path=name
+        )
     for name, content in source_entries.items():
         if name in ROOT_OMITTED_PATHS:
             continue
