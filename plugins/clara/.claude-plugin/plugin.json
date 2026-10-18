@@ -33,6 +33,6 @@
   "agents": [
     "./agents/clara.md"
   ],
-  "version": "0.1.298",
+  "version": "0.1.300",
   "privacyPolicyUrl": "https://mparanza.com/privacy"
 }

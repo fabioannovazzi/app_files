@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "f5cf319f757f3507b4861aff6aa0f514296e4fb842cdf8334337aa3fe072a3a5",
+  "catalogue_fingerprint": "c2365fa5185e5691644ce87f7d23b2ad6b0c3bf5cb1d17bc6b0c9cfa14b4d44a",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -1933,5 +1933,21 @@
       "privacy-surface-review"
     ],
     "scope": "Reviewed the shared developer privacy skill: registry coverage, host profiles, manifest-bound public explanations and actual-run report binding. The helper remains a technical source review; all existing Geneva function rows, dispositions, professional judgments and acceptance limits remain unchanged. This release does not qualify Swiss legal compliance or a Geneva client workflow."
+  },
+  "archive_input_verification_release_binding": {
+    "version": "0.1.410",
+    "reviewed_at": "2026-10-18",
+    "previous_catalogue_fingerprint": "d88fdf323b18281debd89554c334171b609b93728192348c00afd0ad02418f37",
+    "current_catalogue_fingerprint": "15596f39bcafe97952f4fe22d5932f60f085e563c78a981dce7527a2e7dd613d",
+    "changed_existing_entrypoints": [
+      "studio-archive",
+      "vera"
+    ],
+    "scope": "The 55 function IDs and existing Geneva dispositions remain unchanged. The changed entrypoints require maintained local receipt and byte verification for saved inputs and continuations. This adds no jurisdiction-specific accounting or legal judgment and establishes no new Geneva client or professional acceptance."
+  },
+  "archive_input_verification_main_integration": {
+    "base_commit": "b8ed35121cc430584260321734f5cf0e91b400ea",
+    "version": "0.1.410",
+    "scope": "Retained all 55 assessment rows and current shared privacy source. The additive maintained Archive verifier and updated entrypoint instructions introduce no jurisdiction-specific judgment or new professional acceptance."
   }
 }

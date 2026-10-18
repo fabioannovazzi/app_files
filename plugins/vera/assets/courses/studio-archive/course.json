@@ -40,7 +40,7 @@
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
       "repository_path": "plugins/studio-archive/scripts/archive_core.py",
-      "sha256": "76af2b1545894a4de14d8e2eafa686292a09d1385750401ab998648a035bdebb"
+      "sha256": "39a2e9fd500bac5090ee8e5a32bba3ceba07fc61dd1b5795b958db58678a6916"
     },
     {
       "path": "modules/studio-archive/scripts/archive_preferences.py",
@@ -73,6 +73,11 @@
       "sha256": "7ea637902377f41bbc785f0d2224246bba69f7f5eb67526120ccbd9e7ed5e2e5"
     },
     {
+      "path": "modules/studio-archive/scripts/input_verification.py",
+      "repository_path": "plugins/studio-archive/scripts/input_verification.py",
+      "sha256": "00d4ac63e8ee22553b51c709f38c2917a088e0435961465a244503af5255ce8f"
+    },
+    {
       "path": "modules/studio-archive/scripts/readable_archive.py",
       "repository_path": "plugins/studio-archive/scripts/readable_archive.py",
       "sha256": "2e00fdb39bb484867a50e96e4d69713cfdd0713c513e49f6ad0b1c1cd1085a1d"
@@ -80,7 +85,7 @@
     {
       "path": "modules/studio-archive/scripts/studio_archive.py",
       "repository_path": "plugins/studio-archive/scripts/studio_archive.py",
-      "sha256": "58e80630ead93644796c075862a5235f343935650e963f4c368a907aa0dca4d0"
+      "sha256": "3aead5a72768b0f6abfc84d1c185dcdfed91304528af8cd91c572d7dd0b47488"
     },
     {
       "path": "modules/studio-archive/scripts/whatsapp_desktop_guard.mjs",
@@ -90,7 +95,7 @@
     {
       "path": "modules/studio-archive/skills/studio-archive/SKILL.md",
       "repository_path": "plugins/studio-archive/skills/studio-archive/SKILL.md",
-      "sha256": "aaf3cc522c1d31a0b5c718d2e8ca934cc9641f39f082580158bc0c7c5bc4fae9"
+      "sha256": "e851697b113899a1da8f674e62074785d7294dacfb0198a08f66e9b20591bd85"
     },
     {
       "path": "modules/studio-archive/skills/studio-archive/agents/openai.yaml",
@@ -101,6 +106,11 @@
       "path": "modules/studio-archive/skills/studio-archive/references/geneva.md",
       "repository_path": "plugins/studio-archive/skills/studio-archive/references/geneva.md",
       "sha256": "a2ebdb373a74fb7a76ba8d3a311d42c973941a86bbe7537e51d979ce76b15ff0"
+    },
+    {
+      "path": "modules/studio-archive/skills/studio-archive/references/input-verification.md",
+      "repository_path": "plugins/studio-archive/skills/studio-archive/references/input-verification.md",
+      "sha256": "52e3da59ec7c56b34f48a1a8e21672bbd6540503c8c7e2ecc1b5cdf5b3f137b8"
     },
     {
       "path": "modules/studio-archive/vendor/modules/__init__.py",
@@ -175,7 +185,7 @@
     {
       "path": "skills/studio-archive/SKILL.md",
       "repository_path": "plugins/vera/skills/studio-archive/SKILL.md",
-      "sha256": "86fb69413e766e2ee96810a36c836788cd834d940182ccad6b8b68dd24cc5e48"
+      "sha256": "67f4fd8675e68a0d4c2acebaf9cfbdd040a0c4fae42a3266b12de72ad25c0939"
     },
     {
       "path": "skills/studio-archive/references/marketplace-gmail.md",

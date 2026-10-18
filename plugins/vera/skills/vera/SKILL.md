@@ -413,6 +413,10 @@ explicit sequence:
 3. After authorization, import each selected file as an immutable, receipted
    input. Use role `source` generally, `journal` for Journal Sampling, and
    `support` for Vouching evidence. Import does not prepare or start a run.
+   Before claiming saved or preserved document-only progress, use Studio
+   Archive's `verify_studio_client_inputs` with exact selected IDs and retained
+   receipt identities. Require its verified result; never improvise raw-ledger
+   field or path checks.
 4. Prepare the selected workflow from the exact input IDs and exact finalized
    same-engagement upstream artifacts it needs. The same request is idempotent;
    a new run must be explicit.

@@ -226,6 +226,15 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "selected-archive-input-verification",
+        "purpose": "Verify selected saved inputs and compare their immutable receipts with a supplied prior baseline",
+        "content": "The selected client, engagement and input IDs; prior receipt seals when supplied; verified input names, roles, controlled absolute and relative paths, byte counts, file hashes, receipt seals, timestamps and verification results or bounded failures. Optional exact-population checking returns current input IDs for the selected engagement. Complete file bytes are read locally for hashing; this operation returns no document text and makes no new connector, model API or hosted-service call. Returned metadata can enter the invoking host model context and is not anonymized.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -233,7 +242,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "94224687d8ce3b0427c7a0771eab71b1cc76e8781dcb12f632379c26da1b51b6"
+    "source_fingerprint": "4339502f59d3a3fbf184545ff701254171b4688d9ba8716a25fc972840509203"
   },
   "role": "internal_engine",
   "runtime_profiles": [
@@ -337,6 +346,10 @@
     {
       "id": "authorized-working-folder-delivery",
       "control": "Require explicit exact-client/open-engagement/source copy authority. Reject sources inside or containing the approved archive tree, linked/non-ordinary entries, unsafe portable names, protected Vera destinations and over-limit trees. Copy into a new readable delivery folder with exclusive per-file publication, a sealed intent/receipt and engagement OS lock. Never merge an occupied unreceipted destination or overwrite existing content. Exact retries revalidate bytes and reuse one receipt; pending intake markers block organization snapshots until the same request completes. Refuse changed/foreign/uncertain retained state rather than deleting or silently adopting it. Intake preserves duplicate paths and does not classify client ownership, approve or apply an organization plan."
+    },
+    {
+      "id": "maintained-read-only-input-verification",
+      "control": "Select 1 to 100 unique exact input IDs within the selected client engagement. Use the maintained receipt reader to validate ownership, non-linked controlled paths, receipt seals and all file bytes. Compare an optional complete set of prior receipt seals without inventing a historical baseline. Reject malformed arguments, preserve structured failures and perform no client-tree repair or mutation. Exact-population checks are explicit. Byte verification does not establish document meaning, authored version lineage, historical retry outcomes or professional acceptance."
     }
   ],
   "workstream": "studio-archive",
@@ -351,7 +364,8 @@
           "Solo in Codex arrivano nome o identificativo e numero completo del cliente, identità della chat individuale verificata, mittente, testo o didascalia, orario e riferimento sullo schermo dei soli messaggi visibili necessari. Le anteprime delle altre chat prima della verifica restano nel controllo locale e non vengono restituite al modello.",
           "Per scegliere il cliente, il modello riceve tutti i record con etichetta, stato e ID opachi. Riceve anche il numero di email, nomi legali e codici fiscali registrati, ma non i valori. Se ne fornisci uno, il codice restituisce solo le corrispondenze esatte.",
           "Durante il run, il modello riceve gli ID di cliente, incarico e run e i percorsi locali necessari. Con l’MCP locale, le operazioni restano legate al run corretto. Senza MCP, restano disponibili il ledger e i file canonici, ma Vera non dichiara salvata o applicata una decisione senza un artefatto persistito.",
-          "Per rivedere il riordino, il modello riceve l’intero snapshot, entro 5.000 file e 2 GB: percorsi proiettati, nomi, tipi, dimensioni, date, riferimenti opachi e duplicati esatti. Hash grezzi, ID Drive, versioni, capacità e percorsi assoluti restano locali. Dei documenti aperti riceve solo testo limitato."
+          "Per rivedere il riordino, il modello riceve l’intero snapshot, entro 5.000 file e 2 GB: percorsi proiettati, nomi, tipi, dimensioni, date, riferimenti opachi e duplicati esatti. Hash grezzi, ID Drive, versioni, capacità e percorsi assoluti restano locali. Dei documenti aperti riceve solo testo limitato.",
+          "La verifica dei documenti salvati legge localmente tutti i byte selezionati. Al modello restituisce ID, nomi, ruoli, percorsi, dimensioni, impronte dei file e delle ricevute ed esiti dei controlli, senza il testo dei documenti. Il confronto con ricevute precedenti verifica la conservazione; non approva il contenuto."
         ],
         "en": [
           "Local code indexes the whole supported population, within 50,000 files and 50 GB; the model does not receive the index or an automatic copy of the full archive. If the archive exceeds those limits, refresh stops before search.",
@@ -360,7 +374,8 @@
           "Only in Codex, the client name or identifier and full phone number, verified one-to-one chat identity, sender, message text or caption, time, and on-screen locator for only the visible messages needed reach the model. Other-chat previews seen before verification remain inside the local control and are not returned to the model.",
           "To choose a client, the model receives every record’s label, status, and opaque IDs. It also receives the number of stored email addresses, legal names, and tax identifiers, but not the values. If you supply one, code returns only exact matches.",
           "During a run, the model receives the client, engagement, and run IDs plus the required local paths. With local MCP, operations remain bound to the correct run. Without MCP, the ledger and canonical files remain available, but Vera does not report a decision as saved or applied without a persisted artifact.",
-          "To review the organization proposal, the model receives the entire snapshot, within 5,000 files and 2 GB: projected paths, names, types, sizes, dates, opaque references, and exact duplicates. Raw hashes, Drive IDs, versions, capabilities, and absolute paths stay local. Only bounded text from opened files is added."
+          "To review the organization proposal, the model receives the entire snapshot, within 5,000 files and 2 GB: projected paths, names, types, sizes, dates, opaque references, and exact duplicates. Raw hashes, Drive IDs, versions, capabilities, and absolute paths stay local. Only bounded text from opened files is added.",
+          "Verification of saved documents reads all selected bytes locally. It returns IDs, names, roles, paths, sizes, file and receipt hashes, and check results to the model, without document text. Comparison with prior receipts checks preservation; it does not approve the content."
         ],
         "fr": [
           "Le code local indexe toute la population prise en charge, dans la limite de 50 000 fichiers et 50 Go ; le modèle ne reçoit ni l’index ni une copie automatique de l’archive complète. Si l’archive dépasse ces limites, l’actualisation s’arrête avant la recherche.",
@@ -369,7 +384,8 @@
           "Uniquement dans Codex, le modèle reçoit le nom ou identifiant et le numéro complet du client, l’identité vérifiée de la conversation individuelle, l’expéditeur, le texte ou la légende, l’heure et le repère à l’écran des seuls messages visibles nécessaires. Les aperçus des autres conversations avant vérification restent dans le contrôle local et ne sont pas renvoyés au modèle.",
           "Pour choisir le client, le modèle reçoit le libellé, le statut et les ID opaques de chaque ligne. Il reçoit aussi le nombre d’adresses e-mail, de noms légaux et d’identifiants fiscaux enregistrés, mais pas les valeurs. Si vous en fournissez une, le code ne renvoie que les correspondances exactes.",
           "Pendant un run, le modèle reçoit les ID du client, de la mission et du run, ainsi que les chemins locaux nécessaires. Avec le MCP local, les opérations restent liées au bon run. Sans MCP, le registre et les fichiers canoniques restent disponibles, mais Vera ne déclare aucune décision enregistrée ou appliquée sans artefact persistant.",
-          "Pour revoir le classement, le modèle reçoit le snapshot complet, dans la limite de 5 000 fichiers et 2 Go : chemins projetés, noms, types, tailles, dates, références opaques et doublons exacts. Les empreintes brutes, ID Drive, versions, capacités et chemins absolus restent locaux. Seul le texte limité des fichiers ouverts est ajouté."
+          "Pour revoir le classement, le modèle reçoit le snapshot complet, dans la limite de 5 000 fichiers et 2 Go : chemins projetés, noms, types, tailles, dates, références opaques et doublons exacts. Les empreintes brutes, ID Drive, versions, capacités et chemins absolus restent locaux. Seul le texte limité des fichiers ouverts est ajouté.",
+          "La vérification des documents enregistrés lit localement tous les octets sélectionnés. Elle transmet au modèle les identifiants, noms, rôles, chemins, tailles, empreintes des fichiers et reçus, et résultats des contrôles, sans le texte des documents. La comparaison avec les reçus précédents vérifie la conservation ; elle ne valide pas le contenu."
         ],
         "de": [
           "Lokaler Code indexiert den gesamten unterstützten Bestand bis zu 50.000 Dateien und 50 GB; das Modell erhält weder den Index noch automatisch eine Kopie des gesamten Archivs. Überschreitet das Archiv diese Grenzen, stoppt die Aktualisierung vor der Suche.",
@@ -378,7 +394,8 @@
           "Nur in Codex erhält das Modell Mandantenname oder -kennung und vollständige Telefonnummer, die verifizierte Identität des Einzelchats sowie Absender, Nachrichtentext oder Bildunterschrift, Zeitpunkt und Bildschirmfundstelle nur der benötigten sichtbaren Nachrichten. Vorschauen anderer Chats vor der Verifizierung bleiben in der lokalen Steuerung und werden nicht an das Modell zurückgegeben.",
           "Zur Auswahl des Mandanten erhält das Modell für jeden Eintrag Bezeichnung, Status und opake IDs. Es erhält außerdem die Anzahl gespeicherter E-Mail-Adressen, rechtlicher Namen und Steuerkennungen, nicht aber die Werte. Wenn Sie einen davon angeben, gibt der Code nur exakte Treffer zurück.",
           "Während eines Runs erhält das Modell Mandanten-, Mandats- und Run-IDs sowie die benötigten lokalen Pfade. Mit lokalem MCP bleiben die Vorgänge an den richtigen Run gebunden. Ohne MCP bleiben Ledger und kanonische Dateien verfügbar; Vera meldet jedoch keine Entscheidung ohne persistiertes Artefakt als gespeichert oder angewendet.",
-          "Zur Prüfung der Ablage erhält das Modell den vollständigen Snapshot innerhalb der Grenze von 5.000 Dateien und 2 GB: projizierte Pfade, Namen, Typen, Größen, Daten, opake Referenzen und exakte Duplikate. Rohe Hashes, Drive-IDs, Versionen, Fähigkeiten und absolute Pfade bleiben lokal. Hinzu kommt nur begrenzter Text aus geöffneten Dateien."
+          "Zur Prüfung der Ablage erhält das Modell den vollständigen Snapshot innerhalb der Grenze von 5.000 Dateien und 2 GB: projizierte Pfade, Namen, Typen, Größen, Daten, opake Referenzen und exakte Duplikate. Rohe Hashes, Drive-IDs, Versionen, Fähigkeiten und absolute Pfade bleiben lokal. Hinzu kommt nur begrenzter Text aus geöffneten Dateien.",
+          "Die Prüfung gespeicherter Dokumente liest alle ausgewählten Bytes lokal. Das Modell erhält IDs, Namen, Rollen, Pfade, Größen, Datei- und Beleg-Hashes sowie Prüfergebnisse, ohne Dokumenttext. Der Vergleich mit früheren Belegen prüft die unveränderte Aufbewahrung; er genehmigt den Inhalt nicht."
         ],
         "es": [
           "El código local indexa toda la población compatible, con un límite de 50.000 archivos y 50 GB; el modelo no recibe el índice ni una copia automática de todo el archivo. Si el archivo supera esos límites, la actualización se detiene antes de la búsqueda.",
@@ -387,7 +404,8 @@
           "Solo en Codex llegan al modelo el nombre o identificador y el número completo del cliente, la identidad verificada del chat individual, el remitente, el texto o pie, la hora y el localizador en pantalla únicamente de los mensajes visibles necesarios. Las vistas previas de otros chats anteriores a la verificación permanecen en el control local y no se devuelven al modelo.",
           "Para elegir al cliente, el modelo recibe la etiqueta, el estado y los ID opacos de cada registro. También recibe el número de correos, nombres legales e identificadores fiscales guardados, pero no los valores. Si proporcionas uno, el código devuelve solo las coincidencias exactas.",
           "Durante una ejecución, el modelo recibe los ID de cliente, encargo y ejecución, además de las rutas locales necesarias. Con MCP local, las operaciones permanecen vinculadas a la ejecución correcta. Sin MCP, el registro y los archivos canónicos siguen disponibles, pero Vera no declara una decisión guardada o aplicada sin un artefacto persistido.",
-          "Para revisar la organización, el modelo recibe la instantánea completa, dentro del límite de 5.000 archivos y 2 GB: rutas proyectadas, nombres, tipos, tamaños, fechas, referencias opacas y duplicados exactos. Las huellas brutas, los ID de Drive, las versiones, las capacidades y las rutas absolutas permanecen locales. Solo se añade texto limitado de los archivos abiertos."
+          "Para revisar la organización, el modelo recibe la instantánea completa, dentro del límite de 5.000 archivos y 2 GB: rutas proyectadas, nombres, tipos, tamaños, fechas, referencias opacas y duplicados exactos. Las huellas brutas, los ID de Drive, las versiones, las capacidades y las rutas absolutas permanecen locales. Solo se añade texto limitado de los archivos abiertos.",
+          "La verificación de documentos guardados lee localmente todos los bytes seleccionados. Devuelve al modelo los identificadores, nombres, funciones, rutas, tamaños, huellas de archivos y recibos, y resultados de los controles, sin el texto de los documentos. La comparación con recibos anteriores verifica la conservación; no aprueba el contenido."
         ]
       }
     }

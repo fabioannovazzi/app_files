@@ -1,9 +1,9 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/mparanza-shared-privacy/plugins/vera",
+  "root": "/Users/fabio/Documents/Codex/2026-10-18/studio-archive-01-ripartenza-0408/work/archive-verification-src/plugins/vera",
   "version": "0.1.411",
-  "captured_at": "2026-10-18T15:05:32.410186+00:00",
-  "catalogue_fingerprint": "f5cf319f757f3507b4861aff6aa0f514296e4fb842cdf8334337aa3fe072a3a5",
+  "captured_at": "2026-10-18T15:27:22.654628+00:00",
+  "catalogue_fingerprint": "c2365fa5185e5691644ce87f7d23b2ad6b0c3bf5cb1d17bc6b0c9cfa14b4d44a",
   "manifest_sha256": "b169c7375e6defb0771ce08a266379c426fa5b48d4df48c77ecefa9f5fa925c7",
   "entries": [
     {
@@ -249,7 +249,7 @@
     {
       "function_id": "studio-archive",
       "skill_path": "skills/studio-archive/SKILL.md",
-      "sha256": "86fb69413e766e2ee96810a36c836788cd834d940182ccad6b8b68dd24cc5e48"
+      "sha256": "67f4fd8675e68a0d4c2acebaf9cfbdd040a0c4fae42a3266b12de72ad25c0939"
     },
     {
       "function_id": "studio-document-format",
@@ -274,7 +274,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "a63d87728c34ddc83d2f39d318d4bd92bea54a4207f8fb17d25ee28ee74d55ff"
+      "sha256": "24cd6211105af34f8f858e6cab90b372aeadd1039c966250d95ab4e98d7e5aef"
     },
     {
       "function_id": "vouching",

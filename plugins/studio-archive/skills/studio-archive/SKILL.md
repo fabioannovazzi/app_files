@@ -313,6 +313,35 @@ Use this exact chat workflow whenever a professional starts client work:
    as its original sources: a prior derived follow-up may be saved there even
    when no workflow run exists.
 
+### Verify saved inputs through the maintained operation
+
+Before reporting saved document progress or unchanged prior inputs, call
+`verify_studio_client_inputs` with the exact client, engagement and 1–100
+selected input IDs. It uses the existing validated receipt reader and re-hashes
+complete controlled bytes. Require `verified: true`; a successful tool transport
+or an available path is insufficient. Its versioned result returns per-input
+outcomes, validated receipts with usable paths, failures and unchecked boundaries.
+It never repairs, imports, rewrites receipts or approves document meaning.
+
+For preservation, pass `expected_receipts` containing exactly one
+`{input_id, content_sha256}` pair per selected input, copied from its earlier
+import or verification response. Missing baselines remain explicitly unchecked.
+Use `require_exact_input_set: true` only when these IDs are the complete
+expected engagement input population; it additionally verifies that population
+and rejects added or missing inputs. Otherwise only selected inputs are checked.
+An actual identical import must itself return `already_imported`; verification
+does not manufacture a historical retry or infer version lineage.
+
+Read document content for semantic work from the verified receipt's `path`.
+The verifier returns metadata, not document text or proof the model read it.
+Do not parse raw `engagement.json` for imports or raw `receipt.json` for
+`relative_path`. Those are internal records; the maintained readers produce
+the hydrated listing. Do not improvise another Python/hash/path verification
+script. On failure, retain its structured result and existing records; never
+repair or switch inputs to manufacture a pass. Readable navigation, external
+originals/folder deliveries, workflow outputs, visual acceptance and professional
+approval remain separate. See `references/input-verification.md`.
+
 ### Preserve a follow-up when there is no workflow run
 
 When the user asks to continue an existing engagement and preserve progress,
@@ -339,10 +368,12 @@ same engagement before reporting that the continuation is saved:
    receipt, digest and `imported_path`. Never hand-write files or receipts in
    the engagement's managed input tree. An identical retry reuses the existing
    import; a changed follow-up gets a new receipt and preserves the old copy.
-4. Call `list_studio_client_engagements` again. Verify that this same engagement
-   lists the returned `input_id`, `support` role, path, byte count and digest;
-   read back the controlled copy and verify that its bytes match the working
-   file. Deliver the archived copy's path and the readable engagement link,
+4. Call `list_studio_client_engagements` again, then
+   `verify_studio_client_inputs` with the saved input IDs and prior receipt
+   identities as described above. Check the returned `support` role and
+   `verified: true`; use the returned controlled path for document readback.
+   Include prior and new notes when checking a continuation. Deliver the
+   archived copy's path and the readable engagement link,
    with the remaining work. A file link in the chat workspace is insufficient.
 
 If import or verification fails, state that the new memo is **not yet saved
@@ -728,6 +759,7 @@ python scripts/studio_archive.py resolve-client --identity-kind email_address \
 python scripts/studio_archive.py create-client --legal-name "Zecca SPA"
 python scripts/studio_archive.py create-engagement --client-id client_... --engagement-label "2026 audit"
 python scripts/studio_archive.py import-document --client-id client_... --engagement-id eng_... --source-path /absolute/path/journal.xlsx --role journal
+python scripts/studio_archive.py verify-inputs --client-id client_... --engagement-id eng_... --input-id input_...
 python scripts/studio_archive.py prepare-workflow --engagement-id eng_... --workflow-id journal-sampling --input-id input_...
 python scripts/studio_archive.py start-workflow --client-id client_... --engagement-id eng_... --run-id run_...
 python scripts/studio_archive.py finalize-workflow --client-id client_... --engagement-id eng_... --run-id run_... --artifacts-json '[{"artifact_id":"deliverable.result","path":"result.pdf","purpose":"Reviewed client deliverable","audience":"deliverable","media_type":"application/pdf"}]'

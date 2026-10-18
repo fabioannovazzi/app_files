@@ -50,7 +50,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "a36487adb0a173280db497d92dae7d48165006b34586a46509a03a471849b95a",
+  "course_sha256": "627ff9c02ab3cff95eb737b1a681ecd233b7326c9d5639c7c2bf25a581105b37",
   "integration_refresh": {
     "reviewer": "Codex /root",
     "date": "2026-10-02",
@@ -644,5 +644,38 @@
       "sources"
     ],
     "scope": "Complete authored lesson JSON is identical to the retained tested candidate; only source fingerprints changed. Preserves all previous editorial and historical artifact reviews. Integrated main usage/device registration is unchanged from main; tested workflow logic is preserved. Open-item import ordering was normalized without changing imported names or statements. No new learner, visual-host or professional acceptance claimed; current native teaching CI remains required."
+  },
+  "archive_input_verification_source_review": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "reviewed_at": "2026-10-18T13:49:42.020615+00:00",
+    "baseline_commit": "2ac3787368ff68a4592311245a2c0e66d27909b0",
+    "previous_course_sha256": "4ce3d323de93e5c6ea3f273727ab10423d900d417772fc246950238e82997125",
+    "current_course_sha256": "df177c20349c7427cc18613b2a66f04a7229f138df278e268632906e0c38a8f6",
+    "changed_sources": [
+      {
+        "path": "modules/studio-archive/scripts/archive_core.py",
+        "before": "76af2b1545894a4de14d8e2eafa686292a09d1385750401ab998648a035bdebb",
+        "after": "39a2e9fd500bac5090ee8e5a32bba3ceba07fc61dd1b5795b958db58678a6916"
+      },
+      {
+        "path": "modules/studio-archive/scripts/input_verification.py",
+        "before": null,
+        "after": "00d4ac63e8ee22553b51c709f38c2917a088e0435961465a244503af5255ce8f"
+      },
+      {
+        "path": "modules/studio-archive/scripts/studio_archive.py",
+        "before": "58e80630ead93644796c075862a5235f343935650e963f4c368a907aa0dca4d0",
+        "after": "3aead5a72768b0f6abfc84d1c185dcdfed91304528af8cd91c572d7dd0b47488"
+      }
+    ],
+    "content_review": "Compared the complete compiled course with the reviewed main baseline. Every field except the source inventory is identical, including all five localized lesson texts, input definitions, requests, checkpoints, demo, practice and timing. Existing editorial judgments and historical artifact hashes are preserved.",
+    "source_review": "Reviewed the additive Archive verification module, the guarded public wrapper, CLI dispatch and skill guidance. They use the maintained receipt reader to check complete selected file bytes and optional earlier receipt seals without modifying the client archive. Existing local-search and studio-document-format routes retain their prior behavior. Their native teaching fixtures remain isolated and do not invoke a replacement client or acceptance run.",
+    "execution_evidence": "GitHub Actions run 39129516593, teaching-kits job 117681627582, commit c927186ddd3575816fb923b23b6f39bb03189673: the native teaching stage passed 1710 tests with 3 skips and 90.54% coverage. The later editorial freshness check failed; this run is not represented as green. Fresh final CI must bind all required demo and practice cases to the current course hashes.",
+    "limits": "This is a source compatibility refresh of unchanged teaching content, not a new independent editorial review. Historical output reviews remain historical. No new learner, voice, native visual, professional or installed-host acceptance is claimed.",
+    "local_native_evidence": "Twenty fresh local demo/practice executions passed across both workflows and all five languages. The maintained release validator matched every required demo/practice identity and current course SHA-256 against their actual JUnit properties. Existing editorial judgments and historical artifact reviews remain preserved; final full CI is still required."
+  },
+  "archive_input_verification_main_integration": {
+    "base_commit": "b8ed35121cc430584260321734f5cf0e91b400ea",
+    "scope": "Compared complete course payload against the merged main release. Only sources differ; authored lessons, all five languages and existing editorial/artifact judgments are preserved. This refresh records source compatibility, not new learner or professional acceptance. Final CI must execute and bind the current course hashes."
   }
 }
