@@ -793,7 +793,9 @@ def _implementation_receipts() -> list[dict[str, Any]]:
             for relative_path, _ in ASSURANCE_IMPLEMENTATION_FILES
         ),
     )
-    declared_contract += (("shared_pdf", "__init__.py"),)
+    declared_contract += tuple(
+        ("shared_pdf", name) for name in ("__init__.py", "rules.py", "recovery.py")
+    )
     if declared_contract != IMPLEMENTATION_CONTRACT:
         raise ValueError(
             "Journal Sampling receipt and execution-boundary contracts diverged."
@@ -834,16 +836,21 @@ def _implementation_receipts() -> list[dict[str, Any]]:
             )
         )
     pdf_root = assurance_root.parent / "vera_journal_pdf"
-    receipts.append(
-        artifact_receipt(
-            pdf_root,
-            pdf_root / "__init__.py",
-            artifact_id="implementation.vera_journal_pdf",
-            root_id="pdf_implementation",
-            role="implementation",
-            media_type="text/x-python",
+    for filename, suffix in (
+        ("__init__.py", ""),
+        ("rules.py", "_rules"),
+        ("recovery.py", "_recovery"),
+    ):
+        receipts.append(
+            artifact_receipt(
+                pdf_root,
+                pdf_root / filename,
+                artifact_id="implementation.vera_journal_pdf" + suffix,
+                root_id="pdf_implementation",
+                role="implementation",
+                media_type="text/x-python",
+            )
         )
-    )
     _validate_implementation_configuration()
     return receipts
 
@@ -3465,6 +3472,46 @@ def _qualification_review_payload(
             ),
         },
     }
+
+
+def recover_pdf_layout(
+    input_path: Path,
+    output_dir: Path,
+    recipe_path: Path | None,
+    *,
+    client_engagement: Mapping[str, Any],
+    action: str,
+    currency: str,
+    pages: list[int] | None = None,
+    region: list[float] | None = None,
+    reason: str = "",
+    render: bool = False,
+) -> dict[str, Any]:
+    """Run bounded PDF recovery inside the same active, source-bound case."""
+    context = _validated_client_normalization_stage(
+        client_engagement,
+        input_path=input_path,
+        output_dir=output_dir,
+    )
+    if context is None:
+        raise ValueError("PDF recovery requires an active client engagement")
+    if recipe_path is not None:
+        _managed_run_reference(recipe_path, context)
+    recipe, _, _, _ = _read_recipe_with_receipt(recipe_path)
+    file_recipe = recipe.get("files", {}).get(input_path.name, {})
+    from vera_journal_pdf.recovery import recover_pdf
+
+    return recover_pdf(
+        input_path,
+        output_dir,
+        action,
+        currency=currency,
+        layout=file_recipe.get("layout"),
+        pages=pages,
+        region=region,
+        reason=reason,
+        render=render,
+    )
 
 
 def inspect_path(

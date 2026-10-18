@@ -700,6 +700,29 @@
     ],
     "scope": "Complete authored course content is unchanged from the integrated candidate. Tested Vera isolated-launcher imports and explicitly selected local-only incident delivery are retained in the new canonical shared reporting runtime and synchronized with the repository tool. Ordinary automatic delivery and product-bound authorization remain unchanged when the test setting is unset. Existing editorial judgments and historical artifact reviews remain preserved; current native teaching CI against exact new digests is required. No new learner, native visual or professional acceptance is asserted."
   },
+  "reporting_reference_binding_20261018": {
+    "reviewer": "Codex - bounded source compatibility review",
+    "reviewed_at": "2026-10-18",
+    "reviewed_baseline_commit": "fae2e2b26719a7e5afeb8ec6402e7fea24a6ce84",
+    "previous_course_sha256": "2541dc2ad0cc7dd640f0e821fa247b14dff68854da458f315af2eff7468216f2",
+    "current_course_sha256": "f1861cb6e188a571a6d48d44675e2463abe64eaf4cf87cc907ec7089af9c1386",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "source_review": "Compared complete course JSON with the exact historically reviewed digest. Only operational_incidents.py and workflow_usage.py source fingerprints changed. Inspected those diffs and reporting_product.py: startup instructions now resolve the actual installed product reference path by file presence, with the existing product identity and ambiguity checks. Course content, inputs, locales, execution contracts and teaching judgments are unchanged. This mismatch was already present at base f7344305fb37e9eb6df645fdd4067a9635ee9a12.",
+    "native_execution_evidence": {
+      "commit": "e10c4780399ea29daed7ff0a0d7b0739fd12194d",
+      "run": 39150899038,
+      "job": 117744153569,
+      "passed": 1710,
+      "skipped": 3,
+      "courseware_coverage_percent": 90.54,
+      "later_failure": "Editorial digest freshness; the original job is not represented as fully green."
+    },
+    "fresh_matching_junit_required": true,
+    "limits": "Historical editorial explanations and output-artifact reviews are retained. This records source compatibility only, not new editorial, visual, learner, installed-host or professional acceptance."
+  },
   "cowork_reporting_source_refresh_20261018": {
     "reviewer": "Codex /root - bounded reporting source compatibility review",
     "reviewed_at": "2026-10-18T18:09:58.783083+00:00",
@@ -718,5 +741,23 @@
     "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
     "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash.",
     "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance."
+  },
+  "pdf_reporting_release_integration_20261018": {
+    "reviewer": "Codex - exact two-parent source compatibility comparison",
+    "reviewed_at": "2026-10-18",
+    "integrated_main": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
+    "previous_pdf_candidate": "a9aa09142fb01b22e834d751c2a68c13204e6714",
+    "parent_course_sha256": {
+      "HEAD": "f1861cb6e188a571a6d48d44675e2463abe64eaf4cf87cc907ec7089af9c1386",
+      "origin/main": "e28300c74effc0cda1162bf1c2b1d6e4d6b554552ebaa6f70ec5f463fbb85c6e"
+    },
+    "current_course_sha256": "e28300c74effc0cda1162bf1c2b1d6e4d6b554552ebaa6f70ec5f463fbb85c6e",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required.",
+    "fresh_matching_junit_required": true,
+    "limits": "No new visual, learner, installed-host or professional acceptance is asserted."
   }
 }

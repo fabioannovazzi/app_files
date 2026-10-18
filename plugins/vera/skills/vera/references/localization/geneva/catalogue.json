@@ -2,8 +2,8 @@
   "schema": "vera.localization.catalogue.v1",
   "root": "/private/tmp/vera-archive-unicode/plugins/vera",
   "version": "0.1.416",
-  "captured_at": "2026-10-18T20:15:25.256958+00:00",
-  "catalogue_fingerprint": "c48fc435a28f533c4bd52cda93b83deda35bd69a0efb2ac854c89bbf0ae37fb1",
+  "captured_at": "2026-10-18T20:45:24.562640+00:00",
+  "catalogue_fingerprint": "e7ec18f7ca424642f55d3332061a2c6adbd7bfba55c6c369433c128a0df36af1",
   "manifest_sha256": "2fa724655cf2e091d50b76d26da6812202d624fb6c33908ecaad39aeb0b67a2b",
   "entries": [
     {
@@ -139,12 +139,12 @@
     {
       "function_id": "journal-bank-reconciliation",
       "skill_path": "skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "d511adda1df4831365201d3f568a71b15a4e303c3403c5546cf2cd6bdfc238ed"
+      "sha256": "2e4fd8460246ddbd9a7341ac143dfe2277be28a8309e452a8aeaa633f6671e14"
     },
     {
       "function_id": "journal-sampling",
       "skill_path": "skills/journal-sampling/SKILL.md",
-      "sha256": "ba4d1674196ecdf93195d15f5314775cd87742d90cede459ac11a6b5fa5932ca"
+      "sha256": "96921cbad3c4cebb9e67a337c5e8ad9d50e153c8935ede62424a41e990c64e8d"
     },
     {
       "function_id": "learn-with-vera",

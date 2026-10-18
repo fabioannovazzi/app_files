@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "c48fc435a28f533c4bd52cda93b83deda35bd69a0efb2ac854c89bbf0ae37fb1",
+  "catalogue_fingerprint": "e7ec18f7ca424642f55d3332061a2c6adbd7bfba55c6c369433c128a0df36af1",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -1950,9 +1950,32 @@
     "version": "0.1.410",
     "scope": "Retained all 55 assessment rows and current shared privacy source. The additive maintained Archive verifier and updated entrypoint instructions introduce no jurisdiction-specific judgment or new professional acceptance."
   },
+  "pdf_recovery_release_binding": {
+    "version": "0.1.413",
+    "reviewed_at": "2026-10-18",
+    "previous_catalogue_fingerprint": "c2365fa5185e5691644ce87f7d23b2ad6b0c3bf5cb1d17bc6b0c9cfa14b4d44a",
+    "changed_existing_entrypoints": [
+      "journal-sampling",
+      "journal-bank-reconciliation"
+    ],
+    "scope": "Added bounded recovery of reviewed journal PDF layouts within the existing workflows. Function IDs and jurisdiction dispositions are unchanged. The optional parser and recovery instructions do not establish additional Geneva accounting or professional acceptance."
+  },
   "cowork_reporting_source_refresh": {
     "version": "0.1.412",
     "date": "2026-10-18",
     "scope": "Refresh unchanged 55-function inventory for shared reporting instructions and release version. No change to Geneva jurisdiction judgments or professional methods; no additional localization acceptance claimed."
+  },
+  "pdf_reporting_release_integration_20261018": {
+    "version": "0.1.413",
+    "integrated_main": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
+    "scope": "Preserves both parent release source reviews and all existing Geneva target judgments. Combined entrypoint changes retain bounded PDF recovery and the main host-reporting fix. No new jurisdiction or professional acceptance is claimed."
+  },
+  "windows_lock_pdf_main_integration_20261018": {
+    "version": "0.1.414",
+    "scope": "Preserved current main PDF source and all55 skill entrypoint hashes and assessment rows. Only product manifest binding changes; no Swiss professional or host acceptance asserted."
+  },
+  "unicode_pdf_main_integration_20261018": {
+    "version": "0.1.416",
+    "scope": "All55 current-main skill entrypoint hashes and assessment rows retained. Updated product manifest binding only; no new Swiss professional or host acceptance."
   }
 }

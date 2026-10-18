@@ -235,6 +235,15 @@ before such a workbook can qualify.
 Unreadable containers emit no rows and record `failure_class=parser_failure`,
 separately from readable sources whose structure is unsupported.
 
+### Agent-led ruled PDF recovery
+
+Before declaring a registration-style journal layout unsupported, follow
+`../../references/pdf-recovery.md`. Use the maintained inspection, trial and
+freeze actions in the existing inspection command. The host agent diagnoses and
+revises source-bound recipes within a persistent four-attempt budget. Successful
+recovery still requires the ordinary reviewed mapping and complete qualification.
+Do not create a parser, alter installed code or bypass a failed gate.
+
 Text journals with registration headers (`N ---- dd/mm/yyyy ----`) and
 `seguito registrazione del dd/mm/yyyy` continuation headers can use the
 `registration_pdf` adapter. Initial PDF inspection returns bounded
