@@ -158,6 +158,8 @@ TRANSITIVE_IMPLEMENTATION_ATTACKS = [
     ("assurance", "review_output_transaction.cjs"),
     ("assurance", "serialization.py"),
     ("shared_pdf", "__init__.py"),
+    ("shared_pdf", "rules.py"),
+    ("shared_pdf", "recovery.py"),
 ]
 
 
@@ -673,6 +675,8 @@ def test_sample_stage_closes_all_values_receipts_gates_and_physical_outputs(
         *(artifact_id for _, artifact_id in core.IMPLEMENTATION_PLUGIN_FILES),
         *(artifact_id for _, artifact_id in core.ASSURANCE_IMPLEMENTATION_FILES),
         "implementation.vera_journal_pdf",
+        "implementation.vera_journal_pdf_rules",
+        "implementation.vera_journal_pdf_recovery",
     ]
     receipt_roles = {
         receipt["artifact_id"]: receipt["role"]
@@ -2905,6 +2909,8 @@ def test_transitive_implementation_attack_matrix_is_exact() -> None:
         *(("plugin", path) for path, _ in core.IMPLEMENTATION_PLUGIN_FILES),
         *(("assurance", path) for path, _ in core.ASSURANCE_IMPLEMENTATION_FILES),
         ("shared_pdf", "__init__.py"),
+        ("shared_pdf", "rules.py"),
+        ("shared_pdf", "recovery.py"),
     ]
 
 

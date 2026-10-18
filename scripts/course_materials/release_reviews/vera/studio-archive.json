@@ -116,7 +116,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "c8192258c814f9f90d7645fc94abb43c6a2fbef857ea728d07f31ac8e894bb7b",
+  "course_sha256": "7348dfabc590c041a998a0b298cddb16a4a16f9dd07e73ecae9141ed17b6a76e",
   "esg_source_refresh_20260930": {
     "reviewer": "Codex /root - bounded source review",
     "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
@@ -869,5 +869,19 @@
   "archive_input_verification_main_integration": {
     "base_commit": "b8ed35121cc430584260321734f5cf0e91b400ea",
     "scope": "Compared complete course payload against the merged main release. Only sources differ; authored lessons, all five languages and existing editorial/artifact judgments are preserved. This refresh records source compatibility, not new learner or professional acceptance. Final CI must execute and bind the current course hashes."
+  },
+  "pdf_recovery_source_compatibility_20261018": {
+    "reviewer": "Codex source inspection and exact retained-course comparison",
+    "reviewed_at": "2026-10-18",
+    "baseline_commit": "f7344305fb37e9eb6df645fdd4067a9635ee9a12",
+    "previous_course_sha256": "c8192258c814f9f90d7645fc94abb43c6a2fbef857ea728d07f31ac8e894bb7b",
+    "current_course_sha256": "7348dfabc590c041a998a0b298cddb16a4a16f9dd07e73ecae9141ed17b6a76e",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Added opt-in character-grid journal PDF parsing and bounded host-agent recovery. Exact retained course content, inputs, locales, execution contracts and teaching judgments are unchanged. Legacy parsing has differential regression coverage; all existing mapping, complete-population, implementation and professional-review gates remain. Historical editorial and artifact evidence is retained; fresh matching native execution is independently required.",
+    "fresh_matching_junit_required": true,
+    "native_ui_qualified": false
   }
 }

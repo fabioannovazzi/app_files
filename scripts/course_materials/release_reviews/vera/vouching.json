@@ -105,7 +105,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "5b5923cf3f9f4b494b49114c09b8c1b131fec48813a1d73a9902bf26bdfb51f4",
+  "course_sha256": "8d1f5b2ea81f9ab6183fafc7d2b58e010df3cb507403b97681078a5882ec2087",
   "discovery_source_refresh": {
     "reviewed_by": "Codex /root",
     "reviewed_at": "2026-10-01T11:44:13.225501+00:00",
@@ -857,5 +857,19 @@
       "sources"
     ],
     "scope": "Complete authored lesson JSON is identical to the retained tested candidate; only source fingerprints changed. Preserves all previous editorial and historical artifact reviews. Integrated main usage/device registration is unchanged from main; tested workflow logic is preserved. Open-item import ordering was normalized without changing imported names or statements. No new learner, visual-host or professional acceptance claimed; current native teaching CI remains required."
+  },
+  "pdf_recovery_source_compatibility_20261018": {
+    "reviewer": "Codex source inspection and exact retained-course comparison",
+    "reviewed_at": "2026-10-18",
+    "baseline_commit": "f7344305fb37e9eb6df645fdd4067a9635ee9a12",
+    "previous_course_sha256": "5b5923cf3f9f4b494b49114c09b8c1b131fec48813a1d73a9902bf26bdfb51f4",
+    "current_course_sha256": "8d1f5b2ea81f9ab6183fafc7d2b58e010df3cb507403b97681078a5882ec2087",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Added opt-in character-grid journal PDF parsing and bounded host-agent recovery. Exact retained course content, inputs, locales, execution contracts and teaching judgments are unchanged. Legacy parsing has differential regression coverage; all existing mapping, complete-population, implementation and professional-review gates remain. Historical editorial and artifact evidence is retained; fresh matching native execution is independently required.",
+    "fresh_matching_junit_required": true,
+    "native_ui_qualified": false
   }
 }

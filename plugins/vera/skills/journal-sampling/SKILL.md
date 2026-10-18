@@ -83,3 +83,10 @@ headers and postings continued across pages are supported by that adapter.
 Readable text alone does not qualify amounts or posting boundaries. Retain
 incomplete-population diagnostics; never replace this route with an ad hoc
 parser or claim success from text extraction alone.
+
+For recoverable ruled/PCL journal layouts, use the component's maintained
+`references/pdf-recovery.md` inspection–trial–freeze loop before closing an
+unsupported-layout result. Review targeted evidence, revise only supported
+recipe options, retain all attempts and require full-source replay plus the
+ordinary source-mapping receipt. Product self-improvement and generated parsers
+are not part of this route.

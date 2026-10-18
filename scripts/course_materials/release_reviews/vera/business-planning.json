@@ -120,7 +120,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "d688766dda9bf6f80da1859e01582cb8d8919415bb9c963c203f698544406d68",
+  "course_sha256": "295aa8be3519a6940801462b36ded4ab71ec439786fada003d374eabd42cdbd5",
   "cowork_yaml_source_binding_review_20261012": {
     "reviewer": "Codex /root - bounded source compatibility review",
     "reviewed_at": "2026-10-12T05:15:38.215651+00:00",
@@ -506,5 +506,19 @@
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "fresh_matching_junit_required": true
+  },
+  "pdf_recovery_source_compatibility_20261018": {
+    "reviewer": "Codex source inspection and exact retained-course comparison",
+    "reviewed_at": "2026-10-18",
+    "baseline_commit": "f7344305fb37e9eb6df645fdd4067a9635ee9a12",
+    "previous_course_sha256": "d688766dda9bf6f80da1859e01582cb8d8919415bb9c963c203f698544406d68",
+    "current_course_sha256": "295aa8be3519a6940801462b36ded4ab71ec439786fada003d374eabd42cdbd5",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Added opt-in character-grid journal PDF parsing and bounded host-agent recovery. Exact retained course content, inputs, locales, execution contracts and teaching judgments are unchanged. Legacy parsing has differential regression coverage; all existing mapping, complete-population, implementation and professional-review gates remain. Historical editorial and artifact evidence is retained; fresh matching native execution is independently required.",
+    "fresh_matching_junit_required": true,
+    "native_ui_qualified": false
   }
 }

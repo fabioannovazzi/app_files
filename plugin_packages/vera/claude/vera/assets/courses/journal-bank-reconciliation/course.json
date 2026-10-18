@@ -39,6 +39,10 @@
       "sha256": "fdab17b97b76a98f7e5d8b5dd02217ff09644fbf91a975859cd37a1a13ec67f3"
     },
     {
+      "path": "modules/journal-bank-reconciliation/references/pdf-recovery.md",
+      "sha256": "91fc6a488707cdd59cca6686ec99b52a4059f02c763b32ce514b1de409926b97"
+    },
+    {
       "path": "modules/journal-bank-reconciliation/references/workflow-reference.md",
       "sha256": "a387406183240e1a33d134863055fa78d29d53d114ed90c579ce0cd756eec90f"
     },
@@ -60,15 +64,15 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
-      "sha256": "e6e92613621f46f0c2567903f3a3bfa61f2acc5aa1b111d835836e086be54fa8"
+      "sha256": "f2dd6f160c8cd4a8993f206b6dcb8fe936859f694680b2f9293ea092c6423788"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/inspect_inputs.py",
-      "sha256": "c8d21e82effa1bb10d099076773b3820bad69299f4ae3150a0a9993845e0e3d3"
+      "sha256": "5342c54ff0275642415727360c874a3f69629fdd24ab9c9fb10a6a7c80e30179"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/journal_bank_core.py",
-      "sha256": "d66473f53f93b5bab418a6c302be2536329078faca9595df77b9b52d6547e9ee"
+      "sha256": "ee660f963c7284e43e2d21c714e0a96a2c9cdfda2ea645555902580547d08391"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/review_session.py",
@@ -88,7 +92,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/mparanza-journal-bank-reconciliation/SKILL.md",
-      "sha256": "954c06890512186e2a7dac83f794facf05570125b6d0175b8ddca7415215157d"
+      "sha256": "0e5b449e6e35b5af5b88f3d7de5be6c591c20b6a96354c5bdb46d9219ec05bcf"
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/mparanza-journal-bank-reconciliation/references/geneva.md",
@@ -136,11 +140,19 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/vendor/modules/vera_journal_pdf/__init__.py",
-      "sha256": "dd88f8273d2eab075178de060385d12014e12b213b1a1e6733568688fdc6cb21"
+      "sha256": "1c9738c861546a4f65c3e492d3a93e17d882473d826c53727a50ef465f97ae76"
+    },
+    {
+      "path": "modules/journal-bank-reconciliation/vendor/modules/vera_journal_pdf/recovery.py",
+      "sha256": "931442fe84eb99dc0a949c95bd9977f3e08d29c68e9991d94fa751d2e012fa1c"
+    },
+    {
+      "path": "modules/journal-bank-reconciliation/vendor/modules/vera_journal_pdf/rules.py",
+      "sha256": "cc0b2c67452a68d87ea019fd1626323338da915f145cb0013cdc3446add7fc5c"
     },
     {
       "path": "skills/mparanza-journal-bank-reconciliation/SKILL.md",
-      "sha256": "d92e4e471f2e9f2bfcb7f68473913639f2dbadc354d770af8a1fdffc830bc8ba"
+      "sha256": "ee3b3983399e5ec4bddbf92319b292b4d1b3286ca7d3cda11e1a1f2ed381838c"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -288,7 +300,15 @@
     },
     {
       "path": "vendor/modules/vera_journal_pdf/__init__.py",
-      "sha256": "dd88f8273d2eab075178de060385d12014e12b213b1a1e6733568688fdc6cb21"
+      "sha256": "1c9738c861546a4f65c3e492d3a93e17d882473d826c53727a50ef465f97ae76"
+    },
+    {
+      "path": "vendor/modules/vera_journal_pdf/recovery.py",
+      "sha256": "931442fe84eb99dc0a949c95bd9977f3e08d29c68e9991d94fa751d2e012fa1c"
+    },
+    {
+      "path": "vendor/modules/vera_journal_pdf/rules.py",
+      "sha256": "cc0b2c67452a68d87ea019fd1626323338da915f145cb0013cdc3446add7fc5c"
     },
     {
       "path": "vendor/modules/vera_ocr/__init__.py",
@@ -553,5 +573,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "8ce4c107efe333e5455c96e48a81f803065adfb583bff7cc0c7cafd799476ab9"
+  "canonical_course_sha256": "4014d506acb12bdba8d080a6231fd2b4f1db3cd7daaae888a4f04b11e66838e8"
 }
