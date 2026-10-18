@@ -97,7 +97,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "0aae8301930e16efdfaf02ee7899dda66b5c1b25274f0c59bd0323bcfc2deed9",
+  "course_sha256": "b541ef8c0edc808940cf1d4418df6957a4760a86640ffce9a9ec8f9e31bf709f",
   "esg_source_refresh_20260930": {
     "reviewer": "Codex /root - bounded source review",
     "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
@@ -736,6 +736,20 @@
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "fresh_matching_junit_required": true
   },
+  "pdf_recovery_source_compatibility_20261018": {
+    "reviewer": "Codex source inspection and exact retained-course comparison",
+    "reviewed_at": "2026-10-18",
+    "baseline_commit": "f7344305fb37e9eb6df645fdd4067a9635ee9a12",
+    "previous_course_sha256": "57e2f9eb098a046fc1c9bf5dafc1beccfdc58b05e2af0a50d786ed6d18b5a9c7",
+    "current_course_sha256": "7cd69db1ec6fceac2269e5269eee55e29cd5238078cdb5fa71c5380eef7b4295",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Added opt-in character-grid journal PDF parsing and bounded host-agent recovery. Exact retained course content, inputs, locales, execution contracts and teaching judgments are unchanged. Legacy parsing has differential regression coverage; all existing mapping, complete-population, implementation and professional-review gates remain. Historical editorial and artifact evidence is retained; fresh matching native execution is independently required.",
+    "fresh_matching_junit_required": true,
+    "native_ui_qualified": false
+  },
   "cowork_reporting_source_refresh_20261018": {
     "reviewer": "Codex /root - bounded reporting source compatibility review",
     "reviewed_at": "2026-10-18T18:09:58.260843+00:00",
@@ -752,5 +766,23 @@
     "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
     "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash.",
     "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance."
+  },
+  "pdf_reporting_release_integration_20261018": {
+    "reviewer": "Codex - exact two-parent source compatibility comparison",
+    "reviewed_at": "2026-10-18",
+    "integrated_main": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
+    "previous_pdf_candidate": "a9aa09142fb01b22e834d751c2a68c13204e6714",
+    "parent_course_sha256": {
+      "HEAD": "7cd69db1ec6fceac2269e5269eee55e29cd5238078cdb5fa71c5380eef7b4295",
+      "origin/main": "0aae8301930e16efdfaf02ee7899dda66b5c1b25274f0c59bd0323bcfc2deed9"
+    },
+    "current_course_sha256": "b541ef8c0edc808940cf1d4418df6957a4760a86640ffce9a9ec8f9e31bf709f",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required.",
+    "fresh_matching_junit_required": true,
+    "limits": "No new visual, learner, installed-host or professional acceptance is asserted."
   }
 }

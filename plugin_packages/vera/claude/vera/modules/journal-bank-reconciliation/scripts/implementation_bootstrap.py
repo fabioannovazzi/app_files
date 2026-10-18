@@ -56,6 +56,8 @@ IMPLEMENTATION_CONTRACT = (
     ("shared_assurance", "review_output_transaction.cjs"),
     ("shared_assurance", "serialization.py"),
     ("shared_pdf", "__init__.py"),
+    ("shared_pdf", "rules.py"),
+    ("shared_pdf", "recovery.py"),
 )
 CHATGPT_IMPLEMENTATION_CONTRACT = tuple(
     entry

@@ -23,7 +23,7 @@
     ],
     "course_sha256": "fc8414b712e60749d3ed7a205de67fb505ecedcbd25313f6b2823384b0a528e6"
   },
-  "course_sha256": "f7d591fe7e98f4825f956a5b2787c5280d03e25213f08a3cdd4108fd6d15cf6f",
+  "course_sha256": "534216e3606a1a31c355aff0b15b14f90b53b36356964becde3f53199e160ed6",
   "integration_refresh": {
     "reviewer": "Codex /root",
     "date": "2026-10-02",
@@ -574,6 +574,20 @@
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "fresh_matching_junit_required": true
   },
+  "pdf_recovery_source_compatibility_20261018": {
+    "reviewer": "Codex source inspection and exact retained-course comparison",
+    "reviewed_at": "2026-10-18",
+    "baseline_commit": "f7344305fb37e9eb6df645fdd4067a9635ee9a12",
+    "previous_course_sha256": "0a862e015cf3fe72637645a0adf6bdaef085489dad8fe94d27e8d36bb1b2ae40",
+    "current_course_sha256": "a9cab34d23fb2e2af823a035e49e973619d0042aec81bd2f7acd96413450a4c3",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Added opt-in character-grid journal PDF parsing and bounded host-agent recovery. Exact retained course content, inputs, locales, execution contracts and teaching judgments are unchanged. Legacy parsing has differential regression coverage; all existing mapping, complete-population, implementation and professional-review gates remain. Historical editorial and artifact evidence is retained; fresh matching native execution is independently required.",
+    "fresh_matching_junit_required": true,
+    "native_ui_qualified": false
+  },
   "cowork_reporting_source_refresh_20261018": {
     "reviewer": "Codex /root - bounded reporting source compatibility review",
     "reviewed_at": "2026-10-18T18:09:58.232512+00:00",
@@ -590,5 +604,23 @@
     "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
     "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash.",
     "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance."
+  },
+  "pdf_reporting_release_integration_20261018": {
+    "reviewer": "Codex - exact two-parent source compatibility comparison",
+    "reviewed_at": "2026-10-18",
+    "integrated_main": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
+    "previous_pdf_candidate": "a9aa09142fb01b22e834d751c2a68c13204e6714",
+    "parent_course_sha256": {
+      "HEAD": "a9cab34d23fb2e2af823a035e49e973619d0042aec81bd2f7acd96413450a4c3",
+      "origin/main": "f7d591fe7e98f4825f956a5b2787c5280d03e25213f08a3cdd4108fd6d15cf6f"
+    },
+    "current_course_sha256": "534216e3606a1a31c355aff0b15b14f90b53b36356964becde3f53199e160ed6",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required.",
+    "fresh_matching_junit_required": true,
+    "limits": "No new visual, learner, installed-host or professional acceptance is asserted."
   }
 }

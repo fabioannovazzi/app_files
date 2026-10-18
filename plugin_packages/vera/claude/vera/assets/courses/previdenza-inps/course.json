@@ -301,7 +301,15 @@
     },
     {
       "path": "vendor/modules/vera_journal_pdf/__init__.py",
-      "sha256": "dd88f8273d2eab075178de060385d12014e12b213b1a1e6733568688fdc6cb21"
+      "sha256": "1c9738c861546a4f65c3e492d3a93e17d882473d826c53727a50ef465f97ae76"
+    },
+    {
+      "path": "vendor/modules/vera_journal_pdf/recovery.py",
+      "sha256": "931442fe84eb99dc0a949c95bd9977f3e08d29c68e9991d94fa751d2e012fa1c"
+    },
+    {
+      "path": "vendor/modules/vera_journal_pdf/rules.py",
+      "sha256": "cc0b2c67452a68d87ea019fd1626323338da915f145cb0013cdc3446add7fc5c"
     },
     {
       "path": "vendor/modules/vera_ocr/__init__.py",
@@ -758,5 +766,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "202e8c40190081b92da3b60f01508e2194f7e993b757d6e2080d3f4252496a7f"
+  "canonical_course_sha256": "6da03fc7a6908f2b4713400c29084e9d89c9eb9f4095875ba463f664391cffbd"
 }

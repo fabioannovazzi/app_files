@@ -123,7 +123,7 @@
     },
     "privacy_amendment": "After integrating main PR #728, the Italian lesson distinguishes native model context from local arithmetic/rendering and Mparanza receipt metadata. Codex local tutorial stamping is excluded; outside that boundary the Vera report builder may request the automatic four-field receipt. Cowork does not inherit that Codex-only exclusion merely from a tutorial name. Documents, reports and calculations are not sent to the receipt service. This is source review, not live-provider or installed Cowork acceptance."
   },
-  "course_sha256": "fbc62c45ca95487cc0788f7faa4c64bbfd3fb9ef346832db9fca97593bba7969",
+  "course_sha256": "3b0edcb6ccec1f8f7a4addc003863ef3381779a7d293d6bbb5f37c4801a6f58e",
   "dated_calculation_review": {
     "scope": "Reviewed the optional dated DCF source and formula contract. The Italian first-use lesson still uses annual flows; both freshly executed native demo/practice reports preserve the expected 750000 / 583333.33 EUR equity indications, development-only purpose coverage and pending review. Inspected all five pages of the final forward/mid-period DOCX, including the Italian timing labels and displayed factors. No PIV approval, human case acceptance, installed-host or live learner acceptance is implied.",
     "tests": "103 valuation tests pass at 92.66% coverage, including both fresh native teaching phases, dated numerical cases, invalid timing, annual plan relabelling rejection and curve sensitivity boundaries.",
@@ -1195,6 +1195,20 @@
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "fresh_matching_junit_required": true
   },
+  "pdf_recovery_source_compatibility_20261018": {
+    "reviewer": "Codex source inspection and exact retained-course comparison",
+    "reviewed_at": "2026-10-18",
+    "baseline_commit": "f7344305fb37e9eb6df645fdd4067a9635ee9a12",
+    "previous_course_sha256": "30cb45d1a4d19b361ec1e6ef953be177f920213e737f58f4c3f1a6245b4d7372",
+    "current_course_sha256": "eb7af8b2e357a79d4bdae93c86037a2bea51a7f9d29679da3c0f202f5d13e40c",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Added opt-in character-grid journal PDF parsing and bounded host-agent recovery. Exact retained course content, inputs, locales, execution contracts and teaching judgments are unchanged. Legacy parsing has differential regression coverage; all existing mapping, complete-population, implementation and professional-review gates remain. Historical editorial and artifact evidence is retained; fresh matching native execution is independently required.",
+    "fresh_matching_junit_required": true,
+    "native_ui_qualified": false
+  },
   "cowork_reporting_source_refresh_20261018": {
     "reviewer": "Codex /root - bounded reporting source compatibility review",
     "reviewed_at": "2026-10-18T18:09:58.640014+00:00",
@@ -1211,5 +1225,23 @@
     "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
     "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash.",
     "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance."
+  },
+  "pdf_reporting_release_integration_20261018": {
+    "reviewer": "Codex - exact two-parent source compatibility comparison",
+    "reviewed_at": "2026-10-18",
+    "integrated_main": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
+    "previous_pdf_candidate": "a9aa09142fb01b22e834d751c2a68c13204e6714",
+    "parent_course_sha256": {
+      "HEAD": "eb7af8b2e357a79d4bdae93c86037a2bea51a7f9d29679da3c0f202f5d13e40c",
+      "origin/main": "fbc62c45ca95487cc0788f7faa4c64bbfd3fb9ef346832db9fca97593bba7969"
+    },
+    "current_course_sha256": "3b0edcb6ccec1f8f7a4addc003863ef3381779a7d293d6bbb5f37c4801a6f58e",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required.",
+    "fresh_matching_junit_required": true,
+    "limits": "No new visual, learner, installed-host or professional acceptance is asserted."
   }
 }
