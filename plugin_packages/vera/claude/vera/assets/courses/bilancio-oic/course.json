@@ -110,7 +110,7 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/case_service.py",
-      "sha256": "4c8e74264fbbf68671d988c16f5001bbc93e1b8170b86d1f421b21043aeadf48"
+      "sha256": "30a89db4ff0c313b99a61dd3c75ad3dfec06ba2355fd25a06b4774eae34aaa86"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/check_dependencies.py",
@@ -640,5 +640,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "8aadad1c2bbbfc002a99fc56fbf05dba2aea9452820dfb03e8664f7e0374e09f"
+  "canonical_course_sha256": "2d3ec7704deb4e2698fa9ad5d3c556981455ab398a8730e5f08487ad0e1f724d"
 }

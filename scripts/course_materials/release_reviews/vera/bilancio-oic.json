@@ -302,7 +302,7 @@
     "limits": "No fresh learner, voice, installed-host, visual or professional acceptance is asserted by a source fingerprint refresh."
   },
   "schema": "mparanza.teaching_release_review.v1",
-  "course_sha256": "8aadad1c2bbbfc002a99fc56fbf05dba2aea9452820dfb03e8664f7e0374e09f",
+  "course_sha256": "2d3ec7704deb4e2698fa9ad5d3c556981455ab398a8730e5f08487ad0e1f724d",
   "isolated_launcher_source_compatibility_20261018": {
     "reviewer": "Codex exact retained-course and launcher-source review",
     "reviewed_at": "2026-10-18",
@@ -723,5 +723,50 @@
     "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required.",
     "fresh_matching_junit_required": true,
     "limits": "No new visual, learner, installed-host or professional acceptance is asserted."
+  },
+  "windows_case_lock_source_binding_20261018": {
+    "reviewed_at": "2026-10-18",
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "baseline_commit": "f7344305fb37e9eb6df645fdd4067a9635ee9a12",
+    "previous_course_sha256": "bd730ab376ab2a3922a4c23a46e34e89387712a5399d7665519d4b3067db0563",
+    "current_course_sha256": "50ab54afcbb5652303a53ad19867ddce28cf5c7c5a2913f6bf81935a8cf51f1f",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "source_review": "docs/releases/2026-10-18-vera-bilancio-windows-lock.md",
+    "scope": "Only case_service.py import and exclusive process-lock implementation changed. POSIX flock retained; Windows receives native msvcrt case/job locking. Every authored lesson field and prepared input is identical outside source bindings. Historical editorial judgments and artifact hashes remain untouched.",
+    "fresh_matching_native_junit_required": true,
+    "local_native_teaching": "Four fresh it/en demo/practice executions passed with the official checksum-pinned2399-concept catalogue; final current source binding rerun required after component version bump.",
+    "installed_host_acceptance": false,
+    "professional_acceptance": false
+  },
+  "windows_lock_quarantine_source_binding_20261018": {
+    "previous_course_sha256": "d1c08218616d6dd4456994cb2e4bf38f656309ab91c0220eed7b6a843c9eb175",
+    "current_course_sha256": "1188288c8fa48edb652767d0416d221cf0d91cd29d5de96074a4b1d012031094",
+    "scope": "Windows case mutex is moved outside case directory to permit retention-controlled quarantine with lock held; symlink controls retained, mutex never unlinked. Same lesson prose, locale reviews, input/artifact hashes and all historical acceptance remain unchanged.43 local service tests pass; Windows CI must verify actual quarantine. This source binding does not renew editorial or host acceptance."
+  },
+  "windows_lock_rebase_source_binding_20261018": {
+    "base_commit": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
+    "previous_course_sha256": "d1c08218616d6dd4456994cb2e4bf38f656309ab91c0220eed7b6a843c9eb175",
+    "current_course_sha256": "1188288c8fa48edb652767d0416d221cf0d91cd29d5de96074a4b1d012031094",
+    "scope": "Reapply reviewed native Windows case/job lock and stable external case mutex to current main, preserving Cowork reporting source. Published course differs only in case_service source SHA; all authored content, locales, artifact reviews and history retained. Original-task host verification remains outstanding."
+  },
+  "windows_lock_final_source_binding_20261018": {
+    "reviewed_at": "2026-10-18T20:35:42.933819+00:00",
+    "baseline_commit": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
+    "previous_course_sha256": "1188288c8fa48edb652767d0416d221cf0d91cd29d5de96074a4b1d012031094",
+    "current_course_sha256": "300820110acd172cf65b0e1d38853925c909b71138dd20511ee88fe4bca5a2d5",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Complete course comparison confirms only the reviewed case_service.py source digest changed. Original locale editorial judgments, dates, inputs and artifact hashes remain intact. Native locking and quarantine tests passed on Windows and Linux. Fresh exact-digest teaching execution remains mandatory; no installed-host, learner or professional acceptance asserted."
+  },
+  "windows_lock_pdf_main_integration_20261018": {
+    "previous_course_sha256": "8aadad1c2bbbfc002a99fc56fbf05dba2aea9452820dfb03e8664f7e0374e09f",
+    "current_course_sha256": "2d3ec7704deb4e2698fa9ad5d3c556981455ab398a8730e5f08487ad0e1f724d",
+    "main_commit": "9361a54e934e3bdeb437df81550b75ae5b0eb5be",
+    "scope": "Exact complete-course comparison against current main confirms only the reviewed case_service source SHA changes. All PDF recovery, course narrative, locale judgments and historical artifact evidence are retained. Fresh native CI must pass on this exact course digest. No new professional or installed-host acceptance."
   }
 }

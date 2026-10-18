@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "c851d16b17b428cc8ac027e524c5b5d3429917db604c63d3501b5acb27d80f83",
+  "catalogue_fingerprint": "43757c1952bb3902cfe046b315d4685d5c00d416ab56c9db0b39669abc593248",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -1969,5 +1969,9 @@
     "version": "0.1.413",
     "integrated_main": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
     "scope": "Preserves both parent release source reviews and all existing Geneva target judgments. Combined entrypoint changes retain bounded PDF recovery and the main host-reporting fix. No new jurisdiction or professional acceptance is claimed."
+  },
+  "windows_lock_pdf_main_integration_20261018": {
+    "version": "0.1.414",
+    "scope": "Preserved current main PDF source and all55 skill entrypoint hashes and assessment rows. Only product manifest binding changes; no Swiss professional or host acceptance asserted."
   }
 }
