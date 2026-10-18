@@ -262,7 +262,7 @@ def test_fdd_case_path_substitution_cannot_redirect_input(
         substitute_case_then_snapshot,
     )
 
-    with pytest.raises(ValueError, match="safely open file"):
+    with pytest.raises(ValueError, match="could not safely open"):
         pack_runner.run_pack(
             pack_id="quality_of_earnings",
             case_path=bundle_path,

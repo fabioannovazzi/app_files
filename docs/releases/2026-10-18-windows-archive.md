@@ -22,12 +22,17 @@ The combined release versions are Vera 0.1.417, Clara 0.1.304 and Lucia 0.1.128.
 - The native Archive list retains its sortable date-string contract for blocked
   rows. A regression exercises the actual workspace JavaScript and confirms
   blocked rows have no action buttons while healthy runs remain startable.
+- Native workspace review saves close their exclusive lock stream before
+  deletion on Windows. Failed acquisition never removes another writer's lock,
+  and normal and exceptional exits both release it.
 - Financial analysis and sales planning use native Windows directory handles,
   handle-relative file opens, identity and byte checks, exclusive output
   creation, and exact-handle cleanup. Reparse points and multiple hard links
   are rejected. Directory list access makes Windows sharing restrictions
   effective; attributes-only access did not prevent rename in the first test.
-  The existing POSIX route remains in place.
+  The existing POSIX route remains in place. Errors raised inside a protected
+  operation retain their identity rather than being misreported as failure to
+  acquire the directory.
 - Journal–Bank has bounded Windows pipe capture and a kill-on-close Job Object.
   A fixed gate prevents command execution before successful job assignment.
   Timeout, excessive output and ordinary exit terminate descendants. The new
@@ -55,12 +60,12 @@ judgments; only its release version binding changes.
 
 ## Evidence and limits
 
-Native Windows CI run `39164041105` passed all 19 file/process boundary tests at
-88.74% coverage and the 16 Archive isolation/readable tests. Its later navigation
-test could not collect because the CI environment lacked a declared dependency;
-the expanded environment is being rerun. The combined local Archive regressions passed 232
-tests and Bilancio passed 43 tests. The Journal–Bank suite passed 472 tests plus an isolated retest of the
-remaining source-preflight test after main integration changed source receipts.
+Native Windows CI run `39167427131` passed 20 file/process boundary tests at
+88.74% coverage, six Archive isolation tests, 12 readable/encoding tests,
+24 financial-analysis tests and 29 sales-plan tests. Its expanded navigation
+and error tests exposed the lock deletion and error-wrapping defects described
+above; those fixes are under final Windows CI. The combined local Archive regressions passed 232
+tests and Bilancio passed 43 tests. The Journal–Bank suite passed all 473 tests together on the combined source.
 These are intermediate results; merge and deployment require all final checks.
 
 The isolated semantic worker remains qualified only for its pinned macOS host

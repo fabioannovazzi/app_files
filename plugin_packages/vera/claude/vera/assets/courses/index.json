@@ -482,7 +482,7 @@
     },
     "financial-analysis": {
       "path": "financial-analysis/course.json",
-      "sha256": "56709bf751964ca3937e1ae4022801f1d76edf8c32745fb0cbc14cf20c3eff5f",
+      "sha256": "c542dec6b6a106a0bbfbde432a4d37f3abf1fddac5618a6321ea29eb5145c026",
       "languages": [
         "it",
         "en",
@@ -937,7 +937,7 @@
     },
     "sales-plan": {
       "path": "sales-plan/course.json",
-      "sha256": "01ce3793261011e2471330993b33b2a90e6daa8874d7b1365e99b35a9e58042a",
+      "sha256": "decf4f1b8b29a0d0a73735518b9c5a3e2f584e7eb2475c7bbe9ae7cc5eaa4a7a",
       "languages": [
         "it",
         "en",

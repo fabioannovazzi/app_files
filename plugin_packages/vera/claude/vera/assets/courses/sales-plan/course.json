@@ -45,7 +45,7 @@
     },
     {
       "path": "modules/sales-plan/scripts/plan_contract_kernel.py",
-      "sha256": "11c9a8dd0bf55f5d777552016e3365a6af87d4ebf009c6649abe5a5c02dd2266"
+      "sha256": "668776ed5a1ad2a19f86f08afc0d9a2591aa84cf161f3ce6602d71d7632feb28"
     },
     {
       "path": "modules/sales-plan/scripts/prepare_sales_plan_case.py",
@@ -502,5 +502,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "d7196090fbd72b434a5c8735286a54756ff0c4277cb8db8821ed8232dd53ade5"
+  "canonical_course_sha256": "f4c1fdedd5f946be70bdfcba9026aabca0dbd88e591e6317e81999de9c9a7a1f"
 }

@@ -1030,11 +1030,14 @@ def ui_state_directory(output: Path, *, create: bool = True) -> Path:
 def write_lock(output: Path) -> Iterator[None]:
     """Serialize shared UI writes; domain engines retain their own transactions."""
     path = ui_state_directory(output) / "write.lock"
-    with path.open("x"):
-        try:
+    lock = path.open("x")
+    try:
+        with lock:
             yield
-        finally:
-            path.unlink(missing_ok=True)
+    finally:
+        # Windows refuses deletion while our stream is open. Acquisition stays
+        # outside the try so a contending writer never removes another lock.
+        path.unlink(missing_ok=True)
 
 
 def draft_path(output: Path, actor: str, *, create: bool = True) -> Path:

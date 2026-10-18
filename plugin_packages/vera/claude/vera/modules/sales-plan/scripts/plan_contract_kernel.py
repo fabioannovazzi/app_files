@@ -393,19 +393,22 @@ def pinned_directory(path: Path) -> Iterator[PinnedDirectory]:
 
     directory_path = Path(path).absolute()
     if os.name == "nt":
-        from windows_contract_io import directory
+        from windows_contract_io import Directory
 
         try:
-            with directory(directory_path) as native:
-                boundary = PinnedDirectory(
-                    directory_path, -1, native.identity, _native=native
-                )
-                yield boundary
-                boundary.verify_identity()
+            native = Directory(directory_path)
         except OSError as exc:
             raise ContractValidationError(
                 "could not pin output directory on Windows"
             ) from exc
+        try:
+            boundary = PinnedDirectory(
+                directory_path, -1, native.identity, _native=native
+            )
+            yield boundary
+            boundary.verify_identity()
+        finally:
+            native.close()
         return
     flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
     if hasattr(os, "O_CLOEXEC"):

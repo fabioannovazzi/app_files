@@ -19,9 +19,38 @@ from tests.plugins.test_vera_native_workspace import (
     ROOT,
     SERVER,
     treasury_binding,
+    workspace_module,
 )
 
 ARCHIVE = ROOT / "plugins/studio-archive/scripts/studio_archive.py"
+
+
+@pytest.mark.parametrize("body_fails", [False, True])
+def test_workspace_lock_excludes_contenders_and_releases_after_exit(
+    tmp_path, body_fails
+):
+    workspace = workspace_module()
+    output = tmp_path / "outputs"
+    output.mkdir()
+    lock_path = workspace.ui_state_directory(output) / "write.lock"
+    failure = OSError("simulated domain write failure")
+    caught = False
+    try:
+        with workspace.write_lock(output):
+            with pytest.raises(FileExistsError):
+                with workspace.write_lock(output):
+                    pytest.fail("Concurrent writer acquired the lock")
+            assert lock_path.is_file()
+            if body_fails:
+                raise failure
+    except OSError as exc:
+        assert body_fails and exc is failure
+        caught = True
+    assert caught == body_fails
+    assert not lock_path.exists()
+    with workspace.write_lock(output):
+        assert lock_path.is_file()
+    assert not lock_path.exists()
 
 
 def process_environment() -> dict[str, str]:

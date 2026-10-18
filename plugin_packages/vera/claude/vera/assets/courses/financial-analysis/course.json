@@ -61,7 +61,7 @@
     },
     {
       "path": "modules/financial-analysis/scripts/preparation_contract_kernel.py",
-      "sha256": "812005d4ed5b536c72e34769dd009b0d995a4c6f7082f98306f0068e1b2bfb01"
+      "sha256": "0640feb42b5bff59a330345f5417350533c3ee599888572d5fadac664aebf293"
     },
     {
       "path": "modules/financial-analysis/scripts/prepare_customer_concentration_case.py",
@@ -554,5 +554,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "6d71e83a778193b6188296a87f507675bff33905c90f23ded8e104113071f563"
+  "canonical_course_sha256": "bd0ada54af9ff7452da6e4d278e57d62e324c832afbd6fe43ad9ac1c37ce86e7"
 }

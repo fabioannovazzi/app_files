@@ -123,3 +123,14 @@ def test_native_helpers_remain_identical():
     ).read_bytes() == (
         ROOT / "plugins/sales-plan/scripts/windows_contract_io.py"
     ).read_bytes()
+
+
+def test_body_error_is_preserved_and_directory_handle_released(kernel, tmp_path):
+    output = tmp_path / "output"
+    output.mkdir()
+    failure = OSError("operation failed after directory acquisition")
+    with pytest.raises(OSError) as raised:
+        with kernel.pinned_directory(output):
+            raise failure
+    assert raised.value is failure
+    output.rename(tmp_path / "released")
