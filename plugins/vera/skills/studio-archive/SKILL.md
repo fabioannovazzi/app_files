@@ -68,8 +68,15 @@ is available.
 
 For a resumed local engagement without a specialist run, preserve a generated
 follow-up as a clearly identified Vera-derived support note through the shared
-component's `import_studio_client_document` route. Re-list that engagement and
-read back its controlled copy before claiming progress is saved. Return the
+component's `import_studio_client_document` route. Re-list that engagement,
+then call `verify_studio_client_inputs` for the exact saved input IDs before
+claiming progress is saved. Copy prior `input_id` / `content_sha256` pairs
+from the import or verification response into `expected_receipts` to check
+preservation; never invent a baseline. Require `verified: true`. Read the
+controlled document for semantic work using the returned verified receipt's
+`path`; byte verification alone is not a semantic read. Never write an ad hoc
+verifier or assume raw `receipt.json` / `engagement.json` has the fields of
+the maintained listing. Return the
 archived copy, not only a memo in the chat workspace. Exact retries reuse its
 receipt; changed notes preserve earlier copies. Do not invent an archive run
 or bypass a specialist run's output/finalization contract. Read the component's

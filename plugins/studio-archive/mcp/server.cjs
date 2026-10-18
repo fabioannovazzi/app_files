@@ -32,6 +32,7 @@ const TOOL_NAMES = {
   archiveInventory: "get_studio_archive_organization_inventory",
   openArchiveItem: "open_studio_archive_organization_item",
   engagements: "list_studio_client_engagements",
+  verifyInputs: "verify_studio_client_inputs",
   prepareWorkflow: "prepare_studio_client_workflow",
   startCheckEntriesFromSample: "start_check_entries_from_sample",
   startWorkflow: "start_studio_client_workflow",
@@ -376,6 +377,33 @@ function toolDefinitions() {
           },
         },
         ["client_id"],
+      ),
+      annotations: annotations(true),
+    },
+    {
+      name: TOOL_NAMES.verifyInputs,
+      title: "Verify selected Studio Archive inputs",
+      description:
+        "Verify receipt seals and complete controlled-file bytes for 1–100 exact inputs using maintained Archive readers. Supply prior input_id/content_sha256 pairs from import or verification receipts to prove preservation against that baseline. Set require_exact_input_set only to also verify all engagement inputs and reject additions or omissions. Returns verified paths and per-input failures without reading document text into the response, importing, repairing or approving anything. Use this before claiming a saved note or preserved continuation; never parse raw internal receipt JSON to guess paths.",
+      inputSchema: objectSchema(
+        {
+          client_id: { type: "string", pattern: "^client_[0-9a-f]{24}$" },
+          engagement_id: { type: "string", pattern: "^eng_[0-9a-f]{24}$" },
+          input_ids: {
+            type: "array", minItems: 1, maxItems: 100, uniqueItems: true,
+            items: { type: "string", pattern: "^input_[0-9a-f]{24}$" },
+          },
+          expected_receipts: {
+            type: "array", minItems: 1, maxItems: 100,
+            description: "Prior receipt identities for every selected input; never invent a baseline.",
+            items: objectSchema({
+              input_id: { type: "string", pattern: "^input_[0-9a-f]{24}$" },
+              content_sha256: { type: "string", pattern: "^[0-9a-f]{64}$" },
+            }, ["input_id", "content_sha256"]),
+          },
+          require_exact_input_set: { type: "boolean", default: false },
+        },
+        ["client_id", "engagement_id", "input_ids"],
       ),
       annotations: annotations(true),
     },
@@ -1179,6 +1207,45 @@ function commandForTool(name, rawArgs) {
     }
     return ["engagements", "--client-id", clientId];
   }
+  if (name === TOOL_NAMES.verifyInputs) {
+    assertOnlyKeys(args, new Set([
+      "client_id", "engagement_id", "input_ids",
+      "expected_receipts", "require_exact_input_set",
+    ]));
+    const clientId = requireString(args.client_id, "client_id");
+    const engagementId = requireString(args.engagement_id, "engagement_id");
+    if (!/^client_[0-9a-f]{24}$/.test(clientId) || !/^eng_[0-9a-f]{24}$/.test(engagementId)) {
+      throw new Error("Select exact client and engagement IDs.");
+    }
+    const inputs = optionalStringArray(args.input_ids, "input_ids", 100, 30);
+    if (!inputs.length || new Set(inputs).size !== inputs.length ||
+        inputs.some((id) => !/^input_[0-9a-f]{24}$/.test(id))) {
+      throw new Error("Select 1 to 100 distinct exact input IDs.");
+    }
+    const command = ["verify-inputs", "--client-id", clientId, "--engagement-id", engagementId];
+    for (const id of inputs) command.push("--input-id", id);
+    if (args.expected_receipts !== undefined) {
+      if (!Array.isArray(args.expected_receipts) || args.expected_receipts.length !== inputs.length) {
+        throw new Error("Expected receipts must cover every selected input.");
+      }
+      const seen = new Set();
+      for (const raw of args.expected_receipts) {
+        const receipt = requirePlainObject(raw);
+        assertOnlyKeys(receipt, new Set(["input_id", "content_sha256"]));
+        if (!inputs.includes(receipt.input_id) || seen.has(receipt.input_id) ||
+            typeof receipt.content_sha256 !== "string" ||
+            !/^[0-9a-f]{64}$/.test(receipt.content_sha256)) {
+          throw new Error("Expected receipt identity is invalid.");
+        }
+        seen.add(receipt.input_id);
+      }
+      command.push("--expected-receipts-json", JSON.stringify(args.expected_receipts));
+    }
+    if (optionalBoolean(args.require_exact_input_set, "require_exact_input_set")) {
+      command.push("--require-exact-input-set");
+    }
+    return command;
+  }
   if (name === TOOL_NAMES.prepareWorkflow) {
     assertOnlyKeys(
       args,
@@ -1601,7 +1668,11 @@ function callTool(name, args) {
       throw new Error("Studio Archive returned invalid JSON.");
     }
   }
-  if (completed.status !== 0 || payload?.error) {
+  const blockedVerification =
+    name === TOOL_NAMES.verifyInputs && completed.status === 1 &&
+    payload?.schema_version === "vera.input_verification.v1" &&
+    payload.status === "blocked" && payload.verified === false;
+  if ((completed.status !== 0 && !blockedVerification) || payload?.error) {
     const detail =
       payload?.error?.message ||
       String(completed.stderr || "").trim() ||
@@ -1632,7 +1703,7 @@ function toolResult(payload) {
       },
     ],
     structuredContent: payload,
-    isError: false,
+    isError: payload.schema_version === "vera.input_verification.v1" && payload.verified !== true,
   };
 }
 

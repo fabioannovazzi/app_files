@@ -915,6 +915,11 @@ def test_projected_cowork_skills_remove_promotion_feedback_and_codex_wording(
     assert "Cowork" in studio_archive
     assert "Studio Archive is available in Cowork" in studio_archive
     assert "portable customer-folder ledger" in " ".join(studio_archive.split())
+    assert "verify_studio_client_inputs" in studio_archive
+    assert "--expected-receipts-json" in studio_archive
+    assert "--require-exact-input-set" in studio_archive
+    assert "references/input-verification.md" in studio_archive
+    assert "modules/studio-archive/scripts/input_verification.py" in vera_entries
     assert "Local-folder mode runs in Claude Desktop and Cowork" in archive_organization
     assert "not an enabled Cowork route" in archive_organization
     assert "cannot scan or reorganize" not in archive_organization

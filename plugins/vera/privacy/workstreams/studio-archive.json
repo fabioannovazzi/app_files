@@ -285,14 +285,23 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "selected-archive-input-verification",
+        "purpose": "Verify selected saved inputs and compare their immutable receipts with a supplied prior baseline",
+        "content": "The selected client, engagement and input IDs; prior receipt seals when supplied; verified input names, roles, controlled absolute and relative paths, byte counts, file hashes, receipt seals, timestamps and verification results or bounded failures. Optional exact-population checking returns current input IDs for the selected engagement. Complete file bytes are read locally for hashing; this operation returns no document text and makes no new connector, model API or hosted-service call. Returned metadata can enter the invoking host model context and is not anonymized.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
   "review": {
     "basis": "external_boundary_review_of_workflow_source",
-    "reviewed_at": "2026-10-17",
+    "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "6d38bafbd6b8a88337ded6166a771df796cf299ab267996d1bc6d9e9d7852bbb"
+    "source_fingerprint": "2488f0dd90aa49f12a9b7b58a04b7ef6116437d2e610225e20b9f259e9979b7a"
   },
   "role": "workflow",
   "runtime_profiles": [
@@ -396,6 +405,10 @@
     {
       "id": "authorized-working-folder-delivery",
       "control": "Require explicit exact-client/open-engagement/source copy authority. Reject sources inside or containing the approved archive tree, linked/non-ordinary entries, unsafe portable names, protected Vera destinations and over-limit trees. Copy into a new readable delivery folder with exclusive per-file publication, a sealed intent/receipt and engagement OS lock. Never merge an occupied unreceipted destination or overwrite existing content. Exact retries revalidate bytes and reuse one receipt; pending intake markers block organization snapshots until the same request completes. Refuse changed/foreign/uncertain retained state rather than deleting or silently adopting it. Intake preserves duplicate paths and does not classify client ownership, approve or apply an organization plan."
+    },
+    {
+      "id": "maintained-read-only-input-verification",
+      "control": "Select 1 to 100 unique exact input IDs within the selected client engagement. Use the maintained receipt reader to validate ownership, non-linked controlled paths, receipt seals and all file bytes. Compare an optional complete set of prior receipt seals without inventing a historical baseline. Reject malformed arguments, preserve structured failures and perform no client-tree repair or mutation. Exact-population checks are explicit. Byte verification does not establish document meaning, authored version lineage, historical retry outcomes or professional acceptance."
     }
   ],
   "workstream": "studio-archive"

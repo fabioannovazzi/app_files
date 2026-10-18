@@ -30,7 +30,8 @@
     "plugins/lucia/skills/lucia/references/workflow-usage.md",
     "plugins/lucia/skills/lucia/references/incident-recovery.md",
     "plugins/lucia/skills/lucia/references/model-data-report-contract.md",
-    "plugins/lucia/usage/pipelines.json"
+    "plugins/lucia/usage/pipelines.json",
+    "plugins/studio-archive/scripts/input_verification.py"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -79,6 +80,15 @@
         "id": "handled-archive-error-review",
         "purpose": "Diagnose a handled Archive helper failure through the existing local host review",
         "content": "Handled Archive, OS, value and SQLite exceptions are retained locally before the unchanged structured error returns. The selected host model may review this diagnostic under its existing account; dynamic paths or case values may be present locally. The shared Lucia technical collector sends source-bound exception facts automatically, and the host sends only reviewed relevant technical evidence to the product incident service. Raw stderr and professional stdout are not forwarded.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "selected-archive-input-verification",
+        "purpose": "Verify selected saved inputs and compare their immutable receipts with a supplied prior baseline",
+        "content": "The selected client, engagement and input IDs; prior receipt seals when supplied; verified input names, roles, controlled absolute and relative paths, byte counts, file hashes, receipt seals, timestamps and verification results or bounded failures. Optional exact-population checking returns current input IDs for the selected engagement. Complete file bytes are read locally for hashing; this operation returns no document text and makes no new connector, model API or hosted-service call. Returned metadata can enter the invoking host model context and is not anonymized.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -203,12 +213,16 @@
     {
       "id": "private-root-specific-identity-continuity",
       "control": "Approved archive discovery is revalidated before a fresh isolated session adopts it; existing sessions stay pinned. Private identity aliases are root-specific and short cross-process transactions prevent lost updates. Unavailable or malformed profile state fails closed, and private profile storage must remain outside source archives."
+    },
+    {
+      "id": "maintained-read-only-input-verification",
+      "control": "Select 1 to 100 unique exact input IDs within the selected client engagement. Use the maintained receipt reader to validate ownership, non-linked controlled paths, receipt seals and all file bytes. Compare an optional complete set of prior receipt seals without inventing a historical baseline. Reject malformed arguments, preserve structured failures and perform no client-tree repair or mutation. Exact-population checks are explicit. Byte verification does not establish document meaning, authored version lineage, historical retry outcomes or professional acceptance."
     }
   ],
   "review": {
     "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "b15fb712ca4b82eab20f07ab825f85ec76b077db203d907e5a3c2a597b282988"
+    "source_fingerprint": "6a0e41ef5676fceffa83bf41e6f79090c0835b5b0b996c9e79125cbc17715e23"
   }
 }

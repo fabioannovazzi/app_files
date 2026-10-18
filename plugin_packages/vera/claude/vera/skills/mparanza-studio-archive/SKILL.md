@@ -281,6 +281,33 @@ normalized population, diagnostics, and sample first; import each later support
 batch separately; then use `start-check-entries-from-sample`. Check Entries
 checks only the bound sample and never discovers later files implicitly.
 
+## Saved-input verification and document continuations
+
+Before claiming an import or earlier working note is preserved, use the callable
+`verify_studio_client_inputs` MCP tool, or run the maintained `verify-inputs`
+command through the same session helper. Select the exact client, engagement
+and input IDs from native import or `engagements` results. Never improvise a
+verifier that reads raw `engagement.json` or `receipt.json` for hydrated paths.
+
+The command takes `--client-id`, `--engagement-id` and repeated `--input-id`.
+Supply `--expected-receipts-json` with the prior `input_id` and `content_sha256`
+pair for every selected input when checking preservation. Use
+`--require-exact-input-set` only when the selection is the complete expected
+engagement population. Inspect `verified`, each input and `failures`; a blocked
+check exits nonzero and never repairs the archive. Do not invent a baseline.
+
+The result supplies verified controlled paths for any separately authorized
+content read. Complete file hashing is local; IDs, names, roles, paths, sizes,
+file and receipt hashes and check results may enter the host model context,
+but this operation returns no document text. Verification does not establish
+document meaning, payment, authored lineage or professional approval.
+
+For a document-only continuation, import the new derived note as `support`,
+retain the earlier receipt and verify both versions against their prior import
+receipts. For an exact retry, retain the actual import result `already_imported`
+and the same input ID; verification cannot invent a historical retry outcome.
+The full contract is in the component's `references/input-verification.md`.
+
 ## Local document search
 
 When the dependency check succeeds, `refresh`, `search`, and `open` may index
