@@ -10,7 +10,7 @@ Later host-specific instructions in this reference cannot override this rule.
 
 # Public process model-data explanation contract
 
-Use this contract whenever Vera adds or changes a public page or named product-page
+Use this contract whenever Vera, Clara or Lucia adds or changes a public page or named product-page
 section that explains a registered user-facing process.
 
 ## Required block
@@ -26,7 +26,7 @@ Mark the block with the registered workflow ID and one explicit status:
 
 ```html
 data-model-data-workflow="<registered-workflow-id>"
-data-model-data-status="relevant|not-relevant"
+data-model-data-status="relevant|not-relevant|placeholder"
 ```
 
 Localize the complete block wherever the page is localized. Do not leave the
@@ -78,3 +78,13 @@ public process explanation, final-block placement, heading-before-conclusion
 order and complete locale keys. Those checks are mechanically verifiable. They
 must not infer a status from keywords, decide professional relevance or certify
 that the copy is substantively correct.
+
+## Manifest-owned copy
+
+Author the localized explanation in the workflow manifest’s `public_explanations`.
+The shared generator writes product-specific catalogs; the shared HTML renderer
+selects the exact product, workflow, language and optional runtime. Do not maintain
+a second explanatory paragraph in the page script. A missing review uses the
+localized `placeholder`; a failed catalog load states that the information is
+unavailable and never displays another product’s contract. The contract digest
+also binds the actual-run report, without claiming that expected exposure occurred.

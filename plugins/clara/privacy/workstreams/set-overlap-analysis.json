@@ -1,0 +1,49 @@
+{
+  "schema_version": 3,
+  "workstream": "set-overlap-analysis",
+  "display_name": "Set overlap analysis",
+  "role": "internal_engine",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "references",
+    "assets"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "selected-task-evidence",
+        "purpose": "Carry out set-overlap-analysis using the selected evidence and user instructions",
+        "content": "Selected item identifiers and set-membership fields, reviewed mappings, calculated intersections and source tables, chart context and images, audit records and interpretation. Local numerical/rendering code makes no separate model call. Reading original data or outputs adds those actual values to host context; no automatic anonymization is applied. Any separately requested publication uses the parent reporting route.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [],
+  "security_controls": [],
+  "review": {
+    "basis": "external_boundary_review_of_workflow_source",
+    "reviewed_at": "2026-10-18",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "e7743c54247a0dd2afc9857e029187e72456fa409c7405a53f18fcdc19ed690d"
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ],
+  "public_explanations": {}
+}

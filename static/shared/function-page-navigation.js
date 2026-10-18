@@ -129,6 +129,22 @@
   };
 
   const pageContexts = {
+    "clara-claim-basis-map": [["clara", "area-deliverables"]],
+    "clara-deck-correction": [["clara", "area-deliverables"]],
+    "clara-advisory-case-director": [["clara", "area-analysis"]],
+    "datev-invoice-start": [["vera", "area-matters"]],
+    "deep-research": [["vera", "area-research"], ["lucia", "area-research"]],
+
+    "organizzazione-lavoro": [["vera", "area-clients"]],
+    "contenzioso-tributario": [["vera", "area-matters"], ["lucia", "area-matters"]],
+    "rating-legalita": [["vera", "area-matters"]],
+    "scissione-guidata": [["vera", "area-analysis"]],
+    "esg-reporting-assurance": [["vera", "area-analysis"]],
+    "vera-skill-studio": [["vera", "area-studio"]],
+    "vera-integrazioni": [["vera", "core"]],
+    "vera-integrazioni/lethe": [["vera", "core"]],
+    "vera-integrazioni/pii-shield": [["vera", "core"]],
+    "vera-integrazioni/rizzo": [["vera", "core"]],
     "learn-with-vera": [["vera", "core"]],
     "learn-with-clara": [["clara", "functions"]],
     "learn-with-lucia": [["lucia", "core"]],

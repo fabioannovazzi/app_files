@@ -15,6 +15,7 @@ BUILD_SCRIPT = ROOT / "scripts" / "build_claude_plugin_zip.py"
 CLARA_SOURCE_MANIFEST = ROOT / "plugins" / "clara" / ".codex-plugin" / "plugin.json"
 CLARA_CLAUDE_MANIFEST = ROOT / "plugins" / "clara" / ".claude-plugin" / "plugin.json"
 EXPECTED_ROOT_SKILLS = {
+    "privacy-surface-review",
     "learn-with-clara",
     "advisory-deliverable-validator",
     "advisory-brief-planner",
@@ -31,6 +32,9 @@ EXPECTED_ROOT_SKILLS = {
 
 
 def load_builder():
+    # Match the CLI entrypoint import path when loading its script directly.
+    if str(ROOT / "scripts") not in sys.path:
+        sys.path.insert(0, str(ROOT / "scripts"))
     spec = importlib.util.spec_from_file_location(
         "build_clara_claude_plugin_zip",
         BUILD_SCRIPT,
@@ -139,7 +143,6 @@ def test_clara_cowork_exposes_only_reviewed_root_skills(clara_entries) -> None:
         "beautify-deck",
         "deck-correction",
         "interview",
-        "privacy-surface-review",
         "transcribe",
     ):
         assert not any(
@@ -164,7 +167,9 @@ def test_clara_cowork_includes_reviewed_feedback_and_omits_other_host_paths(
         "claraIncidents",
         "claraIncidentHost",
     }
-    assert not any(name.startswith("privacy/") for name in clara_entries)
+    assert "privacy/registry.json" in clara_entries
+    assert "privacy/contracts/index.json" in clara_entries
+    assert "skills/mparanza-privacy-surface-review/SKILL.md" in clara_entries
     assert not any(name.endswith("/agents/openai.yaml") for name in clara_entries)
     assert not any(".codex-plugin/" in name for name in clara_entries)
     assert not any(
@@ -254,7 +259,13 @@ def test_clara_cowork_instructions_are_host_neutral(clara_entries) -> None:
             or ("/references/" in name and name.endswith(".md"))
         )
     }
-    combined = "\n".join(instruction_docs.values())
+    # Developer governance must describe all reviewed hosts accurately; only
+    # professional instructions are rewritten for the installed Cowork host.
+    combined = "\n".join(
+        text
+        for name, text in instruction_docs.items()
+        if not name.startswith("skills/mparanza-privacy-surface-review/")
+    )
 
     assert (
         "This package is for Claude Cowork"
@@ -285,7 +296,8 @@ def test_clara_cowork_instructions_are_host_neutral(clara_entries) -> None:
     catalog = instruction_docs["skills/mparanza-clara/references/workflow-catalog.md"]
     catalogued = set(re.findall(r"^- `([a-z0-9-]+)`:", catalog, re.MULTILINE))
     assert catalogued == {
-        f"mparanza-{name}" for name in EXPECTED_ROOT_SKILLS - {"clara"}
+        f"mparanza-{name}"
+        for name in EXPECTED_ROOT_SKILLS - {"clara", "privacy-surface-review"}
     }
     assert (
         "../mparanza-clara/references/workflow-catalog.md"

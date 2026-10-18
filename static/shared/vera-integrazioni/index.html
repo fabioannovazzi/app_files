@@ -47,7 +47,8 @@
     footer { padding-block: 24px 40px; border-top: 1px solid var(--line); font-size: 14px; }
     @media (max-width: 580px) { .shell { width: calc(100% - 36px); } main { padding-top: 32px; } .lead { font-size: 19px; } .steps { padding-left: 22px; } .steps li { padding-left: 4px; } blockquote { padding: 16px 18px; } }
   </style>
- </head>
+ <link rel="stylesheet" href="../function-page-scale.css">
+</head>
  <body>
   <header class="shell">
    <a class="brand" data-vera-link="" href="../vera/index.html?lang=it">
@@ -223,20 +224,7 @@
    <section id="lethe"><h2 data-i18n="lethe.title">Lethe</h2><p data-i18n="lethe.copy">Lethe assegna i segnaposto una sola volta a un insieme di elementi approvati localmente per tutto il lavoro. Il connettore riusa quella selezione nei documenti successivi; non aggiunge nuove identità. La revisione locale è necessaria prima di creare la sessione.</p><a data-engine-link href="lethe/index.html?lang=it" data-i18n="engine.details">Istruzioni, limiti e percorso dei dati</a></section>
 <section id="pii-shield"><h2 data-i18n="shield.title">PII-Shield</h2><p data-i18n="shield.copy">Il connettore usa PII-Shield di gregmos, CLI Node.js 2.2.0. Il primo documento crea la sessione del motore; i successivi la estendono con lo stesso dizionario. Il motore decide identità, alias e pseudonimi. Servono Node.js 22+ e la configurazione esplicita del modello. Nella prova su macOS arm64, il runtime ONNX del motore si interrompe alla chiusura: il connettore rifiuta l’esecuzione e non dichiara il modello pronto. L’accettazione su questo Mac non è verificata; la prova reale multi-documento viene eseguita separatamente su Linux.</p><a data-engine-link href="pii-shield/index.html?lang=it" data-i18n="engine.details">Istruzioni, limiti e percorso dei dati</a></section>
 <section id="sessions"><h2 data-i18n="sessions.title">Sessioni e ripristino delle identità</h2><p data-i18n="sessions.copy">Lethe e PII-Shield possono usare la stessa sessione per più documenti e ripristinare le identità nel risultato finale. Crea o riapri una sessione, usa il suo ID per ogni file e passa alla funzione di ripristino il percorso del risultato AI salvato localmente. Il ripristino restituisce solo il percorso del file, da aprire sul computer.</p><p data-i18n="sessions.boundary">Il dizionario del motore è autorevole: il connettore ne conserva lo stato senza inferire, unire o correggere identità. OpenAI Privacy Filter e GLiNER2 restano di sola redazione. Rizzo conserva e ripristina il dizionario nativo di ogni documento; non estende una sessione tra chiamate separate. Lethe e PII-Shield supportano il lavoro multi-documento.</p></section>
-<section aria-labelledby="model-data-title" id="model-data">
-    <h2 data-i18n="data" id="model-data-title">Quali dati arrivano al modello</h2>
-    <h3>Second Brain</h3>
-    <p data-i18n="dataCopy">Questa pagina non registra l’URL del tuo connettore, non avvia login e non legge Second Brain. Quando chiedi una consultazione a Vera, la query, i metadati e gli estratti restituiti dalla ricerca, e il testo delle fonti aperte possono entrare nel contesto del modello dell’app scelta. Per la prova usa un documento senza dati dei clienti. La consultazione non è solo locale: accesso, conservazione e trattamento dipendono dall’app e dal servizio Second Brain. Collegare l’archivio non invia automaticamente tutto il suo contenuto a Vera; i dati effettivamente consultati dipendono dagli strumenti e dalle richieste.</p>
-    <h3 data-i18n="privacy.title">OpenAI Privacy Filter</h3>
-    <p data-i18n="privacy.data">Il connettore elabora gli originali localmente. All’app scelta arrivano i percorsi indicati nella richiesta, il percorso della copia filtrata e un riepilogo con i conteggi. Il testo filtrato entra nella conversazione quando ne chiedi la lettura. L’installazione scarica il modello e il tokenizer; il filtraggio avviene in locale, senza chiamate API.</p>
-    <h3 data-i18n="gliner.title">GLiNER2-PII</h3>
-    <p data-i18n="gliner.data">Il testo estratto dal documento arriva al modello GLiNER2 sul tuo computer. Il processo locale applica i segnaposto senza restituire i valori rilevati. All’app scelta arrivano i percorsi della richiesta e del risultato, i conteggi e i metadati del modello; il testo filtrato entra nella conversazione quando ne chiedi la lettura. Modello e tokenizer vengono scaricati durante l’installazione. Il filtraggio usa i file locali e non chiama API.</p>
-    <h3 data-i18n="rizzo.title">Rizzo PII</h3>
-    <p data-i18n="rizzo.data">Il testo originale estratto arriva all’app Rizzo sullo stesso computer tramite HTTP locale. Il dizionario nativo viene salvato nella cartella privata model/sessions del connettore, senza cifratura; su POSIX i permessi sono 0700/0600, su Windows valgono le ACL della cartella utente. Dizionario, originali, anteprime e diagnostica non entrano nelle risposte MCP. Alla conversazione arrivano percorsi, ID, conteggi e testo filtrato richiesto. Il ripristino restituisce solo un percorso locale e funziona anche con Rizzo chiuso. La cartella resta fino alla rimozione da parte dell’utente.</p>
-<h3 data-i18n="lethe.title">Lethe</h3><p data-i18n="lethe.data">Il testo estratto viene elaborato da Lethe sul computer. Gli elementi approvati e il dizionario restano nella cartella privata della sessione, senza entrare nelle risposte MCP. Questo connettore non usa il vault cifrato dell’app Lethe. Al modello arrivano percorsi, ID, conteggi e il testo filtrato richiesto; il ripristino salva un file locale e restituisce solo il percorso.</p>
-<h3 data-i18n="shield.title">PII-Shield</h3><p data-i18n="shield.data">Gli originali estratti arrivano al processo PII-Shield e al suo modello GLiNER locali. Dizionari e record di revisione, che possono contenere dati originali, restano separati per sessione sul computer. Non sono cifrati dal connettore. Al modello della conversazione arrivano solo metadati e testo filtrato richiesto; il ripristino restituisce un percorso locale. La conservazione dipende anche dal TTL del motore.</p>
-    <a data-data-link="" data-i18n="dataPage" href="https://mparanza.com/data-handling?lang=it">Gestione dei dati Mparanza</a>
-   </section>
+<section id="model-data" class="function-model-data" data-model-data-status="placeholder" aria-live="polite"><h2 class="function-model-data__title">Quali dati arrivano al modello</h2><div class="function-model-data__body"></div></section>
   </main>
   <footer class="shell">
    <a data-i18n="back" data-vera-link="" href="../vera/index.html?lang=it#connections">← Torna a Integrazioni</a>
@@ -782,5 +770,5 @@
     });
     document.querySelector('[data-data-link]').href = 'https://mparanza.com/data-handling?lang=' + lang;
   </script>
- </body>
+ <script src="/static/shared/function-model-data.js?v=20261018-shared-privacy"></script></body>
 </html>

@@ -198,7 +198,8 @@
         {
           "source_root": "plugins/vera/scripts",
           "module_roots": [
-            "model_data_report.py"
+            "model_data_report.py",
+            "privacy_contract.py"
           ]
         },
         {
@@ -262,7 +263,8 @@
         {
           "source_root": "plugins/vera/scripts",
           "module_roots": [
-            "model_data_report.py"
+            "model_data_report.py",
+            "privacy_contract.py"
           ]
         },
         {

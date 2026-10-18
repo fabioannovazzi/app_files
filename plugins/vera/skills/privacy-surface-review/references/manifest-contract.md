@@ -1,11 +1,11 @@
 # Runtime and external-boundary manifest contracts
 
-Each file in `privacy/workstreams/` records one component from
-`components.json`. It is a developer-maintained design record, not runtime
+Each file in `privacy/workstreams/` records one registered workstream from
+`privacy/registry.json`. It is a developer-maintained design record, not runtime
 inspection of customer files and not a legal compliance determination.
 
-Each file in `privacy/services/` records one shared Vera service from
-`components.json`. Shared services are registered once rather than repeated in
+Each file in `privacy/services/` records one shared product service from
+`privacy/registry.json`. Shared services are registered once rather than repeated in
 every workstream that can reach them.
 
 ## Runtime profiles
@@ -15,29 +15,32 @@ once for each supported runtime:
 
 - `openai-codex` covers Codex model processing by OpenAI.
 - `anthropic-cowork` covers Cowork model processing by Anthropic.
+- `openai-chatgpt` covers ChatGPT model processing by OpenAI.
+- `google-antigravity` covers the model provider selected in Antigravity; the
+  package does not identify that selected provider or enforce account settings.
 
-Both profiles state that the firm or user selects the account or workspace,
-Vera cannot inspect or enforce account plan, model-training data controls, or
+All profiles state that the firm or user selects the account or workspace,
+the product cannot inspect or enforce account plan, model-training data controls, or
 retention/deletion controls, and the account is reviewed before professional
-use and when the account or terms change. Neither profile promises automatic
-anonymization or local-only processing. Vera is not a separate model-processing
+use and when the account or terms change. No profile promises automatic
+anonymization or local-only processing. The product is not a separate model-processing
 recipient.
 
 Do not create provider-specific copies of a workstream manifest. Each
-workstream references both profiles. A runtime-specific external route records
+workstream references its reviewed runtime profiles. A runtime-specific external route records
 only the applicable profile IDs on that boundary.
 
 ## Required workstream fields
 
 - `schema_version`: currently `3`.
-- `workstream`, `display_name`, and `role`: registered component identity.
-- `governed_paths`: component-relative files whose bytes form the freshness
+- `workstream`, `display_name`, and `role`: registered workstream identity.
+- `governed_paths`: files relative to the registered product or component source whose bytes form the freshness
   fingerprint.
-- `governed_shared_paths`: optional Vera-package-relative shared implementation
+- `governed_shared_paths`: optional product-package-relative shared implementation
   paths whose bytes also form the workstream fingerprint. Repository reviews
   resolve these paths from `plugins/_shared`; installed-package reviews must
-  resolve them from the packaged Vera tree.
-- `runtime_profiles`: exactly `openai-codex` and `anthropic-cowork`.
+  resolve them from the packaged product tree.
+- `runtime_profiles`: the reviewed profile IDs from the shared catalog.
 - `model_context.policy`: always
   `real_case_data_may_enter_selected_runtime_model_context`.
 - `model_context.classes`: distinct classes a supported runtime can read, each
@@ -63,13 +66,14 @@ Shared-service manifests use schema version `2` and record `service_id`,
 applicable runtime profiles, retention posture, and one activation mode:
 
 - `governed_repository_paths`: optional repository-root-relative runtime files
-  outside the Vera plugin tree. Use this for a hosted shared service whose
+  outside the product plugin tree. Use this for a hosted shared service whose
   executable API, persistence, or deployment wiring lives elsewhere in the
   same repository. Paths must remain inside the repository and are fingerprinted
   with a `repository:` logical prefix. Security controls implemented there use
   the same prefix in `implemented_by`.
 
 - `automatic_session_start`;
+- `automatic_on_first_use`;
 - `automatic_after_prior_submission`;
 - `automatic_after_prior_connection`;
 - `automatic_per_durable_run`;
@@ -96,9 +100,9 @@ GDPR data minimisation remains applicable as a purpose-based professional and
 legal judgment. The manifest and validator neither decide that judgment nor
 certify GDPR compliance.
 
-## Installed Codex repository-source declarations
+## Installed repository-source declarations
 
-A Codex package may retain a shared service's complete repository review without
+A product package may retain a shared service's complete repository review without
 shipping the hosted application or the entire published course library. Source
 validation must still inspect actual repository bytes before packaging and
 reject a stale review; it must never use the declaration as a source fallback.
@@ -127,3 +131,36 @@ records, changed local copies, stale fingerprints, and any declaration claiming
 hosted verification. It does not independently reconstruct absent source bytes
 from hashes or authenticate the unsigned review record. A package-local pass
 is not hosted acceptance or proof that a provider received model context.
+
+
+## Shared product register
+
+`privacy/registry.json` is the authoritative ownership inventory for all exposed
+skills, embedded components, registered workflow IDs and public function pages.
+A workstream can use product-root code or a registered shared component. Multiple
+professional entry points may reuse a component, but component ownership and
+each exposed skill's ownership are explicit. Studio Archive is infrastructure.
+
+All products use these same schemas and validator. `runtime-profiles.json`
+contains Codex, Cowork, ChatGPT and Antigravity account/model boundaries. A
+manifest lists only reviewed routes; the packaged projection retains the exact
+reviewed source contract and binds its actual installed bytes separately.
+Unknown host behavior remains unknown. Availability is not inferred from an OS.
+
+Every workstream has `service_ids` referencing registered common service records
+and `public_explanations` keyed by its registered public page IDs. Each explanation
+contains its reviewed status and complete paragraph arrays in every language
+supported by that page. A placeholder is explicit incomplete review, never
+`not-relevant`. The public catalog is generated from these exact fields.
+
+`privacy/contracts/` retains canonical source documents and their SHA-256 index.
+`source_contract_sha256` appears only after package projection. Do not change that
+binding to conceal stale source. Regenerate contracts only after validation and
+semantic review. Neither source hashing nor contract generation makes a semantic
+approval decision or verifies a remote hosted deployment.
+
+Host packaging keeps the complete source contract and marks installed records
+with `packaged_for_runtime`. A different requested host cannot claim that installed
+review. `registry.json` records the exact reviewed workstream, service and file
+omissions for each host. New or removed omissions fail packaging and require an
+inspected source review; the builder must never silently approve missing code.

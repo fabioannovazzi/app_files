@@ -297,7 +297,7 @@
     "render_evidence": "Italian Vera fatture-xml-check rendered through the new CLI and inspected in the Codex in-app browser. Original material and the port-8769 lesson server were untouched.",
     "limits": "Existing artifact hashes remain historical evidence. No new professional approval, live learner completion, installed-version acceptance or validation of every browser host is claimed."
   },
-  "course_sha256": "bff928893e6f366e194f7d3133a064890476ab29e2422c7eb9717efa482f88b7",
+  "course_sha256": "b4789241e3d20c8cee7d4304ccb08e3ea877986db3e3a45a336eae93c2b5df57",
   "isolated_launcher_source_compatibility_20261018": {
     "reviewer": "Codex exact retained-course and launcher-source review",
     "reviewed_at": "2026-10-18",

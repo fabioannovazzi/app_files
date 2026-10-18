@@ -46,17 +46,17 @@ def _service_manifests() -> list[dict[str, Any]]:
     ]
 
 
-def test_vera_runtime_catalog_has_codex_and_cowork_without_chat_surface() -> None:
+def test_vera_runtime_catalog_names_each_distributed_host() -> None:
     profiles = _runtime_profiles()
 
-    assert list(profiles) == RUNTIME_PROFILE_IDS
+    assert list(profiles) == RUNTIME_PROFILE_IDS + [
+        "openai-chatgpt",
+        "google-antigravity",
+    ]
     assert profiles["openai-codex"]["surfaces"] == ["codex"]
     assert profiles["anthropic-cowork"]["surfaces"] == ["cowork"]
-    assert all(
-        "chat" not in surface
-        for profile in profiles.values()
-        for surface in profile["surfaces"]
-    )
+    assert profiles["openai-chatgpt"]["provider"] == "OpenAI"
+    assert profiles["google-antigravity"]["provider"] == "selected_in_host"
 
 
 def test_vera_cowork_profile_declares_anthropic_model_and_account_boundary() -> None:
@@ -65,7 +65,7 @@ def test_vera_cowork_profile_declares_anthropic_model_and_account_boundary() -> 
     assert cowork["provider"] == "Anthropic"
     assert cowork["runtime"] == "Cowork"
     assert cowork["account_boundary"]["selected_by"] == "firm_or_user"
-    assert cowork["account_boundary"]["vera_runtime_enforcement"] == "none"
+    assert cowork["account_boundary"]["product_runtime_enforcement"] == "none"
     assert cowork["account_boundary"]["per_case_record_required"] is False
     assert (
         cowork["model_processing"]["scope"]
@@ -80,12 +80,19 @@ def test_vera_workstreams_share_one_manifest_across_both_runtimes() -> None:
     components = json.loads((VERA_ROOT / "components.json").read_text(encoding="utf-8"))
     manifests = _workstream_manifests()
 
+    registry = json.loads((VERA_ROOT / "privacy/registry.json").read_text())
     assert {manifest["workstream"] for manifest in manifests} == set(
-        components["plugins"]
+        registry["workstreams"]
     )
+    assert set(components["plugins"]) == {
+        component
+        for entry in registry["workstreams"].values()
+        for component in entry["components"]
+    }
     assert all(manifest["schema_version"] == 3 for manifest in manifests)
     assert all(
-        manifest["runtime_profiles"] == RUNTIME_PROFILE_IDS for manifest in manifests
+        set(manifest["runtime_profiles"]).issubset(_runtime_profiles())
+        for manifest in manifests
     )
     assert all(
         model_class["runtime_profiles"]
@@ -142,7 +149,7 @@ def test_vera_cowork_services_include_shared_runtime_and_run_receipts() -> None:
         "plugin-feedback": ["openai-codex"],
         "plugin-update-check": ["openai-codex"],
         "run-receipt-stamping": RUNTIME_PROFILE_IDS,
-        "research-subscriptions": RUNTIME_PROFILE_IDS,
+        "research-subscriptions": ["openai-codex"],
         "studio-work": RUNTIME_PROFILE_IDS,
         "operational-incidents": RUNTIME_PROFILE_IDS,
         "workflow-usage": RUNTIME_PROFILE_IDS,
@@ -160,6 +167,7 @@ def test_vera_cowork_services_include_shared_runtime_and_run_receipts() -> None:
 
 def test_vera_validator_rejects_a_false_cowork_local_only_claim(
     tmp_path: Path,
+    monkeypatch,
 ) -> None:
     vera_root = tmp_path / "plugins" / "vera"
     privacy_root = vera_root / "privacy"
@@ -183,8 +191,30 @@ def test_vera_validator_rejects_a_false_cowork_local_only_claim(
     (privacy_root / "runtime-profiles.json").write_text(
         json.dumps(payload), encoding="utf-8"
     )
+    (privacy_root / "registry.json").write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "product": "vera",
+                "developer_skills": ["privacy-surface-review"],
+                "workstreams": {},
+                "services": [],
+            }
+        )
+    )
+    for schema in ("registry.schema.json", "runtime-profiles.schema.json"):
+        (privacy_root / schema).write_bytes(
+            (VERA_ROOT / "privacy" / schema).read_bytes()
+        )
+    skill = vera_root / "skills/privacy-surface-review/SKILL.md"
+    skill.parent.mkdir(parents=True)
+    skill.write_text("Developer review fixture")
+    (vera_root / ".codex-plugin").mkdir()
+    (vera_root / ".codex-plugin/plugin.json").write_text(json.dumps({"name": "vera"}))
     validator = _validator_module()
 
+    # Isolate the host profile check from unrelated registration coverage.
+    monkeypatch.setattr(validator, "_registration_errors", lambda root: [])
     errors = validator.validate_privacy_surfaces(vera_root)
 
     assert (

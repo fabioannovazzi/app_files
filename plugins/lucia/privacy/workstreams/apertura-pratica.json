@@ -165,7 +165,7 @@
       "id": "automatic-product-incident-recovery",
       "destination": "Mparanza technical incident service and product-scoped anonymous incident connector",
       "purpose": "Diagnose technical failures, deliver a targeted correction and verify the original matter-opening task.",
-      "content": "Random reporter and optional native-computer proofs; product, host and worker versions; package-relative source frames, exception codes and reviewed technical messages; exact original report, operation and remedy revision; actual retries and original-task verification. Raw stderr remains private for host-model review; professional stdout, documents, prompts, identities and credentials are not diagnostic content. Full transport, capability and retention details are in privacy/hosted-services/operational-incidents.json.",
+      "content": "Random reporter and optional native-computer proofs; product, host and worker versions; package-relative source frames, exception codes and reviewed technical messages; exact original report, operation and remedy revision; actual retries and original-task verification. Raw stderr remains private for host-model review; professional stdout, documents, prompts, identities and credentials are not diagnostic content. Full transport, capability and retention details are in privacy/services/operational-incidents.json.",
       "controls": [
         "The host selects relevant technical evidence; diagnostic text is data, never an executable command. Product-bound ownership and exact report/revision binding apply. A published remedy or successful helper alone cannot close the original task."
       ]
@@ -209,6 +209,44 @@
     "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "b15fb712ca4b82eab20f07ab825f85ec76b077db203d907e5a3c2a597b282988"
-  }
+    "source_fingerprint": "ec32693e4633ee53b438d1ec1b502bedd3bfdd504ad9e3bb6b05811ec9c4e1b1"
+  },
+  "public_explanations": {
+    "apertura-pratica": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Il modello può leggere i materiali selezionati per preparare il fascicolo legale; conflitti, termini, antiriciclaggio e accettazione restano decisioni dell'avvocato.",
+          "Possono arrivare identità e contatti; nomi, alias e identificativi di cliente, assistito, controparti e altri soggetti; incarico richiesto, fatti, giurisdizione e stato del procedimento; ambito, esclusioni, poteri e compensi; riferimenti e candidati della ricerca conflitti; possibili termini e fonti; vincoli di riservatezza; dati per valutare se si applichi l'antiriciclaggio; privacy, conservazione, elementi mancanti, nomi e hash delle evidenze, decisioni di revisione e stato del pacchetto.",
+          "Non c'è anonimizzazione automatica né garanzia di elaborazione solo locale. L'eventuale ricerca su fonti ufficiali usa domande generiche e non deve contenere identità, fatti privati, documenti, credenziali o dati del registro conflitti. Il piano cartelle è solo proposto: i file non vengono spostati o rinominati automaticamente."
+        ],
+        "en": [
+          "The model can read selected material used to prepare the legal matter file; conflicts, deadlines, AML, and acceptance remain lawyer decisions.",
+          "This may include identity and contact material; names, aliases, and identifiers for the client, assisted party, counterparties, and other relevant parties; requested work, facts, jurisdiction, and procedural posture; scope, exclusions, authority, and fee status; conflict-search references and candidate matches; possible deadlines and sources; confidentiality restrictions; conditional AML material; privacy and retention posture; missing items; evidence names and hashes; review decisions; and package status.",
+          "There is no automatic anonymization or local-only processing guarantee. Optional official-source research uses generic queries and must exclude identities, private facts, documents, credentials, and conflict-register data. The folder plan is a proposal only: files are not moved or renamed automatically."
+        ],
+        "fr": [
+          "Le modèle peut lire les éléments sélectionnés pour préparer le dossier juridique ; conflits, délais, LBC et acceptation restent des décisions de l'avocat.",
+          "Cela peut comprendre identités et contacts ; noms, alias et identifiants du client, de la partie assistée, des contreparties et autres personnes pertinentes ; mission demandée, faits, juridiction et état de la procédure ; périmètre, exclusions, pouvoirs et honoraires ; références et candidats de la recherche de conflits ; délais possibles et sources ; restrictions de confidentialité ; éléments pour apprécier l'application de la LBC ; posture de confidentialité et conservation ; pièces manquantes ; noms et empreintes des preuves ; décisions de revue et état du paquet.",
+          "Il n'y a ni anonymisation automatique ni garantie de traitement exclusivement local. La recherche facultative de sources officielles utilise des requêtes génériques et doit exclure identités, faits privés, documents, identifiants de connexion et données du registre des conflits. Le plan de classement reste une proposition : les fichiers ne sont ni déplacés ni renommés automatiquement."
+        ],
+        "de": [
+          "Das Modell kann ausgewähltes Material zur Vorbereitung der Mandatsakte lesen; Konflikte, Fristen, Geldwäscheprüfung und Annahme entscheidet der Anwalt.",
+          "Dazu können Identitäts- und Kontaktdaten, Namen, Aliasnamen und Kennungen von Mandant, vertretener Partei, Gegenparteien und weiteren Beteiligten gehören; Auftrag, Sachverhalt, Rechtsordnung und Verfahrensstand; Umfang, Ausschlüsse, Vollmacht und Honorarstatus; Referenzen und Trefferkandidaten der Konfliktprüfung; mögliche Fristen und Quellen; Vertraulichkeitsbeschränkungen; Angaben zur bedingten Geldwäscheprüfung; Datenschutz- und Aufbewahrungslage; fehlende Elemente; Namen und Hashes von Nachweisen; Prüfentscheidungen und Paketstatus.",
+          "Es gibt keine automatische Anonymisierung und keine Garantie ausschließlich lokaler Verarbeitung. Optionale Recherchen in amtlichen Quellen verwenden allgemeine Anfragen und müssen Identitäten, private Fakten, Dokumente, Zugangsdaten und Inhalte des Konfliktregisters ausschließen. Der Ordnerplan ist nur ein Vorschlag; Dateien werden nicht automatisch verschoben oder umbenannt."
+        ],
+        "es": [
+          "El modelo puede leer los materiales seleccionados para preparar el expediente jurídico; conflictos, plazos, PBC y aceptación siguen siendo decisiones del abogado.",
+          "Pueden incluir identidad y contacto; nombres, alias e identificadores del cliente, parte asistida, contrapartes y otros sujetos relevantes; trabajo solicitado, hechos, jurisdicción y estado procesal; alcance, exclusiones, poderes y honorarios; referencias y candidatos de la búsqueda de conflictos; posibles plazos y fuentes; restricciones de confidencialidad; datos para valorar la aplicación de PBC; privacidad y conservación; elementos faltantes; nombres y hashes de las evidencias; decisiones de revisión y estado del paquete.",
+          "No hay anonimización automática ni garantía de procesamiento solo local. La investigación opcional en fuentes oficiales usa consultas genéricas y debe excluir identidades, hechos privados, documentos, credenciales y datos del registro de conflictos. El plan de carpetas es solo una propuesta: los archivos no se mueven ni se renombran automáticamente."
+        ]
+      }
+    }
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ]
 }

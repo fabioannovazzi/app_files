@@ -1,0 +1,195 @@
+{
+  "schema_version": 3,
+  "workstream": "deck-correction",
+  "display_name": "Deck Correction",
+  "role": "workflow",
+  "governed_paths": [
+    "skills/deck-correction/SKILL.md",
+    "scripts/start_deck_feedback.py",
+    "scripts/prepare_voice_deck_revision.py",
+    "scripts/build_deck_revision_workbench.py",
+    "scripts/build_deck_revision_interpretation_packets.py",
+    "scripts/finalize_deck_revision_plan.py",
+    "scripts/build_deck_revision_execution_plan.py",
+    "scripts/build_deck_revision_execution_packets.py",
+    "scripts/analyze_deck_revision_materials.py",
+    "scripts/approve_deck_revision_plan.py",
+    "scripts/apply_deck_revision_plan.py",
+    "scripts/verify_deck_revision_output.py",
+    "scripts/complete_deck_revision_output_review.py",
+    "scripts/verify_advisory_html_delivery.py",
+    "scripts/self_relaunch.py",
+    "scripts/managed_python_runtime.py",
+    "scripts/_managed_python_runtime.py",
+    "requirements.txt",
+    "components.json",
+    "scripts/_shared_python_runtime.py",
+    "requirements-shared-core.txt",
+    "requirements-shared-ocr.txt",
+    "constraints-shared-macos-py312.txt",
+    "scripts/_python_bootstrap.py",
+    "scripts/advisor_case_core.py",
+    "scripts/case_store.py",
+    "scripts/case_exchange_safety.py",
+    "scripts/launch_hosted_voice.py",
+    "scripts/import_hosted_voice_bundle.py",
+    "scripts/import_latest_hosted_voice_bundle.py",
+    "scripts/match_feedback_frames_to_deck_slides.py",
+    "scripts/build_deck_revision_quote_candidate_matrix.py",
+    "scripts/advisory_delivery.py",
+    "skills/html-deck/SKILL.md",
+    "scripts/run_deck_revision.py",
+    "scripts/build_voice_feedback_timeline.py",
+    "scripts/bounded_process.py"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "deck-and-feedback-evidence",
+        "purpose": "Interpret requested changes against the correct deck and evidence",
+        "content": "Existing PPTX or HTML deck; slide text, images, notes and structure; spoken feedback, transcript, screen recording, review notes, partner comments, case evidence, style authority, and source materials",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      },
+      {
+        "id": "revision-plan-and-output",
+        "purpose": "Plan, apply, and verify only the understood changes",
+        "content": "Interpretation packets, requested changes, uncertainty, targets, success criteria, approval state, patches, corrected deck, rendered slides, verification findings, corrected-output hashes, claim and evidence bindings, correction and recheck succession, and the required second audience-facing advisory validation of the corrected artifact When frame candidates conflict or remain uncertain, the interpretation packet retains all available deck slide records and every supplied frame summary instead of narrowing to the strongest frame. This broadens the local evidence presented to Codex for that unit; it does not infer a requested edit or create an external recipient.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      },
+      {
+        "id": "retained-review-and-render-workfiles",
+        "purpose": "Locate requested changes and inspect the corrected audience-facing output",
+        "content": "Local deck and style snapshots, downloaded and imported voice bundles, feedback frames and timelines, quote candidates, slide-match candidates, LibreOffice-generated PDF and slide-image caches, interpretation/execution packets and diagnostics may contain source text, participant statements, identities, business figures and local paths. Approval and final-review files record reviewer names, notes, timestamps, supplied confirmation flags and exact plan/understanding/output hashes. The helpers check these declared records, not reviewer identity or whether visual inspection actually occurred. Local files remain until separately removed; selected stale render-cache cleanup is not a general case deletion policy. Slide-render identity receipts now retain the exact deck hash and each cached image filename, slide number and hash; these verify cache identity only, not visual or semantic correctness. Output-review packets also retain paths and hashes for the exact source deck, corrected deck, normalized plan, approval, understanding and verification report; completion rejects drift in those inputs. These are local provenance records, not proof of actual semantic or visual review. The preparation runner retains local stage input/output file paths and hashes, current workflow status, next action and per-change missing-material summaries; these do not attest model interpretation or approval.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      },
+      {
+        "id": "retained-converter-attempts",
+        "purpose": "Inspect frame extraction and document conversion results or failures",
+        "content": "Local conversion attempts retain generated PDFs, normalized decks, extracted feedback frames and converter stdout/stderr logs in attempt directories, including after failure or cancellation. These files may contain source content, participant statements, document metadata and local paths. Their contents enter model context when read; generating or retaining them does not itself send them to Hosted Voice. They remain until separately removed.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      },
+      {
+        "id": "external-output-registration",
+        "purpose": "Verify an approved externally edited PPTX and preserve exact review identity",
+        "content": "The external deck, original deck, approved normalized plan, understanding, approval metadata, mechanical verification report, execution-mode marker and exact file hashes remain local and can enter Codex context when inspected. Registration does not rewrite the external PPTX; final semantic and visual review remains separate. Stale registration preserves the submitted file.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "direct-cli-python-dependency-setup",
+      "kind": "public_research",
+      "destination": "Python Package Index (PyPI) or the index selected by the user's Python configuration",
+      "purpose": "Prepare the published shared Vera, Clara and Lucia core dependencies, and validate the selected workflow, in one user-scoped Python 3.12 environment per operating-system host.",
+      "content": "Shared published package names and version constraints plus ordinary package-index request metadata. Client files, prompts, case data and generated work are not included in installer requests. Workflow arguments stay in the local child process.",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "Only published shared requirements are installed, never requirements derived from client material or prompts.",
+        "One fixed environment outside plugin source and client folders is reused across products and modules. Explicitly approved OCR is retained in the same environment.",
+        "A reader lease prevents setup from modifying packages while managed workflows run. Setup validates dependencies before writing the readiness receipt. Failed updates leave execution unavailable until repair.",
+        "Older plugin policies cannot downgrade an environment created by a newer shared policy revision."
+      ],
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork",
+        "openai-chatgpt",
+        "google-antigravity"
+      ]
+    },
+    {
+      "id": "declared-python312-retrieval",
+      "kind": "public_research",
+      "destination": "Astral python-build-standalone CPython distributions on GitHub, or the Python download mirror explicitly configured in uv",
+      "purpose": "Provision the declared CPython 3.12 workflow interpreter when absent, automatically bootstrapping uv if needed",
+      "content": "The fixed CPython 3.12 version request, operating-system and architecture selection, and ordinary download request metadata. Setup does not read client files or add prompts, case material or generated reports to this request.",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "Use an installed CPython 3.12 when available; otherwise use uv or automatically download the published uv 0.12.10 wheel, verify its pinned SHA-256, and provision private CPython 3.12 without changing system Python or shell profiles.",
+        "Probe the selected interpreter before creating the dependency environment; never fall back to executing workflows with another Python minor version.",
+        "A failed download or interpreter probe stops setup; existing environments and client files remain intact."
+      ],
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork",
+        "openai-chatgpt",
+        "google-antigravity"
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "pptx-metadata-entity-rejection",
+      "control": "The content-type and visible-slide metadata parsers reject XML entity declarations before using those metadata. This control is scoped to those local PPTX parsing helpers."
+    }
+  ],
+  "service_ids": [
+    "hosted-voice",
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ],
+  "public_explanations": {
+    "clara-deck-correction": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Il modello può leggere testo, immagini, note e struttura del deck, trascrizioni e fotogrammi del feedback, commenti, fonti e piano di revisione. Possono entrare nel contesto slide renderizzate, diagnostica, approvazioni e risultati. Copie, cache e tentativi di conversione restano locali finché non vengono rimossi; leggerli ne espone il contenuto al modello. La cattura vocale, quando usata, segue il servizio dichiarato separatamente. Nessuna anonimizzazione automatica."
+        ],
+        "en": [
+          "The model may read deck text, images, notes and structure, feedback transcripts and frames, comments, sources and revision plans. Rendered slides, diagnostics, approvals and results may enter context. Copies, caches and conversion attempts remain local until removed; reading them exposes their content to the model. Voice capture, when used, follows its separately declared service. There is no automatic anonymization."
+        ],
+        "fr": [
+          "Le modèle peut lire textes, images, notes et structure du deck, transcriptions et images du feedback, commentaires, sources et plans de révision. Rendus, diagnostics, approbations et résultats peuvent entrer dans le contexte. Copies, caches et tentatives de conversion restent locales jusqu’à suppression ; leur lecture expose leur contenu au modèle. La capture vocale suit son service déclaré séparément. Aucune anonymisation automatique."
+        ],
+        "de": [
+          "Das Modell kann Folientext, Bilder, Notizen, Struktur, Feedbacktranskripte und Einzelbilder, Kommentare, Quellen und Änderungspläne lesen. Gerenderte Folien, Diagnosen, Freigaben und Ergebnisse können in den Kontext gelangen. Kopien, Caches und Konvertierungsversuche bleiben bis zur Löschung lokal; beim Lesen erhält das Modell ihren Inhalt. Sprachaufnahmen folgen dem separat beschriebenen Dienst. Keine automatische Anonymisierung."
+        ],
+        "es": [
+          "El modelo puede leer textos, imágenes, notas y estructura, transcripciones y fotogramas del feedback, comentarios, fuentes y planes. Diapositivas renderizadas, diagnósticos, aprobaciones y resultados pueden entrar en contexto. Copias, cachés e intentos de conversión permanecen locales hasta su eliminación; leerlos expone su contenido al modelo. La captura de voz utiliza su servicio declarado por separado. No hay anonimización automática."
+        ]
+      }
+    }
+  },
+  "review": {
+    "reviewed_at": "2026-10-18",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "93912df3e494d4077de51dae8cde893ddb552706a0f740658482cd1763ac8a4c"
+  }
+}

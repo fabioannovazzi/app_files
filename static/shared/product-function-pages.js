@@ -3053,3 +3053,363 @@ window.MPARANZA_FUNCTION_PAGES["agenzia-acquisition"] = {
     }
   }
 };
+
+// Additional governed workflow explanations. Privacy copy comes from the manifests.
+Object.assign(window.MPARANZA_FUNCTION_PAGES, {
+  "clara-claim-basis-map": {
+    "product": "Clara",
+    "defaultLanguage": "en",
+    "copy": {
+      "it": {
+        "name": "Fonti delle affermazioni",
+        "summary": "Collega le affermazioni delle slide alle prove e segnala cambiamenti nel deck.",
+        "useWhen": "Quando devi verificare un deck modificato o la base delle sue conclusioni.",
+        "input": "PPTX corrente, affermazioni, fonti, calcoli e ipotesi.",
+        "work": "Confronta il testo corrente con le affermazioni registrate e conserva i riferimenti.",
+        "output": "Mappa delle fonti e controllo delle affermazioni cambiate o senza supporto.",
+        "responsibilityIntro": "Il controllo meccanico non stabilisce se una fonte sostiene davvero la conclusione.",
+        "productRole": "Confronta il testo corrente con le affermazioni registrate e conserva i riferimenti.",
+        "professionalRole": "Conferma il significato delle affermazioni e la sufficienza delle prove.",
+        "prompt": "verifica le fonti delle affermazioni di queste slide.",
+        "modelDataStatus": "relevant"
+      },
+      "en": {
+        "name": "Sources behind slide claims",
+        "summary": "Links slide claims to evidence and identifies changes in the deck.",
+        "useWhen": "When checking an edited deck or the basis for its conclusions.",
+        "input": "Current PPTX, claims, sources, calculations and assumptions.",
+        "work": "Compares current text with retained claims and preserves references.",
+        "output": "A source map and a check of changed or unsupported claims.",
+        "responsibilityIntro": "Mechanical checks do not establish whether a source supports a conclusion.",
+        "productRole": "Compares current text with retained claims and preserves references.",
+        "professionalRole": "Confirm claim meaning and whether the evidence is sufficient.",
+        "prompt": "check the sources behind the claims in these slides.",
+        "modelDataStatus": "relevant"
+      },
+      "fr": {
+        "name": "Sources des affirmations",
+        "summary": "Relie les affirmations des diapositives aux preuves et signale les changements.",
+        "useWhen": "Pour vérifier un deck modifié ou le fondement de ses conclusions.",
+        "input": "PPTX actuel, affirmations, sources, calculs et hypothèses.",
+        "work": "Compare le texte actuel aux affirmations conservées et garde les références.",
+        "output": "Carte des sources et contrôle des affirmations modifiées ou non étayées.",
+        "responsibilityIntro": "Les contrôles mécaniques ne prouvent pas qu’une source étaye une conclusion.",
+        "productRole": "Compare le texte actuel aux affirmations conservées et garde les références.",
+        "professionalRole": "Confirmez le sens des affirmations et la suffisance des preuves.",
+        "prompt": "vérifie les sources des affirmations de ces diapositives.",
+        "modelDataStatus": "relevant"
+      },
+      "de": {
+        "name": "Quellen der Folienaussagen",
+        "summary": "Verknüpft Folienaussagen mit Belegen und zeigt Änderungen an der Präsentation.",
+        "useWhen": "Bei geänderten Präsentationen oder zur Prüfung ihrer Beleggrundlage.",
+        "input": "Aktuelle PPTX, Aussagen, Quellen, Berechnungen und Annahmen.",
+        "work": "Vergleicht aktuellen Text mit gespeicherten Aussagen und erhält Referenzen.",
+        "output": "Quellenübersicht und Prüfung geänderter oder unbelegter Aussagen.",
+        "responsibilityIntro": "Mechanische Kontrollen beweisen nicht, dass eine Quelle eine Schlussfolgerung trägt.",
+        "productRole": "Vergleicht aktuellen Text mit gespeicherten Aussagen und erhält Referenzen.",
+        "professionalRole": "Bestätigen Sie Bedeutung der Aussagen und ausreichende Belege.",
+        "prompt": "prüfe die Quellen der Aussagen dieser Folien.",
+        "modelDataStatus": "relevant"
+      },
+      "es": {
+        "name": "Fuentes de las afirmaciones",
+        "summary": "Vincula afirmaciones de las diapositivas con pruebas y detecta cambios.",
+        "useWhen": "Para comprobar una presentación modificada o la base de sus conclusiones.",
+        "input": "PPTX actual, afirmaciones, fuentes, cálculos y supuestos.",
+        "work": "Compara el texto actual con las afirmaciones conservadas y guarda referencias.",
+        "output": "Mapa de fuentes y comprobación de afirmaciones modificadas o sin respaldo.",
+        "responsibilityIntro": "Los controles mecánicos no demuestran que una fuente respalde una conclusión.",
+        "productRole": "Compara el texto actual con las afirmaciones conservadas y guarda referencias.",
+        "professionalRole": "Confirma el significado de las afirmaciones y la suficiencia de las pruebas.",
+        "prompt": "verifica las fuentes de las afirmaciones de estas diapositivas.",
+        "modelDataStatus": "relevant"
+      }
+    }
+  },
+  "clara-advisory-case-director": {
+    "product": "Clara",
+    "defaultLanguage": "en",
+    "copy": {
+      "it": {
+        "name": "Direzione del caso di consulenza",
+        "summary": "Mantiene la risposta corrente, le prove e le prossime attività di un caso.",
+        "useWhen": "Quando nuove prove richiedono di rivedere la risposta o le prossime attività.",
+        "input": "Incarico, fonti, analisi precedenti, giudizi del partner e questioni aperte.",
+        "work": "Integra nuove prove, valuta contraddizioni e propone la prossima analisi utile.",
+        "output": "Stato del caso, risposta motivata, domande aperte e aggiornamenti degli elaborati.",
+        "responsibilityIntro": "La scelta analitica è del modello; i controlli locali verificano riferimenti e versioni.",
+        "productRole": "Integra nuove prove, valuta contraddizioni e propone la prossima analisi utile.",
+        "professionalRole": "Conferma decisioni, priorità e conclusioni professionali.",
+        "prompt": "riprendi questo caso e proponi il prossimo lavoro motivando la scelta.",
+        "modelDataStatus": "relevant"
+      },
+      "en": {
+        "name": "Direct an advisory case",
+        "summary": "Maintains the current answer, evidence and next work for a case.",
+        "useWhen": "When new evidence calls for revising the answer or next work.",
+        "input": "Assignment, sources, prior analysis, partner judgment and open questions.",
+        "work": "Integrates new evidence, considers contradictions and proposes the next useful analysis.",
+        "output": "Case state, reasoned answer, open questions and updated deliverables.",
+        "responsibilityIntro": "The model makes analytical choices; local checks verify references and versions.",
+        "productRole": "Integrates new evidence, considers contradictions and proposes the next useful analysis.",
+        "professionalRole": "Confirm decisions, priorities and professional conclusions.",
+        "prompt": "resume this case and explain which work should come next.",
+        "modelDataStatus": "relevant"
+      },
+      "fr": {
+        "name": "Direction du dossier de conseil",
+        "summary": "Conserve la réponse actuelle, les preuves et les prochaines activités du dossier.",
+        "useWhen": "Quand de nouvelles preuves imposent de revoir la réponse ou les prochaines activités.",
+        "input": "Mission, sources, analyses antérieures, jugement du partenaire et questions ouvertes.",
+        "work": "Intègre les preuves, examine les contradictions et propose la prochaine analyse utile.",
+        "output": "État du dossier, réponse motivée, questions ouvertes et livrables actualisés.",
+        "responsibilityIntro": "Le modèle choisit l’analyse ; les contrôles locaux vérifient références et versions.",
+        "productRole": "Intègre les preuves, examine les contradictions et propose la prochaine analyse utile.",
+        "professionalRole": "Confirmez décisions, priorités et conclusions professionnelles.",
+        "prompt": "reprends ce dossier et explique le prochain travail proposé.",
+        "modelDataStatus": "relevant"
+      },
+      "de": {
+        "name": "Beratungsfall steuern",
+        "summary": "Erhält aktuelle Antwort, Belege und nächste Arbeiten eines Beratungsfalls.",
+        "useWhen": "Wenn neue Belege eine Überarbeitung der Antwort oder nächsten Schritte erfordern.",
+        "input": "Auftrag, Quellen, bisherige Analysen, Partnerurteile und offene Fragen.",
+        "work": "Integriert neue Belege, prüft Widersprüche und schlägt die nächste Analyse vor.",
+        "output": "Fallstand, begründete Antwort, offene Fragen und aktualisierte Ergebnisse.",
+        "responsibilityIntro": "Das Modell trifft analytische Entscheidungen; lokale Kontrollen prüfen Referenzen und Versionen.",
+        "productRole": "Integriert neue Belege, prüft Widersprüche und schlägt die nächste Analyse vor.",
+        "professionalRole": "Bestätigen Sie Entscheidungen, Prioritäten und fachliche Schlussfolgerungen.",
+        "prompt": "setze diesen Fall fort und begründe den nächsten Arbeitsschritt.",
+        "modelDataStatus": "relevant"
+      },
+      "es": {
+        "name": "Dirección del caso de consultoría",
+        "summary": "Mantiene la respuesta actual, las pruebas y las próximas actividades del caso.",
+        "useWhen": "Cuando nuevas pruebas requieren revisar la respuesta o las próximas actividades.",
+        "input": "Encargo, fuentes, análisis anteriores, criterio del socio y preguntas abiertas.",
+        "work": "Integra pruebas, analiza contradicciones y propone el siguiente análisis útil.",
+        "output": "Estado del caso, respuesta razonada, preguntas abiertas y entregables actualizados.",
+        "responsibilityIntro": "El modelo decide el análisis; los controles locales verifican referencias y versiones.",
+        "productRole": "Integra pruebas, analiza contradicciones y propone el siguiente análisis útil.",
+        "professionalRole": "Confirma decisiones, prioridades y conclusiones profesionales.",
+        "prompt": "retoma este caso y explica el próximo trabajo propuesto.",
+        "modelDataStatus": "relevant"
+      }
+    }
+  },
+  "clara-deck-correction": {
+    "product": "Clara",
+    "defaultLanguage": "en",
+    "copy": {
+      "it": {
+        "name": "Correzione delle presentazioni",
+        "summary": "Traduce feedback revisionato in modifiche verificabili a un deck esistente.",
+        "useWhen": "Quando il feedback riguarda una presentazione già esistente.",
+        "input": "PPTX o HTML corrente, feedback, prove e indicazioni di stile.",
+        "work": "Interpreta i commenti, prepara il piano, applica le modifiche approvate a una copia e verifica la resa.",
+        "output": "Deck corretto, registro delle modifiche e prove dei controlli.",
+        "responsibilityIntro": "La versione Cowork non include questa procedura; render e strumenti disponibili dipendono dall’host.",
+        "productRole": "Interpreta i commenti, prepara il piano, applica le modifiche approvate a una copia e verifica la resa.",
+        "professionalRole": "Approva il piano e verifica significato, stile e versione da consegnare.",
+        "prompt": "prepara un piano di correzione di questo deck dal feedback allegato.",
+        "modelDataStatus": "relevant"
+      },
+      "en": {
+        "name": "Correct presentations",
+        "summary": "Turns reviewed feedback into verifiable changes to an existing deck.",
+        "useWhen": "When feedback concerns an existing presentation.",
+        "input": "Current PPTX or HTML, feedback, evidence and style requirements.",
+        "work": "Interprets feedback, prepares a plan, applies approved edits to a copy and checks rendering.",
+        "output": "Corrected deck, change register and verification evidence.",
+        "responsibilityIntro": "The Cowork package omits this workflow; rendering and tools depend on the host.",
+        "productRole": "Interprets feedback, prepares a plan, applies approved edits to a copy and checks rendering.",
+        "professionalRole": "Approve the plan and review meaning, style and the version to deliver.",
+        "prompt": "prepare a correction plan for this deck from the attached feedback.",
+        "modelDataStatus": "relevant"
+      },
+      "fr": {
+        "name": "Corriger les présentations",
+        "summary": "Transforme les commentaires revus en modifications vérifiables d’un deck existant.",
+        "useWhen": "Quand les commentaires concernent une présentation existante.",
+        "input": "PPTX ou HTML actuel, commentaires, preuves et consignes de style.",
+        "work": "Interprète les commentaires, prépare le plan, applique les modifications approuvées à une copie et vérifie le rendu.",
+        "output": "Deck corrigé, registre des modifications et preuves des contrôles.",
+        "responsibilityIntro": "Le paquet Cowork exclut cette procédure ; rendu et outils dépendent de l’hôte.",
+        "productRole": "Interprète les commentaires, prépare le plan, applique les modifications approuvées à une copie et vérifie le rendu.",
+        "professionalRole": "Approuvez le plan puis vérifiez sens, style et version à remettre.",
+        "prompt": "prépare un plan de correction de ce deck selon les commentaires joints.",
+        "modelDataStatus": "relevant"
+      },
+      "de": {
+        "name": "Präsentationen korrigieren",
+        "summary": "Überführt geprüftes Feedback in nachvollziehbare Änderungen einer Präsentation.",
+        "useWhen": "Wenn Feedback eine bestehende Präsentation betrifft.",
+        "input": "Aktuelle PPTX oder HTML, Feedback, Belege und Stilvorgaben.",
+        "work": "Interpretiert Feedback, plant Änderungen, bearbeitet nach Freigabe eine Kopie und prüft das Rendering.",
+        "output": "Korrigierte Präsentation, Änderungsregister und Prüfbelege.",
+        "responsibilityIntro": "Das Cowork-Paket enthält diesen Ablauf nicht; Rendering und Werkzeuge hängen vom Host ab.",
+        "productRole": "Interpretiert Feedback, plant Änderungen, bearbeitet nach Freigabe eine Kopie und prüft das Rendering.",
+        "professionalRole": "Genehmigen Sie den Plan und prüfen Sie Bedeutung, Stil und Lieferfassung.",
+        "prompt": "erstelle aus diesem Feedback einen Korrekturplan für die Präsentation.",
+        "modelDataStatus": "relevant"
+      },
+      "es": {
+        "name": "Corregir presentaciones",
+        "summary": "Convierte comentarios revisados en cambios verificables de una presentación existente.",
+        "useWhen": "Cuando los comentarios se refieren a una presentación existente.",
+        "input": "PPTX o HTML actual, comentarios, pruebas e instrucciones de estilo.",
+        "work": "Interpreta comentarios, prepara el plan, aplica cambios aprobados a una copia y comprueba el renderizado.",
+        "output": "Presentación corregida, registro de cambios y pruebas de verificación.",
+        "responsibilityIntro": "El paquete Cowork excluye este proceso; renderizado y herramientas dependen del host.",
+        "productRole": "Interpreta comentarios, prepara el plan, aplica cambios aprobados a una copia y comprueba el renderizado.",
+        "professionalRole": "Aprueba el plan y revisa significado, estilo y versión para entregar.",
+        "prompt": "prepara un plan de corrección de esta presentación con los comentarios adjuntos.",
+        "modelDataStatus": "relevant"
+      }
+    }
+  },
+  "datev-invoice-start": {
+    "product": "Vera",
+    "defaultLanguage": "en",
+    "copy": {
+      "it": {
+        "name": "Prima prova fatture in DATEV",
+        "summary": "Avvia o riprende la procedura nota delle fatture passive in DATEV nativo Windows.",
+        "useWhen": "Per una prova di lavoro autorizzata sul gestionale nativo.",
+        "input": "Cliente selezionato, fatture e accesso DATEV effettuato dall’operatore.",
+        "work": "Controlla gli strumenti disponibili, segue la procedura ECONS e conserva avanzamento e punti da rivedere.",
+        "output": "Report per cliente e, se serve, richiesta tecnica di adattamento revisionata.",
+        "responsibilityIntro": "Richiede accesso nativo al PC Windows; non tratta DATEV come un sito web.",
+        "productRole": "Controlla gli strumenti disponibili, segue la procedura ECONS e conserva avanzamento e punti da rivedere.",
+        "professionalRole": "Conferma conti, IVA e registrazioni prima degli atti con effetto contabile.",
+        "prompt": "avvia una prova della procedura fatture passive in DATEV sul PC autorizzato.",
+        "modelDataStatus": "relevant"
+      },
+      "en": {
+        "name": "First invoice trial in DATEV",
+        "summary": "Starts or resumes the known purchase-invoice procedure in native Windows DATEV.",
+        "useWhen": "For an authorized work trial in the native accounting application.",
+        "input": "Selected client, invoices and DATEV access completed by the operator.",
+        "work": "Checks available controls, follows the ECONS procedure and retains progress and review items.",
+        "output": "A per-client report and, when needed, a reviewed technical adaptation request.",
+        "responsibilityIntro": "Requires native access to the Windows PC; DATEV is not treated as a website.",
+        "productRole": "Checks available controls, follows the ECONS procedure and retains progress and review items.",
+        "professionalRole": "Confirm accounts, VAT and postings before actions with accounting effects.",
+        "prompt": "start an authorized purchase-invoice trial in native DATEV.",
+        "modelDataStatus": "relevant"
+      },
+      "fr": {
+        "name": "Premier essai de factures dans DATEV",
+        "summary": "Démarre ou reprend la procédure connue des factures fournisseurs dans DATEV Windows natif.",
+        "useWhen": "Pour un essai de travail autorisé dans le logiciel natif.",
+        "input": "Client sélectionné, factures et connexion DATEV effectuée par l’opérateur.",
+        "work": "Vérifie les outils, suit la procédure ECONS et conserve avancement et points à revoir.",
+        "output": "Rapport par client et, si nécessaire, demande technique d’adaptation revue.",
+        "responsibilityIntro": "Nécessite un accès natif au PC Windows ; DATEV n’est pas traité comme un site web.",
+        "productRole": "Vérifie les outils, suit la procédure ECONS et conserve avancement et points à revoir.",
+        "professionalRole": "Confirmez comptes, TVA et écritures avant les actes ayant un effet comptable.",
+        "prompt": "démarre un essai autorisé des factures fournisseurs dans DATEV natif.",
+        "modelDataStatus": "relevant"
+      },
+      "de": {
+        "name": "Erster Rechnungsversuch in DATEV",
+        "summary": "Startet oder setzt den bekannten Eingangsrechnungsablauf in nativem Windows-DATEV fort.",
+        "useWhen": "Für einen autorisierten Arbeitsversuch in der nativen Buchhaltungsanwendung.",
+        "input": "Ausgewählter Mandant, Rechnungen und Anmeldung durch den Bediener.",
+        "work": "Prüft verfügbare Werkzeuge, folgt dem ECONS-Verfahren und speichert Fortschritt und Prüfpunkte.",
+        "output": "Mandantenbericht und bei Bedarf eine geprüfte technische Anpassungsanfrage.",
+        "responsibilityIntro": "Benötigt nativen Zugriff auf den Windows-PC; DATEV wird nicht als Website behandelt.",
+        "productRole": "Prüft verfügbare Werkzeuge, folgt dem ECONS-Verfahren und speichert Fortschritt und Prüfpunkte.",
+        "professionalRole": "Bestätigen Sie Konten, Umsatzsteuer und Buchungen vor buchungswirksamen Aktionen.",
+        "prompt": "starte einen autorisierten Eingangsrechnungsversuch in nativem DATEV.",
+        "modelDataStatus": "relevant"
+      },
+      "es": {
+        "name": "Primera prueba de facturas en DATEV",
+        "summary": "Inicia o retoma el procedimiento conocido de facturas recibidas en DATEV nativo de Windows.",
+        "useWhen": "Para una prueba de trabajo autorizada en la aplicación nativa.",
+        "input": "Cliente seleccionado, facturas y acceso DATEV realizado por el operador.",
+        "work": "Comprueba herramientas, sigue el procedimiento ECONS y conserva avances y puntos pendientes.",
+        "output": "Informe por cliente y, si hace falta, solicitud técnica de adaptación revisada.",
+        "responsibilityIntro": "Requiere acceso nativo al PC Windows; DATEV no se trata como un sitio web.",
+        "productRole": "Comprueba herramientas, sigue el procedimiento ECONS y conserva avances y puntos pendientes.",
+        "professionalRole": "Confirma cuentas, IVA y asientos antes de acciones con efecto contable.",
+        "prompt": "inicia una prueba autorizada de facturas recibidas en DATEV nativo.",
+        "modelDataStatus": "relevant"
+      }
+    }
+  },
+  "deep-research": {
+    "product": "Vera",
+    "defaultLanguage": "en",
+    "copy": {
+      "it": {
+        "name": "Ricerca approfondita del quesito",
+        "summary": "Esegue la ricerca dal brief accettato e conserva fonti favorevoli, contrarie e questioni aperte.",
+        "useWhen": "Quando un brief già accettato richiede un’indagine documentata.",
+        "input": "Brief, requisiti della risposta, fatti selezionati e fonti disponibili.",
+        "work": "Ricerca e confronta le autorità, sviluppa cicli di analisi e rivede la risposta.",
+        "output": "Bozza motivata con riferimenti, controprove e limiti dichiarati.",
+        "responsibilityIntro": "Disponibilità delle fonti e strumenti di ricerca dipendono dalla sessione.",
+        "productRole": "Ricerca e confronta le autorità, sviluppa cicli di analisi e rivede la risposta.",
+        "professionalRole": "Verifica pertinenza, diritto applicabile e conclusione prima dell’uso professionale.",
+        "prompt": "Esegui la ricerca dal brief accettato, includendo prove contrarie e punti irrisolti.",
+        "modelDataStatus": "relevant"
+      },
+      "en": {
+        "name": "Research an accepted question",
+        "summary": "Researches the accepted brief and retains supporting and adverse sources and open questions.",
+        "useWhen": "When an accepted brief requires documented research.",
+        "input": "Brief, answer requirements, selected facts and available sources.",
+        "work": "Finds and compares authorities, develops research cycles and reviews the answer.",
+        "output": "Reasoned draft with references, contrary evidence and explicit limitations.",
+        "responsibilityIntro": "Available sources and research tools depend on the session.",
+        "productRole": "Finds and compares authorities, develops research cycles and reviews the answer.",
+        "professionalRole": "Verify relevance, applicable law and conclusions before professional use.",
+        "prompt": "Research the accepted brief, including contrary evidence and unresolved questions.",
+        "modelDataStatus": "relevant"
+      },
+      "fr": {
+        "name": "Recherche approfondie du dossier",
+        "summary": "Recherche à partir du brief accepté et conserve sources favorables, contraires et questions ouvertes.",
+        "useWhen": "Lorsqu’un brief accepté nécessite une recherche documentée.",
+        "input": "Brief, exigences de réponse, faits sélectionnés et sources disponibles.",
+        "work": "Recherche et compare les autorités, développe les analyses puis révise la réponse.",
+        "output": "Projet motivé avec références, preuves contraires et limites explicites.",
+        "responsibilityIntro": "Sources et outils de recherche disponibles dépendent de la session.",
+        "productRole": "Recherche et compare les autorités, développe les analyses puis révise la réponse.",
+        "professionalRole": "Vérifiez pertinence, droit applicable et conclusions avant usage professionnel.",
+        "prompt": "Recherche à partir du brief accepté en incluant preuves contraires et questions non résolues.",
+        "modelDataStatus": "relevant"
+      },
+      "de": {
+        "name": "Vertiefte Recherche zur Fragestellung",
+        "summary": "Recherchiert den angenommenen Brief und erhält unterstützende und entgegenstehende Quellen sowie offene Fragen.",
+        "useWhen": "Wenn ein angenommener Brief eine dokumentierte Recherche erfordert.",
+        "input": "Brief, Antwortanforderungen, ausgewählte Fakten und verfügbare Quellen.",
+        "work": "Sucht und vergleicht Quellen, entwickelt Recherchezyklen und prüft die Antwort.",
+        "output": "Begründeter Entwurf mit Referenzen, Gegenbelegen und ausdrücklichen Grenzen.",
+        "responsibilityIntro": "Verfügbare Quellen und Recherchewerkzeuge hängen von der Sitzung ab.",
+        "productRole": "Sucht und vergleicht Quellen, entwickelt Recherchezyklen und prüft die Antwort.",
+        "professionalRole": "Prüfen Sie Relevanz, anwendbares Recht und Schlussfolgerungen vor fachlicher Nutzung.",
+        "prompt": "Recherchiere den angenommenen Brief einschließlich Gegenbelegen und offener Fragen.",
+        "modelDataStatus": "relevant"
+      },
+      "es": {
+        "name": "Investigación profunda del asunto",
+        "summary": "Investiga el brief aceptado y conserva fuentes favorables, contrarias y preguntas abiertas.",
+        "useWhen": "Cuando un brief aceptado requiere una investigación documentada.",
+        "input": "Brief, requisitos de respuesta, hechos seleccionados y fuentes disponibles.",
+        "work": "Busca y compara autoridades, desarrolla ciclos de análisis y revisa la respuesta.",
+        "output": "Borrador razonado con referencias, pruebas contrarias y límites explícitos.",
+        "responsibilityIntro": "Las fuentes y herramientas disponibles dependen de la sesión.",
+        "productRole": "Busca y compara autoridades, desarrolla ciclos de análisis y revisa la respuesta.",
+        "professionalRole": "Verifica pertinencia, derecho aplicable y conclusiones antes del uso profesional.",
+        "prompt": "Investiga el brief aceptado incluyendo pruebas contrarias y preguntas sin resolver.",
+        "modelDataStatus": "relevant"
+      }
+    },
+    "shared": true
+  }
+});

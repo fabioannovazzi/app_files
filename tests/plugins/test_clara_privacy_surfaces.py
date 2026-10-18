@@ -17,7 +17,7 @@ VALIDATOR = (
     / "scripts"
     / "validate_privacy_surfaces.py"
 )
-CONTEXT_POLICY = "real_professional_data_may_enter_codex_context"
+CONTEXT_POLICY = "real_case_data_may_enter_selected_runtime_model_context"
 EXPECTED_HOSTED_SERVICES = {
     "operational-incidents",
     "workflow-usage",
@@ -29,6 +29,7 @@ EXPECTED_HOSTED_SERVICES = {
     "research-video-voice",
     "retail-data",
     "prepared-course-files",
+    "managed-python-runtime",
 }
 
 
@@ -61,16 +62,16 @@ def test_clara_privacy_register_covers_every_user_facing_skill_and_is_fresh() ->
 
 def test_clara_workflow_manifests_match_published_schema() -> None:
     schema = json.loads(
-        (CLARA_ROOT / "privacy" / "workflow-privacy-surface.schema.json").read_text(
+        (CLARA_ROOT / "privacy" / "privacy-surface.schema.json").read_text(
             encoding="utf-8"
         )
     )
     validator = jsonschema.Draft202012Validator(schema)
     errors = {
-        manifest["workflow"]: [
+        manifest["workstream"]: [
             error.message for error in validator.iter_errors(manifest)
         ]
-        for manifest in _manifests("workflows")
+        for manifest in _manifests("workstreams")
     }
 
     assert errors
@@ -79,12 +80,12 @@ def test_clara_workflow_manifests_match_published_schema() -> None:
 
 def test_clara_hosted_service_manifests_match_published_schema() -> None:
     schema = json.loads(
-        (CLARA_ROOT / "privacy" / "hosted-service.schema.json").read_text(
+        (CLARA_ROOT / "privacy" / "service-boundary.schema.json").read_text(
             encoding="utf-8"
         )
     )
     validator = jsonschema.Draft202012Validator(schema)
-    manifests = _manifests("hosted-services")
+    manifests = _manifests("services")
     errors = {
         manifest["service_id"]: [
             error.message for error in validator.iter_errors(manifest)
@@ -101,25 +102,22 @@ def test_clara_hosted_service_manifests_match_published_schema() -> None:
 def test_clara_codex_boundary_allows_real_professional_data_without_case_forms() -> (
     None
 ):
-    expected_ordinary_processing = {
-        "scope": "content_supplied_to_the_codex_model",
-        "account_arrangement": "user_selected_chatgpt_or_codex_account",
-        "separate_clara_recipient_or_arrangement": False,
-        "automatic_anonymisation": False,
-        "local_filter_or_aggregate": "only_when_useful_for_professional_work",
-        "plan_visibility": "not_inspected_or_enforced_by_clara",
-    }
-    expected_account_boundary = {
-        "selected_by": "firm_or_user",
-        "clara_runtime_enforcement": "none",
-        "review_timing": "before_professional_use_and_when_account_or_terms_change",
-        "review_items": [
-            "account_or_workspace_plan",
-            "model_training_data_controls",
-            "retention_and_deletion_controls",
-        ],
-        "per_case_record_required": False,
-    }
+    profiles = json.loads((CLARA_ROOT / "privacy/runtime-profiles.json").read_text())[
+        "profiles"
+    ]
+    assert len(profiles) == 4
+    assert all(
+        profile["account_boundary"]["product_runtime_enforcement"] == "none"
+        for profile in profiles
+    )
+    assert all(
+        profile["account_boundary"]["per_case_record_required"] is False
+        for profile in profiles
+    )
+    assert all(
+        profile["model_processing"]["automatic_anonymization"] is False
+        for profile in profiles
+    )
     forbidden_fields = {
         "commercialista_notice",
         "minimum_necessary",
@@ -129,24 +127,24 @@ def test_clara_codex_boundary_allows_real_professional_data_without_case_forms()
         "runtime_consent",
     }
 
-    for manifest in _manifests("workflows"):
-        assert manifest["codex_context"]["policy"] == CONTEXT_POLICY
-        assert manifest["codex_context"]["classes"]
-        assert (
-            manifest["ordinary_codex_model_processing"] == expected_ordinary_processing
-        )
-        assert manifest["codex_account_boundary"] == expected_account_boundary
+    for manifest in _manifests("workstreams"):
+        assert manifest["model_context"]["policy"] == CONTEXT_POLICY
+        assert manifest["model_context"]["classes"]
         assert forbidden_fields.isdisjoint(manifest)
 
 
 def test_clara_privacy_validator_allows_an_honest_empty_security_control_list() -> None:
     validator = _validator_module()
 
-    assert validator._control_errors([], subject="workflow without controls") == []
+    assert (
+        validator._security_control_errors([], scope="workflow without controls") == []
+    )
 
 
 def test_clara_register_does_not_relabel_workflow_hygiene_as_security() -> None:
-    manifests = {manifest["workflow"]: manifest for manifest in _manifests("workflows")}
+    manifests = {
+        manifest["workstream"]: manifest for manifest in _manifests("workstreams")
+    }
     ceremonial_ids = {
         "local-artifacts",
         "local-case-workspace",
@@ -172,82 +170,103 @@ def test_clara_register_does_not_relabel_workflow_hygiene_as_security() -> None:
     assert all(
         control["id"] not in ceremonial_ids
         for manifest in [
-            *_manifests("workflows"),
-            *_manifests("hosted-services"),
+            *_manifests("workstreams"),
+            *_manifests("services"),
         ]
         for control in manifest["security_controls"]
     )
 
 
 def test_hosted_voice_launch_token_is_not_documented_as_authentication() -> None:
-    services = {
-        manifest["service_id"]: manifest for manifest in _manifests("hosted-services")
-    }
+    services = {manifest["service_id"]: manifest for manifest in _manifests("services")}
     voice = services["hosted-voice"]
 
-    assert "not standalone authentication" in voice["access"]["arrangement"]
-    assert "launch-token-only" in " ".join(voice["access"]["controls"])
+    assert (
+        "not standalone authentication"
+        in voice["service_details"]["access"]["arrangement"]
+    )
+    assert "launch-token-only" in " ".join(
+        voice["service_details"]["access"]["controls"]
+    )
 
 
 def test_clara_hosted_records_use_source_backed_retention_and_cleanup() -> None:
     manifests = {
-        manifest["service_id"]: manifest for manifest in _manifests("hosted-services")
+        manifest["service_id"]: manifest for manifest in _manifests("services")
     }
 
-    interview_retention = manifests["hosted-interviews"]["retention"]
+    interview_retention = manifests["hosted-interviews"]["service_details"]["retention"]
     assert interview_retention["status"] == "documented"
     assert "manual or administrative deletion" in interview_retention["statement"]
     assert "link expiry" in interview_retention["statement"]
 
     voice = manifests["hosted-voice"]
-    assert voice["retention"]["status"] == "documented"
-    assert "transcript and job state are scrubbed" in voice["retention"]["statement"]
+    assert voice["service_details"]["retention"]["status"] == "documented"
+    assert (
+        "transcript and job state are scrubbed"
+        in voice["service_details"]["retention"]["statement"]
+    )
     assert any(
         item["id"] == "live-capture"
         and "screen video" in item["content"].lower()
         and "not uploaded" in item["content"].lower()
-        for item in voice["data_sent"]
+        for item in voice["service_details"]["data_sent"]
     )
 
-    assert manifests["retail-data"]["retention"]["status"] == "documented"
-    retail_retention = manifests["retail-data"]["retention"]["statement"]
+    assert (
+        manifests["retail-data"]["service_details"]["retention"]["status"]
+        == "documented"
+    )
+    retail_retention = manifests["retail-data"]["service_details"]["retention"][
+        "statement"
+    ]
     assert "durable service data" in retail_retention
     assert "no age-based or event-triggered automatic deletion" in retail_retention
     assert "reject new work without deleting retained artifacts" in retail_retention
 
     research_video_voice = manifests["research-video-voice"]
-    assert research_video_voice["retention"]["status"] == "partially_documented"
+    assert (
+        research_video_voice["service_details"]["retention"]["status"]
+        == "partially_documented"
+    )
     assert (
         "without writing narration requests or audio"
-        in research_video_voice["retention"]["statement"]
+        in research_video_voice["service_details"]["retention"]["statement"]
     )
     assert (
         "not established by the inspected application source"
-        in research_video_voice["retention"]["statement"]
+        in research_video_voice["service_details"]["retention"]["statement"]
     )
 
 
 def test_clara_register_includes_non_case_automatic_network_boundaries() -> None:
-    services = {
-        manifest["service_id"]: manifest for manifest in _manifests("hosted-services")
-    }
+    services = {manifest["service_id"]: manifest for manifest in _manifests("services")}
     update = services["plugin-update-check"]
     feedback = services["plugin-feedback"]
 
-    assert update["automatic"] is True
+    assert update["external_boundaries"][0]["activation"] == "automatic_session_start"
     assert (
         "no client files, prompts, transcripts, or case content"
-        in update["data_sent"][0]["content"]
+        in update["service_details"]["data_sent"][0]["content"]
     )
-    assert feedback["automatic"] is True
-    assert any(item["id"] == "automatic-status-poll" for item in feedback["data_sent"])
+    assert any(
+        item["activation"] == "automatic_after_prior_submission"
+        for item in feedback["external_boundaries"]
+    )
+    assert any(
+        item["id"] == "automatic-status-poll"
+        for item in feedback["service_details"]["data_sent"]
+    )
     approved_text = next(
-        item for item in feedback["data_sent"] if item["id"] == "approved-text-request"
+        item
+        for item in feedback["service_details"]["data_sent"]
+        if item["id"] == "approved-text-request"
     )
     assert "helper enforces that mechanical shape" in approved_text["content"]
     assert "does not detect personal data" in approved_text["content"]
     assert any(
-        item["id"] == "approved-follow-up-evidence" for item in feedback["data_sent"]
+        item["id"] == "approved-follow-up-evidence"
+        for item in feedback["service_details"]["data_sent"]
     )
 
 
@@ -259,7 +278,7 @@ def test_vera_and_clara_share_maintenance_boundary_semantics() -> None:
         )
     }
     clara_services = {
-        manifest["service_id"]: manifest for manifest in _manifests("hosted-services")
+        manifest["service_id"]: manifest for manifest in _manifests("services")
     }
     common_ids = {"plugin-update-check", "plugin-feedback"}
 
@@ -267,7 +286,9 @@ def test_vera_and_clara_share_maintenance_boundary_semantics() -> None:
     assert common_ids <= clara_services.keys()
 
     vera_update_boundaries = vera_services["plugin-update-check"]["external_boundaries"]
-    clara_update_payloads = clara_services["plugin-update-check"]["data_sent"]
+    clara_update_payloads = clara_services["plugin-update-check"]["service_details"][
+        "data_sent"
+    ]
     assert [boundary["id"] for boundary in vera_update_boundaries] == [
         "automatic-version-check"
     ]
@@ -278,7 +299,9 @@ def test_vera_and_clara_share_maintenance_boundary_semantics() -> None:
     assert "HTTPS GET" in clara_update_payloads[0]["content"]
 
     vera_feedback_boundaries = vera_services["plugin-feedback"]["external_boundaries"]
-    clara_feedback_payloads = clara_services["plugin-feedback"]["data_sent"]
+    clara_feedback_payloads = clara_services["plugin-feedback"]["service_details"][
+        "data_sent"
+    ]
     assert any(
         boundary["activation"] == "explicit_user_choice"
         for boundary in vera_feedback_boundaries
@@ -298,10 +321,10 @@ def test_vera_and_clara_share_maintenance_boundary_semantics() -> None:
 def test_clara_external_confirmations_are_only_for_unselected_optional_actions() -> (
     None
 ):
-    manifests = _manifests("workflows")
+    manifests = _manifests("workstreams")
 
     for manifest in manifests:
-        for boundary in manifest["boundaries_beyond_codex"]:
+        for boundary in manifest["external_boundaries"]:
             if boundary["requires_confirmation"]:
                 assert boundary["optional"] is True
                 assert boundary["id"] in {
@@ -317,44 +340,48 @@ def test_clara_external_confirmations_are_only_for_unselected_optional_actions()
                 }
 
 
+def _minimal_clara(tmp_path: Path) -> Path:
+    """Keep one real reviewed workflow and its local dependencies."""
+    root = tmp_path / "plugins/clara"
+    shutil.copytree(CLARA_ROOT, root)
+    registry = json.loads((root / "privacy/registry.json").read_text())
+    entry = registry["workstreams"]["claim-basis-map"]
+    entry["components"] = []
+    registry["workstreams"] = {"claim-basis-map": entry}
+    registry["services"] = []
+    registry.pop("host_omissions", None)
+    (root / "privacy/registry.json").write_text(json.dumps(registry))
+    (root / "components.json").write_text(json.dumps({"plugins": []}))
+    (root / "usage/pipelines.json").unlink()
+    for folder in (root / "skills").iterdir():
+        if folder.name not in {"claim-basis-map", "privacy-surface-review"}:
+            shutil.rmtree(folder)
+    for file in (root / "privacy/workstreams").glob("*.json"):
+        if file.stem != "claim-basis-map":
+            file.unlink()
+    for file in (root / "privacy/services").glob("*.json"):
+        file.unlink()
+    path = root / "privacy/workstreams/claim-basis-map.json"
+    manifest = json.loads(path.read_text())
+    manifest["service_ids"] = []
+    path.write_text(json.dumps(manifest))
+    return root
+
+
 def test_clara_privacy_validator_detects_changed_governed_source(
     tmp_path: Path,
 ) -> None:
     validator = _validator_module()
-    clara_root = tmp_path / "plugins" / "clara"
-    skill_source = CLARA_ROOT / "skills" / "claim-basis-map"
-    skill_target = clara_root / "skills" / "claim-basis-map"
-    shutil.copytree(skill_source, skill_target)
-    manifest_dir = clara_root / "privacy" / "workflows"
-    manifest_dir.mkdir(parents=True)
-    shutil.copy2(
-        CLARA_ROOT / "privacy" / "workflows" / "claim-basis-map.json",
-        manifest_dir / "claim-basis-map.json",
-    )
-    shutil.copytree(
-        CLARA_ROOT / "privacy" / "hosted-services",
-        clara_root / "privacy" / "hosted-services",
-    )
-    # Include the shared launcher dependencies now governed by this workflow.
-    manifest = json.loads(
-        (manifest_dir / "claim-basis-map.json").read_text(encoding="utf-8")
-    )
-    for logical_path, source in validator._governed_files(
-        CLARA_ROOT, manifest["governed_paths"]
-    ):
-        destination = clara_root / logical_path
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source, destination)
-    governed_script = skill_target / "scripts" / "render_claim_basis_map.py"
-    governed_script.write_text(
-        governed_script.read_text(encoding="utf-8") + "\n# reviewed boundary changed\n",
-        encoding="utf-8",
-    )
+    root = _minimal_clara(tmp_path)
+    validator._refresh("claim-basis-map", root)
+    assert validator.validate_privacy_surfaces(root) == []
+    script = root / "skills/claim-basis-map/scripts/render_claim_basis_map.py"
+    script.write_text(script.read_text() + "\n# reviewed boundary changed\n")
 
-    errors = validator.validate_privacy_surfaces(clara_root)
+    errors = validator.validate_privacy_surfaces(root)
 
     assert (
-        "workflow claim-basis-map: privacy review is stale; review source, then --refresh"
+        "claim-basis-map: privacy review is stale; run the review skill, then --refresh"
         in errors
     )
 
@@ -363,17 +390,24 @@ def test_clara_privacy_validator_reports_new_skill_without_manifest(
     tmp_path: Path,
 ) -> None:
     validator = _validator_module()
-    clara_root = tmp_path / "plugins" / "clara"
-    (clara_root / "skills" / "future-workflow").mkdir(parents=True)
-    (clara_root / "skills" / "future-workflow" / "SKILL.md").write_text(
-        "---\nname: future-workflow\n---\n",
-        encoding="utf-8",
-    )
-    (clara_root / "privacy" / "workflows").mkdir(parents=True)
-    (clara_root / "privacy" / "hosted-services").mkdir(parents=True)
+    root = _minimal_clara(tmp_path)
+    skill = root / "skills/future-workflow/SKILL.md"
+    skill.parent.mkdir()
+    skill.write_text("---\nname: future-workflow\n---\n")
 
-    errors = validator.validate_privacy_surfaces(clara_root)
+    errors = validator.validate_privacy_surfaces(root)
 
-    assert (
-        "workflow future-workflow: registered skill has no privacy manifest" in errors
-    )
+    assert "future-workflow: skill has no privacy registration" in errors
+
+
+def test_clara_workflow_without_explanation_page_blocks_release(tmp_path: Path) -> None:
+    validator = _validator_module()
+    root = _minimal_clara(tmp_path)
+    path = root / "privacy/registry.json"
+    registry = json.loads(path.read_text())
+    registry["workstreams"]["claim-basis-map"]["public_pages"] = []
+    path.write_text(json.dumps(registry))
+
+    errors = validator.validate_privacy_surfaces(root)
+
+    assert "claim-basis-map: workflow requires a public explanation page" in errors

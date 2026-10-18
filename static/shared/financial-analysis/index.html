@@ -239,19 +239,7 @@
       </div>
     </section>
 
-    <section class="function-model-data" data-model-data-workflow="financial-analysis" data-model-data-status="relevant" aria-labelledby="financial-analysis-model-data-title">
-      <div class="function-model-data__head">
-        <div class="function-model-data__heading">
-          <p class="function-model-data__label" data-i18n="model.label">Trattamento dei dati</p>
-          <h2 id="financial-analysis-model-data-title" data-i18n="model.title">Quali dati arrivano al modello</h2>
-        </div>
-        <div class="function-model-data__body function-model-data__paragraphs financial-model-data-copy">
-          <p class="function-model-data__copy" data-i18n="model.copy.1">Per preparare l’analisi, il modello può leggere le istruzioni e i dati contabili pertinenti. Questi possono comprendere nomi di società, clienti e gruppi; conti, transazioni e saldi; periodi, valute, importi, unità, rettifiche e classificazioni; informazioni su cassa, debito, leasing, factoring, immobilizzazioni, investimenti e capitale circolante; contratti e documenti di supporto.</p>
-          <p class="function-model-data__copy" data-i18n="model.copy.2">Per il confronto dei bilanci annuali il codice legge le celle Excel mappate esplicitamente e conserva totali dichiarati, totali ricostruiti, valori mancanti e differenze. Il modello sceglie e interpreta le fonti pertinenti, comprese le note, e scrive il commento con riferimenti e copertura dichiarata. Negli altri pack usa normalmente i risultati preparati dopo il mapping; una fonte originale viene riaperta per una questione specifica verificandone l’integrità. Un hash non dimostra che tutte le pagine siano state lette o interpretate correttamente.</p>
-          <p class="function-model-data__copy" data-i18n="model.copy.3">Vera non anonimizza né pseudonimizza i dati: nomi e identificativi restano visibili quando servono all’analisi o alla verifica delle evidenze.</p>
-        </div>
-      </div>
-    </section>
+    <section id="model-data" class="function-model-data" data-model-data-status="placeholder" aria-live="polite"><h2 class="function-model-data__title">Quali dati arrivano al modello</h2><div class="function-model-data__body"></div></section>
 
   </main>
 
@@ -588,6 +576,6 @@
 
     setLanguage(params.get("lang") || "it", false);
   </script>
-  <script src="../function-model-data.js"></script>
+  <script src="../function-model-data.js?v=20261018-shared-privacy"></script>
 </body>
 </html>

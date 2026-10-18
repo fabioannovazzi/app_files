@@ -150,17 +150,7 @@
       </div>
     </section>
 
-    <section class="function-model-data" data-model-data-workflow="management-control-pack" data-model-data-status="relevant" aria-labelledby="management-control-pack-model-data-title">
-      <div class="function-model-data__head">
-        <div class="function-model-data__heading"><p class="function-model-data__label" data-i18n="model.label">Trattamento dei dati</p><h2 id="management-control-pack-model-data-title" data-i18n="model.title">Quali dati arrivano al modello</h2></div>
-        <div class="function-model-data__body function-model-data__paragraphs model-copy">
-          <p class="function-model-data__copy" data-i18n="model.copy.1">Per qualificare il mapping, il modello può ricevere istruzioni, nomi di file e fogli, colonne, tipi e fino a dieci righe di anteprima per tabella. Le anteprime possono contenere nomi di società, clienti, fornitori, conti, date, importi e altre informazioni presenti negli export; non sono anonimizzate automaticamente.</p>
-          <p class="function-model-data__copy" data-i18n="model.copy.2">Dopo la conferma del mapping, il codice calcola sulle popolazioni complete incluse nella lavorazione. Il pacchetto calcolato completo viene validato localmente rispetto alla proiezione limitata e non viene letto di nuovo dal modello per impostazione predefinita. Per preparare il commento, il modello riceve metriche aggregate, copertura, esiti dei controlli e un insieme limitato di righe già calcolate; non riceve di default le popolazioni complete né i nomi dei file origine.</p>
-          <p class="function-model-data__copy" data-i18n="model.costing">Nel percorso costing, il modello può leggere le fonti selezionate e il caso analitico per qualificare costi, oggetti, driver e ipotesi. Dopo il calcolo riceve la domanda, il perimetro scelto, metriche, controlli, limiti e fino a 60 righe calcolate per sezione. I dettagli completi dei costi e i riferimenti alle fonti restano nei file locali e non sono inclusi nella proiezione post-calcolo predefinita; questo non annulla quanto già letto dal modello durante la preparazione. Non avviene anonimizzazione automatica.</p>
-          <p class="function-model-data__copy" data-i18n="model.copy.3">La pubblicazione richiesta con Sites trasferisce l’intero HTML, inclusi dati finanziari nelle viste nascoste, ipotesi del forecast, commenti e nomi presenti nelle tabelle opzionali. Gli export originali, le popolazioni complete e il JSON del pacchetto non sono copiati nella pagina pubblica. Accesso, conservazione ed eliminazione dipendono da Sites. Le fonti vengono ricontrollate prima di ogni nuova pubblicazione; non è un monitoraggio automatico.</p>
-        </div>
-      </div>
-    </section>
+    <section id="model-data" class="function-model-data" data-model-data-status="placeholder" aria-live="polite"><h2 class="function-model-data__title">Quali dati arrivano al modello</h2><div class="function-model-data__body"></div></section>
   </main>
 
   <footer><div class="footer-shell"><span>Vera · <span data-i18n="footer.scope">Pacchetto controllo di gestione</span></span><span class="footer-links"><a id="footer-vera-link" href="../vera/index.html?lang=it" data-i18n="footer.vera">Tutte le funzioni</a><a id="data-link" href="/data-handling?lang=it" data-i18n="footer.data">Trattamento dati</a></span></div></footer>
@@ -323,6 +313,6 @@
     const requestedLanguage = new URLSearchParams(window.location.search).get("lang") || (navigator.language || "it").slice(0, 2);
     setLanguage(requestedLanguage);
   </script>
-  <script src="../function-model-data.js?v=20260827-run-report"></script>
+  <script src="../function-model-data.js?v=20261018-shared-privacy"></script>
 </body>
 </html>

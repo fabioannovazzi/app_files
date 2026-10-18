@@ -758,6 +758,8 @@ def validate_plugin_source(plugin_dir: Path) -> list[str]:
                 break
         if plugin_name in SHARED_REPORTING_PLUGINS:
             for skill_path in skill_files:
+                if skill_path.parent.name == "privacy-surface-review":
+                    continue  # Development governance is not a professional user task.
                 skill_text = skill_path.read_text(encoding="utf-8")
                 required = (
                     *SHARED_REPORTING_SNIPPETS,
@@ -781,7 +783,7 @@ def validate_plugin_source(plugin_dir: Path) -> list[str]:
                 plugin=plugin_name
             )
             for skill_path in skill_files:
-                if skill_path.parent.name == plugin_name:
+                if skill_path.parent.name in {plugin_name, "privacy-surface-review"}:
                     continue
                 if specialist_handoff not in skill_path.read_text(encoding="utf-8"):
                     relative_path = skill_path.relative_to(plugin_dir)
@@ -1181,175 +1183,18 @@ def _project_vera_repository_reviews(
 def _project_vera_codex_privacy(
     entries: dict[str, bytes], prefix: str, source_root: Path
 ) -> dict[str, object]:
-    """Rebase package-local governance without discarding hosted review sources."""
-    validator = _vera_privacy_validator()
-    source_vera = source_root / "plugins/vera"
-    source_errors = validator.validate_privacy_surfaces(source_vera)
-    if source_errors:
-        raise ValueError(
-            "Cannot project an unreviewed Vera source register: "
-            + "; ".join(source_errors)
-        )
-    components = json.loads(entries[prefix + "components.json"])
-    workstreams = components["plugins"]
-    roles = components["workflow_roles"]
-    vendor_sources: dict[str, list[str]] = {}
-    configs = load_vendor_module_config()
-    for component in ["vera", *workstreams]:
-        for name, candidate in shared_vendor_module_entries(
-            configs.get(component)
-        ).items():
-            try:
-                relative = (
-                    candidate.resolve(strict=True)
-                    .relative_to(ROOT.resolve())
-                    .as_posix()
-                )
-            except ValueError:
-                continue
-            destination = (
-                "" if component == "vera" else f"modules/{component}/"
-            ) + f"vendor/modules/{name}"
-            vendor_sources.setdefault(relative, []).append(destination)
-    projected: dict[str, dict[str, Any]] = {}
-    omitted_sources: dict[str, str] = {}
-    for workstream in workstreams:
-        name = f"privacy/workstreams/{workstream}.json"
-        payload = json.loads(entries[prefix + name])
-        source_manifest = source_vera / name
-        if entries[prefix + name] != source_manifest.read_bytes():
-            raise ValueError(f"Unreviewed workstream manifest bytes: {workstream}")
-        repository_paths = payload.get("governed_repository_paths", [])
-        if not repository_paths:
-            continue
-        paths = list(payload.get("governed_shared_paths", []))
-        for path in repository_paths:
-            if path == "plugins/vera/agents/passive-invoice-reviewer.md":
-                if not should_skip_codex_source(
-                    Path("agents/passive-invoice-reviewer.md")
-                ):
-                    raise ValueError("Cowork-only agent exclusion changed")
-                omitted_sources[path] = hashlib.sha256(
-                    (source_root / path).read_bytes()
-                ).hexdigest()
-                continue
-            paths.extend(
-                _vera_repository_projections(
-                    path, entries, prefix, workstreams, source_root, vendor_sources
-                )
-            )
-        payload["governed_shared_paths"] = sorted(set(paths))
-        payload.pop("governed_repository_paths")
-        projected[name] = payload
-    for service_id in ("datev-starter", "native-workspace", "managed-python-runtime"):
-        name = f"privacy/services/{service_id}.json"
-        payload = json.loads(entries[prefix + name])
-        if entries[prefix + name] != (source_vera / name).read_bytes():
-            raise ValueError(f"Unreviewed service manifest bytes: {service_id}")
-        mapping: dict[str, list[str]] = {}
-        if service_id != "native-workspace":
-            for path in payload.get("governed_repository_paths", []):
-                mapping[path] = _vera_repository_projections(
-                    path, entries, prefix, workstreams, source_root, vendor_sources
-                )
-        # This shared review server is injected byte-for-byte by expected_zip_entries.
-        if service_id == "native-workspace":
-            original = "scripts/serve_review_workbench.py"
-            installed = "scripts/serve_review_workbench.py"
-            repository_paths = payload.get("governed_repository_paths", [])
-            if repository_paths.count(original) != 1 or len(repository_paths) != len(
-                set(repository_paths)
-            ):
-                raise ValueError("Native hosted/local server governance changed")
-            if entries[prefix + installed] != (source_root / original).read_bytes():
-                raise ValueError("Injected review server differs from reviewed source")
-            mapping = {original: [installed]}
-            # Additional native assets must have verified, byte-identical
-            # projections into a registered component; never drop governance.
-            for path in repository_paths:
-                if path != original:
-                    mapping[path] = _vera_repository_projections(
-                        path, entries, prefix, workstreams, source_root, vendor_sources
-                    )
-        paths = list(payload["governed_paths"])
-        for values in mapping.values():
-            paths.extend(values)
-        omitted = "skills/studio-archive/references/cowork-runtime.md"
-        if service_id == "managed-python-runtime":
-            if (
-                tuple(Path(omitted).parts) not in CODEX_PACKAGE_EXCLUDED_PATHS
-                or prefix + omitted in entries
-            ):
-                raise ValueError("Cowork-only document exclusion changed")
-            paths.remove(omitted)
-            omitted_sources["plugins/vera/" + omitted] = hashlib.sha256(
-                (source_vera / omitted).read_bytes()
-            ).hexdigest()
-        payload["governed_paths"] = sorted(set(paths))
-        payload.pop("governed_repository_paths", None)
-        for control in payload["security_controls"]:
-            implementations: list[str] = []
-            for path in control["implemented_by"]:
-                if path.startswith("repository:"):
-                    implementations.extend(mapping[path.removeprefix("repository:")])
-                else:
-                    implementations.append(path)
-            control["implemented_by"] = sorted(set(implementations))
-        projected[name] = payload
-    projected.update(
-        _project_vera_repository_reviews(
-            entries, prefix, source_root, validator, vendor_sources
-        )
+    """Preserve the public builder API while applying the shared projection."""
+    from project_product_privacy import project_privacy
+
+    result = project_privacy(
+        entries, "vera", prefix=prefix, host="openai-codex", source_root=source_root
     )
-    with tempfile.TemporaryDirectory(prefix="vera-codex-local-privacy-") as folder:
-        package = Path(folder) / "plugins/vera"
-        for name, content in entries.items():
-            if not name.startswith(prefix):
-                continue
-            target = package / name.removeprefix(prefix)
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(content)
-        for name, payload in projected.items():
-            if name.startswith("privacy/workstreams/"):
-                workstream = payload["workstream"]
-                role = roles.get(workstream, {}).get("kind", "workflow")
-                wrapper = (
-                    package
-                    / "skills"
-                    / roles.get(workstream, {}).get("skill", workstream)
-                    / "SKILL.md"
-                    if role != "internal_engine"
-                    else None
-                )
-                fingerprint = validator._fingerprint(
-                    validator._component_root(package, workstream),
-                    payload["governed_paths"],
-                    wrapper=wrapper,
-                    vera_root=package,
-                    shared_paths=payload.get("governed_shared_paths", []),
-                )
-            else:
-                fingerprint = validator._fingerprint(
-                    package,
-                    payload["governed_paths"],
-                    vera_root=package,
-                    repository_paths=payload.get("governed_repository_paths", []),
-                    repository_review=payload.get("repository_source_review"),
-                )
-            payload["review"]["source_fingerprint"] = fingerprint
-            content = (
-                json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
-            ).encode()
-            entries[prefix + name] = content
-            (package / name).write_bytes(content)
-        errors = validator.validate_privacy_surfaces(package)
     return {
-        "projected_manifests": sorted(projected),
-        "intentional_other_host_document_exclusions": omitted_sources,
-        "remaining_diagnostics": errors,
+        **result,
+        "remaining_diagnostics": [],
+        "source_register_verified_before_projection": True,
         "hosted_repository_governance_retained": True,
         "repository_reviews_are_declarations_not_hosted_runtime_verification": True,
-        "source_register_verified_before_projection": True,
     }
 
 
@@ -1503,6 +1348,15 @@ def expected_zip_entries(
                     raise ValueError(
                         "Unreviewed Vera source register: " + "; ".join(errors)
                     )
+        if plugin_dir.name in {"clara", "lucia"} and project_vera_privacy:
+            from project_product_privacy import project_privacy
+
+            project_privacy(
+                entries,
+                plugin_dir.name,
+                prefix=f"{root}/plugins/{plugin_dir.name}/",
+                host="openai-codex",
+            )
         if plugin_dir.name in {"vera", "clara", "lucia"}:
             add_vera_execution_manifest(entries, f"{root}/plugins/{plugin_dir.name}/")
     return dict(sorted(entries.items()))
@@ -1920,7 +1774,9 @@ def load_chatgpt_skill_cards(
                 "lucia: Marketplace root card is missing mandatory router contracts: "
                 f"{missing_contracts}"
             )
-        expected_router_skills = expected_skills - {plugin_name}
+        expected_router_skills = (
+            expected_skills - {plugin_name} - VERA_CHATGPT_DEVELOPER_SKILLS
+        )
         if set(LUCIA_CHATGPT_ROUTER_TARGETS) != expected_router_skills:
             raise ValueError(
                 "lucia: Marketplace router target coverage differs; "
@@ -2226,6 +2082,9 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
     project_chatgpt_course_sources(entries, packaged_entries, prefix)
     externalize_course_files(entries, plugin_name, root=ROOT)
     if plugin_name in {"vera", "clara", "lucia"}:
+        from project_product_privacy import project_privacy
+
+        project_privacy(entries, plugin_name, host="openai-chatgpt", source_root=ROOT)
         add_vera_execution_manifest(entries)
     return dict(sorted(entries.items()))
 
@@ -2296,7 +2155,7 @@ def verify_packaged_mcp(
             if not config_path.is_file():
                 errors.append(f"{relative_root}: packaged MCP configuration is missing")
                 continue
-            configuration = json.loads(config_path.read_text())
+            configuration = json.loads(config_path.read_text(encoding="utf-8"))
             count = len(configuration["mcpServers"])
             try:
                 result = subprocess.run(

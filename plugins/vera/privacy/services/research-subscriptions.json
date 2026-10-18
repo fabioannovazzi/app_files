@@ -16,8 +16,7 @@
     "scripts/research-sources.cjs"
   ],
   "runtime_profiles": [
-    "openai-codex",
-    "anthropic-cowork"
+    "openai-codex"
   ],
   "external_boundaries": [],
   "security_controls": [

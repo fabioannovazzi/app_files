@@ -1,0 +1,48 @@
+{
+  "schema_version": 3,
+  "workstream": "statement-analysis",
+  "display_name": "Statement analysis",
+  "role": "internal_engine",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "assets"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "selected-task-evidence",
+        "purpose": "Carry out statement-analysis using the selected evidence and user instructions",
+        "content": "Selected long-form income-statement values, explicit row scheme and financial line labels, period/scenario mappings, computed subtotals and complete reporting table, context, diagnostic and interpretation artifacts. Local numerical/rendering code makes no separate model call. Reading original data or outputs adds those actual values to host context; no automatic anonymization is applied. Any separately requested publication uses the parent reporting route.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [],
+  "security_controls": [],
+  "review": {
+    "basis": "external_boundary_review_of_workflow_source",
+    "reviewed_at": "2026-10-18",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "610b333444c18eb99e81e49f0a1e6f4a144dc9f2b6665a5fcf9c690b03bb3387"
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ],
+  "public_explanations": {}
+}

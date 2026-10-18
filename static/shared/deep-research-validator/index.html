@@ -299,15 +299,7 @@
         </details>
       </section>
 
-      <section class="function-model-data" id="model-data" data-model-data-workflow="deep-research-validator" data-model-data-status="relevant" aria-labelledby="deep-research-validator-model-data-title">
-        <div class="function-model-data__head">
-          <div class="function-model-data__heading">
-            <p class="function-model-data__label" data-i18n="model.label">Trattamento dei dati</p>
-            <h2 id="deep-research-validator-model-data-title" data-i18n="model.title">Quali dati arrivano al modello</h2>
-          </div>
-          <p class="function-model-data__copy" data-i18n="model.copy">Il codice deterministico legge l'intero documento, non un campione, e salva il testo estratto completo. Gli inventari di navigazione sono limitati a 40 titoli, 80 possibili affermazioni, 200 URL grezzi e 200 marcatori di citazione; link Markdown e note restano completi, quindi possono essere recuperati tutti gli URL HTTP/S distinti ricavati dal documento. Per ogni URL il codice accetta solo destinazioni pubbliche su porte standard, legge al massimo 1.000.001 byte per rilevare il troncamento e conserva i primi 1.000.000; senza recupero di rete usa i riferimenti elencati e i file locali selezionati, dei quali legge il testo completo. L'host pubblico riceve l'URL e i metadati della richiesta. Il modello legge il documento completo, il contratto di risposta, le affermazioni materiali con il loro contesto, le citazioni, l'inventario delle fonti e il testo acquisito necessario, oltre alle valutazioni su identità e supporto delle fonti, ragionamento, giudizio professionale e correzioni. I materiali possono contenere nomi, dati personali e informazioni legali, fiscali o finanziarie. Non vengono applicate anonimizzazione o pseudonimizzazione automatiche: identità delle parti, della fonte e fatti esatti possono essere necessari alla verifica. Il limite delle affermazioni candidate non limita la selezione semantica né la copertura dichiarata; per correggere il risultato il modello può ricevere nuovamente le affermazioni rivedute e il documento completo. Per evitare invii ripetuti, i dati della revisione arrivano al modello una sola volta, quando si apre la schermata. La schermata mostra fino a 750 affermazioni e può ricevere al massimo 2.500 elementi o 2 MB; tutte le affermazioni e i controlli restano comunque disponibili nei file di lavoro. Il collegamento temporaneo usato per la revisione resta in memoria per quattro ore. Se la schermata non è disponibile, il modello legge direttamente gli stessi file; solo i pacchetti meno recenti o non gestiti possono ancora inviare tutti i dati insieme. Le fonti con lo stesso contenuto vengono salvate una sola volta, senza perdere URL e provenienza.</p>
-        </div>
-      </section>
+      <section id="model-data" class="function-model-data" data-model-data-status="placeholder" aria-live="polite"><h2 class="function-model-data__title">Quali dati arrivano al modello</h2><div class="function-model-data__body"></div></section>
 
     </main>
 
@@ -730,6 +722,6 @@
 
     applyLanguage(getLang());
   </script>
-  <script src="../function-model-data.js"></script>
+  <script src="../function-model-data.js?v=20261018-shared-privacy"></script>
 </body>
 </html>

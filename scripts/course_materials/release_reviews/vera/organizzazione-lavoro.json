@@ -178,7 +178,7 @@
     "basis": "Release metadata/source binding after automatic integrity-incident reporting correction. Existing authored lessons, professional methods, inputs and review dispositions remain unchanged. No new learner or customer recovery acceptance claimed."
   },
   "schema": "mparanza.teaching_release_review.v1",
-  "course_sha256": "811a4e22aea8786be635a5cef1d1709f6148b7f06864478567213bd63f54ed9e",
+  "course_sha256": "38267e96c39a31d27eff84b0af5650b5e41a217cacd4657af38753415b4a1453",
   "isolated_launcher_source_compatibility_20261018": {
     "reviewer": "Codex exact retained-course and launcher-source review",
     "reviewed_at": "2026-10-18",

@@ -167,5 +167,33 @@
       "control": "The optional app prepares the unchanged ordinary local review-node file without network; receipt/reason drafts remain private and generation-bound. A separately renewed exact saved-receipt choice contacts only the fixed HTTPS verification endpoint with opaque UUID/hash. Local exact case/role/node/version/request conflicts refuse transmission; actual server retention and the unchanged public writer independently verify account/decision. Complete ordinary request/receipt/snapshot/memo bytes are preserved. First service refusal/unavailability remains pending without public writes; uncertain later writes block retry/closure. Canonical source has two incorrect API arguments. The candidate uses the declared output-path lock and direct-binding reload; its separately qualified correction remains unapplied and does not establish production or installed-host acceptance."
     }
   ],
-  "workstream": "composizione-negoziata"
+  "workstream": "composizione-negoziata",
+  "public_explanations": {
+    "composizione-negoziata": {
+      "status": "relevant",
+      "copy": {
+        "en": [
+          "The model may read relevant documents in full: identities, mandates, creditors, accounting records, plans, negotiations, procedural acts, confidential notes, revisions and confirmations. Python checks references, versions and dependencies; it does not anonymize data or make analysis local-only. Codex uses the selected OpenAI account and Cowork the Anthropic account. Public research uses generic topics without private identifiers. The case report describes actual data use. If you choose Mparanza review, the server retains opaque identifiers, version, role, decision, account email and timestamp until deletion is requested. Draft text and documents stay local; the verified receipt may enter model context."
+        ],
+        "fr": [
+          "Le modèle peut lire intégralement les documents pertinents : identités, mandats, créanciers, comptabilité, plans, négociations, actes, notes confidentielles, versions et confirmations. Python contrôle références, versions et dépendances ; il n’anonymise pas et ne rend pas l’analyse locale. Codex utilise le compte OpenAI choisi, Cowork le compte Anthropic. Les recherches publiques utilisent des sujets génériques sans identifiants privés. Le rapport décrit les données effectivement utilisées. Si vous choisissez la revue Mparanza, le serveur conserve identifiants opaques, version, rôle, décision, adresse du compte et date jusqu’à une demande de suppression. Le texte et les documents restent locaux ; le reçu vérifié peut entrer dans le contexte du modèle."
+        ],
+        "de": [
+          "Das Modell kann relevante Dokumente vollständig lesen: Identitäten, Mandate, Gläubiger, Buchhaltung, Pläne, Verhandlungen, Akten, vertrauliche Notizen, Versionen und Bestätigungen. Python prüft Referenzen, Versionen und Abhängigkeiten; es anonymisiert nicht und macht die Analyse nicht lokal. Codex nutzt das gewählte OpenAI-Konto, Cowork das Anthropic-Konto. Öffentliche Recherche verwendet allgemeine Themen ohne private Kennungen. Der Fallbericht beschreibt die tatsächlich verwendeten Daten. Bei Auswahl der Mparanza-Prüfung speichert der Server opake Kennungen, Version, Rolle, Entscheidung, Konto-E-Mail und Zeitstempel bis zur beantragten Löschung. Entwurf und Dokumente bleiben lokal; der geprüfte Beleg kann in den Modellkontext gelangen."
+        ],
+        "es": [
+          "El modelo puede leer documentos pertinentes completos: identidades, encargos, acreedores, contabilidad, planes, negociaciones, actuaciones, notas confidenciales, revisiones y confirmaciones. Python verifica referencias, versiones y dependencias; no anonimiza ni hace local el análisis. Codex utiliza la cuenta OpenAI elegida y Cowork la de Anthropic. La investigación pública usa temas genéricos sin identificadores privados. El informe describe los datos realmente utilizados. Si eliges la revisión Mparanza, el servidor conserva identificadores opacos, versión, rol, decisión, correo de la cuenta y fecha hasta que se solicite su eliminación. El texto y los documentos permanecen locales; el recibo verificado puede entrar en el contexto del modelo."
+        ],
+        "it": [
+          "Il modello può leggere i documenti pertinenti, anche integralmente: identità, incarichi, creditori, dati contabili, piani, trattative, atti, note riservate, revisioni e conferme. Python verifica riferimenti, versioni e dipendenze; non anonimizza né rende locale l’analisi. Codex usa l’account OpenAI selezionato, Cowork quello Anthropic. La ricerca pubblica usa temi generici senza identificativi privati. Il report della pratica descrive i dati effettivamente usati. Se scegli la revisione Mparanza, il server conserva identificativi opachi, versione, ruolo, decisione, email dell’account e data fino a richiesta di cancellazione. Il testo della bozza e i documenti restano locali; la ricevuta verificata può entrare nel contesto del modello."
+        ]
+      }
+    }
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ]
 }

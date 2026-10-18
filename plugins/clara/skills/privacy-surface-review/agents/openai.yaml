@@ -1,4 +1,4 @@
 interface:
-  display_name: "Review workflow data handling"
-  short_description: "Map Clara model and hosted boundaries"
-  default_prompt: "Use $privacy-surface-review to review this Clara workflow or hosted service boundary."
+  display_name: "Privacy Surface Review"
+  short_description: "Review product data paths across supported hosts"
+  default_prompt: "Use $privacy-surface-review to inspect this product workflow, its host boundaries, public explanation and actual-run report contract."

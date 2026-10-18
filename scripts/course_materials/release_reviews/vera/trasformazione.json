@@ -206,7 +206,7 @@
     "basis": "Release metadata/source binding after automatic integrity-incident reporting correction. Existing authored lessons, professional methods, inputs and review dispositions remain unchanged. No new learner or customer recovery acceptance claimed."
   },
   "schema": "mparanza.teaching_release_review.v1",
-  "course_sha256": "78ec3074919d8f8562e080f3cf202dff723b4d402b3a68963a6db37ed9cb4533",
+  "course_sha256": "83220a292c6df2ef836c2b00b0df5519b0ac7a3db1b5cd55aa762b081b58c902",
   "isolated_launcher_source_compatibility_20261018": {
     "reviewer": "Codex exact retained-course and launcher-source review",
     "reviewed_at": "2026-10-18",

@@ -21,10 +21,15 @@ VALIDATOR = (
     / "validate_privacy_surfaces.py"
 )
 CONTEXT_POLICY = "real_case_data_may_enter_selected_runtime_model_context"
-RUNTIME_PROFILE_IDS = ["openai-codex", "anthropic-cowork"]
+RUNTIME_PROFILE_IDS = [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity",
+]
 ACCOUNT_BOUNDARY = {
     "selected_by": "firm_or_user",
-    "vera_runtime_enforcement": "none",
+    "product_runtime_enforcement": "none",
     "review_timing": "before_professional_use_and_when_account_or_terms_change",
     "review_items": [
         "account_or_workspace_plan",
@@ -44,6 +49,76 @@ def _copy_local_helper_environment(directory: Path) -> None:
     for suffix in ("py", "json"):
         name = f"local_helper_environment.{suffix}"
         shutil.copy2(ROOT / "scripts" / name, directory / name)
+
+
+def _narrow_fixture_registry(root: Path) -> None:
+    """Match the isolated fixture's actual component and service population."""
+    registry = json.loads((root / "privacy/registry.json").read_text())
+    components = json.loads((root / "components.json").read_text())
+    names = set(components["plugins"])
+    registry["workstreams"] = {
+        name: entry for name, entry in registry["workstreams"].items() if name in names
+    }
+    registry["services"] = components.get("shared_services", [])
+    if not names:
+        entry = json.loads((VERA_ROOT / "privacy/registry.json").read_text())[
+            "workstreams"
+        ]["vera"]
+        entry["public_pages"] = []
+        registry["workstreams"]["vera"] = entry
+        manifest = json.loads((VERA_ROOT / "privacy/workstreams/vera.json").read_text())
+        manifest["governed_paths"] = ["skills/vera/SKILL.md"]
+        manifest["service_ids"] = []
+        manifest["public_explanations"] = {}
+        manifest.pop("governed_repository_paths", None)
+        (root / "privacy/workstreams/vera.json").write_text(json.dumps(manifest))
+    allowed_skills = {
+        skill for entry in registry["workstreams"].values() for skill in entry["skills"]
+    } | {"privacy-surface-review"}
+    dependency_skills = sorted(
+        folder.name
+        for folder in (root / "skills").iterdir()
+        if folder.name not in allowed_skills and (folder / "SKILL.md").is_file()
+    )
+    if dependency_skills:
+        registry["workstreams"]["fixture-source-dependencies"] = {
+            "source": "product",
+            "role": "internal_engine",
+            "skills": dependency_skills,
+            "components": [],
+            "workflow_ids": [],
+            "public_pages": [],
+        }
+        dependency = json.loads(
+            (VERA_ROOT / "privacy/workstreams/vera.json").read_text()
+        )
+        dependency.update(
+            workstream="fixture-source-dependencies",
+            role="internal_engine",
+            governed_paths=[f"skills/{skill}/SKILL.md" for skill in dependency_skills],
+            service_ids=[],
+            public_explanations={},
+        )
+        dependency.pop("governed_repository_paths", None)
+        dependency["review"]["source_fingerprint"] = _validator_module()._fingerprint(
+            root, dependency["governed_paths"], vera_root=root
+        )
+        (root / "privacy/workstreams/fixture-source-dependencies.json").write_text(
+            json.dumps(dependency)
+        )
+    for path in (root / "privacy/services").glob("*.json"):
+        if path.stem not in registry["services"]:
+            path.unlink()
+    for path in (root / "privacy/workstreams").glob("*.json"):
+        manifest = json.loads(path.read_text())
+        manifest["service_ids"] = [
+            name for name in manifest["service_ids"] if name in registry["services"]
+        ]
+        path.write_text(json.dumps(manifest))
+    (root / "privacy/registry.json").write_text(json.dumps(registry))
+    usage = root / "usage/pipelines.json"
+    if usage.exists():
+        usage.unlink()
 
 
 def _validator_module():
@@ -220,7 +295,7 @@ def test_vera_privacy_contract_allows_real_case_data_without_minimum_classifier(
 
     for manifest in _manifests():
         assert manifest["schema_version"] == 3
-        assert manifest["runtime_profiles"] == RUNTIME_PROFILE_IDS
+        assert set(manifest["runtime_profiles"]) <= set(RUNTIME_PROFILE_IDS)
         model_context = manifest["model_context"]
         assert model_context["policy"] == CONTEXT_POLICY
         assert model_context["classes"]
@@ -240,7 +315,7 @@ def test_vera_account_boundary_is_shared_and_not_a_per_case_form() -> None:
 def test_vera_model_processing_has_no_extra_recipient_or_fake_local_guarantee() -> None:
     for profile in _runtime_profiles():
         processing = profile["model_processing"]
-        assert processing["separate_vera_recipient"] is False
+        assert processing["separate_product_recipient"] is False
         assert processing["automatic_anonymization"] is False
         assert processing["local_only"] is False
         assert (
@@ -266,7 +341,7 @@ def test_vera_public_process_model_data_contract_is_canonical_and_linked() -> No
         "This entire block must be the final block",
         "Quali dati arrivano al modello",
         "What data reaches the model",
-        'data-model-data-status="relevant|not-relevant"',
+        'data-model-data-status="relevant|not-relevant|placeholder"',
         "full population",
         "Codex and Cowork",
         "Not relevant to this process",
@@ -275,7 +350,7 @@ def test_vera_public_process_model_data_contract_is_canonical_and_linked() -> No
         "must not infer a status from keywords",
     ):
         assert required_rule in normalized_contract
-    assert "../vera/references/public-process-page-contract.md" in review_skill
+    assert "references/public-process-page-contract.md" in review_skill
     assert "`public-process-page-contract.md`" in catalog
 
 
@@ -296,7 +371,7 @@ def test_archive_pages_explain_the_purpose_preserving_model_projection() -> None
         "model.engagement.organization",
     ):
         assert studio_page.count(f'"{key}":') == 5
-        assert f'data-i18n="{key}"' in studio_page
+        assert "function-model-data.js" in studio_page
     assert '"model.engagement.copy":' not in studio_page
     assert organization_page.count('"model.inventory.copy":') == 5
     assert organization_page.count('"model.review.copy":') == 5
@@ -538,10 +613,10 @@ def test_reconciliation_pages_explain_their_concrete_model_data_flow() -> None:
 
     for path in shared_flow_pages:
         page = path.read_text(encoding="utf-8")
-        model_block = page.split('data-model-data-status="relevant"', 1)[1].split(
-            "</section>",
-            1,
-        )[0]
+        catalog = json.loads(
+            (ROOT / "static/shared/privacy-contracts/vera.json").read_text()
+        )
+        model_block = " ".join(catalog["pages"][path.parent.name]["copy"]["it"])
         for snippet in required:
             assert snippet in model_block
         if path.parent.name == "journal-bank-reconciliation":
@@ -558,9 +633,10 @@ def test_reconciliation_pages_explain_their_concrete_model_data_flow() -> None:
     check_entries = (
         ROOT / "static" / "shared" / "check-entries" / "index.html"
     ).read_text(encoding="utf-8")
-    model_block = check_entries.split('data-model-data-status="relevant"', 1)[1].split(
-        "</section>", 1
-    )[0]
+    catalog = json.loads(
+        (ROOT / "static/shared/privacy-contracts/vera.json").read_text()
+    )
+    model_block = " ".join(catalog["pages"]["check-entries"]["copy"]["it"])
     for snippet in (
         "le prime 20 righe della popolazione normalizzata",
         "per tutti i PDF",
@@ -712,6 +788,8 @@ def test_vera_privacy_validator_detects_changed_shared_service_source(
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(ROOT / relative_path, target)
 
+    _narrow_fixture_registry(vera_root)
+    validator._refresh("all", vera_root)
     validator._refresh_service("all", vera_root)
     updater = vera_root / "scripts" / "check_for_update.py"
     updater.write_text(
@@ -781,6 +859,7 @@ def test_vera_privacy_validator_detects_changed_governed_source(
         / "scripts"
         / "validate_privacy_surfaces.py"
     )
+    _narrow_fixture_registry(vera_root)
     refreshed = subprocess.run(
         [sys.executable, str(validator_path), "--refresh", "prompt-optimizer"],
         check=False,
@@ -804,7 +883,7 @@ def test_vera_privacy_validator_detects_changed_governed_source(
     )
 
     assert result.returncode == 1
-    assert "prompt-optimizer: privacy review is stale" in result.stdout
+    assert "prompt-optimizer: privacy review is stale" in result.stdout + result.stderr
 
 
 def test_privacy_fingerprint_governs_projected_local_review_server(
@@ -845,6 +924,7 @@ def test_privacy_fingerprint_governs_projected_local_review_server(
             manifest.unlink()
     for manifest in (vera_root / "privacy" / "services").glob("*.json"):
         manifest.unlink()
+    _narrow_fixture_registry(vera_root)
     validator._refresh("client-file-preparation", vera_root)
 
     assert validator.validate_privacy_surfaces(vera_root) == []
@@ -911,6 +991,7 @@ def test_privacy_fingerprint_governs_workflow_wrapper_references(
             manifest.unlink()
     for manifest in (vera_root / "privacy" / "services").glob("*.json"):
         manifest.unlink()
+    _narrow_fixture_registry(vera_root)
     validator._refresh("studio-archive", vera_root)
 
     assert validator.validate_privacy_surfaces(vera_root) == []
@@ -963,6 +1044,7 @@ def test_privacy_fingerprint_governs_shared_ocr_source(
             manifest.unlink()
     for manifest in (vera_root / "privacy" / "services").glob("*.json"):
         manifest.unlink()
+    _narrow_fixture_registry(vera_root)
     validator._refresh("previdenza-inps", vera_root)
 
     assert validator.validate_privacy_surfaces(vera_root) == []
@@ -1013,6 +1095,7 @@ def test_packaged_ocr_consumer_cannot_fall_back_to_repository_shared_source(
             manifest.unlink()
     for manifest in (vera_root / "privacy" / "services").glob("*.json"):
         manifest.unlink()
+    _narrow_fixture_registry(vera_root)
     validator._refresh("previdenza-inps", vera_root)
     shutil.copytree(source_component, vera_root / "modules" / "previdenza-inps")
     shutil.copytree(

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "attribute-reporting",
-  "course_sha256": "fa0b67145989c08dd6a249ceb9cc6f4715734c16bd191e10851eeafed0a8645a",
+  "course_sha256": "f097e6d4fec1523148a07ad52d3d6b248b0fc6bca4cb71e1896facdc4a7fa11d",
   "reviewer": "Codex editorial review; independent report review by attribute_course_independent_review",
   "reviewed_at": "2026-09-23T11:44:31.208927+00:00",
   "review_scope": "Reviewed five localized first-use lessons and actual demo/practice reports. Independent agent reviewed every exact rendered report and claim ledger, then the native browser QA and finalizer completed all ten reports. Automated regression separately tests native construction and refuses final semantic acceptance when independent review is missing. No learner participation or live retailer-data acquisition is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",

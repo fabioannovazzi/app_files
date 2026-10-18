@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://mparanza.com/schemas/vera-external-boundary-v3.json",
-  "title": "Vera workstream runtime and external-boundary review",
+  "$id": "https://mparanza.com/schemas/product-external-boundary-v3.json",
+  "title": "Product workstream runtime and external-boundary review",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -14,39 +14,73 @@
     "model_context",
     "external_boundaries",
     "security_controls",
-    "review"
+    "review",
+    "service_ids",
+    "public_explanations"
   ],
   "properties": {
-    "schema_version": {"const": 3},
-    "workstream": {"type": "string", "minLength": 1},
-    "display_name": {"type": "string", "minLength": 1},
-    "role": {"enum": ["workflow", "internal_engine"]},
+    "schema_version": {
+      "const": 3
+    },
+    "workstream": {
+      "type": "string",
+      "minLength": 1
+    },
+    "display_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "role": {
+      "enum": [
+        "workflow",
+        "internal_engine"
+      ]
+    },
     "governed_paths": {
       "type": "array",
       "minItems": 1,
       "uniqueItems": true,
-      "items": {"type": "string", "minLength": 1}
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
     },
     "governed_shared_paths": {
       "type": "array",
       "uniqueItems": true,
-      "items": {"type": "string", "minLength": 1}
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
     },
     "governed_repository_paths": {
       "type": "array",
       "uniqueItems": true,
-      "items": {"type": "string", "minLength": 1}
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
     },
     "runtime_profiles": {
-      "const": [
-        "openai-codex",
-        "anthropic-cowork"
-      ]
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      }
     },
     "model_context": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["policy", "classes"],
+      "required": [
+        "policy",
+        "classes"
+      ],
       "properties": {
         "policy": {
           "const": "real_case_data_may_enter_selected_runtime_model_context"
@@ -57,11 +91,25 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["id", "purpose", "content", "runtime_profiles"],
+            "required": [
+              "id",
+              "purpose",
+              "content",
+              "runtime_profiles"
+            ],
             "properties": {
-              "id": {"type": "string", "minLength": 1},
-              "purpose": {"type": "string", "minLength": 1},
-              "content": {"type": "string", "minLength": 1},
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "purpose": {
+                "type": "string",
+                "minLength": 1
+              },
+              "content": {
+                "type": "string",
+                "minLength": 1
+              },
               "runtime_profiles": {
                 "type": "array",
                 "minItems": 1,
@@ -69,7 +117,9 @@
                 "items": {
                   "enum": [
                     "openai-codex",
-                    "anthropic-cowork"
+                    "anthropic-cowork",
+                    "openai-chatgpt",
+                    "google-antigravity"
                   ]
                 }
               }
@@ -86,10 +136,22 @@
         "allOf": [
           {
             "if": {
-              "properties": {"requires_confirmation": {"const": true}},
-              "required": ["requires_confirmation"]
+              "properties": {
+                "requires_confirmation": {
+                  "const": true
+                }
+              },
+              "required": [
+                "requires_confirmation"
+              ]
             },
-            "then": {"properties": {"optional": {"const": true}}}
+            "then": {
+              "properties": {
+                "optional": {
+                  "const": true
+                }
+              }
+            }
           }
         ],
         "required": [
@@ -104,7 +166,10 @@
           "runtime_profiles"
         ],
         "properties": {
-          "id": {"type": "string", "minLength": 1},
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
           "kind": {
             "enum": [
               "public_research",
@@ -113,15 +178,31 @@
               "send_or_publish"
             ]
           },
-          "destination": {"type": "string", "minLength": 1},
-          "purpose": {"type": "string", "minLength": 1},
-          "content": {"type": "string", "minLength": 1},
-          "optional": {"type": "boolean"},
-          "requires_confirmation": {"type": "boolean"},
+          "destination": {
+            "type": "string",
+            "minLength": 1
+          },
+          "purpose": {
+            "type": "string",
+            "minLength": 1
+          },
+          "content": {
+            "type": "string",
+            "minLength": 1
+          },
+          "optional": {
+            "type": "boolean"
+          },
+          "requires_confirmation": {
+            "type": "boolean"
+          },
           "controls": {
             "type": "array",
             "minItems": 1,
-            "items": {"type": "string", "minLength": 1}
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
           },
           "runtime_profiles": {
             "type": "array",
@@ -130,9 +211,15 @@
             "items": {
               "enum": [
                 "openai-codex",
-                "anthropic-cowork"
+                "anthropic-cowork",
+                "openai-chatgpt",
+                "google-antigravity"
               ]
             }
+          },
+          "workflow_conditions": {
+            "type": "string",
+            "minLength": 1
           }
         }
       }
@@ -142,26 +229,137 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "control"],
+        "required": [
+          "id",
+          "control"
+        ],
         "properties": {
-          "id": {"type": "string", "minLength": 1},
-          "control": {"type": "string", "minLength": 1}
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "control": {
+            "type": "string",
+            "minLength": 1
+          }
         }
       }
     },
     "review": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["reviewed_at", "reviewed_by", "basis", "source_fingerprint"],
+      "required": [
+        "reviewed_at",
+        "reviewed_by",
+        "basis",
+        "source_fingerprint"
+      ],
       "properties": {
-        "reviewed_at": {"type": "string", "format": "date"},
-        "reviewed_by": {"const": "privacy-surface-review"},
-        "basis": {"const": "external_boundary_review_of_workflow_source"},
+        "reviewed_at": {
+          "type": "string",
+          "format": "date"
+        },
+        "reviewed_by": {
+          "const": "privacy-surface-review"
+        },
+        "basis": {
+          "const": "external_boundary_review_of_workflow_source"
+        },
         "source_fingerprint": {
           "type": "string",
           "pattern": "^[0-9a-f]{64}$"
+        },
+        "fingerprint_scope": {
+          "const": "installed_client_and_repository_review_declaration"
         }
       }
+    },
+    "source_contract_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "service_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "public_explanations": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9-]*$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "status",
+          "copy"
+        ],
+        "properties": {
+          "status": {
+            "enum": [
+              "relevant",
+              "not-relevant",
+              "placeholder"
+            ]
+          },
+          "copy": {
+            "type": "object",
+            "propertyNames": {
+              "enum": [
+                "it",
+                "en",
+                "fr",
+                "de",
+                "es",
+                "ar"
+              ]
+            },
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "repository_source_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "service_id",
+        "scope"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^privacy/repository-source-reviews/[a-z0-9-]+\\.json$"
+        },
+        "service_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "const": "reviewed_repository_declaration_not_hosted_runtime"
+        }
+      }
+    },
+    "packaged_for_runtime": {
+      "enum": [
+        "openai-codex",
+        "anthropic-cowork",
+        "openai-chatgpt",
+        "google-antigravity"
+      ]
     }
   }
 }

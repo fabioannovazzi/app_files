@@ -1,4 +1,33 @@
 {
+  "schema_version": 2,
+  "service_id": "workflow-usage",
+  "display_name": "Pipeline usage, outcomes and user satisfaction",
+  "governed_paths": [
+    "scripts/workflow_usage.py",
+    "scripts/operational_incidents.py",
+    "scripts/model_data_report.py",
+    "scripts/notarized_run_receipt.py",
+    "skills/vera/references/workflow-usage.md",
+    "usage/pipelines.json",
+    "scripts/reporting_product.py"
+  ],
+  "governed_repository_paths": [
+    "modules/workflow_usage",
+    "modules/operational_incidents/api.py",
+    "modules/operational_incidents/store.py",
+    "scripts/manage_workflow_usage.py",
+    "templates/vera_workflow_feedback.html",
+    "static/shared/vera/workflow-feedback.js",
+    "static/shared/vera/workflow-feedback.css",
+    "static/shared/vera-testing-status.js",
+    "static/shared/vera/index.html",
+    "plugins/_shared/reporting-runtime",
+    "scripts/sync_reporting_runtime.py"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
   "external_boundaries": [
     {
       "controls": [
@@ -63,40 +92,6 @@
       ]
     }
   ],
-  "governed_paths": [
-    "scripts/workflow_usage.py",
-    "scripts/operational_incidents.py",
-    "scripts/model_data_report.py",
-    "scripts/notarized_run_receipt.py",
-    "skills/vera/references/workflow-usage.md",
-    "usage/pipelines.json",
-    "scripts/reporting_product.py"
-  ],
-  "service_id": "workflow-usage",
-  "review": {
-    "reviewed_by": "privacy-surface-review",
-    "basis": "external_boundary_review_of_shared_service_source",
-    "reviewed_at": "2026-10-18",
-    "source_fingerprint": "28dcc83261825f742a08ef579eaa840643cf6633e87aec27bedcaab33915f92e"
-  },
-  "runtime_profiles": [
-    "openai-codex",
-    "anthropic-cowork"
-  ],
-  "governed_repository_paths": [
-    "modules/workflow_usage",
-    "modules/operational_incidents/api.py",
-    "modules/operational_incidents/store.py",
-    "scripts/manage_workflow_usage.py",
-    "templates/vera_workflow_feedback.html",
-    "static/shared/vera/workflow-feedback.js",
-    "static/shared/vera/workflow-feedback.css",
-    "static/shared/vera-testing-status.js",
-    "static/shared/vera/index.html",
-    "plugins/_shared/reporting-runtime",
-    "scripts/sync_reporting_runtime.py"
-  ],
-  "schema_version": 2,
   "security_controls": [
     {
       "id": "owned-closed-schema-events",
@@ -136,5 +131,10 @@
       "on_violation": "Unknown or missing fields are not included in the public projection."
     }
   ],
-  "display_name": "Pipeline usage, outcomes and user satisfaction"
+  "review": {
+    "basis": "external_boundary_review_of_shared_service_source",
+    "reviewed_at": "2026-10-18",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "9bb80a54ff4bf659b5bb65e068bcde20b5228025bb6f6713c1f87ee75cdb898a"
+  }
 }

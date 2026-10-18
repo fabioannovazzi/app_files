@@ -110,12 +110,17 @@
     {
       "path": "modules/studio-archive/vendor/modules/model-data-report-contract.md",
       "repository_path": "plugins/vera/skills/vera/references/model-data-report-contract.md",
-      "sha256": "d15de66e8cacde6586955265f51121ec9f59a0a7d6e2e3edc1c5784efdb994cb"
+      "sha256": "f3407b01a608858d3a1eb172101af7231023192d63d944495ca2fd8a3cbc5a54"
     },
     {
       "path": "modules/studio-archive/vendor/modules/model_data_report.py",
       "repository_path": "plugins/vera/scripts/model_data_report.py",
-      "sha256": "0e7a99ef631ed67a1aa25eb10ce7ed158625f6c0c09dcf8546eeb132a238262d"
+      "sha256": "368b0903fa071c0563a0d0ac04f7a1ce9d33445236daba47f4357b7e6216bf59"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/privacy_contract.py",
+      "repository_path": "plugins/vera/scripts/privacy_contract.py",
+      "sha256": "08116da007761d983c5eaead355025e9ba299d20dc31821044f402da1bcab594"
     },
     {
       "path": "modules/studio-archive/vendor/modules/vera_assurance/__init__.py",

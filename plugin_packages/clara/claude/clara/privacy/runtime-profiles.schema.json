@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/product-runtime-profiles-v1.json",
+  "title": "Product model runtime privacy profiles",
+  "const": {
+    "schema_version": 1,
+    "profiles": [
+      {
+        "id": "openai-codex",
+        "provider": "OpenAI",
+        "runtime": "Codex",
+        "surfaces": [
+          "codex"
+        ],
+        "account_boundary": {
+          "selected_by": "firm_or_user",
+          "review_timing": "before_professional_use_and_when_account_or_terms_change",
+          "review_items": [
+            "account_or_workspace_plan",
+            "model_training_data_controls",
+            "retention_and_deletion_controls"
+          ],
+          "per_case_record_required": false,
+          "product_runtime_enforcement": "none"
+        },
+        "model_processing": {
+          "scope": "ordinary_openai_codex_model_processing",
+          "destination": "OpenAI model processing used by Codex",
+          "account_arrangement": "existing_openai_codex_account_or_workspace_selected_by_firm_or_user",
+          "automatic_anonymization": false,
+          "local_only": false,
+          "local_filtering_or_aggregation": "only_when_useful_for_the_work",
+          "separate_product_recipient": false
+        }
+      },
+      {
+        "id": "anthropic-cowork",
+        "provider": "Anthropic",
+        "runtime": "Cowork",
+        "surfaces": [
+          "cowork"
+        ],
+        "account_boundary": {
+          "selected_by": "firm_or_user",
+          "review_timing": "before_professional_use_and_when_account_or_terms_change",
+          "review_items": [
+            "account_or_workspace_plan",
+            "model_training_data_controls",
+            "retention_and_deletion_controls"
+          ],
+          "per_case_record_required": false,
+          "product_runtime_enforcement": "none"
+        },
+        "model_processing": {
+          "scope": "ordinary_anthropic_cowork_model_processing",
+          "destination": "Anthropic model processing used by Cowork",
+          "account_arrangement": "existing_anthropic_claude_account_or_workspace_selected_by_firm_or_user",
+          "automatic_anonymization": false,
+          "local_only": false,
+          "local_filtering_or_aggregation": "only_when_useful_for_the_work",
+          "separate_product_recipient": false
+        }
+      },
+      {
+        "id": "openai-chatgpt",
+        "provider": "OpenAI",
+        "runtime": "ChatGPT",
+        "surfaces": [
+          "chatgpt"
+        ],
+        "account_boundary": {
+          "selected_by": "firm_or_user",
+          "review_timing": "before_professional_use_and_when_account_or_terms_change",
+          "review_items": [
+            "account_or_workspace_plan",
+            "model_training_data_controls",
+            "retention_and_deletion_controls"
+          ],
+          "per_case_record_required": false,
+          "product_runtime_enforcement": "none"
+        },
+        "model_processing": {
+          "scope": "ordinary_chatgpt_model_processing",
+          "destination": "Model provider selected in ChatGPT",
+          "account_arrangement": "existing_chatgpt_account_or_workspace_selected_by_firm_or_user",
+          "automatic_anonymization": false,
+          "local_only": false,
+          "local_filtering_or_aggregation": "only_when_useful_for_the_work",
+          "separate_product_recipient": false
+        }
+      },
+      {
+        "id": "google-antigravity",
+        "provider": "selected_in_host",
+        "runtime": "Antigravity",
+        "surfaces": [
+          "antigravity"
+        ],
+        "account_boundary": {
+          "selected_by": "firm_or_user",
+          "review_timing": "before_professional_use_and_when_account_or_terms_change",
+          "review_items": [
+            "account_or_workspace_plan",
+            "model_training_data_controls",
+            "retention_and_deletion_controls"
+          ],
+          "per_case_record_required": false,
+          "product_runtime_enforcement": "none"
+        },
+        "model_processing": {
+          "scope": "ordinary_antigravity_model_processing",
+          "destination": "Model provider selected in Antigravity",
+          "account_arrangement": "existing_antigravity_account_or_workspace_selected_by_firm_or_user",
+          "automatic_anonymization": false,
+          "local_only": false,
+          "local_filtering_or_aggregation": "only_when_useful_for_the_work",
+          "separate_product_recipient": false
+        }
+      }
+    ]
+  }
+}

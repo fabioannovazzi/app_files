@@ -1,2 +1,4 @@
 # Build-time parser only; never installed by a customer workflow.
 PyYAML>=6.0,<7
+# Shared privacy schemas are enforced before every host package is built.
+jsonschema>=4.23,<5
