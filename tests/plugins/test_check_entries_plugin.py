@@ -9782,9 +9782,11 @@ def test_check_intake_withholds_invented_single_currency(
     assert assumptions["currency_scope"] == "checked_entries"
 
 
-@pytest.mark.parametrize('tool_name', ['validate_check_entries_review', 'render_check_entries_review'])
-@pytest.mark.parametrize('input_mode', ['inline', 'explicit_paths', 'review_path_only'])
-@pytest.mark.parametrize('tamper', [False, True])
+@pytest.mark.parametrize(
+    "tool_name", ["validate_check_entries_review", "render_check_entries_review"]
+)
+@pytest.mark.parametrize("input_mode", ["inline", "explicit_paths", "review_path_only"])
+@pytest.mark.parametrize("tamper", [False, True])
 def test_readonly_review_paths_enforce_actual_assurance_replay(
     monkeypatch: Any,
     tmp_path: Path,
@@ -9793,89 +9795,111 @@ def test_readonly_review_paths_enforce_actual_assurance_replay(
     tamper: bool,
 ) -> None:
     _, output_dir, payload, intake = _supported_assurance_run(monkeypatch, tmp_path)
-    replay_log = tmp_path / 'actual-replay.jsonl'
-    wrapper = tmp_path / 'record-real-python'
+    replay_log = tmp_path / "actual-replay.jsonl"
+    wrapper = tmp_path / "record-real-python"
     wrapper.write_text(
-        f'#!{sys.executable}\n'
-        'import json, subprocess, sys\n'
-        'from pathlib import Path\n'
+        f"#!{sys.executable}\n"
+        "import json, subprocess, sys\n"
+        "from pathlib import Path\n"
         'if "--preflight-only" in sys.argv:\n'
         f'    with Path({str(replay_log)!r}).open("a") as log:\n'
         '        log.write(json.dumps(sys.argv[1:]) + "\\n")\n'
-        f'raise SystemExit(subprocess.run([{sys.executable!r}, *sys.argv[1:]]).returncode)\n'
+        f"raise SystemExit(subprocess.run([{sys.executable!r}, *sys.argv[1:]]).returncode)\n"
     )
     wrapper.chmod(0o755)
-    monkeypatch.setenv('PYTHON', str(wrapper))
-    if input_mode == 'inline':
-        arguments = {'review_payload': payload, 'run_intake': intake}
+    monkeypatch.setenv("PYTHON", str(wrapper))
+    if input_mode == "inline":
+        arguments = {"review_payload": payload, "run_intake": intake}
     else:
-        arguments = {'review_payload_path': str(output_dir / 'review_payload.json')}
-        if input_mode == 'explicit_paths':
-            arguments['run_intake_path'] = str(output_dir / 'run_intake.json')
+        arguments = {"review_payload_path": str(output_dir / "review_payload.json")}
+        if input_mode == "explicit_paths":
+            arguments["run_intake_path"] = str(output_dir / "run_intake.json")
     arguments = _managed_check_mcp_arguments(output_dir, arguments)
     if tamper:
-        results = output_dir / 'check_results.csv'
-        results.write_bytes(results.read_bytes() + b'\n')
+        results = output_dir / "check_results.csv"
+        results.write_bytes(results.read_bytes() + b"\n")
     before = _transaction_tree_state(output_dir)
     response = _check_transaction_call(tool_name, arguments)
     assert _transaction_tree_state(output_dir) == before
     if tamper:
-        assert response['ok'] is False, response
-        assert 'review_reference' not in response
+        assert response["ok"] is False, response
+        assert "review_reference" not in response
     else:
-        assert response['ok'] is True, response
-        assert response['review_reference']['persistence_token']
-        assert replay_log.is_file(), 'Required assurance child was never invoked'
+        assert response["ok"] is True, response
+        assert response["review_reference"]["persistence_token"]
+        assert replay_log.is_file(), "Required assurance child was never invoked"
         calls = [json.loads(line) for line in replay_log.read_text().splitlines()]
         assert len(calls) == 1
-        assert '--read-only' in calls[0]
+        assert "--read-only" in calls[0]
         assert str(output_dir) in calls[0]
 
 
-@pytest.mark.parametrize('tool_name', ['validate_check_entries_review', 'render_check_entries_review'])
-@pytest.mark.parametrize('runtime_ready', [True, False])
+@pytest.mark.parametrize(
+    "tool_name", ["validate_check_entries_review", "render_check_entries_review"]
+)
+@pytest.mark.parametrize("runtime_ready", [True, False])
 def test_embedded_check_review_uses_prepared_managed_python(
-    monkeypatch: Any, tmp_path: Path, tool_name: str, runtime_ready: bool,
+    monkeypatch: Any,
+    tmp_path: Path,
+    tool_name: str,
+    runtime_ready: bool,
 ) -> None:
-    _, output, _, _ = _supported_assurance_run(monkeypatch, tmp_path / 'case')
-    plugin, _ = _copy_check_entries_runtime(tmp_path / 'installation')
-    shutil.copytree(ROOT / 'plugins/journal-sampling', plugin.parent / 'journal-sampling', ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
-    launcher = plugin.parent / 'vera/scripts/managed_python_runtime.py'
+    _, output, _, _ = _supported_assurance_run(monkeypatch, tmp_path / "case")
+    plugin, _ = _copy_check_entries_runtime(tmp_path / "installation")
+    shutil.copytree(
+        ROOT / "plugins/journal-sampling",
+        plugin.parent / "journal-sampling",
+        ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
+    )
+    launcher = plugin.parent / "vera/scripts/managed_python_runtime.py"
     launcher.parent.mkdir(parents=True)
     launcher.write_text(
-        'from pathlib import Path\n'
-        'def activate_runtime(root, module):\n'
+        "from pathlib import Path\n"
+        "def activate_runtime(root, module):\n"
         '    assert module == "check-entries"\n'
-        f'    return Path({sys.prefix!r}) if {runtime_ready!r} else None\n'
-        'def runtime_python(target):\n'
-        f'    return Path({sys.executable!r})\n'
+        f"    return Path({sys.prefix!r}) if {runtime_ready!r} else None\n"
+        "def runtime_python(target):\n"
+        f"    return Path({sys.executable!r})\n"
     )
-    bootstrap = plugin.parent / 'system-python'
+    bootstrap = plugin.parent / "system-python"
     bootstrap.write_text(
-        f'#!{sys.executable}\n'
-        'import os, sys\n'
+        f"#!{sys.executable}\n"
+        "import os, sys\n"
         'if "-c" in sys.argv:\n'
-        f'    os.execv({sys.executable!r}, [{sys.executable!r}, *sys.argv[1:]])\n'
+        f"    os.execv({sys.executable!r}, [{sys.executable!r}, *sys.argv[1:]])\n"
         'sys.stderr.write("ModuleNotFoundError: No module named openpyxl\\n")\n'
-        'sys.exit(1)\n'
+        "sys.exit(1)\n"
     )
     bootstrap.chmod(0o700)
-    monkeypatch.setenv('VERA_COMPONENT_HOST', '1')
-    monkeypatch.setenv('PYTHON', str(bootstrap))
-    monkeypatch.setenv('VIRTUAL_ENV', '')
+    monkeypatch.setenv("VERA_COMPONENT_HOST", "1")
+    monkeypatch.setenv("PYTHON", str(bootstrap))
+    monkeypatch.setenv("VIRTUAL_ENV", "")
     before = _transaction_tree_state(output)
-    response = _call_mcp_server([{
-        'jsonrpc': '2.0', 'id': 1, 'method': 'tools/call',
-        'params': {'name': tool_name, 'arguments': _managed_check_mcp_arguments(output, {
-            'review_payload_path': str(output / 'review_payload.json'),
-            'run_intake_path': str(output / 'run_intake.json'),
-        })},
-    }], server_path=plugin / 'mcp/server.cjs')[0]['result']['structuredContent']
+    response = _call_mcp_server(
+        [
+            {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "tools/call",
+                "params": {
+                    "name": tool_name,
+                    "arguments": _managed_check_mcp_arguments(
+                        output,
+                        {
+                            "review_payload_path": str(output / "review_payload.json"),
+                            "run_intake_path": str(output / "run_intake.json"),
+                        },
+                    ),
+                },
+            }
+        ],
+        server_path=plugin / "mcp/server.cjs",
+    )[0]["result"]["structuredContent"]
     assert _transaction_tree_state(output) == before
     if runtime_ready:
-        assert response['ok'] is True, response
-        assert response['review_reference']['persistence_token']
+        assert response["ok"] is True, response
+        assert response["review_reference"]["persistence_token"]
     else:
-        assert response['ok'] is False, response
-        assert 'managed Python runtime is not ready' in response['error']
-        assert 'review_reference' not in response
+        assert response["ok"] is False, response
+        assert "managed Python runtime is not ready" in response["error"]
+        assert "review_reference" not in response

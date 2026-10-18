@@ -1,5 +1,32 @@
 {
+  "schema_version": 2,
   "display_name": "Server-stamped run receipts",
+  "security_controls": [
+    {
+      "id": "minimal-receipt-request-allow-list",
+      "control": "Both client and server enforce the same closed receipt request schema, and the server's Pydantic model forbids every unregistered field.",
+      "implemented_by": [
+        "scripts/notarized_run_receipt.py"
+      ],
+      "on_violation": "The request or response is rejected before a proof is accepted or written locally."
+    },
+    {
+      "id": "fixed-receipt-destination",
+      "control": "The installed client accepts only the fixed Mparanza HTTPS receipt route, with an explicit loopback HTTP port allowed solely for local testing. Endpoint credentials are rejected, and the default stamping and verification transport refuses redirects rather than following another destination.",
+      "implemented_by": [
+        "scripts/notarized_run_receipt.py"
+      ],
+      "on_violation": "The client aborts before making a network request."
+    }
+  ],
+  "governed_paths": [
+    "scripts/model_data_report.py",
+    "scripts/notarized_run_receipt.py",
+    "skills/mparanza-vera/SKILL.md",
+    "skills/mparanza-vera/references/model-data-report-contract.md",
+    "skills/mparanza-contenzioso-tributario",
+    "skills/mparanza-posizioni-negoziali"
+  ],
   "external_boundaries": [
     {
       "id": "automatic-server-stamped-run-receipt",
@@ -27,41 +54,14 @@
       ]
     }
   ],
-  "governed_paths": [
-    "scripts/model_data_report.py",
-    "scripts/notarized_run_receipt.py",
-    "skills/mparanza-vera/SKILL.md",
-    "skills/mparanza-vera/references/model-data-report-contract.md",
-    "skills/mparanza-contenzioso-tributario",
-    "skills/mparanza-posizioni-negoziali"
-  ],
+  "service_id": "run-receipt-stamping",
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
-    "reviewed_at": "2026-10-14",
+    "source_fingerprint": "ca7f3377ebf05ac1ab54291df94526a826af0a5bf1df518212514ba889cb23aa",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "ca7f3377ebf05ac1ab54291df94526a826af0a5bf1df518212514ba889cb23aa"
+    "reviewed_at": "2026-10-14"
   },
   "runtime_profiles": [
     "anthropic-cowork"
-  ],
-  "schema_version": 2,
-  "security_controls": [
-    {
-      "id": "minimal-receipt-request-allow-list",
-      "control": "Both client and server enforce the same closed receipt request schema, and the server's Pydantic model forbids every unregistered field.",
-      "implemented_by": [
-        "scripts/notarized_run_receipt.py"
-      ],
-      "on_violation": "The request or response is rejected before a proof is accepted or written locally."
-    },
-    {
-      "id": "fixed-receipt-destination",
-      "control": "The installed client accepts only the fixed Mparanza HTTPS receipt route, with an explicit loopback HTTP port allowed solely for local testing. Endpoint credentials are rejected, and the default stamping and verification transport refuses redirects rather than following another destination.",
-      "implemented_by": [
-        "scripts/notarized_run_receipt.py"
-      ],
-      "on_violation": "The client aborts before making a network request."
-    }
-  ],
-  "service_id": "run-receipt-stamping"
+  ]
 }

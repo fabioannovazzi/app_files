@@ -79,7 +79,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/audit_assurance.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/audit_assurance.py",
-      "sha256": "1ace982e6fa333e56664661d41752c8fa8b24c07619322b37aaf238abf1aca3f"
+      "sha256": "d6e74e30b3bb6dbc3b12786b50ae578608baf111923f7264f32adea957c88595"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
@@ -104,7 +104,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/raw_input_runner.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/raw_input_runner.py",
-      "sha256": "fb3f955e9317503aebaf5a31d1f3c94e16e19daed7233b82ae95e7b212eeba33"
+      "sha256": "b32e6a49c30c40545b1fdf25564d7eceacddb07b17d8e6a522e8753ef4a5aa53"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/reconciliation_workflow.py",

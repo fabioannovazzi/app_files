@@ -105,7 +105,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "fec7760968cea009c321f27e1ca5d93c2ee9b45d4494d7a9611612bb6f7fb59d",
+  "course_sha256": "5b5923cf3f9f4b494b49114c09b8c1b131fec48813a1d73a9902bf26bdfb51f4",
   "discovery_source_refresh": {
     "reviewed_by": "Codex /root",
     "reviewed_at": "2026-10-01T11:44:13.225501+00:00",
@@ -846,5 +846,16 @@
     "authored_content_unchanged": true,
     "scope": "Embedded CheckEntries MCP selects existing prepared shared runtime for assurance/review helpers, mirroring the qualified Journal Sampling route. No review-time install; unready runtime fails closed. Resolver and workflow child envs use existing allowlist. Sixteen focused host/path assurance cases pass, broader MCP regression pending. Numerical workflow scripts unchanged; prior full284 remains prior baseline, not a claim of current full288 testing. Native.28 qualification pending.",
     "native_ui_qualified": false
+  },
+  "deploy_final_source_compatibility_20261018": {
+    "reviewer": "Codex /root - bounded complete-course comparison",
+    "reviewed_at": "2026-10-18",
+    "previous_course_sha256": "fec7760968cea009c321f27e1ca5d93c2ee9b45d4494d7a9611612bb6f7fb59d",
+    "current_course_sha256": "5b5923cf3f9f4b494b49114c09b8c1b131fec48813a1d73a9902bf26bdfb51f4",
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "scope": "Complete authored lesson JSON is identical to the retained tested candidate; only source fingerprints changed. Preserves all previous editorial and historical artifact reviews. Integrated main usage/device registration is unchanged from main; tested workflow logic is preserved. Open-item import ordering was normalized without changing imported names or statements. No new learner, visual-host or professional acceptance claimed; current native teaching CI remains required."
   }
 }

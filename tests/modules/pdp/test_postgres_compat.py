@@ -2,12 +2,14 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Any
+from unittest.mock import Mock
 
 import pytest
 
 from modules.pdp.postgres_compat import (
     PostgresCommitStateUnknownError,
     PostgresCompatConnection,
+    PostgresCompatCursor,
     connect_pdp_database,
     pdp_database_exists,
     require_pdp_postgres_url,
@@ -17,6 +19,29 @@ from modules.pdp.postgres_compat import (
 
 class OperationalError(Exception):
     pass
+
+
+def test_fetchmany_preserves_batch_boundaries_and_end_of_result() -> None:
+    raw_cursor = Mock()
+    raw_cursor.fetchmany.side_effect = [[("first",), ("second",)], [("third",)], []]
+    cursor = PostgresCompatCursor(Mock(), raw_cursor)
+
+    batches = [cursor.fetchmany(2), cursor.fetchmany(2), cursor.fetchmany(2)]
+
+    assert batches == [[("first",), ("second",)], [("third",)], []]
+    raw_cursor.fetchall.assert_not_called()
+
+
+def test_fetchmany_does_not_replay_a_partially_consumed_result() -> None:
+    raw_cursor = Mock()
+    raw_cursor.fetchmany.side_effect = OperationalError("server closed during batch")
+    connection = Mock()
+    cursor = PostgresCompatCursor(connection, raw_cursor)
+
+    with pytest.raises(OperationalError, match="server closed during batch"):
+        cursor.fetchmany(1000)
+
+    connection._replay_read_operation.assert_not_called()
 
 
 class _FakeCursor:

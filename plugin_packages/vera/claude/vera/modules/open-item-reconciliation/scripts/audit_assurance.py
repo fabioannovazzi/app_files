@@ -89,22 +89,22 @@ IMPLEMENTATION_CONTRACT = tuple(_BOOTSTRAP_NAMESPACE["IMPLEMENTATION_CONTRACT"])
 
 import argparse
 import csv
-import io
 import hashlib
+import io
 import json
 import mimetypes
 import os
+import posixpath
 import re
 import shutil
 import stat
 import sys
 import tempfile
-import posixpath
-import zipfile
 import xml.etree.ElementTree as ET
+import zipfile
 from collections.abc import Callable, Mapping, Sequence
 from datetime import date, datetime
-from decimal import Decimal, ROUND_HALF_EVEN
+from decimal import ROUND_HALF_EVEN, Decimal
 from pathlib import Path
 from typing import Any
 
@@ -119,9 +119,9 @@ if str(_SCRIPTS_DIRECTORY) not in sys.path:
 
 from reconciliation_helpers import (  # noqa: E402
     closed_bank_allocation_controls,
+    document_key,
     reconcile_open_items,
     reconciliation_checks,
-    document_key,
 )
 
 

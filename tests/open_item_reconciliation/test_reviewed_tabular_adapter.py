@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import copy
 import io
-import zipfile
 import xml.etree.ElementTree as ET
+import zipfile
 from datetime import datetime
 from pathlib import Path
 
@@ -11,10 +11,10 @@ import pytest
 from openpyxl import Workbook
 
 from tests.open_item_reconciliation.test_audit_assurance import (
+    SCRIPTS,
     load_assurance,
     load_script_module,
     reviewed_source_decision,
-    SCRIPTS,
 )
 
 

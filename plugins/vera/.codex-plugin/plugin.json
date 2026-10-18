@@ -1,9 +1,9 @@
 {
   "name": "vera",
-  "version": "0.1.406-folder-intake.28",
+  "version": "0.1.407",
   "description": "Vera affianca commercialisti e studi professionali nei quesiti fiscali e legali, nel contenzioso tributario italiano, nel bilancio OIC/XBRL e nella revisione contabile e riconciliazione: risposte con fonti, analisi, controlli e carte di lavoro da rivedere.",
   "author": {
-    "name": "Fabio Annovazzi \u00b7 Mparanza",
+    "name": "Fabio Annovazzi · Mparanza",
     "email": "fabio@mparanza.com",
     "url": "https://mparanza.com"
   },
@@ -88,17 +88,17 @@
     "fiduciaires",
     "expert-comptable",
     "experts-comptables",
-    "comptabilit\u00e9",
-    "fiscalit\u00e9",
+    "comptabilité",
+    "fiscalité",
     "questions-fiscales",
     "questions-juridiques",
     "comptes-annuels",
-    "\u00e9tats-financiers",
-    "r\u00e9vision-comptable",
+    "états-financiers",
+    "révision-comptable",
     "rapprochement-bancaire",
     "rapprochement-comptable",
-    "analyse-financi\u00e8re",
-    "gen\u00e8ve",
+    "analyse-financière",
+    "genève",
     "lipe",
     "contenzioso-tributario"
   ],
@@ -109,8 +109,8 @@
   "interface": {
     "displayName": "Vera",
     "shortDescription": "Assistente AI x commercialisti",
-    "longDescription": "Vera affianca commercialisti e studi professionali nei quesiti fiscali e legali, nel bilancio e nella revisione contabile. Prepara risposte e report con verifica delle fonti e del ragionamento. Da CSV, Excel o PDF supportati prepara il bilancio civilistico OIC/XBRL e analisi finanziarie.\n\nPer la revisione contabile e le riconciliazioni prepara abbinamenti bancari, verifiche delle partite aperte, campioni, controlli documentali ed eccezioni. Supporta anche controllo di gestione, piani economico-finanziari, bandi, avvisi e cartelle, contenzioso tributario italiano con passaggi, termini verificati e bozze riprendibili, INPS, Registro Imprese e DIRE, concordato preventivo e comunicazioni.\n\nVera mostra fonti, passaggi, ambiguit\u00e0 e informazioni mancanti. Firma, approvazione, deposito, invio, pubblicazione e giudizio professionale restano al commercialista.",
-    "developerName": "Fabio Annovazzi \u00b7 Mparanza",
+    "longDescription": "Vera affianca commercialisti e studi professionali nei quesiti fiscali e legali, nel bilancio e nella revisione contabile. Prepara risposte e report con verifica delle fonti e del ragionamento. Da CSV, Excel o PDF supportati prepara il bilancio civilistico OIC/XBRL e analisi finanziarie.\n\nPer la revisione contabile e le riconciliazioni prepara abbinamenti bancari, verifiche delle partite aperte, campioni, controlli documentali ed eccezioni. Supporta anche controllo di gestione, piani economico-finanziari, bandi, avvisi e cartelle, contenzioso tributario italiano con passaggi, termini verificati e bozze riprendibili, INPS, Registro Imprese e DIRE, concordato preventivo e comunicazioni.\n\nVera mostra fonti, passaggi, ambiguità e informazioni mancanti. Firma, approvazione, deposito, invio, pubblicazione e giudizio professionale restano al commercialista.",
+    "developerName": "Fabio Annovazzi · Mparanza",
     "category": "Finance",
     "capabilities": [
       "Interactive",

@@ -1,101 +1,6 @@
 {
   "schema_version": 2,
-  "service_id": "managed-python-runtime",
   "display_name": "Managed Python runtime",
-  "governed_paths": [
-    "components.json",
-    "scripts/check_dependencies.py",
-    "scripts/_managed_python_runtime.py",
-    "scripts/managed_python_runtime.py",
-    "skills/vera/SKILL.md",
-    "scripts/_shared_python_runtime.py",
-    "requirements-shared-core.txt",
-    "requirements-shared-ocr.txt",
-    "constraints-shared-macos-py312.txt",
-    "scripts/_python_bootstrap.py",
-    "scripts/studio_archive_session.py",
-    "scripts/studio_archive_windows.ps1",
-    "skills/studio-archive/references/cowork-runtime.md",
-    "scripts/verified_execution.py",
-    "skills/vera/references/execution-recovery.md",
-    "scripts/operational_incidents.py",
-    "scripts/technical_runner.py"
-  ],
-  "runtime_profiles": [
-    "openai-codex",
-    "anthropic-cowork"
-  ],
-  "external_boundaries": [
-    {
-      "id": "declared-core-dependency-retrieval",
-      "kind": "hosted_service",
-      "destination": "Python Package Index (PyPI) or the package index configured for the active Python interpreter",
-      "purpose": "Prepare the published shared Vera, Clara and Lucia core requirements and explicitly approved optional OCR in one user-scoped Python 3.12 environment per operating-system host.",
-      "content": "Published shared package names and version constraints plus ordinary package-index request metadata. No client files, prompts, case data, credentials, or generated work are sent by this runtime installer.",
-      "retention": "Packages remain in one fixed user-scoped environment outside plugin source and client folders until explicitly removed. The default location is ~/.local/share/mparanza/runtime/venv on macOS and Linux, and LOCALAPPDATA/mpr/venv on Windows; MPARANZA_RUNTIME_ROOT may override the parent. Enabled OCR remains enabled across later core updates. Package-index request-log retention is controlled by the configured index. Failed updates invalidate the readiness receipt and require repair before execution; this shared environment has no retained generations.",
-      "activation": "automatic_on_first_use",
-      "optional": false,
-      "requires_confirmation": false,
-      "runtime_profiles": [
-        "openai-codex",
-        "anthropic-cowork"
-      ],
-      "controls": [
-        "Only published shared core and explicitly selected OCR recipes are installed; package names are never derived from client material or prompts.",
-        "Host network denials stop package retrieval. Retry only the same declared setup after the host user or administrator authorizes registry access; never change host network settings or use an alternate installer to evade a denial.",
-        "Readiness probes the managed interpreter locally with isolated Python and site loading disabled, verifies CPython 3.12 and its platform against both receipt and policy, and validates common recipes and enabled features independently of the initial launcher.",
-        "All three products and their modules use the same environment. Optional OCR requires approval and is then retained in that environment. A shared environment is not a boundary between client matters."
-      ]
-    },
-    {
-      "id": "declared-python312-retrieval",
-      "kind": "hosted_service",
-      "destination": "PyPI files.pythonhosted.org for the pinned uv bootstrap, and Astral python-build-standalone CPython distributions on GitHub",
-      "purpose": "Provision the single supported CPython 3.12 interpreter when it is absent, automatically bootstrapping uv if needed",
-      "content": "The fixed CPython 3.12 version request, operating-system and architecture selection, and ordinary download request metadata. Setup does not read client files or add prompts, case material or generated reports to this request.",
-      "retention": "When uv must be bootstrapped, the bootstrap executable and private interpreter remain inside shared runtime storage until removed. Download request-log retention is controlled by the providers.",
-      "activation": "automatic_on_first_use",
-      "optional": false,
-      "requires_confirmation": false,
-      "runtime_profiles": [
-        "openai-codex",
-        "anthropic-cowork"
-      ],
-      "controls": [
-        "Use an installed CPython 3.12 when available; otherwise use uv or automatically download the published uv 0.12.10 wheel, verify its pinned SHA-256, and provision private CPython 3.12 without changing system Python or shell profiles.",
-        "Probe the selected interpreter before creating the dependency environment; never fall back to executing workflows with another Python minor version.",
-        "A failed download or interpreter probe stops setup; existing environments and client files remain intact."
-      ]
-    },
-    {
-      "id": "runtime-failure-incident-delivery",
-      "kind": "hosted_service",
-      "destination": "Mparanza HTTPS operational-incident API and Streamable HTTP MCP endpoint",
-      "purpose": "Diagnose observed execution/setup failures, return installation-specific remedies and receive actual recovery outcomes",
-      "content": "Random installation UUID and opaque capability, Vera/host/runtime versions, platform and workflow technical IDs, failed stage, complete available technical diagnostic chains and measurements, explicit missing-measurement reasons, retry IDs and actual recovery outcomes. No professional helper stdout, client documents, case text, user prompts or arbitrary task logs. Known path, email and credential patterns are removed from technical messages; this mechanical filter does not establish semantic privacy. The host agent must select technical evidence without unrelated personal/client material. The remote channel does not read local files. Failed helpers retain complete stderr privately on disk; stderr may include unrelated private/client text and is read by the selected host model for semantic review under its existing account. Raw stderr is not forwarded to Mparanza. Only reviewed relevant technical diagnostics, linked by the original report UUID, are submitted as supplemental evidence. Professional stdout is not captured. Managed helpers also send source-bound exception classes, OS error numbers, package-relative stack coordinates, developer-authored error templates and missing required option names automatically. Dynamic exception/argument values, locals, professional stdout and arbitrary source excerpts are not part of these structured events. Process-session UUIDs, persistent operation UUIDs and optional keyed digests of existing run/input-receipt identities bind attempts without disclosing receipt fields or raw client-input hashes. Actual worker interpreter/platform fields are separate from the reporter's interpreter. Capture completeness, pending semantic review, exact remedy/retry events and host verification of the original task remain distinct evidence states; a structured event is not a semantic diagnosis.",
-      "retention": "Local capability, pending reports and receipts persist outside client folders. The service retains incident, report, remedy and outcome records; no automatic deletion period is enforced. Status access is scoped by the opaque capability. Pending diagnostic pointers and raw stderr persist in the private incident directory until a matching actual recorded supplementation receipt is acknowledged; unsuccessful review or delivery retains them. Supplementation never replaces the original recovery episode or reopens recovered records. Recorded original/outcome receipts can acknowledge only their exact local queued UUID without replacing the local capability or saved connector identity. Remedy revisions are retained from the surviving migration revision onward; overwritten legacy revisions are not reconstructed.",
-      "activation": "automatic_on_first_use",
-      "optional": false,
-      "requires_confirmation": false,
-      "runtime_profiles": [
-        "openai-codex",
-        "anthropic-cowork"
-      ],
-      "controls": [
-        "Only closed technical transport schemas are accepted; unknown fields and arbitrary recovery commands are rejected.",
-        "The fixed HTTPS transport refuses redirects. Reporting failures retain the outbox and do not discard professional outputs.",
-        "The remote connector is independent of local command-process startup. If the host cannot expose/connect it, no successful report is claimed.",
-        "Only two built-in setup/preparation retries may execute automatically, once per remedy revision. Client documents, ACLs and security settings are not changed.",
-        "A published update is not recovery. The failed operation must actually execute successfully before that installation delivery closes.",
-        "Supplemental diagnostics require ownership of the original report and matching execution metadata; they are stored separately and cannot change the original report UUID, delivery status or remedy revision. Raw local diagnostic files can only be removed by acknowledging a matching recorded supplement.",
-        "Actionable remedies target an explicit original report. Each delivery uses its own applicable revision; a different report with the same generic signal does not inherit that remedy.",
-        "A cached actual connector status permits only the two fixed retries for an existing matching local receipt and latest report. It performs no direct HTTP polling or identity adoption. Missing local receipts cannot be fabricated to authorise a retry.",
-        "A helper success records readiness. Host AI verification of the original task and inputs is required for all recovered outcomes, including setup/startup. Delayed failures cannot reopen an already recovered episode.",
-        "Failed fixed retries retain complete stderr privately for semantic review. Raw recovery stderr is not automatically transmitted.",
-        "An explicitly selected MPARANZA_INCIDENT_DELIVERY=local-only setting blocks automatic client HTTP transport for this execution while preserving local evidence. Incident queues are durably marked and not automatically flushed later; this does not make model-provider processing local-only."
-      ]
-    }
-  ],
   "security_controls": [
     {
       "id": "published-requirements-only",
@@ -169,10 +74,105 @@
       "on_violation": "The maintained launcher must stop rather than resolving technical diagnostics from the caller working directory."
     }
   ],
+  "governed_paths": [
+    "components.json",
+    "scripts/check_dependencies.py",
+    "scripts/_managed_python_runtime.py",
+    "scripts/managed_python_runtime.py",
+    "skills/vera/SKILL.md",
+    "scripts/_shared_python_runtime.py",
+    "requirements-shared-core.txt",
+    "requirements-shared-ocr.txt",
+    "constraints-shared-macos-py312.txt",
+    "scripts/_python_bootstrap.py",
+    "scripts/studio_archive_session.py",
+    "scripts/studio_archive_windows.ps1",
+    "skills/studio-archive/references/cowork-runtime.md",
+    "scripts/verified_execution.py",
+    "skills/vera/references/execution-recovery.md",
+    "scripts/operational_incidents.py",
+    "scripts/technical_runner.py"
+  ],
+  "external_boundaries": [
+    {
+      "id": "declared-core-dependency-retrieval",
+      "kind": "hosted_service",
+      "destination": "Python Package Index (PyPI) or the package index configured for the active Python interpreter",
+      "purpose": "Prepare the published shared Vera, Clara and Lucia core requirements and explicitly approved optional OCR in one user-scoped Python 3.12 environment per operating-system host.",
+      "content": "Published shared package names and version constraints plus ordinary package-index request metadata. No client files, prompts, case data, credentials, or generated work are sent by this runtime installer.",
+      "retention": "Packages remain in one fixed user-scoped environment outside plugin source and client folders until explicitly removed. The default location is ~/.local/share/mparanza/runtime/venv on macOS and Linux, and LOCALAPPDATA/mpr/venv on Windows; MPARANZA_RUNTIME_ROOT may override the parent. Enabled OCR remains enabled across later core updates. Package-index request-log retention is controlled by the configured index. Failed updates invalidate the readiness receipt and require repair before execution; this shared environment has no retained generations.",
+      "activation": "automatic_on_first_use",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Only published shared core and explicitly selected OCR recipes are installed; package names are never derived from client material or prompts.",
+        "Host network denials stop package retrieval. Retry only the same declared setup after the host user or administrator authorizes registry access; never change host network settings or use an alternate installer to evade a denial.",
+        "Readiness probes the managed interpreter locally with isolated Python and site loading disabled, verifies CPython 3.12 and its platform against both receipt and policy, and validates common recipes and enabled features independently of the initial launcher.",
+        "All three products and their modules use the same environment. Optional OCR requires approval and is then retained in that environment. A shared environment is not a boundary between client matters."
+      ]
+    },
+    {
+      "id": "declared-python312-retrieval",
+      "kind": "hosted_service",
+      "destination": "PyPI files.pythonhosted.org for the pinned uv bootstrap, and Astral python-build-standalone CPython distributions on GitHub",
+      "purpose": "Provision the single supported CPython 3.12 interpreter when it is absent, automatically bootstrapping uv if needed",
+      "content": "The fixed CPython 3.12 version request, operating-system and architecture selection, and ordinary download request metadata. Setup does not read client files or add prompts, case material or generated reports to this request.",
+      "retention": "When uv must be bootstrapped, the bootstrap executable and private interpreter remain inside shared runtime storage until removed. Download request-log retention is controlled by the providers.",
+      "activation": "automatic_on_first_use",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Use an installed CPython 3.12 when available; otherwise use uv or automatically download the published uv 0.12.10 wheel, verify its pinned SHA-256, and provision private CPython 3.12 without changing system Python or shell profiles.",
+        "Probe the selected interpreter before creating the dependency environment; never fall back to executing workflows with another Python minor version.",
+        "A failed download or interpreter probe stops setup; existing environments and client files remain intact."
+      ]
+    },
+    {
+      "id": "runtime-failure-incident-delivery",
+      "kind": "hosted_service",
+      "destination": "Mparanza HTTPS operational-incident API and Streamable HTTP MCP endpoint",
+      "purpose": "Diagnose observed execution/setup failures, return installation-specific remedies and receive actual recovery outcomes",
+      "content": "Random installation UUID and opaque capability, Vera/host/runtime versions, platform and workflow technical IDs, failed stage, complete available technical diagnostic chains and measurements, explicit missing-measurement reasons, retry IDs and actual recovery outcomes. No professional helper stdout, client documents, case text, user prompts or arbitrary task logs. Known path, email and credential patterns are removed from technical messages; this mechanical filter does not establish semantic privacy. The host agent must select technical evidence without unrelated personal/client material. The remote channel does not read local files. Failed helpers retain complete stderr privately on disk; stderr may include unrelated private/client text and is read by the selected host model for semantic review under its existing account. Raw stderr is not forwarded to Mparanza. Only reviewed relevant technical diagnostics, linked by the original report UUID, are submitted as supplemental evidence. Professional stdout is not captured. Managed helpers also send source-bound exception classes, OS error numbers, package-relative stack coordinates, developer-authored error templates and missing required option names automatically. Dynamic exception/argument values, locals, professional stdout and arbitrary source excerpts are not part of these structured events. Process-session UUIDs, persistent operation UUIDs and optional keyed digests of existing run/input-receipt identities bind attempts without disclosing receipt fields or raw client-input hashes. Actual worker interpreter/platform fields are separate from the reporter's interpreter. Capture completeness, pending semantic review, exact remedy/retry events and host verification of the original task remain distinct evidence states; a structured event is not a semantic diagnosis.",
+      "retention": "Local capability, pending reports and receipts persist outside client folders. The service retains incident, report, remedy and outcome records; no automatic deletion period is enforced. Status access is scoped by the opaque capability. Pending diagnostic pointers and raw stderr persist in the private incident directory until a matching actual recorded supplementation receipt is acknowledged; unsuccessful review or delivery retains them. Supplementation never replaces the original recovery episode or reopens recovered records. Recorded original/outcome receipts can acknowledge only their exact local queued UUID without replacing the local capability or saved connector identity. Remedy revisions are retained from the surviving migration revision onward; overwritten legacy revisions are not reconstructed.",
+      "activation": "automatic_on_first_use",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Only closed technical transport schemas are accepted; unknown fields and arbitrary recovery commands are rejected.",
+        "The fixed HTTPS transport refuses redirects. Reporting failures retain the outbox and do not discard professional outputs.",
+        "The remote connector is independent of local command-process startup. If the host cannot expose/connect it, no successful report is claimed.",
+        "Only two built-in setup/preparation retries may execute automatically, once per remedy revision. Client documents, ACLs and security settings are not changed.",
+        "A published update is not recovery. The failed operation must actually execute successfully before that installation delivery closes.",
+        "Supplemental diagnostics require ownership of the original report and matching execution metadata; they are stored separately and cannot change the original report UUID, delivery status or remedy revision. Raw local diagnostic files can only be removed by acknowledging a matching recorded supplement.",
+        "Actionable remedies target an explicit original report. Each delivery uses its own applicable revision; a different report with the same generic signal does not inherit that remedy.",
+        "A cached actual connector status permits only the two fixed retries for an existing matching local receipt and latest report. It performs no direct HTTP polling or identity adoption. Missing local receipts cannot be fabricated to authorise a retry.",
+        "A helper success records readiness. Host AI verification of the original task and inputs is required for all recovered outcomes, including setup/startup. Delayed failures cannot reopen an already recovered episode.",
+        "Failed fixed retries retain complete stderr privately for semantic review. Raw recovery stderr is not automatically transmitted.",
+        "An explicitly selected MPARANZA_INCIDENT_DELIVERY=local-only setting blocks automatic client HTTP transport for this execution while preserving local evidence. Incident queues are durably marked and not automatically flushed later; this does not make model-provider processing local-only."
+      ]
+    }
+  ],
+  "service_id": "managed-python-runtime",
   "review": {
-    "reviewed_at": "2026-10-17",
-    "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "0dd22218fa608b0b83270dbc62fdf7a2f359248147d8ee22b21d7bed89008fc6"
-  }
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "0a61289dc325dadb5b59764e0a35dbd1fcac05654f0dda150c24e4f909ddeae7",
+    "reviewed_at": "2026-10-17"
+  },
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ]
 }

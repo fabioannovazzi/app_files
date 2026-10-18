@@ -533,7 +533,15 @@ def workflow_transport(operation: str, payload: dict[str, Any]) -> dict[str, Any
     """Reuse the registered local capability and fixed, redirect-free transport."""
     if operation not in {"workflow-record", "workflow-status"}:
         raise ValueError("Unknown workflow usage operation")
-    _post("register", {"credentials": payload["credentials"]})
+    registration: dict[str, Any] = {"credentials": payload["credentials"]}
+    try:
+        device = _host_credentials()
+        if device is not None:
+            registration["device"] = {**device, "native_app": _host()}
+            registration["native_status"] = _reporter_status()
+    except (OSError, ValueError, sqlite3.Error):
+        LOGGER.warning("Computer identity is unavailable; usage delivery continues.")
+    _post("register", registration)
     return _post(operation, payload)
 
 

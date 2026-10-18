@@ -16,7 +16,7 @@ __all__ = [
 CONTACT_EMAIL = "fabio@mparanza.com"
 SUPPORT_EMAIL = "fabio@mparanza.com"
 LEGAL_EFFECTIVE_DATE = "July 31, 2026"
-ZERO_RETENTION_EFFECTIVE_DATE = "July 31, 2026"
+ZERO_RETENTION_EFFECTIVE_DATE = "October 17, 2026"
 
 LEGAL_PAGES: dict[str, dict[str, Any]] = {
     "zero-retention": {
@@ -169,12 +169,47 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
             },
             {
                 "id": "workflow-usage",
-                "title": "Vera Process Usage and Optional Feedback",
+                "title": "Anonymous usage and satisfaction monitoring",
                 "paragraphs": [
-                    "Vera records one opaque task ID for each substantive user process, its existing installation ID, process name from a fixed catalogue, host, version, timestamps and observed start, completion, failure or cancellation. An interrupted task remains outcome unknown. Studio Archive is supporting infrastructure, not a separately rated process.",
-                    "The usage service can link the task to its existing signed report receipt ID and SHA-256 digest and to an owned technical incident. This does not send the report, client documents, task text, filenames, prompts or professional outputs. Synthetic and agent-test activity is marked and excluded from ordinary usage statistics.",
-                    "After delivering the result, Vera offers one optional 1–5-star rating and optional comment. Your answer or the form’s submit button sends that feedback to the Vera team; there is no second confirmation. No answer remains unrated. Comments are user-authored text, not automatically copied case material. Service records are retained until administrative deletion without automatic expiry.",
-                    "The team reviews usage, outcomes and feedback to identify defects, quality and usability issues. A successful task, a hash receipt or a high rating does not establish professional validation or close a technical incident. Older uninstrumented versions and undelivered events remain coverage gaps, not proof of no use.",
+                    (
+                        "Vera automatically records which processes are used and their "
+                        "observed outcome: started, completed, failed or cancelled. A run "
+                        "with no observed outcome remains unknown. A random installation "
+                        "identifier, without a named account, also allows repeat usage to be "
+                        "measured. Records include the process, host application, Vera "
+                        "version and event timestamps."
+                    ),
+                    (
+                        "Users can rate the result from 1 to 5 stars and add an optional "
+                        "comment to help improve Vera. Without a response, the result "
+                        "remains unrated. Periodic "
+                        "AI monitoring reviews usage, outcomes and feedback to identify "
+                        "problems and improve the functions."
+                    ),
+                    (
+                        "Usage events contain no client documents, task text, filenames, "
+                        "prompts or professional outputs. They can link to an existing "
+                        "technical receipt through its identifier and report hash without "
+                        "sending the report. Studio Archive and supporting operations are not "
+                        "counted as separate processes; synthetic and agent tests are "
+                        "excluded from ordinary usage statistics."
+                    ),
+                    (
+                        "The service operates in Finland. Events, ratings, optional comments "
+                        "and receipt links are retained until administrative deletion, "
+                        "without automatic expiry. Events awaiting delivery remain in the "
+                        "local queue until receipt is acknowledged."
+                    ),
+                ],
+                "links": [
+                    {
+                        "label": "Vera usage monitoring",
+                        "href": "/static/shared/vera-compliance/index.html#monitoraggio-utilizzo",
+                    },
+                    {
+                        "label": "Technical description and transmitted fields",
+                        "href": "https://github.com/fabioannovazzi/app_files/blob/1e8a87934/plugins/vera/privacy/services/workflow-usage.json",
+                    },
                 ],
             },
             {
@@ -294,7 +329,10 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "and protect the Service;"
                     ),
                     ("to deliver requested downloads and transactional messages;"),
-                    ("to troubleshoot failures and provide support; and"),
+                    ("to troubleshoot failures and provide support;"),
+                    (
+                        "to measure Vera process usage, outcomes and satisfaction and improve its functions; and"
+                    ),
                     (
                         "to comply with law, enforce terms, and protect rights, "
                         "safety, and security."
@@ -343,6 +381,12 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "Feedback or suggestion content is transmitted only through the "
                         "explicit submission workflow and remains a support record until "
                         "administrative deletion."
+                    ),
+                    (
+                        "Vera usage monitoring: process events, optional ratings and "
+                        "comments, and receipt links remain until administrative "
+                        "deletion, without automatic expiry. The service stores no "
+                        "client documents, prompts or professional outputs in usage events."
                     ),
                     (
                         "Request-scoped hosted tools: the application does not "
@@ -560,7 +604,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
     "terms": {
         "title": "Terms of Service",
         "eyebrow": "Mparanza LLC",
-        "effective_date": "October 14, 2026",
+        "effective_date": "October 17, 2026",
         "summary": (
             "These Terms govern access to and use of mparanza.com, Mparanza LLC web "
             "tools, downloadable plugins, and related services. Ordinary plugin "
@@ -765,6 +809,42 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                     {
                         "label": "Data handling",
                         "href": "/data-handling?lang=it#run-evidence",
+                    },
+                ],
+            },
+            {
+                "id": "workflow-usage",
+                "title": "Anonymous usage and satisfaction monitoring",
+                "paragraphs": [
+                    (
+                        "Vera uses anonymous monitoring to measure process usage, observed "
+                        "outcomes and user satisfaction and to improve its functions. "
+                        "Technical events are sent automatically using a random installation "
+                        "identifier, without a named account. They include the process, host "
+                        "application, Vera version and event timestamps, with no client "
+                        "documents, task text, filenames, prompts or professional outputs."
+                    ),
+                    (
+                        "After a result is delivered, you can rate it from 1 to 5 stars and "
+                        "add an optional comment to help improve Vera. Without a response, "
+                        "the result remains unrated. Monitoring does not provide a guaranteed support response "
+                        "or change the professional review required for the result."
+                    ),
+                    (
+                        "The service operates in Finland. Its events, optional feedback and "
+                        "links to existing technical receipts remain until administrative "
+                        "deletion, without automatic expiry, as described in the Zero "
+                        "Retention Policy."
+                    ),
+                ],
+                "links": [
+                    {
+                        "label": "Data and retention for this service",
+                        "href": "/zero-retention#workflow-usage",
+                    },
+                    {
+                        "label": "Vera usage monitoring",
+                        "href": "/static/shared/vera-compliance/index.html#monitoraggio-utilizzo",
                     },
                 ],
             },
@@ -1132,7 +1212,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "title": "Problems and New Ideas",
                 "paragraphs": [
                     (
-                        "If Vera or Clara encounters a technical problem, it can "
+                        "For a problem you choose to report, Vera or Clara can "
                         "prepare a concise report with client material and identifying "
                         "details removed. You see the exact text before anything is "
                         "sent, and it goes to Mparanza only with your approval. This "
@@ -1148,15 +1228,44 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 ],
             },
             {
+                "id": "workflow-usage",
+                "title": "Vera monitoring and feedback",
+                "paragraphs": [
+                    (
+                        "Vera automatically reports technical faults and tracks their "
+                        "recovery. It also records anonymous process usage and observed "
+                        "outcomes. These technical events exclude client documents, prompts "
+                        "and professional outputs."
+                    ),
+                    (
+                        "After a result is delivered, you can rate it from 1 to 5 stars and "
+                        "add an optional comment to help improve Vera. Periodic AI monitoring "
+                        "reviews outcomes and feedback to identify problems and improvements. "
+                        "This does not create a support obligation or a guaranteed response "
+                        "time."
+                    ),
+                ],
+                "links": [
+                    {
+                        "label": "Technical fault diagnosis and recovery",
+                        "href": "/static/shared/vera-compliance/index.html#diagnosi-errori",
+                    },
+                    {
+                        "label": "Usage, satisfaction and retained data",
+                        "href": "/zero-retention#workflow-usage",
+                    },
+                ],
+            },
+            {
                 "id": "local-first",
                 "title": "Ordinary Functions Support Boundary",
                 "paragraphs": [
                     (
                         "Ordinary plugin functions run in your "
                         "selected AI host and workspace. Mparanza "
-                        "has no automatic access to your files, "
-                        "plugin runs, or outputs and cannot inspect "
-                        "them unless you choose to share details or "
+                        "has no automatic access to your files or "
+                        "outputs and cannot inspect their contents "
+                        "unless you choose to share details or "
                         "invoke a Mparanza-hosted service."
                     ),
                 ],

@@ -1,5 +1,16 @@
 {
+  "schema_version": 2,
   "display_name": "Plugin update check",
+  "security_controls": [],
+  "governed_paths": [
+    ".codex-plugin/plugin.json",
+    "hooks/hooks.json",
+    "scripts/check_for_update.py",
+    "scripts/onboarding_session_start.py",
+    "scripts/local_onboarding.py",
+    "scripts/local_teaching.py",
+    "skills/vera/SKILL.md"
+  ],
   "external_boundaries": [
     {
       "id": "automatic-version-check",
@@ -21,25 +32,14 @@
       ]
     }
   ],
-  "governed_paths": [
-    ".codex-plugin/plugin.json",
-    "hooks/hooks.json",
-    "scripts/check_for_update.py",
-    "scripts/onboarding_session_start.py",
-    "scripts/local_onboarding.py",
-    "scripts/local_teaching.py",
-    "skills/vera/SKILL.md"
-  ],
+  "service_id": "plugin-update-check",
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
-    "reviewed_at": "2026-10-17",
+    "source_fingerprint": "25ea9d90c74880d56f718f1547351f95e298da7141a71566a0b4fa7530693f7f",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "d578ec04174380cb3a9ce34c516329b1573e0b918ec5db3ef8565573f9869668"
+    "reviewed_at": "2026-10-17"
   },
   "runtime_profiles": [
     "openai-codex"
-  ],
-  "schema_version": 2,
-  "security_controls": [],
-  "service_id": "plugin-update-check"
+  ]
 }

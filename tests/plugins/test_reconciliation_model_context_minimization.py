@@ -81,24 +81,28 @@ def _review_payload(plugin: str) -> dict[str, object]:
     }
     if plugin == "check-entries":
         facts = payload["items"][0]["evidence"][0]["evidence_facts"]
-        facts.update({
-            "support_match_status": "ambiguous",
-            "candidate_filenames": [
-                "input_PRIVATE-RECEIPT/support_PRIVATE-FIRST.pdf",
-                "input_PRIVATE-RECEIPT/support_PRIVATE-SECOND.pdf",
-            ],
-            "nested": json.dumps({
-                "support_artifact_ids": ["PRIVATE-ARTIFACT"],
-                "source_paths": ["/private/customer/nested.pdf"],
-                "files": ["PRIVATE-FILE.pdf"],
-                "filenames": ["PRIVATE-FILENAME.pdf"],
-                "locators": ["PRIVATE-LOCATOR"],
-                "ids": ["PRIVATE-ID"],
-                "support_reuse_count": 2,
-                "currency_found": "CHF",
-                "reference": "REF-SECRET-9988",
-            }),
-        })
+        facts.update(
+            {
+                "support_match_status": "ambiguous",
+                "candidate_filenames": [
+                    "input_PRIVATE-RECEIPT/support_PRIVATE-FIRST.pdf",
+                    "input_PRIVATE-RECEIPT/support_PRIVATE-SECOND.pdf",
+                ],
+                "nested": json.dumps(
+                    {
+                        "support_artifact_ids": ["PRIVATE-ARTIFACT"],
+                        "source_paths": ["/private/customer/nested.pdf"],
+                        "files": ["PRIVATE-FILE.pdf"],
+                        "filenames": ["PRIVATE-FILENAME.pdf"],
+                        "locators": ["PRIVATE-LOCATOR"],
+                        "ids": ["PRIVATE-ID"],
+                        "support_reuse_count": 2,
+                        "currency_found": "CHF",
+                        "reference": "REF-SECRET-9988",
+                    }
+                ),
+            }
+        )
         payload["content_sha256"] = _check_entries_payload_digest(payload)
     return payload
 
@@ -259,8 +263,18 @@ def test_reconciliation_review_exposes_only_selected_case_context_to_model(
                 assert facts["nested"]["currency_found"] == "CHF"
                 assert "candidate_filenames" not in facts
                 assert "PRIVATE-" not in json.dumps(facts)
-            assert selected["cases"][0]["evidence"][0]["evidence_facts"]["nested"]["reference_present"] is True
-            assert selected_with_identifiers["cases"][0]["evidence"][0]["evidence_facts"]["nested"]["reference"] == "REF-SECRET-9988"
+            assert (
+                selected["cases"][0]["evidence"][0]["evidence_facts"]["nested"][
+                    "reference_present"
+                ]
+                is True
+            )
+            assert (
+                selected_with_identifiers["cases"][0]["evidence"][0]["evidence_facts"][
+                    "nested"
+                ]["reference"]
+                == "REF-SECRET-9988"
+            )
 
         exact_json = json.dumps(selected_with_identifiers, sort_keys=True)
         assert "DATA-DOC for REF-SECRET-9988" in exact_json
