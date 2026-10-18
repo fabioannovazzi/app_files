@@ -437,7 +437,8 @@ jobs:
       - name: Prepare the declared managed workflow runtime
         timeout-minutes: 10
         run: |
-          python plugins/clara/scripts/check_dependencies.py --module variance-analysis
+          python -m zipfile -e plugin_packages/clara/clara-plugin.zip "$RUNNER_TEMP/clara-managed-runtime"
+          python "$RUNNER_TEMP/clara-managed-runtime/clara-codex-plugin/plugins/clara/scripts/check_dependencies.py" --module variance-analysis
           python plugins/vera/scripts/check_dependencies.py --module concordato-plan-review
       - name: Verify teaching-kit languages, real executions and native packages
         run: >-
