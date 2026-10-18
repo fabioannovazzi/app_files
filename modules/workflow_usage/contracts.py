@@ -4,14 +4,57 @@ from __future__ import annotations
 
 import json
 from datetime import datetime
-from typing import Literal
+from typing import Any, Literal
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from modules.workflow_usage.products import Product, catalog_metadata
 
-__all__ = ["WorkflowEvent", "pipeline_catalog"]
+__all__ = ["WorkflowEvent", "pipeline_catalog", "event_fields", "event_schema"]
+
+_GROUPS = {
+    "started": {"pipeline", "host", "sample_kind"},
+    "receipt": {"receipt_id", "receipt_version", "report_sha256"},
+    "feedback": {"stars", "feedback_source", "comment"},
+    "incident": {"incident_report_id"},
+}
+_COMMON = {
+    "schema_version",
+    "product",
+    "event_id",
+    "run_id",
+    "sequence",
+    "kind",
+    "occurred_at",
+    "product_version",
+}
+
+
+def event_fields(kind: str) -> list[str]:
+    """Expose only contract field names, never rejected input values."""
+    return sorted(_COMMON | _GROUPS.get(kind, set()))
+
+
+def event_schema() -> dict[str, Any]:
+    """Make the advertised tool schema enforce the same mechanical event shapes."""
+    schema = WorkflowEvent.model_json_schema()
+    variants = []
+    for kind in schema["properties"]["kind"]["enum"]:
+        names = event_fields(kind)
+        properties = {name: schema["properties"][name] for name in names}
+        properties["kind"] = {"type": "string", "const": kind}
+        variants.append(
+            {
+                "type": "object",
+                "additionalProperties": False,
+                "properties": properties,
+                "required": sorted(
+                    set(schema["required"]) | (_GROUPS.get(kind, set()) - {"comment"})
+                ),
+            }
+        )
+    return {"oneOf": variants}
 
 
 def pipeline_catalog(product: Product = "vera") -> dict[str, str]:
@@ -59,12 +102,7 @@ class WorkflowEvent(BaseModel):
         """Reject accidental case fields and incomplete event-specific evidence."""
         if self.occurred_at.tzinfo is None:
             raise ValueError("A timezone is required")
-        groups = {
-            "started": {"pipeline", "host", "sample_kind"},
-            "receipt": {"receipt_id", "receipt_version", "report_sha256"},
-            "feedback": {"stars", "feedback_source", "comment"},
-            "incident": {"incident_report_id"},
-        }
+        groups = _GROUPS
         optional = {name for names in groups.values() for name in names}
         allowed = groups.get(self.kind, set())
         present = {name for name in optional if getattr(self, name) is not None}

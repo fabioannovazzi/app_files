@@ -26,11 +26,12 @@ def inspect(
     agents = set(json.loads(epoch["agent_devices_json"])) if epoch else set()
     cursor = connection.execute(
         sql(
-            "SELECT r.projection_json,d.device_id,a.last_seen "
+            "SELECT r.projection_json,COALESCE(h.device_id,d.device_id) AS device_id,a.last_seen "
             "FROM vera_workflow_runs r "
             "JOIN (SELECT run_id,MAX(received_at) AS last_seen FROM vera_workflow_events "
             "WHERE received_at>=? GROUP BY run_id) a ON a.run_id=r.run_id "
-            "LEFT JOIN operational_device_links d ON d.installation_id=r.installation_id"
+            "LEFT JOIN operational_device_links d ON d.installation_id=r.installation_id "
+            "LEFT JOIN workflow_run_hosts h ON h.run_id=r.run_id"
         ),
         (since,),
     )
