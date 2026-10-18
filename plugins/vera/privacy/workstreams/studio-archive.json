@@ -301,7 +301,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "7dad77b422189b34fdeec376a583c6e9d070b0e00bc073ebd8250a24fd2d19f2"
+    "source_fingerprint": "b9b8719582d879eb5c10955b4b35bb70c51f89c1c1d5e9bd56fa96a1941838fd"
   },
   "role": "internal_engine",
   "runtime_profiles": [
@@ -409,6 +409,10 @@
     {
       "id": "maintained-read-only-input-verification",
       "control": "Select 1 to 100 unique exact input IDs within the selected client engagement. Use the maintained receipt reader to validate ownership, non-linked controlled paths, receipt seals and all file bytes. Compare an optional complete set of prior receipt seals without inventing a historical baseline. Reject malformed arguments, preserve structured failures and perform no client-tree repair or mutation. Exact-population checks are explicit. Byte verification does not establish document meaning, authored version lineage, historical retry outcomes or professional acceptance."
+    },
+    {
+      "id": "isolated-invalid-run-records",
+      "control": "Archive inventories expose only the ordinary run directory identifier and a fixed unavailable status when a run fails integrity validation. No fields or paths from that invalid record are promoted into model context or usable artifacts. Healthy records remain accessible; invalid records are preserved unchanged, and execution, handoff and same-request replay still fail closed."
     }
   ],
   "workstream": "studio-archive",
