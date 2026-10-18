@@ -74,6 +74,7 @@ from archive_core import (
     start_studio_client_workflow,
     studio_archive_status,
     studio_google_drive_status,
+    verify_studio_client_inputs,
 )
 
 __all__ = ["main"]
@@ -145,6 +146,13 @@ def _parser() -> argparse.ArgumentParser:
 
     engagements = subparsers.add_parser("engagements")
     engagements.add_argument("--client-id", required=True)
+
+    verification = subparsers.add_parser("verify-inputs")
+    verification.add_argument("--client-id", required=True)
+    verification.add_argument("--engagement-id", required=True)
+    verification.add_argument("--input-id", action="append", required=True)
+    verification.add_argument("--expected-receipts-json")
+    verification.add_argument("--require-exact-input-set", action="store_true")
 
     snapshot_folder = subparsers.add_parser("snapshot-client-folder")
     snapshot_folder.add_argument("--client-id", required=True)
@@ -336,6 +344,18 @@ def main(argv: list[str] | None = None) -> int:
             )
         elif args.command == "engagements":
             result = list_studio_client_engagements(args.client_id)
+        elif args.command == "verify-inputs":
+            result = verify_studio_client_inputs(
+                args.client_id,
+                args.engagement_id,
+                args.input_id,
+                expected_receipts=(
+                    json.loads(args.expected_receipts_json)
+                    if args.expected_receipts_json is not None
+                    else None
+                ),
+                require_exact_input_set=args.require_exact_input_set,
+            )
         elif args.command == "snapshot-client-folder":
             result = snapshot_studio_client_folder(
                 args.client_id,
@@ -486,7 +506,9 @@ def main(argv: list[str] | None = None) -> int:
         _emit({"error": error})
         return 1
     _emit(result)
-    return 0
+    return (
+        1 if args.command == "verify-inputs" and result["verified"] is not True else 0
+    )
 
 
 if __name__ == "__main__":

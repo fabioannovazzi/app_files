@@ -1920,7 +1920,152 @@ def test_symlinked_source_is_not_indexed(
     ]
 
 
-def test_mcp_lists_thirty_three_strict_local_tools(tmp_path: Path) -> None:
+def test_mcp_verifies_same_name_imports_retry_and_continuation_in_fresh_session(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("VERA_STUDIO_ARCHIVE_PROFILE_DIR", str(tmp_path / "profile"))
+    archive = tmp_path / "Studio"
+    archive.mkdir()
+    state = tmp_path / "first-session"
+    _mcp_tool(
+        "configure_studio_archive", {"archive_root": str(archive)}, state_dir=state
+    )
+    created = _mcp_tool(
+        "create_studio_archive_client",
+        {"legal_name": "Synthetic verification"},
+        state_dir=state,
+    )["structuredContent"]
+    cid = created["client"]["client_id"]
+    eid = _mcp_tool(
+        "create_studio_client_engagement",
+        {"client_id": cid, "engagement_label": "Opening-file handoff"},
+        state_dir=state,
+    )["structuredContent"]["engagement"]["engagement_id"]
+    receipts = []
+    for folder, name, content, role in [
+        ("Contracts", "note.txt", "Proposed fee CHF 1800. Unsigned.", "source"),
+        ("Administration", "note.txt", "EUR 1200 stated; bank proof absent.", "source"),
+        ("Drafts", "handoff.md", "Derived unapproved note v1.", "support"),
+        (
+            "Continuation",
+            "handoff.md",
+            "Derived unapproved note v2; proof pending.",
+            "support",
+        ),
+    ]:
+        path = tmp_path / folder / name
+        path.parent.mkdir()
+        path.write_text(content, encoding="utf-8")
+        arguments = {
+            "client_id": cid,
+            "engagement_id": eid,
+            "role": role,
+            "source_path": str(path),
+        }
+        saved = _mcp_tool("import_studio_client_document", arguments, state_dir=state)[
+            "structuredContent"
+        ]
+        receipts.append(saved["input_receipt"])
+    retry = _mcp_tool("import_studio_client_document", arguments, state_dir=state)[
+        "structuredContent"
+    ]
+    client_root = Path(created["client_folder"]["client_root"])
+    before = {
+        str(path.relative_to(client_root)): path.read_bytes()
+        for path in client_root.rglob("*")
+        if path.is_file()
+    }
+    arguments = {
+        "client_id": cid,
+        "engagement_id": eid,
+        "input_ids": [item["input_id"] for item in receipts],
+        "expected_receipts": [
+            {key: item[key] for key in ("input_id", "content_sha256")}
+            for item in receipts
+        ],
+        "require_exact_input_set": True,
+    }
+
+    response = _mcp_tool(
+        "verify_studio_client_inputs", arguments, state_dir=tmp_path / "fresh-session"
+    )
+
+    result = response["structuredContent"]
+    assert response["isError"] is False
+    assert result["schema_version"] == "vera.input_verification.v1"
+    assert result["verified"] is True
+    assert result["input_set_matches"] is True
+    assert result["expected_receipts_checked"] is True
+    assert result["selected_input_count"] == 4
+    assert (
+        result["inputs"][0]["receipt"]["original_name"]
+        == result["inputs"][1]["receipt"]["original_name"]
+    )
+    assert result["inputs"][0]["input_id"] != result["inputs"][1]["input_id"]
+    assert retry["status"] == "already_imported"
+    assert retry["input_id"] == receipts[-1]["input_id"]
+    assert {
+        str(path.relative_to(client_root)): path.read_bytes()
+        for path in client_root.rglob("*")
+        if path.is_file()
+    } == before
+
+    Path(receipts[0]["path"]).write_text("Altered after import")
+    blocked = _mcp_tool(
+        "verify_studio_client_inputs", arguments, state_dir=tmp_path / "fresh-session"
+    )
+    assert blocked["isError"] is True
+    assert blocked["structuredContent"]["verified"] is False
+    assert blocked["structuredContent"]["inputs"][0]["status"] == "failed"
+    assert blocked["structuredContent"]["inputs"][1]["status"] == "verified"
+    assert Path(receipts[0]["path"]).read_text() == "Altered after import"
+
+
+@pytest.mark.parametrize(
+    "override",
+    [
+        {"input_ids": []},
+        {"input_ids": ["input_" + "1" * 24] * 2},
+        {"input_ids": ["../receipt.json"]},
+        {"require_exact_input_set": "true"},
+        {"expected_receipts": []},
+        {
+            "expected_receipts": [
+                {"input_id": "input_" + "1" * 24, "content_sha256": "bad"}
+            ]
+        },
+        {
+            "expected_receipts": [
+                {
+                    "input_id": "input_" + "1" * 24,
+                    "content_sha256": "0" * 64,
+                    "path": "/foreign",
+                }
+            ]
+        },
+        {"client_id": "foreign"},
+        {"source_path": "/foreign"},
+    ],
+)
+def test_mcp_verification_rejects_malformed_requests_before_client_access(
+    tmp_path: Path, override: dict
+) -> None:
+    state = tmp_path / "absent-state"
+    result = _mcp_tool(
+        "verify_studio_client_inputs",
+        {
+            "client_id": "client_" + "1" * 24,
+            "engagement_id": "eng_" + "1" * 24,
+            "input_ids": ["input_" + "1" * 24],
+            **override,
+        },
+        state_dir=state,
+    )
+    assert result["isError"] is True
+    assert not state.exists()
+
+
+def test_mcp_lists_strict_local_tools(tmp_path: Path) -> None:
     response = _mcp_request(
         {
             "jsonrpc": "2.0",
@@ -1948,6 +2093,7 @@ def test_mcp_lists_thirty_three_strict_local_tools(tmp_path: Path) -> None:
         "get_studio_archive_organization_inventory",
         "open_studio_archive_organization_item",
         "list_studio_client_engagements",
+        "verify_studio_client_inputs",
         "prepare_studio_client_workflow",
         "start_check_entries_from_sample",
         "start_studio_client_workflow",

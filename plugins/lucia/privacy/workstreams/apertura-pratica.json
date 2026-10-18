@@ -30,7 +30,8 @@
     "plugins/lucia/skills/lucia/references/workflow-usage.md",
     "plugins/lucia/skills/lucia/references/incident-recovery.md",
     "plugins/lucia/skills/lucia/references/model-data-report-contract.md",
-    "plugins/lucia/usage/pipelines.json"
+    "plugins/lucia/usage/pipelines.json",
+    "plugins/studio-archive/scripts/input_verification.py"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -79,6 +80,15 @@
         "id": "handled-archive-error-review",
         "purpose": "Diagnose a handled Archive helper failure through the existing local host review",
         "content": "Handled Archive, OS, value and SQLite exceptions are retained locally before the unchanged structured error returns. The selected host model may review this diagnostic under its existing account; dynamic paths or case values may be present locally. The shared Lucia technical collector sends source-bound exception facts automatically, and the host sends only reviewed relevant technical evidence to the product incident service. Raw stderr and professional stdout are not forwarded.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "selected-archive-input-verification",
+        "purpose": "Verify selected saved inputs and compare their immutable receipts with a supplied prior baseline",
+        "content": "The selected client, engagement and input IDs; prior receipt seals when supplied; verified input names, roles, controlled absolute and relative paths, byte counts, file hashes, receipt seals, timestamps and verification results or bounded failures. Optional exact-population checking returns current input IDs for the selected engagement. Complete file bytes are read locally for hashing; this operation returns no document text and makes no new connector, model API or hosted-service call. Returned metadata can enter the invoking host model context and is not anonymized.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -203,13 +213,17 @@
     {
       "id": "private-root-specific-identity-continuity",
       "control": "Approved archive discovery is revalidated before a fresh isolated session adopts it; existing sessions stay pinned. Private identity aliases are root-specific and short cross-process transactions prevent lost updates. Unavailable or malformed profile state fails closed, and private profile storage must remain outside source archives."
+    },
+    {
+      "id": "maintained-read-only-input-verification",
+      "control": "Select 1 to 100 unique exact input IDs within the selected client engagement. Use the maintained receipt reader to validate ownership, non-linked controlled paths, receipt seals and all file bytes. Compare an optional complete set of prior receipt seals without inventing a historical baseline. Reject malformed arguments, preserve structured failures and perform no client-tree repair or mutation. Exact-population checks are explicit. Byte verification does not establish document meaning, authored version lineage, historical retry outcomes or professional acceptance."
     }
   ],
   "review": {
     "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "ec32693e4633ee53b438d1ec1b502bedd3bfdd504ad9e3bb6b05811ec9c4e1b1"
+    "source_fingerprint": "5934bac17dd1c7fc06b1e7a2307f3bfcddd667dfbbad47ef6b7253ab6f26791e"
   },
   "public_explanations": {
     "apertura-pratica": {
@@ -218,27 +232,32 @@
         "it": [
           "Il modello può leggere i materiali selezionati per preparare il fascicolo legale; conflitti, termini, antiriciclaggio e accettazione restano decisioni dell'avvocato.",
           "Possono arrivare identità e contatti; nomi, alias e identificativi di cliente, assistito, controparti e altri soggetti; incarico richiesto, fatti, giurisdizione e stato del procedimento; ambito, esclusioni, poteri e compensi; riferimenti e candidati della ricerca conflitti; possibili termini e fonti; vincoli di riservatezza; dati per valutare se si applichi l'antiriciclaggio; privacy, conservazione, elementi mancanti, nomi e hash delle evidenze, decisioni di revisione e stato del pacchetto.",
-          "Non c'è anonimizzazione automatica né garanzia di elaborazione solo locale. L'eventuale ricerca su fonti ufficiali usa domande generiche e non deve contenere identità, fatti privati, documenti, credenziali o dati del registro conflitti. Il piano cartelle è solo proposto: i file non vengono spostati o rinominati automaticamente."
+          "Non c'è anonimizzazione automatica né garanzia di elaborazione solo locale. L'eventuale ricerca su fonti ufficiali usa domande generiche e non deve contenere identità, fatti privati, documenti, credenziali o dati del registro conflitti. Il piano cartelle è solo proposto: i file non vengono spostati o rinominati automaticamente.",
+          "La verifica dei documenti salvati legge localmente tutti i byte selezionati. Al modello restituisce ID, nomi, ruoli, percorsi, dimensioni, impronte dei file e delle ricevute ed esiti dei controlli, senza il testo dei documenti. Il confronto con ricevute precedenti verifica la conservazione; non approva il contenuto."
         ],
         "en": [
           "The model can read selected material used to prepare the legal matter file; conflicts, deadlines, AML, and acceptance remain lawyer decisions.",
           "This may include identity and contact material; names, aliases, and identifiers for the client, assisted party, counterparties, and other relevant parties; requested work, facts, jurisdiction, and procedural posture; scope, exclusions, authority, and fee status; conflict-search references and candidate matches; possible deadlines and sources; confidentiality restrictions; conditional AML material; privacy and retention posture; missing items; evidence names and hashes; review decisions; and package status.",
-          "There is no automatic anonymization or local-only processing guarantee. Optional official-source research uses generic queries and must exclude identities, private facts, documents, credentials, and conflict-register data. The folder plan is a proposal only: files are not moved or renamed automatically."
+          "There is no automatic anonymization or local-only processing guarantee. Optional official-source research uses generic queries and must exclude identities, private facts, documents, credentials, and conflict-register data. The folder plan is a proposal only: files are not moved or renamed automatically.",
+          "Verification of saved documents reads all selected bytes locally. It returns IDs, names, roles, paths, sizes, file and receipt hashes, and check results to the model, without document text. Comparison with prior receipts checks preservation; it does not approve the content."
         ],
         "fr": [
           "Le modèle peut lire les éléments sélectionnés pour préparer le dossier juridique ; conflits, délais, LBC et acceptation restent des décisions de l'avocat.",
           "Cela peut comprendre identités et contacts ; noms, alias et identifiants du client, de la partie assistée, des contreparties et autres personnes pertinentes ; mission demandée, faits, juridiction et état de la procédure ; périmètre, exclusions, pouvoirs et honoraires ; références et candidats de la recherche de conflits ; délais possibles et sources ; restrictions de confidentialité ; éléments pour apprécier l'application de la LBC ; posture de confidentialité et conservation ; pièces manquantes ; noms et empreintes des preuves ; décisions de revue et état du paquet.",
-          "Il n'y a ni anonymisation automatique ni garantie de traitement exclusivement local. La recherche facultative de sources officielles utilise des requêtes génériques et doit exclure identités, faits privés, documents, identifiants de connexion et données du registre des conflits. Le plan de classement reste une proposition : les fichiers ne sont ni déplacés ni renommés automatiquement."
+          "Il n'y a ni anonymisation automatique ni garantie de traitement exclusivement local. La recherche facultative de sources officielles utilise des requêtes génériques et doit exclure identités, faits privés, documents, identifiants de connexion et données du registre des conflits. Le plan de classement reste une proposition : les fichiers ne sont ni déplacés ni renommés automatiquement.",
+          "La vérification des documents enregistrés lit localement tous les octets sélectionnés. Elle transmet au modèle les identifiants, noms, rôles, chemins, tailles, empreintes des fichiers et reçus, et résultats des contrôles, sans le texte des documents. La comparaison avec les reçus précédents vérifie la conservation ; elle ne valide pas le contenu."
         ],
         "de": [
           "Das Modell kann ausgewähltes Material zur Vorbereitung der Mandatsakte lesen; Konflikte, Fristen, Geldwäscheprüfung und Annahme entscheidet der Anwalt.",
           "Dazu können Identitäts- und Kontaktdaten, Namen, Aliasnamen und Kennungen von Mandant, vertretener Partei, Gegenparteien und weiteren Beteiligten gehören; Auftrag, Sachverhalt, Rechtsordnung und Verfahrensstand; Umfang, Ausschlüsse, Vollmacht und Honorarstatus; Referenzen und Trefferkandidaten der Konfliktprüfung; mögliche Fristen und Quellen; Vertraulichkeitsbeschränkungen; Angaben zur bedingten Geldwäscheprüfung; Datenschutz- und Aufbewahrungslage; fehlende Elemente; Namen und Hashes von Nachweisen; Prüfentscheidungen und Paketstatus.",
-          "Es gibt keine automatische Anonymisierung und keine Garantie ausschließlich lokaler Verarbeitung. Optionale Recherchen in amtlichen Quellen verwenden allgemeine Anfragen und müssen Identitäten, private Fakten, Dokumente, Zugangsdaten und Inhalte des Konfliktregisters ausschließen. Der Ordnerplan ist nur ein Vorschlag; Dateien werden nicht automatisch verschoben oder umbenannt."
+          "Es gibt keine automatische Anonymisierung und keine Garantie ausschließlich lokaler Verarbeitung. Optionale Recherchen in amtlichen Quellen verwenden allgemeine Anfragen und müssen Identitäten, private Fakten, Dokumente, Zugangsdaten und Inhalte des Konfliktregisters ausschließen. Der Ordnerplan ist nur ein Vorschlag; Dateien werden nicht automatisch verschoben oder umbenannt.",
+          "Die Prüfung gespeicherter Dokumente liest alle ausgewählten Bytes lokal. Das Modell erhält IDs, Namen, Rollen, Pfade, Größen, Datei- und Beleg-Hashes sowie Prüfergebnisse, ohne Dokumenttext. Der Vergleich mit früheren Belegen prüft die unveränderte Aufbewahrung; er genehmigt den Inhalt nicht."
         ],
         "es": [
           "El modelo puede leer los materiales seleccionados para preparar el expediente jurídico; conflictos, plazos, PBC y aceptación siguen siendo decisiones del abogado.",
           "Pueden incluir identidad y contacto; nombres, alias e identificadores del cliente, parte asistida, contrapartes y otros sujetos relevantes; trabajo solicitado, hechos, jurisdicción y estado procesal; alcance, exclusiones, poderes y honorarios; referencias y candidatos de la búsqueda de conflictos; posibles plazos y fuentes; restricciones de confidencialidad; datos para valorar la aplicación de PBC; privacidad y conservación; elementos faltantes; nombres y hashes de las evidencias; decisiones de revisión y estado del paquete.",
-          "No hay anonimización automática ni garantía de procesamiento solo local. La investigación opcional en fuentes oficiales usa consultas genéricas y debe excluir identidades, hechos privados, documentos, credenciales y datos del registro de conflictos. El plan de carpetas es solo una propuesta: los archivos no se mueven ni se renombran automáticamente."
+          "No hay anonimización automática ni garantía de procesamiento solo local. La investigación opcional en fuentes oficiales usa consultas genéricas y debe excluir identidades, hechos privados, documentos, credenciales y datos del registro de conflictos. El plan de carpetas es solo una propuesta: los archivos no se mueven ni se renombran automáticamente.",
+          "La verificación de documentos guardados lee localmente todos los bytes seleccionados. Devuelve al modelo los identificadores, nombres, funciones, rutas, tamaños, huellas de archivos y recibos, y resultados de los controles, sin el texto de los documentos. La comparación con recibos anteriores verifica la conservación; no aprueba el contenido."
         ]
       }
     }

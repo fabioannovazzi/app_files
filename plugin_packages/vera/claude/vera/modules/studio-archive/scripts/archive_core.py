@@ -57,6 +57,7 @@ import archive_preferences as preferences  # noqa: E402
 import client_ledger as ledger  # noqa: E402
 import folder_intake  # noqa: E402
 import google_drive as drive  # noqa: E402
+import input_verification  # noqa: E402
 from vera_assurance import (  # noqa: E402
     JOURNAL_SAMPLING_CHECK_ENTRIES_HANDOFF,
     VERA_CLIENT_WORKFLOW_IDS,
@@ -87,6 +88,7 @@ __all__ = [
     "import_studio_client_document",
     "copy_studio_client_source_folder",
     "list_studio_client_engagements",
+    "verify_studio_client_inputs",
     "list_studio_client_identities",
     "list_studio_clients",
     "match_studio_email_client",
@@ -3382,6 +3384,32 @@ def import_studio_client_document(
         "original_preserved": True,
         "source_archive_mutated": imported["source_archive_mutated"],
     }
+
+
+def verify_studio_client_inputs(
+    client_id: str,
+    engagement_id: str,
+    input_ids: Sequence[str],
+    *,
+    expected_receipts: Sequence[Mapping[str, Any]] | None = None,
+    require_exact_input_set: bool = False,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Verify exact selected imports through the maintained portable readers."""
+
+    private_state = _state_dir(state_dir)
+    root = _selected_ledger_root(client_id, engagement_id, state_dir=private_state)
+    try:
+        return input_verification.verify_inputs(
+            root,
+            client_id,
+            engagement_id,
+            input_ids,
+            expected_receipts=expected_receipts,
+            require_exact_input_set=require_exact_input_set,
+        )
+    except ledger.LedgerError as exc:
+        raise ArchiveError(f"Input verification request failed: {exc}") from exc
 
 
 def list_studio_client_engagements(

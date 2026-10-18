@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/mparanza-shared-privacy/plugins/vera",
-  "version": "0.1.409",
-  "captured_at": "2026-10-18T13:24:12.665125+00:00",
-  "catalogue_fingerprint": "928eb839d0f619f103333ca3962d02c09b0bed915b1b295a2a2c64745db78b2d",
-  "manifest_sha256": "a1333cf0c8560f7e5d1a51f206f58a6caa0ea1e51ac4e5cd4349ce4db6f9c7e7",
+  "root": "/Users/fabio/Documents/Codex/2026-10-18/studio-archive-01-ripartenza-0408/work/archive-verification-src/plugins/vera",
+  "version": "0.1.410",
+  "captured_at": "2026-10-18T14:24:27.626233+00:00",
+  "catalogue_fingerprint": "7c528861ca96f3862ca55a452dabbf4e284f1d40c873f2534017a76c5b9b5cd5",
+  "manifest_sha256": "1b1deabec0b100857dd5d7e3426c6e77bf762151b2fa3ddac3200e2ed0adf6ea",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -249,7 +249,7 @@
     {
       "function_id": "studio-archive",
       "skill_path": "skills/studio-archive/SKILL.md",
-      "sha256": "86fb69413e766e2ee96810a36c836788cd834d940182ccad6b8b68dd24cc5e48"
+      "sha256": "67f4fd8675e68a0d4c2acebaf9cfbdd040a0c4fae42a3266b12de72ad25c0939"
     },
     {
       "function_id": "studio-document-format",
@@ -274,7 +274,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "a63d87728c34ddc83d2f39d318d4bd92bea54a4207f8fb17d25ee28ee74d55ff"
+      "sha256": "24cd6211105af34f8f858e6cab90b372aeadd1039c966250d95ab4e98d7e5aef"
     },
     {
       "function_id": "vouching",
