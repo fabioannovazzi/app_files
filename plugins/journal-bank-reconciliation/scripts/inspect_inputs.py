@@ -62,6 +62,7 @@ if _SCRIPTS_DIR not in _bootstrap_sys.path:
     _bootstrap_sys.path.insert(0, _SCRIPTS_DIR)
 
 import argparse
+import json
 import logging
 from pathlib import Path
 
@@ -89,6 +90,9 @@ def main() -> int:
     parser.add_argument("--client-engagement", type=Path, required=True)
     parser.add_argument("--sample", type=Path, help="Optional sample movements file.")
     parser.add_argument("--recipe", type=Path, help="Optional existing recipe JSON.")
+    from vera_journal_pdf.recovery import add_recovery_args
+
+    add_recovery_args(parser)
     add_common_args(parser)
     args = parser.parse_args()
     configure_logging(args.verbose)
@@ -105,6 +109,27 @@ def main() -> int:
     except AssuranceContractError as exc:
         LOGGER.error("CLIENT_ENGAGEMENT_BLOCKED: %s", exc)
         return 2
+
+    if args.pdf_recovery:
+        if not args.pdf_currency:
+            parser.error("--pdf-currency is required for recovery")
+        from vera_journal_pdf.recovery import recover_pdf
+
+        recipe = json.loads(args.recipe.read_text()) if args.recipe else {}
+        entry = recipe.get("journal", {}).get("files", {}).get(args.journal.name, {})
+        result = recover_pdf(
+            args.journal,
+            args.output_dir,
+            args.pdf_recovery,
+            currency=args.pdf_currency,
+            layout=entry.get("pdf_registration_layout"),
+            pages=args.pdf_pages,
+            region=args.pdf_region,
+            reason=args.pdf_reason,
+            render=args.pdf_render,
+        )
+        LOGGER.info("%s", json.dumps(result, ensure_ascii=False))
+        return 0
 
     result = inspect_inputs(
         args.bank,

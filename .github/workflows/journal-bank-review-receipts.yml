@@ -37,7 +37,8 @@ jobs:
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_journal_sampling_plugin.py
           tests/plugins/test_journal_bank_reconciliation_plugin.py
-          -k registration_pdf
+          tests/plugins/test_journal_pdf_recovery.py
+          -k 'registration_pdf or journal_pdf_recovery'
           --cov=vera_journal_pdf --cov-report=term-missing --cov-fail-under=80
       - name: Verify shared PDF receipt integrity and worker termination diagnostics
         run: >-
@@ -52,10 +53,10 @@ jobs:
           tests/plugins/test_check_entries_plugin.py::test_vouching_accepts_complete_reviewed_cross_page_pdf_journal
       - name: Check shared PDF reader quality
         run: |
-          python -m black --check plugins/_shared/vendor/modules/vera_journal_pdf/__init__.py plugins/vera/scripts/managed_python_runtime.py
-          python -m isort --check-only plugins/_shared/vendor/modules/vera_journal_pdf/__init__.py plugins/vera/scripts/managed_python_runtime.py
-          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/_shared/vendor/modules/vera_journal_pdf/__init__.py plugins/vera/scripts/managed_python_runtime.py
-          python -m bandit -q plugins/_shared/vendor/modules/vera_journal_pdf/__init__.py plugins/vera/scripts/managed_python_runtime.py
+          python -m black --check plugins/_shared/vendor/modules/vera_journal_pdf/*.py plugins/vera/scripts/managed_python_runtime.py tests/plugins/test_journal_pdf_recovery.py tests/plugins/journal_pdf_fixtures.py
+          python -m isort --check-only plugins/_shared/vendor/modules/vera_journal_pdf/*.py plugins/vera/scripts/managed_python_runtime.py tests/plugins/test_journal_pdf_recovery.py tests/plugins/journal_pdf_fixtures.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/_shared/vendor/modules/vera_journal_pdf/*.py plugins/vera/scripts/managed_python_runtime.py
+          python -m bandit -q plugins/_shared/vendor/modules/vera_journal_pdf/*.py plugins/vera/scripts/managed_python_runtime.py
       - name: Check review entrypoint quality
         run: |
           python -m black --check plugins/journal-bank-reconciliation/scripts/seal_review_receipts.py tests/plugins/test_journal_bank_review_receipts.py

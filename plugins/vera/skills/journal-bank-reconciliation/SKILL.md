@@ -113,3 +113,10 @@ extraction, ad hoc scripts, or another parser inside this Vera run. Preserve
 `vera:journal-bank-reconciliation` as the workflow provenance, report zero
 emitted movements and no reconciliation deliverable, request a labelled text
 PDF table or reviewed CSV/XLSX export, and stop dependent work.
+
+For recoverable ruled/PCL journal layouts, use the component's maintained
+`references/pdf-recovery.md` inspection–trial–freeze loop before closing an
+unsupported-layout result. Review targeted evidence, revise only supported
+recipe options, retain all attempts and require full-source replay plus the
+ordinary source-mapping receipt. Product self-improvement and generated parsers
+are not part of this route.

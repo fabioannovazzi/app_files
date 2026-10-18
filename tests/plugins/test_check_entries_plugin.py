@@ -509,9 +509,9 @@ def _text_pdf_bytes(lines: list[str]) -> bytes:
 def _load_journal_sampling_core() -> Any:
     previous_bootstrap = sys.modules.pop("implementation_bootstrap", None)
     script_dir = str(JOURNAL_SAMPLING_SCRIPT_DIR)
-    inserted = script_dir not in sys.path
-    if inserted:
-        sys.path.insert(0, script_dir)
+    # Other suites can leave this directory behind another plugin's scripts.
+    # Give this import precedence, then remove only the temporary entry.
+    sys.path.insert(0, script_dir)
     spec = importlib.util.spec_from_file_location(
         "journal_sampling_core_for_check_entries",
         JOURNAL_SAMPLING_CORE_PATH,
@@ -525,8 +525,7 @@ def _load_journal_sampling_core() -> Any:
         sys.modules.pop("implementation_bootstrap", None)
         if previous_bootstrap is not None:
             sys.modules["implementation_bootstrap"] = previous_bootstrap
-        if inserted:
-            sys.path.remove(script_dir)
+        sys.path.remove(script_dir)
     return module
 
 
