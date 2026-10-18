@@ -1,0 +1,111 @@
+{
+  "schema_version": 3,
+  "workstream": "posizioni-negoziali",
+  "display_name": "Posizioni negoziali",
+  "role": "workflow",
+  "governed_paths": [
+    "skills/posizioni-negoziali",
+    "scripts/legal_citations.py",
+    "scripts/legal_citations.schema.json",
+    "scripts/legal_citations_labels.json",
+    "scripts/legal_documents.py",
+    "scripts/legal_documents_labels.json",
+    "scripts/legal_documents_review.schema.json",
+    "scripts/legal_docx.py",
+    "scripts/legal_matter.py",
+    "scripts/legal_matter.schema.json",
+    "scripts/legal_matter_labels.json",
+    "scripts/legal_negotiation.py",
+    "scripts/legal_negotiation.schema.json",
+    "scripts/legal_negotiation_labels.json",
+    "scripts/legal_playbook.py",
+    "scripts/legal_playbook.schema.json",
+    "scripts/legal_playbook_labels.json",
+    "scripts/legal_proofreading.py",
+    "scripts/legal_proofreading.schema.json",
+    "scripts/legal_proofreading_labels.json",
+    "scripts/legal_word_bridge.py",
+    "skills/revisione-contratti/references",
+    "skills/lucia/references/model-data-report-contract.md"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "selected-task-evidence",
+        "purpose": "Carry out posizioni-negoziali using the selected evidence and user instructions",
+        "content": "The model may read the selected agreement, names and amounts, deleted and proposed text, revisions, recorded authors/dates, Word properties, comments/anchors, firm instructions, groups, requested responses, earlier review and inspected rendered pages. Originals, inventory, reviews and outputs remain local; helpers call no models, Mike or editing service. Any necessary legal research uses host tools with general questions, without client documents or identifying data in queries. Lucia reads only selected Archive materials; its report can send Mparanza schema, UUID, product name and Lucia version and report digest, without contracts or report contents. User-requested local mode excludes that external receipt. Model processing and Documents/Word follow the host account; content is not automatically anonymized.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "selected-public-legal-research",
+      "kind": "public_research",
+      "destination": "Public legal sources through the selected host research tools",
+      "purpose": "Verify authorities needed for the selected question",
+      "content": "General legal references, provision identifiers and questions without client documents or identifying case facts.",
+      "optional": true,
+      "requires_confirmation": false,
+      "controls": [
+        "Use the current legal-question method; do not include credentials or attach private case files. Retain actual sources and access limits."
+      ],
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork",
+        "openai-chatgpt",
+        "google-antigravity"
+      ]
+    }
+  ],
+  "security_controls": [],
+  "review": {
+    "basis": "external_boundary_review_of_workflow_source",
+    "reviewed_at": "2026-10-18",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "705d35bcfe53e6b69b9d44d0541f998b8dd592df3823532f92fd9780d529fa32"
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ],
+  "public_explanations": {
+    "posizioni-negoziali": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Il modello può leggere il contratto scelto, nomi e importi, testo eliminato e proposto, revisioni, autori e date registrati, proprietà Word, commenti e ancore, istruzioni dello studio, raggruppamenti, risposte richieste, review precedente e pagine renderizzate ispezionate. Originali, inventario, review e output sono locali; i helper non chiamano modelli, Mike o servizi di editing. La ricerca giuridica eventualmente necessaria usa gli strumenti dell’host con questioni generali senza documenti o dati identificanti del cliente nelle query. In Lucia entrano solo i materiali Archive selezionati; il report può trasmettere a Mparanza schema, UUID, versione Lucia e digest del report, senza contratti o contenuto del report. Il modo locale richiesto esclude quella ricevuta esterna. Elaborazione del modello e Documents/Word seguono l’account dell’host; i dati non sono automaticamente anonimizzati."
+        ],
+        "en": [
+          "The model may read the selected agreement, names and amounts, deleted and proposed text, revisions, recorded authors/dates, Word properties, comments/anchors, firm instructions, groups, requested responses, earlier review and inspected rendered pages. Originals, inventory, reviews and outputs remain local; helpers call no models, Mike or editing service. Any necessary legal research uses host tools with general questions, without client documents or identifying data in queries. Lucia reads only selected Archive materials; its report can send Mparanza schema, UUID, product name and Lucia version and report digest, without contracts or report contents. User-requested local mode excludes that external receipt. Model processing and Documents/Word follow the host account; content is not automatically anonymized."
+        ],
+        "fr": [
+          "Le modèle peut lire le contrat choisi, noms et montants, texte supprimé/proposé, révisions, auteurs/dates enregistrés, propriétés Word, commentaires/repères, instructions, groupes, réponses demandées, revue antérieure et pages rendues inspectées. Originaux, inventaire, revues et sorties sont locaux ; les helpers n’appellent ni modèle, Mike ou service d’édition. La recherche juridique utilise les outils de l’hôte avec questions générales sans documents ou données identifiantes du client dans les requêtes. Lucia lit seulement les pièces Archive choisies ; son rapport peut transmettre à Mparanza schéma, UUID, version Lucia et empreinte du rapport, sans contrats ni contenu du rapport. Le mode local demandé exclut ce reçu externe. Modèle et Documents/Word suivent le compte hôte ; aucune anonymisation automatique."
+        ],
+        "de": [
+          "Das Modell kann den gewählten Vertrag, Namen/Beträge, gelöschten/vorgeschlagenen Text, Revisionen, erfasste Autoren/Daten, Word-Eigenschaften, Kommentare/Anker, Kanzleivorgaben, Gruppen, gewünschte Antworten, frühere Prüfung und gesichtete gerenderte Seiten lesen. Originale, Inventar, Prüfungen und Ergebnisse sind lokal; Helfer rufen weder Modelle, Mike noch Editing-Dienste auf. Rechtsrecherche verwendet Host-Werkzeuge mit allgemeinen Fragen ohne Mandantendokumente oder identifizierende Daten in Suchanfragen. Lucia liest nur gewählte Archive-Unterlagen; ihr Bericht kann Schema, UUID, Produktname und Lucia-Version und Berichts-Hash an Mparanza senden, keine Verträge oder Berichtsinhalte. Gewünschter lokaler Modus schließt diesen externen Beleg aus. Modell und Documents/Word folgen dem Host-Konto; keine automatische Anonymisierung."
+        ],
+        "es": [
+          "El modelo puede leer contrato elegido, nombres/importes, texto eliminado/propuesto, revisiones, autores/fechas registrados, propiedades Word, comentarios/anclas, instrucciones, grupos, respuestas solicitadas, revisión anterior y páginas renderizadas inspeccionadas. Originales, inventario, revisiones y resultados son locales; los ayudantes no llaman modelos, Mike ni servicios de edición. La investigación jurídica usa herramientas del anfitrión con preguntas generales sin documentos o datos identificativos del cliente en consultas. Lucia lee solo materiales Archive seleccionados; su informe puede enviar a Mparanza esquema, UUID, versión Lucia y digest del informe, sin contratos ni contenido del informe. El modo local solicitado excluye ese recibo externo. Modelo y Documents/Word siguen la cuenta anfitriona; no hay anonimización automática."
+        ]
+      }
+    }
+  },
+  "governed_shared_paths": [
+    "vendor/modules/deal_redux"
+  ]
+}

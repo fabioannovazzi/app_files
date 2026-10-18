@@ -1,0 +1,89 @@
+{
+  "schema_version": 3,
+  "workstream": "controllo-documento",
+  "display_name": "Controllo documento",
+  "role": "workflow",
+  "governed_paths": [
+    "skills/controllo-documento",
+    "scripts/legal_citations.py",
+    "scripts/legal_citations.schema.json",
+    "scripts/legal_citations_labels.json",
+    "scripts/legal_documents.py",
+    "scripts/legal_documents_labels.json",
+    "scripts/legal_documents_review.schema.json",
+    "scripts/legal_docx.py",
+    "scripts/legal_matter.py",
+    "scripts/legal_matter.schema.json",
+    "scripts/legal_matter_labels.json",
+    "scripts/legal_negotiation.py",
+    "scripts/legal_negotiation.schema.json",
+    "scripts/legal_negotiation_labels.json",
+    "scripts/legal_playbook.py",
+    "scripts/legal_playbook.schema.json",
+    "scripts/legal_playbook_labels.json",
+    "scripts/legal_proofreading.py",
+    "scripts/legal_proofreading.schema.json",
+    "scripts/legal_proofreading_labels.json",
+    "scripts/legal_word_bridge.py",
+    "skills/revisione-contratti/references",
+    "skills/lucia/references/model-data-report-contract.md"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "selected-task-evidence",
+        "purpose": "Carry out controllo-documento using the selected evidence and user instructions",
+        "content": "The model may read text, identities, amounts, notes, comments, revision text, formatting properties and extracted hyperlink targets. Rendered pages enter context when inspected. Local inspection stores copies and anchors; it does not open links or send the document to Mike. Content read by the conversation model is not automatically anonymized.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [],
+  "security_controls": [],
+  "review": {
+    "basis": "external_boundary_review_of_workflow_source",
+    "reviewed_at": "2026-10-18",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "7546fd7218ea38ea123cc3b755d86663fe13bd513df86e3cad95952d53ceffa4"
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ],
+  "public_explanations": {
+    "controllo-documento": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Il modello può leggere testo, nomi, importi, note, commenti, testo delle revisioni, proprietà di formattazione e destinazioni dei collegamenti estratti. Le pagine renderizzate entrano nel contesto se vengono ispezionate. Il controllo locale conserva copie e ancore; non apre i link e non invia il documento a Mike. Non anonimizza i contenuti letti dal modello della conversazione."
+        ],
+        "en": [
+          "The model may read text, identities, amounts, notes, comments, revision text, formatting properties and extracted hyperlink targets. Rendered pages enter context when inspected. Local inspection stores copies and anchors; it does not open links or send the document to Mike. Content read by the conversation model is not automatically anonymized."
+        ],
+        "fr": [
+          "Le modèle peut lire texte, identités, montants, notes, commentaires, révisions, propriétés de mise en forme et cibles des liens extraits. Les pages rendues entrent dans le contexte lorsqu’elles sont examinées. Le contrôle local conserve copies et repères sans ouvrir les liens ni envoyer le document à Mike. Les contenus lus par le modèle ne sont pas automatiquement anonymisés."
+        ],
+        "de": [
+          "Das Modell kann Text, Identitäten, Beträge, Notizen, Kommentare, Revisionstext, Formatierungseigenschaften und extrahierte Linkziele lesen. Gerenderte Seiten gelangen bei Sichtprüfung in den Kontext. Die lokale Prüfung speichert Kopien und Belegstellen, öffnet keine Links und sendet keine Dokumente an Mike. Gelesene Inhalte werden nicht automatisch anonymisiert."
+        ],
+        "es": [
+          "El modelo puede leer texto, identidades, importes, notas, comentarios, revisiones, propiedades de formato y destinos de enlaces extraídos. Las páginas renderizadas entran en contexto al inspeccionarlas. El control local conserva copias y referencias; no abre enlaces ni envía documentos a Mike. El contenido leído por el modelo no se anonimiza automáticamente."
+        ]
+      }
+    }
+  }
+}

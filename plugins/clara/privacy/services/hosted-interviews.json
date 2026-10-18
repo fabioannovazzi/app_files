@@ -1,0 +1,304 @@
+{
+  "schema_version": 2,
+  "service_id": "hosted-interviews",
+  "display_name": "Mparanza Hosted Interviews",
+  "governed_paths": [
+    "skills/hosted-interview/SKILL.md",
+    "scripts/manage_hosted_interview.py"
+  ],
+  "governed_repository_paths": [
+    "modules/hosted_services/api.py",
+    "modules/hosted_interviews/api.py",
+    "modules/pdp/legal_content.py",
+    "static/js/hosted-interview.js",
+    "templates/hosted_interview.html",
+    "modules/case_notes_voice/transcription_service.py",
+    "modules/case_notes_voice/transcription_transport.py",
+    "modules/case_notes_voice/__init__.py",
+    "modules/hosted_interviews/review_service.py",
+    "modules/hosted_interviews/job_state.py",
+    "modules/hosted_interviews/__init__.py",
+    "templates/hosted_interview_output.html"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "external_boundaries": [
+    {
+      "id": "authentication",
+      "kind": "hosted_service",
+      "destination": "Mparanza Hosted Interviews; OpenAI realtime, transcription, and review services configured by Mparanza",
+      "purpose": "When the preparer authenticates or requests a magic link",
+      "content": "Authorized email address and redirect path for magic-link requests, or a Mparanza session cookie or consumed magic link",
+      "retention": "Prepared records, uploaded original microphone chunks, any submitted video chunks, events, transcripts, generated reviews and durable post-completion job state remain stored until manual or administrative deletion. Retry can archive earlier attempt material. Participant-link expiry, revocation or archiving is not deletion. Post-call audio assembly uses a private temporary workspace inside the interview session. Normal worker completion removes it; after abrupt worker death, the next job inspection or dispatch removes the abandoned workspace under the worker lock before proceeding. Active locked work is preserved, and cleanup failures propagate rather than report successful cleanup. This is request-triggered cleanup, not a guaranteed time-based deletion schedule. It does not delete original session media or discover temporary copies left by earlier implementations in system temp. Quality-review Responses requests explicitly set store=false; silent-partner requests omit that field. Neither fact establishes provider-wide retention or deletion, which these sources do not verify. Local downloaded bundles and receipts have a separate user-managed lifetime. The participant page keeps the current attempt identifier in per-tab sessionStorage for reload recovery and removes it after successful completion. Browser storage is not required for normal interviewing.",
+      "activation": "explicit_user_choice",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "openai-chatgpt",
+        "google-antigravity"
+      ],
+      "controls": [
+        "The remote helper accepts only HTTPS mparanza.com or www.mparanza.com outside local tests.",
+        "Cookie headers are attached only to the approved origin.",
+        "Briefs and receipts containing bearer material are written as local 0600 files."
+      ]
+    },
+    {
+      "id": "campaign-interview-preparation",
+      "kind": "hosted_service",
+      "destination": "Mparanza Hosted Interviews; OpenAI realtime, transcription, and review services configured by Mparanza",
+      "purpose": "When creating a participant link from a registered campaign",
+      "content": "Exact campaign identifier, non-sensitive case identifier, participant name, language, participant role, and requested expiry",
+      "retention": "Prepared records, uploaded original microphone chunks, any submitted video chunks, events, transcripts, generated reviews and durable post-completion job state remain stored until manual or administrative deletion. Retry can archive earlier attempt material. Participant-link expiry, revocation or archiving is not deletion. Post-call audio assembly uses a private temporary workspace inside the interview session. Normal worker completion removes it; after abrupt worker death, the next job inspection or dispatch removes the abandoned workspace under the worker lock before proceeding. Active locked work is preserved, and cleanup failures propagate rather than report successful cleanup. This is request-triggered cleanup, not a guaranteed time-based deletion schedule. It does not delete original session media or discover temporary copies left by earlier implementations in system temp. Quality-review Responses requests explicitly set store=false; silent-partner requests omit that field. Neither fact establishes provider-wide retention or deletion, which these sources do not verify. Local downloaded bundles and receipts have a separate user-managed lifetime. The participant page keeps the current attempt identifier in per-tab sessionStorage for reload recovery and removes it after successful completion. Browser storage is not required for normal interviewing.",
+      "activation": "explicit_user_choice",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "openai-chatgpt",
+        "google-antigravity"
+      ],
+      "controls": [
+        "The remote helper accepts only HTTPS mparanza.com or www.mparanza.com outside local tests.",
+        "Cookie headers are attached only to the approved origin.",
+        "Briefs and receipts containing bearer material are written as local 0600 files."
+      ]
+    },
+    {
+      "id": "custom-interview-brief",
+      "kind": "hosted_service",
+      "destination": "Mparanza Hosted Interviews; OpenAI realtime, transcription, and review services configured by Mparanza",
+      "purpose": "When creating a one-off interview",
+      "content": "Campaign and case identifiers; case, project, participant and interview labels; role and language; purpose, participant introduction, background context, hypotheses, topics, questions, red flags, boundaries, and expiry",
+      "retention": "Prepared records, uploaded original microphone chunks, any submitted video chunks, events, transcripts, generated reviews and durable post-completion job state remain stored until manual or administrative deletion. Retry can archive earlier attempt material. Participant-link expiry, revocation or archiving is not deletion. Post-call audio assembly uses a private temporary workspace inside the interview session. Normal worker completion removes it; after abrupt worker death, the next job inspection or dispatch removes the abandoned workspace under the worker lock before proceeding. Active locked work is preserved, and cleanup failures propagate rather than report successful cleanup. This is request-triggered cleanup, not a guaranteed time-based deletion schedule. It does not delete original session media or discover temporary copies left by earlier implementations in system temp. Quality-review Responses requests explicitly set store=false; silent-partner requests omit that field. Neither fact establishes provider-wide retention or deletion, which these sources do not verify. Local downloaded bundles and receipts have a separate user-managed lifetime. The participant page keeps the current attempt identifier in per-tab sessionStorage for reload recovery and removes it after successful completion. Browser storage is not required for normal interviewing.",
+      "activation": "explicit_user_choice",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "openai-chatgpt",
+        "google-antigravity"
+      ],
+      "controls": [
+        "The remote helper accepts only HTTPS mparanza.com or www.mparanza.com outside local tests.",
+        "Cookie headers are attached only to the approved origin.",
+        "Briefs and receipts containing bearer material are written as local 0600 files."
+      ]
+    },
+    {
+      "id": "participant-conversation",
+      "kind": "hosted_service",
+      "destination": "Mparanza Hosted Interviews; OpenAI realtime, transcription, and review services configured by Mparanza",
+      "purpose": "When the participant opens the bearer link and completes the interview",
+      "content": "Participant microphone audio and answers, conversation events, and service-generated transcript and review material",
+      "retention": "Prepared records, uploaded original microphone chunks, any submitted video chunks, events, transcripts, generated reviews and durable post-completion job state remain stored until manual or administrative deletion. Retry can archive earlier attempt material. Participant-link expiry, revocation or archiving is not deletion. Post-call audio assembly uses a private temporary workspace inside the interview session. Normal worker completion removes it; after abrupt worker death, the next job inspection or dispatch removes the abandoned workspace under the worker lock before proceeding. Active locked work is preserved, and cleanup failures propagate rather than report successful cleanup. This is request-triggered cleanup, not a guaranteed time-based deletion schedule. It does not delete original session media or discover temporary copies left by earlier implementations in system temp. Quality-review Responses requests explicitly set store=false; silent-partner requests omit that field. Neither fact establishes provider-wide retention or deletion, which these sources do not verify. Local downloaded bundles and receipts have a separate user-managed lifetime. The participant page keeps the current attempt identifier in per-tab sessionStorage for reload recovery and removes it after successful completion. Browser storage is not required for normal interviewing.",
+      "activation": "explicit_user_choice",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "openai-chatgpt",
+        "google-antigravity"
+      ],
+      "controls": [
+        "The remote helper accepts only HTTPS mparanza.com or www.mparanza.com outside local tests.",
+        "Cookie headers are attached only to the approved origin.",
+        "Briefs and receipts containing bearer material are written as local 0600 files."
+      ]
+    },
+    {
+      "id": "provider-processing",
+      "kind": "hosted_service",
+      "destination": "Mparanza Hosted Interviews; OpenAI realtime, transcription, and review services configured by Mparanza",
+      "purpose": "During live interviewing, silent-partner guidance, post-call transcription and quality review",
+      "content": "Configured OpenAI services receive the prepared brief and participant audio or transcript. Post-call transcription uses a bounded brief excerpt. Quality review receives selected case/project fields, brief, dialog and final/live transcript excerpts, transcription provenance including audio-file metadata, event counts, completion telemetry and any screen-capture metadata. The silent partner receives the brief, recent live transcript, latest turn and previous note. Realtime follow-ups retain the session conversation, including earlier interviewer questions and participant answers; private control directions are appended to that conversation without replacing its context.",
+      "retention": "Prepared records, uploaded original microphone chunks, any submitted video chunks, events, transcripts, generated reviews and durable post-completion job state remain stored until manual or administrative deletion. Retry can archive earlier attempt material. Participant-link expiry, revocation or archiving is not deletion. Post-call audio assembly uses a private temporary workspace inside the interview session. Normal worker completion removes it; after abrupt worker death, the next job inspection or dispatch removes the abandoned workspace under the worker lock before proceeding. Active locked work is preserved, and cleanup failures propagate rather than report successful cleanup. This is request-triggered cleanup, not a guaranteed time-based deletion schedule. It does not delete original session media or discover temporary copies left by earlier implementations in system temp. Quality-review Responses requests explicitly set store=false; silent-partner requests omit that field. Neither fact establishes provider-wide retention or deletion, which these sources do not verify. Local downloaded bundles and receipts have a separate user-managed lifetime. The participant page keeps the current attempt identifier in per-tab sessionStorage for reload recovery and removes it after successful completion. Browser storage is not required for normal interviewing.",
+      "activation": "explicit_user_choice",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "openai-chatgpt",
+        "google-antigravity"
+      ],
+      "controls": [
+        "The remote helper accepts only HTTPS mparanza.com or www.mparanza.com outside local tests.",
+        "Cookie headers are attached only to the approved origin.",
+        "Briefs and receipts containing bearer material are written as local 0600 files."
+      ]
+    },
+    {
+      "id": "optional-video-endpoint",
+      "kind": "hosted_service",
+      "destination": "Mparanza Hosted Interviews; OpenAI realtime, transcription, and review services configured by Mparanza",
+      "purpose": "If a client submits video to the bearer-token video-chunk endpoint for the active attempt",
+      "content": "Video bytes and chunk metadata are stored by Mparanza. The current participant page does not invoke its screen-capture helpers during the normal microphone workflow; endpoint support is not a promise of screen capture in that workflow.",
+      "retention": "Prepared records, uploaded original microphone chunks, any submitted video chunks, events, transcripts, generated reviews and durable post-completion job state remain stored until manual or administrative deletion. Retry can archive earlier attempt material. Participant-link expiry, revocation or archiving is not deletion. Post-call audio assembly uses a private temporary workspace inside the interview session. Normal worker completion removes it; after abrupt worker death, the next job inspection or dispatch removes the abandoned workspace under the worker lock before proceeding. Active locked work is preserved, and cleanup failures propagate rather than report successful cleanup. This is request-triggered cleanup, not a guaranteed time-based deletion schedule. It does not delete original session media or discover temporary copies left by earlier implementations in system temp. Quality-review Responses requests explicitly set store=false; silent-partner requests omit that field. Neither fact establishes provider-wide retention or deletion, which these sources do not verify. Local downloaded bundles and receipts have a separate user-managed lifetime. The participant page keeps the current attempt identifier in per-tab sessionStorage for reload recovery and removes it after successful completion. Browser storage is not required for normal interviewing.",
+      "activation": "explicit_user_choice",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "openai-chatgpt",
+        "google-antigravity"
+      ],
+      "controls": [
+        "The remote helper accepts only HTTPS mparanza.com or www.mparanza.com outside local tests.",
+        "Cookie headers are attached only to the approved origin.",
+        "Briefs and receipts containing bearer material are written as local 0600 files."
+      ]
+    },
+    {
+      "id": "same-tab-retry",
+      "kind": "hosted_service",
+      "destination": "Mparanza Hosted Interviews; OpenAI realtime, transcription, and review services configured by Mparanza",
+      "purpose": "When a participant retries after reloading the same browser tab",
+      "content": "The previous attempt identifier from browser sessionStorage is sent to Mparanza. A matching active attempt may be replaced; its recorded evidence is archived. A missing or mismatched identifier cannot replace a non-stale active attempt.",
+      "retention": "Prepared records, uploaded original microphone chunks, any submitted video chunks, events, transcripts, generated reviews and durable post-completion job state remain stored until manual or administrative deletion. Retry can archive earlier attempt material. Participant-link expiry, revocation or archiving is not deletion. Post-call audio assembly uses a private temporary workspace inside the interview session. Normal worker completion removes it; after abrupt worker death, the next job inspection or dispatch removes the abandoned workspace under the worker lock before proceeding. Active locked work is preserved, and cleanup failures propagate rather than report successful cleanup. This is request-triggered cleanup, not a guaranteed time-based deletion schedule. It does not delete original session media or discover temporary copies left by earlier implementations in system temp. Quality-review Responses requests explicitly set store=false; silent-partner requests omit that field. Neither fact establishes provider-wide retention or deletion, which these sources do not verify. Local downloaded bundles and receipts have a separate user-managed lifetime. The participant page keeps the current attempt identifier in per-tab sessionStorage for reload recovery and removes it after successful completion. Browser storage is not required for normal interviewing.",
+      "activation": "explicit_user_choice",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "openai-chatgpt",
+        "google-antigravity"
+      ],
+      "controls": [
+        "The remote helper accepts only HTTPS mparanza.com or www.mparanza.com outside local tests.",
+        "Cookie headers are attached only to the approved origin.",
+        "Briefs and receipts containing bearer material are written as local 0600 files."
+      ]
+    },
+    {
+      "id": "interview-recovery-events",
+      "kind": "hosted_service",
+      "destination": "Mparanza Hosted Interviews; OpenAI realtime, transcription, and review services configured by Mparanza",
+      "purpose": "During the hosted microphone interview and when the participant leaves its page",
+      "content": "Connection recovery, browser playback-blocked and microphone mute/unmute events are stored by Mparanza with the active attempt. Page departure can finalise already received transcripts and audio for post-call processing. The microphone energy meter is computed and displayed locally in the browser; no meter samples are uploaded. Interrupted evidence remains stored and retryable under the existing interview retention arrangement. Timed-out microphone uploads retry the same numbered bytes up to three times. Completion includes the expected audio chunk count; detected recording gaps preserve the live transcript instead of submitting incomplete audio for transcription.",
+      "retention": "Prepared records, uploaded original microphone chunks, any submitted video chunks, events, transcripts, generated reviews and durable post-completion job state remain stored until manual or administrative deletion. Retry can archive earlier attempt material. Participant-link expiry, revocation or archiving is not deletion. Post-call audio assembly uses a private temporary workspace inside the interview session. Normal worker completion removes it; after abrupt worker death, the next job inspection or dispatch removes the abandoned workspace under the worker lock before proceeding. Active locked work is preserved, and cleanup failures propagate rather than report successful cleanup. This is request-triggered cleanup, not a guaranteed time-based deletion schedule. It does not delete original session media or discover temporary copies left by earlier implementations in system temp. Quality-review Responses requests explicitly set store=false; silent-partner requests omit that field. Neither fact establishes provider-wide retention or deletion, which these sources do not verify. Local downloaded bundles and receipts have a separate user-managed lifetime. The participant page keeps the current attempt identifier in per-tab sessionStorage for reload recovery and removes it after successful completion. Browser storage is not required for normal interviewing.",
+      "activation": "explicit_user_choice",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "openai-chatgpt",
+        "google-antigravity"
+      ],
+      "controls": [
+        "The remote helper accepts only HTTPS mparanza.com or www.mparanza.com outside local tests.",
+        "Cookie headers are attached only to the approved origin.",
+        "Briefs and receipts containing bearer material are written as local 0600 files."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "approved-origin-cookie-binding",
+      "control": "The helper restricts remote base URLs to approved HTTPS Mparanza origins and attaches a supplied cookie only to the exact approved origin.",
+      "implemented_by": [
+        "scripts/manage_hosted_interview.py"
+      ],
+      "on_violation": "Reject unapproved remote origins and bind cookies only to the approved origin."
+    },
+    {
+      "id": "private-local-files",
+      "control": "The helper sets local brief and receipt file permissions to mode 0600; the effect depends on host filesystem permission support.",
+      "implemented_by": [
+        "scripts/manage_hosted_interview.py"
+      ],
+      "on_violation": "Create and retain local authentication files with owner-only modes."
+    },
+    {
+      "id": "https-provider-transport",
+      "control": "The shared quality-review and silent-partner transport rejects non-HTTPS endpoints before opening a URL. Classified transport errors omit the raw provider response body.",
+      "implemented_by": [
+        "repository:modules/hosted_interviews/api.py"
+      ],
+      "on_violation": "Use the configured HTTPS provider endpoints for the hosted interviewing requests."
+    }
+  ],
+  "service_details": {
+    "trigger": "The user asks Clara to create or operate an external-participant hosted interview; creating the participant link is the route choice.",
+    "data_sent": [
+      {
+        "id": "authentication",
+        "when": "When the preparer authenticates or requests a magic link",
+        "content": "Authorized email address and redirect path for magic-link requests, or a Mparanza session cookie or consumed magic link"
+      },
+      {
+        "id": "campaign-interview-preparation",
+        "when": "When creating a participant link from a registered campaign",
+        "content": "Exact campaign identifier, non-sensitive case identifier, participant name, language, participant role, and requested expiry"
+      },
+      {
+        "id": "custom-interview-brief",
+        "when": "When creating a one-off interview",
+        "content": "Campaign and case identifiers; case, project, participant and interview labels; role and language; purpose, participant introduction, background context, hypotheses, topics, questions, red flags, boundaries, and expiry"
+      },
+      {
+        "id": "participant-conversation",
+        "when": "When the participant opens the bearer link and completes the interview",
+        "content": "Participant microphone audio and answers, conversation events, and service-generated transcript and review material"
+      },
+      {
+        "id": "provider-processing",
+        "when": "During live interviewing, silent-partner guidance, post-call transcription and quality review",
+        "content": "Configured OpenAI services receive the prepared brief and participant audio or transcript. Post-call transcription uses a bounded brief excerpt. Quality review receives selected case/project fields, brief, dialog and final/live transcript excerpts, transcription provenance including audio-file metadata, event counts, completion telemetry and any screen-capture metadata. The silent partner receives the brief, recent live transcript, latest turn and previous note. Realtime follow-ups retain the session conversation, including earlier interviewer questions and participant answers; private control directions are appended to that conversation without replacing its context."
+      },
+      {
+        "id": "optional-video-endpoint",
+        "when": "If a client submits video to the bearer-token video-chunk endpoint for the active attempt",
+        "content": "Video bytes and chunk metadata are stored by Mparanza. The current participant page does not invoke its screen-capture helpers during the normal microphone workflow; endpoint support is not a promise of screen capture in that workflow."
+      },
+      {
+        "id": "same-tab-retry",
+        "when": "When a participant retries after reloading the same browser tab",
+        "content": "The previous attempt identifier from browser sessionStorage is sent to Mparanza. A matching active attempt may be replaced; its recorded evidence is archived. A missing or mismatched identifier cannot replace a non-stale active attempt."
+      },
+      {
+        "id": "interview-recovery-events",
+        "when": "During the hosted microphone interview and when the participant leaves its page",
+        "content": "Connection recovery, browser playback-blocked and microphone mute/unmute events are stored by Mparanza with the active attempt. Page departure can finalise already received transcripts and audio for post-call processing. The microphone energy meter is computed and displayed locally in the browser; no meter samples are uploaded. Interrupted evidence remains stored and retryable under the existing interview retention arrangement. Timed-out microphone uploads retry the same numbered bytes up to three times. Completion includes the expected audio chunk count; detected recording gaps preserve the live transcript instead of submitting incomplete audio for transcription."
+      }
+    ],
+    "data_returned": [
+      {
+        "id": "participant-link-and-receipt",
+        "when": "After interview preparation",
+        "content": "Bearer participant URL, expiry, campaign identifier, and preparation receipt"
+      },
+      {
+        "id": "public-status",
+        "when": "When checking a known participant link",
+        "content": "Minimal status, case name, interview title and post-completion progress fields (status, stage, timestamp and message); internal worker host and process identifiers are excluded."
+      },
+      {
+        "id": "bundle-and-review",
+        "when": "After authenticated retrieval of a completed interview",
+        "content": "Prepared record, completion data, current-run events, transcript material, media metadata, and generated quality review; the documented JSON bundle contains no raw audio or video bytes"
+      }
+    ],
+    "access": {
+      "arrangement": "An authenticated preparer creates and retrieves interviews. The participant uses an expiring bearer link without login. A known bearer token can read minimal public status, including case name and interview title; bundle and review retrieval use the authenticated helper. Mparanza and OpenAI process audio, answers, and transcript to conduct, transcribe, and review the interview. The workflow instructs the preparer to use non-sensitive participant-visible labels; the server does not classify or anonymise those labels.",
+      "controls": [
+        "The remote helper accepts only HTTPS mparanza.com or www.mparanza.com outside local tests.",
+        "Cookie headers are attached only to the approved origin.",
+        "Briefs and receipts containing bearer material are written as local 0600 files."
+      ]
+    },
+    "retention": {
+      "status": "documented",
+      "statement": "Prepared records, uploaded original microphone chunks, any submitted video chunks, events, transcripts, generated reviews and durable post-completion job state remain stored until manual or administrative deletion. Retry can archive earlier attempt material. Participant-link expiry, revocation or archiving is not deletion. Post-call audio assembly uses a private temporary workspace inside the interview session. Normal worker completion removes it; after abrupt worker death, the next job inspection or dispatch removes the abandoned workspace under the worker lock before proceeding. Active locked work is preserved, and cleanup failures propagate rather than report successful cleanup. This is request-triggered cleanup, not a guaranteed time-based deletion schedule. It does not delete original session media or discover temporary copies left by earlier implementations in system temp. Quality-review Responses requests explicitly set store=false; silent-partner requests omit that field. Neither fact establishes provider-wide retention or deletion, which these sources do not verify. Local downloaded bundles and receipts have a separate user-managed lifetime. The participant page keeps the current attempt identifier in per-tab sessionStorage for reload recovery and removes it after successful completion. Browser storage is not required for normal interviewing."
+    }
+  },
+  "review": {
+    "reviewed_at": "2026-10-17",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_shared_service_source",
+    "source_fingerprint": "7aaf844579b231542df6d9a67755b7ad67f031fbe4e80c8c4e48ab53d55e4271"
+  }
+}

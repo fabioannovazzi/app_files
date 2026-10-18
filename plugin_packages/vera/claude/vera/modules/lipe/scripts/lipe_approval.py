@@ -122,24 +122,13 @@ def _disclosure(path: Path | None, run_id: str | None) -> dict:
     spec.loader.exec_module(module)
     report = read_json(path)
     try:
-        module.validate_model_data_report(report, evidence_root=path.parent)
-        rebuilt, markdown = module.build_model_data_report(
-            {
-                key: value
-                for key, value in report.items()
-                if key not in {"report_id", "evidence", "limitations"}
-            },
-            evidence_root=path.parent,
-        )
+        markdown = module.render_model_data_report(report, evidence_root=path.parent)
     except module.ModelDataReportError as exc:
         raise ContractError(str(exc)) from exc
     if report["workflow_id"] != "lipe" or report["run_id"] != run_id:
         raise ContractError("Model-data report belongs to a different workflow run")
     readable = path.with_suffix(".md")
-    if (
-        rebuilt["evidence"] != report["evidence"]
-        or readable.read_text(encoding="utf-8") != markdown
-    ):
+    if readable.read_text(encoding="utf-8") != markdown:
         raise ContractError(
             "Model-data report differs from its evidence or readable disclosure"
         )

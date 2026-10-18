@@ -1,4 +1,5 @@
 {
+  "display_name": "Local onboarding and repeatable voice-first teaching in native OpenAI desktop sessions",
   "external_boundaries": [
     {
       "id": "public-version-check",
@@ -76,16 +77,6 @@
     "scripts/check_for_update.py",
     "scripts/change_requests.py"
   ],
-  "service_id": "local-onboarding",
-  "review": {
-    "reviewed_by": "privacy-surface-review",
-    "basis": "external_boundary_review_of_shared_service_source",
-    "reviewed_at": "2026-10-17",
-    "source_fingerprint": "f4b7f43e2109a596138b0b3121f1c76f9c60410f735771e280fe69d14ed18efd"
-  },
-  "runtime_profiles": [
-    "openai-codex"
-  ],
   "governed_repository_paths": [
     "plugins/_shared/vendor/modules/courseware",
     "scripts/course_materials",
@@ -93,6 +84,15 @@
     "static/shared/courses",
     "static/shared/learn-with-vera/index.html",
     "static/shared/product-function-pages.js"
+  ],
+  "review": {
+    "basis": "external_boundary_review_of_shared_service_source",
+    "reviewed_at": "2026-10-18",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "fbd1b4eddfc3c1a54c6ed9449ddd1bb5767becbe2e94e1a3bca976ca8e3b91e7"
+  },
+  "runtime_profiles": [
+    "openai-codex"
   ],
   "schema_version": 2,
   "security_controls": [
@@ -180,5 +180,5 @@
       "on_violation": "Block stale, expired, replaced, duplicate or interrupted claims; return to the teacher and preserve course files and progress."
     }
   ],
-  "display_name": "Local onboarding and repeatable voice-first teaching in native OpenAI desktop sessions"
+  "service_id": "local-onboarding"
 }

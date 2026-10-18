@@ -64,7 +64,7 @@ def test_native_report_pending_retry_receipt_completion_and_reopen(
     retained_start = usage.pending()["events"][0]
     output = tmp_path / "output"
     output.mkdir()
-    report = _report(reports, output)
+    report = _report(reports, output, workflow_id=PIPELINES[product])
     report_bytes = report.read_bytes()
 
     assert usage.stamp_report(run_id, report, output)["status"] == "pending"

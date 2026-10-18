@@ -176,7 +176,7 @@
     {
       "path": "modules/lipe/scripts/lipe_approval.py",
       "repository_path": "plugins/lipe/scripts/lipe_approval.py",
-      "sha256": "cb2554b5c9f29cd07ccb54b15af2d3b9e3c7afd9ac4095d63ff823d9d330f0be"
+      "sha256": "a9a7eb1d4fd09b12b40d0e9bcdbb31b77266faab980070b8124d28fb58ca5bd6"
     },
     {
       "path": "modules/lipe/scripts/lipe_authorization.py",

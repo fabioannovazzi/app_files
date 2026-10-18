@@ -302,7 +302,7 @@
     "limits": "No fresh learner, voice, installed-host, visual or professional acceptance is asserted by a source fingerprint refresh."
   },
   "schema": "mparanza.teaching_release_review.v1",
-  "course_sha256": "6d6d672933d90ed7febe8ac8218f4f9c119acdb9e2fed2f819c53f588b074ce5",
+  "course_sha256": "bd730ab376ab2a3922a4c23a46e34e89387712a5399d7665519d4b3067db0563",
   "isolated_launcher_source_compatibility_20261018": {
     "reviewer": "Codex exact retained-course and launcher-source review",
     "reviewed_at": "2026-10-18",

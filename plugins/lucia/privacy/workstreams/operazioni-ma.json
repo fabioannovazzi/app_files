@@ -1,0 +1,108 @@
+{
+  "schema_version": 3,
+  "workstream": "operazioni-ma",
+  "display_name": "Operazioni ma",
+  "role": "workflow",
+  "governed_paths": [
+    "skills/operazioni-ma",
+    "scripts/legal_citations.py",
+    "scripts/legal_citations.schema.json",
+    "scripts/legal_citations_labels.json",
+    "scripts/legal_documents.py",
+    "scripts/legal_documents_labels.json",
+    "scripts/legal_documents_review.schema.json",
+    "scripts/legal_docx.py",
+    "scripts/legal_matter.py",
+    "scripts/legal_matter.schema.json",
+    "scripts/legal_matter_labels.json",
+    "scripts/legal_negotiation.py",
+    "scripts/legal_negotiation.schema.json",
+    "scripts/legal_negotiation_labels.json",
+    "scripts/legal_playbook.py",
+    "scripts/legal_playbook.schema.json",
+    "scripts/legal_playbook_labels.json",
+    "scripts/legal_proofreading.py",
+    "scripts/legal_proofreading.schema.json",
+    "scripts/legal_proofreading_labels.json",
+    "scripts/legal_word_bridge.py",
+    "skills/revisione-contratti/references",
+    "skills/lucia/references/model-data-report-contract.md"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "selected-task-evidence",
+        "purpose": "Carry out operazioni-ma using the selected evidence and user instructions",
+        "content": "The model may read selected contracts, commercial terms, identities, SPA, disclosures and negotiation instructions, plus resulting tables and proposals. Copies and references remain in the local folder. The workflow does not upload the data room to Mike; acquisition from external services depends on the host’s available tools and permissions.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "selected-public-legal-research",
+      "kind": "public_research",
+      "destination": "Public legal sources through the selected host research tools",
+      "purpose": "Verify authorities needed for the selected question",
+      "content": "General legal references, provision identifiers and questions without client documents or identifying case facts.",
+      "optional": true,
+      "requires_confirmation": false,
+      "controls": [
+        "Use the current legal-question method; do not include credentials or attach private case files. Retain actual sources and access limits."
+      ],
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork",
+        "openai-chatgpt",
+        "google-antigravity"
+      ]
+    }
+  ],
+  "security_controls": [],
+  "review": {
+    "basis": "external_boundary_review_of_workflow_source",
+    "reviewed_at": "2026-10-18",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "b20bbee02372cc5a334976a941a3e4d2645637735a30efb2d5a1c664eb3ffb6b"
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ],
+  "public_explanations": {
+    "operazioni-ma": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Il modello può leggere contratti selezionati, condizioni economiche, nominativi, SPA, disclosure e istruzioni negoziali, oltre alle tabelle e proposte prodotte. Copie e riferimenti restano nella cartella locale. Il percorso non carica la data room su Mike; l’eventuale acquisizione da servizi esterni dipende dagli strumenti e dalle autorizzazioni già disponibili all’host."
+        ],
+        "en": [
+          "The model may read selected contracts, commercial terms, identities, SPA, disclosures and negotiation instructions, plus resulting tables and proposals. Copies and references remain in the local folder. The workflow does not upload the data room to Mike; acquisition from external services depends on the host’s available tools and permissions."
+        ],
+        "fr": [
+          "Le modèle peut lire contrats choisis, conditions économiques, identités, SPA, disclosures et instructions de négociation, ainsi que tableaux et propositions. Copies et références restent dans le dossier local. Le parcours ne charge pas la data room sur Mike ; l’acquisition depuis un service externe dépend des outils et autorisations de l’hôte."
+        ],
+        "de": [
+          "Das Modell kann gewählte Verträge, wirtschaftliche Bedingungen, Identitäten, SPA, Offenlegungen und Verhandlungsvorgaben sowie Tabellen und Vorschläge lesen. Kopien und Fundstellen bleiben im lokalen Ordner. Der Ablauf lädt den Datenraum nicht zu Mike hoch; Bezug aus externen Diensten hängt von Host-Werkzeugen und Berechtigungen ab."
+        ],
+        "es": [
+          "El modelo puede leer contratos seleccionados, condiciones económicas, identidades, SPA, revelaciones e instrucciones negociadoras, además de tablas y propuestas. Copias y referencias quedan en la carpeta local. El recorrido no carga la sala de datos en Mike; la adquisición desde servicios externos depende de herramientas y permisos del anfitrión."
+        ]
+      }
+    }
+  }
+}

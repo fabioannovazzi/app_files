@@ -116,5 +116,12 @@
       "control": "The local review server requests component-only private review metadata only for the registered render tool. The browser receives that payload locally; normal MCP callers continue to receive structuredContent. This is transport separation, not anonymization of data selected for model review."
     }
   ],
-  "workstream": "client-file-preparation"
+  "workstream": "client-file-preparation",
+  "public_explanations": {},
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ]
 }

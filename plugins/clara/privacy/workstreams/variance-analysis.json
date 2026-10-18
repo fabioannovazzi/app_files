@@ -1,0 +1,79 @@
+{
+  "schema_version": 3,
+  "workstream": "variance-analysis",
+  "display_name": "Variance Analysis",
+  "role": "internal_engine",
+  "governed_paths": [
+    ".codex-plugin/plugin.json",
+    "skills",
+    "scripts",
+    "mcp",
+    "assets"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "variance-analysis-mapping-inspection",
+        "purpose": "Establish the comparison and candidate semantic mapping before calculation",
+        "content": "User instructions; all source column names and types; detected period or scenario values; mapping proposals and warnings; and at most the first 10 rows projected to candidate period, date, amount, units, discount, COGS, reporting-dimension and calculation-grain columns. The complete file is processed locally for inspection; unrelated columns are omitted from the built-in row preview. A separate targeted inspection may show at most 10 rows from no more than 12 explicitly named columns.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "variance-analysis-post-mapping-review",
+        "purpose": "Interpret the reconciled variance from reviewed mappings and complete deterministic calculations",
+        "content": "The complete selected population is calculated locally. The default model context contains mapped variance results, summaries, recipes, prepared-data lineage, standard and root-cause contexts, chart data and images, diagnostics, limitations and hypotheses, but not raw source rows, the original source filename or unmapped column names in the model-use manifest. Exact in-scope source matches can be produced only for a reason-recorded request using reviewed mapped filters and output columns and the exact sealed used-recipe bytes; every exact match is returned without sampling. The review widget payload contains at most the 50 largest driver rows plus artifact and follow-up metadata.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "variance-analysis-review-decisions",
+        "purpose": "Render and record review decisions without repeatedly copying the full review package through MCP calls",
+        "content": "The first validation may receive the bounded review payload. When the stored run package matches, later render, save and apply calls use an expiring local token bound to the review_payload.json hash and run ID. Vera performs no automatic anonymization or pseudonymization.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "connected-studio-knowledge",
+        "purpose": "Consult relevant studio procedures, precedents or case evidence when requested",
+        "content": "Repository and selected studio/client scope; scoped search queries; returned metadata and snippets; opened relevant passages; source IDs, links and locators; version, date and approval metadata when exposed; coverage and access limitations. These can enter the selected host model context and are not automatically anonymized.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [],
+  "security_controls": [],
+  "review": {
+    "reviewed_at": "2026-10-14",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "90afdd62f35d760ab8bef13dd732970a89046698d7951a96b16b8a21e641fb63"
+  },
+  "governed_repository_paths": [
+    "plugins/clara/skills/reporting-engine/SKILL.md"
+  ],
+  "public_explanations": {},
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ]
+}

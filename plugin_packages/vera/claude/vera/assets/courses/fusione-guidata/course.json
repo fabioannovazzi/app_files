@@ -101,7 +101,11 @@
     },
     {
       "path": "modules/fusione-guidata/vendor/modules/model_data_report.py",
-      "sha256": "0e7a99ef631ed67a1aa25eb10ce7ed158625f6c0c09dcf8546eeb132a238262d"
+      "sha256": "368b0903fa071c0563a0d0ac04f7a1ce9d33445236daba47f4357b7e6216bf59"
+    },
+    {
+      "path": "modules/fusione-guidata/vendor/modules/privacy_contract.py",
+      "sha256": "08116da007761d983c5eaead355025e9ba299d20dc31821044f402da1bcab594"
     },
     {
       "path": "skills/mparanza-fusione-guidata/SKILL.md",
@@ -486,5 +490,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "3ff88f8558874cbaedc8fedbada29ad2741e43686864fcac33c795231c9439ab"
+  "canonical_course_sha256": "62600de29208aeebad52840ea1fdcfc054db6d62d8fd016f9211c10637072990"
 }

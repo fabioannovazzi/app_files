@@ -264,3 +264,12 @@ The user controls voice and window setup; verify actual native capabilities.
 Never transmit interview, profile, teaching results or feedback to Mparanza,
 even after completion. No Claude Cowork teaching is provided.
 <!-- LUCIA_OPENAI_ONBOARDING_END -->
+
+## Privacy Surface Governance
+
+For plugin development and release, every new or materially changed workflow
+or hosted integration must use `../privacy-surface-review/SKILL.md`, update its
+records under `privacy/`, and pass the shared privacy validator before packaging.
+This developer step does not add a user-facing task or a per-run consent prompt.
+Public explanations come from those reviewed manifests; actual-run reports record
+observations and their comparison with the governing contract separately.

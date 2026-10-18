@@ -118,7 +118,7 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/check_review_invariants.py",
-      "sha256": "84a6e2bbc71ca8c6c4e45454aeb9d6cd717462abf8cc30d6b952dccc3f1391d2"
+      "sha256": "04c0d67fc1aca34316d8483599d2ebd53a2ab37021822cfd0115dae0c3683dc8"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/client_history.py",
@@ -290,7 +290,7 @@
     },
     {
       "path": "scripts/model_data_report.py",
-      "sha256": "0e7a99ef631ed67a1aa25eb10ce7ed158625f6c0c09dcf8546eeb132a238262d"
+      "sha256": "368b0903fa071c0563a0d0ac04f7a1ce9d33445236daba47f4357b7e6216bf59"
     },
     {
       "path": "scripts/notarized_run_receipt.py",
@@ -632,5 +632,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "6d6d672933d90ed7febe8ac8218f4f9c119acdb9e2fed2f819c53f588b074ce5"
+  "canonical_course_sha256": "bd730ab376ab2a3922a4c23a46e34e89387712a5399d7665519d4b3067db0563"
 }

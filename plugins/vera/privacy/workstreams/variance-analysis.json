@@ -158,5 +158,33 @@
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"
+  ],
+  "public_explanations": {
+    "variance-analysis": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Il modello selezionato può leggere istruzioni, nomi e tipi di tutte le colonne, periodi o scenari, mapping proposti e al massimo le prime 10 righe delle sole colonne candidate: periodo o data, importi, unità, sconti, COGS, conti, centri di costo, prodotti, clienti, canali e altre dimensioni. Le altre colonne sono escluse dall’anteprima; se un mapping resta ambiguo, un controllo mirato mostra al massimo 10 righe di non più di 12 colonne nominate.\n\nIl codice esamina l’intero file e, dopo la conferma, elabora tutte le righe selezionate. Verifica che la somma degli scostamenti coincida con la variazione totale. Per l’analisi, il modello riceve normalmente i risultati, i riepiloghi e le informazioni necessarie a verificarli, non tutte le righe del file né le colonne escluse. Se occorre approfondire un punto specifico, può recuperare tutte le righe pertinenti usando soltanto i filtri e le colonne già approvati. La sintesi iniziale contiene al massimo i 50 scostamenti principali.\n\nVera non anonimizza né pseudonimizza automaticamente, perché nomi e identificativi possono essere necessari per perimetro e spiegazione."
+        ],
+        "en": [
+          "The selected model may read instructions, every column name and type, periods or scenarios, proposed mappings, and at most the first 10 rows of candidate columns only: period or date, amounts, units, discounts, COGS, accounts, cost centres, products, customers, channels and other dimensions. Other columns are omitted from the preview; if mapping remains ambiguous, a targeted check shows at most 10 rows from no more than 12 named columns.\n\nCode examines the complete file and, after confirmation, processes every selected row. It checks that the variances add up to the total change. For analysis, the model normally receives the results, summaries and information needed to verify them, not every source row or excluded column. If a specific point needs more detail, it can retrieve every relevant row using only the approved filters and columns. The initial summary contains at most the 50 largest variances.\n\nVera does not automatically anonymize or pseudonymize data because names and identifiers may be needed for scope and explanation."
+        ],
+        "fr": [
+          "Le modèle sélectionné peut lire les instructions, les noms et types de toutes les colonnes, les périodes ou scénarios, les mappings proposés et au plus les 10 premières lignes des seules colonnes candidates : période ou date, montants, unités, remises, COGS, comptes, centres de coûts, produits, clients, canaux et autres dimensions. Les autres colonnes sont omises de l’aperçu ; si un mapping reste ambigu, un contrôle ciblé montre au plus 10 lignes de 12 colonnes nommées.\n\nLe code examine le fichier complet puis, après confirmation, traite toutes les lignes sélectionnées. Il vérifie aussi que la somme des écarts correspond à la variation totale. Pour l’analyse, le modèle reçoit normalement les résultats, les synthèses et les informations nécessaires à leur vérification, et non toutes les lignes source ni les colonnes exclues. Si un point précis doit être approfondi, il peut récupérer toutes les lignes pertinentes en utilisant uniquement les filtres et colonnes approuvés. La synthèse initiale contient au plus les 50 principaux écarts.\n\nVera n’anonymise ni ne pseudonymise automatiquement, car noms et identifiants peuvent être nécessaires au périmètre et à l’explication."
+        ],
+        "de": [
+          "Das ausgewählte Modell kann Anweisungen, Namen und Typen aller Spalten, Perioden oder Szenarien, vorgeschlagene Zuordnungen und höchstens die ersten 10 Zeilen nur der Kandidatenspalten lesen: Periode oder Datum, Beträge, Einheiten, Rabatte, COGS, Konten, Kostenstellen, Produkte, Kunden, Kanäle und andere Dimensionen. Andere Spalten fehlen in der Vorschau; bleibt eine Zuordnung unklar, zeigt eine gezielte Prüfung höchstens 10 Zeilen aus bis zu 12 benannten Spalten.\n\nDer Code prüft die vollständige Datei und verarbeitet nach der Bestätigung alle ausgewählten Zeilen. Er prüft außerdem, ob die Summe der Abweichungen mit der Gesamtveränderung übereinstimmt. Für die Analyse erhält das Modell normalerweise die Ergebnisse, Zusammenfassungen und die zu ihrer Prüfung erforderlichen Informationen, nicht alle Quellzeilen oder ausgeschlossenen Spalten. Wenn ein bestimmter Punkt vertieft werden muss, kann es alle relevanten Zeilen nur anhand der freigegebenen Filter und Spalten abrufen. Die erste Zusammenfassung enthält höchstens die 50 größten Abweichungen.\n\nVera anonymisiert oder pseudonymisiert nicht automatisch, da Namen und Kennungen für Umfang und Erklärung erforderlich sein können."
+        ],
+        "es": [
+          "El modelo seleccionado puede leer instrucciones, nombres y tipos de todas las columnas, periodos o escenarios, mapeos propuestos y como máximo las primeras 10 filas solo de columnas candidatas: periodo o fecha, importes, unidades, descuentos, COGS, cuentas, centros de coste, productos, clientes, canales y otras dimensiones. Las demás columnas se omiten de la vista previa; si un mapeo sigue ambiguo, una comprobación dirigida muestra como máximo 10 filas de hasta 12 columnas nombradas.\n\nEl código examina el archivo completo y, tras la confirmación, procesa todas las filas seleccionadas. También comprueba que la suma de las desviaciones coincida con la variación total. Para el análisis, el modelo recibe normalmente los resultados, los resúmenes y la información necesaria para verificarlos, no todas las filas fuente ni las columnas excluidas. Si hay que profundizar en un punto concreto, puede recuperar todas las filas pertinentes utilizando solo los filtros y columnas aprobados. El resumen inicial contiene como máximo las 50 principales desviaciones.\n\nVera no anonimiza ni seudonimiza automáticamente porque nombres e identificadores pueden ser necesarios para el alcance y la explicación."
+        ]
+      }
+    }
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
   ]
 }

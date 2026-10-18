@@ -43,7 +43,7 @@ Questi controlli non autenticano la provenienza dei documenti, non certificano l
 
 ## Registrazione nel prodotto
 
-È stato consultato il metodo `vera:privacy-surface-review`, compresi il contratto dei manifest, `components.json` e i profili runtime della versione 0.1.258. Questa è una revisione progettuale del nuovo componente, non una validazione di rilascio del plugin.
+È stato consultato il metodo `vera:mparanza-privacy-surface-review`, compresi il contratto dei manifest, `components.json` e i profili runtime della versione 0.1.258. Questa è una revisione progettuale del nuovo componente, non una validazione di rilascio del plugin.
 
 Il manutentore dovrà creare il manifest di workstream secondo lo schema della versione corrente, indicare percorsi effettivi, classi di contesto e confini esterni, aggiornare l'impronta ed eseguire il validatore dell'intero plugin. Non è stato modificato il registro installato e il suo validatore non certifica questo ZIP.
 

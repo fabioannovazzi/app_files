@@ -49,10 +49,12 @@ def _modules(monkeypatch: pytest.MonkeyPatch) -> tuple[Any, Any]:
     return report_module, receipt_module
 
 
-def _report(report_module: Any, output: Path) -> Path:
+def _report(
+    report_module: Any, output: Path, *, workflow_id: str = "concordato-plan-review"
+) -> Path:
     request = {
         "schema_version": 1,
-        "workflow_id": "concordato-plan-review",
+        "workflow_id": workflow_id,
         "run_id": "run_89abcdef0123456789abcdef",
         "runtime_profile": "openai-codex",
         "language": "it",

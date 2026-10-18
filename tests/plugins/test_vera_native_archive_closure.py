@@ -63,10 +63,28 @@ const seal={...authority(view),human_reviewed:true,idempotency_key:'fictional-se
 """
 
 
+@pytest.mark.parametrize("bound_report", [False, True])
 def test_closure_seal_and_explicit_completion_keep_all_outputs_and_retry(
     closure_workspace,
+    bound_report,
 ):
     env, folder, output, selected = closure_workspace
+    if bound_report:
+        from tests.plugins.test_vera_model_data_report import _load_module
+
+        path = output / "model_data_report.json"
+        legacy = json.loads(path.read_text())
+        request = {
+            k: v
+            for k, v in legacy.items()
+            if k not in {"report_id", "evidence", "limitations"}
+        }
+        report, markdown = _load_module().build_model_data_report(
+            request, evidence_root=output
+        )
+        assert report["schema_version"] == 2
+        path.write_text(json.dumps(report))
+        (output / "model_data_report.md").write_text(markdown)
     before = {p.name: p.read_bytes() for p in output.iterdir()}
     body = (
         setup(selected)
@@ -533,7 +551,12 @@ const result={sealed,completed,closed:read()};
     manifest = _load_customer_ledger().validate_run_artifacts(
         folder, selected["engagement_id"], selected["run_id"]
     )
-    assert len(manifest["artifacts"]) == 3
+    assert {item["path"] for item in manifest["artifacts"]} == {
+        "working-000.txt",
+        "model_data_report.json",
+        "model_data_report.md",
+        "privacy_contract.json",
+    }
     assert (output / "working-000.txt").read_text() == "Fictional local working file.\n"
 
 

@@ -129,9 +129,9 @@
     },
     "privacy-surface-review": {
       "display_name": "Revisione privacy",
-      "short_description": "Controlla dati, confini, account e conservazione",
-      "default_prompt": "Usa $privacy-surface-review per verificare come questa modifica a Vera tratta dati, account, servizi esterni e conservazione.",
-      "instructions": "Indica il flusso Vera o il servizio condiviso che stai aggiungendo o modificando e fornisci i file interessati. Vera registra dati leggibili dal modello, confini esterni, account, conservazione e controlli effettivi e restituisce il registro aggiornato e gli esiti di validazione."
+      "short_description": "Verifica dati, servizi, manifest e report",
+      "default_prompt": "Usa $privacy-surface-review per verificare il percorso dei dati di questa modifica al prodotto.",
+      "instructions": "Leggi integralmente la skill privacy-surface-review e i suoi riferimenti condivisi. Ispeziona il codice del prodotto selezionato tra Vera, Clara e Lucia, aggiorna il suo registro privacy e le spiegazioni specifiche delle funzioni, quindi verifica schemi, impronte, pacchetti e report effettivi. Un hash valido non prova correttezza semantica, trasmissione al modello o distribuzione del server."
     },
     "legal-tax-answer-planner": {
       "display_name": "Ottimizzazione prompt",

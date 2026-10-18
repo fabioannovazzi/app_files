@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import sys
 from pathlib import Path
 from types import ModuleType
@@ -148,12 +149,11 @@ def test_plain_language_revision_preserves_journal_audit_disclosure_bounds() -> 
     entries = (ROOT / "static/shared/check-entries/index.html").read_text(
         encoding="utf-8"
     )
-    journal_block = journal.split('data-model-data-status="relevant"', 1)[1].split(
-        "</section>", 1
-    )[0]
-    entries_block = entries.split('data-model-data-status="relevant"', 1)[1].split(
-        "</section>", 1
-    )[0]
+    pages = json.loads(
+        (ROOT / "static/shared/privacy-contracts/vera.json").read_text()
+    )["pages"]
+    journal_block = "\n".join(pages["journal-sampling"]["copy"]["it"])
+    entries_block = "\n".join(pages["check-entries"]["copy"]["it"])
 
     for required in (
         "prime 20 righe canoniche",

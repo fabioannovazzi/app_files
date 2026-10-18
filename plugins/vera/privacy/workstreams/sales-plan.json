@@ -134,5 +134,33 @@
       "control": "In Codex, a signed exact-generation reviewer request with explicit purpose, row IDs or exact filters, columns and confirmation invokes unchanged public model_use on byte-identical manifest/scenario copies in a separate owner-scoped run-output query tree. Every match is retained without sampling; intent, exact idempotency replay and whole-tree seals preserve the Plan generation and stop uncertain retries. App pages are private and bounded; explicit query discussion returns the complete selected query as untrusted model evidence only if it fits 64 KiB, otherwise refuses without a sample and requires a narrower new query. Source consultation is available to Viewer without editing an authoring draft. No anonymization, professional approval or run completion is added."
     }
   ],
-  "workstream": "sales-plan"
+  "workstream": "sales-plan",
+  "public_explanations": {
+    "sales-plan": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Per confermare gli scope, il modello selezionato può leggere le istruzioni e le sole colonne previste dal caso: ID riga, periodo, etichette rivedute di cliente, prodotto, paese, canale o altro scope, valuta, unità e le misure di vendite, sconti, COGS e cambio effettivamente usate, oltre alle assunzioni con priorità, sovrapposizioni, basi e motivazioni. Il contratto rifiuta colonne aggiuntive.\n\nDopo la conferma, il codice deterministico elabora tutte le righe Actual osservate nel perimetro, conserva le granularità sparse e produce l’intero scenario Actual e Plan. Per la revisione successiva il modello riceve per impostazione predefinita ledger, riepilogo, riconciliazione e tracciabilità, senza che il manifest ripeta il nome originale del file e senza tutte le righe dello scenario; quando serve un dettaglio, una richiesta registrata seleziona ID o filtri e colonne esatti e restituisce tutte le corrispondenze, senza campionamento.\n\nVera non anonimizza né pseudonimizza automaticamente, perché le etichette possono essere necessarie per applicare gli scope."
+        ],
+        "en": [
+          "To confirm assumption scopes, the selected model may read the instructions and only the case-selected columns: row ID, period, reviewed customer, product, country, channel or other scope labels, currency, units and the sales, discount, COGS and FX measures actually used, plus assumptions with priorities, overlap rules, bases and rationales. The contract rejects extra columns.\n\nAfter confirmation, deterministic code processes every observed in-scope Actual row, preserves sparse grains and writes the complete Actual and Plan scenario. For later review, the model receives the ledger, summary, reconciliation and lineage by default, without the manifest repeating the original filename and without every scenario row; when detail is needed, a recorded request selects exact IDs or filters and columns and returns every match without sampling.\n\nVera does not automatically anonymize or pseudonymize the data because labels may be necessary to apply scopes."
+        ],
+        "fr": [
+          "Pour confirmer les périmètres des hypothèses, le modèle sélectionné peut lire les instructions et uniquement les colonnes retenues par le cas : ID de ligne, période, libellés révisés de client, produit, pays, canal ou autre périmètre, devise, unités et mesures de ventes, remises, COGS et change effectivement utilisées, ainsi que les hypothèses, priorités, règles de chevauchement, bases et justifications. Le contrat rejette les colonnes supplémentaires.\n\nAprès confirmation, le code déterministe traite toutes les lignes Réel observées dans le périmètre, conserve les granularités clairsemées et écrit le scénario Réel et Plan complet. Pour la revue ultérieure, le modèle reçoit par défaut le registre, la synthèse, le rapprochement et la traçabilité, sans que le manifeste répète le nom de fichier d’origine et sans toutes les lignes ; si un détail est nécessaire, une demande enregistrée sélectionne des ID ou filtres et colonnes exacts et restitue toutes les correspondances sans échantillonnage.\n\nVera n’anonymise ni ne pseudonymise automatiquement, car les libellés peuvent être nécessaires aux périmètres."
+        ],
+        "de": [
+          "Zur Bestätigung der Annahmeumfänge kann das ausgewählte Modell die Anweisungen und nur die im Fall ausgewählten Spalten lesen: Zeilen-ID, Periode, geprüfte Kunden-, Produkt-, Länder-, Kanal- oder andere Umfangsbezeichnungen, Währung, Einheiten und die tatsächlich verwendeten Umsatz-, Rabatt-, COGS- und Wechselkursmaße sowie Annahmen, Prioritäten, Überlappungsregeln, Grundlagen und Begründungen. Der Vertrag weist zusätzliche Spalten zurück.\n\nNach der Bestätigung verarbeitet der deterministische Code alle beobachteten Ist-Zeilen im Umfang, bewahrt lückenhafte Granularitäten und schreibt das vollständige Ist- und Plan-Szenario. Für die spätere Prüfung erhält das Modell standardmäßig Register, Zusammenfassung, Abstimmung und Herkunft, ohne dass das Manifest den ursprünglichen Dateinamen wiederholt und ohne jede Szenariozeile; bei Detailbedarf wählt eine protokollierte Anfrage genaue IDs oder Filter und Spalten und liefert ohne Stichprobe alle Treffer.\n\nVera anonymisiert oder pseudonymisiert nicht automatisch, da Bezeichnungen für Umfänge erforderlich sein können."
+        ],
+        "es": [
+          "Para confirmar los ámbitos de los supuestos, el modelo seleccionado puede leer las instrucciones y solo las columnas seleccionadas por el caso: ID de fila, periodo, etiquetas revisadas de cliente, producto, país, canal u otro ámbito, moneda, unidades y las medidas de ventas, descuentos, COGS y cambio realmente utilizadas, además de supuestos, prioridades, reglas de solapamiento, bases y justificaciones. El contrato rechaza columnas adicionales.\n\nTras la confirmación, el código determinista procesa todas las filas Real observadas dentro del ámbito, conserva las granularidades dispersas y escribe el escenario Real y Plan completo. Para la revisión posterior, el modelo recibe por defecto el registro, resumen, conciliación y trazabilidad, sin que el manifiesto repita el nombre original del archivo y sin todas las filas; cuando hace falta detalle, una solicitud registrada selecciona IDs o filtros y columnas exactos y devuelve todas las coincidencias sin muestreo.\n\nVera no anonimiza ni seudonimiza automáticamente porque las etiquetas pueden ser necesarias para aplicar los ámbitos."
+        ]
+      }
+    }
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ]
 }

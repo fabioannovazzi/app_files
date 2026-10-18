@@ -1,0 +1,718 @@
+{
+  "schema_version": 1,
+  "product": "lucia",
+  "developer_skills": [
+    "privacy-surface-review"
+  ],
+  "workstreams": {
+    "prompt-optimizer": {
+      "source": "prompt-optimizer",
+      "role": "workflow",
+      "skills": [
+        "legal-tax-answer-planner"
+      ],
+      "components": [
+        "prompt-optimizer"
+      ],
+      "workflow_ids": [
+        "prompt-optimizer",
+        "legal-tax-answer-planner"
+      ],
+      "public_pages": [
+        {
+          "page_id": "prompt-optimizer",
+          "path": "static/shared/prompt-optimizer/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "deep-research-validator": {
+      "source": "deep-research-validator",
+      "role": "workflow",
+      "skills": [
+        "legal-tax-answer-review"
+      ],
+      "components": [
+        "deep-research-validator"
+      ],
+      "workflow_ids": [
+        "deep-research-validator",
+        "legal-tax-answer-review"
+      ],
+      "public_pages": [
+        {
+          "page_id": "deep-research-validator",
+          "path": "static/shared/deep-research-validator/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "comunicazione-professionale": {
+      "source": "comunicazione-professionale",
+      "role": "workflow",
+      "skills": [
+        "comunicazione-professionale"
+      ],
+      "components": [
+        "comunicazione-professionale"
+      ],
+      "workflow_ids": [
+        "comunicazione-professionale"
+      ],
+      "public_pages": [
+        {
+          "page_id": "comunicazione-professionale",
+          "path": "static/shared/comunicazione-professionale/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "presenza-digitale-studio": {
+      "source": "presenza-digitale-studio",
+      "role": "workflow",
+      "skills": [
+        "presenza-digitale-studio"
+      ],
+      "components": [
+        "presenza-digitale-studio"
+      ],
+      "workflow_ids": [
+        "presenza-digitale-studio"
+      ],
+      "public_pages": [
+        {
+          "page_id": "presenza-digitale-studio",
+          "path": "static/shared/presenza-digitale-studio/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "apertura-pratica": {
+      "source": "apertura-pratica",
+      "role": "workflow",
+      "skills": [
+        "apertura-pratica"
+      ],
+      "components": [
+        "apertura-pratica"
+      ],
+      "workflow_ids": [
+        "apertura-pratica"
+      ],
+      "public_pages": [
+        {
+          "page_id": "apertura-pratica",
+          "path": "static/shared/apertura-pratica/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "studio-archive": {
+      "source": "studio-archive",
+      "role": "internal_engine",
+      "skills": [
+        "studio-archive"
+      ],
+      "components": [
+        "studio-archive"
+      ],
+      "workflow_ids": [
+        "studio-archive"
+      ],
+      "public_pages": [
+        {
+          "page_id": "studio-archive",
+          "path": "static/shared/studio-archive/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "adversarial-opinion": {
+      "source": "deep-research-validator",
+      "role": "workflow",
+      "skills": [
+        "adversarial-opinion"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "adversarial-opinion"
+      ],
+      "public_pages": [
+        {
+          "page_id": "adversarial-opinion",
+          "path": "static/shared/adversarial-opinion/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "confronto-documenti": {
+      "source": "product",
+      "role": "workflow",
+      "skills": [
+        "confronto-documenti"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "confronto-documenti"
+      ],
+      "public_pages": [
+        {
+          "page_id": "confronto-documenti",
+          "path": "static/shared/confronto-documenti/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "contenzioso-civile": {
+      "source": "product",
+      "role": "workflow",
+      "skills": [
+        "contenzioso-civile"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "contenzioso-civile"
+      ],
+      "public_pages": [
+        {
+          "page_id": "contenzioso-civile",
+          "path": "static/shared/contenzioso-civile/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "contenzioso-tributario": {
+      "source": "product",
+      "role": "workflow",
+      "skills": [
+        "contenzioso-tributario"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "contenzioso-tributario"
+      ],
+      "public_pages": [
+        {
+          "page_id": "contenzioso-tributario",
+          "path": "static/shared/contenzioso-tributario/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "controllo-documento": {
+      "source": "product",
+      "role": "workflow",
+      "skills": [
+        "controllo-documento"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "controllo-documento"
+      ],
+      "public_pages": [
+        {
+          "page_id": "controllo-documento",
+          "path": "static/shared/controllo-documento/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "deep-research": {
+      "source": "deep-research-validator",
+      "role": "workflow",
+      "skills": [
+        "deep-research"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "deep-research"
+      ],
+      "public_pages": [
+        {
+          "page_id": "deep-research",
+          "path": "static/shared/deep-research/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "estrazione-clausole": {
+      "source": "product",
+      "role": "workflow",
+      "skills": [
+        "estrazione-clausole"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "estrazione-clausole"
+      ],
+      "public_pages": [
+        {
+          "page_id": "estrazione-clausole",
+          "path": "static/shared/estrazione-clausole/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "lavoro": {
+      "source": "product",
+      "role": "workflow",
+      "skills": [
+        "lavoro"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "lavoro"
+      ],
+      "public_pages": [
+        {
+          "page_id": "lavoro",
+          "path": "static/shared/lavoro/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "learn-with-lucia": {
+      "source": "product",
+      "role": "internal_engine",
+      "skills": [
+        "learn-with-lucia"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "learn-with-lucia"
+      ],
+      "public_pages": [
+        {
+          "page_id": "learn-with-lucia",
+          "path": "static/shared/learn-with-lucia/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "lucia": {
+      "source": "product",
+      "role": "internal_engine",
+      "skills": [
+        "lucia"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "lucia"
+      ],
+      "public_pages": []
+    },
+    "metodo-studio": {
+      "source": "product",
+      "role": "workflow",
+      "skills": [
+        "metodo-studio"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "metodo-studio"
+      ],
+      "public_pages": [
+        {
+          "page_id": "metodo-studio",
+          "path": "static/shared/metodo-studio/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "operazioni-ma": {
+      "source": "product",
+      "role": "workflow",
+      "skills": [
+        "operazioni-ma"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "operazioni-ma"
+      ],
+      "public_pages": [
+        {
+          "page_id": "operazioni-ma",
+          "path": "static/shared/operazioni-ma/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "posizioni-negoziali": {
+      "source": "product",
+      "role": "workflow",
+      "skills": [
+        "posizioni-negoziali"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "posizioni-negoziali"
+      ],
+      "public_pages": [
+        {
+          "page_id": "posizioni-negoziali",
+          "path": "static/shared/posizioni-negoziali/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "quesito-legale-fiscale": {
+      "source": "deep-research-validator",
+      "role": "workflow",
+      "skills": [
+        "quesito-legale-fiscale"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "quesito-legale-fiscale"
+      ],
+      "public_pages": [
+        {
+          "page_id": "quesito-legale-fiscale",
+          "path": "static/shared/quesito-legale-fiscale/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "recupero-crediti": {
+      "source": "product",
+      "role": "workflow",
+      "skills": [
+        "recupero-crediti"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "recupero-crediti"
+      ],
+      "public_pages": [
+        {
+          "page_id": "recupero-crediti",
+          "path": "static/shared/recupero-crediti/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "redazione-da-modello": {
+      "source": "product",
+      "role": "workflow",
+      "skills": [
+        "redazione-da-modello"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "redazione-da-modello"
+      ],
+      "public_pages": [
+        {
+          "page_id": "redazione-da-modello",
+          "path": "static/shared/redazione-da-modello/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        },
+        {
+          "page_id": "revisione-word",
+          "path": "static/shared/revisione-word/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "revisione-contratti": {
+      "source": "product",
+      "role": "workflow",
+      "skills": [
+        "revisione-contratti"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "revisione-contratti"
+      ],
+      "public_pages": [
+        {
+          "page_id": "revisione-contratti",
+          "path": "static/shared/revisione-contratti/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "revisione-documentale": {
+      "source": "product",
+      "role": "workflow",
+      "skills": [
+        "revisione-documentale"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "revisione-documentale"
+      ],
+      "public_pages": [
+        {
+          "page_id": "revisione-documentale",
+          "path": "static/shared/revisione-documentale/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "verifica-citazioni": {
+      "source": "product",
+      "role": "workflow",
+      "skills": [
+        "verifica-citazioni"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "verifica-citazioni"
+      ],
+      "public_pages": [
+        {
+          "page_id": "verifica-citazioni",
+          "path": "static/shared/verifica-citazioni/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    }
+  },
+  "services": [
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage",
+    "managed-python-runtime",
+    "prepared-course-files"
+  ],
+  "host_omissions": {
+    "openai-codex": {
+      "services": [],
+      "workstreams": [],
+      "paths": {
+        "privacy/workstreams/deep-research-validator.json": [
+          "shared:vendor/modules/vera_assurance"
+        ],
+        "privacy/workstreams/prompt-optimizer.json": [
+          "shared:vendor/modules/vera_assurance"
+        ],
+        "privacy/workstreams/studio-archive.json": [
+          "shared:vendor/modules/vera_assurance",
+          "shared:vendor/modules/vera_ocr"
+        ]
+      }
+    },
+    "openai-chatgpt": {
+      "services": [],
+      "workstreams": [],
+      "paths": {
+        "privacy/services/operational-incidents.json": [
+          ".mcp.json"
+        ],
+        "privacy/workstreams/deep-research-validator.json": [
+          "mcp",
+          "shared:vendor/modules/vera_assurance"
+        ],
+        "privacy/workstreams/prompt-optimizer.json": [
+          "mcp",
+          "shared:vendor/modules/vera_assurance"
+        ],
+        "privacy/workstreams/studio-archive.json": [
+          ".mcp.json",
+          "mcp",
+          "shared:vendor/modules/vera_assurance",
+          "shared:vendor/modules/vera_ocr"
+        ]
+      }
+    },
+    "anthropic-cowork": {
+      "services": [],
+      "workstreams": [],
+      "paths": {
+        "privacy/services/operational-incidents.json": [
+          "scripts/onboarding_session_start.py"
+        ],
+        "privacy/services/run-receipt-stamping.json": [
+          ".codex-plugin/plugin.json"
+        ],
+        "privacy/workstreams/deep-research-validator.json": [
+          "shared:vendor/modules/vera_assurance"
+        ],
+        "privacy/workstreams/learn-with-lucia.json": [
+          "scripts/local_onboarding.py",
+          "scripts/local_onboarding_case.py",
+          "scripts/onboarding_session_start.py"
+        ],
+        "privacy/workstreams/prompt-optimizer.json": [
+          "shared:vendor/modules/vera_assurance"
+        ],
+        "privacy/workstreams/studio-archive.json": [
+          ".mcp.json",
+          "README.md",
+          "shared:vendor/modules/vera_assurance",
+          "shared:vendor/modules/vera_ocr"
+        ]
+      }
+    },
+    "google-antigravity": {
+      "services": [],
+      "workstreams": [],
+      "paths": {
+        "privacy/services/operational-incidents.json": [
+          ".mcp.json"
+        ],
+        "privacy/workstreams/deep-research-validator.json": [
+          "shared:vendor/modules/vera_assurance"
+        ],
+        "privacy/workstreams/prompt-optimizer.json": [
+          "shared:vendor/modules/vera_assurance"
+        ],
+        "privacy/workstreams/studio-archive.json": [
+          "shared:vendor/modules/vera_assurance",
+          "shared:vendor/modules/vera_ocr"
+        ]
+      }
+    }
+  }
+}

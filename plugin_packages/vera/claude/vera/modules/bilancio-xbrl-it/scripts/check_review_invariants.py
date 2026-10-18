@@ -49,7 +49,7 @@ def main() -> int:
     repository = Path(__file__).resolve().parents[3]
     privacy_validator = (
         repository
-        / "plugins/vera/skills/privacy-surface-review/scripts/validate_privacy_surfaces.py"
+        / "plugins/vera/skills/mparanza-privacy-surface-review/scripts/validate_privacy_surfaces.py"
     )
     if not privacy_validator.is_file() or any(
         not (repository / node.partition("::")[0]).is_file() for node in INVARIANT_NODES

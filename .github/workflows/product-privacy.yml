@@ -1,0 +1,39 @@
+name: Shared product privacy
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contracts:
+    name: Vera Clara Lucia privacy contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python -m pip install pytest pytest-cov jsonschema pyyaml black==25.1.0 isort==6.0.1 mypy bandit
+      - run: python scripts/sync_privacy_runtime.py --check
+      - run: python scripts/build_privacy_contracts.py --check
+      - name: Verify binding, unknowns, legacy reopening and product separation
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_product_privacy_contract.py
+          tests/plugins/test_vera_privacy_surfaces.py
+          tests/plugins/test_clara_privacy_surfaces.py
+          tests/plugins/test_vera_cowork_privacy.py
+          --cov=plugins/_shared/privacy-runtime/scripts --cov-report=term-missing --cov-fail-under=80
+      - run: node --test tests/test_function_model_data.mjs
+      - name: Check shared contract implementation quality
+        run: |
+          python -m black --check scripts/build_privacy_contracts.py scripts/project_product_privacy.py scripts/sync_privacy_runtime.py plugins/_shared/privacy-runtime tests/plugins/test_product_privacy_contract.py
+          python -m isort --check-only scripts/build_privacy_contracts.py scripts/project_product_privacy.py scripts/sync_privacy_runtime.py plugins/_shared/privacy-runtime tests/plugins/test_product_privacy_contract.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports scripts/build_privacy_contracts.py scripts/project_product_privacy.py scripts/sync_privacy_runtime.py plugins/_shared/privacy-runtime/scripts/privacy_contract.py
+          python -m bandit -q -ll scripts/build_privacy_contracts.py scripts/project_product_privacy.py scripts/sync_privacy_runtime.py plugins/_shared/privacy-runtime/scripts/privacy_contract.py

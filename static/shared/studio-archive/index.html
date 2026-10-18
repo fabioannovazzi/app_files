@@ -690,39 +690,7 @@
       </div>
     </section>
 
-    <section class="section-block" id="model-data" data-model-data-workflow="studio-archive" data-model-data-status="relevant">
-      <div class="section-head">
-        <div>
-          <span class="section-index" data-i18n="model.eyebrow">Quali dati arrivano al modello</span>
-          <h2 data-i18n="model.title">L’indice completo resta sul Mac. Al modello arrivano la domanda e le evidenze aperte per rispondere.</h2>
-        </div>
-        <p data-i18n="model.copy">Il codice indicizza localmente tutta la popolazione supportata, entro 50.000 file e 50 GB; il modello non riceve l’indice né una copia automatica dell’intero archivio. Se l’archivio supera questi limiti, l’aggiornamento si ferma prima della ricerca.</p>
-      </div>
-      <div class="sources">
-        <article class="source">
-          <div><span class="label" data-i18n="model.local.label">Documenti locali</span></div>
-          <div class="source-copy"><p data-i18n="model.local.copy">Il modello riceve il cliente e il perimetro scelti, la domanda, i percorsi relativi e fino a 20 passaggi candidati con estratti, impronte, riferimenti e limiti di estrazione. Per ogni fonte usata riceve il passaggio aperto e, se necessario, fino a due passaggi adiacenti per lato; ciascun passaggio è limitato a 24.000 caratteri.</p></div>
-        </article>
-        <article class="source">
-          <div><span class="label" data-i18n="model.gmail.label">Gmail</span></div>
-          <div class="source-copy"><p data-i18n="model.gmail.copy">Al modello arrivano, con gli stessi limiti: account collegato; nome o identificativo del cliente solo per una ricerca iniziale fino a 20 candidati quando manca un indirizzo confermato; poi indirizzi email o PEC completi confermati, ricerche in gruppi di massimo 10 indirizzi e fino a 20 risultati per pagina, con paginazione solo se serve alla copertura richiesta. Arrivano quindi mittente, destinatari disponibili, oggetto, data, estratto e soltanto i corpi, thread o allegati selezionati. Cambia il connettore dell’account, non il perimetro professionale; la casella completa non viene copiata.</p></div>
-        </article>
-        <article class="source">
-          <div><span class="label" data-i18n="model.whatsapp.label">WhatsApp Desktop</span></div>
-          <div class="source-copy"><p data-i18n="model.whatsapp.copy">Solo in Codex arrivano nome o identificativo e numero completo del cliente, identità della chat individuale verificata, mittente, testo o didascalia, orario e riferimento sullo schermo dei soli messaggi visibili necessari. Le anteprime delle altre chat prima della verifica restano nel controllo locale e non vengono restituite al modello.</p></div>
-        </article>
-        <article class="source">
-          <div><span class="label" data-i18n="model.engagement.label">Incarico e Drive</span></div>
-          <div class="source-copy">
-            <p data-i18n="model.engagement.selection">Per scegliere il cliente, il modello riceve tutti i record con etichetta, stato e ID opachi. Riceve anche il numero di email, nomi legali e codici fiscali registrati, ma non i valori. Se ne fornisci uno, il codice restituisce solo le corrispondenze esatte.</p>
-            <p data-i18n="model.engagement.run">Durante il run, il modello riceve gli ID di cliente, incarico e run e i percorsi locali necessari. Con l’MCP locale, le operazioni restano legate al run corretto. Senza MCP, restano disponibili il ledger e i file canonici, ma Vera non dichiara salvata o applicata una decisione senza un artefatto persistito.</p>
-            <p data-i18n="model.engagement.verification">La verifica dei documenti salvati legge localmente tutti i byte selezionati. Al modello restituisce ID, nomi, ruoli, percorsi, dimensioni, impronte dei file e delle ricevute ed esiti dei controlli, senza il testo dei documenti. Il confronto con ricevute precedenti verifica la conservazione; non approva il contenuto.</p>
-            <p data-i18n="model.engagement.organization">Per rivedere il riordino, il modello riceve l’intero snapshot, entro 5.000 file e 2 GB: percorsi proiettati, nomi, tipi, dimensioni, date, riferimenti opachi e duplicati esatti. Hash grezzi, ID Drive, versioni, capacità e percorsi assoluti restano locali. Dei documenti aperti riceve solo testo limitato.</p>
-          </div>
-        </article>
-      </div>
-      <p class="model-data-note"><span data-i18n="model.note">Non c’è anonimizzazione automatica. I riferimenti tecnici del riordino sono pseudonimizzati, ma identità del cliente, nomi, percorsi proiettati, date e contenuto selezionato restano quando servono al lavoro professionale. Credenziali, token, cookie, identità private non selezionate, l’indice completo e le anteprime WhatsApp non verificate restano esclusi.</span> <a id="model-data-link" href="/data-handling?lang=it" data-i18n="model.link">Account, conservazione e addestramento →</a></p>
-    </section>
+    <section id="model-data" class="function-model-data" data-model-data-status="placeholder" aria-live="polite"><h2 class="function-model-data__title">Quali dati arrivano al modello</h2><div class="function-model-data__body"></div></section>
   </main>
 
   <footer>
@@ -1387,9 +1355,8 @@
         "model.engagement.label": "Incarico e Drive",
         "model.engagement.selection": "Per scegliere il cliente, il modello riceve tutti i record con etichetta, stato e ID opachi. Riceve anche il numero di email, nomi legali e codici fiscali registrati, ma non i valori. Se ne fornisci uno, il codice restituisce solo le corrispondenze esatte.",
         "model.engagement.run": "Durante il run, il modello riceve gli ID di cliente, incarico e run e i percorsi locali necessari. Con l’MCP locale, le operazioni restano legate al run corretto. Senza MCP, restano disponibili il ledger e i file canonici, ma Vera non dichiara salvata o applicata una decisione senza un artefatto persistito.",
-          "model.engagement.verification": "La verifica dei documenti salvati legge localmente tutti i byte selezionati. Al modello restituisce ID, nomi, ruoli, percorsi, dimensioni, impronte dei file e delle ricevute ed esiti dei controlli, senza il testo dei documenti. Il confronto con ricevute precedenti verifica la conservazione; non approva il contenuto.",
         "model.engagement.organization": "Per rivedere il riordino, il modello riceve l’intero snapshot, entro 5.000 file e 2 GB: percorsi proiettati, nomi, tipi, dimensioni, date, riferimenti opachi e duplicati esatti. Hash grezzi, ID Drive, versioni, capacità e percorsi assoluti restano locali. Dei documenti aperti riceve solo testo limitato.",
-        "model.note": "Non c’è anonimizzazione automatica. I riferimenti tecnici del riordino sono pseudonimizzati, ma identità del cliente, nomi, percorsi proiettati, date e contenuto selezionato restano quando servono al lavoro professionale. Credenziali, token, cookie, identità private non selezionate, l’indice completo e le anteprime WhatsApp non verificate restano esclusi.",
+        "model.note": "Non c’è anonimizzazione automatica. I riferimenti tecnici del riordino sono pseudonimizzati, ma identità del cliente, nomi, percorsi proiettati, date e contenuto selezionato restano quando servono al lavoro professionale. Credenziali, token, cookie, identità private non selezionate, hash grezzi, l’indice completo e le anteprime WhatsApp non verificate restano esclusi.",
         "model.link": "Account, conservazione e addestramento →"
       },
       en: {
@@ -1405,9 +1372,8 @@
         "model.engagement.label": "Engagement and Drive",
         "model.engagement.selection": "To choose a client, the model receives every record’s label, status, and opaque IDs. It also receives the number of stored email addresses, legal names, and tax identifiers, but not the values. If you supply one, code returns only exact matches.",
         "model.engagement.run": "During a run, the model receives the client, engagement, and run IDs plus the required local paths. With local MCP, operations remain bound to the correct run. Without MCP, the ledger and canonical files remain available, but Vera does not report a decision as saved or applied without a persisted artifact.",
-          "model.engagement.verification": "Verification of saved documents reads all selected bytes locally. It returns IDs, names, roles, paths, sizes, file and receipt hashes, and check results to the model, without document text. Comparison with prior receipts checks preservation; it does not approve the content.",
         "model.engagement.organization": "To review the organization proposal, the model receives the entire snapshot, within 5,000 files and 2 GB: projected paths, names, types, sizes, dates, opaque references, and exact duplicates. Raw hashes, Drive IDs, versions, capabilities, and absolute paths stay local. Only bounded text from opened files is added.",
-        "model.note": "There is no automatic anonymization. Organization technical references are pseudonymized, but client identity, names, projected paths, dates, and selected content remain when professional work requires them. Credentials, tokens, cookies, unselected private identities, the complete search index, and unverified WhatsApp previews stay out.",
+        "model.note": "There is no automatic anonymization. Organization technical references are pseudonymized, but client identity, names, projected paths, dates, and selected content remain when professional work requires them. Credentials, tokens, cookies, unselected private identities, raw hashes, the complete search index, and unverified WhatsApp previews stay out.",
         "model.link": "Account, retention, and training →"
       },
       fr: {
@@ -1423,9 +1389,8 @@
         "model.engagement.label": "Mission et Drive",
         "model.engagement.selection": "Pour choisir le client, le modèle reçoit le libellé, le statut et les ID opaques de chaque ligne. Il reçoit aussi le nombre d’adresses e-mail, de noms légaux et d’identifiants fiscaux enregistrés, mais pas les valeurs. Si vous en fournissez une, le code ne renvoie que les correspondances exactes.",
         "model.engagement.run": "Pendant un run, le modèle reçoit les ID du client, de la mission et du run, ainsi que les chemins locaux nécessaires. Avec le MCP local, les opérations restent liées au bon run. Sans MCP, le registre et les fichiers canoniques restent disponibles, mais Vera ne déclare aucune décision enregistrée ou appliquée sans artefact persistant.",
-          "model.engagement.verification": "La vérification des documents enregistrés lit localement tous les octets sélectionnés. Elle transmet au modèle les identifiants, noms, rôles, chemins, tailles, empreintes des fichiers et reçus, et résultats des contrôles, sans le texte des documents. La comparaison avec les reçus précédents vérifie la conservation ; elle ne valide pas le contenu.",
         "model.engagement.organization": "Pour revoir le classement, le modèle reçoit le snapshot complet, dans la limite de 5 000 fichiers et 2 Go : chemins projetés, noms, types, tailles, dates, références opaques et doublons exacts. Les empreintes brutes, ID Drive, versions, capacités et chemins absolus restent locaux. Seul le texte limité des fichiers ouverts est ajouté.",
-        "model.note": "Il n’y a pas d’anonymisation automatique. Les références techniques du classement sont pseudonymisées, mais l’identité du client, les noms, chemins projetés, dates et contenus sélectionnés restent visibles lorsqu’ils sont nécessaires au travail professionnel. Identifiants de connexion, jetons, cookies, identités privées non sélectionnées, index de recherche complet et aperçus WhatsApp non vérifiés restent exclus.",
+        "model.note": "Il n’y a pas d’anonymisation automatique. Les références techniques du classement sont pseudonymisées, mais l’identité du client, les noms, chemins projetés, dates et contenus sélectionnés restent visibles lorsqu’ils sont nécessaires au travail professionnel. Identifiants de connexion, jetons, cookies, identités privées non sélectionnées, empreintes brutes, index de recherche complet et aperçus WhatsApp non vérifiés restent exclus.",
         "model.link": "Compte, conservation et entraînement →"
       },
       de: {
@@ -1441,9 +1406,8 @@
         "model.engagement.label": "Mandat und Drive",
         "model.engagement.selection": "Zur Auswahl des Mandanten erhält das Modell für jeden Eintrag Bezeichnung, Status und opake IDs. Es erhält außerdem die Anzahl gespeicherter E-Mail-Adressen, rechtlicher Namen und Steuerkennungen, nicht aber die Werte. Wenn Sie einen davon angeben, gibt der Code nur exakte Treffer zurück.",
         "model.engagement.run": "Während eines Runs erhält das Modell Mandanten-, Mandats- und Run-IDs sowie die benötigten lokalen Pfade. Mit lokalem MCP bleiben die Vorgänge an den richtigen Run gebunden. Ohne MCP bleiben Ledger und kanonische Dateien verfügbar; Vera meldet jedoch keine Entscheidung ohne persistiertes Artefakt als gespeichert oder angewendet.",
-          "model.engagement.verification": "Die Prüfung gespeicherter Dokumente liest alle ausgewählten Bytes lokal. Das Modell erhält IDs, Namen, Rollen, Pfade, Größen, Datei- und Beleg-Hashes sowie Prüfergebnisse, ohne Dokumenttext. Der Vergleich mit früheren Belegen prüft die unveränderte Aufbewahrung; er genehmigt den Inhalt nicht.",
         "model.engagement.organization": "Zur Prüfung der Ablage erhält das Modell den vollständigen Snapshot innerhalb der Grenze von 5.000 Dateien und 2 GB: projizierte Pfade, Namen, Typen, Größen, Daten, opake Referenzen und exakte Duplikate. Rohe Hashes, Drive-IDs, Versionen, Fähigkeiten und absolute Pfade bleiben lokal. Hinzu kommt nur begrenzter Text aus geöffneten Dateien.",
-        "model.note": "Es gibt keine automatische Anonymisierung. Technische Referenzen der Ordnung sind pseudonymisiert; Mandantenidentität, Namen, projizierte Pfade, Daten und ausgewählte Inhalte bleiben jedoch sichtbar, wenn die fachliche Arbeit sie benötigt. Zugangsdaten, Tokens, Cookies, nicht ausgewählte private Identitäten, der vollständige Suchindex und nicht verifizierte WhatsApp-Vorschauen bleiben außen vor.",
+        "model.note": "Es gibt keine automatische Anonymisierung. Technische Referenzen der Ordnung sind pseudonymisiert; Mandantenidentität, Namen, projizierte Pfade, Daten und ausgewählte Inhalte bleiben jedoch sichtbar, wenn die fachliche Arbeit sie benötigt. Zugangsdaten, Tokens, Cookies, nicht ausgewählte private Identitäten, rohe Hashes, der vollständige Suchindex und nicht verifizierte WhatsApp-Vorschauen bleiben außen vor.",
         "model.link": "Konto, Aufbewahrung und Training →"
       },
       es: {
@@ -1459,9 +1423,8 @@
         "model.engagement.label": "Encargo y Drive",
         "model.engagement.selection": "Para elegir al cliente, el modelo recibe la etiqueta, el estado y los ID opacos de cada registro. También recibe el número de correos, nombres legales e identificadores fiscales guardados, pero no los valores. Si proporcionas uno, el código devuelve solo las coincidencias exactas.",
         "model.engagement.run": "Durante una ejecución, el modelo recibe los ID de cliente, encargo y ejecución, además de las rutas locales necesarias. Con MCP local, las operaciones permanecen vinculadas a la ejecución correcta. Sin MCP, el registro y los archivos canónicos siguen disponibles, pero Vera no declara una decisión guardada o aplicada sin un artefacto persistido.",
-          "model.engagement.verification": "La verificación de documentos guardados lee localmente todos los bytes seleccionados. Devuelve al modelo los identificadores, nombres, funciones, rutas, tamaños, huellas de archivos y recibos, y resultados de los controles, sin el texto de los documentos. La comparación con recibos anteriores verifica la conservación; no aprueba el contenido.",
         "model.engagement.organization": "Para revisar la organización, el modelo recibe la instantánea completa, dentro del límite de 5.000 archivos y 2 GB: rutas proyectadas, nombres, tipos, tamaños, fechas, referencias opacas y duplicados exactos. Las huellas brutas, los ID de Drive, las versiones, las capacidades y las rutas absolutas permanecen locales. Solo se añade texto limitado de los archivos abiertos.",
-        "model.note": "No hay anonimización automática. Las referencias técnicas de la organización están seudonimizadas, pero la identidad del cliente, los nombres, las rutas proyectadas, las fechas y el contenido seleccionado se mantienen cuando el trabajo profesional los necesita. Credenciales, tokens, cookies, identidades privadas no seleccionadas, el índice de búsqueda completo y las vistas previas de WhatsApp no verificadas quedan fuera.",
+        "model.note": "No hay anonimización automática. Las referencias técnicas de la organización están seudonimizadas, pero la identidad del cliente, los nombres, las rutas proyectadas, las fechas y el contenido seleccionado se mantienen cuando el trabajo profesional los necesita. Credenciales, tokens, cookies, identidades privadas no seleccionadas, huellas brutas, el índice de búsqueda completo y las vistas previas de WhatsApp no verificadas quedan fuera.",
         "model.link": "Cuenta, conservación y entrenamiento →"
       }
     };
@@ -1521,6 +1484,6 @@
     });
     applyLanguage(lang);
   </script>
-  <script src="../function-model-data.js"></script>
+  <script src="../function-model-data.js?v=20261018-shared-privacy"></script>
 </body>
 </html>

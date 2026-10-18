@@ -1,0 +1,166 @@
+{
+  "schema_version": 3,
+  "workstream": "transcribe",
+  "display_name": "Transcribe",
+  "role": "workflow",
+  "governed_paths": [
+    "skills/transcribe/SKILL.md",
+    "scripts/launch_hosted_voice.py",
+    "scripts/upload_hosted_audio.py",
+    "scripts/import_hosted_voice_bundle.py",
+    "scripts/import_hosted_voice_bundle_to_folder.py",
+    "scripts/import_latest_hosted_voice_bundle.py",
+    "scripts/finalize_hosted_transcript.py",
+    "scripts/integrate_transcript_review.py",
+    "scripts/self_relaunch.py",
+    "scripts/managed_python_runtime.py",
+    "scripts/_managed_python_runtime.py",
+    "requirements.txt",
+    "components.json",
+    "scripts/_shared_python_runtime.py",
+    "requirements-shared-core.txt",
+    "requirements-shared-ocr.txt",
+    "constraints-shared-macos-py312.txt",
+    "scripts/_python_bootstrap.py",
+    "scripts/build_voice_feedback_timeline.py",
+    "scripts/bounded_process.py"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "recording-and-case-context",
+        "purpose": "Transcribe an advisor debrief, meeting, call, or existing recording in the correct project context",
+        "content": "Audio or screen-recording content; compact case brief; client and project facts; recording title, date, participants, interviewer, notes, source transcription language (including Arabic), separate supported case output language, and source metadata",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      },
+      {
+        "id": "transcript-and-review",
+        "purpose": "Attribute speakers, review evidence, and integrate the transcript",
+        "content": "Raw and reviewed transcripts, speaker identities or labels, timing and media metadata, uncertainty notes, transcription corrections, review findings, exact transcript artifact hashes, quotation evidence receipts, stable claims and dependency edges, judgement proposals bound to their direct evidence, questions, issues, and shared evidence- and claim-register updates",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      },
+      {
+        "id": "retained-converter-attempts",
+        "purpose": "Inspect frame extraction and document conversion results or failures",
+        "content": "Local feedback-frame extraction retains images and per-frame converter stdout/stderr logs in attempt directories, including after failure or cancellation. These files may contain screen-recorded professional content, media metadata and local paths. Their contents enter model context when read; generating or retaining them does not itself send them to Hosted Voice. They remain until separately removed.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "direct-cli-python-dependency-setup",
+      "kind": "public_research",
+      "destination": "Python Package Index (PyPI) or the index selected by the user's Python configuration",
+      "purpose": "Prepare the published shared Vera, Clara and Lucia core dependencies, and validate the selected workflow, in one user-scoped Python 3.12 environment per operating-system host.",
+      "content": "Shared published package names and version constraints plus ordinary package-index request metadata. Client files, prompts, case data and generated work are not included in installer requests. Workflow arguments stay in the local child process.",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "Only published shared requirements are installed, never requirements derived from client material or prompts.",
+        "One fixed environment outside plugin source and client folders is reused across products and modules. Explicitly approved OCR is retained in the same environment.",
+        "A reader lease prevents setup from modifying packages while managed workflows run. Setup validates dependencies before writing the readiness receipt. Failed updates leave execution unavailable until repair.",
+        "Older plugin policies cannot downgrade an environment created by a newer shared policy revision."
+      ],
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork",
+        "openai-chatgpt",
+        "google-antigravity"
+      ]
+    },
+    {
+      "id": "declared-python312-retrieval",
+      "kind": "public_research",
+      "destination": "Astral python-build-standalone CPython distributions on GitHub, or the Python download mirror explicitly configured in uv",
+      "purpose": "Provision the declared CPython 3.12 workflow interpreter when absent, automatically bootstrapping uv if needed",
+      "content": "The fixed CPython 3.12 version request, operating-system and architecture selection, and ordinary download request metadata. Setup does not read client files or add prompts, case material or generated reports to this request.",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "Use an installed CPython 3.12 when available; otherwise use uv or automatically download the published uv 0.12.10 wheel, verify its pinned SHA-256, and provision private CPython 3.12 without changing system Python or shell profiles.",
+        "Probe the selected interpreter before creating the dependency environment; never fall back to executing workflows with another Python minor version.",
+        "A failed download or interpreter probe stops setup; existing environments and client files remain intact."
+      ],
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork",
+        "openai-chatgpt",
+        "google-antigravity"
+      ]
+    }
+  ],
+  "security_controls": [],
+  "service_ids": [
+    "hosted-voice",
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ],
+  "public_explanations": {
+    "clara-transcribe": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Il servizio ospitato riceve l'audio da trascrivere; Codex riceve trascrizione e metadati necessari alla revisione.",
+          "Per una registrazione esistente, il servizio riceve il file audio e i metadati forniti, come titolo, data, partecipanti, intervistatore e lingua. Per una cattura avviata da un fascicolo autenticato riceve anche un contesto compatto ricavato da `case_brief.md` nel corpo HTTPS, mai nell'URL; il fallback senza autenticazione esplicita non allega quel brief. Il modello ospitato produce la trascrizione ma non decide l'attribuzione finale dei parlanti.",
+          "Per attribuzione e revisione, Codex può leggere trascrizione grezza, metadati sorgente, note utili, elenco dei parlanti noti e versione attribuita. L'originale non attribuito viene conservato e le correzioni devono limitarsi a errori evidenti. Audio, bundle e trascrizioni restano nei file locali dopo l'importazione; l'inserimento nel workpaper o in un deliverable richiede un passaggio separato e tracciato."
+        ],
+        "en": [
+          "The hosted service receives the audio to transcribe; Codex receives the transcript and metadata needed for review.",
+          "For an existing recording, the service receives the audio file and supplied metadata such as title, date, participants, interviewer, and language. For authenticated capture launched from a case, it also receives compact context derived from `case_brief.md` in the HTTPS request body, never in the URL; the explicit unauthenticated fallback does not attach that brief. The hosted model produces the transcript but is not the final speaker-attribution authority.",
+          "For attribution and review, Codex may read the raw transcript, source metadata, useful notes, known-speaker list, and attributed version. The original unattributed transcript is preserved, and corrections are limited to clear transcription errors. Audio, bundles, and transcripts remain in local files after import; using them in the workpaper or a deliverable requires a separate, recorded step."
+        ],
+        "fr": [
+          "Le service hébergé reçoit l'audio à transcrire ; Codex reçoit la transcription et les métadonnées nécessaires à la revue.",
+          "Pour un enregistrement existant, le service reçoit le fichier audio et les métadonnées fournies, telles que titre, date, participants, interviewer et langue. Pour une capture authentifiée lancée depuis un dossier, il reçoit aussi un contexte compact issu de `case_brief.md` dans le corps HTTPS, jamais dans l'URL ; le fallback explicite sans authentification n'attache pas ce brief. Le modèle hébergé produit la transcription mais n'est pas l'autorité finale d'attribution des locuteurs.",
+          "Pour l'attribution et la revue, Codex peut lire transcription brute, métadonnées source, notes utiles, liste des locuteurs connus et version attribuée. L'original non attribué est conservé et les corrections se limitent aux erreurs de transcription évidentes. Audio, bundles et transcriptions restent dans les fichiers locaux après import ; leur utilisation dans le workpaper ou un livrable exige une étape séparée et tracée."
+        ],
+        "de": [
+          "Der gehostete Dienst erhält das zu transkribierende Audio; Codex erhält Transkript und Metadaten für die Prüfung.",
+          "Bei einer bestehenden Aufnahme erhält der Dienst die Audiodatei und bereitgestellte Metadaten wie Titel, Datum, Teilnehmer, Interviewer und Sprache. Bei authentifizierter Aufnahme aus einer Akte erhält er zusätzlich kompakten Kontext aus `case_brief.md` im HTTPS-Anfragekörper, nie in der URL; der ausdrückliche Fallback ohne Authentifizierung fügt dieses Briefing nicht bei. Das gehostete Modell erzeugt das Transkript, entscheidet aber nicht endgültig über Sprecherzuordnungen.",
+          "Für Zuordnung und Prüfung kann Codex Rohtranskript, Quellenmetadaten, hilfreiche Notizen, bekannte Sprecher und zugeordnete Fassung lesen. Das ursprüngliche nicht zugeordnete Transkript bleibt erhalten; Korrekturen beschränken sich auf eindeutige Transkriptionsfehler. Audio, Bundles und Transkripte bleiben nach dem Import in lokalen Dateien; ihre Nutzung im Workpaper oder Deliverable erfordert einen getrennten, protokollierten Schritt."
+        ],
+        "es": [
+          "El servicio alojado recibe el audio que debe transcribir; Codex recibe la transcripción y los metadatos necesarios para revisarla.",
+          "Para una grabación existente, el servicio recibe el archivo de audio y los metadatos aportados, como título, fecha, participantes, entrevistador e idioma. Para una captura autenticada iniciada desde un expediente, también recibe contexto compacto derivado de `case_brief.md` en el cuerpo HTTPS, nunca en la URL; el modo alternativo explícito sin autenticación no adjunta ese brief. El modelo alojado produce la transcripción, pero no es la autoridad final para atribuir hablantes.",
+          "Para la atribución y revisión, Codex puede leer la transcripción sin tratar, metadatos de origen, notas útiles, lista de hablantes conocidos y versión atribuida. Se conserva el original sin atribuir y las correcciones se limitan a errores evidentes. Audio, paquetes y transcripciones permanecen en archivos locales tras la importación; usarlos en el papel de trabajo o en un entregable requiere un paso separado y registrado."
+        ],
+        "ar": [
+          "تستلم الخدمة المستضافة الصوت العربي لتفريغه؛ ويتلقى Codex النص والبيانات الوصفية اللازمة للمراجعة وإعداد مخرجات بلغة الحالة المختارة.",
+          "بالنسبة إلى تسجيل موجود، تستلم الخدمة ملف الصوت والبيانات الوصفية المقدمة، مثل العنوان والتاريخ والمشاركين والمحاور ولغة التسجيل. وعند بدء تسجيل موثّق من حالة، تستلم أيضاً سياقاً موجزاً مشتقاً من `case_brief.md` داخل جسم طلب HTTPS وليس داخل عنوان URL؛ ولا يرفق المسار البديل الصريح غير الموثّق هذا الملخص. ينتج النموذج المستضاف النص العربي، لكنه لا يملك القرار النهائي في إسناد المتحدثين.",
+          "لأغراض الإسناد والمراجعة، قد يقرأ Codex النص العربي الخام والبيانات الوصفية للمصدر والملاحظات المفيدة وقائمة المتحدثين المعروفين والنسخة المنسوبة. يُحفظ النص العربي الأصلي غير المنسوب، وتقتصر التصحيحات على أخطاء التفريغ الواضحة. تبقى ملفات الصوت والحزم والنصوص في الملفات المحلية بعد الاستيراد؛ ويتطلب استخدامها في ورقة عمل أو مخرج باللغة الإنجليزية خطوة منفصلة ومسجلة."
+        ]
+      }
+    }
+  },
+  "review": {
+    "reviewed_at": "2026-10-18",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "1672d8e806971f7bcd7232c646e5a4266a964efd574bb84143c9a80f90669eab"
+  }
+}

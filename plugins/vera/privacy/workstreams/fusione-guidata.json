@@ -124,9 +124,37 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-09",
+    "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "7aed1a7c3e3431f3eccf9c5874df542adcff76f59a9440217bfba8e77054142c"
-  }
+    "source_fingerprint": "d49fb03d851d0118a04f13fadfed312e6a20c30d2b25a526b97779e50d77cad3"
+  },
+  "public_explanations": {
+    "fusione-guidata": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Codex o Cowork possono leggere identità societarie, soci, ricevute e percorsi di Studio Archive, documenti selezionati, saldi, valutazioni, assegnazioni, date, registri fiscali, bozze, fonti e conferme necessari al lavoro. Il programma importa localmente i file selezionati completi e limita gli export agli ambiti dell’operatore dichiarato; non applica anonimizzazione automatica. La ricerca pubblica usa quesiti generici senza identificativi o dati riservati. Il componente non chiama API di modelli: ciò non rende locale il trattamento del modello. Per un caso reale, il report indica come non misurabile l’esposizione che il programma non può osservare."
+        ],
+        "en": [
+          "Codex or Cowork may read company and shareholder identities, Studio Archive receipts and paths, selected documents, balances, valuations, allocations, dates, tax registers, drafts, sources and confirmations needed for the work. The helper imports complete selected files locally and restricts exports to the declared operator’s scopes; it does not automatically anonymize data. Public research uses generic questions without identifiers or confidential case data. The component makes no model API calls; this does not imply local model processing. For a real case, the report marks model exposure that the helper cannot observe as not measurable."
+        ],
+        "fr": [
+          "Codex ou Cowork peuvent lire identités des sociétés et associés, reçus et chemins Studio Archive, documents sélectionnés, soldes, évaluations, attributions, dates, registres fiscaux, projets, sources et confirmations nécessaires. Le programme importe localement les fichiers sélectionnés complets et limite les exports au périmètre de l’opérateur déclaré ; il n’anonymise pas automatiquement les données. La recherche publique utilise des questions génériques sans identifiants ni données confidentielles. Le composant n’appelle aucune API de modèle ; cela ne rend pas local le traitement du modèle. Pour un dossier réel, le rapport indique comme non mesurable l’exposition que le programme ne peut observer."
+        ],
+        "de": [
+          "Codex oder Cowork können Gesellschafts- und Gesellschafteridentitäten, Studio-Archive-Belege und Pfade, ausgewählte Unterlagen, Salden, Bewertungen, Zuteilungen, Termine, steuerliche Register, Entwürfe, Quellen und Bestätigungen lesen. Das Programm importiert vollständige ausgewählte Dateien lokal und beschränkt Exporte auf die Bereiche des angegebenen Benutzers; es anonymisiert nicht automatisch. Öffentliche Recherchen verwenden allgemeine Fragen ohne Identifikatoren oder vertrauliche Falldaten. Die Komponente ruft keine Modell-API auf; das bedeutet keine lokale Modellverarbeitung. Bei echten Fällen bezeichnet der Bericht die vom Programm nicht beobachtbare Modelloffenlegung als nicht messbar."
+        ],
+        "es": [
+          "Codex o Cowork pueden leer identidades societarias y de socios, recibos y rutas de Studio Archive, documentos seleccionados, saldos, valoraciones, asignaciones, fechas, registros fiscales, borradores, fuentes y confirmaciones necesarios. El programa importa localmente los archivos seleccionados completos y limita las exportaciones al alcance del operador declarado; no anonimiza automáticamente. La investigación pública utiliza preguntas genéricas sin identificadores ni datos confidenciales. El componente no llama a API de modelos; esto no hace local el tratamiento del modelo. En casos reales, el informe indica como no medible la exposición que el programa no puede observar."
+        ]
+      }
+    }
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ]
 }

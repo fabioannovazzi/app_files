@@ -1,0 +1,108 @@
+{
+  "schema_version": 3,
+  "workstream": "lavoro",
+  "display_name": "Lavoro",
+  "role": "workflow",
+  "governed_paths": [
+    "skills/lavoro",
+    "scripts/legal_citations.py",
+    "scripts/legal_citations.schema.json",
+    "scripts/legal_citations_labels.json",
+    "scripts/legal_documents.py",
+    "scripts/legal_documents_labels.json",
+    "scripts/legal_documents_review.schema.json",
+    "scripts/legal_docx.py",
+    "scripts/legal_matter.py",
+    "scripts/legal_matter.schema.json",
+    "scripts/legal_matter_labels.json",
+    "scripts/legal_negotiation.py",
+    "scripts/legal_negotiation.schema.json",
+    "scripts/legal_negotiation_labels.json",
+    "scripts/legal_playbook.py",
+    "scripts/legal_playbook.schema.json",
+    "scripts/legal_playbook_labels.json",
+    "scripts/legal_proofreading.py",
+    "scripts/legal_proofreading.schema.json",
+    "scripts/legal_proofreading_labels.json",
+    "scripts/legal_word_bridge.py",
+    "skills/revisione-contratti/references",
+    "skills/lucia/references/model-data-report-contract.md"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "selected-task-evidence",
+        "purpose": "Carry out lavoro using the selected evidence and user instructions",
+        "content": "The model may read selected worker information, pay, contract, allegations and communications, including sensitive data where present and relevant. It also reads calculation inputs and results. The workbook is produced in the host environment; the local record retains sources and questions. Research on agreements or legislation uses general references without sending payslips or identities to consulted sites.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "selected-public-legal-research",
+      "kind": "public_research",
+      "destination": "Public legal sources through the selected host research tools",
+      "purpose": "Verify authorities needed for the selected question",
+      "content": "General legal references, provision identifiers and questions without client documents or identifying case facts.",
+      "optional": true,
+      "requires_confirmation": false,
+      "controls": [
+        "Use the current legal-question method; do not include credentials or attach private case files. Retain actual sources and access limits."
+      ],
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork",
+        "openai-chatgpt",
+        "google-antigravity"
+      ]
+    }
+  ],
+  "security_controls": [],
+  "review": {
+    "basis": "external_boundary_review_of_workflow_source",
+    "reviewed_at": "2026-10-18",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "4a1d23f60b5cbf1832c6592eec9256313531af5a37257116e02ab61816b9c29e"
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ],
+  "public_explanations": {
+    "lavoro": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Il modello può leggere dati del lavoratore, retribuzioni, contratto, contestazioni e comunicazioni selezionate, anche sensibili se presenti e pertinenti. Legge anche gli input e risultati del calcolo. Il foglio è prodotto nell’ambiente ospite; il registro locale conserva fonti e domande. Le ricerche su CCNL o norme usano riferimenti generali, senza trasmettere cedolini o nominativi ai siti consultati."
+        ],
+        "en": [
+          "The model may read selected worker information, pay, contract, allegations and communications, including sensitive data where present and relevant. It also reads calculation inputs and results. The workbook is produced in the host environment; the local record retains sources and questions. Research on agreements or legislation uses general references without sending payslips or identities to consulted sites."
+        ],
+        "fr": [
+          "Le modèle peut lire les données choisies du salarié, rémunérations, contrat, griefs et communications, y compris sensibles si présentes et pertinentes. Il lit aussi données et résultats du calcul. Le classeur est produit dans l’environnement hôte ; le registre local conserve sources et questions. Les recherches normatives utilisent des références générales sans envoyer bulletins ou identités aux sites consultés."
+        ],
+        "de": [
+          "Das Modell kann ausgewählte Arbeitnehmerdaten, Vergütung, Vertrag, Vorwürfe und Kommunikation lesen, bei Relevanz auch enthaltene sensible Daten. Es liest Eingaben und Rechenergebnisse. Die Arbeitsmappe entsteht im Host; das lokale Protokoll erhält Quellen und Fragen. Rechtsrecherchen nutzen allgemeine Fundstellen ohne Übermittlung von Abrechnungen oder Namen an besuchte Seiten."
+        ],
+        "es": [
+          "El modelo puede leer datos seleccionados del trabajador, retribuciones, contrato, acusaciones y comunicaciones, incluso datos sensibles si existen y son pertinentes. También lee entradas y resultados del cálculo. La hoja se produce en el anfitrión; el registro local conserva fuentes y preguntas. La investigación normativa usa referencias generales sin enviar nóminas ni identidades a los sitios consultados."
+        ]
+      }
+    }
+  }
+}

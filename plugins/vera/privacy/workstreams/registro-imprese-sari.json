@@ -208,5 +208,38 @@
       "control": "Distinct same-client/engagement/workflow run, whole predecessor SHA snapshot, explicit extra imported receipt choices, saved literal parameters and renewed creation/initialization/model mandate confirmation. Existing public initializer and proposal producer remain authoritative; all new professional confirmations stay pending. Preserve old output bytes/run record, exact registered history mapping, origin marker and whole immutable receipt. Pending/orphan/changed history blocks source and successor use and closure. Candidate source input tuple/list scope normalization is separately qualified but unapplied; real installed host acceptance remains unverified."
     }
   ],
-  "workstream": "registro-imprese-sari"
+  "workstream": "registro-imprese-sari",
+  "public_explanations": {
+    "registro-imprese-sari": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Il fascicolo privato della pratica e tutti i dati utili alla compilazione possono arrivare al modello.",
+          "Possono comprendere documenti, nome o ragione sociale, codice fiscale, partita IVA, indirizzi, email, PEC, telefono, Camera competente, forma giuridica, attività e ATECO, cariche e posizioni, modifiche non ancora pubbliche, date di efficacia, valori proposti per i campi DIRE, estratti probatori, rischi e informazioni mancanti.\n\nDopo la mappatura, il pacchetto di revisione non ripete l’intero blocco identità cliente: conserva scopo della pratica, singoli valori proposti, estratti probatori, rischi e informazioni mancanti. Le fasi successive riusano un riferimento temporaneo legato al run e all’hash; la ricerca SARI pubblica avviene solo quando web o browser sono disponibili e blocca i valori identificativi esatti già presenti nel fascicolo; altrimenti usa fonti ufficiali fornite e segnala la copertura corrente come incompleta.\n\nNon viene applicata un’anonimizzazione automatica."
+        ],
+        "en": [
+          "The private practice file and all information useful for preparing it can reach the model.",
+          "This can include documents, personal or company name, tax code, VAT number, addresses, email, PEC, telephone, competent Chamber, legal form, activity and ATECO, offices and positions, changes not yet public, effective dates, proposed DIRE field values, evidence extracts, risks, and missing information.\n\nAfter mapping, the review package does not repeat the entire client-identity block; it keeps the case purpose, individual proposed values, evidence extracts, risks, and missing information. Later phases reuse a temporary run- and hash-bound reference, and public SARI search runs only when web or browser access is available and blocks exact identity values already present in the case; otherwise supplied official sources are used and current-source coverage is marked incomplete.\n\nNo automatic anonymization is applied."
+        ],
+        "fr": [
+          "Le dossier privé de la formalité et toutes les données utiles à sa préparation peuvent parvenir au modèle.",
+          "Cela peut inclure les documents, le nom de la personne ou de l’entreprise, le code fiscal, le numéro de TVA, les adresses, l’email, la PEC, le téléphone, la Chambre compétente, la forme juridique, l’activité et le code ATECO, les fonctions et positions, les modifications non encore publiques, les dates d’effet, les valeurs proposées pour les champs DIRE, les extraits probants, les risques et les informations manquantes.\n\nAprès la cartographie, le paquet de revue ne répète pas tout le bloc d’identité client; il conserve l’objet du dossier, les valeurs proposées, les extraits probants, les risques et les informations manquantes. Les étapes suivantes réutilisent une référence temporaire liée au run et au hachage; la recherche SARI publique n’a lieu que si l’accès web ou navigateur est disponible et bloque les valeurs d’identité exactes déjà présentes dans le dossier ; sinon les sources officielles fournies sont utilisées et la couverture actuelle est signalée comme incomplète.\n\nAucune anonymisation automatique n’est appliquée."
+        ],
+        "de": [
+          "Die private Verfahrensakte und alle für ihre Vorbereitung nützlichen Daten können das Modell erreichen.",
+          "Dazu können Dokumente, Personen- oder Firmenname, Steuernummer, Umsatzsteuer-Identifikationsnummer, Anschriften, E-Mail, PEC, Telefon, zuständige Kammer, Rechtsform, Tätigkeit und ATECO, Ämter und Positionen, noch nicht veröffentlichte Änderungen, Wirksamkeitsdaten, vorgeschlagene Werte für DIRE-Felder, Belegauszüge, Risiken und fehlende Informationen gehören.\n\nNach der Zuordnung wiederholt das Prüfungspaket nicht den gesamten Identitätsblock; es behält Verfahrenszweck, vorgeschlagene Einzelwerte, Belegauszüge, Risiken und fehlende Informationen. Spätere Phasen verwenden eine temporäre, an Run und Hash gebundene Referenz; die öffentliche SARI-Suche läuft nur bei verfügbarem Web- oder Browserzugriff und blockiert exakte Identitätswerte aus dem Fall; andernfalls werden bereitgestellte offizielle Quellen verwendet und die aktuelle Quellenabdeckung als unvollständig gekennzeichnet.\n\nEs erfolgt keine automatische Anonymisierung."
+        ],
+        "es": [
+          "El expediente privado del trámite y todos los datos útiles para prepararlo pueden llegar al modelo.",
+          "Esto puede incluir documentos, nombre personal o razón social, código fiscal, número de IVA, direcciones, correo electrónico, PEC, teléfono, Cámara competente, forma jurídica, actividad y ATECO, cargos y posiciones, cambios aún no públicos, fechas de efecto, valores propuestos para los campos DIRE, extractos probatorios, riesgos e información faltante.\n\nDespués del mapeo, el paquete de revisión no repite todo el bloque de identidad del cliente; conserva el propósito, los valores propuestos, los extractos probatorios, los riesgos y la información faltante. Las fases posteriores reutilizan una referencia temporal vinculada al run y al hash; la búsqueda pública SARI también bloquea valores de identidad exactos ya presentes en el expediente.\n\nNo se aplica anonimización automática."
+        ]
+      }
+    }
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ]
 }

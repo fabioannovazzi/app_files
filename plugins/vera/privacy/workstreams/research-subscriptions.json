@@ -1,0 +1,49 @@
+{
+  "schema_version": 3,
+  "workstream": "research-subscriptions",
+  "display_name": "Research subscriptions",
+  "role": "internal_engine",
+  "governed_paths": [
+    "skills/research-subscriptions",
+    "scripts/research-sources.cjs",
+    "skills/vera/references/research-subscriptions.md"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "selected-task-evidence",
+        "purpose": "Carry out research-subscriptions using the selected evidence and user instructions",
+        "content": "Provider choices, request IDs and reported access checks are retained in the computer profile. Authorized publisher queries and opened subscription passages may enter the host model context and private research record. The operator logs in; the register does not store passwords, cookies, sessions or document bodies. A saved preference is not proof of live access. The research-subscriptions service record describes publisher requests and revocation.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [],
+  "security_controls": [],
+  "review": {
+    "basis": "external_boundary_review_of_workflow_source",
+    "reviewed_at": "2026-10-18",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "84a0d7139a41db5f3d9effe6aa3102f95884f3fa6428cf08ba5f47bf9846eef8"
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "research-subscriptions",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ],
+  "public_explanations": {}
+}

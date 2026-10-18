@@ -364,18 +364,7 @@
       </div>
     </section>
 
-    <section class="function-model-data" id="model-data" data-model-data-workflow="previdenza-inps" data-model-data-status="relevant" aria-labelledby="previdenza-inps-model-data-title">
-      <div class="function-model-data__head">
-        <div class="function-model-data__heading">
-          <p class="function-model-data__label" data-i18n="model.label">Trattamento dei dati</p>
-          <h2 id="previdenza-inps-model-data-title" data-i18n="model.title">Quali dati arrivano al modello</h2>
-        </div>
-        <div class="function-model-data__body">
-          <h3 class="function-model-data__conclusion" data-i18n="model.conclusion">L’intero fascicolo previdenziale privato e i dati ricavati possono arrivare al modello.</h3>
-          <p class="function-model-data__copy" data-i18n="model.copy">Possono comprendere documenti ed export INPS, identità e recapiti, datori e rapporti di lavoro, periodi e versamenti contributivi, retribuzioni, F24, pensioni o prestazioni, corrispondenza, citazioni, valori, calcoli e informazioni su salute, disabilità o famiglia quando presenti. Solo in Codex Desktop, se viene usata la cattura autorizzata, possono arrivare anche il testo visibile e l’immagine completa della pagina INPS aperta; Cowork usa soltanto documenti collegati ed export ufficiali registrati e non cattura una sessione INPS live. Inventario, estrazione e calcoli possono essere eseguiti dal codice, ma non mantengono questi dati fuori dal modello. Dopo la mappatura, la revisione usa fatti, citazioni, calcoli e richieste mancanti; le fasi successive riusano un riferimento temporaneo legato al run e all’hash invece di ritrasmettere il payload privato. Non viene applicata un’anonimizzazione automatica.</p>
-        </div>
-      </div>
-    </section>
+    <section id="model-data" class="function-model-data" data-model-data-status="placeholder" aria-live="polite"><h2 class="function-model-data__title">Quali dati arrivano al modello</h2><div class="function-model-data__body"></div></section>
 
   </main>
 
@@ -531,6 +520,6 @@
 
     applyLanguage(getLang());
   </script>
-  <script src="../function-model-data.js"></script>
+  <script src="../function-model-data.js?v=20261018-shared-privacy"></script>
 </body>
 </html>

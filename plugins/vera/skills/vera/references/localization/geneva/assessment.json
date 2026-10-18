@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "15596f39bcafe97952f4fe22d5932f60f085e563c78a981dce7527a2e7dd613d",
+  "catalogue_fingerprint": "7c528861ca96f3862ca55a452dabbf4e284f1d40c873f2534017a76c5b9b5cd5",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -1925,6 +1925,15 @@
     "entrypoint_set_unchanged": true,
     "scope": "Only the Studio Archive wrapper adds the maintained explicitly authorized external working-folder delivery route, retaining the selected client/engagement, source tree and receipts. All existing Geneva assessment rows, dispositions, legal-source references and limits are preserved. No new jurisdiction adaptation, Swiss legal conclusion, live client or professional acceptance is asserted."
   },
+  "shared_privacy_release_binding_20261018": {
+    "date": "2026-10-18",
+    "version": "0.1.409",
+    "previous_catalogue_fingerprint": "d88fdf323b18281debd89554c334171b609b93728192348c00afd0ad02418f37",
+    "changed_entrypoints": [
+      "privacy-surface-review"
+    ],
+    "scope": "Reviewed the shared developer privacy skill: registry coverage, host profiles, manifest-bound public explanations and actual-run report binding. The helper remains a technical source review; all existing Geneva function rows, dispositions, professional judgments and acceptance limits remain unchanged. This release does not qualify Swiss legal compliance or a Geneva client workflow."
+  },
   "archive_input_verification_release_binding": {
     "version": "0.1.410",
     "reviewed_at": "2026-10-18",
@@ -1935,5 +1944,10 @@
       "vera"
     ],
     "scope": "The 55 function IDs and existing Geneva dispositions remain unchanged. The changed entrypoints require maintained local receipt and byte verification for saved inputs and continuations. This adds no jurisdiction-specific accounting or legal judgment and establishes no new Geneva client or professional acceptance."
+  },
+  "archive_input_verification_main_integration": {
+    "base_commit": "b8ed35121cc430584260321734f5cf0e91b400ea",
+    "version": "0.1.410",
+    "scope": "Retained all 55 assessment rows and current shared privacy source. The additive maintained Archive verifier and updated entrypoint instructions introduce no jurisdiction-specific judgment or new professional acceptance."
   }
 }

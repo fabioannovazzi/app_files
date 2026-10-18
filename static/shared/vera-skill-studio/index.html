@@ -49,7 +49,8 @@
   
     li, p, blockquote { overflow-wrap: anywhere; }
   </style>
- </head>
+ <link rel="stylesheet" href="../function-page-scale.css">
+</head>
  <body>
   <header class="shell">
    <a class="brand" data-vera-link="" href="../vera/index.html?lang=it">
@@ -194,17 +195,7 @@
      Passaggi verificati sulla documentazione ufficiale il 2 ottobre 2026. Nomi dei menu e disponibilità possono cambiare con versione, lingua e account.
     </p>
    </section>
-   <section aria-labelledby="data-title" id="model-data">
-    <h2 data-i18n="data" id="data-title">
-     Quali dati arrivano al modello
-    </h2>
-    <p data-i18n="dataCopy">
-     Questa pagina non installa skill e non legge file. Quando usi una skill, il nome e la descrizione possono essere forniti al modello; le istruzioni caricate, i riferimenti letti, i materiali della richiesta e gli output degli strumenti possono entrare nel contesto. Gli script possono elaborare file sul computer, ma questo non rende l’intero lavoro solo locale. Il percorso effettivo dipende dalla skill e dall’app: chiedi al gestore quali file, strumenti e servizi utilizza. Installare una skill non equivale a inviare automaticamente tutte le cartelle dei clienti. Vera non certifica il trattamento dei dati delle skill dello studio.
-    </p>
-    <a data-data-link="" data-i18n="dataPage" href="https://mparanza.com/data-handling?lang=it">
-     Trattamento dei dati di Mparanza
-    </a>
-   </section>
+   <section id="model-data" class="function-model-data" data-model-data-status="placeholder" aria-live="polite"><h2 class="function-model-data__title">Quali dati arrivano al modello</h2><div class="function-model-data__body"></div></section>
   </main>
   <footer class="shell">
    <a data-i18n="back" data-vera-link="" href="../vera/index.html?lang=it#connections">
@@ -416,5 +407,5 @@
     });
     document.querySelector('[data-data-link]').href = 'https://mparanza.com/data-handling?lang=' + lang;
   </script>
- </body>
+ <script src="/static/shared/function-model-data.js?v=20261018-shared-privacy"></script></body>
 </html>

@@ -612,6 +612,7 @@ artifact card and final response.""",
 
 CLARA_COWORK_INCLUDED_SKILLS = frozenset(
     {
+        "privacy-surface-review",
         "learn-with-clara",
         "advisory-deliverable-validator",
         "advisory-brief-planner",
@@ -630,7 +631,6 @@ CLARA_COWORK_OMITTED_SKILLS = frozenset(
     {
         "deck-correction",
         "hosted-interview",
-        "privacy-surface-review",
         "transcribe",
     }
 )
@@ -2776,7 +2776,6 @@ def _clara_cowork_omits_path(relative_path: str) -> bool:
         (
             ".claude-plugin/",
             "evals/",
-            "privacy/",
             "samples/",
             "submission/",
         )
@@ -2880,7 +2879,6 @@ def _validate_clara_cowork_entries(
     for name in entries:
         if (
             "beautify-deck" in name
-            or name.startswith("privacy/")
             or name.endswith("/agents/openai.yaml")
             or ".codex-plugin/" in name
             or name.endswith(".app.json")
@@ -3208,6 +3206,7 @@ def _lucia_package_entries(
         if name.startswith(
             (
                 "scripts/",
+                "privacy/",
                 "vendor/modules/italian_tax_litigation/",
                 "vendor/modules/deal_redux/",
             )
@@ -3367,8 +3366,6 @@ def _claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
             continue
         if relative.startswith("modules/") and Path(relative).name == "README.md":
             continue
-        if relative.startswith("skills/privacy-surface-review/"):
-            continue
         if _omit_inert_module_host_metadata(relative):
             continue
         if relative == ".codex-plugin/plugin.json":
@@ -3454,7 +3451,6 @@ def _claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
     entries[registry_path] = project_cowork_workflow_registry(
         entries[registry_path], entries=entries
     )
-    _project_cowork_privacy_register(entries)
     _validate_cowork_instruction_entries(entries)
     # Seal only in claude_package_entries, after final skill-name projection.
 
@@ -3527,12 +3523,14 @@ def _reviewer_note(product: str, entries: dict[str, bytes]) -> bytes:
         )
     note = (
         (source / "review.md")
-        .read_text()
+        .read_text(encoding="utf-8")
         .format(
             product=product,
             servers=server_text,
             fonts="\n".join(fonts),
-            local_tokens=(source / f"{product}-local-tokens.md").read_text().strip(),
+            local_tokens=(source / f"{product}-local-tokens.md")
+            .read_text(encoding="utf-8")
+            .strip(),
             workflows=sum(
                 bool(re.fullmatch(r"skills/[^/]+/SKILL\.md", name)) for name in entries
             ),
@@ -3559,8 +3557,33 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
         # those final bytes rather than Lucia's earlier intermediate projection.
         entries = project_skill_names(entries)
     entries["REVIEW.md"] = _reviewer_note(package.plugin, entries)
-    if package.plugin == "vera":
-        _project_cowork_privacy_register(entries)
+    if package.plugin in {"vera", "clara", "lucia"}:
+        # The same review method ships in every host, with only its required
+        # host-specific skill name projected below.
+        entries = {
+            name: data
+            for name, data in entries.items()
+            if not name.startswith("skills/mparanza-privacy-surface-review/")
+        }
+        review_root = (
+            ROOT / "plugins/_shared/privacy-runtime/skills/privacy-surface-review"
+        )
+        for file in review_root.rglob("*"):
+            if (
+                file.is_file()
+                and "__pycache__" not in file.parts
+                and file.suffix != ".pyc"
+                and file.name != "openai.yaml"
+            ):
+                entries[
+                    "skills/privacy-surface-review/"
+                    + file.relative_to(review_root).as_posix()
+                ] = file.read_bytes()
+        entries = project_skill_names(entries)
+    if package.plugin in {"vera", "clara", "lucia"}:
+        from project_product_privacy import project_privacy
+
+        project_privacy(entries, package.plugin, host="anthropic-cowork")
     if package.plugin in {"vera", "clara", "lucia"}:
         _load_codex_builder().add_vera_execution_manifest(entries)
     return dict(sorted(entries.items()))

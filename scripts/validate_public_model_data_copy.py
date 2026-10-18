@@ -11,6 +11,7 @@ and Studio Archive remain allowed.
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 import re
 from dataclasses import dataclass
@@ -135,12 +136,29 @@ def validate_public_model_data_copy(
     """Return editorial findings in governed, or optionally all, public copy."""
 
     findings: list[Finding] = []
-    for path in _public_copy_files(repository_root, all_public_pages=all_public_pages):
+    paths = _public_copy_files(repository_root, all_public_pages=all_public_pages)
+    paths.extend(
+        sorted((repository_root / "static/shared/privacy-contracts").glob("*.json"))
+    )
+    for path in paths:
         if not path.is_file():
             continue
         source = path.read_text(encoding="utf-8")
         seen: set[tuple[int, str, str]] = set()
-        for offset, fragment in _model_copy_fragments(source):
+        fragments = list(_model_copy_fragments(source))
+        if path.suffix == ".json":
+            catalog = json.loads(source)
+            for page_id, page in catalog.get("pages", {}).items():
+                if not isinstance(page, dict) or (
+                    not all_public_pages
+                    and page_id not in {"journal-sampling", "check-entries"}
+                ):
+                    continue
+                for paragraphs in page["copy"].values():
+                    for paragraph in paragraphs:
+                        literal = json.dumps(paragraph, ensure_ascii=False)
+                        fragments.append((max(0, source.find(literal)), paragraph))
+        for offset, fragment in fragments:
             for rule in RULES:
                 for match in rule.pattern.finditer(fragment):
                     absolute_offset = offset + match.start()

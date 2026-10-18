@@ -118,5 +118,33 @@
     "plugins/vera/scripts/native_esg_authoring.py",
     "plugins/vera/scripts/native_esg_author_bridge.py",
     "plugins/vera/scripts/native_archive_closure.py"
+  ],
+  "public_explanations": {
+    "esg-reporting-assurance": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Python legge localmente i file CSV e testo selezionati, fino a 8 MB per file, ed estrae celle o righe. Identità della pratica, percorsi, estratti, valori proposti, motivazioni, fonti, nomi dichiarati dei revisori, decisioni e bozze possono arrivare al modello; anche gli originali che il modello legge per il lavoro possono entrarvi. Si applica il conto OpenAI in Codex o Anthropic in Cowork scelto dallo studio. Non vi sono anonimizzazione automatica o garanzia di elaborazione del modello solo locale. Questo modulo non invia dati a servizi esterni; il report del lavoro deve descrivere le letture effettivamente eseguite dal modello."
+        ],
+        "en": [
+          "Python locally reads selected CSV and text files up to 8 MB each and extracts cells or lines. Case identity, paths, excerpts, proposed values, rationales, sources, declared reviewer names, decisions and drafts may reach the model; so may original documents the model reads for the work. The firm-selected OpenAI account in Codex or Anthropic account in Cowork applies. There is no automatic anonymization or guarantee of local-only model processing. This component sends no data to external services; the work report must describe actual model reads."
+        ],
+        "fr": [
+          "Python lit localement les fichiers CSV et texte sélectionnés, jusqu’à 8 Mo chacun, et extrait cellules ou lignes. Identité du dossier, chemins, extraits, valeurs proposées, justifications, sources, noms déclarés des réviseurs, décisions et brouillons peuvent parvenir au modèle, ainsi que les originaux lus pour le travail. Le compte OpenAI dans Codex ou Anthropic dans Cowork choisi par le cabinet s’applique. Aucune anonymisation automatique ni garantie de traitement du modèle exclusivement local. Le module n’envoie rien à des services externes ; le rapport du travail doit décrire les lectures effectives du modèle."
+        ],
+        "de": [
+          "Python liest ausgewählte CSV- und Textdateien bis 8 MB lokal und extrahiert Zellen oder Zeilen. Aktenidentität, Pfade, Auszüge, vorgeschlagene Werte, Begründungen, Quellen, angegebene Prüfernamen, Entscheidungen und Entwürfe können das Modell erreichen; ebenso für die Arbeit gelesene Originale. Es gilt das gewählte OpenAI-Konto in Codex oder Anthropic-Konto in Cowork. Keine automatische Anonymisierung oder Garantie ausschließlich lokaler Modellverarbeitung. Dieses Modul sendet keine Daten an externe Dienste; der Arbeitsbericht muss tatsächliche Modellzugriffe beschreiben."
+        ],
+        "es": [
+          "Python lee localmente los CSV y textos seleccionados, hasta 8 MB por archivo, y extrae celdas o líneas. Identidad del expediente, rutas, extractos, valores propuestos, razones, fuentes, nombres declarados de revisores, decisiones y borradores pueden llegar al modelo, igual que los originales leídos para el trabajo. Se aplica la cuenta OpenAI en Codex o Anthropic en Cowork elegida por el despacho. No hay anonimización automática ni garantía de tratamiento del modelo exclusivamente local. Este módulo no envía datos a servicios externos; el informe del trabajo debe describir las lecturas efectivas del modelo."
+        ]
+      }
+    }
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
   ]
 }

@@ -134,5 +134,33 @@
       "control": "Only the fixed assetti producer and same running reviewer-owned registered run are accepted. Signed source scopes, exact byte receipts and actor/tenant/client/engagement/run/implementation-bound grants refuse foreign or changed inputs. Private CAS stages require the current intelligent_review extension and reject model professional_decision. A predecessor must be the exact sealed same-engagement assetti artifact in a fresh run. Signed explicit selected conservation uses the unchanged immutable public producer; completed request receipts replay exact retries and pending/orphaned/changed/unreceipted work blocks further authoring, professional decisions and all-output closure until recovery."
     }
   ],
-  "workstream": "adeguati-assetti"
+  "workstream": "adeguati-assetti",
+  "public_explanations": {
+    "adeguati-assetti": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Il modello può leggere integralmente i documenti pertinenti e le risposte restituite: ruoli, deleghe, note di colloquio, dati contabili, previsioni, contraddizioni, giudizi, manuali, adozioni, prove di esecuzione e indicatori. Non è previsto un limite fisso agli estratti né anonimizzazione automatica. La scheda HTML non fa richieste di rete e non usa il microfono; quando restituisci il Markdown a Vera, il contenuto entra nel contesto del modello. I programmi locali verificano collegamenti e versioni e scrivono i file, ma non rendono locale l’analisi del modello. Codex usa l’account OpenAI selezionato; Cowork quello Anthropic. La ricerca pubblica usa temi professionali senza identificativi diretti del cliente. Il report di esecuzione descrive i dati effettivamente usati."
+        ],
+        "en": [
+          "The model may read complete relevant documents and returned answers: roles, delegations, interview notes, accounting data, forecasts, contradictions, judgments, manuals, adoption records, execution evidence and indicators. There is no fixed excerpt limit or automatic anonymization. The HTML form makes no network requests and does not use the microphone; returning its Markdown to Vera brings that content into model context. Local programs check links and versions and write files, but do not make model analysis local-only. Codex uses the selected OpenAI account; Cowork uses the Anthropic account. Public research uses professional topics without direct client identifiers. The run report describes the data actually used."
+        ],
+        "fr": [
+          "Le modèle peut lire intégralement les documents pertinents et les réponses remises : fonctions, délégations, notes d’entretien, données comptables, prévisions, contradictions, jugements, manuels, adoptions, preuves d’exécution et indicateurs. Il n’existe ni limite fixe d’extrait ni anonymisation automatique. Le formulaire HTML ne fait aucune requête réseau et n’utilise pas le microphone ; remettre son Markdown à Vera fait entrer le contenu dans le contexte du modèle. Les programmes locaux vérifient liens et versions et écrivent les fichiers, sans rendre l’analyse du modèle exclusivement locale. Codex utilise le compte OpenAI choisi ; Cowork le compte Anthropic. La recherche publique utilise des sujets professionnels sans identifiants directs du client. Le rapport d’exécution décrit les données réellement utilisées."
+        ],
+        "de": [
+          "Das Modell kann relevante Unterlagen und zurückgegebene Antworten vollständig lesen: Rollen, Vollmachten, Gesprächsnotizen, Buchhaltungsdaten, Prognosen, Widersprüche, Urteile, Handbücher, Annahmeentscheidungen, Ausführungsnachweise und Kennzahlen. Es gibt keine feste Auszugsgrenze oder automatische Anonymisierung. Das HTML-Formular sendet keine Netzwerkanfragen und nutzt kein Mikrofon; mit der Rückgabe der Markdown-Datei an Vera gelangt der Inhalt in den Modellkontext. Lokale Programme prüfen Verknüpfungen und Versionen und schreiben Dateien, machen die Modellanalyse aber nicht ausschließlich lokal. Codex nutzt das gewählte OpenAI-Konto, Cowork das Anthropic-Konto. Öffentliche Recherche verwendet fachliche Themen ohne direkte Kundenkennungen. Der Ausführungsbericht beschreibt die tatsächlich verwendeten Daten."
+        ],
+        "es": [
+          "El modelo puede leer completos los documentos pertinentes y las respuestas devueltas: funciones, delegaciones, notas de entrevista, datos contables, previsiones, contradicciones, juicios, manuales, adopciones, pruebas de ejecución e indicadores. No hay un límite fijo de extractos ni anonimización automática. El formulario HTML no hace solicitudes de red ni usa el micrófono; devolver su Markdown a Vera incorpora el contenido al contexto del modelo. Los programas locales verifican vínculos y versiones y escriben archivos, pero no hacen local el análisis del modelo. Codex usa la cuenta OpenAI seleccionada; Cowork la de Anthropic. La investigación pública usa temas profesionales sin identificadores directos del cliente. El informe de ejecución describe los datos realmente utilizados."
+        ]
+      }
+    }
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ]
 }

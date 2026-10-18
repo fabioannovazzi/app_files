@@ -175,5 +175,38 @@
       "control": "Reviewer-only signed current job/revision authority and private actor/tenant/run draft CAS govern exact invoice IDs and explicit human label choices. Draft recovery never restores confirmation or infers attribution. Registration retains the exact screening JSONL and immutable separate labels, review attribution and public evaluate_results output; previous versions remain sealed by four artifact hashes and readonly. Corrections preserve other pages and do not rewrite worker screening. Same-key durable intent precedes writes; foreign output changes, implementation changes or guard cleanup faults preserve actual files and an uncertain receipt, with no automatic retry. No real ledger posting, professional approval or Archive completion is implied."
     }
   ],
-  "workstream": "passive-invoice-audit"
+  "workstream": "passive-invoice-audit",
+  "public_explanations": {
+    "passive-invoice-audit": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "03 · Confine dati",
+          "Il modello selezionato (GPT-5.6 Luna per impostazione predefinita) riceve attraverso Codex soltanto i pacchetti compatti delle fatture abbinate: identificativo e riferimento fonte, fornitore, data e numero, righe e valori, riepiloghi IVA, causali e riferimenti a documenti collegati entro limiti dichiarati, ritenute e bollo, conti e descrizioni effettivamente registrati, esiti deterministici e al massimo cinque precedenti revisionati e collegati esplicitamente. Gli XML grezzi, le istruzioni di pagamento e l’IBAN, l’intera prima nota, le credenziali, le colonne non mappate e i file estranei non entrano nel prompt del worker. I sorgenti restano in sola lettura; non esiste una API separata né una scrittura nel gestionale. Un modello diverso richiede una decisione di selezione revisionata; restano gli stessi limiti del pacchetto e il confine Codex. In Cowork gli stessi pacchetti e lo schema sono letti dal subagente Haiku configurato, nel normale ambiente Claude. Il modello principale può leggere campioni per la mappatura, riepiloghi e prove di esecuzione. Per Ginevra può anche leggere le fatture originali selezionate per preparare l’estrazione revisionata. Il worker riceve riferimenti e hash nel pacchetto compatto, non i documenti originali. Il registro host lega richiesta e risposta ma non certifica l’identità del modello. Senza risposta la revisione resta in attesa; la selezione alternativa Codex non si applica a Cowork."
+        ],
+        "en": [
+          "03 · Data boundary",
+          "Through Codex, the selected model (GPT-5.6 Luna by default) receives only compact packets for matched invoices: ID and source reference, supplier, date and number, lines and values, VAT summaries, bounded causale and related-document references, withholding and stamp summaries, actual booked accounts and descriptions, deterministic findings, and at most five explicitly linked reviewed historical treatments. Raw XML, payment instructions and IBAN, the full ledger, credentials, unmapped columns and unrelated files do not enter the worker prompt. Sources stay read-only; there is no separate API or ERP write. A different model requires a reviewed selection decision; the same packet limits and Codex boundary apply. In Cowork the configured Haiku subagent reads the same packets and schema in the existing Claude environment. The parent model may read mapping samples, summaries and execution evidence. For Geneva, it may also read selected original invoices to prepare the reviewed extraction. The worker receives source locators and hashes with the compact packet, not the original documents. The host record binds request and response but does not certify model identity. Without a response, review remains pending; Codex alternative-selection settings do not apply to Cowork."
+        ],
+        "fr": [
+          "03 · Périmètre des données",
+          "Via Codex, le modèle sélectionné (GPT-5.6 Luna par défaut) reçoit uniquement les paquets compacts des factures rapprochées : identifiant et source, fournisseur, date et numéro, lignes et montants, TVA, mentions de cause et références de documents liés limitées, résumés des retenues et du timbre, comptes réellement enregistrés, constats déterministes et au plus cinq historiques révisés et explicitement liés. XML brut, instructions de paiement et IBAN, journal complet, identifiants, colonnes non mappées et fichiers étrangers restent hors du prompt. Sources en lecture seule, sans API séparée ni écriture ERP. Un autre modèle nécessite une décision de sélection revue ; les mêmes limites du paquet et le même périmètre Codex restent applicables. Dans Cowork, le sous-agent Haiku configuré lit les mêmes paquets et le schéma dans l’environnement Claude existant. Le modèle principal peut lire des échantillons de correspondance, des synthèses et des preuves d’exécution. Le registre hôte lie la demande à la réponse sans certifier l’identité du modèle. Sans réponse, la revue reste en attente ; la sélection alternative Codex ne s’applique pas à Cowork."
+        ],
+        "de": [
+          "03 · Datengrenze",
+          "Das ausgewählte Modell (standardmäßig GPT-5.6 Luna) erhält über Codex nur kompakte Pakete zugeordneten Rechnungen: ID und Quelle, Lieferant, Datum und Nummer, Positionen und Werte, USt, begrenzte Angaben zum Rechnungsgrund und zu verknüpften Dokumenten, Zusammenfassungen zu Einbehalt und Stempelsteuer, tatsächlich gebuchte Konten, deterministische Befunde und höchstens fünf ausdrücklich verknüpfte und geprüfte historische Behandlungen. Roh-XML, Zahlungsanweisungen und IBAN, vollständiges Journal, Zugangsdaten, nicht zugeordnete Spalten und fremde Dateien bleiben außerhalb des Prompts. Quellen bleiben schreibgeschützt; keine separate API und kein ERP-Schreibzugriff. Ein anderes Modell erfordert eine geprüfte Auswahlentscheidung; dieselben Paketgrenzen und die Codex-Verarbeitungsgrenze gelten weiterhin. In Cowork liest der konfigurierte Haiku-Unteragent dieselben Pakete und das Schema in der bestehenden Claude-Umgebung. Das Hauptmodell kann Zuordnungsstichproben, Zusammenfassungen und Ausführungsnachweise lesen. Der Host-Nachweis bindet Anfrage und Antwort, bestätigt aber nicht die Modellidentität. Ohne Antwort bleibt die Prüfung ausstehend; die alternative Codex-Modellauswahl gilt nicht für Cowork."
+        ],
+        "es": [
+          "03 · Límite de datos",
+          "El modelo seleccionado (GPT-5.6 Luna de forma predeterminada) recibe mediante Codex solo paquetes compactos de facturas conciliadas: ID y fuente, proveedor, fecha y número, líneas y valores, IVA, causales y referencias limitadas a documentos vinculados, resúmenes de retenciones y timbre, cuentas realmente registradas, hallazgos deterministas y hasta cinco tratamientos históricos revisados y vinculados explícitamente. XML bruto, instrucciones de pago e IBAN, diario completo, credenciales, columnas no mapeadas y archivos ajenos quedan fuera del prompt. Fuentes de solo lectura; sin API separada ni escritura ERP. Otro modelo requiere una decisión de selección revisada; se mantienen los mismos límites del paquete y el entorno Codex. En Cowork, el subagente Haiku configurado lee los mismos paquetes y el esquema en el entorno Claude existente. El modelo principal puede leer muestras de mapeo, resúmenes y pruebas de ejecución. El registro del host vincula solicitud y respuesta, pero no certifica la identidad del modelo. Sin respuesta, la revisión queda pendiente; la selección alternativa de Codex no se aplica a Cowork."
+        ]
+      }
+    }
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ]
 }

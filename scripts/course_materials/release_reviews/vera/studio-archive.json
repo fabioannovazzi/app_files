@@ -116,7 +116,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "7a5cc92caa0f77c8c3dbd543bfc1342d31f8aaca93fc0694d9a39e8752dbbe10",
+  "course_sha256": "c8192258c814f9f90d7645fc94abb43c6a2fbef857ea728d07f31ac8e894bb7b",
   "esg_source_refresh_20260930": {
     "reviewer": "Codex /root - bounded source review",
     "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
@@ -865,5 +865,9 @@
     "execution_evidence": "GitHub Actions run 39129516593, teaching-kits job 117681627582, commit c927186ddd3575816fb923b23b6f39bb03189673: the native teaching stage passed 1710 tests with 3 skips and 90.54% coverage. The later editorial freshness check failed; this run is not represented as green. Fresh final CI must bind all required demo and practice cases to the current course hashes.",
     "limits": "This is a source compatibility refresh of unchanged teaching content, not a new independent editorial review. Historical output reviews remain historical. No new learner, voice, native visual, professional or installed-host acceptance is claimed.",
     "local_native_evidence": "Twenty fresh local demo/practice executions passed across both workflows and all five languages. The maintained release validator matched every required demo/practice identity and current course SHA-256 against their actual JUnit properties. Existing editorial judgments and historical artifact reviews remain preserved; final full CI is still required."
+  },
+  "archive_input_verification_main_integration": {
+    "base_commit": "b8ed35121cc430584260321734f5cf0e91b400ea",
+    "scope": "Compared complete course payload against the merged main release. Only sources differ; authored lessons, all five languages and existing editorial/artifact judgments are preserved. This refresh records source compatibility, not new learner or professional acceptance. Final CI must execute and bind the current course hashes."
   }
 }

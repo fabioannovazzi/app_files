@@ -793,38 +793,7 @@ Tieni il tie-out numerico come appendice quando è utile.</code></div>
       <a class="button" href="../vera/index.html?lang=it" data-vera-link data-copy="cta.button">Vera</a>
     </section>
 
-    <section class="function-model-data" id="model-data" data-model-data-workflow="concordato-plan-review" data-model-data-status="relevant" aria-labelledby="concordato-plan-review-model-data-title">
-      <div class="function-model-data__head">
-        <div class="function-model-data__heading">
-          <p class="function-model-data__label" data-copy="model.label">Trattamento dei dati</p>
-          <h2 id="concordato-plan-review-model-data-title" data-copy="model.title">Quali dati arrivano al modello</h2>
-        </div>
-        <div>
-          <p class="function-model-data__conclusion" data-copy="model.conclusion">Rilevante per questo processo.</p>
-          <p class="function-model-data__copy" data-copy="model.intro">Per ricostruire procedura, creditori, trattamento e fattibilità, il modello può dover leggere dati identificativi e finanziari reali del fascicolo.</p>
-        </div>
-      </div>
-      <div class="sequence">
-        <article>
-          <h3 data-copy="model.localTitle">Il codice cattura il fascicolo</h3>
-          <p data-copy="model.localText">Inventaria ricorsivamente ogni file e cattura tutti i PDF, i workbook Excel e i CSV supportati. Estrae tutte le pagine dei PDF. Per l’appendice numerica esamina tutte le colonne solo quando ogni foglio resta entro 5.000 righe; se un foglio supera il limite, quel workbook non produce candidati numerici.</p>
-        </article>
-        <article>
-          <h3 data-copy="model.semanticTitle">Il modello ricostruisce il caso</h3>
-          <p data-copy="model.semanticText">Il modello può leggere le fonti pertinenti e il testo estratto: istruzioni; debitore, tribunale e riferimenti della procedura; proposta, piano, attestazione e atti; nomi e identificativi dei creditori, crediti, prelazioni, classi, voto, trattamento, recuperi e scadenze; dati contabili, fiscali e previdenziali; fonti e impieghi, liquidità, assunzioni, estratti di evidenza, questioni e note del revisore.</p>
-        </article>
-        <article>
-          <h3 data-copy="model.populationTitle">Il codice calcola l’intera popolazione confermata</h3>
-          <p data-copy="model.populationText">Dopo la conferma professionale, elabora ogni creditore del modello, ogni voce di fonti e impieghi e ogni periodo di liquidità. I calcoli non usano un campione; l’appendice numerica considera tutti i candidati espressamente autorizzati.</p>
-        </article>
-        <article>
-          <h3 data-copy="model.reviewTitle">La revisione evita una seconda copia completa</h3>
-          <p data-copy="model.reviewText">Dopo la conferma semantica, validate e render inviano al modello solo stato, conteggi totali e per tipo e una piccola referenza del run. Il widget riceve invece il payload completo in metadati visibili soltanto al componente: al massimo 300 fonti, 100 domande, 200 questioni, 200 classi, 400 importi di piano e 100 errori, entro 2.500 elementi e 2 MB. Per una domanda professionale specifica il modello può richiedere al massimo 25 elementi per volta; percorsi, hash, dimensioni e riferimenti tecnici vengono rimossi e i nomi file sostituiti da alias stabili, senza togliere contenuto professionale o localizzatori di evidenza. Il modello opera entro lo stesso confine.</p>
-        </article>
-      </div>
-      <p class="appendix"><strong data-copy="model.runtimeTitle">Nomi e identificativi restano quando servono.</strong>
-        <span data-copy="model.runtimeText">Il workflow non usa altri connettori esterni e non anonimizza né pseudonimizza automaticamente debitore, creditori o altri soggetti: nomi e identificativi restano quando sono necessari per verificare procedura, crediti, prelazioni, voto, trattamento ed evidenze. La sostituzione dei soli nomi file nel percorso on demand è una minimizzazione tecnica, non l'anonimizzazione del caso.</span></p>
-    </section>
+    <section id="model-data" class="function-model-data" data-model-data-status="placeholder" aria-live="polite"><h2 class="function-model-data__title">Quali dati arrivano al modello</h2><div class="function-model-data__body"></div></section>
   </main>
   <script src="../video-library.js?v=20260811-distributed"></script>
   <script>
@@ -1554,6 +1523,6 @@ Tieni il tie-out numerico come appendice quando è utile.</code></div>
       openLabel: videoOpenLabels[safeLang]
     });
   </script>
-  <script src="../function-model-data.js"></script>
+  <script src="../function-model-data.js?v=20261018-shared-privacy"></script>
 </body>
 </html>

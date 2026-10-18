@@ -31,6 +31,9 @@ VERA_PRIVACY_VALIDATOR = (
 
 
 def load_builder():
+    # Match the CLI entrypoint import path when loading its script directly.
+    if str(ROOT / "scripts") not in sys.path:
+        sys.path.insert(0, str(ROOT / "scripts"))
     spec = importlib.util.spec_from_file_location(
         "build_claude_plugin_zip",
         BUILD_SCRIPT,
@@ -402,7 +405,9 @@ def test_audit_instructions_direct_skills_share_current_contract_and_component_n
     builder = load_builder()
     expected = builder.COWORK_EXECUTION_CONTRACT.strip()
     for path, content in vera_entries.items():
-        if path.endswith("/SKILL.md"):
+        if path.endswith("/SKILL.md") and not path.startswith(
+            "skills/mparanza-privacy-surface-review/"
+        ):
             text = content.decode()
             assert text.count(expected) == 1, path
     for workflow, component in (
@@ -608,10 +613,7 @@ def test_root_anthropic_manifest_and_local_mcp_are_discoverable(
     assert (
         "modules/previdenza-inps/scripts/capture_portal_snapshot.py" not in vera_entries
     )
-    assert not any(
-        name.startswith("skills/mparanza-privacy-surface-review/")
-        for name in vera_entries
-    )
+    assert "skills/mparanza-privacy-surface-review/SKILL.md" in vera_entries
     assert not any(name.startswith("evals/") for name in vera_entries)
     communication_eval_prefix = "modules/comunicazione-professionale/evals/"
     assert {
@@ -790,25 +792,27 @@ def test_cowork_privacy_register_keeps_supported_receipts_and_omits_openai_servi
     runtime_service = json.loads(
         vera_entries["privacy/services/managed-python-runtime.json"]
     )
-    assert runtime_service["runtime_profiles"] == ["anthropic-cowork"]
+    assert runtime_service["packaged_for_runtime"] == "anthropic-cowork"
+    assert "anthropic-cowork" in runtime_service["runtime_profiles"]
     assert {boundary["id"] for boundary in runtime_service["external_boundaries"]} == {
         "declared-core-dependency-retrieval",
         "declared-python312-retrieval",
         "runtime-failure-incident-delivery",
     }
     assert all(
-        boundary["runtime_profiles"] == ["anthropic-cowork"]
+        "anthropic-cowork" in boundary["runtime_profiles"]
         for boundary in runtime_service["external_boundaries"]
     )
     receipt_service = json.loads(
         vera_entries["privacy/services/run-receipt-stamping.json"]
     )
-    assert receipt_service["runtime_profiles"] == ["anthropic-cowork"]
-    assert "governed_repository_paths" not in receipt_service
-    assert all(
-        not implementation.startswith("repository:")
-        for control in receipt_service["security_controls"]
-        for implementation in control["implemented_by"]
+    assert receipt_service["packaged_for_runtime"] == "anthropic-cowork"
+    review = receipt_service["repository_source_review"]
+    declaration = json.loads(vera_entries[review["path"]])
+    assert declaration["hosted_runtime_verified"] is False
+    assert (
+        declaration["source_manifest"]["governed_repository_paths"]
+        == receipt_service["governed_repository_paths"]
     )
 
 
@@ -818,7 +822,7 @@ def test_cowork_studio_work_privacy_governs_the_packaged_local_register(
     """Retain the actual local scheduling route and its account boundaries."""
     service = json.loads(vera_entries["privacy/services/studio-work.json"])
 
-    assert service["runtime_profiles"] == ["anthropic-cowork"]
+    assert service["packaged_for_runtime"] == "anthropic-cowork"
     assert "scripts/studio_work.py" in service["governed_paths"]
     assert "scripts/native_studio_work.py" in service["governed_paths"]
     assert "skills/mparanza-organizzazione-lavoro/SKILL.md" in service["governed_paths"]
@@ -828,7 +832,7 @@ def test_cowork_studio_work_privacy_governs_the_packaged_local_register(
     assert {boundary["id"] for boundary in service["external_boundaries"]} == {
         "connected-calendar"
     }
-    assert service["external_boundaries"][0]["runtime_profiles"] == ["anthropic-cowork"]
+    assert "anthropic-cowork" in service["external_boundaries"][0]["runtime_profiles"]
     assert service["external_boundaries"][0]["requires_confirmation"] is True
     assert {control["id"] for control in service["security_controls"]} == {
         "revision-and-retry",
@@ -925,6 +929,9 @@ def test_projected_cowork_skills_remove_promotion_feedback_and_codex_wording(
     assert "cannot scan or reorganize" not in archive_organization
     assert "privacy-surface-review/SKILL.md" not in main
     for name, content in skills.items():
+        if name.startswith("skills/mparanza-privacy-surface-review/"):
+            assert "developer workflow" in content
+            continue
         assert "## Cowork execution contract" in content, name
         assert "connected folder and supplied files first" in content, name
         if name == "modules/fusione-guidata/skills/mparanza-fusione-guidata/SKILL.md":
@@ -1296,6 +1303,8 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
             )
             assert "Never run desktop profile/session commands there" in normalized
             assert "uses only its connected lesson folder" in normalized
+            continue
+        if name.startswith("skills/mparanza-privacy-surface-review/"):
             continue
         assert "Cowork execution note" in content, name
         assert "Their absence never" in content, name
@@ -1911,7 +1920,9 @@ def test_every_vera_cowork_entry_preserves_automatic_incident_continuity(
     public_skills = {
         name: content.decode("utf-8")
         for name, content in entries.items()
-        if name.startswith("skills/") and name.endswith("/SKILL.md")
+        if name.startswith("skills/")
+        and name.endswith("/SKILL.md")
+        and name != "skills/mparanza-privacy-surface-review/SKILL.md"
     }
 
     assert len(public_skills) > 1

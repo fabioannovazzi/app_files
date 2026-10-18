@@ -47,6 +47,7 @@ def write_no_model_report(
         ],
         "improvement_assessment": {"status": "not_assessed", "candidates": []},
     }
+    contract_path = None
     if report_script is not None:
         with tempfile.TemporaryDirectory(
             prefix="synthetic-model-data-request-"
@@ -73,11 +74,13 @@ def write_no_model_report(
                 check=False,
             )
         assert result.returncode == 0, result.stderr
-        assert json.loads(result.stdout)["server_receipt"]["status"] == "not_requested"
+        built = json.loads(result.stdout)
+        assert built["server_receipt"]["status"] == "not_requested"
+        contract_path = built.get("privacy_contract_path")
     else:
         source = (
             Path(__file__).resolve().parents[1]
-            / "plugins/vera/scripts/model_data_report.py"
+            / "plugins/_shared/reporting-runtime/model_data_report.py"
         )
         spec = importlib.util.spec_from_file_location("test_disclosure_factory", source)
         assert spec is not None and spec.loader is not None
@@ -88,7 +91,7 @@ def write_no_model_report(
             json.dumps(report) + "\n", encoding="utf-8"
         )
         (output / "model_data_report.md").write_text(markdown, encoding="utf-8")
-    return [
+    declarations = [
         {
             "artifact_id": f"disclosure.{suffix}",
             "path": f"model_data_report.{suffix}",
@@ -98,3 +101,15 @@ def write_no_model_report(
         }
         for suffix, mime in (("json", "application/json"), ("md", "text/markdown"))
     ]
+    if contract_path is not None:
+        assert Path(contract_path).is_file()
+        declarations.append(
+            {
+                "artifact_id": "disclosure.privacy-contract",
+                "path": Path(contract_path).relative_to(output).as_posix(),
+                "purpose": "Retain the exact reviewed contract referenced by the report.",
+                "audience": "review",
+                "media_type": "application/json",
+            }
+        )
+    return declarations

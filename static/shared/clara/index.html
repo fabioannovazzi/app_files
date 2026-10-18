@@ -149,7 +149,9 @@
           <a class="function-link" href="../clara-research-video/index.html?lang=en" data-function-link data-base-href="../clara-research-video/index.html">
             <h4><span data-i18n="functions.researchVideo">Create narrated research videos</span><span class="function-test-indicator" data-testing-pipeline="research-video" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span aria-hidden="true">↗</span>
           </a>
-          <a class="function-link" href="../clara-documents/index.html?lang=en" data-function-link data-base-href="../clara-documents/index.html">
+          <a class="function-link" href="../clara-claim-basis-map/index.html" data-function-link data-base-href="../clara-claim-basis-map/index.html"><h4><span data-i18n="functions.privacy.claim-basis-map">Fonti delle affermazioni</span><span class="function-test-indicator" data-testing-pipeline="claim-basis-map" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span aria-hidden="true">↗</span></a>
+            <a class="function-link" href="../clara-deck-correction/index.html" data-function-link data-base-href="../clara-deck-correction/index.html"><h4><span data-i18n="functions.privacy.deck-correction">Correzione delle presentazioni</span><span class="function-test-indicator" data-testing-pipeline="deck-correction" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span aria-hidden="true">↗</span></a>
+            <a class="function-link" href="../clara-documents/index.html?lang=en" data-function-link data-base-href="../clara-documents/index.html">
             <h4><span data-i18n="functions.documents">Create and revise documents</span><span class="function-test-indicator" data-testing-pipeline="professional-document" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span aria-hidden="true">↗</span>
           </a>
           <a class="function-link" href="../clara-advisory-deliverable-validator/index.html?lang=en" data-function-link data-base-href="../clara-advisory-deliverable-validator/index.html">
@@ -182,7 +184,8 @@
           <a class="function-link" href="../clara-advisory-planning/index.html?lang=en" data-function-link data-base-href="../clara-advisory-planning/index.html">
             <h4><span data-i18n="functions.advisoryPlanning">Plan an advisory assignment</span><span class="function-test-indicator" data-testing-pipeline="advisory-brief-planner" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span aria-hidden="true">↗</span>
           </a>
-          <a class="function-link" href="../clara-business-planning/index.html?lang=en" data-function-link data-base-href="../clara-business-planning/index.html">
+          <a class="function-link" href="../clara-advisory-case-director/index.html" data-function-link data-base-href="../clara-advisory-case-director/index.html"><h4><span data-i18n="functions.privacy.advisory-case-director">Direzione del caso di consulenza</span><span class="function-test-indicator" data-testing-pipeline="advisory-case-director" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span aria-hidden="true">↗</span></a>
+            <a class="function-link" href="../clara-business-planning/index.html?lang=en" data-function-link data-base-href="../clara-business-planning/index.html">
             <h4><span data-i18n="functions.businessPlanning">Prepare a business plan</span><span class="function-test-indicator" data-testing-pipeline="business-planning" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span aria-hidden="true">↗</span>
           </a>
           <a class="function-link" href="../clara-data-analysis/index.html?lang=en" data-function-link data-base-href="../clara-data-analysis/index.html">
@@ -986,6 +989,8 @@
       },
     };
 
+    const privacyFunctionNames = {"it": {"functions.privacy.claim-basis-map": "Fonti delle affermazioni", "functions.privacy.deck-correction": "Correzione delle presentazioni", "functions.privacy.advisory-case-director": "Direzione del caso di consulenza"}, "en": {"functions.privacy.claim-basis-map": "Sources behind slide claims", "functions.privacy.deck-correction": "Correct presentations", "functions.privacy.advisory-case-director": "Direct an advisory case"}, "fr": {"functions.privacy.claim-basis-map": "Sources des affirmations", "functions.privacy.deck-correction": "Corriger les présentations", "functions.privacy.advisory-case-director": "Direction du dossier de conseil"}, "de": {"functions.privacy.claim-basis-map": "Quellen der Folienaussagen", "functions.privacy.deck-correction": "Präsentationen korrigieren", "functions.privacy.advisory-case-director": "Beratungsfall steuern"}, "es": {"functions.privacy.claim-basis-map": "Fuentes de las afirmaciones", "functions.privacy.deck-correction": "Corregir presentaciones", "functions.privacy.advisory-case-director": "Dirección del caso de consultoría"}};
+    Object.entries(privacyFunctionNames).forEach(([code, names]) => Object.assign(copy[code], names));
     const params = new URLSearchParams(window.location.search);
     const supportedLanguages = new Set(["en", "it", "fr", "de", "es"]);
     const languageNames = {

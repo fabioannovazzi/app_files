@@ -164,5 +164,43 @@
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"
+  ],
+  "public_explanations": {
+    "financial-analysis": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Per preparare l’analisi, il modello può leggere le istruzioni e i dati contabili pertinenti. Questi possono comprendere nomi di società, clienti e gruppi; conti, transazioni e saldi; periodi, valute, importi, unità, rettifiche e classificazioni; informazioni su cassa, debito, leasing, factoring, immobilizzazioni, investimenti e capitale circolante; contratti e documenti di supporto.",
+          "Per il confronto dei bilanci annuali il codice legge le celle Excel mappate esplicitamente e conserva totali dichiarati, totali ricostruiti, valori mancanti e differenze. Il modello sceglie e interpreta le fonti pertinenti, comprese le note, e scrive il commento con riferimenti e copertura dichiarata. Negli altri pack usa normalmente i risultati preparati dopo il mapping; una fonte originale viene riaperta per una questione specifica verificandone l’integrità. Un hash non dimostra che tutte le pagine siano state lette o interpretate correttamente.",
+          "Vera non anonimizza né pseudonimizza i dati: nomi e identificativi restano visibili quando servono all’analisi o alla verifica delle evidenze."
+        ],
+        "en": [
+          "To prepare the analysis, the model may read the instructions and relevant accounting data. This may include names of companies, customers and groups; accounts, transactions and balances; periods, currencies, amounts, units, adjustments and classifications; information about cash, debt, leases, factoring, fixed assets, investments and working capital; contracts and supporting documents.",
+          "For annual statement comparisons, code reads explicitly mapped Excel cells and preserves reported totals, rebuilt totals, missing values and differences. The model selects and interprets relevant sources, including notes, and writes commentary with references and declared reading coverage. In the other packs it normally uses prepared results after mapping; an original source is reopened for a specific question with an integrity check. A hash does not prove that every page was read or correctly interpreted.",
+          "Vera does not anonymize or pseudonymize the data: names and identifiers remain visible when needed for the analysis or to verify the evidence."
+        ],
+        "fr": [
+          "Pour préparer l’analyse, le modèle peut lire les instructions et les données comptables pertinentes. Il peut s’agir des noms de sociétés, de clients et de groupes ; des comptes, transactions et soldes ; des périodes, devises, montants, unités, ajustements et classifications ; des informations sur la trésorerie, la dette, les contrats de location, l’affacturage, les immobilisations, les investissements et le fonds de roulement ; des contrats et pièces justificatives.",
+          "Pour comparer les comptes annuels, le code lit les cellules Excel explicitement mappées et conserve les totaux déclarés, les totaux reconstitués, les valeurs manquantes et les écarts. Le modèle choisit et interprète les sources pertinentes, y compris les notes, puis rédige le commentaire avec références et couverture de lecture déclarée. Dans les autres packs, il utilise normalement les résultats préparés après le mapping ; une source originale est rouverte pour une question précise après contrôle de son intégrité. Une empreinte ne prouve pas que chaque page a été lue ou correctement interprétée.",
+          "Vera n’anonymise ni ne pseudonymise les données : les noms et identifiants restent visibles lorsqu’ils sont nécessaires à l’analyse ou à la vérification des éléments probants."
+        ],
+        "de": [
+          "Zur Vorbereitung der Analyse kann das Modell die Anweisungen und relevanten Buchhaltungsdaten lesen. Dazu können Namen von Unternehmen, Kunden und Gruppen gehören; Konten, Transaktionen und Salden; Zeiträume, Währungen, Beträge, Einheiten, Anpassungen und Klassifikationen; Angaben zu Zahlungsmitteln, Schulden, Leasing, Factoring, Anlagevermögen, Investitionen und Working Capital; Verträge und unterstützende Unterlagen.",
+          "Beim Vergleich von Jahresabschlüssen liest der Code ausdrücklich zugeordnete Excel-Zellen und erhält ausgewiesene Summen, nachgerechnete Summen, fehlende Werte und Differenzen. Das Modell wählt und interpretiert relevante Quellen einschließlich Anhang und verfasst Kommentare mit Quellenangaben und dokumentiertem Leseumfang. In den anderen Packs verwendet es nach der Zuordnung normalerweise die aufbereiteten Ergebnisse; Originalquellen werden für konkrete Fragen mit Integritätsprüfung erneut geöffnet. Ein Hash beweist nicht, dass jede Seite gelesen oder richtig interpretiert wurde.",
+          "Vera anonymisiert oder pseudonymisiert die Daten nicht: Namen und Kennungen bleiben sichtbar, wenn sie für die Analyse oder die Prüfung der Nachweise erforderlich sind."
+        ],
+        "es": [
+          "Para preparar el análisis, el modelo puede leer las instrucciones y los datos contables pertinentes. Estos pueden incluir nombres de sociedades, clientes y grupos; cuentas, transacciones y saldos; periodos, monedas, importes, unidades, ajustes y clasificaciones; información sobre caja, deuda, arrendamientos, factoring, inmovilizado, inversiones y capital circulante; contratos y documentos de soporte.",
+          "Para comparar cuentas anuales, el código lee las celdas Excel asignadas expresamente y conserva los totales declarados, los reconstruidos, los valores ausentes y las diferencias. El modelo selecciona e interpreta las fuentes pertinentes, incluidas las notas, y redacta comentarios con referencias y cobertura de lectura declarada. En los otros packs utiliza normalmente los resultados preparados tras la asignación; una fuente original se vuelve a abrir para una pregunta concreta comprobando su integridad. Un hash no demuestra que todas las páginas se hayan leído o interpretado correctamente.",
+          "Vera no anonimiza ni seudonimiza los datos: los nombres y los identificadores permanecen visibles cuando son necesarios para el análisis o para verificar la evidencia."
+        ]
+      }
+    }
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
   ]
 }

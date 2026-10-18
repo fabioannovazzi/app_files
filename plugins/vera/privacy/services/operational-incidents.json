@@ -1,4 +1,35 @@
 {
+  "schema_version": 2,
+  "service_id": "operational-incidents",
+  "display_name": "Automatic operational incident recovery",
+  "governed_paths": [
+    ".mcp.json",
+    "scripts/operational_incidents.py",
+    "scripts/check_dependencies.py",
+    "scripts/managed_python_runtime.py",
+    "scripts/onboarding_session_start.py",
+    "skills/vera/SKILL.md",
+    "skills/vera/references/incident-recovery.md",
+    "scripts/_managed_python_runtime.py",
+    "scripts/verified_execution.py",
+    "skills/vera/references/execution-recovery.md",
+    "scripts/technical_runner.py",
+    "scripts/incident_host_mcp.cjs",
+    "scripts/reporting_product.py"
+  ],
+  "governed_repository_paths": [
+    "modules/operational_incidents",
+    "modules/hosted_services/api.py",
+    "scripts/manage_incidents.py",
+    "scripts/render_incident_alert.py",
+    "scripts/summarize_incident_monitor.py",
+    "plugins/_shared/reporting-runtime",
+    "scripts/sync_reporting_runtime.py"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
   "external_boundaries": [
     {
       "controls": [
@@ -35,42 +66,6 @@
       "destination": "Mparanza HTTPS operational-incident API and Streamable HTTP MCP endpoint"
     }
   ],
-  "governed_paths": [
-    ".mcp.json",
-    "scripts/operational_incidents.py",
-    "scripts/check_dependencies.py",
-    "scripts/managed_python_runtime.py",
-    "scripts/onboarding_session_start.py",
-    "skills/vera/SKILL.md",
-    "skills/vera/references/incident-recovery.md",
-    "scripts/_managed_python_runtime.py",
-    "scripts/verified_execution.py",
-    "skills/vera/references/execution-recovery.md",
-    "scripts/technical_runner.py",
-    "scripts/incident_host_mcp.cjs",
-    "scripts/reporting_product.py"
-  ],
-  "service_id": "operational-incidents",
-  "review": {
-    "reviewed_by": "privacy-surface-review",
-    "basis": "external_boundary_review_of_shared_service_source",
-    "reviewed_at": "2026-10-18",
-    "source_fingerprint": "1d493ebebbf06a441219a106ba9179aa60e1441f9c5ef2b53e875f202f0edf38"
-  },
-  "runtime_profiles": [
-    "openai-codex",
-    "anthropic-cowork"
-  ],
-  "governed_repository_paths": [
-    "modules/operational_incidents",
-    "modules/hosted_services/api.py",
-    "scripts/manage_incidents.py",
-    "scripts/render_incident_alert.py",
-    "scripts/summarize_incident_monitor.py",
-    "plugins/_shared/reporting-runtime",
-    "scripts/sync_reporting_runtime.py"
-  ],
-  "schema_version": 2,
   "security_controls": [
     {
       "id": "capability-isolation",
@@ -109,5 +104,10 @@
       "on_violation": "Undeclared environment names are absent from the child environment."
     }
   ],
-  "display_name": "Automatic operational incident recovery"
+  "review": {
+    "reviewed_at": "2026-10-18",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_shared_service_source",
+    "source_fingerprint": "b2b6c93265906040349eeafacab6f88ce708b9af68ae35ebdabb702aac8434be"
+  }
 }

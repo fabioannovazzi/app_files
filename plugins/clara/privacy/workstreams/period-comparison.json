@@ -1,0 +1,49 @@
+{
+  "schema_version": 3,
+  "workstream": "period-comparison",
+  "display_name": "Period comparison",
+  "role": "internal_engine",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "references",
+    "assets"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "selected-task-evidence",
+        "purpose": "Carry out period-comparison using the selected evidence and user instructions",
+        "content": "Selected sales rows, dates, category/member labels and measures, explicit comparison windows, calculated current/prior values and changes, complete source tables, context and chart images, diagnostics and interpretation. Local numerical/rendering code makes no separate model call. Reading original data or outputs adds those actual values to host context; no automatic anonymization is applied. Any separately requested publication uses the parent reporting route.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [],
+  "security_controls": [],
+  "review": {
+    "basis": "external_boundary_review_of_workflow_source",
+    "reviewed_at": "2026-10-18",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "314b985a1fe97262ba69b41366c4fa8aaf4e4a35967aa2802ea9df209f8661df"
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ],
+  "public_explanations": {}
+}

@@ -110,5 +110,33 @@
       "control": "App-only preparation keeps literal company/currency/cutoff/horizon/coverage, six exact registered CSV/XLSX receipt choices and sheet names, optional extracted XML and an accepted predecessor in atomic actor/tenant/client/engagement/run private drafts with CAS; confirmation is never persisted. Complete source validation and cent-exact arithmetic use unchanged public load_inputs/build_forecast, not inferred source roles. Private pages count every row and display 20 complete parsed rows; oversized pages are refused without sampling. Exact current signed reviewer scope and running run, public preflight and explicit confirmation precede durable intent and public prepare. Retain compiled native manifest and intake, seal every physical file of the immutable first public version, and allow subsequent public date review/acceptance versions only while that initial version and source evidence replay. Identical completed requests replay receipts; uncertain preparation blocks even ordinary view/review. No automatic source-pointer recovery, source rewriting, semantic mapping, anonymization, model/provider/network call, authenticated signature, professional acceptance or Archive completion occurs. Choices, counts and preview cells remain app-private metadata; existing explicit selected-event explanation is the model-context boundary. Host/account processing can still expose locally selected sources when requested."
     }
   ],
-  "workstream": "treasury-forecast"
+  "workstream": "treasury-forecast",
+  "public_explanations": {
+    "treasury-forecast": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Il modello può leggere impresa, saldi, movimenti, clienti e fornitori, residui, flussi pianificati, abbinamenti e rettifiche, eventuali XML, previsioni precedenti e decisioni del revisore. L'anteprima iniziale limita il numero di voci visualizzate, ma il modello può leggere le fonti complete quando servono. Python calcola localmente e non chiama servizi esterni; questo non rende locale l'analisi del modello. Si applica l'account OpenAI in Codex o Anthropic in Cowork scelto dallo studio, senza anonimizzazione automatica. La pagina di revisione usa un server sul computer locale. Il report di esecuzione descrive i dati effettivamente letti."
+        ],
+        "en": [
+          "The model may read company identity, balances, movements, customers and suppliers, outstanding amounts, planned flows, allocations, adjustments, optional XML, previous forecasts and reviewer decisions. The initial preview bounds displayed rows; the model may read complete sources when needed. Python calculates locally without external service calls; model analysis is not local-only. The firm's selected OpenAI account in Codex or Anthropic account in Cowork applies, without automatic anonymization. The review page uses a server on the local computer. The execution report records what the model actually read."
+        ],
+        "fr": [
+          "Le modèle peut lire identité de l'entreprise, soldes, mouvements, clients et fournisseurs, créances et dettes, flux prévus, affectations, ajustements, XML facultatifs, prévisions précédentes et décisions du réviseur. L'aperçu initial limite les lignes affichées ; les sources complètes restent lisibles si nécessaire. Python calcule localement sans appeler de services externes ; l'analyse du modèle n'est pas exclusivement locale. Le compte OpenAI dans Codex ou Anthropic dans Cowork choisi par le cabinet s'applique, sans anonymisation automatique. La revue utilise un serveur sur l'ordinateur local. Le rapport d'exécution décrit les données effectivement lues."
+        ],
+        "de": [
+          "Das Modell kann Unternehmensidentität, Salden, Bewegungen, Kunden, Lieferanten, offene Beträge, Planströme, Zuordnungen, Anpassungen, optionale XML, frühere Planungen und Prüfentscheidungen lesen. Die erste Vorschau begrenzt angezeigte Zeilen; vollständige Quellen bleiben bei Bedarf lesbar. Python rechnet lokal ohne externe Dienste; die Modellanalyse ist nicht ausschließlich lokal. Es gilt das gewählte OpenAI-Konto in Codex oder Anthropic-Konto in Cowork, ohne automatische Anonymisierung. Die Prüfseite nutzt einen Server auf dem lokalen Computer. Der Ausführungsbericht beschreibt tatsächlich gelesene Daten."
+        ],
+        "es": [
+          "El modelo puede leer identidad empresarial, saldos, movimientos, clientes y proveedores, pendientes, flujos previstos, asignaciones, ajustes, XML opcionales, previsiones anteriores y decisiones del revisor. La vista inicial limita filas mostradas; las fuentes completas siguen disponibles cuando hacen falta. Python calcula localmente sin llamar a servicios externos; el análisis del modelo no es exclusivamente local. Se aplica la cuenta OpenAI en Codex o Anthropic en Cowork elegida por el despacho, sin anonimización automática. La revisión usa un servidor en el ordenador local. El informe de ejecución describe los datos realmente leídos."
+        ]
+      }
+    }
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ]
 }

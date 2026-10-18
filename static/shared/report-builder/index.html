@@ -467,18 +467,7 @@
       </ul>
     </section>
 
-    <section class="function-model-data" id="model-data" data-model-data-workflow="report-builder" data-model-data-status="relevant" aria-labelledby="report-builder-model-data-title">
-      <div class="function-model-data__head">
-        <div class="function-model-data__heading">
-          <p class="function-model-data__label" data-i18n="model.label">Trattamento dei dati</p>
-          <h2 id="report-builder-model-data-title" data-i18n="model.title">Quali dati arrivano al modello</h2>
-        </div>
-        <div class="function-model-data__body">
-          <h3 class="function-model-data__conclusion" data-i18n="model.conclusion">Il codice controlla l'intera popolazione; il modello parte da un'anteprima limitata.</h3>
-          <p class="function-model-data__copy" data-i18n="model.copy">Il codice locale legge tutti i file supportati e tutte le righe e celle non vuote per inventario, controlli e calcoli. Al modello arrivano inizialmente istruzioni, nomi di file e fogli, dimensioni delle tabelle, intestazioni candidate, posizioni delle celle numeriche, diagnostica e al massimo otto righe di anteprima per tabella, con i numeri oscurati. Se non basta per decidere struttura o narrativa, il modello richiede un'espansione con uno scopo dichiarato: una tabella, fino a 16 colonne esatte e 100 righe sorgente, con testo delle celle, valori, coordinate, formati e stato delle formule. Le richieste possono essere ripetute, quindi nessuna parte della popolazione diventa irraggiungibile. Nomi del cliente o dell'entità, descrizioni, identificativi, importi e altri dati possono quindi comparire nelle istruzioni, nelle anteprime o espansioni selezionate e, nelle fasi successive, nella ricetta, nella diagnostica, nelle bozze o nelle decisioni di revisione. L'inventario completo resta nel controllo locale privato e non viene letto dal modello per impostazione predefinita. Gli stessi limiti si applicano in ogni ambiente supportato; lo strumento non viene sostituito dalla lettura diretta dei file collegati. Non c'è anonimizzazione né pseudonimizzazione automatica: nomi e identificativi restano nell'evidenza selezionata quando servono allo scopo professionale.</p>
-        </div>
-      </div>
-    </section>
+    <section id="model-data" class="function-model-data" data-model-data-status="placeholder" aria-live="polite"><h2 class="function-model-data__title">Quali dati arrivano al modello</h2><div class="function-model-data__body"></div></section>
 
   </main>
 
@@ -741,6 +730,6 @@
     function applyJourneyCopy(requested){const lang=journeyCopy[requested]?requested:"it";const data=journeyCopy[lang];document.title=data.metaTitle;document.getElementById("meta-description").content=data.metaDescription;document.getElementById("og-title").content=data.metaTitle;document.getElementById("og-description").content=data.metaDescription;document.getElementById("og-locale").content={it:"it_IT",en:"en_US",fr:"fr_FR",de:"de_DE",es:"es_ES"}[lang];document.querySelectorAll("[data-journey]").forEach(node=>{const value=data.text[node.dataset.journey];if(value)node.textContent=value});document.querySelectorAll("[data-journey-aria]").forEach(node=>node.setAttribute("aria-label",data[node.dataset.journeyAria]));const vera=document.querySelector("[data-vera-link]");const reconciliation=document.querySelector('[data-related-link="reconciliation"]');const concordato=document.querySelector('[data-related-link="concordato"]');const research=document.querySelector('[data-related-link="research"]');const proof=document.querySelector("[data-proof-link]");const thumb=document.querySelector("[data-proof-thumb]");if(vera)vera.href=`../vera/index.html?lang=${lang}`;if(reconciliation)reconciliation.href=`../riconciliazione-partite/index.html?lang=${lang}`;if(concordato)concordato.href=`../concordato-plan-review/index.html?lang=${lang}`;if(research)research.href=`../deep-research-validator/index.html?lang=${lang}`;if(proof)proof.href=`https://youtu.be/${data.videoId}`;if(thumb)thumb.src=`https://i.ytimg.com/vi/${data.videoId}/maxresdefault.jpg`}
     document.querySelectorAll("[data-lang]").forEach(button=>button.addEventListener("click",()=>applyJourneyCopy(button.dataset.lang)));applyJourneyCopy(document.documentElement.lang.slice(0,2));
   </script>
-  <script src="../function-model-data.js"></script>
+  <script src="../function-model-data.js?v=20261018-shared-privacy"></script>
 </body>
 </html>

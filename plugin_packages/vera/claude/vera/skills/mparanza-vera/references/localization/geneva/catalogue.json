@@ -2,8 +2,8 @@
   "schema": "vera.localization.catalogue.v1",
   "root": "/Users/fabio/Documents/Codex/2026-10-18/studio-archive-01-ripartenza-0408/work/archive-verification-src/plugins/vera",
   "version": "0.1.410",
-  "captured_at": "2026-10-18T12:35:45.109604+00:00",
-  "catalogue_fingerprint": "15596f39bcafe97952f4fe22d5932f60f085e563c78a981dce7527a2e7dd613d",
+  "captured_at": "2026-10-18T14:24:27.626233+00:00",
+  "catalogue_fingerprint": "7c528861ca96f3862ca55a452dabbf4e284f1d40c873f2534017a76c5b9b5cd5",
   "manifest_sha256": "1b1deabec0b100857dd5d7e3426c6e77bf762151b2fa3ddac3200e2ed0adf6ea",
   "entries": [
     {
@@ -209,7 +209,7 @@
     {
       "function_id": "privacy-surface-review",
       "skill_path": "skills/privacy-surface-review/SKILL.md",
-      "sha256": "8dab36eab3e6ca911e80702637ce0d6fb70f38e7f9e14321197761850d341ca6"
+      "sha256": "17339be89956e62cb980d91eba7732b8fec37ff92d3f744ca6417dbd2373ec8a"
     },
     {
       "function_id": "purchase-invoice-review",

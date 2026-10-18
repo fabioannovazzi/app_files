@@ -514,24 +514,7 @@
       <pre><code data-journey="prompt.text">Usa Journal-Bank Reconciliation su /percorso/banca.xlsx e /percorso/giornale.xlsx. Prepara abbinamenti, candidati ed eccezioni in una carta di lavoro rivedibile.</code></pre><ul class="output-list" id="prompt-list"></ul>
     </section>
 
-    <section class="function-model-data" id="model-data" data-model-data-workflow="journal-bank-reconciliation" data-model-data-status="relevant" aria-labelledby="journal-bank-reconciliation-model-data-title">
-      <div class="function-model-data__head">
-        <div class="function-model-data__heading">
-          <p class="function-model-data__label" data-journey="model.eyebrow">Trattamento dei dati</p>
-          <h2 id="journal-bank-reconciliation-model-data-title" data-journey="model.title">Quali dati arrivano al modello</h2>
-        </div>
-        <div class="function-model-data__copy">
-          <div class="journey-steps">
-            <article class="journey-step"><h3 data-journey="model.structure.title">Il modello comprende la struttura</h3><p data-journey="model.structure.copy">All'inizio, il modello legge un numero limitato di righe per riconoscere i campi e comprenderne il significato.</p></article>
-            <article class="journey-step"><h3 data-journey="model.local.title">Il codice elabora localmente l'intero perimetro</h3><p data-journey="model.local.copy">Una volta confermati i campi e il perimetro, il codice elabora tutti i dati compresi nel lavoro secondo regole dichiarate e ripetibili.</p></article>
-            <article class="journey-step"><h3 data-journey="model.index.title">Il modello riceve un indice dei casi da rivedere</h3><p data-journey="model.index.copy">L'indice usa riferimenti opachi ai casi e mostra solo il tipo di caso, lo stato e i tipi di segnale del controllo. Non contiene nomi, descrizioni, importi, date, riferimenti o identificativi presenti nelle fonti, né percorsi.</p></article>
-            <article class="journey-step"><h3 data-journey="model.context.title">Il modello richiede il contesto di un caso quando serve</h3><p data-journey="model.context.copy">Solo per i casi selezionati arrivano i campi mappati e valorizzati utili alla revisione. Campi vuoti, colonne non mappate, percorsi e identificativi tecnici restano fuori; gli identificativi professionali esatti arrivano solo quando sono necessari al confronto.</p></article>
-            <article class="journey-step"><h3 data-journey="model.residual.title">Il modello esamina il residuo ammesso</h3><p data-journey="model.residual.copy">Solo nel runtime Codex, dopo la riconciliazione, un passaggio separato può ricevere tutti i movimenti bancari ancora aperti e i candidati contabili compatibili, con i soli campi mappati e valorizzati, se l’intero insieme rientra in un unico pacchetto limitato. Il residuo non viene diviso in chiamate automatiche: se supera i limiti, resta interamente alla revisione umana. Cowork non esegue questo passaggio, che non può modificare gli abbinamenti deterministici né lo stato di prontezza.</p></article>
-          </div>
-          <p class="model-data-note" data-journey="model.note">I dati professionali non vengono anonimizzati né pseudonimizzati automaticamente. Il contesto di un caso selezionato può contenere nomi, descrizioni, importi, date e riferimenti reali quando servono alla revisione professionale.</p>
-        </div>
-      </div>
-    </section>
+    <section id="model-data" class="function-model-data" data-model-data-status="placeholder" aria-live="polite"><h2 class="function-model-data__title">Quali dati arrivano al modello</h2><div class="function-model-data__body"></div></section>
 
   </main>
 
@@ -976,7 +959,7 @@
     function applyJourneyCopy(requested){const lang=journeyCopy[requested]?requested:"it";const data=journeyCopy[lang];document.title=data.metaTitle;document.getElementById("meta-description").content=data.metaDescription;document.getElementById("og-title").content=data.metaTitle;document.getElementById("og-description").content=data.metaDescription;document.getElementById("og-locale").content={it:"it_IT",en:"en_US",fr:"fr_FR",de:"de_DE",es:"es_ES"}[lang];document.querySelectorAll("[data-journey]").forEach(node=>{const value=data.text[node.dataset.journey];if(value)node.textContent=value});document.querySelectorAll("[data-journey-aria]").forEach(node=>node.setAttribute("aria-label",data[node.dataset.journeyAria]));const vera=document.querySelector("[data-vera-link]");const related=document.querySelector("[data-related-link]");const proof=document.querySelector("[data-proof-link]");const thumb=document.querySelector("[data-proof-thumb]");if(vera)vera.href=`../vera/index.html?lang=${lang}`;if(related)related.href=`../riconciliazione-partite/index.html?lang=${lang}`;if(proof)proof.href=`https://youtu.be/${data.videoId}`;if(thumb)thumb.src=`https://i.ytimg.com/vi/${data.videoId}/maxresdefault.jpg`}
     document.querySelectorAll("[data-lang]").forEach(button=>button.addEventListener("click",()=>applyJourneyCopy(button.dataset.lang)));applyJourneyCopy(document.documentElement.lang.slice(0,2));
   </script>
-  <script src="../function-page-navigation.js"></script>
-  <script src="../function-model-data.js?v=20260827-run-report"></script>
+  <script src="../function-page-navigation.js?v=20261018-shared-privacy"></script>
+  <script src="../function-model-data.js?v=20261018-shared-privacy"></script>
 </body>
 </html>
