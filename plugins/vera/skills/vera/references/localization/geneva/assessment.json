@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "bd452564fb0d2527ab611279d8f26c75974f536ccca1eee41ffea5774007c9d3",
+  "catalogue_fingerprint": "c851d16b17b428cc8ac027e524c5b5d3429917db604c63d3501b5acb27d80f83",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -1959,5 +1959,15 @@
       "journal-bank-reconciliation"
     ],
     "scope": "Added bounded recovery of reviewed journal PDF layouts within the existing workflows. Function IDs and jurisdiction dispositions are unchanged. The optional parser and recovery instructions do not establish additional Geneva accounting or professional acceptance."
+  },
+  "cowork_reporting_source_refresh": {
+    "version": "0.1.412",
+    "date": "2026-10-18",
+    "scope": "Refresh unchanged 55-function inventory for shared reporting instructions and release version. No change to Geneva jurisdiction judgments or professional methods; no additional localization acceptance claimed."
+  },
+  "pdf_reporting_release_integration_20261018": {
+    "version": "0.1.413",
+    "integrated_main": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
+    "scope": "Preserves both parent release source reviews and all existing Geneva target judgments. Combined entrypoint changes retain bounded PDF recovery and the main host-reporting fix. No new jurisdiction or professional acceptance is claimed."
   }
 }

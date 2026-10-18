@@ -441,7 +441,7 @@
     },
     {
       "path": "modules/studio-archive/vendor/modules/model-data-report-contract.md",
-      "sha256": "f3407b01a608858d3a1eb172101af7231023192d63d944495ca2fd8a3cbc5a54"
+      "sha256": "fae24763acfeeb7c24d3cd83f9062ad311be2943ebfad86c134f530a30f3773a"
     },
     {
       "path": "modules/studio-archive/vendor/modules/model_data_report.py",
@@ -497,7 +497,7 @@
     },
     {
       "path": "skills/mparanza-studio-document-format/SKILL.md",
-      "sha256": "db0bac232d6398fab8ae0af53eeddabfe05ca161eff4638ebc182a1c64abe517"
+      "sha256": "889df95bb4874b2b425bd2c4df59725b1679ef1e414b9d4f7c8266721b8d6b54"
     },
     {
       "path": "skills/mparanza-studio-document-format/references/procedure.md",
@@ -878,5 +878,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "2db3c409b9434b6cc0361b3dc3e6a7a0698910e01197e30228d4d5ab22a44157"
+  "canonical_course_sha256": "4ee7763c764b8236f98f7fe0dfd8613de414afa79c55ad121496d86a231edc7b"
 }

@@ -152,7 +152,7 @@
     },
     {
       "path": "skills/mparanza-journal-bank-reconciliation/SKILL.md",
-      "sha256": "ee3b3983399e5ec4bddbf92319b292b4d1b3286ca7d3cda11e1a1f2ed381838c"
+      "sha256": "45943553bf1024a4146cfdb4376addee82b0535bb079fc95a14518533d9613d1"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -573,5 +573,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "4014d506acb12bdba8d080a6231fd2b4f1db3cd7daaae888a4f04b11e66838e8"
+  "canonical_course_sha256": "e89a4b4ed0c1cda4104aa3406dc6aded74382004318172172362c24d3ba6ad0f"
 }

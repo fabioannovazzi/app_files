@@ -149,7 +149,7 @@
     },
     {
       "path": "skills/mparanza-registro-imprese-sari/SKILL.md",
-      "sha256": "cad5bbc6c07088ff954c2b63c946b21e3b3ef2ae30d4873a184e2d7a111edef3"
+      "sha256": "b4587254c7c5a348db2417b335809baf87fa6c50475f2677df78e7ffbf666ef6"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -666,5 +666,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "17605c2658ecbaa6f74ddfa29f9de2a06acd29de961a83c90be8b5d8e8f110c4"
+  "canonical_course_sha256": "fa129e8ac31606a14217091e8c4650289d60d2fa9b46257a3478214e66be901c"
 }

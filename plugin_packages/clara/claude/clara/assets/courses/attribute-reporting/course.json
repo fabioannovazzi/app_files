@@ -189,7 +189,7 @@
     },
     {
       "path": "skills/mparanza-attribute-reporting/SKILL.md",
-      "sha256": "4da367b72dc4e4bd140749aa94bc2dc38ce52e4d8bfe7ba15f959700139faa8a"
+      "sha256": "2d562c073b50bc7fd6301c3f8be619621c53cf6aa738d6c8c6eeba61263cbdcd"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -486,5 +486,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "775dde65118fa213e253650868386a6ad8b15c1107fb44ed99c3f9ce316163dc"
+  "canonical_course_sha256": "85ab8fff3f7855a040c0458039acd25859171f745283debcebc5739cbdf12c59"
 }

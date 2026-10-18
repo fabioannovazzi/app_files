@@ -114,6 +114,57 @@ def event(product, run_id, sequence, kind, **fields):
 
 
 @pytest.mark.parametrize("product", PIPELINES)
+def test_connector_receipt_fallback_keeps_original_product_and_run(service, product):
+    client, store, receipts, signer, owners, _ = service
+    run_id = uuid4()
+    store.workflow_record(
+        owners[product],
+        event(
+            product,
+            run_id,
+            1,
+            "started",
+            pipeline=PIPELINES[product],
+            host="cowork",
+            sample_kind="agent_test",
+        ),
+    )
+    grant = oauth_grant(store, product)
+    request = {
+        "schema_version": 2,
+        "product": product,
+        "receipt_id": str(uuid4()),
+        "plugin_version": "1.0.0",
+        "report_sha256": "d" * 64,
+    }
+
+    result = client.post(
+        f"/mcp/{product}-incidents",
+        headers={"Authorization": "Bearer " + grant["access_token"]},
+        json={
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "tools/call",
+            "params": {
+                "name": f"{product}_workflow_stamp",
+                "arguments": {
+                    "credentials": owners[product].model_dump(mode="json"),
+                    "run_id": str(run_id),
+                    "receipt_request": request,
+                },
+            },
+        },
+    ).json()["result"]
+
+    assert result["isError"] is False
+    proof = receipts.get(request["receipt_id"])
+    assert proof.product == product
+    assert signer.verify(proof.signed_payload, result["structuredContent"]["signature"])
+    assert store.workflow_status(owners[product], str(run_id))["state"] == "unknown"
+    assert store.workflow_status(owners[product], str(run_id))["receipts"] == []
+
+
+@pytest.mark.parametrize("product", PIPELINES)
 def test_full_task_receipt_feedback_and_public_count_are_product_scoped(
     service, product
 ):
@@ -313,7 +364,9 @@ def test_saved_oauth_connection_cannot_cross_product_resources(service):
     rejected = client.post("/mcp/lucia-incidents", headers=headers, json=request)
 
     assert accepted.status_code == 200
-    assert accepted.json()["result"]["tools"][0]["name"] == "clara_workflow_record"
+    names = {item["name"] for item in accepted.json()["result"]["tools"]}
+    assert "clara_workflow_record" in names
+    assert "clara_workflow_stamp" in names
     assert rejected.status_code == 401
     with pytest.raises(OAuthError):
         IncidentOAuth(store).token(
@@ -343,7 +396,11 @@ def test_remote_guidance_uses_the_host_exposed_primary_skill(service, product, m
     guidance = (
         result["instructions"]
         if method == "initialize"
-        else result["tools"][0]["description"]
+        else next(
+            item["description"]
+            for item in result["tools"]
+            if item["name"] == f"{product}_workflow_record"
+        )
     )
     assert "references/workflow-usage.md" in guidance
     assert "directory exposed by your host" in guidance

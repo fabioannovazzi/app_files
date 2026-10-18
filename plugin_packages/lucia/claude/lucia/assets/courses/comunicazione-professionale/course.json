@@ -245,7 +245,7 @@
     },
     {
       "path": "skills/mparanza-comunicazione-professionale/SKILL.md",
-      "sha256": "2bf3b7aa7aed66a24f89f47598a0bcc69df323cacb5876775627b67f9ae44147"
+      "sha256": "d4738dc2750008aac2d932cda58393f60c1b0e426b7a702d7c85cf084d5277e3"
     },
     {
       "path": "skills/mparanza-comunicazione-professionale/references/lucia-lawyer-profile.md",
@@ -702,5 +702,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "92c9d37da8bc9953c438b5195e8ef97774fdd37ccec0026d2f6d3584ea0fee35"
+  "canonical_course_sha256": "8f677699fdf71fade05b02f8a13bbac503897796bd84dd415dda9a056deb106b"
 }

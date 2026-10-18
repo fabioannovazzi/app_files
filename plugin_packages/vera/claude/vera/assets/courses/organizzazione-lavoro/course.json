@@ -61,7 +61,7 @@
     },
     {
       "path": "skills/mparanza-organizzazione-lavoro/SKILL.md",
-      "sha256": "4fd9015252d5b3d7616eacce6c4302b9b23667c4ef52d32d9ac3a84d3202ae90"
+      "sha256": "47d2e5828185b750afe4a105c749cc837593a2ff13a5b77d745af18df4e85307"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -444,5 +444,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "488034efa0e2a330fcd95ef74716967d8c9bc8d81dd5ad16a35d94d27256beee"
+  "canonical_course_sha256": "98c7e0f706a0874cb6e3a7da3bb8a43c421d93031ed78ea5163cade841ba3f9c"
 }

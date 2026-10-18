@@ -63,6 +63,14 @@ all historical editorial judgments. The initial CI native teaching stage passed
 failure is retained as such. Final-head CI must independently pass the complete
 release gate.
 
+The release integrates main `e217a2c7aab6cc3fad21d921ef1264125e8233c6`
+(PR #862) before deployment. Its reporting and host-link changes are preserved.
+The PDF implementation merged without source conflicts. Combined course bindings
+were regenerated only after verifying complete authored-content equality against
+both parents; both sets of source compatibility records and all historical
+editorial judgments remain. Generated packages are rebuilt from the combined
+source, retaining Vera 0.1.413 and main's Clara/Lucia versions.
+
 Phase two is excluded: no generated parsers, runtime product edits, developer
 feedback transport, shared learning or automatic promotion of a recovered
 recipe into Vera. Deployment, publication and installed-host acceptance are

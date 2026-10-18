@@ -152,7 +152,7 @@
     },
     {
       "path": "skills/mparanza-fatture-xml-check/SKILL.md",
-      "sha256": "e063942bbd901ce995f2b5b36167fbbb29dfda068a0420a79d76a29f18b51088"
+      "sha256": "7a48883d4c39df2e5fa7c0b6142710784b520551cb1bcd8d74df06b8c9043291"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -569,5 +569,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "adb3532cc6d30493519ebf848e09ea760c6af3810bc4c07bc99a06cabe74a7c8"
+  "canonical_course_sha256": "3653dbfaa272ae0d91900c379fb9c15144a6030cb7dbe33540919b8978815643"
 }

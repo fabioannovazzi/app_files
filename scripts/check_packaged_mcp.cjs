@@ -16,6 +16,10 @@ function validIncidentTools(tools, product = "vera") {
     expected.add(`${product}_workflow_record`);
     expected.add(`${product}_workflow_status`);
   }
+  // The receipt fallback may be deployed after its package has been built.
+  // Admit that one explicit extension while retaining the full base contract.
+  if (Array.isArray(tools) && tools.some(tool => tool?.name === `${product}_workflow_stamp`))
+    expected.add(`${product}_workflow_stamp`);
   return Array.isArray(tools) && tools.length === expected.size &&
     tools.every(tool => tool && tool.inputSchema?.type === "object" && expected.delete(tool.name)) &&
     expected.size === 0;

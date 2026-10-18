@@ -550,7 +550,7 @@
     {
       "path": "modules/studio-archive/vendor/modules/model-data-report-contract.md",
       "repository_path": "plugins/vera/skills/vera/references/model-data-report-contract.md",
-      "sha256": "f3407b01a608858d3a1eb172101af7231023192d63d944495ca2fd8a3cbc5a54"
+      "sha256": "fae24763acfeeb7c24d3cd83f9062ad311be2943ebfad86c134f530a30f3773a"
     },
     {
       "path": "modules/studio-archive/vendor/modules/model_data_report.py",
@@ -630,7 +630,7 @@
     {
       "path": "skills/studio-document-format/SKILL.md",
       "repository_path": "plugins/vera/skills/studio-document-format/SKILL.md",
-      "sha256": "78e7aba1d8f2cb17d89fe2e000df619833ce2e748c4991838253e8de8b24b06d"
+      "sha256": "3a9fc1db3ef44199e83e08bdb43a809a29112ddefb6da21ce6c57440f040a224"
     },
     {
       "path": "skills/studio-document-format/references/procedure.md",

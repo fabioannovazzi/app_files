@@ -168,7 +168,7 @@
     "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "04c9ee0921e55a75f4dc4628918557ce73a2b4af86d2a9187066e3f29c6b4955"
+    "source_fingerprint": "95f82b9e487216290e0fe4c80bf3114b2f6b8f950a1f0cdf02b1f7c904df617b"
   },
   "governed_repository_paths": [
     "plugins/lucia/scripts/workflow_usage.py",

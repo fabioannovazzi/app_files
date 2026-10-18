@@ -14,6 +14,20 @@ server-attestation behavior described below belongs to the product's own
 The explicitly local onboarding path does not request stamping. Reading an
 existing report does not request stamping either. The invoking product’s functions-and-limits reference remains applicable.
 
+## Chat inputs and drafts still require a report
+
+A user mandate in chat and a template read by the model are observed inputs.
+The agent assembles `model_data_report_input.json` from those phases; absence of
+client files, a Studio Archive handoff, or an already prepared input JSON does
+not waive the report. Use `host_attested` for conversational evidence and honest
+unknown measurements where extent is unavailable. Synthetic content may support
+`no_case_data`; it does not mean that no report input exists. Never reconstruct
+a supposed exact provider payload or invent measurements.
+
+A cloud task folder is a valid writable output folder. Do not require access to
+native client folders simply to save a report. Use the installed product root
+for its report scripts, independently of a delegated module's working directory.
+
 ## Required outputs
 
 When the runtime can write durable artifacts, create both files in the run's

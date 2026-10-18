@@ -109,7 +109,7 @@
     },
     {
       "path": "skills/mparanza-fusione-guidata/SKILL.md",
-      "sha256": "7ff18ef9097c38e3e5384911e974c29564d99b5cb85ed6bb61eb56bd68e743d4"
+      "sha256": "bda6e86a3f8562069dc28fcf538d6cb60e9033a68192c732bb9d10cecc64ab1b"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -498,5 +498,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "45d3939af7ef40d4f254c32a731042b950eead4e23cf313dccd81d5f1513de7d"
+  "canonical_course_sha256": "5cc514919f8f007e4fb2b465e3016c5dcba6686c5f852468d3454b543c40acd0"
 }

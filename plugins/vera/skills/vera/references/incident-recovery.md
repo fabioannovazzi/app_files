@@ -49,7 +49,8 @@ prompts, local task files or diagnostics. No personal login or client-file grant
 is part of this connection. Reconnecting after revocation creates a new identity;
 do not pretend it recovers a revoked connection's history.
 
-When `vera_incident_host_link` is actually exposed, pass the existing local
+Discover `vera_incident_host_link` through the host tool search/catalog,
+including deferred tools, before treating it as unavailable. When exposed, pass the existing local
 installation capability to it once at startup. The native helper supplies its
 separate persistent host proof directly to Mparanza and returns public host/app
 codes; never read or expose its device key. Its `native_broker_sessions` version

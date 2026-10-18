@@ -145,6 +145,34 @@ def test_native_stdio_refuses_damaged_reporter_before_creating_host_key(
     assert not device.exists()
 
 
+@pytest.mark.parametrize(
+    "arguments",
+    [
+        {"capability": {"installation_key": "PRIVATE_SENTINEL"}, "run_id": "wrong"},
+        {"credentials": None},
+        {"credentials": []},
+        {"credentials": {"installation_key": "PRIVATE_SENTINEL"}},
+    ],
+)
+def test_native_host_link_invalid_shape_explains_retry_without_echoing_secrets(
+    tmp_path, arguments
+):
+    root = installed(tmp_path)
+    device = tmp_path / "native-host"
+
+    result = call(root, device, "vera_incident_host_link", arguments)
+
+    assert result["isError"] is True
+    message = result["content"][0]["text"]
+    assert "credentials" in message
+    assert "installation_id" in message
+    assert "installation_key" in message
+    assert "original guest incident context" in message
+    assert "No host linkage has occurred" in message
+    assert "PRIVATE_SENTINEL" not in json.dumps(result)
+    assert not device.exists()
+
+
 def test_native_stdio_binds_fresh_guest_reporters_without_overstating_guest_version(
     tmp_path,
 ):

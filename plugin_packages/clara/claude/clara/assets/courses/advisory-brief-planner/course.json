@@ -68,7 +68,7 @@
     },
     {
       "path": "skills/mparanza-advisory-brief-planner/SKILL.md",
-      "sha256": "2a71d64dae7328fd71b7ccad9fec16b0ac6ba988bdcdfa5ac411bba12ccc08c5"
+      "sha256": "835576389155e1b397e18f523b50e69dea8650cefc471b87521bc1201ad56ded"
     },
     {
       "path": "skills/mparanza-advisory-brief-planner/references/advisory-contract.md",
@@ -449,5 +449,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "73715a88e0625598dfc4f8faacc0df99a1a5286b396429d326a353b619e1ce36"
+  "canonical_course_sha256": "382a8ea330ed530db86706b1344fa6026592effb8a3c171c21a9debb454087f6"
 }

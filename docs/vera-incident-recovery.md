@@ -89,14 +89,31 @@ sessions and failure-worker versions. Native linking errors do not block failure
 delivery. `registry.linked_host_devices` counts all proven linked host profiles;
 the unresolved counts remain separate.
 
-Native plugin tools may be unavailable in cloud Cowork. The saved remote
-connection still preserves cross-task reports and recovery ownership, but does
-not prove a physical host. Leave that linkage unknown. Do not expand native
-computer/folder access merely to fill the gap. A fresh Claude capability inventory
-on 2026-10-15 exposed the remote connector and no native plugin tools; enabling
-its connected-computer group was rejected by automatic approval review as a
-separate access expansion. Full native cloud-host acceptance remains pending
-that authority and actual capability evidence.
+Native plugin tools may be deferred in cloud Cowork. Discover them through the
+host's tool catalogue before declaring them unavailable. On 2026-10-18, an actual
+Cowork task invoked the installed native host-context tool and returned the same
+Mac Computer ID used by Codex, without connecting a client folder. This establishes
+native-tool availability for that session, not that a workflow owner is linked.
+An earlier completed Cowork test reached production without that link or a receipt.
+The workflow now explicitly invokes the host-link tool with its original owner
+capability and checks the server's reporting status. When the native route is
+unavailable, keep linkage unknown and continue remote reporting. Do not expand
+computer/folder access to manufacture a match.
+
+Workflow event acknowledgements and authenticated workflow status now return
+`reporting.computer_id`, `computer_link`, `model_data_receipt` and bounded
+`next_steps`. These fields describe server evidence independently of the
+professional task outcome. A completed task can still be unlinked or lack a
+signed model-data receipt. Chat inputs and templates require an observed-phase
+report too; the absence of client files does not waive it.
+
+Use `manage_workflow_usage.py computers --days 30` for the server's received
+activity count. It deduplicates proven Computer IDs, excludes explicit tests and
+the product's designated test computers even when a run says `user`, and reports
+unlinked user reporter instances separately. The result retains the exact run
+and reporter references for audit. It is a count of received activity in that
+window, not a census of older or offline installations; do not turn missing
+reporting into a claim that nobody used Vera.
 
 Use `manage_incidents.py app <app-installation-id>` for scoped original reports,
 supplements, deliveries, outcome ownership and retry events across the profile's

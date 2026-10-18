@@ -201,7 +201,7 @@
     },
     {
       "path": "skills/mparanza-agenzia-acquisition/SKILL.md",
-      "sha256": "ea412f7861297802b434c3ec40e4a7b6c3efceebd1aa37a3527fb1af46026997"
+      "sha256": "3cb7359ebf28d3429c2444402aac09468742b62e22793dbc904d4474e15d0641"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -426,5 +426,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "9446b958fc2b143ced7edaf121fb5b715747a78263bd9921b11de95430f1dd30"
+  "canonical_course_sha256": "0d8cf5313f16a9c5b2724bfb7e10d3c7a19471e4f1961742b57588c40d7b1284"
 }
