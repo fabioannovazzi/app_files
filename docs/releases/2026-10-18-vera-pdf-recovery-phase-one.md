@@ -54,6 +54,15 @@ lessons and existing jurisdiction judgments. Clara's generated privacy binding
 also changes because its teaching register includes the shared course directory;
 its workflow and policy are unchanged.
 
+The deployment CI also exposed nine stale Clara/Lucia editorial digest bindings
+already present on the base commit. Exact comparison with their historically
+reviewed course objects confirmed that only reporting-helper source fingerprints
+had changed. The refreshed bindings record that bounded source review and retain
+all historical editorial judgments. The initial CI native teaching stage passed
+1,710 tests (three skips), with 90.54% courseware coverage; its later metadata
+failure is retained as such. Final-head CI must independently pass the complete
+release gate.
+
 Phase two is excluded: no generated parsers, runtime product edits, developer
 feedback transport, shared learning or automatic promotion of a recovered
 recipe into Vera. Deployment, publication and installed-host acceptance are
