@@ -843,8 +843,8 @@ def test_public_page_states_connector_and_model_data_boundaries() -> None:
         "Il pacchetto calcolato completo viene validato localmente",
         "The complete calculated pack is validated locally",
         "non è un monitoraggio automatico",
-        'data-model-data-workflow="management-control-pack"',
-        'data-model-data-status="relevant"',
+        'data-model-data-status="placeholder"',
+        'src="../function-model-data.js',
     ):
         assert snippet in page
     assert "files already available" not in page

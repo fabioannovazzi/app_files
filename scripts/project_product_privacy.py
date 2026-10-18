@@ -223,9 +223,11 @@ def project_privacy(
                 if repository_paths:
                     identity = "workstream-" + name if kind == "workstreams" else name
                     files = []
-                    for logical, path in validator._repository_governed_files(
-                        source, repository_paths
-                    ).items():
+                    for logical, path in sorted(
+                        validator._repository_governed_files(
+                            source, repository_paths
+                        ).items()
+                    ):
                         content = path.read_bytes()
                         repository_path = logical.removeprefix("repository:")
                         installed = []

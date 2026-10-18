@@ -21,6 +21,7 @@ __all__ = [
     "ModelDataReportError",
     "build_model_data_report",
     "main",
+    "render_model_data_report",
     "show_model_data_report",
     "validate_model_data_report",
 ]
@@ -88,6 +89,10 @@ _INPUT_FIELDS = {
     "improvement_assessment",
 }
 _BOUND_REPORT_FIELDS = {"privacy_contract", "contract_review"}
+_REPORT_LIMITATIONS = [
+    "The report records workflow evidence and exact payload files when available; it is not provider-signed network telemetry.",
+    "The report does not decide semantic necessity, provide legal advice, perform a DPIA, or certify GDPR compliance.",
+]
 _PHASE_FIELDS = {
     "phase_id",
     "purpose",
@@ -953,10 +958,7 @@ def build_model_data_report(
             **receipt_content,
             "receipt_sha256": receipt_sha256,
         },
-        "limitations": [
-            "The report records workflow evidence and exact payload files when available; it is not provider-signed network telemetry.",
-            "The report does not decide semantic necessity, provide legal advice, perform a DPIA, or certify GDPR compliance.",
-        ],
+        "limitations": list(_REPORT_LIMITATIONS),
     }
     return report, _render_markdown(report)
 
@@ -1038,23 +1040,31 @@ def validate_model_data_report(
         root = Path(evidence_root).expanduser().resolve()
         if not root.is_dir():
             raise ModelDataReportError("evidence_root must be an existing directory")
-        for index, receipt in enumerate(normalized_files):
-            path = _resolve_evidence_file(
-                root,
-                receipt["path"],
-                label=f"report.evidence.files[{index}].path",
+        # Revalidate the recorded execution, not a newly bound installation.
+        request = {key: payload[key] for key in _INPUT_FIELDS}
+        request["schema_version"] = 1
+        checked, current_files = _validate_request(request, evidence_root=root)
+        if checked != request:
+            raise ModelDataReportError("Report execution fields are not canonical")
+        if current_files != normalized_files:
+            raise ModelDataReportError(
+                "report evidence file changed or receipts differ"
             )
-            current = _file_receipt(
-                path,
-                root=root,
-                phase_id=str(receipt["phase_id"]),
-            )
-            if current != receipt:
-                raise ModelDataReportError(
-                    f"report evidence file changed: {receipt['path']}"
-                )
-    _sequence(payload["limitations"], label="report.limitations")
+    if payload["limitations"] != _REPORT_LIMITATIONS:
+        raise ModelDataReportError(
+            "report limitations differ from the maintained disclosure"
+        )
     return dict(payload)
+
+
+def render_model_data_report(
+    report: object, *, evidence_root: str | Path | None = None
+) -> str:
+    """Validate and render saved facts without rebinding to the current installation."""
+
+    return _render_markdown(
+        validate_model_data_report(report, evidence_root=evidence_root)
+    )
 
 
 def _atomic_write(path: Path, data: bytes) -> None:
@@ -1084,8 +1094,7 @@ def show_model_data_report(report_path: str | Path) -> str:
     path = Path(report_path).expanduser()
     if path.is_symlink() or not path.is_file():
         raise ModelDataReportError("report must be an existing regular JSON file")
-    report = validate_model_data_report(json.loads(path.read_text(encoding="utf-8")))
-    return _render_markdown(report)
+    return render_model_data_report(json.loads(path.read_text(encoding="utf-8")))
 
 
 def _write_once_or_identical(path: Path, data: bytes) -> None:

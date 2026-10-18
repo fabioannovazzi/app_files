@@ -73,7 +73,7 @@ and seal the final execution manifests. The common release command checks shared
 source synchronization and public contract drift before building all hosts.
 
 Local release candidate: Vera 0.1.409, Clara 0.1.299, Lucia 0.1.122. All twelve
-archives built. Shared privacy tests: 71 passed, binding module coverage 87.36%.
+archives built. Shared privacy tests: 74 passed, binding module coverage 87.36%.
 Renderer behavior tests: six passed. Black, Isort, Mypy and Bandit passed for the
 new implementation. Signed-receipt acceptance passed for all three products. Final CI and deployment are pending.
 
@@ -81,7 +81,7 @@ Every user-facing workflow now requires a registered explanation page. Five miss
 
 ## Controlled acceptance
 
-On 18 October 2026, downloaded Codex-format packages ran the following synthetic
+On 18 October 2026, built Codex-format release packages ran the following synthetic
 operations in the local Python environment. This is packaged-CLI evidence, not a
 fresh installed Codex, Cowork, ChatGPT or Antigravity conversation acceptance.
 
@@ -104,7 +104,24 @@ recovery claim or external message was created by these acceptance operations.
 
 Private evidence, exact package/report/contract hashes, report files and signed
 receipts are retained in
-`outputs/shared-privacy-acceptance/2026-10-18/final/`. The local review also covered
+`outputs/shared-privacy-acceptance/2026-10-18/verified-release/`, with the preceding
+candidate evidence retained separately in `final/`. The local review also covered
 Clara's Italian explanation, Lucia's English explanation and Vera's nested
 integration page. Thirty-six public-page tests passed; six renderer tests cover
 product separation, language and unavailable-review behavior.
+
+The integration pass also exercises LIPE approval/export and native Archive
+closure with the new report. They validate the recorded report and its evidence
+without rebuilding it against the current installation. Legacy disclosures still
+reopen; changed evidence, invalid execution fields and mismatched readable copies
+remain rejected. Packaged closure retains the separate privacy contract artifact.
+
+Repository review file lists are sorted before packaging so filesystem enumeration
+cannot change a package's retained review or integrity hashes. A regression reverses
+that enumeration and requires identical projected package bytes.
+
+The updated teaching bindings change only source inventories: the eighteen changed
+course payloads were compared with commit `32f7e7e0d90a3191e4c1ea80489eb0b750b76b16`
+after excluding `sources` and `retained_from`, and their authored content was identical.
+Only the current course digest in each release review was advanced; all dated
+editorial and output judgments remain historical. Fresh CI execution is still required.

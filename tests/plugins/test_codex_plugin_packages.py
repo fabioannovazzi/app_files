@@ -824,6 +824,7 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         assert "## Required Questions" in full_workflow
     if plugin_name == "lucia":
         assert set(card_bodies) == {
+            "skills/privacy-surface-review/SKILL.md",
             "skills/posizioni-negoziali/SKILL.md",
             "skills/controllo-documento/SKILL.md",
             "skills/estrazione-clausole/SKILL.md",

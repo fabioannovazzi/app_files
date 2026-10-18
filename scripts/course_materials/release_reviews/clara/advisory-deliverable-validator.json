@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "advisory-deliverable-validator",
-  "course_sha256": "4ad0532b4918f9301468d09cba9f2ce059dbbbdcd97b4dfe2695058b72792af1",
+  "course_sha256": "e22d2df1d27378a50af4dd326c1a33e6579aab0c0b638a4a86327e3256db576f",
   "reviewer": "Codex: five-language whole-memo lesson and native output review",
   "reviewed_at": "2026-09-14T21:37:39.206080+00:00",
   "review_scope": "Prepared material and native local execution review. Read the five localized lesson outlines and source sets, all ten artifact cards and run-review notes, five full practice review packages and the demo-specific changed passages. Final package/card text matches the inspected run after temporary-path normalization; the final clarified run notes were read separately. Eighty-eight native advisory and validator checks pass, including ten distinct phase/language review exercises. Native voice, window presentation, human timing, learner comprehension and professional approval remain unverified. The authored fictional review interpretations are regression fixtures outside shipped kits. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",

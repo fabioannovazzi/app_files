@@ -5,7 +5,7 @@
     "basis": "Release metadata/source binding after automatic integrity-incident reporting correction. Existing authored lessons, professional methods, inputs and review dispositions remain unchanged. No new learner or customer recovery acceptance claimed."
   },
   "schema": "mparanza.teaching_release_review.v1",
-  "course_sha256": "b80ac7f1849334d43f03c82b70b108a22d0c7aebfafa9468972f3de7b4555d5c",
+  "course_sha256": "0c9605f862440e03749773e7353c21569bd2c8953478cae20f74c4ce8c6db10c",
   "source_binding_note": "2026-10-15: Only the source skill description was quoted to make its YAML valid. Course text, teaching steps, input files, prior execution evidence and substantive editorial judgments are unchanged.",
   "isolated_launcher_source_compatibility_20261018": {
     "reviewer": "Codex exact retained-course and launcher-source review",

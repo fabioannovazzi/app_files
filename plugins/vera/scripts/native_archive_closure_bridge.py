@@ -46,19 +46,8 @@ def main() -> None:
             if path.stat().st_size > 2_000_000:
                 raise ValueError("Model-data report exceeds native validation limit")
             value = json.loads(path.read_bytes())
-            producer.validate_model_data_report(value, evidence_root=output)
-            rebuilt, markdown = producer.build_model_data_report(
-                {
-                    k: v
-                    for k, v in value.items()
-                    if k not in {"report_id", "evidence", "limitations"}
-                },
-                evidence_root=output,
-            )
-            if (
-                rebuilt != value
-                or (output / "model_data_report.md").read_text() != markdown
-            ):
+            markdown = producer.render_model_data_report(value, evidence_root=output)
+            if (output / "model_data_report.md").read_text() != markdown:
                 raise ValueError(
                     "Disclosure differs from the maintained report/rendered Markdown"
                 )

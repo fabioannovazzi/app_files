@@ -231,9 +231,11 @@ def test_professional_question_is_an_orchestrator_not_a_third_data_workstream() 
     workflow = _read_text(VERA_ROOT / "skills" / "quesito-legale-fiscale" / "SKILL.md")
 
     assert "quesito-legale-fiscale" not in components["plugins"]
-    assert not (
-        VERA_ROOT / "privacy" / "workstreams" / "quesito-legale-fiscale.json"
-    ).exists()
+    # Privacy coverage includes the orchestrator without creating an Archive engine.
+    privacy = json.loads(
+        (VERA_ROOT / "privacy/workstreams/quesito-legale-fiscale.json").read_text()
+    )
+    assert privacy["workstream"] == "quesito-legale-fiscale"
     assert "references/answer-journey.md" in workflow
     shared = _read_text(
         ROOT

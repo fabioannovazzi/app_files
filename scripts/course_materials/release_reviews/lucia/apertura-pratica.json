@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "apertura-pratica",
-  "course_sha256": "21fbab87ee4e90dd4f8d9b7365fa64340f277b67b7bdbb53de68673bfacf8405",
+  "course_sha256": "2541dc2ad0cc7dd640f0e821fa247b14dff68854da458f315af2eff7468216f2",
   "reviewer": "Codex /root - Deal Redux source compatibility review",
   "reviewed_at": "2026-10-14T08:00:57.894710+00:00",
   "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",

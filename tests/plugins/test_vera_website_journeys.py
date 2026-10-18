@@ -895,7 +895,7 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
 def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     core = _section_markup(page, "core")
-    expected_module_count = 48
+    expected_module_count = 50
     module_hrefs = re.findall(
         r'<a class="module-row"[^>]+href="([^"]+)"', core, flags=re.DOTALL
     )
@@ -904,7 +904,7 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     assert len(module_hrefs) == expected_module_count
     assert len(module_hrefs) == len(set(module_hrefs))
     assert core.count('data-primary-workflow-link="') == 2
-    assert core.count('data-jurisdiction-item="it"') == 18
+    assert core.count('data-jurisdiction-item="it"') == 19
     for language in ("en", "fr", "de"):
         assert f'data-jurisdiction-item="{language}"' not in core
     for expected_href in (
@@ -975,6 +975,7 @@ def test_vera_hub_separates_research_from_studio_communication() -> None:
     communication = _article_markup(page, "area-studio")
 
     assert set(re.findall(r'href="([^"]+)"', research)) == {
+        "../deep-research/index.html",
         "../bandi-agevolazioni/index.html",
         "../quesito-legale-fiscale/index.html",
         "../adversarial-opinion/index.html",
@@ -1026,6 +1027,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Patent Box · anteprima",
         "Revisione concordato preventivo",
         "Acquisizione Agenzia delle Entrate",
+        "Prima prova fatture in DATEV",
         "Automazione web",
         "Campionamento scritture contabili",
         "Verifica documentale",
@@ -1049,6 +1051,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Preparazione report finanziario",
         "Report finanziario enti locali",
         "Bandi e agevolazioni",
+        "Ricerca approfondita del quesito",
         "Risposta a quesiti legali e fiscali",
         "Parere contrapposto",
         "Formato dei documenti dello studio",
@@ -1143,7 +1146,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
     )["skills"]
 
     assert labels == expected_labels
-    assert len(labels) == 48
+    assert len(labels) == 50
     assert {
         workflow: marketplace_cards[workflow]["display_name"]
         for workflow in canonical_skill_labels
@@ -1831,7 +1834,7 @@ def test_vera_formerly_unplaced_guides_are_mounted_on_subject_pages() -> None:
 def test_bilancio_page_renders_closing_workflow_and_acceptance_in_each_locale(
     language: str, heading: str
 ) -> None:
-    """Execute the page's actual scripts, including its function-specific copy."""
+    """Render the synchronous page shell; the shared asynchronous renderer has Node tests."""
     node = shutil.which("node")
     assert node is not None
     shared = ROOT / "static" / "shared"
@@ -1870,7 +1873,8 @@ process.stdout.write(JSON.stringify({ html: root.innerHTML, lang: document.docum
     assert rendered["lang"] == language
     assert html.select_one("#alfa-v3-acceptance-title").get_text() == heading
     assert (
-        html.select_one(".function-model-data")["data-model-data-status"] == "relevant"
+        html.select_one(".function-model-data")["data-model-data-status"]
+        == "placeholder"
     )
     assert html.select_one("#area-review-title") is not None
     assert "29" in html.select_one("#area-review").get_text()

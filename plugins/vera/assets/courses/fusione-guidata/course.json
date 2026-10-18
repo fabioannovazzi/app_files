@@ -120,7 +120,7 @@
     {
       "path": "modules/fusione-guidata/vendor/modules/model_data_report.py",
       "repository_path": "plugins/vera/scripts/model_data_report.py",
-      "sha256": "c41d46cefed2692db9d6c00ca6747aff156902fdb238317e24b9d165b1845613"
+      "sha256": "368b0903fa071c0563a0d0ac04f7a1ce9d33445236daba47f4357b7e6216bf59"
     },
     {
       "path": "modules/fusione-guidata/vendor/modules/privacy_contract.py",

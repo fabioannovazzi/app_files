@@ -134,6 +134,26 @@ def test_run_binds_product_contract_without_inventing_observations(
     assert report_module.validate_model_data_report(report) == report
 
 
+@pytest.mark.parametrize("bound", [False, True])
+def test_saved_report_renders_without_rebinding_after_installation_changes(
+    installation, tmp_path, bound
+):
+    module = _module("plugins/_shared/reporting-runtime/model_data_report.py")
+    report, original_markdown = module.build_model_data_report(
+        _request(),
+        evidence_root=tmp_path,
+        product_root=installation if bound else None,
+    )
+    original = copy.deepcopy(report)
+    (installation / "privacy/contracts/index.json").unlink()
+
+    rendered = module.render_model_data_report(report, evidence_root=tmp_path)
+
+    assert rendered == original_markdown
+    assert report == original
+    assert report["schema_version"] == (2 if bound else 1)
+
+
 def test_changed_runtime_profile_cannot_reuse_an_unchanged_contract(
     installation: Path, contract_module
 ):
@@ -352,6 +372,38 @@ def test_package_rejects_an_unreviewed_missing_helper(tmp_path, monkeypatch):
 
     with pytest.raises(ValueError, match="omissions differ"):
         project_privacy(entries, "lucia", host="anthropic-cowork", source_root=ROOT)
+
+
+def test_package_privacy_is_identical_with_reversed_filesystem_enumeration(monkeypatch):
+    from zipfile import ZipFile
+
+    monkeypatch.syspath_prepend(str(ROOT / "scripts"))
+    import project_product_privacy as projection
+
+    with ZipFile(ROOT / "plugin_packages/lucia/lucia-claude-plugin.zip") as archive:
+        original = {
+            name: archive.read(name)
+            for name in archive.namelist()
+            if not name.endswith("/")
+        }
+    expected = dict(original)
+    projection.project_privacy(expected, "lucia", host="anthropic-cowork")
+    load = projection._load
+
+    def reverse_source_enumeration(path, name):
+        module = load(path, name)
+        if name == "_package_privacy_validator":
+            enumerate_files = module._repository_governed_files
+            module._repository_governed_files = lambda *args: dict(
+                reversed(list(enumerate_files(*args).items()))
+            )
+        return module
+
+    monkeypatch.setattr(projection, "_load", reverse_source_enumeration)
+
+    projection.project_privacy(original, "lucia", host="anthropic-cowork")
+
+    assert original == expected
 
 
 @pytest.mark.parametrize("product", ["vera", "clara", "lucia"])

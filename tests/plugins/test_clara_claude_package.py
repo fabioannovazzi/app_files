@@ -259,7 +259,13 @@ def test_clara_cowork_instructions_are_host_neutral(clara_entries) -> None:
             or ("/references/" in name and name.endswith(".md"))
         )
     }
-    combined = "\n".join(instruction_docs.values())
+    # Developer governance must describe all reviewed hosts accurately; only
+    # professional instructions are rewritten for the installed Cowork host.
+    combined = "\n".join(
+        text
+        for name, text in instruction_docs.items()
+        if not name.startswith("skills/mparanza-privacy-surface-review/")
+    )
 
     assert (
         "This package is for Claude Cowork"
@@ -290,7 +296,8 @@ def test_clara_cowork_instructions_are_host_neutral(clara_entries) -> None:
     catalog = instruction_docs["skills/mparanza-clara/references/workflow-catalog.md"]
     catalogued = set(re.findall(r"^- `([a-z0-9-]+)`:", catalog, re.MULTILINE))
     assert catalogued == {
-        f"mparanza-{name}" for name in EXPECTED_ROOT_SKILLS - {"clara"}
+        f"mparanza-{name}"
+        for name in EXPECTED_ROOT_SKILLS - {"clara", "privacy-surface-review"}
     }
     assert (
         "../mparanza-clara/references/workflow-catalog.md"
