@@ -122,3 +122,46 @@ def test_native_navigation_keeps_blocked_record_non_actionable(archive, monkeypa
     assert rows[first["run"]["run_id"]]["can_start"] is False
     assert rows[first["run"]["run_id"]]["closure_available"] is False
     assert rows[second["run"]["run_id"]]["can_start"] is True
+
+
+def test_same_request_cannot_replace_invalid_run_but_unrelated_preparation_works(
+    archive,
+):
+    core, client, cid, eid, first, second, state, path = archive
+    input_id = core.ledger.list_inputs(client, eid)[0]["input_id"]
+    before = path.read_bytes()
+    with pytest.raises(core.ledger.LedgerError, match="manifest shape"):
+        core.ledger.prepare_run(
+            client,
+            cid,
+            eid,
+            "sales-plan",
+            "1.0.0",
+            input_ids=[input_id],
+            label="Plan",
+            purpose="Synthetic test",
+        )
+    replay = core.ledger.prepare_run(
+        client,
+        cid,
+        eid,
+        "financial-analysis",
+        "1.0.0",
+        input_ids=[input_id],
+        label="Analysis",
+        purpose="Synthetic test",
+    )
+    assert replay["status"] == "already_prepared"
+    assert replay["run"]["run_id"] == second["run"]["run_id"]
+    assert path.read_bytes() == before
+    assert len(core.ledger.inspect_runs(client, eid)["runs"]) == 1
+
+
+def test_unknown_header_still_blocks_new_work_to_preserve_idempotency(archive):
+    core, client, cid, eid, first, second, state, path = archive
+    (path.parent / "run.json").write_text("{}")
+    input_id = core.ledger.list_inputs(client, eid)[0]["input_id"]
+    with pytest.raises(core.ledger.LedgerError, match="Run manifest shape"):
+        core.ledger.prepare_run(
+            client, cid, eid, "new-workflow", "1.0.0", input_ids=[input_id]
+        )

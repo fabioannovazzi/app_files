@@ -276,6 +276,11 @@ IMPLEMENTATION_ARTIFACT_SPECS = (
         "scripts/semantic_review.py",
     ),
     (
+        "implementation.plugin.scripts.windows_worker_process_py",
+        "implementation",
+        "scripts/windows_worker_process.py",
+    ),
+    (
         "implementation.shared.vera_assurance.init_py",
         "shared_implementation",
         "__init__.py",
