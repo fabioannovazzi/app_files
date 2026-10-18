@@ -21,7 +21,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: python -m pip install pytest pytest-cov pypdf -r plugins/financial-analysis/requirements.txt
+      - run: >-
+          python -m pip install pytest pytest-cov pypdf beautifulsoup4 reportlab
+          -r scripts/requirements-plugin-build.txt
+          -r plugins/financial-analysis/requirements.txt
+          -r plugins/journal-bank-reconciliation/requirements.txt
+          -r plugins/check-entries/requirements.txt
+          -r plugins/concordato-plan-review/requirements.txt
+          -r plugins/report-builder/requirements.txt
+          -r plugins/open-item-reconciliation/requirements.txt
+          -r plugins/client-file-preparation/requirements.txt
       - if: runner.os != 'Windows'
         run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_windows_contract_io.py tests/plugins/test_windows_worker_process.py
       - if: runner.os == 'Windows'
