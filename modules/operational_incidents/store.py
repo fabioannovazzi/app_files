@@ -5,12 +5,13 @@ from __future__ import annotations
 import hashlib
 import hmac
 import json
+import secrets
 import sqlite3
 import threading
 from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 from uuid import NAMESPACE_URL, UUID, uuid4, uuid5
@@ -68,6 +69,8 @@ _SCHEMA = (
     "CREATE TABLE IF NOT EXISTS operational_installation_products (installation_id TEXT PRIMARY KEY, product TEXT NOT NULL)",
     *workflow_repository.SCHEMA,
     *workflow_testing.SCHEMA,
+    "CREATE TABLE IF NOT EXISTS workflow_host_link_tickets (ticket_id TEXT PRIMARY KEY, key_hash TEXT NOT NULL, run_id TEXT NOT NULL, expires_at TEXT NOT NULL)",
+    "CREATE TABLE IF NOT EXISTS workflow_run_hosts (run_id TEXT PRIMARY KEY, device_id TEXT NOT NULL, native_app TEXT NOT NULL, recorded_at TEXT NOT NULL)",
     "CREATE TABLE IF NOT EXISTS operational_host_sessions (device_id TEXT NOT NULL, session_id TEXT NOT NULL, payload_json TEXT NOT NULL, last_seen TEXT NOT NULL, PRIMARY KEY (device_id,session_id))",
     "CREATE TABLE IF NOT EXISTS operational_app_links (installation_id TEXT PRIMARY KEY, app_installation_id TEXT NOT NULL, native_app TEXT NOT NULL, recorded_at TEXT NOT NULL)",
     "CREATE TABLE IF NOT EXISTS operational_reporter_sessions (installation_id TEXT NOT NULL, session_id TEXT NOT NULL, payload_json TEXT NOT NULL, last_seen TEXT NOT NULL, PRIMARY KEY (installation_id,session_id))",
@@ -249,9 +252,49 @@ class IncidentStore:
                 product=self._installation_product(connection, owner),
             )
             row = workflow_repository.get_run(connection, self._sql, str(event.run_id))
+            reporting = self._workflow_reporting(connection, row)
+            if (
+                isinstance(actor, ConnectionActor)
+                and reporting["computer_link"] == "unlinked"
+            ):
+                # A saved connection can be used on several computers. The proof
+                # authorizes one run, never an account-wide device association.
+                ticket = Credentials(
+                    installation_id=uuid4(), installation_key=secrets.token_urlsafe(32)
+                )
+                expires = (
+                    datetime.fromisoformat(_now()) + timedelta(minutes=15)
+                ).isoformat()
+                connection.execute(
+                    self._sql(
+                        "INSERT INTO workflow_host_link_tickets VALUES (?,?,?,?)"
+                    ),
+                    (
+                        str(ticket.installation_id),
+                        hashlib.sha256(ticket.installation_key.encode()).hexdigest(),
+                        str(event.run_id),
+                        expires,
+                    ),
+                )
+                reporting["host_link"] = {
+                    "scope": "this-run-native-host-link-only",
+                    "run_id": str(event.run_id),
+                    "expires_at": expires,
+                    "credentials": ticket.model_dump(mode="json"),
+                }
+                reporting["next_steps"][0] = (
+                    "Discover the native "
+                    + self._installation_product(connection, owner)
+                    + "_incident_host_link tool, including deferred tools, and call it with "
+                    "exactly {credentials: reporting.host_link.credentials} from this acknowledgement. "
+                    "This short-lived proof only links this run; it is not a reporter or OAuth identity. "
+                    "Do not save it as installation credentials or use it for workflow_record. "
+                    "Keep the original run and saved connector owner. The native helper supplies its "
+                    "private Computer ID proof; afterwards verify workflow_status."
+                )
             return {
                 **acknowledgement,
-                "reporting": self._workflow_reporting(connection, row),
+                "reporting": reporting,
             }
 
     def _workflow_reporting(self, connection: Any, row: Any) -> dict[str, Any]:
@@ -259,17 +302,23 @@ class IncidentStore:
         run = json.loads(row["projection_json"])
         link = connection.execute(
             self._sql(
-                "SELECT device_id FROM operational_device_links WHERE installation_id=?"
+                "SELECT COALESCE(h.device_id,d.device_id) AS device_id "
+                "FROM vera_workflow_runs r "
+                "LEFT JOIN workflow_run_hosts h ON h.run_id=r.run_id "
+                "LEFT JOIN operational_device_links d ON d.installation_id=r.installation_id "
+                "WHERE r.run_id=?"
             ),
-            (row["installation_id"],),
+            (run["run_id"],),
         ).fetchone()
         product = self._installation_product(connection, row["installation_id"])
         next_steps = []
-        if link is None:
+        if link is None or link["device_id"] is None:
             next_steps.append(
+                f"For a saved-connector run, replay its latest acknowledged event unchanged through {product}_workflow_record "
+                "to obtain reporting.host_link.credentials, a short-lived proof for this run only. "
                 f"Discover {product}_incident_host_link in the host tool catalog and "
                 "call it with exactly {credentials: {installation_id, installation_key}} "
-                "using this run owner's existing values; omit capability and run_id. A tool omitted "
+                "using that proof, or the existing local owner capability for locally started runs; omit capability and run_id. A tool omitted "
                 "from the initial list may be deferred. If unavailable, preserve "
                 "the unlinked state; never infer a Computer ID or request broader access."
             )
@@ -284,7 +333,7 @@ class IncidentStore:
             )
         return {
             "computer_id": link["device_id"] if link else None,
-            "computer_link": "verified" if link else "unlinked",
+            "computer_link": "verified" if link and link["device_id"] else "unlinked",
             "model_data_receipt": "linked" if run["receipts"] else "missing",
             "next_steps": next_steps,
         }
@@ -455,6 +504,14 @@ class IncidentStore:
         """Register an installation; host linkage requires both local capabilities."""
         with self._connection() as connection:
             self._schema(connection)
+            ticket = connection.execute(
+                self._sql("SELECT * FROM workflow_host_link_tickets WHERE ticket_id=?"),
+                (str(credentials.installation_id),),
+            ).fetchone()
+            if ticket is not None:
+                return self._consume_host_link(
+                    connection, ticket, credentials, device, native_status, product
+                )
             previous = connection.execute(
                 self._sql(
                     "SELECT installation_id FROM operational_installations WHERE installation_id=?"
@@ -521,19 +578,7 @@ class IncidentStore:
         self, connection: Any, credentials: Credentials, device: DeviceCredentials
     ) -> None:
         """Match opaque host and installation proofs, never hostnames or IPs."""
-        digest = hashlib.sha256(device.device_key.encode()).hexdigest()
-        connection.execute(
-            self._sql(
-                "INSERT INTO operational_devices VALUES (?,?,?) ON CONFLICT (device_id) DO NOTHING"
-            ),
-            (str(device.device_id), digest, _now()),
-        )
-        recorded = connection.execute(
-            self._sql("SELECT key_hash FROM operational_devices WHERE device_id=?"),
-            (str(device.device_id),),
-        ).fetchone()
-        if recorded is None or not hmac.compare_digest(recorded["key_hash"], digest):
-            raise IncidentNotFound("Host capability is unavailable")
+        self._authorize_device(connection, device)
         previous = connection.execute(
             self._sql(
                 "SELECT device_id FROM operational_device_links WHERE installation_id=?"
@@ -567,6 +612,101 @@ class IncidentStore:
             ),
             (str(credentials.installation_id), app_id, device.native_app, _now()),
         )
+
+    def _authorize_device(self, connection: Any, device: DeviceCredentials) -> None:
+        """Authenticate the native proof without assigning an entire OAuth owner."""
+        digest = hashlib.sha256(device.device_key.encode()).hexdigest()
+        connection.execute(
+            self._sql(
+                "INSERT INTO operational_devices VALUES (?,?,?) ON CONFLICT (device_id) DO NOTHING"
+            ),
+            (str(device.device_id), digest, _now()),
+        )
+        recorded = connection.execute(
+            self._sql("SELECT key_hash FROM operational_devices WHERE device_id=?"),
+            (str(device.device_id),),
+        ).fetchone()
+        if recorded is None or not hmac.compare_digest(recorded["key_hash"], digest):
+            raise IncidentNotFound("Host capability is unavailable")
+
+    def _consume_host_link(
+        self,
+        connection: Any,
+        ticket: Any,
+        credentials: Credentials,
+        device: DeviceCredentials | None,
+        status: ReporterStatus | None,
+        product: Product | None,
+    ) -> dict[str, Any]:
+        """Redeem a bounded, purpose-specific proof through the existing native tool."""
+        if not hmac.compare_digest(
+            ticket["key_hash"],
+            hashlib.sha256(credentials.installation_key.encode()).hexdigest(),
+        ) or datetime.fromisoformat(ticket["expires_at"]) <= datetime.fromisoformat(
+            _now()
+        ):
+            raise IncidentNotFound("Native host-link proof is unavailable or expired")
+        row = workflow_repository.get_run(connection, self._sql, ticket["run_id"])
+        if (
+            row is None
+            or self._installation_product(connection, row["installation_id"]) != product
+        ):
+            raise IncidentNotFound("Native host-link proof belongs to another product")
+        run = json.loads(row["projection_json"])
+        if (
+            device is None
+            or device.native_app is None
+            or status is None
+            or status.host != device.native_app
+            or run["host"] != device.native_app
+        ):
+            raise IncidentConflict(
+                "Native host-link requires this run's observed app and native proof"
+            )
+        self._authorize_device(connection, device)
+        prior = self._workflow_reporting(connection, row)["computer_id"]
+        if prior is not None and prior != str(device.device_id):
+            raise IncidentConflict("Run already belongs to another computer")
+        connection.execute(
+            self._sql(
+                "INSERT INTO workflow_run_hosts VALUES (?,?,?,?) ON CONFLICT (run_id) DO NOTHING"
+            ),
+            (ticket["run_id"], str(device.device_id), device.native_app, _now()),
+        )
+        # Check the winning row too: concurrent claims cannot silently both succeed.
+        bound = connection.execute(
+            self._sql(
+                "SELECT device_id,native_app FROM workflow_run_hosts WHERE run_id=?"
+            ),
+            (ticket["run_id"],),
+        ).fetchone()
+        if (
+            bound["device_id"] != str(device.device_id)
+            or bound["native_app"] != device.native_app
+        ):
+            raise IncidentConflict("Run already belongs to another native host")
+        connection.execute(
+            self._sql(
+                "INSERT INTO operational_host_sessions VALUES (?,?,?,?) ON CONFLICT (device_id,session_id) DO UPDATE SET payload_json=excluded.payload_json,last_seen=excluded.last_seen"
+            ),
+            (
+                str(device.device_id),
+                str(status.session_id),
+                _json(status.model_dump(mode="json")),
+                _now(),
+            ),
+        )
+        return {
+            "installation_id": str(credentials.installation_id),
+            "registered": True,
+            "device_id": str(device.device_id),
+            "native_app": device.native_app,
+            "app_installation_id": str(
+                uuid5(device.device_id, "vera-app:" + device.native_app)
+            ),
+            "run_id": ticket["run_id"],
+            "binding": "workflow-run",
+        }
 
     def link_connection(self, actor: ConnectionActor, credentials: Credentials) -> None:
         """Link local state only with proof of both the connection and local capability."""

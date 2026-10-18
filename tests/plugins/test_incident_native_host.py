@@ -302,10 +302,13 @@ def test_release_checker_requires_the_actual_remote_incident_tool_contract(
             if isinstance(tool["name"], str):
                 tool["name"] = tool["name"].replace("vera_", product + "_", 1)
     checker = ROOT / "scripts/check_packaged_mcp.cjs"
-    program = "const {validIncidentTools}=require(process.argv[1]); process.stdout.write(JSON.stringify(validIncidentTools(JSON.parse(process.argv[2]), process.argv[3])));"
+    # A complete catalogue can exceed Linux's per-argument limit. It is test
+    # input, not executable source: pass the unchanged JSON over stdin.
+    program = "const {validIncidentTools}=require(process.argv[1]); const tools=JSON.parse(require('node:fs').readFileSync(0,'utf8')); process.stdout.write(JSON.stringify(validIncidentTools(tools, process.argv[2])));"
 
     result = subprocess.run(
-        ["node", "-e", program, str(checker), json.dumps(tools), product],
+        ["node", "-e", program, str(checker), product],
+        input=json.dumps(tools),
         check=True,
         capture_output=True,
         text=True,
