@@ -88,7 +88,7 @@
     },
     {
       "path": "skills/mparanza-advisory-case-director/SKILL.md",
-      "sha256": "e415a8d93f5f1dc678127409a0ec047c88fba001ca267f42d36db32ff24d5f7c"
+      "sha256": "d53b7d28b22743df5f3164ab9e2500d97e90e778f51013be12746600533e02cb"
     },
     {
       "path": "skills/mparanza-advisory-case-director/references/case-direction-return.md",
@@ -433,5 +433,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "7ff1322de3e309f52b716fb99a6b65e49ceddd7674fbbffbe975818cf80f335c"
+  "canonical_course_sha256": "638f6f721e9d836fae84894ca26d8de5e574a1d7a2c7c19d20970f91140dd9ba"
 }

@@ -41,6 +41,7 @@ from modules.utilities.cache import get_cache_dir
 from modules.workflow_usage import repository as workflow_repository
 from modules.workflow_usage import testing as workflow_testing
 from modules.workflow_usage.contracts import WorkflowEvent
+from modules.workflow_usage.products import Product, product_name
 from modules.workflow_usage.reporting import evidence_hash
 
 __all__ = ["IncidentStore", "IncidentConflict", "IncidentNotFound", "ConnectionActor"]
@@ -63,6 +64,7 @@ class IncidentNotFound(ValueError):
 
 
 _SCHEMA = (
+    "CREATE TABLE IF NOT EXISTS operational_installation_products (installation_id TEXT PRIMARY KEY, product TEXT NOT NULL)",
     *workflow_repository.SCHEMA,
     *workflow_testing.SCHEMA,
     "CREATE TABLE IF NOT EXISTS operational_host_sessions (device_id TEXT NOT NULL, session_id TEXT NOT NULL, payload_json TEXT NOT NULL, last_seen TEXT NOT NULL, PRIMARY KEY (device_id,session_id))",
@@ -220,6 +222,10 @@ class IncidentStore:
             )
             if row is None or not linked:
                 raise IncidentNotFound("Installation is outside the connector scope")
+            if self._installation_product(
+                connection, str(credentials.installation_id)
+            ) != self._installation_product(connection, str(credentials.connection_id)):
+                raise IncidentNotFound("Installation is outside the connector product")
             return
         actual = hashlib.sha256(credentials.installation_key.encode()).hexdigest()
         if row is None or not hmac.compare_digest(row["key_hash"], actual):
@@ -234,7 +240,12 @@ class IncidentStore:
             self._authorize(connection, actor)
             owner = self._workflow_owner(connection, actor, str(event.run_id))
             return workflow_repository.record(
-                connection, self._sql, owner, event, _now()
+                connection,
+                self._sql,
+                owner,
+                event,
+                _now(),
+                product=self._installation_product(connection, owner),
             )
 
     def _workflow_owner(
@@ -279,17 +290,31 @@ class IncidentStore:
                     }
                     for item in events
                 ],
-                "feedback_url": f"https://mparanza.com/vera/feedback/{run_id}#{row['feedback_key']}",
+                "feedback_url": f"https://mparanza.com/{self._installation_product(connection, row['installation_id'])}/feedback/{run_id}#{row['feedback_key']}",
             }
 
     def workflow_feedback(
-        self, run_id: str, key: str, event_id: UUID, stars: int, comment: str | None
+        self,
+        run_id: str,
+        key: str,
+        event_id: UUID,
+        stars: int,
+        comment: str | None,
+        product: Product = "vera",
     ) -> dict[str, Any]:
         """Persist an explicit form answer under its run-specific capability."""
         with self._connection() as connection:
             self._schema(connection)
             return workflow_repository.feedback(
-                connection, self._sql, run_id, key, event_id, stars, comment, _now()
+                connection,
+                self._sql,
+                run_id,
+                key,
+                event_id,
+                stars,
+                comment,
+                _now(),
+                product,
             )
 
     def workflow_inspect(self, run_id: str) -> dict[str, Any]:
@@ -328,27 +353,63 @@ class IncidentStore:
             self._schema(connection)
             return workflow_repository.overview(connection, self._sql, limit)
 
-    def workflow_testing_reset(self, agent_devices: list[str]) -> dict[str, Any]:
+    def workflow_testing_reset(
+        self, agent_devices: list[str], product: Product = "vera"
+    ) -> dict[str, Any]:
         """Operator-only reset of the public testing counter; preserve all work."""
         with self._connection() as connection:
             self._schema(connection)
-            return workflow_testing.reset(connection, self._sql, agent_devices, _now())
+            return workflow_testing.reset(
+                connection, self._sql, agent_devices, _now(), product
+            )
 
-    def workflow_testing(self) -> dict[str, Any]:
+    def workflow_testing(self, product: Product = "vera") -> dict[str, Any]:
         """Operator evidence for the current public testing levels."""
         with self._connection() as connection:
             self._schema(connection)
-            return workflow_testing.inspect(connection, self._sql)
+            return workflow_testing.inspect(connection, self._sql, product)
+
+    def _installation_product(self, connection: Any, installation_id: str) -> Product:
+        """Legacy installations retain their original Vera namespace."""
+        row = connection.execute(
+            self._sql(
+                "SELECT product FROM operational_installation_products WHERE installation_id=?"
+            ),
+            (installation_id,),
+        ).fetchone()
+        return product_name(row["product"] if row else "vera")
+
+    def product(self, actor: Credentials | ConnectionActor) -> Product:
+        """Return the authenticated installation's immutable product namespace."""
+        with self._connection() as connection:
+            self._schema(connection)
+            self._authorize(connection, actor)
+            return self._installation_product(connection, str(actor.installation_id))
 
     def register(
         self,
         credentials: Credentials,
         device: DeviceCredentials | None = None,
         native_status: ReporterStatus | None = None,
+        product: Product | None = None,
     ) -> dict[str, Any]:
         """Register an installation; host linkage requires both local capabilities."""
         with self._connection() as connection:
             self._schema(connection)
+            previous = connection.execute(
+                self._sql(
+                    "SELECT installation_id FROM operational_installations WHERE installation_id=?"
+                ),
+                (str(credentials.installation_id),),
+            ).fetchone()
+            registered_product = self._installation_product(
+                connection, str(credentials.installation_id)
+            )
+            selected_product = product_name(product or registered_product)
+            if previous is not None and selected_product != registered_product:
+                raise IncidentConflict(
+                    "Installation already belongs to another product"
+                )
             connection.execute(
                 self._sql(
                     "INSERT INTO operational_installations VALUES (?,?,?) ON CONFLICT (installation_id) DO NOTHING"
@@ -360,6 +421,12 @@ class IncidentStore:
                 ),
             )
             self._authorize(connection, credentials)
+            connection.execute(
+                self._sql(
+                    "INSERT INTO operational_installation_products VALUES (?,?) ON CONFLICT (installation_id) DO NOTHING"
+                ),
+                (str(credentials.installation_id), selected_product),
+            )
             if device is not None:
                 self._link_device(connection, credentials, device)
             if native_status is not None:
@@ -444,7 +511,7 @@ class IncidentStore:
 
     def link_connection(self, actor: ConnectionActor, credentials: Credentials) -> None:
         """Link local state only with proof of both the connection and local capability."""
-        self.register(credentials)
+        self.register(credentials, product=self.product(actor))
         with self._connection() as connection:
             self._schema(connection)
             self._authorize(connection, actor)
@@ -628,6 +695,8 @@ class IncidentStore:
         self, credentials: Credentials | ConnectionActor, report: Report
     ) -> dict[str, Any]:
         """Group exact technical signals for investigation, not assumed root causes."""
+        if report.product != self.product(credentials):
+            raise IncidentConflict("Report belongs to another product")
         if report.evidence_for_report_id is not None:
             return self._supplement(credentials, report)
         payload = _report_payload(report)
@@ -774,8 +843,8 @@ class IncidentStore:
                         },
                         "download_urls": (
                             {
-                                "codex": "https://mparanza.com/static/shared/plugin-downloads/index.html?product=vera&lang=it",
-                                "cowork": "https://mparanza.com/static/shared/vera/downloads/vera-cowork-plugin.zip",
+                                "codex": f"https://mparanza.com/static/shared/plugin-downloads/index.html?product={self._installation_product(connection, str(credentials.installation_id))}&lang=it",
+                                "cowork": f"https://mparanza.com/static/shared/{self._installation_product(connection, str(credentials.installation_id))}/downloads/{self._installation_product(connection, str(credentials.installation_id))}-cowork-plugin.zip",
                             }
                             if remedy["kind"] == "update"
                             else {}
@@ -1256,6 +1325,7 @@ class IncidentStore:
             ).fetchall()
             return {
                 **dict(row),
+                "product": self._installation_product(connection, identifier),
                 "host_link": dict(device) if device else None,
                 "app_link": dict(app) if app else None,
                 "saved_connections": [item["connection_id"] for item in connections],

@@ -11,6 +11,7 @@ import hashlib
 import json
 import logging
 import os
+import runpy
 import shutil
 import sqlite3
 import stat
@@ -18,6 +19,10 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path, PurePosixPath, PureWindowsPath
+
+product_name = runpy.run_path(str(Path(__file__).with_name("reporting_product.py")))[
+    "product_name"
+]
 
 __all__ = [
     "ASSURED_MODULES",
@@ -181,11 +186,15 @@ def _manifest(data: bytes) -> dict[str, str]:
     return files
 
 
-def _validate_module(root: Path, module: str) -> None:
+def _validate_module(root: Path, module: str | None) -> None:
     """Run the unchanged module boundary only after package-byte verification."""
 
+    if module is None:
+        return
     component = root / "modules" / module
     bootstrap = component / "scripts" / "implementation_bootstrap.py"
+    if module not in ASSURED_MODULES and not bootstrap.is_file():
+        return
     code = (
         "import runpy, sys; "
         "namespace = runpy.run_path(sys.argv[1]); "
@@ -208,7 +217,8 @@ def prepare_execution_root(root: Path, module: str | None) -> Path:
     Recovery never weakens a module's own single-link validation.
     """
 
-    if module not in ASSURED_MODULES:
+    product = product_name(root)
+    if product == "vera" and module not in ASSURED_MODULES:
         return root
     root = root.absolute()
     # Repository component sources use sibling roots, not installed modules.
@@ -216,13 +226,13 @@ def prepare_execution_root(root: Path, module: str | None) -> Path:
         not (root / "modules").exists()
         and root.parent.name == "plugins"
         and (root.parent.parent / ".git").exists()
-        and (root.parent / module).is_dir()
+        and (module is None or (root.parent / module).is_dir())
     ):
         return root
     _real_ancestors(root)
     observed, directories = _inventory(root)
     if MANIFEST not in observed:
-        raise ValueError("Installed Vera has no execution digest index; update Vera.")
+        raise ValueError("Installed product has no execution digest index; update it.")
     manifest_bytes, manifest_links = _read_regular(observed.pop(MANIFEST))
     expected = _manifest(manifest_bytes)
     expected_directories = {
@@ -314,6 +324,7 @@ def report_preparation_failure(
         for name in (
             "scripts/verified_execution.py",
             "scripts/operational_incidents.py",
+            "scripts/reporting_product.py",
             metadata,
         ):
             data, _ = _read_regular(root / name)
@@ -325,10 +336,10 @@ def report_preparation_failure(
         # Detect an index replacement during the independent verification too.
         if _read_regular(root / MANIFEST)[0] != manifest:
             raise ValueError("Incident reporting index changed during verification")
-        detail = "Installed Vera failed its installation preparation check."
+        detail = "Installed product failed its installation preparation check."
         complete = technical_code is not None
         if technical_code is not None:
-            detail = f"Vera could not start the published helper: {technical_type or type(error).__name__}."
+            detail = f"Product could not start the published helper: {technical_type or type(error).__name__}."
         if isinstance(error, InstallationContentMismatch):
             technical_code = "installation.content-mismatch"
             complete = True
@@ -347,6 +358,8 @@ def report_preparation_failure(
             # an unindexed module cannot shadow a stdlib reporter dependency.
             program = (
                 "import json, runpy, sys; "
+                "from pathlib import Path; "
+                "sys.path.insert(0, str(Path(sys.argv[1]).parent)); "
                 "reporter = runpy.run_path(sys.argv[1]); "
                 "receipt = reporter['report_failure'](**json.load(sys.stdin)); "
                 "receipt['outbox_path'] = reporter['local_context']()['outbox_path'] "
@@ -373,7 +386,7 @@ def report_preparation_failure(
                         "capture_state": "complete" if complete else "unavailable",
                         "technical_diagnostics": [
                             {
-                                "component": "vera-runtime",
+                                "component": product_name(root) + "-runtime",
                                 "stage": stage,
                                 "error_type": technical_type or type(error).__name__,
                                 "error_code": technical_code
@@ -412,7 +425,7 @@ def report_preparation_failure(
         )
     LOGGER.error(
         "VERA_REMOTE_INCIDENT_REQUIRED: workflow=%s stage=installation-preparation error_type=%s. "
-        "Use the saved veraIncidents connector automatically. Deliver the exact queued "
+        "Use the saved product incident connector automatically. Deliver the exact queued "
         "original envelope when available; otherwise report the observed technical failure "
         "without running unverified plugin code. Verify recorded:true before claiming delivery. "
         "Do not ask the professional to report it or consent again.",
@@ -425,7 +438,7 @@ def main(argv: list[str] | None = None) -> int:
     """Prepare the workflow internally; the professional does not run a terminal."""
 
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--module", required=True, choices=sorted(ASSURED_MODULES))
+    parser.add_argument("--module")
     args = parser.parse_args(argv)
     root = Path(__file__).absolute().parents[1]
     try:

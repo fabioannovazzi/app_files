@@ -15,6 +15,7 @@ from uuid import UUID, uuid4
 
 from modules.operational_incidents.contracts import Credentials
 from modules.operational_incidents.store import ConnectionActor, IncidentStore
+from modules.workflow_usage.products import PRODUCTS, Product
 
 __all__ = [
     "IncidentOAuth",
@@ -28,6 +29,7 @@ __all__ = [
 ISSUER = "https://mparanza.com"
 RESOURCE = ISSUER + "/mcp/vera-incidents"
 SCOPE = "vera:incidents"
+RESOURCES = {ISSUER + f"/mcp/{product}-incidents": product for product in PRODUCTS}
 CLAUDE_CLIENT = "https://claude.ai/oauth/mcp-oauth-client-metadata"
 CLAUDE_CALLBACK = "https://claude.ai/api/mcp/auth_callback"
 ACCESS_SECONDS = 3600
@@ -98,7 +100,7 @@ class IncidentOAuth:
             "grant_types_supported": ["authorization_code", "refresh_token"],
             "token_endpoint_auth_methods_supported": ["none"],
             "code_challenge_methods_supported": ["S256"],
-            "scopes_supported": [SCOPE],
+            "scopes_supported": [f"{product}:incidents" for product in PRODUCTS],
             "client_id_metadata_document_supported": True,
         }
 
@@ -159,12 +161,13 @@ class IncidentOAuth:
     def authorize(self, data: dict[str, str]) -> str:
         """Create a new anonymous namespace without any personal browser account."""
         challenge = data.get("code_challenge", "")
+        product = RESOURCES.get(data.get("resource", ""))
         if (
             data.get("response_type") != "code"
             or data.get("code_challenge_method") != "S256"
             or not re.fullmatch(r"[A-Za-z0-9_-]{43}", challenge)
-            or data.get("resource") != RESOURCE
-            or data.get("scope", SCOPE) != SCOPE
+            or product is None
+            or data.get("scope", f"{product}:incidents") != f"{product}:incidents"
             or not data.get("redirect_uri")
         ):
             raise OAuthError()
@@ -186,6 +189,11 @@ class IncidentOAuth:
             )
             self._execute(
                 connection,
+                "INSERT INTO operational_installation_products VALUES (?,?)",
+                (str(namespace.installation_id), product),
+            )
+            self._execute(
+                connection,
                 "INSERT INTO operational_oauth_codes VALUES (?,?,?,?,?,?,?)",
                 (
                     _hash(code),
@@ -199,7 +207,9 @@ class IncidentOAuth:
             )
         return code
 
-    def _tokens(self, connection: Any, session_id: str) -> dict[str, Any]:
+    def _tokens(
+        self, connection: Any, session_id: str, product: Product = "vera"
+    ) -> dict[str, Any]:
         access, refresh = secrets.token_urlsafe(32), secrets.token_urlsafe(32)
         now = int(time.time())
         self._execute(
@@ -221,12 +231,16 @@ class IncidentOAuth:
             "token_type": "Bearer",
             "expires_in": ACCESS_SECONDS,
             "refresh_token": refresh,
-            "scope": SCOPE,
+            "scope": f"{product}:incidents",
         }
 
     def token(self, data: dict[str, str]) -> dict[str, Any]:
         """Bind codes to PKCE/client/resource and rotate refreshes atomically."""
-        if data.get("resource") != RESOURCE or data.get("scope", SCOPE) != SCOPE:
+        product = RESOURCES.get(data.get("resource", ""))
+        if (
+            product is None
+            or data.get("scope", f"{product}:incidents") != f"{product}:incidents"
+        ):
             raise OAuthError("invalid_target")
         grant = data.get("grant_type")
         if grant not in {"authorization_code", "refresh_token"}:
@@ -257,6 +271,10 @@ class IncidentOAuth:
                     or row["redirect_uri"] != data.get("redirect_uri")
                     or not re.fullmatch(r"[A-Za-z0-9._~-]{43,128}", verifier)
                     or not hmac.compare_digest(row["challenge"], computed)
+                    or self.store._installation_product(
+                        connection, row["connection_id"]
+                    )
+                    != product
                 ):
                     raise OAuthError("invalid_grant")
                 session_id = str(uuid4())
@@ -276,11 +294,11 @@ class IncidentOAuth:
                         now + REFRESH_SECONDS,
                     ),
                 )
-                result = self._tokens(connection, session_id)
+                result = self._tokens(connection, session_id, product)
             else:
                 row = self._execute(
                     connection,
-                    "SELECT t.*,s.revoked,s.client_id,s.expires_at AS session_expires FROM operational_oauth_tokens t JOIN operational_oauth_sessions s ON t.session_id=s.session_id WHERE token_hash=?",
+                    "SELECT t.*,s.connection_id,s.revoked,s.client_id,s.expires_at AS session_expires FROM operational_oauth_tokens t JOIN operational_oauth_sessions s ON t.session_id=s.session_id WHERE token_hash=?",
                     (_hash(data.get("refresh_token", "")),),
                 ).fetchone()
                 if (
@@ -290,6 +308,10 @@ class IncidentOAuth:
                     or row["revoked"]
                     or row["expires_at"] <= now
                     or row["session_expires"] <= now
+                    or self.store._installation_product(
+                        connection, row["connection_id"]
+                    )
+                    != product
                 ):
                     raise OAuthError("invalid_grant")
                 if row["used"]:
@@ -305,13 +327,13 @@ class IncidentOAuth:
                         "UPDATE operational_oauth_tokens SET used=1 WHERE token_hash=?",
                         (_hash(data["refresh_token"]),),
                     )
-                    result = self._tokens(connection, row["session_id"])
+                    result = self._tokens(connection, row["session_id"], product)
         # Commit revocation before returning the replay error.
         if replay:
             raise OAuthError("invalid_grant")
         return result
 
-    def actor(self, token: str) -> ConnectionActor:
+    def actor(self, token: str, product: Product = "vera") -> ConnectionActor:
         """Resolve only live access tokens bound to the fixed incident resource."""
         with self.store._connection() as connection:
             self._schema(connection)
@@ -327,6 +349,8 @@ class IncidentOAuth:
                 or row["revoked"]
                 or row["expires_at"] <= now
                 or row["session_expires"] <= now
+                or self.store._installation_product(connection, row["connection_id"])
+                != product
             ):
                 raise OAuthError("invalid_token")
             identifier = UUID(row["connection_id"])

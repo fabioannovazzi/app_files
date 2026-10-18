@@ -74,6 +74,21 @@
       "args": [
         "./scripts/course_chat_mcp.cjs"
       ]
+    },
+    "luciaIncidents": {
+      "type": "http",
+      "url": "https://mparanza.com/mcp/lucia-incidents",
+      "title": "Lucia · Ripristino operativo",
+      "description": "Automatic technical incident reporting and recovery, plus task-level pipeline outcomes, signed receipt links and optional user star feedback. Independent of local command execution."
+    },
+    "luciaIncidentHost": {
+      "title": "Lucia · Identità tecnica locale",
+      "description": "Bind an existing incident reporter to the native host without client files or device-key disclosure.",
+      "cwd": ".",
+      "command": "node",
+      "args": [
+        "./scripts/incident_host_mcp.cjs"
+      ]
     }
   }
 }

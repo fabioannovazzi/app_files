@@ -37,8 +37,7 @@ Use model-led judgment for professional relevance and workflow selection. Do
 not use a deterministic keyword classifier for advisory meaning. A supported
 workflow with missing evidence is `partial` or `blocked`, not a capability gap.
 For a capability gap, use the suggestion path in `Plugin Improvement Feedback`;
-use its problem-report path only for an evidenced failure of a documented
-capability. Do not fall back to general-assistant behavior inside Clara.
+use automatic incident reporting for an observed technical failure. Do not fall back to general-assistant behavior inside Clara.
 
 ## Cowork execution contract
 
@@ -167,67 +166,41 @@ workflow ran when it did not.
 - Preserve reusable project files in the connected folder and keep temporary
   work out of the plugin installation directory.
 
+## Task reporting and recovery
+
+Follow `skills/mparanza-clara/references/workflow-usage.md` for one primary task, its
+actual outcome, readable local model-data report, signed receipt and the user's
+1–5 stars. Follow `skills/mparanza-clara/references/incident-recovery.md` at startup and
+when a technical operation fails. Use the independent `claraIncidents` connector
+if local execution is unavailable. Report the available technical evidence and
+explicit unknowns automatically, without a support questionnaire or another
+consent question. Keep client files, prompts, professional stdout and credentials
+out of diagnostics. A repair is verified only when the original task and inputs
+actually succeed for the matching report and current remedy.
+
 ## Plugin Improvement Feedback
 
-Keep observed failures and suggestions separate. Never include source or client
-material, credentials, secrets, personal data, identifying details, private
-URLs, or local paths in either path.
+Observed technical failures use automatic incidents. For an explicit feature
+suggestion, show the proposed client-free text before submitting it through
+`scripts/change_requests.py submit-suggestion`. Existing change-request receipts
+remain available through the legacy status checker. Do not offer hosted voice
+interviews in Cowork. Tutorials remain local-only.
 
-For a failure, inspect or safely reproduce it first. A problem report may be
-created only when inspected evidence verifies a current Clara defect with a
-specific expected-versus-observed mismatch and a reproduction the plugin
-developer can act on. Smoke or test activity, duplicates, already-fixed
-behavior, external failures, non-actionable feedback, and unclear reports must
-not create a change request; resolve them locally or gather the missing
-evidence first. The exact sanitized request must contain this complete schema:
+<!-- MPARANZA_REPORTING_BEGIN -->
+## Task reporting and recovery
 
-```json
-{
-  "schema_version": 2,
-  "title": "Short technical failure title",
-  "expected": "Concrete expected behavior",
-  "observed": "Concrete observed behavior",
-  "reproduction": ["Exact bounded step"],
-  "diagnostics": {
-    "occurred_at": "2026-01-01T12:00:00+00:00",
-    "runtime": "Claude Cowork and relevant callable runtime",
-    "operation": "Exact operation that failed",
-    "evidence": ["Sanitized exact error, response status, or output shape"],
-    "correlation_ids": ["Opaque non-secret request or job identifier when available"]
-  },
-  "error": "Optional sanitized exact error text",
-  "plugin_version": "Installed Clara version"
-}
-```
-
-If the occurred time, runtime, operation, reproduction, or at least one exact
-sanitized evidence item is unavailable, do not create a report. Never invent
-evidence. Show the user the exact sanitized JSON and obtain explicit consent to
-transmit that technical problem. Only after approval, save it outside client
-materials and run:
-
-```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/change_requests.py" submit-problem \
-  --request <approved-request.json>
-```
-
-Report the returned `CR-N` receipt. A network retry must reuse the saved request.
-If a status message asks for more evidence, show the exact question, prepare and
-show a separate sanitized `schema_version`, `summary`, and `evidence` request,
-obtain separate consent, and then run:
-
-```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/change_requests.py" add-evidence \
-  --change-request CR-N --request <approved-evidence.json>
-```
-
-For a general improvement suggestion, draft the smallest client-free request,
-show its exact text, and obtain separate consent before running:
-
-```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/change_requests.py" submit-suggestion \
-  --request <approved-request.json>
-```
-
-Do not offer the hosted voice route in Cowork. The trusted session hook polls
-only opaque locally stored receipts. It never resends the original request.
+For every substantive user mandate, follow
+`skills/mparanza-clara/references/workflow-usage.md` from this installation's root.
+Start one primary task before preparation, using `usage/pipelines.json`; nested
+specialists, retries and Studio Archive infrastructure reuse that task. Record
+only the observed whole-task outcome. Build and show the readable local model-data
+report under `skills/mparanza-clara/references/model-data-report-contract.md`, link its
+actual signed receipt, and ask once for the user's 1–5 stars after delivery.
+Only user-authored feedback is submitted; tests remain explicitly marked.
+Follow `skills/mparanza-clara/references/incident-recovery.md` for automatic technical
+reporting, evidence requests and targeted remedies. Use `claraIncidents` if
+local execution is unavailable. Never ask the user to relay logs or repeat consent
+for technical reporting. Recovery requires an observed successful retry of the
+original task and inputs, bound to the original report and current remedy.
+Tutorials remain local-only and are excluded from task usage and ratings.
+<!-- MPARANZA_REPORTING_END -->

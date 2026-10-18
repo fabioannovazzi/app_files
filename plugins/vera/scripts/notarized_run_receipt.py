@@ -15,6 +15,7 @@ import html
 import json
 import os
 import re
+import runpy
 import sys
 import tempfile
 import urllib.error
@@ -26,6 +27,10 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+product_name = runpy.run_path(str(Path(__file__).with_name("reporting_product.py")))[
+    "product_name"
+]
+
 __all__ = [
     "NotarizedRunReceiptError",
     "build_receipt_request",
@@ -34,8 +39,9 @@ __all__ = [
     "verify_model_data_receipt",
 ]
 
-RECEIPT_ENDPOINT = "https://mparanza.com/api/vera/run-receipts"
-_ENDPOINT_ENV = "VERA_RUN_RECEIPT_ENDPOINT"
+PRODUCT = product_name(Path(__file__).resolve().parents[1])
+RECEIPT_ENDPOINT = f"https://mparanza.com/api/{PRODUCT}/run-receipts"
+_ENDPOINT_ENV = PRODUCT.upper() + "_RUN_RECEIPT_ENDPOINT"
 _REQUEST_FILE = "model_data_receipt_request.json"
 _RECEIPT_FILE = "model_data_receipt.json"
 _HTML_FILE = "model_data_receipt.html"
@@ -406,7 +412,8 @@ def build_receipt_request(
         raise NotarizedRunReceiptError("receipt_id must be a UUID") from exc
     report_sha256 = hashlib.sha256(_canonical_bytes(report)).hexdigest()
     return {
-        "schema_version": 1,
+        "schema_version": 1 if PRODUCT == "vera" else 2,
+        **({"product": PRODUCT} if PRODUCT != "vera" else {}),
         "receipt_id": canonical_receipt_id,
         "plugin_version": plugin_version,
         "report_sha256": report_sha256,
@@ -427,7 +434,8 @@ def _request_for_run(
             raise NotarizedRunReceiptError("receipt request must be an object")
         _exact_fields(
             existing,
-            {"schema_version", "receipt_id", "plugin_version", "report_sha256"},
+            {"schema_version", "receipt_id", "plugin_version", "report_sha256"}
+            | ({"product"} if PRODUCT != "vera" else set()),
             label="receipt request",
         )
         expected = build_receipt_request(
@@ -453,7 +461,7 @@ def _validate_endpoint(value: str) -> str:
     parsed = urllib.parse.urlsplit(value)
     if parsed.username is not None or parsed.password is not None:
         raise NotarizedRunReceiptError("Receipt endpoint cannot contain credentials")
-    expected_path = "/api/vera/run-receipts"
+    expected_path = f"/api/{PRODUCT}/run-receipts"
     production = (
         parsed.scheme == "https"
         and parsed.hostname == "mparanza.com"
@@ -545,7 +553,7 @@ def _post_receipt_request(
         headers={
             "Accept": "application/json",
             "Content-Type": "application/json",
-            "User-Agent": "Vera-Run-Receipt/1",
+            "User-Agent": "Mparanza-Run-Receipt/2",
         },
         method="POST",
     )
@@ -561,7 +569,7 @@ def _validate_verification_url(value: object, *, receipt_id: str, digest: str) -
         parsed.scheme == "https"
         and parsed.hostname == "mparanza.com"
         and parsed.port is None
-        and parsed.path == f"/verify/vera-run-receipt/{receipt_id}"
+        and parsed.path == f"/verify/{PRODUCT}-run-receipt/{receipt_id}"
         and query == {"sha256": [digest]}
         and not parsed.fragment
     )
@@ -575,7 +583,19 @@ def _validate_verification_url(value: object, *, receipt_id: str, digest: str) -
 def _validate_response(
     payload: Mapping[str, Any], request: Mapping[str, Any]
 ) -> dict[str, Any]:
-    _exact_fields(payload, _RESPONSE_FIELDS, label="receipt response")
+    _exact_fields(
+        payload,
+        _RESPONSE_FIELDS | ({"product"} if PRODUCT != "vera" else set()),
+        label="receipt response",
+    )
+    if PRODUCT != "vera" and (
+        payload["product"] != PRODUCT
+        or request.get("product") != PRODUCT
+        or payload["schema_version"] != 2
+    ):
+        raise NotarizedRunReceiptError(
+            "receipt product does not match this installation"
+        )
     for field in ("schema_version", "receipt_id", "plugin_version", "report_sha256"):
         if payload[field] != request[field]:
             raise NotarizedRunReceiptError(
@@ -654,6 +674,8 @@ def _signed_receipt_bytes(receipt: Mapping[str, Any]) -> bytes:
             "key_id",
         )
     }
+    if receipt["schema_version"] == 2:
+        payload["product"] = receipt["product"]
     return json.dumps(
         payload,
         ensure_ascii=False,
@@ -689,7 +711,10 @@ def _improvement_html(report: Mapping[str, Any], copy: Mapping[str, str]) -> str
 
 def _render_html(report: Mapping[str, Any], receipt: Mapping[str, Any]) -> str:
     language = str(report.get("language") or "en")
-    copy = _COPY.get(language, _COPY["en"])
+    copy = {
+        key: value.replace("Vera", PRODUCT.title())
+        for key, value in _COPY.get(language, _COPY["en"]).items()
+    }
     outcome_copy = _OUTCOME_COPY.get(language, _OUTCOME_COPY["en"])
     rows: list[str] = []
     phases = report.get("phases")
@@ -869,7 +894,7 @@ def stamp_model_data_report(
     # A local tutorial scope suppresses transmission even on direct later retries.
     # This is an explicit storage/privacy boundary, not a semantic classifier.
     if any(
-        (parent / ".vera-onboarding-local-only").exists()
+        (parent / f".{PRODUCT}-onboarding-local-only").exists()
         for parent in (
             report_path.parent,
             *report_path.parent.parents,
@@ -939,6 +964,7 @@ def verify_model_data_receipt(
     digest = hashlib.sha256(_canonical_bytes(report)).hexdigest()
     local_request = {
         "schema_version": receipt.get("schema_version"),
+        **({"product": PRODUCT} if PRODUCT != "vera" else {}),
         "receipt_id": receipt.get("receipt_id"),
         "plugin_version": receipt.get("plugin_version"),
         "report_sha256": digest,
@@ -950,11 +976,11 @@ def verify_model_data_receipt(
         digest=digest,
     )
     api_url = verification_url.replace(
-        "/verify/vera-run-receipt/", "/api/vera/run-receipts/", 1
+        f"/verify/{PRODUCT}-run-receipt/", f"/api/{PRODUCT}/run-receipts/", 1
     )
     request = urllib.request.Request(
         api_url,
-        headers={"Accept": "application/json", "User-Agent": "Vera-Run-Receipt/1"},
+        headers={"Accept": "application/json", "User-Agent": "Mparanza-Run-Receipt/2"},
         method="GET",
     )
     verified = _request_json(request, opener=opener)

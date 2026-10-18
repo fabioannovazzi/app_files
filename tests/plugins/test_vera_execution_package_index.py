@@ -13,12 +13,14 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 
 
+@pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
 @pytest.mark.parametrize("host", ["codex", "chatgpt-upload", "claude"])
-def test_release_index_matches_every_final_host_projected_byte(host):
+def test_release_index_matches_every_final_host_projected_byte(host, product):
     filename = "vera-plugin.zip" if host == "codex" else f"vera-{host}-plugin.zip"
     if host == "chatgpt-upload":
         filename = "vera-chatgpt-upload.zip"
-    with ZipFile(ROOT / "plugin_packages/vera" / filename) as archive:
+    filename = filename.replace("vera", product)
+    with ZipFile(ROOT / "plugin_packages" / product / filename) as archive:
         indexes = [
             name for name in archive.namelist() if name.endswith("execution-files.json")
         ]
@@ -35,8 +37,22 @@ def test_release_index_matches_every_final_host_projected_byte(host):
     assert manifest["schema_version"] == 1
     assert manifest["files"] == expected
     assert "scripts/verified_execution.py" in expected
-    router = "mparanza-vera" if host == "claude" else "vera"
-    assert f"skills/{router}/references/execution-recovery.md" in expected
+    router = f"mparanza-{product}" if host == "claude" else product
+    assert f"skills/{router}/references/incident-recovery.md" in expected
+    assert "scripts/reporting_product.py" in expected
+    assert "scripts/model_data_report.py" in expected
+    assert "scripts/workflow_usage.py" in expected
+    with ZipFile(ROOT / "plugin_packages" / product / filename) as archive:
+        connector = json.loads(archive.read(prefix + ".mcp.json"))["mcpServers"]
+        assert (
+            connector[f"{product}Incidents"]["url"]
+            == f"https://mparanza.com/mcp/{product}-incidents"
+        )
+        if product != "vera":
+            root_contract = archive.read(prefix + f"skills/{router}/SKILL.md").decode()
+            assert "MPARANZA_REPORTING_BEGIN" in root_contract
+            assert "actual signed receipt" in root_contract
+            assert f"{product}Incidents" in root_contract
 
 
 @pytest.mark.parametrize("host", ["codex", "chatgpt-upload", "claude"])

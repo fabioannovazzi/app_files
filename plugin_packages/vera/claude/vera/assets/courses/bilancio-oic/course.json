@@ -230,7 +230,7 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/SKILL.md",
-      "sha256": "f71106a38c817c85591fca0919e87510d7f9804c9e774dfbe5a48cbef21e09fc"
+      "sha256": "c4008431a6298a470f27a9348960e972808929967ad9756bd8099b07b0d6f29e"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/agents/openai.yaml",
@@ -286,7 +286,7 @@
     },
     {
       "path": "scripts/managed_python_runtime.py",
-      "sha256": "4c818a1c172f02b07625ef26a6cbe12672e6b52844948b0ee7fefce325a58c69"
+      "sha256": "980f27dd7fbfab5eb3f7fb01367c2f84c65cce7ffbb0f1c79a6fcb143dd63728"
     },
     {
       "path": "scripts/model_data_report.py",
@@ -294,23 +294,23 @@
     },
     {
       "path": "scripts/notarized_run_receipt.py",
-      "sha256": "ecdad6c6aa491ab9fbcff84d85090b0568874305ad61a96af8120a47802bd165"
+      "sha256": "e7fb73264c7fae65a97c9bcce8a364590486862347e4917e6fcb0f51a2e9deeb"
     },
     {
       "path": "scripts/operational_incidents.py",
-      "sha256": "ba7881154bcd7d8b0de65215eef75a89a2667a62e56f20ce32c75439874ad79c"
+      "sha256": "f522f36e98cff350323a401e7393d0b1c7b99184cba78d6dcfef52c26380bbd0"
     },
     {
       "path": "scripts/verified_execution.py",
-      "sha256": "8817cdb519cce486adf79d4f8feaf7bc3d4f89a810361855da823c6d9a852c31"
+      "sha256": "55d1c0335e5c67c5518d65d3598bfbf3253e8f64644dbb98ce9e8595ea5c856b"
     },
     {
       "path": "scripts/workflow_usage.py",
-      "sha256": "20edb05ee55c84f5624ee22376c72318789563be7bc0d3851ef4fbc0da62c395"
+      "sha256": "449d5b3b2cf5be4ab01b3e96eed63d3c82c90860a9a458ab364912a59fe7cf34"
     },
     {
       "path": "skills/mparanza-bilancio-oic/SKILL.md",
-      "sha256": "41b9d4ead8fc55738a9507947eddd857382a1a539b26d62b6cad5a82234b2b70"
+      "sha256": "06fdbe39cc25a74401f5745631a2e424d6a5b5840c22d48010703905419f6b47"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -632,5 +632,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "4b9f253d56f6e1e224a22a19ef391246a6763643f6bdc32e5c9939bf3325f5b9"
+  "canonical_course_sha256": "6b3eb10654c75e1859e25172bcb710d9bd79c3e6bc0e5685e52d10a39739de29"
 }

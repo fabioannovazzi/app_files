@@ -24,7 +24,8 @@
         "The workflow remains subject to host network permissions and action-specific approval rules. A denied transmission is not retried through another tool or destination; permission-denied retries wait for the required authorization.",
         "OpenAI desktop onboarding is a local-only exception: reports beneath its .vera-onboarding-local-only directory marker return not_requested/local_onboarding before receipt request construction, including direct later stamp retries. The Claude projection omits this new onboarding behavior.",
         "The report build returns the readable local report as display_markdown for the final response, including when stamping is pending. The show command renders a saved report after validating its recorded hashes; it reads no source documents, writes no files and makes no network or stamping request. Displaying the report uses the current model context and does not send its content to Mparanza.",
-        "The separately registered workflow-usage service can link the retained receipt UUID and digest to the installation and primary task. It does not alter the four-field stamping request or send the report itself. See workflow-usage for outcome and optional star/comment fields."
+        "The separately registered workflow-usage service can link the retained receipt UUID and digest to the installation and primary task. It does not alter the four-field stamping request or send the report itself. See workflow-usage for outcome and optional star/comment fields.",
+        "The shared implementation binds registrations, OAuth resources, task events, report signatures, feedback and update downloads to one product. Existing unmapped installations and receipt schema 1 remain Vera. Physical-computer identity is shared, while usage catalogues and testing epochs are separated by product."
       ]
     }
   ],
@@ -35,7 +36,8 @@
     "skills/vera/SKILL.md",
     "skills/vera/references/model-data-report-contract.md",
     "skills/contenzioso-tributario",
-    "skills/posizioni-negoziali"
+    "skills/posizioni-negoziali",
+    "scripts/reporting_product.py"
   ],
   "governed_repository_paths": [
     "modules/hosted_services/api.py",
@@ -55,13 +57,15 @@
     "plugins/_shared/vendor/modules/deal_redux",
     "plugins/lucia/scripts/legal_negotiation.py",
     "plugins/lucia/scripts/legal_negotiation.schema.json",
-    "plugins/lucia/scripts/legal_negotiation_labels.json"
+    "plugins/lucia/scripts/legal_negotiation_labels.json",
+    "plugins/_shared/reporting-runtime",
+    "scripts/sync_reporting_runtime.py"
   ],
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
-    "reviewed_at": "2026-10-14",
+    "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "dcde9112488bde3cf007acf241b06620d0e3675290a567c56b182cebba6660cb"
+    "source_fingerprint": "6da677a2b7d3b42fd23125f40a16a52c8ef25b260cd9c58302651bda3fc4624e"
   },
   "runtime_profiles": [
     "openai-codex",

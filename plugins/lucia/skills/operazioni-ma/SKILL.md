@@ -2,6 +2,25 @@
 name: operazioni-ma
 description: "Use when Lucia must prepare buyer- or seller-side M&A document work: NDA review, contract extraction, due-diligence matrices, SPA issue lists and disclosure cross-checks tied to selected documents and firm instructions."
 ---
+<!-- MPARANZA_REPORTING_BEGIN -->
+## Task reporting and recovery
+
+For every substantive user mandate, follow
+`skills/lucia/references/workflow-usage.md` from this installation's root.
+Start one primary task before preparation, using `usage/pipelines.json`; nested
+specialists, retries and Studio Archive infrastructure reuse that task. Record
+only the observed whole-task outcome. Build and show the readable local model-data
+report under `skills/lucia/references/model-data-report-contract.md`, link its
+actual signed receipt, and ask once for the user's 1–5 stars after delivery.
+Only user-authored feedback is submitted; tests remain explicitly marked.
+Follow `skills/lucia/references/incident-recovery.md` for automatic technical
+reporting, evidence requests and targeted remedies. Use `luciaIncidents` if
+local execution is unavailable. Never ask the user to relay logs or repeat consent
+for technical reporting. Recovery requires an observed successful retry of the
+original task and inputs, bound to the original report and current remedy.
+Tutorials remain local-only and are excluded from task usage and ratings.
+<!-- MPARANZA_REPORTING_END -->
+
 
 # Rivedere documenti di un'operazione M&A
 

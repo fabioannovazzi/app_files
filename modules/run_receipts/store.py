@@ -22,6 +22,7 @@ from modules.pdp.postgres_compat import (
     is_postgres_enabled,
 )
 from modules.utilities.cache import get_cache_dir
+from modules.workflow_usage.products import Product
 
 __all__ = [
     "RunReceiptConflictError",
@@ -63,13 +64,16 @@ class RunReceiptRecord:
     stamped_at: str
     key_id: str
     signature: str
+    product: Product = "vera"
+    schema_version: int = 1
 
     @property
     def signed_payload(self) -> dict[str, Any]:
         """Return exactly the fields covered by the Ed25519 signature."""
 
         return {
-            "schema_version": 1,
+            "schema_version": self.schema_version,
+            **({"product": self.product} if self.schema_version == 2 else {}),
             "receipt_id": self.receipt_id,
             "plugin_version": self.plugin_version,
             "report_sha256": self.report_sha256,
@@ -121,6 +125,9 @@ class RunReceiptStore:
             try:
                 with self._connect() as connection:
                     connection.execute(_SCHEMA_SQL)
+                    connection.execute(
+                        "CREATE TABLE IF NOT EXISTS mparanza_run_receipt_products (receipt_id TEXT PRIMARY KEY, product TEXT NOT NULL, schema_version INTEGER NOT NULL)"
+                    )
             except (
                 OSError,
                 sqlite3.Error,
@@ -142,13 +149,18 @@ class RunReceiptStore:
             stamped_at=str(values["stamped_at"]),
             key_id=str(values["key_id"]),
             signature=str(values["signature"]),
+            product=values.get("product") or "vera",
+            schema_version=values.get("schema_version") or 1,
         )
 
     @staticmethod
     def _same_evidence(left: RunReceiptRecord, right: RunReceiptRecord) -> bool:
-        return hmac.compare_digest(
-            left.report_sha256, right.report_sha256
-        ) and hmac.compare_digest(left.plugin_version, right.plugin_version)
+        return (
+            left.product == right.product
+            and left.schema_version == right.schema_version
+            and hmac.compare_digest(left.report_sha256, right.report_sha256)
+            and hmac.compare_digest(left.plugin_version, right.plugin_version)
+        )
 
     def stamp(self, candidate: RunReceiptRecord) -> RunReceiptRecord:
         """Persist one signed record idempotently and return the durable record."""
@@ -165,7 +177,7 @@ class RunReceiptStore:
         try:
             with self._connect() as connection:
                 connection.disable_transaction_replay() if self._use_postgres else None
-                connection.execute(
+                inserted = connection.execute(
                     sql,
                     (
                         candidate.receipt_id,
@@ -176,8 +188,17 @@ class RunReceiptStore:
                         candidate.signature,
                     ),
                 ).fetchone()
+                if inserted is not None:
+                    connection.execute(
+                        "INSERT INTO mparanza_run_receipt_products VALUES (?,?,?)",
+                        (
+                            candidate.receipt_id,
+                            candidate.product,
+                            candidate.schema_version,
+                        ),
+                    )
                 row = connection.execute(
-                    "SELECT * FROM mparanza_vera_run_receipts WHERE receipt_id = ?",
+                    "SELECT r.*,p.product,p.schema_version FROM mparanza_vera_run_receipts r LEFT JOIN mparanza_run_receipt_products p ON p.receipt_id=r.receipt_id WHERE r.receipt_id = ?",
                     (candidate.receipt_id,),
                 ).fetchone()
                 if row is None:
@@ -214,7 +235,7 @@ class RunReceiptStore:
                 "SELECT COUNT(*) AS n FROM mparanza_vera_run_receipts"
             ).fetchone()["n"]
             rows = connection.execute(
-                "SELECT receipt_id,plugin_version,report_sha256,stamped_at FROM mparanza_vera_run_receipts ORDER BY stamped_at DESC LIMIT ?",
+                "SELECT r.receipt_id,r.plugin_version,r.report_sha256,r.stamped_at,COALESCE(p.product,'vera') AS product FROM mparanza_vera_run_receipts r LEFT JOIN mparanza_run_receipt_products p ON p.receipt_id=r.receipt_id ORDER BY r.stamped_at DESC LIMIT ?",
                 (limit,),
             ).fetchall()
             return {
@@ -230,7 +251,7 @@ class RunReceiptStore:
         try:
             with self._connect() as connection:
                 row = connection.execute(
-                    "SELECT * FROM mparanza_vera_run_receipts WHERE receipt_id = ?",
+                    "SELECT r.*,p.product,p.schema_version FROM mparanza_vera_run_receipts r LEFT JOIN mparanza_run_receipt_products p ON p.receipt_id=r.receipt_id WHERE r.receipt_id = ?",
                     (receipt_id,),
                 ).fetchone()
                 return self._record(row) if row is not None else None

@@ -7,10 +7,10 @@ import html
 import json
 import re
 from collections import Counter, defaultdict
-from pathlib import Path
 from typing import Any
 
 from modules.workflow_usage.contracts import pipeline_catalog
+from modules.workflow_usage.products import Product, catalog_metadata
 
 __all__ = ["evidence_hash", "summarize", "render_html"]
 
@@ -68,10 +68,13 @@ def _metrics(runs: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 def summarize(
-    inventory: dict[str, Any], receipts: dict[str, Any] | None = None
+    inventory: dict[str, Any],
+    receipts: dict[str, Any] | None = None,
+    *,
+    product: Product = "vera",
 ) -> dict[str, Any]:
     """Count exact task IDs; unknown, unrated and synthetic are explicit categories."""
-    runs = inventory["runs"]
+    runs = [run for run in inventory["runs"] if run.get("product", "vera") == product]
     real = [run for run in runs if run["sample_kind"] == "user"]
     groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
     segments: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
@@ -94,6 +97,7 @@ def summarize(
             candidates.append(
                 {
                     "run_id": run["run_id"],
+                    "product": product,
                     "installation_id": run["installation_id"],
                     "pipeline": run["pipeline"],
                     "reasons": reasons,
@@ -108,13 +112,9 @@ def summarize(
     unattributed = [
         item
         for item in (receipts or {}).get("receipts", [])
-        if item["receipt_id"] not in linked
+        if item.get("product", "vera") == product and item["receipt_id"] not in linked
     ]
-    metadata = json.loads(
-        (
-            Path(__file__).resolve().parents[2] / "plugins/vera/usage/pipelines.json"
-        ).read_text(encoding="utf-8")
-    )
+    metadata = catalog_metadata(product)
     minimum = tuple(
         int(part) for part in metadata["instrumented_from_version"].split(".")
     )
@@ -126,6 +126,7 @@ def summarize(
         if version and tuple(map(int, version.groups())) >= minimum:
             current_unattributed.append(item)
     return {
+        "product": product,
         "receipt_inventory_complete": receipts["complete"] if receipts else None,
         "unattributed_receipts": current_unattributed,
         "legacy_unattributed_receipt_count": len(unattributed)
@@ -139,7 +140,7 @@ def summarize(
         "totals": _metrics(real),
         "pipelines": [
             {"pipeline": identifier, "label": label, **_metrics(groups[identifier])}
-            for identifier, label in pipeline_catalog().items()
+            for identifier, label in pipeline_catalog(product).items()
         ],
         "segments": [
             {
@@ -163,6 +164,7 @@ def summarize(
 
 def render_html(summary: dict[str, Any]) -> str:
     """Render escaped operator evidence; comments remain untrusted text."""
+    title = html.escape(summary.get("product", "vera").title())
     rows = []
     for row in summary["pipelines"]:
         average = (
@@ -198,7 +200,7 @@ def render_html(summary: dict[str, Any]) -> str:
         if summary["inventory_complete"]
         else "Inventario parziale: questi numeri non sono totali"
     )
-    return (
+    document = (
         '<!doctype html><html lang="it"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vera · Utilizzo e risultati</title><style>body{font-family:Instrument Sans,system-ui,sans-serif;color:#192d49;background:#fff;margin:40px auto;padding:0 24px;max-width:1200px}h1{font-weight:550}table{border-collapse:collapse;width:100%;font-size:14px}th,td{padding:10px;text-align:left;border-bottom:1px solid #dde3eb}section{overflow-x:auto}article{border-top:1px solid #dde3eb;padding:16px 0}blockquote{white-space:pre-wrap}p{line-height:1.5}</style><h1>Vera: utilizzo e risultati</h1><p>'
         + html.escape(complete)
         + f' · {summary["included_user_runs"]} attività ricevute · {summary["excluded_test_runs"]} prove escluse.</p><p>Esito sconosciuto e nessuna valutazione restano distinti da errore e insoddisfazione. Le versioni precedenti senza questa raccolta non sono misurabili.</p><section><table><thead><tr><th>Processo</th><th>Attività</th><th>Installazioni</th><th>Completate</th><th>Fallite</th><th>Annullate</th><th>Esito sconosciuto</th><th>Ricevute</th><th>Valutazioni</th><th>Stelle</th></tr></thead><tbody>'
@@ -206,4 +208,7 @@ def render_html(summary: dict[str, Any]) -> str:
         + "</tbody></table></section><h2>Evidenze da esaminare</h2>"
         + "".join(reviews)
         + "</html>"
+    )
+    return document.replace("<title>Vera ·", f"<title>{title} ·").replace(
+        "<h1>Vera:", f"<h1>{title}:"
     )

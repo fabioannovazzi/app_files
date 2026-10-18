@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import os
@@ -34,6 +35,10 @@ def installed_fixture(tmp_path, product, monkeypatch):
         "_shared_python_runtime.py",
         "managed_python_runtime.py",
         "check_dependencies.py",
+        "reporting_product.py",
+        "operational_incidents.py",
+        "verified_execution.py",
+        "technical_runner.py",
     ):
         shutil.copyfile(
             ROOT / f"plugins/{product}/scripts/{filename}", scripts / filename
@@ -43,7 +48,7 @@ def installed_fixture(tmp_path, product, monkeypatch):
             ROOT / "plugins/clara/scripts/managed_ocr_runtime.py",
             scripts / "managed_ocr_runtime.py",
         )
-    if product == "vera":
+    if product in {"vera", "clara", "lucia"}:
         for suffix in ("py", "json"):
             filename = f"local_helper_environment.{suffix}"
             shutil.copyfile(ROOT / "scripts" / filename, scripts / filename)
@@ -66,6 +71,10 @@ def installed_fixture(tmp_path, product, monkeypatch):
             ROOT / "plugins/vera/scripts/technical_runner.py",
             scripts / "technical_runner.py",
         )
+    (root / ".codex-plugin").mkdir()
+    (root / ".codex-plugin/plugin.json").write_text(
+        json.dumps({"name": product, "version": "0.1.1"})
+    )
     component = "reporting-engine" if product == "clara" else "studio-archive"
     (root / "components.json").write_text(json.dumps({"plugins": [component]}))
     for name in (
@@ -81,6 +90,20 @@ def installed_fixture(tmp_path, product, monkeypatch):
         (child / "requirements-render.txt").write_text("# no optional dependencies\n")
     (child / "scripts/check_dependencies.py").write_text(
         "import json,sys\nprint(json.dumps({'version':list(sys.version_info[:2]), 'prefix':sys.prefix}))\n"
+    )
+    (root / "execution-files.json").write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "files": {
+                    file.relative_to(root)
+                    .as_posix(): hashlib.sha256(file.read_bytes())
+                    .hexdigest()
+                    for file in root.rglob("*")
+                    if file.is_file()
+                },
+            }
+        )
     )
     api = manager(product)
     shared = api._shared_runtime()

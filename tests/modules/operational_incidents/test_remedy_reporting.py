@@ -358,6 +358,22 @@ def alert_case(tmp_path):
     return actual, review, labels
 
 
+@pytest.mark.parametrize("product", ["clara", "lucia"])
+def test_alert_rejects_recovery_action_owned_by_another_product(tmp_path, product):
+    incident, review, labels = alert_case(tmp_path)
+    row = incident["remedy_followups"][0]
+    row["product"] = product
+    review = review.model_copy(
+        update={
+            "followup_sha256": followup_hash(row),
+            "next_action": review.next_action.model_copy(update={"owner": "vera"}),
+        }
+    )
+
+    with pytest.raises(ValueError, match="another product"):
+        render_alert(incident, review, device_labels=labels, now=NOW)
+
+
 def test_rendered_alert_names_verified_mac_app_original_version_blocker_and_owner(
     tmp_path,
 ):

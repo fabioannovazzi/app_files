@@ -1,0 +1,18 @@
+    .function-test-legend { margin-block: 20px 28px; font-size: 0.8125rem; color: #002060; }
+    .function-test-legend__items { display: flex; flex-wrap: wrap; gap: 10px 24px; margin-bottom: 8px; }
+    .function-test-legend__items > span { display: inline-flex; align-items: center; gap: 8px; }
+    .function-test-indicator {
+      display: inline-block;
+      width: 11px;
+      height: 11px;
+      flex: 0 0 11px;
+      border: 1px solid #5685ab;
+      border-radius: 50%;
+      position: relative;
+      overflow: hidden;
+      vertical-align: 0.04em;
+    }
+    h4 .function-test-indicator { margin-left: 9px; }
+    .function-test-indicator[data-test-status="agent"],
+    .function-test-indicator[data-test-status="tried"],
+    .function-test-indicator[data-test-status="repeated"] { background: currentColor; }

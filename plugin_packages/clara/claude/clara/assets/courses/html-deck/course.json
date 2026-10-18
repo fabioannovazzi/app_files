@@ -45,7 +45,7 @@
     },
     {
       "path": "scripts/check_dependencies.py",
-      "sha256": "6e037df9002300cbd635b3e2a8795061abe8369880f71b8040b3fdaab103c22c"
+      "sha256": "4556447640d0a39a30131dfe47a36310fbca2afe640f529dd8a13c3776018f89"
     },
     {
       "path": "scripts/managed_ocr_runtime.py",
@@ -53,15 +53,35 @@
     },
     {
       "path": "scripts/managed_python_runtime.py",
-      "sha256": "6f1e29d38fa4ff7919a507ddcb95df81d4bdf600b2ab6fc392956772d846d76d"
+      "sha256": "980f27dd7fbfab5eb3f7fb01367c2f84c65cce7ffbb0f1c79a6fcb143dd63728"
+    },
+    {
+      "path": "scripts/model_data_report.py",
+      "sha256": "0e7a99ef631ed67a1aa25eb10ce7ed158625f6c0c09dcf8546eeb132a238262d"
+    },
+    {
+      "path": "scripts/notarized_run_receipt.py",
+      "sha256": "d14afea6e9dabee7c2611d4e5fc0dac12c7c0011a7e8908f5e0e927369962f71"
+    },
+    {
+      "path": "scripts/operational_incidents.py",
+      "sha256": "c38cf8df7eb466a47c0e0516409f46f7f209c12f25d64f0a22ebf47b4f440627"
+    },
+    {
+      "path": "scripts/verified_execution.py",
+      "sha256": "55d1c0335e5c67c5518d65d3598bfbf3253e8f64644dbb98ce9e8595ea5c856b"
     },
     {
       "path": "scripts/verify_advisory_html_delivery.py",
       "sha256": "771dec6416bb5bd0eb2453caed09fbd9644c1386dab1c187c1d2b859e377d8ef"
     },
     {
+      "path": "scripts/workflow_usage.py",
+      "sha256": "449d5b3b2cf5be4ab01b3e96eed63d3c82c90860a9a458ab364912a59fe7cf34"
+    },
+    {
       "path": "skills/mparanza-html-deck/SKILL.md",
-      "sha256": "352b97f87fcd76684d01f64e295a6575e07b71c42c22e6d42d80922442a587c2"
+      "sha256": "ca4615dafc86bd26b6cd8de847c3be3e75b33b5576cdefeb7621f924fd66217a"
     },
     {
       "path": "skills/mparanza-html-deck/references/evidence-bindings.md",
@@ -390,5 +410,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "3bf05b819d6ca92f70c8eae732229094289c14dab3263dc313a854b083b04ba9"
+  "canonical_course_sha256": "aec6d40ced0b8753d7e02b9adf7a8052cd6142afbf5822ee0a6bc6fd8d4e86ac"
 }

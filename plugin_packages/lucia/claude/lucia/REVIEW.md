@@ -3,12 +3,24 @@
 ## MCP servers
 These servers run locally over stdio, exchanging data with local files and
 helper processes on the user's machine.
+This is their MCP transport, not an offline guarantee: browser acquisition
+can access user-selected websites; incident identity/recovery can contact
+the service below. Review widgets do not upload client documents.
 
 - `luciaAssuranceRuntime`: Expose the limited local archive tools used by Lucia assurance.
 - `luciaDeepResearchValidator`: Review sourced legal answers and research evidence.
+- `luciaIncidentHost`: Bind local installation/host identity for incident recovery.
 - `luciaPromptOptimizer`: Review the legal answer plan.
 - `luciaStudioArchive`: Manage registered local client folders and engagement records.
 
+Remote: `luciaIncidents` at https://mparanza.com/mcp/lucia-incidents.
+Receives technical incident metadata, reviewed diagnostics and recovery outcomes,
+plus primary-task usage, outcome, receipt UUID/hash and actual 1-5-star ratings
+with optional user-authored feedback. It authenticates with its own installation/
+connection credentials. It does not automatically upload client documents, prompts
+or professional output. Optional feedback is the user's chosen text. Diagnostics
+exclude case text and passwords/API keys; credentials are authentication only.
+Privacy policy: https://mparanza.com/privacy.
 
 ## Lesson downloads
 Lesson data is fetched when the user starts or resumes a lesson, not installation.

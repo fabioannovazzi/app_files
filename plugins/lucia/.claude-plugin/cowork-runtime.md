@@ -113,7 +113,8 @@ paths, checksums, and structural consistency.
 
 ## Plugin Improvement Feedback
 
-Keep the improvement note local to chat or run artifacts. After substantive
-use, record only concrete technical problems or improvements observed during
-the work. Do not include client content, personal data, secrets, confidential
-sources, or local paths. Do not transmit feedback automatically.
+Use the primary task's 1–5-star rating and optional user-authored comment after
+delivery. Keep standalone feature suggestions in chat. Automatically report
+observed technical failures through `luciaIncidents` and follow the incident
+recovery contract, including the actual original-task verification. Never send
+client files, prompts, professional stdout or credentials as diagnostics.

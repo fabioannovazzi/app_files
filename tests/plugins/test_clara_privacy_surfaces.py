@@ -19,6 +19,9 @@ VALIDATOR = (
 )
 CONTEXT_POLICY = "real_professional_data_may_enter_codex_context"
 EXPECTED_HOSTED_SERVICES = {
+    "operational-incidents",
+    "workflow-usage",
+    "run-receipt-stamping",
     "hosted-interviews",
     "hosted-voice",
     "plugin-feedback",
@@ -328,7 +331,10 @@ def test_clara_privacy_validator_detects_changed_governed_source(
         CLARA_ROOT / "privacy" / "workflows" / "claim-basis-map.json",
         manifest_dir / "claim-basis-map.json",
     )
-    (clara_root / "privacy" / "hosted-services").mkdir(parents=True)
+    shutil.copytree(
+        CLARA_ROOT / "privacy" / "hosted-services",
+        clara_root / "privacy" / "hosted-services",
+    )
     # Include the shared launcher dependencies now governed by this workflow.
     manifest = json.loads(
         (manifest_dir / "claim-basis-map.json").read_text(encoding="utf-8")

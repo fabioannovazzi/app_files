@@ -23,7 +23,8 @@
         "The workflow remains subject to host network permissions and action-specific approval rules. A denied transmission is not retried through another tool or destination; permission-denied retries wait for the required authorization.",
         "OpenAI desktop onboarding is a local-only exception: reports beneath its .vera-onboarding-local-only directory marker return not_requested/local_onboarding before receipt request construction, including direct later stamp retries. The Claude projection omits this new onboarding behavior.",
         "The report build returns the readable local report as display_markdown for the final response, including when stamping is pending. The show command renders a saved report after validating its recorded hashes; it reads no source documents, writes no files and makes no network or stamping request. Displaying the report uses the current model context and does not send its content to Mparanza.",
-        "The separately registered workflow-usage service can link the retained receipt UUID and digest to the installation and primary task. It does not alter the four-field stamping request or send the report itself. See workflow-usage for outcome and optional star/comment fields."
+        "The separately registered workflow-usage service can link the retained receipt UUID and digest to the installation and primary task. It does not alter the four-field stamping request or send the report itself. See workflow-usage for outcome and optional star/comment fields.",
+        "The shared implementation binds registrations, OAuth resources, task events, report signatures, feedback and update downloads to one product. Existing unmapped installations and receipt schema 1 remain Vera. Physical-computer identity is shared, while usage catalogues and testing epochs are separated by product."
       ]
     }
   ],
@@ -33,13 +34,14 @@
     "skills/mparanza-vera/SKILL.md",
     "skills/mparanza-vera/references/model-data-report-contract.md",
     "skills/mparanza-contenzioso-tributario",
-    "skills/mparanza-posizioni-negoziali"
+    "skills/mparanza-posizioni-negoziali",
+    "scripts/reporting_product.py"
   ],
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
-    "reviewed_at": "2026-10-14",
+    "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "ca7f3377ebf05ac1ab54291df94526a826af0a5bf1df518212514ba889cb23aa"
+    "source_fingerprint": "39ded5a0fc1bbd4020551f977ee7bbff87bfa730d2b667b6edc10e17b644c4db"
   },
   "runtime_profiles": [
     "anthropic-cowork"

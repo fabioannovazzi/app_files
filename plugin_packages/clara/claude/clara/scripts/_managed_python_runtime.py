@@ -879,7 +879,11 @@ def activate_runtime(
 
 
 def main(
-    plugin_root: Path, argv: list[str] | None = None, *, stderr: TextIO | None = None
+    plugin_root: Path,
+    argv: list[str] | None = None,
+    *,
+    stderr: TextIO | None = None,
+    diagnostic_path: Path | None = None,
 ) -> int:
     """Run the managed runtime command-line interface."""
 
@@ -924,8 +928,18 @@ def main(
     if not script.is_relative_to(selection.requirement_root) or not script.is_file():
         LOGGER.error("Managed runtime script not found: %s", script)
         return 2
+    command = [str(runtime_python(target)), str(script), *args.arguments]
+    if diagnostic_path is not None:
+        command = [
+            str(runtime_python(target)),
+            str(plugin_root / "scripts/technical_runner.py"),
+            str(selection.requirement_root),
+            str(diagnostic_path),
+            str(script),
+            *args.arguments,
+        ]
     completed = subprocess.run(
-        [str(runtime_python(target)), str(script), *args.arguments],
+        command,
         cwd=selection.requirement_root,
         env=runtime_environment(target),
         check=False,

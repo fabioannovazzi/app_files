@@ -41,6 +41,7 @@ from modules.operational_incidents.store import (
 from modules.run_receipts.signing import get_run_receipt_signer
 from modules.run_receipts.store import get_run_receipt_store
 from modules.workflow_usage.contracts import WorkflowEvent
+from modules.workflow_usage.products import Product
 from modules.workflow_usage.repository import WorkflowConflict
 from modules.workflow_usage.testing import public_status
 
@@ -67,6 +68,7 @@ class ConnectionEnvelope(BaseModel):
 
 class Envelope(BaseModel):
     model_config = ConfigDict(extra="forbid")
+    product: Product | None = None
     credentials: Credentials
     report: Report | None = None
     outcome: Outcome | None = None
@@ -138,7 +140,10 @@ def _dispatch(
     envelope = Envelope.model_validate(arguments)
     if operation == "register":
         registered = store.register(
-            envelope.credentials, envelope.device, envelope.native_status
+            envelope.credentials,
+            envelope.device,
+            envelope.native_status,
+            envelope.product,
         )
         if envelope.client_status is not None:
             store.observe_reporter(envelope.credentials, envelope.client_status)
@@ -191,12 +196,12 @@ def _oauth_error(error: OAuthError) -> JSONResponse:
     return JSONResponse({"error": error.code}, status_code=400, headers=_NO_CACHE)
 
 
-@router.get("/.well-known/oauth-protected-resource/mcp/vera-incidents")
-async def incident_resource_metadata() -> dict[str, Any]:
+@router.get("/.well-known/oauth-protected-resource/mcp/{product}-incidents")
+async def incident_resource_metadata(product: Product = "vera") -> dict[str, Any]:
     return {
-        "resource": RESOURCE,
+        "resource": ISSUER + f"/mcp/{product}-incidents",
         "authorization_servers": [ISSUER],
-        "scopes_supported": [SCOPE],
+        "scopes_supported": [f"{product}:incidents"],
         "bearer_methods_supported": ["header"],
     }
 
@@ -294,20 +299,22 @@ async def revoke_oauth_token(
         return _oauth_error(error)
 
 
-def _connection_actor(request: Request, store: IncidentStore) -> ConnectionActor:
+def _connection_actor(
+    request: Request, store: IncidentStore, product: Product = "vera"
+) -> ConnectionActor:
     header = request.headers.get("authorization", "")
     scheme, _, token = header.partition(" ")
     try:
         if scheme.lower() != "bearer" or not token or len(token) > 128:
             raise OAuthError("invalid_token")
-        return IncidentOAuth(store).actor(token)
+        return IncidentOAuth(store).actor(token, product)
     except OAuthError as error:
         _admit(request.client.host if request.client else "unknown")
         raise HTTPException(
             401,
             "A saved anonymous incident connection is required",
             headers={
-                "WWW-Authenticate": f'Bearer resource_metadata="{ISSUER}/.well-known/oauth-protected-resource/mcp/vera-incidents", scope="{SCOPE}"',
+                "WWW-Authenticate": f'Bearer resource_metadata="{ISSUER}/.well-known/oauth-protected-resource/mcp/{product}-incidents", scope="{product}:incidents"',
                 **_NO_CACHE,
             },
         ) from error
@@ -428,12 +435,37 @@ TOOLS = [
 ]
 
 
-@router.post("/mcp/vera-incidents")
+def _product_tools(product: Product) -> list[dict[str, Any]]:
+    """Render product names without rewriting schemas or admitted identifiers."""
+    tools = json.loads(json.dumps(TOOLS))
+    for tool in tools:
+        tool["name"] = tool["name"].replace("vera_", product + "_", 1)
+        tool["description"] = (
+            tool["description"]
+            .replace("Vera", product.title())
+            .replace("skills/vera/", f"skills/{product}/")
+        )
+        definitions = tool["inputSchema"].get("$defs", {})
+        for name in ("Report", "WorkflowEvent"):
+            if name in definitions:
+                definition = definitions[name]
+                definition["properties"]["product"] = {
+                    "type": "string",
+                    "const": product,
+                }
+                if product != "vera":
+                    definition.setdefault("required", []).append("product")
+    return tools
+
+
+@router.post("/mcp/{product}-incidents")
 async def incident_mcp(
-    request: Request, store: IncidentStore = Depends(get_incident_store)
+    request: Request,
+    store: IncidentStore = Depends(get_incident_store),
+    product: Product = "vera",
 ) -> Response:
     """Stateless Streamable HTTP MCP: no local command, Node or Python required."""
-    actor = _connection_actor(request, store)
+    actor = _connection_actor(request, store, product)
     payload = await _body(request)
     identifier = payload.get("id")
     method = payload.get("method")
@@ -451,13 +483,18 @@ async def incident_mcp(
         result: Any = {
             "protocolVersion": "2025-03-26",
             "capabilities": {"tools": {}},
-            "serverInfo": {"name": "vera-operational-incidents", "version": "1.0.0"},
-            "instructions": _INSTRUCTIONS,
+            "serverInfo": {
+                "name": f"{product}-operational-incidents",
+                "version": "1.1.0",
+            },
+            "instructions": _INSTRUCTIONS.replace("Vera", product.title()).replace(
+                "vera", product
+            ),
         }
     elif method == "ping":
         result = {}
     elif method == "tools/list":
-        result = {"tools": TOOLS}
+        result = {"tools": _product_tools(product)}
     elif method == "tools/call":
         params = payload.get("params", {})
         if not isinstance(params, dict):
@@ -472,6 +509,16 @@ async def incident_mcp(
                 }
             )
         name = str(params.get("name", ""))
+        # Tool names select a mechanical API operation, never semantic diagnosis.
+        if not name.startswith(product + "_"):
+            return JSONResponse(
+                {
+                    "jsonrpc": "2.0",
+                    "id": identifier,
+                    "error": {"code": -32601, "message": "Unknown product tool"},
+                }
+            )
+        name = "vera_" + name.removeprefix(product + "_")
         operation = (
             "workflow-" + name.removeprefix("vera_workflow_")
             if name in {"vera_workflow_record", "vera_workflow_status"}
@@ -525,6 +572,7 @@ def _workflow_dispatch(
             receipt is None
             or receipt.report_sha256 != event.report_sha256
             or receipt.plugin_version != event.receipt_version
+            or receipt.product != store.product(actor)
         ):
             raise WorkflowConflict("Receipt does not match the retained report proof")
         if not get_run_receipt_signer().verify(
@@ -544,23 +592,26 @@ class WorkflowFeedback(BaseModel):
     comment: str | None = Field(default=None, max_length=2000)
 
 
-@router.get("/api/vera/testing-status")
+@router.get("/api/{product}/testing-status")
 def workflow_testing_status(
+    product: Product = "vera",
     store: IncidentStore = Depends(get_incident_store),
 ) -> JSONResponse:
     """Public aggregate legend states; writes remain operator-only."""
     return JSONResponse(
-        public_status(store.workflow_testing()),
+        public_status(store.workflow_testing(product)),
         headers={"Cache-Control": "no-store"},
     )
 
 
-@router.get("/vera/feedback/{run_id}", response_class=HTMLResponse)
-async def workflow_feedback_page(run_id: UUID) -> HTMLResponse:
+@router.get("/{product}/feedback/{run_id}", response_class=HTMLResponse)
+async def workflow_feedback_page(
+    run_id: UUID, product: Product = "vera"
+) -> HTMLResponse:
     """Serve the same empty form for every ID; no task information is public."""
     path = Path(__file__).resolve().parents[2] / "templates/vera_workflow_feedback.html"
     return HTMLResponse(
-        path.read_text(encoding="utf-8"),
+        path.read_text(encoding="utf-8").replace("Vera", product.title()),
         headers={
             **_NO_CACHE,
             "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self'; frame-ancestors 'none'; base-uri 'none'",
@@ -568,15 +619,23 @@ async def workflow_feedback_page(run_id: UUID) -> HTMLResponse:
     )
 
 
-@router.post("/api/vera/workflow-feedback/{run_id}")
+@router.post("/api/{product}/workflow-feedback/{run_id}")
 async def workflow_feedback_submit(
-    run_id: UUID, request: Request, store: IncidentStore = Depends(get_incident_store)
+    run_id: UUID,
+    request: Request,
+    store: IncidentStore = Depends(get_incident_store),
+    product: Product = "vera",
 ) -> JSONResponse:
     raw = await _body(request, 16384)
     try:
         answer = WorkflowFeedback.model_validate(raw)
         result = store.workflow_feedback(
-            str(run_id), answer.key, answer.event_id, answer.stars, answer.comment
+            str(run_id),
+            answer.key,
+            answer.event_id,
+            answer.stars,
+            answer.comment,
+            product,
         )
     except ValidationError as error:
         raise HTTPException(
