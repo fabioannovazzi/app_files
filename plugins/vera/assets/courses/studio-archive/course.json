@@ -85,7 +85,7 @@
     {
       "path": "modules/studio-archive/scripts/studio_archive.py",
       "repository_path": "plugins/studio-archive/scripts/studio_archive.py",
-      "sha256": "3aead5a72768b0f6abfc84d1c185dcdfed91304528af8cd91c572d7dd0b47488"
+      "sha256": "f18bb4f7a5fb06592d70f2961d70243c0f911a8027abd5a23e6b82d17c2e2964"
     },
     {
       "path": "modules/studio-archive/scripts/whatsapp_desktop_guard.mjs",
@@ -95,7 +95,7 @@
     {
       "path": "modules/studio-archive/skills/studio-archive/SKILL.md",
       "repository_path": "plugins/studio-archive/skills/studio-archive/SKILL.md",
-      "sha256": "e851697b113899a1da8f674e62074785d7294dacfb0198a08f66e9b20591bd85"
+      "sha256": "49368e1c65b3ffe2c9ad86c5c7b67d95639b2a704ed4370a91718c7de813da1c"
     },
     {
       "path": "modules/studio-archive/skills/studio-archive/agents/openai.yaml",

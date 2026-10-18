@@ -191,7 +191,9 @@ class PinnedDirectory:
     def _snapshot_name(self, name: str) -> _TrackedFile:
         normalized_name = self._file_name(name)
         self.verify_identity()
-        flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
+        flags = os.O_RDONLY
+        if self._native is None:
+            flags |= os.O_NOFOLLOW
         if hasattr(os, "O_CLOEXEC"):
             flags |= os.O_CLOEXEC
         descriptor: int | None = None
@@ -278,7 +280,9 @@ class PinnedDirectory:
             + "\n"
         ).encode("utf-8")
         self.verify_identity()
-        flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0)
+        flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+        if self._native is None:
+            flags |= os.O_NOFOLLOW
         if hasattr(os, "O_CLOEXEC"):
             flags |= os.O_CLOEXEC
         descriptor: int | None = None
@@ -401,7 +405,7 @@ def pinned_directory(path: Path) -> Iterator[PinnedDirectory]:
                 "could not pin output directory on Windows"
             ) from exc
         return
-    flags = os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0)
+    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
     if hasattr(os, "O_CLOEXEC"):
         flags |= os.O_CLOEXEC
     descriptor: int | None = None
@@ -667,8 +671,8 @@ def _open_regular_file_beneath(
             ) from exc
         return
 
-    directory_flags = os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0)
-    file_flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
+    directory_flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+    file_flags = os.O_RDONLY | os.O_NOFOLLOW
     if hasattr(os, "O_CLOEXEC"):
         directory_flags |= os.O_CLOEXEC
         file_flags |= os.O_CLOEXEC

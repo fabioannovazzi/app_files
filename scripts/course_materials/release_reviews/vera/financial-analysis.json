@@ -135,7 +135,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "8630d5044412bdd15844a3fb2be89d5709a10251514b6507b665e05559ab9483",
+  "course_sha256": "6d71e83a778193b6188296a87f507675bff33905c90f23ded8e104113071f563",
   "discovery_source_refresh": {
     "reviewed_by": "Codex /root",
     "reviewed_at": "2026-10-01T11:44:13.200192+00:00",
@@ -856,6 +856,31 @@
     ],
     "authored_content_unchanged": true,
     "scope": "Local Archive invalid-run isolation, native Windows file boundaries and process lifecycle control. Every non-source field of the compiled course equals the reviewed baseline, including localized content, inputs, exercises, checkpoints and timing. Existing editorial judgments and historical artifact reviews remain unchanged. Windows process controls do not qualify semantic worker isolation. Fresh CI must independently match native demo/practice identities to this exact course digest.",
+    "fresh_matching_junit_required": true,
+    "native_ui_qualified": false
+  },
+  "combined_windows_archive_integration_20261018": {
+    "reviewer": "Codex exact source and retained-course comparison",
+    "reviewed_at": "2026-10-18",
+    "parents": [
+      {
+        "label": "windows_bilancio",
+        "commit": "82df4c1d3e2195ce7d3dcb765dd521a5e142c99d",
+        "course_sha256": "8630d5044412bdd15844a3fb2be89d5709a10251514b6507b665e05559ab9483",
+        "authored_content_unchanged": true
+      },
+      {
+        "label": "archive_unicode",
+        "commit": "4370e78cf321b8c99b3251cff666499a2f15c8a4",
+        "course_sha256": "bd8b910c033a107a0636a912dad5b79f5bae2c83fe4fb84fcfa3040caa96f70b",
+        "authored_content_unchanged": true
+      }
+    ],
+    "current_course_sha256": "6d71e83a778193b6188296a87f507675bff33905c90f23ded8e104113071f563",
+    "changed_fields": [
+      "sources"
+    ],
+    "source_review": "Combined Windows file/process controls, Bilancio locking, Archive encoding and per-run invalid-record isolation. Strict POSIX no-follow flags remain required. Guidance explicitly distinguishes incomplete inventory from a valid selected activity and prohibits changing or replacing blocked records. Complete non-source course objects match both parents; both prior review histories and historical artifact judgments are retained.",
     "fresh_matching_junit_required": true,
     "native_ui_qualified": false
   }

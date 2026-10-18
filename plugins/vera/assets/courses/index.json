@@ -482,7 +482,7 @@
     },
     "financial-analysis": {
       "path": "financial-analysis/course.json",
-      "sha256": "8630d5044412bdd15844a3fb2be89d5709a10251514b6507b665e05559ab9483",
+      "sha256": "6d71e83a778193b6188296a87f507675bff33905c90f23ded8e104113071f563",
       "languages": [
         "it",
         "en",
@@ -937,7 +937,7 @@
     },
     "sales-plan": {
       "path": "sales-plan/course.json",
-      "sha256": "c6ca01c93165bf66278fb0824e2017cfed5f12a465906bb4de630ab5a37fbcd3",
+      "sha256": "d7196090fbd72b434a5c8735286a54756ff0c4277cb8db8821ed8232dd53ade5",
       "languages": [
         "it",
         "en",
@@ -993,7 +993,7 @@
     },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "c3cc7debcc9eb7a9c7013f88cbad0f53c611f3996dfebd91055ac70e529c9297",
+      "sha256": "0e36339042d1c162a6679cf5aff7309c6f4ac1880794f76c5d3c9dfd515ac2cc",
       "languages": [
         "it",
         "en",
@@ -1021,7 +1021,7 @@
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "0b4c4cd3bf701795ef8d39d386a45dc5b765c9d97f37c78c1dd6ff9e0aff1708",
+      "sha256": "09b62155fab34a5d180d08d878a62ab5625f754f45eeb8e602f65a291b56f6f5",
       "languages": [
         "it",
         "en",

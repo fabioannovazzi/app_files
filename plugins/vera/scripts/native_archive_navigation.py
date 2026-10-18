@@ -236,7 +236,9 @@ def catalogue(root: Path, args: dict[str, Any]) -> dict[str, Any]:
                 **issue,
                 "label": "Unavailable run",
                 "status": "blocked",
-                "created_at": None,
+                # Preserve the catalogue's sortable string contract without
+                # trusting a timestamp from the invalid run record.
+                "created_at": "",
                 "client_id": selected_client,
                 "client_label": selected["display_name"],
                 "engagement_id": selected_engagement,

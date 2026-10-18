@@ -73,7 +73,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/studio_archive.py",
-      "sha256": "3aead5a72768b0f6abfc84d1c185dcdfed91304528af8cd91c572d7dd0b47488"
+      "sha256": "f18bb4f7a5fb06592d70f2961d70243c0f911a8027abd5a23e6b82d17c2e2964"
     },
     {
       "path": "modules/studio-archive/skills/mparanza-studio-archive/SKILL.md",
@@ -642,5 +642,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "c3cc7debcc9eb7a9c7013f88cbad0f53c611f3996dfebd91055ac70e529c9297"
+  "canonical_course_sha256": "0e36339042d1c162a6679cf5aff7309c6f4ac1880794f76c5d3c9dfd515ac2cc"
 }

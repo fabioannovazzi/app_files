@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -122,6 +124,29 @@ def test_native_navigation_keeps_blocked_record_non_actionable(archive, monkeypa
     assert rows[first["run"]["run_id"]]["can_start"] is False
     assert rows[first["run"]["run_id"]]["closure_available"] is False
     assert rows[second["run"]["run_id"]]["can_start"] is True
+
+    # The exact API rows must render together: an unavailable date must not
+    # crash sorting and hide the healthy activity in the native workspace.
+    node = shutil.which("node")
+    assert node is not None, "Node is required for the native workspace regression"
+    rendered = subprocess.run(
+        [
+            node,
+            str(ROOT / "tests/plugins/archive_run_list_ui.cjs"),
+            str(ROOT / "plugins/vera/ui/workspace.js"),
+        ],
+        input=json.dumps(result),
+        text=True,
+        capture_output=True,
+        check=True,
+        timeout=20,
+    )
+    visible = json.loads(rendered.stdout)
+    assert len(visible) == 2
+    blocked = next(row for row in visible if "Unavailable run" in row["text"])
+    healthy = next(row for row in visible if "Analysis" in row["text"])
+    assert blocked["buttons"] == []
+    assert "Avvia lavorazione" in healthy["buttons"]
 
 
 def test_same_request_cannot_replace_invalid_run_but_unrelated_preparation_works(

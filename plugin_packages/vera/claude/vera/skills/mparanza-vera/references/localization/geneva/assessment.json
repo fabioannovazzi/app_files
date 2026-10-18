@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "43757c1952bb3902cfe046b315d4685d5c00d416ab56c9db0b39669abc593248",
+  "catalogue_fingerprint": "1cd4969eeedf9cde13043466d9161d27bad371bee324fae5464cb23eca5d1bdb",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -1973,5 +1973,15 @@
   "windows_lock_pdf_main_integration_20261018": {
     "version": "0.1.414",
     "scope": "Preserved current main PDF source and all55 skill entrypoint hashes and assessment rows. Only product manifest binding changes; no Swiss professional or host acceptance asserted."
+  },
+  "unicode_pdf_main_integration_20261018": {
+    "version": "0.1.416",
+    "scope": "All55 current-main skill entrypoint hashes and assessment rows retained. Updated product manifest binding only; no new Swiss professional or host acceptance."
+  },
+  "windows_archive_integration_release_binding": {
+    "date": "2026-10-18",
+    "version": "0.1.417",
+    "previous_catalogue_fingerprint": "e7ec18f7ca424642f55d3332061a2c6adbd7bfba55c6c369433c128a0df36af1",
+    "scope": "Only the product manifest/version changed in this snapshot; all 55 skill entrypoint hashes and function IDs are unchanged. Preserve all prior Geneva dispositions and limits. Windows file/process portability and isolation of invalid archive runs do not establish new jurisdiction or original-client acceptance."
   }
 }

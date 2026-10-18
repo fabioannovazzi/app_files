@@ -58,11 +58,16 @@ def test_capture_limit_stops_flood(stream, tmp_path):
 
 def test_timeout_terminates_descendants(tmp_path):
     marker = tmp_path / "escaped.txt"
-    child = f"import time; time.sleep(2); open({str(marker)!r},'w').write('escaped')"
+    started = tmp_path / "started.txt"
+    child = (
+        f"import time; open({str(started)!r},'w').write('started'); "
+        f"time.sleep(3.5); open({str(marker)!r},'w').write('escaped')"
+    )
     code = f"import subprocess,sys,time; subprocess.Popen([sys.executable,'-c',{child!r}]); time.sleep(30)"
     with pytest.raises(ValueError, match="time limit"):
-        run(code, tmp_path, timeout_seconds=1)
-    time.sleep(1.3)
+        run(code, tmp_path, timeout_seconds=2)
+    assert started.exists(), "The descendant must execute before the timeout"
+    time.sleep(1.8)
     assert not marker.exists()
 
 
@@ -94,11 +99,13 @@ def test_native_host_status_does_not_claim_worker_isolation(tmp_path):
         cwd=tmp_path,
         capture_output=True,
         text=True,
-        check=True,
+        check=False,
         env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"},
         timeout=20,
     )
-    payload = json.loads(result.stdout)
+    assert result.returncode == 2, result.stderr
+    lines = [line.removeprefix("INFO: ") for line in result.stderr.splitlines()]
+    payload = json.loads(next(line for line in lines if line.startswith("{")))
     assert payload["status"] == "unsupported"
     assert payload["worker_executed"] is False
     assert payload["canaries_executed"] is False

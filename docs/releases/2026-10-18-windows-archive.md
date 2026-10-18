@@ -6,8 +6,9 @@ Journal–Bank's Unix pipe selector/process-group operations. The Archive incide
 reports separately showed `Run input manifest shape is invalid` during listing
 and recovery. The invalid original manifest contents have not been received.
 
-This change complements PR #864 (Bilancio locking) and PR #866 (Archive JSON
-output encoding). Those changes must be integrated before the combined release.
+This release integrates PR #864 at `5f356f1a2191` (Bilancio locking) and PR #866
+at `4370e78cf321` (Archive JSON output encoding), preserving their source history.
+The combined release versions are Vera 0.1.417, Clara 0.1.304 and Lucia 0.1.128.
 
 ## Behavior
 
@@ -18,6 +19,9 @@ output encoding). Those changes must be integrated before the combined release.
   with the same request identity still fails on the original invalid run.
   Unrelated preparation can proceed only when all immutable run headers remain
   valid, so an unreadable idempotency identity cannot conceal a duplicate.
+- The native Archive list retains its sortable date-string contract for blocked
+  rows. A regression exercises the actual workspace JavaScript and confirms
+  blocked rows have no action buttons while healthy runs remain startable.
 - Financial analysis and sales planning use native Windows directory handles,
   handle-relative file opens, identity and byte checks, exclusive output
   creation, and exact-handle cleanup. Reparse points and multiple hard links
@@ -45,15 +49,17 @@ fingerprints are regenerated from reviewed source.
 All non-source fields of the six affected compiled courses were compared with
 main at `9361a54e9`: content, languages, inputs, exercises, checkpoints and timing
 were identical. Existing editorial judgments and historical artifact reviews
-are preserved. Current native execution remains an independent CI requirement.
+are preserved. Current native execution remains an independent CI requirement. The final
+combined catalogue retains all 55 unchanged skill entrypoints and prior Geneva
+judgments; only its release version binding changes.
 
 ## Evidence and limits
 
 Native Windows CI run `39164041105` passed all 19 file/process boundary tests at
 88.74% coverage and the 16 Archive isolation/readable tests. Its later navigation
 test could not collect because the CI environment lacked a declared dependency;
-the expanded environment is being rerun. Local Archive regressions passed 230
-tests. The Journal–Bank suite passed 472 tests plus an isolated retest of the
+the expanded environment is being rerun. The combined local Archive regressions passed 232
+tests and Bilancio passed 43 tests. The Journal–Bank suite passed 472 tests plus an isolated retest of the
 remaining source-preflight test after main integration changed source receipts.
 These are intermediate results; merge and deployment require all final checks.
 

@@ -81,7 +81,8 @@ __all__ = ["main"]
 
 
 def _emit(payload: dict[str, Any]) -> None:
-    sys.stdout.write(json.dumps(payload, ensure_ascii=False, sort_keys=True) + "\n")
+    # JSON escapes preserve every decoded value on ASCII/legacy Windows pipes.
+    sys.stdout.write(json.dumps(payload, ensure_ascii=True, sort_keys=True) + "\n")
 
 
 def _parser() -> argparse.ArgumentParser:

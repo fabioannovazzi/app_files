@@ -70,7 +70,7 @@
     {
       "path": "modules/financial-analysis/scripts/preparation_contract_kernel.py",
       "repository_path": "plugins/financial-analysis/scripts/preparation_contract_kernel.py",
-      "sha256": "0a96500df5377e455d711db5d8ce1b6d62a29a9f48d5483ba7ef000663d77197"
+      "sha256": "812005d4ed5b536c72e34769dd009b0d995a4c6f7082f98306f0068e1b2bfb01"
     },
     {
       "path": "modules/financial-analysis/scripts/prepare_customer_concentration_case.py",
