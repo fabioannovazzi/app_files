@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/cowork-reporting-e2e/plugins/vera",
-  "version": "0.1.412",
-  "captured_at": "2026-10-18T17:36:11.796963+00:00",
-  "catalogue_fingerprint": "b4358ac6c0f5177f3138135717ffe2613634b26c774bc6b75d4a5c7dff883817",
-  "manifest_sha256": "53fa3ce95b1520d7016b43cc12b7162b381068149eb788375f15863b0b08da09",
+  "root": "/private/tmp/cowork-reporting-link/plugins/vera",
+  "version": "0.1.415",
+  "captured_at": "2026-10-18T19:58:07.515204+00:00",
+  "catalogue_fingerprint": "611b79da288307999c8c9a58eac82b6662e4cfcba80151a309494377a2b92bb9",
+  "manifest_sha256": "ec601f419c6fa45255818402d774b4820b042d0b686d1e3cd886b4b1c6b094d0",
   "entries": [
     {
       "function_id": "adeguati-assetti",

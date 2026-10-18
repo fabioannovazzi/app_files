@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "b4358ac6c0f5177f3138135717ffe2613634b26c774bc6b75d4a5c7dff883817",
+  "catalogue_fingerprint": "611b79da288307999c8c9a58eac82b6662e4cfcba80151a309494377a2b92bb9",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -1954,5 +1954,11 @@
     "version": "0.1.412",
     "date": "2026-10-18",
     "scope": "Refresh unchanged 55-function inventory for shared reporting instructions and release version. No change to Geneva jurisdiction judgments or professional methods; no additional localization acceptance claimed."
+  },
+  "cowork_run_host_link_release_binding": {
+    "version": "0.1.415",
+    "date": "2026-10-18",
+    "previous_catalogue_fingerprint": "b4358ac6c0f5177f3138135717ffe2613634b26c774bc6b75d4a5c7dff883817",
+    "scope": "Manifest version binding only: all 55 skill entrypoint bytes and function IDs remain identical to 0.1.412. Existing Geneva dispositions and unresolved limitations are preserved. The per-run native reporting proof adds no jurisdiction qualification or professional acceptance."
   }
 }
