@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "quesito-legale-fiscale",
-  "course_sha256": "7402cb563f4abee1ce8744350ed22a073545d6b2d8008aba79a9861877adb991",
+  "course_sha256": "346c8b65a3385e6a5042fa6a74384d44d67edf0e84c4b87ae4fb5b1dc429be9d",
   "reviewer": "Codex /root - Deal Redux source compatibility review",
   "reviewed_at": "2026-10-14T08:00:57.892378+00:00",
   "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
@@ -628,5 +628,17 @@
       "junit_sha256": "878b4b011680830bedfa7a06fc63f41246aace9a51694988b872dd7c02346bc0",
       "scope": "Authored regression fixtures through actual local workflow code; not live model inference, learner participation, rendered-output re-review or professional acceptance."
     }
+  },
+  "product_reporting_source_binding_20261018": {
+    "reviewer": "Codex /root - bounded reporting-runtime source compatibility review",
+    "reviewed_at": "2026-10-18T09:29:46.492945+00:00",
+    "baseline_commit": "be77d6749bb17278358bb22313ff0cd3c380f1dc",
+    "previous_course_sha256": "7402cb563f4abee1ce8744350ed22a073545d6b2d8008aba79a9861877adb991",
+    "current_course_sha256": "346c8b65a3385e6a5042fa6a74384d44d67edf0e84c4b87ae4fb5b1dc429be9d",
+    "authored_content_unchanged": true,
+    "source_review": "docs/releases/2026-10-18-product-reporting-source-review.json",
+    "scope": "All authored lesson fields, locales, fictional inputs, checkpoints and execution definitions are unchanged. Source bindings incorporate shared product-bound reporting, verified helper execution and primary-task reporting instructions. Tutorials remain excluded from ordinary task reporting. Historical editorial and output-artifact judgments are preserved.",
+    "fresh_matching_junit_required": true,
+    "limits": "No new learner, visual, installed-host or professional acceptance is asserted."
   }
 }

@@ -70,7 +70,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "4b9f253d56f6e1e224a22a19ef391246a6763643f6bdc32e5c9939bf3325f5b9",
+  "course_sha256": "6b3eb10654c75e1859e25172bcb710d9bd79c3e6bc0e5685e52d10a39739de29",
   "discovery_source_refresh": {
     "reviewed_by": "Codex /root",
     "reviewed_at": "2026-10-01T11:44:13.108677+00:00",
@@ -608,5 +608,17 @@
     "source_review": "Inspected the exact operational_incidents.py change: workflow_transport now attaches the existing native host proof and observed app to its existing register request when available. Missing native proof leaves delivery available and linkage unknown. Workflow event bytes, helper execution, source files, professional output and incident recovery are unchanged. All authored lesson fields are byte-equivalent as JSON outside the source inventory.",
     "validation": "76 focused usage/receipt tests and 298 incident/native-host regressions passed. Full native lesson CI remains required at the final PR head.",
     "limits": "Retains original editorial and rendered-artifact review scope. This source-binding refresh is not a new professional test, learner acceptance or installed-host UI verification."
+  },
+  "product_reporting_source_binding_20261018": {
+    "reviewer": "Codex /root - bounded reporting-runtime source compatibility review",
+    "reviewed_at": "2026-10-18T09:29:46.492945+00:00",
+    "baseline_commit": "be77d6749bb17278358bb22313ff0cd3c380f1dc",
+    "previous_course_sha256": "4b9f253d56f6e1e224a22a19ef391246a6763643f6bdc32e5c9939bf3325f5b9",
+    "current_course_sha256": "6b3eb10654c75e1859e25172bcb710d9bd79c3e6bc0e5685e52d10a39739de29",
+    "authored_content_unchanged": true,
+    "source_review": "docs/releases/2026-10-18-product-reporting-source-review.json",
+    "scope": "All authored lesson fields, locales, fictional inputs, checkpoints and execution definitions are unchanged. Source bindings incorporate shared product-bound reporting, verified helper execution and primary-task reporting instructions. Tutorials remain excluded from ordinary task reporting. Historical editorial and output-artifact judgments are preserved.",
+    "fresh_matching_junit_required": true,
+    "limits": "No new learner, visual, installed-host or professional acceptance is asserted."
   }
 }

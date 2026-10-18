@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "advisory-deliverable-validator",
-  "course_sha256": "bb35d901f096028929d2ad983c7adfb02c9935c2f8895bd0d5003a1d57faddcb",
+  "course_sha256": "daf1d8e9010affeeee408b23adbee8bce9d3dc86e21631ab58e21a175c9f8df8",
   "reviewer": "Codex: five-language whole-memo lesson and native output review",
   "reviewed_at": "2026-09-14T21:37:39.206080+00:00",
   "review_scope": "Prepared material and native local execution review. Read the five localized lesson outlines and source sets, all ten artifact cards and run-review notes, five full practice review packages and the demo-specific changed passages. Final package/card text matches the inspected run after temporary-path normalization; the final clarified run notes were read separately. Eighty-eight native advisory and validator checks pass, including ten distinct phase/language review exercises. Native voice, window presentation, human timing, learner comprehension and professional approval remain unverified. The authored fictional review interpretations are regression fixtures outside shipped kits. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
@@ -665,5 +665,17 @@
     "scope": "Source fingerprints refreshed for the shared on-demand course-data loader. Full authored course content, locales, timings, attachment hashes and workflow execution contracts are unchanged. Existing editorial judgments and reviewed artifact records are retained; this does not claim new human understanding or professional approval.",
     "native_junit_sha256": "cd30b01112bfed6e8afdb23199c8c258438b7e0c921ee431ca00905923065f79",
     "package_tests": "tests/plugins/test_remote_course_files.py and tests/plugins/test_cowork_teaching.py verify source and remote materialization, exact original input bytes, selected languages, hash failures, size limits, host restrictions, retry and immutable assets."
+  },
+  "product_reporting_source_binding_20261018": {
+    "reviewer": "Codex /root - bounded reporting-runtime source compatibility review",
+    "reviewed_at": "2026-10-18T09:29:46.492945+00:00",
+    "baseline_commit": "be77d6749bb17278358bb22313ff0cd3c380f1dc",
+    "previous_course_sha256": "bb35d901f096028929d2ad983c7adfb02c9935c2f8895bd0d5003a1d57faddcb",
+    "current_course_sha256": "daf1d8e9010affeeee408b23adbee8bce9d3dc86e21631ab58e21a175c9f8df8",
+    "authored_content_unchanged": true,
+    "source_review": "docs/releases/2026-10-18-product-reporting-source-review.json",
+    "scope": "All authored lesson fields, locales, fictional inputs, checkpoints and execution definitions are unchanged. Source bindings incorporate shared product-bound reporting, verified helper execution and primary-task reporting instructions. Tutorials remain excluded from ordinary task reporting. Historical editorial and output-artifact judgments are preserved.",
+    "fresh_matching_junit_required": true,
+    "limits": "No new learner, visual, installed-host or professional acceptance is asserted."
   }
 }

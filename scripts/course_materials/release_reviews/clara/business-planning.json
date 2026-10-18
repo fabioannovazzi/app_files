@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "business-planning",
-  "course_sha256": "735ee68134a38d60532fbff1284f3838099ced580e6a6598ae1a8dcfc13c0839",
+  "course_sha256": "b7fe13436b993a017ee53e8fb861a85594df8658d95a996029cb34c34d889383",
   "reviewer": "Codex /root - Deal Redux source compatibility review",
   "reviewed_at": "2026-10-14T08:00:57.895553+00:00",
   "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
@@ -351,5 +351,17 @@
     "scope": "Source fingerprints refreshed for the shared on-demand course-data loader. Full authored course content, locales, timings, attachment hashes and workflow execution contracts are unchanged. Existing editorial judgments and reviewed artifact records are retained; this does not claim new human understanding or professional approval.",
     "native_junit_sha256": "cd30b01112bfed6e8afdb23199c8c258438b7e0c921ee431ca00905923065f79",
     "package_tests": "tests/plugins/test_remote_course_files.py and tests/plugins/test_cowork_teaching.py verify source and remote materialization, exact original input bytes, selected languages, hash failures, size limits, host restrictions, retry and immutable assets."
+  },
+  "product_reporting_source_binding_20261018": {
+    "reviewer": "Codex /root - bounded reporting-runtime source compatibility review",
+    "reviewed_at": "2026-10-18T09:29:46.492945+00:00",
+    "baseline_commit": "be77d6749bb17278358bb22313ff0cd3c380f1dc",
+    "previous_course_sha256": "735ee68134a38d60532fbff1284f3838099ced580e6a6598ae1a8dcfc13c0839",
+    "current_course_sha256": "b7fe13436b993a017ee53e8fb861a85594df8658d95a996029cb34c34d889383",
+    "authored_content_unchanged": true,
+    "source_review": "docs/releases/2026-10-18-product-reporting-source-review.json",
+    "scope": "All authored lesson fields, locales, fictional inputs, checkpoints and execution definitions are unchanged. Source bindings incorporate shared product-bound reporting, verified helper execution and primary-task reporting instructions. Tutorials remain excluded from ordinary task reporting. Historical editorial and output-artifact judgments are preserved.",
+    "fresh_matching_junit_required": true,
+    "limits": "No new learner, visual, installed-host or professional acceptance is asserted."
   }
 }
