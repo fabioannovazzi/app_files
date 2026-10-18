@@ -1,0 +1,68 @@
+{
+  "schema_version": 3,
+  "workstream": "deep-research",
+  "display_name": "Deep research",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "references",
+    "assets"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "selected-task-evidence",
+        "purpose": "Carry out deep-research using the selected evidence and user instructions",
+        "content": "Complete accepted brief, answer contract, selected case evidence, retrieved authorities, research cycles, draft conclusions, adverse evidence and reviews may enter the current host model context. Local validators check structure and evidence references, not legal correctness. Public-source access uses the authorized research question and necessary facts; source captures remain in the chosen work folder.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "selected-public-legal-research",
+      "kind": "public_research",
+      "destination": "Public legal sources through the selected host research tools",
+      "purpose": "Verify authorities needed for the selected question",
+      "content": "Issue terms and necessary authorized case facts in selected research queries. No credentials or automatic upload of the complete private file.",
+      "optional": true,
+      "requires_confirmation": false,
+      "controls": [
+        "Use the current legal-question method; do not include credentials or attach private case files. Retain actual sources and access limits."
+      ],
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork",
+        "openai-chatgpt",
+        "google-antigravity"
+      ]
+    }
+  ],
+  "security_controls": [],
+  "review": {
+    "basis": "external_boundary_review_of_workflow_source",
+    "reviewed_at": "2026-10-18",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "6788bb5d0215ffb5b1caaa334f7647e49c3b4468ef58372e449ec9d6e44a4336"
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ],
+  "public_explanations": {}
+}

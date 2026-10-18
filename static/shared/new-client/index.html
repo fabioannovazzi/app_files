@@ -254,22 +254,7 @@
       </div>
     </section>
 
-    <section class="function-model-data" id="model-data" data-model-data-workflow="new-client" data-model-data-status="relevant" aria-labelledby="new-client-model-data-title">
-      <div class="function-model-data__head">
-        <div class="function-model-data__heading">
-          <p class="function-model-data__label" data-i18n="model.label">Trattamento dei dati</p>
-          <h2 id="new-client-model-data-title" data-i18n="model.title">Quali dati arrivano al modello</h2>
-        </div>
-        <p class="function-model-data__copy" data-i18n="model.copy">Per preparare il fascicolo, il modello può leggere dati reali del cliente. Non sono anonimizzati automaticamente.</p>
-      </div>
-      <div class="document-lines">
-        <article class="document-line"><h3 data-i18n="model.local.title">Elaborazione locale dell’intera cartella</h3><p data-i18n="model.local.copy">Il codice inventaria tutti i file entro i limiti del processo, estrae testo e campi leggibili, calcola hash, segnala duplicati e controlla formalmente le fatture XML. Questi passaggi non eliminano dalla cartella nomi o identificativi.</p></article>
-        <article class="document-line"><h3 data-i18n="model.files.title">Documenti e dati fiscali</h3><p data-i18n="model.files.copy">Il contesto predefinito del modello usa model_handoff.json e tutte le pagine elencate: una riga di metadati per ogni file, anteprime fino a 600 caratteri solo per i file segnalati e ogni campo fiscale mappato con valore e citazione fino a 600 caratteri. Le bozze complete non sono incluse nel contesto iniziale. Quando applichi una sostituzione del testo dell’email approvata in revisione, il modello riceve anche l’intera email rivista, inclusi eventuali nomi e identificativi, per verificare il risultato salvato. Il modello può leggere un estratto o file locale esatto quando viene selezionato o serve a sostenere il giudizio professionale.</p></article>
-        <article class="document-line"><h3 data-i18n="model.relationship.title">Identità e rapporto professionale</h3><p data-i18n="model.relationship.copy">Possono entrare nel modello nome e riferimenti del cliente, codice fiscale e partita IVA, dati dei documenti di identità, rappresentanti e titolari effettivi, prestazioni e condizioni economiche, decisioni privacy, esiti delle verifiche, fattori e motivazioni AML, fonti, lacune, scadenze e decisioni di revisione.</p></article>
-        <article class="document-line"><h3 data-i18n="model.runtime.title">Indice completo senza campionamento</h3><p data-i18n="model.runtime.copy">Quando l’handoff è disponibile, il modello usa lo stesso indice e tutte le sue pagine, ordinate in modo deterministico e senza campionamento. Ogni pagina è limitata a 2.500 elementi e 1.500.000 byte. Il payload più ampio resta il contratto locale della revisione MCP; i file collegati o locali vengono aperti su richiesta. Non viene usato un server Mparanza separato.</p></article>
-        <article class="document-line"><h3 data-i18n="model.identifiers.title">Minimizzazione per fase, non anonimizzazione</h3><p data-i18n="model.note">La bozza email riceve solo richieste approvate o integrate in revisione e il riferimento generico CLIENT-001. La sintesi XML riceve anomalie e gruppi duplicati opachi, senza nomi delle parti, codici fiscali del cliente o chiavi duplicate originali. Non è anonimizzazione generale: valori fiscali, nomi file e altri identificativi restano negli artefatti locali esatti e possono entrare nel modello quando servono al lavoro professionale. Conservazione, cancellazione e uso per l’addestramento dipendono dai controlli dell’account o workspace scelto dallo studio.</p></article>
-      </div>
-    </section>
+    <section id="model-data" class="function-model-data" data-model-data-status="placeholder" aria-live="polite"><h2 class="function-model-data__title">Quali dati arrivano al modello</h2><div class="function-model-data__body"></div></section>
 
   </main>
 

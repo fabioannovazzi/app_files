@@ -167,5 +167,73 @@
       "control": "Signed current work/revision and receipt identities bind native source opening; stale, foreign, changed or oversized sources are refused. All source roles and conventions must be explicitly complete before the unchanged raw producer runs in the bound outputs/reconciliation directory. Private drafts use owner-bound compare-and-set and never restore confirmation. A durable unresolved intent requires recovery; identical completed requests replay their retained result. The public assurance validator checks the complete output and preserves failed gates. Declared reviewer labels are not authenticated identities; preparation does not approve the reconciliation or complete Archive."
     }
   ],
-  "workstream": "open-item-reconciliation"
+  "workstream": "open-item-reconciliation",
+  "public_explanations": {
+    "riconciliazione-partite": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Il modello comprende la struttura",
+          "All'inizio, il modello legge un numero limitato di righe per riconoscere i campi e comprenderne il significato.",
+          "Il codice elabora localmente l'intero perimetro",
+          "Una volta confermati i campi e il perimetro, il codice elabora tutti i dati compresi nel lavoro secondo regole dichiarate e ripetibili.",
+          "Il modello riceve un indice dei casi da rivedere",
+          "L'indice usa riferimenti opachi ai casi e mostra solo il tipo di caso, lo stato e i tipi di segnale del controllo. Non contiene nomi, descrizioni, importi, date, riferimenti o identificativi presenti nelle fonti, né percorsi.",
+          "Il modello richiede il contesto di un caso quando serve",
+          "Solo per i casi selezionati arrivano i campi mappati e valorizzati utili alla revisione. Campi vuoti, colonne non mappate, percorsi e identificativi tecnici restano fuori; gli identificativi professionali esatti arrivano solo quando sono necessari al confronto.",
+          "I dati professionali non vengono anonimizzati né pseudonimizzati automaticamente. Il contesto di un caso selezionato può contenere nomi, descrizioni, importi, date e riferimenti reali quando servono alla revisione professionale."
+        ],
+        "en": [
+          "The model understands the structure",
+          "At the start, the model reads a limited number of rows to identify the fields and understand what they mean.",
+          "The code processes the full scope locally",
+          "Once the fields and scope are confirmed, the code processes all data included in the work using declared, repeatable rules.",
+          "The model receives an index of cases to review",
+          "The index uses opaque case references and shows only the case type, status, and control signal types. It contains no names, descriptions, amounts, dates, source references or identifiers, or paths.",
+          "The model requests a case's context when needed",
+          "Only selected cases supply the mapped, populated fields useful to the review. Empty fields, unmapped columns, paths, and technical identifiers stay out; exact professional identifiers arrive only when the comparison requires them.",
+          "Professional data is not automatically anonymized or pseudonymized. Selected case context may contain real names, descriptions, amounts, dates, and references when professional review requires them."
+        ],
+        "fr": [
+          "Le modèle comprend la structure",
+          "Au début, le modèle lit un nombre limité de lignes pour reconnaître les champs et en comprendre la signification.",
+          "Le code traite localement l'ensemble du périmètre",
+          "Une fois les champs et le périmètre confirmés, le code traite toutes les données incluses dans le travail selon des règles déclarées et reproductibles.",
+          "Le modèle reçoit un index des cas à examiner",
+          "L'index utilise des références de cas opaques et indique uniquement le type de cas, son statut et les types de signaux du contrôle. Il ne contient ni noms, descriptions, montants, dates, références ou identifiants provenant des sources, ni chemins.",
+          "Le modèle demande le contexte d'un cas lorsque nécessaire",
+          "Seuls les cas sélectionnés transmettent les champs mappés et renseignés utiles à la revue. Les champs vides, colonnes non mappées, chemins et identifiants techniques restent exclus ; les identifiants professionnels exacts ne sont transmis que lorsque la comparaison l'exige.",
+          "Les données professionnelles ne sont pas automatiquement anonymisées ou pseudonymisées. Le contexte d'un cas sélectionné peut contenir des noms, descriptions, montants, dates et références réels lorsque la revue professionnelle l'exige."
+        ],
+        "de": [
+          "Das Modell versteht die Struktur",
+          "Zu Beginn liest das Modell eine begrenzte Anzahl von Zeilen, um die Felder zu erkennen und ihre Bedeutung zu verstehen.",
+          "Der Code verarbeitet den gesamten Umfang lokal",
+          "Sobald Felder und Umfang bestätigt sind, verarbeitet der Code alle zum Auftrag gehörenden Daten nach offengelegten, wiederholbaren Regeln.",
+          "Das Modell erhält einen Index der zu prüfenden Fälle",
+          "Der Index verwendet undurchsichtige Fallreferenzen und zeigt nur Falltyp, Status und Arten von Prüfsignalen. Er enthält keine Namen, Beschreibungen, Beträge, Daten, Quellreferenzen oder Quellkennungen und keine Pfade.",
+          "Das Modell fordert bei Bedarf den Kontext eines Falls an",
+          "Nur für ausgewählte Fälle werden die gemappten, befüllten und für die Prüfung nützlichen Felder übermittelt. Leere Felder, nicht gemappte Spalten, Pfade und technische Kennungen bleiben ausgeschlossen; exakte fachliche Kennungen werden nur übermittelt, wenn der Vergleich sie erfordert.",
+          "Professionelle Daten werden nicht automatisch anonymisiert oder pseudonymisiert. Der Kontext eines ausgewählten Falls kann echte Namen, Beschreibungen, Beträge, Daten und Referenzen enthalten, wenn die fachliche Prüfung sie benötigt."
+        ],
+        "es": [
+          "El modelo comprende la estructura",
+          "Al principio, el modelo lee un número limitado de filas para reconocer los campos y comprender su significado.",
+          "El código procesa localmente todo el alcance",
+          "Una vez confirmados los campos y el alcance, el código procesa todos los datos incluidos en el trabajo mediante reglas declaradas y repetibles.",
+          "El modelo recibe un índice de los casos que deben revisarse",
+          "El índice utiliza referencias opacas a los casos y muestra solo el tipo de caso, el estado y los tipos de señales del control. No contiene nombres, descripciones, importes, fechas, referencias o identificadores presentes en las fuentes ni rutas.",
+          "El modelo solicita el contexto de un caso cuando lo necesita",
+          "Solo los casos seleccionados aportan los campos mapeados y cumplimentados útiles para la revisión. Quedan fuera los campos vacíos, las columnas no mapeadas, las rutas y los identificadores técnicos; los identificadores profesionales exactos solo se incluyen cuando la comparación los exige.",
+          "Los datos profesionales no se anonimizan ni se seudonimizan automáticamente. El contexto de un caso seleccionado puede contener nombres, descripciones, importes, fechas y referencias reales cuando la revisión profesional los necesita."
+        ]
+      }
+    }
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ]
 }

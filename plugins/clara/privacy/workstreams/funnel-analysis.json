@@ -1,0 +1,48 @@
+{
+  "schema_version": 3,
+  "workstream": "funnel-analysis",
+  "display_name": "Funnel analysis",
+  "role": "internal_engine",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "assets"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "selected-task-evidence",
+        "purpose": "Carry out funnel-analysis using the selected evidence and user instructions",
+        "content": "Selected stage columns and ordered stage definition, item or cohort identities, counts and conversion values, calculated funnel and source tables, diagnostics and interpretation. Local numerical/rendering code makes no separate model call. Reading original data or outputs adds those actual values to host context; no automatic anonymization is applied. Any separately requested publication uses the parent reporting route.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [],
+  "security_controls": [],
+  "review": {
+    "basis": "external_boundary_review_of_workflow_source",
+    "reviewed_at": "2026-10-18",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "ea0aba4de721fd64f4f274fb68528e38506aec5f4c8b4941c2a1913701fd5aa0"
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ],
+  "public_explanations": {}
+}

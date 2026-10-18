@@ -1,0 +1,108 @@
+{
+  "schema_version": 3,
+  "workstream": "recupero-crediti",
+  "display_name": "Recupero crediti",
+  "role": "workflow",
+  "governed_paths": [
+    "skills/recupero-crediti",
+    "scripts/legal_citations.py",
+    "scripts/legal_citations.schema.json",
+    "scripts/legal_citations_labels.json",
+    "scripts/legal_documents.py",
+    "scripts/legal_documents_labels.json",
+    "scripts/legal_documents_review.schema.json",
+    "scripts/legal_docx.py",
+    "scripts/legal_matter.py",
+    "scripts/legal_matter.schema.json",
+    "scripts/legal_matter_labels.json",
+    "scripts/legal_negotiation.py",
+    "scripts/legal_negotiation.schema.json",
+    "scripts/legal_negotiation_labels.json",
+    "scripts/legal_playbook.py",
+    "scripts/legal_playbook.schema.json",
+    "scripts/legal_playbook_labels.json",
+    "scripts/legal_proofreading.py",
+    "scripts/legal_proofreading.schema.json",
+    "scripts/legal_proofreading_labels.json",
+    "scripts/legal_word_bridge.py",
+    "skills/revisione-contratti/references",
+    "skills/lucia/references/model-data-report-contract.md"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "selected-task-evidence",
+        "purpose": "Carry out recupero-crediti using the selected evidence and user instructions",
+        "content": "The model may read selected invoices, debtor information, account details present in documents, amounts, payments, certified correspondence and evidence, plus formulas and drafts. New helpers keep the working file locally and do not send demands or documents to collection services. Host research on law or rates uses general references without debtor information.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "selected-public-legal-research",
+      "kind": "public_research",
+      "destination": "Public legal sources through the selected host research tools",
+      "purpose": "Verify authorities needed for the selected question",
+      "content": "General legal references, provision identifiers and questions without client documents or identifying case facts.",
+      "optional": true,
+      "requires_confirmation": false,
+      "controls": [
+        "Use the current legal-question method; do not include credentials or attach private case files. Retain actual sources and access limits."
+      ],
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork",
+        "openai-chatgpt",
+        "google-antigravity"
+      ]
+    }
+  ],
+  "security_controls": [],
+  "review": {
+    "basis": "external_boundary_review_of_workflow_source",
+    "reviewed_at": "2026-10-18",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "422023fa41d952d9ba64d7656479801f10df61f0265b32787a45eb9cec4316d8"
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ],
+  "public_explanations": {
+    "recupero-crediti": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Il modello può leggere fatture, dati del debitore, coordinate presenti nei documenti, importi, pagamenti, PEC e prove selezionate, oltre a formule e bozze. I nuovi helper conservano il fascicolo di lavoro localmente e non inviano solleciti o documenti a servizi di recupero. Eventuali ricerche dell’host su norme e tassi usano riferimenti generali senza dati del debitore."
+        ],
+        "en": [
+          "The model may read selected invoices, debtor information, account details present in documents, amounts, payments, certified correspondence and evidence, plus formulas and drafts. New helpers keep the working file locally and do not send demands or documents to collection services. Host research on law or rates uses general references without debtor information."
+        ],
+        "fr": [
+          "Le modèle peut lire factures, données du débiteur, coordonnées présentes, montants, paiements, correspondance certifiée et preuves sélectionnées, ainsi que formules et projets. Les nouveaux outils conservent le travail localement sans envoyer de relances ou pièces à des services de recouvrement. Les recherches sur droit ou taux utilisent des références générales sans données du débiteur."
+        ],
+        "de": [
+          "Das Modell kann gewählte Rechnungen, Schuldnerdaten, enthaltene Bankverbindungen, Beträge, Zahlungen, zertifizierte Korrespondenz und Nachweise sowie Formeln und Entwürfe lesen. Neue Helfer halten die Arbeitsakte lokal und versenden keine Mahnungen oder Dokumente an Inkassodienste. Host-Recherchen zu Recht oder Zinssätzen nutzen allgemeine Fundstellen ohne Schuldnerdaten."
+        ],
+        "es": [
+          "El modelo puede leer facturas, datos del deudor, cuentas presentes en documentos, importes, pagos, correspondencia certificada y pruebas seleccionadas, además de fórmulas y borradores. Los nuevos ayudantes guardan el trabajo localmente sin enviar reclamaciones ni documentos a servicios de cobro. La investigación del anfitrión sobre normas o tipos usa referencias generales sin datos del deudor."
+        ]
+      }
+    }
+  }
+}

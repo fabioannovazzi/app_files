@@ -1,0 +1,89 @@
+{
+  "schema_version": 3,
+  "workstream": "metodo-studio",
+  "display_name": "Metodo studio",
+  "role": "workflow",
+  "governed_paths": [
+    "skills/metodo-studio",
+    "scripts/legal_citations.py",
+    "scripts/legal_citations.schema.json",
+    "scripts/legal_citations_labels.json",
+    "scripts/legal_documents.py",
+    "scripts/legal_documents_labels.json",
+    "scripts/legal_documents_review.schema.json",
+    "scripts/legal_docx.py",
+    "scripts/legal_matter.py",
+    "scripts/legal_matter.schema.json",
+    "scripts/legal_matter_labels.json",
+    "scripts/legal_negotiation.py",
+    "scripts/legal_negotiation.schema.json",
+    "scripts/legal_negotiation_labels.json",
+    "scripts/legal_playbook.py",
+    "scripts/legal_playbook.schema.json",
+    "scripts/legal_playbook_labels.json",
+    "scripts/legal_proofreading.py",
+    "scripts/legal_proofreading.schema.json",
+    "scripts/legal_proofreading_labels.json",
+    "scripts/legal_word_bridge.py",
+    "skills/revisione-contratti/references",
+    "skills/lucia/references/model-data-report-contract.md"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "selected-task-evidence",
+        "purpose": "Carry out metodo-studio using the selected evidence and user instructions",
+        "content": "Editing the HTML form happens in the local browser; the editor does not transmit its content. When an exported file is selected for a matter, the model reads its questions, preferences and instructions alongside selected documents and lawyer answers. Lucia keeps the configuration snapshot and question record in the work folder. It does not synchronize instructions with Mike or other firms.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [],
+  "security_controls": [],
+  "review": {
+    "basis": "external_boundary_review_of_workflow_source",
+    "reviewed_at": "2026-10-18",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "794ecdca6ff8a6565787e658cc7fdeba4a7d58ed0a8927e9f93d96354072da64"
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ],
+  "public_explanations": {
+    "metodo-studio": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "La modifica del modulo HTML avviene nel browser locale: l’editor non trasmette il contenuto. Quando il file esportato viene scelto per una pratica, il modello legge domande, preferenze e istruzioni insieme ai documenti selezionati e alle risposte dell’avvocato. Lucia conserva una copia della configurazione e il registro delle domande nella cartella del lavoro. Non sincronizza le istruzioni con Mike o altri studi."
+        ],
+        "en": [
+          "Editing the HTML form happens in the local browser; the editor does not transmit its content. When an exported file is selected for a matter, the model reads its questions, preferences and instructions alongside selected documents and lawyer answers. Lucia keeps the configuration snapshot and question record in the work folder. It does not synchronize instructions with Mike or other firms."
+        ],
+        "fr": [
+          "Le formulaire HTML se modifie dans le navigateur local ; l’éditeur ne transmet pas son contenu. Quand le fichier exporté est choisi pour un dossier, le modèle lit questions, préférences et instructions avec les documents sélectionnés et les réponses de l’avocat. Lucia conserve la configuration et le registre des questions dans le dossier de travail, sans synchronisation avec Mike ou d’autres cabinets."
+        ],
+        "de": [
+          "Das HTML-Formular wird im lokalen Browser bearbeitet; der Editor überträgt keine Inhalte. Wird die exportierte Datei für einen Vorgang ausgewählt, liest das Modell Fragen, Präferenzen und Vorgaben zusammen mit gewählten Dokumenten und anwaltlichen Antworten. Lucia speichert Konfigurationskopie und Fragenprotokoll im Arbeitsordner, ohne Synchronisierung mit Mike oder anderen Kanzleien."
+        ],
+        "es": [
+          "El formulario HTML se edita en el navegador local; el editor no transmite su contenido. Al seleccionar el archivo exportado para un asunto, el modelo lee preguntas, preferencias e instrucciones junto con los documentos elegidos y respuestas del abogado. Lucia conserva configuración y registro de preguntas en la carpeta de trabajo, sin sincronizarlos con Mike u otros despachos."
+        ]
+      }
+    }
+  }
+}

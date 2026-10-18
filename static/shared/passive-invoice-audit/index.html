@@ -151,15 +151,7 @@
       </div>
     </section>
 
-    <section class="function-model-data" id="model-data" data-model-data-workflow="passive-invoice-audit" data-model-data-status="relevant">
-      <div class="function-model-data__head">
-        <div class="function-model-data__heading">
-          <p class="function-model-data__label" data-i18n="data.index">03 · Confine dati</p>
-          <h2 data-i18n="data.title">Quali dati arrivano al modello</h2>
-        </div>
-        <p class="function-model-data__copy" data-i18n="data.copy">Il modello selezionato (GPT-5.6 Luna per impostazione predefinita) riceve attraverso Codex soltanto i pacchetti compatti delle fatture abbinate: identificativo e riferimento fonte, fornitore, data e numero, righe e valori, riepiloghi IVA, causali e riferimenti a documenti collegati entro limiti dichiarati, ritenute e bollo, conti e descrizioni effettivamente registrati, esiti deterministici e al massimo cinque precedenti revisionati e collegati esplicitamente. Gli XML grezzi, le istruzioni di pagamento e l’IBAN, l’intera prima nota, le credenziali, le colonne non mappate e i file estranei non entrano nel prompt del worker. I sorgenti restano in sola lettura; non esiste una API separata né una scrittura nel gestionale. Un modello diverso richiede una decisione di selezione revisionata; restano gli stessi limiti del pacchetto e il confine Codex. In Cowork gli stessi pacchetti e lo schema sono letti dal subagente Haiku configurato, nel normale ambiente Claude. Il modello principale può leggere campioni per la mappatura, riepiloghi e prove di esecuzione. Per Ginevra può anche leggere le fatture originali selezionate per preparare l’estrazione revisionata. Il worker riceve riferimenti e hash nel pacchetto compatto, non i documenti originali. Il registro host lega richiesta e risposta ma non certifica l’identità del modello. Senza risposta la revisione resta in attesa; la selezione alternativa Codex non si applica a Cowork.</p>
-      </div>
-    </section>
+    <section id="model-data" class="function-model-data" data-model-data-status="placeholder" aria-live="polite"><h2 class="function-model-data__title">Quali dati arrivano al modello</h2><div class="function-model-data__body"></div></section>
   </main>
   <footer><span>Vera / Mparanza</span><span data-i18n="footer.note">Revisione professionale obbligatoria</span></footer>
   <script>

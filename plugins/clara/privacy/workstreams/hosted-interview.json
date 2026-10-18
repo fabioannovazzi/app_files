@@ -1,0 +1,115 @@
+{
+  "schema_version": 3,
+  "workstream": "hosted-interview",
+  "display_name": "Hosted Interview",
+  "role": "workflow",
+  "governed_paths": [
+    "skills/hosted-interview/SKILL.md",
+    "scripts/manage_hosted_interview.py"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "interview-design",
+        "purpose": "Select or prepare an interview that addresses the engagement question",
+        "content": "Campaign definitions; case and project labels; participant name, role, language, introduction and identifier; purpose, background context, hypotheses, topics, questions, red flags, boundaries, and expiry",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      },
+      {
+        "id": "interview-evidence",
+        "purpose": "Retrieve and interpret the completed interview",
+        "content": "Status, completion data, transcript events, participant answers, media metadata, generated review, uncertainties, contradictions, missed opportunities, and follow-up questions",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "send-participant-link",
+      "kind": "send_or_publish",
+      "destination": "A participant or mailing channel selected by the user",
+      "purpose": "Deliver the bearer interview link to its intended participant",
+      "content": "Participant URL and any invitation text",
+      "optional": true,
+      "requires_confirmation": true,
+      "controls": [
+        "Creating a link does not authorize Clara to send it.",
+        "The workflow sends or publishes the link only after the user explicitly asks for that action."
+      ],
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork",
+        "openai-chatgpt",
+        "google-antigravity"
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "private-local-files",
+      "control": "Input briefs and output receipts containing bearer material are restricted to local mode 0600."
+    }
+  ],
+  "service_ids": [
+    "hosted-interviews",
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ],
+  "public_explanations": {
+    "clara-interview": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Il modello intervistatore ospitato riceve il brief e la conversazione; Codex vede il risultato solo quando viene recuperato e aperto.",
+          "Per preparare l'intervista arrivano al servizio campagna o brief, scopo, contesto, ipotesi, temi prioritari, domande, segnali d'allarme, limiti, lingua e durata. Nome partecipante, nome caso, titolo e introduzione sono visibili al partecipante; nome caso e titolo sono esposti anche dallo stato senza login, quindi devono restare non sensibili. Durante la sessione il modello ospitato elabora l'audio del microfono e il contenuto della conversazione per condurre l'intervista adattiva.",
+          "Il bundle recuperato contiene record preparato, eventi della sessione, trascrizione, metadati media e revisione, ma non i byte audio o video grezzi. Quando Codex lo esamina, questi contenuti possono entrare nel suo contesto per distinguere affermazioni, incertezze, contraddizioni e domande successive. Non c'è cattura dello schermo né importazione automatica nel fascicolo Clara."
+        ],
+        "en": [
+          "The hosted interviewer model receives the brief and conversation; Codex sees the result only when it is retrieved and opened.",
+          "To prepare the interview, the service receives the campaign or brief, purpose, background, hypotheses, priority topics, questions, red flags, boundaries, language, and duration. Participant name, case name, title, and introduction are participant-visible; case name and title are also exposed by the no-login status endpoint, so they must remain non-sensitive. During the session, the hosted model processes microphone audio and conversation content to conduct the adaptive interview.",
+          "The retrieved bundle contains the prepared record, session events, transcript, media metadata, and review, but no raw audio or video bytes. When Codex inspects it, those contents may enter its context to distinguish claims, uncertainty, contradictions, and follow-up questions. There is no screen capture and no automatic import into a Clara case."
+        ],
+        "fr": [
+          "Le modèle d'entretien hébergé reçoit le brief et la conversation ; Codex ne voit le résultat que lorsqu'il est récupéré et ouvert.",
+          "Pour préparer l'entretien, le service reçoit campagne ou brief, objectif, contexte, hypothèses, thèmes prioritaires, questions, signaux d'alerte, limites, langue et durée. Nom du participant, nom du cas, titre et introduction sont visibles par le participant ; le nom du cas et le titre sont aussi exposés par l'état sans connexion et doivent donc rester non sensibles. Pendant la session, le modèle hébergé traite l'audio du microphone et le contenu de la conversation pour conduire l'entretien adaptatif.",
+          "Le bundle récupéré contient enregistrement préparé, événements de session, transcription, métadonnées média et revue, mais aucun octet audio ou vidéo brut. Lorsque Codex l'examine, ces contenus peuvent entrer dans son contexte afin de distinguer affirmations, incertitudes, contradictions et questions de suivi. Il n'y a ni capture d'écran ni import automatique dans un dossier Clara."
+        ],
+        "de": [
+          "Das gehostete Interviewmodell erhält Briefing und Gespräch; Codex sieht das Ergebnis erst, wenn es abgerufen und geöffnet wird.",
+          "Zur Vorbereitung erhält der Dienst Kampagne oder Briefing, Zweck, Hintergrund, Hypothesen, Schwerpunktthemen, Fragen, Warnsignale, Grenzen, Sprache und Dauer. Teilnehmername, Fallname, Titel und Einführung sind für den Teilnehmer sichtbar; Fallname und Titel erscheinen auch im Status ohne Anmeldung und müssen daher nicht sensibel sein. Während der Sitzung verarbeitet das gehostete Modell Mikrofon-Audio und Gesprächsinhalt für das adaptive Interview.",
+          "Das abgerufene Bundle enthält vorbereiteten Datensatz, Sitzungsereignisse, Transkript, Medienmetadaten und Prüfung, jedoch keine rohen Audio- oder Videobytes. Wenn Codex es prüft, können diese Inhalte zur Einordnung von Aussagen, Unsicherheiten, Widersprüchen und Folgefragen in seinen Kontext gelangen. Es gibt weder Bildschirmaufzeichnung noch automatischen Import in eine Clara-Akte."
+        ],
+        "es": [
+          "El modelo entrevistador alojado recibe el brief y la conversación; Codex solo ve el resultado cuando se recupera y se abre.",
+          "Para preparar la entrevista, el servicio recibe campaña o brief, finalidad, contexto, hipótesis, temas prioritarios, preguntas, señales de alerta, límites, idioma y duración. Nombre del participante, nombre del caso, título e introducción son visibles para el participante; el nombre del caso y el título también aparecen en el estado sin inicio de sesión, por lo que deben ser no sensibles. Durante la sesión, el modelo alojado procesa el audio del micrófono y el contenido de la conversación para realizar la entrevista adaptativa.",
+          "El paquete recuperado contiene el registro preparado, eventos de sesión, transcripción, metadatos multimedia y revisión, pero no bytes de audio o vídeo sin tratar. Cuando Codex lo examina, esos contenidos pueden entrar en su contexto para distinguir afirmaciones, incertidumbres, contradicciones y preguntas de seguimiento. No hay captura de pantalla ni importación automática en un expediente Clara."
+        ]
+      }
+    }
+  },
+  "review": {
+    "reviewed_at": "2026-07-22",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "5d55e8af5bf51e19099af08d1d71c99d9661fbd09a522923c1bde26a7220fc87"
+  }
+}

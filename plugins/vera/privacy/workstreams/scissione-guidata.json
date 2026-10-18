@@ -150,5 +150,33 @@
       "control": "Signed actor/tenant/client/engagement/running-run source authorization and recoverable private literal-question CAS bind all selected bytes, native/public implementation and exact current case scope. Model proposals must preserve every chosen ordinary source in case evidence and may use only a selected sealed same-engagement Scissione predecessor in a fresh run. Initial preparation and correction replay the unchanged public producer without new approval fields. Complete private case and memo precede explicit signed conservation; retain original execution request and every immutable public artifact, check the resulting current pointer and preserve prior versions. Existing approvals survive or invalidate solely through the producer. Exact successful retries reopen only their own outcome; later case changes require a fresh mandate. Pending, orphaned, altered or unreceipted intents block authoring, record review and all-output closure. Current legal applicability/source qualification remain model/professional work; no signature, filing, source classifier, worker or Archive completion."
     }
   ],
-  "workstream": "scissione-guidata"
+  "workstream": "scissione-guidata",
+  "public_explanations": {
+    "scissione-guidata": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Codex o Cowork può leggere i documenti selezionati, anche integralmente quando necessario, e i dati del fascicolo: società, soci, contratti, passività, valori, fonti e decisioni. Gli script verificano riferimenti, versioni e calcoli localmente, senza chiamare servizi esterni. Le ricerche legali seguono il percorso dedicato di Vera con quesiti generici privi di identificativi cliente. L'analisi del modello usa l'account OpenAI o Anthropic scelto dallo studio: nessuna anonimizzazione automatica o garanzia di trattamento esclusivamente locale. Il report dell'esecuzione registra i dati effettivamente letti."
+        ],
+        "en": [
+          "Codex or Cowork may read the selected documents, including complete files when needed, and case records: companies, owners, contracts, liabilities, values, sources and decisions. Scripts check references, versions and arithmetic locally without external service calls. Legal research follows Vera's dedicated workflow with generic queries without client identifiers. Model analysis uses the firm's selected OpenAI or Anthropic account, with no automatic anonymization or local-only guarantee. The run report records what was actually read."
+        ],
+        "fr": [
+          "Codex ou Cowork peut lire les documents sélectionnés, intégralement si nécessaire, et les données du dossier : sociétés, associés, contrats, passifs, valeurs, sources et décisions. Les scripts vérifient références, versions et calculs localement, sans services externes. La recherche juridique suit le parcours dédié de Vera avec des requêtes génériques sans identifiants clients. L'analyse utilise le compte OpenAI ou Anthropic choisi par le cabinet, sans anonymisation automatique ni garantie de traitement exclusivement local. Le rapport d'exécution indique les données effectivement lues."
+        ],
+        "de": [
+          "Codex oder Cowork kann ausgewählte Dokumente bei Bedarf vollständig und Akteninhalte lesen: Gesellschaften, Gesellschafter, Verträge, Verbindlichkeiten, Werte, Quellen und Entscheidungen. Skripte prüfen Referenzen, Versionen und Berechnungen lokal ohne externe Dienste. Rechtsrecherche erfolgt über Veras eigenen Ablauf mit allgemeinen Fragen ohne Mandantenkennungen. Die Modellanalyse nutzt das gewählte OpenAI- oder Anthropic-Konto; keine automatische Anonymisierung und keine Garantie rein lokaler Verarbeitung. Der Ausführungsbericht dokumentiert tatsächlich gelesene Daten."
+        ],
+        "es": [
+          "Codex o Cowork puede leer documentos seleccionados, completos cuando sea necesario, y datos del expediente: sociedades, socios, contratos, pasivos, valores, fuentes y decisiones. Los scripts comprueban referencias, versiones y cálculos localmente sin servicios externos. La investigación jurídica sigue el recorrido dedicado de Vera con consultas genéricas sin identificadores de clientes. El análisis utiliza la cuenta OpenAI o Anthropic elegida por el despacho, sin anonimización automática ni garantía de tratamiento exclusivamente local. El informe de ejecución registra lo que se leyó."
+        ]
+      }
+    }
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ]
 }

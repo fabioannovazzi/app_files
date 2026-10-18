@@ -368,6 +368,9 @@ VERA_PRODUCT_PAGE_HREF = "../vera/index.html"
 
 
 def load_builder():
+    # Match the CLI entrypoint import path when loading its script directly.
+    if str(ROOT / "scripts") not in sys.path:
+        sys.path.insert(0, str(ROOT / "scripts"))
     spec = importlib.util.spec_from_file_location(
         "build_codex_plugin_zip", BUILD_SCRIPT
     )

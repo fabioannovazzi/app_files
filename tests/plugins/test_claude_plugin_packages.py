@@ -31,6 +31,9 @@ VERA_PRIVACY_VALIDATOR = (
 
 
 def load_builder():
+    # Match the CLI entrypoint import path when loading its script directly.
+    if str(ROOT / "scripts") not in sys.path:
+        sys.path.insert(0, str(ROOT / "scripts"))
     spec = importlib.util.spec_from_file_location(
         "build_claude_plugin_zip",
         BUILD_SCRIPT,
@@ -790,25 +793,27 @@ def test_cowork_privacy_register_keeps_supported_receipts_and_omits_openai_servi
     runtime_service = json.loads(
         vera_entries["privacy/services/managed-python-runtime.json"]
     )
-    assert runtime_service["runtime_profiles"] == ["anthropic-cowork"]
+    assert runtime_service["packaged_for_runtime"] == "anthropic-cowork"
+    assert "anthropic-cowork" in runtime_service["runtime_profiles"]
     assert {boundary["id"] for boundary in runtime_service["external_boundaries"]} == {
         "declared-core-dependency-retrieval",
         "declared-python312-retrieval",
         "runtime-failure-incident-delivery",
     }
     assert all(
-        boundary["runtime_profiles"] == ["anthropic-cowork"]
+        "anthropic-cowork" in boundary["runtime_profiles"]
         for boundary in runtime_service["external_boundaries"]
     )
     receipt_service = json.loads(
         vera_entries["privacy/services/run-receipt-stamping.json"]
     )
-    assert receipt_service["runtime_profiles"] == ["anthropic-cowork"]
-    assert "governed_repository_paths" not in receipt_service
-    assert all(
-        not implementation.startswith("repository:")
-        for control in receipt_service["security_controls"]
-        for implementation in control["implemented_by"]
+    assert receipt_service["packaged_for_runtime"] == "anthropic-cowork"
+    review = receipt_service["repository_source_review"]
+    declaration = json.loads(vera_entries[review["path"]])
+    assert declaration["hosted_runtime_verified"] is False
+    assert (
+        declaration["source_manifest"]["governed_repository_paths"]
+        == receipt_service["governed_repository_paths"]
     )
 
 
@@ -818,7 +823,7 @@ def test_cowork_studio_work_privacy_governs_the_packaged_local_register(
     """Retain the actual local scheduling route and its account boundaries."""
     service = json.loads(vera_entries["privacy/services/studio-work.json"])
 
-    assert service["runtime_profiles"] == ["anthropic-cowork"]
+    assert service["packaged_for_runtime"] == "anthropic-cowork"
     assert "scripts/studio_work.py" in service["governed_paths"]
     assert "scripts/native_studio_work.py" in service["governed_paths"]
     assert "skills/mparanza-organizzazione-lavoro/SKILL.md" in service["governed_paths"]
@@ -828,7 +833,7 @@ def test_cowork_studio_work_privacy_governs_the_packaged_local_register(
     assert {boundary["id"] for boundary in service["external_boundaries"]} == {
         "connected-calendar"
     }
-    assert service["external_boundaries"][0]["runtime_profiles"] == ["anthropic-cowork"]
+    assert "anthropic-cowork" in service["external_boundaries"][0]["runtime_profiles"]
     assert service["external_boundaries"][0]["requires_confirmation"] is True
     assert {control["id"] for control in service["security_controls"]} == {
         "revision-and-retry",

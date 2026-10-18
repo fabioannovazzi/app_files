@@ -150,6 +150,12 @@
       "short_description": "Posizioni negoziali da Word",
       "default_prompt": "Usa $posizioni-negoziali. Da questo Word revisionato prepara le posizioni negoziali con clausole, effetti e conto completo delle modifiche. Lascia vuote le risposte.",
       "instructions": "Lucia sintetizza il Word revisionato in posizioni negoziali con un registro completo delle modifiche. Leggi integralmente `../../skills/posizioni-negoziali/SKILL.md` e il metodo condiviso indicato. Riusa prove e contesto; inventaria il DOCX originale e raggruppa con il modello le modifiche che vanno decise insieme. Non classificare automaticamente formattazione, foro, rinvii o numerazione come cosmetici. Collega ogni unità una sola volta e registra ogni commento; lascia le risposte vuote salvo richiesta dell’utente. Usa gli helper locali per fonti, conteggi, snapshot e verifica della consegna, senza server Mike o API modello separate. Per una questione giuridica sostanziale usa il quesito-legale-fiscale del prodotto. Il Word della tabella usa Documents/Word dell’host. Conserva originali e round precedenti; non accettare revisioni o inviare risultati."
+    },
+    "privacy-surface-review": {
+      "display_name": "Revisione privacy",
+      "short_description": "Verifica dati, servizi, manifest e report",
+      "default_prompt": "Usa $privacy-surface-review per verificare il percorso dei dati di questa modifica al prodotto.",
+      "instructions": "Leggi integralmente la skill privacy-surface-review e i suoi riferimenti condivisi. Ispeziona il codice del prodotto selezionato tra Vera, Clara e Lucia, aggiorna il suo registro privacy e le spiegazioni specifiche delle funzioni, quindi verifica schemi, impronte, pacchetti e report effettivi. Un hash valido non prova correttezza semantica, trasmissione al modello o distribuzione del server."
     }
   }
 }

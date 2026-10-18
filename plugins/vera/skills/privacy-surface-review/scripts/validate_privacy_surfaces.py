@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate Vera external-boundary coverage and source freshness.
+"""Validate product external-boundary coverage and source freshness.
 
 The checks are deterministic because registration, JSON shape, confirmation
 consistency, and byte fingerprints are mechanically verifiable. Purpose-based
@@ -11,10 +11,12 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import logging
 from pathlib import Path
 from typing import Any, Iterable
 
 __all__ = ["main", "validate_privacy_surfaces"]
+LOGGER = logging.getLogger(__name__)
 
 SKIP_DIRS = {".git", ".mypy_cache", ".pytest_cache", ".ruff_cache", "__pycache__"}
 SKIP_SUFFIXES = {".pyc", ".pyo"}
@@ -31,46 +33,105 @@ ACCOUNT_REVIEW_ITEMS = [
     "model_training_data_controls",
     "retention_and_deletion_controls",
 ]
-ACCOUNT_BOUNDARY = {
-    "selected_by": "firm_or_user",
-    "vera_runtime_enforcement": "none",
-    "review_timing": "before_professional_use_and_when_account_or_terms_change",
-    "review_items": ACCOUNT_REVIEW_ITEMS,
-    "per_case_record_required": False,
-}
 EXPECTED_RUNTIME_PROFILES = {
     "openai-codex": {
         "provider": "OpenAI",
         "runtime": "Codex",
         "surfaces": ["codex"],
-        "account_boundary": ACCOUNT_BOUNDARY,
+        "account_boundary": {
+            "selected_by": "firm_or_user",
+            "review_timing": "before_professional_use_and_when_account_or_terms_change",
+            "review_items": [
+                "account_or_workspace_plan",
+                "model_training_data_controls",
+                "retention_and_deletion_controls",
+            ],
+            "per_case_record_required": False,
+            "product_runtime_enforcement": "none",
+        },
         "model_processing": {
             "scope": "ordinary_openai_codex_model_processing",
-            "destination": "OpenAI model processing used by Codex",
-            "account_arrangement": (
-                "existing_openai_codex_account_or_workspace_selected_by_firm_or_user"
-            ),
-            "separate_vera_recipient": False,
+            "destination": "OpenAI model processing used by " "Codex",
+            "account_arrangement": "existing_openai_codex_account_or_workspace_selected_by_firm_or_user",
             "automatic_anonymization": False,
             "local_only": False,
             "local_filtering_or_aggregation": "only_when_useful_for_the_work",
+            "separate_product_recipient": False,
         },
     },
     "anthropic-cowork": {
         "provider": "Anthropic",
         "runtime": "Cowork",
         "surfaces": ["cowork"],
-        "account_boundary": ACCOUNT_BOUNDARY,
+        "account_boundary": {
+            "selected_by": "firm_or_user",
+            "review_timing": "before_professional_use_and_when_account_or_terms_change",
+            "review_items": [
+                "account_or_workspace_plan",
+                "model_training_data_controls",
+                "retention_and_deletion_controls",
+            ],
+            "per_case_record_required": False,
+            "product_runtime_enforcement": "none",
+        },
         "model_processing": {
             "scope": "ordinary_anthropic_cowork_model_processing",
-            "destination": "Anthropic model processing used by Cowork",
-            "account_arrangement": (
-                "existing_anthropic_claude_account_or_workspace_selected_by_firm_or_user"
-            ),
-            "separate_vera_recipient": False,
+            "destination": "Anthropic model processing " "used by Cowork",
+            "account_arrangement": "existing_anthropic_claude_account_or_workspace_selected_by_firm_or_user",
             "automatic_anonymization": False,
             "local_only": False,
             "local_filtering_or_aggregation": "only_when_useful_for_the_work",
+            "separate_product_recipient": False,
+        },
+    },
+    "openai-chatgpt": {
+        "provider": "OpenAI",
+        "runtime": "ChatGPT",
+        "surfaces": ["chatgpt"],
+        "account_boundary": {
+            "selected_by": "firm_or_user",
+            "review_timing": "before_professional_use_and_when_account_or_terms_change",
+            "review_items": [
+                "account_or_workspace_plan",
+                "model_training_data_controls",
+                "retention_and_deletion_controls",
+            ],
+            "per_case_record_required": False,
+            "product_runtime_enforcement": "none",
+        },
+        "model_processing": {
+            "scope": "ordinary_chatgpt_model_processing",
+            "destination": "Model provider selected in " "ChatGPT",
+            "account_arrangement": "existing_chatgpt_account_or_workspace_selected_by_firm_or_user",
+            "automatic_anonymization": False,
+            "local_only": False,
+            "local_filtering_or_aggregation": "only_when_useful_for_the_work",
+            "separate_product_recipient": False,
+        },
+    },
+    "google-antigravity": {
+        "provider": "selected_in_host",
+        "runtime": "Antigravity",
+        "surfaces": ["antigravity"],
+        "account_boundary": {
+            "selected_by": "firm_or_user",
+            "review_timing": "before_professional_use_and_when_account_or_terms_change",
+            "review_items": [
+                "account_or_workspace_plan",
+                "model_training_data_controls",
+                "retention_and_deletion_controls",
+            ],
+            "per_case_record_required": False,
+            "product_runtime_enforcement": "none",
+        },
+        "model_processing": {
+            "scope": "ordinary_antigravity_model_processing",
+            "destination": "Model provider selected " "in Antigravity",
+            "account_arrangement": "existing_antigravity_account_or_workspace_selected_by_firm_or_user",
+            "automatic_anonymization": False,
+            "local_only": False,
+            "local_filtering_or_aggregation": "only_when_useful_for_the_work",
+            "separate_product_recipient": False,
         },
     },
 }
@@ -82,6 +143,16 @@ def _vera_root() -> Path:
 
 
 def _components(vera_root: Path) -> tuple[set[str], dict[str, dict[str, Any]]]:
+    registry = vera_root / "privacy/registry.json"
+    if registry.is_file():
+        entries = json.loads(registry.read_text(encoding="utf-8"))["workstreams"]
+        return set(entries), {
+            name: {
+                "kind": entry["role"],
+                "skill": entry["skills"][0] if entry["skills"] else name,
+            }
+            for name, entry in entries.items()
+        }
     payload = json.loads((vera_root / "components.json").read_text(encoding="utf-8"))
     names = set(payload["plugins"])
     roles = payload.get("workflow_roles", {})
@@ -89,6 +160,9 @@ def _components(vera_root: Path) -> tuple[set[str], dict[str, dict[str, Any]]]:
 
 
 def _shared_services(vera_root: Path) -> set[str]:
+    registry = vera_root / "privacy/registry.json"
+    if registry.is_file():
+        return set(json.loads(registry.read_text(encoding="utf-8"))["services"])
     payload = json.loads((vera_root / "components.json").read_text(encoding="utf-8"))
     return set(payload.get("shared_services", []))
 
@@ -115,8 +189,7 @@ def _runtime_profile_errors(vera_root: Path) -> list[str]:
         errors.append("runtime-profiles: profile ids must be unique")
     if profile_ids != RUNTIME_PROFILE_IDS:
         errors.append(
-            "runtime-profiles: profiles must contain openai-codex and "
-            "anthropic-cowork in that order"
+            "runtime-profiles: catalog must contain the four canonical host profiles in order"
         )
     for index, profile in enumerate(profiles):
         if not isinstance(profile, dict):
@@ -137,25 +210,64 @@ def _runtime_profile_errors(vera_root: Path) -> list[str]:
 
 
 def _component_root(vera_root: Path, workstream: str) -> Path:
+    registry = vera_root / "privacy/registry.json"
+    if registry.is_file():
+        entry = json.loads(registry.read_text(encoding="utf-8"))["workstreams"][
+            workstream
+        ]
+        if entry["source"] == "product":
+            return vera_root
+        workstream = entry["source"]
     packaged = vera_root / "modules" / workstream
     if packaged.is_dir():
         return packaged
+    if (vera_root / "privacy/package-projection.json").is_file():
+        raise FileNotFoundError(f"installed component not found: {workstream}")
     source = vera_root.parent / workstream
     if source.is_dir():
         return source
     raise FileNotFoundError(f"component source not found: {workstream}")
 
 
+def _wrapper(
+    root: Path, workstream: str, roles: dict[str, dict[str, Any]]
+) -> Path | None:
+    """Bind component wrapper bytes; product-root records govern their skills directly."""
+    if _component_root(root, workstream) == root:
+        return None
+    skill = roles.get(workstream, {}).get("skill", workstream)
+    candidate = root / "skills" / skill / "SKILL.md"
+    return candidate if candidate.is_file() else None
+
+
 def _governed_files(component_root: Path, paths: Iterable[str]) -> list[Path]:
     files: set[Path] = set()
+    resolved_root = component_root.resolve()
+
+    def check_contained(path: Path) -> None:
+        if path.is_symlink() or any(
+            parent.is_symlink()
+            for parent in path.parents
+            if parent != component_root and component_root in parent.parents
+        ):
+            raise ValueError(f"governed path must not be a symlink: {path}")
+        try:
+            path.resolve(strict=True).relative_to(resolved_root)
+        except (OSError, ValueError) as exc:
+            raise ValueError(f"governed path escapes source root: {path}") from exc
+
     for relative in paths:
+        if relative != "." and not _review_relative_path(relative):
+            raise ValueError(f"governed path must be contained: {relative}")
         target = component_root / relative
+        check_contained(target)
         if target.is_file():
             files.add(target)
             continue
         if not target.is_dir():
             raise FileNotFoundError(f"governed path not found: {target}")
         for path in target.rglob("*"):
+            check_contained(path)
             if not path.is_file():
                 continue
             rel_parts = path.relative_to(component_root).parts
@@ -327,10 +439,13 @@ def _repository_review_file(
     if (
         (vera_root / "modules").is_symlink()
         or not (vera_root / "modules").is_dir()
-        or not (vera_root / ".codex-plugin/plugin.json").is_file()
+        or not any(
+            (vera_root / name).is_file()
+            for name in (".codex-plugin/plugin.json", ".claude-plugin/plugin.json")
+        )
     ):
         raise ValueError(
-            "repository-source declarations are allowed only in installed Codex packages"
+            "repository-source declarations are allowed only in installed product packages"
         )
     relative = binding["path"]
     if not _review_relative_path(relative):
@@ -378,10 +493,21 @@ def _repository_review_file(
     source = document["source_manifest"]
     if (
         not isinstance(source, dict)
-        or source.get("service_id") != binding["service_id"]
+        or (
+            "workstream-" + source["workstream"]
+            if "workstream" in source
+            else source.get("service_id")
+        )
+        != binding["service_id"]
     ):
         raise ValueError("repository-source review has a foreign source manifest")
-    if _service_manifest_errors(source, service_id=binding["service_id"]):
+    if (
+        _manifest_errors(
+            source, workstream=source["workstream"], expected_role=source["role"]
+        )
+        if "workstream" in source
+        else _service_manifest_errors(source, service_id=binding["service_id"])
+    ):
         raise ValueError("repository-source review has an invalid source manifest")
     if "repository_source_review" in source or not _review_digest(
         source["review"]["source_fingerprint"]
@@ -466,10 +592,27 @@ def _fingerprint(
     repository_review: dict[str, Any] | None = None,
 ) -> str:
     governed_paths = tuple(paths)
-    logical_files = {
-        path.relative_to(component_root).as_posix(): path
-        for path in _governed_files(component_root, governed_paths)
-    }
+    logical_files: dict[str, Path] = {}
+    for relative in governed_paths:
+        parts = Path(relative).parts
+        if (
+            len(parts) >= 2
+            and parts[0] == "modules"
+            and not (component_root / relative).exists()
+            and (component_root / "components.json").is_file()
+        ):
+            components = json.loads((component_root / "components.json").read_text())
+            if parts[1] not in components["plugins"]:
+                raise ValueError(f"unregistered governed component: {parts[1]}")
+            external_root = component_root.parent / parts[1]
+            nested = Path(*parts[2:]).as_posix() if len(parts) > 2 else "."
+            for path in _governed_files(external_root, (nested,)):
+                logical_files[
+                    f"modules/{parts[1]}/{path.relative_to(external_root).as_posix()}"
+                ] = path
+        else:
+            for path in _governed_files(component_root, (relative,)):
+                logical_files[path.relative_to(component_root).as_posix()] = path
     shared_governed_paths = tuple(shared_paths)
     if shared_governed_paths:
         if vera_root is None:
@@ -478,7 +621,7 @@ def _fingerprint(
             component_root.resolve().relative_to((vera_root / "modules").resolve())
             packaged = True
         except ValueError:
-            packaged = False
+            packaged = (vera_root / "privacy/package-projection.json").is_file()
         logical_files.update(
             _shared_governed_files(vera_root, shared_governed_paths, packaged=packaged)
         )
@@ -808,7 +951,7 @@ def _manifest_errors(
         _runtime_profile_reference_errors(
             payload["runtime_profiles"],
             scope=workstream,
-            require_all=True,
+            require_all=False,
         )
     )
     context = payload["model_context"]
@@ -861,6 +1004,9 @@ def _manifest_errors(
     )
     errors.extend(
         _security_control_errors(payload["security_controls"], scope=workstream)
+    )
+    errors.extend(
+        _repository_review_binding_errors(payload, "workstream-" + workstream)
     )
 
     review = payload["review"]
@@ -963,8 +1109,88 @@ def _expected_role(workstream: str, roles: dict[str, dict[str, Any]]) -> str:
     return str(roles.get(workstream, {}).get("kind", "workflow"))
 
 
+def _registration_errors(root: Path) -> list[str]:
+    """Check explicit ownership against actual skills/components, never infer semantics."""
+    path = root / "privacy/registry.json"
+    if not path.is_file():
+        return ["privacy: missing product registry"]
+    try:
+        registry = json.loads(path.read_text(encoding="utf-8"))
+        from jsonschema import Draft202012Validator
+
+        schema = json.loads((root / "privacy/registry.schema.json").read_text())
+        errors = [
+            f"registry: {error.json_path}: {error.message}"
+            for error in Draft202012Validator(schema).iter_errors(registry)
+        ]
+        if errors:
+            return errors
+        metadata = root / ".codex-plugin/plugin.json"
+        if not metadata.is_file():
+            metadata = root / ".claude-plugin/plugin.json"
+        product = json.loads(metadata.read_text())["name"]
+        if registry["product"] != product:
+            errors.append("registry: product does not match installed product")
+        entries = registry["workstreams"]
+        skills = [skill for entry in entries.values() for skill in entry["skills"]]
+        if len(skills) != len(set(skills)):
+            errors.append("registry: a skill has multiple privacy owners")
+        present = {file.parent.name for file in (root / "skills").glob("*/SKILL.md")}
+        registered = set(skills) | set(registry["developer_skills"])
+        for missing in sorted(present - registered):
+            errors.append(f"{missing}: skill has no privacy registration")
+        for extra in sorted(registered - present):
+            errors.append(f"{extra}: registered skill is missing")
+        components = json.loads((root / "components.json").read_text())["plugins"]
+        owned = [
+            component for entry in entries.values() for component in entry["components"]
+        ]
+        if set(owned) != set(components) or len(owned) != len(set(owned)):
+            errors.append(
+                "registry: every embedded component requires exactly one privacy owner"
+            )
+        for name, entry in entries.items():
+            if entry["source"] != "product" and entry["source"] not in components:
+                errors.append(f"{name}: source is not a registered embedded component")
+            if name == "studio-archive" and entry["role"] != "internal_engine":
+                errors.append(
+                    "studio-archive: infrastructure cannot be a professional process"
+                )
+        aliases = [
+            alias for entry in entries.values() for alias in entry["workflow_ids"]
+        ]
+        if len(aliases) != len(set(aliases)):
+            errors.append(
+                "registry: workflow aliases require exactly one privacy owner"
+            )
+        usage = root / "usage/pipelines.json"
+        if usage.is_file():
+            pipelines = json.loads(usage.read_text())["pipelines"]
+            for missing in sorted(set(pipelines) - set(aliases)):
+                errors.append(f"{missing}: primary pipeline has no privacy contract")
+        return errors
+    except (OSError, KeyError, TypeError, ValueError) as exc:
+        return [f"registry: cannot validate registration: {exc}"]
+
+
+def _schema_errors(
+    root: Path, payload: Any, schema_name: str, subject: str
+) -> list[str]:
+    """Enforce the published closed schema, not just selected required fields."""
+    from jsonschema import Draft202012Validator
+
+    schema = json.loads((root / "privacy" / schema_name).read_text())
+    return [
+        f"{subject}: {error.json_path}: {error.message}"
+        for error in Draft202012Validator(schema).iter_errors(payload)
+    ]
+
+
 def validate_privacy_surfaces(vera_root: Path | None = None) -> list[str]:
     root = vera_root or _vera_root()
+    registration_errors = _registration_errors(root)
+    if registration_errors:
+        return registration_errors
     names, roles = _components(root)
     manifest_dir = root / "privacy" / "workstreams"
     manifests = {path.stem: path for path in manifest_dir.glob("*.json")}
@@ -984,19 +1210,37 @@ def validate_privacy_surfaces(vera_root: Path | None = None) -> list[str]:
         manifest_errors = _manifest_errors(
             payload, workstream=workstream, expected_role=role
         )
+        manifest_errors.extend(
+            _schema_errors(root, payload, "privacy-surface.schema.json", workstream)
+        )
+        known_services = _shared_services(root)
+        for service in payload.get("service_ids", []):
+            if service not in known_services:
+                manifest_errors.append(
+                    f"{workstream}: unknown service reference: {service}"
+                )
+        registry = json.loads((root / "privacy/registry.json").read_text())
+        pages = registry["workstreams"][workstream]["public_pages"]
+        explanations = payload.get("public_explanations", {})
+        if isinstance(explanations, dict):
+            if set(explanations) != {page["page_id"] for page in pages}:
+                manifest_errors.append(
+                    f"{workstream}: public explanations must match registered pages"
+                )
+            for page in pages:
+                explanation = explanations.get(page["page_id"], {})
+                if isinstance(explanation, dict) and set(
+                    explanation.get("copy", {})
+                ) != set(page["languages"]):
+                    manifest_errors.append(
+                        f"{workstream}/{page['page_id']}: missing or unregistered public explanation language"
+                    )
         errors.extend(manifest_errors)
         if manifest_errors:
             continue
         try:
             component_root = _component_root(root, workstream)
-            wrapper = (
-                root
-                / "skills"
-                / roles.get(workstream, {}).get("skill", workstream)
-                / "SKILL.md"
-                if role != "internal_engine"
-                else None
-            )
+            wrapper = _wrapper(root, workstream, roles)
             actual = _fingerprint(
                 component_root,
                 payload["governed_paths"],
@@ -1004,6 +1248,7 @@ def validate_privacy_surfaces(vera_root: Path | None = None) -> list[str]:
                 vera_root=root,
                 shared_paths=payload.get("governed_shared_paths", []),
                 repository_paths=payload.get("governed_repository_paths", []),
+                repository_review=payload.get("repository_source_review"),
             )
         except (OSError, ValueError) as exc:
             errors.append(f"{workstream}: cannot fingerprint governed source: {exc}")
@@ -1028,6 +1273,9 @@ def validate_privacy_surfaces(vera_root: Path | None = None) -> list[str]:
             errors.append(f"{service_id}: cannot read manifest: {exc}")
             continue
         manifest_errors = _service_manifest_errors(payload, service_id=service_id)
+        manifest_errors.extend(
+            _schema_errors(root, payload, "service-boundary.schema.json", service_id)
+        )
         errors.extend(manifest_errors)
         if manifest_errors:
             continue
@@ -1063,11 +1311,7 @@ def _refresh(workstream: str, vera_root: Path) -> None:
         component_root = _component_root(vera_root, name)
         _, roles = _components(vera_root)
         role = _expected_role(name, roles)
-        wrapper = (
-            vera_root / "skills" / roles.get(name, {}).get("skill", name) / "SKILL.md"
-            if role != "internal_engine"
-            else None
-        )
+        wrapper = _wrapper(vera_root, name, roles)
         payload["review"]["source_fingerprint"] = _fingerprint(
             component_root,
             payload["governed_paths"],
@@ -1079,7 +1323,7 @@ def _refresh(workstream: str, vera_root: Path) -> None:
         manifest_path.write_text(
             json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
         )
-        print(f"refreshed {name}")
+        LOGGER.info("Refreshed %s", name)
 
 
 def _refresh_service(service_id: str, vera_root: Path) -> None:
@@ -1101,7 +1345,7 @@ def _refresh_service(service_id: str, vera_root: Path) -> None:
             json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
         )
-        print(f"refreshed service {name}")
+        LOGGER.info("Refreshed service %s", name)
 
 
 def main() -> int:
@@ -1126,9 +1370,9 @@ def main() -> int:
     errors = validate_privacy_surfaces(root)
     if errors:
         for error in errors:
-            print(f"ERROR: {error}")
+            LOGGER.error("%s", error)
         return 1
-    print("Vera privacy surfaces are complete and current.")
+    LOGGER.info("Product privacy register is complete and current.")
     return 0
 
 

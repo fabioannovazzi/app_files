@@ -1,0 +1,1568 @@
+{
+  "schema_version": 1,
+  "product": "vera",
+  "developer_skills": [
+    "privacy-surface-review"
+  ],
+  "workstreams": {
+    "scissione-guidata": {
+      "source": "scissione-guidata",
+      "role": "workflow",
+      "skills": [
+        "scissione-guidata"
+      ],
+      "components": [
+        "scissione-guidata"
+      ],
+      "workflow_ids": [
+        "scissione-guidata"
+      ],
+      "public_pages": [
+        {
+          "page_id": "scissione-guidata",
+          "path": "static/shared/scissione-guidata/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "open-item-reconciliation": {
+      "source": "open-item-reconciliation",
+      "role": "workflow",
+      "skills": [
+        "open-item-reconciliation"
+      ],
+      "components": [
+        "open-item-reconciliation"
+      ],
+      "workflow_ids": [
+        "open-item-reconciliation"
+      ],
+      "public_pages": [
+        {
+          "page_id": "riconciliazione-partite",
+          "path": "static/shared/riconciliazione-partite/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "archive-organization": {
+      "source": "archive-organization",
+      "role": "workflow",
+      "skills": [
+        "archive-organization"
+      ],
+      "components": [
+        "archive-organization"
+      ],
+      "workflow_ids": [
+        "archive-organization"
+      ],
+      "public_pages": [
+        {
+          "page_id": "archive-organization",
+          "path": "static/shared/archive-organization/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "client-file-preparation": {
+      "source": "client-file-preparation",
+      "role": "internal_engine",
+      "skills": [],
+      "components": [
+        "client-file-preparation"
+      ],
+      "workflow_ids": [
+        "client-file-preparation"
+      ],
+      "public_pages": []
+    },
+    "new-client": {
+      "source": "new-client",
+      "role": "workflow",
+      "skills": [
+        "new-client"
+      ],
+      "components": [
+        "new-client"
+      ],
+      "workflow_ids": [
+        "new-client"
+      ],
+      "public_pages": [
+        {
+          "page_id": "new-client",
+          "path": "static/shared/new-client/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "aml-review": {
+      "source": "aml-review",
+      "role": "workflow",
+      "skills": [
+        "aml-review"
+      ],
+      "components": [
+        "aml-review"
+      ],
+      "workflow_ids": [
+        "aml-review"
+      ],
+      "public_pages": [
+        {
+          "page_id": "aml-review",
+          "path": "static/shared/aml-review/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "adeguati-assetti": {
+      "source": "adeguati-assetti",
+      "role": "workflow",
+      "skills": [
+        "adeguati-assetti"
+      ],
+      "components": [
+        "adeguati-assetti"
+      ],
+      "workflow_ids": [
+        "adeguati-assetti"
+      ],
+      "public_pages": [
+        {
+          "page_id": "adeguati-assetti",
+          "path": "static/shared/adeguati-assetti/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "journal-sampling": {
+      "source": "journal-sampling",
+      "role": "workflow",
+      "skills": [
+        "journal-sampling"
+      ],
+      "components": [
+        "journal-sampling"
+      ],
+      "workflow_ids": [
+        "journal-sampling"
+      ],
+      "public_pages": [
+        {
+          "page_id": "journal-sampling",
+          "path": "static/shared/journal-sampling/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "check-entries": {
+      "source": "check-entries",
+      "role": "workflow",
+      "skills": [
+        "vouching"
+      ],
+      "components": [
+        "check-entries"
+      ],
+      "workflow_ids": [
+        "check-entries",
+        "vouching"
+      ],
+      "public_pages": [
+        {
+          "page_id": "check-entries",
+          "path": "static/shared/check-entries/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "journal-bank-reconciliation": {
+      "source": "journal-bank-reconciliation",
+      "role": "workflow",
+      "skills": [
+        "journal-bank-reconciliation"
+      ],
+      "components": [
+        "journal-bank-reconciliation"
+      ],
+      "workflow_ids": [
+        "journal-bank-reconciliation"
+      ],
+      "public_pages": [
+        {
+          "page_id": "journal-bank-reconciliation",
+          "path": "static/shared/journal-bank-reconciliation/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "passive-invoice-audit": {
+      "source": "passive-invoice-audit",
+      "role": "workflow",
+      "skills": [
+        "purchase-invoice-review"
+      ],
+      "components": [
+        "passive-invoice-audit"
+      ],
+      "workflow_ids": [
+        "passive-invoice-audit",
+        "purchase-invoice-review"
+      ],
+      "public_pages": [
+        {
+          "page_id": "passive-invoice-audit",
+          "path": "static/shared/passive-invoice-audit/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "invoice-xml": {
+      "source": "invoice-xml",
+      "role": "workflow",
+      "skills": [
+        "invoice-xml"
+      ],
+      "components": [
+        "invoice-xml"
+      ],
+      "workflow_ids": [
+        "invoice-xml"
+      ],
+      "public_pages": [
+        {
+          "page_id": "invoice-xml",
+          "path": "static/shared/invoice-xml/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "sales-plan": {
+      "source": "sales-plan",
+      "role": "workflow",
+      "skills": [
+        "sales-plan"
+      ],
+      "components": [
+        "sales-plan"
+      ],
+      "workflow_ids": [
+        "sales-plan"
+      ],
+      "public_pages": [
+        {
+          "page_id": "sales-plan",
+          "path": "static/shared/sales-plan/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "business-planning": {
+      "source": "business-planning",
+      "role": "workflow",
+      "skills": [
+        "business-planning"
+      ],
+      "components": [
+        "business-planning"
+      ],
+      "workflow_ids": [
+        "business-planning"
+      ],
+      "public_pages": [
+        {
+          "page_id": "business-planning",
+          "path": "static/shared/business-planning/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "business-valuation": {
+      "source": "business-valuation",
+      "role": "workflow",
+      "skills": [
+        "business-valuation"
+      ],
+      "components": [
+        "business-valuation"
+      ],
+      "workflow_ids": [
+        "business-valuation"
+      ],
+      "public_pages": [
+        {
+          "page_id": "business-valuation",
+          "path": "static/shared/business-valuation/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "variance-analysis": {
+      "source": "variance-analysis",
+      "role": "workflow",
+      "skills": [
+        "variance-analysis"
+      ],
+      "components": [
+        "variance-analysis"
+      ],
+      "workflow_ids": [
+        "variance-analysis"
+      ],
+      "public_pages": [
+        {
+          "page_id": "variance-analysis",
+          "path": "static/shared/variance-analysis/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "management-control-pack": {
+      "source": "management-control-pack",
+      "role": "workflow",
+      "skills": [
+        "management-control-pack"
+      ],
+      "components": [
+        "management-control-pack"
+      ],
+      "workflow_ids": [
+        "management-control-pack"
+      ],
+      "public_pages": [
+        {
+          "page_id": "management-control-pack",
+          "path": "static/shared/management-control-pack/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "treasury-forecast": {
+      "source": "treasury-forecast",
+      "role": "workflow",
+      "skills": [
+        "treasury-forecast"
+      ],
+      "components": [
+        "treasury-forecast"
+      ],
+      "workflow_ids": [
+        "treasury-forecast"
+      ],
+      "public_pages": [
+        {
+          "page_id": "treasury-forecast",
+          "path": "static/shared/treasury-forecast/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "centrale-rischi-review": {
+      "source": "centrale-rischi-review",
+      "role": "workflow",
+      "skills": [
+        "centrale-rischi-review"
+      ],
+      "components": [
+        "centrale-rischi-review"
+      ],
+      "workflow_ids": [
+        "centrale-rischi-review"
+      ],
+      "public_pages": [
+        {
+          "page_id": "centrale-rischi-review",
+          "path": "static/shared/centrale-rischi-review/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "financial-analysis": {
+      "source": "financial-analysis",
+      "role": "workflow",
+      "skills": [
+        "financial-analysis"
+      ],
+      "components": [
+        "financial-analysis"
+      ],
+      "workflow_ids": [
+        "financial-analysis"
+      ],
+      "public_pages": [
+        {
+          "page_id": "financial-analysis",
+          "path": "static/shared/financial-analysis/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "report-builder": {
+      "source": "report-builder",
+      "role": "workflow",
+      "skills": [
+        "financial-report-builder"
+      ],
+      "components": [
+        "report-builder"
+      ],
+      "workflow_ids": [
+        "report-builder",
+        "financial-report-builder",
+        "report-enti-locali"
+      ],
+      "public_pages": [
+        {
+          "page_id": "report-builder",
+          "path": "static/shared/report-builder/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        },
+        {
+          "page_id": "report-enti-locali",
+          "path": "static/shared/report-enti-locali/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "concordato-plan-review": {
+      "source": "concordato-plan-review",
+      "role": "workflow",
+      "skills": [
+        "concordato-plan-review"
+      ],
+      "components": [
+        "concordato-plan-review"
+      ],
+      "workflow_ids": [
+        "concordato-plan-review"
+      ],
+      "public_pages": [
+        {
+          "page_id": "concordato-plan-review",
+          "path": "static/shared/concordato-plan-review/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "composizione-negoziata": {
+      "source": "composizione-negoziata",
+      "role": "workflow",
+      "skills": [
+        "composizione-negoziata"
+      ],
+      "components": [
+        "composizione-negoziata"
+      ],
+      "workflow_ids": [
+        "composizione-negoziata"
+      ],
+      "public_pages": [
+        {
+          "page_id": "composizione-negoziata",
+          "path": "static/shared/composizione-negoziata/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "comunicazione-professionale": {
+      "source": "comunicazione-professionale",
+      "role": "workflow",
+      "skills": [
+        "comunicazione-professionale"
+      ],
+      "components": [
+        "comunicazione-professionale"
+      ],
+      "workflow_ids": [
+        "comunicazione-professionale"
+      ],
+      "public_pages": [
+        {
+          "page_id": "comunicazione-professionale",
+          "path": "static/shared/comunicazione-professionale/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "presenza-digitale-studio": {
+      "source": "presenza-digitale-studio",
+      "role": "workflow",
+      "skills": [
+        "presenza-digitale-studio"
+      ],
+      "components": [
+        "presenza-digitale-studio"
+      ],
+      "workflow_ids": [
+        "presenza-digitale-studio"
+      ],
+      "public_pages": [
+        {
+          "page_id": "presenza-digitale-studio",
+          "path": "static/shared/presenza-digitale-studio/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "prompt-optimizer": {
+      "source": "prompt-optimizer",
+      "role": "workflow",
+      "skills": [
+        "legal-tax-answer-planner"
+      ],
+      "components": [
+        "prompt-optimizer"
+      ],
+      "workflow_ids": [
+        "prompt-optimizer",
+        "legal-tax-answer-planner"
+      ],
+      "public_pages": []
+    },
+    "deep-research-validator": {
+      "source": "deep-research-validator",
+      "role": "workflow",
+      "skills": [
+        "legal-tax-answer-review"
+      ],
+      "components": [
+        "deep-research-validator"
+      ],
+      "workflow_ids": [
+        "deep-research-validator",
+        "legal-tax-answer-review"
+      ],
+      "public_pages": []
+    },
+    "previdenza-inps": {
+      "source": "previdenza-inps",
+      "role": "workflow",
+      "skills": [
+        "previdenza-inps"
+      ],
+      "components": [
+        "previdenza-inps"
+      ],
+      "workflow_ids": [
+        "previdenza-inps"
+      ],
+      "public_pages": [
+        {
+          "page_id": "previdenza-inps",
+          "path": "static/shared/previdenza-inps/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "registro-imprese-sari": {
+      "source": "registro-imprese-sari",
+      "role": "workflow",
+      "skills": [
+        "registro-imprese-sari"
+      ],
+      "components": [
+        "registro-imprese-sari"
+      ],
+      "workflow_ids": [
+        "registro-imprese-sari"
+      ],
+      "public_pages": [
+        {
+          "page_id": "registro-imprese-sari",
+          "path": "static/shared/registro-imprese-sari/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "bandi-agevolazioni": {
+      "source": "bandi-agevolazioni",
+      "role": "workflow",
+      "skills": [
+        "bandi-agevolazioni"
+      ],
+      "components": [
+        "bandi-agevolazioni"
+      ],
+      "workflow_ids": [
+        "bandi-agevolazioni"
+      ],
+      "public_pages": [
+        {
+          "page_id": "bandi-agevolazioni",
+          "path": "static/shared/bandi-agevolazioni/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "bilancio-xbrl-it": {
+      "source": "bilancio-xbrl-it",
+      "role": "workflow",
+      "skills": [
+        "bilancio-oic"
+      ],
+      "components": [
+        "bilancio-xbrl-it"
+      ],
+      "workflow_ids": [
+        "bilancio-xbrl-it",
+        "bilancio-oic"
+      ],
+      "public_pages": [
+        {
+          "page_id": "bilancio-xbrl-it",
+          "path": "static/shared/bilancio-xbrl-it/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "browser-automation": {
+      "source": "browser-automation",
+      "role": "workflow",
+      "skills": [
+        "browser-automation"
+      ],
+      "components": [
+        "browser-automation"
+      ],
+      "workflow_ids": [
+        "browser-automation"
+      ],
+      "public_pages": [
+        {
+          "page_id": "browser-automation",
+          "path": "static/shared/browser-automation/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "studio-archive": {
+      "source": "studio-archive",
+      "role": "internal_engine",
+      "skills": [
+        "studio-archive"
+      ],
+      "components": [
+        "studio-archive"
+      ],
+      "workflow_ids": [
+        "studio-archive"
+      ],
+      "public_pages": [
+        {
+          "page_id": "studio-archive",
+          "path": "static/shared/studio-archive/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "esg-reporting-assurance": {
+      "source": "esg-reporting-assurance",
+      "role": "workflow",
+      "skills": [
+        "esg-reporting-assurance"
+      ],
+      "components": [
+        "esg-reporting-assurance"
+      ],
+      "workflow_ids": [
+        "esg-reporting-assurance"
+      ],
+      "public_pages": [
+        {
+          "page_id": "esg-reporting-assurance",
+          "path": "static/shared/esg-reporting-assurance/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "trasformazione": {
+      "source": "trasformazione",
+      "role": "workflow",
+      "skills": [
+        "trasformazione"
+      ],
+      "components": [
+        "trasformazione"
+      ],
+      "workflow_ids": [
+        "trasformazione"
+      ],
+      "public_pages": []
+    },
+    "fusione-guidata": {
+      "source": "fusione-guidata",
+      "role": "workflow",
+      "skills": [
+        "fusione-guidata"
+      ],
+      "components": [
+        "fusione-guidata"
+      ],
+      "workflow_ids": [
+        "fusione-guidata"
+      ],
+      "public_pages": [
+        {
+          "page_id": "fusione-guidata",
+          "path": "static/shared/fusione-guidata/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "patent-box-review": {
+      "source": "patent-box-review",
+      "role": "workflow",
+      "skills": [
+        "patent-box-review"
+      ],
+      "components": [
+        "patent-box-review"
+      ],
+      "workflow_ids": [
+        "patent-box-review"
+      ],
+      "public_pages": [
+        {
+          "page_id": "patent-box-review",
+          "path": "static/shared/patent-box-review/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "rating-legalita": {
+      "source": "rating-legalita",
+      "role": "workflow",
+      "skills": [
+        "rating-legalita"
+      ],
+      "components": [
+        "rating-legalita"
+      ],
+      "workflow_ids": [
+        "rating-legalita"
+      ],
+      "public_pages": [
+        {
+          "page_id": "rating-legalita",
+          "path": "static/shared/rating-legalita/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "lipe": {
+      "source": "lipe",
+      "role": "workflow",
+      "skills": [
+        "lipe"
+      ],
+      "components": [
+        "lipe"
+      ],
+      "workflow_ids": [
+        "lipe"
+      ],
+      "public_pages": [
+        {
+          "page_id": "lipe",
+          "path": "static/shared/lipe/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "adversarial-opinion": {
+      "source": "deep-research-validator",
+      "role": "workflow",
+      "skills": [
+        "adversarial-opinion"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "adversarial-opinion"
+      ],
+      "public_pages": [
+        {
+          "page_id": "adversarial-opinion",
+          "path": "static/shared/adversarial-opinion/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "agenzia-acquisition": {
+      "source": "browser-automation",
+      "role": "workflow",
+      "skills": [
+        "agenzia-acquisition"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "agenzia-acquisition"
+      ],
+      "public_pages": [
+        {
+          "page_id": "agenzia-acquisition",
+          "path": "static/shared/agenzia-acquisition/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "avviso-intake": {
+      "source": "client-file-preparation",
+      "role": "workflow",
+      "skills": [
+        "avviso-intake"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "avviso-intake"
+      ],
+      "public_pages": [
+        {
+          "page_id": "avviso-intake",
+          "path": "static/shared/avviso-intake/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "contenzioso-tributario": {
+      "source": "product",
+      "role": "workflow",
+      "skills": [
+        "contenzioso-tributario"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "contenzioso-tributario"
+      ],
+      "public_pages": [
+        {
+          "page_id": "contenzioso-tributario",
+          "path": "static/shared/contenzioso-tributario/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "datev-invoice-start": {
+      "source": "product",
+      "role": "workflow",
+      "skills": [
+        "datev-invoice-start"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "datev-invoice-start"
+      ],
+      "public_pages": []
+    },
+    "dati-fiscali-strutturati": {
+      "source": "client-file-preparation",
+      "role": "workflow",
+      "skills": [
+        "dati-fiscali-strutturati"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "dati-fiscali-strutturati"
+      ],
+      "public_pages": [
+        {
+          "page_id": "dati-fiscali-strutturati",
+          "path": "static/shared/dati-fiscali-strutturati/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "deep-research": {
+      "source": "deep-research-validator",
+      "role": "workflow",
+      "skills": [
+        "deep-research"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "deep-research"
+      ],
+      "public_pages": []
+    },
+    "email-cliente": {
+      "source": "client-file-preparation",
+      "role": "workflow",
+      "skills": [
+        "email-cliente"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "email-cliente"
+      ],
+      "public_pages": [
+        {
+          "page_id": "email-cliente",
+          "path": "static/shared/email-cliente/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "fatture-xml-check": {
+      "source": "client-file-preparation",
+      "role": "workflow",
+      "skills": [
+        "fatture-xml-check"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "fatture-xml-check"
+      ],
+      "public_pages": [
+        {
+          "page_id": "fatture-xml-check",
+          "path": "static/shared/fatture-xml-check/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "learn-with-vera": {
+      "source": "product",
+      "role": "internal_engine",
+      "skills": [
+        "learn-with-vera"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "learn-with-vera"
+      ],
+      "public_pages": [
+        {
+          "page_id": "learn-with-vera",
+          "path": "static/shared/learn-with-vera/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "organizzazione-lavoro": {
+      "source": "product",
+      "role": "workflow",
+      "skills": [
+        "organizzazione-lavoro"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "organizzazione-lavoro"
+      ],
+      "public_pages": [
+        {
+          "page_id": "organizzazione-lavoro",
+          "path": "static/shared/organizzazione-lavoro/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "posizioni-negoziali": {
+      "source": "product",
+      "role": "workflow",
+      "skills": [
+        "posizioni-negoziali"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "posizioni-negoziali"
+      ],
+      "public_pages": [
+        {
+          "page_id": "posizioni-negoziali",
+          "path": "static/shared/posizioni-negoziali/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "quesito-legale-fiscale": {
+      "source": "deep-research-validator",
+      "role": "workflow",
+      "skills": [
+        "quesito-legale-fiscale"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "quesito-legale-fiscale"
+      ],
+      "public_pages": [
+        {
+          "page_id": "quesito-legale-fiscale",
+          "path": "static/shared/quesito-legale-fiscale/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "research-subscriptions": {
+      "source": "product",
+      "role": "internal_engine",
+      "skills": [
+        "research-subscriptions"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "research-subscriptions"
+      ],
+      "public_pages": []
+    },
+    "studio-document-format": {
+      "source": "product",
+      "role": "workflow",
+      "skills": [
+        "studio-document-format"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "studio-document-format"
+      ],
+      "public_pages": [
+        {
+          "page_id": "studio-document-format",
+          "path": "static/shared/studio-document-format/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    },
+    "vera": {
+      "source": "product",
+      "role": "internal_engine",
+      "skills": [
+        "vera"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "vera"
+      ],
+      "public_pages": [
+        {
+          "page_id": "vera-integrazioni",
+          "path": "static/shared/vera-integrazioni/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        },
+        {
+          "page_id": "vera-skill-studio",
+          "path": "static/shared/vera-skill-studio/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        },
+        {
+          "page_id": "rizzo",
+          "path": "static/shared/vera-integrazioni/rizzo/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        },
+        {
+          "page_id": "lethe",
+          "path": "static/shared/vera-integrazioni/lethe/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        },
+        {
+          "page_id": "pii-shield",
+          "path": "static/shared/vera-integrazioni/pii-shield/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
+    }
+  },
+  "services": [
+    "cnc-authenticated-review",
+    "datev-starter",
+    "local-onboarding",
+    "managed-python-runtime",
+    "native-workspace",
+    "operational-incidents",
+    "plugin-feedback",
+    "plugin-update-check",
+    "research-subscriptions",
+    "run-receipt-stamping",
+    "studio-work",
+    "workflow-usage"
+  ],
+  "host_omissions": {
+    "openai-codex": {
+      "services": [],
+      "workstreams": [],
+      "paths": {
+        "privacy/services/managed-python-runtime.json": [
+          "skills/studio-archive/references/cowork-runtime.md"
+        ]
+      }
+    },
+    "openai-chatgpt": {
+      "services": [],
+      "workstreams": [],
+      "paths": {
+        "privacy/services/datev-starter.json": [
+          "marketplace_skill_instructions.json"
+        ],
+        "privacy/services/local-onboarding.json": [
+          "hooks/hooks.json",
+          "marketplace_skill_instructions.json"
+        ],
+        "privacy/services/managed-python-runtime.json": [
+          "skills/studio-archive/references/cowork-runtime.md"
+        ],
+        "privacy/services/native-workspace.json": [
+          ".mcp.json",
+          "mcp/selected-context.cjs",
+          "mcp/workspace.cjs"
+        ],
+        "privacy/services/operational-incidents.json": [
+          ".mcp.json"
+        ],
+        "privacy/services/plugin-feedback.json": [
+          "hooks/hooks.json"
+        ],
+        "privacy/services/plugin-update-check.json": [
+          "hooks/hooks.json"
+        ],
+        "privacy/services/research-subscriptions.json": [
+          "mcp/research-sources.cjs"
+        ],
+        "privacy/services/studio-work.json": [
+          "mcp/studio-work-panel.cjs",
+          "mcp/studio-work.cjs"
+        ],
+        "privacy/workstreams/archive-organization.json": [
+          ".mcp.json",
+          "mcp"
+        ],
+        "privacy/workstreams/bilancio-xbrl-it.json": [
+          "mcp"
+        ],
+        "privacy/workstreams/browser-automation.json": [
+          "mcp"
+        ],
+        "privacy/workstreams/check-entries.json": [
+          "mcp"
+        ],
+        "privacy/workstreams/client-file-preparation.json": [
+          "mcp"
+        ],
+        "privacy/workstreams/concordato-plan-review.json": [
+          "mcp"
+        ],
+        "privacy/workstreams/deep-research-validator.json": [
+          "mcp"
+        ],
+        "privacy/workstreams/financial-analysis.json": [
+          "mcp"
+        ],
+        "privacy/workstreams/journal-bank-reconciliation.json": [
+          "mcp"
+        ],
+        "privacy/workstreams/journal-sampling.json": [
+          "mcp"
+        ],
+        "privacy/workstreams/new-client.json": [
+          "mcp"
+        ],
+        "privacy/workstreams/open-item-reconciliation.json": [
+          "mcp"
+        ],
+        "privacy/workstreams/previdenza-inps.json": [
+          "mcp"
+        ],
+        "privacy/workstreams/prompt-optimizer.json": [
+          "mcp"
+        ],
+        "privacy/workstreams/registro-imprese-sari.json": [
+          "mcp"
+        ],
+        "privacy/workstreams/report-builder.json": [
+          "mcp"
+        ],
+        "privacy/workstreams/sales-plan.json": [
+          "mcp"
+        ],
+        "privacy/workstreams/studio-archive.json": [
+          ".mcp.json",
+          "mcp"
+        ],
+        "privacy/workstreams/variance-analysis.json": [
+          "mcp"
+        ]
+      }
+    },
+    "anthropic-cowork": {
+      "services": [
+        "datev-starter",
+        "local-onboarding",
+        "native-workspace",
+        "plugin-feedback",
+        "plugin-update-check",
+        "research-subscriptions"
+      ],
+      "workstreams": [
+        "datev-invoice-start"
+      ],
+      "paths": {
+        "privacy/services/managed-python-runtime.json": [
+          "skills/mparanza-studio-archive/references/cowork-runtime.md"
+        ],
+        "privacy/services/operational-incidents.json": [
+          "scripts/onboarding_session_start.py"
+        ],
+        "privacy/services/run-receipt-stamping.json": [
+          ".codex-plugin/plugin.json"
+        ],
+        "privacy/workstreams/archive-organization.json": [
+          ".mcp.json",
+          "README.md"
+        ],
+        "privacy/workstreams/browser-automation.json": [
+          "README.md"
+        ],
+        "privacy/workstreams/learn-with-vera.json": [
+          "scripts/local_onboarding.py",
+          "scripts/local_onboarding_case.py",
+          "scripts/onboarding_session_start.py"
+        ],
+        "privacy/workstreams/studio-archive.json": [
+          ".mcp.json",
+          "README.md"
+        ]
+      }
+    },
+    "google-antigravity": {
+      "services": [],
+      "workstreams": [],
+      "paths": {
+        "privacy/services/local-onboarding.json": [
+          "hooks/hooks.json"
+        ],
+        "privacy/services/managed-python-runtime.json": [
+          "skills/studio-archive/references/cowork-runtime.md"
+        ],
+        "privacy/services/native-workspace.json": [
+          ".mcp.json"
+        ],
+        "privacy/services/operational-incidents.json": [
+          ".mcp.json"
+        ],
+        "privacy/services/plugin-feedback.json": [
+          "hooks/hooks.json"
+        ],
+        "privacy/services/plugin-update-check.json": [
+          "hooks/hooks.json"
+        ]
+      }
+    }
+  }
+}

@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-"""Validate Clara privacy-surface coverage and source freshness.
+"""Validate product external-boundary coverage and source freshness.
 
-The checks are deterministic because workflow registration, manifest shape,
-hosted-service references, confirmation consistency, and byte fingerprints are
-mechanically verifiable. Purpose-based data minimisation and legal compliance
-remain outside this validator.
+The checks are deterministic because registration, JSON shape, confirmation
+consistency, and byte fingerprints are mechanically verifiable. Purpose-based
+data minimisation and legal compliance remain outside this validator.
 """
 
 from __future__ import annotations
@@ -13,587 +12,1367 @@ import argparse
 import hashlib
 import json
 import logging
-from collections.abc import Iterable, Mapping
-from pathlib import Path, PurePosixPath
-from typing import Any
+from pathlib import Path
+from typing import Any, Iterable
 
 __all__ = ["main", "validate_privacy_surfaces"]
-
 LOGGER = logging.getLogger(__name__)
 
 SKIP_DIRS = {".git", ".mypy_cache", ".pytest_cache", ".ruff_cache", "__pycache__"}
 SKIP_SUFFIXES = {".pyc", ".pyo"}
-REVIEW_SKILL = "privacy-surface-review"
-CODEX_CONTEXT_POLICY = "real_professional_data_may_enter_codex_context"
+MODEL_CONTEXT_POLICY = "real_case_data_may_enter_selected_runtime_model_context"
 BOUNDARY_KINDS = {
     "public_research",
     "hosted_service",
     "external_connector",
     "send_or_publish",
 }
+SERVICE_BOUNDARY_KINDS = {"hosted_service", "send_or_publish"}
 ACCOUNT_REVIEW_ITEMS = [
     "account_or_workspace_plan",
     "model_training_data_controls",
     "retention_and_deletion_controls",
 ]
-ORDINARY_CODEX_MODEL_PROCESSING = {
-    "scope": "content_supplied_to_the_codex_model",
-    "account_arrangement": "user_selected_chatgpt_or_codex_account",
-    "separate_clara_recipient_or_arrangement": False,
-    "automatic_anonymisation": False,
-    "local_filter_or_aggregate": "only_when_useful_for_professional_work",
-    "plan_visibility": "not_inspected_or_enforced_by_clara",
+EXPECTED_RUNTIME_PROFILES = {
+    "openai-codex": {
+        "provider": "OpenAI",
+        "runtime": "Codex",
+        "surfaces": ["codex"],
+        "account_boundary": {
+            "selected_by": "firm_or_user",
+            "review_timing": "before_professional_use_and_when_account_or_terms_change",
+            "review_items": [
+                "account_or_workspace_plan",
+                "model_training_data_controls",
+                "retention_and_deletion_controls",
+            ],
+            "per_case_record_required": False,
+            "product_runtime_enforcement": "none",
+        },
+        "model_processing": {
+            "scope": "ordinary_openai_codex_model_processing",
+            "destination": "OpenAI model processing used by " "Codex",
+            "account_arrangement": "existing_openai_codex_account_or_workspace_selected_by_firm_or_user",
+            "automatic_anonymization": False,
+            "local_only": False,
+            "local_filtering_or_aggregation": "only_when_useful_for_the_work",
+            "separate_product_recipient": False,
+        },
+    },
+    "anthropic-cowork": {
+        "provider": "Anthropic",
+        "runtime": "Cowork",
+        "surfaces": ["cowork"],
+        "account_boundary": {
+            "selected_by": "firm_or_user",
+            "review_timing": "before_professional_use_and_when_account_or_terms_change",
+            "review_items": [
+                "account_or_workspace_plan",
+                "model_training_data_controls",
+                "retention_and_deletion_controls",
+            ],
+            "per_case_record_required": False,
+            "product_runtime_enforcement": "none",
+        },
+        "model_processing": {
+            "scope": "ordinary_anthropic_cowork_model_processing",
+            "destination": "Anthropic model processing " "used by Cowork",
+            "account_arrangement": "existing_anthropic_claude_account_or_workspace_selected_by_firm_or_user",
+            "automatic_anonymization": False,
+            "local_only": False,
+            "local_filtering_or_aggregation": "only_when_useful_for_the_work",
+            "separate_product_recipient": False,
+        },
+    },
+    "openai-chatgpt": {
+        "provider": "OpenAI",
+        "runtime": "ChatGPT",
+        "surfaces": ["chatgpt"],
+        "account_boundary": {
+            "selected_by": "firm_or_user",
+            "review_timing": "before_professional_use_and_when_account_or_terms_change",
+            "review_items": [
+                "account_or_workspace_plan",
+                "model_training_data_controls",
+                "retention_and_deletion_controls",
+            ],
+            "per_case_record_required": False,
+            "product_runtime_enforcement": "none",
+        },
+        "model_processing": {
+            "scope": "ordinary_chatgpt_model_processing",
+            "destination": "Model provider selected in " "ChatGPT",
+            "account_arrangement": "existing_chatgpt_account_or_workspace_selected_by_firm_or_user",
+            "automatic_anonymization": False,
+            "local_only": False,
+            "local_filtering_or_aggregation": "only_when_useful_for_the_work",
+            "separate_product_recipient": False,
+        },
+    },
+    "google-antigravity": {
+        "provider": "selected_in_host",
+        "runtime": "Antigravity",
+        "surfaces": ["antigravity"],
+        "account_boundary": {
+            "selected_by": "firm_or_user",
+            "review_timing": "before_professional_use_and_when_account_or_terms_change",
+            "review_items": [
+                "account_or_workspace_plan",
+                "model_training_data_controls",
+                "retention_and_deletion_controls",
+            ],
+            "per_case_record_required": False,
+            "product_runtime_enforcement": "none",
+        },
+        "model_processing": {
+            "scope": "ordinary_antigravity_model_processing",
+            "destination": "Model provider selected " "in Antigravity",
+            "account_arrangement": "existing_antigravity_account_or_workspace_selected_by_firm_or_user",
+            "automatic_anonymization": False,
+            "local_only": False,
+            "local_filtering_or_aggregation": "only_when_useful_for_the_work",
+            "separate_product_recipient": False,
+        },
+    },
 }
-RETENTION_STATUSES = {
-    "documented",
-    "partially_documented",
-    "not_established_by_plugin_source",
-}
+RUNTIME_PROFILE_IDS = list(EXPECTED_RUNTIME_PROFILES)
 
 
-def _clara_root() -> Path:
+def _vera_root() -> Path:
     return Path(__file__).resolve().parents[3]
 
 
-def _workflow_names(clara_root: Path) -> set[str]:
-    skills_root = clara_root / "skills"
-    return {
-        path.parent.name
-        for path in skills_root.glob("*/SKILL.md")
-        if path.parent.name != REVIEW_SKILL
-    }
+def _components(vera_root: Path) -> tuple[set[str], dict[str, dict[str, Any]]]:
+    registry = vera_root / "privacy/registry.json"
+    if registry.is_file():
+        entries = json.loads(registry.read_text(encoding="utf-8"))["workstreams"]
+        return set(entries), {
+            name: {
+                "kind": entry["role"],
+                "skill": entry["skills"][0] if entry["skills"] else name,
+            }
+            for name, entry in entries.items()
+        }
+    payload = json.loads((vera_root / "components.json").read_text(encoding="utf-8"))
+    names = set(payload["plugins"])
+    roles = payload.get("workflow_roles", {})
+    return names, roles
 
 
-def _physical_target(clara_root: Path, logical_path: str) -> Path:
-    logical = PurePosixPath(logical_path)
-    if logical.is_absolute() or ".." in logical.parts:
-        raise ValueError(f"governed path must be plugin-relative: {logical_path}")
-    if logical.parts and logical.parts[0] == "repository":
-        return clara_root.parents[1].joinpath(*logical.parts[1:])
-    target = clara_root.joinpath(*logical.parts)
-    if target.exists() or logical.parts[:2] != ("modules", "attribute-reporting"):
-        return target
-    return clara_root.parent.joinpath("attribute-reporting", *logical.parts[2:])
+def _shared_services(vera_root: Path) -> set[str]:
+    registry = vera_root / "privacy/registry.json"
+    if registry.is_file():
+        return set(json.loads(registry.read_text(encoding="utf-8"))["services"])
+    payload = json.loads((vera_root / "components.json").read_text(encoding="utf-8"))
+    return set(payload.get("shared_services", []))
 
 
-def _governed_files(clara_root: Path, paths: Iterable[str]) -> list[tuple[str, Path]]:
-    files: dict[str, Path] = {}
-    for logical_path in paths:
-        target = _physical_target(clara_root, logical_path)
-        logical = PurePosixPath(logical_path)
+def _runtime_profile_errors(vera_root: Path) -> list[str]:
+    path = vera_root / "privacy" / "runtime-profiles.json"
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return [f"runtime-profiles: cannot read profile catalog: {exc}"]
+    if not isinstance(payload, dict):
+        return ["runtime-profiles: catalog must be an object"]
+    errors: list[str] = []
+    if payload.get("schema_version") != 1:
+        errors.append("runtime-profiles: schema_version must be 1")
+    profiles = payload.get("profiles")
+    if not isinstance(profiles, list):
+        return [*errors, "runtime-profiles: profiles must be an array"]
+    profile_ids = [
+        str(profile.get("id", "")) if isinstance(profile, dict) else ""
+        for profile in profiles
+    ]
+    if len(profile_ids) != len(set(profile_ids)):
+        errors.append("runtime-profiles: profile ids must be unique")
+    if profile_ids != RUNTIME_PROFILE_IDS:
+        errors.append(
+            "runtime-profiles: catalog must contain the four canonical host profiles in order"
+        )
+    for index, profile in enumerate(profiles):
+        if not isinstance(profile, dict):
+            errors.append(f"runtime-profiles: profile[{index}] must be an object")
+            continue
+        profile_id = str(profile.get("id", ""))
+        expected = EXPECTED_RUNTIME_PROFILES.get(profile_id)
+        if expected is None:
+            errors.append(f"runtime-profiles: profile[{index}] has unknown id")
+            continue
+        actual = {key: value for key, value in profile.items() if key != "id"}
+        if actual != expected:
+            errors.append(
+                f"runtime-profiles: {profile_id} account or model-processing "
+                "boundary is inaccurate"
+            )
+    return errors
+
+
+def _component_root(vera_root: Path, workstream: str) -> Path:
+    registry = vera_root / "privacy/registry.json"
+    if registry.is_file():
+        entry = json.loads(registry.read_text(encoding="utf-8"))["workstreams"][
+            workstream
+        ]
+        if entry["source"] == "product":
+            return vera_root
+        workstream = entry["source"]
+    packaged = vera_root / "modules" / workstream
+    if packaged.is_dir():
+        return packaged
+    if (vera_root / "privacy/package-projection.json").is_file():
+        raise FileNotFoundError(f"installed component not found: {workstream}")
+    source = vera_root.parent / workstream
+    if source.is_dir():
+        return source
+    raise FileNotFoundError(f"component source not found: {workstream}")
+
+
+def _wrapper(
+    root: Path, workstream: str, roles: dict[str, dict[str, Any]]
+) -> Path | None:
+    """Bind component wrapper bytes; product-root records govern their skills directly."""
+    if _component_root(root, workstream) == root:
+        return None
+    skill = roles.get(workstream, {}).get("skill", workstream)
+    candidate = root / "skills" / skill / "SKILL.md"
+    return candidate if candidate.is_file() else None
+
+
+def _governed_files(component_root: Path, paths: Iterable[str]) -> list[Path]:
+    files: set[Path] = set()
+    resolved_root = component_root.resolve()
+
+    def check_contained(path: Path) -> None:
+        if path.is_symlink() or any(
+            parent.is_symlink()
+            for parent in path.parents
+            if parent != component_root and component_root in parent.parents
+        ):
+            raise ValueError(f"governed path must not be a symlink: {path}")
+        try:
+            path.resolve(strict=True).relative_to(resolved_root)
+        except (OSError, ValueError) as exc:
+            raise ValueError(f"governed path escapes source root: {path}") from exc
+
+    for relative in paths:
+        if relative != "." and not _review_relative_path(relative):
+            raise ValueError(f"governed path must be contained: {relative}")
+        target = component_root / relative
+        check_contained(target)
         if target.is_file():
-            files[logical.as_posix()] = target
+            files.add(target)
             continue
         if not target.is_dir():
-            raise FileNotFoundError(f"governed path not found: {logical_path}")
+            raise FileNotFoundError(f"governed path not found: {target}")
         for path in target.rglob("*"):
+            check_contained(path)
             if not path.is_file():
                 continue
-            relative = path.relative_to(target)
-            if any(part in SKIP_DIRS for part in relative.parts):
+            rel_parts = path.relative_to(component_root).parts
+            if any(part in SKIP_DIRS for part in rel_parts):
                 continue
             if path.suffix in SKIP_SUFFIXES:
                 continue
-            name = (logical / PurePosixPath(relative.as_posix())).as_posix()
-            files[name] = path
-    return sorted(files.items())
+            files.add(path)
+    return sorted(files, key=lambda item: item.relative_to(component_root).as_posix())
 
 
-def _fingerprint(clara_root: Path, paths: Iterable[str]) -> str:
-    digest = hashlib.sha256()
-    for logical_path, path in _governed_files(clara_root, paths):
-        name = logical_path.encode("utf-8")
-        digest.update(len(name).to_bytes(4, "big"))
-        digest.update(name)
-        content = path.read_bytes()
-        digest.update(len(content).to_bytes(8, "big"))
-        digest.update(content)
-    return digest.hexdigest()
+def _shared_governed_files(
+    vera_root: Path, paths: Iterable[str], *, packaged: bool
+) -> dict[str, Path]:
+    """Resolve package-relative shared files from source or an installed Vera."""
+
+    logical_files: dict[str, Path] = {}
+    source_root = vera_root if packaged else vera_root.parent / "_shared"
+    resolved_source_root = source_root.resolve()
+    for value in paths:
+        relative = Path(value)
+        if relative.is_absolute() or ".." in relative.parts:
+            raise ValueError(f"governed shared path must be package-relative: {value}")
+        target = source_root / relative
+        if target.is_symlink():
+            raise ValueError(f"governed shared path must not be a symlink: {target}")
+        try:
+            target.resolve(strict=True).relative_to(resolved_source_root)
+        except (FileNotFoundError, ValueError) as exc:
+            raise FileNotFoundError(
+                f"governed shared path not found or outside source root: {target}"
+            ) from exc
+        if target.is_file():
+            logical_files[f"vera-shared/{relative.as_posix()}"] = target
+            continue
+        if not target.is_dir():
+            raise FileNotFoundError(f"governed shared path not found: {target}")
+        for path in target.rglob("*"):
+            if path.is_symlink():
+                raise ValueError(
+                    f"governed shared source must not use symlinks: {path}"
+                )
+            if not path.is_file():
+                continue
+            rel_parts = path.relative_to(target).parts
+            if any(part in SKIP_DIRS for part in rel_parts):
+                continue
+            if path.suffix in SKIP_SUFFIXES:
+                continue
+            logical_path = relative / path.relative_to(target)
+            logical_files[f"vera-shared/{logical_path.as_posix()}"] = path
+    return logical_files
 
 
-def _non_empty_string(value: Any) -> bool:
-    return isinstance(value, str) and bool(value.strip())
+def _repository_governed_files(
+    vera_root: Path,
+    paths: Iterable[str],
+) -> dict[str, Path]:
+    """Resolve repository-root-relative hosted service source without escapes."""
+
+    logical_files: dict[str, Path] = {}
+    repository_root = vera_root.parents[1]
+    resolved_repository_root = repository_root.resolve()
+    for value in paths:
+        relative = Path(value)
+        if relative.is_absolute() or ".." in relative.parts:
+            raise ValueError(
+                f"governed repository path must be repository-relative: {value}"
+            )
+        target = repository_root / relative
+        if target.is_symlink():
+            raise ValueError(
+                f"governed repository path must not be a symlink: {target}"
+            )
+        try:
+            target.resolve(strict=True).relative_to(resolved_repository_root)
+        except (FileNotFoundError, ValueError) as exc:
+            raise FileNotFoundError(
+                "governed repository path not found or outside repository: " f"{target}"
+            ) from exc
+        if target.is_file():
+            logical_files[f"repository:{relative.as_posix()}"] = target
+            continue
+        if not target.is_dir():
+            raise FileNotFoundError(f"governed repository path not found: {target}")
+        for path in target.rglob("*"):
+            if path.is_symlink():
+                raise ValueError(
+                    f"governed repository source must not use symlinks: {path}"
+                )
+            if not path.is_file():
+                continue
+            rel_parts = path.relative_to(target).parts
+            if any(part in SKIP_DIRS for part in rel_parts):
+                continue
+            if path.suffix in SKIP_SUFFIXES:
+                continue
+            logical_path = relative / path.relative_to(target)
+            logical_files[f"repository:{logical_path.as_posix()}"] = path
+    return logical_files
 
 
-def _string_list(value: Any, *, allow_empty: bool = False) -> bool:
+REPOSITORY_REVIEW_SCOPE = "reviewed_repository_declaration_not_hosted_runtime"
+MAX_REPOSITORY_REVIEW_BYTES = 8_000_000
+
+
+def _review_relative_path(value: Any) -> bool:
+    """Require portable contained paths for mechanically checked provenance."""
     return (
-        isinstance(value, list)
-        and (allow_empty or bool(value))
-        and all(_non_empty_string(item) for item in value)
-        and len(value) == len(set(value))
+        isinstance(value, str)
+        and bool(value)
+        and value != "."
+        and ":" not in value
+        and "\\" not in value
+        and not Path(value).is_absolute()
+        and ".." not in Path(value).parts
+        and Path(value).as_posix() == value
     )
 
 
-def _review_errors(
-    review: Any,
-    *,
-    subject: str,
-    expected_basis: str,
+def _review_digest(value: Any) -> bool:
+    """Check a SHA-256 representation without claiming authenticated provenance."""
+    return (
+        isinstance(value, str)
+        and len(value) == 64
+        and all(character in "0123456789abcdef" for character in value)
+    )
+
+
+def _repository_review_binding_errors(
+    payload: dict[str, Any], service_id: str
 ) -> list[str]:
-    if not isinstance(review, Mapping):
-        return [f"{subject}: review must be an object"]
-    errors: list[str] = []
-    if not _non_empty_string(review.get("reviewed_at")):
-        errors.append(f"{subject}: reviewed_at must be non-empty")
-    if review.get("reviewed_by") != REVIEW_SKILL:
-        errors.append(f"{subject}: unexpected reviewer")
-    if review.get("basis") != expected_basis:
-        errors.append(f"{subject}: unexpected review basis")
-    fingerprint = review.get("source_fingerprint")
+    binding = payload.get("repository_source_review")
+    if binding is None:
+        return []
+    if not isinstance(binding, dict) or set(binding) != {"path", "service_id", "scope"}:
+        return [f"{service_id}: invalid repository-source review binding"]
+    expected = f"privacy/repository-source-reviews/{service_id}.json"
     if (
-        not isinstance(fingerprint, str)
-        or len(fingerprint) != 64
-        or any(character not in "0123456789abcdef" for character in fingerprint)
+        binding["service_id"] != service_id
+        or binding["scope"] != REPOSITORY_REVIEW_SCOPE
+        or binding["path"] != expected
     ):
-        errors.append(f"{subject}: invalid source fingerprint")
-    return errors
+        return [
+            f"{service_id}: repository-source review must bind its exact service and declaration scope"
+        ]
+    if not payload.get("governed_repository_paths"):
+        return [
+            f"{service_id}: repository-source review requires retained repository governance"
+        ]
+    review = payload.get("review")
+    if (
+        not isinstance(review, dict)
+        or review.get("fingerprint_scope")
+        != "installed_client_and_repository_review_declaration"
+    ):
+        return [
+            f"{service_id}: repository-source review requires explicit fingerprint scope"
+        ]
+    return []
 
 
-def _context_errors(context: Any, *, subject: str) -> list[str]:
-    if not isinstance(context, Mapping):
-        return [f"{subject}: codex_context must be an object"]
-    errors: list[str] = []
-    if context.get("policy") != CODEX_CONTEXT_POLICY:
-        errors.append(f"{subject}: unexpected Codex context policy")
-    classes = context.get("classes")
-    if not isinstance(classes, list) or not classes:
-        return errors + [f"{subject}: codex_context.classes must be non-empty"]
-    identifiers: list[str] = []
-    for index, item in enumerate(classes):
-        if not isinstance(item, Mapping) or not all(
-            _non_empty_string(item.get(field)) for field in ("id", "purpose", "content")
+def _repository_review_file(
+    vera_root: Path, binding: dict[str, Any], repository_paths: Iterable[str]
+) -> tuple[str, Path]:
+    """Validate retained declarations; never substitute them for hosted runtime proof."""
+    # Source freshness must still inspect actual repository bytes. Only an
+    # explicitly bound installed package may retain a declaration instead.
+    if (
+        (vera_root / "modules").is_symlink()
+        or not (vera_root / "modules").is_dir()
+        or not any(
+            (vera_root / name).is_file()
+            for name in (".codex-plugin/plugin.json", ".claude-plugin/plugin.json")
+        )
+    ):
+        raise ValueError(
+            "repository-source declarations are allowed only in installed product packages"
+        )
+    relative = binding["path"]
+    if not _review_relative_path(relative):
+        raise ValueError("invalid repository-source review path")
+    target = vera_root / relative
+    if any(
+        (vera_root / Path(*Path(relative).parts[:count])).is_symlink()
+        for count in range(1, len(Path(relative).parts) + 1)
+    ):
+        raise ValueError("repository-source review must not be a symlink")
+    target.resolve(strict=True).relative_to(vera_root.resolve())
+    if not target.is_file() or target.stat().st_size > MAX_REPOSITORY_REVIEW_BYTES:
+        raise ValueError("repository-source review is unavailable or oversized")
+    raw = target.read_bytes()
+    if len(raw) > MAX_REPOSITORY_REVIEW_BYTES:
+        raise ValueError("repository-source review is oversized")
+    document = json.loads(raw)
+    expected_fields = {
+        "schema_version",
+        "service_id",
+        "scope",
+        "hosted_runtime_verified",
+        "limitations",
+        "source_manifest",
+        "files",
+    }
+    if not isinstance(document, dict) or set(document) != expected_fields:
+        raise ValueError("invalid repository-source review document fields")
+    if (
+        type(document["schema_version"]) is not int
+        or document["schema_version"] != 1
+        or document["service_id"] != binding["service_id"]
+        or document["scope"] != REPOSITORY_REVIEW_SCOPE
+        or document["hosted_runtime_verified"] is not False
+    ):
+        raise ValueError(
+            "repository-source review cannot claim hosted runtime verification"
+        )
+    if document["limitations"] != [
+        "Hashes record repository bytes inspected during packaging; hosted code is not included or executed.",
+        "Installed validation checks local client bytes and this retained review declaration.",
+        "Hosted deployment, live controls and model delivery require separate acceptance evidence.",
+    ]:
+        raise ValueError("repository-source review limitations must remain explicit")
+    source = document["source_manifest"]
+    if (
+        not isinstance(source, dict)
+        or (
+            "workstream-" + source["workstream"]
+            if "workstream" in source
+            else source.get("service_id")
+        )
+        != binding["service_id"]
+    ):
+        raise ValueError("repository-source review has a foreign source manifest")
+    if (
+        _manifest_errors(
+            source, workstream=source["workstream"], expected_role=source["role"]
+        )
+        if "workstream" in source
+        else _service_manifest_errors(source, service_id=binding["service_id"])
+    ):
+        raise ValueError("repository-source review has an invalid source manifest")
+    if "repository_source_review" in source or not _review_digest(
+        source["review"]["source_fingerprint"]
+    ):
+        raise ValueError(
+            "repository-source review must retain the original source review"
+        )
+    roots = list(repository_paths)
+    if source.get("governed_repository_paths") != roots or not all(
+        _review_relative_path(path) for path in roots
+    ):
+        raise ValueError("repository-source review changed declared source scope")
+    files = document["files"]
+    if not isinstance(files, list) or not files or len(files) > 10_000:
+        raise ValueError(
+            "repository-source review must contain bounded source-file identities"
+        )
+    seen: set[str] = set()
+    covered: set[str] = set()
+    for item in files:
+        if not isinstance(item, dict) or set(item) != {
+            "path",
+            "bytes",
+            "sha256",
+            "installed_paths",
+        }:
+            raise ValueError("invalid reviewed repository-file fields")
+        path = item["path"]
+        if (
+            not _review_relative_path(path)
+            or path in seen
+            or not _review_digest(item["sha256"])
+            or type(item["bytes"]) is not int
+            or item["bytes"] < 0
         ):
-            errors.append(f"{subject}: codex_context.classes[{index}] is incomplete")
-            continue
-        identifiers.append(str(item["id"]))
-    if len(identifiers) != len(set(identifiers)):
-        errors.append(f"{subject}: Codex context ids must be unique")
-    return errors
+            raise ValueError("invalid or duplicate reviewed repository-file identity")
+        parents = {
+            root for root in roots if path == root or path.startswith(root + "/")
+        }
+        if not parents:
+            raise ValueError(
+                "reviewed repository file is outside the declared source scope"
+            )
+        installed = item["installed_paths"]
+        if (
+            not isinstance(installed, list)
+            or not all(_review_relative_path(value) for value in installed)
+            or len(installed) != len(set(installed))
+        ):
+            raise ValueError("invalid reviewed repository-file installation paths")
+        for value in installed:
+            selected = vera_root / value
+            if any(
+                (vera_root / Path(*Path(value).parts[:count])).is_symlink()
+                for count in range(1, len(Path(value).parts) + 1)
+            ):
+                raise ValueError("reviewed installed copy must not be a symlink")
+            selected.resolve(strict=True).relative_to(vera_root.resolve())
+            content = selected.read_bytes()
+            if (
+                len(content) != item["bytes"]
+                or hashlib.sha256(content).hexdigest() != item["sha256"]
+            ):
+                raise ValueError(
+                    "installed copy differs from reviewed repository-source identity"
+                )
+        seen.add(path)
+        covered.update(parents)
+    if covered != set(roots):
+        raise ValueError("repository-source review omits a declared source root")
+    return f"repository-source-review:{binding['service_id']}", target
 
 
-def _account_errors(account: Any, *, subject: str) -> list[str]:
-    if not isinstance(account, Mapping):
-        return [f"{subject}: codex_account_boundary must be an object"]
-    errors: list[str] = []
-    if account.get("selected_by") != "firm_or_user":
-        errors.append(f"{subject}: account must be selected by the firm or user")
-    if account.get("clara_runtime_enforcement") != "none":
-        errors.append(f"{subject}: Clara cannot claim to enforce account settings")
+def _fingerprint(
+    component_root: Path,
+    paths: Iterable[str],
+    *,
+    wrapper: Path | None = None,
+    vera_root: Path | None = None,
+    shared_paths: Iterable[str] = (),
+    repository_paths: Iterable[str] = (),
+    repository_review: dict[str, Any] | None = None,
+) -> str:
+    governed_paths = tuple(paths)
+    logical_files: dict[str, Path] = {}
+    for relative in governed_paths:
+        parts = Path(relative).parts
+        if (
+            len(parts) >= 2
+            and parts[0] == "modules"
+            and not (component_root / relative).exists()
+            and (component_root / "components.json").is_file()
+        ):
+            components = json.loads((component_root / "components.json").read_text())
+            if parts[1] not in components["plugins"]:
+                raise ValueError(f"unregistered governed component: {parts[1]}")
+            external_root = component_root.parent / parts[1]
+            nested = Path(*parts[2:]).as_posix() if len(parts) > 2 else "."
+            for path in _governed_files(external_root, (nested,)):
+                logical_files[
+                    f"modules/{parts[1]}/{path.relative_to(external_root).as_posix()}"
+                ] = path
+        else:
+            for path in _governed_files(component_root, (relative,)):
+                logical_files[path.relative_to(component_root).as_posix()] = path
+    shared_governed_paths = tuple(shared_paths)
+    if shared_governed_paths:
+        if vera_root is None:
+            raise ValueError("vera_root is required for governed shared paths")
+        try:
+            component_root.resolve().relative_to((vera_root / "modules").resolve())
+            packaged = True
+        except ValueError:
+            packaged = (vera_root / "privacy/package-projection.json").is_file()
+        logical_files.update(
+            _shared_governed_files(vera_root, shared_governed_paths, packaged=packaged)
+        )
+    repository_governed_paths = tuple(repository_paths)
+    if repository_governed_paths:
+        if vera_root is None:
+            raise ValueError("vera_root is required for governed repository paths")
+        if repository_review is None:
+            logical_files.update(
+                _repository_governed_files(vera_root, repository_governed_paths)
+            )
+        else:
+            logical_path, review_file = _repository_review_file(
+                vera_root, repository_review, repository_governed_paths
+            )
+            logical_files[logical_path] = review_file
+    projected_review_server = "scripts/review_server.py"
+    adapter = component_root / "assets" / "review-workbench-adapter.json"
+    source_review_server = component_root / projected_review_server
+    scripts_are_governed = any(
+        relative == "scripts" or relative == projected_review_server
+        for relative in governed_paths
+    )
     if (
-        account.get("review_timing")
-        != "before_professional_use_and_when_account_or_terms_change"
+        adapter.is_file()
+        and json.loads(adapter.read_text(encoding="utf-8")).get("injectLocalServer")
+        is not False
+        and scripts_are_governed
+        and not source_review_server.is_file()
     ):
-        errors.append(f"{subject}: account review timing is inaccurate")
-    if account.get("review_items") != ACCOUNT_REVIEW_ITEMS:
-        errors.append(f"{subject}: incomplete Codex account boundary review")
-    if account.get("per_case_record_required") is not False:
-        errors.append(f"{subject}: account review must not require a per-case record")
+        repository_root = component_root.parents[1]
+        shared_review_server = repository_root / "scripts" / "serve_review_workbench.py"
+        if not shared_review_server.is_file():
+            raise FileNotFoundError(
+                "shared review workbench source not found: " f"{shared_review_server}"
+            )
+        logical_files[projected_review_server] = shared_review_server
+
+    # The package builder injects the same shared helper next to its consumers.
+    # Include those bytes in repository reviews as well as installed reviews.
+    if any(
+        path.suffix == ".py"
+        and b"from local_helper_environment import" in path.read_bytes()
+        for path in logical_files.values()
+    ):
+        for suffix in ("py", "json"):
+            name = f"scripts/local_helper_environment.{suffix}"
+            candidate = component_root / name
+            if not candidate.is_file():
+                if vera_root is None:
+                    raise ValueError("vera_root is required for shared helper review")
+                candidate = vera_root / name
+                if not candidate.is_file():
+                    candidate = vera_root.parents[1] / name
+            if not candidate.is_file():
+                raise FileNotFoundError(f"Shared helper source not found: {name}")
+            logical_files[name] = candidate
+
+    digest = hashlib.sha256()
+    for logical_path, path in sorted(logical_files.items()):
+        relative = logical_path.encode("utf-8")
+        digest.update(len(relative).to_bytes(4, "big"))
+        digest.update(relative)
+        content = path.read_bytes()
+        digest.update(len(content).to_bytes(8, "big"))
+        digest.update(content)
+    if wrapper is not None:
+        wrapper_root = wrapper.parent
+        wrapper_files = _governed_files(wrapper_root, (".",))
+        if wrapper not in wrapper_files:
+            raise FileNotFoundError(f"workflow wrapper not found: {wrapper}")
+        for path in wrapper_files:
+            logical_path = (
+                Path("vera-wrapper") / path.relative_to(wrapper_root)
+            ).as_posix()
+            digest.update(logical_path.encode("utf-8"))
+            content = path.read_bytes()
+            digest.update(len(content).to_bytes(8, "big"))
+            digest.update(content)
+    return digest.hexdigest()
+
+
+def _boundary_errors(
+    boundaries: Any,
+    *,
+    scope: str,
+    allowed_kinds: set[str],
+    manifest_runtime_profiles: Any,
+    require_retention: bool = False,
+    require_activation: bool = False,
+) -> list[str]:
+    errors: list[str] = []
+    if not isinstance(boundaries, list):
+        return [f"{scope}: external_boundaries must be an array"]
+    available_profiles = (
+        set(manifest_runtime_profiles)
+        if isinstance(manifest_runtime_profiles, list)
+        else set()
+    )
+    boundary_ids: list[str] = []
+    for index, boundary in enumerate(boundaries):
+        if not isinstance(boundary, dict):
+            errors.append(f"{scope}: boundary[{index}] must be an object")
+            continue
+        fields = {
+            "id",
+            "kind",
+            "destination",
+            "purpose",
+            "content",
+            "optional",
+            "requires_confirmation",
+            "controls",
+            "runtime_profiles",
+        }
+        text_fields = ["id", "destination", "purpose", "content"]
+        if require_retention:
+            fields.add("retention")
+            text_fields.append("retention")
+        if require_activation:
+            fields.add("activation")
+            text_fields.append("activation")
+        if fields - boundary.keys():
+            errors.append(f"{scope}: boundary[{index}] is incomplete")
+        if not all(
+            isinstance(boundary.get(field), str) and boundary[field].strip()
+            for field in text_fields
+        ):
+            errors.append(f"{scope}: boundary[{index}] text must be non-empty")
+        boundary_ids.append(str(boundary.get("id", "")))
+        if boundary.get("kind") not in allowed_kinds:
+            errors.append(f"{scope}: boundary[{index}] has invalid kind")
+        optional = boundary.get("optional")
+        confirmation = boundary.get("requires_confirmation")
+        if not isinstance(optional, bool) or not isinstance(confirmation, bool):
+            errors.append(f"{scope}: boundary[{index}] flags must be boolean")
+        elif confirmation and not optional:
+            errors.append(
+                f"{scope}: confirmation is allowed only for an optional boundary"
+            )
+        if require_activation:
+            activation = boundary.get("activation")
+            automatic = {
+                "automatic_session_start",
+                "automatic_on_first_use",
+                "automatic_after_prior_submission",
+                "automatic_after_prior_connection",
+                "automatic_per_durable_run",
+            }
+            if activation not in automatic | {"explicit_user_choice"}:
+                errors.append(f"{scope}: boundary[{index}] has invalid activation")
+            elif activation == "explicit_user_choice" and (
+                optional is not True or confirmation is not True
+            ):
+                errors.append(
+                    f"{scope}: explicit user choice must be optional and confirmed"
+                )
+            elif activation in automatic and (
+                optional is not False or confirmation is not False
+            ):
+                errors.append(
+                    f"{scope}: automatic boundary cannot request confirmation"
+                )
+        controls = boundary.get("controls")
+        if (
+            not isinstance(controls, list)
+            or not controls
+            or not all(isinstance(item, str) and item.strip() for item in controls)
+        ):
+            errors.append(f"{scope}: boundary[{index}] controls must be non-empty")
+        profiles = boundary.get("runtime_profiles")
+        if (
+            not isinstance(profiles, list)
+            or not profiles
+            or not all(isinstance(item, str) and item for item in profiles)
+        ):
+            errors.append(
+                f"{scope}: boundary[{index}] runtime_profiles must be non-empty strings"
+            )
+        elif len(profiles) != len(set(profiles)):
+            errors.append(f"{scope}: boundary[{index}] runtime_profiles must be unique")
+        elif not set(profiles) <= available_profiles:
+            errors.append(
+                f"{scope}: boundary[{index}] references a runtime outside the manifest"
+            )
+    if len(boundary_ids) != len(set(boundary_ids)):
+        errors.append(f"{scope}: boundary ids must be unique")
     return errors
 
 
-def _control_errors(controls: Any, *, subject: str) -> list[str]:
-    # Array shape and stable identifiers are mechanical release invariants. An
-    # empty array is valid: inventing a control is worse than recording that a
-    # workflow has no source-enforced security control of its own.
+def _security_control_errors(
+    controls: Any,
+    *,
+    scope: str,
+    governed_paths: Iterable[str] = (),
+    require_implementation: bool = False,
+) -> list[str]:
+    errors: list[str] = []
     if not isinstance(controls, list):
-        return [f"{subject}: security_controls must be an array"]
-    errors: list[str] = []
-    identifiers: list[str] = []
+        return [f"{scope}: security_controls must be an array"]
+    control_ids: list[str] = []
     for index, control in enumerate(controls):
-        if not isinstance(control, Mapping) or not all(
-            _non_empty_string(control.get(field)) for field in ("id", "control")
-        ):
-            errors.append(f"{subject}: security_controls[{index}] is incomplete")
+        if not isinstance(control, dict):
+            errors.append(f"{scope}: security_controls[{index}] must be an object")
             continue
-        identifiers.append(str(control["id"]))
-    if len(identifiers) != len(set(identifiers)):
-        errors.append(f"{subject}: security control ids must be unique")
+        if not all(
+            isinstance(control.get(field), str) and control[field].strip()
+            for field in ("id", "control")
+        ):
+            errors.append(f"{scope}: security_controls[{index}] is incomplete")
+        if require_implementation:
+            implementations = control.get("implemented_by")
+            on_violation = control.get("on_violation")
+            if (
+                not isinstance(implementations, list)
+                or not implementations
+                or not all(
+                    isinstance(item, str) and item.strip() for item in implementations
+                )
+                or not isinstance(on_violation, str)
+                or not on_violation.strip()
+            ):
+                errors.append(
+                    f"{scope}: security_controls[{index}] lacks executable support"
+                )
+            else:
+                governed = tuple(governed_paths)
+                for implementation in implementations:
+                    implementation_path = Path(implementation)
+                    if (
+                        implementation_path.is_absolute()
+                        or ".." in implementation_path.parts
+                    ):
+                        errors.append(
+                            f"{scope}: security_controls[{index}] has unsafe implementation path"
+                        )
+                        continue
+                    covered = any(
+                        implementation == path
+                        or implementation.startswith(path.rstrip("/") + "/")
+                        for path in governed
+                    )
+                    if not covered:
+                        errors.append(
+                            f"{scope}: security_controls[{index}] implementation is not governed"
+                        )
+        control_ids.append(str(control.get("id", "")))
+    if len(control_ids) != len(set(control_ids)):
+        errors.append(f"{scope}: security control ids must be unique")
     return errors
 
 
-def _workflow_errors(
-    payload: Any,
+def _runtime_profile_reference_errors(
+    profiles: Any,
     *,
-    workflow: str,
-    service_ids: set[str],
+    scope: str,
+    require_all: bool,
 ) -> list[str]:
-    subject = f"workflow {workflow}"
-    if not isinstance(payload, Mapping):
-        return [f"{subject}: manifest must be an object"]
+    if (
+        not isinstance(profiles, list)
+        or not profiles
+        or not all(isinstance(item, str) and item for item in profiles)
+    ):
+        return [f"{scope}: runtime_profiles must be non-empty strings"]
+    errors: list[str] = []
+    if len(profiles) != len(set(profiles)):
+        errors.append(f"{scope}: runtime_profiles must be unique")
+    unknown = sorted(set(profiles) - set(RUNTIME_PROFILE_IDS))
+    if unknown:
+        errors.append(f"{scope}: unknown runtime_profiles: {', '.join(unknown)}")
+    if require_all and profiles != RUNTIME_PROFILE_IDS:
+        errors.append(
+            f"{scope}: every workstream must reference openai-codex and "
+            "anthropic-cowork in that order"
+        )
+    return errors
+
+
+def _manifest_errors(
+    payload: dict[str, Any], *, workstream: str, expected_role: str
+) -> list[str]:
+    errors: list[str] = []
     required = {
         "schema_version",
-        "workflow",
+        "workstream",
         "display_name",
+        "role",
         "governed_paths",
-        "codex_context",
-        "ordinary_codex_model_processing",
-        "codex_account_boundary",
-        "hosted_service_ids",
-        "boundaries_beyond_codex",
+        "runtime_profiles",
+        "model_context",
+        "external_boundaries",
         "security_controls",
         "review",
     }
     missing = sorted(required - payload.keys())
     if missing:
-        return [f"{subject}: missing fields: {', '.join(missing)}"]
-    errors: list[str] = []
-    if payload.get("schema_version") != 1:
-        errors.append(f"{subject}: schema_version must be 1")
-    if payload.get("workflow") != workflow:
-        errors.append(f"{subject}: manifest workflow does not match filename")
-    if not _non_empty_string(payload.get("display_name")):
-        errors.append(f"{subject}: display_name must be non-empty")
-    if not _string_list(payload.get("governed_paths")):
-        errors.append(f"{subject}: governed_paths must be unique non-empty strings")
-    errors.extend(_context_errors(payload.get("codex_context"), subject=subject))
+        return [f"{workstream}: missing fields: {', '.join(missing)}"]
+    if payload["schema_version"] != 3:
+        errors.append(f"{workstream}: schema_version must be 3")
+    if payload["workstream"] != workstream:
+        errors.append(f"{workstream}: manifest workstream does not match filename")
     if (
-        payload.get("ordinary_codex_model_processing")
-        != ORDINARY_CODEX_MODEL_PROCESSING
+        not isinstance(payload["display_name"], str)
+        or not payload["display_name"].strip()
     ):
-        errors.append(
-            f"{subject}: ordinary Codex model processing policy is inaccurate"
-        )
+        errors.append(f"{workstream}: display_name must be non-empty")
+    if payload["role"] != expected_role:
+        errors.append(f"{workstream}: role must be {expected_role}")
+    governed = payload["governed_paths"]
+    if (
+        not isinstance(governed, list)
+        or not governed
+        or not all(isinstance(item, str) and item for item in governed)
+    ):
+        errors.append(f"{workstream}: governed_paths must be non-empty strings")
+    shared_governed = payload.get("governed_shared_paths", [])
+    if not isinstance(shared_governed, list) or not all(
+        isinstance(item, str) and item for item in shared_governed
+    ):
+        errors.append(f"{workstream}: governed_shared_paths must be strings")
+    repository_governed = payload.get("governed_repository_paths", [])
+    if not isinstance(repository_governed, list) or not all(
+        isinstance(item, str) and item for item in repository_governed
+    ):
+        errors.append(f"{workstream}: governed_repository_paths must be strings")
     errors.extend(
-        _account_errors(payload.get("codex_account_boundary"), subject=subject)
-    )
-
-    hosted_ids = payload.get("hosted_service_ids")
-    if not _string_list(hosted_ids, allow_empty=True):
-        errors.append(f"{subject}: hosted_service_ids must be unique strings")
-        hosted_ids = []
-    for service_id in hosted_ids:
-        if service_id not in service_ids:
-            errors.append(f"{subject}: unknown hosted service {service_id}")
-
-    boundaries = payload.get("boundaries_beyond_codex")
-    if not isinstance(boundaries, list):
-        errors.append(f"{subject}: boundaries_beyond_codex must be an array")
-        boundaries = []
-    boundary_ids: list[str] = []
-    referenced_services: set[str] = set()
-    for index, boundary in enumerate(boundaries):
-        label = f"{subject}: boundary[{index}]"
-        if not isinstance(boundary, Mapping):
-            errors.append(f"{label} must be an object")
-            continue
-        if not all(
-            _non_empty_string(boundary.get(field))
-            for field in ("id", "destination", "purpose", "content")
-        ):
-            errors.append(f"{label} text must be non-empty")
-        boundary_ids.append(str(boundary.get("id", "")))
-        kind = boundary.get("kind")
-        if kind not in BOUNDARY_KINDS:
-            errors.append(f"{label} has invalid kind")
-        optional = boundary.get("optional")
-        confirmation = boundary.get("requires_confirmation")
-        if not isinstance(optional, bool) or not isinstance(confirmation, bool):
-            errors.append(f"{label} flags must be boolean")
-        elif confirmation and not optional:
-            errors.append(f"{label} confirmation is allowed only when optional")
-        controls = boundary.get("controls")
-        if not _string_list(controls):
-            errors.append(f"{label} controls must be unique non-empty strings")
-        hosted_service_id = boundary.get("hosted_service_id")
-        if kind == "hosted_service":
-            if not _non_empty_string(hosted_service_id):
-                errors.append(f"{label} must name hosted_service_id")
-            else:
-                referenced_services.add(str(hosted_service_id))
-        elif hosted_service_id is not None:
-            errors.append(f"{label} non-hosted boundary cannot name a hosted service")
-    if len(boundary_ids) != len(set(boundary_ids)):
-        errors.append(f"{subject}: boundary ids must be unique")
-    if set(hosted_ids) != referenced_services:
-        errors.append(
-            f"{subject}: hosted_service_ids must exactly match hosted boundaries"
-        )
-
-    errors.extend(_control_errors(payload.get("security_controls"), subject=subject))
-    errors.extend(
-        _review_errors(
-            payload.get("review"),
-            subject=subject,
-            expected_basis="external_boundary_review_of_workflow_source",
+        _runtime_profile_reference_errors(
+            payload["runtime_profiles"],
+            scope=workstream,
+            require_all=False,
         )
     )
+    context = payload["model_context"]
+    if not isinstance(context, dict):
+        errors.append(f"{workstream}: model_context must be an object")
+    else:
+        if context.get("policy") != MODEL_CONTEXT_POLICY:
+            errors.append(f"{workstream}: unexpected model-context policy")
+        classes = context.get("classes")
+        if not isinstance(classes, list) or not classes:
+            errors.append(f"{workstream}: model_context.classes must be non-empty")
+            classes = []
+        context_ids: list[str] = []
+        for index, item in enumerate(classes):
+            if not isinstance(item, dict):
+                errors.append(
+                    f"{workstream}: model_context.classes[{index}] must be an object"
+                )
+                continue
+            fields = {"id", "purpose", "content", "runtime_profiles"}
+            if fields - item.keys() or not all(
+                isinstance(item.get(field), str) and item[field].strip()
+                for field in ("id", "purpose", "content")
+            ):
+                errors.append(
+                    f"{workstream}: model_context.classes[{index}] is incomplete"
+                )
+            profiles = item.get("runtime_profiles")
+            if (
+                not isinstance(profiles, list)
+                or not profiles
+                or not all(isinstance(value, str) and value for value in profiles)
+                or len(profiles) != len(set(profiles))
+                or not set(profiles) <= set(payload["runtime_profiles"])
+            ):
+                errors.append(
+                    f"{workstream}: model_context.classes[{index}] has invalid "
+                    "runtime_profiles"
+                )
+            context_ids.append(str(item.get("id", "")))
+        if len(context_ids) != len(set(context_ids)):
+            errors.append(f"{workstream}: model_context ids must be unique")
+    errors.extend(
+        _boundary_errors(
+            payload["external_boundaries"],
+            scope=workstream,
+            allowed_kinds=BOUNDARY_KINDS,
+            manifest_runtime_profiles=payload["runtime_profiles"],
+        )
+    )
+    errors.extend(
+        _security_control_errors(payload["security_controls"], scope=workstream)
+    )
+    errors.extend(
+        _repository_review_binding_errors(payload, "workstream-" + workstream)
+    )
+
+    review = payload["review"]
+    if not isinstance(review, dict):
+        errors.append(f"{workstream}: review must be an object")
+    else:
+        if review.get("reviewed_by") != "privacy-surface-review":
+            errors.append(f"{workstream}: unexpected reviewer")
+        if review.get("basis") != "external_boundary_review_of_workflow_source":
+            errors.append(f"{workstream}: unexpected external-boundary review basis")
+        fingerprint = review.get("source_fingerprint")
+        if not isinstance(fingerprint, str) or len(fingerprint) != 64:
+            errors.append(f"{workstream}: invalid source fingerprint")
     return errors
 
 
-def _data_class_errors(value: Any, *, subject: str, field: str) -> list[str]:
-    if not isinstance(value, list) or not value:
-        return [f"{subject}: {field} must be non-empty"]
+def _service_manifest_errors(payload: dict[str, Any], *, service_id: str) -> list[str]:
     errors: list[str] = []
-    identifiers: list[str] = []
-    for index, item in enumerate(value):
-        if not isinstance(item, Mapping) or not all(
-            _non_empty_string(item.get(key)) for key in ("id", "when", "content")
-        ):
-            errors.append(f"{subject}: {field}[{index}] is incomplete")
-            continue
-        identifiers.append(str(item["id"]))
-    if len(identifiers) != len(set(identifiers)):
-        errors.append(f"{subject}: {field} ids must be unique")
-    return errors
-
-
-def _service_errors(
-    payload: Any,
-    *,
-    service_id: str,
-    workflow_names: set[str],
-) -> list[str]:
-    subject = f"hosted service {service_id}"
-    if not isinstance(payload, Mapping):
-        return [f"{subject}: manifest must be an object"]
     required = {
         "schema_version",
         "service_id",
         "display_name",
-        "provider_or_recipients",
-        "workflows",
         "governed_paths",
-        "trigger",
-        "automatic",
-        "data_sent",
-        "data_returned",
-        "access",
-        "retention",
+        "runtime_profiles",
+        "external_boundaries",
         "security_controls",
         "review",
     }
     missing = sorted(required - payload.keys())
     if missing:
-        return [f"{subject}: missing fields: {', '.join(missing)}"]
-    errors: list[str] = []
-    if payload.get("schema_version") != 1:
-        errors.append(f"{subject}: schema_version must be 1")
-    if payload.get("service_id") != service_id:
-        errors.append(f"{subject}: service_id does not match filename")
-    if not _non_empty_string(payload.get("display_name")):
-        errors.append(f"{subject}: display_name must be non-empty")
-    if not _string_list(payload.get("provider_or_recipients")):
-        errors.append(f"{subject}: provider_or_recipients must be non-empty")
-    workflows = payload.get("workflows")
-    if not _string_list(workflows):
-        errors.append(f"{subject}: workflows must be unique non-empty strings")
-        workflows = []
-    for workflow in workflows:
-        if workflow not in workflow_names:
-            errors.append(f"{subject}: unknown workflow {workflow}")
-    if not _string_list(payload.get("governed_paths")):
-        errors.append(f"{subject}: governed_paths must be unique non-empty strings")
-    if not _non_empty_string(payload.get("trigger")):
-        errors.append(f"{subject}: trigger must be non-empty")
-    if not isinstance(payload.get("automatic"), bool):
-        errors.append(f"{subject}: automatic must be boolean")
+        return [f"{service_id}: missing fields: {', '.join(missing)}"]
+    if payload["schema_version"] != 2:
+        errors.append(f"{service_id}: schema_version must be 2")
+    if payload["service_id"] != service_id:
+        errors.append(f"{service_id}: manifest service_id does not match filename")
+    if (
+        not isinstance(payload["display_name"], str)
+        or not payload["display_name"].strip()
+    ):
+        errors.append(f"{service_id}: display_name must be non-empty")
+    governed = payload["governed_paths"]
+    if (
+        not isinstance(governed, list)
+        or not governed
+        or not all(isinstance(item, str) and item for item in governed)
+    ):
+        errors.append(f"{service_id}: governed_paths must be non-empty strings")
+    repository_governed = payload.get("governed_repository_paths", [])
+    if not isinstance(repository_governed, list) or not all(
+        isinstance(item, str) and item for item in repository_governed
+    ):
+        errors.append(f"{service_id}: governed_repository_paths must be strings")
     errors.extend(
-        _data_class_errors(payload.get("data_sent"), subject=subject, field="data_sent")
-    )
-    errors.extend(
-        _data_class_errors(
-            payload.get("data_returned"), subject=subject, field="data_returned"
+        _runtime_profile_reference_errors(
+            payload["runtime_profiles"],
+            scope=service_id,
+            require_all=False,
         )
     )
-    access = payload.get("access")
-    if not isinstance(access, Mapping):
-        errors.append(f"{subject}: access must be an object")
-    else:
-        if not _non_empty_string(access.get("arrangement")):
-            errors.append(f"{subject}: access arrangement must be non-empty")
-        if not _string_list(access.get("controls")):
-            errors.append(f"{subject}: access controls must be non-empty")
-    retention = payload.get("retention")
-    if not isinstance(retention, Mapping):
-        errors.append(f"{subject}: retention must be an object")
-    else:
-        if retention.get("status") not in RETENTION_STATUSES:
-            errors.append(f"{subject}: retention status is invalid")
-        if not _non_empty_string(retention.get("statement")):
-            errors.append(f"{subject}: retention statement must be non-empty")
-    errors.extend(_control_errors(payload.get("security_controls"), subject=subject))
     errors.extend(
-        _review_errors(
-            payload.get("review"),
-            subject=subject,
-            expected_basis="hosted_service_boundary_review_of_source",
+        _boundary_errors(
+            payload["external_boundaries"],
+            scope=service_id,
+            allowed_kinds=SERVICE_BOUNDARY_KINDS,
+            manifest_runtime_profiles=payload["runtime_profiles"],
+            require_retention=True,
+            require_activation=True,
         )
     )
+    errors.extend(
+        _security_control_errors(
+            payload["security_controls"],
+            scope=service_id,
+            governed_paths=[
+                *payload["governed_paths"],
+                *(
+                    f"repository:{path}"
+                    for path in payload.get("governed_repository_paths", [])
+                ),
+            ],
+            require_implementation=True,
+        )
+    )
+    review = payload["review"]
+    if not isinstance(review, dict):
+        errors.append(f"{service_id}: review must be an object")
+    else:
+        if review.get("reviewed_by") != "privacy-surface-review":
+            errors.append(f"{service_id}: unexpected reviewer")
+        if review.get("basis") != "external_boundary_review_of_shared_service_source":
+            errors.append(f"{service_id}: unexpected external-boundary review basis")
+        fingerprint = review.get("source_fingerprint")
+        if not isinstance(fingerprint, str) or len(fingerprint) != 64:
+            errors.append(f"{service_id}: invalid source fingerprint")
+    errors.extend(_repository_review_binding_errors(payload, service_id))
     return errors
 
 
-def _load_manifests(directory: Path) -> tuple[dict[str, Path], list[str]]:
-    errors: list[str] = []
-    manifests: dict[str, Path] = {}
-    if not directory.is_dir():
-        return {}, [f"manifest directory not found: {directory}"]
-    for path in sorted(directory.glob("*.json")):
-        if path.stem in manifests:
-            errors.append(f"duplicate manifest id: {path.stem}")
-        manifests[path.stem] = path
-    return manifests, errors
+def _expected_role(workstream: str, roles: dict[str, dict[str, Any]]) -> str:
+    return str(roles.get(workstream, {}).get("kind", "workflow"))
 
 
-def _read_json(path: Path, *, subject: str) -> tuple[dict[str, Any] | None, str | None]:
+def _registration_errors(root: Path) -> list[str]:
+    """Check explicit ownership against actual skills/components, never infer semantics."""
+    path = root / "privacy/registry.json"
+    if not path.is_file():
+        return ["privacy: missing product registry"]
     try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        return None, f"{subject}: cannot read manifest: {exc}"
-    if not isinstance(payload, dict):
-        return None, f"{subject}: manifest must be an object"
-    return payload, None
+        registry = json.loads(path.read_text(encoding="utf-8"))
+        from jsonschema import Draft202012Validator
+
+        schema = json.loads((root / "privacy/registry.schema.json").read_text())
+        errors = [
+            f"registry: {error.json_path}: {error.message}"
+            for error in Draft202012Validator(schema).iter_errors(registry)
+        ]
+        if errors:
+            return errors
+        metadata = root / ".codex-plugin/plugin.json"
+        if not metadata.is_file():
+            metadata = root / ".claude-plugin/plugin.json"
+        product = json.loads(metadata.read_text())["name"]
+        if registry["product"] != product:
+            errors.append("registry: product does not match installed product")
+        entries = registry["workstreams"]
+        skills = [skill for entry in entries.values() for skill in entry["skills"]]
+        if len(skills) != len(set(skills)):
+            errors.append("registry: a skill has multiple privacy owners")
+        present = {file.parent.name for file in (root / "skills").glob("*/SKILL.md")}
+        registered = set(skills) | set(registry["developer_skills"])
+        for missing in sorted(present - registered):
+            errors.append(f"{missing}: skill has no privacy registration")
+        for extra in sorted(registered - present):
+            errors.append(f"{extra}: registered skill is missing")
+        components = json.loads((root / "components.json").read_text())["plugins"]
+        owned = [
+            component for entry in entries.values() for component in entry["components"]
+        ]
+        if set(owned) != set(components) or len(owned) != len(set(owned)):
+            errors.append(
+                "registry: every embedded component requires exactly one privacy owner"
+            )
+        for name, entry in entries.items():
+            if entry["source"] != "product" and entry["source"] not in components:
+                errors.append(f"{name}: source is not a registered embedded component")
+            if name == "studio-archive" and entry["role"] != "internal_engine":
+                errors.append(
+                    "studio-archive: infrastructure cannot be a professional process"
+                )
+        aliases = [
+            alias for entry in entries.values() for alias in entry["workflow_ids"]
+        ]
+        if len(aliases) != len(set(aliases)):
+            errors.append(
+                "registry: workflow aliases require exactly one privacy owner"
+            )
+        usage = root / "usage/pipelines.json"
+        if usage.is_file():
+            pipelines = json.loads(usage.read_text())["pipelines"]
+            for missing in sorted(set(pipelines) - set(aliases)):
+                errors.append(f"{missing}: primary pipeline has no privacy contract")
+        return errors
+    except (OSError, KeyError, TypeError, ValueError) as exc:
+        return [f"registry: cannot validate registration: {exc}"]
 
 
-def validate_privacy_surfaces(clara_root: Path | None = None) -> list[str]:
-    root = clara_root or _clara_root()
-    workflow_names = _workflow_names(root)
-    workflow_paths, errors = _load_manifests(root / "privacy" / "workflows")
-    service_paths, service_directory_errors = _load_manifests(
-        root / "privacy" / "hosted-services"
-    )
-    errors.extend(service_directory_errors)
-    service_ids = set(service_paths)
+def _schema_errors(
+    root: Path, payload: Any, schema_name: str, subject: str
+) -> list[str]:
+    """Enforce the published closed schema, not just selected required fields."""
+    from jsonschema import Draft202012Validator
 
-    for missing in sorted(workflow_names - workflow_paths.keys()):
-        errors.append(f"workflow {missing}: registered skill has no privacy manifest")
-    for extra in sorted(workflow_paths.keys() - workflow_names):
-        errors.append(f"workflow {extra}: privacy manifest has no registered skill")
+    schema = json.loads((root / "privacy" / schema_name).read_text())
+    return [
+        f"{subject}: {error.json_path}: {error.message}"
+        for error in Draft202012Validator(schema).iter_errors(payload)
+    ]
 
-    workflows: dict[str, dict[str, Any]] = {}
-    services: dict[str, dict[str, Any]] = {}
-    for workflow in sorted(workflow_names & workflow_paths.keys()):
-        payload, read_error = _read_json(
-            workflow_paths[workflow], subject=f"workflow {workflow}"
-        )
-        if read_error:
-            errors.append(read_error)
+
+def validate_privacy_surfaces(vera_root: Path | None = None) -> list[str]:
+    root = vera_root or _vera_root()
+    registration_errors = _registration_errors(root)
+    if registration_errors:
+        return registration_errors
+    names, roles = _components(root)
+    manifest_dir = root / "privacy" / "workstreams"
+    manifests = {path.stem: path for path in manifest_dir.glob("*.json")}
+    errors = _runtime_profile_errors(root)
+    for missing in sorted(names - manifests.keys()):
+        errors.append(f"{missing}: registered workstream has no privacy manifest")
+    for extra in sorted(manifests.keys() - names):
+        errors.append(f"{extra}: privacy manifest is not a registered workstream")
+    for workstream in sorted(names & manifests.keys()):
+        path = manifests[workstream]
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            errors.append(f"{workstream}: cannot read manifest: {exc}")
             continue
-        assert payload is not None
-        workflows[workflow] = payload
-        manifest_errors = _workflow_errors(
-            payload,
-            workflow=workflow,
-            service_ids=service_ids,
+        role = _expected_role(workstream, roles)
+        manifest_errors = _manifest_errors(
+            payload, workstream=workstream, expected_role=role
+        )
+        manifest_errors.extend(
+            _schema_errors(root, payload, "privacy-surface.schema.json", workstream)
+        )
+        known_services = _shared_services(root)
+        for service in payload.get("service_ids", []):
+            if service not in known_services:
+                manifest_errors.append(
+                    f"{workstream}: unknown service reference: {service}"
+                )
+        registry = json.loads((root / "privacy/registry.json").read_text())
+        pages = registry["workstreams"][workstream]["public_pages"]
+        explanations = payload.get("public_explanations", {})
+        if isinstance(explanations, dict):
+            if set(explanations) != {page["page_id"] for page in pages}:
+                manifest_errors.append(
+                    f"{workstream}: public explanations must match registered pages"
+                )
+            for page in pages:
+                explanation = explanations.get(page["page_id"], {})
+                if isinstance(explanation, dict) and set(
+                    explanation.get("copy", {})
+                ) != set(page["languages"]):
+                    manifest_errors.append(
+                        f"{workstream}/{page['page_id']}: missing or unregistered public explanation language"
+                    )
+        errors.extend(manifest_errors)
+        if manifest_errors:
+            continue
+        try:
+            component_root = _component_root(root, workstream)
+            wrapper = _wrapper(root, workstream, roles)
+            actual = _fingerprint(
+                component_root,
+                payload["governed_paths"],
+                wrapper=wrapper,
+                vera_root=root,
+                shared_paths=payload.get("governed_shared_paths", []),
+                repository_paths=payload.get("governed_repository_paths", []),
+                repository_review=payload.get("repository_source_review"),
+            )
+        except (OSError, ValueError) as exc:
+            errors.append(f"{workstream}: cannot fingerprint governed source: {exc}")
+            continue
+        if actual != payload["review"]["source_fingerprint"]:
+            errors.append(
+                f"{workstream}: privacy review is stale; run the review skill, then --refresh"
+            )
+
+    service_names = _shared_services(root)
+    service_dir = root / "privacy" / "services"
+    service_manifests = {path.stem: path for path in service_dir.glob("*.json")}
+    for missing in sorted(service_names - service_manifests.keys()):
+        errors.append(f"{missing}: registered shared service has no privacy manifest")
+    for extra in sorted(service_manifests.keys() - service_names):
+        errors.append(f"{extra}: privacy manifest is not a registered shared service")
+    for service_id in sorted(service_names & service_manifests.keys()):
+        path = service_manifests[service_id]
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            errors.append(f"{service_id}: cannot read manifest: {exc}")
+            continue
+        manifest_errors = _service_manifest_errors(payload, service_id=service_id)
+        manifest_errors.extend(
+            _schema_errors(root, payload, "service-boundary.schema.json", service_id)
         )
         errors.extend(manifest_errors)
         if manifest_errors:
             continue
         try:
-            actual = _fingerprint(root, payload["governed_paths"])
-        except (OSError, ValueError) as exc:
-            errors.append(f"workflow {workflow}: cannot fingerprint source: {exc}")
-            continue
-        if actual != payload["review"]["source_fingerprint"]:
-            errors.append(
-                f"workflow {workflow}: privacy review is stale; review source, then --refresh"
+            actual = _fingerprint(
+                root,
+                payload["governed_paths"],
+                vera_root=root,
+                repository_paths=payload.get("governed_repository_paths", []),
+                repository_review=payload.get("repository_source_review"),
             )
-
-    for service_id in sorted(service_paths):
-        payload, read_error = _read_json(
-            service_paths[service_id], subject=f"hosted service {service_id}"
-        )
-        if read_error:
-            errors.append(read_error)
-            continue
-        assert payload is not None
-        services[service_id] = payload
-        manifest_errors = _service_errors(
-            payload,
-            service_id=service_id,
-            workflow_names=workflow_names,
-        )
-        errors.extend(manifest_errors)
-        if manifest_errors:
-            continue
-        try:
-            actual = _fingerprint(root, payload["governed_paths"])
         except (OSError, ValueError) as exc:
             errors.append(
-                f"hosted service {service_id}: cannot fingerprint source: {exc}"
+                f"{service_id}: cannot fingerprint governed service source: {exc}"
             )
             continue
         if actual != payload["review"]["source_fingerprint"]:
             errors.append(
-                f"hosted service {service_id}: privacy review is stale; review source, then --refresh"
+                f"{service_id}: privacy review is stale; run the review skill, "
+                "then --refresh-service"
             )
-
-    for service_id, service in services.items():
-        for workflow in service.get("workflows", []):
-            workflow_payload = workflows.get(str(workflow))
-            if workflow_payload is None:
-                continue
-            if service_id not in workflow_payload.get("hosted_service_ids", []):
-                errors.append(
-                    f"hosted service {service_id}: workflow {workflow} does not reference it"
-                )
-    for workflow, payload in workflows.items():
-        for service_id in payload.get("hosted_service_ids", []):
-            service = services.get(str(service_id))
-            if service is not None and workflow not in service.get("workflows", []):
-                errors.append(
-                    f"workflow {workflow}: hosted service {service_id} does not link back"
-                )
     return errors
 
 
-def _refresh(identifier: str, clara_root: Path) -> None:
-    workflow_path = clara_root / "privacy" / "workflows" / f"{identifier}.json"
-    service_path = clara_root / "privacy" / "hosted-services" / f"{identifier}.json"
-    matches = [path for path in (workflow_path, service_path) if path.is_file()]
-    if not matches:
-        raise ValueError(f"unknown workflow or hosted service: {identifier}")
-    if len(matches) != 1:
-        raise ValueError(f"ambiguous workflow and hosted service id: {identifier}")
-    path = matches[0]
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    payload["review"]["source_fingerprint"] = _fingerprint(
-        clara_root, payload["governed_paths"]
-    )
-    path.write_text(
-        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
-    LOGGER.info("refreshed %s", identifier)
+def _refresh(workstream: str, vera_root: Path) -> None:
+    names, _ = _components(vera_root)
+    selected = sorted(names) if workstream == "all" else [workstream]
+    for name in selected:
+        if name not in names:
+            raise ValueError(f"unknown registered workstream: {name}")
+        manifest_path = vera_root / "privacy" / "workstreams" / f"{name}.json"
+        payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+        component_root = _component_root(vera_root, name)
+        _, roles = _components(vera_root)
+        role = _expected_role(name, roles)
+        wrapper = _wrapper(vera_root, name, roles)
+        payload["review"]["source_fingerprint"] = _fingerprint(
+            component_root,
+            payload["governed_paths"],
+            wrapper=wrapper,
+            vera_root=vera_root,
+            shared_paths=payload.get("governed_shared_paths", []),
+            repository_paths=payload.get("governed_repository_paths", []),
+        )
+        manifest_path.write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+        )
+        LOGGER.info("Refreshed %s", name)
 
 
-def _refresh_all(clara_root: Path) -> None:
-    identifiers = sorted(
-        {
-            path.stem
-            for directory in (
-                clara_root / "privacy" / "workflows",
-                clara_root / "privacy" / "hosted-services",
-            )
-            for path in directory.glob("*.json")
-        }
-    )
-    for identifier in identifiers:
-        _refresh(identifier, clara_root)
+def _refresh_service(service_id: str, vera_root: Path) -> None:
+    names = _shared_services(vera_root)
+    selected = sorted(names) if service_id == "all" else [service_id]
+    for name in selected:
+        if name not in names:
+            raise ValueError(f"unknown registered shared service: {name}")
+        manifest_path = vera_root / "privacy" / "services" / f"{name}.json"
+        payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+        payload["review"]["source_fingerprint"] = _fingerprint(
+            vera_root,
+            payload["governed_paths"],
+            vera_root=vera_root,
+            repository_paths=payload.get("governed_repository_paths", []),
+            repository_review=payload.get("repository_source_review"),
+        )
+        manifest_path.write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        LOGGER.info("Refreshed service %s", name)
 
 
 def main() -> int:
-    logging.basicConfig(level=logging.INFO, format="%(message)s")
     parser = argparse.ArgumentParser()
-    parser.add_argument("--refresh", metavar="WORKFLOW_OR_SERVICE")
+    parser.add_argument("--refresh", metavar="WORKSTREAM")
+    parser.add_argument("--refresh-service", metavar="SERVICE")
     parser.add_argument("--refresh-all", action="store_true")
     args = parser.parse_args()
-    root = _clara_root()
-    if args.refresh and args.refresh_all:
-        parser.error("choose --refresh or --refresh-all")
-    try:
-        if args.refresh:
-            _refresh(args.refresh, root)
-        elif args.refresh_all:
-            _refresh_all(root)
-    except (OSError, ValueError, KeyError, json.JSONDecodeError) as exc:
-        LOGGER.error("ERROR: %s", exc)
-        return 1
+    root = _vera_root()
+    selected_refreshes = sum(
+        bool(value) for value in (args.refresh, args.refresh_service, args.refresh_all)
+    )
+    if selected_refreshes > 1:
+        parser.error("choose --refresh, --refresh-service, or --refresh-all")
+    if args.refresh_all:
+        _refresh("all", root)
+        _refresh_service("all", root)
+    elif args.refresh:
+        _refresh(args.refresh, root)
+    elif args.refresh_service:
+        _refresh_service(args.refresh_service, root)
     errors = validate_privacy_surfaces(root)
     if errors:
         for error in errors:
-            LOGGER.error("ERROR: %s", error)
+            LOGGER.error("%s", error)
         return 1
-    LOGGER.info("Clara privacy surfaces are complete and current.")
+    LOGGER.info("Product privacy register is complete and current.")
     return 0
 
 

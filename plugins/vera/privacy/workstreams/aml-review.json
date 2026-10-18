@@ -131,5 +131,33 @@
       "control": "Signed app-only source mandate and literal intake CAS bind current exact run and actor/tenant. Stable opaque grant enables only selected actual evidence, complete source closure and model staging CAS; fixed checks establish identity and integrity rather than legal relevance or truth. The unchanged public AML build/render/save service validates source hashes and same-engagement sealed AML predecessor from a fresh run, retains full proposed findings and memo, and rejects model-authored professional decisions. Explicit signed selection conserves the exact staged draft_for_review record, with full preview replay and exact retries, without overwriting old records. Pending, orphaned, altered or missing completed staging/conservation receipts block additional authoring, professional decisions and Archive closure. Final human decision, run-level model-data report and explicit all-output declaration/finalization stay separate."
     }
   ],
-  "workstream": "aml-review"
+  "workstream": "aml-review",
+  "public_explanations": {
+    "aml-review": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Il modello può leggere i documenti selezionati, anche integralmente: identità, proprietà e controllo, contratti, movimenti, dichiarazioni e rapporti di screening. Legge inoltre valutazioni precedenti, spiegazioni, fonti, proposte e decisioni necessarie al riesame. Python verifica localmente riferimenti e hash, conserva versioni e riusa eventuali calcoli; questo non rende l’analisi locale né anonimizza i dati. In Codex si applica l’account OpenAI scelto dallo studio; in Cowork quello Anthropic, con revisione in chat se il fascicolo portabile non è disponibile. Le ricerche normative pubbliche usano argomenti generici senza identificativi del cliente. Il report di esecuzione descrive i dati effettivamente usati."
+        ],
+        "en": [
+          "The model may read selected documents in full: identity, ownership and control, contracts, transactions, declarations and screening reports. It also reads prior assessments, explanations, sources, proposals and decisions needed for the review. Python checks references and hashes locally, preserves versions and reuses available calculations; this does not make the analysis local or anonymize data. Codex uses the studio’s selected OpenAI account; Cowork uses its Anthropic account, with a chat review if the portable archive is unavailable. Public legal research uses generic topics without client identifiers. The run report describes the data actually used."
+        ],
+        "fr": [
+          "Le modèle peut lire intégralement les pièces sélectionnées : identité, propriété et contrôle, contrats, transactions, déclarations et rapports de filtrage. Il lit aussi les appréciations précédentes, explications, sources, propositions et décisions utiles à la revue. Python vérifie localement références et empreintes, conserve les versions et réutilise les calculs disponibles ; cela ne rend pas l’analyse locale et n’anonymise pas les données. Codex utilise le compte OpenAI choisi par le cabinet ; Cowork utilise son compte Anthropic, avec revue dans la conversation si le dossier portable est indisponible. La recherche juridique publique utilise des sujets génériques sans identifiants du client. Le rapport d’exécution décrit les données utilisées."
+        ],
+        "de": [
+          "Das Modell kann ausgewählte Unterlagen vollständig lesen: Identität, Eigentum und Kontrolle, Verträge, Transaktionen, Erklärungen und Screeningberichte. Hinzu kommen frühere Einschätzungen, Erklärungen, Quellen, Vorschläge und notwendige Entscheidungen. Python prüft Referenzen und Hashwerte lokal, speichert Versionen und nutzt verfügbare Berechnungen; dadurch wird die Analyse weder lokal noch anonymisiert. Codex nutzt das gewählte OpenAI-Konto der Kanzlei; Cowork deren Anthropic-Konto, mit Prüfung im Chat, wenn die portable Akte fehlt. Öffentliche Rechtsrecherche verwendet allgemeine Themen ohne Mandantenkennungen. Der Ausführungsbericht beschreibt die verwendeten Daten."
+        ],
+        "es": [
+          "El modelo puede leer documentos seleccionados completos: identidad, propiedad y control, contratos, operaciones, declaraciones e informes de screening. También lee valoraciones anteriores, explicaciones, fuentes, propuestas y decisiones necesarias para la revisión. Python verifica referencias y hashes localmente, conserva versiones y reutiliza cálculos disponibles; esto no hace que el análisis sea local ni anonimiza datos. Codex usa la cuenta OpenAI elegida por el despacho; Cowork usa su cuenta Anthropic, con revisión en el chat si el expediente portátil no está disponible. La investigación jurídica pública usa temas genéricos sin identificadores del cliente. El informe de ejecución describe los datos utilizados."
+        ]
+      }
+    }
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ]
 }

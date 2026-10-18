@@ -1,0 +1,84 @@
+{
+  "schema_version": 2,
+  "service_id": "prepared-course-files",
+  "display_name": "Prepared course-file downloads",
+  "governed_paths": [
+    "scripts/local_courses.py",
+    "assets/courses"
+  ],
+  "governed_repository_paths": [
+    "plugins/_shared/vendor/modules/courseware",
+    "scripts/course_materials/remote_files.py"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "external_boundaries": [
+    {
+      "id": "public-file-get",
+      "kind": "hosted_service",
+      "destination": "Mparanza public static course-file infrastructure",
+      "purpose": "Preparing a requested course",
+      "content": "Fixed public GET paths identifying prepared assets by SHA-256 and original filename, plus ordinary connection metadata. No client files, local paths, teaching profile, answers, progress or feedback are sent.",
+      "retention": "Verified prepared files stay in the selected local lesson folder. Hosted access-log retention and other provider copies are outside this helper; no deletion schedule is enforced by the download.",
+      "activation": "automatic_on_first_use",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork",
+        "openai-chatgpt",
+        "google-antigravity"
+      ],
+      "controls": [
+        "HTTPS and mparanza.com only, including redirects; no credentials or query parameters; passive lesson-data extensions only; 30-second request timeout and 25 MB cap; SHA-256 checked before atomic write; only selected-language attachments are fetched; no code is downloaded or executed."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "fixed-host-and-byte-integrity",
+      "control": "HTTPS and mparanza.com only, including redirects; no credentials or query parameters; passive lesson-data extensions only; 30-second request timeout and 25 MB cap; SHA-256 checked before atomic write; only selected-language attachments are fetched; no code is downloaded or executed.",
+      "implemented_by": [
+        "repository:plugins/_shared/vendor/modules/courseware/library.py"
+      ],
+      "on_violation": "Reject unapproved origins, oversized or non-passive content and mismatching SHA-256 before atomic write."
+    }
+  ],
+  "service_details": {
+    "trigger": "When the user requests preparation of a lesson whose selected-language attachments are omitted from the installed package.",
+    "data_sent": [
+      {
+        "id": "public-file-get",
+        "when": "Preparing a requested course",
+        "content": "Fixed public GET paths identifying prepared assets by SHA-256 and original filename, plus ordinary connection metadata. No client files, local paths, teaching profile, answers, progress or feedback are sent."
+      }
+    ],
+    "data_returned": [
+      {
+        "id": "reviewed-fictional-inputs",
+        "when": "After a successful bounded download and SHA-256 verification",
+        "content": "The original prepared fictional lesson attachment bytes, written into the selected local lesson folder. No executable code is downloaded or run."
+      }
+    ],
+    "access": {
+      "arrangement": "Public unauthenticated HTTPS files under https://mparanza.com/static/shared/courses/clara/; host network permissions remain enforced.",
+      "controls": [
+        "HTTPS and mparanza.com only, including redirects; no credentials or query parameters; passive lesson-data extensions only; 30-second request timeout and 25 MB cap; SHA-256 checked before atomic write; only selected-language attachments are fetched; no code is downloaded or executed."
+      ]
+    },
+    "retention": {
+      "status": "partially_documented",
+      "statement": "Verified prepared files stay in the selected local lesson folder. Hosted access-log retention and other provider copies are outside this helper; no deletion schedule is enforced by the download."
+    }
+  },
+  "review": {
+    "reviewed_at": "2026-10-18",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_shared_service_source",
+    "source_fingerprint": "14401a2f820777ab5ba21ab09d92536ca5bafdbdf8e098d0b4e0cce5648bea2f"
+  }
+}

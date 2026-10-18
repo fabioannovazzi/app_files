@@ -134,6 +134,11 @@ def package_entries(product: str = "vera") -> dict[str, bytes]:
             )
         )
     if product in {"vera", "clara", "lucia"}:
+        from project_product_privacy import project_privacy
+
+        project_privacy(
+            entries, product, prefix=f"{product}/", host="google-antigravity"
+        )
         add_vera_execution_manifest(entries, f"{product}/")
     return dict(sorted(entries.items()))
 

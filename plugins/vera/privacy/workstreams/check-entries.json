@@ -161,5 +161,83 @@
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"
+  ],
+  "public_explanations": {
+    "check-entries": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "L'ispezione può mostrare struttura e inventari completi dei supporti",
+          "Il modello può leggere istruzioni, riferimenti al campione e al lotto e il risultato dell'ispezione: fino alle prime 20 righe della popolazione normalizzata con campi contabili, ID preparati e posizioni sorgente; per tutti i PDF, nome, percorso, ID, hash, estraibilità, lunghezza del testo ed errore; per ogni FatturaPA parsata, origine, tipo, numero, data, totale, valuta, nomi e ID fiscali di fornitore e cliente. Altra evidenza esatta viene aperta solo per un'ambiguità specifica.",
+          "Il codice rilegge tutta la popolazione, ma controlla solo il campione",
+          "Il codice riproduce localmente l'intera popolazione qualificata per verificarne integrità e chiusura, la restringe uno-a-uno alle righe del campione e analizza integralmente solo il lotto di supporti selezionato. Abbinamenti e controlli riguardano esclusivamente le scritture campionate; le righe non campionate non entrano nei risultati.",
+          "Il modello riceve un indice non identificativo; il professionista vede il dettaglio",
+          "Dopo i controlli, il server locale legge i dati completi della revisione. Il modello riceve conteggi e, per ogni caso interpretabile, solo riferimento opaco, tipo, stato, azione proposta e nomi dei segnali presenti; la referenza casuale dura quattro ore. Valori, titoli, nomi, descrizioni, importi, date, identificativi e percorsi restano fuori dall'indice. La schermata mostrata al professionista conserva invece tutto il dettaglio, senza inviarlo al modello. La preparazione limita il dettaglio a 1.500 risultati e 500 PDF; gli strumenti integrati rifiutano oltre 2.500 elementi o 2.000.000 byte.",
+          "Solo i casi scelti arrivano al modello, al massimo 25 per chiamata",
+          "Ogni risposta è limitata a 25 casi e 500.000 byte. Può contenere stato, data, importi, conto e descrizione, beneficiario o controparte, valuta, controlli, differenze, note, tipo e segnali del supporto, conclusione professionale, stato di assurance ed evidenze estratte. Campi vuoti o non mappati, percorsi, nomi file, ID tecnici, destinazioni di scrittura e duplicati restano fuori; numeri di movimento o fattura, conto, ID fiscali e riferimenti esatti arrivano solo su richiesta per il confronto d'identità.",
+          "Stesso indice e stessi limiti in ogni modalità",
+          "Quando sono disponibili, gli strumenti integrati verificano, salvano e applicano la revisione con lo stesso indice e gli stessi limiti. Altrimenti, la consegna in Markdown o in un file contiene soltanto i casi selezionati e la procedura locale di Studio Archive conserva e finalizza la stessa esecuzione senza rileggere tutti i dati completi della revisione. Una fonte completa può essere aperta per una domanda probatoria specifica rimasta irrisolta.",
+          "I dati professionali non vengono anonimizzati né pseudonimizzati automaticamente. I riferimenti opachi servono solo a selezionare i casi: nomi, descrizioni, importi, date e identificativi reali possono arrivare quando sono necessari alla revisione professionale."
+        ],
+        "en": [
+          "Inspection can expose source structure and complete support inventories",
+          "The model may read instructions, sample and batch references, and the inspection result: up to the first 20 rows of the normalized population with accounting fields, prepared IDs and source locations; for every PDF, its name, path, IDs, hash, extractability, text length and error; and for every parsed FatturaPA record, source, type, number, date, total, currency, and supplier and customer names and tax IDs. Other exact evidence is opened only for a specific ambiguity.",
+          "Code replays the whole population but checks only the sample",
+          "Code locally reproduces the complete qualified population to verify integrity and closure, restricts it one-for-one to the sample rows, and fully analyzes only the selected support batch. Matching and checks apply exclusively to sampled entries; unsampled rows do not enter the results.",
+          "The model receives a non-identifying index; the professional sees the detail",
+          "After checks, the local server reads the complete review data. The model receives counts and, for each interpretable case, only an opaque handle, type, status, proposed action, and names of present signal classes; the random reference lasts four hours. Values, titles, names, descriptions, amounts, dates, identifiers, and paths stay out of the index. The review screen keeps the full detail for the professional without sending it to the model. Preparation limits that detail to 1,500 results and 500 PDFs; integrated tools reject more than 2,500 items or 2,000,000 bytes.",
+          "Only selected cases reach the model, at most 25 per call",
+          "Each response is limited to 25 cases and 500,000 bytes. It may contain status, date, amounts, account and description, beneficiary or counterparty, currency, checks, mismatches, notes, support type and signals, professional conclusion, assurance status, and extracted evidence. Empty or unmapped fields, paths, filenames, technical IDs, write targets, and duplicates stay out; exact movement or invoice numbers, account, tax IDs, and references arrive only on request for identity comparison.",
+          "One index and the same limits in every mode",
+          "When available, integrated tools validate, save, and apply the review with the same index and limits. Otherwise, the Markdown or file delivery contains selected cases only, and the local Studio Archive procedure preserves and finalizes the same review without rereading all complete review data. A complete source can be opened for a specific unresolved evidence question.",
+          "Professional data is not automatically anonymized or pseudonymized. Opaque references only select cases: real names, descriptions, amounts, dates, and identifiers may reach the model when professional review requires them."
+        ],
+        "fr": [
+          "L'inspection peut exposer la structure et les inventaires complets des justificatifs",
+          "Le modèle peut lire les instructions, les références de l'échantillon et du lot, ainsi que le résultat de l'inspection : jusqu'aux 20 premières lignes de la population normalisée avec champs comptables, identifiants préparés et emplacements source ; pour chaque PDF, nom, chemin, identifiants, hash, extractibilité, longueur du texte et erreur ; et pour chaque FatturaPA analysée, source, type, numéro, date, total, devise, noms et identifiants fiscaux du fournisseur et du client. Une autre preuve exacte n'est ouverte que pour une ambiguïté précise.",
+          "Le code rejoue toute la population mais ne contrôle que l'échantillon",
+          "Le code reproduit localement toute la population qualifiée pour en vérifier l'intégrité et la clôture, la restreint ligne par ligne à l'échantillon et analyse intégralement seulement le lot de justificatifs sélectionné. Les rapprochements et contrôles portent exclusivement sur les écritures échantillonnées ; les lignes hors échantillon n'entrent pas dans les résultats.",
+          "Le modèle reçoit un index non identifiant ; le professionnel voit le détail",
+          "Après les contrôles, le serveur local lit les données complètes de la revue. Le modèle reçoit les décomptes et, pour chaque cas interprétable, uniquement une référence opaque, le type, le statut, l'action proposée et les noms des classes de signaux présentes ; la référence aléatoire dure quatre heures. Valeurs, titres, noms, descriptions, montants, dates, identifiants et chemins restent hors de l'index. L'écran de revue conserve tous les détails pour le professionnel sans les envoyer au modèle. La préparation limite ces détails à 1 500 résultats et 500 PDF ; les outils intégrés refusent plus de 2 500 éléments ou 2 000 000 octets.",
+          "Seuls les cas choisis parviennent au modèle, au plus 25 par appel",
+          "Chaque réponse est limitée à 25 cas et 500 000 octets. Elle peut contenir statut, date, montants, compte et description, bénéficiaire ou contrepartie, devise, contrôles, écarts, notes, type et signaux du justificatif, conclusion professionnelle, état d'assurance et preuves extraites. Champs vides ou non mappés, chemins, noms de fichiers, identifiants techniques, cibles d'écriture et doublons restent exclus ; numéros exacts de mouvement ou facture, compte, identifiants fiscaux et références n'arrivent que sur demande pour comparer l'identité.",
+          "Un même index et les mêmes limites dans chaque mode",
+          "Lorsqu'ils sont disponibles, les outils intégrés valident, enregistrent et appliquent la revue avec le même index et les mêmes limites. Sinon, la remise en Markdown ou dans un fichier ne contient que les cas sélectionnés et la procédure locale de Studio Archive conserve et finalise la même revue sans relire toutes les données complètes. Une source complète peut être ouverte pour une question probatoire précise non résolue.",
+          "Les données professionnelles ne sont pas automatiquement anonymisées ou pseudonymisées. Les références opaques servent uniquement à sélectionner les cas : noms, descriptions, montants, dates et identifiants réels peuvent parvenir au modèle si la revue professionnelle l'exige."
+        ],
+        "de": [
+          "Die Inspektion kann Struktur und vollständige Beleginventare offenlegen",
+          "Das Modell kann Anweisungen, Stichproben- und Chargenverweise sowie das Inspektionsergebnis lesen: bis zu den ersten 20 Zeilen des normalisierten Bestands mit Buchungsfeldern, vorbereiteten Kennungen und Quellpositionen; für jedes PDF Name, Pfad, Kennungen, Hash, Extrahierbarkeit, Textlänge und Fehler; und für jeden gelesenen FatturaPA-Datensatz Quelle, Typ, Nummer, Datum, Summe, Währung sowie Namen und Steuerkennungen von Lieferant und Kunde. Weitere exakte Nachweise werden nur für eine konkrete Unklarheit geöffnet.",
+          "Der Code spielt den gesamten Bestand nach, prüft aber nur die Stichprobe",
+          "Der Code reproduziert lokal den vollständigen qualifizierten Bestand, um Integrität und Abschluss zu prüfen, beschränkt ihn eins zu eins auf die Stichprobenzeilen und analysiert vollständig nur die ausgewählte Belegcharge. Zuordnung und Prüfungen gelten ausschließlich für ausgewählte Buchungen; nicht ausgewählte Zeilen gelangen nicht in die Ergebnisse.",
+          "Das Modell erhält einen nicht identifizierenden Index; der Berater sieht die Details",
+          "Nach den Prüfungen liest der lokale Server die vollständigen Prüfungsdaten. Das Modell erhält Zählwerte und je interpretierbarem Fall nur einen undurchsichtigen Verweis, Typ, Status, vorgeschlagene Aktion und Namen vorhandener Signalklassen; die zufällige Referenz gilt vier Stunden. Werte, Titel, Namen, Beschreibungen, Beträge, Daten, Kennungen und Pfade bleiben aus dem Index heraus. Die Prüfungsansicht behält alle Details für den Berater, ohne sie an das Modell zu senden. Die Vorbereitung begrenzt diese Details auf 1.500 Ergebnisse und 500 PDFs; integrierte Werkzeuge lehnen mehr als 2.500 Elemente oder 2.000.000 Byte ab.",
+          "Nur ausgewählte Fälle erreichen das Modell, höchstens 25 pro Aufruf",
+          "Jede Antwort ist auf 25 Fälle und 500.000 Byte begrenzt. Sie kann Status, Datum, Beträge, Konto und Beschreibung, Begünstigten oder Gegenpartei, Währung, Prüfungen, Abweichungen, Notizen, Belegtyp und -signale, fachliche Schlussfolgerung, Assurance-Status und extrahierte Nachweise enthalten. Leere oder nicht gemappte Felder, Pfade, Dateinamen, technische Kennungen, Schreibziele und Duplikate bleiben ausgeschlossen; exakte Bewegungs- oder Rechnungsnummern, Konto, Steuerkennungen und Referenzen kommen nur auf Anforderung zum Identitätsvergleich hinzu.",
+          "Ein Index und dieselben Grenzen in jeder Variante",
+          "Wenn integrierte Werkzeuge verfügbar sind, validieren, speichern und übernehmen sie die Prüfung mit demselben Index und denselben Grenzen. Andernfalls enthält die Übergabe als Markdown oder Datei nur ausgewählte Fälle, und das lokale Studio-Archive-Verfahren bewahrt und finalisiert dieselbe Prüfung, ohne alle vollständigen Prüfungsdaten erneut zu lesen. Eine vollständige Quelle kann für eine konkrete ungeklärte Nachweisfrage geöffnet werden.",
+          "Fachdaten werden nicht automatisch anonymisiert oder pseudonymisiert. Undurchsichtige Verweise dienen nur der Fallauswahl: echte Namen, Beschreibungen, Beträge, Daten und Kennungen können das Modell erreichen, wenn die fachliche Prüfung sie benötigt."
+        ],
+        "es": [
+          "La inspección puede exponer la estructura y los inventarios completos de soportes",
+          "El modelo puede leer las instrucciones, las referencias de la muestra y del lote, y el resultado de la inspección: hasta las primeras 20 filas de la población normalizada con campos contables, identificadores preparados y ubicaciones de origen; para cada PDF, nombre, ruta, identificadores, hash, capacidad de extracción, longitud del texto y error; y para cada FatturaPA analizada, origen, tipo, número, fecha, total, moneda, nombres e identificadores fiscales de proveedor y cliente. Solo se abre otra evidencia exacta para una ambigüedad concreta.",
+          "El código reproduce toda la población, pero solo comprueba la muestra",
+          "El código reproduce localmente toda la población calificada para verificar su integridad y cierre, la restringe uno a uno a las filas de la muestra y analiza por completo solo el lote de soportes seleccionado. Los emparejamientos y controles se aplican exclusivamente a los asientos muestreados; las filas no muestreadas no entran en los resultados.",
+          "El modelo recibe un índice no identificativo; el profesional ve el detalle",
+          "Después de los controles, el servidor local lee los datos completos de la revisión. El modelo recibe recuentos y, para cada caso interpretable, solo una referencia opaca, tipo, estado, acción propuesta y nombres de las clases de señales presentes; la referencia aleatoria dura cuatro horas. Valores, títulos, nombres, descripciones, importes, fechas, identificadores y rutas quedan fuera del índice. La pantalla de revisión conserva todo el detalle para el profesional sin enviarlo al modelo. La preparación limita ese detalle a 1.500 resultados y 500 PDF; las herramientas integradas rechazan más de 2.500 elementos o 2.000.000 bytes.",
+          "Solo los casos elegidos llegan al modelo, como máximo 25 por llamada",
+          "Cada respuesta se limita a 25 casos y 500.000 bytes. Puede contener estado, fecha, importes, cuenta y descripción, beneficiario o contraparte, moneda, controles, diferencias, notas, tipo y señales del soporte, conclusión profesional, estado de aseguramiento y evidencias extraídas. Los campos vacíos o no mapeados, rutas, nombres de archivo, identificadores técnicos, destinos de escritura y duplicados quedan fuera; los números exactos de movimiento o factura, cuenta, identificadores fiscales y referencias solo llegan bajo petición para comparar la identidad.",
+          "Un mismo índice y los mismos límites en cada modalidad",
+          "Cuando están disponibles, las herramientas integradas validan, guardan y aplican la revisión con el mismo índice y los mismos límites. De lo contrario, la entrega en Markdown o en un archivo contiene solo los casos seleccionados y el procedimiento local de Studio Archive conserva y finaliza la misma revisión sin volver a leer todos los datos completos. Puede abrirse una fuente completa para una cuestión probatoria concreta no resuelta.",
+          "Los datos profesionales no se anonimizan ni se seudonimizan automáticamente. Las referencias opacas solo sirven para seleccionar casos: nombres, descripciones, importes, fechas e identificadores reales pueden llegar al modelo cuando la revisión profesional los necesita."
+        ]
+      }
+    }
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
   ]
 }

@@ -83,6 +83,8 @@ def main(argv: list[str] | None = None) -> int:
     suffix = ["--check"] if args.check else []
     commands = [
         ["scripts/sync_reporting_runtime.py", *suffix],
+        ["scripts/sync_privacy_runtime.py", *suffix],
+        ["scripts/build_privacy_contracts.py", *suffix],
         ["scripts/check_shared_runtime_revision.py"],
         ["scripts/course_materials/build_catalog.py", "--check"],
         ["scripts/course_materials/remote_files.py", *suffix],

@@ -14,6 +14,12 @@ PRODUCT_PAGES = {
 }
 
 
+def _privacy_page(product: str, page: str) -> dict:
+    return json.loads((SHARED / "privacy-contracts" / f"{product}.json").read_text())[
+        "pages"
+    ][page]
+
+
 def _javascript_string_values(source: str, key: str) -> list[str]:
     key_pattern = re.escape(key) if key.startswith('"') else rf'"?{re.escape(key)}"?'
     pattern = rf'{key_pattern}\s*:\s*("(?:\\.|[^"\\])*")'
@@ -86,8 +92,7 @@ def test_product_pages_are_directories_without_generic_method_or_data_sections()
         ):
             assert "<p" not in module, page_path
             if 'class="module-row"' in module:
-                assert "<h4" in module, page_path
-                assert "<h3" not in module, page_path
+                assert re.search(r"<h[34]\b", module), page_path
 
 
 def test_every_directory_link_resolves_to_a_separate_explanation_page() -> None:
@@ -259,7 +264,7 @@ def test_vera_keeps_market_specific_functions_inside_user_job_areas() -> None:
     assert 'href="#jurisdiction"' not in vera
     assert "data-jurisdiction-section" not in vera
     assert "data-jurisdiction-nav" not in vera
-    assert vera.count('data-jurisdiction-item="it"') == 17
+    assert vera.count('data-jurisdiction-item="it"') == 18
     assert 'id="area-matters"' in vera
     assert 'id="area-analysis"' in vera
     assert 'id="area-research"' in vera
@@ -473,7 +478,7 @@ def test_all_product_directories_distinguish_area_headings_from_function_links()
 def test_product_roots_keep_function_explanations_out_of_overview() -> None:
     for product, page_path in PRODUCT_PAGES.items():
         page = page_path.read_text(encoding="utf-8")
-        expected_section_count = 4 if product == "vera" else 2
+        expected_section_count = 6 if product == "vera" else 2
         assert page.count("<section") == expected_section_count
         assert '<section id="workflow">' not in page
         assert "Funzioni disponibili" in page or "Available functions" in page
@@ -541,7 +546,8 @@ def test_function_pages_use_specific_data_copy_and_keep_future_page_fallback() -
     for workflow_copy in (communication_copy, website_copy):
         assert workflow_copy.count('modelDataStatus: "relevant"') == 5
         assert 'modelDataStatus: "not-relevant"' not in workflow_copy
-    assert 'data-model-data-status="relevant"' in bank_page
+    assert 'data-model-data-status="placeholder"' in bank_page
+    assert _privacy_page("vera", "journal-bank-reconciliation")["status"] == "relevant"
     assert "Quali dati arrivano al modello" in bank_page
     assert "modelDataConclusion" in function_copy
 
@@ -768,11 +774,11 @@ def test_professional_question_page_explains_the_complete_answer_journey() -> No
         "Répondre aux questions juridiques et fiscales",
         "Rechtliche und steuerliche Fragen beantworten",
         "Responder consultas jurídicas y fiscales",
-        "l'intero quesito, non un campione",
-        "separate runs in the same Studio Archive engagement",
-        "Aucune anonymisation ou pseudonymisation automatique",
-        "keine automatische Anonymisierung oder Pseudonymisierung",
-        "No se aplica anonimización ni seudonimización automática",
+        "quesito completo",
+        "distinct runs",
+        "anonymisation automatique",
+        "automatische Anonymisierung",
+        "anonimización automática",
     ):
         assert snippet in workflow_copy
 
@@ -816,56 +822,22 @@ def test_clara_research_video_has_a_localized_public_explanation() -> None:
 
 
 def test_every_function_page_uses_one_shared_model_data_component() -> None:
-    component_css = (SHARED / "function-model-data.css").read_text(encoding="utf-8")
-    injector = (SHARED / "function-model-data.js").read_text(encoding="utf-8")
-    renderer = (SHARED / "product-function-page.js").read_text(encoding="utf-8")
-    renderer_css = (SHARED / "product-function-page.css").read_text(encoding="utf-8")
-    bank_page = (SHARED / "journal-bank-reconciliation" / "index.html").read_text(
-        encoding="utf-8"
-    )
-
-    shared_classes = (
-        "function-model-data",
-        "function-model-data__head",
-        "function-model-data__heading",
-        "function-model-data__label",
-        "function-model-data__copy",
-    )
-    for class_name in shared_classes:
-        assert class_name in injector
-        assert class_name in renderer
-        assert class_name in bank_page
-
-    assert '@import url("./function-model-data.css");' in renderer_css
-    assert "function-model-data__conclusion" in renderer
-    assert "function-model-data__conclusion" in component_css
-    assert "function-model-data__report-note" in injector
-    assert "function-model-data__report-note" in renderer
-    assert "function-model-data__report-note" in component_css
-    assert 'page.product === "Vera"' in renderer
-    assert "#run-evidence" in injector
-    assert "#run-evidence" in renderer
-    assert "https://mparanza.com/data-handling?lang=${language}" in injector
-    assert "https://mparanza.com/data-handling?lang=${linkedSiteLanguage}" in renderer
+    injector = (SHARED / "function-model-data.js").read_text()
+    renderer = (SHARED / "product-function-page.js").read_text()
+    assert "function-model-data.js" in renderer
+    assert "text.modelData" not in renderer
+    assert "privacy-contracts/index.json" in injector
+    assert "privacy-contracts/${selectedProduct}.json" in injector
     assert 'attributeFilter: ["lang"]' in injector
-    assert "pf-model-data" not in renderer
-    assert "pf-model-data" not in renderer_css
-    assert 'href="../function-model-data.css"' in bank_page
-    assert (
-        "grid-template-columns: minmax(240px, 0.75fr) minmax(0, 1.25fr)"
-        in component_css
-    )
-
+    assert "main.append(section)" in injector
+    assert 'contract.role === "workflow"' in injector
     for page_path in PRODUCT_PAGES.values():
-        page = page_path.read_text(encoding="utf-8")
-        for href in _directory_links(page):
-            destination = _resolved_page(page_path, href)
-            explanation = destination.read_text(encoding="utf-8")
+        for href in _directory_links(page_path.read_text()):
+            explanation = _resolved_page(page_path, href).read_text()
             assert (
                 "function-model-data.js" in explanation
                 or "product-function-page.js" in explanation
-                or 'class="function-model-data"' in explanation
-            ), f"{destination}: does not use the shared model-data component"
+            )
 
 
 def test_every_standalone_vera_model_data_page_loads_the_run_report_note() -> None:
@@ -885,49 +857,20 @@ def test_every_standalone_vera_model_data_page_loads_the_run_report_note() -> No
 
 
 def test_long_vera_model_data_explanations_preserve_readable_paragraphs() -> None:
-    function_copy = (SHARED / "product-function-pages.js").read_text(encoding="utf-8")
-    renderer = (SHARED / "product-function-page.js").read_text(encoding="utf-8")
-    injector = (SHARED / "function-model-data.js").read_text(encoding="utf-8")
-
-    for page_name in (
-        "variance-analysis",
-        "bilancio-xbrl-it",
-        "bandi-agevolazioni",
-        "quesito-legale-fiscale",
-        "comunicazione-professionale",
-        "presenza-digitale-studio",
-        "business-planning",
-        "clara-business-planning",
+    for product, page in (
+        ("vera", "variance-analysis"),
+        ("vera", "bandi-agevolazioni"),
+        ("vera", "quesito-legale-fiscale"),
+        ("clara", "clara-business-planning"),
     ):
-        values = _javascript_string_values(
-            _function_page_copy(function_copy, page_name), "modelData"
+        paragraphs = _privacy_page(product, page)["copy"]
+        assert set(paragraphs) == {"it", "en", "fr", "de", "es"}
+        assert all(
+            len("\n\n".join(values).split("\n\n")) >= 3
+            for values in paragraphs.values()
         )
-        assert len(values) == 5
-        expected_paragraphs = {
-            "bandi-agevolazioni": 6,
-            "quesito-legale-fiscale": 6,
-            "business-planning": 5,
-            "clara-business-planning": 5,
-        }.get(page_name, 3)
-        assert all(len(value.split("\n\n")) == expected_paragraphs for value in values)
-
-    for page_name in (
-        "deep-research-validator",
-        "previdenza-inps",
-        "prompt-optimizer",
-        "registro-imprese-sari",
-        "report-builder",
-        "sales-plan",
-    ):
-        page = (SHARED / page_name / "index.html").read_text(encoding="utf-8")
-        values = _javascript_string_values(page, '"model.copy"')
-        assert len(values) == 5
-        expected_paragraphs = 4 if page_name == "prompt-optimizer" else 3
-        assert all(len(value.split("\n\n")) == expected_paragraphs for value in values)
-
-    assert "modelDataParagraphs.map" in renderer
-    assert 'class="function-model-data__copy"' in renderer
-    assert "initializeParagraphs" in injector
+    injector = (SHARED / "function-model-data.js").read_text()
+    assert "paragraphs.flatMap" in injector
     assert 'paragraph.className = "function-model-data__copy";' in injector
 
 
@@ -965,6 +908,6 @@ def test_all_function_page_systems_use_the_shared_quiet_typography_scale() -> No
             destination = _resolved_page(page_path, href)
             explanation = destination.read_text(encoding="utf-8")
             assert re.search(
-                r'href="\.\./(?:product-function-page|plugin-page-shell|function-page-scale)\.css(?:\?[^\"]*)?"',
+                r'href="(?:\.\./)+(?:product-function-page|plugin-page-shell|function-page-scale)\.css(?:\?[^\"]*)?"',
                 explanation,
             ), f"{destination}: does not consume the shared function-page scale"

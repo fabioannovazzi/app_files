@@ -97,5 +97,12 @@
     "plugins/vera/scripts/native_transformation_initial_bridge.py",
     "plugins/vera/ui/transformation.js",
     "plugins/vera/scripts/native_transformation_author.py"
+  ],
+  "public_explanations": {},
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
   ]
 }

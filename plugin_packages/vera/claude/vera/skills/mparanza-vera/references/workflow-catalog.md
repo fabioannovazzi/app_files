@@ -335,7 +335,7 @@ outcome when required by the professional purpose.
 
 ## Developer governance
 
-- `privacy-surface-review`: review and register model-context and external-data
+- `mparanza-privacy-surface-review`: review and register model-context and external-data
   boundaries when a Vera workflow or shared service changes. This is not a
   customer-case workflow.
 

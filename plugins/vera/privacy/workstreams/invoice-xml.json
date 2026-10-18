@@ -165,5 +165,33 @@
       "control": "Only invoice-xml, prompt-optimizer and deep-research-validator accept the distinct standalone context. The loader rechecks its digest, selected byte receipts and closed input set and rejects foreign workflows, aliases, source changes and output escape. Invoice professional export approval, schema/arithmetic checks and legal semantic review are retained. The task is not an Archive run or registered client."
     }
   ],
-  "workstream": "invoice-xml"
+  "workstream": "invoice-xml",
+  "public_explanations": {
+    "invoice-xml": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Il modello può leggere le fatture complete, le foto, le pagine PDF, i testi estratti, i profili anagrafici selezionati, gli importi, le informazioni fiscali e di pagamento, le fonti e le decisioni. PDF, immagini e controlli XML vengono preparati localmente; l'interpretazione usa l'account OpenAI di Codex o Anthropic di Cowork scelto dallo Studio. Non vi è anonimizzazione automatica né garanzia di elaborazione solo locale. Le ricerche pubbliche usano argomenti generici senza dati cliente. Il rapporto del run registra ciò che il modello ha effettivamente letto. Senza strumenti locali si ottiene solo una bozza in chat, non un XML validato."
+        ],
+        "en": [
+          "The model may read complete invoices, photos, PDF pages, extracted text, selected party profiles, amounts, tax and payment information, sources and decisions. PDF/image preparation and XML checks run locally; interpretation uses the firm's selected OpenAI account in Codex or Anthropic account in Cowork. Data is not automatically anonymized and processing is not exclusively local. Public research uses generic topics without client details. The run report records what the model actually read. Without local tools, only an in-chat draft is available, not validated XML."
+        ],
+        "fr": [
+          "Le modèle peut lire factures complètes, photos, pages PDF, textes extraits, profils sélectionnés, montants, données fiscales et de paiement, sources et décisions. La préparation des fichiers et les contrôles XML sont locaux ; l'interprétation utilise le compte OpenAI de Codex ou Anthropic de Cowork choisi par le cabinet. Il n'y a ni anonymisation automatique ni traitement exclusivement local. La recherche publique utilise des sujets génériques sans données client. Le rapport décrit les lectures effectives. Sans outils locaux, seul un brouillon dans la conversation est disponible, pas d'XML validé."
+        ],
+        "de": [
+          "Das Modell kann vollständige Rechnungen, Fotos, PDF-Seiten, extrahierte Texte, ausgewählte Stammdaten, Beträge, Steuer- und Zahlungsdaten, Quellen und Entscheidungen lesen. Dateiaufbereitung und XML-Prüfungen laufen lokal; die Interpretation nutzt das gewählte OpenAI-Konto in Codex oder Anthropic-Konto in Cowork. Keine automatische Anonymisierung oder ausschließlich lokale Verarbeitung. Öffentliche Recherche verwendet allgemeine Themen ohne Mandantendaten. Der Ausführungsbericht erfasst tatsächliche Modell-Lektüre. Ohne lokale Werkzeuge entsteht nur ein Chat-Entwurf, kein validiertes XML."
+        ],
+        "es": [
+          "El modelo puede leer facturas completas, fotos, páginas PDF, textos extraídos, perfiles seleccionados, importes, datos fiscales y de pago, fuentes y decisiones. Preparación de archivos y controles XML son locales; la interpretación usa la cuenta OpenAI en Codex o Anthropic en Cowork elegida por el despacho. No hay anonimización automática ni procesamiento exclusivamente local. La investigación pública usa temas genéricos sin datos del cliente. El informe registra lo que el modelo leyó. Sin herramientas locales, solo se prepara un borrador en chat, no XML validado."
+        ]
+      }
+    }
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ]
 }

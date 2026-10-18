@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import os
 import re
@@ -35,6 +36,7 @@ _RUNTIME_PROFILES = {
     "openai-chatgpt",
     "openai-codex",
     "anthropic-cowork",
+    "google-antigravity",
     "other-host",
 }
 _LANGUAGES = {"it", "en", "fr", "de", "es"}
@@ -85,6 +87,7 @@ _INPUT_FIELDS = {
     "phases",
     "improvement_assessment",
 }
+_BOUND_REPORT_FIELDS = {"privacy_contract", "contract_review"}
 _PHASE_FIELDS = {
     "phase_id",
     "purpose",
@@ -673,6 +676,75 @@ def _markdown_cell(value: object) -> str:
     return str(value).replace("|", "\\|").replace("\n", " ").strip()
 
 
+def _installed_product_root() -> Path | None:
+    """Find the invoking product, including a helper vendored inside its component."""
+    for parent in Path(__file__).resolve().parents:
+        if (parent / "privacy/registry.json").is_file() and any(
+            (parent / name).is_file()
+            for name in (".codex-plugin/plugin.json", ".claude-plugin/plugin.json")
+        ):
+            return parent
+    return None
+
+
+def _privacy_contract_module(product_root: Path | None):
+    """Load bundled code only; reopening a historical report needs no network."""
+    candidates = [Path(__file__).with_name("privacy_contract.py")]
+    if product_root is not None:
+        candidates.append(product_root / "scripts/privacy_contract.py")
+    # Editable canonical reporting source has its governance sibling here.
+    candidates.append(
+        Path(__file__).resolve().parents[1]
+        / "privacy-runtime/scripts/privacy_contract.py"
+    )
+    path = next((candidate for candidate in candidates if candidate.is_file()), None)
+    if path is None:
+        raise ModelDataReportError("Bundled privacy contract implementation is missing")
+    spec = importlib.util.spec_from_file_location("_report_privacy_contract", path)
+    if spec is None or spec.loader is None:
+        raise ModelDataReportError(
+            "Cannot load bundled privacy contract implementation"
+        )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def _validate_contract_review(
+    value: Any, *, phase_ids: set[str], bound: bool
+) -> dict[str, Any]:
+    """Validate an agent's declared comparison, without substituting a code verdict."""
+    review = _mapping(value, label="contract_review")
+    _exact_fields(review, {"status", "phase_ids", "reason"}, label="contract_review")
+    status = review["status"]
+    if status not in {"consistent", "divergence", "not_assessed"}:
+        raise ModelDataReportError("Unknown contract comparison status")
+    selected = _sequence(review["phase_ids"], label="contract_review.phase_ids")
+    if (
+        not all(isinstance(phase, str) for phase in selected)
+        or len(selected) != len(set(selected))
+        or not set(selected) <= phase_ids
+    ):
+        raise ModelDataReportError(
+            "Contract comparison must reference actual unique phase IDs"
+        )
+    if status == "consistent" and (set(selected) != phase_ids or not bound):
+        raise ModelDataReportError(
+            "A consistent comparison requires the reviewed runtime and all actual phases"
+        )
+    if status == "divergence" and not selected:
+        raise ModelDataReportError("A divergence must identify its actual phases")
+    if status == "not_assessed" and selected:
+        raise ModelDataReportError(
+            "Unassessed comparisons cannot claim reviewed phases"
+        )
+    return {
+        "status": status,
+        "phase_ids": list(selected),
+        "reason": _text(review["reason"], label="contract_review.reason"),
+    }
+
+
 def _render_markdown(report: Mapping[str, Any]) -> str:
     language = str(report["language"])
     copy = _COPY[language]
@@ -740,6 +812,77 @@ def _render_markdown(report: Mapping[str, Any]) -> str:
                     f"- {copy['status']}: `{candidate['status']}`",
                 ]
             )
+    if report.get("schema_version") == 2:
+        binding = report["privacy_contract"]
+        review = report["contract_review"]
+        labels = {
+            "it": (
+                "Contratto privacy della funzione",
+                "Confronto con la lavorazione",
+                "Riferimento alla descrizione revisionata; non prova i dati effettivamente trasmessi al fornitore del modello.",
+            ),
+            "en": (
+                "Function privacy contract",
+                "Comparison with this run",
+                "Reference to the reviewed description; it does not prove what was transmitted to the model provider.",
+            ),
+            "fr": (
+                "Contrat de confidentialité de la fonction",
+                "Comparaison avec ce traitement",
+                "Référence à la description révisée ; elle ne prouve pas les données transmises au fournisseur du modèle.",
+            ),
+            "de": (
+                "Datenschutzbeschreibung der Funktion",
+                "Abgleich mit diesem Lauf",
+                "Verweis auf die geprüfte Beschreibung; kein Nachweis der tatsächlich an den Modellanbieter übermittelten Daten.",
+            ),
+            "es": (
+                "Contrato de privacidad de la función",
+                "Comparación con esta ejecución",
+                "Referencia a la descripción revisada; no demuestra los datos transmitidos al proveedor del modelo.",
+            ),
+        }
+        title, comparison, limitation = labels[language]
+        statuses = {
+            "it": {
+                "consistent": "coerente",
+                "divergence": "differenze rilevate",
+                "not_assessed": "non verificato",
+            },
+            "en": {
+                "consistent": "consistent",
+                "divergence": "differences found",
+                "not_assessed": "not reviewed",
+            },
+            "fr": {
+                "consistent": "cohérent",
+                "divergence": "différences constatées",
+                "not_assessed": "non vérifié",
+            },
+            "de": {
+                "consistent": "übereinstimmend",
+                "divergence": "Abweichungen festgestellt",
+                "not_assessed": "nicht geprüft",
+            },
+            "es": {
+                "consistent": "coherente",
+                "divergence": "diferencias detectadas",
+                "not_assessed": "no verificado",
+            },
+        }
+        lines.extend(
+            [
+                "",
+                f"## {title}",
+                "",
+                f"{binding['product'].title()} · `{binding['workstream']}` · `{binding['product_version']}`",
+                f"`SHA-256: {binding['contract_sha256']}`",
+                "",
+                f"{comparison}: **{statuses[language][review['status']]}** — {review['reason']}",
+                "",
+                limitation,
+            ]
+        )
     lines.extend(
         [
             "",
@@ -756,13 +899,47 @@ def build_model_data_report(
     request: object,
     *,
     evidence_root: str | Path,
+    product_root: str | Path | None = None,
 ) -> tuple[dict[str, Any], str]:
     """Validate one run request and return its durable JSON and Markdown reports."""
 
     root = Path(evidence_root).expanduser().resolve()
     if not root.is_dir():
         raise ModelDataReportError("evidence_root must be an existing directory")
-    normalized, file_receipts = _validate_request(request, evidence_root=root)
+    request_data = dict(_mapping(request, label="request"))
+    contract_review = request_data.pop("contract_review", None)
+    normalized, file_receipts = _validate_request(request_data, evidence_root=root)
+    installed = (
+        Path(product_root).resolve()
+        if product_root is not None
+        else _installed_product_root()
+    )
+    if installed is not None:
+        contract = _privacy_contract_module(installed)
+        try:
+            normalized["privacy_contract"] = contract.bind_run(
+                installed, normalized["workflow_id"], normalized["runtime_profile"]
+            )
+        except contract.PrivacyContractError as exc:
+            raise ModelDataReportError(str(exc)) from exc
+        normalized["contract_review"] = _validate_contract_review(
+            (
+                contract_review
+                if contract_review is not None
+                else {
+                    "status": "not_assessed",
+                    "phase_ids": [],
+                    "reason": "The host agent has not recorded a comparison of this run with the reviewed contract.",
+                }
+            ),
+            phase_ids={phase["phase_id"] for phase in normalized["phases"]},
+            bound=normalized["privacy_contract"]["status"] == "bound",
+        )
+        normalized["schema_version"] = 2
+    elif contract_review is not None:
+        raise ModelDataReportError(
+            "A contract comparison requires a registered product installation"
+        )
     input_sha256 = hashlib.sha256(_canonical_bytes(normalized)).hexdigest()
     receipt_content = {
         "input_sha256": input_sha256,
@@ -792,9 +969,28 @@ def validate_model_data_report(
     """Validate stable hashes and report structure without reinterpreting necessity."""
 
     payload = _mapping(report, label="report")
-    required = _INPUT_FIELDS | {"report_id", "evidence", "limitations"}
+    version = payload.get("schema_version")
+    if type(version) is not int or version not in {1, 2}:
+        raise ModelDataReportError("report.schema_version must be 1 or 2")
+    input_fields = _INPUT_FIELDS | (_BOUND_REPORT_FIELDS if version == 2 else set())
+    required = input_fields | {"report_id", "evidence", "limitations"}
     _exact_fields(payload, required, label="report")
-    normalized = {key: payload[key] for key in _INPUT_FIELDS}
+    normalized = {key: payload[key] for key in input_fields}
+    if version == 2:
+        contract = _privacy_contract_module(_installed_product_root())
+        try:
+            contract.validate_binding(
+                payload["privacy_contract"],
+                workflow_id=payload["workflow_id"],
+                runtime_profile=payload["runtime_profile"],
+            )
+        except contract.PrivacyContractError as exc:
+            raise ModelDataReportError(str(exc)) from exc
+        _validate_contract_review(
+            payload["contract_review"],
+            phase_ids={phase["phase_id"] for phase in payload["phases"]},
+            bound=payload["privacy_contract"]["status"] == "bound",
+        )
     expected_hash = hashlib.sha256(_canonical_bytes(normalized)).hexdigest()
     evidence = _mapping(payload["evidence"], label="report.evidence")
     _exact_fields(
@@ -980,6 +1176,26 @@ def main(argv: list[str] | None = None, *, server_attestation: bool = True) -> i
         )
         json_path = output_dir / "model_data_report.json"
         markdown_path = output_dir / "model_data_report.md"
+        if report["schema_version"] == 2:
+            product_root = _installed_product_root()
+            if product_root is None:
+                raise ModelDataReportError(
+                    "Cannot retain the governing product contract"
+                )
+            binding = report["privacy_contract"]
+            contract_path = (
+                product_root / f"privacy/contracts/{binding['workstream']}.json"
+            )
+            retained_contract = json.loads(contract_path.read_text(encoding="utf-8"))
+            contract_module = _privacy_contract_module(product_root)
+            contract_bytes = contract_module.canonical_bytes(retained_contract)
+            if hashlib.sha256(contract_bytes).hexdigest() != binding["contract_sha256"]:
+                raise ModelDataReportError(
+                    "Governing contract changed while saving the report"
+                )
+            _write_once_or_identical(
+                output_dir / "privacy_contract.json", contract_bytes
+            )
         _write_once_or_identical(json_path, _canonical_bytes(report))
         _write_once_or_identical(markdown_path, markdown.encode("utf-8"))
         if not server_attestation or args.local_only:

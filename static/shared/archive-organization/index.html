@@ -188,22 +188,7 @@
       </div>
     </section>
 
-    <section class="content-section" id="model-data" data-model-data-workflow="archive-organization" data-model-data-status="relevant">
-      <div class="section-head">
-        <div class="section-title">
-          <p class="section-kicker" data-i18n="model.eyebrow">Quali dati arrivano al modello</p>
-          <h2 data-i18n="model.title">Il modello vede l’inventario completo della cartella scelta; apre il contenuto solo quando serve a classificare.</h2>
-        </div>
-        <p data-i18n="model.copy">Il codice crea e controlla localmente uno snapshot dell’intera popolazione ammessa, fino a 5.000 file e 2 GB. Esclude la cartella Vera, i collegamenti locali e le scorciatoie Drive; ogni file ammesso deve comparire una volta nella proposta. Se i limiti vengono superati, lo snapshot si ferma e la fase semantica non parte.</p>
-      </div>
-      <div class="document-lines">
-        <article class="document-line"><h3 data-i18n="model.inventory.title">Inventario completo</h3><p data-i18n="model.inventory.copy">Il modello riceve tutti i file dello snapshot, non un campione: identità registrata di cliente e incarico, percorso proiettato, nome, tipo, dimensione, data, disponibilità del contenuto e riferimenti opachi per file e duplicati esatti. Hash, ID Drive di radice, file e cartella superiore, versioni, capacità, checksum e percorsi assoluti della fonte restano nel controllo locale.</p></article>
-        <article class="document-line"><h3 data-i18n="model.content.title">Contenuto selezionato</h3><p data-i18n="model.content.copy">Per i soli documenti necessari, il modello riceve testo leggibile e riferimenti alla fonte. Produce categoria, tipo, data, soggetto, riferimento, pratica, confidenza, motivo, anomalie e duplicati probabili. I file completi non vengono inviati automaticamente; i duplicati esatti restano una verifica locale tramite SHA-256; gli altri checksum, da soli, non provano duplicati esatti.</p></article>
-        <article class="document-line"><h3 data-i18n="model.review.title">Revisione ed esecuzione</h3><p data-i18n="model.review.copy">La revisione mostra le regole applicate, i percorsi attuali e proposti, la classificazione con motivo e confidenza, i duplicati, le anomalie, le collisioni, i blocchi, l’alias e le decisioni del revisore. Identità tecniche, hash, dimensioni in byte e ID Drive grezzi restano locali. Con MCP locale e un’esecuzione collegata, dopo la prima esposizione, visualizzazione, salvataggio e approvazione usano per quattro ore un riferimento casuale associato all’hash del payload. Il modello non riceve di nuovo né il payload completo né il percorso assoluto dell’esecuzione. Senza MCP, i file canonici restano disponibili per la revisione, ma le decisioni restano in attesa finché un artefatto persistito non prova che sono state salvate e applicate. Un piano proposto soltanto in chat può essere rivisto, ma non salvato né applicato.</p></article>
-        <article class="document-line"><h3 data-i18n="model.runtime.title">Cartella locale; Drive nativo separato</h3><p data-i18n="model.runtime.copy">Il percorso della cartella locale scansiona e, dopo revisione e approvazione esplicita separata, può modificare la cartella collegata con gli stessi controlli e rollback. Il percorso Drive nativo usa invece l’adattatore OAuth desktop non abilitato come percorso Cowork: il token resta nello stato locale privato e i file aperti da Drive vengono scaricati solo temporaneamente.</p></article>
-      </div>
-      <div class="result-excerpt"><p><span data-i18n="model.note">I riferimenti tecnici sono pseudonimizzati; non c’è anonimizzazione automatica del contenuto. Identità del cliente, nomi, percorsi proiettati, date e testo selezionato restano quando sono necessari per proporre una collocazione professionale corretta e verificabile.</span> <a id="model-data-link" href="/data-handling?lang=it" data-i18n="model.link">Account, conservazione e addestramento →</a></p></div>
-    </section>
+    <section id="model-data" class="function-model-data" data-model-data-status="placeholder" aria-live="polite"><h2 class="function-model-data__title">Quali dati arrivano al modello</h2><div class="function-model-data__body"></div></section>
   </main>
 
   <footer>

@@ -1,0 +1,49 @@
+{
+  "schema_version": 3,
+  "workstream": "datev-invoice-start",
+  "display_name": "Datev invoice start",
+  "role": "workflow",
+  "governed_paths": [
+    "skills/datev-invoice-start",
+    "scripts/datev_starter.py"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "selected-task-evidence",
+        "purpose": "Carry out datev-invoice-start using the selected evidence and user instructions",
+        "content": "Selected native DATEV screens and accessibility text, invoice descriptions, account and VAT mappings, amounts, posting evidence and private per-client reports can enter the host model context when actually read. Login is performed by the operator outside observation. Local progress and review helpers make no model or server calls. A separately reviewed sanitized development request may be sent through plugin-feedback; raw screenshots, client reports and credentials are excluded from that request.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [],
+  "security_controls": [],
+  "review": {
+    "basis": "external_boundary_review_of_workflow_source",
+    "reviewed_at": "2026-10-18",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "5781b501fe049e1198561cf39d50ef5cd81459d52869025a369e1a0df2fa7fd4"
+  },
+  "service_ids": [
+    "datev-starter",
+    "managed-python-runtime",
+    "operational-incidents",
+    "plugin-feedback",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ],
+  "public_explanations": {}
+}

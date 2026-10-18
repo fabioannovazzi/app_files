@@ -1,0 +1,108 @@
+{
+  "schema_version": 3,
+  "workstream": "contenzioso-civile",
+  "display_name": "Contenzioso civile",
+  "role": "workflow",
+  "governed_paths": [
+    "skills/contenzioso-civile",
+    "scripts/legal_citations.py",
+    "scripts/legal_citations.schema.json",
+    "scripts/legal_citations_labels.json",
+    "scripts/legal_documents.py",
+    "scripts/legal_documents_labels.json",
+    "scripts/legal_documents_review.schema.json",
+    "scripts/legal_docx.py",
+    "scripts/legal_matter.py",
+    "scripts/legal_matter.schema.json",
+    "scripts/legal_matter_labels.json",
+    "scripts/legal_negotiation.py",
+    "scripts/legal_negotiation.schema.json",
+    "scripts/legal_negotiation_labels.json",
+    "scripts/legal_playbook.py",
+    "scripts/legal_playbook.schema.json",
+    "scripts/legal_playbook_labels.json",
+    "scripts/legal_proofreading.py",
+    "scripts/legal_proofreading.schema.json",
+    "scripts/legal_proofreading_labels.json",
+    "scripts/legal_word_bridge.py",
+    "skills/revisione-contratti/references",
+    "skills/lucia/references/model-data-report-contract.md"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "selected-task-evidence",
+        "purpose": "Carry out contenzioso-civile using the selected evidence and user instructions",
+        "content": "The model may read selected pleadings, facts, identities, correspondence, receipts, evidence and template, plus the chronology and draft. A local record preserves sources, questions and progress. If research is needed, host queries use general legal references without attaching the case file. This workflow does not transmit pleadings to courts.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "selected-public-legal-research",
+      "kind": "public_research",
+      "destination": "Public legal sources through the selected host research tools",
+      "purpose": "Verify authorities needed for the selected question",
+      "content": "General legal references, provision identifiers and questions without client documents or identifying case facts.",
+      "optional": true,
+      "requires_confirmation": false,
+      "controls": [
+        "Use the current legal-question method; do not include credentials or attach private case files. Retain actual sources and access limits."
+      ],
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork",
+        "openai-chatgpt",
+        "google-antigravity"
+      ]
+    }
+  ],
+  "security_controls": [],
+  "review": {
+    "basis": "external_boundary_review_of_workflow_source",
+    "reviewed_at": "2026-10-18",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "845aefcf17f8832ded4f00aa1b9cde596ae513b3fcd36357ee01e406a7dc46f0"
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ],
+  "public_explanations": {
+    "contenzioso-civile": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Il modello può leggere atti, fatti, identità, corrispondenza, ricevute, prove e modello scelti, oltre alla cronologia e alla bozza. Il registro locale conserva fonti, domande e stato del lavoro. Se serve ricerca, le query dell’host usano riferimenti giuridici generali senza allegare il fascicolo. Il percorso non invia atti a uffici giudiziari."
+        ],
+        "en": [
+          "The model may read selected pleadings, facts, identities, correspondence, receipts, evidence and template, plus the chronology and draft. A local record preserves sources, questions and progress. If research is needed, host queries use general legal references without attaching the case file. This workflow does not transmit pleadings to courts."
+        ],
+        "fr": [
+          "Le modèle peut lire actes, faits, identités, correspondance, récépissés, preuves et modèle choisis, ainsi que chronologie et projet. Le registre local conserve sources, questions et avancement. La recherche éventuelle utilise des références juridiques générales sans joindre le dossier. Ce parcours ne transmet pas d’actes aux juridictions."
+        ],
+        "de": [
+          "Das Modell kann gewählte Schriftsätze, Tatsachen, Identitäten, Korrespondenz, Empfangsnachweise, Belege und Vorlage sowie Chronologie und Entwurf lesen. Das lokale Protokoll erhält Quellen, Fragen und Fortschritt. Recherchen nutzen allgemeine Rechtsfundstellen ohne Übermittlung der Akte. Der Ablauf übermittelt keine Schriftsätze an Gerichte."
+        ],
+        "es": [
+          "El modelo puede leer escritos, hechos, identidades, correspondencia, justificantes, pruebas y plantilla elegidos, además de cronología y borrador. El registro local conserva fuentes, preguntas y estado. Si hace falta investigar, las búsquedas usan referencias jurídicas generales sin adjuntar el expediente. Este recorrido no transmite escritos a tribunales."
+        ]
+      }
+    }
+  }
+}

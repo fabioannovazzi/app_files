@@ -1,139 +1,95 @@
 ---
 name: privacy-surface-review
-description: Use when adding, changing, reviewing, or releasing a Clara workflow or hosted integration to record what Codex can read, every boundary beyond Codex, and the source-backed access and retention position before packaging.
+description: Review Vera, Clara or Lucia source, model-context paths, external services, public explanations and run-report contracts before releasing a product workflow.
 ---
-<!-- MPARANZA_REPORTING_BEGIN -->
-## Task reporting and recovery
 
-For every substantive user mandate, follow
-`skills/clara/references/workflow-usage.md` from this installation's root.
-Start one primary task before preparation, using `usage/pipelines.json`; nested
-specialists, retries and Studio Archive infrastructure reuse that task. Record
-only the observed whole-task outcome. Build and show the readable local model-data
-report under `skills/clara/references/model-data-report-contract.md`, link its
-actual signed receipt, and ask once for the user's 1–5 stars after delivery.
-Only user-authored feedback is submitted; tests remain explicitly marked.
-Follow `skills/clara/references/incident-recovery.md` for automatic technical
-reporting, evidence requests and targeted remedies. Use `claraIncidents` if
-local execution is unavailable. Never ask the user to relay logs or repeat consent
-for technical reporting. Recovery requires an observed successful retry of the
-original task and inputs, bound to the original report and current remedy.
-Tutorials remain local-only and are excluded from task usage and ratings.
-<!-- MPARANZA_REPORTING_END -->
+# Privacy surface review
 
+This developer workflow is identical in Vera, Clara and Lucia. It does not add a
+customer intake, a consent questionnaire or a professional process to usage
+counts. Ordinary authorized model processing follows the selected host account.
 
-<!-- CLARA_OPENAI_ONBOARDING_BEGIN -->
-Onboarding is optional. Continue ordinary professional work immediately,
-including direct specialist invocation, without checking or completing a local
-onboarding profile. Missing, unfinished, inaccessible or corrupt onboarding state,
-or unavailable voice/window controls, must never block ordinary work. Do not
-automatically start, resume or repeatedly offer onboarding.
-Only for a user-requested tutorial or a native teaching handoff, read
-`../clara/references/local-onboarding.md`. A verified paired lesson worker
-executes only its bound lesson and token; never bypass tutorial validation.
-Tutorial profiles, progress, examples and feedback remain local; never send a
-change request, stamp a tutorial receipt or call hosted interviews for a tutorial.
-Current user requests take precedence over saved preferences.
-<!-- CLARA_OPENAI_ONBOARDING_END -->
-
-# Privacy Surface Review
-
-After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../clara/SKILL.md`.
-
-Do not initiate feedback merely because this release check was run.
-
-This is a developer and release workflow. It is not a customer-case intake step.
-A normal Clara run does not display a privacy notice or ask for privacy consent
-merely because Codex reads professional material.
-
-## Review workflow
-
-1. Resolve the Clara root and list every sibling directory in `skills/` that has
-   a `SKILL.md`. Every user-facing workflow except this review skill must have a
-   matching record in `privacy/workflows/`.
-2. Read the workflow's complete skill and every relevant script, reference,
-   payload builder, connector, browser route, and embedded component. For
-   Attribute Reporting and Brand Fit, resolve `modules/attribute-reporting` in a
-   packaged plugin or the sibling repository component.
-3. Record the information that may enter Codex context. Real client, participant,
-   employee, source, transcript, deck, and business data may enter that context.
-   Do not describe model-read material as local-only because its source file or
-   final artifact remains on the user's computer.
-   For ordinary Codex model processing, keep the common policy explicit: the
-   user-selected ChatGPT/Codex account is the processing arrangement; Clara adds
-   no separate recipient, does not automatically anonymise, and may filter or
-   aggregate locally only when useful. Clara cannot inspect or enforce the plan.
-4. Record every boundary beyond Codex in the workflow manifest. Link every
-   Mparanza route to one record in `privacy/hosted-services/`. Public research,
-   public image retrieval, external connectors, and send or publish actions stay
-   in the workflow manifest.
-5. For a hosted service, record only payload, access, and retention facts that
-   inspected governed source supports, including the relevant Mparanza service
-   and legal copy. If those sources do not establish hosted retention or
-   deletion, say so. Link expiry is not proof that stored material is deleted.
-6. The user's explicit choice of a hosted, connector, send, or publish route is
-   the confirmation for that route. Ask separately only when the external action
-   is optional and the user has not already chosen it. Do not ask twice.
-7. Record only source-enforced security controls and the user's ChatGPT/Codex
-   account boundary. An empty security-control array is accurate when the
-   workflow has no control of its own. Do not relabel local storage, output
-   review, source preservation, ordinary route choice, policy wording, or a
-   procedural instruction as security. Clara cannot inspect or enforce the
-   user's plan, model-training data controls, or retention/deletion controls. The
-   firm or user checks those before professional use and when the account or
-   terms change, not in a per-case form.
-8. Update the workflow and hosted-service manifests, then refresh only after the
-   substantive review is complete:
+1. Resolve this installation's product root and read `privacy/registry.json`,
+   `components.json` and `privacy/runtime-profiles.json`. Inventory every exposed
+   skill, embedded component, primary process and service. Studio Archive is
+   infrastructure. A direct skill must not escape review merely because it has
+   no embedded component. A registration alias maps an existing process; it does
+   not create another rated task.
+2. Read the selected complete skill, its references, relevant scripts, schemas,
+   model-visible payload builders, connectors and native or hosted routes.
+   Resolve a product source inside its root; resolve components in `modules/`
+   when installed or in the sibling repository component. Follow cross-component
+   dependencies. Inspect actual emitted payloads and app-only metadata separately.
+3. Describe information that can enter the selected host model context, with its
+   purpose and source. Names, identifiers, full documents and professional facts
+   can be necessary. Local calculations do not imply a local-only conversation
+   or automatic anonymization. Do not infer a provider or account configuration
+   from an operating system or a product name. Antigravity uses the provider
+   actually selected in that host; its package alone does not identify the model.
+4. Record every additional boundary: public retrieval, hosted service, connector,
+   and send/publish action. Reuse shared `privacy/services/` records through
+   `service_ids`. Preserve actual recipients, payloads, returned data, activation,
+   access, retention limitations and executable controls. A route being optional
+   does not mean it ran. Prior authorization applies only to the same scope and
+   only when the host permits it; never override an action-time approval or denial.
+5. Review each supported host route separately. Availability of local Python,
+   native UI, connected files and saved state differs. Explicitly record missing
+   capabilities; never claim a local helper executed in a chat-only host. The
+   user's account controls training and retention; the plugin does not inspect
+   or enforce them. Do not invent a per-case account form.
+6. For every registered public page, author its localized `public_explanations`
+   in the governing workstream manifest. Explain that function's actual data
+   path in plain language. The generated page uses this exact reviewed copy and
+   contract revision, selected by product and page. Keep “Quali dati arrivano al
+   modello” (localized) as the final process section. If the review is incomplete,
+   retain an explicitly labelled localized placeholder; never borrow another
+   function's behavior. `not-relevant` requires an evidence-based explanation.
+7. Read `references/model-data-report-contract.md`. The reviewed contract says
+   what can happen; the saved report says what happened. Review actual phase
+   evidence, identify deviations and unknowns, and record the semantic comparison.
+   Never fill actual counts or phases from this manifest. A contract digest is
+   not proof of model-provider transmission or professional correctness. Old
+   reports and their signatures remain verifiable without today's installation.
+8. Update `privacy/workstreams/<id>.json` or `privacy/services/<id>.json` only
+   after inspecting the governed source. Refresh the selected fingerprint with
+   the commands below. The refresh performs hashing, not semantic approval.
+9. Validate the complete register, regenerate contract/public artifacts and run
+   their drift checks. Rebuild every product/host affected by a shared change.
+   Review actual packaged manifests and preserved source declarations; package
+   validation is not evidence that a remote hosted service was deployed or tested.
+10. Exercise a synthetic workflow with a fresh supported session, show the actual
+    readable report by default, reopen it without rerunning the task, and verify
+    the retained signed receipt. Record the exact host, version and remaining
+    acceptance limits. Do not label CLI-only evidence as host-conversation proof.
 
 ```bash
-python skills/privacy-surface-review/scripts/validate_privacy_surfaces.py \
-  --refresh <workflow-or-service-id>
+python skills/privacy-surface-review/scripts/validate_privacy_surfaces.py --refresh <workstream>
+python skills/privacy-surface-review/scripts/validate_privacy_surfaces.py --refresh-service <service>
+python skills/privacy-surface-review/scripts/validate_privacy_surfaces.py
 ```
 
-9. Validate the complete register and run the Clara privacy tests before
-   packaging:
+Repository generation and release:
 
 ```bash
-python skills/privacy-surface-review/scripts/validate_privacy_surfaces.py
-pytest -q tests/plugins/test_clara_privacy_surfaces.py
+python scripts/sync_privacy_runtime.py --check
+python scripts/build_privacy_contracts.py --check
+python scripts/build_product_release.py --check
 ```
 
 ## Judgment boundary
 
-Use deterministic code for registered-workflow coverage, JSON shape, allowed
-boundary kinds, hosted-service references, confirmation consistency, exact file
-hashing, and stale-review detection.
+Code checks schemas, explicit registrations, file identities, source freshness,
+translations present, exact contract bindings and package bytes. These are
+mechanically verifiable. The host agent judges relevance, adequacy, actual data
+exposure and the accuracy of the explanation from inspected evidence. Do not
+implement keyword privacy classifiers or automatically delete or anonymize
+professional facts. Empty external-boundary/security-control arrays are valid
+when supported by source. A policy statement is not an executable control.
 
-Do not add automatic anonymisation, personal-data detection, deterministic
-deletion, a `minimum useful context` classifier, per-prompt declarations, or
-routine consent screens. Local Python may filter or aggregate information when
-that improves the professional work; that is not a claim that everything read
-by Codex was anonymised.
+This register is engineering evidence, not legal advice, a DPIA, a provider
+account audit or a certification of GDPR compliance.
 
-This register is an engineering record. It is not legal advice, a DPIA, an
-account-configuration audit, or a certification of GDPR compliance.
-
-## Codex-Native Run UX
-
-Keep a short developer checklist for workflow coverage, hosted-service coverage,
-source review, fingerprint refresh, schema validation, and focused tests.
-
-Before source review, show a compact Run Intake table with the changed workflow
-or service ID, governed paths, related manifests, and whether the change adds or
-alters a boundary beyond Codex. Show a Decision Table only when source evidence
-leaves a real boundary, access, or retention fact unresolved; record an unknown
-instead of guessing.
-
-Default output policy: update the affected manifest, refresh its fingerprint,
-and validate the complete register. These are not choices to propose when the
-user asks for the normal privacy-surface review.
-
-Before refreshing fingerprints, use one execution checkpoint naming the changed
-workflow or service, governed paths, and manifests. Never edit generated ZIPs by
-hand; release artifacts are rebuilt from source.
-
-End with an Artifact Card listing the validated register, any intentionally
-unknown hosted arrangement, and the test result. Create `codex_run_review.md`
-only when the review needs a local note about blocked source evidence, a schema
-gap, or repeated manual cleanup. Do not create customer-facing notices or case
-artifacts.
+Read `references/public-process-page-contract.md` for the final HTML section.
+Honor an existing user choice only where the host permits prior authorization;
+it never overrides action-time confirmation or a denied operation. Do not invent
+per-run consent for the already authorized technical reporting route.

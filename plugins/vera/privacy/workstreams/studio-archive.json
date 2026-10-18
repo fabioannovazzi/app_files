@@ -281,11 +281,11 @@
   },
   "review": {
     "basis": "external_boundary_review_of_workflow_source",
-    "reviewed_at": "2026-10-17",
+    "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "5f4f3b5d4b59119190d6fd3447cec6d28ab5ebff4373140196f76cfdccb88462"
+    "source_fingerprint": "ea7a99f9befe86e086dfff583fffa799b64902b5869644a1ac28c13f8fb0e0ed"
   },
-  "role": "workflow",
+  "role": "internal_engine",
   "runtime_profiles": [
     "openai-codex",
     "anthropic-cowork"
@@ -385,5 +385,63 @@
       "control": "Only explicit configuration records an approved root. Fresh default sessions revalidate it into independent session-owned configuration; explicit state directories remain isolated unless an explicit private profile is supplied. Root-specific identity read/modify/write is serialized with short OS locks and private regular-file records; private aliases are not returned in safe directory rows. Current-session aliases migrate only after validation. Shared profile state stays outside source archives and contains no active run selection or credentials. Contending identity writers wait up to ten seconds for the existing OS lock and fail with a retryable busy message without deleting or stealing that lock. Client-directory metadata is revalidated independently of document indexing, so another session adding a client does not require reading other clients source documents or changing the approved root. Portable manifest identity checks and session configuration ownership remain enforced; indexed search and source opening still require an explicitly refreshed index."
     }
   ],
-  "workstream": "studio-archive"
+  "workstream": "studio-archive",
+  "public_explanations": {
+    "studio-archive": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Il codice indicizza localmente tutta la popolazione supportata, entro 50.000 file e 50 GB; il modello non riceve l’indice né una copia automatica dell’intero archivio. Se l’archivio supera questi limiti, l’aggiornamento si ferma prima della ricerca.",
+          "Il modello riceve il cliente e il perimetro scelti, la domanda, i percorsi relativi e fino a 20 passaggi candidati con estratti, impronte, riferimenti e limiti di estrazione. Per ogni fonte usata riceve il passaggio aperto e, se necessario, fino a due passaggi adiacenti per lato; ciascun passaggio è limitato a 24.000 caratteri.",
+          "Al modello arrivano, con gli stessi limiti: account collegato; nome o identificativo del cliente solo per una ricerca iniziale fino a 20 candidati quando manca un indirizzo confermato; poi indirizzi email o PEC completi confermati, ricerche in gruppi di massimo 10 indirizzi e fino a 20 risultati per pagina, con paginazione solo se serve alla copertura richiesta. Arrivano quindi mittente, destinatari disponibili, oggetto, data, estratto e soltanto i corpi, thread o allegati selezionati. Cambia il connettore dell’account, non il perimetro professionale; la casella completa non viene copiata.",
+          "Solo in Codex arrivano nome o identificativo e numero completo del cliente, identità della chat individuale verificata, mittente, testo o didascalia, orario e riferimento sullo schermo dei soli messaggi visibili necessari. Le anteprime delle altre chat prima della verifica restano nel controllo locale e non vengono restituite al modello.",
+          "Per scegliere il cliente, il modello riceve tutti i record con etichetta, stato e ID opachi. Riceve anche il numero di email, nomi legali e codici fiscali registrati, ma non i valori. Se ne fornisci uno, il codice restituisce solo le corrispondenze esatte.",
+          "Durante il run, il modello riceve gli ID di cliente, incarico e run e i percorsi locali necessari. Con l’MCP locale, le operazioni restano legate al run corretto. Senza MCP, restano disponibili il ledger e i file canonici, ma Vera non dichiara salvata o applicata una decisione senza un artefatto persistito.",
+          "Per rivedere il riordino, il modello riceve l’intero snapshot, entro 5.000 file e 2 GB: percorsi proiettati, nomi, tipi, dimensioni, date, riferimenti opachi e duplicati esatti. Hash grezzi, ID Drive, versioni, capacità e percorsi assoluti restano locali. Dei documenti aperti riceve solo testo limitato."
+        ],
+        "en": [
+          "Local code indexes the whole supported population, within 50,000 files and 50 GB; the model does not receive the index or an automatic copy of the full archive. If the archive exceeds those limits, refresh stops before search.",
+          "The model receives the selected client and scope, the question, relative paths, and up to 20 candidate passages with snippets, hashes, locators, and extraction limits. For each source used, it receives the opened passage and, when needed, up to two adjacent passages on each side; each passage is capped at 24,000 characters.",
+          "The model receives, with the same limits: the connected account; client name or identifier only for one initial search of up to 20 candidates when no address is confirmed; then confirmed full email or PEC addresses, searches in batches of at most 10 addresses, and up to 20 results per page, with pagination only when the requested coverage requires it. Sender, available recipients, subject, time, snippet, and only selected bodies, threads, or attachments then reach the model. The account connector differs, not the professional scope; the full mailbox is not copied.",
+          "Only in Codex, the client name or identifier and full phone number, verified one-to-one chat identity, sender, message text or caption, time, and on-screen locator for only the visible messages needed reach the model. Other-chat previews seen before verification remain inside the local control and are not returned to the model.",
+          "To choose a client, the model receives every record’s label, status, and opaque IDs. It also receives the number of stored email addresses, legal names, and tax identifiers, but not the values. If you supply one, code returns only exact matches.",
+          "During a run, the model receives the client, engagement, and run IDs plus the required local paths. With local MCP, operations remain bound to the correct run. Without MCP, the ledger and canonical files remain available, but Vera does not report a decision as saved or applied without a persisted artifact.",
+          "To review the organization proposal, the model receives the entire snapshot, within 5,000 files and 2 GB: projected paths, names, types, sizes, dates, opaque references, and exact duplicates. Raw hashes, Drive IDs, versions, capabilities, and absolute paths stay local. Only bounded text from opened files is added."
+        ],
+        "fr": [
+          "Le code local indexe toute la population prise en charge, dans la limite de 50 000 fichiers et 50 Go ; le modèle ne reçoit ni l’index ni une copie automatique de l’archive complète. Si l’archive dépasse ces limites, l’actualisation s’arrête avant la recherche.",
+          "Le modèle reçoit le client et le périmètre choisis, la question, les chemins relatifs et jusqu’à 20 passages candidats avec extraits, empreintes, repères et limites d’extraction. Pour chaque source utilisée, il reçoit le passage ouvert et, si nécessaire, jusqu’à deux passages adjacents de chaque côté ; chaque passage est limité à 24 000 caractères.",
+          "Le modèle reçoit, avec les mêmes limites : le compte connecté ; le nom ou l’identifiant du client uniquement pour une recherche initiale de 20 candidats au maximum lorsqu’aucune adresse n’est confirmée ; puis les adresses e-mail ou PEC complètes confirmées, des recherches par groupes de 10 adresses au maximum et jusqu’à 20 résultats par page, avec pagination uniquement si la couverture demandée l’exige. Le modèle reçoit ensuite l’expéditeur, les destinataires disponibles, l’objet, la date, l’extrait et seulement les corps, fils ou pièces jointes sélectionnés. Le connecteur du compte change, pas le périmètre professionnel ; la boîte complète n’est pas copiée.",
+          "Uniquement dans Codex, le modèle reçoit le nom ou identifiant et le numéro complet du client, l’identité vérifiée de la conversation individuelle, l’expéditeur, le texte ou la légende, l’heure et le repère à l’écran des seuls messages visibles nécessaires. Les aperçus des autres conversations avant vérification restent dans le contrôle local et ne sont pas renvoyés au modèle.",
+          "Pour choisir le client, le modèle reçoit le libellé, le statut et les ID opaques de chaque ligne. Il reçoit aussi le nombre d’adresses e-mail, de noms légaux et d’identifiants fiscaux enregistrés, mais pas les valeurs. Si vous en fournissez une, le code ne renvoie que les correspondances exactes.",
+          "Pendant un run, le modèle reçoit les ID du client, de la mission et du run, ainsi que les chemins locaux nécessaires. Avec le MCP local, les opérations restent liées au bon run. Sans MCP, le registre et les fichiers canoniques restent disponibles, mais Vera ne déclare aucune décision enregistrée ou appliquée sans artefact persistant.",
+          "Pour revoir le classement, le modèle reçoit le snapshot complet, dans la limite de 5 000 fichiers et 2 Go : chemins projetés, noms, types, tailles, dates, références opaques et doublons exacts. Les empreintes brutes, ID Drive, versions, capacités et chemins absolus restent locaux. Seul le texte limité des fichiers ouverts est ajouté."
+        ],
+        "de": [
+          "Lokaler Code indexiert den gesamten unterstützten Bestand bis zu 50.000 Dateien und 50 GB; das Modell erhält weder den Index noch automatisch eine Kopie des gesamten Archivs. Überschreitet das Archiv diese Grenzen, stoppt die Aktualisierung vor der Suche.",
+          "Das Modell erhält den gewählten Mandanten und Suchbereich, die Frage, relative Pfade und bis zu 20 Kandidatenpassagen mit Auszügen, Hashes, Fundstellen und Extraktionsgrenzen. Für jede verwendete Quelle erhält es die geöffnete Passage und bei Bedarf bis zu zwei benachbarte Passagen auf jeder Seite; jede Passage ist auf 24.000 Zeichen begrenzt.",
+          "Das Modell erhält innerhalb derselben Grenzen: das verbundene Konto; Mandantenname oder -kennung nur für eine erste Suche mit höchstens 20 Kandidaten, wenn noch keine Adresse bestätigt ist; danach bestätigte vollständige E-Mail- oder PEC-Adressen, Suchen in Gruppen von höchstens 10 Adressen und bis zu 20 Ergebnisse je Seite, mit weiteren Seiten nur wenn die verlangte Abdeckung dies erfordert. Anschließend erreichen Absender, verfügbare Empfänger, Betreff, Zeitpunkt, Auszug und nur ausgewählte Nachrichtentexte, Threads oder Anhänge das Modell. Der Konto-Connector unterscheidet sich, nicht der fachliche Umfang; das vollständige Postfach wird nicht kopiert.",
+          "Nur in Codex erhält das Modell Mandantenname oder -kennung und vollständige Telefonnummer, die verifizierte Identität des Einzelchats sowie Absender, Nachrichtentext oder Bildunterschrift, Zeitpunkt und Bildschirmfundstelle nur der benötigten sichtbaren Nachrichten. Vorschauen anderer Chats vor der Verifizierung bleiben in der lokalen Steuerung und werden nicht an das Modell zurückgegeben.",
+          "Zur Auswahl des Mandanten erhält das Modell für jeden Eintrag Bezeichnung, Status und opake IDs. Es erhält außerdem die Anzahl gespeicherter E-Mail-Adressen, rechtlicher Namen und Steuerkennungen, nicht aber die Werte. Wenn Sie einen davon angeben, gibt der Code nur exakte Treffer zurück.",
+          "Während eines Runs erhält das Modell Mandanten-, Mandats- und Run-IDs sowie die benötigten lokalen Pfade. Mit lokalem MCP bleiben die Vorgänge an den richtigen Run gebunden. Ohne MCP bleiben Ledger und kanonische Dateien verfügbar; Vera meldet jedoch keine Entscheidung ohne persistiertes Artefakt als gespeichert oder angewendet.",
+          "Zur Prüfung der Ablage erhält das Modell den vollständigen Snapshot innerhalb der Grenze von 5.000 Dateien und 2 GB: projizierte Pfade, Namen, Typen, Größen, Daten, opake Referenzen und exakte Duplikate. Rohe Hashes, Drive-IDs, Versionen, Fähigkeiten und absolute Pfade bleiben lokal. Hinzu kommt nur begrenzter Text aus geöffneten Dateien."
+        ],
+        "es": [
+          "El código local indexa toda la población compatible, con un límite de 50.000 archivos y 50 GB; el modelo no recibe el índice ni una copia automática de todo el archivo. Si el archivo supera esos límites, la actualización se detiene antes de la búsqueda.",
+          "El modelo recibe el cliente y el ámbito elegidos, la pregunta, las rutas relativas y hasta 20 pasajes candidatos con extractos, huellas, localizadores y límites de extracción. Por cada fuente utilizada recibe el pasaje abierto y, si hace falta, hasta dos pasajes adyacentes a cada lado; cada pasaje se limita a 24.000 caracteres.",
+          "El modelo recibe, con los mismos límites: la cuenta conectada; el nombre o identificador del cliente solo para una búsqueda inicial de hasta 20 candidatos cuando no hay una dirección confirmada; después, direcciones completas de correo o PEC confirmadas, búsquedas en grupos de hasta 10 direcciones y hasta 20 resultados por página, con paginación solo cuando la cobertura solicitada lo requiere. Luego llegan remitente, destinatarios disponibles, asunto, fecha, extracto y solo los cuerpos, hilos o adjuntos seleccionados. Cambia el conector de la cuenta, no el alcance profesional; no se copia el buzón completo.",
+          "Solo en Codex llegan al modelo el nombre o identificador y el número completo del cliente, la identidad verificada del chat individual, el remitente, el texto o pie, la hora y el localizador en pantalla únicamente de los mensajes visibles necesarios. Las vistas previas de otros chats anteriores a la verificación permanecen en el control local y no se devuelven al modelo.",
+          "Para elegir al cliente, el modelo recibe la etiqueta, el estado y los ID opacos de cada registro. También recibe el número de correos, nombres legales e identificadores fiscales guardados, pero no los valores. Si proporcionas uno, el código devuelve solo las coincidencias exactas.",
+          "Durante una ejecución, el modelo recibe los ID de cliente, encargo y ejecución, además de las rutas locales necesarias. Con MCP local, las operaciones permanecen vinculadas a la ejecución correcta. Sin MCP, el registro y los archivos canónicos siguen disponibles, pero Vera no declara una decisión guardada o aplicada sin un artefacto persistido.",
+          "Para revisar la organización, el modelo recibe la instantánea completa, dentro del límite de 5.000 archivos y 2 GB: rutas proyectadas, nombres, tipos, tamaños, fechas, referencias opacas y duplicados exactos. Las huellas brutas, los ID de Drive, las versiones, las capacidades y las rutas absolutas permanecen locales. Solo se añade texto limitado de los archivos abiertos."
+        ]
+      }
+    }
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ]
 }

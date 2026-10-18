@@ -130,7 +130,7 @@
     {
       "path": "scripts/model_data_report.py",
       "repository_path": "plugins/clara/scripts/model_data_report.py",
-      "sha256": "0e7a99ef631ed67a1aa25eb10ce7ed158625f6c0c09dcf8546eeb132a238262d"
+      "sha256": "751b0acf4c510e6f542ba71921293fdb760433a6a79782f2be9269ad85f62a7e"
     },
     {
       "path": "scripts/notarized_run_receipt.py",

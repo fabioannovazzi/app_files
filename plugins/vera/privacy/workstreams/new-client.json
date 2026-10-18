@@ -143,5 +143,83 @@
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"
+  ],
+  "public_explanations": {
+    "new-client": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Per preparare il fascicolo, il modello può leggere dati reali del cliente. Non sono anonimizzati automaticamente.",
+          "Elaborazione locale dell’intera cartella",
+          "Il codice inventaria tutti i file entro i limiti del processo, estrae testo e campi leggibili, calcola hash, segnala duplicati e controlla formalmente le fatture XML. Questi passaggi non eliminano dalla cartella nomi o identificativi.",
+          "Documenti e dati fiscali",
+          "Il contesto predefinito del modello usa model_handoff.json e tutte le pagine elencate: una riga di metadati per ogni file, anteprime fino a 600 caratteri solo per i file segnalati e ogni campo fiscale mappato con valore e citazione fino a 600 caratteri. Le bozze complete non sono incluse nel contesto iniziale. Quando applichi una sostituzione del testo dell’email approvata in revisione, il modello riceve anche l’intera email rivista, inclusi eventuali nomi e identificativi, per verificare il risultato salvato. Il modello può leggere un estratto o file locale esatto quando viene selezionato o serve a sostenere il giudizio professionale.",
+          "Identità e rapporto professionale",
+          "Possono entrare nel modello nome e riferimenti del cliente, codice fiscale e partita IVA, dati dei documenti di identità, rappresentanti e titolari effettivi, prestazioni e condizioni economiche, decisioni privacy, esiti delle verifiche, fattori e motivazioni AML, fonti, lacune, scadenze e decisioni di revisione.",
+          "Indice completo senza campionamento",
+          "Quando l’handoff è disponibile, il modello usa lo stesso indice e tutte le sue pagine, ordinate in modo deterministico e senza campionamento. Ogni pagina è limitata a 2.500 elementi e 1.500.000 byte. Il payload più ampio resta il contratto locale della revisione MCP; i file collegati o locali vengono aperti su richiesta. Non viene usato un server Mparanza separato.",
+          "Minimizzazione per fase, non anonimizzazione",
+          "La bozza email riceve solo richieste approvate o integrate in revisione e il riferimento generico CLIENT-001. La sintesi XML riceve anomalie e gruppi duplicati opachi, senza nomi delle parti, codici fiscali del cliente o chiavi duplicate originali. Non è anonimizzazione generale: valori fiscali, nomi file e altri identificativi restano negli artefatti locali esatti e possono entrare nel modello quando servono al lavoro professionale. Conservazione, cancellazione e uso per l’addestramento dipendono dai controlli dell’account o workspace scelto dallo studio."
+        ],
+        "en": [
+          "To prepare the file, the model may read real client data. It is not automatically anonymized.",
+          "Local processing of the complete folder",
+          "Code inventories every file within the process limits, extracts readable text and fields, calculates hashes, flags duplicates and formally checks invoice XML. These steps do not remove names or identifiers from the folder.",
+          "Documents and fiscal data",
+          "The model’s default context uses model_handoff.json and every listed page: one metadata row for every file, previews up to 600 characters only for flagged files, and every mapped fiscal field with its value and a citation up to 600 characters. Complete drafts are not included in the initial context. When you apply an email text replacement approved in review, the model also receives the complete revised email, including any names and identifiers, to verify the saved result. The model may read a selected excerpt or exact local file when needed to support professional judgment.",
+          "Identity and professional relationship",
+          "The model may receive the client’s name and references, tax and VAT identifiers, identity-document data, representatives and beneficial owners, services and financial terms, privacy decisions, verification results, AML factors and reasons, sources, gaps, deadlines and review decisions.",
+          "Complete unsampled index",
+          "When the handoff is available, the model uses the same index and every page, deterministically ordered and unsampled. Each page is capped at 2,500 items and 1,500,000 bytes. The broader payload remains the local MCP review contract; connected or local files are opened on demand. No separate Mparanza server is used.",
+          "Purpose-specific minimization, not anonymization",
+          "Email drafting receives only requests accepted or supplemented in review and the generic CLIENT-001 reference. XML synthesis receives anomalies and opaque duplicate groups without party names, customer tax identifiers, or raw duplicate keys. This is not general anonymization: fiscal values, file names and other identifiers remain in exact local artifacts and may enter model context when professionally required. Retention, deletion and model-training use depend on the controls of the account or workspace selected by the firm."
+        ],
+        "fr": [
+          "Pour préparer le dossier, le modèle peut lire des données réelles du client. Elles ne sont pas automatiquement anonymisées.",
+          "Traitement local de l’ensemble du dossier",
+          "Le code inventorie tous les fichiers dans les limites du processus, extrait le texte et les champs lisibles, calcule les empreintes, signale les doublons et contrôle formellement les factures XML. Ces étapes ne retirent pas les noms ou identifiants du dossier.",
+          "Documents et données fiscales",
+          "Le contexte par défaut du modèle utilise model_handoff.json et chaque page répertoriée : une ligne de métadonnées pour chaque fichier, des extraits de 600 caractères au maximum uniquement pour les fichiers signalés, et chaque champ fiscal mappé avec sa valeur et une citation de 600 caractères au maximum. Les projets complets ne sont pas inclus dans le contexte initial. Lorsque vous appliquez un remplacement du texte de l’e-mail approuvé lors de la revue, le modèle reçoit aussi l’e-mail révisé complet, y compris les noms et identifiants éventuels, pour vérifier le résultat enregistré. Le modèle peut lire un extrait sélectionné ou le fichier local exact lorsque le jugement professionnel l’exige.",
+          "Identité et relation professionnelle",
+          "Le modèle peut recevoir le nom et les références du client, les identifiants fiscaux et TVA, les données des pièces d’identité, les représentants et bénéficiaires effectifs, les prestations et conditions financières, les décisions de confidentialité, les résultats des vérifications, les facteurs et motifs LCB-FT, les sources, lacunes, échéances et décisions de révision.",
+          "Index complet sans échantillonnage",
+          "Lorsque le handoff est disponible, le modèle utilise le même index et toutes ses pages, ordonnées de façon déterministe et sans échantillonnage. Chaque page est limitée à 2 500 éléments et 1 500 000 octets. Le payload plus large reste le contrat local de la revue MCP ; les fichiers connectés ou locaux sont ouverts à la demande. Aucun serveur Mparanza distinct n’est utilisé.",
+          "Minimisation par finalité, pas anonymisation",
+          "La rédaction de l’e-mail reçoit uniquement les demandes acceptées ou complétées lors de la revue et la référence générique CLIENT-001. La synthèse XML reçoit les anomalies et des groupes de doublons opaques, sans noms des parties, identifiants fiscaux du client ni clés de doublon brutes. Il ne s’agit pas d’une anonymisation générale : les valeurs fiscales, noms de fichiers et autres identifiants restent dans les artefacts locaux exacts et peuvent entrer dans le contexte du modèle lorsque le travail professionnel l’exige. La conservation, la suppression et l’utilisation pour l’entraînement dépendent des contrôles du compte ou de l’espace de travail choisi par le cabinet."
+        ],
+        "de": [
+          "Zur Vorbereitung der Akte kann das Modell echte Mandantendaten lesen. Sie werden nicht automatisch anonymisiert.",
+          "Lokale Verarbeitung des vollständigen Ordners",
+          "Der Code inventarisiert alle Dateien innerhalb der Prozessgrenzen, extrahiert lesbaren Text und Felder, berechnet Hashes, kennzeichnet Duplikate und prüft Rechnungs-XML formal. Diese Schritte entfernen keine Namen oder Identifikatoren aus dem Ordner.",
+          "Dokumente und Steuerdaten",
+          "Der Standardkontext des Modells verwendet model_handoff.json und alle aufgeführten Seiten: eine Metadatenzeile für jede Datei, Auszüge mit höchstens 600 Zeichen nur für gekennzeichnete Dateien und jedes zugeordnete Steuerfeld mit Wert und Zitat von höchstens 600 Zeichen. Vollständige Entwürfe sind im anfänglichen Kontext nicht enthalten. Wenn Sie einen in der Prüfung freigegebenen Ersatztext für die E-Mail anwenden, erhält das Modell auch die vollständige überarbeitete E-Mail einschließlich enthaltener Namen und Identifikatoren zur Prüfung des gespeicherten Ergebnisses. Das Modell kann einen ausgewählten Auszug oder die genaue lokale Datei lesen, wenn dies für das fachliche Urteil erforderlich ist.",
+          "Identität und Mandatsbeziehung",
+          "Das Modell kann Name und Referenzen des Mandanten, Steuer- und Umsatzsteuer-Identifikatoren, Ausweisdaten, Vertreter und wirtschaftlich Berechtigte, Leistungen und finanzielle Bedingungen, Datenschutzentscheidungen, Prüfergebnisse, AML-Faktoren und Begründungen, Quellen, Lücken, Fristen und Prüfentscheidungen erhalten.",
+          "Vollständiger Index ohne Stichprobe",
+          "Wenn der Handoff verfügbar ist, verwendet das Modell denselben Index und alle Seiten, deterministisch geordnet und ohne Stichprobe. Jede Seite ist auf 2.500 Elemente und 1.500.000 Byte begrenzt. Der breitere Payload bleibt der lokale Vertrag der MCP-Prüfung; verbundene oder lokale Dateien werden bei Bedarf geöffnet. Ein separater Mparanza-Server wird nicht verwendet.",
+          "Zweckbezogene Minimierung, keine Anonymisierung",
+          "Die E-Mail-Erstellung erhält nur in der Prüfung angenommene oder ergänzte Anfragen sowie die generische Referenz CLIENT-001. Die XML-Zusammenfassung erhält Auffälligkeiten und opake Duplikatgruppen ohne Namen der Parteien, Steueridentifikatoren des Mandanten oder ursprüngliche Duplikatschlüssel. Dies ist keine allgemeine Anonymisierung: Steuerwerte, Dateinamen und andere Identifikatoren bleiben in den exakten lokalen Artefakten und können bei fachlicher Erforderlichkeit in den Modellkontext gelangen. Aufbewahrung, Löschung und Nutzung für das Modelltraining hängen von den Einstellungen des von der Kanzlei gewählten Kontos oder Workspace ab."
+        ],
+        "es": [
+          "Para preparar el expediente, el modelo puede leer datos reales del cliente. No se anonimizan automáticamente.",
+          "Tratamiento local de toda la carpeta",
+          "El código inventaría todos los archivos dentro de los límites del proceso, extrae texto y campos legibles, calcula hashes, señala duplicados y comprueba formalmente las facturas XML. Estos pasos no eliminan de la carpeta los nombres o identificadores.",
+          "Documentos y datos fiscales",
+          "El contexto predeterminado del modelo usa model_handoff.json y todas las páginas enumeradas: una fila de metadatos por cada archivo, extractos de hasta 600 caracteres solo para los archivos señalados y cada campo fiscal mapeado con su valor y una cita de hasta 600 caracteres. Los borradores completos no se incluyen en el contexto inicial. Al aplicar una sustitución del texto del correo aprobada durante la revisión, el modelo también recibe el correo revisado completo, incluidos los nombres e identificadores que contenga, para comprobar el resultado guardado. El modelo puede leer un extracto seleccionado o el archivo local exacto cuando sea necesario para sustentar el criterio profesional.",
+          "Identidad y relación profesional",
+          "El modelo puede recibir el nombre y las referencias del cliente, identificadores fiscales y de IVA, datos de documentos de identidad, representantes y titulares reales, servicios y condiciones económicas, decisiones de privacidad, resultados de verificaciones, factores y motivos PBC, fuentes, lagunas, plazos y decisiones de revisión.",
+          "Índice completo sin muestreo",
+          "Cuando el handoff está disponible, el modelo usa el mismo índice y todas sus páginas, ordenadas de forma determinista y sin muestreo. Cada página se limita a 2.500 elementos y 1.500.000 bytes. El payload más amplio sigue siendo el contrato local de la revisión MCP; los archivos conectados o locales se abren bajo demanda. No se utiliza un servidor Mparanza separado.",
+          "Minimización por finalidad, no anonimización",
+          "La redacción del correo recibe solo las solicitudes aceptadas o ampliadas durante la revisión y la referencia genérica CLIENT-001. La síntesis XML recibe anomalías y grupos de duplicados opacos, sin nombres de las partes, identificadores fiscales del cliente ni claves de duplicado originales. No es una anonimización general: los valores fiscales, nombres de archivo y otros identificadores permanecen en los artefactos locales exactos y pueden entrar en el contexto del modelo cuando el trabajo profesional lo requiera. La conservación, la eliminación y el uso para entrenamiento dependen de los controles de la cuenta o del espacio de trabajo elegido por el despacho."
+        ]
+      }
+    }
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
   ]
 }

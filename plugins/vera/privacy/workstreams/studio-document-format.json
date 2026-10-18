@@ -1,0 +1,70 @@
+{
+  "schema_version": 3,
+  "workstream": "studio-document-format",
+  "display_name": "Studio document format",
+  "role": "workflow",
+  "governed_paths": [
+    "skills/studio-document-format",
+    "scripts/studio_document_format.py"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "selected-task-evidence",
+        "purpose": "Carry out studio-document-format using the selected evidence and user instructions",
+        "content": "Local DOCX inspection produces formatting metadata, style identifiers and the file path without extracting document text. These metadata can identify the studio. The selected model may read selected metadata, studio identity, preferences, the selected logo, the proposal, synthetic previews and review decisions. Direct visual inspection of a selected document may also expose its text. If example text needs interpretation, the isolated stripping, pseudonymization and independent review steps of Professional Communication apply. The private standard retains configuration, assets and approval; a subsequent report receives only presentation settings and logo, without examples or communications history. That report’s accounting data follows its separate process. No archive scan, sending or automatic upload to Mparanza. Local storage does not make model processing offline or automatically anonymous.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [],
+  "security_controls": [],
+  "review": {
+    "basis": "external_boundary_review_of_workflow_source",
+    "reviewed_at": "2026-10-18",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "e1a06ccdc5ae266e7b9d4a3c12ecdb3328fc7ffa5f64481a69f2c00613eeb49c"
+  },
+  "service_ids": [
+    "local-onboarding",
+    "managed-python-runtime",
+    "native-workspace",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ],
+  "public_explanations": {
+    "studio-document-format": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "L’ispezione locale dei DOCX produce metadati di formato, nomi degli stili e percorso del file, senza estrarre il testo. Questi metadati possono identificare lo studio. Il modello scelto può leggere metadati selezionati, identità dello studio, preferenze, logo scelto, proposta, anteprime sintetiche e decisioni di revisione. Una lettura visiva diretta di un documento selezionato può esporne anche il testo. Se serve interpretare il testo degli esempi, si applicano i passaggi isolati di pulizia, pseudonimizzazione e revisione indipendente di Comunicazione professionale. Lo standard privato conserva configurazione, asset e approvazione; il report successivo riceve solo impostazioni di presentazione e logo, non gli esempi o la storia delle comunicazioni. I dati contabili del report seguono il suo processo distinto. Nessuna scansione dell’archivio, invio o caricamento automatico a Mparanza. La conservazione locale non rende il modello offline e non garantisce anonimizzazione automatica."
+        ],
+        "en": [
+          "Local DOCX inspection produces formatting metadata, style identifiers and the file path without extracting document text. These metadata can identify the studio. The selected model may read selected metadata, studio identity, preferences, the selected logo, the proposal, synthetic previews and review decisions. Direct visual inspection of a selected document may also expose its text. If example text needs interpretation, the isolated stripping, pseudonymization and independent review steps of Professional Communication apply. The private standard retains configuration, assets and approval; a subsequent report receives only presentation settings and logo, without examples or communications history. That report’s accounting data follows its separate process. No archive scan, sending or automatic upload to Mparanza. Local storage does not make model processing offline or automatically anonymous."
+        ],
+        "fr": [
+          "L’inspection locale des DOCX produit des métadonnées de format, des identifiants de styles et le chemin du fichier sans extraire le texte. Ces métadonnées peuvent identifier le cabinet. Le modèle choisi peut lire les métadonnées sélectionnées, l’identité du cabinet, les préférences, le logo choisi, la proposition, les aperçus synthétiques et les décisions de révision. Une inspection visuelle directe d’un document choisi peut aussi exposer son texte. Son interprétation nécessite les étapes isolées de nettoyage, pseudonymisation et révision indépendante de Communication professionnelle. Le standard privé conserve configuration, éléments graphiques et approbation ; un rapport ultérieur reçoit seulement les réglages de présentation et le logo, sans exemples ni historique des communications. Ses données comptables suivent un processus distinct. Aucune exploration d’archive, aucun envoi ni chargement automatique vers Mparanza. Le stockage local ne rend pas le modèle hors ligne et ne garantit pas l’anonymisation automatique."
+        ],
+        "de": [
+          "Die lokale DOCX-Prüfung erzeugt Formatmetadaten, Stilkennungen und den Dateipfad, ohne Dokumenttext zu extrahieren. Diese Metadaten können die Kanzlei identifizieren. Das gewählte Modell kann ausgewählte Metadaten, Kanzleiidentität, Wünsche, ausgewähltes Logo, Vorschlag, synthetische Vorschauen und Prüfentscheidungen lesen. Eine direkte Sichtprüfung eines ausgewählten Dokuments kann auch dessen Text offenlegen. Für eine Textauswertung gelten die getrennten Bereinigungs-, Pseudonymisierungs- und unabhängigen Prüfschritte der professionellen Kommunikation. Der private Standard speichert Konfiguration, Grafiken und Genehmigung; ein späterer Bericht erhält nur Präsentationseinstellungen und Logo, keine Beispiele oder Kommunikationshistorie. Seine Buchhaltungsdaten folgen einem eigenen Verfahren. Keine Archivsuche, kein Versand und kein automatisches Hochladen zu Mparanza. Lokale Speicherung bedeutet weder Offline-Modellverarbeitung noch automatische Anonymisierung."
+        ],
+        "es": [
+          "La inspección local de DOCX produce metadatos de formato, identificadores de estilos y la ruta del archivo sin extraer su texto. Estos metadatos pueden identificar al despacho. El modelo elegido puede leer metadatos seleccionados, identidad del despacho, preferencias, logo elegido, propuesta, vistas sintéticas y decisiones de revisión. La inspección visual directa de un documento elegido también puede exponer su texto. Su interpretación requiere los pasos aislados de limpieza, seudonimización y revisión independiente de Comunicación profesional. El estándar privado conserva configuración, recursos y aprobación; el informe posterior recibe solo ajustes de presentación y logo, sin ejemplos ni historial de comunicaciones. Sus datos contables siguen un proceso separado. No hay exploración del archivo, envío ni carga automática a Mparanza. El almacenamiento local no vuelve al modelo desconectado ni garantiza anonimización automática."
+        ]
+      }
+    }
+  }
+}

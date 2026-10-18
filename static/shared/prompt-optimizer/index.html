@@ -379,15 +379,7 @@
         </details>
       </section>
 
-      <section class="function-model-data" id="model-data" data-model-data-workflow="prompt-optimizer" data-model-data-status="relevant" aria-labelledby="prompt-optimizer-model-data-title">
-        <div class="function-model-data__head">
-          <div class="function-model-data__heading">
-            <p class="function-model-data__label" data-i18n="model.label">Trattamento dei dati</p>
-            <h2 id="prompt-optimizer-model-data-title" data-i18n="model.title">Quali dati arrivano al modello</h2>
-          </div>
-          <p class="function-model-data__copy" data-i18n="model.copy">Il codice deterministico esamina l'intero quesito, non un campione, e crea inventari limitati a 20 URL, 30 date, 30 anni, 30 importi, 30 percentuali, 30 stringhe di soggetti e 12 domande esplicite. Servono per la navigazione e i controlli di ancoraggio; il testo completo resta disponibile. Nelle fasi di pianificazione e revisione, il modello legge l'intero quesito e i fatti rilevanti, compresi nomi, dati personali e informazioni legali, fiscali o finanziarie quando servono, oltre a contratto di risposta, brief, revisione semantica, siti fonte, diagnostica e decisioni del revisore. Non vengono applicate anonimizzazione o pseudonimizzazione automatiche: identità delle parti e fatti esatti possono essere necessari all'analisi. Se scegli ChatGPT Deep Research, ChatGPT riceve il brief ottimizzato completo, l'elenco completo dei siti e i requisiti di tipo e output del documento. La ricerca delle fonti può inviare ai siti pubblici scelti termini del quesito o fatti del caso, ma non credenziali né accesso autenticato. Nella revisione gestita con MCP locale, la validazione invia solo i dati di esecuzione e un riferimento SHA-256; il record canonico, con nomi dei controlli falliti, ancoraggi o domande mancanti e riferimenti ai file, arriva al modello una volta al rendering. Il workbench accetta al massimo 2.500 elementi o 2 MB e riusa per quattro ore un token casuale solo in memoria; non include un'anteprima del quesito né copia l'audit completo in ciascun controllo, mentre i file completi restano disponibili per l'approfondimento locale. Quando l’interfaccia MCP locale non è disponibile, il modello legge gli stessi file canonici; pacchetti legacy o non gestiti possono ancora inviare il payload inline.</p>
-        </div>
-      </section>
+      <section id="model-data" class="function-model-data" data-model-data-status="placeholder" aria-live="polite"><h2 class="function-model-data__title">Quali dati arrivano al modello</h2><div class="function-model-data__body"></div></section>
 
     </main>
 

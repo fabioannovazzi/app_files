@@ -1,0 +1,246 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/product-privacy-registry-v1.json",
+  "title": "Product privacy coverage registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "product",
+    "workstreams",
+    "services",
+    "developer_skills"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "product": {
+      "enum": [
+        "vera",
+        "clara",
+        "lucia"
+      ]
+    },
+    "developer_skills": {
+      "enum": [
+        [
+          "privacy-surface-review"
+        ],
+        [
+          "mparanza-privacy-surface-review"
+        ]
+      ]
+    },
+    "services": {
+      "$ref": "#/$defs/identifiers"
+    },
+    "workstreams": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "$ref": "#/$defs/identifier"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source",
+          "role",
+          "skills",
+          "components",
+          "workflow_ids",
+          "public_pages"
+        ],
+        "properties": {
+          "source": {
+            "$ref": "#/$defs/identifier"
+          },
+          "role": {
+            "enum": [
+              "workflow",
+              "internal_engine"
+            ]
+          },
+          "skills": {
+            "$ref": "#/$defs/identifiers"
+          },
+          "components": {
+            "$ref": "#/$defs/identifiers"
+          },
+          "workflow_ids": {
+            "$ref": "#/$defs/identifiers"
+          },
+          "public_pages": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "page_id",
+                "path",
+                "languages"
+              ],
+              "properties": {
+                "page_id": {
+                  "$ref": "#/$defs/identifier"
+                },
+                "path": {
+                  "type": "string",
+                  "pattern": "^static/shared/(?:[a-z0-9-]+/)+index\\.html$"
+                },
+                "languages": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "enum": [
+                      "it",
+                      "en",
+                      "fr",
+                      "de",
+                      "es",
+                      "ar"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "host_omissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "openai-codex": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "services",
+            "workstreams",
+            "paths"
+          ],
+          "properties": {
+            "services": {
+              "$ref": "#/$defs/identifiers"
+            },
+            "workstreams": {
+              "$ref": "#/$defs/identifiers"
+            },
+            "paths": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        },
+        "anthropic-cowork": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "services",
+            "workstreams",
+            "paths"
+          ],
+          "properties": {
+            "services": {
+              "$ref": "#/$defs/identifiers"
+            },
+            "workstreams": {
+              "$ref": "#/$defs/identifiers"
+            },
+            "paths": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        },
+        "openai-chatgpt": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "services",
+            "workstreams",
+            "paths"
+          ],
+          "properties": {
+            "services": {
+              "$ref": "#/$defs/identifiers"
+            },
+            "workstreams": {
+              "$ref": "#/$defs/identifiers"
+            },
+            "paths": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        },
+        "google-antigravity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "services",
+            "workstreams",
+            "paths"
+          ],
+          "properties": {
+            "services": {
+              "$ref": "#/$defs/identifiers"
+            },
+            "workstreams": {
+              "$ref": "#/$defs/identifiers"
+            },
+            "paths": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "identifiers": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/identifier"
+      }
+    }
+  }
+}

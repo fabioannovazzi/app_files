@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://mparanza.com/schemas/vera-service-boundary-v2.json",
-  "title": "Vera shared-service external-boundary review",
+  "$id": "https://mparanza.com/schemas/product-service-boundary-v2.json",
+  "title": "Product shared-service external-boundary review",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -50,7 +50,9 @@
       "items": {
         "enum": [
           "openai-codex",
-          "anthropic-cowork"
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
         ]
       }
     },
@@ -202,7 +204,9 @@
             "items": {
               "enum": [
                 "openai-codex",
-                "anthropic-cowork"
+                "anthropic-cowork",
+                "openai-chatgpt",
+                "google-antigravity"
               ]
             }
           }
@@ -295,6 +299,53 @@
           "const": "reviewed_repository_declaration_not_hosted_runtime"
         }
       }
+    },
+    "source_contract_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "service_details": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "trigger",
+        "data_sent",
+        "data_returned",
+        "access",
+        "retention"
+      ],
+      "properties": {
+        "trigger": {
+          "type": "string",
+          "minLength": 1
+        },
+        "data_sent": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "data_returned": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "access": {
+          "type": "object"
+        },
+        "retention": {
+          "type": "object"
+        }
+      }
+    },
+    "packaged_for_runtime": {
+      "enum": [
+        "openai-codex",
+        "anthropic-cowork",
+        "openai-chatgpt",
+        "google-antigravity"
+      ]
     }
   },
   "allOf": [

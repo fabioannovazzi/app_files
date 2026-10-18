@@ -633,7 +633,7 @@ def test_router_requires_report_for_every_substantive_run() -> None:
     assert "After every substantive Vera run" in router
     assert "model_data_report.json" in router
     assert "complete document or population" in router.lower()
-    assert "after every substantive Vera run" in contract
+    assert "after every substantive product run" in contract
     assert '"runtime_profile": "openai-chatgpt"' in contract
     assert "candidate_needs_validation" in contract
     assert router.index("## Show the privacy report") < router.index(

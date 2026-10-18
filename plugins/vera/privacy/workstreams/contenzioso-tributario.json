@@ -1,0 +1,92 @@
+{
+  "schema_version": 3,
+  "workstream": "contenzioso-tributario",
+  "display_name": "Contenzioso tributario",
+  "role": "workflow",
+  "governed_paths": [
+    "skills/contenzioso-tributario"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "selected-task-evidence",
+        "purpose": "Carry out contenzioso-tributario using the selected evidence and user instructions",
+        "content": "The model may read selected tax and court acts, identifiers, taxes, periods, amounts, attachments, certified-email or postal receipts, instructions, answers, calendar and drafts, plus rendered pages when inspected. Copies and progress are stored locally. Host research uses general questions and legal references without attaching the file or including client data in queries. Helpers do not send acts to Mike, authorities or courts. Local storage does not imply offline processing or anonymization. In Vera, the model may also read the prior intake and Studio Archive materials selected for the assignment; the run report identifies data actually read. Vera’s report can send Mparanza only schema version, receipt UUID, Vera version and report digest; it does not send the case files or report contents. User-requested local mode excludes that external receipt.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [],
+  "security_controls": [],
+  "review": {
+    "basis": "external_boundary_review_of_workflow_source",
+    "reviewed_at": "2026-10-18",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "a11008b6f9abb24c35e98df5d6bdc70d34ef1d67109fbd23790cf3ef0826151b"
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ],
+  "public_explanations": {
+    "contenzioso-tributario": {
+      "status": "relevant",
+      "copy": {
+        "it": [
+          "Il modello può leggere gli atti fiscali e giudiziari scelti, identificativi, tributi, periodi, importi, allegati, ricevute PEC o postali, istruzioni, risposte, calendario e bozze; anche pagine renderizzate se ispezionate. Copie e registro sono locali. La ricerca dell’host usa questioni e riferimenti generali senza allegare il fascicolo o includere dati del cliente nelle query. Gli helper non inviano atti a Mike, enti o corti. Conservazione locale non significa elaborazione offline o anonimizzazione. In Vera possono entrare anche l’intake precedente e i materiali Studio Archive selezionati per l’incarico; il report della lavorazione indica i dati realmente letti. Il report Vera può inviare a Mparanza solo versione dello schema, UUID della ricevuta, versione di Vera e digest del report; non invia gli atti o il contenuto del report. La modalità locale richiesta dall’utente esclude questa ricevuta esterna."
+        ],
+        "en": [
+          "The model may read selected tax and court acts, identifiers, taxes, periods, amounts, attachments, certified-email or postal receipts, instructions, answers, calendar and drafts, plus rendered pages when inspected. Copies and progress are stored locally. Host research uses general questions and legal references without attaching the file or including client data in queries. Helpers do not send acts to Mike, authorities or courts. Local storage does not imply offline processing or anonymization. In Vera, the model may also read the prior intake and Studio Archive materials selected for the assignment; the run report identifies data actually read. Vera’s report can send Mparanza only schema version, receipt UUID, Vera version and report digest; it does not send the case files or report contents. User-requested local mode excludes that external receipt."
+        ],
+        "fr": [
+          "Le modèle peut lire actes fiscaux et judiciaires choisis, identifiants, impôts, périodes, montants, annexes, reçus électroniques ou postaux, instructions, réponses, calendrier et projets, ainsi que les pages rendues examinées. Copies et suivi restent locaux. La recherche de l’hôte utilise questions et références générales sans joindre le dossier ni inclure de données client dans les requêtes. Les helpers n’envoient pas d’actes à Mike, aux administrations ou aux tribunaux. Le stockage local n’implique ni traitement hors ligne ni anonymisation. Dans Vera, le modèle peut aussi lire l’intake antérieur et les pièces Studio Archive sélectionnées pour la mission ; le rapport indique les données réellement lues. Le rapport Vera peut envoyer à Mparanza uniquement la version du schéma, l’UUID du reçu, la version de Vera et l’empreinte du rapport ; ni les actes ni son contenu. Le mode local demandé par l’utilisateur exclut ce reçu externe."
+        ],
+        "de": [
+          "Das Modell kann gewählte Steuer- und Gerichtsakten, Identifikatoren, Steuern, Zeiträume, Beträge, Anlagen, E-Mail- oder Postnachweise, Vorgaben, Antworten, Kalender und Entwürfe lesen; gerenderte Seiten bei Sichtprüfung ebenfalls. Kopien und Vorgangsstatus werden lokal gespeichert. Host-Recherche nutzt allgemeine Fragen und Rechtsverweise ohne Aktenanhänge oder Mandantendaten in Suchanfragen. Helfer senden keine Akte an Mike, Behörden oder Gerichte. Lokale Speicherung bedeutet weder Offline-Verarbeitung noch Anonymisierung. In Vera kann das Modell auch die frühere Erstprüfung und für den Auftrag ausgewählte Studio-Archive-Unterlagen lesen; der Arbeitsbericht nennt tatsächlich gelesene Daten. Der Vera-Bericht kann nur Schemaversion, Beleg-UUID, Vera-Version und Berichtsdigest an Mparanza senden, ohne Akten oder Berichtsinhalte. Der vom Nutzer gewählte lokale Modus schließt diesen externen Beleg aus."
+        ],
+        "es": [
+          "El modelo puede leer actos tributarios y judiciales seleccionados, identificadores, tributos, períodos, importes, anexos, recibos electrónicos o postales, instrucciones, respuestas, calendario y borradores; también páginas renderizadas cuando se inspeccionan. Copias y seguimiento son locales. La investigación del anfitrión usa preguntas y referencias generales sin adjuntar el expediente ni incluir datos del cliente en las consultas. Los helpers no envían actos a Mike, autoridades o tribunales. El almacenamiento local no implica procesamiento sin conexión ni anonimización. En Vera el modelo también puede leer el intake anterior y los materiales Studio Archive seleccionados para el encargo; el informe identifica los datos realmente leídos. El informe Vera puede enviar a Mparanza solo versión del esquema, UUID del recibo, versión de Vera y resumen criptográfico del informe; no envía escritos ni contenido del informe. El modo local solicitado por el usuario excluye ese recibo externo."
+        ]
+      }
+    }
+  },
+  "governed_shared_paths": [
+    "vendor/modules/italian_tax_litigation"
+  ],
+  "governed_repository_paths": [
+    "plugins/lucia/scripts/legal_proofreading.py",
+    "plugins/lucia/scripts/legal_documents_review.schema.json",
+    "plugins/lucia/scripts/legal_documents.py",
+    "plugins/lucia/scripts/legal_citations.schema.json",
+    "plugins/lucia/scripts/legal_negotiation_labels.json",
+    "plugins/lucia/scripts/legal_proofreading.schema.json",
+    "plugins/lucia/scripts/legal_negotiation.py",
+    "plugins/lucia/scripts/legal_matter.schema.json",
+    "plugins/lucia/scripts/legal_playbook_labels.json",
+    "plugins/lucia/scripts/legal_playbook.py",
+    "plugins/lucia/scripts/legal_citations.py",
+    "plugins/lucia/scripts/legal_citations_labels.json",
+    "plugins/lucia/scripts/legal_matter.py",
+    "plugins/lucia/scripts/legal_negotiation.schema.json",
+    "plugins/lucia/scripts/legal_word_bridge.py",
+    "plugins/lucia/scripts/legal_docx.py",
+    "plugins/lucia/scripts/legal_documents_labels.json",
+    "plugins/lucia/scripts/legal_matter_labels.json",
+    "plugins/lucia/scripts/legal_playbook.schema.json",
+    "plugins/lucia/scripts/legal_proofreading_labels.json"
+  ]
+}

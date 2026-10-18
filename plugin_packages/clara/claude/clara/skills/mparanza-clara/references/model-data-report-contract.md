@@ -1,7 +1,7 @@
 # Run-level model-data report contract
 
-Use this contract after every substantive Clara run, across client-bound,
-studio-wide, local, connected-source, Claude, Claude, and Cowork workflows. The
+Use this contract after every substantive product run, across client-bound,
+studio-wide, local, connected-source, Claude, Claude, Cowork and Antigravity workflows. The
 invariant is evidence about the actual model-context boundary. A smaller context
 is not required when the professional purpose needs a complete document or
 population.
@@ -9,11 +9,10 @@ population.
 Studio Archive also reuses this input schema and local report validation in
 `scripts/build_model_data_report.py`. That generic helper creates local JSON and
 Markdown only and returns `server_receipt.status=not_requested`. The automatic
-server-attestation behavior described below belongs to Clara's own
+server-attestation behavior described below belongs to the product's own
 `scripts/model_data_report.py` command; it is not implied by the generic helper.
 The explicitly local onboarding path does not request stamping. Reading an
-existing report does not request stamping either. See
-[The Clara workflow contract](../SKILL.md) for the shared boundaries.
+existing report does not request stamping either. The invoking product’s functions-and-limits reference remains applicable.
 
 ## Required outputs
 
@@ -30,9 +29,9 @@ build command. It creates the local reports and returns
 request file or network call. Do not retry stamping without a later explicit
 request. This option does not change the selected host's model processing.
 
-Otherwise the receipt-enabled Clara build command automatically creates:
+Otherwise the receipt-enabled product build command automatically creates:
 
-- `model_data_receipt_request.json`: the retry-stable five-field request (including product `clara`);
+- `model_data_receipt_request.json`: the retry-stable product-specific minimal request;
 - `model_data_receipt.json`: the returned server timestamp and Ed25519 proof;
 - `model_data_receipt.html`: a customer-readable receipt that can be printed or
   saved as PDF and links to public verification.
@@ -80,7 +79,7 @@ and ask which one; never silently select a different client's report. If the
 current conversation already identifies one run, retrieve it without asking
 the user to locate files or name technical identifiers.
 
-Run from the Clara root with its resolved Python runtime:
+Run from the product root with its resolved Python runtime:
 
 ```bash
 python scripts/model_data_report.py show \
@@ -104,13 +103,18 @@ not require a report about that retrieval or a new server receipt.
 
 ## Automatic server-stamped proof
 
-The server receives exactly schema version `2`, product `clara`, a random
-receipt UUID created for this run, the installed Clara version, and the
-SHA-256 digest of the canonical local report. It does not receive the report, workflow or local run
+Vera preserves receipt request schema `1`: schema version, one random per-run
+receipt UUID, the installed product version and the SHA-256 digest of the
+canonical local report. Clara and Lucia use receipt request schema `2`, which
+adds the explicit product as a fifth signed field. The model-data report's schema
+version is separate from the receipt protocol version. Existing signed requests
+and report bytes are never rewritten during a product upgrade.
+
+It does not receive the report, workflow or local run
 IDs, client or case data, purposes, phase labels, counts, filenames, file
 contents, source-document hashes, prompts, or model outputs. Mparanza retains
-only the opaque receipt ID, its own timestamp, Clara version, report digest,
-signature, key ID, product and schema version, without an automatic deletion
+only the opaque receipt ID, its own timestamp, the product version, report digest,
+signature, key ID, and implicit schema version, without an automatic deletion
 period. Existing proofs remain until removed locally or deleted administratively
 from Mparanza, after which public verification is no longer possible. The proof
 establishes existence, server time, and integrity of the matching report only.
@@ -190,13 +194,52 @@ limitations. Do not copy source values, names, tax identifiers, document text,
 email content, credentials, local absolute paths, or other client facts into the
 report. Use stable artifact IDs and generic labels.
 
+## Reviewed contract and actual run
+
+Read the exact workflow's entry in `privacy/registry.json`, then its retained
+`privacy/contracts/<workstream>.json`. This is the same source contract that
+feeds the product-specific final section of the public function page. The
+installed manifest additionally binds the projected host implementation.
+
+Compare that description with the actual phases, host and services used. Add
+`contract_review` to the report input:
+
+```json
+{
+  "status": "consistent",
+  "phase_ids": ["mapping"],
+  "reason": "Le fasi osservate corrispondono al percorso descritto; il confronto usa le prove della lavorazione."
+}
+```
+
+This is an example of shape, not a default verdict. `consistent` requires review
+of every actual phase and the reviewed runtime. Use `divergence` with affected
+phase IDs and a concrete reason when the run differs. Use `not_assessed`, an empty
+phase list and the missing-evidence reason when comparison is unavailable. Do not
+hide an uncertain extent or alter observations to fit the expected contract.
+The comparison is an agent judgment; code only checks references and shape.
+
+The product builder writes model-data report schema `2` with the exact product,
+workflow, runtime, product version, source-contract digest and installed manifest
+fingerprint. It retains `privacy_contract.json` alongside the report. Its source
+contract digest is the public page's revision. The receipt signs the entire
+report digest, including this binding; it does not turn the agent's comparison
+into an independent attestation. Missing comparison is visibly unreviewed.
+
+Legacy model-data reports with schema `1` remain valid. `show` reads either schema
+offline without requiring the original installation or re-reading case files.
+Preserve the saved original report and receipt; do not rebuild them to add newer
+metadata. If no durable local workspace is available, disclose the actual
+chat-only evidence and contract revision when available, without inventing files,
+signatures or measured network exposure.
+
 ## Build and validation
 
-From the Clara root, after assembling `model_data_report_input.json` from the
+From the product root, after assembling `model_data_report_input.json` from the
 actual run evidence:
 
 ```bash
-python scripts/workflow_usage.py build-report --run-id <primary-task-uuid> \
+python scripts/model_data_report.py build \
   --input /absolute/run/output/model_data_report_input.json \
   --evidence-root /absolute/run/output \
   --output-dir /absolute/run/output

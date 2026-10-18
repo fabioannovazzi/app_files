@@ -176,5 +176,12 @@
     "plugins/vera/scripts/research-sources.cjs",
     "plugins/vera/skills/vera/references/legal-tax-model-policy.md",
     "plugins/vera/skills/legal-tax-answer-review/SKILL.md"
+  ],
+  "public_explanations": {},
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
   ]
 }

@@ -1,0 +1,49 @@
+{
+  "schema_version": 3,
+  "workstream": "scatter-bubble-analysis",
+  "display_name": "Scatter bubble analysis",
+  "role": "internal_engine",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "references",
+    "assets"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "selected-task-evidence",
+        "purpose": "Carry out scatter-bubble-analysis using the selected evidence and user instructions",
+        "content": "Selected dimensions and numeric measures, point labels, x/y/size mappings and grouping choices, calculated point tables and context, charts, diagnostics and interpretation. Local numerical/rendering code makes no separate model call. Reading original data or outputs adds those actual values to host context; no automatic anonymization is applied. Any separately requested publication uses the parent reporting route.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [],
+  "security_controls": [],
+  "review": {
+    "basis": "external_boundary_review_of_workflow_source",
+    "reviewed_at": "2026-10-18",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "ce95a05738f8a2d0357294748e63c6bf0cf71ef466ca76dfae60ca3fa58aa1b1"
+  },
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "run-receipt-stamping",
+    "workflow-usage"
+  ],
+  "public_explanations": {}
+}

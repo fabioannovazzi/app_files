@@ -1,0 +1,174 @@
+{
+  "schema_version": 2,
+  "service_id": "research-video-voice",
+  "display_name": "Mparanza Research Video Voice",
+  "governed_paths": [
+    "skills/research-video/SKILL.md",
+    "skills/research-video/references/hosted-voice-bundle.schema.json",
+    "skills/research-video/scripts/research_video.py",
+    "scripts/self_relaunch.py",
+    "scripts/managed_python_runtime.py",
+    "scripts/_managed_python_runtime.py",
+    "requirements.txt",
+    "components.json"
+  ],
+  "governed_repository_paths": [
+    "modules/hosted_services/api.py",
+    "modules/research_video_voice/api.py",
+    "scripts/video_voice_policy.py",
+    "static/js/research-video-voice.js",
+    "static/shared/product-function-pages.js",
+    "templates/research_video_voice.html",
+    "modules/pdp/legal_content.py"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "external_boundaries": [
+    {
+      "id": "mparanza-authentication",
+      "kind": "hosted_service",
+      "destination": "Mparanza Research Video Voice; OpenAI speech service configured by Mparanza",
+      "purpose": "When the user opens the page or submits the request",
+      "content": "Mparanza HttpOnly signed session cookie. The cookie is checked by Mparanza and is not sent to OpenAI.",
+      "retention": "Mparanza builds narration audio and the response ZIP in process memory without writing narration requests or audio to application storage. This does not establish deletion from provider systems or technical infrastructure logs. The browser downloads the ZIP, and Clara may retain attached narration and copies in local render attempts or published snapshots until those local files are removed. Provider-side processing, retention and deletion are not established by the inspected application source.",
+      "activation": "explicit_user_choice",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "openai-chatgpt",
+        "google-antigravity"
+      ],
+      "controls": [
+        "The HTML page redirects unauthenticated users to Mparanza sign-in and the API returns HTTP 401 without a valid signed session cookie.",
+        "The endpoint requires the fixed Research Video action header and a strict, bounded narration-only JSON schema.",
+        "Mparanza calls a fixed HTTPS OpenAI speech endpoint with a server-held credential. The request builder does not forward the Mparanza cookie or include the provider credential in the returned bundle.",
+        "The response is marked no-store and nosniff; the local plugin validates the complete ZIP entry set, hashes, approval and plan binding, provider policy, WAV metadata, and scene order before rendering.",
+        "The local Research Video CLI can prepare published Python dependencies before processing its arguments. That package-index request is separate from the hosted narration upload and carries no CLI arguments; the research-video workflow records this setup boundary."
+      ]
+    },
+    {
+      "id": "bound-hosted-request",
+      "kind": "hosted_service",
+      "destination": "Mparanza Research Video Voice; OpenAI speech service configured by Mparanza",
+      "purpose": "After explicit narration and visual-plan approval",
+      "content": "Exact approved narration per scene, narration language, stable scene identifiers, scene-plan SHA-256, approval SHA-256, and explicit confirmation flag sent to Mparanza. Images, research sources, source-basis notes, Vera artifacts, and local paths are excluded.",
+      "retention": "Mparanza builds narration audio and the response ZIP in process memory without writing narration requests or audio to application storage. This does not establish deletion from provider systems or technical infrastructure logs. The browser downloads the ZIP, and Clara may retain attached narration and copies in local render attempts or published snapshots until those local files are removed. Provider-side processing, retention and deletion are not established by the inspected application source.",
+      "activation": "explicit_user_choice",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "openai-chatgpt",
+        "google-antigravity"
+      ],
+      "controls": [
+        "The HTML page redirects unauthenticated users to Mparanza sign-in and the API returns HTTP 401 without a valid signed session cookie.",
+        "The endpoint requires the fixed Research Video action header and a strict, bounded narration-only JSON schema.",
+        "Mparanza calls a fixed HTTPS OpenAI speech endpoint with a server-held credential. The request builder does not forward the Mparanza cookie or include the provider credential in the returned bundle.",
+        "The response is marked no-store and nosniff; the local plugin validates the complete ZIP entry set, hashes, approval and plan binding, provider policy, WAV metadata, and scene order before rendering.",
+        "The local Research Video CLI can prepare published Python dependencies before processing its arguments. That package-index request is separate from the hosted narration upload and carries no CLI arguments; the research-video workflow records this setup boundary."
+      ]
+    },
+    {
+      "id": "openai-speech-request",
+      "kind": "hosted_service",
+      "destination": "Mparanza Research Video Voice; OpenAI speech service configured by Mparanza",
+      "purpose": "When Mparanza generates each approved scene narration",
+      "content": "Exact approved narration for that scene, fixed speech model, language-selected voice, and professional delivery instructions sent by Mparanza to OpenAI. Mparanza authentication, scene-plan and approval hashes, images, sources, Vera artifacts, and local paths are not forwarded.",
+      "retention": "Mparanza builds narration audio and the response ZIP in process memory without writing narration requests or audio to application storage. This does not establish deletion from provider systems or technical infrastructure logs. The browser downloads the ZIP, and Clara may retain attached narration and copies in local render attempts or published snapshots until those local files are removed. Provider-side processing, retention and deletion are not established by the inspected application source.",
+      "activation": "explicit_user_choice",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "openai-chatgpt",
+        "google-antigravity"
+      ],
+      "controls": [
+        "The HTML page redirects unauthenticated users to Mparanza sign-in and the API returns HTTP 401 without a valid signed session cookie.",
+        "The endpoint requires the fixed Research Video action header and a strict, bounded narration-only JSON schema.",
+        "Mparanza calls a fixed HTTPS OpenAI speech endpoint with a server-held credential. The request builder does not forward the Mparanza cookie or include the provider credential in the returned bundle.",
+        "The response is marked no-store and nosniff; the local plugin validates the complete ZIP entry set, hashes, approval and plan binding, provider policy, WAV metadata, and scene order before rendering.",
+        "The local Research Video CLI can prepare published Python dependencies before processing its arguments. That package-index request is separate from the hosted narration upload and carries no CLI arguments; the research-video workflow records this setup boundary."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "authenticated-open-access",
+      "control": "The route requires a cryptographically signed Mparanza session but intentionally applies no Research Video email allowlist, so every authenticated account is currently authorized.",
+      "implemented_by": [
+        "repository:modules/research_video_voice/api.py"
+      ],
+      "on_violation": "Reject a request without the required authenticated session."
+    },
+    {
+      "id": "narration-only-bounded-request",
+      "control": "Strict request validation rejects extra fields, missing approval evidence, duplicate scene identifiers, unsupported languages, more than 20 scenes, more than 2,500 characters per scene, or more than 20,000 narration characters in total.",
+      "implemented_by": [
+        "skills/research-video/scripts/research_video.py",
+        "repository:modules/research_video_voice/api.py"
+      ],
+      "on_violation": "Build the narration-only request and reject invalid, unapproved or oversized narration payloads."
+    },
+    {
+      "id": "hash-bound-bundle-validation",
+      "control": "The local attachment step verifies the complete ZIP entry set, each WAV hash, canonical request and approval/plan bindings, WAV metadata and provider policy; it rejects unsafe or mismatched entries. Hash binding verifies consistency with the supplied approval record, not independent proof of a human approval.",
+      "implemented_by": [
+        "skills/research-video/scripts/research_video.py"
+      ],
+      "on_violation": "Reject a voice bundle that does not match the approved scene plan and exact retained identities."
+    }
+  ],
+  "service_details": {
+    "trigger": "After the user explicitly approves the exact scene plan and narration, the user signs in to Mparanza and uploads the generated narration-only request on the Research Video voice page.",
+    "data_sent": [
+      {
+        "id": "mparanza-authentication",
+        "when": "When the user opens the page or submits the request",
+        "content": "Mparanza HttpOnly signed session cookie. The cookie is checked by Mparanza and is not sent to OpenAI."
+      },
+      {
+        "id": "bound-hosted-request",
+        "when": "After explicit narration and visual-plan approval",
+        "content": "Exact approved narration per scene, narration language, stable scene identifiers, scene-plan SHA-256, approval SHA-256, and explicit confirmation flag sent to Mparanza. Images, research sources, source-basis notes, Vera artifacts, and local paths are excluded."
+      },
+      {
+        "id": "openai-speech-request",
+        "when": "When Mparanza generates each approved scene narration",
+        "content": "Exact approved narration for that scene, fixed speech model, language-selected voice, and professional delivery instructions sent by Mparanza to OpenAI. Mparanza authentication, scene-plan and approval hashes, images, sources, Vera artifacts, and local paths are not forwarded."
+      }
+    ],
+    "data_returned": [
+      {
+        "id": "voice-bundle",
+        "when": "After all scene narrations are generated",
+        "content": "In-memory ZIP containing one WAV file per scene and a manifest with provider, model, voice, language, plan/request/approval bindings, retention marker, scene identifiers, audio hashes, sizes, durations, and WAV metadata."
+      }
+    ],
+    "access": {
+      "arrangement": "Google or magic-link authentication is required. The Research Video page and API currently accept every valid Mparanza session and do not consult an email or page allowlist. Mparanza uses a server-held OpenAI credential; the user does not provide a provider API key.",
+      "controls": [
+        "The HTML page redirects unauthenticated users to Mparanza sign-in and the API returns HTTP 401 without a valid signed session cookie.",
+        "The endpoint requires the fixed Research Video action header and a strict, bounded narration-only JSON schema.",
+        "Mparanza calls a fixed HTTPS OpenAI speech endpoint with a server-held credential. The request builder does not forward the Mparanza cookie or include the provider credential in the returned bundle.",
+        "The response is marked no-store and nosniff; the local plugin validates the complete ZIP entry set, hashes, approval and plan binding, provider policy, WAV metadata, and scene order before rendering.",
+        "The local Research Video CLI can prepare published Python dependencies before processing its arguments. That package-index request is separate from the hosted narration upload and carries no CLI arguments; the research-video workflow records this setup boundary."
+      ]
+    },
+    "retention": {
+      "status": "partially_documented",
+      "statement": "Mparanza builds narration audio and the response ZIP in process memory without writing narration requests or audio to application storage. This does not establish deletion from provider systems or technical infrastructure logs. The browser downloads the ZIP, and Clara may retain attached narration and copies in local render attempts or published snapshots until those local files are removed. Provider-side processing, retention and deletion are not established by the inspected application source."
+    }
+  },
+  "review": {
+    "reviewed_at": "2026-10-17",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_shared_service_source",
+    "source_fingerprint": "237d5450bbd63880a77127e97b11faa014141c4d7d57119b0558f99489b4520e"
+  }
+}
