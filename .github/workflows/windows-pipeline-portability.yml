@@ -2,7 +2,7 @@ name: Windows pipeline portability
 on:
   pull_request:
   push:
-    branches: [codex/windows-pipeline-portability]
+    branches: [main]
 permissions:
   contents: read
 jobs:
@@ -41,6 +41,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          result=0
           for suite in test_archive_run_isolation test_studio_archive_readable test_vera_native_archive_navigation test_vera_financial_analysis test_vera_fdd_io_hardening test_vera_sales_plan_preparation; do
-            python -m pytest -q -o addopts='' --confcutdir=tests/plugins "tests/plugins/${suite}.py"
+            python -m pytest -q -o addopts='' --confcutdir=tests/plugins "tests/plugins/${suite}.py" || result=1
           done
+          exit "$result"

@@ -28,7 +28,21 @@ def process_environment() -> dict[str, str]:
     """Keep runtime/OS paths without unrelated account credentials in fixtures."""
     return {
         key: os.environ[key]
-        for key in ("PATH", "HOME", "TMPDIR", "LANG", "LC_ALL", "SYSTEMROOT", "WINDIR")
+        for key in (
+            "PATH",
+            "HOME",
+            "USERPROFILE",
+            "HOMEDRIVE",
+            "HOMEPATH",
+            "TMPDIR",
+            "TEMP",
+            "TMP",
+            "LANG",
+            "LC_ALL",
+            "SYSTEMROOT",
+            "WINDIR",
+            "PYTHONDONTWRITEBYTECODE",
+        )
         if key in os.environ
     }
 
