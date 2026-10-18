@@ -106,6 +106,15 @@ and OCR-only PDFs are not movement sources. Inspection must expose
 bank non-movement classifications supported by the script. The presence of a
 date and one or more amounts on a line is never enough to infer a movement.
 
+### Agent-led ruled PDF recovery
+
+Before declaring a registration-style journal layout unsupported, follow
+`../../references/pdf-recovery.md`. Use the maintained inspection, trial and
+freeze actions in the existing inspection command. The host agent diagnoses and
+revises source-bound recipes within a persistent four-attempt budget. Successful
+recovery still requires the ordinary reviewed mapping and complete qualification.
+Do not create a parser, alter installed code or bypass a failed gate.
+
 ### Registration-style journal PDF
 
 A text journal with `N ---- dd/mm/yyyy ----` registration headers and

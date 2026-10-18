@@ -137,6 +137,11 @@ def _read_registration_pdf(
         r"^seguito registrazione del\s+(?P<date>\d{2}/\d{2}/\d{4})\s*$", re.IGNORECASE
     )
     money = re.compile(r"^-?\d{1,3}(?:\.\d{3})*,\d{2}$|^-?\d+,\d{2}$")
+    from .rules import CONTINUATION, HEADER, RULE_KEYS, RuleLayout
+
+    rules = RuleLayout(layout) if RULE_KEYS.intersection(layout) else None
+    if rules is not None and rules.border:
+        header, continuation = HEADER, CONTINUATION
     records: list[dict[str, Any]] = []
     registration: dict[str, Any] | None = None
     pending_accounts: dict[str, str] = {}
@@ -166,12 +171,19 @@ def _read_registration_pdf(
                 if body[1] > page.height or ordered[-1][1] > page.width:
                     reject(page_number, 0, "reviewed_coordinates_outside_page")
                     break
-                words = page.extract_words(x_tolerance=1, y_tolerance=2)
+                words = (
+                    rules.words(page, page_number, reject)
+                    if rules is not None
+                    else page.extract_words(x_tolerance=1, y_tolerance=2)
+                )
+                page_postings = 0
+                continuation_seen = False
+                header_seen = False
                 lines: list[list[dict[str, Any]]] = []
                 for word in sorted(
                     words, key=lambda w: (float(w["top"]), float(w["x0"]))
                 ):
-                    if not body[0] <= float(word["top"]) < body[1]:
+                    if rules is None and not body[0] <= float(word["top"]) < body[1]:
                         continue
                     if (
                         not lines
@@ -184,8 +196,34 @@ def _read_registration_pdf(
                 for row_number, line in enumerate(lines, start=1):
                     line.sort(key=lambda w: float(w["x0"]))
                     text = " ".join(str(w["text"]) for w in line).strip()
+                    if rules is not None:
+                        if rules.total(line, bands, page_number, row_number, reject):
+                            continue
+                        if not body[0] <= float(line[0]["top"]) < body[1]:
+                            if (
+                                any(money.fullmatch(str(w["text"])) for w in line)
+                                or header.fullmatch(text)
+                                or continuation.fullmatch(text)
+                            ):
+                                reject(
+                                    page_number,
+                                    row_number,
+                                    "accounting_content_outside_reviewed_body",
+                                )
+                            continue
+                        if rules.border and set(text) <= set("+- "):
+                            continue
                     match = header.fullmatch(text)
                     if match:
+                        header_seen = True
+                        if rules is not None:
+                            if match["number"] in rules.seen_registrations:
+                                reject(
+                                    page_number,
+                                    row_number,
+                                    "duplicate_registration_number",
+                                )
+                            rules.seen_registrations.add(match["number"])
                         close_registration(page_number, row_number)
                         pending_accounts = {}
                         pending_description = ""
@@ -200,6 +238,7 @@ def _read_registration_pdf(
                         continue
                     match = continuation.fullmatch(text)
                     if match:
+                        continuation_seen = True
                         if (
                             registration is None
                             or registration["date"]
@@ -211,10 +250,36 @@ def _read_registration_pdf(
                                 "continuation_without_matching_registration",
                             )
                         continue
+                    if (
+                        rules is not None
+                        and rules.border
+                        and (
+                            text.startswith(("+", "-"))
+                            or "seguito registrazione" in text.casefold()
+                        )
+                    ):
+                        reject(
+                            page_number,
+                            row_number,
+                            "unrecognized_decorated_registration_line",
+                        )
+                        continue
                     if any(
-                        text.casefold().startswith(prefix.casefold())
+                        (
+                            text.casefold() == prefix.casefold()
+                            if rules is not None
+                            else text.casefold().startswith(prefix.casefold())
+                        )
                         for prefix in ignored
                     ):
+                        if rules is not None and any(
+                            money.fullmatch(str(w["text"])) for w in line
+                        ):
+                            reject(
+                                page_number,
+                                row_number,
+                                "monetary_line_cannot_be_ignored",
+                            )
                         continue
                     cells: dict[str, list[str]] = {field: [] for field in bands}
                     unassigned_money = False
@@ -240,6 +305,10 @@ def _read_registration_pdf(
                             cells[owner].append(str(word["text"]))
                         elif money.fullmatch(str(word["text"])):
                             unassigned_money = True
+                        elif rules is not None:
+                            reject(
+                                page_number, row_number, "text_outside_reviewed_bands"
+                            )
                     values = {
                         field: " ".join(parts).strip() for field, parts in cells.items()
                     }
@@ -277,6 +346,23 @@ def _read_registration_pdf(
                         if not amount_text:
                             continue
                         candidate_count += 1
+                        if rules is not None:
+                            if rules.page_total_count:
+                                reject(
+                                    page_number,
+                                    row_number,
+                                    "posting_after_running_total",
+                                )
+                            if (
+                                page_number > 1
+                                and not header_seen
+                                and not continuation_seen
+                            ):
+                                reject(
+                                    page_number,
+                                    row_number,
+                                    "posting_without_page_continuation",
+                                )
                         if (
                             not money.fullmatch(amount_text)
                             or registration is None
@@ -317,18 +403,36 @@ def _read_registration_pdf(
                             "source_row": row_number,
                         }
                         records.append(record)
+                        page_postings += 1
+                        if rules is not None:
+                            rules.running[side] += amount
                         registration[side] += amount
                         registration["postings"] += 1
                         emitted = True
                     if emitted:
                         pending_description = ""
-                    elif description and not pending_accounts and records:
+                    elif (
+                        description
+                        and not pending_accounts
+                        and records
+                        and (
+                            rules is None
+                            or (
+                                registration is not None
+                                and registration["postings"] > 0
+                            )
+                        )
+                    ):
                         # Description-only continuations belong to the preceding posting.
                         previous = records[-1]
                         previous["line_desc"] = " ".join(
                             filter(None, [previous["line_desc"], description])
                         )
                         pending_description = ""
+                if rules is not None:
+                    if not page_postings:
+                        reject(page_number, 0, "page_has_no_postings")
+                    rules.close_page(page_number, reject)
                 if errors:
                     break
             finally:
@@ -345,6 +449,7 @@ def _read_registration_pdf(
         "rejected_row_count": len(errors),
         "rejected_rows": errors,
         "reason": None if accepted else "registration_pdf_incomplete_or_unbalanced",
+        **(rules.diagnostics() if rules is not None else {}),
     }
 
 

@@ -8,7 +8,8 @@
     "scripts",
     "mcp",
     "assets/review-workbench-adapter.json",
-    "assets/journal-bank-review-widget.html"
+    "assets/journal-bank-review-widget.html",
+    "references/pdf-recovery.md"
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
@@ -59,7 +60,7 @@
       {
         "id": "registration-pdf-layout-review",
         "purpose": "Review the physical layout of a text-PDF accounting journal before local reconstruction",
-        "content": "Bounded PDF layout evidence: at most 300 words from each of the first two and final pages, capped at 100 characters per word, their x/top coordinates, page dimensions, source SHA-256, page count and truncation status. Layout coordinates and printed header/footer labels are reviewed by the host model; no column semantics are inferred from number clusters. A dry-run preview contains at most twenty reconstructed postings per source for reconciliation. Entire registration reconstruction and exact debit/credit closure run locally, preserving source page/row lineage. Case names and accounting text in the sampled words are not anonymized. The helper makes no direct model API calls or new external-service requests.",
+        "content": "Bounded PDF layout evidence: at most 300 words from each of the first two and final pages, capped at 100 characters per word, their x/top coordinates, page dimensions, source SHA-256, page count and truncation status. Layout coordinates and printed header/footer labels are reviewed by the host model; no column semantics are inferred from number clusters. A dry-run preview contains at most twenty reconstructed postings per source for reconciliation. Entire registration reconstruction and exact debit/credit closure run locally, preserving source page/row lineage. Case names and accounting text in the sampled words are not anonymized. The helper makes no direct model API calls or new external-service requests. During layout recovery, the model can request up to three pages or regions per inspection, with at most 300 words and 1,200 characters with coordinates per page, and images of requested regions. It also receives proposed recipes and trial diagnostics; the history stays in the case workspace. Four trials and twelve inspections are allowed. This data is not anonymized and this procedure does not send it to developers.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -171,7 +172,7 @@
     "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "cb65bc93ec15a8886ed4a6aaba6bd9a174a36a56d93f29a9ac130e87f481298e"
+    "source_fingerprint": "da761e8d9f1a293be28d62cdb6487d781b661fa0d1ff9005f12defb6aded74ca"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"
@@ -182,7 +183,7 @@
       "copy": {
         "it": [
           "Il modello comprende la struttura",
-          "All'inizio, il modello legge un numero limitato di righe per riconoscere i campi e comprenderne il significato. Per il layout del giornale PDF può ricevere fino a 300 parole da ciascuna delle prime due pagine e dell’ultima, con massimo 100 caratteri per parola, coordinate, dimensioni delle pagine e hash della fonte. La ricostruzione completa avviene localmente.",
+          "All'inizio, il modello legge un numero limitato di righe per riconoscere i campi e comprenderne il significato. Per il layout del giornale PDF può ricevere fino a 300 parole da ciascuna delle prime due pagine e dell’ultima, con massimo 100 caratteri per parola, coordinate, dimensioni delle pagine e hash della fonte. La ricostruzione completa avviene localmente. Nel recupero del layout, ogni ispezione richiesta dal modello può mostrare fino a tre pagine o regioni, con al massimo 300 parole e 1.200 caratteri con coordinate per pagina, oltre alle immagini richieste. Il modello legge anche ricette proposte e diagnostica dei tentativi. La procedura conserva la cronologia nel fascicolo, consente quattro tentativi e dodici ispezioni, e non invia questi dati agli sviluppatori.",
           "Il codice elabora localmente l'intero perimetro",
           "Una volta confermati i campi e il perimetro, il codice elabora tutti i dati compresi nel lavoro secondo regole dichiarate e ripetibili.",
           "Il modello riceve un indice dei casi da rivedere",
@@ -195,7 +196,7 @@
         ],
         "en": [
           "The model understands the structure",
-          "At the start, the model reads a limited number of rows to identify the fields and understand what they mean. For PDF journal layout review it may receive up to 300 words from each of the first two and final pages, capped at 100 characters per word, with coordinates, page dimensions and the source hash. Full reconstruction runs locally.",
+          "At the start, the model reads a limited number of rows to identify the fields and understand what they mean. For PDF journal layout review it may receive up to 300 words from each of the first two and final pages, capped at 100 characters per word, with coordinates, page dimensions and the source hash. Full reconstruction runs locally. For layout recovery, each model-requested inspection can show up to three pages or regions, with at most 300 words and 1,200 characters with coordinates per page, plus requested images. The model also reads proposed recipes and trial diagnostics. The procedure retains history in the case workspace, allows four trials and twelve inspections, and does not send this data to developers.",
           "The code processes the full scope locally",
           "Once the fields and scope are confirmed, the code processes all data included in the work using declared, repeatable rules.",
           "The model receives an index of cases to review",
@@ -208,7 +209,7 @@
         ],
         "fr": [
           "Le modèle comprend la structure",
-          "Au début, le modèle lit un nombre limité de lignes pour reconnaître les champs et en comprendre la signification. Pour la revue du journal PDF, il peut recevoir jusqu’à 300 mots de chacune des deux premières pages et de la dernière, limités à 100 caractères par mot, avec coordonnées, dimensions et empreinte de la source. La reconstruction complète est locale.",
+          "Au début, le modèle lit un nombre limité de lignes pour reconnaître les champs et en comprendre la signification. Pour la revue du journal PDF, il peut recevoir jusqu’à 300 mots de chacune des deux premières pages et de la dernière, limités à 100 caractères par mot, avec coordonnées, dimensions et empreinte de la source. La reconstruction complète est locale. Pour récupérer la mise en page, chaque inspection demandée par le modèle peut montrer jusqu’à trois pages ou régions, avec au maximum 300 mots et 1 200 caractères avec coordonnées par page, ainsi que les images demandées. Le modèle lit aussi les recettes proposées et les diagnostics. La procédure conserve l’historique dans le dossier, autorise quatre essais et douze inspections et ne transmet pas ces données aux développeurs.",
           "Le code traite localement l'ensemble du périmètre",
           "Une fois les champs et le périmètre confirmés, le code traite toutes les données incluses dans le travail selon des règles déclarées et reproductibles.",
           "Le modèle reçoit un index des cas à examiner",
@@ -221,7 +222,7 @@
         ],
         "de": [
           "Das Modell versteht die Struktur",
-          "Zu Beginn liest das Modell eine begrenzte Anzahl von Zeilen, um die Felder zu erkennen und ihre Bedeutung zu verstehen. Zur Prüfung des PDF-Journallayouts kann es bis zu 300 Wörter aus jeder der ersten beiden und der letzten Seite erhalten, mit höchstens 100 Zeichen pro Wort, Koordinaten, Seitengrößen und Quellhash. Die vollständige Rekonstruktion erfolgt lokal.",
+          "Zu Beginn liest das Modell eine begrenzte Anzahl von Zeilen, um die Felder zu erkennen und ihre Bedeutung zu verstehen. Zur Prüfung des PDF-Journallayouts kann es bis zu 300 Wörter aus jeder der ersten beiden und der letzten Seite erhalten, mit höchstens 100 Zeichen pro Wort, Koordinaten, Seitengrößen und Quellhash. Die vollständige Rekonstruktion erfolgt lokal. Zur Layout-Wiederherstellung kann jede vom Modell angeforderte Prüfung bis zu drei Seiten oder Bereiche mit höchstens 300 Wörtern und 1.200 Zeichen samt Koordinaten pro Seite sowie angeforderte Bilder zeigen. Das Modell liest auch vorgeschlagene Rezepte und Versuchsdiagnosen. Das Verfahren bewahrt den Verlauf in der Fallablage auf, erlaubt vier Versuche und zwölf Prüfungen und sendet diese Daten nicht an Entwickler.",
           "Der Code verarbeitet den gesamten Umfang lokal",
           "Sobald Felder und Umfang bestätigt sind, verarbeitet der Code alle zum Auftrag gehörenden Daten nach offengelegten, wiederholbaren Regeln.",
           "Das Modell erhält einen Index der zu prüfenden Fälle",
@@ -234,7 +235,7 @@
         ],
         "es": [
           "El modelo comprende la estructura",
-          "Al principio, el modelo lee un número limitado de filas para reconocer los campos y comprender su significado. Para revisar el diseño del diario PDF puede recibir hasta 300 palabras de cada una de las dos primeras páginas y de la última, con un máximo de 100 caracteres por palabra, coordenadas, dimensiones y hash de la fuente. La reconstrucción completa se ejecuta localmente.",
+          "Al principio, el modelo lee un número limitado de filas para reconocer los campos y comprender su significado. Para revisar el diseño del diario PDF puede recibir hasta 300 palabras de cada una de las dos primeras páginas y de la última, con un máximo de 100 caracteres por palabra, coordenadas, dimensiones y hash de la fuente. La reconstrucción completa se ejecuta localmente. Para recuperar el diseño, cada inspección solicitada por el modelo puede mostrar hasta tres páginas o regiones, con un máximo de 300 palabras y 1.200 caracteres con coordenadas por página, además de las imágenes solicitadas. El modelo también lee las recetas propuestas y los diagnósticos. El procedimiento conserva el historial en el expediente, permite cuatro intentos y doce inspecciones y no envía estos datos a los desarrolladores.",
           "El código procesa localmente todo el alcance",
           "Una vez confirmados los campos y el alcance, el código procesa todos los datos incluidos en el trabajo mediante reglas declaradas y repetibles.",
           "El modelo recibe un índice de los casos que deben revisarse",

@@ -328,6 +328,8 @@ IMPLEMENTATION_ARTIFACT_SPECS = (
 )
 IMPLEMENTATION_ARTIFACT_SPECS += (
     ("implementation.vera_journal_pdf", "pdf_implementation", "__init__.py"),
+    ("implementation.vera_journal_pdf_rules", "pdf_implementation", "rules.py"),
+    ("implementation.vera_journal_pdf_recovery", "pdf_implementation", "recovery.py"),
 )
 
 CHATGPT_IMPLEMENTATION_ARTIFACT_SPECS = tuple(

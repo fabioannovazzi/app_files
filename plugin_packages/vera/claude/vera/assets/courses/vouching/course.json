@@ -57,7 +57,7 @@
     },
     {
       "path": "modules/check-entries/scripts/check_entries_core.py",
-      "sha256": "21d99c76e0e7ed5f4f8c38303e8b19f0444a3de92effea00df7852f919eac5e8"
+      "sha256": "3e34376b6235392faaab6850301e593232ca2455cd8e63e75392ff85f247aeb3"
     },
     {
       "path": "modules/check-entries/scripts/implementation_bootstrap.py",
@@ -153,7 +153,15 @@
     },
     {
       "path": "modules/check-entries/vendor/modules/vera_journal_pdf/__init__.py",
-      "sha256": "dd88f8273d2eab075178de060385d12014e12b213b1a1e6733568688fdc6cb21"
+      "sha256": "1c9738c861546a4f65c3e492d3a93e17d882473d826c53727a50ef465f97ae76"
+    },
+    {
+      "path": "modules/check-entries/vendor/modules/vera_journal_pdf/recovery.py",
+      "sha256": "931442fe84eb99dc0a949c95bd9977f3e08d29c68e9991d94fa751d2e012fa1c"
+    },
+    {
+      "path": "modules/check-entries/vendor/modules/vera_journal_pdf/rules.py",
+      "sha256": "cc0b2c67452a68d87ea019fd1626323338da915f145cb0013cdc3446add7fc5c"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -305,7 +313,15 @@
     },
     {
       "path": "vendor/modules/vera_journal_pdf/__init__.py",
-      "sha256": "dd88f8273d2eab075178de060385d12014e12b213b1a1e6733568688fdc6cb21"
+      "sha256": "1c9738c861546a4f65c3e492d3a93e17d882473d826c53727a50ef465f97ae76"
+    },
+    {
+      "path": "vendor/modules/vera_journal_pdf/recovery.py",
+      "sha256": "931442fe84eb99dc0a949c95bd9977f3e08d29c68e9991d94fa751d2e012fa1c"
+    },
+    {
+      "path": "vendor/modules/vera_journal_pdf/rules.py",
+      "sha256": "cc0b2c67452a68d87ea019fd1626323338da915f145cb0013cdc3446add7fc5c"
     },
     {
       "path": "vendor/modules/vera_ocr/__init__.py",
@@ -618,5 +634,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "e4dff934e3a0306d2277d124d709f27c84deb40b011f5d6ed37b3d635ff09e8b"
+  "canonical_course_sha256": "9dc7ff37a4c17d80cf3819e5a57c324a65df781396a2b993b6fd66cdae08ccf7"
 }
