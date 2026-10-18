@@ -805,7 +805,13 @@ def _sample_items(
             )
             or None,
             output_path="journal_sample.csv",
-            allowed_actions=("accept", "edit", "mark_unclear", "skip"),
+            allowed_actions=(
+                "accept",
+                "edit",
+                "mark_unclear",
+                "request_more_documents",
+                "skip",
+            ),
             recommended_action="accept",
             evidence=[
                 {
@@ -1043,6 +1049,7 @@ def write_run_intake(
     min_abs: str | None,
     keyword: str | None,
     language: str,
+    currencies: Sequence[str] = (),
     declared_output_dir: Path | None = None,
     client_engagement: dict[str, Any] | None = None,
     run_id: str | None = None,
@@ -1051,6 +1058,12 @@ def write_run_intake(
 
     language_code = _normalize_language(language)
     copy = _review_copy(language_code)
+    population_currencies = sorted(set(currencies))
+    if any(
+        not isinstance(value, str) or re.fullmatch(r"[A-Z]{3}", value) is None
+        for value in population_currencies
+    ):
+        raise ValueError("Review currency must come from canonical population codes.")
     context_run_id = (
         client_engagement.get("run_id")
         if isinstance(client_engagement, dict)
@@ -1109,7 +1122,11 @@ def write_run_intake(
             "min_abs": min_abs,
             "keyword": keyword,
             "language": language_code,
-            "currency": "EUR",
+            "currency": (
+                population_currencies[0] if len(population_currencies) == 1 else None
+            ),
+            "currencies": population_currencies,
+            "currency_scope": "normalized_population",
         },
         "unresolved_questions": [],
         "dependency_check": {

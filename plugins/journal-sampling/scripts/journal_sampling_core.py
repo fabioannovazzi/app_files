@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
 import json
 import logging
@@ -15,7 +16,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass, replace
 from datetime import date, datetime, timedelta
 from decimal import Decimal, InvalidOperation
-from io import BytesIO
+from io import BytesIO, StringIO
 from pathlib import Path
 from typing import Any, Sequence
 from zipfile import BadZipFile
@@ -1038,8 +1039,36 @@ def _read_csv_raw(
     path: Path,
     source_bytes: bytes | None = None,
 ) -> pl.DataFrame:
-    source: Path | BytesIO = path if source_bytes is None else BytesIO(source_bytes)
-    return pl.read_csv(source, has_header=False, infer_schema=False, ignore_errors=True)
+    captured = path.read_bytes() if source_bytes is None else source_bytes
+    text = captured.decode("utf-8-sig")
+    candidates: list[str] = []
+    for separator in (",", ";", "\t", "|"):
+        width: int | None = None
+        valid = True
+        try:
+            for row in csv.reader(
+                StringIO(text, newline=""), delimiter=separator, strict=True
+            ):
+                if not row:
+                    continue
+                if width is None:
+                    width = len(row)
+                elif len(row) != width:
+                    valid = False
+                    break
+        except csv.Error:
+            valid = False
+        if valid and width is not None and width > 1:
+            candidates.append(separator)
+    if len(candidates) != 1:
+        raise ValueError("CSV separator is ambiguous or records are malformed.")
+    return pl.read_csv(
+        BytesIO(captured),
+        separator=candidates[0],
+        has_header=False,
+        infer_schema=False,
+        ignore_errors=False,
+    )
 
 
 def _raw_table(
@@ -5802,6 +5831,22 @@ def _review_item_contract(
         run_intake,
         audit.get("normalized_csv"),
     ).as_posix()
+    population_currencies = sorted(
+        set(
+            pl.read_csv(audit_normalized_csv_reference, infer_schema=False)
+            .get_column("currency")
+            .to_list()
+        )
+    )
+    expected_currency = (
+        population_currencies[0] if len(population_currencies) == 1 else None
+    )
+    if not isinstance(assumptions, dict) or (
+        assumptions.get("currency") != expected_currency
+        or assumptions.get("currencies") != population_currencies
+        or assumptions.get("currency_scope") != "normalized_population"
+    ):
+        raise ValueError("Sample review currency no longer closes to the population.")
     if not isinstance(assumptions, dict) or {
         "normalized_csv": normalized_csv_reference,
         "method": assumptions.get("method"),
@@ -7319,6 +7364,7 @@ def run_sample(
             keyword=keyword,
             language=language_code,
             declared_output_dir=output_dir,
+            currencies=frame.get_column("currency").to_list(),
             client_engagement=normalized_client_engagement,
             run_id=(
                 str(normalized_client_engagement["run_id"])

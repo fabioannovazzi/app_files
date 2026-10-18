@@ -231,7 +231,6 @@ const MODEL_CASE_DATA_FIELDS = new Set([
   "amount_difference",
   "date_difference_days",
   "exception_reason",
-  "requested_document",
   "reason",
   "status",
   "actual",
@@ -247,6 +246,8 @@ const MODEL_CONTEXT_EXACT_IDENTIFIER_FIELDS = new Set([
   "movement_number",
   "reference",
   "matched_evidence_reference",
+  // Producer-authored requests can quote the exact reference or movement ID.
+  "requested_document",
 ]);
 const MODEL_CONTEXT_EVIDENCE_FIELDS = new Set([
   "kind",
@@ -263,7 +264,6 @@ const MODEL_CONTEXT_EVIDENCE_FIELDS = new Set([
   "expected",
   "note",
   "reason",
-  "requested_document",
 ]);
 const WIDGET_TOOL_URIS = {
   [TOOL_NAMES.renderReview]: WIDGET_URI,
@@ -538,8 +538,7 @@ function toolDefinitions() {
       },
       include_exact_identifiers: {
         type: "boolean",
-        description:
-          "Include exact document, movement, invoice, or reference values only when they are required for the selected accounting judgment.",
+        description: "Include exact identifiers, generated document requests and technical diagnostic detail only when required for the selected accounting judgment.",
       },
     },
     ["persistence_token", "case_handles"],
@@ -932,10 +931,16 @@ function modelContextCleanValue(value, depth = 0) {
   return undefined;
 }
 
-function modelContextProjectObject(value, allowedFields) {
+function modelContextProjectObject(value, allowedFields, includeExactIdentifiers = false) {
   if (!isPlainObject(value)) return {};
   const projected = {};
   for (const key of allowedFields) {
+    // Diagnostic notes and container values can embed row IDs/source locators.
+    // Keep only typed check counts/booleans by default; do not scan text for IDs.
+    if (!includeExactIdentifiers && key === "note") continue;
+    if (!includeExactIdentifiers && ["actual", "expected"].includes(key)
+        && !(typeof value[key] === "boolean"
+          || (typeof value[key] === "number" && Number.isFinite(value[key])))) continue;
     const cleaned = modelContextCleanValue(value[key]);
     if (cleaned !== undefined) projected[key] = cleaned;
   }
@@ -951,7 +956,7 @@ function modelContextProjectEvidence(evidence, semanticFields, includeExactIdent
   return evidence
     .slice(0, 50)
     .map((entry) => {
-      const projected = modelContextProjectObject(entry, allowed);
+      const projected = modelContextProjectObject(entry, allowed, includeExactIdentifiers);
       for (const [key, value] of Object.entries(projected)) {
         if (
           Object.prototype.hasOwnProperty.call(semanticFields, key)
@@ -1117,7 +1122,7 @@ function modelContextCases(args) {
       throw new Error(`case_handles[${index}] is unknown for this review`);
     }
     const item = context.handles.get(handle);
-    const semanticFields = modelContextProjectObject(item.data, allowedDataFields);
+    const semanticFields = modelContextProjectObject(item.data, allowedDataFields, includeExactIdentifiers);
     const evidence = modelContextProjectEvidence(
       item.evidence,
       semanticFields,
@@ -1140,8 +1145,12 @@ function modelContextCases(args) {
     cases,
     minimization: {
       omitted: [
-        "physical source paths and locators",
-        "workflow record identifiers",
+        ...(!includeExactIdentifiers ? [
+          "dedicated physical source path and locator fields",
+          "dedicated workflow record identifier fields",
+          "unstructured diagnostic notes",
+          "non-scalar diagnostic values",
+        ] : []),
         "review write targets",
         "empty fields",
         "unmapped columns",

@@ -55,8 +55,12 @@
       "sha256": "3dd2b965f37075fdb0851d53b658b4f6c13053e9dc051b066663d0c0742de61a"
     },
     {
+      "path": "modules/open-item-reconciliation/references/tabular-source-layout.md",
+      "sha256": "3e7f86f331cd0fbe0659fa95346f9cefd4c58f269dbd58b9f34eeaff1b09b9fd"
+    },
+    {
       "path": "modules/open-item-reconciliation/references/workflow-reference.md",
-      "sha256": "b6e3f2823268d8070cfba7462fbfbd6bd0131b3ff69e66ab5a22fffda9b7b681"
+      "sha256": "b6b441a8dff04bfbb7b26347e57edcecc022ff0a6bdf36ec6fbf07cdea77b469"
     },
     {
       "path": "modules/open-item-reconciliation/requirements.txt",
@@ -64,7 +68,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/audit_assurance.py",
-      "sha256": "28db9d3ba74b5313cd73dd3e15f3d943f7ced80f5d42544ae4291da322eb3c61"
+      "sha256": "1ace982e6fa333e56664661d41752c8fa8b24c07619322b37aaf238abf1aca3f"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
@@ -84,7 +88,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/raw_input_runner.py",
-      "sha256": "901a038c0ea4cd25a3aa84a2906969d228f212a35089ca50bb3aefa5ac51447b"
+      "sha256": "fb3f955e9317503aebaf5a31d1f3c94e16e19daed7233b82ae95e7b212eeba33"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/reconciliation_workflow.py",
@@ -96,11 +100,11 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/locale_support.source",
-      "sha256": "b1ab9125675abd27a30e4e7daa5546ae45bd386567f27730f5cae40a53826553"
+      "sha256": "10653fc2b967b0c625809482aeaaaa9b4b7b1e5835cc8e56f5a229216bc8b000"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/reconciliation_helpers.source",
-      "sha256": "2e784894b3995a12636101777dff3760441c46d28abbac4f5a494683ffb6902b"
+      "sha256": "e4f0456a39cce711c9b61824c0edb8517dce98d55a9df529d9e393d388fe2a2a"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/review_session.source",
@@ -108,7 +112,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/workpaper_outputs.source",
-      "sha256": "03c1fe0549d0bee7740d79ce3b94bfc8904e6e65660cdfad4c739afabee56ba3"
+      "sha256": "b9f1fce97c35e08e07ed7023b1833d417029d78972bf20c4c332c2d5d33334a5"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/review_server.py",
@@ -116,7 +120,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/skills/mparanza-open-item-reconciliation/SKILL.md",
-      "sha256": "061108fe431623615c2778279ff34565bd0c071ccf83a67bb957153ef1dc1e77"
+      "sha256": "7edfd39e7fee1c1cf81a3eefd976f2efae59c2c92ba436566c9c3e260d4e0cf2"
     },
     {
       "path": "modules/open-item-reconciliation/skills/mparanza-open-item-reconciliation/references/geneva.md",
@@ -609,5 +613,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "cd716c5afb389b563fc04b5e83d609e46706bbbb338c3dbc1d9d6bca79080e02"
+  "canonical_course_sha256": "e9edbf6cbf74a25aaf2d88cd98a3cc4c14f33f9b7e670ea7c2559c6da1dbe9a0"
 }

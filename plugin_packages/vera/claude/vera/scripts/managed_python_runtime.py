@@ -7,6 +7,7 @@ import argparse
 import importlib.util
 import json
 import logging
+import os
 import runpy
 import shutil
 import sqlite3
@@ -17,6 +18,12 @@ from contextlib import redirect_stderr
 from pathlib import Path
 
 __all__ = ["main", "run_verified_helper"]
+
+# Isolated Python omits the script directory. Restore only this owned directory,
+# never the caller's working directory, for the sibling diagnostic imports below.
+_SCRIPTS_DIRECTORY = str(Path(__file__).resolve().parent)
+if _SCRIPTS_DIRECTORY not in sys.path:
+    sys.path.insert(0, _SCRIPTS_DIRECTORY)
 
 _VERIFICATION = runpy.run_path(str(Path(__file__).with_name("verified_execution.py")))
 prepare_execution_root = _VERIFICATION["prepare_execution_root"]
@@ -232,14 +239,23 @@ def _technical_events(
 
 def _independent_failure(stage: str, module: str | None, error_type: str) -> None:
     """Route pre-execution failures without running an unverified incident helper."""
-    logging.error(
-        "VERA_REMOTE_INCIDENT_REQUIRED: workflow=%s stage=%s error_type=%s. "
-        "Use the saved veraIncidents connector to report the complete observed technical error. "
-        "Do not run an altered plugin helper to report its own integrity failure.",
-        module or "unknown",
-        stage,
-        error_type,
-    )
+    if os.environ.get("MPARANZA_INCIDENT_DELIVERY") == "local-only":
+        logging.error(
+            "VERA_LOCAL_INCIDENT: workflow=%s stage=%s error_type=%s. "
+            "Retain local evidence; incident transmission is disabled for this execution.",
+            module or "unknown",
+            stage,
+            error_type,
+        )
+    else:
+        logging.error(
+            "VERA_REMOTE_INCIDENT_REQUIRED: workflow=%s stage=%s error_type=%s. "
+            "Use the saved veraIncidents connector to report the complete observed technical error. "
+            "Do not run an altered plugin helper to report its own integrity failure.",
+            module or "unknown",
+            stage,
+            error_type,
+        )
     report_preparation_failure(
         Path(__file__).absolute().parents[1],
         module,
@@ -377,10 +393,17 @@ def run_verified_helper(
         if error_path is not None:
             try:
                 pointer = retain_diagnostic(error_path, receipt)
-                logging.error(
-                    "VERA_TECHNICAL_EVIDENCE: %s. Automatically read the retained stderr locally, review complete relevant technical diagnostics without unrelated private/client content, then use vera_incident_report with evidence_for_report_id from its report before concluding diagnosis is blocked. Raw stderr is not uploaded.",
-                    pointer,
-                )
+                if os.environ.get("MPARANZA_INCIDENT_DELIVERY") == "local-only":
+                    logging.error(
+                        "VERA_TECHNICAL_EVIDENCE: %s. Read retained stderr locally; "
+                        "incident transmission is disabled for this execution.",
+                        pointer,
+                    )
+                else:
+                    logging.error(
+                        "VERA_TECHNICAL_EVIDENCE: %s. Automatically read the retained stderr locally, review complete relevant technical diagnostics without unrelated private/client content, then use vera_incident_report with evidence_for_report_id from its report before concluding diagnosis is blocked. Raw stderr is not uploaded.",
+                        pointer,
+                    )
             except (OSError, ValueError, KeyError):
                 logging.warning(
                     "Retained helper stderr is at %s; metadata could not be saved. Use the independent incident connector for the observed error.",

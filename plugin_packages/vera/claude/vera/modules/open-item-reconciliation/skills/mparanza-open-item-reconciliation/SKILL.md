@@ -85,6 +85,18 @@ PDF/print-export parser may be named only inside this reviewed decision with
 adapter `legacy_it_accounting_export_v1`; do not ask the user to edit plugin
 files.
 
+For ordinary header-based CSV and XLSX exports, use the maintained
+`reviewed_tabular_accounting_v1` adapter with an explicit reviewed `tabular`
+layout. Read `references/tabular-source-layout.md` before qualifying these
+files. professional reviews the actual headers, table bounds, source role, evidence
+meaning and perimeter; the parser does not infer them. It supports open-item,
+bank and journal tables, preserves source rows and critical dates, reads native
+Excel monetary values from exact XML numbers, and rejects mapped formulas,
+invalid dates/amounts, ambiguous headers and perimeter contradictions. Do not
+convert a normal export to a special PDF layout merely to fit a legacy parser.
+Create/replay the source-bound decision through the same maintained intake;
+never fabricate prepared records or ask the professional to author JSON.
+
 Every `reviewer_ref` is an unsigned, unauthenticated, untrusted label. Its
 canonical syntax and sealed bytes do not prove the reviewer's identity or
 authorization.
@@ -279,9 +291,11 @@ The deterministic workflow should:
    reporting; publication remains withheld as a separate action. Build and
    replay final controls in staging before transactional promotion.
 
-The raw runner does not interpret arbitrary CSV or arbitrary spreadsheet
-layouts. Such a source requires a qualified adapter or reviewed external
-preparation; do not coerce it through a similar-looking parser.
+The raw runner interprets CSV/XLSX only through an explicitly reviewed bounded
+tabular layout, or another qualified maintained adapter. It does not infer
+arbitrary spreadsheet structure. Unsupported layouts require a qualified
+adapter or reviewed external preparation; do not coerce them through a
+similar-looking parser.
 
 When extracting long PDFs, enable `verbose_extraction` and set
 `pdf_progress_every_pages` when the default cadence is too sparse. The runner

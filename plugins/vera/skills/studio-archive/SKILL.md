@@ -40,6 +40,13 @@ using the localized wording in `../vera/SKILL.md`, and continue in ChatGPT.
 
 # Archivio dello Studio
 
+For a user-authorized external folder delivery into a selected client's working
+area, use the component's `copy_studio_client_source_folder` operation. It
+preserves the tree outside `Vera/` for Archive Organization and retains a copy
+receipt. Single-document engagement imports remain a separate route; they are
+not a substitute for the working-folder delivery. Reuse the selected client,
+engagement and explicit copy authority; do not ask again for settled choices.
+
 For a Geneva (CH-GE) mandate, read `../vera/references/localization/geneva.md` first and use this existing function’s Geneva adaptation in its resolved component skill. Language alone never selects jurisdiction.
 
 

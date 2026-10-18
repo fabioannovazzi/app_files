@@ -35,7 +35,7 @@
     {
       "path": "scripts/managed_python_runtime.py",
       "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
-      "sha256": "4c818a1c172f02b07625ef26a6cbe12672e6b52844948b0ee7fefce325a58c69"
+      "sha256": "47abf5f768198382faf5df02e1db73c959b02334eca492e50318f19e458ace72"
     },
     {
       "path": "scripts/model_data_report.py",
@@ -50,7 +50,7 @@
     {
       "path": "scripts/operational_incidents.py",
       "repository_path": "plugins/vera/scripts/operational_incidents.py",
-      "sha256": "7bc14b1ef1e9542175c38e4345eed1ae548472dbcd02ac36e367b847962170f8"
+      "sha256": "6557ca4cb14d905141e1d841a81c67834fb189da654d990527639412e3b2ca55"
     },
     {
       "path": "scripts/studio_work.py",
@@ -60,7 +60,7 @@
     {
       "path": "scripts/verified_execution.py",
       "repository_path": "plugins/vera/scripts/verified_execution.py",
-      "sha256": "8817cdb519cce486adf79d4f8feaf7bc3d4f89a810361855da823c6d9a852c31"
+      "sha256": "24349391d083ef2434fe7c6d9ea8930e21144ad3932b8ad6d01cdd8426837e30"
     },
     {
       "path": "scripts/workflow_usage.py",

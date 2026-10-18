@@ -89,6 +89,7 @@ IMPLEMENTATION_CONTRACT = tuple(_BOOTSTRAP_NAMESPACE["IMPLEMENTATION_CONTRACT"])
 
 import argparse
 import csv
+import io
 import hashlib
 import json
 import mimetypes
@@ -98,16 +99,19 @@ import shutil
 import stat
 import sys
 import tempfile
+import posixpath
+import zipfile
+import xml.etree.ElementTree as ET
 from collections.abc import Callable, Mapping, Sequence
 from datetime import date, datetime
-from decimal import Decimal
+from decimal import Decimal, ROUND_HALF_EVEN
 from pathlib import Path
 from typing import Any
 
 from docx import Document
 from locale_support import canonical_word_label
 from openpyxl import load_workbook
-from openpyxl.utils import get_column_letter
+from openpyxl.utils import coordinate_to_tuple, get_column_letter
 
 _SCRIPTS_DIRECTORY = Path(__file__).resolve().parent
 if str(_SCRIPTS_DIRECTORY) not in sys.path:
@@ -117,6 +121,7 @@ from reconciliation_helpers import (  # noqa: E402
     closed_bank_allocation_controls,
     reconcile_open_items,
     reconciliation_checks,
+    document_key,
 )
 
 
@@ -161,6 +166,7 @@ __all__ = [
     "build_professional_review_authority",
     "build_review_payload_mapping",
     "build_reviewed_source_decisions",
+    "read_reviewed_tabular_source",
     "build_source_receipts",
     "capture_review_transition_predecessor",
     "finalize_assurance_run",
@@ -283,6 +289,7 @@ ASSURANCE_SEAL_FIELDS = frozenset(
 
 _CHECKPOINT_PATTERN = re.compile(r"[0-9a-f]{64}")
 SUPPORTED_SOURCE_ADAPTER_VERSIONS = {
+    "reviewed_tabular_accounting_v1": "2",
     "bank_statement_text_v1": "2",
     "journal_header_columns_v1": "2",
     "legacy_it_accounting_export_v1": "2",
@@ -737,6 +744,135 @@ def _source_decision_input(
     return value if isinstance(value, Mapping) else None
 
 
+TABULAR_ADAPTER = "reviewed_tabular_accounting_v1"
+TABULAR_COLUMNS = frozenset(
+    {
+        "source_record_id",
+        "document_no",
+        "document_date",
+        "posting_date",
+        "value_date",
+        "due_date",
+        "amount",
+        "balance",
+        "description",
+        "entity_ref",
+        "party_ref",
+        "currency",
+        "unit",
+        "evidence_type",
+        "support_document_no",
+    }
+)
+
+
+def _validate_tabular_layout(
+    value: object, role: str, relative_path: str
+) -> dict[str, Any]:
+    """Validate explicit reviewed selectors, never infer accounting column meaning."""
+    keys = {
+        "sheet",
+        "header_row",
+        "first_data_row",
+        "last_data_row",
+        "delimiter",
+        "columns",
+        "evidence_type_map",
+        "default_evidence_type",
+    }
+    if not isinstance(value, Mapping) or set(value) != keys:
+        raise AssuranceRunError("tabular layout requires exact reviewed fields")
+    if role not in {"open_items", "journal", "bank_statement"}:
+        raise AssuranceRunError("tabular adapter does not support this source role")
+    for key in ("header_row", "first_data_row", "last_data_row"):
+        if type(value[key]) is not int or not 1 <= value[key] <= 100000:
+            raise AssuranceRunError(
+                "tabular row selectors must be bounded positive integers"
+            )
+    if not value["header_row"] < value["first_data_row"] <= value["last_data_row"]:
+        raise AssuranceRunError("tabular row selectors are inconsistent")
+    suffix = Path(relative_path).suffix.lower()
+    if suffix == ".csv":
+        if (
+            value["sheet"] is not None
+            or not isinstance(value["delimiter"], str)
+            or value["delimiter"]
+            not in {
+                ",",
+                ";",
+                "\t",
+                "|",
+            }
+        ):
+            raise AssuranceRunError("CSV requires an explicit delimiter and no sheet")
+    elif suffix == ".xlsx":
+        if (
+            not isinstance(value["sheet"], str)
+            or not value["sheet"].strip()
+            or value["delimiter"] is not None
+        ):
+            raise AssuranceRunError("XLSX requires an exact sheet and no delimiter")
+    else:
+        raise AssuranceRunError("tabular adapter supports only CSV and XLSX")
+    columns = value["columns"]
+    required = (
+        {"amount", "document_no", "document_date"}
+        if role == "open_items"
+        else {"amount", "posting_date"}
+    )
+    if (
+        not isinstance(columns, Mapping)
+        or not required <= set(columns) <= TABULAR_COLUMNS
+    ):
+        raise AssuranceRunError("tabular column mapping is incomplete or unsupported")
+    if not all(isinstance(x, str) and x.strip() for x in columns.values()):
+        raise AssuranceRunError("tabular columns must name exact nonempty headers")
+    if len(set(columns.values())) != len(columns):
+        raise AssuranceRunError("tabular fields cannot alias the same source column")
+    if not ({"source_record_id", "document_no"} & set(columns)):
+        raise AssuranceRunError(
+            "tabular rows require a mapped source or document identity"
+        )
+    allowed = (
+        {"open_item"}
+        if role == "open_items"
+        else (
+            {"external_bank"}
+            if role == "bank_statement"
+            else {
+                "internal_accounting",
+                "internal_closure",
+                "compensation",
+                "factoring_bridge",
+            }
+        )
+    )
+    mapping = value["evidence_type_map"]
+    if not isinstance(mapping, Mapping) or not all(
+        isinstance(k, str)
+        and k
+        and k == k.strip()
+        and isinstance(v, str)
+        and v in allowed
+        for k, v in mapping.items()
+    ):
+        raise AssuranceRunError(
+            "tabular evidence types require explicit supported review choices"
+        )
+    if "evidence_type" in columns:
+        if not mapping or value["default_evidence_type"] is not None:
+            raise AssuranceRunError(
+                "mapped evidence types require a complete map and no fallback"
+            )
+    elif (
+        mapping
+        or not isinstance(value["default_evidence_type"], str)
+        or value["default_evidence_type"] not in allowed
+    ):
+        raise AssuranceRunError("tabular source requires an explicit evidence type")
+    return _json_safe(dict(value), label="tabular layout")
+
+
 def _validate_source_decision_content(
     value: Mapping[str, Any],
     *,
@@ -753,6 +889,8 @@ def _validate_source_decision_content(
         "money",
         "date",
     }
+    if adapter_family == TABULAR_ADAPTER:
+        required.add("tabular")
     if set(value) != required:
         raise AssuranceRunError(
             f"reviewed source decision for {relative_path} has invalid fields"
@@ -848,6 +986,10 @@ def _validate_source_decision_content(
         "money": dict(money),
         "date": dict(date_authority),
     }
+    if adapter_family == TABULAR_ADAPTER:
+        content["tabular"] = _validate_tabular_layout(
+            value["tabular"], str(value["role"]), relative_path
+        )
     return _json_safe(content, label=f"reviewed_source_decisions.{relative_path}")
 
 
@@ -902,6 +1044,8 @@ def build_reviewed_source_decisions(
                     "money": content.get("money"),
                     "date": content.get("date"),
                 }
+                if adapter_family == TABULAR_ADAPTER:
+                    replay_input["tabular"] = content.get("tabular")
                 if _validate_source_decision_content(
                     replay_input,
                     relative_path=relative_path,
@@ -1381,6 +1525,8 @@ def _validated_source_decisions(
             "money": content.get("money"),
             "date": content.get("date"),
         }
+        if adapter_family == TABULAR_ADAPTER:
+            replay_input["tabular"] = content.get("tabular")
         expected_content = _validate_source_decision_content(
             replay_input,
             relative_path=relative_path,
@@ -1423,6 +1569,7 @@ def _validate_prepared_population(
     source_receipts: Sequence[Mapping[str, Any]],
     reviewed_source_decisions: Sequence[Mapping[str, Any]],
     source_qualifications: Sequence[Mapping[str, Any]],
+    source_root: Path | None = None,
 ) -> None:
     """Close source identity, qualification, perimeter, and cent precision."""
 
@@ -1522,6 +1669,32 @@ def _validate_prepared_population(
             )
         if int(qualification["emitted_row_count"]) != row_count:
             raise AssuranceRunError("source qualification emitted row count is stale")
+    for receipt in source_receipts:
+        source_ref = str(receipt["artifact_id"])
+        decision = decision_by_ref[source_ref]
+        if decision["adapter_id"] != TABULAR_ADAPTER:
+            continue
+        if source_root is None:
+            raise AssuranceRunError("tabular source replay requires its source root")
+        expected = read_reviewed_tabular_source(
+            Path(source_root) / str(receipt["path"]), decision
+        )
+        actual = [
+            row
+            for row in rows
+            if _source_receipt_for_row(row, source_receipts) == receipt
+        ]
+        expected_by_id = {row["record_id"]: row for row in expected}
+        if {row["record_id"] for row in actual} != set(expected_by_id):
+            raise AssuranceRunError(
+                "tabular prepared population is missing or contains added source rows"
+            )
+        for row in actual:
+            derived = expected_by_id[row["record_id"]]
+            if any(row.get(key) != value for key, value in derived.items()):
+                raise AssuranceRunError(
+                    "tabular prepared record differs from current reviewed source cells"
+                )
 
 
 def _portable_client_engagement_context(
@@ -1802,6 +1975,7 @@ def prepare_assurance_run(
         source_receipts=normalized_sources,
         reviewed_source_decisions=normalized_decisions,
         source_qualifications=normalized_qualifications,
+        source_root=Path(source_root) if source_root is not None else None,
     )
     supplied_review_authority = professional_review_authority
     existing_review_path = out_dir / "professional_review.json"
@@ -4056,6 +4230,7 @@ def _status_context(
     statuses = sorted(
         {
             "closed",
+            "partially_paid",
             "needs_evidence",
             "open_supported",
             "probable_payment",
@@ -4327,6 +4502,58 @@ def _rendered_value_formula(
                     "field_by_status": {"partially_paid": "residual_amount"},
                 }
 
+    if share_header and owner_refs:
+        in_scope = {
+            str(row["record_id"]): row
+            for row in reconciliation_rows
+            if row.get("reconciliation_status") != "out_of_scope"
+        }
+        if set(owner_refs) <= set(in_scope):
+            numerator = sum(
+                (
+                    abs(_row_numeric_field_total(in_scope[ref], "amount"))
+                    for ref in owner_refs
+                ),
+                Decimal("0"),
+            )
+            denominator = sum(
+                (
+                    abs(_row_numeric_field_total(row, "amount"))
+                    for row in in_scope.values()
+                ),
+                Decimal("0"),
+            )
+            expected = (
+                Decimal("0")
+                if denominator == 0
+                else numerator / denominator * Decimal("100")
+            )
+            expected = expected.quantize(Decimal("0.01"), rounding=ROUND_HALF_EVEN)
+            if number == expected:
+                return list(owner_refs), {
+                    "kind": "record_absolute_share_percent",
+                    "field": "amount",
+                    "denominator_scope": "in_scope_population",
+                    "decimal_places": 2,
+                    "rounding": "ROUND_HALF_EVEN",
+                }
+
+    if header_token in {"evidence_amount", "evidence_amount_total"} and owner_refs:
+        open_ids = {str(row["record_id"]) for row in reconciliation_rows}
+        evidence_refs = [ref for ref in owner_refs if ref not in open_ids]
+        if evidence_refs and number == sum(
+            (
+                _row_numeric_field_total(rows_by_id[ref], "amount")
+                for ref in evidence_refs
+            ),
+            Decimal("0"),
+        ):
+            return evidence_refs, {
+                "kind": "source_role_sum",
+                "field": "amount",
+                "source_bucket": "evidence",
+            }
+
     if len(owners) > 1:
         reconciliation_ids = {
             str(row.get("record_id") or "") for row in reconciliation_rows
@@ -4542,6 +4769,11 @@ def _native_rendered_value_addresses(
         list(prepared.get("evidence_rows") or []),
         dict(prepared.get("assumptions") or {}),
     )
+    from build_missing_evidence_requests import TEXT as request_text
+
+    request_id_headers = {c["headers"]["row_id"] for c in request_text.values()}
+    request_amount_headers = {c["headers"]["amount"] for c in request_text.values()}
+    reconciliation_by_id = {str(row["record_id"]): row for row in reconciliation_rows}
     record_rows = [*support_rows, *reconciliation_rows]
     addresses: list[dict[str, Any]] = []
     for name in sorted(native_names):
@@ -4561,6 +4793,11 @@ def _native_rendered_value_addresses(
                         for index, header in enumerate(headers)
                         if _material_header(header)
                     }
+                    request_columns = [
+                        i
+                        for i, label in enumerate(headers)
+                        if label in request_id_headers
+                    ]
                     for row in rows[1:]:
                         values = [cell.value for cell in row]
                         owner_refs = _row_record_refs(values, record_rows)
@@ -4572,15 +4809,43 @@ def _native_rendered_value_addresses(
                             if value is None:
                                 continue
                             header = headers[index] if index < len(headers) else ""
-                            owners, formula = _rendered_value_formula(
-                                value=value,
-                                header=header,
-                                values=values,
-                                owner_refs=owner_refs,
-                                reconciliation_rows=reconciliation_rows,
-                                support_rows=support_rows,
-                                external_detail_rows=external_detail,
-                            )
+                            if (
+                                name == "richieste_mirate_evidenze.xlsx"
+                                and header in request_amount_headers
+                                and len(request_columns) == 1
+                            ):
+                                # This renderer-owned detail column requests the
+                                # current residual, not the original face amount.
+                                ref = str(values[request_columns[0]] or "")
+                                target = reconciliation_by_id.get(ref)
+                                field = (
+                                    "residual_amount"
+                                    if target is not None
+                                    and target.get("reconciliation_status")
+                                    == "partially_paid"
+                                    else "amount"
+                                )
+                                if target is None or Decimal(
+                                    value
+                                ) != _row_numeric_field_total(target, field):
+                                    raise AssuranceRunError(
+                                        "request row amount does not match its current open-item residual"
+                                    )
+                                owners, formula = [ref], {
+                                    "kind": "record_field",
+                                    "field": field,
+                                    "absolute": False,
+                                }
+                            else:
+                                owners, formula = _rendered_value_formula(
+                                    value=value,
+                                    header=header,
+                                    values=values,
+                                    owner_refs=owner_refs,
+                                    reconciliation_rows=reconciliation_rows,
+                                    support_rows=support_rows,
+                                    external_detail_rows=external_detail,
+                                )
                             addresses.append(
                                 _rendered_value_address(
                                     artifact_ref=artifact_ref,
@@ -4957,6 +5222,320 @@ def _source_date(
         return None
 
 
+def _tabular_xlsx_numbers(
+    data: bytes, sheet_name: str
+) -> tuple[dict[str, str], int, int]:
+    """Read authoritative XML number lexemes, never binary-float approximations."""
+    ns = {"m": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
+    with zipfile.ZipFile(io.BytesIO(data)) as archive:
+        if sum(x.file_size for x in archive.infolist()) > 50_000_000:
+            raise AssuranceRunError("tabular workbook exceeds the bounded XML size")
+        book = ET.fromstring(archive.read("xl/workbook.xml"))
+        selected = [
+            x
+            for x in book.findall("m:sheets/m:sheet", ns)
+            if x.get("name") == sheet_name
+        ]
+        if len(selected) != 1:
+            raise AssuranceRunError("reviewed workbook sheet is unavailable")
+        rel_id = selected[0].get(
+            "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id"
+        )
+        rels = ET.fromstring(archive.read("xl/_rels/workbook.xml.rels"))
+        targets = [
+            x.get("Target", "")
+            for x in rels
+            if x.get("Id") == rel_id and x.get("TargetMode") != "External"
+        ]
+        if len(targets) != 1:
+            raise AssuranceRunError("workbook sheet relationship is unavailable")
+        target = targets[0]
+        member = posixpath.normpath(
+            target.lstrip("/") if target.startswith("/") else "xl/" + target
+        )
+        if not member.startswith("xl/worksheets/"):
+            raise AssuranceRunError(
+                "workbook sheet relationship is outside the supported boundary"
+            )
+        tree = ET.fromstring(archive.read(member))
+        numbers = {}
+        max_row = max_column = cell_count = 0
+        # Worksheet dimensions are optional metadata and can be stale. Derive
+        # bounded physical extents from the actual rows/cells before openpyxl
+        # iteration, avoiding both None dimensions and sparse giant ranges.
+        for xml_row in tree.findall("m:sheetData/m:row", ns):
+            row_number = int(xml_row.get("r", str(max_row + 1)))
+            if not 1 <= row_number <= 100000:
+                raise AssuranceRunError("workbook exceeds the bounded row count")
+            max_row = max(max_row, row_number)
+            column = 0
+            for cell in xml_row.findall("m:c", ns):
+                cell_count += 1
+                coordinate = cell.get("r")
+                if coordinate:
+                    cell_row, column = coordinate_to_tuple(coordinate)
+                    if cell_row != row_number:
+                        raise AssuranceRunError("workbook cell row is inconsistent")
+                else:
+                    column += 1
+                    coordinate = f"{get_column_letter(column)}{row_number}"
+                if not 1 <= column <= 256 or cell_count > 1_000_000:
+                    raise AssuranceRunError(
+                        "workbook exceeds bounded column or cell count"
+                    )
+                max_column = max(max_column, column)
+                value = cell.find("m:v", ns)
+                if (
+                    cell.get("t", "n") == "n"
+                    and value is not None
+                    and value.text
+                    and cell.find("m:f", ns) is None
+                ):
+                    numbers[coordinate] = value.text
+        return numbers, max_row, max_column
+
+
+def read_reviewed_tabular_source(
+    path: Path, decision: Mapping[str, Any]
+) -> list[dict[str, Any]]:
+    """Apply explicit semantic review using reproducible cell reads and arithmetic.
+
+    The reviewer chooses roles, columns, evidence meaning and table bounds. This
+    code does no header guessing or description classification. All emitted
+    fields can be rederived from the same byte-bound source during assurance.
+    """
+    current = validate_reviewed_decision_receipt(
+        decision,
+        expected_adapter_id=TABULAR_ADAPTER,
+        expected_adapter_version=SOURCE_DECISION_ADAPTER_VERSION,
+        require_reviewed=True,
+    )
+    content = current["content"]
+    source = str(content["source_path"])
+    replay_input = {
+        key: content.get(key)
+        for key in ("role", "adapter_family", "perimeter", "money", "date", "tabular")
+    }
+    replay_input.update(
+        reviewer_ref=current["reviewer_ref"], reviewed_on=current["reviewed_on"]
+    )
+    if (
+        _validate_source_decision_content(
+            replay_input,
+            relative_path=source,
+            adapter_family=TABULAR_ADAPTER,
+            run_date=current["reviewed_on"],
+        )
+        != content
+    ):
+        raise AssuranceRunError("reviewed tabular content is stale")
+    layout = _validate_tabular_layout(
+        content.get("tabular"), str(content["role"]), source
+    )
+    _require_single_link_regular(path, label="reviewed tabular source")
+    data = path.read_bytes()
+    expected_ref = "source." + canonical_json_sha256(
+        {"path": source, "sha256": hashlib.sha256(data).hexdigest()}
+    )
+    if (
+        current["source_artifact_refs"] != [expected_ref]
+        or Path(source).name != path.name
+    ):
+        raise AssuranceRunError("reviewed tabular source bytes or identity changed")
+    header_row, first, last = (
+        layout[x] for x in ("header_row", "first_data_row", "last_data_row")
+    )
+    workbook = None
+    numbers: dict[str, str] = {}
+    try:
+        if path.suffix.lower() == ".csv":
+            reader = csv.reader(
+                io.StringIO(data.decode("utf-8-sig")),
+                delimiter=layout["delimiter"],
+                strict=True,
+            )
+            table = []
+            cells_read = 0
+            for values in reader:
+                cells_read += len(values)
+                if len(table) >= 100000 or cells_read > 1_000_000 or len(values) > 256:
+                    raise AssuranceRunError(
+                        "CSV exceeds bounded row, column or cell count"
+                    )
+                table.append(values)
+            if len(table) < last or not table or max(map(len, table), default=0) > 256:
+                raise AssuranceRunError("reviewed CSV bounds or width are invalid")
+            headers = table[header_row - 1]
+            source_rows = [(i, table[i - 1]) for i in range(first, last + 1)]
+        else:
+            numbers, physical_last, width = _tabular_xlsx_numbers(data, layout["sheet"])
+            workbook = load_workbook(io.BytesIO(data), read_only=True, data_only=False)
+            sheet = workbook[layout["sheet"]]
+            if physical_last < last or not width:
+                raise AssuranceRunError("reviewed workbook bounds or width are invalid")
+            sheet.reset_dimensions()
+            headers = [
+                x.value
+                for x in next(
+                    sheet.iter_rows(
+                        min_row=header_row, max_row=header_row, max_col=width
+                    )
+                )
+            ]
+            if (last - first + 1) * len(headers) > 1_000_000:
+                raise AssuranceRunError("reviewed table exceeds the bounded cell count")
+            source_rows = list(
+                enumerate(
+                    sheet.iter_rows(min_row=first, max_row=last, max_col=width), first
+                )
+            )
+        if (last - first + 1) * len(headers) > 1_000_000:
+            raise AssuranceRunError("reviewed table exceeds the bounded cell count")
+        columns = {}
+        for field, name in layout["columns"].items():
+            matches = [i for i, h in enumerate(headers) if h == name]
+            if len(matches) != 1:
+                raise AssuranceRunError(
+                    f"reviewed header is missing or ambiguous: {name}"
+                )
+            columns[field] = matches[0]
+        output = []
+        for row_number, cells in source_rows:
+            raw = {}
+            for field, col in columns.items():
+                if col >= len(cells):
+                    raise AssuranceRunError("reviewed source row has missing columns")
+                cell = cells[col]
+                if workbook is not None:
+                    if cell.data_type in {"f", "e"}:
+                        raise AssuranceRunError(
+                            "mapped formulas or error cells are unsupported"
+                        )
+                    value = cell.value
+                    if (
+                        field in {"amount", "balance"}
+                        and cell.data_type == "n"
+                        and value is not None
+                    ):
+                        lexical = numbers.get(cell.coordinate)
+                        if lexical is None or len(lexical) > 100:
+                            raise AssuranceRunError(
+                                "exact workbook amount is unavailable"
+                            )
+                        number = Decimal(lexical)
+                        if (
+                            not number.is_finite()
+                            or len(number.as_tuple().digits) > 28
+                            or abs(number.as_tuple().exponent) > 28
+                        ):
+                            raise AssuranceRunError(
+                                "workbook amount exceeds supported precision"
+                            )
+                        value = decimal_text(number)
+                        raw[field] = value
+                        continue
+                else:
+                    value = cell
+                raw[field] = value
+            if all(v is None or v == "" for v in raw.values()):
+                continue
+            row = {}
+            for field, value in raw.items():
+                if field in {"amount", "balance"}:
+                    convention = content["money"]
+                    if workbook is not None and field in {"amount", "balance"}:
+                        # XML numeric lexemes are invariant; text money still uses the review.
+                        cell = cells[columns[field]]
+                        if cell.data_type == "n":
+                            convention = {
+                                **convention,
+                                "decimal_separator": ".",
+                                "thousands_separator": None,
+                            }
+                    if isinstance(value, str) and convention["thousands_separator"]:
+                        sep = re.escape(convention["thousands_separator"])
+                        dec = re.escape(convention["decimal_separator"] or ".")
+                        if not re.fullmatch(
+                            rf"-?(?:\d+|\d{{1,3}}(?:{sep}\d{{3}})+)(?:{dec}\d+)?",
+                            value.strip(),
+                        ):
+                            raise AssuranceRunError(
+                                "source money punctuation is ambiguous"
+                            )
+                    parsed = _source_money(value, convention)
+                    if parsed is None:
+                        raise AssuranceRunError(
+                            "mapped money is missing, invalid or not an exact cent value"
+                        )
+                    row[field] = parsed
+                elif field in {
+                    "document_date",
+                    "posting_date",
+                    "value_date",
+                    "due_date",
+                }:
+                    if value is None or value == "":
+                        row[field] = ""
+                    else:
+                        parsed = _source_date(value, convention=content["date"])
+                        if parsed is None:
+                            raise AssuranceRunError("mapped critical date is invalid")
+                        row[field] = parsed
+                else:
+                    row[field] = "" if value is None else str(value).strip()
+            role = content["role"]
+            for field in (
+                {"document_no", "document_date"}
+                if role == "open_items"
+                else {"posting_date"}
+            ):
+                if not row.get(field):
+                    raise AssuranceRunError(f"required mapped {field} is empty")
+            if not row.get("source_record_id") and not row.get("document_no"):
+                raise AssuranceRunError("mapped row identity is empty")
+            for field in ("entity_ref", "party_ref", "currency", "unit"):
+                if field in columns and row.get(field) != content["perimeter"][field]:
+                    raise AssuranceRunError(
+                        f"source {field} contradicts reviewed perimeter"
+                    )
+            evidence = layout["default_evidence_type"]
+            if "evidence_type" in columns:
+                evidence = layout["evidence_type_map"].get(row["evidence_type"])
+                if evidence is None:
+                    raise AssuranceRunError(
+                        "source evidence type lacks an explicit review mapping"
+                    )
+            row.update(content["perimeter"])
+            row.update(
+                reported_unit=content["money"]["reported_unit"],
+                reported_increment=SUPPORTED_REPORTED_INCREMENT,
+                record_id=f"tabular:{source}:{layout['sheet'] or 'csv'}:r{row_number}",
+                source_file=source,
+                source_row=row_number,
+                source_role=role,
+                evidence_type=evidence,
+            )
+            if workbook is not None:
+                row["source_sheet"] = layout["sheet"]
+            row["document_key"] = document_key(
+                row.get("document_no", ""), row.get("document_date", "")
+            )
+            if role == "open_items":
+                row.setdefault("balance", row["amount"])
+                row.setdefault("posting_date", row["document_date"])
+                row.update(
+                    source_side=content["perimeter"]["direction_policy"],
+                    expected_side=content["perimeter"]["direction_policy"],
+                )
+            if role == "bank_statement":
+                row["bank_amount"] = row["amount"]
+            output.append(row)
+        return output
+    finally:
+        if workbook is not None:
+            workbook.close()
+
+
 def _validate_tabular_source_identity(
     *,
     row: Mapping[str, Any],
@@ -5054,6 +5633,7 @@ def _source_value_locator(
     receipt: Mapping[str, Any],
     decision: Mapping[str, Any],
     strict_identity: bool = True,
+    tabular_cache: dict[str, dict[int, dict[str, Any]]] | None = None,
 ) -> tuple[str, str]:
     """Dereference one bounded current-source amount or abstain."""
 
@@ -5070,6 +5650,32 @@ def _source_value_locator(
         or source_row < 1
     ):
         raise AssuranceRunError("source-backed row lacks a bounded source_row")
+    if decision["adapter_id"] == TABULAR_ADAPTER:
+        cache = tabular_cache if tabular_cache is not None else {}
+        key = (
+            str(receipt["artifact_id"])
+            + ":"
+            + canonical_json_sha256(decision["content"])
+        )
+        if key not in cache:
+            # Exact physical row indexing preserves replay without quadratic scans.
+            cache[key] = {
+                item["source_row"]: item
+                for item in read_reviewed_tabular_source(path, decision)
+            }
+        derived = cache[key].get(source_row)
+        if derived is None or any(row.get(k) != v for k, v in derived.items()):
+            raise AssuranceRunError("mapped tabular source value or identity is stale")
+        return (
+            _locator(
+                "reviewed_tabular_record_value",
+                row=source_row,
+                sheet=derived.get("source_sheet"),
+                mapping_sha256=canonical_json_sha256(decision["content"]["tabular"]),
+                record_id=str(row["record_id"]),
+            ),
+            amount,
+        )
     suffix = path.suffix.lower()
     if suffix == ".csv":
         with path.open("r", encoding="utf-8-sig", newline="") as handle:
@@ -5350,6 +5956,7 @@ def _numeric_entries(
     receipt_by_id = {
         str(receipt["artifact_id"]): receipt for receipt in source_receipts
     }
+    tabular_cache: dict[str, dict[int, dict[str, Any]]] = {}
     for index, row in enumerate(reconciliation_rows):
         value = _canonical_money(row.get("amount"))
         source_ref = _record_source_artifact_ref(row, source_receipts)
@@ -5372,6 +5979,7 @@ def _numeric_entries(
             receipt=receipt_by_id[source_ref],
             decision=decision_by_source_ref_full[source_ref],
             strict_identity=strict_source_identity,
+            tabular_cache=tabular_cache,
         )
         outputs = [
             {
@@ -5902,6 +6510,7 @@ def _finalize_assurance_run_in_place(
         source_receipts=source_receipts,
         reviewed_source_decisions=source_decisions,
         source_qualifications=normalized_qualifications,
+        source_root=Path(source_root) if source_root is not None else None,
     )
     _validate_reconciliation_population(
         prepared["open_items"],
@@ -6745,6 +7354,7 @@ def validate_assurance_run(
         source_receipts=source_receipts,
         reviewed_source_decisions=reviewed_decisions,
         source_qualifications=qualifications,
+        source_root=Path(source_root) if source_root is not None else None,
     )
     _validate_reconciliation_population(
         prepared["open_items"],

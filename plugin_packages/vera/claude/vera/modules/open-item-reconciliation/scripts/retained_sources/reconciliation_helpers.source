@@ -12,7 +12,7 @@ import html
 import re
 import sys
 from datetime import date, datetime
-from decimal import ROUND_HALF_UP, Decimal
+from decimal import ROUND_HALF_EVEN, ROUND_HALF_UP, Decimal
 from pathlib import Path
 from typing import Any
 
@@ -892,6 +892,7 @@ def open_item_aging_summary(
                 "amount_total": Decimal("0.00"),
                 "amount_abs_total": Decimal("0.00"),
                 "closed_amount": Decimal("0.00"),
+                "partially_paid_amount": Decimal("0.00"),
                 "probable_payment_amount": Decimal("0.00"),
                 "open_supported_amount": Decimal("0.00"),
                 "needs_evidence_amount": Decimal("0.00"),
@@ -905,6 +906,8 @@ def open_item_aging_summary(
         bucket["amount_abs_total"] += abs(amount)
         if status == "closed":
             bucket["closed_amount"] += amount
+        elif status == "partially_paid":
+            bucket["partially_paid_amount"] += amount
         elif status == PROBABLE_BANK_PAYMENT_STATUS:
             bucket["probable_payment_amount"] += amount
         elif status == "open_supported":
@@ -935,6 +938,7 @@ def open_item_aging_summary(
             "amount_total": f"{row['amount_total']:.2f}",
             "amount_abs_total": f"{row['amount_abs_total']:.2f}",
             "closed_amount": f"{row['closed_amount']:.2f}",
+            "partially_paid_amount": f"{row['partially_paid_amount']:.2f}",
             "probable_payment_amount": f"{row['probable_payment_amount']:.2f}",
             "open_supported_amount": f"{row['open_supported_amount']:.2f}",
             "needs_evidence_amount": f"{row['needs_evidence_amount']:.2f}",
@@ -1072,6 +1076,7 @@ def evidence_concentration_summary(
         bucket = buckets.setdefault(
             key,
             {
+                "record_refs": [],
                 "support_bucket": bucket_key,
                 "reconciliation_status": status,
                 "rows": 0,
@@ -1079,6 +1084,7 @@ def evidence_concentration_summary(
                 "amount_abs_total": Decimal("0.00"),
             },
         )
+        bucket["record_refs"].append(clean_text(row.get("record_id")))
         bucket["rows"] += 1
         bucket["amount_total"] += amount
         bucket["amount_abs_total"] += amount_abs
@@ -1095,11 +1101,12 @@ def evidence_concentration_summary(
             Decimal("0.00")
             if total_abs == Decimal("0.00")
             else (bucket["amount_abs_total"] / total_abs * Decimal("100")).quantize(
-                Decimal("0.01")
+                Decimal("0.01"), rounding=ROUND_HALF_EVEN
             )
         )
         rows.append(
             {
+                "record_refs": "; ".join(sorted(filter(None, bucket["record_refs"]))),
                 "support_bucket": bucket["support_bucket"],
                 "reconciliation_status": bucket["reconciliation_status"],
                 "rows": bucket["rows"],
@@ -2648,8 +2655,22 @@ def closed_bank_allocation_controls(
         partial_payment = (
             len(closed_rows) == 1
             and closed_rows[0].get("reconciliation_status") == "partially_paid"
-            and closed_rows[0].get("rule_applied")
-            == "exact_document_partial_bank_payment"
+            and (
+                closed_rows[0].get("rule_applied")
+                == "exact_document_partial_bank_payment"
+                or (
+                    closed_rows[0].get("rule_applied")
+                    == "exact_document_partial_compensation"
+                    and _partial_compensation_eligible(evidence, active)
+                    and bool(
+                        record_document_keys(closed_rows[0])
+                        & record_document_keys(evidence)
+                    )
+                    and not document_key_match_rejected_by_date(
+                        closed_rows[0], evidence, active
+                    )
+                )
+            )
             and Decimal("0") < evidence_amount < face_amount
             and parse_decimal(closed_rows[0].get("allocated_amount")) == evidence_amount
             and parse_decimal(closed_rows[0].get("residual_amount"))
@@ -2930,17 +2951,36 @@ def direct_supporting_bank_by_key(
     return support_by_key
 
 
+def _partial_compensation_eligible(
+    evidence: dict[str, Any], assumptions: dict[str, Any]
+) -> bool:
+    """Apply an explicit reviewed evidence type and existing sufficiency policy."""
+    source_date = parse_date(record_date(evidence))
+    cutoff = parse_date(assumptions.get("cutoff_date"))
+    return bool(
+        clean_text(evidence.get("evidence_type")).lower() == "compensation"
+        and evidence_level(evidence, assumptions) == "documented_compensation"
+        and source_date
+        and cutoff
+        and source_date <= cutoff
+    )
+
+
 def promote_partial_bank_payments(
     reconciliation_rows: list[dict[str, Any]],
     evidence_rows: list[dict[str, Any]],
     assumptions: dict[str, Any],
 ) -> list[dict[str, Any]]:
-    """Allocate exact, exclusive document references; never resolve ambiguity by order.
+    """Allocate exact partial bank settlements or explicitly reviewed compensation.
 
     Decimal conservation and reference ownership are mechanically verifiable.
     This does not infer payment purpose from descriptions or company names.
     """
     support = direct_supporting_bank_by_key(evidence_rows, assumptions)
+    for evidence in evidence_rows:
+        if _partial_compensation_eligible(evidence, assumptions):
+            for key in record_document_keys(evidence):
+                support.setdefault(key, []).append(evidence)
     candidates = [
         {
             clean_text(evidence.get("record_id")): evidence
@@ -2960,6 +3000,7 @@ def promote_partial_bank_payments(
             result.append(row)
             continue
         evidence_id, evidence = next(iter(matches.items()))
+        compensation = _partial_compensation_eligible(evidence, assumptions)
         amount = amount_for_matching(row)
         payment = amount_for_matching(evidence)
         if (
@@ -2979,6 +3020,10 @@ def promote_partial_bank_payments(
             )
             != 1
             or not accounting_perimeters_compatible(row, evidence)
+            or (
+                compensation
+                and document_key_match_rejected_by_date(row, evidence, assumptions)
+            )
         ):
             result.append(row)
             continue
@@ -2986,7 +3031,11 @@ def promote_partial_bank_payments(
             {
                 **row,
                 "reconciliation_status": "partially_paid",
-                "rule_applied": "exact_document_partial_bank_payment",
+                "rule_applied": (
+                    "exact_document_partial_compensation"
+                    if compensation
+                    else "exact_document_partial_bank_payment"
+                ),
                 "evidence_level": evidence_level(evidence, assumptions),
                 "matched_evidence_type": normalized_evidence_type(evidence),
                 "matched_evidence_id": evidence_id,

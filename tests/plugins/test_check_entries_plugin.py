@@ -852,6 +852,8 @@ def _client_bound_check_inputs(
 def _v2_client_bound_check_inputs(
     tmp_path: Path,
     rows: list[dict[str, object]],
+    *,
+    support_lines: list[str] | None = None,
 ) -> tuple[Path, Path, dict[str, Any], dict[str, Any]]:
     """Create one running v2 Journal Sampling -> Check Entries boundary."""
 
@@ -1018,7 +1020,8 @@ def _v2_client_bound_check_inputs(
     support_source = received / "invoice.pdf"
     support_source.write_bytes(
         _text_pdf_bytes(
-            [
+            support_lines
+            or [
                 "Invoice",
                 "Movement M-1001",
                 "Supplier VAT: 01234567890",
@@ -9601,3 +9604,278 @@ def test_vouching_accepts_complete_reviewed_cross_page_pdf_journal(
     assert result.audit["journal_row_count"] == 2
     assert (output / "check_audit.json").is_file()
     assert "PDF" in (output / "normalized_entries.csv").read_text()
+
+
+@pytest.mark.parametrize("explicit_zero", [False, True])
+def test_real_cli_closes_recipe_options_and_chf_review_intake(
+    tmp_path: Path, explicit_zero: bool
+) -> None:
+    core = load_core()
+    journal, support, _, context = _v2_client_bound_check_inputs(
+        tmp_path,
+        [
+            {
+                "date": "2025-01-02",
+                "movement": "M-1001",
+                "description": "CHF source",
+                "debit": "123.45",
+                "currency": "CHF",
+            }
+        ],
+        support_lines=[
+            "Fattura",
+            "Registrazione contabile",
+            "M-1001",
+            "04/01/2025 CHF 123.46",
+        ],
+    )
+    root = Path(context["output_dir"])
+    core.inspect_entries(
+        journal, support, root / "inspection", client_engagement=context
+    )
+    recipe_path = root / "inspection/suggested_recipe.json"
+    recipe = json.loads(recipe_path.read_text())
+    recipe["checks"]["amount_tolerance"] = "0.01"
+    recipe["checks"]["date_window_days"] = 3
+    recipe_path.write_text(json.dumps(recipe, indent=2) + "\n")
+    original_recipe = recipe_path.read_bytes()
+    options = (
+        ["--amount-tolerance", "0", "--date-window-days", "0"] if explicit_zero else []
+    )
+    output = root / "checks"
+    completed = subprocess.run(
+        [
+            sys.executable,
+            "-I",
+            "-B",
+            str(SCRIPT_DIR / "run_checks.py"),
+            str(journal),
+            str(support),
+            "--output-dir",
+            str(output),
+            "--recipe",
+            str(recipe_path),
+            "--client-engagement",
+            str(root.parent / "context.json"),
+            *options,
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=45,
+    )
+    assert completed.returncode == 0, completed.stderr
+    audit = json.loads((output / "check_audit.json").read_text())
+    intake = json.loads((output / "run_intake.json").read_text())
+    expected_tolerance, expected_days = ("0", 0) if explicit_zero else ("0.01", 3)
+    assert (audit["amount_tolerance"], audit["date_window_days"]) == (
+        expected_tolerance,
+        expected_days,
+    )
+    assert (
+        intake["assumptions"]["amount_tolerance"],
+        intake["assumptions"]["date_window_days"],
+    ) == (expected_tolerance, expected_days)
+    assert intake["assumptions"]["currency"] == "CHF"
+    assert intake["assumptions"]["currencies"] == ["CHF"]
+    assert intake["assumptions"]["currency_scope"] == "checked_entries"
+    assert recipe_path.read_bytes() == original_recipe
+    assert (output / "execution_recipe.json").read_bytes() == original_recipe
+    result_rows = list(csv.DictReader((output / "check_results.csv").open()))
+    assert len(result_rows) == 1
+    assert result_rows[0]["matched_support"]
+    assert result_rows[0]["status"] == "manual_review"
+    assert result_rows[0]["professional_conclusion"] == "pending_review"
+    facts = json.loads(result_rows[0]["evidence_facts"])
+    if explicit_zero:
+        assert facts["amount_found"] is None and facts["date_found"] is None
+    else:
+        assert Decimal(facts["amount_found"]) == Decimal("123.46")
+        assert facts["date_found"] == "2025-01-04"
+
+    validated = _check_transaction_call(
+        "validate_check_entries_review",
+        {
+            "client_engagement": str(root.parent / "context.json"),
+            "review_payload_path": str(output / "review_payload.json"),
+            "run_intake_path": str(output / "run_intake.json"),
+            "ui_decisions_path": str(output / "ui_decisions.json"),
+            "final_artifacts_path": str(output / "final_artifacts.json"),
+        },
+    )
+    assert validated["ok"] is True, validated
+
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        ("Registrazione contabile\nREG26-0002", True),
+        ("Registrazione contabile n. REG26-0002", True),
+        ("Registrazione REG26-0002", True),
+        ("Registrazione del cliente REG26-0002", False),
+        ("Fattura REG26-0002", False),
+        ("REG26-0002.pdf", False),
+    ],
+)
+def test_italian_accounting_movement_label_has_bounded_identity(
+    text: str, expected: bool
+) -> None:
+    assert (
+        load_core()._contains_labeled_movement_identifier(text, "REG26-0002")
+        is expected
+    )
+
+
+@pytest.mark.parametrize(
+    "checks",
+    [
+        {"amount_tolerance": -1},
+        {"amount_tolerance": 0.01},
+        {"amount_tolerance": True},
+        {"amount_tolerance": None},
+        {"date_window_days": -1},
+        {"date_window_days": True},
+        {"date_window_days": "3"},
+        {"date_window_days": None},
+        [],
+    ],
+)
+def test_invalid_recipe_check_options_leave_no_partial_run(
+    tmp_path: Path, checks: object
+) -> None:
+    core = load_core()
+    recipe = tmp_path / "recipe.json"
+    recipe.write_text(json.dumps({"checks": checks}))
+    original = recipe.read_bytes()
+    out = tmp_path / "checks"
+    with pytest.raises(ValueError):
+        core.run_entry_checks(
+            tmp_path / "absent.csv", tmp_path / "absent-support", out, recipe
+        )
+    assert not out.exists()
+    assert recipe.read_bytes() == original
+
+
+@pytest.mark.parametrize("currencies", [[], ["CHF", "EUR", "CHF"]])
+def test_check_intake_withholds_invented_single_currency(
+    tmp_path: Path, currencies: list[str]
+) -> None:
+    core = load_core()
+    core.write_run_intake(
+        tmp_path,
+        tmp_path / "source.csv",
+        tmp_path / "support",
+        normalization_diagnostics_path=tmp_path / "diagnostics.json",
+        recipe_path=None,
+        language="it",
+        document_language="it",
+        amount_tolerance="0",
+        date_window_days=0,
+        mapping={},
+        journal_row_count=2,
+        pdf_count=0,
+        currencies=currencies,
+    )
+    assumptions = json.loads((tmp_path / "run_intake.json").read_text())["assumptions"]
+    assert assumptions["currency"] is None
+    assert assumptions["currencies"] == sorted(set(currencies))
+    assert assumptions["currency_scope"] == "checked_entries"
+
+
+@pytest.mark.parametrize('tool_name', ['validate_check_entries_review', 'render_check_entries_review'])
+@pytest.mark.parametrize('input_mode', ['inline', 'explicit_paths', 'review_path_only'])
+@pytest.mark.parametrize('tamper', [False, True])
+def test_readonly_review_paths_enforce_actual_assurance_replay(
+    monkeypatch: Any,
+    tmp_path: Path,
+    tool_name: str,
+    input_mode: str,
+    tamper: bool,
+) -> None:
+    _, output_dir, payload, intake = _supported_assurance_run(monkeypatch, tmp_path)
+    replay_log = tmp_path / 'actual-replay.jsonl'
+    wrapper = tmp_path / 'record-real-python'
+    wrapper.write_text(
+        f'#!{sys.executable}\n'
+        'import json, subprocess, sys\n'
+        'from pathlib import Path\n'
+        'if "--preflight-only" in sys.argv:\n'
+        f'    with Path({str(replay_log)!r}).open("a") as log:\n'
+        '        log.write(json.dumps(sys.argv[1:]) + "\\n")\n'
+        f'raise SystemExit(subprocess.run([{sys.executable!r}, *sys.argv[1:]]).returncode)\n'
+    )
+    wrapper.chmod(0o755)
+    monkeypatch.setenv('PYTHON', str(wrapper))
+    if input_mode == 'inline':
+        arguments = {'review_payload': payload, 'run_intake': intake}
+    else:
+        arguments = {'review_payload_path': str(output_dir / 'review_payload.json')}
+        if input_mode == 'explicit_paths':
+            arguments['run_intake_path'] = str(output_dir / 'run_intake.json')
+    arguments = _managed_check_mcp_arguments(output_dir, arguments)
+    if tamper:
+        results = output_dir / 'check_results.csv'
+        results.write_bytes(results.read_bytes() + b'\n')
+    before = _transaction_tree_state(output_dir)
+    response = _check_transaction_call(tool_name, arguments)
+    assert _transaction_tree_state(output_dir) == before
+    if tamper:
+        assert response['ok'] is False, response
+        assert 'review_reference' not in response
+    else:
+        assert response['ok'] is True, response
+        assert response['review_reference']['persistence_token']
+        assert replay_log.is_file(), 'Required assurance child was never invoked'
+        calls = [json.loads(line) for line in replay_log.read_text().splitlines()]
+        assert len(calls) == 1
+        assert '--read-only' in calls[0]
+        assert str(output_dir) in calls[0]
+
+
+@pytest.mark.parametrize('tool_name', ['validate_check_entries_review', 'render_check_entries_review'])
+@pytest.mark.parametrize('runtime_ready', [True, False])
+def test_embedded_check_review_uses_prepared_managed_python(
+    monkeypatch: Any, tmp_path: Path, tool_name: str, runtime_ready: bool,
+) -> None:
+    _, output, _, _ = _supported_assurance_run(monkeypatch, tmp_path / 'case')
+    plugin, _ = _copy_check_entries_runtime(tmp_path / 'installation')
+    shutil.copytree(ROOT / 'plugins/journal-sampling', plugin.parent / 'journal-sampling', ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
+    launcher = plugin.parent / 'vera/scripts/managed_python_runtime.py'
+    launcher.parent.mkdir(parents=True)
+    launcher.write_text(
+        'from pathlib import Path\n'
+        'def activate_runtime(root, module):\n'
+        '    assert module == "check-entries"\n'
+        f'    return Path({sys.prefix!r}) if {runtime_ready!r} else None\n'
+        'def runtime_python(target):\n'
+        f'    return Path({sys.executable!r})\n'
+    )
+    bootstrap = plugin.parent / 'system-python'
+    bootstrap.write_text(
+        f'#!{sys.executable}\n'
+        'import os, sys\n'
+        'if "-c" in sys.argv:\n'
+        f'    os.execv({sys.executable!r}, [{sys.executable!r}, *sys.argv[1:]])\n'
+        'sys.stderr.write("ModuleNotFoundError: No module named openpyxl\\n")\n'
+        'sys.exit(1)\n'
+    )
+    bootstrap.chmod(0o700)
+    monkeypatch.setenv('VERA_COMPONENT_HOST', '1')
+    monkeypatch.setenv('PYTHON', str(bootstrap))
+    monkeypatch.setenv('VIRTUAL_ENV', '')
+    before = _transaction_tree_state(output)
+    response = _call_mcp_server([{
+        'jsonrpc': '2.0', 'id': 1, 'method': 'tools/call',
+        'params': {'name': tool_name, 'arguments': _managed_check_mcp_arguments(output, {
+            'review_payload_path': str(output / 'review_payload.json'),
+            'run_intake_path': str(output / 'run_intake.json'),
+        })},
+    }], server_path=plugin / 'mcp/server.cjs')[0]['result']['structuredContent']
+    assert _transaction_tree_state(output) == before
+    if runtime_ready:
+        assert response['ok'] is True, response
+        assert response['review_reference']['persistence_token']
+    else:
+        assert response['ok'] is False, response
+        assert 'managed Python runtime is not ready' in response['error']
+        assert 'review_reference' not in response

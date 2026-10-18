@@ -20,7 +20,7 @@ Write one UTF-8 JSON object with this exact top-level shape:
 }
 ```
 
-Each `proposals` row must contain exactly:
+Each `proposals` row must contain the following required fields:
 
 - `item_ref`: exact opaque item reference from the projected inventory;
 - `category_id`: a policy category ID or `null`;
@@ -30,6 +30,15 @@ Each `proposals` row must contain exactly:
 - `reason`: concise evidence-backed explanation;
 - `probable_duplicate_of`: another projected `item_ref` or `null`;
 - `anomalies`: a bounded list of concise observations.
+
+The only optional field is `keep_in_place`, a strict boolean (default `false`).
+Set it to `true` when the current case instruction or evidence requires retaining
+this file at its present path, even if it has a supported category or is an exact
+duplicate. Explain the instruction or evidence in `reason`; retain duplicate
+relationships and anomalies. Set it on every member of a group when all copies
+must stay. This is a draft placement proposal, not professional approval, and
+never changes the studio policy. Without it, normal policy destinations and
+exact-duplicate quarantine proposals still apply. Unknown fields are rejected.
 
 Cover every projected inventory item exactly once. Local code resolves item
 references back to immutable snapshot rows and verifies the inventory binding;

@@ -565,7 +565,7 @@ def _load_proposals(
     drive_snapshot = snapshot["schema_version"] == DRIVE_SNAPSHOT_SCHEMA
     for index, row in enumerate(rows):
         identity_key = "item_ref" if uses_model_refs else "relative_path"
-        if not isinstance(row, dict) or set(row) != {
+        if not isinstance(row, dict) or set(row) - {"keep_in_place"} != {
             identity_key,
             "category_id",
             "document_type",
@@ -579,6 +579,9 @@ def _load_proposals(
             "anomalies",
         }:
             raise ArchiveOrganizationError(f"Semantic proposal {index} is invalid.")
+        keep_in_place = row.get("keep_in_place", False)
+        if not isinstance(keep_in_place, bool):
+            raise ArchiveOrganizationError("keep_in_place must be a boolean.")
         if uses_model_refs:
             item_ref = _text(row["item_ref"], label="proposal item_ref", maximum=37)
             relative = refs_to_paths.get(item_ref, "")
@@ -640,6 +643,7 @@ def _load_proposals(
         normalized_rows.append(
             {
                 "relative_path": relative,
+                "keep_in_place": keep_in_place,
                 "category_id": category_id,
                 "document_type": _optional_text(
                     row["document_type"], label="document_type"
@@ -786,7 +790,10 @@ def build_review_package(
     for source in sorted(snapshot_by_path, key=lambda item: (item.casefold(), item)):
         proposal = proposal_by_path[source]
         canonical_duplicate = duplicate_canonical.get(source)
-        if canonical_duplicate is not None and canonical_duplicate != source:
+        if proposal["keep_in_place"]:
+            target = source
+            action = "keep"
+        elif canonical_duplicate is not None and canonical_duplicate != source:
             target = PurePosixPath(
                 "Da_verificare",
                 "Duplicati_esatti",

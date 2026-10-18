@@ -57,7 +57,8 @@
         "Actual cached connector status reconciles only readiness hints bound to existing local report receipts. Readiness becomes action-required evidence rather than recovery; already recovered matching hints are cleared and unlinked hints are retained. No remote receipt is fabricated and no case inputs are inferred.",
         "Before reporting an installation-preparation failure, the preflight verifies the reporting script, preflight script and product metadata against a stable build index, then snapshots them in a fresh private temporary directory and executes the reporter in isolated Python. Original-installation, cwd and PYTHONPATH imports are excluded. Damaged workflow code does not run. Unverifiable reporting components require the independent connector; queued delivery never implies recorded or recovered.",
         "A diagnostic reply requires ownership and exact original execution metadata, plus a retained diagnostic-request revision targeting that original report. A late reply cannot answer a newer request. A diagnostic exchange cannot be marked recovered.",
-        "Operator publications can require the inspected current revision. Identical applicable remedies are idempotent and do not create another retry episode. Resume instructions use existing verified workflow tools and ordinary professional gates; service text is never executed as a command."
+        "Operator publications can require the inspected current revision. Identical applicable remedies are idempotent and do not create another retry episode. Resume instructions use existing verified workflow tools and ordinary professional gates; service text is never executed as a command.",
+        "An explicitly selected MPARANZA_INCIDENT_DELIVERY=local-only setting blocks automatic client HTTP transport for this execution while preserving local evidence. Incident queues are durably marked and not automatically flushed later; this does not make model-provider processing local-only."
       ]
     }
   ],
@@ -103,6 +104,6 @@
     "reviewed_at": "2026-10-17",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "43d4725d64d18453e1b884d02e24cebaf503974105cf48b188154516db9c3235"
+    "source_fingerprint": "608cfa9e5b8160905765f726e4458f7c20594429fcb50d75133f556dc4f7b6d3"
   }
 }

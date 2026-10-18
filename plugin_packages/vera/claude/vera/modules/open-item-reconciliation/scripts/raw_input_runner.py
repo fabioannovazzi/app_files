@@ -164,6 +164,7 @@ try:
         SUPPORTED_SOURCE_ADAPTER_VERSIONS,
         AssuranceRunError,
         build_reviewed_source_decisions,
+        read_reviewed_tabular_source,
         build_source_receipts,
         finalize_assurance_run,
         reviewed_date_convention,
@@ -202,6 +203,7 @@ except ImportError:  # pragma: no cover - direct import support
         SUPPORTED_SOURCE_ADAPTER_VERSIONS,
         AssuranceRunError,
         build_reviewed_source_decisions,
+        read_reviewed_tabular_source,
         build_source_receipts,
         finalize_assurance_run,
         reviewed_date_convention,
@@ -2670,6 +2672,7 @@ def extract_normalized_records(
     inventory = source_inventory(root, active)
     all_pages: list[SourcePage] = []
     evidence_rows: list[dict[str, Any]] = []
+    tabular_open_items: list[dict[str, Any]] = []
     journal_rollforward_rows: list[dict[str, Any]] = []
     journal_paths: list[Path] = []
     extraction_errors: list[dict[str, Any]] = []
@@ -2822,7 +2825,16 @@ def extract_normalized_records(
                         flush=True,
                     )
                 continue
-            if path.suffix.lower() == ".pdf":
+            if adapter_family == "reviewed_tabular_accounting_v1":
+                parsed = read_reviewed_tabular_source(
+                    path, _reviewed_source_decision(active, path)
+                )
+                if role_from_name == "open_items":
+                    tabular_open_items.extend(parsed)
+                else:
+                    evidence_rows.extend(parsed)
+                    candidate_rows_by_source[_source_name(path, active)] += len(parsed)
+            elif path.suffix.lower() == ".pdf":
                 pages = extract_pdf_pages(
                     path,
                     cache_dir,
@@ -2907,7 +2919,7 @@ def extract_normalized_records(
                 )
 
     open_items = apply_source_perimeters(
-        parse_open_items(all_pages, active),
+        [*parse_open_items(all_pages, active), *tabular_open_items],
         active,
     )
     ledger_balance_rows = apply_source_perimeters(

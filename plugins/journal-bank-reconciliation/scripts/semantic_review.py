@@ -172,7 +172,7 @@ LAUNCH_RECEIPT_SCHEMA_VERSION = "journal_bank.semantic_launch_receipt.v1"
 RESOLUTION_APPLICATION_SCHEMA_VERSION = (
     "journal_bank.semantic_resolution_application.v1"
 )
-RESOLUTION_FUNNEL_SCHEMA_VERSION = "journal_bank.resolution_funnel.v1"
+RESOLUTION_FUNNEL_SCHEMA_VERSION = "journal_bank.resolution_funnel.v2"
 RESOLUTION_STATE_SCHEMA_VERSION = "journal_bank.semantic_resolution_state.v1"
 
 # These are sufficiency thresholds, not claims that every weaker evidence type
@@ -4289,6 +4289,70 @@ def _write_operational_review_payload(
     return path
 
 
+def _gross_value_summary(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    """Sum only comparable currency/unit amounts; never imply an FX conversion.
+
+    This is dimensional arithmetic, not semantic classification. Counts span
+    the population, while mixed or unknown denominations withhold a scalar.
+    """
+    groups: dict[tuple[str | None, str | None], dict[str, Any]] = {}
+    for item in rows:
+        evidence = item["bank_evidence"]
+        currency = str(evidence.get("currency") or "").strip() or None
+        unit = str(evidence.get("unit") or "").strip() or None
+        group = groups.setdefault(
+            (currency, unit), {"count": 0, "amount": Decimal("0"), "missing": 0}
+        )
+        group["count"] += 1
+        value = item.get("amount_abs")
+        if value in (None, ""):
+            group["missing"] += 1
+        elif currency is not None and unit is not None:
+            group["amount"] += parse_canonical_decimal(value, label="resolution amount")
+    totals = []
+    for (currency, unit), group in sorted(
+        groups.items(), key=lambda pair: (pair[0][0] or "", pair[0][1] or "")
+    ):
+        totals.append(
+            {
+                "currency": currency,
+                "unit": unit,
+                "movement_count": group["count"],
+                "gross_absolute_value": (
+                    decimal_text(group["amount"])
+                    if currency is not None
+                    and unit is not None
+                    and not group["missing"]
+                    else None
+                ),
+                "missing_amount_count": group["missing"],
+            }
+        )
+    if not totals:
+        status, value, currency, unit = "empty", "0", None, None
+    elif any(row["currency"] is None or row["unit"] is None for row in totals):
+        status, value, currency, unit = "missing_currency_or_unit", None, None, None
+    elif any(row["missing_amount_count"] for row in totals):
+        status, value, currency, unit = "missing_amount", None, None, None
+    elif len(totals) > 1:
+        status, value, currency, unit = "mixed_currency_or_unit", None, None, None
+    else:
+        row = totals[0]
+        status, value, currency, unit = (
+            "single_currency_unit",
+            row["gross_absolute_value"],
+            row["currency"],
+            row["unit"],
+        )
+    return {
+        "gross_absolute_value": value,
+        "value_aggregation_status": status,
+        "currency": currency,
+        "unit": unit,
+        "value_totals": totals,
+    }
+
+
 def _apply_resolution_funnel(
     reconciliation: Path,
     semantic: Path,
@@ -4475,14 +4539,6 @@ def _apply_resolution_funnel(
             }
         )
 
-    def gross_value(rows: Sequence[Mapping[str, Any]]) -> str:
-        total = Decimal("0")
-        for item in rows:
-            value = item.get("amount_abs")
-            if value not in (None, ""):
-                total += parse_canonical_decimal(value, label="resolution amount")
-        return decimal_text(total)
-
     at_least = []
     for level in RESOLUTION_LEVELS[1:]:
         reached = [
@@ -4495,7 +4551,7 @@ def _apply_resolution_funnel(
                 "level": level,
                 "rank": RESOLUTION_RANK[level],
                 "movement_count": len(reached),
-                "gross_absolute_value": gross_value(reached),
+                **_gross_value_summary(reached),
             }
         )
     review_queue = [item for item in assignments if item["human_review_required"]]
@@ -4529,23 +4585,23 @@ def _apply_resolution_funnel(
         "required_resolution_level": required_level,
         "total": {
             "movement_count": len(assignments),
-            "gross_absolute_value": gross_value(assignments),
+            **_gross_value_summary(assignments),
         },
         "at_least": at_least,
         "human_review": {
             "movement_count": len(review_queue),
-            "gross_absolute_value": gross_value(review_queue),
+            **_gross_value_summary(review_queue),
         },
     }
     funnel = {**funnel_content, "content_sha256": canonical_json_sha256(funnel_content)}
     queue_content = {
-        "schema_version": "journal_bank.human_review_queue.v1",
+        "schema_version": "journal_bank.human_review_queue.v2",
         "workflow_id": "journal_bank_reconciliation",
         "candidate_graph_sha256": graph["candidate_graph_sha256"],
         "semantic_decisions_sha256": semantic_decisions_sha256,
         "required_resolution_level": required_level,
         "movement_count": len(review_queue),
-        "gross_absolute_value": gross_value(review_queue),
+        **_gross_value_summary(review_queue),
         "items": review_queue,
     }
     queue = {**queue_content, "content_sha256": canonical_json_sha256(queue_content)}

@@ -1,5 +1,13 @@
 # Automatic incident recovery
 
+When incident transmission is explicitly excluded, use
+`MPARANZA_INCIDENT_DELIVERY=local-only` for managed commands and retain the chosen
+private state directory. Keep complete local diagnostics and queued evidence;
+do not invoke a remote incident connector or claim delivery/recovery. The marked
+queue will not be automatically flushed by later callbacks. Generic automatic
+reporting directions below do not override this execution choice. This setting
+controls technical incident delivery, not the selected model provider's processing.
+
 An operational failure is not a suggestion or a CR. Report it automatically,
 diagnose it with all available relevant technical evidence, deliver the remedy
 to that installation and record the actual outcome. Do not ask the user to

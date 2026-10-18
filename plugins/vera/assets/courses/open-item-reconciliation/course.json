@@ -62,9 +62,14 @@
       "sha256": "3453d2e00672be7c3e4988df4f47894bfd38930ce0c95fe3d8e3d708598fbc62"
     },
     {
+      "path": "modules/open-item-reconciliation/references/tabular-source-layout.md",
+      "repository_path": "plugins/open-item-reconciliation/references/tabular-source-layout.md",
+      "sha256": "a6b2fc28517947dfe27146b2ec4c1eb646b9158ff419d00e59d4c13d26b38c26"
+    },
+    {
       "path": "modules/open-item-reconciliation/references/workflow-reference.md",
       "repository_path": "plugins/open-item-reconciliation/references/workflow-reference.md",
-      "sha256": "e2192a7b55196de1b096540f183f739572c5bb8c70a13db08e02a40d429cbd37"
+      "sha256": "92be695a5f3559c85e834c4f82a2616717f87b9e45c5eac2aa27ae51734665ba"
     },
     {
       "path": "modules/open-item-reconciliation/requirements.txt",
@@ -74,7 +79,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/audit_assurance.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/audit_assurance.py",
-      "sha256": "28db9d3ba74b5313cd73dd3e15f3d943f7ced80f5d42544ae4291da322eb3c61"
+      "sha256": "1ace982e6fa333e56664661d41752c8fa8b24c07619322b37aaf238abf1aca3f"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
@@ -99,7 +104,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/raw_input_runner.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/raw_input_runner.py",
-      "sha256": "901a038c0ea4cd25a3aa84a2906969d228f212a35089ca50bb3aefa5ac51447b"
+      "sha256": "fb3f955e9317503aebaf5a31d1f3c94e16e19daed7233b82ae95e7b212eeba33"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/reconciliation_workflow.py",
@@ -114,12 +119,12 @@
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/locale_support.source",
       "repository_path": "plugins/open-item-reconciliation/scripts/retained_sources/locale_support.source",
-      "sha256": "b1ab9125675abd27a30e4e7daa5546ae45bd386567f27730f5cae40a53826553"
+      "sha256": "10653fc2b967b0c625809482aeaaaa9b4b7b1e5835cc8e56f5a229216bc8b000"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/reconciliation_helpers.source",
       "repository_path": "plugins/open-item-reconciliation/scripts/retained_sources/reconciliation_helpers.source",
-      "sha256": "2e784894b3995a12636101777dff3760441c46d28abbac4f5a494683ffb6902b"
+      "sha256": "e4f0456a39cce711c9b61824c0edb8517dce98d55a9df529d9e393d388fe2a2a"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/review_session.source",
@@ -129,7 +134,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/workpaper_outputs.source",
       "repository_path": "plugins/open-item-reconciliation/scripts/retained_sources/workpaper_outputs.source",
-      "sha256": "03c1fe0549d0bee7740d79ce3b94bfc8904e6e65660cdfad4c739afabee56ba3"
+      "sha256": "b9f1fce97c35e08e07ed7023b1833d417029d78972bf20c4c332c2d5d33334a5"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/review_server.py",
@@ -139,7 +144,7 @@
     {
       "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
       "repository_path": "plugins/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
-      "sha256": "190893aa01e12503f29c413048a7a2f58b86ffa507064ffd89ae760ff8ce94dd"
+      "sha256": "69cb15afe9f2ef71ed9e8405087e8920f0a8871f13cb7359da51f274d16c1f1d"
     },
     {
       "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/references/geneva.md",

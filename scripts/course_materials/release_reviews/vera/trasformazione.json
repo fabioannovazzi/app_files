@@ -38,7 +38,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "ba80d84e214e80c035155a749f762efca7ff877d0840a1f8cf9d923a812dc2e6",
+  "course_sha256": "9e191cf6d420c597d3d2058831d6d61c69b833a441aeb211c80b7c8298000477",
   "host_marker_source_binding_review_20261010": {
     "prior_course_sha256": "64bc06545792bcb1f92f254b78725da6bb0e05a19f2c503ea22ca2826c67a78f",
     "current_course_sha256": "b37f5d86d6167ecccdbe4365e05b43b7bd6fcc7b414a3b954b0bcdde08d2438e",
@@ -591,5 +591,35 @@
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "fresh_matching_junit_required": true
+  },
+  "local_incident_delivery_source_compatibility_20261018": {
+    "reviewer": "Codex runtime source review and exact retained-course field comparison",
+    "reviewed_at": "2026-10-18",
+    "previous_course_sha256": "ba80d84e214e80c035155a749f762efca7ff877d0840a1f8cf9d923a812dc2e6",
+    "current_course_sha256": "7e5f756d14a8bd7023e59de7d706d663f1b06a152b2ba1e09d3135a5ef5c1b6e",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Shared Vera incident client/runtime now honors an explicit local-only incident-delivery policy while preserving queued evidence, default automatic behavior and original professional execution gates. Authored lessons and input attachments unchanged. This records source compatibility only; no new native, learner or professional acceptance.",
+    "runtime_test_summary": "incident-local-only-validation-summary.json",
+    "runtime_behavior_checks": 113,
+    "sandbox_loopback_test_retry_passed": true,
+    "native_ui_qualified": false
+  },
+  "isolated_launcher_source_compatibility_20261018": {
+    "reviewer": "Codex exact retained-course and launcher-source review",
+    "reviewed_at": "2026-10-18",
+    "previous_course_sha256": "7e5f756d14a8bd7023e59de7d706d663f1b06a152b2ba1e09d3135a5ef5c1b6e",
+    "current_course_sha256": "9e191cf6d420c597d3d2058831d6d61c69b833a441aeb211c80b7c8298000477",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "The maintained runtime launcher restores only its own script directory under isolated Python for technical diagnostics. Existing helper execution, incident delivery controls and professional gates are unchanged. Retained teaching content and attachments unchanged; native Vouching acceptance remains pending.",
+    "runtime_regression_tests": 199,
+    "sandbox_passed": 198,
+    "exact_loopback_permission_retry_passed": true,
+    "native_ui_qualified": false
   }
 }

@@ -60,7 +60,7 @@
     },
     {
       "path": "modules/journal-sampling/scripts/journal_sampling_core.py",
-      "sha256": "77f2e2a3413b5132583f73992b2314b15e5a1119ccd65db82bc252676f7a5971"
+      "sha256": "21ea72db072b8fcf02833cd4f7f984141ff5e8266df68b9bf5c1dca66ea7e422"
     },
     {
       "path": "modules/journal-sampling/scripts/normalize_journal.py",
@@ -72,7 +72,7 @@
     },
     {
       "path": "modules/journal-sampling/scripts/review_session.py",
-      "sha256": "46755d2e786348997802ee3d30ed8d3d679c45ac3db975da56cd6711d98ebd73"
+      "sha256": "4ac2dc75e1f25a8b8f01c78960c7cb4048d6314e3c68418eafad723b09e4fb32"
     },
     {
       "path": "modules/journal-sampling/scripts/review_successor.py",
@@ -84,7 +84,7 @@
     },
     {
       "path": "modules/journal-sampling/skills/mparanza-journal-sampling/SKILL.md",
-      "sha256": "036bba75efab0e05e63d60d6256963d55293677f2feb7e5258b104276c85a2f3"
+      "sha256": "d8b8f8cdda052f5998ab6e856a40d9303f0c1de893b657950de285bfad7c9084"
     },
     {
       "path": "modules/journal-sampling/skills/mparanza-journal-sampling/references/geneva.md",
@@ -525,5 +525,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "36479f2de375fc6e2e896c966d0fec09ce60fd0294a3eda5496792e9fa645192"
+  "canonical_course_sha256": "b32137e649060dea7303cbd047564274a24112f333e1bc2ed175be2bba2bca9b"
 }

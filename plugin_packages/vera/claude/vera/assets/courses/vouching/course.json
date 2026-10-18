@@ -41,7 +41,7 @@
     },
     {
       "path": "modules/check-entries/references/workflow-reference.md",
-      "sha256": "83004a5442c2504774fc9290fb07df0eafa7e78415b1300e03c087fb8a6f3dca"
+      "sha256": "eb14ea83c96d752320cfaacff2db1d1757557b819288b14090b45c5fba100d9a"
     },
     {
       "path": "modules/check-entries/requirements.txt",
@@ -57,7 +57,7 @@
     },
     {
       "path": "modules/check-entries/scripts/check_entries_core.py",
-      "sha256": "0865cb9b8746c5f29d8442a1b877660d93a4c17d7f1c7142a9c6744219f04f70"
+      "sha256": "21d99c76e0e7ed5f4f8c38303e8b19f0444a3de92effea00df7852f919eac5e8"
     },
     {
       "path": "modules/check-entries/scripts/implementation_bootstrap.py",
@@ -93,11 +93,11 @@
     },
     {
       "path": "modules/check-entries/scripts/review_session.py",
-      "sha256": "bca46b74ceb9796bd22fa74dabdbdf7e034a96247231bafedfd922f9bb5ecd30"
+      "sha256": "fb8caae15cfa29dbd9e7838b6ba454ff17f1fed59a9fcc938735b91b327da78f"
     },
     {
       "path": "modules/check-entries/scripts/run_checks.py",
-      "sha256": "c7ed591cd84360f4f880026c38e7fa1787624f7abc3d477dbb25f18e334fbfda"
+      "sha256": "9988e88c48c37de72f97c086413abbb4cc40417fb2141c9f8ac44543eba2d8dc"
     },
     {
       "path": "modules/check-entries/scripts/stable_ooxml.py",
@@ -618,5 +618,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "2d391b9cdb123c6017cf53d5f8dde833609a4ee413dbdd02ce5202be7df62e22"
+  "canonical_course_sha256": "5b5923cf3f9f4b494b49114c09b8c1b131fec48813a1d73a9902bf26bdfb51f4"
 }

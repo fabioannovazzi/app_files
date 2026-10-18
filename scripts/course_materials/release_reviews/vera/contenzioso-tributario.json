@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "vera",
   "workflow": "contenzioso-tributario",
-  "course_sha256": "f430967f07637dc4e0dd8b0a3e767ba66ad770cb0f7a29b956781f0bd93acead",
+  "course_sha256": "18a1ec3a6f49bcec8b59e84adafa6a98dabd55b531507ca6639c701de00f2ecf",
   "reviewer": "Codex /root: five-language authored lesson and real evidence/progress output review",
   "reviewed_at": "2026-10-14T14:55:04.859840+00:00",
   "review_scope": "Accepted prepared material and bounded real helper/Archive regressions. Semantic narrative and decisions are explicit test fixtures. This does not attest full live legal research, substantive pleading approval, native Word, native voice, installed-host learner execution or professional acceptance. Live lessons run the current specialist, not the fixtures.",
@@ -314,5 +314,35 @@
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "fresh_matching_junit_required": true
+  },
+  "local_incident_delivery_source_compatibility_20261018": {
+    "reviewer": "Codex runtime source review and exact retained-course field comparison",
+    "reviewed_at": "2026-10-18",
+    "previous_course_sha256": "f430967f07637dc4e0dd8b0a3e767ba66ad770cb0f7a29b956781f0bd93acead",
+    "current_course_sha256": "c50f7c15e55834ea53540ac9578ca5ea7705000c3d20ae3e7a3561112238c981",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Shared Vera incident client/runtime now honors an explicit local-only incident-delivery policy while preserving queued evidence, default automatic behavior and original professional execution gates. Authored lessons and input attachments unchanged. This records source compatibility only; no new native, learner or professional acceptance.",
+    "runtime_test_summary": "incident-local-only-validation-summary.json",
+    "runtime_behavior_checks": 113,
+    "sandbox_loopback_test_retry_passed": true,
+    "native_ui_qualified": false
+  },
+  "isolated_launcher_source_compatibility_20261018": {
+    "reviewer": "Codex exact retained-course and launcher-source review",
+    "reviewed_at": "2026-10-18",
+    "previous_course_sha256": "c50f7c15e55834ea53540ac9578ca5ea7705000c3d20ae3e7a3561112238c981",
+    "current_course_sha256": "18a1ec3a6f49bcec8b59e84adafa6a98dabd55b531507ca6639c701de00f2ecf",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "The maintained runtime launcher restores only its own script directory under isolated Python for technical diagnostics. Existing helper execution, incident delivery controls and professional gates are unchanged. Retained teaching content and attachments unchanged; native Vouching acceptance remains pending.",
+    "runtime_regression_tests": 199,
+    "sandbox_passed": 198,
+    "exact_loopback_permission_retry_passed": true,
+    "native_ui_qualified": false
   }
 }

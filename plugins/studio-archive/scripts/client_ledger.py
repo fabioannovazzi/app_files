@@ -827,7 +827,13 @@ def list_inputs(client_root: Path, engagement_id: str) -> tuple[dict[str, Any], 
     )
 
 
-def _stable_copy(source_path: Path, destination: Path) -> tuple[int, str]:
+def _stable_copy(
+    source_path: Path,
+    destination: Path,
+    *,
+    exclusive: bool = False,
+    temporary_directory: Path | None = None,
+) -> tuple[int, str]:
     source = source_path.expanduser()
     if not source.is_absolute() or source.is_symlink():
         raise LedgerError("Imported document must be an absolute non-symlink file.")
@@ -842,7 +848,9 @@ def _stable_copy(source_path: Path, destination: Path) -> tuple[int, str]:
         if not _same_file_stat(before, before_path, check_ctime=cross_api_ctime):
             raise LedgerError("Imported document changed before it was opened.")
         descriptor, temporary_name = tempfile.mkstemp(
-            prefix=".vera-input-", suffix=".tmp", dir=destination.parent
+            prefix=".vera-input-",
+            suffix=".tmp",
+            dir=temporary_directory or destination.parent,
         )
         temporary = Path(temporary_name)
         digest = hashlib.sha256()
@@ -865,7 +873,14 @@ def _stable_copy(source_path: Path, destination: Path) -> tuple[int, str]:
             or not _same_file_stat(after, final_path, check_ctime=cross_api_ctime)
         ):
             raise LedgerError("Imported document changed during the copy.")
-        os.replace(temporary, destination)
+        if exclusive:
+            # Same-filesystem hard-link publication is atomic and refuses an
+            # existing destination, unlike replace/rename. The temporary name
+            # is then removed, leaving one ordinary destination file.
+            os.link(temporary, destination, follow_symlinks=False)
+            temporary.unlink()
+        else:
+            os.replace(temporary, destination)
         temporary = None
         return byte_count, digest.hexdigest()
     finally:
@@ -1019,8 +1034,16 @@ def snapshot_client_folder(
     excluded: list[dict[str, str]] = []
     total_bytes = 0
     pending = [root]
+    scanned_directories: list[tuple[Path, os.stat_result]] = []
     while pending:
         directory = pending.pop()
+        scanned_directories.append((directory, directory.stat()))
+        pending_intake = directory / ".vera-folder-intake-pending.json"
+        if pending_intake.exists() or pending_intake.is_symlink():
+            raise LedgerError(
+                "A folder intake is incomplete; resume its original copy request "
+                "before taking an organization snapshot."
+            )
         for entry in sorted(
             directory.iterdir(), key=lambda item: (item.name.casefold(), item.name)
         ):
@@ -1066,6 +1089,11 @@ def snapshot_client_folder(
                     "modified_ns": observed.st_mtime_ns,
                     "sha256": sha256,
                 }
+            )
+    for directory, before in scanned_directories:
+        if not _same_file_stat(before, directory.lstat()):
+            raise LedgerError(
+                "Client folder changed during the snapshot; retry after writes finish."
             )
     files.sort(
         key=lambda item: (item["relative_path"].casefold(), item["relative_path"])

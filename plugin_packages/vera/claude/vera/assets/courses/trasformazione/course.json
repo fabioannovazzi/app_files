@@ -73,7 +73,7 @@
     },
     {
       "path": "scripts/managed_python_runtime.py",
-      "sha256": "4c818a1c172f02b07625ef26a6cbe12672e6b52844948b0ee7fefce325a58c69"
+      "sha256": "47abf5f768198382faf5df02e1db73c959b02334eca492e50318f19e458ace72"
     },
     {
       "path": "scripts/model_data_report.py",
@@ -85,11 +85,11 @@
     },
     {
       "path": "scripts/operational_incidents.py",
-      "sha256": "2553616257314e720108ee23d7e1dcd3d681334dc1f1b911a6235b14dcf015c8"
+      "sha256": "fe57a247994bde2551638ba61760d7560bcd41d977fa4388bce3704d5692abef"
     },
     {
       "path": "scripts/verified_execution.py",
-      "sha256": "8817cdb519cce486adf79d4f8feaf7bc3d4f89a810361855da823c6d9a852c31"
+      "sha256": "24349391d083ef2434fe7c6d9ea8930e21144ad3932b8ad6d01cdd8426837e30"
     },
     {
       "path": "scripts/workflow_usage.py",
@@ -502,5 +502,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "ba80d84e214e80c035155a749f762efca7ff877d0840a1f8cf9d923a812dc2e6"
+  "canonical_course_sha256": "9e191cf6d420c597d3d2058831d6d61c69b833a441aeb211c80b7c8298000477"
 }

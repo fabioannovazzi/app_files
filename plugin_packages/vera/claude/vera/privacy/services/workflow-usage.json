@@ -30,7 +30,8 @@
       "controls": [
         "Events are durably queued before transport and acknowledged by exact UUID, owner, sequence and hash. Interruptions stay outcome unknown; repeated submissions are idempotent.",
         "Synthetic and agent-test runs are excluded from user metrics. Studio Archive is infrastructure and cannot be selected as a rated process.",
-        "The host AI selects the primary process and observes actual task completion. Counters and hashes do not assert professional correctness or independent model delivery."
+        "The host AI selects the primary process and observes actual task completion. Counters and hashes do not assert professional correctness or independent model delivery.",
+        "The operational client honors an explicitly selected local-only HTTP delivery setting for this execution; this does not change synthetic-run exclusion, rating authorization or model-provider processing."
       ]
     },
     {
@@ -58,6 +59,6 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-10-17",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "fb1cf25eebd0c150a599d0e935333f42668ee2420fc70e087ddd6941340e82c7"
+    "source_fingerprint": "5d1e6c7db9808d22dd8b118e07fb63718b1632417bfafb49b8b5dfcc5b0e3ad0"
   }
 }

@@ -1,0 +1,24 @@
+{
+  "contract_id": "journal-bank-required-party-residual-extension",
+  "version": 1,
+  "reason": "An unidentified counterparty prevents proving that row's party equality; it does not invalidate independently qualified monetary populations or unrelated allocations.",
+  "required_party_semantics": {
+    "allocation_requires_nonempty_equal_party_ref": true,
+    "missing_party_is_wildcard": false,
+    "two_missing_parties_are_equal": false,
+    "population_wide_missing_party_stop": false,
+    "missing_party_rows_retained_in_normalized_population_and_residuals": true,
+    "source_values_invented_or_filled_without_reviewed_default": false,
+    "unrelated_valid_rows_can_reconcile": true
+  },
+  "unchanged": [
+    "reviewed source-bound mapping and relationship receipts",
+    "required currency and unit completeness",
+    "required entity completeness",
+    "exact amount, date, currency, unit, entity, direction and non-reuse checks",
+    "explicit reviewed defaults only",
+    "unresolved reconciliation prevents report-ready acceptance"
+  ],
+  "deterministic_reason": "Presence and equality of mapped party identifiers are mechanically verifiable; no semantic party attribution or model judgment is replaced.",
+  "historical_contracts": "Immutable evaluation contracts retain their original bytes; this additive extension specifies the new behavior."
+}

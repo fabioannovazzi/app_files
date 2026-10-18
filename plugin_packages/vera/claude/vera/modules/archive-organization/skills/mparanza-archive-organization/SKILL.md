@@ -177,6 +177,12 @@ ZIPs during a customer run.
 
 1. Use Studio Archive to select exactly one registered client and one open
    engagement. Never infer the client from filenames.
+   If the user supplied an external folder tree and authorized bringing it into
+   this client, first use `copy_studio_client_source_folder`. It retains the
+   ordinary delivery tree outside `Vera/`, without overwriting anything.
+   Do not populate engagement inputs one file at a time or manually copy files
+   as a workaround: those are different operations. Intake does not establish
+   client ownership of each document; assess all delivered files below.
 2. Select one storage mode from the actual archive location:
    - Local: call `snapshot_studio_client_folder`. It reads at most 5,000
      ordinary files and 2 GB, excludes `Vera/`, follows no symlinks, hashes
@@ -214,7 +220,12 @@ ZIPs during a customer run.
    `item_ref` exactly once and bind `inventory_ref` to the projected inventory.
    Use `item_ref` for probable-duplicate relationships. Local code rehydrates
    the raw snapshot paths before compiling an executable plan. Use the fields
-   in `references/proposal-contract.md` and the data boundary in
+   in `references/proposal-contract.md`. Use optional `keep_in_place: true`
+   on each affected row when the case requires keeping a file at its current
+   location, including every duplicate copy the user wants retained there.
+   Preserve its supported classification and duplicate evidence, explain the
+   case-specific reason, and do not change the studio policy. This proposes
+   retention only; it does not record professional approval. Use the data boundary in
    `references/model-inventory-contract.md`.
 6. Run `scripts/archive_organization.py prepare-review`. This is always a dry
    run. It writes the policy snapshot, semantic proposals, deterministic plan,

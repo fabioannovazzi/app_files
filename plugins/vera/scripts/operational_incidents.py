@@ -367,6 +367,8 @@ def _read() -> dict[str, Any]:
 
 
 def _write(state: dict[str, Any]) -> None:
+    if _local_delivery_only():
+        state["delivery_mode"] = "local-only"
     path = _state_path()
     with tempfile.NamedTemporaryFile(
         mode="w", encoding="utf-8", dir=path.parent, delete=False
@@ -493,7 +495,16 @@ class _NoRedirect(urllib.request.HTTPRedirectHandler):
         )
 
 
+def _local_delivery_only() -> bool:
+    mode = os.environ.get("MPARANZA_INCIDENT_DELIVERY", "automatic")
+    if mode not in {"automatic", "local-only"}:
+        raise ValueError("Unknown operational incident delivery mode")
+    return mode == "local-only"
+
+
 def _post(operation: str, payload: dict[str, Any]) -> dict[str, Any]:
+    if _local_delivery_only():
+        raise urllib.error.URLError("Operational incident delivery is local-only")
     # A native broker linking a guest must never claim the guest ran its version.
     if "native_status" not in payload:
         payload = {**payload, "client_status": _reporter_status()}
@@ -603,6 +614,8 @@ def _expand_success(
 
 
 def _flush(state: dict[str, Any]) -> None:
+    if _local_delivery_only() or state.get("delivery_mode") == "local-only":
+        return
     if not state["registered"]:
         _post("register", {"credentials": state["credentials"]})
         state["registered"] = True
@@ -1055,6 +1068,7 @@ def check_incidents(
                                 "MPARANZA_INCIDENT_DEVICE_DIR",
                                 "MPARANZA_INCIDENT_HOST",
                                 "MPARANZA_INCIDENT_HOST_SESSION",
+                                "MPARANZA_INCIDENT_DELIVERY",
                             )
                             if key in os.environ
                         },

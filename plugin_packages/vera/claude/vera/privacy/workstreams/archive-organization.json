@@ -28,7 +28,7 @@
       {
         "id": "client-folder-document-evidence",
         "purpose": "Understand each selected client document and propose an evidence-backed studio archive category, practice, date, name, anomaly status, or probable-duplicate relationship",
-        "content": "One registered client and engagement identity and the complete bounded inventory population, not a sample: opaque inventory and item references; purpose-relevant projected client-relative paths, filenames, extensions, MIME types where available, sizes, timestamps, evidence-opening availability, exclusions, and opaque exact-duplicate groups and canonical relationships. Raw local hashes, absolute source paths, Google Drive root, file and parent IDs, versions, capabilities and checksums remain in the sealed local receipt. Selected readable content or transiently downloaded or exported Drive evidence enters context only after local resolution and identity revalidation. Proposed category, document type, date, subject, reference, practice, confidence, reasons, anomaly observations, and probable-duplicate item references remain model judgments",
+        "content": "One registered client and engagement identity and the complete bounded inventory population, not a sample: opaque inventory and item references; purpose-relevant projected client-relative paths, filenames, extensions, MIME types where available, sizes, timestamps, evidence-opening availability, exclusions, and opaque exact-duplicate groups and canonical relationships. Raw local hashes, absolute source paths, Google Drive root, file and parent IDs, versions, capabilities and checksums remain in the sealed local receipt. Selected readable content or transiently downloaded or exported Drive evidence enters context only after local resolution and identity revalidation. Proposed category, document type, date, subject, reference, practice, confidence, reasons, anomaly observations, and probable-duplicate item references remain model judgments Optional per-file keep-in-place intent and its case-specific reason remain model judgments. Local plan compilation preserves that draft intent before proposing a policy destination or exact-duplicate quarantine, without removing duplicate identity evidence or recording professional approval.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -137,6 +137,6 @@
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "1decd6dc9d1a82eaea73d977720d60ed02a8f294ea8338a12dcda8e80a4af2db"
+    "source_fingerprint": "abac760dbf5002170e23cc72de65efe01cf2d3fbf0c63b2175f1d4667cee7963"
   }
 }
