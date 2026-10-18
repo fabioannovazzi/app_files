@@ -104,8 +104,8 @@ recovery claim or external message was created by these acceptance operations.
 
 Private evidence, exact package/report/contract hashes, report files and signed
 receipts are retained in
-`outputs/shared-privacy-acceptance/2026-10-18/verified-release/`, with the preceding
-candidate evidence retained separately in `final/`. The local review also covered
+`outputs/shared-privacy-acceptance/2026-10-18/public-candidate/`, with preceding
+candidate evidence retained separately in `final/` and `verified-release/`. The local review also covered
 Clara's Italian explanation, Lucia's English explanation and Vera's nested
 integration page. Thirty-six public-page tests passed; six renderer tests cover
 product separation, language and unavailable-review behavior.
@@ -119,6 +119,10 @@ remain rejected. Packaged closure retains the separate privacy contract artifact
 Repository review file lists are sorted before packaging so filesystem enumeration
 cannot change a package's retained review or integrity hashes. A regression reverses
 that enumeration and requires identical projected package bytes.
+
+Public entry pages use versioned URLs for the shared renderer, function data and
+navigation. The template renderer passes the same release identity to its loaded
+scripts so a previously cached script cannot replace the updated contract reader.
 
 The updated teaching bindings change only source inventories: the eighteen changed
 course payloads were compared with commit `32f7e7e0d90a3191e4c1ea80489eb0b750b76b16`

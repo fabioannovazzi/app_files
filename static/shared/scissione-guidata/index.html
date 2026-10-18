@@ -96,4 +96,4 @@ const translations = {
   }
 };
 function setLanguage(lang){if(!translations[lang])lang="it";document.documentElement.lang=lang;document.title=translations[lang].title+" | Vera";document.querySelectorAll("[data-i18n]").forEach(el=>el.textContent=translations[lang][el.dataset.i18n]);document.querySelectorAll("[data-lang]").forEach(el=>el.setAttribute("aria-pressed",String(el.dataset.lang===lang)));document.querySelector(".brand").href="../vera/index.html?lang="+lang;const url=new URL(location.href);url.searchParams.set("lang",lang);history.replaceState(null,"",url);}document.querySelectorAll("[data-lang]").forEach(el=>el.addEventListener("click",()=>setLanguage(el.dataset.lang)));setLanguage(new URLSearchParams(location.search).get("lang")||"it");
-</script><script src="../function-model-data.js"></script></body></html>
+</script><script src="../function-model-data.js?v=20261018-shared-privacy"></script></body></html>

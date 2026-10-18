@@ -276,7 +276,7 @@
   loadNavigation();
   if (currentScript && !window.MPARANZA_PRIVACY_RENDERER_LOADED) {
     const privacyScript = document.createElement("script");
-    privacyScript.src = new URL("function-model-data.js", currentScript.src).href;
+    privacyScript.src = new URL("function-model-data.js?v=20261018-shared-privacy", currentScript.src).href;
     document.head.append(privacyScript);
   }
 
