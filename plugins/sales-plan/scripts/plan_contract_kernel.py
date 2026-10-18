@@ -400,7 +400,7 @@ def pinned_directory(path: Path) -> Iterator[PinnedDirectory]:
                 boundary.verify_identity()
         except OSError as exc:
             raise ContractValidationError(
-                "could not safely use Windows output directory"
+                "could not pin output directory on Windows"
             ) from exc
         return
     flags = os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0)

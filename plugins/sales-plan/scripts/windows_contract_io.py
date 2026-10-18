@@ -148,7 +148,9 @@ def _relative(
     )
     status = _IoStatus()
     result = w.HANDLE()
-    access = 0x100080 if directory else (0x12019F if create else 0x120089)
+    # FILE_LIST_DIRECTORY participates in sharing checks; attributes-only
+    # handles do not prevent another handle from renaming the directory.
+    access = 0x100081 if directory else (0x12019F if create else 0x120089)
     if delete:
         access |= 0x10000
     options = 0x200000 | 0x20 | (1 if directory else 0x40)
@@ -188,7 +190,7 @@ class Directory:
         kernel, _ = _api()
         if parent is None:
             handle = kernel.CreateFileW(
-                str(self.path), 0x80, 3, None, 3, 0x02000000 | 0x00200000, None
+                str(self.path), 0x100081, 3, None, 3, 0x02000000 | 0x00200000, None
             )
             if handle == ctypes.c_void_p(-1).value:
                 raise ctypes.WinError(ctypes.get_last_error())
