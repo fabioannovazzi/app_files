@@ -149,7 +149,7 @@
     },
     {
       "path": "skills/mparanza-concordato-plan-review/SKILL.md",
-      "sha256": "62da48e4a9ff88409828a126a7424ab5e626b7a904104ab17d1744fcc3fc864c"
+      "sha256": "c53241a8566f50938bfd1a8ce543dac280a26bbac90656c88918a4a8e52fc46d"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -594,5 +594,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "848b8328a88d0c2cfef232d815602bfbd9cb5e971933ca08990680c9fd695a38"
+  "canonical_course_sha256": "e3cf996e85792b128f898aac998c35a6cd41aafbabcff780e2b9156df78ee0b3"
 }

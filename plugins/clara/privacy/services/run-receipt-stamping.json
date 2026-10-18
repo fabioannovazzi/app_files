@@ -27,7 +27,8 @@
         "OpenAI desktop onboarding is a local-only exception: reports beneath its .vera-onboarding-local-only directory marker return not_requested/local_onboarding before receipt request construction, including direct later stamp retries. The Claude projection omits this new onboarding behavior.",
         "The report build returns the readable local report as display_markdown for the final response, including when stamping is pending. The show command renders a saved report after validating its recorded hashes; it reads no source documents, writes no files and makes no network or stamping request. Displaying the report uses the current model context and does not send its content to Mparanza.",
         "The separately registered workflow-usage service can link the retained receipt UUID and digest to the installation and primary task. It does not alter the four-field stamping request or send the report itself. See workflow-usage for outcome and optional star/comment fields.",
-        "The shared implementation binds registrations, OAuth resources, task events, report signatures, feedback and update downloads to one product. Existing unmapped installations and receipt schema 1 remain Vera. Physical-computer identity is shared, while usage catalogues and testing epochs are separated by product."
+        "The shared implementation binds registrations, OAuth resources, task events, report signatures, feedback and update downloads to one product. Existing unmapped installations and receipt schema 1 remain Vera. Physical-computer identity is shared, while usage catalogues and testing epochs are separated by product.",
+        "The workflow-usage connector can relay the same retained allow-listed stamping request when local HTTPS is unavailable. Its surrounding envelope includes the existing workflow run UUID and original reporter credentials for ownership checks; the proof service retains only the original proof fields. No report contents are admitted. Returned receipts are validated locally against the unchanged report and retained request before linking."
       ]
     }
   ],
@@ -66,7 +67,7 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "e75cbf1c33b5efa8c1befea50ffb697343e0e29b9f86f8426a9d2c9206477371"
+    "source_fingerprint": "2925e01cd99ee4d94804b869a43493abb0ef0914b9afc97570dde65a5601d1f4"
   },
   "runtime_profiles": [
     "openai-codex",

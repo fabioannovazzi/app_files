@@ -84,7 +84,7 @@
     "source_review": "Reviewed the additive costing route, its exact arithmetic, archive-bound source checks and separate renderer. Existing reporting dispatch is unchanged unless analysis_kind is costing. This source refresh does not turn the monthly reporting lesson into a costing lesson.",
     "limits": "Preserves historical editorial and artifact evidence. Current regression execution is required; no fresh learner, voice, installed-host or professional acceptance is claimed."
   },
-  "course_sha256": "e3ad0cf67c9425f0a2c1847c4de737e5a25c53012f4d4b1ebee946f011978d93",
+  "course_sha256": "08bed413e8a92163c714c84fc1c5b29f6ce7285228f1da01b848141fe53ec5cc",
   "discovery_source_refresh": {
     "reviewed_by": "Codex /root",
     "reviewed_at": "2026-10-01T11:44:13.133138+00:00",
@@ -450,5 +450,22 @@
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "fresh_matching_junit_required": true
+  },
+  "cowork_reporting_source_refresh_20261018": {
+    "reviewer": "Codex /root - bounded reporting source compatibility review",
+    "reviewed_at": "2026-10-18T18:09:58.653901+00:00",
+    "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
+    "previous_course_sha256": "e3ad0cf67c9425f0a2c1847c4de737e5a25c53012f4d4b1ebee946f011978d93",
+    "current_course_sha256": "08bed413e8a92163c714c84fc1c5b29f6ce7285228f1da01b848141fe53ec5cc",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "changed_sources": [
+      "plugins/vera/skills/management-control-pack/SKILL.md"
+    ],
+    "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
+    "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash.",
+    "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance."
   }
 }

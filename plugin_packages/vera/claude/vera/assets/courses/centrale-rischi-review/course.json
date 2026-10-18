@@ -108,7 +108,7 @@
     },
     {
       "path": "skills/mparanza-centrale-rischi-review/SKILL.md",
-      "sha256": "8ab33ace18d00cff387361a24153e125521229ceadf9b860cdba8eeb3fcc95c4"
+      "sha256": "3e91bc8b2e39a217cfa316337bc285b535db7c889b301fe7499952838338dfdc"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -328,5 +328,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "5368124af91d31a4f3e9ab3bda299bce79b108ddd8e38de526ae63a4a70b2702"
+  "canonical_course_sha256": "fdce3f92ed46292fde8ba30eb26fdcbb0922d2cca71b8953b6733a32cfc8a261"
 }

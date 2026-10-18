@@ -1017,6 +1017,11 @@ def test_named_skill_is_discoverable_and_bound_in_package(
         store, process, named_skill_specification(), tmp_path / "skills"
     )
     monkeypatch.syspath_prepend(str(ROOT / "scripts"))
+    # This fixture tests routing/binding of an exported synthetic skill, not a
+    # reviewed production release. Privacy registration/projection is covered by
+    # test_product_privacy_contract; do not silently register this invented skill.
+    privacy = importlib.import_module("project_product_privacy")
+    monkeypatch.setattr(privacy, "project_privacy", lambda *_args, **_kwargs: {})
     builder = importlib.import_module("build_codex_plugin_zip")
     target = next(bundle for bundle in builder.load_bundles() if bundle.name == "vera")
     entries = builder.expected_zip_entries(target, project_vera_privacy=False)

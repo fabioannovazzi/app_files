@@ -50,7 +50,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "627ff9c02ab3cff95eb737b1a681ecd233b7326c9d5639c7c2bf25a581105b37",
+  "course_sha256": "5d1d9525b0605f91d1559004c5fc4f0764aa09088db331859c7a5e4087435d45",
   "integration_refresh": {
     "reviewer": "Codex /root",
     "date": "2026-10-02",
@@ -677,5 +677,23 @@
   "archive_input_verification_main_integration": {
     "base_commit": "b8ed35121cc430584260321734f5cf0e91b400ea",
     "scope": "Compared complete course payload against the merged main release. Only sources differ; authored lessons, all five languages and existing editorial/artifact judgments are preserved. This refresh records source compatibility, not new learner or professional acceptance. Final CI must execute and bind the current course hashes."
+  },
+  "cowork_reporting_source_refresh_20261018": {
+    "reviewer": "Codex /root - bounded reporting source compatibility review",
+    "reviewed_at": "2026-10-18T18:09:58.549637+00:00",
+    "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
+    "previous_course_sha256": "627ff9c02ab3cff95eb737b1a681ecd233b7326c9d5639c7c2bf25a581105b37",
+    "current_course_sha256": "5d1d9525b0605f91d1559004c5fc4f0764aa09088db331859c7a5e4087435d45",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "changed_sources": [
+      "plugins/vera/skills/studio-document-format/SKILL.md",
+      "plugins/vera/skills/vera/references/model-data-report-contract.md"
+    ],
+    "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
+    "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash.",
+    "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance."
   }
 }

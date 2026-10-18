@@ -120,7 +120,7 @@
     },
     {
       "path": "skills/mparanza-advisory-deliverable-validator/SKILL.md",
-      "sha256": "cab400ac56a17f53cf424b3754d0b6fe55a906f4d5e20355ba34e6834e25bdb0"
+      "sha256": "68dc52fdf0c2384d6e1c96a195e959d90954c60dbfce0a79e304b157c318e12c"
     },
     {
       "path": "skills/mparanza-advisory-deliverable-validator/references/advisory-contract.md",
@@ -549,5 +549,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "8d193d62b6dce35c8c7a754d605df7b2c0b9e3b3728c88ea5e17d8327c06ff91"
+  "canonical_course_sha256": "40392599f87e07cab0b0fd8d1ab1bef03a6a87e4b348dbfc936e5cf36ccfb89d"
 }

@@ -56,7 +56,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "e5c22adcd871cf99a691f2a8c486bcc59d5296de348721042444ae6421be5b9e"
+    "source_fingerprint": "08fb1376d670244fcd68159fdd8e288828fd4de4d2551db32a9f188ec3b24c84"
   },
   "service_ids": [
     "datev-starter",

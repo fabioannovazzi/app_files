@@ -153,7 +153,7 @@
     },
     {
       "path": "skills/mparanza-previdenza-inps/SKILL.md",
-      "sha256": "26e0655979a6279b3d5b1879c43bb8cbd19514186e55ae28dfed579156c5a148"
+      "sha256": "c410b0e535c2b70fa33be70bc7c13569e7b35f0a4daea2ae44a0f9e0a6c3e8f6"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -758,5 +758,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "d2152c8e19443f4269249ad282b678e6403926fa6299b22ac751d4ad5886b3e0"
+  "canonical_course_sha256": "202e8c40190081b92da3b60f01508e2194f7e993b757d6e2080d3f4252496a7f"
 }

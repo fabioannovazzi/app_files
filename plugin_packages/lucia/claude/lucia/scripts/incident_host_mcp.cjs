@@ -21,7 +21,7 @@ const TOOLS = [
   { name: `${PRODUCT}_incident_host_context`, description: "Read or create the native host's random public incident code. Never returns its private key. A Cowork Linux guest remains explicitly unlinked. This does not report a guest workflow version.",
     inputSchema: { type: "object", properties: {}, additionalProperties: false },
     annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false } },
-  { name: `${PRODUCT}_incident_host_link`, description: "Automatically bind a guest's existing local incident capability to this native host and app at Mparanza. Pass the exact guest capability from incident context. The host key stays out of tool results; no client files, diagnostics or commands are inputs. Does not close an incident.",
+  { name: `${PRODUCT}_incident_host_link`, description: "Automatically bind a guest's existing local incident capability to this native host and app at Mparanza. Pass exactly {credentials: {installation_id, installation_key}} using the guest's existing values. The argument is credentials, not capability; do not add run_id. The host key stays out of tool results; no client files, diagnostics or commands are inputs. Does not close an incident.",
     inputSchema: { type: "object", properties: { credentials }, required: ["credentials"], additionalProperties: false },
     annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: true } },
 ];
@@ -102,12 +102,15 @@ function handle(message) {
     if (!args || typeof args !== "object" || Array.isArray(args)) throw new HostFailure("Invalid native incident arguments");
     let command;
     if (name === TOOLS[0].name && Object.keys(args).length === 0) command = "host-context";
-    else if (name === TOOLS[1].name && Object.keys(args).length === 1 && args.credentials) {
+    else if (name === TOOLS[1].name) {
+      if (Object.keys(args).length !== 1 || !args.credentials ||
+          typeof args.credentials !== "object" || Array.isArray(args.credentials))
+        throw new HostFailure("Invalid host-link arguments. Retry this same tool with exactly {credentials: {installation_id, installation_key}} from the original guest incident context. Use credentials, not capability; omit run_id. No host linkage has occurred.");
       const value = args.credentials;
       if (Object.keys(value).sort().join(",") !== "installation_id,installation_key" ||
           typeof value.installation_id !== "string" || !/^[0-9a-f-]{36}$/i.test(value.installation_id) ||
           typeof value.installation_key !== "string" || !/^[A-Za-z0-9_-]{32,128}$/.test(value.installation_key))
-        throw new HostFailure("Invalid local incident capability");
+        throw new HostFailure("Invalid local incident capability. credentials must contain only installation_id (UUID) and installation_key (32-128 allowed characters), copied unchanged from the original guest incident context. Do not generate replacement credentials. No host linkage has occurred.");
       command = "host-link";
     } else throw new HostFailure("Unsupported native incident operation");
     const value = bridge(command, args);

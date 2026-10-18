@@ -182,7 +182,7 @@
     },
     {
       "path": "skills/mparanza-business-planning/SKILL.md",
-      "sha256": "d6a867d9923f8bd9cfc013e322d5c644f46bb5a344800601d32516983ee4443e"
+      "sha256": "38fcf98e55b1d6a275dae7650eaf221fd2faaa13e40a07aa115f6c0ccea017e1"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -374,5 +374,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "b7fe13436b993a017ee53e8fb861a85594df8658d95a996029cb34c34d889383"
+  "canonical_course_sha256": "cd7e3a4df7ea76cf8dfd21f1d00f6e580a5aa5570c3142cdef17cb597d137f9d"
 }

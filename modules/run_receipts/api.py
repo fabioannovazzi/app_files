@@ -37,6 +37,7 @@ __all__ = [
     "RunReceiptStampResponse",
     "api_router",
     "get_run_receipt_rate_limiter",
+    "issue_run_receipt",
     "site_router",
 ]
 
@@ -360,6 +361,16 @@ def stamp_run_receipt(
     """Timestamp, sign, and retain only one minimal per-run proof record."""
 
     _enforce_rate_limit(request, limiter, "stamp")
+    return issue_run_receipt(payload, store, signer, product)
+
+
+def issue_run_receipt(
+    payload: RunReceiptStampRequest,
+    store: RunReceiptStore,
+    signer: RunReceiptSigner,
+    product: Product,
+) -> RunReceiptStampResponse:
+    """Issue the same bounded proof through admitted HTTP or MCP transport."""
     if (
         payload.schema_version == 1
         and (product != "vera" or payload.product is not None)

@@ -165,7 +165,7 @@
     },
     {
       "path": "skills/mparanza-quesito-legale-fiscale/SKILL.md",
-      "sha256": "03313b6afc6799d3510c86a1fc0bb0b7ec01ede8b74d8b4b456eddb657594879"
+      "sha256": "746c9023929004f708a27b2bc2345fb917ef891fe11fd66daf009edaa6bb8a45"
     },
     {
       "path": "vendor/modules/deal_redux/references/evidence-and-rounds.md",
@@ -722,5 +722,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "346c8b65a3385e6a5042fa6a74384d44d67edf0e84c4b87ae4fb5b1dc429be9d"
+  "canonical_course_sha256": "7a521d8167541240b26fea167559ebc09015cac93d27b990a6b82ab19e71f31e"
 }

@@ -209,7 +209,7 @@
     {
       "path": "skills/reporting-engine/SKILL.md",
       "repository_path": "plugins/clara/skills/reporting-engine/SKILL.md",
-      "sha256": "daadcfc436f2f2e63d62c5a73fe0246a9e0040faf674645ed144452f4bd20fb4"
+      "sha256": "7e67fa8e5c1824c7b1a2054ddc7eb4b2186ba87b0a92e5e6be839f75192beed2"
     },
     {
       "path": "vendor/modules/__init__.py",

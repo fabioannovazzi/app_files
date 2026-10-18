@@ -206,7 +206,7 @@
     "basis": "Release metadata/source binding after automatic integrity-incident reporting correction. Existing authored lessons, professional methods, inputs and review dispositions remain unchanged. No new learner or customer recovery acceptance claimed."
   },
   "schema": "mparanza.teaching_release_review.v1",
-  "course_sha256": "83220a292c6df2ef836c2b00b0df5519b0ac7a3db1b5cd55aa762b081b58c902",
+  "course_sha256": "d4a48f6f288a28b95bf6789a55440f9aa0e50f333b5bc8aadcbbc1bfe248e783",
   "isolated_launcher_source_compatibility_20261018": {
     "reviewer": "Codex exact retained-course and launcher-source review",
     "reviewed_at": "2026-10-18",
@@ -668,5 +668,24 @@
       "sources"
     ],
     "scope": "Complete authored course content is unchanged from the integrated candidate. Tested Vera isolated-launcher imports and explicitly selected local-only incident delivery are retained in the new canonical shared reporting runtime and synchronized with the repository tool. Ordinary automatic delivery and product-bound authorization remain unchanged when the test setting is unset. Existing editorial judgments and historical artifact reviews remain preserved; current native teaching CI against exact new digests is required. No new learner, native visual or professional acceptance is asserted."
+  },
+  "cowork_reporting_source_refresh_20261018": {
+    "reviewer": "Codex /root - bounded reporting source compatibility review",
+    "reviewed_at": "2026-10-18T18:09:58.327373+00:00",
+    "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
+    "previous_course_sha256": "83220a292c6df2ef836c2b00b0df5519b0ac7a3db1b5cd55aa762b081b58c902",
+    "current_course_sha256": "d4a48f6f288a28b95bf6789a55440f9aa0e50f333b5bc8aadcbbc1bfe248e783",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "changed_sources": [
+      "plugins/vera/scripts/operational_incidents.py",
+      "plugins/vera/scripts/workflow_usage.py",
+      "plugins/vera/skills/trasformazione/SKILL.md"
+    ],
+    "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
+    "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash.",
+    "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance."
   }
 }

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "advisory-deliverable-validator",
-  "course_sha256": "e22d2df1d27378a50af4dd326c1a33e6579aab0c0b638a4a86327e3256db576f",
+  "course_sha256": "40392599f87e07cab0b0fd8d1ab1bef03a6a87e4b348dbfc936e5cf36ccfb89d",
   "reviewer": "Codex: five-language whole-memo lesson and native output review",
   "reviewed_at": "2026-09-14T21:37:39.206080+00:00",
   "review_scope": "Prepared material and native local execution review. Read the five localized lesson outlines and source sets, all ten artifact cards and run-review notes, five full practice review packages and the demo-specific changed passages. Final package/card text matches the inspected run after temporary-path normalization; the final clarified run notes were read separately. Eighty-eight native advisory and validator checks pass, including ten distinct phase/language review exercises. Native voice, window presentation, human timing, learner comprehension and professional approval remain unverified. The authored fictional review interpretations are regression fixtures outside shipped kits. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
@@ -688,5 +688,24 @@
       "sources"
     ],
     "scope": "Complete authored course content is unchanged from the integrated candidate. Tested Vera isolated-launcher imports and explicitly selected local-only incident delivery are retained in the new canonical shared reporting runtime and synchronized with the repository tool. Ordinary automatic delivery and product-bound authorization remain unchanged when the test setting is unset. Existing editorial judgments and historical artifact reviews remain preserved; current native teaching CI against exact new digests is required. No new learner, native visual or professional acceptance is asserted."
+  },
+  "cowork_reporting_source_refresh_20261018": {
+    "reviewer": "Codex /root - bounded reporting source compatibility review",
+    "reviewed_at": "2026-10-18T18:09:58.862037+00:00",
+    "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
+    "previous_course_sha256": "e22d2df1d27378a50af4dd326c1a33e6579aab0c0b638a4a86327e3256db576f",
+    "current_course_sha256": "40392599f87e07cab0b0fd8d1ab1bef03a6a87e4b348dbfc936e5cf36ccfb89d",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "changed_sources": [
+      "plugins/clara/scripts/operational_incidents.py",
+      "plugins/clara/scripts/workflow_usage.py",
+      "plugins/clara/skills/advisory-deliverable-validator/SKILL.md"
+    ],
+    "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
+    "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash.",
+    "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance."
   }
 }

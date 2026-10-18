@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "contenzioso-tributario",
-  "course_sha256": "01f8b2b4c0eb0ec1d45b07ed261561f4380e94f31a77a5e3a1961c6c4b0d2925",
+  "course_sha256": "2ac30380ddf1f4e56be79203d38fb56d30c6269d690629b597afd70aa606f6e6",
   "reviewer": "Codex /root: five-language authored lesson and real evidence/progress output review",
   "reviewed_at": "2026-10-14T14:55:04.860976+00:00",
   "review_scope": "Accepted prepared material and bounded real helper/Archive regressions. Semantic narrative and decisions are explicit test fixtures. This does not attest full live legal research, substantive pleading approval, native Word, native voice, installed-host learner execution or professional acceptance. Live lessons run the current specialist, not the fixtures.",
@@ -266,5 +266,24 @@
       "sources"
     ],
     "scope": "Complete authored course content is unchanged from the integrated candidate. Tested Vera isolated-launcher imports and explicitly selected local-only incident delivery are retained in the new canonical shared reporting runtime and synchronized with the repository tool. Ordinary automatic delivery and product-bound authorization remain unchanged when the test setting is unset. Existing editorial judgments and historical artifact reviews remain preserved; current native teaching CI against exact new digests is required. No new learner, native visual or professional acceptance is asserted."
+  },
+  "cowork_reporting_source_refresh_20261018": {
+    "reviewer": "Codex /root - bounded reporting source compatibility review",
+    "reviewed_at": "2026-10-18T18:09:58.809182+00:00",
+    "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
+    "previous_course_sha256": "01f8b2b4c0eb0ec1d45b07ed261561f4380e94f31a77a5e3a1961c6c4b0d2925",
+    "current_course_sha256": "2ac30380ddf1f4e56be79203d38fb56d30c6269d690629b597afd70aa606f6e6",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "changed_sources": [
+      "plugins/lucia/scripts/operational_incidents.py",
+      "plugins/lucia/scripts/workflow_usage.py",
+      "plugins/lucia/skills/contenzioso-tributario/SKILL.md"
+    ],
+    "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
+    "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash.",
+    "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance."
   }
 }
