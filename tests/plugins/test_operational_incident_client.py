@@ -24,10 +24,11 @@ from modules.operational_incidents.store import IncidentStore
 ROOT = Path(__file__).resolve().parents[2]
 
 
+@pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
 def test_local_delivery_retains_failure_and_success_without_transport(
-    tmp_path, monkeypatch
+    tmp_path, monkeypatch, product
 ):
-    module, store, _ = client(tmp_path, monkeypatch)
+    module, store, _ = client(tmp_path, monkeypatch, product)
     monkeypatch.setenv("MPARANZA_INCIDENT_DELIVERY", "local-only")
     receipt = module.report_failure(
         "journal-sampling", "execution-startup", "Synthetic argument failure"
@@ -52,15 +53,16 @@ def test_local_delivery_retains_failure_and_success_without_transport(
     assert store.queue() == []
 
 
+@pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
 @pytest.mark.parametrize(
     "mode,error", [("local-only", urllib.error.URLError), ("invalid", ValueError)]
 )
 def test_incident_delivery_setting_blocks_direct_http(
-    tmp_path, monkeypatch, mode, error
+    tmp_path, monkeypatch, mode, error, product
 ):
     spec = importlib.util.spec_from_file_location(
         "local_only_incident_transport",
-        ROOT / "plugins/vera/scripts/operational_incidents.py",
+        ROOT / "plugins" / product / "scripts/operational_incidents.py",
     )
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
@@ -74,8 +76,9 @@ def test_incident_delivery_setting_blocks_direct_http(
         module._post("status", {"credentials": {}})
 
 
+@pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
 def test_agent_diagnosis_reply_and_corrected_original_task_end_to_end(
-    tmp_path, monkeypatch
+    tmp_path, monkeypatch, product
 ):
     """Two agent turns must end in the original calculation, not helper readiness."""
     import sys
@@ -87,11 +90,11 @@ def test_agent_diagnosis_reply_and_corrected_original_task_end_to_end(
         request_for,
     )
 
-    module, store, _ = client(tmp_path, monkeypatch)
+    module, store, _ = client(tmp_path, monkeypatch, product)
     monkeypatch.setitem(sys.modules, "operational_incidents", module)
     spec = importlib.util.spec_from_file_location(
         "agent_exchange_launcher",
-        ROOT / "plugins/vera/scripts/managed_python_runtime.py",
+        ROOT / "plugins" / product / "scripts/managed_python_runtime.py",
     )
     launcher = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(launcher)
@@ -145,6 +148,7 @@ def test_agent_diagnosis_reply_and_corrected_original_task_end_to_end(
     assert launcher.main(["run", "calculate.py", *arguments]) == 1
     incident = store.queue()[0]
     original = Report.model_validate(incident["reports"][0])
+    assert original.product == product
     request = store.remedy(incident["incident_id"], request_for(original.report_id))
     pending = module.check_incidents(recover=False)["pending"][0]
     assert pending["diagnostic_exchange"]["state"] == "awaiting-vera"
@@ -339,17 +343,18 @@ def test_resume_rejects_a_different_original_input_receipt(tmp_path, monkeypatch
         )
 
 
-def client(tmp_path, monkeypatch):
+def client(tmp_path, monkeypatch, product="vera"):
+    monkeypatch.syspath_prepend(str(ROOT / "plugins" / product / "scripts"))
     spec = importlib.util.spec_from_file_location(
         "isolated_incident_client",
-        ROOT / "plugins/vera/scripts/operational_incidents.py",
+        ROOT / "plugins" / product / "scripts/operational_incidents.py",
     )
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     root = tmp_path / "installation"
     (root / ".codex-plugin").mkdir(parents=True)
     (root / ".codex-plugin/plugin.json").write_text(
-        json.dumps({"name": "vera", "version": "0.1.361"})
+        json.dumps({"name": product, "version": "0.1.361"})
     )
     # The installed startup now imports its usage sibling; bind that sibling to
     # this isolated capability rather than the real user's installation state.
@@ -357,7 +362,7 @@ def client(tmp_path, monkeypatch):
 
     monkeypatch.setitem(sys.modules, "operational_incidents", module)
     usage_spec = importlib.util.spec_from_file_location(
-        "workflow_usage", ROOT / "plugins/vera/scripts/workflow_usage.py"
+        "workflow_usage", ROOT / "plugins" / product / "scripts/workflow_usage.py"
     )
     usage_module = importlib.util.module_from_spec(usage_spec)
     usage_spec.loader.exec_module(usage_module)
@@ -381,6 +386,7 @@ def client(tmp_path, monkeypatch):
                     if payload.get("native_status")
                     else None
                 ),
+                product=product,
             )
         if operation == "report":
             return store.report(credentials, Report.model_validate(payload["report"]))

@@ -154,7 +154,10 @@ def test_clara_marketplace_names_match_public_tasks_and_codex_metadata() -> None
     }
     assert "const directoryNames =" not in public_page
     for key, display_name in public_directory.items():
-        assert f'data-i18n="{key}">{display_name}</h4>' in public_page
+        assert re.search(
+            rf'data-i18n="{re.escape(key)}">{re.escape(display_name)}</(?:h4|span)>',
+            public_page,
+        )
         assert public_page.count(f'"{key}":') == 5
 
 
@@ -181,7 +184,7 @@ def test_clara_public_page_exposes_complete_spanish_locale_contract() -> None:
     assert '"hero.eyebrow": "AI companion para consultores"' in page
     assert '"hero.title": "Clara"' in page
     assert (
-        "Instala Clara para ChatGPT Work y Codex o descarga el paquete para Claude Cowork."
+        "Instala Clara en ChatGPT Work y Codex, Claude Cowork o Google Antigravity."
         in page
     )
     assert "Clara prepara el trabajo. El criterio sigue siendo tuyo." not in page
@@ -1202,14 +1205,16 @@ def test_hosted_interview_manager_magic_link_returns_to_authorized_voice_route(
 def test_human_visible_document_quality_gate_rejects_scaffolding() -> None:
     core = load_core()
 
-    violations = core.audit_human_visible_document_text("""
+    violations = core.audit_human_visible_document_text(
+        """
         Pagina 3
         jud-0007
         etichetta da confermare
         Il prossimo passo e' produrre un documento piu decidibile.
         Il documento deve aiutare a pensare.
         Questo passaggio puo' creare valore.
-        """)
+        """
+    )
 
     assert "visible judgement/source id" in violations
     assert "page-number scaffolding" in violations
@@ -3600,6 +3605,8 @@ def test_reporting_dependency_check_prepares_selected_requirements(
         return False, tmp_path / "runtime", "injected setup failure"
 
     monkeypatch.setattr(checker, "ensure_runtime", prepare)
+    monkeypatch.setattr(checker, "prepare_execution_root", lambda root, module: root)
+    monkeypatch.setattr(checker, "report_failure", lambda *args, **kwargs: {})
 
     result = checker.main(["--module", "reporting-engine", *options])
 
@@ -3761,6 +3768,7 @@ def test_dependency_checker_missing_ocr_uses_managed_setup_prompt(
 ) -> None:
     checker = load_dependency_checker()
     source = tmp_path / "visual-only.pdf"
+    monkeypatch.setattr(checker, "prepare_execution_root", lambda root, module: root)
     source.write_bytes(b"%PDF synthetic")
     requirements = tmp_path / "requirements-ocr.txt"
     requirements.write_text("paddleocr>=3.0\n", encoding="utf-8")

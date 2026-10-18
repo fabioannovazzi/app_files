@@ -96,6 +96,54 @@
         "Require accepted semantic, rendered and packaged scopes plus a successful validation receipt.",
         "Do not record delivery without visible evidence bound to the exact package."
       ]
+    },
+    {
+      "kind": "hosted_service",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "id": "primary-task-usage-and-feedback",
+      "destination": "Mparanza product task reporting service",
+      "purpose": "Count the original professional-communication mandate and observed completion; retain optional user-authored satisfaction.",
+      "content": "Product and authored pipeline ID, random task and installation identifiers, version and host, event sequence and timestamp, observed outcome, incident and receipt references. Optional actual user rating from 1 to 5 and user-authored comment; no client files, matter labels, prompts, professional output or inferred rating.",
+      "controls": [
+        "The primary task is reused across nested Studio Archive helpers and retries. Synthetic samples are explicitly excluded from real metrics. Product ownership, exact acknowledgements and persistent outbox retries are enforced."
+      ]
+    },
+    {
+      "kind": "hosted_service",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "id": "signed-model-data-report-digest",
+      "destination": "Mparanza Lucia run-receipt service",
+      "purpose": "Return a signed proof for the local readable model-data report.",
+      "content": "Schema version 2, product lucia, opaque receipt UUID, plugin version and SHA-256 of the canonical local report. The server returns its timestamp, key identity, public key and signature. The report itself, source files and professional content are not transmitted to this service.",
+      "controls": [
+        "Persist the original request across retries and link only the matching verified product receipt. Reopening the saved readable report performs no new analysis or service call. A hash is not evidence of provider transmission."
+      ]
+    },
+    {
+      "kind": "hosted_service",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "id": "automatic-product-incident-recovery",
+      "destination": "Mparanza technical incident service and product-scoped anonymous incident connector",
+      "purpose": "Diagnose technical failures, deliver a targeted correction and verify the original professional-communication task.",
+      "content": "Random reporter and optional native-computer proofs; product, host and worker versions; package-relative source frames, exception codes and reviewed technical messages; exact original report, operation and remedy revision; actual retries and original-task verification. Raw stderr remains private for host-model review; professional stdout, documents, prompts, identities and credentials are not diagnostic content. Full transport, capability and retention details are in privacy/hosted-services/operational-incidents.json.",
+      "controls": [
+        "The host selects relevant technical evidence; diagnostic text is data, never an executable command. Product-bound ownership and exact report/revision binding apply. A published remedy or successful helper alone cannot close the original task."
+      ]
     }
   ],
   "security_controls": [
@@ -117,9 +165,20 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-08",
+    "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "06fbef15a17bc6eaa4eb23027f14f087d2dbbfbf797fa57424fc7b5025c5b7b6"
-  }
+    "source_fingerprint": "62aefd21198a7c1e97d3323105767ec3cddd88860e4be7134d49da33b3e88c34"
+  },
+  "governed_repository_paths": [
+    "plugins/lucia/scripts/workflow_usage.py",
+    "plugins/lucia/scripts/model_data_report.py",
+    "plugins/lucia/scripts/notarized_run_receipt.py",
+    "plugins/lucia/scripts/operational_incidents.py",
+    "plugins/lucia/scripts/reporting_product.py",
+    "plugins/lucia/skills/lucia/references/workflow-usage.md",
+    "plugins/lucia/skills/lucia/references/incident-recovery.md",
+    "plugins/lucia/skills/lucia/references/model-data-report-contract.md",
+    "plugins/lucia/usage/pipelines.json"
+  ]
 }

@@ -1,6 +1,100 @@
 {
+  "external_boundaries": [
+    {
+      "id": "public-version-check",
+      "kind": "hosted_service",
+      "destination": "Mparanza's fixed HTTPS plugin-version manifest",
+      "purpose": "Show published version updates independently of tutorial completion",
+      "content": "Fixed public GET with ordinary connection metadata; no tutorial, profile, lesson, case, plugin-version or local-path content. Details are governed by plugin-update-check.",
+      "retention": "Only the downloaded public manifest and check time are cached locally when plugin data storage is available. Hosted access-log retention is outside this helper.",
+      "activation": "automatic_session_start",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex"
+      ],
+      "controls": [
+        "Profile, lesson and feedback fields are never arguments to the version checker. Change-request status polling is suppressed while onboarding is unfinished/recovering or a teaching session is active/inaccessible; tutorial receipt stamping remains suppressed. A completed introduction with no active teaching session permits the ordinary prior-submission status route described separately below."
+      ]
+    },
+    {
+      "id": "ordinary-prior-feedback-status-after-tutorial",
+      "kind": "hosted_service",
+      "destination": "Mparanza HTTPS /api/change-requests/status through the existing plugin-feedback service",
+      "purpose": "Restore ordinary status notices for previously user-approved feedback when the introduction is complete and no teaching session is active.",
+      "content": "Only previously retained change-request IDs and their bearer status tokens, bounded to 100 per batch, plus ordinary connection metadata. No interview, profile, lesson, personal teaching feedback, tutorial files or submitted feedback text is sent by this status lookup.",
+      "retention": "Existing local plugin-feedback receipt state and Mparanza service retention apply. The onboarding helper does not set a new deletion policy.",
+      "activation": "automatic_after_prior_submission",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex"
+      ],
+      "controls": [
+        "No local prior-submission receipts means no request. Unfinished or inaccessible onboarding and active or inaccessible teaching suppress this route. Polling does not create feedback or mark a lesson complete; the plugin-feedback register governs the bounded transport and response."
+      ]
+    },
+    {
+      "id": "prepared-course-download",
+      "kind": "hosted_service",
+      "destination": "https://mparanza.com/static/shared/courses/vera/",
+      "purpose": "Download reviewed fictional lesson data omitted from distributable packages when the user requests preparation.",
+      "content": "Fixed public GET paths for selected prepared assets, bound locally to exact SHA-256 values, plus ordinary connection metadata. No client files, local paths, teaching profile, answers, progress or feedback are sent.",
+      "retention": "Hash-verified lesson files stay in the selected local lesson folder. Website access-log retention is outside this helper.",
+      "activation": "automatic_on_first_use",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex"
+      ],
+      "controls": [
+        "HTTPS and mparanza.com only, including redirects; no credentials or query parameters; passive lesson-data extensions only; 30-second request timeout and 25 MB cap; SHA-256 checked before atomic write; only selected-language attachments are fetched; no code is downloaded or executed.",
+        "The restored tax-litigation lesson is included in the prepared catalogue and packages. Vera attachments use existing language-file URLs whose bytes match each course SHA-256; restored immutable URLs remain available for older packages."
+      ]
+    }
+  ],
+  "governed_paths": [
+    "scripts/local_onboarding.py",
+    "scripts/local_onboarding_case.py",
+    "scripts/onboarding_session_start.py",
+    "hooks/hooks.json",
+    "skills/vera/references/local-onboarding.md",
+    "skills/vera/references/tutorial-cases.md",
+    "skills/vera/SKILL.md",
+    "scripts/notarized_run_receipt.py",
+    "assets/onboarding",
+    "scripts/local_teaching.py",
+    "skills/learn-with-vera",
+    "skills/vera/references/workflow-catalog.md",
+    "marketplace_skill_instructions.json",
+    "scripts/local_courses.py",
+    "assets/courses",
+    "scripts/course_chat_bridge.py",
+    "scripts/course_chat_mcp.cjs",
+    "scripts/_desktop_teaching.py",
+    "skills/learn-with-vera/references/chat-button.md",
+    "scripts/check_for_update.py",
+    "scripts/change_requests.py"
+  ],
+  "service_id": "local-onboarding",
+  "review": {
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_shared_service_source",
+    "reviewed_at": "2026-10-17",
+    "source_fingerprint": "94bd03f1fdca3bdf6c298ed91f2c7291e371ace614b7c5d0b3c1e8dcf1df7034"
+  },
+  "runtime_profiles": [
+    "openai-codex"
+  ],
+  "governed_repository_paths": [
+    "plugins/_shared/vendor/modules/courseware",
+    "scripts/course_materials",
+    "scripts/cowork_teaching",
+    "static/shared/courses",
+    "static/shared/learn-with-vera/index.html",
+    "static/shared/product-function-pages.js"
+  ],
   "schema_version": 2,
-  "display_name": "Local onboarding and repeatable voice-first teaching in native OpenAI desktop sessions",
   "security_controls": [
     {
       "id": "local-state-only",
@@ -86,99 +180,5 @@
       "on_violation": "Block stale, expired, replaced, duplicate or interrupted claims; return to the teacher and preserve course files and progress."
     }
   ],
-  "governed_paths": [
-    "scripts/local_onboarding.py",
-    "scripts/local_onboarding_case.py",
-    "scripts/onboarding_session_start.py",
-    "hooks/hooks.json",
-    "skills/vera/references/local-onboarding.md",
-    "skills/vera/references/tutorial-cases.md",
-    "skills/vera/SKILL.md",
-    "scripts/notarized_run_receipt.py",
-    "assets/onboarding",
-    "scripts/local_teaching.py",
-    "skills/learn-with-vera",
-    "skills/vera/references/workflow-catalog.md",
-    "marketplace_skill_instructions.json",
-    "scripts/local_courses.py",
-    "assets/courses",
-    "scripts/course_chat_bridge.py",
-    "scripts/course_chat_mcp.cjs",
-    "scripts/_desktop_teaching.py",
-    "skills/learn-with-vera/references/chat-button.md",
-    "scripts/check_for_update.py",
-    "scripts/change_requests.py"
-  ],
-  "external_boundaries": [
-    {
-      "id": "public-version-check",
-      "kind": "hosted_service",
-      "destination": "Mparanza's fixed HTTPS plugin-version manifest",
-      "purpose": "Show published version updates independently of tutorial completion",
-      "content": "Fixed public GET with ordinary connection metadata; no tutorial, profile, lesson, case, plugin-version or local-path content. Details are governed by plugin-update-check.",
-      "retention": "Only the downloaded public manifest and check time are cached locally when plugin data storage is available. Hosted access-log retention is outside this helper.",
-      "activation": "automatic_session_start",
-      "optional": false,
-      "requires_confirmation": false,
-      "runtime_profiles": [
-        "openai-codex"
-      ],
-      "controls": [
-        "Profile, lesson and feedback fields are never arguments to the version checker. Change-request status polling is suppressed while onboarding is unfinished/recovering or a teaching session is active/inaccessible; tutorial receipt stamping remains suppressed. A completed introduction with no active teaching session permits the ordinary prior-submission status route described separately below."
-      ]
-    },
-    {
-      "id": "ordinary-prior-feedback-status-after-tutorial",
-      "kind": "hosted_service",
-      "destination": "Mparanza HTTPS /api/change-requests/status through the existing plugin-feedback service",
-      "purpose": "Restore ordinary status notices for previously user-approved feedback when the introduction is complete and no teaching session is active.",
-      "content": "Only previously retained change-request IDs and their bearer status tokens, bounded to 100 per batch, plus ordinary connection metadata. No interview, profile, lesson, personal teaching feedback, tutorial files or submitted feedback text is sent by this status lookup.",
-      "retention": "Existing local plugin-feedback receipt state and Mparanza service retention apply. The onboarding helper does not set a new deletion policy.",
-      "activation": "automatic_after_prior_submission",
-      "optional": false,
-      "requires_confirmation": false,
-      "runtime_profiles": [
-        "openai-codex"
-      ],
-      "controls": [
-        "No local prior-submission receipts means no request. Unfinished or inaccessible onboarding and active or inaccessible teaching suppress this route. Polling does not create feedback or mark a lesson complete; the plugin-feedback register governs the bounded transport and response."
-      ]
-    },
-    {
-      "id": "prepared-course-download",
-      "kind": "hosted_service",
-      "destination": "https://mparanza.com/static/shared/courses/vera/",
-      "purpose": "Download reviewed fictional lesson data omitted from distributable packages when the user requests preparation.",
-      "content": "Fixed public GET paths for selected prepared assets, bound locally to exact SHA-256 values, plus ordinary connection metadata. No client files, local paths, teaching profile, answers, progress or feedback are sent.",
-      "retention": "Hash-verified lesson files stay in the selected local lesson folder. Website access-log retention is outside this helper.",
-      "activation": "automatic_on_first_use",
-      "optional": false,
-      "requires_confirmation": false,
-      "runtime_profiles": [
-        "openai-codex"
-      ],
-      "controls": [
-        "HTTPS and mparanza.com only, including redirects; no credentials or query parameters; passive lesson-data extensions only; 30-second request timeout and 25 MB cap; SHA-256 checked before atomic write; only selected-language attachments are fetched; no code is downloaded or executed.",
-        "The restored tax-litigation lesson is included in the prepared catalogue and packages. Vera attachments use existing language-file URLs whose bytes match each course SHA-256; restored immutable URLs remain available for older packages."
-      ]
-    }
-  ],
-  "service_id": "local-onboarding",
-  "review": {
-    "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "07a963c1983537aa22465d065ca990887d69cfcd33ef923220b95f164201ccc8",
-    "reviewed_by": "privacy-surface-review",
-    "reviewed_at": "2026-10-17"
-  },
-  "governed_repository_paths": [
-    "plugins/_shared/vendor/modules/courseware",
-    "scripts/course_materials",
-    "scripts/cowork_teaching",
-    "static/shared/courses",
-    "static/shared/learn-with-vera/index.html",
-    "static/shared/product-function-pages.js"
-  ],
-  "runtime_profiles": [
-    "openai-codex"
-  ]
+  "display_name": "Local onboarding and repeatable voice-first teaching in native OpenAI desktop sessions"
 }

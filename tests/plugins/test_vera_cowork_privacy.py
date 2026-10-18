@@ -145,6 +145,7 @@ def test_vera_cowork_services_include_shared_runtime_and_run_receipts() -> None:
         "research-subscriptions": RUNTIME_PROFILE_IDS,
         "studio-work": RUNTIME_PROFILE_IDS,
         "operational-incidents": RUNTIME_PROFILE_IDS,
+        "workflow-usage": RUNTIME_PROFILE_IDS,
     }
 
     assert {

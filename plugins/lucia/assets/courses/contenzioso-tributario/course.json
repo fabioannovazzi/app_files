@@ -30,17 +30,42 @@
     {
       "path": "scripts/check_dependencies.py",
       "repository_path": "plugins/lucia/scripts/check_dependencies.py",
-      "sha256": "d8fe58ac68e4cb0e05783256d829fbffc2a29c802c83902ee3102ff432764b69"
+      "sha256": "7a4a68a8dc06dde4ebad3a8ed1ed6bb43b783e50aa06dcd53a479f950b8add42"
     },
     {
       "path": "scripts/managed_python_runtime.py",
       "repository_path": "plugins/lucia/scripts/managed_python_runtime.py",
-      "sha256": "ccc8f805bc8807b1c16a2a92dc43533571cb341bc20a68d850d25af04c879e69"
+      "sha256": "c4cc507b1331ec74f0f78e84c0c68644d1b4e31361778ad87e116b31b6274cc4"
+    },
+    {
+      "path": "scripts/model_data_report.py",
+      "repository_path": "plugins/lucia/scripts/model_data_report.py",
+      "sha256": "0e7a99ef631ed67a1aa25eb10ce7ed158625f6c0c09dcf8546eeb132a238262d"
+    },
+    {
+      "path": "scripts/notarized_run_receipt.py",
+      "repository_path": "plugins/lucia/scripts/notarized_run_receipt.py",
+      "sha256": "d14afea6e9dabee7c2611d4e5fc0dac12c7c0011a7e8908f5e0e927369962f71"
+    },
+    {
+      "path": "scripts/operational_incidents.py",
+      "repository_path": "plugins/lucia/scripts/operational_incidents.py",
+      "sha256": "af23904b87d017d25f00c81cc601952b522fa1023f6bc746843ec73b6e996f6d"
+    },
+    {
+      "path": "scripts/verified_execution.py",
+      "repository_path": "plugins/lucia/scripts/verified_execution.py",
+      "sha256": "ec854fca344b92ae5208981a1631f5bc2f3ee96d365d62ed36f7f74e7aa19518"
+    },
+    {
+      "path": "scripts/workflow_usage.py",
+      "repository_path": "plugins/lucia/scripts/workflow_usage.py",
+      "sha256": "449d5b3b2cf5be4ab01b3e96eed63d3c82c90860a9a458ab364912a59fe7cf34"
     },
     {
       "path": "skills/contenzioso-tributario/SKILL.md",
       "repository_path": "plugins/lucia/skills/contenzioso-tributario/SKILL.md",
-      "sha256": "ba752083422e5c1e4061c948ebe2049b9a16c973ed204c42f56f682a8a487f8a"
+      "sha256": "507d53c7ed4794b0f0d1480e6c33f69a8c8b06928738e2dcb14cf58509301db8"
     },
     {
       "path": "vendor/modules/__init__.py",

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="it">
+<html lang="it" data-testing-product="lucia">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -29,6 +29,7 @@
   <link rel="stylesheet" href="../product-social.css?v=2026092601">
   <link rel="stylesheet" href="../product-install.css?v=2026100302">
   <script defer src="antigravity/version.js"></script>
+  <link rel="stylesheet" href="../product-testing-status.css">
 </head>
 <body>
   <a class="skip-link" href="#main-content" data-i18n="skip">Vai al contenuto</a>
@@ -130,6 +131,17 @@
         <p data-i18n="core.copy">Seleziona una funzione per aprire la pagina con input, metodo, output, responsabilità e informazioni sui dati che arrivano al modello.</p>
       </div>
 
+      <div class="function-test-legend">
+        <div class="function-test-legend__items">
+          <span><span class="function-test-indicator" data-test-status="untried" aria-hidden="true"></span><span data-testing-label="untried">Da provare su casi concreti</span></span>
+          <span><span class="function-test-indicator" data-test-status="agent" aria-hidden="true"></span><span data-testing-label="agent">Provata da un agente</span></span>
+          <span><span class="function-test-indicator" data-test-status="tried" aria-hidden="true"></span><span data-testing-label="tried">Provata con successo da un professionista</span></span>
+          <span><span class="function-test-indicator" data-test-status="repeated" aria-hidden="true"></span><span data-testing-label="repeated">Provata con successo da almeno tre professionisti</span></span>
+        </div>
+        <p data-testing-label="note">Lo stato si aggiorna dai processi conclusi. Ogni computer conta una volta; le stelle restano separate.</p>
+        <p data-testing-unavailable data-testing-label="unavailable" hidden>Aggiornamento dello stato temporaneamente non disponibile.</p>
+      </div>
+
       <div><a class="module-row" href="../learn-with-lucia/index.html?lang=it" data-module-link data-base-href="../learn-with-lucia/index.html"><h4 data-i18n="teaching.title">Impara con Lucia</h4><span aria-hidden="true">↗</span></a></div>
       <p><a href="../lucia-mike/index.html?lang=it" data-module-link data-base-href="../lucia-mike/index.html" data-i18n="mike.mapping">Le dieci idee Mike e le funzioni di Lucia</a></p>
       <div class="workstreams">
@@ -141,31 +153,31 @@
           </header>
           <div class="module-directory">
             <a class="module-row" href="../revisione-contratti/index.html?lang=it" data-module-link data-base-href="../revisione-contratti/index.html">
-              <h4 data-i18n="module.revisione-contratti.title">Rivedi un contratto per il tuo cliente</h4>
+              <h4><span data-i18n="module.revisione-contratti.title">Rivedi un contratto per il tuo cliente</span><span class="function-test-indicator" data-testing-pipeline="revisione-contratti" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../posizioni-negoziali/index.html?from=lucia" data-module-link data-base-href="../posizioni-negoziali/index.html">
-              <h4 data-i18n="module.negotiation.title">Sintetizza le revisioni in posizioni negoziali</h4>
+              <h4><span data-i18n="module.negotiation.title">Sintetizza le revisioni in posizioni negoziali</span><span class="function-test-indicator" data-testing-pipeline="posizioni-negoziali" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../confronto-documenti/index.html?lang=it" data-module-link data-base-href="../confronto-documenti/index.html">
-              <h4 data-i18n="module.confronto-documenti.title">Confronta versioni e conseguenze delle modifiche</h4>
+              <h4><span data-i18n="module.confronto-documenti.title">Confronta versioni e conseguenze delle modifiche</span><span class="function-test-indicator" data-testing-pipeline="confronto-documenti" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../revisione-documentale/index.html?lang=it" data-module-link data-base-href="../revisione-documentale/index.html">
-              <h4 data-i18n="module.revisione-documentale.title">Rivedi più documenti in una tabella</h4>
+              <h4><span data-i18n="module.revisione-documentale.title">Rivedi più documenti in una tabella</span><span class="function-test-indicator" data-testing-pipeline="revisione-documentale" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../redazione-da-modello/index.html?lang=it" data-module-link data-base-href="../redazione-da-modello/index.html">
-              <h4 data-i18n="module.redazione-da-modello.title">Prepara una bozza dal modello dello studio</h4>
+              <h4><span data-i18n="module.redazione-da-modello.title">Prepara una bozza dal modello dello studio</span><span class="function-test-indicator" data-testing-pipeline="redazione-da-modello" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../controllo-documento/index.html?lang=it" data-module-link data-base-href="../controllo-documento/index.html">
-              <h4 data-i18n="module.controllo-documento.title">Trova errori e incoerenze nel documento</h4>
+              <h4><span data-i18n="module.controllo-documento.title">Trova errori e incoerenze nel documento</span><span class="function-test-indicator" data-testing-pipeline="controllo-documento" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../estrazione-clausole/index.html?lang=it" data-module-link data-base-href="../estrazione-clausole/index.html">
-              <h4 data-i18n="module.estrazione-clausole.title">Estrai i dati principali di un contratto</h4>
+              <h4><span data-i18n="module.estrazione-clausole.title">Estrai i dati principali di un contratto</span><span class="function-test-indicator" data-testing-pipeline="estrazione-clausole" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../revisione-word/index.html?lang=it" data-module-link data-base-href="../revisione-word/index.html">
@@ -173,7 +185,7 @@
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../metodo-studio/index.html?lang=it" data-module-link data-base-href="../metodo-studio/index.html">
-              <h4 data-i18n="module.metodo-studio.title">Personalizza le istruzioni dello studio</h4>
+              <h4><span data-i18n="module.metodo-studio.title">Personalizza le istruzioni dello studio</span><span class="function-test-indicator" data-testing-pipeline="metodo-studio" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
@@ -186,23 +198,23 @@
           </header>
           <div class="module-directory">
             <a class="module-row" href="../quesito-legale-fiscale/index.html?lang=it" data-module-link data-base-href="../quesito-legale-fiscale/index.html">
-              <h4 data-i18n="module.question.title">Risposta a quesiti legali e fiscali</h4>
+              <h4><span data-i18n="module.question.title">Risposta a quesiti legali e fiscali</span><span class="function-test-indicator" data-testing-pipeline="quesito-legale-fiscale" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../prompt-optimizer/index.html?lang=it" data-module-link data-base-href="../prompt-optimizer/index.html">
-              <h4 data-i18n="module.prompt.title">Ottimizzazione prompt</h4>
+              <h4><span data-i18n="module.prompt.title">Ottimizzazione prompt</span><span class="function-test-indicator" data-testing-pipeline="legal-tax-answer-planner" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../adversarial-opinion/index.html?lang=it" data-module-link data-base-href="../adversarial-opinion/index.html">
-              <h4 data-i18n="module.adversarial.title">Parere contrapposto</h4>
+              <h4><span data-i18n="module.adversarial.title">Parere contrapposto</span><span class="function-test-indicator" data-testing-pipeline="adversarial-opinion" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../deep-research-validator/index.html?lang=it" data-module-link data-base-href="../deep-research-validator/index.html">
-              <h4 data-i18n="module.research.title">Validazione ricerca</h4>
+              <h4><span data-i18n="module.research.title">Validazione ricerca</span><span class="function-test-indicator" data-testing-pipeline="legal-tax-answer-review" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../verifica-citazioni/index.html?lang=it" data-module-link data-base-href="../verifica-citazioni/index.html">
-              <h4 data-i18n="module.verifica-citazioni.title">Verifica norme, sentenze e citazioni</h4>
+              <h4><span data-i18n="module.verifica-citazioni.title">Verifica norme, sentenze e citazioni</span><span class="function-test-indicator" data-testing-pipeline="verifica-citazioni" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
@@ -214,23 +226,23 @@
           </header>
           <div class="module-directory">
             <a class="module-row" href="../contenzioso-civile/index.html?lang=it" data-module-link data-base-href="../contenzioso-civile/index.html">
-              <h4 data-i18n="module.contenzioso-civile.title">Prepara il fascicolo di contenzioso civile</h4>
+              <h4><span data-i18n="module.contenzioso-civile.title">Prepara il fascicolo di contenzioso civile</span><span class="function-test-indicator" data-testing-pipeline="contenzioso-civile" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../contenzioso-tributario/index.html?lang=it" data-module-link data-base-href="../contenzioso-tributario/index.html">
-              <h4 data-i18n="module.contenzioso-tributario.title">Prepara il contenzioso tributario italiano</h4>
+              <h4><span data-i18n="module.contenzioso-tributario.title">Prepara il contenzioso tributario italiano</span><span class="function-test-indicator" data-testing-pipeline="contenzioso-tributario" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../operazioni-ma/index.html?lang=it" data-module-link data-base-href="../operazioni-ma/index.html">
-              <h4 data-i18n="module.operazioni-ma.title">Rivedi i documenti di un’acquisizione</h4>
+              <h4><span data-i18n="module.operazioni-ma.title">Rivedi i documenti di un’acquisizione</span><span class="function-test-indicator" data-testing-pipeline="operazioni-ma" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../lavoro/index.html?lang=it" data-module-link data-base-href="../lavoro/index.html">
-              <h4 data-i18n="module.lavoro.title">Rivedi un fascicolo di lavoro</h4>
+              <h4><span data-i18n="module.lavoro.title">Rivedi un fascicolo di lavoro</span><span class="function-test-indicator" data-testing-pipeline="lavoro" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../recupero-crediti/index.html?lang=it" data-module-link data-base-href="../recupero-crediti/index.html">
-              <h4 data-i18n="module.recupero-crediti.title">Prepara una pratica di recupero crediti</h4>
+              <h4><span data-i18n="module.recupero-crediti.title">Prepara una pratica di recupero crediti</span><span class="function-test-indicator" data-testing-pipeline="recupero-crediti" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
@@ -246,7 +258,7 @@
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../apertura-pratica/index.html?lang=it" data-module-link data-base-href="../apertura-pratica/index.html">
-              <h4 data-i18n="module.matter.title">Fascicolo nuova pratica</h4>
+              <h4><span data-i18n="module.matter.title">Fascicolo nuova pratica</span><span class="function-test-indicator" data-testing-pipeline="apertura-pratica" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
@@ -258,11 +270,11 @@
           </header>
           <div class="module-directory">
             <a class="module-row" href="../comunicazione-professionale/index.html?lang=it" data-module-link data-base-href="../comunicazione-professionale/index.html">
-              <h4 data-i18n="module.communication.title">Comunicazione professionale</h4>
+              <h4><span data-i18n="module.communication.title">Comunicazione professionale</span><span class="function-test-indicator" data-testing-pipeline="comunicazione-professionale" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../presenza-digitale-studio/index.html?lang=it" data-module-link data-base-href="../presenza-digitale-studio/index.html">
-              <h4 data-i18n="module.website.title">Sito dello studio</h4>
+              <h4><span data-i18n="module.website.title">Sito dello studio</span><span class="function-test-indicator" data-testing-pipeline="presenza-digitale-studio" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
@@ -686,5 +698,7 @@
 
     setLanguage(params.get("lang") || "it", false);
   </script>
+  <script src="../product-testing-labels.js"></script>
+  <script src="../vera-testing-status.js"></script>
 </body>
 </html>

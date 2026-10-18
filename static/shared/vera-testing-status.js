@@ -1,6 +1,8 @@
 /* Testing levels are computed on the server from concluded pipeline runs. */
 (function () {
   "use strict";
+  const product = document.documentElement.dataset.testingProduct || "vera";
+  if (!["vera", "clara", "lucia"].includes(product)) return;
   const states = new Set(["untried", "agent", "tried", "repeated"]);
   let loading = false;
 
@@ -10,7 +12,7 @@
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 10000);
     try {
-      const response = await fetch("/api/vera/testing-status", {
+      const response = await fetch(`/api/${product}/testing-status`, {
         cache: "no-store", credentials: "omit", signal: controller.signal
       });
       if (!response.ok) throw new Error("Testing status unavailable");

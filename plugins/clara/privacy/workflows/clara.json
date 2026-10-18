@@ -83,7 +83,10 @@
     "hosted-voice",
     "plugin-feedback",
     "plugin-update-check",
-    "research-video-voice"
+    "research-video-voice",
+    "operational-incidents",
+    "workflow-usage",
+    "run-receipt-stamping"
   ],
   "boundaries_beyond_codex": [
     {
@@ -118,7 +121,7 @@
       "kind": "hosted_service",
       "hosted_service_id": "plugin-feedback",
       "destination": "Mparanza plugin feedback service",
-      "purpose": "Transmit a technical problem or improvement suggestion to the developer and check its status",
+      "purpose": "Submit an explicitly requested improvement suggestion and inspect its status. Automatic operational failures use operational-incidents.",
       "content": "The exact sanitized request approved by the user, plugin name and version, request kind, idempotency metadata, and later receipt identifiers and status tokens",
       "optional": true,
       "requires_confirmation": true,
@@ -223,6 +226,51 @@
         "Probe the selected interpreter before creating the dependency environment; never fall back to executing workflows with another Python minor version.",
         "A failed download or interpreter probe stops setup; existing environments and client files remain intact."
       ]
+    },
+    {
+      "id": "operational-incidents",
+      "kind": "hosted_service",
+      "hosted_service_id": "operational-incidents",
+      "destination": "Mparanza clara technical service",
+      "purpose": "Automatic operational incident recovery",
+      "content": "Random installation UUID and opaque capability, Clara/host/runtime versions, platform and workflow technical IDs, failed stage, complete available technical diagnostic chains and measurements, explicit missing-measurement reasons, retry IDs and actual recovery outcomes. No professional helper stdout, client documents, case text, user prompts or arbitrary task logs. Known path, email and credential patterns are removed from technical messages; this mechanical filter does not establish semantic privacy. The host agent must select technical evidence without unrelated personal/client material. The remote channel does not read local files. Saved anonymous connector authorization exchanges a random code with a PKCE verifier, client ID and fixed incident resource; the host saves access/refresh tokens. The server stores token/code hashes, technical callback metadata and a random connection UUID. No personal account signup, user profile, email or client-file permission is involved. Failed helpers retain complete stderr privately on disk; stderr may include unrelated private/client text and is read by the selected host model for semantic review under its existing account. Raw stderr is not forwarded to Mparanza. Only reviewed relevant technical diagnostics, linked by the original report UUID, are submitted as supplemental evidence. Professional stdout is not captured. Installation-preparation failures submit only a fixed technical message, exception type/errno, or the indexed package-relative file name and expected/observed SHA-256 values for a content mismatch. No altered file contents or professional files are read for this report. Managed helpers also send source-bound exception classes, OS error numbers, package-relative stack coordinates, developer-authored error templates and missing required option names automatically. Dynamic exception/argument values, locals, professional stdout and arbitrary source excerpts are not part of these structured events. Process-session UUIDs, persistent operation UUIDs and optional keyed digests of existing run/input-receipt identities bind attempts without disclosing receipt fields or raw client-input hashes. Actual worker interpreter/platform fields are separate from the reporter's interpreter. Capture completeness, pending semantic review, exact remedy/retry events and host verification of the original task remain distinct evidence states; a structured event is not a semantic diagnosis. Current reporting-process version, protocol capabilities and server last-seen time are retained per process session, separately from historical failure versions; they do not establish that all conversations updated. Native-host binding, when invoked, accepts a random host UUID and scoped capability plus an optional explicit native-app label at the same incident service. Only the host capability hash is retained server-side. Stable app-profile UUIDs are derived from host UUID and app label; reporter-instance UUIDs may be task-local and do not count physical computers, plugin copies or people. App grouping grants no additional client status or outcome access. Operator views retain each original report, supplement, outcome and retry event with its actual reporting owner and server receipt time; missing historical task identity is not reconstructed. The native stdio identity bridge verifies its indexed entry, reporter, technical collector and product metadata, then executes an isolated temporary reporter snapshot using existing Python without installing dependencies. Its tool accepts only an existing reporter capability and sends host proof to the fixed register endpoint; it never returns the device key or copies the reporter key into the host identity file. Native broker version/session observations are retained separately from guest reporter and failure-worker observations. When native tools are not exposed in cloud Cowork, the saved remote connector continues to report under its distinct connection identity and physical-host linkage remains unknown; no device controls or folder permissions are expanded automatically. Native-helper failures return source-bound exception classes, errno or HTTP status, package-relative frames and developer-authored templates. Dynamic diagnostic values are not returned; unavailable capture is explicit. This bridge does not return raw stderr or device keys. The central recovery agent may request named technical evidence surfaces through a diagnostic-request remedy. The host AI replies with reviewed technical facts, the original report UUID and request revision. Original-task availability is represented by technical booleans, not task text, client identifiers or file contents. A resume remedy communicates a diagnosed correction to the existing authorized workflow; it does not carry executable code. Technical requests, response UUIDs, applicable revisions and their observed status are retained with the original episode. The central agent may implement and deploy incident-related software fixes through reviewed source and green CI under Fabio’s explicit recovery authorization; it does not receive professional case files or gain user-host permissions. Handled Studio Archive exceptions log their active traceback locally before returning the existing error JSON, allowing the same source-bound collector and host semantic review to retain their actual cause. The operator derives diagnostic publication, exact owner/report/revision receipt and reply states, the existing 15-minute deadline and reporting-owner last service contact from retained records. These delivery facts do not establish physical-host availability, diagnosis or original-task recovery. The operator also projects exact delivery, retry and original-task outcome evidence for all actionable remedy kinds, including software updates. Its 15-minute attention cadence is not an execution timeout. A local alert renderer uses technical incident facts and an AI-reviewed blocker, accountable next action, reason and scheduled check. An optional operator-maintained device label is accepted only with a recorded exact-device verification reference; it is not inferred from the recipient, OS or reporter identity. Rendered operator alerts may include opaque machine/case codes and a verified operator-device label, but no client contents, raw diagnostics, personal identifiers or credentials. The renderer neither sends email nor accesses the registry or client files. It rejects stale followup reviews and cannot assign an unreceived or overdue remedy back to the uncontacted Clara. Recovered labels require matching actual original-task success evidence; incomplete historical bindings remain unknown. The shared API also exposes a separate public workflow-testing endpoint: an allowlisted map of pipeline IDs to testing levels and baseline metadata, without incident details, computer IDs, run IDs or user feedback. Its reset is operator-only and does not change incident records. Native workflow transport supplies the same existing host proof during registration when it is available.",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "Technical reporting is automatic; stars and optional comment are only the user’s chosen feedback, never inferred from professional context.",
+        "The local model-data report stays in the task output; only its hash and opaque receipt link reach the service.",
+        "Read the corresponding hosted-service record for exact payload, ownership, retention and recovery boundaries."
+      ]
+    },
+    {
+      "id": "workflow-usage",
+      "kind": "hosted_service",
+      "hosted_service_id": "workflow-usage",
+      "destination": "Mparanza clara technical service",
+      "purpose": "Pipeline usage, outcomes and user satisfaction",
+      "content": "The existing installation capability authenticates closed-schema events: random run and event UUIDs, sequence, catalog pipeline ID, host, observed product version, timestamps, explicit user/synthetic/agent-test classification and started/resumed/completed/failed/cancelled state. Optional links contain only an existing signed receipt UUID/report digest or an owned incident report UUID. Run ownership, single-run receipt binding and the retained signature are checked server-side. The original stamping service does not attest the identity of the author of a report. The service receives no task text, client identity, filenames, source data, prompt or professional output. Existing connection metadata and rate limiting apply. Saved connector identity is not inferred to be a native computer. Native senders also present the existing anonymous native-computer capability and observed native app when available. The server retains the established computer binding; unlinked guests and standalone OAuth connections remain unlinked. The product field is explicit. Product, run owner and receipt product must match. Baselines and function catalogues are distinct per product. The actual 1–5 integer score, up to 2000 characters of optional user-authored comment, source (chat or form), random event UUID and existing task binding. Nothing is copied automatically from professional context. The host asks once after delivery; no response is unrated. A low score offers one optional question about what failed or was expected. Only catalog pipeline IDs, four testing-level names and counting epoch UUID/time are public. The service privately groups completed runs by proven anonymous computer IDs: the owner-designated computer counts as agent testing, other computers as professional use. Stars, comments, report digests, client documents, task prompts, computer IDs, run IDs and capabilities are not in this response. The owner convention counts computers, not authenticated people; completion does not certify professional correctness. No model call is made by this public projection.",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "Technical reporting is automatic; stars and optional comment are only the user’s chosen feedback, never inferred from professional context.",
+        "The local model-data report stays in the task output; only its hash and opaque receipt link reach the service.",
+        "Read the corresponding hosted-service record for exact payload, ownership, retention and recovery boundaries."
+      ]
+    },
+    {
+      "id": "run-receipt-stamping",
+      "kind": "hosted_service",
+      "hosted_service_id": "run-receipt-stamping",
+      "destination": "Mparanza clara technical service",
+      "purpose": "Server-stamped run receipts",
+      "content": "Unless the user requests --local-only, each substantive run with a durable local report automatically sends exactly schema version, one random per-run receipt UUID, the Clara version when the request was first created, and the SHA-256 digest of the canonical local model-data report, plus ordinary connection metadata. The report itself, workflow and local run IDs, client or case data, professional purpose, phase labels, counts, filenames, file contents, source-document hashes, prompts, and model outputs are not sent. A later verification request sends the same opaque receipt UUID and report digest. Clara and Lucia use receipt schema 2 with the explicit product as a fifth signed request field; legacy Vera schema 1 is preserved.",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "Technical reporting is automatic; stars and optional comment are only the user’s chosen feedback, never inferred from professional context.",
+        "The local model-data report stays in the task output; only its hash and opaque receipt link reach the service.",
+        "Read the corresponding hosted-service record for exact payload, ownership, retention and recovery boundaries."
+      ]
     }
   ],
   "security_controls": [
@@ -235,6 +283,6 @@
     "reviewed_at": "2026-10-17",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "dae76e0e98310e4265b732a8d4072c746c84c292ea4155cc9902ec8ddb3aaabe"
+    "source_fingerprint": "205563bb680f1a8eb5090b2141024f743de5b0b66ec814ebb73515ef35c84134"
   }
 }

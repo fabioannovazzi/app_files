@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/vera-testing-evidence/plugins/vera",
-  "version": "0.1.406",
-  "captured_at": "2026-10-17T19:55:15.103649+00:00",
-  "catalogue_fingerprint": "7786dfdabfeb9ad9c7f190ed8be53364ce5776333e525ad8026f95c32d1de64f",
-  "manifest_sha256": "165a6ff7ecf2b4d67083ddcadb9d73d0f677237d41817e5fa3e22e83be15a881",
+  "root": "/private/tmp/mparanza-reporting-recovery/plugins/vera",
+  "version": "0.1.407",
+  "captured_at": "2026-10-18T08:31:35.240067+00:00",
+  "catalogue_fingerprint": "4a63d0d4c2a6edbf73d8dbbe2fdf5d987822fddb3876e20618b4bf0efc43f122",
+  "manifest_sha256": "50cd511aa60ae1adba7cf70ff0b68d7f2d3e4811be7f8559ed75ecbf8af7fff5",
   "entries": [
     {
       "function_id": "adeguati-assetti",

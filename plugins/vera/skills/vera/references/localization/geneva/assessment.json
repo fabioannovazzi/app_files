@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "7786dfdabfeb9ad9c7f190ed8be53364ce5776333e525ad8026f95c32d1de64f",
+  "catalogue_fingerprint": "4a63d0d4c2a6edbf73d8dbbe2fdf5d987822fddb3876e20618b4bf0efc43f122",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -1908,5 +1908,11 @@
     "version": "0.1.405",
     "previous_catalogue_fingerprint": "20c3266ee7159ace336b5a39ef500420ffcf4d0813ba0ec6c180de6943f5b0d4",
     "scope": "Only the canonical manifest version changes this catalogue identity; every skill entrypoint hash is unchanged. The Python installer environment allowlist and directory reviewer notes do not change existing Geneva dispositions or establish additional localization acceptance."
+  },
+  "shared_product_reporting_release_binding": {
+    "version": "0.1.407",
+    "date": "2026-10-18",
+    "previous_catalogue_fingerprint": "7786dfdabfeb9ad9c7f190ed8be53364ce5776333e525ad8026f95c32d1de64f",
+    "scope": "Refresh only the canonical product manifest/version binding. Every recorded skill entrypoint and function ID is byte-identical to the preceding snapshot. Preserve existing Geneva dispositions; shared operational reporting does not establish new jurisdiction acceptance."
   }
 }

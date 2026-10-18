@@ -105,7 +105,7 @@
     },
     {
       "path": "modules/presenza-digitale-studio/skills/mparanza-presenza-digitale-studio/SKILL.md",
-      "sha256": "ade3234e78a6111bc6c26c7b2e27408a6c2c9e2c451b9f7478a7d7597460b00b"
+      "sha256": "c30ccbff1c142370afd844bf29101b52b4087f552c3b57a4b1b74e85d6957fef"
     },
     {
       "path": "modules/presenza-digitale-studio/skills/mparanza-presenza-digitale-studio/agents/openai.yaml",
@@ -133,7 +133,7 @@
     },
     {
       "path": "skills/mparanza-presenza-digitale-studio/SKILL.md",
-      "sha256": "f1d1e702952f5ca154fbd1edfcf82bf220c7c21883ca37d54a44be70f06fc23f"
+      "sha256": "d7e6d8b6463219f65c87961664b59002a70ed00b84f9010e426d5786ad5a0608"
     },
     {
       "path": "skills/mparanza-presenza-digitale-studio/references/lucia-lawyer-profile.md",
@@ -430,5 +430,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "1f03b75c634c8ea7c5086ef0d11fb526cddd1015c4c86b2de603fb91cddf322d"
+  "canonical_course_sha256": "a4ec366008fc8d4b37912342857b521b08aa3c30fe8ce2f27380c494f92bce73"
 }

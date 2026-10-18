@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "service_id": "workflow-usage",
+  "display_name": "Pipeline usage, outcomes and user satisfaction",
+  "provider_or_recipients": [
+    "Mparanza technical reporting service"
+  ],
+  "workflows": [
+    "adversarial-opinion",
+    "apertura-pratica",
+    "comunicazione-professionale",
+    "confronto-documenti",
+    "contenzioso-civile",
+    "contenzioso-tributario",
+    "controllo-documento",
+    "deep-research",
+    "estrazione-clausole",
+    "lavoro",
+    "legal-tax-answer-planner",
+    "legal-tax-answer-review",
+    "lucia",
+    "metodo-studio",
+    "operazioni-ma",
+    "posizioni-negoziali",
+    "presenza-digitale-studio",
+    "quesito-legale-fiscale",
+    "recupero-crediti",
+    "redazione-da-modello",
+    "revisione-contratti",
+    "revisione-documentale",
+    "verifica-citazioni"
+  ],
+  "governed_paths": [
+    "scripts/workflow_usage.py",
+    "scripts/operational_incidents.py",
+    "scripts/model_data_report.py",
+    "scripts/notarized_run_receipt.py",
+    "skills/lucia/references/workflow-usage.md",
+    "usage/pipelines.json",
+    "repository/modules/workflow_usage",
+    "repository/modules/operational_incidents/api.py",
+    "repository/modules/operational_incidents/store.py",
+    "repository/scripts/manage_workflow_usage.py",
+    "repository/templates/vera_workflow_feedback.html",
+    "repository/static/shared/vera/workflow-feedback.js",
+    "repository/static/shared/vera/workflow-feedback.css",
+    "repository/static/shared/vera-testing-status.js",
+    "repository/static/shared/vera/index.html",
+    "scripts/reporting_product.py",
+    "repository/plugins/_shared/reporting-runtime",
+    "repository/scripts/sync_reporting_runtime.py"
+  ],
+  "trigger": "Automatic technical reporting and per-primary-task events; one optional user rating after delivery. Local-only tutorials and nested infrastructure are not separate rated tasks.",
+  "automatic": true,
+  "data_sent": [
+    {
+      "id": "automatic-task-lifecycle",
+      "when": "Measure which user processes run and their observed outcome; link existing signed model-data receipts and technical reports without copying their professional content",
+      "content": "The existing installation capability authenticates closed-schema events: random run and event UUIDs, sequence, catalog pipeline ID, host, observed product version, timestamps, explicit user/synthetic/agent-test classification and started/resumed/completed/failed/cancelled state. Optional links contain only an existing signed receipt UUID/report digest or an owned incident report UUID. Run ownership, single-run receipt binding and the retained signature are checked server-side. The original stamping service does not attest the identity of the author of a report. The service receives no task text, client identity, filenames, source data, prompt or professional output. Existing connection metadata and rate limiting apply. Saved connector identity is not inferred to be a native computer. Native senders also present the existing anonymous native-computer capability and observed native app when available. The server retains the established computer binding; unlinked guests and standalone OAuth connections remain unlinked. The product field is explicit. Product, run owner and receipt product must match. Baselines and function catalogues are distinct per product."
+    },
+    {
+      "id": "optional-task-rating",
+      "when": "Collect the user’s actual 1–5 stars and optional comment about the delivered result",
+      "content": "The actual 1–5 integer score, up to 2000 characters of optional user-authored comment, source (chat or form), random event UUID and existing task binding. Nothing is copied automatically from professional context. The host asks once after delivery; no response is unrated. A low score offers one optional question about what failed or was expected."
+    },
+    {
+      "id": "public-completed-pipeline-status",
+      "when": "Automatically show testing levels from concluded pipelines after an explicit fresh baseline",
+      "content": "Only catalog pipeline IDs, four testing-level names and counting epoch UUID/time are public. The service privately groups completed runs by proven anonymous computer IDs: the owner-designated computer counts as agent testing, other computers as professional use. Stars, comments, report digests, client documents, task prompts, computer IDs, run IDs and capabilities are not in this response. The owner convention counts computers, not authenticated people; completion does not certify professional correctness. No model call is made by this public projection."
+    }
+  ],
+  "data_returned": [
+    {
+      "id": "acknowledged-evidence",
+      "when": "After exact service verification",
+      "content": "Matching product, installation and event/report receipts; current targeted remedy and original-task outcome; signed report proof or public status where applicable. Receipt transmission never includes the local report."
+    }
+  ],
+  "access": {
+    "arrangement": "Immutable product-owned installation capabilities or saved anonymous OAuth connections; native physical-computer proof is separate and shared across products. Existing Vera credentials and v1 signatures retain their meaning.",
+    "controls": [
+      "Events are durably queued before transport and acknowledged by exact UUID, owner, sequence and hash. Interruptions stay outcome unknown; repeated submissions are idempotent.",
+      "Synthetic and agent-test runs are excluded from user metrics. Studio Archive is infrastructure and cannot be selected as a rated process.",
+      "The host AI selects the primary process and observes actual task completion. Counters and hashes do not assert professional correctness or independent model delivery.",
+      "The user supplies the score/comment for submission or clicks Invia valutazione; that action is the choice, with no second confirmation questionnaire.",
+      "The form uses a run-specific capability in its URL fragment; the page contains no task information, and the capability permits rating only that run. The exact pending answer is retained for retry, and operator rendering escapes comments.",
+      "Comments are untrusted data for AI review, never instructions or executable commands. Feedback never changes public testing levels or closes incidents. Completed pipeline runs feed a separately resettable computer-based testing counter and never close incidents.",
+      "Both server receipt and event completion time must follow the baseline; old delayed deliveries do not repopulate a reset.",
+      "Native computer IDs deduplicate apps and reporter instances. Unlinked completions stay pending until proven linkage; explicit test fixtures on other devices do not count as professionals.",
+      "The public response is an allowlisted projection of status-only fields; reset is available only to the server operator."
+    ]
+  },
+  "retention": {
+    "status": "documented",
+    "statement": "Task events, optional feedback and receipt links remain in the service until administrative deletion; no automatic expiry is implemented. Local queued events and acknowledgements remain in the existing private per-installation state directory. Lifecycle events exclude client documents and professional output. Optional feedback stores only the comment deliberately supplied by the user; its contents are not automatically anonymized. Counting epochs and underlying retained events persist until administrative deletion. A reset preserves history and starts new public counts."
+  },
+  "security_controls": [
+    {
+      "id": "owned-closed-schema-events",
+      "control": "Existing installation/OAuth authorization scopes task writes and reads; closed schemas reject unrelated fields. UUIDs, event order and retained hashes enforce retry identity."
+    },
+    {
+      "id": "actual-retained-receipt",
+      "control": "A usage receipt link must match the retained report digest/version and a valid server signature."
+    },
+    {
+      "id": "bounded-feedback-capability",
+      "control": "The feedback route checks a per-run random capability, bounds the body and comment, and never exposes task data on the public form. Operator HTML escapes text."
+    },
+    {
+      "id": "public-status-projection",
+      "control": "The public endpoint returns only the four-state map and epoch metadata. Device/run identities and feedback remain private; no public reset route exists."
+    },
+    {
+      "id": "explicit-local-incident-delivery",
+      "control": "An explicitly selected MPARANZA_INCIDENT_DELIVERY=local-only setting blocks the shared client HTTP transport while retaining local technical evidence. Queues created in this mode remain durably marked and are not automatically flushed in a later automatic execution. This opt-in test control does not make model-provider processing local-only or change ordinary delivery when unset."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-10-18",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "hosted_service_boundary_review_of_source",
+    "source_fingerprint": "563c338d96ef7c38b7b9753db5513f22c05a7a797d1c5f120c3205e076131ee5"
+  }
+}

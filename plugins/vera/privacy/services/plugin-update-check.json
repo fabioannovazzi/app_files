@@ -35,7 +35,7 @@
   "service_id": "plugin-update-check",
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "25ea9d90c74880d56f718f1547351f95e298da7141a71566a0b4fa7530693f7f",
+    "source_fingerprint": "ad3f5098f672bfe7bdef2c691fe370435c6319da939ba8a6983b9480d0410264",
     "reviewed_by": "privacy-surface-review",
     "reviewed_at": "2026-10-17"
   },

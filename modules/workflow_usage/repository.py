@@ -10,6 +10,7 @@ from typing import Any, Callable
 from uuid import UUID, uuid4
 
 from modules.workflow_usage.contracts import WorkflowEvent
+from modules.workflow_usage.products import Product
 
 __all__ = ["SCHEMA", "WorkflowConflict", "record", "get_run", "feedback", "overview"]
 
@@ -45,9 +46,12 @@ def record(
     now: str,
     *,
     form_submission: bool = False,
+    product: Product = "vera",
 ) -> dict[str, Any]:
     """Exactly-once storage uses immutable UUIDs and sequential compare-and-swap."""
     run_id = str(event.run_id)
+    if (event.product or "vera") != product:
+        raise WorkflowConflict("Event belongs to another product")
     row = get_run(connection, sql, run_id)
     if row is not None and row["installation_id"] != owner:
         raise WorkflowConflict("Run is outside this installation")
@@ -64,6 +68,7 @@ def record(
         if event.kind != "started" or event.sequence != 1:
             raise WorkflowConflict("Start must be recorded before subsequent events")
         projection: dict[str, Any] = {
+            "product": product,
             "run_id": run_id,
             "installation_id": owner,
             "pipeline": event.pipeline,
@@ -193,7 +198,7 @@ def _ack(row: Any, event: WorkflowEvent, *, duplicate: bool) -> dict[str, Any]:
             _json(event.model_dump(mode="json", exclude_none=True)).encode()
         ).hexdigest(),
         "state": projection["state"],
-        "feedback_url": f"https://mparanza.com/vera/feedback/{event.run_id}#{row['feedback_key']}",
+        "feedback_url": f"https://mparanza.com/{projection.get('product', 'vera')}/feedback/{event.run_id}#{row['feedback_key']}",
     }
 
 
@@ -206,12 +211,15 @@ def feedback(
     stars: int,
     comment: str | None,
     now: str,
+    product: Product = "vera",
 ) -> dict[str, Any]:
     """A per-run form capability can rate only that run, never read other records."""
     row = get_run(connection, sql, run_id)
     if row is None or not hmac.compare_digest(key, row["feedback_key"]):
         raise WorkflowConflict("Feedback link is unavailable")
     projection = json.loads(row["projection_json"])
+    if projection.get("product", "vera") != product:
+        raise WorkflowConflict("Feedback belongs to another product")
     old = connection.execute(
         sql(
             "SELECT payload_json FROM vera_workflow_events WHERE event_id=? AND run_id=?"
@@ -228,6 +236,11 @@ def feedback(
             raise WorkflowConflict("Feedback retry changed the original answer")
         return {"recorded": True, "event_id": str(event_id)}
     event = WorkflowEvent(
+        product=(
+            projection.get("product")
+            if projection.get("product", "vera") != "vera"
+            else None
+        ),
         event_id=event_id,
         run_id=UUID(run_id),
         sequence=projection["sequence"] + 1,
@@ -240,7 +253,15 @@ def feedback(
             "user_form" if projection["sample_kind"] == "user" else "synthetic_test"
         ),
     )
-    record(connection, sql, row["installation_id"], event, now, form_submission=True)
+    record(
+        connection,
+        sql,
+        row["installation_id"],
+        event,
+        now,
+        form_submission=True,
+        product=projection.get("product", "vera"),
+    )
     return {"recorded": True, "event_id": str(event_id)}
 
 

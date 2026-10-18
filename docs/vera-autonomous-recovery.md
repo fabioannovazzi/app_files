@@ -1,5 +1,15 @@
 # Vera: active operational recovery
 
+The reporting-parity release extends this existing recovery loop to Clara and
+Lucia under Fabio's explicit end-to-end implementation goal. Read
+`docs/product-reporting-recovery.md`. Diagnose each report's recorded product and
+use that product's connector, package version, public download and original-task
+owner. Alert reviews accept `clara` and `lucia` as host action owners as well as
+`vera`; never assign one product's work to another. Existing protocol state names,
+chat identity, fixture IDs, counter epochs and alert event keys remain stable.
+The same schedule and existing alert authorization apply; no extra monitor or
+Marketplace publication is implied.
+
 Fabio explicitly authorized the full loop on 2026-10-15: “Our agent should
 communicate with the user's Vera, diagnose the problem, deliver the fix and
 verify that the original task actually works.” This replaces the earlier

@@ -28,6 +28,9 @@ def main() -> int:
         "native lesson worker handoffs. Do not run onboarding for other plugins. "
         "Do not transmit onboarding/profile/lesson feedback to Mparanza."
     )
+    from operational_incidents import startup_context
+
+    message += " " + startup_context()
     sys.stdout.write(
         json.dumps(
             {

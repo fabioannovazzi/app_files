@@ -7,12 +7,13 @@ import importlib.util
 import logging
 import os
 import re
-import subprocess
 from collections.abc import Sequence
 from pathlib import Path
 
 from managed_ocr_runtime import OCR_SETUP_PROMPT, activate_ocr_runtime
-from managed_python_runtime import ensure_runtime, runtime_environment, runtime_python
+from managed_python_runtime import ensure_runtime, run_verified_helper
+from operational_incidents import report_failure
+from verified_execution import prepare_execution_root, report_preparation_failure
 
 __all__ = [
     "check_dependencies",
@@ -288,12 +289,29 @@ def main(argv: list[str] | None = None) -> int:
     )
     args, remaining = parser.parse_known_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(message)s")
+    try:
+        execution_root = prepare_execution_root(plugin_root(), args.module)
+    except (OSError, ValueError) as error:
+        report_preparation_failure(plugin_root(), args.module, error)
+        return 1
     if args.module is not None:
-        root = component_root(args.module)
+        root = (
+            execution_root / "modules" / args.module
+            if execution_root != plugin_root()
+            else component_root(args.module)
+        )
         checker = root / "scripts" / "check_dependencies.py"
         if not checker.is_file():
             LOGGER.error(
                 "Dependency checker not found for %s: %s", args.module, checker
+            )
+            report_preparation_failure(
+                plugin_root(),
+                args.module,
+                ValueError("Published dependency checker is missing"),
+                stage="dependency-setup",
+                technical_code="runtime.missing-checker",
+                technical_type="MissingDependencyChecker",
             )
             return 1
         delegated_args = list(remaining)
@@ -309,29 +327,34 @@ def main(argv: list[str] | None = None) -> int:
             if "requirements-render.txt" not in runtime_requirements:
                 runtime_requirements.append("requirements-render.txt")
         if runtime_requirements is None:
-            ready, target, detail = ensure_runtime(plugin_root(), args.module)
+            ready, target, detail = ensure_runtime(execution_root, args.module)
         else:
             ready, target, detail = ensure_runtime(
-                plugin_root(), args.module, requirements=runtime_requirements
+                execution_root, args.module, requirements=runtime_requirements
             )
         if not ready:
             LOGGER.error("Clara managed Python runtime setup failed: %s", detail)
+            if not os.environ.get("MPARANZA_INCIDENT_RECOVERY_ACTIVE"):
+                report_failure(args.module or "clara-core", "dependency-setup", detail)
             return 1
-        completed = subprocess.run(
-            [str(runtime_python(target)), str(checker), *delegated_args],
-            cwd=root,
-            env=runtime_environment(target),
-            check=False,
+        runtime_args = ["--module", args.module]
+        for requirement in runtime_requirements or []:
+            runtime_args.extend(["--requirements", requirement])
+        return run_verified_helper(
+            execution_root,
+            [*runtime_args, "run", "scripts/check_dependencies.py", *delegated_args],
+            args.module,
         )
-        return completed.returncode
     if remaining:
         parser.error(f"unrecognized arguments: {' '.join(remaining)}")
     if not args.managed_verify and not os.environ.get(
         "MPARANZA_MANAGED_RUNTIME_VERIFY"
     ):
-        ready, target, detail = ensure_runtime(plugin_root())
+        ready, target, detail = ensure_runtime(execution_root)
         if not ready:
             LOGGER.error("Clara managed Python runtime setup failed: %s", detail)
+            if not os.environ.get("MPARANZA_INCIDENT_RECOVERY_ACTIVE"):
+                report_failure(args.module or "clara-core", "dependency-setup", detail)
             return 1
         delegated_args = ["--managed-verify"]
         for requirement in args.requirements or []:
@@ -340,17 +363,11 @@ def main(argv: list[str] | None = None) -> int:
             delegated_args.append("--include-optional")
         for input_path in args.input or []:
             delegated_args.extend(("--input", str(input_path)))
-        completed = subprocess.run(
-            [
-                str(runtime_python(target)),
-                str(Path(__file__).resolve()),
-                *delegated_args,
-            ],
-            cwd=plugin_root(),
-            env=runtime_environment(target),
-            check=False,
+        return run_verified_helper(
+            execution_root,
+            ["run", "scripts/check_dependencies.py", *delegated_args],
+            "clara-core",
         )
-        return completed.returncode
     ocr_required = input_requires_ocr(args.input or [])
     if ocr_required:
         activate_ocr_runtime(plugin_root() / "requirements-ocr.txt")

@@ -30,6 +30,7 @@ from modules.run_receipts.store import (
     RunReceiptStoreUnavailableError,
     get_run_receipt_store,
 )
+from modules.workflow_usage.products import Product
 
 __all__ = [
     "RunReceiptStampRequest",
@@ -159,7 +160,9 @@ class RunReceiptRateLimiter:
         self._max_sources = max(max_sources, 1)
         self._clock = clock
         self._source_events: OrderedDict[tuple[str, str], deque[float]] = OrderedDict()
-        self._global_events = {action: deque() for action in self._limits}
+        self._global_events: dict[str, deque[float]] = {
+            action: deque() for action in self._limits
+        }
         self._lock = threading.Lock()
 
     def check(self, source: str, action: str) -> None:
@@ -240,7 +243,7 @@ class _BoundedRunReceiptRoute(APIRoute):
 
 
 api_router = APIRouter(
-    prefix="/api/vera/run-receipts",
+    prefix="/api/{product}/run-receipts",
     tags=["vera-run-receipts"],
     route_class=_BoundedRunReceiptRoute,
 )
@@ -256,7 +259,8 @@ class RunReceiptStampRequest(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    schema_version: Literal[1] = 1
+    schema_version: Literal[1, 2] = 1
+    product: Product | None = None
     receipt_id: UUID
     plugin_version: str = Field(
         min_length=5, max_length=64, pattern=_PLUGIN_VERSION_PATTERN
@@ -269,7 +273,8 @@ class RunReceiptStampResponse(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    schema_version: Literal[1] = 1
+    schema_version: Literal[1, 2] = 1
+    product: Product | None = None
     receipt_id: UUID
     plugin_version: str
     report_sha256: str
@@ -313,7 +318,7 @@ def _server_timestamp() -> str:
 
 def _verification_url(record: RunReceiptRecord) -> str:
     return (
-        f"https://mparanza.com/verify/vera-run-receipt/{record.receipt_id}"
+        f"https://mparanza.com/verify/{record.product}-run-receipt/{record.receipt_id}"
         f"?sha256={record.report_sha256}"
     )
 
@@ -341,6 +346,7 @@ def _response(
 @api_router.post(
     "",
     response_model=RunReceiptStampResponse,
+    response_model_exclude_none=True,
     status_code=status.HTTP_201_CREATED,
 )
 def stamp_run_receipt(
@@ -349,12 +355,21 @@ def stamp_run_receipt(
     store: Store,
     signer: Signer,
     limiter: RateLimiter,
+    product: Product = "vera",
 ) -> RunReceiptStampResponse:
     """Timestamp, sign, and retain only one minimal per-run proof record."""
 
     _enforce_rate_limit(request, limiter, "stamp")
-    signed_payload = {
-        "schema_version": 1,
+    if (
+        payload.schema_version == 1
+        and (product != "vera" or payload.product is not None)
+    ) or (payload.schema_version == 2 and payload.product != product):
+        raise HTTPException(
+            422, "Receipt product and schema do not match this endpoint"
+        )
+    signed_payload: dict[str, Any] = {
+        "schema_version": payload.schema_version,
+        **({"product": product} if payload.schema_version == 2 else {}),
         "receipt_id": str(payload.receipt_id),
         "plugin_version": payload.plugin_version,
         "report_sha256": payload.report_sha256,
@@ -369,6 +384,8 @@ def stamp_run_receipt(
             stamped_at=signed_payload["stamped_at"],
             key_id=signed_payload["key_id"],
             signature=signer.sign(signed_payload),
+            product=product,
+            schema_version=payload.schema_version,
         )
         record = store.stamp(candidate)
     except RunReceiptConflictError as exc:
@@ -388,7 +405,11 @@ def stamp_run_receipt(
     return _response(record, signer)
 
 
-@api_router.get("/{receipt_id}", response_model=RunReceiptStampResponse)
+@api_router.get(
+    "/{receipt_id}",
+    response_model=RunReceiptStampResponse,
+    response_model_exclude_none=True,
+)
 def verify_run_receipt(
     receipt_id: UUID,
     request: Request,
@@ -396,6 +417,7 @@ def verify_run_receipt(
     signer: Signer,
     limiter: RateLimiter,
     sha256: str = Query(pattern=_SHA256_PATTERN),
+    product: Product = "vera",
 ) -> RunReceiptStampResponse:
     """Verify that the supplied digest matches one valid retained proof."""
 
@@ -407,16 +429,20 @@ def verify_run_receipt(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Run-receipt storage is temporarily unavailable.",
         ) from exc
-    if record is None or not hmac.compare_digest(record.report_sha256, sha256):
+    if (
+        record is None
+        or record.product != product
+        or not hmac.compare_digest(record.report_sha256, sha256)
+    ):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="No matching Vera run receipt was found.",
+            detail="No matching product run receipt was found.",
         )
     return _response(record, signer)
 
 
 @site_router.get(
-    "/verify/vera-run-receipt/{receipt_id}",
+    "/verify/{product}-run-receipt/{receipt_id}",
     response_class=HTMLResponse,
     include_in_schema=False,
 )
@@ -428,6 +454,7 @@ def verify_run_receipt_page(
     limiter: RateLimiter,
     sha256: str = Query(pattern=_SHA256_PATTERN),
     lang: str = Query(default="it", pattern=r"^(it|en|fr|de|es)$"),
+    product: Product = "vera",
 ) -> HTMLResponse:
     """Render a customer-readable verification result without case content."""
 
@@ -439,6 +466,7 @@ def verify_run_receipt_page(
             signer=signer,
             limiter=limiter,
             sha256=sha256,
+            product=product,
         )
         receipt = response.model_dump(mode="json")
         verified = True
@@ -455,8 +483,12 @@ def verify_run_receipt_page(
             "verified": verified,
             "receipt_id": str(receipt_id),
             "report_sha256": sha256,
+            "product_name": product.title(),
             "lang": lang,
-            "copy": _VERIFY_COPY[lang],
+            "copy": {
+                key: value.replace("Vera", product.title())
+                for key, value in _VERIFY_COPY[lang].items()
+            },
         },
         status_code=status.HTTP_200_OK if verified else status.HTTP_404_NOT_FOUND,
     )

@@ -22,15 +22,20 @@ from tests.modules.operational_incidents.test_incidents import report
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def installed(tmp_path: Path, endpoint: str | None = None) -> Path:
+def installed(
+    tmp_path: Path, endpoint: str | None = None, product: str = "vera"
+) -> Path:
     root = tmp_path / "installed"
     (root / "scripts").mkdir(parents=True)
     for name in (
         "incident_host_mcp.cjs",
         "operational_incidents.py",
+        "reporting_product.py",
         "technical_runner.py",
     ):
-        shutil.copyfile(ROOT / "plugins/vera/scripts" / name, root / "scripts" / name)
+        shutil.copyfile(
+            ROOT / "plugins" / product / "scripts" / name, root / "scripts" / name
+        )
     for suffix in ("py", "json"):
         filename = f"local_helper_environment.{suffix}"
         shutil.copyfile(ROOT / "scripts" / filename, root / "scripts" / filename)
@@ -43,7 +48,7 @@ def installed(tmp_path: Path, endpoint: str | None = None) -> Path:
         script.write_text(original.replace(assignment, f'SERVER = "{endpoint}"'))
     (root / ".codex-plugin").mkdir()
     (root / ".codex-plugin/plugin.json").write_text(
-        json.dumps({"name": "vera", "version": "0.1.391"})
+        json.dumps({"name": product, "version": "0.1.391"})
     )
     files = {
         item.relative_to(root).as_posix(): hashlib.sha256(item.read_bytes()).hexdigest()
@@ -88,8 +93,11 @@ def call(
     return json.loads(result.stdout)["result"]
 
 
-def test_native_stdio_processes_keep_public_host_code_without_exposing_key(tmp_path):
-    root = installed(tmp_path)
+@pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
+def test_native_stdio_processes_keep_public_host_code_without_exposing_key(
+    tmp_path, product
+):
+    root = installed(tmp_path, product=product)
     device = tmp_path / "native-host"
     poison = tmp_path / "poison"
     poison.mkdir()
@@ -98,8 +106,8 @@ def test_native_stdio_processes_keep_public_host_code_without_exposing_key(tmp_p
         f"from pathlib import Path\nPath({str(marker)!r}).touch()\nraise RuntimeError('untrusted import')"
     )
 
-    first = call(root, device, "vera_incident_host_context", {}, cwd=poison)
-    second = call(root, device, "vera_incident_host_context", {})
+    first = call(root, device, f"{product}_incident_host_context", {}, cwd=poison)
+    second = call(root, device, f"{product}_incident_host_context", {})
 
     assert (
         first["structuredContent"]["device_id"]
@@ -242,7 +250,10 @@ def test_native_identity_read_failure_returns_source_facts_without_key(tmp_path)
         "invalid-name",
     ],
 )
-def test_release_checker_requires_the_actual_remote_incident_tool_contract(variant):
+@pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
+def test_release_checker_requires_the_actual_remote_incident_tool_contract(
+    variant, product
+):
     tools = json.loads(json.dumps(TOOLS))
     if variant == "legacy-contract":
         tools = [tool for tool in tools if tool["name"].startswith("vera_incident_")]
@@ -258,16 +269,38 @@ def test_release_checker_requires_the_actual_remote_incident_tool_contract(varia
         tools = None
     elif variant == "invalid-name":
         tools[-1]["name"] = 42
+    if isinstance(tools, list):
+        for tool in tools:
+            if isinstance(tool["name"], str):
+                tool["name"] = tool["name"].replace("vera_", product + "_", 1)
     checker = ROOT / "scripts/check_packaged_mcp.cjs"
-    program = "const {validIncidentTools}=require(process.argv[1]); process.stdout.write(JSON.stringify(validIncidentTools(JSON.parse(process.argv[2]))));"
+    program = "const {validIncidentTools}=require(process.argv[1]); process.stdout.write(JSON.stringify(validIncidentTools(JSON.parse(process.argv[2]), process.argv[3])));"
 
     result = subprocess.run(
-        ["node", "-e", program, str(checker), json.dumps(tools)],
+        ["node", "-e", program, str(checker), json.dumps(tools), product],
         check=True,
         capture_output=True,
         text=True,
     )
 
     assert json.loads(result.stdout) is (
-        variant in {"deployed-contract", "legacy-contract"}
+        variant == "deployed-contract"
+        or (variant == "legacy-contract" and product == "vera")
+    )
+
+
+def test_three_products_reuse_the_same_physical_computer_proof(tmp_path):
+    device = tmp_path / "native-host"
+    vera = installed(tmp_path / "vera", product="vera")
+    clara = installed(tmp_path / "clara", product="clara")
+    lucia = installed(tmp_path / "lucia", product="lucia")
+
+    first = call(vera, device, "vera_incident_host_context", {})
+    second = call(clara, device, "clara_incident_host_context", {})
+    third = call(lucia, device, "lucia_incident_host_context", {})
+
+    assert (
+        first["structuredContent"]["device_id"]
+        == second["structuredContent"]["device_id"]
+        == third["structuredContent"]["device_id"]
     )

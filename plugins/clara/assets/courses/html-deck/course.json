@@ -50,7 +50,7 @@
     {
       "path": "scripts/check_dependencies.py",
       "repository_path": "plugins/clara/scripts/check_dependencies.py",
-      "sha256": "6e037df9002300cbd635b3e2a8795061abe8369880f71b8040b3fdaab103c22c"
+      "sha256": "4556447640d0a39a30131dfe47a36310fbca2afe640f529dd8a13c3776018f89"
     },
     {
       "path": "scripts/managed_ocr_runtime.py",
@@ -60,7 +60,27 @@
     {
       "path": "scripts/managed_python_runtime.py",
       "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
-      "sha256": "6f1e29d38fa4ff7919a507ddcb95df81d4bdf600b2ab6fc392956772d846d76d"
+      "sha256": "c4cc507b1331ec74f0f78e84c0c68644d1b4e31361778ad87e116b31b6274cc4"
+    },
+    {
+      "path": "scripts/model_data_report.py",
+      "repository_path": "plugins/clara/scripts/model_data_report.py",
+      "sha256": "0e7a99ef631ed67a1aa25eb10ce7ed158625f6c0c09dcf8546eeb132a238262d"
+    },
+    {
+      "path": "scripts/notarized_run_receipt.py",
+      "repository_path": "plugins/clara/scripts/notarized_run_receipt.py",
+      "sha256": "d14afea6e9dabee7c2611d4e5fc0dac12c7c0011a7e8908f5e0e927369962f71"
+    },
+    {
+      "path": "scripts/operational_incidents.py",
+      "repository_path": "plugins/clara/scripts/operational_incidents.py",
+      "sha256": "af23904b87d017d25f00c81cc601952b522fa1023f6bc746843ec73b6e996f6d"
+    },
+    {
+      "path": "scripts/verified_execution.py",
+      "repository_path": "plugins/clara/scripts/verified_execution.py",
+      "sha256": "ec854fca344b92ae5208981a1631f5bc2f3ee96d365d62ed36f7f74e7aa19518"
     },
     {
       "path": "scripts/verify_advisory_html_delivery.py",
@@ -68,9 +88,14 @@
       "sha256": "771dec6416bb5bd0eb2453caed09fbd9644c1386dab1c187c1d2b859e377d8ef"
     },
     {
+      "path": "scripts/workflow_usage.py",
+      "repository_path": "plugins/clara/scripts/workflow_usage.py",
+      "sha256": "449d5b3b2cf5be4ab01b3e96eed63d3c82c90860a9a458ab364912a59fe7cf34"
+    },
+    {
       "path": "skills/html-deck/SKILL.md",
       "repository_path": "plugins/clara/skills/html-deck/SKILL.md",
-      "sha256": "a5a618bede89c5f161f84a1731e8265e4640c9ddd94ccde154cce01de4c5c5a1"
+      "sha256": "368efb13c0bc762f782f79e0ffa32db432b317beeb14438ca8cc16e0cbbb1430"
     },
     {
       "path": "skills/html-deck/references/evidence-bindings.md",

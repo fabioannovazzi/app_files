@@ -61,9 +61,15 @@ def _base64url_decode(value: str, *, label: str) -> bytes:
 def canonical_receipt_bytes(payload: Mapping[str, Any]) -> bytes:
     """Return the one canonical byte representation covered by the signature."""
 
-    if set(payload) != _SIGNED_FIELDS:
+    version = payload.get("schema_version")
+    fields = _SIGNED_FIELDS | ({"product"} if version == 2 else set())
+    if (
+        version not in {1, 2}
+        or set(payload) != fields
+        or (version == 2 and payload["product"] not in {"vera", "clara", "lucia"})
+    ):
         raise RunReceiptSigningError(
-            "Signed receipt fields do not match schema version 1."
+            "Signed receipt fields do not match the declared schema version."
         )
     return json.dumps(
         dict(payload),

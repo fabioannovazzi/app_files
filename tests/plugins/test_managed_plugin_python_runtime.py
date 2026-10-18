@@ -124,6 +124,9 @@ def make_packaged_component(root: Path) -> Path:
         json.dumps({"name": "vera", "version": "0.1.129"}) + "\n",
         encoding="utf-8",
     )
+    (scripts / "reporting_product.py").write_bytes(
+        (VERA_MANAGER.parent / "reporting_product.py").read_bytes()
+    )
     (scripts / "managed_python_runtime.py").write_bytes(VERA_MANAGER.read_bytes())
     (scripts / "verified_execution.py").write_bytes(
         (VERA_MANAGER.parent / "verified_execution.py").read_bytes()

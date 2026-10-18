@@ -24,7 +24,7 @@ class NextAction(BaseModel):
 
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
     action_id: str = Field(pattern=r"^[a-z0-9][a-z0-9-]{0,99}$")
-    owner: Literal["monitor", "vera", "fabio"]
+    owner: Literal["monitor", "vera", "clara", "lucia", "fabio"]
     instruction: str = Field(min_length=1, max_length=1500)
     reason: str = Field(min_length=1, max_length=1500)
     evidence_refs: list[str] = Field(min_length=1, max_length=20)
@@ -118,7 +118,14 @@ def render_alert(
         raise ValueError("Review must match the current exact followup evidence")
     if review.next_check_at <= (now or datetime.now(timezone.utc)):
         raise ValueError("Next check must be in the future")
-    if review.next_action.owner == "vera" and (
+    product = followup.get("product", "vera")
+    title = product.title()
+    if (
+        review.next_action.owner in {"vera", "clara", "lucia"}
+        and review.next_action.owner != product
+    ):
+        raise ValueError("The next action belongs to another product")
+    if review.next_action.owner in {"vera", "clara", "lucia"} and (
         not followup["received_at"] or followup["overdue"]
     ):
         raise ValueError(
@@ -141,7 +148,7 @@ def render_alert(
         app_name += " (dichiarata, collegamento non verificato)"
     contact = followup["reporter_contact"]
     contact_text = (
-        f"{_date(contact['last_seen'])}; Vera {contact['product_version']} osservata dal reporter originale"
+        f"{_date(contact['last_seen'])}; {title} {contact['product_version']} osservata dal reporter originale"
         if contact
         else "nessun contatto del reporter originale registrato"
     )
@@ -163,6 +170,8 @@ def render_alert(
     owner = {
         "monitor": "Agente di monitoraggio",
         "vera": "Vera interessata",
+        "clara": "Clara interessata",
+        "lucia": "Lucia interessata",
         "fabio": "Fabio",
     }[review.next_action.owner]
     identity = f"{machine} · {app_name}"
@@ -172,7 +181,7 @@ def render_alert(
         ("Installazione", identity),
         (
             "Segnalazione originale",
-            f"{_date(followup['original_reported_at'])} · {followup['workflow']} · Vera {followup['original_version']}",
+            f"{_date(followup['original_reported_at'])} · {followup['workflow']} · {title} {followup['original_version']}",
         ),
         (
             "Rimedio",
@@ -208,7 +217,7 @@ def render_alert(
         f"{review.next_action.owner}|{review.next_action.action_id}"
     )
     return {
-        "subject": f"Vera: {identity} · {followup['workflow']}",
+        "subject": f"{title}: {identity} · {followup['workflow']}",
         "html": body,
         "event_key": event_key,
         "report_id": followup["report_id"],

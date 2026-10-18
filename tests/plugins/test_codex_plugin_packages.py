@@ -2574,16 +2574,12 @@ def test_builder_rejects_redundant_plugin_namespace_in_skill_name(
 @pytest.mark.parametrize(
     "required_snippet",
     (
-        "Should I transmit this technical problem to the developer so we can fix it?",
-        "Do not continue with a chat interview, offer a fallback, or ask any",
-        "does not authorize transmission of the user's improvement suggestion.",
-        "Only in a later turn, after the failure-report choice has been handled",
-        "credentials, secrets, or other identifying information.",
-        "obtain separate suggestion-transmission consent.",
-        "Should I transmit this suggestion to the developer so we can improve",
+        "scripts/change_requests.py",
+        "show the proposed text before submitting it",
+        "use the automatic incident channel; a CR is not its substitute",
     ),
 )
-def test_builder_rejects_transmitted_feedback_policy_missing_safeguard(
+def test_builder_rejects_suggestion_policy_missing_safeguard(
     tmp_path: Path, required_snippet: str
 ) -> None:
     builder = load_builder()
@@ -2595,7 +2591,7 @@ def test_builder_rejects_transmitted_feedback_policy_missing_safeguard(
     ).read_text(encoding="utf-8")
     assert required_snippet in source_skill
     skill_path.write_text(
-        source_skill.replace(required_snippet, "", 1),
+        source_skill.replace(required_snippet, ""),
         encoding="utf-8",
     )
 
@@ -2603,6 +2599,31 @@ def test_builder_rejects_transmitted_feedback_policy_missing_safeguard(
 
     assert (
         "clara: skill instructions must include plugin improvement feedback policy"
+        in errors
+    )
+
+
+@pytest.mark.parametrize("product", ("clara", "lucia"))
+def test_builder_rejects_specialist_missing_automatic_reporting_contract(
+    tmp_path: Path, product: str
+) -> None:
+    builder = load_builder()
+    plugin_root = tmp_path / product
+    specialist = next(
+        path
+        for path in (ROOT / "plugins" / product / "skills").glob("*/SKILL.md")
+        if path.parent.name != product
+    )
+    target = plugin_root / specialist.relative_to(ROOT / "plugins" / product)
+    target.parent.mkdir(parents=True)
+    target.write_text(
+        specialist.read_text().replace("actual signed receipt", "receipt")
+    )
+
+    errors = builder.validate_plugin_source(plugin_root)
+
+    assert (
+        f"{product}: {target.relative_to(plugin_root)} must include task reporting and recovery contract"
         in errors
     )
 
@@ -2797,75 +2818,17 @@ def test_all_repo_plugins_include_end_of_run_feedback_policy() -> None:
             for snippet in builder.AUTOMATIC_INCIDENT_SNIPPETS:
                 assert snippet in combined_skill_text
             assert "Should I transmit this technical problem" not in combined_skill_text
-        elif plugin_name == "clara":
+        elif plugin_name in {"clara", "lucia"}:
+            assert "Should I transmit this technical problem" not in combined_skill_text
             assert (
-                "Localize the consent question to the conversation language."
-                in combined_skill_text
-            ), plugin_name
-            assert (
-                "Vuoi che trasmetta questo problema tecnico allo sviluppatore "
-                "così possiamo risolverlo?" in combined_skill_text
-            ), plugin_name
-            assert (
-                "Should I transmit this technical problem to the developer so we "
-                "can fix it?" in combined_skill_text
-            ), plugin_name
-            assert (
-                "Do not continue with a chat interview, offer a fallback, or ask any "
-                "suggestion question in the same turn." in normalized_skill_text
-            ), plugin_name
-            assert (
-                "Consent to transmit the technical problem does not authorize "
-                "transmission of the user's improvement suggestion."
+                "use the automatic incident channel; a CR is not its substitute"
                 in normalized_skill_text
-            ), plugin_name
-            assert (
-                "client or customer names or data, source documents, run or case "
-                "details, credentials, secrets, or other identifying information"
-                in normalized_skill_text
-            ), plugin_name
-            assert (
-                "follow the normal text-suggestion path below: draft a separate "
-                "sanitized suggestion, show its exact text, and obtain separate "
-                "suggestion-transmission consent." in normalized_skill_text
-            ), plugin_name
-            assert (
-                "Vuoi che trasmetta questo suggerimento allo sviluppatore così "
-                f"possiamo migliorare {plugin_name.title()}?" in combined_skill_text
-            ), plugin_name
-            assert (
-                "Should I transmit this suggestion to the developer so we can improve "
-                f"{plugin_name.title()}?" in combined_skill_text
-            ), plugin_name
-            assert "scripts/change_requests.py submit-problem" in combined_skill_text
-            assert (
-                "scripts/change_requests.py reserve-suggestion-prompt"
-                in combined_skill_text
-            )
-            assert "scripts/change_requests.py submit-suggestion" in combined_skill_text
-            assert "scripts/change_requests.py start-interview" in combined_skill_text
-            assert (
-                "Always use the generic client-free string below" in combined_skill_text
-            )
-            generic_voice_command = (
-                'python scripts/change_requests.py start-interview --opportunity "General '
-                f"{plugin_name.title()} improvement suggestion; no client, customer, "
-                'source, run, or case details supplied." --language <language>'
-            )
-            assert generic_voice_command in combined_skill_text
-            assert "at most one minute" in combined_skill_text
-            assert "only if needed, one short follow-up" in combined_skill_text
-            specialist_handoff = (
-                "After substantive use of this workflow, read and follow the "
-                "`Plugin Improvement Feedback` section in "
-                f"`../{plugin_name}/SKILL.md`."
             )
             for skill_file in skill_files:
-                if skill_file.parent.name == plugin_name:
-                    continue
-                assert specialist_handoff in skill_file.read_text(
-                    encoding="utf-8"
-                ), skill_file
+                text = skill_file.read_text(encoding="utf-8")
+                for snippet in builder.SHARED_REPORTING_SNIPPETS:
+                    assert snippet in text, skill_file
+
         else:
             assert (
                 "Keep the improvement note local to chat or run artifacts."

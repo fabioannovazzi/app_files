@@ -64,7 +64,7 @@
     },
     {
       "path": "scripts/check_dependencies.py",
-      "sha256": "6e037df9002300cbd635b3e2a8795061abe8369880f71b8040b3fdaab103c22c"
+      "sha256": "4556447640d0a39a30131dfe47a36310fbca2afe640f529dd8a13c3776018f89"
     },
     {
       "path": "scripts/decision_narrative.py",
@@ -80,7 +80,19 @@
     },
     {
       "path": "scripts/managed_python_runtime.py",
-      "sha256": "6f1e29d38fa4ff7919a507ddcb95df81d4bdf600b2ab6fc392956772d846d76d"
+      "sha256": "c4cc507b1331ec74f0f78e84c0c68644d1b4e31361778ad87e116b31b6274cc4"
+    },
+    {
+      "path": "scripts/model_data_report.py",
+      "sha256": "0e7a99ef631ed67a1aa25eb10ce7ed158625f6c0c09dcf8546eeb132a238262d"
+    },
+    {
+      "path": "scripts/notarized_run_receipt.py",
+      "sha256": "d14afea6e9dabee7c2611d4e5fc0dac12c7c0011a7e8908f5e0e927369962f71"
+    },
+    {
+      "path": "scripts/operational_incidents.py",
+      "sha256": "af23904b87d017d25f00c81cc601952b522fa1023f6bc746843ec73b6e996f6d"
     },
     {
       "path": "scripts/public_http.py",
@@ -91,6 +103,10 @@
       "sha256": "9bc960fe45ba6f8ba0e6a5dc19b35f40342d3bc318873d1a257c4257193c4f42"
     },
     {
+      "path": "scripts/verified_execution.py",
+      "sha256": "ec854fca344b92ae5208981a1631f5bc2f3ee96d365d62ed36f7f74e7aa19518"
+    },
+    {
       "path": "scripts/verify_advisory_delivery.py",
       "sha256": "1db20ac24cadf936821244631b51bf6187258efb269c745d61fc6c6261fe950a"
     },
@@ -99,8 +115,12 @@
       "sha256": "771dec6416bb5bd0eb2453caed09fbd9644c1386dab1c187c1d2b859e377d8ef"
     },
     {
+      "path": "scripts/workflow_usage.py",
+      "sha256": "449d5b3b2cf5be4ab01b3e96eed63d3c82c90860a9a458ab364912a59fe7cf34"
+    },
+    {
       "path": "skills/mparanza-advisory-deliverable-validator/SKILL.md",
-      "sha256": "caf8ebe0cc654238e1b2e3eb3ce417434d70471ad978481fb000e1fe4f062d01"
+      "sha256": "cab400ac56a17f53cf424b3754d0b6fe55a906f4d5e20355ba34e6834e25bdb0"
     },
     {
       "path": "skills/mparanza-advisory-deliverable-validator/references/advisory-contract.md",
@@ -529,5 +549,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "bb35d901f096028929d2ad983c7adfb02c9935c2f8895bd0d5003a1d57faddcb"
+  "canonical_course_sha256": "96a1763ffcea67e6015352ad661fd5b714f33b4b3bc1077e392d2f9d6e79738d"
 }

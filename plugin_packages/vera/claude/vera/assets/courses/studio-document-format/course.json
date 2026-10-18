@@ -217,7 +217,7 @@
     },
     {
       "path": "modules/comunicazione-professionale/skills/mparanza-comunicazione-professionale/SKILL.md",
-      "sha256": "1feb1a0832bf279176ecc8548b87a30f6be15343c599bf1691e1d165bd773a79"
+      "sha256": "bb441eac1d4464b7f50e56128664f536194b656e723e5820e87f8d73d7d052cb"
     },
     {
       "path": "modules/comunicazione-professionale/skills/mparanza-comunicazione-professionale/agents/openai.yaml",
@@ -345,7 +345,7 @@
     },
     {
       "path": "modules/report-builder/skills/mparanza-financial-report-builder/SKILL.md",
-      "sha256": "2004644539b7e42a1041fa0bcb984d7dca6b4c2689ec560a9953e82db5cba854"
+      "sha256": "146033736849d2ad361b888c58c4e3a9030da68081eef92a747536ce54c1ea13"
     },
     {
       "path": "modules/report-builder/vendor/modules/__init__.py",
@@ -489,7 +489,7 @@
     },
     {
       "path": "skills/mparanza-studio-document-format/SKILL.md",
-      "sha256": "919a70c00b443f3637e632dc162eb60f88131221cd6b0e7a2152554fdab3cac8"
+      "sha256": "db0bac232d6398fab8ae0af53eeddabfe05ca161eff4638ebc182a1c64abe517"
     },
     {
       "path": "skills/mparanza-studio-document-format/references/procedure.md",

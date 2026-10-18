@@ -17,6 +17,10 @@ import traceback
 from contextlib import redirect_stderr
 from pathlib import Path
 
+product_name = runpy.run_path(str(Path(__file__).with_name("reporting_product.py")))[
+    "product_name"
+]
+
 __all__ = ["main", "run_verified_helper"]
 
 # Isolated Python omits the script directory. Restore only this owned directory,
@@ -36,7 +40,10 @@ def _implementation_path() -> Path:
 
 def _load_implementation():
     path = _implementation_path()
-    spec = importlib.util.spec_from_file_location("vera_managed_python_runtime", path)
+    spec = importlib.util.spec_from_file_location(
+        "mparanza_managed_python_runtime",
+        path,
+    )
     if spec is None or spec.loader is None:
         raise RuntimeError(f"Could not load managed Python runtime: {path}")
     module = importlib.util.module_from_spec(spec)
@@ -202,7 +209,8 @@ def _technical_events(
             ]
             for event in events:
                 event.update(
-                    component="vera-runtime",
+                    component=product_name(Path(__file__).resolve().parents[1])
+                    + "-runtime",
                     stage=stage,
                     exit_code=result,
                     evidence_source="runtime-exception",
@@ -223,7 +231,8 @@ def _technical_events(
     return (
         [
             {
-                "component": "vera-runtime",
+                "component": product_name(Path(__file__).resolve().parents[1])
+                + "-runtime",
                 "stage": stage,
                 "error_type": "DiagnosticCaptureUnavailable",
                 "error_code": "reporting.evidence-missing",
@@ -250,7 +259,7 @@ def _independent_failure(stage: str, module: str | None, error_type: str) -> Non
     else:
         logging.error(
             "VERA_REMOTE_INCIDENT_REQUIRED: workflow=%s stage=%s error_type=%s. "
-            "Use the saved veraIncidents connector to report the complete observed technical error. "
+            "Use the saved product incident connector to report the complete observed technical error. "
             "Do not run an altered plugin helper to report its own integrity failure.",
             module or "unknown",
             stage,
@@ -267,7 +276,7 @@ def _independent_failure(stage: str, module: str | None, error_type: str) -> Non
 
 
 def main(argv: list[str] | None = None) -> int:
-    """Run Vera's managed runtime CLI."""
+    """Run the installed product's managed runtime CLI."""
 
     arguments = list(sys.argv[1:] if argv is None else argv)
     # Only runtime options before its subcommand select the component. A helper
@@ -320,12 +329,16 @@ def main(argv: list[str] | None = None) -> int:
     try:
         root = prepare_execution_root(root, selection.module)
     except (OSError, ValueError) as error:
-        logging.error("Vera installation verification failed: %s", error)
+        logging.error("Product installation verification failed: %s", error)
         report_preparation_failure(root, selection.module, error)
         return 1
     if "run" in arguments:
         return run_verified_helper(
-            root, arguments, selection.module or "vera-core", original_report_id
+            root,
+            arguments,
+            selection.module
+            or product_name(Path(__file__).resolve().parents[1]) + "-core",
+            original_report_id,
         )
     return _IMPLEMENTATION.main(root, arguments)
 
@@ -401,7 +414,7 @@ def run_verified_helper(
                     )
                 else:
                     logging.error(
-                        "VERA_TECHNICAL_EVIDENCE: %s. Automatically read the retained stderr locally, review complete relevant technical diagnostics without unrelated private/client content, then use vera_incident_report with evidence_for_report_id from its report before concluding diagnosis is blocked. Raw stderr is not uploaded.",
+                        "VERA_TECHNICAL_EVIDENCE: %s. Automatically read the retained stderr locally, review complete relevant technical diagnostics without unrelated private/client content, then use the product incident report tool with evidence_for_report_id from its report before concluding diagnosis is blocked. Raw stderr is not uploaded.",
                         pointer,
                     )
             except (OSError, ValueError, KeyError):

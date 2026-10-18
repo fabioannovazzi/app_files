@@ -1,9 +1,17 @@
 # Monitor pipeline use, outcomes and satisfaction
 
+The same monitor covers Vera, Clara and Lucia. Follow
+`docs/product-reporting-recovery.md`. Use `--product all summary` for a complete
+audit, inspect each product's `review_candidates`, and retain separate summaries
+and HTML views. Product ownership is explicit; equal pipeline names never merge.
+Keep the existing private ledger, historical counter and email delivery receipts.
+The renderer's deployed runtime now also needs `products.py` and all three
+`plugins/<product>/usage/pipelines.json` catalogues when mirrored privately.
+
 At each existing scheduled incident audit, also run on production:
 
 ```
-/opt/mparanza_api_env/bin/python3 scripts/manage_workflow_usage.py summary --limit 100000
+/opt/mparanza_api_env/bin/python3 scripts/manage_workflow_usage.py --product all summary --limit 100000
 /opt/mparanza_api_env/bin/python3 scripts/manage_workflow_usage.py show <run-uuid>
 ```
 

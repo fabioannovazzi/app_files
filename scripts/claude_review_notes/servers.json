@@ -25,5 +25,7 @@
   "luciaAssuranceRuntime": "Expose the limited local archive tools used by Lucia assurance.",
   "luciaDeepResearchValidator": "Review sourced legal answers and research evidence.",
   "luciaPromptOptimizer": "Review the legal answer plan.",
-  "luciaStudioArchive": "Manage registered local client folders and engagement records."
+  "luciaStudioArchive": "Manage registered local client folders and engagement records.",
+  "claraIncidentHost": "Bind local installation/host identity for incident recovery.",
+  "luciaIncidentHost": "Bind local installation/host identity for incident recovery."
 }
