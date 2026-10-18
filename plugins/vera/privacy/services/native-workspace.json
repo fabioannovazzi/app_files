@@ -859,6 +859,14 @@
         "scripts/native_archive_navigation.py"
       ],
       "on_violation": "Keep the record unavailable and preserve its original bytes."
+    },
+    {
+      "id": "windows-write-lock-lifecycle",
+      "control": "On Windows hold a noninherited native handle with no file sharing and deletion on close for the reserved UI write lock. Recover a legacy lock only after exclusive acquisition verifies one empty regular non-reparse file with one link; delete that exact held object. Active current or legacy writers, foreign content and linked objects are not displaced. No elapsed-time or process-ID inference authorizes recovery. Domain review and transaction guards remain unchanged.",
+      "implemented_by": [
+        "scripts/native_workspace.py"
+      ],
+      "on_violation": "Reject a held, nonempty, linked, reparse or inaccessible UI lock without altering it or any domain record."
     }
   ],
   "governed_paths": [
@@ -1074,7 +1082,7 @@
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "e15b077f8c5a1ba092356e0cb484b07717858ff0867098a2b57598f027157304",
+    "source_fingerprint": "f64df5d3573f22a0533aff855403863ca8f3fceaefb39dd57c7352f495972053",
     "reviewed_at": "2026-10-18"
   },
   "governed_repository_paths": [

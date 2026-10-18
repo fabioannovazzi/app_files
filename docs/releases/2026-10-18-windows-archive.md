@@ -22,9 +22,13 @@ The combined release versions are Vera 0.1.417, Clara 0.1.304 and Lucia 0.1.128.
 - The native Archive list retains its sortable date-string contract for blocked
   rows. A regression exercises the actual workspace JavaScript and confirms
   blocked rows have no action buttons while healthy runs remain startable.
-- Native workspace review saves close their exclusive lock stream before
-  deletion on Windows. Failed acquisition never removes another writer's lock,
-  and normal and exceptional exits both release it.
+- Native workspace review saves use an exclusive Windows handle with deletion
+  on close, including process exit. A legacy lock left by the old open-stream
+  deletion failure is recoverable only after exclusive acquisition proves it is
+  one empty regular non-reparse file with one link. Active writers and foreign
+  file content remain untouched. No file age or PID guess authorizes cleanup.
+  The mechanism follows the native sharing and deletion contracts documented in
+  [CreateFileW](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew).
 - Financial analysis and sales planning use native Windows directory handles,
   handle-relative file opens, identity and byte checks, exclusive output
   creation, and exact-handle cleanup. Reparse points and multiple hard links
