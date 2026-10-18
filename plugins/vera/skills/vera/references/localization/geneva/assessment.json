@@ -1983,5 +1983,22 @@
     "version": "0.1.417",
     "previous_catalogue_fingerprint": "e7ec18f7ca424642f55d3332061a2c6adbd7bfba55c6c369433c128a0df36af1",
     "scope": "Only the product manifest/version changed in this snapshot; all 55 skill entrypoint hashes and function IDs are unchanged. Preserve all prior Geneva dispositions and limits. Windows file/process portability and isolation of invalid archive runs do not establish new jurisdiction or original-client acceptance."
+  },
+  "cowork_run_host_link_release_binding": {
+    "date": "2026-10-18",
+    "previous_catalogue_fingerprint": "b4358ac6c0f5177f3138135717ffe2613634b26c774bc6b75d4a5c7dff883817",
+    "scope": "Manifest version binding only: all 55 skill entrypoint bytes and function IDs remain identical to 0.1.412. Existing Geneva dispositions and unresolved limitations are preserved. The per-run native reporting proof adds no jurisdiction qualification or professional acceptance.",
+    "version": "0.1.415"
+  },
+  "cowork_link_pdf_integration_20261018": {
+    "integrated_main": "9361a54e934e3bdeb437df81550b75ae5b0eb5be",
+    "scope": "Preserves the deployed bounded PDF recovery routes and all 55 entrypoint hashes from 0.1.413 while adding per-run native reporting proofs. Both parent review records and existing Geneva target judgments remain intact. No new jurisdiction or professional acceptance is claimed.",
+    "version": "0.1.415"
+  },
+  "windows_reporting_main_integration_20261019": {
+    "date": "2026-10-19",
+    "version": "0.1.417",
+    "integrated_main": "28623647c7a396f01aba14ea76abe52fbcc4db01",
+    "scope": "Retain the per-run Cowork reporting/native-link repair from PR865 and all existing catalogue history and Geneva dispositions. All 55 skill entrypoints match both parent catalogues; the combined source introduces no new professional or jurisdiction qualification."
   }
 }

@@ -83,10 +83,11 @@ def inspect(
         agent_devices = set(json.loads(row["agent_devices_json"]))
         cursor = connection.execute(
             sql(
-                "SELECT r.projection_json,d.device_id,e.payload_json,e.received_at "
+                "SELECT r.projection_json,COALESCE(h.device_id,d.device_id) AS device_id,e.payload_json,e.received_at "
                 "FROM vera_workflow_events e "
                 "JOIN vera_workflow_runs r ON r.run_id=e.run_id "
                 "LEFT JOIN operational_device_links d ON d.installation_id=r.installation_id "
+                "LEFT JOIN workflow_run_hosts h ON h.run_id=r.run_id "
                 "WHERE e.received_at>? ORDER BY e.received_at,e.event_id"
             ),
             (row["started_at"],),

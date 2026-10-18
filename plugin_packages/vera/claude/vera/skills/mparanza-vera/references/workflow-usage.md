@@ -59,7 +59,9 @@ event_id and run_id random UUIDs, sequence 1, kind started, actual timezone-awar
 occurred_at, observed product_version, pipeline, host and sample_kind. Retain the
 exact event before sending. Retry the same event UUID and fields after an
 ambiguous response. Use `vera_workflow_status` with run_id to inspect acknowledged
-sequence before later events. Subsequent events increase sequence by one. Keep
+sequence before later events. Subsequent events increase sequence by one. `pipeline`, `host` and `sample_kind`
+belong only to `started`; omit them from `completed`, `receipt` and other events.
+Use only the fields admitted for the actual event kind. Keep
 unacknowledged events in the existing task's durable private context where
 available; if no durable storage exists, report that limitation, never pretend
 that a retry is persisted. Do not route around a denied host permission.
@@ -72,14 +74,23 @@ the initial tool list is not evidence of unavailability. In Cowork, the plugin
 can expose these on the connected computer even while task scripts run in a
 Linux container. The fixed native tool needs no client folder or shell access.
 
-Use the exact capability that owns this task: the local reporter capability if
-started locally, or the original capability returned by remote registration if
-started through the connector. Call the native host-link tool with that
-`{credentials: {installation_id, installation_key}}` using those existing values. The argument is `credentials`, not `capability`; omit `run_id`. The native tool supplies its own private host proof. Then inspect
-`vera_workflow_status` for this same run and confirm the server's
-`reporting.computer_link` and `reporting.computer_id`. The public context tool
-alone is not proof that the run is linked. Never copy a host key into task files,
-replace the reporter owner, or associate the run by matching names or IPs.
+For a locally started run, use its existing local reporter capability. For a
+connector-owned run, read `reporting.host_link.credentials` from the actual
+`vera_workflow_record` acknowledgement. This is a short-lived proof scoped
+only to this run's native-computer link; it is not a new reporter or the OAuth
+identity. If expired, inspect status and replay the latest acknowledged event
+unchanged to obtain a fresh proof, preserving its UUID, sequence and owner.
+Do not store this proof as installation credentials or use it for other tools.
+
+Call `vera_incident_host_link` with exactly
+`{credentials: {installation_id, installation_key}}` from that proof or the
+original local capability. Omit `capability` and `run_id`. The native helper adds
+its own private computer proof. Inspect `vera_workflow_status` for this
+same run and confirm `reporting.computer_link` and `reporting.computer_id`.
+The public context tool alone is not proof of linkage. A saved connector may be
+used on multiple computers: only this run is bound, never all its other runs.
+Never copy a host key into task files, replace the original owner, or infer a
+computer from names, IPs, OAuth IDs or task IDs.
 
 If discovery or linking fails, retain that exact technical limitation and keep
 work/reporting running. Do not expand permissions, attach additional folders,

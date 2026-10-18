@@ -8,7 +8,9 @@ and recovery. The invalid original manifest contents have not been received.
 
 This release integrates PR #864 at `5f356f1a2191` (Bilancio locking) and PR #866
 at `4370e78cf321` (Archive JSON output encoding), preserving their source history.
-The combined release versions are Vera 0.1.417, Clara 0.1.304 and Lucia 0.1.128.
+Main commit `28623647c7a3` (PR #865, per-run Cowork reporting and native binding)
+is also retained. The combined release versions are Vera 0.1.417, Clara 0.1.304
+and Lucia 0.1.128.
 
 ## Behavior
 
@@ -64,13 +66,20 @@ judgments; only its release version binding changes.
 
 ## Evidence and limits
 
-Native Windows CI run `39167427131` passed 20 file/process boundary tests at
-88.74% coverage, six Archive isolation tests, 12 readable/encoding tests,
-24 financial-analysis tests and 29 sales-plan tests. Its expanded navigation
-and error tests exposed the lock deletion and error-wrapping defects described
-above; those fixes are under final Windows CI. The combined local Archive regressions passed 232
-tests and Bilancio passed 43 tests. The Journal–Bank suite passed all 473 tests together on the combined source.
-These are intermediate results; merge and deployment require all final checks.
+Native Windows run `39171312432` on `3af718c2f` passed all 142 tests:
+22 file/process boundary tests at 88.74% helper coverage, six Archive isolation,
+12 readable/encoding, 39 native navigation/save/legacy-lock recovery,
+24 financial-analysis, ten FDD hardening and 29 sales-plan tests. The recovery
+cases preserve active legacy writers, nonempty files, hard links and symbolic
+links, and verify cleanup after process exit. All three product formats matched
+source; package/update tests passed 406 tests with two explicit skips.
+
+Local combined Archive regressions passed 232 tests, Bilancio passed 43 and
+Journal–Bank passed all 473 tests together. PR #865 integration preserved the
+Windows/Archive implementation bytes and the incoming reporting implementation.
+All non-source course fields match both parents, and all 55 catalogue skill
+entrypoints remain unchanged. Full CI on the final combined head remains the
+merge and deployment gate.
 
 The isolated semantic worker remains qualified only for its pinned macOS host
 profiles. Windows process lifecycle tests do **not** qualify its filesystem
