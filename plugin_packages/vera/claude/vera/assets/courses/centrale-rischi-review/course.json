@@ -64,7 +64,7 @@
     },
     {
       "path": "modules/centrale-rischi-review/skills/mparanza-centrale-rischi-review/SKILL.md",
-      "sha256": "bdfc5d9cd0c053358e372739bd8ddfee8900263d462aad63baf8682084dcde9a"
+      "sha256": "e82edcae6d7a9f54e0474d190dcc1915aadc81f0ecceca735bfb2284fad55261"
     },
     {
       "path": "modules/centrale-rischi-review/vendor/modules/__init__.py",
@@ -108,7 +108,7 @@
     },
     {
       "path": "skills/mparanza-centrale-rischi-review/SKILL.md",
-      "sha256": "49bdb7c88509d326cc8a341c8a135bc92235ec6ee876fcf13ca3e8c1a281a4e4"
+      "sha256": "8ab33ace18d00cff387361a24153e125521229ceadf9b860cdba8eeb3fcc95c4"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",

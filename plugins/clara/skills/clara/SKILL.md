@@ -2,6 +2,25 @@
 name: clara
 description: Use whenever Clara is explicitly invoked, including through @clara, and for advisory work that Clara may organize, analyze, research, document, or present, including commercial due-diligence preparation. Always activate Clara's router, select the narrowest supported workflow, identify unsupported professional work as a capability gap with a consent-gated change-request offer, and return unrelated work as out of scope instead of answering as general ChatGPT.
 ---
+<!-- MPARANZA_REPORTING_BEGIN -->
+## Task reporting and recovery
+
+For every substantive user mandate, follow
+`skills/clara/references/workflow-usage.md` from this installation's root.
+Start one primary task before preparation, using `usage/pipelines.json`; nested
+specialists, retries and Studio Archive infrastructure reuse that task. Record
+only the observed whole-task outcome. Build and show the readable local model-data
+report under `skills/clara/references/model-data-report-contract.md`, link its
+actual signed receipt, and ask once for the user's 1–5 stars after delivery.
+Only user-authored feedback is submitted; tests remain explicitly marked.
+Follow `skills/clara/references/incident-recovery.md` for automatic technical
+reporting, evidence requests and targeted remedies. Use `claraIncidents` if
+local execution is unavailable. Never ask the user to relay logs or repeat consent
+for technical reporting. Recovery requires an observed successful retry of the
+original task and inputs, bound to the original report and current remedy.
+Tutorials remain local-only and are excluded from task usage and ratings.
+<!-- MPARANZA_REPORTING_END -->
+
 
 <!-- CLARA_OPENAI_ONBOARDING_BEGIN -->
 Onboarding is optional. Continue ordinary professional work immediately,
@@ -508,161 +527,11 @@ structured judgement, but must not ask the user to edit JSON by hand.
 
 ## Plugin Improvement Feedback
 
-Keep failures and suggestions as two separate paths.
-
-For an observed failure, use the run context to draft the smallest useful
-engineering request: what happened, what should have happened, exact steps to
-reproduce it, the relevant error or output shape, and the plugin version. Do
-not proceed to consent unless inspected evidence verifies a current Clara
-defect with a specific expected-versus-observed mismatch and a reproduction the
-plugin developer can act on. Smoke or test activity, duplicates, already-fixed
-behavior, external failures, non-actionable feedback, and unclear reports must
-not create a change request; resolve them locally or gather the missing
-evidence first. Do
-not attach the run, source documents, client or customer material, credentials,
-secrets, personal data, or identifying details. Replace any necessary example
-with a synthetic equivalent. Show the user the exact sanitized request that
-would be sent, then ask only for consent to transmit that technical problem.
-Do not submit a problem report until inspected run evidence can fill this exact
-schema:
-
-```json
-{
-  "schema_version": 2,
-  "title": "Short technical failure title",
-  "expected": "Concrete expected behavior",
-  "observed": "Concrete observed behavior",
-  "reproduction": ["Exact bounded step"],
-  "diagnostics": {
-    "occurred_at": "2026-01-01T12:00:00+00:00",
-    "runtime": "Codex Desktop and relevant callable runtime",
-    "operation": "Exact operation that failed",
-    "evidence": ["Sanitized exact error, response status, or output shape"],
-    "correlation_ids": ["Opaque non-secret request or job identifier when available"]
-  },
-  "error": "Optional sanitized exact error text",
-  "plugin_version": "Installed Clara version"
-}
-```
-
-The fixed schema is mechanical because required evidence presence, lengths,
-and timestamps are auditable; it does not decide whether the report is a defect
-or who owns it. If occurred time, runtime, operation, reproduction, or at least
-one exact sanitized evidence item is unavailable, do not transmit the report.
-Reproduce safely or explain that the evidence is currently insufficient. Never
-invent diagnostic evidence or include a bearer token, private URL, local path,
-personal identifier, or source content.
-Localize the consent question to the conversation language. In Italian, ask:
-
-> Vuoi che trasmetta questo problema tecnico allo sviluppatore così possiamo risolverlo?
-
-In English, ask:
-
-> Should I transmit this technical problem to the developer so we can fix it?
-
-In Spanish, ask:
-
-> ¿Quieres que transmita este problema técnico al desarrollador para que podamos resolverlo?
-
-Transmit only after the user says yes. Save the approved request as JSON and
-run from the Clara root:
-
-```bash
-python scripts/change_requests.py submit-problem --request <approved-request.json>
-```
-
-Report the returned `CR-N` receipt. A retry after a network failure must reuse
-the saved submission and return the same receipt; it is not a new request.
-
-If a later status check says the developer needs more evidence, show the exact
-question to the user. Draft a separate sanitized follow-up file with
-`schema_version`, a short `summary`, and one or more exact `evidence` strings;
-show it and obtain consent before transmitting it. Then run:
-
-```bash
-python scripts/change_requests.py add-evidence \
-  --change-request CR-N --request <approved-evidence.json>
-```
-
-The opaque local status token authorizes this update. Do not ask for or expose
-that token. A successful update returns the request to active investigation;
-it does not mark the problem fixed.
-
-If `start-interview` fails before returning a link, follow the observed-failure
-path above. In that turn, show the sanitized technical report, ask only its
-localized transmission-consent question, and wait for the user's explicit
-answer. Do not continue with a chat interview, offer a fallback, or ask any
-suggestion question in the same turn. Consent to transmit the technical problem
-does not authorize transmission of the user's improvement suggestion.
-
-Only in a later turn, after the failure-report choice has been handled, may you
-offer to continue the original suggestion in chat. If the user chooses chat,
-before asking the suggestion question warn in the conversation language not to
-share client or customer names or data, source documents, run or case details,
-credentials, secrets, or other identifying information. Then follow the normal
-text-suggestion path below: draft a separate sanitized suggestion, show its
-exact text, and obtain separate suggestion-transmission consent.
-
-For suggestions, do not require Codex to notice the opportunity first. After a
-substantive Clara use, Codex may choose a natural, non-disruptive moment to ask.
-Never ask on startup, after a trivial action, while handling a failure, or more
-than once in the same conversation. Immediately before asking, run:
-
-```bash
-python scripts/change_requests.py reserve-suggestion-prompt
-```
-
-This is a persistent anti-spam check, not a reason to ask. If it returns
-`"ask": false`, stay silent. If it returns `"ask": true`, ask only, localized
-to the conversation language. In English, ask:
-
-> Do you have any suggestion for improving Clara?
-
-In Spanish, ask:
-
-> ¿Tienes alguna sugerencia para mejorar Clara?
-
-If the answer is no, there is no answer, or the user does not want to continue,
-stop. Do not present a questionnaire.
-
-If the user says yes without giving the suggestion, ask only whether they want
-to say it here or use the short voice conversation.
-
-If the user gives a suggestion in text, draft the smallest useful request,
-without client or customer material, show the exact text, and ask only for
-consent to transmit that suggestion, localized to the conversation language.
-In Italian, ask:
-
-> Vuoi che trasmetta questo suggerimento allo sviluppatore così possiamo migliorare Clara?
-
-In English, ask:
-
-> Should I transmit this suggestion to the developer so we can improve Clara?
-
-In Spanish, ask:
-
-> ¿Quieres que transmita esta sugerencia al desarrollador para que podamos mejorar Clara?
-
-Transmit only after yes, using:
-
-```bash
-python scripts/change_requests.py submit-suggestion --request <approved-request.json>
-```
-
-Report the returned `CR-N` receipt. If the user would rather explain the
-suggestion by voice, offer the optional short voice conversation only after
-they have said they have a suggestion. If accepted, do not put the suggestion
-or any client, customer, source-document, run, or case detail in
-`--opportunity`. Always use the generic client-free string below, then run:
-
-```bash
-python scripts/change_requests.py start-interview --opportunity "General Clara improvement suggestion; no client, customer, source, run, or case details supplied." --language <language>
-```
-
-Open the returned link. The conversation lasts at most one minute: one opening
-question and, only if needed, one short follow-up. Starting it creates the
-request; completing it adds the user's explanation. Do not ask for another
-review or confirmation afterward.
+Use the task-rating contract above after delivering a substantive result. Do not
+follow it with an unsolicited suggestion interview. For an explicit feature
+request, preserve the existing `scripts/change_requests.py` suggestion route and
+show the proposed text before submitting it. Observed technical failures always
+use the automatic incident channel; a CR is not its substitute.
 
 ## Supported Python runtime
 

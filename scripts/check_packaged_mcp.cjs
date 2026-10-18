@@ -7,14 +7,14 @@ const { spawn, spawnSync } = require("node:child_process");
 const readline = require("node:readline");
 const crypto = require("node:crypto");
 
-function validIncidentTools(tools) {
+function validIncidentTools(tools, product = "vera") {
   // Tool names are an exact transport contract, not a diagnostic classifier.
-  const expected = new Set(["vera_incident_register", "vera_incident_report", "vera_incident_status", "vera_incident_outcome", "vera_incident_progress"]);
+  const expected = new Set(["register", "report", "status", "outcome", "progress"].map(action => `${product}_incident_${action}`));
   // A release is built before its API deployment. Accept the existing incident
   // contract or the complete usage extension, never a half-deployed pair.
-  if (Array.isArray(tools) && tools.some(tool => typeof tool?.name === "string" && tool.name.startsWith("vera_workflow_"))) {
-    expected.add("vera_workflow_record");
-    expected.add("vera_workflow_status");
+  if (product !== "vera" || (Array.isArray(tools) && tools.some(tool => typeof tool?.name === "string" && tool.name.startsWith(`${product}_workflow_`)))) {
+    expected.add(`${product}_workflow_record`);
+    expected.add(`${product}_workflow_status`);
   }
   return Array.isArray(tools) && tools.length === expected.size &&
     tools.every(tool => tool && tool.inputSchema?.type === "object" && expected.delete(tool.name)) &&
@@ -22,10 +22,11 @@ function validIncidentTools(tools) {
 }
 
 async function checkRemoteServer(name, config) {
+  const product = ["vera", "clara", "lucia"].find(value => name === `${value}Incidents`);
   let url;
   try { url = new URL(config.url); } catch { return {name, error: "Invalid remote MCP URL"}; }
-  if (url.protocol !== "https:" || url.username || url.password || url.search || url.hash ||
-      url.origin !== "https://mparanza.com" || url.pathname !== "/mcp/vera-incidents") {
+  if (!product || url.protocol !== "https:" || url.username || url.password || url.search || url.hash ||
+      url.origin !== "https://mparanza.com" || url.pathname !== `/mcp/${product}-incidents`) {
     return {name, error: "Remote MCP endpoint is outside the reviewed incident contract"};
   }
   if (process.env.MPARANZA_VERIFY_REMOTE_MCP !== "1") {
@@ -55,7 +56,7 @@ async function checkRemoteServer(name, config) {
     const state = crypto.randomBytes(32).toString("base64url");
     const authorize = new URL(metadata.authorization_endpoint);
     authorize.search = new URLSearchParams({client_id, redirect_uri: callback, response_type: "code", code_challenge_method: "S256",
-      code_challenge: challenge, resource: url.href, scope: "vera:incidents", state}).toString();
+      code_challenge: challenge, resource: url.href, scope: `${product}:incidents`, state}).toString();
     const authorized = await fixedFetch(authorize);
     if (authorized.status !== 302) throw new Error("Anonymous verifier authorization failed");
     const returned = new URL(authorized.headers.get("location"));
@@ -81,7 +82,7 @@ async function checkRemoteServer(name, config) {
     const initialized = await rpc(1, "initialize", {protocolVersion: "2025-03-26", capabilities: {}, clientInfo: {name: "package-release-verifier", version: "1"}});
     if (!initialized.serverInfo?.name || !initialized.capabilities?.tools) throw new Error("Invalid remote initialize response");
     const listed = await rpc(2, "tools/list", {});
-    if (!validIncidentTools(listed.tools)) throw new Error("Invalid remote incident tools/list");
+    if (!validIncidentTools(listed.tools, product)) throw new Error("Invalid remote incident tools/list");
     return {name, transport: "http", tools: listed.tools.length, remoteRuntimeChecked: true};
   } catch (error) { return {name, error: error.message}; }
   finally {

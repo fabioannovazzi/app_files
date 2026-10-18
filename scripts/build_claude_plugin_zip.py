@@ -469,10 +469,11 @@ destination.
 
 Do not use WhatsApp, live INPS browser capture, hosted suggestion or voice
 interviews, or custom update services. Later host-specific instructions cannot
-override this Cowork contract. When invoked through Vera, task usage and 1–5-star
-feedback through its supported incident service and rating form remain available;
-follow the primary task's workflow-usage contract. This does not enable reporting
-for other invoking products. Tutorials retain their no-reporting boundary.
+override this Cowork contract. When invoked through Vera, Clara or Lucia, task
+usage, signed receipts, technical recovery and 1–5-star feedback through the
+invoking product's incident service and rating form remain available. Follow the
+primary task's workflow-usage contract and product identity. Tutorials retain
+their no-reporting boundary.
 """
 COWORK_REFERENCE_CONTRACT = """> **Cowork execution note:** The normal deliverable is a reviewable draft,
 artifact card, and source/review files in the connected folder. MCP tools,
@@ -1072,7 +1073,10 @@ def project_claude_mcp(content: bytes) -> bytes:
         if not isinstance(server, dict):
             raise ValueError(f"MCP server {name} must be a JSON object")
         if server.get("type") == "http":
-            if server.get("url") != "https://mparanza.com/mcp/vera-incidents":
+            if server.get("url") not in {
+                f"https://mparanza.com/mcp/{product}-incidents"
+                for product in ("vera", "clara", "lucia")
+            }:
                 raise ValueError(
                     f"MCP server {name} is outside the reviewed incident endpoint"
                 )
@@ -2136,6 +2140,13 @@ and is not permission to manually copy it or bypass a denied operation.
         )
         if usage is not None and "<!-- VERA_WORKFLOW_USAGE_BEGIN -->" not in text:
             text += "\n\n" + _project_natural_language_runtime(usage.group()) + "\n"
+    if relative_path.startswith("skills/"):
+        reporting = re.search(
+            r"(?s)<!-- MPARANZA_REPORTING_BEGIN -->.*?<!-- MPARANZA_REPORTING_END -->",
+            content.decode("utf-8"),
+        )
+        if reporting is not None and "<!-- MPARANZA_REPORTING_BEGIN -->" not in text:
+            text += "\n\n" + _project_natural_language_runtime(reporting.group()) + "\n"
     # Some public wrappers are replaced by Cowork-specific bodies. Retain their
     # optional knowledge contract without altering shared component skill bytes.
     if relative_path.startswith("skills/"):
@@ -2603,6 +2614,13 @@ def _project_clara_cowork_skill(
         text = (
             f"{frontmatter}\n\n" f"{main_runtime_reference.decode('utf-8').strip()}\n"
         )
+        reporting = re.search(
+            r"(?s)<!-- MPARANZA_REPORTING_BEGIN -->.*?<!-- MPARANZA_REPORTING_END -->",
+            content.decode("utf-8"),
+        )
+        if reporting is None:
+            raise ValueError("Clara source is missing its reporting contract")
+        text += "\n" + reporting.group() + "\n"
     else:
         text = _remove_optional_section(text, "## ChatGPT and Codex Runtime")
         text = _remove_optional_section(text, "## Plugin Improvement Feedback")
@@ -2866,7 +2884,7 @@ def _validate_clara_cowork_entries(
             or name.endswith("/agents/openai.yaml")
             or ".codex-plugin/" in name
             or name.endswith(".app.json")
-            or name.endswith(".mcp.json")
+            or (name.endswith(".mcp.json") and name != ".mcp.json")
         ):
             raise ValueError(f"Clara Cowork retains forbidden path: {name}")
     for component in components:
@@ -3013,6 +3031,17 @@ def _clara_package_entries(
     if not cowork_hook_path.is_file():
         raise FileNotFoundError(f"Clara Cowork hook does not exist: {cowork_hook_path}")
     entries["hooks/hooks.json"] = cowork_hook_path.read_bytes()
+    source_servers = json.loads(source_entries[".mcp.json"])["mcpServers"]
+    entries[".mcp.json"] = project_claude_mcp(
+        _json_bytes(
+            {
+                "mcpServers": {
+                    name: source_servers[name]
+                    for name in ("claraIncidents", "claraIncidentHost")
+                }
+            }
+        )
+    )
     _overlay_cowork_agents(entries, plugin="clara")
     entries["LICENSE"] = (ROOT / "LICENSE").read_bytes()
     components = builder.embedded_plugin_names(ROOT / "plugins" / "clara")
@@ -3100,9 +3129,16 @@ def _lucia_package_entries(
     if main_skill is None:
         raise ValueError("lucia: router skill is missing")
     main_text = main_skill.decode("utf-8")
+    reporting = re.search(
+        r"(?s)<!-- MPARANZA_REPORTING_BEGIN -->.*?<!-- MPARANZA_REPORTING_END -->",
+        main_text,
+    )
+    if reporting is None:
+        raise ValueError("Lucia source is missing its reporting contract")
     entries["skills/lucia/SKILL.md"] = (
         f"{_skill_frontmatter(main_text)}\n\n"
         f"{runtime_path.read_text(encoding='utf-8').strip()}\n"
+        f"\n{reporting.group()}\n"
     ).encode("utf-8")
 
     for component in sorted(LUCIA_COWORK_SKILLS):
@@ -3156,6 +3192,16 @@ def _lucia_package_entries(
         }
     )
     entries[".mcp.json"] = project_claude_mcp(source_entries[".mcp.json"])
+    entries["usage/pipelines.json"] = source_entries["usage/pipelines.json"]
+    for reference in (
+        "workflow-usage",
+        "incident-recovery",
+        "model-data-report-contract",
+    ):
+        name = f"skills/lucia/references/{reference}.md"
+        entries[name] = _project_cowork_reference(
+            source_entries[name], relative_path=name
+        )
     for name, content in source_entries.items():
         if name in ROOT_OMITTED_PATHS:
             continue
@@ -3432,13 +3478,13 @@ def _reviewer_note(product: str, entries: dict[str, bytes]) -> bytes:
     for name, config in servers.items():
         if "url" in config:
             if (
-                name != "veraIncidents"
-                or config["url"] != "https://mparanza.com/mcp/vera-incidents"
+                name != product + "Incidents"
+                or config["url"] != f"https://mparanza.com/mcp/{product}-incidents"
             ):
                 raise ValueError(f"Unreviewed remote server: {name}")
             remote.extend(
                 [
-                    "Remote: `veraIncidents` at https://mparanza.com/mcp/vera-incidents.",
+                    f"Remote: `{product}Incidents` at https://mparanza.com/mcp/{product}-incidents.",
                     "Receives technical incident metadata, reviewed diagnostics and recovery outcomes,",
                     "plus primary-task usage, outcome, receipt UUID/hash and actual 1-5-star ratings",
                     "with optional user-authored feedback. It authenticates with its own installation/",
@@ -3515,6 +3561,7 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
     entries["REVIEW.md"] = _reviewer_note(package.plugin, entries)
     if package.plugin == "vera":
         _project_cowork_privacy_register(entries)
+    if package.plugin in {"vera", "clara", "lucia"}:
         _load_codex_builder().add_vera_execution_manifest(entries)
     return dict(sorted(entries.items()))
 

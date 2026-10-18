@@ -28,6 +28,7 @@ def installed_copy(tmp_path, host="codex"):
     for name in (
         "verified_execution.py",
         "operational_incidents.py",
+        "reporting_product.py",
         "managed_python_runtime.py",
         "_managed_python_runtime.py",
         "check_dependencies.py",

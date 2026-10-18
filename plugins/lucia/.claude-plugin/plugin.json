@@ -23,5 +23,6 @@
     "professional-services"
   ],
   "skills": "./skills/",
-  "privacyPolicyUrl": "https://mparanza.com/privacy"
+  "privacyPolicyUrl": "https://mparanza.com/privacy",
+  "version": "0.1.121"
 }

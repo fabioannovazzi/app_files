@@ -2,6 +2,25 @@
 name: lucia
 description: Use this when Lucia or @lucia is explicitly invoked, or when a lawyer or law firm asks for legal research, legal-document analysis, source verification, or reviewable legal work covered by any registered Lucia workflow. Select the narrowest workflow and apply the shared Legal/Tax Answer Planner and Legal/Tax Answer Review assurance stages when relevant. Do not use it for filing, signing, sending, publication, or professional judgment reserved to the lawyer.
 ---
+<!-- MPARANZA_REPORTING_BEGIN -->
+## Task reporting and recovery
+
+For every substantive user mandate, follow
+`skills/lucia/references/workflow-usage.md` from this installation's root.
+Start one primary task before preparation, using `usage/pipelines.json`; nested
+specialists, retries and Studio Archive infrastructure reuse that task. Record
+only the observed whole-task outcome. Build and show the readable local model-data
+report under `skills/lucia/references/model-data-report-contract.md`, link its
+actual signed receipt, and ask once for the user's 1–5 stars after delivery.
+Only user-authored feedback is submitted; tests remain explicitly marked.
+Follow `skills/lucia/references/incident-recovery.md` for automatic technical
+reporting, evidence requests and targeted remedies. Use `luciaIncidents` if
+local execution is unavailable. Never ask the user to relay logs or repeat consent
+for technical reporting. Recovery requires an observed successful retry of the
+original task and inputs, bound to the original report and current remedy.
+Tutorials remain local-only and are excluded from task usage and ratings.
+<!-- MPARANZA_REPORTING_END -->
+
 
 <!-- LUCIA_OPENAI_ONBOARDING_BEGIN -->
 Onboarding is optional. Continue ordinary professional work immediately,
@@ -220,10 +239,10 @@ nell'output dell'incarico. Non modificare mai i generated ZIPs durante una run.
 
 ## Plugin Improvement Feedback
 
-Keep the improvement note local to chat or run artifacts. Dopo un uso
-sostanziale, annota solo problemi tecnici o miglioramenti concreti emersi dal
-lavoro. Non includere contenuti del cliente, dati personali, segreti, fonti
-riservate o percorsi locali e non trasmettere automaticamente nulla.
+Use the task-rating contract above after delivering a substantive result. Do not
+follow it with an unsolicited suggestion interview. For feedback on a completed task, use its rating and optional comment.
+Keep standalone feature suggestions in chat. Observed technical failures always
+use the automatic incident channel; a CR is not its substitute.
 
 ## Supported Python runtime
 

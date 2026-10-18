@@ -117,7 +117,7 @@ class Report(StrictModel):
     evidence_for_report_id: UUID | None = None
     response_to_remedy_revision: int | None = Field(default=None, ge=1)
     report_id: UUID
-    product: Literal["vera"] = "vera"
+    product: Literal["vera", "clara", "lucia"] = "vera"
     product_version: str = Field(
         min_length=1, max_length=100, pattern=r"^[A-Za-z0-9_.+-]+$"
     )

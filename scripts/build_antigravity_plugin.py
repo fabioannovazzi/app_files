@@ -133,8 +133,8 @@ def package_entries(product: str = "vera") -> dict[str, bytes]:
                 b"modules, scripts and MCP servers.", b"modules and local scripts."
             )
         )
-    if product == "vera":
-        add_vera_execution_manifest(entries, "vera/")
+    if product in {"vera", "clara", "lucia"}:
+        add_vera_execution_manifest(entries, f"{product}/")
     return dict(sorted(entries.items()))
 
 

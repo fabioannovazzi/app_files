@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "product": "clara",
+  "pipelines": {
+    "advisory-brief-planner": "Impostazione incarico",
+    "advisory-case-director": "Direzione incarico di consulenza",
+    "advisory-deliverable-validator": "Verifica elaborato professionale",
+    "attribute-reporting": "Analisi assortimenti",
+    "brand-fit": "Compatibilità marchio e retailer",
+    "business-planning": "Business plan",
+    "deck-correction": "Revisione presentazione",
+    "html-deck": "Presentazione HTML",
+    "hosted-interview": "Intervista",
+    "research-video": "Video di ricerca",
+    "reporting-engine": "Analisi dati e report",
+    "transcribe": "Trascrizione",
+    "claim-basis-map": "Verifica fonti delle affermazioni",
+    "professional-document": "Documento professionale"
+  },
+  "infrastructure": [
+    "learn-with-clara",
+    "privacy-surface-review"
+  ],
+  "instrumented_from_version": "0.1.298"
+}

@@ -160,11 +160,17 @@ def test_clara_cowork_includes_reviewed_feedback_and_omits_other_host_paths(
     assert forbidden_exact.isdisjoint(clara_entries)
     assert "scripts/change_requests.py" in clara_entries
     assert "scripts/check_change_requests.py" in clara_entries
+    assert set(json.loads(clara_entries[".mcp.json"])["mcpServers"]) == {
+        "claraIncidents",
+        "claraIncidentHost",
+    }
     assert not any(name.startswith("privacy/") for name in clara_entries)
     assert not any(name.endswith("/agents/openai.yaml") for name in clara_entries)
     assert not any(".codex-plugin/" in name for name in clara_entries)
     assert not any(
-        name.endswith((".app.json", ".mcp.json", ".pyc")) for name in clara_entries
+        name.endswith((".app.json", ".pyc"))
+        or (name.endswith(".mcp.json") and name != ".mcp.json")
+        for name in clara_entries
     )
     assert not any("beautify" in name.lower() for name in clara_entries)
 
@@ -262,8 +268,12 @@ def test_clara_cowork_instructions_are_host_neutral(clara_entries) -> None:
         "## Plugin Improvement Feedback"
         in instruction_docs["skills/mparanza-clara/SKILL.md"]
     )
-    assert "If the occurred time" in instruction_docs["skills/mparanza-clara/SKILL.md"]
-    assert "submit-problem" in instruction_docs["skills/mparanza-clara/SKILL.md"]
+    assert (
+        "without a support questionnaire"
+        in instruction_docs["skills/mparanza-clara/SKILL.md"]
+    )
+    assert "claraIncidents" in instruction_docs["skills/mparanza-clara/SKILL.md"]
+    assert "actual signed receipt" in instruction_docs["skills/mparanza-clara/SKILL.md"]
     assert (
         "Professional capability gap"
         in instruction_docs["skills/mparanza-clara/SKILL.md"]

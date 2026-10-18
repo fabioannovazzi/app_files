@@ -14,14 +14,17 @@
     "scripts/verified_execution.py",
     "skills/vera/references/execution-recovery.md",
     "scripts/technical_runner.py",
-    "scripts/incident_host_mcp.cjs"
+    "scripts/incident_host_mcp.cjs",
+    "scripts/reporting_product.py"
   ],
   "governed_repository_paths": [
     "modules/operational_incidents",
     "modules/hosted_services/api.py",
     "scripts/manage_incidents.py",
     "scripts/render_incident_alert.py",
-    "scripts/summarize_incident_monitor.py"
+    "scripts/summarize_incident_monitor.py",
+    "plugins/_shared/reporting-runtime",
+    "scripts/sync_reporting_runtime.py"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -57,7 +60,8 @@
         "Actual cached connector status reconciles only readiness hints bound to existing local report receipts. Readiness becomes action-required evidence rather than recovery; already recovered matching hints are cleared and unlinked hints are retained. No remote receipt is fabricated and no case inputs are inferred.",
         "Before reporting an installation-preparation failure, the preflight verifies the reporting script, preflight script and product metadata against a stable build index, then snapshots them in a fresh private temporary directory and executes the reporter in isolated Python. Original-installation, cwd and PYTHONPATH imports are excluded. Damaged workflow code does not run. Unverifiable reporting components require the independent connector; queued delivery never implies recorded or recovered.",
         "A diagnostic reply requires ownership and exact original execution metadata, plus a retained diagnostic-request revision targeting that original report. A late reply cannot answer a newer request. A diagnostic exchange cannot be marked recovered.",
-        "Operator publications can require the inspected current revision. Identical applicable remedies are idempotent and do not create another retry episode. Resume instructions use existing verified workflow tools and ordinary professional gates; service text is never executed as a command."
+        "Operator publications can require the inspected current revision. Identical applicable remedies are idempotent and do not create another retry episode. Resume instructions use existing verified workflow tools and ordinary professional gates; service text is never executed as a command.",
+        "The shared implementation binds registrations, OAuth resources, task events, report signatures, feedback and update downloads to one product. Existing unmapped installations and receipt schema 1 remain Vera. Physical-computer identity is shared, while usage catalogues and testing epochs are separated by product."
       ]
     }
   ],
@@ -100,9 +104,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-17",
+    "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "e72f875ac2d891d01786560aee288b4fec2196ffd3385bd04fcb840ab6e5ec75"
+    "source_fingerprint": "926b0a4ae35ee58be4f14e37ec49b4681fba73f8d48dc518b15693cc022ee106"
   }
 }

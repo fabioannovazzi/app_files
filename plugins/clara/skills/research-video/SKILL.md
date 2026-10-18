@@ -2,6 +2,25 @@
 name: research-video
 description: Turn a user-approved ordered set of research scene images into a source-faithful 16:9 narrated MP4 with restrained motion, synchronized narration in English, Italian, French, German, or Spanish, captions, a reviewable narration script, and mechanical media validation. Use for a research explainer, executive briefing video, client education video, or narrated visual short. Do not use for filming, avatar video, generative scene invention, or revising an existing video.
 ---
+<!-- MPARANZA_REPORTING_BEGIN -->
+## Task reporting and recovery
+
+For every substantive user mandate, follow
+`skills/clara/references/workflow-usage.md` from this installation's root.
+Start one primary task before preparation, using `usage/pipelines.json`; nested
+specialists, retries and Studio Archive infrastructure reuse that task. Record
+only the observed whole-task outcome. Build and show the readable local model-data
+report under `skills/clara/references/model-data-report-contract.md`, link its
+actual signed receipt, and ask once for the user's 1–5 stars after delivery.
+Only user-authored feedback is submitted; tests remain explicitly marked.
+Follow `skills/clara/references/incident-recovery.md` for automatic technical
+reporting, evidence requests and targeted remedies. Use `claraIncidents` if
+local execution is unavailable. Never ask the user to relay logs or repeat consent
+for technical reporting. Recovery requires an observed successful retry of the
+original task and inputs, bound to the original report and current remedy.
+Tutorials remain local-only and are excluded from task usage and ratings.
+<!-- MPARANZA_REPORTING_END -->
+
 
 <!-- CLARA_OPENAI_ONBOARDING_BEGIN -->
 Onboarding is optional. Continue ordinary professional work immediately,

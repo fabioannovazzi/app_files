@@ -10,6 +10,7 @@ import logging
 import os
 import platform
 import re
+import runpy
 import secrets
 import sqlite3
 import stat
@@ -25,6 +26,10 @@ from functools import wraps
 from pathlib import Path
 from typing import Any
 from uuid import UUID, uuid4
+
+product_name = runpy.run_path(str(Path(__file__).with_name("reporting_product.py")))[
+    "product_name"
+]
 
 __all__ = [
     "report_failure",
@@ -72,7 +77,13 @@ def _state_path() -> Path:
         Path(
             os.environ.get(
                 "MPARANZA_INCIDENT_STATE_DIR",
-                str(Path.home() / ".mparanza/vera/incidents" / _host()),
+                str(
+                    Path.home()
+                    / ".mparanza"
+                    / product_name(ROOT)
+                    / "incidents"
+                    / _host()
+                ),
             )
         )
         .expanduser()
@@ -494,6 +505,8 @@ class _NoRedirect(urllib.request.HTTPRedirectHandler):
 
 
 def _post(operation: str, payload: dict[str, Any]) -> dict[str, Any]:
+    if operation == "register":
+        payload = {**payload, "product": product_name(ROOT)}
     # A native broker linking a guest must never claim the guest ran its version.
     if "native_status" not in payload:
         payload = {**payload, "client_status": _reporter_status()}
@@ -572,7 +585,7 @@ def _expand_success(
                         "execution_succeeded": False,
                         "diagnostics": [
                             {
-                                "component": "vera-runtime",
+                                "component": product_name(ROOT) + "-runtime",
                                 "error_type": "ObservedExecutionSuccess",
                                 "stage": "execution-receipt",
                                 "exit_code": 0,
@@ -580,7 +593,9 @@ def _expand_success(
                                 "message": (
                                     "Verified helper execution succeeded: "
                                     + item["payload"]["operation"]
-                                    + "; Vera "
+                                    + "; "
+                                    + product_name(ROOT).title()
+                                    + " "
                                     + item["payload"]["product_version"]
                                     + ". "
                                     + (
@@ -664,8 +679,8 @@ def _identity() -> dict[str, str]:
         path = ROOT / name
         if path.is_file():
             value = json.loads(path.read_text(encoding="utf-8"))
-            return {"product": "vera", "product_version": value["version"]}
-    raise ValueError("Installed Vera manifest is unavailable")
+            return {"product": product_name(ROOT), "product_version": value["version"]}
+    raise ValueError("Installed product manifest is unavailable")
 
 
 def _reporter_status() -> dict[str, Any]:
@@ -726,7 +741,7 @@ def _report_failure(
             "stage": stage,
             "diagnostics": [
                 {
-                    "component": "vera-runtime",
+                    "component": product_name(ROOT) + "-runtime",
                     "error_type": error_type,
                     "message": _clean(message),
                     "stage": stage,
@@ -807,7 +822,7 @@ def _report_failure(
             if any(item.get("fingerprint") == fingerprint for item in state["outbox"]):
                 return {
                     "reporting": "queued",
-                    "independent_connector": "vera_incident_report",
+                    "independent_connector": product_name(ROOT) + "_incident_report",
                     "report": reports[0],
                 }
             return {
@@ -822,14 +837,14 @@ def _report_failure(
         except (OSError, ValueError, urllib.error.URLError):
             return {
                 "reporting": "queued",
-                "independent_connector": "vera_incident_report",
+                "independent_connector": product_name(ROOT) + "_incident_report",
                 "report": reports[0],
             }
     except (OSError, ValueError, KeyError) as error:
         LOGGER.warning("Incident local queue unavailable: %s", type(error).__name__)
         return {
             "reporting": "local-state-unavailable",
-            "independent_connector": "vera_incident_report",
+            "independent_connector": product_name(ROOT) + "_incident_report",
         }
 
 
@@ -841,7 +856,7 @@ def report_failure(workflow: str, stage: str, message: str, **kwargs) -> dict[st
     except (OSError, ValueError, sqlite3.Error):
         return {
             "reporting": "local-state-unavailable",
-            "independent_connector": "vera_incident_report",
+            "independent_connector": product_name(ROOT) + "_incident_report",
         }
 
 
@@ -954,7 +969,7 @@ def check_incidents(
         except (OSError, ValueError, urllib.error.URLError) as error:
             return {
                 "transport": "unavailable",
-                "independent_connector": "vera_incident_status",
+                "independent_connector": product_name(ROOT) + "_incident_status",
                 "error_type": type(error).__name__,
                 "message": _clean(str(error)),
                 "credentials": state["credentials"],
@@ -1041,7 +1056,8 @@ def check_incidents(
                         str(ROOT / script),
                         *(
                             []
-                            if receipt["workflow"] == "vera-core"
+                            if receipt["workflow"]
+                            in {product_name(ROOT) + "-core", product_name(ROOT)}
                             else ["--module", receipt["workflow"]]
                         ),
                     ],
@@ -1089,7 +1105,7 @@ def check_incidents(
             if completed.returncode == 0
             else [
                 {
-                    "component": "vera-recovery",
+                    "component": product_name(ROOT) + "-recovery",
                     "error_type": "RecoveryActionFailure",
                     "exit_code": completed.returncode,
                     "stage": "automatic-recovery",
@@ -1219,20 +1235,27 @@ def startup_context() -> str:
         from workflow_usage import startup_context as usage_context
 
         return (
-            usage_context()
-            + " "
-            + "Vera incident capability (technical opaque values; never show to the user): "
-            + json.dumps(context["credentials"])
-            + ". Observed reporting process (pass as client_status to the incident tools): "
-            + json.dumps(context["client_status"])
-            + ". Pending helper evidence for automatic technical review: "
-            + json.dumps(context["pending_diagnostics"])
-            + ". Pending delivery state (read only when queued evidence needs connector delivery): "
-            + context["outbox_path"]
-            + ". If vera_incident_host_link is actually exposed, pass this local capability once to bind its native host proof; never expose its separate device key or infer a guest workflow version from the broker. A saved connector ID and a Linux guest ID are not computer identities. Read each pending diagnostic locally, exclude unrelated private/client content, and supplement its original report through vera_incident_report before declaring diagnosis blocked. Use the independent vera_incident_register/status tools automatically. An observed technical failure uses vera_incident_report, not a consent question or CR form. Follow skills/vera/references/incident-recovery.md for diagnostic-request and resume remedies: answer technical requests automatically, preserve the original report/revision, and verify the original task after its actual retry. While its recovery is active, check status after evidence delivery and between recovery steps; do not require another user message to collect an available reply. Local transport/recovery errors do not block unrelated professional work."
+            (
+                usage_context()
+                + " "
+                + "Vera incident capability (technical opaque values; never show to the user): "
+                + json.dumps(context["credentials"])
+                + ". Observed reporting process (pass as client_status to the incident tools): "
+                + json.dumps(context["client_status"])
+                + ". Pending helper evidence for automatic technical review: "
+                + json.dumps(context["pending_diagnostics"])
+                + ". Pending delivery state (read only when queued evidence needs connector delivery): "
+                + context["outbox_path"]
+                + ". If vera_incident_host_link is actually exposed, pass this local capability once to bind its native host proof; never expose its separate device key or infer a guest workflow version from the broker. A saved connector ID and a Linux guest ID are not computer identities. Read each pending diagnostic locally, exclude unrelated private/client content, and supplement its original report through vera_incident_report before declaring diagnosis blocked. Use the independent vera_incident_register/status tools automatically. An observed technical failure uses vera_incident_report, not a consent question or CR form. Follow skills/vera/references/incident-recovery.md for diagnostic-request and resume remedies: answer technical requests automatically, preserve the original report/revision, and verify the original task after its actual retry. While its recovery is active, check status after evidence delivery and between recovery steps; do not require another user message to collect an available reply. Local transport/recovery errors do not block unrelated professional work."
+            )
+            .replace("Vera", product_name(ROOT).title())
+            .replace("vera_", product_name(ROOT) + "_")
+            .replace("skills/vera/", "skills/" + product_name(ROOT) + "/")
         )
     except (OSError, ValueError, KeyError, sqlite3.Error):
-        return "Local incident state is unavailable. Use vera_incident_register with empty arguments to reuse the saved anonymous connection identity. Report observed technical failure automatically."
+        return "Local incident state is unavailable. Use vera_incident_register with empty arguments to reuse the saved anonymous connection identity. Report observed technical failure automatically.".replace(
+            "vera_", product_name(ROOT) + "_"
+        )
 
 
 def main() -> None:

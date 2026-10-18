@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-testing-product="clara">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -30,6 +30,7 @@
   <link rel="stylesheet" href="../product-social.css?v=2026092601">
   <link rel="stylesheet" href="../product-install.css?v=2026100302">
   <script defer src="antigravity/version.js"></script>
+  <link rel="stylesheet" href="../product-testing-status.css">
 </head>
 <body>
   <a class="skip-link" href="#main-content" data-i18n="skip">Skip to content</a>
@@ -126,55 +127,66 @@
         <h2 data-i18n="functions.title">Available functions</h2>
         <p data-i18n="functions.copy">Select a function to open its page with inputs, method, outputs, responsibilities, and model-data information.</p>
       </div>
+      <div class="function-test-legend">
+        <div class="function-test-legend__items">
+          <span><span class="function-test-indicator" data-test-status="untried" aria-hidden="true"></span><span data-testing-label="untried">Da provare su casi concreti</span></span>
+          <span><span class="function-test-indicator" data-test-status="agent" aria-hidden="true"></span><span data-testing-label="agent">Provata da un agente</span></span>
+          <span><span class="function-test-indicator" data-test-status="tried" aria-hidden="true"></span><span data-testing-label="tried">Provata con successo da un professionista</span></span>
+          <span><span class="function-test-indicator" data-test-status="repeated" aria-hidden="true"></span><span data-testing-label="repeated">Provata con successo da almeno tre professionisti</span></span>
+        </div>
+        <p data-testing-label="note">Lo stato si aggiorna dai processi conclusi. Ogni computer conta una volta; le stelle restano separate.</p>
+        <p data-testing-unavailable data-testing-label="unavailable" hidden>Aggiornamento dello stato temporaneamente non disponibile.</p>
+      </div>
+
       <div><a class="function-link" href="../learn-with-clara/index.html?lang=en" data-function-link data-base-href="../learn-with-clara/index.html"><h4 data-i18n="teaching.title">Learn with Clara</h4><span aria-hidden="true">↗</span></a></div>
       <div class="function-directory">
         <article class="function-group" id="area-deliverables">
           <span class="stream-number function-index" data-i18n="functions.deliverables.index">Area 1</span>
           <h3 data-i18n="functions.deliverables">Presentations, videos, and documents</h3>
           <a class="function-link" href="../clara-presentations/index.html?lang=en" data-function-link data-base-href="../clara-presentations/index.html">
-            <h4 data-i18n="functions.presentations">Create and revise presentations</h4><span aria-hidden="true">↗</span>
+            <h4><span data-i18n="functions.presentations">Create and revise presentations</span><span class="function-test-indicator" data-testing-pipeline="html-deck" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span aria-hidden="true">↗</span>
           </a>
           <a class="function-link" href="../clara-research-video/index.html?lang=en" data-function-link data-base-href="../clara-research-video/index.html">
-            <h4 data-i18n="functions.researchVideo">Create narrated research videos</h4><span aria-hidden="true">↗</span>
+            <h4><span data-i18n="functions.researchVideo">Create narrated research videos</span><span class="function-test-indicator" data-testing-pipeline="research-video" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span aria-hidden="true">↗</span>
           </a>
           <a class="function-link" href="../clara-documents/index.html?lang=en" data-function-link data-base-href="../clara-documents/index.html">
-            <h4 data-i18n="functions.documents">Create and revise documents</h4><span aria-hidden="true">↗</span>
+            <h4><span data-i18n="functions.documents">Create and revise documents</span><span class="function-test-indicator" data-testing-pipeline="professional-document" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span aria-hidden="true">↗</span>
           </a>
           <a class="function-link" href="../clara-advisory-deliverable-validator/index.html?lang=en" data-function-link data-base-href="../clara-advisory-deliverable-validator/index.html">
-            <h4 data-i18n="functions.advisoryDeliverableValidator">Validate an advisory deliverable</h4><span aria-hidden="true">↗</span>
+            <h4><span data-i18n="functions.advisoryDeliverableValidator">Validate an advisory deliverable</span><span class="function-test-indicator" data-testing-pipeline="advisory-deliverable-validator" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span aria-hidden="true">↗</span>
           </a>
         </article>
         <article class="function-group" id="area-recordings">
           <span class="stream-number function-index" data-i18n="functions.research.index">Area 2</span>
           <h3 data-i18n="functions.research">Interviews and recordings</h3>
           <a class="function-link" href="../clara-interview/index.html?lang=en" data-function-link data-base-href="../clara-interview/index.html">
-            <h4 data-i18n="functions.interviews">Prepare and conduct interviews</h4><span aria-hidden="true">↗</span>
+            <h4><span data-i18n="functions.interviews">Prepare and conduct interviews</span><span class="function-test-indicator" data-testing-pipeline="hosted-interview" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span aria-hidden="true">↗</span>
           </a>
           <a class="function-link" href="../clara-transcribe/index.html?lang=en" data-function-link data-base-href="../clara-transcribe/index.html">
-            <h4 data-i18n="functions.transcription">Transcribe recordings and voice notes</h4><span aria-hidden="true">↗</span>
+            <h4><span data-i18n="functions.transcription">Transcribe recordings and voice notes</span><span class="function-test-indicator" data-testing-pipeline="transcribe" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span aria-hidden="true">↗</span>
           </a>
         </article>
         <article class="function-group" id="area-retail">
           <span class="stream-number function-index" data-i18n="functions.retail.index">Area 3</span>
           <h3 data-i18n="functions.retail">Retail analysis</h3>
           <a class="function-link" href="../clara-retailer-signals/index.html?lang=en" data-function-link data-base-href="../clara-retailer-signals/index.html">
-            <h4 data-i18n="functions.retailerSignals">Compare assortment, new-product, and best-seller attributes</h4><span aria-hidden="true">↗</span>
+            <h4><span data-i18n="functions.retailerSignals">Compare assortment, new-product, and best-seller attributes</span><span class="function-test-indicator" data-testing-pipeline="attribute-reporting" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span aria-hidden="true">↗</span>
           </a>
           <a class="function-link" href="../clara-brand-fit/index.html?lang=en" data-function-link data-base-href="../clara-brand-fit/index.html">
-            <h4 data-i18n="functions.brandFit">Compare the retailer assortment with the brand catalogue</h4><span aria-hidden="true">↗</span>
+            <h4><span data-i18n="functions.brandFit">Compare the retailer assortment with the brand catalogue</span><span class="function-test-indicator" data-testing-pipeline="brand-fit" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span aria-hidden="true">↗</span>
           </a>
         </article>
         <article class="function-group" id="area-analysis">
           <span class="stream-number function-index" data-i18n="functions.analysis.index">Area 4</span>
           <h3 data-i18n="functions.analysis">Business analysis</h3>
           <a class="function-link" href="../clara-advisory-planning/index.html?lang=en" data-function-link data-base-href="../clara-advisory-planning/index.html">
-            <h4 data-i18n="functions.advisoryPlanning">Plan an advisory assignment</h4><span aria-hidden="true">↗</span>
+            <h4><span data-i18n="functions.advisoryPlanning">Plan an advisory assignment</span><span class="function-test-indicator" data-testing-pipeline="advisory-brief-planner" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span aria-hidden="true">↗</span>
           </a>
           <a class="function-link" href="../clara-business-planning/index.html?lang=en" data-function-link data-base-href="../clara-business-planning/index.html">
-            <h4 data-i18n="functions.businessPlanning">Prepare a business plan</h4><span aria-hidden="true">↗</span>
+            <h4><span data-i18n="functions.businessPlanning">Prepare a business plan</span><span class="function-test-indicator" data-testing-pipeline="business-planning" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span aria-hidden="true">↗</span>
           </a>
           <a class="function-link" href="../clara-data-analysis/index.html?lang=en" data-function-link data-base-href="../clara-data-analysis/index.html">
-            <h4 data-i18n="functions.dataAnalysis">Analyze business data</h4><span aria-hidden="true">↗</span>
+            <h4><span data-i18n="functions.dataAnalysis">Analyze business data</span><span class="function-test-indicator" data-testing-pipeline="reporting-engine" data-test-status="untried" role="img" aria-label="Da provare su casi concreti" title="Da provare su casi concreti"></span></h4><span aria-hidden="true">↗</span>
           </a>
         </article>
       </div>
@@ -1065,5 +1077,7 @@
       });
     }
   </script>
+  <script src="../product-testing-labels.js"></script>
+  <script src="../vera-testing-status.js"></script>
 </body>
 </html>

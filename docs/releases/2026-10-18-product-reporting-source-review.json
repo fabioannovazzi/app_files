@@ -1,0 +1,1331 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-10-18T09:29:46.492945+00:00",
+  "baseline_commit": "be77d6749bb17278358bb22313ff0cd3c380f1dc",
+  "source_commit": "a4e6aa6160d4e02ee5adbf01a036c1c2687b3f14",
+  "scope": "Bounded source compatibility review for existing materials. Every non-source field matches the exact baseline whose digest is retained in its editorial review. Source changes are the reviewed shared reporting runtime and product reporting instructions. No authored course content is edited or restored.",
+  "runtime_review": "The shared component binds reporting, receipts and recovery to the installed product; preserves Vera legacy proof bytes; captures actual technical failure facts; and delegates helpers through verified execution. Primary task usage excludes tutorial activity. Product reporting instructions reuse one run across nested helpers, preserve local model-data reports and require actual original-task verification.",
+  "execution_evidence": "CI run 39113568691, job 117634623964 passed the complete native teaching execution stage, component delegation and annual-accounts gates before rejecting stale editorial metadata. Final-head CI must still provide fresh matching JUnit evidence under the unchanged verifier.",
+  "courses": [
+    {
+      "workflow": "vera/organizzazione-lavoro",
+      "previous_course_sha256": "87e0cb7e1ed7e023d5a48d00c2a61b0dd51e2d01cde7d6e0c40547c4787a1b0c",
+      "current_course_sha256": "8aac4560e27adda7109efa22aa888041f2d88fc7bb1b4f3fe93970b10332c3f5",
+      "changed_fields": [
+        "sources"
+      ],
+      "changed_sources": [
+        {
+          "path": "scripts/managed_python_runtime.py",
+          "previous": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+            "sha256": "4c818a1c172f02b07625ef26a6cbe12672e6b52844948b0ee7fefce325a58c69"
+          },
+          "current": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+            "sha256": "980f27dd7fbfab5eb3f7fb01367c2f84c65cce7ffbb0f1c79a6fcb143dd63728"
+          }
+        },
+        {
+          "path": "scripts/notarized_run_receipt.py",
+          "previous": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
+            "sha256": "c80e16d86474dad3aa0f28241c010e6ca78286d98a9f0cd62c79e49e210aa864"
+          },
+          "current": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
+            "sha256": "d14afea6e9dabee7c2611d4e5fc0dac12c7c0011a7e8908f5e0e927369962f71"
+          }
+        },
+        {
+          "path": "scripts/operational_incidents.py",
+          "previous": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/vera/scripts/operational_incidents.py",
+            "sha256": "b33e4aa666daef15414d3c0aa79fe2a5494c480213576cbeced92bf8ccae9275"
+          },
+          "current": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/vera/scripts/operational_incidents.py",
+            "sha256": "c38cf8df7eb466a47c0e0516409f46f7f209c12f25d64f0a22ebf47b4f440627"
+          }
+        },
+        {
+          "path": "scripts/verified_execution.py",
+          "previous": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "8817cdb519cce486adf79d4f8feaf7bc3d4f89a810361855da823c6d9a852c31"
+          },
+          "current": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "55d1c0335e5c67c5518d65d3598bfbf3253e8f64644dbb98ce9e8595ea5c856b"
+          }
+        },
+        {
+          "path": "scripts/workflow_usage.py",
+          "previous": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/vera/scripts/workflow_usage.py",
+            "sha256": "066c0639a272e8d9b5466d83beee1e623c495e3cb0f05bba3257b6384d88a62b"
+          },
+          "current": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/vera/scripts/workflow_usage.py",
+            "sha256": "449d5b3b2cf5be4ab01b3e96eed63d3c82c90860a9a458ab364912a59fe7cf34"
+          }
+        }
+      ],
+      "authored_content_unchanged": true
+    },
+    {
+      "workflow": "vera/trasformazione",
+      "previous_course_sha256": "621c742b61da1f3392982f02ec1bb6735e0c747cd8aa3fdaf37dd6bcf4082694",
+      "current_course_sha256": "5170edbe4300e236766b2e0b9daeafc34c20e33588ea8e53d08ffc1aaaa5e981",
+      "changed_fields": [
+        "sources"
+      ],
+      "changed_sources": [
+        {
+          "path": "scripts/managed_python_runtime.py",
+          "previous": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+            "sha256": "4c818a1c172f02b07625ef26a6cbe12672e6b52844948b0ee7fefce325a58c69"
+          },
+          "current": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+            "sha256": "980f27dd7fbfab5eb3f7fb01367c2f84c65cce7ffbb0f1c79a6fcb143dd63728"
+          }
+        },
+        {
+          "path": "scripts/notarized_run_receipt.py",
+          "previous": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
+            "sha256": "c80e16d86474dad3aa0f28241c010e6ca78286d98a9f0cd62c79e49e210aa864"
+          },
+          "current": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
+            "sha256": "d14afea6e9dabee7c2611d4e5fc0dac12c7c0011a7e8908f5e0e927369962f71"
+          }
+        },
+        {
+          "path": "scripts/operational_incidents.py",
+          "previous": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/vera/scripts/operational_incidents.py",
+            "sha256": "b33e4aa666daef15414d3c0aa79fe2a5494c480213576cbeced92bf8ccae9275"
+          },
+          "current": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/vera/scripts/operational_incidents.py",
+            "sha256": "c38cf8df7eb466a47c0e0516409f46f7f209c12f25d64f0a22ebf47b4f440627"
+          }
+        },
+        {
+          "path": "scripts/verified_execution.py",
+          "previous": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "8817cdb519cce486adf79d4f8feaf7bc3d4f89a810361855da823c6d9a852c31"
+          },
+          "current": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "55d1c0335e5c67c5518d65d3598bfbf3253e8f64644dbb98ce9e8595ea5c856b"
+          }
+        },
+        {
+          "path": "scripts/workflow_usage.py",
+          "previous": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/vera/scripts/workflow_usage.py",
+            "sha256": "066c0639a272e8d9b5466d83beee1e623c495e3cb0f05bba3257b6384d88a62b"
+          },
+          "current": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/vera/scripts/workflow_usage.py",
+            "sha256": "449d5b3b2cf5be4ab01b3e96eed63d3c82c90860a9a458ab364912a59fe7cf34"
+          }
+        }
+      ],
+      "authored_content_unchanged": true
+    },
+    {
+      "workflow": "vera/variance-analysis",
+      "previous_course_sha256": "f416d7bf26f14265bd5b4513c0aafc2e0c1dfd3b245fd53aa95cea9adce8eddb",
+      "current_course_sha256": "77de73cede15332b33d89bda91de52a98a0a98842b3871d9f19a5436ae9870a3",
+      "changed_fields": [
+        "sources"
+      ],
+      "changed_sources": [
+        {
+          "path": "scripts/managed_python_runtime.py",
+          "previous": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+            "sha256": "4c818a1c172f02b07625ef26a6cbe12672e6b52844948b0ee7fefce325a58c69"
+          },
+          "current": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+            "sha256": "980f27dd7fbfab5eb3f7fb01367c2f84c65cce7ffbb0f1c79a6fcb143dd63728"
+          }
+        },
+        {
+          "path": "scripts/notarized_run_receipt.py",
+          "previous": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
+            "sha256": "c80e16d86474dad3aa0f28241c010e6ca78286d98a9f0cd62c79e49e210aa864"
+          },
+          "current": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
+            "sha256": "d14afea6e9dabee7c2611d4e5fc0dac12c7c0011a7e8908f5e0e927369962f71"
+          }
+        },
+        {
+          "path": "scripts/operational_incidents.py",
+          "previous": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/vera/scripts/operational_incidents.py",
+            "sha256": "b33e4aa666daef15414d3c0aa79fe2a5494c480213576cbeced92bf8ccae9275"
+          },
+          "current": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/vera/scripts/operational_incidents.py",
+            "sha256": "c38cf8df7eb466a47c0e0516409f46f7f209c12f25d64f0a22ebf47b4f440627"
+          }
+        },
+        {
+          "path": "scripts/verified_execution.py",
+          "previous": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "8817cdb519cce486adf79d4f8feaf7bc3d4f89a810361855da823c6d9a852c31"
+          },
+          "current": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "55d1c0335e5c67c5518d65d3598bfbf3253e8f64644dbb98ce9e8595ea5c856b"
+          }
+        },
+        {
+          "path": "scripts/workflow_usage.py",
+          "previous": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/vera/scripts/workflow_usage.py",
+            "sha256": "066c0639a272e8d9b5466d83beee1e623c495e3cb0f05bba3257b6384d88a62b"
+          },
+          "current": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/vera/scripts/workflow_usage.py",
+            "sha256": "449d5b3b2cf5be4ab01b3e96eed63d3c82c90860a9a458ab364912a59fe7cf34"
+          }
+        }
+      ],
+      "authored_content_unchanged": true
+    },
+    {
+      "workflow": "vera/contenzioso-tributario",
+      "previous_course_sha256": "35bcf1bcb38b8406c972622947caa073f3e59aa543729750034329562e022c66",
+      "current_course_sha256": "fac502ff58e9e57c351194f64dab26ce8aa905af638f383fb6e7eda52daf4e79",
+      "changed_fields": [
+        "sources"
+      ],
+      "changed_sources": [
+        {
+          "path": "scripts/managed_python_runtime.py",
+          "previous": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+            "sha256": "4c818a1c172f02b07625ef26a6cbe12672e6b52844948b0ee7fefce325a58c69"
+          },
+          "current": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+            "sha256": "980f27dd7fbfab5eb3f7fb01367c2f84c65cce7ffbb0f1c79a6fcb143dd63728"
+          }
+        },
+        {
+          "path": "scripts/notarized_run_receipt.py",
+          "previous": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
+            "sha256": "c80e16d86474dad3aa0f28241c010e6ca78286d98a9f0cd62c79e49e210aa864"
+          },
+          "current": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
+            "sha256": "d14afea6e9dabee7c2611d4e5fc0dac12c7c0011a7e8908f5e0e927369962f71"
+          }
+        },
+        {
+          "path": "scripts/operational_incidents.py",
+          "previous": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/vera/scripts/operational_incidents.py",
+            "sha256": "b33e4aa666daef15414d3c0aa79fe2a5494c480213576cbeced92bf8ccae9275"
+          },
+          "current": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/vera/scripts/operational_incidents.py",
+            "sha256": "c38cf8df7eb466a47c0e0516409f46f7f209c12f25d64f0a22ebf47b4f440627"
+          }
+        },
+        {
+          "path": "scripts/verified_execution.py",
+          "previous": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "8817cdb519cce486adf79d4f8feaf7bc3d4f89a810361855da823c6d9a852c31"
+          },
+          "current": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "55d1c0335e5c67c5518d65d3598bfbf3253e8f64644dbb98ce9e8595ea5c856b"
+          }
+        },
+        {
+          "path": "scripts/workflow_usage.py",
+          "previous": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/vera/scripts/workflow_usage.py",
+            "sha256": "066c0639a272e8d9b5466d83beee1e623c495e3cb0f05bba3257b6384d88a62b"
+          },
+          "current": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/vera/scripts/workflow_usage.py",
+            "sha256": "449d5b3b2cf5be4ab01b3e96eed63d3c82c90860a9a458ab364912a59fe7cf34"
+          }
+        }
+      ],
+      "authored_content_unchanged": true
+    },
+    {
+      "workflow": "vera/bilancio-oic",
+      "previous_course_sha256": "4b9f253d56f6e1e224a22a19ef391246a6763643f6bdc32e5c9939bf3325f5b9",
+      "current_course_sha256": "6b3eb10654c75e1859e25172bcb710d9bd79c3e6bc0e5685e52d10a39739de29",
+      "changed_fields": [
+        "sources"
+      ],
+      "changed_sources": [
+        {
+          "path": "scripts/managed_python_runtime.py",
+          "previous": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+            "sha256": "4c818a1c172f02b07625ef26a6cbe12672e6b52844948b0ee7fefce325a58c69"
+          },
+          "current": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+            "sha256": "980f27dd7fbfab5eb3f7fb01367c2f84c65cce7ffbb0f1c79a6fcb143dd63728"
+          }
+        },
+        {
+          "path": "scripts/notarized_run_receipt.py",
+          "previous": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
+            "sha256": "c80e16d86474dad3aa0f28241c010e6ca78286d98a9f0cd62c79e49e210aa864"
+          },
+          "current": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
+            "sha256": "d14afea6e9dabee7c2611d4e5fc0dac12c7c0011a7e8908f5e0e927369962f71"
+          }
+        },
+        {
+          "path": "scripts/operational_incidents.py",
+          "previous": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/vera/scripts/operational_incidents.py",
+            "sha256": "b33e4aa666daef15414d3c0aa79fe2a5494c480213576cbeced92bf8ccae9275"
+          },
+          "current": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/vera/scripts/operational_incidents.py",
+            "sha256": "c38cf8df7eb466a47c0e0516409f46f7f209c12f25d64f0a22ebf47b4f440627"
+          }
+        },
+        {
+          "path": "scripts/verified_execution.py",
+          "previous": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "8817cdb519cce486adf79d4f8feaf7bc3d4f89a810361855da823c6d9a852c31"
+          },
+          "current": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "55d1c0335e5c67c5518d65d3598bfbf3253e8f64644dbb98ce9e8595ea5c856b"
+          }
+        },
+        {
+          "path": "scripts/workflow_usage.py",
+          "previous": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/vera/scripts/workflow_usage.py",
+            "sha256": "066c0639a272e8d9b5466d83beee1e623c495e3cb0f05bba3257b6384d88a62b"
+          },
+          "current": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/vera/scripts/workflow_usage.py",
+            "sha256": "449d5b3b2cf5be4ab01b3e96eed63d3c82c90860a9a458ab364912a59fe7cf34"
+          }
+        }
+      ],
+      "authored_content_unchanged": true
+    },
+    {
+      "workflow": "lucia/comunicazione-professionale",
+      "previous_course_sha256": "4487aa10efbfbff3bddcdc51bc3cc41b8e2d4ffbd8ca40e09c4a111be718de4a",
+      "current_course_sha256": "92c9d37da8bc9953c438b5195e8ef97774fdd37ccec0026d2f6d3584ea0fee35",
+      "changed_fields": [
+        "sources"
+      ],
+      "changed_sources": [
+        {
+          "path": "skills/comunicazione-professionale/SKILL.md",
+          "previous": {
+            "path": "skills/comunicazione-professionale/SKILL.md",
+            "repository_path": "plugins/lucia/skills/comunicazione-professionale/SKILL.md",
+            "sha256": "d84b91a17a5175e542adecbf382009709487a202520732ebf4e50b1dff635ae2"
+          },
+          "current": {
+            "path": "skills/comunicazione-professionale/SKILL.md",
+            "repository_path": "plugins/lucia/skills/comunicazione-professionale/SKILL.md",
+            "sha256": "5109deb0379adc64ff43b79002d262130c3acb7ac253b272a7af511f574913b1"
+          }
+        }
+      ],
+      "authored_content_unchanged": true
+    },
+    {
+      "workflow": "lucia/apertura-pratica",
+      "previous_course_sha256": "aaf33db351b0e4bcbd1e9e353d3ea742dc1b4c3c9bc2900e3fd6627fd09803a6",
+      "current_course_sha256": "d38c4b5a0e9625f85b615aee65be6c868b1e9968919a1a4ca437f8dca99bd187",
+      "changed_fields": [
+        "sources"
+      ],
+      "changed_sources": [
+        {
+          "path": "scripts/model_data_report.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/model_data_report.py",
+            "repository_path": "plugins/lucia/scripts/model_data_report.py",
+            "sha256": "0e7a99ef631ed67a1aa25eb10ce7ed158625f6c0c09dcf8546eeb132a238262d"
+          }
+        },
+        {
+          "path": "scripts/notarized_run_receipt.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/lucia/scripts/notarized_run_receipt.py",
+            "sha256": "d14afea6e9dabee7c2611d4e5fc0dac12c7c0011a7e8908f5e0e927369962f71"
+          }
+        },
+        {
+          "path": "scripts/operational_incidents.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/lucia/scripts/operational_incidents.py",
+            "sha256": "c38cf8df7eb466a47c0e0516409f46f7f209c12f25d64f0a22ebf47b4f440627"
+          }
+        },
+        {
+          "path": "scripts/workflow_usage.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/lucia/scripts/workflow_usage.py",
+            "sha256": "449d5b3b2cf5be4ab01b3e96eed63d3c82c90860a9a458ab364912a59fe7cf34"
+          }
+        },
+        {
+          "path": "skills/apertura-pratica/SKILL.md",
+          "previous": {
+            "path": "skills/apertura-pratica/SKILL.md",
+            "repository_path": "plugins/lucia/skills/apertura-pratica/SKILL.md",
+            "sha256": "c99832c981d9d080cd25061ec4ad48ff04818e59a327d76eaab8b6b7c5ac9092"
+          },
+          "current": {
+            "path": "skills/apertura-pratica/SKILL.md",
+            "repository_path": "plugins/lucia/skills/apertura-pratica/SKILL.md",
+            "sha256": "d144b3e6984bc9828e7327e68c31bea75aee7e194ed650b709a23bba9b193c54"
+          }
+        }
+      ],
+      "authored_content_unchanged": true
+    },
+    {
+      "workflow": "lucia/presenza-digitale-studio",
+      "previous_course_sha256": "1f03b75c634c8ea7c5086ef0d11fb526cddd1015c4c86b2de603fb91cddf322d",
+      "current_course_sha256": "a4ec366008fc8d4b37912342857b521b08aa3c30fe8ce2f27380c494f92bce73",
+      "changed_fields": [
+        "sources"
+      ],
+      "changed_sources": [
+        {
+          "path": "skills/presenza-digitale-studio/SKILL.md",
+          "previous": {
+            "path": "skills/presenza-digitale-studio/SKILL.md",
+            "repository_path": "plugins/lucia/skills/presenza-digitale-studio/SKILL.md",
+            "sha256": "d3d382b78a44901653ccbbd4f23cad175525f90cb7d242240dc0d2c48acb4ab6"
+          },
+          "current": {
+            "path": "skills/presenza-digitale-studio/SKILL.md",
+            "repository_path": "plugins/lucia/skills/presenza-digitale-studio/SKILL.md",
+            "sha256": "24ae5643aa4a9c35af8254f3302a55981bb67001b9d061a2b0521fd139ccb0bc"
+          }
+        }
+      ],
+      "authored_content_unchanged": true
+    },
+    {
+      "workflow": "lucia/contenzioso-tributario",
+      "previous_course_sha256": "5832962d37ff0e98ad6fefcf96623bdcda15e05211d1cb2e268a6f79a39d115c",
+      "current_course_sha256": "2dc5f561080eb40066018e9b53515c92be666bd52423ff3a89ea1209d39ba07a",
+      "changed_fields": [
+        "sources"
+      ],
+      "changed_sources": [
+        {
+          "path": "scripts/check_dependencies.py",
+          "previous": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/lucia/scripts/check_dependencies.py",
+            "sha256": "d8fe58ac68e4cb0e05783256d829fbffc2a29c802c83902ee3102ff432764b69"
+          },
+          "current": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/lucia/scripts/check_dependencies.py",
+            "sha256": "7a4a68a8dc06dde4ebad3a8ed1ed6bb43b783e50aa06dcd53a479f950b8add42"
+          }
+        },
+        {
+          "path": "scripts/managed_python_runtime.py",
+          "previous": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/lucia/scripts/managed_python_runtime.py",
+            "sha256": "ccc8f805bc8807b1c16a2a92dc43533571cb341bc20a68d850d25af04c879e69"
+          },
+          "current": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/lucia/scripts/managed_python_runtime.py",
+            "sha256": "980f27dd7fbfab5eb3f7fb01367c2f84c65cce7ffbb0f1c79a6fcb143dd63728"
+          }
+        },
+        {
+          "path": "scripts/model_data_report.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/model_data_report.py",
+            "repository_path": "plugins/lucia/scripts/model_data_report.py",
+            "sha256": "0e7a99ef631ed67a1aa25eb10ce7ed158625f6c0c09dcf8546eeb132a238262d"
+          }
+        },
+        {
+          "path": "scripts/notarized_run_receipt.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/lucia/scripts/notarized_run_receipt.py",
+            "sha256": "d14afea6e9dabee7c2611d4e5fc0dac12c7c0011a7e8908f5e0e927369962f71"
+          }
+        },
+        {
+          "path": "scripts/operational_incidents.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/lucia/scripts/operational_incidents.py",
+            "sha256": "c38cf8df7eb466a47c0e0516409f46f7f209c12f25d64f0a22ebf47b4f440627"
+          }
+        },
+        {
+          "path": "scripts/verified_execution.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/lucia/scripts/verified_execution.py",
+            "sha256": "55d1c0335e5c67c5518d65d3598bfbf3253e8f64644dbb98ce9e8595ea5c856b"
+          }
+        },
+        {
+          "path": "scripts/workflow_usage.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/lucia/scripts/workflow_usage.py",
+            "sha256": "449d5b3b2cf5be4ab01b3e96eed63d3c82c90860a9a458ab364912a59fe7cf34"
+          }
+        },
+        {
+          "path": "skills/contenzioso-tributario/SKILL.md",
+          "previous": {
+            "path": "skills/contenzioso-tributario/SKILL.md",
+            "repository_path": "plugins/lucia/skills/contenzioso-tributario/SKILL.md",
+            "sha256": "ba752083422e5c1e4061c948ebe2049b9a16c973ed204c42f56f682a8a487f8a"
+          },
+          "current": {
+            "path": "skills/contenzioso-tributario/SKILL.md",
+            "repository_path": "plugins/lucia/skills/contenzioso-tributario/SKILL.md",
+            "sha256": "507d53c7ed4794b0f0d1480e6c33f69a8c8b06928738e2dcb14cf58509301db8"
+          }
+        }
+      ],
+      "authored_content_unchanged": true
+    },
+    {
+      "workflow": "lucia/quesito-legale-fiscale",
+      "previous_course_sha256": "7402cb563f4abee1ce8744350ed22a073545d6b2d8008aba79a9861877adb991",
+      "current_course_sha256": "346c8b65a3385e6a5042fa6a74384d44d67edf0e84c4b87ae4fb5b1dc429be9d",
+      "changed_fields": [
+        "sources"
+      ],
+      "changed_sources": [
+        {
+          "path": "skills/quesito-legale-fiscale/SKILL.md",
+          "previous": {
+            "path": "skills/quesito-legale-fiscale/SKILL.md",
+            "repository_path": "plugins/lucia/skills/quesito-legale-fiscale/SKILL.md",
+            "sha256": "4a5d7c6b2a373d8b223194f3ba3cb3dba589f4aee2a3d5d0c3d17f4b6a4332c0"
+          },
+          "current": {
+            "path": "skills/quesito-legale-fiscale/SKILL.md",
+            "repository_path": "plugins/lucia/skills/quesito-legale-fiscale/SKILL.md",
+            "sha256": "9c4e75db170986f44c09ca794ffdc27d91f051515a7757e0ce0f47a0719b3517"
+          }
+        }
+      ],
+      "authored_content_unchanged": true
+    },
+    {
+      "workflow": "clara/advisory-case-director",
+      "previous_course_sha256": "7ff1322de3e309f52b716fb99a6b65e49ceddd7674fbbffbe975818cf80f335c",
+      "current_course_sha256": "638f6f721e9d836fae84894ca26d8de5e574a1d7a2c7c19d20970f91140dd9ba",
+      "changed_fields": [
+        "sources"
+      ],
+      "changed_sources": [
+        {
+          "path": "skills/advisory-case-director/SKILL.md",
+          "previous": {
+            "path": "skills/advisory-case-director/SKILL.md",
+            "repository_path": "plugins/clara/skills/advisory-case-director/SKILL.md",
+            "sha256": "246bad138aa7ead885ecd807546d3ea725871c63249224560476410b9af0f8d7"
+          },
+          "current": {
+            "path": "skills/advisory-case-director/SKILL.md",
+            "repository_path": "plugins/clara/skills/advisory-case-director/SKILL.md",
+            "sha256": "78928d23065ca74aae97398d5c286da0d5ed8b0a66d75e04b00df1a350be7420"
+          }
+        }
+      ],
+      "authored_content_unchanged": true
+    },
+    {
+      "workflow": "clara/advisory-brief-planner",
+      "previous_course_sha256": "b27195812acb12bafd3355d50a66bddf5713512c0da3bfe9998d301e207b93e3",
+      "current_course_sha256": "8ecab11fdea15c0ec949f6c7018810341ac1fc969f8cb95753b5c23673cdb18f",
+      "changed_fields": [
+        "sources"
+      ],
+      "changed_sources": [
+        {
+          "path": "scripts/check_dependencies.py",
+          "previous": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "6e037df9002300cbd635b3e2a8795061abe8369880f71b8040b3fdaab103c22c"
+          },
+          "current": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "4556447640d0a39a30131dfe47a36310fbca2afe640f529dd8a13c3776018f89"
+          }
+        },
+        {
+          "path": "scripts/managed_python_runtime.py",
+          "previous": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "6f1e29d38fa4ff7919a507ddcb95df81d4bdf600b2ab6fc392956772d846d76d"
+          },
+          "current": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "980f27dd7fbfab5eb3f7fb01367c2f84c65cce7ffbb0f1c79a6fcb143dd63728"
+          }
+        },
+        {
+          "path": "scripts/model_data_report.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/model_data_report.py",
+            "repository_path": "plugins/clara/scripts/model_data_report.py",
+            "sha256": "0e7a99ef631ed67a1aa25eb10ce7ed158625f6c0c09dcf8546eeb132a238262d"
+          }
+        },
+        {
+          "path": "scripts/notarized_run_receipt.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/clara/scripts/notarized_run_receipt.py",
+            "sha256": "d14afea6e9dabee7c2611d4e5fc0dac12c7c0011a7e8908f5e0e927369962f71"
+          }
+        },
+        {
+          "path": "scripts/operational_incidents.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/clara/scripts/operational_incidents.py",
+            "sha256": "c38cf8df7eb466a47c0e0516409f46f7f209c12f25d64f0a22ebf47b4f440627"
+          }
+        },
+        {
+          "path": "scripts/verified_execution.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/clara/scripts/verified_execution.py",
+            "sha256": "55d1c0335e5c67c5518d65d3598bfbf3253e8f64644dbb98ce9e8595ea5c856b"
+          }
+        },
+        {
+          "path": "scripts/workflow_usage.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/clara/scripts/workflow_usage.py",
+            "sha256": "449d5b3b2cf5be4ab01b3e96eed63d3c82c90860a9a458ab364912a59fe7cf34"
+          }
+        },
+        {
+          "path": "skills/advisory-brief-planner/SKILL.md",
+          "previous": {
+            "path": "skills/advisory-brief-planner/SKILL.md",
+            "repository_path": "plugins/clara/skills/advisory-brief-planner/SKILL.md",
+            "sha256": "73f9096e1b4377b326683af07960a61a8d23c3ee346dfe5d4eb245207ae88824"
+          },
+          "current": {
+            "path": "skills/advisory-brief-planner/SKILL.md",
+            "repository_path": "plugins/clara/skills/advisory-brief-planner/SKILL.md",
+            "sha256": "ae7d1929ec4b28d6c57762c97912a10b85758e4fecd499ff25388419c67beacc"
+          }
+        }
+      ],
+      "authored_content_unchanged": true
+    },
+    {
+      "workflow": "clara/advisory-deliverable-validator",
+      "previous_course_sha256": "bb35d901f096028929d2ad983c7adfb02c9935c2f8895bd0d5003a1d57faddcb",
+      "current_course_sha256": "daf1d8e9010affeeee408b23adbee8bce9d3dc86e21631ab58e21a175c9f8df8",
+      "changed_fields": [
+        "sources"
+      ],
+      "changed_sources": [
+        {
+          "path": "scripts/check_dependencies.py",
+          "previous": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "6e037df9002300cbd635b3e2a8795061abe8369880f71b8040b3fdaab103c22c"
+          },
+          "current": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "4556447640d0a39a30131dfe47a36310fbca2afe640f529dd8a13c3776018f89"
+          }
+        },
+        {
+          "path": "scripts/managed_python_runtime.py",
+          "previous": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "6f1e29d38fa4ff7919a507ddcb95df81d4bdf600b2ab6fc392956772d846d76d"
+          },
+          "current": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "980f27dd7fbfab5eb3f7fb01367c2f84c65cce7ffbb0f1c79a6fcb143dd63728"
+          }
+        },
+        {
+          "path": "scripts/model_data_report.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/model_data_report.py",
+            "repository_path": "plugins/clara/scripts/model_data_report.py",
+            "sha256": "0e7a99ef631ed67a1aa25eb10ce7ed158625f6c0c09dcf8546eeb132a238262d"
+          }
+        },
+        {
+          "path": "scripts/notarized_run_receipt.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/clara/scripts/notarized_run_receipt.py",
+            "sha256": "d14afea6e9dabee7c2611d4e5fc0dac12c7c0011a7e8908f5e0e927369962f71"
+          }
+        },
+        {
+          "path": "scripts/operational_incidents.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/clara/scripts/operational_incidents.py",
+            "sha256": "c38cf8df7eb466a47c0e0516409f46f7f209c12f25d64f0a22ebf47b4f440627"
+          }
+        },
+        {
+          "path": "scripts/verified_execution.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/clara/scripts/verified_execution.py",
+            "sha256": "55d1c0335e5c67c5518d65d3598bfbf3253e8f64644dbb98ce9e8595ea5c856b"
+          }
+        },
+        {
+          "path": "scripts/workflow_usage.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/clara/scripts/workflow_usage.py",
+            "sha256": "449d5b3b2cf5be4ab01b3e96eed63d3c82c90860a9a458ab364912a59fe7cf34"
+          }
+        },
+        {
+          "path": "skills/advisory-deliverable-validator/SKILL.md",
+          "previous": {
+            "path": "skills/advisory-deliverable-validator/SKILL.md",
+            "repository_path": "plugins/clara/skills/advisory-deliverable-validator/SKILL.md",
+            "sha256": "89ee64ddaa229a0f68118b6d9a2862b30df683ea11b5eb6ff9cf6a1074ac7be2"
+          },
+          "current": {
+            "path": "skills/advisory-deliverable-validator/SKILL.md",
+            "repository_path": "plugins/clara/skills/advisory-deliverable-validator/SKILL.md",
+            "sha256": "ff7e04ba34e99a31f52f5f77bb7e1f0d3d629ee04c1756da3e6d42bf5f5a17ce"
+          }
+        }
+      ],
+      "authored_content_unchanged": true
+    },
+    {
+      "workflow": "clara/reporting-engine",
+      "previous_course_sha256": "5fe18e9028c985ce5490b9a286f54fd962fd08f19a3f649942bfc45babb0fdd0",
+      "current_course_sha256": "852c45f5c39ccad4dcfcc41f6379e4802abe567e1405b189f38175a3ffffcfd8",
+      "changed_fields": [
+        "sources"
+      ],
+      "changed_sources": [
+        {
+          "path": "scripts/check_dependencies.py",
+          "previous": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "6e037df9002300cbd635b3e2a8795061abe8369880f71b8040b3fdaab103c22c"
+          },
+          "current": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "4556447640d0a39a30131dfe47a36310fbca2afe640f529dd8a13c3776018f89"
+          }
+        },
+        {
+          "path": "scripts/managed_python_runtime.py",
+          "previous": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "6f1e29d38fa4ff7919a507ddcb95df81d4bdf600b2ab6fc392956772d846d76d"
+          },
+          "current": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "980f27dd7fbfab5eb3f7fb01367c2f84c65cce7ffbb0f1c79a6fcb143dd63728"
+          }
+        },
+        {
+          "path": "scripts/model_data_report.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/model_data_report.py",
+            "repository_path": "plugins/clara/scripts/model_data_report.py",
+            "sha256": "0e7a99ef631ed67a1aa25eb10ce7ed158625f6c0c09dcf8546eeb132a238262d"
+          }
+        },
+        {
+          "path": "scripts/notarized_run_receipt.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/clara/scripts/notarized_run_receipt.py",
+            "sha256": "d14afea6e9dabee7c2611d4e5fc0dac12c7c0011a7e8908f5e0e927369962f71"
+          }
+        },
+        {
+          "path": "scripts/operational_incidents.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/clara/scripts/operational_incidents.py",
+            "sha256": "c38cf8df7eb466a47c0e0516409f46f7f209c12f25d64f0a22ebf47b4f440627"
+          }
+        },
+        {
+          "path": "scripts/verified_execution.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/clara/scripts/verified_execution.py",
+            "sha256": "55d1c0335e5c67c5518d65d3598bfbf3253e8f64644dbb98ce9e8595ea5c856b"
+          }
+        },
+        {
+          "path": "scripts/workflow_usage.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/clara/scripts/workflow_usage.py",
+            "sha256": "449d5b3b2cf5be4ab01b3e96eed63d3c82c90860a9a458ab364912a59fe7cf34"
+          }
+        },
+        {
+          "path": "skills/reporting-engine/SKILL.md",
+          "previous": {
+            "path": "skills/reporting-engine/SKILL.md",
+            "repository_path": "plugins/clara/skills/reporting-engine/SKILL.md",
+            "sha256": "39f4ddb67dd2c12ebe3b8b3ba5802989232a3bfb91fdf3203dc09eeb97d8b52f"
+          },
+          "current": {
+            "path": "skills/reporting-engine/SKILL.md",
+            "repository_path": "plugins/clara/skills/reporting-engine/SKILL.md",
+            "sha256": "daadcfc436f2f2e63d62c5a73fe0246a9e0040faf674645ed144452f4bd20fb4"
+          }
+        }
+      ],
+      "authored_content_unchanged": true
+    },
+    {
+      "workflow": "clara/deck-correction",
+      "previous_course_sha256": "3d17b08d8055976b4e5eaa98eabd71546ce7f21e1ee8c482f8300173bb7cd103",
+      "current_course_sha256": "420f0dcc951fcf9f8e32eac9a246f9640eb70b4bc8f58992ec5a1f8b921ddbd7",
+      "changed_fields": [
+        "sources"
+      ],
+      "changed_sources": [
+        {
+          "path": "scripts/check_dependencies.py",
+          "previous": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "6e037df9002300cbd635b3e2a8795061abe8369880f71b8040b3fdaab103c22c"
+          },
+          "current": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "4556447640d0a39a30131dfe47a36310fbca2afe640f529dd8a13c3776018f89"
+          }
+        },
+        {
+          "path": "scripts/managed_python_runtime.py",
+          "previous": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "6f1e29d38fa4ff7919a507ddcb95df81d4bdf600b2ab6fc392956772d846d76d"
+          },
+          "current": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "980f27dd7fbfab5eb3f7fb01367c2f84c65cce7ffbb0f1c79a6fcb143dd63728"
+          }
+        },
+        {
+          "path": "scripts/model_data_report.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/model_data_report.py",
+            "repository_path": "plugins/clara/scripts/model_data_report.py",
+            "sha256": "0e7a99ef631ed67a1aa25eb10ce7ed158625f6c0c09dcf8546eeb132a238262d"
+          }
+        },
+        {
+          "path": "scripts/notarized_run_receipt.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/clara/scripts/notarized_run_receipt.py",
+            "sha256": "d14afea6e9dabee7c2611d4e5fc0dac12c7c0011a7e8908f5e0e927369962f71"
+          }
+        },
+        {
+          "path": "scripts/operational_incidents.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/clara/scripts/operational_incidents.py",
+            "sha256": "c38cf8df7eb466a47c0e0516409f46f7f209c12f25d64f0a22ebf47b4f440627"
+          }
+        },
+        {
+          "path": "scripts/verified_execution.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/clara/scripts/verified_execution.py",
+            "sha256": "55d1c0335e5c67c5518d65d3598bfbf3253e8f64644dbb98ce9e8595ea5c856b"
+          }
+        },
+        {
+          "path": "scripts/workflow_usage.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/clara/scripts/workflow_usage.py",
+            "sha256": "449d5b3b2cf5be4ab01b3e96eed63d3c82c90860a9a458ab364912a59fe7cf34"
+          }
+        },
+        {
+          "path": "skills/deck-correction/SKILL.md",
+          "previous": {
+            "path": "skills/deck-correction/SKILL.md",
+            "repository_path": "plugins/clara/skills/deck-correction/SKILL.md",
+            "sha256": "7d476257b37ca6c92ad7ec5e548f09ce9b9c4f98d9722583086f94e1fdccc83e"
+          },
+          "current": {
+            "path": "skills/deck-correction/SKILL.md",
+            "repository_path": "plugins/clara/skills/deck-correction/SKILL.md",
+            "sha256": "94e4bd9886230be48687ee7ba35ffd80e6e8b388c2262bf927f6603859e8f81c"
+          }
+        }
+      ],
+      "authored_content_unchanged": true
+    },
+    {
+      "workflow": "clara/business-planning",
+      "previous_course_sha256": "735ee68134a38d60532fbff1284f3838099ced580e6a6598ae1a8dcfc13c0839",
+      "current_course_sha256": "b7fe13436b993a017ee53e8fb861a85594df8658d95a996029cb34c34d889383",
+      "changed_fields": [
+        "sources"
+      ],
+      "changed_sources": [
+        {
+          "path": "skills/business-planning/SKILL.md",
+          "previous": {
+            "path": "skills/business-planning/SKILL.md",
+            "repository_path": "plugins/clara/skills/business-planning/SKILL.md",
+            "sha256": "091bd983cae7b5cfa41e06f2c0ba05e30246978798d0419e0bc0368dae4737aa"
+          },
+          "current": {
+            "path": "skills/business-planning/SKILL.md",
+            "repository_path": "plugins/clara/skills/business-planning/SKILL.md",
+            "sha256": "2885e9966a3bc02fdb21e060720c0d0f66d67b9afeea5f3177815f73584e33d2"
+          }
+        }
+      ],
+      "authored_content_unchanged": true
+    },
+    {
+      "workflow": "clara/transcribe",
+      "previous_course_sha256": "48ebd259c5036ffacc677ba7613771b15480ffe86550f37e8c97612bc11e1447",
+      "current_course_sha256": "9aba3177a31a6efb58b38d4e65fc9d1f2e66cff4e5bed131094311b4592470bb",
+      "changed_fields": [
+        "sources"
+      ],
+      "changed_sources": [
+        {
+          "path": "scripts/check_dependencies.py",
+          "previous": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "6e037df9002300cbd635b3e2a8795061abe8369880f71b8040b3fdaab103c22c"
+          },
+          "current": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "4556447640d0a39a30131dfe47a36310fbca2afe640f529dd8a13c3776018f89"
+          }
+        },
+        {
+          "path": "scripts/managed_python_runtime.py",
+          "previous": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "6f1e29d38fa4ff7919a507ddcb95df81d4bdf600b2ab6fc392956772d846d76d"
+          },
+          "current": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "980f27dd7fbfab5eb3f7fb01367c2f84c65cce7ffbb0f1c79a6fcb143dd63728"
+          }
+        },
+        {
+          "path": "scripts/model_data_report.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/model_data_report.py",
+            "repository_path": "plugins/clara/scripts/model_data_report.py",
+            "sha256": "0e7a99ef631ed67a1aa25eb10ce7ed158625f6c0c09dcf8546eeb132a238262d"
+          }
+        },
+        {
+          "path": "scripts/notarized_run_receipt.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/clara/scripts/notarized_run_receipt.py",
+            "sha256": "d14afea6e9dabee7c2611d4e5fc0dac12c7c0011a7e8908f5e0e927369962f71"
+          }
+        },
+        {
+          "path": "scripts/operational_incidents.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/clara/scripts/operational_incidents.py",
+            "sha256": "c38cf8df7eb466a47c0e0516409f46f7f209c12f25d64f0a22ebf47b4f440627"
+          }
+        },
+        {
+          "path": "scripts/verified_execution.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/clara/scripts/verified_execution.py",
+            "sha256": "55d1c0335e5c67c5518d65d3598bfbf3253e8f64644dbb98ce9e8595ea5c856b"
+          }
+        },
+        {
+          "path": "scripts/workflow_usage.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/clara/scripts/workflow_usage.py",
+            "sha256": "449d5b3b2cf5be4ab01b3e96eed63d3c82c90860a9a458ab364912a59fe7cf34"
+          }
+        },
+        {
+          "path": "skills/transcribe/SKILL.md",
+          "previous": {
+            "path": "skills/transcribe/SKILL.md",
+            "repository_path": "plugins/clara/skills/transcribe/SKILL.md",
+            "sha256": "1cb896eb89dfeebc3039b482dc75d61971f8b69ee197d088d6d607d750f3d698"
+          },
+          "current": {
+            "path": "skills/transcribe/SKILL.md",
+            "repository_path": "plugins/clara/skills/transcribe/SKILL.md",
+            "sha256": "b59c4878f4774de4001bbe2337f62b5b54d61e27cdae5cccc1e2b33226194778"
+          }
+        }
+      ],
+      "authored_content_unchanged": true
+    },
+    {
+      "workflow": "clara/html-deck",
+      "previous_course_sha256": "3bf05b819d6ca92f70c8eae732229094289c14dab3263dc313a854b083b04ba9",
+      "current_course_sha256": "aec6d40ced0b8753d7e02b9adf7a8052cd6142afbf5822ee0a6bc6fd8d4e86ac",
+      "changed_fields": [
+        "sources"
+      ],
+      "changed_sources": [
+        {
+          "path": "scripts/check_dependencies.py",
+          "previous": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "6e037df9002300cbd635b3e2a8795061abe8369880f71b8040b3fdaab103c22c"
+          },
+          "current": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "4556447640d0a39a30131dfe47a36310fbca2afe640f529dd8a13c3776018f89"
+          }
+        },
+        {
+          "path": "scripts/managed_python_runtime.py",
+          "previous": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "6f1e29d38fa4ff7919a507ddcb95df81d4bdf600b2ab6fc392956772d846d76d"
+          },
+          "current": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "980f27dd7fbfab5eb3f7fb01367c2f84c65cce7ffbb0f1c79a6fcb143dd63728"
+          }
+        },
+        {
+          "path": "scripts/model_data_report.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/model_data_report.py",
+            "repository_path": "plugins/clara/scripts/model_data_report.py",
+            "sha256": "0e7a99ef631ed67a1aa25eb10ce7ed158625f6c0c09dcf8546eeb132a238262d"
+          }
+        },
+        {
+          "path": "scripts/notarized_run_receipt.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/clara/scripts/notarized_run_receipt.py",
+            "sha256": "d14afea6e9dabee7c2611d4e5fc0dac12c7c0011a7e8908f5e0e927369962f71"
+          }
+        },
+        {
+          "path": "scripts/operational_incidents.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/clara/scripts/operational_incidents.py",
+            "sha256": "c38cf8df7eb466a47c0e0516409f46f7f209c12f25d64f0a22ebf47b4f440627"
+          }
+        },
+        {
+          "path": "scripts/verified_execution.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/clara/scripts/verified_execution.py",
+            "sha256": "55d1c0335e5c67c5518d65d3598bfbf3253e8f64644dbb98ce9e8595ea5c856b"
+          }
+        },
+        {
+          "path": "scripts/workflow_usage.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/clara/scripts/workflow_usage.py",
+            "sha256": "449d5b3b2cf5be4ab01b3e96eed63d3c82c90860a9a458ab364912a59fe7cf34"
+          }
+        },
+        {
+          "path": "skills/html-deck/SKILL.md",
+          "previous": {
+            "path": "skills/html-deck/SKILL.md",
+            "repository_path": "plugins/clara/skills/html-deck/SKILL.md",
+            "sha256": "a5a618bede89c5f161f84a1731e8265e4640c9ddd94ccde154cce01de4c5c5a1"
+          },
+          "current": {
+            "path": "skills/html-deck/SKILL.md",
+            "repository_path": "plugins/clara/skills/html-deck/SKILL.md",
+            "sha256": "368efb13c0bc762f782f79e0ffa32db432b317beeb14438ca8cc16e0cbbb1430"
+          }
+        }
+      ],
+      "authored_content_unchanged": true
+    },
+    {
+      "workflow": "clara/attribute-reporting",
+      "previous_course_sha256": "d5422b532e1eb8a14b23b446604d7d595f516e796bc513005378b5d1158b4a70",
+      "current_course_sha256": "599564a55ff74de477c41dc846900aa2f4d00278fbab301c8af6494d146f835d",
+      "changed_fields": [
+        "sources"
+      ],
+      "changed_sources": [
+        {
+          "path": "scripts/check_dependencies.py",
+          "previous": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "6e037df9002300cbd635b3e2a8795061abe8369880f71b8040b3fdaab103c22c"
+          },
+          "current": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "4556447640d0a39a30131dfe47a36310fbca2afe640f529dd8a13c3776018f89"
+          }
+        },
+        {
+          "path": "scripts/managed_python_runtime.py",
+          "previous": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "6f1e29d38fa4ff7919a507ddcb95df81d4bdf600b2ab6fc392956772d846d76d"
+          },
+          "current": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "980f27dd7fbfab5eb3f7fb01367c2f84c65cce7ffbb0f1c79a6fcb143dd63728"
+          }
+        },
+        {
+          "path": "scripts/model_data_report.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/model_data_report.py",
+            "repository_path": "plugins/clara/scripts/model_data_report.py",
+            "sha256": "0e7a99ef631ed67a1aa25eb10ce7ed158625f6c0c09dcf8546eeb132a238262d"
+          }
+        },
+        {
+          "path": "scripts/notarized_run_receipt.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/clara/scripts/notarized_run_receipt.py",
+            "sha256": "d14afea6e9dabee7c2611d4e5fc0dac12c7c0011a7e8908f5e0e927369962f71"
+          }
+        },
+        {
+          "path": "scripts/operational_incidents.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/clara/scripts/operational_incidents.py",
+            "sha256": "c38cf8df7eb466a47c0e0516409f46f7f209c12f25d64f0a22ebf47b4f440627"
+          }
+        },
+        {
+          "path": "scripts/verified_execution.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/clara/scripts/verified_execution.py",
+            "sha256": "55d1c0335e5c67c5518d65d3598bfbf3253e8f64644dbb98ce9e8595ea5c856b"
+          }
+        },
+        {
+          "path": "scripts/workflow_usage.py",
+          "previous": null,
+          "current": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/clara/scripts/workflow_usage.py",
+            "sha256": "449d5b3b2cf5be4ab01b3e96eed63d3c82c90860a9a458ab364912a59fe7cf34"
+          }
+        },
+        {
+          "path": "skills/attribute-reporting/SKILL.md",
+          "previous": {
+            "path": "skills/attribute-reporting/SKILL.md",
+            "repository_path": "plugins/clara/skills/attribute-reporting/SKILL.md",
+            "sha256": "f0ab8d8bc2c9a8fb48dffdd2991638be1176aad22886aa7d16c439c938c3ac78"
+          },
+          "current": {
+            "path": "skills/attribute-reporting/SKILL.md",
+            "repository_path": "plugins/clara/skills/attribute-reporting/SKILL.md",
+            "sha256": "56815832781d7a783b090af78fba8a96d38e38951c9c1a880c49de7a482efef0"
+          }
+        }
+      ],
+      "authored_content_unchanged": true
+    }
+  ]
+}

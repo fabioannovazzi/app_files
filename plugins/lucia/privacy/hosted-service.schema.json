@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/clara-hosted-service-boundary-v1.json",
+  "title": "Clara hosted-service boundary review",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "service_id",
+    "display_name",
+    "provider_or_recipients",
+    "workflows",
+    "governed_paths",
+    "trigger",
+    "automatic",
+    "data_sent",
+    "data_returned",
+    "access",
+    "retention",
+    "security_controls",
+    "review"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "service_id": {"type": "string", "minLength": 1},
+    "display_name": {"type": "string", "minLength": 1},
+    "provider_or_recipients": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "workflows": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "governed_paths": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "trigger": {"type": "string", "minLength": 1},
+    "automatic": {"type": "boolean"},
+    "data_sent": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/dataClass"}
+    },
+    "data_returned": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/dataClass"}
+    },
+    "access": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["arrangement", "controls"],
+      "properties": {
+        "arrangement": {"type": "string", "minLength": 1},
+        "controls": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "retention": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "statement"],
+      "properties": {
+        "status": {
+          "enum": [
+            "documented",
+            "partially_documented",
+            "not_established_by_plugin_source"
+          ]
+        },
+        "statement": {"type": "string", "minLength": 1}
+      }
+    },
+    "security_controls": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "control"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "control": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reviewed_at", "reviewed_by", "basis", "source_fingerprint"],
+      "properties": {
+        "reviewed_at": {"type": "string", "format": "date"},
+        "reviewed_by": {"const": "privacy-surface-review"},
+        "basis": {"const": "hosted_service_boundary_review_of_source"},
+        "source_fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  },
+  "$defs": {
+    "dataClass": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "when", "content"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "when": {"type": "string", "minLength": 1},
+        "content": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

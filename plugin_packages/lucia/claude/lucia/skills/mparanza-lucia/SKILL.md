@@ -122,7 +122,27 @@ paths, checksums, and structural consistency.
 
 ## Plugin Improvement Feedback
 
-Keep the improvement note local to chat or run artifacts. After substantive
-use, record only concrete technical problems or improvements observed during
-the work. Do not include client content, personal data, secrets, confidential
-sources, or local paths. Do not transmit feedback automatically.
+Use the primary task's 1–5-star rating and optional user-authored comment after
+delivery. Keep standalone feature suggestions in chat. Automatically report
+observed technical failures through `luciaIncidents` and follow the incident
+recovery contract, including the actual original-task verification. Never send
+client files, prompts, professional stdout or credentials as diagnostics.
+
+<!-- MPARANZA_REPORTING_BEGIN -->
+## Task reporting and recovery
+
+For every substantive user mandate, follow
+`skills/mparanza-lucia/references/workflow-usage.md` from this installation's root.
+Start one primary task before preparation, using `usage/pipelines.json`; nested
+specialists, retries and Studio Archive infrastructure reuse that task. Record
+only the observed whole-task outcome. Build and show the readable local model-data
+report under `skills/mparanza-lucia/references/model-data-report-contract.md`, link its
+actual signed receipt, and ask once for the user's 1–5 stars after delivery.
+Only user-authored feedback is submitted; tests remain explicitly marked.
+Follow `skills/mparanza-lucia/references/incident-recovery.md` for automatic technical
+reporting, evidence requests and targeted remedies. Use `luciaIncidents` if
+local execution is unavailable. Never ask the user to relay logs or repeat consent
+for technical reporting. Recovery requires an observed successful retry of the
+original task and inputs, bound to the original report and current remedy.
+Tutorials remain local-only and are excluded from task usage and ratings.
+<!-- MPARANZA_REPORTING_END -->

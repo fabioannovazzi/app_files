@@ -8,6 +8,7 @@ import io
 import json
 import logging
 import os
+import runpy
 import sqlite3
 import sys
 import time
@@ -18,6 +19,10 @@ from typing import Any
 from uuid import UUID, uuid4
 
 import operational_incidents as incidents
+
+product_name = runpy.run_path(str(Path(__file__).with_name("reporting_product.py")))[
+    "product_name"
+]
 
 __all__ = [
     "start",
@@ -310,6 +315,7 @@ def _append(
         "kind": kind,
         "occurred_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "product_version": _version(),
+        **({"product": product_name(ROOT)} if product_name(ROOT) != "vera" else {}),
         **{key: value for key, value in fields.items() if value is not None},
     }
     connection.execute(
@@ -446,6 +452,8 @@ def attach_receipt(
     value = json.loads(receipt_path.read_text(encoding="utf-8"))
     if value.get("status") == "stamped" and "receipt" in value:
         value = value["receipt"]
+    if value.get("product", "vera") != product_name(ROOT):
+        raise ValueError("Receipt belongs to another product")
     return record(
         run_id,
         "receipt",
@@ -521,7 +529,7 @@ def startup_context() -> str:
             "SELECT DISTINCT run_id FROM events WHERE receipt IS NULL LIMIT 100"
         ).fetchall()
         return (
-            "Vera workflow usage: follow skills/vera/references/workflow-usage.md for every substantive task, including AI-only work. One primary task UUID; Studio Archive is infrastructure. Flush the durable usage outbox at task startup and after outcomes. Pending run IDs: "
+            f"{product_name(ROOT).title()} workflow usage: follow skills/{product_name(ROOT)}/references/workflow-usage.md for every substantive task, including AI-only work. One primary task UUID; Studio Archive is infrastructure. Flush the durable usage outbox at task startup and after outcomes. Pending run IDs: "
             + json.dumps([row["run_id"] for row in pending])
             + ". Never infer stars or completion; record the user's actual answer after delivery."
         )

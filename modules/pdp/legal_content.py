@@ -172,16 +172,16 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "title": "Anonymous usage and satisfaction monitoring",
                 "paragraphs": [
                     (
-                        "Vera automatically records which processes are used and their "
+                        "Vera, Clara and Lucia automatically record which processes are used and their "
                         "observed outcome: started, completed, failed or cancelled. A run "
                         "with no observed outcome remains unknown. A random installation "
                         "identifier, without a named account, also allows repeat usage to be "
-                        "measured. Records include the process, host application, Vera "
+                        "measured. Records include the process, host application, product "
                         "version and event timestamps."
                     ),
                     (
                         "Users can rate the result from 1 to 5 stars and add an optional "
-                        "comment to help improve Vera. Without a response, the result "
+                        "comment to help improve the product. Without a response, the result "
                         "remains unrated. Periodic "
                         "AI monitoring reviews usage, outcomes and feedback to identify "
                         "problems and improve the functions."
@@ -214,12 +214,12 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
             },
             {
                 "id": "run-receipts",
-                "title": "Vera Technical Receipts",
+                "title": "Product Technical Receipts",
                 "paragraphs": [
                     (
-                        "Vera’s receipt-enabled report command automatically sends four "
-                        "fields to Mparanza LLC: schema version, random receipt ID, Vera "
-                        "version and the SHA-256 digest of the local report. It does not "
+                        "The receipt-enabled report command automatically sends four "
+                        "fields to Mparanza LLC: schema version, random receipt ID, product "
+                        "version and the SHA-256 digest of the local report. Clara and Lucia also include the product name in the signed schema-2 proof. The command does not "
                         "send the report, client documents, filenames, prompts or model "
                         "outputs. Reading a report, the generic local Studio Archive "
                         "report helper and the explicitly local onboarding path do not "
@@ -331,7 +331,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                     ("to deliver requested downloads and transactional messages;"),
                     ("to troubleshoot failures and provide support;"),
                     (
-                        "to measure Vera process usage, outcomes and satisfaction and improve its functions; and"
+                        "to measure Vera, Clara and Lucia process usage, outcomes and satisfaction and improve its functions; and"
                     ),
                     (
                         "to comply with law, enforce terms, and protect rights, "
@@ -383,7 +383,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "administrative deletion."
                     ),
                     (
-                        "Vera usage monitoring: process events, optional ratings and "
+                        "Vera, Clara and Lucia usage monitoring: process events, optional ratings and "
                         "comments, and receipt links remain until administrative "
                         "deletion, without automatic expiry. The service stores no "
                         "client documents, prompts or professional outputs in usage events."
@@ -817,16 +817,16 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "title": "Anonymous usage and satisfaction monitoring",
                 "paragraphs": [
                     (
-                        "Vera uses anonymous monitoring to measure process usage, observed "
+                        "Vera, Clara and Lucia use anonymous monitoring to measure process usage, observed "
                         "outcomes and user satisfaction and to improve its functions. "
                         "Technical events are sent automatically using a random installation "
                         "identifier, without a named account. They include the process, host "
-                        "application, Vera version and event timestamps, with no client "
+                        "application, product version and event timestamps, with no client "
                         "documents, task text, filenames, prompts or professional outputs."
                     ),
                     (
                         "After a result is delivered, you can rate it from 1 to 5 stars and "
-                        "add an optional comment to help improve Vera. Without a response, "
+                        "add an optional comment to help improve the product. Without a response, "
                         "the result remains unrated. Monitoring does not provide a guaranteed support response "
                         "or change the professional review required for the result."
                     ),
@@ -1229,17 +1229,17 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
             },
             {
                 "id": "workflow-usage",
-                "title": "Vera monitoring and feedback",
+                "title": "Vera, Clara and Lucia monitoring and feedback",
                 "paragraphs": [
                     (
-                        "Vera automatically reports technical faults and tracks their "
-                        "recovery. It also records anonymous process usage and observed "
+                        "Vera, Clara and Lucia automatically report technical faults and track their "
+                        "recovery. Each also records anonymous process usage and observed "
                         "outcomes. These technical events exclude client documents, prompts "
                         "and professional outputs."
                     ),
                     (
                         "After a result is delivered, you can rate it from 1 to 5 stars and "
-                        "add an optional comment to help improve Vera. Periodic AI monitoring "
+                        "add an optional comment to help improve the product. Periodic AI monitoring "
                         "reviews outcomes and feedback to identify problems and improvements. "
                         "This does not create a support obligation or a guaranteed response "
                         "time."

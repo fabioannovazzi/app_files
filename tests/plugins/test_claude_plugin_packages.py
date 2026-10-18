@@ -964,13 +964,16 @@ def test_projected_cowork_skills_remove_promotion_feedback_and_codex_wording(
         assert "Do not use WhatsApp" in content, name
         assert "live INPS browser capture" in content, name
         assert "hosted suggestion or voice" in content, name
-        assert "When invoked through Vera, task usage and 1–5-star feedback" in (
+        assert (
+            "When invoked through Vera, Clara or Lucia, task usage, signed receipts"
+            in (" ".join(content.split()))
+        ), name
+        assert "primary task's workflow-usage contract and product identity" in (
             " ".join(content.split())
         ), name
-        assert "This does not enable reporting for other invoking products" in (
-            " ".join(content.split())
+        assert "Tutorials retain their no-reporting boundary" in " ".join(
+            content.split()
         ), name
-        assert "Tutorials retain their no-reporting boundary" in content, name
         assert "custom update services" in content, name
         assert "Later host-specific instructions" in content, name
         assert "override this Cowork contract" in content, name

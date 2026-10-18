@@ -8,18 +8,25 @@ from typing import Any, Callable
 from uuid import UUID, uuid4
 
 from modules.workflow_usage.contracts import pipeline_catalog
+from modules.workflow_usage.products import Product, product_name
 
 __all__ = ["SCHEMA", "reset", "inspect", "public_status"]
 
 SCHEMA = (
     "CREATE TABLE IF NOT EXISTS vera_workflow_testing_epochs (epoch_id TEXT PRIMARY KEY, started_at TEXT NOT NULL, agent_devices_json TEXT NOT NULL)",
+    "CREATE TABLE IF NOT EXISTS workflow_testing_epoch_products (epoch_id TEXT PRIMARY KEY, product TEXT NOT NULL)",
 )
 
 
 def reset(
-    connection: Any, sql: Callable[[str], str], agent_devices: list[str], now: str
+    connection: Any,
+    sql: Callable[[str], str],
+    agent_devices: list[str],
+    now: str,
+    product: Product = "vera",
 ) -> dict[str, Any]:
     """Start a fresh counter without deleting usage or earlier counting epochs."""
+    product_name(product)
     devices = sorted({str(UUID(value)) for value in agent_devices})
     if not devices:
         raise ValueError("At least one registered agent computer is required")
@@ -37,22 +44,32 @@ def reset(
         sql("INSERT INTO vera_workflow_testing_epochs VALUES (?,?,?)"),
         (epoch["epoch_id"], now, json.dumps(devices)),
     )
+    connection.execute(
+        sql("INSERT INTO workflow_testing_epoch_products VALUES (?,?)"),
+        (epoch["epoch_id"], product),
+    )
     return epoch
 
 
-def inspect(connection: Any, sql: Callable[[str], str]) -> dict[str, Any]:
+def inspect(
+    connection: Any, sql: Callable[[str], str], product: Product = "vera"
+) -> dict[str, Any]:
     """Exact event times and native device IDs make these counts reproducible.
 
     The product owner's rule classifies their computer as agent testing and
     other computers as professional use. This is a counting convention, not
     semantic evaluation of the work, stars, or identification of individuals.
     """
+    product_name(product)
     row = connection.execute(
-        "SELECT * FROM vera_workflow_testing_epochs ORDER BY started_at DESC,epoch_id DESC LIMIT 1"
+        sql(
+            "SELECT e.* FROM vera_workflow_testing_epochs e LEFT JOIN workflow_testing_epoch_products p ON p.epoch_id=e.epoch_id WHERE COALESCE(p.product,'vera')=? ORDER BY e.started_at DESC,e.epoch_id DESC LIMIT 1"
+        ),
+        (product,),
     ).fetchone()
     evidence: dict[str, dict[str, Any]] = {
         key: {"agent_runs": [], "professional_devices": {}, "unlinked_runs": []}
-        for key in pipeline_catalog()
+        for key in pipeline_catalog(product)
     }
     result: dict[str, Any] = {
         "schema_version": 1,
@@ -83,6 +100,8 @@ def inspect(connection: Any, sql: Callable[[str], str]) -> dict[str, Any]:
                 if datetime.fromisoformat(event["occurred_at"]) <= baseline:
                     continue
                 run = json.loads(item["projection_json"])
+                if run.get("product", "vera") != product:
+                    continue
                 if run["state"] != "completed" or run["pipeline"] not in evidence:
                     continue
                 target = evidence[run["pipeline"]]

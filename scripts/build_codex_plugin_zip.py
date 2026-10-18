@@ -94,7 +94,19 @@ RUNTIME_SUPPORT_FILES = {
 }
 REQUIRED_FEEDBACK_HEADING = "## Plugin Improvement Feedback"
 LOCAL_FEEDBACK_SNIPPET = "Keep the improvement note local to chat or run artifacts."
-TRANSMITTED_FEEDBACK_PLUGINS = frozenset({"clara", "vera"})
+TRANSMITTED_FEEDBACK_PLUGINS = frozenset({"vera"})
+SHARED_REPORTING_PLUGINS = frozenset({"clara", "lucia"})
+SHARED_REPORTING_SNIPPETS = (
+    "<!-- MPARANZA_REPORTING_BEGIN -->",
+    "Start one primary task before preparation",
+    "actual signed receipt",
+    "1–5 stars after delivery",
+    "Only user-authored feedback is submitted",
+    "Never ask the user to relay logs or repeat consent",
+    "original task and inputs, bound to the original report and current remedy",
+    "Tutorials remain local-only",
+    "<!-- MPARANZA_REPORTING_END -->",
+)
 AUTOMATIC_INCIDENT_SNIPPETS = (
     "references/incident-recovery.md",
     "relevant technical diagnostics without a separate consent question",
@@ -712,16 +724,31 @@ def validate_plugin_source(plugin_dir: Path) -> list[str]:
             (
                 REQUIRED_FEEDBACK_HEADING,
                 *(
-                    AUTOMATIC_INCIDENT_SNIPPETS
-                    if plugin_name == "vera"
-                    else TRANSMITTED_FEEDBACK_SNIPPETS
+                    (
+                        "scripts/change_requests.py",
+                        "show the proposed text before submitting it",
+                    )
+                    if plugin_name == "clara"
+                    else ("Keep standalone feature suggestions in chat",)
                 ),
-                GENERIC_VOICE_OPPORTUNITY_TEMPLATE.format(
-                    display_name=plugin_name.title()
-                ),
+                "use the automatic incident channel; a CR is not its substitute",
             )
-            if plugin_name in TRANSMITTED_FEEDBACK_PLUGINS
-            else (REQUIRED_FEEDBACK_HEADING, LOCAL_FEEDBACK_SNIPPET)
+            if plugin_name in SHARED_REPORTING_PLUGINS
+            else (
+                (
+                    REQUIRED_FEEDBACK_HEADING,
+                    *(
+                        AUTOMATIC_INCIDENT_SNIPPETS
+                        if plugin_name == "vera"
+                        else TRANSMITTED_FEEDBACK_SNIPPETS
+                    ),
+                    GENERIC_VOICE_OPPORTUNITY_TEMPLATE.format(
+                        display_name=plugin_name.title()
+                    ),
+                )
+                if plugin_name in TRANSMITTED_FEEDBACK_PLUGINS
+                else (REQUIRED_FEEDBACK_HEADING, LOCAL_FEEDBACK_SNIPPET)
+            )
         )
         for snippet in feedback_snippets:
             if snippet not in combined_skill_text:
@@ -729,6 +756,24 @@ def validate_plugin_source(plugin_dir: Path) -> list[str]:
                     f"{plugin_name}: skill instructions must include plugin improvement feedback policy"
                 )
                 break
+        if plugin_name in SHARED_REPORTING_PLUGINS:
+            for skill_path in skill_files:
+                skill_text = skill_path.read_text(encoding="utf-8")
+                required = (
+                    *SHARED_REPORTING_SNIPPETS,
+                    *(
+                        f"skills/{plugin_name}/references/{reference}.md"
+                        for reference in (
+                            "workflow-usage",
+                            "model-data-report-contract",
+                            "incident-recovery",
+                        )
+                    ),
+                )
+                if any(snippet not in skill_text for snippet in required):
+                    errors.append(
+                        f"{plugin_name}: {skill_path.relative_to(plugin_dir)} must include task reporting and recovery contract"
+                    )
         if plugin_name in TRANSMITTED_FEEDBACK_PLUGINS:
             # Specialists can trigger without the main skill. Requiring its exact
             # relative path makes the post-run handoff mechanically resolvable.
@@ -1458,7 +1503,8 @@ def expected_zip_entries(
                     raise ValueError(
                         "Unreviewed Vera source register: " + "; ".join(errors)
                     )
-            add_vera_execution_manifest(entries, f"{root}/plugins/vera/")
+        if plugin_dir.name in {"vera", "clara", "lucia"}:
+            add_vera_execution_manifest(entries, f"{root}/plugins/{plugin_dir.name}/")
     return dict(sorted(entries.items()))
 
 
@@ -2179,7 +2225,7 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
         raise ValueError("ChatGPT upload ZIP is missing .codex-plugin/plugin.json")
     project_chatgpt_course_sources(entries, packaged_entries, prefix)
     externalize_course_files(entries, plugin_name, root=ROOT)
-    if plugin_name == "vera":
+    if plugin_name in {"vera", "clara", "lucia"}:
         add_vera_execution_manifest(entries)
     return dict(sorted(entries.items()))
 

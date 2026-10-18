@@ -639,6 +639,11 @@ def test_startup_suppresses_network_while_pending_active_or_corrupt(
         "check_for_update",
         types.SimpleNamespace(session_start_output=check),
     )
+    monkeypatch.setitem(
+        sys.modules,
+        "operational_incidents",
+        types.SimpleNamespace(startup_context=lambda: "Technical context only."),
+    )
     spec = importlib.util.spec_from_file_location(
         "tested_startup", store.plugin_root / "scripts/onboarding_session_start.py"
     )

@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "product": "lucia",
+  "pipelines": {
+    "revisione-contratti": "Revisione contratti",
+    "controllo-documento": "Controllo documento",
+    "posizioni-negoziali": "Posizioni negoziali",
+    "confronto-documenti": "Confronto documenti",
+    "revisione-documentale": "Revisione documentale",
+    "estrazione-clausole": "Estrazione clausole",
+    "redazione-da-modello": "Redazione da modello",
+    "metodo-studio": "Metodo dello studio",
+    "verifica-citazioni": "Verifica citazioni",
+    "contenzioso-civile": "Contenzioso civile",
+    "operazioni-ma": "Operazioni M&A",
+    "lavoro": "Diritto del lavoro",
+    "recupero-crediti": "Recupero crediti",
+    "contenzioso-tributario": "Contenzioso tributario",
+    "apertura-pratica": "Apertura pratica",
+    "quesito-legale-fiscale": "Quesito legale e fiscale",
+    "comunicazione-professionale": "Comunicazione professionale",
+    "presenza-digitale-studio": "Sito dello studio",
+    "deep-research": "Ricerca giuridica",
+    "adversarial-opinion": "Parere avversariale",
+    "legal-tax-answer-planner": "Impostazione quesito legale",
+    "legal-tax-answer-review": "Verifica risposta legale"
+  },
+  "infrastructure": [
+    "learn-with-lucia",
+    "studio-archive"
+  ],
+  "instrumented_from_version": "0.1.121"
+}

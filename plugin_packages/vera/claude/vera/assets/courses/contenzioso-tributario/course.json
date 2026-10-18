@@ -33,7 +33,7 @@
     },
     {
       "path": "scripts/managed_python_runtime.py",
-      "sha256": "4c818a1c172f02b07625ef26a6cbe12672e6b52844948b0ee7fefce325a58c69"
+      "sha256": "980f27dd7fbfab5eb3f7fb01367c2f84c65cce7ffbb0f1c79a6fcb143dd63728"
     },
     {
       "path": "scripts/model_data_report.py",
@@ -41,23 +41,23 @@
     },
     {
       "path": "scripts/notarized_run_receipt.py",
-      "sha256": "ecdad6c6aa491ab9fbcff84d85090b0568874305ad61a96af8120a47802bd165"
+      "sha256": "e7fb73264c7fae65a97c9bcce8a364590486862347e4917e6fcb0f51a2e9deeb"
     },
     {
       "path": "scripts/operational_incidents.py",
-      "sha256": "ba7881154bcd7d8b0de65215eef75a89a2667a62e56f20ce32c75439874ad79c"
+      "sha256": "f522f36e98cff350323a401e7393d0b1c7b99184cba78d6dcfef52c26380bbd0"
     },
     {
       "path": "scripts/verified_execution.py",
-      "sha256": "8817cdb519cce486adf79d4f8feaf7bc3d4f89a810361855da823c6d9a852c31"
+      "sha256": "55d1c0335e5c67c5518d65d3598bfbf3253e8f64644dbb98ce9e8595ea5c856b"
     },
     {
       "path": "scripts/workflow_usage.py",
-      "sha256": "20edb05ee55c84f5624ee22376c72318789563be7bc0d3851ef4fbc0da62c395"
+      "sha256": "449d5b3b2cf5be4ab01b3e96eed63d3c82c90860a9a458ab364912a59fe7cf34"
     },
     {
       "path": "skills/mparanza-contenzioso-tributario/SKILL.md",
-      "sha256": "fcb084352461fd00f5cfd6d1bdfbe3d6ac22ffe8625b8fdede410e8128c943f4"
+      "sha256": "c7ba3077d76c0af0c3737a6afded50318786d5dcc69563f3525291b4256b2c51"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -526,5 +526,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "35bcf1bcb38b8406c972622947caa073f3e59aa543729750034329562e022c66"
+  "canonical_course_sha256": "fac502ff58e9e57c351194f64dab26ce8aa905af638f383fb6e7eda52daf4e79"
 }

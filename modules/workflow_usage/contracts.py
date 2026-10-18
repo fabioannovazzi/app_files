@@ -4,19 +4,19 @@ from __future__ import annotations
 
 import json
 from datetime import datetime
-from pathlib import Path
 from typing import Literal
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from modules.workflow_usage.products import Product, catalog_metadata
+
 __all__ = ["WorkflowEvent", "pipeline_catalog"]
 
 
-def pipeline_catalog() -> dict[str, str]:
+def pipeline_catalog(product: Product = "vera") -> dict[str, str]:
     """Read the shipped user-process inventory; infrastructure has no rating."""
-    path = Path(__file__).resolve().parents[2] / "plugins/vera/usage/pipelines.json"
-    return json.loads(path.read_text(encoding="utf-8"))["pipelines"]
+    return catalog_metadata(product)["pipelines"]
 
 
 class WorkflowEvent(BaseModel):
@@ -24,6 +24,7 @@ class WorkflowEvent(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
     schema_version: Literal[1] = 1
+    product: Product | None = None
     event_id: UUID
     run_id: UUID
     sequence: int = Field(ge=1, le=10000)
@@ -69,6 +70,8 @@ class WorkflowEvent(BaseModel):
         present = {name for name in optional if getattr(self, name) is not None}
         if present - allowed or (allowed - {"comment"}) - present:
             raise ValueError("Fields do not match this event kind")
-        if self.kind == "started" and self.pipeline not in pipeline_catalog():
+        if self.kind == "started" and self.pipeline not in pipeline_catalog(
+            self.product or "vera"
+        ):
             raise ValueError("Unknown user-facing pipeline")
         return self

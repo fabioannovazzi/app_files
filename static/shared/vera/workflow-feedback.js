@@ -4,7 +4,10 @@
   const status = document.querySelector("#status");
   const button = form.querySelector("button");
   const runId = location.pathname.split("/").pop();
-  const storageKey = `vera-feedback:${runId}`;
+  const product = location.pathname.split("/")[1];
+  if (!["vera", "clara", "lucia"].includes(product)) return;
+  const displayName = product[0].toUpperCase() + product.slice(1);
+  const storageKey = `${product}-feedback:${runId}`;
   let saved = {};
   try { saved = JSON.parse(sessionStorage.getItem(storageKey) || "{}"); } catch { /* Storage can be unavailable. */ }
   const key = location.hash.slice(1) || saved.key || "";
@@ -21,7 +24,7 @@
   }
   if (!/^[A-Za-z0-9_-]{32,128}$/.test(key)) {
     button.disabled = true;
-    status.textContent = "Apri il link completo ricevuto da Vera per valutare questo risultato.";
+    status.textContent = `Apri il link completo ricevuto da ${displayName} per valutare questo risultato.`;
   }
   const updateLabel = () => {
     const rating = Number(new FormData(form).get("stars"));
@@ -51,7 +54,7 @@
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15000);
     try {
-      const response = await fetch(`/api/vera/workflow-feedback/${runId}`, {
+      const response = await fetch(`/api/${product}/workflow-feedback/${runId}`, {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify(pending), credentials: "omit", redirect: "error",
         signal: controller.signal

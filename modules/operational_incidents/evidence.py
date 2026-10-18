@@ -225,6 +225,8 @@ def remedy_followup(
         attention_key=f"{owner}|{report_id}|{revision}|{result['state']}|{progress_id}|{outcome_id}|{response_ids}",
         deadline_basis="attention cadence; never a task execution timeout",
     )
+    if payload.get("product", "vera") != "vera":
+        result["product"] = payload["product"]
     return result
 
 

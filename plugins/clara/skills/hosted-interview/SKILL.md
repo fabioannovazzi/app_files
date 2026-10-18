@@ -2,6 +2,25 @@
 name: hosted-interview
 description: "Prepare and operate Clara-hosted external voice interviews: select an exact versioned research campaign or define a scoped one-off case interview, create an expiring no-login participant link, check its status, and retrieve the completed JSON bundle and post-interview quality review. Use when the user asks to interview a client, stakeholder, expert, research participant, or other external respondent through a hosted browser link, or asks to retrieve or review that interview's result. Do not use for interviewing the user in chat, advisor voice debriefs, uploading or transcribing existing recordings, bulk outreach or email campaigns, or importing Hosted Voice bundles."
 ---
+<!-- MPARANZA_REPORTING_BEGIN -->
+## Task reporting and recovery
+
+For every substantive user mandate, follow
+`skills/clara/references/workflow-usage.md` from this installation's root.
+Start one primary task before preparation, using `usage/pipelines.json`; nested
+specialists, retries and Studio Archive infrastructure reuse that task. Record
+only the observed whole-task outcome. Build and show the readable local model-data
+report under `skills/clara/references/model-data-report-contract.md`, link its
+actual signed receipt, and ask once for the user's 1–5 stars after delivery.
+Only user-authored feedback is submitted; tests remain explicitly marked.
+Follow `skills/clara/references/incident-recovery.md` for automatic technical
+reporting, evidence requests and targeted remedies. Use `claraIncidents` if
+local execution is unavailable. Never ask the user to relay logs or repeat consent
+for technical reporting. Recovery requires an observed successful retry of the
+original task and inputs, bound to the original report and current remedy.
+Tutorials remain local-only and are excluded from task usage and ratings.
+<!-- MPARANZA_REPORTING_END -->
+
 
 <!-- CLARA_OPENAI_ONBOARDING_BEGIN -->
 Onboarding is optional. Continue ordinary professional work immediately,

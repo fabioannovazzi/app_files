@@ -43,6 +43,10 @@ def installation(tmp_path: Path, component: str = "journal-bank-reconciliation")
     (root / "components.json").write_text(
         json.dumps({"plugins": [component]}), encoding="utf-8"
     )
+    (root / ".codex-plugin").mkdir()
+    (root / ".codex-plugin/plugin.json").write_text(
+        json.dumps({"name": "vera", "version": "0.1.407"})
+    )
     write_index(root)
     return root
 
@@ -74,8 +78,14 @@ def test_managed_launcher_loads_by_path_outside_its_script_directory(tmp_path):
         "managed_python_runtime.py",
         "_managed_python_runtime.py",
         "verified_execution.py",
+        "reporting_product.py",
     ):
         shutil.copyfile(ROOT / "plugins/vera/scripts" / name, scripts / name)
+
+    (scripts.parent / ".codex-plugin").mkdir()
+    (scripts.parent / ".codex-plugin/plugin.json").write_text(
+        json.dumps({"name": "vera", "version": "0.1.407"})
+    )
 
     result = subprocess.run(
         [
@@ -229,13 +239,17 @@ def test_missing_index_requires_update(tmp_path):
     root = installation(tmp_path)
     (root / "execution-files.json").unlink()
 
-    with pytest.raises(ValueError, match="update Vera"):
+    with pytest.raises(ValueError, match="execution digest index; update"):
         recovery.prepare_execution_root(root, "journal-bank-reconciliation")
 
 
 def test_unrelated_module_preserves_existing_launch(tmp_path):
     recovery = load_recovery()
     root = tmp_path / "no-copy"
+    (root / ".codex-plugin").mkdir(parents=True)
+    (root / ".codex-plugin/plugin.json").write_text(
+        json.dumps({"name": "vera", "version": "0.1.407"})
+    )
 
     assert recovery.prepare_execution_root(root, "studio-archive") == root
 

@@ -7,6 +7,7 @@ import json
 import sys
 from pathlib import Path
 from typing import Any
+from zipfile import ZipFile
 
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -14,8 +15,37 @@ if __package__ in {None, ""}:
 from modules.operational_incidents.contracts import Remedy
 from modules.operational_incidents.store import IncidentStore
 from modules.utilities.secrets_loader import load_env_from_secrets_file
+from modules.workflow_usage.products import Product, product_name
 
-__all__ = ["main"]
+__all__ = ["main", "verify_update_release"]
+
+
+def verify_update_release(root: Path, product: Product, version: str) -> None:
+    """Bind an update to both published host packages of the report's product."""
+    product = product_name(product)
+    for package, suffix in (
+        (
+            root / f"static/shared/{product}/downloads/{product}-cowork-plugin.zip",
+            ".claude-plugin/plugin.json",
+        ),
+        (
+            root / f"plugin_packages/{product}/{product}-plugin.zip",
+            ".codex-plugin/plugin.json",
+        ),
+    ):
+        with ZipFile(package) as archive:
+            manifests = [
+                json.loads(archive.read(name))
+                for name in archive.namelist()
+                if name.endswith(suffix)
+            ]
+            matching = [
+                manifest for manifest in manifests if manifest.get("name") == product
+            ]
+            if len(matching) != 1 or matching[0]["version"] != version:
+                raise ValueError(
+                    f"Required version is not the deployed downloadable {product.title()} release on both hosts"
+                )
 
 
 def main() -> None:
@@ -59,37 +89,25 @@ def main() -> None:
             else args.input.read_text(encoding="utf-8")
         )
         if value.kind == "update":
-            import zipfile
-
-            root = Path(__file__).resolve().parents[1]
-            for package, suffix in (
+            reports = store.show(args.incident_id)["reports"]
+            target = next(
                 (
-                    root / "static/shared/vera/downloads/vera-cowork-plugin.zip",
-                    ".claude-plugin/plugin.json",
+                    report
+                    for report in reports
+                    if report["report_id"] == str(value.target_report_id)
                 ),
-                (
-                    root / "plugin_packages/vera/vera-plugin.zip",
-                    ".codex-plugin/plugin.json",
-                ),
-            ):
-                with zipfile.ZipFile(package) as archive:
-                    manifests = [
-                        json.loads(archive.read(name))
-                        for name in archive.namelist()
-                        if name.endswith(suffix)
-                    ]
-                    product = [
-                        manifest
-                        for manifest in manifests
-                        if manifest.get("name") == "vera"
-                    ]
-                    if (
-                        len(product) != 1
-                        or product[0]["version"] != value.required_version
-                    ):
-                        parser.error(
-                            "Required version is not the deployed downloadable Vera release on both hosts"
-                        )
+                None,
+            )
+            if target is None or value.required_version is None:
+                parser.error("An update requires an exact original report and version")
+            try:
+                verify_update_release(
+                    Path(__file__).resolve().parents[1],
+                    product_name(target["product"]),
+                    value.required_version,
+                )
+            except ValueError as exc:
+                parser.error(str(exc))
         result = store.remedy(
             args.incident_id, value, expected_revision=args.expected_revision
         )

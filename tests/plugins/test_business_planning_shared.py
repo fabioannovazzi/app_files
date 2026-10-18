@@ -111,6 +111,16 @@ def test_registered_business_workflow_preserves_shared_analysis_contract() -> No
                 flags=re.DOTALL,
             )
             assert usage_blocks == 1
+        else:
+            normalized, usage_blocks = re.subn(
+                r"<!-- MPARANZA_REPORTING_BEGIN -->\n.*?"
+                r"<!-- MPARANZA_REPORTING_END -->\n\n",
+                "",
+                normalized,
+                count=1,
+                flags=re.DOTALL,
+            )
+            assert usage_blocks == 1
         workflows.append(normalized)
     vera_workflow, clara_workflow = workflows
     assert vera_workflow == clara_workflow

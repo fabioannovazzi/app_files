@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "contenzioso-tributario",
-  "course_sha256": "5832962d37ff0e98ad6fefcf96623bdcda15e05211d1cb2e268a6f79a39d115c",
+  "course_sha256": "2dc5f561080eb40066018e9b53515c92be666bd52423ff3a89ea1209d39ba07a",
   "reviewer": "Codex /root: five-language authored lesson and real evidence/progress output review",
   "reviewed_at": "2026-10-14T14:55:04.860976+00:00",
   "review_scope": "Accepted prepared material and bounded real helper/Archive regressions. Semantic narrative and decisions are explicit test fixtures. This does not attest full live legal research, substantive pleading approval, native Word, native voice, installed-host learner execution or professional acceptance. Live lessons run the current specialist, not the fixtures.",
@@ -243,5 +243,17 @@
       }
     }
   },
-  "source_binding_note": "2026-10-15: Quoted the colon-bearing skill description as valid YAML. Course content, inputs, procedural instructions, prior execution evidence and editorial judgments are unchanged."
+  "source_binding_note": "2026-10-15: Quoted the colon-bearing skill description as valid YAML. Course content, inputs, procedural instructions, prior execution evidence and editorial judgments are unchanged.",
+  "product_reporting_source_binding_20261018": {
+    "reviewer": "Codex /root - bounded reporting-runtime source compatibility review",
+    "reviewed_at": "2026-10-18T09:29:46.492945+00:00",
+    "baseline_commit": "be77d6749bb17278358bb22313ff0cd3c380f1dc",
+    "previous_course_sha256": "5832962d37ff0e98ad6fefcf96623bdcda15e05211d1cb2e268a6f79a39d115c",
+    "current_course_sha256": "2dc5f561080eb40066018e9b53515c92be666bd52423ff3a89ea1209d39ba07a",
+    "authored_content_unchanged": true,
+    "source_review": "docs/releases/2026-10-18-product-reporting-source-review.json",
+    "scope": "All authored lesson fields, locales, fictional inputs, checkpoints and execution definitions are unchanged. Source bindings incorporate shared product-bound reporting, verified helper execution and primary-task reporting instructions. Tutorials remain excluded from ordinary task reporting. Historical editorial and output-artifact judgments are preserved.",
+    "fresh_matching_junit_required": true,
+    "limits": "No new learner, visual, installed-host or professional acceptance is asserted."
+  }
 }

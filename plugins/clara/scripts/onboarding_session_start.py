@@ -43,6 +43,9 @@ def main() -> int:
             pass  # Preserve inaccessible teaching state; do not poll its CRs.
     output = session_start_output(include_change_requests=allow_change_requests)
     output["hookSpecificOutput"]["additionalContext"] += " " + message
+    from operational_incidents import startup_context
+
+    output["hookSpecificOutput"]["additionalContext"] += " " + startup_context()
     sys.stdout.write(json.dumps(output) + "\n")
     return 0
 

@@ -13,7 +13,8 @@
     "scripts/verified_execution.py",
     "skills/mparanza-vera/references/execution-recovery.md",
     "scripts/technical_runner.py",
-    "scripts/incident_host_mcp.cjs"
+    "scripts/incident_host_mcp.cjs",
+    "scripts/reporting_product.py"
   ],
   "runtime_profiles": [
     "anthropic-cowork"
@@ -47,7 +48,8 @@
         "Actual cached connector status reconciles only readiness hints bound to existing local report receipts. Readiness becomes action-required evidence rather than recovery; already recovered matching hints are cleared and unlinked hints are retained. No remote receipt is fabricated and no case inputs are inferred.",
         "Before reporting an installation-preparation failure, the preflight verifies the reporting script, preflight script and product metadata against a stable build index, then snapshots them in a fresh private temporary directory and executes the reporter in isolated Python. Original-installation, cwd and PYTHONPATH imports are excluded. Damaged workflow code does not run. Unverifiable reporting components require the independent connector; queued delivery never implies recorded or recovered.",
         "A diagnostic reply requires ownership and exact original execution metadata, plus a retained diagnostic-request revision targeting that original report. A late reply cannot answer a newer request. A diagnostic exchange cannot be marked recovered.",
-        "Operator publications can require the inspected current revision. Identical applicable remedies are idempotent and do not create another retry episode. Resume instructions use existing verified workflow tools and ordinary professional gates; service text is never executed as a command."
+        "Operator publications can require the inspected current revision. Identical applicable remedies are idempotent and do not create another retry episode. Resume instructions use existing verified workflow tools and ordinary professional gates; service text is never executed as a command.",
+        "The shared implementation binds registrations, OAuth resources, task events, report signatures, feedback and update downloads to one product. Existing unmapped installations and receipt schema 1 remain Vera. Physical-computer identity is shared, while usage catalogues and testing epochs are separated by product."
       ]
     }
   ],
@@ -70,9 +72,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-17",
+    "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "7ee06b72c45c7b04e27152f6490e3167951fcc1068061b7f70ab5ea69e37f6c7"
+    "source_fingerprint": "88d43cda62e4e77deef55487bc52a1e292f550396e2e5c932fab999d903efc52"
   }
 }

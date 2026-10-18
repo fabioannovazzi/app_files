@@ -7,10 +7,41 @@ import re
 import shutil
 import subprocess
 import sys
+from html.parser import HTMLParser
 from pathlib import Path
 from zipfile import ZipFile
 
 import pytest
+
+
+class DirectoryHeadings(HTMLParser):
+    """Read visible heading text independently of nested translation or icon spans."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.labels: list[str] = []
+        self.current: list[str] | None = None
+        self.module_heading = False
+
+    def handle_starttag(self, tag, attrs) -> None:
+        if tag == "h4":
+            self.current = []
+            self.module_heading = False
+        if self.current is not None and dict(attrs).get("data-i18n", "").startswith(
+            "module."
+        ):
+            self.module_heading = True
+
+    def handle_data(self, data) -> None:
+        if self.current is not None:
+            self.current.append(data)
+
+    def handle_endtag(self, tag) -> None:
+        if tag == "h4" and self.current is not None:
+            if self.module_heading:
+                self.labels.append("".join(self.current).strip())
+            self.current = None
+
 
 ROOT = Path(__file__).resolve().parents[2]
 LUCIA_ROOT = ROOT / "plugins" / "lucia"
@@ -582,7 +613,7 @@ def test_lucia_public_page_is_a_directory_of_separate_function_pages() -> None:
     stylesheet = (ROOT / "static" / "shared" / "lucia" / "lucia-page.css").read_text(
         encoding="utf-8"
     )
-    assert '<html lang="it">' in page
+    assert re.search(r'<html\b[^>]*\blang="it"(?:\s|>)', page)
     assert 'href="../product-navigation.css?v=' in page
     assert 'src="../product-navigation.js?v=' in page
     assert 'class="hero-install"' in page
@@ -705,9 +736,9 @@ def test_lucia_marketplace_and_website_use_identical_canonical_names() -> None:
     page = (ROOT / "static" / "shared" / "lucia" / "index.html").read_text(
         encoding="utf-8"
     )
-    directory_labels = re.findall(
-        r'<h4 data-i18n="module\.[^"]+\.title">([^<]+)</h4>', page
-    )
+    headings = DirectoryHeadings()
+    headings.feed(page)
+    directory_labels = headings.labels
     website_keys = {
         "revisione-contratti": "module.revisione-contratti.title",
         "confronto-documenti": "module.confronto-documenti.title",
