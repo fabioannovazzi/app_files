@@ -45,6 +45,7 @@ from archive_core import (
     close_studio_client_engagement,
     complete_studio_client_workflow,
     configure_archive,
+    copy_studio_client_source_folder,
     create_studio_client,
     create_studio_client_engagement,
     diagnose_archive_access,
@@ -134,6 +135,13 @@ def _parser() -> argparse.ArgumentParser:
         "--role", choices=["journal", "source", "support"], required=True
     )
     import_document.add_argument("--engagement-id", required=True)
+
+    copy_folder = subparsers.add_parser("copy-client-source-folder")
+    copy_folder.add_argument("--client-id", required=True)
+    copy_folder.add_argument("--engagement-id", required=True)
+    copy_folder.add_argument("--source-path", type=Path, required=True)
+    copy_folder.add_argument("--destination-name")
+    copy_folder.add_argument("--copy-authorized", action="store_true", required=True)
 
     engagements = subparsers.add_parser("engagements")
     engagements.add_argument("--client-id", required=True)
@@ -310,6 +318,14 @@ def main(argv: list[str] | None = None) -> int:
             result = create_studio_client_engagement(
                 args.client_id,
                 args.engagement_label,
+            )
+        elif args.command == "copy-client-source-folder":
+            result = copy_studio_client_source_folder(
+                args.client_id,
+                args.engagement_id,
+                args.source_path,
+                copy_authorized=args.copy_authorized,
+                destination_name=args.destination_name,
             )
         elif args.command == "import-document":
             result = import_studio_client_document(

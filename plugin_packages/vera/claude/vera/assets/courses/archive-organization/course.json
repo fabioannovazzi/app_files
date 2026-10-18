@@ -49,11 +49,11 @@
     },
     {
       "path": "modules/archive-organization/references/proposal-contract.md",
-      "sha256": "970d84ea81d55564ab7140cc46df74173198a6d0131966bec3f360610c51a2d6"
+      "sha256": "aca7eb3d2ec0398b74f1a48859dd3d3571a97cc2b2706a9d0025b30ea8495071"
     },
     {
       "path": "modules/archive-organization/references/review-labels.json",
-      "sha256": "ce1464a869f5823b9260336bc28e4c2f0d3cfba982650cb2c92e9a31feff776a"
+      "sha256": "ab567a2220cc1c27146d5e0780ae61e3f57a88f1bff4acec8ac60cea4dadabf1"
     },
     {
       "path": "modules/archive-organization/requirements.txt",
@@ -61,7 +61,7 @@
     },
     {
       "path": "modules/archive-organization/scripts/archive_organization.py",
-      "sha256": "7a6ff25a01163a828a8673e6e522291695cab75302b91f1dfa0ac81b8b4b8063"
+      "sha256": "5d8a3314789214e912bb62f2bbc435695017cb94a9732f9409e57fa9e622603c"
     },
     {
       "path": "modules/archive-organization/scripts/check_dependencies.py",
@@ -69,7 +69,7 @@
     },
     {
       "path": "modules/archive-organization/skills/mparanza-archive-organization/SKILL.md",
-      "sha256": "20094e8b87f65f00be4d19e63b0a758ca524558d0a79df20809091a4f259e6d9"
+      "sha256": "ec1047d9d91bcf1ef44e4adfabefe8ba8fab90277dd39693ad409405e0a3bd20"
     },
     {
       "path": "modules/archive-organization/skills/mparanza-archive-organization/agents/openai.yaml",
@@ -682,5 +682,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "43b6e20a7a15b1dea3d957e4deb3b3009d723e8361339feff8012a77752b11d3"
+  "canonical_course_sha256": "d13d9011af729bc8eac0b76bd4b278ed6c039fa2b0471387ae7a6a95dfcccfa8"
 }

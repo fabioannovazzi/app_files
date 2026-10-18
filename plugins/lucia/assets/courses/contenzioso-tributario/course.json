@@ -35,7 +35,7 @@
     {
       "path": "scripts/managed_python_runtime.py",
       "repository_path": "plugins/lucia/scripts/managed_python_runtime.py",
-      "sha256": "980f27dd7fbfab5eb3f7fb01367c2f84c65cce7ffbb0f1c79a6fcb143dd63728"
+      "sha256": "c4cc507b1331ec74f0f78e84c0c68644d1b4e31361778ad87e116b31b6274cc4"
     },
     {
       "path": "scripts/model_data_report.py",
@@ -50,12 +50,12 @@
     {
       "path": "scripts/operational_incidents.py",
       "repository_path": "plugins/lucia/scripts/operational_incidents.py",
-      "sha256": "c38cf8df7eb466a47c0e0516409f46f7f209c12f25d64f0a22ebf47b4f440627"
+      "sha256": "af23904b87d017d25f00c81cc601952b522fa1023f6bc746843ec73b6e996f6d"
     },
     {
       "path": "scripts/verified_execution.py",
       "repository_path": "plugins/lucia/scripts/verified_execution.py",
-      "sha256": "55d1c0335e5c67c5518d65d3598bfbf3253e8f64644dbb98ce9e8595ea5c856b"
+      "sha256": "ec854fca344b92ae5208981a1631f5bc2f3ee96d365d62ed36f7f74e7aa19518"
     },
     {
       "path": "scripts/workflow_usage.py",

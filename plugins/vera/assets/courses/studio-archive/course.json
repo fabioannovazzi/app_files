@@ -40,7 +40,7 @@
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
       "repository_path": "plugins/studio-archive/scripts/archive_core.py",
-      "sha256": "5de0bbb8d69e4519a189e158cfce743878cd487eb7b2d4392868e4aaf9767037"
+      "sha256": "76af2b1545894a4de14d8e2eafa686292a09d1385750401ab998648a035bdebb"
     },
     {
       "path": "modules/studio-archive/scripts/archive_preferences.py",
@@ -60,7 +60,12 @@
     {
       "path": "modules/studio-archive/scripts/client_ledger.py",
       "repository_path": "plugins/studio-archive/scripts/client_ledger.py",
-      "sha256": "cebe03cf64d188cbab8be95ce083227663cfc3b6f41a802fa7f88c63f449bf9e"
+      "sha256": "45c0a9ae6fb12df07b5e72270f9c4dd5577d77098dcef44d87a01b00cb46c94b"
+    },
+    {
+      "path": "modules/studio-archive/scripts/folder_intake.py",
+      "repository_path": "plugins/studio-archive/scripts/folder_intake.py",
+      "sha256": "11a9eb7d2be366890b0db14ca2588454b288d53e414d86193c2f5b867b40947c"
     },
     {
       "path": "modules/studio-archive/scripts/google_drive.py",
@@ -75,7 +80,7 @@
     {
       "path": "modules/studio-archive/scripts/studio_archive.py",
       "repository_path": "plugins/studio-archive/scripts/studio_archive.py",
-      "sha256": "caf83eb965861dd50b680228c81bcb3ee949ff1586e342fab07332aae94669e3"
+      "sha256": "58e80630ead93644796c075862a5235f343935650e963f4c368a907aa0dca4d0"
     },
     {
       "path": "modules/studio-archive/scripts/whatsapp_desktop_guard.mjs",
@@ -85,7 +90,7 @@
     {
       "path": "modules/studio-archive/skills/studio-archive/SKILL.md",
       "repository_path": "plugins/studio-archive/skills/studio-archive/SKILL.md",
-      "sha256": "5776776e5fad8df0e7c6277a183cea50e276d2e6e2d13df1e17696131ba49490"
+      "sha256": "aaf3cc522c1d31a0b5c718d2e8ca934cc9641f39f082580158bc0c7c5bc4fae9"
     },
     {
       "path": "modules/studio-archive/skills/studio-archive/agents/openai.yaml",
@@ -165,7 +170,7 @@
     {
       "path": "skills/studio-archive/SKILL.md",
       "repository_path": "plugins/vera/skills/studio-archive/SKILL.md",
-      "sha256": "e95fb2f59c7e3d18de7171126d870090b4baa490d5e1551b7a6ca9c281f771d2"
+      "sha256": "86fb69413e766e2ee96810a36c836788cd834d940182ccad6b8b68dd24cc5e48"
     },
     {
       "path": "skills/studio-archive/references/marketplace-gmail.md",

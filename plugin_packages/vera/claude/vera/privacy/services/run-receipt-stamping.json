@@ -1,5 +1,4 @@
 {
-  "display_name": "Server-stamped run receipts",
   "external_boundaries": [
     {
       "id": "automatic-server-stamped-run-receipt",
@@ -37,10 +36,11 @@
     "skills/mparanza-posizioni-negoziali",
     "scripts/reporting_product.py"
   ],
+  "service_id": "run-receipt-stamping",
   "review": {
+    "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-10-18",
-    "reviewed_by": "privacy-surface-review",
     "source_fingerprint": "39ded5a0fc1bbd4020551f977ee7bbff87bfa730d2b667b6edc10e17b644c4db"
   },
   "runtime_profiles": [
@@ -65,5 +65,5 @@
       "on_violation": "The client aborts before making a network request."
     }
   ],
-  "service_id": "run-receipt-stamping"
+  "display_name": "Server-stamped run receipts"
 }

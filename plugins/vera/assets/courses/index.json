@@ -76,7 +76,7 @@
     },
     "archive-organization": {
       "path": "archive-organization/course.json",
-      "sha256": "43b6e20a7a15b1dea3d957e4deb3b3009d723e8361339feff8012a77752b11d3",
+      "sha256": "d13d9011af729bc8eac0b76bd4b278ed6c039fa2b0471387ae7a6a95dfcccfa8",
       "languages": [
         "it",
         "en",
@@ -160,7 +160,7 @@
     },
     "bilancio-oic": {
       "path": "bilancio-oic/course.json",
-      "sha256": "6b3eb10654c75e1859e25172bcb710d9bd79c3e6bc0e5685e52d10a39739de29",
+      "sha256": "6d6d672933d90ed7febe8ac8218f4f9c119acdb9e2fed2f819c53f588b074ce5",
       "languages": [
         "it",
         "en"
@@ -342,7 +342,7 @@
     },
     "contenzioso-tributario": {
       "path": "contenzioso-tributario/course.json",
-      "sha256": "fac502ff58e9e57c351194f64dab26ce8aa905af638f383fb6e7eda52daf4e79",
+      "sha256": "9e1dbef349b0cf5543e0a56cd73d9a219101e6f368dc3276ae56247395441195",
       "languages": [
         "it",
         "en",
@@ -538,7 +538,7 @@
     },
     "fusione-guidata": {
       "path": "fusione-guidata/course.json",
-      "sha256": "0b49b39edb5db1bd60a10a7fa94e31fd2d6bc3a8a900b757177bbd2e1ec3fead",
+      "sha256": "3ff88f8558874cbaedc8fedbada29ad2741e43686864fcac33c795231c9439ab",
       "languages": [
         "it",
         "en",
@@ -594,7 +594,7 @@
     },
     "journal-bank-reconciliation": {
       "path": "journal-bank-reconciliation/course.json",
-      "sha256": "86da92c4553f588cb40b406d1113df3bc96e8782a3d1fed488d830eb5bed9ff4",
+      "sha256": "8ce4c107efe333e5455c96e48a81f803065adfb583bff7cc0c7cafd799476ab9",
       "languages": [
         "it",
         "en",
@@ -622,7 +622,7 @@
     },
     "journal-sampling": {
       "path": "journal-sampling/course.json",
-      "sha256": "36479f2de375fc6e2e896c966d0fec09ce60fd0294a3eda5496792e9fa645192",
+      "sha256": "b32137e649060dea7303cbd047564274a24112f333e1bc2ed175be2bba2bca9b",
       "languages": [
         "it",
         "en",
@@ -713,7 +713,7 @@
     },
     "open-item-reconciliation": {
       "path": "open-item-reconciliation/course.json",
-      "sha256": "cd716c5afb389b563fc04b5e83d609e46706bbbb338c3dbc1d9d6bca79080e02",
+      "sha256": "1fee14c8dc994a97e59456d2e1c2ca5a26c3fd70ef4c452ffe80c05e860aa760",
       "languages": [
         "it",
         "en",
@@ -741,7 +741,7 @@
     },
     "organizzazione-lavoro": {
       "path": "organizzazione-lavoro/course.json",
-      "sha256": "8aac4560e27adda7109efa22aa888041f2d88fc7bb1b4f3fe93970b10332c3f5",
+      "sha256": "811a4e22aea8786be635a5cef1d1709f6148b7f06864478567213bd63f54ed9e",
       "languages": [
         "it",
         "en",
@@ -993,7 +993,7 @@
     },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "61cb4323f56777e73232c11c6b5819b2c6a1be8e5831a3214476d6348bd5ca89",
+      "sha256": "65292f97295418be569ca5a73b2a231887b23c0f70d4d4701fecf03af9d5c7a0",
       "languages": [
         "it",
         "en",
@@ -1021,7 +1021,7 @@
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "082a650cfe45502a1dc15ccdadddb2dc76aa6042ebcd74a211b8909fbab3b0e9",
+      "sha256": "4ce3d323de93e5c6ea3f273727ab10423d900d417772fc246950238e82997125",
       "languages": [
         "it",
         "en",
@@ -1049,7 +1049,7 @@
     },
     "trasformazione": {
       "path": "trasformazione/course.json",
-      "sha256": "5170edbe4300e236766b2e0b9daeafc34c20e33588ea8e53d08ffc1aaaa5e981",
+      "sha256": "78ec3074919d8f8562e080f3cf202dff723b4d402b3a68963a6db37ed9cb4533",
       "languages": [
         "it",
         "en",
@@ -1093,7 +1093,7 @@
     },
     "variance-analysis": {
       "path": "variance-analysis/course.json",
-      "sha256": "77de73cede15332b33d89bda91de52a98a0a98842b3871d9f19a5436ae9870a3",
+      "sha256": "bff928893e6f366e194f7d3133a064890476ab29e2422c7eb9717efa482f88b7",
       "languages": [
         "it",
         "en",
@@ -1121,7 +1121,7 @@
     },
     "vouching": {
       "path": "vouching/course.json",
-      "sha256": "2d391b9cdb123c6017cf53d5f8dde833609a4ee413dbdd02ce5202be7df62e22",
+      "sha256": "5b5923cf3f9f4b494b49114c09b8c1b131fec48813a1d73a9902bf26bdfb51f4",
       "languages": [
         "it",
         "en",

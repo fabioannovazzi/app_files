@@ -83,6 +83,21 @@ renames, deletes, or overwrites an existing file. Refresh detects top-level
 scope-folder changes and reads the stable identity from `Vera/client.json`.
 The index never follows symbolic links.
 
+When the user supplies an external folder tree to bring into the selected
+client's working area, use `copy_studio_client_source_folder` after the exact
+client, open engagement and copy scope have been authorized. This separate
+intake copies every ordinary file and preserves relative subfolders beneath a
+new delivery folder outside `Vera/`, so Archive Organization can snapshot it.
+The default delivery name is the supplied folder's name. Do not ask for another
+name unless it conflicts. Never copy the tree manually, import each file into
+engagement inputs as a substitute, merge an occupied destination, or infer that
+every delivered document belongs to the client.
+The tool returns the readable destination and a local sealed receipt; it does
+not classify, organize or approve the documents. Exact retries verify retained
+bytes. An interrupted intake keeps a pending marker and blocks organization
+snapshots until the same authorized request has recovered. Changed, moved,
+foreign or uncertain retained files fail closed and remain untouched.
+
 ### Consultare cartelle e risultati
 
 Ogni modifica esplicita al ledger aggiorna una vista leggibile locale:

@@ -144,7 +144,7 @@
     {
       "path": "scripts/operational_incidents.py",
       "repository_path": "plugins/lucia/scripts/operational_incidents.py",
-      "sha256": "c38cf8df7eb466a47c0e0516409f46f7f209c12f25d64f0a22ebf47b4f440627"
+      "sha256": "af23904b87d017d25f00c81cc601952b522fa1023f6bc746843ec73b6e996f6d"
     },
     {
       "path": "scripts/workflow_usage.py",

@@ -24,6 +24,7 @@ const TOOL_NAMES = {
   createClient: "create_studio_archive_client",
   createEngagement: "create_studio_client_engagement",
   importDocument: "import_studio_client_document",
+  copySourceFolder: "copy_studio_client_source_folder",
   snapshotFolder: "snapshot_studio_client_folder",
   googleDriveStatus: "studio_archive_google_drive_status",
   bindGoogleDrive: "bind_studio_client_google_drive",
@@ -236,6 +237,23 @@ function toolDefinitions() {
           },
         },
         ["client_id", "source_path", "role", "engagement_id"],
+      ),
+      annotations: annotations(false, false),
+    },
+    {
+      name: TOOL_NAMES.copySourceFolder,
+      title: "Copy an authorized delivery folder into client working files",
+      description:
+        "After explicit user authorization for this exact client, engagement and external source folder, copy its ordinary files and subfolders into a new readable delivery folder outside Vera/. Use this for a supplied tree that Archive Organization must inspect. Preserve originals, relative paths and duplicate copies. Never overwrite, merge with an existing delivery, assign document meaning or apply an organization plan. Exact retries verify the retained receipt and bytes; interrupted copies block snapshots until recovered by the same request. The default destination name is the selected folder name; ask for a new delivery name only when it conflicts.",
+      inputSchema: objectSchema(
+        {
+          client_id: { type: "string", pattern: "^client_[0-9a-f]{24}$" },
+          engagement_id: { type: "string", pattern: "^eng_[0-9a-f]{24}$" },
+          source_path: { type: "string", minLength: 1, maxLength: 4096 },
+          destination_name: { type: "string", minLength: 1, maxLength: 255 },
+          copy_authorized: { type: "boolean", const: true },
+        },
+        ["client_id", "engagement_id", "source_path", "copy_authorized"],
       ),
       annotations: annotations(false, false),
     },
@@ -1003,6 +1021,28 @@ function commandForTool(name, rawArgs) {
       throw new Error("engagement_id is invalid.");
     }
     command.push("--engagement-id", engagementId);
+    return command;
+  }
+  if (name === TOOL_NAMES.copySourceFolder) {
+    assertOnlyKeys(args, new Set([
+      "client_id", "engagement_id", "source_path", "destination_name", "copy_authorized",
+    ]));
+    if (args.copy_authorized !== true) {
+      throw new Error("Folder intake requires explicit user copy authorization.");
+    }
+    const clientId = requireString(args.client_id, "client_id");
+    const engagementId = requireString(args.engagement_id, "engagement_id");
+    if (!/^client_[0-9a-f]{24}$/.test(clientId) || !/^eng_[0-9a-f]{24}$/.test(engagementId)) {
+      throw new Error("Select one exact registered client and engagement.");
+    }
+    const command = [
+      "copy-client-source-folder", "--client-id", clientId,
+      "--engagement-id", engagementId, "--source-path",
+      requireString(args.source_path, "source_path"), "--copy-authorized",
+    ];
+    if (args.destination_name !== undefined) {
+      command.push("--destination-name", requireString(args.destination_name, "destination_name"));
+    }
     return command;
   }
   if (name === TOOL_NAMES.createEngagement) {

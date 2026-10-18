@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/mparanza-reporting-recovery/plugins/vera",
-  "version": "0.1.407",
-  "captured_at": "2026-10-18T08:31:35.240067+00:00",
-  "catalogue_fingerprint": "4a63d0d4c2a6edbf73d8dbbe2fdf5d987822fddb3876e20618b4bf0efc43f122",
-  "manifest_sha256": "50cd511aa60ae1adba7cf70ff0b68d7f2d3e4811be7f8559ed75ecbf8af7fff5",
+  "root": "/private/var/folders/rt/cw29lbc116n1ct5n0m_8b7yr0000gn/T/vera-release-catalogue-k6d8kz7n/vera",
+  "version": "0.1.408",
+  "captured_at": "2026-10-18T10:59:36.858099+00:00",
+  "catalogue_fingerprint": "d88fdf323b18281debd89554c334171b609b93728192348c00afd0ad02418f37",
+  "manifest_sha256": "1aea9787212e4c78fcaaed95073ff59b332182a61dd01c7760e1e09917efde89",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -249,7 +249,7 @@
     {
       "function_id": "studio-archive",
       "skill_path": "skills/studio-archive/SKILL.md",
-      "sha256": "e95fb2f59c7e3d18de7171126d870090b4baa490d5e1551b7a6ca9c281f771d2"
+      "sha256": "86fb69413e766e2ee96810a36c836788cd834d940182ccad6b8b68dd24cc5e48"
     },
     {
       "function_id": "studio-document-format",

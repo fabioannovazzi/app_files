@@ -44,6 +44,10 @@ def _review_payload(plugin: str) -> dict[str, object]:
                         "kind": "deterministic_check",
                         "status": "FAIL",
                         "reason": "amount_and_date_candidate",
+                        "note": "EVIDENCE-CHECK-LEAK /private/customer/check.csv row PRIVATE-CHECK-REF",
+                        "actual": False,
+                        "expected": {"source": "PRIVATE-EVIDENCE-CHECK-REF"},
+                        "requested_document": "EVIDENCE-DOC for REF-SECRET-9988",
                         "evidence_facts": {
                             "reference": "REF-SECRET-9988",
                             "source_path": "/private/customer/support.pdf",
@@ -54,6 +58,9 @@ def _review_payload(plugin: str) -> dict[str, object]:
                 ],
                 "data": {
                     "status": "needs_review",
+                    "note": "DATA-CHECK-LEAK workflow PRIVATE-CHECK-REF /private/customer/check.csv",
+                    "actual": {"records": ["PRIVATE-CHECK-REF"]},
+                    "expected": 6,
                     "description": "Acme S.p.A. settlement",
                     "amount": 123.45,
                     "amount_signed": 123.45,
@@ -61,6 +68,7 @@ def _review_payload(plugin: str) -> dict[str, object]:
                     "entry_date": "2026-01-02",
                     "transaction_date": "2026-01-02",
                     "reference": "REF-SECRET-9988",
+                    "requested_document": "DATA-DOC for REF-SECRET-9988",
                     "target_record_id": "PRIVATE-TARGET-ID",
                     "unmapped_secret": "PRIVATE-UNMAPPED-VALUE",
                     "blank_field": "",
@@ -72,10 +80,34 @@ def _review_payload(plugin: str) -> dict[str, object]:
         "status": "ready_for_review",
     }
     if plugin == "check-entries":
+        facts = payload["items"][0]["evidence"][0]["evidence_facts"]
+        facts.update(
+            {
+                "support_match_status": "ambiguous",
+                "candidate_filenames": [
+                    "input_PRIVATE-RECEIPT/support_PRIVATE-FIRST.pdf",
+                    "input_PRIVATE-RECEIPT/support_PRIVATE-SECOND.pdf",
+                ],
+                "nested": json.dumps(
+                    {
+                        "support_artifact_ids": ["PRIVATE-ARTIFACT"],
+                        "source_paths": ["/private/customer/nested.pdf"],
+                        "files": ["PRIVATE-FILE.pdf"],
+                        "filenames": ["PRIVATE-FILENAME.pdf"],
+                        "locators": ["PRIVATE-LOCATOR"],
+                        "ids": ["PRIVATE-ID"],
+                        "support_reuse_count": 2,
+                        "currency_found": "CHF",
+                        "reference": "REF-SECRET-9988",
+                    }
+                ),
+            }
+        )
         payload["content_sha256"] = _check_entries_payload_digest(payload)
     return payload
 
 
+@pytest.mark.parametrize("encode_facts", [False, True])
 @pytest.mark.parametrize(
     ("plugin", "validate_tool", "render_tool", "case_tool"),
     [
@@ -104,6 +136,7 @@ def test_reconciliation_review_exposes_only_selected_case_context_to_model(
     validate_tool: str,
     render_tool: str,
     case_tool: str,
+    encode_facts: bool,
 ) -> None:
     node = shutil.which("node")
     if node is None:
@@ -147,6 +180,10 @@ def test_reconciliation_review_exposes_only_selected_case_context_to_model(
 
     try:
         payload = _review_payload(plugin)
+        if plugin == "check-entries" and encode_facts:
+            evidence = payload["items"][0]["evidence"][0]
+            evidence["evidence_facts"] = json.dumps(evidence["evidence_facts"])
+            payload["content_sha256"] = _check_entries_payload_digest(payload)
         validated = call_tool(1, validate_tool, {"review_payload": payload})
         model_index = validated["structuredContent"]
         serialized_index = json.dumps(model_index, sort_keys=True)
@@ -174,6 +211,7 @@ def test_reconciliation_review_exposes_only_selected_case_context_to_model(
             {
                 "persistence_token": reference["persistence_token"],
                 "case_handles": [case_handle],
+                "include_exact_identifiers": False,
             },
         )["structuredContent"]
         serialized_selected = json.dumps(selected, sort_keys=True)
@@ -187,10 +225,20 @@ def test_reconciliation_review_exposes_only_selected_case_context_to_model(
             "PRIVATE-SOURCE-ROW-ID",
             "PRIVATE-TARGET-ID",
             "PRIVATE-UNMAPPED-VALUE",
+            "DATA-CHECK-LEAK",
+            "EVIDENCE-CHECK-LEAK",
+            "PRIVATE-CHECK-REF",
+            "PRIVATE-EVIDENCE-CHECK-REF",
             "/private/customer",
             "private-review-output.json",
         ):
             assert excluded not in serialized_selected
+
+        assert "note" not in selected["cases"][0]["semantic_fields"]
+        assert "actual" not in selected["cases"][0]["semantic_fields"]
+        if plugin == "open-item-reconciliation":
+            assert selected["cases"][0]["semantic_fields"]["expected"] == 6
+            assert selected["cases"][0]["evidence"][0]["actual"] is False
 
         selected_with_identifiers = call_tool(
             3,
@@ -206,8 +254,48 @@ def test_reconciliation_review_exposes_only_selected_case_context_to_model(
             sort_keys=True,
         )
 
-        rendered = call_tool(
+        if plugin == "check-entries":
+            for context in (selected, selected_with_identifiers):
+                facts = context["cases"][0]["evidence"][0]["evidence_facts"]
+                assert facts["support_match_status"] == "ambiguous"
+                assert facts["candidate_count"] == 2
+                assert facts["nested"]["support_reuse_count"] == 2
+                assert facts["nested"]["currency_found"] == "CHF"
+                assert "candidate_filenames" not in facts
+                assert "PRIVATE-" not in json.dumps(facts)
+            assert (
+                selected["cases"][0]["evidence"][0]["evidence_facts"]["nested"][
+                    "reference_present"
+                ]
+                is True
+            )
+            assert (
+                selected_with_identifiers["cases"][0]["evidence"][0]["evidence_facts"][
+                    "nested"
+                ]["reference"]
+                == "REF-SECRET-9988"
+            )
+
+        exact_json = json.dumps(selected_with_identifiers, sort_keys=True)
+        assert "DATA-DOC for REF-SECRET-9988" in exact_json
+        assert "EVIDENCE-DOC for REF-SECRET-9988" in exact_json
+        if plugin == "open-item-reconciliation":
+            assert "DATA-CHECK-LEAK" in exact_json
+            assert "EVIDENCE-CHECK-LEAK" in exact_json
+            assert "PRIVATE-CHECK-REF" in exact_json
+            assert "PRIVATE-EVIDENCE-CHECK-REF" in exact_json
+        selected_with_default = call_tool(
             4,
+            case_tool,
+            {
+                "persistence_token": reference["persistence_token"],
+                "case_handles": [case_handle],
+            },
+        )["structuredContent"]
+        assert selected_with_default == selected
+
+        rendered = call_tool(
+            5,
             render_tool,
             {"persistence_token": reference["persistence_token"]},
         )

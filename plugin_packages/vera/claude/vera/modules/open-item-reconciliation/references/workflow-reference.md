@@ -31,6 +31,14 @@ For every source, record a `reviewed_source_decisions` entry with exactly:
   `0.01`;
 - `date.order`: exactly `day_first` or `month_first`.
 
+For `reviewed_tabular_accounting_v1`, add exactly one `tabular` object with
+reviewed header/row/sheet/delimiter selectors, canonical columns and explicit
+evidence-type choices. Follow `tabular-source-layout.md`. It admits bounded
+CSV/XLSX open-item, bank and journal tables without header/role inference.
+Every tabular prepared row is rederived from its current source during
+preparation and final replay, including evidence rows; no copied normalized
+population substitutes for source qualification.
+
 The v2 reviewed decision receipt cites exactly one byte-bound source artifact,
 uses its expected decision ID/path/adapter, and has canonical reviewer identity
 and ISO review date no later than the sealed `assurance_run_date`. Filename or
@@ -207,3 +215,34 @@ The controls verify identity, exact arithmetic, conservation, replay, and
 declared file sets. A qualified professional remains responsible for source
 meaning, accounting perimeter, materiality, evidence sufficiency, review
 findings, and the final accounting/audit conclusion.
+
+
+## Partial settlement from reviewed compensation
+
+A positive open item can retain a partial noncash settlement from one smaller
+positive source amount explicitly reviewed as `evidence_type=compensation`.
+The existing compensation-sufficiency policy must permit it; a required bank
+proof is never invented. A current date at or before the cutoff, exact document
+reference, matching accounting perimeter and exclusive evidence/target ownership
+are required. A description keyword or internal annotation is insufficient.
+Multiple competing partial sources or targets remain unresolved rather than
+being selected by row order.
+
+The existing `partially_paid` status records the partial settlement, with the
+explicit compensation type and rule, allocated amount, exact retained residual
+and source/target allocation ledger. It does not turn the journal entry into a
+cash receipt or bank match. Professional review remains pending. Negative or
+combined partial settlements require their own reviewed handling; this automatic
+route does not infer their accounting meaning.
+
+
+## Selected check diagnostics
+
+With `include_exact_identifiers=false` (the default), the selected-case model
+context withholds diagnostic `note` fields and non-numeric/non-boolean `actual`
+and `expected` values. Those producer diagnostics can embed workflow IDs and
+source locators. Typed numeric counts and booleans remain available. An explicit
+exact-identifier request can restore the selected diagnostics. This is a field
+projection policy, not text redaction or anonymization; other reviewed semantic
+text remains governed by its declared model-context fields. The human component
+retains the complete original payload in private metadata.

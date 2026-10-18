@@ -1,5 +1,4 @@
 {
-  "display_name": "Server-stamped run receipts",
   "external_boundaries": [
     {
       "id": "automatic-server-stamped-run-receipt",
@@ -39,6 +38,17 @@
     "skills/posizioni-negoziali",
     "scripts/reporting_product.py"
   ],
+  "service_id": "run-receipt-stamping",
+  "review": {
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_shared_service_source",
+    "reviewed_at": "2026-10-18",
+    "source_fingerprint": "c8b8359a423afbc0028e2ee005d03afc5e9c5d6e30c60a459d41a811f6678892"
+  },
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
   "governed_repository_paths": [
     "modules/hosted_services/api.py",
     "modules/run_receipts/__init__.py",
@@ -60,16 +70,6 @@
     "plugins/lucia/scripts/legal_negotiation_labels.json",
     "plugins/_shared/reporting-runtime",
     "scripts/sync_reporting_runtime.py"
-  ],
-  "review": {
-    "basis": "external_boundary_review_of_shared_service_source",
-    "reviewed_at": "2026-10-18",
-    "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "6da677a2b7d3b42fd23125f40a16a52c8ef25b260cd9c58302651bda3fc4624e"
-  },
-  "runtime_profiles": [
-    "openai-codex",
-    "anthropic-cowork"
   ],
   "schema_version": 2,
   "security_controls": [
@@ -108,5 +108,5 @@
       "on_violation": "Oversized or excess requests receive an explicit 413 or 429 response without creating a receipt."
     }
   ],
-  "service_id": "run-receipt-stamping"
+  "display_name": "Server-stamped run receipts"
 }

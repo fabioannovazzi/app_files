@@ -98,12 +98,16 @@
     {
       "id": "helper-environment-allowlist",
       "control": "Built-in recovery children receive the shared host/runtime environment allowlist, explicit named runtime/state locations and the recovery recursion guard. Unrelated user tokens and keys are not inherited."
+    },
+    {
+      "id": "explicit-local-incident-delivery",
+      "control": "An explicitly selected MPARANZA_INCIDENT_DELIVERY=local-only setting blocks the shared client HTTP transport while retaining local technical evidence. Queues created in this mode remain durably marked and are not automatically flushed in a later automatic execution. This opt-in test control does not make model-provider processing local-only or change ordinary delivery when unset."
     }
   ],
   "review": {
     "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
     "basis": "hosted_service_boundary_review_of_source",
-    "source_fingerprint": "0cea1631543bf45e3193120795780f69a4dd445e21e3043b4d083ff31f98d078"
+    "source_fingerprint": "8ce176de63b341eedcc5bdc20abd6d3e5dd1c4a8eabe4979f4542550fe1907ce"
   }
 }

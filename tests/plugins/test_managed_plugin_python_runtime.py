@@ -1509,3 +1509,70 @@ def test_vera_manager_does_not_write_forced_exit_diagnostic_outside_client_outpu
 
     assert result == -9
     assert not output.exists()
+
+
+@pytest.mark.parametrize("helper_exit", [0, 1])
+def test_isolated_vera_launcher_keeps_owned_incident_imports_and_local_diagnostics(
+    tmp_path: Path,
+    helper_exit: int,
+) -> None:
+    import shutil
+
+    (tmp_path / "scripts").mkdir()
+    shutil.copyfile(
+        ROOT / "plugins/vera/scripts/technical_runner.py",
+        tmp_path / "scripts/technical_runner.py",
+    )
+    helper = tmp_path / "helper.py"
+    helper.write_text(
+        "import os\nprint('PROFESSIONAL_VALUE')\n"
+        + (
+            "raise ValueError(os.environ['TEST_PRIVATE_VALUE'])\n"
+            if helper_exit
+            else ""
+        )
+    )
+    marker = tmp_path / "poison-executed"
+    (tmp_path / "operational_incidents.py").write_text(
+        f"from pathlib import Path\nPath({str(marker)!r}).write_text('bad')\nraise RuntimeError('untrusted cwd module')\n"
+    )
+    code = r"""
+import importlib.util,json,os,sys,urllib.request
+from pathlib import Path
+from types import SimpleNamespace
+path=Path(sys.argv[1]); root=Path(sys.argv[2])
+os.environ['MPARANZA_INCIDENT_DELIVERY']='local-only'
+os.environ['MPARANZA_INCIDENT_STATE_DIR']=str(root/'local-diagnostics')
+os.environ['TEST_PRIVATE_VALUE']='PRIVATE_TECHNICAL_VALUE'
+def forbidden(*args,**kwargs):
+    raise AssertionError('No network opener may be constructed')
+urllib.request.build_opener=forbidden
+spec=importlib.util.spec_from_file_location('isolated_launcher_test',path)
+launcher=importlib.util.module_from_spec(spec);spec.loader.exec_module(launcher)
+launcher.prepare_execution_root=lambda *args: root
+launcher._IMPLEMENTATION.select_runtime=lambda *args: SimpleNamespace(requirement_root=root)
+launcher._IMPLEMENTATION.ensure_runtime=lambda *args,**kwargs: (True,root,'synthetic ready runtime')
+launcher._IMPLEMENTATION.runtime_python=lambda *args: Path(sys.executable)
+launcher._IMPLEMENTATION.runtime_environment=lambda *args: dict(os.environ)
+raise SystemExit(launcher.main(['--module','check-entries','run','helper.py']))
+"""
+    completed = subprocess.run(
+        [sys.executable, "-I", "-B", "-c", code, str(VERA_MANAGER), str(tmp_path)],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert completed.returncode == helper_exit, completed.stderr
+    assert "PROFESSIONAL_VALUE" in completed.stdout
+    assert not marker.exists()
+    state = json.loads((tmp_path / "local-diagnostics/state.json").read_text())
+    assert state["delivery_mode"] == "local-only"
+    assert state["registered"] is False and not state["receipts"]
+    if helper_exit:
+        assert len(state["outbox"]) == 1
+        assert "PRIVATE_TECHNICAL_VALUE" not in json.dumps(state["outbox"])
+        diagnostic_files = list((tmp_path / "local-diagnostics").rglob("*.stderr"))
+        assert any("PRIVATE_TECHNICAL_VALUE" in p.read_text() for p in diagnostic_files)
+    else:
+        assert not state["outbox"]

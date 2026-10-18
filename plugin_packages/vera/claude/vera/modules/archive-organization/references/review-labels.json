@@ -2,7 +2,7 @@
   "it": {
     "title": "Revisione del riordino archivio",
     "lead": "Esamina i file, le destinazioni proposte e i motivi nella pagina di revisione. Puoi accettare, correggere, rifiutare o lasciare in sospeso ogni proposta.",
-    "execution": "Salvare e applicare le decisioni prepara il piano approvato: non sposta ancora i file. Prima degli spostamenti, rivedi il riepilogo e autorizza separatamente l'esecuzione. Le copie esatte vengono conservate nell'area di verifica dei duplicati.",
+    "execution": "Salvare e applicare le decisioni prepara il piano approvato: non sposta ancora i file. Prima degli spostamenti, rivedi il riepilogo e autorizza separatamente l'esecuzione. Per ogni copia esatta, il piano indica se mantenerla nel percorso attuale o proporne lo spostamento nell'area di verifica dei duplicati.",
     "files": "File per riprendere la revisione",
     "payload": "Proposte e prove",
     "decisions": "Decisioni salvate",
@@ -68,13 +68,13 @@
       }
     },
     "review_next": "Rivedi tutte le proposte e salva le decisioni.",
-    "prepare_caveat": "Salvare e applicare le decisioni prepara il piano approvato: non sposta ancora i file. Prima degli spostamenti, rivedi il riepilogo e autorizza separatamente l'esecuzione. Le copie esatte vengono conservate nell'area di verifica dei duplicati.",
-    "approve_next": "Salvare e applicare le decisioni prepara il piano approvato: non sposta ancora i file. Prima degli spostamenti, rivedi il riepilogo e autorizza separatamente l'esecuzione. Le copie esatte vengono conservate nell'area di verifica dei duplicati."
+    "prepare_caveat": "Salvare e applicare le decisioni prepara il piano approvato: non sposta ancora i file. Prima degli spostamenti, rivedi il riepilogo e autorizza separatamente l'esecuzione. Per ogni copia esatta, il piano indica se mantenerla nel percorso attuale o proporne lo spostamento nell'area di verifica dei duplicati.",
+    "approve_next": "Salvare e applicare le decisioni prepara il piano approvato: non sposta ancora i file. Prima degli spostamenti, rivedi il riepilogo e autorizza separatamente l'esecuzione. Per ogni copia esatta, il piano indica se mantenerla nel percorso attuale o proporne lo spostamento nell'area di verifica dei duplicati."
   },
   "en": {
     "title": "Review the archive organisation plan",
     "lead": "Review the files, proposed destinations and reasons on the review page. You can accept, edit, reject or leave each proposal unresolved.",
-    "execution": "Saving and applying decisions prepares the approved plan; it does not move files yet. Before any moves, review the summary and separately authorise execution. Exact copies are retained in the duplicate-review area.",
+    "execution": "Saving and applying decisions prepares the approved plan; it does not move files yet. Before any moves, review the summary and separately authorise execution. For each exact copy, the plan indicates whether to keep its current path or propose moving it to the duplicate-review area.",
     "files": "Files for resuming the review",
     "payload": "Proposals and evidence",
     "decisions": "Saved decisions",
@@ -140,13 +140,13 @@
       }
     },
     "review_next": "Review every proposal and save the decisions.",
-    "prepare_caveat": "Saving and applying decisions prepares the approved plan; it does not move files yet. Before any moves, review the summary and separately authorise execution. Exact copies are retained in the duplicate-review area.",
-    "approve_next": "Saving and applying decisions prepares the approved plan; it does not move files yet. Before any moves, review the summary and separately authorise execution. Exact copies are retained in the duplicate-review area."
+    "prepare_caveat": "Saving and applying decisions prepares the approved plan; it does not move files yet. Before any moves, review the summary and separately authorise execution. For each exact copy, the plan indicates whether to keep its current path or propose moving it to the duplicate-review area.",
+    "approve_next": "Saving and applying decisions prepares the approved plan; it does not move files yet. Before any moves, review the summary and separately authorise execution. For each exact copy, the plan indicates whether to keep its current path or propose moving it to the duplicate-review area."
   },
   "fr": {
     "title": "Revoir le plan de classement",
     "lead": "Examinez les fichiers, les destinations proposées et les motifs sur la page de revue. Vous pouvez accepter, modifier, refuser ou laisser chaque proposition en suspens.",
-    "execution": "Enregistrer et appliquer les décisions prépare le plan approuvé, sans déplacer les fichiers. Avant tout déplacement, revoyez le récapitulatif et autorisez séparément l'exécution. Les copies exactes sont conservées dans la zone de revue des doublons.",
+    "execution": "Enregistrer et appliquer les décisions prépare le plan approuvé, sans déplacer les fichiers. Avant tout déplacement, revoyez le récapitulatif et autorisez séparément l'exécution. Pour chaque copie exacte, le plan indique si elle doit rester à son emplacement actuel ou si un déplacement vers la zone de revue des doublons est proposé.",
     "files": "Fichiers pour reprendre la revue",
     "payload": "Propositions et preuves",
     "decisions": "Décisions enregistrées",
@@ -212,13 +212,13 @@
       }
     },
     "review_next": "Examinez toutes les propositions et enregistrez les décisions.",
-    "prepare_caveat": "Enregistrer et appliquer les décisions prépare le plan approuvé, sans déplacer les fichiers. Avant tout déplacement, revoyez le récapitulatif et autorisez séparément l'exécution. Les copies exactes sont conservées dans la zone de revue des doublons.",
-    "approve_next": "Enregistrer et appliquer les décisions prépare le plan approuvé, sans déplacer les fichiers. Avant tout déplacement, revoyez le récapitulatif et autorisez séparément l'exécution. Les copies exactes sont conservées dans la zone de revue des doublons."
+    "prepare_caveat": "Enregistrer et appliquer les décisions prépare le plan approuvé, sans déplacer les fichiers. Avant tout déplacement, revoyez le récapitulatif et autorisez séparément l'exécution. Pour chaque copie exacte, le plan indique si elle doit rester à son emplacement actuel ou si un déplacement vers la zone de revue des doublons est proposé.",
+    "approve_next": "Enregistrer et appliquer les décisions prépare le plan approuvé, sans déplacer les fichiers. Avant tout déplacement, revoyez le récapitulatif et autorisez séparément l'exécution. Pour chaque copie exacte, le plan indique si elle doit rester à son emplacement actuel ou si un déplacement vers la zone de revue des doublons est proposé."
   },
   "de": {
     "title": "Den Ordnungsplan prüfen",
     "lead": "Prüfen Sie Dateien, vorgeschlagene Zielorte und Begründungen auf der Prüfseite. Sie können jeden Vorschlag annehmen, ändern, ablehnen oder offenlassen.",
-    "execution": "Das Speichern und Anwenden der Entscheidungen erstellt den genehmigten Plan, verschiebt aber noch keine Dateien. Prüfen Sie vor den Verschiebungen die Zusammenfassung und genehmigen Sie die Ausführung gesondert. Identische Kopien bleiben im Prüfbereich für Duplikate erhalten.",
+    "execution": "Das Speichern und Anwenden der Entscheidungen erstellt den genehmigten Plan, verschiebt aber noch keine Dateien. Prüfen Sie vor den Verschiebungen die Zusammenfassung und genehmigen Sie die Ausführung gesondert. Der Plan zeigt für jede identische Kopie, ob sie am bisherigen Speicherort bleiben oder in den Prüfbereich für Duplikate verschoben werden soll.",
     "files": "Dateien zur Fortsetzung der Prüfung",
     "payload": "Vorschläge und Belege",
     "decisions": "Gespeicherte Entscheidungen",
@@ -284,13 +284,13 @@
       }
     },
     "review_next": "Prüfen Sie alle Vorschläge und speichern Sie die Entscheidungen.",
-    "prepare_caveat": "Das Speichern und Anwenden der Entscheidungen erstellt den genehmigten Plan, verschiebt aber noch keine Dateien. Prüfen Sie vor den Verschiebungen die Zusammenfassung und genehmigen Sie die Ausführung gesondert. Identische Kopien bleiben im Prüfbereich für Duplikate erhalten.",
-    "approve_next": "Das Speichern und Anwenden der Entscheidungen erstellt den genehmigten Plan, verschiebt aber noch keine Dateien. Prüfen Sie vor den Verschiebungen die Zusammenfassung und genehmigen Sie die Ausführung gesondert. Identische Kopien bleiben im Prüfbereich für Duplikate erhalten."
+    "prepare_caveat": "Das Speichern und Anwenden der Entscheidungen erstellt den genehmigten Plan, verschiebt aber noch keine Dateien. Prüfen Sie vor den Verschiebungen die Zusammenfassung und genehmigen Sie die Ausführung gesondert. Der Plan zeigt für jede identische Kopie, ob sie am bisherigen Speicherort bleiben oder in den Prüfbereich für Duplikate verschoben werden soll.",
+    "approve_next": "Das Speichern und Anwenden der Entscheidungen erstellt den genehmigten Plan, verschiebt aber noch keine Dateien. Prüfen Sie vor den Verschiebungen die Zusammenfassung und genehmigen Sie die Ausführung gesondert. Der Plan zeigt für jede identische Kopie, ob sie am bisherigen Speicherort bleiben oder in den Prüfbereich für Duplikate verschoben werden soll."
   },
   "es": {
     "title": "Revisar el plan de organización",
     "lead": "Revisa los archivos, los destinos propuestos y los motivos en la página de revisión. Puedes aceptar, modificar, rechazar o dejar pendiente cada propuesta.",
-    "execution": "Guardar y aplicar las decisiones prepara el plan aprobado; todavía no mueve archivos. Antes de los movimientos, revisa el resumen y autoriza la ejecución por separado. Las copias exactas se conservan en la zona de revisión de duplicados.",
+    "execution": "Guardar y aplicar las decisiones prepara el plan aprobado; todavía no mueve archivos. Antes de los movimientos, revisa el resumen y autoriza la ejecución por separado. Para cada copia exacta, el plan indica si se mantiene en su ubicación actual o se propone moverla a la zona de revisión de duplicados.",
     "files": "Archivos para reanudar la revisión",
     "payload": "Propuestas y pruebas",
     "decisions": "Decisiones guardadas",
@@ -356,7 +356,7 @@
       }
     },
     "review_next": "Revisa todas las propuestas y guarda las decisiones.",
-    "prepare_caveat": "Guardar y aplicar las decisiones prepara el plan aprobado; todavía no mueve archivos. Antes de los movimientos, revisa el resumen y autoriza la ejecución por separado. Las copias exactas se conservan en la zona de revisión de duplicados.",
-    "approve_next": "Guardar y aplicar las decisiones prepara el plan aprobado; todavía no mueve archivos. Antes de los movimientos, revisa el resumen y autoriza la ejecución por separado. Las copias exactas se conservan en la zona de revisión de duplicados."
+    "prepare_caveat": "Guardar y aplicar las decisiones prepara el plan aprobado; todavía no mueve archivos. Antes de los movimientos, revisa el resumen y autoriza la ejecución por separado. Para cada copia exacta, el plan indica si se mantiene en su ubicación actual o se propone moverla a la zona de revisión de duplicados.",
+    "approve_next": "Guardar y aplicar las decisiones prepara el plan aprobado; todavía no mueve archivos. Antes de los movimientos, revisa el resumen y autoriza la ejecución por separado. Para cada copia exacta, el plan indica si se mantiene en su ubicación actual o se propone moverla a la zona de revisión de duplicados."
   }
 }

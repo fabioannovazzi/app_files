@@ -999,3 +999,61 @@ def test_interrupted_drive_response_retains_uncertain_move_for_review(
     assert journal["status"] == "partial_failure"
     assert journal["operations"][0]["status"] == "moving"
     assert "remote state requires review" in journal["rollback_errors"][0]
+
+
+@pytest.mark.parametrize("model_refs", [False, True])
+def test_case_retention_keeps_classified_duplicates_without_changing_policy(
+    tmp_path: Path, model_refs: bool
+) -> None:
+    context_path, snapshot, original_files = _prepared_run(tmp_path)
+    proposal_path = (
+        _model_proposals(tmp_path, snapshot)
+        if model_refs
+        else _proposals(tmp_path, snapshot)
+    )
+    proposals = json.loads(proposal_path.read_text())
+    for row in proposals["proposals"]:
+        row["keep_in_place"] = True
+        row["reason"] = "The case instruction requires all copies to stay here."
+    _write_json(proposal_path, proposals)
+    policy_before = organizer.DEFAULT_POLICY_PATH.read_bytes()
+
+    review = organizer.build_review_package(context_path, proposal_path)
+    plan = json.loads((Path(review["output_dir"]) / "archive_plan.json").read_text())
+    approved = _review_and_approve(context_path, tmp_path, review)
+    applied = organizer.apply_approved_plan(
+        context_path, Path(approved["approved_plan_path"]), explicit_approval=True
+    )
+
+    assert {item["proposed_action"] for item in plan["items"]} == {"keep"}
+    assert sum(item["exact_duplicate_of"] is not None for item in plan["items"]) == 1
+    assert all(
+        item["source_relative_path"] == item["target_relative_path"]
+        for item in plan["items"]
+    )
+    assert all(
+        item["category_id"] == "ade"
+        for item in plan["items"]
+        if item["source_relative_path"] != "notes.txt"
+    )
+    assert applied["applied_count"] == 0
+    assert organizer.DEFAULT_POLICY_PATH.read_bytes() == policy_before
+    client_root = context_path.parents[5]
+    assert {
+        relative: (client_root / relative).read_bytes() for relative in original_files
+    } == original_files
+    assert not (client_root / "Da_verificare").exists()
+
+
+@pytest.mark.parametrize("value", ["true", 1, None, [], {}])
+def test_retention_requires_a_strict_boolean(tmp_path: Path, value: object) -> None:
+    context_path, snapshot, _ = _prepared_run(tmp_path)
+    proposal_path = _model_proposals(tmp_path, snapshot)
+    proposals = json.loads(proposal_path.read_text())
+    proposals["proposals"][0]["keep_in_place"] = value
+    _write_json(proposal_path, proposals)
+
+    with pytest.raises(
+        organizer.ArchiveOrganizationError, match="keep_in_place must be a boolean"
+    ):
+        organizer.build_review_package(context_path, proposal_path)

@@ -154,14 +154,14 @@ def main() -> int:
     )
     parser.add_argument(
         "--amount-tolerance",
-        default="0",
-        help="Allowed exact absolute amount difference as decimal text.",
+        default=None,
+        help="Override recipe amount tolerance; defaults to recipe checks or zero.",
     )
     parser.add_argument(
         "--date-window-days",
         type=int,
-        default=0,
-        help="Allowed date difference in calendar days.",
+        default=None,
+        help="Override recipe date window; defaults to recipe checks or zero days.",
     )
     parser.add_argument(
         "--connector-name",

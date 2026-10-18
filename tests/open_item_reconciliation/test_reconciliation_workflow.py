@@ -445,3 +445,241 @@ def test_public_report_counts_distinct_rows_once_after_document_alias_merge(tmp_
     assert saved_row["open_item_rows"] == row_count
     assert saved_row["reconciliation_status_counts"] == f"unresolved:{row_count}"
     assert len(result["reconciliation_rows"]) == row_count
+
+
+@pytest.mark.parametrize("language", ["it", "en"])
+def test_post_cutoff_subset_figures_retain_their_source_records(tmp_path, language):
+    workflow = load_workflow()
+    result = workflow.build_reconciliation_artifacts(
+        output_dir=tmp_path,
+        open_items=[
+            {
+                "record_id": "open-with-later-payment",
+                "source_role": "open_items",
+                "evidence_type": "open_item",
+                "document_key": "INV-A|2026",
+                "document_no": "INV-A",
+                "document_date": "2026-09-01",
+                "amount": "1000.00",
+                "currency": "EUR",
+            },
+            {
+                "record_id": "other-open-item",
+                "source_role": "open_items",
+                "evidence_type": "open_item",
+                "document_key": "INV-B|2026",
+                "document_no": "INV-B",
+                "document_date": "2026-09-02",
+                "amount": "500.00",
+                "currency": "EUR",
+            },
+        ],
+        evidence_rows=[
+            {
+                "record_id": "later-partial-payment",
+                "document_key": "INV-A|2026",
+                "posting_date": "2026-10-02",
+                "amount": "400.00",
+                "currency": "EUR",
+                "source_role": "bank_statement",
+                "evidence_type": "external_bank",
+            }
+        ],
+        assumptions={"scope_year": "2026", "cutoff_date": "2026-09-30"},
+        language=language,
+    )
+    assert [r["reconciliation_status"] for r in result["reconciliation_rows"]] == [
+        "unresolved",
+        "unresolved",
+    ]
+    assert len(result["post_cutoff_candidates"]) == 1
+    report = Document(result["word_path"])
+    source_bound_tables = [
+        t
+        for t in report.tables
+        if "open-with-later-payment"
+        in " ".join(c.text for r in t.rows for c in r.cells)
+    ]
+    assert source_bound_tables
+    assert result["assurance"]["content_sha256"]
+
+
+@pytest.mark.parametrize("language", ["it", "en"])
+@pytest.mark.parametrize("additional_compensation", [False, True])
+def test_mixed_status_percentage_replays_its_display_precision(
+    tmp_path, language, additional_compensation
+):
+    workflow = load_workflow()
+    result = workflow.build_reconciliation_artifacts(
+        output_dir=tmp_path,
+        open_items=[
+            {
+                "record_id": "open-A-2026",
+                "document_no": "INV-A",
+                "document_key": "INV-A|2026",
+                "document_date": "2026-09-01",
+                "amount": "1000.00",
+                "currency": "EUR",
+            },
+            {
+                "record_id": "open-B-2026",
+                "document_no": "INV-B",
+                "document_key": "INV-B|2026",
+                "document_date": "2026-09-02",
+                "amount": "500.00",
+                "currency": "EUR",
+            },
+        ],
+        evidence_rows=[
+            {
+                "record_id": "evidence-B-20260903",
+                "document_no": "INV-B",
+                "document_key": "INV-B|2026",
+                "posting_date": "2026-09-03",
+                "amount": "500.00",
+                "currency": "EUR",
+                "source_role": "bank_statement",
+                "evidence_type": "external_bank",
+            },
+        ]
+        + (
+            [
+                {
+                    "record_id": "evidence-A-20260903",
+                    "document_no": "INV-A",
+                    "document_key": "INV-A|2026",
+                    "posting_date": "2026-09-03",
+                    "amount": "1000.00",
+                    "currency": "EUR",
+                    "source_role": "journal",
+                    "evidence_type": "compensation",
+                }
+            ]
+            if additional_compensation
+            else []
+        ),
+        assumptions={"scope_year": "2026", "cutoff_date": "2026-09-30"},
+        language=language,
+    )
+    assert {r["reconciliation_status"] for r in result["reconciliation_rows"]} == (
+        {"closed"} if additional_compensation else {"closed", "unresolved"}
+    )
+    assert {
+        r["share_of_abs_amount_percent"] for r in result["evidence_concentration"]
+    } == {"33.33", "66.67"}
+    assert result["assurance"]["content_sha256"]
+
+
+def compensation_case():
+    population = [
+        {
+            "record_id": "open-comp-2026",
+            "document_no": "INV-C",
+            "document_key": "INV-C|2026",
+            "document_date": "2026-09-15",
+            "amount": "750.00",
+            "source_role": "open_items",
+            "currency": "EUR",
+            "unit": "1",
+            "entity_ref": "RETE",
+            "party_ref": "FARO",
+        }
+    ]
+    evidence = [
+        {
+            "record_id": "credit-note-2026",
+            "document_no": "INV-C",
+            "document_key": "INV-C|2026",
+            "posting_date": "2026-09-27",
+            "amount": "150.00",
+            "source_role": "journal",
+            "evidence_type": "compensation",
+            "currency": "EUR",
+            "unit": "1",
+            "entity_ref": "RETE",
+            "party_ref": "FARO",
+        }
+    ]
+    assumptions = {
+        "scope_year": "2026",
+        "cutoff_date": "2026-09-30",
+        "amount_tolerance": "0",
+        "compensation_requires_bank": False,
+    }
+    return population, evidence, assumptions
+
+
+def test_reviewed_partial_compensation_retains_exact_residual_and_assurance(tmp_path):
+    workflow = load_workflow()
+    population, evidence, assumptions = compensation_case()
+    result = workflow.build_reconciliation_artifacts(
+        output_dir=tmp_path,
+        open_items=population,
+        evidence_rows=evidence,
+        assumptions=assumptions,
+        language="it",
+    )
+    row = result["reconciliation_rows"][0]
+    assert row["reconciliation_status"] == "partially_paid"
+    assert row["rule_applied"] == "exact_document_partial_compensation"
+    assert row["allocated_amount"] == "150.00"
+    assert row["residual_amount"] == "600.00"
+    assert row["matched_evidence_type"] == "compensation"
+    assert row["relationship_control_status"] == "passed"
+    ledger = result["relationship_allocation_ledgers"][0]
+    assert ledger["source_residuals"][0]["residual"] == "0"
+    assert ledger["target_residuals"][0]["residual"] == "600"
+    assert result["assurance"]["content_sha256"]
+
+
+@pytest.mark.parametrize(
+    "conflict",
+    [
+        "bank_required",
+        "internal_only",
+        "after_cutoff",
+        "different_party",
+        "different_invoice",
+        "duplicate_target",
+        "different_currency",
+        "different_invoice_year",
+        "duplicate_evidence",
+        "competing_bank_evidence",
+    ],
+)
+def test_partial_compensation_never_overrides_reviewed_policy_or_ownership(conflict):
+    workflow = load_workflow()
+    population, evidence, assumptions = compensation_case()
+    if conflict == "bank_required":
+        assumptions["compensation_requires_bank"] = True
+    elif conflict == "internal_only":
+        evidence[0]["evidence_type"] = "internal_accounting"
+        evidence[0]["description"] = "compensazione documentata"
+    elif conflict == "after_cutoff":
+        evidence[0]["posting_date"] = "2026-10-01"
+    elif conflict == "different_party":
+        evidence[0]["party_ref"] = "OTHER"
+    elif conflict == "different_invoice":
+        evidence[0].update(document_no="INV-OTHER", document_key="INV-OTHER|2026")
+    elif conflict == "different_currency":
+        evidence[0]["currency"] = "USD"
+    elif conflict == "different_invoice_year":
+        evidence[0].update(document_key="INV-C|2025", document_date="2025-09-15")
+    elif conflict == "duplicate_evidence":
+        evidence.append(dict(evidence[0]))
+    elif conflict == "competing_bank_evidence":
+        evidence.append(
+            {
+                **evidence[0],
+                "record_id": "bank-competing-2026",
+                "source_role": "bank_statement",
+                "evidence_type": "external_bank",
+            }
+        )
+    else:
+        population.append({**population[0], "record_id": "duplicate-open-target"})
+    rows = workflow.reconcile_open_items(population, evidence, assumptions)
+    assert all(
+        r["reconciliation_status"] not in {"partially_paid", "closed"} for r in rows
+    )
+    assert all("allocated_amount" not in r for r in rows)

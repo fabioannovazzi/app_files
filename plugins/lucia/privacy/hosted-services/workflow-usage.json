@@ -110,12 +110,16 @@
     {
       "id": "public-status-projection",
       "control": "The public endpoint returns only the four-state map and epoch metadata. Device/run identities and feedback remain private; no public reset route exists."
+    },
+    {
+      "id": "explicit-local-incident-delivery",
+      "control": "An explicitly selected MPARANZA_INCIDENT_DELIVERY=local-only setting blocks the shared client HTTP transport while retaining local technical evidence. Queues created in this mode remain durably marked and are not automatically flushed in a later automatic execution. This opt-in test control does not make model-provider processing local-only or change ordinary delivery when unset."
     }
   ],
   "review": {
     "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
     "basis": "hosted_service_boundary_review_of_source",
-    "source_fingerprint": "ee62ae8b4b71f8a7deee9e1ac54503a46e843ab9859def3740d7e43d0b49e50d"
+    "source_fingerprint": "563c338d96ef7c38b7b9753db5513f22c05a7a797d1c5f120c3205e076131ee5"
   }
 }

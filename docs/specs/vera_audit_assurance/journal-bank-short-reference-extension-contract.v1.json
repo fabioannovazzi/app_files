@@ -1,0 +1,22 @@
+{
+  "schema_version": "journal_bank.short_explicit_reference_extension.v1",
+  "extends_contract": "journal-bank-evaluation-contract.v5.json",
+  "historical_contract_sha256": "4824652ecdb990a844fd9b72d799a2537f46a21ddb9fefb8a664f828c0ec6657",
+  "scope": "Additive whole-field identifier recognition; historical v5 evaluation remains unchanged",
+  "short_whole_field_identifier": {
+    "exception_to_minimum_token_length": true,
+    "source": "complete mapped reference or movement_number field only",
+    "form": "alphanumeric segments separated optionally by hyphen, slash or period; at least one letter and digit",
+    "comparison": "case-normalized complete value with punctuation preserved",
+    "never_promote": "short fragments of free text, bare numeric values or generic period labels",
+    "all_relationship_amount_date_perimeter_and_conflict_controls_still_required": true
+  },
+  "reason": "The previous extracted-token length guard incorrectly discarded complete explicitly mapped identifiers such as C101, preventing exact conserved split groups",
+  "regression_requirements": [
+    "Exact short mixed alphanumeric whole-field references conserve grouped amounts",
+    "Preserve punctuation and distinguish A-1 from A1",
+    "Do not promote bare numeric, generic period or short free-text fragments",
+    "Keep competing equal counterparts unresolved",
+    "Preserve existing date/sign/currency/unit/entity/no-reuse controls"
+  ]
+}

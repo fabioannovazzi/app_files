@@ -423,6 +423,14 @@ def report_preparation_failure(
             "Incident reporting verification unavailable: %s",
             type(reporting_error).__name__,
         )
+    if os.environ.get("MPARANZA_INCIDENT_DELIVERY") == "local-only":
+        LOGGER.error(
+            "VERA_LOCAL_INCIDENT: workflow=%s stage=installation-preparation error_type=%s. "
+            "Retain local evidence; incident transmission is disabled for this execution.",
+            module or "unknown",
+            type(error).__name__,
+        )
+        return
     LOGGER.error(
         "VERA_REMOTE_INCIDENT_REQUIRED: workflow=%s stage=installation-preparation error_type=%s. "
         "Use the saved product incident connector automatically. Deliver the exact queued "

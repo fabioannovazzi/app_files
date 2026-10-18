@@ -5,6 +5,7 @@ import json
 import sys
 from pathlib import Path
 
+import pytest
 from docx import Document
 from openpyxl import load_workbook
 
@@ -454,6 +455,121 @@ def test_write_word_report_defaults_to_italian_labels(tmp_path):
     assert "Prossimi passi" in text
 
 
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+def test_report_keeps_review_diagnostics_in_canonical_evidence(tmp_path, language):
+    import copy
+
+    outputs = load_outputs()
+    assumptions = json.loads(
+        (
+            Path(__file__).parent
+            / "fixtures"
+            / "reviewed_settlement_case/reviewed-assumptions.json"
+        ).read_text()
+    )
+    assumptions["professional_note"] = "Valutare separatamente la nota di credito."
+    before = copy.deepcopy(assumptions)
+    path = tmp_path / "report.docx"
+    outputs.write_word_report(
+        path,
+        title="Report",
+        metadata={},
+        summary_rows=[],
+        assumptions=assumptions,
+        next_steps=[],
+        language=language,
+    )
+    text = document_text(path)
+    assert assumptions == before
+    assert "Valutare separatamente la nota di credito." in text
+    assert "source_path_keys" not in text
+    assert "/studio-private/" not in text
+    assert "unsigned synthetic agent test" not in text
+    assert "source_review_notes" not in outputs._report_assumptions(assumptions)
+    assert outputs._report_assumptions(assumptions)["professional_approval"] is False
+    if language == "it":
+        assert "Tolleranza sugli importi: 0" in text
+        assert "Conferma umana: No" in text
+        assert "Approvazione professionale: No" in text
+        assert "Prova sintetica automatizzata" in text
+        for key in [
+            "Jurisdiction",
+            "Unit:",
+            "Entity ref",
+            "Party ref",
+            "Amount tolerance",
+            "Human confirmation",
+            "Professional approval",
+            "Source review notes",
+            "agent_test",
+        ]:
+            assert key not in text
+
+
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+def test_report_renders_owned_settlement_labels_without_rewriting_source_text(
+    tmp_path, language
+):
+    outputs = load_outputs()
+    categories = [
+        "other_external",
+        "factor_or_operator_debit_fee",
+        "bank_advance_repayment",
+        "bank_advance_credit",
+        "factor_operator_cash_inflow",
+        "direct_counterparty_bank_receipt",
+        "direct_counterparty_bank_payment",
+        "counterparty_bank_other",
+        "factor_operator_other",
+    ]
+    path = tmp_path / "report.docx"
+    original_note = (
+        "Source note: other_external; invoice exact_document_partial_bank_payment"
+    )
+    outputs.write_word_report(
+        path,
+        title="Report",
+        metadata={},
+        summary_rows=[
+            {
+                "reconciliation_status": "partially_paid",
+                "rule_applied": "exact_document_partial_bank_payment",
+                "rows": 1,
+                "amount": "600.00",
+            }
+        ],
+        assumptions={},
+        next_steps=[],
+        narrative=original_note,
+        external_evidence_summary=[
+            {
+                "external_category": category,
+                "rows": 1,
+                "amount_total": "100.00",
+            }
+            for category in categories
+        ],
+        language=language,
+    )
+    text = document_text(path)
+    assert original_note in text
+    table_cells = [
+        cell.text
+        for table in Document(path).tables
+        for row in table.rows
+        for cell in row.cells
+    ]
+    assert all(category not in table_cells for category in categories)
+    assert "exact_document_partial_bank_payment" not in table_cells
+    assert "Exact document partial bank payment" not in table_cells
+    if language == "it":
+        assert "Altra evidenza esterna" in table_cells
+        assert (
+            "Pagamento bancario parziale con riferimento esatto al documento"
+            in table_cells
+        )
+
+
 def test_write_word_report_localizes_italian_internal_codes(tmp_path):
     outputs = load_outputs()
     path = tmp_path / "relazione.docx"
@@ -490,6 +606,64 @@ def test_write_word_report_localizes_italian_internal_codes(tmp_path):
     assert "internal_closure_without_external" not in text
     assert "factoring_pro_soluto_closes_item" not in text
     assert "post_cutoff_events_excluded" not in text
+
+
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+def test_report_localizes_emitted_review_signals(tmp_path, language):
+    outputs = load_outputs()
+    helpers = sys.modules["reconciliation_helpers"]
+    signals = helpers.review_signal_rows(
+        [
+            {
+                "record_id": f"open-{index}",
+                "document_no": f"INV-{index}",
+                "document_date": "2025-01-01",
+                "amount": "1000.00",
+                "reconciliation_status": status,
+                "evidence_level": level,
+                "matched_evidence_type": "payment_order",
+            }
+            for index, (status, level) in enumerate(
+                [
+                    ("needs_evidence", "weak_internal"),
+                    ("unresolved", "none"),
+                    ("probable_payment", "bridge_only"),
+                ]
+            )
+        ],
+        {"cutoff_date": "2026-09-30", "review_high_value_threshold": "100"},
+    )
+    emitted = {
+        token.strip() for row in signals for token in row["review_signals"].split(";")
+    }
+    assert {
+        "old_open_item",
+        "evidence_weak_internal",
+        "evidence_bridge_only",
+        "evidence_none",
+        "payment_order_bridge",
+    } <= emitted
+    path = tmp_path / "report.docx"
+    outputs.write_word_report(
+        path,
+        title="Report",
+        metadata={},
+        summary_rows=[],
+        assumptions={},
+        next_steps=[],
+        review_signals=signals,
+        language=language,
+    )
+    text = document_text(path)
+    assert "INV-0" in text and "INV-1" in text and "INV-2" in text
+    for code in emitted:
+        assert code not in text
+    assert "Evidence weak internal" not in text
+    assert "Payment order bridge" not in text
+    if language == "it":
+        assert "Evidenza interna debole" in text
+        assert "Solo evidenza ponte" in text
+        assert "Partita datata" in text
 
 
 def test_write_word_report_includes_deterministic_check_summaries(tmp_path):

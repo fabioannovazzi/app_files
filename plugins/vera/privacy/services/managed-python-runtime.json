@@ -1,30 +1,4 @@
 {
-  "schema_version": 2,
-  "service_id": "managed-python-runtime",
-  "display_name": "Managed Python runtime",
-  "governed_paths": [
-    "components.json",
-    "scripts/check_dependencies.py",
-    "scripts/_managed_python_runtime.py",
-    "scripts/managed_python_runtime.py",
-    "skills/vera/SKILL.md",
-    "scripts/_shared_python_runtime.py",
-    "requirements-shared-core.txt",
-    "requirements-shared-ocr.txt",
-    "constraints-shared-macos-py312.txt",
-    "scripts/_python_bootstrap.py",
-    "scripts/studio_archive_session.py",
-    "scripts/studio_archive_windows.ps1",
-    "skills/studio-archive/references/cowork-runtime.md",
-    "scripts/verified_execution.py",
-    "skills/vera/references/execution-recovery.md",
-    "scripts/operational_incidents.py",
-    "scripts/technical_runner.py"
-  ],
-  "runtime_profiles": [
-    "openai-codex",
-    "anthropic-cowork"
-  ],
   "external_boundaries": [
     {
       "id": "declared-core-dependency-retrieval",
@@ -91,10 +65,42 @@
         "Actionable remedies target an explicit original report. Each delivery uses its own applicable revision; a different report with the same generic signal does not inherit that remedy.",
         "A cached actual connector status permits only the two fixed retries for an existing matching local receipt and latest report. It performs no direct HTTP polling or identity adoption. Missing local receipts cannot be fabricated to authorise a retry.",
         "A helper success records readiness. Host AI verification of the original task and inputs is required for all recovered outcomes, including setup/startup. Delayed failures cannot reopen an already recovered episode.",
-        "Failed fixed retries retain complete stderr privately for semantic review. Raw recovery stderr is not automatically transmitted."
+        "Failed fixed retries retain complete stderr privately for semantic review. Raw recovery stderr is not automatically transmitted.",
+        "An explicitly selected MPARANZA_INCIDENT_DELIVERY=local-only setting blocks automatic client HTTP transport for this execution while preserving local evidence. Incident queues are durably marked and not automatically flushed later; this does not make model-provider processing local-only."
       ]
     }
   ],
+  "governed_paths": [
+    "components.json",
+    "scripts/check_dependencies.py",
+    "scripts/_managed_python_runtime.py",
+    "scripts/managed_python_runtime.py",
+    "skills/vera/SKILL.md",
+    "scripts/_shared_python_runtime.py",
+    "requirements-shared-core.txt",
+    "requirements-shared-ocr.txt",
+    "constraints-shared-macos-py312.txt",
+    "scripts/_python_bootstrap.py",
+    "scripts/studio_archive_session.py",
+    "scripts/studio_archive_windows.ps1",
+    "skills/studio-archive/references/cowork-runtime.md",
+    "scripts/verified_execution.py",
+    "skills/vera/references/execution-recovery.md",
+    "scripts/operational_incidents.py",
+    "scripts/technical_runner.py"
+  ],
+  "service_id": "managed-python-runtime",
+  "review": {
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_shared_service_source",
+    "reviewed_at": "2026-10-17",
+    "source_fingerprint": "96ff5b1dcec83acc99b7c558be26d8a3e069482fe3a664943edde3dda53894ad"
+  },
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "schema_version": 2,
   "security_controls": [
     {
       "id": "published-requirements-only",
@@ -158,12 +164,15 @@
         "scripts/operational_incidents.py"
       ],
       "on_violation": "Undeclared environment names are absent from the child environment."
+    },
+    {
+      "id": "isolated-launcher-owned-imports",
+      "control": "When the maintained launcher itself runs under Python -I -B, it restores only its own resolved scripts directory for sibling technical-diagnostic imports. It does not add the caller working directory. Helper execution, diagnostic retention and explicit incident delivery policy remain unchanged.",
+      "implemented_by": [
+        "scripts/managed_python_runtime.py"
+      ],
+      "on_violation": "The maintained launcher must stop rather than resolving technical diagnostics from the caller working directory."
     }
   ],
-  "review": {
-    "reviewed_at": "2026-10-17",
-    "reviewed_by": "privacy-surface-review",
-    "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "f63719f854c21c2b2106dd1874fcc0d9a6f612907a7d72ae9c72a62c79d176e4"
-  }
+  "display_name": "Managed Python runtime"
 }

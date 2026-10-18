@@ -34,7 +34,7 @@
       {
         "id": "minimized-sample-review",
         "purpose": "Review the sampling basis and at most 750 selected entries without transporting the complete local assurance envelope",
-        "content": "model_review_context.json: method, seed, filters, requested size, complete-population counts, the population assurance proof, sampling-control evidence, allowed review actions, artifact statuses and at most 750 selected rows with the 17 canonical journal columns. Names, descriptions, dates, amounts, identifiers and other row content remain when they are part of the professional review. Exact known file and directory references are replaced by stable opaque ref-* aliases; the full run_intake.json, review_payload.json, ui_decisions.json, final_artifacts.json, source-path list, filesystem paths, timestamps and client-engagement object remain local. Codex and Cowork begin from the same minimized file and portable Studio Archive run. When MCP is available, the current context path lets the local server resolve and verify complete records and persist the bounded review; otherwise the packaged files and Studio Archive CLI preserve the same limits and run lifecycle. Complete artifacts are opened only for a specific unresolved question.",
+        "content": "model_review_context.json: method, seed, filters, requested size, complete-population counts, the population assurance proof, sampling-control evidence, allowed review actions, artifact statuses and at most 750 selected rows with the 17 canonical journal columns. Names, descriptions, dates, amounts, identifiers and other row content remain when they are part of the professional review. Exact known file and directory references are replaced by stable opaque ref-* aliases; the full run_intake.json, review_payload.json, ui_decisions.json, final_artifacts.json, source-path list, filesystem paths, timestamps and client-engagement object remain local. Codex and Cowork begin from the same minimized file and portable Studio Archive run. When MCP is available, the current context path lets the local server resolve and verify complete records and persist the bounded review; otherwise the packaged files and Studio Archive CLI preserve the same limits and run lifecycle. Complete artifacts are opened only for a specific unresolved question. Explicit reviewer-authored supporting-document requests for selected sampled rows and their source-bound follow-up context remain part of the review; requesting documents does not verify them or imply professional approval.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -122,12 +122,16 @@
     {
       "id": "source-bound-registration-pdf-layout",
       "control": "The mapping receipt binds reviewed physical bands and header/footer exclusions to the source digest. Overlapping bands, unmapped money, missing-text body pages, incomplete registrations or unequal registration debit/credit totals withhold the complete source. Page caches are released after each page. No PDF posting is qualified by text readability alone."
+    },
+    {
+      "id": "embedded-review-managed-runtime",
+      "control": "Embedded product MCP review resolves the already-ready shared managed Python runtime through the owning product runtime readiness check; it does not install dependencies during review or silently fall back to system Python when that runtime is unavailable. The bridge retains isolated Python execution, managed runtime verification and inherited incident-delivery policy. Explicit Journal Sampling interpreter overrides and standalone component operation retain their existing routes. This adds no model call or external destination."
     }
   ],
   "review": {
     "reviewed_at": "2026-10-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "4dd19d591fec469399cbca3d9570986a8002a4f661d8d50d77295741d4eac478"
+    "source_fingerprint": "b6b3dcbb4ba171fe847a05479711ad9b33252032d05081bfa7ba22648ddf3dd9"
   }
 }
