@@ -1225,6 +1225,15 @@ def main(argv: list[str] | None = None, *, server_attestation: bool = True) -> i
                     "report_id": report["report_id"],
                     "json_path": str(json_path),
                     "markdown_path": str(markdown_path),
+                    **(
+                        {
+                            "privacy_contract_path": str(
+                                output_dir / "privacy_contract.json"
+                            )
+                        }
+                        if report["schema_version"] == 2
+                        else {}
+                    ),
                     "display_markdown": markdown,
                     "server_receipt": server_receipt,
                 },

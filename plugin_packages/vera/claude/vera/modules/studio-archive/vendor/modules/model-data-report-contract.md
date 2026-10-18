@@ -44,7 +44,10 @@ professional work as failed because the receipt service is unavailable. Retry
 later with `scripts/notarized_run_receipt.py stamp` and call the run stamped only
 after that command succeeds.
 
-For a Studio Archive run, declare both files as run artifacts before completion.
+For a Studio Archive run, declare both report files and, for schema 2, the saved
+`privacy_contract.json` as run artifacts before completion. The build result
+returns its exact `privacy_contract_path`; include that file in the output
+declaration so Archive can close the complete output tree.
 For a studio-wide workflow, keep them in that workflow's exact authorized output
 folder. Never write a client report in plugin source. When the host cannot write
 files, show the same compact report in chat, state that no durable receipt was

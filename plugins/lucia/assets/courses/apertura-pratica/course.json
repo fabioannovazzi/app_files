@@ -134,7 +134,7 @@
     {
       "path": "scripts/model_data_report.py",
       "repository_path": "plugins/lucia/scripts/model_data_report.py",
-      "sha256": "751b0acf4c510e6f542ba71921293fdb760433a6a79782f2be9269ad85f62a7e"
+      "sha256": "c41d46cefed2692db9d6c00ca6747aff156902fdb238317e24b9d165b1845613"
     },
     {
       "path": "scripts/notarized_run_receipt.py",

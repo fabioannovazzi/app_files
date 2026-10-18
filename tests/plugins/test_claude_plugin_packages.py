@@ -405,7 +405,9 @@ def test_audit_instructions_direct_skills_share_current_contract_and_component_n
     builder = load_builder()
     expected = builder.COWORK_EXECUTION_CONTRACT.strip()
     for path, content in vera_entries.items():
-        if path.endswith("/SKILL.md"):
+        if path.endswith("/SKILL.md") and not path.startswith(
+            "skills/mparanza-privacy-surface-review/"
+        ):
             text = content.decode()
             assert text.count(expected) == 1, path
     for workflow, component in (
@@ -611,10 +613,7 @@ def test_root_anthropic_manifest_and_local_mcp_are_discoverable(
     assert (
         "modules/previdenza-inps/scripts/capture_portal_snapshot.py" not in vera_entries
     )
-    assert not any(
-        name.startswith("skills/mparanza-privacy-surface-review/")
-        for name in vera_entries
-    )
+    assert "skills/mparanza-privacy-surface-review/SKILL.md" in vera_entries
     assert not any(name.startswith("evals/") for name in vera_entries)
     communication_eval_prefix = "modules/comunicazione-professionale/evals/"
     assert {
@@ -925,6 +924,9 @@ def test_projected_cowork_skills_remove_promotion_feedback_and_codex_wording(
     assert "cannot scan or reorganize" not in archive_organization
     assert "privacy-surface-review/SKILL.md" not in main
     for name, content in skills.items():
+        if name.startswith("skills/mparanza-privacy-surface-review/"):
+            assert "developer workflow" in content
+            continue
         assert "## Cowork execution contract" in content, name
         assert "connected folder and supplied files first" in content, name
         if name == "modules/fusione-guidata/skills/mparanza-fusione-guidata/SKILL.md":
@@ -1296,6 +1298,8 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
             )
             assert "Never run desktop profile/session commands there" in normalized
             assert "uses only its connected lesson folder" in normalized
+            continue
+        if name.startswith("skills/mparanza-privacy-surface-review/"):
             continue
         assert "Cowork execution note" in content, name
         assert "Their absence never" in content, name
