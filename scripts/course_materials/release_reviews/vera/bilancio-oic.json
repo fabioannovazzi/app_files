@@ -302,7 +302,7 @@
     "limits": "No fresh learner, voice, installed-host, visual or professional acceptance is asserted by a source fingerprint refresh."
   },
   "schema": "mparanza.teaching_release_review.v1",
-  "course_sha256": "1188288c8fa48edb652767d0416d221cf0d91cd29d5de96074a4b1d012031094",
+  "course_sha256": "300820110acd172cf65b0e1d38853925c909b71138dd20511ee88fe4bca5a2d5",
   "isolated_launcher_source_compatibility_20261018": {
     "reviewer": "Codex exact retained-course and launcher-source review",
     "reviewed_at": "2026-10-18",
@@ -719,5 +719,16 @@
     "previous_course_sha256": "d1c08218616d6dd4456994cb2e4bf38f656309ab91c0220eed7b6a843c9eb175",
     "current_course_sha256": "1188288c8fa48edb652767d0416d221cf0d91cd29d5de96074a4b1d012031094",
     "scope": "Reapply reviewed native Windows case/job lock and stable external case mutex to current main, preserving Cowork reporting source. Published course differs only in case_service source SHA; all authored content, locales, artifact reviews and history retained. Original-task host verification remains outstanding."
+  },
+  "windows_lock_final_source_binding_20261018": {
+    "reviewed_at": "2026-10-18T20:35:42.933819+00:00",
+    "baseline_commit": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
+    "previous_course_sha256": "1188288c8fa48edb652767d0416d221cf0d91cd29d5de96074a4b1d012031094",
+    "current_course_sha256": "300820110acd172cf65b0e1d38853925c909b71138dd20511ee88fe4bca5a2d5",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Complete course comparison confirms only the reviewed case_service.py source digest changed. Original locale editorial judgments, dates, inputs and artifact hashes remain intact. Native locking and quarantine tests passed on Windows and Linux. Fresh exact-digest teaching execution remains mandatory; no installed-host, learner or professional acceptance asserted."
   }
 }
