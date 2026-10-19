@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <meta name="description" content="Download temporanei di Vera, Clara e Lucia per Codex, con istruzioni di installazione.">
+  <meta name="description" content="Download di Vera, Clara e Lucia per Codex, con istruzioni per la prima installazione e per aggiornare una versione già installata da ZIP.">
   <meta name="theme-color" content="#ffffff">
   <title>Download per Codex · Mparanza</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,6 +38,7 @@
     .button { display: inline-block; border: 1px solid var(--blue); border-radius: 3px; color: var(--blue); padding: 10px 18px; font-weight: 600; text-decoration: none; cursor: pointer; background: #fff; text-align: center; }
     .button:hover { background: #f1f6fb; }
     .section { border-top: 1px solid var(--line); padding-top: 32px; margin-top: 44px; }
+    .guide-links { display: flex; flex-wrap: wrap; gap: 12px 28px; margin-bottom: 32px; }
     .steps { padding-left: 26px; max-width: 760px; }
     .steps > li { padding-left: 10px; margin-bottom: 24px; }
     .steps > li::marker { color: var(--blue); font-weight: 600; }
@@ -49,7 +50,7 @@
     label { display: block; font-size: 14px; margin-bottom: 6px; color: var(--muted); }
     textarea { display: block; width: 100%; min-height: 210px; resize: vertical; border: 1px solid var(--line); border-radius: 3px; padding: 18px; color: var(--ink); background: #fafcfe; line-height: 1.5; }
     .copy-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 12px; }
-    #copy-status { font-size: 14px; color: var(--muted); }
+    [role="status"] { font-size: 14px; color: var(--muted); }
     code { font-size: .86em; overflow-wrap: anywhere; }
     details { max-width: 760px; }
     summary { cursor: pointer; color: var(--blue); font-weight: 600; padding-block: 10px; }
@@ -98,9 +99,39 @@
         <a class="button" href="https://raw.githubusercontent.com/fabioannovazzi/app_files/main/plugin_packages/lucia/lucia-plugin.zip" download="lucia-plugin.zip" aria-label="Download Lucia ZIP"><span data-copy="download">Scarica ZIP</span> ↓</a>
       </li>
     </ul>
-    <section aria-labelledby="install-title">
-      <h2 id="install-title" data-copy="installTitle">Come installare</h2>
-      <p data-copy="scope">Usa Codex nell’app desktop. Questi ZIP sono per Codex: non caricarli come allegati in ChatGPT web o nei plugin di Claude Cowork.</p>
+    <p data-copy="scope">Usa Codex nell’app desktop. Questi ZIP sono per Codex: non caricarli come allegati in ChatGPT web o nei plugin di Claude Cowork.</p>
+    <p class="note"><a href="../cowork-downloads/index.html?lang=it#update" id="cowork-guide" data-copy="coworkGuide">Usi Claude Cowork? Vai alla guida per aggiornare da ZIP →</a></p>
+    <nav class="guide-links" aria-label="Installazione e aggiornamento" data-guide-nav>
+      <a href="#update-title" data-copy="updateLink">Ho già installato da ZIP: aggiorna</a>
+      <a href="#install-title" data-copy="installLink">È la prima installazione</a>
+    </nav>
+    <section aria-labelledby="update-title">
+      <h2 id="update-title" data-copy="updateTitle">Come aggiornare una versione installata da ZIP</h2>
+      <p data-copy="update">Se avevi già scaricato e installato il plugin da uno ZIP, segui questi passaggi a ogni nuova versione. Scaricare o estrarre il nuovo ZIP non aggiorna da solo la copia installata in Codex.</p>
+      <ol class="steps">
+        <li><h3 data-copy="update1Title">Scarica il nuovo ZIP ed estrailo in una cartella separata.</h3><p data-copy="update1">Usa il link del tuo prodotto qui sopra. Su Mac, fai doppio clic sul nuovo ZIP; su Windows, scegli “Estrai tutto”. Metti l’intera cartella estratta in una posizione stabile, per esempio Documenti/Mparanza/Vera-aggiornamento. Non unirla alla vecchia cartella e non cancellare ancora quella precedente.</p></li>
+        <li><h3 data-copy="update2Title">Apri la nuova cartella in Codex.</h3><p data-copy="update2">Avvia una nuova chat locale nella cartella vera-codex-plugin, clara-codex-plugin o lucia-codex-plugin del nuovo ZIP: quella che contiene “plugins” e LEGGIMI_INSTALLAZIONE.txt. Controlla di aver aperto la nuova cartella, non quella della versione precedente.</p></li>
+        <li>
+          <h3 data-copy="update3Title">Chiedi a Codex di sostituire la versione installata.</h3>
+          <p data-copy="update3">Scegli il prodotto e incolla questa richiesta nella nuova chat. Codex deve controllare la vecchia installazione, collegare il catalogo locale alla nuova cartella e installare la nuova versione. Non basta riaprire la vecchia chat.</p>
+          <div class="prompt-panel">
+            <div class="product-picker" role="group" aria-label="Plugin">
+              <button type="button" data-product="vera" aria-pressed="true">Vera</button>
+              <button type="button" data-product="clara" aria-pressed="false">Clara</button>
+              <button type="button" data-product="lucia" aria-pressed="false">Lucia</button>
+            </div>
+            <label for="update-prompt" data-copy="updatePromptLabel">Richiesta di aggiornamento da copiare in Codex</label>
+            <textarea id="update-prompt" rows="12" readonly spellcheck="false">Ho già installato Vera da un precedente ZIP. Aggiornala usando il nuovo pacchetto in questa cartella. Confronta la versione installata con quella del nuovo pacchetto; se non è più recente, fermati e spiegamelo. Controlla a quale cartella punta mp-vera. Se punta alla vecchia cartella, rimuovi quella registrazione e registra il catalogo incluso qui, poi installa vera@mp-vera con i comandi supportati da Codex. Verifica la versione installata e abilitata e lascia attiva una sola copia di Vera. Non cancellare le cartelle estratte né i miei file di lavoro. Chiedi a me eventuali approvazioni per gli hook. Riporta la versione precedente e quella installata e dimmi quando riavviare l’app e verificare il plugin in una nuova chat.</textarea>
+            <div class="copy-row"><button type="button" class="button" data-copy-prompt="update-prompt" data-copy-status="update-copy-status" data-copy="copyUpdate">Copia richiesta di aggiornamento</button><span id="update-copy-status" role="status" aria-live="polite"></span></div>
+          </div>
+        </li>
+        <li><h3 data-copy="update4Title">Riavvia l’app e controlla la versione attiva.</h3><p data-copy="update4">Chiudi e riapri l’app. Apri una nuova chat nella tua normale cartella di lavoro e chiedi: “Verifica la versione del plugin disponibile in questa chat e confrontala con quella appena installata”. Riprendi il lavoro dopo la verifica: una chat già aperta può conservare le vecchie istruzioni.</p></li>
+      </ol>
+      <p class="note" data-copy="keepFolders">Conserva la nuova cartella nella posizione scelta: è la sorgente del plugin locale. Fai verificare a Codex che la vecchia cartella non sia più usata e non contenga file di lavoro prima di eliminarla. I documenti dei clienti restano nella tua normale cartella di lavoro.</p>
+      <p class="note" data-copy="marketplace">Se invece avevi installato dal Marketplace, quella è un’installazione distinta. Per passare allo ZIP usa la procedura di prima installazione qui sotto e fai lasciare attiva una sola copia del prodotto.</p>
+    </section>
+    <section class="section" aria-labelledby="install-title">
+      <h2 id="install-title" data-copy="installTitle">Prima installazione da ZIP</h2>
       <ol class="steps">
         <li><h3 data-copy="step1Title">Estrai tutto lo ZIP.</h3><p data-copy="step1">Su Mac, fai doppio clic; su Windows, scegli “Estrai tutto”. Sposta la cartella estratta in una posizione stabile, per esempio Documenti/Mparanza. Conserva l’intera cartella, comprese le cartelle nascoste.</p></li>
         <li><h3 data-copy="step2Title">Apri la cartella in Codex.</h3><p data-copy="step2">Avvia una chat locale nella cartella vera-codex-plugin, clara-codex-plugin o lucia-codex-plugin appena estratta. È la cartella che contiene “plugins” e il file LEGGIMI_INSTALLAZIONE.txt.</p></li>
@@ -115,17 +146,12 @@
             </div>
             <label for="install-prompt" data-copy="promptLabel">Richiesta da copiare in Codex</label>
             <textarea id="install-prompt" readonly spellcheck="false">Installa Vera da questa cartella come plugin locale nella versione contenuta nello ZIP. Registra il catalogo locale già incluso e installa vera@mp-vera con i comandi supportati da Codex. Verifica la versione realmente installata e abilitata. Se esiste già una copia di Vera, aggiorna la registrazione locale se necessario e lascia abilitata solo questa versione dopo aver verificato che l’installazione è riuscita. Conserva i miei file di lavoro e chiedi a me eventuali approvazioni per gli hook. Dimmi quando riavviare l’app e aprire una nuova chat.</textarea>
-            <div class="copy-row"><button type="button" class="button" id="copy-prompt" data-copy="copy">Copia richiesta</button><span id="copy-status" role="status" aria-live="polite"></span></div>
+            <div class="copy-row"><button type="button" class="button" id="copy-prompt" data-copy-prompt="install-prompt" data-copy-status="copy-status" data-copy="copy">Copia richiesta</button><span id="copy-status" role="status" aria-live="polite"></span></div>
           </div>
         </li>
         <li><h3 data-copy="step4Title">Riavvia e verifica in una nuova chat.</h3><p data-copy="step4">Dopo l’installazione, chiudi e riapri l’app. Apri una nuova chat nella tua cartella di lavoro e chiedi a Codex di controllare che il plugin sia attivo nella versione contenuta nello ZIP e disponibile nella nuova chat. Poi descrivi il lavoro da svolgere. Una chat già aperta può conservare le vecchie istruzioni.</p></li>
       </ol>
       <noscript><p>Per Clara e Lucia, sostituisci nome e identificativo nella richiesta: Clara / clara@mp-clara; Lucia / lucia@mp-lucia.</p></noscript>
-    </section>
-    <section class="section" aria-labelledby="update-title">
-      <h2 id="update-title" data-copy="updateTitle">Se hai già installato il plugin</h2>
-      <p data-copy="update">La copia locale e quella del Marketplace sono installazioni distinte. La richiesta qui sopra serve anche per passare da una versione precedente: fai verificare la nuova installazione e lascia attiva una sola copia dello stesso prodotto. Il download da solo non aggiorna il plugin.</p>
-      <p data-copy="future">Per un prossimo aggiornamento, scarica il nuovo ZIP in una cartella separata e ripeti la procedura indicando quella cartella. Conserva le cartelle dei plugin e tieni i documenti dei clienti nella tua normale cartella di lavoro.</p>
     </section>
     <section class="section" aria-labelledby="help-title">
       <h2 id="help-title" data-copy="helpTitle">Se l’installazione si ferma</h2>
@@ -149,15 +175,23 @@ codex plugin list --json</code></pre>
       eyebrow: 'Website downloads · Codex', title: 'Install the updated version.',
       lead: 'Download the plugin you use and install it in Codex on your computer. Get the latest project ZIPs here, including when the Marketplace update is not yet available.',
       date: 'The links follow package updates. The version may differ from the Marketplace: check the version inside the ZIP and the version actually installed.',
-      download: 'Download ZIP', installTitle: 'How to install',
+      download: 'Download ZIP', installTitle: 'First installation from a ZIP',
+      updateLink: 'Already installed from a ZIP: update', installLink: 'This is my first installation',
       scope: 'Use Codex in the desktop app. These ZIPs are for Codex: do not upload them as chat attachments in ChatGPT web or as Claude Cowork plugins.',
+      coworkGuide: 'Using Claude Cowork? Go to the ZIP upgrade guide →',
       step1Title: 'Extract the entire ZIP.', step1: 'On Mac, double-click it; on Windows, choose “Extract All”. Move the extracted folder to a permanent location such as Documents/Mparanza. Keep the entire folder, including hidden folders.',
       step2Title: 'Open the folder in Codex.', step2: 'Start a local chat in the extracted vera-codex-plugin, clara-codex-plugin or lucia-codex-plugin folder. This is the folder containing “plugins” and LEGGIMI_INSTALLAZIONE.txt.',
       step3Title: 'Ask Codex to install the plugin.', step3: 'Choose the product, copy the request and paste it into the chat. Codex may ask for permission to register and install the local plugin.',
       promptLabel: 'Request to paste into Codex', copy: 'Copy request',
       step4Title: 'Restart and verify in a new chat.', step4: 'After installation, close and reopen the app. Start a new chat in your working folder and ask Codex to check that the plugin is enabled at the version contained in the ZIP and available in the new chat. Then describe your task. An existing chat may retain the old instructions.',
-      updateTitle: 'If you already have the plugin', update: 'The local copy and the Marketplace copy are separate installations. The request above also handles switching from an older version: have Codex verify the new installation and leave only one copy of the same product enabled. Downloading the ZIP alone does not update the plugin.',
-      future: 'For a future update, extract the new ZIP into a separate folder and repeat the procedure using that folder. Keep the plugin folders and store client documents in your usual working folder.',
+      updateTitle: 'How to update a version installed from a ZIP', update: 'If you previously downloaded and installed the plugin from a ZIP, follow these steps for each new version. Downloading or extracting the new ZIP does not by itself update the copy installed in Codex.',
+      update1Title: 'Download the new ZIP and extract it into a separate folder.', update1: 'Use your product’s link above. On Mac, double-click the new ZIP; on Windows, choose “Extract All”. Put the entire extracted folder in a permanent location, such as Documents/Mparanza/Vera-update. Do not merge it with the old folder or delete the previous folder yet.',
+      update2Title: 'Open the new folder in Codex.', update2: 'Start a new local chat in the vera-codex-plugin, clara-codex-plugin or lucia-codex-plugin folder from the new ZIP: the one containing “plugins” and LEGGIMI_INSTALLAZIONE.txt. Check that you opened the new folder, not the previous version’s folder.',
+      update3Title: 'Ask Codex to replace the installed version.', update3: 'Choose the product and paste this request into the new chat. Codex needs to check the old installation, point the local catalogue to the new folder and install the new version. Reopening the old chat is not enough.',
+      updatePromptLabel: 'Update request to paste into Codex', copyUpdate: 'Copy update request',
+      update4Title: 'Restart the app and check the active version.', update4: 'Close and reopen the app. Start a new chat in your usual working folder and ask: “Check the plugin version available in this chat and compare it with the version just installed.” Resume work after verification: an existing chat may retain the old instructions.',
+      keepFolders: 'Keep the new folder in its chosen location: it is the local plugin’s source. Before deleting the old folder, have Codex check that it is no longer used and contains no working files. Client documents stay in your usual working folder.',
+      marketplace: 'If you installed from the Marketplace instead, that is a separate installation. To switch to the ZIP, use the first-installation steps below and have Codex leave only one copy of the product enabled.',
       helpTitle: 'If installation stops', help: 'Share the plugin name, version, operating system and complete error message in the group, without client documents. On a firm-managed account, local plugin installation may require your administrator’s help.',
       manualTitle: 'Commands for manual installation', manual: 'If you use a terminal and the codex command is available, replace the example path with the absolute path to the extracted folder. Run the commands for the product selected above, then restart the app. If the catalogue is already registered, ask Codex to check which folder it points to before updating it.',
       footer: 'Page for direct distribution. Files are hosted in the public Mparanza repository on GitHub; no GitHub sign-in required. The link is shareable and is not restricted to the group.', docs: 'OpenAI documentation for local installation'
@@ -165,7 +199,8 @@ codex plugin list --json</code></pre>
     if (language === 'en') {
       document.documentElement.lang = 'en';
       document.title = 'Codex downloads · Mparanza';
-      document.querySelector('meta[name="description"]').content = 'Codex downloads for Vera, Clara and Lucia, with installation instructions.';
+      document.querySelector('meta[name="description"]').content = 'Codex downloads for Vera, Clara and Lucia, with first-installation and ZIP upgrade instructions.';
+      document.querySelector('[data-guide-nav]').setAttribute('aria-label', 'Installation and updates');
       document.querySelectorAll('[data-copy]').forEach(function (node) { node.textContent = english[node.dataset.copy]; });
     }
     document.querySelectorAll('[data-language]').forEach(function (link) {
@@ -173,31 +208,39 @@ codex plugin list --json</code></pre>
       else link.removeAttribute('aria-current');
     });
     const products = { vera: { name: 'Vera' }, clara: { name: 'Clara' }, lucia: { name: 'Lucia' } };
+    document.getElementById('cowork-guide').href = '../cowork-downloads/index.html?lang=' + language + '#update';
     const promptBox = document.getElementById('install-prompt');
-    const status = document.getElementById('copy-status');
+    const updatePromptBox = document.getElementById('update-prompt');
     function selectProduct(key) {
       const product = products[key];
       const identifier = key + '@mp-' + key;
       promptBox.value = language === 'en'
         ? 'Install ' + product.name + ' from this folder as a local plugin at the version contained in the ZIP. Register the included local catalogue and install ' + identifier + ' using supported Codex commands. Verify the actual installed and enabled version. If another copy of ' + product.name + ' exists, update the local registration if needed and leave only this version enabled after confirming installation succeeded. Preserve my working files and leave any hook approvals to me. Tell me when to restart the app and open a new chat.'
         : 'Installa ' + product.name + ' da questa cartella come plugin locale nella versione contenuta nello ZIP. Registra il catalogo locale già incluso e installa ' + identifier + ' con i comandi supportati da Codex. Verifica la versione realmente installata e abilitata. Se esiste già una copia di ' + product.name + ', aggiorna la registrazione locale se necessario e lascia abilitata solo questa versione dopo aver verificato che l’installazione è riuscita. Conserva i miei file di lavoro e chiedi a me eventuali approvazioni per gli hook. Dimmi quando riavviare l’app e aprire una nuova chat.';
+      updatePromptBox.value = language === 'en'
+        ? 'I previously installed ' + product.name + ' from a ZIP. Update it using the new package in this folder. Compare the installed version with the new package; if it is not newer, stop and explain. Check which folder mp-' + key + ' points to. If it points to the old folder, remove that registration and register the catalogue included here, then install ' + identifier + ' using supported Codex commands. Verify the installed and enabled version and leave only one copy of ' + product.name + ' enabled. Do not delete the extracted folders or my working files. Leave any hook approvals to me. Report the previous and installed versions and tell me when to restart the app and verify the plugin in a new chat.'
+        : 'Ho già installato ' + product.name + ' da un precedente ZIP. Aggiornala usando il nuovo pacchetto in questa cartella. Confronta la versione installata con quella del nuovo pacchetto; se non è più recente, fermati e spiegamelo. Controlla a quale cartella punta mp-' + key + '. Se punta alla vecchia cartella, rimuovi quella registrazione e registra il catalogo incluso qui, poi installa ' + identifier + ' con i comandi supportati da Codex. Verifica la versione installata e abilitata e lascia attiva una sola copia di ' + product.name + '. Non cancellare le cartelle estratte né i miei file di lavoro. Chiedi a me eventuali approvazioni per gli hook. Riporta la versione precedente e quella installata e dimmi quando riavviare l’app e verificare il plugin in una nuova chat.';
       document.querySelectorAll('[data-product]').forEach(function (button) { button.setAttribute('aria-pressed', String(button.dataset.product === key)); });
       const example = language === 'en' ? '/path/to/' : '/percorso/';
       document.getElementById('commands').textContent = 'codex plugin marketplace add "' + example + key + '-codex-plugin"\ncodex plugin add ' + identifier + '\ncodex plugin list --json';
       document.querySelectorAll('[data-language]').forEach(function (link) {
         link.href = '?lang=' + link.dataset.language + '&product=' + key;
       });
-      status.textContent = '';
+      document.querySelectorAll('[role="status"]').forEach(function (status) { status.textContent = ''; });
     }
     document.querySelectorAll('[data-product]').forEach(function (button) { button.addEventListener('click', function () { selectProduct(button.dataset.product); }); });
-    document.getElementById('copy-prompt').addEventListener('click', async function () {
-      try {
-        await navigator.clipboard.writeText(promptBox.value);
-        status.textContent = language === 'en' ? 'Copied. Paste it into Codex.' : 'Copiata. Incollala in Codex.';
-      } catch {
-        promptBox.focus(); promptBox.select();
-        status.textContent = language === 'en' ? 'Text selected. Copy it manually.' : 'Testo selezionato. Copialo manualmente.';
-      }
+    document.querySelectorAll('[data-copy-prompt]').forEach(function (button) {
+      button.addEventListener('click', async function () {
+        const source = document.getElementById(button.dataset.copyPrompt);
+        const status = document.getElementById(button.dataset.copyStatus);
+        try {
+          await navigator.clipboard.writeText(source.value);
+          status.textContent = language === 'en' ? 'Copied. Paste it into Codex.' : 'Copiata. Incollala in Codex.';
+        } catch {
+          source.focus(); source.select();
+          status.textContent = language === 'en' ? 'Text selected. Copy it manually.' : 'Testo selezionato. Copialo manualmente.';
+        }
+      });
     });
     const requestedProduct = new URLSearchParams(window.location.search).get('product');
     selectProduct(Object.prototype.hasOwnProperty.call(products, requestedProduct) ? requestedProduct : 'vera');
