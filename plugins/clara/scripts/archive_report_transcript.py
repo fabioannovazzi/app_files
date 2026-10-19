@@ -45,7 +45,7 @@ def attach(root: Path, session: str, transcript: Path) -> None:
     """Start at the current EOF, retaining only the in-flight call identifiers."""
     target = _cursor(root, session)
     if target.is_file():
-        existing = json.loads(target.read_text())
+        existing = json.loads(target.read_text(encoding="utf-8"))
         if existing["path"] != str(transcript):
             RunStore(root).error("host_transcript_path_changed")
         return
@@ -89,7 +89,7 @@ def refresh(root: Path, session: str) -> None:
     if not target.is_file():
         RunStore(root).error("host_transcript_missing")
         return
-    cursor = json.loads(target.read_text())
+    cursor = json.loads(target.read_text(encoding="utf-8"))
     path = Path(cursor["path"])
     _source(path)
     if path.stat().st_size < cursor["offset"]:
@@ -162,9 +162,9 @@ def closing_calls(root: Path) -> dict[str, list[str]]:
         for session, calls in Registry().pending_calls(state["run_id"]).items()
     }
     for path in (root / "reporting").glob("host-*.json"):
-        cursor = json.loads(path.read_text())
+        cursor = json.loads(path.read_text(encoding="utf-8"))
         refresh(root, cursor["session"])
-        cursor = json.loads(path.read_text())
+        cursor = json.loads(path.read_text(encoding="utf-8"))
         result[cursor["session"]] = sorted(cursor["calls"])
     return result
 
@@ -180,7 +180,7 @@ def barrier_complete(root: Path, barrier: dict[str, list[str]]) -> bool:
             ):
                 return False
             continue
-        cursor = json.loads(_cursor(root, session).read_text())
+        cursor = json.loads(_cursor(root, session).read_text(encoding="utf-8"))
         if not set(calls) <= set(cursor["completed"]):
             return False
     return True

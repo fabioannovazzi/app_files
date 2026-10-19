@@ -98,7 +98,7 @@ def handle(event: dict[str, Any]) -> dict[str, Any]:
 def main() -> int:
     event = {}
     try:
-        event = json.load(sys.stdin)
+        event = json.load(sys.stdin.buffer)
         if not isinstance(event, dict):
             raise ValueError("Hook input must be an object")
         result = handle(event)

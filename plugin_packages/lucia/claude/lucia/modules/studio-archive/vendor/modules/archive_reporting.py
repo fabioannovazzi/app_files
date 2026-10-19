@@ -468,7 +468,7 @@ def finish_run(loaded: Mapping[str, Any]) -> dict[str, Any]:
         if loaded["run"]["status"] == "ready_for_review":
             path = Path(loaded["run_root"]) / "model_data_reporting.json"
             if path.is_file():
-                return json.loads(path.read_text())
+                return json.loads(path.read_text(encoding="utf-8"))
         return snapshot_run(loaded)
     from archive_report_seal import checkpoint, reseal
 
@@ -521,7 +521,7 @@ def finish_run(loaded: Mapping[str, Any]) -> dict[str, Any]:
 def close_observed_run(root: Path) -> None:
     """Finish a pending terminal write after its outer result is actually visible."""
     state = RunStore(root).state()
-    run = json.loads((root / "run.json").read_text())
+    run = json.loads((root / "run.json").read_text(encoding="utf-8"))
     if (
         state
         and run["status"] in {"completed", "failed", "cancelled"}
@@ -532,7 +532,7 @@ def close_observed_run(root: Path) -> None:
         from archive_report_transcript import refresh
 
         for path in (root / "reporting").glob("host-*.json"):
-            refresh(root, json.loads(path.read_text())["session"])
+            refresh(root, json.loads(path.read_text(encoding="utf-8"))["session"])
         finish_run(
             {
                 "run_root": str(root),

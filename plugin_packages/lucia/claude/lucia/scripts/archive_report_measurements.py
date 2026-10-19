@@ -224,7 +224,7 @@ def model_texts(response: Any) -> list[str]:
 def direct_read_selection(
     source: dict[str, Any], tool_input: Any, response: Any
 ) -> dict[str, Any] | None:
-    """Recognize exact whole-file and prefix reads by comparing returned bytes.
+    """Recognize whole-file and prefix text, allowing host newline translation.
 
     Command recognition only resolves an explicit file operand. It never decides
     semantic relevance or treats a requested read as proof that data was returned.
@@ -256,7 +256,12 @@ def direct_read_selection(
         original = content.decode("utf-8-sig")
     except UnicodeError:
         return None
-    displayed = model_texts(response)
+    # Text-mode host reads can translate CRLF/CR to LF. Source identity still
+    # binds the original bytes; only line-ending transport syntax is normalized.
+    original = original.replace("\r\n", "\n").replace("\r", "\n")
+    displayed = [
+        text.replace("\r\n", "\n").replace("\r", "\n") for text in model_texts(response)
+    ]
     if original and any(original.strip() == text.strip() for text in displayed):
         return {
             "source_id": source["source_id"],

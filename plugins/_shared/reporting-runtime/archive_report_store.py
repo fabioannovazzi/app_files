@@ -462,7 +462,7 @@ class Registry:
             path = root / "run.json"
             if path.is_symlink() or not path.is_file() or root.is_symlink():
                 continue
-            if json.loads(path.read_text())["status"] in {
+            if json.loads(path.read_text(encoding="utf-8"))["status"] in {
                 "completed",
                 "failed",
                 "cancelled",

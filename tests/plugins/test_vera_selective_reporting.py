@@ -76,7 +76,9 @@ def _finish(archive_core, case, run_id, output):
 def test_fixed_scope_matches_published_catalogue_and_excludes_shared_intake():
     from selective_reporting import REPORT_PIPELINES, report_pipeline
 
-    catalogue = json.loads((ROOT / "plugins/vera/usage/pipelines.json").read_text())
+    catalogue = json.loads(
+        (ROOT / "plugins/vera/usage/pipelines.json").read_text(encoding="utf-8")
+    )
     assert len(REPORT_PIPELINES) == 13
     assert set(catalogue["model_data_reporting"]["pipelines"]) == REPORT_PIPELINES
     assert report_pipeline("client-file-preparation") is None
@@ -87,7 +89,7 @@ def test_fixed_scope_matches_published_catalogue_and_excludes_shared_intake():
 
 def test_only_selected_public_function_pages_describe_archive_reporting():
     public = json.loads(
-        (ROOT / "static/shared/privacy-contracts/vera.json").read_text()
+        (ROOT / "static/shared/privacy-contracts/vera.json").read_text(encoding="utf-8")
     )
     selected = {
         page
@@ -138,7 +140,7 @@ def test_archive_finalization_builds_bound_report_without_a_separate_trigger(
 
     result = _finish(archive_core, client_case, run_id, output)
 
-    report = json.loads((output / "model_data_report.json").read_text())
+    report = json.loads((output / "model_data_report.json").read_text(encoding="utf-8"))
     assert report["run_id"] == run_id
     assert result["reporting"]["status"] == "available"
     assert result["reporting"]["started_at"]
@@ -177,7 +179,7 @@ def test_no_evidence_or_no_local_remainder_never_invents_a_comparison(
 
     result = _finish(archive_core, client_case, run_id, output)
 
-    report = json.loads((output / "model_data_report.json").read_text())
+    report = json.loads((output / "model_data_report.json").read_text(encoding="utf-8"))
     assert result["reporting"]["status"] == "available"
     assert report["collection_status"] == "incomplete"
     assert report["sources"][0]["remaining_local"] is None
@@ -190,7 +192,7 @@ def test_authored_foreign_run_evidence_cannot_change_automatic_report(
     _evidence(output, "run_" + "a" * 24)
 
     _finish(archive_core, client_case, run_id, output)
-    report = json.loads((output / "model_data_report.json").read_text())
+    report = json.loads((output / "model_data_report.json").read_text(encoding="utf-8"))
     assert report["run_id"] == run_id
     assert report["collection_status"] == "incomplete"
 
@@ -299,7 +301,9 @@ def test_failed_run_report_is_preserved_when_the_same_run_resumes(
     )
     assert resumed["run"]["run_id"] == run_id
     assert retained[0].read_bytes() == previous
-    current = json.loads((output / "model_data_report.json").read_text())
+    current = json.loads(
+        (output / "model_data_report.json").read_text(encoding="utf-8")
+    )
     assert current["report_revision"] == 2
     assert current["outcome"] == "running"
 
@@ -327,7 +331,7 @@ def test_later_full_or_unknown_read_cannot_reuse_an_earlier_reduction(
 
     result = _finish(archive_core, client_case, run_id, output)
 
-    report = json.loads((output / "model_data_report.json").read_text())
+    report = json.loads((output / "model_data_report.json").read_text(encoding="utf-8"))
     assert result["reporting"]["status"] == "available"
     assert report["collection_status"] == "incomplete"
     assert report["sources"][0]["remaining_local"] is None
@@ -366,7 +370,9 @@ def test_acquisition_worker_uses_a_client_bound_run_and_waits_for_model_review(
     worker = tmp_path / "worker"
     worker.mkdir()
     archive_runs.prepare_runs(worker, plan)
-    binding = json.loads((worker / "archive-runs.json").read_text())["01234567890"]
+    binding = json.loads((worker / "archive-runs.json").read_text(encoding="utf-8"))[
+        "01234567890"
+    ]
     (worker / "events.jsonl").write_text(
         json.dumps({"client": "01234567890", "kind": "invoice", "status": "downloaded"})
         + "\n"
@@ -379,7 +385,7 @@ def test_acquisition_worker_uses_a_client_bound_run_and_waits_for_model_review(
         client_case.client_root, client_case.engagement_id, binding["run_id"]
     )
     output = Path(loaded["output_dir"])
-    report = json.loads((output / "model_data_report.json").read_text())
+    report = json.loads((output / "model_data_report.json").read_text(encoding="utf-8"))
     assert loaded["run"]["status"] == "running"
     assert report["run_id"] == binding["run_id"]
     assert report["finished_at"] is None
@@ -397,10 +403,9 @@ def test_finalization_retry_returns_same_report_without_rewriting_it(
     replay = _finish(archive_core, client_case, run_id, output)
 
     assert (output / "model_data_report.json").read_bytes() == previous
-    assert (
-        replay["reporting"]["display_markdown"]
-        == (output / "model_data_report.md").read_text()
-    )
+    assert replay["reporting"]["display_markdown"] == (
+        output / "model_data_report.md"
+    ).read_text(encoding="utf-8")
 
 
 def test_resuming_review_ready_run_preserves_the_old_seal_outside_active_outputs(

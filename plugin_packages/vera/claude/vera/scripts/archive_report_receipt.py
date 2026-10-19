@@ -45,7 +45,7 @@ def _product_root() -> Path:
             manifest = parent / relative
             if (
                 manifest.is_file()
-                and json.loads(manifest.read_text())["name"] == "vera"
+                and json.loads(manifest.read_text(encoding="utf-8"))["name"] == "vera"
             ):
                 return parent
         if (
@@ -73,7 +73,7 @@ def _request(report_path: Path, *, persist: bool = True) -> dict[str, Any]:
         raise ValueError("Report bytes do not match the saved canonical report")
     request_path = report_path.with_name("model_data_receipt_request.json")
     previous = (
-        json.loads(request_path.read_text())
+        json.loads(request_path.read_text(encoding="utf-8"))
         if persist and request_path.is_file()
         else None
     )
@@ -152,7 +152,7 @@ def stamp_report(report_path: Path) -> dict[str, Any]:
     """Queue before transport; preserve local work through network or identity failures."""
     options_path = report_path.with_name("model_data_report_options.json")
     if options_path.is_file():
-        options = json.loads(options_path.read_text())
+        options = json.loads(options_path.read_text(encoding="utf-8"))
         if (
             not isinstance(options, dict)
             or set(options) - {"local_only"}
@@ -226,7 +226,7 @@ def retry_pending(registry: Registry) -> None:
                 continue
             status_path = root / "model_data_reporting.json"
             result = (
-                json.loads(status_path.read_text())
+                json.loads(status_path.read_text(encoding="utf-8"))
                 if status_path.is_file()
                 else {"status": "available", "report_path": str(report_path)}
             )

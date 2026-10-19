@@ -33,7 +33,7 @@ def _check(root: Path, manifest: dict[str, Any], *, include_report: bool) -> Non
     body = {key: value for key, value in manifest.items() if key != "content_sha256"}
     if _digest(body) != manifest["content_sha256"]:
         raise ValueError("Archive artifact manifest seal is invalid")
-    run = json.loads((root / "run.json").read_text())
+    run = json.loads((root / "run.json").read_text(encoding="utf-8"))
     if any(
         manifest[key] != run[key]
         for key in ("run_id", "workflow_id", "client_id", "engagement_id")
@@ -72,10 +72,10 @@ def checkpoint(root: Path) -> dict[str, Any] | None:
         return None
     pending = root / "reporting/seal-update.json"
     if pending.is_file():
-        baseline = json.loads(pending.read_text())
+        baseline = json.loads(pending.read_text(encoding="utf-8"))
         _check(root, baseline, include_report=False)
         return baseline
-    manifest = json.loads(path.read_text())
+    manifest = json.loads(path.read_text(encoding="utf-8"))
     _check(root, manifest, include_report=True)
     atomic_json(pending, manifest)
     return manifest

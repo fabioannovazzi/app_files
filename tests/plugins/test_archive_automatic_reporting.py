@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shlex
 import subprocess
 import sys
@@ -187,11 +188,10 @@ def test_unselected_archive_runs_do_not_create_reports(
     assert not (Path(loaded["output_dir"]) / "model_data_report.json").exists()
 
 
-def csv_case(core, case, tmp_path):
+def csv_case(core, case, tmp_path, line_ending="\n"):
     source = tmp_path / "population.csv"
-    source.write_text(
-        "id,amount\n" + "".join(f"{index},{index * 2}\n" for index in range(10000))
-    )
+    text = "id,amount\n" + "".join(f"{index},{index * 2}\n" for index in range(10000))
+    source.write_bytes(text.replace("\n", line_ending).encode("utf-8"))
     imported = core.import_studio_client_document(
         case.client_id,
         source,
@@ -203,12 +203,13 @@ def csv_case(core, case, tmp_path):
     return start(core, case)
 
 
+@pytest.mark.parametrize("line_ending", ["\n", "\r\n"])
 def test_later_whole_file_read_counts_all_ten_thousand_rows_without_double_counting(
-    archive_core, client_case, tmp_path
+    archive_core, client_case, tmp_path, line_ending
 ):
     from archive_report_hook import handle
 
-    loaded = csv_case(archive_core, client_case, tmp_path)
+    loaded = csv_case(archive_core, client_case, tmp_path, line_ending)
     read_observed(loaded, limit=100)
     read_observed(loaded, limit=100)
     path = Path(loaded["context"]["input_bindings"][0]["path"])
@@ -589,12 +590,13 @@ def test_scanned_or_empty_pdf_cannot_claim_measured_exposure(tmp_path):
     assert source["measurement_error"] is not None
 
 
+@pytest.mark.parametrize("line_ending", ["\n", "\r\n"])
 def test_exact_head_read_counts_only_returned_csv_records(
-    archive_core, client_case, tmp_path
+    archive_core, client_case, tmp_path, line_ending
 ):
     from archive_report_hook import handle
 
-    loaded = csv_case(archive_core, client_case, tmp_path)
+    loaded = csv_case(archive_core, client_case, tmp_path, line_ending)
     path = Path(loaded["context"]["input_bindings"][0]["path"])
     shown = "".join(path.read_text().splitlines(keepends=True)[:101])
     handle(
@@ -677,14 +679,17 @@ def test_hook_cli_failure_is_explicit_without_echoing_source_data(monkeypatch, c
     monkeypatch.setattr(
         archive_report_hook.sys,
         "stdin",
-        io.StringIO(
-            json.dumps(
-                {
-                    "hook_event_name": "PostToolUse",
-                    "session_id": "test-session",
-                    "tool_input": "PRIVATE SOURCE",
-                }
-            )
+        io.TextIOWrapper(
+            io.BytesIO(
+                json.dumps(
+                    {
+                        "hook_event_name": "PostToolUse",
+                        "session_id": "test-session",
+                        "tool_input": "PRIVATE SOURCE",
+                    }
+                ).encode("utf-8")
+            ),
+            encoding="utf-8",
         ),
     )
 
@@ -714,12 +719,13 @@ def test_stop_hook_retries_pending_proof(archive_core, client_case, monkeypatch)
     assert Registry().pending_receipts() == []
 
 
+@pytest.mark.parametrize("line_ending", ["\n", "\r\n"])
 def test_host_python_observes_direct_read_and_reseals_pending_receipt(
-    archive_core, client_case, tmp_path
+    archive_core, client_case, tmp_path, line_ending
 ):
     from archive_report_store import Registry, RunStore
 
-    loaded = csv_case(archive_core, client_case, tmp_path)
+    loaded = csv_case(archive_core, client_case, tmp_path, line_ending)
     source = Path(loaded["context"]["input_bindings"][0]["path"])
     hook = (
         Path(__file__).resolve().parents[2]
@@ -731,7 +737,7 @@ def test_host_python_observes_direct_read_and_reseals_pending_receipt(
         "hook_event_name": "PostToolUse",
         "session_id": "test-session",
         "tool_use_id": "host-python-direct-read",
-        "tool_name": "exec_command",
+        "tool_name": "lecture_é",
         "tool_input": {
             "cmd": "cat " + shlex.quote(str(source)),
             "run_id": loaded["run"]["run_id"],
@@ -739,10 +745,16 @@ def test_host_python_observes_direct_read_and_reseals_pending_receipt(
         "tool_response": source.read_text(),
     }
 
+    environment = {
+        **os.environ,
+        "PYTHONUTF8": "0",
+        "PYTHONCOERCECLOCALE": "0",
+        "LC_ALL": "C",
+    }
     observed = subprocess.run(
         [executable, "-B", str(hook)],
-        input=json.dumps(event),
-        text=True,
+        input=json.dumps(event, ensure_ascii=False).encode("utf-8"),
+        env=environment,
         capture_output=True,
         check=True,
         timeout=30,
@@ -750,8 +762,10 @@ def test_host_python_observes_direct_read_and_reseals_pending_receipt(
     report = finish(archive_core, client_case, loaded)
     retried = subprocess.run(
         [executable, "-B", str(hook)],
-        input=json.dumps({"hook_event_name": "Stop", "session_id": "test-session"}),
-        text=True,
+        input=json.dumps(
+            {"hook_event_name": "Stop", "session_id": "test-session"}
+        ).encode("utf-8"),
+        env=environment,
         capture_output=True,
         check=True,
         timeout=30,
@@ -760,6 +774,7 @@ def test_host_python_observes_direct_read_and_reseals_pending_receipt(
     assert json.loads(observed.stdout) == {}
     assert json.loads(retried.stdout) == {}
     assert report["sources"][0]["observed_quantity"] == 10000
+    assert report["tool_results"][0]["tool"] == "lecture_é"
     assert RunStore(Path(loaded["run_root"])).state()["collection_closed"] is True
     # The child has its own isolated identity, so the proof stays pending.
     assert Registry().pending_receipts() == [Path(loaded["run_root"])]
