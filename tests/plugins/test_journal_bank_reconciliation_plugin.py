@@ -703,6 +703,7 @@ def _attach_current_mapping_receipt(
         decimal_separator=file_recipe.get("decimal_separator"),
         thousands_separator=file_recipe.get("thousands_separator"),
         pdf_registration_layout=file_recipe.get("pdf_registration_layout"),
+        pdf_bank_layout=file_recipe.get("pdf_bank_layout"),
     )
     file_recipe["mapping_decision"] = receipt
     return receipt

@@ -20,7 +20,7 @@ The plugin starts from a qualified prepared-evidence boundary:
   artifacts. Vouching replays the complete
   upstream assurance envelope, gate register, reviewed mapping decisions,
   original-source receipts, retained reviewed-recipe receipt, normalized
-  receipt, and exact 24-file Journal Sampling/shared implementation receipt
+  receipt, and exact Journal Sampling/shared implementation receipt
   set. It then invokes Journal Sampling's isolated `-I -B` replay CLI and
   requires the raw journal plus exact retained recipe to reproduce the
   canonical CSV and material preparation contract before Polars parses it.

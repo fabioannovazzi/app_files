@@ -157,6 +157,7 @@ const IMPLEMENTATION_ARTIFACT_SPECS = [
   ["implementation.vera_journal_pdf_rules", "pdf_implementation", "rules.py"],
   ["implementation.vera_journal_pdf_recovery", "pdf_implementation", "recovery.py"],
   ["implementation.vera_journal_pdf_adapter", "pdf_implementation", "adapter.py"],
+  ["implementation.vera_journal_pdf_bank", "pdf_implementation", "bank.py"],
 ];
 validateImplementationPhysicalTree();
 const PLUGIN_MANIFEST = JSON.parse(

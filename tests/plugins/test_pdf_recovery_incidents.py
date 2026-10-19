@@ -88,6 +88,71 @@ def freeze_event(history, number):
     (history / "freeze_receipt.json").write_text(json.dumps(value))
 
 
+def test_bank_and_journal_recoveries_keep_separate_linked_incidents(
+    tmp_path, monkeypatch
+):
+    reporter, store, _ = client(tmp_path, monkeypatch)
+    history, arguments = episode(tmp_path)
+    bank_history = history / "bank" / ("a" * 64)
+    bank_history.mkdir(parents=True)
+    execution = reporter.execution_identity("journal-bank-reconciliation", arguments)
+    event(history, 1, False)
+    event(bank_history, 1, False)
+    reporter.report_pdf_recovery("journal-bank-reconciliation", arguments, execution)
+    event(bank_history, 2, True)
+    freeze_event(bank_history, 2)
+
+    reporter.report_pdf_recovery("journal-bank-reconciliation", arguments, execution)
+
+    state = json.loads(reporter._state_path().read_text())
+    journal = state["pdf_recoveries"][execution["operation_id"]]
+    bank = state["pdf_recoveries"][execution["operation_id"] + ":bank:" + "a" * 64]
+    assert journal["original"]["report_id"] != bank["original"]["report_id"]
+    assert len(journal["reported"]) == 1
+    assert len(bank["reported"]) == 3
+    reports = store.queue()
+    assert "PRIVATE_CUSTOMER" not in json.dumps(reports)
+
+
+def test_initial_bank_failure_links_only_its_own_source_recovery(tmp_path, monkeypatch):
+    reporter, store, _ = client(tmp_path, monkeypatch)
+    history, arguments = episode(tmp_path)
+    execution = reporter.execution_identity("journal-bank-reconciliation", arguments)
+    (history.parent / "inspection.json").write_text(
+        json.dumps(
+            {
+                "bank": {
+                    "files": [
+                        {
+                            "source_sha256": "a" * 64,
+                            "parser": "pdf_table",
+                            "qualification_status": "unsupported_source_layout",
+                        },
+                        {
+                            "source_sha256": "b" * 64,
+                            "parser": "pdf_table",
+                            "qualification_status": "needs_review",
+                        },
+                    ]
+                }
+            }
+        )
+    )
+    reporter.report_pdf_recovery("journal-bank-reconciliation", arguments, execution)
+    bank_history = history / "bank" / ("a" * 64)
+    bank_history.mkdir(parents=True)
+    event(bank_history, 1, True)
+    freeze_event(bank_history, 1)
+
+    reporter.report_pdf_recovery("journal-bank-reconciliation", arguments, execution)
+
+    state = reporter._read()
+    assert len(state["pdf_recoveries"]) == 1
+    assert len(store.queue()) == 1
+    assert len(state["recovery_evidence_receipts"]) == 2
+    assert "unsupported_bank_pdf_layout" in json.dumps(store.queue())
+
+
 @pytest.mark.parametrize("local_only", [False, True])
 def test_failure_attempt_and_replay_share_incident_without_closing_original_task(
     tmp_path, monkeypatch, local_only

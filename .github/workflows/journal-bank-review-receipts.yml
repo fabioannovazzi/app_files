@@ -39,7 +39,8 @@ jobs:
           tests/plugins/test_journal_bank_reconciliation_plugin.py
           tests/plugins/test_journal_pdf_recovery.py
           tests/plugins/test_agentic_pdf_recovery.py
-          -k 'registration_pdf or journal_pdf_recovery or agentic_pdf_recovery'
+          tests/plugins/test_bank_pdf_recovery.py
+          -k 'registration_pdf or journal_pdf_recovery or agentic_pdf_recovery or bank_pdf_recovery'
           --cov=vera_journal_pdf --cov-report=term-missing --cov-fail-under=80
       - name: Verify shared PDF receipt integrity and worker termination diagnostics
         run: >-
@@ -56,8 +57,8 @@ jobs:
         run: |
           python -m black --check plugins/_shared/vendor/modules/vera_journal_pdf/*.py plugins/vera/scripts/managed_python_runtime.py tests/plugins/test_journal_pdf_recovery.py tests/plugins/journal_pdf_fixtures.py
           python -m isort --check-only plugins/_shared/vendor/modules/vera_journal_pdf/*.py plugins/vera/scripts/managed_python_runtime.py tests/plugins/test_journal_pdf_recovery.py tests/plugins/journal_pdf_fixtures.py
-          python -m black --check tests/plugins/test_agentic_pdf_recovery.py
-          python -m isort --check-only tests/plugins/test_agentic_pdf_recovery.py
+          python -m black --check tests/plugins/test_agentic_pdf_recovery.py tests/plugins/test_bank_pdf_recovery.py
+          python -m isort --check-only tests/plugins/test_agentic_pdf_recovery.py tests/plugins/test_bank_pdf_recovery.py
           python -m mypy --follow-imports=skip --ignore-missing-imports plugins/_shared/vendor/modules/vera_journal_pdf/*.py plugins/vera/scripts/managed_python_runtime.py
           python -m bandit -q plugins/_shared/vendor/modules/vera_journal_pdf/*.py plugins/vera/scripts/managed_python_runtime.py
       - name: Check review entrypoint quality

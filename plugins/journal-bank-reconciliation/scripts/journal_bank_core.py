@@ -116,6 +116,8 @@ TEXT_PDF_ADAPTER_VERSION = "2"
 TEXT_PDF_ADAPTER_ID = "journal_bank.text_pdf.disabled.v2"
 PDF_REGISTRATION_ADAPTER_ID = "journal_bank.registration_pdf.v1"
 PDF_REGISTRATION_ADAPTER_VERSION = "1"
+PDF_BANK_ADAPTER_ID = "journal_bank.bank_pdf.v1"
+PDF_BANK_ADAPTER_VERSION = "1"
 PDF_TABLE_ADAPTER_VERSION = "1"
 PDF_TABLE_ADAPTER_ID = "journal_bank.pdf_table.v1"
 RELATIONSHIP_ADAPTER_ID = "journal_bank.relationship.v3"
@@ -331,6 +333,7 @@ IMPLEMENTATION_ARTIFACT_SPECS += (
     ("implementation.vera_journal_pdf_rules", "pdf_implementation", "rules.py"),
     ("implementation.vera_journal_pdf_recovery", "pdf_implementation", "recovery.py"),
     ("implementation.vera_journal_pdf_adapter", "pdf_implementation", "adapter.py"),
+    ("implementation.vera_journal_pdf_bank", "pdf_implementation", "bank.py"),
 )
 
 CHATGPT_IMPLEMENTATION_ARTIFACT_SPECS = tuple(
@@ -2300,9 +2303,12 @@ def _tabular_adapter_binding(
     *,
     source_file: str | None = None,
     pdf_registration_layout: dict[str, Any] | None = None,
+    pdf_bank_layout: dict[str, Any] | None = None,
 ) -> tuple[str, str]:
     """Select the source adapter bound by the reviewed mapping receipt."""
 
+    if pdf_bank_layout is not None:
+        return PDF_BANK_ADAPTER_ID, PDF_BANK_ADAPTER_VERSION
     if pdf_registration_layout is not None:
         return PDF_REGISTRATION_ADAPTER_ID, PDF_REGISTRATION_ADAPTER_VERSION
     if source_file and Path(source_file).suffix.lower() == ".pdf":
@@ -2331,6 +2337,7 @@ def _mapping_review_content(
     decimal_separator: object | None,
     thousands_separator: object | None,
     pdf_registration_layout: dict[str, Any] | None = None,
+    pdf_bank_layout: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     normalized_direction_values, direction_errors = _normalized_direction_value_mapping(
         direction_value_mapping
@@ -2382,6 +2389,10 @@ def _mapping_review_content(
         if side != "journal" or not isinstance(pdf_registration_layout, dict):
             raise ValueError("Registration PDF layout belongs to the journal side")
         content["pdf_registration_layout"] = pdf_registration_layout
+    if pdf_bank_layout is not None:
+        if side != "bank" or not isinstance(pdf_bank_layout, dict):
+            raise ValueError("Bank PDF layout belongs to the bank side")
+        content["pdf_bank_layout"] = pdf_bank_layout
     return content
 
 
@@ -2405,6 +2416,7 @@ def build_mapping_review_receipt(
     decimal_separator: object | None = None,
     thousands_separator: object | None = None,
     pdf_registration_layout: dict[str, Any] | None = None,
+    pdf_bank_layout: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Seal a professional mapping decision against source bytes and adapter."""
 
@@ -2457,6 +2469,7 @@ def build_mapping_review_receipt(
         normalized_summary_labels,
         source_file=source_file,
         pdf_registration_layout=pdf_registration_layout,
+        pdf_bank_layout=pdf_bank_layout,
     )
     return build_reviewed_decision_receipt(
         decision_id=decision_id,
@@ -2482,6 +2495,7 @@ def build_mapping_review_receipt(
             decimal_separator=decimal_separator,
             thousands_separator=thousands_separator,
             pdf_registration_layout=pdf_registration_layout,
+            pdf_bank_layout=pdf_bank_layout,
         ),
     )
 
@@ -3089,6 +3103,45 @@ def _read_pdf_registration_raw(
     return raw, locators, metadata
 
 
+def _read_pdf_bank_raw(
+    path: Path, layout: dict[str, Any]
+) -> tuple[pl.DataFrame, list[tuple[str, int]], dict[str, Any]]:
+    """Reconstruct bank rows before the existing mapping and population gates."""
+    from vera_journal_pdf.bank import read_bank_pdf
+
+    movements, diagnostics = read_bank_pdf(
+        path, layout, currency=layout["recovery_currency"]
+    )
+    metadata = {
+        "page_count": diagnostics["page_count"],
+        "failure_kind": None if diagnostics["accepted"] else diagnostics["reason"],
+        "limitations": [] if diagnostics["accepted"] else [diagnostics["reason"]],
+        "bank_diagnostics": diagnostics,
+    }
+    if not diagnostics["accepted"]:
+        return pl.DataFrame(), [], metadata
+    fields = (
+        "entry_date",
+        "line_desc",
+        "amount",
+        "reference",
+        "currency",
+        "value_date",
+    )
+    headers = ["Date", "Description", "Amount", "Reference", "Currency", "Value date"]
+    raw = pl.DataFrame(
+        {
+            f"column_{index}": [headers[index], *[m[field] for m in movements]]
+            for index, field in enumerate(fields)
+        }
+    )
+    locators = [
+        ("PDF header", 1),
+        *[(f"PDF page {m['source_page']}", m["source_row"]) for m in movements],
+    ]
+    return raw, locators, metadata
+
+
 def _normalize_table(
     path: Path,
     side: str,
@@ -3172,7 +3225,18 @@ def _normalize_table(
     source_locators: list[tuple[str, int]] | None = None
     if path.suffix.lower() == ".pdf":
         registration_layout = file_recipe.get("pdf_registration_layout")
-        if registration_layout is not None:
+        bank_layout = file_recipe.get("pdf_bank_layout")
+        if bank_layout is not None:
+            if (
+                side != "bank"
+                or not isinstance(bank_layout, dict)
+                or registration_layout is not None
+            ):
+                raise ValueError(
+                    "Bank PDF layout requires bank-side physical coordinates"
+                )
+            raw, source_locators, pdf_metadata = _read_pdf_bank_raw(path, bank_layout)
+        elif registration_layout is not None:
             if side != "journal" or not isinstance(registration_layout, dict):
                 raise ValueError(
                     "Registration PDF layout requires journal-side physical coordinates"
@@ -3296,6 +3360,7 @@ def _normalize_table(
         non_movement_summary_labels,
         source_file=source_identity,
         pdf_registration_layout=file_recipe.get("pdf_registration_layout"),
+        pdf_bank_layout=file_recipe.get("pdf_bank_layout"),
     )
     observed_direction_values = sorted(
         {
@@ -3402,6 +3467,7 @@ def _normalize_table(
         decimal_separator=decimal_separator,
         thousands_separator=thousands_separator,
         pdf_registration_layout=file_recipe.get("pdf_registration_layout"),
+        pdf_bank_layout=file_recipe.get("pdf_bank_layout"),
     )
     mapping_receipt: dict[str, Any] | None = None
     mapping_review_error: str | None = None
@@ -4092,6 +4158,10 @@ def _normalize_files(
                 error=exc,
             )
         frames.append(frame)
+        if side == "bank" and file_path.suffix.lower() == ".pdf":
+            diag["source_sha256"] = source_refs[(side, source_identity)].rsplit(".", 1)[
+                -1
+            ]
         diagnostics.append(diag)
     if not frames:
         return _transaction_frame([]), diagnostics
@@ -4256,6 +4326,8 @@ def _source_qualifications(
             adapter_version = PDF_TABLE_ADAPTER_VERSION
         elif adapter_id == PDF_REGISTRATION_ADAPTER_ID:
             adapter_version = PDF_REGISTRATION_ADAPTER_VERSION
+        elif adapter_id == PDF_BANK_ADAPTER_ID:
+            adapter_version = PDF_BANK_ADAPTER_VERSION
         else:
             raise ValueError(f"Unsupported Journal-Bank adapter: {adapter_id}")
         supported = status == "qualified"
@@ -4544,6 +4616,9 @@ def _recipe_side(diagnostics: list[dict[str, Any]]) -> dict[str, Any]:
         )
         if registration_layout is not None:
             entry["pdf_registration_layout"] = registration_layout
+        bank_layout = (diag.get("mapping_review_content") or {}).get("pdf_bank_layout")
+        if bank_layout is not None:
+            entry["pdf_bank_layout"] = bank_layout
         for separator in ("decimal_separator", "thousands_separator"):
             entry[separator] = (diag.get("mapping_review_content") or {}).get(separator)
         entry["mapping_review_content_sha256"] = diag.get(
@@ -4894,8 +4969,10 @@ def inspect_inputs(
         output_dir / "readable_pdf_entries.csv",
         [
             row
-            for item in journal_diag
-            for row in item.get("registration_diagnostics", {}).get("readable_rows", [])
+            for item in [*journal_diag, *bank_diag]
+            for row in item.get(
+                "registration_diagnostics", item.get("bank_diagnostics", {})
+            ).get("readable_rows", [])
         ],
     )
     return InspectionResult(
