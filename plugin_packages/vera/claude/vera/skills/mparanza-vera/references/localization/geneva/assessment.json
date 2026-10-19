@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "b18836357ed228279c693da6727aae851fb18cb44de0970d17b090bf4b2dabd4",
+  "catalogue_fingerprint": "7c9932f5e713bcd14257194fbef39bfebecbe8b438fcb248c082029957b16040",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -2009,7 +2009,7 @@
   },
   "specific_proposal_release_binding": {
     "date": "2026-10-19",
-    "version": "0.1.421",
+    "version": "0.1.422",
     "previous_catalogue_fingerprint": "724abd301a540665f94af2285763d14bdd1904113d1c11f259377e1db0fa0fd8",
     "changed_skill_entrypoints": [
       "lipe",
