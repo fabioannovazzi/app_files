@@ -979,7 +979,7 @@ def report_pdf_recovery(
     bank = directory / "bank"
     if bank.is_symlink():
         raise ValueError("Bank recovery history must not traverse symlinks")
-    bank_sources = set()
+    bank_sources: set[str] = set()
     inspection = output / "inspection.json"
     if inspection.exists() and workflow == "journal-bank-reconciliation":
         bank_sources.update(
