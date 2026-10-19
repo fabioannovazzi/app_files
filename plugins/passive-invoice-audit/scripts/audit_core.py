@@ -2371,6 +2371,7 @@ def run_audit(
         )
         + "\n\n`no_issue_detected` is a screening result, not proof that accounting treatment is correct.\n",
         encoding="utf-8",
+        newline="\n",
     )
     _write_exception_workpaper(
         output_dir / "exception_workpaper.xlsx", summary, review_rows, orphans

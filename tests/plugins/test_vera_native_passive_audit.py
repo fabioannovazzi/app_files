@@ -32,6 +32,22 @@ def audit_workspace(tmp_path, monkeypatch, request, vera_workflow_workspace):
     xml = tmp_path / "invoice.xml"
     fixture._write_invoice(xml)
     variant = getattr(request, "param", "ordinary")
+    if variant == "windows-text":
+        original_open = Path.open
+
+        def windows_text_open(
+            self, mode="r", buffering=-1, encoding=None, errors=None, newline=None
+        ):
+            if (
+                self.name in {"luna_prompt.md", "run_summary.md"}
+                and "w" in mode
+                and "b" not in mode
+                and newline is None
+            ):
+                newline = "\r\n"
+            return original_open(self, mode, buffering, encoding, errors, newline)
+
+        monkeypatch.setattr(Path, "open", windows_text_open)
     if variant == "fresh":
         fixture._write_invoice(xml, number="INV-FRESH", supplier_vat="01234511111")
     ledger = fixture._write_ledger(

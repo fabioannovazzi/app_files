@@ -853,7 +853,7 @@
     },
     "purchase-invoice-review": {
       "path": "purchase-invoice-review/course.json",
-      "sha256": "8d20cbda01e7e5cc6ebec758cc37c6e2bc94ac6fcdb1b274cf2f4f2b289d773d",
+      "sha256": "45ce049f1ad14c113e196915df14cbf828adb14876445f8ba63e2b5408930677",
       "languages": [
         "it",
         "en",

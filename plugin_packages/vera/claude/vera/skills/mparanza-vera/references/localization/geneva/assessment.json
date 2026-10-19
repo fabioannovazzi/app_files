@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "b02f288f5b03861ef2e51b561a1ae2ce6801f03a7fdd1a38ab0943d42a607040",
+  "catalogue_fingerprint": "656b3fd1f9d5ce8e23c168201f29de9cc27e04eeb17dad939fd9dd75a68b9637",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -2052,7 +2052,7 @@
     "scope": "Only the shared host-identity resolver changes: Codex PLUGIN_ROOT takes precedence over its CLAUDE_PLUGIN_ROOT compatibility variable. All function IDs and skill source hashes are unchanged; existing jurisdiction dispositions and professional acceptance limits remain unchanged."
   },
   "reporting_portability_binding_20261020": {
-    "version": "0.1.433",
+    "version": "0.1.434",
     "previous_catalogue_fingerprint": "fe0aa34775ad1cff14c3aa30183ecbc16c1fdf40b28c36d0e269b326fd717428",
     "scope": "Product version binding only. Skill entrypoint bytes and existing Geneva dispositions are unchanged; no new legal adaptation or native host acceptance is claimed."
   }

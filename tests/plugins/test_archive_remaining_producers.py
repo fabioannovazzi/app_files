@@ -7,6 +7,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 from tests.conftest import vera_workflow_workspace
 from tests.plugins.test_archive_automatic_reporting import (
     archive_core,
@@ -36,6 +38,7 @@ def test_open_item_selected_context_records_exact_mcp_response(tmp_path, monkeyp
     assert_native_send((workspace_module(), binding, root_output), None)
 
 
+@pytest.mark.parametrize("audit_workspace", ["ordinary", "windows-text"], indirect=True)
 def test_passive_selected_population_member_records_only_model_response(
     passive_service,
 ):
