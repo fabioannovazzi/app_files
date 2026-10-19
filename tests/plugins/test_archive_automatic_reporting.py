@@ -116,7 +116,7 @@ def finish(core, case, loaded):
         loaded["run"]["run_id"],
         state_dir=case.state_dir,
     )
-    return json.loads((output / "model_data_report.json").read_text())
+    return json.loads((output / "model_data_report.json").read_text(encoding="utf-8"))
 
 
 @pytest.mark.parametrize("workflow", PIPELINES)
@@ -125,7 +125,9 @@ def test_selected_archive_run_always_creates_report_at_start_and_terminal_write(
 ):
     loaded = start(archive_core, client_case, workflow)
     output = Path(loaded["output_dir"])
-    initial = json.loads((output / "model_data_report.json").read_text())
+    initial = json.loads(
+        (output / "model_data_report.json").read_text(encoding="utf-8")
+    )
     assert initial["outcome"] == "running"
     assert initial["user_id"] == USER_ID
     assert not (output / "model_data_report_input.json").exists()
@@ -171,7 +173,9 @@ def test_failure_and_cancellation_retain_an_incomplete_report(
     action(*args)
 
     report = json.loads(
-        (Path(loaded["output_dir"]) / "model_data_report.json").read_text()
+        (Path(loaded["output_dir"]) / "model_data_report.json").read_text(
+            encoding="utf-8"
+        )
     )
     assert report["outcome"] == terminal
     assert report["finished_at"] is not None
@@ -220,7 +224,7 @@ def test_later_whole_file_read_counts_all_ten_thousand_rows_without_double_count
             "tool_use_id": "later-read",
             "tool_name": "Bash",
             "tool_input": {"command": f"cat '{path}'"},
-            "tool_response": {"stdout": path.read_text()},
+            "tool_response": {"stdout": path.read_text(encoding="utf-8")},
         }
     )
 
@@ -287,7 +291,9 @@ def test_codex_internal_result_is_not_counted_until_emitted_to_model(
     refresh(root, "test-session")
     snapshot_run(loaded)
     before = json.loads(
-        (Path(loaded["output_dir"]) / "model_data_report.json").read_text()
+        (Path(loaded["output_dir"]) / "model_data_report.json").read_text(
+            encoding="utf-8"
+        )
     )
     assert before["sources"][0]["observed_quantity"] == 0
     transcript_line(
@@ -312,7 +318,9 @@ def test_codex_internal_result_is_not_counted_until_emitted_to_model(
     snapshot_run(loaded)
 
     after = json.loads(
-        (Path(loaded["output_dir"]) / "model_data_report.json").read_text()
+        (Path(loaded["output_dir"]) / "model_data_report.json").read_text(
+            encoding="utf-8"
+        )
     )
     assert after["sources"][0]["observed_quantity"] == 1
     assert after["collection_status"] == "complete"
@@ -357,7 +365,9 @@ def test_terminal_write_waits_for_outer_result_before_hashing(
     )
     handle({"hook_event_name": "SessionStart", "session_id": "different-session"})
 
-    report = json.loads((root / "outputs/model_data_report.json").read_text())
+    report = json.loads(
+        (root / "outputs/model_data_report.json").read_text(encoding="utf-8")
+    )
     assert report["collection_closed"] is True
     assert report["sources"][0]["observed_quantity"] == 1
     assert report["collection_status"] == "complete"
@@ -409,16 +419,18 @@ def test_terminal_report_retries_real_authenticated_proof_without_changing_work(
     before = report_path.read_bytes()
     professional_before = (root / "outputs/result.txt").read_bytes()
     assert (
-        json.loads((root / "model_data_reporting.json").read_text())["server_receipt"][
-            "status"
-        ]
+        json.loads((root / "model_data_reporting.json").read_text(encoding="utf-8"))[
+            "server_receipt"
+        ]["status"]
         == "pending"
     )
     monkeypatch.setattr(operational_incidents, "workflow_transport", transport)
 
     archive_report_receipt.retry_pending(Registry())
 
-    receipt = json.loads((root / "outputs/model_data_receipt.json").read_text())
+    receipt = json.loads(
+        (root / "outputs/model_data_receipt.json").read_text(encoding="utf-8")
+    )
     assert receipt["user_id"] == report["user_id"]
     assert receipt["archive_run_id"] == report["run_id"]
     assert report_path.read_bytes() == before
@@ -543,7 +555,9 @@ def test_local_only_report_makes_no_transport_call(
     report = finish(archive_core, client_case, loaded)
 
     status = json.loads(
-        (Path(loaded["run_root"]) / "model_data_reporting.json").read_text()
+        (Path(loaded["run_root"]) / "model_data_reporting.json").read_text(
+            encoding="utf-8"
+        )
     )
     assert report["collection_closed"] is True
     assert status["server_receipt"] == {
@@ -598,7 +612,7 @@ def test_exact_head_read_counts_only_returned_csv_records(
 
     loaded = csv_case(archive_core, client_case, tmp_path, line_ending)
     path = Path(loaded["context"]["input_bindings"][0]["path"])
-    shown = "".join(path.read_text().splitlines(keepends=True)[:101])
+    shown = "".join(path.read_text(encoding="utf-8").splitlines(keepends=True)[:101])
     handle(
         {
             "hook_event_name": "PostToolUse",
@@ -742,7 +756,7 @@ def test_host_python_observes_direct_read_and_reseals_pending_receipt(
             "cmd": "cat " + shlex.quote(str(source)),
             "run_id": loaded["run"]["run_id"],
         },
-        "tool_response": source.read_text(),
+        "tool_response": source.read_text(encoding="utf-8"),
     }
 
     environment = {
@@ -880,11 +894,16 @@ def test_stop_recovers_terminal_write_interrupted_before_report_finalization(
                 "Synthetic failure",
             )
     assert RunStore(root).state()["finished_at"] is None
-    assert json.loads((root / "run.json").read_text())["status"] == "failed"
+    assert (
+        json.loads((root / "run.json").read_text(encoding="utf-8"))["status"]
+        == "failed"
+    )
 
     handle({"hook_event_name": "SessionStart", "session_id": "different-session"})
 
-    report = json.loads((root / "outputs/model_data_report.json").read_text())
+    report = json.loads(
+        (root / "outputs/model_data_report.json").read_text(encoding="utf-8")
+    )
     assert report["outcome"] == "failed"
     assert report["collection_closed"] is True
 
