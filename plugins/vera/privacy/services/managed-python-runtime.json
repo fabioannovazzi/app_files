@@ -93,8 +93,8 @@
   "review": {
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "reviewed_at": "2026-10-17",
-    "source_fingerprint": "87e86e334517e236c5c2d9791e762f78ceca98d938f3c88400b6c6db1745845d"
+    "reviewed_at": "2026-10-19",
+    "source_fingerprint": "6406c20df436c0b33e4e838d047b46ebc77177dfe5298c669076b7687f1f75b3"
   },
   "runtime_profiles": [
     "openai-codex",
@@ -114,7 +114,7 @@
     },
     {
       "id": "user-scoped-runtime-isolation",
-      "control": "One fixed environment is located outside plugin source and client folders. An exclusive operating-system installation lock waits for running managed Python readers, which hold a shared lease through a startup hook. Setup removes the ready receipt before mutation and restores it only after pip check and component validation. Failed setup leaves execution unavailable until repair. Symlink roots, locks and metadata are rejected. The installer is launched from base Python to avoid self-deadlock. This lease is concurrency protection, not a security sandbox. Other historical environments are not automatically deleted.",
+      "control": "One fixed environment is located outside plugin source and client folders. An exclusive operating-system installation lock waits for running managed Python readers, which hold a shared lease through a startup hook. Setup removes the ready receipt before mutation and restores it only after pip check and component validation. Failed setup leaves execution unavailable until repair. Symlink roots, locks and metadata are rejected. The installer is launched from base Python to avoid self-deadlock. This lease is concurrency protection, not a security sandbox. Other historical environments are not automatically deleted. State metadata normally uses atomic replacement. Only EXDEV or Windows error 17 falls back under the same installer lock to a single-link regular-file write with full-byte writes and fsync. Failed writes attempt to restore existing metadata or remove a newly created file; the ready receipt remains invalid until setup succeeds. This fallback is local and does not add a recipient or payload.",
       "implemented_by": [
         "scripts/managed_python_runtime.py",
         "scripts/_managed_python_runtime.py",
