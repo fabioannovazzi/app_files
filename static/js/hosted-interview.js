@@ -8,7 +8,7 @@
   const PLUGIN_IMPROVEMENT_MODE = "plugin_improvement_interview";
   const isPluginImprovementInterview =
     interviewMode === PLUGIN_IMPROVEMENT_MODE;
-  const SCRIPT_VERSION = "20260924-audio-upload-retry-v1";
+  const SCRIPT_VERSION = "20261006-playback-aware-silence-v1";
   const attemptStorageKey = `hosted-interview-attempt:${token}`;
   const CONNECTION_RECOVERY_MS = 15000;
   const FINAL_TRANSCRIPT_SETTLE_MS = 2500;
@@ -93,6 +93,7 @@
   let lastPeerConnectionState = "";
   let lastDataChannelState = "";
   let assistantResponseActive = false;
+  let interviewerAudioPlaying = false;
   let awaitingIntervieweeAnswer = false;
   let interviewerQuestionId = 0;
   let silenceNudgeQuestionId = 0;
@@ -102,6 +103,7 @@
   let interviewClosing = false;
   let liveInputMuted = false;
   let lastInterviewerTurnAtMs = 0;
+  let lastInterviewerAudioStoppedAtMs = 0;
   let lastIntervieweeTurnAtMs = 0;
   let lastResponseCreateAtMs = 0;
   let lastInputActivityAtMs = 0;
@@ -388,6 +390,7 @@
     lastPeerConnectionState = "";
     lastDataChannelState = "";
     assistantResponseActive = false;
+    interviewerAudioPlaying = false;
     awaitingIntervieweeAnswer = false;
     interviewerQuestionId = 0;
     silenceNudgeQuestionId = 0;
@@ -397,6 +400,7 @@
     interviewClosing = false;
     liveInputMuted = false;
     lastInterviewerTurnAtMs = 0;
+    lastInterviewerAudioStoppedAtMs = 0;
     lastIntervieweeTurnAtMs = 0;
     lastResponseCreateAtMs = 0;
     lastInputActivityAtMs = 0;
@@ -1184,6 +1188,7 @@
       !dc ||
       dc.readyState !== "open" ||
       assistantResponseActive ||
+      interviewerAudioPlaying ||
       genericResponsePending
     ) {
       return false;
@@ -1292,6 +1297,7 @@
       !dc ||
       dc.readyState !== "open" ||
       assistantResponseActive ||
+      interviewerAudioPlaying ||
       genericResponsePending ||
       transcriptionDeltaActive ||
       inputSpeechPending ||
@@ -1301,8 +1307,10 @@
       return;
     }
     const remainingSeconds = secondsRemaining();
-    const silenceSeconds = lastInterviewerTurnAtMs
-      ? Math.round((Date.now() - lastInterviewerTurnAtMs) / 1000)
+    const silenceStartedAtMs =
+      lastInterviewerAudioStoppedAtMs || lastInterviewerTurnAtMs;
+    const silenceSeconds = silenceStartedAtMs
+      ? Math.round((Date.now() - silenceStartedAtMs) / 1000)
       : 0;
     const waitingForAnswer = awaitingIntervieweeAnswer;
 
@@ -1494,6 +1502,7 @@
       const text = cleanTranscriptText(event.transcript || "");
       if (text) {
         lastInterviewerTurnAtMs = Date.now();
+        lastInterviewerAudioStoppedAtMs = 0;
         lastInterviewerTurnText = text;
         assistantTranscript = appendTranscript(assistantTranscript, text);
         if (
@@ -1518,6 +1527,22 @@
           item_id: String(event.item_id || "").trim(),
           response_id: String(event.response_id || "").trim(),
         });
+      }
+    }
+    if (event.type === "output_audio_buffer.started") {
+      interviewerAudioPlaying = true;
+      lastInterviewerAudioStoppedAtMs = 0;
+    }
+    if (
+      event.type === "output_audio_buffer.stopped" ||
+      event.type === "output_audio_buffer.cleared"
+    ) {
+      interviewerAudioPlaying = false;
+      if (
+        lastInterviewerTurnAtMs > lastIntervieweeTurnAtMs &&
+        lastInterviewerTurnText
+      ) {
+        lastInterviewerAudioStoppedAtMs = Date.now();
       }
     }
     if (event.type === "response.created") {
