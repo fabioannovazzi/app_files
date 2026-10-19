@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "724abd301a540665f94af2285763d14bdd1904113d1c11f259377e1db0fa0fd8",
+  "catalogue_fingerprint": "1b3d3d97b94eeaafb660f2313f2724dfdbdc7b07f86af4447ec6bdfc6cbb4f5e",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -2006,5 +2006,10 @@
     "version": "0.1.418",
     "previous_catalogue_fingerprint": "1cd4969eeedf9cde13043466d9161d27bad371bee324fae5464cb23eca5d1bdb",
     "scope": "Only the canonical manifest version changes the catalogue identity. All 55 skill entrypoint hashes are unchanged. Runtime metadata write recovery preserves existing Geneva dispositions and does not establish additional jurisdiction or host acceptance."
+  },
+  "pdf_negative_amount_release_binding": {
+    "version": "0.1.421",
+    "previous_catalogue_fingerprint": "724abd301a540665f94af2285763d14bdd1904113d1c11f259377e1db0fa0fd8",
+    "scope": "Only the product manifest binding changed in this catalogue snapshot; all skill entrypoint hashes and existing Geneva dispositions are unchanged. Reviewed negative PDF posting notation and sign semantics do not establish new jurisdiction or client acceptance."
   }
 }
