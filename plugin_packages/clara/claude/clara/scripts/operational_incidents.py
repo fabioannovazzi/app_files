@@ -975,7 +975,43 @@ def report_pdf_recovery(
     }:
         raise ValueError("PDF recovery reporting requires the same bound workflow")
     directory = output / "pdf_recovery"
-    if any(p.is_symlink() for p in (options.output_dir, directory, *directory.parents)):
+    _report_pdf_history(workflow, output, directory, execution, "journal")
+    bank = directory / "bank"
+    if bank.is_symlink():
+        raise ValueError("Bank recovery history must not traverse symlinks")
+    bank_sources = set()
+    inspection = output / "inspection.json"
+    if inspection.exists() and workflow == "journal-bank-reconciliation":
+        bank_sources.update(
+            item["source_sha256"]
+            for item in _pdf_history_event(inspection).get("bank", {}).get("files", [])
+            if re.fullmatch(r"[a-f0-9]{64}", str(item.get("source_sha256", "")))
+        )
+    if bank.exists():
+        for history in sorted(bank.iterdir()):
+            if re.fullmatch(r"[a-f0-9]{64}", history.name) is None:
+                raise ValueError("Invalid bank recovery history")
+            bank_sources.add(history.name)
+    for digest in sorted(bank_sources):
+        _report_pdf_history(workflow, output, bank / digest, execution, "bank")
+
+
+def _pdf_history_event(path: Path) -> dict[str, Any]:
+    """Read bounded local evidence without following substituted history files."""
+    if (
+        path.is_symlink()
+        or path.stat().st_nlink != 1
+        or path.stat().st_size > 32 * 1024 * 1024
+    ):
+        raise ValueError("Invalid recovery evidence file")
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _report_pdf_history(
+    workflow: str, output: Path, directory: Path, execution: dict[str, str], side: str
+) -> None:
+    """Keep each bank source's recovery and the journal history independent."""
+    if any(p.is_symlink() for p in (output, directory, *directory.parents)):
         raise ValueError("PDF recovery reporting must not traverse symlinks")
     inspection = output / "inspection.json"
     events = ([inspection] if inspection.exists() else []) + sorted(
@@ -986,30 +1022,37 @@ def report_pdf_recovery(
         events.append(frozen)
     last_trial: dict[str, Any] | None = None
     for path in events:
-        if (
-            path.is_symlink()
-            or path.stat().st_nlink != 1
-            or path.stat().st_size > 32 * 1024 * 1024
-        ):
-            raise ValueError("Invalid recovery evidence file")
-        event = json.loads(path.read_text(encoding="utf-8"))
+        event = _pdf_history_event(path)
         if path.name.startswith("attempt-"):
             last_trial = event
         if path == inspection:
             files = (
                 event.get("files", [])
                 if workflow == "journal-sampling"
-                else event.get("journal", {}).get("files", [])
+                else event.get(side, {}).get("files", [])
             )
             failures = []
             for item in files:
-                diagnostics = item.get("registration_diagnostics", item)
-                if (
-                    diagnostics.get("accepted") is False
-                    and diagnostics.get("reason")
-                    == "registration_pdf_incomplete_or_unbalanced"
-                ):
+                if side == "bank" and item.get("source_sha256") != directory.name:
+                    continue
+                diagnostics = item.get(
+                    "registration_diagnostics", item.get("bank_diagnostics", item)
+                )
+                if diagnostics.get("accepted") is False and diagnostics.get(
+                    "reason"
+                ) in {
+                    "registration_pdf_incomplete_or_unbalanced",
+                    "bank_pdf_incomplete_or_unbalanced",
+                }:
                     failures.append(diagnostics)
+                elif (
+                    side == "bank"
+                    and item.get("qualification_status") == "unsupported_source_layout"
+                    and item.get("parser") in {"pdf_table", "text_pdf_disabled"}
+                ):
+                    failures.append(
+                        {"rejected_rows": [{"reason": "unsupported_bank_pdf_layout"}]}
+                    )
             if not failures:
                 continue
             event = {
@@ -1069,10 +1112,16 @@ def report_pdf_recovery(
         )
         state = _read()
         key = execution["operation_id"]
+        if side == "bank":
+            key += ":bank:" + directory.name
         episode = state.setdefault("pdf_recoveries", {}).setdefault(
             key, {"reported": []}
         )
-        event_key = hashlib.sha256(path.read_bytes()).hexdigest()
+        event_key = hashlib.sha256(
+            json.dumps(event, sort_keys=True).encode()
+            if path == inspection
+            else path.read_bytes()
+        ).hexdigest()
         if event_key in episode["reported"]:
             continue
         if "original" not in episode and passed:
@@ -1087,6 +1136,16 @@ def report_pdf_recovery(
         # Exact identifiers are transport-safe facts, not a classifier of the
         # host's free-form diagnosis or any client text.
         allowed_checks = {
+            "unsupported_bank_pdf_layout",
+            "bank_requires_independent_printed_controls",
+            "bank_opening_movements_closing_mismatch",
+            "bank_running_balance_mismatch",
+            "bank_printed_movement_total_mismatch",
+            "bank_controls_do_not_bound_movements",
+            "bank_date_outside_movement",
+            "invalid_bank_date",
+            "bank_text_crosses_movement",
+            "bank_statement_has_no_readable_movements",
             "unclaimed_source_amount",
             "page_decode_failed",
             "invalid_registration_date",

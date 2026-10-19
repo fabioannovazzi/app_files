@@ -89,6 +89,7 @@ __all__ = ["main", "seal_review_receipts"]
 LOGGER = logging.getLogger(__name__)
 _MAPPING_FIELDS = {
     "pdf_registration_layout",
+    "pdf_bank_layout",
     "header_rows",
     "mapping",
     "excluded_monetary_columns",

@@ -33,17 +33,30 @@ class AdapterFailure(ValueError):
         self.evidence = evidence
 
 
-def _bands(layout: dict[str, Any]) -> dict[str, tuple[float, float]]:
+def _bands(
+    layout: dict[str, Any], *, source_role: str = "journal"
+) -> dict[str, tuple[float, float]]:
     from . import _coordinate
 
     columns = layout.get("columns", {})
-    if not isinstance(columns, dict) or set(columns) != {
+    if not isinstance(columns, dict):
+        raise ValueError("Adapter requires reviewed physical column semantics")
+    required = {
         "account_debit",
         "account_credit",
         "debit",
         "credit",
         "description",
-    }:
+    }
+    if source_role == "bank":
+        required = {"date", "description"}
+        required |= {"amount"} if "amount" in columns else {"debit", "credit"}
+    if (
+        set(columns) != required
+        if source_role == "journal"
+        else not required <= set(columns)
+        or set(columns) - required - {"balance", "reference", "value_date"}
+    ):
         raise ValueError("Adapter requires reviewed physical column semantics")
     result = {}
     for name, bounds in columns.items():
@@ -66,16 +79,21 @@ def _bands(layout: dict[str, Any]) -> dict[str, tuple[float, float]]:
     return result
 
 
-def source_inventory(path: Path, layout: dict[str, Any]) -> dict[str, Any]:
+def source_inventory(
+    path: Path, layout: dict[str, Any], *, source_role: str = "journal"
+) -> dict[str, Any]:
     """Read all source words with stable IDs; keep this evidence local."""
     import pdfplumber
     from pdfplumber.utils.exceptions import PdfminerException
 
     from .recovery import _file_digest
 
-    bands = _bands(layout)
+    bands = _bands(layout, source_role=source_role)
     rules = RuleLayout(layout)
-    if layout.get("date_format", "%d/%m/%Y") not in ("%d/%m/%Y", "%Y-%m-%d"):
+    date_formats = ("%d/%m/%Y", "%Y-%m-%d")
+    if source_role == "bank":
+        date_formats += ("%d.%m.%Y", "%d/%m/%y", "%d.%m.%y")
+    if layout.get("date_format", "%d/%m/%Y") not in date_formats:
         raise ValueError(
             "Adapter date format requires an explicit supported source format"
         )

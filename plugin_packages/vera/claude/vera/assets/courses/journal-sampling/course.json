@@ -56,7 +56,7 @@
     },
     {
       "path": "modules/journal-sampling/scripts/implementation_bootstrap.py",
-      "sha256": "e93b4789bdc72e5a6f648cee4b2beda3d2c09ce435056d8b235d0e6129c1b2e5"
+      "sha256": "72b5120a0cff15c2d24fb207a49a851ad1828702c17483f1f2e5d7ff691a55e7"
     },
     {
       "path": "modules/journal-sampling/scripts/inspect_journal.py",
@@ -64,7 +64,7 @@
     },
     {
       "path": "modules/journal-sampling/scripts/journal_sampling_core.py",
-      "sha256": "4bae91ef606fef25aa82f1c24c2dcb86fd407a202027d0877c8fb0b93ea87a07"
+      "sha256": "18d6b393e3ec1ac7695fdea1e600ea94f832b06d00655de12f9f629e60e4517f"
     },
     {
       "path": "modules/journal-sampling/scripts/normalize_journal.py",
@@ -140,11 +140,15 @@
     },
     {
       "path": "modules/journal-sampling/vendor/modules/vera_journal_pdf/adapter.py",
-      "sha256": "fe5fc400218a2de29afe216f850d901399feae85bbbfb842298e3481692af21b"
+      "sha256": "4a0dc8920918c0614f5ad259a61c70774874f3e366e73c02523ba94a02b9a819"
+    },
+    {
+      "path": "modules/journal-sampling/vendor/modules/vera_journal_pdf/bank.py",
+      "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
     },
     {
       "path": "modules/journal-sampling/vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "ea53edae34c00bfae610671217f5752e52eec1ee6a552aec9207feba82403b1b"
+      "sha256": "8fc5711a9b225cb9d3bae1eb7ca2f6a372bd45ce8325cd4142ceb24f10197332"
     },
     {
       "path": "modules/journal-sampling/vendor/modules/vera_journal_pdf/rules.py",
@@ -304,11 +308,15 @@
     },
     {
       "path": "vendor/modules/vera_journal_pdf/adapter.py",
-      "sha256": "fe5fc400218a2de29afe216f850d901399feae85bbbfb842298e3481692af21b"
+      "sha256": "4a0dc8920918c0614f5ad259a61c70774874f3e366e73c02523ba94a02b9a819"
+    },
+    {
+      "path": "vendor/modules/vera_journal_pdf/bank.py",
+      "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "ea53edae34c00bfae610671217f5752e52eec1ee6a552aec9207feba82403b1b"
+      "sha256": "8fc5711a9b225cb9d3bae1eb7ca2f6a372bd45ce8325cd4142ceb24f10197332"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/rules.py",
@@ -553,5 +561,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "869e55c7a780cc799550e55825023ad2304d1d55b7870e1276001ca08d5e9cb4"
+  "canonical_course_sha256": "99cc71c09c4e61d9f982609e50606a0d5d6d1c1ac117d712901194d66bb15a4d"
 }

@@ -90,6 +90,12 @@ def main() -> int:
     parser.add_argument("--client-engagement", type=Path, required=True)
     parser.add_argument("--sample", type=Path, help="Optional sample movements file.")
     parser.add_argument("--recipe", type=Path, help="Optional existing recipe JSON.")
+    parser.add_argument("--pdf-side", choices=("bank", "journal"), default="journal")
+    parser.add_argument(
+        "--pdf-source",
+        type=Path,
+        help="Exact PDF inside the selected bound source folder.",
+    )
     from vera_journal_pdf.recovery import add_recovery_args
 
     add_recovery_args(parser)
@@ -116,17 +122,40 @@ def main() -> int:
         from vera_journal_pdf.recovery import recover_pdf
 
         recipe = json.loads(args.recipe.read_text()) if args.recipe else {}
-        entry = recipe.get("journal", {}).get("files", {}).get(args.journal.name, {})
+        selected_root = args.bank if args.pdf_side == "bank" else args.journal
+        selected = args.pdf_source or selected_root
+        if selected_root.is_dir():
+            if (
+                not selected.is_file()
+                or selected_root.resolve() not in selected.resolve().parents
+            ):
+                parser.error(
+                    "--pdf-source must select one PDF inside the bound source folder"
+                )
+            source_name = (
+                selected.resolve().relative_to(selected_root.resolve()).as_posix()
+            )
+        else:
+            if selected.resolve() != selected_root.resolve():
+                parser.error("--pdf-source differs from the bound source file")
+            source_name = selected_root.name
+        if any(p.is_symlink() for p in (selected, *selected.parents)):
+            parser.error("Recovery source must not traverse symlinks")
+        layout_key = (
+            "pdf_bank_layout" if args.pdf_side == "bank" else "pdf_registration_layout"
+        )
+        entry = recipe.get(args.pdf_side, {}).get("files", {}).get(source_name, {})
         result = recover_pdf(
-            args.journal,
+            selected,
             args.output_dir,
             args.pdf_recovery,
             currency=args.pdf_currency,
-            layout=entry.get("pdf_registration_layout"),
+            layout=entry.get(layout_key),
             pages=args.pdf_pages,
             region=args.pdf_region,
             reason=args.pdf_reason,
             render=args.pdf_render,
+            source_role=args.pdf_side,
         )
         LOGGER.info("%s", json.dumps(result, ensure_ascii=False))
         return 0

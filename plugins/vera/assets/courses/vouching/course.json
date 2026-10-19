@@ -45,7 +45,7 @@
     {
       "path": "modules/check-entries/references/workflow-reference.md",
       "repository_path": "plugins/check-entries/references/workflow-reference.md",
-      "sha256": "c01aa0eafb3693bf45792c8834f18706db1a4def598409f8331c697cb2da9ad3"
+      "sha256": "1b97d413464f3e8ac3f20ff6794865bef3c11e4848567c6ae7febc0c47ee9d51"
     },
     {
       "path": "modules/check-entries/requirements.txt",
@@ -65,7 +65,7 @@
     {
       "path": "modules/check-entries/scripts/check_entries_core.py",
       "repository_path": "plugins/check-entries/scripts/check_entries_core.py",
-      "sha256": "33b49cf7a45d1084590fff26b69fc4d714f95025ac3264dd48a5dedd29583e7e"
+      "sha256": "3d902f5bc7c5a01d61eafd023acb4d5efbed48c9db3e3368adf2533073439859"
     },
     {
       "path": "modules/check-entries/scripts/implementation_bootstrap.py",
@@ -125,7 +125,7 @@
     {
       "path": "modules/check-entries/skills/vouching/SKILL.md",
       "repository_path": "plugins/check-entries/skills/vouching/SKILL.md",
-      "sha256": "d30cf88c340df29f65dbf7d8f6f9ccbea928001b68fe8ce7553cfded3e256754"
+      "sha256": "0a4988379b91fe08036fa79a58a0ded6b332037daf1b4fac22c05daf53244386"
     },
     {
       "path": "modules/check-entries/skills/vouching/references/geneva.md",
@@ -190,12 +190,17 @@
     {
       "path": "modules/check-entries/vendor/modules/vera_journal_pdf/adapter.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/adapter.py",
-      "sha256": "fe5fc400218a2de29afe216f850d901399feae85bbbfb842298e3481692af21b"
+      "sha256": "4a0dc8920918c0614f5ad259a61c70774874f3e366e73c02523ba94a02b9a819"
+    },
+    {
+      "path": "modules/check-entries/vendor/modules/vera_journal_pdf/bank.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+      "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
     },
     {
       "path": "modules/check-entries/vendor/modules/vera_journal_pdf/recovery.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "ea53edae34c00bfae610671217f5752e52eec1ee6a552aec9207feba82403b1b"
+      "sha256": "8fc5711a9b225cb9d3bae1eb7ca2f6a372bd45ce8325cd4142ceb24f10197332"
     },
     {
       "path": "modules/check-entries/vendor/modules/vera_journal_pdf/rules.py",
@@ -510,12 +515,17 @@
     {
       "path": "vendor/modules/vera_journal_pdf/adapter.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/adapter.py",
-      "sha256": "fe5fc400218a2de29afe216f850d901399feae85bbbfb842298e3481692af21b"
+      "sha256": "4a0dc8920918c0614f5ad259a61c70774874f3e366e73c02523ba94a02b9a819"
+    },
+    {
+      "path": "vendor/modules/vera_journal_pdf/bank.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+      "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/recovery.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "ea53edae34c00bfae610671217f5752e52eec1ee6a552aec9207feba82403b1b"
+      "sha256": "8fc5711a9b225cb9d3bae1eb7ca2f6a372bd45ce8325cd4142ceb24f10197332"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/rules.py",

@@ -194,7 +194,7 @@ python scripts/run_checks.py <bound-normalized-journal> <bound-support-path-or-c
   schema/order.
 - Replay the complete Journal Sampling assurance envelope, gate register,
   reviewed decisions, original-source and exact retained-recipe receipts,
-  normalized receipt, and exact 24-file Journal Sampling/shared implementation
+  normalized receipt, and exact Journal Sampling/shared implementation
   receipt set. Before Polars parses the captured normalized bytes, invoke
   Journal Sampling's isolated `-I -B` replay CLI and require raw source plus the
   retained recipe to reproduce the CSV and material preparation contract.

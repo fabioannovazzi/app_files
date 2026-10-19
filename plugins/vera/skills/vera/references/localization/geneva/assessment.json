@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "210bd55bba0d91ce62ff19c62f068a462e3c48ef56d8dd51cf323f8d71bcf376",
+  "catalogue_fingerprint": "ce6064387499b488a12141d7f032340f37dfb36402b12553c1fb17d8f64f3bf9",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -2031,5 +2031,14 @@
     "date": "2026-10-19",
     "scope": "Replace the universal privacy-report trigger with fixed pipeline scope and Studio Archive lifecycle. Existing jurisdiction judgments are unchanged; no additional Geneva professional acceptance is claimed.",
     "version": "0.1.425"
+  },
+  "bank_pdf_recovery_source_review": {
+    "date": "2026-10-19",
+    "source_version": "0.1.426",
+    "previous_catalogue_fingerprint": "210bd55bba0d91ce62ff19c62f068a462e3c48ef56d8dd51cf323f8d71bcf376",
+    "changed_entrypoints": [
+      "journal-bank-reconciliation"
+    ],
+    "scope": "Adds bank-side text-PDF source-reference recovery, independent bank controls and separate incident histories. Preserves all existing Geneva dispositions. Synthetic bank fixtures do not establish acceptance on Swiss or customer statements."
   }
 }

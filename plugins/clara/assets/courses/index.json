@@ -4,7 +4,7 @@
   "courses": {
     "advisory-brief-planner": {
       "path": "advisory-brief-planner/course.json",
-      "sha256": "f0d8dcfef575dead797da1a4dd2f8f8a9eb4afee611a2160b5eba2ef69fa6b09",
+      "sha256": "e9cf3bb8d9441785d33f5d5efb6e419978005706797c2a82658055669f7a2ad5",
       "languages": [
         "it",
         "en",
@@ -60,7 +60,7 @@
     },
     "advisory-deliverable-validator": {
       "path": "advisory-deliverable-validator/course.json",
-      "sha256": "e615c4ed191c9344f4eaeaba674575eaab55b6b047d37c5c59ba3a2aa3443dca",
+      "sha256": "ef55316306f0de72abdb2a190a8caae0fd84ae7b96d40ac82915ddecf316709b",
       "languages": [
         "it",
         "en",
@@ -88,7 +88,7 @@
     },
     "attribute-reporting": {
       "path": "attribute-reporting/course.json",
-      "sha256": "542fe1ae99558b18116738dc25663c004d6cc104cb18c65e40b49ecb83523f92",
+      "sha256": "6a9c97432c915513c67e9b0be587965011b58b24b5247f5dcf2f993fe9cbd493",
       "languages": [
         "it",
         "en",
@@ -135,7 +135,7 @@
     },
     "deck-correction": {
       "path": "deck-correction/course.json",
-      "sha256": "443406e879a653de79a5e68cf504d4d95ef169f8dacf7dab84d36e32bbf3db1d",
+      "sha256": "7ef3a2b4483a7e5eb5e31f6a525ea0122e633b82e39f2323f1fdabf6d5a58402",
       "languages": [
         "it",
         "en",
@@ -163,7 +163,7 @@
     },
     "html-deck": {
       "path": "html-deck/course.json",
-      "sha256": "00147a521c006c4f4f6a71e4e0a1412fb47f0c8c507a89e9a56b2ed600076ba1",
+      "sha256": "3f93412bf6a78d14c9a5f4797213110b260ed9f96ca0c856e2dbbf0e065288ff",
       "languages": [
         "it",
         "en",
@@ -191,7 +191,7 @@
     },
     "reporting-engine": {
       "path": "reporting-engine/course.json",
-      "sha256": "a8693451b30d43a12859ca3ca0f5285660a911d58a2dc5f4ddc25c10c4539e94",
+      "sha256": "0898cfd5b0d61ab73fb4b54f1f03b01700549a839690ee0c9b14aec0fbcb58b5",
       "languages": [
         "it",
         "en",
@@ -219,7 +219,7 @@
     },
     "transcribe": {
       "path": "transcribe/course.json",
-      "sha256": "1c3363d5320bbb551b631874858e001d4075d1800e3820e234dc1e979372b118",
+      "sha256": "6999bdc989237877602be4da00314b383f561fd805e63cba501e8238a3c403a5",
       "languages": [
         "it",
         "en",

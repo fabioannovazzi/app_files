@@ -3109,9 +3109,10 @@ def _read_pdf_bank_raw(
     """Reconstruct bank rows before the existing mapping and population gates."""
     from vera_journal_pdf.bank import read_bank_pdf
 
-    movements, diagnostics = read_bank_pdf(
-        path, layout, currency=layout["recovery_currency"]
-    )
+    currency = layout.get("recovery_currency")
+    if not isinstance(currency, str):
+        raise ValueError("Bank PDF layout requires a reviewed recovery_currency")
+    movements, diagnostics = read_bank_pdf(path, layout, currency=currency)
     metadata = {
         "page_count": diagnostics["page_count"],
         "failure_kind": None if diagnostics["accepted"] else diagnostics["reason"],
