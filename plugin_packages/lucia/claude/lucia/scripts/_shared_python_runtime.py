@@ -18,7 +18,7 @@ RECEIPT = ".mparanza-shared-ready.json"
 POLICY = ".mparanza-shared-features.json"
 INSTALLING = "MPARANZA_RUNTIME_INSTALLING"
 # Bump together across products whenever recipes, constraints or this backend change.
-POLICY_REVISION = 11
+POLICY_REVISION = 12
 # Every process in the managed interpreter holds a reader lease until exit.
 # The installer uses the same file exclusively. Never modify the interpreter
 # while readers are running. This is concurrency protection, not a sandbox.
@@ -151,6 +151,73 @@ def ready(selection: Any, path: Path, api: Any) -> bool:
         return False
 
 
+def _write_all(descriptor: int, payload: bytes) -> None:
+    """Write every byte to an already validated metadata descriptor."""
+    view = memoryview(payload)
+    while view:
+        written = os.write(descriptor, view)
+        if written <= 0:
+            raise OSError("Runtime metadata write made no progress")
+        view = view[written:]
+
+
+def _replace_state(temporary: Path, path: Path) -> None:
+    """Prefer atomic replace; recover only from a cross-volume failure."""
+    try:
+        temporary.replace(path)
+        return
+    except OSError as error:
+        if error.errno != errno.EXDEV and getattr(error, "winerror", None) != 17:
+            raise
+
+    payload = temporary.read_bytes()
+    flags = os.O_RDWR | getattr(os, "O_NOFOLLOW", 0)
+    descriptor: int | None = None
+    created = False
+    previous = b""
+    try:
+        try:
+            descriptor = os.open(path, flags | os.O_CREAT | os.O_EXCL, 0o600)
+            created = True
+        except FileExistsError:
+            descriptor = os.open(path, flags)
+        info = os.fstat(descriptor)
+        import stat
+
+        if not stat.S_ISREG(info.st_mode) or info.st_nlink != 1:
+            raise OSError("Runtime metadata must be a single-link regular file")
+        if path.is_symlink():
+            raise OSError("Runtime metadata cannot be a symlink")
+        if not created:
+            os.lseek(descriptor, 0, os.SEEK_SET)
+            chunks = []
+            while chunk := os.read(descriptor, 64 * 1024):
+                chunks.append(chunk)
+            previous = b"".join(chunks)
+        try:
+            os.lseek(descriptor, 0, os.SEEK_SET)
+            os.ftruncate(descriptor, 0)
+            _write_all(descriptor, payload)
+            os.fsync(descriptor)
+        except OSError:
+            if not created:
+                os.lseek(descriptor, 0, os.SEEK_SET)
+                os.ftruncate(descriptor, 0)
+                _write_all(descriptor, previous)
+                os.fsync(descriptor)
+            raise
+    except OSError:
+        if descriptor is not None:
+            os.close(descriptor)
+            descriptor = None
+        if created:
+            path.unlink(missing_ok=True)
+        raise
+    finally:
+        if descriptor is not None:
+            os.close(descriptor)
+
+
 def _write(path: Path, value: dict[str, Any]) -> None:
     temporary = path.with_name(path.name + f".{os.getpid()}.tmp")
     if temporary.is_symlink() or path.is_symlink():
@@ -161,7 +228,7 @@ def _write(path: Path, value: dict[str, Any]) -> None:
             handle.write("\n")
             handle.flush()
             os.fsync(handle.fileno())
-        temporary.replace(path)
+        _replace_state(temporary, path)
     finally:
         temporary.unlink(missing_ok=True)
 

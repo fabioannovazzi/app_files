@@ -239,6 +239,28 @@ test('empty input during the opening waits until the interviewer finishes instea
   assert.equal(page.sent.filter(e => e.type === 'response.create').length, 2);
 });
 
+test('silence recovery waits until interviewer audio playback has ended', async () => {
+  const page = browser();
+  await page.start();
+  page.open();
+  page.receive({ type: 'output_audio_buffer.started', response_id: 'opening' });
+  page.receive({
+    type: 'response.output_audio_transcript.done',
+    response_id: 'opening',
+    transcript: 'Benvenuta. Qual è il cambiamento più importante che vorresti ottenere?',
+  });
+  responseDone(page);
+
+  page.tick(40000);
+  assert.equal(page.sent.filter(e => e.response?.metadata?.trigger === 'silence_nudge').length, 0);
+
+  page.receive({ type: 'output_audio_buffer.stopped', response_id: 'opening' });
+  page.tick(34000);
+  assert.equal(page.sent.filter(e => e.response?.metadata?.trigger === 'silence_nudge').length, 0);
+  page.tick(1000);
+  assert.equal(page.sent.filter(e => e.response?.metadata?.trigger === 'silence_nudge').length, 1);
+});
+
 test('failed transcription releases the pending input state and offers a retry', async () => {
   const page = browser();
   await page.start();
@@ -293,7 +315,7 @@ test('departure sends the attempt identifier for server-side partial finalisatio
   await page.start(); page.open(); page.hide();
   const departure = page.requests.find(r => r.payload.event_type === 'pagehide');
   assert.equal(departure.payload.attempt_id, 'new-attempt');
-  assert.equal(departure.payload.payload.script_version, '20260924-audio-upload-retry-v1');
+  assert.equal(departure.payload.payload.script_version, '20261006-playback-aware-silence-v1');
 });
 
 

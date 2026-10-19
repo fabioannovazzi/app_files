@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import errno
 import importlib.util
 import json
 import os
@@ -115,6 +116,94 @@ def test_failed_package_update_invalidates_ready_receipt_and_keeps_features(tmp_
         "ocr",
     ]
     assert module.ensure(selection, path, api, runner)[0]
+
+
+@pytest.mark.parametrize(
+    "error_number, windows_error", [(errno.EXDEV, None), (None, 17)]
+)
+def test_recipe_upgrade_recovers_from_cross_volume_state_replace(
+    tmp_path, monkeypatch, error_number, windows_error
+):
+    module, selection, api, runner, calls = fixture_runtime(tmp_path)
+    path = module.target(selection.plugin_root, tmp_path / "shared")
+    assert module.ensure(selection, path, api, runner)[0]
+    module.POLICY_REVISION += 1
+    (selection.plugin_root / "requirements-shared-core.txt").write_text("# upgraded\n")
+
+    def cross_volume_replace(_source, _target):
+        error = OSError(error_number, "cross-volume")
+        error.winerror = windows_error
+        raise error
+
+    monkeypatch.setattr(Path, "replace", cross_volume_replace)
+
+    ready, upgraded, detail = module.ensure(selection, path, api, runner)
+
+    assert ready, detail
+    assert upgraded == path
+    assert (
+        json.loads((path.parent / module.POLICY).read_text())["revision"]
+        == module.POLICY_REVISION
+    )
+    assert module.ready(selection, path, api)
+    assert list(path.parent.glob("*.tmp")) == []
+
+
+def test_recipe_upgrade_does_not_fallback_after_permission_denied(
+    tmp_path, monkeypatch
+):
+    module, selection, api, runner, calls = fixture_runtime(tmp_path)
+    path = module.target(selection.plugin_root, tmp_path / "shared")
+    assert module.ensure(selection, path, api, runner)[0]
+    previous_policy = (path.parent / module.POLICY).read_bytes()
+    module.POLICY_REVISION += 1
+    (selection.plugin_root / "requirements-shared-core.txt").write_text("# upgraded\n")
+
+    def denied_replace(_source, _target):
+        raise PermissionError(errno.EACCES, "replacement denied")
+
+    monkeypatch.setattr(Path, "replace", denied_replace)
+
+    ready, _, detail = module.ensure(selection, path, api, runner)
+
+    assert not ready
+    assert "replacement denied" in detail
+    assert (path.parent / module.POLICY).read_bytes() == previous_policy
+    assert not module.ready(selection, path, api)
+    assert list(path.parent.glob("*.tmp")) == []
+
+
+def test_recipe_upgrade_restores_policy_after_fallback_write_failure(
+    tmp_path, monkeypatch
+):
+    module, selection, api, runner, calls = fixture_runtime(tmp_path)
+    path = module.target(selection.plugin_root, tmp_path / "shared")
+    assert module.ensure(selection, path, api, runner)[0]
+    previous_policy = (path.parent / module.POLICY).read_bytes()
+    module.POLICY_REVISION += 1
+    (selection.plugin_root / "requirements-shared-core.txt").write_text("# upgraded\n")
+    real_write = os.write
+    writes = []
+
+    def cross_volume_replace(_source, _target):
+        raise OSError(errno.EXDEV, "cross-volume")
+
+    def fail_first_write(descriptor, payload):
+        writes.append(bytes(payload))
+        if len(writes) == 1:
+            raise OSError(errno.ENOSPC, "disk full")
+        return real_write(descriptor, payload)
+
+    monkeypatch.setattr(Path, "replace", cross_volume_replace)
+    monkeypatch.setattr(os, "write", fail_first_write)
+
+    ready, _, detail = module.ensure(selection, path, api, runner)
+
+    assert not ready
+    assert "disk full" in detail
+    assert (path.parent / module.POLICY).read_bytes() == previous_policy
+    assert not module.ready(selection, path, api)
+    assert list(path.parent.glob("*.tmp")) == []
 
 
 def test_changed_shared_recipe_is_not_silently_reused(tmp_path):
