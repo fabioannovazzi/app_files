@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 from tests.plugins.test_archive_automatic_reporting import (
@@ -75,6 +76,27 @@ def test_native_sampling_selection_is_recorded(sampling_workspace):
 
 
 def test_native_vouching_selection_is_recorded(vouching_workspace):
+    # Exercise the actual assurance preflight with a useful failure diagnostic
+    # before its MCP layer intentionally sanitizes local exception details.
+    from local_helper_environment import local_helper_environment
+
+    component = SERVER.parents[2] / "check-entries"
+    preflight = subprocess.run(
+        [
+            sys.executable,
+            "-I",
+            "-B",
+            str(component / "scripts/apply_review_edits.py"),
+            "--output-dir",
+            str(vouching_workspace[3]),
+            "--preflight-only",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=60,
+        env=local_helper_environment(python=sys.executable),
+    )
+    assert preflight.returncode == 0, preflight.stdout + preflight.stderr
     assert_native_send(vouching_workspace, "supported_entry")
 
 

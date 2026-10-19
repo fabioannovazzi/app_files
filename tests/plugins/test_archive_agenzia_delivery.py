@@ -163,7 +163,7 @@ def test_agenzia_mcp_status_records_counts_without_app_only_clients(
         capture_output=True,
         text=True,
         timeout=30,
-        env={**os.environ, "PYTHON": sys.executable},
+        env={**os.environ, "VERA_AGENZIA_PYTHON": sys.executable},
     )
 
     assert completed.returncode == 0, completed.stderr

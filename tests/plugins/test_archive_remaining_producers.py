@@ -99,7 +99,7 @@ def test_fatture_xml_actual_cli_records_with_selected_archive_identity(
             str(case["output_dir"]),
         ],
         capture_output=True,
-        text=True,
+        text=False,
         timeout=60,
     )
 
@@ -113,8 +113,8 @@ def test_fatture_xml_actual_cli_records_with_selected_archive_identity(
     assert len(events) == 1
     assert events[0]["response_sha256"] == digest(
         {
-            "stdout": completed.stdout,
-            "stderr": completed.stderr,
+            "stdout": completed.stdout.decode("utf-8"),
+            "stderr": completed.stderr.decode("utf-8"),
         }
     )
     binding, output = archived_review_binding(case["output_dir"], "fatture-xml-check")
@@ -174,7 +174,7 @@ def test_centrale_rischi_actual_pdf_inspection_records_its_cli_output(
             str(output),
         ],
         capture_output=True,
-        text=True,
+        text=False,
         timeout=60,
     )
 
@@ -188,7 +188,7 @@ def test_centrale_rischi_actual_pdf_inspection_records_its_cli_output(
     assert len(events) == 1
     assert events[0]["response_sha256"] == digest(
         {
-            "stdout": completed.stdout,
-            "stderr": completed.stderr,
+            "stdout": completed.stdout.decode("utf-8"),
+            "stderr": completed.stderr.decode("utf-8"),
         }
     )

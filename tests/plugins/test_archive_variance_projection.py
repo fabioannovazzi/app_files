@@ -7,6 +7,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from tests._plugin_cli import workflow_cli
 from tests.plugins.test_archive_automatic_reporting import (
     archive_core,
     archive_script_imports,
@@ -36,9 +37,7 @@ def test_variance_targeted_inspection_counts_only_delivered_source_columns(
     artifact = Path(loaded["output_dir"]) / "column-preview.json"
     completed = subprocess.run(
         [
-            sys.executable,
-            "-B",
-            str(SCRIPTS / "inspect_column_values.py"),
+            *workflow_cli(SCRIPTS / "inspect_column_values.py"),
             "--input",
             loaded["context"]["input_bindings"][0]["path"],
             "--output",
