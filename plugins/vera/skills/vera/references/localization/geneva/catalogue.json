@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/app-files-archive-reporting/plugins/vera",
-  "version": "0.1.428",
-  "captured_at": "2026-10-19T18:45:28.024864+00:00",
-  "catalogue_fingerprint": "8fccb73a26ee05e846c3c7c01cd05a8aff940cd8ff59405a17f4f660c456c10e",
-  "manifest_sha256": "1336cd3c9814fc9c2062b7992f4cc411170460ae9f7e7009e8afac8e17349e64",
+  "root": "/private/tmp/app-files-reporting-hook-identity/plugins/vera",
+  "version": "0.1.431",
+  "captured_at": "2026-10-19T22:19:32.997779+00:00",
+  "catalogue_fingerprint": "fe0aa34775ad1cff14c3aa30183ecbc16c1fdf40b28c36d0e269b326fd717428",
+  "manifest_sha256": "7dff93af55265c991498ad8f3377b3dc9d036a489ff1ffe57f7cc1819cba7cf2",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -19,7 +19,7 @@
     {
       "function_id": "agenzia-acquisition",
       "skill_path": "skills/agenzia-acquisition/SKILL.md",
-      "sha256": "f7b83f47c514f67c5b065db20f3ad321936f336db78920cf711bad11f923256e"
+      "sha256": "1428f502067e1bcac3bc55a5c91d95c3138f016555e42ac881540b6a5bb64310"
     },
     {
       "function_id": "aml-review",
@@ -249,7 +249,7 @@
     {
       "function_id": "studio-archive",
       "skill_path": "skills/studio-archive/SKILL.md",
-      "sha256": "70551d1e8e81143f0de97e3e762799b160a224d5516da6cd2200cea9a56ffb73"
+      "sha256": "d565194c059b01e2bfd9f882a8b077b10093d3d4ece9e8647b6d3a6a91375031"
     },
     {
       "function_id": "studio-document-format",

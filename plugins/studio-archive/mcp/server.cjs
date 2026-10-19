@@ -460,7 +460,7 @@ function toolDefinitions() {
     {
       name: TOOL_NAMES.readRunArtifact,
       title: "Read data from an active Archive run",
-      description: "Read a bound input or generated data file for one exact active reporting run. Offset and limit select physical data units; columns are zero-based indices. The host observer records the returned selection automatically. Use for initial inspection and later reads in the 13 reporting pipelines.",
+      description: "Read a bound input or generated data file for one exact active reporting run. Offset and limit select physical data units; columns are zero-based indices. Vera records the exact selection before returning it. Use for initial inspection and later reads in the 13 reporting pipelines.",
       inputSchema: objectSchema({
         ...runIdentitySchema().properties,
         path: { type: "string", minLength: 1 },
@@ -529,7 +529,7 @@ function toolDefinitions() {
       name: TOOL_NAMES.finalizeWorkflow,
       title: "Finalize Vera workflow artifacts",
       description:
-        "Finalize one exact Archive run. For selected Vera pipelines, automatically build the privacy comparison from recorded run evidence, or return its unavailable/not-applicable status. Declare professional outputs with purpose, audience and media type; generated report artifacts are included automatically before the closed output tree is hashed and marked ready for review.",
+        "Finalize the professional outputs of one exact Archive run and mark them ready for review. Every run of the 13 selected pipelines retains its local privacy report, with missing measurements explicit. The completed, failed or cancelled Archive write closes the report and registers its hash against the Vera userID. Declare professional outputs with purpose, audience and media type; Archive includes its report artifacts automatically.",
       inputSchema: objectSchema(
         {
           ...runIdentityProperties(),

@@ -40,6 +40,7 @@ __all__ = [
     "report_pdf_recovery",
     "startup_context",
     "local_context",
+    "reporting_credentials",
     "workflow_transport",
     "diagnostic_directory",
     "retain_diagnostic",
@@ -67,6 +68,10 @@ def _host() -> str:
     configured = os.environ.get("MPARANZA_INCIDENT_HOST")
     if configured in {"codex", "cowork"}:
         return configured
+    # Codex sets PLUGIN_ROOT and also CLAUDE_PLUGIN_ROOT for compatibility.
+    # Its explicit host variable must win so hooks retain the CLI's userID.
+    if os.environ.get("PLUGIN_ROOT"):
+        return "codex"
     if (
         os.environ.get("CLAUDE_PLUGIN_ROOT")
         or not (ROOT / ".codex-plugin/plugin.json").is_file()
@@ -75,7 +80,7 @@ def _host() -> str:
     return "codex"
 
 
-def _state_path() -> Path:
+def _state_path(*, create: bool = True) -> Path:
     base = (
         Path(
             os.environ.get(
@@ -94,9 +99,10 @@ def _state_path() -> Path:
     )
     if any(path.is_symlink() for path in (base, *base.parents)):
         raise ValueError("Incident state must not traverse symbolic links")
-    base.mkdir(parents=True, exist_ok=True, mode=0o700)
-    if os.name == "posix":
-        base.chmod(0o700)
+    if create:
+        base.mkdir(parents=True, exist_ok=True, mode=0o700)
+        if os.name == "posix":
+            base.chmod(0o700)
     return base / "state.json"
 
 
@@ -1571,6 +1577,28 @@ def record_success(workflow: str, operation: str) -> None:
     _write(state)
     # Save the observed result before any network access so outages cannot lose it.
     _flush(state)
+
+
+def reporting_credentials() -> dict[str, str]:
+    """Read the existing machine identity without rewriting unrelated local state."""
+    path = _state_path(create=False)
+    if not path.exists():
+        return local_context()["credentials"]
+    metadata = path.lstat()
+    if not stat.S_ISREG(metadata.st_mode) or metadata.st_nlink != 1:
+        raise ValueError("Vera identity must be an ordinary private file")
+    saved = json.loads(path.read_text(encoding="utf-8"))
+    credentials = saved.get("credentials") if isinstance(saved, dict) else None
+    if (
+        not isinstance(credentials, dict)
+        or set(credentials) != {"installation_id", "installation_key"}
+        or not all(isinstance(value, str) and value for value in credentials.values())
+    ):
+        raise ValueError("Invalid existing Vera identity")
+    UUID(credentials["installation_id"])
+    if not re.fullmatch(r"[A-Za-z0-9_-]{32,128}", credentials["installation_key"]):
+        raise ValueError("Invalid existing Vera installation capability")
+    return credentials
 
 
 @_serialized

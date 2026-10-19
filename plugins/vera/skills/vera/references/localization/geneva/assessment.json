@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "8fccb73a26ee05e846c3c7c01cd05a8aff940cd8ff59405a17f4f660c456c10e",
+  "catalogue_fingerprint": "fe0aa34775ad1cff14c3aa30183ecbc16c1fdf40b28c36d0e269b326fd717428",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -2045,5 +2045,10 @@
     "version": "0.1.428",
     "previous_catalogue_fingerprint": "d746fb05d6f0d3a85b638c5ba6b8d620055462ff498599edc1c568fb6fd71652",
     "scope": "The same function IDs now use automatic reporting for the fixed 13 Archive pipelines. Other pipelines are excluded from this comparison report. Reports stay local and proof hashes bind to Vera userID. Existing Geneva jurisdiction dispositions are unchanged; automatic evidence collection does not establish new Swiss professional acceptance."
+  },
+  "codex_hook_identity_release_binding": {
+    "version": "0.1.429",
+    "previous_catalogue_fingerprint": "8fccb73a26ee05e846c3c7c01cd05a8aff940cd8ff59405a17f4f660c456c10e",
+    "scope": "Only the shared host-identity resolver changes: Codex PLUGIN_ROOT takes precedence over its CLAUDE_PLUGIN_ROOT compatibility variable. All function IDs and skill source hashes are unchanged; existing jurisdiction dispositions and professional acceptance limits remain unchanged."
   }
 }

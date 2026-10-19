@@ -6,7 +6,6 @@ import csv
 import hashlib
 import io
 import json
-import shlex
 from contextlib import contextmanager
 from itertools import islice
 from pathlib import Path
@@ -16,7 +15,7 @@ from zipfile import BadZipFile
 
 from archive_report_store import canonical, file_digest
 
-__all__ = ["measure_source", "read_selection", "direct_read_selection", "model_texts"]
+__all__ = ["measure_source", "read_selection", "direct_read_selection"]
 
 
 @contextmanager
@@ -203,51 +202,19 @@ def read_selection(
     return data, evidence
 
 
-def model_texts(response: Any) -> list[str]:
-    """Extract displayed strings once, avoiding duplicated MCP structured content."""
-    if isinstance(response, str):
-        return [response]
-    if isinstance(response, list):
-        return [text for item in response for text in model_texts(item)]
-    if not isinstance(response, dict):
-        return []
-    if response.get("type") in {"image", "audio", "resource_link"}:
-        return []
-    if isinstance(response.get("content"), list):
-        return model_texts(response["content"])
-    for field in ("text", "stdout", "output", "content"):
-        if isinstance(response.get(field), str):
-            return [response[field]]
-    return [canonical(response).decode()]
-
-
 def direct_read_selection(
-    source: dict[str, Any], tool_input: Any, response: Any
+    source: dict[str, Any], request: Any, response: Any
 ) -> dict[str, Any] | None:
-    """Recognize whole-file and prefix text, allowing host newline translation.
+    """Match a Vera payload against the complete bytes of an immutable source.
 
-    Command recognition only resolves an explicit file operand. It never decides
-    semantic relevance or treats a requested read as proof that data was returned.
-    Other commands remain unmeasured rather than fabricating a row count.
+    Source selection depends on exact content equality, never host commands,
+    transcript syntax or a model's statement that it read something.
     """
     path = Path(source["path"])
-    if isinstance(tool_input, str):
-        # Code-mode transcripts contain the outer JavaScript source. Require an
-        # explicit file operand plus exact returned bytes, not command execution.
-        if str(path) not in tool_input:
+    if isinstance(response, str):
+        if len(response.encode("utf-8")) not in {source["bytes"], source["bytes"] - 3}:
             return None
-        tool_input = {"path": str(path)}
-    if not isinstance(tool_input, dict):
-        return None
-    named = tool_input.get("file_path") or tool_input.get("path")
-    command = tool_input.get("command") or tool_input.get("cmd")
-    tokens: list[str] = []
-    if isinstance(command, str):
-        try:
-            tokens = shlex.split(command)
-        except ValueError:
-            return None
-    if str(path) != named and str(path) not in tokens:
+    elif path.suffix.lower() != ".json":
         return None
     content = path.read_bytes()
     if hashlib.sha256(content).hexdigest() != source["sha256"]:
@@ -256,53 +223,20 @@ def direct_read_selection(
         original = content.decode("utf-8-sig")
     except UnicodeError:
         return None
-    # Text-mode host reads can translate CRLF/CR to LF. Source identity still
-    # binds the original bytes; only line-ending transport syntax is normalized.
-    original = original.replace("\r\n", "\n").replace("\r", "\n")
-    displayed = [
-        text.replace("\r\n", "\n").replace("\r", "\n") for text in model_texts(response)
-    ]
-    if original and any(original.strip() == text.strip() for text in displayed):
-        return {
-            "source_id": source["source_id"],
-            "source_sha256": source["sha256"],
-            "unit": source["unit"],
-            "start": 0,
-            "stop": source["quantity"],
-            "columns": list(range(source["columns"] or 1)),
-            "basis": "exact_returned_file",
-        }
-    if path.suffix.lower() not in {".csv", ".tsv"}:
-        return None
-    if not tokens or Path(tokens[0]).name != "head":
-        return None
-    try:
-        count = (
-            10
-            if tokens == [tokens[0], str(path)]
-            else int(tokens[tokens.index("-n") + 1])
-        )
-    except (ValueError, IndexError):
-        return None
-    if count < 1:
-        return None
-    prefix = "".join(original.splitlines(keepends=True)[:count])
-    if not prefix or not any(prefix.strip() == text.strip() for text in displayed):
-        return None
-    # Multiline CSV fields must close in the returned prefix before counting.
-    try:
-        dialect = csv.Sniffer().sniff(original[:65536], delimiters=",;\t|")
-        rows = list(csv.reader(io.StringIO(prefix), dialect=dialect, strict=True))
-    except csv.Error:
-        return None
-    if any(len(row) != source["columns"] for row in rows):
+    matched = isinstance(response, str) and response == original
+    if path.suffix.lower() == ".json":
+        try:
+            matched = matched or json.loads(original) == response
+        except ValueError:
+            return None
+    if not matched:
         return None
     return {
         "source_id": source["source_id"],
         "source_sha256": source["sha256"],
         "unit": source["unit"],
         "start": 0,
-        "stop": max(0, len(rows) - 1),
+        "stop": source["quantity"],
         "columns": list(range(source["columns"] or 1)),
-        "basis": "exact_returned_prefix",
+        "basis": "exact_vera_payload",
     }

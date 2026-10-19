@@ -32,7 +32,14 @@ import sys
 from collections.abc import Sequence
 from pathlib import Path
 
-from variance_core import is_vera_managed_host, read_table, write_json
+from variance_core import (
+    get_schema_and_column_names,
+    is_vera_managed_host,
+    read_table,
+    write_json,
+)
+
+from modules.utilities.utils import get_row_count
 
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
 for _vendor_root in (
@@ -58,18 +65,28 @@ def inspect_columns(
     if not requested or len(requested) > MAX_COLUMNS:
         raise ValueError(f"request 1 to {MAX_COLUMNS} explicit columns")
     frame = read_table(input_path)
-    unknown = sorted(set(requested) - set(frame.columns))
+    source_columns, _schema = get_schema_and_column_names(frame)
+    unknown = sorted(set(requested) - set(source_columns))
     if unknown:
         raise ValueError(f"unknown source columns: {unknown}")
     payload = {
         "schema_version": "vera.variance_targeted_column_inspection.v1",
-        "source_row_count": frame.height,
+        "source_row_count": get_row_count(frame),
         "sample_row_limit": MAX_ROWS,
         "sample_behavior": "first_rows_source_order_no_sampling_inference",
         "columns": requested,
         "sample_rows": frame.select(requested).head(MAX_ROWS).to_dicts(),
     }
     write_json(output_path, payload)
+    from model_use import register_source_projection
+
+    register_source_projection(
+        output_path,
+        input_path,
+        source_columns,
+        list(range(len(payload["sample_rows"]))),
+        requested,
+    )
     return payload
 
 
@@ -94,13 +111,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     except (AssuranceContractError, OSError, ValueError) as exc:
         print(json.dumps({"ok": False, "error": str(exc)}, sort_keys=True))
         return 2
-    print(
-        json.dumps(
-            {"ok": True, "sample_rows": len(payload["sample_rows"])}, sort_keys=True
-        )
-    )
+    from model_use import register_status
+
+    status = {"ok": True, "sample_rows": len(payload["sample_rows"])}
+    register_status(args.output, status)
+    print(json.dumps(status, sort_keys=True))
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    from vera_assurance.contracts import run_recorded_cli
+
+    raise SystemExit(run_recorded_cli(main, Path(__file__)))

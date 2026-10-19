@@ -64,7 +64,12 @@ if _SCRIPTS_DIR not in _bootstrap_sys.path:
 import argparse
 from pathlib import Path
 
-from report_builder_core import add_common_args, configure_logging, inspect_inputs
+from report_builder_core import (
+    add_common_args,
+    configure_logging,
+    emit_status,
+    inspect_inputs,
+)
 from vera_assurance import (  # noqa: E402
     AssuranceContractError,
     load_client_engagement_context_file,
@@ -100,15 +105,18 @@ def main() -> int:
         document_language=args.document_language,
         report_type=args.report_type,
     )
-    print(
+    emit_status(
+        args.output_dir,
         "OK: inspected "
         f"{result.inspection['table_count']} tables; "
         f"wrote bounded {args.output_dir / 'inspection.json'}, private "
         f"{args.output_dir / 'inspection_control.json'}, and "
-        f"{args.output_dir / 'suggested_recipe.json'}"
+        f"{args.output_dir / 'suggested_recipe.json'}",
     )
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    from vera_assurance.contracts import run_recorded_cli
+
+    raise SystemExit(run_recorded_cli(main, Path(__file__)))

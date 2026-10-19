@@ -156,12 +156,20 @@
       "sha256": "dfeb4543d1482650e8be2bf6ea9f5ff313abe7dde7fef0539031c95a08a5c56e"
     },
     {
+      "path": "scripts/archive_emit.py",
+      "sha256": "20304f6878ac14f028f479ff63b63a1433f4bde62cc9eb0ae6b34113f070283d"
+    },
+    {
+      "path": "scripts/archive_report_legacy.py",
+      "sha256": "6dadb7f05b50afb13f7d23cde1e0e6a0748ad850a7df7dadace66f66cf96098e"
+    },
+    {
       "path": "scripts/archive_report_measurements.py",
-      "sha256": "856c9a468151e13e5b805801562c825e5eab4512aae8f39aff980c3151669be4"
+      "sha256": "4cfb659d770febc0ae0d87702d9bb3ee8a46fbf13a67e45e6cce66e895016fd4"
     },
     {
       "path": "scripts/archive_report_receipt.py",
-      "sha256": "7ba519f8037ead65588eb9aa3815861052460396741d9b58aa788cd925b71a36"
+      "sha256": "a4f1857397b15438c8f9934d526df28ac012aaa3c60c1daa47fe5b000af19246"
     },
     {
       "path": "scripts/archive_report_seal.py",
@@ -169,15 +177,11 @@
     },
     {
       "path": "scripts/archive_report_store.py",
-      "sha256": "7986b3c4b65861534e983b6bb1fd592d1dfff99ee5091ac974af29a9b2d5fb89"
-    },
-    {
-      "path": "scripts/archive_report_transcript.py",
-      "sha256": "1bebc62c9cdf4f82913cd98ed96b0fcb3e662b58bc82c62a8ab24cc3b7b300ff"
+      "sha256": "4923b2de70536d3f581d9daa67970737ee736b78b4ec143e49c7499858a3c1cd"
     },
     {
       "path": "scripts/archive_reporting.py",
-      "sha256": "f1bd764800703c60a985b9b79be147c230ddeb7418c029cb3601234eb09b8aec"
+      "sha256": "f6d04c1a6023b48f8f745c8a7cde4b39f1575382620d5356d03a3ec8a4a1b11c"
     },
     {
       "path": "scripts/check_dependencies.py",
@@ -189,11 +193,11 @@
     },
     {
       "path": "scripts/managed_python_runtime.py",
-      "sha256": "3a797a3a467f530dabf182417fbea86976ac2738bd675a4e170a9a73e94e81ec"
+      "sha256": "19028997fca298fea7dc5c8abca3ee77e7b16acf7b5cfce694f36b926748c149"
     },
     {
       "path": "scripts/model_data_report.py",
-      "sha256": "afdc3f6483a3aa013772eb934ad975eab59f7c9f8f2b04b693578a590f3aabe4"
+      "sha256": "7a0fae4f7981674d31e34bb5cb94a8aa86830f495f554393b5fd151c13a81f14"
     },
     {
       "path": "scripts/notarized_run_receipt.py",
@@ -201,7 +205,7 @@
     },
     {
       "path": "scripts/operational_incidents.py",
-      "sha256": "b3a24728d1226c8ae0da8afa1296e08cc6457b0f199f0721f4453cbb9d715d72"
+      "sha256": "e613649358d15576a5f8ffa5b82226910b941f1cb6c37f3066a45ee3738df107"
     },
     {
       "path": "scripts/selective_reporting.py",
@@ -514,5 +518,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "dd24206ee26a40c010f132e28a514e29a3ea6cee50116b2952b62c8635df4fe3"
+  "canonical_course_sha256": "5aa16638345ce2e8d74be7a609f4f044dd300efd3aa8c94607eda56ecd780092"
 }

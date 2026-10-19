@@ -85,7 +85,7 @@
     },
     {
       "path": "modules/browser-automation/scripts/ade_acquisition/archive_runs.py",
-      "sha256": "1bdc3ae2daa6aae6bc00c8f41358e574f6cbeba646002f2d1f48967f42fb785e"
+      "sha256": "70ceb14a509a165088dacdff089285132c5201c0b8a67cd84a901e5879da63cf"
     },
     {
       "path": "modules/browser-automation/scripts/ade_acquisition/artifacts.py",
@@ -117,7 +117,7 @@
     },
     {
       "path": "modules/browser-automation/scripts/agenzia_acquire.py",
-      "sha256": "2dc5e893d95e1b512bdcb7c2e01d06bb0b12b1b978afb78ad8d491eb49df2889"
+      "sha256": "a6c3ed54116c6c5117e35ac2fc37b765ca4fd5877fd3dbca895bfd6df69ba13a"
     },
     {
       "path": "modules/browser-automation/scripts/agenzia_demo.py",
@@ -129,7 +129,7 @@
     },
     {
       "path": "modules/browser-automation/scripts/agenzia_ui.py",
-      "sha256": "6bac91c556d0c4b65f49a411d42043ece3bce5497a6f9385ddb595931f3ee16e"
+      "sha256": "08d2a4676bd452e3e5905148fcded17ddcdf6ea3313e0ff7d21e6a407fd5c50f"
     },
     {
       "path": "modules/browser-automation/scripts/batch_review.py",
@@ -205,7 +205,7 @@
     },
     {
       "path": "skills/mparanza-agenzia-acquisition/SKILL.md",
-      "sha256": "1f9e00157874154caffa27a7f9dedb9849872660ef7aa028b3b917d908fa56f8"
+      "sha256": "4dd5122771d3ee5c66082643b2b24e295c5d1c898577186fb3b6c412164f92b7"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -305,7 +305,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "099669d56a3c16655b5f65051209eca78541846bbd9c32b5aa3cc592380c4832"
+      "sha256": "618c55739ff238b7000704131ce0995d1129facd53152923f13805812f68fe49"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -329,7 +329,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
-      "sha256": "81a25a1641b7d6d6919087f62e2ab8b88f7ea2969be5ae8aa2eea2e70812de95"
+      "sha256": "92718fc4d3cdd30b7a317a0c9eaa38fedad3981c8383c50c09ec7a93e754e420"
     },
     {
       "path": "vendor/modules/vera_assurance/serialization.py",
@@ -438,5 +438,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "e2645a33927b6448682ce5096eb925629b50ddd6c31854111a50bd0ce34c5540"
+  "canonical_course_sha256": "4dc36d5300b0f23fc462d5354547bcd64e2b425ee635ee0bf30eb99d03c24c57"
 }

@@ -24,10 +24,9 @@ def write_no_model_report(
     """Return declarations for a synthetic run that executes no model call."""
 
     existing = output / "model_data_report.json"
-    if (
-        existing.is_file()
-        and json.loads(existing.read_text(encoding="utf-8")).get("schema_version") == 3
-    ):
+    if existing.is_file() and json.loads(existing.read_text(encoding="utf-8")).get(
+        "schema_version"
+    ) in {3, 4}:
         # Archive owns these declarations; some fixtures already enumerated them.
         return []
 

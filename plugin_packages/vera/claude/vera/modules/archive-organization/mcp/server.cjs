@@ -454,6 +454,7 @@ function pythonExecutable() {
 function callCli(args) {
   const result = spawnSync(pythonExecutable(), [CLI_PATH, ...args], {
     cwd: PLUGIN_ROOT,
+    env: { ...process.env, VERA_REPORTING_INTERNAL: "1" },
     encoding: "utf8",
     maxBuffer: MAX_PAYLOAD_BYTES,
     timeout: 300000,

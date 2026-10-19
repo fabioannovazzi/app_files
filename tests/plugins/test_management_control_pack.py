@@ -757,6 +757,18 @@ def test_connectorless_cli_runs_end_to_end_inside_studio_archive(
         check=False,
     )
     assert finalized.returncode == 0, finalized.stderr
+    from archive_report_store import RunStore, digest
+
+    sends = [
+        event
+        for event in RunStore(context_path.parent).events()
+        if event.get("channel") == "cli:management-control-pack"
+    ]
+    assert len(sends) == 3
+    assert {event["response_sha256"] for event in sends} == {
+        digest({"stdout": result.stdout, "stderr": result.stderr})
+        for result in (inspected, calculated, finalized)
+    }
     assert (final_dir / "management_control_report.md").is_file()
     assert (final_dir / "management_control_dashboard_reviewed.html").is_file()
     assert (final_dir / "commentary_receipt.json").is_file()

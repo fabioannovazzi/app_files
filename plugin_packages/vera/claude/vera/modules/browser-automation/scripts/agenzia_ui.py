@@ -100,6 +100,13 @@ def dispatch(request: dict[str, Any]) -> dict[str, Any]:
     source_clients = {client.vat_number: client for client in source.clients}
     if any(source_clients.get(client.vat_number) != client for client in plan.clients):
         raise AcquisitionError("run-client-outside-selected-source")
+    if action == "record-output":
+        from ade_acquisition.archive_runs import record_status_payload
+
+        record_status_payload(
+            run, args["summary"], args["model_payload"], channel="mcp"
+        )
+        return {"recorded": True}
     if action == "continue":
         if read_json(run / "status.json")["state"] != "waiting_for_login":
             raise AcquisitionError("run-not-waiting-for-login")

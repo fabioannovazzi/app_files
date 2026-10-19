@@ -17,12 +17,16 @@ import stat
 from collections.abc import Mapping, Sequence
 from datetime import datetime, timezone
 from pathlib import Path
+from types import ModuleType
 from typing import Any
 
 from .money import MoneyValidationError, parse_canonical_decimal
 from .serialization import canonical_json_sha256
 
 __all__ = [
+    "workflow_engine",
+    "archive_projection_runtime",
+    "run_recorded_cli",
     "archive_reporting_paths",
     "create_standalone_task",
     "load_standalone_context",
@@ -44,6 +48,48 @@ __all__ = [
     "validate_source_qualification",
     "validate_studio_client_folder_binding",
 ]
+
+
+def workflow_engine(workflow_id: str) -> str:
+    """Resolve the two explicit Archive identities that share an existing engine."""
+    return {
+        "fatture-xml-check": "client-file-preparation",
+        "report-enti-locali": "report-builder",
+    }.get(workflow_id, workflow_id)
+
+
+def archive_projection_runtime(component_file: Path) -> ModuleType | None:
+    """Resolve Vera's owned producer recorder without imposing it on other products."""
+    import importlib
+    import sys
+
+    for parent in component_file.resolve().parents:
+        for manifest_name in (
+            ".codex-plugin/plugin.json",
+            ".claude-plugin/plugin.json",
+        ):
+            manifest = parent / manifest_name
+            if manifest.is_file():
+                product = json.loads(manifest.read_text(encoding="utf-8"))["name"]
+                if product in {"clara", "lucia"}:
+                    return None
+                if product == "vera":
+                    scripts = parent / "scripts"
+                    sys.path.insert(0, str(scripts))
+                    return importlib.import_module("archive_projection")
+        if (
+            parent.name == "plugins"
+            and (parent / "vera/scripts/archive_projection.py").is_file()
+        ):
+            sys.path.insert(0, str(parent / "vera/scripts"))
+            return importlib.import_module("archive_projection")
+    return None
+
+
+def run_recorded_cli(main: Any, component_file: Path) -> int | None:
+    """Record an eligible Vera command even when called without its launcher."""
+    runtime = archive_projection_runtime(component_file)
+    return main() if runtime is None else runtime.run_cli(main, component_file)
 
 
 def archive_reporting_paths(
@@ -82,7 +128,7 @@ def archive_reporting_paths(
     report = json.loads((root / "model_data_report.json").read_text(encoding="utf-8"))
     if (
         not isinstance(report, dict)
-        or report.get("schema_version") != 3
+        or report.get("schema_version") not in {3, 4}
         or report.get("product") != "vera"
         or report.get("workflow_id") not in expected_workflow_ids
     ):
@@ -938,13 +984,7 @@ def validate_client_workflow_run(
             "expected_workflow_id is not a registered Vera workflow"
         )
     context = validate_client_engagement_context(value)
-    execution_aliases = {
-        "fatture-xml-check": "client-file-preparation",
-        "report-enti-locali": "report-builder",
-    }
-    if execution_aliases.get(
-        context["workflow_id"], context["workflow_id"]
-    ) != execution_aliases.get(expected_workflow_id, expected_workflow_id):
+    if workflow_engine(context["workflow_id"]) != workflow_engine(expected_workflow_id):
         raise AssuranceContractError(
             "client engagement context belongs to a different Vera workflow"
         )

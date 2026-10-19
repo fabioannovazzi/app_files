@@ -712,4 +712,18 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    import sys as _reporting_sys
+    from pathlib import Path as _ReportingPath
+
+    _component = _ReportingPath(__file__).resolve().parents[1]
+    for _vendor in (
+        _component / "vendor/modules",
+        _component.parent.parent / "vendor/modules",
+        _component.parent / "_shared/vendor/modules",
+    ):
+        if (_vendor / "vera_assurance").is_dir():
+            _reporting_sys.path.insert(0, str(_vendor))
+            break
+    from vera_assurance.contracts import run_recorded_cli
+
+    raise SystemExit(run_recorded_cli(main, Path(__file__)))

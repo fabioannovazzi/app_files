@@ -972,7 +972,7 @@ def validate_model_data_report(
 
     payload = _mapping(report, label="report")
     version = payload.get("schema_version")
-    if version == 3:
+    if version in {3, 4}:
         from archive_reporting import validate_report
 
         try:
@@ -1070,7 +1070,7 @@ def render_model_data_report(
     """Validate and render saved facts without rebinding to the current installation."""
 
     validated = validate_model_data_report(report, evidence_root=evidence_root)
-    if validated["schema_version"] == 3:
+    if validated["schema_version"] in {3, 4}:
         from archive_reporting import render_report
 
         return render_report(validated)

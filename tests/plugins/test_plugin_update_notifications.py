@@ -223,13 +223,7 @@ def test_plugins_declare_trusted_session_start_update_hook(plugin_root: Path) ->
         "timeout": 8,
     }
     if plugin_root == VERA_ROOT:
-        assert session_hook["hooks"][1:] == [
-            {
-                "type": "command",
-                "command": 'python3 "$PLUGIN_ROOT/scripts/archive_report_hook.py"',
-                "timeout": 60,
-            }
-        ]
+        assert "archive_report_hook.py" not in json.dumps(hooks)
 
 
 def test_session_start_prioritizes_exact_fixed_request_message(

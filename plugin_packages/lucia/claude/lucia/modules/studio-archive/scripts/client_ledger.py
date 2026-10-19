@@ -2093,6 +2093,31 @@ def _reporting_runtime() -> ModuleType:
     return module
 
 
+def retry_reporting(client_root: Path) -> None:
+    """Recover interrupted terminal writes and retry proofs on ordinary Archive use."""
+    if not _reporting_runtime().selective_reporting_enabled():
+        return
+    from archive_report_receipt import retry_pending
+    from archive_report_store import Registry
+
+    registry = Registry(
+        None
+        if os.environ.get("VERA_REPORTING_STATE_DIR")
+        else client_root / LEDGER_DIRECTORY / "reporting"
+    )
+    if not registry.path.is_file():
+        return
+    for run_root in registry.terminal_runs():
+        if run_root.parents[4] != client_root:
+            continue
+        engagement_id = run_root.parents[1].name
+        with _engagement_lock(client_root, engagement_id):
+            loaded = load_run(client_root, engagement_id, run_root.name)
+            if loaded["run"]["status"] in {"completed", "failed", "cancelled"}:
+                _reporting_runtime().finish_report(loaded)
+    retry_pending(registry, strict=False)
+
+
 def _write_run_status_locked(
     client_root: Path,
     engagement_id: str,
@@ -2268,7 +2293,7 @@ def _require_model_data_artifacts(loaded: Mapping[str, Any]) -> None:
         or report.get("workflow_id") != loaded["run"]["workflow_id"]
     ):
         raise LedgerError("Model-data report belongs to another workflow run.")
-    if report.get("schema_version") == 3:
+    if report.get("schema_version") in {3, 4}:
         from archive_reporting import render_report, validate_report
 
         try:

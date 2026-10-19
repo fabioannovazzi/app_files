@@ -169,7 +169,7 @@
     "reviewed_at": "2026-10-19",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "f3aba3b05055b2eb96151ee69269167c84aa7e87c4de47c2a6f2ce15cb1528b6"
+    "source_fingerprint": "82381df03565c506731f7e1d3e6f174dbf70cfc85c884ca7168b11892c121a6f"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"
@@ -190,7 +190,7 @@
           "Stesso indice e stessi limiti in ogni modalità",
           "Quando sono disponibili, gli strumenti integrati verificano, salvano e applicano la revisione con lo stesso indice e gli stessi limiti. Altrimenti, la consegna in Markdown o in un file contiene soltanto i casi selezionati e la procedura locale di Studio Archive conserva e finalizza la stessa esecuzione senza rileggere tutti i dati completi della revisione. Una fonte completa può essere aperta per una domanda probatoria specifica rimasta irrisolta.",
           "I dati professionali non vengono anonimizzati né pseudonimizzati automaticamente. I riferimenti opachi servono solo a selezionare i casi: nomi, descrizioni, importi, date e identificativi reali possono arrivare quando sono necessari alla revisione professionale.",
-          "Studio Archive delimita ogni esecuzione di questo processo: avvia automaticamente il report alla partenza e lo chiude al completamento, al fallimento o all’annullamento. Il report resta sul computer e include le letture successive, anche quando tutti i dati arrivano al modello. Misure mancanti o non collegabili alle fonti sono segnalate come rilevazione incompleta, senza affermare che i dati siano rimasti locali. Il server conserva l’impronta del report associata a Vera userID autenticato, alla stessa esecuzione e alla revisione; non riceve il report né i documenti."
+          "Studio Archive delimita ogni esecuzione di questo processo e crea automaticamente un report dei dati inviati da Vera. Vera registra i propri invii; il report non ispeziona la chat o altri strumenti. Il report viene conservato sulla macchina anche quando tutti i dati sono stati inviati. I conteggi mancanti sono indicati come non determinabili. Il server riceve soltanto l’impronta del report e i riferimenti di verifica, associati al Vera userID della macchina, alla stessa esecuzione e alla revisione. Il contenuto del report e le evidenze restano locali."
         ],
         "en": [
           "Inspection can expose source structure and complete support inventories",
@@ -204,7 +204,7 @@
           "One index and the same limits in every mode",
           "When available, integrated tools validate, save, and apply the review with the same index and limits. Otherwise, the Markdown or file delivery contains selected cases only, and the local Studio Archive procedure preserves and finalizes the same review without rereading all complete review data. A complete source can be opened for a specific unresolved evidence question.",
           "Professional data is not automatically anonymized or pseudonymized. Opaque references only select cases: real names, descriptions, amounts, dates, and identifiers may reach the model when professional review requires them.",
-          "Studio Archive defines each execution of this pipeline: it starts the report automatically at run start and closes it on completion, failure or cancellation. The report stays on the computer and includes later reads, even when all data reaches the model. Missing measurements or source links are reported as incomplete collection, without claiming those data stayed local. The server retains the report hash bound to authenticated Vera userID, the same run and revision; it receives neither the report nor the documents."
+          "Studio Archive delimits each run of this process and automatically creates a report of the data Vera sent. Vera records its own sends; the report does not inspect the chat or other tools. The report stays on the machine even when all data was sent. Missing counts are explicitly unknown. The server receives only the report hash and verification references, bound to the machine’s Vera userID, the same run and revision. Report contents and evidence remain local."
         ],
         "fr": [
           "L'inspection peut exposer la structure et les inventaires complets des justificatifs",
@@ -218,7 +218,7 @@
           "Un même index et les mêmes limites dans chaque mode",
           "Lorsqu'ils sont disponibles, les outils intégrés valident, enregistrent et appliquent la revue avec le même index et les mêmes limites. Sinon, la remise en Markdown ou dans un fichier ne contient que les cas sélectionnés et la procédure locale de Studio Archive conserve et finalise la même revue sans relire toutes les données complètes. Une source complète peut être ouverte pour une question probatoire précise non résolue.",
           "Les données professionnelles ne sont pas automatiquement anonymisées ou pseudonymisées. Les références opaques servent uniquement à sélectionner les cas : noms, descriptions, montants, dates et identifiants réels peuvent parvenir au modèle si la revue professionnelle l'exige.",
-          "Studio Archive délimite chaque exécution de ce processus : il démarre automatiquement le rapport au début et le clôt à la fin, en cas d’échec ou d’annulation. Le rapport reste sur l’ordinateur et inclut les lectures ultérieures, même si toutes les données parviennent au modèle. Les mesures ou liens aux sources manquants sont signalés comme une collecte incomplète, sans affirmer que ces données sont restées locales. Le serveur conserve l’empreinte du rapport liée au Vera userID authentifié, à la même exécution et à sa révision ; il ne reçoit ni le rapport ni les documents."
+          "Studio Archive délimite chaque exécution de ce processus et crée automatiquement un rapport des données envoyées par Vera. Vera enregistre ses propres envois ; le rapport n’inspecte ni la conversation ni les autres outils. Le rapport reste sur la machine même lorsque toutes les données ont été envoyées. Les comptages manquants sont signalés comme indéterminés. Le serveur reçoit uniquement l’empreinte du rapport et les références de vérification, liées au Vera userID de la machine, à la même exécution et à la révision. Le contenu du rapport et les preuves restent locaux."
         ],
         "de": [
           "Die Inspektion kann Struktur und vollständige Beleginventare offenlegen",
@@ -232,7 +232,7 @@
           "Ein Index und dieselben Grenzen in jeder Variante",
           "Wenn integrierte Werkzeuge verfügbar sind, validieren, speichern und übernehmen sie die Prüfung mit demselben Index und denselben Grenzen. Andernfalls enthält die Übergabe als Markdown oder Datei nur ausgewählte Fälle, und das lokale Studio-Archive-Verfahren bewahrt und finalisiert dieselbe Prüfung, ohne alle vollständigen Prüfungsdaten erneut zu lesen. Eine vollständige Quelle kann für eine konkrete ungeklärte Nachweisfrage geöffnet werden.",
           "Fachdaten werden nicht automatisch anonymisiert oder pseudonymisiert. Undurchsichtige Verweise dienen nur der Fallauswahl: echte Namen, Beschreibungen, Beträge, Daten und Kennungen können das Modell erreichen, wenn die fachliche Prüfung sie benötigt.",
-          "Studio Archive begrenzt jeden Durchlauf dieses Prozesses: Der Bericht beginnt automatisch beim Start und endet bei Abschluss, Fehler oder Abbruch. Er bleibt auf dem Computer und erfasst auch spätere Lesezugriffe, selbst wenn alle Daten das Modell erreichen. Fehlende Messungen oder Quellenbezüge werden als unvollständige Erfassung ausgewiesen; für diese Daten wird kein lokaler Verbleib behauptet. Der Server speichert den Berichts-Hash mit authentifizierter Vera userID, derselben Ausführung und Revision. Bericht und Dokumente werden nicht übertragen."
+          "Studio Archive grenzt jede Ausführung dieses Prozesses ab und erstellt automatisch einen Bericht über die von Vera gesendeten Daten. Vera erfasst die eigenen Sendungen; der Bericht untersucht weder den Chat noch andere Werkzeuge. Der Bericht bleibt auf dem Rechner, auch wenn alle Daten gesendet wurden. Fehlende Mengenangaben werden ausdrücklich als unbekannt ausgewiesen. Der Server erhält nur den Berichtshash und die Prüfverweise, gebunden an die Vera userID des Rechners, dieselbe Ausführung und Revision. Berichtsinhalte und Nachweise bleiben lokal."
         ],
         "es": [
           "La inspección puede exponer la estructura y los inventarios completos de soportes",
@@ -246,7 +246,7 @@
           "Un mismo índice y los mismos límites en cada modalidad",
           "Cuando están disponibles, las herramientas integradas validan, guardan y aplican la revisión con el mismo índice y los mismos límites. De lo contrario, la entrega en Markdown o en un archivo contiene solo los casos seleccionados y el procedimiento local de Studio Archive conserva y finaliza la misma revisión sin volver a leer todos los datos completos. Puede abrirse una fuente completa para una cuestión probatoria concreta no resuelta.",
           "Los datos profesionales no se anonimizan ni se seudonimizan automáticamente. Las referencias opacas solo sirven para seleccionar casos: nombres, descripciones, importes, fechas e identificadores reales pueden llegar al modelo cuando la revisión profesional los necesita.",
-          "Studio Archive delimita cada ejecución de este proceso: inicia automáticamente el informe al comenzar y lo cierra al completarse, fallar o cancelarse. El informe permanece en el ordenador e incluye las lecturas posteriores, incluso cuando todos los datos llegan al modelo. Las mediciones o relaciones con las fuentes que faltan se declaran como captura incompleta, sin afirmar que esos datos permanecieron en local. El servidor conserva la huella del informe vinculada a Vera userID autenticado, a la misma ejecución y revisión; no recibe el informe ni los documentos."
+          "Studio Archive delimita cada ejecución de este proceso y crea automáticamente un informe de los datos enviados por Vera. Vera registra sus propios envíos; el informe no inspecciona el chat ni otras herramientas. El informe permanece en el equipo incluso cuando se han enviado todos los datos. Los recuentos que faltan se indican como indeterminados. El servidor recibe únicamente la huella del informe y las referencias de verificación, vinculadas al Vera userID del equipo, a la misma ejecución y revisión. El contenido del informe y las evidencias permanecen locales."
         ]
       }
     }

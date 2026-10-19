@@ -696,6 +696,7 @@ function bridge(name, args) {
   }
   const result = spawnSync(python,
     [path.join(ROOT, "scripts/native_workspace.py")], { input: JSON.stringify({ tool: name, arguments: args }),
+      env: { ...process.env, VERA_REPORTING_INTERNAL: "1" },
       encoding: "utf8", maxBuffer: 8 * 1024 * 1024, timeout: 120000 });
   if (result.error) throw result.error;
   if (result.status !== 0) throw new Error(result.stderr.trim().split("\n").at(-1) || "Workflow service failed");
@@ -763,7 +764,33 @@ function handle(message) {
     if (message.method === "tools/call") {
       const definition = TOOLS.find(t => t.name === message.params?.name);
       if (!definition) throw new Error("Unknown workspace tool");
-      return response(call(definition, message.params.arguments || {}));
+      const args = message.params.arguments || {};
+      const reporting = definition._meta.ui.visibility.includes("model") && args.work_ref;
+      let binding = null;
+      if (reporting) {
+        try {
+          binding = bridge("__bind_model_output", { work_ref: args.work_ref });
+        } catch {
+          return response({ isError: true, content: [{ type: "text", text:
+            "Vera could not bind this request to its outgoing-data record. The case payload was not returned." }] });
+        }
+      }
+      let result;
+      try {
+        result = call(definition, args);
+      } catch (error) {
+        result = { isError: true, content: [{ type: "text", text: error.message }],
+          _meta: { workspace: { error: error.message } } };
+      }
+      if (reporting) {
+        const { _meta, ...modelPayload } = result;
+        try {
+          bridge("__record_model_output", { work_ref: args.work_ref, payload: modelPayload, binding });
+        } catch {
+          throw new Error("Vera could not save this run's outgoing-data record. The case payload was not returned.");
+        }
+      }
+      return response(result);
     }
     throw new Error("Unknown method or resource");
   } catch (error) {

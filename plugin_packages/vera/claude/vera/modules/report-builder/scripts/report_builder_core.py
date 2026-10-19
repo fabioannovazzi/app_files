@@ -764,6 +764,8 @@ DOCX_COPY: dict[str, dict[str, str]] = {
 WORD_RE = re.compile(r"[a-z0-9]+")
 
 __all__ = [
+    "emit_status",
+    "register_expansion_projection",
     "BuildResult",
     "InspectionResult",
     "add_common_args",
@@ -2350,6 +2352,137 @@ def _model_inspection_packet(inspection: Mapping[str, Any]) -> dict[str, Any]:
     return packet
 
 
+def emit_status(output: Path, message: str) -> None:
+    """Return a producer status message with an exact metadata declaration."""
+    from vera_assurance.contracts import archive_projection_runtime
+
+    text = message + "\n"
+    recorder = archive_projection_runtime(Path(__file__))
+    if recorder is not None:
+        recorder.register_metadata("report-builder", output, text)
+    sys.stdout.write(text)
+
+
+def _register_inspection_projection(
+    path: Path, tables: list[dict[str, Any]], packet: dict[str, Any]
+) -> None:
+    """Retain the producer's exact unredacted preview cells; creation is not a send."""
+    from vera_assurance.contracts import archive_projection_runtime
+
+    recorder = archive_projection_runtime(Path(__file__))
+    if recorder is None or not recorder.is_recording("report-builder", path):
+        return
+    entries = []
+    for table, public in zip(tables, packet["tables"], strict=True):
+        if table["kind"] not in {"csv", "worksheet"} or "source_receipt" not in table:
+            return  # No invented row mapping for another source format.
+        header = public["header_row"]
+        physical = [
+            (index + 1, row)
+            for index, row in enumerate(table["rows"])
+            if (header is None or index + 1 > header) and row_nonempty_count(row) > 0
+        ]
+        rows = []
+        if header is not None:
+            rows.append(
+                {"physical_row": header, "columns": list(range(public["column_count"]))}
+            )
+        for (number, original), preview in zip(physical, public["preview_rows"]):
+            columns = [
+                index
+                for index, value in enumerate(preview.values())
+                if value == clean_text(original[index] if index < len(original) else "")
+            ]
+            rows.append({"physical_row": number, "columns": columns})
+        source = table["source_receipt"]
+        entries.append(
+            {
+                "source_path": str(
+                    Path(source["root_path"]) / source["receipt"]["path"]
+                ),
+                "source_sha256": source["receipt"]["sha256"],
+                "sheet_name": table["sheet_name"],
+                "rows": rows,
+            }
+        )
+    recorder.register_projection("report-builder", path, entries)
+
+
+def register_expansion_projection(
+    path: Path, control_path: Path, packet: dict[str, Any]
+) -> None:
+    """Verify expansion values against immutable sources before recording lineage."""
+    from vera_assurance.contracts import archive_projection_runtime
+
+    recorder = archive_projection_runtime(Path(__file__))
+    if recorder is None or not recorder.is_recording("report-builder", path):
+        return
+    table = next(
+        (
+            table
+            for table in load_indexed_tables(
+                control_path.parent, persist_source_index=False
+            )
+            if table["table_id"] == packet["table"]["table_id"]
+        ),
+        None,
+    )
+    if table is None:
+        raise ValueError("Expansion table is absent from the bound sources")
+    control = inspect_table(table)
+    selection = packet["selection"]
+    expected = build_model_context_expansion(
+        {"tables": [control]},
+        table_id=table["table_id"],
+        header_row=selection["header_row"],
+        columns=selection["columns"],
+        row_start=selection["row_start"],
+        row_limit=selection["requested_row_limit"],
+        purpose=packet["purpose"],
+    )
+    if packet != expected:
+        raise ValueError("Expansion differs from its bound source values")
+    inventory = (
+        control["numeric_measure_cells"]
+        if selection["header_row"] is not None
+        else control["headerless_numeric_measure_cells"]
+    )
+    indices = {column["column"]: column["column_index"] - 1 for column in inventory}
+    rows = [
+        {
+            "physical_row": row["source_row"],
+            "columns": [
+                indices[column]
+                for column, value in row["cells"].items()
+                if value is not None
+            ],
+        }
+        for row in packet["rows"]
+    ]
+    if selection["header_row"] is not None:
+        rows.append(
+            {
+                "physical_row": selection["header_row"],
+                "columns": [indices[column] for column in selection["columns"]],
+            }
+        )
+    source = table["source_receipt"]
+    recorder.register_projection(
+        "report-builder",
+        path,
+        [
+            {
+                "source_path": str(
+                    resolve_source_record_path(control_path.parent, source)
+                ),
+                "source_sha256": source["receipt"]["sha256"],
+                "sheet_name": table["sheet_name"],
+                "rows": rows,
+            }
+        ],
+    )
+
+
 def _packet_sha256(value: Mapping[str, Any]) -> str:
     """Hash canonical JSON packet content without making semantic judgments."""
 
@@ -2795,6 +2928,7 @@ def inspect_inputs(
     model_path = output_dir / "inspection.json"
     write_json(control_path, inspection)
     write_json(model_path, model_inspection)
+    _register_inspection_projection(model_path, raw_tables, model_inspection)
     write_json(
         output_dir / "model_context_receipt.json",
         {

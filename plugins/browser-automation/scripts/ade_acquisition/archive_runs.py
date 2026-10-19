@@ -10,7 +10,53 @@ from typing import Any
 from .contracts import AcquisitionError, Plan
 from .storage import Store, atomic_json, read_json
 
-__all__ = ["prepare_runs", "finish_runs", "record_acquired_event"]
+__all__ = [
+    "prepare_runs",
+    "finish_runs",
+    "record_acquired_event",
+    "record_status_payload",
+]
+
+
+def record_status_payload(
+    run: Path, summary: dict[str, Any], payload: Any, *, channel: str
+) -> None:
+    """Record the producer's status/count projection in each bound client run.
+
+    Acquisition never includes downloaded document contents in this projection;
+    per-client app-only details are excluded by the caller before this boundary.
+    """
+    path = run / "archive-runs.json"
+    if not path.is_file():
+        return
+    archive = _archive()
+    archive.ledger._reporting_runtime()
+    from archive_report_store import RunStore, digest, run_lock
+    from archive_reporting import record_send
+
+    for binding in read_json(path).values():
+        context = Path(binding["context_path"])
+        loaded = archive.ledger.load_run(
+            context.parents[5], binding["engagement_id"], binding["run_id"]
+        )
+        if (
+            loaded["run"]["workflow_id"] != "agenzia-acquisition"
+            or loaded["run"]["client_id"] != binding["client_id"]
+        ):
+            raise AcquisitionError("archive-client-identity-mismatch")
+        root = Path(loaded["run_root"])
+        with run_lock(root):
+            store = RunStore(root)
+            state = store.state()
+            if state is None:
+                raise AcquisitionError("archive-reporting-start-missing")
+            if state["collection_closed"]:
+                continue
+            store.event(
+                "metadata:" + digest(summary),
+                {"kind": "prepared_metadata", "data_sha256": digest(summary)},
+            )
+            record_send(root, payload, channel=channel + ":agenzia-acquisition")
 
 
 def record_acquired_event(run: Path, storage: Store, event: dict[str, Any]) -> None:
