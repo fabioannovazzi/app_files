@@ -165,7 +165,7 @@
     "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "64a0b82bf0d7e0cb5f390a143cd9ece825b0fb5042fd0eb3ac0e604b7cc4ea8a"
+    "source_fingerprint": "da9ce1f2ba69527e9ac5f9cde722527acf5a6382405d73e2ea5f4d1d2f3072e8"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"
@@ -185,7 +185,8 @@
           "Ogni risposta è limitata a 25 casi e 500.000 byte. Può contenere stato, data, importi, conto e descrizione, beneficiario o controparte, valuta, controlli, differenze, note, tipo e segnali del supporto, conclusione professionale, stato di assurance ed evidenze estratte. Campi vuoti o non mappati, percorsi, nomi file, ID tecnici, destinazioni di scrittura e duplicati restano fuori; numeri di movimento o fattura, conto, ID fiscali e riferimenti esatti arrivano solo su richiesta per il confronto d'identità.",
           "Stesso indice e stessi limiti in ogni modalità",
           "Quando sono disponibili, gli strumenti integrati verificano, salvano e applicano la revisione con lo stesso indice e gli stessi limiti. Altrimenti, la consegna in Markdown o in un file contiene soltanto i casi selezionati e la procedura locale di Studio Archive conserva e finalizza la stessa esecuzione senza rileggere tutti i dati completi della revisione. Una fonte completa può essere aperta per una domanda probatoria specifica rimasta irrisolta.",
-          "I dati professionali non vengono anonimizzati né pseudonimizzati automaticamente. I riferimenti opachi servono solo a selezionare i casi: nomi, descrizioni, importi, date e identificativi reali possono arrivare quando sono necessari alla revisione professionale."
+          "I dati professionali non vengono anonimizzati né pseudonimizzati automaticamente. I riferimenti opachi servono solo a selezionare i casi: nomi, descrizioni, importi, date e identificativi reali possono arrivare quando sono necessari alla revisione professionale.",
+          "Studio Archive delimita questa esecuzione e genera alla finalizzazione il report di confronto su scritture della popolazione e del campione elaborati localmente, esposti al modello e rimasti locali. Il report usa le misure registrate durante preparazione, elaborazione e riesame. Se le misure mancano, segnala che il report non è disponibile; se non resta una quota locale misurabile, non genera il confronto."
         ],
         "en": [
           "Inspection can expose source structure and complete support inventories",
@@ -198,7 +199,8 @@
           "Each response is limited to 25 cases and 500,000 bytes. It may contain status, date, amounts, account and description, beneficiary or counterparty, currency, checks, mismatches, notes, support type and signals, professional conclusion, assurance status, and extracted evidence. Empty or unmapped fields, paths, filenames, technical IDs, write targets, and duplicates stay out; exact movement or invoice numbers, account, tax IDs, and references arrive only on request for identity comparison.",
           "One index and the same limits in every mode",
           "When available, integrated tools validate, save, and apply the review with the same index and limits. Otherwise, the Markdown or file delivery contains selected cases only, and the local Studio Archive procedure preserves and finalizes the same review without rereading all complete review data. A complete source can be opened for a specific unresolved evidence question.",
-          "Professional data is not automatically anonymized or pseudonymized. Opaque references only select cases: real names, descriptions, amounts, dates, and identifiers may reach the model when professional review requires them."
+          "Professional data is not automatically anonymized or pseudonymized. Opaque references only select cases: real names, descriptions, amounts, dates, and identifiers may reach the model when professional review requires them.",
+          "Studio Archive defines this execution and generates its comparison report at finalization: population and sample entries processed locally, exposed to the model and remaining local. The report uses measurements recorded during preparation, processing and review. Missing measurements produce an explicit unavailable status; without a measurable local remainder, no comparison is generated."
         ],
         "fr": [
           "L'inspection peut exposer la structure et les inventaires complets des justificatifs",
@@ -211,7 +213,8 @@
           "Chaque réponse est limitée à 25 cas et 500 000 octets. Elle peut contenir statut, date, montants, compte et description, bénéficiaire ou contrepartie, devise, contrôles, écarts, notes, type et signaux du justificatif, conclusion professionnelle, état d'assurance et preuves extraites. Champs vides ou non mappés, chemins, noms de fichiers, identifiants techniques, cibles d'écriture et doublons restent exclus ; numéros exacts de mouvement ou facture, compte, identifiants fiscaux et références n'arrivent que sur demande pour comparer l'identité.",
           "Un même index et les mêmes limites dans chaque mode",
           "Lorsqu'ils sont disponibles, les outils intégrés valident, enregistrent et appliquent la revue avec le même index et les mêmes limites. Sinon, la remise en Markdown ou dans un fichier ne contient que les cas sélectionnés et la procédure locale de Studio Archive conserve et finalise la même revue sans relire toutes les données complètes. Une source complète peut être ouverte pour une question probatoire précise non résolue.",
-          "Les données professionnelles ne sont pas automatiquement anonymisées ou pseudonymisées. Les références opaques servent uniquement à sélectionner les cas : noms, descriptions, montants, dates et identifiants réels peuvent parvenir au modèle si la revue professionnelle l'exige."
+          "Les données professionnelles ne sont pas automatiquement anonymisées ou pseudonymisées. Les références opaques servent uniquement à sélectionner les cas : noms, descriptions, montants, dates et identifiants réels peuvent parvenir au modèle si la revue professionnelle l'exige.",
+          "Studio Archive délimite cette exécution et génère à la finalisation son rapport comparatif : écritures de la population et de l’échantillon traités localement, exposés au modèle et restés locaux. Le rapport utilise les mesures enregistrées pendant la préparation, le traitement et la revue. Si elles manquent, le rapport est déclaré indisponible ; sans part locale mesurable, aucune comparaison n’est générée."
         ],
         "de": [
           "Die Inspektion kann Struktur und vollständige Beleginventare offenlegen",
@@ -224,7 +227,8 @@
           "Jede Antwort ist auf 25 Fälle und 500.000 Byte begrenzt. Sie kann Status, Datum, Beträge, Konto und Beschreibung, Begünstigten oder Gegenpartei, Währung, Prüfungen, Abweichungen, Notizen, Belegtyp und -signale, fachliche Schlussfolgerung, Assurance-Status und extrahierte Nachweise enthalten. Leere oder nicht gemappte Felder, Pfade, Dateinamen, technische Kennungen, Schreibziele und Duplikate bleiben ausgeschlossen; exakte Bewegungs- oder Rechnungsnummern, Konto, Steuerkennungen und Referenzen kommen nur auf Anforderung zum Identitätsvergleich hinzu.",
           "Ein Index und dieselben Grenzen in jeder Variante",
           "Wenn integrierte Werkzeuge verfügbar sind, validieren, speichern und übernehmen sie die Prüfung mit demselben Index und denselben Grenzen. Andernfalls enthält die Übergabe als Markdown oder Datei nur ausgewählte Fälle, und das lokale Studio-Archive-Verfahren bewahrt und finalisiert dieselbe Prüfung, ohne alle vollständigen Prüfungsdaten erneut zu lesen. Eine vollständige Quelle kann für eine konkrete ungeklärte Nachweisfrage geöffnet werden.",
-          "Fachdaten werden nicht automatisch anonymisiert oder pseudonymisiert. Undurchsichtige Verweise dienen nur der Fallauswahl: echte Namen, Beschreibungen, Beträge, Daten und Kennungen können das Modell erreichen, wenn die fachliche Prüfung sie benötigt."
+          "Fachdaten werden nicht automatisch anonymisiert oder pseudonymisiert. Undurchsichtige Verweise dienen nur der Fallauswahl: echte Namen, Beschreibungen, Beträge, Daten und Kennungen können das Modell erreichen, wenn die fachliche Prüfung sie benötigt.",
+          "Studio Archive grenzt diese Ausführung ab und erstellt beim Abschluss ihren Vergleichsbericht: lokal verarbeitete, dem Modell offengelegte und lokal verbliebene Buchungen der Grundgesamtheit und Stichprobe. Er verwendet die bei Vorbereitung, Verarbeitung und Prüfung erfassten Messwerte. Fehlen diese, wird der Bericht als nicht verfügbar gemeldet; ohne messbaren lokalen Rest wird kein Vergleich erstellt."
         ],
         "es": [
           "La inspección puede exponer la estructura y los inventarios completos de soportes",
@@ -237,7 +241,8 @@
           "Cada respuesta se limita a 25 casos y 500.000 bytes. Puede contener estado, fecha, importes, cuenta y descripción, beneficiario o contraparte, moneda, controles, diferencias, notas, tipo y señales del soporte, conclusión profesional, estado de aseguramiento y evidencias extraídas. Los campos vacíos o no mapeados, rutas, nombres de archivo, identificadores técnicos, destinos de escritura y duplicados quedan fuera; los números exactos de movimiento o factura, cuenta, identificadores fiscales y referencias solo llegan bajo petición para comparar la identidad.",
           "Un mismo índice y los mismos límites en cada modalidad",
           "Cuando están disponibles, las herramientas integradas validan, guardan y aplican la revisión con el mismo índice y los mismos límites. De lo contrario, la entrega en Markdown o en un archivo contiene solo los casos seleccionados y el procedimiento local de Studio Archive conserva y finaliza la misma revisión sin volver a leer todos los datos completos. Puede abrirse una fuente completa para una cuestión probatoria concreta no resuelta.",
-          "Los datos profesionales no se anonimizan ni se seudonimizan automáticamente. Las referencias opacas solo sirven para seleccionar casos: nombres, descripciones, importes, fechas e identificadores reales pueden llegar al modelo cuando la revisión profesional los necesita."
+          "Los datos profesionales no se anonimizan ni se seudonimizan automáticamente. Las referencias opacas solo sirven para seleccionar casos: nombres, descripciones, importes, fechas e identificadores reales pueden llegar al modelo cuando la revisión profesional los necesita.",
+          "Studio Archive delimita esta ejecución y genera al finalizar su informe comparativo: asientos de la población y de la muestra procesados localmente, expuestos al modelo y conservados en local. Utiliza mediciones registradas durante la preparación, el procesamiento y la revisión. Si faltan, el informe se declara no disponible; sin una parte local medible no se genera la comparación."
         ]
       }
     }

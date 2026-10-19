@@ -17,9 +17,13 @@ SCRIPTS = Path(__file__).resolve().parents[1] / "plugins/browser-automation/scri
 @pytest.fixture
 def services(monkeypatch):
     monkeypatch.syspath_prepend(str(SCRIPTS))
+    # Launch/recovery tests isolate the Archive adapter; its actual binding is
+    # exercised with real client ledgers in test_vera_selective_reporting.py.
+    cli = importlib.import_module("agenzia_acquire")
+    monkeypatch.setattr(cli, "prepare_runs", lambda run, plan: None)
     return SimpleNamespace(
         ui=importlib.import_module("agenzia_ui"),
-        cli=importlib.import_module("agenzia_acquire"),
+        cli=cli,
         contracts=importlib.import_module("ade_acquisition.contracts"),
         storage=importlib.import_module("ade_acquisition.storage"),
         engine=importlib.import_module("ade_acquisition.engine"),
@@ -275,7 +279,8 @@ def test_worker_runs_actual_engine_and_writes_reports_without_model_calls(
     assert result["state"] == "complete"
     assert result["downloaded"] == 2
     assert (run / "riepilogo.xlsx").is_file()
-    assert (run / "model_data_report.md").is_file()
+    assert (run / "model_data_worker_input.json").is_file()
+    assert not (run / "model_data_report.md").exists()
 
 
 def test_worker_cancel_during_login_keeps_terminal_status(

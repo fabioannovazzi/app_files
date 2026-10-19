@@ -113,7 +113,7 @@
     },
     {
       "path": "skills/mparanza-composizione-negoziata/SKILL.md",
-      "sha256": "4aa84ef4139924dd23f056a42f2573e6eee712cf38a8972fc2fad335ec18bad4"
+      "sha256": "1cec3713f0ebc965a2ff063aea0997fa0f08ec42eb80db168872bb3e71254a51"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -213,7 +213,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "592b0cac8a87d80a3cc9b4b0e7958f79be402814ac7b44e0510de7302d745b50"
+      "sha256": "220e14178ddcf811782956f50177732a1664a309eef87847ddb306db7c83381b"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -829,5 +829,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "860629c06eb4101b856dac02da8b1319f2a01740c9f6149c1ebdd4e9e89c1126"
+  "canonical_course_sha256": "09e709fe969a24b8efd1acff13738f9bd1314780df88b896ad2ef638cd9d8129"
 }

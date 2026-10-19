@@ -10,8 +10,11 @@ Before substantive work, follow `references/workflow-usage.md`: start one
 retained task UUID for the primary user process (including AI-led work), reuse
 it across helpers/resumption, and record only observed outcomes. Discover the
 native `vera_incident_host_link` tool, including deferred tools, and verify the
-same run's Computer ID on the server. Build the model-data report from the actual
-task even for chat-only drafts, then link its actual signed receipt. After delivery ask once for the user's 1–5 stars and optional
+same run's Computer ID on the server. Privacy reporting applies only to the fixed pipeline list in
+`references/selective-reporting.md`, using the exact Studio Archive run.
+Archive finalization generates eligible reports from saved execution evidence;
+never create a report for other pipelines or a chat-only task. Link a signed
+receipt only when one actually exists. After delivery ask once for the user's 1–5 stars and optional
 comment; never infer a score. Studio Archive is infrastructure, not another rated
 process. Synthetic/agent tests are marked and excluded. Flush pending delivery
 at task startup and after outcomes. The shared contract applies even on direct
@@ -153,7 +156,7 @@ the **Show an existing report** section in
 response. Do not answer with instructions for finding it, start a new
 professional run, or classify this as an unsupported legal/privacy workflow.
 
-At the end of every substantive run, show the privacy report as part of the
+For an eligible Archive run with a generated report, show it as part of the
 normal final response. The report build returns `display_markdown`: use that
 content to present the report and link the saved Markdown file. This delivery
 step also applies when server stamping is pending and in local tutorials.
@@ -312,28 +315,24 @@ deployment's actual account settings.
 
 ## Run-level model-data report
 
-After every substantive Vera run, read and follow
-`references/model-data-report-contract.md`. This applies across client-bound,
-studio-wide, local, connected-source, ChatGPT, Codex, and Cowork workflows.
-Record every model-visible phase separately in the workflow's natural units,
-such as rows, columns, pages, files, messages, chunks, metrics, or evidence
-excerpts. Distinguish the full extent processed locally from the part that was
-never model-visible; those measures overlap and are not alternative categories.
+Follow `references/selective-reporting.md`. Only its 13 selected pipelines
+produce comparison reports, and only for a verified Studio Archive run with
+recorded, countable execution evidence. Do not judge whether a chat or task is
+substantive to decide reporting. Other Vera processes produce no such report.
 
-When durable local output is available, build `model_data_report.json` and the
-localized `model_data_report.md` in the run's exact output folder with
-`scripts/model_data_report.py`. Bind exact model-payload files when the workflow
-has them. Otherwise use the contract's narrower evidence basis and do not claim
-provider-signed delivery proof. For a Studio Archive run, declare both reports
-as artifacts before completion. When the host cannot create files, show the same
-compact report in chat and state that no durable receipt was created.
+Start the Archive run before source inspection. Save cumulative phase evidence
+as `model_data_report_input.json` in that exact run output, including mapping and
+subsequent source reads. Archive finalization builds and declares the report.
+Missing evidence produces an explicit unavailable status, never guessed counts.
+If no measured local remainder exists, no comparison report is generated.
+Show the returned readable report when created; preserve unavailable status when
+measurements are missing. A chat-only task has no Archive comparison report.
 
-When the user prohibits external receipt transmission, pass `--local-only` to
-`scripts/workflow_usage.py build-report --run-id <retained-task-uuid>` with
-the same report input/output arguments. It calls the existing report builder and
-links the actual signed receipt to the primary task. This preserves the local JSON and readable
-report and returns `not_requested/local_only` without constructing or sending a
-stamping request. Do not retry stamping unless the user later requests it. This
+When the user prohibits external receipt transmission, save
+`model_data_report_options.json` containing `{"local_only": true}` in the run
+output **before finalization, failure or cancellation**. Archive preserves the local JSON
+and readable report and returns `not_requested/local_only` without constructing
+or sending a stamping request. Do not retry stamping unless the user later requests it. This
 option concerns Mparanza receipt transmission; it does not make the selected
 host's model processing local.
 
@@ -957,7 +956,7 @@ handoff. Do not turn this into an unsolicited feedback survey or interview.
 
 ## Plugin Improvement Feedback
 
-After a substantive specialist run, first deliver its readable model-data report
+After a specialist run, deliver its readable model-data report only when Archive generated one
 using `display_markdown` and the saved report link, as required by
 `references/model-data-report-contract.md`. This also applies when the specialist
 was invoked directly. Reopening an existing report does not start a feedback

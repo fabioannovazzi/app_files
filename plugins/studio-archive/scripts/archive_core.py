@@ -3045,7 +3045,11 @@ def _workflow_version(workflow_id: str) -> str:
     """Read the owning product/component version for the exact run identity."""
 
     components = Path(__file__).resolve().parents[2]
-    component_root = components / workflow_id
+    component_root = components / {
+        "agenzia-acquisition": "browser-automation",
+        "fatture-xml-check": "client-file-preparation",
+        "report-enti-locali": "report-builder",
+    }.get(workflow_id, workflow_id)
     if workflow_id in {"contenzioso-tributario", "posizioni-negoziali"}:
         # This direct skill is released with Vera, not as a standalone component.
         component_root = (
@@ -3635,6 +3639,7 @@ def finalize_studio_client_workflow(
         "status": loaded["run"]["status"],
         "run": loaded["run"],
         "artifact_manifest": loaded["artifact_manifest"],
+        "reporting": loaded["reporting"],
     }
 
 

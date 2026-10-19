@@ -261,7 +261,7 @@
     {
       "path": "skills/lipe/SKILL.md",
       "repository_path": "plugins/vera/skills/lipe/SKILL.md",
-      "sha256": "d37835e20e160e4724d7be151308c8fe6a675499a38e7504c9cd12adf6627046"
+      "sha256": "f7c35261d70feff652e228bd51047d83184f1123d418f20724e85196c49fa061"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -501,7 +501,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "592b0cac8a87d80a3cc9b4b0e7958f79be402814ac7b44e0510de7302d745b50"
+      "sha256": "220e14178ddcf811782956f50177732a1664a309eef87847ddb306db7c83381b"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",

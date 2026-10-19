@@ -180,7 +180,7 @@
     {
       "path": "scripts/model_data_report.py",
       "repository_path": "plugins/clara/scripts/model_data_report.py",
-      "sha256": "368b0903fa071c0563a0d0ac04f7a1ce9d33445236daba47f4357b7e6216bf59"
+      "sha256": "6217728e9ca9feff2b54996a8eff94b8ccc708bbaadf2b03c8eae2c5cfe2b77e"
     },
     {
       "path": "scripts/notarized_run_receipt.py",
@@ -206,6 +206,11 @@
       "path": "scripts/run_deck_revision.py",
       "repository_path": "plugins/clara/scripts/run_deck_revision.py",
       "sha256": "44ffa92de9dd6005677595b00f44915aa001bb8fcbe4590abc950de9a9a6e098"
+    },
+    {
+      "path": "scripts/selective_reporting.py",
+      "repository_path": "plugins/clara/scripts/selective_reporting.py",
+      "sha256": "a8f7168aead00a0c400f197665ec1613a57b2e213ffb9176f65628bac135d409"
     },
     {
       "path": "scripts/start_deck_feedback.py",

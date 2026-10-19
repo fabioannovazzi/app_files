@@ -104,22 +104,20 @@ UUID before retrying. Record its new observed result. Preserve the original
 technical incident report ID separately with an `incident` event; recovery still
 requires that incident's original task and current remedy evidence.
 
-Read `model-data-report-contract.md` in this same reference directory and
-assemble its input from the actual observed task, even for a draft based only on
-chat and templates. No client files, no Studio Archive handoff, and no pre-existing
-report-input JSON are not reasons to omit it. Creating that input is part of the
-workflow. Use host-attested evidence or unknown measurements where appropriate;
-never fabricate exact payloads. Resolve scripts from the installed product root,
-not a delegated module root. Use a writable task output folder in the cloud when
-available; no additional native client-folder permission is needed for it.
+Privacy reports follow `selective-reporting.md`, independently of usage events.
+Only the fixed 13 pipelines and their exact Studio Archive runs qualify. All other
+processes still record their normal usage outcomes, without a privacy report or
+receipt requirement. Archive finalization creates an eligible report from the
+recorded execution evidence. Do not generate one for a chat-only draft.
 
-Build the normal model-data report through the Vera-specific wrapper:
+After Archive creates a report, the existing wrapper can link its signed receipt
+to the usage task:
 
 ```
 python scripts/workflow_usage.py build-report --run-id <uuid> --input <model_data_report_input.json> --evidence-root <exact-run-output> --output-dir <exact-run-output>
 ```
 
-This calls the existing shared report builder unchanged and links its actual
+This validates the existing report and links its actual
 signed receipt without transmitting the report. Show its display_markdown and
 normal artifact links after the professional result. Inspect the same run on the
 server after final delivery: an acknowledged completed event, a verified Computer

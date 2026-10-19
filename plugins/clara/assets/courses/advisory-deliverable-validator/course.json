@@ -99,7 +99,7 @@
     {
       "path": "scripts/model_data_report.py",
       "repository_path": "plugins/clara/scripts/model_data_report.py",
-      "sha256": "368b0903fa071c0563a0d0ac04f7a1ce9d33445236daba47f4357b7e6216bf59"
+      "sha256": "6217728e9ca9feff2b54996a8eff94b8ccc708bbaadf2b03c8eae2c5cfe2b77e"
     },
     {
       "path": "scripts/notarized_run_receipt.py",
@@ -120,6 +120,11 @@
       "path": "scripts/record_case_direction_return.py",
       "repository_path": "plugins/clara/scripts/record_case_direction_return.py",
       "sha256": "9bc960fe45ba6f8ba0e6a5dc19b35f40342d3bc318873d1a257c4257193c4f42"
+    },
+    {
+      "path": "scripts/selective_reporting.py",
+      "repository_path": "plugins/clara/scripts/selective_reporting.py",
+      "sha256": "a8f7168aead00a0c400f197665ec1613a57b2e213ffb9176f65628bac135d409"
     },
     {
       "path": "scripts/verified_execution.py",

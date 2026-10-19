@@ -36,6 +36,14 @@ CLIENT = {
 }
 
 
+@pytest.fixture(autouse=True)
+def retain_local_acquisition_package(monkeypatch):
+    """Keep relative lazy imports valid after the suite isolates plugin modules."""
+    monkeypatch.setitem(sys.modules, PACKAGE, package)
+    for module in (contracts, artifacts, storage, engine, reports):
+        monkeypatch.setitem(sys.modules, module.__name__, module)
+
+
 def plan_data(operations=None):
     return {
         "schema_version": "vera-agenzia-plan/v1",
@@ -355,7 +363,8 @@ def test_full_acquisition_writes_reviewable_reports(tmp_path):
     assert workbook["Corrispettivi giornalieri"]["E2"].value == 24.4
     assert workbook["Bolli e prospetto F24"]["J2"].value == "pagato"
     assert (run / "report.html").is_file()
-    assert (run / "model_data_report.md").is_file()
+    assert (run / "model_data_worker_input.json").is_file()
+    assert not (run / "model_data_report.md").exists()
     assert not any(
         cell.data_type == "f" for sheet in workbook for row in sheet for cell in row
     )

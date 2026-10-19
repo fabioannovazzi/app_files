@@ -284,27 +284,23 @@ Use this exact chat workflow whenever a professional starts client work:
    the paths in its hydrated `input_bindings`, and write only below its exact
    `output_dir`. Never scan the whole engagement input folder as an implicit
    input set.
-9. After execution, generate and validate `model_data_report.json` and
-   `model_data_report.md` for this exact workflow/run, including an explicit
-   no-case-data or not-measurable phase when appropriate. Never infer zero
-   transmission from missing telemetry. Finalization requires both artifacts.
-   For any host without its own report command, use the component's local-only
-   helper and the input contract in `vendor/modules/model-data-report-contract.md`
-   (repository source: `../vera/skills/vera/references/model-data-report-contract.md`).
-   Run `python scripts/build_model_data_report.py build --input <phase-evidence.json> --evidence-root <run-output> --output-dir <run-output>`.
-   Validate with `python scripts/build_model_data_report.py validate --report <run-output/model_data_report.json>`.
-   This helper makes no server-attestation request; it does not imply that the
-   underlying professional workflow made no model calls.
-   Call `finalize_studio_client_workflow`. Declare every
-   physical output with a unique artifact ID, relative path, concrete purpose,
-   audience (`internal`, `review`, or `deliverable`), and media type. An empty,
-   partial, changed, or undeclared output tree is not review-ready. Review the
-   declared artifacts, then call `complete_studio_client_workflow`. On an
-   execution error, record `failed`; explicitly cancel an abandoned run.
-   Receipt retries after finalization write to the run's supplementary
-   `receipts/<report-byte-hash>/` directory, preserving the sealed output tree
-   and the original request identifier. Supplementary receipts are attestations,
-   not additional deliverables or proof of provider transmission.
+9. For Vera, report eligibility is the fixed list in
+   `scripts/selective_reporting.py`, never a judgment about substantive work. Start the
+   run before source inspection. Save actual cumulative phase evidence in
+   `outputs/model_data_report_input.json`. Finalization generates and declares an
+   eligible report automatically, or returns an explicit unavailable/not-applicable
+   status. Other workflows need no privacy report. Do not fabricate phase counts,
+   treat absent evidence as zero, or create reports for chat-only work. If the user
+   prohibits receipt transmission, save `model_data_report_options.json` with
+   `{"local_only": true}` in the output before any finalization or failed/cancelled
+   outcome. Other products retain their own report requirements.
+   Call `finalize_studio_client_workflow` with explicit declarations for every
+   professional output; generated report artifacts are added by Archive. Review
+   the sealed artifacts, then call `complete_studio_client_workflow`. Record
+   execution failures and explicit cancellations on the same run.
+   Receipt retries after finalization use `receipts/<report-byte-hash>/`, outside
+   the sealed output tree. Preserve the original report bytes and receipt ID.
+
 10. In a later chat, call `list_studio_client_engagements` for the selected
    `client_id`. It returns imported-file receipts and persisted workflow runs,
    including lifecycle, exact input manifests, artifact purposes, and

@@ -24,6 +24,12 @@ from modules.workflow_usage.contracts import WorkflowEvent
 from modules.workflow_usage.reporting import render_html, summarize
 from modules.workflow_usage.repository import WorkflowConflict
 from tests.modules.operational_incidents.test_oauth import connection_headers
+from tests.plugins.test_vera_customer_folder_ledger import (
+    archive_core,
+    archive_script_imports,
+    client_case,
+)
+from tests.plugins.test_vera_selective_reporting import _evidence, _finish, _start
 
 
 def event(run_id, sequence=1, kind="started", **fields):
@@ -138,6 +144,30 @@ def test_cowork_completion_exposes_missing_link_and_receipt_without_failing_work
     assert len(reply["reporting"]["next_steps"]) == 2
     assert store.workflow_status(owner, str(run_id))["state"] == "completed"
     assert summarize(store.workflow_overview())["included_user_runs"] == 0
+
+
+@pytest.mark.parametrize(
+    "pipeline",
+    [
+        "quesito-legale-fiscale",
+        "presenza-digitale-studio",
+        "new-client",
+        "bilancio-oic",
+    ],
+)
+def test_excluded_vera_task_needs_no_privacy_receipt_or_monitoring_alert(
+    setup, pipeline
+):
+    store, owner, client = setup
+    run_id = uuid4()
+    post(client, owner, event(run_id, pipeline=pipeline))
+
+    response = post(client, owner, event(run_id, 2, "completed")).json()
+
+    assert response["reporting"]["model_data_receipt"] == "not_applicable"
+    assert response["reporting"]["model_data_report_eligible"] is False
+    assert len(response["reporting"]["next_steps"]) == 1
+    assert summarize(store.workflow_overview())["review_candidates"] == []
 
 
 def test_native_binding_updates_same_cowork_run_status_without_event_replay(setup):
@@ -826,18 +856,18 @@ def test_independent_connector_acknowledges_the_exact_local_outbox_item(
 
 
 def test_report_wrapper_uses_real_report_and_signed_receipt_without_claiming_task_success(
-    setup, installed_client, tmp_path, monkeypatch
+    setup, installed_client, tmp_path, monkeypatch, archive_core, client_case
 ):
     import notarized_run_receipt
-
-    from tests.plugins.test_vera_model_data_report import _full_document_request
 
     store, _, client = setup
     usage = installed_client
     run = str(uuid4())
-    usage.start(run, "concordato-plan-review", sample_kind="synthetic")
-    source = tmp_path / "report-input.json"
-    source.write_text(json.dumps(_full_document_request()))
+    usage.start(run, "variance-analysis", sample_kind="synthetic")
+    archive_run, tmp_path = _start(archive_core, client_case)
+    _evidence(tmp_path, archive_run)
+    _finish(archive_core, client_case, archive_run, tmp_path)
+    source = tmp_path / "model_data_report_input.json"
 
     def stamp(endpoint, payload, *, opener):
         response = client.post("/api/vera/run-receipts", json=dict(payload))
@@ -852,7 +882,7 @@ def test_report_wrapper_uses_real_report_and_signed_receipt_without_claiming_tas
     assert result["display_markdown"]
     assert result["server_receipt"]["status"] == "stamped"
     assert result["workflow_usage"]["delivery"]["queued"] == 0
-    proof = json.loads((tmp_path / "model_data_receipt.json").read_text())
+    proof = json.loads(Path(result["server_receipt"]["receipt_path"]).read_text())
     projection = store.workflow_inspect(run)["run"]
     assert projection["receipts"][0]["report_sha256"] == proof["report_sha256"]
     assert projection["state"] == "unknown"
@@ -860,18 +890,18 @@ def test_report_wrapper_uses_real_report_and_signed_receipt_without_claiming_tas
 
 
 def test_receipt_outage_keeps_report_and_later_stamp_links_same_task(
-    setup, installed_client, tmp_path, monkeypatch
+    setup, installed_client, tmp_path, monkeypatch, archive_core, client_case
 ):
     import notarized_run_receipt
-
-    from tests.plugins.test_vera_model_data_report import _full_document_request
 
     store, _, client = setup
     usage = installed_client
     run = str(uuid4())
-    usage.start(run, "concordato-plan-review", sample_kind="synthetic")
-    source = tmp_path / "report-input.json"
-    source.write_text(json.dumps(_full_document_request()))
+    usage.start(run, "variance-analysis", sample_kind="synthetic")
+    archive_run, tmp_path = _start(archive_core, client_case)
+    _evidence(tmp_path, archive_run)
+    _finish(archive_core, client_case, archive_run, tmp_path)
+    source = tmp_path / "model_data_report_input.json"
 
     def unavailable(*args, **kwargs):
         raise notarized_run_receipt.NotarizedRunReceiptError("offline")

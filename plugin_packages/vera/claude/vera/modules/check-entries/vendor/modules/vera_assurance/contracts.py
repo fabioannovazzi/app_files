@@ -128,6 +128,9 @@ _RUN_TRANSITIONS = {
 # engine at the product layer, but receives its own run folder because it emits
 # an independently reviewed package that New Client consumes.
 VERA_CLIENT_WORKFLOW_IDS = (
+    "agenzia-acquisition",
+    "fatture-xml-check",
+    "report-enti-locali",
     "posizioni-negoziali",
     "contenzioso-tributario",
     "lipe",
@@ -853,7 +856,13 @@ def validate_client_workflow_run(
             "expected_workflow_id is not a registered Vera workflow"
         )
     context = validate_client_engagement_context(value)
-    if context["workflow_id"] != expected_workflow_id:
+    execution_aliases = {
+        "fatture-xml-check": "client-file-preparation",
+        "report-enti-locali": "report-builder",
+    }
+    if execution_aliases.get(
+        context["workflow_id"], context["workflow_id"]
+    ) != execution_aliases.get(expected_workflow_id, expected_workflow_id):
         raise AssuranceContractError(
             "client engagement context belongs to a different Vera workflow"
         )
@@ -1443,7 +1452,9 @@ def load_client_engagement_context_file(
     if isinstance(allowed_statuses, (str, bytes)):
         raise AssuranceContractError("allowed_statuses must be a status sequence")
     normalized_statuses = frozenset(allowed_statuses)
-    readable_statuses = frozenset({"running", "ready_for_review", "completed"})
+    readable_statuses = frozenset(
+        {"running", "ready_for_review", "completed", "failed", "cancelled"}
+    )
     if not normalized_statuses or not normalized_statuses.issubset(readable_statuses):
         raise AssuranceContractError(
             "allowed_statuses contains an unreadable run state"

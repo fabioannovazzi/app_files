@@ -2119,6 +2119,39 @@ def _write_run_status_locked(
         ],
     }
     _write_json(Path(loaded["run_root"]) / "run.json", updated)
+    if target_status in {"failed", "cancelled"} and current in {
+        "running",
+        "ready_for_review",
+    }:
+        from run_reporting import finish_report
+
+        # The outcome is already durable; reporting must never erase or mask it.
+        try:
+            reporting = finish_report(loaded)
+        except (ValueError, OSError) as exc:
+            reporting = {
+                "status": "unavailable",
+                "reason": "execution_evidence_invalid",
+                "detail": str(exc),
+            }
+        _write_json(
+            Path(loaded["run_root"]) / "model_data_reporting.json",
+            {
+                **reporting,
+                "run_id": run_id,
+                "workflow_id": run["workflow_id"],
+                "started_at": next(
+                    (
+                        event["at"]
+                        for event in run["status_history"]
+                        if event["status"] == "running"
+                    ),
+                    None,
+                ),
+                "finished_at": at,
+                "finish_status": target_status,
+            },
+        )
     return load_run(client_root, engagement_id, run_id)
 
 
@@ -2144,7 +2177,58 @@ def _write_run_status(
 def start_run(client_root: Path, engagement_id: str, run_id: str) -> dict[str, Any]:
     """Mark one prepared or failed run as actively executing."""
 
-    return _write_run_status(client_root, engagement_id, run_id, "running")
+    root = _ordinary_directory(client_root, label="client folder")
+    with _engagement_lock(root, engagement_id):
+        loaded = load_run(root, engagement_id, run_id)
+        current = loaded["run"]["status"]
+        if current != "running":
+            if load_engagement_manifest(root, engagement_id)["status"] != "open":
+                raise LedgerError(
+                    "Runs cannot change after their engagement is closed."
+                )
+            if "running" not in _RUN_TRANSITIONS[current]:
+                raise LedgerError(f"Run cannot transition from {current} to running.")
+        from run_reporting import report_pipeline, selective_reporting_enabled
+
+        if (
+            loaded["run"]["status"]
+            in {
+                "failed",
+                "ready_for_review",
+            }
+            and selective_reporting_enabled()
+            and report_pipeline(loaded["run"]["workflow_id"])
+        ):
+            output = Path(loaded["output_dir"])
+            names = (
+                "model_data_report.json",
+                "model_data_report.md",
+                "privacy_contract.json",
+                "model_data_receipt.json",
+                "model_data_receipt.html",
+                "model_data_receipt_request.json",
+            )
+            retained = [output / name for name in names if (output / name).exists()]
+            retained.extend(
+                Path(loaded["run_root"]) / name
+                for name in ("artifact_manifest.json", "model_data_reporting.json")
+                if (Path(loaded["run_root"]) / name).exists()
+            )
+            if retained:
+                history = (
+                    Path(loaded["run_root"])
+                    / "reporting-history"
+                    / secrets.token_hex(12)
+                )
+                history.mkdir(parents=True, mode=0o700)
+                for source in retained:
+                    _ordinary_file(source, label="previous run report")
+                for source in retained:
+                    source.rename(history / source.name)
+            (Path(loaded["run_root"]) / "model_data_reporting.json").unlink(
+                missing_ok=True
+            )
+        return _write_run_status_locked(root, engagement_id, run_id, "running")
 
 
 def fail_run(
@@ -2202,7 +2286,7 @@ def _require_model_data_artifacts(loaded: Mapping[str, Any]) -> None:
     markdown_path = output / "model_data_report.md"
     if not report_path.is_file() or not markdown_path.is_file():
         raise LedgerError(
-            "Finalization requires model_data_report.json and model_data_report.md, including no-model or unknown-transmission runs."
+            "A generated report requires both model_data_report.json and model_data_report.md."
         )
     report = _read_json(report_path, label="model-data report")
     _ordinary_file(markdown_path, label="model-data report Markdown")
@@ -2263,10 +2347,46 @@ def _finalize_run_locked(
     if loaded["run"]["status"] not in {"running", "ready_for_review"}:
         raise LedgerError("Only a running or review-ready run can be finalized.")
     output_dir = Path(loaded["output_dir"])
+    from run_reporting import finish_report, report_declarations
+
+    try:
+        reporting = finish_report(loaded)
+    except (ValueError, OSError) as exc:
+        raise LedgerError(f"Run reporting evidence is invalid: {exc}") from exc
+    reporting = {
+        **reporting,
+        "run_id": run_id,
+        "workflow_id": loaded["run"]["workflow_id"],
+        "started_at": next(
+            (
+                event["at"]
+                for event in loaded["run"]["status_history"]
+                if event["status"] == "running"
+            ),
+            None,
+        ),
+        "finished_at": (
+            loaded["run"]["updated_at"]
+            if loaded["run"]["status"] == "ready_for_review"
+            else _now_iso()
+        ),
+        "finish_status": "ready_for_review",
+    }
+    if not isinstance(declarations, (str, bytes)):
+        paths = {item.get("path") for item in declarations if isinstance(item, Mapping)}
+        declarations = [
+            *declarations,
+            *(
+                item
+                for item in report_declarations(output_dir)
+                if item["path"] not in paths
+            ),
+        ]
     files = _output_files(output_dir)
     if not files:
         raise LedgerError("An empty workflow output cannot be finalized.")
-    _require_model_data_artifacts(loaded)
+    if reporting["status"] in {"available", "created", "legacy_required"}:
+        _require_model_data_artifacts(loaded)
     if isinstance(declarations, (str, bytes)) or len(declarations) > _MAX_ARTIFACTS:
         raise LedgerError("Artifact declarations are invalid or too numerous.")
     declared: dict[str, Mapping[str, Any]] = {}
@@ -2349,7 +2469,8 @@ def _finalize_run_locked(
             raise LedgerError(
                 "Review-ready artifacts are already sealed with different declarations."
             )
-        return {**loaded, "artifact_manifest": existing}
+        _write_json(Path(loaded["run_root"]) / "model_data_reporting.json", reporting)
+        return {**loaded, "artifact_manifest": existing, "reporting": reporting}
     manifest = _sealed(
         {
             "schema_version": ARTIFACT_MANIFEST_SCHEMA,
@@ -2367,7 +2488,9 @@ def _finalize_run_locked(
         loaded = _write_run_status_locked(
             client_root, engagement_id, run_id, "ready_for_review"
         )
-    return {**loaded, "artifact_manifest": manifest}
+    reporting["finished_at"] = loaded["run"]["updated_at"]
+    _write_json(Path(loaded["run_root"]) / "model_data_reporting.json", reporting)
+    return {**loaded, "artifact_manifest": manifest, "reporting": reporting}
 
 
 def validate_run_artifacts(

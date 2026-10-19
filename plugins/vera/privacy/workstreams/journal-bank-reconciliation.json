@@ -172,7 +172,7 @@
     "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "da761e8d9f1a293be28d62cdb6487d781b661fa0d1ff9005f12defb6aded74ca"
+    "source_fingerprint": "8b90336bc81bd11b37ee78f5bda799e3b0f0e2ebae1227956402e5bc9bc72e06"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"
@@ -192,7 +192,8 @@
           "Solo per i casi selezionati arrivano i campi mappati e valorizzati utili alla revisione. Campi vuoti, colonne non mappate, percorsi e identificativi tecnici restano fuori; gli identificativi professionali esatti arrivano solo quando sono necessari al confronto.",
           "Il modello esamina il residuo ammesso",
           "Solo nel runtime Codex, dopo la riconciliazione, un passaggio separato può ricevere tutti i movimenti bancari ancora aperti e i candidati contabili compatibili, con i soli campi mappati e valorizzati, se l’intero insieme rientra in un unico pacchetto limitato. Il residuo non viene diviso in chiamate automatiche: se supera i limiti, resta interamente alla revisione umana. Cowork non esegue questo passaggio, che non può modificare gli abbinamenti deterministici né lo stato di prontezza.",
-          "I dati professionali non vengono anonimizzati né pseudonimizzati automaticamente. Il contesto di un caso selezionato può contenere nomi, descrizioni, importi, date e riferimenti reali quando servono alla revisione professionale."
+          "I dati professionali non vengono anonimizzati né pseudonimizzati automaticamente. Il contesto di un caso selezionato può contenere nomi, descrizioni, importi, date e riferimenti reali quando servono alla revisione professionale.",
+          "Studio Archive delimita questa esecuzione e genera alla finalizzazione il report di confronto su righe e campi elaborati localmente, esposti al modello e rimasti locali. Il report usa le misure registrate durante preparazione, elaborazione e riesame. Se le misure mancano, segnala che il report non è disponibile; se non resta una quota locale misurabile, non genera il confronto."
         ],
         "en": [
           "The model understands the structure",
@@ -205,7 +206,8 @@
           "Only selected cases supply the mapped, populated fields useful to the review. Empty fields, unmapped columns, paths, and technical identifiers stay out; exact professional identifiers arrive only when the comparison requires them.",
           "The model reviews the admitted residual",
           "Only in the Codex runtime, after reconciliation, a separate step may receive all still-unmatched bank movements and their compatible accounting candidates, using only mapped, populated fields, when the complete set fits one bounded packet. The residual is never split into automatic calls: if it exceeds the limits, it remains entirely in human review. Cowork does not run this step, which cannot change deterministic matches or readiness.",
-          "Professional data is not automatically anonymized or pseudonymized. Selected case context may contain real names, descriptions, amounts, dates, and references when professional review requires them."
+          "Professional data is not automatically anonymized or pseudonymized. Selected case context may contain real names, descriptions, amounts, dates, and references when professional review requires them.",
+          "Studio Archive defines this execution and generates its comparison report at finalization: rows and fields processed locally, exposed to the model and remaining local. The report uses measurements recorded during preparation, processing and review. Missing measurements produce an explicit unavailable status; without a measurable local remainder, no comparison is generated."
         ],
         "fr": [
           "Le modèle comprend la structure",
@@ -218,7 +220,8 @@
           "Seuls les cas sélectionnés transmettent les champs mappés et renseignés utiles à la revue. Les champs vides, colonnes non mappées, chemins et identifiants techniques restent exclus ; les identifiants professionnels exacts ne sont transmis que lorsque la comparaison l'exige.",
           "Le modèle examine le résidu admis",
           "Uniquement dans l’environnement Codex, après le rapprochement, une étape distincte peut recevoir tous les mouvements bancaires encore non rapprochés et leurs candidats comptables compatibles, avec les seuls champs mappés et renseignés, si l’ensemble complet tient dans un paquet limité. Le résidu n’est jamais divisé en appels automatiques : s’il dépasse les limites, il reste intégralement soumis à la revue humaine. Cowork n’exécute pas cette étape, qui ne peut modifier ni les rapprochements déterministes ni l’état de préparation.",
-          "Les données professionnelles ne sont pas automatiquement anonymisées ou pseudonymisées. Le contexte d'un cas sélectionné peut contenir des noms, descriptions, montants, dates et références réels lorsque la revue professionnelle l'exige."
+          "Les données professionnelles ne sont pas automatiquement anonymisées ou pseudonymisées. Le contexte d'un cas sélectionné peut contenir des noms, descriptions, montants, dates et références réels lorsque la revue professionnelle l'exige.",
+          "Studio Archive délimite cette exécution et génère à la finalisation son rapport comparatif : lignes et champs traités localement, exposés au modèle et restés locaux. Le rapport utilise les mesures enregistrées pendant la préparation, le traitement et la revue. Si elles manquent, le rapport est déclaré indisponible ; sans part locale mesurable, aucune comparaison n’est générée."
         ],
         "de": [
           "Das Modell versteht die Struktur",
@@ -231,7 +234,8 @@
           "Nur für ausgewählte Fälle werden die gemappten, befüllten und für die Prüfung nützlichen Felder übermittelt. Leere Felder, nicht gemappte Spalten, Pfade und technische Kennungen bleiben ausgeschlossen; exakte fachliche Kennungen werden nur übermittelt, wenn der Vergleich sie erfordert.",
           "Das Modell prüft den zugelassenen Restbestand",
           "Nur in der Codex-Laufzeit kann nach dem Abgleich ein separater Schritt alle noch nicht zugeordneten Bankbewegungen und ihre kompatiblen Buchhaltungskandidaten mit ausschließlich gemappten, befüllten Feldern erhalten, wenn der vollständige Bestand in ein begrenztes Paket passt. Der Restbestand wird nie in automatische Aufrufe aufgeteilt: Überschreitet er die Grenzen, bleibt er vollständig in der menschlichen Prüfung. Cowork führt diesen Schritt nicht aus; er kann weder deterministische Zuordnungen noch die Freigabebereitschaft ändern.",
-          "Professionelle Daten werden nicht automatisch anonymisiert oder pseudonymisiert. Der Kontext eines ausgewählten Falls kann echte Namen, Beschreibungen, Beträge, Daten und Referenzen enthalten, wenn die fachliche Prüfung sie benötigt."
+          "Professionelle Daten werden nicht automatisch anonymisiert oder pseudonymisiert. Der Kontext eines ausgewählten Falls kann echte Namen, Beschreibungen, Beträge, Daten und Referenzen enthalten, wenn die fachliche Prüfung sie benötigt.",
+          "Studio Archive grenzt diese Ausführung ab und erstellt beim Abschluss ihren Vergleichsbericht: lokal verarbeitete, dem Modell offengelegte und lokal verbliebene Zeilen und Felder. Er verwendet die bei Vorbereitung, Verarbeitung und Prüfung erfassten Messwerte. Fehlen diese, wird der Bericht als nicht verfügbar gemeldet; ohne messbaren lokalen Rest wird kein Vergleich erstellt."
         ],
         "es": [
           "El modelo comprende la estructura",
@@ -244,7 +248,8 @@
           "Solo los casos seleccionados aportan los campos mapeados y cumplimentados útiles para la revisión. Quedan fuera los campos vacíos, las columnas no mapeadas, las rutas y los identificadores técnicos; los identificadores profesionales exactos solo se incluyen cuando la comparación los exige.",
           "El modelo revisa el residuo admitido",
           "Solo en el entorno Codex, después de la conciliación, un paso separado puede recibir todos los movimientos bancarios aún sin conciliar y sus candidatos contables compatibles, usando únicamente campos mapeados y cumplimentados, si el conjunto completo cabe en un único paquete limitado. El residuo nunca se divide en llamadas automáticas: si supera los límites, permanece íntegramente en revisión humana. Cowork no ejecuta este paso, que no puede modificar las conciliaciones deterministas ni el estado de preparación.",
-          "Los datos profesionales no se anonimizan ni se seudonimizan automáticamente. El contexto de un caso seleccionado puede contener nombres, descripciones, importes, fechas y referencias reales cuando la revisión profesional los necesita."
+          "Los datos profesionales no se anonimizan ni se seudonimizan automáticamente. El contexto de un caso seleccionado puede contener nombres, descripciones, importes, fechas y referencias reales cuando la revisión profesional los necesita.",
+          "Studio Archive delimita esta ejecución y genera al finalizar su informe comparativo: filas y campos procesados localmente, expuestos al modelo y conservados en local. Utiliza mediciones registradas durante la preparación, el procesamiento y la revisión. Si faltan, el informe se declara no disponible; sin una parte local medible no se genera la comparación."
         ]
       }
     }

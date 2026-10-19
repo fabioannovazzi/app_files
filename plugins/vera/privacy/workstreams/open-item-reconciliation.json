@@ -110,7 +110,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "ffe7657b851cc45f215d1eb33be0ac6f665071ccd268028a0ca28a4a6c3ffc89"
+    "source_fingerprint": "92654aed5bf0144772e737fea219a895f522732d4e90b4099af9ca2184a4b547"
   },
   "role": "workflow",
   "runtime_profiles": [
@@ -190,7 +190,8 @@
           "L'indice usa riferimenti opachi ai casi e mostra solo il tipo di caso, lo stato e i tipi di segnale del controllo. Non contiene nomi, descrizioni, importi, date, riferimenti o identificativi presenti nelle fonti, né percorsi.",
           "Il modello richiede il contesto di un caso quando serve",
           "Solo per i casi selezionati arrivano i campi mappati e valorizzati utili alla revisione. Campi vuoti, colonne non mappate, percorsi e identificativi tecnici restano fuori; gli identificativi professionali esatti arrivano solo quando sono necessari al confronto.",
-          "I dati professionali non vengono anonimizzati né pseudonimizzati automaticamente. Il contesto di un caso selezionato può contenere nomi, descrizioni, importi, date e riferimenti reali quando servono alla revisione professionale."
+          "I dati professionali non vengono anonimizzati né pseudonimizzati automaticamente. Il contesto di un caso selezionato può contenere nomi, descrizioni, importi, date e riferimenti reali quando servono alla revisione professionale.",
+          "Studio Archive delimita questa esecuzione e genera alla finalizzazione il report di confronto su righe e campi elaborati localmente, esposti al modello e rimasti locali. Il report usa le misure registrate durante preparazione, elaborazione e riesame. Se le misure mancano, segnala che il report non è disponibile; se non resta una quota locale misurabile, non genera il confronto."
         ],
         "en": [
           "The model understands the structure",
@@ -201,7 +202,8 @@
           "The index uses opaque case references and shows only the case type, status, and control signal types. It contains no names, descriptions, amounts, dates, source references or identifiers, or paths.",
           "The model requests a case's context when needed",
           "Only selected cases supply the mapped, populated fields useful to the review. Empty fields, unmapped columns, paths, and technical identifiers stay out; exact professional identifiers arrive only when the comparison requires them.",
-          "Professional data is not automatically anonymized or pseudonymized. Selected case context may contain real names, descriptions, amounts, dates, and references when professional review requires them."
+          "Professional data is not automatically anonymized or pseudonymized. Selected case context may contain real names, descriptions, amounts, dates, and references when professional review requires them.",
+          "Studio Archive defines this execution and generates its comparison report at finalization: rows and fields processed locally, exposed to the model and remaining local. The report uses measurements recorded during preparation, processing and review. Missing measurements produce an explicit unavailable status; without a measurable local remainder, no comparison is generated."
         ],
         "fr": [
           "Le modèle comprend la structure",
@@ -212,7 +214,8 @@
           "L'index utilise des références de cas opaques et indique uniquement le type de cas, son statut et les types de signaux du contrôle. Il ne contient ni noms, descriptions, montants, dates, références ou identifiants provenant des sources, ni chemins.",
           "Le modèle demande le contexte d'un cas lorsque nécessaire",
           "Seuls les cas sélectionnés transmettent les champs mappés et renseignés utiles à la revue. Les champs vides, colonnes non mappées, chemins et identifiants techniques restent exclus ; les identifiants professionnels exacts ne sont transmis que lorsque la comparaison l'exige.",
-          "Les données professionnelles ne sont pas automatiquement anonymisées ou pseudonymisées. Le contexte d'un cas sélectionné peut contenir des noms, descriptions, montants, dates et références réels lorsque la revue professionnelle l'exige."
+          "Les données professionnelles ne sont pas automatiquement anonymisées ou pseudonymisées. Le contexte d'un cas sélectionné peut contenir des noms, descriptions, montants, dates et références réels lorsque la revue professionnelle l'exige.",
+          "Studio Archive délimite cette exécution et génère à la finalisation son rapport comparatif : lignes et champs traités localement, exposés au modèle et restés locaux. Le rapport utilise les mesures enregistrées pendant la préparation, le traitement et la revue. Si elles manquent, le rapport est déclaré indisponible ; sans part locale mesurable, aucune comparaison n’est générée."
         ],
         "de": [
           "Das Modell versteht die Struktur",
@@ -223,7 +226,8 @@
           "Der Index verwendet undurchsichtige Fallreferenzen und zeigt nur Falltyp, Status und Arten von Prüfsignalen. Er enthält keine Namen, Beschreibungen, Beträge, Daten, Quellreferenzen oder Quellkennungen und keine Pfade.",
           "Das Modell fordert bei Bedarf den Kontext eines Falls an",
           "Nur für ausgewählte Fälle werden die gemappten, befüllten und für die Prüfung nützlichen Felder übermittelt. Leere Felder, nicht gemappte Spalten, Pfade und technische Kennungen bleiben ausgeschlossen; exakte fachliche Kennungen werden nur übermittelt, wenn der Vergleich sie erfordert.",
-          "Professionelle Daten werden nicht automatisch anonymisiert oder pseudonymisiert. Der Kontext eines ausgewählten Falls kann echte Namen, Beschreibungen, Beträge, Daten und Referenzen enthalten, wenn die fachliche Prüfung sie benötigt."
+          "Professionelle Daten werden nicht automatisch anonymisiert oder pseudonymisiert. Der Kontext eines ausgewählten Falls kann echte Namen, Beschreibungen, Beträge, Daten und Referenzen enthalten, wenn die fachliche Prüfung sie benötigt.",
+          "Studio Archive grenzt diese Ausführung ab und erstellt beim Abschluss ihren Vergleichsbericht: lokal verarbeitete, dem Modell offengelegte und lokal verbliebene Zeilen und Felder. Er verwendet die bei Vorbereitung, Verarbeitung und Prüfung erfassten Messwerte. Fehlen diese, wird der Bericht als nicht verfügbar gemeldet; ohne messbaren lokalen Rest wird kein Vergleich erstellt."
         ],
         "es": [
           "El modelo comprende la estructura",
@@ -234,7 +238,8 @@
           "El índice utiliza referencias opacas a los casos y muestra solo el tipo de caso, el estado y los tipos de señales del control. No contiene nombres, descripciones, importes, fechas, referencias o identificadores presentes en las fuentes ni rutas.",
           "El modelo solicita el contexto de un caso cuando lo necesita",
           "Solo los casos seleccionados aportan los campos mapeados y cumplimentados útiles para la revisión. Quedan fuera los campos vacíos, las columnas no mapeadas, las rutas y los identificadores técnicos; los identificadores profesionales exactos solo se incluyen cuando la comparación los exige.",
-          "Los datos profesionales no se anonimizan ni se seudonimizan automáticamente. El contexto de un caso seleccionado puede contener nombres, descripciones, importes, fechas y referencias reales cuando la revisión profesional los necesita."
+          "Los datos profesionales no se anonimizan ni se seudonimizan automáticamente. El contexto de un caso seleccionado puede contener nombres, descripciones, importes, fechas y referencias reales cuando la revisión profesional los necesita.",
+          "Studio Archive delimita esta ejecución y genera al finalizar su informe comparativo: filas y campos procesados localmente, expuestos al modelo y conservados en local. Utiliza mediciones registradas durante la preparación, el procesamiento y la revisión. Si faltan, el informe se declara no disponible; sin una parte local medible no se genera la comparación."
         ]
       }
     }

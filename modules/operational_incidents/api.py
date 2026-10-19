@@ -506,8 +506,15 @@ async def incident_mcp(
                 "name": f"{product}-operational-incidents",
                 "version": "1.1.0",
             },
-            "instructions": _INSTRUCTIONS.replace("Vera", product.title()).replace(
-                "vera", product
+            "instructions": (
+                _INSTRUCTIONS.replace(
+                    "Chat-only drafts still require a model-data report from observed phases and its actual receipt; missing client files or a pre-existing input JSON do not waive it.",
+                    "Privacy reporting is restricted to Vera's fixed 13-pipeline list and the exact Studio Archive execution. Archive finalization generates a comparison only from measured evidence of a local remainder. Other pipelines and chat-only tasks have no comparison report or receipt requirement. Missing measurements must remain explicitly unavailable.",
+                )
+                if product == "vera"
+                else _INSTRUCTIONS.replace("Vera", product.title()).replace(
+                    "vera", product
+                )
             ),
         }
     elif method == "ping":

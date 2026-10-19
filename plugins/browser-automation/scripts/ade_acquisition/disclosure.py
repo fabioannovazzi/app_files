@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import importlib.util
 import os
 from pathlib import Path
 from typing import Any
@@ -25,12 +24,6 @@ def vera_root() -> Path:
 
 def write_disclosure(run: Path, document_count: int) -> None:
     """Distinguish known zero worker model calls from unmeasured surrounding chat reads."""
-    path = vera_root() / "scripts/model_data_report.py"
-    spec = importlib.util.spec_from_file_location("vera_acquisition_data_report", path)
-    if spec is None or spec.loader is None:
-        raise AcquisitionError("vera-report-helper-unavailable")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
     request: dict[str, Any] = {
         "schema_version": 1,
         "workflow_id": "agenzia-acquisition",
@@ -83,8 +76,6 @@ def write_disclosure(run: Path, document_count: int) -> None:
         ],
         "improvement_assessment": {"status": "not_assessed", "candidates": []},
     }
-    report, markdown = module.build_model_data_report(request, evidence_root=run)
-    atomic_json(run / "model_data_report.json", report)
-    (run / "model_data_report.md").write_text(markdown, encoding="utf-8")
-    (run / "model_data_report.md").chmod(0o600)
+    # The worker records evidence only. Archive finalization, after model review,
+    # owns the report identity and timing; this worker UUID is not an Archive run.
     atomic_json(run / "model_data_worker_input.json", request)

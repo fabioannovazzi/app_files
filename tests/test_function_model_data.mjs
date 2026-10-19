@@ -44,7 +44,11 @@ for (const product of ['vera', 'clara', 'lucia']) {
     assert.equal(section.dataset.privacyContract, 'a'.repeat(64));
     assert.match(section.text(), new RegExp(`${product}: testo selezionato`));
     assert.equal(main.children.at(-1), section);
-    assert.match(section.text(), /limiti di verifica/);
+    if (product === 'vera') {
+      assert.doesNotMatch(section.text(), /ogni esecuzione sostanziale/);
+    } else {
+      assert.match(section.text(), /limiti di verifica/);
+    }
     language('en');
     assert.match(section.text(), /selected text/);
     assert.doesNotMatch(section.text(), /testo selezionato/);

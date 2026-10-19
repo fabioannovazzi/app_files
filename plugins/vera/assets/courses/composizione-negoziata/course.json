@@ -135,7 +135,7 @@
     {
       "path": "skills/composizione-negoziata/SKILL.md",
       "repository_path": "plugins/vera/skills/composizione-negoziata/SKILL.md",
-      "sha256": "c4237aaff748a4660ff395c3f4c9921be64821528582f81d8e576d518643c782"
+      "sha256": "6501fea5a8a210d2159e290e9fd2e0187738196bac87d6c2f4be9267c766d026"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -375,7 +375,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "592b0cac8a87d80a3cc9b4b0e7958f79be402814ac7b44e0510de7302d745b50"
+      "sha256": "220e14178ddcf811782956f50177732a1664a309eef87847ddb306db7c83381b"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",

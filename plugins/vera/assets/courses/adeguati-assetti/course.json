@@ -140,7 +140,7 @@
     {
       "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "592b0cac8a87d80a3cc9b4b0e7958f79be402814ac7b44e0510de7302d745b50"
+      "sha256": "220e14178ddcf811782956f50177732a1664a309eef87847ddb306db7c83381b"
     },
     {
       "path": "modules/adeguati-assetti/vendor/modules/vera_assurance/decisions.py",
@@ -180,7 +180,7 @@
     {
       "path": "skills/adeguati-assetti/SKILL.md",
       "repository_path": "plugins/vera/skills/adeguati-assetti/SKILL.md",
-      "sha256": "a003117e55be33f33a57844bce521ccebf2408f44669e9e6e1bcfa5048c6647c"
+      "sha256": "e22a0210241fd1a7682f29408ca8ac9bc1c7f3921d47e9b86dbed4567a5e0a27"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -420,7 +420,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "592b0cac8a87d80a3cc9b4b0e7958f79be402814ac7b44e0510de7302d745b50"
+      "sha256": "220e14178ddcf811782956f50177732a1664a309eef87847ddb306db7c83381b"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",

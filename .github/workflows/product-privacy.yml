@@ -29,7 +29,9 @@ jobs:
           tests/plugins/test_vera_privacy_surfaces.py
           tests/plugins/test_clara_privacy_surfaces.py
           tests/plugins/test_vera_cowork_privacy.py
-          --cov=plugins/_shared/privacy-runtime/scripts --cov-report=term-missing --cov-fail-under=80
+          tests/plugins/test_vera_selective_reporting.py
+          --cov=plugins/_shared/privacy-runtime/scripts --cov=run_reporting --cov=selective_reporting
+          --cov-report=term-missing --cov-fail-under=80
       - run: node --test tests/test_function_model_data.mjs
       - name: Check shared contract implementation quality
         run: |

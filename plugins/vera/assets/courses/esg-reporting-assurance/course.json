@@ -65,7 +65,7 @@
     {
       "path": "skills/esg-reporting-assurance/SKILL.md",
       "repository_path": "plugins/vera/skills/esg-reporting-assurance/SKILL.md",
-      "sha256": "5a021648591d0ca0ea8f5e6ea1444e6336e8ac293d8ffcb39bfa48ac3ac09fb8"
+      "sha256": "70c5013e7e87b39628e2c9ff9be592c8b67f7f9801ffe889921d983caf2c1613"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -305,7 +305,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "592b0cac8a87d80a3cc9b4b0e7958f79be402814ac7b44e0510de7302d745b50"
+      "sha256": "220e14178ddcf811782956f50177732a1664a309eef87847ddb306db7c83381b"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",

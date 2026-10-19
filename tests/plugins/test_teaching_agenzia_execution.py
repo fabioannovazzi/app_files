@@ -68,7 +68,8 @@ def test_agenzia_course_acquires_and_resumes_actual_outputs(
     assert "ESEMPIO DIDATTICO" in (run / "report.html").read_text()
     assert (run / "riepilogo.xlsx").is_file()
     assert (run / "fatture.csv").is_file()
-    assert (run / "model_data_report.md").is_file()
+    assert (run / "model_data_worker_input.json").is_file()
+    assert not (run / "model_data_report.md").exists()
     assert not list(run.glob("*.pdf"))
     record_property("agenzia_output_directory", str(run))
     record_native_check(

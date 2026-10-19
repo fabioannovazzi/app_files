@@ -79,6 +79,8 @@ class _FakeGoogleDriveGateway:
 def archive_script_imports(monkeypatch: pytest.MonkeyPatch) -> None:
     """Retain sibling imports independently of other tests' sys.path changes."""
     monkeypatch.syspath_prepend(str(ARCHIVE_CORE_PATH.parent))
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/_shared/vendor/modules"))
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/vera/scripts"))
 
 
 @pytest.fixture(scope="module")
@@ -1230,6 +1232,8 @@ def test_fresh_private_state_recovers_client_engagement_input_and_run(
         "input_count": 1,
         "run_count": 1,
         "private_identity_values_recovered": False,
+        "blocked_runs": [],
+        "recovery_complete": True,
     }
     assert listed["engagements"][0]["engagement_id"] == client_case.engagement_id
     assert listed["engagements"][0]["workflow_runs"][0]["run_id"] == (

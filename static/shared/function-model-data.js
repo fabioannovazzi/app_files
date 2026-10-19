@@ -112,7 +112,9 @@
       paragraph.textContent = text;
       body.append(paragraph);
     }
-    if (available && contract.role === "workflow" && labels.report) {
+    // Vera's selected workflows explain reporting in their reviewed page copy.
+    // Its other functions must not inherit the generic all-runs promise.
+    if (available && selectedProduct !== "vera" && contract.role === "workflow" && labels.report) {
       const paragraph = document.createElement("p");
       paragraph.className = "function-model-data__report-note";
       paragraph.dataset.modelDataReportNote = "";

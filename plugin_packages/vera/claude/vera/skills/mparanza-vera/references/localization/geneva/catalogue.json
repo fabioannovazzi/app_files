@@ -1,150 +1,150 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/app-files-recovered-fixes-deploy/plugins/vera",
-  "version": "0.1.418",
-  "captured_at": "2026-10-19T11:02:05.140947+00:00",
-  "catalogue_fingerprint": "724abd301a540665f94af2285763d14bdd1904113d1c11f259377e1db0fa0fd8",
-  "manifest_sha256": "fc55f1d2169e430a33809599ac5243afc0df87be0f6b698a8778bff1965e7ade",
+  "root": "/private/tmp/app-files-selective-reporting/plugins/vera",
+  "version": "0.1.423",
+  "captured_at": "2026-10-19T12:04:12.608138+00:00",
+  "catalogue_fingerprint": "27fe8e52f66c20d7edea22772e7cf64d6643f338e409015a64db2bca5bcd1b6d",
+  "manifest_sha256": "24175e21a34e96886f1ba768b42e278a6fb296051d71ea696402a40b95399abe",
   "entries": [
     {
       "function_id": "adeguati-assetti",
       "skill_path": "skills/adeguati-assetti/SKILL.md",
-      "sha256": "a003117e55be33f33a57844bce521ccebf2408f44669e9e6e1bcfa5048c6647c"
+      "sha256": "e22a0210241fd1a7682f29408ca8ac9bc1c7f3921d47e9b86dbed4567a5e0a27"
     },
     {
       "function_id": "adversarial-opinion",
       "skill_path": "skills/adversarial-opinion/SKILL.md",
-      "sha256": "6c1799054ffdff7944ec19f07fbfc596dd67a6da2e92d0424df64e8db58a0523"
+      "sha256": "9868e7964cddb61b660a9a4b0b64a79da37e477a85753e51e2fc761b1d965100"
     },
     {
       "function_id": "agenzia-acquisition",
       "skill_path": "skills/agenzia-acquisition/SKILL.md",
-      "sha256": "817f54d4a72fa668a928bf1f02200f908700eebe4cdcdac1226b79cd41b1fe9a"
+      "sha256": "8faf972497e0a06fba5dab17ab803131a57565073f8e6d6d368a0d32f82ad507"
     },
     {
       "function_id": "aml-review",
       "skill_path": "skills/aml-review/SKILL.md",
-      "sha256": "172d82b77418eab5ed6994037c886523af4eb12a62d107441858b065ac199e6f"
+      "sha256": "d43e914d0f04207986df40120bfa905ed7462976c0ff28ecd1b0834a240d0ee8"
     },
     {
       "function_id": "archive-organization",
       "skill_path": "skills/archive-organization/SKILL.md",
-      "sha256": "4be5b2c53f817dfbe7e77ac3ea9d54945eb4b50043c49e8207dee2333c1798ca"
+      "sha256": "c297190952fa280ea154559a7be908a9953fe1d0e0146ceb95977da7c7876e19"
     },
     {
       "function_id": "avviso-intake",
       "skill_path": "skills/avviso-intake/SKILL.md",
-      "sha256": "e9fe435d3b9a546c65a18d7a5a3d47187d62dc8e5adf703cb7087f2d195a3a68"
+      "sha256": "f8c43d4256b1ac87b745b14f9ab6d82ce7d9414dc7b45a0573c071ea7000fbe6"
     },
     {
       "function_id": "bandi-agevolazioni",
       "skill_path": "skills/bandi-agevolazioni/SKILL.md",
-      "sha256": "b47c1271cadb00eed743976e517eed2623e4d870560ec2056804fb4ec46c143c"
+      "sha256": "59f5c4447ce43eba08a484a94e7c423b61648b3c9cc6653fa58568e22003916a"
     },
     {
       "function_id": "bilancio-oic",
       "skill_path": "skills/bilancio-oic/SKILL.md",
-      "sha256": "6f19f421e405fe44bec10f7baa9541273d9bfb2f5b2196a5cab690c309ca26a3"
+      "sha256": "bb63aecd58625aa065d8cbc38e4dc27372337246538aa85dc7c7fe0dc1989e03"
     },
     {
       "function_id": "browser-automation",
       "skill_path": "skills/browser-automation/SKILL.md",
-      "sha256": "a9de904a23a10602f3eef5f45f73ef5f445e8a7384a364522bb2fd8bd1925857"
+      "sha256": "9ab18aa1329070905f74d3247fe54dccbf070def8bb4cf53b0de800d98fccfc8"
     },
     {
       "function_id": "business-planning",
       "skill_path": "skills/business-planning/SKILL.md",
-      "sha256": "20c246c0c39d3079a222b91870bbfdcaa158d9b3a28d84bba37db8dab13738a3"
+      "sha256": "063eab46991f5cb15b626f2c0a201d0e46dd54d65fd22e2cfa476fd12303e200"
     },
     {
       "function_id": "business-valuation",
       "skill_path": "skills/business-valuation/SKILL.md",
-      "sha256": "272b0a25c2d8a4d6e609b0c329d3f3a70a86f195198782073ca64f4cf0400e71"
+      "sha256": "f9dc123bc024500b35de4c311e91178a5a5d13151728ff047c8199d49de9dda3"
     },
     {
       "function_id": "centrale-rischi-review",
       "skill_path": "skills/centrale-rischi-review/SKILL.md",
-      "sha256": "fab6c5dab776336d959bdc9ec5047bcda3bb8d92ef262623ee880de23eac2201"
+      "sha256": "ae17b657d645098e00cc698b97f6dc48e64a4d735892361423613b1ac6f22edd"
     },
     {
       "function_id": "composizione-negoziata",
       "skill_path": "skills/composizione-negoziata/SKILL.md",
-      "sha256": "c4237aaff748a4660ff395c3f4c9921be64821528582f81d8e576d518643c782"
+      "sha256": "6501fea5a8a210d2159e290e9fd2e0187738196bac87d6c2f4be9267c766d026"
     },
     {
       "function_id": "comunicazione-professionale",
       "skill_path": "skills/comunicazione-professionale/SKILL.md",
-      "sha256": "e20ed7ebb36f74b3aa516b4b8b8fe469f0ee1a46ffede196ff314f55e5ec35a0"
+      "sha256": "82492b97395280adfcb4fdf4482c704727cf05b1d6ab408c702587f56fc73a69"
     },
     {
       "function_id": "concordato-plan-review",
       "skill_path": "skills/concordato-plan-review/SKILL.md",
-      "sha256": "a7317411abb070eb71f0493d73cf57f8550f3fc5b7cb55d7f0a39fb290fb3e67"
+      "sha256": "ad989791fa13f351f5f8ce17d6cda8e5f6841af136c39b22ac8461897887d376"
     },
     {
       "function_id": "contenzioso-tributario",
       "skill_path": "skills/contenzioso-tributario/SKILL.md",
-      "sha256": "3cbcee90a2c8f189b4754b2e35f2e0454c3c2e918dda296d79c350b3b4efd252"
+      "sha256": "ec4a6ecf299adc90abf659089dbb34f61c4300ad44b86eaf04c8bf985823eb29"
     },
     {
       "function_id": "datev-invoice-start",
       "skill_path": "skills/datev-invoice-start/SKILL.md",
-      "sha256": "46f6a73c2c889d7e60c94135d4cae1f3ffeea0aadc7da1873b5071f89a41ff25"
+      "sha256": "ef3027acebb4a0a72f79be301b02dbbe26d850875d37f6606a7d6fb1b88ac66d"
     },
     {
       "function_id": "dati-fiscali-strutturati",
       "skill_path": "skills/dati-fiscali-strutturati/SKILL.md",
-      "sha256": "31bb4021c63643b50875d24bc68996fa6b394eed5df76d32e54f910182a71e39"
+      "sha256": "f476fa92ae907c60fd4dcc47d56c60ab59f4b3dd6a2a42eedbbd4afd500b8cb9"
     },
     {
       "function_id": "deep-research",
       "skill_path": "skills/deep-research/SKILL.md",
-      "sha256": "b9be93af78ba6cb2ad3ad1ed5c1f8c0660e9859a7ded0c3def94eb1440d010c4"
+      "sha256": "95e4e9fcd91e276ceebb755c25b4efe9e41c0aecd8b565dc0c7ee7ead057a0ce"
     },
     {
       "function_id": "email-cliente",
       "skill_path": "skills/email-cliente/SKILL.md",
-      "sha256": "8abeeb773e05cf716f6de34d97618f55f221c133c13db89c90266ae0e919f9b0"
+      "sha256": "c6cbdd36b228bd5f15b572bb026cd0a56be3e723a688abfe3fe4f2c9427248d8"
     },
     {
       "function_id": "esg-reporting-assurance",
       "skill_path": "skills/esg-reporting-assurance/SKILL.md",
-      "sha256": "5a021648591d0ca0ea8f5e6ea1444e6336e8ac293d8ffcb39bfa48ac3ac09fb8"
+      "sha256": "70c5013e7e87b39628e2c9ff9be592c8b67f7f9801ffe889921d983caf2c1613"
     },
     {
       "function_id": "fatture-xml-check",
       "skill_path": "skills/fatture-xml-check/SKILL.md",
-      "sha256": "6c2c2f28cec7acd004bb349c7228e8968775be00053621e862cf591e819af4b9"
+      "sha256": "c19c82cdb0d930070b07ff577ffe33da06091a545eaa3f79fd37389e6fbbd151"
     },
     {
       "function_id": "financial-analysis",
       "skill_path": "skills/financial-analysis/SKILL.md",
-      "sha256": "52cc54f276e42849687771c4262f38a923caf9683083cf988d9ca317723c2269"
+      "sha256": "bf46213129cc6bdb8b4204d255556a8ac5810313ca4968b746e6564456b6419b"
     },
     {
       "function_id": "financial-report-builder",
       "skill_path": "skills/financial-report-builder/SKILL.md",
-      "sha256": "326943b2793ec9f7dcf7495c29b970a120e1dd70a53843009aaeb385193aec6b"
+      "sha256": "bce67e01208087fc70c55fceeecec925e42903c57dc5d541ba7c828a1d5db3c3"
     },
     {
       "function_id": "fusione-guidata",
       "skill_path": "skills/fusione-guidata/SKILL.md",
-      "sha256": "06aedc32b73e9dcb3bc82bc94f601f491b7f4318709fe87e765db2dc5cada0d4"
+      "sha256": "d8e53424998d9ff48f5045d46a648c5074cc1f35c750fa703374451577d05bd7"
     },
     {
       "function_id": "invoice-xml",
       "skill_path": "skills/invoice-xml/SKILL.md",
-      "sha256": "dc2398bb8884a6c98f2ec249d8f68098a05925f68cee347c9304e29b308705ec"
+      "sha256": "05d57f5b5ce608f99a794961c61a46cb8f5b6a187f49ce1eef42ef7228eda0e1"
     },
     {
       "function_id": "journal-bank-reconciliation",
       "skill_path": "skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "2e4fd8460246ddbd9a7341ac143dfe2277be28a8309e452a8aeaa633f6671e14"
+      "sha256": "d373a6e3b6982b85fcf4b71b494786207c5604112415c4e198737a59b89effc2"
     },
     {
       "function_id": "journal-sampling",
       "skill_path": "skills/journal-sampling/SKILL.md",
-      "sha256": "96921cbad3c4cebb9e67a337c5e8ad9d50e153c8935ede62424a41e990c64e8d"
+      "sha256": "885b78755a3054aac3d07bd5e53a81fe61a4b58192e226c95b0a529868f04b2e"
     },
     {
       "function_id": "learn-with-vera",
@@ -164,47 +164,47 @@
     {
       "function_id": "lipe",
       "skill_path": "skills/lipe/SKILL.md",
-      "sha256": "d37835e20e160e4724d7be151308c8fe6a675499a38e7504c9cd12adf6627046"
+      "sha256": "f7c35261d70feff652e228bd51047d83184f1123d418f20724e85196c49fa061"
     },
     {
       "function_id": "management-control-pack",
       "skill_path": "skills/management-control-pack/SKILL.md",
-      "sha256": "f5d569eaad2930c1cfe3bc63ac6663dfcb082fa13c0485da9ec0d30baec4cfa2"
+      "sha256": "d1177a73390d1b4de71c68ab52e00d53fecbed84b4b0e2a025db0d6a26cdb729"
     },
     {
       "function_id": "new-client",
       "skill_path": "skills/new-client/SKILL.md",
-      "sha256": "065290b9f40edd25598a9449e56ee6579b6fb5a93977fa91ccfb8b56f6a1df5b"
+      "sha256": "95294ff49b373c5e970b8f652f71da46cef8bc67efc9343d5b1b8ef0460e0c94"
     },
     {
       "function_id": "open-item-reconciliation",
       "skill_path": "skills/open-item-reconciliation/SKILL.md",
-      "sha256": "c86551c52d0f1fc2dab8355476b0bed7335aea3840ed92f8c8785fcb9986ef99"
+      "sha256": "491b905691d49d1e380416f77d963e0a09b43a6dc23095d430f4c885a46befc0"
     },
     {
       "function_id": "organizzazione-lavoro",
       "skill_path": "skills/organizzazione-lavoro/SKILL.md",
-      "sha256": "b058a663c65219c577d19399e2d8800ae658e5e77e3f8fa85760935bc1e79041"
+      "sha256": "f16cb8455c5025d9e5e550b1aff23e0be6068d50ff428919b0703ab26423f486"
     },
     {
       "function_id": "patent-box-review",
       "skill_path": "skills/patent-box-review/SKILL.md",
-      "sha256": "537d81d49279594ea7448e435b45159d1db41171d3dee34049fc211dccb56d76"
+      "sha256": "c4c173af7d710a060944af320812845e936eb7ee41c1ef17a64ddcd69928bbd3"
     },
     {
       "function_id": "posizioni-negoziali",
       "skill_path": "skills/posizioni-negoziali/SKILL.md",
-      "sha256": "2d93ab1b1b3f6ef21f2ed077aa3f62ba0351771ca57ecbab0e1f227171a0c92a"
+      "sha256": "6f99b354b29a4f2b69fa88063ddfb024897d5d8dedb9c5bb452614c556f746db"
     },
     {
       "function_id": "presenza-digitale-studio",
       "skill_path": "skills/presenza-digitale-studio/SKILL.md",
-      "sha256": "eea4cb85adb9a18547ab19725793154c22abe38c37dd1bf8897f2754b8513368"
+      "sha256": "3d02c7d8cafd5ec4fd26dac57420b754b8ec52d7fb4d45a1f8a3d698eb53a9b9"
     },
     {
       "function_id": "previdenza-inps",
       "skill_path": "skills/previdenza-inps/SKILL.md",
-      "sha256": "1c01dbc66f7946d9b0854cbad68482941d7655629677dfcd49152dd20911608e"
+      "sha256": "f966574d3732bbbc6b56524824e163d1771daccfd8e62df9307248e73381c679"
     },
     {
       "function_id": "privacy-surface-review",
@@ -214,22 +214,22 @@
     {
       "function_id": "purchase-invoice-review",
       "skill_path": "skills/purchase-invoice-review/SKILL.md",
-      "sha256": "7149489378e79dd59cb71da00ce59ef37e538ba880bab2ca07942e01d04bdcc7"
+      "sha256": "e4f44f485ccb7c5ac3fe0734566183d095d4a9dac04d742c36a7230d0afdca23"
     },
     {
       "function_id": "quesito-legale-fiscale",
       "skill_path": "skills/quesito-legale-fiscale/SKILL.md",
-      "sha256": "62f0f8b16fff92da424ebd503e567bbd7016412aa97d69f235d23a5f3119ed29"
+      "sha256": "ed7e93f4fc326b468f4d74653f2962e65d6556966f7f5221e4389cd616a5d362"
     },
     {
       "function_id": "rating-legalita",
       "skill_path": "skills/rating-legalita/SKILL.md",
-      "sha256": "b65f184075d00ee71944551b291aa2ea46c2a0c1f023a5d21dc5007955d4fab3"
+      "sha256": "acb318a64333c53202dc95a9728999270322c6cf4ebe49d988b3fa064e78e93b"
     },
     {
       "function_id": "registro-imprese-sari",
       "skill_path": "skills/registro-imprese-sari/SKILL.md",
-      "sha256": "3f10ea6c4d922c120a0ff3144ace1c3b2c392289777f8ac60c200f98e1cc5d8a"
+      "sha256": "84bfa2d05414e728b15e4e0adb657df1f913f7cd7b54f48f9e250904e918a823"
     },
     {
       "function_id": "research-subscriptions",
@@ -239,12 +239,12 @@
     {
       "function_id": "sales-plan",
       "skill_path": "skills/sales-plan/SKILL.md",
-      "sha256": "db550b431b8f0e8bc48bf64a32d964f6bdaf16f1d0155e502b788e14a871412f"
+      "sha256": "b4326435c9c8e9824618609451f447255b578726112a1ed67427a771452643a5"
     },
     {
       "function_id": "scissione-guidata",
       "skill_path": "skills/scissione-guidata/SKILL.md",
-      "sha256": "bbd55a24071edb88f697b0ac530a4271fba2e78f2e6f6200c7fe360aab074699"
+      "sha256": "ddc2f20da7b0b1b0783336e093a9acd7bf96d9feb1c15262aacf94eda71c3591"
     },
     {
       "function_id": "studio-archive",
@@ -254,32 +254,32 @@
     {
       "function_id": "studio-document-format",
       "skill_path": "skills/studio-document-format/SKILL.md",
-      "sha256": "3a9fc1db3ef44199e83e08bdb43a809a29112ddefb6da21ce6c57440f040a224"
+      "sha256": "dfb7f5417471a5500dc3d37b58772e8b565acbe262c06efb357f2da2e539bfd5"
     },
     {
       "function_id": "trasformazione",
       "skill_path": "skills/trasformazione/SKILL.md",
-      "sha256": "edfacbd6d93fb7ef02fdecb73f354062a823ea2da94ebffb505976ffca60e88f"
+      "sha256": "5aad8db4557144e179c32a1e59b4ba54ecff8f426d7a4506d06129011fa773ab"
     },
     {
       "function_id": "treasury-forecast",
       "skill_path": "skills/treasury-forecast/SKILL.md",
-      "sha256": "323dc739f46eea0d24d8475bab05bb1c7534b27391e9710d329b4f77fe142870"
+      "sha256": "f7f9132206de9f57cdf2b9bb3c7bf3fe4a4174fe6cb03c107b2fe098b5a98ea1"
     },
     {
       "function_id": "variance-analysis",
       "skill_path": "skills/variance-analysis/SKILL.md",
-      "sha256": "2e53e90c0fd2fff2434bf10ba0767717fa84022c4b7cf8a2d5f07438d0baab10"
+      "sha256": "b115b8ffd7c413f2960a5b0455bc7c2d905852e0c1ab3a048461af206deff945"
     },
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "0a80949e963b7cc04f85e3186b04aa3bac67eb9d66822dd0af286db2b3682368"
+      "sha256": "ebe0516ee9a78b55d2d9114613089ea49f88ef29db7264318da141566502f553"
     },
     {
       "function_id": "vouching",
       "skill_path": "skills/vouching/SKILL.md",
-      "sha256": "487a70c5182bd4b502a67a0d28478796f4aac1601447227ea0eaa8afd93d9562"
+      "sha256": "e856c1a01445e112287a78d2f0a5e7953253de3a953e89e58f50b0ecd97f961f"
     }
   ]
 }
