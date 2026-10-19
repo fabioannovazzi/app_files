@@ -137,9 +137,32 @@ def _read_registration_pdf(
         r"^seguito registrazione del\s+(?P<date>\d{2}/\d{2}/\d{4})\s*$", re.IGNORECASE
     )
     money = re.compile(r"^-?\d{1,3}(?:\.\d{3})*,\d{2}$|^-?\d+,\d{2}$")
-    from .rules import CONTINUATION, HEADER, RULE_KEYS, RuleLayout
+    from .rules import (
+        CONTINUATION,
+        HEADER,
+        RULE_KEYS,
+        RuleLayout,
+        money_candidate,
+        negative_notation,
+        signed_amount,
+    )
 
     rules = RuleLayout(layout) if RULE_KEYS.intersection(layout) else None
+    eligibility = rules.negative_eligibility(path, bands) if rules is not None else None
+    if eligibility is not None and eligibility["issue_count"]:
+        return [], {
+            "parser": "registration_pdf",
+            "accepted": False,
+            "page_count": eligibility["page_count"],
+            "candidate_row_count": 0,
+            "emitted_row_count": 0,
+            "rejected_row_count": eligibility["issue_count"],
+            "rejected_rows": eligibility["issues"][:50],
+            "rejected_rows_truncated": eligibility["issue_count"] > 50,
+            "negative_amount_eligibility": eligibility,
+            "reason": "registration_pdf_incomplete_or_unbalanced",
+            **rules.diagnostics(),
+        }
     if rules is not None and rules.border:
         header, continuation = HEADER, CONTINUATION
     records: list[dict[str, Any]] = []
@@ -201,7 +224,7 @@ def _read_registration_pdf(
                             continue
                         if not body[0] <= float(line[0]["top"]) < body[1]:
                             if (
-                                any(money.fullmatch(str(w["text"])) for w in line)
+                                any(money_candidate(str(w["text"])) for w in line)
                                 or header.fullmatch(text)
                                 or continuation.fullmatch(text)
                             ):
@@ -273,7 +296,7 @@ def _read_registration_pdf(
                         for prefix in ignored
                     ):
                         if rules is not None and any(
-                            money.fullmatch(str(w["text"])) for w in line
+                            money_candidate(str(w["text"])) for w in line
                         ):
                             reject(
                                 page_number,
@@ -303,7 +326,11 @@ def _read_registration_pdf(
                                     "word_crosses_reviewed_column",
                                 )
                             cells[owner].append(str(word["text"]))
-                        elif money.fullmatch(str(word["text"])):
+                        elif (
+                            money_candidate(str(word["text"]))
+                            if rules is not None
+                            else money.fullmatch(str(word["text"]))
+                        ):
                             unassigned_money = True
                         elif rules is not None:
                             reject(
@@ -363,8 +390,25 @@ def _read_registration_pdf(
                                     row_number,
                                     "posting_without_page_continuation",
                                 )
+                        notation = negative_notation(amount_text)
+                        issue = (
+                            rules.amount_issue(amount_text)
+                            if rules is not None
+                            else (
+                                "unsupported_negative_amount_notation"
+                                if notation in ("trailing_minus", "parentheses")
+                                else None
+                            )
+                        )
+                        if issue:
+                            reject(page_number, row_number, issue)
+                            continue
                         if (
-                            not money.fullmatch(amount_text)
+                            not (
+                                money_candidate(amount_text)
+                                if rules is not None
+                                else money.fullmatch(amount_text)
+                            )
                             or registration is None
                             or side not in pending_accounts
                         ):
@@ -374,14 +418,23 @@ def _read_registration_pdf(
                                 "posting_requires_registration_account_and_amount",
                             )
                             continue
-                        amount = Decimal(amount_text.replace(".", "").replace(",", "."))
-                        if amount < ZERO:
+                        amount = signed_amount(amount_text)
+                        source_amount = amount
+                        output_side = side
+                        if amount < ZERO and rules is None:
                             reject(
                                 page_number,
                                 row_number,
                                 "negative_amount_side_requires_review",
                             )
                             continue
+                        if (
+                            notation is not None
+                            and rules is not None
+                            and rules.negative_semantics == "opposite_side"
+                        ):
+                            output_side = "credit" if side == "debit" else "debit"
+                            amount = -amount
                         record = {
                             "entry_date": registration["date"].isoformat(),
                             "movement_number": registration["number"],
@@ -392,8 +445,8 @@ def _read_registration_pdf(
                                     [registration["description"], pending_description],
                                 )
                             ),
-                            "debit": str(amount) if side == "debit" else "0",
-                            "credit": str(amount) if side == "credit" else "0",
+                            "debit": str(amount) if output_side == "debit" else "0",
+                            "credit": str(amount) if output_side == "credit" else "0",
                             "currency": currency,
                             "unit": "currency",
                             "reported_increment": "0.01",
@@ -401,12 +454,23 @@ def _read_registration_pdf(
                             "source_sheet": "PDF",
                             "source_page": page_number,
                             "source_row": row_number,
+                            **(
+                                {
+                                    "source_amount_text": amount_text,
+                                    "source_amount_side": side,
+                                    "negative_amount_semantics": rules.negative_semantics,
+                                }
+                                if notation is not None and rules is not None
+                                else {}
+                            ),
                         }
                         records.append(record)
                         page_postings += 1
                         if rules is not None:
-                            rules.running[side] += amount
-                        registration[side] += amount
+                            # Printed totals use signed source columns even when
+                            # the reviewed output moves reversals to the other side.
+                            rules.running[side] += source_amount
+                        registration[output_side] += amount
                         registration["postings"] += 1
                         emitted = True
                     if emitted:

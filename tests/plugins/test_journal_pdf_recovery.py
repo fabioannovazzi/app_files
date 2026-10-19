@@ -12,7 +12,7 @@ from zipfile import ZipFile
 
 import pytest
 
-from tests.plugins.journal_pdf_fixtures import write_grid_pdf
+from tests.plugins.journal_pdf_fixtures import write_grid_pdf, write_negative_grid_pdf
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -30,6 +30,218 @@ def recovery(reader):
     from vera_journal_pdf.recovery import recover_pdf
 
     return recover_pdf
+
+
+@pytest.mark.parametrize(
+    "notation,amount", [("leading_minus", "-25,88"), ("trailing_minus", "25,88-")]
+)
+@pytest.mark.parametrize(
+    "semantics,expected",
+    [
+        ("signed_side", [("-25.88", "0"), ("0", "-25.88")]),
+        ("opposite_side", [("0", "25.88"), ("25.88", "0")]),
+    ],
+)
+def test_reviewed_negatives_preserve_accounts_and_source_totals(
+    reader, tmp_path, notation, amount, semantics, expected
+):
+    source = tmp_path / "reversal.pdf"
+    layout = write_negative_grid_pdf(source, amount=amount)
+    layout.update(
+        negative_amount_notation=notation, negative_amount_semantics=semantics
+    )
+
+    rows, diag = reader(source, layout)
+
+    assert diag["accepted"], diag
+    assert [(r["debit"], r["credit"]) for r in rows] == expected
+    assert [r["account"] for r in rows] == ["1.01.001", "2.01.001"]
+    assert rows[0]["line_desc"] == "OPS! SRLS"
+    assert rows[0]["source_amount_text"] == amount
+    assert rows[0]["source_amount_side"] == "debit"
+    assert rows[0]["negative_amount_semantics"] == semantics
+    assert diag["running_total_basis"] == "signed_source_sides"
+    assert diag["running_total_controls"][0]["recomputed"] == {
+        "debit": "74.12",
+        "credit": "74.12",
+    }
+    assert diag["running_total_controls"][0]["matched"] is True
+
+
+@pytest.mark.parametrize(
+    "amount,notation,reason",
+    [
+        ("25,88-", None, "unsupported_negative_amount_notation"),
+        ("-25,88", None, "negative_amount_side_requires_review"),
+        ("(25,88)", None, "unsupported_negative_amount_notation"),
+        ("-25,88", "trailing_minus", "unsupported_negative_amount_notation"),
+        ("25,88-", "leading_minus", "unsupported_negative_amount_notation"),
+        ("0,00-", None, "unsupported_negative_amount_notation"),
+    ],
+)
+def test_negative_eligibility_reports_every_page_before_parsing(
+    reader, tmp_path, amount, notation, reason
+):
+    source = tmp_path / "reversal.pdf"
+    layout = write_negative_grid_pdf(source, amount=amount, pages=3)
+    if notation:
+        layout.update(
+            negative_amount_notation=notation, negative_amount_semantics="signed_side"
+        )
+
+    rows, diag = reader(source, layout)
+
+    assert rows == []
+    assert diag["accepted"] is False
+    assert diag["candidate_row_count"] == 0
+    assert diag["negative_amount_eligibility"]["page_count"] == 3
+    assert diag["negative_amount_eligibility"]["issue_count"] == 6
+    assert [r["source_page"] for r in diag["rejected_rows"]] == [1, 1, 2, 2, 3, 3]
+    assert {r["reason"] for r in diag["rejected_rows"]} == {reason}
+    assert diag["rejected_rows"][0]["source_row"] == 2
+    assert diag["rejected_rows"][0]["amount_text"] == amount
+
+
+@pytest.mark.parametrize(
+    "amount,total,opening",
+    [
+        ("1.234,56-", "765,44", "2000"),
+        ("25,88-", "25,88-", "0"),
+    ],
+)
+def test_reviewed_negatives_handle_grouped_amounts_and_negative_footers(
+    reader, tmp_path, amount, total, opening
+):
+    source = tmp_path / "reversal.pdf"
+    layout = write_negative_grid_pdf(source, amount=amount, total=total)
+    layout["running_totals"].update(opening_debit=opening, opening_credit=opening)
+    layout.update(
+        negative_amount_notation="trailing_minus",
+        negative_amount_semantics="signed_side",
+    )
+
+    rows, diag = reader(source, layout)
+
+    assert diag["accepted"], diag
+    assert len(rows) == 2
+    assert diag["running_total_controls"][0]["matched"] is True
+
+
+@pytest.mark.parametrize("semantics", ["signed_side", "opposite_side"])
+def test_same_source_side_reversal_balances_after_review(reader, tmp_path, semantics):
+    source = tmp_path / "reversal.pdf"
+    layout = write_negative_grid_pdf(
+        source, total="100,00", counterpart="25,88", same_side=True
+    )
+    layout.update(
+        negative_amount_notation="trailing_minus", negative_amount_semantics=semantics
+    )
+
+    rows, diag = reader(source, layout)
+
+    assert diag["accepted"], diag
+    assert len(rows) == 2
+    assert rows[1]["debit"] == "25.88"
+    assert rows[1]["credit"] == "0"
+
+
+@pytest.mark.parametrize(
+    "options",
+    [
+        {"negative_amount_notation": "trailing_minus"},
+        {"negative_amount_semantics": "signed_side"},
+        {
+            "negative_amount_notation": "parentheses",
+            "negative_amount_semantics": "signed_side",
+        },
+        {
+            "negative_amount_notation": "trailing_minus",
+            "negative_amount_semantics": "automatic",
+        },
+    ],
+)
+def test_negative_policy_requires_two_explicit_supported_choices(
+    reader, tmp_path, options
+):
+    source = tmp_path / "reversal.pdf"
+    layout = write_negative_grid_pdf(source)
+    layout.update(options)
+
+    with pytest.raises(ValueError, match="negative_amount_"):
+        reader(source, layout)
+
+
+@pytest.mark.parametrize(
+    "amount,reason",
+    [
+        ("100,00-", "unsupported_negative_amount_notation"),
+        ("-100,00", "negative_amount_side_requires_review"),
+    ],
+)
+def test_legacy_negative_diagnostics_do_not_enable_unreviewed_postings(
+    reader, tmp_path, amount, reason
+):
+    from tests.plugins.test_journal_sampling_plugin import (
+        _write_registration_journal_pdf,
+    )
+
+    source = tmp_path / "legacy.pdf"
+    layout = _write_registration_journal_pdf(source, credit=amount)
+
+    rows, diag = reader(source, layout)
+
+    assert rows == []
+    assert reason in [r["reason"] for r in diag["rejected_rows"]]
+
+
+@pytest.mark.parametrize(
+    "total,counterpart,reason",
+    [
+        ("74,13", "25,88-", "running_total_does_not_match_postings"),
+        ("74,12", "25,87-", "registration_debit_credit_do_not_balance"),
+        ("74,12", "-25,88-", "posting_requires_registration_account_and_amount"),
+    ],
+)
+def test_negative_policy_does_not_relax_completeness_controls(
+    reader, tmp_path, total, counterpart, reason
+):
+    source = tmp_path / "reversal.pdf"
+    layout = write_negative_grid_pdf(source, total=total, counterpart=counterpart)
+    layout.update(
+        negative_amount_notation="trailing_minus",
+        negative_amount_semantics="opposite_side",
+    )
+
+    rows, diag = reader(source, layout)
+
+    assert rows == []
+    assert reason in [r["reason"] for r in diag["rejected_rows"]]
+
+
+def test_recovery_retains_all_negative_locations_with_bounded_projection(
+    recovery, tmp_path
+):
+    source = tmp_path / "reversal.pdf"
+    layout = write_negative_grid_pdf(source, pages=26)
+    out = tmp_path / "out"
+
+    result = recovery(
+        source,
+        out,
+        "trial",
+        currency="EUR",
+        layout=layout,
+        reason="Review printed reversal notation",
+    )
+
+    saved = json.loads((out / "pdf_recovery/attempt-01.json").read_text())
+    assert saved["diagnostics"]["negative_amount_eligibility"]["issue_count"] == 52
+    assert len(saved["diagnostics"]["negative_amount_eligibility"]["issues"]) == 52
+    assert len(result["diagnostics"]["negative_amount_eligibility"]["issues"]) == 50
+    assert (
+        result["diagnostics"]["negative_amount_eligibility"]["issues_truncated"] is True
+    )
+    assert result["status"] == "revise_layout"
 
 
 def test_grid_removes_only_rules_and_excludes_totals(reader, tmp_path):
@@ -300,7 +512,10 @@ def test_inspection_renders_all_requested_pages(recovery, tmp_path):
     )
 
 
-def test_recovered_layout_passes_managed_normalization_replay_and_sampling(tmp_path):
+@pytest.mark.parametrize("semantics", [None, "signed_side", "opposite_side"])
+def test_recovered_layout_passes_managed_normalization_replay_and_sampling(
+    tmp_path, semantics
+):
     from tests.plugins.test_journal_sampling_plugin import (
         _approve_suggested_recipe,
         _running_customer_output,
@@ -309,7 +524,16 @@ def test_recovered_layout_passes_managed_normalization_replay_and_sampling(tmp_p
 
     core = load_core()
     source = tmp_path / "grid.pdf"
-    layout = write_grid_pdf(source, pages=1)
+    layout = (
+        write_negative_grid_pdf(source)
+        if semantics
+        else write_grid_pdf(source, pages=1)
+    )
+    if semantics:
+        layout.update(
+            negative_amount_notation="trailing_minus",
+            negative_amount_semantics=semantics,
+        )
     context_path, output = _running_customer_output(tmp_path, source_path=source)
     context = core.load_client_engagement_context(context_path)
     bound = Path(context["input_bindings"][0]["path"])
@@ -374,7 +598,12 @@ def test_recovered_layout_passes_managed_normalization_replay_and_sampling(tmp_p
         client_engagement=context,
     )
 
-    assert normalized.frame.height == 3
+    assert normalized.frame.height == (2 if semantics else 3)
+    if semantics:
+        assert normalized.frame["amount_signed"].cast(str).to_list() == [
+            "-25.88",
+            "25.88",
+        ]
     assert sample.frame.height == 1
     assert (normalization / "pdf_recovery/freeze_receipt.json").is_file()
 
@@ -403,7 +632,10 @@ def test_managed_recovery_rejects_unbound_source_before_writes(tmp_path):
 
 
 @pytest.mark.parametrize("mutate", [False, True])
-def test_ruled_layout_bank_mapping_receipt_seals_recovery_options(tmp_path, mutate):
+@pytest.mark.parametrize("semantics", [None, "signed_side", "opposite_side"])
+def test_ruled_layout_bank_mapping_receipt_seals_recovery_options(
+    tmp_path, mutate, semantics
+):
     from tests.plugins.test_journal_bank_reconciliation_plugin import (
         _attach_current_mapping_receipt,
         _save_csv,
@@ -413,12 +645,25 @@ def test_ruled_layout_bank_mapping_receipt_seals_recovery_options(tmp_path, muta
 
     core = load_core()
     journal, bank = tmp_path / "grid.pdf", tmp_path / "bank.csv"
-    layout = write_grid_pdf(journal, pages=1)
+    layout = (
+        write_negative_grid_pdf(journal)
+        if semantics
+        else write_grid_pdf(journal, pages=1)
+    )
+    if semantics:
+        layout.update(
+            negative_amount_notation="trailing_minus",
+            negative_amount_semantics=semantics,
+        )
     _save_csv(
         bank,
         [
             ["Date", "Amount", "Description"],
-            ["2024-01-01", "32.94", "Example punctuation"],
+            (
+                ["2023-01-01", "-25.88", "OPS! SRLS"]
+                if semantics
+                else ["2024-01-01", "32.94", "Example punctuation"]
+            ),
         ],
     )
     proposed = tmp_path / "proposed.json"
@@ -451,9 +696,15 @@ def test_ruled_layout_bank_mapping_receipt_seals_recovery_options(tmp_path, muta
     )
     if mutate:
         changed = json.loads(sealed.read_text())
-        changed["journal"]["files"][journal.name]["pdf_registration_layout"][
-            "rule_characters"
-        ]["tolerance"] = "0.6"
+        changed_layout = changed["journal"]["files"][journal.name][
+            "pdf_registration_layout"
+        ]
+        if semantics:
+            changed_layout["negative_amount_semantics"] = (
+                "opposite_side" if semantics == "signed_side" else "signed_side"
+            )
+        else:
+            changed_layout["rule_characters"]["tolerance"] = "0.6"
         sealed.write_text(json.dumps(changed))
         with pytest.raises(ValueError):
             core.run_reconciliation(
@@ -474,7 +725,7 @@ def test_ruled_layout_bank_mapping_receipt_seals_recovery_options(tmp_path, muta
             date_window_days=0,
         )
         assert result.matches.height == 1
-        assert result.unmatched_journal.height == 2
+        assert result.unmatched_journal.height == (1 if semantics else 2)
 
 
 def test_freeze_rejects_changed_replay_results(recovery, monkeypatch, tmp_path):
@@ -584,7 +835,11 @@ def test_managed_host_recovery_entrypoint(tmp_path, monkeypatch, host, workflow)
     environment = harness._runtime_environment(root, tmp_path)
     if workflow == "journal-sampling":
         source = tmp_path / "journal.pdf"
-        layout = write_grid_pdf(source, pages=2)
+        layout = write_negative_grid_pdf(source)
+        layout.update(
+            negative_amount_notation="trailing_minus",
+            negative_amount_semantics="opposite_side",
+        )
         context, output = _running_customer_output(tmp_path, source_path=source)
         hydrated = load_core().load_client_engagement_context(context)
         bound = Path(hydrated["input_bindings"][0]["path"])
@@ -599,7 +854,12 @@ def test_managed_host_recovery_entrypoint(tmp_path, monkeypatch, host, workflow)
 
         def write_source(path, rows):
             if path.name == "journal.pdf":
-                layouts.append(write_grid_pdf(path, pages=2))
+                layout = write_negative_grid_pdf(path)
+                layout.update(
+                    negative_amount_notation="trailing_minus",
+                    negative_amount_semantics="opposite_side",
+                )
+                layouts.append(layout)
             else:
                 original(path, rows)
 

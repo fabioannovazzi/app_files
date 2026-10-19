@@ -7,8 +7,41 @@ from typing import Any
 
 from reportlab.pdfgen import canvas
 
-__all__ = ["write_grid_pdf", "grid_layout"]
+__all__ = ["write_grid_pdf", "grid_layout", "write_negative_grid_pdf"]
 POSITIONS = [20, 96.8, 173.6, 404, 485.6, 567.2]
+
+
+def write_negative_grid_pdf(
+    path: Path,
+    *,
+    amount: str = "25,88-",
+    total: str = "74,12",
+    pages: int = 1,
+    counterpart: str | None = None,
+    same_side: bool = False,
+) -> dict[str, Any]:
+    """Print explicit reversals and independent source controls; no derived oracle."""
+    pdf = canvas.Canvas(str(path), pagesize=(600, 800))
+    for number in range(1, pages + 1):
+        pdf.setFont("Courier", 8)
+        pdf.drawString(20, 750, f"+----+ {number} ---- 01/01/2023 ----+----+")
+        for y in (720, 700):
+            for x in POSITIONS:
+                pdf.drawString(x, y, "!")
+        pdf.drawString(24.8, 720, "1.01.001")
+        pdf.drawString(178.4, 720, "OPS! SRLS")
+        pdf.drawRightString(480, 720, amount)
+        pdf.drawString(24.8 if same_side else 101.6, 700, "2.01.001")
+        pdf.drawString(178.4, 700, "ACEA ATO 2 S.P.A.")
+        pdf.drawRightString(480 if same_side else 562, 700, counterpart or amount)
+        pdf.drawString(178.4, 680, "TOTALI PROGRESSIVI")
+        pdf.drawRightString(480, 680, total)
+        pdf.drawRightString(562, 680, total)
+        pdf.showPage()
+    pdf.save()
+    layout = grid_layout()
+    layout["running_totals"].update(opening_debit="100", opening_credit="100")
+    return layout
 
 
 def grid_layout() -> dict[str, Any]:
