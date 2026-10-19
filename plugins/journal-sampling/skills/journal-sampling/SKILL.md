@@ -320,6 +320,16 @@ Do not ask the user to edit JSON. Ask the user in business terms, then Codex upd
 
 Available methods are `random`, `systematic`, `stratified`, and `mus`. Random sampling uses seed `42`; MUS uses deterministic cumulative amount thresholds. Always preserve `sampling_audit.json` with filters, method, requested size, population size, and output paths.
 
+Explicit zero-value postings remain in the normalized journal, source lineage
+and completeness/accounting checks. Exclude them from selection for every
+sampling method; do not classify them as unreadable or an incomplete population.
+Report `zero_value_rows_excluded` alongside the original and eligible row counts.
+This exclusion precedes optional account/date/amount filters and is replayed.
+If no eligible rows remain, retain the empty CSV/XLSX and audit with
+`sampling_status: no_eligible_rows`, explain that no sample was selected, and do
+not run downstream work that requires sampled entries. This is an empty result,
+not a reading failure. Missing or malformed amounts remain unresolved.
+
 For stratified sampling, allocation is equal across encountered strata with
 capacity redistribution: exhausted strata yield their remaining allocation to
 others. Encounter order breaks allocation ties, and within-stratum selection

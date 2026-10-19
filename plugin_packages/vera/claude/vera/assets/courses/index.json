@@ -622,7 +622,7 @@
     },
     "journal-sampling": {
       "path": "journal-sampling/course.json",
-      "sha256": "5fec6435d539afdbdf596563bfc44eb19b700a78fb02ea20fdd93ed3b9a25580",
+      "sha256": "709862c8d4b8bb0a527c205d602d8e25314ac85f8c54edc2174bcd01d762b700",
       "languages": [
         "it",
         "en",
@@ -1121,7 +1121,7 @@
     },
     "vouching": {
       "path": "vouching/course.json",
-      "sha256": "2f3da9559f75b4763b8baf3fd08fed6e17c926ee5d45e834b73af7d73e2fbb9f",
+      "sha256": "0c3b120da6f9bfcbb0a774d9178f3553e4dc540ac7373896e3f3d3ca11d1894e",
       "languages": [
         "it",
         "en",

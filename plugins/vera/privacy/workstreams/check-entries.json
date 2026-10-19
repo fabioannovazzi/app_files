@@ -159,13 +159,17 @@
     {
       "id": "bounded-italian-accounting-label",
       "control": "PDF identity accepts the explicit Italian accounting label Registrazione contabile, optionally with a number label, only beside the exact distinctive movement identifier. It does not infer identity from filenames, generic numeric references, amount/date coincidence or intervening unrelated words; party, direction, relationship and professional gates remain unchanged."
+    },
+    {
+      "id": "zero-value-source-retention",
+      "control": "Complete upstream journals may include explicit zero-valued postings. They do not invalidate source replay or the population used to validate a bound sample; the existing source, amount, identity, relationship and support checks remain enforced. No new model call or external destination is introduced."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-18",
+    "reviewed_at": "2026-10-19",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "66aad617e186667731218b6083860530b6031c9054fc92f4df301b933f242392"
+    "source_fingerprint": "be0edd001ce22c8e94fb91b8b1fb065babdd774124f3b8ffcde954d292c6e6e4"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"

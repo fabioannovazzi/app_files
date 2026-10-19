@@ -3475,6 +3475,29 @@ def test_spanish_run_localizes_review_notes_and_strict_contract(tmp_path: Path) 
     assert contract_report.ok, contract_report.as_dict()
 
 
+def test_check_entries_accepts_zero_rows_in_complete_upstream_journal(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    journal_path = _qualified_journal(
+        tmp_path,
+        [
+            {"date": "2025-03-10", "movement": "1", "debit": "100.00"},
+            {"date": "2025-03-10", "movement": "2", "debit": "0.00"},
+        ],
+    )
+    support = tmp_path / "support"
+    support.mkdir()
+
+    result = core.run_entry_checks(journal_path, support, tmp_path / "out")
+
+    assert result.frame.get_column("amount_abs").to_list() == ["100", "0"]
+    assert result.frame.get_column("status").to_list() == [
+        "missing_support",
+        "missing_support",
+    ]
+
+
 def test_plugin_marks_missing_support_without_model_calls(tmp_path: Path) -> None:
     core = load_core()
     journal_path = _qualified_journal(

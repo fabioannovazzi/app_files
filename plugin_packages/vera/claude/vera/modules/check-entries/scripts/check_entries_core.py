@@ -2050,8 +2050,6 @@ def _canonical_entry_frame(
             )
         if signed != debit - credit or absolute != abs(signed):
             raise ValueError(f"Normalized monetary closure failed for row {row_index}.")
-        if absolute == ZERO:
-            raise ValueError(f"Zero-value row {row_index} cannot enter entry checks.")
         if absolute % reported_increment != ZERO:
             raise ValueError(
                 f"Row {row_index} amount is not aligned to its reported increment."

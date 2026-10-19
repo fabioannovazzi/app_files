@@ -2554,14 +2554,14 @@ def _normalize_tabular(
         elif reason is None and _field(mapping, "amount"):
             if amount is None:
                 reason = "invalid_or_missing_amount"
-            elif amount == ZERO:
-                reason = "zero_amount"
-        elif reason is None and debit is None and credit is None:
+        elif reason is None and (
+            (debit is None and credit is None)
+            or (_clean_text(debit_value) and debit is None)
+            or (_clean_text(credit_value) and credit is None)
+        ):
             reason = "invalid_or_missing_debit_credit"
         elif reason is None and (debit or ZERO) != ZERO and (credit or ZERO) != ZERO:
             reason = "both_debit_and_credit_nonzero"
-        elif reason is None and (debit or ZERO) == ZERO and (credit or ZERO) == ZERO:
-            reason = "zero_amount"
         if reason is not None:
             rejected_rows.append({"source_row": source_row, "reason": reason})
             continue
@@ -2585,7 +2585,7 @@ def _normalize_tabular(
                     if _field(mapping, "amount")
                     else (
                         debit_value
-                        if debit is not None and debit != ZERO
+                        if debit is not None and (debit != ZERO or credit is None)
                         else credit_value
                     )
                 ),
@@ -2726,12 +2726,14 @@ def _parse_print_friendly_excel(
             reason = "missing_account"
         elif effective_date is None:
             reason = "missing_entry_date"
-        elif debit is None and credit is None:
+        elif (
+            (debit is None and credit is None)
+            or (_clean_text(debit_value) and debit is None)
+            or (_clean_text(credit_value) and credit is None)
+        ):
             reason = "invalid_or_missing_debit_credit"
         elif (debit or ZERO) != ZERO and (credit or ZERO) != ZERO:
             reason = "both_debit_and_credit_nonzero"
-        elif (debit or ZERO) == ZERO and (credit or ZERO) == ZERO:
-            reason = "zero_amount"
         if reason is not None:
             rejected_rows.append({"source_row": row_idx + 1, "reason": reason})
             continue
@@ -2750,7 +2752,7 @@ def _parse_print_friendly_excel(
                 "reported_increment": _reported_increment(
                     (
                         debit_value
-                        if debit is not None and debit != ZERO
+                        if debit is not None and (debit != ZERO or credit is None)
                         else credit_value
                     ),
                     decimal_separator=decimal_separator,
@@ -4530,8 +4532,6 @@ def _validate_population_proof(
         )
         if signed != debit - credit or absolute != abs(signed):
             raise ValueError(f"Normalized monetary closure failed for row {row_index}.")
-        if absolute == ZERO:
-            raise ValueError(f"Zero-value row {row_index} cannot enter the population.")
     normalization_replay = _fresh_normalization_replay(
         normalized_csv,
         diagnostics,
@@ -4591,6 +4591,24 @@ def replay_normalization_from_provenance(
     return dict(proof["normalization_replay"])
 
 
+def _exclude_zero_value_rows(frame: pl.DataFrame) -> pl.DataFrame:
+    """Apply the explicit sampling policy without changing the source population.
+
+    Exact decimal comparison makes exclusion reproducible; zero is valid source
+    data and remains covered by normalization and completeness checks.
+    """
+    return frame.filter(
+        pl.Series(
+            "__nonzero_amount",
+            [
+                parse_canonical_decimal(value, label="amount_abs") != ZERO
+                for value in frame.get_column("amount_abs").to_list()
+            ],
+            dtype=pl.Boolean,
+        )
+    )
+
+
 def _select_sample(
     population: pl.DataFrame,
     *,
@@ -4602,8 +4620,10 @@ def _select_sample(
 
     if size <= 0:
         raise ValueError("Requested sample size must be strictly positive.")
-    if population.height <= 0:
-        raise ValueError("Sampling is blocked because filters produced no rows.")
+    if method not in {"random", "systematic", "stratified", "mus"}:
+        raise ValueError(f"Unsupported sampling method: {method}")
+    if population.height == 0:
+        return population.head(0)
     if method == "random":
         return population.sample(n=min(size, population.height), seed=42)
     if method == "systematic":
@@ -4824,7 +4844,7 @@ def validate_sample_material_value_ledger(
         not isinstance(entries, list)
         or not isinstance(row_count, int)
         or isinstance(row_count, bool)
-        or row_count <= 0
+        or row_count < 0
         or len(entries) != row_count * len(SAMPLE_MATERIAL_FIELDS)
     ):
         raise ValueError("Sample material-value ledger cardinality does not close.")
@@ -4900,6 +4920,7 @@ def _build_sample_reproducibility(
     keyword: str | None,
     population_size_before: int,
     population_size_after: int,
+    zero_value_rows_excluded: int,
     selected: pl.DataFrame,
     sample_csv: Path,
 ) -> dict[str, Any]:
@@ -4917,6 +4938,7 @@ def _build_sample_reproducibility(
         },
         "implementation_sha256": implementation_sha256,
         "sampling_contract": {
+            "exclude_zero_values": True,
             "method": method,
             "seed": 42 if method in {"random", "stratified"} else None,
             "requested_size": size,
@@ -4932,6 +4954,7 @@ def _build_sample_reproducibility(
         },
         "population_size_before_filters": population_size_before,
         "population_size_after_filters": population_size_after,
+        "zero_value_rows_excluded": zero_value_rows_excluded,
         "selected_prepared_row_numbers": [
             int(value)
             for value in selected.get_column("__prepared_row_number").to_list()
@@ -4975,8 +4998,9 @@ def _validate_sample_reproducibility(
         offset=1,
     )
     min_abs = filters.get("min_abs")
+    eligible = _exclude_zero_value_rows(frame)
     population = _apply_filters(
-        frame,
+        eligible,
         include_accounts=filters.get("include_accounts") or (),
         exclude_accounts=filters.get("exclude_accounts") or (),
         date_start=filters.get("date_start"),
@@ -5003,6 +5027,7 @@ def _validate_sample_reproducibility(
         keyword=filters.get("keyword"),
         population_size_before=frame.height,
         population_size_after=population.height,
+        zero_value_rows_excluded=frame.height - eligible.height,
         selected=selected,
         sample_csv=output_dir / "journal_sample.csv",
     )
@@ -5861,6 +5886,8 @@ def _review_item_contract(
         "population_size_before_filters": summary.get("population_size_before_filters"),
         "population_size_after_filters": summary.get("population_size_after_filters"),
         "sample_size": summary.get("sample_size"),
+        "zero_value_rows_excluded": summary.get("zero_value_rows_excluded"),
+        "sampling_status": summary.get("sampling_status"),
         "filters": summary.get("filters"),
         "population_proof": summary.get("population_proof"),
     } != {
@@ -5869,6 +5896,8 @@ def _review_item_contract(
         "population_size_before_filters": audit.get("population_size_before_filters"),
         "population_size_after_filters": audit.get("population_size_after_filters"),
         "sample_size": audit.get("sample_size"),
+        "zero_value_rows_excluded": audit.get("zero_value_rows_excluded"),
+        "sampling_status": audit.get("sampling_status"),
         "filters": audit.get("filters"),
         "population_proof": audit.get("population_proof"),
     }:
@@ -7269,6 +7298,14 @@ def validate_sample_assurance(output_dir: Path) -> dict[str, Any]:
         or audit.get("sample_size")
         != len(reproducibility["selected_prepared_row_numbers"])
         or audit.get("sample_size") != ledger["row_count"]
+        or audit.get("zero_value_rows_excluded")
+        != reproducibility["zero_value_rows_excluded"]
+        or audit.get("sampling_status")
+        != (
+            "sampled"
+            if reproducibility["population_size_after_filters"]
+            else "no_eligible_rows"
+        )
         or audit.get("method") != reproducibility["sampling_contract"]["method"]
         or audit.get("requested_size")
         != reproducibility["sampling_contract"]["requested_size"]
@@ -7391,8 +7428,9 @@ def run_sample(
     min_abs_text = decimal_text(min_abs_value) if min_abs_value is not None else None
     target_existed = _require_clean_output_target(output_dir)
     indexed_frame = frame.with_row_index("__prepared_row_number", offset=1)
+    eligible = _exclude_zero_value_rows(indexed_frame)
     population = _apply_filters(
-        indexed_frame,
+        eligible,
         include_accounts=include_accounts,
         exclude_accounts=exclude_accounts,
         date_start=date_start,
@@ -7459,6 +7497,7 @@ def run_sample(
             keyword=keyword,
             population_size_before=frame.height,
             population_size_after=population.height,
+            zero_value_rows_excluded=frame.height - eligible.height,
             selected=selected,
             sample_csv=sample_csv,
         )
@@ -7510,6 +7549,8 @@ def run_sample(
             "population_size_before_filters": frame.height,
             "population_size_after_filters": population.height,
             "sample_size": sample.height,
+            "zero_value_rows_excluded": frame.height - eligible.height,
+            "sampling_status": "sampled" if population.height else "no_eligible_rows",
             "filters": {
                 "include_accounts": list(include_accounts),
                 "exclude_accounts": list(exclude_accounts),
