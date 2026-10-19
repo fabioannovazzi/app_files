@@ -2,10 +2,13 @@
 
 Use this maintained recovery route after a registration-layout failure, before
 closing the run as unsupported. The host agent interprets evidence and revises
-recipes; the tools perform bounded inspection, deterministic trials and exact
-replay. No helper calls a model, writes new parser code, changes the installed
-plugin, sends client evidence to developers or promotes an improvement to Vera.
-Generic PDF/OCR reconstruction remains outside this route.
+recipes or writes a run-local adapter; tools perform bounded local trials and
+exact replay. Keep the host's ordinary inspection, image viewing and coding
+abilities available. The host chooses how to interpret unfamiliar evidence.
+The installed checker independently reconstructs amounts and enforces controls.
+No helper calls a model or changes the installed plugin. A local recovery is
+not a reusable product fix. OCR-only sources cannot qualify through this text
+word-reference contract; preserve their readable evidence and unresolved status.
 
 ## Same case, bounded attempts
 
@@ -26,7 +29,8 @@ source or implementation invalidates the session.
    images through the host's image-viewing capability.
 2. Form a concrete hypothesis from that evidence. Review the physical account,
    description and amount bands, registration structure, separator glyphs and
-   footer meaning. Configure only the maintained options below. Resolve routine
+   footer meaning. Configure the maintained options or the run-local adapter
+   contract below. Resolve routine
    coordinates yourself; ask the professional only for unresolved accounting
    meaning, currency or evidence. Never infer an opening total from the first
    printed total just to make the numbers agree.
@@ -34,11 +38,11 @@ source or implementation invalidates the session.
    `--pdf-recovery trial --recipe <proposed-recipe> --pdf-reason <evidence-and-change>`.
    With ruled-layout options, every trial first scans the complete PDF for
    unsupported negative amount notation or missing sign decisions. It reports
-   all affected locations together before attempting postings. The retained
+   all affected locations together. The retained
    attempt contains the complete list under `negative_amount_eligibility`;
    the tool response shows at most 50 issues. This scan checks notation only,
-   not layout completeness. If eligible, parsing reads from the beginning and
-   stops after the first failing page. Both passes release page caches.
+   not layout completeness. Partial reading scans all pages and retains the
+   entries it can reconstruct with explicit issues. Both passes release page caches.
    A successful trial covers the entire source;
    it does not authorize sampling. Review the diagnostics and suggested failure
    pages. Revise only when new evidence explains the failure. Inspect additional
@@ -54,7 +58,8 @@ source or implementation invalidates the session.
    existing replay/qualification and downstream gates.
 5. If inspection or trial limits are exhausted, or evidence remains ambiguous,
    retain the full recovery history, report the specific remaining problem and
-   close the run with its existing failed/blocked lifecycle. Do not adjust
+   deliver the readable CSV and its unresolved issues, then close the run with
+   its existing failed/blocked lifecycle. Do not adjust
    amounts, invent accounts, skip malformed registrations or relax controls.
 
 For Journal Sampling use the existing `scripts/inspect_journal.py` command with
@@ -66,6 +71,80 @@ bound bank/journal paths, output directory and context. The proposed layout is
 `journal.files[filename].pdf_registration_layout`.
 Both commands require `--pdf-currency <reviewed ISO code>` during recovery.
 All other required command arguments and execution-integrity checks still apply.
+
+## Run-local adapter contract
+
+Use this when the built-in registration parser does not understand the source
+structure. First run `--pdf-recovery inventory --recipe <recipe>`. Read its
+local `inventory_path`: every PDF word has an ID, page, physical row, text and
+coordinates. This full evidence stays local; select only necessary regions for
+model reasoning. The proposed five column bands, body, separator rules and
+explicit sign policy remain part of the mapping contract.
+
+Write a Python adapter under the same workflow output directory using the
+host's normal coding tools. It reads the inventory JSON on stdin and emits
+exactly `{"rows": [...]}` on stdout. Each row has only:
+
+```json
+{
+  "amount": "p1w12", "side": "debit",
+  "account": ["p1w9"], "description": ["p1w10", "p1w11"],
+  "date": "p1w4", "registration": "p1w2"
+}
+```
+
+These IDs are illustrative, never defaults. An empty description is permitted.
+Account and description references must retain source order and belong to the
+reviewed bands between the registration header and that posting. Date and
+registration references identify the same source header line. The date format
+is explicitly `%d/%m/%Y` (default) or `%Y-%m-%d`. The adapter cannot supply
+amounts, invent text, emit its own qualification or choose its own controls.
+
+Add `agent_adapter: {"path": "<absolute run-local .py>", "sha256": "<code hash>"}`
+to the layout and run the ordinary trial. Each distinct adapter/recipe revision
+uses the same four-attempt budget. Record the diagnosis, source evidence and
+change in `--pdf-reason`. The runner snapshots the code, runs it in a separate
+Python process with a 60-second limit, and checks source/checker hashes before
+and after execution. This is not an operating-system sandbox; normal host
+permissions still apply. Do not use the adapter to modify installed checks,
+access unrelated client files, install packages, or contact external services.
+
+The independent checker obtains values from original PDF tokens, rejects
+duplicated or unclaimed monetary tokens, checks physical sides and account
+references, checks registration balances and recomputes printed running totals.
+The adapter route requires reviewed printed controls on every page; absent
+controls leave readable results unqualified. These mechanical checks do not
+establish semantic correctness: review the actual account/header mapping and
+scope through the existing source-bound decision receipt. Matching totals
+alone never approve a source. Freeze reruns the exact code and checks the
+complete source again. Subsequent normalization/reconciliation rechecks the
+adapter digest and reruns the independent validator.
+
+## Partial results and incident recovery
+
+Every trial retains `readable-entries-NN.json` and a corresponding CSV with
+`unqualified_requires_review` on each row. Ordinary PDF inspection also writes
+`readable_pdf_entries.csv`; its inspection JSON holds the unresolved issues.
+Show useful readable entries and explain the specific missing evidence. An
+issue elsewhere does not erase them. Keep sampling, population statistics and
+completed reconciliation blocked until the complete source qualifies.
+
+Use the managed command so the existing incident outbox automatically records
+handled failures, correction attempts and matching fresh replay as one episode.
+Automatic reports contain fixed technical categories, check results and counts;
+source text, amounts, paths, adapter code and free-text rationale stay local.
+Inspect the retained attempt and supplement the original incident through the
+existing incident connector with the relevant technical diagnosis and how the
+correction addressed it, excluding client content. For example, report an
+observed syntax issue as such, not a generic success claim. Respect local-only
+delivery and retain its queue. Do not create a second incident for a retry.
+
+A freeze reports extraction recovery, not completion of the original task.
+Resume the same mapping/normalization/reconciliation workflow. Only after its
+ordinary independent gates and actual outputs verify the original request may
+the host send the existing original-task recovery outcome. Record remaining
+unresolved issues even when part of the work succeeded. A reusable source fix
+needs a separate code review and regression fixture; never auto-promote it.
 
 ## Optional ruled-layout contract
 
@@ -149,7 +228,8 @@ merely to make a failed trial pass.
 - Without a reviewed policy, trailing-minus and parenthesized amounts report
   `unsupported_negative_amount_notation`; leading-minus amounts report
   `negative_amount_side_requires_review`. Each issue includes its page, row,
-  amount band and printed token. No postings are emitted from an ineligible PDF.
+  amount band and printed token. No qualified postings are emitted from an
+  ineligible PDF; readable entries remain available separately.
 
 An excerpt starting mid-registration remains incomplete. Every completed
 registration must balance, every posting must have its account and amount, and

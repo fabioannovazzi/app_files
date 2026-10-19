@@ -54,6 +54,7 @@ IMPLEMENTATION_CONTRACT = (
     ("shared_pdf", "__init__.py"),
     ("shared_pdf", "rules.py"),
     ("shared_pdf", "recovery.py"),
+    ("shared_pdf", "adapter.py"),
 )
 
 _DIRECTORY_MODE = 0o040000

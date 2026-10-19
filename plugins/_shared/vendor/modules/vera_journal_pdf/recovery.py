@@ -1,11 +1,12 @@
 """Persistent, bounded tools for a host-agent-led PDF layout recovery loop.
 
-The host interprets evidence and proposes recipes. These tools never call a
-model, generate parser code, infer account semantics or qualify a population.
+The host interprets evidence and proposes recipes or run-local source-reference
+adapters. Local tools enforce source checks and never qualify a population.
 """
 
 from __future__ import annotations
 
+import csv
 import hashlib
 import json
 import re
@@ -13,9 +14,44 @@ import stat
 from pathlib import Path
 from typing import Any
 
-__all__ = ["add_recovery_args", "recover_pdf", "inspect_pdf_regions"]
+__all__ = [
+    "add_recovery_args",
+    "recover_pdf",
+    "inspect_pdf_regions",
+    "write_readable_entries",
+]
 MAX_ATTEMPTS = 4
 MAX_INSPECTIONS = 12
+
+
+def write_readable_entries(path: Path, rows: list[dict[str, Any]]) -> None:
+    """Expose local partial entries in a spreadsheet-readable, unqualified file."""
+    fields = [
+        "qualification_status",
+        "source_file",
+        "source_page",
+        "source_row",
+        "movement_number",
+        "entry_date",
+        "account",
+        "line_desc",
+        "debit",
+        "credit",
+        "currency",
+    ]
+    if path.is_symlink() or (path.exists() and path.stat().st_nlink != 1):
+        raise ValueError("Readable entries must not overwrite a symlink")
+    with path.open("w", encoding="utf-8-sig", newline="") as stream:
+        writer = csv.DictWriter(stream, fieldnames=fields)
+        writer.writeheader()
+        for row in rows:
+            value = {key: row.get(key, "") for key in fields}
+            value["qualification_status"] = "unqualified_requires_review"
+            for key in ("source_file", "movement_number", "account", "line_desc"):
+                text = str(value[key])
+                if text.lstrip().startswith(("=", "+", "-", "@")):
+                    value[key] = "'" + text
+            writer.writerow(value)
 
 
 def _digest(value: Any) -> str:
@@ -155,7 +191,7 @@ def recover_pdf(
     Artifacts live below that workflow's existing output root. Neither a trial
     nor a frozen recipe replaces the normal reviewed mapping/qualification gate.
     """
-    if action not in {"inspect", "trial", "freeze"}:
+    if action not in {"inspect", "inventory", "trial", "freeze"}:
         raise ValueError("Unknown PDF recovery action")
     identity = _identity(source, currency)
     root = output_dir / "pdf_recovery"
@@ -191,13 +227,42 @@ def recover_pdf(
             or event["layout_sha256"] != _digest(event["layout"])
         ):
             raise ValueError("Recovery attempt history no longer closes")
+        if (
+            event.get("readable_entries_path")
+            and _file_digest(Path(event["readable_entries_path"]))
+            != event["readable_entries_sha256"]
+        ):
+            raise ValueError("Retained readable entries changed")
         previous = _digest(event)
         attempts.append(event)
-    if action == "inspect":
+    if action in {"inspect", "inventory"}:
         existing = sorted(root.glob("inspection-*.json"))
         if len(existing) >= MAX_INSPECTIONS:
             raise ValueError("PDF recovery inspection budget exhausted")
         try:
+            if action == "inventory":
+                from .adapter import source_inventory
+
+                if not layout:
+                    raise ValueError(
+                        "Inventory requires proposed physical column semantics"
+                    )
+                inventory = source_inventory(source, layout)
+                if _identity(source, currency) != identity:
+                    raise ValueError(
+                        "PDF source or implementation changed during inventory"
+                    )
+                inventory_path = root / f"inventory-{len(existing)+1:02}.json"
+                _save(inventory_path, inventory)
+                result = {
+                    "status": "evidence_only",
+                    **identity,
+                    "inventory_path": str(inventory_path),
+                    "inventory_sha256": _file_digest(inventory_path),
+                    "page_count": len(inventory["pages"]),
+                }
+                _save(root / f"inspection-{len(existing)+1:02}.json", result)
+                return result
             evidence = inspect_pdf_regions(
                 source,
                 pages,
@@ -231,6 +296,35 @@ def recover_pdf(
     ):
         raise ValueError("Proposed PDF layout is bound to another source")
     layout["source_sha256"] = identity["source_sha256"]
+    if layout.get("recovery_currency", currency) != currency:
+        raise ValueError("Proposed PDF layout is bound to another currency")
+    layout["recovery_currency"] = currency
+    if "agent_adapter" in layout:
+        spec = layout["agent_adapter"]
+        if not isinstance(spec, dict) or set(spec) != {"path", "sha256"}:
+            raise ValueError("agent_adapter requires path and sha256")
+        adapter = Path(spec["path"])
+        if (
+            not adapter.is_absolute()
+            or output_dir.resolve() not in adapter.resolve().parents
+        ):
+            raise ValueError("Adapter must belong to this workflow's output directory")
+        if (
+            any(p.is_symlink() for p in adapter.parents)
+            or _file_digest(adapter) != spec["sha256"]
+        ):
+            raise ValueError("Adapter must match its reviewed source digest")
+        directory = root / "adapters"
+        if directory.is_symlink():
+            raise ValueError("Adapter history must not be a symlink")
+        directory.mkdir(exist_ok=True)
+        snapshot = directory / (spec["sha256"] + ".py")
+        if not snapshot.exists():
+            with snapshot.open("xb") as stream:
+                stream.write(adapter.read_bytes())
+        if _file_digest(snapshot) != spec["sha256"]:
+            raise ValueError("Retained adapter changed")
+        layout["agent_adapter"] = {"path": str(snapshot), "sha256": spec["sha256"]}
     layout_digest = _digest(layout)
     frozen = root / "frozen_layout.json"
     if frozen.exists():
@@ -265,16 +359,20 @@ def recover_pdf(
     from . import read_registration_pdf
 
     try:
-        rows, diagnostics = read_registration_pdf(source, layout, currency=currency)
+        rows, diagnostics = read_registration_pdf(
+            source, layout, currency=currency, retain_partial=True
+        )
     except ValueError as exc:
         rows, diagnostics = [], {
             "accepted": False,
             "reason": "invalid_reviewed_layout",
             "detail": str(exc)[:500],
+            "local_adapter_evidence": getattr(exc, "evidence", None),
             "rejected_rows": [],
         }
     if _identity(source, currency) != identity:
         raise ValueError("PDF source or implementation changed during recovery")
+    readable = diagnostics.pop("readable_rows", rows)
     row_digest = _digest(rows)
     if action == "freeze":
         if (
@@ -292,11 +390,28 @@ def recover_pdf(
             "rows_sha256": row_digest,
             "previous_sha256": previous,
             "qualified": False,
+            "population_operations_allowed": False,
             "layout_path": str(frozen),
         }
         _save(frozen, layout)
         _save(root / "freeze_receipt.json", receipt)
         return receipt
+    readable_path = root / f"readable-entries-{len(attempts)+1:02}.json"
+    _save(
+        readable_path,
+        {
+            "qualified": False,
+            "population_operations_allowed": False,
+            "source_sha256": identity["source_sha256"],
+            "rows": readable,
+            "unresolved_issues": diagnostics.get(
+                "unresolved_issues", diagnostics.get("rejected_rows", [])
+            ),
+            "next_step": "Review exact mapping and complete normal qualification before population operations.",
+        },
+    )
+    csv_path = readable_path.with_suffix(".csv")
+    write_readable_entries(csv_path, readable)
     result = {
         "attempt": len(attempts) + 1,
         "previous_sha256": previous,
@@ -306,6 +421,20 @@ def recover_pdf(
         "diagnostics": diagnostics,
         "reason": reason[:2000],
         "qualified": False,
+        "population_operations_allowed": False,
+        "readable_entries_path": str(readable_path),
+        "readable_entries_sha256": _file_digest(readable_path),
+        "readable_csv_path": str(csv_path),
+        "readable_row_count": len(readable),
+        "available_readable_attempts": [
+            {
+                "attempt": item["attempt"],
+                "row_count": item.get("readable_row_count", 0),
+                "path": item.get("readable_entries_path"),
+            }
+            for item in attempts
+            if item.get("readable_row_count", 0)
+        ],
         "status": (
             "ready_to_freeze"
             if diagnostics["accepted"]
@@ -313,6 +442,15 @@ def recover_pdf(
         ),
     }
     _save(root / f"attempt-{len(attempts)+1:02}.json", result)
+    result = {
+        **result,
+        "attempt_path": str(root / f"attempt-{len(attempts)+1:02}.json"),
+        "diagnostics": {
+            key: value
+            for key, value in diagnostics.items()
+            if key not in {"local_adapter_evidence", "unresolved_issues"}
+        },
+    }
     eligibility = diagnostics.get("negative_amount_eligibility")
     if eligibility and eligibility["issue_count"] > 50:
         result = {
@@ -357,7 +495,9 @@ def recover_pdf(
 
 
 def add_recovery_args(parser: Any) -> None:
-    parser.add_argument("--pdf-recovery", choices=("inspect", "trial", "freeze"))
+    parser.add_argument(
+        "--pdf-recovery", choices=("inspect", "inventory", "trial", "freeze")
+    )
     parser.add_argument("--pdf-pages", nargs="+", type=int)
     parser.add_argument(
         "--pdf-region", nargs=4, type=float, metavar=("X0", "TOP", "X1", "BOTTOM")
