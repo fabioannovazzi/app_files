@@ -4,7 +4,7 @@
   "additionalProperties": false,
   "properties": {
     "schema_version": {
-      "const": "lipe.approval-request.v1"
+      "const": "lipe.approval-request.v2"
     },
     "request_id": {
       "type": "string",
@@ -106,10 +106,6 @@
         "xsd_manifest_hash": {
           "type": "string",
           "pattern": "^[0-9a-f]{64}$"
-        },
-        "crypto_provider_hash": {
-          "type": "string",
-          "pattern": "^[0-9a-f]{64}$"
         }
       },
       "required": [
@@ -121,8 +117,7 @@
         "catalog_review_hash",
         "source_inventory_hash",
         "artifacts_hash",
-        "xsd_manifest_hash",
-        "crypto_provider_hash"
+        "xsd_manifest_hash"
       ]
     }
   },

@@ -45,7 +45,7 @@
     {
       "path": "modules/previdenza-inps/references/workflow-reference.md",
       "repository_path": "plugins/previdenza-inps/references/workflow-reference.md",
-      "sha256": "c0066d34620bba05f2b59c410d0062e81d1ebea8ce5aef2af3dee12ed2fbfd1c"
+      "sha256": "f1afe6b8d3e82dad4b97eaf57684d1f78aecb42ac09843c6cf0a922a0908787d"
     },
     {
       "path": "modules/previdenza-inps/requirements.txt",
@@ -55,7 +55,7 @@
     {
       "path": "modules/previdenza-inps/schemas/arithmetic_recipes.schema.json",
       "repository_path": "plugins/previdenza-inps/schemas/arithmetic_recipes.schema.json",
-      "sha256": "1a742f7413b054a9e21f4b1191a97e8939b37f6aefddccb96129b2521415c308"
+      "sha256": "dc459b8c6e9e35f701be9b969c30bbbbb7b377768142caab0ed8b7e0fbcf6440"
     },
     {
       "path": "modules/previdenza-inps/schemas/case_records.schema.json",
@@ -110,7 +110,7 @@
     {
       "path": "modules/previdenza-inps/scripts/reconcile_contributions.py",
       "repository_path": "plugins/previdenza-inps/scripts/reconcile_contributions.py",
-      "sha256": "d65dcc717f36788ac14ee590188c7a07cc4d9b226dc7a72876f3578772931276"
+      "sha256": "650c7bbd15266f65ab23a3bd88f645502b8ecfa8a7b5b671a21e1f7590749e2d"
     },
     {
       "path": "modules/previdenza-inps/scripts/register_portal_export.py",
@@ -125,7 +125,7 @@
     {
       "path": "modules/previdenza-inps/skills/previdenza-inps/SKILL.md",
       "repository_path": "plugins/previdenza-inps/skills/previdenza-inps/SKILL.md",
-      "sha256": "759708ff5921b11274a4834e368ffb2c655ff720ea4a5f5c374c42cfc1932998"
+      "sha256": "39063ac07749c4886d2b083e4b885a317ba9a5098a5fe933f63e5d1662349630"
     },
     {
       "path": "modules/previdenza-inps/skills/previdenza-inps/agents/openai.yaml",
@@ -190,7 +190,7 @@
     {
       "path": "skills/previdenza-inps/SKILL.md",
       "repository_path": "plugins/vera/skills/previdenza-inps/SKILL.md",
-      "sha256": "1c01dbc66f7946d9b0854cbad68482941d7655629677dfcd49152dd20911608e"
+      "sha256": "fd238b3894503fbe3429438839dc1bd8b8d88b90208a5ce8528de2cd583562f3"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

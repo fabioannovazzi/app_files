@@ -650,7 +650,7 @@
     },
     "lipe": {
       "path": "lipe/course.json",
-      "sha256": "da00fc35ff6bf54f35e402bd37ec4bfb69d241ded1d485bad019dc0361c7e804",
+      "sha256": "c44e0b6ef87172339f572bf2d1c6df90ab383921e6496c613671f8eb4bcbaf79",
       "languages": [
         "it"
       ],
@@ -769,7 +769,7 @@
     },
     "patent-box-review": {
       "path": "patent-box-review/course.json",
-      "sha256": "797d7c71f031fa2bd546d7620e6e585a8f9f83773945da666e60097f0b17f45c",
+      "sha256": "5214965cd04fc5189f3dbbd9cfc855b68093320603b7253bd011d948ad616783",
       "languages": [
         "it",
         "en",
@@ -825,7 +825,7 @@
     },
     "previdenza-inps": {
       "path": "previdenza-inps/course.json",
-      "sha256": "c3ef3dce2dc1c43ad137115e2839a039ab83bd86c0135dd6dd5ae193a0bbc4d4",
+      "sha256": "2110494b643d49848a15736a23815edbcd78d840a2998ab6490da5c2b0779efb",
       "languages": [
         "it",
         "en",

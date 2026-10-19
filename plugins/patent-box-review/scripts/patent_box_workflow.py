@@ -44,7 +44,7 @@ for _vendor in (
         sys.path.insert(0, str(_vendor))
         break
 
-from patent_box import professional_review
+from patent_box import proposal_review as professional_review
 from patent_box.casebook import (
     casebook_markdown,
     check_casebook,
@@ -818,12 +818,12 @@ def accept_professional_review(
     *,
     digest: str,
     request_digest: str,
-    signature: Path,
-    mandate: Path,
-    mandate_signature: Path,
+    reviewer: str,
+    confirmation_ref: str,
+    confirmed: bool,
     at: datetime | None = None,
 ) -> dict[str, Any]:
-    """Retain a certificate-authenticated decision for this exact run version."""
+    """Retain the user confirmation of this exact proposal; no professional credentials."""
     context, output, session = _bound(context_path)
     return professional_review.accept_review(
         context,
@@ -831,9 +831,9 @@ def accept_professional_review(
         output,
         _proposal(output, digest),
         request_digest=request_digest,
-        signature=signature,
-        mandate=mandate,
-        mandate_signature=mandate_signature,
+        reviewer=reviewer,
+        confirmation_ref=confirmation_ref,
+        confirmed=confirmed,
         at=at or datetime.now(timezone.utc),
     )
 
@@ -913,24 +913,18 @@ def calculate_draft(
     professional_review.verify_reopening(
         context, session, output, proposal, at=at or datetime.now(timezone.utc)
     )
-    authenticated = output / f"authenticated_decision_{digest}.json"
+    confirmed_decision = output / f"confirmed_decision_{digest}.json"
     decision_path = (
-        authenticated if authenticated.exists() else output / f"decision_{digest}.json"
+        confirmed_decision
+        if not session["demo"] or confirmed_decision.exists()
+        else output / f"decision_{digest}.json"
     )
-    if authenticated.exists():
-        validation_time = at or datetime.now(timezone.utc)
-        if (
-            not session["demo"]
-            and session["as_of"] != validation_time.date().isoformat()
-        ):
-            raise ContractError(
-                "Real calculation needs a current dated archive run and source review"
-            )
+    if not session["demo"] or confirmed_decision.exists():
         decision = professional_review.verify_control_review(
-            context, session, output, proposal, at=validation_time
+            context, session, output, proposal, at=at or datetime.now(timezone.utc)
         )
     else:
-        decision = _read(decision_path)
+        decision = _read(output / f"decision_{digest}.json")
     if (
         decision["run_id"] != session["run_id"]
         or decision["proposal_digest"] != digest
@@ -939,16 +933,17 @@ def calculate_draft(
     ):
         raise ContractError("Review is not bound to this run and these inputs")
     _text(decision["reviewer"], "reviewer")
-    if not session["demo"] and not authenticated.exists():
-        raise ContractError(
-            "Real calculation is blocked without reviewed legal sources and an authenticated professional decision; preparation remains available"
-        )
     if (
         session["demo"]
-        and not authenticated.exists()
+        and not confirmed_decision.exists()
         and decision["identity_assurance"] != "SYNTHETIC_ACCEPTANCE"
     ):
-        raise ContractError("Demo requires a labelled synthetic decision")
+        raise ContractError("Synthetic review must be labelled synthetic")
+    validation_time = at or datetime.now(timezone.utc)
+    if not session["demo"] and session["as_of"] != validation_time.date().isoformat():
+        raise ContractError(
+            "Real calculation needs a current dated archive run and source review"
+        )
     case = _aggregate(proposal, decision)
     result = calculate(
         case, proposal["rules"], evidence_root=output, as_of=session["as_of"]
@@ -1152,7 +1147,9 @@ def main(argv: list[str] | None = None) -> int:
     inspect.add_argument("--options", type=Path, required=True)
     normalize = commands.add_parser("normalize-ledger")
     normalize.add_argument("--plan", type=Path, required=True)
-    prepare_review = commands.add_parser("prepare-professional-review")
+    prepare_review = commands.add_parser(
+        "prepare-review", aliases=["prepare-professional-review"]
+    )
     prepare_review.add_argument("--digest", required=True)
     prepare_review.add_argument("--source-scan", type=Path, required=True)
     prepare_review.add_argument(
@@ -1162,12 +1159,14 @@ def main(argv: list[str] | None = None) -> int:
     )
     prepare_review.add_argument("--previous-digest")
     prepare_review.add_argument("--reason")
-    accept_review = commands.add_parser("accept-professional-review")
+    accept_review = commands.add_parser(
+        "accept-review", aliases=["accept-professional-review"]
+    )
     accept_review.add_argument("--digest", required=True)
     accept_review.add_argument("--request-digest", required=True)
-    accept_review.add_argument("--signature", type=Path, required=True)
-    accept_review.add_argument("--mandate", type=Path, required=True)
-    accept_review.add_argument("--mandate-signature", type=Path, required=True)
+    accept_review.add_argument("--reviewer", required=True)
+    accept_review.add_argument("--confirmation-ref", required=True)
+    accept_review.add_argument("--confirmed", action="store_true")
     formal = commands.add_parser("verify-formalities")
     formal.add_argument("--plan", type=Path, required=True)
     formal.add_argument("--openssl", type=Path, required=True)
@@ -1205,7 +1204,7 @@ def main(argv: list[str] | None = None) -> int:
             )
         else:
             result = normalize_ledger(args.client_engagement, _read(input_path))
-    elif args.command == "prepare-professional-review":
+    elif args.command in {"prepare-review", "prepare-professional-review"}:
         result = prepare_professional_review(
             args.client_engagement,
             digest=args.digest,
@@ -1214,14 +1213,14 @@ def main(argv: list[str] | None = None) -> int:
             previous_digest=args.previous_digest,
             reason=args.reason,
         )
-    elif args.command == "accept-professional-review":
+    elif args.command in {"accept-review", "accept-professional-review"}:
         result = accept_professional_review(
             args.client_engagement,
             digest=args.digest,
             request_digest=args.request_digest,
-            signature=args.signature,
-            mandate=args.mandate,
-            mandate_signature=args.mandate_signature,
+            reviewer=args.reviewer,
+            confirmation_ref=args.confirmation_ref,
+            confirmed=args.confirmed,
         )
     elif args.command == "verify-formalities":
         _, output = _context(args.client_engagement)

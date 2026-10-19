@@ -1,10 +1,11 @@
 # LIPE — autorizzazioni del catalogo
 
-Un catalogo nuovo dichiara l'origine delle interpretazioni. Con `REAL`, ogni
-registrazione, revisione, revoca, contestazione e decisione del curatore richiede
-firme CMS esterne. La stringa con il nome del revisore non attribuisce un ruolo.
-Le prove sintetiche possono usare `SYNTHETIC`; aggiungere `--require-signatures`
-per provarne anche le autorizzazioni. Non etichettare dati reali come sintetici.
+Un catalogo nuovo dichiara l'origine delle interpretazioni. Con `REAL` o
+`SYNTHETIC`, il percorso ordinario conserva la decisione effettiva sulla proposta
+senza firme o qualifiche professionali obbligatorie. Non etichettare dati reali
+come sintetici. Soltanto se lo studio sceglie esplicitamente
+`--require-signatures`, si applica la policy facoltativa descritta sotto.
+Non attivarla come requisito generale per approvare una proposta o esportare XML.
 
 ```bash
 python scripts/lipe_catalog.py init --catalog /absolute/studio/catalog/lipe.sqlite3 --studio-id STUDIO_ID --data-origin REAL --minimum-confidence SOGLIA_SCELTA --output /absolute/studio/catalog/init.json
@@ -16,7 +17,7 @@ precedenti restano leggibili, ma la loro origine non è stabilita e non possono
 alimentare nuovi calcoli: conservare lo storico e far rivedere le interpretazioni
 in un nuovo catalogo. Non modificare i metadati per simularne la migrazione.
 
-## Autorità indipendente dello studio
+## Policy firmata facoltativa dello studio
 
 L'amministratore configura `VERA_LIPE_CATALOG_AUTHORITY_CONFIG` con il percorso
 assoluto di un JSON conforme a `schemas/catalog-authority.schema.json`, fuori

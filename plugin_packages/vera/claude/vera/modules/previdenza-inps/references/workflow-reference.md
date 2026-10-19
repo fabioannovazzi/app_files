@@ -118,7 +118,7 @@ Use Vera’s `prompt-optimizer` component to prepare broad or disputed research.
 An arithmetic recipe is executable only when:
 
 - its formula basis claim is fully supported;
-- a professional reviewer explicitly confirms the recipe and records actor ID, role, timestamp, and approval basis;
+- the user confirms the displayed exact recipe; record actor ID, actual confirmation reference, timestamp, basis, `confirmed_by_user: true` and `recipe_sha256` (no professional role required);
 - every operand cites a confirmed fact or supported claim;
 - the operation and rounding rule are explicit.
 
@@ -136,7 +136,7 @@ Allowed operations are add, subtract, multiply, and divide with `Decimal`. The s
 - `validation_fail`: material claims fail package validation.
 - `ready_for_professional_review`: the draft package is structurally complete.
 
-Never emit a stronger final status. The professional must record substantive approval separately.
+Never emit a stronger final status. Do not turn this limited technical status into a requirement for blanket professional approval. Ask for a user decision only on a specific displayed choice that is needed to continue.
 
 When blocked, still deliver the intake, inventory, extraction report, extracted evidence, document requests, and a visible handoff naming the blocker and next required professional decision. Do not create a conclusive memo or calculation for a blocked case.
 

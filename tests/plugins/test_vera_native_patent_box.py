@@ -223,7 +223,9 @@ const result={review:review.receipt,calculation:calculation.receipt,retry,page};
         == "LOCAL_OPERATOR_ASSERTION_NOT_PROFESSIONAL_AUTHENTICATION"
     )
     assert result["calculation"]["status"] == "refused"
-    assert "authenticated professional decision" in result["calculation"]["error"]
+    assert (
+        "Confirmation of the exact current proposal" in result["calculation"]["error"]
+    )
     assert result["calculation"] == result["retry"]
     assert result["page"]["can_write"] is True
     assert not any(name.endswith("/result.json") for name in public_files(fixture))
@@ -241,9 +243,8 @@ def test_patent_box_no_firm_authority_is_created_by_refused_native_action(
         {
             "digest": "0" * 64,
             "request_digest": "0" * 64,
-            "signature_ref": "../../foreign.der",
-            "mandate_ref": "../../foreign.json",
-            "mandate_signature_ref": "../../foreign.der",
+            "reviewer": "fixture-user",
+            "confirmation_ref": "fixture-yes",
         }
         if operation == "accept_professional_review"
         else {"plan": {}, "trust_basis": "Unconfigured fictional fixture"}

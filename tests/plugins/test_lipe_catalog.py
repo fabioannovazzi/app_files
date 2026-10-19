@@ -26,6 +26,13 @@ from lipe_catalog import (
 from lipe_core import ContractError, calculate, read_json
 
 
+LIPE_MODULES = {
+    name: module
+    for name, module in sys.modules.items()
+    if name == "lipe" or name.startswith("lipe_")
+}
+
+
 def entry(root: Path, identity: str = "test-entry", scope: str = "STUDIO") -> dict:
     """Write a wholly fictional vendor-code legend, not a reusable real tax rule."""
     source = root / "synthetic-legend.txt"
@@ -553,3 +560,23 @@ def test_missing_catalog_evidence_blocks_lookup_instead_of_trusting_saved_class(
     stored.unlink()
     with pytest.raises(ContractError, match="missing or changed"):
         find(path)
+
+
+@pytest.fixture(autouse=True)
+def component_path(monkeypatch):
+    monkeypatch.syspath_prepend(str(PLUGIN / "scripts"))
+    for name, module in LIPE_MODULES.items():
+        monkeypatch.setitem(sys.modules, name, module)
+
+
+def test_real_mode_catalog_does_not_require_professional_credentials(
+    tmp_path, monkeypatch
+):
+    # Fictional fixture checks REAL-mode mechanics, not a real tax classification.
+    monkeypatch.delenv("VERA_LIPE_CATALOG_AUTHORITY_CONFIG", raising=False)
+    path = tmp_path / "catalog.sqlite3"
+    metadata = create_catalog(path, "studio-a", "0.80", data_origin="REAL")
+    assert metadata["require_signatures"] is False
+    value = entry(tmp_path)
+    event = add(path, value)
+    assert history(path)["events"][-1]["event_hash"] == event["event_hash"]

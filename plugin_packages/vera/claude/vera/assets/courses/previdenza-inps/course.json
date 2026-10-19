@@ -41,7 +41,7 @@
     },
     {
       "path": "modules/previdenza-inps/references/workflow-reference.md",
-      "sha256": "bfc005e676e8db0c968939fe20ba57baba1ea484c5215c2058d16c8ba062a907"
+      "sha256": "ed3cc3f642aadb3cc2a7d399c9b63eaf5f20d5aad44ddc4e63dc4bc8b04eb071"
     },
     {
       "path": "modules/previdenza-inps/requirements.txt",
@@ -49,7 +49,7 @@
     },
     {
       "path": "modules/previdenza-inps/schemas/arithmetic_recipes.schema.json",
-      "sha256": "1a742f7413b054a9e21f4b1191a97e8939b37f6aefddccb96129b2521415c308"
+      "sha256": "dc459b8c6e9e35f701be9b969c30bbbbb7b377768142caab0ed8b7e0fbcf6440"
     },
     {
       "path": "modules/previdenza-inps/schemas/case_records.schema.json",
@@ -89,7 +89,7 @@
     },
     {
       "path": "modules/previdenza-inps/scripts/reconcile_contributions.py",
-      "sha256": "d65dcc717f36788ac14ee590188c7a07cc4d9b226dc7a72876f3578772931276"
+      "sha256": "650c7bbd15266f65ab23a3bd88f645502b8ecfa8a7b5b671a21e1f7590749e2d"
     },
     {
       "path": "modules/previdenza-inps/scripts/register_portal_export.py",
@@ -101,7 +101,7 @@
     },
     {
       "path": "modules/previdenza-inps/skills/mparanza-previdenza-inps/SKILL.md",
-      "sha256": "b868aa8b8cb86a841c799cf283f52bfef978a02f19b138f520c61007bf80ee0a"
+      "sha256": "ee72cd2872cad04c5ba6860d3ffa9eb6f57aac42abe37eb1f4eeb40f5803aa3b"
     },
     {
       "path": "modules/previdenza-inps/skills/mparanza-previdenza-inps/agents/openai.yaml",
@@ -153,7 +153,7 @@
     },
     {
       "path": "skills/mparanza-previdenza-inps/SKILL.md",
-      "sha256": "c410b0e535c2b70fa33be70bc7c13569e7b35f0a4daea2ae44a0f9e0a6c3e8f6"
+      "sha256": "857abc44f5e2511e54075e8696337fddb5f5f318d4afa2c992efffb67638f277"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -766,5 +766,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "6da03fc7a6908f2b4713400c29084e9d89c9eb9f4095875ba463f664391cffbd"
+  "canonical_course_sha256": "36aa1f295e0eb00baf7bb03e0226728bf1d22cfb6a497eb6bfb23797f74b7c55"
 }

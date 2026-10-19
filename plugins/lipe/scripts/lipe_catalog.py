@@ -103,7 +103,7 @@ def create_catalog(
         "created_at": datetime.now(timezone.utc).isoformat(),
         "identity_authenticated": False,
         "data_origin": data_origin,
-        "require_signatures": data_origin == "REAL" or require_signatures,
+        "require_signatures": require_signatures,
         "remote_sharing": False,
     }
     path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
@@ -130,7 +130,6 @@ def _history(connection: sqlite3.Connection) -> dict:
     if metadata["schema_version"] == "lipe.catalog.v2" and (
         metadata.get("data_origin") not in {"REAL", "SYNTHETIC"}
         or type(metadata.get("require_signatures")) is not bool
-        or (metadata["data_origin"] == "REAL" and not metadata["require_signatures"])
     ):
         raise ContractError("Invalid catalog authorization boundary")
     previous = digest(metadata)

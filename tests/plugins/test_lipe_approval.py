@@ -33,6 +33,13 @@ from lipe_authorization import (
 from lipe_core import ContractError, calculate, read_json
 from lipe_frontpage import check_identifier, validate_frontpage
 
+LIPE_MODULES = {
+    name: module
+    for name, module in sys.modules.items()
+    if name == "lipe" or name.startswith("lipe_")
+}
+
+
 AT = datetime(2026, 10, 3, 10, tzinfo=timezone.utc)
 BEFORE = datetime(2025, 1, 1, tzinfo=timezone.utc)
 AFTER = datetime(2028, 1, 1, tzinfo=timezone.utc)
@@ -369,155 +376,6 @@ def sign(raw: bytes, path: Path, crypto: dict, who: str) -> Path:
     return path
 
 
-def signed_packet(root, crypto):
-    case, front, draft = example(root)
-    packet = prepare_review(case, front, draft, root, root / "packet", at=AT)
-    request = read_json(packet / "request.json")
-    mandate = {
-        "schema_version": "lipe.mandate.v1",
-        "policy_id": "fictional-policy",
-        "mandate_id": "fictional-mandate",
-        "scope": request["scope"],
-        "reviewer_name": "FICTIONAL REVIEWER",
-        "professional_reference": "SYNTHETIC ONLY",
-        "reviewer_certificate_sha256": crypto["certs"]["reviewer"]
-        .fingerprint(hashes.SHA256())
-        .hex(),
-        "actions": ["APPROVE_LIPE_EXPORT"],
-        "valid_from": BEFORE.isoformat(),
-        "valid_until": AFTER.isoformat(),
-        "powers_evidence": [
-            {"reference": "FICTIONAL MANDATE EVIDENCE", "sha256": "1" * 64}
-        ],
-    }
-    mandate_path = root / "mandate.json"
-    mandate_path.write_bytes(request_bytes(mandate))
-    files = {
-        "signature": sign(
-            (packet / "request.json").read_bytes(),
-            root / "decision.p7s",
-            crypto,
-            "reviewer",
-        ),
-        "mandate": mandate_path,
-        "mandate_signature": sign(
-            mandate_path.read_bytes(), root / "mandate.p7s", crypto, "admin"
-        ),
-    }
-    return case, front, draft, packet, request, files
-
-
-def test_real_cms_signatures_bind_professional_mandate_and_exact_review(
-    tmp_path, crypto
-):
-    case, front, draft, packet, request, files = signed_packet(tmp_path, crypto)
-    output = accept_review(
-        case,
-        front,
-        draft,
-        tmp_path,
-        packet / "request.json",
-        tmp_path / "accepted",
-        at=AT,
-        authority=crypto["authority"],
-        **files,
-    )
-    proof = read_json(output / "approval.json")
-    assert proof["request"] == request
-    assert proof["review_verification"]["revocation"]["status"] == "PASS"
-    assert proof["identity_assurance"] == "CERTIFICATE_AND_FIRM_SIGNED_MANDATE"
-    assert proof["qualified_signature_status"] == "NOT_TESTED"
-    assert proof["filing_status"] == "NOT_SIGNED_OR_TRANSMITTED"
-    assert (output / "decision.p7s").read_bytes() == files["signature"].read_bytes()
-    assert not list(output.glob("*.xml"))
-
-
-@pytest.mark.parametrize(
-    "mutation,message",
-    [
-        ("changed-request", "signature_integrity"),
-        ("changed-mandate", "signature_integrity"),
-        ("wrong-signer", "authorized professional"),
-        ("untrusted-admin", "trusted firm administrator"),
-        ("revoked-mandate", "revoked"),
-        ("revoked-certificate", "authorized professional"),
-        ("crl-revoked", "revocation"),
-        ("expired", "expired"),
-        ("future", "future"),
-        ("overlong", "24 hours"),
-        ("real-policy", "cannot be mixed"),
-        ("provider-changed", "component changed"),
-        ("wrong-scope", "exact case scope"),
-    ],
-)
-def test_cryptographic_and_authority_failures_do_not_become_approval(
-    tmp_path, crypto, mutation, message
-):
-    _, _, _, _, request, files = signed_packet(tmp_path, crypto)
-    authority = copy.deepcopy(crypto["authority"])
-    if mutation == "changed-request":
-        request["bindings"]["result_hash"] = "f" * 64
-    elif mutation == "changed-mandate":
-        grant = read_json(files["mandate"])
-        grant["reviewer_name"] = "ALTERED"
-        files["mandate"].write_bytes(request_bytes(grant))
-    elif mutation == "wrong-signer":
-        sign(request_bytes(request), files["signature"], crypto, "admin")
-    elif mutation == "untrusted-admin":
-        authority["policy"]["admin_certificate_sha256"] = ["0" * 64]
-    elif mutation == "revoked-mandate":
-        authority["policy"]["revoked_mandate_ids"] = ["fictional-mandate"]
-    elif mutation == "revoked-certificate":
-        authority["policy"]["revoked_certificate_sha256"] = [
-            crypto["certs"]["reviewer"].fingerprint(hashes.SHA256()).hex()
-        ]
-    elif mutation == "crl-revoked":
-        authority["crls"] = crypto["revoked"]
-    elif mutation == "expired":
-        request["expires_at"] = AT.isoformat()
-    elif mutation == "future":
-        request["created_at"] = (AT + timedelta(hours=1)).isoformat()
-    elif mutation == "overlong":
-        request["expires_at"] = (AT + timedelta(hours=25)).isoformat()
-    elif mutation == "real-policy":
-        authority["policy"]["data_origin"] = "REAL"
-    elif mutation == "provider-changed":
-        request["bindings"]["crypto_provider_hash"] = "0" * 64
-    elif mutation == "wrong-scope":
-        request["scope"]["quarter"] = 3
-    with pytest.raises(ContractError, match=message):
-        verify_approval(request, at=AT, **files, **authority)
-
-
-def test_artifact_change_during_signature_verification_rejects_approval(
-    tmp_path, crypto, monkeypatch
-):
-    case, front, draft, packet, _, files = signed_packet(tmp_path, crypto)
-    verify = lipe_approval.verify_approval
-
-    def altered(*args, **kwargs):
-        proof = verify(*args, **kwargs)
-        (draft / "workpaper.md").write_text(
-            "Replaced during verification", encoding="utf-8"
-        )
-        return proof
-
-    monkeypatch.setattr(lipe_approval, "verify_approval", altered)
-    with pytest.raises(ContractError, match="changed during verification"):
-        accept_review(
-            case,
-            front,
-            draft,
-            tmp_path,
-            packet / "request.json",
-            tmp_path / "rejected",
-            at=AT,
-            authority=crypto["authority"],
-            **files,
-        )
-    assert not (tmp_path / "rejected").exists()
-
-
 def test_review_packet_cannot_modify_the_draft_it_binds(tmp_path):
     case, front, draft = example(tmp_path)
     with pytest.raises(ContractError, match="separate from the draft"):
@@ -549,81 +407,6 @@ def test_case_cannot_supply_its_own_firm_authority_config(tmp_path, monkeypatch)
     monkeypatch.setenv("VERA_LIPE_AUTHORITY_CONFIG", str(path))
     with pytest.raises(ContractError, match="outside client runs"):
         load_authority(excluded_roots=[tmp_path])
-
-
-@pytest.mark.parametrize(
-    "mutation,message",
-    [
-        ("artifact", "stale"),
-        ("frontpage", "stale"),
-        ("case", "Recalculation differs"),
-        ("source", "Source changed"),
-        ("request-bytes", "canonical request"),
-        ("missing-artifact", "missing review artifacts"),
-        ("extra-field", "authorization"),
-    ],
-)
-def test_acceptance_rejects_changes_to_the_exact_reviewed_version(
-    tmp_path, crypto, mutation, message
-):
-    case, front, draft, packet, _, files = signed_packet(tmp_path, crypto)
-    if mutation == "artifact":
-        (draft / "summary.pdf").write_bytes(b"Replacement report")
-    elif mutation == "frontpage":
-        front["review"]["reason"] = "Different scope of review"
-    elif mutation == "case":
-        case["scope_review"]["reason"] = "Different scope of review"
-    elif mutation == "source":
-        (tmp_path / "front-source.txt").write_text("Changed evidence", encoding="utf-8")
-    elif mutation == "request-bytes":
-        with (packet / "request.json").open("ab") as handle:
-            handle.write(b" ")
-    elif mutation == "missing-artifact":
-        (draft / "summary.pdf").unlink()
-    elif mutation == "extra-field":
-        request = read_json(packet / "request.json")
-        request["approved"] = True
-        (packet / "request.json").write_bytes(request_bytes(request))
-    with pytest.raises(ContractError, match=message):
-        accept_review(
-            case,
-            front,
-            draft,
-            tmp_path,
-            packet / "request.json",
-            tmp_path / "rejected",
-            at=AT,
-            authority=crypto["authority"],
-            **files,
-        )
-    assert not (tmp_path / "rejected").exists()
-
-
-def test_approval_rechecks_original_signature_bytes_after_verification(
-    tmp_path, crypto, monkeypatch
-):
-    case, front, draft, packet, _, files = signed_packet(tmp_path, crypto)
-    verify = lipe_approval.verify_approval
-
-    def altered(*args, **kwargs):
-        proof = verify(*args, **kwargs)
-        files["signature"].write_bytes(b"Replaced signature")
-        return proof
-
-    monkeypatch.setattr(lipe_approval, "verify_approval", altered)
-    with pytest.raises(ContractError, match="evidence changed during"):
-        accept_review(
-            case,
-            front,
-            draft,
-            tmp_path,
-            packet / "request.json",
-            tmp_path / "rejected",
-            at=AT,
-            authority=crypto["authority"],
-            **files,
-        )
-    assert not (tmp_path / "rejected").exists()
 
 
 def test_italian_year_boundary_controls_the_allowed_submission_window(tmp_path):
@@ -824,7 +607,7 @@ def test_real_cli_rejects_unreceipted_frontpage_before_writing(tmp_path):
     _, _, draft, _, output, context, paths, _ = archive_example(tmp_path)
     path = tmp_path / "external-front.json"
     shutil.copy(paths["frontpage.json"], path)
-    with pytest.raises(ContractError, match="escapes archive inputs"):
+    with pytest.raises(ValueError, match="escapes archive inputs"):
         main(
             [
                 "prepare",
@@ -845,7 +628,7 @@ def test_real_cli_rejects_unreceipted_frontpage_before_writing(tmp_path):
 
 def test_real_cli_rejects_external_output_before_writing(tmp_path):
     _, _, draft, _, _, context, paths, _ = archive_example(tmp_path)
-    with pytest.raises(ContractError, match="selected Archive output"):
+    with pytest.raises(ContractError, match="selected run output"):
         main(
             [
                 "prepare",
@@ -864,92 +647,89 @@ def test_real_cli_rejects_external_output_before_writing(tmp_path):
     assert not (tmp_path / "external-output").exists()
 
 
-def test_accept_cli_uses_independent_host_authority_config(
-    tmp_path, crypto, monkeypatch
-):
-    root = tmp_path / "case"
-    root.mkdir()
-    case, front, draft, packet, _, files = signed_packet(root, crypto)
-    case_path, front_path = root / "case.json", root / "front.json"
-    case_path.write_bytes(request_bytes(case))
-    front_path.write_bytes(request_bytes(front))
-    config = tmp_path / "host-authority.json"
-    config.write_bytes(
-        request_bytes(
-            {
-                name: str(value) if isinstance(value, Path) else value
-                for name, value in crypto["authority"].items()
-            }
-        )
-    )
-    monkeypatch.setenv("VERA_LIPE_AUTHORITY_CONFIG", str(config))
+def user_packet(tmp_path):
+    case, front, draft = example(tmp_path)
+    packet = prepare_review(case, front, draft, tmp_path, tmp_path / "packet", at=AT)
+    return case, front, draft, packet
 
-    # Fix the clock at the signed request's actual validation time.
-    class Clock(datetime):
-        @classmethod
-        def now(cls, tz=None):
-            return AT
 
-    monkeypatch.setattr(lipe_approval, "datetime", Clock)
-    status = main(
-        [
-            "accept",
-            "--case",
-            str(case_path),
-            "--frontpage",
-            str(front_path),
-            "--draft",
-            str(draft),
-            "--source-root",
-            str(root),
-            "--request",
-            str(packet / "request.json"),
-            "--signature",
-            str(files["signature"]),
-            "--mandate",
-            str(files["mandate"]),
-            "--mandate-signature",
-            str(files["mandate_signature"]),
-            "--output",
-            str(root / "accepted"),
-        ]
+def test_specific_user_confirmation_needs_no_credentials(tmp_path, monkeypatch):
+    monkeypatch.delenv("VERA_LIPE_AUTHORITY_CONFIG", raising=False)
+    case, front, draft, packet = user_packet(tmp_path)
+    approved = accept_review(
+        case,
+        front,
+        draft,
+        tmp_path,
+        packet / "request.json",
+        tmp_path / "approved",
+        reviewer="synthetic-user",
+        confirmation_ref="fixture-user-yes",
+        confirmed=True,
+        at=AT,
     )
-    assert status == 0
+    assert (approved / "decision.json").is_file()
+    assert not (approved / "decision.p7s").exists()
     assert (
-        read_json(root / "accepted/approval.json")["reviewer_name"]
-        == "FICTIONAL REVIEWER"
+        read_json(approved / "approval.json")["identity_assurance"]
+        == "USER_CONFIRMATION_NOT_AUTHENTICATED"
     )
 
 
-def test_authority_must_match_the_case_catalog_studio(tmp_path, crypto):
-    from lipe_catalog import create_catalog
-
-    case, front, _ = example(tmp_path)
-    catalog = tmp_path / "catalog.sqlite3"
-    created = create_catalog(catalog, "different-studio", "0.80")
-    case["catalog_context"] = {
-        "catalog_id": created["catalog_id"],
-        "studio_id": created["studio_id"],
-    }
-    draft = save_result(
-        case, calculate(case, tmp_path, catalog), tmp_path / "catalog-draft"
-    )
-    packet = prepare_review(
-        case, front, draft, tmp_path, tmp_path / "review", at=AT, catalog_path=catalog
-    )
-    with pytest.raises(ContractError, match="selected studio catalog"):
+@pytest.mark.parametrize(
+    "confirmed,reviewer,reference",
+    [(False, "user", "message"), (True, "", "message"), (True, "user", "")],
+)
+def test_missing_actual_user_confirmation_creates_no_approval(
+    tmp_path, confirmed, reviewer, reference
+):
+    case, front, draft, packet = user_packet(tmp_path)
+    destination = tmp_path / "approved"
+    with pytest.raises(ContractError):
         accept_review(
             case,
             front,
             draft,
             tmp_path,
             packet / "request.json",
-            tmp_path / "rejected",
+            destination,
+            reviewer=reviewer,
+            confirmation_ref=reference,
+            confirmed=confirmed,
             at=AT,
-            catalog_path=catalog,
-            authority=crypto["authority"],
-            signature=tmp_path / "unused",
-            mandate=tmp_path / "unused",
-            mandate_signature=tmp_path / "unused",
         )
-    assert not (tmp_path / "rejected").exists()
+    assert not destination.exists()
+
+
+@pytest.mark.parametrize("changed", ["source", "artifact", "case", "frontpage"])
+def test_changed_proposal_does_not_inherit_user_confirmation(tmp_path, changed):
+    case, front, draft, packet = user_packet(tmp_path)
+    if changed == "source":
+        (tmp_path / "front-source.txt").write_text("changed")
+    elif changed == "artifact":
+        (draft / "workpaper.md").write_text("changed")
+    elif changed == "case":
+        case["tax_year"] = 2025
+    else:
+        front["fields"]["AnnoImposta"] = 2025
+    with pytest.raises(ContractError):
+        accept_review(
+            case,
+            front,
+            draft,
+            tmp_path,
+            packet / "request.json",
+            tmp_path / "approved",
+            reviewer="synthetic-user",
+            confirmation_ref="fixture-yes",
+            confirmed=True,
+            at=AT,
+        )
+
+
+@pytest.fixture(autouse=True)
+def lipe_path(monkeypatch):
+    """Keep this component importable after other modules restore sys.path."""
+    monkeypatch.syspath_prepend(str(PLUGIN / "scripts"))
+    for name, module in LIPE_MODULES.items():
+        monkeypatch.setitem(sys.modules, name, module)

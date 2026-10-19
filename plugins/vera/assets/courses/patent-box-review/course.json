@@ -183,6 +183,11 @@
       "sha256": "ff641b5ce49054087c280054169e88f7e9396770d0d2f11f76e2dc8cd3b401f8"
     },
     {
+      "path": "modules/patent-box-review/patent_box/proposal_review.py",
+      "repository_path": "plugins/patent-box-review/patent_box/proposal_review.py",
+      "sha256": "7fafa94fe39fe5af41ee0840b52fcd5ec2267f0d2ec9a1effcadc08cb5fc3497"
+    },
+    {
       "path": "modules/patent-box-review/patent_box/render.py",
       "repository_path": "plugins/patent-box-review/patent_box/render.py",
       "sha256": "9d9420222230f0c963ee4febe3b724f55e620a89f635e9ccba5d013aaee990c9"
@@ -225,7 +230,7 @@
     {
       "path": "modules/patent-box-review/references/implementation-status.md",
       "repository_path": "plugins/patent-box-review/references/implementation-status.md",
-      "sha256": "c7af61c0e9f324a4b597052e8f08b20786f0b50427e2805296a66575c0e3b3e4"
+      "sha256": "aeeae1e3ae7c7d1f345c2c38a0dbe33b4bab395a3c1174f07e6984796601403a"
     },
     {
       "path": "modules/patent-box-review/references/ledger-import.md",
@@ -240,7 +245,7 @@
     {
       "path": "modules/patent-box-review/references/professional-review.md",
       "repository_path": "plugins/patent-box-review/references/professional-review.md",
-      "sha256": "36725049a3d935068b7d8acab7d283eef43be3745646601b67210cd9a0480715"
+      "sha256": "9c5f15f7233aa92675fff84a5a555c2c794b4faa5f43dc17eca21176f518aba2"
     },
     {
       "path": "modules/patent-box-review/references/source-discovery.md",
@@ -298,6 +303,11 @@
       "sha256": "5ca87def9c42d09be73ec065e40ea9217a3bbdb2e26276bd0458afcd054f52f1"
     },
     {
+      "path": "modules/patent-box-review/schemas/proposal-review-request.schema.json",
+      "repository_path": "plugins/patent-box-review/schemas/proposal-review-request.schema.json",
+      "sha256": "3a698c43e2c9df578c8ce9e18a12209e7f13e43f68c02107ba14624e36ddd4f9"
+    },
+    {
       "path": "modules/patent-box-review/schemas/ruleset.schema.json",
       "repository_path": "plugins/patent-box-review/schemas/ruleset.schema.json",
       "sha256": "0886ddafb74944831eb44f12b9cc78a118e26298505aaca0e69f5de85ba830a5"
@@ -330,12 +340,12 @@
     {
       "path": "modules/patent-box-review/scripts/patent_box_workflow.py",
       "repository_path": "plugins/patent-box-review/scripts/patent_box_workflow.py",
-      "sha256": "6b8c279ab270edbdaeba433bb2e54af560bf1d4206a9adfc417afb5d1aadb504"
+      "sha256": "d867cac56a001267e38434607cf7a661d7193b4945449363eeb8a3c47c66bfdb"
     },
     {
       "path": "modules/patent-box-review/skills/patent-box-review/SKILL.md",
       "repository_path": "plugins/patent-box-review/skills/patent-box-review/SKILL.md",
-      "sha256": "b51f1a0a8c205bde57e37bade3eafb24423482d82b039012498dddbb7c560976"
+      "sha256": "a7a526c5a9a32e8d20bf3695acf16f3715115ceb18e75fe3fc75321ddcce0465"
     },
     {
       "path": "modules/patent-box-review/templates/declaration_bridge.csv",
@@ -415,7 +425,7 @@
     {
       "path": "skills/patent-box-review/SKILL.md",
       "repository_path": "plugins/vera/skills/patent-box-review/SKILL.md",
-      "sha256": "537d81d49279594ea7448e435b45159d1db41171d3dee34049fc211dccb56d76"
+      "sha256": "31cff91aec59f853bdd0fbbda1af5091f8d04246e60786429450926423bf1620"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
