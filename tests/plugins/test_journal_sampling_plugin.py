@@ -4393,6 +4393,7 @@ def _write_registration_journal_pdf(
     credit: str = "100,00",
     continuation_date: str = "01/01/2024",
     credit_x: int = 500,
+    zero_value: str | None = None,
 ) -> dict[str, Any]:
     from reportlab.pdfgen import canvas
 
@@ -4409,6 +4410,10 @@ def _write_registration_journal_pdf(
     pdf.drawString(120, 710, "7.10.001")
     pdf.drawString(200, 710, "Contropartita")
     pdf.drawString(credit_x, 710, credit)
+    if zero_value is not None:
+        pdf.drawString(30, 670, "6.30.056")
+        pdf.drawString(200, 670, "Riga a zero")
+        pdf.drawString(410, 670, zero_value)
     pdf.save()
     return {
         "body": [20, 770],

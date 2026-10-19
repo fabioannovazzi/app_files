@@ -51,6 +51,8 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
         "page": "page",
         "row": "row",
         "sample_control": "{method} sample: {sample_size} of {population}",
+        "zero_exclusions": "{count} zero-value rows retained in the journal and excluded from sampling.",
+        "no_eligible_rows": "No eligible rows: the journal is retained; no sample was selected.",
         "methods": {
             "random": "random",
             "systematic": "systematic",
@@ -116,6 +118,8 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
         "page": "página",
         "row": "fila",
         "sample_control": "Muestra {method}: {sample_size} de {population}",
+        "zero_exclusions": "{count} filas de importe cero conservadas en el diario y excluidas del muestreo.",
+        "no_eligible_rows": "No hay filas elegibles: se conserva el diario; no se ha seleccionado una muestra.",
         "methods": {
             "random": "aleatoria",
             "systematic": "sistemática",
@@ -183,6 +187,8 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
         "page": "pagina",
         "row": "riga",
         "sample_control": "Campione {method}: {sample_size} su {population}",
+        "zero_exclusions": "{count} righe a importo zero conservate nel giornale ed escluse dal campionamento.",
+        "no_eligible_rows": "Nessuna riga eleggibile: il giornale è conservato; nessun campione selezionato.",
         "methods": {
             "random": "casuale",
             "systematic": "sistematico",
@@ -249,6 +255,8 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
         "page": "page",
         "row": "ligne",
         "sample_control": "Échantillon {method} : {sample_size} sur {population}",
+        "zero_exclusions": "{count} lignes de montant nul conservées dans le journal et exclues de l’échantillonnage.",
+        "no_eligible_rows": "Aucune ligne éligible : le journal est conservé ; aucun échantillon sélectionné.",
         "methods": {
             "random": "aléatoire",
             "systematic": "systématique",
@@ -315,6 +323,8 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
         "page": "Seite",
         "row": "Zeile",
         "sample_control": "Stichprobe {method}: {sample_size} von {population}",
+        "zero_exclusions": "{count} Nullbetragszeilen im Journal beibehalten und von der Stichprobe ausgeschlossen.",
+        "no_eligible_rows": "Keine geeigneten Zeilen: Das Journal bleibt erhalten; keine Stichprobe ausgewählt.",
         "methods": {
             "random": "zufällig",
             "systematic": "systematisch",
@@ -424,12 +434,15 @@ def _write_review_handoff_card(
     render_tool: str,
     save_tool: str,
     apply_tool: str,
+    audit: dict[str, Any],
 ) -> Path:
     copy = _review_copy(language)
     path = output_dir / "review_handoff.md"
     lines = [
         f"# {copy['product_title']} · {copy['handoff_title']}",
         "<!-- review-contract: Review Handoff -->",
+        "",
+        _control_items(audit, language)[0]["title"],
         "",
         f"- {copy['run_id']}: `{run_id}`",
         f"- {copy['review_payload']}: `review_payload.json`",
@@ -841,15 +854,21 @@ def _control_items(audit: dict[str, Any], language: str) -> list[dict[str, Any]]
         action = "mark_unclear"
     method = str(audit.get("method") or "sample")
     method_label = copy["methods"].get(method, method)
+    title = (
+        str(copy["no_eligible_rows"])
+        if audit.get("sampling_status") == "no_eligible_rows"
+        else str(copy["sample_control"]).format(
+            method=method_label, sample_size=sample_size, population=population
+        )
+    )
+    zero_count = int(audit.get("zero_value_rows_excluded") or 0)
+    if zero_count:
+        title += " — " + str(copy["zero_exclusions"]).format(count=zero_count)
     return [
         _base_item(
             "sampling-control",
             "sampling_control",
-            str(copy["sample_control"]).format(
-                method=method_label,
-                sample_size=sample_size,
-                population=population,
-            ),
+            title,
             output_path="sampling_audit.json",
             allowed_actions=("accept", "edit", "mark_unclear", "skip"),
             recommended_action=action,
@@ -860,6 +879,9 @@ def _control_items(audit: dict[str, Any], language: str) -> list[dict[str, Any]]
                     "seed": audit.get("seed"),
                     "requested_size": requested,
                     "population_size_after_filters": population,
+                    "zero_value_rows_excluded": audit.get(
+                        "zero_value_rows_excluded", 0
+                    ),
                     "filters": audit.get("filters"),
                     "population_proof": audit.get("population_proof"),
                 }
@@ -869,6 +891,8 @@ def _control_items(audit: dict[str, Any], language: str) -> list[dict[str, Any]]
                 "requested_size": requested,
                 "sample_size": sample_size,
                 "population_size_after_filters": population,
+                "zero_value_rows_excluded": audit.get("zero_value_rows_excluded", 0),
+                "sampling_status": audit.get("sampling_status"),
                 "filters": audit.get("filters"),
                 "population_proof": audit.get("population_proof"),
             },
@@ -1214,6 +1238,8 @@ def write_review_session_artifacts(
             ),
             "population_size_after_filters": audit.get("population_size_after_filters"),
             "sample_size": audit.get("sample_size", len(sample_rows)),
+            "zero_value_rows_excluded": audit.get("zero_value_rows_excluded", 0),
+            "sampling_status": audit.get("sampling_status"),
             "filters": audit.get("filters", {}),
             "population_proof": audit.get("population_proof"),
         },
@@ -1246,6 +1272,7 @@ def write_review_session_artifacts(
 
     review_handoff_path = _write_review_handoff_card(
         output_dir,
+        audit=audit,
         run_id=run_id,
         language=language,
         validate_tool="validate_journal_sampling_review",

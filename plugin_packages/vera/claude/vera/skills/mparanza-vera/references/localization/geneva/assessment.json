@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "ce6064387499b488a12141d7f032340f37dfb36402b12553c1fb17d8f64f3bf9",
+  "catalogue_fingerprint": "d746fb05d6f0d3a85b638c5ba6b8d620055462ff498599edc1c568fb6fd71652",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",

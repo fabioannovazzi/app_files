@@ -135,13 +135,17 @@
     {
       "id": "embedded-review-managed-runtime",
       "control": "Embedded product MCP review resolves the already-ready shared managed Python runtime through the owning product runtime readiness check; it does not install dependencies during review or silently fall back to system Python when that runtime is unavailable. The bridge retains isolated Python execution, managed runtime verification and inherited incident-delivery policy. Explicit Journal Sampling interpreter overrides and standalone component operation retain their existing routes. This adds no model call or external destination."
+    },
+    {
+      "id": "zero-value-source-retention",
+      "control": "Explicit zero-valued journal postings remain in the complete locally normalized journal and its source checks. Sampling excludes them before optional filters; the exact excluded count and no-eligible-rows outcome enter the existing audit and bounded model review context. Replay verifies the exclusion and native CSV/XLSX outputs, including empty selections. No new model call or external destination is introduced."
     }
   ],
   "review": {
     "reviewed_at": "2026-10-19",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "dde0721592b03d3b67397875d604fc0eaa3618ccf0b245272bd9c9d3c86a4b73"
+    "source_fingerprint": "88d134a23f88c4add5abbd6f1fbf2a5db5410d53270db8f2fb4ddc492fa89adb"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"

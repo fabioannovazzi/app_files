@@ -74,7 +74,7 @@
     {
       "path": "modules/journal-sampling/scripts/journal_sampling_core.py",
       "repository_path": "plugins/journal-sampling/scripts/journal_sampling_core.py",
-      "sha256": "d9af2d34f98597bc5e9a617b1fb502e900096a883bcc189b7bb0102ad291c78a"
+      "sha256": "cd7951be6c3742619143fa9c4b7034e1aca91f579b0360b7f217e6fbe1041501"
     },
     {
       "path": "modules/journal-sampling/scripts/normalize_journal.py",
@@ -89,7 +89,7 @@
     {
       "path": "modules/journal-sampling/scripts/review_session.py",
       "repository_path": "plugins/journal-sampling/scripts/review_session.py",
-      "sha256": "607e798a446751cface17a2b5ee6ea0184de3f42478351909c31d31d7fc5bb69"
+      "sha256": "9696b1ea88fdea10a2ac798b0f76d6c46a4e9ce255ffcaa311af77dd75b5311d"
     },
     {
       "path": "modules/journal-sampling/scripts/review_successor.py",
@@ -104,7 +104,7 @@
     {
       "path": "modules/journal-sampling/skills/journal-sampling/SKILL.md",
       "repository_path": "plugins/journal-sampling/skills/journal-sampling/SKILL.md",
-      "sha256": "f16a0dc43c6824fd179f4ed1a46bdf202696acc43b291b172219e7fe46e8464d"
+      "sha256": "4bb86703a826037aaa366efe53c0ebe7a944b14e931c89eda8d9cb483cb87161"
     },
     {
       "path": "modules/journal-sampling/skills/journal-sampling/references/geneva.md",

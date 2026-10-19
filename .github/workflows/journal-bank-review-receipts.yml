@@ -53,6 +53,11 @@ jobs:
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_check_entries_plugin.py::test_vouching_accepts_complete_reviewed_cross_page_pdf_journal
+      - name: Verify zero-value journal retention and sample exclusion
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_journal_zero_rows.py
+          tests/plugins/test_check_entries_plugin.py::test_check_entries_accepts_zero_rows_in_complete_upstream_journal
       - name: Check shared PDF reader quality
         run: |
           python -m black --check plugins/_shared/vendor/modules/vera_journal_pdf/*.py plugins/vera/scripts/managed_python_runtime.py tests/plugins/test_journal_pdf_recovery.py tests/plugins/journal_pdf_fixtures.py
