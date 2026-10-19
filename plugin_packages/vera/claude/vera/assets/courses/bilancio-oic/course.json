@@ -230,7 +230,7 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/SKILL.md",
-      "sha256": "c4008431a6298a470f27a9348960e972808929967ad9756bd8099b07b0d6f29e"
+      "sha256": "6d16517b3f1b5879ab4da25c83e5f7347e361bb80693a003627809517ac02c2a"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/agents/openai.yaml",
@@ -338,7 +338,7 @@
     },
     {
       "path": "skills/mparanza-bilancio-oic/SKILL.md",
-      "sha256": "c44d2b52ae95f1b32f285a35224e57cf646ed75c72ec5df51563407c400bf52a"
+      "sha256": "e695c5dce9efad51764fcbc4e1f0d0b3078a1d3150d56748c26822f51fc66d01"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",

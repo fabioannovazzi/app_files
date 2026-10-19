@@ -97,7 +97,7 @@
     },
     {
       "path": "modules/registro-imprese-sari/skills/mparanza-registro-imprese-sari/SKILL.md",
-      "sha256": "d6d0676918f483d6d3b487f84b612c8a221bb588138d0de4dfb06615e82b853c"
+      "sha256": "cb158611d457dfe7ff481b35101fdfe5dce086b53b571944218f89d0f5ccb508"
     },
     {
       "path": "modules/registro-imprese-sari/skills/mparanza-registro-imprese-sari/agents/openai.yaml",
@@ -149,7 +149,7 @@
     },
     {
       "path": "skills/mparanza-registro-imprese-sari/SKILL.md",
-      "sha256": "a003f12e8c6f29d1f8ea2818ae21bdf3d87562c15ee93777dd7ffb3d11649899"
+      "sha256": "a3cdc7ef764db0be42723bf74cfcd940c4783410f43495829b4998f7b1929702"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",

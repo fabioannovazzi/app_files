@@ -121,7 +121,7 @@
     },
     {
       "path": "modules/attribute-reporting/skills/mparanza-attribute-reporting/SKILL.md",
-      "sha256": "0c7e4d324adfce34455751c03b64cf3dd69cb5fa9b4a580427d494603452e23c"
+      "sha256": "1d0892da55384a0ce0e090800dba1277ac6723cf4e5b3642a596a17dac95fad7"
     },
     {
       "path": "modules/attribute-reporting/skills/mparanza-attribute-reporting/references/server-boundary.md",
@@ -217,7 +217,7 @@
     },
     {
       "path": "skills/mparanza-attribute-reporting/SKILL.md",
-      "sha256": "2d562c073b50bc7fd6301c3f8be619621c53cf6aa738d6c8c6eeba61263cbdcd"
+      "sha256": "0f4c24640d5df54371ec30b6dce671c592eabb7090ece871c030a2f9a756c7e4"
     },
     {
       "path": "vendor/modules/__init__.py",

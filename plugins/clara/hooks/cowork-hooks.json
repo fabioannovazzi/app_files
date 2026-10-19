@@ -6,11 +6,6 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/bootstrap_python_dependencies.py\"",
-            "timeout": 240
-          },
-          {
-            "type": "command",
             "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/check_change_requests.py\"",
             "timeout": 10
           }

@@ -5,13 +5,20 @@ description: Develop and repeatedly revise a business plan as evidence changes. 
 
 ## Cowork execution contract
 
-Work from the connected folder and supplied files first. Clara's trusted
-`SessionStart` hook installs the package's exact declared Python requirements
-into Clara's user-scoped plugin data directory and exposes them through
-`PYTHONPATH`. Run the dependency check before Python-backed workflows. Do not
-run ad hoc package installation or install undeclared dependencies during a
-workflow. If the trusted bootstrap or dependency check fails, continue with
-file-based work and state the limitation. MCP tools, browser or computer
+Work from the connected folder and supplied files first. Before Python workflows,
+locate the installed plugin root and run the module through its managed launcher:
+
+```bash
+python3 scripts/managed_python_runtime.py --module <module> run scripts/check_dependencies.py
+python3 scripts/managed_python_runtime.py --module <module> run scripts/<helper>.py <arguments>
+```
+
+The launcher completes or waits for shared setup before starting the helper. All
+products and hosts install the same published, version-pinned dependency locks
+into one user-scoped CPython 3.12 environment per OS host. Session startup does
+not install dependencies. Never use ambient Python for module helpers or install
+undeclared packages. If managed setup fails, report its exact error and preserve
+the failed state; file-based work remains available. MCP tools, browser or computer
 control, and local review servers are optional enhancements, never completion
 gates.
 
@@ -336,7 +343,7 @@ and explain that hosting remains incomplete. Do not claim automatic refresh.
 
 ### Registered execution and output location
 
-Run `python scripts/check_dependencies.py` from the shared module root first.
+Run `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module business-planning run scripts/check_dependencies.py` from the shared module root first.
 Never write client outputs in the Git workspace or a published folder. Synthetic
 developer evaluations may use a temporary directory. Use a fresh output folder.
 
@@ -345,7 +352,7 @@ Archive receipts for workflow ID `business-planning`. Source paths are relative
 to the returned run input directory. Pass the context unchanged:
 
 ```bash
-python scripts/run_business_plan.py --case <receipted-case.json> \
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module business-planning run scripts/run_business_plan.py --case <receipted-case.json> \
   --client-engagement <context.json> --source-root <run-input-dir> \
   --output-dir <run-output>/plan
 ```
@@ -353,7 +360,7 @@ python scripts/run_business_plan.py --case <receipted-case.json> \
 Clara binds the same case to the selected advisory case workspace:
 
 ```bash
-python scripts/run_strategic_plan.py --case <workspace>/business_plan_case.json \
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module business-planning run scripts/run_strategic_plan.py --case <workspace>/business_plan_case.json \
   --case-workspace <workspace> --source-root <workspace> \
   --output-dir <workspace>/business-plan/<cycle-id>
 ```

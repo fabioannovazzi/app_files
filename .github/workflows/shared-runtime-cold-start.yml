@@ -10,16 +10,17 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
+        host-package: [codex, cowork]
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 25
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.14'
       - name: Install and launch all products from packages with empty PATH
-        run: python scripts/check_shared_runtime_cold_start.py --output cold-start.json
+        run: python scripts/check_shared_runtime_cold_start.py --host-package ${{ matrix.host-package }} --output cold-start.json
       - uses: actions/upload-artifact@v4
         with:
-          name: cold-start-${{ matrix.os }}
+          name: cold-start-${{ matrix.os }}-${{ matrix.host-package }}
           path: cold-start.json
