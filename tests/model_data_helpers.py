@@ -23,6 +23,22 @@ def write_no_model_report(
 ) -> list[dict[str, str]]:
     """Return declarations for a synthetic run that executes no model call."""
 
+    existing = output / "model_data_report.json"
+    if (
+        existing.is_file()
+        and json.loads(existing.read_text()).get("schema_version") == 3
+    ):
+        return [
+            {
+                "artifact_id": f"disclosure.{suffix}",
+                "path": f"model_data_report.{suffix}",
+                "purpose": "Retain the automatic Archive report.",
+                "audience": "review",
+                "media_type": mime,
+            }
+            for suffix, mime in (("json", "application/json"), ("md", "text/markdown"))
+        ]
+
     request: dict[str, Any] = {
         "schema_version": 1,
         "workflow_id": workflow_id,

@@ -71,6 +71,10 @@ def process_environment() -> dict[str, str]:
             "SYSTEMROOT",
             "WINDIR",
             "PYTHONDONTWRITEBYTECODE",
+            "VERA_REPORTING_STATE_DIR",
+            "MPARANZA_INCIDENT_STATE_DIR",
+            "MPARANZA_INCIDENT_DEVICE_DIR",
+            "MPARANZA_INCIDENT_DELIVERY",
         )
         if key in os.environ
     }

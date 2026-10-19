@@ -512,6 +512,12 @@ def build_report(
 
 def stamp_report(run_id: str, report_path: Path, output_dir: Path) -> dict[str, Any]:
     """Retry the original signed receipt without creating a different task."""
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    if report.get("schema_version") == 3 and report.get("product") == "vera":
+        raise ValueError(
+            "Vera Archive receipts are bound and retried automatically for the Archive run; "
+            "a separate workflow-usage task cannot stamp or link this report."
+        )
     from notarized_run_receipt import NotarizedRunReceiptError, stamp_model_data_report
 
     try:

@@ -2982,6 +2982,11 @@ def run_isolated_luna_worker(
             model=model,
             reasoning_effort=reasoning_effort,
         )
+        from vera_assurance.reporting import record_model_submission
+
+        record_model_submission(
+            output, prompt=prompt, model=model, workflow_id=workflow_id
+        )
         process_result = _run_captured_process(
             [*worker_prefix, *worker_inner],
             cwd=capsule,

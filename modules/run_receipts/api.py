@@ -16,7 +16,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from fastapi.responses import HTMLResponse, Response
 from fastapi.routing import APIRoute
 from fastapi.templating import Jinja2Templates
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from modules.run_receipts.signing import (
     RunReceiptSigner,
@@ -49,6 +49,44 @@ VERIFY_PER_SOURCE_LIMIT = 240
 VERIFY_GLOBAL_LIMIT = 2400
 _SHA256_PATTERN = r"^[0-9a-f]{64}$"
 _PLUGIN_VERSION_PATTERN = r"^[0-9]+\.[0-9]+\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$"
+
+_ARCHIVE_VERIFY_COPY = {
+    "it": {
+        "verified": "Corrispondenza verificata: la firma associa questo report a Vera userID autenticato, alla stessa esecuzione di Studio Archive e alla revisione indicata.",
+        "missing": "Nessuna ricevuta corrisponde a report, Vera userID, esecuzione e revisione indicati.",
+        "run": "Esecuzione Studio Archive",
+        "revision": "Revisione del report",
+        "limit": "La verifica prova l’impronta registrata, il collegamento all’installazione Vera autenticata e alla sua macchina, l’esecuzione e la data server. Non identifica una persona e non prova la consegna al provider, la correttezza delle misure o la conformità GDPR.",
+    },
+    "en": {
+        "verified": "Match verified: the signature binds this report to authenticated Vera userID, the same Studio Archive run and the stated revision.",
+        "missing": "No receipt matches the supplied report, Vera userID, run and revision.",
+        "run": "Studio Archive run",
+        "revision": "Report revision",
+        "limit": "Verification proves the retained hash, the authenticated Vera installation and machine binding, run and server time. It does not identify a person or prove provider-side delivery, measurement accuracy or GDPR compliance.",
+    },
+    "fr": {
+        "verified": "Correspondance vérifiée : la signature lie ce rapport au Vera userID authentifié, à la même exécution Studio Archive et à la révision indiquée.",
+        "missing": "Aucun reçu ne correspond au rapport, au Vera userID, à l’exécution et à la révision indiqués.",
+        "run": "Exécution Studio Archive",
+        "revision": "Révision du rapport",
+        "limit": "La vérification prouve l’empreinte conservée, le lien avec l’installation Vera authentifiée et sa machine, l’exécution et l’heure serveur. Elle n’identifie pas une personne et ne prouve ni la réception par le fournisseur, ni l’exactitude des mesures, ni la conformité RGPD.",
+    },
+    "de": {
+        "verified": "Zuordnung bestätigt: Die Signatur bindet diesen Bericht an die authentifizierte Vera userID, dieselbe Studio-Archive-Ausführung und die angegebene Revision.",
+        "missing": "Kein Beleg entspricht Bericht, Vera userID, Ausführung und Revision.",
+        "run": "Studio-Archive-Ausführung",
+        "revision": "Berichtsrevision",
+        "limit": "Die Prüfung belegt den gespeicherten Hash, die Bindung an die authentifizierte Vera-Installation und ihren Computer, die Ausführung und die Serverzeit. Sie identifiziert keine Person und belegt weder den Empfang beim Modellanbieter noch die Richtigkeit der Messungen oder die DSGVO-Konformität.",
+    },
+    "es": {
+        "verified": "Correspondencia verificada: la firma vincula este informe a Vera userID autenticado, a la misma ejecución de Studio Archive y a la revisión indicada.",
+        "missing": "Ningún recibo corresponde al informe, Vera userID, ejecución y revisión indicados.",
+        "run": "Ejecución Studio Archive",
+        "revision": "Revisión del informe",
+        "limit": "La verificación prueba la huella conservada, el vínculo con la instalación Vera autenticada y su ordenador, la ejecución y la hora del servidor. No identifica a una persona ni prueba la recepción por el proveedor, la exactitud de las mediciones o la conformidad con el RGPD.",
+    },
+}
 
 _VERIFY_COPY = {
     "it": {
@@ -260,13 +298,29 @@ class RunReceiptStampRequest(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    schema_version: Literal[1, 2] = 1
+    schema_version: Literal[1, 2, 3] = 1
     product: Product | None = None
     receipt_id: UUID
     plugin_version: str = Field(
         min_length=5, max_length=64, pattern=_PLUGIN_VERSION_PATTERN
     )
     report_sha256: str = Field(pattern=_SHA256_PATTERN)
+    user_id: UUID | None = None
+    archive_run_id: str | None = Field(default=None, pattern=r"^run_[0-9a-f]{24}$")
+    report_revision: int | None = Field(default=None, ge=1, strict=True)
+
+    @model_validator(mode="after")
+    def require_archive_binding(self) -> RunReceiptStampRequest:
+        """A v3 receipt has one authenticated owner and exact Archive revision."""
+        binding = (self.user_id, self.archive_run_id, self.report_revision)
+        if self.schema_version == 3:
+            if self.product != "vera" or any(value is None for value in binding):
+                raise ValueError(
+                    "Archive receipts require Vera, userID, run and revision"
+                )
+        elif any(value is not None for value in binding):
+            raise ValueError("Machine bindings require receipt schema 3")
+        return self
 
 
 class RunReceiptStampResponse(BaseModel):
@@ -274,11 +328,14 @@ class RunReceiptStampResponse(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    schema_version: Literal[1, 2] = 1
+    schema_version: Literal[1, 2, 3] = 1
     product: Product | None = None
     receipt_id: UUID
     plugin_version: str
     report_sha256: str
+    user_id: str | None = None
+    archive_run_id: str | None = None
+    report_revision: int | None = None
     stamped_at: str
     key_id: str
     algorithm: Literal["Ed25519"] = "Ed25519"
@@ -321,6 +378,11 @@ def _verification_url(record: RunReceiptRecord) -> str:
     return (
         f"https://mparanza.com/verify/{record.product}-run-receipt/{record.receipt_id}"
         f"?sha256={record.report_sha256}"
+        + (
+            f"&user_id={record.user_id}&archive_run_id={record.archive_run_id}&report_revision={record.report_revision}"
+            if record.schema_version == 3
+            else ""
+        )
     )
 
 
@@ -369,18 +431,35 @@ def issue_run_receipt(
     store: RunReceiptStore,
     signer: RunReceiptSigner,
     product: Product,
+    *,
+    authenticated_user_id: str | None = None,
 ) -> RunReceiptStampResponse:
     """Issue the same bounded proof through admitted HTTP or MCP transport."""
+    if payload.schema_version == 3 and (
+        authenticated_user_id is None or str(payload.user_id) != authenticated_user_id
+    ):
+        raise HTTPException(
+            403, "Archive receipt requires its authenticated Vera userID"
+        )
     if (
         payload.schema_version == 1
         and (product != "vera" or payload.product is not None)
-    ) or (payload.schema_version == 2 and payload.product != product):
+    ) or (payload.schema_version in {2, 3} and payload.product != product):
         raise HTTPException(
             422, "Receipt product and schema do not match this endpoint"
         )
     signed_payload: dict[str, Any] = {
         "schema_version": payload.schema_version,
-        **({"product": product} if payload.schema_version == 2 else {}),
+        **({"product": product} if payload.schema_version in {2, 3} else {}),
+        **(
+            {
+                "user_id": authenticated_user_id,
+                "archive_run_id": payload.archive_run_id,
+                "report_revision": payload.report_revision,
+            }
+            if payload.schema_version == 3
+            else {}
+        ),
         "receipt_id": str(payload.receipt_id),
         "plugin_version": payload.plugin_version,
         "report_sha256": payload.report_sha256,
@@ -397,6 +476,9 @@ def issue_run_receipt(
             signature=signer.sign(signed_payload),
             product=product,
             schema_version=payload.schema_version,
+            user_id=authenticated_user_id if payload.schema_version == 3 else None,
+            archive_run_id=payload.archive_run_id,
+            report_revision=payload.report_revision,
         )
         record = store.stamp(candidate)
     except RunReceiptConflictError as exc:
@@ -429,6 +511,9 @@ def verify_run_receipt(
     limiter: RateLimiter,
     sha256: str = Query(pattern=_SHA256_PATTERN),
     product: Product = "vera",
+    user_id: UUID | None = None,
+    archive_run_id: str | None = None,
+    report_revision: int | None = None,
 ) -> RunReceiptStampResponse:
     """Verify that the supplied digest matches one valid retained proof."""
 
@@ -444,6 +529,11 @@ def verify_run_receipt(
         record is None
         or record.product != product
         or not hmac.compare_digest(record.report_sha256, sha256)
+        or (
+            record.schema_version == 3
+            and (str(user_id), archive_run_id, report_revision)
+            != (record.user_id, record.archive_run_id, record.report_revision)
+        )
     ):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -466,6 +556,9 @@ def verify_run_receipt_page(
     sha256: str = Query(pattern=_SHA256_PATTERN),
     lang: str = Query(default="it", pattern=r"^(it|en|fr|de|es)$"),
     product: Product = "vera",
+    user_id: UUID | None = None,
+    archive_run_id: str | None = None,
+    report_revision: int | None = None,
 ) -> HTMLResponse:
     """Render a customer-readable verification result without case content."""
 
@@ -478,6 +571,9 @@ def verify_run_receipt_page(
             limiter=limiter,
             sha256=sha256,
             product=product,
+            user_id=user_id,
+            archive_run_id=archive_run_id,
+            report_revision=report_revision,
         )
         receipt = response.model_dump(mode="json")
         verified = True
@@ -497,8 +593,15 @@ def verify_run_receipt_page(
             "product_name": product.title(),
             "lang": lang,
             "copy": {
-                key: value.replace("Vera", product.title())
-                for key, value in _VERIFY_COPY[lang].items()
+                **{
+                    key: value.replace("Vera", product.title())
+                    for key, value in _VERIFY_COPY[lang].items()
+                },
+                **(
+                    _ARCHIVE_VERIFY_COPY[lang]
+                    if user_id is not None or receipt and receipt["schema_version"] == 3
+                    else {}
+                ),
             },
         },
         status_code=status.HTTP_200_OK if verified else status.HTTP_404_NOT_FOUND,

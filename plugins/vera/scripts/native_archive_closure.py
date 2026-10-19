@@ -384,6 +384,26 @@ def receipts(current: dict, api: Any) -> list[dict]:
     ]
 
 
+def professional_manifest_fingerprint(current: dict) -> str:
+    """Keep idempotent professional closure stable through automatic proof retries."""
+    manifest = current["manifest"]
+    runtime = current["core"].ledger._reporting_runtime()
+    if (
+        manifest
+        and runtime.selective_reporting_enabled()
+        and runtime.report_pipeline(current["loaded"]["run"]["workflow_id"])
+    ):
+        from archive_report_seal import FILES
+
+        manifest = {
+            key: value for key, value in manifest.items() if key != "content_sha256"
+        }
+        manifest["artifacts"] = [
+            item for item in manifest["artifacts"] if item["path"] not in FILES
+        ]
+    return fingerprint(manifest)
+
+
 def projection(current: dict, args: dict, api: Any) -> dict:
     draft, stamp = draft_read(current, api)
     stale = bool(stamp and draft["scope_revision"] != current["scope_revision"])
@@ -464,7 +484,7 @@ def dispatch(root: Path, tool: str, args: dict, api: Any) -> dict:
                     raise ValueError(
                         "Interrupted archive closure requires specialist verification"
                     )
-                if fingerprint(current["manifest"]) != saved[
+                if professional_manifest_fingerprint(current) != saved[
                     "manifest_sha256"
                 ] or current["loaded"]["run"]["status"] not in {
                     saved["result"]["status"],
@@ -570,7 +590,7 @@ def dispatch(root: Path, tool: str, args: dict, api: Any) -> dict:
         api.atomic_json(path, {"request_sha256": request_sha})
         ids = [run[k] for k in ("client_id", "engagement_id", "run_id")]
         if tool == "vera_workspace_archive_finalize":
-            finalized = core.finalize_studio_client_workflow(*ids, declarations)
+            core.finalize_studio_client_workflow(*ids, declarations)
         else:
             core.complete_studio_client_workflow(*ids)
         after = snapshot(root, args, api)
@@ -579,20 +599,22 @@ def dispatch(root: Path, tool: str, args: dict, api: Any) -> dict:
             for r in after["manifest"]["artifacts"]
         }
         expected = {r["name"]: (r["byte_count"], r["sha256"]) for r in current["rows"]}
-        if (
-            tool == "vera_workspace_archive_finalize"
-            and finalized["reporting"]["status"] == "created"
+        runtime = core.ledger._reporting_runtime()
+        if runtime.selective_reporting_enabled() and runtime.report_pipeline(
+            run["workflow_id"]
         ):
-            from run_reporting import report_declarations
+            from archive_report_seal import FILES
 
-            generated = {row["path"] for row in report_declarations(current["output"])}
-            expected.update(
-                {
-                    name: actual[name]
-                    for name in actual.keys() - expected.keys()
-                    if name in generated
-                }
-            )
+            # Archive owns these reserved files through terminal collection and
+            # receipt retries. Every professional artifact still matches exactly.
+            expected = {
+                name: evidence
+                for name, evidence in expected.items()
+                if name not in FILES
+            }
+            actual = {
+                name: evidence for name, evidence in actual.items() if name not in FILES
+            }
         status = (
             "ready_for_review"
             if tool == "vera_workspace_archive_finalize"
@@ -619,7 +641,7 @@ def dispatch(root: Path, tool: str, args: dict, api: Any) -> dict:
             {
                 "request_sha256": request_sha,
                 "result": result,
-                "manifest_sha256": fingerprint(after["manifest"]),
+                "manifest_sha256": professional_manifest_fingerprint(after),
             },
         )
         draft_path(current, api).unlink(missing_ok=True)

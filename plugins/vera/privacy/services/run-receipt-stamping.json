@@ -5,9 +5,9 @@
       "id": "automatic-server-stamped-run-receipt",
       "kind": "hosted_service",
       "destination": "Mparanza's fixed HTTPS Vera run-receipt endpoint and public verification page",
-      "purpose": "Bind one local model-data report to a Mparanza server timestamp and Ed25519 signature, then let the studio or its customer verify the retained proof",
-      "content": "Unless the user requests --local-only, each substantive run with a durable local report automatically sends exactly schema version, one random per-run receipt UUID, the Vera version when the request was first created, and the SHA-256 digest of the canonical local model-data report, plus ordinary connection metadata. The report itself, workflow and local run IDs, client or case data, professional purpose, phase labels, counts, filenames, file contents, source-document hashes, prompts, and model outputs are not sent. A later verification request sends the same opaque receipt UUID and report digest.",
-      "retention": "Mparanza retains the opaque receipt UUID, server timestamp, Vera version, report digest, signature, signature key ID, and implicit receipt schema version as the proof record, without an automatic deletion period. The local HTML and JSON receipt remain in the studio's run output, or in a supplementary run receipts directory for a retry after output finalization, until the studio removes them. Administrative deletion of the server proof must be requested from Mparanza and makes later verification impossible.",
+      "purpose": "Authenticate the existing machine Vera userID and bind the hash of each selected Archive run report to that run, revision and server time.",
+      "content": "For every run of the 13 selected Vera pipelines, Archive automatically prepares a schema-3 proof request containing product, receipt UUID, plugin version, canonical report SHA-256, existing Vera userID (installation_id), Archive run ID and report revision. The operational transport authenticates existing installation credentials and requires its existing verified machine link. Ordinary connection metadata also reaches Mparanza. No report body, observations, source paths, source hashes, row counts, source values, prompts or model outputs are submitted. Verification supplies the receipt ID, report hash, Vera userID, Archive run ID and revision together.",
+      "retention": "The server retains the proof fields, server timestamp, signature and signing-key identity, with a unique userID/run/revision binding, without an automatic deletion period. Reports, raw observations, local database and receipts remain inside the local Archive run until the studio removes them. Deleting a server proof makes later server verification unavailable.",
       "activation": "automatic_per_durable_run",
       "optional": false,
       "requires_confirmation": false,
@@ -16,17 +16,14 @@
         "anthropic-cowork"
       ],
       "controls": [
-        "Vera report builds stamp by default. When the user prohibits external receipt transmission, --local-only writes the local JSON and readable report, returns not_requested/local_only, and skips receipt request construction and transport. It does not change host model processing. Do not retry stamping without a later explicit user request. Service failures leave completed work and the local report intact and return pending. The generic Studio Archive helper also disables server attestation.",
-        "The client constructs a four-field allow-listed request, restricts production traffic to the fixed Mparanza HTTPS route, permits HTTP only on an explicit loopback port for testing, bounds responses, and rejects additional or mismatched response fields. The default transport rejects HTTP redirects before any redirected request and rejects endpoint URLs containing credentials.",
-        "The server rejects additional request fields, assigns its own timestamp, signs the complete retained record with Ed25519, stores only the minimal proof fields, applies request-size and rate limits, and fails closed when signing or verification keys are unavailable.",
-        "The local customer receipt states that the proof covers existence, server time, and report integrity only; it does not claim who submitted the digest, provider delivery, analytical correctness, semantic necessity, DPIA completion, legal advice, or GDPR compliance.",
-        "Retries retain the original UUID and version. A retry after finalization verifies the retained report against the sealed artifact manifest and writes supplementary receipts outside the immutable output tree.",
-        "The workflow remains subject to host network permissions and action-specific approval rules. A denied transmission is not retried through another tool or destination; permission-denied retries wait for the required authorization.",
-        "OpenAI desktop onboarding is a local-only exception: reports beneath its .vera-onboarding-local-only directory marker return not_requested/local_onboarding before receipt request construction, including direct later stamp retries. The Claude projection omits this new onboarding behavior.",
-        "The report build returns the readable local report as display_markdown for the final response, including when stamping is pending. The show command renders a saved report after validating its recorded hashes; it reads no source documents, writes no files and makes no network or stamping request. Displaying the report uses the current model context and does not send its content to Mparanza.",
-        "The separately registered workflow-usage service can link the retained receipt UUID and digest to the installation and primary task. It does not alter the four-field stamping request or send the report itself. See workflow-usage for outcome and optional star/comment fields.",
-        "The shared implementation binds registrations, OAuth resources, task events, report signatures, feedback and update downloads to one product. Existing unmapped installations and receipt schema 1 remain Vera. Physical-computer identity is shared, while usage catalogues and testing epochs are separated by product.",
-        "The workflow-usage connector can relay the same retained allow-listed stamping request when local HTTPS is unavailable. Its surrounding envelope includes the existing workflow run UUID and original reporter credentials for ownership checks; the proof service retains only the original proof fields. No report contents are admitted. Returned receipts are validated locally against the unchanged report and retained request before linking."
+        "Only the fixed 13-pipeline scope generates new automatic Vera reports. Every selected execution gets a report, including full exposure and incomplete measurements. Start/end writes control collection; no agent-authored report input or substantive-work decision is used.",
+        "The terminal Archive write triggers closure. A pending enclosing host call must deliver its observed result before the report is frozen and hashed. Codex intermediate code-mode values are not treated as model-visible evidence.",
+        "Vera schema 3 requires authenticated installation credentials and an existing physical-machine link. The public anonymous stamping route cannot issue this schema. userID, Archive run ID, revision and report hash are included in the Ed25519 signature.",
+        "The request uses one fixed HTTPS operational endpoint. Additional fields, mismatched owner identity, changed retry evidence, wrong-product records and verification mismatches are rejected. Local raw observations are never sent.",
+        "Retries retain identical report bytes, UUID, version and revision. Professional artifacts are checked before and after updating only the reserved reporting artifacts in the Archive seal.",
+        "An explicit local_only option or local onboarding marker suppresses the proof request but keeps the report. Network or identity failures retain a pending receipt without invalidating the professional work. Host permission denials remain binding.",
+        "Verification proves the stored report hash, authenticated Vera installation/machine binding, Archive run, revision and server time. It does not identify a natural person or establish provider-side receipt, correctness of measurements, analytical correctness or GDPR compliance.",
+        "Historical schema-1 and schema-2 receipts remain readable through their existing routes; the authenticated Archive proof does not depend on a separate workflow-usage link."
       ]
     }
   ],
@@ -38,7 +35,18 @@
     "skills/vera/references/model-data-report-contract.md",
     "skills/contenzioso-tributario",
     "skills/posizioni-negoziali",
-    "scripts/reporting_product.py"
+    "scripts/reporting_product.py",
+    "scripts/archive_report_receipt.py",
+    "scripts/archive_report_transcript.py",
+    "scripts/archive_report_hook.py",
+    "scripts/archive_report_seal.py",
+    "scripts/archive_reporting.py",
+    "scripts/archive_report_store.py",
+    "scripts/archive_report_measurements.py",
+    "hooks/hooks.json",
+    "hooks/cowork-hooks.json",
+    "skills/vera/references/selective-reporting.md",
+    "scripts/operational_incidents.py"
   ],
   "governed_repository_paths": [
     "modules/hosted_services/api.py",
@@ -60,13 +68,17 @@
     "plugins/lucia/scripts/legal_negotiation.schema.json",
     "plugins/lucia/scripts/legal_negotiation_labels.json",
     "plugins/_shared/reporting-runtime",
-    "scripts/sync_reporting_runtime.py"
+    "scripts/sync_reporting_runtime.py",
+    "plugins/studio-archive/scripts/run_reporting.py",
+    "plugins/studio-archive/scripts/client_ledger.py",
+    "modules/operational_incidents/api.py",
+    "modules/operational_incidents/store.py"
   ],
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-10-19",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "29d10e5deb8f1cabf47083bab73aa51dcc389392567a64238ffcc967544d501e"
+    "source_fingerprint": "100fbaa3fde06b3239f94ae7c59d72db20e1d822679812e6493a4cde92e94ed8"
   },
   "runtime_profiles": [
     "openai-codex",
@@ -79,21 +91,24 @@
       "control": "Both client and server enforce the same closed receipt request schema, and the server's Pydantic model forbids every unregistered field.",
       "implemented_by": [
         "scripts/notarized_run_receipt.py",
-        "repository:modules/run_receipts/api.py"
+        "repository:modules/run_receipts/api.py",
+        "scripts/archive_report_receipt.py"
       ],
       "on_violation": "The request or response is rejected before a proof is accepted or written locally."
     },
     {
       "id": "fixed-receipt-destination",
-      "control": "The installed client accepts only the fixed Mparanza HTTPS receipt route, with an explicit loopback HTTP port allowed solely for local testing. Endpoint credentials are rejected, and the default stamping and verification transport refuses redirects rather than following another destination.",
+      "control": "Automatic Archive stamping and verification use fixed Mparanza HTTPS endpoints; operational credentials authenticate the existing Vera installation. The transport refuses redirects. The older generic receipt client retains its explicit loopback test option.",
       "implemented_by": [
+        "scripts/archive_report_receipt.py",
+        "scripts/operational_incidents.py",
         "scripts/notarized_run_receipt.py"
       ],
       "on_violation": "The client aborts before making a network request."
     },
     {
       "id": "signed-idempotent-minimal-storage",
-      "control": "The server generates the timestamp, signs the exact minimal record with Ed25519, persists no report or case fields, and treats reuse of a receipt UUID for a different digest or version as a conflict.",
+      "control": "The server signs the exact minimal record with Ed25519, including authenticated Vera userID, Archive run and revision for schema 3. A unique userID/run/revision binding prevents a second proof for different bytes. Conflicting receipt retries are rejected atomically; no report or source data are stored.",
       "implemented_by": [
         "repository:modules/run_receipts/signing.py",
         "repository:modules/run_receipts/store.py"
@@ -102,9 +117,11 @@
     },
     {
       "id": "bounded-public-receipt-service",
-      "control": "The public receipt API caps request bodies and per-source and global operation rates before stamping or verification.",
+      "control": "Receipt routes cap body size and operation rates. Archive stamping additionally authenticates installation credentials and requires the retained verified device link; anonymous requests cannot create schema-3 proofs.",
       "implemented_by": [
-        "repository:modules/run_receipts/api.py"
+        "repository:modules/run_receipts/api.py",
+        "repository:modules/operational_incidents/api.py",
+        "repository:modules/operational_incidents/store.py"
       ],
       "on_violation": "Oversized or excess requests receive an explicit 413 or 429 response without creating a receipt."
     }

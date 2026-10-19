@@ -475,14 +475,16 @@ const result=payload(call('vera_workspace_archive_complete',{...authority(ready)
     assert result["status"] == "completed"
     assert result["professional_approval"] is False
     assert result["sent_or_published"] is False
-    assert (
-        len(
-            ledger.validate_run_artifacts(folder, engagement, selected["run_id"])[
-                "artifacts"
-            ]
-        )
-        == 2
-    )
+    artifacts = ledger.validate_run_artifacts(folder, engagement, selected["run_id"])[
+        "artifacts"
+    ]
+    paths = {item["path"] for item in artifacts}
+    assert {"model_data_report.json", "model_data_report.md"} <= paths
+    assert paths <= {
+        "model_data_report.json",
+        "model_data_report.md",
+        "model_data_receipt_request.json",
+    }
 
 
 @pytest.mark.parametrize("surface", ["codex", "cowork"])

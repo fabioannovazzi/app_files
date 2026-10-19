@@ -36,6 +36,7 @@ const TOOL_NAMES = {
   prepareWorkflow: "prepare_studio_client_workflow",
   startCheckEntriesFromSample: "start_check_entries_from_sample",
   startWorkflow: "start_studio_client_workflow",
+  readRunArtifact: "read_studio_run_artifact",
   failWorkflow: "fail_studio_client_workflow",
   cancelWorkflow: "cancel_studio_client_workflow",
   finalizeWorkflow: "finalize_studio_client_workflow",
@@ -455,6 +456,19 @@ function toolDefinitions() {
         ["engagement_id", "workflow_id"],
       ),
       annotations: annotations(false),
+    },
+    {
+      name: TOOL_NAMES.readRunArtifact,
+      title: "Read data from an active Archive run",
+      description: "Read a bound input or generated data file for one exact active reporting run. Offset and limit select physical data units; columns are zero-based indices. The host observer records the returned selection automatically. Use for initial inspection and later reads in the 13 reporting pipelines.",
+      inputSchema: objectSchema({
+        ...runIdentitySchema().properties,
+        path: { type: "string", minLength: 1 },
+        offset: { type: "integer", minimum: 0 },
+        limit: { type: "integer", minimum: 0 },
+        columns: { type: "array", minItems: 1, uniqueItems: true, items: { type: "integer", minimum: 0 } },
+      }, ["client_id", "engagement_id", "run_id", "path"]),
+      annotations: annotations(true),
     },
     {
       name: TOOL_NAMES.startWorkflow,
@@ -1316,6 +1330,21 @@ function commandForTool(name, rawArgs) {
       if (value !== null) command.push(flag, value);
     }
     if (optionalBoolean(args.new_run, "new_run")) command.push("--new-run");
+    return command;
+  }
+  if (name === TOOL_NAMES.readRunArtifact) {
+    const command = runIdentityCommand(args, "read-run-artifact", ["path", "offset", "limit", "columns"]);
+    command.push("--path", requireString(args.path, "path"));
+    for (const key of ["offset", "limit"]) {
+      if (args[key] !== undefined) {
+        if (!Number.isSafeInteger(args[key]) || args[key] < 0) throw new Error(`${key} must be a non-negative integer`);
+        command.push(`--${key}`, String(args[key]));
+      }
+    }
+    if (args.columns !== undefined) {
+      if (!Array.isArray(args.columns) || args.columns.length === 0 || new Set(args.columns).size !== args.columns.length || args.columns.some(index => !Number.isSafeInteger(index) || index < 0)) throw new Error("columns must be nonempty, distinct non-negative integers");
+      for (const column of args.columns) command.push("--column", String(column));
+    }
     return command;
   }
   if (name === TOOL_NAMES.startWorkflow) {

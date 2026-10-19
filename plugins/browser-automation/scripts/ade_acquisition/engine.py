@@ -74,6 +74,9 @@ class Acquisition:
             )
             stream.flush()
             os.fsync(stream.fileno())
+        from .archive_runs import record_acquired_event
+
+        record_acquired_event(self.run, self.store, value)
 
     def checkpoint(self) -> None:
         if (self.run / "cancel.json").exists():

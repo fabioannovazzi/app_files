@@ -235,6 +235,24 @@ class IncidentStore:
         if row is None or not hmac.compare_digest(row["key_hash"], actual):
             raise IncidentNotFound("Installation capability is unavailable")
 
+    def archive_receipt_owner(self, actor: Credentials) -> str:
+        """Authenticate the existing Vera userID and its retained machine binding."""
+        with self._connection() as connection:
+            self._schema(connection)
+            self._authorize(connection, actor)
+            owner = str(actor.installation_id)
+            if self._installation_product(connection, owner) != "vera":
+                raise IncidentNotFound("Archive receipts require a Vera installation")
+            linked = connection.execute(
+                self._sql(
+                    "SELECT device_id FROM operational_device_links WHERE installation_id=?"
+                ),
+                (owner,),
+            ).fetchone()
+            if linked is None:
+                raise IncidentConflict("Vera userID has no verified machine binding")
+            return owner
+
     def workflow_record(
         self, actor: Credentials | ConnectionActor, event: WorkflowEvent
     ) -> dict[str, Any]:

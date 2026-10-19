@@ -28,7 +28,6 @@ from vera_assurance import (  # noqa: E402
     load_client_workflow_context_for_output,
 )
 
-
 # Direct skills use the public Archive lifecycle and generic packaged helpers;
 # their execution is covered by the tax lifecycle and packaged-helper regressions.
 DIRECT_CLIENT_SKILLS = {
@@ -1212,5 +1211,6 @@ def test_finalization_records_missing_measurements_without_inventing_a_report(
             }
         ],
     )
-    assert result["reporting"]["status"] == "unavailable"
-    assert not (output_dir / "model_data_report.json").exists()
+    assert result["reporting"]["status"] == "available"
+    report = json.loads((output_dir / "model_data_report.json").read_text())
+    assert report["collection_status"] == "incomplete"

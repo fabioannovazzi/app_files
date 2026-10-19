@@ -62,11 +62,14 @@ def canonical_receipt_bytes(payload: Mapping[str, Any]) -> bytes:
     """Return the one canonical byte representation covered by the signature."""
 
     version = payload.get("schema_version")
-    fields = _SIGNED_FIELDS | ({"product"} if version == 2 else set())
+    fields = _SIGNED_FIELDS | ({"product"} if version in {2, 3} else set())
+    if version == 3:
+        fields |= {"user_id", "archive_run_id", "report_revision"}
     if (
-        version not in {1, 2}
+        version not in {1, 2, 3}
         or set(payload) != fields
-        or (version == 2 and payload["product"] not in {"vera", "clara", "lucia"})
+        or (version in {2, 3} and payload["product"] not in {"vera", "clara", "lucia"})
+        or (version == 3 and payload["product"] != "vera")
     ):
         raise RunReceiptSigningError(
             "Signed receipt fields do not match the declared schema version."

@@ -38,6 +38,8 @@ def main() -> None:
         files[str(Path(policy.__file__))] = hashlib.sha256(
             Path(policy.__file__).read_bytes()
         ).hexdigest()
+        for path in Path(producer.__file__).parent.glob("archive_report*.py"):
+            files[str(path)] = hashlib.sha256(path.read_bytes()).hexdigest()
         result = {
             "sha256": hashlib.sha256(
                 json.dumps(files, sort_keys=True).encode()

@@ -140,9 +140,9 @@ def test_archive_finalization_builds_bound_report_without_a_separate_trigger(
 
     report = json.loads((output / "model_data_report.json").read_text())
     assert report["run_id"] == run_id
-    assert result["reporting"]["status"] == "created"
+    assert result["reporting"]["status"] == "available"
     assert result["reporting"]["started_at"]
-    assert result["reporting"]["finished_at"] == result["run"]["updated_at"]
+    assert result["reporting"]["finished_at"] is None
     assert "model_data_report.md" in {
         a["path"] for a in result["artifact_manifest"]["artifacts"]
     }
@@ -177,18 +177,22 @@ def test_no_evidence_or_no_local_remainder_never_invents_a_comparison(
 
     result = _finish(archive_core, client_case, run_id, output)
 
-    assert result["reporting"]["status"] == (
-        "unavailable" if evidence == "missing" else "not_applicable"
-    )
-    assert not (output / "model_data_report.json").exists()
+    report = json.loads((output / "model_data_report.json").read_text())
+    assert result["reporting"]["status"] == "available"
+    assert report["collection_status"] == "incomplete"
+    assert report["sources"][0]["remaining_local"] is None
 
 
-def test_foreign_run_evidence_cannot_be_attached(archive_core, client_case):
+def test_authored_foreign_run_evidence_cannot_change_automatic_report(
+    archive_core, client_case
+):
     run_id, output = _start(archive_core, client_case)
     _evidence(output, "run_" + "a" * 24)
 
-    with pytest.raises(archive_core.ArchiveError, match="another Archive run"):
-        _finish(archive_core, client_case, run_id, output)
+    _finish(archive_core, client_case, run_id, output)
+    report = json.loads((output / "model_data_report.json").read_text())
+    assert report["run_id"] == run_id
+    assert report["collection_status"] == "incomplete"
 
 
 def test_direct_report_command_refuses_an_unbound_output(tmp_path, capsys):
@@ -207,7 +211,7 @@ def test_direct_report_command_refuses_an_unbound_output(tmp_path, capsys):
     )
 
     assert code == 2
-    assert "context" in capsys.readouterr().err
+    assert "Archive" in capsys.readouterr().err
     assert not (tmp_path / "model_data_report.json").exists()
 
 
@@ -266,7 +270,7 @@ def test_selected_entrypoints_have_exact_archive_lifecycle(
     request["workflow_id"] = workflow
     (output / "model_data_report_input.json").write_text(json.dumps(request))
     result = _finish(archive_core, client_case, run_id, output)
-    assert result["reporting"]["status"] == "created"
+    assert result["reporting"]["status"] == "available"
 
 
 def test_failed_run_report_is_preserved_when_the_same_run_resumes(
@@ -291,11 +295,13 @@ def test_failed_run_report_is_preserved_when_the_same_run_resumes(
     )
 
     retained = list(
-        (output.parent / "reporting-history").glob("*/model_data_report.json")
+        (output.parent / "reporting/history").glob("*/model_data_report.json")
     )
     assert resumed["run"]["run_id"] == run_id
     assert retained[0].read_bytes() == previous
-    assert not (output / "model_data_report.json").exists()
+    current = json.loads((output / "model_data_report.json").read_text())
+    assert current["report_revision"] == 2
+    assert current["outcome"] == "running"
 
 
 @pytest.mark.parametrize("later_outcome", ["full_context_required", "not_measurable"])
@@ -321,10 +327,10 @@ def test_later_full_or_unknown_read_cannot_reuse_an_earlier_reduction(
 
     result = _finish(archive_core, client_case, run_id, output)
 
-    assert result["reporting"]["status"] == (
-        "unavailable" if later_outcome == "not_measurable" else "not_applicable"
-    )
-    assert not (output / "model_data_report.json").exists()
+    report = json.loads((output / "model_data_report.json").read_text())
+    assert result["reporting"]["status"] == "available"
+    assert report["collection_status"] == "incomplete"
+    assert report["sources"][0]["remaining_local"] is None
 
 
 def test_acquisition_worker_uses_a_client_bound_run_and_waits_for_model_review(
@@ -373,11 +379,11 @@ def test_acquisition_worker_uses_a_client_bound_run_and_waits_for_model_review(
         client_case.client_root, client_case.engagement_id, binding["run_id"]
     )
     output = Path(loaded["output_dir"])
-    evidence = json.loads((output / "model_data_report_input.json").read_text())
+    report = json.loads((output / "model_data_report.json").read_text())
     assert loaded["run"]["status"] == "running"
-    assert evidence["run_id"] == binding["run_id"]
-    assert evidence["phases"][0]["source_extent"][0]["quantity"] == 1
-    assert not (output / "model_data_report.json").exists()
+    assert report["run_id"] == binding["run_id"]
+    assert report["finished_at"] is None
+    assert not (output / "model_data_report_input.json").exists()
 
 
 def test_finalization_retry_returns_same_report_without_rewriting_it(
@@ -423,5 +429,5 @@ def test_resuming_review_ready_run_preserves_the_old_seal_outside_active_outputs
     (output / "model_data_report_input.json").write_text(json.dumps(request))
     assert (
         _finish(archive_core, client_case, run_id, output)["reporting"]["status"]
-        == "created"
+        == "available"
     )
