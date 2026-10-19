@@ -56,6 +56,52 @@ REQUEST_DIR_NAME = "model_drilldowns"
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
 
+def register_source_projection(
+    output_path: Path,
+    input_path: Path,
+    source_columns: Sequence[str],
+    row_indices: Sequence[int],
+    columns: Sequence[str],
+) -> None:
+    """Bind exact CSV/TSV source positions selected by the producer, before delivery."""
+    from vera_assurance.contracts import archive_projection_runtime
+
+    recorder = archive_projection_runtime(Path(__file__))
+    if (
+        recorder is None
+        or not recorder.is_recording("variance-analysis", output_path)
+        or input_path.suffix.lower() not in {".csv", ".tsv"}
+    ):
+        return
+    # These are retained physical record indices, not value matching or inferred
+    # provenance. Spreadsheet readers do not yet expose equivalent positions.
+    positions = [source_columns.index(name) for name in columns]
+    recorder.register_projection(
+        "variance-analysis",
+        output_path,
+        [
+            {
+                "source_path": str(input_path.resolve()),
+                "source_sha256": _snapshot(input_path)["sha256"],
+                "source_column_count": len(source_columns),
+                "rows": [
+                    {"physical_row": index + 2, "columns": positions}
+                    for index in row_indices
+                ],
+            }
+        ],
+    )
+
+
+def register_status(output: Path, payload: Any) -> None:
+    """Declare this producer's exact status payload without counting it as source rows."""
+    from vera_assurance.contracts import archive_projection_runtime
+
+    recorder = archive_projection_runtime(Path(__file__))
+    if recorder is not None:
+        recorder.register_metadata("variance-analysis", output, payload)
+
+
 class ModelUseError(ValueError):
     """Raised when a model-use manifest or drilldown request is invalid."""
 
@@ -254,9 +300,14 @@ def extract_source_rows(
 ) -> dict[str, Any]:
     """Write all exact in-scope source matches for one bounded question."""
 
-    from variance_core import prepare_period_comparison_buckets, read_table
+    from variance_core import (
+        get_schema_and_column_names,
+        prepare_period_comparison_buckets,
+        read_table,
+    )
 
     from modules.chart_harness import apply_recipe_cohorts, apply_recipe_filters
+    from modules.utilities.utils import get_row_count
 
     manifest_path = Path(manifest_path).resolve()
     manifest = validate_manifest(json.loads(manifest_path.read_text(encoding="utf-8")))
@@ -289,7 +340,12 @@ def extract_source_rows(
     if _snapshot(recipe_path) != manifest["semantic_boundary"].get("recipe_snapshot"):
         raise ModelUseError("Variance recipe no longer matches the reviewed recipe")
     frame = read_table(input_path)
-    source_rows = frame.height
+    source_columns, _schema = get_schema_and_column_names(frame)
+    source_rows = get_row_count(frame)
+    position_column = "__vera_source_row"
+    while position_column in source_columns:
+        position_column += "_"
+    frame = frame.with_row_index(position_column)
     frame, recipe = prepare_period_comparison_buckets(frame, recipe)
     frame, _filter_audit = apply_recipe_filters(frame, recipe)
     frame, _cohort_audit = apply_recipe_cohorts(
@@ -338,7 +394,14 @@ def extract_source_rows(
         raise ModelUseError("existing drilldown artifact does not match")
     if not output_path.exists():
         output_path.write_text(rendered, encoding="utf-8")
-    return {
+    register_source_projection(
+        output_path,
+        input_path,
+        source_columns,
+        frame.get_column(position_column).to_list(),
+        requested_columns,
+    )
+    result = {
         "ok": True,
         "artifact_path": str(output_path),
         "request_sha256": request_sha256,
@@ -346,6 +409,8 @@ def extract_source_rows(
         "full_source_rows_scanned_locally": source_rows,
         "in_scope_rows_scanned_locally": in_scope_rows,
     }
+    register_status(output_path, result)
+    return result
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -386,4 +451,6 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    from vera_assurance.contracts import run_recorded_cli
+
+    raise SystemExit(run_recorded_cli(main, Path(__file__)))

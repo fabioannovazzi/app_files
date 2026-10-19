@@ -1826,7 +1826,7 @@ def _execute_chunk(
     prompt = build_luna_prompt(packets)
     schema = luna_output_schema(invoice_ids)
     (chunk_dir / "audit_packets.json").write_bytes(_json_bytes(list(packets)))
-    (chunk_dir / "luna_prompt.md").write_text(prompt, encoding="utf-8")
+    (chunk_dir / "luna_prompt.md").write_bytes(prompt.encode("utf-8"))
     (chunk_dir / "luna_output_schema.json").write_bytes(_json_bytes(schema))
     worker_artifacts_present = any(
         os.path.lexists(chunk_dir / name) for name in LUNA_ARTIFACT_NAMES
@@ -2371,6 +2371,7 @@ def run_audit(
         )
         + "\n\n`no_issue_detected` is a screening result, not proof that accounting treatment is correct.\n",
         encoding="utf-8",
+        newline="\n",
     )
     _write_exception_workpaper(
         output_dir / "exception_workpaper.xlsx", summary, review_rows, orphans

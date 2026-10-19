@@ -84,12 +84,12 @@
     {
       "path": "modules/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
-      "sha256": "a7a8bb44aca8d25c6d4ad4d1b447db9d205fc2c6873e990a7f4b8d1e65aa49ec"
+      "sha256": "16582f72e10222004c2c384158ada7279c1c0f83754d981320fa74cdb442e82d"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/build_review_sample.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/build_review_sample.py",
-      "sha256": "9f4fe255a875e535c3ba56a59f47a03711861f0cc5b610c8fe4c1d8abd8a8ff9"
+      "sha256": "8a09de78fecca3e5d0e6e244a843b8b5e4023038d33f70a16b47c3736b309acf"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/check_dependencies.py",
@@ -104,7 +104,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/raw_input_runner.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/raw_input_runner.py",
-      "sha256": "b32e6a49c30c40545b1fdf25564d7eceacddb07b17d8e6a522e8753ef4a5aa53"
+      "sha256": "54778bfebf495a2e730a1ec29e793956ac1b9f7710d3d8c550eaacb3e4c7d8a6"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/reconciliation_workflow.py",
@@ -139,7 +139,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/review_server.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/review_server.py",
-      "sha256": "dcecb645b0be020893741b99b64099a70953ac17880dc05bbbb11cbe0c38d091"
+      "sha256": "48e4d7d7924df993abb7a22f004f431f5929dc42ac3d7f7835a96eaf5c8c61b9"
     },
     {
       "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
@@ -164,7 +164,7 @@
     {
       "path": "modules/open-item-reconciliation/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "099669d56a3c16655b5f65051209eca78541846bbd9c32b5aa3cc592380c4832"
+      "sha256": "618c55739ff238b7000704131ce0995d1129facd53152923f13805812f68fe49"
     },
     {
       "path": "modules/open-item-reconciliation/vendor/modules/vera_assurance/decisions.py",
@@ -194,7 +194,7 @@
     {
       "path": "modules/open-item-reconciliation/vendor/modules/vera_assurance/review_output_transaction.cjs",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
-      "sha256": "81a25a1641b7d6d6919087f62e2ab8b88f7ea2969be5ae8aa2eea2e70812de95"
+      "sha256": "92718fc4d3cdd30b7a317a0c9eaa38fedad3981c8383c50c09ec7a93e754e420"
     },
     {
       "path": "modules/open-item-reconciliation/vendor/modules/vera_assurance/serialization.py",
@@ -444,7 +444,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "099669d56a3c16655b5f65051209eca78541846bbd9c32b5aa3cc592380c4832"
+      "sha256": "618c55739ff238b7000704131ce0995d1129facd53152923f13805812f68fe49"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -474,7 +474,7 @@
     {
       "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
-      "sha256": "81a25a1641b7d6d6919087f62e2ab8b88f7ea2969be5ae8aa2eea2e70812de95"
+      "sha256": "92718fc4d3cdd30b7a317a0c9eaa38fedad3981c8383c50c09ec7a93e754e420"
     },
     {
       "path": "vendor/modules/vera_assurance/serialization.py",

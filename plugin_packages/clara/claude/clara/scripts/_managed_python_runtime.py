@@ -938,8 +938,13 @@ def main(
             str(script),
             *args.arguments,
         ]
-    completed = subprocess.run(
+    from archive_cli import run_command
+
+    completed = run_command(
         command,
+        plugin_root=plugin_root,
+        component=selection.requirement_root.name,
+        arguments=[str(script), *args.arguments],
         cwd=selection.requirement_root,
         env=runtime_environment(target),
         check=False,

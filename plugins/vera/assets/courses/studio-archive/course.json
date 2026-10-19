@@ -40,7 +40,7 @@
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
       "repository_path": "plugins/studio-archive/scripts/archive_core.py",
-      "sha256": "21bc9b925de44c249945408c175889e0ab066b38e371348ed9775a86276df23e"
+      "sha256": "592e9c64d9ea965a70fa864a869705e90ac7ee82dd3356ebd22d8b452a59803a"
     },
     {
       "path": "modules/studio-archive/scripts/archive_preferences.py",
@@ -60,7 +60,7 @@
     {
       "path": "modules/studio-archive/scripts/client_ledger.py",
       "repository_path": "plugins/studio-archive/scripts/client_ledger.py",
-      "sha256": "a5a59cd694ca34bd5d7ecac9fd94ab9a34ece965eca3d93b2f1ac52229d5ebb1"
+      "sha256": "7236f1465961136dda8a1589ce607f998d6a0718be13b94a7f2a1463f100d4d1"
     },
     {
       "path": "modules/studio-archive/scripts/folder_intake.py",
@@ -123,19 +123,19 @@
       "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
     },
     {
-      "path": "modules/studio-archive/vendor/modules/archive_report_hook.py",
-      "repository_path": "plugins/vera/scripts/archive_report_hook.py",
-      "sha256": "11537c73a59088d2a90451a0b927061429e2ed7c13aea67ea4bcf86515d4884e"
+      "path": "modules/studio-archive/vendor/modules/archive_report_legacy.py",
+      "repository_path": "plugins/vera/scripts/archive_report_legacy.py",
+      "sha256": "6dadb7f05b50afb13f7d23cde1e0e6a0748ad850a7df7dadace66f66cf96098e"
     },
     {
       "path": "modules/studio-archive/vendor/modules/archive_report_measurements.py",
       "repository_path": "plugins/vera/scripts/archive_report_measurements.py",
-      "sha256": "856c9a468151e13e5b805801562c825e5eab4512aae8f39aff980c3151669be4"
+      "sha256": "0e9286baf9d372b0a3bdf727758434ca5e1749c03535136dc1550b66514a54cd"
     },
     {
       "path": "modules/studio-archive/vendor/modules/archive_report_receipt.py",
       "repository_path": "plugins/vera/scripts/archive_report_receipt.py",
-      "sha256": "7ba519f8037ead65588eb9aa3815861052460396741d9b58aa788cd925b71a36"
+      "sha256": "a4f1857397b15438c8f9934d526df28ac012aaa3c60c1daa47fe5b000af19246"
     },
     {
       "path": "modules/studio-archive/vendor/modules/archive_report_seal.py",
@@ -145,27 +145,22 @@
     {
       "path": "modules/studio-archive/vendor/modules/archive_report_store.py",
       "repository_path": "plugins/vera/scripts/archive_report_store.py",
-      "sha256": "7986b3c4b65861534e983b6bb1fd592d1dfff99ee5091ac974af29a9b2d5fb89"
-    },
-    {
-      "path": "modules/studio-archive/vendor/modules/archive_report_transcript.py",
-      "repository_path": "plugins/vera/scripts/archive_report_transcript.py",
-      "sha256": "a85ce11b35c75db8e32f4b84cb85fec5b8757fba7cbadd3f85ac001616a21533"
+      "sha256": "4923b2de70536d3f581d9daa67970737ee736b78b4ec143e49c7499858a3c1cd"
     },
     {
       "path": "modules/studio-archive/vendor/modules/archive_reporting.py",
       "repository_path": "plugins/vera/scripts/archive_reporting.py",
-      "sha256": "f1bd764800703c60a985b9b79be147c230ddeb7418c029cb3601234eb09b8aec"
+      "sha256": "f6d04c1a6023b48f8f745c8a7cde4b39f1575382620d5356d03a3ec8a4a1b11c"
     },
     {
       "path": "modules/studio-archive/vendor/modules/model-data-report-contract.md",
       "repository_path": "plugins/vera/skills/vera/references/model-data-report-contract.md",
-      "sha256": "e555e14b6dee5f0261287526b9c7a174fcea0d2b8535de5ff5ce0e1b10bdac2f"
+      "sha256": "93e16152a47769fa8fbf56181e5a213f7dba181a8515a139971d3169ec055546"
     },
     {
       "path": "modules/studio-archive/vendor/modules/model_data_report.py",
       "repository_path": "plugins/vera/scripts/model_data_report.py",
-      "sha256": "afdc3f6483a3aa013772eb934ad975eab59f7c9f8f2b04b693578a590f3aabe4"
+      "sha256": "7a0fae4f7981674d31e34bb5cb94a8aa86830f495f554393b5fd151c13a81f14"
     },
     {
       "path": "modules/studio-archive/vendor/modules/privacy_contract.py",
@@ -185,7 +180,7 @@
     {
       "path": "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "099669d56a3c16655b5f65051209eca78541846bbd9c32b5aa3cc592380c4832"
+      "sha256": "618c55739ff238b7000704131ce0995d1129facd53152923f13805812f68fe49"
     },
     {
       "path": "modules/studio-archive/vendor/modules/vera_assurance/decisions.py",
@@ -215,7 +210,7 @@
     {
       "path": "modules/studio-archive/vendor/modules/vera_assurance/review_output_transaction.cjs",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
-      "sha256": "81a25a1641b7d6d6919087f62e2ab8b88f7ea2969be5ae8aa2eea2e70812de95"
+      "sha256": "92718fc4d3cdd30b7a317a0c9eaa38fedad3981c8383c50c09ec7a93e754e420"
     },
     {
       "path": "modules/studio-archive/vendor/modules/vera_assurance/serialization.py",
@@ -230,7 +225,7 @@
     {
       "path": "skills/studio-archive/SKILL.md",
       "repository_path": "plugins/vera/skills/studio-archive/SKILL.md",
-      "sha256": "70551d1e8e81143f0de97e3e762799b160a224d5516da6cd2200cea9a56ffb73"
+      "sha256": "d565194c059b01e2bfd9f882a8b077b10093d3d4ece9e8647b6d3a6a91375031"
     },
     {
       "path": "skills/studio-archive/references/marketplace-gmail.md",
@@ -480,7 +475,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "099669d56a3c16655b5f65051209eca78541846bbd9c32b5aa3cc592380c4832"
+      "sha256": "618c55739ff238b7000704131ce0995d1129facd53152923f13805812f68fe49"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -510,7 +505,7 @@
     {
       "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
-      "sha256": "81a25a1641b7d6d6919087f62e2ab8b88f7ea2969be5ae8aa2eea2e70812de95"
+      "sha256": "92718fc4d3cdd30b7a317a0c9eaa38fedad3981c8383c50c09ec7a93e754e420"
     },
     {
       "path": "vendor/modules/vera_assurance/serialization.py",

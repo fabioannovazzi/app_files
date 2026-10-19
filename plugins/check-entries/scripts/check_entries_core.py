@@ -17,6 +17,7 @@ import tempfile
 import unicodedata
 import zipfile
 from collections.abc import Mapping
+from contextlib import closing
 from dataclasses import dataclass
 from datetime import date, datetime
 from decimal import Decimal
@@ -3365,115 +3366,137 @@ def _validate_numeric_artifact_addresses(
     if len(normalized_rows) != len(records) or len(result_rows) != len(records):
         raise ValueError("Numeric evidence row counts do not close.")
     support_by_entry = {row["prepared_entry_id"]: row for row in support_rows}
-    workbook = openpyxl.load_workbook(xlsx_path, read_only=True, data_only=False)
-    if workbook.sheetnames != ["Sheet1"]:
-        raise ValueError("Check Entries workbook sheet identity is unstable.")
-    sheet = workbook["Sheet1"]
-    headers = [str(cell.value or "") for cell in sheet[1]]
-    if headers != RESULT_COLUMNS:
-        raise ValueError("Check Entries workbook headers do not close.")
-    for index, record in enumerate(records, start=2):
-        row_index = index - 2
-        amount_signed = str(record["amount_signed"])
-        amount_abs = str(record["amount_abs"])
-        if (
-            normalized_rows[row_index]["amount_signed"] != amount_signed
-            or result_rows[row_index]["amount_signed"] != amount_signed
-            or str(sheet.cell(index, RESULT_COLUMNS.index("amount_signed") + 1).value)
-            != amount_signed
-        ):
-            raise ValueError("amount_signed numeric evidence address does not close.")
-        if (
-            normalized_rows[row_index]["amount_abs"] != amount_abs
-            or result_rows[row_index]["amount_abs"] != amount_abs
-            or str(sheet.cell(index, RESULT_COLUMNS.index("amount_abs") + 1).value)
-            != amount_abs
-        ):
-            raise ValueError("amount_abs numeric evidence address does not close.")
-        support_amount_signed = record.get("support_amount_signed")
-        if support_amount_signed not in (None, ""):
-            support_amount_text = str(support_amount_signed)
-            support_row = support_by_entry.get(str(record["prepared_entry_id"]))
-            if support_row is None:
-                raise ValueError("Prepared support numeric evidence row is missing.")
+    with (
+        xlsx_path.open("rb") as workbook_source,
+        closing(
+            openpyxl.load_workbook(workbook_source, read_only=True, data_only=False)
+        ) as workbook,
+    ):
+        if workbook.sheetnames != ["Sheet1"]:
+            raise ValueError("Check Entries workbook sheet identity is unstable.")
+        sheet = workbook["Sheet1"]
+        headers = [str(cell.value or "") for cell in sheet[1]]
+        if headers != RESULT_COLUMNS:
+            raise ValueError("Check Entries workbook headers do not close.")
+        for index, record in enumerate(records, start=2):
+            row_index = index - 2
+            amount_signed = str(record["amount_signed"])
+            amount_abs = str(record["amount_abs"])
             if (
-                support_row["support_amount_signed"] != support_amount_text
-                or result_rows[row_index]["support_amount_signed"]
-                != support_amount_text
+                normalized_rows[row_index]["amount_signed"] != amount_signed
+                or result_rows[row_index]["amount_signed"] != amount_signed
                 or str(
-                    sheet.cell(
-                        index,
-                        RESULT_COLUMNS.index("support_amount_signed") + 1,
-                    ).value
+                    sheet.cell(index, RESULT_COLUMNS.index("amount_signed") + 1).value
                 )
-                != support_amount_text
+                != amount_signed
             ):
                 raise ValueError(
-                    "support_amount_signed numeric evidence address does not close."
+                    "amount_signed numeric evidence address does not close."
                 )
-            raw_difference_signed = record.get("amount_difference_signed")
-            raw_difference_abs = record.get("amount_difference_abs")
-            if raw_difference_signed in (None, "") or raw_difference_abs in (None, ""):
-                if not (
-                    raw_difference_signed in (None, "")
-                    and raw_difference_abs in (None, "")
+            if (
+                normalized_rows[row_index]["amount_abs"] != amount_abs
+                or result_rows[row_index]["amount_abs"] != amount_abs
+                or str(sheet.cell(index, RESULT_COLUMNS.index("amount_abs") + 1).value)
+                != amount_abs
+            ):
+                raise ValueError("amount_abs numeric evidence address does not close.")
+            support_amount_signed = record.get("support_amount_signed")
+            if support_amount_signed not in (None, ""):
+                support_amount_text = str(support_amount_signed)
+                support_row = support_by_entry.get(str(record["prepared_entry_id"]))
+                if support_row is None:
+                    raise ValueError(
+                        "Prepared support numeric evidence row is missing."
+                    )
+                if (
+                    support_row["support_amount_signed"] != support_amount_text
+                    or result_rows[row_index]["support_amount_signed"]
+                    != support_amount_text
+                    or str(
+                        sheet.cell(
+                            index,
+                            RESULT_COLUMNS.index("support_amount_signed") + 1,
+                        ).value
+                    )
+                    != support_amount_text
                 ):
-                    raise ValueError("Amount difference fields must close together.")
-            else:
-                difference_signed = str(raw_difference_signed)
-                difference_abs = str(raw_difference_abs)
-                for field, value in (
-                    ("amount_difference_signed", difference_signed),
-                    ("amount_difference_abs", difference_abs),
+                    raise ValueError(
+                        "support_amount_signed numeric evidence address does not close."
+                    )
+                raw_difference_signed = record.get("amount_difference_signed")
+                raw_difference_abs = record.get("amount_difference_abs")
+                if raw_difference_signed in (None, "") or raw_difference_abs in (
+                    None,
+                    "",
                 ):
-                    if (
-                        support_row[field] != value
-                        or result_rows[row_index][field] != value
-                        or str(
-                            sheet.cell(
-                                index,
-                                RESULT_COLUMNS.index(field) + 1,
-                            ).value
-                        )
-                        != value
+                    if not (
+                        raw_difference_signed in (None, "")
+                        and raw_difference_abs in (None, "")
                     ):
                         raise ValueError(
-                            f"{field} numeric evidence address does not close."
+                            "Amount difference fields must close together."
                         )
-                journal_value = parse_canonical_decimal(
-                    amount_signed,
-                    label="entry amount_signed",
+                else:
+                    difference_signed = str(raw_difference_signed)
+                    difference_abs = str(raw_difference_abs)
+                    for field, value in (
+                        ("amount_difference_signed", difference_signed),
+                        ("amount_difference_abs", difference_abs),
+                    ):
+                        if (
+                            support_row[field] != value
+                            or result_rows[row_index][field] != value
+                            or str(
+                                sheet.cell(
+                                    index,
+                                    RESULT_COLUMNS.index(field) + 1,
+                                ).value
+                            )
+                            != value
+                        ):
+                            raise ValueError(
+                                f"{field} numeric evidence address does not close."
+                            )
+                    journal_value = parse_canonical_decimal(
+                        amount_signed,
+                        label="entry amount_signed",
+                    )
+                    support_value = parse_canonical_decimal(
+                        support_amount_text,
+                        label="support amount_signed",
+                    )
+                    signed_value = parse_canonical_decimal(
+                        difference_signed,
+                        label="amount difference_signed",
+                    )
+                    absolute_value = parse_canonical_decimal(
+                        difference_abs,
+                        label="amount difference_abs",
+                    )
+                    if (
+                        support_value - journal_value != signed_value
+                        or abs(signed_value) != absolute_value
+                    ):
+                        raise ValueError(
+                            "Signed support amount arithmetic does not close."
+                        )
+            amount_found = record.get("amount_found")
+            if amount_found in (None, ""):
+                continue
+            amount_found_text = str(amount_found)
+            support_row = support_by_entry.get(str(record["prepared_entry_id"]))
+            if (
+                support_row is None
+                or support_row["amount_found"] != amount_found_text
+                or result_rows[row_index]["amount_found"] != amount_found_text
+                or str(
+                    sheet.cell(index, RESULT_COLUMNS.index("amount_found") + 1).value
                 )
-                support_value = parse_canonical_decimal(
-                    support_amount_text,
-                    label="support amount_signed",
+                != amount_found_text
+            ):
+                raise ValueError(
+                    "amount_found numeric evidence address does not close."
                 )
-                signed_value = parse_canonical_decimal(
-                    difference_signed,
-                    label="amount difference_signed",
-                )
-                absolute_value = parse_canonical_decimal(
-                    difference_abs,
-                    label="amount difference_abs",
-                )
-                if (
-                    support_value - journal_value != signed_value
-                    or abs(signed_value) != absolute_value
-                ):
-                    raise ValueError("Signed support amount arithmetic does not close.")
-        amount_found = record.get("amount_found")
-        if amount_found in (None, ""):
-            continue
-        amount_found_text = str(amount_found)
-        support_row = support_by_entry.get(str(record["prepared_entry_id"]))
-        if (
-            support_row is None
-            or support_row["amount_found"] != amount_found_text
-            or result_rows[row_index]["amount_found"] != amount_found_text
-            or str(sheet.cell(index, RESULT_COLUMNS.index("amount_found") + 1).value)
-            != amount_found_text
-        ):
-            raise ValueError("amount_found numeric evidence address does not close.")
 
 
 def inspect_entries(

@@ -61,11 +61,13 @@ function validate(definition,args) {
     if(field.type==="object"&&(!value||typeof value!=="object"||Array.isArray(value)))throw new Error("argument-value-invalid");
   }
 }
-function resultFor(data,ref) {
+function resultFor(data,ref,binding=null) {
   const summary={state:data.state, ...(ref?{workspace_ref:ref}:{}), ...(data.run_id?{run_id:data.run_id}:{})};
   for(const key of ["downloaded","verified_existing","failed_documents","scopes_complete","scopes_expected","scopes_incomplete","scopes_not_attempted","cash_review_issue_count","error"])
     if(data[key]!==undefined)summary[key]=data[key];
-  return {content:[{type:"text",text:JSON.stringify(summary)}],structuredContent:summary,_meta:{agenzia:{...data,workspace_ref:ref}}};
+  const modelPayload={content:[{type:"text",text:JSON.stringify(summary)}],structuredContent:summary};
+  if(binding&&data.run_id)bridge(binding,"record-output",{run_id:data.run_id,summary,model_payload:modelPayload});
+  return {...modelPayload,_meta:{agenzia:{...data,workspace_ref:ref}}};
 }
 function callTool(name,args) {
   const definition=TOOLS.find(item=>item.name===name);
@@ -79,12 +81,12 @@ function callTool(name,args) {
     binding.source_revision=data.source_revision;
     const ref=randomUUID();bindings.set(ref,binding);
     if(args.run_id)data=bridge(binding,"status",{run_id:args.run_id});
-    return resultFor(data,ref);
+    return resultFor(data,ref,binding);
   }
   const binding=bindings.get(args.workspace_ref);
   if(!binding)throw new Error("workspace-expired-reopen-exact-plan");
   const {workspace_ref,...values}=args;
-  return resultFor(bridge(binding,name.slice("agenzia_workspace_".length),values),workspace_ref);
+  return resultFor(bridge(binding,name.slice("agenzia_workspace_".length),values),workspace_ref,binding);
 }
 function resource() {
   return fs.readFileSync(path.join(ROOT,"ui/agenzia.html"),"utf8")

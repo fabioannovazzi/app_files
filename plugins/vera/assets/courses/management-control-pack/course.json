@@ -81,12 +81,12 @@
     {
       "path": "modules/management-control-pack/scripts/finalize_pack.py",
       "repository_path": "plugins/management-control-pack/scripts/finalize_pack.py",
-      "sha256": "7cddaa2377112588a905b04f09c54e5f5d9d57a91c9cad6810de5b93161e5a7e"
+      "sha256": "acd51df1fc944ca307527d3509c2641f75ba9746963bd780c8c991562e70fb63"
     },
     {
       "path": "modules/management-control-pack/scripts/inspect_inputs.py",
       "repository_path": "plugins/management-control-pack/scripts/inspect_inputs.py",
-      "sha256": "02fabbeaf9770fc750003ae7981eb4f5d58e3ca745808a13f655a524ddb81456"
+      "sha256": "cfbd14235a96796befa1170918bf2cd8bf230a04c4c2015012d07de7083e3e62"
     },
     {
       "path": "modules/management-control-pack/scripts/management_control_core.py",
@@ -111,22 +111,22 @@
     {
       "path": "modules/management-control-pack/scripts/prepare_report_site.py",
       "repository_path": "plugins/management-control-pack/scripts/prepare_report_site.py",
-      "sha256": "17c9c3296fd152848ab4299347be4806c1a0062367cc27b6c37f173fd2510d3b"
+      "sha256": "81b222612685768843dc76d914b59b0df2a58dbe0abbf41185ccd550cbabbbb1"
     },
     {
       "path": "modules/management-control-pack/scripts/preview_report.py",
       "repository_path": "plugins/management-control-pack/scripts/preview_report.py",
-      "sha256": "7bf3850456f4f673eb384424fe1898b180cf51f72f720f7abdbf9233ebb864f4"
+      "sha256": "4a5d5cf9d2cc3a5ce231d8a5e5ced7b531be20577b318044680d630044b003d3"
     },
     {
       "path": "modules/management-control-pack/scripts/run_costing.py",
       "repository_path": "plugins/management-control-pack/scripts/run_costing.py",
-      "sha256": "585c8566c6e413e15467bdb0dc97df02081d2c1f51f8c576f5d34bd0674a07c2"
+      "sha256": "d41bd9be497e090d2fc8e057e44d79f115fcce17e610d3d54e76a6fec75ae303"
     },
     {
       "path": "modules/management-control-pack/scripts/run_pack.py",
       "repository_path": "plugins/management-control-pack/scripts/run_pack.py",
-      "sha256": "69ef1cbde7526f347c45bf51758f9356796cb583c64a484bacaa04014d266fdd"
+      "sha256": "52e3e8deb4c2236261c6b00384ced92b0dc00eaf33a2d242726c4b404ab09ac4"
     },
     {
       "path": "modules/management-control-pack/skills/management-control-pack/SKILL.md",
@@ -156,7 +156,7 @@
     {
       "path": "modules/management-control-pack/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "099669d56a3c16655b5f65051209eca78541846bbd9c32b5aa3cc592380c4832"
+      "sha256": "618c55739ff238b7000704131ce0995d1129facd53152923f13805812f68fe49"
     },
     {
       "path": "modules/management-control-pack/vendor/modules/vera_assurance/decisions.py",
@@ -186,7 +186,7 @@
     {
       "path": "modules/management-control-pack/vendor/modules/vera_assurance/review_output_transaction.cjs",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
-      "sha256": "81a25a1641b7d6d6919087f62e2ab8b88f7ea2969be5ae8aa2eea2e70812de95"
+      "sha256": "92718fc4d3cdd30b7a317a0c9eaa38fedad3981c8383c50c09ec7a93e754e420"
     },
     {
       "path": "modules/management-control-pack/vendor/modules/vera_assurance/serialization.py",
@@ -436,7 +436,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "099669d56a3c16655b5f65051209eca78541846bbd9c32b5aa3cc592380c4832"
+      "sha256": "618c55739ff238b7000704131ce0995d1129facd53152923f13805812f68fe49"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -466,7 +466,7 @@
     {
       "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
-      "sha256": "81a25a1641b7d6d6919087f62e2ab8b88f7ea2969be5ae8aa2eea2e70812de95"
+      "sha256": "92718fc4d3cdd30b7a317a0c9eaa38fedad3981c8383c50c09ec7a93e754e420"
     },
     {
       "path": "vendor/modules/vera_assurance/serialization.py",

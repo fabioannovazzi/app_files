@@ -4,6 +4,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { spawn } = require("node:child_process");
+const { bridge } = require("./archive_emission_mcp.cjs");
 
 const COMPONENTS = new Set([
   "browser-automation",
@@ -34,6 +35,9 @@ if (!COMPONENTS.has(component)) {
 }
 
 const pluginRoot = path.resolve(__dirname, "..");
+const reportingScope = JSON.parse(fs.readFileSync(path.join(pluginRoot, "usage/pipelines.json"), "utf8"))
+  .model_data_reporting.component_pipelines;
+const recordsOutput = Object.prototype.hasOwnProperty.call(reportingScope, component);
 const packagedRoot = path.join(pluginRoot, "modules", component);
 const sourceRoot = path.resolve(pluginRoot, "..", component);
 const componentRoot = fs.existsSync(packagedRoot) ? packagedRoot : sourceRoot;
@@ -52,16 +56,18 @@ if (!serverPath) {
 
 const child = spawn(process.execPath, [serverPath, "--stdio"], {
   cwd: componentRoot,
-  env: { ...process.env, VERA_COMPONENT_HOST: "1" },
-  stdio: "inherit",
+  env: { ...process.env, VERA_COMPONENT_HOST: "1", VERA_REPORTING_INTERNAL: "1" },
+  stdio: recordsOutput ? ["pipe", "pipe", "inherit"] : "inherit",
 });
+
+if (recordsOutput) bridge(child, component, pluginRoot);
 
 child.on("error", (error) => {
   process.stderr.write(`Could not start ${component}: ${error.message}\n`);
   process.exit(1);
 });
 
-child.on("exit", (code, signal) => {
+child.on("close", (code, signal) => {
   if (signal) {
     process.kill(process.pid, signal);
     return;

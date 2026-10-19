@@ -13,6 +13,7 @@ on:
       - 'tests/test_agenzia*.mjs'
       - 'tests/agenzia_acquisition.coveragerc'
       - 'tests/plugins/test_teaching_agenzia_execution.py'
+      - 'tests/plugins/test_archive_agenzia_delivery.py'
       - 'plugins/vera/skills/agenzia-acquisition/**'
       - 'tests/test_browser_automation*.py'
       - 'tests/test_browser_batch_review.py'
@@ -122,7 +123,7 @@ jobs:
       - run: python -m pip install pytest pytest-cov pypdf black==25.1.0 isort==6.0.1 mypy bandit -r plugins/browser-automation/requirements-agenzia.txt
       - run: python -m playwright install --with-deps chromium
       - name: Verify single worker, real offline DOM, optional UI and course execution
-        run: python -m pytest --noconftest -q -o addopts='' --tb=short tests/test_agenzia_acquisition.py tests/test_agenzia_ui.py tests/test_agenzia_portal.py tests/test_agenzia_panel.py tests/plugins/test_teaching_agenzia_execution.py tests/plugins/test_vera_selective_reporting.py::test_acquisition_worker_uses_a_client_bound_run_and_waits_for_model_review tests/plugins/test_archive_automatic_reporting.py::test_acquisition_registers_only_verified_originals_in_its_archive_run --cov --cov-config=tests/agenzia_acquisition.coveragerc
+        run: python -m pytest --noconftest -q -o addopts='' --tb=short tests/test_agenzia_acquisition.py tests/test_agenzia_ui.py tests/test_agenzia_portal.py tests/test_agenzia_panel.py tests/plugins/test_teaching_agenzia_execution.py tests/plugins/test_vera_selective_reporting.py::test_acquisition_worker_uses_a_client_bound_run_and_waits_for_model_review tests/plugins/test_archive_automatic_reporting.py::test_acquisition_registers_only_verified_originals_in_its_archive_run tests/plugins/test_archive_agenzia_delivery.py --cov --cov-config=tests/agenzia_acquisition.coveragerc
       - name: Verify native metadata and Python projection
         shell: bash
         run: VERA_AGENZIA_PYTHON="$(python -c 'import sys; print(sys.executable)')" node --test tests/test_agenzia_mcp.mjs

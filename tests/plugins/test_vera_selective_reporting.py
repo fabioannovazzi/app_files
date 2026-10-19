@@ -165,7 +165,7 @@ def test_excluded_pipeline_completes_without_report_or_receipt(
 
 
 @pytest.mark.parametrize("evidence", ["missing", "all_visible"])
-def test_no_evidence_or_no_local_remainder_never_invents_a_comparison(
+def test_agent_authored_measurements_do_not_replace_vera_sending_records(
     archive_core, client_case, evidence
 ):
     run_id, output = _start(archive_core, client_case)
@@ -181,8 +181,9 @@ def test_no_evidence_or_no_local_remainder_never_invents_a_comparison(
 
     report = json.loads((output / "model_data_report.json").read_text(encoding="utf-8"))
     assert result["reporting"]["status"] == "available"
-    assert report["collection_status"] == "incomplete"
-    assert report["sources"][0]["remaining_local"] is None
+    assert report["collection_status"] == "complete"
+    assert report["sources"][0]["sent_quantity"] == 0
+    assert report["sources"][0]["not_sent_quantity"] == 1
 
 
 def test_authored_foreign_run_evidence_cannot_change_automatic_report(
@@ -194,7 +195,8 @@ def test_authored_foreign_run_evidence_cannot_change_automatic_report(
     _finish(archive_core, client_case, run_id, output)
     report = json.loads((output / "model_data_report.json").read_text(encoding="utf-8"))
     assert report["run_id"] == run_id
-    assert report["collection_status"] == "incomplete"
+    assert report["collection_status"] == "complete"
+    assert report["sources"][0]["sent_quantity"] == 0
 
 
 def test_direct_report_command_refuses_an_unbound_output(tmp_path, capsys):
@@ -309,32 +311,38 @@ def test_failed_run_report_is_preserved_when_the_same_run_resumes(
 
 
 @pytest.mark.parametrize("later_outcome", ["full_context_required", "not_measurable"])
-def test_later_full_or_unknown_read_cannot_reuse_an_earlier_reduction(
+def test_later_full_or_unknown_send_cannot_reuse_an_earlier_reduction(
     archive_core, client_case, later_outcome
 ):
     run_id, output = _start(archive_core, client_case)
-    request = _evidence(output, run_id)
-    later = {
-        **request["phases"][0],
-        "phase_id": "later-read",
-        "outcome": later_outcome,
-        "remained_local": [],
-    }
+    from archive_reporting import read_artifact, record_send
+
+    loaded = archive_core.ledger.load_run(
+        client_case.client_root, client_case.engagement_id, run_id
+    )
+    source = Path(loaded["context"]["input_bindings"][0]["path"])
+    read_artifact(loaded, source, limit=0)
     if later_outcome == "not_measurable":
-        later["evidence_basis"] = "not_measurable"
-        later["source_extent"] = []
-        later["locally_processed"] = []
-        later["model_visible"] = []
-        later["evidence_files"] = []
-    request["phases"].append(later)
-    (output / "model_data_report_input.json").write_text(json.dumps(request))
+        record_send(
+            Path(loaded["run_root"]),
+            "Unmapped derived data",
+            channel="cli:variance-analysis",
+        )
+    else:
+        read_artifact(loaded, source)
 
     result = _finish(archive_core, client_case, run_id, output)
 
     report = json.loads((output / "model_data_report.json").read_text(encoding="utf-8"))
     assert result["reporting"]["status"] == "available"
-    assert report["collection_status"] == "incomplete"
-    assert report["sources"][0]["remaining_local"] is None
+    expected = {
+        "full_context_required": ("complete", 0),
+        "not_measurable": ("incomplete", None),
+    }[later_outcome]
+    assert (
+        report["collection_status"],
+        report["sources"][0]["not_sent_quantity"],
+    ) == expected
 
 
 def test_acquisition_worker_uses_a_client_bound_run_and_waits_for_model_review(

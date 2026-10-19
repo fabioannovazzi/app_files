@@ -110,7 +110,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "013c131fbc5c67a960d70a33dd133a2fe3f1cf554a59a2f39a2f6744e17ff7dc"
+    "source_fingerprint": "db3e27d1b959a6767cc1239780fc5385b371d420260163f8296a6c2f770acc1b"
   },
   "role": "workflow",
   "runtime_profiles": [
@@ -191,7 +191,7 @@
           "Il modello richiede il contesto di un caso quando serve",
           "Solo per i casi selezionati arrivano i campi mappati e valorizzati utili alla revisione. Campi vuoti, colonne non mappate, percorsi e identificativi tecnici restano fuori; gli identificativi professionali esatti arrivano solo quando sono necessari al confronto.",
           "I dati professionali non vengono anonimizzati né pseudonimizzati automaticamente. Il contesto di un caso selezionato può contenere nomi, descrizioni, importi, date e riferimenti reali quando servono alla revisione professionale.",
-          "Studio Archive delimita ogni esecuzione di questo processo: avvia automaticamente il report alla partenza e lo chiude al completamento, al fallimento o all’annullamento. Il report resta sul computer e include le letture successive, anche quando tutti i dati arrivano al modello. Misure mancanti o non collegabili alle fonti sono segnalate come rilevazione incompleta, senza affermare che i dati siano rimasti locali. Il server conserva l’impronta del report associata a Vera userID autenticato, alla stessa esecuzione e alla revisione; non riceve il report né i documenti."
+          "Studio Archive delimita ogni esecuzione di questo processo e crea automaticamente un report dei dati inviati da Vera. Vera registra i propri invii; il report non ispeziona la chat o altri strumenti. Il report viene conservato sulla macchina anche quando tutti i dati sono stati inviati. I conteggi mancanti sono indicati come non determinabili. Il server riceve soltanto l’impronta del report e i riferimenti di verifica, associati al Vera userID della macchina, alla stessa esecuzione e alla revisione. Il contenuto del report e le evidenze restano locali."
         ],
         "en": [
           "The model understands the structure",
@@ -203,7 +203,7 @@
           "The model requests a case's context when needed",
           "Only selected cases supply the mapped, populated fields useful to the review. Empty fields, unmapped columns, paths, and technical identifiers stay out; exact professional identifiers arrive only when the comparison requires them.",
           "Professional data is not automatically anonymized or pseudonymized. Selected case context may contain real names, descriptions, amounts, dates, and references when professional review requires them.",
-          "Studio Archive defines each execution of this pipeline: it starts the report automatically at run start and closes it on completion, failure or cancellation. The report stays on the computer and includes later reads, even when all data reaches the model. Missing measurements or source links are reported as incomplete collection, without claiming those data stayed local. The server retains the report hash bound to authenticated Vera userID, the same run and revision; it receives neither the report nor the documents."
+          "Studio Archive delimits each run of this process and automatically creates a report of the data Vera sent. Vera records its own sends; the report does not inspect the chat or other tools. The report stays on the machine even when all data was sent. Missing counts are explicitly unknown. The server receives only the report hash and verification references, bound to the machine’s Vera userID, the same run and revision. Report contents and evidence remain local."
         ],
         "fr": [
           "Le modèle comprend la structure",
@@ -215,7 +215,7 @@
           "Le modèle demande le contexte d'un cas lorsque nécessaire",
           "Seuls les cas sélectionnés transmettent les champs mappés et renseignés utiles à la revue. Les champs vides, colonnes non mappées, chemins et identifiants techniques restent exclus ; les identifiants professionnels exacts ne sont transmis que lorsque la comparaison l'exige.",
           "Les données professionnelles ne sont pas automatiquement anonymisées ou pseudonymisées. Le contexte d'un cas sélectionné peut contenir des noms, descriptions, montants, dates et références réels lorsque la revue professionnelle l'exige.",
-          "Studio Archive délimite chaque exécution de ce processus : il démarre automatiquement le rapport au début et le clôt à la fin, en cas d’échec ou d’annulation. Le rapport reste sur l’ordinateur et inclut les lectures ultérieures, même si toutes les données parviennent au modèle. Les mesures ou liens aux sources manquants sont signalés comme une collecte incomplète, sans affirmer que ces données sont restées locales. Le serveur conserve l’empreinte du rapport liée au Vera userID authentifié, à la même exécution et à sa révision ; il ne reçoit ni le rapport ni les documents."
+          "Studio Archive délimite chaque exécution de ce processus et crée automatiquement un rapport des données envoyées par Vera. Vera enregistre ses propres envois ; le rapport n’inspecte ni la conversation ni les autres outils. Le rapport reste sur la machine même lorsque toutes les données ont été envoyées. Les comptages manquants sont signalés comme indéterminés. Le serveur reçoit uniquement l’empreinte du rapport et les références de vérification, liées au Vera userID de la machine, à la même exécution et à la révision. Le contenu du rapport et les preuves restent locaux."
         ],
         "de": [
           "Das Modell versteht die Struktur",
@@ -227,7 +227,7 @@
           "Das Modell fordert bei Bedarf den Kontext eines Falls an",
           "Nur für ausgewählte Fälle werden die gemappten, befüllten und für die Prüfung nützlichen Felder übermittelt. Leere Felder, nicht gemappte Spalten, Pfade und technische Kennungen bleiben ausgeschlossen; exakte fachliche Kennungen werden nur übermittelt, wenn der Vergleich sie erfordert.",
           "Professionelle Daten werden nicht automatisch anonymisiert oder pseudonymisiert. Der Kontext eines ausgewählten Falls kann echte Namen, Beschreibungen, Beträge, Daten und Referenzen enthalten, wenn die fachliche Prüfung sie benötigt.",
-          "Studio Archive begrenzt jeden Durchlauf dieses Prozesses: Der Bericht beginnt automatisch beim Start und endet bei Abschluss, Fehler oder Abbruch. Er bleibt auf dem Computer und erfasst auch spätere Lesezugriffe, selbst wenn alle Daten das Modell erreichen. Fehlende Messungen oder Quellenbezüge werden als unvollständige Erfassung ausgewiesen; für diese Daten wird kein lokaler Verbleib behauptet. Der Server speichert den Berichts-Hash mit authentifizierter Vera userID, derselben Ausführung und Revision. Bericht und Dokumente werden nicht übertragen."
+          "Studio Archive grenzt jede Ausführung dieses Prozesses ab und erstellt automatisch einen Bericht über die von Vera gesendeten Daten. Vera erfasst die eigenen Sendungen; der Bericht untersucht weder den Chat noch andere Werkzeuge. Der Bericht bleibt auf dem Rechner, auch wenn alle Daten gesendet wurden. Fehlende Mengenangaben werden ausdrücklich als unbekannt ausgewiesen. Der Server erhält nur den Berichtshash und die Prüfverweise, gebunden an die Vera userID des Rechners, dieselbe Ausführung und Revision. Berichtsinhalte und Nachweise bleiben lokal."
         ],
         "es": [
           "El modelo comprende la estructura",
@@ -239,7 +239,7 @@
           "El modelo solicita el contexto de un caso cuando lo necesita",
           "Solo los casos seleccionados aportan los campos mapeados y cumplimentados útiles para la revisión. Quedan fuera los campos vacíos, las columnas no mapeadas, las rutas y los identificadores técnicos; los identificadores profesionales exactos solo se incluyen cuando la comparación los exige.",
           "Los datos profesionales no se anonimizan ni se seudonimizan automáticamente. El contexto de un caso seleccionado puede contener nombres, descripciones, importes, fechas y referencias reales cuando la revisión profesional los necesita.",
-          "Studio Archive delimita cada ejecución de este proceso: inicia automáticamente el informe al comenzar y lo cierra al completarse, fallar o cancelarse. El informe permanece en el ordenador e incluye las lecturas posteriores, incluso cuando todos los datos llegan al modelo. Las mediciones o relaciones con las fuentes que faltan se declaran como captura incompleta, sin afirmar que esos datos permanecieron en local. El servidor conserva la huella del informe vinculada a Vera userID autenticado, a la misma ejecución y revisión; no recibe el informe ni los documentos."
+          "Studio Archive delimita cada ejecución de este proceso y crea automáticamente un informe de los datos enviados por Vera. Vera registra sus propios envíos; el informe no inspecciona el chat ni otras herramientas. El informe permanece en el equipo incluso cuando se han enviado todos los datos. Los recuentos que faltan se indican como indeterminados. El servidor recibe únicamente la huella del informe y las referencias de verificación, vinculadas al Vera userID del equipo, a la misma ejecución y revisión. El contenido del informe y las evidencias permanecen locales."
         ]
       }
     }

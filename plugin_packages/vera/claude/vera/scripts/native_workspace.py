@@ -120,9 +120,10 @@ def load_binding(binding: dict[str, Any]) -> dict[str, Any]:
     """Replay the existing ledger, including all source receipts, every time."""
     scripts = module_root("studio-archive") / "scripts"
     sys.path.insert(0, str(scripts))
-    from client_ledger import load_run
+    # Archive's public module establishes its packaged/source assurance imports.
+    import archive_core
 
-    loaded = load_run(
+    loaded = archive_core.ledger.load_run(
         Path(binding["client_root"]), binding["engagement_id"], binding["run_id"]
     )
     run = loaded["run"]
@@ -131,9 +132,10 @@ def load_binding(binding: dict[str, Any]) -> dict[str, Any]:
         or run["workflow_id"] != binding["workflow_id"]
     ):
         raise PermissionError("Run belongs to a different client or workflow")
-    component = binding.get("component", binding["workflow_id"])
-    expected = component
-    if expected != binding["workflow_id"]:
+    from vera_assurance.contracts import workflow_engine
+
+    component = binding_component(binding)
+    if component != workflow_engine(binding["workflow_id"]):
         raise PermissionError("Component does not own this workflow")
     if component == "bilancio-xbrl-it":
         legacy = read_json(Path(os.environ["VERA_XBRL_WORKSPACE_BINDINGS"]))
@@ -147,6 +149,13 @@ def load_binding(binding: dict[str, Any]) -> dict[str, Any]:
         ):
             raise PermissionError("Bilancio case is bound to another archive run")
     return loaded
+
+
+def binding_component(binding: dict[str, Any]) -> str:
+    """Keep the Archive run identity while opening its registered execution engine."""
+    from vera_assurance.contracts import workflow_engine
+
+    return binding.get("component", workflow_engine(binding["workflow_id"]))
 
 
 def connect_bilancio_binding(binding: dict[str, Any]) -> dict[str, Any]:
@@ -384,7 +393,7 @@ def file_preparation_selection(
 def outputs(binding: dict[str, Any], loaded: dict[str, Any]) -> list[dict[str, str]]:
     """Expose only declared regular artifacts inside the authoritative run."""
     output = Path(loaded["output_dir"])
-    review = review_directory(output, binding.get("component", binding["workflow_id"]))
+    review = review_directory(output, binding_component(binding))
     manifest_path = review / "final_artifacts.json"
     if not manifest_path.exists():
         return []
@@ -694,7 +703,7 @@ def concordato_review(
 def snapshot(
     binding: dict[str, Any], loaded: dict[str, Any], args: dict[str, Any]
 ) -> dict[str, Any]:
-    component = binding.get("component", binding["workflow_id"])
+    component = binding_component(binding)
     root = module_root(component)
     output = Path(loaded["output_dir"])
     start_revision = output_revision(output, component)
@@ -1606,7 +1615,7 @@ def dispatch(tool: str, args: dict[str, Any]) -> dict[str, Any]:
                     "client_label": client_root.name,
                     "engagement_id": binding["engagement_id"],
                     "engagement_label": engagement["label"],
-                    "workflow": binding.get("component", binding["workflow_id"]),
+                    "workflow": binding_component(binding),
                     "label": loaded["run"]["label"],
                     "status": loaded["run"]["status"],
                     "created_at": loaded["run"]["created_at"],
@@ -2614,9 +2623,59 @@ def dispatch(tool: str, args: dict[str, Any]) -> dict[str, Any]:
     return current
 
 
+def _reporting_case(args: dict[str, Any]) -> dict[str, Any]:
+    """Resolve the same authorised work binding used by the actual operation."""
+    config = configuration()
+    if config["mode"] == "studio-archive":
+        from native_archive_navigation import resolve_binding
+
+        binding = resolve_binding(module_root("studio-archive"), args["work_ref"])
+    else:
+        binding = next(
+            (row for row in config["bindings"] if row["work_ref"] == args["work_ref"]),
+            None,
+        )
+    if binding is None:
+        raise PermissionError("Run is not authorised in this workspace")
+    return load_binding(binding)
+
+
+def bind_model_output(args: dict[str, Any]) -> dict[str, Any] | None:
+    """Pin this operation's Archive revision before producing its response."""
+    from archive_emit import bind_output
+
+    loaded = _reporting_case(args)
+    return bind_output(
+        loaded["run"]["workflow_id"], {"client_engagement": loaded["context_path"]}
+    )
+
+
+def record_model_output(args: dict[str, Any]) -> dict[str, Any]:
+    """Record the final model-visible projection after the MCP app split."""
+    from archive_emit import record_output
+
+    loaded = _reporting_case(args)
+    record_output(
+        loaded["run"]["workflow_id"],
+        {"client_engagement": loaded["context_path"]},
+        args["payload"],
+        channel="mcp",
+        binding=args.get("binding"),
+    )
+    return {"recorded": True}
+
+
 def main() -> None:
     request = json.loads(sys.stdin.read(MAX_BYTES + 1))
-    result = dispatch(request["tool"], request["arguments"])
+    result = (
+        bind_model_output(request["arguments"])
+        if request["tool"] == "__bind_model_output"
+        else (
+            record_model_output(request["arguments"])
+            if request["tool"] == "__record_model_output"
+            else dispatch(request["tool"], request["arguments"])
+        )
+    )
     sys.stdout.write(json.dumps(result, ensure_ascii=False))
 
 

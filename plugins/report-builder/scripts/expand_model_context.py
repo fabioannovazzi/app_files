@@ -64,7 +64,12 @@ import argparse
 import json
 from pathlib import Path
 
-from report_builder_core import build_model_context_expansion, write_json
+from report_builder_core import (
+    build_model_context_expansion,
+    emit_status,
+    register_expansion_projection,
+    write_json,
+)
 from vera_assurance import (  # noqa: E402
     AssuranceContractError,
     load_client_engagement_context_file,
@@ -136,12 +141,16 @@ def main() -> int:
     except (AssuranceContractError, ValueError) as exc:
         parser.error(str(exc))
     write_json(args.output, packet)
-    print(
+    register_expansion_projection(args.output, args.inspection_control, packet)
+    emit_status(
+        args.output.parent,
         "OK: wrote bounded model-context expansion "
-        f"{args.output} ({len(packet['rows'])} rows)"
+        f"{args.output} ({len(packet['rows'])} rows)",
     )
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    from vera_assurance.contracts import run_recorded_cli
+
+    raise SystemExit(run_recorded_cli(main, Path(__file__)))

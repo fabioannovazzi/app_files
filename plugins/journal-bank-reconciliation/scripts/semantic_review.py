@@ -2875,7 +2875,12 @@ def load_worker_selection(
 
 
 def _record_model_submission(
-    output: Path, *, prompt: str, model: str, workflow_id: str
+    output: Path,
+    *,
+    prompt: str,
+    output_schema: Mapping[str, Any],
+    model: str,
+    workflow_id: str,
 ) -> None:
     """Retain the exact submitted prompt locally; never send it to the receipt service."""
     from vera_assurance.contracts import load_client_engagement_context_file
@@ -2911,23 +2916,18 @@ def _record_model_submission(
     import secrets
 
     from archive_report_store import RunStore
-    from archive_reporting import observe_tool
+    from archive_reporting import record_send
 
     root = context_path.parent
     if RunStore(root).state() is None:
         raise ValueError(
             "Worker submission requires the Archive start reporting record"
         )
-    observe_tool(
+    record_send(
         root,
-        {
-            "session_id": "worker",
-            "tool_use_id": secrets.token_hex(24),
-            "tool_name": "model_worker:" + model,
-            "tool_input": {},
-            "tool_response": prompt,
-            "evidence_basis": "submitted_worker_prompt",
-        },
+        {"prompt": prompt, "output_schema": output_schema},
+        channel="model_worker:" + model,
+        event_id=secrets.token_hex(24),
     )
 
 
@@ -3040,7 +3040,11 @@ def run_isolated_luna_worker(
             reasoning_effort=reasoning_effort,
         )
         _record_model_submission(
-            output, prompt=prompt, model=model, workflow_id=workflow_id
+            output,
+            prompt=prompt,
+            output_schema=json.loads(schema_bytes),
+            model=model,
+            workflow_id=workflow_id,
         )
         process_result = _run_captured_process(
             [*worker_prefix, *worker_inner],
@@ -3392,6 +3396,13 @@ def run_semantic_worker(
             reasoning_effort=graph["requested_worker_configuration"][
                 "reasoning_effort"
             ],
+        )
+        _record_model_submission(
+            semantic,
+            prompt=prompt_text,
+            output_schema=json.loads(schema_bytes),
+            model=graph["requested_worker_configuration"]["model"],
+            workflow_id="journal-bank-reconciliation",
         )
         process_result = _run_captured_process(
             [*worker_prefix, *worker_inner],

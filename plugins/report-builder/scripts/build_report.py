@@ -64,7 +64,12 @@ if _SCRIPTS_DIR not in _bootstrap_sys.path:
 import argparse
 from pathlib import Path
 
-from report_builder_core import add_common_args, build_report, configure_logging
+from report_builder_core import (
+    add_common_args,
+    build_report,
+    configure_logging,
+    emit_status,
+)
 from vera_assurance import (  # noqa: E402
     AssuranceContractError,
     load_client_engagement_context_file,
@@ -115,12 +120,15 @@ def main() -> int:
         studio_id=args.studio_id,
         studio_name=args.studio_name,
     )
-    print(
+    emit_status(
+        args.output_dir,
         "OK: built report draft; "
-        f"Markdown={result.markdown_path} DOCX={result.docx_path}"
+        f"Markdown={result.markdown_path} DOCX={result.docx_path}",
     )
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    from vera_assurance.contracts import run_recorded_cli
+
+    raise SystemExit(run_recorded_cli(main, Path(__file__)))

@@ -43,6 +43,12 @@ def installed_fixture(tmp_path, product, monkeypatch):
         shutil.copyfile(
             ROOT / f"plugins/{product}/scripts/{filename}", scripts / filename
         )
+    for source in (ROOT / f"plugins/{product}/scripts").glob("archive_*.py"):
+        shutil.copyfile(source, scripts / source.name)
+    shutil.copyfile(
+        ROOT / f"plugins/{product}/scripts/selective_reporting.py",
+        scripts / "selective_reporting.py",
+    )
     if product == "clara":
         shutil.copyfile(
             ROOT / "plugins/clara/scripts/managed_ocr_runtime.py",

@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import os
 import sqlite3
 import stat
@@ -30,6 +31,7 @@ __all__ = [
     "serialized_run",
     "RunStore",
     "Registry",
+    "registry_for_run",
 ]
 _LOCKS: dict[str, Any] = {}
 _LOCK_GUARD = threading.Lock()
@@ -37,7 +39,7 @@ _LOCK_GUARD = threading.Lock()
 
 @contextmanager
 def run_lock(root: Path) -> Iterator[None]:
-    """Serialize snapshots, hook records and retries across processes and threads."""
+    """Serialize snapshots, sending records and retries across processes and threads."""
     directory = private_directory(root / "reporting")
     with _LOCK_GUARD:
         entry = _LOCKS.setdefault(
@@ -224,7 +226,7 @@ class RunStore:
             )
 
     def error(self, reason: str) -> None:
-        """Retain a collection failure without overwriting another hook's state."""
+        """Retain a collection failure without overwriting another producer's state."""
         with self.transaction() as connection:
             row = connection.execute(
                 "SELECT payload FROM state WHERE singleton=1"
@@ -238,7 +240,7 @@ class RunStore:
                 )
 
     def event(self, event_id: str, payload: dict[str, Any]) -> None:
-        """Identical hook retries are harmless; conflicting evidence is an error."""
+        """Identical event retries are harmless; conflicting evidence is an error."""
         with self.transaction() as connection:
             old = connection.execute(
                 "SELECT payload FROM events WHERE event_id=?", (event_id,)
@@ -271,30 +273,60 @@ class RunStore:
             return result
 
     def source(self, source: dict[str, Any]) -> None:
+        # Canonical run-local sources move with the customer folder. External
+        # aliases remain absolute; they never replace the owned source copy.
+        root = self.root.parent
+
+        def portable(value: str) -> str:
+            path = Path(value)
+            return (
+                path.relative_to(root).as_posix()
+                if path.is_relative_to(root)
+                else value
+            )
+
+        source = {
+            **source,
+            "path": portable(source["path"]),
+            "aliases": sorted(
+                portable(value) for value in source.get("aliases", [source["path"]])
+            ),
+        }
         with self.transaction() as connection:
             old = connection.execute(
                 "SELECT payload FROM sources WHERE source_id=?", (source["source_id"],)
             ).fetchone()
             encoded = canonical(source).decode()
             if old and old["payload"] != encoded:
-                raise ValueError("Registered reporting source bytes changed")
+                previous = json.loads(old["payload"])
+                if {
+                    k: v for k, v in previous.items() if k not in {"path", "aliases"}
+                } != {k: v for k, v in source.items() if k not in {"path", "aliases"}}:
+                    raise ValueError("Registered reporting source bytes changed")
             connection.execute(
-                "INSERT INTO sources VALUES(?,?,?) ON CONFLICT(source_id) DO NOTHING",
+                "INSERT INTO sources VALUES(?,?,?) ON CONFLICT(source_id) DO UPDATE SET path=excluded.path,payload=excluded.payload",
                 (source["source_id"], source["path"], encoded),
             )
 
     def sources(self) -> list[dict[str, Any]]:
         with self.transaction() as connection:
-            return [
+            sources = [
                 json.loads(row["payload"])
                 for row in connection.execute(
                     "SELECT payload FROM sources ORDER BY source_id"
                 )
             ]
+        for source in sources:
+            source["path"] = str(self.root.parent / source["path"])
+            source["aliases"] = [
+                str(self.root.parent / value)
+                for value in source.get("aliases", [source["path"]])
+            ]
+        return sources
 
 
 class Registry:
-    """Bind observed host sessions to exact active runs without inspecting chats."""
+    """Queue exact Archive runs for proof delivery; no host observation state."""
 
     def __init__(self, directory: Path | None = None):
         configured = os.environ.get("VERA_REPORTING_STATE_DIR")
@@ -307,6 +339,15 @@ class Registry:
             )
         ) / "registry.sqlite3"
 
+    def _stored_root(self, root: Path) -> str:
+        base = self.path.parent.parent
+        if base.name == "Vera" and root.is_relative_to(base):
+            return root.relative_to(base).as_posix()
+        return str(root)
+
+    def _current_root(self, value: str) -> Path:
+        return self.path.parent.parent / value
+
     @contextmanager
     def transaction(self) -> Iterator[sqlite3.Connection]:
         with _database(self.path) as connection:
@@ -314,131 +355,23 @@ class Registry:
                 "CREATE TABLE IF NOT EXISTS runs (run_id TEXT PRIMARY KEY, run_root TEXT NOT NULL, active INTEGER NOT NULL)"
             )
             connection.execute(
-                "CREATE TABLE IF NOT EXISTS sessions (session_id TEXT NOT NULL, run_id TEXT NOT NULL, PRIMARY KEY(session_id,run_id))"
-            )
-            connection.execute(
-                "CREATE TABLE IF NOT EXISTS invocations (session_id TEXT NOT NULL, tool_id TEXT NOT NULL, run_id TEXT NOT NULL, PRIMARY KEY(session_id,tool_id,run_id))"
-            )
-            connection.execute(
-                "CREATE TABLE IF NOT EXISTS heartbeats (session_id TEXT PRIMARY KEY, at TEXT NOT NULL)"
-            )
-            connection.execute(
-                "CREATE TABLE IF NOT EXISTS hosts (session_id TEXT PRIMARY KEY, transcript_path TEXT NOT NULL, host TEXT NOT NULL)"
-            )
-            connection.execute(
                 "CREATE TABLE IF NOT EXISTS receipt_queue (run_id TEXT PRIMARY KEY, status TEXT NOT NULL, checked_at TEXT NOT NULL)"
             )
             yield connection
 
-    def register(self, run_id: str, root: Path, session_id: str | None = None) -> None:
+    def register(self, run_id: str, root: Path) -> None:
         with self.transaction() as connection:
             old = connection.execute(
                 "SELECT run_root FROM runs WHERE run_id=?", (run_id,)
             ).fetchone()
-            if old and old["run_root"] != str(root):
+            if old and old["run_root"] != self._stored_root(root):
                 raise ValueError(
                     "Archive run identity is already bound to another directory"
                 )
             connection.execute(
                 "INSERT INTO runs VALUES(?,?,1) ON CONFLICT(run_id) DO UPDATE SET active=1",
-                (run_id, str(root)),
+                (run_id, self._stored_root(root)),
             )
-            pending = connection.execute(
-                "SELECT DISTINCT session_id FROM invocations WHERE run_id=?", (run_id,)
-            ).fetchall()
-            sessions = {row["session_id"] for row in pending}
-            if session_id:
-                sessions.add(session_id)
-            for session in sessions:
-                connection.execute(
-                    "INSERT INTO sessions VALUES(?,?) ON CONFLICT DO NOTHING",
-                    (session, run_id),
-                )
-        from archive_report_transcript import attach
-
-        for session in sessions:
-            host = self.host(session)
-            if host and host["host"] == "codex":
-                attach(root, session, Path(host["transcript_path"]))
-
-    def begin_tool(
-        self,
-        session_id: str,
-        tool_id: str,
-        run_ids: set[str],
-        *,
-        transcript_path: str | None = None,
-        host: str = "claude",
-    ) -> None:
-        with self.transaction() as connection:
-            connection.execute(
-                "INSERT INTO heartbeats VALUES(?,?) ON CONFLICT(session_id) DO UPDATE SET at=excluded.at",
-                (session_id, now()),
-            )
-            if transcript_path:
-                connection.execute(
-                    "INSERT INTO hosts VALUES(?,?,?) ON CONFLICT(session_id) DO UPDATE SET transcript_path=excluded.transcript_path,host=excluded.host",
-                    (session_id, transcript_path, host),
-                )
-            if not run_ids:
-                run_ids = {
-                    row["run_id"]
-                    for row in connection.execute(
-                        "SELECT r.run_id FROM runs r JOIN sessions s ON s.run_id=r.run_id WHERE s.session_id=? AND r.active=1",
-                        (session_id,),
-                    )
-                }
-            for run_id in run_ids:
-                connection.execute(
-                    "INSERT INTO invocations VALUES(?,?,?) ON CONFLICT DO NOTHING",
-                    (session_id, tool_id, run_id),
-                )
-                if connection.execute(
-                    "SELECT 1 FROM runs WHERE run_id=? AND active=1", (run_id,)
-                ).fetchone():
-                    connection.execute(
-                        "INSERT INTO sessions VALUES(?,?) ON CONFLICT DO NOTHING",
-                        (session_id, run_id),
-                    )
-
-    def host(self, session_id: str) -> dict[str, str] | None:
-        with self.transaction() as connection:
-            row = connection.execute(
-                "SELECT transcript_path,host FROM hosts WHERE session_id=?",
-                (session_id,),
-            ).fetchone()
-            return dict(row) if row else None
-
-    def pending_calls(self, run_id: str) -> dict[str, list[str]]:
-        with self.transaction() as connection:
-            result: dict[str, list[str]] = {}
-            for row in connection.execute(
-                "SELECT i.session_id,i.tool_id FROM invocations i LEFT JOIN hosts h ON h.session_id=i.session_id WHERE i.run_id=? AND (h.host IS NULL OR h.host!='codex')",
-                (run_id,),
-            ):
-                result.setdefault(row["session_id"], []).append(row["tool_id"])
-            return result
-
-    def end_tool(self, session_id: str, tool_id: str) -> None:
-        with self.transaction() as connection:
-            connection.execute(
-                "DELETE FROM invocations WHERE session_id=? AND tool_id=?",
-                (session_id, tool_id),
-            )
-
-    def active(self, session_id: str, run_ids: set[str] | None = None) -> list[Path]:
-        with self.transaction() as connection:
-            rows = connection.execute(
-                "SELECT r.run_id,r.run_root FROM runs r JOIN sessions s ON s.run_id=r.run_id WHERE s.session_id=? AND r.active=1",
-                (session_id,),
-            ).fetchall()
-            return [
-                Path(row["run_root"])
-                for row in rows
-                if (not run_ids or row["run_id"] in run_ids)
-                and (Path(row["run_root"]) / "run.json").is_file()
-                and not Path(row["run_root"]).is_symlink()
-            ]
 
     def close(self, run_id: str) -> None:
         with self.transaction() as connection:
@@ -452,7 +385,7 @@ class Registry:
         """Find written terminal transitions whose local collection did not finish."""
         with self.transaction() as connection:
             roots = [
-                Path(row["run_root"])
+                self._current_root(row["run_root"])
                 for row in connection.execute(
                     "SELECT run_root FROM runs WHERE active=1"
                 )
@@ -462,7 +395,14 @@ class Registry:
             path = root / "run.json"
             if path.is_symlink() or not path.is_file() or root.is_symlink():
                 continue
-            if json.loads(path.read_text(encoding="utf-8"))["status"] in {
+            try:
+                status = json.loads(path.read_text(encoding="utf-8"))["status"]
+            except (OSError, ValueError, KeyError, TypeError):
+                logging.warning(
+                    "An unreadable Archive transition could not be recovered"
+                )
+                continue
+            if status in {
                 "completed",
                 "failed",
                 "cancelled",
@@ -476,14 +416,23 @@ class Registry:
         with self.transaction() as connection:
             connection.execute(
                 "UPDATE receipt_queue SET status=?,checked_at=? WHERE run_id IN (SELECT run_id FROM runs WHERE run_root=?)",
-                (status, now(), str(root)),
+                (status, now(), self._stored_root(root)),
             )
 
     def pending_receipts(self) -> list[Path]:
         with self.transaction() as connection:
             return [
-                Path(row["run_root"])
+                self._current_root(row["run_root"])
                 for row in connection.execute(
                     "SELECT r.run_root FROM runs r JOIN receipt_queue q ON r.run_id=q.run_id WHERE r.active=0 AND q.status='pending' ORDER BY q.checked_at LIMIT 3"
                 )
             ]
+
+
+def registry_for_run(root: Path) -> Registry:
+    """Keep retries inside the same writable client Archive as the local report."""
+    if os.environ.get("VERA_REPORTING_STATE_DIR"):
+        return Registry()
+    if root.parent.name != "runs" or root.parents[2].name != "engagements":
+        raise ValueError("Reporting requires a canonical Studio Archive run")
+    return Registry(root.parents[3] / "reporting")

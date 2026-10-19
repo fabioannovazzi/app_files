@@ -301,7 +301,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "ee2fc152f5316df3983b886ab0140d2c1250ecb3773e0fcced76990c4b07c952"
+    "source_fingerprint": "370a0c4e148e7997e33d82c6f3350a08a7629f8b6311b4a85ea502a49655f62c"
   },
   "role": "internal_engine",
   "runtime_profiles": [
@@ -376,7 +376,7 @@
     },
     {
       "id": "local-model-data-report-finalization",
-      "control": "Durable Studio Archive finalization requires run-bound, hash-consistent model-data JSON and Markdown reports. The shared local helper validates supplied phase evidence and writes these artifacts without contacting a model or requesting a server attestation; it does not independently prove provider transmission or infer zero transmission from missing telemetry."
+      "control": "For each of the fixed 13 Vera pipelines, the durable Archive start creates a local schema-4 report and measures bound sources. Vera-owned producers retain exact outgoing payloads locally; prepared files and private MCP app metadata are not counted as sends. Terminal completion, failure or cancellation freezes the report and requests the authenticated hash proof bound to the same Vera userID, run and revision. Unsupported source coordinates remain explicitly unknown. Ordinary Archive use retries pending proofs; the report and professional output bytes are preserved. The generic historical helper remains separate."
     },
     {
       "id": "duplicate-import-filename-lineage",

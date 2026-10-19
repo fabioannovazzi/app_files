@@ -965,7 +965,7 @@ function archiveReportingPaths(outputDir, expectedWorkflowIds) {
   if (
     context.schema_version !== "vera.client_workflow_context.v2" ||
     context.output_relative_path !== "outputs" || path.basename(canonicalRoot) !== "outputs" ||
-    report.schema_version !== 3 || report.product !== "vera" ||
+    ![3, 4].includes(report.schema_version) || report.product !== "vera" ||
     !expectedWorkflowIds.includes(report.workflow_id) ||
     report.workflow_id !== context.workflow_id || report.workflow_id !== run.workflow_id ||
     report.run_id !== context.run_id || report.run_id !== run.run_id

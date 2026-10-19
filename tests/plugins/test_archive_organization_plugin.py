@@ -15,6 +15,12 @@ ROOT = Path(__file__).resolve().parents[2]
 PLUGIN_ROOT = ROOT / "plugins" / "archive-organization"
 
 
+@pytest.fixture(autouse=True)
+def reporting_runtime_imports(monkeypatch):
+    """Restore test dependencies after other component suites isolate imports."""
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/_shared/reporting-runtime"))
+
+
 def _load_module(name: str, path: Path) -> ModuleType:
     spec = importlib.util.spec_from_file_location(name, path)
     assert spec is not None and spec.loader is not None
@@ -91,9 +97,11 @@ def test_generated_archive_organization_review_contract(tmp_path: Path) -> None:
 
 
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+@pytest.mark.parametrize("delivery", ["component", "vera"])
 def test_mcp_uses_hash_bound_review_reference_after_single_payload_exposure(
     tmp_path: Path,
     language: str,
+    delivery: str,
 ) -> None:
     context_path, snapshot, _ = scenario._prepared_run(tmp_path)
     prepared = core.build_review_package(
@@ -102,8 +110,16 @@ def test_mcp_uses_hash_bound_review_reference_after_single_payload_exposure(
         language=language,
     )
     review_payload = json.loads(Path(prepared["review_payload_path"]).read_text())
+    command = (
+        [
+            str(ROOT / "plugins/vera/scripts/run_component_mcp.cjs"),
+            "archive-organization",
+        ]
+        if delivery == "vera"
+        else [str(PLUGIN_ROOT / "mcp/server.cjs")]
+    )
     process = subprocess.Popen(
-        [_node_executable(), str(PLUGIN_ROOT / "mcp" / "server.cjs")],
+        [_node_executable(), *command],
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -123,6 +139,7 @@ def test_mcp_uses_hash_bound_review_reference_after_single_payload_exposure(
                 "review_payload": review_payload,
             },
         )
+        assert "review_reference" in validated["structuredContent"], validated
         reference = validated["structuredContent"]["review_reference"]["reference"]
         rendered = _rpc_call(
             process,
@@ -192,6 +209,19 @@ def test_mcp_uses_hash_bound_review_reference_after_single_payload_exposure(
     assert "review_payload" not in repeated_results
     assert str(context_path) not in repeated_results
     assert prepared["output_dir"] not in repeated_results
+    if delivery == "vera":
+        from archive_report_store import RunStore, digest
+
+        events = [
+            event
+            for event in RunStore(context_path.parent).events()
+            if event.get("channel") == "mcp:archive-organization"
+        ]
+        assert len(events) == 4
+        assert {event["response_sha256"] for event in events} == {
+            digest({key: value for key, value in result.items() if key != "_meta"})
+            for result in (validated, rendered, saved, approved)
+        }
 
 
 def test_mcp_unbound_supplied_plan_reference_remains_review_only(

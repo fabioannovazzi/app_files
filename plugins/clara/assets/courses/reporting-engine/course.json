@@ -137,14 +137,24 @@
       "sha256": "2ad7c96dee1bd61d76f578bfef1dac2f90d3b7ab8d72e0a355dce4ebed44d934"
     },
     {
+      "path": "scripts/archive_emit.py",
+      "repository_path": "plugins/clara/scripts/archive_emit.py",
+      "sha256": "20304f6878ac14f028f479ff63b63a1433f4bde62cc9eb0ae6b34113f070283d"
+    },
+    {
+      "path": "scripts/archive_report_legacy.py",
+      "repository_path": "plugins/clara/scripts/archive_report_legacy.py",
+      "sha256": "6dadb7f05b50afb13f7d23cde1e0e6a0748ad850a7df7dadace66f66cf96098e"
+    },
+    {
       "path": "scripts/archive_report_measurements.py",
       "repository_path": "plugins/clara/scripts/archive_report_measurements.py",
-      "sha256": "856c9a468151e13e5b805801562c825e5eab4512aae8f39aff980c3151669be4"
+      "sha256": "0e9286baf9d372b0a3bdf727758434ca5e1749c03535136dc1550b66514a54cd"
     },
     {
       "path": "scripts/archive_report_receipt.py",
       "repository_path": "plugins/clara/scripts/archive_report_receipt.py",
-      "sha256": "7ba519f8037ead65588eb9aa3815861052460396741d9b58aa788cd925b71a36"
+      "sha256": "a4f1857397b15438c8f9934d526df28ac012aaa3c60c1daa47fe5b000af19246"
     },
     {
       "path": "scripts/archive_report_seal.py",
@@ -154,17 +164,12 @@
     {
       "path": "scripts/archive_report_store.py",
       "repository_path": "plugins/clara/scripts/archive_report_store.py",
-      "sha256": "7986b3c4b65861534e983b6bb1fd592d1dfff99ee5091ac974af29a9b2d5fb89"
-    },
-    {
-      "path": "scripts/archive_report_transcript.py",
-      "repository_path": "plugins/clara/scripts/archive_report_transcript.py",
-      "sha256": "a85ce11b35c75db8e32f4b84cb85fec5b8757fba7cbadd3f85ac001616a21533"
+      "sha256": "4923b2de70536d3f581d9daa67970737ee736b78b4ec143e49c7499858a3c1cd"
     },
     {
       "path": "scripts/archive_reporting.py",
       "repository_path": "plugins/clara/scripts/archive_reporting.py",
-      "sha256": "f1bd764800703c60a985b9b79be147c230ddeb7418c029cb3601234eb09b8aec"
+      "sha256": "f6d04c1a6023b48f8f745c8a7cde4b39f1575382620d5356d03a3ec8a4a1b11c"
     },
     {
       "path": "scripts/bounded_process.py",
@@ -204,12 +209,12 @@
     {
       "path": "scripts/managed_python_runtime.py",
       "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
-      "sha256": "3a797a3a467f530dabf182417fbea86976ac2738bd675a4e170a9a73e94e81ec"
+      "sha256": "19028997fca298fea7dc5c8abca3ee77e7b16acf7b5cfce694f36b926748c149"
     },
     {
       "path": "scripts/model_data_report.py",
       "repository_path": "plugins/clara/scripts/model_data_report.py",
-      "sha256": "afdc3f6483a3aa013772eb934ad975eab59f7c9f8f2b04b693578a590f3aabe4"
+      "sha256": "7a0fae4f7981674d31e34bb5cb94a8aa86830f495f554393b5fd151c13a81f14"
     },
     {
       "path": "scripts/notarized_run_receipt.py",
@@ -219,7 +224,7 @@
     {
       "path": "scripts/operational_incidents.py",
       "repository_path": "plugins/clara/scripts/operational_incidents.py",
-      "sha256": "b3a24728d1226c8ae0da8afa1296e08cc6457b0f199f0721f4453cbb9d715d72"
+      "sha256": "417a214b671bc92caaed383be5765c67f4cd7536cf41d6b931efaca8b8b464af"
     },
     {
       "path": "scripts/record_reporting_contribution.py",
@@ -239,7 +244,7 @@
     {
       "path": "scripts/workflow_usage.py",
       "repository_path": "plugins/clara/scripts/workflow_usage.py",
-      "sha256": "227973769762e5e678a030d39152d3b973dbdcaac463e19cb7ba0e7d31017774"
+      "sha256": "d9a956d0bb6bbe8bc94154c8b5c4e80be591c6768c00344ba218b27a9d10f79c"
     },
     {
       "path": "skills/reporting-engine/SKILL.md",

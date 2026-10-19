@@ -20,8 +20,47 @@
       "agenzia-acquisition",
       "archive-organization"
     ],
-    "generation": "archive-finalization",
-    "requires": "measured source population and evidenced data remaining local",
+    "generation": "archive-start-and-terminal-writes",
+    "requires": "every selected Archive run; incomplete measurements remain explicit",
+    "component_pipelines": {
+      "journal-bank-reconciliation": [
+        "journal-bank-reconciliation"
+      ],
+      "open-item-reconciliation": [
+        "open-item-reconciliation"
+      ],
+      "journal-sampling": [
+        "journal-sampling"
+      ],
+      "check-entries": [
+        "vouching"
+      ],
+      "client-file-preparation": [
+        "fatture-xml-check"
+      ],
+      "passive-invoice-audit": [
+        "purchase-invoice-review"
+      ],
+      "centrale-rischi-review": [
+        "centrale-rischi-review"
+      ],
+      "report-builder": [
+        "financial-report-builder",
+        "report-enti-locali"
+      ],
+      "management-control-pack": [
+        "management-control-pack"
+      ],
+      "variance-analysis": [
+        "variance-analysis"
+      ],
+      "browser-automation": [
+        "agenzia-acquisition"
+      ],
+      "archive-organization": [
+        "archive-organization"
+      ]
+    },
     "generated_artifacts": [
       "model_data_report.json",
       "model_data_report.md"

@@ -114,7 +114,7 @@ def _report_forced_termination(
 
 
 def _execute_with_diagnostics(
-    root: Path, arguments: list[str]
+    root: Path, arguments: list[str], module: str | None = None
 ) -> tuple[int, Path | None]:
     """Spool stderr to disk without capturing or buffering professional stdout."""
     from operational_incidents import diagnostic_directory
@@ -161,6 +161,22 @@ def _execute_with_diagnostics(
                 _IMPLEMENTATION.LOGGER.removeHandler(handler)
             handle.flush()
             handle.seek(0)
+            if (
+                product_name(root) == "vera"
+                and module is not None
+                and os.environ.get("VERA_REPORTING_INTERNAL") != "1"
+            ):
+                from archive_emit import record_output
+
+                diagnostic = handle.read()
+                if diagnostic:
+                    record_output(
+                        module,
+                        arguments,
+                        {"stdout": "", "stderr": diagnostic},
+                        channel="cli",
+                    )
+                handle.seek(0)
             shutil.copyfileobj(handle, sys.stderr, length=16384)
     finally:
         _IMPLEMENTATION.LOGGER.removeHandler(handler)
@@ -359,7 +375,7 @@ def run_verified_helper(
         logging.warning(
             "Incident identity/progress is unavailable; use the saved incident connector. Professional execution continues."
         )
-    result, error_path = _execute_with_diagnostics(root, arguments)
+    result, error_path = _execute_with_diagnostics(root, arguments, module)
     if execution is not None and (
         "--pdf-recovery" in arguments
         or (
