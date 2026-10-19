@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/app-files-bank-pdf-recovery/plugins/vera",
-  "version": "0.1.426",
-  "captured_at": "2026-10-19T14:42:01.123973+00:00",
-  "catalogue_fingerprint": "ce6064387499b488a12141d7f032340f37dfb36402b12553c1fb17d8f64f3bf9",
-  "manifest_sha256": "4adce428b2e5c99b0484e8a98a295e5d5dd9abb1aa6ae48ab439316d5590cc41",
+  "root": "/Users/fabio/Documents/GitHub/app_files/plugins/vera",
+  "version": "0.1.427",
+  "captured_at": "2026-10-19T16:37:41.633513+00:00",
+  "catalogue_fingerprint": "d746fb05d6f0d3a85b638c5ba6b8d620055462ff498599edc1c568fb6fd71652",
+  "manifest_sha256": "79033d6622ad258a8890ca5e5f830f1008bf0fe6396b7e16c6141b9219c49e56",
   "entries": [
     {
       "function_id": "adeguati-assetti",
