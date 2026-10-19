@@ -26,6 +26,8 @@ jobs:
           node-version: "22"
       - run: python -m pip install pytest pytest-cov pyyaml
       - run: python -m pytest -q -o addopts='' --confcutdir=tests/scripts tests/scripts/test_local_helper_environment.py tests/scripts/test_claude_reviewer_note.py --cov=scripts.local_helper_environment --cov-report=term-missing --cov-fail-under=80
+      - name: Verify teaching CI stays separate from release checks
+        run: python -m pytest --noconftest -q -o addopts='' tests/scripts/test_teaching_ci_scope.py
 
   operational-incidents:
     name: Operational incident recovery loop
@@ -293,7 +295,8 @@ jobs:
           python -m mypy --config-file plugins/invoice-xml/mypy.ini plugins/invoice-xml/scripts
           python -m bandit -q -r plugins/invoice-xml/scripts
 
-  vera-local-onboarding:
+  client-file-boundaries:
+    name: Client file and privacy boundaries (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -312,7 +315,7 @@ jobs:
           node-version: "22"
       - name: Install plugin build dependencies
         run: python -m pip install -r scripts/requirements-plugin-build.txt
-      - name: Install local teaching lifecycle test dependencies
+      - name: Install client boundary test dependencies
         run: >-
           python -m pip install pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit reportlab
           -r plugins/client-file-preparation/requirements.txt
@@ -328,43 +331,13 @@ jobs:
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           "tests/plugins/test_vera_local_onboarding.py::test_vouching_kit_runs_live_sample_handoff_and_current_checks[demo-it]"
-      - name: Verify local profiles, native lesson handoffs and transmission suppression
-        run: >-
-          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
-          tests/plugins/test_vera_local_onboarding.py tests/plugins/test_vera_teaching.py
-          tests/plugins/test_studio_archive_file_identity.py
-          tests/plugins/test_vera_model_data_report.py
-          tests/plugins/test_plugin_update_notifications.py
-          --cov=local_teaching --cov=local_onboarding --cov=local_onboarding_case
-          --cov=onboarding_session_start --cov-fail-under=80
-      - name: Verify Clara and Lucia local teaching, isolation and native handoffs
-        run: >-
-          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
-          tests/plugins/test_desktop_teaching.py tests/plugins/test_desktop_teaching_packages.py
-          tests/plugins/test_teaching_execution_evidence.py
-          tests/plugins/test_teaching_product_scope.py tests/plugins/test_optional_onboarding.py
-          --cov=desktop_teaching --cov-fail-under=80
-      - name: Check shared teaching code quality
+      - name: Verify file identity, model-data reports and update notices
         run: |
-          python -m black --check plugins/_shared/vendor/modules/desktop_teaching tests/plugins/test_desktop_teaching.py tests/plugins/test_teaching_product_scope.py tests/plugins/_teaching_execution.py tests/plugins/test_teaching_execution_evidence.py
-          python -m isort --check-only plugins/_shared/vendor/modules/desktop_teaching tests/plugins/test_desktop_teaching.py tests/plugins/test_teaching_product_scope.py tests/plugins/_teaching_execution.py tests/plugins/test_teaching_execution_evidence.py
-          python -m mypy --follow-imports=skip plugins/_shared/vendor/modules/desktop_teaching/onboarding.py plugins/_shared/vendor/modules/desktop_teaching/teaching.py plugins/_shared/vendor/modules/desktop_teaching/cases.py
-          python -m bandit -qr plugins/_shared/vendor/modules/desktop_teaching
-      - name: Verify mandatory course file access on every platform
-        run: >-
-          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
-          tests/plugins/test_course_file_access.py tests/plugins/test_course_chat_buttons.py
-          --cov=courseware.access --cov=courseware.chat --cov-report=term-missing --cov-fail-under=80
-      - name: Check onboarding code quality
-        run: |
-          python -m black --check plugins/vera/scripts/local_onboarding.py plugins/vera/scripts/local_onboarding_case.py plugins/vera/scripts/onboarding_session_start.py plugins/vera/scripts/local_teaching.py tests/plugins/test_vera_local_onboarding.py tests/plugins/test_vera_teaching.py
-          python -m isort --check-only plugins/vera/scripts/local_onboarding.py plugins/vera/scripts/local_onboarding_case.py plugins/vera/scripts/onboarding_session_start.py plugins/vera/scripts/local_teaching.py tests/plugins/test_vera_local_onboarding.py tests/plugins/test_vera_teaching.py
-          python -m mypy --follow-imports=skip plugins/vera/scripts/local_onboarding.py plugins/vera/scripts/local_onboarding_case.py plugins/vera/scripts/onboarding_session_start.py plugins/vera/scripts/local_teaching.py
-          python -m bandit -q plugins/vera/scripts/local_onboarding.py plugins/vera/scripts/local_onboarding_case.py plugins/vera/scripts/onboarding_session_start.py plugins/vera/scripts/local_teaching.py
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_studio_archive_file_identity.py tests/plugins/test_vera_model_data_report.py tests/plugins/test_plugin_update_notifications.py
 
-  teaching-kits:
+  workflow-regressions:
+    name: Accounting and reporting regressions
     runs-on: ubuntu-latest
-    # Native course executions and the full report regressions exceed 30 minutes.
     timeout-minutes: 60
     env:
       PYTHONDONTWRITEBYTECODE: "1"
@@ -443,39 +416,9 @@ jobs:
           python -m zipfile -e plugin_packages/clara/clara-plugin.zip "$RUNNER_TEMP/clara-managed-runtime"
           python "$RUNNER_TEMP/clara-managed-runtime/clara-codex-plugin/plugins/clara/scripts/check_dependencies.py" --module variance-analysis
           python plugins/vera/scripts/check_dependencies.py --module concordato-plan-review
-      - name: Verify teaching-kit languages, real executions and native packages
-        run: >-
-          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
-          tests/plugins/test_teaching_release_review.py tests/plugins/test_teaching_execution_evidence.py tests/plugins/test_prepared_courses.py tests/plugins/test_course_chat_buttons.py tests/plugins/test_course_preview.py tests/plugins/test_mixed_course_release.py tests/plugins/test_prepared_course_packages.py tests/plugins/test_teaching_package_projection.py tests/plugins/test_remote_course_files.py tests/plugins/test_teaching_kit_execution.py tests/plugins/test_teaching_kit_advisory_execution.py tests/plugins/test_teaching_kit_transcript_execution.py tests/plugins/test_teaching_kit_website_execution.py tests/plugins/test_teaching_presentation_execution.py tests/plugins/test_teaching_inps_execution.py
-          tests/plugins/test_teaching_workbook_dimensions.py tests/plugins/test_teaching_concordato_execution.py tests/plugins/test_teaching_question_execution.py tests/plugins/test_teaching_registro_execution.py tests/plugins/test_teaching_bilancio_execution.py
-          tests/plugins/test_teaching_attribute_execution.py
-          tests/plugins/test_teaching_agenzia_execution.py
-          tests/plugins/test_teaching_studio_work_execution.py
-          tests/plugins/test_teaching_bandi_execution.py
-          tests/plugins/test_teaching_invoice_xml_execution.py
-          tests/plugins/test_teaching_communication_execution.py
-          tests/plugins/test_teaching_management_execution.py
-          tests/plugins/test_business_valuation.py
-          tests/plugins/test_teaching_clara_budget_execution.py
-          tests/plugins/test_teaching_esg_execution.py
-          tests/plugins/test_teaching_patent_box_execution.py
-          tests/plugins/test_teaching_cnc_execution.py
-          tests/plugins/test_teaching_fusione_execution.py
-          tests/plugins/test_teaching_trasformazione_execution.py
-          tests/plugins/test_teaching_studio_document_format_execution.py
-          tests/plugins/test_teaching_cnc_practical_execution.py
-          tests/plugins/test_teaching_scissione_execution.py
-          tests/plugins/test_teaching_lipe_execution.py
-          tests/plugins/test_teaching_tax_litigation_execution.py
-          tests/plugins/test_cnc_integrations.py
-          tests/plugins/test_cowork_teaching.py
-          tests/plugins/test_vera_get_started.py
-          tests/plugins/test_teaching_browser_execution.py
-          tests/plugins/test_teaching_purchase_execution.py
-          tests/plugins/test_matter_review_presentation.py
-          tests/plugins/test_vera_local_onboarding.py
-          --cov=plugins/_shared/vendor/modules/courseware --cov-fail-under=80
-          --junitxml=${{ runner.temp }}/teaching-native.xml -o junit_family=legacy
+      - name: Verify workflow integrations
+        run: |
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_business_valuation.py tests/plugins/test_cnc_integrations.py tests/plugins/test_matter_review_presentation.py
       - name: Install repository assortment-test dependencies
         run: python -m pip install -r tests/plugin_attribute_hosted_requirements.txt
       - name: Verify assortment runtime and report evidence
@@ -542,53 +485,17 @@ jobs:
           python -m isort --check-only plugins/bilancio-xbrl-it/scripts/workspace_bridge.py plugins/bilancio-xbrl-it/scripts/workspace_contract.py scripts/build_vera_workspace_pilot.py tests/plugins/test_bilancio_native_workspace.py
           python -m mypy --follow-imports=skip plugins/bilancio-xbrl-it/scripts/workspace_bridge.py plugins/bilancio-xbrl-it/scripts/workspace_contract.py scripts/build_vera_workspace_pilot.py
           python -m bandit -ll plugins/bilancio-xbrl-it/scripts/workspace_bridge.py plugins/bilancio-xbrl-it/scripts/workspace_contract.py scripts/build_vera_workspace_pilot.py
-      - name: Check course runtime and compiler
+      - name: Check workflow code quality
         run: |
-          python -m black --check tests/plugins/test_teaching_patent_box_execution.py
-          python -m isort --check-only tests/plugins/test_teaching_patent_box_execution.py
-          python -m mypy --follow-imports=skip tests/plugins/test_teaching_patent_box_execution.py
-          python -m bandit -q -ll tests/plugins/test_teaching_patent_box_execution.py
-          python scripts/course_materials/build_catalog.py --check
-          python scripts/course_materials/build_public_catalog.py --check
-          python -m black --check tests/plugins/test_teaching_cnc_execution.py tests/plugins/test_teaching_scissione_execution.py
-          python -m isort --check-only tests/plugins/test_teaching_cnc_execution.py tests/plugins/test_teaching_scissione_execution.py
           python scripts/build_matter_review_assets.py --check
-          python scripts/course_materials/verify_release.py --junit "$RUNNER_TEMP/teaching-native.xml"
-          python scripts/course_materials/build_presentation_baselines.py --check
-          python -m black --check scripts/course_materials/build_presentation_baselines.py tests/plugins/_business_teaching.py tests/plugins/_presentation_teaching.py tests/plugins/test_teaching_presentation_execution.py
-          python -m isort --check-only scripts/course_materials/build_presentation_baselines.py tests/plugins/_business_teaching.py tests/plugins/_presentation_teaching.py tests/plugins/test_teaching_presentation_execution.py
-          python -m mypy --follow-imports=skip scripts/course_materials/build_presentation_baselines.py
-          python -m bandit -q scripts/course_materials/build_presentation_baselines.py
-          python -m black --check scripts/course_materials/verify_release.py tests/plugins/_teaching_release.py tests/plugins/test_teaching_release_review.py tests/plugins/test_teaching_trasformazione_execution.py tests/plugins/test_teaching_esg_execution.py tests/plugins/test_teaching_execution_evidence.py
-          python -m isort --check-only scripts/course_materials/verify_release.py tests/plugins/_teaching_release.py tests/plugins/test_teaching_release_review.py tests/plugins/test_teaching_trasformazione_execution.py tests/plugins/test_teaching_esg_execution.py tests/plugins/test_teaching_execution_evidence.py
-          python -m mypy --follow-imports=skip scripts/course_materials/verify_release.py tests/plugins/_teaching_release.py
-          python -m bandit -q scripts/course_materials/verify_release.py tests/plugins/_teaching_release.py
           python -m black --check scripts/archive_organization_review_widget.py
           python -m isort --check-only scripts/archive_organization_review_widget.py
           python -m mypy --follow-imports=skip scripts/archive_organization_review_widget.py
           python -m bandit -q scripts/archive_organization_review_widget.py
-          python -m black --check scripts/course_materials/build_attribute_inputs.py tests/plugins/test_teaching_attribute_execution.py
-          python -m isort --check-only scripts/course_materials/build_attribute_inputs.py tests/plugins/test_teaching_attribute_execution.py
-          python -m mypy --follow-imports=skip scripts/course_materials/build_attribute_inputs.py
-          python -m bandit -q scripts/course_materials/build_attribute_inputs.py
-          python -m black --check tests/plugins/test_teaching_bandi_execution.py tests/plugins/test_teaching_purchase_execution.py
-          python -m isort --check-only tests/plugins/test_teaching_bandi_execution.py tests/plugins/test_teaching_purchase_execution.py
           python -m black --check plugins/bandi-agevolazioni/scripts/dossier_report.py plugins/bandi-agevolazioni/scripts/package_dossier.py tests/plugins/test_bandi_dossier_report.py
           python -m isort --check-only plugins/bandi-agevolazioni/scripts/dossier_report.py plugins/bandi-agevolazioni/scripts/package_dossier.py tests/plugins/test_bandi_dossier_report.py
           python -m mypy --follow-imports=skip --ignore-missing-imports plugins/bandi-agevolazioni/scripts/dossier_report.py plugins/bandi-agevolazioni/scripts/package_dossier.py
           python -m bandit -q -ll plugins/bandi-agevolazioni/scripts/dossier_report.py plugins/bandi-agevolazioni/scripts/package_dossier.py
-          python -m black --check tests/plugins/_invoice_teaching.py tests/plugins/test_teaching_invoice_xml_execution.py
-          python -m isort --check-only tests/plugins/_invoice_teaching.py tests/plugins/test_teaching_invoice_xml_execution.py
-          python -m black --check tests/plugins/test_teaching_communication_execution.py tests/plugins/test_teaching_management_execution.py
-          python -m isort --check-only tests/plugins/test_teaching_communication_execution.py tests/plugins/test_teaching_management_execution.py
-          python -m black --check scripts/course_materials/finalize_workbook_dimensions.py tests/plugins/test_teaching_workbook_dimensions.py tests/plugins/test_teaching_concordato_execution.py tests/plugins/test_teaching_inps_execution.py tests/plugins/test_teaching_question_execution.py tests/plugins/test_teaching_registro_execution.py tests/plugins/test_teaching_bilancio_execution.py
-          python -m isort --check-only scripts/course_materials/finalize_workbook_dimensions.py tests/plugins/test_teaching_workbook_dimensions.py tests/plugins/test_teaching_concordato_execution.py tests/plugins/test_teaching_inps_execution.py tests/plugins/test_teaching_question_execution.py tests/plugins/test_teaching_registro_execution.py tests/plugins/test_teaching_bilancio_execution.py
-          python -m mypy --follow-imports=skip scripts/course_materials/finalize_workbook_dimensions.py
-          python -m bandit -q scripts/course_materials/finalize_workbook_dimensions.py
-          python -m black --check plugins/_shared/vendor/modules/courseware scripts/course_materials/build_catalog.py scripts/course_materials/render_catalog.py tests/plugins/test_prepared_courses.py tests/plugins/test_course_chat_buttons.py tests/plugins/test_course_preview.py tests/plugins/test_mixed_course_release.py tests/plugins/test_prepared_course_packages.py tests/plugins/test_teaching_kit_execution.py tests/plugins/test_teaching_kit_advisory_execution.py tests/plugins/test_teaching_kit_transcript_execution.py tests/plugins/test_teaching_kit_website_execution.py
-          python -m isort --check-only plugins/_shared/vendor/modules/courseware scripts/course_materials/build_catalog.py scripts/course_materials/render_catalog.py tests/plugins/test_prepared_courses.py tests/plugins/test_course_chat_buttons.py tests/plugins/test_course_preview.py tests/plugins/test_mixed_course_release.py tests/plugins/test_prepared_course_packages.py tests/plugins/test_teaching_kit_execution.py tests/plugins/test_teaching_kit_advisory_execution.py tests/plugins/test_teaching_kit_transcript_execution.py tests/plugins/test_teaching_kit_website_execution.py
-          python -m mypy --follow-imports=skip plugins/_shared/vendor/modules/courseware/policy.py plugins/_shared/vendor/modules/courseware/library.py plugins/_shared/vendor/modules/courseware/execution.py scripts/course_materials/build_catalog.py scripts/course_materials/render_catalog.py
-          python -m bandit -qr plugins/_shared/vendor/modules/courseware scripts/course_materials/build_catalog.py scripts/course_materials/render_catalog.py
           python -m black --check plugins/new-client/scripts plugins/new-client/tests scripts/new_client_review_widget.py scripts/generate_non_plotting_review_widgets.py tests/plugins/_new_client_teaching.py tests/plugins/test_non_plotting_review_workbench.py
           python -m isort --check-only plugins/new-client/scripts plugins/new-client/tests scripts/new_client_review_widget.py scripts/generate_non_plotting_review_widgets.py tests/plugins/_new_client_teaching.py tests/plugins/test_non_plotting_review_workbench.py
           python -m mypy --follow-imports=silent plugins/new-client/scripts scripts/new_client_review_widget.py
@@ -609,8 +516,6 @@ jobs:
           python -m isort --check-only plugins/concordato-plan-review/scripts/concordato_semantic.py plugins/concordato-plan-review/scripts/concordato_labels.py plugins/concordato-plan-review/scripts/concordato_plan_core.py plugins/concordato-plan-review/scripts/review_session.py scripts/course_materials/build_concordato_support.py tests/plugins/test_concordato_preventivo_semantics.py
           python -m mypy --follow-imports=skip plugins/concordato-plan-review/scripts/concordato_semantic.py plugins/concordato-plan-review/scripts/concordato_labels.py plugins/concordato-plan-review/scripts/concordato_plan_core.py plugins/concordato-plan-review/scripts/review_session.py scripts/course_materials/build_concordato_support.py
           python -m bandit -q -ll plugins/concordato-plan-review/scripts/concordato_semantic.py plugins/concordato-plan-review/scripts/concordato_labels.py plugins/concordato-plan-review/scripts/concordato_plan_core.py plugins/concordato-plan-review/scripts/review_session.py scripts/course_materials/build_concordato_support.py
-      - name: Check prepared Concordato source PDFs
-        run: python scripts/course_materials/build_concordato_support.py --check
       - name: Check Concordato reasoning and localized deliverables
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
