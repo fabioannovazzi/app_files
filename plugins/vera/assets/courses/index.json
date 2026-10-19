@@ -510,7 +510,7 @@
     },
     "financial-report-builder": {
       "path": "financial-report-builder/course.json",
-      "sha256": "df7fe6f657f403e14517858973a119d568921c44f6ca61313a164ccd687bbb63",
+      "sha256": "368b4e3f13a6372325318607abeb401e9ff310c3f48317685e3d183d6d586f19",
       "languages": [
         "it",
         "en",
@@ -853,7 +853,7 @@
     },
     "purchase-invoice-review": {
       "path": "purchase-invoice-review/course.json",
-      "sha256": "c48722a6500dd0e8f5a7a56d1fa76de9daa51ed84e14e2c903693be094067739",
+      "sha256": "def1428a958cdf48f132b472e8404f7c1079e4e7ea6a0470ab6e9c94c67a3006",
       "languages": [
         "it",
         "en",
@@ -1021,7 +1021,7 @@
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "2a9c006f983c254982632c38b0c50f3d362a2a34a35789a3b73a6561b1ea9002",
+      "sha256": "71c468daaf229d1bcf8b1818a14838dd1f78ed2bc5a9d203168be17ef2c8f8c2",
       "languages": [
         "it",
         "en",
@@ -1121,7 +1121,7 @@
     },
     "vouching": {
       "path": "vouching/course.json",
-      "sha256": "c7c7b42d6be3f9686ab746b898b2a38bef0b35b2af32949e734f65b3efa34e57",
+      "sha256": "bef6a205855855432105ce896142b21806cd565a397fc6d638f138f26d60df33",
       "languages": [
         "it",
         "en",

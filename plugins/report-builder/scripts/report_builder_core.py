@@ -2360,7 +2360,12 @@ def emit_status(output: Path, message: str) -> None:
     recorder = archive_projection_runtime(Path(__file__))
     if recorder is not None:
         recorder.register_metadata("report-builder", output, text)
-    sys.stdout.write(text)
+    buffer = getattr(sys.stdout, "buffer", None)
+    if buffer is None:
+        sys.stdout.write(text)
+    else:
+        buffer.write(text.encode("utf-8"))
+        buffer.flush()
 
 
 def _register_inspection_projection(

@@ -380,7 +380,7 @@
     {
       "path": "modules/report-builder/scripts/report_builder_core.py",
       "repository_path": "plugins/report-builder/scripts/report_builder_core.py",
-      "sha256": "e05126ea329b7dc237348965d1b2d44ee4ef7cebca3356f544448b47ee2948da"
+      "sha256": "eeb4fa90088c23ab71423192a3eacf4843bbc450c705b222e57eb00932774283"
     },
     {
       "path": "modules/report-builder/scripts/report_builder_integrity.py",

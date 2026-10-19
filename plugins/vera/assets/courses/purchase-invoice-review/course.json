@@ -45,7 +45,7 @@
     {
       "path": "modules/passive-invoice-audit/scripts/audit_core.py",
       "repository_path": "plugins/passive-invoice-audit/scripts/audit_core.py",
-      "sha256": "a159782e899e421808f2012b76b081205501dfdb13f526c269aea9a881ef065d"
+      "sha256": "269c3ff57647adf06a117ba1602b21ab43ad09ebe3680314dc823cd231f5b6fb"
     },
     {
       "path": "modules/passive-invoice-audit/scripts/check_dependencies.py",

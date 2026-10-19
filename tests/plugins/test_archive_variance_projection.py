@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import subprocess
-import sys
 from pathlib import Path
 
 from tests._plugin_cli import workflow_cli

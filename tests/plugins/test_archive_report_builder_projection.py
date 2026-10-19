@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import io
 import json
+import sys
 from pathlib import Path
 
 import pytest
@@ -16,6 +18,32 @@ from tests.plugins.test_archive_automatic_reporting import (
     start,
 )
 from tests.plugins.test_report_builder_plugin import load_core
+
+
+def test_report_builder_status_retains_registered_bytes_with_windows_text_stream(
+    archive_core, client_case, monkeypatch
+):
+    from archive_report_store import RunStore
+    from archive_reporting import record_send
+
+    loaded = start(archive_core, client_case, "report-builder")
+    output = Path(loaded["output_dir"])
+    core = load_core()
+    buffer = io.BytesIO()
+    stream = io.TextIOWrapper(buffer, encoding="utf-8", newline="\r\n")
+    with monkeypatch.context() as patch:
+        patch.setattr(sys, "stdout", stream)
+
+        core.emit_status(output, "Saved report.html")
+
+    assert buffer.getvalue() == b"Saved report.html\n"
+    root = Path(loaded["run_root"])
+    record_send(
+        root, {"stdout": buffer.getvalue().decode()}, channel="cli:report-builder"
+    )
+    events = RunStore(root).events()
+    sent = [event for event in events if event.get("channel") == "cli:report-builder"]
+    assert sent[-1]["unmapped"] is False
 
 
 @pytest.mark.parametrize("kind", ["csv", "xlsx"])
