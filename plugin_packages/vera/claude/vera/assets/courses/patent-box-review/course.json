@@ -281,7 +281,7 @@
     },
     {
       "path": "modules/patent-box-review/skills/mparanza-patent-box-review/SKILL.md",
-      "sha256": "c89f963c35e0b3d5691b27baa15b3bd1e3169612e2a36757327d9abc3b0d7543"
+      "sha256": "cefb5eb43943ed336ae4856d6b854aa33f76b920205a0000a69158624d67d4d7"
     },
     {
       "path": "modules/patent-box-review/templates/declaration_bridge.csv",
@@ -313,7 +313,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "592b0cac8a87d80a3cc9b4b0e7958f79be402814ac7b44e0510de7302d745b50"
+      "sha256": "220e14178ddcf811782956f50177732a1664a309eef87847ddb306db7c83381b"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -345,7 +345,7 @@
     },
     {
       "path": "skills/mparanza-patent-box-review/SKILL.md",
-      "sha256": "d334d91a83a30c8c0073808e1792f00d633f4a4008ed558ad4855639882e477d"
+      "sha256": "0ac0e15cc918555b7a4cbfde7e980cc1ff0de780a5ed5be118d22db1db8ce756"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -445,7 +445,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "592b0cac8a87d80a3cc9b4b0e7958f79be402814ac7b44e0510de7302d745b50"
+      "sha256": "220e14178ddcf811782956f50177732a1664a309eef87847ddb306db7c83381b"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -770,5 +770,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "d54e8024e0af6dad24d5d5070fff329adcf9cf872bd40b2f5256af7c6664fa8f"
+  "canonical_course_sha256": "174f3d03936844aeb8c8e0f84c0910fe462fd747a2f0f355fdb09339c03a5d17"
 }

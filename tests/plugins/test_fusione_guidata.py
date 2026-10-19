@@ -560,7 +560,8 @@ def test_demo_persists_before_after_and_negative_control_results(api, tmp_path):
     assert result["failed"] == []
     assert result["checks"]["company_access_denied"] is True
     assert Path(result["before"]["case_report"]).is_file()
-    assert Path(result["after"]["model_data_report"]).is_file()
+    assert Path(result["after"]["case_report"]).is_file()
+    assert not list((tmp_path / "demo").rglob("model_data_report.*"))
 
 
 def test_real_case_report_does_not_invent_host_exposure(api, case, tmp_path):
@@ -570,11 +571,8 @@ def test_real_case_report_does_not_invent_host_exposure(api, case, tmp_path):
         case, tmp_path.resolve() / "report", runtime_profile="anthropic-cowork"
     )
 
-    report = json.loads(
-        Path(paths["model_data_report"]).with_suffix(".json").read_text()
-    )
-    assert report["phases"][0]["outcome"] == "not_measurable"
-    assert report["phases"][0]["model_visible"] == []
+    assert Path(paths["case_report"]).is_file()
+    assert not list((tmp_path / "report").glob("model_data_report.*"))
     assert paths["server_receipt"] == "not_requested"
 
 

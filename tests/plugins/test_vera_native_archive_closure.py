@@ -525,14 +525,6 @@ def test_closure_fresh_extracted_package_preserves_customer_ledger(
             destination = target / name[len(prefix) :]
             destination.parent.mkdir(parents=True, exist_ok=True)
             destination.write_bytes(content)
-    write_no_model_report(
-        output,
-        "composizione-negoziata",
-        selected["run_id"],
-        runtime_profile="anthropic-cowork" if surface == "cowork" else "openai-codex",
-        report_script=target
-        / "modules/studio-archive/scripts/build_model_data_report.py",
-    )
     body = (
         setup(selected)
         + declare_all()
@@ -548,14 +540,12 @@ const result={sealed,completed,closed:read()};
 
     assert result["closed"]["status"] == "completed"
     assert result["closed"]["report"]["valid"] is True
+    assert result["closed"]["report"]["status"] == "not_applicable"
     manifest = _load_customer_ledger().validate_run_artifacts(
         folder, selected["engagement_id"], selected["run_id"]
     )
     assert {item["path"] for item in manifest["artifacts"]} == {
         "working-000.txt",
-        "model_data_report.json",
-        "model_data_report.md",
-        "privacy_contract.json",
     }
     assert (output / "working-000.txt").read_text() == "Fictional local working file.\n"
 
@@ -627,3 +617,66 @@ def test_closure_uncertain_public_write_never_adopts_or_completes(
     )
     with pytest.raises(ValueError, match="Interrupted archive closure"):
         service.dispatch("vera_workspace_archive_finalize", request)
+
+
+def test_native_closure_completes_excluded_pipeline_without_a_privacy_report(
+    closure_workspace,
+):
+    env, _, output, selected = closure_workspace
+    (output / "model_data_report.json").unlink()
+    (output / "model_data_report.md").unlink()
+    result = rpc_program(
+        env,
+        setup(selected)
+        + declare_all()
+        + """
+const sealed=payload(call('vera_workspace_archive_finalize',seal));
+const ready=read();
+const completed=payload(call('vera_workspace_archive_complete',{...authority(ready),human_reviewed:true,idempotency_key:'without-report'}));
+const result={first,ready,completed};
+""",
+    )
+    assert result["first"]["report"]["status"] == "not_applicable"
+    assert result["completed"]["status"] == "completed"
+    assert not (output / "model_data_report.json").exists()
+
+
+def test_native_closure_generates_and_accepts_only_the_added_report_artifacts(
+    closure_workspace,
+):
+    from tests.plugins.test_vera_selective_reporting import _evidence
+
+    env, folder, output, selected = closure_workspace
+    ledger = _load_customer_ledger()
+    original = ledger.load_run(folder, selected["engagement_id"], selected["run_id"])
+    prepared = ledger.prepare_run(
+        folder,
+        selected["client_id"],
+        selected["engagement_id"],
+        "journal-sampling",
+        "synthetic",
+        input_ids=[original["input_manifest"]["inputs"][0]["binding_id"]],
+    )
+    selected = {**selected, "run_id": prepared["run"]["run_id"]}
+    started = ledger.start_run(folder, selected["engagement_id"], selected["run_id"])
+    output = Path(started["output_dir"])
+    (output / "result.txt").write_text("Synthetic sample result")
+    request = _evidence(output, selected["run_id"])
+    request["workflow_id"] = "journal-sampling"
+    (output / "model_data_report_input.json").write_text(json.dumps(request))
+
+    result = rpc_program(
+        env,
+        setup(selected)
+        + declare_all()
+        + """
+const sealed=payload(call('vera_workspace_archive_finalize',seal));
+const result={first,sealed,ready:read()};
+""",
+    )
+
+    assert result["first"]["report"]["status"] == "pending"
+    assert result["ready"]["report"]["valid"] is True
+    assert result["ready"]["report"]["text"]
+    assert result["sealed"]["status"] == "ready_for_review"
+    assert (output / "model_data_report.json").is_file()

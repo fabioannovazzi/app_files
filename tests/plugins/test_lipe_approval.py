@@ -482,7 +482,7 @@ def disclosure(output: Path, run_id: str) -> Path:
     return path
 
 
-def archive_example(tmp_path, *, front_overrides=None):
+def archive_example(tmp_path, *, front_overrides=None, retained_report=False):
     """Exercise the REAL route with a real Archive ledger and fictional documents."""
     ledger = load_test_module(
         PLUGIN.parent / "studio-archive/scripts/client_ledger.py",
@@ -529,7 +529,7 @@ def archive_example(tmp_path, *, front_overrides=None):
     }
     root, output = Path(context["run_root"]) / "inputs", Path(running["output_dir"])
     draft = save_result(case, calculate(case, root), output)
-    report = disclosure(output, context["run_id"])
+    report = disclosure(output, context["run_id"]) if retained_report else None
     return (
         case,
         front,
@@ -561,27 +561,25 @@ def test_real_cli_prepares_run_bound_review_with_actual_archive_receipts(tmp_pat
     )
     assert status == 0
     snapshot = read_json(output / "review/review-snapshot.json")
-    assert "run/model_data_report.json" in snapshot["artifacts"]
+    assert "run/model_data_report.json" not in snapshot["artifacts"]
+    assert not (output / "model_data_report.json").exists()
     assert not (output / "review/approval.json").exists()
 
 
 @pytest.mark.parametrize(
     "changed,message",
     [
-        ("missing", "requires the selected run"),
         ("run", "different workflow run"),
         ("markdown", "readable disclosure"),
         ("json", "input hash"),
     ],
 )
-def test_real_review_rejects_missing_or_mismatched_disclosure(
-    tmp_path, changed, message
-):
-    case, front, draft, root, _, context, _, report = archive_example(tmp_path)
+def test_real_review_rejects_mismatched_retained_disclosure(tmp_path, changed, message):
+    case, front, draft, root, _, context, _, report = archive_example(
+        tmp_path, retained_report=True
+    )
     run_id = read_json(context)["run_id"]
-    if changed == "missing":
-        report = None
-    elif changed == "run":
+    if changed == "run":
         run_id = "run_different"
     elif changed == "markdown":
         report.with_suffix(".md").write_text("Different report", encoding="utf-8")

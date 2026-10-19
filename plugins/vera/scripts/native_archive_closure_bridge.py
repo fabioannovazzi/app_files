@@ -18,6 +18,7 @@ def main() -> None:
     sys.path.insert(0, str(root / "scripts"))
     import build_model_data_report  # noqa: F401
     import model_data_report as producer
+    import selective_reporting as policy
 
     request = json.loads(sys.stdin.read(128001))
     if request["operation"] == "implementation":
@@ -34,6 +35,9 @@ def main() -> None:
         files[str(Path(producer.__file__))] = hashlib.sha256(
             Path(producer.__file__).read_bytes()
         ).hexdigest()
+        files[str(Path(policy.__file__))] = hashlib.sha256(
+            Path(policy.__file__).read_bytes()
+        ).hexdigest()
         result = {
             "sha256": hashlib.sha256(
                 json.dumps(files, sort_keys=True).encode()
@@ -42,6 +46,28 @@ def main() -> None:
     elif request["operation"] == "report":
         output = Path(request["output"])
         path = output / "model_data_report.json"
+        if not path.exists() and not (output / "model_data_report.md").exists():
+            state_path = output.parent / "model_data_reporting.json"
+            state = json.loads(state_path.read_text()) if state_path.is_file() else {}
+            matches = (
+                state.get("run_id") == request["run_id"]
+                and state.get("workflow_id") == request["workflow_id"]
+            )
+            result = {
+                "valid": True,
+                "status": (
+                    state["status"]
+                    if matches
+                    else (
+                        "pending"
+                        if policy.report_pipeline(request["workflow_id"])
+                        else "not_applicable"
+                    )
+                ),
+                "text": None,
+            }
+            sys.stdout.write(json.dumps(result))
+            return
         try:
             if path.stat().st_size > 2_000_000:
                 raise ValueError("Model-data report exceeds native validation limit")

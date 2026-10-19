@@ -442,10 +442,9 @@ New Client contract, requires `0700` on every directory and `0600` on every
 file, rejects host/provider names in ordinary assistant-authored dossier text,
 rejects supplemental run IDs that differ from `final_artifacts.json`, and
 writes `delivery_manifest.json` with receipts for every other delivered file.
-Build and validate the native `model_data_report.json` and
-`model_data_report.md` before sealing and finalizing the run. These two exact
-root files may name the actual host because their purpose is to disclose model
-processing; identity, permissions and receipt checks still apply to both.
+New Client is outside Vera's selective comparison-report scope. Seal and finalize
+the delivery without requiring privacy report files. If an older delivery contains
+such files, its identity, permissions and receipt checks still apply.
 Validate that exact delivered path independently after sealing:
 
 ```bash

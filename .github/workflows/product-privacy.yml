@@ -19,7 +19,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: python -m pip install pytest pytest-cov jsonschema pyyaml black==25.1.0 isort==6.0.1 mypy bandit
+      - run: python -m pip install pytest pytest-cov jsonschema pyyaml 'defusedxml>=0.7,<1' black==25.1.0 isort==6.0.1 mypy bandit
       - run: python scripts/sync_privacy_runtime.py --check
       - run: python scripts/build_privacy_contracts.py --check
       - name: Verify binding, unknowns, legacy reopening and product separation
@@ -29,7 +29,9 @@ jobs:
           tests/plugins/test_vera_privacy_surfaces.py
           tests/plugins/test_clara_privacy_surfaces.py
           tests/plugins/test_vera_cowork_privacy.py
-          --cov=plugins/_shared/privacy-runtime/scripts --cov-report=term-missing --cov-fail-under=80
+          tests/plugins/test_vera_selective_reporting.py
+          --cov=plugins/_shared/privacy-runtime/scripts --cov=run_reporting --cov=selective_reporting
+          --cov-report=term-missing --cov-fail-under=80
       - run: node --test tests/test_function_model_data.mjs
       - name: Check shared contract implementation quality
         run: |

@@ -57,7 +57,7 @@
     },
     {
       "path": "scripts/model_data_report.py",
-      "sha256": "368b0903fa071c0563a0d0ac04f7a1ce9d33445236daba47f4357b7e6216bf59"
+      "sha256": "6217728e9ca9feff2b54996a8eff94b8ccc708bbaadf2b03c8eae2c5cfe2b77e"
     },
     {
       "path": "scripts/notarized_run_receipt.py",
@@ -66,6 +66,10 @@
     {
       "path": "scripts/operational_incidents.py",
       "sha256": "a3d3ae71f68a9972fdff84307e42cf2e18b5bc359c4b491d3b5fc07e08ce94e1"
+    },
+    {
+      "path": "scripts/selective_reporting.py",
+      "sha256": "a8f7168aead00a0c400f197665ec1613a57b2e213ffb9176f65628bac135d409"
     },
     {
       "path": "scripts/verified_execution.py",
@@ -410,5 +414,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "5429b921c0e01d50da3e1c3aaeb98bda5f1d4449b965bd2ab6d95c56ba97891d"
+  "canonical_course_sha256": "00147a521c006c4f4f6a71e4e0a1412fb47f0c8c507a89e9a56b2ed600076ba1"
 }

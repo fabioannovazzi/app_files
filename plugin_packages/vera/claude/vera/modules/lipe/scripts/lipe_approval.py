@@ -99,8 +99,10 @@ def _markdown(value: str) -> str:
 
 
 def _disclosure(path: Path | None, run_id: str | None) -> dict:
-    """Bind the selected run's disclosure using the existing canonical validator."""
-    if path is None or not run_id:
+    """Validate an optional retained report; LIPE creates no comparison report."""
+    if path is None or not path.exists():
+        return {}
+    if not run_id:
         raise ContractError("Real review requires the selected run's model-data report")
     candidates = (
         ROOT.parent / "studio-archive/vendor/modules/model_data_report.py",
@@ -161,9 +163,7 @@ def current_bindings(
     required = ARTIFACTS
     paths = {path.name: path for path in draft_folder.iterdir()}
     if not required.issubset(paths):
-        raise ContractError(
-            "The preserved draft is missing review artifacts or the real model-data report"
-        )
+        raise ContractError("The preserved draft is missing review artifacts")
     if (
         read_json(paths["case.json"]) != case
         or read_json(paths["result.json"]) != result

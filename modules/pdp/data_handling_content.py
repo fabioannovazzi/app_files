@@ -100,20 +100,10 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
             },
             {
                 "id": "run-evidence",
-                "title": "Vera records the boundary of every substantive run.",
+                "title": "Vera reports on selected Studio Archive workflows.",
                 "paragraphs": [
                     (
-                        "After every substantive Vera run, a compact report records each "
-                        "model-visible phase in the workflow's natural units. It "
-                        "distinguishes the source extent available, what code processed "
-                        "locally, what was visible to the model, which part was never "
-                        "visible to the model, why the context was needed, and the "
-                        "available evidence basis. When the host can write files, Vera "
-                        "keeps a JSON report and a Markdown version in that run's output;"
-                        " otherwise it shows the report in chat and says that no durable "
-                        "receipt was created. The locally processed total and the never-"
-                        "model-visible part overlap; they are not alternative categories "
-                        "to add together."
+                        "Only 13 selected Vera pipelines produce this comparison report; their function pages identify them. Studio Archive records the start and finish of each run and generates the report at finalization from recorded execution evidence for each model-visible phase. The report compares the countable source population, local processing and model-visible data, and saves JSON and Markdown files in that run. Missing measurements make the report unavailable. If all data reaches the model or no measurable local remainder exists, there is no comparison report. A chat or another pipeline does not trigger one."
                     ),
                     (
                         "A possible narrower code path appears only when evidence from "
@@ -346,21 +336,10 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
             },
             {
                 "id": "run-evidence",
-                "title": "Vera registra il confine dei dati di ogni esecuzione sostanziale.",
+                "title": "Vera produce il report per processi selezionati in Studio Archive.",
                 "paragraphs": [
                     (
-                        "Dopo ogni esecuzione sostanziale di Vera, un report compatto "
-                        "registra ogni fase visibile al modello nelle unità proprie del "
-                        "processo. Distingue l'estensione disponibile della fonte, ciò "
-                        "che il codice ha elaborato localmente, ciò che è stato visibile "
-                        "al modello, quale parte non è mai stata visibile al modello, il "
-                        "motivo del contesto e la base probatoria disponibile. Quando "
-                        "l'ambiente può scrivere file, Vera conserva un report JSON e una"
-                        " versione Markdown nell'output dell'esecuzione; altrimenti "
-                        "mostra il report in chat e dichiara che non è stato creato un "
-                        "report durevole. Il totale elaborato localmente e la parte mai "
-                        "visibile al modello si sovrappongono: non sono categorie "
-                        "alternative da sommare."
+                        "Solo 13 processi selezionati di Vera producono questo report di confronto; le rispettive pagine lo indicano. Studio Archive registra inizio e fine di ogni esecuzione e genera il report alla finalizzazione dalle evidenze registrate per le fasi visibili al modello. Il confronto riguarda la popolazione di origine misurabile, i dati elaborati localmente e quelli visibili al modello; conserva un report JSON e una versione Markdown nella stessa esecuzione. Se le misure mancano, il report non è disponibile. Se tutti i dati arrivano al modello o non resta una quota locale misurabile, non viene generato il confronto. Una chat o un altro processo non lo attivano."
                     ),
                     (
                         "Un possibile percorso di codice più ristretto compare soltanto "
@@ -587,22 +566,10 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
             },
             {
                 "id": "run-evidence",
-                "title": "Vera consigne le périmètre de chaque exécution substantielle.",
+                "title": "Vera produit le rapport pour des processus sélectionnés dans Studio Archive.",
                 "paragraphs": [
                     (
-                        "Après chaque exécution substantielle de Vera, un rapport compact"
-                        " consigne chaque phase visible par le modèle dans les unités "
-                        "propres au workflow. Il distingue l'étendue de la source "
-                        "disponible, ce que le code a traité localement, ce qui a été "
-                        "visible par le modèle, la partie qui n'a jamais été visible par "
-                        "le modèle, la raison du contexte et la base de preuve "
-                        "disponible. Lorsque l'environnement peut écrire des fichiers, "
-                        "Vera conserve un rapport JSON et une version Markdown dans le "
-                        "livrable de l'exécution ; sinon, elle affiche le rapport dans la"
-                        " conversation et indique qu'aucun rapport durable n'a été créé. "
-                        "Le total traité localement et la partie jamais visible par le "
-                        "modèle se chevauchent : ce ne sont pas des catégories "
-                        "alternatives à additionner."
+                        "Seuls 13 processus sélectionnés de Vera produisent ce rapport comparatif ; leurs pages respectives le précisent. Studio Archive enregistre le début et la fin de chaque exécution et génère le rapport à la finalisation à partir des preuves enregistrées pour les phases visibles par le modèle. Il compare la population source mesurable, les données traitées localement et celles visibles par le modèle, puis conserve les fichiers JSON et Markdown dans cette exécution. Si les mesures manquent, le rapport est indisponible. Si toutes les données parviennent au modèle ou si aucune part locale mesurable ne subsiste, aucun rapport comparatif n’est généré. Une conversation ou un autre processus ne le déclenchent pas."
                     ),
                     (
                         "Une voie de code potentiellement plus étroite n'apparaît que si "
@@ -846,22 +813,10 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
             },
             {
                 "id": "run-evidence",
-                "title": "Vera dokumentiert die Datengrenze jeder substanziellen Ausführung.",
+                "title": "Vera erstellt den Bericht für ausgewählte Prozesse in Studio Archive.",
                 "paragraphs": [
                     (
-                        "Nach jeder substanziellen Vera-Ausführung dokumentiert ein "
-                        "kompakter Bericht jede für das Modell sichtbare Phase in den "
-                        "natürlichen Einheiten des Workflows. Er unterscheidet den "
-                        "verfügbaren Quellumfang, die lokale Codeverarbeitung, die für "
-                        "das Modell sichtbaren Daten, den Teil, der für das Modell nie "
-                        "sichtbar war, den Zweck des Kontexts und die verfügbare "
-                        "Nachweisgrundlage. Kann die Umgebung Dateien schreiben, "
-                        "speichert Vera einen JSON-Bericht und eine Markdown-Version im "
-                        "Ergebnis dieser Ausführung; andernfalls zeigt sie den Bericht im"
-                        " Chat und erklärt, dass kein dauerhafter Bericht erstellt wurde."
-                        " Der lokal verarbeitete Gesamtumfang und der für das Modell nie "
-                        "sichtbare Teil überlappen; sie sind keine alternativen "
-                        "Kategorien, die addiert werden dürfen."
+                        "Nur 13 ausgewählte Vera-Prozesse erstellen diesen Vergleichsbericht; die jeweiligen Funktionsseiten weisen darauf hin. Studio Archive erfasst Beginn und Ende jeder Ausführung und erstellt den Bericht bei der Finalisierung aus den aufgezeichneten Nachweisen der für das Modell sichtbaren Phasen. Der Bericht vergleicht die messbare Quellpopulation, lokal verarbeitete und für das Modell sichtbare Daten und speichert JSON und Markdown in derselben Ausführung. Fehlen Messwerte, ist der Bericht nicht verfügbar. Erhält das Modell sämtliche Daten oder verbleibt kein messbarer lokaler Anteil, wird kein Vergleichsbericht erstellt. Ein Chat oder ein anderer Prozess löst ihn nicht aus."
                     ),
                     (
                         "Ein möglicher engerer Codepfad erscheint nur, wenn die Nachweise"
@@ -1101,21 +1056,10 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
             },
             {
                 "id": "run-evidence",
-                "title": "Vera registra el límite de datos de cada ejecución sustancial.",
+                "title": "Vera genera el informe para procesos seleccionados en Studio Archive.",
                 "paragraphs": [
                     (
-                        "Después de cada ejecución sustancial de Vera, un informe "
-                        "compacto registra cada fase visible para el modelo en las "
-                        "unidades propias del flujo. Distingue la extensión disponible de"
-                        " la fuente, lo que el código procesó localmente, lo que fue "
-                        "visible para el modelo, la parte que nunca fue visible para el "
-                        "modelo, la razón del contexto y la base probatoria disponible. "
-                        "Cuando el entorno puede escribir archivos, Vera conserva un "
-                        "informe JSON y una versión Markdown en la salida de esa "
-                        "ejecución; de lo contrario, muestra el informe en el chat e "
-                        "indica que no se creó un informe duradero. El total procesado "
-                        "localmente y la parte nunca visible para el modelo se solapan; "
-                        "no son categorías alternativas que deban sumarse."
+                        "Solo 13 procesos seleccionados de Vera generan este informe comparativo; sus páginas lo indican. Studio Archive registra el inicio y el final de cada ejecución y genera el informe al finalizar, a partir de las evidencias registradas de las fases visibles para el modelo. Compara la población de origen medible, los datos procesados localmente y los visibles para el modelo, y guarda JSON y Markdown en esa ejecución. Si faltan mediciones, el informe no está disponible. Si todos los datos llegan al modelo o no queda una parte local medible, no se genera la comparación. Un chat u otro proceso no lo activan."
                     ),
                     (
                         "Una posible ruta de código más estrecha solo aparece cuando las "

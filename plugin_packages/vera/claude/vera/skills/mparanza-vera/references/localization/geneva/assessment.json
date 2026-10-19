@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "cc7e105c4ea255b143707620003d0a6e68e661cf0ad62c5dfd82090edcd6b49c",
+  "catalogue_fingerprint": "210bd55bba0d91ce62ff19c62f068a462e3c48ef56d8dd51cf323f8d71bcf376",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -2026,5 +2026,10 @@
     ],
     "previous_catalogue_fingerprint": "7c9932f5e713bcd14257194fbef39bfebecbe8b438fcb248c082029957b16040",
     "scope": "Source binding for host-led run-local text-PDF adapters, independent accounting checks, readable partial entries and incident recovery evidence. Existing Geneva dispositions and professional acceptance limits remain unchanged. Synthetic PDF/reconciliation tests do not establish acceptance on Swiss customer documents."
+  },
+  "selective_reporting_release_binding": {
+    "date": "2026-10-19",
+    "scope": "Replace the universal privacy-report trigger with fixed pipeline scope and Studio Archive lifecycle. Existing jurisdiction judgments are unchanged; no additional Geneva professional acceptance is claimed.",
+    "version": "0.1.425"
   }
 }

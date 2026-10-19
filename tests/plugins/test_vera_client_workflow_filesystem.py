@@ -28,9 +28,14 @@ from vera_assurance import (  # noqa: E402
     load_client_workflow_context_for_output,
 )
 
+
 # Direct skills use the public Archive lifecycle and generic packaged helpers;
 # their execution is covered by the tax lifecycle and packaged-helper regressions.
 DIRECT_CLIENT_SKILLS = {
+    "fatture-xml-check": ROOT / "plugins/vera/skills/fatture-xml-check/SKILL.md",
+    "report-enti-locali": ROOT
+    / "plugins/vera/skills/financial-report-builder/SKILL.md",
+    "agenzia-acquisition": ROOT / "plugins/vera/skills/agenzia-acquisition/SKILL.md",
     "posizioni-negoziali": ROOT / "plugins/vera/skills/posizioni-negoziali/SKILL.md",
     "contenzioso-tributario": ROOT
     / "plugins/vera/skills/contenzioso-tributario/SKILL.md",
@@ -1184,24 +1189,28 @@ def test_output_discovery_writer_loads_customer_run_from_its_output(
     assert loader_calls
 
 
-def test_finalization_rejects_missing_model_data_reports(tmp_path: Path) -> None:
+def test_finalization_records_missing_measurements_without_inventing_a_report(
+    tmp_path: Path, monkeypatch
+) -> None:
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/studio-archive/scripts"))
     ledger = _load_customer_ledger()
     context_path, _, output_dir, run_id = _running_context(tmp_path, "journal-sampling")
     context = json.loads(context_path.read_text(encoding="utf-8"))
     (output_dir / "result.txt").write_text("reviewable result", encoding="utf-8")
 
-    with pytest.raises(ledger.LedgerError, match="requires model_data_report"):
-        ledger.finalize_run(
-            context_path.parents[5],
-            context["engagement_id"],
-            run_id,
-            [
-                {
-                    "artifact_id": "prepared.result",
-                    "path": "result.txt",
-                    "purpose": "Provide the workflow result.",
-                    "audience": "review",
-                    "media_type": "text/plain",
-                }
-            ],
-        )
+    result = ledger.finalize_run(
+        context_path.parents[5],
+        context["engagement_id"],
+        run_id,
+        [
+            {
+                "artifact_id": "prepared.result",
+                "path": "result.txt",
+                "purpose": "Provide the workflow result.",
+                "audience": "review",
+                "media_type": "text/plain",
+            }
+        ],
+    )
+    assert result["reporting"]["status"] == "unavailable"
+    assert not (output_dir / "model_data_report.json").exists()

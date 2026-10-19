@@ -1583,28 +1583,16 @@ expressed confirmation through the public reviewer-only method. A pending
 execution intent blocks automatic repetition; exact completed retries verify
 the current successor before returning the retained result.
 
-Exports invoke the actual public formatter and canonical model-data builder.
-The verifier independently reproduces every declared file from a retained
-private SQLite baseline, freezes only the recorded export clocks in that
-isolated verifier, and compares bytes. It checks live access to every historical
-record and preserved document before releasing an export; revoked company access
-cannot be restored by a snapshot. The SQLite baseline is not downloadable.
-Combined dossiers remain in the merger case, with both individual company
-Archives unchanged. Real model exposure stays `not_measurable` until actual
-orchestration evidence exists; synthetic cases carry the public synthetic
-disclosure. No model call, signature, filing or Archive closure is performed.
-
-The current source panel also presents each independently verified saved
-`model_data_report.md` immediately, rather than requiring JSON expansion or a
-download. The maintained `ui/model-data-report.js` renderer creates text-only
-headings, paragraphs and lists from the canonical Markdown; it does not run HTML,
-activate links, translate retained report text, sample phases or total unlike
-units. Full report JSON remains separately accessible. Reopening keeps the saved
-report bytes and timestamps unchanged. This is readable-report delivery, not
-proof that a prepared request reached a provider or that all model phases have
-been recorded. Actual installed-host delivery remains pending. The narrow report
-body fits 390 px; the surrounding long export identifiers still need the prepared
-wrapping repair under AGENTS.md.
+Exports invoke the public dossier and workpaper formatter. The verifier
+independently reproduces every declared file from a retained private SQLite
+baseline, freezes the recorded export clock in that isolated verifier, and
+compares bytes. It checks current access to historical records and documents;
+a snapshot cannot restore revoked company access. The baseline is not downloadable.
+Combined dossiers remain in the merger case, with both company Archives unchanged.
+Fusione is outside Vera's comparison-report scope; exports contain no generated
+privacy comparison report. The panel displays the verified dossier and workpapers.
+This does not establish model exposure or installed-host acceptance. No model call,
+signature, filing or Archive closure is performed.
 
 Source qualification is partial. The shared renderer still fails syntax, and a
 shared HMAC parser test found that non-hex trailing signature text is ignored.

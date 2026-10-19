@@ -199,7 +199,8 @@
           "source_root": "plugins/vera/scripts",
           "module_roots": [
             "model_data_report.py",
-            "privacy_contract.py"
+            "privacy_contract.py",
+            "selective_reporting.py"
           ]
         },
         {
@@ -264,13 +265,15 @@
           "source_root": "plugins/vera/scripts",
           "module_roots": [
             "model_data_report.py",
-            "privacy_contract.py"
+            "privacy_contract.py",
+            "selective_reporting.py"
           ]
         },
         {
           "source_root": "plugins/studio-archive/scripts",
           "module_roots": [
-            "client_ledger.py"
+            "client_ledger.py",
+            "run_reporting.py"
           ]
         }
       ]

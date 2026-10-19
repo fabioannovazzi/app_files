@@ -60,10 +60,13 @@ def build_registry(root: Path) -> dict[str, Any]:
         "schema_version": 1,
         "membership_source": "components.json",
         "routing_policy": "Use the semantic workflow catalog and selected skill; entrypoint presence is not workflow suitability or host qualification.",
-        "managed_run_required_artifacts": [
-            "model_data_report.json",
-            "model_data_report.md",
-        ],
+        "managed_run_required_artifacts": [],
+        "selective_model_data_reporting": {
+            **json.loads((root / "plugins/vera/usage/pipelines.json").read_text())[
+                "model_data_reporting"
+            ],
+            "generated_artifacts": ["model_data_report.json", "model_data_report.md"],
+        },
         "host_qualification": {
             "native_semantic_worker": {
                 "components": ["journal-bank-reconciliation", "passive-invoice-audit"],

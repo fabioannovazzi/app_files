@@ -15,6 +15,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from ade_acquisition.archive_runs import finish_runs, prepare_runs
 from ade_acquisition.contracts import (
     OPERATIONS,
     AcquisitionError,
@@ -79,7 +80,13 @@ def _summary(run: Path) -> dict[str, Any]:
     return selected
 
 
-def _start(store: Store, plan: Plan, request_id: str | None = None) -> dict[str, Any]:
+def _start(
+    store: Store,
+    plan: Plan,
+    request_id: str | None = None,
+    *,
+    archive_bindings: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     """Reserve a durable run before launching; retries cannot launch a second worker."""
     control = Store(store.root / "launch-control")
     with control.lock():
@@ -104,6 +111,8 @@ def _start(store: Store, plan: Plan, request_id: str | None = None) -> dict[str,
         with store.lock():
             pass
         run = store.new_run(plan.payload())
+        if archive_bindings is not None:
+            atomic_json(run / "archive-runs.json", archive_bindings)
         atomic_json(
             run / "status.json", {"state": "starting", "updated_at": timestamp()}
         )
@@ -114,6 +123,17 @@ def _start(store: Store, plan: Plan, request_id: str | None = None) -> dict[str,
         if receipt:
             atomic_json(receipt, reservation)
         atomic_json(latest, reservation)
+        try:
+            prepare_runs(run, plan)
+        except (AcquisitionError, OSError, ValueError) as exc:
+            state = {
+                "state": "failed",
+                "error": "archive-run-preparation-failed",
+                "updated_at": timestamp(),
+            }
+            atomic_json(run / "status.json", state)
+            _finish_archive(run, state)
+            raise AcquisitionError("archive-run-preparation-failed") from exc
         command = [
             sys.executable,
             str(Path(__file__).resolve()),
@@ -137,14 +157,13 @@ def _start(store: Store, plan: Plan, request_id: str | None = None) -> dict[str,
         try:
             process = subprocess.Popen(command, **kwargs)
         except OSError as exc:
-            atomic_json(
-                run / "status.json",
-                {
-                    "state": "failed",
-                    "error": "worker-launch-failed",
-                    "updated_at": timestamp(),
-                },
-            )
+            state = {
+                "state": "failed",
+                "error": "worker-launch-failed",
+                "updated_at": timestamp(),
+            }
+            atomic_json(run / "status.json", state)
+            _finish_archive(run, state)
             raise AcquisitionError("worker-launch-failed") from exc
         # PID is separate: the worker may already have written a newer status.
         atomic_json(run / "process.json", {"pid": process.pid})
@@ -154,6 +173,15 @@ def _start(store: Store, plan: Plan, request_id: str | None = None) -> dict[str,
             "run_directory": str(run),
             "pid": process.pid,
         }
+
+
+def _finish_archive(run: Path, state: dict[str, Any]) -> None:
+    """Keep the worker outcome even if Archive evidence cannot be retained."""
+    try:
+        finish_runs(run, state)
+    except (AcquisitionError, OSError, ValueError):
+        state["archive_status"] = "evidence_failed"
+        atomic_json(run / "status.json", state)
 
 
 def _worker(store: Store, run: Path) -> dict[str, Any]:
@@ -200,6 +228,7 @@ def _worker(store: Store, run: Path) -> dict[str, Any]:
             updated_at=timestamp(),
         )
         atomic_json(run / "status.json", state)
+    _finish_archive(run, state)
     return _summary(run)
 
 
@@ -384,7 +413,14 @@ def main(argv: list[str] | None = None) -> int:
             elif args.command == "resume":
                 with store.lock():
                     pass
-                result = _start(store, plan)
+                binding_path = run / "archive-runs.json"
+                result = _start(
+                    store,
+                    plan,
+                    archive_bindings=(
+                        read_json(binding_path) if binding_path.is_file() else None
+                    ),
+                )
             elif args.command == "f24":
                 result = {
                     "state": "draft",

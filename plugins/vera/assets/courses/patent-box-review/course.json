@@ -345,7 +345,7 @@
     {
       "path": "modules/patent-box-review/skills/patent-box-review/SKILL.md",
       "repository_path": "plugins/patent-box-review/skills/patent-box-review/SKILL.md",
-      "sha256": "a7a526c5a9a32e8d20bf3695acf16f3715115ceb18e75fe3fc75321ddcce0465"
+      "sha256": "fc2f20a182c092c0cd14a824989892a7f77a2ca45714cf37a40da8bd82620e1f"
     },
     {
       "path": "modules/patent-box-review/templates/declaration_bridge.csv",
@@ -385,7 +385,7 @@
     {
       "path": "modules/patent-box-review/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "592b0cac8a87d80a3cc9b4b0e7958f79be402814ac7b44e0510de7302d745b50"
+      "sha256": "220e14178ddcf811782956f50177732a1664a309eef87847ddb306db7c83381b"
     },
     {
       "path": "modules/patent-box-review/vendor/modules/vera_assurance/decisions.py",
@@ -425,7 +425,7 @@
     {
       "path": "skills/patent-box-review/SKILL.md",
       "repository_path": "plugins/vera/skills/patent-box-review/SKILL.md",
-      "sha256": "31cff91aec59f853bdd0fbbda1af5091f8d04246e60786429450926423bf1620"
+      "sha256": "b531b36936ba1dd9fe8f4d357432bda3fc24e85a74b92e4f56fb49dc6543c4df"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -665,7 +665,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "592b0cac8a87d80a3cc9b4b0e7958f79be402814ac7b44e0510de7302d745b50"
+      "sha256": "220e14178ddcf811782956f50177732a1664a309eef87847ddb306db7c83381b"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",

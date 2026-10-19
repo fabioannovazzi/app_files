@@ -62,5 +62,25 @@
   "instrumented_from_version": "0.1.404",
   "entrypoints": {
     "report-enti-locali": "financial-report-builder"
+  },
+  "model_data_reporting": {
+    "boundary": "studio-archive-run",
+    "pipelines": [
+      "journal-bank-reconciliation",
+      "open-item-reconciliation",
+      "journal-sampling",
+      "vouching",
+      "fatture-xml-check",
+      "purchase-invoice-review",
+      "centrale-rischi-review",
+      "financial-report-builder",
+      "report-enti-locali",
+      "management-control-pack",
+      "variance-analysis",
+      "agenzia-acquisition",
+      "archive-organization"
+    ],
+    "generation": "archive-finalization",
+    "requires": "measured source population and evidenced data remaining local"
   }
 }

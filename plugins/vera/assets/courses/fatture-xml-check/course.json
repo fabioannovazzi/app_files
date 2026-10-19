@@ -144,7 +144,7 @@
     {
       "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "592b0cac8a87d80a3cc9b4b0e7958f79be402814ac7b44e0510de7302d745b50"
+      "sha256": "220e14178ddcf811782956f50177732a1664a309eef87847ddb306db7c83381b"
     },
     {
       "path": "modules/client-file-preparation/vendor/modules/vera_assurance/decisions.py",
@@ -184,7 +184,7 @@
     {
       "path": "skills/fatture-xml-check/SKILL.md",
       "repository_path": "plugins/vera/skills/fatture-xml-check/SKILL.md",
-      "sha256": "6c2c2f28cec7acd004bb349c7228e8968775be00053621e862cf591e819af4b9"
+      "sha256": "c19c82cdb0d930070b07ff577ffe33da06091a545eaa3f79fd37389e6fbbd151"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -424,7 +424,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "592b0cac8a87d80a3cc9b4b0e7958f79be402814ac7b44e0510de7302d745b50"
+      "sha256": "220e14178ddcf811782956f50177732a1664a309eef87847ddb306db7c83381b"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",

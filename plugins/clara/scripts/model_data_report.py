@@ -1132,6 +1132,26 @@ def _parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _selective_report_policy():
+    """Apply Vera's fixed policy without changing Clara or Lucia reporting."""
+    root = _installed_product_root()
+    if (
+        root is None
+        or json.loads((root / "privacy/registry.json").read_text())["product"] != "vera"
+    ):
+        return None
+    for candidate in (root / "vendor/modules", root.parent / "_shared/vendor/modules"):
+        if (candidate / "vera_assurance").is_dir():
+            if str(candidate) not in sys.path:
+                sys.path.insert(0, str(candidate))
+            break
+    if str(root / "scripts") not in sys.path:
+        sys.path.insert(0, str(root / "scripts"))
+    import selective_reporting
+
+    return selective_reporting
+
+
 def main(argv: list[str] | None = None, *, server_attestation: bool = True) -> int:
     """Build, validate, or display a Vera model-data report."""
 
@@ -1179,10 +1199,54 @@ def main(argv: list[str] | None = None, *, server_attestation: bool = True) -> i
             )
         output_dir = requested_output_dir.resolve()
         request = json.loads(input_path.read_text(encoding="utf-8"))
+        policy = _selective_report_policy()
+        if policy is not None:
+            if not isinstance(request, dict):
+                raise ModelDataReportError("Report input must be an object")
+            if policy.report_pipeline(request.get("workflow_id", "")) is None:
+                sys.stdout.write(
+                    json.dumps(
+                        {
+                            "status": "not_applicable",
+                            "reason": "pipeline_not_selected",
+                            "server_receipt": {"status": "not_requested"},
+                        }
+                    )
+                    + "\n"
+                )
+                return 0
+            try:
+                policy.bind_report_run(
+                    output_dir,
+                    request.get("workflow_id", ""),
+                    request.get("run_id", ""),
+                )
+            except ValueError as exc:
+                raise ModelDataReportError(str(exc)) from exc
+            if evidence_root != output_dir:
+                raise ModelDataReportError(
+                    "Report evidence must belong to the exact Archive output"
+                )
+            if not (output_dir / "model_data_report.json").is_file():
+                raise ModelDataReportError(
+                    "Studio Archive finalization creates this report automatically; this command can only retain or stamp the existing report"
+                )
         report, markdown = build_model_data_report(
             request,
             evidence_root=evidence_root,
         )
+        if policy is not None and not policy.has_comparison(request):
+            sys.stdout.write(
+                json.dumps(
+                    {
+                        "status": "not_applicable",
+                        "reason": "no_measured_local_remainder",
+                        "server_receipt": {"status": "not_requested"},
+                    }
+                )
+                + "\n"
+            )
+            return 0
         json_path = output_dir / "model_data_report.json"
         markdown_path = output_dir / "model_data_report.md"
         if report["schema_version"] == 2:

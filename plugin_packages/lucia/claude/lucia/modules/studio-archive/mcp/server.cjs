@@ -54,6 +54,9 @@ const TOOL_NAMES = {
   matchEmail: "match_studio_archive_email",
 };
 const VERA_CLIENT_WORKFLOW_IDS = Object.freeze([
+  "agenzia-acquisition",
+  "fatture-xml-check",
+  "report-enti-locali",
   "posizioni-negoziali",
   "contenzioso-tributario",
   "lipe",
@@ -512,7 +515,7 @@ function toolDefinitions() {
       name: TOOL_NAMES.finalizeWorkflow,
       title: "Finalize Vera workflow artifacts",
       description:
-        "Declare every physical output with its purpose, audience, and media type, hash the closed output tree, and mark the run ready for review.",
+        "Finalize one exact Archive run. For selected Vera pipelines, automatically build the privacy comparison from recorded run evidence, or return its unavailable/not-applicable status. Declare professional outputs with purpose, audience and media type; generated report artifacts are included automatically before the closed output tree is hashed and marked ready for review.",
       inputSchema: objectSchema(
         {
           ...runIdentityProperties(),

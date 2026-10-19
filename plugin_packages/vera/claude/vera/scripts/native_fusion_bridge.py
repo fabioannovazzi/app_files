@@ -69,13 +69,12 @@ def main() -> None:
         # Own declared grant only. The public store enforces every actual read/write.
         with store._connect() as db:
             grant = store._grant(db)
-        helper = fusione_report._report_builder()
         result = {
             "report": report,
             "grant": grant,
             "shared_implementation": {
-                "model_data_report.py": hashlib.sha256(
-                    Path(helper.__globals__["__file__"]).read_bytes()
+                "fusione_report.py": hashlib.sha256(
+                    Path(fusione_report.__file__).read_bytes()
                 ).hexdigest(),
                 "client_ledger.py": hashlib.sha256(
                     Path(ledger().__file__).read_bytes()
@@ -86,7 +85,6 @@ def main() -> None:
         receipt = request["receipt"]
         directory = Path(receipt["directory"])
         case_report = json.loads((directory / "case-report.json").read_bytes())
-        model_report = json.loads((directory / "model_data_report.json").read_bytes())
         # A historical snapshot never restores a revoked company permission.
         for record in case_report["history"]:
             if store.read(record["id"], record["version"]) != record:
@@ -113,7 +111,6 @@ def main() -> None:
             # Freeze only recorded export clocks in this isolated verifier. No live
             # producer, stored history or professional timestamp is changed.
             fusione_case.now = lambda: case_report["generated_at"]
-            fusione_report.now = lambda: model_report["created_at"]
             target = temporary / "reproduced"
             fusione_report.export_report(replay, target, runtime_profile="openai-codex")
             if set(files(target)) != set(receipt["artifacts"]):
@@ -128,12 +125,6 @@ def main() -> None:
         result = {
             "verified": True,
             "case_report": case_report,
-            "model_report": model_report,
-            # Exact saved artifact, already compared with the canonical public
-            # formatter above. Reading adds no phase, receipt or provider claim.
-            "model_report_markdown": (directory / "model_data_report.md").read_text(
-                encoding="utf-8"
-            ),
         }
     elif action == "document":
         record = store.read(request["object_id"], request["version"])

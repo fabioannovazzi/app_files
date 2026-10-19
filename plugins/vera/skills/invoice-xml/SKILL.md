@@ -10,8 +10,11 @@ Before substantive work, follow `../vera/references/workflow-usage.md`: start on
 retained task UUID for the primary user process (including AI-led work), reuse
 it across helpers/resumption, and record only observed outcomes. Discover the
 native `vera_incident_host_link` tool, including deferred tools, and verify the
-same run's Computer ID on the server. Build the model-data report from the actual
-task even for chat-only drafts, then link its actual signed receipt. After delivery ask once for the user's 1–5 stars and optional
+same run's Computer ID on the server. Privacy reporting applies only to the fixed pipeline list in
+`../vera/references/selective-reporting.md`, using the exact Studio Archive run.
+Archive finalization generates eligible reports from saved execution evidence;
+never create a report for other pipelines or a chat-only task. Link a signed
+receipt only when one actually exists. After delivery ask once for the user's 1–5 stars and optional
 comment; never infer a score. Studio Archive is infrastructure, not another rated
 process. Synthetic/agent tests are marked and excluded. Flush pending delivery
 at task startup and after outcomes. The shared contract applies even on direct
@@ -110,6 +113,6 @@ recovery is explicit and never restores confirmation. Changed populations or
 uncertain interrupted writes require verification rather than repeated export.
 
 `File del lavoro` opens only the exact selected version's files. Declare all
-run outputs and the actual model-data report through Studio Archive before its
+run outputs through Studio Archive before its
 separate finalization/completion. If native tools are absent, retain the full
 specialist CLI workflow and its authoritative persistence.

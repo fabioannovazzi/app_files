@@ -130,7 +130,7 @@
     {
       "path": "scripts/model_data_report.py",
       "repository_path": "plugins/clara/scripts/model_data_report.py",
-      "sha256": "368b0903fa071c0563a0d0ac04f7a1ce9d33445236daba47f4357b7e6216bf59"
+      "sha256": "6217728e9ca9feff2b54996a8eff94b8ccc708bbaadf2b03c8eae2c5cfe2b77e"
     },
     {
       "path": "scripts/notarized_run_receipt.py",
@@ -151,6 +151,11 @@
       "path": "scripts/repair_audio_pointer_links.py",
       "repository_path": "plugins/clara/scripts/repair_audio_pointer_links.py",
       "sha256": "bea98821df1d30cd78b4f14587846890f22884e2aee500f7eb0c882efa0a3a74"
+    },
+    {
+      "path": "scripts/selective_reporting.py",
+      "repository_path": "plugins/clara/scripts/selective_reporting.py",
+      "sha256": "a8f7168aead00a0c400f197665ec1613a57b2e213ffb9176f65628bac135d409"
     },
     {
       "path": "scripts/upload_hosted_audio.py",

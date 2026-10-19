@@ -91,7 +91,9 @@ def summarize(
             reasons.append("user_comment")
         if run["state"] == "failed":
             reasons.append("observed_failure")
-        if run["state"] == "completed" and not run["receipts"]:
+        # Vera's server cannot observe local Archive applicability or measurement
+        # availability. Absence alone is not a broken-report diagnosis.
+        if product != "vera" and run["state"] == "completed" and not run["receipts"]:
             reasons.append("receipt_not_linked")
         if reasons:
             candidates.append(

@@ -156,6 +156,6 @@ They show complete request shapes with actual valid references for that demo cas
 They are examples, not reusable identities for another client or an instruction
 to invent professional confirmations. `show --id <id>` returns record and status.
 `export --output <fresh-directory>` produces scoped JSON history, Markdown/HTML
-P1 workpapers and the canonical readable model-data report.
+P1 workpapers. This pipeline does not generate a privacy comparison report.
 
 The accounting result includes `opening_journal`: target asset/liability assumption, reciprocal eliminations, consideration and reviewed difference allocations. These draft entries transform the acquirer ledger into `opening_balances`; `journal_residual` and `opening_residual` must both be zero. No entry is posted to an accounting system.

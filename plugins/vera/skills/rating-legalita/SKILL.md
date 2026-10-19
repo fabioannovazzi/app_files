@@ -10,8 +10,11 @@ Before substantive work, follow `../vera/references/workflow-usage.md`: start on
 retained task UUID for the primary user process (including AI-led work), reuse
 it across helpers/resumption, and record only observed outcomes. Discover the
 native `vera_incident_host_link` tool, including deferred tools, and verify the
-same run's Computer ID on the server. Build the model-data report from the actual
-task even for chat-only drafts, then link its actual signed receipt. After delivery ask once for the user's 1–5 stars and optional
+same run's Computer ID on the server. Privacy reporting applies only to the fixed pipeline list in
+`../vera/references/selective-reporting.md`, using the exact Studio Archive run.
+Archive finalization generates eligible reports from saved execution evidence;
+never create a report for other pipelines or a chat-only task. Link a signed
+receipt only when one actually exists. After delivery ask once for the user's 1–5 stars and optional
 comment; never infer a score. Studio Archive is infrastructure, not another rated
 process. Synthetic/agent tests are marked and excluded. Flush pending delivery
 at task startup and after outcomes. The shared contract applies even on direct
@@ -65,8 +68,8 @@ prerequisites, evidence links, quotations, immutable observations and status
 before projecting the dossier privately to the app. No legal judgment, source
 qualification or professional decision is added by opening the panel.
 
-Initial preparation, model-led case authoring, professional decisions and the
-readable model-data report continue in the unchanged specialist workflow. A
+Initial preparation, model-led case authoring and professional decisions
+continue in the specialist workflow, without a privacy comparison report. A
 native saved selection is not a review, an AGCM award or permission to submit.
 First-save and signed-scope write qualification are pending in current source;
 do not claim native render is accepted or bypass those checks. Use the public

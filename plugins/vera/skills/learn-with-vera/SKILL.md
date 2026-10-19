@@ -118,8 +118,8 @@ quiz after the explanation. Never simulate the user's answers or participation.
 
 When the worker produces the normal deliverables, open those actual files in its
 window. Explain where to start, what the main sections mean, how a finding links
-to the inputs and what the user can do next. Apply the existing model-data report
-contract to the actual reading and explanation of results as well as execution.
+to the inputs and what the user can do next. Apply selective reporting only for
+eligible Archive pipelines, including actual result-reading evidence before closure.
 Do not infer "no case data reached the model" merely because the parser ran
 locally: invoice fields or other results already read in chat are model context.
 This does not authorize any additional source access, copying or transmission.
@@ -213,7 +213,7 @@ through native task tools; no separate API credentials or hosted worker.
 2. Start the selected onboarding lesson or repeated session. Prepare a genuine
    portable tutorial case beneath its local marker using `local_onboarding_case.py`.
    Follow the specialist's complete execution contract, including managed runtime,
-   input reviews, validation, model-data report and ledger finalization. Never
+   input reviews, validation, applicable selective reporting and ledger finalization. Never
    configure the real studio archive to run a demonstration.
 3. Execute in the working chat. Keep voice turns short: explain the next decision,
    then listen. Check progress when useful. Do not narrate invented intermediate

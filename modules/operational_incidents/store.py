@@ -43,7 +43,7 @@ from modules.workflow_usage import computers as workflow_computers
 from modules.workflow_usage import repository as workflow_repository
 from modules.workflow_usage import testing as workflow_testing
 from modules.workflow_usage.contracts import WorkflowEvent
-from modules.workflow_usage.products import Product, product_name
+from modules.workflow_usage.products import Product, product_name, report_eligible
 from modules.workflow_usage.reporting import evidence_hash
 
 __all__ = ["IncidentStore", "IncidentConflict", "IncidentNotFound", "ConnectionActor"]
@@ -322,19 +322,29 @@ class IncidentStore:
                 "from the initial list may be deferred. If unavailable, preserve "
                 "the unlinked state; never infer a Computer ID or request broader access."
             )
-        if not run["receipts"] and run["state"] != "unknown":
+        eligible = report_eligible(product, run["pipeline"])
+        if eligible and not run["receipts"] and run["state"] != "unknown":
             next_steps.append(
-                "Build the model-data report from this task's observed phases, "
-                "including chat-only inputs, obtain its actual signed receipt and "
-                "link it to this same run. Preserve pending delivery on failure; "
-                f"if local HTTPS is unavailable, use {product}_workflow_stamp with "
-                "the exact retained receipt request through the saved connector. "
-                "do not rerun completed work or invent evidence."
+                (
+                    "This pipeline is eligible for an Archive comparison report. Only if Studio Archive generated one from measured execution evidence, obtain its actual signed receipt and link it to this same usage run. A chat-only task, unavailable measurements or no local remainder does not require a report or receipt. Do not rerun work to manufacture one."
+                    if product == "vera"
+                    else "Build the model-data report from this task's observed phases, "
+                    "including chat-only inputs, obtain its actual signed receipt and "
+                    "link it to this same run. Preserve pending delivery on failure; "
+                    f"if local HTTPS is unavailable, use {product}_workflow_stamp with "
+                    "the exact retained receipt request through the saved connector. "
+                    "do not rerun completed work or invent evidence."
+                )
             )
         return {
             "computer_id": link["device_id"] if link else None,
             "computer_link": "verified" if link and link["device_id"] else "unlinked",
-            "model_data_receipt": "linked" if run["receipts"] else "missing",
+            "model_data_receipt": (
+                "linked"
+                if run["receipts"]
+                else "missing" if eligible else "not_applicable"
+            ),
+            "model_data_report_eligible": eligible,
             "next_steps": next_steps,
         }
 

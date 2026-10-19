@@ -114,8 +114,9 @@ chat with the available research capabilities. Show both positions, sources,
 comparison and limits; state that no durable run or hash verification occurred.
 If current-source research is unavailable, keep the result evidence-limited.
 
-Include the original review, adversarial research/drafting, opposing review and
-comparison as distinct model-visible phases in the invoking product's model-data report. They
+Vera excludes legal opinions from comparison reporting. For other invoking products,
+record the original review, adversarial research/drafting, opposing review and
+comparison under their reporting contract. These phases
 can expose complete opinions, material case facts and selected source text to
 the selected model runtime. The stage does not require a new provider account.
 

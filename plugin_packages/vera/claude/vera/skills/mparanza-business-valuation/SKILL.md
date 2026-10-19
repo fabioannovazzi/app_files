@@ -130,8 +130,11 @@ Before substantive work, follow `../mparanza-vera/references/workflow-usage.md`:
 retained task UUID for the primary user process (including AI-led work), reuse
 it across helpers/resumption, and record only observed outcomes. Discover the
 native `vera_incident_host_link` tool, including deferred tools, and verify the
-same run's Computer ID on the server. Build the model-data report from the actual
-task even for chat-only drafts, then link its actual signed receipt. After delivery ask once for the user's 1–5 stars and optional
+same run's Computer ID on the server. Privacy reporting applies only to the fixed pipeline list in
+`../mparanza-vera/references/selective-reporting.md`, using the exact Studio Archive run.
+Archive finalization generates eligible reports from saved execution evidence;
+never create a report for other pipelines or a chat-only task. Link a signed
+receipt only when one actually exists. After delivery ask once for the user's 1–5 stars and optional
 comment; never infer a score. Studio Archive is infrastructure, not another rated
 process. Synthetic/agent tests are marked and excluded. Flush pending delivery
 at task startup and after outcomes. The shared contract applies even on direct
@@ -213,4 +216,4 @@ When this panel is unavailable, use the unchanged packaged file workflow and
 public helpers. Source, packaged adapter checks and a browser protocol preview
 do not establish installed Claude or connected Cowork host acceptance.
 
-After substantive use, follow Vera's run-level model-data report in `../mparanza-vera/SKILL.md`.
+Business Valuation is outside Vera's selective comparison-report scope.
