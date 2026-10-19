@@ -158,6 +158,45 @@ def test_bank_printed_movement_totals_can_independently_check_source(
     assert [r["amount"] for r in rows] == ["-30.00", "10.00"]
 
 
+def test_bank_descending_statement_checks_balances_in_chronological_order(
+    bank_tools, tmp_path
+):
+    inventory, reader, _ = bank_tools
+    source, _, layout = bank_case(tmp_path, bank_tools)
+    pdf = canvas.Canvas(str(source), pagesize=(600, 800))
+    pdf.setFont("Courier", 7)
+    pdf.drawString(190, 760, "CLOSING BALANCE")
+    pdf.drawRightString(590, 760, "980,00")
+    for y, date, right, amount, balance in (
+        (700, "03/01/2024", 525, "10,00", "980,00"),
+        (680, "01/01/2024", 475, "30,00", "970,00"),
+    ):
+        pdf.drawString(22, y, date)
+        pdf.drawString(112, y, date)
+        pdf.drawString(192, y, "Movement")
+        pdf.drawRightString(right, y, amount)
+        pdf.drawRightString(590, y, balance)
+    pdf.drawString(190, 640, "OPENING BALANCE")
+    pdf.drawRightString(590, 640, "1.000,00")
+    pdf.save()
+    layout["source_sha256"] = hashlib.sha256(source.read_bytes()).hexdigest()
+    layout["transaction_order"] = "descending"
+    words = inventory(source, layout, source_role="bank")["pages"][0]["words"]
+    for kind, label in (("opening_balance", "OPENING"), ("closing_balance", "CLOSING")):
+        heading = next(w for w in words if w["text"] == label)
+        line = [w for w in words if w["row"] == heading["row"]]
+        layout["statement_controls"][kind] = {
+            "label": [w["id"] for w in line if float(w["x0"]) < 350],
+            "amount": line[-1]["id"],
+            "column": "balance",
+        }
+
+    rows, diagnostics = reader(source, layout, currency="EUR")
+
+    assert diagnostics["accepted"] is True
+    assert [r["amount"] for r in rows] == ["10.00", "-30.00"]
+
+
 def test_ordinary_bank_inspection_preserves_partial_entries_and_issues(
     bank_tools, tmp_path
 ):
@@ -432,6 +471,14 @@ def test_bank_recovery_reaches_reconciliation_only_after_mapping_review(
     assert result.unmatched_bank.height == 0
     assert result.unmatched_journal.height == 0
 
+    changed = json.loads(sealed.read_text())
+    changed["bank"]["files"][bank.name]["pdf_bank_layout"]["body"][0] = 21
+    sealed.write_text(json.dumps(changed))
+    stale = core.inspect_inputs(bank, journal, output / "stale", sealed)
+    assert stale.bank["row_count"] == 0
+    assert stale.bank["files"][0]["qualification_status"] == "needs_review"
+    assert stale.bank["files"][0]["bank_diagnostics"]["accepted"] is True
+
 
 @pytest.mark.parametrize("host", ["source", "codex", "cowork"])
 def test_bank_recovery_managed_command_selects_bank_then_seals_and_reconciles(
@@ -532,6 +579,25 @@ def test_bank_recovery_managed_command_selects_bank_then_seals_and_reconciles(
     base = (sources["source"], sources["journal"], "--output-dir", output)
     initial = run("inspect_inputs.py", *base)
     assert initial.returncode == 0, initial.stderr
+    inventory = run(
+        "inspect_inputs.py",
+        sources["source"].parent,
+        sources["journal"],
+        "--output-dir",
+        output,
+        "--recipe",
+        recipe,
+        "--pdf-side",
+        "bank",
+        "--pdf-source",
+        sources["source"],
+        "--pdf-currency",
+        "EUR",
+        "--pdf-recovery",
+        "inventory",
+    )
+    assert inventory.returncode == 0, inventory.stderr
+    assert '"status": "evidence_only"' in inventory.stderr
     trial = run(
         "inspect_inputs.py",
         *base,
