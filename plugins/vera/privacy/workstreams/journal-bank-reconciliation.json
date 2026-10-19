@@ -25,7 +25,7 @@
       {
         "id": "bounded-column-mapping-and-run-review",
         "purpose": "Map source columns before deterministic reconciliation and review run-level controls and limitations",
-        "content": "User instructions; source file metadata and raw column names; at most the first 20 normalized preview rows per qualified source; mapping assumptions and decisions; aggregate match and exception counts; assurance gates, limitations, review notes and artifact paths; when a worker selection is reviewed, its model/effort, reviewer reference, review status and benchmark digest may be read in the parent runtime. The selection review is retained in local evidence and is not added to the subordinate worker prompt. Resolution-funnel and human-review aggregate values are partitioned by explicit currency and measurement unit. Mixed or unknown denominations withhold a scalar total and expose the qualification; no conversion is inferred.",
+        "content": "User instructions; source file metadata and raw column names; at most the first 20 normalized preview rows per qualified source; mapping assumptions and decisions; aggregate match and exception counts; assurance gates, limitations, review notes and artifact paths; when a worker selection is reviewed, its model/effort, reviewer reference, review status and benchmark digest may be read in the parent runtime. The selection review is retained in local evidence and is not added to the subordinate worker prompt. Resolution-funnel and human-review aggregate values are partitioned by explicit currency and measurement unit. Mixed or unknown denominations withhold a scalar total and expose the qualification; no conversion is inferred. Technical mapping/policy receipts also record actor kind, delegation basis and a trusted mandate reference, with professional approval explicitly pending; this local attribution is included in the content digest and may appear in run-review context. It does not authenticate the reviewer or authorize external transmission.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -169,10 +169,10 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-18",
+    "reviewed_at": "2026-10-19",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "da761e8d9f1a293be28d62cdb6487d781b661fa0d1ff9005f12defb6aded74ca"
+    "source_fingerprint": "e5ec0a18db5804a8933f1fe611b532e57d4a5a596fa68f47ac7849079f748b0f"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"

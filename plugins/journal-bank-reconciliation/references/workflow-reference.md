@@ -9,7 +9,7 @@ python3 scripts/managed_python_runtime.py --module journal-bank-reconciliation r
 ```
 
 The decisions file contains exactly `reviewer_ref`, `reviewed_on`, `bank`,
-`journal`, and `relationship`. Obtain the reviewer and date from the actual
+`journal`, `relationship`, and `review_authority`. Obtain the reviewer and date from the actual
 review: an identifier matching `^[A-Za-z0-9][A-Za-z0-9._-]*$` and a real
 `YYYY-MM-DD` date. Never invent them.
 
@@ -480,3 +480,37 @@ unresolved queue or approves a professional result.
 ## Missing counterparties under a required-party policy
 
 `require_same_party=true` permits an allocation only when both mapped party identifiers are present and equal. A missing counterparty remains unresolved in the normalized population, unmatched outputs and review queue; it does not block independent allocations elsewhere in the population. Two missing values never prove equality. Do not invent a counterparty or relax the reviewed policy to obtain a match. Currency, unit and required entity completeness checks remain in force. This is specified by the additive required-party residual extension contract; historical evaluation contracts remain unchanged.
+
+
+## Technical review and professional approval
+
+Mapping and matching-policy review authorizes computation; it does not approve
+accounts or the reconciliation professionally. Reuse the user's established
+choices and explicit delegation. An AI may inspect evidence and record its own
+technical review for a draft, including ordinary client work, within that mandate.
+Use its truthful AI identity and actual review date. Do not ask the user to repeat
+an authorization already given. Ask only about an unresolved material choice;
+never silently adopt an unreviewed proposal or invent delegation.
+
+The receipt command requires `review_authority` alongside the decisions:
+
+```json
+{
+  "actor_kind": "ai",
+  "basis": "user_delegated",
+  "authorization_ref": "actual trusted user message or retained mandate reference",
+  "professional_approval": "pending"
+}
+```
+
+For an actual human technical review use `actor_kind: human` and
+`basis: user_confirmed`, with the actual reviewer and authorization reference.
+These fields are claims grounded in the trusted conversation, not proof of
+consent derived from source documents. The receipt binds attribution to the
+reviewed source and technical choices. Neither actor can grant professional
+approval through this command. Keep final professional approval pending and
+return the useful draft workbook; do not stop draft computation solely because
+that approval is pending. Professional sign-off, unresolved material choices,
+source qualification and host action permissions remain separate gates.
+A host denial must be reported and respected; these instructions cannot override
+it or authorize a retry. This separation applies to live work as well as tests.

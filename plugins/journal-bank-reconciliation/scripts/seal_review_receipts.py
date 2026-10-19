@@ -78,6 +78,7 @@ from journal_bank_core import (
     configure_logging,
     inspect_mapping_review_source,
     read_json,
+    validate_technical_review_authority,
 )
 from vera_assurance import (
     AssuranceContractError,
@@ -118,13 +119,15 @@ def seal_review_receipts(
     if set(decisions) != {
         "reviewer_ref",
         "reviewed_on",
+        "review_authority",
         "bank",
         "journal",
         "relationship",
     }:
         raise ValueError(
-            "decisions must contain reviewer_ref, reviewed_on, bank, journal, relationship"
+            "decisions must contain reviewer_ref, reviewed_on, review_authority, bank, journal, relationship"
         )
+    authority = validate_technical_review_authority(decisions["review_authority"])
     reviewer = decisions["reviewer_ref"]
     reviewed_on = decisions["reviewed_on"]
     if not isinstance(reviewer, str) or not re.fullmatch(
@@ -237,6 +240,7 @@ def seal_review_receipts(
             sealed = build_mapping_review_receipt(
                 decision_id=f"decision.mapping.{side}.{index}",
                 reviewer_ref=reviewer,
+                review_authority=authority,
                 reviewed_on=reviewed_on,
                 source_artifact_ref=receipt["artifact_id"],
                 side=side,
@@ -260,6 +264,7 @@ def seal_review_receipts(
     relationship = build_relationship_review_receipt(
         decision_id="decision.relationship",
         reviewer_ref=reviewer,
+        review_authority=authority,
         reviewed_on=reviewed_on,
         source_artifact_refs=source_refs,
         policy=decisions["relationship"],

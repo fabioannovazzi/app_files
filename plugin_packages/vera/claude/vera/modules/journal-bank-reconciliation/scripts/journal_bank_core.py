@@ -853,6 +853,7 @@ __all__ = [
     "WORKBOOK_SHEET_ORDER",
     "add_common_args",
     "build_mapping_review_receipt",
+    "validate_technical_review_authority",
     "inspect_mapping_review_source",
     "build_implementation_artifact_receipts",
     "build_relationship_review_receipt",
@@ -2384,6 +2385,45 @@ def _mapping_review_content(
     return content
 
 
+def validate_technical_review_authority(value: object) -> dict[str, str]:
+    """Validate attribution of technical work without granting professional approval."""
+    fields = {"actor_kind", "basis", "authorization_ref", "professional_approval"}
+    if not isinstance(value, dict) or set(value) != fields:
+        raise ValueError(
+            "review_authority requires exact actor, basis, authorization and approval fields"
+        )
+    if any(not isinstance(item, str) for item in value.values()):
+        raise ValueError("review_authority fields must be text")
+    if (value["actor_kind"], value["basis"]) not in {
+        ("ai", "user_delegated"),
+        ("human", "user_confirmed"),
+    }:
+        raise ValueError("review_authority actor and basis are inconsistent")
+    ref = value["authorization_ref"]
+    if not isinstance(ref, str) or not ref.strip() or ref != ref.strip():
+        raise ValueError("review_authority requires an actual authorization_ref")
+    if value["professional_approval"] != "pending":
+        raise ValueError("technical review cannot grant professional approval")
+    return dict(value)
+
+
+def _technical_review_content(
+    content: dict[str, Any], authority: object | None
+) -> dict[str, Any]:
+    """Keep actor and mandate attribution inside the source-bound content digest."""
+    if authority is not None:
+        content["review_authority"] = validate_technical_review_authority(authority)
+    return content
+
+
+def _reviewed_technical_content(content: dict[str, Any]) -> dict[str, Any]:
+    """Validate attribution before comparing the reviewed technical choices."""
+    result = dict(content)
+    if "review_authority" in result:
+        validate_technical_review_authority(result.pop("review_authority"))
+    return result
+
+
 def build_mapping_review_receipt(
     *,
     decision_id: str,
@@ -2404,8 +2444,9 @@ def build_mapping_review_receipt(
     decimal_separator: object | None = None,
     thousands_separator: object | None = None,
     pdf_registration_layout: dict[str, Any] | None = None,
+    review_authority: dict[str, str] | None = None,
 ) -> dict[str, Any]:
-    """Seal a professional mapping decision against source bytes and adapter."""
+    """Seal a technical mapping review against source bytes and adapter."""
 
     if isinstance(potential_monetary_columns, (str, bytes)) or isinstance(
         excluded_monetary_columns,
@@ -2466,21 +2507,24 @@ def build_mapping_review_receipt(
         adapter_id=adapter_id,
         adapter_version=adapter_version,
         source_artifact_refs=[source_artifact_ref],
-        content=_mapping_review_content(
-            side=side,
-            source_file=source_file,
-            header_rows=header_rows,
-            mapping=mapping,
-            direction_value_mapping=direction_value_mapping,
-            potential_monetary_columns=potential,
-            excluded_monetary_columns=excluded,
-            date_convention=date_convention,
-            date_locale=normalized_date_locale,
-            non_movement_summary_labels=normalized_summary_labels,
-            csv_field_delimiter=csv_field_delimiter,
-            decimal_separator=decimal_separator,
-            thousands_separator=thousands_separator,
-            pdf_registration_layout=pdf_registration_layout,
+        content=_technical_review_content(
+            _mapping_review_content(
+                side=side,
+                source_file=source_file,
+                header_rows=header_rows,
+                mapping=mapping,
+                direction_value_mapping=direction_value_mapping,
+                potential_monetary_columns=potential,
+                excluded_monetary_columns=excluded,
+                date_convention=date_convention,
+                date_locale=normalized_date_locale,
+                non_movement_summary_labels=normalized_summary_labels,
+                csv_field_delimiter=csv_field_delimiter,
+                decimal_separator=decimal_separator,
+                thousands_separator=thousands_separator,
+                pdf_registration_layout=pdf_registration_layout,
+            ),
+            review_authority,
         ),
     )
 
@@ -2542,8 +2586,9 @@ def build_relationship_review_receipt(
     reviewed_on: str,
     source_artifact_refs: Sequence[str],
     policy: dict[str, Any],
+    review_authority: dict[str, str] | None = None,
 ) -> dict[str, Any]:
-    """Seal the reviewed relationship perimeter, shape, and tolerance policy."""
+    """Seal the technical relationship review without professional sign-off."""
 
     normalized = _normalize_relationship_policy(policy)
     return build_reviewed_decision_receipt(
@@ -2555,7 +2600,7 @@ def build_relationship_review_receipt(
         adapter_id=RELATIONSHIP_ADAPTER_ID,
         adapter_version=RELATIONSHIP_ADAPTER_VERSION,
         source_artifact_refs=list(source_artifact_refs),
-        content={"policy": normalized},
+        content=_technical_review_content({"policy": normalized}, review_authority),
     )
 
 
@@ -3027,7 +3072,11 @@ def _validated_mapping_decision(
         return None, f"Mapping receipt is invalid or stale: {exc}"
     if receipt["decision_type"] != "journal_bank_mapping":
         return None, "Mapping receipt has the wrong decision type."
-    if receipt["content"] != expected_content:
+    try:
+        technical_content = _reviewed_technical_content(receipt["content"])
+    except ValueError as exc:
+        return None, f"Mapping review authority is invalid: {exc}"
+    if technical_content != expected_content:
         return None, "Mapping receipt content does not match the current recipe."
     return receipt, None
 
@@ -4954,7 +5003,11 @@ def _validated_relationship_decision(
         return None, None, f"Relationship decision is invalid or stale: {exc}"
     if decision["decision_type"] != "journal_bank_relationship":
         return None, None, "Relationship decision has the wrong decision type."
-    if decision["content"] != {"policy": policy}:
+    try:
+        technical_content = _reviewed_technical_content(decision["content"])
+    except ValueError as exc:
+        return None, None, f"Relationship review authority is invalid: {exc}"
+    if technical_content != {"policy": policy}:
         return None, None, "Relationship decision content does not match the policy."
     return policy, decision, None
 
@@ -7048,6 +7101,10 @@ def run_reconciliation(
         "tolerance": tolerance_text,
         "date_window_days": date_window_days,
         "source_qualification_status": qualification_status,
+        "professional_approval": "pending",
+        "technical_review_authority": relationship_decision["content"].get(
+            "review_authority"
+        ),
         "relationship_decision_ref": str(relationship_decision["decision_id"]),
         "relationship_balanced": relationship_exactly_balanced,
         "relationship_within_policy_tolerance": bool(relationship_ledger["balanced"]),
