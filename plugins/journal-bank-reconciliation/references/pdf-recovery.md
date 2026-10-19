@@ -32,8 +32,14 @@ source or implementation invalidates the session.
    printed total just to make the numbers agree.
 3. Save the proposed ordinary workflow recipe in the run. Use
    `--pdf-recovery trial --recipe <proposed-recipe> --pdf-reason <evidence-and-change>`.
-   Every trial reads the source from the beginning, stops after the first failing
-   page and releases page caches. A successful trial covers the entire source;
+   With ruled-layout options, every trial first scans the complete PDF for
+   unsupported negative amount notation or missing sign decisions. It reports
+   all affected locations together before attempting postings. The retained
+   attempt contains the complete list under `negative_amount_eligibility`;
+   the tool response shows at most 50 issues. This scan checks notation only,
+   not layout completeness. If eligible, parsing reads from the beginning and
+   stops after the first failing page. Both passes release page caches.
+   A successful trial covers the entire source;
    it does not authorize sampling. Review the diagnostics and suggested failure
    pages. Revise only when new evidence explains the failure. Inspect additional
    pages not used to develop the recipe, including a continuation and the final
@@ -64,7 +70,8 @@ All other required command arguments and execution-integrity checks still apply.
 ## Optional ruled-layout contract
 
 The existing `body`, five non-overlapping `columns` and source mapping remain.
-Without any keys below the reader uses its existing behavior and diagnostics.
+Without any keys below the reader retains its existing layout and amount support;
+unsupported negative formats receive the specific diagnostics described below.
 Presence of a key enables the strict `rule_delimited.v1` extension. Its full
 configuration is included in the normal source-mapping receipt and its code is
 included in the implementation/replay receipts. The parent adapter identifiers
@@ -104,11 +111,45 @@ These coordinates are synthetic examples, not defaults for customer documents.
 - `running_totals` identifies exact reviewed textual labels, ignoring whitespace
   and case to handle spaced lettering. Labels belong to the description band;
   each amount must occupy its reviewed amount band. The reader requires one
-  control per page, recomputes each side from the explicit opening totals plus
-  emitted postings, and rejects mismatches or postings after the footer. A total
+  control per page, recomputes each signed source side from the explicit opening
+  totals plus source postings, and rejects mismatches or postings after the footer. A total
   may be outside the posting body but is still processed. Unrecognized monetary
   content outside the body is rejected. An opening balance requires source
   evidence; this option never supplies a missing registration or continuation.
+
+### Reviewed negative amounts
+
+Negative postings require both optional keys below in the layout. Record the
+professional's decision in the ordinary source-mapping review; the recovery
+trial and freeze do not approve accounting semantics. Do not add these choices
+merely to make a failed trial pass.
+
+```json
+{
+  "negative_amount_notation": "trailing_minus",
+  "negative_amount_semantics": "signed_side"
+}
+```
+
+- `negative_amount_notation`: `trailing_minus` accepts `25,88-` and
+  `1.234,56-`; `leading_minus` accepts `-25,88`. Positive amounts remain valid.
+  These are exact, mutually exclusive negative formats. Parentheses, mixed
+  formats and doubled signs are not authorized by either choice.
+- `negative_amount_semantics`: `signed_side` keeps the negative value in its
+  printed debit/credit column; `opposite_side` emits the absolute amount on the
+  other side, preserving the original account. For example, a debit `25,88-`
+  becomes debit `-25.88` or credit `25.88`, respectively. There is no default.
+- Registration balances use the emitted postings. Printed running totals always
+  use signed source columns, including when output sides are reversed; they
+  must reconcile to the source printout. Negative printed totals use the same
+  reviewed notation. Diagnostics identify this basis as `signed_source_sides`.
+- Negative posting records retain `source_amount_text`, `source_amount_side`
+  and the chosen semantics alongside the existing page/row/account lineage.
+  Both choices are sealed in the layout/replay/source-mapping receipts.
+- Without a reviewed policy, trailing-minus and parenthesized amounts report
+  `unsupported_negative_amount_notation`; leading-minus amounts report
+  `negative_amount_side_requires_review`. Each issue includes its page, row,
+  amount band and printed token. No postings are emitted from an ineligible PDF.
 
 An excerpt starting mid-registration remains incomplete. Every completed
 registration must balance, every posting must have its account and amount, and

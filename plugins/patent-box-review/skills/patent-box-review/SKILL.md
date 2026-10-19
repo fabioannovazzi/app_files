@@ -1,6 +1,6 @@
 ---
 name: patent-box-review
-description: Prepare Patent Box evidence, mapped ledger costs, detailed control proposals and source-backed case records for professional review. The implementation remains in development; real calculations require configured professional authorization and reviewed sources, and final acceptance remains pending.
+description: Prepare Patent Box evidence, mapped ledger costs, detailed control proposals and source-backed case records for professional review. The implementation remains in development; real calculations require approval of the specific proposal and reviewed sources, and final acceptance remains pending.
 ---
 
 # Patent Box
@@ -8,7 +8,7 @@ description: Prepare Patent Box evidence, mapped ledger costs, detailed control 
 Use this workflow for a practice dossier and its evidence, rather than a general
 tax question. Explain the current boundary: preparation supports the explicit
 software, patent, design, premial and supplier branches in the control catalogue;
-real calculation requires an authenticated signed decision and reviewed rules.
+Real calculation requires the user’s confirmation of the specific proposal and reviewed rules.
 Read `references/implementation-status.md` before claiming acceptance. Keep
 old-regime history separate from new-regime calculation. Technical signature and
 timestamp checks have distinct trust, revocation and professional boundaries.
@@ -95,23 +95,22 @@ and real-calculation limitations.
    Vera's legal-tax workflow. No scheduler or notification is activated.
 7. Run `propose --proposal <output/model_proposal.json>`. Open the returned
    readable review. Show amounts, scope, proposed controls, rationale, citations,
-   rules, open issues and dossier texts. Obtain the professional's explicit
-   confirmation of that exact proposal or revise it. On confirmation, run
+   rules, open issues and dossier texts. Obtain the user's explicit
+   confirmation of that exact proposal or revise it. For a synthetic demonstration, on confirmation run
    `review --digest <digest> --reviewer <name> --confirmation-ref <actual host
    message reference> --confirmed`. Never invent the confirmation or reviewer.
-   This local assertion cannot authorize a real calculation. For professional
-   authentication follow `references/professional-review.md`: show the exact
-   proposal, prepare its review request and verify the professional's actual
-   external signature and firm-issued mandate. Never sign for the professional
-   or create a firm policy to unblock a case. A synthetic automated test using
-   local review must use a synthetic reviewer/reference and `--synthetic`.
+   For real calculation use `references/professional-review.md`: show the exact
+   proposal and current source scan, prepare its request, then record the actual
+   user's confirmation with actor, confirmation-message reference and current time.
+   No professional role, certificate, firm mandate or external signature is required.
+   A synthetic automated test using local review must use a synthetic reviewer/reference
+   and `--synthetic`; never treat a fixture as an actual user's approval.
 8. Run `calculate --digest <digest>` after the appropriate review. Real runs
-   require current sources, reviewed rules and configured certificate/mandate
-   authentication. Bundled real rules remain unapproved. Every version writes a
+   require current sources, reviewed rules and confirmation of the exact current proposal. Bundled real rules remain unapproved. Every version writes a
    new result directory; a changed proposal needs another explicit decision.
    Changed selected source bytes require a new archive run. No previous
    decisions or calculations are overwritten. For an approved version, follow the
-   signed REOPEN_CASE path in `references/professional-review.md` before the new
+   exact-version REOPEN_CASE path in `references/professional-review.md` before the new
    control review. A completed run continues in a new run using explicitly
    selected, sealed upstream artifacts; the old run stays unchanged.
 9. Present case_summary.md, missing_documents.md, control_matrix.csv,
@@ -122,8 +121,8 @@ and real-calculation limitations.
    A/B exports preserve the selected template, citations and explicit open
    paragraphs. They are unsigned drafts. Follow `references/formalities.md` for
    actual selected signed documents and timestamps, preserving all separate
-   outcomes. Final professional approval binds the exact generated artifacts and
-   requires a separate signed request; it does not grant penalty protection.
+   outcomes. Final proposal approval binds the exact generated artifacts and
+   requires the user’s separate confirmation of those exact artifacts; it does not grant penalty protection.
 10. Build and validate model_data_report.json and model_data_report.md using
     the shared Studio Archive report helper and its actual phase evidence.
     Host model reading is not local-only; use not_measurable where no provider

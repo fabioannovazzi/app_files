@@ -261,20 +261,14 @@ figures and letter before delivery. Do not send correspondence without an explic
 user request. The named reviewer is an attributed local record, not an
 authenticated identity or a tax approval issued by Vera.
 
-## Prepare and verify professional approval
+## Confirm the exact proposal
 
-Follow `references/approval.md` for the source-bound front-page contract, the
-readable exact-version request and external signature verification. Preserve
-actual registry evidence and professional judgments; format/checksum checks do
-not establish Anagrafe registration or ownership. Reuse the current Archive run
-and complete its actual model-data disclosure before preparing a request.
-
-Only the independently configured firm authority and externally signed mandate
-can authorize a signer. Do not create real keys, trusted administrator pins or
-mandates, or treat a named reviewer/JSON status as authenticated approval.
-`prepare` creates a request; `accept` verifies supplied originals and preserves
-proof. The separate export command re-verifies those originals and the current
-version. An approval signature is not a signature on the XML return.
+Follow `references/approval.md`: show the current figures, front page, sources,
+anomalies and choices, then ask whether the user agrees to export this version.
+Record only that actual response, actor, confirmation reference and time. Reuse
+an existing response only for unchanged reviewed content. No professional role,
+certificate, signature, mandate or authority policy is required for this decision.
+The real case remains in its existing Archive run and keeps its model-data report.
 
 ## XML export and qualification
 
@@ -285,11 +279,10 @@ requires the bundled official XSD with the complete W3C signature schema:
 python scripts/lipe.py xml-test --case examples/synthetic-case.json --source-root examples --output /absolute/synthetic/xml
 ```
 
-For an approved case, follow `references/xml-export.md`. Use the independently
-configured firm authority and its one filename registry. Obtain the intermediary's
+For an approved case, follow `references/xml-export.md`. Use the studio's one configured filename registry (`VERA_LIPE_EXPORT_REGISTRY`). Obtain the intermediary's
 confirmed unused progressive; do not guess the history of filenames generated
 outside this registry or create a fresh registry to bypass a collision. Export
-re-verifies the original CMS signatures, current mandate/CRLs, sources, disclosure,
+re-verifies the actual user confirmation, current sources, disclosure,
 catalog and artifacts, then reads the generated XML back against the approved VP.
 
 The delivered XML is unsigned and is not transmitted. No real studio, importer

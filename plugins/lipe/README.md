@@ -27,9 +27,9 @@ overrides, central-reference records, original source bytes, confidence and
 review history. Revisions/revocations are append-only; conflicts and explicit
 curator disputes block reuse. Calculation rechecks bound entries over the whole
 quarter against the current catalog. No classification or promotion is inferred
-from code strings or agreement counts. Real catalog writes require external CMS
-signatures with independently assigned professional/curator/disclosure roles and
-client/level permissions. Original evidence records verification at commit;
+from code strings or agreement counts. Catalog writes use recorded decisions by default. A studio may explicitly opt
+into a separate signed-catalog policy with independently assigned roles; it is
+not required for ordinary proposal approval or unsigned XML export. Original evidence records verification at commit;
 historical reads do not attest that those powers remain current.
 See `references/code-catalog.md` for commands and outstanding limits.
 
@@ -40,13 +40,13 @@ changes are not a tax-error rate. Follow `references/code-measurements.md` befor
 confirming case mappings; no real performance rate has been established.
 
 Front-page checks now bind identifiers, representative/intermediary fields and
-registry-evidence declarations to preserved sources. Approval packets bind the
-exact reviewed version and verify external CMS signatures under an independently
-configured firm mandate, including chain and revocation checks. These are local
-cryptographic checks, not qualified-signature, professional-register or filing
+registry-evidence declarations to preserved sources. Proposal packets bind the
+exact reviewed version and retain the actual user confirmation without requiring
+a professional role, CMS signature or firm mandate. These are version/decision
+checks, not professional-register or filing
 acceptance. See `references/approval.md`.
 
-The approved export path re-verifies original signatures and the current case,
+The approved export path re-verifies the user decision and the current case,
 reserves the intermediary's chosen five-digit filename in the configured studio
 registry, and writes an unsigned IVP18 with its approved PDF and fresh evidence.
 Every XML field and VP amount is read back before delivery. Supplied transmitted
@@ -72,8 +72,8 @@ tests but its real aggregate fixtures and provisional rules are not distributed
 in this implementation. LIPE uses a separately implemented, stricter contract.
 
 The delivered state is a **pilot**, not professional acceptance. See
-`references/acceptance.md`. Unsigned export requires current external approval
-and the host-configured firm authority. The separate synthetic XML command uses
+`references/acceptance.md`. Unsigned export requires the user’s confirmation of the current proposal
+and the existing studio filename registry. The separate synthetic XML command uses
 fictional identifiers. Neither path establishes Agenzia Entrate or accounting-
 software acceptance, and neither signs or transmits a declaration.
 
@@ -85,8 +85,8 @@ or network requests; this does not describe what the host already received.
 Authorized catalog/measurement reads can also expose preserved proposals,
 complete source documents, client/engagement identities, reviewer records and
 software-specific counts. Aggregate reports are not guaranteed anonymous.
-Front-page evidence, public certificates, signed review requests, mandates and
-professional-authority references may also enter the selected model context.
+Front-page evidence, proposal requests, actual user decisions and
+confirmation references may also enter the selected model context.
 Private signing keys are never requested. Actual model exposure is recorded separately in the run's model-data report.
 Supplied receipts, IDs, filenames, dates, error descriptions and notes, and any
 file supplied as transmitted may also enter context when the host reads them.

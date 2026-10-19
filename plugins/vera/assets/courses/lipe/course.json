@@ -41,17 +41,17 @@
     {
       "path": "modules/lipe/references/approval.md",
       "repository_path": "plugins/lipe/references/approval.md",
-      "sha256": "5d4da7d44b77cfb0bfdf3fb2537036d5875887317905c4ae1d2558acc9b4c8c4"
+      "sha256": "94ae8ce78270f074366616e666380a5b93776740e432cf5bed2ecc0176fbbb0a"
     },
     {
       "path": "modules/lipe/references/catalog-authorization.md",
       "repository_path": "plugins/lipe/references/catalog-authorization.md",
-      "sha256": "02d7ea3d7f6ef183a4e0c43353d08469555f20264854ad95a4003233f4cf455e"
+      "sha256": "132789d2a6e0b104525ffc63fd1d4d1a24b25dab292f974bdbed53c4c4c65e59"
     },
     {
       "path": "modules/lipe/references/code-catalog.md",
       "repository_path": "plugins/lipe/references/code-catalog.md",
-      "sha256": "cc6b99edaa9619fe4ee9567340605c38489650e0d7f580eea9b1cc6402c1176e"
+      "sha256": "80e1aa1ee7109b6747c08d56fe1dc79b85f69962ca19a6112d8750fcaa2acb55"
     },
     {
       "path": "modules/lipe/references/code-measurements.md",
@@ -76,7 +76,7 @@
     {
       "path": "modules/lipe/references/xml-export.md",
       "repository_path": "plugins/lipe/references/xml-export.md",
-      "sha256": "41fd5c43ef6f7efd5df7ec79edd3e160198a346e2aa7e8bd4d8a6266de06a933"
+      "sha256": "51f9fd1c9432fd2fc814af978e2790cc51b7fe2079534d77a0b11dbaedf2b2e8"
     },
     {
       "path": "modules/lipe/references/xsd/common/fornitura_v3.xsd",
@@ -131,7 +131,7 @@
     {
       "path": "modules/lipe/schemas/approval-request.schema.json",
       "repository_path": "plugins/lipe/schemas/approval-request.schema.json",
-      "sha256": "c515dfcb1fc4ee59d0534d59ae995b896d1d2b496d32e6fd59d6f7bb45d81f2d"
+      "sha256": "421619c0e9ab9640df0f5e70ab195cc4f682ed518d7995aa88428d4f792769a8"
     },
     {
       "path": "modules/lipe/schemas/authority-policy.schema.json",
@@ -176,17 +176,17 @@
     {
       "path": "modules/lipe/scripts/lipe_approval.py",
       "repository_path": "plugins/lipe/scripts/lipe_approval.py",
-      "sha256": "a9a7eb1d4fd09b12b40d0e9bcdbb31b77266faab980070b8124d28fb58ca5bd6"
+      "sha256": "025ef3d85d044b16e939c169ce5e125ff1ecfbdd05bf7eae4db20b76b3237ec7"
     },
     {
       "path": "modules/lipe/scripts/lipe_authorization.py",
       "repository_path": "plugins/lipe/scripts/lipe_authorization.py",
-      "sha256": "45aaeb948e3a604bac6cf31eaee121d9a09899e5305f5a65addcb19a10e2bd65"
+      "sha256": "01099decc4e4e8740531474221dde84e1b5119ade42c1f734892d8187346139a"
     },
     {
       "path": "modules/lipe/scripts/lipe_catalog.py",
       "repository_path": "plugins/lipe/scripts/lipe_catalog.py",
-      "sha256": "bad64b118759d3f1e60d54ec2da1e0c200c2351f98a8a2ed9927178a4e233b2b"
+      "sha256": "7ebe786b8fae52e3a211cfe9a3bec22530710aa41ef1004534b4ba0cd96b2f45"
     },
     {
       "path": "modules/lipe/scripts/lipe_catalog_authorization.py",
@@ -201,7 +201,7 @@
     {
       "path": "modules/lipe/scripts/lipe_export.py",
       "repository_path": "plugins/lipe/scripts/lipe_export.py",
-      "sha256": "43b9c58e796ae3e7570adc2790f7b5d58c28441528f42ca2314c23281caadd03"
+      "sha256": "2b1281ab804b127b084d456ae39d322d32d3fb3d0f17055a30948fd21a51b8bf"
     },
     {
       "path": "modules/lipe/scripts/lipe_frontpage.py",
@@ -256,12 +256,12 @@
     {
       "path": "modules/lipe/skills/lipe/SKILL.md",
       "repository_path": "plugins/lipe/skills/lipe/SKILL.md",
-      "sha256": "50aedb1de5970981b17e9e0c8922900a50b05dee3339758843e8d6ad94ae4cc3"
+      "sha256": "d5ec5adad129df34f9fb1748ea93f48bcc71b44f6fd0eac41eb10fc640ba9a44"
     },
     {
       "path": "skills/lipe/SKILL.md",
       "repository_path": "plugins/vera/skills/lipe/SKILL.md",
-      "sha256": "d37835e20e160e4724d7be151308c8fe6a675499a38e7504c9cd12adf6627046"
+      "sha256": "ec99ef30e45fb1c00b2c9e276163d19b78c8eeedc4c32403d26cdc7823145443"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -561,17 +561,17 @@
     {
       "path": "vendor/modules/vera_journal_pdf/__init__.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/__init__.py",
-      "sha256": "1c9738c861546a4f65c3e492d3a93e17d882473d826c53727a50ef465f97ae76"
+      "sha256": "ef7ab6e4917fa66e0b01a2361ec68717a81855f1775f6170ad6bc3b08b254352"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/recovery.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "931442fe84eb99dc0a949c95bd9977f3e08d29c68e9991d94fa751d2e012fa1c"
+      "sha256": "3c954fc09af79b584de478afe56cbefc50c0f1bef4b1f7b5766b7f41a77ba778"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/rules.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/rules.py",
-      "sha256": "cc0b2c67452a68d87ea019fd1626323338da915f145cb0013cdc3446add7fc5c"
+      "sha256": "71ca43916c174963ff5eb35c235fbfee9851b5caed4518a31fc6dbf88f82c84e"
     },
     {
       "path": "vendor/modules/vera_ocr/__init__.py",

@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "724abd301a540665f94af2285763d14bdd1904113d1c11f259377e1db0fa0fd8",
+  "catalogue_fingerprint": "7c9932f5e713bcd14257194fbef39bfebecbe8b438fcb248c082029957b16040",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -2006,5 +2006,16 @@
     "version": "0.1.418",
     "previous_catalogue_fingerprint": "1cd4969eeedf9cde13043466d9161d27bad371bee324fae5464cb23eca5d1bdb",
     "scope": "Only the canonical manifest version changes the catalogue identity. All 55 skill entrypoint hashes are unchanged. Runtime metadata write recovery preserves existing Geneva dispositions and does not establish additional jurisdiction or host acceptance."
+  },
+  "specific_proposal_release_binding": {
+    "date": "2026-10-19",
+    "version": "0.1.422",
+    "previous_catalogue_fingerprint": "724abd301a540665f94af2285763d14bdd1904113d1c11f259377e1db0fa0fd8",
+    "changed_skill_entrypoints": [
+      "lipe",
+      "patent-box-review",
+      "previdenza-inps"
+    ],
+    "scope": "Refresh the exact source catalogue for the current release. Patent Box, LIPE and INPS now retain actual user confirmation of the specific proposal without mandatory professional credentials, signatures or mandates. Preserve every existing Geneva disposition and prior history. This binding adds no jurisdiction, professional or installed-host acceptance. Remove the unused legacy professional-signature approval adapter; optional signed-document verification uses selected tools and trust sources without a professional-role policy."
   }
 }

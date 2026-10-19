@@ -37,15 +37,15 @@
     },
     {
       "path": "modules/lipe/references/approval.md",
-      "sha256": "075d9b373394838a35ea08278a1db3dc5c9f96db640ae425a98d4c37515d3b3a"
+      "sha256": "b6c63405cedd43b5c858dec9c7454ebd8fdb5d22a2479d56d94b00a120b52b08"
     },
     {
       "path": "modules/lipe/references/catalog-authorization.md",
-      "sha256": "c1836ae4da39493a3bfdf657edca0e9351ddbe686031920bc6637662c5602704"
+      "sha256": "fdee9493c496f381b4cd0050b1e33ac86e75677e457cb8490b61d30282be034a"
     },
     {
       "path": "modules/lipe/references/code-catalog.md",
-      "sha256": "a36ed33a76cff430481ea834ce06e09f04f3b78fced3c0e1cb9bbf2c9054a038"
+      "sha256": "98028efb476cb4af35eb71d86ffd94526404fcf34bf2f77781348035ab3e513b"
     },
     {
       "path": "modules/lipe/references/code-measurements.md",
@@ -65,7 +65,7 @@
     },
     {
       "path": "modules/lipe/references/xml-export.md",
-      "sha256": "459c683c8ace21ab70359c61e7013577300b9dd467ee663bb7cbbccbc2106238"
+      "sha256": "28b814dcb32aff8b9dc09325ca8ed05a48d3aeb8c1336ec31234b669aee5d028"
     },
     {
       "path": "modules/lipe/references/xsd/common/fornitura_v3.xsd",
@@ -109,7 +109,7 @@
     },
     {
       "path": "modules/lipe/schemas/approval-request.schema.json",
-      "sha256": "c515dfcb1fc4ee59d0534d59ae995b896d1d2b496d32e6fd59d6f7bb45d81f2d"
+      "sha256": "421619c0e9ab9640df0f5e70ab195cc4f682ed518d7995aa88428d4f792769a8"
     },
     {
       "path": "modules/lipe/schemas/authority-policy.schema.json",
@@ -145,15 +145,15 @@
     },
     {
       "path": "modules/lipe/scripts/lipe_approval.py",
-      "sha256": "a9a7eb1d4fd09b12b40d0e9bcdbb31b77266faab980070b8124d28fb58ca5bd6"
+      "sha256": "025ef3d85d044b16e939c169ce5e125ff1ecfbdd05bf7eae4db20b76b3237ec7"
     },
     {
       "path": "modules/lipe/scripts/lipe_authorization.py",
-      "sha256": "45aaeb948e3a604bac6cf31eaee121d9a09899e5305f5a65addcb19a10e2bd65"
+      "sha256": "01099decc4e4e8740531474221dde84e1b5119ade42c1f734892d8187346139a"
     },
     {
       "path": "modules/lipe/scripts/lipe_catalog.py",
-      "sha256": "bad64b118759d3f1e60d54ec2da1e0c200c2351f98a8a2ed9927178a4e233b2b"
+      "sha256": "7ebe786b8fae52e3a211cfe9a3bec22530710aa41ef1004534b4ba0cd96b2f45"
     },
     {
       "path": "modules/lipe/scripts/lipe_catalog_authorization.py",
@@ -165,7 +165,7 @@
     },
     {
       "path": "modules/lipe/scripts/lipe_export.py",
-      "sha256": "43b9c58e796ae3e7570adc2790f7b5d58c28441528f42ca2314c23281caadd03"
+      "sha256": "2b1281ab804b127b084d456ae39d322d32d3fb3d0f17055a30948fd21a51b8bf"
     },
     {
       "path": "modules/lipe/scripts/lipe_frontpage.py",
@@ -209,11 +209,11 @@
     },
     {
       "path": "modules/lipe/skills/mparanza-lipe/SKILL.md",
-      "sha256": "eb806fd7e36db3fac861695dc1a156b71669040e7fd8c0669e660f77288163a7"
+      "sha256": "033db14e47c76f90048984e6bd80b38dd9ff2a712ea9a89cd303bc31aace4048"
     },
     {
       "path": "skills/mparanza-lipe/SKILL.md",
-      "sha256": "7bcd32f8d3b47244d66f728e0a1d8ddd22a275afbf72e613c7f911f898c2713e"
+      "sha256": "71d75bb405504d8cb696b2d8d486085d6328a7b5fb5fda111d362c9ad84ecf45"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -361,15 +361,15 @@
     },
     {
       "path": "vendor/modules/vera_journal_pdf/__init__.py",
-      "sha256": "1c9738c861546a4f65c3e492d3a93e17d882473d826c53727a50ef465f97ae76"
+      "sha256": "ef7ab6e4917fa66e0b01a2361ec68717a81855f1775f6170ad6bc3b08b254352"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "931442fe84eb99dc0a949c95bd9977f3e08d29c68e9991d94fa751d2e012fa1c"
+      "sha256": "3c954fc09af79b584de478afe56cbefc50c0f1bef4b1f7b5766b7f41a77ba778"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/rules.py",
-      "sha256": "cc0b2c67452a68d87ea019fd1626323338da915f145cb0013cdc3446add7fc5c"
+      "sha256": "71ca43916c174963ff5eb35c235fbfee9851b5caed4518a31fc6dbf88f82c84e"
     },
     {
       "path": "vendor/modules/vera_ocr/__init__.py",
@@ -446,5 +446,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "79e2a017d3745f1390c0aa3be762339f6894b3f51d853e17e2d8e5a7ba45d5c5"
+  "canonical_course_sha256": "6e72577e0d37427127d230263e8c693c6216403c1f1628c806c892e758587dff"
 }

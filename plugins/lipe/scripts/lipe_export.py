@@ -1,4 +1,4 @@
-"""Export an unsigned IVP18 after re-verifying exact-version professional approval.
+"""Export an unsigned IVP18 after re-verifying the user’s exact-version proposal approval.
 
 No signature is added to the XML and no return is transmitted. The filename
 registry prevents local reuse; external filename use and importer qualification
@@ -17,7 +17,6 @@ from pathlib import Path
 
 from lipe_approval import current_bindings, verify_review
 from lipe_authorization import (
-    load_authority,
     load_export_registry,
     read_evidence,
     request_bytes,
@@ -180,7 +179,6 @@ def export_xml(
     approval_folder: Path,
     output: Path,
     *,
-    authority: dict,
     registry: Path,
     progressive: int,
     at: datetime,
@@ -213,10 +211,7 @@ def export_xml(
         draft_folder,
         source_root,
         approval_folder / "request.json",
-        signature=approval_folder / "decision.p7s",
-        mandate=approval_folder / "mandate.json",
-        mandate_signature=approval_folder / "mandate.p7s",
-        authority=authority,
+        decision=approval_folder / "decision.json",
         **options,
     )
     snapshot = verified["snapshot"]
@@ -257,7 +252,17 @@ def export_xml(
         "filing_status": "NOT_SIGNED_OR_TRANSMITTED",
         "network_calls": False,
     }
-    _reserve(registry, filename, receipt, authority["policy"])
+    _reserve(
+        registry,
+        filename,
+        receipt,
+        {
+            "studio_id": (case.get("catalog_context") or {}).get(
+                "studio_id", fields["CFIntermediario"]
+            ),
+            "data_origin": case["data_origin"],
+        },
+    )
     output.mkdir(parents=True, mode=0o700, exist_ok=False)
     (output / "approval").mkdir(mode=0o700)
     for name, value in verified["files"].items():
@@ -270,12 +275,12 @@ def export_xml(
         (
             "# LIPE — XML della versione approvata\n\n"
             f"File: `{filename}`\n\nSHA-256: `{receipt['xml_sha256']}`\n\n"
-            "XML non firmato e non trasmesso, destinato all'importazione nel gestionale. La firma CMS verificata approva la versione dei dati e non firma questa dichiarazione.\n\n"
-            "Frontespizio, periodi e tutti gli importi sono stati riletti dall'XML e confrontati con il risultato approvato. Gli elementi importo a zero sono omessi. La sintesi PDF conservata è quella vincolata dalla richiesta firmata.\n\n"
+            "XML non firmato e non trasmesso, destinato all'importazione nel gestionale. La conferma dell’utente riguarda questa versione; non è una firma o un’attestazione professionale.\n\n"
+            "Frontespizio, periodi e tutti gli importi sono stati riletti dall'XML e confrontati con il risultato approvato. Gli elementi importo a zero sono omessi. La sintesi PDF conservata è quella vincolata dalla richiesta confermata.\n\n"
             "Il progressivo è riservato nel registro dello studio. LIPE non conosce i nomi usati esternamente o in altri registri: il professionista ne verifica l'unicità prima dell'uso. Una prenotazione rimane consumata anche se una scrittura successiva fallisce.\n\n"
             "La validazione XSD e l'approvazione della versione non attestano la qualificazione professionale del software, l'importazione nel gestionale o l'accettazione dell'Agenzia. Queste prove restano pendenti. Non inviare una dichiarazione per eseguire un test.\n\n"
             "## Quali dati arrivano al modello\n\n"
-            "Se aperti dall'host, XML, frontespizio, identificativi di contribuente e intermediario, importi VP, PDF, richiesta firmata, mandato e verifiche dei certificati possono entrare nel modello scelto. Il codice locale non chiama modelli o reti. Registrare le letture effettive nel report della sessione.\n"
+            "Se aperti dall'host, XML, frontespizio, identificativi di contribuente e intermediario, importi VP, PDF, richiesta confermata, mandato e verifiche dei certificati possono entrare nel modello scelto. Il codice locale non chiama modelli o reti. Registrare le letture effettive nel report della sessione.\n"
         ).encode("utf-8"),
     )
     return output
@@ -389,7 +394,6 @@ def main(argv: list[str] | None = None) -> int:
         args.approval,
         args.output,
     ]
-    authority = load_authority(excluded_roots=excluded)
     registry = load_export_registry(excluded_roots=excluded)
     folder = export_xml(
         case,
@@ -398,7 +402,6 @@ def main(argv: list[str] | None = None) -> int:
         source_root,
         args.approval,
         args.output,
-        authority=authority,
         registry=registry,
         progressive=args.progressive,
         at=datetime.now(timezone.utc),

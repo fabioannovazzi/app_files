@@ -25,14 +25,23 @@ from lipe_catalog import (
 )
 from lipe_catalog_authorization import prepare_decision
 from lipe_core import ContractError, read_json
-from test_lipe_approval import crypto, sign
-from test_lipe_catalog import entry
+
+from tests.plugins.test_lipe_approval import crypto, sign
+from tests.plugins.test_lipe_catalog import entry
+
+LIPE_MODULES = {
+    name: module
+    for name, module in sys.modules.items()
+    if name == "lipe" or name.startswith("lipe_")
+}
 
 
 def studio(root, crypto, monkeypatch, *, scope="STUDIO"):
     """Install a fictional independent policy, not a user or professional credential."""
     path = root / "catalog/catalog.sqlite3"
-    metadata = create_catalog(path, "fictional-studio", "0.80", data_origin="REAL")
+    metadata = create_catalog(
+        path, "fictional-studio", "0.80", data_origin="REAL", require_signatures=True
+    )
     value = entry(path.parent, scope=scope)
     value["review"]["reviewer"] = "FICTIONAL PROFESSIONAL"
     if scope == "CENTRAL":
@@ -108,9 +117,7 @@ def add(path, value, packet=None):
     )
 
 
-def test_real_catalog_requires_signatures_even_when_every_reviewer_name_is_filled(
-    tmp_path, crypto, monkeypatch
-):
+def test_explicit_signed_policy_requires_signatures(tmp_path, crypto, monkeypatch):
     path, value, _ = studio(tmp_path, crypto, monkeypatch)
 
     with pytest.raises(ContractError, match="externally signed"):
@@ -435,3 +442,10 @@ def test_dispute_and_curator_resolution_preserve_distinct_authorized_decisions(
 
     assert result["event"]["kind"] == "RESOLVE_DISPUTE"
     assert len(history(path)["events"]) == 3
+
+
+@pytest.fixture(autouse=True)
+def component_path(monkeypatch):
+    monkeypatch.syspath_prepend(str(PLUGIN / "scripts"))
+    for name, module in LIPE_MODULES.items():
+        monkeypatch.setitem(sys.modules, name, module)

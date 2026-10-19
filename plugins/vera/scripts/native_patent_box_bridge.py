@@ -29,9 +29,8 @@ OPERATIONS = {
     "accept_professional_review": {
         "digest",
         "request_digest",
-        "signature_ref",
-        "mandate_ref",
-        "mandate_signature_ref",
+        "reviewer",
+        "confirmation_ref",
     },
     "verify_formalities": {"plan", "trust_basis"},
 }
@@ -232,11 +231,9 @@ def invoke(
             context_path,
             digest=fields["digest"],
             request_digest=fields["request_digest"],
-            signature=selected_path(output, fields["signature_ref"], population),
-            mandate=selected_path(output, fields["mandate_ref"], population),
-            mandate_signature=selected_path(
-                output, fields["mandate_signature_ref"], population
-            ),
+            reviewer=fields["reviewer"],
+            confirmation_ref=fields["confirmation_ref"],
+            confirmed=True,
         )
     if action == "verify_formalities":
         # The existing administrator configuration remains the sole trust/executable source.

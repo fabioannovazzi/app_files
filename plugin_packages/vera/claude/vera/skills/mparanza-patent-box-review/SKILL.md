@@ -1,6 +1,6 @@
 ---
 name: mparanza-patent-box-review
-description: Prepare software, patent and design evidence, reviewed ledger costs and control proposals; export draft Word/PDF dossiers and verify signed professional reviews. Real calculations require current reviewed sources and configured firm authorization; professional acceptance remains pending.
+description: Prepare software, patent and design evidence, reviewed ledger costs and control proposals; export draft Word/PDF dossiers and retain user confirmation of exact proposals. Real calculations require current reviewed sources and user confirmation of the exact proposal.
 ---
 
 ## Operational incident continuity
@@ -183,7 +183,7 @@ professional acceptance or public producer execution.
 The operator compares the complete proposal and current private fields, then
 explicitly adopts it into typed controls. Adoption restores no consent. A
 separate current confirmation invokes the unchanged producer. Local declared
-review, real signed firm authorization, final dossier approval, formalities and
+review, confirmation of the exact dossier, optional document formalities and
 technical Archive completion remain distinct. Open/uncertain mandates block
 completion until disposition or ordinary recovery. Use service read receipts
 as phase evidence, while keeping provider telemetry `not_measurable` and host
@@ -192,3 +192,7 @@ readings qualified by actual evidence.
 If these tools are absent, continue the complete file-based specialist route.
 Source tests and standalone browser probes do not qualify an installed native
 host or packaged Cowork compatibility.
+
+## User confirmation
+
+Follow the component’s exact-proposal review. Ordinary work requires no professional role, certificate, signature or firm mandate. Record only the actual user response to the displayed proposal. Signed-document inspection is a separate optional action.

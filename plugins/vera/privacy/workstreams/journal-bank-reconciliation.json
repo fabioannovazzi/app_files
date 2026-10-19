@@ -60,7 +60,7 @@
       {
         "id": "registration-pdf-layout-review",
         "purpose": "Review the physical layout of a text-PDF accounting journal before local reconstruction",
-        "content": "Bounded PDF layout evidence: at most 300 words from each of the first two and final pages, capped at 100 characters per word, their x/top coordinates, page dimensions, source SHA-256, page count and truncation status. Layout coordinates and printed header/footer labels are reviewed by the host model; no column semantics are inferred from number clusters. A dry-run preview contains at most twenty reconstructed postings per source for reconciliation. Entire registration reconstruction and exact debit/credit closure run locally, preserving source page/row lineage. Case names and accounting text in the sampled words are not anonymized. The helper makes no direct model API calls or new external-service requests. During layout recovery, the model can request up to three pages or regions per inspection, with at most 300 words and 1,200 characters with coordinates per page, and images of requested regions. It also receives proposed recipes and trial diagnostics; the history stays in the case workspace. Four trials and twelve inspections are allowed. This data is not anonymized and this procedure does not send it to developers.",
+        "content": "Bounded PDF layout evidence: at most 300 words from each of the first two and final pages, capped at 100 characters per word, their x/top coordinates, page dimensions, source SHA-256, page count and truncation status. Layout coordinates and printed header/footer labels are reviewed by the host model; no column semantics are inferred from number clusters. A dry-run preview contains at most twenty reconstructed postings per source for reconciliation. Entire registration reconstruction and exact debit/credit closure run locally, preserving source page/row lineage. Case names and accounting text in the sampled words are not anonymized. The helper makes no direct model API calls or new external-service requests. During layout recovery, the model can request up to three pages or regions per inspection, with at most 300 words and 1,200 characters with coordinates per page, and images of requested regions. It also receives proposed recipes and trial diagnostics; the history stays in the case workspace. Four trials and twelve inspections are allowed. This data is not anonymized and this procedure does not send it to developers. Local negative-amount eligibility scans retain every unsupported notation or unreviewed sign location in the diagnostics. Recovery responses expose at most 50 issues with page, row, amount band, printed token, notation and reason; full retained diagnostics can be opened for a specific unresolved question. Recipes expose both reviewed negative notation and sign semantics. No additional model API call or external destination is introduced.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -172,7 +172,7 @@
     "reviewed_at": "2026-10-18",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "da761e8d9f1a293be28d62cdb6487d781b661fa0d1ff9005f12defb6aded74ca"
+    "source_fingerprint": "17c95b8bea9902f69d21b22f8583dbc687e01aab524b5464eb950ab97032db27"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"
@@ -192,7 +192,8 @@
           "Solo per i casi selezionati arrivano i campi mappati e valorizzati utili alla revisione. Campi vuoti, colonne non mappate, percorsi e identificativi tecnici restano fuori; gli identificativi professionali esatti arrivano solo quando sono necessari al confronto.",
           "Il modello esamina il residuo ammesso",
           "Solo nel runtime Codex, dopo la riconciliazione, un passaggio separato può ricevere tutti i movimenti bancari ancora aperti e i candidati contabili compatibili, con i soli campi mappati e valorizzati, se l’intero insieme rientra in un unico pacchetto limitato. Il residuo non viene diviso in chiamate automatiche: se supera i limiti, resta interamente alla revisione umana. Cowork non esegue questo passaggio, che non può modificare gli abbinamenti deterministici né lo stato di prontezza.",
-          "I dati professionali non vengono anonimizzati né pseudonimizzati automaticamente. Il contesto di un caso selezionato può contenere nomi, descrizioni, importi, date e riferimenti reali quando servono alla revisione professionale."
+          "I dati professionali non vengono anonimizzati né pseudonimizzati automaticamente. Il contesto di un caso selezionato può contenere nomi, descrizioni, importi, date e riferimenti reali quando servono alla revisione professionale.",
+          "Nel recupero del PDF, la verifica locale della notazione degli importi negativi conserva tutte le anomalie e mostra al modello al massimo 50 segnalazioni per risposta, con pagina, riga, colonna e importo stampato. Il modello vede anche le scelte proposte per notazione e trattamento del segno; queste richiedono la revisione del professionista."
         ],
         "en": [
           "The model understands the structure",
@@ -205,7 +206,8 @@
           "Only selected cases supply the mapped, populated fields useful to the review. Empty fields, unmapped columns, paths, and technical identifiers stay out; exact professional identifiers arrive only when the comparison requires them.",
           "The model reviews the admitted residual",
           "Only in the Codex runtime, after reconciliation, a separate step may receive all still-unmatched bank movements and their compatible accounting candidates, using only mapped, populated fields, when the complete set fits one bounded packet. The residual is never split into automatic calls: if it exceeds the limits, it remains entirely in human review. Cowork does not run this step, which cannot change deterministic matches or readiness.",
-          "Professional data is not automatically anonymized or pseudonymized. Selected case context may contain real names, descriptions, amounts, dates, and references when professional review requires them."
+          "Professional data is not automatically anonymized or pseudonymized. Selected case context may contain real names, descriptions, amounts, dates, and references when professional review requires them.",
+          "During PDF recovery, the local negative-amount notation check retains every issue and shows the model at most 50 issues per response, with page, row, column and printed amount. The model also sees the proposed notation and sign-treatment choices; these require professional review."
         ],
         "fr": [
           "Le modèle comprend la structure",
@@ -218,7 +220,8 @@
           "Seuls les cas sélectionnés transmettent les champs mappés et renseignés utiles à la revue. Les champs vides, colonnes non mappées, chemins et identifiants techniques restent exclus ; les identifiants professionnels exacts ne sont transmis que lorsque la comparaison l'exige.",
           "Le modèle examine le résidu admis",
           "Uniquement dans l’environnement Codex, après le rapprochement, une étape distincte peut recevoir tous les mouvements bancaires encore non rapprochés et leurs candidats comptables compatibles, avec les seuls champs mappés et renseignés, si l’ensemble complet tient dans un paquet limité. Le résidu n’est jamais divisé en appels automatiques : s’il dépasse les limites, il reste intégralement soumis à la revue humaine. Cowork n’exécute pas cette étape, qui ne peut modifier ni les rapprochements déterministes ni l’état de préparation.",
-          "Les données professionnelles ne sont pas automatiquement anonymisées ou pseudonymisées. Le contexte d'un cas sélectionné peut contenir des noms, descriptions, montants, dates et références réels lorsque la revue professionnelle l'exige."
+          "Les données professionnelles ne sont pas automatiquement anonymisées ou pseudonymisées. Le contexte d'un cas sélectionné peut contenir des noms, descriptions, montants, dates et références réels lorsque la revue professionnelle l'exige.",
+          "Lors de la récupération du PDF, le contrôle local de la notation des montants négatifs conserve toutes les anomalies et montre au modèle au plus 50 signalements par réponse, avec page, ligne, colonne et montant imprimé. Le modèle voit aussi les choix proposés de notation et de traitement du signe, qui nécessitent une revue professionnelle."
         ],
         "de": [
           "Das Modell versteht die Struktur",
@@ -231,7 +234,8 @@
           "Nur für ausgewählte Fälle werden die gemappten, befüllten und für die Prüfung nützlichen Felder übermittelt. Leere Felder, nicht gemappte Spalten, Pfade und technische Kennungen bleiben ausgeschlossen; exakte fachliche Kennungen werden nur übermittelt, wenn der Vergleich sie erfordert.",
           "Das Modell prüft den zugelassenen Restbestand",
           "Nur in der Codex-Laufzeit kann nach dem Abgleich ein separater Schritt alle noch nicht zugeordneten Bankbewegungen und ihre kompatiblen Buchhaltungskandidaten mit ausschließlich gemappten, befüllten Feldern erhalten, wenn der vollständige Bestand in ein begrenztes Paket passt. Der Restbestand wird nie in automatische Aufrufe aufgeteilt: Überschreitet er die Grenzen, bleibt er vollständig in der menschlichen Prüfung. Cowork führt diesen Schritt nicht aus; er kann weder deterministische Zuordnungen noch die Freigabebereitschaft ändern.",
-          "Professionelle Daten werden nicht automatisch anonymisiert oder pseudonymisiert. Der Kontext eines ausgewählten Falls kann echte Namen, Beschreibungen, Beträge, Daten und Referenzen enthalten, wenn die fachliche Prüfung sie benötigt."
+          "Professionelle Daten werden nicht automatisch anonymisiert oder pseudonymisiert. Der Kontext eines ausgewählten Falls kann echte Namen, Beschreibungen, Beträge, Daten und Referenzen enthalten, wenn die fachliche Prüfung sie benötigt.",
+          "Bei der PDF-Wiederherstellung speichert die lokale Prüfung der Schreibweise negativer Beträge alle Auffälligkeiten und zeigt dem Modell höchstens 50 Meldungen pro Antwort mit Seite, Zeile, Spalte und gedrucktem Betrag. Das Modell sieht auch die vorgeschlagene Schreibweise und Behandlung des Vorzeichens; diese erfordern eine fachliche Prüfung."
         ],
         "es": [
           "El modelo comprende la estructura",
@@ -244,7 +248,8 @@
           "Solo los casos seleccionados aportan los campos mapeados y cumplimentados útiles para la revisión. Quedan fuera los campos vacíos, las columnas no mapeadas, las rutas y los identificadores técnicos; los identificadores profesionales exactos solo se incluyen cuando la comparación los exige.",
           "El modelo revisa el residuo admitido",
           "Solo en el entorno Codex, después de la conciliación, un paso separado puede recibir todos los movimientos bancarios aún sin conciliar y sus candidatos contables compatibles, usando únicamente campos mapeados y cumplimentados, si el conjunto completo cabe en un único paquete limitado. El residuo nunca se divide en llamadas automáticas: si supera los límites, permanece íntegramente en revisión humana. Cowork no ejecuta este paso, que no puede modificar las conciliaciones deterministas ni el estado de preparación.",
-          "Los datos profesionales no se anonimizan ni se seudonimizan automáticamente. El contexto de un caso seleccionado puede contener nombres, descripciones, importes, fechas y referencias reales cuando la revisión profesional los necesita."
+          "Los datos profesionales no se anonimizan ni se seudonimizan automáticamente. El contexto de un caso seleccionado puede contener nombres, descripciones, importes, fechas y referencias reales cuando la revisión profesional los necesita.",
+          "Durante la recuperación del PDF, la comprobación local de la notación de importes negativos conserva todas las anomalías y muestra al modelo como máximo 50 incidencias por respuesta, con página, fila, columna e importe impreso. El modelo también ve las opciones propuestas de notación y tratamiento del signo, que requieren revisión profesional."
         ]
       }
     }

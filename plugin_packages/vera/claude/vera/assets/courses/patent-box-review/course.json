@@ -148,12 +148,16 @@
       "sha256": "60bd26576965327d2f7ec24310118dc2dff8b17d11fab3194acd5c0d8f43cd2e"
     },
     {
-      "path": "modules/patent-box-review/patent_box/professional_review.py",
-      "sha256": "ff641b5ce49054087c280054169e88f7e9396770d0d2f11f76e2dc8cd3b401f8"
+      "path": "modules/patent-box-review/patent_box/proposal_review.py",
+      "sha256": "9faa35386a8565d87fc00986f8ade45154eb8b249e5b7a5d82a12a18573e63fd"
     },
     {
       "path": "modules/patent-box-review/patent_box/render.py",
       "sha256": "9d9420222230f0c963ee4febe3b724f55e620a89f635e9ccba5d013aaee990c9"
+    },
+    {
+      "path": "modules/patent-box-review/patent_box/review_evidence.py",
+      "sha256": "20a732f89132c4ece457743492538214fc2edb1b678a839d24834b96d6a23bc3"
     },
     {
       "path": "modules/patent-box-review/patent_box/source_acquisition.py",
@@ -185,7 +189,7 @@
     },
     {
       "path": "modules/patent-box-review/references/implementation-status.md",
-      "sha256": "b8c3a01dd6b98ea8369f6fb72d509dd33ee65f227b9998592f703d9053098a17"
+      "sha256": "61f71fdbf9a6785787d7211d70474a8df3882e5d0da518bc1a067eb51e89cc40"
     },
     {
       "path": "modules/patent-box-review/references/ledger-import.md",
@@ -197,7 +201,7 @@
     },
     {
       "path": "modules/patent-box-review/references/professional-review.md",
-      "sha256": "f6d53245f9f960e8bfde29c54eaa6d61b2dc63deef8e15b74c05ae1addf6e640"
+      "sha256": "9a84d218d878d4504ae9ced5bb4a3746a8db747058c750e7129b777620ff811b"
     },
     {
       "path": "modules/patent-box-review/references/source-discovery.md",
@@ -244,6 +248,10 @@
       "sha256": "5ca87def9c42d09be73ec065e40ea9217a3bbdb2e26276bd0458afcd054f52f1"
     },
     {
+      "path": "modules/patent-box-review/schemas/proposal-review-request.schema.json",
+      "sha256": "3a698c43e2c9df578c8ce9e18a12209e7f13e43f68c02107ba14624e36ddd4f9"
+    },
+    {
       "path": "modules/patent-box-review/schemas/ruleset.schema.json",
       "sha256": "0886ddafb74944831eb44f12b9cc78a118e26298505aaca0e69f5de85ba830a5"
     },
@@ -269,11 +277,11 @@
     },
     {
       "path": "modules/patent-box-review/scripts/patent_box_workflow.py",
-      "sha256": "6b8c279ab270edbdaeba433bb2e54af560bf1d4206a9adfc417afb5d1aadb504"
+      "sha256": "d867cac56a001267e38434607cf7a661d7193b4945449363eeb8a3c47c66bfdb"
     },
     {
       "path": "modules/patent-box-review/skills/mparanza-patent-box-review/SKILL.md",
-      "sha256": "86da99f7813036fd458bd0a42f0579ca0d411006c723a9e752aaaa3c33610529"
+      "sha256": "c89f963c35e0b3d5691b27baa15b3bd1e3169612e2a36757327d9abc3b0d7543"
     },
     {
       "path": "modules/patent-box-review/templates/declaration_bridge.csv",
@@ -337,7 +345,7 @@
     },
     {
       "path": "skills/mparanza-patent-box-review/SKILL.md",
-      "sha256": "0bfe8cb5bed09e3610a994beec76b5ecd7966d47d701e60a578dfe153f3e33ac"
+      "sha256": "d334d91a83a30c8c0073808e1792f00d633f4a4008ed558ad4855639882e477d"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -485,15 +493,15 @@
     },
     {
       "path": "vendor/modules/vera_journal_pdf/__init__.py",
-      "sha256": "1c9738c861546a4f65c3e492d3a93e17d882473d826c53727a50ef465f97ae76"
+      "sha256": "ef7ab6e4917fa66e0b01a2361ec68717a81855f1775f6170ad6bc3b08b254352"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "931442fe84eb99dc0a949c95bd9977f3e08d29c68e9991d94fa751d2e012fa1c"
+      "sha256": "3c954fc09af79b584de478afe56cbefc50c0f1bef4b1f7b5766b7f41a77ba778"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/rules.py",
-      "sha256": "cc0b2c67452a68d87ea019fd1626323338da915f145cb0013cdc3446add7fc5c"
+      "sha256": "71ca43916c174963ff5eb35c235fbfee9851b5caed4518a31fc6dbf88f82c84e"
     },
     {
       "path": "vendor/modules/vera_ocr/__init__.py",
@@ -758,5 +766,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "4add5b546aa64166f9ca723dd3f952b391b210b44e5c40570c14837de4a86db1"
+  "canonical_course_sha256": "9dc245ce293e34f62ff99a74ee6f3f257f9cf6c8ab1f847227e95a23bbc3747e"
 }

@@ -1,7 +1,7 @@
 {
   "name": "patent-box-review",
-  "version": "0.1.1",
-  "description": "Prepara prove, costi e controlli Patent Box e bozze Word/PDF; fonti e autorizzazione professionale restano condizioni del calcolo reale.",
+  "version": "0.1.3",
+  "description": "Prepara prove, costi e controlli Patent Box e bozze Word/PDF; il calcolo reale richiede fonti riesaminate e conferma della proposta specifica.",
   "author": {
     "name": "Mparanza",
     "email": "fabio@mparanza.com",
@@ -22,7 +22,7 @@
   "interface": {
     "displayName": "Patent Box",
     "shortDescription": "Prepara e rivede il fascicolo Patent Box.",
-    "longDescription": "Organizza prove selezionate, costi tracciabili e controlli per software, brevetti e design in una pratica Vera. Produce prospetti e fascicolo A/B in Word e PDF, verifica firme e marche esistenti e conserva revisioni firmate legate alla proposta esatta. Il calcolo reale richiede fonti riesaminate e un mandato professionale configurato dallo studio. Il collaudo professionale resta aperto; non firma né invia dichiarazioni.",
+    "longDescription": "Organizza prove selezionate, costi tracciabili e controlli per software, brevetti e design in una pratica Vera. Produce prospetti e fascicolo A/B in Word e PDF e conserva la conferma dell’utente legata alla proposta esatta. Il calcolo reale richiede fonti riesaminate, senza ruolo professionale, firma o mandato obbligatori. Le verifiche di documenti già firmati restano separate e facoltative; non firma né invia dichiarazioni.",
     "developerName": "Mparanza",
     "category": "Productivity",
     "websiteURL": "https://mparanza.com/static/shared/patent-box-review/index.html?lang=it",
