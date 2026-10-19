@@ -239,10 +239,9 @@ new review; never transfer acceptance to an updated draft.
 
 ## Close the working session
 
-Generate Vera's actual model-data report with Studio Archive's existing report
-builder. Record which documents, case records, drafts and public queries the
-runtime actually used. Declare every physical output, including requests,
-revision JSON, memos and both report files. Finalize, review the declaration
+Composizione Negoziata is outside the comparison-report scope. Retain evidence of
+the documents, case records, drafts and public queries actually used. Declare
+every physical output, including requests, revision JSON and memos. Finalize, review the declaration
 and complete the run; fail or cancel abandoned work explicitly. Completing a
 run does not close the legal procedure.
 

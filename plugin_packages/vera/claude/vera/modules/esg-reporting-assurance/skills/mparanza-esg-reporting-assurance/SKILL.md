@@ -225,10 +225,9 @@ view; inspect the new run for current engagement work.
 Use the returned history to explain what changed, why earlier approvals no
 longer apply, and what needs review. Provide current partial drafts and limitations,
 not only a JSON path. Show the evidence locator behind each significant value.
-Before finalizing an Archive run, create and show the normal Vera model-data
-report using the parent's reporting contract and actual recorded host reads.
-The helper cannot observe host model reads and must not fabricate a receipt.
-Register esg_state.json, every emitted draft and the model-data reports in the
+ESG is outside Vera's comparison-report scope. The helper cannot observe host
+model reads and must not fabricate a receipt. Register esg_state.json and every
+emitted draft in the
 Archive artifact manifest, then use its finalize/complete commands only after
 review. Ordinary resume supports running, review-ready and completed runs;
 mutation requires running. Do not claim full workflow qualification from tests.

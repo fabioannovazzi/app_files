@@ -25,12 +25,16 @@ CONTRACT_PATH = (
 )
 
 
-def _load_module():
+def _load_module(*, enforce_scope=False):
     spec = importlib.util.spec_from_file_location("vera_model_data_report", SCRIPT_PATH)
     assert spec is not None
     assert spec.loader is not None
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
+    if not enforce_scope:
+        # These unit cases exercise the shared renderer/receipt transport.
+        # Archive eligibility and binding have their own integration suite.
+        module._selective_report_policy = lambda: None
     return module
 
 
@@ -352,6 +356,11 @@ def test_studio_archive_report_helper_needs_no_receipt_module_or_network(
         check=False,
     )
 
+    if not packaged:
+        assert result.returncode == 2
+        assert "context" in result.stderr
+        assert not (output / "model_data_report.json").exists()
+        return
     assert result.returncode == 0, result.stderr
     assert json.loads(result.stdout)["server_receipt"] == {
         "status": "not_requested",
@@ -626,14 +635,15 @@ def test_show_missing_report_does_not_generate_a_replacement(
     assert list(tmp_path.iterdir()) == []
 
 
-def test_router_requires_report_for_every_substantive_run() -> None:
+def test_router_limits_new_reports_to_selected_archive_runs() -> None:
     router = ROUTER_PATH.read_text(encoding="utf-8")
     contract = CONTRACT_PATH.read_text(encoding="utf-8")
 
-    assert "After every substantive Vera run" in router
-    assert "model_data_report.json" in router
-    assert "complete document or population" in router.lower()
-    assert "after every substantive product run" in contract
+    assert "After every substantive Vera run" not in router
+    assert "selective-reporting.md" in router
+    assert "model_data_report_input.json" in router
+    assert "Studio Archive" in router
+    assert "Vera scope overrides" in contract
     assert '"runtime_profile": "openai-chatgpt"' in contract
     assert "candidate_needs_validation" in contract
     assert router.index("## Show the privacy report") < router.index(

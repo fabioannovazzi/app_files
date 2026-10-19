@@ -1,6 +1,17 @@
 # Run-level model-data report contract
 
-Use this contract after every substantive product run, across client-bound,
+## Vera scope overrides the generic delivery rules below
+
+For Vera, use `skills/mparanza-vera/references/selective-reporting.md` and the fixed
+`usage/pipelines.json` list. Only selected Studio Archive runs qualify. Archive
+finalization generates a report from recorded execution evidence; a chat-only
+activity, another pipeline, or an execution without a measurable local remainder
+does not produce this report. Missing evidence is explicitly unavailable, never
+invented. The substantive-run and chat-draft rules below apply only to Clara
+and Lucia.
+
+
+For Clara and Lucia, use this contract after every substantive product run, across client-bound,
 studio-wide, local, connected-source, ChatGPT, Codex, Cowork and Antigravity workflows. The
 invariant is evidence about the actual model-context boundary. A smaller context
 is not required when the professional purpose needs a complete document or
@@ -14,7 +25,7 @@ server-attestation behavior described below belongs to the product's own
 The explicitly local onboarding path does not request stamping. Reading an
 existing report does not request stamping either. The invoking product’s functions-and-limits reference remains applicable.
 
-## Chat inputs and drafts still require a report
+## Clara and Lucia chat inputs and drafts
 
 A user mandate in chat and a template read by the model are observed inputs.
 The agent assembles `model_data_report_input.json` from those phases; absence of
@@ -37,8 +48,10 @@ exact output folder:
 - `model_data_report.md`: the small localized report shown in the final
   Artifact Card.
 
-If the user prohibits external receipt transmission, add `--local-only` to the
-build command. It creates the local reports and returns
+For Vera, if the user prohibits receipt transmission, save
+`model_data_report_options.json` with `{"local_only": true}` in the Archive run
+output before finalization, failure or cancellation. For Clara and Lucia, add
+`--local-only` to the build command. Both retain the local reports and return
 `server_receipt={"status":"not_requested","reason":"local_only"}` without a
 request file or network call. Do not retry stamping without a later explicit
 request. This option does not change the selected host's model processing.

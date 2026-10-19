@@ -10,8 +10,11 @@ Before substantive work, follow `../vera/references/workflow-usage.md`: start on
 retained task UUID for the primary user process (including AI-led work), reuse
 it across helpers/resumption, and record only observed outcomes. Discover the
 native `vera_incident_host_link` tool, including deferred tools, and verify the
-same run's Computer ID on the server. Build the model-data report from the actual
-task even for chat-only drafts, then link its actual signed receipt. After delivery ask once for the user's 1–5 stars and optional
+same run's Computer ID on the server. Privacy reporting applies only to the fixed pipeline list in
+`../vera/references/selective-reporting.md`, using the exact Studio Archive run.
+Archive finalization generates eligible reports from saved execution evidence;
+never create a report for other pipelines or a chat-only task. Link a signed
+receipt only when one actually exists. After delivery ask once for the user's 1–5 stars and optional
 comment; never infer a score. Studio Archive is infrastructure, not another rated
 process. Synthetic/agent tests are marked and excluded. Flush pending delivery
 at task startup and after outcomes. The shared contract applies even on direct
@@ -55,13 +58,11 @@ grants. The panel neither initializes a substitute case nor discovers client
 folders. It shows all accessible records and revisions, prepared proposal
 identities, separate exact-version confirmations and verified exports.
 
-For each verified export, the source panel displays the saved canonical
-`model_data_report.md` directly, with the full JSON evidence available separately.
-Reopening reads the same export under current company permissions; it does not
-create another report or claim a new model phase. Real-case exposure remains
-`not_measurable` unless the specialist orchestration supplies observed evidence.
-This report view is source-level work; shared runtime, ticket parsing, long
-identifier wrapping and installed-host acceptance remain unqualified.
+For each verified export, the source panel displays the saved dossier and
+workpapers under current company permissions. Fusione is outside Vera's
+comparison-report scope. Reopening does not claim a new model phase or prove
+what the model received. Shared runtime, ticket parsing, long identifier
+wrapping and installed-host acceptance remain unqualified.
 
 Prepared proposals use the unchanged public `put`, `workpaper`, `bind_archive`
 or `import_archive` helpers. Review the complete preview before independently

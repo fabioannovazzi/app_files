@@ -1563,13 +1563,6 @@ def test_projected_cowork_studio_archive_portable_ledger_round_trip(
     output_dir = Path(prepared["client_engagement"]["output_dir"])
     result_path = output_dir / "result.md"
     result_path.write_text("# Reviewed result\n", encoding="utf-8")
-    disclosures = write_no_model_report(
-        output_dir,
-        workflow_id,
-        str(run_id),
-        runtime_profile="anthropic-cowork",
-        report_script=script.parent / "build_model_data_report.py",
-    )
     finalized = run(
         "finalize-workflow",
         "--client-id",
@@ -1581,7 +1574,6 @@ def test_projected_cowork_studio_archive_portable_ledger_round_trip(
         "--artifacts-json",
         json.dumps(
             [
-                *disclosures,
                 {
                     "artifact_id": "deliverable.result",
                     "path": "result.md",
@@ -1601,6 +1593,10 @@ def test_projected_cowork_studio_archive_portable_ledger_round_trip(
         "--run-id",
         str(run_id),
     )
+    assert finalized["reporting"]["status"] == (
+        "unavailable" if workflow_id == "variance-analysis" else "not_applicable"
+    )
+    assert not (output_dir / "model_data_report.json").exists()
 
     recovered_environment = {**environment}
     recovered_environment["VERA_STUDIO_ARCHIVE_STATE_DIR"] = str(tmp_path / "state-two")

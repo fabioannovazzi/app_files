@@ -176,7 +176,7 @@ def test_italian_data_handling_copy_states_the_shared_boundaries_directly() -> N
         "del modello."
     )
     assert sections["run-evidence"]["title"] == (
-        "Vera registra il confine dei dati di ogni esecuzione sostanziale."
+        "Vera produce il report per processi selezionati in Studio Archive."
     )
     assert "report JSON e una versione Markdown" in (
         sections["run-evidence"]["paragraphs"][0]

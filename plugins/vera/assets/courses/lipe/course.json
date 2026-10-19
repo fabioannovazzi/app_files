@@ -176,7 +176,7 @@
     {
       "path": "modules/lipe/scripts/lipe_approval.py",
       "repository_path": "plugins/lipe/scripts/lipe_approval.py",
-      "sha256": "025ef3d85d044b16e939c169ce5e125ff1ecfbdd05bf7eae4db20b76b3237ec7"
+      "sha256": "ac44f341996123b348652a7515ca73d361eedd7330100550de53817b73dea290"
     },
     {
       "path": "modules/lipe/scripts/lipe_authorization.py",
@@ -256,12 +256,12 @@
     {
       "path": "modules/lipe/skills/lipe/SKILL.md",
       "repository_path": "plugins/lipe/skills/lipe/SKILL.md",
-      "sha256": "d5ec5adad129df34f9fb1748ea93f48bcc71b44f6fd0eac41eb10fc640ba9a44"
+      "sha256": "c10744369e998da45bc4da98f296b8115d2a87cb3ff62c966f6724e6004c3dec"
     },
     {
       "path": "skills/lipe/SKILL.md",
       "repository_path": "plugins/vera/skills/lipe/SKILL.md",
-      "sha256": "ec99ef30e45fb1c00b2c9e276163d19b78c8eeedc4c32403d26cdc7823145443"
+      "sha256": "3acbb127da9370318e2298e2bf6a0b77cd7bdf11c4cf91c5181a5d9d48a052e4"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -501,7 +501,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "592b0cac8a87d80a3cc9b4b0e7958f79be402814ac7b44e0510de7302d745b50"
+      "sha256": "220e14178ddcf811782956f50177732a1664a309eef87847ddb306db7c83381b"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",

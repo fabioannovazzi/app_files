@@ -60,7 +60,7 @@
     {
       "path": "modules/fusione-guidata/scripts/fusione_dossier.py",
       "repository_path": "plugins/fusione-guidata/scripts/fusione_dossier.py",
-      "sha256": "816642abf56afa89878239166cba3dd4a16296f9ebbe95efbe7f894c5ebeb7b0"
+      "sha256": "ac35db494ba1b9faf9d4b6dc2e2eeff31403c551548c50d21854fb007776b602"
     },
     {
       "path": "modules/fusione-guidata/scripts/fusione_model.py",
@@ -80,7 +80,7 @@
     {
       "path": "modules/fusione-guidata/scripts/fusione_report.py",
       "repository_path": "plugins/fusione-guidata/scripts/fusione_report.py",
-      "sha256": "44cf535075561c4430f8d1b6b8a24d6462b58cc1b4bb5bf7a52f3a7ec0ae4281"
+      "sha256": "a0531cb85df71e5c6c64e6c653216bb4ef1efba22ec0c204c7b17bf72ba36981"
     },
     {
       "path": "modules/fusione-guidata/scripts/run_fusione.py",
@@ -90,7 +90,7 @@
     {
       "path": "modules/fusione-guidata/skills/fusione-guidata/SKILL.md",
       "repository_path": "plugins/fusione-guidata/skills/fusione-guidata/SKILL.md",
-      "sha256": "c359c231afdd5c38296b0323af1fa4acfcdc09b5f33735e23a83eb7fe04a11e7"
+      "sha256": "11e2c1263c1ba14367a103327c84e3bc4a798f69187ccf81cf1fc55f70662407"
     },
     {
       "path": "modules/fusione-guidata/skills/fusione-guidata/agents/openai.yaml",
@@ -105,7 +105,7 @@
     {
       "path": "modules/fusione-guidata/skills/fusione-guidata/references/p1-contract.md",
       "repository_path": "plugins/fusione-guidata/skills/fusione-guidata/references/p1-contract.md",
-      "sha256": "6db090807051d4e64f29f99e98987f617104021d499bb8b03729c50b85de1869"
+      "sha256": "d3ba7372fc3af7f730761c1a6e58f4a1fc254a0629306cf281fbe187eed99ecd"
     },
     {
       "path": "modules/fusione-guidata/skills/fusione-guidata/references/p1-source-review.md",
@@ -115,12 +115,12 @@
     {
       "path": "modules/fusione-guidata/vendor/modules/client_ledger.py",
       "repository_path": "plugins/studio-archive/scripts/client_ledger.py",
-      "sha256": "47d79916eef2b09759c50fad6c875f9e62ba00f8b55c00441401bbff5c6c83f6"
+      "sha256": "f56bf05c094f6f96549d4e2e01c99d83793194dd3d84faa1abd46b4f501d3927"
     },
     {
       "path": "modules/fusione-guidata/vendor/modules/model_data_report.py",
       "repository_path": "plugins/vera/scripts/model_data_report.py",
-      "sha256": "368b0903fa071c0563a0d0ac04f7a1ce9d33445236daba47f4357b7e6216bf59"
+      "sha256": "6217728e9ca9feff2b54996a8eff94b8ccc708bbaadf2b03c8eae2c5cfe2b77e"
     },
     {
       "path": "modules/fusione-guidata/vendor/modules/privacy_contract.py",
@@ -128,9 +128,19 @@
       "sha256": "08116da007761d983c5eaead355025e9ba299d20dc31821044f402da1bcab594"
     },
     {
+      "path": "modules/fusione-guidata/vendor/modules/run_reporting.py",
+      "repository_path": "plugins/studio-archive/scripts/run_reporting.py",
+      "sha256": "143fd982d6b4782d4fa3b0436b748b3de89177520f402bf75c3f875dd0a192a4"
+    },
+    {
+      "path": "modules/fusione-guidata/vendor/modules/selective_reporting.py",
+      "repository_path": "plugins/vera/scripts/selective_reporting.py",
+      "sha256": "a8f7168aead00a0c400f197665ec1613a57b2e213ffb9176f65628bac135d409"
+    },
+    {
       "path": "skills/fusione-guidata/SKILL.md",
       "repository_path": "plugins/vera/skills/fusione-guidata/SKILL.md",
-      "sha256": "06aedc32b73e9dcb3bc82bc94f601f491b7f4318709fe87e765db2dc5cada0d4"
+      "sha256": "eaa928c9e62013b95e49d7d6b6736084a91298893deaa3dfa04a855660ad7bb7"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -370,7 +380,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "592b0cac8a87d80a3cc9b4b0e7958f79be402814ac7b44e0510de7302d745b50"
+      "sha256": "220e14178ddcf811782956f50177732a1664a309eef87847ddb306db7c83381b"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",

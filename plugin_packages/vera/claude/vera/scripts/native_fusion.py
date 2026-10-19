@@ -238,8 +238,6 @@ def snapshot(owner: dict, row: dict, module: Path) -> tuple[Path, Path, dict]:
             {
                 "export_ref": receipt["export_ref"],
                 "case_report": verified["case_report"],
-                "model_report": verified["model_report"],
-                "model_report_markdown": verified["model_report_markdown"],
                 "artifacts": [
                     {"name": n, "sha256": h} for n, h in receipt["artifacts"].items()
                 ],

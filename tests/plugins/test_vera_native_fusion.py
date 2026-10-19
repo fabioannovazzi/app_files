@@ -159,7 +159,7 @@ def test_fusion_exports_replay_public_formatter_and_return_exact_download(merger
     )
     export = result["after"]["data"]["exports"][0]
     assert export["case_report"]["history"] == history
-    assert export["model_report"]["workflow_id"] == "fusione-guidata"
+    assert "model_report" not in export
     assert (
         json.loads(base64.b64decode(result["artifact"]["base64"]))
         == export["case_report"]
@@ -490,11 +490,9 @@ def test_fusion_p1_export_keeps_workpaper_outputs_and_canonical_report(p1_merger
     assert {row["name"] for row in export["artifacts"]} == {
         "case-report.json",
         "case-report.md",
-        "model_data_report.json",
-        "model_data_report.md",
         "p1-workpapers.md",
         "p1-workpapers.html",
     }
     assert export["case_report"]["history"] == before
-    assert export["model_report"]["workflow_id"] == "fusione-guidata"
+    assert "model_report" not in export
     assert demo.store.report()["history"] == before

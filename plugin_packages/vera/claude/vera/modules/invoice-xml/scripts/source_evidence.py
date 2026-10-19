@@ -93,7 +93,7 @@ def prepare_source_evidence(
                 "sources": sources,
                 "material": material,
                 "interpretation_status": "awaiting_model_extraction",
-                "model_visibility": "Record pages actually read in the run-level model-data report; this inventory does not prove model exposure.",
+                "model_visibility": "Record pages actually read in the run evidence; this inventory does not prove model exposure.",
             }
         ),
     )

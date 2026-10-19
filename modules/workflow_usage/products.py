@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 from typing import Any, Literal, cast
 
-__all__ = ["Product", "PRODUCTS", "product_name", "catalog_metadata"]
+__all__ = ["Product", "PRODUCTS", "product_name", "catalog_metadata", "report_eligible"]
 
 Product = Literal["vera", "clara", "lucia"]
 PRODUCTS: tuple[Product, ...] = ("vera", "clara", "lucia")
@@ -26,3 +26,10 @@ def catalog_metadata(product: Product = "vera") -> dict[str, Any]:
         Path(__file__).resolve().parents[2] / "plugins" / name / "usage/pipelines.json"
     )
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def report_eligible(product: Product, pipeline: str) -> bool:
+    """Read explicit product scope; eligibility is not proof a report exists."""
+    if product != "vera":
+        return True
+    return pipeline in catalog_metadata(product)["model_data_reporting"]["pipelines"]

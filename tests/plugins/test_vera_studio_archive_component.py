@@ -179,6 +179,9 @@ def test_cli_rejects_unsupported_python_with_version_and_path() -> None:
 
 
 EXPECTED_CLIENT_WORKFLOW_IDS = (
+    "agenzia-acquisition",
+    "fatture-xml-check",
+    "report-enti-locali",
     "posizioni-negoziali",
     "contenzioso-tributario",
     "lipe",

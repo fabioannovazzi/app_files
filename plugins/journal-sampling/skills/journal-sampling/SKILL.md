@@ -183,11 +183,11 @@ python -I -B scripts/review_successor.py context <client-run-output> \
   --client-engagement <customer-run>/context.json
 ```
 
-11. Before finalization, generate the required run-bound `model_data_report.json`
-   and `.md` with the product's `build_model_data_report.py` helper. Describe the
-   actual model-context data path, including local/no-model or unknown cases;
-   do not invent transmission facts. Use `--local-only` for an isolated synthetic
-   test. Read the model-data report contract for the exact CLI arguments.
+11. Save actual phase evidence as `model_data_report_input.json` in the exact
+   Archive output, using the product's selective-reporting contract. Archive
+   finalization generates a comparison report only when measurements support one.
+   Preserve unknown exposure. For an isolated synthetic test, save
+   `model_data_report_options.json` with `{"local_only": true}` before finalization.
    After the last output write, call `finalize_studio_client_workflow` and
    declare every physical output with a unique artifact ID, relative path,
    concrete purpose, audience, and media type. Declaration keys are exactly

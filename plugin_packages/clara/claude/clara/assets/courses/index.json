@@ -4,7 +4,7 @@
   "courses": {
     "advisory-brief-planner": {
       "path": "advisory-brief-planner/course.json",
-      "sha256": "ec63979eefcc617f45c5733b2c5a11c642538992895765c1478c827e35f4275a",
+      "sha256": "a4496d0c8abe3c707ee7bebebd38868250491d17bebb54d4b0ec562b032b23b5",
       "languages": [
         "it",
         "en",
@@ -60,7 +60,7 @@
     },
     "advisory-deliverable-validator": {
       "path": "advisory-deliverable-validator/course.json",
-      "sha256": "36a2c3ba2ac946c6ec7a9dd58a49b79f18334edba74c005c87833bec0a62e88f",
+      "sha256": "c6fc02d21f7f478c588e28a4d221a0f7a909162f69c4a82acd073c0380f69a5c",
       "languages": [
         "it",
         "en",
@@ -88,7 +88,7 @@
     },
     "attribute-reporting": {
       "path": "attribute-reporting/course.json",
-      "sha256": "57824cc2413281bc196b5e4143626b9dfce2b0c2d43d49e1426a03f765922f14",
+      "sha256": "6242eb28eaa8b42f97ea122215a880d34891495e828fd4b98ab35887b5231314",
       "languages": [
         "it",
         "en",
@@ -116,7 +116,7 @@
     },
     "business-planning": {
       "path": "business-planning/course.json",
-      "sha256": "c16637bce12a48ce4d88a78bfd64971c68c0ee84a635e8653909b3827822ee30",
+      "sha256": "ce032ad5b901c8a638ffe480864deac6e53eebe7a7cb37c87d17a27a63a261ca",
       "languages": [
         "it",
         "en"
@@ -135,7 +135,7 @@
     },
     "html-deck": {
       "path": "html-deck/course.json",
-      "sha256": "a683099c3e077c81372b87daeef0d1efd0337b0f0cf19981ad36aec2490a0507",
+      "sha256": "533d52e1a9ad16994ef3b75644745b5d2c4559113bfcef961cc66bb938312095",
       "languages": [
         "it",
         "en",
@@ -163,7 +163,7 @@
     },
     "reporting-engine": {
       "path": "reporting-engine/course.json",
-      "sha256": "9036c6a9376f148e30558bc1c5a72260713badff0a7bb39c9717941281b320d8",
+      "sha256": "a939bf8ad1b007f1cc71c15f712dc08115aae1d36fc03751417001928b0ed28b",
       "languages": [
         "it",
         "en",

@@ -75,7 +75,7 @@
     {
       "path": "modules/trasformazione/skills/trasformazione/SKILL.md",
       "repository_path": "plugins/trasformazione/skills/trasformazione/SKILL.md",
-      "sha256": "0dee3ad53d74be3d550db5688322d7103a709cdd71a15783593b5fd5a9becd3b"
+      "sha256": "f1b1783ac6bbf5bcf5c4ff0b62452fd4495d6f3abc36f237b8195773136b4f3d"
     },
     {
       "path": "scripts/check_dependencies.py",
@@ -90,7 +90,7 @@
     {
       "path": "scripts/model_data_report.py",
       "repository_path": "plugins/vera/scripts/model_data_report.py",
-      "sha256": "368b0903fa071c0563a0d0ac04f7a1ce9d33445236daba47f4357b7e6216bf59"
+      "sha256": "6217728e9ca9feff2b54996a8eff94b8ccc708bbaadf2b03c8eae2c5cfe2b77e"
     },
     {
       "path": "scripts/notarized_run_receipt.py",
@@ -101,6 +101,11 @@
       "path": "scripts/operational_incidents.py",
       "repository_path": "plugins/vera/scripts/operational_incidents.py",
       "sha256": "a3d3ae71f68a9972fdff84307e42cf2e18b5bc359c4b491d3b5fc07e08ce94e1"
+    },
+    {
+      "path": "scripts/selective_reporting.py",
+      "repository_path": "plugins/vera/scripts/selective_reporting.py",
+      "sha256": "a8f7168aead00a0c400f197665ec1613a57b2e213ffb9176f65628bac135d409"
     },
     {
       "path": "scripts/verified_execution.py",
@@ -115,7 +120,7 @@
     {
       "path": "skills/trasformazione/SKILL.md",
       "repository_path": "plugins/vera/skills/trasformazione/SKILL.md",
-      "sha256": "edfacbd6d93fb7ef02fdecb73f354062a823ea2da94ebffb505976ffca60e88f"
+      "sha256": "a962656dc355377511be005a553608b0d8e3eb7f496b08fcd0df5285159c1eee"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -355,7 +360,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "592b0cac8a87d80a3cc9b4b0e7958f79be402814ac7b44e0510de7302d745b50"
+      "sha256": "220e14178ddcf811782956f50177732a1664a309eef87847ddb306db7c83381b"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",

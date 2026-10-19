@@ -90,7 +90,7 @@ visible even after a decision. No automatic calendar monitoring is included.
 
 Deliver the review memo, linked evidence and questions, calculation when available,
 and recorded decisions when supplied. Use the user's language for narrative.
-Follow Vera's model-data report contract, declare every output in Studio Archive,
+AML review is outside the comparison-report scope. Declare every output in Studio Archive,
 then finalize and complete the run. Completion means delivered work, not a clean
 AML opinion. If a host cannot operate the portable archive, prepare the sourced
 review in chat and disclose that no durable version or decision was saved.

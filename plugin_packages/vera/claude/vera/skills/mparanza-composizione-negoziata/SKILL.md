@@ -130,8 +130,11 @@ Before substantive work, follow `../mparanza-vera/references/workflow-usage.md`:
 retained task UUID for the primary user process (including AI-led work), reuse
 it across helpers/resumption, and record only observed outcomes. Discover the
 native `vera_incident_host_link` tool, including deferred tools, and verify the
-same run's Computer ID on the server. Build the model-data report from the actual
-task even for chat-only drafts, then link its actual signed receipt. After delivery ask once for the user's 1–5 stars and optional
+same run's Computer ID on the server. Privacy reporting applies only to the fixed pipeline list in
+`../mparanza-vera/references/selective-reporting.md`, using the exact Studio Archive run.
+Archive finalization generates eligible reports from saved execution evidence;
+never create a report for other pipelines or a chat-only task. Link a signed
+receipt only when one actually exists. After delivery ask once for the user's 1–5 stars and optional
 comment; never infer a score. Studio Archive is infrastructure, not another rated
 process. Synthetic/agent tests are marked and excluded. Flush pending delivery
 at task startup and after outcomes. The shared contract applies even on direct
@@ -175,7 +178,7 @@ original receipt IDs. Saving an incomplete draft does not authorize model reads.
 Renewed source confirmation issues a mandate for those originals and the exact
 existing case. `vera_workspace_cnc_author_context` returns their paths and hashes
 only after an explicit request. Read the actual granted files and record actual
-reads in the run's normal model-data report; a mandate is not evidence of a read.
+reads in the run evidence; a mandate is not evidence of a read.
 Unsent local reviewer names, reasons and confirmation references stay private.
 
 Use `vera_workspace_cnc_stage` for the complete ordinary proposal, with empty
@@ -235,7 +238,7 @@ the complete private case/output view remains bounded to 2 MB. This context may
 include confidential case content and already conserved reviewer identities and
 reasons, but excludes unsent private drafts and absolute original-file/output
 paths. Original evidence requires a separate explicit mandate. Record actual
-case reads in the ordinary model-data report. Retained authenticated decisions
+case reads in the run evidence; no privacy comparison report is required. Retained authenticated decisions
 are shown as stored; this reader does not independently reverify their server
 receipts or authenticate the reviewer again.
 

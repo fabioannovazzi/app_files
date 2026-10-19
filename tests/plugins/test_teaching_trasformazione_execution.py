@@ -389,11 +389,8 @@ def test_transformation_kit_native_dossier_and_selective_staleness(
         )
         == 0
     )
-    assert (tmp_path / "execution/model_data_report.md").is_file()
-    assert (
-        read(tmp_path / "execution/model_data_report.json")["workflow_id"]
-        == "trasformazione"
-    )
+    assert not (tmp_path / "execution/model_data_report.md").exists()
+    assert not (tmp_path / "execution/model_data_report.json").exists()
     record_native_check(
         record_property,
         root=ROOT,

@@ -157,10 +157,10 @@ automatically attached to the model. The chat's requested scope, exact paths,
 selected summaries and any content Vera explicitly reads do enter model context.
 Login secrets stay in the operator's Chrome context and are not persisted by Vera.
 
-Follow Vera's `model-data-report-contract.md` for actual conversation reads and
-the required final delivery. The worker writes canonical `model_data_report.json`
-and `.md` describing its own no-model-call phase, and marks the surrounding chat
-phase as unmeasured. Do not present that initial report as proof the chat read no
-client data. Incorporate actual observed reads and the standard delivery stamp
-through Vera's established finalization; never stamp a tutorial or invent receipts.
+Follow Vera's selective-reporting contract. The worker writes
+`model_data_worker_input.json` and binds per-client phase evidence to each exact
+Archive run. Successful downloads leave that run open for model review. Record
+actual review reads before Archive finalization; unmeasured phases remain
+unavailable. Archive creates any eligible comparison report and receipt at its
+boundary. Never stamp a tutorial or invent receipts.
 The ordinary report files remain available when the native UI is unavailable.

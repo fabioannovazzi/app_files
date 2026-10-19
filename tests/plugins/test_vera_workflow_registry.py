@@ -21,8 +21,11 @@ def test_registry_matches_canonical_components_and_entrypoints() -> None:
     generated = BUILDER.build_registry(ROOT)
 
     assert retained == generated
-    assert "model_data_report.json" in generated["managed_run_required_artifacts"]
-    assert "model_data_report.md" in generated["managed_run_required_artifacts"]
+    assert generated["managed_run_required_artifacts"] == []
+    assert (
+        generated["selective_model_data_reporting"]["boundary"] == "studio-archive-run"
+    )
+    assert len(generated["selective_model_data_reporting"]["pipelines"]) == 13
 
 
 def test_registry_rejects_missing_component_skill(tmp_path: Path) -> None:

@@ -207,12 +207,10 @@ not supplied, never a completed professional review. Keep earlier exports.
 Show the dossier and explain blocked or stale branches. Do not report a successful
 export as legal readiness, execution or a completed filing.
 
-Follow Vera's model-data report contract for the actual model-visible phases.
-Resolve the Studio Archive component beside this module, read its independent
-`scripts/build_model_data_report.py` helper, and use that generic local builder
-with `build --input <report-input.json> --output-dir <case-report-folder>`.
-It calls the canonical validator with server attestation disabled and needs no
-Studio Archive case run. Do not use Vera's stamping command for this prototype.
+Trasformazione is outside Vera's selective comparison-report scope. Preserve
+case evidence and outputs without generating or stamping a privacy comparison
+report, including for standalone synthetic prototypes.
+
 The dossier's final data section describes mechanics, not a visibility receipt.
 Show the saved readable report. No server stamping or external transmission is
 part of this synthetic prototype.

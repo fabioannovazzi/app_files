@@ -135,7 +135,7 @@ def write_workpapers(report: dict[str, Any], destination: Path) -> dict[str, str
             + html.escape(json.dumps(row["dependencies"], indent=2))
             + "</pre></details></section>"
         )
-    disclosure = "Il runtime Codex o Cowork può leggere identità, documenti selezionati, saldi, valori, soci, bozze, fonti e conferme necessari al lavoro. Il programma non osserva il contesto del modello: per i casi reali l'esposizione resta non misurabile. Non è applicata anonimizzazione automatica. Il report dati locale è disponibile accanto al fascicolo."
+    disclosure = "Il runtime Codex o Cowork può leggere identità, documenti selezionati, saldi, valori, soci, bozze, fonti e conferme necessari al lavoro. Il programma non osserva il contesto del modello: per i casi reali l'esposizione resta non misurabile. Non è applicata anonimizzazione automatica."
     md += ["## Quali dati arrivano al modello", "", disclosure]
     markdown = destination / "p1-workpapers.md"
     markdown.write_text("\n".join(md) + "\n", encoding="utf-8")
@@ -153,7 +153,7 @@ def write_workpapers(report: dict[str, Any], destination: Path) -> dict[str, str
         + "".join(sections)
         + "<section><h2>Quali dati arrivano al modello</h2><p>"
         + disclosure
-        + "</p><a href='model_data_report.md'>Report dati locale</a></section></main></html>"
+        + "</p></section></main></html>"
     )
     target = destination / "p1-workpapers.html"
     target.write_text(page, encoding="utf-8")
