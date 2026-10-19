@@ -2,14 +2,14 @@
   "schema": "vera.localization.catalogue.v1",
   "root": "/private/tmp/app-files-selective-reporting/plugins/vera",
   "version": "0.1.423",
-  "captured_at": "2026-10-19T12:14:53.392349+00:00",
-  "catalogue_fingerprint": "11c7b199334f26da838d66cde6af79028337ddf1798168e8fc26f577ddbcc5ce",
+  "captured_at": "2026-10-19T12:38:38.350017+00:00",
+  "catalogue_fingerprint": "ac73b0335f58f6c5ab3f9f6c026064949955ce1aa66cd3d4950aa49a321fb16b",
   "manifest_sha256": "24175e21a34e96886f1ba768b42e278a6fb296051d71ea696402a40b95399abe",
   "entries": [
     {
       "function_id": "adeguati-assetti",
       "skill_path": "skills/adeguati-assetti/SKILL.md",
-      "sha256": "e22a0210241fd1a7682f29408ca8ac9bc1c7f3921d47e9b86dbed4567a5e0a27"
+      "sha256": "991d64f2d540bf00859ff237131cfa1f5493f59146e66f8421e71f33de3dca52"
     },
     {
       "function_id": "adversarial-opinion",
@@ -59,7 +59,7 @@
     {
       "function_id": "business-valuation",
       "skill_path": "skills/business-valuation/SKILL.md",
-      "sha256": "f9dc123bc024500b35de4c311e91178a5a5d13151728ff047c8199d49de9dda3"
+      "sha256": "0c7f84309d0856e7811f469edf8488b016220c3389cf657c74e2e1c1028a62a2"
     },
     {
       "function_id": "centrale-rischi-review",
@@ -69,7 +69,7 @@
     {
       "function_id": "composizione-negoziata",
       "skill_path": "skills/composizione-negoziata/SKILL.md",
-      "sha256": "6501fea5a8a210d2159e290e9fd2e0187738196bac87d6c2f4be9267c766d026"
+      "sha256": "490bbe70168579c2cf26df4efcaef138899049fdca655175508a30b21bc1b8d3"
     },
     {
       "function_id": "comunicazione-professionale",
@@ -89,7 +89,7 @@
     {
       "function_id": "datev-invoice-start",
       "skill_path": "skills/datev-invoice-start/SKILL.md",
-      "sha256": "ef3027acebb4a0a72f79be301b02dbbe26d850875d37f6606a7d6fb1b88ac66d"
+      "sha256": "c68f41b51c93aa910f081cba8438942511522453d04394a849bc1da92fc18d95"
     },
     {
       "function_id": "dati-fiscali-strutturati",
@@ -129,12 +129,12 @@
     {
       "function_id": "fusione-guidata",
       "skill_path": "skills/fusione-guidata/SKILL.md",
-      "sha256": "d8e53424998d9ff48f5045d46a648c5074cc1f35c750fa703374451577d05bd7"
+      "sha256": "eaa928c9e62013b95e49d7d6b6736084a91298893deaa3dfa04a855660ad7bb7"
     },
     {
       "function_id": "invoice-xml",
       "skill_path": "skills/invoice-xml/SKILL.md",
-      "sha256": "05d57f5b5ce608f99a794961c61a46cb8f5b6a187f49ce1eef42ef7228eda0e1"
+      "sha256": "f64d3ef579eef31a99569e2664d0a16845c90837d9619b32524cb351ca80f662"
     },
     {
       "function_id": "journal-bank-reconciliation",
@@ -149,7 +149,7 @@
     {
       "function_id": "learn-with-vera",
       "skill_path": "skills/learn-with-vera/SKILL.md",
-      "sha256": "edaba93044e45e409cf9f1119cc8fc64a1ed8cefcf737e99da5fae1c90b5b826"
+      "sha256": "ea48b2f1b4466309b1835f358b386a4e16603df7b7cfc1c7150e3ee4d02e9d82"
     },
     {
       "function_id": "legal-tax-answer-planner",
@@ -184,7 +184,7 @@
     {
       "function_id": "organizzazione-lavoro",
       "skill_path": "skills/organizzazione-lavoro/SKILL.md",
-      "sha256": "f16cb8455c5025d9e5e550b1aff23e0be6068d50ff428919b0703ab26423f486"
+      "sha256": "c61240a735bd35d31afb4b166ceca4298552d82b5eb148282a2ff1b47ac17287"
     },
     {
       "function_id": "patent-box-review",
@@ -224,12 +224,12 @@
     {
       "function_id": "rating-legalita",
       "skill_path": "skills/rating-legalita/SKILL.md",
-      "sha256": "acb318a64333c53202dc95a9728999270322c6cf4ebe49d988b3fa064e78e93b"
+      "sha256": "39f50c22f58db3b1738aa82d2fba5b26f6538143fe58f18537ba29fedca1e62b"
     },
     {
       "function_id": "registro-imprese-sari",
       "skill_path": "skills/registro-imprese-sari/SKILL.md",
-      "sha256": "84bfa2d05414e728b15e4e0adb657df1f913f7cd7b54f48f9e250904e918a823"
+      "sha256": "1a4956c1915a46c2439a065e234530c31f93b84ef16de0f164c032a4927e989a"
     },
     {
       "function_id": "research-subscriptions",
@@ -244,7 +244,7 @@
     {
       "function_id": "scissione-guidata",
       "skill_path": "skills/scissione-guidata/SKILL.md",
-      "sha256": "ddc2f20da7b0b1b0783336e093a9acd7bf96d9feb1c15262aacf94eda71c3591"
+      "sha256": "1ffcfb1eb3ab95fc3cd09e5bfde0d3b1776f3838c1a20e2bcabb594b68dcf443"
     },
     {
       "function_id": "studio-archive",
@@ -259,7 +259,7 @@
     {
       "function_id": "trasformazione",
       "skill_path": "skills/trasformazione/SKILL.md",
-      "sha256": "5aad8db4557144e179c32a1e59b4ba54ecff8f426d7a4506d06129011fa773ab"
+      "sha256": "a962656dc355377511be005a553608b0d8e3eb7f496b08fcd0df5285159c1eee"
     },
     {
       "function_id": "treasury-forecast",

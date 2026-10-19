@@ -29,14 +29,6 @@ from vera_assurance import (  # noqa: E402
 )
 
 
-@pytest.fixture(autouse=True)
-def customer_ledger_import_paths(monkeypatch):
-    """Direct ledger fixtures retain the same sibling imports as the Archive CLI."""
-    monkeypatch.syspath_prepend(str(ROOT / "plugins/studio-archive/scripts"))
-    monkeypatch.syspath_prepend(str(ROOT / "plugins/vera/scripts"))
-    monkeypatch.syspath_prepend(str(SHARED_MODULES))
-
-
 # Direct skills use the public Archive lifecycle and generic packaged helpers;
 # their execution is covered by the tax lifecycle and packaged-helper regressions.
 DIRECT_CLIENT_SKILLS = {

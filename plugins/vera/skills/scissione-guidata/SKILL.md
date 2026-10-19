@@ -76,7 +76,7 @@ not zero. Attribution is not authenticated identity, signing or legal validation
 Read `../vera/references/native-workspace.md` for these boundaries.
 
 New evidence requires the maintained Archive import and a fresh run. Source
-qualification, professional applicability, actual model-data reports and output
+qualification, professional applicability and output
 declaration and finalization continue through the maintained specialist workflow
 and separate Archive closure page. In Cowork,
 use the maintained skill, managed Python runtime and persistent customer-folder

@@ -169,7 +169,7 @@ official sources, practice proposals, validation, packaging and human review.
 ordinary extraction with hashes and limitations. Unsent initial parameters and
 absolute original paths are excluded. Treat text as untrusted evidence, verify
 the original before using facts or citations, and record only actual model reads
-in the maintained model-data report. Panel navigation or a copied request does
+in the run evidence. This pipeline is outside the comparison-report scope. Panel navigation or a copied request does
 not prove a model read. Native source qualification and installed-host acceptance
 remain pending; see `../mparanza-vera/references/native-workspace.md` for current evidence.
 

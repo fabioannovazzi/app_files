@@ -68,8 +68,8 @@ prerequisites, evidence links, quotations, immutable observations and status
 before projecting the dossier privately to the app. No legal judgment, source
 qualification or professional decision is added by opening the panel.
 
-Initial preparation, model-led case authoring, professional decisions and the
-readable model-data report continue in the unchanged specialist workflow. A
+Initial preparation, model-led case authoring and professional decisions
+continue in the specialist workflow, without a privacy comparison report. A
 native saved selection is not a review, an AGCM award or permission to submit.
 First-save and signed-scope write qualification are pending in current source;
 do not claim native render is accepted or bypass those checks. Use the public

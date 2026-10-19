@@ -113,6 +113,6 @@ recovery is explicit and never restores confirmation. Changed populations or
 uncertain interrupted writes require verification rather than repeated export.
 
 `File del lavoro` opens only the exact selected version's files. Declare all
-run outputs and the actual model-data report through Studio Archive before its
+run outputs through Studio Archive before its
 separate finalization/completion. If native tools are absent, retain the full
 specialist CLI workflow and its authoritative persistence.

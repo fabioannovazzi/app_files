@@ -144,7 +144,7 @@ classifications unless the facts cue them. Use ordinary chat for explanations
 and the host's question control for a small set of missing decisions.
 
 Default output policy: the summary, control matrix, cost reconciliation,
-workpaper, draft A/B dossier and model-data report are the normal deliverables,
+workpaper and draft A/B dossier are the normal deliverables,
 not choices to propose. Present readable files before machine records. Save a
 brief `run_review.md` with validation results, outstanding decisions and
 links to the exact output version. Never edit plugin source or generated ZIPs
@@ -228,10 +228,10 @@ and real-calculation limitations.
    actual selected signed documents and timestamps, preserving all separate
    outcomes. Final proposal approval binds the exact generated artifacts and
    requires the user’s separate confirmation of those exact artifacts; it does not grant penalty protection.
-10. Build and validate model_data_report.json and model_data_report.md using
-    the shared Studio Archive report helper and its actual phase evidence.
-    Host model reading is not local-only; use not_measurable where no provider
-    telemetry exists. Declare every output in archive finalization, then complete
+10. Patent Box is outside Vera's comparison-report scope. Retain actual source
+    and processing evidence without creating a privacy comparison report. Host
+    model reading is not local-only. Declare every output in Archive finalization,
+    then complete
     the technical run. A completed run is not professional acceptance.
 
 The assistant owns dialogue, extraction, targeted questions and drafting.

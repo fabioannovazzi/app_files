@@ -75,7 +75,7 @@
     {
       "path": "modules/trasformazione/skills/trasformazione/SKILL.md",
       "repository_path": "plugins/trasformazione/skills/trasformazione/SKILL.md",
-      "sha256": "0dee3ad53d74be3d550db5688322d7103a709cdd71a15783593b5fd5a9becd3b"
+      "sha256": "f1b1783ac6bbf5bcf5c4ff0b62452fd4495d6f3abc36f237b8195773136b4f3d"
     },
     {
       "path": "scripts/check_dependencies.py",
@@ -120,7 +120,7 @@
     {
       "path": "skills/trasformazione/SKILL.md",
       "repository_path": "plugins/vera/skills/trasformazione/SKILL.md",
-      "sha256": "5aad8db4557144e179c32a1e59b4ba54ecff8f426d7a4506d06129011fa773ab"
+      "sha256": "a962656dc355377511be005a553608b0d8e3eb7f496b08fcd0df5285159c1eee"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

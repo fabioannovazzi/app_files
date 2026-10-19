@@ -178,7 +178,7 @@ original receipt IDs. Saving an incomplete draft does not authorize model reads.
 Renewed source confirmation issues a mandate for those originals and the exact
 existing case. `vera_workspace_cnc_author_context` returns their paths and hashes
 only after an explicit request. Read the actual granted files and record actual
-reads in the run's normal model-data report; a mandate is not evidence of a read.
+reads in the run evidence; a mandate is not evidence of a read.
 Unsent local reviewer names, reasons and confirmation references stay private.
 
 Use `vera_workspace_cnc_stage` for the complete ordinary proposal, with empty
@@ -238,7 +238,7 @@ the complete private case/output view remains bounded to 2 MB. This context may
 include confidential case content and already conserved reviewer identities and
 reasons, but excludes unsent private drafts and absolute original-file/output
 paths. Original evidence requires a separate explicit mandate. Record actual
-case reads in the ordinary model-data report. Retained authenticated decisions
+case reads in the run evidence; no privacy comparison report is required. Retained authenticated decisions
 are shown as stored; this reader does not independently reverify their server
 receipts or authenticate the reviewer again.
 

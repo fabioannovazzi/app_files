@@ -145,7 +145,7 @@
     {
       "path": "modules/business-valuation/skills/business-valuation/SKILL.md",
       "repository_path": "plugins/business-valuation/skills/business-valuation/SKILL.md",
-      "sha256": "84fbb693d9d5917cca621718f122ac7192dd8192cba2868f78321c1a6f5a4b99"
+      "sha256": "817e42e4d60f06598e6a0e88bf4f1e273dc5d118c78d215a4da3bd4ab56729af"
     },
     {
       "path": "modules/business-valuation/vendor/modules/__init__.py",
@@ -205,7 +205,7 @@
     {
       "path": "skills/business-valuation/SKILL.md",
       "repository_path": "plugins/vera/skills/business-valuation/SKILL.md",
-      "sha256": "f9dc123bc024500b35de4c311e91178a5a5d13151728ff047c8199d49de9dda3"
+      "sha256": "0c7f84309d0856e7811f469edf8488b016220c3389cf657c74e2e1c1028a62a2"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

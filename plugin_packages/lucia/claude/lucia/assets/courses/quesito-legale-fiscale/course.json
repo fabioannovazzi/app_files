@@ -97,7 +97,7 @@
     },
     {
       "path": "modules/deep-research-validator/skills/mparanza-deep-research/SKILL.md",
-      "sha256": "7db8d15d664f5ee64502556008cdcd862d69cf5910c5e6915833dba9a866ea20"
+      "sha256": "783066b90c53146c2c8878640944761deab3914b5919b6c7f95771459397a6cb"
     },
     {
       "path": "modules/deep-research-validator/skills/mparanza-deep-research/references/evaluation.md",
@@ -722,5 +722,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "539e729cc3c9224114745a2a5e20126004f8a6f663357cafb7971cc14424932c"
+  "canonical_course_sha256": "360d44f5db7a021a6d2b84768fad6d9cbde767937524b0f62e0bc5a872ae1705"
 }

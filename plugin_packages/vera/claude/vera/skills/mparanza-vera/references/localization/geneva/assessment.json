@@ -92,7 +92,7 @@
     "scope": "Italian OIC closing-account workflow and Alfa v3 synthetic acceptance only. Existing function IDs and Geneva dispositions are retained. No Swiss accounting framework, Geneva professional acceptance, native-host acceptance or filing capability is added or claimed.",
     "version": "0.1.394"
   },
-  "catalogue_fingerprint": "11c7b199334f26da838d66cde6af79028337ddf1798168e8fc26f577ddbcc5ce",
+  "catalogue_fingerprint": "ac73b0335f58f6c5ab3f9f6c026064949955ce1aa66cd3d4950aa49a321fb16b",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -1845,6 +1845,17 @@
       "url": "https://www.estv.admin.ch/fr/numero-identification-des-entreprises-ide"
     }
   },
+  "specific_proposal_release_binding": {
+    "changed_skill_entrypoints": [
+      "lipe",
+      "patent-box-review",
+      "previdenza-inps"
+    ],
+    "date": "2026-10-19",
+    "previous_catalogue_fingerprint": "724abd301a540665f94af2285763d14bdd1904113d1c11f259377e1db0fa0fd8",
+    "scope": "Refresh the exact source catalogue for the current release. Patent Box, LIPE and INPS now retain actual user confirmation of the specific proposal without mandatory professional credentials, signatures or mandates. Preserve every existing Geneva disposition and prior history. This binding adds no jurisdiction, professional or installed-host acceptance. Remove the unused legacy professional-signature approval adapter; optional signed-document verification uses selected tools and trust sources without a professional-role policy.",
+    "version": "0.1.422"
+  },
   "studio_archive_concurrency_release_binding": {
     "date": "2026-10-17",
     "scope": "Product manifest version binding updated. Vera skill entrypoint bytes and existing Geneva dispositions are unchanged. Shared archive runtime now serializes registry writes with bounded waits and refreshes directory metadata independently of the content index. No new jurisdiction or host acceptance is claimed.",
@@ -2011,16 +2022,5 @@
     "reviewed_at": "2026-10-17",
     "scope": "Adds the same task-level usage, outcome and optional 1-5-star reporting contract to existing user processes. Function identities and prior Geneva professional dispositions are unchanged. Usage, technical receipts and satisfaction do not establish professional testing or Geneva acceptance.",
     "version": "0.1.404"
-  },
-  "specific_proposal_release_binding": {
-    "date": "2026-10-19",
-    "version": "0.1.422",
-    "previous_catalogue_fingerprint": "724abd301a540665f94af2285763d14bdd1904113d1c11f259377e1db0fa0fd8",
-    "changed_skill_entrypoints": [
-      "lipe",
-      "patent-box-review",
-      "previdenza-inps"
-    ],
-    "scope": "Refresh the exact source catalogue for the current release. Patent Box, LIPE and INPS now retain actual user confirmation of the specific proposal without mandatory professional credentials, signatures or mandates. Preserve every existing Geneva disposition and prior history. This binding adds no jurisdiction, professional or installed-host acceptance. Remove the unused legacy professional-signature approval adapter; optional signed-document verification uses selected tools and trust sources without a professional-role policy."
   }
 }

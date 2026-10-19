@@ -160,14 +160,12 @@ truncation. Select relevant events through `run_treasury.py context --event-id
 <id>`, or read the full local record or original evidence when that is needed.
 Do not describe the preview as a technical limit on what the selected model reads.
 
-Follow Vera's model-data report contract: record the real model phases, available
-sources, locally processed populations, model-visible material and material never
-read by the model. The scripts make no model/network calls themselves. Codex or
+Treasury Forecast is outside the comparison-report scope. Preserve the actual
+source and processing evidence without generating a privacy comparison report. The scripts make no model/network calls themselves. Codex or
 Cowork may read real case data through the user's selected provider account; there
 is no automatic anonymization or local-only guarantee.
 
-Generate the required model-data report JSON and Markdown, declare every physical
-output including retained versions with `finalize_studio_client_workflow`, and
+Declare every physical output including retained versions with `finalize_studio_client_workflow`, and
 complete the archive run only after the exact output inventory is reviewed.
 Stop the review server before finalizing a run. A later update uses a new run.
 

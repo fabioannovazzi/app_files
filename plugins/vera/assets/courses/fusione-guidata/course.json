@@ -115,7 +115,7 @@
     {
       "path": "modules/fusione-guidata/vendor/modules/client_ledger.py",
       "repository_path": "plugins/studio-archive/scripts/client_ledger.py",
-      "sha256": "9da7f9c3f0413e3ec177e0f53b1ebc44f5422552990831320568673122f2d483"
+      "sha256": "f56bf05c094f6f96549d4e2e01c99d83793194dd3d84faa1abd46b4f501d3927"
     },
     {
       "path": "modules/fusione-guidata/vendor/modules/model_data_report.py",
@@ -140,7 +140,7 @@
     {
       "path": "skills/fusione-guidata/SKILL.md",
       "repository_path": "plugins/vera/skills/fusione-guidata/SKILL.md",
-      "sha256": "d8e53424998d9ff48f5045d46a648c5074cc1f35c750fa703374451577d05bd7"
+      "sha256": "eaa928c9e62013b95e49d7d6b6736084a91298893deaa3dfa04a855660ad7bb7"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

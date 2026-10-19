@@ -510,7 +510,7 @@
     {
       "path": "modules/studio-archive/scripts/client_ledger.py",
       "repository_path": "plugins/studio-archive/scripts/client_ledger.py",
-      "sha256": "9da7f9c3f0413e3ec177e0f53b1ebc44f5422552990831320568673122f2d483"
+      "sha256": "f56bf05c094f6f96549d4e2e01c99d83793194dd3d84faa1abd46b4f501d3927"
     },
     {
       "path": "modules/studio-archive/scripts/folder_intake.py",

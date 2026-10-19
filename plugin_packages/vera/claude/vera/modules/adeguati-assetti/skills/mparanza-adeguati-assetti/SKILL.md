@@ -246,8 +246,8 @@ Default output policy: the Markdown assessment memo and versioned JSON record
 are normal outputs, not choices to propose;
 the memo contains the evidence observations, findings and action plan. Narrative
 uses the user's language. State unresolved areas, professional review status and
-which actions remain proposals. Include Vera's per-phase model-data reports and
-receipt when available, declare the outputs in Studio Archive, then finalize and
+which actions remain proposals. This pipeline is outside Vera's comparison-report
+scope. Declare the outputs in Studio Archive, then finalize and
 complete the run. Completion means delivery, not adequacy or professional approval.
 If archive capability is unavailable, complete the evidence-based review in chat
 or connected files and disclose that no portable run or immutable decision was

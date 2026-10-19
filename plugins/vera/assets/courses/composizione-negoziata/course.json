@@ -95,7 +95,7 @@
     {
       "path": "modules/composizione-negoziata/skills/composizione-negoziata/SKILL.md",
       "repository_path": "plugins/composizione-negoziata/skills/composizione-negoziata/SKILL.md",
-      "sha256": "400c16568029652bf88133afc8997a0fc7a35e25b49e0e67426f504a7372ec6b"
+      "sha256": "35c76a4a6df671f7d1fd7ac0a437347b78376569439853906f02c8dfe1e38d57"
     },
     {
       "path": "modules/composizione-negoziata/skills/composizione-negoziata/agents/openai.yaml",
@@ -135,7 +135,7 @@
     {
       "path": "skills/composizione-negoziata/SKILL.md",
       "repository_path": "plugins/vera/skills/composizione-negoziata/SKILL.md",
-      "sha256": "6501fea5a8a210d2159e290e9fd2e0187738196bac87d6c2f4be9267c766d026"
+      "sha256": "490bbe70168579c2cf26df4efcaef138899049fdca655175508a30b21bc1b8d3"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

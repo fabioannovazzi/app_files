@@ -120,7 +120,7 @@
     {
       "path": "modules/adeguati-assetti/skills/adeguati-assetti/SKILL.md",
       "repository_path": "plugins/adeguati-assetti/skills/adeguati-assetti/SKILL.md",
-      "sha256": "238303755cb266f9dee4d5ec0bd83e3cd814e38f43f80d822de7bdc95a9479ea"
+      "sha256": "7eaf727d71b925324d2f34bc17926ddcc8355a8a5934b078e3e49953ecb96eab"
     },
     {
       "path": "modules/adeguati-assetti/skills/adeguati-assetti/references/geneva.md",
@@ -180,7 +180,7 @@
     {
       "path": "skills/adeguati-assetti/SKILL.md",
       "repository_path": "plugins/vera/skills/adeguati-assetti/SKILL.md",
-      "sha256": "e22a0210241fd1a7682f29408ca8ac9bc1c7f3921d47e9b86dbed4567a5e0a27"
+      "sha256": "991d64f2d540bf00859ff237131cfa1f5493f59146e66f8421e71f33de3dca52"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

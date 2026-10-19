@@ -53,7 +53,7 @@
     },
     {
       "path": "modules/aml-review/skills/mparanza-aml-review/SKILL.md",
-      "sha256": "13620f775b720a1280ceb3d1d32588260e9d7d9329bf2269fe8b6192eb290e07"
+      "sha256": "b5fd48c458b15a17104d1fbe41d74648c08d5486f8c1c42353586cc6b9a11257"
     },
     {
       "path": "modules/aml-review/skills/mparanza-aml-review/references/geneva.md",
@@ -674,5 +674,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "5ff4cc363a406ae683c478db12f9331e8ee7072c19cfea6fb94466494e8ac7db"
+  "canonical_course_sha256": "1f6c70cfdfae24c0b7ceae43aab265c2c0241b61b83235cf4e48cacee8857744"
 }

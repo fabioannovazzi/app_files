@@ -237,8 +237,6 @@ model or server. Local files do not mean offline inference or anonymization.
 POSIX file modes are not a Windows ACL guarantee; use the operator's private
 authorized folder. Only the separately reviewed sanitized CR text and routine
 version/OS/client metadata go to Mparanza after transmission authorization;
-the ZIP and private client reports are not sent by that API. The ordinary
-model-data report can separately send only its digest, random receipt ID, schema
-version and Vera version to the registered receipt-stamping service. Follow Vera's
-model-data-report contract, reporting actual context exposure and unknowns,
-and show its returned readable report even if server stamping is pending.
+the ZIP and private client reports are not sent by that API. This pipeline is
+outside Vera's selective comparison-report scope. Retain the actual processing
+evidence and distinguish observed model reads from unknown exposure.

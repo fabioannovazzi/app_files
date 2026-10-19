@@ -268,7 +268,7 @@ anomalies and choices, then ask whether the user agrees to export this version.
 Record only that actual response, actor, confirmation reference and time. Reuse
 an existing response only for unchanged reviewed content. No professional role,
 certificate, signature, mandate or authority policy is required for this decision.
-The real case remains in its existing Archive run and keeps its model-data report.
+The real case remains in its existing Archive run and preserves its evidence.
 
 ## XML export and qualification
 
@@ -282,7 +282,7 @@ python scripts/lipe.py xml-test --case examples/synthetic-case.json --source-roo
 For an approved case, follow `references/xml-export.md`. Use the studio's one configured filename registry (`VERA_LIPE_EXPORT_REGISTRY`). Obtain the intermediary's
 confirmed unused progressive; do not guess the history of filenames generated
 outside this registry or create a fresh registry to bypass a collision. Export
-re-verifies the actual user confirmation, current sources, disclosure,
+re-verifies the actual user confirmation, current sources, any retained disclosure,
 catalog and artifacts, then reads the generated XML back against the approved VP.
 
 The delivered XML is unsigned and is not transmitted. No real studio, importer
@@ -305,12 +305,13 @@ visible; interpretation and follow-up require professional review.
 
 ## Delivery and privacy
 
-Read Vera's `skills/mparanza-vera/references/model-data-report-contract.md`. Record actual
-extraction, mapping, review and narrative model-visible phases. Local helper
-execution cannot measure host model exposure: `local_processing_receipt.json`
-explicitly leaves it unknown. Build and show the readable `model_data_report.md`
-and its JSON using the shared report helper; declare both and each revision as
-Studio Archive run artifacts. Do not close the managed run without them.
+LIPE is outside Vera's selective comparison-report scope. Preserve extraction,
+mapping, review and narrative evidence without requiring a privacy report for
+review, export or Archive completion. `local_processing_receipt.json` cannot
+measure host model exposure and explicitly leaves it unknown. Declare every
+output revision as a Studio Archive artifact. An existing report, when supplied,
+remains bound to its exact run and must still validate.
+
 Current user restrictions govern any optional external attestation or publishing.
 
 ## Cowork-native Run UX

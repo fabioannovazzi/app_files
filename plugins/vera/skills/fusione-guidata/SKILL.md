@@ -58,13 +58,11 @@ grants. The panel neither initializes a substitute case nor discovers client
 folders. It shows all accessible records and revisions, prepared proposal
 identities, separate exact-version confirmations and verified exports.
 
-For each verified export, the source panel displays the saved canonical
-`model_data_report.md` directly, with the full JSON evidence available separately.
-Reopening reads the same export under current company permissions; it does not
-create another report or claim a new model phase. Real-case exposure remains
-`not_measurable` unless the specialist orchestration supplies observed evidence.
-This report view is source-level work; shared runtime, ticket parsing, long
-identifier wrapping and installed-host acceptance remain unqualified.
+For each verified export, the source panel displays the saved dossier and
+workpapers under current company permissions. Fusione is outside Vera's
+comparison-report scope. Reopening does not claim a new model phase or prove
+what the model received. Shared runtime, ticket parsing, long identifier
+wrapping and installed-host acceptance remain unqualified.
 
 Prepared proposals use the unchanged public `put`, `workpaper`, `bind_archive`
 or `import_archive` helpers. Review the complete preview before independently

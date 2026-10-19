@@ -87,6 +87,6 @@ complete source documents, client/engagement identities, reviewer records and
 software-specific counts. Aggregate reports are not guaranteed anonymous.
 Front-page evidence, proposal requests, actual user decisions and
 confirmation references may also enter the selected model context.
-Private signing keys are never requested. Actual model exposure is recorded separately in the run's model-data report.
+Private signing keys are never requested. LIPE is outside Vera's selective comparison-report scope; local receipts do not measure host model exposure.
 Supplied receipts, IDs, filenames, dates, error descriptions and notes, and any
 file supplied as transmitted may also enter context when the host reads them.

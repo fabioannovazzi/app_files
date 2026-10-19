@@ -370,13 +370,12 @@ actions requiring explicit authority. Calculation and report compilation call no
 remote service. The separately selected benchmark-acquisition helper makes public
 HTTPS reads to its supported NYU or ECB hosts, without sending the private case.
 
-Follow Vera's run-level model-data report contract and show the report in the final
-response. Include source-reading, assumption/modeling and report-review phases,
-and the public URLs and captured benchmark/terms documents when acquisition was
-used. Do not describe an incomplete acquisition as an approved parameter.
+Business Valuation is outside Vera's comparison-report scope. Preserve source,
+assumption, modeling and review evidence, including public URLs and captured
+benchmark/terms documents when acquisition was used. Do not describe an incomplete acquisition as an approved parameter.
 Client documents, personal/company facts, projections, benchmarks and reviewer
 decisions may enter the selected Claude/Cowork model context. Local calculation
 does not mean local-only model processing or automatic anonymization. The helper
-creates no provider-delivery proof. Generate the shared model-data reports in the
-exact run output, declare every physical artifact and complete Studio Archive only
+creates no provider-delivery proof. Declare every physical artifact in the exact
+run output and complete Studio Archive only
 after review. A blocked or incomplete run is retained with its actual status.

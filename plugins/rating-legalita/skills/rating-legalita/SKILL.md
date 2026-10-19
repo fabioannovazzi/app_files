@@ -179,11 +179,9 @@ invent a field map, signature verification, approval, submission receipt or
 official rating. The helper always returns `submission_authorized: false`.
 No portal, email, PEC, public posting or background monitoring is performed.
 
-Follow Vera's `references/model-data-report-contract.md`: generate and display
-`model_data_report.json` and `model_data_report.md` in the exact run output.
-Record actual model-visible inputs rather than saying all work was local.
-Finalize the dossier, requests and report as durable Studio Archive artifacts;
-complete the run only after those artifacts and its model-data report exist.
+Rating Legalita is outside the comparison-report scope. Retain evidence of actual
+model-visible inputs without claiming all work was local. Finalize the dossier
+and requests as durable Studio Archive artifacts, then complete the run.
 
 ## Data boundary
 

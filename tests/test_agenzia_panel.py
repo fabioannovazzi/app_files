@@ -55,6 +55,10 @@ def panel(tmp_path, monkeypatch):
     )
     fake_process.Popen = lambda *a, **k: SimpleNamespace(pid=54321)
     monkeypatch.setattr(cli, "subprocess", fake_process)
+    # This panel harness isolates external setup alongside process creation.
+    # Client identity and real Archive binding have their own integration test.
+    prepared = []
+    monkeypatch.setattr(cli, "prepare_runs", lambda run, plan: prepared.append(plan))
     fixture = json.loads(
         (ROOT / "scripts/course_materials/inputs/agenzia/demo.json").read_text()
     )
@@ -127,6 +131,7 @@ def panel(tmp_path, monkeypatch):
             source=source,
             output=output,
             selected=selected,
+            prepared=prepared,
         )
         browser.close()
 
@@ -153,6 +158,7 @@ def test_panel_saves_selected_dates_and_starts_same_worker(panel, width):
     plans = list((panel.output / "runs").glob("*/plan.json"))
     assert len(plans) == 1
     assert json.loads(plans[0].read_text())["date_to"] == "2026-02-28"
+    assert panel.prepared[0].date_to.isoformat() == "2026-02-28"
 
 
 def test_panel_retains_f24_review_when_switching_views(panel):

@@ -220,7 +220,7 @@
     },
     {
       "path": "modules/new-client/skills/mparanza-new-client/SKILL.md",
-      "sha256": "2c28ac8147169b4238b010a1a63657d4b289f5cc1ac63b0d4507dc7b94bebb81"
+      "sha256": "8ead9773d995662749cb8112f090a47d43a044bd6c66592b45cf2cbcfd369284"
     },
     {
       "path": "modules/new-client/skills/mparanza-new-client/references/geneva.md",
@@ -681,5 +681,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "4138bc673491754fe67bc91f7acde66e9a970c31faed14d19c9095fc36912d08"
+  "canonical_course_sha256": "27ee1c77c346e7edf80bce833cdbaa1d20f1be65455def4fef3659255b630c6f"
 }

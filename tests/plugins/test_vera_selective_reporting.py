@@ -119,9 +119,11 @@ def test_only_selected_public_function_pages_describe_archive_reporting():
 def test_other_products_keep_their_existing_archive_report_requirement(
     archive_core, client_case, monkeypatch
 ):
-    import run_reporting
-
-    monkeypatch.setattr(run_reporting, "selective_reporting_enabled", lambda: False)
+    monkeypatch.setattr(
+        archive_core.ledger._reporting_runtime(),
+        "selective_reporting_enabled",
+        lambda: False,
+    )
     run_id, output = _start(archive_core, client_case, "financial-analysis")
 
     with pytest.raises(archive_core.ArchiveError, match="requires both"):

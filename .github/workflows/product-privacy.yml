@@ -19,7 +19,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: python -m pip install pytest pytest-cov jsonschema pyyaml black==25.1.0 isort==6.0.1 mypy bandit
+      - run: python -m pip install pytest pytest-cov jsonschema pyyaml 'defusedxml>=0.7,<1' black==25.1.0 isort==6.0.1 mypy bandit
       - run: python scripts/sync_privacy_runtime.py --check
       - run: python scripts/build_privacy_contracts.py --check
       - name: Verify binding, unknowns, legacy reopening and product separation

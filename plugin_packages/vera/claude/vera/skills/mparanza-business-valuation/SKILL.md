@@ -216,4 +216,4 @@ When this panel is unavailable, use the unchanged packaged file workflow and
 public helpers. Source, packaged adapter checks and a browser protocol preview
 do not establish installed Claude or connected Cowork host acceptance.
 
-After substantive use, follow Vera's run-level model-data report in `../mparanza-vera/SKILL.md`.
+Business Valuation is outside Vera's selective comparison-report scope.

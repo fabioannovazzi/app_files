@@ -128,7 +128,7 @@ prototype's legal scope or qualify it for another jurisdiction.
 
 The unchanged file-based Codex/Cowork workflow remains available. Whole shared
 renderer, actual model-led/native-host acceptance, independent fresh Cowork
-packaging, readable model-data report delivery and release are still pending;
+packaging and release are still pending;
 this source checkpoint does not claim them. It does not widen professional
 qualification, source validation, deadline, filing or transmission scope.
 <!-- VERA_OPENAI_NATIVE_WORKSPACE_END -->

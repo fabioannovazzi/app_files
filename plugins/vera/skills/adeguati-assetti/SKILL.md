@@ -91,7 +91,7 @@ and creates an immutable `draft_for_review`; it is not a professional decision.
 No model-authored `professional_decision` is accepted. Subsequent assessments need
 a fresh run with the exact sealed same-engagement predecessor and every prior
 action addressed. Interrupted or altered staging/conservation refuses uncertain
-repetition and requires recovery. Model-data reports retain actual model use;
+repetition and requires recovery. Run evidence records actual model use;
 the source-choice confirmation is a work mandate, not a privacy-consent form.
 
 For a conserved or previously prepared record, the panel
@@ -109,8 +109,8 @@ action owners/timing/status, prior records or operating-evidence states. It does
 not establish company adoption, operating effectiveness, adequacy certification,
 an authenticated signature or archive completion. New evidence and semantic
 corrections require the specialist method and a fresh explicit mandate rather
-than changing a conserved record. Actual model-data reporting and shared Archive
-closure remain separate delivery steps. Experimental construction, manuals, adoption,
+than changing a conserved record. Shared Archive closure remains a separate
+delivery step; this pipeline requires no privacy comparison report. Experimental construction, manuals, adoption,
 operating review and financial lab remain in their existing supervised routes.
 If native tools are unavailable, including Cowork, continue the maintained
 component skill and CLI through the managed Python launcher in the same

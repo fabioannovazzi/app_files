@@ -240,32 +240,14 @@ entries or establishes prior SdI submission status.
 
 ## Delivery and model-data evidence
 
-Follow Vera's run-level model-data report contract. Record source pages/images
-actually visible during extraction, proposal/field evidence and decisions
-visible during review, and errors/results visible after local validation.
-`source_evidence.json` counts locally prepared material; do not claim every
-prepared page reached the model. Record actual native-vision exposure honestly.
-Use `full_context_required` when the entire relevant invoice was needed.
-
-Read Vera's report contract once and use
-`../../references/model-data-report-example.json` (relative to this skill) as a
-schema-valid synthetic example. Replace its run metadata and measurements with
-actual evidence, and record every model-visible phase, including review and
-checks when applicable. The example is not a receipt for the current run.
-Use supported units such as `files`, `pages`, `images`, `items` or
-`evidence_excerpts`; invoice fields can be counted as `items` with a descriptive
-label, not a new `fields` unit. Unknown quantities must not be guessed or entered
-as zero. Consult `scripts/model_data_report.py` in the Vera root for other units.
-Build the report through the shared builder after the final checks; do not hand
-construct its hashes or defer the required report until after run completion.
-
-Create `model_data_report.json` and `model_data_report.md` in the exact run
-output using Vera's shared builder; its minimal server receipt is a shared Vera
-service, not an invoice upload. For archived work, declare all final artifacts in Studio Archive, review and
-complete the run only after the report contract is satisfied. For standalone work,
-retain the report and artifacts in the task output; do not call Archive completion. Link
-the XML, preview and export report, distinguishing schema validation, local
-checks, professional review and untested SdI acceptance.
+Invoice XML is outside Vera's selective comparison-report scope. Retain source,
+proposal, review and validation evidence without creating a privacy comparison
+report. `source_evidence.json` counts locally prepared material; it does not prove
+which pages reached the model. Unknown exposure must not be reported as zero.
+For archived work, declare the final artifacts in Studio Archive and finalize
+and complete the run after review. For standalone work, retain them in the task
+output. Link the XML, preview and export report, distinguishing schema validation,
+local checks, professional review and untested SdI acceptance.
 
 Claude and Cowork use their current native model to interpret evidence and the
 same local helpers where supported. A runtime without local scripts may prepare

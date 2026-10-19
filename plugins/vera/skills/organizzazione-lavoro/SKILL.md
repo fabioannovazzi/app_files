@@ -67,7 +67,7 @@ not authority to write external events or prerecorded completed outputs.
 Execute capture, rescheduling, a fresh-process read, meeting actions and the
 learner's distinct practice through the real backend. Inspect returned identities,
 revisions, source, owner and times; keep completed tasks recoverable. Deliver the
-actual register results and the standard model-data report. Interpret notes,
+actual register results. Interpret notes,
 priorities and missing facts with the model; no scripted semantic classifier.
 Imported busy periods teach comparison only and never prove live availability.
 
@@ -215,16 +215,11 @@ organizer cannot replace their validation or infer financial/legal conclusions.
 
 ## Quali dati arrivano al modello
 
-After substantive work, follow `../vera/references/model-data-report-contract.md`.
-Use `report_workspace` for this turn's durable output directory/run_id. Record
-actual capture, planning/meeting and connector-review phases separately. Save
-the actual selected tool payload evidence when available; otherwise use
-host_attested or not_measurable and disclose the limitation. Never claim model
-provider transmission measurements or that the context description returned by
-`context` is a completed run report. Build/validate through the maintained
-`scripts/model_data_report.py` helper, retain its actual receipt status and show
-`display_markdown` with the saved report link. Briefings/reports stay outside
-plugin source and client files; reopening a saved report requires no new run.
+Studio work organization is outside Vera's comparison-report scope. Use
+`report_workspace` for durable briefings and other work outputs. Preserve actual
+tool payload evidence when available and disclose unknown exposure. The
+`context` description does not measure model-provider transmission. Briefings
+stay outside plugin source and client files.
 
 The host model receives the user's typed or transcribed request, selected calendar
 responses, studio preferences, commitment details, recent stored meeting summaries

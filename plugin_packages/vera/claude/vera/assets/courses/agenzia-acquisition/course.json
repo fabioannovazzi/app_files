@@ -201,7 +201,7 @@
     },
     {
       "path": "modules/browser-automation/skills/mparanza-agenzia-acquisition/SKILL.md",
-      "sha256": "9726fe67c028cf4c8b28734fa233d88449bc11cbcbfe70141a5c5f4a78027e03"
+      "sha256": "4c826e0e8b43f68763b66d574003c8e19a2d999850b049e69e3a66fbdf34e24f"
     },
     {
       "path": "skills/mparanza-agenzia-acquisition/SKILL.md",
@@ -430,5 +430,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "1720fb41998a92599c38e931cd8b40d14a0fa814543c6cc187bac1d68ee1000e"
+  "canonical_course_sha256": "bf3559fa0d185809b70240bfcfc83b4ad8ba9cffe7f7b0c5cff25f17a4221e36"
 }

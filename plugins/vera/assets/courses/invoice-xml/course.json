@@ -90,12 +90,12 @@
     {
       "path": "modules/invoice-xml/scripts/source_evidence.py",
       "repository_path": "plugins/invoice-xml/scripts/source_evidence.py",
-      "sha256": "0e7a664c6fd1647f37471a7b46efd15c7961f5f9fb20889050e7c8fdae58b465"
+      "sha256": "2a4f31ab7bc98d3da6d33896676cb00d272d9803bfe17aa6454d3b25f7f3c8f0"
     },
     {
       "path": "modules/invoice-xml/skills/invoice-xml/SKILL.md",
       "repository_path": "plugins/invoice-xml/skills/invoice-xml/SKILL.md",
-      "sha256": "0d171c8a3a797f5fbac73500ae42582c2b32b6946f5ef3c737a14a8af9ff442f"
+      "sha256": "5f23cb54fbe7fc2a4b1087fe53236da9157dbcd2dc39dc5744c17ae2a73117ed"
     },
     {
       "path": "modules/invoice-xml/vendor/modules/__init__.py",
@@ -150,7 +150,7 @@
     {
       "path": "skills/invoice-xml/SKILL.md",
       "repository_path": "plugins/vera/skills/invoice-xml/SKILL.md",
-      "sha256": "05d57f5b5ce608f99a794961c61a46cb8f5b6a187f49ce1eef42ef7228eda0e1"
+      "sha256": "f64d3ef579eef31a99569e2664d0a16845c90837d9619b32524cb351ca80f662"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

@@ -11,6 +11,7 @@ from __future__ import annotations
 import errno
 import hashlib
 import importlib
+import importlib.util
 import json
 import os
 import re
@@ -23,7 +24,9 @@ import time
 from collections.abc import Iterator, Mapping, Sequence
 from contextlib import contextmanager
 from datetime import datetime, timezone
+from functools import cache
 from pathlib import Path
+from types import ModuleType
 from typing import Any
 
 _PROCESS_LOCK_MODULE = importlib.import_module("msvcrt" if os.name == "nt" else "fcntl")
@@ -2078,6 +2081,18 @@ def prepare_run(
         return {"status": "prepared", **loaded}
 
 
+@cache
+def _reporting_runtime() -> ModuleType:
+    """Load this ledger's reporting sibling, including direct-file entrypoints."""
+    path = Path(__file__).resolve().with_name("run_reporting.py")
+    spec = importlib.util.spec_from_file_location("run_reporting", path)
+    if spec is None or spec.loader is None:
+        raise LedgerError("The bundled Archive reporting runtime is unavailable")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
 def _write_run_status_locked(
     client_root: Path,
     engagement_id: str,
@@ -2123,11 +2138,9 @@ def _write_run_status_locked(
         "running",
         "ready_for_review",
     }:
-        from run_reporting import finish_report
-
         # The outcome is already durable; reporting must never erase or mask it.
         try:
-            reporting = finish_report(loaded)
+            reporting = _reporting_runtime().finish_report(loaded)
         except (ValueError, OSError) as exc:
             reporting = {
                 "status": "unavailable",
@@ -2188,7 +2201,7 @@ def start_run(client_root: Path, engagement_id: str, run_id: str) -> dict[str, A
                 )
             if "running" not in _RUN_TRANSITIONS[current]:
                 raise LedgerError(f"Run cannot transition from {current} to running.")
-        from run_reporting import report_pipeline, selective_reporting_enabled
+        runtime = _reporting_runtime()
 
         if (
             loaded["run"]["status"]
@@ -2196,8 +2209,8 @@ def start_run(client_root: Path, engagement_id: str, run_id: str) -> dict[str, A
                 "failed",
                 "ready_for_review",
             }
-            and selective_reporting_enabled()
-            and report_pipeline(loaded["run"]["workflow_id"])
+            and runtime.selective_reporting_enabled()
+            and runtime.report_pipeline(loaded["run"]["workflow_id"])
         ):
             output = Path(loaded["output_dir"])
             names = (
@@ -2347,10 +2360,10 @@ def _finalize_run_locked(
     if loaded["run"]["status"] not in {"running", "ready_for_review"}:
         raise LedgerError("Only a running or review-ready run can be finalized.")
     output_dir = Path(loaded["output_dir"])
-    from run_reporting import finish_report, report_declarations
+    runtime = _reporting_runtime()
 
     try:
-        reporting = finish_report(loaded)
+        reporting = runtime.finish_report(loaded)
     except (ValueError, OSError) as exc:
         raise LedgerError(f"Run reporting evidence is invalid: {exc}") from exc
     reporting = {
@@ -2378,7 +2391,7 @@ def _finalize_run_locked(
             *declarations,
             *(
                 item
-                for item in report_declarations(output_dir)
+                for item in runtime.report_declarations(output_dir)
                 if item["path"] not in paths
             ),
         ]
