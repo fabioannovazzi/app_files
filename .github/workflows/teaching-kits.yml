@@ -1,0 +1,269 @@
+name: Teaching kits
+
+# Authored lessons and teaching runtime only. Generated course inventories and
+# product ZIPs change during ordinary fixes and must not start editorial review.
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/teaching-kits.yml'
+      - 'scripts/course_materials/**'
+      - 'plugins/_shared/vendor/modules/courseware/**'
+      - 'plugins/_shared/vendor/modules/desktop_teaching/**'
+      - 'plugins/*/scripts/*teaching*.py'
+      - 'plugins/*/scripts/local_courses.py'
+      - 'plugins/*/scripts/local_onboarding*.py'
+      - 'plugins/*/scripts/onboarding_session_start.py'
+      - 'plugins/*/scripts/course_chat*'
+      - 'plugins/*/skills/learn-with-*/**'
+      - 'tests/plugins/*teaching*.py'
+      - 'tests/plugins/test_course_*.py'
+      - 'tests/plugins/test_prepared_course*.py'
+      - 'tests/plugins/test_mixed_course_release.py'
+      - 'tests/plugins/test_remote_course_files.py'
+      - 'tests/plugins/test_vera_local_onboarding.py'
+      - 'tests/plugins/test_vera_get_started.py'
+      - 'tests/plugins/test_optional_onboarding.py'
+  pull_request:
+    paths:
+      - '.github/workflows/teaching-kits.yml'
+      - 'scripts/course_materials/**'
+      - 'plugins/_shared/vendor/modules/courseware/**'
+      - 'plugins/_shared/vendor/modules/desktop_teaching/**'
+      - 'plugins/*/scripts/*teaching*.py'
+      - 'plugins/*/scripts/local_courses.py'
+      - 'plugins/*/scripts/local_onboarding*.py'
+      - 'plugins/*/scripts/onboarding_session_start.py'
+      - 'plugins/*/scripts/course_chat*'
+      - 'plugins/*/skills/learn-with-*/**'
+      - 'tests/plugins/*teaching*.py'
+      - 'tests/plugins/test_course_*.py'
+      - 'tests/plugins/test_prepared_course*.py'
+      - 'tests/plugins/test_mixed_course_release.py'
+      - 'tests/plugins/test_remote_course_files.py'
+      - 'tests/plugins/test_vera_local_onboarding.py'
+      - 'tests/plugins/test_vera_get_started.py'
+      - 'tests/plugins/test_optional_onboarding.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: teaching-kits-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  teaching-kits:
+    runs-on: ubuntu-latest
+    # Native lesson executions and editorial acceptance belong to this workflow.
+    timeout-minutes: 60
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set local taxonomy fixture paths
+        run: |
+          echo "TEACHING_TAXONOMY_CATALOGUE=$RUNNER_TEMP/teaching-bilancio-catalogue.json" >> "$GITHUB_ENV"
+          echo "TEACHING_TAXONOMY_PACKAGE=$RUNNER_TEMP/teaching-PCI-2018-11-04.zip" >> "$GITHUB_ENV"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install plugin build dependencies
+        run: python -m pip install -r scripts/requirements-plugin-build.txt
+      - name: Install declared workflow dependencies and verification tools
+        run: >-
+          python -m pip install pytest pytest-cov 'coverage>=7.10' black==25.1.0 isort==6.0.1 mypy bandit reportlab 'jsonschema>=4.23,<5'
+          -r plugins/adeguati-assetti/requirements.txt
+          -r plugins/aml-review/requirements.txt
+          -r plugins/apertura-pratica/requirements.txt
+          -r plugins/archive-organization/requirements.txt
+          -r plugins/attribute-reporting/requirements.txt
+          -r plugins/bandi-agevolazioni/requirements.txt
+          -r plugins/bilancio-xbrl-it/requirements.txt
+          -r plugins/browser-automation/requirements-agenzia.txt
+          -r plugins/business-planning/requirements.txt
+          -r plugins/business-valuation/requirements.txt
+          -r plugins/centrale-rischi-review/requirements.txt
+          -r plugins/check-entries/requirements.txt
+          -r plugins/clara/requirements.txt
+          -r plugins/client-file-preparation/requirements.txt
+          -r plugins/comunicazione-professionale/requirements.txt
+          -r plugins/concordato-plan-review/requirements.txt
+          -r plugins/deep-research-validator/requirements.txt
+          -r plugins/financial-analysis/requirements.txt
+          -r plugins/invoice-xml/requirements.txt
+          -r plugins/journal-bank-reconciliation/requirements.txt
+          -r plugins/journal-sampling/requirements.txt
+          -r plugins/management-control-pack/requirements.txt
+          -r plugins/open-item-reconciliation/requirements.txt
+          -r plugins/passive-invoice-audit/requirements.txt
+          -r plugins/patent-box-review/requirements.txt
+          -r plugins/presenza-digitale-studio/requirements.txt
+          -r plugins/previdenza-inps/requirements.txt
+          -r plugins/prompt-optimizer/requirements.txt
+          -r plugins/registro-imprese-sari/requirements.txt
+          -r plugins/report-builder/requirements.txt
+          -r plugins/sales-plan/requirements.txt
+          -r plugins/studio-archive/requirements.txt
+          -r plugins/treasury-forecast/requirements.txt
+          -r plugins/variance-analysis/requirements.txt
+      - name: Install Chromium for the local browser teaching regression
+        run: python -m playwright install --with-deps chromium
+      - name: Build the checksum-verified official taxonomy for local OIC execution
+        shell: bash
+        run: |
+          curl --fail --location --retry 2 --max-time 60 --output "$RUNNER_TEMP/teaching-PCI-2018-11-04.zip" https://it.xbrl.org/wp-content/uploads/sites/5/2018/11/PCI-2018-11-04.zip
+          python plugins/bilancio-xbrl-it/scripts/build_taxonomy_catalogue.py \
+            --package "$RUNNER_TEMP/teaching-PCI-2018-11-04.zip" \
+            --entry-point ORDINARY=2018-11-04/itcc-ci-ese-2018-11-04.xsd \
+            --entry-point ABBREVIATED=2018-11-04/itcc-ci-abb-2018-11-04.xsd \
+            --entry-point MICRO=2018-11-04/itcc-ci-micr-2018-11-04.xsd \
+            --taxonomy-id PCI_2018-11-04 \
+            --expected-sha256 c24b86375529469ca0be9a06b231fbb05da18df99fa36a1db2e587ab51e2f0f1 \
+            --official-source https://it.xbrl.org/wp-content/uploads/sites/5/2018/11/PCI-2018-11-04.zip \
+            --output "$TEACHING_TAXONOMY_CATALOGUE"
+      # A CLI may provision the shared environment before importing the workflow.
+      # Keep cold setup outside the teaching tests' 60-second analysis deadline;
+      # the dedicated cold-start matrix still verifies first-time installation.
+      - name: Prepare the declared managed workflow runtime
+        timeout-minutes: 10
+        run: |
+          python -m zipfile -e plugin_packages/clara/clara-plugin.zip "$RUNNER_TEMP/clara-managed-runtime"
+          python "$RUNNER_TEMP/clara-managed-runtime/clara-codex-plugin/plugins/clara/scripts/check_dependencies.py" --module variance-analysis
+          python plugins/vera/scripts/check_dependencies.py --module concordato-plan-review
+      - name: Verify teaching-kit languages, real executions and native packages
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_teaching_release_review.py tests/plugins/test_teaching_execution_evidence.py tests/plugins/test_prepared_courses.py tests/plugins/test_course_chat_buttons.py tests/plugins/test_course_preview.py tests/plugins/test_mixed_course_release.py tests/plugins/test_prepared_course_packages.py tests/plugins/test_teaching_package_projection.py tests/plugins/test_remote_course_files.py tests/plugins/test_teaching_kit_execution.py tests/plugins/test_teaching_kit_advisory_execution.py tests/plugins/test_teaching_kit_transcript_execution.py tests/plugins/test_teaching_kit_website_execution.py tests/plugins/test_teaching_presentation_execution.py tests/plugins/test_teaching_inps_execution.py
+          tests/plugins/test_teaching_workbook_dimensions.py tests/plugins/test_teaching_concordato_execution.py tests/plugins/test_teaching_question_execution.py tests/plugins/test_teaching_registro_execution.py tests/plugins/test_teaching_bilancio_execution.py
+          tests/plugins/test_teaching_attribute_execution.py
+          tests/plugins/test_teaching_agenzia_execution.py
+          tests/plugins/test_teaching_studio_work_execution.py
+          tests/plugins/test_teaching_bandi_execution.py
+          tests/plugins/test_teaching_invoice_xml_execution.py
+          tests/plugins/test_teaching_communication_execution.py
+          tests/plugins/test_teaching_management_execution.py
+          tests/plugins/test_business_valuation.py
+          tests/plugins/test_teaching_clara_budget_execution.py
+          tests/plugins/test_teaching_esg_execution.py
+          tests/plugins/test_teaching_patent_box_execution.py
+          tests/plugins/test_teaching_cnc_execution.py
+          tests/plugins/test_teaching_fusione_execution.py
+          tests/plugins/test_teaching_trasformazione_execution.py
+          tests/plugins/test_teaching_studio_document_format_execution.py
+          tests/plugins/test_teaching_cnc_practical_execution.py
+          tests/plugins/test_teaching_scissione_execution.py
+          tests/plugins/test_teaching_lipe_execution.py
+          tests/plugins/test_teaching_tax_litigation_execution.py
+          tests/plugins/test_cnc_integrations.py
+          tests/plugins/test_cowork_teaching.py
+          tests/plugins/test_vera_get_started.py
+          tests/plugins/test_teaching_browser_execution.py
+          tests/plugins/test_teaching_purchase_execution.py
+          tests/plugins/test_matter_review_presentation.py
+          tests/plugins/test_vera_local_onboarding.py
+          --cov=plugins/_shared/vendor/modules/courseware --cov-fail-under=80
+          --junitxml=${{ runner.temp }}/teaching-native.xml -o junit_family=legacy
+      - name: Check course runtime, compiler and editorial acceptance
+        run: |
+          python -m black --check tests/plugins/test_teaching_patent_box_execution.py
+          python -m isort --check-only tests/plugins/test_teaching_patent_box_execution.py
+          python -m mypy --follow-imports=skip tests/plugins/test_teaching_patent_box_execution.py
+          python -m bandit -q -ll tests/plugins/test_teaching_patent_box_execution.py
+          python scripts/course_materials/build_catalog.py --check
+          python scripts/course_materials/build_public_catalog.py --check
+          python -m black --check tests/plugins/test_teaching_cnc_execution.py tests/plugins/test_teaching_scissione_execution.py
+          python -m isort --check-only tests/plugins/test_teaching_cnc_execution.py tests/plugins/test_teaching_scissione_execution.py
+          python scripts/course_materials/verify_release.py --junit "$RUNNER_TEMP/teaching-native.xml"
+          python scripts/course_materials/build_presentation_baselines.py --check
+          python -m black --check scripts/course_materials/build_presentation_baselines.py tests/plugins/_business_teaching.py tests/plugins/_presentation_teaching.py tests/plugins/test_teaching_presentation_execution.py
+          python -m isort --check-only scripts/course_materials/build_presentation_baselines.py tests/plugins/_business_teaching.py tests/plugins/_presentation_teaching.py tests/plugins/test_teaching_presentation_execution.py
+          python -m mypy --follow-imports=skip scripts/course_materials/build_presentation_baselines.py
+          python -m bandit -q scripts/course_materials/build_presentation_baselines.py
+          python -m black --check scripts/course_materials/verify_release.py tests/plugins/_teaching_release.py tests/plugins/test_teaching_release_review.py tests/plugins/test_teaching_trasformazione_execution.py tests/plugins/test_teaching_esg_execution.py tests/plugins/test_teaching_execution_evidence.py
+          python -m isort --check-only scripts/course_materials/verify_release.py tests/plugins/_teaching_release.py tests/plugins/test_teaching_release_review.py tests/plugins/test_teaching_trasformazione_execution.py tests/plugins/test_teaching_esg_execution.py tests/plugins/test_teaching_execution_evidence.py
+          python -m mypy --follow-imports=skip scripts/course_materials/verify_release.py tests/plugins/_teaching_release.py
+          python -m bandit -q scripts/course_materials/verify_release.py tests/plugins/_teaching_release.py
+          python -m black --check scripts/course_materials/build_attribute_inputs.py tests/plugins/test_teaching_attribute_execution.py
+          python -m isort --check-only scripts/course_materials/build_attribute_inputs.py tests/plugins/test_teaching_attribute_execution.py
+          python -m mypy --follow-imports=skip scripts/course_materials/build_attribute_inputs.py
+          python -m bandit -q scripts/course_materials/build_attribute_inputs.py
+          python -m black --check tests/plugins/test_teaching_bandi_execution.py tests/plugins/test_teaching_purchase_execution.py
+          python -m isort --check-only tests/plugins/test_teaching_bandi_execution.py tests/plugins/test_teaching_purchase_execution.py
+          python -m black --check tests/plugins/_invoice_teaching.py tests/plugins/test_teaching_invoice_xml_execution.py
+          python -m isort --check-only tests/plugins/_invoice_teaching.py tests/plugins/test_teaching_invoice_xml_execution.py
+          python -m black --check tests/plugins/test_teaching_communication_execution.py tests/plugins/test_teaching_management_execution.py
+          python -m isort --check-only tests/plugins/test_teaching_communication_execution.py tests/plugins/test_teaching_management_execution.py
+          python -m black --check scripts/course_materials/finalize_workbook_dimensions.py tests/plugins/test_teaching_workbook_dimensions.py tests/plugins/test_teaching_concordato_execution.py tests/plugins/test_teaching_inps_execution.py tests/plugins/test_teaching_question_execution.py tests/plugins/test_teaching_registro_execution.py tests/plugins/test_teaching_bilancio_execution.py
+          python -m isort --check-only scripts/course_materials/finalize_workbook_dimensions.py tests/plugins/test_teaching_workbook_dimensions.py tests/plugins/test_teaching_concordato_execution.py tests/plugins/test_teaching_inps_execution.py tests/plugins/test_teaching_question_execution.py tests/plugins/test_teaching_registro_execution.py tests/plugins/test_teaching_bilancio_execution.py
+          python -m mypy --follow-imports=skip scripts/course_materials/finalize_workbook_dimensions.py
+          python -m bandit -q scripts/course_materials/finalize_workbook_dimensions.py
+          python -m black --check plugins/_shared/vendor/modules/courseware scripts/course_materials/build_catalog.py scripts/course_materials/render_catalog.py tests/plugins/test_prepared_courses.py tests/plugins/test_course_chat_buttons.py tests/plugins/test_course_preview.py tests/plugins/test_mixed_course_release.py tests/plugins/test_prepared_course_packages.py tests/plugins/test_teaching_kit_execution.py tests/plugins/test_teaching_kit_advisory_execution.py tests/plugins/test_teaching_kit_transcript_execution.py tests/plugins/test_teaching_kit_website_execution.py
+          python -m isort --check-only plugins/_shared/vendor/modules/courseware scripts/course_materials/build_catalog.py scripts/course_materials/render_catalog.py tests/plugins/test_prepared_courses.py tests/plugins/test_course_chat_buttons.py tests/plugins/test_course_preview.py tests/plugins/test_mixed_course_release.py tests/plugins/test_prepared_course_packages.py tests/plugins/test_teaching_kit_execution.py tests/plugins/test_teaching_kit_advisory_execution.py tests/plugins/test_teaching_kit_transcript_execution.py tests/plugins/test_teaching_kit_website_execution.py
+          python -m mypy --follow-imports=skip plugins/_shared/vendor/modules/courseware/policy.py plugins/_shared/vendor/modules/courseware/library.py plugins/_shared/vendor/modules/courseware/execution.py scripts/course_materials/build_catalog.py scripts/course_materials/render_catalog.py
+          python -m bandit -qr plugins/_shared/vendor/modules/courseware scripts/course_materials/build_catalog.py scripts/course_materials/render_catalog.py
+      - name: Check prepared Concordato source PDFs
+        run: python scripts/course_materials/build_concordato_support.py --check
+
+  local-teaching:
+    name: Local teaching (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    timeout-minutes: 30
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install plugin build dependencies
+        run: python -m pip install -r scripts/requirements-plugin-build.txt
+      - name: Install local teaching lifecycle test dependencies
+        run: >-
+          python -m pip install pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit reportlab
+          -r plugins/client-file-preparation/requirements.txt
+          -r plugins/journal-sampling/requirements.txt
+          -r plugins/check-entries/requirements.txt
+          -r plugins/archive-organization/requirements.txt
+      - name: Verify local profiles, native lesson handoffs and transmission suppression
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_vera_local_onboarding.py tests/plugins/test_vera_teaching.py
+          --cov=local_teaching --cov=local_onboarding --cov=local_onboarding_case
+          --cov=onboarding_session_start --cov-fail-under=80
+      - name: Verify Clara and Lucia local teaching, isolation and native handoffs
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_desktop_teaching.py tests/plugins/test_desktop_teaching_packages.py
+          tests/plugins/test_teaching_execution_evidence.py
+          tests/plugins/test_teaching_product_scope.py tests/plugins/test_optional_onboarding.py
+          --cov=desktop_teaching --cov-fail-under=80
+      - name: Check shared teaching code quality
+        run: |
+          python -m black --check plugins/_shared/vendor/modules/desktop_teaching tests/plugins/test_desktop_teaching.py tests/plugins/test_teaching_product_scope.py tests/plugins/_teaching_execution.py tests/plugins/test_teaching_execution_evidence.py
+          python -m isort --check-only plugins/_shared/vendor/modules/desktop_teaching tests/plugins/test_desktop_teaching.py tests/plugins/test_teaching_product_scope.py tests/plugins/_teaching_execution.py tests/plugins/test_teaching_execution_evidence.py
+          python -m mypy --follow-imports=skip plugins/_shared/vendor/modules/desktop_teaching/onboarding.py plugins/_shared/vendor/modules/desktop_teaching/teaching.py plugins/_shared/vendor/modules/desktop_teaching/cases.py
+          python -m bandit -qr plugins/_shared/vendor/modules/desktop_teaching
+      - name: Verify mandatory course file access on every platform
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_course_file_access.py tests/plugins/test_course_chat_buttons.py
+          --cov=courseware.access --cov=courseware.chat --cov-report=term-missing --cov-fail-under=80
+      - name: Check onboarding code quality
+        run: |
+          python -m black --check plugins/vera/scripts/local_onboarding.py plugins/vera/scripts/local_onboarding_case.py plugins/vera/scripts/onboarding_session_start.py plugins/vera/scripts/local_teaching.py tests/plugins/test_vera_local_onboarding.py tests/plugins/test_vera_teaching.py
+          python -m isort --check-only plugins/vera/scripts/local_onboarding.py plugins/vera/scripts/local_onboarding_case.py plugins/vera/scripts/onboarding_session_start.py plugins/vera/scripts/local_teaching.py tests/plugins/test_vera_local_onboarding.py tests/plugins/test_vera_teaching.py
+          python -m mypy --follow-imports=skip plugins/vera/scripts/local_onboarding.py plugins/vera/scripts/local_onboarding_case.py plugins/vera/scripts/onboarding_session_start.py plugins/vera/scripts/local_teaching.py
+          python -m bandit -q plugins/vera/scripts/local_onboarding.py plugins/vera/scripts/local_onboarding_case.py plugins/vera/scripts/onboarding_session_start.py plugins/vera/scripts/local_teaching.py
+
