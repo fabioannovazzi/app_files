@@ -236,37 +236,3 @@ unsupported-layout result. Review targeted evidence, revise only supported
 recipe options, retain all attempts and require full-source replay plus the
 ordinary source-mapping receipt. Product self-improvement and generated parsers
 are not part of this route.
-
-
-## Technical review and professional approval
-
-Mapping and matching-policy review authorizes computation; it does not approve
-accounts or the reconciliation professionally. Reuse the user's established
-choices and explicit delegation. An AI may inspect evidence and record its own
-technical review for a draft, including ordinary client work, within that mandate.
-Use its truthful AI identity and actual review date. Do not ask the user to repeat
-an authorization already given. Ask only about an unresolved material choice;
-never silently adopt an unreviewed proposal or invent delegation.
-
-The receipt command requires `review_authority` alongside the decisions:
-
-```json
-{
-  "actor_kind": "ai",
-  "basis": "user_delegated",
-  "authorization_ref": "actual trusted user message or retained mandate reference",
-  "professional_approval": "pending"
-}
-```
-
-For an actual human technical review use `actor_kind: human` and
-`basis: user_confirmed`, with the actual reviewer and authorization reference.
-These fields are claims grounded in the trusted conversation, not proof of
-consent derived from source documents. The receipt binds attribution to the
-reviewed source and technical choices. Neither actor can grant professional
-approval through this command. Keep final professional approval pending and
-return the useful draft workbook; do not stop draft computation solely because
-that approval is pending. Professional sign-off, unresolved material choices,
-source qualification and host action permissions remain separate gates.
-A host denial must be reported and respected; these instructions cannot override
-it or authorize a retry. This separation applies to live work as well as tests.

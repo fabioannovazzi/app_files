@@ -172,13 +172,7 @@ def _decisions(recipe: dict) -> dict:
         "direction_value_mapping": {},
     }
     return {
-        "reviewer_ref": "AI.synthetic.operator",
-        "review_authority": {
-            "actor_kind": "ai",
-            "basis": "user_delegated",
-            "authorization_ref": "test-user-mandate",
-            "professional_approval": "pending",
-        },
+        "reviewer_ref": "reviewer.synthetic",
         "reviewed_on": "2026-10-08",
         "bank": {
             "files": {key: copy.deepcopy(decision) for key in recipe["bank"]["files"]}
@@ -293,13 +287,6 @@ def test_managed_pdf_inspection_sealing_reconciliation_and_stale_source(
     assert reconciled.returncode == 0, reconciled.stderr
     assert (output / "reconciliation/material_value_ledger.json").is_file()
     assert "matched=2" in reconciled.stderr
-    audit = json.loads(
-        (output / "reconciliation/reconciliation_audit.json").read_text()
-    )
-    assert audit["professional_approval"] == "pending"
-    assert audit["technical_review_authority"]["actor_kind"] == "ai"
-    assert audit["technical_review_authority"]["basis"] == "user_delegated"
-    assert (output / "reconciliation/journal_bank_reconciliation.xlsx").is_file()
 
     # Public core reinspection is used here because the archive gate separately
     # rejects tampered imported bytes before the CLI reaches source qualification.
@@ -572,78 +559,3 @@ def test_managed_registration_pdf_layout_sealing_and_reconciliation(
     normalized = (output / "reconciliation/normalized_journal.csv").read_text()
     assert "PDF page 1" in normalized and "PDF page 2" in normalized
     assert (output / "reconciliation/journal_bank_reconciliation.xlsx").is_file()
-
-
-@pytest.mark.parametrize(
-    "actor,basis", [("ai", "user_delegated"), ("human", "user_confirmed")]
-)
-def test_technical_review_binds_actor_without_professional_approval(
-    tmp_path, actor, basis
-):
-    core = load_core()
-    sealer = _load(
-        ROOT / "plugins/journal-bank-reconciliation/scripts/seal_review_receipts.py",
-        "seal_actor_review",
-    )
-    case = _case(tmp_path)
-    output = Path(case["output_dir"])
-    sources = {
-        "bank" if item["role"] == "source" else item["role"]: Path(item["path"])
-        for item in case["context"]["input_bindings"]
-    }
-    core.inspect_inputs(sources["bank"], sources["journal"], output)
-    recipe = json.loads((output / "suggested_recipe.json").read_text())
-    decisions = _decisions(recipe)
-    decisions["review_authority"].update(actor_kind=actor, basis=basis)
-    decisions["reviewer_ref"] = (
-        "AI.synthetic.operator" if actor == "ai" else "human.test.operator"
-    )
-    receipts = json.loads((output / "input_receipts.json").read_text())["receipts"]
-    sealed = sealer.seal_review_receipts(recipe, decisions, receipts, case["context"])
-    authority = decisions["review_authority"]
-    mapping = next(iter(sealed["bank"]["files"].values()))["mapping_decision"]
-    assert mapping["content"]["review_authority"] == authority
-    policy, receipt, error = core._validated_relationship_decision(
-        sealed,
-        source_artifact_refs=[r["artifact_id"] for r in receipts],
-        tolerance_text="0",
-        date_window_days=0,
-    )
-    assert error is None
-    assert receipt["content"]["review_authority"] == authority
-    assert receipt["content"]["review_authority"]["professional_approval"] == "pending"
-    # Changing actor attribution without resealing is stale, just like changing a mapping.
-    sealed["relationship"]["decision"]["content"]["review_authority"][
-        "actor_kind"
-    ] = "other"
-    assert (
-        "stale"
-        in core._validated_relationship_decision(
-            sealed,
-            source_artifact_refs=[r["artifact_id"] for r in receipts],
-            tolerance_text="0",
-            date_window_days=0,
-        )[2]
-    )
-
-
-@pytest.mark.parametrize(
-    "change",
-    [
-        {"actor_kind": []},
-        {"professional_approval": "approved"},
-        {"authorization_ref": ""},
-        {"actor_kind": "ai", "basis": "user_confirmed"},
-    ],
-)
-def test_technical_review_rejects_approval_or_missing_authority(change):
-    core = load_core()
-    authority = {
-        "actor_kind": "ai",
-        "basis": "user_delegated",
-        "authorization_ref": "trusted-user-message",
-        "professional_approval": "pending",
-    }
-    authority.update(change)
-    with pytest.raises(ValueError):
-        core.validate_technical_review_authority(authority)

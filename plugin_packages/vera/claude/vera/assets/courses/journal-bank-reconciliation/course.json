@@ -44,7 +44,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/references/workflow-reference.md",
-      "sha256": "9439fe82f9fbd1f1d48d25306b5c63d3fff3a098732bc29f5e7af4f0c9ca9059"
+      "sha256": "a387406183240e1a33d134863055fa78d29d53d114ed90c579ce0cd756eec90f"
     },
     {
       "path": "modules/journal-bank-reconciliation/requirements.txt",
@@ -72,7 +72,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/journal_bank_core.py",
-      "sha256": "8aa767c3bdd2990bf941682c68be970e5ba1c35894e707677f9a41841df36db0"
+      "sha256": "59f8fde65e59807252b18a25cc47d365aa30b33def82ff0e43851fb9ec9075c9"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/review_session.py",
@@ -84,7 +84,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/seal_review_receipts.py",
-      "sha256": "11472cd7f5eae965c297a730b826306caf8be77585cb537f6c4055b6ef616626"
+      "sha256": "b24844fc7faaeeeed42d8601c4d7762b5fd982acf76a9282599e25cc23aa6bf5"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/semantic_review.py",
@@ -96,7 +96,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/mparanza-journal-bank-reconciliation/SKILL.md",
-      "sha256": "94629f12ac182616cb869610232015fb69a1ac2600f091059b8b1115c2320b6e"
+      "sha256": "0e5b449e6e35b5af5b88f3d7de5be6c591c20b6a96354c5bdb46d9219ec05bcf"
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/mparanza-journal-bank-reconciliation/references/geneva.md",
@@ -156,7 +156,7 @@
     },
     {
       "path": "skills/mparanza-journal-bank-reconciliation/SKILL.md",
-      "sha256": "b323a8914af7aa5981393ded6b32a88780dc35412bf9c5ea378c25d2a2eb37f5"
+      "sha256": "45943553bf1024a4146cfdb4376addee82b0535bb079fc95a14518533d9613d1"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -577,5 +577,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "e97aefbee53450acf729ca2b99b622643a63a7d6182cb8e0d8b78c79cad8ad6f"
+  "canonical_course_sha256": "1fc8fb1b51fcb671a507f8632f699db3cf7f14b6277a033e7e292eccb9f3de4d"
 }
