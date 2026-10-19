@@ -217,17 +217,19 @@ def test_plugins_declare_trusted_session_start_update_hook(plugin_root: Path) ->
     assert manifest["hooks"] == "./hooks/hooks.json"
     session_hook = hooks["hooks"]["SessionStart"][0]
     assert session_hook["matcher"] == "startup|resume"
-    assert session_hook["hooks"] == [
-        {
-            "type": "command",
-            "command": (
-                'python3 "$PLUGIN_ROOT/scripts/onboarding_session_start.py"'
-                if plugin_root.name in {"vera", "clara"}
-                else 'python3 "$PLUGIN_ROOT/scripts/check_for_update.py"'
-            ),
-            "timeout": 8,
-        }
-    ]
+    assert session_hook["hooks"][0] == {
+        "type": "command",
+        "command": 'python3 "$PLUGIN_ROOT/scripts/onboarding_session_start.py"',
+        "timeout": 8,
+    }
+    if plugin_root == VERA_ROOT:
+        assert session_hook["hooks"][1:] == [
+            {
+                "type": "command",
+                "command": 'python3 "$PLUGIN_ROOT/scripts/archive_report_hook.py"',
+                "timeout": 60,
+            }
+        ]
 
 
 def test_session_start_prioritizes_exact_fixed_request_message(

@@ -284,22 +284,22 @@ Use this exact chat workflow whenever a professional starts client work:
    the paths in its hydrated `input_bindings`, and write only below its exact
    `output_dir`. Never scan the whole engagement input folder as an implicit
    input set.
-9. For Vera, report eligibility is the fixed list in
-   `scripts/selective_reporting.py`, never a judgment about substantive work. Start the
-   run before source inspection. Save actual cumulative phase evidence in
-   `outputs/model_data_report_input.json`. Finalization generates and declares an
-   eligible report automatically, or returns an explicit unavailable/not-applicable
-   status. Other workflows need no privacy report. Do not fabricate phase counts,
-   treat absent evidence as zero, or create reports for chat-only work. If the user
-   prohibits receipt transmission, save `model_data_report_options.json` with
-   `{"local_only": true}` in the output before any finalization or failed/cancelled
-   outcome. Other products retain their own report requirements.
-   Call `finalize_studio_client_workflow` with explicit declarations for every
-   professional output; generated report artifacts are added by Archive. Review
-   the sealed artifacts, then call `complete_studio_client_workflow`. Record
-   execution failures and explicit cancellations on the same run.
-   Receipt retries after finalization use `receipts/<report-byte-hash>/`, outside
-   the sealed output tree. Preserve the original report bytes and receipt ID.
+9. For Vera, the fixed 13 pipelines in `scripts/selective_reporting.py` receive
+   one report for every run. Start initializes it automatically. Use
+   `read_studio_run_artifact` for exact selections from the bound inputs; trusted
+   host hooks record actual returned data and supported direct reads. No agent
+   prepares phase counts or `model_data_report_input.json`. Missing observations
+   leave an explicitly incomplete report; full exposure still produces a report.
+   Call `finalize_studio_client_workflow` with declarations for professional
+   outputs. Archive adds report artifacts and seals the review-ready outputs.
+   Collection continues through review. `complete_studio_client_workflow`, failure
+   or cancellation writes end the run and finalize the report after the enclosing
+   tool result has been observed. The report remains local; the authenticated
+   server proof binds its hash to this Archive run, revision and existing Vera
+   userID. Receipt retries preserve professional output bytes and the report hash.
+   If transmission is prohibited, save `model_data_report_options.json` with
+   `{"local_only": true}` before the terminal write. Other products retain their
+   own report requirements.
 
 10. In a later chat, call `list_studio_client_engagements` for the selected
    `client_id`. It returns imported-file receipts and persisted workflow runs,

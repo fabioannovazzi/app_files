@@ -561,7 +561,7 @@ def _post(operation: str, payload: dict[str, Any]) -> dict[str, Any]:
 
 def workflow_transport(operation: str, payload: dict[str, Any]) -> dict[str, Any]:
     """Reuse the registered local capability and fixed, redirect-free transport."""
-    if operation not in {"workflow-record", "workflow-status"}:
+    if operation not in {"workflow-record", "workflow-status", "archive-stamp"}:
         raise ValueError("Unknown workflow usage operation")
     registration: dict[str, Any] = {"credentials": payload["credentials"]}
     try:

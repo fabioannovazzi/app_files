@@ -108,6 +108,7 @@ __all__ = [
     "snapshot_studio_client_google_drive",
     "start_check_entries_from_sample",
     "start_studio_client_workflow",
+    "read_studio_run_artifact",
     "studio_archive_status",
     "studio_google_drive_status",
 ]
@@ -3560,6 +3561,17 @@ def _selected_ledger_root(
     return client_root
 
 
+def _run_result(loaded: Mapping[str, Any]) -> dict[str, Any]:
+    result = {"status": loaded["run"]["status"], "run": loaded["run"]}
+    if "reporting" in loaded:
+        result["reporting"] = loaded["reporting"]
+    if ledger._reporting_runtime().selective_reporting_enabled():
+        from archive_reporting import metadata_result
+
+        result = metadata_result(loaded, result)
+    return result
+
+
 @_readable_after_write
 def start_studio_client_workflow(
     client_id: str,
@@ -3576,7 +3588,35 @@ def start_studio_client_workflow(
         loaded = ledger.start_run(root, engagement_id, run_id)
     except ledger.LedgerError as exc:
         raise ArchiveError(f"Workflow run could not start: {exc}") from exc
-    return {"status": loaded["run"]["status"], "run": loaded["run"]}
+    return _run_result(loaded)
+
+
+def read_studio_run_artifact(
+    client_id: str,
+    engagement_id: str,
+    run_id: str,
+    path: str | Path,
+    *,
+    offset: int = 0,
+    limit: int | None = None,
+    columns: list[int] | None = None,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Return selected source units with locally retained, exact read provenance."""
+    private_state = _state_dir(state_dir)
+    root = _selected_ledger_root(client_id, engagement_id, state_dir=private_state)
+    loaded = ledger.load_run(root, engagement_id, run_id)
+    if loaded["run"]["status"] not in {"running", "ready_for_review"}:
+        raise ArchiveError("Data reads require an active Archive run")
+    ledger._reporting_runtime()
+    from archive_reporting import read_artifact
+
+    try:
+        return read_artifact(
+            loaded, Path(path), offset=offset, limit=limit, columns=columns
+        )
+    except (ValueError, OSError) as exc:
+        raise ArchiveError(f"Run artifact could not be read: {exc}") from exc
 
 
 @_readable_after_write
@@ -3596,7 +3636,7 @@ def fail_studio_client_workflow(
         loaded = ledger.fail_run(root, engagement_id, run_id, reason)
     except ledger.LedgerError as exc:
         raise ArchiveError(f"Workflow failure could not be recorded: {exc}") from exc
-    return {"status": loaded["run"]["status"], "run": loaded["run"]}
+    return _run_result(loaded)
 
 
 @_readable_after_write
@@ -3615,7 +3655,7 @@ def cancel_studio_client_workflow(
         loaded = ledger.cancel_run(root, engagement_id, run_id)
     except ledger.LedgerError as exc:
         raise ArchiveError(f"Workflow run could not be cancelled: {exc}") from exc
-    return {"status": loaded["run"]["status"], "run": loaded["run"]}
+    return _run_result(loaded)
 
 
 @_readable_after_write
@@ -3635,12 +3675,17 @@ def finalize_studio_client_workflow(
         loaded = ledger.finalize_run(root, engagement_id, run_id, artifacts)
     except ledger.LedgerError as exc:
         raise ArchiveError(f"Workflow artifacts could not be finalized: {exc}") from exc
-    return {
+    result = {
         "status": loaded["run"]["status"],
         "run": loaded["run"],
         "artifact_manifest": loaded["artifact_manifest"],
         "reporting": loaded["reporting"],
     }
+    if ledger._reporting_runtime().selective_reporting_enabled():
+        from archive_reporting import metadata_result
+
+        return metadata_result(loaded, result)
+    return result
 
 
 @_readable_after_write
@@ -3659,7 +3704,7 @@ def complete_studio_client_workflow(
         loaded = ledger.complete_run(root, engagement_id, run_id)
     except ledger.LedgerError as exc:
         raise ArchiveError(f"Workflow run could not be completed: {exc}") from exc
-    return {"status": loaded["run"]["status"], "run": loaded["run"]}
+    return _run_result(loaded)
 
 
 @_readable_after_write

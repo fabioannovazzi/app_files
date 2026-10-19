@@ -144,7 +144,7 @@
     {
       "path": "modules/client-file-preparation/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "220e14178ddcf811782956f50177732a1664a309eef87847ddb306db7c83381b"
+      "sha256": "099669d56a3c16655b5f65051209eca78541846bbd9c32b5aa3cc592380c4832"
     },
     {
       "path": "modules/client-file-preparation/vendor/modules/vera_assurance/decisions.py",
@@ -174,7 +174,7 @@
     {
       "path": "modules/client-file-preparation/vendor/modules/vera_assurance/review_output_transaction.cjs",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
-      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+      "sha256": "81a25a1641b7d6d6919087f62e2ab8b88f7ea2969be5ae8aa2eea2e70812de95"
     },
     {
       "path": "modules/client-file-preparation/vendor/modules/vera_assurance/serialization.py",
@@ -184,7 +184,7 @@
     {
       "path": "skills/avviso-intake/SKILL.md",
       "repository_path": "plugins/vera/skills/avviso-intake/SKILL.md",
-      "sha256": "f8c43d4256b1ac87b745b14f9ab6d82ce7d9414dc7b45a0573c071ea7000fbe6"
+      "sha256": "ec9526835a9c2d56b8d624fe3af8dbeac22d75b9cd17a34765acff0cfc0f4d71"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -424,7 +424,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "220e14178ddcf811782956f50177732a1664a309eef87847ddb306db7c83381b"
+      "sha256": "099669d56a3c16655b5f65051209eca78541846bbd9c32b5aa3cc592380c4832"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -454,7 +454,7 @@
     {
       "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
-      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+      "sha256": "81a25a1641b7d6d6919087f62e2ab8b88f7ea2969be5ae8aa2eea2e70812de95"
     },
     {
       "path": "vendor/modules/vera_assurance/serialization.py",

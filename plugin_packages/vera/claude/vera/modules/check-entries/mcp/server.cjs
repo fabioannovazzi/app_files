@@ -174,6 +174,7 @@ const {
   generatedReviewPathEntryStat,
   generatedReviewTransactionEnvelope,
   withGeneratedReviewOutputTransaction,
+  archiveReportingPaths,
 } = require(REVIEW_TRANSACTION_RUNTIME);
 const PLUGIN_MANIFEST = JSON.parse(
   fs.readFileSync(path.join(PLUGIN_ROOT, ".codex-plugin", "plugin.json"), "utf8"),
@@ -1696,6 +1697,7 @@ function validateCheckEntriesPhysicalOutputSet(outputDir, envelope) {
   const expectedDirectories =
     checkEntriesExpectedPhysicalDirectories(expectedFiles);
   const actual = checkEntriesPhysicalTree(outputDir);
+  for (const name of archiveReportingPaths(outputDir, ["check-entries"])) actual.files.delete(name);
   const sameSet = (left, right) =>
     left.size === right.size && [...left].every((value) => right.has(value));
   if (

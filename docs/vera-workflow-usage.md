@@ -21,11 +21,16 @@ A retained native host binding may identify shared hosts; absent binding stays
 unknown. Technical incident closure remains governed by its exact original
 report and remedy episode. Usage completion and stars never close incidents.
 
-Each actual model-data report can link its existing signed receipt UUID and
-SHA-256 to the run. The service verifies the retained proof; neither the report,
-professional output, client paths nor source documents enter usage telemetry.
-Missing receipts remain missing. Report hashing proves byte identity and server
-receipt, not professional quality or provider-side reading.
+For the 13 selected Vera pipelines, Studio Archive automatically creates one
+local report per execution. Start opens collection; completed, failed or cancelled
+writes close it after the enclosing host result is observed. No usage-task UUID
+or agent-authored phase file is needed. Full exposure and incomplete measurement
+still produce reports. Other pipelines have no privacy-report requirement.
+
+Schema-3 server receipts authenticate the existing Vera userID and bind the report
+hash to that Archive run and revision. They do not require a separate usage-link
+event. The report and evidence remain local. A server proof verifies bytes and
+the authenticated binding, not professional quality or measurement completeness.
 
 After delivering the result, ask once: “Quanto ti è stato utile questo risultato?
 Da 1 a 5 stelle.” A comment is optional at every score. For 1–2 stars offer:

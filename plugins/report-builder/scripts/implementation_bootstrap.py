@@ -268,7 +268,12 @@ def activate_implementation_boundary() -> dict[str, str]:
 
     script_path = _os.path.abspath(__file__)
     plugin_root = _os.path.dirname(_os.path.dirname(script_path))
-    return validate_implementation_tree(plugin_root)
+    roots = validate_implementation_tree(plugin_root)
+    # Read-only validators also need the exact shared runtime admitted above.
+    module_root = _os.path.dirname(roots["shared_assurance"])
+    if module_root not in _sys.path:
+        _sys.path.insert(0, module_root)
+    return roots
 
 
 def repair_vendor_bytecode() -> int:

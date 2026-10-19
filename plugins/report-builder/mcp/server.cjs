@@ -73,6 +73,7 @@ const REPORT_BUILDER_ASSURANCE_IMPLEMENTATION_ROOT = path.dirname(
 );
 validateReportBuilderImplementationTree();
 const {
+  archiveReportingPaths,
   generatedReviewArgsForWorkingOutput,
   generatedReviewAtomicWriteFileSync,
   generatedReviewCollectApplicationWritePaths,
@@ -2460,6 +2461,7 @@ function validateReportBuilderPhysicalOutputSet(outputDir) {
   const expectedFiles = reportBuilderExpectedPhysicalPaths(outputDir);
   const expectedDirectories = reportBuilderExpectedDirectories(expectedFiles);
   const { files, directories } = reportBuilderPhysicalTree(outputDir);
+  for (const name of archiveReportingPaths(outputDir, ["report-builder", "report-enti-locali"])) files.delete(name);
   if (
     !reportBuilderJsonValuesEqual(
       [...files].sort(),
@@ -4598,7 +4600,7 @@ function preflightClientWorkflowRun(outputDir, expectedRunId) {
     !isPlainObject(result) ||
     result.ok !== true ||
     result.schema_version !== "vera.client_workflow_context.v2" ||
-    result.workflow_id !== "report-builder" ||
+    !["report-builder", "report-enti-locali"].includes(result.workflow_id) ||
     result.run_id !== expectedRunId
   ) {
     throw new Error(

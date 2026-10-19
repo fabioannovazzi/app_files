@@ -2098,6 +2098,7 @@ def test_mcp_lists_strict_local_tools(tmp_path: Path) -> None:
         "list_studio_client_engagements",
         "verify_studio_client_inputs",
         "prepare_studio_client_workflow",
+        "read_studio_run_artifact",
         "start_check_entries_from_sample",
         "start_studio_client_workflow",
         "fail_studio_client_workflow",

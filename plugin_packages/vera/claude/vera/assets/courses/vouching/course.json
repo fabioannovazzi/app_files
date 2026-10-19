@@ -89,7 +89,7 @@
     },
     {
       "path": "modules/check-entries/scripts/physical_output_set.py",
-      "sha256": "0870043ab7ac3171cc73d951d6915e80ec4ab67219eec4362c05550bccdd5107"
+      "sha256": "779153967dbcd3a82c7c83cbfb4723ef4908d53689f03f0127363bdb6216a60b"
     },
     {
       "path": "modules/check-entries/scripts/review_session.py",
@@ -121,7 +121,7 @@
     },
     {
       "path": "modules/check-entries/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "220e14178ddcf811782956f50177732a1664a309eef87847ddb306db7c83381b"
+      "sha256": "099669d56a3c16655b5f65051209eca78541846bbd9c32b5aa3cc592380c4832"
     },
     {
       "path": "modules/check-entries/vendor/modules/vera_assurance/decisions.py",
@@ -145,7 +145,7 @@
     },
     {
       "path": "modules/check-entries/vendor/modules/vera_assurance/review_output_transaction.cjs",
-      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+      "sha256": "81a25a1641b7d6d6919087f62e2ab8b88f7ea2969be5ae8aa2eea2e70812de95"
     },
     {
       "path": "modules/check-entries/vendor/modules/vera_assurance/serialization.py",
@@ -177,7 +177,7 @@
     },
     {
       "path": "skills/mparanza-vouching/SKILL.md",
-      "sha256": "27af579bdafb440f904ea0e7c4363a128e07abec9a6bad94f38ea0cb26662269"
+      "sha256": "f6244e15e215ed7327749c0abb245c23611fc24f7954caf4b826839d13446ae9"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -273,7 +273,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "220e14178ddcf811782956f50177732a1664a309eef87847ddb306db7c83381b"
+      "sha256": "099669d56a3c16655b5f65051209eca78541846bbd9c32b5aa3cc592380c4832"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -297,7 +297,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
-      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+      "sha256": "81a25a1641b7d6d6919087f62e2ab8b88f7ea2969be5ae8aa2eea2e70812de95"
     },
     {
       "path": "vendor/modules/vera_assurance/serialization.py",
@@ -650,5 +650,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "16910fba07cc3d94a4223d34659dcbcb71d1a42f623135d90799ad2508bd9c9e"
+  "canonical_course_sha256": "c3f3aee4f7ad0b015189d216f79c38b1250a8dfa900de9ce981eb3da6a908617"
 }

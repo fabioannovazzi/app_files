@@ -213,7 +213,7 @@
     },
     {
       "path": "skills/mparanza-lipe/SKILL.md",
-      "sha256": "6155a1f2ce22ef187b739ae3536cf39d6882ea0a304e9fa7ef2d68e5159458b2"
+      "sha256": "ab1f885c564f6ef4e462406896797788abd2693447aa50fa5b24b2eb11e39b4d"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -313,7 +313,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "220e14178ddcf811782956f50177732a1664a309eef87847ddb306db7c83381b"
+      "sha256": "099669d56a3c16655b5f65051209eca78541846bbd9c32b5aa3cc592380c4832"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -337,7 +337,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
-      "sha256": "32252b7bd8efedfa40dea71f7a3ca8a33709f4daeb72094b6d2308db79b61ca8"
+      "sha256": "81a25a1641b7d6d6919087f62e2ab8b88f7ea2969be5ae8aa2eea2e70812de95"
     },
     {
       "path": "vendor/modules/vera_assurance/serialization.py",
@@ -454,5 +454,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "51a1841ebaa942ec3122dc82860e8b197e308e80c06add180509b7bd58125b4e"
+  "canonical_course_sha256": "1df46a9925d9ab3ff9bc689aeb3c13286536cd8bb1e3d36ee6619350c8ddc22c"
 }

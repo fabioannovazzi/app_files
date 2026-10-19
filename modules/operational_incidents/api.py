@@ -166,6 +166,22 @@ def _dispatch(
         store.observe_reporter(envelope.credentials, envelope.client_status)
     if operation.startswith("workflow-"):
         return _workflow_dispatch(store, envelope.credentials, operation, envelope)
+    if operation == "archive-stamp" and envelope.receipt_request is not None:
+        owner = store.archive_receipt_owner(envelope.credentials)
+        if envelope.receipt_request.schema_version != 3:
+            raise IncidentConflict("Archive stamping requires an owner-bound receipt")
+        try:
+            get_run_receipt_rate_limiter().check(owner, "stamp")
+            proof = issue_run_receipt(
+                envelope.receipt_request,
+                get_run_receipt_store(),
+                get_run_receipt_signer(),
+                "vera",
+                authenticated_user_id=owner,
+            )
+        except RunReceiptRateLimitError as exc:
+            raise HTTPException(429, "Archive receipt rate exceeded") from exc
+        return proof.model_dump(mode="json", exclude_none=True)
     if operation == "report" and envelope.report is not None:
         return {
             **store.report(envelope.credentials, envelope.report),

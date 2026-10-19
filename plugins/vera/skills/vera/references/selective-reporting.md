@@ -20,29 +20,49 @@ The fixed scope is the `model_data_reporting.pipelines` list in
 There is one report boundary per Studio Archive run, never per chat or inferred
 substantive task. The same run survives retries and a different chat.
 
-Prepare and start the run before opening sources for mapping or analysis. Keep
-source inspection, local processing, model review and subsequent exact reads in
-that run. Save the actual cumulative phase evidence using
-`model-data-report-contract.md` as `model_data_report_input.json` in its output
-folder. Counts must include initial mapping and later reads; splitting a complete
-population into packets does not establish a reduction. Never infer measurements
-from public descriptions, packet limits or a source file hash.
+Prepare and start the Archive run before source inspection. Its start write
+creates the local report and initializes collection automatically. No agent
+creates `model_data_report_input.json` or decides whether work is substantive.
+Use `read_studio_run_artifact` (or the Archive CLI `read-run-artifact`) for initial
+inspection and subsequent reads of bound inputs. The collector counts only
+observed returned selections, deduplicates repeated rows/cells, and retains exact
+source hashes. Host hooks also observe supported direct reads. Codex code-mode
+results are counted from the actual model-visible transcript, not from intermediate
+values returned to a JavaScript script.
 
-Archive finalization creates the local report and includes generated artifacts in
-the output manifest. No separate report trigger is needed. It returns the readable
-report, or an explicit `unavailable` reason when execution evidence is absent.
-No measured local remainder means `not_applicable`, without a report or receipt.
-Unknown exposure must not be described as zero. A missing privacy report must not
-be disguised as a failed professional calculation.
+The review-ready Archive write saves a draft report and seals professional outputs.
+Collection continues during review. Completion, failure or cancellation closes the
+run and triggers the final report. If that write occurs inside a host tool call,
+collection waits for the enclosing tool's returned result before freezing the
+report and submitting its hash. Report maintenance can reseal only reserved report
+artifacts; the already sealed professional outputs must remain unchanged.
 
-If any phase has unmeasured exposure, the report is unavailable. If any phase
-requires full context, this comparison is conservatively omitted: phase totals
-alone cannot prove that a later read did not expose an earlier local remainder.
+Every run of the 13 pipelines gets a local JSON and readable Markdown report,
+including full exposure and zero local remainder. Missing observations, unsupported
+reads or missing source lineage produce an explicitly incomplete report, never an
+exemption or a zero-exposure claim. Derived data must not be described as proving
+that its original inputs stayed local. Installed host hooks must be enabled and
+trusted; unsupported host transcript formats leave collection incomplete.
+
+The server receives the report SHA-256 with the same Archive run ID, report
+revision and existing Vera userID, authenticated with the installation's existing
+credentials and machine link. These fields are covered by the receipt signature.
+It receives no report body, raw observations, source filenames or source values.
+The local observer retries pending receipts without rerunning professional work.
+Verify a local report against its machine identity with
+`scripts/archive_report_receipt.py verify --report PATH`.
+
+After the terminal Archive call, reopen the saved report with
+`scripts/model_data_report.py show --report PATH` and present that report.
+The terminal call can return a provisional snapshot while its enclosing tool
+result is still pending. Do not present that draft as the final report. Reopening
+the saved report does not start another run or submit its contents to the server.
 
 When receipt transmission is prohibited, save `model_data_report_options.json`
-with `{"local_only": true}` in the output before finalization or recording a
-failed/cancelled outcome. This prevents the automatic stamp request. Local
-onboarding retains its existing automatic transmission suppression.
+with `{"local_only": true}` in the output before the terminal Archive write.
+Local onboarding retains its automatic transmission suppression. Both keep the
+local report and suppress the request; a network or identity failure instead
+retains a pending receipt.
 
 Use `fatture-xml-check` as the Archive workflow identity for the dedicated XML
 check. Its execution engine remains `client-file-preparation`; broader intake

@@ -145,7 +145,12 @@ def _validate_exact(
     *,
     permit_missing_review_paths: bool,
 ) -> dict[str, list[str]]:
+    from vera_assurance.contracts import archive_reporting_paths
+
     actual_files, actual_directories = _physical_tree(output_dir)
+    actual_files -= archive_reporting_paths(
+        output_dir, expected_workflow_ids=("check-entries",)
+    )
     expected_directories = _expected_directories(expected_files)
     unexpected_files = sorted(actual_files - expected_files)
     missing_files = sorted(expected_files - actual_files)

@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "d746fb05d6f0d3a85b638c5ba6b8d620055462ff498599edc1c568fb6fd71652",
+  "catalogue_fingerprint": "8fccb73a26ee05e846c3c7c01cd05a8aff940cd8ff59405a17f4f660c456c10e",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -2040,5 +2040,10 @@
       "journal-bank-reconciliation"
     ],
     "scope": "Adds bank-side text-PDF source-reference recovery, independent bank controls and separate incident histories. Preserves all existing Geneva dispositions. Synthetic bank fixtures do not establish acceptance on Swiss or customer statements."
+  },
+  "archive_automatic_reporting_release_binding": {
+    "version": "0.1.428",
+    "previous_catalogue_fingerprint": "d746fb05d6f0d3a85b638c5ba6b8d620055462ff498599edc1c568fb6fd71652",
+    "scope": "The same function IDs now use automatic reporting for the fixed 13 Archive pipelines. Other pipelines are excluded from this comparison report. Reports stay local and proof hashes bind to Vera userID. Existing Geneva jurisdiction dispositions are unchanged; automatic evidence collection does not establish new Swiss professional acceptance."
   }
 }

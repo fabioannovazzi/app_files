@@ -84,6 +84,8 @@ def package_entries(product: str = "vera") -> dict[str, bytes]:
     source = expected_zip_entries(bundle)
     prefix = f"{bundle.package_root}/plugins/{product}/"
     excluded = {".mcp.json", ".app.json", "hooks/hooks.json"}
+    if product == "vera":
+        excluded.add("hooks/cowork-hooks.json")
     entries = {
         f"{product}/" + name.removeprefix(prefix): content
         for name, content in source.items()

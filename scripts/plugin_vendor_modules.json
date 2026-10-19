@@ -200,7 +200,14 @@
           "module_roots": [
             "model_data_report.py",
             "privacy_contract.py",
-            "selective_reporting.py"
+            "selective_reporting.py",
+            "archive_report_hook.py",
+            "archive_report_measurements.py",
+            "archive_report_receipt.py",
+            "archive_report_seal.py",
+            "archive_report_store.py",
+            "archive_report_transcript.py",
+            "archive_reporting.py"
           ]
         },
         {

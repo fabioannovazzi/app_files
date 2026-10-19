@@ -158,6 +158,7 @@ from vera_assurance import (  # noqa: E402
     validate_source_qualification,
     write_json,
 )
+from vera_assurance.contracts import archive_reporting_paths  # noqa: E402
 
 __all__ = [
     "AssuranceRunError",
@@ -1390,13 +1391,15 @@ def run_review_output_transaction(
         shutil.rmtree(transaction_root, ignore_errors=True)
 
 
-def _tree_fingerprint(root: Path) -> tuple[tuple[object, ...], ...]:
+def _tree_fingerprint(
+    root: Path, *, include_reporting: bool = True
+) -> tuple[tuple[object, ...], ...]:
     """Return a byte/mode identity for transaction concurrency checks."""
 
     rows: list[tuple[object, ...]] = []
     root_stat = root.lstat()
     rows.append((".", "directory", stat.S_IMODE(root_stat.st_mode)))
-    for entry in _physical_tree_entries(root):
+    for entry in _physical_tree_entries(root, include_reporting=include_reporting):
         path = root / entry["path"]
         current = path.lstat()
         if entry["kind"] == "directory":
@@ -2060,10 +2063,19 @@ def _regular_file_set(root: Path) -> set[str]:
     return paths
 
 
-def _physical_tree_entries(root: Path) -> list[dict[str, str]]:
+def _physical_tree_entries(
+    root: Path, *, include_reporting: bool = False
+) -> list[dict[str, str]]:
     """Capture every ordinary file and directory without following links."""
 
     _validate_real_directory(root, label="assurance run root")
+    reporting_paths = (
+        set()
+        if include_reporting
+        else archive_reporting_paths(
+            root, expected_workflow_ids=("open-item-reconciliation",)
+        )
+    )
     entries: list[dict[str, str]] = []
     for path in sorted(root.rglob("*"), key=lambda item: item.as_posix()):
         current = path.lstat()
@@ -2082,7 +2094,8 @@ def _physical_tree_entries(root: Path) -> list[dict[str, str]]:
             raise AssuranceRunError(
                 "assurance run tree contains a non-file, non-directory entry"
             )
-        entries.append({"path": relative, "kind": kind})
+        if relative not in reporting_paths:
+            entries.append({"path": relative, "kind": kind})
     return entries
 
 
@@ -3116,10 +3129,10 @@ def capture_review_transition_predecessor(
     *,
     expected_predecessor_checkpoint: str | None = None,
 ) -> dict[str, Any]:
-    """Capture and replay the complete predecessor outside the candidate tree."""
+    """Capture and replay the professional predecessor outside the candidate tree."""
 
     out_dir = Path(output_dir)
-    trusted_fingerprint = _tree_fingerprint(out_dir)
+    trusted_fingerprint = _tree_fingerprint(out_dir, include_reporting=False)
     checkpoint = _validated_expected_predecessor_checkpoint(
         expected_predecessor_checkpoint
     )
@@ -3142,9 +3155,20 @@ def capture_review_transition_predecessor(
         capture.mkdir(mode=0o700)
     snapshot = capture / PREDECESSOR_RUN_SNAPSHOT_DIRECTORY
     try:
-        shutil.copytree(out_dir, snapshot)
+        reporting_paths = archive_reporting_paths(
+            out_dir, expected_workflow_ids=("open-item-reconciliation",)
+        )
+        # Archive retains the current report separately. Historical professional
+        # snapshots must not acquire unsealed copies of changing report sidecars.
+        shutil.copytree(
+            out_dir,
+            snapshot,
+            ignore=lambda directory, names: (
+                reporting_paths if Path(directory) == out_dir else set()
+            ),
+        )
         if (
-            _tree_fingerprint(out_dir) != trusted_fingerprint
+            _tree_fingerprint(out_dir, include_reporting=False) != trusted_fingerprint
             or _tree_fingerprint(snapshot) != trusted_fingerprint
         ):
             raise AssuranceRunError(

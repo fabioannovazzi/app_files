@@ -2107,6 +2107,8 @@ def _write_run_status_locked(
     current = run["status"]
     if target_status == current:
         if current == "completed":
+            if (Path(loaded["run_root"]) / "reporting/seal-update.json").is_file():
+                _reporting_runtime().finish_report(loaded)
             validate_run_artifacts(client_root, engagement_id, run_id)
         return loaded
     if engagement["status"] != "open":
@@ -2134,38 +2136,16 @@ def _write_run_status_locked(
         ],
     }
     _write_json(Path(loaded["run_root"]) / "run.json", updated)
-    if target_status in {"failed", "cancelled"} and current in {
+    loaded = load_run(client_root, engagement_id, run_id)
+    if target_status in {"completed", "failed", "cancelled"} and current in {
         "running",
         "ready_for_review",
+        "failed",
     }:
-        # The outcome is already durable; reporting must never erase or mask it.
-        try:
-            reporting = _reporting_runtime().finish_report(loaded)
-        except (ValueError, OSError) as exc:
-            reporting = {
-                "status": "unavailable",
-                "reason": "execution_evidence_invalid",
-                "detail": str(exc),
-            }
-        _write_json(
-            Path(loaded["run_root"]) / "model_data_reporting.json",
-            {
-                **reporting,
-                "run_id": run_id,
-                "workflow_id": run["workflow_id"],
-                "started_at": next(
-                    (
-                        event["at"]
-                        for event in run["status_history"]
-                        if event["status"] == "running"
-                    ),
-                    None,
-                ),
-                "finished_at": at,
-                "finish_status": target_status,
-            },
-        )
-    return load_run(client_root, engagement_id, run_id)
+        reporting = _reporting_runtime().finish_report(loaded)
+        _write_json(Path(loaded["run_root"]) / "model_data_reporting.json", reporting)
+        return {**loaded, "reporting": reporting}
+    return loaded
 
 
 def _write_run_status(
@@ -2203,45 +2183,23 @@ def start_run(client_root: Path, engagement_id: str, run_id: str) -> dict[str, A
                 raise LedgerError(f"Run cannot transition from {current} to running.")
         runtime = _reporting_runtime()
 
-        if (
-            loaded["run"]["status"]
-            in {
-                "failed",
-                "ready_for_review",
-            }
-            and runtime.selective_reporting_enabled()
-            and runtime.report_pipeline(loaded["run"]["workflow_id"])
-        ):
-            output = Path(loaded["output_dir"])
-            names = (
-                "model_data_report.json",
-                "model_data_report.md",
-                "privacy_contract.json",
-                "model_data_receipt.json",
-                "model_data_receipt.html",
-                "model_data_receipt_request.json",
-            )
-            retained = [output / name for name in names if (output / name).exists()]
-            retained.extend(
-                Path(loaded["run_root"]) / name
-                for name in ("artifact_manifest.json", "model_data_reporting.json")
-                if (Path(loaded["run_root"]) / name).exists()
-            )
-            if retained:
+        if current in {"failed", "ready_for_review"}:
+            # The professional output tree is opened again by this explicit
+            # transition. Reporting revisions are retained by the collector.
+            manifest = Path(loaded["run_root"]) / "artifact_manifest.json"
+            if manifest.exists():
+                _ordinary_file(manifest, label="previous artifact manifest")
                 history = (
                     Path(loaded["run_root"])
                     / "reporting-history"
                     / secrets.token_hex(12)
                 )
                 history.mkdir(parents=True, mode=0o700)
-                for source in retained:
-                    _ordinary_file(source, label="previous run report")
-                for source in retained:
-                    source.rename(history / source.name)
-            (Path(loaded["run_root"]) / "model_data_reporting.json").unlink(
-                missing_ok=True
-            )
-        return _write_run_status_locked(root, engagement_id, run_id, "running")
+                manifest.rename(history / manifest.name)
+        loaded = _write_run_status_locked(root, engagement_id, run_id, "running")
+        reporting = runtime.begin_report(loaded)
+        _write_json(Path(loaded["run_root"]) / "model_data_reporting.json", reporting)
+        return {**loaded, "reporting": reporting}
 
 
 def fail_run(
@@ -2310,6 +2268,16 @@ def _require_model_data_artifacts(loaded: Mapping[str, Any]) -> None:
         or report.get("workflow_id") != loaded["run"]["workflow_id"]
     ):
         raise LedgerError("Model-data report belongs to another workflow run.")
+    if report.get("schema_version") == 3:
+        from archive_reporting import render_report, validate_report
+
+        try:
+            validate_report(report)
+        except (ValueError, KeyError, TypeError) as exc:
+            raise LedgerError("Automatic Archive report is invalid") from exc
+        if markdown_path.read_text(encoding="utf-8") != render_report(report):
+            raise LedgerError("Automatic Archive report Markdown does not match")
+        return
     if not isinstance(report.get("phases"), list) or not report["phases"]:
         raise LedgerError(
             "Model-data report must disclose at least one execution phase."
@@ -2378,11 +2346,7 @@ def _finalize_run_locked(
             ),
             None,
         ),
-        "finished_at": (
-            loaded["run"]["updated_at"]
-            if loaded["run"]["status"] == "ready_for_review"
-            else _now_iso()
-        ),
+        "finished_at": None,
         "finish_status": "ready_for_review",
     }
     if not isinstance(declarations, (str, bytes)):
@@ -2501,7 +2465,7 @@ def _finalize_run_locked(
         loaded = _write_run_status_locked(
             client_root, engagement_id, run_id, "ready_for_review"
         )
-    reporting["finished_at"] = loaded["run"]["updated_at"]
+    reporting["review_ready_at"] = loaded["run"]["updated_at"]
     _write_json(Path(loaded["run_root"]) / "model_data_reporting.json", reporting)
     return {**loaded, "artifact_manifest": manifest, "reporting": reporting}
 

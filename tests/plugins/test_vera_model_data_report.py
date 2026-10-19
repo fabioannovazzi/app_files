@@ -358,7 +358,7 @@ def test_studio_archive_report_helper_needs_no_receipt_module_or_network(
 
     if not packaged:
         assert result.returncode == 2
-        assert "context" in result.stderr
+        assert "Archive" in result.stderr
         assert not (output / "model_data_report.json").exists()
         return
     assert result.returncode == 0, result.stderr
@@ -641,9 +641,10 @@ def test_router_limits_new_reports_to_selected_archive_runs() -> None:
 
     assert "After every substantive Vera run" not in router
     assert "selective-reporting.md" in router
-    assert "model_data_report_input.json" in router
+    assert "Archive" in router
+    assert "automatically" in router
     assert "Studio Archive" in router
-    assert "Vera scope overrides" in contract
+    assert "Vera" in contract and "automatic" in contract
     assert '"runtime_profile": "openai-chatgpt"' in contract
     assert "candidate_needs_validation" in contract
     assert router.index("## Show the privacy report") < router.index(

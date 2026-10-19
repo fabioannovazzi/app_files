@@ -66,6 +66,9 @@ class RunReceiptRecord:
     signature: str
     product: Product = "vera"
     schema_version: int = 1
+    user_id: str | None = None
+    archive_run_id: str | None = None
+    report_revision: int | None = None
 
     @property
     def signed_payload(self) -> dict[str, Any]:
@@ -73,7 +76,16 @@ class RunReceiptRecord:
 
         return {
             "schema_version": self.schema_version,
-            **({"product": self.product} if self.schema_version == 2 else {}),
+            **({"product": self.product} if self.schema_version in {2, 3} else {}),
+            **(
+                {
+                    "user_id": self.user_id,
+                    "archive_run_id": self.archive_run_id,
+                    "report_revision": self.report_revision,
+                }
+                if self.schema_version == 3
+                else {}
+            ),
             "receipt_id": self.receipt_id,
             "plugin_version": self.plugin_version,
             "report_sha256": self.report_sha256,
@@ -108,6 +120,7 @@ class RunReceiptStore:
         self._sqlite_path.parent.mkdir(parents=True, exist_ok=True)
         connection = sqlite3.connect(self._sqlite_path, timeout=30.0)
         connection.row_factory = sqlite3.Row
+        connection.execute("PRAGMA foreign_keys = ON")
         connection.execute("PRAGMA busy_timeout = 30000")
         connection.execute("PRAGMA journal_mode = WAL")
         try:
@@ -127,6 +140,9 @@ class RunReceiptStore:
                     connection.execute(_SCHEMA_SQL)
                     connection.execute(
                         "CREATE TABLE IF NOT EXISTS mparanza_run_receipt_products (receipt_id TEXT PRIMARY KEY, product TEXT NOT NULL, schema_version INTEGER NOT NULL)"
+                    )
+                    connection.execute(
+                        "CREATE TABLE IF NOT EXISTS vera_archive_receipt_bindings (receipt_id TEXT PRIMARY KEY REFERENCES mparanza_vera_run_receipts(receipt_id) ON DELETE CASCADE, user_id TEXT NOT NULL, archive_run_id TEXT NOT NULL, report_revision INTEGER NOT NULL, UNIQUE(user_id,archive_run_id,report_revision))"
                     )
             except (
                 OSError,
@@ -151,6 +167,9 @@ class RunReceiptStore:
             signature=str(values["signature"]),
             product=values.get("product") or "vera",
             schema_version=values.get("schema_version") or 1,
+            user_id=values.get("user_id"),
+            archive_run_id=values.get("archive_run_id"),
+            report_revision=values.get("report_revision"),
         )
 
     @staticmethod
@@ -160,6 +179,9 @@ class RunReceiptStore:
             and left.schema_version == right.schema_version
             and hmac.compare_digest(left.report_sha256, right.report_sha256)
             and hmac.compare_digest(left.plugin_version, right.plugin_version)
+            and left.user_id == right.user_id
+            and left.archive_run_id == right.archive_run_id
+            and left.report_revision == right.report_revision
         )
 
     def stamp(self, candidate: RunReceiptRecord) -> RunReceiptRecord:
@@ -197,8 +219,22 @@ class RunReceiptStore:
                             candidate.schema_version,
                         ),
                     )
+                    if candidate.schema_version == 3:
+                        bound = connection.execute(
+                            "INSERT INTO vera_archive_receipt_bindings VALUES (?,?,?,?) ON CONFLICT(user_id,archive_run_id,report_revision) DO NOTHING RETURNING receipt_id",
+                            (
+                                candidate.receipt_id,
+                                candidate.user_id,
+                                candidate.archive_run_id,
+                                candidate.report_revision,
+                            ),
+                        ).fetchone()
+                        if bound is None:
+                            raise RunReceiptConflictError(
+                                "Archive report revision already has a receipt."
+                            )
                 row = connection.execute(
-                    "SELECT r.*,p.product,p.schema_version FROM mparanza_vera_run_receipts r LEFT JOIN mparanza_run_receipt_products p ON p.receipt_id=r.receipt_id WHERE r.receipt_id = ?",
+                    "SELECT r.*,p.product,p.schema_version,b.user_id,b.archive_run_id,b.report_revision FROM mparanza_vera_run_receipts r LEFT JOIN mparanza_run_receipt_products p ON p.receipt_id=r.receipt_id LEFT JOIN vera_archive_receipt_bindings b ON b.receipt_id=r.receipt_id WHERE r.receipt_id = ?",
                     (candidate.receipt_id,),
                 ).fetchone()
                 if row is None:
@@ -235,7 +271,7 @@ class RunReceiptStore:
                 "SELECT COUNT(*) AS n FROM mparanza_vera_run_receipts"
             ).fetchone()["n"]
             rows = connection.execute(
-                "SELECT r.receipt_id,r.plugin_version,r.report_sha256,r.stamped_at,COALESCE(p.product,'vera') AS product FROM mparanza_vera_run_receipts r LEFT JOIN mparanza_run_receipt_products p ON p.receipt_id=r.receipt_id ORDER BY r.stamped_at DESC LIMIT ?",
+                "SELECT r.receipt_id,r.plugin_version,r.report_sha256,r.stamped_at,COALESCE(p.product,'vera') AS product,b.user_id,b.archive_run_id,b.report_revision FROM mparanza_vera_run_receipts r LEFT JOIN mparanza_run_receipt_products p ON p.receipt_id=r.receipt_id LEFT JOIN vera_archive_receipt_bindings b ON b.receipt_id=r.receipt_id ORDER BY r.stamped_at DESC LIMIT ?",
                 (limit,),
             ).fetchall()
             return {
@@ -251,7 +287,7 @@ class RunReceiptStore:
         try:
             with self._connect() as connection:
                 row = connection.execute(
-                    "SELECT r.*,p.product,p.schema_version FROM mparanza_vera_run_receipts r LEFT JOIN mparanza_run_receipt_products p ON p.receipt_id=r.receipt_id WHERE r.receipt_id = ?",
+                    "SELECT r.*,p.product,p.schema_version,b.user_id,b.archive_run_id,b.report_revision FROM mparanza_vera_run_receipts r LEFT JOIN mparanza_run_receipt_products p ON p.receipt_id=r.receipt_id LEFT JOIN vera_archive_receipt_bindings b ON b.receipt_id=r.receipt_id WHERE r.receipt_id = ?",
                     (receipt_id,),
                 ).fetchone()
                 return self._record(row) if row is not None else None

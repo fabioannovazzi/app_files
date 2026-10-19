@@ -8,9 +8,39 @@ from pathlib import Path
 from typing import Any
 
 from .contracts import AcquisitionError, Plan
-from .storage import atomic_json, read_json
+from .storage import Store, atomic_json, read_json
 
-__all__ = ["prepare_runs", "finish_runs"]
+__all__ = ["prepare_runs", "finish_runs", "record_acquired_event"]
+
+
+def record_acquired_event(run: Path, storage: Store, event: dict[str, Any]) -> None:
+    """Measure originals at acquisition, under their existing client Archive run."""
+    bindings_path = run / "archive-runs.json"
+    if not bindings_path.is_file() or not event.get("record", {}).get("artifacts"):
+        return
+    binding = read_json(bindings_path)[event["client"]]
+    archive = _archive()
+    archive.ledger._reporting_runtime()  # Resolve the installed product runtime.
+    from archive_report_measurements import measure_source
+    from archive_report_store import RunStore, digest, run_lock
+
+    root = Path(binding["context_path"]).parent
+    with run_lock(root):
+        collector = RunStore(root)
+        if not storage.verified(event["record"]):
+            collector.error("acquired_source_verification_failed")
+            return
+        for artifact in event["record"]["artifacts"]:
+            path = storage.safe_path(artifact["path"])
+            source = measure_source(
+                path,
+                source_id="acquired_"
+                + digest({"path": str(path), "sha256": artifact["sha256"]})[:24],
+            )
+            if source["sha256"] != artifact["sha256"]:
+                collector.error("acquired_source_verification_failed")
+                continue
+            collector.source(source)
 
 
 def _archive():
@@ -144,27 +174,6 @@ def _finish_runs(archive: Any, run: Path, state: dict[str, Any]) -> None:
             output / "acquisition-evidence.json",
             {"state": state["state"], "events": client_events},
         )
-        request_path = run / "model_data_worker_input.json"
-        if request_path.is_file():
-            request = read_json(request_path)
-            request["run_id"] = binding["run_id"]
-            phase = request["phases"][0]
-            count = sum(
-                event.get("status") in {"downloaded", "verified_existing"}
-                for event in client_events
-                if event.get("kind") == "invoice"
-            )
-            measurement = {
-                "unit": "files",
-                "quantity": count,
-                "label": "originali acquisiti o riverificati",
-                "basis": "measured",
-            }
-            phase["source_extent"] = [measurement]
-            phase["locally_processed"] = [measurement]
-            phase["remained_local"] = [measurement]
-            phase["evidence_files"] = ["acquisition-evidence.json"]
-            atomic_json(output / "model_data_report_input.json", request)
         if state["state"] == "cancelled":
             archive.cancel_studio_client_workflow(
                 binding["client_id"], binding["engagement_id"], binding["run_id"]

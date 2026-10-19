@@ -132,9 +132,11 @@ it across helpers/resumption, and record only observed outcomes. Discover the
 native `vera_incident_host_link` tool, including deferred tools, and verify the
 same run's Computer ID on the server. Privacy reporting applies only to the fixed pipeline list in
 `../mparanza-vera/references/selective-reporting.md`, using the exact Studio Archive run.
-Archive finalization generates eligible reports from saved execution evidence;
-never create a report for other pipelines or a chat-only task. Link a signed
-receipt only when one actually exists. After delivery ask once for the user's 1–5 stars and optional
+Studio Archive start and terminal writes automatically create a local report for
+every run of those pipelines, including full exposure or incomplete observations.
+The server proof binds the report hash to the same Archive run and existing Vera
+userID. No agent-authored phase file or separate usage-task receipt link is needed.
+Other pipelines and chat-only tasks do not get this report. After delivery ask once for the user's 1–5 stars and optional
 comment; never infer a score. Studio Archive is infrastructure, not another rated
 process. Synthetic/agent tests are marked and excluded. Flush pending delivery
 at task startup and after outcomes. The shared contract applies even on direct

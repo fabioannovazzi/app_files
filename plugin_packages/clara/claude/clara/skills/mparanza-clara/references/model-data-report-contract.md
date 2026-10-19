@@ -3,13 +3,13 @@
 ## Vera scope overrides the generic delivery rules below
 
 For Vera, use `skills/vera/references/selective-reporting.md` and the fixed
-`usage/pipelines.json` list. Only selected Studio Archive runs qualify. Archive
-finalization generates a report from recorded execution evidence; a chat-only
-activity, another pipeline, or an execution without a measurable local remainder
-does not produce this report. Missing evidence is explicitly unavailable, never
-invented. The substantive-run and chat-draft rules below apply only to Clara
-and Lucia.
-
+`usage/pipelines.json` list. Every execution of those 13 pipelines has one report,
+automatically started and ended by Studio Archive. It remains local; the server
+receives its hash bound to authenticated Vera userID, Archive run ID and revision.
+Full exposure still yields a report. Missing measurements yield an incomplete
+report. The agent never authors a report-input file or decides report eligibility.
+The manual build, substantive-work and phase-input rules below apply only to
+Clara and Lucia and to reading historical reports.
 
 For Clara and Lucia, use this contract after every substantive product run, across client-bound,
 studio-wide, local, connected-source, Claude, Claude, Cowork and Antigravity workflows. The

@@ -30,6 +30,11 @@
     <p class="status">{{ copy.verified }}</p>
     <dl>
       <dt>{{ copy.id }}</dt><dd>{{ receipt.receipt_id }}</dd>
+      {% if receipt.schema_version == 3 %}
+      <dt>Vera userID</dt><dd>{{ receipt.user_id }}</dd>
+      <dt>{{ copy.run }}</dt><dd>{{ receipt.archive_run_id }}</dd>
+      <dt>{{ copy.revision }}</dt><dd>{{ receipt.report_revision }}</dd>
+      {% endif %}
       <dt>{{ copy.time }}</dt><dd>{{ receipt.stamped_at }}</dd>
       <dt>{{ copy.version }}</dt><dd>{{ receipt.plugin_version }}</dd>
       <dt>{{ copy.digest }}</dt><dd>{{ receipt.report_sha256 }}</dd>

@@ -366,12 +366,17 @@ def validate_output_set(
 ) -> dict[str, list[str]]:
     """Require exact equality with the trusted current run profile."""
 
+    from vera_assurance.contracts import archive_reporting_paths
+
     root = Path(output_dir)
     expected_files = expected_output_paths(
         root,
         permit_review_transition=permit_review_transition,
     )
     actual_files, actual_directories = _physical_tree(root)
+    actual_files -= archive_reporting_paths(
+        root, expected_workflow_ids=("report-builder", "report-enti-locali")
+    )
     expected_directories = _expected_directories(expected_files)
     unexpected_files = sorted(actual_files - expected_files)
     missing_files = sorted(expected_files - actual_files)

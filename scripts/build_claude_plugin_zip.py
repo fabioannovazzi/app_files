@@ -3412,6 +3412,11 @@ def _claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
             )
         entries[relative] = content
 
+    entries["hooks/hooks.json"] = (
+        ROOT / "plugins/vera/hooks/cowork-hooks.json"
+    ).read_bytes()
+    entries.pop("hooks/cowork-hooks.json", None)
+
     _overlay_cowork_agents(entries, plugin=package.plugin)
     include_agents = any(name.startswith("agents/") for name in entries)
     entries[".claude-plugin/plugin.json"] = project_claude_manifest(

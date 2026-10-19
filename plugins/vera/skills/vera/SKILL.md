@@ -12,9 +12,11 @@ it across helpers/resumption, and record only observed outcomes. Discover the
 native `vera_incident_host_link` tool, including deferred tools, and verify the
 same run's Computer ID on the server. Privacy reporting applies only to the fixed pipeline list in
 `references/selective-reporting.md`, using the exact Studio Archive run.
-Archive finalization generates eligible reports from saved execution evidence;
-never create a report for other pipelines or a chat-only task. Link a signed
-receipt only when one actually exists. After delivery ask once for the user's 1–5 stars and optional
+Studio Archive start and terminal writes automatically create a local report for
+every run of those pipelines, including full exposure or incomplete observations.
+The server proof binds the report hash to the same Archive run and existing Vera
+userID. No agent-authored phase file or separate usage-task receipt link is needed.
+Other pipelines and chat-only tasks do not get this report. After delivery ask once for the user's 1–5 stars and optional
 comment; never infer a score. Studio Archive is infrastructure, not another rated
 process. Synthetic/agent tests are marked and excluded. Flush pending delivery
 at task startup and after outcomes. The shared contract applies even on direct
@@ -315,52 +317,25 @@ deployment's actual account settings.
 
 ## Run-level model-data report
 
-Follow `references/selective-reporting.md`. Only its 13 selected pipelines
-produce comparison reports, and only for a verified Studio Archive run with
-recorded, countable execution evidence. Do not judge whether a chat or task is
-substantive to decide reporting. Other Vera processes produce no such report.
+Follow `references/selective-reporting.md`. Each execution of its 13 pipelines
+gets a local report. Archive start initializes collection; completion, failure or
+cancellation triggers the final report. Review-ready is not the end of collection.
+There is no substantive-work decision, no agent-authored report input and no
+exception for full exposure or missing measurements. Other pipelines get no report.
 
-Start the Archive run before source inspection. Save cumulative phase evidence
-as `model_data_report_input.json` in that exact run output, including mapping and
-subsequent source reads. Archive finalization builds and declares the report.
-Missing evidence produces an explicit unavailable status, never guessed counts.
-If no measured local remainder exists, no comparison report is generated.
-Show the returned readable report when created; preserve unavailable status when
-measurements are missing. A chat-only task has no Archive comparison report.
+Use the run-bound `read_studio_run_artifact` for source inspection and subsequent
+reads. Host observation records actual returned content; missing coverage stays
+explicitly incomplete. Show the report returned by Archive and link its local
+Markdown. Do not invent measurements or claim unobserved data stayed local.
 
-When the user prohibits external receipt transmission, save
-`model_data_report_options.json` containing `{"local_only": true}` in the run
-output **before finalization, failure or cancellation**. Archive preserves the local JSON
-and readable report and returns `not_requested/local_only` without constructing
-or sending a stamping request. Do not retry stamping unless the user later requests it. This
-option concerns Mparanza receipt transmission; it does not make the selected
-host's model processing local.
-
-Otherwise, every durable report build automatically sends only schema version, a random
-per-run receipt UUID, the Vera version, and the canonical report digest to
-Mparanza. It then creates `model_data_receipt.json` and the customer-readable,
-print-to-PDF `model_data_receipt.html` in the same output folder. This built-in
-receipt route remains subject to host network permissions and approval rules.
-Do not bypass a denial or switch tools or destinations to complete the same
-blocked transmission. If stamping fails, state that the local model-data report was created but the server receipt is pending, preserve
-the request file for an idempotent retry, and return the completed run
-successfully. Never discard, roll back, or describe the professional work as
-failed merely because the receipt service is unavailable. Retry a transient
-service failure later with `scripts/notarized_run_receipt.py stamp`; retry a
-permission denial only after the required authorization is granted. Do not
-describe the run as stamped until the command succeeds. The receipt proves
-existence, server time, and integrity of the matching local report; it does not prove who submitted the
-digest, provider-side delivery, analytical correctness, semantic necessity, or
-GDPR compliance.
-
-A complete document or population reaching the model can be the correct
-purpose-based minimization outcome. Never score it as a privacy failure. Show a
-possible code improvement only when the run evidence supports a narrower path
-and the report records how analytical quality will be protected. If no such
-conclusion is supportable, keep the internal assessment as `none_supported` or
-`not_assessed` and show no improvement suggestion to the user. The deterministic
-report builder validates counts, shapes, hashes, and status consistency; model
-and professional judgment decide semantic necessity.
+The report and observation evidence remain on the machine. The server receipt
+binds its hash to existing authenticated Vera userID, the same Archive run and
+report revision. Pending receipts retry automatically; they never invalidate
+professional work. To suppress transmission when the user requests it, save
+`model_data_report_options.json` with `{"local_only": true}` before the terminal
+Archive write. This does not suppress the local report. Verify an existing report
+with `scripts/archive_report_receipt.py verify --report PATH`; verification uses
+the current machine's Vera userID by default.
 
 ## Synthetic transformation prototype
 
