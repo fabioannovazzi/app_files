@@ -59,6 +59,7 @@ IMPLEMENTATION_CONTRACT = (
     ("shared_pdf", "__init__.py"),
     ("shared_pdf", "rules.py"),
     ("shared_pdf", "recovery.py"),
+    ("shared_pdf", "adapter.py"),
 )
 CHATGPT_IMPLEMENTATION_CONTRACT = tuple(
     entry

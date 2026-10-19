@@ -40,7 +40,7 @@
     },
     {
       "path": "modules/journal-sampling/references/pdf-recovery.md",
-      "sha256": "309cb68a830da91801098ef5411f0705848cfafee0cf16f906c7b7a0f5e643f0"
+      "sha256": "5d8c82e6f5cb162779d68fe1dccc2c5be1c8ae2328c688cc93172f8b952da67a"
     },
     {
       "path": "modules/journal-sampling/references/workflow-reference.md",
@@ -56,7 +56,7 @@
     },
     {
       "path": "modules/journal-sampling/scripts/implementation_bootstrap.py",
-      "sha256": "5dd2c88d35fb203669bdf92cc23164b24aab9b26c61fae41a744dd2a1e2cf5a2"
+      "sha256": "e93b4789bdc72e5a6f648cee4b2beda3d2c09ce435056d8b235d0e6129c1b2e5"
     },
     {
       "path": "modules/journal-sampling/scripts/inspect_journal.py",
@@ -64,7 +64,7 @@
     },
     {
       "path": "modules/journal-sampling/scripts/journal_sampling_core.py",
-      "sha256": "40a4bdaf52d1aed4055d3c2d0899b6e0cc8aa40adcd6e15a9f6efc2fb5cb58d5"
+      "sha256": "4bae91ef606fef25aa82f1c24c2dcb86fd407a202027d0877c8fb0b93ea87a07"
     },
     {
       "path": "modules/journal-sampling/scripts/normalize_journal.py",
@@ -88,7 +88,7 @@
     },
     {
       "path": "modules/journal-sampling/skills/mparanza-journal-sampling/SKILL.md",
-      "sha256": "54408388d9154f17382a4c932853fefe0d059c8b17512259a3f7957d662a014a"
+      "sha256": "b57014f9e4b02c1463e3ffc6095c453595de3b114556d6d0f28e01d8b5e0fda2"
     },
     {
       "path": "modules/journal-sampling/skills/mparanza-journal-sampling/references/geneva.md",
@@ -136,11 +136,15 @@
     },
     {
       "path": "modules/journal-sampling/vendor/modules/vera_journal_pdf/__init__.py",
-      "sha256": "ef7ab6e4917fa66e0b01a2361ec68717a81855f1775f6170ad6bc3b08b254352"
+      "sha256": "a87cbdc034f60aac5b4c3d0d4fac9023b4f5d85d0bc061112346bf0825c01b0c"
+    },
+    {
+      "path": "modules/journal-sampling/vendor/modules/vera_journal_pdf/adapter.py",
+      "sha256": "fe5fc400218a2de29afe216f850d901399feae85bbbfb842298e3481692af21b"
     },
     {
       "path": "modules/journal-sampling/vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "3c954fc09af79b584de478afe56cbefc50c0f1bef4b1f7b5766b7f41a77ba778"
+      "sha256": "ea53edae34c00bfae610671217f5752e52eec1ee6a552aec9207feba82403b1b"
     },
     {
       "path": "modules/journal-sampling/vendor/modules/vera_journal_pdf/rules.py",
@@ -148,7 +152,7 @@
     },
     {
       "path": "skills/mparanza-journal-sampling/SKILL.md",
-      "sha256": "4bd1437484eb34c4a87c9c64c85569394db1306e71165cbb87d392f960e7250f"
+      "sha256": "6be55be6881f24866e8742753473627e1b26c5b9b20330553a4faa2c77684a00"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -296,11 +300,15 @@
     },
     {
       "path": "vendor/modules/vera_journal_pdf/__init__.py",
-      "sha256": "ef7ab6e4917fa66e0b01a2361ec68717a81855f1775f6170ad6bc3b08b254352"
+      "sha256": "a87cbdc034f60aac5b4c3d0d4fac9023b4f5d85d0bc061112346bf0825c01b0c"
+    },
+    {
+      "path": "vendor/modules/vera_journal_pdf/adapter.py",
+      "sha256": "fe5fc400218a2de29afe216f850d901399feae85bbbfb842298e3481692af21b"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "3c954fc09af79b584de478afe56cbefc50c0f1bef4b1f7b5766b7f41a77ba778"
+      "sha256": "ea53edae34c00bfae610671217f5752e52eec1ee6a552aec9207feba82403b1b"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/rules.py",
@@ -545,5 +553,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "5ad6ff4f5bd4b622e92e16545e4c06da6662102c5adc2485092c7f7ca3d51436"
+  "canonical_course_sha256": "869e55c7a780cc799550e55825023ad2304d1d55b7870e1276001ca08d5e9cb4"
 }

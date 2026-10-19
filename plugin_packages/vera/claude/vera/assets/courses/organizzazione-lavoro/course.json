@@ -33,7 +33,7 @@
     },
     {
       "path": "scripts/managed_python_runtime.py",
-      "sha256": "c4cc507b1331ec74f0f78e84c0c68644d1b4e31361778ad87e116b31b6274cc4"
+      "sha256": "3a797a3a467f530dabf182417fbea86976ac2738bd675a4e170a9a73e94e81ec"
     },
     {
       "path": "scripts/model_data_report.py",
@@ -45,7 +45,7 @@
     },
     {
       "path": "scripts/operational_incidents.py",
-      "sha256": "b9bfc7590f77fb956ef38a3982aa6a7c15fa6e318f679143d7f44146bb056c6f"
+      "sha256": "a3d3ae71f68a9972fdff84307e42cf2e18b5bc359c4b491d3b5fc07e08ce94e1"
     },
     {
       "path": "scripts/selective_reporting.py",
@@ -213,11 +213,15 @@
     },
     {
       "path": "vendor/modules/vera_journal_pdf/__init__.py",
-      "sha256": "ef7ab6e4917fa66e0b01a2361ec68717a81855f1775f6170ad6bc3b08b254352"
+      "sha256": "a87cbdc034f60aac5b4c3d0d4fac9023b4f5d85d0bc061112346bf0825c01b0c"
+    },
+    {
+      "path": "vendor/modules/vera_journal_pdf/adapter.py",
+      "sha256": "fe5fc400218a2de29afe216f850d901399feae85bbbfb842298e3481692af21b"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "3c954fc09af79b584de478afe56cbefc50c0f1bef4b1f7b5766b7f41a77ba778"
+      "sha256": "ea53edae34c00bfae610671217f5752e52eec1ee6a552aec9207feba82403b1b"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/rules.py",
@@ -448,5 +452,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "0aac1160982458c2c14f014704f4d9458b30dc301cf7253c8c81ff4dc3502a4c"
+  "canonical_course_sha256": "e6141a0f94d6dbc8d49703cf94bb46125a5d9261aa53a9c54649beec6bc31370"
 }

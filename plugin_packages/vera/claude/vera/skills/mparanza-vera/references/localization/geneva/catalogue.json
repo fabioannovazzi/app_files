@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/private/tmp/app-files-selective-reporting/plugins/vera",
-  "version": "0.1.423",
-  "captured_at": "2026-10-19T12:38:38.350017+00:00",
-  "catalogue_fingerprint": "ac73b0335f58f6c5ab3f9f6c026064949955ce1aa66cd3d4950aa49a321fb16b",
-  "manifest_sha256": "24175e21a34e96886f1ba768b42e278a6fb296051d71ea696402a40b95399abe",
+  "version": "0.1.425",
+  "captured_at": "2026-10-19T13:50:27.862107+00:00",
+  "catalogue_fingerprint": "210bd55bba0d91ce62ff19c62f068a462e3c48ef56d8dd51cf323f8d71bcf376",
+  "manifest_sha256": "dd1fda6a725dc50cf9f935e00a4537a233b112bbc24903f24ca355d46be59720",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -139,12 +139,12 @@
     {
       "function_id": "journal-bank-reconciliation",
       "skill_path": "skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "d373a6e3b6982b85fcf4b71b494786207c5604112415c4e198737a59b89effc2"
+      "sha256": "50a227d9f521ebf9fe83779da2b9684fea29ec020b5ad32de41409a0ac496c94"
     },
     {
       "function_id": "journal-sampling",
       "skill_path": "skills/journal-sampling/SKILL.md",
-      "sha256": "885b78755a3054aac3d07bd5e53a81fe61a4b58192e226c95b0a529868f04b2e"
+      "sha256": "e642daffc853a640c4d6792164cc2ad1be98e3fff3395623dc23afa1b91c763b"
     },
     {
       "function_id": "learn-with-vera",

@@ -239,10 +239,16 @@ separately from readable sources whose structure is unsupported.
 
 Before declaring a registration-style journal layout unsupported, follow
 `../../references/pdf-recovery.md`. Use the maintained inspection, trial and
-freeze actions in the existing inspection command. The host agent diagnoses and
-revises source-bound recipes within a persistent four-attempt budget. Successful
-recovery still requires the ordinary reviewed mapping and complete qualification.
-Do not create a parser, alter installed code or bypass a failed gate.
+freeze actions in the existing inspection command. The host agent diagnoses,
+revises source-bound recipes or writes a run-local source-reference adapter
+within a persistent four-attempt budget. Keep ordinary host inspection and
+reasoning available. Independent checks reconstruct source amounts, enforce
+coverage and accounting controls, and replay frozen code. Retain readable partial
+entries and explicit unresolved issues; block population-dependent operations.
+Successful recovery still requires the ordinary reviewed mapping and complete
+qualification. Do not alter installed code or bypass a failed gate. The managed
+runtime reports issues and recovery evidence through the existing incident
+pipeline; verify the original task before claiming it recovered.
 
 Text journals with registration headers (`N ---- dd/mm/yyyy ----`) and
 `seguito registrazione del dd/mm/yyyy` continuation headers can use the

@@ -202,12 +202,15 @@ bounded coordinate evidence, review the source-bound physical layout, qualify
 every completed registration, then normalize and sample. Dates in registration
 headers and postings continued across pages are supported by that adapter.
 Readable text alone does not qualify amounts or posting boundaries. Retain
-incomplete-population diagnostics; never replace this route with an ad hoc
-parser or claim success from text extraction alone.
+incomplete-population diagnostics and readable partial entries. Use the recovery
+adapter contract for unfamiliar structure; never claim qualification from text
+extraction alone.
 
 For recoverable ruled/PCL journal layouts, use the component's maintained
 `references/pdf-recovery.md` inspection–trial–freeze loop before closing an
-unsupported-layout result. Review targeted evidence, revise only supported
-recipe options, retain all attempts and require full-source replay plus the
-ordinary source-mapping receipt. Product self-improvement and generated parsers
-are not part of this route.
+unsupported-layout result. Review targeted evidence and revise a recipe or write
+a run-local source-reference adapter using ordinary host tools. Retain attempts
+and readable entries, require independent checks and full-source replay plus the
+ordinary source-mapping receipt, and report technical issues and recoveries
+through the incident pipeline. Keep population operations blocked until complete
+qualification. Installed code and validators are not changed by local recovery.

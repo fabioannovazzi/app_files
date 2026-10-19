@@ -57,7 +57,7 @@
     },
     {
       "path": "modules/check-entries/scripts/check_entries_core.py",
-      "sha256": "3e34376b6235392faaab6850301e593232ca2455cd8e63e75392ff85f247aeb3"
+      "sha256": "1aa3660c315496a02ad60c9b9c16361d27985f62e51db41e97a75387e34c1240"
     },
     {
       "path": "modules/check-entries/scripts/implementation_bootstrap.py",
@@ -153,11 +153,15 @@
     },
     {
       "path": "modules/check-entries/vendor/modules/vera_journal_pdf/__init__.py",
-      "sha256": "ef7ab6e4917fa66e0b01a2361ec68717a81855f1775f6170ad6bc3b08b254352"
+      "sha256": "a87cbdc034f60aac5b4c3d0d4fac9023b4f5d85d0bc061112346bf0825c01b0c"
+    },
+    {
+      "path": "modules/check-entries/vendor/modules/vera_journal_pdf/adapter.py",
+      "sha256": "fe5fc400218a2de29afe216f850d901399feae85bbbfb842298e3481692af21b"
     },
     {
       "path": "modules/check-entries/vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "3c954fc09af79b584de478afe56cbefc50c0f1bef4b1f7b5766b7f41a77ba778"
+      "sha256": "ea53edae34c00bfae610671217f5752e52eec1ee6a552aec9207feba82403b1b"
     },
     {
       "path": "modules/check-entries/vendor/modules/vera_journal_pdf/rules.py",
@@ -313,11 +317,15 @@
     },
     {
       "path": "vendor/modules/vera_journal_pdf/__init__.py",
-      "sha256": "ef7ab6e4917fa66e0b01a2361ec68717a81855f1775f6170ad6bc3b08b254352"
+      "sha256": "a87cbdc034f60aac5b4c3d0d4fac9023b4f5d85d0bc061112346bf0825c01b0c"
+    },
+    {
+      "path": "vendor/modules/vera_journal_pdf/adapter.py",
+      "sha256": "fe5fc400218a2de29afe216f850d901399feae85bbbfb842298e3481692af21b"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "3c954fc09af79b584de478afe56cbefc50c0f1bef4b1f7b5766b7f41a77ba778"
+      "sha256": "ea53edae34c00bfae610671217f5752e52eec1ee6a552aec9207feba82403b1b"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/rules.py",
@@ -634,5 +642,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "ee185ed8e5f7e180b23eb6ea9d15ff830ac088f2f4677ef979ad9fae7992400e"
+  "canonical_course_sha256": "892250663a7a0092c24f7e77ac13e6a5cdf7b7086c4a28258688c8cb67ebfdce"
 }

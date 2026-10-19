@@ -360,6 +360,22 @@ def run_verified_helper(
             "Incident identity/progress is unavailable; use the saved incident connector. Professional execution continues."
         )
     result, error_path = _execute_with_diagnostics(root, arguments)
+    if execution is not None and (
+        "--pdf-recovery" in arguments
+        or (
+            module in {"journal-sampling", "journal-bank-reconciliation"}
+            and Path(arguments[arguments.index("run") + 1]).name
+            in {"inspect_journal.py", "inspect_inputs.py"}
+        )
+    ):
+        from operational_incidents import report_pdf_recovery
+
+        try:
+            report_pdf_recovery(module, arguments, execution)
+        except (OSError, ValueError, KeyError, TypeError, sqlite3.Error):
+            logging.warning(
+                "PDF issue/recovery reporting remains pending; retained local attempts and readable results are preserved."
+            )
     from operational_incidents import (
         record_success,
         report_failure,

@@ -108,10 +108,9 @@ def test_unsupported_pdf_user_insistence_contract_stays_blocked() -> None:
     assert "invoke run_reconciliation.py" in case["must_not"]
     assert any("ad hoc Python" in item for item in case["must_not"])
     assert any("ordered tool trace" in item for item in case["evidence_to_record"])
-    assert (
-        "A user's instruction to proceed anyway does not authorize a fallback" in skill
-    )
-    assert "Do not offer or start a non-Vera alternative in the same run" in skill
+    assert "A blocked population does not prevent diagnosis" in skill
+    assert "run-local" in skill
+    assert "until qualification passes" in skill
     assert "`emitted_movements`: `0`" in skill
 
 

@@ -37,6 +37,7 @@ __all__ = [
     "report_failure",
     "check_incidents",
     "record_success",
+    "report_pdf_recovery",
     "startup_context",
     "local_context",
     "workflow_transport",
@@ -492,6 +493,20 @@ def _accept_delivery(state: dict[str, Any], receipt: dict[str, Any]) -> dict[str
 @_serialized
 def acknowledge_delivery(receipt: dict[str, Any]) -> dict[str, Any]:
     """Clear exactly the evidence recorded through either transport, idempotently."""
+    if receipt.get("evidence_for_report_id"):
+        state = _read()
+        if receipt in state.get("recovery_evidence_receipts", []):
+            return {
+                "acknowledged": True,
+                "operation": "report",
+                "queued": len(state["outbox"]),
+            }
+        _accept_recovery_evidence(state, receipt)
+        return {
+            "acknowledged": True,
+            "operation": "report",
+            "queued": len(state["outbox"]),
+        }
     return _accept_delivery(_read(), receipt)
 
 
@@ -685,7 +700,10 @@ def _flush(state: dict[str, Any]) -> None:
             state["outbox"].pop(0)
             _write(state)
             continue
-        _accept_delivery(state, reply)
+        if reply.get("evidence_for_report_id"):
+            _accept_recovery_evidence(state, reply)
+        else:
+            _accept_delivery(state, reply)
         delivered += 1
 
 
@@ -739,6 +757,7 @@ def _report_failure(
     technical_diagnostics: list[dict[str, Any]] | None = None,
     capture_state: str = "pending",
     execution: dict[str, str] | None = None,
+    evidence_for: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Queue technical setup evidence; service availability never blocks the task."""
     try:
@@ -785,6 +804,25 @@ def _report_failure(
         }
         if technical_diagnostics:
             report["diagnostics"] = technical_diagnostics
+        if evidence_for is not None:
+            # Server supplementation requires the original episode identity,
+            # including its session/version when a retry uses a fresh process.
+            for key in (
+                "product",
+                "product_version",
+                "host",
+                "platform",
+                "workflow",
+                "stage",
+                "session_id",
+                "operation_id",
+                "input_binding",
+            ):
+                if key in evidence_for:
+                    report[key] = evidence_for[key]
+                else:
+                    report.pop(key, None)
+            report["evidence_for_report_id"] = evidence_for["report_id"]
         events: list[dict[str, Any]] = []
         for diagnostic in report["diagnostics"]:
             cleaned = _clean(diagnostic["message"])
@@ -845,6 +883,7 @@ def _report_failure(
                 "incident_id": next(
                     row["incident_id"]
                     for row in state["receipts"]
+                    + state.get("recovery_evidence_receipts", [])
                     if row["report_id"] == reports[0]["report_id"]
                 ),
                 "report": reports[0],
@@ -873,6 +912,261 @@ def report_failure(workflow: str, stage: str, message: str, **kwargs) -> dict[st
             "reporting": "local-state-unavailable",
             "independent_connector": product_name(ROOT) + "_incident_report",
         }
+
+
+def _accept_recovery_evidence(state: dict[str, Any], receipt: dict[str, Any]) -> None:
+    """Acknowledge only queued supplements; never promote them to original tasks."""
+    if (
+        receipt.get("recorded") is not True
+        or receipt.get("installation_id") != state["credentials"]["installation_id"]
+    ):
+        raise ValueError("Recovery evidence receipt has the wrong installation")
+    item = next(
+        (
+            item
+            for item in state["outbox"]
+            if item["operation"] == "report"
+            and item["payload"]["report"]["report_id"] == receipt.get("report_id")
+            and item["payload"]["report"].get("evidence_for_report_id")
+            == receipt.get("evidence_for_report_id")
+        ),
+        None,
+    )
+    if item is None:
+        raise ValueError("Recovery evidence receipt does not match the outbox")
+    original = next(
+        (
+            row
+            for row in state["receipts"]
+            if row["report_id"] == receipt["evidence_for_report_id"]
+        ),
+        None,
+    )
+    if original is None or original["incident_id"] != receipt.get("incident_id"):
+        raise ValueError("Recovery evidence belongs to a different incident")
+    state.setdefault("recovery_evidence_receipts", []).append(receipt)
+    state["outbox"].remove(item)
+    _write(state)
+
+
+def report_pdf_recovery(
+    workflow: str, arguments: list[str], execution: dict[str, str]
+) -> None:
+    """Report handled PDF failures and local recoveries through the existing outbox.
+
+    Only fixed technical categories and counts are projected. PDF text, amounts,
+    file paths, adapter source and the host's free-text rationale stay local.
+    Passing extraction is supplementary evidence, never original-task closure.
+    """
+    if workflow not in {"journal-sampling", "journal-bank-reconciliation"}:
+        return
+    parser = argparse.ArgumentParser(add_help=False, allow_abbrev=False)
+    parser.add_argument("--output-dir", type=Path)
+    parser.add_argument("--client-engagement", type=Path)
+    options, _ = parser.parse_known_args(arguments)
+    if options.output_dir is None or options.client_engagement is None:
+        return
+    context = json.loads(options.client_engagement.read_text(encoding="utf-8"))
+    output = options.output_dir.resolve()
+    root = Path(context["output_dir"]).resolve()
+    if context.get("workflow_id") != workflow or output not in {
+        root,
+        root / "normalization",
+    }:
+        raise ValueError("PDF recovery reporting requires the same bound workflow")
+    directory = output / "pdf_recovery"
+    if any(p.is_symlink() for p in (options.output_dir, directory, *directory.parents)):
+        raise ValueError("PDF recovery reporting must not traverse symlinks")
+    inspection = output / "inspection.json"
+    events = ([inspection] if inspection.exists() else []) + sorted(
+        directory.glob("attempt-*.json")
+    )
+    frozen = directory / "freeze_receipt.json"
+    if frozen.exists():
+        events.append(frozen)
+    last_trial: dict[str, Any] | None = None
+    for path in events:
+        if (
+            path.is_symlink()
+            or path.stat().st_nlink != 1
+            or path.stat().st_size > 32 * 1024 * 1024
+        ):
+            raise ValueError("Invalid recovery evidence file")
+        event = json.loads(path.read_text(encoding="utf-8"))
+        if path.name.startswith("attempt-"):
+            last_trial = event
+        if path == inspection:
+            files = (
+                event.get("files", [])
+                if workflow == "journal-sampling"
+                else event.get("journal", {}).get("files", [])
+            )
+            failures = []
+            for item in files:
+                diagnostics = item.get("registration_diagnostics", item)
+                if (
+                    diagnostics.get("accepted") is False
+                    and diagnostics.get("reason")
+                    == "registration_pdf_incomplete_or_unbalanced"
+                ):
+                    failures.append(diagnostics)
+            if not failures:
+                continue
+            event = {
+                "attempt": 0,
+                "readable_row_count": sum(
+                    item.get("readable_row_count", 0) for item in failures
+                ),
+                "diagnostics": {
+                    "accepted": False,
+                    "rejected_rows": [
+                        row
+                        for item in failures
+                        for row in item.get("rejected_rows", [])
+                    ],
+                },
+                "layout": {},
+            }
+        is_freeze = path == frozen
+        if is_freeze:
+            # Reporting may not infer recovery from a filename or a zero helper
+            # exit. Match the independently produced replay receipt to its trial.
+            if (
+                last_trial is None
+                or last_trial.get("diagnostics", {}).get("accepted") is not True
+                or event.get("status") != "frozen_requires_mapping_review"
+                or event.get("qualified") is not False
+                or any(
+                    not isinstance(last_trial.get(key), str)
+                    or re.fullmatch(r"[a-f0-9]{64}", last_trial[key]) is None
+                    or event.get(key) != last_trial[key]
+                    for key in ("rows_sha256", "layout_sha256")
+                )
+                or event.get("previous_sha256")
+                != hashlib.sha256(
+                    json.dumps(
+                        last_trial, sort_keys=True, ensure_ascii=False, allow_nan=False
+                    ).encode()
+                ).hexdigest()
+                or last_trial["layout_sha256"]
+                != hashlib.sha256(
+                    json.dumps(
+                        last_trial["layout"],
+                        sort_keys=True,
+                        ensure_ascii=False,
+                        allow_nan=False,
+                    ).encode()
+                ).hexdigest()
+            ):
+                raise ValueError(
+                    "Freeze evidence is not bound to the latest successful trial"
+                )
+        passed = is_freeze or event["diagnostics"]["accepted"] is True
+        strategy = (
+            "run-local source-reference adapter"
+            if "agent_adapter" in event.get("layout", {})
+            else "reviewed layout revision"
+        )
+        state = _read()
+        key = execution["operation_id"]
+        episode = state.setdefault("pdf_recoveries", {}).setdefault(
+            key, {"reported": []}
+        )
+        event_key = hashlib.sha256(path.read_bytes()).hexdigest()
+        if event_key in episode["reported"]:
+            continue
+        if "original" not in episode and passed:
+            continue
+        message = (
+            "Fresh full-source replay matched; extraction recovered locally. Mapping qualification and original task verification remain required."
+            if is_freeze
+            else f"PDF correction attempt using {strategy}: independent source/accounting checks {'passed' if passed else 'failed'}. Full local evidence and readable entries retained."
+        )
+        if path == inspection:
+            message = "PDF inspection found failed source/accounting checks. Readable entries remain available; population-dependent work is blocked."
+        # Exact identifiers are transport-safe facts, not a classifier of the
+        # host's free-form diagnosis or any client text.
+        allowed_checks = {
+            "unclaimed_source_amount",
+            "page_decode_failed",
+            "invalid_registration_date",
+            "invalid_continuation_date",
+            "duplicate_source_amount",
+            "invalid_source_reference",
+            "invalid_posting_proposal",
+            "amount_outside_reviewed_side",
+            "account_reference_outside_posting",
+            "posting_crosses_registration_header",
+            "running_total_does_not_match_postings",
+            "registration_debit_credit_do_not_balance",
+            "unsupported_negative_amount_notation",
+            "negative_amount_side_requires_review",
+            "posting_requires_registration_account_and_amount",
+            "page_requires_one_reviewed_running_total",
+            "adapter_requires_independent_printed_running_totals",
+            "unrecognized_numeric_content_in_amount_band",
+            "reviewed_coordinates_outside_page",
+            "word_crosses_reviewed_column",
+            "duplicate_registration_number",
+            "continuation_without_matching_registration",
+            "monetary_value_outside_reviewed_bands",
+        }
+        checks = sorted(
+            {
+                str(item["reason"])
+                for item in event.get("diagnostics", {}).get("rejected_rows", [])
+                if isinstance(item, dict)
+                and isinstance(item.get("reason"), str)
+                and item["reason"] in allowed_checks
+            }
+        )
+        if checks:
+            message += " Observed checks: " + ", ".join(checks) + "."
+        diagnostic = {
+            "component": "vera-pdf-recovery",
+            "stage": "pdf-recovery",
+            "error_type": "PDFRecoveryEvidence",
+            "error_code": (
+                "PDF_REPLAY_MATCHED"
+                if is_freeze
+                else ("PDF_CHECKS_PASSED" if passed else "PDF_CHECKS_FAILED")
+            ),
+            "message": message,
+            "evidence_source": "observed-tool-result",
+        }
+        measurements = {
+            "independent_checks_passed": passed,
+            "fresh_replay_matched": is_freeze,
+            "population_qualified": False,
+            "original_task_verified": False,
+        }
+        for name in ("attempt", "readable_row_count"):
+            if type(event.get(name)) is int:
+                measurements[name] = event[name]
+        receipt = report_failure(
+            workflow,
+            "pdf-recovery",
+            message,
+            technical_diagnostics=[diagnostic],
+            capture_state="complete",
+            measurements=measurements,
+            execution=execution,
+            evidence_for=episode.get("original"),
+        )
+        if "report" not in receipt:
+            LOGGER.warning(
+                "PDF recovery evidence remains local; incident queue unavailable"
+            )
+            return
+        # report_failure owns its state transaction; reload before adding linkage.
+        with _state_lock():
+            state = _read()
+            episode = state.setdefault("pdf_recoveries", {}).setdefault(
+                key, {"reported": []}
+            )
+            episode.setdefault("original", receipt["report"])
+            episode["reported"].append(event_key)
+            _write(state)
 
 
 @_serialized
