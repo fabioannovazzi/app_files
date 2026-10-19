@@ -225,21 +225,47 @@ def test_agent_can_inspect_revise_freeze_and_replay(recovery, reader, tmp_path):
     assert recovery(source, out, "freeze", currency="EUR", layout=layout) == frozen
 
 
-def test_recovery_requires_successful_exact_recipe_and_rejects_stale_source(
-    recovery, tmp_path
+@pytest.mark.parametrize("trial", ["none", "failed", "different_recipe"])
+def test_freeze_without_exact_successful_trial_returns_blocked_without_writes(
+    recovery, tmp_path, trial
 ):
     source = tmp_path / "grid.pdf"
     layout = write_grid_pdf(source, pages=1)
     out = tmp_path / "out"
-    with pytest.raises(ValueError, match="latest successful"):
-        recovery(source, out, "freeze", currency="EUR", layout=layout)
+    recovery(source, out, "inspect", currency="EUR", pages=[1])
+    if trial != "none":
+        tested = copy.deepcopy(layout)
+        if trial == "failed":
+            tested.pop("running_totals")
+            layout = tested
+        recovery(
+            source,
+            out,
+            "trial",
+            currency="EUR",
+            layout=tested,
+            reason="Reviewed geometry",
+        )
+    if trial == "different_recipe":
+        layout["body"][0] = "21"
+    before = {p.name: p.read_bytes() for p in (out / "pdf_recovery").iterdir()}
+
+    result = recovery(source, out, "freeze", currency="EUR", layout=layout)
+
+    assert result["status"] == "freeze_blocked"
+    assert result["reason_code"] == "successful_exact_trial_required"
+    assert result["qualified"] is False
+    assert "layout_path" not in result
+    assert {p.name: p.read_bytes() for p in (out / "pdf_recovery").iterdir()} == before
+
+
+def test_freeze_rejects_stale_source(recovery, tmp_path):
+    source = tmp_path / "grid.pdf"
+    layout = write_grid_pdf(source, pages=1)
+    out = tmp_path / "out"
     recovery(
         source, out, "trial", currency="EUR", layout=layout, reason="Reviewed geometry"
     )
-    altered = copy.deepcopy(layout)
-    altered["body"][0] = "21"
-    with pytest.raises(ValueError, match="exact latest"):
-        recovery(source, out, "freeze", currency="EUR", layout=altered)
     with source.open("ab") as stream:
         stream.write(b"\n%changed source")
     with pytest.raises(ValueError, match="stale"):
@@ -563,10 +589,13 @@ def test_invalid_render_region_preserves_attempt_and_allows_recovery(
 
 
 @pytest.mark.parametrize("host", ["source", "codex", "cowork"])
+@pytest.mark.parametrize("incomplete", [False, True])
 @pytest.mark.parametrize(
     "workflow", ["journal-sampling", "journal-bank-reconciliation"]
 )
-def test_managed_host_recovery_entrypoint(tmp_path, monkeypatch, host, workflow):
+def test_managed_host_recovery_entrypoint(
+    tmp_path, monkeypatch, host, workflow, incomplete
+):
     from tests.plugins import test_journal_bank_review_receipts as harness
     from tests.plugins.test_journal_sampling_plugin import (
         _running_customer_output,
@@ -584,7 +613,9 @@ def test_managed_host_recovery_entrypoint(tmp_path, monkeypatch, host, workflow)
     environment = harness._runtime_environment(root, tmp_path)
     if workflow == "journal-sampling":
         source = tmp_path / "journal.pdf"
-        layout = write_grid_pdf(source, pages=2)
+        layout = write_grid_pdf(
+            source, pages=2, issue="unbalanced" if incomplete else None
+        )
         context, output = _running_customer_output(tmp_path, source_path=source)
         hydrated = load_core().load_client_engagement_context(context)
         bound = Path(hydrated["input_bindings"][0]["path"])
@@ -599,7 +630,11 @@ def test_managed_host_recovery_entrypoint(tmp_path, monkeypatch, host, workflow)
 
         def write_source(path, rows):
             if path.name == "journal.pdf":
-                layouts.append(write_grid_pdf(path, pages=2))
+                layouts.append(
+                    write_grid_pdf(
+                        path, pages=2, issue="unbalanced" if incomplete else None
+                    )
+                )
             else:
                 original(path, rows)
 
@@ -649,6 +684,17 @@ def test_managed_host_recovery_entrypoint(tmp_path, monkeypatch, host, workflow)
             check=False,
         )
         assert result.returncode == 0, result.stderr
+        assert "Traceback" not in result.stderr
+        assert "VERA_TECHNICAL_EVIDENCE" not in result.stderr
+    if incomplete:
+        assert '"status": "freeze_blocked"' in result.stdout + result.stderr
+        assert '"qualified": false' in result.stdout + result.stderr
+        assert not list((tmp_path / "incident-state").rglob("*.technical.json"))
+        assert not (output / "pdf_recovery/frozen_layout.json").exists()
+        assert not (output / "pdf_recovery/freeze_receipt.json").exists()
+        trial = json.loads((output / "pdf_recovery/attempt-01.json").read_text())
+        assert trial["diagnostics"]["accepted"] is False
+        return
     receipt = json.loads((output / "pdf_recovery/freeze_receipt.json").read_text())
     assert receipt["status"] == "frozen_requires_mapping_review"
     assert receipt["qualified"] is False

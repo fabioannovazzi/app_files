@@ -297,7 +297,7 @@
     "render_evidence": "Italian Vera fatture-xml-check rendered through the new CLI and inspected in the Codex in-app browser. Original material and the port-8769 lesson server were untouched.",
     "limits": "Existing artifact hashes remain historical evidence. No new professional approval, live learner completion, installed-version acceptance or validation of every browser host is claimed."
   },
-  "course_sha256": "fbc5895859fbe81241df0def9b437599dc03ea1eab690e9ade2ce14c10583875",
+  "course_sha256": "06f694a0d737a937f85937e2fce2e615b06498016ed7f4468b9e1a6c7a9335e8",
   "isolated_launcher_source_compatibility_20261018": {
     "reviewer": "Codex exact retained-course and launcher-source review",
     "reviewed_at": "2026-10-18",
@@ -1097,5 +1097,19 @@
     "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required.",
     "fresh_matching_junit_required": true,
     "limits": "No new visual, learner, installed-host or professional acceptance is asserted."
+  },
+  "pdf_freeze_refusal_compatibility_20261019": {
+    "reviewer": "Codex source inspection and exact retained-course comparison",
+    "reviewed_at": "2026-10-19",
+    "baseline_commit": "f868d4ad933c53434091b07f7c133d348c5daa67",
+    "previous_course_sha256": "fbc5895859fbe81241df0def9b437599dc03ea1eab690e9ade2ce14c10583875",
+    "current_course_sha256": "06f694a0d737a937f85937e2fce2e615b06498016ed7f4468b9e1a6c7a9335e8",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Expected PDF freeze prerequisite refusal now returns freeze_blocked with qualified=false instead of an unhandled exception. Parsing, acceptance, replay, mapping and professional gates remain unchanged. Authored lessons and teaching judgments are byte-equivalent after removing source fingerprints. Native deployed-version acceptance is tracked separately.",
+    "fresh_matching_junit_required": true,
+    "native_ui_qualified": false
   }
 }

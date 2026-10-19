@@ -135,7 +135,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "bd0ada54af9ff7452da6e4d278e57d62e324c832afbd6fe43ad9ac1c37ce86e7",
+  "course_sha256": "f56a0d7f073c67c29986dd414e893e020ea2b85af5d71b6d6476affda19e8cb9",
   "discovery_source_refresh": {
     "reviewed_by": "Codex /root",
     "reviewed_at": "2026-10-01T11:44:13.200192+00:00",
@@ -887,5 +887,19 @@
   "windows_error_lifecycle_source_binding_20261018": {
     "base_commit": "46f0a17b16a0c40ab6d49df09a0e179f05cee289",
     "scope": "Only governed source hashes changed. The Windows directory context now preserves errors raised by the protected operation and releases its handle; native workspace closes the existing exclusive lock stream before deletion. All course content, language, input and professional review judgments remain unchanged. Native Windows CI is a separate release requirement."
+  },
+  "pdf_freeze_refusal_compatibility_20261019": {
+    "reviewer": "Codex source inspection and exact retained-course comparison",
+    "reviewed_at": "2026-10-19",
+    "baseline_commit": "f868d4ad933c53434091b07f7c133d348c5daa67",
+    "previous_course_sha256": "bd0ada54af9ff7452da6e4d278e57d62e324c832afbd6fe43ad9ac1c37ce86e7",
+    "current_course_sha256": "f56a0d7f073c67c29986dd414e893e020ea2b85af5d71b6d6476affda19e8cb9",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Expected PDF freeze prerequisite refusal now returns freeze_blocked with qualified=false instead of an unhandled exception. Parsing, acceptance, replay, mapping and professional gates remain unchanged. Authored lessons and teaching judgments are byte-equivalent after removing source fingerprints. Native deployed-version acceptance is tracked separately.",
+    "fresh_matching_junit_required": true,
+    "native_ui_qualified": false
   }
 }

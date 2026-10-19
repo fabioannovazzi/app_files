@@ -302,7 +302,7 @@
     "limits": "No fresh learner, voice, installed-host, visual or professional acceptance is asserted by a source fingerprint refresh."
   },
   "schema": "mparanza.teaching_release_review.v1",
-  "course_sha256": "2d3ec7704deb4e2698fa9ad5d3c556981455ab398a8730e5f08487ad0e1f724d",
+  "course_sha256": "e577c08434fd3a02cca673d3e9d15356b9310809013367bc76aabcca9cc9e4c8",
   "isolated_launcher_source_compatibility_20261018": {
     "reviewer": "Codex exact retained-course and launcher-source review",
     "reviewed_at": "2026-10-18",
@@ -768,5 +768,19 @@
     "current_course_sha256": "2d3ec7704deb4e2698fa9ad5d3c556981455ab398a8730e5f08487ad0e1f724d",
     "main_commit": "9361a54e934e3bdeb437df81550b75ae5b0eb5be",
     "scope": "Exact complete-course comparison against current main confirms only the reviewed case_service source SHA changes. All PDF recovery, course narrative, locale judgments and historical artifact evidence are retained. Fresh native CI must pass on this exact course digest. No new professional or installed-host acceptance."
+  },
+  "pdf_freeze_refusal_compatibility_20261019": {
+    "reviewer": "Codex source inspection and exact retained-course comparison",
+    "reviewed_at": "2026-10-19",
+    "baseline_commit": "f868d4ad933c53434091b07f7c133d348c5daa67",
+    "previous_course_sha256": "2d3ec7704deb4e2698fa9ad5d3c556981455ab398a8730e5f08487ad0e1f724d",
+    "current_course_sha256": "e577c08434fd3a02cca673d3e9d15356b9310809013367bc76aabcca9cc9e4c8",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Expected PDF freeze prerequisite refusal now returns freeze_blocked with qualified=false instead of an unhandled exception. Parsing, acceptance, replay, mapping and professional gates remain unchanged. Authored lessons and teaching judgments are byte-equivalent after removing source fingerprints. Native deployed-version acceptance is tracked separately.",
+    "fresh_matching_junit_required": true,
+    "native_ui_qualified": false
   }
 }

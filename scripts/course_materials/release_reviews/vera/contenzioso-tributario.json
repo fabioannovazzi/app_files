@@ -5,7 +5,7 @@
     "basis": "Release metadata/source binding after automatic integrity-incident reporting correction. Existing authored lessons, professional methods, inputs and review dispositions remain unchanged. No new learner or customer recovery acceptance claimed."
   },
   "schema": "mparanza.teaching_release_review.v1",
-  "course_sha256": "44b2f27a9cd8d93dfa2cbb434004ea5ddc483f7400d40111b7c977164d7b378e",
+  "course_sha256": "f660b8b6cada9348269326fc8009983dd0e7874d07a7927c7e602d7afdf0fe02",
   "source_binding_note": "2026-10-15: Only the source skill description was quoted to make its YAML valid. Course text, teaching steps, input files, prior execution evidence and substantive editorial judgments are unchanged.",
   "isolated_launcher_source_compatibility_20261018": {
     "reviewer": "Codex exact retained-course and launcher-source review",
@@ -442,5 +442,19 @@
     "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required.",
     "fresh_matching_junit_required": true,
     "limits": "No new visual, learner, installed-host or professional acceptance is asserted."
+  },
+  "pdf_freeze_refusal_compatibility_20261019": {
+    "reviewer": "Codex source inspection and exact retained-course comparison",
+    "reviewed_at": "2026-10-19",
+    "baseline_commit": "f868d4ad933c53434091b07f7c133d348c5daa67",
+    "previous_course_sha256": "44b2f27a9cd8d93dfa2cbb434004ea5ddc483f7400d40111b7c977164d7b378e",
+    "current_course_sha256": "f660b8b6cada9348269326fc8009983dd0e7874d07a7927c7e602d7afdf0fe02",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Expected PDF freeze prerequisite refusal now returns freeze_blocked with qualified=false instead of an unhandled exception. Parsing, acceptance, replay, mapping and professional gates remain unchanged. Authored lessons and teaching judgments are byte-equivalent after removing source fingerprints. Native deployed-version acceptance is tracked separately.",
+    "fresh_matching_junit_required": true,
+    "native_ui_qualified": false
   }
 }

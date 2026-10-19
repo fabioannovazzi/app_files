@@ -259,9 +259,17 @@ def recover_pdf(
         or not attempts[-1]["diagnostics"]["accepted"]
         or attempts[-1]["layout_sha256"] != layout_digest
     ):
-        raise ValueError(
-            "Freeze requires the exact latest successful full-source trial"
-        )
+        # Exact trial identity is a mechanical prerequisite, not a runtime fault.
+        # Keep the source unqualified and the retained history unchanged.
+        return {
+            "status": "freeze_blocked",
+            "reason_code": "successful_exact_trial_required",
+            "reason": "Freeze requires the exact latest successful full-source trial",
+            **identity,
+            "layout_sha256": layout_digest,
+            "previous_sha256": previous,
+            "qualified": False,
+        }
     from . import read_registration_pdf
 
     try:
