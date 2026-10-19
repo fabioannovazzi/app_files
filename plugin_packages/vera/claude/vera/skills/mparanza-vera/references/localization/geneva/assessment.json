@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "7c9932f5e713bcd14257194fbef39bfebecbe8b438fcb248c082029957b16040",
+  "catalogue_fingerprint": "cc7e105c4ea255b143707620003d0a6e68e661cf0ad62c5dfd82090edcd6b49c",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -2017,5 +2017,14 @@
       "previdenza-inps"
     ],
     "scope": "Refresh the exact source catalogue for the current release. Patent Box, LIPE and INPS now retain actual user confirmation of the specific proposal without mandatory professional credentials, signatures or mandates. Preserve every existing Geneva disposition and prior history. This binding adds no jurisdiction, professional or installed-host acceptance. Remove the unused legacy professional-signature approval adapter; optional signed-document verification uses selected tools and trust sources without a professional-role policy."
+  },
+  "agentic_pdf_recovery_release_binding_20261019": {
+    "version": "0.1.424",
+    "changed_entrypoints": [
+      "journal-bank-reconciliation",
+      "journal-sampling"
+    ],
+    "previous_catalogue_fingerprint": "7c9932f5e713bcd14257194fbef39bfebecbe8b438fcb248c082029957b16040",
+    "scope": "Source binding for host-led run-local text-PDF adapters, independent accounting checks, readable partial entries and incident recovery evidence. Existing Geneva dispositions and professional acceptance limits remain unchanged. Synthetic PDF/reconciliation tests do not establish acceptance on Swiss customer documents."
   }
 }

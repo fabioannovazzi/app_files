@@ -65,6 +65,15 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "host-led-pdf-adapter-recovery",
+        "purpose": "Diagnose unfamiliar registration structures and review a local correction without weakening qualification",
+        "content": "For unfamiliar PDF structures, the agent may read original words with page references, run-local adapter code and partial entries needed for diagnosis. Code executes locally and independent checks remain mandatory. The incident service receives fixed technical categories, check results and counts, excluding documents, amounts, paths, adapter code and free-text rationales. A successful reread does not automatically close the original task. The full word inventory, adapter snapshots, bounded private adapter stderr, every trial, readable JSON/CSV entries and unresolved issues remain in the same local run. The host selects evidence for its existing model account; no automatic anonymization is claimed. The source-reference adapter runs in isolated Python with a time limit; this is not an OS security sandbox. Its path and code digest are sealed in the mapping recipe. Missing printed controls or failed coverage/accounting checks preserve entries as unqualified. Existing original-task recovery verification remains required.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -169,10 +178,10 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-18",
+    "reviewed_at": "2026-10-19",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "17c95b8bea9902f69d21b22f8583dbc687e01aab524b5464eb950ab97032db27"
+    "source_fingerprint": "8bf194db9e8fedecf177bfa8cb2d055cbcd280982e1787841a95635e0952ea90"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"
@@ -193,7 +202,7 @@
           "Il modello esamina il residuo ammesso",
           "Solo nel runtime Codex, dopo la riconciliazione, un passaggio separato può ricevere tutti i movimenti bancari ancora aperti e i candidati contabili compatibili, con i soli campi mappati e valorizzati, se l’intero insieme rientra in un unico pacchetto limitato. Il residuo non viene diviso in chiamate automatiche: se supera i limiti, resta interamente alla revisione umana. Cowork non esegue questo passaggio, che non può modificare gli abbinamenti deterministici né lo stato di prontezza.",
           "I dati professionali non vengono anonimizzati né pseudonimizzati automaticamente. Il contesto di un caso selezionato può contenere nomi, descrizioni, importi, date e riferimenti reali quando servono alla revisione professionale.",
-          "Nel recupero del PDF, la verifica locale della notazione degli importi negativi conserva tutte le anomalie e mostra al modello al massimo 50 segnalazioni per risposta, con pagina, riga, colonna e importo stampato. Il modello vede anche le scelte proposte per notazione e trattamento del segno; queste richiedono la revisione del professionista."
+          "Nel recupero del PDF, la verifica locale della notazione degli importi negativi conserva tutte le anomalie e mostra al modello al massimo 50 segnalazioni per risposta, con pagina, riga, colonna e importo stampato. Il modello vede anche le scelte proposte per notazione e trattamento del segno; queste richiedono la revisione del professionista. Per strutture PDF non riconosciute, l’agente può leggere le parole originali con i riferimenti di pagina, il codice di un adattatore locale e le scritture parziali necessarie alla diagnosi. Il codice viene eseguito localmente e i controlli indipendenti restano obbligatori. Al servizio incidenti arrivano categorie tecniche fisse, esiti dei controlli e conteggi; non documenti, importi, percorsi, codice dell’adattatore o motivazioni libere. Una rilettura riuscita non chiude automaticamente il lavoro originale."
         ],
         "en": [
           "The model understands the structure",
@@ -207,7 +216,7 @@
           "The model reviews the admitted residual",
           "Only in the Codex runtime, after reconciliation, a separate step may receive all still-unmatched bank movements and their compatible accounting candidates, using only mapped, populated fields, when the complete set fits one bounded packet. The residual is never split into automatic calls: if it exceeds the limits, it remains entirely in human review. Cowork does not run this step, which cannot change deterministic matches or readiness.",
           "Professional data is not automatically anonymized or pseudonymized. Selected case context may contain real names, descriptions, amounts, dates, and references when professional review requires them.",
-          "During PDF recovery, the local negative-amount notation check retains every issue and shows the model at most 50 issues per response, with page, row, column and printed amount. The model also sees the proposed notation and sign-treatment choices; these require professional review."
+          "During PDF recovery, the local negative-amount notation check retains every issue and shows the model at most 50 issues per response, with page, row, column and printed amount. The model also sees the proposed notation and sign-treatment choices; these require professional review. For unfamiliar PDF structures, the agent may read original words with page references, run-local adapter code and partial entries needed for diagnosis. Code executes locally and independent checks remain mandatory. The incident service receives fixed technical categories, check results and counts, excluding documents, amounts, paths, adapter code and free-text rationales. A successful reread does not automatically close the original task."
         ],
         "fr": [
           "Le modèle comprend la structure",
@@ -221,7 +230,7 @@
           "Le modèle examine le résidu admis",
           "Uniquement dans l’environnement Codex, après le rapprochement, une étape distincte peut recevoir tous les mouvements bancaires encore non rapprochés et leurs candidats comptables compatibles, avec les seuls champs mappés et renseignés, si l’ensemble complet tient dans un paquet limité. Le résidu n’est jamais divisé en appels automatiques : s’il dépasse les limites, il reste intégralement soumis à la revue humaine. Cowork n’exécute pas cette étape, qui ne peut modifier ni les rapprochements déterministes ni l’état de préparation.",
           "Les données professionnelles ne sont pas automatiquement anonymisées ou pseudonymisées. Le contexte d'un cas sélectionné peut contenir des noms, descriptions, montants, dates et références réels lorsque la revue professionnelle l'exige.",
-          "Lors de la récupération du PDF, le contrôle local de la notation des montants négatifs conserve toutes les anomalies et montre au modèle au plus 50 signalements par réponse, avec page, ligne, colonne et montant imprimé. Le modèle voit aussi les choix proposés de notation et de traitement du signe, qui nécessitent une revue professionnelle."
+          "Lors de la récupération du PDF, le contrôle local de la notation des montants négatifs conserve toutes les anomalies et montre au modèle au plus 50 signalements par réponse, avec page, ligne, colonne et montant imprimé. Le modèle voit aussi les choix proposés de notation et de traitement du signe, qui nécessitent une revue professionnelle. Pour une structure PDF inconnue, l’agent peut lire les mots originaux avec leurs références de page, le code d’un adaptateur local et les écritures partielles nécessaires au diagnostic. Le code s’exécute localement et les contrôles indépendants restent obligatoires. Le service d’incidents reçoit des catégories techniques fixes, les résultats des contrôles et des comptages, sans documents, montants, chemins, code de l’adaptateur ni explications libres. Une relecture réussie ne clôture pas automatiquement le travail initial."
         ],
         "de": [
           "Das Modell versteht die Struktur",
@@ -235,7 +244,7 @@
           "Das Modell prüft den zugelassenen Restbestand",
           "Nur in der Codex-Laufzeit kann nach dem Abgleich ein separater Schritt alle noch nicht zugeordneten Bankbewegungen und ihre kompatiblen Buchhaltungskandidaten mit ausschließlich gemappten, befüllten Feldern erhalten, wenn der vollständige Bestand in ein begrenztes Paket passt. Der Restbestand wird nie in automatische Aufrufe aufgeteilt: Überschreitet er die Grenzen, bleibt er vollständig in der menschlichen Prüfung. Cowork führt diesen Schritt nicht aus; er kann weder deterministische Zuordnungen noch die Freigabebereitschaft ändern.",
           "Professionelle Daten werden nicht automatisch anonymisiert oder pseudonymisiert. Der Kontext eines ausgewählten Falls kann echte Namen, Beschreibungen, Beträge, Daten und Referenzen enthalten, wenn die fachliche Prüfung sie benötigt.",
-          "Bei der PDF-Wiederherstellung speichert die lokale Prüfung der Schreibweise negativer Beträge alle Auffälligkeiten und zeigt dem Modell höchstens 50 Meldungen pro Antwort mit Seite, Zeile, Spalte und gedrucktem Betrag. Das Modell sieht auch die vorgeschlagene Schreibweise und Behandlung des Vorzeichens; diese erfordern eine fachliche Prüfung."
+          "Bei der PDF-Wiederherstellung speichert die lokale Prüfung der Schreibweise negativer Beträge alle Auffälligkeiten und zeigt dem Modell höchstens 50 Meldungen pro Antwort mit Seite, Zeile, Spalte und gedrucktem Betrag. Das Modell sieht auch die vorgeschlagene Schreibweise und Behandlung des Vorzeichens; diese erfordern eine fachliche Prüfung. Bei unbekannten PDF-Strukturen kann der Agent Originalwörter mit Seitenverweisen, lokalen Adaptercode und die für die Diagnose benötigten teilweise gelesenen Buchungen lesen. Der Code läuft lokal; unabhängige Prüfungen bleiben verpflichtend. Der Störungsdienst erhält feste technische Kategorien, Prüfergebnisse und Anzahlen, jedoch keine Dokumente, Beträge, Pfade, Adaptercodes oder frei formulierten Begründungen. Erfolgreiches erneutes Einlesen schließt den ursprünglichen Auftrag nicht automatisch ab."
         ],
         "es": [
           "El modelo comprende la estructura",
@@ -249,7 +258,7 @@
           "El modelo revisa el residuo admitido",
           "Solo en el entorno Codex, después de la conciliación, un paso separado puede recibir todos los movimientos bancarios aún sin conciliar y sus candidatos contables compatibles, usando únicamente campos mapeados y cumplimentados, si el conjunto completo cabe en un único paquete limitado. El residuo nunca se divide en llamadas automáticas: si supera los límites, permanece íntegramente en revisión humana. Cowork no ejecuta este paso, que no puede modificar las conciliaciones deterministas ni el estado de preparación.",
           "Los datos profesionales no se anonimizan ni se seudonimizan automáticamente. El contexto de un caso seleccionado puede contener nombres, descripciones, importes, fechas y referencias reales cuando la revisión profesional los necesita.",
-          "Durante la recuperación del PDF, la comprobación local de la notación de importes negativos conserva todas las anomalías y muestra al modelo como máximo 50 incidencias por respuesta, con página, fila, columna e importe impreso. El modelo también ve las opciones propuestas de notación y tratamiento del signo, que requieren revisión profesional."
+          "Durante la recuperación del PDF, la comprobación local de la notación de importes negativos conserva todas las anomalías y muestra al modelo como máximo 50 incidencias por respuesta, con página, fila, columna e importe impreso. El modelo también ve las opciones propuestas de notación y tratamiento del signo, que requieren revisión profesional. Ante estructuras PDF desconocidas, el agente puede leer palabras originales con referencias de página, código de un adaptador local y asientos parciales necesarios para el diagnóstico. El código se ejecuta localmente y los controles independientes siguen siendo obligatorios. El servicio de incidencias recibe categorías técnicas fijas, resultados de controles y recuentos, sin documentos, importes, rutas, código del adaptador ni explicaciones libres. Una nueva lectura correcta no cierra automáticamente el trabajo original."
         ]
       }
     }

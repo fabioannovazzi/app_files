@@ -326,6 +326,7 @@ def test_managed_cli_delegates_to_private_root_and_keeps_helper_arguments(
         "operational_incidents",
         SimpleNamespace(
             report_failure=record_failure,
+            report_pdf_recovery=lambda *args: None,
             record_success=lambda *args: None,
             execution_identity=lambda *args: {
                 "operation_id": "00000000-0000-0000-0000-000000000001"

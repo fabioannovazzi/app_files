@@ -794,7 +794,8 @@ def _implementation_receipts() -> list[dict[str, Any]]:
         ),
     )
     declared_contract += tuple(
-        ("shared_pdf", name) for name in ("__init__.py", "rules.py", "recovery.py")
+        ("shared_pdf", name)
+        for name in ("__init__.py", "rules.py", "recovery.py", "adapter.py")
     )
     if declared_contract != IMPLEMENTATION_CONTRACT:
         raise ValueError(
@@ -840,6 +841,7 @@ def _implementation_receipts() -> list[dict[str, Any]]:
         ("__init__.py", ""),
         ("rules.py", "_rules"),
         ("recovery.py", "_recovery"),
+        ("adapter.py", "_adapter"),
     ):
         receipts.append(
             artifact_receipt(
@@ -2790,7 +2792,9 @@ def _parse_text_pdf(
     """Normalize physical PDF postings through the shared reviewed reader."""
     from vera_journal_pdf import read_registration_pdf
 
-    postings, diagnostics = read_registration_pdf(path, layout, currency=currency)
+    postings, diagnostics = read_registration_pdf(
+        path, layout, currency=currency, retain_partial=True
+    )
     records = [
         _normalize_record(
             posting,
@@ -3571,6 +3575,12 @@ def inspect_path(
     )
     if output_dir is not None:
         output_dir.mkdir(parents=True, exist_ok=True)
+        from vera_journal_pdf.recovery import write_readable_entries
+
+        write_readable_entries(
+            output_dir / "readable_pdf_entries.csv",
+            [row for item in inspections for row in item.get("readable_rows", [])],
+        )
         review_payload = _qualification_review_payload(inspections)
         write_json(
             output_dir / "inspection.json",
@@ -3916,6 +3926,12 @@ def normalize_path(
         "population_status": "complete" if population_complete else "incomplete",
         "qualification_review_payload": "qualification_review_payload.json",
     }
+    from vera_journal_pdf.recovery import write_readable_entries
+
+    write_readable_entries(
+        output_dir / "readable_pdf_entries.csv",
+        [row for item in diagnostics for row in item.get("readable_rows", [])],
+    )
     write_json(
         output_dir / "normalization_diagnostics.json",
         {

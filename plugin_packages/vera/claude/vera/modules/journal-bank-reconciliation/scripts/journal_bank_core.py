@@ -330,6 +330,7 @@ IMPLEMENTATION_ARTIFACT_SPECS += (
     ("implementation.vera_journal_pdf", "pdf_implementation", "__init__.py"),
     ("implementation.vera_journal_pdf_rules", "pdf_implementation", "rules.py"),
     ("implementation.vera_journal_pdf_recovery", "pdf_implementation", "recovery.py"),
+    ("implementation.vera_journal_pdf_adapter", "pdf_implementation", "adapter.py"),
 )
 
 CHATGPT_IMPLEMENTATION_ARTIFACT_SPECS = tuple(
@@ -3039,7 +3040,18 @@ def _read_pdf_registration_raw(
     """Reuse the registration reader without guessing account or amount roles."""
     from vera_journal_pdf import read_registration_pdf
 
-    postings, diagnostics = read_registration_pdf(path, layout)
+    postings, diagnostics = read_registration_pdf(
+        path,
+        layout,
+        currency=layout.get("recovery_currency", "EUR"),
+        retain_partial=True,
+    )
+    if "recovery_currency" not in layout:
+        # The reconciliation policy resolves currency later. A partial reading
+        # must not present the parser's default as a source-currency observation.
+        diagnostics["readable_rows"] = [
+            {**row, "currency": ""} for row in diagnostics.get("readable_rows", [])
+        ]
     metadata = {
         "page_count": diagnostics.get("page_count", 0),
         "failure_kind": None if diagnostics["accepted"] else diagnostics["reason"],
@@ -4876,6 +4888,16 @@ def inspect_inputs(
         },
     )
     write_json(output_dir / "suggested_recipe.json", suggested_recipe)
+    from vera_journal_pdf.recovery import write_readable_entries
+
+    write_readable_entries(
+        output_dir / "readable_pdf_entries.csv",
+        [
+            row
+            for item in journal_diag
+            for row in item.get("registration_diagnostics", {}).get("readable_rows", [])
+        ],
+    )
     return InspectionResult(
         bank={"row_count": bank_frame.height, "files": bank_diag},
         journal={"row_count": journal_frame.height, "files": journal_diag},

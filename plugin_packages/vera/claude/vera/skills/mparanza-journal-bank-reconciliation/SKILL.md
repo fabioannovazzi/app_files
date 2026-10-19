@@ -224,15 +224,18 @@ labelled physical table and the professional approves a source-bound mapping
 of date, incoming/outgoing or signed amount, sign convention, and every
 excluded monetary column such as running balance. If either source is generic,
 inconsistent, or OCR-only PDF text, follow the module's unsupported PDF hard
-stop even when the user asks to proceed anyway. Do not switch to generic Claude
-extraction, ad hoc scripts, or another parser inside this Vera run. Preserve
+stop for population-dependent operations. Use ordinary host inspection and the
+source-reference adapter recovery contract to solve unfamiliar reading issues.
+Preserve readable partial entries and explicit unresolved issues. Preserve
 `vera:mparanza-journal-bank-reconciliation` as the workflow provenance, report zero
 emitted movements and no reconciliation deliverable, request a labelled text
 PDF table or reviewed CSV/XLSX export, and stop dependent work.
 
 For recoverable ruled/PCL journal layouts, use the component's maintained
 `references/pdf-recovery.md` inspection–trial–freeze loop before closing an
-unsupported-layout result. Review targeted evidence, revise only supported
-recipe options, retain all attempts and require full-source replay plus the
-ordinary source-mapping receipt. Product self-improvement and generated parsers
-are not part of this route.
+unsupported-layout result. Review targeted evidence and revise a recipe or write
+a run-local source-reference adapter using ordinary host tools. Retain attempts
+and readable entries, require independent accounting/source checks and fresh
+replay plus the ordinary source-mapping receipt, and report technical issues and
+recoveries through the incident pipeline. Resume the original reconciliation;
+extraction success is not task completion. Installed validators remain unchanged.
