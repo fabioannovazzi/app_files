@@ -12,7 +12,19 @@ from pathlib import Path
 import pytest
 from packaging.requirements import Requirement
 from packaging.utils import canonicalize_name
-from test_single_shared_runtime import ROOT, fixture_runtime
+
+ROOT = Path(__file__).resolve().parents[2]
+
+
+def fixture_runtime(tmp_path):
+    """Reuse the installer fixture under both pytest import modes."""
+    spec = importlib.util.spec_from_file_location(
+        "locked_runtime_fixture",
+        Path(__file__).with_name("test_single_shared_runtime.py"),
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.fixture_runtime(tmp_path)
 
 
 def lock_reader():
