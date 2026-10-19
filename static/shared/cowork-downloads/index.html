@@ -69,8 +69,8 @@
     <p class="lead" data-copy="lead">Abbiamo inviato i plugin al marketplace Cowork e siamo in attesa di approvazione. Nel frattempo puoi scaricarli qui e installarli dal file ZIP.</p>
     <p class="note" data-copy="scope">Questi pacchetti sono per Claude Cowork. Carica lo ZIP nei plugin senza estrarlo e senza allegarlo a una chat.</p>
     <nav class="jump-links" aria-label="Instructions">
+      <a href="#update" data-copy="updateNav">Già installato da ZIP? Aggiorna</a>
       <a href="#install" data-copy="installNav">Prima installazione</a>
-      <a href="#update" data-copy="updateNav">Aggiornare</a>
       <a href="#remove" data-copy="removeNav">Rimuovere la vecchia versione</a>
     </nav>
     <ul class="downloads" aria-label="Claude Cowork ZIP">
@@ -88,6 +88,18 @@
       </li>
     </ul>
     <p data-copy="downloadNote">Per aggiornare, scarica di nuovo il file da questa pagina: il download da solo non modifica il plugin già installato.</p>
+    <section id="update" aria-labelledby="update-title">
+      <h2 id="update-title" data-copy="updateTitle">Come aggiornare una versione installata da ZIP</h2>
+      <p data-copy="updateIntro">Se avevi già caricato personalmente lo ZIP di Vera, Clara o Lucia in Cowork, segui questi passaggi a ogni nuova versione. Sostituisci il plugin nell’elenco di Claude; non devi estrarre lo ZIP né sovrascrivere cartelle sul computer.</p>
+      <ol class="steps">
+        <li><h3 data-copy="update1Title">Scarica il nuovo ZIP e annota la versione precedente.</h3><p data-copy="update1">Usa il link del tuo prodotto qui sopra e conserva il file .zip intero. In Claude, apri Cowork → Personalizza (Customize) → Plugin (Plugins) → I tuoi (Yours), apri il prodotto e annota la versione installata. Se hai personalizzato il plugin, salva le modifiche da riapplicare prima di rimuoverlo.</p></li>
+        <li><h3 data-copy="update2Title">Rimuovi la vecchia copia del plugin.</h3><p data-copy="update2">Nel menu ⋯ della scheda del prodotto scegli Remove (Rimuovi), controlla il nome e conferma. Attendi che la vecchia copia scompaia dall’elenco. Turn off (Disattiva) la lascia installata: per questa sostituzione usa Remove. Conserva l’app Claude, le cartelle di lavoro e i documenti dei clienti.</p></li>
+        <li><h3 data-copy="update3Title">Carica il nuovo ZIP nei plugin.</h3><p data-copy="update3">In Personalizza (Customize) → Plugin (Plugins), scegli Aggiungi (Add o +) → Carica plugin (Upload plugin). Seleziona il file appena scaricato, per esempio vera-cowork-plugin.zip, premi Upload e completa le richieste di Claude. Non usare il vecchio ZIP e non allegare il file a una chat. Attendi che il plugin compaia in I tuoi (Yours): la scritta “Uploading…” non indica che l’installazione è terminata.</p></li>
+        <li><h3 data-copy="update4Title">Verifica la nuova versione e apri una nuova attività.</h3><p data-copy="update4">Apri la scheda del plugin, confronta il numero di versione con quello annotato e controlla che sia attivo (Enable plugin). Chiudi e riapri Claude, poi avvia una nuova attività Cowork nella tua normale cartella di lavoro. Chiedi di verificare la versione del plugin disponibile in questa attività e confrontala con quella della scheda. Un’attività già aperta può conservare la versione precedente.</p></li>
+      </ol>
+      <p class="note" data-copy="updateCheck">Se il numero non è cambiato, il plugin non compare o la nuova attività usa ancora la vecchia versione, l’aggiornamento non è verificato. Comunica nel gruppo il prodotto, la versione precedente, quella ora visualizzata e l’eventuale errore.</p>
+      <p class="note" data-copy="updateScope">Questa procedura riguarda una tua copia personale caricata da ZIP. Per un plugin condiviso da un collega o gestito dallo studio, chiedi l’aggiornamento al proprietario o all’amministratore.</p>
+    </section>
     <section id="install" aria-labelledby="install-title">
       <h2 id="install-title" data-copy="installTitle">Prima installazione</h2>
       <ol class="steps">
@@ -96,16 +108,6 @@
         <li><h3 data-copy="install3Title">Carica lo ZIP.</h3><p data-copy="install3">Seleziona il file appena scaricato, premi Upload e completa le richieste mostrate da Claude. Attendi che il plugin compaia nell’elenco dei tuoi plugin (Yours).</p></li>
         <li><h3 data-copy="install4Title">Controlla il plugin e avvia una nuova attività.</h3><p data-copy="install4">Apri la scheda di Vera, Clara o Lucia: controlla il nome, il numero di versione e che il plugin sia attivo (Enable plugin). Apri una nuova attività Cowork, seleziona la cartella di lavoro e descrivi cosa vuoi fare con il plugin.</p></li>
       </ol>
-    </section>
-    <section id="update" aria-labelledby="update-title">
-      <h2 id="update-title" data-copy="updateTitle">Aggiornare una copia installata da ZIP</h2>
-      <p data-copy="updateIntro">Per sostituire una vecchia copia personale con il pacchetto del sito, usa questa procedura. Non serve disinstallare l’app Claude.</p>
-      <ol class="steps">
-        <li><p data-copy="update1">Scarica prima il nuovo ZIP da questa pagina e annota la versione attualmente mostrata nella scheda del plugin. Se hai personalizzato il plugin, conserva le modifiche che vuoi riapplicare prima di rimuoverlo.</p></li>
-        <li><p data-copy="update2">Rimuovi la vecchia copia del prodotto seguendo i passaggi qui sotto, poi carica il nuovo ZIP con la procedura di prima installazione.</p></li>
-        <li><p data-copy="update3">Verifica nella scheda il numero di versione della nuova copia e che sia attiva. Inizia una nuova attività Cowork per usare il plugin appena installato. Se la versione è ancora quella precedente, segnala il problema prima di continuare.</p></li>
-      </ol>
-      <a href="#remove" data-copy="removeLink">Come rimuovere la vecchia versione →</a>
     </section>
     <section id="remove" aria-labelledby="remove-title">
       <h2 id="remove-title" data-copy="removeTitle">Rimuovere la vecchia versione del plugin</h2>
@@ -133,18 +135,21 @@
       eyebrow: 'Website downloads · Claude Cowork', title: 'Vera, Clara and Lucia in Claude Cowork.',
       lead: 'We have submitted the plugins to the Cowork marketplace and are awaiting approval. In the meantime, download them here and install them from the ZIP file.',
       scope: 'These packages are for Claude Cowork. Upload the ZIP in Plugins without extracting it or attaching it to a chat.',
-      installNav: 'First installation', updateNav: 'Update', removeNav: 'Remove the old version', download: 'Download ZIP',
+      installNav: 'First installation', updateNav: 'Already installed from a ZIP? Update', removeNav: 'Remove the old version', download: 'Download ZIP',
       downloadNote: 'To update, download the file again from this page: downloading alone does not change the installed plugin.',
       installTitle: 'First installation',
       install1Title: 'Download the plugin you want to use.', install1: 'Keep the .zip file as it is. If your browser extracted it automatically, retrieve the original ZIP from your downloads.',
       install2Title: 'Open Plugins in Claude.', install2: 'In the Claude app, open Cowork, then Customize → Plugins. Choose Add (or +) → Upload plugin.',
       install3Title: 'Upload the ZIP.', install3: 'Select the file you just downloaded, click Upload and complete the prompts shown by Claude. Wait for the plugin to appear under Yours.',
       install4Title: 'Check the plugin and start a new task.', install4: 'Open the Vera, Clara or Lucia details: check the name, version number and that Enable plugin is on. Start a new Cowork task, select your working folder and describe what you want to do with the plugin.',
-      updateTitle: 'Update a copy installed from ZIP', updateIntro: 'Use this procedure to replace an older personal copy with the package from this website. You do not need to uninstall the Claude app.',
-      update1: 'Download the new ZIP from this page first and note the version currently shown in the plugin details. If you customized the plugin, save the changes you want to reapply before removing it.',
-      update2: 'Remove the old copy of the product using the steps below, then upload the new ZIP following the first installation steps.',
-      update3: 'Check the new copy’s version number in its details and that it is enabled. Start a new Cowork task to use the newly installed plugin. If the previous version still appears, report the problem before continuing.',
-      removeLink: 'How to remove the old version →', removeTitle: 'Remove the old plugin version',
+      updateTitle: 'How to update a version installed from a ZIP', updateIntro: 'If you previously uploaded the Vera, Clara or Lucia ZIP yourself in Cowork, follow these steps for each new version. Replace the plugin in Claude’s list; you do not need to extract the ZIP or overwrite folders on your computer.',
+      update1Title: 'Download the new ZIP and note the previous version.', update1: 'Use your product’s link above and keep the .zip file intact. In Claude, open Cowork → Customize → Plugins → Yours, open the product and note the installed version. If you customized the plugin, save the changes you want to reapply before removing it.',
+      update2Title: 'Remove the old plugin copy.', update2: 'In the product’s details, open the ⋯ menu and choose Remove, check the name and confirm. Wait for the old copy to disappear from the list. Turn off leaves it installed: use Remove for this replacement. Keep the Claude app, your working folders and client documents.',
+      update3Title: 'Upload the new ZIP in Plugins.', update3: 'In Customize → Plugins, choose Add (or +) → Upload plugin. Select the file you just downloaded, such as vera-cowork-plugin.zip, click Upload and complete Claude’s prompts. Do not use the old ZIP or attach the file to a chat. Wait for the plugin to appear under Yours: “Uploading…” does not mean installation has finished.',
+      update4Title: 'Check the new version and start a new task.', update4: 'Open the plugin details, compare the version number with the one you noted and check that Enable plugin is on. Close and reopen Claude, then start a new Cowork task in your usual working folder. Ask it to check the plugin version available in this task and compare it with the version in the plugin details. An existing task may retain the previous version.',
+      updateCheck: 'If the version number has not changed, the plugin is missing or the new task still uses the old version, the update is not verified. Share the product, previous version, version now displayed and any error in the group.',
+      updateScope: 'This procedure is for your own personal copy uploaded from a ZIP. For a plugin shared by a colleague or managed by your firm, ask its owner or administrator to update it.',
+      removeTitle: 'Remove the old plugin version',
       removeIntro: 'You are removing Vera, Clara or Lucia from the plugin list. Do not delete the Claude app, your working folders or client documents.',
       remove1: 'Open Customize → Plugins → Yours and find the product you are replacing.',
       remove2: 'Open the ⋯ menu next to its name and choose Remove. The same action is available in the ⋯ menu on the plugin’s details page.',
