@@ -189,7 +189,7 @@
     {
       "path": "scripts/operational_incidents.py",
       "repository_path": "plugins/clara/scripts/operational_incidents.py",
-      "sha256": "a3d3ae71f68a9972fdff84307e42cf2e18b5bc359c4b491d3b5fc07e08ce94e1"
+      "sha256": "ef13511bf871c19fe61c67eeb869d9fe44aff0da08ea154a03e0a388704d0345"
     },
     {
       "path": "scripts/record_reporting_contribution.py",

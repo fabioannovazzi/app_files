@@ -99,16 +99,16 @@ Optional:
 - date window in days;
 - working language and source-document language.
 
-PDF text without a labelled physical column grid or a reviewed registration
-layout, inconsistent page tables,
+PDF text without a labelled physical column grid, a reviewed registration
+layout or a checked bank source-reference adapter, inconsistent page tables,
 and OCR-only PDFs are not movement sources. Inspection must expose
 `unsupported_source_layout`, emit zero qualified movements, and retain readable
 partial entries separately from the supported bank non-movement classifications. The presence of a
 date and one or more amounts on a line is never enough to infer a movement.
 
-### Agent-led ruled PDF recovery
+### Agent-led journal and bank PDF recovery
 
-Before declaring a registration-style journal layout unsupported, follow
+Before declaring an unfamiliar journal or bank statement layout unsupported, follow
 `../../references/pdf-recovery.md`. Use the maintained inspection, trial and
 freeze actions in the existing inspection command. The host agent diagnoses,
 revises source-bound recipes or writes a run-local source-reference adapter
@@ -120,6 +120,16 @@ Successful recovery still requires the ordinary reviewed mapping and complete
 qualification. Do not alter installed code or bypass a failed gate. The managed
 runtime reports issues and recovery evidence through the existing incident
 pipeline; verify the original task before claiming it recovered.
+
+Select `--pdf-side bank` on every recovery action for a bank statement; journal
+is the default. Use `--pdf-source` to select one exact PDF inside a bound source
+folder. Bank recipes use `bank.files[filename].pdf_bank_layout` and independent
+per-source histories. Review date, description, signed amount or debit/credit
+bands and printed opening/closing balances or movement totals. The bank checker
+enforces source coverage and bank arithmetic; it does not require debit to equal
+credit. Multiline and cross-page descriptions retain source references. Include
+the frozen bank layout in the ordinary mapping decision. A single payment receipt
+cannot establish a complete statement population.
 
 ### Registration-style journal PDF
 
@@ -145,7 +155,7 @@ registration. Missing postings, empty-text pages, unassigned money, overlapping
 bands and incomplete/unbalanced registrations withhold the source. Review the
 bank-account scope and sign convention before matching a complete journal;
 counterpart postings must not be mistaken for bank-account movements. The bank
-PDF still requires its own labelled table mapping. An unsupported layout
+PDF requires its own labelled table mapping or checked bank recovery adapter. An unsupported layout
 cannot be promoted merely because its text is readable.
 
 Each page cache is released after extraction; progress names the current page.

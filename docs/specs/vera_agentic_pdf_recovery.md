@@ -1,6 +1,6 @@
 # Agent-led PDF reading and reconciliation recovery
 
-The host agent diagnoses unfamiliar registration layouts and may write a local
+The host agent diagnoses unfamiliar journal and bank layouts and may write a local
 adapter in the active run. Local code checks source ownership, exact arithmetic
 and frozen replay independently. The adapter proposes references to original
 PDF words; it does not provide accounting values or qualification decisions.
@@ -15,7 +15,9 @@ PDF words; it does not provide accounting values or qualification decisions.
    twelve inspections/inventories per session.
 4. The independent checker reads the original PDF again, reconstructs proposed
    values from referenced tokens, checks column/account ownership, monetary
-   coverage, duplicate use, registration balances and printed running totals.
+   coverage and duplicate use. Journal checks enforce registration balances and
+   printed running totals. Bank checks enforce opening plus movements equals
+   closing, printed movement totals and optional running balances.
 5. Retain readable entries and all unresolved issues even if qualification fails.
    JSON preserves complete evidence; CSV labels each row as unqualified.
 6. A successful trial permits a fresh freeze replay. The frozen code/layout/source
@@ -36,9 +38,18 @@ Installed code and validators are never rewritten by this recovery route.
 
 - Text PDFs with reviewed physical amount/account bands. The adapter can resolve
   unfamiliar header and posting associations beyond the built-in header parser.
-- The adapter route requires independently printed running controls on every
-  page. Missing controls, OCR-only pages or unsupported amount syntax preserve
+- The journal adapter requires independently printed running controls on every
+  page. The bank adapter requires printed opening/closing balances or debit/credit
+  movement totals; running balances additionally require the balance pair.
+  Missing controls, OCR-only pages or unsupported amount syntax preserve
   available evidence but cannot qualify a complete population through this route.
+- Bank recovery selects `--pdf-side bank` and optionally `--pdf-source` within
+  a bound folder. Recipes use `bank.files[relative-name].pdf_bank_layout`.
+  Histories and incident episodes are isolated by side and source digest.
+  Bank dates and amounts must share a physical row; descriptions and references
+  may continue across lines/pages. Signed amounts or separate debit/credit bands
+  are supported with reviewed date and sign conventions. Document purpose and
+  statement scope remain model/professional judgments, never inferred from totals.
 - Source-reference and arithmetic checks cannot establish semantic correctness
   of every account/header association. The existing exact mapping review remains
   necessary; balanced totals are not semantic approval.
@@ -71,3 +82,9 @@ continue to govern those boundaries.
 
 Synthetic acceptance proves these tested paths. A real customer PDF and a fresh
 installed-host conversation remain separate acceptance evidence.
+
+`tests/plugins/test_bank_pdf_recovery.py` exercises split-column and signed bank
+layouts, continued descriptions, printed controls, readable partial results,
+rejected invalid proposals, separate histories, mapping receipts and reconciliation.
+Incident tests also check that bank and journal recoveries cannot close or replace
+each other's episodes, including an initial unsupported bank-table inspection.

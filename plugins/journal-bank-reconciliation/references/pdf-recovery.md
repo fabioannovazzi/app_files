@@ -1,6 +1,6 @@
-# Agent-led recovery of registration PDF layouts
+# Agent-led recovery of journal and bank PDF layouts
 
-Use this maintained recovery route after a registration-layout failure, before
+Use this maintained recovery route after a journal or bank layout failure, before
 closing the run as unsupported. The host agent interprets evidence and revises
 recipes or writes a run-local adapter; tools perform bounded local trials and
 exact replay. Keep the host's ordinary inspection, image viewing and coding
@@ -12,7 +12,7 @@ word-reference contract; preserve their readable evidence and unresolved status.
 
 ## Same case, bounded attempts
 
-Keep the same running Studio Archive context and immutable journal input. Use
+Keep the same running Studio Archive context and immutable source input. Use
 only the workflow's existing output directory. The recovery tools write its
 `pdf_recovery` child, retaining source and implementation hashes, inspection
 artifacts, every candidate recipe and its diagnostics. Four distinct trials and
@@ -67,12 +67,79 @@ its bound input, `--output-dir <run-output>/normalization` and
 `--client-engagement <context>`. The proposed layout is
 `files[filename].layout` with `parser: registration_pdf`.
 For Journal–Bank use the existing `scripts/inspect_inputs.py` command with its
-bound bank/journal paths, output directory and context. The proposed layout is
-`journal.files[filename].pdf_registration_layout`.
+bound bank/journal paths, output directory and context. Select `--pdf-side journal`
+(the default) for `journal.files[filename].pdf_registration_layout`, or
+`--pdf-side bank` for `bank.files[filename].pdf_bank_layout`. When the selected
+input is a folder, supply `--pdf-source <exact PDF inside that folder>`; use its
+relative filename as the recipe key. Each bank source retains its own history
+under `pdf_recovery/bank/<source-sha256>`; journal history stays separate.
 Both commands require `--pdf-currency <reviewed ISO code>` during recovery.
 All other required command arguments and execution-integrity checks still apply.
 
-## Run-local adapter contract
+## Bank statement adapter contract
+
+Before interpreting rows, review that the document is a complete bank statement
+for the required scope. A payment confirmation or individual-operation receipt
+does not establish a statement population. For unfamiliar text statements, use
+the same inspect, inventory, trial and freeze loop with `--pdf-side bank` on every
+command. Interpret the actual columns; do not apply journal double-entry controls
+to a bank statement.
+
+Save `pdf_bank_layout` with `document_kind: "bank_statement"`, `body: [top, bottom]`,
+and non-overlapping physical `columns`: `date`, `description`, and either `debit`
+plus `credit` or a signed `amount` column. Optional columns are `value_date`,
+`reference`, and `balance`. Review `transaction_order: "ascending"` (default) or
+`"descending"`. Dates support `%d/%m/%Y`, `%Y-%m-%d`, `%d.%m.%Y`, `%d/%m/%y` or
+`%d.%m.%y` through `date_format`. This text-token contract accepts decimal-comma
+money, with optional dot thousands separators. Negative values require the
+explicit notation policy below; bank split-column corrections require
+`negative_amount_semantics: "signed_side"`.
+
+Export the inventory and write a run-local Python adapter, using the execution
+and hash contract described below. It returns exactly `{"rows": [...]}` with:
+
+```json
+{
+  "amount": "p1w12", "column": "debit",
+  "date": ["p1w8"], "value_date": [],
+  "description": ["p1w9", "p1w10"], "reference": [],
+  "balance": null
+}
+```
+
+IDs are illustrative. Dates and optional running balance must occupy the
+movement's physical row. Descriptions and references can continue across lines
+and pages until the next movement. The checker reconstructs all values from the
+PDF, rejects duplicate or unclaimed monetary tokens and checks physical column
+ownership. Debit decreases the bank balance; credit increases it. A signed
+amount column must use that same reviewed cash direction.
+
+Provide `statement_controls` containing `opening_balance` and `closing_balance`,
+or `debit_total` and `credit_total`, or both pairs. Each control is a reference:
+
+```json
+{
+  "label": ["p1w1", "p1w2"],
+  "amount": "p1w3",
+  "column": "balance"
+}
+```
+
+Review the printed labels' meaning. They must share the control amount's row;
+amounts occupy a reviewed monetary column within the body. The checker verifies
+opening balance plus signed movements equals closing balance, any printed
+movement totals, and any supplied running balances. Opening/closing controls
+must bound the movements in the reviewed order. Running balances require an
+opening/closing pair. Missing or contradictory controls retain readable entries
+and explicit issues, with no qualified statement population.
+
+Freeze binds `source_sha256` and `recovery_currency` into the layout. Copy that
+exact layout into `bank.files[filename].pdf_bank_layout`, reinspect and include it
+in the file's normal `seal_review_receipts.py` decision. Frozen extraction alone
+does not approve mapping, statement completeness or reconciliation. Subsequent
+reconciliation rechecks source bytes, adapter bytes and independent controls.
+
+## Journal run-local adapter contract
 
 Use this when the built-in registration parser does not understand the source
 structure. First run `--pdf-recovery inventory --recipe <recipe>`. Read its

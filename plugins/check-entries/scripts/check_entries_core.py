@@ -256,6 +256,7 @@ JOURNAL_SAMPLING_IMPLEMENTATION_SPECS += (
     ("pdf_implementation", "rules.py", "implementation.vera_journal_pdf_rules"),
     ("pdf_implementation", "recovery.py", "implementation.vera_journal_pdf_recovery"),
     ("pdf_implementation", "adapter.py", "implementation.vera_journal_pdf_adapter"),
+    ("pdf_implementation", "bank.py", "implementation.vera_journal_pdf_bank"),
 )
 JOURNAL_SAMPLING_COLUMNS = [
     "entry_date",

@@ -18,7 +18,7 @@ that sealed v2 output by replaying its complete assurance envelope, gates,
 mapping decisions, source and implementation receipts, extracts PDF/XML facts,
 performs exact comparisons, and binds results to receipts and lineage. The
 normalized bytes are captured once. Before parsing them, Vouching closes
-the exact 24-file Journal Sampling/shared implementation tree and invokes the
+the exact Journal Sampling/shared implementation tree and invokes the
 isolated normalization replay CLI. Raw source plus the exact retained reviewed
 recipe must reproduce the CSV byte-for-byte, the material diagnostics
 projection, reviewed decisions, gates, envelope, and qualification-review

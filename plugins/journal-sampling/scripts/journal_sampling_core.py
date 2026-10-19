@@ -795,7 +795,7 @@ def _implementation_receipts() -> list[dict[str, Any]]:
     )
     declared_contract += tuple(
         ("shared_pdf", name)
-        for name in ("__init__.py", "rules.py", "recovery.py", "adapter.py")
+        for name in ("__init__.py", "rules.py", "recovery.py", "adapter.py", "bank.py")
     )
     if declared_contract != IMPLEMENTATION_CONTRACT:
         raise ValueError(
@@ -842,6 +842,7 @@ def _implementation_receipts() -> list[dict[str, Any]]:
         ("rules.py", "_rules"),
         ("recovery.py", "_recovery"),
         ("adapter.py", "_adapter"),
+        ("bank.py", "_bank"),
     ):
         receipts.append(
             artifact_receipt(

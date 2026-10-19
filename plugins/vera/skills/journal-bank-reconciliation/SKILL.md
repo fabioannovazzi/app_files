@@ -104,7 +104,8 @@ The module may admit a journal text PDF through its reviewed registration
 adapter, including dates in registration headers and cross-page postings.
 Read the module’s Registration-style journal PDF instructions and use its
 bounded coordinate evidence, layout/mapping receipts and closure checks.
-Bank PDFs still require their own table mapping.
+Bank PDFs require their own table mapping or the bank source-reference recovery
+adapter described in the module's `references/pdf-recovery.md`.
 
 The module may otherwise admit a text PDF only when inspection recovers a consistent,
 labelled physical table and the professional approves a source-bound mapping
@@ -118,7 +119,7 @@ Preserve readable partial entries and explicit unresolved issues. Preserve
 emitted movements and no reconciliation deliverable, request a labelled text
 PDF table or reviewed CSV/XLSX export, and stop dependent work.
 
-For recoverable ruled/PCL journal layouts, use the component's maintained
+For unfamiliar journal or bank statement layouts, use the component's maintained
 `references/pdf-recovery.md` inspection–trial–freeze loop before closing an
 unsupported-layout result. Review targeted evidence and revise a recipe or write
 a run-local source-reference adapter using ordinary host tools. Retain attempts
@@ -126,3 +127,10 @@ and readable entries, require independent accounting/source checks and fresh
 replay plus the ordinary source-mapping receipt, and report technical issues and
 recoveries through the incident pipeline. Resume the original reconciliation;
 extraction success is not task completion. Installed validators remain unchanged.
+Select `--pdf-side bank` for bank recovery (journal is the default), and
+`--pdf-source` for one PDF inside a bound source folder. Bank layouts live under
+`bank.files[filename].pdf_bank_layout`, with separate per-source histories.
+The bank checker verifies original monetary tokens, printed balances or movement
+totals, and source coverage. Review document scope and column semantics through
+the normal mapping receipt; an individual payment confirmation is not a complete
+bank statement. Retain readable bank entries when those checks cannot pass.

@@ -35,6 +35,9 @@ def write_readable_entries(path: Path, rows: list[dict[str, Any]]) -> None:
         "entry_date",
         "account",
         "line_desc",
+        "reference",
+        "value_date",
+        "amount",
         "debit",
         "credit",
         "currency",
@@ -47,7 +50,13 @@ def write_readable_entries(path: Path, rows: list[dict[str, Any]]) -> None:
         for row in rows:
             value = {key: row.get(key, "") for key in fields}
             value["qualification_status"] = "unqualified_requires_review"
-            for key in ("source_file", "movement_number", "account", "line_desc"):
+            for key in (
+                "source_file",
+                "movement_number",
+                "account",
+                "line_desc",
+                "reference",
+            ):
                 text = str(value[key])
                 if text.lstrip().startswith(("=", "+", "-", "@")):
                     value[key] = "'" + text
@@ -184,6 +193,7 @@ def recover_pdf(
     region: list[float] | None = None,
     reason: str = "",
     render: bool = False,
+    source_role: str = "journal",
 ) -> dict[str, Any]:
     """Inspect, retain a trial, or freeze a recipe after exact full-source replay.
 
@@ -193,11 +203,16 @@ def recover_pdf(
     """
     if action not in {"inspect", "inventory", "trial", "freeze"}:
         raise ValueError("Unknown PDF recovery action")
+    if source_role not in {"bank", "journal"}:
+        raise ValueError("Recovery source role must be bank or journal")
     identity = _identity(source, currency)
     root = output_dir / "pdf_recovery"
+    if source_role == "bank":
+        identity["source_role"] = "bank"
+        root = root / "bank" / identity["source_sha256"]
     if (
         root.is_symlink()
-        or any(p.is_symlink() for p in output_dir.parents)
+        or any(p.is_symlink() for p in root.parents)
         or output_dir.is_symlink()
     ):
         raise ValueError("Recovery output must not traverse symlinks")
@@ -247,8 +262,10 @@ def recover_pdf(
                     raise ValueError(
                         "Inventory requires proposed physical column semantics"
                     )
-                inventory = source_inventory(source, layout)
-                if _identity(source, currency) != identity:
+                inventory = source_inventory(source, layout, source_role=source_role)
+                if _identity(source, currency) != {
+                    k: v for k, v in identity.items() if k != "source_role"
+                }:
                     raise ValueError(
                         "PDF source or implementation changed during inventory"
                     )
@@ -277,7 +294,9 @@ def recover_pdf(
             }
             _save(root / f"inspection-{len(existing)+1:02}.json", result)
             return result
-        if _identity(source, currency) != identity:
+        if _identity(source, currency) != {
+            k: v for k, v in identity.items() if k != "source_role"
+        }:
             raise ValueError("PDF source changed during inspection")
         result = {
             "status": "evidence_only",
@@ -356,12 +375,17 @@ def recover_pdf(
         raise ValueError(
             "Freeze requires the exact latest successful full-source trial"
         )
-    from . import read_registration_pdf
-
     try:
-        rows, diagnostics = read_registration_pdf(
-            source, layout, currency=currency, retain_partial=True
-        )
+        if source_role == "bank":
+            from .bank import read_bank_pdf
+
+            rows, diagnostics = read_bank_pdf(source, layout, currency=currency)
+        else:
+            from . import read_registration_pdf
+
+            rows, diagnostics = read_registration_pdf(
+                source, layout, currency=currency, retain_partial=True
+            )
     except ValueError as exc:
         rows, diagnostics = [], {
             "accepted": False,
@@ -370,7 +394,9 @@ def recover_pdf(
             "local_adapter_evidence": getattr(exc, "evidence", None),
             "rejected_rows": [],
         }
-    if _identity(source, currency) != identity:
+    if _identity(source, currency) != {
+        k: v for k, v in identity.items() if k != "source_role"
+    }:
         raise ValueError("PDF source or implementation changed during recovery")
     readable = diagnostics.pop("readable_rows", rows)
     row_digest = _digest(rows)

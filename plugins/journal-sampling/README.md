@@ -108,8 +108,8 @@ Every complete normalization retains the exact reviewed recipe as
 source receipt, and exposes `scripts/replay_normalization.py` for isolated
 `-I -B` re-performance. The replay also reproduces reviewed decisions, gates,
 the assurance envelope, and the qualification-review payload. The exact
-execution boundary is 24 files: 16 plugin entry/core/MCP/widget/configuration
-files and 8 shared Vera assurance files. Unexpected caches, links, special
+execution boundary includes the declared plugin entry/core/MCP/widget/configuration
+files, shared Vera assurance files and shared PDF readers. Unexpected caches, links, special
 files, directories, or executable/configuration files fail before local
 imports. These hashes prove local execution consistency, not package publisher
 or reviewer authority.
