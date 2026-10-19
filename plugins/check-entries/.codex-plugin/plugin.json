@@ -1,6 +1,6 @@
 {
   "name": "check-entries",
-  "version": "0.1.53-managed-mcp.1",
+  "version": "0.1.54-managed-mcp.1",
   "description": "Vouching of sampled journal entries against FatturaPA XML and PDF supporting documents, guided by Codex.",
   "author": {
     "name": "Mparanza",
