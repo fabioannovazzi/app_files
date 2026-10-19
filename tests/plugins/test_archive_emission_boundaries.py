@@ -25,6 +25,44 @@ ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS = ROOT / "plugins/vera/scripts"
 
 
+@pytest.mark.parametrize("line_ending", ["\r\n", "\r", "\n"])
+def test_full_source_text_matches_universal_newlines_without_changing_saved_payload(
+    archive_core, client_case, tmp_path, line_ending
+):
+    from archive_emit import record_output
+    from archive_report_store import RunStore, digest
+
+    source = tmp_path / "line-endings.txt"
+    source.write_bytes(
+        ("First line" + line_ending + "Second line" + line_ending).encode()
+    )
+    client_case.imported = archive_core.import_studio_client_document(
+        client_case.client_id,
+        source,
+        "source",
+        engagement_id=client_case.engagement_id,
+        state_dir=client_case.state_dir,
+    )
+    loaded = start(archive_core, client_case, "report-builder")
+    payload = {"content": [{"type": "text", "text": "First line\nSecond line\n"}]}
+
+    record_output(
+        "report-builder",
+        {"client_engagement": loaded["context_path"]},
+        payload,
+        channel="mcp",
+    )
+
+    events = RunStore(Path(loaded["run_root"])).events()
+    sends = [event for event in events if event.get("channel") == "mcp:report-builder"]
+    assert sends[-1]["response_sha256"] == digest(payload)
+    assert sends[-1]["unmapped"] is False
+    report = finish(archive_core, client_case, loaded)
+    assert report["collection_status"] == "complete", report["errors"]
+    assert report["sources"][0]["sent_quantity"] == 2
+    assert report["sources"][0]["not_sent_quantity"] == 0
+
+
 @pytest.mark.parametrize("pipeline", PIPELINES)
 def test_each_selected_component_records_its_actual_outgoing_source(
     archive_core, client_case, pipeline
@@ -50,7 +88,7 @@ def test_each_selected_component_records_its_actual_outgoing_source(
     )
     report = finish(archive_core, client_case, loaded)
 
-    assert report["collection_status"] == "complete"
+    assert report["collection_status"] == "complete", report["errors"]
     assert report["sources"][0]["sent_quantity"] == 1
     assert report["sources"][0]["not_sent_quantity"] == 0
     assert (

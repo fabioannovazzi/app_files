@@ -100,7 +100,7 @@
     {
       "path": "modules/report-builder/scripts/physical_output_set.py",
       "repository_path": "plugins/report-builder/scripts/physical_output_set.py",
-      "sha256": "e1ef0a7c953132508d0fd05be05553f16d8cdb198c0c90403d6f2fe74918ff64"
+      "sha256": "92c73b734949c7284016495607a9c6023ff3b48b71b243beb43dd5aa1e8d2b0b"
     },
     {
       "path": "modules/report-builder/scripts/prepared_contract.py",

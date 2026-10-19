@@ -124,7 +124,7 @@
     },
     {
       "path": "scripts/archive_report_measurements.py",
-      "sha256": "4cfb659d770febc0ae0d87702d9bb3ee8a46fbf13a67e45e6cce66e895016fd4"
+      "sha256": "0e9286baf9d372b0a3bdf727758434ca5e1749c03535136dc1550b66514a54cd"
     },
     {
       "path": "scripts/archive_report_receipt.py",
@@ -200,7 +200,7 @@
     },
     {
       "path": "scripts/workflow_usage.py",
-      "sha256": "227973769762e5e678a030d39152d3b973dbdcaac463e19cb7ba0e7d31017774"
+      "sha256": "d9a956d0bb6bbe8bc94154c8b5c4e80be591c6768c00344ba218b27a9d10f79c"
     },
     {
       "path": "skills/mparanza-reporting-engine/SKILL.md",
@@ -445,5 +445,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "d37086cf4fb5805dcf1b120c43b524bf95627a7d7abceec465d9c542f2a6ed68"
+  "canonical_course_sha256": "558cf86df2e013507e4de4e8f60677e64d9f73fb9834e189c817a38178fcb26e"
 }

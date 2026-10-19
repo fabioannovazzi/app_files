@@ -63,7 +63,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: python -m pip install pytest jsonschema pyyaml pypdf reportlab defusedxml -r plugins/variance-analysis/requirements.txt -r plugins/journal-bank-reconciliation/requirements.txt -r plugins/report-builder/requirements.txt -r plugins/client-file-preparation/requirements.txt
+      - run: python -m pip install pytest jsonschema pyyaml pypdf reportlab defusedxml beautifulsoup4 -r plugins/variance-analysis/requirements.txt -r plugins/journal-bank-reconciliation/requirements.txt -r plugins/report-builder/requirements.txt -r plugins/client-file-preparation/requirements.txt
       - name: Verify actual native selections and targeted source columns
         run: >-
           python -m pytest -q -o addopts=''

@@ -49,7 +49,8 @@ def test_cli_records_only_streams_it_releases_to_its_caller(
 
     streams = capfd.readouterr()
     assert result.returncode == 0
-    assert streams.out == source.read_text()
+    expected_stdout = source.read_bytes().decode("utf-8")
+    assert streams.out == expected_stdout
     assert streams.err == ("" if private_stderr else "PRIVATE_DIAGNOSTIC")
     with sqlite3.connect(
         Path(loaded["run_root"]) / "reporting/events.sqlite3"
@@ -61,9 +62,9 @@ def test_cli_records_only_streams_it_releases_to_its_caller(
     sent = [event for event in events if event.get("channel") == "cli:report-builder"]
     assert len(sent) == 1
     assert sent[0]["local_response"] == (
-        {"stdout": source.read_text()}
+        {"stdout": expected_stdout}
         if private_stderr
-        else {"stdout": source.read_text(), "stderr": "PRIVATE_DIAGNOSTIC"}
+        else {"stdout": expected_stdout, "stderr": "PRIVATE_DIAGNOSTIC"}
     )
     assert private.read_text() == ("PRIVATE_DIAGNOSTIC" if private_stderr else "")
 

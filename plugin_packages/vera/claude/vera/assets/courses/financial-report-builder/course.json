@@ -85,7 +85,7 @@
     },
     {
       "path": "modules/report-builder/scripts/physical_output_set.py",
-      "sha256": "e1ef0a7c953132508d0fd05be05553f16d8cdb198c0c90403d6f2fe74918ff64"
+      "sha256": "92c73b734949c7284016495607a9c6023ff3b48b71b243beb43dd5aa1e8d2b0b"
     },
     {
       "path": "modules/report-builder/scripts/prepared_contract.py",
@@ -578,5 +578,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "e18d7ca9f1b2c51308d90ee2dd6050f4e09028cca199426e845743762593b78e"
+  "canonical_course_sha256": "df7fe6f657f403e14517858973a119d568921c44f6ca61313a164ccd687bbb63"
 }

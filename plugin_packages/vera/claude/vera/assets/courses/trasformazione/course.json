@@ -77,7 +77,7 @@
     },
     {
       "path": "scripts/archive_report_measurements.py",
-      "sha256": "4cfb659d770febc0ae0d87702d9bb3ee8a46fbf13a67e45e6cce66e895016fd4"
+      "sha256": "0e9286baf9d372b0a3bdf727758434ca5e1749c03535136dc1550b66514a54cd"
     },
     {
       "path": "scripts/archive_report_receipt.py",
@@ -125,7 +125,7 @@
     },
     {
       "path": "scripts/workflow_usage.py",
-      "sha256": "227973769762e5e678a030d39152d3b973dbdcaac463e19cb7ba0e7d31017774"
+      "sha256": "d9a956d0bb6bbe8bc94154c8b5c4e80be591c6768c00344ba218b27a9d10f79c"
     },
     {
       "path": "skills/mparanza-trasformazione/SKILL.md",
@@ -550,5 +550,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "13101594bd1729f3fdb8fb8c58363989376ec097d879b25ccb8464753b7c94e2"
+  "canonical_course_sha256": "949a5c90b57405e1b91b02d2e11698817d6b0a797fcff6c777fc5b90767ea9a7"
 }

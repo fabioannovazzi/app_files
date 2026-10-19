@@ -9,15 +9,102 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 from tests.plugins.test_archive_automatic_reporting import (
     archive_core,
     archive_script_imports,
     client_case,
     finish,
     reporting_runtime,
+    start,
 )
 
 COMPONENT = Path(__file__).resolve().parents[2] / "plugins/browser-automation"
+
+
+def acquisition_binding(
+    core, case, tmp_path, monkeypatch, workflow="agenzia-acquisition"
+):
+    """Bind an actual started client run to an acquisition worker directory."""
+    monkeypatch.syspath_prepend(str(COMPONENT / "scripts"))
+    from ade_acquisition import archive_runs
+
+    monkeypatch.setattr(archive_runs, "_archive", lambda: core)
+    loaded = start(core, case, workflow)
+    worker = tmp_path / "acquisition-worker"
+    worker.mkdir()
+    (worker / "archive-runs.json").write_text(
+        json.dumps(
+            {
+                "01234567890": {
+                    "context_path": loaded["context"]["context_path"],
+                    "engagement_id": case.engagement_id,
+                    "run_id": loaded["run"]["run_id"],
+                    "client_id": case.client_id,
+                }
+            }
+        )
+    )
+    return archive_runs, worker, loaded
+
+
+def test_acquisition_status_records_exact_projection_and_metadata(
+    archive_core, client_case, monkeypatch, tmp_path
+):
+    from archive_report_store import RunStore, digest
+
+    runs, worker, loaded = acquisition_binding(
+        archive_core, client_case, tmp_path, monkeypatch
+    )
+    summary = {"downloaded": 2, "failed": 0}
+    store = RunStore(Path(loaded["run_root"]))
+
+    runs.record_status_payload(worker, summary, summary, channel="cli")
+
+    sends = [
+        event
+        for event in store.events()
+        if event.get("channel") == "cli:agenzia-acquisition"
+    ]
+    assert len(sends) == 1
+    assert sends[0]["response_sha256"] == digest(summary)
+    report = finish(archive_core, client_case, loaded)
+    assert report["collection_status"] == "complete", report["errors"]
+    assert report["sources"][0]["not_sent_quantity"] == 1
+
+
+def test_acquisition_status_rejects_a_binding_to_another_pipeline(
+    archive_core, client_case, monkeypatch, tmp_path
+):
+    runs, worker, _ = acquisition_binding(
+        archive_core, client_case, tmp_path, monkeypatch, workflow="variance-analysis"
+    )
+
+    with pytest.raises(runs.AcquisitionError, match="archive-client-identity-mismatch"):
+        runs.record_status_payload(worker, {}, {}, channel="cli")
+
+
+def test_acquisition_status_does_not_mutate_a_closed_report(
+    archive_core, client_case, monkeypatch, tmp_path
+):
+    from archive_report_store import RunStore
+
+    runs, worker, loaded = acquisition_binding(
+        archive_core, client_case, tmp_path, monkeypatch
+    )
+    finish(archive_core, client_case, loaded)
+    store = RunStore(Path(loaded["run_root"]))
+    events_before = store.events()
+    report_path = Path(loaded["output_dir"]) / "model_data_report.json"
+    report_before = report_path.read_bytes()
+
+    runs.record_status_payload(
+        worker, {"downloaded": 3}, {"downloaded": 3}, channel="cli"
+    )
+
+    assert store.events() == events_before
+    assert report_path.read_bytes() == report_before
 
 
 def test_agenzia_mcp_status_records_counts_without_app_only_clients(

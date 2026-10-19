@@ -205,14 +205,14 @@ def read_selection(
 def direct_read_selection(
     source: dict[str, Any], request: Any, response: Any
 ) -> dict[str, Any] | None:
-    """Match a Vera payload against the complete bytes of an immutable source.
+    """Match complete source content, allowing text-mode newline normalization.
 
     Source selection depends on exact content equality, never host commands,
     transcript syntax or a model's statement that it read something.
     """
     path = Path(source["path"])
     if isinstance(response, str):
-        if len(response.encode("utf-8")) not in {source["bytes"], source["bytes"] - 3}:
+        if len(response.encode("utf-8")) > source["bytes"]:
             return None
     elif path.suffix.lower() != ".json":
         return None
@@ -223,7 +223,10 @@ def direct_read_selection(
         original = content.decode("utf-8-sig")
     except UnicodeError:
         return None
-    matched = isinstance(response, str) and response == original
+    matched = isinstance(response, str) and response in {
+        original,
+        original.replace("\r\n", "\n").replace("\r", "\n"),
+    }
     if path.suffix.lower() == ".json":
         try:
             matched = matched or json.loads(original) == response
