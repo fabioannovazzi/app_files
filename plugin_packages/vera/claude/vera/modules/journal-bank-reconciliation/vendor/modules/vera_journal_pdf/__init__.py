@@ -82,6 +82,7 @@ def _read_registration_pdf(
     layout: dict[str, Any] | None = None,
     *,
     currency: str = "EUR",
+    retain_partial: bool = False,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     """Read a reviewed registration layout, keeping physical posting lineage.
 
@@ -89,6 +90,14 @@ def _read_registration_pdf(
     exact registration balance checks; unreviewed column semantics never
     authorize these rows to enter a sampling population.
     """
+    if layout and layout.get("recovery_currency", currency) != currency:
+        raise ValueError(
+            "PDF recovery currency differs from the reviewed workflow currency"
+        )
+    if layout and "agent_adapter" in layout:
+        from .adapter import read_adapter_pdf
+
+        return read_adapter_pdf(path, layout, currency=currency)
     if not layout:
         return [], {
             "parser": "text_pdf",
@@ -101,6 +110,7 @@ def _read_registration_pdf(
             "reason": "reviewed_registration_pdf_layout_required",
         }
     import pdfplumber
+    from pdfplumber.utils.exceptions import PdfminerException
 
     columns = layout.get("columns")
     required = {"account_debit", "account_credit", "debit", "credit", "description"}
@@ -148,8 +158,24 @@ def _read_registration_pdf(
     )
 
     rules = RuleLayout(layout) if RULE_KEYS.intersection(layout) else None
-    eligibility = rules.negative_eligibility(path, bands) if rules is not None else None
-    if eligibility is not None and eligibility["issue_count"]:
+    try:
+        eligibility = (
+            rules.negative_eligibility(path, bands) if rules is not None else None
+        )
+    except PdfminerException:
+        if not retain_partial:
+            raise
+        # Read the surviving pages below; a later decoder failure must not erase
+        # postings already readable elsewhere in the immutable source.
+        eligibility = None
+        if rules is not None:
+            rules.removed = 0
+    if (
+        rules is not None
+        and eligibility is not None
+        and eligibility["issue_count"]
+        and not retain_partial
+    ):
         return [], {
             "parser": "registration_pdf",
             "accepted": False,
@@ -169,12 +195,14 @@ def _read_registration_pdf(
     registration: dict[str, Any] | None = None
     pending_accounts: dict[str, str] = {}
     pending_description = ""
-    errors: list[dict[str, Any]] = []
+    errors: list[dict[str, Any]] = (
+        list(eligibility["issues"]) if eligibility and retain_partial else []
+    )
     candidate_count = 0
     page_count = 0
 
     def reject(page: int, row: int, reason: str) -> None:
-        if len(errors) < 50:
+        if retain_partial or len(errors) < 50:
             errors.append({"source_page": page, "source_row": row, "reason": reason})
 
     def close_registration(page: int, row: int) -> None:
@@ -193,7 +221,12 @@ def _read_registration_pdf(
             try:
                 if body[1] > page.height or ordered[-1][1] > page.width:
                     reject(page_number, 0, "reviewed_coordinates_outside_page")
-                    break
+                    if not retain_partial:
+                        break
+                    registration = None
+                    pending_accounts = {}
+                    pending_description = ""
+                    continue
                 words = (
                     rules.words(page, page_number, reject)
                     if rules is not None
@@ -250,8 +283,18 @@ def _read_registration_pdf(
                         close_registration(page_number, row_number)
                         pending_accounts = {}
                         pending_description = ""
+                        try:
+                            registration_date = datetime.strptime(
+                                match["date"], "%d/%m/%Y"
+                            ).date()
+                        except ValueError:
+                            if not retain_partial:
+                                raise
+                            reject(page_number, row_number, "invalid_registration_date")
+                            registration = None
+                            continue
                         registration = {
-                            "date": datetime.strptime(match["date"], "%d/%m/%Y").date(),
+                            "date": registration_date,
                             "number": match["number"],
                             "description": match["description"].strip(),
                             "debit": ZERO,
@@ -262,10 +305,21 @@ def _read_registration_pdf(
                     match = continuation.fullmatch(text)
                     if match:
                         continuation_seen = True
+                        try:
+                            continuation_date = datetime.strptime(
+                                match["date"], "%d/%m/%Y"
+                            ).date()
+                        except ValueError:
+                            if not retain_partial:
+                                raise
+                            reject(page_number, row_number, "invalid_continuation_date")
+                            registration = None
+                            pending_accounts = {}
+                            pending_description = ""
+                            continue
                         if (
                             registration is None
-                            or registration["date"]
-                            != datetime.strptime(match["date"], "%d/%m/%Y").date()
+                            or registration["date"] != continuation_date
                         ):
                             reject(
                                 page_number,
@@ -286,6 +340,10 @@ def _read_registration_pdf(
                             row_number,
                             "unrecognized_decorated_registration_line",
                         )
+                        if retain_partial:
+                            registration = None
+                            pending_accounts = {}
+                            pending_description = ""
                         continue
                     if any(
                         (
@@ -366,6 +424,9 @@ def _read_registration_pdf(
                             row_number,
                             "two_posting_sides_on_one_physical_row_require_review",
                         )
+                        if retain_partial:
+                            pending_accounts = {}
+                            pending_description = ""
                         continue
                     emitted = False
                     for side in ("debit", "credit"):
@@ -402,6 +463,8 @@ def _read_registration_pdf(
                         )
                         if issue:
                             reject(page_number, row_number, issue)
+                            if retain_partial:
+                                pending_accounts.pop(side, None)
                             continue
                         if (
                             not (
@@ -417,6 +480,8 @@ def _read_registration_pdf(
                                 row_number,
                                 "posting_requires_registration_account_and_amount",
                             )
+                            if retain_partial:
+                                pending_accounts.pop(side, None)
                             continue
                         amount = signed_amount(amount_text)
                         source_amount = amount
@@ -497,8 +562,15 @@ def _read_registration_pdf(
                     if not page_postings:
                         reject(page_number, 0, "page_has_no_postings")
                     rules.close_page(page_number, reject)
-                if errors:
+                if errors and not retain_partial:
                     break
+            except PdfminerException:
+                if not retain_partial:
+                    raise
+                reject(page_number, 0, "page_decode_failed")
+                registration = None
+                pending_accounts = {}
+                pending_description = ""
             finally:
                 page.close()
     close_registration(page_count, 0)
@@ -511,7 +583,18 @@ def _read_registration_pdf(
         "candidate_row_count": candidate_count,
         "emitted_row_count": len(qualified_records),
         "rejected_row_count": len(errors),
-        "rejected_rows": errors,
+        "rejected_rows": errors[:50],
+        **(
+            {
+                "readable_rows": records,
+                "readable_row_count": len(records),
+                "unresolved_issues": errors,
+                "requires_mapping_qualification": True,
+                "negative_amount_eligibility": eligibility,
+            }
+            if retain_partial
+            else {}
+        ),
         "reason": None if accepted else "registration_pdf_incomplete_or_unbalanced",
         **(rules.diagnostics() if rules is not None else {}),
     }
@@ -522,11 +605,14 @@ def read_registration_pdf(
     layout: dict[str, Any] | None = None,
     *,
     currency: str = "EUR",
+    retain_partial: bool = False,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     """Reconstruct the complete source, converting PDF decoder failures to diagnostics."""
     from pdfplumber.utils.exceptions import PdfminerException
 
     try:
-        return _read_registration_pdf(path, layout, currency=currency)
+        return _read_registration_pdf(
+            path, layout, currency=currency, retain_partial=retain_partial
+        )
     except PdfminerException as exc:
         raise ValueError("PDF source could not be reconstructed") from exc

@@ -102,18 +102,24 @@ Optional:
 PDF text without a labelled physical column grid or a reviewed registration
 layout, inconsistent page tables,
 and OCR-only PDFs are not movement sources. Inspection must expose
-`unsupported_source_layout`, emit zero movements, and retain only the narrow
-bank non-movement classifications supported by the script. The presence of a
+`unsupported_source_layout`, emit zero qualified movements, and retain readable
+partial entries separately from the supported bank non-movement classifications. The presence of a
 date and one or more amounts on a line is never enough to infer a movement.
 
 ### Agent-led ruled PDF recovery
 
 Before declaring a registration-style journal layout unsupported, follow
 `../../references/pdf-recovery.md`. Use the maintained inspection, trial and
-freeze actions in the existing inspection command. The host agent diagnoses and
-revises source-bound recipes within a persistent four-attempt budget. Successful
-recovery still requires the ordinary reviewed mapping and complete qualification.
-Do not create a parser, alter installed code or bypass a failed gate.
+freeze actions in the existing inspection command. The host agent diagnoses,
+revises source-bound recipes or writes a run-local source-reference adapter
+within a persistent four-attempt budget. Keep ordinary host inspection and
+reasoning available. Independent checks reconstruct source amounts, enforce
+coverage and accounting controls, and replay frozen code. Retain readable partial
+entries and explicit unresolved issues; block population-dependent operations.
+Successful recovery still requires the ordinary reviewed mapping and complete
+qualification. Do not alter installed code or bypass a failed gate. The managed
+runtime reports issues and recovery evidence through the existing incident
+pipeline; verify the original task before claiming it recovered.
 
 ### Registration-style journal PDF
 
@@ -163,11 +169,11 @@ blocked result before ending the run:
 - `next_supported_input`: a reviewed registration journal PDF, a labelled text-PDF table or a reviewed CSV/XLSX
   export from the source system.
 
-A user's instruction to proceed anyway does not authorize a fallback. Do not
-invoke `run_reconciliation.py`, generic PDF/OCR tools, `pdfplumber` through an
-ad hoc script, or any undeclared extraction path; do not manually reconstruct
-movements; and do not create or relabel a generic comparison as a Vera result.
-Do not offer or start a non-Vera alternative in the same run. Keep the Vera run
+A blocked population does not prevent diagnosis, targeted reading or run-local
+adapter development under `references/pdf-recovery.md`. Show readable partial
+entries with unresolved issues. Do not invoke population-dependent
+`run_reconciliation.py` until qualification passes, invent movements, weaken
+independent checks, or relabel a generic comparison as a Vera result. Keep the Vera run
 blocked until supported inputs or a reviewed PDF-table or registration-layout mapping are available.
 
 ## First Run Workflow
@@ -446,9 +452,9 @@ DE: Verwende Journal-Bank Reconciliation für Kontoauszüge in /pfad/bank und Jo
 - For every PDF without a consistent labelled physical table or a reviewed
   supported registration layout, and every
   scanned/OCR-only PDF, report `unsupported_source_layout`; do not emit
-  movements or complete reconciliation. User insistence never authorizes
-  generic extraction, an ad hoc PDF script, or a non-Vera fallback in the same
-  run; show the blocked provenance result and stop dependent work.
+  qualified movements or complete reconciliation. Use host-led recovery before
+  closing an unfamiliar layout as unsupported. Retain readable entries and show
+  the blocked provenance result while population-dependent work remains blocked.
 - If amount mapping is missing or a mapped amount has invalid/ambiguous
   separator syntax, keep the source unqualified and the run blocked.
 - If a CSV delimiter is ambiguous or unsupported, or a non-default delimiter
