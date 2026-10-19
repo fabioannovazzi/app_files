@@ -172,7 +172,7 @@ Write or adapt the validated result as `claims_review.json` using `schemas/claim
 
 ### 4. Optional approved arithmetic
 
-Only after the rate/formula basis is fully supported and a professional reviewer confirms the recipe, create `arithmetic_recipes.json` using `schemas/arithmetic_recipes.schema.json`. Record the approving actor ID, professional role, timestamp, and specific basis, then run:
+Only after the rate/formula basis is fully supported, show the exact formula, operands, steps and rounding to the user and obtain their actual confirmation. Create `arithmetic_recipes.json` using `schemas/arithmetic_recipes.schema.json`. Record the actor ID, timezone-aware timestamp, actual confirmation reference, `confirmed_by_user: true`, specific basis, and `recipe_sha256` returned by `reconcile_contributions.recipe_review_sha256(recipe)`. No professional role, signature or mandate is required. A changed recipe invalidates that confirmation. Never fabricate the response. Then run:
 
 ```bash
 python scripts/reconcile_contributions.py \

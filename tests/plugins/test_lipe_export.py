@@ -25,8 +25,15 @@ from lipe_core import ContractError, calculate, read_json
 from lipe_export import compare_files, export_xml, main
 from lipe_xml import build_test_xml
 from lipe_xml_compare import compare_ivp, read_ivp
-from test_lipe import amounts, case_data, monthly_quarter, prepare, quarterly
-from test_lipe_approval import (
+
+from tests.plugins.test_lipe import (
+    amounts,
+    case_data,
+    monthly_quarter,
+    prepare,
+    quarterly,
+)
+from tests.plugins.test_lipe_approval import (
     AFTER,
     AT,
     BEFORE,
@@ -34,6 +41,7 @@ from test_lipe_approval import (
     crypto,
     example,
     frontpage,
+    lipe_path,
     sign,
 )
 
@@ -43,6 +51,13 @@ INTERMEDIARY = {
     "ImpegnoPresentazione": "2",
     "DataImpegno": "2026-10-01",
     "FirmaIntermediario": "1",
+}
+
+
+LIPE_MODULES = {
+    name: module
+    for name, module in sys.modules.items()
+    if name == "lipe" or name.startswith("lipe_")
 }
 
 
@@ -56,7 +71,7 @@ def signed_approval(
     case_override=None,
     at=AT,
 ):
-    """Create actual test signatures without asserting real professional acceptance."""
+    """Record the fictional test user’s confirmation of the exact export proposal."""
     options = copy.deepcopy(INTERMEDIARY) if intermediary else {}
     if representative:
         options.update(
@@ -87,8 +102,6 @@ def signed_approval(
         )
     if representative:
         front["taxpayer_kind"] = "OTHER"
-    authority = copy.deepcopy(crypto["authority"])
-    authority["policy"]["data_origin"] = case["data_origin"]
     packet = prepare_review(
         case,
         front,
@@ -99,35 +112,6 @@ def signed_approval(
         model_data_report=report,
         run_id=run_id,
     )
-    request = read_json(packet / "request.json")
-    mandate = {
-        "schema_version": "lipe.mandate.v1",
-        "policy_id": "fictional-policy",
-        "mandate_id": "fictional-mandate",
-        "scope": request["scope"],
-        "reviewer_name": "FICTIONAL EXPORT REVIEWER",
-        "professional_reference": "SYNTHETIC ONLY",
-        "reviewer_certificate_sha256": crypto["certs"]["reviewer"]
-        .fingerprint(hashes.SHA256())
-        .hex(),
-        "actions": ["APPROVE_LIPE_EXPORT"],
-        "valid_from": BEFORE.isoformat(),
-        "valid_until": AFTER.isoformat(),
-        "powers_evidence": [
-            {"reference": "FICTIONAL AUTHORITY ONLY", "sha256": "1" * 64}
-        ],
-    }
-    mandate_path = root / "mandate.json"
-    mandate_path.write_bytes(request_bytes(mandate))
-    signature = sign(
-        (packet / "request.json").read_bytes(),
-        root / "decision.p7s",
-        crypto,
-        "reviewer",
-    )
-    mandate_signature = sign(
-        mandate_path.read_bytes(), root / "mandate.p7s", crypto, "admin"
-    )
     approved = accept_review(
         case,
         front,
@@ -135,10 +119,9 @@ def signed_approval(
         sources,
         packet / "request.json",
         output / "approved",
-        signature=signature,
-        mandate=mandate_path,
-        mandate_signature=mandate_signature,
-        authority=authority,
+        reviewer="synthetic-user",
+        confirmation_ref="fixture-user-yes",
+        confirmed=True,
         at=at,
         model_data_report=report,
         run_id=run_id,
@@ -150,7 +133,6 @@ def signed_approval(
             "draft_folder": draft,
             "source_root": sources,
             "approval_folder": approved,
-            "authority": authority,
             "at": at,
             "model_data_report": report,
             "run_id": run_id,
@@ -223,8 +205,8 @@ def test_approved_export_preserves_originals_and_emits_checked_unsigned_import_x
     assert (folder / "approved-summary.pdf").read_bytes() == (
         options["draft_folder"] / "summary.pdf"
     ).read_bytes()
-    assert (folder / "approval/decision.p7s").read_bytes() == (
-        options["approval_folder"] / "decision.p7s"
+    assert (folder / "approval/decision.json").read_bytes() == (
+        options["approval_folder"] / "decision.json"
     ).read_bytes()
     receipt = read_json(folder / "export.json")
     assert receipt["status"] == "APPROVED_VERSION_XML_UNSIGNED"
@@ -250,7 +232,7 @@ def test_editable_approval_status_is_ignored_and_original_signatures_are_recheck
     folder = export_xml(**options)
 
     proof = read_json(folder / "approval/approval.json")
-    assert proof["review_verification"]["signature_integrity"]["status"] == "PASS"
+    assert proof["identity_assurance"] == "USER_CONFIRMATION_NOT_AUTHENTICATED"
     assert "forged_status" not in proof
 
 
@@ -389,51 +371,6 @@ def test_vp10_export_uses_the_actual_schema_tag_and_preserves_amount(tmp_path, c
     assert "VersamentiAuto" not in module["fields"]
 
 
-@pytest.mark.parametrize(
-    "changed",
-    [
-        "workpaper",
-        "source",
-        "signature",
-        "request",
-        "mandate",
-        "expired",
-        "revoked_mandate",
-        "revoked_certificate",
-    ],
-)
-def test_changed_or_no_longer_authorized_evidence_prevents_export(
-    tmp_path, crypto, changed
-):
-    options = export_options(tmp_path, crypto)
-    approved = options["approval_folder"]
-    if changed == "workpaper":
-        (options["draft_folder"] / "workpaper.md").write_bytes(b"changed")
-    elif changed == "source":
-        (tmp_path / "synthetic-registers.txt").write_bytes(b"changed")
-    elif changed == "signature":
-        sign(
-            (approved / "request.json").read_bytes(),
-            approved / "decision.p7s",
-            crypto,
-            "admin",
-        )
-    elif changed in {"request", "mandate"}:
-        (approved / (changed + ".json")).write_bytes(b"{}")
-    elif changed == "expired":
-        options["at"] = AT + timedelta(hours=25)
-    elif changed == "revoked_mandate":
-        options["authority"]["policy"]["revoked_mandate_ids"] = ["fictional-mandate"]
-    else:
-        options["authority"]["crls"] = crypto["revoked"]
-
-    with pytest.raises(ContractError):
-        export_xml(**options)
-
-    assert not options["output"].exists()
-    assert not options["registry"].exists()
-
-
 def test_valid_approval_without_intermediary_cannot_invent_import_filename(
     tmp_path, crypto
 ):
@@ -443,28 +380,6 @@ def test_valid_approval_without_intermediary_cannot_invent_import_filename(
         export_xml(**options)
 
     assert not options["output"].exists()
-
-
-def test_signed_earlier_statement_does_not_authorize_the_current_export_contract(
-    tmp_path, crypto
-):
-    options = export_options(tmp_path, crypto)
-    approved = options["approval_folder"]
-    request = read_json(approved / "request.json")
-    request["statement"] = (
-        "Approvo dati, fonti, frontespizio, decisioni e righi VP della versione "
-        "indicata per la preparazione del file XML non firmato, subordinata alle "
-        "qualificazioni richieste. Firma telematica e trasmissione restano atti separati."
-    )
-    raw = request_bytes(request)
-    (approved / "request.json").write_bytes(raw)
-    sign(raw, approved / "decision.p7s", crypto, "reviewer")
-
-    with pytest.raises(ContractError, match="statement"):
-        export_xml(**options)
-
-    assert not options["output"].exists()
-    assert not options["registry"].exists()
 
 
 @pytest.mark.parametrize("value", [0, -1, 100000, True, "7"])
@@ -538,18 +453,6 @@ def test_unrelated_database_is_not_repurposed_as_an_export_registry(tmp_path, cr
         assert connection.execute("SELECT value FROM unrelated").fetchall() == [
             ("preserve",)
         ]
-    assert not options["output"].exists()
-
-
-def test_registry_cannot_mix_studios_or_real_and_synthetic_data(tmp_path, crypto):
-    options = export_options(tmp_path, crypto)
-    export_xml(**options)
-    options.update(output=tmp_path / "second", progressive=8)
-    options["authority"]["policy"]["studio_id"] = "another-studio"
-
-    with pytest.raises(ContractError, match="different studio or data origin"):
-        export_xml(**options)
-
     assert not options["output"].exists()
 
 
@@ -792,7 +695,7 @@ def test_changed_commitment_date_is_not_silently_approved_by_equal_vp_amounts(
 
 
 def test_xml_signature_presence_does_not_establish_signature_authenticity():
-    from test_lipe_receipt import receipt_tree
+    from tests.plugins.test_lipe_receipt import receipt_tree
 
     raw = synthetic_xml()
     root = etree.fromstring(raw)
@@ -817,7 +720,7 @@ def test_xml_signature_presence_does_not_establish_signature_authenticity():
 
 
 def test_nested_schema_valid_communication_cannot_substitute_signed_object_content():
-    from test_lipe_receipt import receipt_tree
+    from tests.plugins.test_lipe_receipt import receipt_tree
 
     root = etree.fromstring(synthetic_xml())
     signature = copy.deepcopy(
@@ -904,50 +807,6 @@ def test_blocked_supplied_file_is_preserved_with_readable_reason(tmp_path):
     assert "Lettura bloccata" in (folder / "comparison.md").read_text(encoding="utf-8")
 
 
-def host_config(tmp_path, options, monkeypatch):
-    config = {
-        key: str(value) if isinstance(value, Path) else value
-        for key, value in options["authority"].items()
-    }
-    config["export_registry"] = str(tmp_path / "host-export.sqlite3")
-    path = tmp_path / "host-policy.json"
-    path.write_bytes(request_bytes(config))
-    monkeypatch.setenv("VERA_LIPE_AUTHORITY_CONFIG", str(path))
-    return path
-
-
-def test_registry_location_must_come_from_independent_host_configuration(
-    tmp_path, crypto, monkeypatch
-):
-    config = {
-        key: str(value) if isinstance(value, Path) else value
-        for key, value in crypto["authority"].items()
-    }
-    path = tmp_path / "host-policy.json"
-    config["export_registry"] = str(tmp_path / "client/registry.sqlite3")
-    (tmp_path / "client").mkdir()
-    path.write_bytes(request_bytes(config))
-    monkeypatch.setenv("VERA_LIPE_AUTHORITY_CONFIG", str(path))
-
-    with pytest.raises(ContractError, match="outside client runs"):
-        load_export_registry(excluded_roots=[tmp_path / "client"])
-
-
-def test_missing_registry_configuration_does_not_create_an_arbitrary_new_ledger(
-    tmp_path, crypto, monkeypatch
-):
-    config = {
-        key: str(value) if isinstance(value, Path) else value
-        for key, value in crypto["authority"].items()
-    }
-    path = tmp_path / "host-policy.json"
-    path.write_bytes(request_bytes(config))
-    monkeypatch.setenv("VERA_LIPE_AUTHORITY_CONFIG", str(path))
-
-    with pytest.raises(ContractError, match="has not configured"):
-        load_export_registry(excluded_roots=[])
-
-
 def test_real_cli_exports_from_actual_archive_binding_with_fictional_authority(
     tmp_path, crypto, monkeypatch
 ):
@@ -1015,3 +874,59 @@ def test_real_cli_rejects_external_export_destination(tmp_path, crypto):
         )
 
     assert not (tmp_path / "external").exists()
+
+
+def host_config(tmp_path, options, monkeypatch):
+    registry = tmp_path / "exports.sqlite3"
+    monkeypatch.setenv("VERA_LIPE_EXPORT_REGISTRY", str(registry))
+    monkeypatch.delenv("VERA_LIPE_AUTHORITY_CONFIG", raising=False)
+    return registry
+
+
+def test_registry_is_independent_of_approval_credentials(tmp_path, monkeypatch):
+    path = tmp_path / "exports.sqlite3"
+    monkeypatch.setenv("VERA_LIPE_EXPORT_REGISTRY", str(path))
+    monkeypatch.delenv("VERA_LIPE_AUTHORITY_CONFIG", raising=False)
+    assert load_export_registry(excluded_roots=[]) == path
+    with pytest.raises(ContractError, match="outside client runs"):
+        load_export_registry(excluded_roots=[tmp_path])
+
+
+def test_missing_registry_does_not_create_replacement(tmp_path, monkeypatch):
+    monkeypatch.delenv("VERA_LIPE_EXPORT_REGISTRY", raising=False)
+    with pytest.raises(ContractError, match="has not configured"):
+        load_export_registry(excluded_roots=[])
+
+
+def test_export_with_user_confirmation_and_no_keys_or_roles(tmp_path, monkeypatch):
+    monkeypatch.delenv("VERA_LIPE_AUTHORITY_CONFIG", raising=False)
+    options = export_options(tmp_path, None)
+    result = export_xml(**options)
+    assert (result / "IT11111111115_LI_00007.xml").is_file()
+    assert not list(result.rglob("*.p7s"))
+
+
+@pytest.mark.parametrize("change", ["request", "decision", "source", "artifact"])
+def test_export_refuses_changed_confirmed_version(tmp_path, change):
+    options = export_options(tmp_path, None)
+    if change in {"request", "decision"}:
+        path = options["approval_folder"] / (change + ".json")
+        payload = read_json(path)
+        if change == "request":
+            payload["bindings"]["result_hash"] = "0" * 64
+        else:
+            payload["confirmed"] = False
+        path.write_bytes(request_bytes(payload))
+    elif change == "source":
+        (tmp_path / "front-source.txt").write_text("changed")
+    else:
+        (options["draft_folder"] / "workpaper.md").write_text("changed")
+    with pytest.raises(ContractError):
+        export_xml(**options)
+    assert not options["registry"].exists()
+
+
+@pytest.fixture(autouse=True)
+def export_modules(monkeypatch):
+    for name, module in LIPE_MODULES.items():
+        monkeypatch.setitem(sys.modules, name, module)

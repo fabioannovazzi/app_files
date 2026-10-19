@@ -2,7 +2,7 @@
 /* Typed literal edits preserve the producer's shapes; they never choose fiscal meaning. */
 globalThis.VeraPatentBox = Object.freeze({create(api) {
   const {node,button,call,say,confirmation}=api;
-  const labels={initialize:"Apertura",import_ledger:"CSV già mappato",inspect_ledger:"Selezione del registro",normalize_ledger:"Normalizzazione dei costi",propose:"Caso e controlli proposti",review:"Riesame locale",calculate:"Calcolo ed elaborati",prepare_professional_review:"Richiesta da firmare",accept_professional_review:"Verifica della firma e del mandato",verify_formalities:"Formalità documentali"};
+  const labels={initialize:"Apertura",import_ledger:"CSV già mappato",inspect_ledger:"Selezione del registro",normalize_ledger:"Normalizzazione dei costi",propose:"Caso e controlli proposti",review:"Riesame locale",calculate:"Calcolo ed elaborati",prepare_professional_review:"Proposta da confermare",accept_professional_review:"Conferma della proposta",verify_formalities:"Formalità documentali"};
   const words={case:"Caso",rules:"Regole proposte",controls:"Controlli",narratives:"Testi A/B",casebook:"Fatti e approfondimenti",normalization_digest:"Normalizzazione collegata",ips:"Beni immateriali",costs:"Costi",allocations:"Quote attribuite",evidence:"Registro delle evidenze",sources:"Fonti",periods:"Periodi",claim_period_id:"Periodo richiesto",ledger_control_total:"Totale contabile",book_amount:"Importo contabile",income_amount:"Base redditi",irap_amount:"Base IRAP",income_max:"Base redditi proposta",irap_max:"Base IRAP proposta",status:"Esito proposto",conclusion:"Conclusione e limiti",evidence_ids:"Evidenze citate",source_ids:"Fonti citate",section:"Sezione",text:"Testo",locator:"Pagina, riga o sezione",mappings:"Mappature",control_totals:"Totali delle fonti",fx_rates:"Cambi documentati",excluded_rows:"Righe escluse",non_data_rows:"Righe non contabili",duplicate_reviews:"Riesame dei duplicati",population_duplicate_review:"Riesame della popolazione",purpose:"Scopo",rationale:"Motivazione",account:"Conto",category:"Categoria proposta",currency:"Valuta",allocation_method:"Criterio di attribuzione",name:"Nome",description:"Descrizione",type:"Tipo dichiarato",value:"Valore",row_ref:"Riga della fonte",table_id:"Tabella della fonte",mapping_rationale:"Motivazione della mappatura",reason:"Motivo",reviewed_on:"Data del riesame",sources_checked_on:"Data di verifica delle fonti",enhancement_rate:"Maggiorazione proposta",premial_periods:"Periodi premiali",key:"Controllo",as_of:"Data del caso",demo:"Caso sintetico"};
   let context,timer,queue=Promise.resolve(); const urls=new Set();
   const authorPanel=globalThis.VeraPatentBoxAuthoring?.create({...api,openProducer:(workRef,operation)=>open(workRef,operation)});
@@ -66,7 +66,7 @@ globalThis.VeraPatentBox = Object.freeze({create(api) {
     if(operation==="review")return {digest:"",reviewer:"",confirmation_ref:"",synthetic:page.session?.demo??null};
     if(operation==="calculate")return {digest:""};
     if(operation==="prepare_professional_review")return {digest:"",source_scan_ref:"",action:"",previous_digest:null,reason:null};
-    if(operation==="accept_professional_review")return {digest:"",request_digest:"",signature_ref:"",mandate_ref:"",mandate_signature_ref:""};
+    if(operation==="accept_professional_review")return {digest:"",request_digest:"",reviewer:"",confirmation_ref:""};
     if(operation==="verify_formalities")return {plan:{schema_version:"1.0",format:"",document_evidence_id:"",signature_evidence_id:null},trust_basis:null};
     return {};
   }
@@ -119,21 +119,21 @@ globalThis.VeraPatentBox = Object.freeze({create(api) {
       }));
       if(op==="review"){
         input(main,local,["reviewer"],"Nome dichiarato del revisore");input(main,local,["confirmation_ref"],"Riferimento effettivo della conferma");
-        main.append(node("p",local.fields.synthetic===true?"Questo riesame resta un’accettazione sintetica, senza valore di decisione professionale reale.":"Il nome e il riferimento sono dichiarati localmente. Non costituiscono autenticazione professionale e non autorizzano un calcolo reale.","notice"));
+        main.append(node("p",local.fields.synthetic===true?"Questo riesame resta un’accettazione sintetica, senza valore di decisione professionale reale.":"Il nome e il riferimento sono dichiarati localmente. Non costituiscono autenticazione professionale. Per un calcolo reale usa la proposta da confermare con la scansione delle fonti.","notice"));
       }
     }else if(op==="prepare_professional_review"){
       input(main,local,["digest"],"Versione esatta del caso",{choices:digestChoices(p)});
-      input(main,local,["action"],"Decisione da sottoporre a firma",{choices:[["","Scegli"],["REVIEW_CONTROLS","Riesame di controlli e regole"],["APPROVE_DOSSIER","Approvazione degli elaborati esatti"],["REOPEN_CASE","Riapertura di una versione approvata"]]});
+      input(main,local,["action"],"Decisione da confermare",{choices:[["","Scegli"],["REVIEW_CONTROLS","Riesame di controlli e regole"],["APPROVE_DOSSIER","Approvazione degli elaborati esatti"],["REOPEN_CASE","Riapertura di una versione approvata"]]});
       const directories=[...new Set(Object.keys(p.files).filter(name=>name.includes("/")).map(name=>name.slice(0,name.lastIndexOf("/"))))];
       input(main,local,["source_scan_ref"],"Scansione delle fonti già conservata",{choices:[["","Scegli il percorso conservato"],...directories.map(name=>[name,name])]});
       input(main,local,["previous_digest"],"Versione precedente per la riapertura",{choices:digestChoices(p),nullable:true});input(main,local,["reason"],"Motivo effettivo della riapertura",{nullable:true,kind:"long"});
-      main.append(node("p","Il produttore verifica popolazione, impronte e freschezza della scansione. Il pannello prepara la richiesta; la firma deve avvenire presso il servizio scelto dal professionista. Non crea fonti o approvazioni.","notice"));
+      main.append(node("p","Il produttore verifica popolazione, impronte e freschezza della scansione. Leggi questa proposta prima di confermarla; non servono firme o mandati.","notice"));
     }else if(op==="accept_professional_review"){
       input(main,local,["digest"],"Versione esatta del caso",{choices:digestChoices(p)});
       const requests=Object.keys(p.files).filter(name=>/^professional_request_[a-f0-9]{64}\/request\.json$/.test(name)).map(name=>name.split("/")[0].slice("professional_request_".length));
-      input(main,local,["request_digest"],"Richiesta effettivamente firmata",{choices:[["","Scegli"],...requests.map(value=>[value,value])]});
-      for(const [key,label] of [["signature_ref","Firma CMS della richiesta"],["mandate_ref","Mandato firmato dello studio"],["mandate_signature_ref","Firma CMS del mandato"]])input(main,local,[key],label,{choices:[["","Scegli il file conservato"],...Object.keys(p.files).map(name=>[name,name])]});
-      main.append(node("p","Il produttore usa la configurazione esterna dell’amministratore e verifica firme, catena, revoche e perimetro. Nessuna policy, chiave o firma viene creata per sbloccare il caso. L’importazione nativa dei file esterni selezionati resta da qualificare.","notice"));
+      input(main,local,["request_digest"],"Proposta effettivamente mostrata",{choices:[["","Scegli"],...requests.map(value=>[value,value])]});
+      input(main,local,["reviewer"],"Nome o riferimento di chi conferma");input(main,local,["confirmation_ref"],"Riferimento alla conferma effettiva");
+      main.append(node("p","La conferma riguarda solo la proposta e le scelte mostrate. Sono ricontrollati fonti, versione ed elaborati; non vengono attestati ruoli professionali.","notice"));
     }else if(op==="verify_formalities"){
       input(main,local,["plan","format"],"Formato della prova crittografica",{choices:[["","Scegli"],...["CMS_DETACHED","CMS_ATTACHED","PDF","RFC3161_RESPONSE","RFC3161_TOKEN"].map(value=>[value,value])]});
       input(main,local,["plan","document_evidence_id"],"Documento esatto selezionato",{choices:evidenceChoices(p)});

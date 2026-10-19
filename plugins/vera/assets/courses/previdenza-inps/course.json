@@ -45,7 +45,7 @@
     {
       "path": "modules/previdenza-inps/references/workflow-reference.md",
       "repository_path": "plugins/previdenza-inps/references/workflow-reference.md",
-      "sha256": "c0066d34620bba05f2b59c410d0062e81d1ebea8ce5aef2af3dee12ed2fbfd1c"
+      "sha256": "f1afe6b8d3e82dad4b97eaf57684d1f78aecb42ac09843c6cf0a922a0908787d"
     },
     {
       "path": "modules/previdenza-inps/requirements.txt",
@@ -55,7 +55,7 @@
     {
       "path": "modules/previdenza-inps/schemas/arithmetic_recipes.schema.json",
       "repository_path": "plugins/previdenza-inps/schemas/arithmetic_recipes.schema.json",
-      "sha256": "1a742f7413b054a9e21f4b1191a97e8939b37f6aefddccb96129b2521415c308"
+      "sha256": "dc459b8c6e9e35f701be9b969c30bbbbb7b377768142caab0ed8b7e0fbcf6440"
     },
     {
       "path": "modules/previdenza-inps/schemas/case_records.schema.json",
@@ -110,7 +110,7 @@
     {
       "path": "modules/previdenza-inps/scripts/reconcile_contributions.py",
       "repository_path": "plugins/previdenza-inps/scripts/reconcile_contributions.py",
-      "sha256": "d65dcc717f36788ac14ee590188c7a07cc4d9b226dc7a72876f3578772931276"
+      "sha256": "650c7bbd15266f65ab23a3bd88f645502b8ecfa8a7b5b671a21e1f7590749e2d"
     },
     {
       "path": "modules/previdenza-inps/scripts/register_portal_export.py",
@@ -125,7 +125,7 @@
     {
       "path": "modules/previdenza-inps/skills/previdenza-inps/SKILL.md",
       "repository_path": "plugins/previdenza-inps/skills/previdenza-inps/SKILL.md",
-      "sha256": "759708ff5921b11274a4834e368ffb2c655ff720ea4a5f5c374c42cfc1932998"
+      "sha256": "39063ac07749c4886d2b083e4b885a317ba9a5098a5fe933f63e5d1662349630"
     },
     {
       "path": "modules/previdenza-inps/skills/previdenza-inps/agents/openai.yaml",
@@ -190,7 +190,7 @@
     {
       "path": "skills/previdenza-inps/SKILL.md",
       "repository_path": "plugins/vera/skills/previdenza-inps/SKILL.md",
-      "sha256": "f966574d3732bbbc6b56524824e163d1771daccfd8e62df9307248e73381c679"
+      "sha256": "1745d4c293c1401cb44e0ae8d616ced4de48ee9285b1b3e2e3984082606d1f3c"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -490,17 +490,17 @@
     {
       "path": "vendor/modules/vera_journal_pdf/__init__.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/__init__.py",
-      "sha256": "1c9738c861546a4f65c3e492d3a93e17d882473d826c53727a50ef465f97ae76"
+      "sha256": "ef7ab6e4917fa66e0b01a2361ec68717a81855f1775f6170ad6bc3b08b254352"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/recovery.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "931442fe84eb99dc0a949c95bd9977f3e08d29c68e9991d94fa751d2e012fa1c"
+      "sha256": "3c954fc09af79b584de478afe56cbefc50c0f1bef4b1f7b5766b7f41a77ba778"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/rules.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/rules.py",
-      "sha256": "cc0b2c67452a68d87ea019fd1626323338da915f145cb0013cdc3446add7fc5c"
+      "sha256": "71ca43916c174963ff5eb35c235fbfee9851b5caed4518a31fc6dbf88f82c84e"
     },
     {
       "path": "vendor/modules/vera_ocr/__init__.py",

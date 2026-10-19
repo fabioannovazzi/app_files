@@ -80,3 +80,7 @@ exists; otherwise resolve `../../../lipe` in the repository. Read
 that module's `skills/lipe/SKILL.md` completely and follow it. Treat
 the resolved module root as the plugin working directory for all commands,
 scripts, requirement files, references, schemas, and local review server.
+
+## Exact-proposal confirmation
+
+Show the proposal and obtain the actual user decision before export. No professional role, signature, certificate or mandate is required. Use the component’s current approval contract and the existing studio filename registry; never infer user confirmation.

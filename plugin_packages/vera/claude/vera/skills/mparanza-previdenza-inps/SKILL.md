@@ -195,3 +195,7 @@ name is not authenticated. The unchanged public service applies the decisions;
 requested edits remain work to perform and do not rewrite the memo. Pending
 uncertain writes require ordinary recovery before further native writes or
 native Archive closure. Closed sealed runs remain consultable without writes.
+
+## Arithmetic recipe confirmation
+
+Show the exact supported recipe and obtain the actual user response before arithmetic. Preserve the source/claim checks and the recipe-bound confirmation. No professional-role, signature or mandate requirement applies.

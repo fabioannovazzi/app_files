@@ -42,90 +42,26 @@ se una schermata o un documento attestino correttamente quella corrispondenza.
 Il revisore conferma questo significato. Una data di revisione non può precedere
 la verifica che dichiara di avere esaminato.
 
-## Preparare la richiesta
+## Mostrare e confermare la proposta
 
-Generare e aprire la bozza, verificare Excel/PDF, quadrature, anomalie e decisioni.
-Completare il report effettivo sui dati arrivati al modello nella cartella output
-del run. La fase controlla report JSON, relativa evidenza, identità del run e
-corrispondenza del Markdown tramite il validatore esistente di Studio Archive.
-Non inventare una dichiarazione di mancata esposizione per superare il controllo.
+Preparare la richiesta con `lipe_approval.py prepare --case <case> --frontpage
+<frontpage> --draft <draft> --client-engagement <context> --output <request>`.
+Mostrare `review-request.md`, frontespizio, righi VP, anomalie e scelte. Chiedere
+se questa proposta va bene e se si può proseguire con l'XML non firmato.
 
-```bash
-python scripts/lipe_approval.py prepare --case /absolute/run/inputs/case.json --frontpage /absolute/run/inputs/frontpage.json --client-engagement /absolute/client_engagement.json --draft /absolute/run/output/lipe-HASH --output /absolute/run/output/approval-request-01
-```
+Dopo la risposta effettiva, eseguire `lipe_approval.py accept` con gli stessi
+parametri, `--request <request/request.json>`, `--reviewer <attore effettivo>`,
+`--confirmation-ref <riferimento della risposta> --confirmed` e una nuova
+cartella `--output`. Nessun ruolo professionale, firma, certificato o mandato è
+richiesto. L'assistente registra la risposta: l'utente non compila JSON.
 
-Usare i percorsi reali delle copie importate; aggiungere `--catalog` per un caso
-collegato al catalogo. `--source-root` è disponibile solo per esempi dichiarati
-sintetici. Il packet contiene `request.json`, `review-snapshot.json`,
-`frontpage.json` e una richiesta leggibile. Non contiene un'approvazione.
-La cartella deve essere nuova e separata dalla bozza: i file già presenti non
-vengono sovrascritti.
+L'export ricalcola i dati e verifica richiesta, risposta e impronte di fonti e
+bozza. Una proposta cambiata non eredita la conferma. Il record non autentica
+identità, qualifiche o responsabilità professionali e non firma né trasmette XML.
+La scadenza della richiesta è una politica operativa del prodotto, non un termine fiscale.
 
-La richiesta vincola cliente, incarico, anno, trimestre, origine dei dati, caso,
-frontespizio, fonti, risultato ricalcolato, revisione del catalogo, motore, regole,
-schema XML, componente crittografico e ogni file della bozza. Una modifica richiede
-una nuova revisione. La scadenza di 24 ore è una politica operativa interna di
-LIPE, non un termine fiscale. Il professionista firma esternamente gli esatti byte
-di `request.json` con firma CMS DER separata; conversioni di newline o altre
-modifiche non sono ammesse. Non consegnare a LIPE chiavi private o password.
-
-## Autorità dello studio
-
-L'amministratore dello studio deve predisporre indipendentemente una policy
-conforme a `authority-policy.schema.json`, il percorso assoluto di OpenSSL 3,
-radici fidate e CRL correnti complete. La configurazione è indicata dalla variabile
-host `VERA_LIPE_AUTHORITY_CONFIG`; non è un argomento scelto dal caso.
-Il JSON contiene `policy`, `openssl`, `trusted_roots`, `crls`;
-gli ultimi tre sono percorsi assoluti a file installati. Può aggiungere soltanto
-`export_registry`, percorso assoluto del registro unico dei nomi per l'export,
-descritto in `xml-export.md`. Configurazione, provider
-e materiale fiduciario devono risiedere fuori dal run cliente e dai componenti.
-La protezione di queste risorse dipende dai permessi amministrativi dell'host:
-essere fuori dalla cartella cliente non rende inviolabile una policy modificabile
-dallo stesso utente del sistema operativo.
-
-Il mandato segue `professional-mandate.schema.json`: policy, perimetro esatto,
-professionista, certificato, azione, validità e riferimenti alle prove dei poteri.
-Un amministratore il cui certificato è già nella policy firma gli esatti byte del
-mandato. Il certificato del professionista firma la richiesta. I due ruoli non
-vengono dedotti dal nome nel certificato. La dichiarazione firmata dello studio
-stabilisce i poteri; LIPE non consulta autonomamente albi o registri professionali.
-Il mandato e i certificati non possono essere revocati nella policy corrente.
-
-Non creare una policy reale, inserire un proprio certificato come amministratore,
-creare mandati o firmare decisioni per aggirare un'autorità mancante. I certificati
-creati dai test sono sintetici e non vengono distribuiti come autorità dello studio.
-
-## Verificare e conservare
-
-```bash
-python scripts/lipe_approval.py accept --case /absolute/run/inputs/case.json --frontpage /absolute/run/inputs/frontpage.json --client-engagement /absolute/client_engagement.json --draft /absolute/run/output/lipe-HASH --request /absolute/run/output/approval-request-01/request.json --signature /absolute/returned/decision.p7s --mandate /absolute/returned/mandate.json --mandate-signature /absolute/returned/mandate.p7s --output /absolute/run/output/approval-01
-```
-
-La verifica riusa il componente CMS già presente in Vera (`patent-box-review`):
-contenuto esatto, algoritmi ammessi, uso della chiave, catena e revoche con CRL.
-Non scarica certificati o revoche dalla rete e non installa OpenSSL. Le prove
-mancanti o non attuali impediscono l'approvazione. I documenti restituiti dal
-firmatario sono letti come originali limitati in dimensione, verificati e copiati
-nella nuova cartella di approvazione con hash, insieme al mandato, materiale
-fiduciario, policy, snapshot e `approval.json`. Non sono retroattivamente aggiunti
-all'inventario immutabile degli input originari del run.
-
-Il caso viene ricalcolato e confrontato con la bozza prima e dopo la verifica.
-La ricevuta distingue verifica crittografica, poteri dichiarati dallo studio,
-qualifica della firma non testata e mancata firma/invio della dichiarazione.
-L'export successivo riverifica gli originali, lo stato corrente della
-policy/revoche e tutti i vincoli; un `approval.json` modificabile non è un token
-fidato. Il serializer e il confronto XML sono descritti in `xml-export.md`;
-la qualificazione professionale e nei gestionali resta pendente. La lettura
-strutturale delle ricevute fornite è descritta in `references/receipts.md` e non
-ne autentica la firma XAdES.
-
-## Quali dati arrivano al modello
-
-Se aperti dall'host, frontespizio e fonti, verifiche anagrafiche, nomi e identificativi
-dei dichiaranti/intermediari, richiesta firmata, certificati pubblici, mandato e
-riferimenti ai poteri possono entrare nel contesto del modello scelto. La verifica
-crittografica locale non invoca modelli o rete e non richiede chiavi private.
-Il report del run deve descrivere ciò che l'host ha realmente letto; la ricevuta
-CMS non misura l'esposizione al modello, né certifica conformità GDPR.
+Il registro unico dei nomi dei file rimane separato dal run cliente ed è indicato
+in `VERA_LIPE_EXPORT_REGISTRY`. Non creare un registro sostitutivo per aggirare
+una collisione. Questo percorso non richiede una policy di autorità o materiale
+crittografico. Conservare la distinzione tra controllo tecnico, scelta dell'utente
+ed effettiva firma o trasmissione, che non sono eseguite da LIPE.

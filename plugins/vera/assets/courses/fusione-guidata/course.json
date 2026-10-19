@@ -60,7 +60,7 @@
     {
       "path": "modules/fusione-guidata/scripts/fusione_dossier.py",
       "repository_path": "plugins/fusione-guidata/scripts/fusione_dossier.py",
-      "sha256": "816642abf56afa89878239166cba3dd4a16296f9ebbe95efbe7f894c5ebeb7b0"
+      "sha256": "ac35db494ba1b9faf9d4b6dc2e2eeff31403c551548c50d21854fb007776b602"
     },
     {
       "path": "modules/fusione-guidata/scripts/fusione_model.py",
@@ -80,7 +80,7 @@
     {
       "path": "modules/fusione-guidata/scripts/fusione_report.py",
       "repository_path": "plugins/fusione-guidata/scripts/fusione_report.py",
-      "sha256": "44cf535075561c4430f8d1b6b8a24d6462b58cc1b4bb5bf7a52f3a7ec0ae4281"
+      "sha256": "a0531cb85df71e5c6c64e6c653216bb4ef1efba22ec0c204c7b17bf72ba36981"
     },
     {
       "path": "modules/fusione-guidata/scripts/run_fusione.py",
@@ -90,7 +90,7 @@
     {
       "path": "modules/fusione-guidata/skills/fusione-guidata/SKILL.md",
       "repository_path": "plugins/fusione-guidata/skills/fusione-guidata/SKILL.md",
-      "sha256": "c359c231afdd5c38296b0323af1fa4acfcdc09b5f33735e23a83eb7fe04a11e7"
+      "sha256": "11e2c1263c1ba14367a103327c84e3bc4a798f69187ccf81cf1fc55f70662407"
     },
     {
       "path": "modules/fusione-guidata/skills/fusione-guidata/agents/openai.yaml",
@@ -105,7 +105,7 @@
     {
       "path": "modules/fusione-guidata/skills/fusione-guidata/references/p1-contract.md",
       "repository_path": "plugins/fusione-guidata/skills/fusione-guidata/references/p1-contract.md",
-      "sha256": "6db090807051d4e64f29f99e98987f617104021d499bb8b03729c50b85de1869"
+      "sha256": "d3ba7372fc3af7f730761c1a6e58f4a1fc254a0629306cf281fbe187eed99ecd"
     },
     {
       "path": "modules/fusione-guidata/skills/fusione-guidata/references/p1-source-review.md",
@@ -440,17 +440,17 @@
     {
       "path": "vendor/modules/vera_journal_pdf/__init__.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/__init__.py",
-      "sha256": "1c9738c861546a4f65c3e492d3a93e17d882473d826c53727a50ef465f97ae76"
+      "sha256": "ef7ab6e4917fa66e0b01a2361ec68717a81855f1775f6170ad6bc3b08b254352"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/recovery.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "931442fe84eb99dc0a949c95bd9977f3e08d29c68e9991d94fa751d2e012fa1c"
+      "sha256": "3c954fc09af79b584de478afe56cbefc50c0f1bef4b1f7b5766b7f41a77ba778"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/rules.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/rules.py",
-      "sha256": "cc0b2c67452a68d87ea019fd1626323338da915f145cb0013cdc3446add7fc5c"
+      "sha256": "71ca43916c174963ff5eb35c235fbfee9851b5caed4518a31fc6dbf88f82c84e"
     },
     {
       "path": "vendor/modules/vera_ocr/__init__.py",

@@ -92,7 +92,7 @@
     "scope": "Italian OIC closing-account workflow and Alfa v3 synthetic acceptance only. Existing function IDs and Geneva dispositions are retained. No Swiss accounting framework, Geneva professional acceptance, native-host acceptance or filing capability is added or claimed.",
     "version": "0.1.394"
   },
-  "catalogue_fingerprint": "27fe8e52f66c20d7edea22772e7cf64d6643f338e409015a64db2bca5bcd1b6d",
+  "catalogue_fingerprint": "11c7b199334f26da838d66cde6af79028337ddf1798168e8fc26f577ddbcc5ce",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2011,5 +2011,16 @@
     "reviewed_at": "2026-10-17",
     "scope": "Adds the same task-level usage, outcome and optional 1-5-star reporting contract to existing user processes. Function identities and prior Geneva professional dispositions are unchanged. Usage, technical receipts and satisfaction do not establish professional testing or Geneva acceptance.",
     "version": "0.1.404"
+  },
+  "specific_proposal_release_binding": {
+    "date": "2026-10-19",
+    "version": "0.1.422",
+    "previous_catalogue_fingerprint": "724abd301a540665f94af2285763d14bdd1904113d1c11f259377e1db0fa0fd8",
+    "changed_skill_entrypoints": [
+      "lipe",
+      "patent-box-review",
+      "previdenza-inps"
+    ],
+    "scope": "Refresh the exact source catalogue for the current release. Patent Box, LIPE and INPS now retain actual user confirmation of the specific proposal without mandatory professional credentials, signatures or mandates. Preserve every existing Geneva disposition and prior history. This binding adds no jurisdiction, professional or installed-host acceptance. Remove the unused legacy professional-signature approval adapter; optional signed-document verification uses selected tools and trust sources without a professional-role policy."
   }
 }

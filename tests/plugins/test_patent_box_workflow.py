@@ -6,6 +6,7 @@ import copy
 import importlib.util
 import json
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from types import ModuleType
 from typing import Any
@@ -397,8 +398,12 @@ def test_real_calculation_cannot_use_synthetic_acceptance(
     run = running_case(tmp_path, workflow, demo=False)
     digest = reviewed(run, workflow, model_proposal(run, workflow))
 
-    with pytest.raises(ValueError, match="authenticated professional"):
-        workflow.calculate_draft(run["context"], digest=digest)
+    with pytest.raises(ValueError, match="Confirmation of the exact current proposal"):
+        workflow.calculate_draft(
+            run["context"],
+            digest=digest,
+            at=datetime(2026, 9, 23, 12, tzinfo=timezone.utc),
+        )
 
 
 def test_another_client_session_is_rejected(

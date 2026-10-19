@@ -313,6 +313,19 @@ def recover_pdf(
         ),
     }
     _save(root / f"attempt-{len(attempts)+1:02}.json", result)
+    eligibility = diagnostics.get("negative_amount_eligibility")
+    if eligibility and eligibility["issue_count"] > 50:
+        result = {
+            **result,
+            "diagnostics": {
+                **diagnostics,
+                "negative_amount_eligibility": {
+                    **eligibility,
+                    "issues": eligibility["issues"][:50],
+                    "issues_truncated": True,
+                },
+            },
+        }
     failed = diagnostics.get("rejected_rows", [])
     if failed:
         first = max(1, int(failed[0]["source_page"]))
@@ -334,7 +347,7 @@ def recover_pdf(
         result = {
             **result,
             "diagnostics": {
-                **diagnostics,
+                **result["diagnostics"],
                 "running_total_control_count": len(controls),
                 "running_total_controls": controls[-3:],
                 "running_total_controls_truncated": True,

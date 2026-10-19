@@ -171,8 +171,7 @@ def load_authority(*, excluded_roots: list[Path]) -> dict:
 
 def load_export_registry(*, excluded_roots: list[Path]) -> Path:
     """Use the firm's one configured filename registry, never a case-chosen reset."""
-    config = _configuration(excluded_roots)
-    value = config.get("export_registry")
+    value = os.environ.get("VERA_LIPE_EXPORT_REGISTRY")
     if not isinstance(value, str) or not value.strip():
         raise ContractError(
             "The firm has not configured its shared export filename registry"

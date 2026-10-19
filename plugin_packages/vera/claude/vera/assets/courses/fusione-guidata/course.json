@@ -53,7 +53,7 @@
     },
     {
       "path": "modules/fusione-guidata/scripts/fusione_dossier.py",
-      "sha256": "31429adbbb14624aff6f75898c867738866bdb8f318bbae1cdd595aa68950693"
+      "sha256": "a379cde47f23943a3beed35d52c4959a212aeaede26f1b47f54c3cccfdbb6d77"
     },
     {
       "path": "modules/fusione-guidata/scripts/fusione_model.py",
@@ -69,7 +69,7 @@
     },
     {
       "path": "modules/fusione-guidata/scripts/fusione_report.py",
-      "sha256": "ad57b7ab54c02dc9f1a5a44c262fe6f3c79df173c0394f1db3fd454064c129e8"
+      "sha256": "24b6c9aad32ce7b91341c753007951aef6e201a5fdc3d4528aee9399ad5d60c2"
     },
     {
       "path": "modules/fusione-guidata/scripts/run_fusione.py",
@@ -77,7 +77,7 @@
     },
     {
       "path": "modules/fusione-guidata/skills/mparanza-fusione-guidata/SKILL.md",
-      "sha256": "538e36892c005b8ee3849780123ed94065c6f666041fd24ac292d5f65654d324"
+      "sha256": "54899381b1b8bebf685b167e47900f80d374f6871d48b74844aab59eb47658a7"
     },
     {
       "path": "modules/fusione-guidata/skills/mparanza-fusione-guidata/agents/openai.yaml",
@@ -89,7 +89,7 @@
     },
     {
       "path": "modules/fusione-guidata/skills/mparanza-fusione-guidata/references/p1-contract.md",
-      "sha256": "48b1620f8d8f3d0f24cb1931de39edf6d07cc08776195020efd52a2834cfd48f"
+      "sha256": "12c2c61916169bd6d02b37c551a52862de8a8e04e6d58c6f0450bb6d26e67aca"
     },
     {
       "path": "modules/fusione-guidata/skills/mparanza-fusione-guidata/references/p1-source-review.md",
@@ -265,15 +265,15 @@
     },
     {
       "path": "vendor/modules/vera_journal_pdf/__init__.py",
-      "sha256": "1c9738c861546a4f65c3e492d3a93e17d882473d826c53727a50ef465f97ae76"
+      "sha256": "ef7ab6e4917fa66e0b01a2361ec68717a81855f1775f6170ad6bc3b08b254352"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "931442fe84eb99dc0a949c95bd9977f3e08d29c68e9991d94fa751d2e012fa1c"
+      "sha256": "3c954fc09af79b584de478afe56cbefc50c0f1bef4b1f7b5766b7f41a77ba778"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/rules.py",
-      "sha256": "cc0b2c67452a68d87ea019fd1626323338da915f145cb0013cdc3446add7fc5c"
+      "sha256": "71ca43916c174963ff5eb35c235fbfee9851b5caed4518a31fc6dbf88f82c84e"
     },
     {
       "path": "vendor/modules/vera_ocr/__init__.py",
@@ -506,5 +506,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "ceee743bfc197c605589dc0ca5e7628183cda03dd5541cf06ea4fcaaed95739f"
+  "canonical_course_sha256": "7a6ab585f37fa0223647bd509dae1ae133b4bf4289a5acf41b858b9c033a7b02"
 }

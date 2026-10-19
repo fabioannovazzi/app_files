@@ -280,7 +280,10 @@
       main.append(button("Scarta dichiarazioni",async()=>{await call("vera_workspace_archive_discard",await closureAuthority(context,true));await openClosure(work);}));return;
     }
     main.append(node("h3","Report sui dati arrivati al modello"));
-    if(view.report.valid){if(view.report.text){const text=node("pre",view.report.text);text.style.whiteSpace="pre-wrap";text.style.overflowWrap="anywhere";text.style.fontFamily="inherit";main.append(text);}else main.append(node("p","Il report supera il limite di visualizzazione del pannello. Apri i file completi riportati sotto prima della chiusura.","notice"));}
+    if(view.report.status==="not_applicable")main.append(node("p","Questa esecuzione non richiede un report di confronto privacy.","caption"));
+    else if(view.report.status==="pending")main.append(node("p","Alla finalizzazione, Studio Archive genera il confronto privacy se le misure registrate lo consentono.","caption"));
+    else if(view.report.status==="unavailable")main.append(node("p","Il confronto privacy non è disponibile: le misure dell’esecuzione sono assenti o incomplete.","notice"));
+    else if(view.report.valid){if(view.report.text){const text=node("pre",view.report.text);text.style.whiteSpace="pre-wrap";text.style.overflowWrap="anywhere";text.style.fontFamily="inherit";main.append(text);}else main.append(node("p","Il report supera il limite di visualizzazione del pannello. Apri i file completi riportati sotto prima della chiusura.","notice"));}
     else main.append(node("p","Il report di questo run è mancante o non valido: "+view.report.reason+". Preparalo nel percorso della funzione usando le fasi e le evidenze reali. Il pannello non inferisce assenza di dati o di trasmissione.","notice"));
     main.append(button("Riprendi la funzione nella chat",()=>resumeWorkInChat(main,{work_ref:work.work_ref})));
     if(view.can_declare){closureContext=context;context.saved=JSON.stringify({});}

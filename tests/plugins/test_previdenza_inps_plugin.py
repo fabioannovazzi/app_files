@@ -251,6 +251,7 @@ def _write_calculation_recipe(path: Path) -> Path:
             }
         ]
     }
+    _confirm_recipes(payload)
     path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
     return path
 
@@ -1067,13 +1068,14 @@ def test_reconcile_contributions_uses_explicit_decimal_recipe() -> None:
         ]
     }
 
+    _confirm_recipes(recipes)
     result = reconciler.evaluate_recipes(recipes, records, claims)
 
     assert result["status"] == "passed"
     assert result["results"][0]["result"] == "1000.00"
 
 
-def test_reconcile_contributions_rejects_model_as_recipe_approver() -> None:
+def test_reconcile_contributions_requires_actual_user_confirmation() -> None:
     reconciler = _load_script("reconcile_contributions")
     records = {
         "facts": [
@@ -1104,7 +1106,8 @@ def test_reconcile_contributions_rejects_model_as_recipe_approver() -> None:
                     "approved_by_id": "MODEL-001",
                     "approved_by_role": "model",
                     "recorded_at": "2026-07-16T09:00:00+02:00",
-                    "basis": "Model self-approval is forbidden.",
+                    "basis": "No user response was received.",
+                    "confirmed_by_user": False,
                 },
                 "operands": [
                     {
@@ -1122,10 +1125,11 @@ def test_reconcile_contributions_rejects_model_as_recipe_approver() -> None:
         ]
     }
 
+    _confirm_recipes(recipes)
     result = reconciler.evaluate_recipes(recipes, records, claims)
 
     assert result["status"] == "calculation_not_run"
-    assert "professional_reviewer" in " ".join(result["results"][0]["errors"])
+    assert "actual user" in " ".join(result["results"][0]["errors"])
 
 
 def test_reconcile_contributions_blocks_unsupported_formula_basis() -> None:
@@ -1177,6 +1181,7 @@ def test_reconcile_contributions_blocks_unsupported_formula_basis() -> None:
         ]
     }
 
+    _confirm_recipes(recipes)
     result = reconciler.evaluate_recipes(recipes, records, claims)
 
     assert result["status"] == "calculation_not_run"
@@ -2667,3 +2672,75 @@ def test_previdenza_inps_mcp_apply_accept_cannot_upgrade_invalid_package(
 
     assert result["application_status"] == "blocked"
     assert result["final_artifacts"]["blockers"] == [{"status": "blocked"}]
+
+
+def _confirm_recipes(payload):
+    reconciler = _load_script("reconcile_contributions")
+    for recipe in payload["recipes"]:
+        approval = recipe.get("approval")
+        if isinstance(approval, dict):
+            approval.pop("approved_by_role", None)
+            approval.setdefault("confirmed_by_user", True)
+            approval["recipe_sha256"] = reconciler.recipe_review_sha256(recipe)
+            approval.setdefault("confirmation_ref", "fixture-user-yes")
+
+
+@pytest.mark.parametrize("change", ["operand", "formula", "rounding", "confirmation"])
+def test_arithmetic_confirmation_cannot_be_reused_for_changed_recipe(change):
+    reconciler = _load_script("reconcile_contributions")
+    records = {
+        "facts": [
+            {
+                "fact_id": "F-BASE",
+                "value": "100.00",
+                "value_type": "amount",
+                "review_status": "confirmed",
+            }
+        ]
+    }
+    claims = {
+        "claims": [
+            {
+                "claim_id": "CL-RATE",
+                "claim_type": "calculation_basis",
+                "verdict": "supported",
+            }
+        ]
+    }
+    recipe = {
+        "recipe_id": "CALC-001",
+        "formula_basis_claim_id": "CL-RATE",
+        "review_status": "confirmed",
+        "approval": {
+            "approved_by_id": "synthetic-user",
+            "recorded_at": "2026-07-16T09:00:00+02:00",
+            "basis": "Actual fixture response",
+        },
+        "operands": [
+            {
+                "id": "base",
+                "value": "100.00",
+                "unit": "EUR",
+                "source_fact_ids": ["F-BASE"],
+            }
+        ],
+        "steps": [{"id": "total", "operation": "add", "inputs": ["base", "base"]}],
+        "rounding": {"places": 2, "mode": "ROUND_HALF_UP"},
+    }
+    payload = {"recipes": [recipe]}
+    _confirm_recipes(payload)
+    assert reconciler.evaluate_recipes(payload, records, claims)["status"] == "passed"
+    if change == "operand":
+        recipe["operands"][0]["value"] = "101.00"
+    elif change == "formula":
+        recipe["steps"][0]["operation"] = "subtract"
+    elif change == "rounding":
+        recipe["rounding"]["places"] = 0
+    else:
+        recipe["approval"]["confirmed_by_user"] = False
+    result = reconciler.evaluate_recipes(payload, records, claims)
+    assert result["status"] == "calculation_not_run"
+    assert any(
+        "confirmation" in e or "actual user" in e
+        for e in result["results"][0]["errors"]
+    )

@@ -3,12 +3,12 @@
 The archive workflow prepares selected software, patent and design evidence,
 normalizes reviewed CSV/XLSX/PDF ledger populations, checks explicit component
 controls, calculates reviewed amounts and exports traceable draft A/B documents
-in Word and PDF. Source acquisition, cryptographic verification and signed
-professional review have separate recorded evidence and acceptance boundaries.
+in Word and PDF. Source acquisition, optional cryptographic document verification and confirmation of exact proposals
+have separate recorded evidence.
 
 Real rules remain DRAFT. Real calculation requires current source preflight,
-reviewed rules and a certificate-authenticated, firm-authorized decision.
-No real firm mandate or trust policy is configured by this implementation.
+reviewed rules and the actual user confirmation of the displayed proposal.
+No professional role, certificate, signature or firm mandate is required.
 Synthetic tests do not establish professional UAT, provider acceptance or an
 installed runtime. The full recovered specification remains in progress.
 

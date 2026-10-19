@@ -1,4 +1,4 @@
-"""Prepare and accept an externally signed review of exact LIPE artifacts.
+"""Prepare and record a user decision on exact LIPE artifacts.
 
 This implements approval evidence, not the remaining filing qualification gate.
 Real XML serialization, tax-return signing and transmission are separate stages.
@@ -16,13 +16,10 @@ from uuid import uuid4
 from zoneinfo import ZoneInfo
 
 from lipe_authorization import (
-    load_authority,
-    provider_hash,
     read_evidence,
     read_signed_json,
     request_bytes,
     validate_request,
-    verify_approval,
 )
 from lipe_core import ROOT, ContractError, calculate, digest, read_json
 from lipe_frontpage import validate_frontpage
@@ -192,7 +189,6 @@ def current_bindings(
         "source_inventory_hash": digest(sources),
         "artifacts_hash": digest(artifacts),
         "xsd_manifest_hash": _hash(ROOT / "references/xsd/manifest.json"),
-        "crypto_provider_hash": provider_hash(),
     }
     return {
         "bindings": bindings,
@@ -232,7 +228,7 @@ def prepare_review(
     ]["const"]
     now = at.astimezone(timezone.utc)
     request = {
-        "schema_version": "lipe.approval-request.v1",
+        "schema_version": "lipe.approval-request.v2",
         "request_id": str(uuid4()),
         "action": "APPROVE_LIPE_EXPORT",
         "scope": _scope(case),
@@ -252,7 +248,7 @@ def prepare_review(
         "",
         "La richiesta non è ancora approvata. Firma del file telematico e invio non sono eseguiti.",
         "",
-        "Leggere i documenti della bozza e i relativi riferimenti alle fonti. Verificare frontespizio, righi VP, quadrature, anomalie e decisioni. La firma autentica questa dichiarazione e i suoi vincoli; non certifica completezza fiscale o accettazione del gestionale.",
+        "Leggere i documenti della bozza e i relativi riferimenti alle fonti. Verificare frontespizio, righi VP, quadrature, anomalie e decisioni. La conferma riguarda questa versione e le scelte mostrate; non autentica identità o qualifiche.",
         "",
         f"Origine dichiarata: {case['data_origin']} · anno {case['tax_year']} · trimestre {case['quarter']}",
         "",
@@ -296,14 +292,53 @@ def prepare_review(
                 for name, fingerprint in snapshot["artifacts"].items()
             ],
             "",
-            "Firmare esternamente gli esatti byte di request.json con il certificato coperto dal mandato dello studio. Una modifica a dati, fonti, catalogo, motore o file richiede una nuova revisione. Non fornire chiavi private a LIPE.",
+            "Confermare la proposta mostrata e conservare il riferimento alla risposta effettiva. Una modifica a dati, fonti, catalogo, motore o file richiede una nuova revisione. Non servono firme, ruoli professionali o mandati.",
             "",
-            "La qualifica produttiva e le prove professionali/importatore restano separate e pendenti. L'export richiede la riverifica della decisione firmata, del mandato e della versione corrente; questa richiesta da sola non genera un XML.",
+            "La qualifica produttiva e le prove professionali/importatore restano separate e pendenti. L'export verifica la conferma della versione corrente; questa richiesta da sola non genera un XML.",
             "",
         ]
     )
     _write(output / "review-request.md", "\n".join(lines).encode("utf-8"))
     return output
+
+
+def _decision(
+    path: Path, request_raw: bytes, request: dict, at: datetime
+) -> tuple[dict, bytes]:
+    decision, raw = read_signed_json(path)
+    required = {
+        "schema_version",
+        "request_sha256",
+        "reviewer",
+        "confirmation_ref",
+        "confirmed",
+        "reviewed_at",
+    }
+    if (
+        set(decision) != required
+        or decision["schema_version"] != "lipe.user-decision.v1"
+        or decision["confirmed"] is not True
+    ):
+        raise ContractError("An actual user confirmation of this proposal is required")
+    if any(
+        not isinstance(decision[key], str) or not decision[key].strip()
+        for key in ["reviewer", "confirmation_ref"]
+    ):
+        raise ContractError("Record the actual actor and confirmation reference")
+    if decision["request_sha256"] != hashlib.sha256(request_raw).hexdigest():
+        raise ContractError("Confirmation belongs to a different proposal")
+    try:
+        reviewed = datetime.fromisoformat(decision["reviewed_at"])
+    except (TypeError, ValueError) as exc:
+        raise ContractError(
+            "Confirmation requires an actual timezone-aware time"
+        ) from exc
+    if (
+        reviewed.tzinfo is None
+        or not datetime.fromisoformat(request["created_at"]) <= reviewed <= at
+    ):
+        raise ContractError("Confirmation time is future or precedes the proposal")
+    return decision, raw
 
 
 def verify_review(
@@ -313,16 +348,13 @@ def verify_review(
     source_root: Path,
     request_path: Path,
     *,
-    signature: Path,
-    mandate: Path,
-    mandate_signature: Path,
-    authority: dict,
+    decision: Path,
     at: datetime,
     catalog_path: Path | None = None,
     model_data_report: Path | None = None,
     run_id: str | None = None,
 ) -> dict:
-    """Reverify original signatures and current bindings without trusting a saved status."""
+    """Replay the user's exact-version decision and current bytes, without credentials."""
     snapshot = current_bindings(
         case,
         front,
@@ -333,38 +365,33 @@ def verify_review(
         model_data_report=model_data_report,
         run_id=run_id,
     )
-    request, raw_request = read_signed_json(request_path)
+    request, raw = read_signed_json(request_path)
     validate_request(request)
-    if raw_request != request_bytes(request):
-        raise ContractError("Sign the exact canonical request prepared by LIPE")
-    if request["scope"] != _scope(case) or request["bindings"] != snapshot["bindings"]:
-        raise ContractError(
-            "The signed request is stale or belongs to a different case"
-        )
-    context = case["catalog_context"]
-    if context is not None and context["studio_id"] != authority["policy"]["studio_id"]:
-        raise ContractError("Firm authority does not match the selected studio catalog")
-    proof = verify_approval(
-        request,
-        signature=signature,
-        mandate=mandate,
-        mandate_signature=mandate_signature,
-        at=at,
-        **authority,
-    )
-    originals = {
-        "request": raw_request,
-        "signature": read_evidence(signature),
-        "mandate": read_evidence(mandate),
-        "mandate_signature": read_evidence(mandate_signature),
-        "trusted_roots": read_evidence(authority["trusted_roots"]),
-        "crls": read_evidence(authority["crls"]),
-    }
-    if any(
-        hashlib.sha256(raw).hexdigest() != proof["input_sha256"][name]
-        for name, raw in originals.items()
+    if (
+        raw != request_bytes(request)
+        or request["scope"] != _scope(case)
+        or request["bindings"] != snapshot["bindings"]
     ):
-        raise ContractError("Approval evidence changed during verification")
+        raise ContractError(
+            "The reviewed request is stale or belongs to a different case"
+        )
+    if (
+        not datetime.fromisoformat(request["created_at"])
+        <= at
+        <= datetime.fromisoformat(request["expires_at"])
+    ):
+        raise ContractError("Review request is future or expired")
+    recorded, decision_raw = _decision(decision, raw, request, at)
+    proof = {
+        "schema_version": "lipe.user-confirmation.v1",
+        "identity_assurance": "USER_CONFIRMATION_NOT_AUTHENTICATED",
+        "reviewer": recorded["reviewer"],
+        "confirmation_ref": recorded["confirmation_ref"],
+        "input_sha256": {
+            "request": hashlib.sha256(raw).hexdigest(),
+            "decision": hashlib.sha256(decision_raw).hexdigest(),
+        },
+    }
     latest = current_bindings(
         case,
         front,
@@ -377,18 +404,12 @@ def verify_review(
     )
     if latest["bindings"] != snapshot["bindings"]:
         raise ContractError("Reviewed data or artifacts changed during verification")
-    names = {
-        "request": "request.json",
-        "signature": "decision.p7s",
-        "mandate": "mandate.json",
-        "mandate_signature": "mandate.p7s",
-        "trusted_roots": "trusted-roots.pem",
-        "crls": "crls.pem",
+    files = {
+        "request.json": raw,
+        "decision.json": decision_raw,
+        "review-snapshot.json": request_bytes(snapshot),
+        "approval.json": request_bytes(proof),
     }
-    files = {names[name]: raw for name, raw in originals.items()}
-    files["policy.json"] = request_bytes(authority["policy"])
-    files["review-snapshot.json"] = request_bytes(snapshot)
-    files["approval.json"] = request_bytes(proof)
     return {"request": request, "snapshot": snapshot, "proof": proof, "files": files}
 
 
@@ -400,113 +421,145 @@ def accept_review(
     request_path: Path,
     output: Path,
     *,
-    signature: Path,
-    mandate: Path,
-    mandate_signature: Path,
-    authority: dict,
+    reviewer: str,
+    confirmation_ref: str,
+    confirmed: bool,
     at: datetime,
     catalog_path: Path | None = None,
     model_data_report: Path | None = None,
     run_id: str | None = None,
 ) -> Path:
-    """Recheck exact current bindings and retain externally signed approval evidence."""
+    """Save the actual user's decision after showing this exact proposal."""
     _separate_output(draft_folder, output)
+    if confirmed is not True or any(
+        not isinstance(v, str) or not v.strip() for v in [reviewer, confirmation_ref]
+    ):
+        raise ContractError(
+            "The user's actual confirmation, actor and reference are required"
+        )
+    snapshot = current_bindings(
+        case,
+        front,
+        draft_folder,
+        source_root,
+        at=at,
+        catalog_path=catalog_path,
+        model_data_report=model_data_report,
+        run_id=run_id,
+    )
+    request, raw = read_signed_json(request_path)
+    validate_request(request)
+    if (
+        raw != request_bytes(request)
+        or request["scope"] != _scope(case)
+        or request["bindings"] != snapshot["bindings"]
+    ):
+        raise ContractError(
+            "The reviewed request is stale or belongs to a different case"
+        )
+    if (
+        not datetime.fromisoformat(request["created_at"])
+        <= at
+        <= datetime.fromisoformat(request["expires_at"])
+    ):
+        raise ContractError("Review request is future or expired")
+    decision = {
+        "schema_version": "lipe.user-decision.v1",
+        "request_sha256": hashlib.sha256(raw).hexdigest(),
+        "reviewer": reviewer.strip(),
+        "confirmation_ref": confirmation_ref.strip(),
+        "confirmed": True,
+        "reviewed_at": at.isoformat(),
+    }
+    output.mkdir(parents=True, mode=0o700, exist_ok=False)
+    _write(output / "decision.json", request_bytes(decision))
     verified = verify_review(
         case,
         front,
         draft_folder,
         source_root,
         request_path,
-        signature=signature,
-        mandate=mandate,
-        mandate_signature=mandate_signature,
-        authority=authority,
+        decision=output / "decision.json",
         at=at,
         catalog_path=catalog_path,
         model_data_report=model_data_report,
         run_id=run_id,
     )
-    output.mkdir(parents=True, mode=0o700, exist_ok=False)
-    for name, raw in verified["files"].items():
-        _write(output / name, raw)
+    for name, content in verified["files"].items():
+        if name != "decision.json":
+            _write(output / name, content)
     return output
 
 
 def main(argv: list[str] | None = None) -> int:
-    """Prepare or verify one selected review without requesting or using private keys."""
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
     prepare = sub.add_parser("prepare")
     accept = sub.add_parser("accept")
     for command in (prepare, accept):
-        command.add_argument("--case", type=Path, required=True)
-        command.add_argument("--frontpage", type=Path, required=True)
-        command.add_argument("--draft", type=Path, required=True)
-        command.add_argument("--source-root", type=Path)
-        command.add_argument("--client-engagement", type=Path)
-        command.add_argument("--catalog", type=Path)
-        command.add_argument("--output", type=Path, required=True)
-    for name in ("request", "signature", "mandate", "mandate-signature"):
-        accept.add_argument("--" + name, type=Path, required=True)
+        for name in ["case", "frontpage", "draft", "output"]:
+            command.add_argument("--" + name, type=Path, required=True)
+        for name in ["source-root", "client-engagement", "catalog"]:
+            command.add_argument("--" + name, type=Path)
+    accept.add_argument("--request", type=Path, required=True)
+    accept.add_argument("--reviewer", required=True)
+    accept.add_argument("--confirmation-ref", required=True)
+    accept.add_argument("--confirmed", action="store_true")
     args = parser.parse_args(argv)
     case, front = read_json(args.case), read_json(args.frontpage)
-    source_root = args.source_root
-    disclosure_path, run_id = None, None
+    source_root, disclosure, run_id = args.source_root, None, None
     if case["data_origin"] != "SYNTHETIC":
         from lipe import _archive
 
         if args.client_engagement is None:
-            raise ContractError(
-                "Real approval requires the existing Studio Archive run"
-            )
-        context = read_json(args.client_engagement)
-        root, _ = _archive(case, args.case, args.client_engagement)
-        extra = [args.frontpage, *[root / item["path"] for item in front["sources"]]]
-        source_root, archive_output = _archive(
-            case, args.case, args.client_engagement, extra
+            raise ContractError("Real review requires the existing Studio Archive run")
+        source_root, output_root = _archive(case, args.case, args.client_engagement)
+        source_root, output_root = _archive(
+            case,
+            args.case,
+            args.client_engagement,
+            [
+                args.frontpage,
+                *[source_root / item["path"] for item in front["sources"]],
+            ],
         )
-        disclosure_path, run_id = (
-            archive_output / "model_data_report.json",
-            context["run_id"],
-        )
-        if not args.draft.resolve().is_relative_to(
-            archive_output.resolve()
-        ) or not args.output.resolve().is_relative_to(archive_output.resolve()):
-            raise ContractError(
-                "Real review artifacts belong in the selected Archive output"
-            )
-    if source_root is None:
-        raise ContractError("Synthetic approval needs its explicit source root")
-    options = {
-        "case": case,
-        "front": front,
-        "draft_folder": args.draft,
-        "source_root": source_root,
-        "output": args.output,
-        "at": datetime.now(timezone.utc),
-        "catalog_path": args.catalog,
-        "model_data_report": disclosure_path,
-        "run_id": run_id,
-    }
-    if args.command == "prepare":
-        folder = prepare_review(**options)
-    else:
-        authority = load_authority(
-            excluded_roots=[
-                source_root.parent if case["data_origin"] == "REAL" else source_root,
+        if any(
+            not path.resolve().is_relative_to(output_root.resolve())
+            for path in [
                 args.draft,
                 args.output,
+                *([args.request] if args.command == "accept" else []),
             ]
+        ):
+            raise ContractError("Real review files belong to the selected run output")
+        disclosure, run_id = (
+            output_root / "model_data_report.json",
+            read_json(args.client_engagement)["run_id"],
         )
-        folder = accept_review(
+    if source_root is None:
+        raise ContractError("Synthetic review requires an explicit source root")
+    options = dict(
+        at=datetime.now(timezone.utc),
+        catalog_path=args.catalog,
+        model_data_report=disclosure,
+        run_id=run_id,
+    )
+    if args.command == "prepare":
+        prepare_review(case, front, args.draft, source_root, args.output, **options)
+    else:
+        accept_review(
+            case,
+            front,
+            args.draft,
+            source_root,
+            args.request,
+            args.output,
+            reviewer=args.reviewer,
+            confirmation_ref=args.confirmation_ref,
+            confirmed=args.confirmed,
             **options,
-            request_path=args.request,
-            signature=args.signature,
-            mandate=args.mandate,
-            mandate_signature=args.mandate_signature,
-            authority=authority,
         )
-    logging.info("LIPE review %s: %s", args.command, folder)
+    logging.info("LIPE exact proposal %s: %s", args.command, args.output)
     return 0
 
 

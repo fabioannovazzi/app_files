@@ -18,20 +18,20 @@ conditions below stay explicit when the preview is distributed.
 | Controls | Software, patent, design, premial, history, supplier/group, extraordinary-operation and penalty branches; corrected core aggregation | Professional conclusions in all 32 scenarios remain unaccepted |
 | Import | CSV/XLSX and host-proposed PDF rows, literal citations, complete mapped populations, reviewed FX/payroll/credits and duplicate dispositions | Representative-client extraction and fiscal meaning need UAT; no OCR |
 | Case records | Located facts, rights/activity/supplier chains, targeted requests, source-specific incentive formulas, annual return reconciliation and adversarial records | Actual legal rules and annual model mappings remain unapproved |
-| Sources | Bounded public HTTPS discovery, immutable originals/text versions, coverage records and 24-hour source preflight for signed review | One official annual-instructions scope was verified live; not comprehensive Patent Box research approval |
+| Sources | Bounded public HTTPS discovery, immutable originals/text versions, coverage records and 24-hour source preflight for proposal confirmation | One official annual-instructions scope was verified live; not comprehensive Patent Box research approval |
 | Source comparison | Separate byte/text comparison, extraction-only change detection and conservative private impact queue | Professional impact and reopening acceptance remain unfinished |
 | Monitor service | Default-off host coordinator, persisted jobs/notices, elapsed-hour cadence, complete-baseline preservation and opening/closing preflights | Native scheduling and notification delivery require configuration and live host acceptance |
-| Calculation | Decimal engine, component-level outcomes and draft artifacts after exact review | Real runs require current approved sources/rules and configured firm authorization; bundled real rules remain DRAFT |
+| Calculation | Decimal engine, component-level outcomes and draft artifacts after exact review | Real runs require current reviewed sources/rules and user confirmation of the exact proposal; bundled real rules remain DRAFT |
 | Documents | Shared A/B document model exported as editable Word and PDF; citations, amounts, open paragraphs and audit records | Template applicability and professional acceptance remain required; exports are unsigned drafts |
 | Formalities | Real local CMS/PDF/RFC3161 verification, exact byte binding, certificate chain, CRL, digest/key-use checks and reviewed-deadline comparison | Qualified status, powers meaning, LT/LTA/DocMDP, statutory conservation and qualified-provider/Windows acceptance remain open |
-| Identity | Actual signature plus pinned firm-administrator signature on an exact client/engagement/period mandate; revocations rechecked | No real firm policy, mandate or reviewer is configured; firm-attested professional status is not an independent register check |
-| Final review | Separate signed request binds exact results, all artifact hashes and earlier control approval; exclusive writes preserve prior versions | Synthetic technical approval is not genuine professional acceptance or independent retention against privileged deletion |
-| Reopening | Fresh signed reopening links revised work to preserved approvals; completed runs continue using exact selected archive artifacts | Historical trust/time, professional acceptance and independent retention remain unverified |
+| Identity | Actual user confirmation, actor and message reference bound to an exact request; no professional role, signature or mandate required | Attribution is a local user declaration, not authenticated identity or professional certification |
+| Final review | Separate user decision binds exact results, all artifact hashes and earlier control approval; exclusive writes preserve prior versions | Synthetic technical approval is not genuine professional acceptance or independent retention against privileged deletion |
+| Reopening | Fresh user confirmation links revised work to preserved approvals; completed runs continue using exact selected archive artifacts | Historical trust/time, professional acceptance and independent retention remain unverified |
 
 ## Current verification
 
 On 2026-09-30 the component and extracted-package suite passes **300 tests**,
-with **84.36%** coverage over the package and scripts. These include actual
+with **84.36%** coverage over the package and scripts at that historical revision. These figures do not qualify the current user-confirmation implementation. These include actual
 synthetic cryptographic signatures, revoked certificates/mandates, changed
 inputs/output files, cross-client scope, source freshness and an authenticated
 archive-to-draft-to-final-review path, followed by signed reopening in the same run or a new run after archive completion. All certificates and identities in those

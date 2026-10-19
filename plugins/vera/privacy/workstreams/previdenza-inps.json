@@ -138,9 +138,9 @@
   },
   "review": {
     "basis": "external_boundary_review_of_workflow_source",
-    "reviewed_at": "2026-10-14",
+    "reviewed_at": "2026-10-19",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "f444a25cbcbf69fc884ef132f5dd9a8d81c52790aa41c85f4751d1d004dcef0a"
+    "source_fingerprint": "11d4766cc0d694a7f975ca3942e2869b74696627e35f4a644f2ce65ecb0c6bb5"
   },
   "role": "workflow",
   "runtime_profiles": [
@@ -168,6 +168,10 @@
     {
       "id": "native-inps-prepared-evidence-review",
       "control": "Optional prepared-case integration binds owner, run, closed input manifest, implementation, acquisition posture and complete output hashes. Literal reviewer/item action/reason/edit/document-request drafts are app-only, generation-bound and never inherit confirmation. Explicit selected-item context returns the whole current public evidence record within 64000 UTF-8 serialized bytes or refuses, without original paths or unsent private fields. Signed named confirmation invokes unchanged public INPS Apply; requested edits are not applied to the memo and professional-review ceilings remain. Durable uncertain intents block further native writes and shared native Archive closure. Closed sealed runs consult the public shape validator without acquiring persistence authority. Canonical running source reads/applications lose client_engagement context in token-based Render/Apply. The candidate passes that exact context through both unchanged public calls; this separately qualified correction remains unapproved, unapplied and unreleased. Initial preparation, actual model reads, installed-host and professional acceptance remain unverified."
+    },
+    {
+      "id": "exact-recipe-confirmation",
+      "control": "Arithmetic recipes require an actual user confirmation with actor, reference, time and a hash of the exact formula, operands, source references and rounding. A professional_reviewer role, certificate, signature or mandate is not required. Changed recipes cannot reuse the prior confirmation; source-supported-claim and arithmetic validation remain enforced."
     }
   ],
   "workstream": "previdenza-inps",

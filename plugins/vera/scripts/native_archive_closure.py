@@ -570,7 +570,7 @@ def dispatch(root: Path, tool: str, args: dict, api: Any) -> dict:
         api.atomic_json(path, {"request_sha256": request_sha})
         ids = [run[k] for k in ("client_id", "engagement_id", "run_id")]
         if tool == "vera_workspace_archive_finalize":
-            core.finalize_studio_client_workflow(*ids, declarations)
+            finalized = core.finalize_studio_client_workflow(*ids, declarations)
         else:
             core.complete_studio_client_workflow(*ids)
         after = snapshot(root, args, api)
@@ -579,6 +579,20 @@ def dispatch(root: Path, tool: str, args: dict, api: Any) -> dict:
             for r in after["manifest"]["artifacts"]
         }
         expected = {r["name"]: (r["byte_count"], r["sha256"]) for r in current["rows"]}
+        if (
+            tool == "vera_workspace_archive_finalize"
+            and finalized["reporting"]["status"] == "created"
+        ):
+            from run_reporting import report_declarations
+
+            generated = {row["path"] for row in report_declarations(current["output"])}
+            expected.update(
+                {
+                    name: actual[name]
+                    for name in actual.keys() - expected.keys()
+                    if name in generated
+                }
+            )
         status = (
             "ready_for_review"
             if tool == "vera_workspace_archive_finalize"

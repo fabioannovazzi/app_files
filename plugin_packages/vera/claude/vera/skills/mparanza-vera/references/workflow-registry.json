@@ -2,10 +2,31 @@
   "schema_version": 1,
   "membership_source": "components.json",
   "routing_policy": "Use the semantic workflow catalog and selected skill; entrypoint presence is not workflow suitability or host qualification.",
-  "managed_run_required_artifacts": [
-    "model_data_report.json",
-    "model_data_report.md"
-  ],
+  "managed_run_required_artifacts": [],
+  "selective_model_data_reporting": {
+    "boundary": "studio-archive-run",
+    "pipelines": [
+      "journal-bank-reconciliation",
+      "open-item-reconciliation",
+      "journal-sampling",
+      "vouching",
+      "fatture-xml-check",
+      "purchase-invoice-review",
+      "centrale-rischi-review",
+      "financial-report-builder",
+      "report-enti-locali",
+      "management-control-pack",
+      "variance-analysis",
+      "agenzia-acquisition",
+      "archive-organization"
+    ],
+    "generation": "archive-finalization",
+    "requires": "measured source population and evidenced data remaining local",
+    "generated_artifacts": [
+      "model_data_report.json",
+      "model_data_report.md"
+    ]
+  },
   "host_qualification": {
     "native_semantic_worker": {
       "components": [

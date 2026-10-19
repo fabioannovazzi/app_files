@@ -145,9 +145,9 @@ and obtain renewed confirmations when required. Never overwrite approved history
 Moving the planned date also reopens dependent work and checks declared rule periods.
 Scope completeness and material dependencies remain model/professional judgments.
 
-`export` writes the scoped case history, readable Markdown and HTML P1 workpapers,
-and the canonical local model-data report. Open `p1-workpapers.html` for review and
-show the readable privacy report. Explain the current stage, open issues and next
+`export` writes the scoped case history and readable Markdown and HTML P1 workpapers.
+Open `p1-workpapers.html` for review. This pipeline is outside Vera's selective
+privacy comparison reporting scope. Explain the current stage, open issues and next
 professional action. For a retained document snapshot, place the approved draft
 under this case's `drafts/` and register it with `artifact`, citing its exact inputs.
 Do not describe a generated dossier as an executed merger or an accepted client case.
@@ -169,12 +169,11 @@ confirmations needed for the assignment. Imports verify complete selected bytes
 locally. Reports retain all declared company scopes; nothing is automatically
 anonymized. Codex/Cowork use the selected provider account, so local helper execution
 does not mean local-only model processing. No helper network calls, uploads or
-model API calls occur. Real-case model exposure is `not_measurable` until the
-orchestrator records observable phases through Vera's normal report workflow.
+model API calls occur. The local helper cannot measure the surrounding host model
+context; no comparison privacy report is generated for this pipeline.
 
 ## Plugin Improvement Feedback
 
 Keep the improvement note local to chat or run artifacts. Do not send feedback
-or receipts from these runs. For ordinary professional work, show the readable
-model-data report and follow Vera's existing feedback instructions. This component
+or receipts from these runs. Follow Vera's existing feedback instructions. This component
 provides no separate authorization to transmit client material.

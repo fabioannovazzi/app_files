@@ -47,9 +47,9 @@ PUBLIC sources and require explicit confirmed `curator_review` and
 `disclosure_review`. The latter must actually examine the complete entry and
 sources for client identifiers, transactions and other private material. This
 semantic privacy judgment is not performed by a keyword filter. The sources'
-visibility labels remain professional judgments. Real catalogs require the
-professional, curator and disclosure-review signatures described in the
-authorization guide; a signature does not perform that semantic review.
+visibility labels remain professional judgments. Ordinary REAL catalogs require the actual recorded decision, without professional
+roles, signatures or mandates. A studio may separately opt into the signed-catalog
+policy in the authorization guide; a signature does not perform semantic review.
 
 These central entries are a local copy of curator-reviewed reference knowledge.
 There is no remote catalog, publication, anonymous upload, automatic aggregation

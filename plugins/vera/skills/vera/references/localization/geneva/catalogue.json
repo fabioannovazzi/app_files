@@ -2,8 +2,8 @@
   "schema": "vera.localization.catalogue.v1",
   "root": "/private/tmp/app-files-selective-reporting/plugins/vera",
   "version": "0.1.423",
-  "captured_at": "2026-10-19T12:04:12.608138+00:00",
-  "catalogue_fingerprint": "27fe8e52f66c20d7edea22772e7cf64d6643f338e409015a64db2bca5bcd1b6d",
+  "captured_at": "2026-10-19T12:14:53.392349+00:00",
+  "catalogue_fingerprint": "11c7b199334f26da838d66cde6af79028337ddf1798168e8fc26f577ddbcc5ce",
   "manifest_sha256": "24175e21a34e96886f1ba768b42e278a6fb296051d71ea696402a40b95399abe",
   "entries": [
     {
@@ -164,7 +164,7 @@
     {
       "function_id": "lipe",
       "skill_path": "skills/lipe/SKILL.md",
-      "sha256": "f7c35261d70feff652e228bd51047d83184f1123d418f20724e85196c49fa061"
+      "sha256": "3acbb127da9370318e2298e2bf6a0b77cd7bdf11c4cf91c5181a5d9d48a052e4"
     },
     {
       "function_id": "management-control-pack",
@@ -189,7 +189,7 @@
     {
       "function_id": "patent-box-review",
       "skill_path": "skills/patent-box-review/SKILL.md",
-      "sha256": "c4c173af7d710a060944af320812845e936eb7ee41c1ef17a64ddcd69928bbd3"
+      "sha256": "b531b36936ba1dd9fe8f4d357432bda3fc24e85a74b92e4f56fb49dc6543c4df"
     },
     {
       "function_id": "posizioni-negoziali",
@@ -204,7 +204,7 @@
     {
       "function_id": "previdenza-inps",
       "skill_path": "skills/previdenza-inps/SKILL.md",
-      "sha256": "f966574d3732bbbc6b56524824e163d1771daccfd8e62df9307248e73381c679"
+      "sha256": "1745d4c293c1401cb44e0ae8d616ced4de48ee9285b1b3e2e3984082606d1f3c"
     },
     {
       "function_id": "privacy-surface-review",

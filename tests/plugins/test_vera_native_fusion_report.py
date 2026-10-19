@@ -1,4 +1,4 @@
-"""Saved report delivery over the actual source MCP, using fictional cases only."""
+"""Saved merger dossier delivery without an out-of-scope privacy comparison."""
 
 from __future__ import annotations
 
@@ -7,7 +7,6 @@ import hashlib
 
 import pytest
 
-from tests.plugins.test_vera_model_data_report import _load_module
 from tests.plugins.test_vera_native_archive_lifecycle import rpc_program
 from tests.plugins.test_vera_native_fusion import (
     PROGRAM,
@@ -34,7 +33,7 @@ def test_saved_report_reopens_exact_markdown_without_rewriting_export(merger, ro
     saved_export(env)
     env["VERA_WORKSPACE_ROLES"] = role
     history = store.report()["history"]
-    report_paths = sorted((store.root / "exports").glob("*/model_data_report.*"))
+    report_paths = sorted((store.root / "exports").glob("*/case-report.*"))
     before = {
         p: (p.stat().st_mtime_ns, hashlib.sha256(p.read_bytes()).hexdigest())
         for p in report_paths
@@ -43,18 +42,15 @@ def test_saved_report_reopens_exact_markdown_without_rewriting_export(merger, ro
     result = rpc_program(
         env,
         PROGRAM
-        + "const first=setup(),item=first.data.exports[0],artifact=payload(call('vera_workspace_fusion_artifact',{work_ref:first.work_ref,revision:first.revision,source_ref:first.source_ref,export_ref:item.export_ref,artifact_ref:'model_data_report.md'}));const result={first,second:setup(),artifact};",
+        + "const first=setup(),item=first.data.exports[0],artifact=payload(call('vera_workspace_fusion_artifact',{work_ref:first.work_ref,revision:first.revision,source_ref:first.source_ref,export_ref:item.export_ref,artifact_ref:'case-report.md'}));const result={first,second:setup(),artifact};",
     )
 
     export = result["first"]["data"]["exports"][0]
-    markdown = export["model_report_markdown"]
-    json_path = next(p for p in report_paths if p.suffix == ".json")
-    assert markdown == _load_module().show_model_data_report(json_path)
+    markdown = next(p for p in report_paths if p.suffix == ".md").read_text()
+    assert "model_report" not in export
+    assert not list((store.root / "exports").glob("*/model_data_report.*"))
     assert markdown == base64.b64decode(result["artifact"]["base64"]).decode()
     assert export == result["second"]["data"]["exports"][0]
-    assert export["model_report"]["phases"][0]["outcome"] == "not_measurable"
-    assert export["model_report"]["phases"][0]["model_visible"] == []
-    assert "cannot observe" in markdown
     assert result["first"]["can_write"] is (role == "REVIEWER")
     assert store.report()["history"] == history
     assert {
@@ -67,7 +63,7 @@ def test_saved_report_reopens_exact_markdown_without_rewriting_export(merger, ro
 def test_saved_report_refuses_changed_or_linked_markdown(merger, tmp_path, variant):
     env, store, _, _ = merger
     saved_export(env)
-    markdown = next((store.root / "exports").glob("*/model_data_report.md"))
+    markdown = next((store.root / "exports").glob("*/case-report.md"))
     if variant == "changed_markdown":
         markdown.write_text("# Fabricated exposure claim\n", encoding="utf-8")
     else:

@@ -29,7 +29,20 @@ from case_core import (
     write_json,
 )
 
-__all__ = ["evaluate_recipes", "main"]
+__all__ = ["evaluate_recipes", "recipe_review_sha256", "main"]
+
+
+def recipe_review_sha256(recipe: dict[str, Any]) -> str:
+    """Bind the user's confirmation to the shown formula, facts and rounding choices."""
+    raw = json.dumps(
+        {key: value for key, value in recipe.items() if key != "approval"},
+        sort_keys=True,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode()
+    return hashlib.sha256(raw).hexdigest()
+
 
 LOGGER = logging.getLogger(__name__)
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
@@ -197,14 +210,18 @@ def _evaluate_recipe(
         errors.append("recipe review_status must be confirmed")
     approval = recipe.get("approval")
     if not isinstance(approval, dict):
-        errors.append("professional recipe approval is required")
+        errors.append("confirmation of the exact arithmetic recipe is required")
     else:
         if not str(approval.get("approved_by_id", "")).strip():
             errors.append("approval.approved_by_id is required")
-        if approval.get("approved_by_role") != "professional_reviewer":
-            errors.append("approval must come from a professional_reviewer")
+        if approval.get("confirmed_by_user") is not True:
+            errors.append("the actual user must confirm this arithmetic recipe")
+        if approval.get("recipe_sha256") != recipe_review_sha256(recipe):
+            errors.append("confirmation does not match the shown arithmetic recipe")
         if not _valid_approval_datetime(approval.get("recorded_at")):
             errors.append("approval.recorded_at must include an ISO timezone")
+        if not str(approval.get("confirmation_ref", "")).strip():
+            errors.append("the actual confirmation reference is required")
         if not str(approval.get("basis", "")).strip():
             errors.append("approval.basis is required")
     basis_claim_id = str(recipe.get("formula_basis_claim_id", "")).strip()
