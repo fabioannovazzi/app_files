@@ -646,8 +646,6 @@ const result={first,ready,completed};
 def test_native_closure_generates_and_accepts_only_the_added_report_artifacts(
     closure_workspace,
 ):
-    from tests.plugins.test_vera_selective_reporting import _evidence
-
     env, folder, output, selected = closure_workspace
     ledger = _load_customer_ledger()
     original = ledger.load_run(folder, selected["engagement_id"], selected["run_id"])
@@ -663,9 +661,6 @@ def test_native_closure_generates_and_accepts_only_the_added_report_artifacts(
     started = ledger.start_run(folder, selected["engagement_id"], selected["run_id"])
     output = Path(started["output_dir"])
     (output / "result.txt").write_text("Synthetic sample result")
-    request = _evidence(output, selected["run_id"])
-    request["workflow_id"] = "journal-sampling"
-    (output / "model_data_report_input.json").write_text(json.dumps(request))
 
     result = rpc_program(
         env,
@@ -677,8 +672,9 @@ const result={first,sealed,ready:read()};
 """,
     )
 
-    assert result["first"]["report"]["status"] == "pending"
+    assert result["first"]["report"]["valid"] is True
     assert result["ready"]["report"]["valid"] is True
     assert result["ready"]["report"]["text"]
     assert result["sealed"]["status"] == "ready_for_review"
     assert (output / "model_data_report.json").is_file()
+    assert not (output / "model_data_report_input.json").exists()
