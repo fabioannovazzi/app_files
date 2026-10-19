@@ -929,7 +929,54 @@ function withGeneratedReviewOutputTransaction(
 // arbitrary external copies requires an OS sandbox or a separate identity.
 // END EMBEDDABLE REVIEW OUTPUT TRANSACTION
 
+function archiveReportingPaths(outputDir, expectedWorkflowIds) {
+  const names = [
+    "model_data_report.json", "model_data_report.md",
+    "model_data_receipt_request.json", "model_data_receipt.json",
+    "model_data_receipt.html",
+  ];
+  const root = path.resolve(outputDir);
+  const present = names.filter((name) => generatedReviewPathEntryExists(path.join(root, name)));
+  if (!present.length) return [];
+  if (!present.includes("model_data_report.json") || !present.includes("model_data_report.md")) {
+    throw new Error("Archive reporting sidecars require the report pair");
+  }
+  const bytes = (file) => {
+    const entry = fs.lstatSync(file);
+    if (!entry.isFile() || entry.isSymbolicLink() || entry.nlink !== 1) {
+      throw new Error("Archive reporting sidecars must be ordinary single-link files");
+    }
+    return fs.readFileSync(file);
+  };
+  for (const name of present) bytes(path.join(root, name));
+  let canonicalRoot = root;
+  if (path.basename(root) === "working" && path.basename(path.dirname(root)).startsWith(".generated-review-transaction-")) {
+    canonicalRoot = path.join(path.dirname(path.dirname(root)), "outputs");
+    for (const name of present) {
+      if (!bytes(path.join(root, name)).equals(bytes(path.join(canonicalRoot, name)))) {
+        throw new Error("Review transaction changed Archive reporting sidecars");
+      }
+    }
+  }
+  generatedReviewValidateRealDirectoryAncestors(canonicalRoot);
+  const context = JSON.parse(bytes(path.join(path.dirname(canonicalRoot), "context.json")));
+  const run = JSON.parse(bytes(path.join(path.dirname(canonicalRoot), "run.json")));
+  const report = JSON.parse(bytes(path.join(root, "model_data_report.json")));
+  if (
+    context.schema_version !== "vera.client_workflow_context.v2" ||
+    context.output_relative_path !== "outputs" || path.basename(canonicalRoot) !== "outputs" ||
+    report.schema_version !== 3 || report.product !== "vera" ||
+    !expectedWorkflowIds.includes(report.workflow_id) ||
+    report.workflow_id !== context.workflow_id || report.workflow_id !== run.workflow_id ||
+    report.run_id !== context.run_id || report.run_id !== run.run_id
+  ) {
+    throw new Error("Archive reporting sidecars belong to another run");
+  }
+  return present;
+}
+
 module.exports = {
+  archiveReportingPaths,
   GENERATED_REVIEW_TRANSACTION_LIMITS,
   generatedReviewArgsForWorkingOutput,
   generatedReviewAtomicWriteFileSync,

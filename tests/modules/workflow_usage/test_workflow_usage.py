@@ -504,6 +504,9 @@ def installed_client(setup, tmp_path, monkeypatch):
     monkeypatch.syspath_prepend(str(scripts))
     usage = importlib.import_module("workflow_usage")
     monkeypatch.setenv("MPARANZA_INCIDENT_STATE_DIR", str(tmp_path / "local-state"))
+    monkeypatch.setenv("MPARANZA_INCIDENT_DEVICE_DIR", str(tmp_path / "local-device"))
+    monkeypatch.setenv("MPARANZA_INCIDENT_DELIVERY", "local-only")
+    monkeypatch.setenv("VERA_REPORTING_STATE_DIR", str(tmp_path / "reporting-state"))
     monkeypatch.setattr(usage, "ROOT", scripts.parent)
 
     def transport(operation, payload):
@@ -855,12 +858,10 @@ def test_independent_connector_acknowledges_the_exact_local_outbox_item(
         usage.acknowledge({**receipt, "payload_sha256": "0" * 64})
 
 
-def test_report_wrapper_uses_real_report_and_signed_receipt_without_claiming_task_success(
+def test_usage_task_cannot_rebuild_or_claim_an_automatic_archive_report(
     setup, installed_client, tmp_path, monkeypatch, archive_core, client_case
 ):
-    import notarized_run_receipt
-
-    store, _, client = setup
+    store, _, _ = setup
     usage = installed_client
     run = str(uuid4())
     usage.start(run, "variance-analysis", sample_kind="synthetic")
@@ -869,59 +870,34 @@ def test_report_wrapper_uses_real_report_and_signed_receipt_without_claiming_tas
     _finish(archive_core, client_case, archive_run, tmp_path)
     source = tmp_path / "model_data_report_input.json"
 
-    def stamp(endpoint, payload, *, opener):
-        response = client.post("/api/vera/run-receipts", json=dict(payload))
-        assert response.status_code == 201
-        return response.json()
+    report_path = tmp_path / "model_data_report.json"
+    retained = report_path.read_bytes()
 
-    monkeypatch.setattr(notarized_run_receipt, "_post_receipt_request", stamp)
+    with pytest.raises(ValueError, match="could not be built"):
+        usage.build_report(run, source, tmp_path)
 
-    result = usage.build_report(run, source, tmp_path)
-
-    assert result["status"] == "written"
-    assert result["display_markdown"]
-    assert result["server_receipt"]["status"] == "stamped"
-    assert result["workflow_usage"]["delivery"]["queued"] == 0
-    proof = json.loads(Path(result["server_receipt"]["receipt_path"]).read_text())
+    assert report_path.read_bytes() == retained
     projection = store.workflow_inspect(run)["run"]
-    assert projection["receipts"][0]["report_sha256"] == proof["report_sha256"]
+    assert projection["receipts"] == []
     assert projection["state"] == "unknown"
     assert projection["feedback"] is None
 
 
-def test_receipt_outage_keeps_report_and_later_stamp_links_same_task(
+def test_usage_task_cannot_stamp_archive_report_under_a_separate_task_identity(
     setup, installed_client, tmp_path, monkeypatch, archive_core, client_case
 ):
-    import notarized_run_receipt
-
-    store, _, client = setup
+    store, _, _ = setup
     usage = installed_client
     run = str(uuid4())
     usage.start(run, "variance-analysis", sample_kind="synthetic")
     archive_run, tmp_path = _start(archive_core, client_case)
     _evidence(tmp_path, archive_run)
     _finish(archive_core, client_case, archive_run, tmp_path)
-    source = tmp_path / "model_data_report_input.json"
-
-    def unavailable(*args, **kwargs):
-        raise notarized_run_receipt.NotarizedRunReceiptError("offline")
-
-    monkeypatch.setattr(notarized_run_receipt, "_post_receipt_request", unavailable)
-    built = usage.build_report(run, source, tmp_path)
     retained_bytes = (tmp_path / "model_data_report.json").read_bytes()
-    monkeypatch.setattr(
-        notarized_run_receipt,
-        "_post_receipt_request",
-        lambda endpoint, payload, **kwargs: client.post(
-            "/api/vera/run-receipts", json=dict(payload)
-        ).json(),
-    )
 
-    retried = usage.stamp_report(run, tmp_path / "model_data_report.json", tmp_path)
+    with pytest.raises(ValueError, match="bound and retried automatically"):
+        usage.stamp_report(run, tmp_path / "model_data_report.json", tmp_path)
 
-    assert built["server_receipt"]["status"] == "pending"
-    assert built["workflow_usage"]["status"] == "not_linked"
-    assert retried["status"] == "stamped"
     assert (tmp_path / "model_data_report.json").read_bytes() == retained_bytes
     assert store.workflow_overview()["total"] == 1
-    assert len(store.workflow_inspect(run)["run"]["receipts"]) == 1
+    assert store.workflow_inspect(run)["run"]["receipts"] == []

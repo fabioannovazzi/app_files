@@ -64,6 +64,7 @@ from vera_assurance import (  # noqa: E402
     validate_source_qualification,
 )
 from vera_assurance import write_json as write_assurance_json  # noqa: E402
+from vera_assurance.contracts import archive_reporting_paths  # noqa: E402
 
 try:
     from .review_session import (
@@ -5286,6 +5287,9 @@ def _canonical_output_relative_path(value: object, *, label: str) -> str:
 def _scan_sample_tree(output_dir: Path) -> tuple[list[str], list[str], dict[str, str]]:
     """Return exact regular files, directories, and modes without following links."""
 
+    reporting_paths = archive_reporting_paths(
+        output_dir, expected_workflow_ids=("journal-sampling",)
+    )
     files: list[str] = []
     directories: list[str] = []
     modes: dict[str, str] = {}
@@ -5310,6 +5314,8 @@ def _scan_sample_tree(output_dir: Path) -> tuple[list[str], list[str], dict[str,
                     raise ValueError(
                         "Sample output set cannot contain hard-linked files."
                     )
+                if relative in reporting_paths:
+                    continue
                 files.append(relative)
                 modes[relative] = f"{stat.S_IMODE(observed.st_mode):04o}"
     return sorted(files), sorted(directories), modes

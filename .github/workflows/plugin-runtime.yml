@@ -394,6 +394,15 @@ jobs:
           -r plugins/variance-analysis/requirements.txt
       - name: Install Chromium for the local browser teaching regression
         run: python -m playwright install --with-deps chromium
+      - name: Verify both reporting pipelines retain professional integrity after Archive completion
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_archive_report_builder_execution.py
+      - name: Verify Open-item review history with automatic Archive reports
+        env:
+          MPARANZA_INCIDENT_DELIVERY: local-only
+          MPARANZA_INCIDENT_STATE_DIR: ${{ runner.temp }}/reporting-open-item/identity
+          MPARANZA_INCIDENT_DEVICE_DIR: ${{ runner.temp }}/reporting-open-item/device
+          VERA_REPORTING_STATE_DIR: ${{ runner.temp }}/reporting-open-item/registry
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/open_item_reconciliation tests/open_item_reconciliation/test_audit_assurance.py
       - name: Build the checksum-verified official taxonomy for local OIC execution
         shell: bash
         run: |

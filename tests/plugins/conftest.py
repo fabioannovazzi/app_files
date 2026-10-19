@@ -11,9 +11,14 @@ __all__: list[str] = []
 def automatic_archive_reporting_environment(request, tmp_path, monkeypatch):
     """Keep automatic Archive identities, hooks and proof delivery inside each test."""
     monkeypatch.setenv("VERA_REPORTING_STATE_DIR", str(tmp_path / "reporting-state"))
-    if {"archive_core", "archive_script_imports", "_load_customer_ledger"} & vars(
-        request.module
-    ).keys():
+    if {
+        "archive_core",
+        "archive_script_imports",
+        "_load_customer_ledger",
+        "_load_client_ledger",
+        "scenario",
+        "_bound_case",
+    } & vars(request.module).keys():
         monkeypatch.setenv(
             "MPARANZA_INCIDENT_STATE_DIR", str(tmp_path / "reporting-identity")
         )

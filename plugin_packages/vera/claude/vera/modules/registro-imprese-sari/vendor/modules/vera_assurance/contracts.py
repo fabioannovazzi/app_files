@@ -23,6 +23,7 @@ from .money import MoneyValidationError, parse_canonical_decimal
 from .serialization import canonical_json_sha256
 
 __all__ = [
+    "archive_reporting_paths",
     "create_standalone_task",
     "load_standalone_context",
     "validate_standalone_context",
@@ -43,6 +44,87 @@ __all__ = [
     "validate_source_qualification",
     "validate_studio_client_folder_binding",
 ]
+
+
+def archive_reporting_paths(
+    output_dir: Path, *, expected_workflow_ids: Sequence[str]
+) -> set[str]:
+    """Separate Archive-owned sidecars from the professional output seal.
+
+    Only the five reserved files in the exact Archive output root qualify.
+    Archive validates their contents and maintains their separate artifact seal;
+    professional validators must remain valid when the final receipt arrives.
+    """
+    names = {
+        "model_data_report.json",
+        "model_data_report.md",
+        "model_data_receipt_request.json",
+        "model_data_receipt.json",
+        "model_data_receipt.html",
+    }
+    root = Path(output_dir)
+    present = {
+        name for name in names if (root / name).exists() or (root / name).is_symlink()
+    }
+    if not present:
+        return set()
+    if not {"model_data_report.json", "model_data_report.md"}.issubset(present):
+        raise AssuranceContractError(
+            "Archive reporting sidecars require the report pair"
+        )
+    for name in present:
+        path = root / name
+        observed = path.lstat()
+        if not stat.S_ISREG(observed.st_mode) or observed.st_nlink != 1:
+            raise AssuranceContractError(
+                "Archive reporting sidecars must be ordinary single-link files"
+            )
+    report = json.loads((root / "model_data_report.json").read_text(encoding="utf-8"))
+    if (
+        not isinstance(report, dict)
+        or report.get("schema_version") != 3
+        or report.get("product") != "vera"
+        or report.get("workflow_id") not in expected_workflow_ids
+    ):
+        raise AssuranceContractError(
+            "Archive reporting sidecars have a foreign workflow"
+        )
+    canonical_root = root
+    if root.name == "working" and root.parent.name.startswith(
+        (".generated-review-transaction-", ".audit-review-transaction-")
+    ):
+        canonical_root = root.parent.parent / "outputs"
+        for name in present:
+            original = canonical_root / name
+            observed = original.lstat()
+            if (
+                not stat.S_ISREG(observed.st_mode)
+                or observed.st_nlink != 1
+                or original.read_bytes() != (root / name).read_bytes()
+            ):
+                raise AssuranceContractError(
+                    "Review transaction changed Archive reporting sidecars"
+                )
+    context = load_client_engagement_context_file(
+        canonical_root.parent / "context.json",
+        expected_workflow_id=report["workflow_id"],
+        output_dir=canonical_root,
+        allowed_statuses=(
+            "running",
+            "ready_for_review",
+            "completed",
+            "failed",
+            "cancelled",
+        ),
+    )
+    if (
+        context["schema_version"] != "vera.client_workflow_context.v2"
+        or Path(context["output_dir"]) != canonical_root.resolve()
+        or report.get("run_id") != context["run_id"]
+    ):
+        raise AssuranceContractError("Archive reporting sidecars belong to another run")
+    return present
+
 
 _IDENTIFIER_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
 _QUALIFICATION_STATUSES = {

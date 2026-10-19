@@ -26,18 +26,10 @@ def write_no_model_report(
     existing = output / "model_data_report.json"
     if (
         existing.is_file()
-        and json.loads(existing.read_text()).get("schema_version") == 3
+        and json.loads(existing.read_text(encoding="utf-8")).get("schema_version") == 3
     ):
-        return [
-            {
-                "artifact_id": f"disclosure.{suffix}",
-                "path": f"model_data_report.{suffix}",
-                "purpose": "Retain the automatic Archive report.",
-                "audience": "review",
-                "media_type": mime,
-            }
-            for suffix, mime in (("json", "application/json"), ("md", "text/markdown"))
-        ]
+        # Archive owns these declarations; some fixtures already enumerated them.
+        return []
 
     request: dict[str, Any] = {
         "schema_version": 1,

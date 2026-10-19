@@ -28,6 +28,7 @@ jobs:
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_archive_automatic_reporting.py
+          tests/plugins/test_archive_output_boundaries.py
           tests/plugins/test_vera_selective_reporting.py
           tests/modules/run_receipts
           --cov=archive_reporting --cov=archive_report_store --cov=archive_report_hook

@@ -2906,8 +2906,8 @@ def _record_model_submission(
     )
     if scripts is None:
         raise ValueError("Automatic Archive reporting runtime is unavailable")
-    if str(scripts) not in sys.path:
-        sys.path.insert(0, str(scripts))
+    if str(scripts) not in _bootstrap_sys.path:
+        _bootstrap_sys.path.insert(0, str(scripts))
     import secrets
 
     from archive_report_store import RunStore
