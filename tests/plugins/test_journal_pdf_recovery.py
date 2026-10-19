@@ -172,6 +172,29 @@ def test_negative_policy_requires_two_explicit_supported_choices(
 
 
 @pytest.mark.parametrize(
+    "amount,reason",
+    [
+        ("100,00-", "unsupported_negative_amount_notation"),
+        ("-100,00", "negative_amount_side_requires_review"),
+    ],
+)
+def test_legacy_negative_diagnostics_do_not_enable_unreviewed_postings(
+    reader, tmp_path, amount, reason
+):
+    from tests.plugins.test_journal_sampling_plugin import (
+        _write_registration_journal_pdf,
+    )
+
+    source = tmp_path / "legacy.pdf"
+    layout = _write_registration_journal_pdf(source, credit=amount)
+
+    rows, diag = reader(source, layout)
+
+    assert rows == []
+    assert reason in [r["reason"] for r in diag["rejected_rows"]]
+
+
+@pytest.mark.parametrize(
     "total,counterpart,reason",
     [
         ("74,13", "25,88-", "running_total_does_not_match_postings"),
@@ -609,7 +632,10 @@ def test_managed_recovery_rejects_unbound_source_before_writes(tmp_path):
 
 
 @pytest.mark.parametrize("mutate", [False, True])
-def test_ruled_layout_bank_mapping_receipt_seals_recovery_options(tmp_path, mutate):
+@pytest.mark.parametrize("semantics", [None, "signed_side", "opposite_side"])
+def test_ruled_layout_bank_mapping_receipt_seals_recovery_options(
+    tmp_path, mutate, semantics
+):
     from tests.plugins.test_journal_bank_reconciliation_plugin import (
         _attach_current_mapping_receipt,
         _save_csv,
@@ -619,12 +645,25 @@ def test_ruled_layout_bank_mapping_receipt_seals_recovery_options(tmp_path, muta
 
     core = load_core()
     journal, bank = tmp_path / "grid.pdf", tmp_path / "bank.csv"
-    layout = write_grid_pdf(journal, pages=1)
+    layout = (
+        write_negative_grid_pdf(journal)
+        if semantics
+        else write_grid_pdf(journal, pages=1)
+    )
+    if semantics:
+        layout.update(
+            negative_amount_notation="trailing_minus",
+            negative_amount_semantics=semantics,
+        )
     _save_csv(
         bank,
         [
             ["Date", "Amount", "Description"],
-            ["2024-01-01", "32.94", "Example punctuation"],
+            (
+                ["2023-01-01", "-25.88", "OPS! SRLS"]
+                if semantics
+                else ["2024-01-01", "32.94", "Example punctuation"]
+            ),
         ],
     )
     proposed = tmp_path / "proposed.json"
@@ -657,9 +696,15 @@ def test_ruled_layout_bank_mapping_receipt_seals_recovery_options(tmp_path, muta
     )
     if mutate:
         changed = json.loads(sealed.read_text())
-        changed["journal"]["files"][journal.name]["pdf_registration_layout"][
-            "rule_characters"
-        ]["tolerance"] = "0.6"
+        changed_layout = changed["journal"]["files"][journal.name][
+            "pdf_registration_layout"
+        ]
+        if semantics:
+            changed_layout["negative_amount_semantics"] = (
+                "opposite_side" if semantics == "signed_side" else "signed_side"
+            )
+        else:
+            changed_layout["rule_characters"]["tolerance"] = "0.6"
         sealed.write_text(json.dumps(changed))
         with pytest.raises(ValueError):
             core.run_reconciliation(
@@ -680,7 +725,7 @@ def test_ruled_layout_bank_mapping_receipt_seals_recovery_options(tmp_path, muta
             date_window_days=0,
         )
         assert result.matches.height == 1
-        assert result.unmatched_journal.height == 2
+        assert result.unmatched_journal.height == (1 if semantics else 2)
 
 
 def test_freeze_rejects_changed_replay_results(recovery, monkeypatch, tmp_path):

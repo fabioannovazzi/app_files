@@ -70,7 +70,8 @@ All other required command arguments and execution-integrity checks still apply.
 ## Optional ruled-layout contract
 
 The existing `body`, five non-overlapping `columns` and source mapping remain.
-Without any keys below the reader uses its existing behavior and diagnostics.
+Without any keys below the reader retains its existing layout and amount support;
+unsupported negative formats receive the specific diagnostics described below.
 Presence of a key enables the strict `rule_delimited.v1` extension. Its full
 configuration is included in the normal source-mapping receipt and its code is
 included in the implementation/replay receipts. The parent adapter identifiers

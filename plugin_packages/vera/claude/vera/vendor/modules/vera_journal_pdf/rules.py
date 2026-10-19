@@ -8,11 +8,32 @@ from __future__ import annotations
 
 import re
 from decimal import Decimal, InvalidOperation
+from pathlib import Path
 from typing import Any, Callable
 
-__all__ = ["RuleLayout", "RULE_KEYS"]
-RULE_KEYS = frozenset({"rule_characters", "border_art", "running_totals"})
+__all__ = [
+    "RuleLayout",
+    "RULE_KEYS",
+    "money_candidate",
+    "negative_notation",
+    "signed_amount",
+]
+RULE_KEYS = frozenset(
+    {
+        "rule_characters",
+        "border_art",
+        "running_totals",
+        "negative_amount_notation",
+        "negative_amount_semantics",
+    }
+)
 MONEY = re.compile(r"^-?\d{1,3}(?:\.\d{3})*,\d{2}$|^-?\d+,\d{2}$")
+UNSIGNED_MONEY = r"(?:\d{1,3}(?:\.\d{3})*|\d+),\d{2}"
+NEGATIVE_NOTATIONS = {
+    "leading_minus": re.compile(rf"-{UNSIGNED_MONEY}"),
+    "trailing_minus": re.compile(rf"{UNSIGNED_MONEY}-"),
+    "parentheses": re.compile(rf"\({UNSIGNED_MONEY}\)"),
+}
 HEADER = re.compile(
     r"^[+\-\s]*(?P<number>\d+)\s*-{2,}\s*"
     r"(?P<date>\d{2}/\d{2}/\d{4})\s*-{2,}[+\-\s]*(?P<description>)$"
@@ -22,6 +43,30 @@ CONTINUATION = re.compile(
     re.IGNORECASE,
 )
 Reject = Callable[[int, int, str], None]
+
+
+def negative_notation(token: str) -> str | None:
+    """Recognize exact printed syntax without authorizing its accounting meaning."""
+    return next(
+        (
+            name
+            for name, pattern in NEGATIVE_NOTATIONS.items()
+            if pattern.fullmatch(token)
+        ),
+        None,
+    )
+
+
+def money_candidate(token: str) -> bool:
+    """Recognize money for completeness checks, including unsupported negatives."""
+    return bool(MONEY.fullmatch(token) or negative_notation(token))
+
+
+def signed_amount(token: str) -> Decimal:
+    """Decode syntax only after the reviewed policy has authorized the token."""
+    negative = negative_notation(token) is not None
+    magnitude = token.strip("-()").replace(".", "").replace(",", ".")
+    return Decimal(magnitude) * (-1 if negative else 1)
 
 
 def _number(value: Any) -> float:
@@ -60,6 +105,19 @@ class RuleLayout:
         self.removed = 0
         self.page_total_count = 0
         self.seen_registrations: set[str] = set()
+        self.negative_notation = layout.get("negative_amount_notation")
+        self.negative_semantics = layout.get("negative_amount_semantics")
+        if {"negative_amount_notation", "negative_amount_semantics"}.intersection(
+            layout
+        ):
+            if self.negative_notation not in ("leading_minus", "trailing_minus"):
+                raise ValueError(
+                    "negative_amount_notation requires leading_minus or trailing_minus"
+                )
+            if self.negative_semantics not in ("signed_side", "opposite_side"):
+                raise ValueError(
+                    "negative_amount_semantics requires signed_side or opposite_side"
+                )
         if "rule_characters" in layout:
             rule = layout["rule_characters"]
             if not isinstance(rule, dict) or set(rule) != {"text", "x0", "tolerance"}:
@@ -121,6 +179,74 @@ class RuleLayout:
                 for side in self.running
             }
 
+    def amount_issue(self, token: str) -> str | None:
+        """Enforce explicit notation and sign decisions; never infer a policy."""
+        notation = negative_notation(token)
+        if notation is None:
+            return None
+        if notation == "leading_minus" and self.negative_notation is None:
+            return "negative_amount_side_requires_review"
+        if notation != self.negative_notation:
+            return "unsupported_negative_amount_notation"
+        return None
+
+    def negative_eligibility(
+        self, path: Path, bands: dict[str, tuple[float, float]]
+    ) -> dict[str, Any]:
+        """Scan every page for unsupported amount syntax, with bounded page memory.
+
+        This is a mechanical eligibility check, not a layout qualification. It
+        retains all locations so recovery need not discover one page per trial.
+        """
+        import pdfplumber
+
+        issues: list[dict[str, Any]] = []
+        page_count = 0
+        removed = self.removed
+        with pdfplumber.open(path) as document:
+            for page_count, page in enumerate(document.pages, 1):
+                try:
+                    # Geometry is checked by the ordinary parser. This pass only
+                    # diagnoses recognized negative tokens in amount/unowned bands.
+                    words = self.words(page, page_count, lambda *_: None)
+                    row = 0
+                    top: float | None = None
+                    for word in sorted(
+                        words, key=lambda w: (float(w["top"]), float(w["x0"]))
+                    ):
+                        if top is None or abs(top - float(word["top"])) > 2:
+                            row += 1
+                            top = float(word["top"])
+                        token = str(word["text"])
+                        reason = self.amount_issue(token)
+                        if reason is None:
+                            continue
+                        center = (float(word["x0"]) + float(word["x1"])) / 2
+                        side = next(
+                            (
+                                s
+                                for s, (left, right) in bands.items()
+                                if left <= center < right
+                            ),
+                            "unassigned",
+                        )
+                        if side not in ("debit", "credit", "unassigned"):
+                            continue
+                        issues.append(
+                            {
+                                "source_page": page_count,
+                                "source_row": row,
+                                "side": side,
+                                "amount_text": token,
+                                "notation": negative_notation(token),
+                                "reason": reason,
+                            }
+                        )
+                finally:
+                    page.close()
+        self.removed = removed
+        return {"page_count": page_count, "issue_count": len(issues), "issues": issues}
+
     def words(
         self, page: Any, page_number: int, reject: Reject
     ) -> list[dict[str, Any]]:
@@ -164,7 +290,7 @@ class RuleLayout:
     ) -> bool:
         """Consume only an exact reviewed label; verify amounts against postings."""
         text = " ".join(
-            str(w["text"]) for w in line if not MONEY.fullmatch(str(w["text"]))
+            str(w["text"]) for w in line if not money_candidate(str(w["text"]))
         )
         if _label(text) not in self.labels:
             return False
@@ -173,7 +299,11 @@ class RuleLayout:
         for word in line:
             token = str(word["text"])
             center = (float(word["x0"]) + float(word["x1"])) / 2
-            if MONEY.fullmatch(token):
+            if money_candidate(token):
+                issue = self.amount_issue(token)
+                if issue:
+                    reject(page, row, issue)
+                    continue
                 owners = [s for s in values if bands[s][0] <= center < bands[s][1]]
                 if len(owners) != 1:
                     reject(page, row, "running_total_outside_reviewed_amount_bands")
@@ -190,10 +320,7 @@ class RuleLayout:
         if any(len(tokens) != 1 for tokens in values.values()):
             reject(page, row, "running_total_requires_two_amounts")
             return True
-        printed = {
-            s: Decimal(v[0].replace(".", "").replace(",", "."))
-            for s, v in values.items()
-        }
+        printed = {s: signed_amount(v[0]) for s, v in values.items()}
         matches = printed == self.running
         if not matches:
             reject(page, row, "running_total_does_not_match_postings")
@@ -217,4 +344,13 @@ class RuleLayout:
             "layout_extension": "rule_delimited.v1",
             "removed_rule_character_count": self.removed,
             "running_total_controls": self.totals,
+            **(
+                {
+                    "negative_amount_notation": self.negative_notation,
+                    "negative_amount_semantics": self.negative_semantics,
+                    "running_total_basis": "signed_source_sides",
+                }
+                if self.negative_notation is not None
+                else {}
+            ),
         }
