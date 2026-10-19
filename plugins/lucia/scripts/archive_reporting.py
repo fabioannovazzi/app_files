@@ -527,6 +527,12 @@ def close_observed_run(root: Path) -> None:
         and run["status"] in {"completed", "failed", "cancelled"}
         and not state["collection_closed"]
     ):
+        if state["finished_at"] is None:
+            RunStore(root).error("terminal_collection_recovered_after_interruption")
+        from archive_report_transcript import refresh
+
+        for path in (root / "reporting").glob("host-*.json"):
+            refresh(root, json.loads(path.read_text())["session"])
         finish_run(
             {
                 "run_root": str(root),

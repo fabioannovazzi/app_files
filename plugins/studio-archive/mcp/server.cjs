@@ -1731,7 +1731,9 @@ function toolResult(payload) {
     content: [
       {
         type: "text",
-        text: "Studio Archive returned the structured result attached to this tool response.",
+        text: payload.vera_reporting
+          ? JSON.stringify(payload)
+          : "Studio Archive returned the structured result attached to this tool response.",
       },
     ],
     structuredContent: payload,

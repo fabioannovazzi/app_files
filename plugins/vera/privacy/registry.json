@@ -1557,6 +1557,10 @@
         ],
         "privacy/workstreams/variance-analysis.json": [
           "mcp"
+        ],
+        "privacy/services/run-receipt-stamping.json": [
+          "hooks/cowork-hooks.json",
+          "hooks/hooks.json"
         ]
       }
     },
@@ -1580,7 +1584,8 @@
           "scripts/onboarding_session_start.py"
         ],
         "privacy/services/run-receipt-stamping.json": [
-          ".codex-plugin/plugin.json"
+          ".codex-plugin/plugin.json",
+          "hooks/cowork-hooks.json"
         ],
         "privacy/workstreams/archive-organization.json": [
           ".mcp.json",
@@ -1620,6 +1625,10 @@
           "hooks/hooks.json"
         ],
         "privacy/services/plugin-update-check.json": [
+          "hooks/hooks.json"
+        ],
+        "privacy/services/run-receipt-stamping.json": [
+          "hooks/cowork-hooks.json",
           "hooks/hooks.json"
         ]
       }

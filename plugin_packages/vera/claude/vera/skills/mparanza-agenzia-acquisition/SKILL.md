@@ -152,9 +152,11 @@ it across helpers/resumption, and record only observed outcomes. Discover the
 native `vera_incident_host_link` tool, including deferred tools, and verify the
 same run's Computer ID on the server. Privacy reporting applies only to the fixed pipeline list in
 `../mparanza-vera/references/selective-reporting.md`, using the exact Studio Archive run.
-Archive finalization generates eligible reports from saved execution evidence;
-never create a report for other pipelines or a chat-only task. Link a signed
-receipt only when one actually exists. After delivery ask once for the user's 1–5 stars and optional
+Studio Archive start and terminal writes automatically create a local report for
+every run of those pipelines, including full exposure or incomplete observations.
+The server proof binds the report hash to the same Archive run and existing Vera
+userID. No agent-authored phase file or separate usage-task receipt link is needed.
+Other pipelines and chat-only tasks do not get this report. After delivery ask once for the user's 1–5 stars and optional
 comment; never infer a score. Studio Archive is infrastructure, not another rated
 process. Synthetic/agent tests are marked and excluded. Flush pending delivery
 at task startup and after outcomes. The shared contract applies even on direct
@@ -179,7 +181,9 @@ Every plan client must have its exact Archive client and engagement binding.
 Starting acquisition creates and starts one Archive run per client before
 the worker runs. Its selected client plan is the initial receipted input. The
 worker saves client-specific evidence into those runs without closing them
-before model review. After review, update the same run's cumulative exposure
-evidence, declare its professional outputs, and finalize through Studio Archive.
+before model review. Each acquired original is measured automatically against its
+verified acquisition record. Use the Archive read tool for subsequent inspection;
+host hooks observe actual returned data. After review, declare professional outputs,
+finalize and complete the same Archive run. No report-input file is required.
 Use `archive-runs.json` to resolve the exact runs, never the worker UUID as a
 report run identity. Do not create a second report in the acquisition folder.

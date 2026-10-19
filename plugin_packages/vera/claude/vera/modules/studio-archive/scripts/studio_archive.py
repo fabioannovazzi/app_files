@@ -61,6 +61,7 @@ from archive_core import (
     open_studio_archive_organization_item,
     plan_gmail_client_search,
     prepare_studio_client_workflow,
+    read_studio_run_artifact,
     recover_studio_client_ledger,
     refresh_archive,
     report_studio_client_retention,
@@ -230,6 +231,15 @@ def _parser() -> argparse.ArgumentParser:
         lifecycle.add_argument("--client-id", required=True)
         lifecycle.add_argument("--engagement-id", required=True)
         lifecycle.add_argument("--run-id", required=True)
+
+    read_artifact = subparsers.add_parser("read-run-artifact")
+    read_artifact.add_argument("--client-id", required=True)
+    read_artifact.add_argument("--engagement-id", required=True)
+    read_artifact.add_argument("--run-id", required=True)
+    read_artifact.add_argument("--path", required=True)
+    read_artifact.add_argument("--offset", type=int, default=0)
+    read_artifact.add_argument("--limit", type=int)
+    read_artifact.add_argument("--column", type=int, action="append")
 
     fail_workflow = subparsers.add_parser("fail-workflow")
     fail_workflow.add_argument("--client-id", required=True)
@@ -409,6 +419,16 @@ def main(argv: list[str] | None = None) -> int:
                 purpose=args.purpose,
                 idempotency_key=args.idempotency_key,
                 new_run=args.new_run,
+            )
+        elif args.command == "read-run-artifact":
+            result = read_studio_run_artifact(
+                args.client_id,
+                args.engagement_id,
+                args.run_id,
+                args.path,
+                offset=args.offset,
+                limit=args.limit,
+                columns=args.column,
             )
         elif args.command == "start-workflow":
             result = start_studio_client_workflow(

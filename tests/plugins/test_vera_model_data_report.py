@@ -358,7 +358,7 @@ def test_studio_archive_report_helper_needs_no_receipt_module_or_network(
 
     if not packaged:
         assert result.returncode == 2
-        assert "context" in result.stderr
+        assert "Archive" in result.stderr
         assert not (output / "model_data_report.json").exists()
         return
     assert result.returncode == 0, result.stderr

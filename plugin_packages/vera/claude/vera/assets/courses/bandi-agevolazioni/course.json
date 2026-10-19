@@ -217,7 +217,7 @@
     },
     {
       "path": "skills/mparanza-bandi-agevolazioni/SKILL.md",
-      "sha256": "b16f0a17269bd26c4ea97acd7c13691419d551e4c28c06fb29af1e51eb8043a8"
+      "sha256": "380b288ccc9a06128169e08d73185afbd3084161974582fb0b4cf0dcc28c5e06"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -758,5 +758,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "36e745059ed5bed2b4c038ab395b55d049c92d4ed9600615330046cbfab97db4"
+  "canonical_course_sha256": "08959a6407544a8ff3e3478303ad3fc88238a727e97c2743c453887b4ca99973"
 }

@@ -115,48 +115,17 @@ technical incident report ID separately with an `incident` event; recovery still
 requires that incident's original task and current remedy evidence.
 
 Privacy reports follow `selective-reporting.md`, independently of usage events.
-Only the fixed 13 pipelines and their exact Studio Archive runs qualify. All other
-processes still record their normal usage outcomes, without a privacy report or
-receipt requirement. Archive finalization creates an eligible report from the
-recorded execution evidence. Do not generate one for a chat-only draft.
+Every execution of the fixed 13 pipelines gets a local report automatically from
+Studio Archive start and terminal writes. The report belongs to the Archive run,
+not the usage-task UUID. Other processes have no privacy-report requirement.
 
-After Archive creates a report, the existing wrapper can link its signed receipt
-to the usage task:
+Archive submits only the report hash and its existing Vera userID/run/revision
+binding through authenticated transport. Do not call `build-report`, `stamp-report`,
+`vera_workflow_stamp`, or `receipt` for these automatic reports. They do not need a
+separate usage link. Host hooks retry pending proofs without rerunning the task.
+After delivery, show the saved readable report and its actual receipt status.
+When reopening, read the retained report without generating another execution.
 
-```
-python scripts/workflow_usage.py build-report --run-id <uuid> --input <model_data_report_input.json> --evidence-root <exact-run-output> --output-dir <exact-run-output>
-```
-
-This validates the existing report and links its actual
-signed receipt without transmitting the report. Show its display_markdown and
-normal artifact links after the professional result. Inspect the same run on the
-server after final delivery: an acknowledged completed event, a verified Computer
-ID link and an actual linked signed receipt are separate facts. Follow any
-`reporting.next_steps` without rerunning the completed professional task. If stamping is pending,
-keep the local report and retry with `workflow_usage.py stamp-report --run-id
-<uuid> --report <model_data_report.json> --output-dir <receipt-output-directory>`.
-If the local receipt service is unreachable but the saved connector is available,
-call `vera_workflow_stamp` with this original run UUID, its existing
-credentials and `receipt_request` copied exactly from the retained
-`model_data_receipt_request.json`. Only this small allow-listed request is sent,
-never the report or its input. Save the exact returned JSON as
-`model_data_receipt.json` beside that request, then repeat `stamp-report` above.
-It validates the response against the unchanged report and request, renders the
-portable proof and queues the receipt link. Deliver that queued event through the
-saved connector and acknowledge it as described below. Do not replace a conflicting
-request or a previously stored receipt. A denied permission is not network failure.
-
-A pre-existing valid receipt can be linked using:
-
-```
-python scripts/workflow_usage.py receipt --run-id <uuid> --receipt <actual-model_data_receipt.json>
-```
-
-For a remote-only task, send kind receipt with the actual receipt_id, receipt_version and
-report_sha256. The service verifies its retained signature and version. Never
-invent a digest or claim a receipt when only an in-chat report exists. An absent
-receipt remains absent; a successful professional task can still lack one.
-`--local-only` on build-report and tutorial suppression also suppress automatic usage linking.
 
 ## Ask once after delivery
 

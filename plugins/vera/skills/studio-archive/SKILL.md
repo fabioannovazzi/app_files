@@ -137,8 +137,10 @@ outside official outputs, with owner/run/output and concurrent-draft checkpoints
 Recovery is explicit and never restores confirmation; changed outputs require
 explicit discard or specialist recovery. The panel validates the existing
 report's schema, evidence, run identity and exact rendered Markdown. It never
-creates a no-model report from missing telemetry. Prepare actual phase evidence
-in the specialist route first.
+interprets missing telemetry as zero exposure. For the 13 selected pipelines,
+Archive start initializes the report and trusted host hooks collect observations.
+Completion, failure or cancellation freezes the local report and requests its
+hash proof bound to the existing Vera userID and the same Archive run.
 Finalization requires all files and a separate confirmation and calls the
 unchanged Archive finalizer to produce ready-for-review status. Completion is
 another explicit action over revalidated sealed outputs; it does not attest

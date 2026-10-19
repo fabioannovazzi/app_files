@@ -52,6 +52,12 @@ The local observer retries pending receipts without rerunning professional work.
 Verify a local report against its machine identity with
 `scripts/archive_report_receipt.py verify --report PATH`.
 
+After the terminal Archive call, reopen the saved report with
+`scripts/model_data_report.py show --report PATH` and present that report.
+The terminal call can return a provisional snapshot while its enclosing tool
+result is still pending. Do not present that draft as the final report. Reopening
+the saved report does not start another run or submit its contents to the server.
+
 When receipt transmission is prohibited, save `model_data_report_options.json`
 with `{"local_only": true}` in the output before the terminal Archive write.
 Local onboarding retains its automatic transmission suppression. Both keep the

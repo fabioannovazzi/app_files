@@ -14,7 +14,7 @@ from typing import Any
 from xml.etree.ElementTree import ParseError
 from zipfile import BadZipFile
 
-from archive_report_store import canonical
+from archive_report_store import canonical, file_digest
 
 __all__ = ["measure_source", "read_selection", "direct_read_selection", "model_texts"]
 
@@ -88,8 +88,7 @@ def _table(path: Path):
 
 
 def _file_hash(path: Path) -> str:
-    with path.open("rb") as handle:
-        return hashlib.file_digest(handle, "sha256").hexdigest()
+    return file_digest(path)
 
 
 def _scalar(value: Any) -> Any:

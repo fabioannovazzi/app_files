@@ -88,7 +88,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/semantic_review.py",
-      "sha256": "d9ea0cefc4bb96191eeb4a194b6fa603211e5ce32d7e3521e32056ce1dd58bca"
+      "sha256": "86398e675f96a7b0a2163676c846e293d4381c24b222908c63270e50938b756e"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/windows_worker_process.py",
@@ -164,7 +164,7 @@
     },
     {
       "path": "skills/mparanza-journal-bank-reconciliation/SKILL.md",
-      "sha256": "2640e20badee4465a9578ef1937000e8ee429861a59c93aecb96fa6e90e773c4"
+      "sha256": "658aa8e1d5e9e11f88f12870c82ce3c5e478b062979e268169bcc0da8d979b63"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -593,5 +593,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "02114935f18cf3add83899f5feda9778afa7e77a8cdea1764544a8b01b879c14"
+  "canonical_course_sha256": "35334ed7b7a39f5f20c020aea34350b63ce262477bf488b87585fea3744b423f"
 }

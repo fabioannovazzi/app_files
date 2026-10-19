@@ -689,6 +689,7 @@ def test_review_writer_preflight_accepts_exact_running_customer_run(
 ) -> None:
     del schema_version, item_type, tool_prefix
     _, _, output_dir, _ = _running_context(tmp_path, workflow_id)
+    before = {p.name: p.read_bytes() for p in output_dir.iterdir()}
     result = subprocess.run(
         [
             sys.executable,
@@ -706,7 +707,7 @@ def test_review_writer_preflight_accepts_exact_running_customer_run(
     payload = json.loads(result.stdout)
     assert payload["schema_version"] == "vera.client_workflow_context.v2"
     assert payload["workflow_id"] == workflow_id
-    assert list(output_dir.iterdir()) == []
+    assert {p.name: p.read_bytes() for p in output_dir.iterdir()} == before
 
 
 @pytest.mark.parametrize(
@@ -808,6 +809,11 @@ def test_review_mcp_save_and_apply_reject_unmanaged_output_before_writing(
     else:
         unmanaged = tmp_path / "unmanaged"
     unmanaged.mkdir()
+    managed_before = (
+        {p.name: p.read_bytes() for p in managed_output.iterdir()}
+        if managed_output is not None
+        else None
+    )
     review_payload = _review_payload(
         workflow_id,
         schema_version,
@@ -857,7 +863,9 @@ def test_review_mcp_save_and_apply_reject_unmanaged_output_before_writing(
     assert apply_result["ok"] is False
     assert list(unmanaged.iterdir()) == []
     if managed_output is not None:
-        assert list(managed_output.iterdir()) == []
+        assert {
+            p.name: p.read_bytes() for p in managed_output.iterdir()
+        } == managed_before
 
 
 @pytest.mark.parametrize(
@@ -874,6 +882,7 @@ def test_review_mcp_rejects_a_different_customer_run_id_before_writing(
     action: str,
 ) -> None:
     context_path, _, output_dir, client_run_id = _running_context(tmp_path, workflow_id)
+    before = {p.name: p.read_bytes() for p in output_dir.iterdir()}
     mismatched_run_id = "run_" + "f" * 24
     assert mismatched_run_id != client_run_id
     review_payload = _review_payload(
@@ -919,7 +928,7 @@ def test_review_mcp_rejects_a_different_customer_run_id_before_writing(
     )
 
     assert result["ok"] is False
-    assert list(output_dir.iterdir()) == []
+    assert {p.name: p.read_bytes() for p in output_dir.iterdir()} == before
 
 
 def test_secondary_writer_rejects_an_intermediate_output_symlink(

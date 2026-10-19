@@ -21,6 +21,7 @@ from typing import Any, Iterator
 __all__ = [
     "canonical",
     "digest",
+    "file_digest",
     "now",
     "private_directory",
     "atomic_json",
@@ -109,6 +110,15 @@ def canonical(value: Any) -> bytes:
 def digest(value: Any) -> str:
     """Hash the exact canonical report bytes, including the final newline."""
     return hashlib.sha256(canonical(value)).hexdigest()
+
+
+def file_digest(path: Path) -> str:
+    """Hash bounded chunks on the host's lightweight Python 3.9+ interpreter."""
+    result = hashlib.sha256()
+    with path.open("rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            result.update(block)
+    return result.hexdigest()
 
 
 def now() -> str:

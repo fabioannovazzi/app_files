@@ -1,9 +1,10 @@
-"""Full canonical text stays readable and inert on a fictional component transport."""
+"""Saved report text stays readable and inert in its standalone DOM renderer."""
 
 from __future__ import annotations
 
 import copy
 import json
+import subprocess
 
 import pytest
 
@@ -12,25 +13,38 @@ from tests.plugins.test_vera_model_data_report import (
     _load_module,
     _reduced_request,
 )
-from tests.plugins.test_vera_native_fusion_ui import events
+from tests.plugins.test_vera_native_workspace import NODE, ROOT
 
 __all__ = []
 
 
 def report_view(report: dict, markdown: str) -> dict:
-    """Return the component DOM without pretending the fictional call is a host."""
-    export = {
-        "export_ref": "fictional-export",
-        "case_report": {},
-        "model_report": report,
-        "model_report_markdown": markdown,
-        "artifacts": [],
-    }
-    return events(
-        "const ui=fixture(source);ui.page.data.exports="
-        + json.dumps([export], ensure_ascii=False)
-        + ";await ui.panel.open('fictional-merger');const nodes=ui.nodes();process.stdout.write(JSON.stringify({text:ui.text(),calls:ui.calls,report:nodes.filter(x=>x.tagName==='SECTION'&&x.children.some(c=>c.tagName==='H2')).map(x=>x.children.map(c=>({tag:c.tagName,text:c.text,items:c.children.map(y=>y.text)}))),tags:nodes.map(x=>x.tagName)}));"
+    """Exercise the renderer directly; Fusione is outside selective reporting."""
+    source = ROOT / "plugins/vera/ui/model-data-report.js"
+    code = """
+const fs=require('node:fs'),vm=require('node:vm');
+class Element {
+  constructor(tag,text) { this.tagName=tag.toUpperCase();this.text=text||'';this.children=[]; }
+  append(...items) { this.children.push(...items); }
+}
+const sandbox={globalThis:{}};
+vm.runInNewContext(fs.readFileSync(SOURCE,'utf8'),sandbox);
+const parent=new Element('main');
+sandbox.globalThis.VeraModelDataReport.render(parent,MARKDOWN,{node:(tag,text)=>new Element(tag,text)});
+const collect=e=>[e,...e.children.flatMap(collect)],nodes=collect(parent);
+process.stdout.write(JSON.stringify({
+  text:nodes.map(x=>x.text).join(' '),calls:[],tags:nodes.map(x=>x.tagName),
+  report:parent.children.map(x=>x.children.map(c=>({tag:c.tagName,text:c.text,items:c.children.map(y=>y.text)})))
+}));
+""".replace(
+        "SOURCE", json.dumps(str(source))
+    ).replace(
+        "MARKDOWN", json.dumps(markdown, ensure_ascii=False)
     )
+    result = subprocess.run(
+        [NODE, "-e", code], capture_output=True, text=True, check=True, timeout=20
+    )
+    return json.loads(result.stdout)
 
 
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
@@ -47,7 +61,7 @@ def test_native_report_displays_canonical_localized_full_context_text(
     assert "1 files" in result["text"]
     assert "Section relationships could not be reviewed" in result["text"]
     assert "semantic-review" in result["text"]
-    assert [row["name"] for row in result["calls"]] == ["vera_workspace_fusion_setup"]
+    assert result["calls"] == []
     assert len(result["report"]) == 1
     assert "IFRAME" not in result["tags"]
 
@@ -82,8 +96,11 @@ def test_native_report_keeps_all_phases_and_separate_units(tmp_path):
     assert "10,000 rows" in result["text"]
     assert "14 columns" in result["text"]
     assert "84 pages" in result["text"]
-    assert "quality_safeguard" in result["text"]
-    assert [row["name"] for row in result["calls"]] == ["vera_workspace_fusion_setup"]
+    assert (
+        "Confrontare casi rappresentativi e mantenere il drill-down esatto."
+        in result["text"]
+    )
+    assert result["calls"] == []
 
 
 def test_native_report_treats_html_links_and_scripts_as_literal_text():
@@ -95,4 +112,4 @@ def test_native_report_treats_html_links_and_scripts_as_literal_text():
     assert "[external](https://example.invalid/)" in result["text"]
     assert "<img src=x onerror=alert(1)>" in result["text"]
     assert not {"SCRIPT", "IMG", "IFRAME", "A"}.intersection(result["tags"])
-    assert [row["name"] for row in result["calls"]] == ["vera_workspace_fusion_setup"]
+    assert result["calls"] == []

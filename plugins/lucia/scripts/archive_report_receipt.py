@@ -72,7 +72,11 @@ def _request(report_path: Path, *, persist: bool = True) -> dict[str, Any]:
     if raw != canonical(report):
         raise ValueError("Report bytes do not match the saved canonical report")
     request_path = report_path.with_name("model_data_receipt_request.json")
-    previous = json.loads(request_path.read_text()) if request_path.is_file() else None
+    previous = (
+        json.loads(request_path.read_text())
+        if persist and request_path.is_file()
+        else None
+    )
     from notarized_run_receipt import _plugin_version
 
     request = {
@@ -85,7 +89,9 @@ def _request(report_path: Path, *, persist: bool = True) -> dict[str, Any]:
             )
         ),
         "plugin_version": (
-            previous["plugin_version"] if previous else _plugin_version(_product_root())
+            previous["plugin_version"]
+            if previous
+            else (_plugin_version(_product_root()) if persist else None)
         ),
         "report_sha256": hashlib.sha256(raw).hexdigest(),
         "user_id": report["user_id"],
@@ -253,7 +259,15 @@ def verify_report(report_path: Path, *, user_id: str) -> dict[str, Any]:
         raw = response.read(65537)
     if len(raw) > 65536:
         raise ValueError("Receipt response exceeds its size limit")
-    return validate_receipt(json.loads(raw), request)
+    receipt = json.loads(raw)
+    if not isinstance(receipt, dict) or not isinstance(
+        receipt.get("plugin_version"), str
+    ):
+        raise ValueError("Server receipt lacks its original product version")
+    # The report alone remains verifiable after a plugin update or when copied
+    # without companion files. The server retains and signs the issuing version.
+    request["plugin_version"] = receipt["plugin_version"]
+    return validate_receipt(receipt, request)
 
 
 def main(argv: list[str] | None = None) -> int:

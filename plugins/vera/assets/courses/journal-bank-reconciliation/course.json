@@ -104,7 +104,7 @@
     {
       "path": "modules/journal-bank-reconciliation/scripts/semantic_review.py",
       "repository_path": "plugins/journal-bank-reconciliation/scripts/semantic_review.py",
-      "sha256": "a6d2b629b1956e9d9e9fe44ae6d17e1a6922c897ef333a509aa89799da6bc059"
+      "sha256": "ec9b3ebc23563c8289cc497eaead26d271df4b0aa7b2f3f3f414223ead50775e"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/windows_worker_process.py",
@@ -199,7 +199,7 @@
     {
       "path": "skills/journal-bank-reconciliation/SKILL.md",
       "repository_path": "plugins/vera/skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "5de69a02ff89e467679ca8ee7ff1c3cc9d0e493cbd77d2e09d13d755661aa993"
+      "sha256": "65386cf8a209e471beed40ae0ee80a6cc476ef76abe945b7a633eb45a1e5ec5f"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

@@ -152,7 +152,7 @@
     },
     {
       "path": "skills/mparanza-dati-fiscali-strutturati/SKILL.md",
-      "sha256": "19b6068a3313e3187261c0bf26a1f16517aaf24b7417e761356a49aefad32c26"
+      "sha256": "462901e847ddc2a31f1acfe66755fbabd23fd010a53359762392bf1143d8bd1a"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -513,5 +513,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "4fa13a835225a521d3d128f3811396e67e26690a10155bd16ed34c147dc7d01e"
+  "canonical_course_sha256": "1824aaa2fc3ac10cacb96df4b692c9d29deee20090f8b9d64867dda5473d0914"
 }

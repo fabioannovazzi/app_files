@@ -85,7 +85,7 @@
     },
     {
       "path": "modules/browser-automation/scripts/ade_acquisition/archive_runs.py",
-      "sha256": "5d4f5d63880fcb7417a2d25abe7a9c57fda5e61a9e5fa74f9418ddcb87cad80e"
+      "sha256": "1bdc3ae2daa6aae6bc00c8f41358e574f6cbeba646002f2d1f48967f42fb785e"
     },
     {
       "path": "modules/browser-automation/scripts/ade_acquisition/artifacts.py",
@@ -101,7 +101,7 @@
     },
     {
       "path": "modules/browser-automation/scripts/ade_acquisition/engine.py",
-      "sha256": "3345dc5bda643d2d1d6ab843214bb1ee9041fc8783475bfd030fde88a5d2eded"
+      "sha256": "dbb3801bf804a5a0131f34bfc53819fcbe60b14a238625d64ca8b8ccce31ef7b"
     },
     {
       "path": "modules/browser-automation/scripts/ade_acquisition/portal.py",
@@ -205,7 +205,7 @@
     },
     {
       "path": "skills/mparanza-agenzia-acquisition/SKILL.md",
-      "sha256": "71063aa7ccfd5eb93ad7a908c72799b07be7a6518b662ad7416aa2f5d228e761"
+      "sha256": "1f9e00157874154caffa27a7f9dedb9849872660ef7aa028b3b917d908fa56f8"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -438,5 +438,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "fb4058ef8700716263b3db1d3cf6439d440b3323e492c58e399de0868743421e"
+  "canonical_course_sha256": "ebcae74512e3f06f6642ced4f13ec36361ae903fb02535b4028274cbde922d5c"
 }

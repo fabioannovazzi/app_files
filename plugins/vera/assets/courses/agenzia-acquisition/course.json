@@ -101,7 +101,7 @@
     {
       "path": "modules/browser-automation/scripts/ade_acquisition/archive_runs.py",
       "repository_path": "plugins/browser-automation/scripts/ade_acquisition/archive_runs.py",
-      "sha256": "5d4f5d63880fcb7417a2d25abe7a9c57fda5e61a9e5fa74f9418ddcb87cad80e"
+      "sha256": "1bdc3ae2daa6aae6bc00c8f41358e574f6cbeba646002f2d1f48967f42fb785e"
     },
     {
       "path": "modules/browser-automation/scripts/ade_acquisition/artifacts.py",
@@ -121,7 +121,7 @@
     {
       "path": "modules/browser-automation/scripts/ade_acquisition/engine.py",
       "repository_path": "plugins/browser-automation/scripts/ade_acquisition/engine.py",
-      "sha256": "3345dc5bda643d2d1d6ab843214bb1ee9041fc8783475bfd030fde88a5d2eded"
+      "sha256": "dbb3801bf804a5a0131f34bfc53819fcbe60b14a238625d64ca8b8ccce31ef7b"
     },
     {
       "path": "modules/browser-automation/scripts/ade_acquisition/portal.py",
@@ -251,7 +251,7 @@
     {
       "path": "skills/agenzia-acquisition/SKILL.md",
       "repository_path": "plugins/vera/skills/agenzia-acquisition/SKILL.md",
-      "sha256": "8faf972497e0a06fba5dab17ab803131a57565073f8e6d6d368a0d32f82ad507"
+      "sha256": "f7b83f47c514f67c5b065db20f3ad321936f336db78920cf711bad11f923256e"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

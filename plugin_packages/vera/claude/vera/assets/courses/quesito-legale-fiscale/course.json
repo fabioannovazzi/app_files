@@ -177,7 +177,7 @@
     },
     {
       "path": "skills/mparanza-quesito-legale-fiscale/SKILL.md",
-      "sha256": "443053b17939ee17c004503c17ab678ea9ba56c1e8e1bf4aae2ca0c8c59a8554"
+      "sha256": "0793bb00c7a73765d26f65acc5575290224e709d9824991b2ccfa80d09ae20eb"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -870,5 +870,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "02231691d393049d586cbb4eec1c43b7b7ef0c0ed27e08b6a8c93f7f8981edd3"
+  "canonical_course_sha256": "72478465c02d150f9dfb90b775de8f0c0972eb2070c3ca16e83feee7a69d9503"
 }

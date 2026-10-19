@@ -98,6 +98,14 @@ def refresh(root: Path, session: str) -> None:
     from archive_reporting import observe_tool
 
     ambiguous = len(Registry().active(session)) > 1
+    state = RunStore(root).state()
+    terminal_calls = (
+        set(state["closing_calls"].get(session, []))
+        if state and state["finished_at"] is not None
+        else None
+    )
+    if terminal_calls is not None and terminal_calls <= set(cursor["completed"]):
+        return
 
     with path.open("rb") as handle:
         handle.seek(cursor["offset"])
@@ -139,6 +147,10 @@ def refresh(root: Path, session: str) -> None:
                 }:
                     RunStore(root).error("hosted_tool_output_not_measured")
             cursor["offset"] = handle.tell()
+            if terminal_calls is not None and terminal_calls <= set(
+                cursor["completed"]
+            ):
+                break
     atomic_json(target, cursor)
 
 

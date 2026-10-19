@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from archive_report_store import atomic_json, canonical
+from archive_report_store import atomic_json, canonical, file_digest
 
 __all__ = ["checkpoint", "reseal"]
 FILES = {
@@ -26,8 +26,7 @@ def _digest(value: Any) -> str:
 def _identity(path: Path) -> tuple[int, str]:
     if path.is_symlink() or not path.is_file() or path.stat().st_nlink != 1:
         raise ValueError("Archive artifact must be an ordinary unlinked file")
-    with path.open("rb") as handle:
-        return path.stat().st_size, hashlib.file_digest(handle, "sha256").hexdigest()
+    return path.stat().st_size, file_digest(path)
 
 
 def _check(root: Path, manifest: dict[str, Any], *, include_report: bool) -> None:
