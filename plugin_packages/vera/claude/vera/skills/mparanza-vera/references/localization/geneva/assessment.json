@@ -32,7 +32,7 @@
     "publication_status": "Marketplace publication excluded by user",
     "validation_scope": "Synthetic cases and repository regressions; no Geneva fiduciary client acceptance"
   },
-  "catalogue_fingerprint": "8fccb73a26ee05e846c3c7c01cd05a8aff940cd8ff59405a17f4f660c456c10e",
+  "catalogue_fingerprint": "3b4a63e400a4868eb8f365985bc22f7b330c92599483d2bc908b213d34cfca16",
   "catalogue_update": {
     "date": "2026-09-30",
     "source_version": "0.1.286",
@@ -2045,5 +2045,11 @@
     "version": "0.1.428",
     "previous_catalogue_fingerprint": "d746fb05d6f0d3a85b638c5ba6b8d620055462ff498599edc1c568fb6fd71652",
     "scope": "The same function IDs now use automatic reporting for the fixed 13 Archive pipelines. Other pipelines are excluded from this comparison report. Reports stay local and proof hashes bind to Vera userID. Existing Geneva jurisdiction dispositions are unchanged; automatic evidence collection does not establish new Swiss professional acceptance."
+  },
+  "shared_runtime_equivalence_release_binding": {
+    "date": "2026-10-19",
+    "previous_catalogue_fingerprint": "8fccb73a26ee05e846c3c7c01cd05a8aff940cd8ff59405a17f4f660c456c10e",
+    "scope": "Refresh the product manifest/version binding only; all 55 skill entrypoint hashes and all Geneva target judgments remain unchanged. The shared Python setup is pinned and tested across hosts; this does not establish new jurisdiction adaptation or professional acceptance.",
+    "version": "0.1.429"
   }
 }
