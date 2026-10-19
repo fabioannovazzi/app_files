@@ -25,9 +25,9 @@ from lipe_catalog import (
 )
 from lipe_catalog_authorization import prepare_decision
 from lipe_core import ContractError, read_json
+
 from tests.plugins.test_lipe_approval import crypto, sign
 from tests.plugins.test_lipe_catalog import entry
-
 
 LIPE_MODULES = {
     name: module

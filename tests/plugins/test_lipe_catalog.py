@@ -25,7 +25,6 @@ from lipe_catalog import (
 )
 from lipe_core import ContractError, calculate, read_json
 
-
 LIPE_MODULES = {
     name: module
     for name, module in sys.modules.items()

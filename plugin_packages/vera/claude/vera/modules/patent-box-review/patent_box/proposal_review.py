@@ -9,10 +9,10 @@ from uuid import uuid4
 
 from .authorization import request_bytes
 from .contracts import ContractError, canonical_hash, file_hash, validate
-from .professional_review import (
+from .review_evidence import (
     _configuration,  # Used only by the optional signed-document inspection route.
 )
-from .professional_review import (
+from .review_evidence import (
     _digest,
     _new,
     _preflight,
@@ -50,6 +50,8 @@ def _bindings(
     }
     if action == "APPROVE_DOSSIER":
         directory = output / f"calculation_{digest}"
+        if directory.is_symlink() or not directory.is_dir():
+            raise ContractError("Calculation directory must be a regular directory")
         manifest = _read(directory / "manifest.json")
         if (
             manifest["run_id"] != session["run_id"]

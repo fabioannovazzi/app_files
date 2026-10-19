@@ -25,6 +25,7 @@ from lipe_core import ContractError, calculate, read_json
 from lipe_export import compare_files, export_xml, main
 from lipe_xml import build_test_xml
 from lipe_xml_compare import compare_ivp, read_ivp
+
 from tests.plugins.test_lipe import (
     amounts,
     case_data,

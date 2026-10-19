@@ -215,3 +215,23 @@ def test_reopening_requires_a_new_user_decision_without_signature(
     workflow.calculate_draft(case["context"], digest=digest, at=NOW)
     assert previous.read_bytes() == prior_bytes
     assert (case["output"] / f"calculation_{digest}" / "result.json").is_file()
+
+
+def test_final_proposal_cannot_read_artifacts_through_a_directory_symlink(
+    workflow, review_case
+):
+    case = review_case
+    accept(workflow, case)
+    workflow.calculate_draft(case["context"], digest=case["digest"], at=NOW)
+    directory = case["output"] / f"calculation_{case['digest']}"
+    moved = directory.with_name("unselected-artifacts")
+    directory.rename(moved)
+    directory.symlink_to(moved, target_is_directory=True)
+    with pytest.raises(ValueError, match="regular directory"):
+        workflow.prepare_professional_review(
+            case["context"],
+            digest=case["digest"],
+            source_scan=case["scan"],
+            action="APPROVE_DOSSIER",
+            at=NOW,
+        )

@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/Documents/Codex/2026-10-18/i-x20/work/app_files/plugins/vera",
-  "version": "0.1.417",
-  "captured_at": "2026-10-18T21:14:17.200769+00:00",
-  "catalogue_fingerprint": "1cd4969eeedf9cde13043466d9161d27bad371bee324fae5464cb23eca5d1bdb",
-  "manifest_sha256": "8332ed2dad735958762e5953887b15f66f89a5a8809f8aa7aa0da5ff2a54aced",
+  "root": "/Users/fabio/Documents/GitHub/app_files/plugins/vera",
+  "version": "0.1.421",
+  "captured_at": "2026-10-19T11:31:21.088254+00:00",
+  "catalogue_fingerprint": "b18836357ed228279c693da6727aae851fb18cb44de0970d17b090bf4b2dabd4",
+  "manifest_sha256": "c419c0c332d090b7812e63cc1c738b713affb2320a1736860201b4c9dd65f86d",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -164,7 +164,7 @@
     {
       "function_id": "lipe",
       "skill_path": "skills/lipe/SKILL.md",
-      "sha256": "d37835e20e160e4724d7be151308c8fe6a675499a38e7504c9cd12adf6627046"
+      "sha256": "ec99ef30e45fb1c00b2c9e276163d19b78c8eeedc4c32403d26cdc7823145443"
     },
     {
       "function_id": "management-control-pack",
@@ -189,7 +189,7 @@
     {
       "function_id": "patent-box-review",
       "skill_path": "skills/patent-box-review/SKILL.md",
-      "sha256": "537d81d49279594ea7448e435b45159d1db41171d3dee34049fc211dccb56d76"
+      "sha256": "31cff91aec59f853bdd0fbbda1af5091f8d04246e60786429450926423bf1620"
     },
     {
       "function_id": "posizioni-negoziali",
@@ -204,7 +204,7 @@
     {
       "function_id": "previdenza-inps",
       "skill_path": "skills/previdenza-inps/SKILL.md",
-      "sha256": "1c01dbc66f7946d9b0854cbad68482941d7655629677dfcd49152dd20911608e"
+      "sha256": "fd238b3894503fbe3429438839dc1bd8b8d88b90208a5ce8528de2cd583562f3"
     },
     {
       "function_id": "privacy-surface-review",
