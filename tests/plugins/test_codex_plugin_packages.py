@@ -2893,7 +2893,8 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 assert "vera_studio_work_*" in skill_text
                 assert "Never manufacture evidence" in normalized_skill_text
                 assert "host-transcribed voice" in normalized_skill_text
-                assert "model_data_report.py" in skill_text
+                assert "outside Vera's comparison-report scope" in normalized_skill_text
+                assert "report_workspace" in skill_text
                 continue
             if (
                 plugin_root.name == "vera"
@@ -2927,7 +2928,7 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
             if plugin_root.name == "composizione-negoziata":
                 assert "Produce and persist useful work" in skill_text
                 assert "Declare every physical output" in normalized_skill_text
-                assert "actual model-data report" in normalized_skill_text
+                assert "outside the comparison-report scope" in normalized_skill_text
                 assert "read its skill and follow" in normalized_skill_text.lower()
                 assert "Never simulate saved history" in skill_text
                 continue
@@ -3098,7 +3099,12 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 # it does not author or qualify a generic browser capability.
                 assert "agenzia_acquire.py" in normalized_skill_text
                 assert "outside source repositories" in normalized_skill_text
-                assert "model-data-report-contract.md" in normalized_skill_text
+                assert "selective-reporting contract" in normalized_skill_text
+                assert "model_data_worker_input.json" in normalized_skill_text
+                assert (
+                    "Archive creates any eligible comparison report"
+                    in normalized_skill_text
+                )
                 assert "riepilogo.xlsx" in normalized_skill_text
                 assert "ordinary report files remain available" in normalized_skill_text
                 continue
@@ -3113,7 +3119,10 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                     "selecting one kind at a time and its exact input references"
                     in normalized_skill_text
                 )
-                assert "show the readable privacy report" in normalized_skill_text
+                assert (
+                    "outside Vera's selective privacy comparison reporting scope"
+                    in normalized_skill_text
+                )
                 assert (
                     "actual professional confirmation still belongs to the named reviewer"
                     in normalized_skill_text
@@ -3121,7 +3130,7 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 continue
             if plugin_root.name == "lipe":
                 assert (
-                    "VP table, findings and readable model-data report are normal outputs"
+                    "outside Vera's selective comparison-report scope"
                     in normalized_skill_text
                 )
                 assert "workpaper.xlsx" in normalized_skill_text
@@ -3131,7 +3140,8 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                     in normalized_skill_text
                 )
                 assert (
-                    "Do not close the managed run without them" in normalized_skill_text
+                    "without requiring a privacy report for review, export or Archive completion"
+                    in normalized_skill_text
                 )
                 continue
             for snippet in required_snippets:
