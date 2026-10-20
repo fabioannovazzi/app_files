@@ -357,6 +357,14 @@ validated generation remains terminal until a new preparation archives its
 fixed-name artifacts under `semantic-review/history/`. In every failure mode,
 the main Codex chat and deterministic reconciliation remain unchanged.
 
+`run-all` performs that final preparation itself. Its completed batch returns
+the retained `worker_run` and `launch_receipt` paths, also emitted by the CLI as
+`validated worker evidence`. Those files belong to the archived generation;
+the current top-level status and resolution artifacts describe the exhaustive
+result. A terminal `worker_required=false` does not mean the preceding batch
+was skipped. Use the actual returned paths, and read artifact contents through
+the run-bound Archive reader so the privacy report records the delivery.
+
 ## Source Qualification
 
 - Tabular files emit rows only after date and amount or debit/credit fields are

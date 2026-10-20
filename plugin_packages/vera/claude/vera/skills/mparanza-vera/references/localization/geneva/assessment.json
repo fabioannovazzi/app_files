@@ -124,7 +124,7 @@
     "scope": "Italian OIC closing-account workflow and Alfa v3 synthetic acceptance only. Existing function IDs and Geneva dispositions are retained. No Swiss accounting framework, Geneva professional acceptance, native-host acceptance or filing capability is added or claimed.",
     "version": "0.1.394"
   },
-  "catalogue_fingerprint": "e10793e12bb95d1fb6d28a0755332d7ea11ad01ac732e90eef24df52bb681036",
+  "catalogue_fingerprint": "7351003dd4b932c90d185eacc7cd30a0eff1aebae9a885af415f508f0d327fae",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -609,6 +609,11 @@
     "review": "Register the new Italian AGCM workflow as Unresolved for CH-GE, refresh the manifest and entrypoint identity, and preserve all prior target judgments. Translated explanation pages do not qualify Swiss applicability; professional document-led pilot acceptance remains pending. Preserves the newer French discovery keywords and Antigravity documentation; neither changes the recorded jurisdiction qualifications.",
     "reviewed_at": "2026-10-02",
     "version": "0.1.334"
+  },
+  "recorded_artifact_read_binding_20261020": {
+    "previous_catalogue_fingerprint": "e10793e12bb95d1fb6d28a0755332d7ea11ad01ac732e90eef24df52bb681036",
+    "scope": "Reviewed the Journal-Bank wrapper change: use the existing run-bound Archive reader for model-visible artifact content, and use the actual retained worker paths returned by run-all. The other 54 wrapper entrypoints and every jurisdiction disposition remain unchanged. This changes neither accounting interpretation nor Swiss applicability and claims no new professional or installed-host acceptance.",
+    "version": "0.1.449"
   },
   "release_baseline_refresh": {
     "changed_skill_ids": [

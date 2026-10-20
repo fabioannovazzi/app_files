@@ -9730,6 +9730,14 @@ def test_semantic_run_all_orchestrates_packets_until_exhaustive(
     assert result["human_review_count"] == 0
     assert result["exhaustive"] is True
     assert status["status"] == "completed_exhaustive"
+    batch = result["batches"][0]
+    retained_worker = json.loads(batch["worker_run"].read_text(encoding="utf-8"))
+    retained_launch = json.loads(batch["launch_receipt"].read_text(encoding="utf-8"))
+    assert retained_worker["status"] == "completed_validated"
+    assert retained_worker["candidate_graph_sha256"] == batch["candidate_graph_sha256"]
+    assert (
+        retained_launch["schema_version"] == "journal_bank.semantic_launch_receipt.v1"
+    )
 
 
 def test_semantic_run_all_skips_worker_when_complete_residual_exceeds_caps(
@@ -9759,6 +9767,7 @@ def test_semantic_run_all_skips_worker_when_complete_residual_exceeds_caps(
         (semantic_dir / "residual_candidate_graph.json").read_text(encoding="utf-8")
     )
     assert result["batch_count"] == 0
+    assert result["batches"] == []
     assert result["exhaustive"] is False
     assert result["reviewed_bank_count"] == 0
     assert result["human_review_count"] == 2

@@ -208,6 +208,13 @@ First follow `../mparanza-vera/references/execution-recovery.md` for component
 `journal-bank-reconciliation`. Use its verified execution root for the handoff
 below; never ask the professional to run a terminal command.
 
+For this Archive run, discover `read_studio_run_artifact` and use its exact
+client, engagement and run IDs to read source previews and generated artifacts
+into model context. This includes inspection JSON, audits, review notes and
+worker receipts. Shell commands that print those files are outside the report's
+measurement boundary. The component's `run-all` returns the retained worker
+receipt paths after archiving; use those paths for the subsequent recorded read.
+
 Resolve `../../modules/journal-bank-reconciliation` from this skill directory
 when it exists; otherwise resolve `../../../journal-bank-reconciliation` in the
 repository. Read that module's `skills/mparanza-journal-bank-reconciliation/SKILL.md`

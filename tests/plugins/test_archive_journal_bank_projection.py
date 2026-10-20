@@ -349,16 +349,9 @@ def test_mcp_records_only_selected_case_fields(
     assert sum(item["not_sent_cells"] for item in inputs) == 25 - expected_cells
 
 
-@pytest.mark.skipif(
-    sys.platform != "darwin", reason="Exercises the macOS worker launch path"
-)
-@pytest.mark.parametrize("native_execution", [False, True])
-def test_worker_submission_counts_only_the_unmatched_candidate(
-    reconciled_case, monkeypatch, tmp_path, native_execution
+def run_worker_case(
+    loaded, monkeypatch, tmp_path, *, native_execution=False, run_pipeline=False
 ):
-    from archive_report_store import RunStore
-    from archive_reporting import snapshot_run
-
     from tests.plugins.test_journal_bank_reconciliation_plugin import (
         _mock_semantic_worker_runtime,
         load_core,
@@ -369,7 +362,6 @@ def test_worker_submission_counts_only_the_unmatched_candidate(
     if native_execution:
         monkeypatch.setenv("VERA_REPORTING_INTERNAL", "1")
     semantic = load_semantic_review()
-    loaded = reconciled_case
     output = Path(loaded["calculation_dir"])
     worker_output = output.parent / "semantic-review"
     context = semantic.load_client_engagement_context_file(
@@ -430,11 +422,54 @@ def test_worker_submission_counts_only_the_unmatched_candidate(
         },
     )
 
-    result = semantic.run_semantic_worker(
-        output, worker_output, prepared["candidate_graph"], client_engagement=context
+    if run_pipeline:
+        result = semantic.run_semantic_resolution_pipeline(
+            output, worker_output, client_engagement=context
+        )
+    else:
+        result = semantic.run_semantic_worker(
+            output,
+            worker_output,
+            prepared["candidate_graph"],
+            client_engagement=context,
+        )
+    return result, captured
+
+
+@pytest.mark.skipif(
+    sys.platform != "darwin", reason="Exercises the macOS worker launch path"
+)
+@pytest.mark.parametrize("native_execution", [False, True])
+@pytest.mark.parametrize("read_receipts", [False, True])
+def test_worker_submission_counts_only_the_unmatched_candidate(
+    reconciled_case, monkeypatch, tmp_path, native_execution, read_receipts
+):
+    from archive_report_store import RunStore
+    from archive_reporting import read_artifact, snapshot_run
+
+    loaded = reconciled_case
+    result, captured = run_worker_case(
+        loaded,
+        monkeypatch,
+        tmp_path,
+        native_execution=native_execution,
+        run_pipeline=read_receipts,
+    )
+    if read_receipts:
+        [batch] = result["batches"]
+        read_artifact(loaded, batch["worker_run"])
+        read_artifact(loaded, batch["launch_receipt"])
+        read_artifact(
+            loaded,
+            result["resolution_application"].parent / "semantic_review_status.json",
+        )
+    response_path = (
+        result["batches"][0]["worker_run"].with_name("luna_response.json")
+        if read_receipts
+        else result["response"]
     )
 
-    assert result["response"].is_file()
+    assert response_path.is_file()
     assert "--model" in captured["command"]
     sends = [
         event
@@ -448,6 +483,37 @@ def test_worker_submission_counts_only_the_unmatched_candidate(
     inputs = [item for item in report["sources"] if item["role"] == "input"]
     assert sum(item["sent_cells"] for item in inputs) == 4
     assert sum(item["not_sent_cells"] for item in inputs) == 21
+
+
+@pytest.mark.skipif(
+    sys.platform != "darwin", reason="Exercises the macOS worker launch path"
+)
+@pytest.mark.parametrize("receipt_key", ["worker_run", "launch_receipt", "status"])
+def test_edited_worker_receipt_cannot_reuse_producer_provenance(
+    reconciled_case, monkeypatch, tmp_path, receipt_key
+):
+    from archive_reporting import read_artifact, snapshot_run
+
+    loaded = reconciled_case
+    result, _ = run_worker_case(loaded, monkeypatch, tmp_path, run_pipeline=True)
+    [batch] = result["batches"]
+    path = (
+        result["resolution_application"].parent / "semantic_review_status.json"
+        if receipt_key == "status"
+        else batch[receipt_key]
+    )
+    receipt = json.loads(path.read_text())
+    receipt["unregistered_note"] = "Case data added after receipt creation"
+    path.write_text(json.dumps(receipt))
+
+    read_artifact(loaded, path)
+    report = json.loads(Path(snapshot_run(loaded)["report_path"]).read_text())
+
+    assert report["collection_status"] == "incomplete"
+    assert any(
+        error.startswith("derived_output_lineage_unavailable:")
+        for error in report["errors"]
+    )
 
 
 @pytest.mark.parametrize("read_preview", [False, True])

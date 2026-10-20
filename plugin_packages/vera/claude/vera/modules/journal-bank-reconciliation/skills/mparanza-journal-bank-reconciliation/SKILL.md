@@ -213,7 +213,14 @@ python scripts/inspect_inputs.py <managed-bank-input> <managed-journal-input> --
 Add `--sample <sample-file>` when a sample movement list is provided.
 
 4. Read `inspection.json`, `input_receipts.json`,
-   `source_qualifications.json`, and `suggested_recipe.json`. Do not run
+   `source_qualifications.json`, and `suggested_recipe.json`. In an Archive run,
+   discover and use `read_studio_run_artifact` with this run's client,
+   engagement and run IDs and the actual file path. Use that same recorded
+   read for subsequent source and generated-artifact contents needed by the
+   model, including the audit, review notes and worker receipts. Printing them
+   with `cat` or an ad hoc Python read bypasses the report's observation
+   boundary. Local calculations and writing agent decisions may still use
+   local files without displaying their contents. Do not run
    reconciliation while any source reports `unsupported_source_layout`. A
    source with `needs_review` has emitted zero rows. Review the physical header,
    monetary role, CSV field delimiter,

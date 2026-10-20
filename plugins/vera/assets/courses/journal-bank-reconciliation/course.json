@@ -49,7 +49,7 @@
     {
       "path": "modules/journal-bank-reconciliation/references/workflow-reference.md",
       "repository_path": "plugins/journal-bank-reconciliation/references/workflow-reference.md",
-      "sha256": "5fede56a66976173c0764cc8a2a4ea90382b6659607658ca6d888c0e333f749b"
+      "sha256": "fabbdc3c499733592edbf98506188fc752c686da0f34936e89241654c392013e"
     },
     {
       "path": "modules/journal-bank-reconciliation/requirements.txt",
@@ -104,7 +104,7 @@
     {
       "path": "modules/journal-bank-reconciliation/scripts/semantic_review.py",
       "repository_path": "plugins/journal-bank-reconciliation/scripts/semantic_review.py",
-      "sha256": "044c7273aa415d0243cf9fd641ff6d2314f3f96bca72ea7d20c6ccf38566f128"
+      "sha256": "dfe8dcf6c3275d6252288aa7c9f5846e4f8676c64d08a1fab985466f9a4f51f6"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/windows_worker_process.py",
@@ -114,7 +114,7 @@
     {
       "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
       "repository_path": "plugins/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "8858b2f9ae9c63aa1fb2e99a8780012560672f7471cfa58aa616d58cd6a4342c"
+      "sha256": "a538bf6b448828728057e404fdcd85b710a80a5dbc44e6d17e64465301c49607"
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/references/geneva.md",
@@ -199,7 +199,7 @@
     {
       "path": "skills/journal-bank-reconciliation/SKILL.md",
       "repository_path": "plugins/vera/skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "a0949f4c2495d749ab432d7977f8eebb29ef023712992e6f2bca9e98f7159196"
+      "sha256": "e5771cd36069994616332c66964cd5a45429131f7ec8cd31696a776dc47dc635"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

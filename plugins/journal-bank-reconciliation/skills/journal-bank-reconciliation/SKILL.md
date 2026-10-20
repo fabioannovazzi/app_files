@@ -213,7 +213,14 @@ python scripts/inspect_inputs.py <managed-bank-input> <managed-journal-input> --
 Add `--sample <sample-file>` when a sample movement list is provided.
 
 4. Read `inspection.json`, `input_receipts.json`,
-   `source_qualifications.json`, and `suggested_recipe.json`. Do not run
+   `source_qualifications.json`, and `suggested_recipe.json`. In an Archive run,
+   discover and use `read_studio_run_artifact` with this run's client,
+   engagement and run IDs and the actual file path. Use that same recorded
+   read for subsequent source and generated-artifact contents needed by the
+   model, including the audit, review notes and worker receipts. Printing them
+   with `cat` or an ad hoc Python read bypasses the report's observation
+   boundary. Local calculations and writing agent decisions may still use
+   local files without displaying their contents. Do not run
    reconciliation while any source reports `unsupported_source_layout`. A
    source with `needs_review` has emitted zero rows. Review the physical header,
    monetary role, CSV field delimiter,
@@ -340,6 +347,16 @@ python scripts/semantic_review.py run-all <output-dir>/reconciliation \
 Pass `--required-level <classified|candidate_match|beneficiary_match|identifier_match|perfect_match>`
 only to apply an explicitly established clearance policy. Its omission does not
 skip the worker or any source, output-receipt or material-value validation.
+
+After `run-all`, use its returned `validated worker evidence` paths. Its final
+preparation moves the validated worker files into an actual
+`semantic-review/history/generation.../` directory and leaves the current
+resolution artifacts at the top level. Read the returned worker and launch
+receipts through `read_studio_run_artifact`; do not reconstruct a generation
+name or assume those receipts remain at the top level. `batches=1` records the
+completed worker; terminal `worker_required=false` means no further packet is
+needed. A zero-batch result supplies no new worker-receipt paths. Continue using
+the current resolution funnel, review queue and operational payload.
 
 An explicitly reviewed alternative may be supplied to `prepare` or `run-all`
 with `--worker-selection <receipt.json>`. Use the shared reviewed-decision

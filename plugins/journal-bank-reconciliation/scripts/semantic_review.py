@@ -2304,6 +2304,7 @@ def _write_status(
     except OSError:
         pending.unlink(missing_ok=True)
         raise
+    _register_execution_metadata(status_path, payload)
     return status_path
 
 
@@ -3320,6 +3321,26 @@ def _publish_worker_artifacts(
         raise
 
 
+def _register_execution_metadata(path: Path, payload: dict[str, Any]) -> None:
+    """Bind producer status/receipt bytes, not filenames, as metadata.
+
+    These constructors contain configuration, counts and hashes, not source
+    records or worker answers. Exact bytes prevent edited receipts inheriting
+    that provenance after a generation moves into history.
+    """
+    from vera_assurance.contracts import archive_projection_runtime
+
+    recorder = archive_projection_runtime(Path(__file__))
+    if recorder is not None:
+        recorder.register_value(
+            "journal-bank-reconciliation",
+            path,
+            payload,
+            [],
+            artifact_sha256=hashlib.sha256(_json_bytes(payload)).hexdigest(),
+        )
+
+
 def _cleanup_worker_capsule(semantic_dir: Path, capsule: Path) -> None:
     if (
         capsule.parent.resolve() != semantic_dir
@@ -3622,6 +3643,7 @@ def run_semantic_worker(
             },
         )
         artifacts_published = True
+        _register_execution_metadata(semantic / LAUNCH_RECEIPT_NAME, receipt)
         status_path = _write_status(
             semantic,
             graph,
@@ -5023,6 +5045,7 @@ def validate_semantic_review(
         validated,
         worker_run,
     )
+    _register_execution_metadata(worker_path, worker_run)
     _write_status(semantic, graph, status_value="completed_validated")
     return {
         "validated_suggestions": validated_path,
@@ -5141,6 +5164,9 @@ def run_semantic_resolution_pipeline(
         "reviewed_bank_count_before": reviewed_count,
         "reviewed_bank_count_after": next_reviewed_count,
         "human_review_count_after": validated["summary"]["human_review_count"],
+        "worker_run": final_preparation["archived_generation"] / WORKER_RUN_NAME,
+        "launch_receipt": final_preparation["archived_generation"]
+        / LAUNCH_RECEIPT_NAME,
     }
     return {
         "batch_count": 1,
@@ -5351,6 +5377,17 @@ def main() -> int:
             result["human_review_count"],
             result["exhaustive"],
         )
+        for batch in result["batches"]:
+            log_execution_status(
+                args.output_dir,
+                "validated worker evidence: %s",
+                json.dumps(
+                    {
+                        "worker_run": str(batch["worker_run"]),
+                        "launch_receipt": str(batch["launch_receipt"]),
+                    }
+                ),
+            )
         return 0
     if args.command == "run-worker":
         try:
